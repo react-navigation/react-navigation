@@ -1,0 +1,30 @@
+{
+  "name": "react-native-tabview",
+  "version": "0.0.1",
+  "description": "Tab view component for React Native",
+  "main": "index.js",
+  "files": [
+    "src/"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/satya164/react-native-tabview.git"
+  },
+  "author": "Satyajit Sahoo <satyajit.happy@gmail.com> (https://github.com/satya164/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/satya164/react-native-tabview/issues"
+  },
+  "homepage": "https://github.com/satya164/react-native-tabview#readme",
+  "devDependencies": {
+    "eslint": "^2.12.0",
+    "eslint-plugin-ava": "^2.5.0",
+    "eslint-plugin-babel": "^3.2.0",
+    "eslint-plugin-import": "^1.8.1",
+    "eslint-plugin-react": "^5.1.1",
+    "eslint-plugin-react-native": "^1.1.0-beta"
+  }
+}
