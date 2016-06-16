@@ -97,7 +97,11 @@ export default class TabView extends Component<void, Props, State> {
 
   _canMoveScreen = (evt, gestureState) => {
     const { scenes, index } = this.props.navigationState;
-    return (gestureState.dx > 0 && index !== 0) || (gestureState.dx < 0 && index !== scenes.length - 1);
+    return (
+      (Math.abs(gestureState.dx) > Math.abs(gestureState.dy)) &&
+      (gestureState.dx > 0 && index !== 0) ||
+      (gestureState.dx < 0 && index !== scenes.length - 1)
+    );
   };
 
   _respondToGesture = (evt, gestureState) => {
