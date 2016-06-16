@@ -47,6 +47,7 @@ type Props = {
   navigationState: NavigationState;
   onRequestChangeTab: Function;
   indicatorColor: string;
+  pressColor?: string;
   labelStyle?: any;
   labelActiveStyle?: any;
   labelInactiveStyle?: any;
@@ -63,6 +64,7 @@ export default class TabBarTop extends Component<void, Props, State> {
     navigationState: NavigationStatePropType.isRequired,
     onRequestChangeTab: PropTypes.func.isRequired,
     indicatorColor: PropTypes.string,
+    pressColor: TouchableItem.propTypes.pressColor,
     labelStyle: Text.propTypes.style,
     labelActiveStyle: Text.propTypes.style,
     labelInactiveStyle: Text.propTypes.style,
@@ -120,6 +122,7 @@ export default class TabBarTop extends Component<void, Props, State> {
             <TouchableItem
               key={scene.key}
               style={styles.tabitem}
+              pressColor={this.props.pressColor}
               onPress={() => this._handleChangeTab(i)}
             >
               <Text

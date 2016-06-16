@@ -39,6 +39,7 @@ export default class TabViewExample extends Component {
         navigationState={this.state.navigation}
         onRequestChangeTab={this._handleChangeTab}
         indicatorColor='#ffeb3b'
+        pressColor='rgba(0, 0, 0, .5)'
         labelStyle={styles.tablabel}
         style={styles.tabbar}
       />
