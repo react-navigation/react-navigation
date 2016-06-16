@@ -3,10 +3,13 @@
 import React, { Component, PropTypes } from 'react';
 import {
   Animated,
+  Easing,
   StyleSheet,
   View,
   PanResponder,
 } from 'react-native';
+import shallowCompare from 'react-addons-shallow-compare';
+import TabViewScene from './TabViewScene';
 import { NavigationStatePropType } from './TabViewPropTypes';
 import type { Scene, NavigationState } from './TabViewTypes';
 import type { GestureEvent, GestureState } from './PanResponderTypes';
@@ -16,11 +19,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     flexWrap: 'nowrap',
-  },
-  page: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
   },
 });
 
@@ -55,6 +53,10 @@ export default class TabView extends Component<void, Props, State> {
     translateAnim: new Animated.Value(0),
   };
 
+  shouldComponentUpdate(nextProps: Props, nextState: State) {
+    return shallowCompare(this, nextProps, nextState);
+  }
+
   componentDidUpdate() {
     this._updatePosition();
   }
@@ -78,10 +80,7 @@ export default class TabView extends Component<void, Props, State> {
     },
   });
 
-  _vx: ?number;
-
-  _calculateLeftOffset = () => {
-    const { index } = this.props.navigationState;
+  _calculateLeftOffset = (index: number) => {
     const { width } = this.state;
 
     return width * index * -1;
@@ -108,10 +107,9 @@ export default class TabView extends Component<void, Props, State> {
   };
 
   _respondToGesture = (evt: GestureEvent, gestureState: GestureState) => {
-    if (this._canMoveScreen(evt, gestureState)) {
-      const offsetLeft = this._calculateLeftOffset() + gestureState.dx;
-      this.state.translateAnim.setValue(offsetLeft);
-    }
+    const { index } = this.props.navigationState;
+    const offsetLeft = this._calculateLeftOffset(index) + gestureState.dx;
+    this.state.translateAnim.setValue(offsetLeft);
   };
 
   _finishGesture = (evt: GestureEvent, gestureState: GestureState) => {
@@ -119,22 +117,26 @@ export default class TabView extends Component<void, Props, State> {
     const { translateAnim } = this.state;
     const nextIndex = this._getNextIndex(evt, gestureState);
     if (index !== nextIndex) {
-      this._vx = gestureState.vx;
-      this.props.onRequestChangeTab(nextIndex);
+      const offsetLeft = this._calculateLeftOffset(nextIndex);
+      Animated.timing(translateAnim, {
+        toValue: offsetLeft,
+        duration: 350 - Math.abs(gestureState.vx) * 10,
+        easing: Easing.easeInOut,
+      }).start(() => {
+        this.props.onRequestChangeTab(nextIndex);
+      });
     } else {
       this._updatePosition();
     }
   };
 
   _updatePosition = () => {
+    const { index } = this.props.navigationState;
     const { translateAnim } = this.state;
-    const offsetLeft = this._calculateLeftOffset();
-
+    const offsetLeft = this._calculateLeftOffset(index);
     Animated.timing(translateAnim, {
       toValue: offsetLeft,
-      duration: this._vx ? Math.max(Math.abs(this._vx), 1) * 100 : 350,
     }).start();
-    this._vx = null;
   };
 
   _handleLayout = (e: any) => {
@@ -160,12 +162,14 @@ export default class TabView extends Component<void, Props, State> {
         <Animated.View style={[ styles.inner, { width: width * scenes.length, transform: [ { translateX: translateAnim } ] } ]}>
           {scenes.map((scene, i) => {
             return (
-              <View key={scene.key} style={[ styles.page, { left: i * width, width } ]}>
-                {this.props.renderScene({
-                  scene,
-                  focused: index === i,
-                })}
-              </View>
+              <TabViewScene
+                key={scene.key}
+                scene={scene}
+                focused={index === i}
+                left={i * width}
+                width={width}
+                renderScene={this.props.renderScene}
+              />
             );
           })}
         </Animated.View>

@@ -7,6 +7,7 @@ import {
   Text,
   View,
 } from 'react-native';
+import shallowCompare from 'react-addons-shallow-compare';
 import TouchableItem from './TouchableItem';
 import { NavigationStatePropType } from './TabViewPropTypes';
 import type { NavigationState } from './TabViewTypes';
@@ -72,6 +73,10 @@ export default class TabBarTop extends Component<void, Props, State> {
     width: 0,
     translateAnim: new Animated.Value(0),
   };
+
+  shouldComponentUpdate(nextProps: Props, nextState: State) {
+    return shallowCompare(this, nextProps, nextState);
+  }
 
   componentDidUpdate() {
     const { scenes, index } = this.props.navigationState;

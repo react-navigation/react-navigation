@@ -1,6 +1,6 @@
 {
   "name": "react-native-tab-view",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Tab view component for React Native",
   "main": "index.js",
   "files": [
@@ -30,5 +30,8 @@
   "peerDependencies": {
     "react": "*",
     "react-native": "*"
+  },
+  "dependencies": {
+    "react-addons-shallow-compare": "^15.1.0"
   }
 }
