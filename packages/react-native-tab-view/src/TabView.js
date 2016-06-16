@@ -124,6 +124,7 @@ export default class TabView extends Component<void, Props, State> {
         easing: Easing.easeInOut,
       }).start(() => {
         this.props.onRequestChangeTab(nextIndex);
+        this._updatePosition();
       });
     } else {
       this._updatePosition();
