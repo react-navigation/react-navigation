@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { NavigationStatePropType } from './TabViewPropTypes';
 import type { Scene, NavigationState } from './TabViewTypes';
+import type { GestureEvent, GestureState } from './PanResponderTypes';
 
 const styles = StyleSheet.create({
   inner: {
@@ -59,20 +60,20 @@ export default class TabView extends Component<void, Props, State> {
   }
 
   _panResponder = PanResponder.create({
-    onMoveShouldSetPanResponder: (evt, gestureState) => {
+    onMoveShouldSetPanResponder: (evt: GestureEvent, gestureState: GestureState) => {
       return this._canMoveScreen(evt, gestureState);
     },
-    onMoveShouldSetPanResponderCapture: (evt, gestureState) => {
+    onMoveShouldSetPanResponderCapture: (evt: GestureEvent, gestureState: GestureState) => {
       return this._canMoveScreen(evt, gestureState);
     },
-    onPanResponderMove: (evt, gestureState) => {
+    onPanResponderMove: (evt: GestureEvent, gestureState: GestureState) => {
       this._respondToGesture(evt, gestureState);
     },
     onPanResponderTerminationRequest: () => true,
-    onPanResponderRelease: (evt, gestureState) => {
+    onPanResponderRelease: (evt: GestureEvent, gestureState: GestureState) => {
       this._finishGesture(evt, gestureState);
     },
-    onPanResponderTerminate: (evt, gestureState) => {
+    onPanResponderTerminate: (evt: GestureEvent, gestureState: GestureState) => {
       this._finishGesture(evt, gestureState);
     },
   });
@@ -84,7 +85,7 @@ export default class TabView extends Component<void, Props, State> {
     return width * index * -1;
   };
 
-  _getNextIndex = (evt, gestureState) => {
+  _getNextIndex = (evt: GestureEvent, gestureState: GestureState) => {
     const { scenes, index } = this.props.navigationState;
     if (Math.abs(gestureState.dx) > (this.state.width / 3)) {
       const nextIndex = index - (gestureState.dx / Math.abs(gestureState.dx));
@@ -95,7 +96,7 @@ export default class TabView extends Component<void, Props, State> {
     return index;
   };
 
-  _canMoveScreen = (evt, gestureState) => {
+  _canMoveScreen = (evt: GestureEvent, gestureState: GestureState) => {
     const { scenes, index } = this.props.navigationState;
     return (
       (Math.abs(gestureState.dx) > Math.abs(gestureState.dy)) &&
@@ -104,14 +105,14 @@ export default class TabView extends Component<void, Props, State> {
     );
   };
 
-  _respondToGesture = (evt, gestureState) => {
+  _respondToGesture = (evt: GestureEvent, gestureState: GestureState) => {
     if (this._canMoveScreen(evt, gestureState)) {
       const offsetLeft = this._calculateLeftOffset() + gestureState.dx;
       this.state.translateAnim.setValue(offsetLeft);
     }
   };
 
-  _finishGesture = (evt, gestureState) => {
+  _finishGesture = (evt: GestureEvent, gestureState: GestureState) => {
     const { index } = this.props.navigationState;
     const { translateAnim } = this.state;
     const nextIndex = this._getNextIndex(evt, gestureState);
