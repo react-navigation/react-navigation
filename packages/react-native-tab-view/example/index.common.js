@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { AppRegistry, Text, View, StyleSheet } from 'react-native';
-import { TabView, TabBarTop } from 'react-native-tab-view';
+import { TabViewAnimated, TabBarTop } from 'react-native-tab-view';
 
 const styles = StyleSheet.create({
   container: {
@@ -62,7 +62,7 @@ export default class TabViewExample extends Component {
 
   render() {
     return (
-      <TabView
+      <TabViewAnimated
         style={styles.container}
         navigationState={this.state.navigation}
         renderScene={this._renderScene}
