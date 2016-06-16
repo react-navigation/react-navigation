@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { AppRegistry, Text, View, StyleSheet } from 'react-native';
-import { TabView, TabBarTop } from 'react-native-tabview';
+import { TabView, TabBarTop } from 'react-native-tab-view';
 
 const styles = StyleSheet.create({
   container: {

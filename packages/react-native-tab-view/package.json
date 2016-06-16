@@ -26,5 +26,9 @@
     "eslint-plugin-import": "^1.8.1",
     "eslint-plugin-react": "^5.1.1",
     "eslint-plugin-react-native": "^1.1.0-beta"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*"
   }
 }

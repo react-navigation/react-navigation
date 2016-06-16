@@ -5,8 +5,6 @@ import {
   Animated,
   StyleSheet,
   Text,
-  TouchableNativeFeedback,
-  TouchableOpacity,
   View,
 } from 'react-native';
 import TouchableItem from './TouchableItem';
