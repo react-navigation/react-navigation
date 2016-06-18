@@ -9,8 +9,8 @@ import {
 } from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
 import TouchableItem from './TouchableItem';
-import { NavigationStatePropType } from './TabViewPropTypes';
-import type { NavigationState } from './TabViewTypes';
+import { SceneRendererPropType } from './TabViewPropTypes';
+import type { SceneRendererProps } from './TabViewTypes';
 
 const styles = StyleSheet.create({
   tabbar: {
@@ -43,9 +43,7 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props = {
-  navigationState: NavigationState;
-  onRequestChangeTab: Function;
+type Props = SceneRendererProps & {
   indicatorColor: string;
   pressColor?: string;
   labelStyle?: any;
@@ -54,15 +52,9 @@ type Props = {
   style?: any;
 }
 
-type State = {
-  width: number;
-  translateAnim: Animated.Value;
-}
-
-export default class TabBarTop extends Component<void, Props, State> {
+export default class TabBarTop extends Component<void, Props, void> {
   static propTypes = {
-    navigationState: NavigationStatePropType.isRequired,
-    onRequestChangeTab: PropTypes.func.isRequired,
+    ...SceneRendererPropType,
     indicatorColor: PropTypes.string,
     pressColor: TouchableItem.propTypes.pressColor,
     labelStyle: Text.propTypes.style,
@@ -71,24 +63,8 @@ export default class TabBarTop extends Component<void, Props, State> {
     style: View.propTypes.style,
   };
 
-  state: State = {
-    width: 0,
-    translateAnim: new Animated.Value(0),
-  };
-
-  shouldComponentUpdate(nextProps: Props, nextState: State) {
+  shouldComponentUpdate(nextProps: Props, nextState: void) {
     return shallowCompare(this, nextProps, nextState);
-  }
-
-  componentDidUpdate() {
-    const { scenes, index } = this.props.navigationState;
-    const { width, translateAnim } = this.state;
-    const offsetLeft = (width / scenes.length) * index;
-
-    Animated.timing(translateAnim, {
-      toValue: offsetLeft,
-      duration: 200,
-    }).start();
   }
 
   _handleChangeTab = (index: number) => {
@@ -96,27 +72,18 @@ export default class TabBarTop extends Component<void, Props, State> {
       return;
     }
 
-    this.props.onRequestChangeTab(index);
-  };
-
-  _handleLayout = (e: any) => {
-    const { width } = e.nativeEvent.layout;
-
-    this.setState({
-      width,
-    });
+    this.props.updateIndex(index);
   };
 
   render() {
+    const { width, position } = this.props;
     const { scenes, index } = this.props.navigationState;
-    const { width, translateAnim } = this.state;
+
+    const sceneDivider = new Animated.Value(-1 / scenes.length);
+    const translateX = Animated.multiply(position, sceneDivider);
 
     return (
-      <View
-        {...this.props}
-        onLayout={this._handleLayout}
-        style={[ styles.tabbar, this.props.style ]}
-      >
+      <View style={[ styles.tabbar, this.props.style ]}>
         {scenes.map((scene, i) => {
           const active = index === i;
           return (
@@ -142,9 +109,8 @@ export default class TabBarTop extends Component<void, Props, State> {
         })}
         <Animated.View
           style={[
-            styles.indicator,
-            this.props.indicatorColor && { backgroundColor: this.props.indicatorColor },
-            { width: width / scenes.length }, { transform: [ { translateX: translateAnim } ] },
+            styles.indicator, { width: width / scenes.length, transform: [ { translateX } ] },
+            this.props.indicatorColor && { backgroundColor: this.props.indicatorColor }
           ]}
         />
       </View>

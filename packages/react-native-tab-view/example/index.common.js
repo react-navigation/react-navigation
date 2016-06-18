@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { AppRegistry, Text, View, StyleSheet } from 'react-native';
-import { TabViewAnimated, TabBarTop } from 'react-native-tab-view';
+import { AppRegistry, View, StyleSheet } from 'react-native';
+import { TabViewTransitioner, TabView, TabBarTop } from 'react-native-tab-view';
 
 const styles = StyleSheet.create({
   container: {
@@ -34,11 +34,10 @@ export default class TabViewExample extends Component {
     });
   };
 
-  _renderHeader = () => {
+  _renderHeader = (props) => {
     return (
       <TabBarTop
-        navigationState={this.state.navigation}
-        onRequestChangeTab={this._handleChangeTab}
+        {...props}
         indicatorColor='#ffeb3b'
         pressColor='rgba(0, 0, 0, .5)'
         labelStyle={styles.tablabel}
@@ -60,12 +59,16 @@ export default class TabViewExample extends Component {
     }
   };
 
+  _renderTabView = (props) => {
+    return <TabView {...props} renderScene={this._renderScene} />;
+  };
+
   render() {
     return (
-      <TabViewAnimated
+      <TabViewTransitioner
         style={styles.container}
         navigationState={this.state.navigation}
-        renderScene={this._renderScene}
+        renderScene={this._renderTabView}
         renderHeader={this._renderHeader}
         onRequestChangeTab={this._handleChangeTab}
       />

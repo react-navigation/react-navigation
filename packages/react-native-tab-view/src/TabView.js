@@ -2,15 +2,17 @@
 
 import React, { Component, PropTypes } from 'react';
 import {
+  Animated,
+  PanResponder,
   StyleSheet,
   View,
-  PanResponder,
 } from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
 import TabViewScene from './TabViewScene';
-import { NavigationStatePropType } from './TabViewPropTypes';
-import type { Scene, NavigationState } from './TabViewTypes';
-import type { GestureEvent, GestureState } from './PanResponderTypes';
+import TabViewPanResponder from './TabViewPanResponder';
+import TabViewStyle from './TabViewStyle';
+import { SceneRendererPropType } from './TabViewPropTypes';
+import type { Scene, SceneRendererProps } from './TabViewTypes';
 
 const styles = StyleSheet.create({
   inner: {
@@ -20,71 +22,54 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props = {
-  navigationState: NavigationState;
+type Props = SceneRendererProps & {
   renderScene: (props: { scene: Scene; focused: boolean; }) => ?React.Element;
-  renderHeader?: () => ?React.Element;
-  renderFooter?: () => ?React.Element;
-  onRequestChangeTab: Function;
+  panHandlers?: any;
   style?: any;
 }
 
-type State = {
-  width: number;
-  height: number;
-}
-
-export default class TabView extends Component<void, Props, State> {
+export default class TabViewAnimated extends Component<void, Props, void> {
   static propTypes = {
-    navigationState: NavigationStatePropType.isRequired,
+    ...SceneRendererPropType,
     renderScene: PropTypes.func.isRequired,
-    renderHeader: PropTypes.func,
-    renderFooter: PropTypes.func,
-    onRequestChangeTab: PropTypes.func.isRequired,
+    panHandlers: PropTypes.object,
     style: View.propTypes.style,
   };
 
-  state: State = {
-    width: 0,
-    height: 0,
-  };
+  static PanResponder = TabViewPanResponder;
+  static Style = TabViewStyle;
 
-  shouldComponentUpdate(nextProps: Props, nextState: State) {
+  shouldComponentUpdate(nextProps: Props, nextState: void) {
     return shallowCompare(this, nextProps, nextState);
   }
 
-  _handleLayout = (e: any) => {
-    const { height, width } = e.nativeEvent.layout;
-
-    this.setState({
-      height,
-      width,
-    });
-  };
+  componentDidUpdate() {
+    this.props.updatePosition();
+  }
 
   render() {
-    const { scenes, index } = this.props.navigationState;
-    const { width } = this.state;
+    const { renderScene, panHandlers, style, ...sceneRendererProps } = this.props;
+    const { width } = sceneRendererProps;
+    const { scenes, index } = sceneRendererProps.navigationState;
+
+    const viewPanHandlers = typeof panHandlers !== 'undefined' ? panHandlers : TabViewPanResponder.forSwipe(sceneRendererProps);
+    const viewStyle = typeof style !== 'undefined' ? style : TabViewStyle.forSwipe(sceneRendererProps);
 
     return (
-      <View {...this.props} onLayout={this._handleLayout}>
-        {this.props.renderHeader && this.props.renderHeader()}
-        <View style={[ styles.inner, { width: width * scenes.length, transform: [ { translateX: width * index * -1 } ] } ]}>
-          {scenes.map((scene, i) => {
-            return (
-              <TabViewScene
-                key={scene.key}
-                scene={scene}
-                focused={index === i}
-                left={i * width}
-                width={width}
-                renderScene={this.props.renderScene}
-              />
-            );
-          })}
-        </View>
-        {this.props.renderFooter && this.props.renderFooter()}
-      </View>
+      <Animated.View style={[ styles.inner, viewStyle ]} {...PanResponder.create(viewPanHandlers).panHandlers}>
+        {scenes.map((scene, i) => {
+          return (
+            <TabViewScene
+              key={scene.key}
+              scene={scene}
+              focused={index === i}
+              left={i * width}
+              width={width}
+              renderScene={renderScene}
+            />
+          );
+        })}
+      </Animated.View>
     );
   }
 }
