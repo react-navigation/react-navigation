@@ -80,6 +80,8 @@ export default class TabViewAnimated extends Component<void, Props, State> {
     },
   });
 
+  _vx: ?number;
+
   _calculateLeftOffset = (index: number) => {
     const { width } = this.state;
 
@@ -117,18 +119,10 @@ export default class TabViewAnimated extends Component<void, Props, State> {
     const { translateAnim } = this.state;
     const nextIndex = this._getNextIndex(evt, gestureState);
     if (index !== nextIndex) {
-      const offsetLeft = this._calculateLeftOffset(nextIndex);
-      Animated.timing(translateAnim, {
-        toValue: offsetLeft,
-        duration: 350 - Math.abs(gestureState.vx) * 10,
-        easing: Easing.easeInOut,
-      }).start(() => {
-        this.props.onRequestChangeTab(nextIndex);
-        this._updatePosition();
-      });
-    } else {
-      this._updatePosition();
+      this._vx = gestureState.vx;
+      this.props.onRequestChangeTab(nextIndex);
     }
+    this._updatePosition();
   };
 
   _updatePosition = () => {
@@ -137,7 +131,10 @@ export default class TabViewAnimated extends Component<void, Props, State> {
     const offsetLeft = this._calculateLeftOffset(index);
     Animated.timing(translateAnim, {
       toValue: offsetLeft,
+      duration: this._vx ? 200 - Math.abs(this._vx) * 10 : 200,
+      easing: Easing.easeInOut,
     }).start();
+    this._vx = null;
   };
 
   _handleLayout = (e: any) => {

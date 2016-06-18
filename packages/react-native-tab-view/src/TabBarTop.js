@@ -87,6 +87,7 @@ export default class TabBarTop extends Component<void, Props, State> {
 
     Animated.timing(translateAnim, {
       toValue: offsetLeft,
+      duration: 200,
     }).start();
   }
 
