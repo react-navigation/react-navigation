@@ -44,8 +44,8 @@ const styles = StyleSheet.create({
 });
 
 type Props = SceneRendererProps & {
-  indicatorColor: string;
   pressColor?: string;
+  indicatorStyle?: any;
   labelStyle?: any;
   labelActiveStyle?: any;
   labelInactiveStyle?: any;
@@ -55,9 +55,9 @@ type Props = SceneRendererProps & {
 export default class TabBarTop extends Component<void, Props, void> {
   static propTypes = {
     ...SceneRendererPropType,
-    indicatorColor: PropTypes.string,
     pressColor: TouchableItem.propTypes.pressColor,
     labelStyle: Text.propTypes.style,
+    indicatorStyle: View.propTypes.style,
     labelActiveStyle: Text.propTypes.style,
     labelInactiveStyle: Text.propTypes.style,
     style: View.propTypes.style,
@@ -107,12 +107,7 @@ export default class TabBarTop extends Component<void, Props, void> {
             </TouchableItem>
           );
         })}
-        <Animated.View
-          style={[
-            styles.indicator, { width: width / scenes.length, transform: [ { translateX } ] },
-            this.props.indicatorColor && { backgroundColor: this.props.indicatorColor }
-          ]}
-        />
+        <Animated.View style={[ styles.indicator, { width: width / scenes.length, transform: [ { translateX } ] }, this.props.indicatorStyle ]} />
       </View>
     );
   }

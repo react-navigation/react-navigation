@@ -13,6 +13,9 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  indicator: {
+    backgroundColor: '#ffeb3b',
   }
 });
 
@@ -38,8 +41,8 @@ export default class TabViewExample extends Component {
     return (
       <TabBarTop
         {...props}
-        indicatorColor='#ffeb3b'
         pressColor='rgba(0, 0, 0, .5)'
+        indicatorStyle={styles.indicator}
         labelStyle={styles.tablabel}
         style={styles.tabbar}
       />
