@@ -71,13 +71,21 @@ export default class TabViewTransitioner extends Component<void, Props, State> {
     }).start();
   };
 
+  _updateIndex = (index: number) => {
+    if (this.props.navigationState.index === index) {
+      return;
+    }
+
+    this.props.onRequestChangeTab(index);
+  };
+
   render() {
     const sceneRendererProps: SceneRendererProps = {
       width: this.state.width,
       navigationState: this.props.navigationState,
       offset: this._calculateLeftOffset(this.props.navigationState.index),
       position: this.state.positionAnim,
-      updateIndex: this.props.onRequestChangeTab,
+      updateIndex: this._updateIndex,
       updatePosition: this._updatePosition,
     };
 

@@ -67,14 +67,6 @@ export default class TabBarTop extends Component<void, Props, void> {
     return shallowCompare(this, nextProps, nextState);
   }
 
-  _handleChangeTab = (index: number) => {
-    if (this.props.navigationState.index === index) {
-      return;
-    }
-
-    this.props.updateIndex(index);
-  };
-
   render() {
     const { width, position } = this.props;
     const { scenes, index } = this.props.navigationState;
@@ -91,7 +83,7 @@ export default class TabBarTop extends Component<void, Props, void> {
               key={scene.key}
               style={styles.tabitem}
               pressColor={this.props.pressColor}
-              onPress={() => this._handleChangeTab(i)}
+              onPress={() => this.props.updateIndex(i)}
             >
               <Text
                 numberOfLines={1}
