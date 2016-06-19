@@ -21,7 +21,7 @@ type Props = {
 type State = {
   width: number;
   height: number;
-  positionAnim: Animated.Value;
+  position: Animated.Value;
 }
 
 export default class TabViewTransitioner extends Component<void, Props, State> {
@@ -37,7 +37,7 @@ export default class TabViewTransitioner extends Component<void, Props, State> {
   state: State = {
     width: 0,
     height: 0,
-    positionAnim: new Animated.Value(0),
+    position: new Animated.Value(0),
   };
 
   shouldComponentUpdate(nextProps: Props, nextState: State) {
@@ -53,39 +53,29 @@ export default class TabViewTransitioner extends Component<void, Props, State> {
     });
   };
 
-  _calculateLeftOffset = (index: number) => {
-    const { width } = this.state;
-
-    return width * index * -1;
-  };
-
   _updatePosition = () => {
     const { index } = this.props.navigationState;
-    const { positionAnim } = this.state;
-    const offsetLeft = this._calculateLeftOffset(index);
-    Animated.timing(positionAnim, {
-      toValue: offsetLeft,
+    const { position } = this.state;
+    Animated.timing(position, {
+      toValue: index,
       duration: 250,
     }).start();
   };
 
   _updateIndex = (index: number) => {
-    if (this.props.navigationState.index === index) {
-      return;
+    if (this.props.navigationState.index !== index) {
+      this.props.onRequestChangeTab(index);
     }
 
-    this.props.onRequestChangeTab(index);
-
-    setTimeout(() => this._updatePosition(), 0);
+    this._updatePosition();
   };
 
   render() {
     const sceneRendererProps: SceneRendererProps = {
       width: this.state.width,
       navigationState: this.props.navigationState,
-      position: this.state.positionAnim,
+      position: this.state.position,
       updateIndex: this._updateIndex,
-      updatePosition: this._updatePosition,
     };
 
     return (

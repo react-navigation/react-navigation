@@ -1,5 +1,8 @@
 /* @flow */
 
+import {
+  Animated,
+} from 'react-native';
 import type { SceneRendererProps } from './TabViewTypes';
 
 function forStatic(props: SceneRendererProps) {
@@ -18,9 +21,11 @@ function forSwipe(props: SceneRendererProps) {
   const { width, position } = props;
   const { scenes } = props.navigationState;
 
+  const translateX = Animated.multiply(position, width * -1)
+
   return {
     width: width * scenes.length,
-    transform: [ { translateX: position } ]
+    transform: [ { translateX } ]
   };
 }
 

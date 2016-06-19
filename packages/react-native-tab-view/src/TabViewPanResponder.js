@@ -5,24 +5,11 @@ import {
   Easing,
 } from 'react-native';
 import type { GestureEvent, GestureState } from './PanResponderTypes';
-import type { NavigationState } from './TabViewTypes';
-
-type Props = {
-  width: number;
-  navigationState: NavigationState;
-  position: Animated.Value;
-  updateIndex: Function;
-  updatePosition: Function;
-}
+import type { SceneRendererProps } from './TabViewTypes';
 
 const POSITION_THRESHOLD = 1 / 5;
 
-function forSwipe(props: Props) {
-  function calculateLeftOffset(index: number) {
-    const { width } = props;
-    return width * index * -1;
-  }
-
+function forSwipe(props: SceneRendererProps) {
   function getNextIndex(evt: GestureEvent, gestureState: GestureState) {
     const { scenes, index } = props.navigationState;
     if (Math.abs(gestureState.dx) > (props.width * POSITION_THRESHOLD)) {
@@ -44,9 +31,10 @@ function forSwipe(props: Props) {
   }
 
   function respondToGesture(evt: GestureEvent, gestureState: GestureState) {
+    const { width } = props;
     const { index } = props.navigationState;
-    const offsetLeft = calculateLeftOffset(index) + gestureState.dx;
-    props.position.setValue(offsetLeft);
+    const nextPosition = index - (gestureState.dx / width);
+    props.position.setValue(nextPosition);
   }
 
   function finishGesture(evt: GestureEvent, gestureState: GestureState) {
@@ -55,14 +43,14 @@ function forSwipe(props: Props) {
     if (index !== nextIndex) {
       const multiplier = Math.max(Math.min(Math.abs(gestureState.vx), 1), 0.5);
       Animated.timing(props.position, {
-        toValue: calculateLeftOffset(nextIndex),
+        toValue: nextIndex,
         duration: 300 * multiplier,
         easing: Easing.easeOut,
       }).start(() => {
         props.updateIndex(nextIndex);
       });
     } else {
-      props.updatePosition();
+      props.updateIndex(index);
     }
   }
 

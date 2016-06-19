@@ -44,7 +44,7 @@ export default class TabViewAnimated extends Component<void, Props, void> {
   }
 
   componentDidUpdate() {
-    this.props.updatePosition();
+    this.props.updateIndex(this.props.navigationState.index);
   }
 
   render() {
