@@ -2,6 +2,7 @@
 
 import {
   Animated,
+  Easing,
 } from 'react-native';
 import type { GestureEvent, GestureState } from './PanResponderTypes';
 import type { NavigationState } from './TabViewTypes';
@@ -52,9 +53,16 @@ function forSwipe(props: Props) {
     const { index } = props.navigationState;
     const nextIndex = getNextIndex(evt, gestureState);
     if (index !== nextIndex) {
-      props.updateIndex(nextIndex);
+      Animated.timing(props.position, {
+        toValue: calculateLeftOffset(nextIndex),
+        duration: 200,
+        easing: Easing.easeIn,
+      }).start(() => {
+        props.updateIndex(nextIndex);
+      });
+    } else {
+      props.updatePosition();
     }
-    props.updatePosition();
   }
 
   return {

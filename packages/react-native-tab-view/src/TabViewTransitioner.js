@@ -67,7 +67,6 @@ export default class TabViewTransitioner extends Component<void, Props, State> {
     Animated.timing(positionAnim, {
       toValue: offsetLeft,
       duration: 250,
-      easing: Easing.easeInOut,
     }).start();
   };
 
@@ -77,6 +76,8 @@ export default class TabViewTransitioner extends Component<void, Props, State> {
     }
 
     this.props.onRequestChangeTab(index);
+
+    setTimeout(() => this._updatePosition(), 0);
   };
 
   render() {
