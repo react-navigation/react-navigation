@@ -53,10 +53,11 @@ function forSwipe(props: Props) {
     const { index } = props.navigationState;
     const nextIndex = getNextIndex(evt, gestureState);
     if (index !== nextIndex) {
+      const multiplier = Math.max(Math.min(Math.abs(gestureState.vx), 1), 0.5);
       Animated.timing(props.position, {
         toValue: calculateLeftOffset(nextIndex),
-        duration: 200,
-        easing: Easing.easeIn,
+        duration: 300 * multiplier,
+        easing: Easing.easeOut,
       }).start(() => {
         props.updateIndex(nextIndex);
       });

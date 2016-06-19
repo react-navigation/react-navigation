@@ -15,7 +15,6 @@ export type NavigationState = {
 export type SceneRendererProps = {
     width: number;
     navigationState: NavigationState;
-    offset: number;
     position: Animated.Value;
     updateIndex: Function;
     updatePosition: Function;

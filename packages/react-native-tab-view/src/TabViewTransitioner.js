@@ -3,7 +3,6 @@
 import React, { Component, PropTypes } from 'react';
 import {
   Animated,
-  Easing,
   View,
 } from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
@@ -84,7 +83,6 @@ export default class TabViewTransitioner extends Component<void, Props, State> {
     const sceneRendererProps: SceneRendererProps = {
       width: this.state.width,
       navigationState: this.props.navigationState,
-      offset: this._calculateLeftOffset(this.props.navigationState.index),
       position: this.state.positionAnim,
       updateIndex: this._updateIndex,
       updatePosition: this._updatePosition,

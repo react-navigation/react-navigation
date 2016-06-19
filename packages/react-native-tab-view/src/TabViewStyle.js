@@ -3,12 +3,14 @@
 import type { SceneRendererProps } from './TabViewTypes';
 
 function forStatic(props: SceneRendererProps) {
-  const { width, offset } = props;
-  const { scenes } = props.navigationState;
+  const { width } = props;
+  const { index, scenes } = props.navigationState;
+
+  const translateX = width * index * -1;
 
   return {
     width: width * scenes.length,
-    transform: [ { translateX: offset } ]
+    transform: [ { translateX } ]
   };
 }
 
