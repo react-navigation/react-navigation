@@ -1,6 +1,6 @@
 /* @flow */
 
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import {
   Animated,
   StyleSheet,
@@ -29,9 +29,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 12,
     margin: 16,
-  },
-  inactive: {
-    color: 'rgba(255, 255, 255, .5)',
   },
   indicator: {
     backgroundColor: 'white',
@@ -71,13 +68,18 @@ export default class TabBarTop extends Component<void, Props, void> {
     const { width, position } = this.props;
     const { scenes, index } = this.props.navigationState;
 
-    const sceneDivider = new Animated.Value(width / scenes.length);
-    const translateX = Animated.multiply(position, sceneDivider);
+    const translateX = Animated.multiply(position, width / scenes.length);
+    const inputRange = Array.from(new Array(scenes.length)).map((x, i) => i);
 
     return (
       <View style={[ styles.tabbar, this.props.style ]}>
         {scenes.map((scene, i) => {
           const active = index === i;
+          const outputRange = inputRange.map(inputIndex => inputIndex === i ? 1 : 0.5);
+          const opacity = position.interpolate({
+            inputRange,
+            outputRange,
+          });
           return (
             <TouchableItem
               key={scene.key}
@@ -85,17 +87,17 @@ export default class TabBarTop extends Component<void, Props, void> {
               pressColor={this.props.pressColor}
               onPress={() => this.props.updateIndex(i)}
             >
-              <Text
+              <Animated.Text
                 numberOfLines={1}
                 style={[
                   styles.tablabel,
                   this.props.labelStyle,
-                  active ? null : styles.inactive,
+                  { opacity },
                   active ? this.props.labelActiveStyle : this.props.labelInactiveStyle,
                 ]}
               >
                 {scene.label.toUpperCase()}
-              </Text>
+              </Animated.Text>
             </TouchableItem>
           );
         })}
