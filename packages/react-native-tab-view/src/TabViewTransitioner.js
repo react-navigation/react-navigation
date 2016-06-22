@@ -45,7 +45,9 @@ export default class TabViewTransitioner extends Component<void, Props, State> {
   }
 
   componentDidUpdate() {
-    this._updatePosition(this.props.navigationState.index);
+    setTimeout(() => {
+      this._updatePosition(this.props.navigationState.index);
+    }, 0);
   }
 
   _handleLayout = (e: any) => {
