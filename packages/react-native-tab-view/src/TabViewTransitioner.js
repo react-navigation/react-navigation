@@ -11,9 +11,9 @@ import type { NavigationState, SceneRendererProps } from './TabViewTypes';
 
 type Props = {
   navigationState: NavigationState;
-  renderScene: (props: SceneRendererProps) => ?React.Element;
-  renderHeader?: () => ?React.Element;
-  renderFooter?: () => ?React.Element;
+  renderScene: (props: SceneRendererProps) => ?React.Element<any>;
+  renderHeader?: () => ?React.Element<any>;
+  renderFooter?: () => ?React.Element<any>;
   onRequestChangeTab: Function;
   style?: any;
 }

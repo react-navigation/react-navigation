@@ -13,7 +13,7 @@ const LOLLIPOP = 21;
 type Props = {
   borderless?: boolean;
   pressColor?: string;
-  children?: React.Element;
+  children?: React.Element<any>;
   style?: any;
 }
 

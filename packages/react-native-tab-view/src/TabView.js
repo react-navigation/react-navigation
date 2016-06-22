@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
 });
 
 type Props = SceneRendererProps & {
-  renderScene: (props: { scene: Scene; focused: boolean; }) => ?React.Element;
+  renderScene: (props: { scene: Scene; focused: boolean; }) => ?React.Element<any>;
   panHandlers?: any;
   style?: any;
 }

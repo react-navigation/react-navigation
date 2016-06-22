@@ -22,7 +22,7 @@ type Props = {
   focused: boolean;
   left: number;
   width: number;
-  renderScene: (props: { scene: Scene; focused: boolean; }) => ?React.Element;
+  renderScene: (props: { scene: Scene; focused: boolean; }) => ?React.Element<any>;
 }
 
 export default class TabViewScene extends Component<void, Props, void> {
