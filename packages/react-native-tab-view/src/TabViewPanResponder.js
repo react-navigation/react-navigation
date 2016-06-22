@@ -1,11 +1,15 @@
 /* @flow */
 
 import type { GestureEvent, GestureState } from './PanResponderTypes';
-import type { SceneRendererProps } from './TabViewTypes';
+import type { Scene, SceneRendererProps } from './TabViewTypeDefinitions';
+
+type Props = SceneRendererProps & {
+  scene: Scene
+}
 
 const POSITION_THRESHOLD = 1 / 5;
 
-function forSwipe(props: SceneRendererProps) {
+function forSwipe(props: Props) {
   function getNextIndex(evt: GestureEvent, gestureState: GestureState) {
     const { scenes, index } = props.navigationState;
     if (Math.abs(gestureState.dx) > (props.width * POSITION_THRESHOLD)) {

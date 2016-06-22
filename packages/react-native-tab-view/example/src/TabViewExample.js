@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { AppRegistry, View, StyleSheet } from 'react-native';
-import { TabViewTransitioner, TabView, TabBarTop } from 'react-native-tab-view';
+import { TabViewAnimated, TabViewPage, TabBarTop } from 'react-native-tab-view';
 
 const styles = StyleSheet.create({
   container: {
@@ -62,16 +62,16 @@ export default class TabViewExample extends Component {
     }
   };
 
-  _renderTabView = (props) => {
-    return <TabView {...props} renderScene={this._renderScene} />;
+  _renderPage = (props) => {
+    return <TabViewPage {...props} renderScene={this._renderScene} />;
   };
 
   render() {
     return (
-      <TabViewTransitioner
+      <TabViewAnimated
         style={styles.container}
         navigationState={this.state.navigation}
-        renderScene={this._renderTabView}
+        renderScene={this._renderPage}
         renderHeader={this._renderHeader}
         onRequestChangeTab={this._handleChangeTab}
       />

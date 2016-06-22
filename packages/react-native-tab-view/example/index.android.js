@@ -1,1 +1,1 @@
-import './index.common';
+import './src/TabViewExample';

@@ -13,8 +13,8 @@ export type NavigationState = {
 }
 
 export type SceneRendererProps = {
-    width: number;
-    navigationState: NavigationState;
-    position: Animated.Value;
-    updateIndex: (index: number) => void;
+  width: number;
+  navigationState: NavigationState;
+  position: Animated.Value;
+  updateIndex: (index: number) => void;
 }

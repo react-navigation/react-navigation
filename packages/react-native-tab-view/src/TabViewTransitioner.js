@@ -7,13 +7,11 @@ import {
 } from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
 import { NavigationStatePropType } from './TabViewPropTypes';
-import type { NavigationState, SceneRendererProps } from './TabViewTypes';
+import type { NavigationState, SceneRendererProps } from './TabViewTypeDefinitions';
 
 type Props = {
   navigationState: NavigationState;
-  renderScene: (props: SceneRendererProps) => ?React.Element<any>;
-  renderHeader?: () => ?React.Element<any>;
-  renderFooter?: () => ?React.Element<any>;
+  render: (props: SceneRendererProps) => ?React.Element<any>;
   onRequestChangeTab: Function;
   style?: any;
 }
@@ -27,9 +25,7 @@ type State = {
 export default class TabViewTransitioner extends Component<void, Props, State> {
   static propTypes = {
     navigationState: NavigationStatePropType.isRequired,
-    renderScene: PropTypes.func.isRequired,
-    renderHeader: PropTypes.func,
-    renderFooter: PropTypes.func,
+    render: PropTypes.func.isRequired,
     onRequestChangeTab: PropTypes.func.isRequired,
     style: View.propTypes.style,
   };
@@ -86,9 +82,7 @@ export default class TabViewTransitioner extends Component<void, Props, State> {
 
     return (
       <View {...this.props} onLayout={this._handleLayout}>
-        {this.props.renderHeader && this.props.renderHeader(sceneRendererProps)}
-        {this.props.renderScene && this.props.renderScene(sceneRendererProps)}
-        {this.props.renderFooter && this.props.renderFooter(sceneRendererProps)}
+        {this.props.render(sceneRendererProps)}
       </View>
     );
   }

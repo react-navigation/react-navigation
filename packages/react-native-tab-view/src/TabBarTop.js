@@ -10,7 +10,7 @@ import {
 import shallowCompare from 'react-addons-shallow-compare';
 import TouchableItem from './TouchableItem';
 import { SceneRendererPropType } from './TabViewPropTypes';
-import type { SceneRendererProps } from './TabViewTypes';
+import type { SceneRendererProps } from './TabViewTypeDefinitions';
 
 const styles = StyleSheet.create({
   tabbar: {
