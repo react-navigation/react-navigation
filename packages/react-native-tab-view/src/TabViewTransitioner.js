@@ -44,6 +44,10 @@ export default class TabViewTransitioner extends Component<void, Props, State> {
     return shallowCompare(this, nextProps, nextState);
   }
 
+  componentDidUpdate() {
+    this._updatePosition(this.props.navigationState.index);
+  }
+
   _handleLayout = (e: any) => {
     const { height, width } = e.nativeEvent.layout;
 
@@ -53,8 +57,7 @@ export default class TabViewTransitioner extends Component<void, Props, State> {
     });
   };
 
-  _updatePosition = () => {
-    const { index } = this.props.navigationState;
+  _updatePosition = (index: number) => {
     const { position } = this.state;
     Animated.spring(position, {
       toValue: index,
@@ -68,7 +71,7 @@ export default class TabViewTransitioner extends Component<void, Props, State> {
       this.props.onRequestChangeTab(index);
     }
 
-    this._updatePosition();
+    this._updatePosition(index);
   };
 
   render() {

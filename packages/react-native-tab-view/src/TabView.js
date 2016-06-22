@@ -43,10 +43,6 @@ export default class TabViewAnimated extends Component<void, Props, void> {
     return shallowCompare(this, nextProps, nextState);
   }
 
-  componentDidUpdate() {
-    this.props.updateIndex(this.props.navigationState.index);
-  }
-
   render() {
     const { renderScene, panHandlers, style, ...sceneRendererProps } = this.props;
     const { width } = sceneRendererProps;
