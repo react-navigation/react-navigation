@@ -56,9 +56,10 @@ export default class TabViewTransitioner extends Component<void, Props, State> {
   _updatePosition = () => {
     const { index } = this.props.navigationState;
     const { position } = this.state;
-    Animated.timing(position, {
+    Animated.spring(position, {
       toValue: index,
-      duration: 250,
+      tension: 300,
+      friction: 30,
     }).start();
   };
 

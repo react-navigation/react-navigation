@@ -1,9 +1,5 @@
 /* @flow */
 
-import {
-  Animated,
-  Easing,
-} from 'react-native';
 import type { GestureEvent, GestureState } from './PanResponderTypes';
 import type { SceneRendererProps } from './TabViewTypes';
 
@@ -38,20 +34,8 @@ function forSwipe(props: SceneRendererProps) {
   }
 
   function finishGesture(evt: GestureEvent, gestureState: GestureState) {
-    const { index } = props.navigationState;
     const nextIndex = getNextIndex(evt, gestureState);
-    if (index !== nextIndex) {
-      const multiplier = Math.max(Math.min(Math.abs(gestureState.vx), 1), 0.5);
-      Animated.timing(props.position, {
-        toValue: nextIndex,
-        duration: 300 * multiplier,
-        easing: Easing.easeOut,
-      }).start(() => {
-        props.updateIndex(nextIndex);
-      });
-    } else {
-      props.updateIndex(index);
-    }
+    props.updateIndex(nextIndex);
   }
 
   return {

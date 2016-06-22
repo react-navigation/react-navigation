@@ -21,7 +21,7 @@ function forSwipe(props: SceneRendererProps) {
   const { width, position } = props;
   const { scenes } = props.navigationState;
 
-  const translateX = Animated.multiply(position, width * -1)
+  const translateX = Animated.multiply(position, width * -1);
 
   return {
     width: width * scenes.length,
