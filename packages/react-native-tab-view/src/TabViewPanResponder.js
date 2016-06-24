@@ -15,17 +15,6 @@ function forSwipe(props: Props) {
 
   props.position.addListener(({ value }) => (currentValue = value));
 
-  function getNextIndex(evt: GestureEvent, gestureState: GestureState) {
-    const { scenes, index } = props.navigationState;
-    if (Math.abs(gestureState.dx) > (props.width * POSITION_THRESHOLD) || Math.abs(gestureState.vx) > VELOCITY_THRESHOLD) {
-      const nextIndex = index - (gestureState.dx / Math.abs(gestureState.dx));
-      if (nextIndex >= 0 && nextIndex < scenes.length) {
-        return nextIndex;
-      }
-    }
-    return index;
-  }
-
   function isIndexInRange(index: number) {
     const { scenes } = props.navigationState;
     if (index < 0 || index > scenes.length - 1) {
@@ -33,6 +22,17 @@ function forSwipe(props: Props) {
     } else {
       return true;
     }
+  }
+
+  function getNextIndex(evt: GestureEvent, gestureState: GestureState) {
+    const { index } = props.navigationState;
+    if (Math.abs(gestureState.dx) > (props.width * POSITION_THRESHOLD) || Math.abs(gestureState.vx) > VELOCITY_THRESHOLD) {
+      const nextIndex = index - (gestureState.dx / Math.abs(gestureState.dx));
+      if (isIndexInRange(nextIndex)) {
+        return nextIndex;
+      }
+    }
+    return index;
   }
 
   function canMoveScreen(evt: GestureEvent, gestureState: GestureState) {
