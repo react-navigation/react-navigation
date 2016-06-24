@@ -55,21 +55,21 @@ export default class TabViewTransitioner extends Component<void, Props, State> {
     });
   };
 
-  _updatePosition = (index: number) => {
+  _updatePosition = (index: number, callback: ?Function) => {
     const { position } = this.state;
     Animated.spring(position, {
       toValue: index,
       tension: 300,
       friction: 30,
-    }).start();
+    }).start(callback);
   };
 
   _updateIndex = (index: number) => {
-    if (this.props.navigationState.index !== index) {
-      this.props.onRequestChangeTab(index);
-    }
-
-    this._updatePosition(index);
+    this._updatePosition(index, () => {
+      if (this.props.navigationState.index !== index) {
+        this.props.onRequestChangeTab(index);
+      }
+    });
   };
 
   render() {
