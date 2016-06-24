@@ -43,7 +43,6 @@ export default class TabViewExample extends Component {
         {...props}
         pressColor='rgba(0, 0, 0, .5)'
         indicatorStyle={styles.indicator}
-        labelStyle={styles.tablabel}
         style={styles.tabbar}
       />
     );
