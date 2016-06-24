@@ -30,11 +30,17 @@ export default class TabViewTransitioner extends Component<void, Props, State> {
     style: View.propTypes.style,
   };
 
-  state: State = {
-    width: 0,
-    height: 0,
-    position: new Animated.Value(0),
-  };
+  constructor(props: Props) {
+    super(props);
+
+    this.state = {
+      width: 0,
+      height: 0,
+      position: new Animated.Value(this.props.navigationState.index),
+    };
+  }
+
+  state: State;
 
   shouldComponentUpdate(nextProps: Props, nextState: State) {
     return shallowCompare(this, nextProps, nextState);
