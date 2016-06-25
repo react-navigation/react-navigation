@@ -10,6 +10,16 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint src/**/*.js"
   },
+  "keywords": [
+    "react-native-component",
+    "react-component",
+    "react-native",
+    "ios",
+    "android",
+    "tab",
+    "swipe",
+    "scrollable"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/satya164/react-native-tabview.git"
