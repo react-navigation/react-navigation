@@ -1,6 +1,6 @@
 /* @flow */
 
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import {
   Animated,
   StyleSheet,
@@ -10,7 +10,7 @@ import {
 import shallowCompare from 'react-addons-shallow-compare';
 import TouchableItem from './TouchableItem';
 import { SceneRendererPropType } from './TabViewPropTypes';
-import type { SceneRendererProps } from './TabViewTypeDefinitions';
+import type { Scene, SceneRendererProps } from './TabViewTypeDefinitions';
 
 const styles = StyleSheet.create({
   tabbar: {
@@ -40,24 +40,34 @@ const styles = StyleSheet.create({
   },
 });
 
+type DefaultProps = {
+  renderLabel: (props: { scene: Scene; focused: boolean; }) => string;
+}
+
 type Props = SceneRendererProps & {
   pressColor?: string;
-  indicatorStyle?: any;
+  renderLabel: (props: { scene: Scene; focused: boolean; }) => React.Element<any> | string;
   labelStyle?: any;
   labelActiveStyle?: any;
   labelInactiveStyle?: any;
+  indicatorStyle?: any;
   style?: any;
 }
 
-export default class TabBarTop extends Component<void, Props, void> {
+export default class TabBarTop extends Component<DefaultProps, Props, void> {
   static propTypes = {
     ...SceneRendererPropType,
     pressColor: TouchableItem.propTypes.pressColor,
+    renderLabel: PropTypes.func.isRequired,
     labelStyle: Text.propTypes.style,
-    indicatorStyle: View.propTypes.style,
     labelActiveStyle: Text.propTypes.style,
     labelInactiveStyle: Text.propTypes.style,
+    indicatorStyle: View.propTypes.style,
     style: View.propTypes.style,
+  };
+
+  static defaultProps = {
+    renderLabel: ({ scene }) => scene.label.toUpperCase(),
   };
 
   shouldComponentUpdate(nextProps: Props, nextState: void) {
@@ -74,12 +84,13 @@ export default class TabBarTop extends Component<void, Props, void> {
     return (
       <View style={[ styles.tabbar, this.props.style ]}>
         {scenes.map((scene, i) => {
-          const active = index === i;
+          const focused = index === i;
           const outputRange = inputRange.map(inputIndex => inputIndex === i ? 1 : 0.5);
           const opacity = position.interpolate({
             inputRange,
             outputRange,
           });
+          const label = this.props.renderLabel({ scene, focused });
           return (
             <TouchableItem
               key={scene.key}
@@ -87,17 +98,20 @@ export default class TabBarTop extends Component<void, Props, void> {
               pressColor={this.props.pressColor}
               onPress={() => this.props.updateIndex(i)}
             >
-              <Animated.Text
-                numberOfLines={1}
-                style={[
-                  styles.tablabel,
-                  this.props.labelStyle,
-                  { opacity },
-                  active ? this.props.labelActiveStyle : this.props.labelInactiveStyle,
-                ]}
-              >
-                {scene.label.toUpperCase()}
-              </Animated.Text>
+              {typeof label === 'string' ?
+                <Animated.Text
+                  numberOfLines={1}
+                  style={[
+                    styles.tablabel,
+                    this.props.labelStyle,
+                    { opacity },
+                    focused ? this.props.labelActiveStyle : this.props.labelInactiveStyle,
+                  ]}
+                >
+                  {label}
+                </Animated.Text> :
+                label
+              }
             </TouchableItem>
           );
         })}

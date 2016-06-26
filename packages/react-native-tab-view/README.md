@@ -110,7 +110,8 @@ The package exposes the following components,
 
   It accepts the following props,
   - `pressColor` - color for material ripple (Android > 5.0 only)
+  - `renderLabel` - callback which receives the current scene and returns a string or React Element to be used as a label
   - `labelStyle` - style object for label
-  - `indicatorStyle` - style object for the tab indicator
   - `labelActiveStyle` - style object for active tab label
   - `labelInactiveStyle` - style object for inactive tab label
+  - `indicatorStyle` - style object for the tab indicator
