@@ -50,6 +50,7 @@ function forSwipe(props: Props) {
 
   function startGesture() {
     lastValue = currentValue;
+    props.position.stopAnimation();
   }
 
   function respondToGesture(evt: GestureEvent, gestureState: GestureState) {
