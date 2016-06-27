@@ -19,5 +19,5 @@ export type SceneRendererProps = {
   };
   navigationState: NavigationState;
   position: Animated.Value;
-  updateIndex: (index: number) => void;
+  jumpToIndex: (index: number) => void;
 }

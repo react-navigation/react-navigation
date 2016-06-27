@@ -62,7 +62,7 @@ function forSwipe(props: Props) {
 
   function finishGesture(evt: GestureEvent, gestureState: GestureState) {
     const nextIndex = getNextIndex(evt, gestureState);
-    props.updateIndex(nextIndex);
+    props.jumpToIndex(nextIndex);
     lastValue = null;
   }
 

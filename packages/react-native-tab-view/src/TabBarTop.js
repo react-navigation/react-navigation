@@ -96,7 +96,7 @@ export default class TabBarTop extends Component<DefaultProps, Props, void> {
               key={route.key}
               style={styles.tabitem}
               pressColor={this.props.pressColor}
-              onPress={() => this.props.updateIndex(i)}
+              onPress={() => this.props.jumpToIndex(i)}
             >
               {typeof label === 'string' ?
                 <Animated.Text
