@@ -17,11 +17,7 @@ function forSwipe(props: Props) {
 
   function isIndexInRange(index: number) {
     const { routes } = props.navigationState;
-    if (index < 0 || index >= routes.length) {
-      return false;
-    } else {
-      return true;
-    }
+    return (index >= 0 && index <= routes.length - 1);
   }
 
   function getNextIndex(evt: GestureEvent, gestureState: GestureState) {
