@@ -4,7 +4,7 @@ import { PropTypes } from 'react';
 import { Animated } from 'react-native';
 
 export const NavigationRoutePropType = PropTypes.shape({
-  label: PropTypes.string,
+  title: PropTypes.string,
   key: PropTypes.string.isRequired,
 });
 

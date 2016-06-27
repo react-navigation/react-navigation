@@ -67,7 +67,7 @@ export default class TabBarTop extends Component<DefaultProps, Props, void> {
   };
 
   static defaultProps = {
-    renderLabel: ({ route }) => route.label ? route.label.toUpperCase() : '',
+    renderLabel: ({ route }) => route.title ? route.title.toUpperCase() : '',
   };
 
   shouldComponentUpdate(nextProps: Props, nextState: void) {

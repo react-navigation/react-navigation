@@ -3,7 +3,7 @@
 import { Animated } from 'react-native';
 
 export type Route = {
-  label?: string;
+  title?: string;
   key: string;
 }
 
