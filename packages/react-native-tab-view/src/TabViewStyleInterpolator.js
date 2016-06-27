@@ -1,15 +1,15 @@
 /* @flow */
 
-import type { Scene, SceneRendererProps } from './TabViewTypeDefinitions';
+import type { Route, SceneRendererProps } from './TabViewTypeDefinitions';
 
 type Props = SceneRendererProps & {
-  scene: Scene
+  route: Route
 }
 
 function forStatic(props: Props) {
-  const { width, scene, navigationState } = props;
-  const { scenes, index } = navigationState;
-  const currentIndex = scenes.indexOf(scene);
+  const { width, route, navigationState } = props;
+  const { routes, index } = navigationState;
+  const currentIndex = routes.indexOf(route);
 
   const translateX = width * (currentIndex - index);
 
@@ -20,10 +20,10 @@ function forStatic(props: Props) {
 }
 
 function forSwipe(props: Props) {
-  const { width, position, scene, navigationState } = props;
-  const { scenes } = navigationState;
-  const currentIndex = scenes.indexOf(scene);
-  const inputRange = Array.from(new Array(scenes.length)).map((x, i) => i);
+  const { width, position, route, navigationState } = props;
+  const { routes } = navigationState;
+  const currentIndex = routes.indexOf(route);
+  const inputRange = Array.from(new Array(routes.length)).map((x, i) => i);
   const outputRange = inputRange.map(i => {
     return width * (currentIndex - i);
   });

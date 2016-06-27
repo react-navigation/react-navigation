@@ -44,8 +44,8 @@ export default class TabViewAnimated extends Component<void, Props, void> {
       <View style={styles.container}>
         {renderHeader && renderHeader(props)}
         <View style={styles.container}>
-          {this.props.navigationState.scenes.map(scene => {
-            return renderScene({ ...props, scene, key: scene.key });
+          {this.props.navigationState.routes.map(route => {
+            return renderScene({ ...props, route, key: route.key });
           })}
         </View>
         {renderFooter && renderFooter(props)}

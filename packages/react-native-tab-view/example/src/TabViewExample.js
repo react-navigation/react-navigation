@@ -23,7 +23,7 @@ export default class TabViewExample extends Component {
   state = {
     navigation: {
       index: 0,
-      scenes: [
+      routes: [
         { key: '1', label: 'First' },
         { key: '2', label: 'Second' },
         { key: '3', label: 'Third' },
@@ -48,8 +48,8 @@ export default class TabViewExample extends Component {
     );
   };
 
-  _renderScene = ({ scene }) => {
-    switch (scene.key) {
+  _renderScene = ({ route }) => {
+    switch (route.key) {
     case '1':
       return <View style={[ styles.page, { backgroundColor: '#ff4081' } ]} />;
     case '2':

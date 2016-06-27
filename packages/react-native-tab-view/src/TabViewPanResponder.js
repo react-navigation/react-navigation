@@ -1,10 +1,10 @@
 /* @flow */
 
 import type { GestureEvent, GestureState } from './PanResponderTypes';
-import type { Scene, SceneRendererProps } from './TabViewTypeDefinitions';
+import type { Route, SceneRendererProps } from './TabViewTypeDefinitions';
 
 type Props = SceneRendererProps & {
-  scene: Scene
+  route: Route
 }
 
 const POSITION_THRESHOLD = 1 / 5;
@@ -16,8 +16,8 @@ function forSwipe(props: Props) {
   props.position.addListener(({ value }) => (currentValue = value));
 
   function isIndexInRange(index: number) {
-    const { scenes } = props.navigationState;
-    if (index < 0 || index >= scenes.length) {
+    const { routes } = props.navigationState;
+    if (index < 0 || index >= routes.length) {
       return false;
     } else {
       return true;
@@ -36,12 +36,12 @@ function forSwipe(props: Props) {
   }
 
   function canMoveScreen(evt: GestureEvent, gestureState: GestureState) {
-    const { scenes, index } = props.navigationState;
+    const { routes, index } = props.navigationState;
     return (
       (Math.abs(gestureState.dx) > Math.abs(gestureState.dy * 2)) &&
       (Math.abs(gestureState.vx) > Math.abs(gestureState.vy)) &&
       (gestureState.dx > 0 && index !== 0) ||
-      (gestureState.dx < 0 && index !== scenes.length - 1)
+      (gestureState.dx < 0 && index !== routes.length - 1)
     );
   }
 

@@ -3,13 +3,13 @@
 import { PropTypes } from 'react';
 import { Animated } from 'react-native';
 
-export const NavigationScenePropType = PropTypes.shape({
-  label: PropTypes.string.isRequired,
+export const NavigationRoutePropType = PropTypes.shape({
+  label: PropTypes.string,
   key: PropTypes.string.isRequired,
 });
 
 export const NavigationStatePropType = PropTypes.shape({
-  scenes: PropTypes.arrayOf(NavigationScenePropType).isRequired,
+  routes: PropTypes.arrayOf(NavigationRoutePropType).isRequired,
   index: PropTypes.number.isRequired,
 });
 

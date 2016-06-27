@@ -10,7 +10,7 @@ import {
 import shallowCompare from 'react-addons-shallow-compare';
 import TouchableItem from './TouchableItem';
 import { SceneRendererPropType } from './TabViewPropTypes';
-import type { Scene, SceneRendererProps } from './TabViewTypeDefinitions';
+import type { Route, SceneRendererProps } from './TabViewTypeDefinitions';
 
 const styles = StyleSheet.create({
   tabbar: {
@@ -41,12 +41,12 @@ const styles = StyleSheet.create({
 });
 
 type DefaultProps = {
-  renderLabel: (props: { scene: Scene; focused: boolean; }) => string;
+  renderLabel: (props: { route: Route; focused: boolean; }) => string;
 }
 
 type Props = SceneRendererProps & {
   pressColor?: string;
-  renderLabel: (props: { scene: Scene; focused: boolean; }) => React.Element<any> | string;
+  renderLabel: (props: { route: Route; focused: boolean; }) => React.Element<any> | string;
   labelStyle?: any;
   labelActiveStyle?: any;
   labelInactiveStyle?: any;
@@ -67,7 +67,7 @@ export default class TabBarTop extends Component<DefaultProps, Props, void> {
   };
 
   static defaultProps = {
-    renderLabel: ({ scene }) => scene.label.toUpperCase(),
+    renderLabel: ({ route }) => route.label ? route.label.toUpperCase() : '',
   };
 
   shouldComponentUpdate(nextProps: Props, nextState: void) {
@@ -76,24 +76,24 @@ export default class TabBarTop extends Component<DefaultProps, Props, void> {
 
   render() {
     const { width, position } = this.props;
-    const { scenes, index } = this.props.navigationState;
+    const { routes, index } = this.props.navigationState;
 
-    const translateX = Animated.multiply(position, width / scenes.length);
-    const inputRange = Array.from(new Array(scenes.length)).map((x, i) => i);
+    const translateX = Animated.multiply(position, width / routes.length);
+    const inputRange = Array.from(new Array(routes.length)).map((x, i) => i);
 
     return (
       <View style={[ styles.tabbar, this.props.style ]}>
-        {scenes.map((scene, i) => {
+        {routes.map((route, i) => {
           const focused = index === i;
           const outputRange = inputRange.map(inputIndex => inputIndex === i ? 1 : 0.5);
           const opacity = position.interpolate({
             inputRange,
             outputRange,
           });
-          const label = this.props.renderLabel({ scene, focused });
+          const label = this.props.renderLabel({ route, focused });
           return (
             <TouchableItem
-              key={scene.key}
+              key={route.key}
               style={styles.tabitem}
               pressColor={this.props.pressColor}
               onPress={() => this.props.updateIndex(i)}
@@ -115,7 +115,7 @@ export default class TabBarTop extends Component<DefaultProps, Props, void> {
             </TouchableItem>
           );
         })}
-        <Animated.View style={[ styles.indicator, { width: width / scenes.length, transform: [ { translateX } ] }, this.props.indicatorStyle ]} />
+        <Animated.View style={[ styles.indicator, { width: width / routes.length, transform: [ { translateX } ] }, this.props.indicatorStyle ]} />
       </View>
     );
   }

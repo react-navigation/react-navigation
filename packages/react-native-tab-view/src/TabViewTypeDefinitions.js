@@ -2,14 +2,14 @@
 
 import { Animated } from 'react-native';
 
-export type Scene = {
-  label: string;
+export type Route = {
+  label?: string;
   key: string;
 }
 
 export type NavigationState = {
   index: number;
-  scenes: Array<Scene>;
+  routes: Array<Route>;
 }
 
 export type SceneRendererProps = {
