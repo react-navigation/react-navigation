@@ -7,10 +7,8 @@ type Props = SceneRendererProps & {
   scene: Scene
 }
 
-
 const POSITION_THRESHOLD = 1 / 5;
 const VELOCITY_THRESHOLD = 1;
-const RESPOND_THRESHOLD = 25;
 
 function forSwipe(props: Props) {
   let currentValue = null, lastValue = null;
@@ -19,7 +17,7 @@ function forSwipe(props: Props) {
 
   function isIndexInRange(index: number) {
     const { scenes } = props.navigationState;
-    if (index < 0 || index > scenes.length - 1) {
+    if (index < 0 || index >= scenes.length) {
       return false;
     } else {
       return true;
@@ -40,8 +38,7 @@ function forSwipe(props: Props) {
   function canMoveScreen(evt: GestureEvent, gestureState: GestureState) {
     const { scenes, index } = props.navigationState;
     return (
-      (Math.abs(gestureState.dx) > RESPOND_THRESHOLD) &&
-      (Math.abs(gestureState.dx) > Math.abs(gestureState.dy)) &&
+      (Math.abs(gestureState.dx) > Math.abs(gestureState.dy * 2)) &&
       (Math.abs(gestureState.vx) > Math.abs(gestureState.vy)) &&
       (gestureState.dx > 0 && index !== 0) ||
       (gestureState.dx < 0 && index !== scenes.length - 1)
