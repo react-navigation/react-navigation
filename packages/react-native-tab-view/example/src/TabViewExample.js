@@ -41,7 +41,7 @@ export default class TabViewExample extends Component {
     return (
       <TabBarTop
         {...props}
-        pressColor='rgba(0, 0, 0, .5)'
+        pressColor='rgba(0, 0, 0, .2)'
         indicatorStyle={styles.indicator}
         style={styles.tabbar}
       />
