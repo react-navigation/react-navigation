@@ -17,8 +17,10 @@ type Props = {
 }
 
 type State = {
-  width: number;
-  height: number;
+  layout: {
+    width: number;
+    height: number;
+  };
   position: Animated.Value;
 }
 
@@ -34,8 +36,10 @@ export default class TabViewTransitioner extends Component<void, Props, State> {
     super(props);
 
     this.state = {
-      width: 0,
-      height: 0,
+      layout: {
+        width: 0,
+        height: 0,
+      },
       position: new Animated.Value(this.props.navigationState.index),
     };
   }
@@ -56,8 +60,10 @@ export default class TabViewTransitioner extends Component<void, Props, State> {
     const { height, width } = e.nativeEvent.layout;
 
     this.setState({
-      height,
-      width,
+      layout: {
+        height,
+        width,
+      },
     });
   };
 
@@ -80,7 +86,7 @@ export default class TabViewTransitioner extends Component<void, Props, State> {
 
   render() {
     const sceneRendererProps: SceneRendererProps = {
-      width: this.state.width,
+      layout: this.state.layout,
       navigationState: this.props.navigationState,
       position: this.state.position,
       updateIndex: this._updateIndex,

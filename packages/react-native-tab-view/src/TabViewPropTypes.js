@@ -14,7 +14,10 @@ export const NavigationStatePropType = PropTypes.shape({
 });
 
 export const SceneRendererPropType = {
-  width: PropTypes.number.isRequired,
+  layout: PropTypes.shape({
+    height: PropTypes.number.isRequired,
+    width: PropTypes.number.isRequired,
+  }).isRequired,
   navigationState: NavigationStatePropType.isRequired,
   position: PropTypes.instanceOf(Animated.Value).isRequired,
   updateIndex: PropTypes.func.isRequired,

@@ -7,7 +7,8 @@ type Props = SceneRendererProps & {
 }
 
 function forStatic(props: Props) {
-  const { width, route, navigationState } = props;
+  const { layout, route, navigationState } = props;
+  const { width } = layout;
   const { routes, index } = navigationState;
   const currentIndex = routes.indexOf(route);
 
@@ -20,7 +21,8 @@ function forStatic(props: Props) {
 }
 
 function forSwipe(props: Props) {
-  const { width, position, route, navigationState } = props;
+  const { layout, position, route, navigationState } = props;
+  const { width } = layout;
   const { routes } = navigationState;
   const currentIndex = routes.indexOf(route);
   const inputRange = Array.from(new Array(routes.length)).map((x, i) => i);

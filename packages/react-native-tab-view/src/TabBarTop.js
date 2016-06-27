@@ -75,7 +75,7 @@ export default class TabBarTop extends Component<DefaultProps, Props, void> {
   }
 
   render() {
-    const { width, position } = this.props;
+    const { layout: { width }, position } = this.props;
     const { routes, index } = this.props.navigationState;
 
     const translateX = Animated.multiply(position, width / routes.length);

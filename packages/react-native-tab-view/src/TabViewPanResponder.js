@@ -26,7 +26,8 @@ function forSwipe(props: Props) {
 
   function getNextIndex(evt: GestureEvent, gestureState: GestureState) {
     const { index } = props.navigationState;
-    if (Math.abs(gestureState.dx) > (props.width * POSITION_THRESHOLD) || Math.abs(gestureState.vx) > VELOCITY_THRESHOLD) {
+    const { width } = props.layout;
+    if (Math.abs(gestureState.dx) > (width * POSITION_THRESHOLD) || Math.abs(gestureState.vx) > VELOCITY_THRESHOLD) {
       const nextIndex = index - (gestureState.dx / Math.abs(gestureState.dx));
       if (isIndexInRange(nextIndex)) {
         return nextIndex;
@@ -51,7 +52,7 @@ function forSwipe(props: Props) {
   }
 
   function respondToGesture(evt: GestureEvent, gestureState: GestureState) {
-    const { width } = props;
+    const { layout: { width } } = props;
     const currentPosition = typeof lastValue === 'number' ? lastValue : props.navigationState.index;
     const nextPosition = currentPosition - (gestureState.dx / width);
     if (isIndexInRange(nextPosition)) {
