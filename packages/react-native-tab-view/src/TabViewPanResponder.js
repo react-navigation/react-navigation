@@ -7,8 +7,8 @@ type Props = SceneRendererProps & {
   route: Route
 }
 
-const POSITION_THRESHOLD = 1 / 5;
-const VELOCITY_THRESHOLD = 1;
+const POSITION_THRESHOLD = 120;
+const VELOCITY_THRESHOLD = 0.000001;
 
 function forSwipe(props: Props) {
   let currentValue = null, lastValue = null;
@@ -22,8 +22,7 @@ function forSwipe(props: Props) {
 
   function getNextIndex(evt: GestureEvent, gestureState: GestureState) {
     const { index } = props.navigationState;
-    const { width } = props.layout;
-    if (Math.abs(gestureState.dx) > (width * POSITION_THRESHOLD) || Math.abs(gestureState.vx) > VELOCITY_THRESHOLD) {
+    if (Math.abs(gestureState.dx) > POSITION_THRESHOLD || Math.abs(gestureState.vx) > VELOCITY_THRESHOLD) {
       const nextIndex = index - (gestureState.dx / Math.abs(gestureState.dx));
       if (isIndexInRange(nextIndex)) {
         return nextIndex;
@@ -35,7 +34,7 @@ function forSwipe(props: Props) {
   function canMoveScreen(evt: GestureEvent, gestureState: GestureState) {
     const { routes, index } = props.navigationState;
     return (
-      (Math.abs(gestureState.dx) > Math.abs(gestureState.dy * 2)) &&
+      (Math.abs(gestureState.dx) > Math.abs(gestureState.dy)) &&
       (Math.abs(gestureState.vx) > Math.abs(gestureState.vy)) &&
       (gestureState.dx > 0 && index !== 0) ||
       (gestureState.dx < 0 && index !== routes.length - 1)
@@ -86,6 +85,5 @@ function forSwipe(props: Props) {
 }
 
 export default {
-  POSITION_THRESHOLD,
   forSwipe,
 };
