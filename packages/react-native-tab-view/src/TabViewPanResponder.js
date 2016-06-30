@@ -8,7 +8,7 @@ type Props = SceneRendererProps & {
 }
 
 const POSITION_THRESHOLD = 120;
-const VELOCITY_THRESHOLD = 0.000001;
+const VELOCITY_THRESHOLD = 0.0000005;
 
 function forSwipe(props: Props) {
   let currentValue = null, lastValue = null;
@@ -18,6 +18,13 @@ function forSwipe(props: Props) {
   function isIndexInRange(index: number) {
     const { routes } = props.navigationState;
     return (index >= 0 && index <= routes.length - 1);
+  }
+
+  function isMovingHorzontally(evt: GestureEvent, gestureState: GestureState) {
+    return (
+      (Math.abs(gestureState.dx) > Math.abs(gestureState.dy * 3)) &&
+      (Math.abs(gestureState.vx) > Math.abs(gestureState.vy * 3))
+    );
   }
 
   function getNextIndex(evt: GestureEvent, gestureState: GestureState) {
@@ -34,8 +41,7 @@ function forSwipe(props: Props) {
   function canMoveScreen(evt: GestureEvent, gestureState: GestureState) {
     const { routes, index } = props.navigationState;
     return (
-      (Math.abs(gestureState.dx) > Math.abs(gestureState.dy)) &&
-      (Math.abs(gestureState.vx) > Math.abs(gestureState.vy)) &&
+      isMovingHorzontally(evt, gestureState) &&
       (gestureState.dx > 0 && index !== 0) ||
       (gestureState.dx < 0 && index !== routes.length - 1)
     );
@@ -50,7 +56,7 @@ function forSwipe(props: Props) {
     const { layout: { width } } = props;
     const currentPosition = typeof lastValue === 'number' ? lastValue : props.navigationState.index;
     const nextPosition = currentPosition - (gestureState.dx / width);
-    if (isIndexInRange(nextPosition)) {
+    if (isMovingHorzontally(evt, gestureState) && isIndexInRange(nextPosition)) {
       props.position.setValue(nextPosition);
     }
   }
@@ -62,6 +68,12 @@ function forSwipe(props: Props) {
   }
 
   return {
+    onStartShouldSetPanResponder: (evt: GestureEvent, gestureState: GestureState) => {
+      return canMoveScreen(evt, gestureState);
+    },
+    onStartShouldSetPanResponderCapture: (evt: GestureEvent, gestureState: GestureState) => {
+      return canMoveScreen(evt, gestureState);
+    },
     onMoveShouldSetPanResponder: (evt: GestureEvent, gestureState: GestureState) => {
       return canMoveScreen(evt, gestureState);
     },
@@ -81,6 +93,7 @@ function forSwipe(props: Props) {
     onPanResponderTerminate: (evt: GestureEvent, gestureState: GestureState) => {
       finishGesture(evt, gestureState);
     },
+    onShouldBlockNativeResponder: () => false,
   };
 }
 
