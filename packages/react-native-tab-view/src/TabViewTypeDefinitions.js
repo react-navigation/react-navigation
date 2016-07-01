@@ -14,6 +14,7 @@ export type NavigationState = {
 
 export type SceneRendererProps = {
   layout: {
+    measured: boolean;
     height: number;
     width: number;
   };

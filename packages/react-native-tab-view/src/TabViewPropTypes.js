@@ -15,6 +15,7 @@ export const NavigationStatePropType = PropTypes.shape({
 
 export const SceneRendererPropType = {
   layout: PropTypes.shape({
+    measured: PropTypes.bool.isRequired,
     height: PropTypes.number.isRequired,
     width: PropTypes.number.isRequired,
   }).isRequired,

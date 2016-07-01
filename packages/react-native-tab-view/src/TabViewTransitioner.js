@@ -18,6 +18,7 @@ type Props = {
 
 type State = {
   layout: {
+    measured: boolean;
     width: number;
     height: number;
   };
@@ -37,6 +38,7 @@ export default class TabViewTransitioner extends Component<void, Props, State> {
 
     this.state = {
       layout: {
+        measured: false,
         width: 0,
         height: 0,
       },
@@ -61,6 +63,7 @@ export default class TabViewTransitioner extends Component<void, Props, State> {
 
     this.setState({
       layout: {
+        measured: true,
         height,
         width,
       },
