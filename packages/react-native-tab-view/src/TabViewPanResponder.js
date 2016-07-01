@@ -62,8 +62,12 @@ function forSwipe(props: Props) {
   }
 
   function finishGesture(evt: GestureEvent, gestureState: GestureState) {
-    const nextIndex = getNextIndex(evt, gestureState);
-    props.jumpToIndex(nextIndex);
+    if (isMovingHorzontally(evt, gestureState)) {
+      const nextIndex = getNextIndex(evt, gestureState);
+      props.jumpToIndex(nextIndex);
+    } else {
+      props.jumpToIndex(props.navigationState.index);
+    }
     lastValue = null;
   }
 
