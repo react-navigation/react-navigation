@@ -38,6 +38,10 @@ export default class TabViewAnimated extends Component<void, Props, void> {
   }
 
   _renderItems = (props: SceneRendererProps) => {
+    if (!props.layout.measured) {
+      return null;
+    }
+
     const { renderHeader, renderFooter, renderScene } = this.props;
 
     return (
