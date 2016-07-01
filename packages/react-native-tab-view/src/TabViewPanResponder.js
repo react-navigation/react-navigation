@@ -1,5 +1,6 @@
 /* @flow */
 
+import { Platform } from 'react-native';
 import type { GestureEvent, GestureState } from './PanResponderTypes';
 import type { Route, SceneRendererProps } from './TabViewTypeDefinitions';
 
@@ -8,7 +9,7 @@ type Props = SceneRendererProps & {
 }
 
 const POSITION_THRESHOLD = 120;
-const VELOCITY_THRESHOLD = 0.0000005;
+const VELOCITY_THRESHOLD = Platform.OS === 'android' ? 0.0000005 : 0.5; // on Android, velocity is way lower, perhaps due to timestamp being in nanosecond
 
 function forSwipe(props: Props) {
   let currentValue = null, lastValue = null;
