@@ -25,7 +25,7 @@ function forSwipe(props: Props) {
   const { width } = layout;
   const { routes } = navigationState;
   const currentIndex = routes.indexOf(route);
-  const inputRange = Array.from(new Array(routes.length)).map((x, i) => i);
+  const inputRange = routes.map((x, i) => i);
   const outputRange = inputRange.map(i => {
     return width * (currentIndex - i);
   });

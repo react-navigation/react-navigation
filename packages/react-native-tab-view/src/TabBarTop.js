@@ -79,7 +79,7 @@ export default class TabBarTop extends Component<DefaultProps, Props, void> {
     const { routes, index } = this.props.navigationState;
 
     const translateX = Animated.multiply(position, width / routes.length);
-    const inputRange = Array.from(new Array(routes.length)).map((x, i) => i);
+    const inputRange = routes.map((x, i) => i);
 
     return (
       <View style={[ styles.tabbar, this.props.style ]}>
