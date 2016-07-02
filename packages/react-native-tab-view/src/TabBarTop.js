@@ -10,7 +10,7 @@ import {
 import shallowCompare from 'react-addons-shallow-compare';
 import TouchableItem from './TouchableItem';
 import { SceneRendererPropType } from './TabViewPropTypes';
-import type { Route, SceneRendererProps } from './TabViewTypeDefinitions';
+import type { Scene, SceneRendererProps } from './TabViewTypeDefinitions';
 
 const styles = StyleSheet.create({
   tabbar: {
@@ -19,15 +19,19 @@ const styles = StyleSheet.create({
     flexWrap: 'nowrap',
     elevation: 4,
   },
-  tabitem: {
+  tab: {
     flex: 1,
   },
+  tabitem: {
+    flex: 1,
+    padding: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   tablabel: {
-    textAlign: 'center',
     color: 'white',
     fontSize: 14,
-    marginVertical: 16,
-    marginHorizontal: 12,
+    margin: 8,
   },
   indicator: {
     backgroundColor: 'white',
@@ -40,13 +44,14 @@ const styles = StyleSheet.create({
 });
 
 type DefaultProps = {
-  renderLabel: (props: { route: Route; focused: boolean; }) => ?React.Element<any>;
+  renderLabel: (scene: Scene) => ?React.Element<any>;
 }
 
 type Props = SceneRendererProps & {
   pressColor?: string;
-  renderLabel: (props: { route: Route; focused: boolean; }) => React.Element<any>;
-  tabItemStyle?: any;
+  renderLabel: (scene: Scene) => React.Element<any>;
+  renderIcon: (scene: Scene) => React.Element<any>;
+  tabStyle?: any;
   indicatorStyle?: any;
   style?: any;
 }
@@ -55,8 +60,9 @@ export default class TabBarTop extends Component<DefaultProps, Props, void> {
   static propTypes = {
     ...SceneRendererPropType,
     pressColor: TouchableItem.propTypes.pressColor,
+    renderIcon: PropTypes.func,
     renderLabel: PropTypes.func.isRequired,
-    tabItemStyle: View.propTypes.style,
+    tabStyle: View.propTypes.style,
     indicatorStyle: View.propTypes.style,
     style: View.propTypes.style,
   };
@@ -85,16 +91,34 @@ export default class TabBarTop extends Component<DefaultProps, Props, void> {
             inputRange,
             outputRange,
           });
-          const label = this.props.renderLabel({ route, focused });
+          const scene = {
+            route,
+            focused,
+            index: i,
+          };
+          const icon = this.props.renderIcon ? this.props.renderIcon(scene) : null;
+          const label = this.props.renderLabel ? this.props.renderLabel(scene) : null;
+
+          let tabStyle;
+
+          if (icon) {
+            if (label) {
+              tabStyle = { marginTop: 8 };
+            } else {
+              tabStyle = { margin: 8 };
+            }
+          }
+
           return (
             <TouchableItem
               key={route.key}
-              style={styles.tabitem}
+              style={styles.tab}
               pressColor={this.props.pressColor}
               onPress={() => this.props.jumpToIndex(i)}
             >
-              <Animated.View style={[ styles.tabitem, { opacity }, this.props.tabItemStyle ]}>
-                {label}
+              <Animated.View style={[ styles.tabitem, { opacity }, tabStyle, this.props.tabStyle ]}>
+                {this.props.renderIcon ? this.props.renderIcon(scene) : null}
+                {this.props.renderLabel ? this.props.renderLabel(scene) : null}
               </Animated.View>
             </TouchableItem>
           );

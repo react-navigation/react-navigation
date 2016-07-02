@@ -12,6 +12,12 @@ export type NavigationState = {
   routes: Array<Route>;
 }
 
+export type Scene = {
+  route: Route;
+  focused: boolean;
+  index: number;
+}
+
 export type SceneRendererProps = {
   layout: {
     measured: boolean;

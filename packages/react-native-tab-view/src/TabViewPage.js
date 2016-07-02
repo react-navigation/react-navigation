@@ -11,7 +11,7 @@ import shallowCompare from 'react-addons-shallow-compare';
 import TabViewPanResponder from './TabViewPanResponder';
 import TabViewStyleInterpolator from './TabViewStyleInterpolator';
 import { SceneRendererPropType } from './TabViewPropTypes';
-import type { Route, SceneRendererProps } from './TabViewTypeDefinitions';
+import type { Route, Scene, SceneRendererProps } from './TabViewTypeDefinitions';
 
 const styles = StyleSheet.create({
   page: {
@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
 
 type Props = SceneRendererProps & {
   route: Route;
-  renderScene: (props: { route: Route; focused: boolean; }) => ?React.Element<any>;
+  renderScene: (scene: Scene) => ?React.Element<any>;
   panHandlers?: any;
   style?: any;
 }
@@ -51,10 +51,15 @@ export default class TabViewPage extends Component<void, Props, void> {
 
     const viewPanHandlers = typeof panHandlers !== 'undefined' ? panHandlers : TabViewPanResponder.forSwipe(this.props);
     const viewStyle = typeof style !== 'undefined' ? style : TabViewStyleInterpolator.forSwipe(this.props);
+    const scene = {
+      route,
+      focused: index === routes.indexOf(route),
+      index: routes.indexOf(route)
+    };
 
     return (
       <Animated.View style={[ styles.page, viewStyle ]} {...PanResponder.create(viewPanHandlers).panHandlers}>
-        {renderScene({ route, focused: index === routes.indexOf(route) })}
+        {renderScene(scene)}
       </Animated.View>
     );
   }

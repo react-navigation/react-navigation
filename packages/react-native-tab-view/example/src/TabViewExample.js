@@ -1,80 +1,116 @@
 import React, { Component } from 'react';
-import { AppRegistry, View, StyleSheet } from 'react-native';
-import { TabViewAnimated, TabViewPage, TabBarTop } from 'react-native-tab-view';
-import ListViewExample from './ListViewExample';
+import {
+  AppRegistry,
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  StatusBar,
+  StyleSheet,
+} from 'react-native';
+import TopBarTextExample from './TopBarTextExample';
+import TopBarIconExample from './TopBarIconExample';
+import TopBarIconTextExample from './TopBarIconTextExample';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  tabbar: {
+  example: {
+    elevation: 4,
+  },
+  appbar: {
+    flexDirection: 'row',
+    height: 56,
     backgroundColor: '#2196f3',
-  },
-  page: {
-    flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    elevation: 4,
   },
-  indicator: {
-    backgroundColor: '#ffeb3b',
-  }
+  title: {
+    color: '#fff',
+    fontSize: 20,
+    margin: 16,
+  },
+  button: {
+    padding: 16,
+  },
+  touchable: {
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(0, 0, 0, .06)',
+  },
+  item: {
+    fontSize: 14,
+    color: '#333',
+  },
 });
 
 export default class TabViewExample extends Component {
   state = {
-    navigation: {
-      index: 0,
-      routes: [
-        { key: '1', title: 'First' },
-        { key: '2', title: 'Second' },
-        { key: '3', title: 'Third' },
-      ],
-    },
+    title: 'Examples',
+    index: -1,
+    items: [
+      'Text only top bar',
+      'Icon only top bar',
+      'Icon + Text top bar',
+    ]
   };
 
-  _handleChangeTab = (index) => {
+  _handleBack = () => {
     this.setState({
-      navigation: { ...this.state.navigation, index },
+      index: -1,
     });
   };
 
-  _renderHeader = (props) => {
+  _handlePress = index => {
+    this.setState({
+      index,
+    });
+  };
+
+  _renderItem = (title, i) => {
     return (
-      <TabBarTop
-        {...props}
-        pressColor='rgba(0, 0, 0, .2)'
-        indicatorStyle={styles.indicator}
-        style={styles.tabbar}
-      />
+      <TouchableOpacity
+        key={i}
+        style={styles.touchable}
+        onPress={() => this._handlePress(i)}
+      >
+        <Text style={styles.item}>{i + 1}. {title}</Text>
+      </TouchableOpacity>
     );
   };
 
-  _renderScene = ({ route }) => {
-    switch (route.key) {
-    case '1':
-      return <ListViewExample />;
-    case '2':
-      return <View style={[ styles.page, { backgroundColor: '#673ab7' } ]} />;
-    case '3':
-      return <View style={[ styles.page, { backgroundColor: '#4caf50' } ]} />;
+  _renderExample = i => {
+    switch (i) {
+    case 0:
+      return <TopBarTextExample style={styles.example} />;
+    case 1:
+      return <TopBarIconExample style={styles.example} />;
+    case 2:
+      return <TopBarIconTextExample style={styles.example} />;
     default:
       return null;
     }
-  };
-
-  _renderPage = (props) => {
-    return <TabViewPage {...props} renderScene={this._renderScene} />;
-  };
+  }
 
   render() {
+    const { index, items } = this.state;
+
     return (
-      <TabViewAnimated
-        style={styles.container}
-        navigationState={this.state.navigation}
-        renderScene={this._renderPage}
-        renderHeader={this._renderHeader}
-        onRequestChangeTab={this._handleChangeTab}
-      />
+      <View style={styles.container}>
+        <StatusBar backgroundColor='#1b7dcb' />
+        <View style={styles.appbar}>
+          {index > -1 ?
+            <TouchableOpacity style={styles.button} onPress={this._handleBack}>
+              <Image source={require('../assets/back-button.png')} />
+            </TouchableOpacity> : null
+          }
+          <Text style={styles.title}>
+            {index > -1 ? items[index] : this.state.title}
+          </Text>
+        </View>
+        {index === -1 ? items.map(this._renderItem) : this._renderExample(index)}
+      </View>
     );
   }
 }
