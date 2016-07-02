@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   StatusBar,
   StyleSheet,
+  Platform,
 } from 'react-native';
 import TopBarTextExample from './TopBarTextExample';
 import TopBarIconExample from './TopBarIconExample';
@@ -23,19 +24,26 @@ const styles = StyleSheet.create({
   example: {
     elevation: 4,
   },
+  statusbar: {
+    backgroundColor: '#2196f3',
+    height: Platform.OS === 'ios' ? 20 : 0,
+  },
   appbar: {
     flexDirection: 'row',
-    height: 56,
+    height: Platform.OS === 'ios' ? 44 : 56,
     backgroundColor: '#2196f3',
     alignItems: 'center',
     elevation: 4,
   },
   title: {
+    flex: 1,
+    textAlign: Platform.OS === 'ios' ? 'center' : 'left',
     color: '#fff',
-    fontSize: 20,
+    fontSize: Platform.OS === 'ios' ? 20 : 18,
     margin: 16,
   },
   button: {
+    width: 56,
     padding: 16,
   },
   touchable: {
@@ -115,15 +123,17 @@ export default class TabViewExample extends Component {
     return (
       <View style={styles.container}>
         <StatusBar backgroundColor='#1b7dcb' />
+        <View style={styles.statusbar} />
         <View style={styles.appbar}>
           {index > -1 ?
             <TouchableOpacity style={styles.button} onPress={this._handleBack}>
               <Image source={require('../assets/back-button.png')} />
-            </TouchableOpacity> : null
+            </TouchableOpacity> : <View style={styles.button} />
           }
           <Text style={styles.title}>
             {index > -1 ? items[index] : this.state.title}
           </Text>
+          <View style={styles.button} />
         </View>
         {index === -1 ? items.map(this._renderItem) : this._renderExample(index)}
       </View>
