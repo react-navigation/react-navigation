@@ -58,6 +58,8 @@ export default class TabViewTransitioner extends Component<void, Props, State> {
     }, 0);
   }
 
+  _currentIndex: number;
+
   _handleLayout = (e: any) => {
     const { height, width } = e.nativeEvent.layout;
 
@@ -80,8 +82,14 @@ export default class TabViewTransitioner extends Component<void, Props, State> {
   };
 
   _jumpToIndex = (index: number) => {
+    this._currentIndex = index;
     this._updatePosition(index, () => {
-      if (this.props.navigationState.index !== index) {
+      // Prevent unnecessary setState when index is the same
+      if (this.props.navigationState.index === index) {
+        return;
+      }
+      // Prevent extra setState when index updated mid-transition
+      if (this._currentIndex === index) {
         this.props.onRequestChangeTab(index);
       }
     });
