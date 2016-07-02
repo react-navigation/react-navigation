@@ -26,9 +26,9 @@ const styles = StyleSheet.create({
     flex: 1,
     textAlign: 'center',
     color: 'white',
-    fontWeight: 'bold',
-    fontSize: 12,
-    margin: 16,
+    fontSize: 14,
+    marginVertical: 16,
+    marginHorizontal: 12,
   },
   indicator: {
     backgroundColor: 'white',
@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
     left: 0,
     bottom: 0,
     right: 0,
-    height: 4,
+    height: 2,
   },
 });
 
@@ -85,7 +85,7 @@ export default class TabBarTop extends Component<DefaultProps, Props, void> {
       <View style={[ styles.tabbar, this.props.style ]}>
         {routes.map((route, i) => {
           const focused = index === i;
-          const outputRange = inputRange.map(inputIndex => inputIndex === i ? 1 : 0.5);
+          const outputRange = inputRange.map(inputIndex => inputIndex === i ? 1 : 0.7);
           const opacity = position.interpolate({
             inputRange,
             outputRange,
