@@ -12,7 +12,9 @@ const POSITION_THRESHOLD = 120;
 const VELOCITY_THRESHOLD = Platform.OS === 'android' ? 0.0000005 : 0.5; // on Android, velocity is way lower, perhaps due to timestamp being in nanosecond
 
 function forSwipe(props: Props) {
-  let currentValue = null, lastValue = null;
+  let currentValue = null;
+  let lastValue = null;
+  let isMoving = null;
 
   props.position.addListener(({ value }) => (currentValue = value));
 
@@ -42,22 +44,24 @@ function forSwipe(props: Props) {
   function canMoveScreen(evt: GestureEvent, gestureState: GestureState) {
     const { routes, index } = props.navigationState;
     return (
-      isMovingHorzontally(evt, gestureState) &&
-      ((gestureState.dx > 0 && index !== 0) ||
-      (gestureState.dx < 0 && index !== routes.length - 1))
-    );
+      isMovingHorzontally(evt, gestureState) && (
+        (gestureState.dx > 0 && index !== 0) ||
+        (gestureState.dx < 0 && index !== routes.length - 1)
+    ));
   }
 
   function startGesture() {
     lastValue = currentValue;
-    props.position.stopAnimation();
   }
 
   function respondToGesture(evt: GestureEvent, gestureState: GestureState) {
     const { layout: { width } } = props;
     const currentPosition = typeof lastValue === 'number' ? lastValue : props.navigationState.index;
     const nextPosition = currentPosition - (gestureState.dx / width);
-    if (isMovingHorzontally(evt, gestureState) && isIndexInRange(nextPosition)) {
+    if (isMoving === null) {
+      isMoving = isMovingHorzontally(evt, gestureState);
+    }
+    if (isMoving && isIndexInRange(nextPosition)) {
       props.position.setValue(nextPosition);
     }
   }
@@ -65,7 +69,7 @@ function forSwipe(props: Props) {
   function finishGesture(evt: GestureEvent, gestureState: GestureState) {
     const currentIndex = props.navigationState.index;
     if (currentValue !== currentIndex) {
-      if (isMovingHorzontally(evt, gestureState)) {
+      if (isMoving) {
         const nextIndex = getNextIndex(evt, gestureState);
         props.jumpToIndex(nextIndex);
       } else {
@@ -73,6 +77,7 @@ function forSwipe(props: Props) {
       }
     }
     lastValue = null;
+    isMoving = null;
   }
 
   return {
