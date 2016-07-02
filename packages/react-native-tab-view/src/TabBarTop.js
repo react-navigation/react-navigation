@@ -23,7 +23,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   tablabel: {
-    flex: 1,
     textAlign: 'center',
     color: 'white',
     fontSize: 14,
@@ -41,15 +40,13 @@ const styles = StyleSheet.create({
 });
 
 type DefaultProps = {
-  renderLabel: (props: { route: Route; focused: boolean; }) => string;
+  renderLabel: (props: { route: Route; focused: boolean; }) => ?React.Element<any>;
 }
 
 type Props = SceneRendererProps & {
   pressColor?: string;
-  renderLabel: (props: { route: Route; focused: boolean; }) => React.Element<any> | string;
-  labelStyle?: any;
-  labelActiveStyle?: any;
-  labelInactiveStyle?: any;
+  renderLabel: (props: { route: Route; focused: boolean; }) => React.Element<any>;
+  tabItemStyle?: any;
   indicatorStyle?: any;
   style?: any;
 }
@@ -59,15 +56,13 @@ export default class TabBarTop extends Component<DefaultProps, Props, void> {
     ...SceneRendererPropType,
     pressColor: TouchableItem.propTypes.pressColor,
     renderLabel: PropTypes.func.isRequired,
-    labelStyle: Text.propTypes.style,
-    labelActiveStyle: Text.propTypes.style,
-    labelInactiveStyle: Text.propTypes.style,
+    tabItemStyle: View.propTypes.style,
     indicatorStyle: View.propTypes.style,
     style: View.propTypes.style,
   };
 
   static defaultProps = {
-    renderLabel: ({ route }) => route.title ? route.title.toUpperCase() : '',
+    renderLabel: ({ route }) => route.title ? <Text style={styles.tablabel}>{route.title.toUpperCase()}</Text> : null,
   };
 
   shouldComponentUpdate(nextProps: Props, nextState: void) {
@@ -98,20 +93,9 @@ export default class TabBarTop extends Component<DefaultProps, Props, void> {
               pressColor={this.props.pressColor}
               onPress={() => this.props.jumpToIndex(i)}
             >
-              {typeof label === 'string' ?
-                <Animated.Text
-                  numberOfLines={1}
-                  style={[
-                    styles.tablabel,
-                    this.props.labelStyle,
-                    { opacity },
-                    focused ? this.props.labelActiveStyle : this.props.labelInactiveStyle,
-                  ]}
-                >
-                  {label}
-                </Animated.Text> :
-                label
-              }
+              <Animated.View style={[ styles.tabitem, { opacity }, this.props.tabItemStyle ]}>
+                {label}
+              </Animated.View>
             </TouchableItem>
           );
         })}
