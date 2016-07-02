@@ -6,21 +6,7 @@ type Props = SceneRendererProps & {
   route: Route
 }
 
-function forStatic(props: Props) {
-  const { layout, route, navigationState } = props;
-  const { width } = layout;
-  const { routes, index } = navigationState;
-  const currentIndex = routes.indexOf(route);
-
-  const translateX = width * (currentIndex - index);
-
-  return {
-    width,
-    transform: [ { translateX } ]
-  };
-}
-
-function forSwipe(props: Props) {
+function forHorizontal(props: Props) {
   const { layout, position, route, navigationState } = props;
   const { width } = layout;
   const { routes } = navigationState;
@@ -42,6 +28,5 @@ function forSwipe(props: Props) {
 }
 
 export default {
-  forStatic,
-  forSwipe,
+  forHorizontal,
 };

@@ -11,6 +11,9 @@ import {
 import TopBarTextExample from './TopBarTextExample';
 import TopBarIconExample from './TopBarIconExample';
 import TopBarIconTextExample from './TopBarIconTextExample';
+import BottomBarIconExample from './BottomBarIconExample';
+import BottomBarIconTextExample from './BottomBarIconTextExample';
+import NoAnimationExample from './NoAnimationExample';
 
 const styles = StyleSheet.create({
   container: {
@@ -53,6 +56,9 @@ export default class TabViewExample extends Component {
       'Text only top bar',
       'Icon only top bar',
       'Icon + Text top bar',
+      'Icon only bottom bar',
+      'Icon + Text bottom bar',
+      'No animation',
     ]
   };
 
@@ -88,6 +94,12 @@ export default class TabViewExample extends Component {
       return <TopBarIconExample style={styles.example} />;
     case 2:
       return <TopBarIconTextExample style={styles.example} />;
+    case 3:
+      return <BottomBarIconExample />;
+    case 4:
+      return <BottomBarIconTextExample />;
+    case 5:
+      return <NoAnimationExample />;
     default:
       return null;
     }

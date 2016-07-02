@@ -11,7 +11,7 @@ type Props = SceneRendererProps & {
 const POSITION_THRESHOLD = 120;
 const VELOCITY_THRESHOLD = Platform.OS === 'android' ? 0.0000005 : 0.5; // on Android, velocity is way lower, perhaps due to timestamp being in nanosecond
 
-function forSwipe(props: Props) {
+function forHorizontal(props: Props) {
   let currentValue = null;
   let lastValue = null;
   let isMoving = null;
@@ -111,5 +111,5 @@ function forSwipe(props: Props) {
 }
 
 export default {
-  forSwipe,
+  forHorizontal,
 };

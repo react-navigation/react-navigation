@@ -49,8 +49,8 @@ export default class TabViewPage extends Component<void, Props, void> {
     const { renderScene, panHandlers, style, route } = this.props;
     const { routes, index } = this.props.navigationState;
 
-    const viewPanHandlers = typeof panHandlers !== 'undefined' ? panHandlers : TabViewPanResponder.forSwipe(this.props);
-    const viewStyle = typeof style !== 'undefined' ? style : TabViewStyleInterpolator.forSwipe(this.props);
+    const viewPanHandlers = typeof panHandlers !== 'undefined' ? panHandlers : TabViewPanResponder.forHorizontal(this.props);
+    const viewStyle = typeof style !== 'undefined' ? style : TabViewStyleInterpolator.forHorizontal(this.props);
     const scene = {
       route,
       focused: index === routes.indexOf(route),
@@ -58,7 +58,7 @@ export default class TabViewPage extends Component<void, Props, void> {
     };
 
     return (
-      <Animated.View style={[ styles.page, viewStyle ]} {...PanResponder.create(viewPanHandlers).panHandlers}>
+      <Animated.View style={[ styles.page, viewStyle ]} {...(viewPanHandlers ? PanResponder.create(viewPanHandlers).panHandlers : null)}>
         {renderScene(scene)}
       </Animated.View>
     );

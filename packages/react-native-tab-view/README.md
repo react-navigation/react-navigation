@@ -89,6 +89,7 @@ The package exposes the following components,
 
   It accepts the following props,
   - `navigationState` - the current navigation state
+  - `configureAnimation` - optional callback which performs animation and returns a promise
   - `onRequestChangeTab` - callback for when the current tab changes, should do the `setState`
   - `render` - callback which renders the tab view, gets a special set of props as argument
 
@@ -103,8 +104,8 @@ The package exposes the following components,
 
   It accepts the following props,
   - `renderScene` - callback which receives the current scene and returns a React Element
-  - `panHandlers` - pan handlers used for gesture (default is `TabViewPage.PanResponder.forSwipe(props)`), pass null to disable gestures
-  - `style` - style object (default is `TabViewPage.StyleInterpolator.forSwipe(props)`), pass `TabViewPage.StyleInterpolator.forStatic(props)` to disable animations
+  - `panHandlers` - pan handlers used for gesture (default is `TabViewPage.PanResponder.forHorizontal(props)`), pass null to disable gestures
+  - `style` - style object (default is `TabViewPage.StyleInterpolator.forHorizontal(props)`)
 
 - `<TabBar />` - basic tab bar
 
@@ -121,3 +122,8 @@ The package exposes the following components,
   It accepts the following props in addition to the props accepted by `<TabBar />`,
   - `renderLabel` - optional callback which receives the current scene and returns a React Element to be used as a label
   - `indicatorStyle` - style object for the tab indicator
+
+- `<TabBarTop />` - material design themed bottom tab bar
+
+  It accepts the following props in addition to the props accepted by `<TabBar />`,
+  - `renderLabel` - optional callback which receives the current scene and returns a React Element to be used as a label
