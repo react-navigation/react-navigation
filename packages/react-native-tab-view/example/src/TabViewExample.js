@@ -14,6 +14,7 @@ import TopBarIconTextExample from './TopBarIconTextExample';
 import BottomBarIconExample from './BottomBarIconExample';
 import BottomBarIconTextExample from './BottomBarIconTextExample';
 import NoAnimationExample from './NoAnimationExample';
+import ScrollViewsExample from './ScrollViewsExample';
 
 const styles = StyleSheet.create({
   container: {
@@ -59,6 +60,7 @@ export default class TabViewExample extends Component {
       'Icon only bottom bar',
       'Icon + Text bottom bar',
       'No animation',
+      'Scroll views',
     ]
   };
 
@@ -100,6 +102,8 @@ export default class TabViewExample extends Component {
       return <BottomBarIconTextExample />;
     case 5:
       return <NoAnimationExample />;
+    case 6:
+      return <ScrollViewsExample style={styles.example} />;
     default:
       return null;
     }

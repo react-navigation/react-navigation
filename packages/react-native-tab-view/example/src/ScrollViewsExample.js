@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { View, Image, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { TabViewAnimated, TabViewPage, TabBarTop } from 'react-native-tab-view';
+import ListViewExample from './ListViewExample';
 
 const styles = StyleSheet.create({
   container: {
@@ -9,17 +10,12 @@ const styles = StyleSheet.create({
   tabbar: {
     backgroundColor: '#2196f3',
   },
-  page: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   indicator: {
     backgroundColor: '#ffeb3b',
   }
 });
 
-export default class TopBarIconExample extends Component {
+export default class TopBarTextExample extends Component {
   static propTypes = {
     style: View.propTypes.style,
   };
@@ -41,26 +37,12 @@ export default class TopBarIconExample extends Component {
     });
   };
 
-  _renderIcon = ({ route }) => {
-    switch (route.key) {
-    case '1':
-      return <Image source={require('../assets/tab-icon-1.png')} />;
-    case '2':
-      return <Image source={require('../assets/tab-icon-2.png')} />;
-    case '3':
-      return <Image source={require('../assets/tab-icon-3.png')} />;
-    default:
-      return null;
-    }
-  };
-
   _renderHeader = (props) => {
     return (
       <TabBarTop
         {...props}
         pressColor='rgba(0, 0, 0, .2)'
         indicatorStyle={styles.indicator}
-        renderIcon={this._renderIcon}
         style={styles.tabbar}
       />
     );
@@ -69,11 +51,11 @@ export default class TopBarIconExample extends Component {
   _renderScene = ({ route }) => {
     switch (route.key) {
     case '1':
-      return <View style={[ styles.page, { backgroundColor: '#ff4081' } ]} />;
+      return <ListViewExample style={{ backgroundColor: '#ff4081' }} />;
     case '2':
-      return <View style={[ styles.page, { backgroundColor: '#673ab7' } ]} />;
+      return <ListViewExample style={{ backgroundColor: '#673ab7' }} />;
     case '3':
-      return <View style={[ styles.page, { backgroundColor: '#4caf50' } ]} />;
+      return <ListViewExample style={{ backgroundColor: '#4caf50' }} />;
     default:
       return null;
     }

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { View, Image, StyleSheet } from 'react-native';
 import { TabViewAnimated, TabViewPage, TabBarBottom } from 'react-native-tab-view';
-import ListViewExample from './ListViewExample';
 
 const styles = StyleSheet.create({
   container: {
@@ -66,7 +65,7 @@ export default class TopBarIconExample extends Component {
   _renderScene = ({ route }) => {
     switch (route.key) {
     case '1':
-      return <ListViewExample />;
+      return <View style={[ styles.page, { backgroundColor: '#ff4081' } ]} />;
     case '2':
       return <View style={[ styles.page, { backgroundColor: '#673ab7' } ]} />;
     case '3':

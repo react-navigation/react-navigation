@@ -3,7 +3,6 @@ import { ListView, View, Text, StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#ff4081',
     padding: 8,
   },
   row: {
@@ -62,6 +61,7 @@ export default class ListViewExample extends Component {
   render() {
     return (
       <ListView
+        {...this.props}
         contentContainerStyle={styles.container}
         dataSource={this.state.dataSource}
         renderRow={this._renderRow}
