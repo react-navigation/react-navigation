@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Image, StyleSheet } from 'react-native';
-import { TabViewAnimated, TabViewPage, TabBarBottom } from 'react-native-tab-view';
+import { TabViewAnimated, TabViewPage, TabBar } from 'react-native-tab-view';
 
 const styles = StyleSheet.create({
   container: {
@@ -13,6 +13,9 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  tab: {
+    padding: 0,
   },
 });
 
@@ -53,10 +56,11 @@ export default class TopBarIconExample extends Component {
 
   _renderFooter = (props) => {
     return (
-      <TabBarBottom
+      <TabBar
         {...props}
         pressColor='rgba(0, 0, 0, .2)'
         renderIcon={this._renderIcon}
+        tabStyle={styles.tab}
         style={styles.tabbar}
       />
     );

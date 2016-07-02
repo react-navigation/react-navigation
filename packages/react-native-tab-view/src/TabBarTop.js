@@ -15,7 +15,6 @@ import type { Scene, SceneRendererProps } from './TabViewTypeDefinitions';
 const styles = StyleSheet.create({
   tablabel: {
     color: 'white',
-    fontSize: 14,
     margin: 8,
   },
   indicator: {

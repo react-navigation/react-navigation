@@ -111,9 +111,9 @@ The package exposes the following components,
 
   It accepts the following props,
   - `pressColor` - color for material ripple (Android > 5.0 only)
-  - `renderIcon` - callback which receives the current scene and returns a React Element to be used as a icon
-  - `renderLabel` - callback which receives the current scene and returns a React Element to be used as a label
-  - `renderIndicator` - callback which receives the current scene and returns a React Element to be used as a indicator
+  - `renderIcon` - optiona; callback which receives the current scene and returns a React Element to be used as a icon
+  - `renderLabel` - optional callback which receives the current scene and returns a React Element to be used as a label
+  - `renderIndicator` - optional callback which receives the current scene and returns a React Element to be used as a indicator
   - `tabStyle` - style object for the tab
   - `indicatorStyle` - style object for the tab indicator
 
@@ -122,8 +122,3 @@ The package exposes the following components,
   It accepts the following props in addition to the props accepted by `<TabBar />`,
   - `renderLabel` - optional callback which receives the current scene and returns a React Element to be used as a label
   - `indicatorStyle` - style object for the tab indicator
-
-- `<TabBarTop />` - material design themed bottom tab bar
-
-  It accepts the following props in addition to the props accepted by `<TabBar />`,
-  - `renderLabel` - optional callback which receives the current scene and returns a React Element to be used as a label

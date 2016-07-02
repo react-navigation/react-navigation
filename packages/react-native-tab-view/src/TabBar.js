@@ -5,6 +5,7 @@ import {
   Animated,
   StyleSheet,
   View,
+  Text,
 } from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
 import TouchableItem from './TouchableItem';
@@ -18,6 +19,10 @@ const styles = StyleSheet.create({
     flexWrap: 'nowrap',
     elevation: 4,
   },
+  tablabel: {
+    color: 'white',
+    margin: 8,
+  },
   tab: {
     flex: 1,
   },
@@ -29,16 +34,20 @@ const styles = StyleSheet.create({
   },
 });
 
+type DefaultProps = {
+  renderLabel: (scene: Scene) => ?React.Element<any>;
+}
+
 type Props = SceneRendererProps & {
   pressColor?: string;
-  renderLabel: (scene: Scene) => React.Element<any>;
-  renderIcon: (scene: Scene) => React.Element<any>;
-  renderIndicator: (props: SceneRendererProps) => React.Element<any>;
+  renderLabel?: (scene: Scene) => ?React.Element<any>;
+  renderIcon?: (scene: Scene) => ?React.Element<any>;
+  renderIndicator?: (props: SceneRendererProps) => ?React.Element<any>;
   tabStyle?: any;
   style?: any;
 }
 
-export default class TabBarTop extends Component<void, Props, void> {
+export default class TabBarTop extends Component<DefaultProps, Props, void> {
   static propTypes = {
     ...SceneRendererPropType,
     pressColor: TouchableItem.propTypes.pressColor,
@@ -47,6 +56,10 @@ export default class TabBarTop extends Component<void, Props, void> {
     renderIndicator: PropTypes.func,
     tabStyle: View.propTypes.style,
     style: View.propTypes.style,
+  };
+
+  static defaultProps = {
+    renderLabel: ({ route }) => route.title ? <Text style={styles.tablabel}>{route.title}</Text> : null,
   };
 
   shouldComponentUpdate(nextProps: Props, nextState: void) {
