@@ -20,6 +20,7 @@ import ScrollViewsExample from './ScrollViewsExample';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#f5f5f5',
   },
   example: {
     elevation: 4,
@@ -48,6 +49,7 @@ const styles = StyleSheet.create({
   },
   touchable: {
     padding: 16,
+    backgroundColor: '#fff',
     borderBottomWidth: 1,
     borderBottomColor: 'rgba(0, 0, 0, .06)',
   },
@@ -128,12 +130,12 @@ export default class TabViewExample extends Component {
           {index > -1 ?
             <TouchableOpacity style={styles.button} onPress={this._handleBack}>
               <Image source={require('../assets/back-button.png')} />
-            </TouchableOpacity> : <View style={styles.button} />
+            </TouchableOpacity> : null
           }
           <Text style={styles.title}>
             {index > -1 ? items[index] : this.state.title}
           </Text>
-          <View style={styles.button} />
+          {index > -1 ? <View style={styles.button} /> : null}
         </View>
         {index === -1 ? items.map(this._renderItem) : this._renderExample(index)}
       </View>
