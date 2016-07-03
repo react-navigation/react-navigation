@@ -27,4 +27,5 @@ export type SceneRendererProps = {
   navigationState: NavigationState;
   position: Animated.Value;
   jumpToIndex: (index: number) => void;
+  getLastPosition: () => number;
 }

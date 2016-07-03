@@ -12,11 +12,8 @@ const POSITION_THRESHOLD = 120;
 const VELOCITY_THRESHOLD = Platform.OS === 'android' ? 0.0000005 : 0.5; // on Android, velocity is way lower, perhaps due to timestamp being in nanosecond
 
 function forHorizontal(props: Props) {
-  let currentValue = null;
   let lastValue = null;
   let isMoving = null;
-
-  props.position.addListener(({ value }) => (currentValue = value));
 
   function isIndexInRange(index: number) {
     const { routes } = props.navigationState;
@@ -51,7 +48,7 @@ function forHorizontal(props: Props) {
   }
 
   function startGesture() {
-    lastValue = currentValue;
+    lastValue = props.getLastPosition();
   }
 
   function respondToGesture(evt: GestureEvent, gestureState: GestureState) {
@@ -68,6 +65,7 @@ function forHorizontal(props: Props) {
 
   function finishGesture(evt: GestureEvent, gestureState: GestureState) {
     const currentIndex = props.navigationState.index;
+    const currentValue = props.getLastPosition();
     if (currentValue !== currentIndex) {
       if (isMoving) {
         const nextIndex = getNextIndex(evt, gestureState);

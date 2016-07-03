@@ -22,4 +22,5 @@ export const SceneRendererPropType = {
   navigationState: NavigationStatePropType.isRequired,
   position: PropTypes.instanceOf(Animated.Value).isRequired,
   jumpToIndex: PropTypes.func.isRequired,
+  getLastPosition: PropTypes.func.isRequired,
 };
