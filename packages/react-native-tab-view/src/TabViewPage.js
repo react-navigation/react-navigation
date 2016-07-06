@@ -35,7 +35,7 @@ export default class TabViewPage extends Component<void, Props, void> {
     ...SceneRendererPropType,
     renderScene: PropTypes.func.isRequired,
     panHandlers: PropTypes.object,
-    style: View.propTypes.style,
+    style: PropTypes.any,
   };
 
   static PanResponder = TabViewPanResponder;
