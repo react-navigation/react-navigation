@@ -47,7 +47,7 @@ type Props = SceneRendererProps & {
   style?: any;
 }
 
-export default class TabBarTop extends Component<DefaultProps, Props, void> {
+export default class TabBar extends Component<DefaultProps, Props, void> {
   static propTypes = {
     ...SceneRendererPropType,
     pressColor: TouchableItem.propTypes.pressColor,
