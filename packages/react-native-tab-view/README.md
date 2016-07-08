@@ -121,3 +121,19 @@ The package exposes the following components,
   It accepts the following props in addition to the props accepted by `<TabBar />`,
   - `renderLabel` - optional callback which receives the current scene and returns a React Element to be used as a label
   - `indicatorStyle` - style object for the tab indicator
+
+
+### Optimization Tips
+
+- The `renderScene` function is called every time the index changes. If your `renderScene` function is expensive, it's good idea move it to a separate component if your `renderScene` function doesn't depend on the index, and apply `shouldComponentUpdate` to prevent unnecessary re-renders.
+- If you've a large number of routes, especially images, it can slow the animation down quite a lot. You can instead render a limited number of routes. In your `renderScene` function, do the following to render only 2 routes on each side,
+
+  ```js
+  renderScene = ({ route }) => {
+    if (Math.abs(this.state.navigation.index - this.state.navigation.routes.indexOf(route)) > 2) {
+      return null;
+    }
+
+    return <MySceneComponent route={route} />;
+  };
+  ```
