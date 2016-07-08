@@ -9,7 +9,7 @@ import shallowCompare from 'react-addons-shallow-compare';
 import { NavigationStatePropType } from './TabViewPropTypes';
 import type { NavigationState, SceneRendererProps } from './TabViewTypeDefinitions';
 
-type Animator = (animatedValue: Animated.Value, toValue: number) => ?Promise<void>
+type Animator = (animatedValue: Animated.Value, toValue: number) => ?Promise<any>
 
 type DefaultProps = {
   configureAnimation: Animator
