@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {
   AppRegistry,
+  AsyncStorage,
   View,
   Text,
   Image,
@@ -9,14 +10,14 @@ import {
   StyleSheet,
   Platform,
 } from 'react-native';
-import TopBarTextExample from './TopBarTextExample';
-import TopBarIconExample from './TopBarIconExample';
-import TopBarIconTextExample from './TopBarIconTextExample';
-import BottomBarIconExample from './BottomBarIconExample';
-import BottomBarIconTextExample from './BottomBarIconTextExample';
-import NoAnimationExample from './NoAnimationExample';
-import ScrollViewsExample from './ScrollViewsExample';
-import CoverflowExample from './CoverflowExample';
+import TopBarTextExample from './src/TopBarTextExample';
+import TopBarIconExample from './src/TopBarIconExample';
+import TopBarIconTextExample from './src/TopBarIconTextExample';
+import BottomBarIconExample from './src/BottomBarIconExample';
+import BottomBarIconTextExample from './src/BottomBarIconTextExample';
+import NoAnimationExample from './src/NoAnimationExample';
+import ScrollViewsExample from './src/ScrollViewsExample';
+import CoverflowExample from './src/CoverflowExample';
 
 const styles = StyleSheet.create({
   container: {
@@ -60,7 +61,9 @@ const styles = StyleSheet.create({
   },
 });
 
-export default class TabViewExample extends Component {
+const PERSISTENCE_KEY = 'index_persistence';
+
+export default class ExampleList extends Component {
   state = {
     title: 'Examples',
     index: -1,
@@ -73,19 +76,50 @@ export default class TabViewExample extends Component {
       'No animation',
       'Scroll views',
       'Coverflow',
-    ]
+    ],
+    restoring: false,
   };
 
-  _handleBack = () => {
+  componentWillMount() {
+    this._restoreNavigationState();
+  }
+
+  _persistNavigationState = async (currentIndex: number) => {
+    await AsyncStorage.setItem(PERSISTENCE_KEY, JSON.stringify(currentIndex));
+  };
+
+  _restoreNavigationState = async () => {
     this.setState({
-      index: -1,
+      restoring: true,
+    });
+
+    const savedIndexString = await AsyncStorage.getItem(PERSISTENCE_KEY);
+
+    try {
+      const savedIndex = JSON.parse(savedIndexString);
+      if (typeof savedIndex === 'number' && !isNaN(savedIndex)) {
+        this.setState({
+          index: savedIndex,
+        });
+      }
+    } catch (e) {
+      // ignore
+    }
+
+    this.setState({
+      restoring: false,
     });
   };
 
-  _handlePress = index => {
+  _handleNavigate = index => {
     this.setState({
       index,
     });
+    this._persistNavigationState(index);
+  };
+
+  _handleNavigateBack = () => {
+    this._handleNavigate(-1);
   };
 
   _renderItem = (title, i) => {
@@ -93,7 +127,7 @@ export default class TabViewExample extends Component {
       <TouchableOpacity
         key={i}
         style={styles.touchable}
-        onPress={() => this._handlePress(i)}
+        onPress={() => this._handleNavigate(i)}
       >
         <Text style={styles.item}>{i + 1}. {title}</Text>
       </TouchableOpacity>
@@ -124,6 +158,10 @@ export default class TabViewExample extends Component {
   }
 
   render() {
+    if (this.state.restoring) {
+      return null;
+    }
+
     const { index, items } = this.state;
 
     return (
@@ -132,8 +170,8 @@ export default class TabViewExample extends Component {
         <View style={styles.statusbar} />
         <View style={styles.appbar}>
           {index > -1 ?
-            <TouchableOpacity style={styles.button} onPress={this._handleBack}>
-              <Image source={require('../assets/back-button.png')} />
+            <TouchableOpacity style={styles.button} onPress={this._handleNavigateBack}>
+              <Image source={require('./assets/back-button.png')} />
             </TouchableOpacity> : null
           }
           <Text style={styles.title}>
@@ -147,4 +185,4 @@ export default class TabViewExample extends Component {
   }
 }
 
-AppRegistry.registerComponent('tabviewexample', () => TabViewExample);
+AppRegistry.registerComponent('tabviewexample', () => ExampleList);
