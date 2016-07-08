@@ -2,13 +2,14 @@ import React, { Component } from 'react';
 import {
   AppRegistry,
   AsyncStorage,
-  View,
-  Text,
   Image,
-  TouchableOpacity,
+  Platform,
+  ScrollView,
   StatusBar,
   StyleSheet,
-  Platform,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import TopBarTextExample from './src/TopBarTextExample';
 import TopBarIconExample from './src/TopBarIconExample';
@@ -179,7 +180,11 @@ export default class ExampleList extends Component {
           </Text>
           {index > -1 ? <View style={styles.button} /> : null}
         </View>
-        {index === -1 ? items.map(this._renderItem) : this._renderExample(index)}
+        {index === -1 ? (
+          <ScrollView>
+            {items.map(this._renderItem)}
+          </ScrollView>
+        ) : this._renderExample(index)}
       </View>
     );
   }
