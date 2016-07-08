@@ -34,21 +34,23 @@ const styles = StyleSheet.create({
   },
   appbar: {
     flexDirection: 'row',
+    alignItems: 'center',
     height: Platform.OS === 'ios' ? 44 : 56,
     backgroundColor: '#2196f3',
-    alignItems: 'center',
     elevation: 4,
   },
   title: {
     flex: 1,
-    textAlign: Platform.OS === 'ios' ? 'center' : 'left',
-    color: '#fff',
-    fontSize: Platform.OS === 'ios' ? 20 : 18,
     margin: 16,
+    textAlign: Platform.OS === 'ios' ? 'center' : 'left',
+    fontSize: Platform.OS === 'ios' ? 20 : 18,
+    color: '#fff',
   },
   button: {
+    flexDirection: 'row',
+    alignItems: 'center',
     width: 56,
-    padding: 16,
+    padding: Platform.OS === 'ios' ? 12 : 16,
   },
   touchable: {
     padding: 16,
