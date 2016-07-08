@@ -3,6 +3,8 @@ React Native Tab View
 
 A cross-platform Tab View component for React Native.
 
+This is a JavaScript-only implementation of swipeable tab views. It's super cutomizable, allowing you to do things like coverflow. Run the example app to see it in action.
+
 ## Demo
 
 <a href="https://raw.githubusercontent.com/satya164/react-native-tab-view/master/demo/demo.mp4"><img src="https://raw.githubusercontent.com/satya164/react-native-tab-view/master/demo/demo.gif" width="360"></a>
@@ -104,7 +106,7 @@ The package exposes the following components,
 
   It accepts the following props,
   - `renderScene` - callback which receives the current scene and returns a React Element
-  - `panHandlers` - pan handlers used for gesture (default is `TabViewPage.PanResponder.forHorizontal(props)`), pass null to disable gestures
+  - `panHandlers` - pan handlers used for gesture (default is `TabViewPage.PanResponder.forHorizontal(props)`), pass `null` to disable gestures
   - `style` - style object (default is `TabViewPage.StyleInterpolator.forHorizontal(props)`)
 
 - `<TabBar />` - basic tab bar
@@ -113,7 +115,7 @@ The package exposes the following components,
   - `pressColor` - color for material ripple (Android > 5.0 only)
   - `renderIcon` - optional callback which receives the current scene and returns a React Element to be used as a icon
   - `renderLabel` - optional callback which receives the current scene and returns a React Element to be used as a label
-  - `renderIndicator` - optional callback which receives the current scene and returns a React Element to be used as a indicator
+  - `renderIndicator` - optional callback which receives the current scene and returns a React Element to be used as a tab indicator
   - `tabStyle` - style object for the tab
 
 - `<TabBarTop />` - material design themed top tab bar

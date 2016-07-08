@@ -18,7 +18,8 @@
     "android",
     "tab",
     "swipe",
-    "scrollable"
+    "scrollable",
+    "coverflow"
   ],
   "repository": {
     "type": "git",
