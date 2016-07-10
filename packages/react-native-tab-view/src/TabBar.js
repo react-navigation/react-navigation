@@ -21,7 +21,8 @@ const styles = StyleSheet.create({
   },
   tablabel: {
     color: 'white',
-    margin: 8,
+    fontSize: 12,
+    margin: 4,
   },
   tab: {
     flex: 1,
