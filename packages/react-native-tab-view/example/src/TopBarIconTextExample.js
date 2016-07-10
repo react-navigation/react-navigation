@@ -9,6 +9,9 @@ const styles = StyleSheet.create({
   tabbar: {
     backgroundColor: '#2196f3',
   },
+  tab: {
+    padding: 4,
+  },
   page: {
     flex: 1,
     alignItems: 'center',
@@ -61,6 +64,7 @@ export default class TopBarIconExample extends Component {
         pressColor='rgba(0, 0, 0, .2)'
         indicatorStyle={styles.indicator}
         renderIcon={this._renderIcon}
+        tabStyle={styles.tab}
         style={styles.tabbar}
       />
     );
