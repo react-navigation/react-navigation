@@ -42,9 +42,7 @@
   },
   "peerDependencies": {
     "react": "*",
-    "react-native": "*"
-  },
-  "dependencies": {
-    "react-addons-shallow-compare": "^15.2.0"
+    "react-native": "*",
+    "react-addons-shallow-compare": "*"
   }
 }
