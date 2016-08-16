@@ -19,8 +19,8 @@ type Props = {
   navigationState: NavigationState;
   render: (props: SceneRendererProps) => ?React.Element<any>;
   configureAnimation: Animator;
-  onRequestChangeTab: Function;
-  onChangePosition: Function;
+  onRequestChangeTab: (index: number) => void;
+  onChangePosition: (value: number) => void;
   style?: any;
 }
 

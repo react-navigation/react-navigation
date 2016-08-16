@@ -102,6 +102,7 @@ The package exposes the following components,
   - `renderHeader` - callback which renders a header, useful for a top tab bar
   - `renderFooter` - callback which renders a footer, useful for a bottom tab bar
   - `renderScene` - callback which renders a single scene
+  - `lazy` - whether to load tabs lazily when you start switching
 
 - `<TabViewPage />` - container component for individual pages
 
