@@ -1,6 +1,6 @@
 /* @flow */
 
-import { Platform } from 'react-native';
+import { Animated, Platform } from 'react-native';
 import type { GestureEvent, GestureState } from './PanResponderTypes';
 import type { Route, SceneRendererProps } from './TabViewTypeDefinitions';
 
@@ -14,6 +14,10 @@ const VELOCITY_THRESHOLD = Platform.OS === 'android' ? 0.0000005 : 0.5; // on An
 function forHorizontal(props: Props) {
   let lastValue = null;
   let isMoving = null;
+
+  const updatePosition = Animated.event([
+    { position: props.position }
+  ]);
 
   function isIndexInRange(index: number) {
     const { routes } = props.navigationState;
@@ -59,7 +63,7 @@ function forHorizontal(props: Props) {
       isMoving = isMovingHorzontally(evt, gestureState);
     }
     if (isMoving && isIndexInRange(nextPosition)) {
-      props.position.setValue(nextPosition);
+      updatePosition({ position: nextPosition });
     }
   }
 
