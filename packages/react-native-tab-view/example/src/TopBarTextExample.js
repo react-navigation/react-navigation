@@ -16,6 +16,10 @@ const styles = StyleSheet.create({
   },
   indicator: {
     backgroundColor: '#ffeb3b',
+  },
+  label: {
+    color: '#fff',
+    fontWeight: '500',
   }
 });
 
@@ -48,6 +52,7 @@ export default class TopBarTextExample extends Component {
         pressColor='rgba(0, 0, 0, .2)'
         indicatorStyle={styles.indicator}
         style={styles.tabbar}
+        labelStyle={styles.label}
       />
     );
   };

@@ -125,6 +125,7 @@ The package exposes the following components,
   It accepts the following props in addition to the props accepted by `<TabBar />`,
   - `renderLabel` - optional callback which receives the current scene and returns a React Element to be used as a label
   - `indicatorStyle` - style object for the tab indicator
+  - `labelStyle` - style object for the tab label
 
 
 Check the [type definitions](src/TabViewTypeDefinitions.js) for details on shape of different objects.

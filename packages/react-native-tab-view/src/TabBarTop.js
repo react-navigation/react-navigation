@@ -13,7 +13,7 @@ import { SceneRendererPropType } from './TabViewPropTypes';
 import type { Scene, SceneRendererProps } from './TabViewTypeDefinitions';
 
 const styles = StyleSheet.create({
-  tablabel: {
+  tabLabel: {
     color: 'white',
     margin: 8,
   },
@@ -27,29 +27,27 @@ const styles = StyleSheet.create({
   },
 });
 
-type DefaultProps = {
-  renderLabel: (scene: Scene) => ?React.Element<any>;
-}
-
 type Props = SceneRendererProps & {
   renderLabel: (scene: Scene) => React.Element<any>;
   indicatorStyle?: any;
+  labelStyle?: any;
 }
 
-export default class TabBarTop extends Component<DefaultProps, Props, void> {
+export default class TabBarTop extends Component<void, Props, void> {
   static propTypes = {
     ...SceneRendererPropType,
-    renderLabel: PropTypes.func.isRequired,
+    renderLabel: PropTypes.func,
     indicatorStyle: View.propTypes.style,
-  };
-
-  static defaultProps = {
-    renderLabel: ({ route }) => route.title ? <Text style={styles.tablabel}>{route.title.toUpperCase()}</Text> : null,
+    labelStyle: Text.propTypes.style,
   };
 
   shouldComponentUpdate(nextProps: Props, nextState: void) {
     return shallowCompare(this, nextProps, nextState);
   }
+
+  _renderLabel = ({ route }: Scene) => (
+    route.title ? <Text style={[ styles.tabLabel, this.props.labelStyle ]}>{route.title.toUpperCase()}</Text> : null
+  );
 
   _renderIndicator = (props: SceneRendererProps) => {
     const { layout: { width }, position } = props;
@@ -68,6 +66,7 @@ export default class TabBarTop extends Component<DefaultProps, Props, void> {
     return (
       <TabBar
         {...this.props}
+        renderLabel={this.props.renderLabel || this._renderLabel}
         renderIndicator={this._renderIndicator}
       />
     );
