@@ -7,7 +7,7 @@ import { TabViewAnimated, TabViewPage } from 'react-native-tab-view';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#222'
+    backgroundColor: '#222',
   },
   page: {
     flex: 1,
@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     shadowOffset: {
       height: 8,
-    }
+    },
   },
   cover: {
     width: 200,
@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
   label: {
     margin: 16,
     color: '#fff',
-  }
+  },
 });
 
 const ALBUMS = {

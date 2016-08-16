@@ -16,7 +16,7 @@ function forHorizontal(props: Props) {
   let isMoving = null;
 
   const updatePosition = Animated.event([
-    { position: props.position }
+    { position: props.position },
   ]);
 
   function isIndexInRange(index: number) {

@@ -23,7 +23,7 @@ function forHorizontal(props: Props) {
 
   return {
     width,
-    transform: [ { translateX } ]
+    transform: [ { translateX } ],
   };
 }
 

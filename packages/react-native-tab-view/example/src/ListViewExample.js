@@ -17,14 +17,14 @@ const styles = StyleSheet.create({
     color: 'rgba(0, 0, 0, .4)',
     fontWeight: 'bold',
     textAlign: 'center',
-  }
+  },
 });
 
 export default class ListViewExample extends Component {
   state = {
     data: [],
     dataSource: new ListView.DataSource({
-      rowHasChanged: (r1, r2) => r1 !== r2
+      rowHasChanged: (r1, r2) => r1 !== r2,
     }),
   };
 

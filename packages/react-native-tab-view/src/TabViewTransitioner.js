@@ -52,7 +52,7 @@ export default class TabViewTransitioner extends Component<DefaultProps, Props, 
           friction: 30,
         }).start(resolve);
       });
-    }
+    },
   };
 
   constructor(props: Props) {

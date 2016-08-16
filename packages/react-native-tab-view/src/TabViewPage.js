@@ -79,7 +79,7 @@ export default class TabViewPage extends Component<void, Props, State> {
     const scene = {
       route,
       focused: index === routes.indexOf(route),
-      index: routes.indexOf(route)
+      index: routes.indexOf(route),
     };
 
     return (

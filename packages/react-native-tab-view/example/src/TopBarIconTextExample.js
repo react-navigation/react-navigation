@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
   },
   indicator: {
     backgroundColor: '#ffeb3b',
-  }
+  },
 });
 
 export default class TopBarIconExample extends Component {

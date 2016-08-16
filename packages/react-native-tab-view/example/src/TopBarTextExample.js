@@ -19,8 +19,8 @@ const styles = StyleSheet.create({
   },
   label: {
     color: '#fff',
-    fontWeight: '500',
-  }
+    fontWeight: '400',
+  },
 });
 
 export default class TopBarTextExample extends Component {

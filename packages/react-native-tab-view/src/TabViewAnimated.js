@@ -41,15 +41,15 @@ export default class TabViewAnimated extends Component<void, Props, State> {
     style: View.propTypes.style,
   };
 
-  state: State;
-
   constructor(props: Props) {
     super(props);
 
     this.state = {
       loaded: [ this.props.navigationState.index ],
-    }
+    };
   }
+
+  state: State;
 
   shouldComponentUpdate(nextProps: Props, nextState: State) {
     return shallowCompare(this, nextProps, nextState);
