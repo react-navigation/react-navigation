@@ -3,7 +3,7 @@ React Native Tab View
 
 A cross-platform Tab View component for React Native.
 
-This is a JavaScript-only implementation of swipeable tab views. It's super cutomizable, allowing you to do things like coverflow. Run the example app to see it in action.
+This is a JavaScript-only implementation of swipeable tab views. It's super customizable, allowing you to do things like coverflow. Run the example app to see it in action.
 
 ## Demo
 
