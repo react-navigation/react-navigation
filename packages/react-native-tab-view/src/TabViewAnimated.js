@@ -8,7 +8,7 @@ import {
 import shallowCompare from 'react-addons-shallow-compare';
 import TabViewTransitioner from './TabViewTransitioner';
 import { NavigationStatePropType } from './TabViewPropTypes';
-import type { NavigationState, SceneRendererProps } from './TabViewTypeDefinitions';
+import type { NavigationState, Route, SceneRendererProps } from './TabViewTypeDefinitions';
 
 const styles = StyleSheet.create({
   container: {
@@ -43,7 +43,7 @@ export default class TabViewAnimated extends Component<void, Props, State> {
 
   state: State;
 
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
 
     this.state = {
@@ -55,7 +55,7 @@ export default class TabViewAnimated extends Component<void, Props, State> {
     return shallowCompare(this, nextProps, nextState);
   }
 
-  _renderScene = (props: SceneRendererProps) => {
+  _renderScene = (props: SceneRendererProps & { route: Route }) => {
     const { renderScene, navigationState, lazy } = this.props;
     const { loaded } = this.state;
     if (lazy) {
