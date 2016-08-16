@@ -13,16 +13,6 @@ import TabViewStyleInterpolator from './TabViewStyleInterpolator';
 import { SceneRendererPropType } from './TabViewPropTypes';
 import type { Route, Scene, SceneRendererProps } from './TabViewTypeDefinitions';
 
-const styles = StyleSheet.create({
-  page: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-  },
-});
-
 type Props = SceneRendererProps & {
   route: Route;
   renderScene: (scene: Scene) => ?React.Element<any>;
@@ -83,7 +73,7 @@ export default class TabViewPage extends Component<void, Props, State> {
     };
 
     return (
-      <Animated.View style={[ styles.page, viewStyle ]} {...this.state.panHandlers}>
+      <Animated.View style={[ StyleSheet.absoluteFill, viewStyle ]} {...this.state.panHandlers}>
         {renderScene(scene)}
       </Animated.View>
     );
