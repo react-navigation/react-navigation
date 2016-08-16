@@ -93,7 +93,7 @@ The package exposes the following components,
   - `navigationState` - the current navigation state
   - `configureAnimation` - optional callback which performs animation and returns a promise
   - `onRequestChangeTab` - callback for when the current tab changes, should do the `setState`
-  - `onChangePosition` - callback for when the animated position changes, avoid doing anything expensive here
+  - `onChangePosition` - callback called with position value when the it changes, avoid doing anything expensive here
   - `render` - callback which renders the tab view, gets a special set of props as argument
 
 - `<TabViewAnimated />` - a convenience wrapper around `<TabViewTransitioner />`
@@ -124,6 +124,9 @@ The package exposes the following components,
   It accepts the following props in addition to the props accepted by `<TabBar />`,
   - `renderLabel` - optional callback which receives the current scene and returns a React Element to be used as a label
   - `indicatorStyle` - style object for the tab indicator
+
+
+Check the [type definitions](src/TabViewTypeDefinitions.js) for details on shape of different objects.
 
 
 ### Optimization Tips
