@@ -30,7 +30,11 @@ type Props = SceneRendererProps & {
   style?: any;
 }
 
-export default class TabViewPage extends Component<void, Props, void> {
+type State = {
+  panHandlers: any;
+}
+
+export default class TabViewPage extends Component<void, Props, State> {
   static propTypes = {
     ...SceneRendererPropType,
     renderScene: PropTypes.func.isRequired,
@@ -41,15 +45,36 @@ export default class TabViewPage extends Component<void, Props, void> {
   static PanResponder = TabViewPanResponder;
   static StyleInterpolator = TabViewStyleInterpolator;
 
-  shouldComponentUpdate(nextProps: Props, nextState: void) {
+  state: State = {
+    panHandlers: null,
+  };
+
+  componentWillMount() {
+    this._updatePanHandlers(this.props);
+  }
+
+  componentWillReceiveProps(nextProps: Props) {
+    if (this.props.navigationState !== nextProps.navigationState) {
+      this._updatePanHandlers(nextProps);
+    }
+  }
+
+  shouldComponentUpdate(nextProps: Props, nextState: State) {
     return shallowCompare(this, nextProps, nextState);
   }
 
+  _updatePanHandlers = (props: Props) => {
+    const { panHandlers } = props;
+    const viewPanHandlers = typeof panHandlers !== 'undefined' ? panHandlers : TabViewPanResponder.forHorizontal(props);
+    this.setState({
+      panHandlers: PanResponder.create(viewPanHandlers).panHandlers,
+    });
+  };
+
   render() {
-    const { navigationState, renderScene, panHandlers, style, route } = this.props;
+    const { navigationState, renderScene, getLastPosition, style, route } = this.props;
     const { routes, index } = navigationState;
 
-    const viewPanHandlers = typeof panHandlers !== 'undefined' ? panHandlers : TabViewPanResponder.forHorizontal(this.props);
     const viewStyle = typeof style !== 'undefined' ? style : TabViewStyleInterpolator.forHorizontal(this.props);
     const scene = {
       route,
@@ -58,7 +83,7 @@ export default class TabViewPage extends Component<void, Props, void> {
     };
 
     return (
-      <Animated.View style={[ styles.page, viewStyle ]} {...(viewPanHandlers ? PanResponder.create(viewPanHandlers).panHandlers : null)}>
+      <Animated.View style={[ styles.page, viewStyle ]} {...(this.state.panHandlers : null)}>
         {renderScene(scene)}
       </Animated.View>
     );
