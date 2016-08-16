@@ -67,12 +67,12 @@ export default class TabViewPage extends Component<void, Props, State> {
     const { panHandlers } = props;
     const viewPanHandlers = typeof panHandlers !== 'undefined' ? panHandlers : TabViewPanResponder.forHorizontal(props);
     this.setState({
-      panHandlers: PanResponder.create(viewPanHandlers).panHandlers,
+      panHandlers: viewPanHandlers ? PanResponder.create(viewPanHandlers).panHandlers : null,
     });
   };
 
   render() {
-    const { navigationState, renderScene, getLastPosition, style, route } = this.props;
+    const { navigationState, renderScene, style, route } = this.props;
     const { routes, index } = navigationState;
 
     const viewStyle = typeof style !== 'undefined' ? style : TabViewStyleInterpolator.forHorizontal(this.props);
@@ -83,7 +83,7 @@ export default class TabViewPage extends Component<void, Props, State> {
     };
 
     return (
-      <Animated.View style={[ styles.page, viewStyle ]} {...(this.state.panHandlers : null)}>
+      <Animated.View style={[ styles.page, viewStyle ]} {...this.state.panHandlers}>
         {renderScene(scene)}
       </Animated.View>
     );
