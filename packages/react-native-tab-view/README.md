@@ -93,6 +93,7 @@ The package exposes the following components,
   - `navigationState` - the current navigation state
   - `configureAnimation` - optional callback which performs animation and returns a promise
   - `onRequestChangeTab` - callback for when the current tab changes, should do the `setState`
+  - `onChangePosition` - callback for when the animated position changes, avoid doing anything expensive here
   - `render` - callback which renders the tab view, gets a special set of props as argument
 
 - `<TabViewAnimated />` - a convenience wrapper around `<TabViewTransitioner />`

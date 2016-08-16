@@ -20,6 +20,7 @@ type Props = {
   render: (props: SceneRendererProps) => ?React.Element<any>;
   configureAnimation: Animator;
   onRequestChangeTab: Function;
+  onChangePosition: Function;
   style?: any;
 }
 
@@ -38,6 +39,7 @@ export default class TabViewTransitioner extends Component<DefaultProps, Props, 
     render: PropTypes.func.isRequired,
     configureAnimation: PropTypes.func.isRequired,
     onRequestChangeTab: PropTypes.func.isRequired,
+    onChangePosition: PropTypes.func,
     style: View.propTypes.style,
   };
 
@@ -94,6 +96,10 @@ export default class TabViewTransitioner extends Component<DefaultProps, Props, 
 
   _trackPosition = (e: { value: number }) => {
     this._lastPosition = e.value;
+    const { onChangePosition } = this.props;
+    if (onChangePosition) {
+      onChangePosition(e.value);
+    }
   };
 
   _getLastPosition = () => {

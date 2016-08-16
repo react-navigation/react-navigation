@@ -46,8 +46,8 @@ export default class TabViewPage extends Component<void, Props, void> {
   }
 
   render() {
-    const { renderScene, panHandlers, style, route } = this.props;
-    const { routes, index } = this.props.navigationState;
+    const { navigationState, renderScene, panHandlers, style, route } = this.props;
+    const { routes, index } = navigationState;
 
     const viewPanHandlers = typeof panHandlers !== 'undefined' ? panHandlers : TabViewPanResponder.forHorizontal(this.props);
     const viewStyle = typeof style !== 'undefined' ? style : TabViewStyleInterpolator.forHorizontal(this.props);
