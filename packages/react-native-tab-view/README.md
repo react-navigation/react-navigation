@@ -35,19 +35,15 @@ const styles = StyleSheet.create({
 
 export default class TabViewExample extends Component {
   state = {
-    navigation: {
-      index: 0,
-      routes: [
-        { key: '1', title: 'First' },
-        { key: '2', title: 'Second' },
-      ],
-    },
+    index: 0,
+    routes: [
+      { key: '1', title: 'First' },
+      { key: '2', title: 'Second' },
+    ],
   };
 
   _handleChangeTab = (index) => {
-    this.setState({
-      navigation: { ...this.state.navigation, index },
-    });
+    this.setState({ index });
   };
 
   _renderHeader = (props) => {
@@ -73,7 +69,7 @@ export default class TabViewExample extends Component {
     return (
       <TabViewAnimated
         style={styles.container}
-        navigationState={this.state.navigation}
+        navigationState={this.state}
         renderScene={this._renderPage}
         renderHeader={this._renderHeader}
         onRequestChangeTab={this._handleChangeTab}
