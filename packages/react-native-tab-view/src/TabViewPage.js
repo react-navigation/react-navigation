@@ -44,6 +44,10 @@ export default class TabViewPage extends Component<void, Props, State> {
   }
 
   componentWillReceiveProps(nextProps: Props) {
+    // Only update panHandlers when navigation state changes
+    // We can't update the panHandlers mid-gesture
+    // Otherwise it'll never release the InteractionManager handle
+    // Which will cause InteractionManager.runAfterInteractions callbacks to never fire
     if (this.props.navigationState !== nextProps.navigationState) {
       this._updatePanHandlers(nextProps);
     }
