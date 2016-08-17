@@ -3,7 +3,6 @@
 import React, { Component, PropTypes } from 'react';
 import {
   Animated,
-  InteractionManager,
   PanResponder,
   StyleSheet,
   View,
@@ -45,24 +44,14 @@ export default class TabViewPage extends Component<void, Props, State> {
   }
 
   componentWillReceiveProps(nextProps: Props) {
-    this._callbackId++;
-    const currentId = this._callbackId;
-    InteractionManager.runAfterInteractions(() => {
-      if (currentId === this._callbackId) {
-        this._updatePanHandlers(nextProps);
-      }
-    });
+    if (this.props.navigationState !== nextProps.navigationState) {
+      this._updatePanHandlers(nextProps);
+    }
   }
 
   shouldComponentUpdate(nextProps: Props, nextState: State) {
     return shallowCompare(this, nextProps, nextState);
   }
-
-  componentWillUnmount() {
-    this._callbackId++;
-  }
-
-  _callbackId: number = 0;
 
   _updatePanHandlers = (props: Props) => {
     const { panHandlers } = props;
