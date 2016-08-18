@@ -20,11 +20,7 @@ type Props = SceneRendererProps & {
   style?: any;
 }
 
-type State = {
-  panHandlers: any;
-}
-
-export default class TabViewPage extends Component<void, Props, State> {
+export default class TabViewPage extends Component<void, Props, void> {
   static propTypes = {
     ...SceneRendererPropType,
     renderScene: PropTypes.func.isRequired,
@@ -35,35 +31,73 @@ export default class TabViewPage extends Component<void, Props, State> {
   static PanResponder = TabViewPanResponder;
   static StyleInterpolator = TabViewStyleInterpolator;
 
-  state: State = {
-    panHandlers: null,
-  };
-
   componentWillMount() {
-    this._updatePanHandlers(this.props);
+    // We need this mess to maintain a single panResponder
+    // We can't update the panResponder mid-gesture
+    // Otherwise it'll never release the InteractionManager handle
+    // Which will cause InteractionManager.runAfterInteractions callbacks to never fire
+    this._panResponder = PanResponder.create({
+      onStartShouldSetPanResponder: (...args) => {
+        return this._callResponderMethod('onStartShouldSetPanResponder', false)(...args);
+      },
+      onStartShouldSetPanResponderCapture: (...args) => {
+        return this._callResponderMethod('onStartShouldSetPanResponderCapture', false)(...args);
+      },
+      onMoveShouldSetPanResponder: (...args) => {
+        return this._callResponderMethod('onMoveShouldSetPanResponder', false)(...args);
+      },
+      onMoveShouldSetPanResponderCapture: (...args) => {
+        return this._callResponderMethod('onMoveShouldSetPanResponderCapture', false)(...args);
+      },
+      onPanResponderReject: (...args) => {
+        this._callResponderMethod('onPanResponderReject', null)(...args);
+      },
+      onPanResponderGrant: (...args) => {
+        this._callResponderMethod('onPanResponderGrant', null)(...args);
+      },
+      onPanResponderStart: (...args) => {
+        this._callResponderMethod('onPanResponderStart', null)(...args);
+      },
+      onPanResponderEnd: (...args) => {
+        this._callResponderMethod('onPanResponderEnd', null)(...args);
+      },
+      onPanResponderRelease: (...args) => {
+        this._callResponderMethod('onPanResponderRelease', null)(...args);
+      },
+      onPanResponderMove: (...args) => {
+        this._callResponderMethod('onPanResponderMove', null)(...args);
+      },
+      onPanResponderTerminate: (...args) => {
+        this._callResponderMethod('onPanResponderTerminate', null)(...args);
+      },
+      onPanResponderTerminationRequest: (...args) => {
+        return this._callResponderMethod('onPanResponderTerminationRequest', true)(...args);
+      },
+      onShouldBlockNativeResponder: (...args) => {
+        return this._callResponderMethod('onShouldBlockNativeResponder', false)(...args);
+      },
+    });
   }
 
   componentWillReceiveProps(nextProps: Props) {
-    // Only update panHandlers when navigation state changes
-    // We can't update the panHandlers mid-gesture
-    // Otherwise it'll never release the InteractionManager handle
-    // Which will cause InteractionManager.runAfterInteractions callbacks to never fire
-    if (this.props.navigationState !== nextProps.navigationState) {
-      this._updatePanHandlers(nextProps);
-    }
+    const { panHandlers } = nextProps;
+    this._panHandlers = typeof panHandlers !== 'undefined' ? panHandlers : TabViewPanResponder.forHorizontal(nextProps);
   }
 
-  shouldComponentUpdate(nextProps: Props, nextState: State) {
+  shouldComponentUpdate(nextProps: Props, nextState: void) {
     return shallowCompare(this, nextProps, nextState);
   }
 
-  _updatePanHandlers = (props: Props) => {
-    const { panHandlers } = props;
-    const viewPanHandlers = typeof panHandlers !== 'undefined' ? panHandlers : TabViewPanResponder.forHorizontal(props);
-    this.setState({
-      panHandlers: viewPanHandlers ? PanResponder.create(viewPanHandlers).panHandlers : null,
-    });
+  _callResponderMethod = (methodName: string, returnValue: any) => (...args) => {
+    const panHandlers = this._panHandlers;
+    if (panHandlers && panHandlers[methodName]) {
+      return panHandlers[methodName](...args);
+    }
+    return returnValue;
   };
+
+  _panHandlers: any;
+  _panResponder: any;
 
   render() {
     const { navigationState, renderScene, style, route } = this.props;
@@ -77,7 +111,7 @@ export default class TabViewPage extends Component<void, Props, State> {
     };
 
     return (
-      <Animated.View style={[ StyleSheet.absoluteFill, viewStyle ]} {...this.state.panHandlers}>
+      <Animated.View style={[ StyleSheet.absoluteFill, viewStyle ]} {...this._panResponder.panHandlers}>
         {renderScene(scene)}
       </Animated.View>
     );
