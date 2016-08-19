@@ -12,7 +12,7 @@ This is a JavaScript-only implementation of swipeable tab views. It's super cust
 ## Installation
 
 ```sh
-npm install --save react-native-tab-view
+npm install --save react-native-tab-view react-addons-shallow-compare
 ```
 
 ## Example
