@@ -88,7 +88,7 @@ export default class TabViewPage extends Component<void, Props, void> {
     return shallowCompare(this, nextProps, nextState);
   }
 
-  _callResponderMethod = (methodName: string, returnValue: any) => (...args) => {
+  _callResponderMethod = (methodName: string, returnValue: any) => (...args: Array<any>) => {
     const panHandlers = this._panHandlers;
     if (panHandlers && panHandlers[methodName]) {
       return panHandlers[methodName](...args);
