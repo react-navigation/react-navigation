@@ -53,10 +53,8 @@ export default class CoverflowExample extends Component {
   };
 
   state = {
-    navigation: {
-      index: 2,
-      routes: Object.keys(ALBUMS).map(key => ({ key })),
-    },
+    index: 2,
+    routes: Object.keys(ALBUMS).map(key => ({ key })),
   };
 
   _buildCoverFlowStyle = ({ layout, position, route, navigationState }) => {
@@ -107,7 +105,7 @@ export default class CoverflowExample extends Component {
 
   _handleChangeTab = (index) => {
     this.setState({
-      navigation: { ...this.state.navigation, index },
+      index,
     });
   };
 
@@ -136,7 +134,7 @@ export default class CoverflowExample extends Component {
     return (
       <TabViewAnimated
         style={[ styles.container, this.props.style ]}
-        navigationState={this.state.navigation}
+        navigationState={this.state}
         renderScene={this._renderPage}
         onRequestChangeTab={this._handleChangeTab}
       />

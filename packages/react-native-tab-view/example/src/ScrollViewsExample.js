@@ -21,19 +21,17 @@ export default class TopBarTextExample extends Component {
   };
 
   state = {
-    navigation: {
-      index: 0,
-      routes: [
-        { key: '1', title: 'First' },
-        { key: '2', title: 'Second' },
-        { key: '3', title: 'Third' },
-      ],
-    },
+    index: 0,
+    routes: [
+      { key: '1', title: 'First' },
+      { key: '2', title: 'Second' },
+      { key: '3', title: 'Third' },
+    ],
   };
 
   _handleChangeTab = (index) => {
     this.setState({
-      navigation: { ...this.state.navigation, index },
+      index,
     });
   };
 
@@ -69,7 +67,7 @@ export default class TopBarTextExample extends Component {
     return (
       <TabViewAnimated
         style={[ styles.container, this.props.style ]}
-        navigationState={this.state.navigation}
+        navigationState={this.state}
         renderScene={this._renderPage}
         renderHeader={this._renderHeader}
         onRequestChangeTab={this._handleChangeTab}

@@ -22,19 +22,17 @@ export default class TopBarIconExample extends Component {
   };
 
   state = {
-    navigation: {
-      index: 0,
-      routes: [
-        { key: '1' },
-        { key: '2' },
-        { key: '3' },
-      ],
-    },
+    index: 0,
+    routes: [
+      { key: '1' },
+      { key: '2' },
+      { key: '3' },
+    ],
   };
 
   _handleChangeTab = (index) => {
     this.setState({
-      navigation: { ...this.state.navigation, index },
+      index,
     });
   };
 
@@ -83,7 +81,7 @@ export default class TopBarIconExample extends Component {
     return (
       <TabViewAnimated
         style={[ styles.container, this.props.style ]}
-        navigationState={this.state.navigation}
+        navigationState={this.state}
         renderScene={this._renderPage}
         renderFooter={this._renderFooter}
         onRequestChangeTab={this._handleChangeTab}
