@@ -32,6 +32,8 @@ export default class TabViewPage extends Component<void, Props, void> {
   static StyleInterpolator = TabViewStyleInterpolator;
 
   componentWillMount() {
+    this._setPanHandlers(this.props);
+
     // We need this mess to maintain a single panResponder
     // We can't update the panResponder mid-gesture
     // Otherwise it'll never release the InteractionManager handle
@@ -80,13 +82,17 @@ export default class TabViewPage extends Component<void, Props, void> {
   }
 
   componentWillReceiveProps(nextProps: Props) {
-    const { panHandlers } = nextProps;
-    this._panHandlers = typeof panHandlers !== 'undefined' ? panHandlers : TabViewPanResponder.forHorizontal(nextProps);
+    this._setPanHandlers(nextProps);
   }
 
   shouldComponentUpdate(nextProps: Props, nextState: void) {
     return shallowCompare(this, nextProps, nextState);
   }
+
+  _setPanHandlers = (props: Props) => {
+    const { panHandlers } = props;
+    this._panHandlers = typeof panHandlers !== 'undefined' ? panHandlers : TabViewPanResponder.forHorizontal(props);
+  };
 
   _callResponderMethod = (methodName: string, returnValue: any) => (...args: Array<any>) => {
     const panHandlers = this._panHandlers;
