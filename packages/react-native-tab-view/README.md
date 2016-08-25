@@ -87,51 +87,61 @@ export default class TabViewExample extends Component {
 
 The package exposes the following components,
 
-- `<TabViewTransitioner />` - container component responsible for managing tab transitions
+### `<TabViewTransitioner />`
 
-  It accepts the following props,
-  - `navigationState` - the current navigation state
-  - `configureAnimation` - optional callback which performs animation and returns a promise
-  - `onRequestChangeTab` - callback for when the current tab changes, should do the `setState`
-  - `onChangePosition` - callback called with position value when the it changes, avoid doing anything expensive here
-  - `render` - callback which renders the tab view, gets a special set of props as argument
+Container component responsible for managing tab transitions
 
-- `<TabViewAnimated />` - a convenience wrapper around `<TabViewTransitioner />`
+It accepts the following props,
+- `navigationState` - the current navigation state
+- `configureAnimation` - optional callback which performs animation and returns a promise
+- `onRequestChangeTab` - callback for when the current tab changes, should do the `setState`
+- `onChangePosition` - callback called with position value as it changes (e.g. - on swipe or tab change), avoid doing anything expensive here
+- `render` - callback which renders the tab view, gets a special set of props as argument
 
-  It accepts the following props in addition to `navigationState` and `onRequestChangeTab`,
-  - `renderHeader` - callback which renders a header, useful for a top tab bar
-  - `renderFooter` - callback which renders a footer, useful for a bottom tab bar
-  - `renderScene` - callback which renders a single scene
-  - `lazy` - whether to load tabs lazily when you start switching
+### `<TabViewAnimated />`
 
-- `<TabViewPage />` - container component for individual pages
+A convenience wrapper around `<TabViewTransitioner />`
 
-  It accepts the following props,
-  - `renderScene` - callback which receives the current scene and returns a React Element
-  - `panHandlers` - pan handlers used for gesture (default is `TabViewPage.PanResponder.forHorizontal(props)`), pass `null` to disable gestures
-  - `style` - style object (default is `TabViewPage.StyleInterpolator.forHorizontal(props)`)
+It accepts the following props in addition to all the props accepted by `<TabViewTransitioner />` (except `render`),
+- `renderHeader` - callback which renders a header, useful for a top tab bar
+- `renderFooter` - callback which renders a footer, useful for a bottom tab bar
+- `renderScene` - callback which renders a single scene
+- `lazy` - whether to load tabs lazily when you start switching
 
-- `<TabBar />` - basic tab bar
+### `<TabViewPage />`
 
-  It accepts the following props,
-  - `pressColor` - color for material ripple (Android > 5.0 only)
-  - `renderIcon` - optional callback which receives the current scene and returns a React Element to be used as a icon
-  - `renderLabel` - optional callback which receives the current scene and returns a React Element to be used as a label
-  - `renderIndicator` - optional callback which receives the current scene and returns a React Element to be used as a tab indicator
-  - `tabStyle` - style object for the tab
+Container component for individual pages
 
-- `<TabBarTop />` - material design themed top tab bar
+It accepts the following props,
+- `renderScene` - callback which receives the current scene and returns a React Element
+- `panHandlers` - pan handlers used for gesture (default is `TabViewPage.PanResponder.forHorizontal(props)`), pass `null` to disable gestures
+- `style` - style object (default is `TabViewPage.StyleInterpolator.forHorizontal(props)`)
 
-  It accepts the following props in addition to the props accepted by `<TabBar />`,
-  - `renderLabel` - optional callback which receives the current scene and returns a React Element to be used as a label
-  - `indicatorStyle` - style object for the tab indicator
-  - `labelStyle` - style object for the tab label
+### `<TabBar />`
+
+Basic tab bar
+
+It accepts the following props,
+- `pressColor` - color for material ripple (Android > 5.0 only)
+- `renderIcon` - optional callback which receives the current scene and returns a React Element to be used as a icon
+- `renderLabel` - optional callback which receives the current scene and returns a React Element to be used as a label
+- `renderIndicator` - optional callback which receives the current scene and returns a React Element to be used as a tab indicator
+- `tabStyle` - style object for the tab
+
+### `<TabBarTop />`
+
+Material design themed top tab bar
+
+It accepts the following props in addition to the props accepted by `<TabBar />`,
+- `renderLabel` - optional callback which receives the current scene and returns a React Element to be used as a label
+- `indicatorStyle` - style object for the tab indicator
+- `labelStyle` - style object for the tab label
 
 
 Check the [type definitions](src/TabViewTypeDefinitions.js) for details on shape of different objects.
 
 
-### Caveats
+## Caveats
 
 `<TabViewAnimated />` and `<TabViewTransitioner />` implement `shouldComponentUpdate` to prevent unnecessary re-rendering. As a side-effect, the tabs won't re-render if something changes in the parent's state. If you need it to trigger a re-render, put it in the `navigationState`.
 
@@ -161,7 +171,7 @@ Then just pass `this.state` as the `navigationState` prop to `<TabViewAnimated /
 ```
 
 
-### Optimization Tips
+## Optimization Tips
 
 - The `renderScene` function is called every time the index changes. If your `renderScene` function is expensive, it's good idea move it to a separate component if your `renderScene` function doesn't depend on the index, and apply `shouldComponentUpdate` to prevent unnecessary re-renders.
 - If you've a large number of routes, especially images, it can slow the animation down quite a lot. You can instead render a limited number of routes. In your `renderScene` function, do the following to render only 2 routes on each side,
