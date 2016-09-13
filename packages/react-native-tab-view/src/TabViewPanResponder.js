@@ -15,10 +15,6 @@ function forHorizontal(props: Props) {
   let lastValue = null;
   let isMoving = null;
 
-  const updatePosition = Animated.event([
-    { position: props.position },
-  ]);
-
   function isIndexInRange(index: number) {
     const { routes } = props.navigationState;
     return (index >= 0 && index <= routes.length - 1);
@@ -63,7 +59,7 @@ function forHorizontal(props: Props) {
       isMoving = isMovingHorzontally(evt, gestureState);
     }
     if (isMoving && isIndexInRange(nextPosition)) {
-      updatePosition({ position: nextPosition });
+      props.position.setValue(nextPosition);
     }
   }
 
