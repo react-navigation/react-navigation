@@ -1,0 +1,19 @@
+{
+  "name": "React Native Tab View Demos",
+  "description": "Demonstrates the various capabilities of react-native-tab-view: https://github.com/react-native-community/react-native-tab-view",
+  "slug": "react-native-tab-view-demos",
+  "sdkVersion": "10.0.0",
+  "version": "1.0.0",
+  "orientation": "portrait",
+  "primaryColor": "#6631BA",
+  "iconUrl": "https://s3.amazonaws.com/exp-us-standard/icons/react-native-tab-view-icon.png",
+  "loading": {
+    "iconUrl": "https://s3.amazonaws.com/exp-us-standard/icons/react-native-tab-view-icon.png",
+    "hideExponentText": false
+  },
+  "packagerOpts": {
+    "assetExts": [
+      "ttf"
+    ]
+  }
+}

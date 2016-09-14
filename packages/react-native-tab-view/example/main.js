@@ -1,3 +1,4 @@
+import Exponent from 'exponent';
 import React, { Component } from 'react';
 import {
   AppRegistry,
@@ -29,8 +30,8 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   statusbar: {
-    backgroundColor: '#2196f3',
-    height: Platform.OS === 'ios' ? 20 : 0,
+    backgroundColor: Platform.OS === 'ios' ? '#2196f3' : '#1b7dcb',
+    height: Platform.OS === 'ios' ? 20 : 24,
   },
   appbar: {
     flexDirection: 'row',
@@ -85,6 +86,22 @@ export default class ExampleList extends Component {
 
   componentWillMount() {
     this._restoreNavigationState();
+
+    cacheImages([
+      require('./assets/album-art-1.jpg'),
+      require('./assets/album-art-2.jpg'),
+      require('./assets/album-art-3.jpg'),
+      require('./assets/album-art-4.jpg'),
+      require('./assets/album-art-5.jpg'),
+      require('./assets/album-art-6.jpg'),
+      require('./assets/album-art-7.jpg'),
+      require('./assets/album-art-8.jpg'),
+      require('./assets/back-button.android.png'),
+      require('./assets/back-button.ios.png'),
+      require('./assets/tab-icon-1.png'),
+      require('./assets/tab-icon-2.png'),
+      require('./assets/tab-icon-3.png'),
+    ]);
   }
 
   _persistNavigationState = async (currentIndex: number) => {
@@ -169,7 +186,7 @@ export default class ExampleList extends Component {
 
     return (
       <View style={styles.container}>
-        <StatusBar backgroundColor='#1b7dcb' />
+        <StatusBar barStyle="light-content" />
         <View style={styles.statusbar} />
         <View style={styles.appbar}>
           {index > -1 ?
@@ -192,4 +209,8 @@ export default class ExampleList extends Component {
   }
 }
 
-AppRegistry.registerComponent('tabviewexample', () => ExampleList);
+function cacheImages(images) {
+  return images.map(image => Exponent.Asset.fromModule(image).downloadAsync());
+}
+
+Exponent.registerRootComponent(ExampleList);
