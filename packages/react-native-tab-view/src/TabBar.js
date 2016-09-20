@@ -7,7 +7,6 @@ import {
   View,
   Text,
 } from 'react-native';
-import shallowCompare from 'react-addons-shallow-compare';
 import TouchableItem from './TouchableItem';
 import { SceneRendererPropType } from './TabViewPropTypes';
 import type { Scene, SceneRendererProps } from './TabViewTypeDefinitions';
@@ -62,10 +61,6 @@ export default class TabBar extends Component<DefaultProps, Props, void> {
   static defaultProps = {
     renderLabel: ({ route }) => route.title ? <Text style={styles.tablabel}>{route.title}</Text> : null,
   };
-
-  shouldComponentUpdate(nextProps: Props, nextState: void) {
-    return shallowCompare(this, nextProps, nextState);
-  }
 
   render() {
     const { position } = this.props;

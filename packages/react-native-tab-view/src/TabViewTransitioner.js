@@ -21,6 +21,7 @@ type Props = {
   configureAnimation: Animator;
   onRequestChangeTab: (index: number) => void;
   onChangePosition: (value: number) => void;
+  shouldOptimizeUpdates: boolean;
   style?: any;
 }
 
@@ -40,6 +41,7 @@ export default class TabViewTransitioner extends Component<DefaultProps, Props, 
     configureAnimation: PropTypes.func.isRequired,
     onRequestChangeTab: PropTypes.func.isRequired,
     onChangePosition: PropTypes.func,
+    shouldOptimizeUpdates: PropTypes.bool,
     style: View.propTypes.style,
   };
 
@@ -75,7 +77,11 @@ export default class TabViewTransitioner extends Component<DefaultProps, Props, 
   }
 
   shouldComponentUpdate(nextProps: Props, nextState: State) {
-    return shallowCompare(this, nextProps, nextState);
+    if (this.props.shouldOptimizeUpdates === false) {
+      return true;
+    } else {
+      return shallowCompare(this, nextProps, nextState);
+    }
   }
 
   componentDidUpdate() {

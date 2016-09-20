@@ -23,6 +23,7 @@ type Props = {
   renderHeader?: () => ?React.Element<any>;
   renderFooter?: () => ?React.Element<any>;
   onChangePosition?: (value: number) => void;
+  shouldOptimizeUpdates: boolean;
   lazy?: boolean;
   style?: any;
 }
@@ -38,6 +39,7 @@ export default class TabViewAnimated extends Component<void, Props, State> {
     renderHeader: PropTypes.func,
     renderFooter: PropTypes.func,
     onChangePosition: PropTypes.func,
+    shouldOptimizeUpdates: PropTypes.bool,
     lazy: PropTypes.bool,
     style: View.propTypes.style,
   };
@@ -53,7 +55,11 @@ export default class TabViewAnimated extends Component<void, Props, State> {
   state: State;
 
   shouldComponentUpdate(nextProps: Props, nextState: State) {
-    return shallowCompare(this, nextProps, nextState);
+    if (this.props.shouldOptimizeUpdates === false) {
+      return true;
+    } else {
+      return shallowCompare(this, nextProps, nextState);
+    }
   }
 
   _renderScene = (props: SceneRendererProps & { route: Route }) => {

@@ -7,7 +7,6 @@ import {
   Text,
   View,
 } from 'react-native';
-import shallowCompare from 'react-addons-shallow-compare';
 import TabBar from './TabBar';
 import { SceneRendererPropType } from './TabViewPropTypes';
 import type { Scene, SceneRendererProps } from './TabViewTypeDefinitions';
@@ -40,10 +39,6 @@ export default class TabBarTop extends Component<void, Props, void> {
     indicatorStyle: View.propTypes.style,
     labelStyle: Text.propTypes.style,
   };
-
-  shouldComponentUpdate(nextProps: Props, nextState: void) {
-    return shallowCompare(this, nextProps, nextState);
-  }
 
   _renderLabel = ({ route }: Scene) => (
     route.title ? <Text style={[ styles.tabLabel, this.props.labelStyle ]}>{route.title.toUpperCase()}</Text> : null

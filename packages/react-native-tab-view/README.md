@@ -101,6 +101,7 @@ It accepts the following props,
 - `configureAnimation` - optional callback which performs animation and returns a promise
 - `onRequestChangeTab` - callback for when the current tab changes, should do the `setState`
 - `onChangePosition` - callback called with position value as it changes (e.g. - on swipe or tab change), avoid doing anything expensive here
+- `shouldOptimizeUpdates` - whether to implement a `shouldComponentUpdate` strategy to minimize updates, enabled by default
 - `render` - callback which renders the tab view, gets a special set of props as argument
 
 ### `<TabViewAnimated />`

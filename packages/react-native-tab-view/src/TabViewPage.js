@@ -7,7 +7,6 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import shallowCompare from 'react-addons-shallow-compare';
 import TabViewPanResponder from './TabViewPanResponder';
 import TabViewStyleInterpolator from './TabViewStyleInterpolator';
 import { SceneRendererPropType } from './TabViewPropTypes';
@@ -83,10 +82,6 @@ export default class TabViewPage extends Component<void, Props, void> {
 
   componentWillReceiveProps(nextProps: Props) {
     this._setPanHandlers(nextProps);
-  }
-
-  shouldComponentUpdate(nextProps: Props, nextState: void) {
-    return shallowCompare(this, nextProps, nextState);
   }
 
   _setPanHandlers = (props: Props) => {
