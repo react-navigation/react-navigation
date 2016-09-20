@@ -83,16 +83,14 @@ export default class TopBarIconExample extends Component {
     );
   };
 
-  _configureAnimation = (animatedValue, toValue) => {
-    animatedValue.setValue(toValue);
-  };
+  _configureTransition = () => null;
 
   render() {
     return (
       <TabViewAnimated
         style={[ styles.container, this.props.style ]}
         navigationState={this.state}
-        configureAnimation={this._configureAnimation}
+        configureTransition={this._configureTransition}
         renderScene={this._renderPage}
         renderFooter={this._renderFooter}
         onRequestChangeTab={this._handleChangeTab}

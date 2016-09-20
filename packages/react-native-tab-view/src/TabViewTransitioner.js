@@ -9,16 +9,24 @@ import shallowCompare from 'react-addons-shallow-compare';
 import { NavigationStatePropType } from './TabViewPropTypes';
 import type { NavigationState, SceneRendererProps } from './TabViewTypeDefinitions';
 
-type Animator = (animatedValue: Animated.Value, toValue: number) => ?Promise<any>
+type TransitionProps = {
+  progress: number
+}
+
+type TransitionSpec = {
+  timing: Function
+}
+
+type TransitionConfigurator = (currentTransitionProps: TransitionProps, nextTransitionProps: TransitionProps) => TransitionSpec
 
 type DefaultProps = {
-  configureAnimation: Animator
+  configureTransition: TransitionConfigurator
 }
 
 type Props = {
   navigationState: NavigationState;
   render: (props: SceneRendererProps) => ?React.Element<any>;
-  configureAnimation: Animator;
+  configureTransition: TransitionConfigurator;
   onRequestChangeTab: (index: number) => void;
   onChangePosition: (value: number) => void;
   shouldOptimizeUpdates: boolean;
@@ -34,11 +42,17 @@ type State = {
   position: Animated.Value;
 }
 
+const DefaultTransitionSpec = {
+  timing: Animated.spring,
+  tension: 300,
+  friction: 30,
+};
+
 export default class TabViewTransitioner extends Component<DefaultProps, Props, State> {
   static propTypes = {
     navigationState: NavigationStatePropType.isRequired,
     render: PropTypes.func.isRequired,
-    configureAnimation: PropTypes.func.isRequired,
+    configureTransition: PropTypes.func.isRequired,
     onRequestChangeTab: PropTypes.func.isRequired,
     onChangePosition: PropTypes.func,
     shouldOptimizeUpdates: PropTypes.bool,
@@ -46,15 +60,7 @@ export default class TabViewTransitioner extends Component<DefaultProps, Props, 
   };
 
   static defaultProps = {
-    configureAnimation: (position: Animated.Value, toValue: number) => {
-      return new Promise(resolve => {
-        Animated.spring(position, {
-          toValue,
-          tension: 300,
-          friction: 30,
-        }).start(resolve);
-      });
-    },
+    configureTransition: () => DefaultTransitionSpec,
   };
 
   constructor(props: Props) {
@@ -85,9 +91,7 @@ export default class TabViewTransitioner extends Component<DefaultProps, Props, 
   }
 
   componentDidUpdate() {
-    setTimeout(() => {
-      this.props.configureAnimation(this.state.position, this.props.navigationState.index);
-    }, 0);
+    this._transitionTo(this.props.navigationState.index);
   }
 
   componentWillUnmount() {
@@ -138,24 +142,45 @@ export default class TabViewTransitioner extends Component<DefaultProps, Props, 
     };
   }
 
-  _updateIndex = (current: ?number, index: number) => {
-    if (this.props.navigationState.index === index) {
+  _transitionTo = (toValue: number, callback: Function) => {
+    const lastPosition = this._getLastPosition();
+    if (lastPosition === toValue) {
       return;
     }
-    // Prevent extra setState when index updated mid-transition
-    if (current === index) {
-      this.props.onRequestChangeTab(index);
+    const currentTransitionProps = {
+      progress: lastPosition,
+    };
+    const nextTransitionProps = {
+      progress: toValue,
+    };
+    const transitionSpec = this.props.configureTransition(currentTransitionProps, nextTransitionProps);
+    if (transitionSpec) {
+      const { timing, ...transitionConfig } = transitionSpec;
+      timing(this.state.position, {
+        ...transitionConfig,
+        toValue,
+      }).start(callback);
+    } else {
+      this.state.position.setValue(toValue);
+      if (callback) {
+        callback();
+      }
     }
-  };
+  }
 
   _jumpToIndex = (index: number) => {
     this._nextIndex = index;
-    const animation = this.props.configureAnimation(this.state.position, index);
-    if (animation) {
-      animation.then(() => this._updateIndex(this._nextIndex, index));
-    } else {
-      this._updateIndex(this._nextIndex, index);
-    }
+    this._transitionTo(index, () =>
+      global.requestAnimationFrame(() => {
+        if (this.props.navigationState.index === index) {
+          return;
+        }
+        // Prevent extra setState when index updated mid-transition
+        if (this._nextIndex === index) {
+          this.props.onRequestChangeTab(index);
+        }
+      })
+    );
   };
 
   render() {

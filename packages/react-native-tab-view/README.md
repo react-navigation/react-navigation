@@ -98,7 +98,7 @@ Container component responsible for managing tab transitions
 
 It accepts the following props,
 - `navigationState` - the current navigation state
-- `configureAnimation` - optional callback which performs animation and returns a promise
+- `configureTransition` - optional callback which returns a configuration for the transition, return `null` to disable animation
 - `onRequestChangeTab` - callback for when the current tab changes, should do the `setState`
 - `onChangePosition` - callback called with position value as it changes (e.g. - on swipe or tab change), avoid doing anything expensive here
 - `shouldOptimizeUpdates` - whether to implement a `shouldComponentUpdate` strategy to minimize updates, enabled by default
@@ -120,7 +120,6 @@ Container component for individual pages
 
 It accepts the following props,
 - `renderScene` - callback which receives the current scene and returns a React Element
-- `panHandlers` - pan handlers used for gesture (default is `TabViewPage.PanResponder.forHorizontal(props)`), pass `null` to disable gestures
 - `style` - style object (default is `TabViewPage.StyleInterpolator.forHorizontal(props)`)
 
 ### `<TabBar />`
