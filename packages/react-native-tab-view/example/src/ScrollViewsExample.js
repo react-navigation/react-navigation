@@ -35,11 +35,29 @@ export default class TopBarTextExample extends Component {
     });
   };
 
+  _handleTabItemPress = route => {
+    if (route !== this.state.routes[this.state.index]) {
+      return;
+    }
+    switch (route.key) {
+    case '1':
+      this._first.scrollTo({ y: 0 });
+      break;
+    case '2':
+      this._second.scrollTo({ y: 0 });
+      break;
+    case '3':
+      this._third.scrollTo({ y: 0 });
+      break;
+    }
+  };
+
   _renderHeader = (props) => {
     return (
       <TabBarTop
         {...props}
         pressColor='rgba(0, 0, 0, .2)'
+        onTabItemPress={this._handleTabItemPress}
         indicatorStyle={styles.indicator}
         style={styles.tabbar}
       />
@@ -49,11 +67,11 @@ export default class TopBarTextExample extends Component {
   _renderScene = ({ route }) => {
     switch (route.key) {
     case '1':
-      return <ListViewExample style={{ backgroundColor: '#ff4081' }} />;
+      return <ListViewExample ref={el => (this._first = el)} style={{ backgroundColor: '#ff4081' }} />;
     case '2':
-      return <ListViewExample style={{ backgroundColor: '#673ab7' }} />;
+      return <ListViewExample ref={el => (this._second = el)} style={{ backgroundColor: '#673ab7' }} />;
     case '3':
-      return <ListViewExample style={{ backgroundColor: '#4caf50' }} />;
+      return <ListViewExample ref={el => (this._third = el)} style={{ backgroundColor: '#4caf50' }} />;
     default:
       return null;
     }

@@ -58,6 +58,8 @@ export default class ListViewExample extends Component {
     );
   };
 
+  scrollTo = (...args) => this._root.scrollTo(...args);
+
   render() {
     return (
       <ListView
@@ -66,6 +68,7 @@ export default class ListViewExample extends Component {
         dataSource={this.state.dataSource}
         renderRow={this._renderRow}
         onEndReached={this._genRows}
+        ref={el => (this._root = el)}
       />
     );
   }
