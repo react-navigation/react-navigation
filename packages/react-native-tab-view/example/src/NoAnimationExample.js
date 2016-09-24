@@ -77,7 +77,7 @@ export default class TopBarIconExample extends Component {
     return (
       <TabViewPage
         {...props}
-        panHandlers={null}
+        swipeEnabled={false}
         renderScene={this._renderScene}
       />
     );

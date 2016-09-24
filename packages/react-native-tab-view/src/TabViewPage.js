@@ -15,7 +15,7 @@ import type { Route, Scene, SceneRendererProps } from './TabViewTypeDefinitions'
 type Props = SceneRendererProps & {
   route: Route;
   renderScene: (scene: Scene) => ?React.Element<any>;
-  panHandlers?: any;
+  swipeEnabled?: boolean;
   style?: any;
 }
 
@@ -23,11 +23,10 @@ export default class TabViewPage extends Component<void, Props, void> {
   static propTypes = {
     ...SceneRendererPropType,
     renderScene: PropTypes.func.isRequired,
-    panHandlers: PropTypes.object,
+    swipeEnabled: PropTypes.bool,
     style: PropTypes.any,
   };
 
-  static PanResponder = TabViewPanResponder;
   static StyleInterpolator = TabViewStyleInterpolator;
 
   componentWillMount() {
@@ -85,8 +84,11 @@ export default class TabViewPage extends Component<void, Props, void> {
   }
 
   _setPanHandlers = (props: Props) => {
-    const { panHandlers } = props;
-    this._panHandlers = typeof panHandlers !== 'undefined' ? panHandlers : TabViewPanResponder.forHorizontal(props);
+    if (this.props.swipeEnabled === false) {
+      this._panHandlers = null;
+    } else {
+      this._panHandlers = TabViewPanResponder.forHorizontal(props);
+    }
   };
 
   _callResponderMethod = (methodName: string, returnValue: any) => (...args: Array<any>) => {

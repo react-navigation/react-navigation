@@ -120,6 +120,7 @@ Container component for individual pages
 
 It accepts the following props,
 - `renderScene` - callback which receives the current scene and returns a React Element
+- `swipeEnabled` - whether to enable swipe gestures
 - `style` - style object (default is `TabViewPage.StyleInterpolator.forHorizontal(props)`)
 
 ### `<TabBar />`
