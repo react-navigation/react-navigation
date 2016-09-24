@@ -3,12 +3,12 @@ React Native Tab View
 
 A cross-platform Tab View component for React Native.
 
-This is a JavaScript-only implementation of swipeable tab views. It's
-super customizable, allowing you to do things like coverflow. [Run the
+This is a JavaScript-only implementation of swipeable tab views. It's super customizable, allowing you to do things like coverflow.
+
+- [Run the
 example app to see it in
-action.](https://getexponent.com/@rncommunity/react-native-tab-view-demos)
--- see the source in
--- [/example](https://github.com/react-native-community/react-native-tab-view/tree/master/example).
+action](https://getexponent.com/@rncommunity/react-native-tab-view-demos).
+- Checkout the [/example](https://github.com/react-native-community/react-native-tab-view/tree/master/example) folder for source code.
 
 
 ## Demo
@@ -165,7 +165,7 @@ state = {
 }
 ```
 
-Then just pass `this.state` as the `navigationState` prop to `<TabViewAnimated />` or `<TabViewTransitioner />`.
+Then pass `this.state` as the `navigationState` prop to `<TabViewAnimated />` or `<TabViewTransitioner />`.
 
 
 ```js
@@ -181,7 +181,7 @@ Then just pass `this.state` as the `navigationState` prop to `<TabViewAnimated /
 ## Optimization Tips
 
 - The `renderScene` function is called every time the index changes. If your `renderScene` function is expensive, it's good idea move it to a separate component if your `renderScene` function doesn't depend on the index, and apply `shouldComponentUpdate` to prevent unnecessary re-renders.
-- If you've a large number of routes, especially images, it can slow the animation down quite a lot. You can instead render a limited number of routes. In your `renderScene` function, do the following to render only 2 routes on each side,
+- If you've a large number of routes, especially images, it can slow the animation down a lot. You can instead render a limited number of routes. In your `renderScene` function, do the following to render only 2 routes on each side,
 
   ```js
   renderScene = ({ route }) => {
