@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Image, StyleSheet } from 'react-native';
+import { View, Image, Text, StyleSheet } from 'react-native';
 import { TabViewAnimated, TabViewPage, TabBar } from 'react-native-tab-view';
 
 const styles = StyleSheet.create({
@@ -16,6 +16,23 @@ const styles = StyleSheet.create({
   },
   tab: {
     padding: 0,
+  },
+  badge: {
+    marginTop: 4,
+    marginRight: 32,
+    backgroundColor: '#f44336',
+    height: 24,
+    width: 24,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 4,
+  },
+  count: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: 'bold',
+    marginTop: -2,
   },
 });
 
@@ -52,12 +69,24 @@ export default class TopBarIconExample extends Component {
     }
   };
 
+  _renderBadge = ({ route }) => {
+    if (route.key === '2') {
+      return (
+        <View style={styles.badge}>
+          <Text style={styles.count}>42</Text>
+        </View>
+      );
+    }
+    return null;
+  };
+
   _renderFooter = (props) => {
     return (
       <TabBar
         {...props}
         pressColor='rgba(0, 0, 0, .2)'
         renderIcon={this._renderIcon}
+        renderBadge={this._renderBadge}
         tabStyle={styles.tab}
         style={styles.tabbar}
       />

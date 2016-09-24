@@ -12,6 +12,9 @@ import { SceneRendererPropType } from './TabViewPropTypes';
 import type { Scene, SceneRendererProps } from './TabViewTypeDefinitions';
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   tabbar: {
     backgroundColor: 'black',
     flexDirection: 'row',
@@ -32,6 +35,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  badge: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+  },
 });
 
 type DefaultProps = {
@@ -42,6 +50,7 @@ type Props = SceneRendererProps & {
   pressColor?: string;
   renderLabel?: (scene: Scene) => ?React.Element<any>;
   renderIcon?: (scene: Scene) => ?React.Element<any>;
+  renderBadge?: (scene: Scene) => ?React.Element<any>;
   renderIndicator?: (props: SceneRendererProps) => ?React.Element<any>;
   onTabItemPress?: Function;
   tabStyle?: any;
@@ -86,6 +95,7 @@ export default class TabBar extends Component<DefaultProps, Props, void> {
           };
           const icon = this.props.renderIcon ? this.props.renderIcon(scene) : null;
           const label = this.props.renderLabel ? this.props.renderLabel(scene) : null;
+          const badge = this.props.renderBadge ? this.props.renderBadge(scene) : null;
 
           let tabStyle;
 
@@ -110,10 +120,17 @@ export default class TabBar extends Component<DefaultProps, Props, void> {
                 jumpToIndex(i);
               }}
             >
-              <Animated.View style={[ styles.tabitem, { opacity }, tabStyle, this.props.tabStyle ]}>
-                {this.props.renderIcon ? this.props.renderIcon(scene) : null}
-                {this.props.renderLabel ? this.props.renderLabel(scene) : null}
-              </Animated.View>
+              <View style={styles.container}>
+                <Animated.View style={[ styles.tabitem, { opacity }, tabStyle, this.props.tabStyle ]}>
+                  {icon}
+                  {label}
+                </Animated.View>
+                {badge ?
+                  <View style={styles.badge}>
+                    {badge}
+                  </View> : null
+                }
+              </View>
             </TouchableItem>
           );
         })}
