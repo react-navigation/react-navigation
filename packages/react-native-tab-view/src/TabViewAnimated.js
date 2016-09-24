@@ -75,19 +75,19 @@ export default class TabViewAnimated extends Component<void, Props, State> {
   };
 
   _renderItems = (props: SceneRendererProps) => {
-    if (!props.layout.measured) {
-      return null;
-    }
-
     const { renderHeader, renderFooter } = this.props;
 
     return (
       <View style={styles.container}>
         {renderHeader && renderHeader(props)}
         <View style={styles.container}>
-          {this.props.navigationState.routes.map(route => {
-            return this._renderScene({ ...props, route, key: route.key });
-          })}
+          {props.layout.measured ?
+            <View style={styles.container}>
+              {this.props.navigationState.routes.map(route => {
+                return this._renderScene({ ...props, route, key: route.key });
+              })}
+            </View> : null
+          }
         </View>
         {renderFooter && renderFooter(props)}
       </View>
