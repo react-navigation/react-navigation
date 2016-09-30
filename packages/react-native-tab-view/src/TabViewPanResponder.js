@@ -1,6 +1,6 @@
 /* @flow */
 
-import { Animated, Platform } from 'react-native';
+import { Platform } from 'react-native';
 import type { GestureEvent, GestureState } from './PanResponderTypes';
 import type { Route, SceneRendererProps } from './TabViewTypeDefinitions';
 
