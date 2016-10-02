@@ -57,7 +57,7 @@ export default class TopBarTextExample extends Component {
       <TabBarTop
         {...props}
         pressColor='rgba(0, 0, 0, .2)'
-        onTabItemPress={this._handleTabItemPress}
+        onTabPress={this._handleTabItemPress}
         indicatorStyle={styles.indicator}
         style={styles.tabbar}
       />

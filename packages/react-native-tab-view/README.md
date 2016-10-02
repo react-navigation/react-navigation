@@ -133,7 +133,7 @@ It accepts the following props,
 - `renderLabel` - optional callback which receives the current scene and returns a React Element to be used as a label
 - `renderIndicator` - optional callback which receives the current scene and returns a React Element to be used as a tab indicator
 - `renderBadge` - optional callback which receives the current scene and returns a React Element to be used as a badge
-- `onTabItemPress` - optional callback invoked on tab press, useful for things like scroll to top
+- `onTabPress` - optional callback invoked on tab press, useful for things like scroll to top
 - `tabStyle` - style object for the tab
 
 ### `<TabBarTop />`

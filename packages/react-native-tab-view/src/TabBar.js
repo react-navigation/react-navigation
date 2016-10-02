@@ -52,7 +52,7 @@ type Props = SceneRendererProps & {
   renderIcon?: (scene: Scene) => ?React.Element<any>;
   renderBadge?: (scene: Scene) => ?React.Element<any>;
   renderIndicator?: (props: SceneRendererProps) => ?React.Element<any>;
-  onTabItemPress?: Function;
+  onTabPress?: Function;
   tabStyle?: any;
   style?: any;
 }
@@ -64,7 +64,7 @@ export default class TabBar extends Component<DefaultProps, Props, void> {
     renderIcon: PropTypes.func,
     renderLabel: PropTypes.func,
     renderIndicator: PropTypes.func,
-    onTabItemPress: PropTypes.func,
+    onTabPress: PropTypes.func,
     tabStyle: View.propTypes.style,
     style: View.propTypes.style,
   };
@@ -113,9 +113,9 @@ export default class TabBar extends Component<DefaultProps, Props, void> {
               style={styles.tab}
               pressColor={this.props.pressColor}
               onPress={() => {
-                const { onTabItemPress, jumpToIndex } = this.props;
-                if (onTabItemPress) {
-                  onTabItemPress(routes[i]);
+                const { onTabPress, jumpToIndex } = this.props;
+                if (onTabPress) {
+                  onTabPress(routes[i]);
                 }
                 jumpToIndex(i);
               }}
