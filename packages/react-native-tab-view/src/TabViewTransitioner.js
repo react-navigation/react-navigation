@@ -123,6 +123,10 @@ export default class TabViewTransitioner extends Component<DefaultProps, Props, 
   _handleLayout = (e: any) => {
     const { height, width } = e.nativeEvent.layout;
 
+    if (this.state.layout.width === width && this.state.layout.height === height) {
+      return;
+    }
+
     this.setState({
       layout: {
         measured: true,
