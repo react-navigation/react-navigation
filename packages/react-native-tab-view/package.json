@@ -46,5 +46,10 @@
     "react": "*",
     "react-native": "*",
     "react-addons-shallow-compare": "*"
+  },
+  "devDependencies": {
+    "react": "latest",
+    "react-native": "latest",
+    "react-addons-shallow-compare": "latest"
   }
 }
