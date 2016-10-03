@@ -77,7 +77,8 @@ export default class TabBar extends Component<DefaultProps, Props, void> {
     const { position } = this.props;
     const { routes, index } = this.props.navigationState;
 
-    const inputRange = routes.map((x, i) => i);
+    // Prepend '-1', so there are always at least 2 items in inputRange
+    const inputRange = [ -1, ...routes.map((x, i) => i) ];
 
     return (
       <View style={[ styles.tabbar, this.props.style ]}>
