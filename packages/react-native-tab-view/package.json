@@ -8,7 +8,8 @@
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint src/**/*.js"
+    "lint": "eslint src/**/*.js",
+    "flow": "flow"
   },
   "keywords": [
     "react-native-component",
@@ -38,7 +39,8 @@
     "eslint-plugin-babel": "^3.3.0",
     "eslint-plugin-import": "^1.10.2",
     "eslint-plugin-react": "^5.2.2",
-    "eslint-plugin-react-native": "^1.1.0"
+    "eslint-plugin-react-native": "^1.1.0",
+    "flow-bin": "^0.32.0"
   },
   "peerDependencies": {
     "react": "*",
