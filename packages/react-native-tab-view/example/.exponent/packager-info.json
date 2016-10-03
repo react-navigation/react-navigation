@@ -1,8 +1,0 @@
-{
-  "exponentServerPort": 19000,
-  "packagerPort": 19001,
-  "packagerPid": 14314,
-  "exponentServerNgrokUrl": "https://rb-2ar.rncommunity.example.exp.direct",
-  "packagerNgrokUrl": "https://packager.rb-2ar.rncommunity.example.exp.direct",
-  "ngrokPid": 14331
-}
