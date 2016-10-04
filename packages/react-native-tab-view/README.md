@@ -8,8 +8,15 @@ This is a JavaScript-only implementation of swipeable tab views. It's super cust
 - [Run the
 example app to see it in
 action](https://getexponent.com/@rncommunity/react-native-tab-view-demos).
-- Checkout the [/example](https://github.com/react-native-community/react-native-tab-view/tree/master/example) folder for source code.
+- Checkout the [example/](https://github.com/react-native-community/react-native-tab-view/tree/master/example) folder for source code.
 
+## Features
+
+- Smooth animations and gestures
+- Scrollable tabs
+- Both top and bottom tab bars
+- Follows Material Design spec
+- Highly customizable
 
 ## Demo
 
