@@ -275,7 +275,7 @@ export default class TabBar extends Component<DefaultProps, Props, State> {
           bounces={false}
           scrollsToTop={false}
           showsHorizontalScrollIndicator={false}
-          contentContainerStyle={[ styles.tabcontent, scrollEnabled ? null : { flex: 1 } ]}
+          contentContainerStyle={[ styles.tabcontent, scrollEnabled ? null : styles.container ]}
           scrollEventThrottle={16}
           onScroll={this._handleScroll}
           onScrollBeginDrag={this._handleBeginDrag}
@@ -304,9 +304,9 @@ export default class TabBar extends Component<DefaultProps, Props, State> {
 
             if (icon) {
               if (label) {
-                tabStyle.marginTop = 8;
+                tabStyle.paddingTop = 8;
               } else {
-                tabStyle.margin = 8;
+                tabStyle.padding = 12;
               }
             }
 
