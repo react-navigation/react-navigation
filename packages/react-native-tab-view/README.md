@@ -128,12 +128,14 @@ It accepts the following props,
 Basic tab bar
 
 It accepts the following props,
-- `pressColor` - color for material ripple (Android > 5.0 only)
 - `renderIcon` - optional callback which receives the current scene and returns a React Element to be used as a icon
 - `renderLabel` - optional callback which receives the current scene and returns a React Element to be used as a label
 - `renderIndicator` - optional callback which receives the current scene and returns a React Element to be used as a tab indicator
 - `renderBadge` - optional callback which receives the current scene and returns a React Element to be used as a badge
 - `onTabPress` - optional callback invoked on tab press, useful for things like scroll to top
+- `pressColor` - color for material ripple (Android > 5.0 only)
+- `scrollEnabled` - whether to enable scrollable tabs
+- `tabWidth` - optional custom tab width for scrollable tabs
 - `tabStyle` - style object for the tab
 
 ### `<TabBarTop />`

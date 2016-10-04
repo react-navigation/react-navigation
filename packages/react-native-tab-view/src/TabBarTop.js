@@ -26,6 +26,10 @@ const styles = StyleSheet.create({
   },
 });
 
+type IndicatorProps = SceneRendererProps & {
+  width: number;
+}
+
 type Props = SceneRendererProps & {
   renderLabel: (scene: Scene) => React.Element<any>;
   indicatorStyle?: any;
@@ -44,15 +48,14 @@ export default class TabBarTop extends Component<void, Props, void> {
     route.title ? <Text style={[ styles.tabLabel, this.props.labelStyle ]}>{route.title.toUpperCase()}</Text> : null
   );
 
-  _renderIndicator = (props: SceneRendererProps) => {
-    const { layout: { width }, position } = props;
-    const { routes } = props.navigationState;
+  _renderIndicator = (props: IndicatorProps) => {
+    const { width, position } = props;
 
-    const translateX = Animated.multiply(position, new Animated.Value(width / routes.length));
+    const translateX = Animated.multiply(position, new Animated.Value(width));
 
     return (
       <Animated.View
-        style={[ styles.indicator, { width: width / routes.length, transform: [ { translateX } ] }, this.props.indicatorStyle ]}
+        style={[ styles.indicator, { width, transform: [ { translateX } ] }, this.props.indicatorStyle ]}
       />
     );
   };

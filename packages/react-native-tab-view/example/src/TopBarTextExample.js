@@ -34,6 +34,7 @@ export default class TopBarTextExample extends Component {
       { key: '1', title: 'First' },
       { key: '2', title: 'Second' },
       { key: '3', title: 'Third' },
+      { key: '4', title: 'Fourth' },
     ],
   };
 
@@ -47,6 +48,7 @@ export default class TopBarTextExample extends Component {
     return (
       <TabBarTop
         {...props}
+        scrollEnabled
         pressColor='rgba(0, 0, 0, .2)'
         indicatorStyle={styles.indicator}
         style={styles.tabbar}
@@ -62,7 +64,9 @@ export default class TopBarTextExample extends Component {
     case '2':
       return <View style={[ styles.page, { backgroundColor: '#673ab7' } ]} />;
     case '3':
-      return <View style={[ styles.page, { backgroundColor: '#4caf50' } ]} />;
+      return <View style={[ styles.page, { backgroundColor: '#8bc34a' } ]} />;
+    case '4':
+      return <View style={[ styles.page, { backgroundColor: '#009688' } ]} />;
     default:
       return null;
     }
