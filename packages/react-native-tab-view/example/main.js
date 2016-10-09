@@ -13,8 +13,6 @@ import {
 } from 'react-native';
 import TopBarTextExample from './src/TopBarTextExample';
 import TopBarIconExample from './src/TopBarIconExample';
-import TopBarIconTextExample from './src/TopBarIconTextExample';
-import BottomBarIconExample from './src/BottomBarIconExample';
 import BottomBarIconTextExample from './src/BottomBarIconTextExample';
 import NoAnimationExample from './src/NoAnimationExample';
 import ScrollViewsExample from './src/ScrollViewsExample';
@@ -55,7 +53,7 @@ const styles = StyleSheet.create({
     borderBottomColor: 'rgba(0, 0, 0, .06)',
   },
   item: {
-    fontSize: 14,
+    fontSize: 16,
     color: '#333',
   },
 });
@@ -63,11 +61,9 @@ const styles = StyleSheet.create({
 const PERSISTENCE_KEY = 'index_persistence';
 
 const EXAMPLE_ITEMS = [
-  'Text only top bar',
+  'Scrollable top bar',
   'Icon only top bar',
-  'Icon + Text top bar',
-  'Icon only bottom bar',
-  'Icon + Text bottom bar',
+  'Bottom bar with indicator',
   'No animation',
   'Scroll views',
   'Coverflow',
@@ -76,8 +72,6 @@ const EXAMPLE_ITEMS = [
 const EXAMPLE_COMPONENTS = [
   TopBarTextExample,
   TopBarIconExample,
-  TopBarIconTextExample,
-  BottomBarIconExample,
   BottomBarIconTextExample,
   NoAnimationExample,
   ScrollViewsExample,

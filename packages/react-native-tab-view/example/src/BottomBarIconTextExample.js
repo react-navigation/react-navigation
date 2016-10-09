@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Image, Text, StyleSheet } from 'react-native';
+import { Animated, View, Text, Image, StyleSheet } from 'react-native';
 import { TabViewAnimated, TabViewPage, TabBar } from 'react-native-tab-view';
 
 const styles = StyleSheet.create({
@@ -9,13 +9,15 @@ const styles = StyleSheet.create({
   tabbar: {
     backgroundColor: '#222',
   },
-  page: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   tab: {
+    opacity: 1,
     padding: 0,
+  },
+  indicator: {
+    flex: 1,
+    backgroundColor: '#0084ff',
+    margin: 4,
+    borderRadius: 2,
   },
   badge: {
     marginTop: 4,
@@ -33,6 +35,11 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: 'bold',
     marginTop: -2,
+  },
+  page: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 
@@ -57,6 +64,18 @@ export default class TopBarIconExample extends Component {
     this.setState({
       index,
     });
+  };
+
+  _renderIndicator = (props) => {
+    const { width, position } = props;
+
+    const translateX = Animated.multiply(position, new Animated.Value(width));
+
+    return (
+      <Animated.View
+        style={[ styles.indicator, { width: width - 8, transform: [ { translateX } ] } ]}
+      />
+    );
   };
 
   _renderIcon = ({ route }) => {
@@ -89,8 +108,9 @@ export default class TopBarIconExample extends Component {
         {...props}
         renderIcon={this._renderIcon}
         renderBadge={this._renderBadge}
-        tabStyle={styles.tab}
+        renderIndicator={this._renderIndicator}
         style={styles.tabbar}
+        tabStyle={styles.tab}
       />
     );
   };
