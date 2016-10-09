@@ -316,6 +316,7 @@ export default class TabBar extends Component<DefaultProps, Props, State> {
 
             return (
               <TouchableItem
+                borderless
                 key={route.key}
                 style={styles.tab}
                 pressColor={this.props.pressColor}
