@@ -49,7 +49,6 @@ export default class TopBarTextExample extends Component {
       <TabBarTop
         {...props}
         scrollEnabled
-        pressColor='rgba(0, 0, 0, .2)'
         indicatorStyle={styles.indicator}
         style={styles.tabbar}
         labelStyle={styles.label}

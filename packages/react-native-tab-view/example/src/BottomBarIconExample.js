@@ -77,7 +77,6 @@ export default class TopBarIconExample extends Component {
     return (
       <TabBar
         {...props}
-        pressColor='rgba(0, 0, 0, .2)'
         renderIcon={this._renderIcon}
         renderIndicator={this._renderIndicator}
         style={styles.tabbar}
