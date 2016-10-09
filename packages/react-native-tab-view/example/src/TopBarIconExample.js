@@ -7,7 +7,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   tabbar: {
-    backgroundColor: '#2196f3',
+    backgroundColor: '#222',
   },
   page: {
     flex: 1,

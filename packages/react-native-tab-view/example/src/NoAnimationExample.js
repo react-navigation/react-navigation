@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Image, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { TabViewAnimated, TabViewPage, TabBar } from 'react-native-tab-view';
 
 const styles = StyleSheet.create({
@@ -9,10 +9,21 @@ const styles = StyleSheet.create({
   tabbar: {
     backgroundColor: '#212121',
   },
+  label: {
+    fontSize: 13,
+    margin: 8,
+  },
   page: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  indicator: {
+    margin: 6,
+    height: 6,
+    width: 6,
+    borderRadius: 3,
+    backgroundColor: '#2196f3',
   },
 });
 
@@ -24,9 +35,9 @@ export default class TopBarIconExample extends Component {
   state = {
     index: 0,
     routes: [
-      { key: '1' },
-      { key: '2' },
-      { key: '3' },
+      { key: '1', title: 'First' },
+      { key: '2', title: 'Second' },
+      { key: '3', title: 'Third' },
     ],
   };
 
@@ -36,25 +47,32 @@ export default class TopBarIconExample extends Component {
     });
   };
 
-  _renderIcon = ({ route }) => {
-    switch (route.key) {
-    case '1':
-      return <Image source={require('../assets/tab-icon-1.png')} />;
-    case '2':
-      return <Image source={require('../assets/tab-icon-2.png')} />;
-    case '3':
-      return <Image source={require('../assets/tab-icon-3.png')} />;
-    default:
-      return null;
-    }
+  _renderIndicator = (props) => {
+    const { width, navigationState } = props;
+
+    const translateX = (navigationState.index * width) + (width / 2) - 9;
+
+    return (
+      <View
+        style={[ styles.indicator, { transform: [ { translateX } ] } ]}
+      />
+    );
   };
 
-  _renderFooter = (props) => {
+  _renderLabel = ({ navigationState }) => ({ route, index }) => {
+    return (
+      <Text style={[ styles.label, { color: navigationState.index === index ? '#2196f3' : '#fff' } ]}>
+        {route.title}
+      </Text>
+    );
+  };
+
+  _renderHeader = (props) => {
     return (
       <TabBar
         {...props}
-        pressColor='rgba(0, 0, 0, .2)'
-        renderIcon={this._renderIcon}
+        renderLabel={this._renderLabel(props)}
+        renderIndicator={this._renderIndicator}
         style={styles.tabbar}
       />
     );
@@ -92,7 +110,7 @@ export default class TopBarIconExample extends Component {
         navigationState={this.state}
         configureTransition={this._configureTransition}
         renderScene={this._renderPage}
-        renderFooter={this._renderFooter}
+        renderHeader={this._renderHeader}
         onRequestChangeTab={this._handleChangeTab}
       />
     );

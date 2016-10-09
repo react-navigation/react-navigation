@@ -7,7 +7,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   tabbar: {
-    backgroundColor: '#2196f3',
+    backgroundColor: '#222',
   },
   page: {
     flex: 1,
@@ -66,7 +66,7 @@ export default class TopBarTextExample extends Component {
     case '3':
       return <View style={[ styles.page, { backgroundColor: '#8bc34a' } ]} />;
     case '4':
-      return <View style={[ styles.page, { backgroundColor: '#009688' } ]} />;
+      return <View style={[ styles.page, { backgroundColor: '#2196f3' } ]} />;
     default:
       return null;
     }

@@ -5,7 +5,7 @@
   "sdkVersion": "10.0.0",
   "version": "1.0.0",
   "orientation": "portrait",
-  "primaryColor": "#6631BA",
+  "primaryColor": "#2196f3",
   "iconUrl": "https://s3.amazonaws.com/exp-us-standard/icons/react-native-tab-view-icon.png",
   "loading": {
     "iconUrl": "https://s3.amazonaws.com/exp-us-standard/icons/react-native-tab-view-icon.png",

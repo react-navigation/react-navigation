@@ -7,7 +7,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   tabbar: {
-    backgroundColor: '#212121',
+    backgroundColor: '#222',
   },
   page: {
     flex: 1,
@@ -17,6 +17,9 @@ const styles = StyleSheet.create({
 });
 
 export default class TopBarIconExample extends Component {
+
+  static appbarElevation = 4;
+
   static propTypes = {
     style: View.propTypes.style,
   };

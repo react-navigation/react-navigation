@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { Animated, View, StyleSheet } from 'react-native';
 import { TabViewAnimated, TabViewPage, TabBarTop } from 'react-native-tab-view';
 import ListViewExample from './ListViewExample';
 
@@ -8,14 +8,29 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   tabbar: {
-    backgroundColor: '#2196f3',
+    backgroundColor: '#fff',
   },
   indicator: {
-    backgroundColor: '#ffeb3b',
+    backgroundColor: '#ff4081',
+  },
+  label: {
+    fontSize: 13,
+    fontWeight: 'bold',
+    margin: 8,
+  },
+  tab: {
+    opacity: 1,
+  },
+  page: {
+    backgroundColor: '#f9f9f9',
   },
 });
 
 export default class TopBarTextExample extends Component {
+
+  static backgroundColor = '#fff';
+  static tintColor = '#222';
+
   static propTypes = {
     style: View.propTypes.style,
   };
@@ -52,14 +67,31 @@ export default class TopBarTextExample extends Component {
     }
   };
 
+  _renderLabel = (props) => ({ route, index }) => {
+    const inputRange = props.navigationState.routes.map((x, i) => i);
+    const outputRange = inputRange.map(inputIndex => inputIndex === index ? '#D6356C' : '#222');
+    const color = props.position.interpolate({
+      inputRange,
+      outputRange,
+    });
+
+    return (
+      <Animated.Text style={[ styles.label, { color } ]}>
+        {route.title}
+      </Animated.Text>
+    );
+  };
+
   _renderHeader = (props) => {
     return (
       <TabBarTop
         {...props}
-        pressColor='rgba(0, 0, 0, .2)'
+        pressColor='rgba(255, 64, 129, .5)'
         onTabPress={this._handleTabItemPress}
+        renderLabel={this._renderLabel(props)}
         indicatorStyle={styles.indicator}
         style={styles.tabbar}
+        tabStyle={styles.tab}
       />
     );
   };
@@ -67,11 +99,11 @@ export default class TopBarTextExample extends Component {
   _renderScene = ({ route }) => {
     switch (route.key) {
     case '1':
-      return <ListViewExample ref={el => (this._first = el)} style={{ backgroundColor: '#ff4081' }} />;
+      return <ListViewExample ref={el => (this._first = el)} style={styles.page} />;
     case '2':
-      return <ListViewExample ref={el => (this._second = el)} style={{ backgroundColor: '#673ab7' }} />;
+      return <ListViewExample ref={el => (this._second = el)} style={styles.page} />;
     case '3':
-      return <ListViewExample ref={el => (this._third = el)} style={{ backgroundColor: '#4caf50' }} />;
+      return <ListViewExample ref={el => (this._third = el)} style={styles.page} />;
     default:
       return null;
     }

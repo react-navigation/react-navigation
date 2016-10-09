@@ -1,7 +1,6 @@
 import Exponent from 'exponent';
 import React, { Component } from 'react';
 import {
-  AppRegistry,
   AsyncStorage,
   Image,
   Platform,
@@ -26,19 +25,15 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f5f5f5',
   },
-  example: {
-    elevation: 4,
-  },
   statusbar: {
-    backgroundColor: Platform.OS === 'ios' ? '#2196f3' : '#1b7dcb',
-    height: Platform.OS === 'ios' ? 20 : 24,
+    backgroundColor: '#222',
+    height: Platform.OS === 'ios' ? 20 : 25,
   },
   appbar: {
     flexDirection: 'row',
     alignItems: 'center',
     height: Platform.OS === 'ios' ? 44 : 56,
-    backgroundColor: '#2196f3',
-    elevation: 4,
+    backgroundColor: '#222',
   },
   title: {
     flex: 1,
@@ -67,27 +62,39 @@ const styles = StyleSheet.create({
 
 const PERSISTENCE_KEY = 'index_persistence';
 
+const EXAMPLE_ITEMS = [
+  'Text only top bar',
+  'Icon only top bar',
+  'Icon + Text top bar',
+  'Icon only bottom bar',
+  'Icon + Text bottom bar',
+  'No animation',
+  'Scroll views',
+  'Coverflow',
+];
+
+const EXAMPLE_COMPONENTS = [
+  TopBarTextExample,
+  TopBarIconExample,
+  TopBarIconTextExample,
+  BottomBarIconExample,
+  BottomBarIconTextExample,
+  NoAnimationExample,
+  ScrollViewsExample,
+  CoverflowExample,
+];
+
 export default class ExampleList extends Component {
   state = {
     title: 'Examples',
     index: -1,
-    items: [
-      'Text only top bar',
-      'Icon only top bar',
-      'Icon + Text top bar',
-      'Icon only bottom bar',
-      'Icon + Text bottom bar',
-      'No animation',
-      'Scroll views',
-      'Coverflow',
-    ],
     restoring: false,
   };
 
   componentWillMount() {
     this._restoreNavigationState();
 
-    cacheImages([
+    [
       require('./assets/album-art-1.jpg'),
       require('./assets/album-art-2.jpg'),
       require('./assets/album-art-3.jpg'),
@@ -101,7 +108,7 @@ export default class ExampleList extends Component {
       require('./assets/tab-icon-1.png'),
       require('./assets/tab-icon-2.png'),
       require('./assets/tab-icon-3.png'),
-    ]);
+    ].map(image => Exponent.Asset.fromModule(image).downloadAsync());
   }
 
   _persistNavigationState = async (currentIndex: number) => {
@@ -154,63 +161,41 @@ export default class ExampleList extends Component {
     );
   };
 
-  _renderExample = i => {
-    switch (i) {
-    case 0:
-      return <TopBarTextExample style={styles.example} />;
-    case 1:
-      return <TopBarIconExample style={styles.example} />;
-    case 2:
-      return <TopBarIconTextExample style={styles.example} />;
-    case 3:
-      return <BottomBarIconExample />;
-    case 4:
-      return <BottomBarIconTextExample />;
-    case 5:
-      return <NoAnimationExample />;
-    case 6:
-      return <ScrollViewsExample style={styles.example} />;
-    case 7:
-      return <CoverflowExample />;
-    default:
-      return null;
-    }
-  }
-
   render() {
     if (this.state.restoring) {
       return null;
     }
 
-    const { index, items } = this.state;
+    const { index } = this.state;
+
+    const ExampleComponent = EXAMPLE_COMPONENTS[index] || null;
+    const backgroundColor = ExampleComponent && ExampleComponent.backgroundColor;
+    const tintColor = ExampleComponent && ExampleComponent.tintColor;
+    const appbarElevation = ExampleComponent ? ExampleComponent.appbarElevation : 4;
 
     return (
       <View style={styles.container}>
-        <StatusBar barStyle="light-content" />
-        <View style={styles.statusbar} />
-        <View style={styles.appbar}>
+        <StatusBar barStyle='light-content' />
+        <View style={[ styles.statusbar, backgroundColor ? { backgroundColor } : null ]} />
+        <View style={[ styles.appbar, backgroundColor ? { backgroundColor } : null, appbarElevation ? { elevation: appbarElevation } : null ]}>
           {index > -1 ?
             <TouchableOpacity style={styles.button} onPress={this._handleNavigateBack}>
-              <Image source={require('./assets/back-button.png')} />
+              <Image tintColor={tintColor} source={require('./assets/back-button.png')} />
             </TouchableOpacity> : null
           }
-          <Text style={styles.title}>
-            {index > -1 ? items[index] : this.state.title}
+          <Text style={[ styles.title, tintColor ? { color: tintColor } : null ]}>
+            {index > -1 ? EXAMPLE_ITEMS[index] : this.state.title}
           </Text>
           {index > -1 ? <View style={styles.button} /> : null}
         </View>
         {index === -1 ? (
           <ScrollView>
-            {items.map(this._renderItem)}
+            {EXAMPLE_ITEMS.map(this._renderItem)}
           </ScrollView>
-        ) : this._renderExample(index)}
+        ) : <ExampleComponent />}
       </View>
     );
   }
-}
-
-function cacheImages(images) {
-  return images.map(image => Exponent.Asset.fromModule(image).downloadAsync());
 }
 
 Exponent.registerRootComponent(ExampleList);
