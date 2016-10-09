@@ -15,6 +15,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     margin: 8,
   },
+  tabbar: {
+    backgroundColor: '#fff',
+  },
   tab: {
     opacity: 1,
   },
@@ -88,6 +91,7 @@ export default class TopBarTextExample extends Component {
         renderLabel={this._renderLabel(props)}
         indicatorStyle={styles.indicator}
         tabStyle={styles.tab}
+        style={styles.tabbar}
       />
     );
   };
