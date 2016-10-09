@@ -7,9 +7,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  tabbar: {
-    backgroundColor: '#fff',
-  },
   indicator: {
     backgroundColor: '#ff4081',
   },
@@ -90,7 +87,6 @@ export default class TopBarTextExample extends Component {
         onTabPress={this._handleTabItemPress}
         renderLabel={this._renderLabel(props)}
         indicatorStyle={styles.indicator}
-        style={styles.tabbar}
         tabStyle={styles.tab}
       />
     );
