@@ -10,20 +10,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#212121',
   },
   label: {
-    fontSize: 13,
+    fontSize: 14,
     margin: 8,
   },
   page: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  indicator: {
-    margin: 6,
-    height: 6,
-    width: 6,
-    borderRadius: 3,
-    backgroundColor: '#2196f3',
   },
 });
 
@@ -47,18 +40,6 @@ export default class TopBarIconExample extends Component {
     });
   };
 
-  _renderIndicator = (props) => {
-    const { width, navigationState } = props;
-
-    const translateX = (navigationState.index * width) + (width / 2) - 9;
-
-    return (
-      <View
-        style={[ styles.indicator, { transform: [ { translateX } ] } ]}
-      />
-    );
-  };
-
   _renderLabel = ({ navigationState }) => ({ route, index }) => {
     return (
       <Text style={[ styles.label, { color: navigationState.index === index ? '#2196f3' : '#fff' } ]}>
@@ -72,7 +53,6 @@ export default class TopBarIconExample extends Component {
       <TabBar
         {...props}
         renderLabel={this._renderLabel(props)}
-        renderIndicator={this._renderIndicator}
         style={styles.tabbar}
       />
     );
