@@ -45,6 +45,7 @@ const styles = StyleSheet.create({
 
 export default class TopBarIconExample extends Component {
 
+  static title = 'Bottom bar with indicator';
   static appbarElevation = 4;
 
   static propTypes = {

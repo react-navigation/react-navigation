@@ -60,15 +60,6 @@ const styles = StyleSheet.create({
 
 const PERSISTENCE_KEY = 'index_persistence';
 
-const EXAMPLE_ITEMS = [
-  'Scrollable top bar',
-  'Icon only top bar',
-  'Bottom bar with indicator',
-  'No animation',
-  'Scroll views',
-  'Coverflow',
-];
-
 const EXAMPLE_COMPONENTS = [
   TopBarTextExample,
   TopBarIconExample,
@@ -143,14 +134,14 @@ export default class ExampleList extends Component {
     this._handleNavigate(-1);
   };
 
-  _renderItem = (title, i) => {
+  _renderItem = (component, i) => {
     return (
       <TouchableOpacity
         key={i}
         style={styles.touchable}
         onPress={() => this._handleNavigate(i)}
       >
-        <Text style={styles.item}>{i + 1}. {title}</Text>
+        <Text style={styles.item}>{i + 1}. {component.title}</Text>
       </TouchableOpacity>
     );
   };
@@ -178,13 +169,13 @@ export default class ExampleList extends Component {
             </TouchableOpacity> : null
           }
           <Text style={[ styles.title, tintColor ? { color: tintColor } : null ]}>
-            {index > -1 ? EXAMPLE_ITEMS[index] : this.state.title}
+            {index > -1 ? EXAMPLE_COMPONENTS[index].title : this.state.title}
           </Text>
           {index > -1 ? <View style={styles.button} /> : null}
         </View>
         {index === -1 ? (
           <ScrollView>
-            {EXAMPLE_ITEMS.map(this._renderItem)}
+            {EXAMPLE_COMPONENTS.map(this._renderItem)}
           </ScrollView>
         ) : <ExampleComponent />}
       </View>

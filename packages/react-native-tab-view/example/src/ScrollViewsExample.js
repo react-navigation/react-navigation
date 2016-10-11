@@ -28,6 +28,7 @@ const styles = StyleSheet.create({
 
 export default class TopBarTextExample extends Component {
 
+  static title = 'Scroll views';
   static backgroundColor = '#fff';
   static tintColor = '#222';
 

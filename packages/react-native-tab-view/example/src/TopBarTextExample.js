@@ -24,6 +24,9 @@ const styles = StyleSheet.create({
 });
 
 export default class TopBarTextExample extends Component {
+
+  static title = 'Scrollable top bar';
+
   static propTypes = {
     style: View.propTypes.style,
   };

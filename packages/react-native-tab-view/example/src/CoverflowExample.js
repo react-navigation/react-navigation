@@ -48,6 +48,9 @@ const ALBUMS = {
 };
 
 export default class CoverflowExample extends Component {
+
+  static title = 'Coverflow';
+
   static propTypes = {
     style: View.propTypes.style,
   };

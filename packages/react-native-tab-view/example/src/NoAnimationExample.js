@@ -21,6 +21,9 @@ const styles = StyleSheet.create({
 });
 
 export default class TopBarIconExample extends Component {
+
+  static title = 'No animation';
+
   static propTypes = {
     style: View.propTypes.style,
   };
