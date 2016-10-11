@@ -1,6 +1,6 @@
 {
   "name": "react-native-tab-view",
-  "version": "0.0.31",
+  "version": "0.0.32",
   "description": "Tab view component for React Native",
   "main": "index.js",
   "files": [
@@ -33,23 +33,16 @@
   },
   "homepage": "https://github.com/satya164/react-native-tabview#readme",
   "devDependencies": {
-    "babel-eslint": "^6.1.1",
-    "eslint": "^3.0.1",
-    "eslint-plugin-ava": "^2.5.0",
-    "eslint-plugin-babel": "^3.3.0",
-    "eslint-plugin-import": "^1.10.2",
-    "eslint-plugin-react": "^5.2.2",
-    "eslint-plugin-react-native": "^1.1.0",
-    "flow-bin": "^0.32.0"
+    "react": "latest",
+    "react-native": "latest",
+    "react-addons-shallow-compare": "latest"
   },
   "peerDependencies": {
     "react": "*",
     "react-native": "*",
     "react-addons-shallow-compare": "*"
   },
-  "devDependencies": {
-    "react": "latest",
-    "react-native": "latest",
-    "react-addons-shallow-compare": "latest"
+  "dependencies": {
+    "@exponent/vector-icons": "^1.0.4"
   }
 }
