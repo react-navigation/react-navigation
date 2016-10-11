@@ -1,3 +1,5 @@
+/* @flow */
+
 import React, { Component } from 'react';
 import { Animated, View, StyleSheet } from 'react-native';
 import { TabViewAnimated, TabBarTop } from 'react-native-tab-view';
@@ -45,6 +47,10 @@ export default class TopBarTextExample extends Component {
     ],
   };
 
+  _first: Object;
+  _second: Object;
+  _third: Object;
+
   _handleChangeTab = (index) => {
     this.setState({
       index,
@@ -68,7 +74,7 @@ export default class TopBarTextExample extends Component {
     }
   };
 
-  _renderLabel = (props) => ({ route, index }) => {
+  _renderLabel = (props: any) => ({ route, index }) => {
     const inputRange = props.navigationState.routes.map((x, i) => i);
     const outputRange = inputRange.map(inputIndex => inputIndex === index ? '#D6356C' : '#222');
     const color = props.position.interpolate({

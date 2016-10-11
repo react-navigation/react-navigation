@@ -1,3 +1,5 @@
+/* @flow */
+
 import React, { Component } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { TabViewAnimated, TabViewPagerPan, TabBar } from 'react-native-tab-view';
@@ -44,7 +46,7 @@ export default class TopBarIconExample extends Component {
     });
   };
 
-  _renderLabel = ({ navigationState }) => ({ route, index }) => {
+  _renderLabel = ({ navigationState }: any) => ({ route, index }) => {
     return (
       <Text style={[ styles.label, { color: navigationState.index === index ? '#2196f3' : '#fff' } ]}>
         {route.title}

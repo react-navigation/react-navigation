@@ -1,3 +1,4 @@
+/* @flow */
 /* eslint-disable import/no-commonjs */
 
 import React, { Component } from 'react';

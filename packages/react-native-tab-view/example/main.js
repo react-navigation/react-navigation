@@ -1,3 +1,5 @@
+/* @flow */
+
 import Exponent from 'exponent';
 import React, { Component } from 'react';
 import {
@@ -149,9 +151,9 @@ export default class ExampleList extends Component {
     const { index } = this.state;
 
     const ExampleComponent = EXAMPLE_COMPONENTS[index] || null;
-    const backgroundColor = ExampleComponent && ExampleComponent.backgroundColor;
+    const backgroundColor = ExampleComponent && ExampleComponent.backgroundColor ? ExampleComponent.backgroundColor : '#222';
     const tintColor = ExampleComponent && ExampleComponent.tintColor ? ExampleComponent.tintColor : 'white';
-    const appbarElevation = ExampleComponent ? ExampleComponent.appbarElevation : 4;
+    const appbarElevation = ExampleComponent && ExampleComponent.appbarElevation ? ExampleComponent.appbarElevation : 4;
 
     return (
       <View style={styles.container}>
@@ -176,7 +178,7 @@ export default class ExampleList extends Component {
           <ScrollView>
             {EXAMPLE_COMPONENTS.map(this._renderItem)}
           </ScrollView>
-        ) : <ExampleComponent />}
+        ) : (ExampleComponent ? <ExampleComponent /> : null)}
       </View>
     );
   }

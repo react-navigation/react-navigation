@@ -1,3 +1,5 @@
+/* @flow */
+
 import React, { Component } from 'react';
 import { ListView, View, Text, StyleSheet } from 'react-native';
 
@@ -32,6 +34,8 @@ export default class ListViewExample extends Component {
     this._genRows();
   }
 
+  _root: Object;
+
   _genRows = () => {
     const data = this.state.data.slice(0);
     const itemsLength = data.length;
@@ -58,7 +62,7 @@ export default class ListViewExample extends Component {
     );
   };
 
-  scrollTo = (...args) => this._root.scrollTo(...args);
+  scrollTo = (...args: any) => this._root.scrollTo(...args);
 
   render() {
     return (
