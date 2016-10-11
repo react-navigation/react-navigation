@@ -64,6 +64,7 @@ export default class ListViewExample extends Component {
     return (
       <ListView
         {...this.props}
+        removeClippedSubviews={false}
         contentContainerStyle={styles.container}
         dataSource={this.state.dataSource}
         renderRow={this._renderRow}
