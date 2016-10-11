@@ -11,6 +11,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 14,
+    fontWeight: 'bold',
     margin: 8,
   },
   page: {

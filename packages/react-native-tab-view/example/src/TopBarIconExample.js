@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { View, Image, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { TabViewAnimated, TabBarTop } from 'react-native-tab-view';
+import { Ionicons } from '@exponent/vector-icons';
 
 const styles = StyleSheet.create({
   container: {
@@ -30,9 +31,9 @@ export default class TopBarIconExample extends Component {
   state = {
     index: 0,
     routes: [
-      { key: '1' },
-      { key: '2' },
-      { key: '3' },
+      { key: '1', icon: 'md-restaurant' },
+      { key: '2', icon: 'md-bicycle' },
+      { key: '3', icon: 'md-color-palette' },
     ],
   };
 
@@ -43,16 +44,13 @@ export default class TopBarIconExample extends Component {
   };
 
   _renderIcon = ({ route }) => {
-    switch (route.key) {
-    case '1':
-      return <Image source={require('../assets/tab-icon-1.png')} />;
-    case '2':
-      return <Image source={require('../assets/tab-icon-2.png')} />;
-    case '3':
-      return <Image source={require('../assets/tab-icon-3.png')} />;
-    default:
-      return null;
-    }
+    return (
+      <Ionicons
+        name={route.icon}
+        size={24}
+        color='white'
+      />
+    );
   };
 
   _renderHeader = (props) => {

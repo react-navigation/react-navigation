@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Animated, View, Text, Image, StyleSheet } from 'react-native';
+import { Animated, View, Text, StyleSheet } from 'react-native';
 import { TabViewAnimated, TabBar } from 'react-native-tab-view';
+import { Ionicons } from '@exponent/vector-icons';
 
 const styles = StyleSheet.create({
   container: {
@@ -12,6 +13,10 @@ const styles = StyleSheet.create({
   tab: {
     opacity: 1,
     padding: 0,
+  },
+  icon: {
+    backgroundColor: 'transparent',
+    color: 'white',
   },
   indicator: {
     flex: 1,
@@ -55,9 +60,9 @@ export default class TopBarIconExample extends Component {
   state = {
     index: 0,
     routes: [
-      { key: '1', title: 'First' },
-      { key: '2', title: 'Second' },
-      { key: '3', title: 'Third' },
+      { key: '1', title: 'First', icon: 'ios-speedometer' },
+      { key: '2', title: 'Second', icon: 'ios-game-controller-b' },
+      { key: '3', title: 'Third', icon: 'ios-basketball' },
     ],
   };
 
@@ -80,16 +85,13 @@ export default class TopBarIconExample extends Component {
   };
 
   _renderIcon = ({ route }) => {
-    switch (route.key) {
-    case '1':
-      return <Image source={require('../assets/tab-icon-1.png')} />;
-    case '2':
-      return <Image source={require('../assets/tab-icon-2.png')} />;
-    case '3':
-      return <Image source={require('../assets/tab-icon-3.png')} />;
-    default:
-      return null;
-    }
+    return (
+      <Ionicons
+        name={route.icon}
+        size={24}
+        style={styles.icon}
+      />
+    );
   };
 
   _renderBadge = ({ route }) => {

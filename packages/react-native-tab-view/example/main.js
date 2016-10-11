@@ -2,7 +2,6 @@ import Exponent from 'exponent';
 import React, { Component } from 'react';
 import {
   AsyncStorage,
-  Image,
   Platform,
   ScrollView,
   StatusBar,
@@ -11,6 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { Ionicons } from '@exponent/vector-icons';
 import TopBarTextExample from './src/TopBarTextExample';
 import TopBarIconExample from './src/TopBarIconExample';
 import BottomBarIconTextExample from './src/BottomBarIconTextExample';
@@ -88,11 +88,6 @@ export default class ExampleList extends Component {
       require('./assets/album-art-6.jpg'),
       require('./assets/album-art-7.jpg'),
       require('./assets/album-art-8.jpg'),
-      require('./assets/back-button.android.png'),
-      require('./assets/back-button.ios.png'),
-      require('./assets/tab-icon-1.png'),
-      require('./assets/tab-icon-2.png'),
-      require('./assets/tab-icon-3.png'),
     ].map(image => Exponent.Asset.fromModule(image).downloadAsync());
   }
 
@@ -155,7 +150,7 @@ export default class ExampleList extends Component {
 
     const ExampleComponent = EXAMPLE_COMPONENTS[index] || null;
     const backgroundColor = ExampleComponent && ExampleComponent.backgroundColor;
-    const tintColor = ExampleComponent && ExampleComponent.tintColor;
+    const tintColor = ExampleComponent && ExampleComponent.tintColor ? ExampleComponent.tintColor : 'white';
     const appbarElevation = ExampleComponent ? ExampleComponent.appbarElevation : 4;
 
     return (
@@ -165,7 +160,11 @@ export default class ExampleList extends Component {
         <View style={[ styles.appbar, backgroundColor ? { backgroundColor } : null, appbarElevation ? { elevation: appbarElevation } : null ]}>
           {index > -1 ?
             <TouchableOpacity style={styles.button} onPress={this._handleNavigateBack}>
-              <Image tintColor={tintColor} source={require('./assets/back-button.png')} />
+              <Ionicons
+                name={Platform.OS === 'android' ? 'md-arrow-back' : 'ios-arrow-back'}
+                size={24}
+                color={tintColor}
+              />
             </TouchableOpacity> : null
           }
           <Text style={[ styles.title, tintColor ? { color: tintColor } : null ]}>
