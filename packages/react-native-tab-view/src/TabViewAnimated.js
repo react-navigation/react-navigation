@@ -4,12 +4,10 @@ import React, { Component, PropTypes } from 'react';
 import {
   View,
   StyleSheet,
-  Platform,
 } from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
 import TabViewTransitioner from './TabViewTransitioner';
-import TabViewPagerScroll from './TabViewPagerScroll';
-import TabViewPagerAndroid from './TabViewPagerAndroid';
+import TabViewPagerPan from './TabViewPagerPan';
 import { NavigationStatePropType } from './TabViewPropTypes';
 import type { NavigationState, Scene, SceneRendererProps } from './TabViewTypeDefinitions';
 
@@ -55,7 +53,7 @@ export default class TabViewAnimated extends Component<DefaultProps, Props, Stat
 
   static defaultProps = {
     renderPager: (props: SceneRendererProps) => {
-      return Platform.OS === 'android' ? <TabViewPagerAndroid {...props} /> : <TabViewPagerScroll {...props} />;
+      return <TabViewPagerPan {...props} />;
     },
   };
 

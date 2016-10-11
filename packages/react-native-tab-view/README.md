@@ -120,7 +120,7 @@ It accepts the following props in addition to all the props accepted by `<TabVie
 
 ### `<TabViewPagerPan />`
 
-Pager component based on `PanResponder`
+Pager component based on `PanResponder` (default)
 
 It accepts the following props,
 - `swipeEnabled` - whether to enable swipe gestures
@@ -130,7 +130,7 @@ It accepts the following props,
 
 ### `<TabViewPagerScroll />`
 
-Pager component based on `ScrollView` (default on iOS)
+Pager component based on `ScrollView`
 
 It accepts the following props,
 - `swipeEnabled` - whether to enable swipe gestures
@@ -138,8 +138,7 @@ It accepts the following props,
 
 ### `<TabViewPagerAndroid />`
 
-Pager component based on `ViewPagerAndroid` (default on Android)
-
+Pager component based on `ViewPagerAndroid`
 It accepts the following props,
 - `swipeEnabled` - whether to enable swipe gestures
 - `children` - React Element(s) to render
