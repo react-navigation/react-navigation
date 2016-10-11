@@ -12,7 +12,8 @@ import { SceneRendererPropType } from './TabViewPropTypes';
 import type { Scene, SceneRendererProps } from './TabViewTypeDefinitions';
 
 const styles = StyleSheet.create({
-  tabLabel: {
+  tablabel: {
+    backgroundColor: 'transparent',
     color: 'white',
     margin: 8,
   },
@@ -45,7 +46,7 @@ export default class TabBarTop extends Component<void, Props, void> {
   };
 
   _renderLabel = ({ route }: Scene) => (
-    route.title ? <Text style={[ styles.tabLabel, this.props.labelStyle ]}>{route.title.toUpperCase()}</Text> : null
+    route.title ? <Text style={[ styles.tablabel, this.props.labelStyle ]}>{route.title.toUpperCase()}</Text> : null
   );
 
   _renderIndicator = (props: IndicatorProps) => {

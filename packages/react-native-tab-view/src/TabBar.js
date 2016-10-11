@@ -32,6 +32,7 @@ const styles = StyleSheet.create({
     flexWrap: 'nowrap',
   },
   tablabel: {
+    backgroundColor: 'transparent',
     color: 'white',
     fontSize: 12,
     margin: 4,
