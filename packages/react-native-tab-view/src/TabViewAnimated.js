@@ -29,7 +29,7 @@ type Props = {
   renderHeader?: () => ?React.Element<any>;
   renderFooter?: () => ?React.Element<any>;
   onChangePosition?: (value: number) => void;
-  shouldOptimizeUpdates: boolean;
+  shouldOptimizeUpdates?: boolean;
   lazy?: boolean;
   style?: any;
 }

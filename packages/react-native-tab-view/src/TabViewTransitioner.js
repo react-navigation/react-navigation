@@ -29,7 +29,7 @@ type Props = {
   configureTransition: TransitionConfigurator;
   onRequestChangeTab: (index: number) => void;
   onChangePosition: (value: number) => void;
-  shouldOptimizeUpdates: boolean;
+  shouldOptimizeUpdates?: boolean;
   style?: any;
 }
 
@@ -147,7 +147,7 @@ export default class TabViewTransitioner extends Component<DefaultProps, Props, 
     };
   }
 
-  _transitionTo = (toValue: number, callback) => {
+  _transitionTo = (toValue: number, callback: ?Function) => {
     const lastPosition = this._getLastPosition();
     const currentTransitionProps = {
       progress: lastPosition,

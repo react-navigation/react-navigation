@@ -8,6 +8,15 @@ import {
 import { SceneRendererPropType } from './TabViewPropTypes';
 import type { SceneRendererProps } from './TabViewTypeDefinitions';
 
+type PageScrollEvent = {
+  nativeEvent: {
+    position: number;
+    offset: number;
+  };
+}
+
+type PageScrollState = 'dragging' | 'settling' | 'idle'
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -70,7 +79,7 @@ export default class TabViewPagerAndroid extends Component<void, Props, void> {
     }
   };
 
-  _handlePageScroll = (e) => {
+  _handlePageScroll = (e: PageScrollEvent) => {
     if (this._isDrag) {
       this.props.position.setValue(
         e.nativeEvent.position + e.nativeEvent.offset
@@ -78,7 +87,7 @@ export default class TabViewPagerAndroid extends Component<void, Props, void> {
     }
   };
 
-  _handlePageScrollStateChanged = (e) => {
+  _handlePageScrollStateChanged = (e: PageScrollState) => {
     this._isIdle = e === 'idle';
     if (e === 'dragging') {
       this._isDrag = true;
@@ -90,7 +99,7 @@ export default class TabViewPagerAndroid extends Component<void, Props, void> {
     }
   };
 
-  _handlePageSelected = (e) => {
+  _handlePageSelected = (e: PageScrollEvent) => {
     this._currentIndex = e.nativeEvent.position;
   };
 

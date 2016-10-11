@@ -9,6 +9,15 @@ import {
 import { SceneRendererPropType } from './TabViewPropTypes';
 import type { SceneRendererProps } from './TabViewTypeDefinitions';
 
+type ScrollEvent = {
+  nativeEvent: {
+    contentOffset: {
+      x: number;
+      y: number;
+    };
+  };
+}
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -93,7 +102,7 @@ export default class TabViewPagerScroll extends Component<void, Props, void> {
     this._isMomentumScroll = true;
   };
 
-  _handleMomentumScrollEnd = (e) => {
+  _handleMomentumScrollEnd = (e: ScrollEvent) => {
     // onMomentumScrollEnd fires when the scroll finishes
     this._isMomentumScroll = false;
     this._isManualScroll = false;
@@ -102,7 +111,7 @@ export default class TabViewPagerScroll extends Component<void, Props, void> {
     this.props.jumpToIndex(nextIndex);
   };
 
-  _handleScroll = (e) => {
+  _handleScroll = (e: ScrollEvent) => {
     if (!this._isManualScroll) {
       return;
     }
