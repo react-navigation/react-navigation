@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
 import { NavigationStatePropType } from './TabViewPropTypes';
-import type { NavigationState, SceneRendererProps } from './TabViewTypeDefinitions';
+import type { SubscriptionName, NavigationState, SceneRendererProps } from './TabViewTypeDefinitions';
 
 type TransitionProps = {
   progress: number
@@ -101,8 +101,10 @@ export default class TabViewTransitioner extends Component<DefaultProps, Props, 
   _nextIndex: ?number;
   _lastPosition: ?number;
   _positionListener: string;
+  _subscriptions: { [key: SubscriptionName]: Array<Function> } = {};
 
   _trackPosition = (e: { value: number }) => {
+    this._triggerEvent('position', e.value);
     this._lastPosition = e.value;
     const { onChangePosition } = this.props;
     if (onChangePosition) {
@@ -141,14 +143,12 @@ export default class TabViewTransitioner extends Component<DefaultProps, Props, 
       position: this.state.position,
       jumpToIndex: this._jumpToIndex,
       getLastPosition: this._getLastPosition,
+      subscribe: this._addSubscription,
     };
   }
 
   _transitionTo = (toValue: number, callback) => {
     const lastPosition = this._getLastPosition();
-    if (lastPosition === toValue) {
-      return;
-    }
     const currentTransitionProps = {
       progress: lastPosition,
     };
@@ -171,6 +171,7 @@ export default class TabViewTransitioner extends Component<DefaultProps, Props, 
   }
 
   _jumpToIndex = (index: number) => {
+    this._triggerEvent('jump', index);
     this._nextIndex = index;
     this._transitionTo(index, () =>
       global.requestAnimationFrame(() => {
@@ -189,6 +190,27 @@ export default class TabViewTransitioner extends Component<DefaultProps, Props, 
         }
       })
     );
+  };
+
+  _addSubscription = (event: SubscriptionName, callback: Function) => {
+    if (!this._subscriptions[event]) {
+      this._subscriptions[event] = [];
+    }
+    this._subscriptions[event].push(callback);
+    return {
+      remove: () => {
+        const index = this._subscriptions[event].indexOf(callback);
+        if (index > -1) {
+          this._subscriptions[event].splice(index, 1);
+        }
+      },
+    };
+  };
+
+  _triggerEvent = (event: SubscriptionName, value: any) => {
+    if (this._subscriptions[event]) {
+      this._subscriptions[event].forEach(fn => fn(value));
+    }
   };
 
   render() {

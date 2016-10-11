@@ -1,8 +1,8 @@
 /* eslint-disable import/no-commonjs */
 
 import React, { Component } from 'react';
-import { View, Image, Text, StyleSheet } from 'react-native';
-import { TabViewAnimated, TabViewPage } from 'react-native-tab-view';
+import { Animated, View, Image, Text, StyleSheet } from 'react-native';
+import { TabViewAnimated, TabViewPagerPan } from 'react-native-tab-view';
 
 const styles = StyleSheet.create({
   container: {
@@ -64,7 +64,7 @@ export default class CoverflowExample extends Component {
     // Prepend '-1', so there are always at least 2 items in inputRange
     const inputRange = [ -1, ...routes.map((x, i) => i) ];
     const translateOutputRange = inputRange.map(i => {
-      return width * (currentIndex - i) - ((width / 2) * (currentIndex - i));
+      return ((width / 2) * (currentIndex - i)) * -1;
     });
     const scaleOutputRange = inputRange.map(i => {
       if (currentIndex === i) {
@@ -95,7 +95,6 @@ export default class CoverflowExample extends Component {
     });
 
     return {
-      width,
       transform: [
         { translateX },
         { scale },
@@ -110,25 +109,19 @@ export default class CoverflowExample extends Component {
     });
   };
 
-  _renderScene = ({ route }) => {
+  _renderScene = (props) => {
     return (
-      <View style={styles.page}>
+      <Animated.View style={[ styles.page, this._buildCoverFlowStyle(props) ]}>
         <View style={styles.album}>
-          <Image source={ALBUMS[route.key]} style={styles.cover} />
+          <Image source={ALBUMS[props.route.key]} style={styles.cover} />
         </View>
-        <Text style={styles.label}>{route.key}</Text>
-      </View>
+        <Text style={styles.label}>{props.route.key}</Text>
+      </Animated.View>
     );
   };
 
-  _renderPage = (props) => {
-    return (
-      <TabViewPage
-        {...props}
-        style={this._buildCoverFlowStyle(props)}
-        renderScene={this._renderScene}
-      />
-    );
+  _renderPager = (props) => {
+    return <TabViewPagerPan {...props} />;
   };
 
   render() {
@@ -136,7 +129,8 @@ export default class CoverflowExample extends Component {
       <TabViewAnimated
         style={[ styles.container, this.props.style ]}
         navigationState={this.state}
-        renderScene={this._renderPage}
+        renderPager={this._renderPager}
+        renderScene={this._renderScene}
         onRequestChangeTab={this._handleChangeTab}
       />
     );

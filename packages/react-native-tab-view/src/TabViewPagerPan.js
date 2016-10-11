@@ -10,24 +10,46 @@ import {
 import TabViewPanResponder from './TabViewPanResponder';
 import TabViewStyleInterpolator from './TabViewStyleInterpolator';
 import { SceneRendererPropType } from './TabViewPropTypes';
-import type { Route, Scene, SceneRendererProps } from './TabViewTypeDefinitions';
+import type { SceneRendererProps } from './TabViewTypeDefinitions';
 
-type Props = SceneRendererProps & {
-  route: Route;
-  renderScene: (scene: Scene) => ?React.Element<any>;
-  swipeEnabled?: boolean;
-  style?: any;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    overflow: 'hidden',
+  },
+
+  sheet: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'stretch',
+  },
+});
+
+type DefaultProps = {
+  swipeDistanceThreshold: number;
+  swipeVelocityThreshold: number;
 }
 
-export default class TabViewPage extends Component<void, Props, void> {
+type Props = SceneRendererProps & {
+  swipeEnabled?: boolean;
+  swipeDistanceThreshold: number;
+  swipeVelocityThreshold: number;
+  children?: any;
+}
+
+export default class TabViewPagerPan extends Component<DefaultProps, Props, void> {
   static propTypes = {
     ...SceneRendererPropType,
-    renderScene: PropTypes.func.isRequired,
     swipeEnabled: PropTypes.bool,
-    style: PropTypes.any,
+    swipeDistanceThreshold: PropTypes.number.isRequired,
+    swipeVelocityThreshold: PropTypes.number.isRequired,
+    children: PropTypes.node,
   };
 
-  static StyleInterpolator = TabViewStyleInterpolator;
+  static defaultProps = {
+    swipeDistanceThreshold: 120,
+    swipeVelocityThreshold: 0.25,
+  };
 
   componentWillMount() {
     this._setPanHandlers(this.props);
@@ -103,20 +125,17 @@ export default class TabViewPage extends Component<void, Props, void> {
   _panResponder: any;
 
   render() {
-    const { navigationState, renderScene, style, route } = this.props;
-    const { routes, index } = navigationState;
+    const { navigationState, layout } = this.props;
+    const { routes } = navigationState;
 
-    const viewStyle = typeof style !== 'undefined' ? style : TabViewStyleInterpolator.forHorizontal(this.props);
-    const scene = {
-      route,
-      focused: index === routes.indexOf(route),
-      index: routes.indexOf(route),
-    };
+    const style = TabViewStyleInterpolator.forHorizontal(this.props);
 
     return (
-      <Animated.View style={[ StyleSheet.absoluteFill, viewStyle ]} {...this._panResponder.panHandlers}>
-        {renderScene(scene)}
-      </Animated.View>
+      <View style={styles.container}>
+        <Animated.View style={[ styles.sheet, style, { width: layout.width * routes.length } ]} {...this._panResponder.panHandlers}>
+          {this.props.children}
+        </Animated.View>
+      </View>
     );
   }
 }

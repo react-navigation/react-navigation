@@ -23,4 +23,5 @@ export const SceneRendererPropType = {
   position: PropTypes.instanceOf(Animated.Value).isRequired,
   jumpToIndex: PropTypes.func.isRequired,
   getLastPosition: PropTypes.func.isRequired,
+  subscribe: PropTypes.func.isRequired,
 };

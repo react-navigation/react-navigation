@@ -109,7 +109,7 @@ export default class TabBar extends Component<DefaultProps, Props, State> {
 
   componentDidMount() {
     this._adjustScroll(this.props.navigationState.index);
-    this._positionListener = this.props.position.addListener(this._handlePosition);
+    this._positionListener = this.props.subscribe('position', this._adjustScroll);
   }
 
   componentWillReceiveProps(nextProps: Props) {
@@ -119,10 +119,10 @@ export default class TabBar extends Component<DefaultProps, Props, State> {
   }
 
   componentWillUnmount() {
-    this.props.position.removeListener(this._positionListener);
+    this._positionListener.remove();
   }
 
-  _positionListener: string;
+  _positionListener: Object;
   _scrollView: Object;
   _scrollOffset: number = 0;
   _isManualScroll: boolean = false;
@@ -157,7 +157,7 @@ export default class TabBar extends Component<DefaultProps, Props, State> {
   };
 
   _resetScrollOffset = (props: Props) => {
-    if (this._scrollOffset === 0 || !this.props.scrollEnabled) {
+    if (this._scrollOffset === 0 || !props.scrollEnabled || !this._scrollView) {
       return;
     }
 
@@ -174,7 +174,7 @@ export default class TabBar extends Component<DefaultProps, Props, State> {
   };
 
   _adjustScroll = (index: number) => {
-    if (!this.props.scrollEnabled) {
+    if (!this.props.scrollEnabled || !this._scrollView) {
       return;
     }
 
@@ -236,10 +236,6 @@ export default class TabBar extends Component<DefaultProps, Props, State> {
     // onMomentumScrollEnd fires when the scroll finishes
     this._isMomentumScroll = false;
     this._isManualScroll = false;
-  };
-
-  _handlePosition = (e: { value: number }) => {
-    this._adjustScroll(e.value);
   };
 
   _setRef = (el: Object) => (this._scrollView = el);

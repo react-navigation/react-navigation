@@ -2,6 +2,8 @@
 
 import { Animated } from 'react-native';
 
+export type SubscriptionName = 'jump' | 'position'
+
 export type Route = {
   title?: string;
   key: string;
@@ -28,4 +30,5 @@ export type SceneRendererProps = {
   position: Animated.Value;
   jumpToIndex: (index: number) => void;
   getLastPosition: () => number;
+  subscribe: (event: SubscriptionName, callback: Function) => { remove: Function };
 }

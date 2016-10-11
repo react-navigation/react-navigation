@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Image, StyleSheet } from 'react-native';
-import { TabViewAnimated, TabViewPage, TabBarTop } from 'react-native-tab-view';
+import { TabViewAnimated, TabBarTop } from 'react-native-tab-view';
 
 const styles = StyleSheet.create({
   container: {
@@ -76,16 +76,12 @@ export default class TopBarIconExample extends Component {
     }
   };
 
-  _renderPage = (props) => {
-    return <TabViewPage {...props} renderScene={this._renderScene} />;
-  };
-
   render() {
     return (
       <TabViewAnimated
         style={[ styles.container, this.props.style ]}
         navigationState={this.state}
-        renderScene={this._renderPage}
+        renderScene={this._renderScene}
         renderHeader={this._renderHeader}
         onRequestChangeTab={this._handleChangeTab}
       />

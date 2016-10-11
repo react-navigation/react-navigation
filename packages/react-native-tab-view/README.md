@@ -35,7 +35,7 @@ npm install --save react-native-tab-view react-addons-shallow-compare
 ```js
 import React, { Component } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { TabViewAnimated, TabViewPage, TabBarTop } from 'react-native-tab-view';
+import { TabViewAnimated, TabBarTop } from 'react-native-tab-view';
 
 const styles = StyleSheet.create({
   container: {
@@ -76,16 +76,12 @@ export default class TabViewExample extends Component {
     }
   };
 
-  _renderPage = (props) => {
-    return <TabViewPage {...props} renderScene={this._renderScene} />;
-  };
-
   render() {
     return (
       <TabViewAnimated
         style={styles.container}
         navigationState={this.state}
-        renderScene={this._renderPage}
+        renderScene={this._renderScene}
         renderHeader={this._renderHeader}
         onRequestChangeTab={this._handleChangeTab}
       />
@@ -116,19 +112,37 @@ It accepts the following props,
 A convenience wrapper around `<TabViewTransitioner />`
 
 It accepts the following props in addition to all the props accepted by `<TabViewTransitioner />` (except `render`),
-- `renderHeader` - callback which renders a header, useful for a top tab bar
-- `renderFooter` - callback which renders a footer, useful for a bottom tab bar
+- `renderPager` - optional callback which renders a pager responsible for handling swipes
+- `renderHeader` - optional callback which renders a header, useful for a top tab bar
+- `renderFooter` - optional callback which renders a footer, useful for a bottom tab bar
 - `renderScene` - callback which renders a single scene
 - `lazy` - whether to load tabs lazily when you start switching
 
-### `<TabViewPage />`
+### `<TabViewPagerPan />`
 
-Container component for individual pages
+Pager component based on `PanResponder`
 
 It accepts the following props,
-- `renderScene` - callback which receives the current scene and returns a React Element
 - `swipeEnabled` - whether to enable swipe gestures
-- `style` - style object (default is `TabViewPage.StyleInterpolator.forHorizontal(props)`)
+- `swipeDistanceThreshold` - minimum swipe distance to trigger page switch
+- `swipeVelocityThreshold` - minimum swipe velocity to trigger page switch
+- `children` - React Element(s) to render
+
+### `<TabViewPagerScroll />`
+
+Pager component based on `ScrollView` (default on iOS)
+
+It accepts the following props,
+- `swipeEnabled` - whether to enable swipe gestures
+- `children` - React Element(s) to render
+
+### `<TabViewPagerAndroid />`
+
+Pager component based on `ViewPagerAndroid` (default on Android)
+
+It accepts the following props,
+- `swipeEnabled` - whether to enable swipe gestures
+- `children` - React Element(s) to render
 
 ### `<TabBar />`
 
