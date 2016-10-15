@@ -24,6 +24,7 @@ type DefaultProps = {
 
 export default class TouchableItem extends Component<DefaultProps, Props, void> {
   static propTypes = {
+    delayPressIn: PropTypes.number,
     borderless: PropTypes.bool,
     pressColor: PropTypes.string,
     children: PropTypes.node.isRequired,

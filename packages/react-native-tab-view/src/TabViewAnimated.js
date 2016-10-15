@@ -9,7 +9,8 @@ import shallowCompare from 'react-addons-shallow-compare';
 import TabViewTransitioner from './TabViewTransitioner';
 import TabViewPagerPan from './TabViewPagerPan';
 import { NavigationStatePropType } from './TabViewPropTypes';
-import type { NavigationState, Scene, SceneRendererProps } from './TabViewTypeDefinitions';
+import type { Scene, SceneRendererProps } from './TabViewTypeDefinitions';
+import type { TransitionerProps } from './TabViewTransitionerTypes';
 
 const styles = StyleSheet.create({
   container: {
@@ -22,16 +23,12 @@ type DefaultProps = {
   renderPager: (props: SceneRendererProps) => React.Element<any>;
 }
 
-type Props = {
-  navigationState: NavigationState;
+type Props = TransitionerProps & {
   renderPager: (props: SceneRendererProps) => React.Element<any>;
   renderScene: (props: SceneRendererProps & Scene) => ?React.Element<any>;
   renderHeader?: () => ?React.Element<any>;
   renderFooter?: () => ?React.Element<any>;
-  onChangePosition?: (value: number) => void;
-  shouldOptimizeUpdates?: boolean;
   lazy?: boolean;
-  style?: any;
 }
 
 type State = {
@@ -48,7 +45,6 @@ export default class TabViewAnimated extends Component<DefaultProps, Props, Stat
     onChangePosition: PropTypes.func,
     shouldOptimizeUpdates: PropTypes.bool,
     lazy: PropTypes.bool,
-    style: View.propTypes.style,
   };
 
   static defaultProps = {

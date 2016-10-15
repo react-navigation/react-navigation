@@ -7,30 +7,15 @@ import {
 } from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
 import { NavigationStatePropType } from './TabViewPropTypes';
-import type { SubscriptionName, NavigationState, SceneRendererProps } from './TabViewTypeDefinitions';
-
-type TransitionProps = {
-  progress: number
-}
-
-type TransitionSpec = {
-  timing: Function
-}
-
-type TransitionConfigurator = (currentTransitionProps: TransitionProps, nextTransitionProps: TransitionProps) => TransitionSpec
+import type { SubscriptionName, SceneRendererProps } from './TabViewTypeDefinitions';
+import type { TransitionConfigurator, TransitionerProps } from './TabViewTransitionerTypes';
 
 type DefaultProps = {
   configureTransition: TransitionConfigurator
 }
 
-type Props = {
-  navigationState: NavigationState;
+type Props = TransitionerProps & {
   render: (props: SceneRendererProps) => ?React.Element<any>;
-  configureTransition: TransitionConfigurator;
-  onRequestChangeTab: (index: number) => void;
-  onChangePosition: (value: number) => void;
-  shouldOptimizeUpdates?: boolean;
-  style?: any;
 }
 
 type State = {
@@ -56,7 +41,6 @@ export default class TabViewTransitioner extends Component<DefaultProps, Props, 
     onRequestChangeTab: PropTypes.func.isRequired,
     onChangePosition: PropTypes.func,
     shouldOptimizeUpdates: PropTypes.bool,
-    style: View.propTypes.style,
   };
 
   static defaultProps = {
@@ -155,7 +139,10 @@ export default class TabViewTransitioner extends Component<DefaultProps, Props, 
     const nextTransitionProps = {
       progress: toValue,
     };
-    const transitionSpec = this.props.configureTransition(currentTransitionProps, nextTransitionProps);
+    let transitionSpec;
+    if (this.props.configureTransition) {
+      transitionSpec = this.props.configureTransition(currentTransitionProps, nextTransitionProps);
+    }
     if (transitionSpec) {
       const { timing, ...transitionConfig } = transitionSpec;
       timing(this.state.position, {
