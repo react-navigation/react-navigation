@@ -41,8 +41,5 @@
     "react": "*",
     "react-native": "*",
     "react-addons-shallow-compare": "*"
-  },
-  "dependencies": {
-    "@exponent/vector-icons": "^1.0.4"
   }
 }
