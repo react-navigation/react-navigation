@@ -16,7 +16,7 @@ function forHorizontal(props: Props) {
 
   if (Platform.OS === 'android') {
     // on Android, velocity is way lower due to timestamp being in nanosecond
-    // normalize it to be have same velocity on both iOS and Android
+    // normalize it to have the same velocity on both iOS and Android
     swipeVelocityThreshold /= 1000000;
   }
 
@@ -101,25 +101,13 @@ function forHorizontal(props: Props) {
   return {
     onStartShouldSetPanResponder: () => false,
     onStartShouldSetPanResponderCapture: () => false,
-    onMoveShouldSetPanResponder: (evt: GestureEvent, gestureState: GestureState) => {
-      return canMoveScreen(evt, gestureState);
-    },
-    onMoveShouldSetPanResponderCapture: (evt: GestureEvent, gestureState: GestureState) => {
-      return canMoveScreen(evt, gestureState);
-    },
-    onPanResponderGrant: (evt: GestureEvent, gestureState: GestureState) => {
-      startGesture(evt, gestureState);
-    },
-    onPanResponderMove: (evt: GestureEvent, gestureState: GestureState) => {
-      respondToGesture(evt, gestureState);
-    },
+    onMoveShouldSetPanResponder: canMoveScreen,
+    onMoveShouldSetPanResponderCapture: canMoveScreen,
+    onPanResponderGrant: startGesture,
+    onPanResponderMove: respondToGesture,
     onPanResponderTerminationRequest: () => true,
-    onPanResponderRelease: (evt: GestureEvent, gestureState: GestureState) => {
-      finishGesture(evt, gestureState);
-    },
-    onPanResponderTerminate: (evt: GestureEvent, gestureState: GestureState) => {
-      finishGesture(evt, gestureState);
-    },
+    onPanResponderRelease: finishGesture,
+    onPanResponderTerminate: finishGesture,
     onShouldBlockNativeResponder: () => false,
   };
 }
