@@ -3,18 +3,36 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { TabViewAnimated, TabViewPagerPan, TabBar } from 'react-native-tab-view';
+import { Ionicons } from '@exponent/vector-icons';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
   tabbar: {
-    backgroundColor: '#212121',
+    backgroundColor: '#fff',
+  },
+  tab: {
+    opacity: 1,
+    padding: 0,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: 'rgba(0, 0, 0, .2)',
   },
   label: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    margin: 8,
+    fontSize: 12,
+    margin: 2,
+  },
+  idle: {
+    backgroundColor: 'transparent',
+    color: '#2196f3',
+  },
+  selected: {
+    backgroundColor: 'transparent',
+    color: 'white',
+  },
+  indicator: {
+    flex: 1,
+    backgroundColor: '#0084ff',
   },
   page: {
     flex: 1,
@@ -26,7 +44,9 @@ const styles = StyleSheet.create({
 export default class TopBarIconExample extends Component {
 
   static title = 'No animation';
-  static appbarElevation = 0;
+  static backgroundColor = '#fff';
+  static tintColor = '#222';
+  static appbarElevation = 4;
 
   static propTypes = {
     style: View.propTypes.style,
@@ -35,9 +55,9 @@ export default class TopBarIconExample extends Component {
   state = {
     index: 0,
     routes: [
-      { key: '1', title: 'First' },
-      { key: '2', title: 'Second' },
-      { key: '3', title: 'Third' },
+      { key: '1', title: 'First', icon: 'ios-book' },
+      { key: '2', title: 'Second', icon: 'ios-chatboxes' },
+      { key: '3', title: 'Third', icon: 'ios-paper' },
     ],
   };
 
@@ -47,20 +67,46 @@ export default class TopBarIconExample extends Component {
     });
   };
 
-  _renderLabel = ({ navigationState }: any) => ({ route, index }) => {
+  _renderIndicator = ({ navigationState, width }: any) => {
+    const translateX = navigationState.index * width;
     return (
-      <Text style={[ styles.label, { color: navigationState.index === index ? '#2196f3' : '#fff' } ]}>
+      <View
+        style={[ styles.indicator, { width, transform: [ { translateX } ] } ]}
+      />
+    );
+  };
+
+  _renderLabel = ({ navigationState }: any) => ({ route, index }) => {
+    const selected = navigationState.index === index;
+    return (
+      <Text style={[ styles.label, selected ? styles.selected : styles.idle ]}>
         {route.title}
       </Text>
     );
   };
 
-  _renderHeader = (props) => {
+  _renderIcon = ({ navigationState }: any) => ({ route, index }) => {
+    const selected = navigationState.index === index;
+    return (
+      <Ionicons
+        name={selected ? route.icon : route.icon + '-outline'}
+        size={24}
+        style={[ selected ? styles.selected : styles.idle ]}
+      />
+    );
+  };
+
+
+  _renderFooter = (props) => {
     return (
       <TabBar
         {...props}
+        renderIcon={this._renderIcon(props)}
         renderLabel={this._renderLabel(props)}
+        renderIndicator={this._renderIndicator}
+        activeOpacity={1}
         style={styles.tabbar}
+        tabStyle={styles.tab}
       />
     );
   };
@@ -92,7 +138,7 @@ export default class TopBarIconExample extends Component {
         configureTransition={this._configureTransition}
         renderPager={this._renderPager}
         renderScene={this._renderScene}
-        renderHeader={this._renderHeader}
+        renderFooter={this._renderFooter}
         onRequestChangeTab={this._handleChangeTab}
       />
     );
