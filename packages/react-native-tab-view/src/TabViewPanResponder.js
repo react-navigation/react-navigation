@@ -37,6 +37,7 @@ function forHorizontal(props: Props) {
   }
 
   function isReverseDirection(gestureState: GestureState) {
+    if (startDirection === 0) return false;
     if (startDirection > 0) {
       return gestureState.vx < 0;
     } else {
