@@ -102,6 +102,7 @@ Container component responsible for managing tab transitions
 It accepts the following props,
 - `navigationState` - the current navigation state
 - `configureTransition` - optional callback which returns a configuration for the transition, return `null` to disable animation
+- `canJumpToTab` - optional callback which accepts a route, and returns a boolean indicating whether jumping to the tab is allowed
 - `onRequestChangeTab` - callback for when the current tab changes, should do the `setState`
 - `onChangePosition` - callback called with position value as it changes (e.g. - on swipe or tab change), avoid doing anything expensive here
 - `shouldOptimizeUpdates` - whether to implement a `shouldComponentUpdate` strategy to minimize updates, enabled by default

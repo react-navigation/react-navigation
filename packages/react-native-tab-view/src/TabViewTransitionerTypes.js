@@ -1,6 +1,6 @@
 /* @flow */
 
-import type { NavigationState } from './TabViewTypeDefinitions';
+import type { NavigationState, Route } from './TabViewTypeDefinitions';
 
 export type TransitionProps = {
   progress: number
@@ -15,6 +15,7 @@ export type TransitionConfigurator = (currentTransitionProps: TransitionProps, n
 export type TransitionerProps = {
   navigationState: NavigationState;
   configureTransition?: TransitionConfigurator;
+  canJumpToTab?: (route: Route) => boolean;
   onRequestChangeTab: (index: number) => void;
   onChangePosition?: (value: number) => void;
   shouldOptimizeUpdates?: boolean;
