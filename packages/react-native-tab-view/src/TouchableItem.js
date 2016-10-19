@@ -14,6 +14,7 @@ type Props = {
   delayPressIn: number;
   borderless?: boolean;
   pressColor?: string;
+  activeOpacity?: number;
   children?: React.Element<any>;
   style?: any;
 }
@@ -27,6 +28,7 @@ export default class TouchableItem extends Component<DefaultProps, Props, void> 
     delayPressIn: PropTypes.number,
     borderless: PropTypes.bool,
     pressColor: PropTypes.string,
+    activeOpacity: PropTypes.number,
     children: PropTypes.node.isRequired,
     style: View.propTypes.style,
   };
