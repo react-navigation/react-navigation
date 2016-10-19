@@ -25,6 +25,7 @@ const styles = StyleSheet.create({
 export default class TopBarIconExample extends Component {
 
   static title = 'Icon only top bar';
+  static appbarElevation = 0;
 
   static propTypes = {
     style: View.propTypes.style,

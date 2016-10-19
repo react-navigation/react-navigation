@@ -153,7 +153,7 @@ export default class ExampleList extends Component {
     const ExampleComponent = EXAMPLE_COMPONENTS[index] || null;
     const backgroundColor = ExampleComponent && ExampleComponent.backgroundColor ? ExampleComponent.backgroundColor : '#222';
     const tintColor = ExampleComponent && ExampleComponent.tintColor ? ExampleComponent.tintColor : 'white';
-    const appbarElevation = ExampleComponent && ExampleComponent.appbarElevation ? ExampleComponent.appbarElevation : 0;
+    const appbarElevation = ExampleComponent && Number.isFinite(ExampleComponent.appbarElevation) ? ExampleComponent.appbarElevation : 4;
 
     return (
       <View style={styles.container}>

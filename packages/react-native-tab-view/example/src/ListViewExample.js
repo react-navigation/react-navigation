@@ -23,6 +23,9 @@ const styles = StyleSheet.create({
 });
 
 export default class ListViewExample extends Component {
+
+  static appbarElevation = 0;
+
   state = {
     data: [],
     dataSource: new ListView.DataSource({

@@ -33,6 +33,7 @@ export default class TopBarTextExample extends Component {
   static title = 'Scroll views';
   static backgroundColor = '#fff';
   static tintColor = '#222';
+  static appbarElevation = 0;
 
   static propTypes = {
     style: View.propTypes.style,
