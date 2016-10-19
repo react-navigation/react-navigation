@@ -71,6 +71,7 @@ function forHorizontal(props: Props) {
 
   function startGesture() {
     lastValue = props.getLastPosition();
+    props.position.stopAnimation();
   }
 
   function respondToGesture(evt: GestureEvent, gestureState: GestureState) {
