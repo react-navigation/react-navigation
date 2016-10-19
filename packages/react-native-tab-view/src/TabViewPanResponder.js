@@ -9,7 +9,7 @@ type Props = SceneRendererProps & {
   swipeVelocityThreshold: number;
 }
 
-const DEAD_ZONE = 20;
+const DEAD_ZONE = 12;
 
 function forHorizontal(props: Props) {
   let { swipeVelocityThreshold } = props;
@@ -37,11 +37,12 @@ function forHorizontal(props: Props) {
   }
 
   function isReverseDirection(gestureState: GestureState) {
-    if (startDirection === 0) return false;
     if (startDirection > 0) {
       return gestureState.vx < 0;
-    } else {
+    } else if (startDirection < 0) {
       return gestureState.vx > 0;
+    } else {
+      return false;
     }
   }
 
@@ -59,9 +60,9 @@ function forHorizontal(props: Props) {
   function canMoveScreen(evt: GestureEvent, gestureState: GestureState) {
     const { routes, index } = props.navigationState;
     const canMove = isMovingHorzontally(evt, gestureState) && (
-        (gestureState.dx >= DEAD_ZONE && index >= 0) ||
-        (gestureState.dx <= -DEAD_ZONE && index <= routes.length - 1)
-      );
+      (gestureState.dx >= DEAD_ZONE && index >= 0) ||
+      (gestureState.dx <= -DEAD_ZONE && index <= routes.length - 1)
+    );
     if (canMove) {
       startDirection = gestureState.dx;
     }
