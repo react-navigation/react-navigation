@@ -106,7 +106,7 @@ export default class TabBar extends Component<DefaultProps, Props, State> {
     onTabPress: PropTypes.func,
     tabWidth: PropTypes.number,
     tabStyle: View.propTypes.style,
-    style: Animated.View.propTypes.style,
+    style: PropTypes.any,
   };
 
   static defaultProps = {
