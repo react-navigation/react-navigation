@@ -26,8 +26,8 @@ type DefaultProps = {
 type Props = TransitionerProps & {
   renderPager: (props: SceneRendererProps) => React.Element<any>;
   renderScene: (props: SceneRendererProps & Scene) => ?React.Element<any>;
-  renderHeader?: () => ?React.Element<any>;
-  renderFooter?: () => ?React.Element<any>;
+  renderHeader?: (props: SceneRendererProps) => ?React.Element<any>;
+  renderFooter?: (props: SceneRendererProps) => ?React.Element<any>;
   lazy?: boolean;
 }
 
