@@ -80,7 +80,7 @@ type Props = SceneRendererProps & {
   scrollEnabled?: boolean;
   pressColor?: string;
   activeOpacity?: number;
-  renderLabel?: (scene: Scene) => ?React.Element<any>;
+  renderLabel: (scene: Scene) => ?React.Element<any>;
   renderIcon?: (scene: Scene) => ?React.Element<any>;
   renderBadge?: (scene: Scene) => ?React.Element<any>;
   renderIndicator?: (props: IndicatorProps) => ?React.Element<any>;

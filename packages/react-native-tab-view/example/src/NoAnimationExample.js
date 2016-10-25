@@ -67,7 +67,7 @@ export default class TopBarIconExample extends Component {
     });
   };
 
-  _renderIndicator = ({ navigationState, width }: any) => {
+  _renderIndicator = ({ navigationState, width }) => {
     const translateX = navigationState.index * width;
     return (
       <View
@@ -76,7 +76,7 @@ export default class TopBarIconExample extends Component {
     );
   };
 
-  _renderLabel = ({ navigationState }: any) => ({ route, index }) => {
+  _renderLabel = ({ navigationState }) => ({ route, index }) => {
     const selected = navigationState.index === index;
     return (
       <Text style={[ styles.label, selected ? styles.selected : styles.idle ]}>
@@ -85,7 +85,7 @@ export default class TopBarIconExample extends Component {
     );
   };
 
-  _renderIcon = ({ navigationState }: any) => ({ route, index }) => {
+  _renderIcon = ({ navigationState }) => ({ route, index }) => {
     const selected = navigationState.index === index;
     return (
       <Ionicons
@@ -95,7 +95,6 @@ export default class TopBarIconExample extends Component {
       />
     );
   };
-
 
   _renderFooter = (props) => {
     return (
