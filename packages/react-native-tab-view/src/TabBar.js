@@ -85,7 +85,7 @@ type Props = SceneRendererProps & {
   renderBadge?: (scene: Scene) => ?React.Element<any>;
   renderIndicator?: (props: IndicatorProps) => ?React.Element<any>;
   onTabPress?: Function;
-  tabWidth: ?number;
+  tabWidth?: number;
   tabStyle?: any;
   style?: any;
 }
