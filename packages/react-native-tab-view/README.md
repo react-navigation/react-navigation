@@ -1,5 +1,4 @@
-React Native Tab View
-=====================
+# React Native Tab View [![npm version](https://img.shields.io/npm/v/react-native-tab-view.svg?style=flat)](https://www.npmjs.com/package/react-native-tab-view)
 
 A cross-platform Tab View component for React Native.
 
