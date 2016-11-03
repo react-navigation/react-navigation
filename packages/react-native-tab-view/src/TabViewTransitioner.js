@@ -75,8 +75,10 @@ export default class TabViewTransitioner extends Component<DefaultProps, Props, 
     }
   }
 
-  componentDidUpdate() {
-    this._transitionTo(this.props.navigationState.index);
+  componentDidUpdate(prevProps: Props) {
+    if (prevProps.navigationState.index !== this.props.navigationState.index) {
+      this._transitionTo(this.props.navigationState.index);
+    }
   }
 
   componentWillUnmount() {
