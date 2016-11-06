@@ -26,6 +26,7 @@ const styles = StyleSheet.create({
       height: StyleSheet.hairlineWidth,
     },
     zIndex: 1,
+    overflow: 'scroll',
   },
   tabcontent: {
     flexDirection: 'row',
