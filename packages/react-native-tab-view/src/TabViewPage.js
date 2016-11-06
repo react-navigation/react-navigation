@@ -5,7 +5,7 @@ import { SceneRendererPropType } from './TabViewPropTypes';
 import type { Scene, SceneRendererProps } from './TabViewTypeDefinitions';
 
 type Props = SceneRendererProps & Scene & {
-  renderScene: (scene: Scene) => ?React.Element<any>;
+  renderScene: (scene: Scene) => ?React.Element<*>;
   style?: any;
 }
 

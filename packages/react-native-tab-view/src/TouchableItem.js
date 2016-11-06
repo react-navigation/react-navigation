@@ -15,7 +15,7 @@ type Props = {
   borderless?: boolean;
   pressColor?: string;
   activeOpacity?: number;
-  children?: React.Element<any>;
+  children?: React.Element<*>;
   style?: any;
 }
 

@@ -2,7 +2,7 @@
 
 export type GestureEvent = {
   nativeEvent: {
-    changedTouches: Array<any>;
+    changedTouches: Array<*>;
     identifier: number;
     locationX: number;
     locationY: number;
@@ -10,7 +10,7 @@ export type GestureEvent = {
     pageY: number;
     target: number;
     timestamp: number;
-    touches: Array<any>;
+    touches: Array<*>;
   };
 }
 

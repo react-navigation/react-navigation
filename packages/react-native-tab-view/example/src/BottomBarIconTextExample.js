@@ -86,7 +86,7 @@ export default class TopBarIconExample extends Component {
     );
   };
 
-  _renderIcon = ({ route }) => {
+  _renderIcon = ({ route }: any) => {
     return (
       <Ionicons
         name={route.icon}

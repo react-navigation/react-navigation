@@ -85,7 +85,7 @@ export default class TopBarIconExample extends Component {
     );
   };
 
-  _renderIcon = ({ navigationState }) => ({ route, index }) => {
+  _renderIcon = ({ navigationState }) => ({ route, index }: any) => {
     const selected = navigationState.index === index;
     return (
       <Ionicons

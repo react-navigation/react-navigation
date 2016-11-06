@@ -20,14 +20,14 @@ const styles = StyleSheet.create({
 });
 
 type DefaultProps = {
-  renderPager: (props: SceneRendererProps) => React.Element<any>;
+  renderPager: (props: SceneRendererProps) => React.Element<*>;
 }
 
 type Props = TransitionerProps & {
-  renderPager: (props: SceneRendererProps) => React.Element<any>;
-  renderScene: (props: SceneRendererProps & Scene) => ?React.Element<any>;
-  renderHeader?: (props: SceneRendererProps) => ?React.Element<any>;
-  renderFooter?: (props: SceneRendererProps) => ?React.Element<any>;
+  renderPager: (props: SceneRendererProps) => React.Element<*>;
+  renderScene: (props: SceneRendererProps & Scene) => ?React.Element<*>;
+  renderHeader?: (props: SceneRendererProps) => ?React.Element<*>;
+  renderFooter?: (props: SceneRendererProps) => ?React.Element<*>;
   lazy?: boolean;
 }
 

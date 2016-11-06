@@ -15,7 +15,7 @@ type DefaultProps = {
 }
 
 type Props = TransitionerProps & {
-  render: (props: SceneRendererProps) => ?React.Element<any>;
+  render: (props: SceneRendererProps) => ?React.Element<*>;
 }
 
 type State = {

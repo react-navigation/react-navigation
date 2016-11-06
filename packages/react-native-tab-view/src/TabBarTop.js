@@ -32,7 +32,7 @@ type IndicatorProps = SceneRendererProps & {
 }
 
 type Props = SceneRendererProps & {
-  renderLabel?: (scene: Scene) => React.Element<any>;
+  renderLabel?: (scene: Scene) => React.Element<*>;
   indicatorStyle?: any;
   labelStyle?: any;
 }

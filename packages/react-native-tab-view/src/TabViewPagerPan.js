@@ -113,7 +113,7 @@ export default class TabViewPagerPan extends Component<DefaultProps, Props, void
     }
   };
 
-  _callResponderMethod = (methodName: string, returnValue: any) => (...args: Array<any>) => {
+  _callResponderMethod = (methodName: string, returnValue: any) => (...args: Array<*>) => {
     const panHandlers = this._panHandlers;
     if (panHandlers && panHandlers[methodName]) {
       return panHandlers[methodName](...args);
