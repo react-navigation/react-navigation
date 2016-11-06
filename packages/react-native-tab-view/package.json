@@ -33,13 +33,20 @@
   },
   "homepage": "https://github.com/satya164/react-native-tabview#readme",
   "devDependencies": {
+    "babel-eslint": "^7.1.0",
+    "eslint": "^3.9.1",
+    "eslint-plugin-babel": "^3.3.0",
+    "eslint-plugin-import": "^2.1.0",
+    "eslint-plugin-react": "^6.5.0",
+    "eslint-plugin-react-native": "^2.0.0",
+    "flow-bin": "^0.33.0",
     "react": "latest",
-    "react-native": "latest",
-    "react-addons-shallow-compare": "latest"
+    "react-addons-shallow-compare": "latest",
+    "react-native": "latest"
   },
   "peerDependencies": {
     "react": "*",
-    "react-native": "*",
-    "react-addons-shallow-compare": "*"
+    "react-addons-shallow-compare": "*",
+    "react-native": "*"
   }
 }
