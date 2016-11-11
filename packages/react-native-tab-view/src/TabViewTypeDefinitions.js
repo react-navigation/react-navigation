@@ -20,11 +20,14 @@ export type Scene = {
   index: number;
 }
 
+export type Layout = {
+  height: number;
+  width: number;
+}
+
 export type SceneRendererProps = {
-  layout: {
+  layout: Layout & {
     measured: boolean;
-    height: number;
-    width: number;
   };
   navigationState: NavigationState;
   position: Animated.Value;

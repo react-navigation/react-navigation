@@ -7,11 +7,12 @@ import {
 } from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
 import { NavigationStatePropType } from './TabViewPropTypes';
-import type { SubscriptionName, SceneRendererProps } from './TabViewTypeDefinitions';
+import type { SubscriptionName, SceneRendererProps, Layout } from './TabViewTypeDefinitions';
 import type { TransitionConfigurator, TransitionerProps } from './TabViewTransitionerTypes';
 
 type DefaultProps = {
-  configureTransition: TransitionConfigurator
+  configureTransition: TransitionConfigurator;
+  initialLayout: Layout;
 }
 
 type Props = TransitionerProps & {
@@ -19,10 +20,8 @@ type Props = TransitionerProps & {
 }
 
 type State = {
-  layout: {
+  layout: Layout & {
     measured: boolean;
-    width: number;
-    height: number;
   };
   position: Animated.Value;
 }
@@ -40,12 +39,20 @@ export default class TabViewTransitioner extends Component<DefaultProps, Props, 
     configureTransition: PropTypes.func.isRequired,
     onRequestChangeTab: PropTypes.func.isRequired,
     onChangePosition: PropTypes.func,
-    shouldOptimizeUpdates: PropTypes.bool,
+    initialLayout: PropTypes.shape({
+      height: PropTypes.number.isRequired,
+      width: PropTypes.number.isRequired,
+    }),
     canJumpToTab: PropTypes.func,
+    shouldOptimizeUpdates: PropTypes.bool,
   };
 
   static defaultProps = {
     configureTransition: () => DefaultTransitionSpec,
+    initialLayout: {
+      height: 0,
+      width: 0,
+    },
   };
 
   constructor(props: Props) {
@@ -53,9 +60,8 @@ export default class TabViewTransitioner extends Component<DefaultProps, Props, 
 
     this.state = {
       layout: {
+        ...this.props.initialLayout,
         measured: false,
-        width: 0,
-        height: 0,
       },
       position: new Animated.Value(this.props.navigationState.index),
     };

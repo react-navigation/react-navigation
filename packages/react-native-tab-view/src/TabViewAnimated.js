@@ -91,7 +91,7 @@ export default class TabViewAnimated extends Component<DefaultProps, Props, Stat
         {renderHeader && renderHeader(props)}
         {renderPager({
           ...props,
-          children: props.layout.measured ?
+          children: props.layout.width !== 0 ?
             props.navigationState.routes.map((route, index) => {
               return (
                 <View key={route.key} style={{ width: props.layout.width }}>
