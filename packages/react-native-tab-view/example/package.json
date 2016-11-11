@@ -7,10 +7,10 @@
   },
   "dependencies": {
     "@exponent/vector-icons": "^1.0.4",
-    "exponent": "^10.0.4",
-    "react": "15.3.2",
-    "react-addons-shallow-compare": "~15.3.2",
-    "react-native": "github:exponentjs/react-native#sdk-10.0.0",
+    "exponent": "^11.0.0",
+    "react": "^15.3.2",
+    "react-addons-shallow-compare": "^15.3.2",
+    "react-native": "git+https://github.com/exponentjs/react-native.git#sdk-11.0.3",
     "react-native-tab-view": "file:../"
   },
   "main": "main.js"
