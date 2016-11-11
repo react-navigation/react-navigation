@@ -16,6 +16,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  scroll: {
+    overflow: 'scroll',
+  },
   tabbar: {
     backgroundColor: 'black',
     elevation: 4,
@@ -26,7 +29,6 @@ const styles = StyleSheet.create({
       height: StyleSheet.hairlineWidth,
     },
     zIndex: 1,
-    overflow: 'scroll',
   },
   tabcontent: {
     flexDirection: 'row',
@@ -285,82 +287,84 @@ export default class TabBar extends Component<DefaultProps, Props, State> {
             null
           }
         </Animated.View>
-        <ScrollView
-          horizontal
-          scrollEnabled={scrollEnabled}
-          bounces={false}
-          scrollsToTop={false}
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={[ styles.tabcontent, scrollEnabled ? null : styles.container ]}
-          scrollEventThrottle={16}
-          onScroll={this._handleScroll}
-          onScrollBeginDrag={this._handleBeginDrag}
-          onScrollEndDrag={this._handleEndDrag}
-          onMomentumScrollBegin={this._handleMomentumScrollBegin}
-          onMomentumScrollEnd={this._handleMomentumScrollEnd}
-          ref={this._setRef}
-        >
-          {routes.map((route, i) => {
-            const focused = index === i;
-            const outputRange = inputRange.map(inputIndex => inputIndex === i ? 1 : 0.7);
-            const opacity = position.interpolate({
-              inputRange,
-              outputRange,
-            });
-            const scene = {
-              route,
-              focused,
-              index: i,
-            };
-            const icon = this.props.renderIcon ? this.props.renderIcon(scene) : null;
-            const label = this.props.renderLabel ? this.props.renderLabel(scene) : null;
-            const badge = this.props.renderBadge ? this.props.renderBadge(scene) : null;
+        <View style={styles.scroll}>
+          <ScrollView
+            horizontal
+            scrollEnabled={scrollEnabled}
+            bounces={false}
+            scrollsToTop={false}
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={[ styles.tabcontent, scrollEnabled ? null : styles.container ]}
+            scrollEventThrottle={16}
+            onScroll={this._handleScroll}
+            onScrollBeginDrag={this._handleBeginDrag}
+            onScrollEndDrag={this._handleEndDrag}
+            onMomentumScrollBegin={this._handleMomentumScrollBegin}
+            onMomentumScrollEnd={this._handleMomentumScrollEnd}
+            ref={this._setRef}
+          >
+            {routes.map((route, i) => {
+              const focused = index === i;
+              const outputRange = inputRange.map(inputIndex => inputIndex === i ? 1 : 0.7);
+              const opacity = position.interpolate({
+                inputRange,
+                outputRange,
+              });
+              const scene = {
+                route,
+                focused,
+                index: i,
+              };
+              const icon = this.props.renderIcon ? this.props.renderIcon(scene) : null;
+              const label = this.props.renderLabel ? this.props.renderLabel(scene) : null;
+              const badge = this.props.renderBadge ? this.props.renderBadge(scene) : null;
 
-            const tabStyle = {};
+              const tabStyle = {};
 
-            if (icon) {
-              if (label) {
-                tabStyle.paddingTop = 8;
-              } else {
-                tabStyle.padding = 12;
+              if (icon) {
+                if (label) {
+                  tabStyle.paddingTop = 8;
+                } else {
+                  tabStyle.padding = 12;
+                }
               }
-            }
 
-            if (scrollEnabled) {
-              tabStyle.width = tabWidth;
-            }
+              if (scrollEnabled) {
+                tabStyle.width = tabWidth;
+              }
 
-            return (
-              <TouchableItem
-                borderless
-                key={route.key}
-                style={styles.tab}
-                pressColor={this.props.pressColor}
-                activeOpacity={this.props.activeOpacity}
-                delayPressIn={0}
-                onPress={() => { // eslint-disable-line react/jsx-no-bind
-                  const { onTabPress, jumpToIndex } = this.props;
-                  jumpToIndex(i);
-                  if (onTabPress) {
-                    onTabPress(routes[i]);
-                  }
-                }}
-              >
-                <View style={styles.container}>
-                  <Animated.View style={[ styles.tabitem, { opacity }, tabStyle, this.props.tabStyle ]}>
-                    {icon}
-                    {label}
-                  </Animated.View>
-                  {badge ?
-                    <View style={styles.badge}>
-                      {badge}
-                    </View> : null
-                  }
-                </View>
-              </TouchableItem>
-            );
-          })}
-        </ScrollView>
+              return (
+                <TouchableItem
+                  borderless
+                  key={route.key}
+                  style={styles.tab}
+                  pressColor={this.props.pressColor}
+                  activeOpacity={this.props.activeOpacity}
+                  delayPressIn={0}
+                  onPress={() => { // eslint-disable-line react/jsx-no-bind
+                    const { onTabPress, jumpToIndex } = this.props;
+                    jumpToIndex(i);
+                    if (onTabPress) {
+                      onTabPress(routes[i]);
+                    }
+                  }}
+                >
+                  <View style={styles.container}>
+                    <Animated.View style={[ styles.tabitem, { opacity }, tabStyle, this.props.tabStyle ]}>
+                      {icon}
+                      {label}
+                    </Animated.View>
+                    {badge ?
+                      <View style={styles.badge}>
+                        {badge}
+                      </View> : null
+                    }
+                  </View>
+                </TouchableItem>
+              );
+            })}
+          </ScrollView>
+        </View>
       </Animated.View>
     );
   }
