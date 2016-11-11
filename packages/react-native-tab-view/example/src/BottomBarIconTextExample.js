@@ -1,7 +1,7 @@
 /* @flow */
 
 import React, { Component } from 'react';
-import { Animated, View, Text, StyleSheet } from 'react-native';
+import { Animated, View, Text, Dimensions, StyleSheet } from 'react-native';
 import { TabViewAnimated, TabBar } from 'react-native-tab-view';
 import { Ionicons } from '@exponent/vector-icons';
 
@@ -49,6 +49,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
+const initialLayout = {
+  height: 0,
+  width: Dimensions.get('window').width,
+};
 
 export default class TopBarIconExample extends Component {
 
@@ -141,6 +146,7 @@ export default class TopBarIconExample extends Component {
         renderScene={this._renderScene}
         renderFooter={this._renderFooter}
         onRequestChangeTab={this._handleChangeTab}
+        initialLayout={initialLayout}
       />
     );
   }

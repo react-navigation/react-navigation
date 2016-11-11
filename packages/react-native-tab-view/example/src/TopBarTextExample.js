@@ -1,7 +1,7 @@
 /* @flow */
 
 import React, { Component } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, Dimensions, StyleSheet } from 'react-native';
 import { TabViewAnimated, TabBarTop } from 'react-native-tab-view';
 
 const styles = StyleSheet.create({
@@ -24,6 +24,11 @@ const styles = StyleSheet.create({
     fontWeight: '400',
   },
 });
+
+const initialLayout = {
+  height: 0,
+  width: Dimensions.get('window').width,
+};
 
 export default class TopBarTextExample extends Component {
 
@@ -85,6 +90,7 @@ export default class TopBarTextExample extends Component {
         renderScene={this._renderScene}
         renderHeader={this._renderHeader}
         onRequestChangeTab={this._handleChangeTab}
+        initialLayout={initialLayout}
       />
     );
   }

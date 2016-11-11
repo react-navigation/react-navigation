@@ -2,7 +2,7 @@
 /* eslint-disable import/no-commonjs */
 
 import React, { Component } from 'react';
-import { Animated, View, Image, Text, StyleSheet } from 'react-native';
+import { Animated, View, Image, Text, Dimensions, StyleSheet } from 'react-native';
 import { TabViewAnimated, TabViewPagerPan } from 'react-native-tab-view';
 
 const styles = StyleSheet.create({
@@ -46,6 +46,11 @@ const ALBUMS = {
   'The Man-Machine': require('../assets/album-art-6.jpg'),
   'The Score': require('../assets/album-art-7.jpg'),
   'Lost Horizons': require('../assets/album-art-8.jpg'),
+};
+
+const initialLayout = {
+  height: 0,
+  width: Dimensions.get('window').width,
 };
 
 export default class CoverflowExample extends Component {
@@ -137,6 +142,7 @@ export default class CoverflowExample extends Component {
         renderPager={this._renderPager}
         renderScene={this._renderScene}
         onRequestChangeTab={this._handleChangeTab}
+        initialLayout={initialLayout}
       />
     );
   }

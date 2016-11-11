@@ -1,7 +1,7 @@
 /* @flow */
 
 import React, { Component } from 'react';
-import { Animated, View, StyleSheet } from 'react-native';
+import { Animated, View, Dimensions, StyleSheet } from 'react-native';
 import { TabViewAnimated, TabBarTop } from 'react-native-tab-view';
 import ListViewExample from './ListViewExample';
 
@@ -27,6 +27,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#f9f9f9',
   },
 });
+
+const initialLayout = {
+  height: 0,
+  width: Dimensions.get('window').width,
+};
 
 export default class TopBarTextExample extends Component {
 
@@ -125,6 +130,7 @@ export default class TopBarTextExample extends Component {
         renderScene={this._renderScene}
         renderHeader={this._renderHeader}
         onRequestChangeTab={this._handleChangeTab}
+        initialLayout={initialLayout}
       />
     );
   }
