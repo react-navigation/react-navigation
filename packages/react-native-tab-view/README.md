@@ -4,10 +4,9 @@ A cross-platform Tab View component for React Native.
 
 This is a JavaScript-only implementation of swipeable tab views. It's super customizable, allowing you to do things like coverflow.
 
-- [Run the
-example app to see it in
-action](https://getexponent.com/@rncommunity/react-native-tab-view-demos).
+- [Run the example app to see it in action](https://getexponent.com/@satya164/react-native-tab-view-demos).
 - Checkout the [example/](https://github.com/react-native-community/react-native-tab-view/tree/master/example) folder for source code.
+
 
 ## Features
 
@@ -16,6 +15,7 @@ action](https://getexponent.com/@rncommunity/react-native-tab-view-demos).
 - Both top and bottom tab bars
 - Follows Material Design spec
 - Highly customizable
+
 
 ## Demo
 
