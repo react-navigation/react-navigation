@@ -114,6 +114,9 @@ export default class TabViewPagerPan extends Component<DefaultProps, Props, void
 
   _canMoveScreen = (evt: GestureEvent, gestureState: GestureState) => {
     const { navigationState: { routes, index } } = this.props;
+    if (this.props.swipeEnabled === false) {
+      return false;
+    }
     const canMove = this._isMovingHorzontally(evt, gestureState) && (
         (gestureState.dx >= DEAD_ZONE && index >= 0) ||
         (gestureState.dx <= -DEAD_ZONE && index <= routes.length - 1)
