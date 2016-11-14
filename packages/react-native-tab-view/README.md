@@ -7,6 +7,8 @@ This is a JavaScript-only implementation of swipeable tab views. It's super cust
 - [Run the example app to see it in action](https://getexponent.com/@satya164/react-native-tab-view-demos).
 - Checkout the [example/](https://github.com/react-native-community/react-native-tab-view/tree/master/example) folder for source code.
 
+Requires React Native version >= 0.36.
+
 
 ## Features
 
