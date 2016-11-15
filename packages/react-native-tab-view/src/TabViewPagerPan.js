@@ -55,8 +55,6 @@ export default class TabViewPagerPan extends Component<DefaultProps, Props, void
   };
 
   componentWillMount() {
-    this._normalizeSwipeVelocityThreshold();
-
     this._panResponder = PanResponder.create({
       onMoveShouldSetPanResponder: this._canMoveScreen,
       onMoveShouldSetPanResponderCapture: this._canMoveScreen,
@@ -68,18 +66,10 @@ export default class TabViewPagerPan extends Component<DefaultProps, Props, void
     });
   }
 
-  componentDidUpdate() {
-    this._normalizeSwipeVelocityThreshold();
-  }
-
-  _normalizeSwipeVelocityThreshold = () => {
-    this._swipeVelocityThreshold = this.props.swipeVelocityThreshold;
-    if (Platform.OS === 'android') {
-      // on Android, velocity is way lower due to timestamp being in nanosecond
-      // normalize it to have the same velocity on both iOS and Android
-      this._swipeVelocityThreshold /= 1000000;
-    }
-  };
+  _panResponder: Object;
+  _lastValue = null;
+  _isMoving = null;
+  _startDirection = 0;
 
   _isIndexInRange = (index: number) => {
     const { routes } = this.props.navigationState;
@@ -103,7 +93,19 @@ export default class TabViewPagerPan extends Component<DefaultProps, Props, void
 
   _getNextIndex = (evt: GestureEvent, gestureState: GestureState) => {
     const { index } = this.props.navigationState;
-    if (Math.abs(gestureState.dx) > this.props.swipeDistanceThreshold || Math.abs(gestureState.vx) > this._swipeVelocityThreshold) {
+
+    let swipeVelocityThreshold = this.props.swipeVelocityThreshold;
+
+    if (Platform.OS === 'android') {
+      // on Android, velocity is way lower due to timestamp being in nanosecond
+      // normalize it to have the same velocity on both iOS and Android
+      swipeVelocityThreshold /= 1000000;
+    }
+
+    if (
+      Math.abs(gestureState.dx) > this.props.swipeDistanceThreshold ||
+      Math.abs(gestureState.vx) > swipeVelocityThreshold
+    ) {
       const nextIndex = index - (gestureState.dx / Math.abs(gestureState.dx));
       if (this._isIndexInRange(nextIndex)) {
         return nextIndex;
@@ -113,14 +115,14 @@ export default class TabViewPagerPan extends Component<DefaultProps, Props, void
   };
 
   _canMoveScreen = (evt: GestureEvent, gestureState: GestureState) => {
-    const { navigationState: { routes, index } } = this.props;
     if (this.props.swipeEnabled === false) {
       return false;
     }
+    const { navigationState: { routes, index } } = this.props;
     const canMove = this._isMovingHorzontally(evt, gestureState) && (
-        (gestureState.dx >= DEAD_ZONE && index >= 0) ||
-        (gestureState.dx <= -DEAD_ZONE && index <= routes.length - 1)
-      );
+      (gestureState.dx >= DEAD_ZONE && index >= 0) ||
+      (gestureState.dx <= -DEAD_ZONE && index <= routes.length - 1)
+    );
     if (canMove) {
       this._startDirection = gestureState.dx;
     }
@@ -158,12 +160,6 @@ export default class TabViewPagerPan extends Component<DefaultProps, Props, void
     this._lastValue = null;
     this._isMoving = null;
   };
-
-  _panResponder: any;
-  _lastValue = null;
-  _isMoving = null;
-  _startDirection = 0;
-  _swipeVelocityThreshold = 0.25;
 
   render() {
     const { navigationState, layout } = this.props;
