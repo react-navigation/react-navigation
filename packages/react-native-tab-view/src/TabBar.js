@@ -294,6 +294,7 @@ export default class TabBar extends Component<DefaultProps, Props, State> {
             bounces={false}
             scrollsToTop={false}
             showsHorizontalScrollIndicator={false}
+            automaticallyAdjustContentInsets={false}
             contentContainerStyle={[ styles.tabcontent, scrollEnabled ? null : styles.container ]}
             scrollEventThrottle={16}
             onScroll={this._handleScroll}
