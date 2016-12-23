@@ -5,8 +5,9 @@ import { Animated } from 'react-native';
 export type SubscriptionName = 'jump' | 'position'
 
 export type Route = {
-  title?: string;
   key: string;
+  title?: string;
+  testID?: string;
 }
 
 export type NavigationState = {
