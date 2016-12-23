@@ -6,11 +6,11 @@
     "start": "node node_modules/react-native/local-cli/cli.js start"
   },
   "dependencies": {
-    "@exponent/vector-icons": "^1.0.4",
-    "exponent": "^11.0.0",
-    "react": "^15.3.2",
-    "react-addons-shallow-compare": "^15.3.2",
-    "react-native": "git+https://github.com/exponentjs/react-native.git#sdk-11.0.3",
+    "@exponent/vector-icons": "^2.0.3",
+    "exponent": "~12.0.5",
+    "react": "~15.3.2",
+    "react-addons-shallow-compare": "~15.3.2",
+    "react-native": "git+https://github.com/exponentjs/react-native.git#sdk-12.0.0",
     "react-native-tab-view": "file:../"
   },
   "main": "main.js"

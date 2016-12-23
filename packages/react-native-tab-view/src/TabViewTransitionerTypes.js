@@ -3,11 +3,11 @@
 import type { NavigationState, Route, Layout } from './TabViewTypeDefinitions';
 
 export type TransitionProps = {
-  progress: number
+  progress: number;
 }
 
 export type TransitionSpec = {
-  timing: Function
+  timing: Function;
 }
 
 export type TransitionConfigurator = (currentTransitionProps: TransitionProps, nextTransitionProps: TransitionProps) => ?TransitionSpec
