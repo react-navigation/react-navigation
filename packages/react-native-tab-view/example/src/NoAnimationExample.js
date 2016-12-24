@@ -1,9 +1,11 @@
 /* @flow */
 
 import React, { Component } from 'react';
-import { View, Text, Dimensions, StyleSheet } from 'react-native';
+import { Animated, View, Dimensions, StyleSheet } from 'react-native';
 import { TabViewAnimated, TabViewPagerPan, TabBar } from 'react-native-tab-view';
 import { Ionicons } from '@exponent/vector-icons';
+
+const AnimatedIcon = Animated.createAnimatedComponent(Ionicons);
 
 const styles = StyleSheet.create({
   container: {
@@ -18,17 +20,25 @@ const styles = StyleSheet.create({
     borderTopWidth: StyleSheet.hairlineWidth,
     borderTopColor: 'rgba(0, 0, 0, .2)',
   },
+  iconContainer: {
+    height: 24,
+    width: 24,
+  },
+  icon: {
+    position: 'absolute',
+    textAlign: 'center',
+    top: 0,
+    left: 0,
+    right: 0,
+    color: 'white',
+  },
+  outline: {
+    color: '#0084ff',
+  },
   label: {
     fontSize: 12,
     margin: 2,
-  },
-  idle: {
     backgroundColor: 'transparent',
-    color: '#2196f3',
-  },
-  selected: {
-    backgroundColor: 'transparent',
-    color: 'white',
   },
   indicator: {
     flex: 1,
@@ -72,32 +82,52 @@ export default class TopBarIconExample extends Component {
     });
   };
 
-  _renderIndicator = ({ navigationState, width }) => {
-    const translateX = navigationState.index * width;
+  _renderIndicator = ({ width, position }) => {
+    const translateX = Animated.multiply(position, new Animated.Value(width));
     return (
-      <View
+      <Animated.View
         style={[ styles.indicator, { width, transform: [ { translateX } ] } ]}
       />
     );
   };
 
-  _renderLabel = ({ navigationState }) => ({ route, index }) => {
-    const selected = navigationState.index === index;
+  _renderLabel = ({ position, navigationState }) => ({ route, index }) => {
+    const inputRange = navigationState.routes.map((x, i) => i);
+    const outputRange = inputRange.map(inputIndex => inputIndex === index ? '#fff' : '#2196f3');
+    const color = position.interpolate({
+      inputRange,
+      outputRange,
+    });
     return (
-      <Text style={[ styles.label, selected ? styles.selected : styles.idle ]}>
+      <Animated.Text style={[ styles.label, { color } ]}>
         {route.title}
-      </Text>
+      </Animated.Text>
     );
   };
 
-  _renderIcon = ({ navigationState }) => ({ route, index }: any) => {
-    const selected = navigationState.index === index;
+  _renderIcon = ({ navigationState, position }) => ({ route, index }: any) => {
+    const inputRange = navigationState.routes.map((x, i) => i);
+    const filledOpacity = position.interpolate({
+      inputRange,
+      outputRange: inputRange.map(i => i === index ? 1 : 0),
+    });
+    const outlineOpacity = position.interpolate({
+      inputRange,
+      outputRange: inputRange.map(i => i === index ? 0 : 1),
+    });
     return (
-      <Ionicons
-        name={selected ? route.icon : route.icon + '-outline'}
-        size={24}
-        style={[ selected ? styles.selected : styles.idle ]}
-      />
+      <View style={styles.iconContainer}>
+        <AnimatedIcon
+          name={route.icon}
+          size={24}
+          style={[ styles.icon, { opacity: filledOpacity } ]}
+        />
+        <AnimatedIcon
+          name={route.icon + '-outline'}
+          size={24}
+          style={[ styles.icon, styles.outline, { opacity: outlineOpacity } ]}
+        />
+      </View>
     );
   };
 
