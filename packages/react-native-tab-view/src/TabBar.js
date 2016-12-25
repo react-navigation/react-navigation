@@ -336,7 +336,6 @@ export default class TabBar extends Component<DefaultProps, Props, State> {
                   key={route.key}
                   accessibilityTraits='button'
                   testID={route.testID}
-                  style={{ width: tabWidth }}
                   pressColor={this.props.pressColor}
                   activeOpacity={this.props.activeOpacity}
                   delayPressIn={0}
@@ -349,7 +348,7 @@ export default class TabBar extends Component<DefaultProps, Props, State> {
                   }}
                 >
                   <View style={styles.container}>
-                    <Animated.View style={[ styles.tabitem, { opacity }, tabStyle, this.props.tabStyle ]}>
+                    <Animated.View style={[ styles.tabitem, { opacity, width: tabWidth }, tabStyle, this.props.tabStyle ]}>
                       {icon}
                       {label}
                     </Animated.View>
