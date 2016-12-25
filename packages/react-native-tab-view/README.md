@@ -159,7 +159,7 @@ It accepts the following props,
 - `pressColor` - color for material ripple (Android >= 5.0 only)
 - `activeOpacity` - opacity for pressed tab (iOS and Android < 5.0 only)
 - `scrollEnabled` - whether to enable scrollable tabs
-- `tabWidth` - optional custom tab width for scrollable tabs
+- `tabWidth` - optional custom tab width
 - `tabStyle` - style object for the tab
 
 ### `<TabBarTop />`

@@ -40,9 +40,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     margin: 4,
   },
-  tab: {
-    flex: 1,
-  },
   tabitem: {
     flex: 1,
     padding: 8,
@@ -142,11 +139,14 @@ export default class TabBar extends Component<DefaultProps, Props, State> {
   _isMomentumScroll: boolean = false;
 
   _getTabWidth = (props: Props) => {
-    const { layout, tabWidth } = props;
+    const { layout, tabWidth, navigationState } = props;
     if (typeof tabWidth === 'number') {
       return tabWidth;
     }
-    return (layout.width / 5) * 2;
+    if (props.scrollEnabled) {
+      return (layout.width / 5) * 2;
+    }
+    return layout.width / navigationState.routes.length;
   };
 
   _getMaxScrollableDistance = (props: Props) => {
@@ -254,7 +254,7 @@ export default class TabBar extends Component<DefaultProps, Props, State> {
   _setRef = (el: Object) => (this._scrollView = el);
 
   render() {
-    const { position, layout, navigationState, scrollEnabled } = this.props;
+    const { position, navigationState, scrollEnabled } = this.props;
     const { routes, index } = navigationState;
     const maxDistance = this._getMaxScrollableDistance(this.props);
     const tabWidth = this._getTabWidth(this.props);
@@ -282,7 +282,7 @@ export default class TabBar extends Component<DefaultProps, Props, State> {
           {this.props.renderIndicator ?
             this.props.renderIndicator({
               ...this.props,
-              width: scrollEnabled ? tabWidth : layout.width / routes.length,
+              width: tabWidth,
             }) :
             null
           }
@@ -330,17 +330,13 @@ export default class TabBar extends Component<DefaultProps, Props, State> {
                 }
               }
 
-              if (scrollEnabled) {
-                tabStyle.width = tabWidth;
-              }
-
               return (
                 <TouchableItem
                   borderless
                   key={route.key}
                   accessibilityTraits='button'
                   testID={route.testID}
-                  style={styles.tab}
+                  style={{ width: tabWidth }}
                   pressColor={this.props.pressColor}
                   activeOpacity={this.props.activeOpacity}
                   delayPressIn={0}
