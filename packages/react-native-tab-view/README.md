@@ -35,7 +35,7 @@ npm install --save react-native-tab-view react-addons-shallow-compare
 
 ```js
 import React, { Component } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { Dimensions, View, StyleSheet } from 'react-native';
 import { TabViewAnimated, TabBarTop } from 'react-native-tab-view';
 
 const styles = StyleSheet.create({
@@ -48,6 +48,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
+const initialLayout = {
+  height: 0,
+  width: Dimensions.get('window').width,
+};
 
 export default class TabViewExample extends Component {
   state = {
@@ -85,6 +90,7 @@ export default class TabViewExample extends Component {
         renderScene={this._renderScene}
         renderHeader={this._renderHeader}
         onRequestChangeTab={this._handleChangeTab}
+        initialLayout={initialLayout}
       />
     );
   }
