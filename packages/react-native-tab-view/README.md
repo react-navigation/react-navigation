@@ -195,7 +195,6 @@ state = {
 
 Then pass `this.state` as the `navigationState` prop to `<TabViewAnimated />` or `<TabViewTransitioner />`.
 
-
 ```js
 <TabViewAnimated
   navigationState={this.state}
@@ -208,18 +207,75 @@ Then pass `this.state` as the `navigationState` prop to `<TabViewAnimated />` or
 
 ## Optimization Tips
 
-- The `renderScene` function is called every time the index changes. If your `renderScene` function is expensive, it's good idea move it to a separate component if your `renderScene` function doesn't depend on the index, and apply `shouldComponentUpdate` to prevent unnecessary re-renders.
-- If you've a large number of routes, especially images, it can slow the animation down a lot. You can instead render a limited number of routes. In your `renderScene` function, do the following to render only 2 routes on each side,
+### Avoid unnecessary re-renders
 
-  ```js
-  renderScene = ({ route }) => {
-    if (Math.abs(this.state.navigation.index - this.state.navigation.routes.indexOf(route)) > 2) {
-      return null;
-    }
+The `renderScene` function is called every time the index changes. If your `renderScene` function is expensive, it's good idea move each route to a separate component if they don't depend on the index, and apply `shouldComponentUpdate` to prevent unnecessary re-renders.
 
-    return <MySceneComponent route={route} />;
-  };
-  ```
+For example, instead of:
+
+```js
+renderScene = ({ route }) => {
+  switch (route.key) {
+  case 'home':
+    return (
+      <View style={styles.page}>
+        <Avatar />
+        <NewsFeed />>
+      </View>
+    );
+  default:
+    return null;
+  }
+}
+```
+
+Do the following:
+
+```js
+renderScene = ({ route }) => {
+  switch (route.key) {
+  case 'home':
+    return <HomeComponent />;
+  default:
+    return null;
+  }
+}
+```
+
+Where `<HomeComponent />` is a `PureComponent`.
+
+
+### Avoid one frame delay before tab view appears
+
+We need to measure the width of the container and hence need to wait before rendering. If you know the initial width upfront, you can pass it in and we won't need to wait for measuring it. Most of the time, it's just the window width.
+
+For example, pass the following `initialLayout` to `TabViewAnimated`:
+
+```js
+initialLayout = {
+  height: 0,
+  width: Dimensions.get('window').width,
+};
+```
+
+The tabview will still react to changes in the dimension and adjust accordingly to accommodate things like orientation change.
+
+
+### Optimize large number of routes
+
+If you've a large number of routes, especially images, it can slow the animation down a lot. You can instead render a limited number of routes.
+
+For example, do the following to render only 2 routes on each side:
+
+```js
+renderScene = ({ route }) => {
+  if (Math.abs(this.state.index - this.state.routes.indexOf(route)) > 2) {
+    return null;
+  }
+
+  return <MySceneComponent route={route} />;
+};
+```
 
 
 ## Troubleshooting
