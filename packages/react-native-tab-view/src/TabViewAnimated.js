@@ -94,6 +94,10 @@ export default class TabViewAnimated extends Component<DefaultProps, Props, Stat
   };
 
   _renderItems = (props: SceneRendererProps) => {
+    if (props.layout.width === 0) {
+      return null;
+    }
+
     const { renderPager, renderHeader, renderFooter } = this.props;
 
     return (
@@ -101,19 +105,16 @@ export default class TabViewAnimated extends Component<DefaultProps, Props, Stat
         {renderHeader && renderHeader(props)}
         {renderPager({
           ...props,
-          children: props.layout.width !== 0 ?
-            props.navigationState.routes.map((route, index) => {
-              return (
-                <View key={route.key} style={{ width: props.layout.width }}>
-                  {this._renderScene({
-                    ...props,
-                    route,
-                    index,
-                    focused: index === props.navigationState.index,
-                  })}
-                </View>
-              );
-            }) : null,
+          children: props.navigationState.routes.map((route, index) => (
+            <View key={route.key} style={{ width: props.layout.width }}>
+              {this._renderScene({
+                ...props,
+                route,
+                index,
+                focused: index === props.navigationState.index,
+              })}
+            </View>
+          )),
         })}
         {renderFooter && renderFooter(props)}
       </View>
