@@ -27,32 +27,48 @@ const styles = StyleSheet.create({
   },
 });
 
+type DefaultProps = {
+  getLabelText: (scene: Scene) => ?string;
+}
+
 type IndicatorProps = SceneRendererProps & {
   width: Animated.Valye;
   opacity: Animated.Value;
 }
 
 type Props = SceneRendererProps & {
+  getLabelText: (scene: Scene) => ?string;
   renderLabel?: (scene: Scene) => React.Element<*>;
   indicatorStyle?: any;
   labelStyle?: any;
 }
 
-export default class TabBarTop extends Component<void, Props, void> {
+export default class TabBarTop extends Component<DefaultProps, Props, void> {
   static propTypes = {
     ...SceneRendererPropType,
+    getLabelText: PropTypes.func,
     renderLabel: PropTypes.func,
     indicatorStyle: View.propTypes.style,
     labelStyle: Text.propTypes.style,
   };
 
-  _renderLabel = ({ route }: Scene) => (
-    route.title ? <Text style={[ styles.tablabel, this.props.labelStyle ]}>{route.title.toUpperCase()}</Text> : null
-  );
+  static defaultProps = {
+    getLabelText: ({ route }) => route.title ? route.title.toUpperCase() : null,
+  };
+
+  _renderLabel = (scene: Scene) => {
+    if (typeof this.props.renderLabel !== 'undefined') {
+      return this.props.renderLabel(scene);
+    }
+    const label = this.props.getLabelText(scene);
+    if (typeof label !== 'string') {
+      return null;
+    }
+    return <Text style={[ styles.tablabel, this.props.labelStyle ]}>{label}</Text>;
+  };
 
   _renderIndicator = (props: IndicatorProps) => {
     const { width, opacity, position } = props;
-
     const translateX = Animated.multiply(position, width);
 
     return (

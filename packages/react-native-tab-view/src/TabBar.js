@@ -73,14 +73,15 @@ type ScrollEvent = {
 }
 
 type DefaultProps = {
-  renderLabel: (scene: Scene) => ?React.Element<*>;
+  getLabelText: (scene: Scene) => ?string;
 }
 
 type Props = SceneRendererProps & {
   scrollEnabled?: boolean;
   pressColor?: string;
   activeOpacity?: number;
-  renderLabel: (scene: Scene) => ?React.Element<*>;
+  getLabelText: (scene: Scene) => ?string;
+  renderLabel?: (scene: Scene) => ?React.Element<*>;
   renderIcon?: (scene: Scene) => ?React.Element<*>;
   renderBadge?: (scene: Scene) => ?React.Element<*>;
   renderIndicator?: (props: IndicatorProps) => ?React.Element<*>;
@@ -101,6 +102,7 @@ export default class TabBar extends Component<DefaultProps, Props, State> {
     scrollEnabled: PropTypes.bool,
     pressColor: TouchableItem.propTypes.pressColor,
     activeOpacity: TouchableItem.propTypes.activeOpacity,
+    getLabelText: PropTypes.func,
     renderIcon: PropTypes.func,
     renderLabel: PropTypes.func,
     renderIndicator: PropTypes.func,
@@ -111,7 +113,7 @@ export default class TabBar extends Component<DefaultProps, Props, State> {
   };
 
   static defaultProps = {
-    renderLabel: ({ route }) => route.title ? <Text style={styles.tablabel}>{route.title}</Text> : null,
+    getLabelText: ({ route }) => route.title,
   };
 
   state: State = {
@@ -155,6 +157,17 @@ export default class TabBar extends Component<DefaultProps, Props, State> {
   _scrollOffset: number = 0;
   _isManualScroll: boolean = false;
   _isMomentumScroll: boolean = false;
+
+  _renderLabel = (scene: Scene) => {
+    if (typeof this.props.renderLabel !== 'undefined') {
+      return this.props.renderLabel(scene);
+    }
+    const label = this.props.getLabelText(scene);
+    if (typeof label !== 'string') {
+      return null;
+    }
+    return <Text style={styles.tablabel}>{label}</Text>;
+  }
 
   _getTabWidth = (props: Props) => {
     const { layout, tabWidth, navigationState } = props;
@@ -335,8 +348,8 @@ export default class TabBar extends Component<DefaultProps, Props, State> {
                 focused,
                 index: i,
               };
+              const label = this._renderLabel(scene);
               const icon = this.props.renderIcon ? this.props.renderIcon(scene) : null;
-              const label = this.props.renderLabel ? this.props.renderLabel(scene) : null;
               const badge = this.props.renderBadge ? this.props.renderBadge(scene) : null;
 
               const tabStyle = {};

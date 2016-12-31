@@ -152,6 +152,7 @@ It accepts the following props,
 Basic tab bar
 
 It accepts the following props,
+- `getLabelText` - optional callback which receives the current scene and returns the tab label
 - `renderIcon` - optional callback which receives the current scene and returns a React Element to be used as a icon
 - `renderLabel` - optional callback which receives the current scene and returns a React Element to be used as a label
 - `renderIndicator` - optional callback which receives the current scene and returns a React Element to be used as a tab indicator
@@ -168,7 +169,6 @@ It accepts the following props,
 Material design themed top tab bar
 
 It accepts the following props in addition to the props accepted by `<TabBar />`,
-- `renderLabel` - optional callback which receives the current scene and returns a React Element to be used as a label
 - `indicatorStyle` - style object for the tab indicator
 - `labelStyle` - style object for the tab label
 
