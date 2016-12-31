@@ -35,7 +35,7 @@ npm install --save react-native-tab-view react-addons-shallow-compare
 
 ```js
 import React, { Component } from 'react';
-import { Dimensions, View, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { TabViewAnimated, TabBarTop } from 'react-native-tab-view';
 
 const styles = StyleSheet.create({
@@ -48,11 +48,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
-
-const initialLayout = {
-  height: 0,
-  width: Dimensions.get('window').width,
-};
 
 export default class TabViewExample extends Component {
   state = {
@@ -90,7 +85,6 @@ export default class TabViewExample extends Component {
         renderScene={this._renderScene}
         renderHeader={this._renderHeader}
         onRequestChangeTab={this._handleChangeTab}
-        initialLayout={initialLayout}
       />
     );
   }
@@ -253,12 +247,12 @@ Where `<HomeComponent />` is a `PureComponent`.
 
 ### Avoid one frame delay before tab view appears
 
-We need to measure the width of the container and hence need to wait before rendering. If you know the initial width upfront, you can pass it in and we won't need to wait for measuring it. Most of the time, it's just the window width.
+We need to measure the width of the container and hence need to wait before rendering. This is especially visible when you are rendering more than one tab on screen, such as coverflow. If you know the initial width upfront, you can pass it in and we won't need to wait for measuring it. Most of the time, it's just the window width.
 
 For example, pass the following `initialLayout` to `TabViewAnimated`:
 
 ```js
-initialLayout = {
+const initialLayout = {
   height: 0,
   width: Dimensions.get('window').width,
 };

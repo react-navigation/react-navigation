@@ -99,7 +99,7 @@ export default class TopBarTextExample extends Component {
         renderLabel={this._renderLabel(props)}
         indicatorStyle={styles.indicator}
         tabStyle={styles.tab}
-        tabWidth={80}
+        tabWidth={90}
         style={styles.tabbar}
       />
     );
