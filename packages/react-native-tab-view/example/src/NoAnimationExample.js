@@ -1,28 +1,31 @@
 /* @flow */
 
 import React, { Component } from 'react';
-import { Animated, View, Dimensions, StyleSheet } from 'react-native';
-import { TabViewAnimated, TabViewPagerPan, TabBar } from 'react-native-tab-view';
+import { Animated, View, TouchableWithoutFeedback, StyleSheet } from 'react-native';
+import { TabViewAnimated, TabViewPagerPan } from 'react-native-tab-view';
 import { Ionicons } from '@exponent/vector-icons';
 
 const AnimatedIcon = Animated.createAnimatedComponent(Ionicons);
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
   },
   tabbar: {
-    backgroundColor: '#fff',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: '#F4F4F4',
   },
   tab: {
-    opacity: 1,
-    padding: 0,
+    flexGrow: 1,
+    alignItems: 'center',
     borderTopWidth: StyleSheet.hairlineWidth,
     borderTopColor: 'rgba(0, 0, 0, .2)',
+    paddingTop: 3,
   },
   iconContainer: {
-    height: 24,
-    width: 24,
+    height: 26,
+    width: 26,
   },
   icon: {
     position: 'absolute',
@@ -30,19 +33,15 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    color: 'white',
-  },
-  outline: {
     color: '#0084ff',
   },
-  label: {
-    fontSize: 12,
-    margin: 2,
-    backgroundColor: 'transparent',
+  outline: {
+    color: '#939393',
   },
-  indicator: {
-    flex: 1,
-    backgroundColor: '#0084ff',
+  label: {
+    fontSize: 10,
+    marginVertical: 3,
+    backgroundColor: 'transparent',
   },
   page: {
     flex: 1,
@@ -50,11 +49,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
-
-const initialLayout = {
-  height: 0,
-  width: Dimensions.get('window').width,
-};
 
 export default class TopBarIconExample extends Component {
 
@@ -70,9 +64,11 @@ export default class TopBarIconExample extends Component {
   state = {
     index: 0,
     routes: [
-      { key: '1', title: 'First', icon: 'ios-book' },
-      { key: '2', title: 'Second', icon: 'ios-chatboxes' },
-      { key: '3', title: 'Third', icon: 'ios-paper' },
+      { key: '1', title: 'Featured', icon: 'ios-star' },
+      { key: '2', title: 'Playlists', icon: 'ios-albums' },
+      { key: '3', title: 'Near Me', icon: 'ios-navigate' },
+      { key: '4', title: 'Search', icon: 'ios-search' },
+      { key: '5', title: 'Updates', icon: 'ios-download' },
     ],
   };
 
@@ -82,18 +78,9 @@ export default class TopBarIconExample extends Component {
     });
   };
 
-  _renderIndicator = ({ width, position }) => {
-    const translateX = Animated.multiply(position, new Animated.Value(width));
-    return (
-      <Animated.View
-        style={[ styles.indicator, { width, transform: [ { translateX } ] } ]}
-      />
-    );
-  };
-
   _renderLabel = ({ position, navigationState }) => ({ route, index }) => {
     const inputRange = navigationState.routes.map((x, i) => i);
-    const outputRange = inputRange.map(inputIndex => inputIndex === index ? '#fff' : '#2196f3');
+    const outputRange = inputRange.map(inputIndex => inputIndex === index ? '#2196f3' : '#939393');
     const color = position.interpolate({
       inputRange,
       outputRange,
@@ -119,29 +106,32 @@ export default class TopBarIconExample extends Component {
       <View style={styles.iconContainer}>
         <AnimatedIcon
           name={route.icon}
-          size={24}
+          size={26}
           style={[ styles.icon, { opacity: filledOpacity } ]}
         />
         <AnimatedIcon
           name={route.icon + '-outline'}
-          size={24}
+          size={26}
           style={[ styles.icon, styles.outline, { opacity: outlineOpacity } ]}
         />
       </View>
     );
   };
 
-  _renderFooter = (props) => {
+  _renderFooter = props => {
     return (
-      <TabBar
-        {...props}
-        renderIcon={this._renderIcon(props)}
-        renderLabel={this._renderLabel(props)}
-        renderIndicator={this._renderIndicator}
-        activeOpacity={1}
-        style={styles.tabbar}
-        tabStyle={styles.tab}
-      />
+      <View style={styles.tabbar}>
+        {props.navigationState.routes.map((route, index) => {
+          return (
+            <TouchableWithoutFeedback key={route.key} onPress={() => props.jumpToIndex(index)}>
+              <Animated.View style={styles.tab}>
+                {this._renderIcon(props)({ route, index })}
+                {this._renderLabel(props)({ route, index })}
+              </Animated.View>
+            </TouchableWithoutFeedback>
+          );
+        })}
+      </View>
     );
   };
 
@@ -152,7 +142,11 @@ export default class TopBarIconExample extends Component {
     case '2':
       return <View style={[ styles.page, { backgroundColor: '#673ab7' } ]} />;
     case '3':
-      return <View style={[ styles.page, { backgroundColor: '#4caf50' } ]} />;
+      return <View style={[ styles.page, { backgroundColor: '#8bc34a' } ]} />;
+    case '4':
+      return <View style={[ styles.page, { backgroundColor: '#2196f3' } ]} />;
+    case '5':
+      return <View style={[ styles.page, { backgroundColor: '#3f51b5' } ]} />;
     default:
       return null;
     }
@@ -174,7 +168,6 @@ export default class TopBarIconExample extends Component {
         renderScene={this._renderScene}
         renderFooter={this._renderFooter}
         onRequestChangeTab={this._handleChangeTab}
-        initialLayout={initialLayout}
       />
     );
   }
