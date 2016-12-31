@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
   tabbar: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    backgroundColor: '#F4F4F4',
+    backgroundColor: '#f4f4f4',
   },
   tab: {
     flexGrow: 1,
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
 export default class TopBarIconExample extends Component {
 
   static title = 'No animation';
-  static backgroundColor = '#fff';
+  static backgroundColor = '#f4f4f4';
   static tintColor = '#222';
   static appbarElevation = 4;
 
