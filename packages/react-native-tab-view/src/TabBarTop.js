@@ -28,7 +28,8 @@ const styles = StyleSheet.create({
 });
 
 type IndicatorProps = SceneRendererProps & {
-  width: number;
+  width: Animated.Valye;
+  opacity: Animated.Value;
 }
 
 type Props = SceneRendererProps & {
@@ -50,13 +51,13 @@ export default class TabBarTop extends Component<void, Props, void> {
   );
 
   _renderIndicator = (props: IndicatorProps) => {
-    const { width, position } = props;
+    const { width, opacity, position } = props;
 
-    const translateX = Animated.multiply(position, new Animated.Value(width));
+    const translateX = Animated.multiply(position, width);
 
     return (
       <Animated.View
-        style={[ styles.indicator, { width, transform: [ { translateX } ] }, this.props.indicatorStyle ]}
+        style={[ styles.indicator, { width, opacity, transform: [ { translateX } ] }, this.props.indicatorStyle ]}
       />
     );
   };

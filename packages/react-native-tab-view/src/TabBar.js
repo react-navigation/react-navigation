@@ -92,6 +92,7 @@ type Props = SceneRendererProps & {
 
 type State = {
   offset: Animated.Value;
+  visibility: Animated.Value;
 }
 
 export default class TabBar extends Component<DefaultProps, Props, State> {
@@ -115,7 +116,14 @@ export default class TabBar extends Component<DefaultProps, Props, State> {
 
   state: State = {
     offset: new Animated.Value(0),
+    visibility: new Animated.Value(0),
   };
+
+  componentWillMount() {
+    if (this.props.layout.width || this.props.tabWidth) {
+      this.state.visibility.setValue(1);
+    }
+  }
 
   componentDidMount() {
     this._adjustScroll(this.props.navigationState.index);
@@ -125,6 +133,16 @@ export default class TabBar extends Component<DefaultProps, Props, State> {
   componentWillReceiveProps(nextProps: Props) {
     if (this.props.navigationState !== nextProps.navigationState) {
       this._resetScrollOffset(nextProps);
+    }
+
+    if (
+        (this.props.tabWidth !== nextProps.tabWidth && nextProps.tabWidth) ||
+        (this.props.layout.width !== nextProps.layout.width && nextProps.layout.width)
+     ) {
+      Animated.timing(this.state.visibility, {
+        toValue: 1,
+        duration: 150,
+      }).start();
     }
   }
 
@@ -282,7 +300,8 @@ export default class TabBar extends Component<DefaultProps, Props, State> {
           {this.props.renderIndicator ?
             this.props.renderIndicator({
               ...this.props,
-              width: tabWidth,
+              width: new Animated.Value(tabWidth),
+              opacity: this.state.visibility,
             }) :
             null
           }
@@ -307,10 +326,10 @@ export default class TabBar extends Component<DefaultProps, Props, State> {
             {routes.map((route, i) => {
               const focused = index === i;
               const outputRange = inputRange.map(inputIndex => inputIndex === i ? 1 : 0.7);
-              const opacity = position.interpolate({
+              const opacity = Animated.multiply(this.state.visibility, position.interpolate({
                 inputRange,
                 outputRange,
-              });
+              }));
               const scene = {
                 route,
                 focused,
@@ -348,14 +367,14 @@ export default class TabBar extends Component<DefaultProps, Props, State> {
                   }}
                 >
                   <View style={styles.container}>
-                    <Animated.View style={[ styles.tabitem, { opacity, width: tabWidth }, tabStyle, this.props.tabStyle ]}>
+                    <Animated.View style={[ styles.tabitem, { opacity }, tabWidth ? { width: tabWidth } : null, tabStyle, this.props.tabStyle ]}>
                       {icon}
                       {label}
                     </Animated.View>
                     {badge ?
-                      <View style={styles.badge}>
+                      <Animated.View style={[ styles.badge, { opacity: this.state.visibility } ]}>
                         {badge}
-                      </View> : null
+                      </Animated.View> : null
                     }
                   </View>
                 </TouchableItem>

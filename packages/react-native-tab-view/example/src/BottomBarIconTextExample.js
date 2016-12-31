@@ -1,7 +1,7 @@
 /* @flow */
 
 import React, { Component } from 'react';
-import { Animated, View, Text, Dimensions, StyleSheet } from 'react-native';
+import { Animated, View, Text, StyleSheet } from 'react-native';
 import { TabViewAnimated, TabBar } from 'react-native-tab-view';
 import { Ionicons } from '@exponent/vector-icons';
 
@@ -13,7 +13,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#222',
   },
   tab: {
-    opacity: 1,
     padding: 0,
   },
   icon: {
@@ -50,11 +49,6 @@ const styles = StyleSheet.create({
   },
 });
 
-const initialLayout = {
-  height: 0,
-  width: Dimensions.get('window').width,
-};
-
 export default class TopBarIconExample extends Component {
 
   static title = 'Bottom bar with indicator';
@@ -80,14 +74,16 @@ export default class TopBarIconExample extends Component {
   };
 
   _renderIndicator = (props) => {
-    const { width, position } = props;
+    const { width, opacity, position } = props;
 
-    const translateX = Animated.multiply(position, new Animated.Value(width));
+    const translateX = Animated.multiply(position, width);
 
     return (
       <Animated.View
-        style={[ styles.indicator, { width: width - 8, transform: [ { translateX } ] } ]}
-      />
+        style={[ styles.container, { width, opacity, transform: [ { translateX } ] } ]}
+      >
+        <View style={styles.indicator} />
+      </Animated.View>
     );
   };
 
@@ -146,7 +142,6 @@ export default class TopBarIconExample extends Component {
         renderScene={this._renderScene}
         renderFooter={this._renderFooter}
         onRequestChangeTab={this._handleChangeTab}
-        initialLayout={initialLayout}
       />
     );
   }

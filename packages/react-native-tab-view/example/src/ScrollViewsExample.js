@@ -28,11 +28,6 @@ const styles = StyleSheet.create({
   },
 });
 
-const initialLayout = {
-  height: 0,
-  width: Dimensions.get('window').width,
-};
-
 export default class TopBarTextExample extends Component {
 
   static title = 'Scroll views';
@@ -104,6 +99,7 @@ export default class TopBarTextExample extends Component {
         renderLabel={this._renderLabel(props)}
         indicatorStyle={styles.indicator}
         tabStyle={styles.tab}
+        tabWidth={80}
         style={styles.tabbar}
       />
     );
@@ -130,7 +126,6 @@ export default class TopBarTextExample extends Component {
         renderScene={this._renderScene}
         renderHeader={this._renderHeader}
         onRequestChangeTab={this._handleChangeTab}
-        initialLayout={initialLayout}
       />
     );
   }
