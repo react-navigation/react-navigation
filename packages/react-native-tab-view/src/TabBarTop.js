@@ -68,12 +68,12 @@ export default class TabBarTop extends Component<DefaultProps, Props, void> {
   };
 
   _renderIndicator = (props: IndicatorProps) => {
-    const { width, opacity, position } = props;
+    const { width, position } = props;
     const translateX = Animated.multiply(position, width);
 
     return (
       <Animated.View
-        style={[ styles.indicator, { width, opacity, transform: [ { translateX } ] }, this.props.indicatorStyle ]}
+        style={[ styles.indicator, { width, transform: [ { translateX } ] }, this.props.indicatorStyle ]}
       />
     );
   };

@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
 });
 
 type IndicatorProps = SceneRendererProps & {
-  width: number;
+  width: Animated.Value;
 }
 
 type ScrollEvent = {
@@ -311,7 +311,6 @@ export default class TabBar extends Component<DefaultProps, Props, State> {
             this.props.renderIndicator({
               ...this.props,
               width: new Animated.Value(tabWidth),
-              opacity: this.state.visibility,
             }) :
             null
           }

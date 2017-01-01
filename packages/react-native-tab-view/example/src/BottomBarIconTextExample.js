@@ -74,13 +74,13 @@ export default class TopBarIconExample extends Component {
   };
 
   _renderIndicator = (props) => {
-    const { width, opacity, position } = props;
+    const { width, position } = props;
 
     const translateX = Animated.multiply(position, width);
 
     return (
       <Animated.View
-        style={[ styles.container, { width, opacity, transform: [ { translateX } ] } ]}
+        style={[ styles.container, { width, transform: [ { translateX } ] } ]}
       >
         <View style={styles.indicator} />
       </Animated.View>
