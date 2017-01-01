@@ -48,11 +48,6 @@ const ALBUMS = {
   'Lost Horizons': require('../assets/album-art-8.jpg'),
 };
 
-const initialLayout = {
-  height: 0,
-  width: Dimensions.get('window').width,
-};
-
 export default class CoverflowExample extends Component {
 
   static title = 'Coverflow';
@@ -142,7 +137,6 @@ export default class CoverflowExample extends Component {
         renderPager={this._renderPager}
         renderScene={this._renderScene}
         onRequestChangeTab={this._handleChangeTab}
-        initialLayout={initialLayout}
       />
     );
   }
