@@ -1,11 +1,12 @@
 /* @flow */
 
-import React, { Component, PropTypes, Children } from 'react';
+import React, { Component, PropTypes } from 'react';
 import {
   Animated,
   PanResponder,
   Platform,
   StyleSheet,
+  View,
 } from 'react-native';
 import TabViewStyleInterpolator from './TabViewStyleInterpolator';
 import { SceneRendererPropType } from './TabViewPropTypes';
@@ -13,11 +14,15 @@ import type { SceneRendererProps } from './TabViewTypeDefinitions';
 import type { GestureEvent, GestureState } from './PanResponderTypes';
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    overflow: 'hidden',
+  },
+
   sheet: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'stretch',
-    overflow: 'hidden',
   },
 });
 
@@ -163,12 +168,11 @@ export default class TabViewPagerPan extends Component<DefaultProps, Props, void
     const style = TabViewStyleInterpolator.forHorizontal(this.props);
 
     return (
-      <Animated.View
-        {...this._panResponder.panHandlers}
-        style={[ styles.sheet, style, layout.width ? { width: layout.width * routes.length } : null ]}
-      >
-        {this.props.children}
-      </Animated.View>
+      <View style={styles.container}>
+        <Animated.View style={[ styles.sheet, style, { width: layout.width * routes.length } ]} {...this._panResponder.panHandlers}>
+          {this.props.children}
+        </Animated.View>
+      </View>
     );
   }
 }
