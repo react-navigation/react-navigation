@@ -145,6 +145,7 @@ Pager component based on `ViewPagerAndroid` (default on Android)
 
 It accepts the following props,
 - `swipeEnabled` - whether to enable swipe gestures
+- `animationEnabled` - whether to enable page change animation
 - `children` - React Element(s) to render
 
 ### `<TabBar />`
