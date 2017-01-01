@@ -196,11 +196,11 @@ export default class TabViewTransitioner extends Component<DefaultProps, Props, 
         if (this._nextIndex === index) {
           this.props.onRequestChangeTab(index);
           // Change back to previous index if it didn't change
-          global.requestAnimationFrame(() => {
+          setTimeout(() => {
             if (this.props.navigationState.index !== index) {
               this._jumpToIndex(this.props.navigationState.index);
             }
-          });
+          }, 0);
         }
       })
     );
