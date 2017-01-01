@@ -141,10 +141,7 @@ export default class TabBar extends Component<DefaultProps, Props, State> {
         (this.props.tabWidth !== nextProps.tabWidth && nextProps.tabWidth) ||
         (this.props.layout.width !== nextProps.layout.width && nextProps.layout.width)
      ) {
-      Animated.timing(this.state.visibility, {
-        toValue: 1,
-        duration: 150,
-      }).start();
+      this.state.visibility.setValue(1);
     }
   }
 
