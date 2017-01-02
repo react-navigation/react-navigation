@@ -57,9 +57,6 @@ export default class TabBarTop extends Component<DefaultProps, Props, void> {
   };
 
   _renderLabel = (scene: Scene) => {
-    if (typeof this.props.renderLabel !== 'undefined') {
-      return this.props.renderLabel(scene);
-    }
     const label = this.props.getLabelText(scene);
     if (typeof label !== 'string') {
       return null;
