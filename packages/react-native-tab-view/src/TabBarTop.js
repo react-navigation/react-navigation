@@ -33,12 +33,12 @@ type DefaultProps = {
 
 type IndicatorProps = SceneRendererProps & {
   width: Animated.Valye;
-  opacity: Animated.Value;
 }
 
 type Props = SceneRendererProps & {
   getLabelText: (scene: Scene) => ?string;
   renderLabel?: (scene: Scene) => React.Element<*>;
+  renderIndicator?: (props: IndicatorProps) => ?React.Element<*>;
   indicatorStyle?: any;
   labelStyle?: any;
 }
@@ -70,7 +70,6 @@ export default class TabBarTop extends Component<DefaultProps, Props, void> {
   _renderIndicator = (props: IndicatorProps) => {
     const { width, position } = props;
     const translateX = Animated.multiply(position, width);
-
     return (
       <Animated.View
         style={[ styles.indicator, { width, transform: [ { translateX } ] }, this.props.indicatorStyle ]}
@@ -79,11 +78,16 @@ export default class TabBarTop extends Component<DefaultProps, Props, void> {
   };
 
   render() {
+    const {
+      renderLabel,
+      renderIndicator,
+      ...rest
+    } = this.props;
     return (
       <TabBar
-        {...this.props}
-        renderLabel={this.props.renderLabel || this._renderLabel}
-        renderIndicator={this._renderIndicator}
+        {...rest}
+        renderLabel={typeof renderLabel === 'undefined' ? this._renderLabel : renderLabel}
+        renderIndicator={typeof renderLabel === 'undefined' ? this._renderIndicator : renderIndicator}
       />
     );
   }
