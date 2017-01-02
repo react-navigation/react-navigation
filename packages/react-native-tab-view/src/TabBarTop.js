@@ -87,7 +87,7 @@ export default class TabBarTop extends Component<DefaultProps, Props, void> {
       <TabBar
         {...rest}
         renderLabel={typeof renderLabel === 'undefined' ? this._renderLabel : renderLabel}
-        renderIndicator={typeof renderLabel === 'undefined' ? this._renderIndicator : renderIndicator}
+        renderIndicator={typeof renderIndicator === 'undefined' ? this._renderIndicator : renderIndicator}
       />
     );
   }
