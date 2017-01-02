@@ -8,9 +8,6 @@ import {
 } from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
 import TabViewTransitioner from './TabViewTransitioner';
-import TabViewPagerAndroid from './TabViewPagerAndroid';
-import TabViewPagerScroll from './TabViewPagerScroll';
-import TabViewPagerPan from './TabViewPagerPan';
 import { NavigationStatePropType } from './TabViewPropTypes';
 import type { Scene, SceneRendererProps } from './TabViewTypeDefinitions';
 import type { TransitionerProps } from './TabViewTransitionerTypes';
@@ -38,6 +35,20 @@ type State = {
   loaded: Array<number>;
 }
 
+let TabViewPager;
+
+switch (Platform.OS) {
+case 'android':
+  TabViewPager = require('./TabViewPagerAndroid').default;
+  break;
+case 'ios':
+  TabViewPager = require('./TabViewPagerScroll').default;
+  break;
+default:
+  TabViewPager = require('./TabViewPagerPan').default;
+  break;
+}
+
 export default class TabViewAnimated extends Component<DefaultProps, Props, State> {
   static propTypes = {
     navigationState: NavigationStatePropType.isRequired,
@@ -51,16 +62,7 @@ export default class TabViewAnimated extends Component<DefaultProps, Props, Stat
   };
 
   static defaultProps = {
-    renderPager: (props: SceneRendererProps) => {
-      switch (Platform.OS) {
-      case 'android':
-        return <TabViewPagerAndroid {...props} />;
-      case 'ios':
-        return <TabViewPagerScroll {...props} />;
-      default:
-        return <TabViewPagerPan {...props} />;
-      }
-    },
+    renderPager: (props: SceneRendererProps) => <TabViewPager {...props} />,
   };
 
   constructor(props: Props) {
