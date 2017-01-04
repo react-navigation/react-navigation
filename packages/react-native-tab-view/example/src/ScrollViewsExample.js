@@ -1,7 +1,7 @@
 /* @flow */
 
 import React, { Component } from 'react';
-import { Animated, View, Dimensions, StyleSheet } from 'react-native';
+import { Animated, View, StyleSheet } from 'react-native';
 import { TabViewAnimated, TabBarTop } from 'react-native-tab-view';
 import ListViewExample from './ListViewExample';
 

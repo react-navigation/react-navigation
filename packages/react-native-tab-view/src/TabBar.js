@@ -122,7 +122,11 @@ export default class TabBar extends PureComponent<DefaultProps, Props, State> {
   };
 
   componentWillMount() {
-    if (this.props.layout.width || this.props.tabWidth) {
+    if (this.props.scrollEnabled === true) {
+      if (this.props.layout.width || this.props.tabWidth) {
+        this.state.visibility.setValue(1);
+      }
+    } else {
       this.state.visibility.setValue(1);
     }
   }
@@ -365,12 +369,29 @@ export default class TabBar extends PureComponent<DefaultProps, Props, State> {
 
               const tabStyle = {};
 
+              tabStyle.opacity = opacity;
+
               if (icon) {
                 if (label) {
                   tabStyle.paddingTop = 8;
                 } else {
                   tabStyle.padding = 12;
                 }
+              }
+
+              const isWidthSet = typeof this.props.tabWidth === 'number' || scrollEnabled === true;
+
+              if (isWidthSet) {
+                tabStyle.width = tabWidth;
+              }
+
+              const tabContainerStyle = {};
+              const passedTabStyle = StyleSheet.flatten(this.props.tabStyle);
+
+              if (passedTabStyle && typeof passedTabStyle.flex === 'number') {
+                tabContainerStyle.flex = passedTabStyle.flex;
+              } else if (!isWidthSet) {
+                tabContainerStyle.flex = 1;
               }
 
               return (
@@ -389,9 +410,10 @@ export default class TabBar extends PureComponent<DefaultProps, Props, State> {
                       onTabPress(routes[i]);
                     }
                   }}
+                  style={tabContainerStyle}
                 >
                   <View style={styles.container}>
-                    <Animated.View style={[ styles.tabitem, { opacity }, tabWidth ? { width: tabWidth } : null, tabStyle, this.props.tabStyle ]}>
+                    <Animated.View style={[ styles.tabitem, tabStyle, passedTabStyle, styles.container ]}>
                       {icon}
                       {label}
                     </Animated.View>
