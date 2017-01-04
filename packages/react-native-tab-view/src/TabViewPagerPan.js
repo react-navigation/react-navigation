@@ -1,6 +1,6 @@
 /* @flow */
 
-import React, { Component, PropTypes } from 'react';
+import React, { PureComponent, PropTypes } from 'react';
 import {
   Animated,
   PanResponder,
@@ -34,7 +34,7 @@ type Props = SceneRendererProps & {
 
 const DEAD_ZONE = 12;
 
-export default class TabViewPagerPan extends Component<DefaultProps, Props, void> {
+export default class TabViewPagerPan extends PureComponent<DefaultProps, Props, void> {
   static propTypes = {
     ...SceneRendererPropType,
     swipeEnabled: PropTypes.bool,

@@ -1,6 +1,6 @@
 /* @flow */
 
-import React, { Component, Children, PropTypes } from 'react';
+import React, { PureComponent, Children, PropTypes } from 'react';
 import {
   ViewPagerAndroid,
   StyleSheet,
@@ -29,7 +29,7 @@ type Props = SceneRendererProps & {
   children?: any;
 }
 
-export default class TabViewPagerAndroid extends Component<void, Props, void> {
+export default class TabViewPagerAndroid extends PureComponent<void, Props, void> {
   static propTypes = {
     ...SceneRendererPropType,
     swipeEnabled: PropTypes.bool,

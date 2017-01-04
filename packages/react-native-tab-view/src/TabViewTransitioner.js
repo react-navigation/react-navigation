@@ -1,11 +1,10 @@
 /* @flow */
 
-import React, { Component, PropTypes } from 'react';
+import React, { PureComponent, PropTypes } from 'react';
 import {
   Animated,
   View,
 } from 'react-native';
-import shallowCompare from 'react-addons-shallow-compare';
 import { NavigationStatePropType } from './TabViewPropTypes';
 import type { SubscriptionName, SceneRendererProps, Layout } from './TabViewTypeDefinitions';
 import type { TransitionConfigurator, TransitionerProps } from './TabViewTransitionerTypes';
@@ -32,7 +31,7 @@ const DefaultTransitionSpec = {
   friction: 35,
 };
 
-export default class TabViewTransitioner extends Component<DefaultProps, Props, State> {
+export default class TabViewTransitioner extends PureComponent<DefaultProps, Props, State> {
   static propTypes = {
     navigationState: NavigationStatePropType.isRequired,
     render: PropTypes.func.isRequired,
@@ -72,14 +71,6 @@ export default class TabViewTransitioner extends Component<DefaultProps, Props, 
   componentDidMount() {
     this._mounted = true;
     this._positionListener = this.state.position.addListener(this._trackPosition);
-  }
-
-  shouldComponentUpdate(nextProps: Props, nextState: State) {
-    if (this.props.shouldOptimizeUpdates === false) {
-      return true;
-    } else {
-      return shallowCompare(this, nextProps, nextState);
-    }
   }
 
   componentDidUpdate(prevProps: Props) {

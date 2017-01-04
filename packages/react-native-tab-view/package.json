@@ -42,12 +42,10 @@
     "eslint-plugin-react-native": "^2.2.1",
     "flow-bin": "^0.35.0",
     "react": "latest",
-    "react-addons-shallow-compare": "latest",
     "react-native": "latest"
   },
   "peerDependencies": {
     "react": "*",
-    "react-addons-shallow-compare": "*",
     "react-native": "*"
   }
 }

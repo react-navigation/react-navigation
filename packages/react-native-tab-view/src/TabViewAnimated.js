@@ -1,12 +1,11 @@
 /* @flow */
 
-import React, { Component, PropTypes } from 'react';
+import React, { PureComponent, PropTypes } from 'react';
 import {
   Platform,
   View,
   StyleSheet,
 } from 'react-native';
-import shallowCompare from 'react-addons-shallow-compare';
 import TabViewTransitioner from './TabViewTransitioner';
 import { NavigationStatePropType } from './TabViewPropTypes';
 import type { Scene, SceneRendererProps } from './TabViewTypeDefinitions';
@@ -49,7 +48,7 @@ default:
   break;
 }
 
-export default class TabViewAnimated extends Component<DefaultProps, Props, State> {
+export default class TabViewAnimated extends PureComponent<DefaultProps, Props, State> {
   static propTypes = {
     navigationState: NavigationStatePropType.isRequired,
     renderPager: PropTypes.func.isRequired,
@@ -74,14 +73,6 @@ export default class TabViewAnimated extends Component<DefaultProps, Props, Stat
   }
 
   state: State;
-
-  shouldComponentUpdate(nextProps: Props, nextState: State) {
-    if (this.props.shouldOptimizeUpdates === false) {
-      return true;
-    } else {
-      return shallowCompare(this, nextProps, nextState);
-    }
-  }
 
   _renderScene = (props: SceneRendererProps & Scene) => {
     const { renderScene, navigationState, lazy } = this.props;

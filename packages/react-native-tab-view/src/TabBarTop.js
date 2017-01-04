@@ -1,6 +1,6 @@
 /* @flow */
 
-import React, { Component, PropTypes } from 'react';
+import React, { PureComponent, PropTypes } from 'react';
 import {
   Animated,
   StyleSheet,
@@ -43,7 +43,7 @@ type Props = SceneRendererProps & {
   labelStyle?: any;
 }
 
-export default class TabBarTop extends Component<DefaultProps, Props, void> {
+export default class TabBarTop extends PureComponent<DefaultProps, Props, void> {
   static propTypes = {
     ...SceneRendererPropType,
     getLabelText: PropTypes.func,

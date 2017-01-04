@@ -1,6 +1,6 @@
 /* @flow */
 
-import React, { Component, PropTypes } from 'react';
+import React, { PureComponent, PropTypes } from 'react';
 import {
   TouchableNativeFeedback,
   TouchableOpacity,
@@ -23,7 +23,7 @@ type DefaultProps = {
   pressColor: string;
 }
 
-export default class TouchableItem extends Component<DefaultProps, Props, void> {
+export default class TouchableItem extends PureComponent<DefaultProps, Props, void> {
   static propTypes = {
     delayPressIn: PropTypes.number,
     borderless: PropTypes.bool,

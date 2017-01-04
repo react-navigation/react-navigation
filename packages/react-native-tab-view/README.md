@@ -27,7 +27,7 @@ Requires React Native version >= 0.36.
 ## Installation
 
 ```sh
-npm install --save react-native-tab-view react-addons-shallow-compare
+npm install --save react-native-tab-view
 ```
 
 
@@ -107,7 +107,6 @@ It accepts the following props,
 - `onChangePosition` - callback called with position value as it changes (e.g. - on swipe or tab change), avoid doing anything expensive here
 - `canJumpToTab` - optional callback which accepts a route, and returns a boolean indicating whether jumping to the tab is allowed
 - `initialLayout` - optional object containing the initial `height` and `width`, can be passed to prevent the one frame delay in rendering
-- `shouldOptimizeUpdates` - whether to implement a `shouldComponentUpdate` strategy to minimize updates, enabled by default
 - `render` - callback which renders the tab view, gets a special set of props as argument
 
 ### `<TabViewAnimated />`

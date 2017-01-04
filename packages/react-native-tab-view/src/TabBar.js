@@ -1,6 +1,6 @@
 /* @flow */
 
-import React, { Component, PropTypes } from 'react';
+import React, { PureComponent, PropTypes } from 'react';
 import {
   Animated,
   StyleSheet,
@@ -96,7 +96,7 @@ type State = {
   visibility: Animated.Value;
 }
 
-export default class TabBar extends Component<DefaultProps, Props, State> {
+export default class TabBar extends PureComponent<DefaultProps, Props, State> {
   static propTypes = {
     ...SceneRendererPropType,
     scrollEnabled: PropTypes.bool,

@@ -1,6 +1,6 @@
 /* @flow */
 
-import React, { Component, Children, PropTypes } from 'react';
+import React, { PureComponent, Children, PropTypes } from 'react';
 import {
   View,
   ScrollView,
@@ -34,7 +34,7 @@ type Props = SceneRendererProps & {
   children?: any;
 }
 
-export default class TabViewPagerScroll extends Component<void, Props, void> {
+export default class TabViewPagerScroll extends PureComponent<void, Props, void> {
   static propTypes = {
     ...SceneRendererPropType,
     swipeEnabled: PropTypes.bool,
