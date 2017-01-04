@@ -132,6 +132,7 @@ export default class TabViewPagerScroll extends PureComponent<void, Props, void>
         scrollEnabled={this.props.swipeEnabled}
         automaticallyAdjustContentInsets={false}
         bounces={false}
+        alwaysBounceHorizontal={false}
         scrollsToTop={false}
         showsHorizontalScrollIndicator={false}
         scrollEventThrottle={16}
@@ -140,6 +141,7 @@ export default class TabViewPagerScroll extends PureComponent<void, Props, void>
         onScrollEndDrag={this._handleEndDrag}
         onMomentumScrollBegin={this._handleMomentumScrollBegin}
         onMomentumScrollEnd={this._handleMomentumScrollEnd}
+        contentOffset={{ x: this.props.navigationState.index * this.props.layout.width, y: 0 }}
         style={styles.container}
         ref={this._setRef}
       >

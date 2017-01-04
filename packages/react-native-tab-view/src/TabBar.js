@@ -284,6 +284,7 @@ export default class TabBar extends PureComponent<DefaultProps, Props, State> {
   render() {
     const { position, navigationState, scrollEnabled } = this.props;
     const { routes, index } = navigationState;
+    const initialOffset = this._getScrollAmount(this.props, this.props.navigationState.index);
     const maxDistance = this._getMaxScrollableDistance(this.props);
     const tabWidth = this._getTabWidth(this.props);
     const tabBarWidth = tabWidth * routes.length;
@@ -320,6 +321,7 @@ export default class TabBar extends PureComponent<DefaultProps, Props, State> {
             horizontal
             scrollEnabled={scrollEnabled}
             bounces={false}
+            alwaysBounceHorizontal={false}
             scrollsToTop={false}
             showsHorizontalScrollIndicator={false}
             automaticallyAdjustContentInsets={false}
@@ -330,6 +332,7 @@ export default class TabBar extends PureComponent<DefaultProps, Props, State> {
             onScrollEndDrag={this._handleEndDrag}
             onMomentumScrollBegin={this._handleMomentumScrollBegin}
             onMomentumScrollEnd={this._handleMomentumScrollEnd}
+            contentOffset={{ x: initialOffset, y: 0 }}
             ref={this._setRef}
           >
             {routes.map((route, i) => {
