@@ -186,9 +186,13 @@ export default class TabBar extends PureComponent<DefaultProps, Props, State> {
   };
 
   _getMaxScrollableDistance = (props: Props) => {
-    const tabWidth = this._getTabWidth(props);
     const { layout, navigationState } = props;
-    const maxDistance = (tabWidth * navigationState.routes.length) - layout.width;
+    if (layout.width === 0) {
+      return 0;
+    }
+    const tabWidth = this._getTabWidth(props);
+    const tabBarWidth = tabWidth * navigationState.routes.length;
+    const maxDistance = tabBarWidth - layout.width;
     return Math.max(maxDistance, 0);
   };
 
