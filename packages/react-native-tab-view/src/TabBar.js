@@ -145,6 +145,14 @@ export default class TabBar extends PureComponent<DefaultProps, Props, State> {
     }
   }
 
+  componentDidUpdate(prevProps: Props) {
+    if (this.props.scrollEnabled && (prevProps.layout !== this.props.layout || prevProps.tabWidth !== this.props.tabWidth)) {
+      global.requestAnimationFrame(() =>
+        this._adjustScroll(this.props.navigationState.index)
+      );
+    }
+  }
+
   componentWillUnmount() {
     this._positionListener.remove();
   }

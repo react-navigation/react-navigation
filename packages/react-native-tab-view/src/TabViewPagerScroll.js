@@ -42,14 +42,14 @@ export default class TabViewPagerScroll extends PureComponent<void, Props, void>
   };
 
   componentDidMount() {
-    this._positionListener = this.props.subscribe('position', this._updatePosition);
     this._scrollTo(this.props.navigationState.index * this.props.layout.width);
+    this._positionListener = this.props.subscribe('position', this._updatePosition);
   }
 
-  componentWillReceiveProps(nextProps: Props) {
-    if (this.props.layout !== nextProps.layout || Children.count(this.props.children) !== Children.count(nextProps.children)) {
+  componentDidUpdate(prevProps: Props) {
+    if (prevProps.layout !== this.props.layout || Children.count(prevProps.children) !== Children.count(this.props.children)) {
       global.requestAnimationFrame(() =>
-        this._scrollTo(nextProps.navigationState.index * nextProps.layout.width)
+        this._scrollTo(this.props.navigationState.index * this.props.layout.width)
       );
     }
   }

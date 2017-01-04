@@ -35,7 +35,7 @@ export default class TopBarTextExample extends Component {
   };
 
   state = {
-    index: 0,
+    index: 1,
     routes: [
       { key: '1', title: 'First' },
       { key: '2', title: 'Second' },
