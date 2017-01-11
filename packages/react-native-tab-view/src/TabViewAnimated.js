@@ -97,7 +97,7 @@ export default class TabViewAnimated extends PureComponent<DefaultProps, Props, 
         {renderPager({
           ...props,
           children: layout.width ? navigationState.routes.map((route, index) => (
-            <View key={route.key} style={{ width: layout.width }}>
+            <View key={route.key} style={{ width: layout.width, overflow: 'hidden' }}>
               {this._renderScene({
                 ...props,
                 route,
