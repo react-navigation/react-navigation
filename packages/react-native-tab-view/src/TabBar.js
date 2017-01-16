@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
     overflow: 'scroll',
   },
   tabbar: {
-    backgroundColor: 'black',
+    backgroundColor: '#2196f3',
     elevation: 4,
     shadowColor: 'black',
     shadowOpacity: 0.1,

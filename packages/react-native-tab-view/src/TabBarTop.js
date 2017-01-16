@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
     margin: 8,
   },
   indicator: {
-    backgroundColor: 'white',
+    backgroundColor: '#ffeb3b',
     position: 'absolute',
     left: 0,
     bottom: 0,
