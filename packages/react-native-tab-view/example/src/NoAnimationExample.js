@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderTopWidth: StyleSheet.hairlineWidth,
     borderTopColor: 'rgba(0, 0, 0, .2)',
-    paddingTop: 4,
+    paddingTop: 4.5,
   },
   iconContainer: {
     height: 26,
@@ -41,8 +41,8 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 10,
-    marginTop: 2,
-    marginBottom: 3,
+    marginTop: 3,
+    marginBottom: 1.5,
     backgroundColor: 'transparent',
   },
   page: {
