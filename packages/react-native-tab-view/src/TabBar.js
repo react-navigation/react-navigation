@@ -86,7 +86,6 @@ type Props = SceneRendererProps & {
   renderBadge?: (scene: Scene) => ?React.Element<*>;
   renderIndicator?: (props: IndicatorProps) => ?React.Element<*>;
   onTabPress?: Function;
-  tabWidth?: number;
   tabStyle?: any;
   style?: any;
 }
@@ -107,7 +106,6 @@ export default class TabBar extends PureComponent<DefaultProps, Props, State> {
     renderLabel: PropTypes.func,
     renderIndicator: PropTypes.func,
     onTabPress: PropTypes.func,
-    tabWidth: PropTypes.number,
     tabStyle: View.propTypes.style,
     style: PropTypes.any,
   };
@@ -123,7 +121,8 @@ export default class TabBar extends PureComponent<DefaultProps, Props, State> {
 
   componentWillMount() {
     if (this.props.scrollEnabled === true) {
-      if (this.props.layout.width || this.props.tabWidth) {
+      const tabWidth = this._getTabWidthFromStyle(this.props.tabStyle);
+      if (this.props.layout.width || tabWidth) {
         this.state.visibility.setValue(1);
       }
     } else {
@@ -141,8 +140,10 @@ export default class TabBar extends PureComponent<DefaultProps, Props, State> {
       this._resetScrollOffset(nextProps);
     }
 
+    const nextTabWidth = this._getTabWidthFromStyle(nextProps.tabStyle);
+
     if (
-        (this.props.tabWidth !== nextProps.tabWidth && nextProps.tabWidth) ||
+        (this.props.tabStyle !== nextProps.tabStyle && nextTabWidth) ||
         (this.props.layout.width !== nextProps.layout.width && nextProps.layout.width)
      ) {
       this.state.visibility.setValue(1);
@@ -150,7 +151,7 @@ export default class TabBar extends PureComponent<DefaultProps, Props, State> {
   }
 
   componentDidUpdate(prevProps: Props) {
-    if (this.props.scrollEnabled && (prevProps.layout !== this.props.layout || prevProps.tabWidth !== this.props.tabWidth)) {
+    if (this.props.scrollEnabled && (prevProps.layout !== this.props.layout || prevProps.tabStyle !== this.props.tabStyle)) {
       global.requestAnimationFrame(() =>
         this._adjustScroll(this.props.navigationState.index)
       );
@@ -178,8 +179,21 @@ export default class TabBar extends PureComponent<DefaultProps, Props, State> {
     return <Text style={styles.tablabel}>{label}</Text>;
   }
 
-  _getTabWidth = (props: Props) => {
-    const { layout, tabWidth, navigationState } = props;
+  _tabWidthCache: ?{ style: any; width: ?number };
+
+  _getTabWidthFromStyle = (style: any) => {
+    if (this._tabWidthCache && this._tabWidthCache.style === style) {
+      return this._tabWidthCache.width;
+    }
+    const passedTabStyle = StyleSheet.flatten(this.props.tabStyle);
+    const cache = { style, width: passedTabStyle ? passedTabStyle.width : null };
+    this._tabWidthCache = cache;
+    return cache;
+  }
+
+  _getFinalTabWidth = (props: Props) => {
+    const { layout, navigationState } = props;
+    const tabWidth = this._getTabWidthFromStyle(props.tabStyle);
     if (typeof tabWidth === 'number') {
       return tabWidth;
     }
@@ -194,8 +208,8 @@ export default class TabBar extends PureComponent<DefaultProps, Props, State> {
     if (layout.width === 0) {
       return 0;
     }
-    const tabWidth = this._getTabWidth(props);
-    const tabBarWidth = tabWidth * navigationState.routes.length;
+    const finalTabWidth = this._getFinalTabWidth(props);
+    const tabBarWidth = finalTabWidth * navigationState.routes.length;
     const maxDistance = tabBarWidth - layout.width;
     return Math.max(maxDistance, 0);
   };
@@ -207,8 +221,8 @@ export default class TabBar extends PureComponent<DefaultProps, Props, State> {
 
   _getScrollAmount = (props: Props, i: number) => {
     const { layout } = props;
-    const tabWidth = this._getTabWidth(props);
-    const centerDistance = (tabWidth * i) + (tabWidth / 2);
+    const finalTabWidth = this._getFinalTabWidth(props);
+    const centerDistance = (finalTabWidth * i) + (finalTabWidth / 2);
     const scrollAmount = centerDistance - (layout.width / 2);
     return this._normalizeScrollValue(props, scrollAmount);
   };
@@ -302,8 +316,8 @@ export default class TabBar extends PureComponent<DefaultProps, Props, State> {
     const { routes, index } = navigationState;
     const initialOffset = this._getScrollAmount(this.props, this.props.navigationState.index);
     const maxDistance = this._getMaxScrollableDistance(this.props);
-    const tabWidth = this._getTabWidth(this.props);
-    const tabBarWidth = tabWidth * routes.length;
+    const finalTabWidth = this._getFinalTabWidth(this.props);
+    const tabBarWidth = finalTabWidth * routes.length;
 
     // Prepend '-1', so there are always at least 2 items in inputRange
     const inputRange = [ -1, ...routes.map((x, i) => i) ];
@@ -327,7 +341,7 @@ export default class TabBar extends PureComponent<DefaultProps, Props, State> {
           {this.props.renderIndicator ?
             this.props.renderIndicator({
               ...this.props,
-              width: new Animated.Value(tabWidth),
+              width: new Animated.Value(finalTabWidth),
             }) :
             null
           }
@@ -379,14 +393,13 @@ export default class TabBar extends PureComponent<DefaultProps, Props, State> {
                 }
               }
 
-              const isWidthSet = typeof this.props.tabWidth === 'number' || scrollEnabled === true;
+              const passedTabStyle = StyleSheet.flatten(this.props.tabStyle);
+              const isWidthSet = passedTabStyle && typeof passedTabStyle.width === 'number' || scrollEnabled === true;
+              const tabContainerStyle = {};
 
               if (isWidthSet) {
-                tabStyle.width = tabWidth;
+                tabStyle.width = finalTabWidth;
               }
-
-              const tabContainerStyle = {};
-              const passedTabStyle = StyleSheet.flatten(this.props.tabStyle);
 
               if (passedTabStyle && typeof passedTabStyle.flex === 'number') {
                 tabContainerStyle.flex = passedTabStyle.flex;
