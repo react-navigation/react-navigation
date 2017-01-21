@@ -159,7 +159,7 @@ It accepts the following props,
 - `renderBadge` - optional callback which receives the current scene and returns a React Element to be used as a badge
 - `onTabPress` - optional callback invoked on tab press, useful for things like scroll to top
 - `pressColor` - color for material ripple (Android >= 5.0 only)
-- `activeOpacity` - opacity for pressed tab (iOS and Android < 5.0 only)
+- `pressOpacity` - opacity for pressed tab (iOS and Android < 5.0 only)
 - `scrollEnabled` - whether to enable scrollable tabs
 - `tabWidth` - optional custom tab width
 - `tabStyle` - style object for the tab

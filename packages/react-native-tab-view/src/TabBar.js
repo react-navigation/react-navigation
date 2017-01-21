@@ -79,7 +79,7 @@ type DefaultProps = {
 type Props = SceneRendererProps & {
   scrollEnabled?: boolean;
   pressColor?: string;
-  activeOpacity?: number;
+  pressOpacity?: number;
   getLabelText: (scene: Scene) => ?string;
   renderLabel?: (scene: Scene) => ?React.Element<*>;
   renderIcon?: (scene: Scene) => ?React.Element<*>;
@@ -100,7 +100,7 @@ export default class TabBar extends PureComponent<DefaultProps, Props, State> {
     ...SceneRendererPropType,
     scrollEnabled: PropTypes.bool,
     pressColor: TouchableItem.propTypes.pressColor,
-    activeOpacity: TouchableItem.propTypes.activeOpacity,
+    pressOpacity: TouchableItem.propTypes.pressOpacity,
     getLabelText: PropTypes.func,
     renderIcon: PropTypes.func,
     renderLabel: PropTypes.func,
@@ -414,7 +414,7 @@ export default class TabBar extends PureComponent<DefaultProps, Props, State> {
                   accessibilityTraits='button'
                   testID={route.testID}
                   pressColor={this.props.pressColor}
-                  activeOpacity={this.props.activeOpacity}
+                  activeOpacity={this.props.pressOpacity}
                   delayPressIn={0}
                   onPress={() => { // eslint-disable-line react/jsx-no-bind
                     const { onTabPress, jumpToIndex } = this.props;
