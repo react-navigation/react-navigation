@@ -129,6 +129,7 @@ export default class TabViewPagerScroll extends PureComponent<void, Props, void>
         pagingEnabled
         directionalLockEnabled
         keyboardDismissMode='on-drag'
+        keyboardShouldPersistTaps='always'
         scrollEnabled={this.props.swipeEnabled}
         automaticallyAdjustContentInsets={false}
         bounces={false}
