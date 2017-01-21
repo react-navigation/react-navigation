@@ -1,6 +1,6 @@
 /* @flow */
 
-import React, { PureComponent, PropTypes } from 'react';
+import React, { PureComponent, Children, PropTypes } from 'react';
 import {
   TouchableNativeFeedback,
   TouchableOpacity,
@@ -14,7 +14,7 @@ type Props = {
   delayPressIn?: number;
   borderless?: boolean;
   pressColor?: string;
-  activeOpacity?: number;
+  pressOpacity?: number;
   children?: React.Element<*>;
   style?: any;
 }
@@ -28,7 +28,7 @@ export default class TouchableItem extends PureComponent<DefaultProps, Props, vo
     delayPressIn: PropTypes.number,
     borderless: PropTypes.bool,
     pressColor: PropTypes.string,
-    activeOpacity: PropTypes.number,
+    pressOpacity: PropTypes.number,
     children: PropTypes.node.isRequired,
     style: View.propTypes.style,
   };
@@ -38,21 +38,26 @@ export default class TouchableItem extends PureComponent<DefaultProps, Props, vo
   };
 
   render() {
+    const { style, pressOpacity, pressColor, borderless, ...rest } = this.props;
+
     if (Platform.OS === 'android' && Platform.Version >= LOLLIPOP) {
       return (
         <TouchableNativeFeedback
-          {...this.props}
-          style={null}
-          background={TouchableNativeFeedback.Ripple(this.props.pressColor, this.props.borderless)}
+          {...rest}
+          background={TouchableNativeFeedback.Ripple(pressColor, borderless)}
         >
-          <View style={this.props.style}>
-            {this.props.children}
+          <View style={style}>
+            {Children.only(this.props.children)}
           </View>
         </TouchableNativeFeedback>
       );
     } else {
       return (
-        <TouchableOpacity {...this.props}>
+        <TouchableOpacity
+          {...rest}
+          style={style}
+          activeOpacity={pressOpacity}
+        >
           {this.props.children}
         </TouchableOpacity>
       );

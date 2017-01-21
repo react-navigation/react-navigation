@@ -422,7 +422,7 @@ export default class TabBar extends PureComponent<DefaultProps, Props, State> {
                   accessibilityTraits='button'
                   testID={route.testID}
                   pressColor={this.props.pressColor}
-                  activeOpacity={this.props.pressOpacity}
+                  pressOpacity={this.props.pressOpacity}
                   delayPressIn={0}
                   onPress={() => { // eslint-disable-line react/jsx-no-bind
                     const { onTabPress, jumpToIndex } = this.props;
