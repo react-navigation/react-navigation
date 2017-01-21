@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react';
 import { Animated, View, StyleSheet } from 'react-native';
-import { TabViewAnimated, TabBarTop } from 'react-native-tab-view';
+import { TabViewAnimated, TabBar } from 'react-native-tab-view';
 import ListViewExample from './ListViewExample';
 
 const styles = StyleSheet.create({
@@ -93,7 +93,7 @@ export default class TopBarTextExample extends Component {
 
   _renderHeader = (props) => {
     return (
-      <TabBarTop
+      <TabBar
         {...props}
         pressColor='rgba(255, 64, 129, .5)'
         onTabPress={this._handleTabItemPress}

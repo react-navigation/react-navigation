@@ -36,7 +36,7 @@ npm install --save react-native-tab-view
 ```js
 import React, { Component } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { TabViewAnimated, TabBarTop } from 'react-native-tab-view';
+import { TabViewAnimated, TabBar } from 'react-native-tab-view';
 
 const styles = StyleSheet.create({
   container: {
@@ -63,7 +63,7 @@ export default class TabViewExample extends Component {
   };
 
   _renderHeader = (props) => {
-    return <TabBarTop {...props} />;
+    return <TabBar {...props} />;
   };
 
   _renderScene = ({ route }) => {
@@ -149,7 +149,7 @@ It accepts the following props,
 
 ### `<TabBar />`
 
-Basic tab bar
+Material design themed top tab bar
 
 It accepts the following props,
 - `getLabelText` - optional callback which receives the current scene and returns the tab label
@@ -163,12 +163,6 @@ It accepts the following props,
 - `scrollEnabled` - whether to enable scrollable tabs
 - `tabWidth` - optional custom tab width
 - `tabStyle` - style object for the tab
-
-### `<TabBarTop />`
-
-Material design themed top tab bar
-
-It accepts the following props in addition to the props accepted by `<TabBar />`,
 - `indicatorStyle` - style object for the tab indicator
 - `labelStyle` - style object for the tab label
 

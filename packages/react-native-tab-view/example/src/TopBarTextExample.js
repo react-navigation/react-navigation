@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { TabViewAnimated, TabBarTop } from 'react-native-tab-view';
+import { TabViewAnimated, TabBar } from 'react-native-tab-view';
 
 const styles = StyleSheet.create({
   container: {
@@ -52,7 +52,7 @@ export default class TopBarTextExample extends Component {
 
   _renderHeader = (props) => {
     return (
-      <TabBarTop
+      <TabBar
         {...props}
         scrollEnabled
         indicatorStyle={styles.indicator}

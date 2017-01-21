@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { TabViewAnimated, TabBarTop } from 'react-native-tab-view';
+import { TabViewAnimated, TabBar } from 'react-native-tab-view';
 import { Ionicons } from '@exponent/vector-icons';
 
 const styles = StyleSheet.create({
@@ -58,7 +58,7 @@ export default class TopBarIconExample extends Component {
 
   _renderHeader = (props) => {
     return (
-      <TabBarTop
+      <TabBar
         {...props}
         indicatorStyle={styles.indicator}
         renderIcon={this._renderIcon}

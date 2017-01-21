@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
   scroll: {
     overflow: 'scroll',
   },
-  tabbar: {
+  tabBar: {
     backgroundColor: '#2196f3',
     elevation: 4,
     shadowColor: 'black',
@@ -30,17 +30,16 @@ const styles = StyleSheet.create({
     },
     zIndex: 1,
   },
-  tabcontent: {
+  tabContent: {
     flexDirection: 'row',
     flexWrap: 'nowrap',
   },
-  tablabel: {
+  tabLabel: {
     backgroundColor: 'transparent',
     color: 'white',
-    fontSize: 12,
-    margin: 4,
+    margin: 8,
   },
-  tabitem: {
+  tabItem: {
     flex: 1,
     padding: 8,
     alignItems: 'center',
@@ -51,12 +50,20 @@ const styles = StyleSheet.create({
     top: 0,
     right: 0,
   },
-  indiator: {
+  indicatorContainer: {
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
+  },
+  indicator: {
+    backgroundColor: '#ffeb3b',
+    position: 'absolute',
+    left: 0,
+    bottom: 0,
+    right: 0,
+    height: 2,
   },
 });
 
@@ -87,6 +94,8 @@ type Props = SceneRendererProps & {
   renderIndicator?: (props: IndicatorProps) => ?React.Element<*>;
   onTabPress?: Function;
   tabStyle?: any;
+  indicatorStyle?: any;
+  labelStyle?: any;
   style?: any;
 }
 
@@ -107,11 +116,13 @@ export default class TabBar extends PureComponent<DefaultProps, Props, State> {
     renderIndicator: PropTypes.func,
     onTabPress: PropTypes.func,
     tabStyle: View.propTypes.style,
+    indicatorStyle: View.propTypes.style,
+    labelStyle: Text.propTypes.style,
     style: PropTypes.any,
   };
 
   static defaultProps = {
-    getLabelText: ({ route }) => route.title,
+    getLabelText: ({ route }) => route.title ? route.title.toUpperCase() : null,
   };
 
   state: State = {
@@ -121,11 +132,11 @@ export default class TabBar extends PureComponent<DefaultProps, Props, State> {
 
   componentWillMount() {
     if (typeof this.props.tabWidth !== 'undefined') {
-      console.error('`tabWidth` prop is removed. Set `width` in `tabStyle` instead.');
+      console.warn('`tabWidth` prop is not supported. Set `width` in `tabStyle` instead.');
     }
 
     if (typeof this.props.activeOpacity !== 'undefined') {
-      console.error('`activeOpacity` prop is removed. Pass `pressOpacity` instead.');
+      console.warn('`activeOpacity` prop is not supported. Pass `pressOpacity` instead.');
     }
 
     if (this.props.scrollEnabled === true) {
@@ -184,8 +195,21 @@ export default class TabBar extends PureComponent<DefaultProps, Props, State> {
     if (typeof label !== 'string') {
       return null;
     }
-    return <Text style={styles.tablabel}>{label}</Text>;
+    return <Text style={[ styles.tabLabel, this.props.labelStyle ]}>{label}</Text>;
   }
+
+  _renderIndicator = (props: IndicatorProps) => {
+    if (typeof this.props.renderIndicator !== 'undefined') {
+      return this.props.renderIndicator(props);
+    }
+    const { width, position } = props;
+    const translateX = Animated.multiply(position, width);
+    return (
+      <Animated.View
+        style={[ styles.indicator, { width, transform: [ { translateX } ] }, this.props.indicatorStyle ]}
+      />
+    );
+  };
 
   _tabWidthCache: ?{ style: any; width: ?number };
 
@@ -344,15 +368,12 @@ export default class TabBar extends PureComponent<DefaultProps, Props, State> {
     });
 
     return (
-      <Animated.View style={[ styles.tabbar, this.props.style ]}>
-        <Animated.View pointerEvents='none' style={[ styles.indiator, scrollEnabled ? { width: tabBarWidth, transform: [ { translateX } ] } : null ]}>
-          {this.props.renderIndicator ?
-            this.props.renderIndicator({
-              ...this.props,
-              width: new Animated.Value(finalTabWidth),
-            }) :
-            null
-          }
+      <Animated.View style={[ styles.tabBar, this.props.style ]}>
+        <Animated.View pointerEvents='none' style={[ styles.indicatorContainer, scrollEnabled ? { width: tabBarWidth, transform: [ { translateX } ] } : null ]}>
+          {this._renderIndicator({
+            ...this.props,
+            width: new Animated.Value(finalTabWidth),
+          })}
         </Animated.View>
         <View style={styles.scroll}>
           <ScrollView
@@ -363,7 +384,7 @@ export default class TabBar extends PureComponent<DefaultProps, Props, State> {
             scrollsToTop={false}
             showsHorizontalScrollIndicator={false}
             automaticallyAdjustContentInsets={false}
-            contentContainerStyle={[ styles.tabcontent, scrollEnabled ? null : styles.container ]}
+            contentContainerStyle={[ styles.tabContent, scrollEnabled ? null : styles.container ]}
             scrollEventThrottle={16}
             onScroll={this._handleScroll}
             onScrollBeginDrag={this._handleBeginDrag}
@@ -434,7 +455,7 @@ export default class TabBar extends PureComponent<DefaultProps, Props, State> {
                   style={tabContainerStyle}
                 >
                   <View style={styles.container}>
-                    <Animated.View style={[ styles.tabitem, tabStyle, passedTabStyle, styles.container ]}>
+                    <Animated.View style={[ styles.tabItem, tabStyle, passedTabStyle, styles.container ]}>
                       {icon}
                       {label}
                     </Animated.View>
