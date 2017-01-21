@@ -120,6 +120,14 @@ export default class TabBar extends PureComponent<DefaultProps, Props, State> {
   };
 
   componentWillMount() {
+    if (typeof this.props.tabWidth !== 'undefined') {
+      console.error('`tabWidth` prop is removed. Set `width` in `tabStyle` instead.');
+    }
+
+    if (typeof this.props.activeOpacity !== 'undefined') {
+      console.error('`activeOpacity` prop is removed. Pass `pressOpacity` instead.');
+    }
+
     if (this.props.scrollEnabled === true) {
       const tabWidth = this._getTabWidthFromStyle(this.props.tabStyle);
       if (this.props.layout.width || tabWidth) {
