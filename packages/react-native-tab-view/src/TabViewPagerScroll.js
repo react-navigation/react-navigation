@@ -107,7 +107,7 @@ export default class TabViewPagerScroll extends PureComponent<void, Props, void>
     this._isMomentumScroll = false;
     this._isManualScroll = false;
 
-    const nextIndex = e.nativeEvent.contentOffset.x / this.props.layout.width;
+    const nextIndex = Math.round(e.nativeEvent.contentOffset.x / this.props.layout.width);
     this.props.jumpToIndex(nextIndex);
   };
 
