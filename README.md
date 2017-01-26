@@ -2,7 +2,7 @@
 
 *Learn once, navigate anywhere.*
 
-Browse the docs on [reactnavigation.org](https://navigate:navigate@reactnavigation.org/). (The username/pass is `navigate:navigate`)
+Browse the docs on [reactnavigation.org](https://navigate:navigate@reactnavigation.org/).
 
 ## [Getting started](https://reactnavigation.org/docs/intro/)
 
