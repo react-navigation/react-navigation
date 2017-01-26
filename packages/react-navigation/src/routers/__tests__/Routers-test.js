@@ -1,0 +1,120 @@
+/**
+ * @flow
+ */
+
+import React from 'react';
+
+import StackRouter from '../StackRouter';
+import TabRouter from '../TabRouter';
+
+import addNavigationHelpers from '../../addNavigationHelpers';
+
+const ROUTERS = {
+  TabRouter,
+  StackRouter,
+};
+
+Object.keys(ROUTERS).forEach((routerName) => {
+  const Router = ROUTERS[routerName];
+
+  describe(`General router features - ${routerName}`, () => {
+
+    test('title is configurable using navigationOptions and getScreenConfig', () => {
+      class FooView extends React.Component {
+        render() { return <div />; }
+      }
+      class BarView extends React.Component {
+        render() { return <div />; }
+        static navigationOptions = { title: () => 'BarTitle' };
+      }
+      class BazView extends React.Component {
+        render() { return <div />; }
+        static navigationOptions = { title: ({ state }) => `Baz-${state.params.id}` };
+      }
+      const router = Router({
+        Foo: { screen: FooView },
+        Bar: { screen: BarView },
+        Baz: { screen: BazView },
+      });
+      const routes = [
+        {key: 'A', routeName: 'Foo'},
+        {key: 'B', routeName: 'Bar'},
+        {key: 'A', routeName: 'Baz', params: { id: '123' }},
+      ];
+      expect(router.getScreenConfig(addNavigationHelpers({ state: routes[0], dispatch: () => false, }), 'title')).toEqual(null);
+      expect(router.getScreenConfig(addNavigationHelpers({ state: routes[1], dispatch: () => false, }), 'title')).toEqual('BarTitle');
+      expect(router.getScreenConfig(addNavigationHelpers({ state: routes[2], dispatch: () => false, }), 'title')).toEqual('Baz-123');
+    });
+  });
+});
+
+test('Handles no-op actions with tabs within stack router', () => {
+  const BarView = () => <div />;
+  const FooTabNavigator = () => <div />;
+  FooTabNavigator.router = TabRouter({
+    Zap: { screen: BarView },
+    Zoo: { screen: BarView },
+  });
+  const TestRouter = StackRouter({
+    Foo: {
+      screen: FooTabNavigator,
+    },
+    Bar: {
+      screen: BarView,
+    },
+  });
+  const state1 = TestRouter.getStateForAction({ type: 'Init' });
+  const state2 = TestRouter.getStateForAction({ type: 'Navigate', routeName: 'Qux' });
+  expect(state1).toEqual(state2);
+  const state3 = TestRouter.getStateForAction({ type: 'Navigate', routeName: 'Zap' }, state2);
+  expect(state2).toEqual(state3);
+});
+
+test('Handles deep action', () => {
+  const BarView = () => <div />;
+  const FooTabNavigator = () => <div />;
+  FooTabNavigator.router = TabRouter({
+    Zap: { screen: BarView },
+    Zoo: { screen: BarView },
+  });
+  const TestRouter = StackRouter({
+    Bar: { screen: BarView },
+    Foo: { screen: FooTabNavigator },
+  });
+  const state1 = TestRouter.getStateForAction({ type: 'Init' });
+  const expectedState = {
+    index: 0,
+    routes: [
+      {
+        key: 'Init',
+        routeName: 'Bar',
+      },
+    ],
+  };
+  expect(state1).toEqual(expectedState);
+  const state2 = TestRouter.getStateForAction({ type: 'Navigate', routeName: 'Foo', action: {type: 'Navigate', routeName: 'Zoo'} }, state1);
+  expect(state2.index).toEqual(1);
+  expect(state2.routes[1].index).toEqual(1);
+});
+
+test('Supports lazily-evaluated getScreen', () => {
+  const BarView = () => <div />;
+  const FooTabNavigator = () => <div />;
+  FooTabNavigator.router = TabRouter({
+    Zap: { screen: BarView },
+    Zoo: { screen: BarView },
+  });
+  const TestRouter = StackRouter({
+    Foo: {
+      screen: FooTabNavigator,
+    },
+    Bar: {
+      getScreen: () => BarView,
+    },
+  });
+  const state1 = TestRouter.getStateForAction({ type: 'Init' });
+  const state2 = TestRouter.getStateForAction({ type: 'Navigate', routeName: 'Qux' });
+  expect(state1).toEqual(state2);
+  const state3 = TestRouter.getStateForAction({ type: 'Navigate', routeName: 'Zap' }, state2);
+  expect(state2).toEqual(state3);
+});

@@ -1,0 +1,76 @@
+{
+  "name": "react-navigation",
+  "version": "1.0.0-alpha19",
+  "description": "React Navigation",
+  "main": "src/react-navigation.js",
+  "sources": {
+    "react-native-v1": "lib-rn/react-navigation.js",
+    "web": "lib/react-navigation.web.js"
+  },
+  "webpack": "lib/react-navigation.web.js",
+  "repository": {
+    "url": "git@github.com:reactjs/react-navigation.git",
+    "type": "git"
+  },
+  "author": "Adam Miskiewicz <adam@sk3vy.com>",
+  "license": "BSD-2-Clause",
+  "scripts": {
+    "clean": "rm -rf lib/ lib-rn/",
+    "build": "npm run build-docs && npm run build-web && npm run build-rn && npm run build-dot-flow",
+    "watch-rn": "mkdir -p lib-rn/views/ && cp -R src/views/assets lib/views/assets && BABEL_ENV=publish-rn babel -w src -d lib-rn",
+    "watch-web": "mkdir -p lib/views/ &&  cp -R src/views/assets lib/views/assets && BABEL_ENV=publish-web babel -w src -d lib",
+    "build-rn": "mkdir -p lib-rn/views/ && cp -R src/views/assets lib-rn/views/assets && BABEL_ENV=publish-rn babel src -d lib-rn",
+    "build-web": "mkdir -p lib/views/ && cp -R src/views/assets lib/views/assets && BABEL_ENV=publish-web babel src -d lib",
+    "build-dot-flow": "find ./src -name '*.js' -not -path '*/__tests__*' | while read filepath; do cp $filepath `echo $filepath | sed 's/\\/src\\//\\/lib\\//g'`.flow && cp $filepath `echo $filepath | sed 's/\\/src\\//\\/lib-rn\\//g'`.flow; done",
+    "build-docs": "node scripts/compile-docs",
+    "start": "node ./node_modules/react-native/local-cli/cli.js start --config ./rn-cli.config.js",
+    "run-playground-ios": "cd examples/NavigationPlayground && react-native run-ios",
+    "run-playground-android": "cd examples/NavigationPlayground && react-native run-android",
+    "test": "BABEL_ENV=development jest",
+    "flow": "flow",
+    "prepublish": "npm run clean && npm run build"
+  },
+  "files": [
+    "lib",
+    "lib-rn",
+    "src"
+  ],
+  "devDependencies": {
+    "babel-cli": "^6.18.0",
+    "babel-core": "^6.18.2",
+    "babel-eslint": "^7.0.0",
+    "babel-jest": "^17.0.2",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-react": "^6.16.0",
+    "babel-preset-react-native": "^1.9.0",
+    "babel-preset-react-native-syntax": "^1.0.0",
+    "babel-preset-stage-1": "^6.16.0",
+    "eslint": "^3.9.1",
+    "eslint-config-airbnb": "^12.0.0",
+    "eslint-plugin-flowtype": "^2.19.0",
+    "eslint-plugin-import": "^1.16.0",
+    "eslint-plugin-jsx-a11y": "^2.2.2",
+    "eslint-plugin-react": "^6.3.0",
+    "flow-bin": "^0.35.0",
+    "jest": "^18.1.0",
+    "react": "~15.4.0",
+    "react-native": "^0.40.0",
+    "react-native-vector-icons": "^3.0.0"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*"
+  },
+  "dependencies": {
+    "clamp": "^1.0.1",
+    "fbjs": "^0.8.5",
+    "path-to-regexp": "^1.7.0",
+    "react-addons-shallow-compare": "15.4.1",
+    "react-native-drawer-layout": "^1.1.0",
+    "react-native-tab-view": "^0.0.52"
+  },
+  "jest": {
+    "testPathDirs": ["src/"],
+    "notify": true
+  }
+}

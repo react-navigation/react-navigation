@@ -1,0 +1,77 @@
+{
+  "extends": "airbnb",
+  "parser": "babel-eslint",
+  "plugins": [
+    "flowtype"
+  ],
+  "env": {
+    "jasmine": true
+  },
+  "rules": {
+    "no-underscore-dangle": 0,
+    "no-use-before-define": 0,
+    "no-unused-expressions": 0,
+    "new-cap": 0,
+    "no-plusplus": 0,
+    "no-class-assign": 0,
+    "no-duplicate-imports": 0,
+
+    "import/extensions": 0,
+    "import/no-extraneous-dependencies": 0,
+    "import/no-unresolved": 0,
+
+    "react/jsx-filename-extension": [
+      0, { "extensions": [".js", ".jsx"] }
+    ],
+    "react/forbid-prop-types": 0,
+    "react/sort-comp": 0,
+    "react/prefer-stateless-function": 0,
+
+    "flowtype/boolean-style": [
+      2,
+      "boolean"
+    ],
+    "flowtype/define-flow-type": 1,
+    "flowtype/generic-spacing": [
+      2,
+      "never"
+    ],
+    "flowtype/no-weak-types": 1,
+    "flowtype/require-parameter-type": 2,
+    "flowtype/require-return-type": [
+      0,
+      "always",
+      {
+        "annotateUndefined": "never"
+      }
+    ],
+    "flowtype/require-valid-file-annotation": 2,
+    "flowtype/semi": [
+      2,
+      "always"
+    ],
+    "flowtype/space-after-type-colon": [
+      2,
+      "always"
+    ],
+    "flowtype/space-before-generic-bracket": [
+      2,
+      "never"
+    ],
+    "flowtype/space-before-type-colon": [
+      2,
+      "never"
+    ],
+    "flowtype/union-intersection-spacing": [
+      2,
+      "always"
+    ],
+    "flowtype/use-flow-type": 1,
+    "flowtype/valid-syntax": 1
+  },
+  "settings": {
+    "flowtype": {
+      "onlyFilesWithFlowAnnotation": false
+    }
+  }
+}

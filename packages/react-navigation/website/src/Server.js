@@ -1,0 +1,75 @@
+
+const path = require('path');
+const express = require('express');
+const fs = require('fs');
+const React = require('react');
+const join = require('path').join;
+const basicAuth = require('basic-auth-connect');
+const server = require('express');
+const ReactDOMServer = require('react-dom/server');
+
+import App from './App';
+
+import { addNavigationHelpers } from 'react-navigation';
+
+class ServerApp extends React.Component {
+  static childContextTypes = {
+    getURIForAction: React.PropTypes.func.isRequired,
+    getActionForPathAndParams: React.PropTypes.func.isRequired,
+    dispatch: React.PropTypes.func.isRequired,
+  };
+  getChildContext() {
+    return {
+      dispatch: this.props.navigation.dispatch,
+      getURIForAction: (action) => {
+        const state = App.router.getStateForAction(action);
+        let { path } = App.router.getPathAndParamsForState(state);
+        return `/${path}`;
+      },
+      getActionForPathAndParams: App.router.getActionForPathAndParams,
+    };
+  }
+  render() {
+    return <App navigation={this.props.navigation} />;
+  }
+}
+
+const indexHtml = fs.readFileSync(join(__dirname, '../public/index.html'), { encoding: 'utf8' });
+
+function AppHandler(req, res) {
+  let status = 200;
+  const path = req.url.substr(1)
+  let initAction = App.router.getActionForPathAndParams(path);
+  if (!initAction) {
+    initAction = { type: 'Navigate', routeName: 'NotFound', params: { path } };
+    status = 404;
+  }
+  const topNavigation = addNavigationHelpers({
+    state: App.router.getStateForAction(initAction),
+    dispatch: (action) => false,
+  });
+  const screenNavigation = addNavigationHelpers({
+    state: topNavigation.state.routes[topNavigation.state.index],
+    dispatch: topNavigation.dispatch,
+  });
+
+  const Component = App.router.getComponentForState(topNavigation.state);
+  const title = App.router.getScreenConfig(screenNavigation, 'title');
+  const app = <ServerApp navigation={topNavigation} />;
+  const body = ReactDOMServer.renderToString(app);
+  let html = indexHtml;
+  html = html.split('<div id="root"></div>').join(`<div id="root">${body}</div>`)
+  if (title) {
+    html = html.split('<title></title>').join(`<title>${title}</title>`);
+  }
+  res.status(status).send(html);
+}
+
+const app = express();
+app.use(basicAuth('navigate', 'navigate', 'React Navigation Preview'));
+app.get('/', AppHandler);
+app.use(express.static(join(__dirname, '../public')));
+app.get('*', AppHandler);
+app.listen(3000, () => {
+  console.log('Started on 3000!');
+});
