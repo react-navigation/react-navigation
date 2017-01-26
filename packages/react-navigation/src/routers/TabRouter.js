@@ -231,9 +231,6 @@ export default (
           };
           if (tabRouter && tabRouter.getActionForPathAndParams) {
             action.action = tabRouter.getActionForPathAndParams(parts.slice(1).join('/'), params);
-            if (!action.action) {
-              return null;
-            }
           } else if (params) {
             action.params = params;
           }
