@@ -1,10 +1,10 @@
 # Web Integration
 
-React navigation routers work on web and allow you to share navigation logic with native apps. The views currently bundled in `react-navigation` currently only work on React Native, but that may change with future-facing projects like [react-primitives](https://github.com/lelandrichardson/react-primitives).
+React Navigation routers work on web and allow you to share navigation logic with native apps. The views currently bundled in `react-navigation` currently only work on React Native, but that may change with future-facing projects like [react-primitives](https://github.com/lelandrichardson/react-primitives).
 
 ## Example App
 
-[This website](https://github.com/react-community/react-navigation/blob/master/website/) is built with react navigation, specifically using `createNavigator` and `TabRouter`.
+[This website](https://reactnavigation.org/) is [built with](https://github.com/react-community/react-navigation/blob/master/website/) React Navigation, specifically using `createNavigator` and `TabRouter`.
 
 See the source code of the site here: [App.js](https://github.com/react-community/react-navigation/blob/master/website/src/App.js).
 
