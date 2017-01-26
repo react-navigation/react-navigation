@@ -4,11 +4,11 @@ React navigation routers work on web and allow you to share navigation logic wit
 
 ## Example App
 
-[This website](https://github.com/reactjs/react-navigation/blob/master/website/) is built with react navigation, specifically using `createNavigator` and `TabRouter`.
+[This website](https://github.com/react-community/react-navigation/blob/master/website/) is built with react navigation, specifically using `createNavigator` and `TabRouter`.
 
-See the source code of the site here: [App.js](https://github.com/reactjs/react-navigation/blob/master/website/src/App.js).
+See the source code of the site here: [App.js](https://github.com/react-community/react-navigation/blob/master/website/src/App.js).
 
-To see how the app gets rendered on the server, see [Server.js](https://github.com/reactjs/react-navigation/blob/master/website/src/Server.js). On the browser, the App wakes up and gets rendered with [BrowserAppContainer.js](https://github.com/reactjs/react-navigation/blob/master/website/src/BrowserAppContainer.js).
+To see how the app gets rendered on the server, see [Server.js](https://github.com/react-community/react-navigation/blob/master/website/src/Server.js). On the browser, the App wakes up and gets rendered with [BrowserAppContainer.js](https://github.com/react-community/react-navigation/blob/master/website/src/BrowserAppContainer.js).
 
 
 ## More Coming Soon

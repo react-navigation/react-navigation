@@ -120,7 +120,7 @@ All `navigationOptions` for the `StackNavigator`:
 
 ### Examples
 
-See the examples [SimpleStack.js](https://github.com/reactjs/react-navigation/tree/master/examples/NavigationPlayground/js/SimpleStack.js) and [ModalStack.js](https://github.com/reactjs/react-navigation/tree/master/examples/NavigationPlayground/js/ModalStack.js) which you can run locally as part of the [NavigationPlayground](https://github.com/reactjs/react-navigation/tree/master/examples/NavigationPlayground) app.
+See the examples [SimpleStack.js](https://github.com/react-community/react-navigation/tree/master/examples/NavigationPlayground/js/SimpleStack.js) and [ModalStack.js](https://github.com/react-community/react-navigation/tree/master/examples/NavigationPlayground/js/ModalStack.js) which you can run locally as part of the [NavigationPlayground](https://github.com/react-community/react-navigation/tree/master/examples/NavigationPlayground) app.
 
 
 ### Navigator Props

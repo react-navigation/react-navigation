@@ -105,7 +105,7 @@ class PageWithSidebar extends Component {
         <div className="main-section">
           <ActiveScreen navigation={this.props.navigation} />
           <hr />
-          {state.routeName === 'Docs' && <Link href={`https://github.com/reactjs/react-navigation/tree/master/docs/${docPath}`} className="editLink"> Edit on GitHub</Link>}
+          {state.routeName === 'Docs' && <Link href={`https://github.com/react-community/react-navigation/tree/master/docs/${docPath}`} className="editLink"> Edit on GitHub</Link>}
           {prevAction && <Link to={prevAction}>Previous: {prevName}</Link>}
           {nextAction && <Link to={nextAction} className="nextLink">Next: {nextName}</Link>}
         </div>

@@ -222,7 +222,7 @@ Based on the state URI we may decide to return an action. If an action is return
 
 ## Reference Implementations
 
-A library to that helps easily produce navigation-aware components: https://github.com/reactjs/react-navigation . (Also uses a HOC to provide navigation containers when needed.)
+A library to that helps easily produce navigation-aware components: https://github.com/react-community/react-navigation . (Also uses a HOC to provide navigation containers when needed.)
 
 A simple navigation container: https://gist.github.com/ericvicenti/77d190e2ec408012255937400e34bdb1
 
