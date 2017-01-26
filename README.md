@@ -1,4 +1,4 @@
-# React Navigation  [![Circle CI](https://circleci.com/gh/reactjs/react-navigation.svg?style=svg&circle-token=296a074544f10b6580652bd283b2c1817154dc20)](https://circleci.com/gh/reactjs/react-navigation)
+# React Navigation [![CircleCI](https://circleci.com/gh/react-community/react-navigation/tree/master.svg?style=svg&circle-token=622fcb1d78413084c2f44699ed2104246a177485)](https://circleci.com/gh/react-community/react-navigation/tree/master) 
 
 *Learn once, navigate anywhere.*
 
