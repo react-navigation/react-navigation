@@ -9,7 +9,7 @@ React navigation was initially developed on macOS 10.12, with node 7+, and react
 ### 0. Basic Install
 
 ```
-git clone git@github.com:reactjs/react-navigation.git
+git clone git@github.com:react-community/react-navigation.git
 cd react-navigation
 npm install
 ```
@@ -57,7 +57,7 @@ Flow is not yet passing, but your code should be flow checked and we expect that
 
 ### 4. Developing Docs
 
-The docs are indexed in [App.js](https://github.com/reactjs/react-navigation/blob/master/website/src/App.js), where all the pages are declared alongside the titles. To test the docs, follow the above instructions for running the website. Changing existing markdown files should not require any testing.
+The docs are indexed in [App.js](https://github.com/react-community/react-navigation/blob/master/website/src/App.js), where all the pages are declared alongside the titles. To test the docs, follow the above instructions for running the website. Changing existing markdown files should not require any testing.
 
 The markdown from the `docs` folder gets generated and dumped into a json file as a part of the build step. To see updated docs appear in the website, re-run the build step by running `npm run build-docs` from the `react-navigation` root folder.
 
