@@ -2,7 +2,7 @@
 
 *Learn once, navigate anywhere.*
 
-Browse the docs on [reactnavigation.org](https://navigate:navigate@reactnavigation.org/).
+Browse the docs on [reactnavigation.org](https://reactnavigation.org/).
 
 ## [Getting started](https://reactnavigation.org/docs/intro/)
 
