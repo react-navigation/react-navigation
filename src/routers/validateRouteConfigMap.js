@@ -1,0 +1,59 @@
+import invariant from 'fbjs/lib/invariant';
+
+/**
+ * Make sure the config passed e.g. to StackRouter, TabRouter has
+ * the correct format, and throw a clear error if it doesn't.
+ */
+function validateRouteConfigMap(routeConfigs: NavigationRouteConfigMap) {
+  const routeNames = Object.keys(routeConfigs);
+  invariant(
+    routeNames.length > 0,
+    'Please specify at least one route when configuring a navigator.'
+  );
+
+  routeNames.forEach((routeName: string) => {
+    const routeConfig = routeConfigs[routeName];
+
+    invariant(
+      routeConfig.screen || routeConfig.getScreen,
+      `Route '${routeName}' should declare a screen. ` +
+      'For example:\n\n' +
+      'import MyScreen from \'./MyScreen\';\n' +
+      '...\n' +
+      `${routeName}: {\n` +
+      '  screen: MyScreen,\n' +
+      '}'
+    );
+
+    if (routeConfig.screen && routeConfig.getScreen) {
+      invariant(false,
+        `Route '${routeName}' should declare a screen or ` +
+        'a getScreen, not both.'
+      );
+    }
+
+    if (routeConfig.screen) {
+      invariant(
+        // `screen: MyScreen`
+        typeof (routeConfig.screen) === 'function',
+        //(!routeConfig.screen.navigation) &&
+        //(!routeConfig.component.router),
+        `The component for route '${routeName}' must be a ` +
+        'a React component. For example:\n\n' +
+        'import MyScreen from \'./MyScreen\';\n' +
+        '...\n' +
+        `${routeName}: {\n` +
+        '  screen: MyScreen,\n' +
+        '}\n\n' +
+        'You can also use a navigator:\n\n' +
+        'import MyNavigator from \'./MyNavigator\';\n' +
+        '...\n' +
+        `${routeName}: {\n` +
+        '  screen: MyNavigator,\n' +
+        '}'
+      );
+    }
+  });
+}
+
+export default validateRouteConfigMap;
