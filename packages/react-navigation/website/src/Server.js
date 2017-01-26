@@ -66,7 +66,6 @@ function AppHandler(req, res) {
 }
 
 const app = express();
-app.use(basicAuth('navigate', 'navigate', 'React Navigation Preview'));
 app.get('/', AppHandler);
 app.use(express.static(join(__dirname, '../public')));
 app.get('*', AppHandler);
