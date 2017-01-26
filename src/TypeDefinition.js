@@ -248,6 +248,7 @@ export type NavigationStackRouterConfig = {
   initialRouteName?: string,
   initialRouteParams?: NavigationParams,
   paths?: NavigationPathsConfig,
+  navigationOptions?: NavigationScreenOptions,
 };
 
 export type NavigationStackAction =

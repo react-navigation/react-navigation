@@ -27,11 +27,13 @@ export default (routeConfigMap: NavigationRouteConfigMap, stackConfig: StackNavi
     headerComponent,
     headerMode,
     mode,
+    navigationOptions,
   } = stackConfig;
   const stackRouterConfig = {
     initialRouteName,
     initialRouteParams,
     paths,
+    navigationOptions,
   };
   const router = StackRouter(routeConfigMap, stackRouterConfig);
   return createNavigationContainer(createNavigator(router)(props => (
