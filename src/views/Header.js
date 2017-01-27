@@ -39,7 +39,7 @@ type DefaultProps = {
   renderTitleComponent: SubViewRenderer,
 };
 
-type Props = NavigationSceneRendererProps & {
+export type HeaderProps = NavigationSceneRendererProps & {
   mode: HeaderMode,
   onNavigateBack: ?Function,
   renderLeftComponent: SubViewRenderer,
@@ -53,7 +53,7 @@ type SubViewName = 'left' | 'title' | 'right';
 const APPBAR_HEIGHT = Platform.OS === 'ios' ? 44 : 56;
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : 0;
 
-class Header extends React.Component<DefaultProps, Props, *> {
+class Header extends React.Component<DefaultProps, HeaderProps, *> {
 
   static HEIGHT = APPBAR_HEIGHT + STATUSBAR_HEIGHT;
   static Title = HeaderTitle;
@@ -89,9 +89,9 @@ class Header extends React.Component<DefaultProps, Props, *> {
     style: PropTypes.any,
   };
 
-  props: Props;
+  props: HeaderProps;
 
-  shouldComponentUpdate(nextProps: Props, nextState: any): boolean {
+  shouldComponentUpdate(nextProps: HeaderProps, nextState: any): boolean {
     return ReactComponentWithPureRenderMixin.shouldComponentUpdate.call(
       this,
       nextProps,

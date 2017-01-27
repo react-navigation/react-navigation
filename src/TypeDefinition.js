@@ -8,6 +8,7 @@ import {
 
 import type {
   HeaderMode,
+  HeaderProps,
 } from './views/Header';
 
 /**
@@ -242,7 +243,7 @@ export type NavigationContainerConfig = {
 export type NavigationStackViewConfig = {
   mode?: 'card' | 'modal',
   headerMode?: HeaderMode,
-  headerComponent?: ReactClass<*>,
+  headerComponent?: ReactClass<HeaderProps>,
 };
 
 export type NavigationStackRouterConfig = {
