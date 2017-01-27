@@ -12,7 +12,7 @@ import Transitioner from './Transitioner';
 import Card from './Card';
 import CardStackStyleInterpolator from './CardStackStyleInterpolator';
 import CardStackPanResponder from './CardStackPanResponder';
-import Header from './Header';
+import s from './Header';
 import NavigationPropTypes from '../PropTypes';
 import addNavigationHelpers from '../addNavigationHelpers';
 import SceneView from './SceneView';
@@ -207,7 +207,11 @@ class CardStack extends React.Component<DefaultProps, Props, void> {
           if (header && header.left) {
             return header.left;
           }
-          return this.props.headerComponent.defaultProps.renderLeftComponent(props);
+          const { renderLeftComponent } = this.props.headerComponent.defaultProps;
+          if (typeof renderLeftComponent === 'function') {
+            return renderLeftComponent(props);
+          }
+          return null;
         }}
         renderRightComponent={({ scene }) => {
           const navigation = this._getChildNavigation(scene);
