@@ -114,6 +114,11 @@ export type HeaderConfig = {
   right?: React.Element<*>,
 
   /**
+   * Renders a custom left component
+   */
+  left?: React.Element<*>,
+
+  /**
    * Style passed into navigation bar container
    */
   style?: Object,
