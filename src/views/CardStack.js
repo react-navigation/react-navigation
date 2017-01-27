@@ -217,7 +217,7 @@ class CardStack extends React.Component<DefaultProps, Props, void> {
           }
           return null;
         }}
-        renderTitleComponent={({ scene, navigationState }) => {
+        renderTitleComponent={({ scene }) => {
           const navigation = this._getChildNavigation(scene);
           const header = this.props.router.getScreenConfig(navigation, 'header');
           let title = null;
