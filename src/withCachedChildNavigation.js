@@ -22,7 +22,7 @@ type Props = {
 export default function withCachedChildNavigation<T: Props>(Comp: ReactClass<T>): ReactClass<T> {
   return class extends PureComponent<void, T, void> {
 
-    static displayName = `withCachedChildNavigation(${Comp.displayName})`;
+    static displayName = `withCachedChildNavigation(${Comp.displayName || Comp.name})`;
 
     props: T;
 
