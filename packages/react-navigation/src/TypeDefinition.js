@@ -112,8 +112,11 @@ export type HeaderConfig = {
    */
   right?: React.Element<*>,
 
-  // Style passed into navigation bar container
-  // style?: HeaderStyleInterpolators,
+  /**
+   * Style passed into navigation bar container
+   */
+  style?: Object,
+
   // // Style of title text
   // titleTextStyle?: $NavigationThunk<Object>,
   // // Tint color of navigation bar contents
@@ -122,8 +125,6 @@ export type HeaderConfig = {
   // height?: $NavigationThunk<number>,
   // // Navigation bar translucentcy
   // translucent?: $NavigationThunk<boolean>,
-  // // Renders a custom title component
-  // renderTitle?: $NavigationThunk<React.Element<*>>,
   // // Renders a custom left component
   // renderLeft?: React.Element<*> |
   //   (navigation: NavigationProp<*>, canGoBack: boolean) => React.Element<*>,
