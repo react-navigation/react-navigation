@@ -22,7 +22,7 @@ export default (
   (
     navigation: NavigationScreenProp<NavigationRoute, NavigationAction>,
     optionName: string,
-    config?: Object
+    config?: {}
   ) => {
     const route = navigation.state;
     invariant(

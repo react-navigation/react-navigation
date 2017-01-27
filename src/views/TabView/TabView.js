@@ -22,6 +22,7 @@ import type {
   NavigationAction,
   NavigationState,
   NavigationRouter,
+  TabBarConfig,
 } from '../../TypeDefinition';
 
 export type TabViewConfig = {
@@ -45,6 +46,13 @@ type TabScene = {
   focused: boolean;
   index: number;
   tintColor?: string;
+};
+
+type TabBarConfigs = {
+  [key: string]: {
+    focused: ?TabBarConfig,
+    unfocused: ?TabBarConfig,
+  }
 };
 
 let TabViewPager;
@@ -84,28 +92,21 @@ class TabView extends PureComponent<void, Props, void> {
     );
   };
 
-  _getLabelText = ({ route }: TabScene) => {
-    const tabBar = this.props.router.getScreenConfig(this.props.childNavigationProps[route.key], 'tabBar');
+  _getLabelText = (configs: TabBarConfigs) => ({ route }: TabScene) => {
+    const tabBar = configs[route.key].focused;
     if (tabBar && typeof tabBar.label === 'string') {
       return tabBar.label;
-    } else {
-      const title = this.props.router.getScreenConfig(this.props.childNavigationProps[route.key], 'title');
-      if (typeof title === 'string') {
-        return title;
-      }
+    }
+    const title = this.props.router.getScreenConfig(this.props.childNavigationProps[route.key], 'title');
+    if (typeof title === 'string') {
+      return title;
     }
     return route.routeName;
   };
 
-  _renderIcon = ({ focused, route, tintColor }: TabScene) => {
-    const tabBar = this.props.router.getScreenConfig(this.props.childNavigationProps[route.key], 'tabBar');
-    if (tabBar && tabBar.icon) {
-      return tabBar.icon({
-        tintColor,
-        focused,
-      });
-    }
-    return null;
+  _renderIcon = (configs: TabBarConfigs) => ({ focused, route }: TabScene) => {
+    const tabBar = focused ? configs[route.key].focused : configs[route.key].unfocused;
+    return tabBar && tabBar.icon ? tabBar.icon : null;
   };
 
   _renderTabBar = (props: *) => {
@@ -113,17 +114,47 @@ class TabView extends PureComponent<void, Props, void> {
       tabBarOptions,
       tabBarComponent: TabBarComponent,
       animationEnabled,
+      childNavigationProps,
+      router,
     } = this.props;
-    if (typeof TabBarComponent === 'undefined') {
+
+    if (TabBarComponent == null) {
       return null;
     }
+
+    const defaultTabBarProps = TabBarComponent.defaultProps || {};
+    const activeTintColor =
+      tabBarOptions && tabBarOptions.activeTintColor ?
+      tabBarOptions.activeTintColor :
+      defaultTabBarProps.activeTintColor;
+    const inactiveTintColor =
+      tabBarOptions && tabBarOptions.inactiveTintColor ?
+      tabBarOptions.inactiveTintColor :
+      defaultTabBarProps.inactiveTintColor;
+
+    const configs = props.navigationState.routes.reduce((acc: TabBarConfigs, route: *) => {
+      const focusedOptions = { focused: true, tintColor: activeTintColor };
+      const unfocusedOptions = { focused: false, tintColor: inactiveTintColor };
+      const focusedConfig = router.getScreenConfig(childNavigationProps[route.key], 'tabBar', focusedOptions);
+      const unfocusedConfig = router.getScreenConfig(childNavigationProps[route.key], 'tabBar', unfocusedOptions);
+      return {
+        ...acc,
+        [route.key]: {
+          focused: focusedConfig,
+          unfocused: unfocusedConfig,
+        },
+      };
+    }, {});
+
     return (
       <TabBarComponent
         {...props}
         {...tabBarOptions}
-        getLabelText={this._getLabelText}
-        renderIcon={this._renderIcon}
+        getLabelText={this._getLabelText(configs)}
+        renderIcon={this._renderIcon(configs)}
         animationEnabled={animationEnabled}
+        router={this.props.router}
+        navigation={this.props.navigation}
       />
     );
   };

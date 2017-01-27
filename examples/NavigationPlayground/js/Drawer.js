@@ -37,16 +37,16 @@ const InboxScreen = ({ navigation }) => (
   />
 );
 InboxScreen.navigationOptions = {
-  drawer: {
+  drawer: (navigation, { tintColor }) => ({
     label: 'Inbox',
-    icon: ({ tintColor }) => (
+    icon: (
       <MaterialIcons
         name="move-to-inbox"
         size={24}
         style={{ color: tintColor }}
       />
     ),
-  },
+  }),
 };
 
 const DraftsScreen = ({ navigation }) => (
@@ -56,16 +56,16 @@ const DraftsScreen = ({ navigation }) => (
   />
 );
 DraftsScreen.navigationOptions = {
-  drawer: {
+  drawer: (navigation, { tintColor }) => ({
     label: 'Drafts',
-    icon: ({ tintColor }) => (
+    icon: (
       <MaterialIcons
         name="drafts"
         size={24}
         style={{ color: tintColor }}
       />
     ),
-  },
+  }),
 };
 
 const DrawerExample = DrawerNavigator({

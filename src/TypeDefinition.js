@@ -91,10 +91,12 @@ export type NavigationRouter = {
   ) => ?any, // todo, fix this any type to become a key of NavigationScreenConfig
 };
 
-export type NavigationScreenOption<T> =
-  | (navigation: NavigationScreenProp<NavigationRoute, NavigationAction>,
-    config: NavigationScreenOptionConfig,
-    router?: NavigationRouter) => T
+export type NavigationScreenOption<T, ViewOptions> =
+  | (
+      navigation: NavigationScreenProp<NavigationRoute, NavigationAction>,
+      options: ViewOptions,
+      router?: NavigationRouter
+    ) => T
   | T;
 
 export type HeaderConfig = {
@@ -142,7 +144,7 @@ export type TabBarConfig = {
   /**
    * Icon used by the tab bar.
    */
-  icon?: (options: { tintColor: string, focused: boolean }) => ?React.Element<*>;
+  icon?: ?React.Element<*>;
   /**
    * Label text used by the tab bar.
    */
@@ -153,7 +155,7 @@ export type DrawerConfig = {
   /**
    * Icon used by the drawer.
    */
-  icon?: (options: { tintColor: string, focused: boolean }) => ?React.Element<*>;
+  icon?: ?React.Element<*>;
   /**
    * Label text used by the drawer.
    */
@@ -165,19 +167,19 @@ export type NavigationScreenOptions = {
    * Title is rendered by certain navigators, e.g. the tab navigator,
    * or on web as the title of the browser tab.
    */
-  title?: NavigationScreenOption<string>;
+  title?: NavigationScreenOption<string, void>;
   /**
    * Options passed to the navigation bar for this screen.
    */
-  header?: NavigationScreenOption<HeaderConfig>;
+  header?: NavigationScreenOption<HeaderConfig, void>;
   /**
    * Options passed to the tab bar for this screen.
    */
-  tabBar?: NavigationScreenOption<TabBarConfig>;
+  tabBar?: NavigationScreenOption<TabBarConfig, { tintColor: string, focused: boolean }>;
   /**
    * Options passed to the drawer for this screen.
    */
-  drawer?: NavigationScreenOption<DrawerConfig>;
+  drawer?: NavigationScreenOption<DrawerConfig, { tintColor: string, focused: boolean }>;
 };
 
 export type NavigationScreenConfig = {
@@ -302,7 +304,7 @@ export type NavigationTabRouterConfig = {
   paths?: NavigationPathsConfig,
   navigationOptions?: NavigationScreenOptions,
   order?: Array<string>, // todo: type these as the real route names rather than 'string'
-  
+
   // Does the back button cause the router to switch to the initial tab
   backBehavior?: 'none' | 'initialRoute', // defaults `initialRoute`
 };
