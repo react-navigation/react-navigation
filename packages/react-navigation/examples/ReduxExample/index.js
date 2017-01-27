@@ -111,17 +111,18 @@ const AppWithNavigationState = connect(state => ({
   <AppNavigator navigation={addNavigationHelpers({ dispatch, state: nav })} />
 ));
 
+const initialNavState = {
+  index: 1,
+  routes: [
+    { key: 'InitA', routeName: 'Main' },
+    { key: 'InitB', routeName: 'Login' },
+  ],
+};
+
+const initialAuthState = { isLoggedIn: false };
+
 const AppReducer = combineReducers({
-  nav: (state, action) => {
-    if (!state) {
-      state = {
-        index: 1,
-        routes: [
-          { key: 'InitA', routeName: 'Main' },
-          { key: 'InitB', routeName: 'Login' },
-        ],
-      };
-    }
+  nav: (state = initialNavState, action) => {
     if (action.type === 'Login') {
       return AppNavigator.router.getStateForAction({ type: 'Back' }, state);
     }
@@ -130,10 +131,7 @@ const AppReducer = combineReducers({
     }
     return AppNavigator.router.getStateForAction(action, state);
   },
-  auth: (state, action) => {
-    if (!state) {
-      state = { isLoggedIn: false };
-    }
+  auth: (state = initialAuthState, action) => {
     if (action.type === 'Login') {
       return { ...state, isLoggedIn: true };
     }
