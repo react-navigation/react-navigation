@@ -72,6 +72,8 @@ class ProfileScreen extends React.Component {
       title: 'Profile Screen',
     },
   }
+  ...
+}
 ```
 
 When `navigationOptions` are present on a component like in the above example, default settings are completely ignored.
@@ -87,6 +89,8 @@ class ProfileScreen extends React.Component {
       title: 'Profile Screen',
     }),
   }
+  ...
+}
 ```
 
 The 2nd argument passed to the function is the default config as found on the navigator.
