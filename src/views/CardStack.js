@@ -12,7 +12,7 @@ import Transitioner from './Transitioner';
 import Card from './Card';
 import CardStackStyleInterpolator from './CardStackStyleInterpolator';
 import CardStackPanResponder from './CardStackPanResponder';
-import s from './Header';
+import Header from './Header';
 import NavigationPropTypes from '../PropTypes';
 import addNavigationHelpers from '../addNavigationHelpers';
 import SceneView from './SceneView';
