@@ -30,6 +30,7 @@ import type {
 
 import type {
   HeaderMode,
+  HeaderProps,
 } from './Header';
 
 import type { TransitionConfig } from './TransitionConfigs';
@@ -41,6 +42,7 @@ const NativeAnimatedModule = NativeModules && NativeModules.NativeAnimatedModule
 type Props = {
   screenProps?: {};
   headerMode: HeaderMode,
+  headerComponent?: ReactClass<HeaderProps>,
   mode: 'card' | 'modal',
   navigation: NavigationScreenProp<NavigationState, NavigationAction>,
   router: NavigationRouter,
@@ -61,6 +63,7 @@ type Props = {
 type DefaultProps = {
   mode: 'card' | 'modal',
   gesturesEnabled: boolean,
+  headerComponent: ReactClass<HeaderProps>,
 };
 
 class CardStack extends React.Component<DefaultProps, Props, void> {
@@ -86,6 +89,11 @@ class CardStack extends React.Component<DefaultProps, Props, void> {
      * is `screen` on Android and `float` on iOS.
      */
     headerMode: PropTypes.oneOf(['float', 'screen', 'none']),
+
+    /**
+     * Custom React component to be used as a header
+     */
+    headerComponent: PropTypes.func,
 
     /**
      * Style of the cards movement. Value could be `card` or `modal`.
@@ -138,6 +146,7 @@ class CardStack extends React.Component<DefaultProps, Props, void> {
   static defaultProps: DefaultProps = {
     mode: 'card',
     gesturesEnabled: Platform.OS === 'ios',
+    headerComponent: Header,
   };
 
   componentWillMount() {
@@ -186,13 +195,8 @@ class CardStack extends React.Component<DefaultProps, Props, void> {
     const navigation = this._getChildNavigation(props.scene);
     const header = this.props.router.getScreenConfig(navigation, 'header') || {};
 
-    let HeaderComponent = Header;
-    if (header.bar) {
-      HeaderComponent = header.bar;
-    }
-
     return (
-      <HeaderComponent
+      <this.props.headerComponent
         {...props}
         style={header.style}
         mode={headerMode}
