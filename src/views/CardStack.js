@@ -201,6 +201,12 @@ class CardStack extends React.Component<DefaultProps, Props, void> {
         style={header.style}
         mode={headerMode}
         onNavigateBack={() => this.props.navigation.goBack(null)}
+        renderLeftComponent={({ scene }) => {
+          const navigation = this._getChildNavigation(scene);
+          const header = this.props.router.getScreenConfig(navigation, 'header');
+          const left = header && header.left;
+          return left;
+        }}
         renderRightComponent={({ scene }) => {
           const navigation = this._getChildNavigation(scene);
           const header = this.props.router.getScreenConfig(navigation, 'header');
