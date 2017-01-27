@@ -12,12 +12,18 @@ import type {
   NavigationRoute,
   NavigationAction,
   NavigationRouteConfigMap,
-  NavigationScreenConfig,
+  NavigationScreenOptions,
 } from '../TypeDefinition';
 
-
-export default (routeConfigs: NavigationRouteConfigMap) =>
-  (navigation: NavigationScreenProp<NavigationRoute, NavigationAction>, optionName: string, config?: Object) => {
+export default (
+  routeConfigs: NavigationRouteConfigMap,
+  defaultOptions?: NavigationScreenOptions
+) =>
+  (
+    navigation: NavigationScreenProp<NavigationRoute, NavigationAction>,
+    optionName: string,
+    config?: Object
+  ) => {
     const route = navigation.state;
     invariant(
       route.routeName &&
@@ -30,7 +36,7 @@ export default (routeConfigs: NavigationRouteConfigMap) =>
     let outputConfig = config || null;
 
     if (Component.router) {
-      const {state, dispatch} = navigation;
+      const { state, dispatch } = navigation;
       invariant(
         state && state.routes && state.index != null,
         `Expect nav state to have routes and index, ${JSON.stringify(route)}`
@@ -44,29 +50,19 @@ export default (routeConfigs: NavigationRouteConfigMap) =>
 
     const routeConfig = routeConfigs[route.routeName];
 
-    if (
-      Component &&
-      Component.navigationOptions &&
-      Component.navigationOptions[optionName] !== undefined
-    ) {
-      if (typeof Component.navigationOptions[optionName] === 'function') {
-        outputConfig = Component.navigationOptions[optionName](navigation, outputConfig);
-      } else {
-        outputConfig = Component.navigationOptions[optionName];
-      }
-    }
-
-    if (
-      routeConfig &&
-      routeConfig.navigationOptions &&
-      routeConfig.navigationOptions[optionName] !== undefined
-    ) {
-      if (typeof routeConfig.navigationOptions[optionName] === 'function') {
-        outputConfig = routeConfig.navigationOptions[optionName](navigation, outputConfig);
-      } else {
-        outputConfig = routeConfig.navigationOptions[optionName];
-      }
-    }
-
-    return outputConfig;
+    return [
+      defaultOptions,
+      Component.navigationOptions,
+      routeConfig.navigationOptions,
+    ].reduce(
+      (acc: Object, options: NavigationScreenOptions) => {
+        if (options && options[optionName] !== undefined) {
+          return typeof options[optionName] === 'function'
+            ? options[optionName](navigation, acc)
+            : options[optionName];
+        }
+        return acc;
+      },
+      outputConfig,
+    );
   };

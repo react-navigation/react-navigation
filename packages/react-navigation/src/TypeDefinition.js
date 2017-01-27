@@ -248,6 +248,7 @@ export type NavigationStackRouterConfig = {
   initialRouteName?: string,
   initialRouteParams?: NavigationParams,
   paths?: NavigationPathsConfig,
+  navigationOptions?: NavigationScreenOptions,
 };
 
 export type NavigationStackAction =
@@ -292,8 +293,9 @@ export type NavigationPathsConfig = {
 export type NavigationTabRouterConfig = {
   initialRouteName?: string,
   paths?: NavigationPathsConfig,
+  navigationOptions?: NavigationScreenOptions,
   order?: Array<string>, // todo: type these as the real route names rather than 'string'
-
+  
   // Does the back button cause the router to switch to the initial tab
   backBehavior?: 'none' | 'initialRoute', // defaults `initialRoute`
 };
