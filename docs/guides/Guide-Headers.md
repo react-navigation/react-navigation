@@ -73,14 +73,14 @@ static navigationOptions = {
     let right = (
       <Button
         title={`${state.params.user}'s info`}
-        onPress={() => setParams({ mode: 'info' }}
+        onPress={() => setParams({ mode: 'info' })}
       />
     );
     if (state.params.mode === 'info') {
       right = (
         <Button
           title="Done"
-          onPress={() => setParams({ mode: 'none' }}
+          onPress={() => setParams({ mode: 'none' })}
         />        
       );
     }
