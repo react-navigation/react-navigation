@@ -30,7 +30,7 @@ class DrawerScreen extends PureComponent<void, Props, void> {
     const { router, navigation, childNavigationProps } = this.props;
     const { routes, index } = navigation.state;
     const childNavigation = childNavigationProps[routes[index].key];
-    const Content = router.getComponentForState(navigation.state);
+    const Content = router.getComponentForRouteName(routes[index].routeName);
     return (
       <SceneView
         screenProps={this.props.screenProps}
