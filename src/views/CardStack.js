@@ -207,7 +207,7 @@ class CardStack extends React.Component<DefaultProps, Props, void> {
           if (header && header.left) {
             return header.left;
           }
-          const { renderLeftComponent } = this.props.headerComponent.defaultProps;
+          const { renderLeftComponent } = this.props.headerComponent.defaultProps || {};
           if (typeof renderLeftComponent === 'function') {
             return renderLeftComponent(props);
           }
