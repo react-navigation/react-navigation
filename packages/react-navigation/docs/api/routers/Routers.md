@@ -40,7 +40,7 @@ const MyApp = StackNavigator({
 }, {
   initialRouteName: 'Home',
 })
-const MyApp.router = {
+MyApp.router = {
   ...MyApp.router,
   getStateForAction(action, state) {
     if (state && action.type === 'PushTwoProfiles') {
