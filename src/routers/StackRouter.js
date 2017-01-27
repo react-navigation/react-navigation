@@ -288,7 +288,7 @@ export default (
       };
     },
 
-    getScreenConfig: createConfigGetter(routeConfigs),
+    getScreenConfig: createConfigGetter(routeConfigs, stackConfig.navigationOptions),
 
   };
 };

@@ -72,6 +72,7 @@ Options for the router:
 
 - `initialRouteName` - Sets the default screen of the stack. Must match one of the keys in route configs.
 - `initialRouteParams` - The params for the initial route
+- `navigationOptions` - Default navigation options to use for screens
 - `paths` - A mapping of overrides for the paths set in the route configs
 
 Visual options:
