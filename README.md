@@ -14,7 +14,7 @@ Navigation can also be used across React and React Native projects allowing
 for a higher degree of shared code.
 
 Once stable, NavigationExperimental will be depracated in favor of React
-Navigation. React Navigation is a is a collaboration between people from
+Navigation. React Navigation is a collaboration between people from
 Facebook, Exponent and the React community at large.
 
 ## [Getting started](https://reactnavigation.org/docs/intro/)
