@@ -95,7 +95,7 @@ class ProfileScreen extends React.Component {
 
   static navigationOptions = {
 
-    title: `${state.params.name}'s Profile!`,
+    title: ({ state }) => `${state.params.name}'s Profile!`,
 
     header: ({ state, setParams }) => ({
       // Render a button on the right side of the header
