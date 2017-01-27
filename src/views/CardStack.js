@@ -191,12 +191,6 @@ class CardStack extends React.Component<DefaultProps, Props, void> {
     return transitionSpec;
   }
 
-  _renderBackButton = () => (
-    <Header.BackButton
-      onPress={() => this.props.navigation.goBack(null)}
-    />
-  );
-
   _renderHeader(props: NavigationTransitionProps, headerMode: HeaderMode): ?React.Element<*> {
     const navigation = this._getChildNavigation(props.scene);
     const header = this.props.router.getScreenConfig(navigation, 'header') || {};
@@ -207,13 +201,13 @@ class CardStack extends React.Component<DefaultProps, Props, void> {
         style={header.style}
         mode={headerMode}
         onNavigateBack={() => this.props.navigation.goBack(null)}
-        renderLeftComponent={({ scene }) => {
-          const navigation = this._getChildNavigation(scene);
+        renderLeftComponent={(props) => {
+          const navigation = this._getChildNavigation(props.scene);
           const header = this.props.router.getScreenConfig(navigation, 'header');
           if (header && header.left) {
             return header.left;
           }
-          return this._renderBackButton();
+          return this.props.headerComponent.defaultProps.renderLeftComponent(props);
         }}
         renderRightComponent={({ scene }) => {
           const navigation = this._getChildNavigation(scene);
