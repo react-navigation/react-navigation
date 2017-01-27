@@ -19,7 +19,11 @@ export default (
   routeConfigs: NavigationRouteConfigMap,
   defaultOptions?: NavigationScreenOptions
 ) =>
-  (navigation: NavigationScreenProp<NavigationRoute, NavigationAction>, optionName: string, config?: Object) => {
+  (
+    navigation: NavigationScreenProp<NavigationRoute, NavigationAction>,
+    optionName: string,
+    config?: Object
+  ) => {
     const route = navigation.state;
     invariant(
       route.routeName &&
@@ -32,7 +36,7 @@ export default (
     let outputConfig = config || null;
 
     if (Component.router) {
-      const {state, dispatch} = navigation;
+      const { state, dispatch } = navigation;
       invariant(
         state && state.routes && state.index != null,
         `Expect nav state to have routes and index, ${JSON.stringify(route)}`
@@ -51,7 +55,7 @@ export default (
       Component.navigationOptions,
       routeConfig.navigationOptions,
     ].reduce(
-      (acc, options) => {
+      (acc: Object, options: NavigationScreenOptions) => {
         if (options && options[optionName] !== undefined) {
           return typeof options[optionName] === 'function'
             ? options[optionName](navigation, acc)
