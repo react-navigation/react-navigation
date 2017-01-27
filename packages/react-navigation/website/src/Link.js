@@ -1,5 +1,8 @@
 import React, { PropTypes, Component } from 'react';
 
+const isModifiedEvent = (event) =>
+  !!(event.metaKey || event.altKey || event.ctrlKey || event.shiftKey);
+
 const Linkable = (Inner) => {
   class LinkableWrapped extends Component {
     render() {
@@ -29,7 +32,7 @@ const Linkable = (Inner) => {
     }
     onClick = e => {
       const action = this.getAction();
-      if (action) {
+      if (!isModifiedEvent(e) && action) {
         this.context.dispatch(action);
         e.preventDefault();
       }
