@@ -20,10 +20,10 @@ const appReducer = combineReducers({
 class AppWithNavigationState extends React.Component {
   render() {
     return (
-      <AppNavigator navigation={{
+      <AppNavigator navigation={addNavigationHelpers({
         dispatch: this.props.dispatch,
         state: this.props.nav,
-      }} />
+      })} />
     );
   }
 }
