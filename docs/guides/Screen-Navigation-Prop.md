@@ -74,7 +74,7 @@ class ProfileScreen extends React.Component {
 ```js
 class HomeScreen extends React.Component {
   render() {
-    const {navigate} = this.props.navigation;
+    const {goBack} = this.props.navigation;
     return (
       <View>
         <Button
