@@ -14,9 +14,9 @@ const appReducer = combineReducers({
   ...
 });
 
-@connect(state => {
+@connect(state => ({
   nav: state.nav,
-})
+}))
 class AppWithNavigationState extends React.Component {
   render() {
     return (
