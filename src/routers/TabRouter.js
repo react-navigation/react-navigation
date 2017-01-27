@@ -245,6 +245,6 @@ export default (
       }).find(action => !!action) || null;
     },
 
-    getScreenConfig: createConfigGetter(routeConfigs),
+    getScreenConfig: createConfigGetter(routeConfigs, config.navigationOptions),
   };
 };
