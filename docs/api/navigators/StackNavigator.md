@@ -118,6 +118,7 @@ All `navigationOptions` for the `StackNavigator`:
   - `visible` - Boolean toggle of header visibility. Only works when `headerMode` is `screen`.
   - `title` - Title string used by the navigation bar, or a custom React component
   - `right` - Custom component displayed on the right side of the header
+  - `style` - Style object for the navigation bar
 
 ### Examples
 
