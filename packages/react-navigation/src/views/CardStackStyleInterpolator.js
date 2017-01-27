@@ -140,7 +140,7 @@ function forFadeFromBottomAndroid(props: NavigationSceneRendererProps): Object {
   }
 
   const index = scene.index;
-  const inputRange = [index - 1, index, index + 1, index + 1];
+  const inputRange = [index - 1, index, index + 0.99, index + 1];
   const height = layout.initHeight;
 
   const opacity = position.interpolate({
