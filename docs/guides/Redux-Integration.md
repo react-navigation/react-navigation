@@ -44,3 +44,5 @@ class App extends React.Component {
 Now, your navigation state is stored with redux, and you can fire navigation actions using redux.
 
 When a navigator is given a `navigation` prop, it relinquishes control of the state. So you are now responsible for persisting state, handling deep linking, integrating the back button, etc.
+
+If you are using nested Navigators as screens, the state of the nested navigators is also included when you attach the parent. There is no need to attach the nested Navigators to Redux directly.
