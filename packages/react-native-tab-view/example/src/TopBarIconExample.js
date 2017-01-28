@@ -7,13 +7,13 @@ import { Ionicons } from '@exponent/vector-icons';
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
   },
   tabbar: {
     backgroundColor: '#222',
   },
   page: {
-    flex: 1,
+    flexGrow: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },

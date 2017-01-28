@@ -7,11 +7,11 @@ import { TabViewAnimated, TabViewPagerPan } from 'react-native-tab-view';
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     backgroundColor: '#222',
   },
   page: {
-    flex: 1,
+    flexGrow: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },

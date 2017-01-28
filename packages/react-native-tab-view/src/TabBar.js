@@ -14,7 +14,7 @@ import type { Scene, SceneRendererProps } from './TabViewTypeDefinitions';
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
   },
   scroll: {
     overflow: 'scroll',
@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     margin: 8,
   },
   tabItem: {
-    flex: 1,
+    flexGrow: 1,
     padding: 8,
     alignItems: 'center',
     justifyContent: 'center',

@@ -13,7 +13,7 @@ import type { TransitionerProps } from './TabViewTransitionerTypes';
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     overflow: 'hidden',
   },
 });
