@@ -65,12 +65,13 @@
     "clamp": "^1.0.1",
     "fbjs": "^0.8.5",
     "path-to-regexp": "^1.7.0",
-    "react-addons-shallow-compare": "15.4.1",
     "react-native-drawer-layout": "^1.1.0",
-    "react-native-tab-view": "^0.0.52"
+    "react-native-tab-view": "^0.0.53"
   },
   "jest": {
-    "testPathDirs": ["src/"],
+    "testPathDirs": [
+      "src/"
+    ],
     "notify": true
   }
 }

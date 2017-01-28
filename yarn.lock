@@ -3786,10 +3786,6 @@ rc@~1.1.6:
     minimist "^1.2.0"
     strip-json-comments "~1.0.4"
 
-react-addons-shallow-compare@15.4.1:
-  version "15.4.1"
-  resolved "https://modules.verse.link/react-addons-shallow-compare/-/react-addons-shallow-compare-15.4.1.tgz#b68103dd4d13144cb221065f6021de1822bd435a"
-
 react-clone-referenced-element@^1.0.1:
   version "1.0.1"
   resolved "https://modules.verse.link/react-clone-referenced-element/-/react-clone-referenced-element-1.0.1.tgz#2bba8c69404c5e4a944398600bcc4c941f860682"
@@ -3809,9 +3805,9 @@ react-native-drawer-layout@^1.1.0:
     autobind-decorator "^1.3.2"
     react-native-dismiss-keyboard "1.0.0"
 
-react-native-tab-view@^0.0.52:
-  version "0.0.52"
-  resolved "https://registry.yarnpkg.com/react-native-tab-view/-/react-native-tab-view-0.0.52.tgz#61655f93974ff4f26f02bd739566848984ad53c7"
+react-native-tab-view@^0.0.53:
+  version "0.0.53"
+  resolved "https://registry.yarnpkg.com/react-native-tab-view/-/react-native-tab-view-0.0.53.tgz#e72bae035f86595e5136d80f7a2afc66f0332a3d"
 
 react-native-vector-icons@^3.0.0:
   version "3.0.0"
@@ -3907,13 +3903,6 @@ react-proxy@^1.1.7:
   dependencies:
     lodash "^4.6.1"
     react-deep-force-update "^1.0.0"
-
-react-test-renderer@^15.4.2:
-  version "15.4.2"
-  resolved "https://registry.yarnpkg.com/react-test-renderer/-/react-test-renderer-15.4.2.tgz#27e1dff5d26d0e830f99614c487622bc831416f3"
-  dependencies:
-    fbjs "^0.8.4"
-    object-assign "^4.1.0"
 
 react-timer-mixin@^0.13.2:
   version "0.13.3"
