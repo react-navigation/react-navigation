@@ -61,7 +61,9 @@ export default class TabBarBottom extends PureComponent<DefaultProps, Props, voi
       inactiveTintColor,
     } = this.props;
     const { index } = scene;
-    const inputRange = navigationState.routes.map((x: any, i: number) => i);
+    const { routes } = navigationState;
+    // Prepend '-1', so there are always at least 2 items in inputRange
+    const inputRange = [-1, ...routes.map((x: *, i: number) => i)];
     const outputRange = inputRange.map((inputIndex: number) =>
       (inputIndex === index ? activeTintColor : inactiveTintColor)
     );
@@ -106,7 +108,9 @@ export default class TabBarBottom extends PureComponent<DefaultProps, Props, voi
       inactiveBackgroundColor,
       style,
     } = this.props;
-    const inputRange = navigationState.routes.map((x: any, i: number) => i);
+    const { routes } = navigationState;
+    // Prepend '-1', so there are always at least 2 items in inputRange
+    const inputRange = [-1, ...routes.map((x: *, i: number) => i)];
     return (
       <View style={[styles.tabBar, style]}>
         {navigationState.routes.map((route: NavigationRoute, index: number) => {
