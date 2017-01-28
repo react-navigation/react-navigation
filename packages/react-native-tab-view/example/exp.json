@@ -8,7 +8,7 @@
   "primaryColor": "#2196f3",
   "icon": "https://s3.amazonaws.com/exp-us-standard/icons/react-native-tab-view-icon.png",
   "loading": {
-    "iconUrl": "https://s3.amazonaws.com/exp-us-standard/icons/react-native-tab-view-icon.png",
+    "icon": "https://s3.amazonaws.com/exp-us-standard/icons/react-native-tab-view-icon.png",
     "hideExponentText": false
   },
   "packagerOpts": {
