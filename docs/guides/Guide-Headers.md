@@ -31,7 +31,7 @@ class ChatScreen extends React.Component {
     // title: 'Hello',
 
     // Or the title string may be a function of the navigation prop:
-    title: ({ navigation }) => `Chat with ${navigation.state.params.user}`
+    title: ({ state }) => `Chat with ${state.params.user}`
   };
   ...
 }
