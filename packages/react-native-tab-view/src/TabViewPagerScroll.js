@@ -123,6 +123,8 @@ export default class TabViewPagerScroll extends PureComponent<void, Props, void>
   _setRef = (el: Object) => (this._scrollView = el);
 
   render() {
+    const { children } = this.props;
+    const single = Children.count(children) === 1;
     return (
       <ScrollView
         horizontal
@@ -144,10 +146,11 @@ export default class TabViewPagerScroll extends PureComponent<void, Props, void>
         onMomentumScrollEnd={this._handleMomentumScrollEnd}
         contentOffset={{ x: this.props.navigationState.index * this.props.layout.width, y: 0 }}
         style={styles.container}
+        contentContainerStyle={single ? styles.container : null}
         ref={this._setRef}
       >
-        <View style={styles.row}>
-          {this.props.children}
+        <View style={single ? styles.container : styles.row}>
+          {children}
         </View>
       </ScrollView>
     );
