@@ -67,7 +67,9 @@ export default class TabBarTop extends PureComponent<DefaultProps, Props, void> 
       return null;
     }
     const { index } = scene;
-    const inputRange = navigationState.routes.map((x: any, i: number) => i);
+    const { routes } = navigationState;
+    // Prepend '-1', so there are always at least 2 items in inputRange
+    const inputRange = [-1, ...routes.map((x: *, i: number) => i)];
     const outputRange = inputRange.map((inputIndex: number) =>
       (inputIndex === index ? activeTintColor : inactiveTintColor)
     );
