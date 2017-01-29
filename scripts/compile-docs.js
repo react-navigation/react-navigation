@@ -1,6 +1,6 @@
-const path = require('path');
 var fs = require('fs');
 var join = require('path').join;
+const sep = require('path').sep;
 
 var files = [];
 function crawl(location) {
@@ -17,7 +17,7 @@ function crawl(location) {
 crawl('docs');
 
 var names = files.map(function(file) {
-  const nameWithExt = file.split('docs'+path.sep)[1];
+  const nameWithExt = file.split('docs'+sep)[1];
   const name = nameWithExt.split('.md')[0];
   return name;
 });
@@ -25,7 +25,7 @@ var names = files.map(function(file) {
 var mdData = {};
 
 names.map(function(name) {
-  mdData[name] = fs.readFileSync('docs'+path.sep+name+'.md', {encoding: 'utf8'});
+  mdData[name] = fs.readFileSync('docs'+sep+name+'.md', {encoding: 'utf8'});
 });
 
-fs.writeFileSync('website'+path.sep+'docs-dist.json', JSON.stringify(mdData));
+fs.writeFileSync('website'+sep+'docs-dist.json', JSON.stringify(mdData));
