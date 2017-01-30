@@ -17,3 +17,6 @@ yarn-error.log
 
 # Exponent
 .exponent
+
+# Jest
+coverage
