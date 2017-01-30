@@ -231,7 +231,7 @@ class CardStack extends React.Component<DefaultProps, Props, void> {
           return (
             <HeaderBackButton
               onPress={props.onNavigateBack}
-              title={typeof prevSceneTitle === 'string' && prevSceneTitle}
+              title={typeof prevSceneTitle === 'string' ? prevSceneTitle : undefined}
             />
           );
         }}
