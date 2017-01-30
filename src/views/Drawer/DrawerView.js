@@ -24,6 +24,7 @@ export type DrawerScene = {
 
 export type DrawerViewConfig = {
   drawerWidth: number,
+  drawerPosition: 'left' | 'right',
   contentComponent: ReactClass<*>,
   contentOptions?: {},
   style?: any;
@@ -119,7 +120,10 @@ export default class DrawerView extends PureComponent<void, Props, void> {
         onDrawerOpen={this._handleDrawerOpen}
         onDrawerClose={this._handleDrawerClose}
         renderNavigationView={this._renderNavigationView}
-        drawerPosition={DrawerLayout.positions.Left}
+        drawerPosition={
+          this.props.drawerPosition === 'right' ?
+          DrawerLayout.positions.Right : DrawerLayout.positions.Left
+        }
       >
         <DrawerScreen
           screenProps={this.props.screenProps}
