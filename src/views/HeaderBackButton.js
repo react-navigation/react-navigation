@@ -30,7 +30,9 @@ const HeaderBackButton = ({ onPress, title, tintColor }: Props) => (
       tintColor={tintColor}
     />
     {Platform.OS === 'ios' && (
-      <Text>{title}</Text>
+      <Text style={{ color: tintColor }}>
+        {title}
+      </Text>
     )}
   </TouchableItem>
 );
@@ -44,6 +46,7 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     justifyContent: 'center',
+    flexDirection: 'row',
   },
   button: {
     height: 24,
