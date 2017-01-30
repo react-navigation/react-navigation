@@ -29,7 +29,9 @@ const HeaderBackButton = ({ onPress, title, tintColor }: Props) => (
       source={require('./assets/back-icon.png')}
       tintColor={tintColor}
     />
-    <Text>{title}</Text>
+    {Platform.OS === 'ios' && (
+      <Text>{title}</Text>
+    )}
   </TouchableItem>
 );
 
