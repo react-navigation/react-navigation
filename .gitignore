@@ -2,6 +2,9 @@
 .vscode/
 jsconfig.json
 
+# IntelliJ/Webstorm
+.idea
+
 # NodeJS
 npm-debug.log
 node_modules
