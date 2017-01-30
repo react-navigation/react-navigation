@@ -224,22 +224,21 @@ class CardStack extends React.Component<DefaultProps, Props, void> {
           if (header && header.left) {
             return header.left;
           }
-          if (props.scene.index === 0 || !props.onNavigateBack) {
-            return null;
+          const { renderLeftComponent } = this.props.headerComponent.defaultProps || {};
+          if (typeof renderLeftComponent === 'function') {
+            return renderLeftComponent(props);
           }
-          const prevSceneTitle = this._getHeaderTitleForScene(props.scenes[props.index - 1]);
-          return (
-            <HeaderBackButton
-              onPress={props.onNavigateBack}
-              title={typeof prevSceneTitle === 'string' ? prevSceneTitle : undefined}
-            />
-          );
+          return null;
         }}
         renderRightComponent={({ scene }) => {
           const navigation = this._getChildNavigation(scene);
           const header = this.props.router.getScreenConfig(navigation, 'header');
           if (header && header.right) {
             return header.right;
+          }
+          const { renderRightComponent } = this.props.headerComponent.defaultProps || {};
+          if (typeof renderRightComponent === 'function') {
+            return renderRightComponent(props);
           }
           return null;
         }}
