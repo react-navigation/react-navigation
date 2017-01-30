@@ -13,6 +13,7 @@ import Card from './Card';
 import CardStackStyleInterpolator from './CardStackStyleInterpolator';
 import CardStackPanResponder from './CardStackPanResponder';
 import Header from './Header';
+import HeaderBackButton from './HeaderBackButton';
 import NavigationPropTypes from '../PropTypes';
 import addNavigationHelpers from '../addNavigationHelpers';
 import SceneView from './SceneView';
@@ -21,6 +22,7 @@ import type {
   NavigationAction,
   NavigationScreenProp,
   NavigationState,
+  NavigationScene,
   NavigationRoute,
   NavigationSceneRenderer,
   NavigationSceneRendererProps,
@@ -191,6 +193,21 @@ class CardStack extends React.Component<DefaultProps, Props, void> {
     return transitionSpec;
   }
 
+  _getHeaderTitleForScene(scene: NavigationScene): ?(string | React.Element<*>) {
+    const navigation = this._getChildNavigation(scene);
+    const header = this.props.router.getScreenConfig(navigation, 'header');
+
+    let title = null;
+
+    if (header && header.title) {
+      title = header.title;
+    } else {
+      title = this.props.router.getScreenConfig(navigation, 'title');
+    }
+
+    return title;
+  }
+
   _renderHeader(props: NavigationTransitionProps, headerMode: HeaderMode): ?React.Element<*> {
     const navigation = this._getChildNavigation(props.scene);
     const header = this.props.router.getScreenConfig(navigation, 'header') || {};
@@ -207,11 +224,16 @@ class CardStack extends React.Component<DefaultProps, Props, void> {
           if (header && header.left) {
             return header.left;
           }
-          const { renderLeftComponent } = this.props.headerComponent.defaultProps || {};
-          if (typeof renderLeftComponent === 'function') {
-            return renderLeftComponent(props);
+          if (props.scene.index === 0 || !props.onNavigateBack) {
+            return null;
           }
-          return null;
+          const prevSceneTitle = this._getHeaderTitleForScene(props.scenes[props.index - 1]);
+          return (
+            <HeaderBackButton
+              onPress={props.onNavigateBack}
+              title={typeof prevSceneTitle === 'string' && prevSceneTitle}
+            />
+          );
         }}
         renderRightComponent={({ scene }) => {
           const navigation = this._getChildNavigation(scene);
@@ -222,14 +244,7 @@ class CardStack extends React.Component<DefaultProps, Props, void> {
           return null;
         }}
         renderTitleComponent={({ scene }) => {
-          const navigation = this._getChildNavigation(scene);
-          const header = this.props.router.getScreenConfig(navigation, 'header');
-          let title = null;
-          if (header && header.title) {
-            title = header.title;
-          } else {
-            title = this.props.router.getScreenConfig(navigation, 'title');
-          }
+          const title = this._getHeaderTitleForScene(scene);
           if (typeof title === 'string') {
             return <Header.Title>{title}</Header.Title>;
           }

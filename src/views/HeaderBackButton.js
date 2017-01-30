@@ -4,6 +4,7 @@ import React, { PropTypes } from 'react';
 import {
   I18nManager,
   Image,
+  Text,
   Platform,
   StyleSheet,
 } from 'react-native';
@@ -12,10 +13,11 @@ import TouchableItem from './TouchableItem';
 
 type Props = {
   onPress: Function,
+  title?: string,
   tintColor?: string;
 };
 
-const HeaderBackButton = ({ onPress, tintColor }: Props) => (
+const HeaderBackButton = ({ onPress, title, tintColor }: Props) => (
   <TouchableItem
     delayPressIn={0}
     onPress={onPress}
@@ -27,6 +29,7 @@ const HeaderBackButton = ({ onPress, tintColor }: Props) => (
       source={require('./assets/back-icon.png')}
       tintColor={tintColor}
     />
+    <Text>{title}</Text>
   </TouchableItem>
 );
 
