@@ -41,7 +41,7 @@ export type HeaderProps = NavigationSceneRendererProps & {
   renderLeftComponent: SubViewRenderer,
   renderRightComponent: SubViewRenderer,
   renderTitleComponent: SubViewRenderer,
-  getNavigation: ?Function,
+  navigation: Object,
   router: NavigationRouter,
   style?: any,
 };
@@ -64,7 +64,7 @@ class Header extends React.Component<*, HeaderProps, *> {
     renderLeftComponent: PropTypes.func,
     renderRightComponent: PropTypes.func,
     renderTitleComponent: PropTypes.func,
-    getNavigation: PropTypes.func,    
+    navigation: PropTypes.object,    
     router: PropTypes.object,
     style: PropTypes.any,
   };
@@ -79,19 +79,16 @@ class Header extends React.Component<*, HeaderProps, *> {
     );
   }
 
-  getHeaderTitleForScene(scene: NavigationScene): ?string {
-    const header = this.props.router.getScreenConfig(
-      this.props.getNavigation(scene),
-      'header'
-    );
+  getHeaderTitleForScene(props: SubViewProps): ?string {
+    const header = this.props.router.getScreenConfig(props.navigation, 'header');
     if (header && header.title) {
       return header.title;
     }
-    return this.props.router.getScreenConfig(this.props.navigation, 'title');
+    return props.router.getScreenConfig(props.navigation, 'title');
   }
 
   renderTitleComponent = (props: SubViewProps) => {
-    const title = this.getHeaderTitleForScene(props.scene);
+    const title = this.getHeaderTitleForScene(props);
     return <HeaderTitle>{title}</HeaderTitle>;
   };
 
@@ -99,11 +96,9 @@ class Header extends React.Component<*, HeaderProps, *> {
     if (props.scene.index === 0 || !props.onNavigateBack) {
       return null;
     }
-    const title = this.getHeaderTitleForScene(props.scenes[props.index - 1]);
     return (
       <HeaderBackButton
         onPress={props.onNavigateBack}
-        title={typeof title === 'string' ? title : undefined}
       />
     );
   };
@@ -222,6 +217,8 @@ class Header extends React.Component<*, HeaderProps, *> {
         const props = NavigationPropTypes.extractSceneRendererProps(this.props);
         props.scene = scene;
         props.index = index;
+        props.router = this.props.router;
+        props.navigation = this.props.navigation;
         return props;
       }): Array<NavigationSceneRendererProps>);
       leftComponents = scenesProps.map(this._renderLeft, this);

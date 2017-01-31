@@ -192,44 +192,38 @@ class CardStack extends React.Component<DefaultProps, Props, void> {
     return transitionSpec;
   }
 
-  _renderHeader(props: NavigationTransitionProps, headerMode: HeaderMode): ?React.Element<*> {
-    const navigation = this._getChildNavigation(props.scene);
+  _renderHeader(
+    transitionProps: NavigationTransitionProps,
+    headerMode: HeaderMode
+  ): ?React.Element<*> {
+    const navigation = this._getChildNavigation(transitionProps.scene);
     const headerConfig = this.props.router.getScreenConfig(navigation, 'header') || {};
 
     return (
       <this.props.headerComponent
-        {...props}
-        navigation={this.props.navigation}
+        {...transitionProps}
+        navigation={navigation}
         getNavigation={this._getChildNavigation}
         router={this.props.router}
         style={headerConfig.style}
         mode={headerMode}
         onNavigateBack={() => this.props.navigation.goBack(null)}
-        renderLeftComponent={({ scene }: NavigationTransitionProps) => {
-          const header = this.props.router.getScreenConfig(
-            this._getChildNavigation(scene),
-            'header'
-          );
+        renderLeftComponent={(props: HeaderProps) => {
+          const header = this.props.router.getScreenConfig(props.navigation, 'header');
           if (header && header.left) {
             return header.left;
           }
           return undefined;
         }}
-        renderRightComponent={({ scene }: NavigationTransitionProps) => {
-          const header = this.props.router.getScreenConfig(
-            this._getChildNavigation(scene),
-            'header'
-          );
+        renderRightComponent={(props: HeaderProps) => {
+          const header = this.props.router.getScreenConfig(props.navigation, 'header');
           if (header && header.right) {
             return header.right;
           }
           return undefined;
         }}
-        renderTitleComponent={({ scene }: NavigationTransitionProps) => {
-          const header = this.props.router.getScreenConfig(
-            this._getChildNavigation(scene),
-            'header'
-          );
+        renderTitleComponent={(props: HeaderProps) => {
+          const header = this.props.router.getScreenConfig(props.navigation, 'header');
           if (header && header.title && React.isValidElement(header.title)) {
             return header.title;
           }
