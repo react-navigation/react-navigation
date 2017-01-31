@@ -99,7 +99,7 @@ class Header extends React.Component<void, HeaderProps, void> {
   _renderTitleComponent = (props: SubViewProps) => {
     const color = this._getHeaderTintColor(props.navigation);
     const title = this._getHeaderTitle(props.navigation);
-    return <HeaderTitle style={{ color }}>{title}</HeaderTitle>;
+    return <HeaderTitle style={color && ({ color })}>{title}</HeaderTitle>;
   };
 
   _renderLeftComponent = (props: SubViewProps) => {
