@@ -196,7 +196,6 @@ class CardStack extends React.Component<DefaultProps, Props, void> {
     transitionProps: NavigationTransitionProps,
     headerMode: HeaderMode
   ): ?React.Element<*> {
-    console.log(Object.keys(transitionProps));
     const headerConfig = this.props.router.getScreenConfig(
       transitionProps.navigation,
       'header'
@@ -236,11 +235,14 @@ class CardStack extends React.Component<DefaultProps, Props, void> {
   }
 
   _render(props: NavigationTransitionProps): React.Element<*> {
-    // let floatingHeader = null;
-    // const headerMode = this._getHeaderMode();
-    // if (headerMode === 'float') {
-    //   floatingHeader = this._renderHeader(props, headerMode);
-    // }
+    let floatingHeader = null;
+    const headerMode = this._getHeaderMode();
+    if (headerMode === 'float') {
+      floatingHeader = this._renderHeader({
+        ...props,
+        navigation: this._getChildNavigation(props.scene),
+      }, headerMode);
+    }
     return (
       <View style={styles.container}>
         <View
@@ -254,7 +256,7 @@ class CardStack extends React.Component<DefaultProps, Props, void> {
             })
           )}
         </View>
-        {/* floatingHeader */}
+        {floatingHeader}
       </View>
     );
   }
