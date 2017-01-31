@@ -74,16 +74,16 @@ class Header extends React.Component<*, HeaderProps, *> {
     );
   }
 
-  _getHeaderTitle(props: SubViewProps): ?string {
-    const header = this.props.router.getScreenConfig(props.navigation, 'header');
+  _getHeaderTitle(navigation: Object): ?string {
+    const header = this.props.router.getScreenConfig(navigation, 'header');
     if (header && header.title) {
       return header.title;
     }
-    return this.props.router.getScreenConfig(props.navigation, 'title');
+    return this.props.router.getScreenConfig(navigation, 'title');
   }
 
-  _getHeaderTintColor(props: SubViewProps): ?string {
-    const header = this.props.router.getScreenConfig(props.navigation, 'header');
+  _getHeaderTintColor(navigation: Object): ?string {
+    const header = this.props.router.getScreenConfig(navigation, 'header');
     if (header && header.tintColor) {
       return header.tintColor;
     }
@@ -91,21 +91,24 @@ class Header extends React.Component<*, HeaderProps, *> {
   }
 
   renderTitleComponent = (props: SubViewProps) => {
-    const color = this._getHeaderTintColor(props);
-    const title = this._getHeaderTitle(props);
-
+    const color = this._getHeaderTintColor(props.navigation);
+    const title = this._getHeaderTitle(props.navigation);
     return <HeaderTitle style={{ color }}>{title}</HeaderTitle>;
   };
 
   renderLeftComponent = (props: SubViewProps) => {
-    const tintColor = this._getHeaderTintColor(props);
+    const tintColor = this._getHeaderTintColor(props.navigation);
     if (props.scene.index === 0 || !props.onNavigateBack) {
       return null;
     }
+    const backButtonTitle = this._getHeaderTitle(
+      this.props.getNavigation(props.scenes[props.index - 1])
+    );
     return (
       <HeaderBackButton
         onPress={props.onNavigateBack}
         tintColor={tintColor}
+        title={backButtonTitle}
       />
     );
   };
