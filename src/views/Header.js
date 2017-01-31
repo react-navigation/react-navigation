@@ -272,8 +272,8 @@ class Header extends React.Component<*, HeaderProps, *> {
     return (
       <Animated.View {...rest} style={[styles.container, style]}>
         <View style={styles.appBar}>
-          {leftComponents}
           {titleComponents}
+          {leftComponents}
           {rightComponents}
         </View>
       </Animated.View>

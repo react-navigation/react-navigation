@@ -5,6 +5,7 @@ import {
   I18nManager,
   Image,
   Text,
+  View,
   Platform,
   StyleSheet,
 } from 'react-native';
@@ -17,23 +18,29 @@ type Props = {
   tintColor?: string;
 };
 
-const HeaderBackButton = ({ onPress, title, tintColor }: Props) => (
+const defaultTintColor = Platform.select({
+  ios: '#037aff',
+});
+
+const HeaderBackButton = ({ onPress, title, tintColor = defaultTintColor }: Props) => (
   <TouchableItem
     delayPressIn={0}
     onPress={onPress}
     style={styles.container}
     borderless
   >
-    <Image
-      style={styles.button}
-      source={require('./assets/back-icon.png')}
-      tintColor={tintColor}
-    />
-    {Platform.OS === 'ios' && title && (
-      <Text style={{ color: tintColor }}>
-        {title}
-      </Text>
-    )}
+    <View style={styles.container}>
+      <Image
+        style={styles.button}
+        source={require('./assets/back-icon.png')}
+        tintColor={tintColor}
+      />
+      {Platform.OS === 'ios' && title && (
+        <Text style={{ color: tintColor }}>
+          {title}
+        </Text>
+      )}
+    </View>
   </TouchableItem>
 );
 
