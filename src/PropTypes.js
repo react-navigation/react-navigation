@@ -57,6 +57,7 @@ const scene = PropTypes.shape({
 const SceneRendererProps = {
   layout: layout.isRequired,
   navigationState: navigationState.isRequired,
+  navigation: PropTypes.object,
   position: animatedValue.isRequired,
   progress: animatedValue.isRequired,
   scene: scene.isRequired,

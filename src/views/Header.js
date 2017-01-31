@@ -15,17 +15,13 @@ import HeaderTitle from './HeaderTitle';
 import HeaderBackButton from './HeaderBackButton';
 import HeaderStyleInterpolator from './HeaderStyleInterpolator';
 import NavigationPropTypes from '../PropTypes';
-import TransitionConfigs from './TransitionConfigs';
 
 import type {
   NavigationScene,
   NavigationRouter,
-  NavigationScreenProp,
   NavigationSceneRendererProps,
   NavigationStyleInterpolator,
 } from '../TypeDefinition';
-
-import type { TransitionConfig } from './TransitionConfigs';
 
 export type HeaderMode = 'float' | 'screen' | 'none';
 
@@ -41,7 +37,6 @@ export type HeaderProps = NavigationSceneRendererProps & {
   renderLeftComponent: SubViewRenderer,
   renderRightComponent: SubViewRenderer,
   renderTitleComponent: SubViewRenderer,
-  navigation: Object,
   router: NavigationRouter,
   style?: any,
 };
@@ -64,7 +59,6 @@ class Header extends React.Component<*, HeaderProps, *> {
     renderLeftComponent: PropTypes.func,
     renderRightComponent: PropTypes.func,
     renderTitleComponent: PropTypes.func,
-    navigation: PropTypes.object,    
     router: PropTypes.object,
     style: PropTypes.any,
   };
