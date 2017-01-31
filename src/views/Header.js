@@ -55,11 +55,13 @@ const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : 0;
 
 class Header extends React.Component<DefaultProps, HeaderProps, *> {
 
-  static HEIGHT = APPBAR_HEIGHT + STATUSBAR_HEIGHT;
   static Title = HeaderTitle;
   static BackButton = HeaderBackButton;
 
   static defaultProps = {
+    barHeight: APPBAR_HEIGHT,
+    statusBarHeight: STATUSBAR_HEIGHT,
+
     renderTitleComponent: (props: SubViewProps) => {
       const title = String(props.scene.route.title || '');
       return <HeaderTitle>{title}</HeaderTitle>;
@@ -86,6 +88,8 @@ class Header extends React.Component<DefaultProps, HeaderProps, *> {
     renderLeftComponent: PropTypes.func,
     renderRightComponent: PropTypes.func,
     renderTitleComponent: PropTypes.func,
+    barHeight: PropTypes.number,
+    statusBarHeight: PropTypes.number,
     style: PropTypes.any,
   };
 
@@ -189,7 +193,7 @@ class Header extends React.Component<DefaultProps, HeaderProps, *> {
 
   render(): React.Element<*> {
     // eslint-disable-next-line no-unused-vars
-    const { scenes, scene, style, position, progress, ...rest } = this.props;
+    const { scenes, scene, style, position, progress, barHeight, statusBarHeight, ...rest } = this.props;
 
     let leftComponents = null;
     let titleComponents = null;
@@ -225,8 +229,8 @@ class Header extends React.Component<DefaultProps, HeaderProps, *> {
     }
 
     return (
-      <Animated.View {...rest} style={[styles.container, style]}>
-        <View style={styles.appBar}>
+      <Animated.View {...rest} style={[styles.container, style, {paddingTop: statusBarHeight}]}>
+        <View style={{height: barHeight}}>
           {leftComponents}
           {titleComponents}
           {rightComponents}
@@ -238,7 +242,6 @@ class Header extends React.Component<DefaultProps, HeaderProps, *> {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: STATUSBAR_HEIGHT,
     backgroundColor: Platform.OS === 'ios' ? '#EFEFF2' : '#FFF',
     shadowColor: 'black',
     shadowOpacity: 0.1,
@@ -247,9 +250,6 @@ const styles = StyleSheet.create({
       height: StyleSheet.hairlineWidth,
     },
     elevation: 4,
-  },
-  appBar: {
-    height: APPBAR_HEIGHT,
   },
   item: {
     flexDirection: 'row',
