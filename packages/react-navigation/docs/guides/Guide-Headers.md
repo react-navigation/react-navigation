@@ -13,8 +13,8 @@ The `user` param can be accessed from the chat screen:
 
 ```js
 class ChatScreen extends React.Component {
-  const { params } = this.props.navigation.state;
   render() {
+    const { params } = this.props.navigation.state;
     return <Text>Chat with {params.user}</Text>;
   }
 }
