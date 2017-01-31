@@ -86,7 +86,7 @@ Visual options:
   - `none` - No header will be rendered.
 
 
-### Screen `navigationOptions`
+### Screen Navigation Options
 
 Usually you define static `navigationOptions` on your screen component. For example:
 
@@ -125,20 +125,19 @@ All `navigationOptions` for the `StackNavigator`:
 
 The navigator component created by `StackNavigator(...)` takes the following props,
 
-- `screenProps` - Props to pass to each child screen
+- `screenProps` - Pass down extra options to child screens, for example:
 
-Use `screenProps` to pass down extra options to child screens. For example: 
 
-```jsx
-const SomeStack = StackNavigator({
-  // config
-});
-
-<SomeStack
-  screenProps={/* these will get passed to the screen components */}
-/>
-```
-
+ ```jsx
+ const SomeStack = StackNavigator({
+   // config
+ });
+ 
+ <SomeStack
+   screenProps={/* these will get passed to the screen components */}
+ />
+ ```
+ 
 ### Examples
 
 See the examples [SimpleStack.js](https://github.com/react-community/react-navigation/tree/master/examples/NavigationPlayground/js/SimpleStack.js) and [ModalStack.js](https://github.com/react-community/react-navigation/tree/master/examples/NavigationPlayground/js/ModalStack.js) which you can run locally as part of the [NavigationPlayground](https://github.com/react-community/react-navigation/tree/master/examples/NavigationPlayground) app.
