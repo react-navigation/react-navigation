@@ -60,21 +60,6 @@ class Header extends React.Component<DefaultProps, HeaderProps, *> {
   static Title = HeaderTitle;
   static BackButton = HeaderBackButton;
 
-  _getHeaderTitleForScene(scene: NavigationScene): ?(string | React.Element<*>) {
-    const navigation = this._getChildNavigation(scene);
-    const header = this.props.router.getScreenConfig(navigation, 'header');
-
-    let title = null;
-
-    if (header && header.title) {
-      title = header.title;
-    } else {
-      title = this.props.router.getScreenConfig(navigation, 'title');
-    }
-
-    return title;
-  }
-
   static _getHeaderTitleForScene(props: SubViewProps, scene: NavigationScene): ?string {
     const header = props.getScreenConfig(scene, 'header');
 
