@@ -74,7 +74,7 @@ class Header extends React.Component<*, HeaderProps, *> {
     );
   }
 
-  getHeaderTitle(props: SubViewProps): ?string {
+  _getHeaderTitle(props: SubViewProps): ?string {
     const header = this.props.router.getScreenConfig(props.navigation, 'header');
     if (header && header.title) {
       return header.title;
@@ -82,7 +82,7 @@ class Header extends React.Component<*, HeaderProps, *> {
     return this.props.router.getScreenConfig(props.navigation, 'title');
   }
 
-  getHeaderTintColor(props: SubViewProps): ?string {
+  _getHeaderTintColor(props: SubViewProps): ?string {
     const header = this.props.router.getScreenConfig(props.navigation, 'header');
     if (header && header.tintColor) {
       return header.tintColor;
@@ -91,14 +91,14 @@ class Header extends React.Component<*, HeaderProps, *> {
   }
 
   renderTitleComponent = (props: SubViewProps) => {
-    const color = this.getHeaderTintColor(props);
-    const title = this.getHeaderTitle(props);
+    const color = this._getHeaderTintColor(props);
+    const title = this._getHeaderTitle(props);
 
     return <HeaderTitle style={{ color }}>{title}</HeaderTitle>;
   };
 
   renderLeftComponent = (props: SubViewProps) => {
-    const tintColor = this.getHeaderTintColor(props);
+    const tintColor = this._getHeaderTintColor(props);
     if (props.scene.index === 0 || !props.onNavigateBack) {
       return null;
     }
