@@ -36,7 +36,7 @@ const HeaderBackButton = ({ onPress, title, tintColor = defaultTintColor }: Prop
         tintColor={tintColor}
       />
       {Platform.OS === 'ios' && title && (
-        <Text style={{ color: tintColor }}>
+        <Text style={[styles.backButton, { color: tintColor }]}>
           {title}
         </Text>
       )}
@@ -55,13 +55,25 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flexDirection: 'row',
   },
-  button: {
-    height: 24,
-    width: 24,
-    margin: Platform.OS === 'ios' ? 10 : 16,
-    resizeMode: 'contain',
-    transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }],
+  backButton: {
+    fontSize: 17,
   },
+  button: Platform.select({
+    ios: {
+      height: 24,
+      width: 24,
+      margin: 10,
+      resizeMode: 'contain',
+      transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }],
+    },
+    android: {
+      height: 24,
+      width: 24,
+      margin: 16,
+      resizeMode: 'contain',
+      transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }],
+    },
+  }),
 });
 
 export default HeaderBackButton;
