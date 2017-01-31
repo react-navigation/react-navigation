@@ -123,7 +123,7 @@ All `navigationOptions` for the `StackNavigator`:
 
 ### Navigator Props
 
-The navigator component created by `StackNavigator(...)` takes the following props,
+The navigator component created by `StackNavigator(...)` takes the following props:
 
 - `screenProps` - Pass down extra options to child screens, for example:
 
