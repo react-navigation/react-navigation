@@ -50,13 +50,13 @@ StackNavigator({
 
     // `ProfileScreen` is a React component that will be the main content of the screen.
     screen: ProfileScreen,
-    // When `ProfileScreen` is loaded by the StackNavigator, it will be given a navigation prop.
+    // When `ProfileScreen` is loaded by the StackNavigator, it will be given a `navigation` prop.
 
     // Optional: When deep linking or using react-navigation in a web app, this path is used:
     path: 'people/:username',
     // The action and route params are extracted from the path.
 
-    // Optional: Override the navigation options for the screen
+    // Optional: Override the `navigationOptions` for the screen
     navigationOptions: {
       title: ({state}) => `${state.params.username}'s Profile'`,
     },
@@ -86,7 +86,7 @@ Visual options:
   - `none` - No header will be rendered.
 
 
-### Screen Navigation Options
+### Screen `navigationOptions`
 
 Usually you define static `navigationOptions` on your screen component. For example:
 
@@ -121,13 +121,24 @@ All `navigationOptions` for the `StackNavigator`:
   - `left` - Custom React Element to display on the left side of the header
   - `style` - Style object for the navigation bar
 
-### Examples
-
-See the examples [SimpleStack.js](https://github.com/react-community/react-navigation/tree/master/examples/NavigationPlayground/js/SimpleStack.js) and [ModalStack.js](https://github.com/react-community/react-navigation/tree/master/examples/NavigationPlayground/js/ModalStack.js) which you can run locally as part of the [NavigationPlayground](https://github.com/react-community/react-navigation/tree/master/examples/NavigationPlayground) app.
-
-
 ### Navigator Props
 
 The navigator component created by `StackNavigator(...)` takes the following props,
 
 - `screenProps` - Props to pass to each child screen
+
+Use `screenProps` to pass down extra options to child screens. For example: 
+
+```jsx
+const SomeStack = StackNavigator({
+  // config
+});
+
+<SomeStack
+  screenProps={/* these will get passed to the screen components */}
+/>
+```
+
+### Examples
+
+See the examples [SimpleStack.js](https://github.com/react-community/react-navigation/tree/master/examples/NavigationPlayground/js/SimpleStack.js) and [ModalStack.js](https://github.com/react-community/react-navigation/tree/master/examples/NavigationPlayground/js/ModalStack.js) which you can run locally as part of the [NavigationPlayground](https://github.com/react-community/react-navigation/tree/master/examples/NavigationPlayground) app.
