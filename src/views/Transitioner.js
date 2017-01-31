@@ -66,7 +66,6 @@ class Transitioner extends React.Component<*, Props, State> {
     configureTransition: PropTypes.func,
     navigation: PropTypes.shape({
       state: NavigationPropTypes.navigationState.isRequired,
-      dispatch: PropTypes.func.isRequired,
     }).isRequired,
     onTransitionEnd: PropTypes.func,
     onTransitionStart: PropTypes.func,
