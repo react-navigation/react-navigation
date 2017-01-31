@@ -159,7 +159,7 @@ class CardStack extends React.Component<DefaultProps, Props, void> {
     return (
       <Transitioner
         configureTransition={this._configureTransition}
-        navigationState={this.props.navigation.state}
+        navigation={this.props.navigation}
         render={this._render}
         style={this.props.style}
       />
@@ -237,10 +237,7 @@ class CardStack extends React.Component<DefaultProps, Props, void> {
     let floatingHeader = null;
     const headerMode = this._getHeaderMode();
     if (headerMode === 'float') {
-      floatingHeader = this._renderHeader({
-        ...props,
-        navigation: this._getChildNavigation(props.scene),
-      }, headerMode);
+      floatingHeader = this._renderHeader(props, headerMode);
     }
     return (
       <View style={styles.container}>
