@@ -249,6 +249,7 @@ export type NavigationStackViewConfig = {
   mode?: 'card' | 'modal',
   headerMode?: HeaderMode,
   headerComponent?: ReactClass<HeaderProps>,
+  cardStyle?: Object
 };
 
 export type NavigationStackRouterConfig = {
@@ -302,7 +303,7 @@ export type NavigationTabRouterConfig = {
   paths?: NavigationPathsConfig,
   navigationOptions?: NavigationScreenOptions,
   order?: Array<string>, // todo: type these as the real route names rather than 'string'
-  
+
   // Does the back button cause the router to switch to the initial tab
   backBehavior?: 'none' | 'initialRoute', // defaults `initialRoute`
 };
