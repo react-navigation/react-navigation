@@ -55,7 +55,7 @@ type Props = {
   /**
    * Optional custom animation when transitioning between screens.
    */
-  transitionConfig?: TransitionConfig,
+  transitionConfig?: () => TransitionConfig,
 };
 
 type DefaultProps = {
