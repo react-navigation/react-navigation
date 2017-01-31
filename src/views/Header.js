@@ -15,6 +15,7 @@ import HeaderTitle from './HeaderTitle';
 import HeaderBackButton from './HeaderBackButton';
 import HeaderStyleInterpolator from './HeaderStyleInterpolator';
 import NavigationPropTypes from '../PropTypes';
+import addNavigationHelpers from '../addNavigationHelpers';
 
 import type {
   NavigationScene,
@@ -82,7 +83,7 @@ class Header extends React.Component<*, HeaderProps, *> {
     } else {
       title = this.props.router.getScreenConfig(navigation, 'title');
     }
-    if (typeof header === 'string') {
+    if (typeof title === 'string') {
       return title;
     }
     return null;
@@ -107,9 +108,11 @@ class Header extends React.Component<*, HeaderProps, *> {
     if (props.scene.index === 0 || !props.onNavigateBack) {
       return null;
     }
-    const backButtonTitle = this._getHeaderTitle(
-      this.props.getNavigation(props.scenes[props.index - 1])
-    );
+    const previousNavigation = addNavigationHelpers({
+      ...props.navigation,
+      state: props.scenes[props.index - 1].route,
+    });
+    const backButtonTitle = this._getHeaderTitle(previousNavigation);
     return (
       <HeaderBackButton
         onPress={props.onNavigateBack}
@@ -233,7 +236,10 @@ class Header extends React.Component<*, HeaderProps, *> {
         const props = NavigationPropTypes.extractSceneRendererProps(this.props);
         props.scene = scene;
         props.index = index;
-        props.navigation = this.props.getNavigation(scene);
+        props.navigation = addNavigationHelpers({
+          ...this.props.navigation,
+          state: scene.route,
+        });
         return props;
       }): Array<NavigationSceneRendererProps>);
       leftComponents = scenesProps.map(this._renderLeft, this);
