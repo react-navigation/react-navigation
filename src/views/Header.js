@@ -37,6 +37,7 @@ export type HeaderProps = NavigationSceneRendererProps & {
   renderLeftComponent: SubViewRenderer,
   renderRightComponent: SubViewRenderer,
   renderTitleComponent: SubViewRenderer,
+  tintColor: ?string,
   router: NavigationRouter,
   style?: any,
 };
@@ -81,18 +82,30 @@ class Header extends React.Component<*, HeaderProps, *> {
     return props.router.getScreenConfig(props.navigation, 'title');
   }
 
+  getHeaderTintColor(props: SubViewProps): ?string {
+    const header = this.props.router.getScreenConfig(props.navigation, 'header');
+    if (header && header.tintColor) {
+      return header.tintColor;
+    }
+    return null;
+  }
+
   renderTitleComponent = (props: SubViewProps) => {
+    const tintColor = this.getHeaderTintColor(props);
     const title = this.getHeaderTitleForScene(props);
-    return <HeaderTitle>{title}</HeaderTitle>;
+
+    return <HeaderTitle style={{ tintColor }}>{title}</HeaderTitle>;
   };
 
   renderLeftComponent = (props: SubViewProps) => {
+    const tintColor = this.getHeaderTintColor(props);
     if (props.scene.index === 0 || !props.onNavigateBack) {
       return null;
     }
     return (
       <HeaderBackButton
         onPress={props.onNavigateBack}
+        tintColor={tintColor}
       />
     );
   };
