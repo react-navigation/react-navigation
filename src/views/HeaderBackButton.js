@@ -60,22 +60,21 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 17,
   },
-  button: Platform.select({
-    ios: {
+  button: Platform.OS === 'ios'
+    ? ({
       height: 21,
       width: 13,
       margin: 10,
       marginRight: 5,
       transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }],
-    },
-    android: {
+    })
+    : ({
       height: 24,
       width: 24,
       margin: 16,
       resizeMode: 'contain',
       transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }],
-    },
-  }),
+    }),
 });
 
 export default HeaderBackButton;
