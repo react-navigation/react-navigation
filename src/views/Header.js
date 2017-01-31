@@ -20,6 +20,7 @@ import TransitionConfigs from './TransitionConfigs';
 import type {
   NavigationScene,
   NavigationRouter,
+  NavigationScreenProp,
   NavigationSceneRendererProps,
   NavigationStyleInterpolator,
 } from '../TypeDefinition';
@@ -42,7 +43,7 @@ export type HeaderProps = NavigationSceneRendererProps & {
   renderLeftComponent: SubViewRenderer,
   renderRightComponent: SubViewRenderer,
   renderTitleComponent: SubViewRenderer,
-  getChildNavigation: Function,
+  navigation: NavigationScreenProp<*, *>,
   router: NavigationRouter,
   style?: any,
 };
@@ -61,11 +62,11 @@ class Header extends React.Component<*, HeaderProps, *> {
   // propTypes for people who don't use Flow
   static propTypes = {
     ...NavigationPropTypes.SceneRendererProps,
-    getChildNavigation: PropTypes.func,
     onNavigateBack: PropTypes.func,
     renderLeftComponent: PropTypes.func,
     renderRightComponent: PropTypes.func,
     renderTitleComponent: PropTypes.func,
+    navigation: PropTypes.object,    
     router: PropTypes.object,
     style: PropTypes.any,
   };
@@ -81,14 +82,13 @@ class Header extends React.Component<*, HeaderProps, *> {
   }
 
   getHeaderTitleForScene(scene: NavigationScene): ?string {
-    const navigation = this.props.getChildNavigation(scene);
-    const header = this.props.router.getScreenConfig(navigation, 'header');
+    const header = this.props.router.getScreenConfig(this.props.navigation, 'header');
 
     if (header && header.title) {
       return header.title;
     }
 
-    return this.props.router.getScreenConfig(navigation, 'title');
+    return this.props.router.getScreenConfig(this.props.navigation, 'title');
   }
 
   renderTitleComponent = (props: SubViewProps) => {
