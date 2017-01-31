@@ -26,7 +26,7 @@
     "start": "node ./node_modules/react-native/local-cli/cli.js start --config ./rn-cli.config.js",
     "run-playground-ios": "cd examples/NavigationPlayground && react-native run-ios",
     "run-playground-android": "cd examples/NavigationPlayground && react-native run-android",
-    "test": "BABEL_ENV=development jest",
+    "test": "jest",
     "flow": "flow",
     "prepublish": "npm run clean && npm run build"
   },
@@ -55,7 +55,8 @@
     "jest": "^18.1.0",
     "react": "~15.4.0",
     "react-native": "^0.40.0",
-    "react-native-vector-icons": "^3.0.0"
+    "react-native-vector-icons": "^3.0.0",
+    "react-test-renderer": "^15.4.2"
   },
   "peerDependencies": {
     "react": "*",
@@ -69,9 +70,14 @@
     "react-native-tab-view": "^0.0.54"
   },
   "jest": {
-    "testPathDirs": [
-      "src/"
+    "notify": true,
+    "preset": "react-native",
+    "testRegex": "./src/.*\\-test\\.js$",
+    "setupFiles": [
+      "<rootDir>/jest-setup.js"
     ],
-    "notify": true
+    "modulePathIgnorePatterns": [
+      "examples"
+    ]
   }
 }
