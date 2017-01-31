@@ -13,6 +13,7 @@ import invariant from 'fbjs/lib/invariant';
 import NavigationScenesReducer from './ScenesReducer';
 import TransitionConfigs from './TransitionConfigs';
 import addNavigationHelpers from '../addNavigationHelpers';
+import NavigationPropTypes from '../PropTypes';
 
 import type {
   NavigationAnimatedValue,
@@ -63,7 +64,10 @@ class Transitioner extends React.Component<*, Props, State> {
 
   static propTypes = {
     configureTransition: PropTypes.func,
-    navigation: PropTypes.object,
+    navigation: PropTypes.shape({
+      state: NavigationPropTypes.navigationState.isRequired,
+      dispatch: PropTypes.func.isRequired,
+    }).isRequired,
     onTransitionEnd: PropTypes.func,
     onTransitionStart: PropTypes.func,
     render: PropTypes.func.isRequired,
