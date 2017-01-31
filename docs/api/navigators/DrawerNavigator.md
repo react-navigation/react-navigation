@@ -82,6 +82,7 @@ DrawerNavigator(RouteConfigs, DrawerNavigatorConfig)
 ### Drawer Navigator Options
 
 - `drawerWidth` - Width of the drawer
+- `drawerPosition` - Options are `left` or `right`. Default is `left` position.
 - `contentComponent` - Component to use to render the navigation items. Receives the `navigation` prop for the drawer. Defaults to `DrawerView.Items`.
 - `contentOptions` - Configure the drawer content, see below.
 
