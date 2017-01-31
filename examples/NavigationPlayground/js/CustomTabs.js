@@ -106,7 +106,7 @@ const CustomTabRouter = TabRouter({
   },
 }, {
   // Change this to start on a different tab
-  initialTab: 'Home',
+  initialRouteName: 'Home',
 });
 
 const CustomTabs = createNavigationContainer(createNavigator(CustomTabRouter)(CustomTabView));
