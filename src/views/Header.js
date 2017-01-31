@@ -53,7 +53,7 @@ type SubViewName = 'left' | 'title' | 'right';
 const APPBAR_HEIGHT = Platform.OS === 'ios' ? 44 : 56;
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : 0;
 
-class Header extends React.Component<*, HeaderProps, *> {
+class Header extends React.Component<void, HeaderProps, *> {
 
   static HEIGHT = APPBAR_HEIGHT + STATUSBAR_HEIGHT;
   static Title = HeaderTitle;
@@ -82,7 +82,7 @@ class Header extends React.Component<*, HeaderProps, *> {
 
   _getHeaderTitle(navigation: Navigation): ?string {
     const header = this.props.router.getScreenConfig(navigation, 'header');
-    let title = null;
+    let title;
     if (header && header.title) {
       title = header.title;
     } else {
@@ -91,7 +91,7 @@ class Header extends React.Component<*, HeaderProps, *> {
     if (typeof title === 'string') {
       return title;
     }
-    return null;
+    return undefined;
   }
 
   _getHeaderTintColor(navigation: Navigation): ?string {
@@ -99,20 +99,20 @@ class Header extends React.Component<*, HeaderProps, *> {
     if (header && header.tintColor) {
       return header.tintColor;
     }
-    return null;
+    return undefined;
   }
 
-  renderTitleComponent = (props: SubViewProps) => {
+  _renderTitleComponent = (props: SubViewProps) => {
     const color = this._getHeaderTintColor(props.navigation);
     const title = this._getHeaderTitle(props.navigation);
     return <HeaderTitle style={{ color }}>{title}</HeaderTitle>;
   };
 
-  renderLeftComponent = (props: SubViewProps) => {
-    const tintColor = this._getHeaderTintColor(props.navigation);
+  _renderLeftComponent = (props: SubViewProps) => {
     if (props.scene.index === 0 || !props.onNavigateBack) {
       return null;
     }
+    const tintColor = this._getHeaderTintColor(props.navigation);
     const previousNavigation = addNavigationHelpers({
       ...props.navigation,
       state: props.scenes[props.index - 1].route,
@@ -127,7 +127,7 @@ class Header extends React.Component<*, HeaderProps, *> {
     );
   };
 
-  renderRightComponent = () => {
+  _renderRightComponent = () => {
     return null;
   };
 
@@ -136,7 +136,7 @@ class Header extends React.Component<*, HeaderProps, *> {
       props,
       'left',
       this.props.renderLeftComponent,
-      this.renderLeftComponent,
+      this._renderLeftComponent,
       HeaderStyleInterpolator.forLeft,
     );
   }
@@ -157,7 +157,7 @@ class Header extends React.Component<*, HeaderProps, *> {
       { ...props, style },
       'title',
       this.props.renderTitleComponent,
-      this.renderTitleComponent,
+      this._renderTitleComponent,
       HeaderStyleInterpolator.forCenter,
     );
   }
@@ -167,7 +167,7 @@ class Header extends React.Component<*, HeaderProps, *> {
       props,
       'right',
       this.props.renderRightComponent,
-      this.renderRightComponent,
+      this._renderRightComponent,
       HeaderStyleInterpolator.forRight,
     );
   }

@@ -18,11 +18,7 @@ type Props = {
   tintColor?: string;
 };
 
-const defaultTintColor = Platform.select({
-  ios: '#037aff',
-});
-
-const HeaderBackButton = ({ onPress, title, tintColor = defaultTintColor }: Props) => (
+const HeaderBackButton = ({ onPress, title, tintColor }: Props) => (
   <TouchableItem
     delayPressIn={0}
     onPress={onPress}
@@ -36,7 +32,7 @@ const HeaderBackButton = ({ onPress, title, tintColor = defaultTintColor }: Prop
         tintColor={tintColor}
       />
       {Platform.OS === 'ios' && title && (
-        <Text style={[styles.backButton, { color: tintColor }]}>
+        <Text style={[styles.title, { color: tintColor }]}>
           {title}
         </Text>
       )}
@@ -49,6 +45,12 @@ HeaderBackButton.propTypes = {
   tintColor: PropTypes.string,
 };
 
+HeaderBackButton.defaultProps = {
+  tintColor: Platform.select({
+    ios: '#037aff',
+  }),
+};
+
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
@@ -58,7 +60,7 @@ const styles = StyleSheet.create({
   backButton: {
     fontSize: 17,
   },
-  button: Platform.select({
+  title: Platform.select({
     ios: {
       height: 21,
       width: 13,
