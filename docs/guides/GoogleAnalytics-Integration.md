@@ -1,7 +1,7 @@
 ## Integration with GoogleAnalytics
 
 This example shows how to use a middleware to track navigation between screens and send to Google Analytics. The approach is generic, should work with any mobile analytics SDK.
-The code is originally from [exnavigtation repo](https://github.com/exponent/ex-navigation), only adapted slightly.
+The code is originally from [exponent/ex-navigtation](https://github.com/exponent/ex-navigation) repo, only adapted slightly.
 
 ### Create middleware
 
