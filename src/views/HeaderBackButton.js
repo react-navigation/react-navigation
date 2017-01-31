@@ -57,10 +57,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flexDirection: 'row',
   },
-  backButton: {
+  title: {
     fontSize: 17,
   },
-  title: Platform.select({
+  button: Platform.select({
     ios: {
       height: 21,
       width: 13,
