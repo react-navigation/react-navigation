@@ -193,21 +193,6 @@ class CardStack extends React.Component<DefaultProps, Props, void> {
     return transitionSpec;
   }
 
-  _getHeaderTitleForScene(scene: NavigationScene): ?(string | React.Element<*>) {
-    const navigation = this._getChildNavigation(scene);
-    const header = this.props.router.getScreenConfig(navigation, 'header');
-
-    let title = null;
-
-    if (header && header.title) {
-      title = header.title;
-    } else {
-      title = this.props.router.getScreenConfig(navigation, 'title');
-    }
-
-    return title;
-  }
-
   _renderHeader(props: NavigationTransitionProps, headerMode: HeaderMode): ?React.Element<*> {
     const navigation = this._getChildNavigation(props.scene);
     const header = this.props.router.getScreenConfig(navigation, 'header') || {};
@@ -219,35 +204,46 @@ class CardStack extends React.Component<DefaultProps, Props, void> {
         mode={headerMode}
         onNavigateBack={() => this.props.navigation.goBack(null)}
         renderLeftComponent={(props) => {
-          const navigation = this._getChildNavigation(props.scene);
-          const header = this.props.router.getScreenConfig(navigation, 'header');
+          const header = this._getScreenConfig(props.scene, 'header');
           if (header && header.left) {
             return header.left;
           }
           const { renderLeftComponent } = this.props.headerComponent.defaultProps || {};
           if (typeof renderLeftComponent === 'function') {
-            return renderLeftComponent(props);
+            return renderLeftComponent({ 
+              ...props,
+              getScreenConfig: this._getScreenConfig,
+            });
           }
           return null;
         }}
-        renderRightComponent={({ scene }) => {
-          const navigation = this._getChildNavigation(scene);
-          const header = this.props.router.getScreenConfig(navigation, 'header');
+        renderRightComponent={(props) => {
+          const header = this._getScreenConfig(props.scene, 'header');
           if (header && header.right) {
             return header.right;
           }
           const { renderRightComponent } = this.props.headerComponent.defaultProps || {};
           if (typeof renderRightComponent === 'function') {
-            return renderRightComponent(props);
+            return renderRightComponent({ 
+              ...props,
+              getScreenConfig: this._getScreenConfig,
+            });
           }
           return null;
         }}
-        renderTitleComponent={({ scene }) => {
-          const title = this._getHeaderTitleForScene(scene);
-          if (typeof title === 'string') {
-            return <Header.Title>{title}</Header.Title>;
+        renderTitleComponent={(props) => {
+          const header = this._getScreenConfig(scene, 'header');
+          if (header && header.title && React.isValidElement(header.title)) {
+            return header.title;
           }
-          return title;
+          const { renderTitleComponent } = this.props.headerComponent.defaultProps || {};
+          if (typeof renderTitleComponent === 'function') {
+            return renderTitleComponent({ 
+              ...props,
+              getScreenConfig: this._getScreenConfig,
+            });
+          }
+          return null;
         }}
       />
     );
@@ -275,6 +271,11 @@ class CardStack extends React.Component<DefaultProps, Props, void> {
       </View>
     );
   }
+
+  _getScreenConfig = (scene: NavigationScene, key: string): ?Object => {
+    const navigation = this._getChildNavigation(scene);
+    return this.props.router.getScreenConfig(navigation, key);
+  };
 
   _getHeaderMode(): HeaderMode {
     if (this.props.headerMode) {

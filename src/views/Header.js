@@ -29,6 +29,7 @@ export type HeaderMode = 'float' | 'screen' | 'none';
 
 type SubViewProps = NavigationSceneRendererProps & {
   onNavigateBack: ?() => void,
+  getScreenConfig: (scene: NavigationScene, key: string) => ?Object,
 };
 
 type SubViewRenderer = (subViewProps: SubViewProps) => ?React.Element<*>;
@@ -59,9 +60,34 @@ class Header extends React.Component<DefaultProps, HeaderProps, *> {
   static Title = HeaderTitle;
   static BackButton = HeaderBackButton;
 
+  _getHeaderTitleForScene(scene: NavigationScene): ?(string | React.Element<*>) {
+    const navigation = this._getChildNavigation(scene);
+    const header = this.props.router.getScreenConfig(navigation, 'header');
+
+    let title = null;
+
+    if (header && header.title) {
+      title = header.title;
+    } else {
+      title = this.props.router.getScreenConfig(navigation, 'title');
+    }
+
+    return title;
+  }
+
+  static _getHeaderTitleForScene(props: SubViewProps, scene: NavigationScene): ?string {
+    const header = props.getScreenConfig(scene, 'header');
+
+    if (header && header.title) {
+      return header.title;
+    }
+
+    return props.getScreenConfig(scene, 'title');
+  }
+
   static defaultProps = {
     renderTitleComponent: (props: SubViewProps) => {
-      const title = String(props.scene.route.title || '');
+      const title = this._getHeaderTitleForScene(props, props.scene);
       return <HeaderTitle>{title}</HeaderTitle>;
     },
 
@@ -69,9 +95,11 @@ class Header extends React.Component<DefaultProps, HeaderProps, *> {
       if (props.scene.index === 0 || !props.onNavigateBack) {
         return null;
       }
+      const title = this._getHeaderTitleForScene(props, props.scene);
       return (
         <HeaderBackButton
           onPress={props.onNavigateBack}
+          title={typeof title === 'string' ? title : undefined}
         />
       );
     },
