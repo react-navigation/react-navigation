@@ -35,8 +35,6 @@ type SubViewProps = NavigationSceneRendererProps & {
 
 type SubViewRenderer = (subViewProps: SubViewProps) => ?React.Element<*>;
 
-type DefaultProps = {};
-
 export type HeaderProps = NavigationSceneRendererProps & {
   mode: HeaderMode,
   onNavigateBack: ?Function,
@@ -53,7 +51,7 @@ type SubViewName = 'left' | 'title' | 'right';
 const APPBAR_HEIGHT = Platform.OS === 'ios' ? 44 : 56;
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : 0;
 
-class Header extends React.Component<*, HeaderProps, *> {
+class Header extends React.Component<{}, HeaderProps, *> {
 
   static HEIGHT = APPBAR_HEIGHT + STATUSBAR_HEIGHT;
   static Title = HeaderTitle;
@@ -83,11 +81,9 @@ class Header extends React.Component<*, HeaderProps, *> {
 
   getHeaderTitleForScene(scene: NavigationScene): ?string {
     const header = this.props.router.getScreenConfig(this.props.navigation, 'header');
-
     if (header && header.title) {
       return header.title;
     }
-
     return this.props.router.getScreenConfig(this.props.navigation, 'title');
   }
 
