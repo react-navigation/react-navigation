@@ -60,10 +60,10 @@ const styles = StyleSheet.create({
   },
   button: Platform.select({
     ios: {
-      height: 24,
-      width: 24,
+      height: 21,
+      width: 13,
       margin: 10,
-      resizeMode: 'contain',
+      marginRight: 5,
       transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }],
     },
     android: {
