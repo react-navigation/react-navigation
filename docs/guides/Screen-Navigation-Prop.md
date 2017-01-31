@@ -32,7 +32,7 @@ class HomeScreen extends React.Component {
 
 ## `state` - The screen's current state/route
 
-A screen has access to it's route via `this.props.navigation.state`. Each will contain:
+A screen has access to its route via `this.props.navigation.state`. Each will contain:
 
 - `routeName` - the name of the route config in the router
 - `key` - a unique identifier used to sort routes
