@@ -196,33 +196,35 @@ class CardStack extends React.Component<DefaultProps, Props, void> {
     transitionProps: NavigationTransitionProps,
     headerMode: HeaderMode
   ): ?React.Element<*> {
-    const navigation = this._getChildNavigation(transitionProps.scene);
-    const headerConfig = this.props.router.getScreenConfig(navigation, 'header') || {};
+    console.log(Object.keys(transitionProps));
+    const headerConfig = this.props.router.getScreenConfig(
+      transitionProps.navigation,
+      'header'
+    ) || {};
 
     return (
       <this.props.headerComponent
         {...transitionProps}
-        navigation={navigation}
         getNavigation={this._getChildNavigation}
         router={this.props.router}
         style={headerConfig.style}
         mode={headerMode}
         onNavigateBack={() => this.props.navigation.goBack(null)}
-        renderLeftComponent={(props: HeaderProps) => {
+        renderLeftComponent={(props: NavigationTransitionProps) => {
           const header = this.props.router.getScreenConfig(props.navigation, 'header');
           if (header && header.left) {
             return header.left;
           }
           return undefined;
         }}
-        renderRightComponent={(props: HeaderProps) => {
+        renderRightComponent={(props: NavigationTransitionProps) => {
           const header = this.props.router.getScreenConfig(props.navigation, 'header');
           if (header && header.right) {
             return header.right;
           }
           return undefined;
         }}
-        renderTitleComponent={(props: HeaderProps) => {
+        renderTitleComponent={(props: NavigationTransitionProps) => {
           const header = this.props.router.getScreenConfig(props.navigation, 'header');
           if (header && header.title && React.isValidElement(header.title)) {
             return header.title;
@@ -234,11 +236,11 @@ class CardStack extends React.Component<DefaultProps, Props, void> {
   }
 
   _render(props: NavigationTransitionProps): React.Element<*> {
-    let floatingHeader = null;
-    const headerMode = this._getHeaderMode();
-    if (headerMode === 'float') {
-      floatingHeader = this._renderHeader(props, headerMode);
-    }
+    // let floatingHeader = null;
+    // const headerMode = this._getHeaderMode();
+    // if (headerMode === 'float') {
+    //   floatingHeader = this._renderHeader(props, headerMode);
+    // }
     return (
       <View style={styles.container}>
         <View
@@ -248,10 +250,11 @@ class CardStack extends React.Component<DefaultProps, Props, void> {
             scene => this._renderScene({
               ...props,
               scene,
+              navigation: this._getChildNavigation(scene),
             })
           )}
         </View>
-        {floatingHeader}
+        {/* floatingHeader */}
       </View>
     );
   }
@@ -291,8 +294,7 @@ class CardStack extends React.Component<DefaultProps, Props, void> {
     Component: ReactClass<*>,
     props: NavigationSceneRendererProps,
   ): React.Element<*> {
-    const navigation = this._getChildNavigation(props.scene);
-    const header = this.props.router.getScreenConfig(navigation, 'header');
+    const header = this.props.router.getScreenConfig(props.navigation, 'header');
     const headerMode = this._getHeaderMode();
     if (headerMode === 'screen') {
       const isHeaderHidden = header && header.visible === false;
@@ -303,7 +305,7 @@ class CardStack extends React.Component<DefaultProps, Props, void> {
           {maybeHeader}
           <SceneView
             screenProps={this.props.screenProps}
-            navigation={navigation}
+            navigation={props.navigation}
             component={Component}
           />
         </View>
@@ -312,7 +314,7 @@ class CardStack extends React.Component<DefaultProps, Props, void> {
     return (
       <SceneView
         screenProps={this.props.screenProps}
-        navigation={navigation}
+        navigation={props.navigation}
         component={Component}
       />
     );
