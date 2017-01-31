@@ -1,15 +1,15 @@
 # Configuring the Header
 
-In the previous example, we created a StackNavigator to display severals screens in our app.
+In the previous example, we created a StackNavigator to display several screens in our app.
 
 
-When navigating to a chat screen, we can specify params for the new route by providing them to the navigate function. In this case we want to provide the name of the person on the chat screen:
+When navigating to a chat screen, we can specify params for the new route by providing them to the navigate function. In this case, we want to provide the name of the person on the chat screen:
 
 ```js
 this.props.navigation.navigate('Chat', { user:  'Lucy' });
 ```
 
-The `user` param can be accessed from the profile screen:
+The `user` param can be accessed from the chat screen:
 
 ```js
 class ChatScreen extends React.Component {
@@ -58,7 +58,7 @@ static navigationOptions = {
 header-button
 ```
 
-Just like `title`, the `header` option can be defined as a function of the [navigation prop](/docs/navigators/navigation-prop). Lets render a different button based on the route params, and set up the button to call `navigation.setParams` when pressed.
+Just like `title`, the `header` option can be defined as a function of the [navigation prop](/docs/navigators/navigation-prop). Let's render a different button based on the route params, and set up the button to call `navigation.setParams` when pressed.
 
 ```js
 static navigationOptions = {
