@@ -80,7 +80,7 @@ class Header extends React.Component<DefaultProps, HeaderProps, *> {
       if (props.scene.index === 0 || !props.onNavigateBack) {
         return null;
       }
-      const title = _getHeaderTitleForScene(props, props.scene);
+      const title = _getHeaderTitleForScene(props, props.scenes[props.index - 1]);
       return (
         <HeaderBackButton
           onPress={props.onNavigateBack}
