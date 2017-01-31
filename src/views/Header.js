@@ -19,6 +19,7 @@ import TransitionConfigs from './TransitionConfigs';
 
 import type {
   NavigationScene,
+  NavigationRouter,
   NavigationSceneRendererProps,
   NavigationStyleInterpolator,
 } from '../TypeDefinition';
@@ -29,16 +30,11 @@ export type HeaderMode = 'float' | 'screen' | 'none';
 
 type SubViewProps = NavigationSceneRendererProps & {
   onNavigateBack: ?() => void,
-  getScreenConfig: (scene: NavigationScene, key: string) => ?Object,
 };
 
 type SubViewRenderer = (subViewProps: SubViewProps) => ?React.Element<*>;
 
-type DefaultProps = {
-  renderLeftComponent: SubViewRenderer,
-  renderRightComponent: SubViewRenderer,
-  renderTitleComponent: SubViewRenderer,
-};
+type DefaultProps = {};
 
 export type HeaderProps = NavigationSceneRendererProps & {
   mode: HeaderMode,
@@ -46,6 +42,8 @@ export type HeaderProps = NavigationSceneRendererProps & {
   renderLeftComponent: SubViewRenderer,
   renderRightComponent: SubViewRenderer,
   renderTitleComponent: SubViewRenderer,
+  getChildNavigation: Function,
+  router: NavigationRouter,
   style?: any,
 };
 
@@ -54,51 +52,21 @@ type SubViewName = 'left' | 'title' | 'right';
 const APPBAR_HEIGHT = Platform.OS === 'ios' ? 44 : 56;
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : 0;
 
-const _getHeaderTitleForScene = (props: SubViewProps, scene: NavigationScene): ?string => {
-  const header = props.getScreenConfig(scene, 'header');
-
-  if (header && header.title) {
-    return header.title;
-  }
-
-  return props.getScreenConfig(scene, 'title');
-};
-
-class Header extends React.Component<DefaultProps, HeaderProps, *> {
+class Header extends React.Component<*, HeaderProps, *> {
 
   static HEIGHT = APPBAR_HEIGHT + STATUSBAR_HEIGHT;
   static Title = HeaderTitle;
   static BackButton = HeaderBackButton;
 
-  static defaultProps = {
-    renderTitleComponent: (props: SubViewProps) => {
-      const title = _getHeaderTitleForScene(props, props.scene);
-      return <HeaderTitle>{title}</HeaderTitle>;
-    },
-
-    renderLeftComponent: (props: SubViewProps) => {
-      if (props.scene.index === 0 || !props.onNavigateBack) {
-        return null;
-      }
-      const title = _getHeaderTitleForScene(props, props.scenes[props.index - 1]);
-      return (
-        <HeaderBackButton
-          onPress={props.onNavigateBack}
-          title={typeof title === 'string' ? title : undefined}
-        />
-      );
-    },
-
-    renderRightComponent: () => null,
-  };
-
   // propTypes for people who don't use Flow
   static propTypes = {
     ...NavigationPropTypes.SceneRendererProps,
+    getChildNavigation: PropTypes.func,
     onNavigateBack: PropTypes.func,
     renderLeftComponent: PropTypes.func,
     renderRightComponent: PropTypes.func,
     renderTitleComponent: PropTypes.func,
+    router: PropTypes.object,
     style: PropTypes.any,
   };
 
@@ -112,11 +80,45 @@ class Header extends React.Component<DefaultProps, HeaderProps, *> {
     );
   }
 
+  getHeaderTitleForScene(scene: NavigationScene): ?string {
+    const navigation = this.props.getChildNavigation(scene);
+    const header = this.props.router.getScreenConfig(navigation, 'header');
+
+    if (header && header.title) {
+      return header.title;
+    }
+
+    return this.props.router.getScreenConfig(navigation, 'title');
+  }
+
+  renderTitleComponent = (props: SubViewProps) => {
+    const title = this.getHeaderTitleForScene(props.scene);
+    return <HeaderTitle>{title}</HeaderTitle>;
+  };
+
+  renderLeftComponent = (props: SubViewProps) => {
+    if (props.scene.index === 0 || !props.onNavigateBack) {
+      return null;
+    }
+    const title = this.getHeaderTitleForScene(props.scenes[props.index - 1]);
+    return (
+      <HeaderBackButton
+        onPress={props.onNavigateBack}
+        title={typeof title === 'string' ? title : undefined}
+      />
+    );
+  };
+
+  renderRightComponent = () => {
+    return null;
+  };
+
   _renderLeft(props: NavigationSceneRendererProps): ?React.Element<*> {
     return this._renderSubView(
       props,
       'left',
       this.props.renderLeftComponent,
+      this.renderLeftComponent,
       HeaderStyleInterpolator.forLeft,
     );
   }
@@ -137,6 +139,7 @@ class Header extends React.Component<DefaultProps, HeaderProps, *> {
       { ...props, style },
       'title',
       this.props.renderTitleComponent,
+      this.renderTitleComponent,
       HeaderStyleInterpolator.forCenter,
     );
   }
@@ -146,6 +149,7 @@ class Header extends React.Component<DefaultProps, HeaderProps, *> {
       props,
       'right',
       this.props.renderRightComponent,
+      this.renderRightComponent,
       HeaderStyleInterpolator.forRight,
     );
   }
@@ -154,6 +158,7 @@ class Header extends React.Component<DefaultProps, HeaderProps, *> {
     props: NavigationSceneRendererProps,
     name: SubViewName,
     renderer: SubViewRenderer,
+    defaultRenderer: SubViewRenderer,
     styleInterpolator: NavigationStyleInterpolator,
   ): ?React.Element<*> {
     const {
@@ -178,7 +183,12 @@ class Header extends React.Component<DefaultProps, HeaderProps, *> {
       ...props,
       onNavigateBack: this.props.onNavigateBack,
     };
-    const subView = renderer(subViewProps);
+
+    let subView = renderer(subViewProps);
+    if (subView === undefined) {
+      subView = defaultRenderer(subViewProps);
+    }
+
     if (subView === null) {
       return null;
     }
