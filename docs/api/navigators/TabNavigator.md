@@ -71,7 +71,17 @@ const MyApp = TabNavigator({
 });
 ```
 
-### Tab Navigator Options
+## API Definition
+
+```js
+TabNavigator(RouteConfigs, TabNavigatorConfig)
+```
+
+### RouteConfigs
+
+The route configs object is a mapping from route name to a route config, which tells the navigator what to present for that route, see [example](https://github.com/coodoo/react-navigation/blob/master/docs/api/navigators/StackNavigator.md#routeconfigs) from `StackNavigator`.
+
+### TabNavigatorConfig
 
 - `tabBarComponent` - component to use as the tab bar, e.g. `TabView.TabBarBottom`
 (this is the default on iOS), `TabView.TabBarTop`
@@ -138,6 +148,18 @@ tabBarOptions: {
 
 ### Navigator Props
 
-The navigator component created by `TabNavigator(...)` takes the following props,
+The navigator component created by `TabNavigator(...)` takes the following props:
 
-- `screenProps` - Props to pass to each child screen
+- `screenProps` - Pass down extra options to child screens, for example:
+
+
+ ```jsx
+ const TabNav = TabNavigator({
+   // config
+ });
+ 
+ <TabNav
+   screenProps={/* these will get passed to the screen components */}
+ />
+ ```
+ 
