@@ -70,3 +70,44 @@ Now we have put one navigator inside another, and we can `navigate` between navi
 ```phone-example
 nested
 ```
+
+
+## Navigating between multi level nested screens
+
+Lets create a simple nested `Navigator` where the top level `Navigator` screens are both `Navigator` components:
+
+```js
+const WelcomeScreenNavigator = StackNavigator({
+  Login: { screen: LoginScreen },
+  Home: { screen: HomeScreen }
+});
+
+const MessagesScreenNavigator = StackNavigator({
+  MessagesList: { screen: MessagesListScreen },
+  Chat: { screen: ChatScreen }
+});
+
+const SimpleApp = StackNavigator({
+  Welcome: { screen: WelcomeScreenNavigator },
+  Messages: { screen: MessagesScreenNavigator }
+});
+```
+
+To Navigate from `HomeScreen` to a `ChatScreen` we need to first navigate to the `MessagesScreenNavigator` then to the `ChatScreen`. To do this, we will use the `action` option when dispatching a `Navigate` command. 
+
+```js
+// Inside HomeScreen render function
+<Button
+  onPress={
+    () => this.props.navigation.dispatch({
+      type: 'Navigate',
+      routeName: 'Messages',
+      action: {
+        type: 'Navigate',
+        routeName: 'Chat'
+      }
+    })
+  }
+  title="Chat With Lucy"
+/>
+```
