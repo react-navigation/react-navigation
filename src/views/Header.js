@@ -54,25 +54,25 @@ type SubViewName = 'left' | 'title' | 'right';
 const APPBAR_HEIGHT = Platform.OS === 'ios' ? 44 : 56;
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : 0;
 
+const _getHeaderTitleForScene = (props: SubViewProps, scene: NavigationScene): ?string => {
+  const header = props.getScreenConfig(scene, 'header');
+
+  if (header && header.title) {
+    return header.title;
+  }
+
+  return props.getScreenConfig(scene, 'title');
+};
+
 class Header extends React.Component<DefaultProps, HeaderProps, *> {
 
   static HEIGHT = APPBAR_HEIGHT + STATUSBAR_HEIGHT;
   static Title = HeaderTitle;
   static BackButton = HeaderBackButton;
 
-  static _getHeaderTitleForScene(props: SubViewProps, scene: NavigationScene): ?string {
-    const header = props.getScreenConfig(scene, 'header');
-
-    if (header && header.title) {
-      return header.title;
-    }
-
-    return props.getScreenConfig(scene, 'title');
-  }
-
   static defaultProps = {
     renderTitleComponent: (props: SubViewProps) => {
-      const title = this._getHeaderTitleForScene(props, props.scene);
+      const title = _getHeaderTitleForScene(props, props.scene);
       return <HeaderTitle>{title}</HeaderTitle>;
     },
 
@@ -80,7 +80,7 @@ class Header extends React.Component<DefaultProps, HeaderProps, *> {
       if (props.scene.index === 0 || !props.onNavigateBack) {
         return null;
       }
-      const title = this._getHeaderTitleForScene(props, props.scene);
+      const title = _getHeaderTitleForScene(props, props.scene);
       return (
         <HeaderBackButton
           onPress={props.onNavigateBack}

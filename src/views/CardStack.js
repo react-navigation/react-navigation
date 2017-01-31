@@ -232,7 +232,7 @@ class CardStack extends React.Component<DefaultProps, Props, void> {
           return null;
         }}
         renderTitleComponent={(props) => {
-          const header = this._getScreenConfig(scene, 'header');
+          const header = this._getScreenConfig(props.scene, 'header');
           if (header && header.title && React.isValidElement(header.title)) {
             return header.title;
           }
