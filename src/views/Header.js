@@ -213,7 +213,7 @@ class Header extends React.Component<*, HeaderProps, *> {
 
   render(): React.Element<*> {
     // eslint-disable-next-line no-unused-vars
-    const { scenes, scene, style, position, navigation, progress, ...rest } = this.props;
+    const { scenes, scene, style, position, progress, ...rest } = this.props;
 
     let leftComponents = null;
     let titleComponents = null;
@@ -224,6 +224,7 @@ class Header extends React.Component<*, HeaderProps, *> {
         const props = NavigationPropTypes.extractSceneRendererProps(this.props);
         props.scene = scene;
         props.index = index;
+        props.navigation = this.props.getNavigation(scene);
         return props;
       }): Array<NavigationSceneRendererProps>);
       leftComponents = scenesProps.map(this._renderLeft, this);

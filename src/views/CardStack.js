@@ -206,6 +206,7 @@ class CardStack extends React.Component<DefaultProps, Props, void> {
         {...transitionProps}
         router={this.props.router}
         style={headerConfig.style}
+        getNavigation={this._getChildNavigation}
         mode={headerMode}
         onNavigateBack={() => this.props.navigation.goBack(null)}
         renderLeftComponent={(props: NavigationTransitionProps) => {
