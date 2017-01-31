@@ -41,7 +41,7 @@ export type HeaderProps = NavigationSceneRendererProps & {
   renderLeftComponent: SubViewRenderer,
   renderRightComponent: SubViewRenderer,
   renderTitleComponent: SubViewRenderer,
-  navigation: NavigationScreenProp<*, *>,
+  getNavigation: ?Function,
   router: NavigationRouter,
   style?: any,
 };
@@ -51,7 +51,7 @@ type SubViewName = 'left' | 'title' | 'right';
 const APPBAR_HEIGHT = Platform.OS === 'ios' ? 44 : 56;
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : 0;
 
-class Header extends React.Component<{}, HeaderProps, *> {
+class Header extends React.Component<*, HeaderProps, *> {
 
   static HEIGHT = APPBAR_HEIGHT + STATUSBAR_HEIGHT;
   static Title = HeaderTitle;
@@ -64,7 +64,7 @@ class Header extends React.Component<{}, HeaderProps, *> {
     renderLeftComponent: PropTypes.func,
     renderRightComponent: PropTypes.func,
     renderTitleComponent: PropTypes.func,
-    navigation: PropTypes.object,    
+    getNavigation: PropTypes.func,    
     router: PropTypes.object,
     style: PropTypes.any,
   };
@@ -80,7 +80,10 @@ class Header extends React.Component<{}, HeaderProps, *> {
   }
 
   getHeaderTitleForScene(scene: NavigationScene): ?string {
-    const header = this.props.router.getScreenConfig(this.props.navigation, 'header');
+    const header = this.props.router.getScreenConfig(
+      this.props.getNavigation(scene),
+      'header'
+    );
     if (header && header.title) {
       return header.title;
     }

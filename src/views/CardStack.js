@@ -194,32 +194,42 @@ class CardStack extends React.Component<DefaultProps, Props, void> {
 
   _renderHeader(props: NavigationTransitionProps, headerMode: HeaderMode): ?React.Element<*> {
     const navigation = this._getChildNavigation(props.scene);
-    const header = this.props.router.getScreenConfig(navigation, 'header') || {};
+    const headerConfig = this.props.router.getScreenConfig(navigation, 'header') || {};
 
     return (
       <this.props.headerComponent
         {...props}
         navigation={this.props.navigation}
+        getNavigation={this._getChildNavigation}
         router={this.props.router}
-        style={header.style}
+        style={headerConfig.style}
         mode={headerMode}
         onNavigateBack={() => this.props.navigation.goBack(null)}
-        renderLeftComponent={(props) => {
-          const header = this.props.router.getScreenConfig(this.props.navigation, 'header');
+        renderLeftComponent={({ scene }: NavigationTransitionProps) => {
+          const header = this.props.router.getScreenConfig(
+            this._getChildNavigation(scene),
+            'header'
+          );
           if (header && header.left) {
             return header.left;
           }
           return undefined;
         }}
-        renderRightComponent={(props) => {
-          const header = this.props.router.getScreenConfig(this.props.navigation, 'header');
+        renderRightComponent={({ scene }: NavigationTransitionProps) => {
+          const header = this.props.router.getScreenConfig(
+            this._getChildNavigation(scene),
+            'header'
+          );
           if (header && header.right) {
             return header.right;
           }
           return undefined;
         }}
-        renderTitleComponent={(props) => {
-          const header = this.props.router.getScreenConfig(this.props.navigation, 'header');
+        renderTitleComponent={({ scene }: NavigationTransitionProps) => {
+          const header = this.props.router.getScreenConfig(
+            this._getChildNavigation(scene),
+            'header'
+          );
           if (header && header.title && React.isValidElement(header.title)) {
             return header.title;
           }
