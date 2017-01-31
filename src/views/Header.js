@@ -20,6 +20,9 @@ import addNavigationHelpers from '../addNavigationHelpers';
 import type {
   NavigationScene,
   NavigationRouter,
+  NavigationRoute,
+  NavigationAction,
+  NavigationScreenProp,
   NavigationSceneRendererProps,
   NavigationStyleInterpolator,
 } from '../TypeDefinition';
@@ -29,6 +32,8 @@ export type HeaderMode = 'float' | 'screen' | 'none';
 type SubViewProps = NavigationSceneRendererProps & {
   onNavigateBack: ?() => void,
 };
+
+type Navigation = NavigationScreenProp<NavigationRoute, NavigationAction>;
 
 type SubViewRenderer = (subViewProps: SubViewProps) => ?React.Element<*>;
 
@@ -75,7 +80,7 @@ class Header extends React.Component<*, HeaderProps, *> {
     );
   }
 
-  _getHeaderTitle(navigation: Object): ?string {
+  _getHeaderTitle(navigation: Navigation): ?string {
     const header = this.props.router.getScreenConfig(navigation, 'header');
     let title = null;
     if (header && header.title) {
@@ -89,7 +94,7 @@ class Header extends React.Component<*, HeaderProps, *> {
     return null;
   }
 
-  _getHeaderTintColor(navigation: Object): ?string {
+  _getHeaderTintColor(navigation: Navigation): ?string {
     const header = this.props.router.getScreenConfig(navigation, 'header');
     if (header && header.tintColor) {
       return header.tintColor;
