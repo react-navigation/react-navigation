@@ -2,6 +2,7 @@
 
 import pathToRegexp from 'path-to-regexp';
 
+import NavigationActions from '../NavigationActions';
 import createConfigGetter from './createConfigGetter';
 import getScreenForRouteName from './getScreenForRouteName';
 import StateUtils from '../StateUtils';
@@ -90,10 +91,12 @@ export default (
     },
 
     getStateForAction(action: NavigationStackAction, state: ?NavigationState) {
+      action = NavigationActions.mapDeprecatedActionAndWarn(action)
+
       // Set up the initial state if needed
       if (!state) {
         let route = {};
-        if (action.type === 'Navigate' && (childRouters[action.routeName] !== undefined)) {
+        if (action.type === NavigationActions.NAVIGATE && (childRouters[action.routeName] !== undefined)) {
           return {
             index: 0,
             routes: [
@@ -106,11 +109,10 @@ export default (
           };
         }
         if (initialChildRouter) {
-          route = initialChildRouter.getStateForAction({
-            type: 'Navigate',
+          route = initialChildRouter.getStateForAction(NavigationActions.navigate({
             routeName: initialRouteName,
             params: initialRouteParams,
-          });
+          }));
         }
         route = {
           ...route,
@@ -134,13 +136,13 @@ export default (
       }
 
       // Handle push/pop
-      if (action.type === 'Navigate' && childRouters[action.routeName] !== undefined) {
+      if (action.type === NavigationActions.NAVIGATE && childRouters[action.routeName] !== undefined) {
         const childRouter = childRouters[action.routeName];
         let route;
         if (childRouter) {
           route = {
             ...action,
-            ...childRouter.getStateForAction(action.action || { type: 'Init' }),
+            ...childRouter.getStateForAction(action.action || NavigationActions.init()),
             key: _getUuid(),
             routeName: action.routeName,
           };
@@ -154,7 +156,7 @@ export default (
         return StateUtils.push(state, route);
       }
 
-      if (action.type === 'SetParams') {
+      if (action.type === NavigationActions.SET_PARAMS) {
         const lastRoute = state.routes.find(route => route.key === action.key);
         if (lastRoute) {
           const params = {
@@ -173,7 +175,7 @@ export default (
         }
       }
 
-      if (action.type === 'Reset') {
+      if (action.type === NavigationActions.RESET) {
         const resetAction = ((action: any): NavigationResetAction);
 
         return {
@@ -199,7 +201,7 @@ export default (
         };
       }
 
-      if (action.type === 'Back') {
+      if (action.type === NavigationActions.BACK) {
         let backRouteIndex = null;
         if (action.key) {
           const backRoute = state.routes.find(route => route.key === action.key);
@@ -230,10 +232,9 @@ export default (
       // If the path is empty (null or empty string)
       // just return the initial route action
       if (!pathToResolve) {
-        return {
-          type: 'Navigate',
+        return NavigationActions.navigate({
           routeName: initialRouteName,
-        };
+        });
       }
 
       // Attempt to match `pathToResolve` with a route in this router's
@@ -280,12 +281,11 @@ export default (
         return result;
       }, null);
 
-      return {
-        type: 'Navigate',
+      return NavigationActions.navigate({
         routeName: matchedRouteName,
         ...(params ? { params } : {}),
         ...(nestedAction ? { action: nestedAction } : {}),
-      };
+      });
     },
 
     getScreenConfig: createConfigGetter(routeConfigs, stackConfig.navigationOptions),
