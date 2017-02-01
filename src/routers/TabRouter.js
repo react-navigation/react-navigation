@@ -129,6 +129,10 @@ export default (
       }
       if (activeTabIndex !== state.index) {
         // console.log(`${order.join('-')}: Normal navigation`, {lastIndex: state.index, newIndex: activeTabIndex});
+        if ( action.params ) {
+          state = {...state, routes: [...state.routes]};
+          state.routes[activeTabIndex] = {...state.routes[activeTabIndex], params: action.params};
+        }
         return {
           ...state,
           index: activeTabIndex,
