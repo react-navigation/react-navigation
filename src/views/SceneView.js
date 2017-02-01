@@ -6,6 +6,7 @@ import type {
   NavigationScreenProp,
   NavigationState,
   NavigationAction,
+  ContextWithNavigation,
 } from '../TypeDefinition';
 
 type Props = {
@@ -16,6 +17,16 @@ type Props = {
 
 export default class SceneView extends PureComponent<void, Props, void> {
   props: Props;
+
+  static childContextTypes = {
+    navigation: React.PropTypes.object.isRequired,
+  };
+
+  getChildContext(): ContextWithNavigation {
+    return {
+      navigation: this.props.navigation,
+    };
+  }
 
   render() {
     const { screenProps, navigation, component: Component } = this.props;

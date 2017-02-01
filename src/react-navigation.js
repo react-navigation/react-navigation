@@ -26,4 +26,7 @@ module.exports = {
   get CardStack() { return require('./views/CardStack').default; },
   get DrawerView() { return require('./views/Drawer/DrawerView').default; },
   get TabView() { return require('./views/TabView/TabView').default; },
+
+  // HOCs
+  get withNavigation() { return require('./views/withNavigation').default; },
 };

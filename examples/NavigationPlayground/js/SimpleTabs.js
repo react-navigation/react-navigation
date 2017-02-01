@@ -11,21 +11,20 @@ import {
 } from 'react-native';
 import {
   TabNavigator,
+  withNavigation,
 } from 'react-navigation';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import SampleText from './SampleText';
 
+const ButtonWithNavigation = withNavigation(({ navigation, to, ...rest}) => {
+  return <Button {...rest} onPress={() => navigation.navigate(to)} />;
+});
+
 const MyNavScreen = ({ navigation, banner }) => (
   <ScrollView style={styles.container}>
     <SampleText>{banner}</SampleText>
-    <Button
-      onPress={() => navigation.navigate('Home')}
-      title="Go to home tab"
-    />
-    <Button
-      onPress={() => navigation.navigate('Settings')}
-      title="Go to settings tab"
-    />
+    <ButtonWithNavigation to="Home" title="Go to home tab" />
+    <ButtonWithNavigation to="Settings" title="Go to settings tab" />
     <Button
       onPress={() => navigation.goBack(null)}
       title="Go back"
