@@ -4,7 +4,6 @@ import React from 'react';
 
 import {
   Animated,
-  Easing,
   StyleSheet,
   View,
 } from 'react-native';
@@ -12,14 +11,17 @@ import {
 import invariant from 'fbjs/lib/invariant';
 
 import NavigationScenesReducer from './ScenesReducer';
-import NavigationPropTypes from '../PropTypes';
 import TransitionConfigs from './TransitionConfigs';
+import addNavigationHelpers from '../addNavigationHelpers';
+import NavigationPropTypes from '../PropTypes';
 
 import type {
   NavigationAnimatedValue,
   NavigationLayout,
   NavigationScene,
-  NavigationState,
+  NavigationRoute,
+  NavigationAction,
+  NavigationScreenProp,
   NavigationTransitionProps,
   NavigationTransitionSpec,
 } from '../TypeDefinition';
@@ -29,7 +31,7 @@ type Props = {
     transitionProps: NavigationTransitionProps,
     prevTransitionProps: ?NavigationTransitionProps,
   ) => NavigationTransitionSpec,
-  navigationState: NavigationState,
+  navigation: NavigationScreenProp<NavigationRoute, NavigationAction>,
   onTransitionEnd: () => void,
   onTransitionStart: () => void,
   render: (
@@ -62,7 +64,9 @@ class Transitioner extends React.Component<*, Props, State> {
 
   static propTypes = {
     configureTransition: PropTypes.func,
-    navigationState: NavigationPropTypes.navigationState.isRequired,
+    navigation: PropTypes.shape({
+      state: NavigationPropTypes.navigationState.isRequired,
+    }).isRequired,
     onTransitionEnd: PropTypes.func,
     onTransitionStart: PropTypes.func,
     render: PropTypes.func.isRequired,
@@ -83,9 +87,9 @@ class Transitioner extends React.Component<*, Props, State> {
 
     this.state = {
       layout,
-      position: new Animated.Value(this.props.navigationState.index),
+      position: new Animated.Value(this.props.navigation.state.index),
       progress: new Animated.Value(1),
-      scenes: NavigationScenesReducer([], this.props.navigationState),
+      scenes: NavigationScenesReducer([], this.props.navigation.state),
     };
 
     this._prevTransitionProps = null;
@@ -109,8 +113,8 @@ class Transitioner extends React.Component<*, Props, State> {
   componentWillReceiveProps(nextProps: Props): void {
     const nextScenes = NavigationScenesReducer(
       this.state.scenes,
-      nextProps.navigationState,
-      this.props.navigationState
+      nextProps.navigation.state,
+      this.props.navigation.state
     );
 
     if (nextScenes === this.state.scenes) {
@@ -158,13 +162,13 @@ class Transitioner extends React.Component<*, Props, State> {
       ),
     ];
 
-    if (nextProps.navigationState.index !== this.props.navigationState.index) {
+    if (nextProps.navigation.state.index !== this.props.navigation.state.index) {
       animations.push(
         timing(
           position,
           {
             ...transitionSpec,
-            toValue: nextProps.navigationState.index,
+            toValue: nextProps.navigation.state.index,
           },
         ),
       );
@@ -244,7 +248,7 @@ function buildTransitionProps(
   state: State,
 ): NavigationTransitionProps {
   const {
-    navigationState,
+    navigation,
   } = props;
 
   const {
@@ -260,7 +264,11 @@ function buildTransitionProps(
 
   return {
     layout,
-    navigationState,
+    navigationState: navigation.state,
+    navigation: addNavigationHelpers({
+      ...navigation,
+      state: scene.route,
+    }),
     position,
     progress,
     scenes,

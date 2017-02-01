@@ -57,6 +57,7 @@ const scene = PropTypes.shape({
 const SceneRendererProps = {
   layout: layout.isRequired,
   navigationState: navigationState.isRequired,
+  navigation: PropTypes.object,
   position: animatedValue.isRequired,
   progress: animatedValue.isRequired,
   scene: scene.isRequired,
@@ -94,6 +95,7 @@ function extractSceneRendererProps(
     position: props.position,
     progress: props.progress,
     scene: props.scene,
+    navigation: props.navigation,
     scenes: props.scenes,
   };
 }
