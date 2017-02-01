@@ -112,7 +112,7 @@ class Header extends React.Component<void, HeaderProps, void> {
     const tintColor = this._getHeaderTintColor(props.navigation);
     const previousNavigation = addNavigationHelpers({
       ...props.navigation,
-      state: props.scenes[props.index - 1].route,
+      state: props.scenes[props.scene.index - 1].route,
     });
     const backButtonTitle = this._getHeaderTitle(previousNavigation);
     return (
