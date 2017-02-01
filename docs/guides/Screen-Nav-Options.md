@@ -19,13 +19,14 @@ class MyScreen extends React.Component {
 
 Or, each option can be a function that takes the following arguments, and returns the value of the option.
 
-- `navigation` - the [navigation prop](/docs/intro/navigation-prop) for the screen, with the screen's route at `navigation.state`
+- `navigation` - The [navigation prop](/docs/intro/navigation-prop) for the screen, with the screen's route at `navigation.state`
+- `viewOptions` - Options specific to the view, e.g. - header, tabBar or drawer
 - `childRouter` - The child router, if the screen is a navigator
 
 ```js
 class ProfileScreen extends React.Component {
   static navigationOptions = {
-    title: (navigation, childRouter) => {
+    title: (navigation, viewOptions, childRouter) => {
       return navigation.state.params.name + "'s Profile!";
     },
   };

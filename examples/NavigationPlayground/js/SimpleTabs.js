@@ -41,16 +41,16 @@ const MyHomeScreen = ({ navigation }) => (
 );
 
 MyHomeScreen.navigationOptions = {
-  tabBar: {
+  tabBar: (navigation, { tintColor, focused }) => ({
     label: 'Home',
-    icon: ({ tintColor, focused }) => (
+    icon: (
       <Ionicons
         name={focused ? 'ios-home' : 'ios-home-outline'}
         size={26}
         style={{ color: tintColor }}
       />
     ),
-  },
+  }),
 };
 
 const MyPeopleScreen = ({ navigation }) => (
@@ -61,16 +61,16 @@ const MyPeopleScreen = ({ navigation }) => (
 );
 
 MyPeopleScreen.navigationOptions = {
-  tabBar: {
+  tabBar: (navigation, { tintColor, focused }) => ({
     label: 'People',
-    icon: ({ tintColor, focused }) => (
+    icon: (
       <Ionicons
         name={focused ? 'ios-people' : 'ios-people-outline'}
         size={26}
         style={{ color: tintColor }}
       />
     ),
-  },
+  }),
 };
 
 const MyChatScreen = ({ navigation }) => (
@@ -81,16 +81,16 @@ const MyChatScreen = ({ navigation }) => (
 );
 
 MyChatScreen.navigationOptions = {
-  tabBar: {
+  tabBar: (navigation, { tintColor, focused }) => ({
     label: 'Chat',
-    icon: ({ tintColor, focused }) => (
+    icon: (
       <Ionicons
         name={focused ? 'ios-chatboxes' : 'ios-chatboxes-outline'}
         size={26}
         style={{ color: tintColor }}
       />
     ),
-  },
+  }),
 };
 
 const MySettingsScreen = ({ navigation }) => (
@@ -101,16 +101,16 @@ const MySettingsScreen = ({ navigation }) => (
 );
 
 MySettingsScreen.navigationOptions = {
-  tabBar: {
+  tabBar: (navigation, { tintColor, focused }) => ({
     label: 'Settings',
-    icon: ({ tintColor, focused }) => (
+    icon: (
       <Ionicons
         name={focused ? 'ios-settings' : 'ios-settings-outline'}
         size={26}
         style={{ color: tintColor }}
       />
     ),
-  },
+  }),
 };
 
 const SimpleTabs = TabNavigator({

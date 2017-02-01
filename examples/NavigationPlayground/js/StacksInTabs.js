@@ -106,9 +106,9 @@ const StacksInTabs = TabNavigator({
     screen: MainTab,
     path: '/',
     navigationOptions: {
-      tabBar: () => ({
+      tabBar: (navigation, { tintColor, focused }) => ({
         label: 'Home',
-        icon: ({ tintColor, focused }) => (
+        icon: (
           <Ionicons
             name={focused ? 'ios-home' : 'ios-home-outline'}
             size={26}
@@ -122,9 +122,9 @@ const StacksInTabs = TabNavigator({
     screen: SettingsTab,
     path: '/settings',
     navigationOptions: {
-      tabBar: () => ({
+      tabBar: (navigation, { tintColor, focused }) => ({
         label: 'Settings',
-        icon: ({ tintColor, focused }) => (
+        icon: (
           <Ionicons
             name={focused ? 'ios-settings' : 'ios-settings-outline'}
             size={26}

@@ -5,9 +5,9 @@ Used to easily set up a screen with a drawer navigation.
 ```js
 class MyHomeScreen extends React.Component {
   static navigationOptions = {
-    drawer: () => ({
+    drawer: (navigation, { tintColor }) => ({
       label: 'Home',
-      icon: ({ tintColor }) => (
+      icon: (
         <Image
           source={require('./chats-icon.png')}
           style={[styles.icon, {tintColor: tintColor}]}
@@ -28,9 +28,9 @@ class MyHomeScreen extends React.Component {
 
 class MyNotificationsScreen extends React.Component {
   static navigationOptions = {
-    drawer: () => ({
+    drawer: (navigation, { tintColor }) => ({
       label: 'Notifications',
-      icon: ({ tintColor }) => (
+      icon: (
         <Image
           source={require('./notif-icon.png')}
           style={[styles.tabIcon, {tintColor: tintColor}]}

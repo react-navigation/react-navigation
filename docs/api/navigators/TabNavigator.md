@@ -5,16 +5,16 @@ Used to easily set up a screen with several tabs with a TabRouter.
 ```js
 class MyHomeScreen extends React.Component {
   static navigationOptions = {
-    tabBar: {
+    // Note: By default the icon is only shown on iOS. See the `showIcon` option below.
+    tabBar: (navigation, { tintColor }) => ({
       label: 'Home',
-      // Note: By default the icon is only shown on iOS. Search the showIcon option below.
-      icon: ({ tintColor }) => (
+      icon: (
         <Image
           source={require('./chats-icon.png')}
           style={[styles.icon, {tintColor: tintColor}]}
         />
       ),
-    },
+    }),
   }
 
   render() {
@@ -29,15 +29,15 @@ class MyHomeScreen extends React.Component {
 
 class MyNotificationsScreen extends React.Component {
   static navigationOptions = {
-    tabBar: {
+    tabBar: (navigation, { tintColor }) => ({
       label: 'Notifications',
-      icon: ({ tintColor }) => (
+      icon: (
         <Image
           source={require('./notif-icon.png')}
           style={[styles.tabIcon, {tintColor: tintColor}]}
         />
       ),
-    },
+    }),
   }
 
   render() {
