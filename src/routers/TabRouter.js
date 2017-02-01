@@ -7,6 +7,7 @@ import createConfigGetter from './createConfigGetter';
 import invariant from 'fbjs/lib/invariant';
 import warning from 'fbjs/lib/warning';
 
+import NavigationActions from '../NavigationActions';
 import StateUtils from '../StateUtils';
 
 import validateRouteConfigMap from './validateRouteConfigMap';
@@ -21,8 +22,6 @@ import type {
   NavigationNavigateAction,
   NavigationTabRouterConfig,
 } from '../TypeDefinition';
-
-const INIT_ACTION = { type: 'Init' };
 
 export default (
   routeConfigs: NavigationRouteConfigMap,
@@ -53,6 +52,8 @@ export default (
   );
   return {
     getStateForAction(action: NavigationAction, inputState: ?NavigationState): ?NavigationState {
+      action = NavigationActions.mapDeprecatedActionAndWarn(action)
+
       // Establish a default state
       let state = inputState;
       if (!state) {
@@ -60,7 +61,7 @@ export default (
           const tabRouter = tabRouters[routeName];
           if (tabRouter) {
             return {
-              ...tabRouter.getStateForAction(action.action || INIT_ACTION),
+              ...tabRouter.getStateForAction(action.action || NavigationActions.init()),
               key: routeName,
               routeName,
             };
@@ -99,11 +100,11 @@ export default (
       // handle the action, to allow inner tabs to change first
       let activeTabIndex = state.index;
       const isBackEligible = action.key == null || action.key === activeTabLastState.key;
-      if (action.type === 'Back' && isBackEligible && shouldBackNavigateToInitialRoute) {
+      if (action.type === NavigationActions.BACK && isBackEligible && shouldBackNavigateToInitialRoute) {
         activeTabIndex = initialRouteIndex;
       }
       let didNavigate = false;
-      if (action.type === 'Navigate') {
+      if (action.type === NavigationActions.NAVIGATE) {
         const navigateAction = ((action: any): NavigationNavigateAction);
         didNavigate = !!order.find((tabId: string, i: number) => {
           if (tabId === navigateAction.routeName) {
@@ -225,10 +226,9 @@ export default (
         const pathToTest = paths[tabId];
         if (parts[0] === pathToTest) {
           const tabRouter = tabRouters[tabId];
-          const action: NavigationNavigateAction = {
-            type: 'Navigate',
+          const action: NavigationNavigateAction = NavigationActions.navigate({
             routeName: tabId,
-          };
+          });
           if (tabRouter && tabRouter.getActionForPathAndParams) {
             action.action = tabRouter.getActionForPathAndParams(parts.slice(1).join('/'), params);
           } else if (params) {

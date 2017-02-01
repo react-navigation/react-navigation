@@ -203,7 +203,7 @@ export type NavigationParams = {
 };
 
 export type NavigationNavigateAction = {
-  type: 'Navigate',
+  type: 'Navigation/NAVIGATE',
   routeName: string,
   params?: NavigationParams,
 
@@ -212,12 +212,12 @@ export type NavigationNavigateAction = {
 };
 
 export type NavigationBackAction = {
-  type: 'Back',
+  type: 'Navigation/BACK',
   key?: ?string,
 };
 
 export type NavigationSetParamsAction = {
-  type: 'SetParams',
+  type: 'Navigation/SET_PARAMS',
 
   // The key of the route where the params should be set
   key: string,
@@ -227,13 +227,18 @@ export type NavigationSetParamsAction = {
 };
 
 export type NavigationInitAction = {
-  type: 'Init',
+  type: 'Navigation/INIT',
 };
 
 export type NavigationResetAction = {
-  type: 'Reset',
+  type: 'Navigation/RESET',
   index: number,
   actions: Array<NavigationNavigateAction>,
+};
+
+export type NavigationUriAction = {
+  type: 'Navigation/URI',
+  uri: string,
 };
 
 export type NavigationContainerOptions = {
@@ -302,7 +307,7 @@ export type NavigationTabRouterConfig = {
   paths?: NavigationPathsConfig,
   navigationOptions?: NavigationScreenOptions,
   order?: Array<string>, // todo: type these as the real route names rather than 'string'
-  
+
   // Does the back button cause the router to switch to the initial tab
   backBehavior?: 'none' | 'initialRoute', // defaults `initialRoute`
 };
