@@ -9,7 +9,7 @@ const MyApp = TabRouter({
   Home: { screen: HomeScreen },
   Settings: { screen: SettingsScreen },
 }, {
-  initialTab: 'Home',
+  initialRouteName: 'Home',
 })
 ```
 
@@ -46,10 +46,10 @@ Each item in the config may have the following:
 
 Config options that are also passed to the router.
 
-- `initialTab` - The routeName for the initial tab route when first loading
+- `initialRouteName` - The routeName for the initial tab route when first loading
 - `order` - Array of routeNames which defines the order of the tabs
 - `paths` - Provide a mapping of routeName to path config, which overrides the paths set in the routeConfigs.
-- `backBehavior` - Should the back button cause a tab switch to the initial tab? If yes, set to `initialTab`, otherwise `none`. Defaults to `initialTab` behavior.
+- `backBehavior` - Should the back button cause a tab switch to the initial tab? If yes, set to `initialRoute`, otherwise `none`. Defaults to `initialRoute` behavior.
 
 ### Supported Actions
 
