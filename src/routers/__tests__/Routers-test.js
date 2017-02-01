@@ -7,7 +7,7 @@ import React from 'react';
 import StackRouter from '../StackRouter';
 import TabRouter from '../TabRouter';
 
-import actions from '../../actions';
+import NavigationActions from '../../NavigationActions';
 import addNavigationHelpers from '../../addNavigationHelpers';
 
 const ROUTERS = {
@@ -64,10 +64,10 @@ test('Handles no-op actions with tabs within stack router', () => {
       screen: BarView,
     },
   });
-  const state1 = TestRouter.getStateForAction({ type: actions.INIT });
-  const state2 = TestRouter.getStateForAction({ type: actions.NAVIGATE, routeName: 'Qux' });
+  const state1 = TestRouter.getStateForAction({ type: NavigationActions.INIT });
+  const state2 = TestRouter.getStateForAction({ type: NavigationActions.NAVIGATE, routeName: 'Qux' });
   expect(state1).toEqual(state2);
-  const state3 = TestRouter.getStateForAction({ type: actions.NAVIGATE, routeName: 'Zap' }, state2);
+  const state3 = TestRouter.getStateForAction({ type: NavigationActions.NAVIGATE, routeName: 'Zap' }, state2);
   expect(state2).toEqual(state3);
 });
 
@@ -82,7 +82,7 @@ test('Handles deep action', () => {
     Bar: { screen: BarView },
     Foo: { screen: FooTabNavigator },
   });
-  const state1 = TestRouter.getStateForAction({ type: actions.INIT });
+  const state1 = TestRouter.getStateForAction({ type: NavigationActions.INIT });
   const expectedState = {
     index: 0,
     routes: [
@@ -93,7 +93,7 @@ test('Handles deep action', () => {
     ],
   };
   expect(state1).toEqual(expectedState);
-  const state2 = TestRouter.getStateForAction({ type: actions.NAVIGATE, routeName: 'Foo', action: {type: actions.NAVIGATE, routeName: 'Zoo'} }, state1);
+  const state2 = TestRouter.getStateForAction({ type: NavigationActions.NAVIGATE, routeName: 'Foo', action: {type: NavigationActions.NAVIGATE, routeName: 'Zoo'} }, state1);
   expect(state2.index).toEqual(1);
   expect(state2.routes[1].index).toEqual(1);
 });
@@ -113,9 +113,9 @@ test('Supports lazily-evaluated getScreen', () => {
       getScreen: () => BarView,
     },
   });
-  const state1 = TestRouter.getStateForAction({ type: actions.INIT });
-  const state2 = TestRouter.getStateForAction({ type: actions.NAVIGATE, routeName: 'Qux' });
+  const state1 = TestRouter.getStateForAction({ type: NavigationActions.INIT });
+  const state2 = TestRouter.getStateForAction({ type: NavigationActions.NAVIGATE, routeName: 'Qux' });
   expect(state1).toEqual(state2);
-  const state3 = TestRouter.getStateForAction({ type: actions.NAVIGATE, routeName: 'Zap' }, state2);
+  const state3 = TestRouter.getStateForAction({ type: NavigationActions.NAVIGATE, routeName: 'Zap' }, state2);
   expect(state2).toEqual(state3);
 });

@@ -79,7 +79,7 @@ class InfraScreen extends React.Component {
       HybridNavigationModule.openURI(action.uri);
       return true;
     }
-    if (action.type === actions.BACK) {
+    if (action.type === NavigationActions.BACK) {
       HybridNavigationModule.goBack();
       return true;
     }

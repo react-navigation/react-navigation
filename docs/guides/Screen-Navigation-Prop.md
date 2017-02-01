@@ -108,14 +108,14 @@ The following actions are supported:
 
 ### Navigate
 ```js
-import { actions } from 'react-navigation'
+import { NavigationActions } from 'react-navigation'
 
-actions.navigate({
+NavigationActions.navigate({
   routeName: 'Profile',
   params: {},
 
   // navigate can have a nested navigate action that will be run inside the child router
-  action: actions.navigate({ routeName: 'SubProfileRoute'})
+  action: NavigationActions.navigate({ routeName: 'SubProfileRoute'})
 })
 ```
 
@@ -125,10 +125,10 @@ actions.navigate({
 The `Reset` action wipes the whole navigation state and replaces it with the result of several actions.
 
 ```js
-import { actions } from 'react-navigation'
+import { NavigationActions } from 'react-navigation'
 
-actions.reset({
-  actions: actions.navigate({ routeName: 'Profile'}),
+NavigationActions.reset({
+  actions: NavigationActions.navigate({ routeName: 'Profile'}),
 })
 ```
 
@@ -137,9 +137,9 @@ actions.reset({
 When dispatching `SetParams`, the router will produce a new state that has changed the params of a particular route, as identified by the key
 
 ```js
-import { actions } from 'react-navigation'
+import { NavigationActions } from 'react-navigation'
 
-actions.setParams({
+NavigationActions.setParams({
   params: {}, // these are the new params that will be merged into the existing route params
   // The key of the route that should get the new params
   key: 'screen-123',

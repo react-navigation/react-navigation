@@ -1,4 +1,4 @@
-const namespacedAction = (action: string) => `navigation/${action}`;
+const namespacedAction = (action: string) => `Navigation/${action}`;
 
 const BACK = namespacedAction('BACK');
 const INIT = namespacedAction('INIT');

@@ -12,7 +12,7 @@ import {
   View,
 } from 'react-native';
 import {
-  actions,
+  NavigationActions,
   addNavigationHelpers,
   StackNavigator,
 } from 'react-navigation';
@@ -71,7 +71,7 @@ const LoginStatusMessage = connect(state => ({
         {'You are "logged in" right now'}
       </Text>
       <Button
-        onPress={() => dispatch(actions.navigate({ routeName: 'Profile' }))}
+        onPress={() => dispatch(NavigationActions.navigate({ routeName: 'Profile' }))}
         title="Profile"
       />
     </View>
@@ -82,7 +82,7 @@ const AuthButton = connect(state => ({
   isLoggedIn: state.auth.isLoggedIn,
 }), dispatch => ({
   logout: () => dispatch({ type: 'Logout' }),
-  login: () => dispatch(actions.navigate({ routeName: 'Login' })),
+  login: () => dispatch(NavigationActions.navigate({ routeName: 'Login' })),
 }))(({ logout, login, isLoggedIn }) => (
   <Button
     title={isLoggedIn ? 'Log Out' : 'Log In'}
@@ -125,10 +125,10 @@ const initialAuthState = { isLoggedIn: false };
 const AppReducer = combineReducers({
   nav: (state = initialNavState, action) => {
     if (action.type === 'Login') {
-      return AppNavigator.router.getStateForAction(actions.back(), state);
+      return AppNavigator.router.getStateForAction(NavigationActions.back(), state);
     }
     if (action.type === 'Logout') {
-      return AppNavigator.router.getStateForAction(actions.navigate({ routeName: 'Login' }), state);
+      return AppNavigator.router.getStateForAction(NavigationActions.navigate({ routeName: 'Login' }), state);
     }
     return AppNavigator.router.getStateForAction(action, state);
   },

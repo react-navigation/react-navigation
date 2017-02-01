@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import Link from "./Link";
 
-import { actions, addNavigationHelpers } from 'react-navigation';
+import { NavigationActions, addNavigationHelpers } from 'react-navigation';
 
 const LinkableLi = Link.Linkable(props => <li {...props} />);
 
@@ -22,15 +22,15 @@ class PageWithSidebar extends Component {
     let prevAction = null;
     if (state.routes[state.index].index > 0) {
       const prev = state.routes[state.index].index - 1;
-      prevAction = actions.navigate({
+      prevAction = NavigationActions.navigate({
         routeName: state.routes[state.index].routes[prev].routeName,
       });
     }
     if (!prevAction && state.index > 0) {
       const prev = state.index - 1;
-      prevAction = actions.navigate({
+      prevAction = NavigationActions.navigate({
         routeName: state.routes[prev].routeName,
-        action: actions.navigate({
+        action: NavigationActions.navigate({
           routeName: state.routes[prev].routes[state.routes[prev].routes.length - 1].routeName,
         })
       });
@@ -38,13 +38,13 @@ class PageWithSidebar extends Component {
     let nextAction = null;
     if (state.routes[state.index].index < state.routes[state.index].routes.length - 1) {
       const next = state.routes[state.index].index + 1;
-      nextAction = actions.navigate({
+      nextAction = NavigationActions.navigate({
         routeName: state.routes[state.index].routes[next].routeName,
       });
     }
     if (!nextAction && state.index < state.routes.length - 1) {
       const next = state.index + 1;
-      nextAction = actions.navigate({
+      nextAction = NavigationActions.navigate({
         routeName: state.routes[next].routeName,
       });
     }

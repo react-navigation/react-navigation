@@ -1,14 +1,14 @@
 
 import React from 'react';
 
-import { actions, addNavigationHelpers } from 'react-navigation';
+import { NavigationActions, addNavigationHelpers } from 'react-navigation';
 
 function getAction(router, path, params) {
   const action = router.getActionForPathAndParams(path, params);
   if (action) {
     return action;
   }
-  return actions.navigate({
+  return NavigationActions.navigate({
     params: { path },
     routeName: 'NotFound',
   });

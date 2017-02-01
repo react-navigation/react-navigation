@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react';
-import { actions } from 'react-navigation'
+import { NavigationActions } from 'react-navigation'
 
 const isModifiedEvent = (event) =>
   !!(event.metaKey || event.altKey || event.ctrlKey || event.shiftKey);
@@ -18,7 +18,7 @@ const Linkable = (Inner) => {
     getAction = () => {
       const {to, href} = this.props;
       if (typeof to === 'string') {
-        return actions.navigate({ routeName: to });
+        return NavigationActions.navigate({ routeName: to });
       } else if (typeof to === 'object' && typeof to.type === 'string') {
         return to;
       } else if (href) {

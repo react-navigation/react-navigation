@@ -78,7 +78,7 @@ const MyAppRouter = {
   getStateForAction(action, state) {
     if (
       state &&
-      action.type === actions.BACK &&
+      action.type === NavigationActions.BACK &&
       state.routes[state.index].params.isEditing
     ) {
       // Returning null from getStateForAction means that the action
@@ -97,7 +97,7 @@ Perhaps your app has a unique URI which the built-in routers cannot handle. You 
 
 ```js
 
-import { actions } from 'react-navigation'
+import { NavigationActions } from 'react-navigation'
 
 const MyApp = StackNavigator({
   Home: { screen: HomeScreen },
@@ -113,9 +113,9 @@ MyApp.router = {
       params.magic === 'yes'
     ) {
       // returns a profile navigate action for /my/custom/path?magic=yes
-      return actions.navigate({
+      return NavigationActions.navigate({
         routeName: 'Profile',
-        action: actions.navigate({
+        action: NavigationActions.navigate({
           // This child action will get passed to the child router
           // ProfileScreen.router.getStateForAction to get the child
           // navigation state.

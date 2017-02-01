@@ -1,6 +1,6 @@
 /* @flow */
 
-import actions from '../actions';
+import NavigationActions from '../NavigationActions';
 import addNavigationHelpers from '../addNavigationHelpers';
 
 describe('addNavigationHelpers', () => {
@@ -10,7 +10,7 @@ describe('addNavigationHelpers', () => {
       state: { key: 'A', routeName: 'Home' },
       dispatch: mockedDispatch,
     }).goBack('A')).toEqual(true);
-    expect(mockedDispatch).toBeCalledWith({ type: actions.BACK, key: 'A' });
+    expect(mockedDispatch).toBeCalledWith({ type: NavigationActions.BACK, key: 'A' });
     expect(mockedDispatch.mock.calls.length).toBe(1);
   });
 
@@ -20,7 +20,7 @@ describe('addNavigationHelpers', () => {
       state: {},
       dispatch: mockedDispatch,
     }).goBack()).toEqual(true);
-    expect(mockedDispatch).toBeCalledWith({ type: actions.BACK });
+    expect(mockedDispatch).toBeCalledWith({ type: NavigationActions.BACK });
     expect(mockedDispatch.mock.calls.length).toBe(1);
   });
 
@@ -31,7 +31,7 @@ describe('addNavigationHelpers', () => {
       dispatch: mockedDispatch,
     }).navigate('Profile', { name: 'Matt' })).toEqual(true);
     expect(mockedDispatch).toBeCalledWith({
-      type: actions.NAVIGATE,
+      type: NavigationActions.NAVIGATE,
       params: { name: 'Matt' },
       routeName: 'Profile',
     });
@@ -45,7 +45,7 @@ describe('addNavigationHelpers', () => {
       dispatch: mockedDispatch,
     }).setParams({ notificationsEnabled: true })).toEqual(true);
     expect(mockedDispatch).toBeCalledWith({
-      type: actions.SET_PARAMS,
+      type: NavigationActions.SET_PARAMS,
       key: 'B',
       params: { notificationsEnabled: true },
     });

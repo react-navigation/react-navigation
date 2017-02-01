@@ -7,7 +7,7 @@ import {
   NativeModules,
 } from 'react-native';
 import {
-  actions,
+  NavigationActions,
   addNavigationHelpers,
 } from 'react-navigation';
 
@@ -23,7 +23,7 @@ const HybridContainer = (ReactScreens) => {
       let ScreenView = ReactScreens[name];
       let screenKey = name;
       let navState = null;
-      const action = actions.navigate({ routeName: name, params };
+      const action = NavigationActions.navigate({ routeName: name, params };
       if (!ScreenView) {
         // Deep linking magic here. Try each screen to see if the state changes
         // in response to this action. The first screen who returns
@@ -34,7 +34,7 @@ const HybridContainer = (ReactScreens) => {
             if (!V || !V.router || !V.router.getStateForAction) {
               return;
             }
-            const baseState = V.router.getStateForAction(actions.init());
+            const baseState = V.router.getStateForAction(NavigationActions.init());
             const linkedState = V.router.getStateForAction(action, baseState);
             if (baseState !== linkedState) {
               ScreenView = V;
@@ -78,7 +78,7 @@ const HybridContainer = (ReactScreens) => {
         this.setState({ navState });
         return true;
       }
-      if (action.type === actions.NAVIGATE) {
+      if (action.type === NavigationActions.NAVIGATE) {
         HybridNavigationManager.navigate(action.routeName, action.params || {});
       }
       return true;

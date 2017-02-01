@@ -2,7 +2,7 @@
 
 import pathToRegexp from 'path-to-regexp';
 
-import actions from '../actions';
+import NavigationActions from '../NavigationActions';
 import createConfigGetter from './createConfigGetter';
 import getScreenForRouteName from './getScreenForRouteName';
 import StateUtils from '../StateUtils';
@@ -91,12 +91,12 @@ export default (
     },
 
     getStateForAction(action: NavigationStackAction, state: ?NavigationState) {
-      action = actions.mapDeprecatedActionAndWarn(action)
+      action = NavigationActions.mapDeprecatedActionAndWarn(action)
 
       // Set up the initial state if needed
       if (!state) {
         let route = {};
-        if (action.type === actions.NAVIGATE && (childRouters[action.routeName] !== undefined)) {
+        if (action.type === NavigationActions.NAVIGATE && (childRouters[action.routeName] !== undefined)) {
           return {
             index: 0,
             routes: [
@@ -109,7 +109,7 @@ export default (
           };
         }
         if (initialChildRouter) {
-          route = initialChildRouter.getStateForAction(actions.navigate({
+          route = initialChildRouter.getStateForAction(NavigationActions.navigate({
             routeName: initialRouteName,
             params: initialRouteParams,
           }));
@@ -136,13 +136,13 @@ export default (
       }
 
       // Handle push/pop
-      if (action.type === actions.NAVIGATE && childRouters[action.routeName] !== undefined) {
+      if (action.type === NavigationActions.NAVIGATE && childRouters[action.routeName] !== undefined) {
         const childRouter = childRouters[action.routeName];
         let route;
         if (childRouter) {
           route = {
             ...action,
-            ...childRouter.getStateForAction(action.action || actions.init()),
+            ...childRouter.getStateForAction(action.action || NavigationActions.init()),
             key: _getUuid(),
             routeName: action.routeName,
           };
@@ -156,7 +156,7 @@ export default (
         return StateUtils.push(state, route);
       }
 
-      if (action.type === actions.SET_PARAMS) {
+      if (action.type === NavigationActions.SET_PARAMS) {
         const lastRoute = state.routes.find(route => route.key === action.key);
         if (lastRoute) {
           const params = {
@@ -175,7 +175,7 @@ export default (
         }
       }
 
-      if (action.type === actions.RESET) {
+      if (action.type === NavigationActions.RESET) {
         const resetAction = ((action: any): NavigationResetAction);
 
         return {
@@ -201,7 +201,7 @@ export default (
         };
       }
 
-      if (action.type === actions.BACK) {
+      if (action.type === NavigationActions.BACK) {
         let backRouteIndex = null;
         if (action.key) {
           const backRoute = state.routes.find(route => route.key === action.key);
@@ -232,7 +232,7 @@ export default (
       // If the path is empty (null or empty string)
       // just return the initial route action
       if (!pathToResolve) {
-        return actions.navigate({
+        return NavigationActions.navigate({
           routeName: initialRouteName,
         });
       }
@@ -281,7 +281,7 @@ export default (
         return result;
       }, null);
 
-      return actions.navigate({
+      return NavigationActions.navigate({
         routeName: matchedRouteName,
         ...(params ? { params } : {}),
         ...(nestedAction ? { action: nestedAction } : {}),

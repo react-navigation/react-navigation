@@ -5,9 +5,9 @@
 import React from 'react';
 import TabRouter from '../TabRouter';
 
-import actions from '../../actions';
+import NavigationActions from '../../NavigationActions';
 
-const INIT_ACTION = { type: actions.INIT };
+const INIT_ACTION = { type: NavigationActions.INIT };
 
 const BareLeafRouteConfig = {
   screen: () => <div />,
@@ -21,13 +21,13 @@ describe('TabRouter', () => {
       Foo: { screen: ScreenA },
       Bar: { screen: ScreenB },
     });
-    const state = router.getStateForAction({ type: actions.INIT });
+    const state = router.getStateForAction({ type: NavigationActions.INIT });
     const expectedState = {
       index: 0,
       routes: [{ key: 'Foo', routeName: 'Foo' }, { key: 'Bar', routeName: 'Bar' }],
     };
     expect(state).toEqual(expectedState);
-    const state2 = router.getStateForAction({ type: actions.NAVIGATE, routeName: 'Bar' }, state);
+    const state2 = router.getStateForAction({ type: NavigationActions.NAVIGATE, routeName: 'Bar' }, state);
     const expectedState2 = {
       index: 1,
       routes: [{ key: 'Foo', routeName: 'Foo' }, { key: 'Bar', routeName: 'Bar' }],
@@ -35,7 +35,7 @@ describe('TabRouter', () => {
     expect(state2).toEqual(expectedState2);
     expect(router.getComponentForState(expectedState)).toEqual(ScreenA);
     expect(router.getComponentForState(expectedState2)).toEqual(ScreenB);
-    const state3 = router.getStateForAction({ type: actions.NAVIGATE, routeName: 'Bar' }, state2);
+    const state3 = router.getStateForAction({ type: NavigationActions.NAVIGATE, routeName: 'Bar' }, state2);
     expect(state3).toEqual(null);
   });
 
@@ -46,13 +46,13 @@ describe('TabRouter', () => {
       Foo: { getScreen: () => ScreenA },
       Bar: { getScreen: () => ScreenB },
     });
-    const state = router.getStateForAction({ type: actions.INIT });
+    const state = router.getStateForAction({ type: NavigationActions.INIT });
     const expectedState = {
       index: 0,
       routes: [{ key: 'Foo', routeName: 'Foo' }, { key: 'Bar', routeName: 'Bar' }],
     };
     expect(state).toEqual(expectedState);
-    const state2 = router.getStateForAction({ type: actions.NAVIGATE, routeName: 'Bar' }, state);
+    const state2 = router.getStateForAction({ type: NavigationActions.NAVIGATE, routeName: 'Bar' }, state);
     const expectedState2 = {
       index: 1,
       routes: [{ key: 'Foo', routeName: 'Foo' }, { key: 'Bar', routeName: 'Bar' }],
@@ -60,13 +60,13 @@ describe('TabRouter', () => {
     expect(state2).toEqual(expectedState2);
     expect(router.getComponentForState(expectedState)).toEqual(ScreenA);
     expect(router.getComponentForState(expectedState2)).toEqual(ScreenB);
-    const state3 = router.getStateForAction({ type: actions.NAVIGATE, routeName: 'Bar' }, state2);
+    const state3 = router.getStateForAction({ type: NavigationActions.NAVIGATE, routeName: 'Bar' }, state2);
     expect(state3).toEqual(null);
   });
 
   test('Can set the initial tab', () => {
     const router = TabRouter({ Foo: BareLeafRouteConfig, Bar: BareLeafRouteConfig }, { initialRouteName: 'Bar' });
-    const state = router.getStateForAction({ type: actions.INIT });
+    const state = router.getStateForAction({ type: NavigationActions.INIT });
     expect(state).toEqual({
       index: 1,
       routes: [{ key: 'Foo', routeName: 'Foo' }, { key: 'Bar', routeName: 'Bar' }],
@@ -75,14 +75,14 @@ describe('TabRouter', () => {
 
   test('getStateForAction returns null when navigating to same tab', () => {
     const router = TabRouter({ Foo: BareLeafRouteConfig, Bar: BareLeafRouteConfig }, { initialRouteName: 'Bar' });
-    const state = router.getStateForAction({ type: actions.INIT });
-    const state2 = router.getStateForAction({ type: actions.NAVIGATE, routeName: 'Bar' }, state);
+    const state = router.getStateForAction({ type: NavigationActions.INIT });
+    const state2 = router.getStateForAction({ type: NavigationActions.NAVIGATE, routeName: 'Bar' }, state);
     expect(state2).toEqual(null);
   });
 
   test('getStateForAction returns initial navigate', () => {
     const router = TabRouter({ Foo: BareLeafRouteConfig, Bar: BareLeafRouteConfig });
-    const state = router.getStateForAction({ type: actions.NAVIGATE, routeName: 'Foo' });
+    const state = router.getStateForAction({ type: NavigationActions.NAVIGATE, routeName: 'Foo' });
     expect(state && state.index).toEqual(0);
   });
 
@@ -91,7 +91,7 @@ describe('TabRouter', () => {
     ChildTabNavigator.router = TabRouter({ Foo: BareLeafRouteConfig, Bar: BareLeafRouteConfig });
     const router = TabRouter({ Foo: BareLeafRouteConfig, Baz: { screen: ChildTabNavigator }, Boo: BareLeafRouteConfig });
     const action = router.getActionForPathAndParams('Baz/Bar', { foo: '42' });
-    const navAction = { type: actions.NAVIGATE, routeName: 'Baz', action: { type: actions.NAVIGATE, routeName: 'Bar', params: { foo: '42' } } };
+    const navAction = { type: NavigationActions.NAVIGATE, routeName: 'Baz', action: { type: NavigationActions.NAVIGATE, routeName: 'Bar', params: { foo: '42' } } };
     expect(action).toEqual(navAction);
     const state = router.getStateForAction(navAction);
     expect(state).toEqual({
@@ -128,7 +128,7 @@ describe('TabRouter', () => {
     const ChildTabNavigator = () => <div />;
     ChildTabNavigator.router = TabRouter({ Foo: BareLeafRouteConfig, Bar: BareLeafRouteConfig });
     const router = TabRouter({ Foo: BareLeafRouteConfig, Baz: { screen: ChildTabNavigator }, Boo: BareLeafRouteConfig });
-    const state = router.getStateForAction({ type: actions.NAVIGATE, routeName: 'Bar' });
+    const state = router.getStateForAction({ type: NavigationActions.NAVIGATE, routeName: 'Bar' });
     expect(state).toEqual({
       index: 1,
       routes: [
@@ -145,7 +145,7 @@ describe('TabRouter', () => {
         { key: 'Boo', routeName: 'Boo' },
       ],
     });
-    const state2 = router.getStateForAction({ type: actions.NAVIGATE, routeName: 'Foo' }, state);
+    const state2 = router.getStateForAction({ type: NavigationActions.NAVIGATE, routeName: 'Foo' }, state);
     expect(state2).toEqual({
       index: 1,
       routes: [
@@ -162,7 +162,7 @@ describe('TabRouter', () => {
         { key: 'Boo', routeName: 'Boo' },
       ],
     });
-    const state3 = router.getStateForAction({ type: actions.NAVIGATE, routeName: 'Foo' }, state2);
+    const state3 = router.getStateForAction({ type: NavigationActions.NAVIGATE, routeName: 'Foo' }, state2);
     expect(state3).toEqual(null);
   });
 
@@ -200,7 +200,7 @@ describe('TabRouter', () => {
         { key: 'Gah', routeName: 'Gah' },
       ],
     });
-    const state2 = router.getStateForAction({ type: actions.NAVIGATE, routeName: 'Zap' }, state);
+    const state2 = router.getStateForAction({ type: NavigationActions.NAVIGATE, routeName: 'Zap' }, state);
     expect(state2).toEqual({
       index: 0,
       routes: [
@@ -226,9 +226,9 @@ describe('TabRouter', () => {
         { key: 'Gah', routeName: 'Gah' },
       ],
     });
-    const state3 = router.getStateForAction({ type: actions.NAVIGATE, routeName: 'Zap' }, state2);
+    const state3 = router.getStateForAction({ type: NavigationActions.NAVIGATE, routeName: 'Zap' }, state2);
     expect(state3).toEqual(null);
-    const state4 = router.getStateForAction({ type: actions.NAVIGATE, routeName: 'Foo', action: { type: actions.NAVIGATE, routeName: 'Bar', action: { type: actions.NAVIGATE, routeName: 'Zap' } } });
+    const state4 = router.getStateForAction({ type: NavigationActions.NAVIGATE, routeName: 'Foo', action: { type: NavigationActions.NAVIGATE, routeName: 'Bar', action: { type: NavigationActions.NAVIGATE, routeName: 'Zap' } } });
     expect(state4).toEqual({
       index: 0,
       routes: [
@@ -276,11 +276,11 @@ describe('TabRouter', () => {
         foo: '42',
       },
       routeName: 'Bar',
-      type: actions.NAVIGATE,
+      type: NavigationActions.NAVIGATE,
     };
     expect(action).toEqual(expectedAction);
 
-    const state = router.getStateForAction({ type: actions.INIT });
+    const state = router.getStateForAction({ type: NavigationActions.INIT });
     const expectedState = {
       index: 0,
       routes: [{ key: 'Foo', routeName: 'Foo' }, { key: 'Bar', routeName: 'Bar' }],
@@ -317,7 +317,7 @@ describe('TabRouter', () => {
         foo: '42',
       },
       routeName: 'Foo',
-      type: actions.NAVIGATE,
+      type: NavigationActions.NAVIGATE,
     });
   });
 

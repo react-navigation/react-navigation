@@ -11,17 +11,17 @@ import type {
   NavigationRoute,
 } from './TypeDefinition';
 
-import actions from './actions'
+import NavigationActions from './NavigationActions'
 
 export default (navigation: NavigationProp<NavigationRoute, NavigationAction>): NavigationScreenProp<NavigationRoute, NavigationAction> => ({
   ...navigation,
   goBack: (key): boolean => {
-    return navigation.dispatch(actions.back({
+    return navigation.dispatch(NavigationActions.back({
       key: key === undefined ? navigation.state.key : key,
     }));
   },
   navigate: (routeName, params, action): boolean => {
-    return navigation.dispatch(actions.navigate({
+    return navigation.dispatch(NavigationActions.navigate({
       routeName,
       params,
       action,
@@ -33,7 +33,7 @@ export default (navigation: NavigationProp<NavigationRoute, NavigationAction>): 
    * This means `setParams` can be used to update nav bar for example.
    */
   setParams: (params): boolean => {
-    return navigation.dispatch(actions.setParams({
+    return navigation.dispatch(NavigationActions.setParams({
       params,
       key: navigation.state.key
     }));

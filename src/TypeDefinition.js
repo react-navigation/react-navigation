@@ -203,7 +203,7 @@ export type NavigationParams = {
 };
 
 export type NavigationNavigateAction = {
-  type: 'navigation/NAVIGATE',
+  type: 'Navigation/NAVIGATE',
   routeName: string,
   params?: NavigationParams,
 
@@ -212,12 +212,12 @@ export type NavigationNavigateAction = {
 };
 
 export type NavigationBackAction = {
-  type: 'navigation/BACK',
+  type: 'Navigation/BACK',
   key?: ?string,
 };
 
 export type NavigationSetParamsAction = {
-  type: 'navigation/SET_PARAMS',
+  type: 'Navigation/SET_PARAMS',
 
   // The key of the route where the params should be set
   key: string,
@@ -227,17 +227,17 @@ export type NavigationSetParamsAction = {
 };
 
 export type NavigationInitAction = {
-  type: 'navigation/INIT',
+  type: 'Navigation/INIT',
 };
 
 export type NavigationResetAction = {
-  type: 'navigation/RESET',
+  type: 'Navigation/RESET',
   index: number,
   actions: Array<NavigationNavigateAction>,
 };
 
 export type NavigationUriAction = {
-  type: 'navigation/URI',
+  type: 'Navigation/URI',
   uri: string,
 };
 
