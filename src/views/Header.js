@@ -82,10 +82,13 @@ class Header extends React.Component<void, HeaderProps, void> {
 
   _getHeaderTitle(navigation: Navigation): ?string {
     const header = this.props.router.getScreenConfig(navigation, 'header');
+    let title;
     if (header && header.title) {
-      return header.title;
+      title = header.title;
+    } else {
+      title = this.props.router.getScreenConfig(navigation, 'title');
     }
-    return this.props.router.getScreenConfig(navigation, 'title');
+    return typeof title === 'string' ? title : undefined;
   }
 
   _getHeaderTintColor(navigation: Navigation): ?string {
