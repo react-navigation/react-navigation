@@ -78,7 +78,7 @@ const MyAppRouter = {
   getStateForAction(action, state) {
     if (
       state &&
-      action.type === 'Back' &&
+      action.type === actions.BACK &&
       state.routes[state.index].params.isEditing
     ) {
       // Returning null from getStateForAction means that the action

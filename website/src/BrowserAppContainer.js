@@ -1,18 +1,17 @@
 
 import React from 'react';
 
-import { addNavigationHelpers } from 'react-navigation';
+import { actions, addNavigationHelpers } from 'react-navigation';
 
 function getAction(router, path, params) {
   const action = router.getActionForPathAndParams(path, params);
   if (action) {
     return action;
   }
-  return {
+  return actions.navigate({
     params: { path },
     routeName: 'NotFound',
-    type: 'Navigate',
-  };
+  });
 }
 
 module.exports = (NavigationAwareView) => {
