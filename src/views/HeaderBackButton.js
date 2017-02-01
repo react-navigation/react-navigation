@@ -27,9 +27,8 @@ const HeaderBackButton = ({ onPress, title, tintColor }: Props) => (
   >
     <View style={styles.container}>
       <Image
-        style={styles.button}
+        style={[styles.button, { tintColor }]}
         source={require('./assets/back-icon.png')}
-        tintColor={tintColor}
       />
       {Platform.OS === 'ios' && title && (
         <Text style={[styles.title, { color: tintColor }]}>
