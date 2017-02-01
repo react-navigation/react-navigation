@@ -97,6 +97,8 @@ Perhaps your app has a unique URI which the built-in routers cannot handle. You 
 
 ```js
 
+import { actions } from 'react-navigation'
+
 const MyApp = StackNavigator({
   Home: { screen: HomeScreen },
   Profile: { screen: ProfileScreen },
@@ -111,17 +113,15 @@ MyApp.router = {
       params.magic === 'yes'
     ) {
       // returns a profile navigate action for /my/custom/path?magic=yes
-      return {
-        type: 'Navigate',
+      return actions.navigate({
         routeName: 'Profile',
-        action: {
+        action: actions.navigate({
           // This child action will get passed to the child router
           // ProfileScreen.router.getStateForAction to get the child
           // navigation state.
-          type: 'Navigate',
           routeName: 'Friends',
-        },
-      };
+        }),
+      });
       return null;
     }
     return MyApp.router.getStateForAction(action, state);

@@ -14,6 +14,7 @@ import CardStackStyleInterpolator from './CardStackStyleInterpolator';
 import CardStackPanResponder from './CardStackPanResponder';
 import Header from './Header';
 import NavigationPropTypes from '../PropTypes';
+import actions from '../actions';
 import addNavigationHelpers from '../addNavigationHelpers';
 import SceneView from './SceneView';
 
@@ -119,8 +120,8 @@ class CardStack extends React.Component<DefaultProps, Props, void> {
 
     /**
      * The navigation prop, including the state and the dispatcher for the back
-     * action. The dispatcher must handle the back action ({type: 'Back'}), and
-     * the navigation state has this shape:
+     * action. The dispatcher must handle the back action
+     * ({ type: actions.BACK }), and the navigation state has this shape:
      *
      * ```js
      * const navigationState = {
@@ -346,7 +347,7 @@ class CardStack extends React.Component<DefaultProps, Props, void> {
     if (this.props.gesturesEnabled) {
       let onNavigateBack = null;
       if (this.props.navigation.state.index !== 0) {
-        onNavigateBack = () => this.props.navigation.dispatch({ type: 'Back', key: props.scene.route.key });
+        onNavigateBack = () => this.props.navigation.dispatch(actions.back({ key: props.scene.route.key }));
       }
       const panHandlersProps = {
         ...props,

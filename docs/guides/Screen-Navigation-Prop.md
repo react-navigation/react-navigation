@@ -102,18 +102,21 @@ Optionally provide a key, which specifies the route to go back from. By default,
 
 Use dispatch to send any navigation action to the router. The other navigation functions use dispatch behind the scenes.
 
+Note that if you want to dispatch react-navigation actions you should use the action creators provided in this library.
+
 The following actions are supported:
 
 ### Navigate
 ```js
-{
-  type: 'Navigate',
+import { actions } from 'react-navigation'
+
+actions.navigate({
   routeName: 'Profile',
   params: {},
 
   // navigate can have a nested navigate action that will be run inside the child router
-  action: {type: 'Navigate', routeName: 'SubProfileRoute'}
-}
+  action: actions.navigate({ routeName: 'SubProfileRoute'})
+})
 ```
 
 
@@ -122,10 +125,11 @@ The following actions are supported:
 The `Reset` action wipes the whole navigation state and replaces it with the result of several actions.
 
 ```js
-{
-  type: 'Reset',
-  actions: ,
-}
+import { actions } from 'react-navigation'
+
+actions.reset({
+  actions: actions.navigate({ routeName: 'Profile'}),
+})
 ```
 
 ### SetParams
@@ -133,10 +137,11 @@ The `Reset` action wipes the whole navigation state and replaces it with the res
 When dispatching `SetParams`, the router will produce a new state that has changed the params of a particular route, as identified by the key
 
 ```js
-{
-  type: 'SetParams',
+import { actions } from 'react-navigation'
+
+actions.setParams({
   params: {}, // these are the new params that will be merged into the existing route params
   // The key of the route that should get the new params
   key: 'screen-123',
-}
+})
 ```

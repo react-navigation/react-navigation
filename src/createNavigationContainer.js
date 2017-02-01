@@ -6,6 +6,7 @@ import {
   Linking,
 } from 'react-native';
 import invariant from 'fbjs/lib/invariant';
+import actions from './actions';
 import addNavigationHelpers from './addNavigationHelpers';
 
 import type {
@@ -77,7 +78,7 @@ const createNavigationContainer = (
       this.state = null;
       if (this._isStateful()) {
         this.state = {
-          nav: Component.router.getStateForAction({ type: 'Init' }),
+          nav: Component.router.getStateForAction(actions.init()),
         };
       }
     }
@@ -85,7 +86,7 @@ const createNavigationContainer = (
     componentDidMount() {
       if (this._isStateful()) {
         this.subs = BackAndroid.addEventListener('backPress', () =>
-           this.dispatch({ type: 'Back' })
+           this.dispatch(actions.back())
         );
         Linking.addEventListener('url', this._handleOpenURL);
         Linking.getInitialURL().then((url: string) => {
