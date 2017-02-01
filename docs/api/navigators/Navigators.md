@@ -38,3 +38,4 @@ class App extends React.Component {
   }
 }
 ```
+Please notice that this solution should only be used on the top level navigator.  
