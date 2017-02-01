@@ -209,25 +209,22 @@ class CardStack extends React.Component<DefaultProps, Props, void> {
         mode={headerMode}
         onNavigateBack={() => this.props.navigation.goBack(null)}
         renderLeftComponent={(props: NavigationTransitionProps) => {
-          const header = this.props.router.getScreenConfig(props.navigation, 'header');
-          if (header && header.left) {
-            return header.left;
-          }
-          return undefined;
+          const header = this.props.router.getScreenConfig(props.navigation, 'header') || {};
+          return header.left;
         }}
         renderRightComponent={(props: NavigationTransitionProps) => {
-          const header = this.props.router.getScreenConfig(props.navigation, 'header');
-          if (header && header.right) {
-            return header.right;
-          }
-          return undefined;
+          const header = this.props.router.getScreenConfig(props.navigation, 'header') || {};
+          return header.right;
         }}
         renderTitleComponent={(props: NavigationTransitionProps) => {
-          const header = this.props.router.getScreenConfig(props.navigation, 'header');
-          if (header && header.title && React.isValidElement(header.title)) {
-            return header.title;
+          const header = this.props.router.getScreenConfig(props.navigation, 'header') || {};
+          `// renderXComponent can only return a custom React Element to be rendered in place
+          // of a default component or null to disable it entirely. Since `title` can be
+          // sometimes a string, we return undefined to use default renderer instead.`
+          if (typeof header.title === 'string') {
+            return undefined;
           }
-          return undefined;
+          return header.title;
         }}
       />
     );
