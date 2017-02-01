@@ -381,6 +381,7 @@ export type NavigationTransitionProps = {
   // is the index of the scene
   scene: NavigationScene,
   index: number,
+  navigation: NavigationScreenProp<NavigationRoute, NavigationAction>,
 
   // The gesture distance for `horizontal` and `vertical` transitions
   gestureResponseDistance?: ?number,

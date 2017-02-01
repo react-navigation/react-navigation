@@ -4,6 +4,8 @@ import React, { PropTypes } from 'react';
 import {
   I18nManager,
   Image,
+  Text,
+  View,
   Platform,
   StyleSheet,
 } from 'react-native';
@@ -12,21 +14,29 @@ import TouchableItem from './TouchableItem';
 
 type Props = {
   onPress: Function,
+  title?: string,
   tintColor?: string;
 };
 
-const HeaderBackButton = ({ onPress, tintColor }: Props) => (
+const HeaderBackButton = ({ onPress, title, tintColor }: Props) => (
   <TouchableItem
     delayPressIn={0}
     onPress={onPress}
     style={styles.container}
     borderless
   >
-    <Image
-      style={styles.button}
-      source={require('./assets/back-icon.png')}
-      tintColor={tintColor}
-    />
+    <View style={styles.container}>
+      <Image
+        style={styles.button}
+        source={require('./assets/back-icon.png')}
+        tintColor={tintColor}
+      />
+      {Platform.OS === 'ios' && title && (
+        <Text style={[styles.title, { color: tintColor }]}>
+          {title}
+        </Text>
+      )}
+    </View>
   </TouchableItem>
 );
 
@@ -35,18 +45,36 @@ HeaderBackButton.propTypes = {
   tintColor: PropTypes.string,
 };
 
+HeaderBackButton.defaultProps = {
+  tintColor: Platform.select({
+    ios: '#037aff',
+  }),
+};
+
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     justifyContent: 'center',
+    flexDirection: 'row',
   },
-  button: {
-    height: 24,
-    width: 24,
-    margin: Platform.OS === 'ios' ? 10 : 16,
-    resizeMode: 'contain',
-    transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }],
+  title: {
+    fontSize: 17,
   },
+  button: Platform.OS === 'ios'
+    ? {
+      height: 21,
+      width: 13,
+      margin: 10,
+      marginRight: 5,
+      transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }],
+    }
+    : {
+      height: 24,
+      width: 24,
+      margin: 16,
+      resizeMode: 'contain',
+      transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }],
+    },
 });
 
 export default HeaderBackButton;

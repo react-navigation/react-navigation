@@ -15,15 +15,17 @@ import HeaderTitle from './HeaderTitle';
 import HeaderBackButton from './HeaderBackButton';
 import HeaderStyleInterpolator from './HeaderStyleInterpolator';
 import NavigationPropTypes from '../PropTypes';
-import TransitionConfigs from './TransitionConfigs';
+import addNavigationHelpers from '../addNavigationHelpers';
 
 import type {
   NavigationScene,
+  NavigationRouter,
+  NavigationRoute,
+  NavigationAction,
+  NavigationScreenProp,
   NavigationSceneRendererProps,
   NavigationStyleInterpolator,
 } from '../TypeDefinition';
-
-import type { TransitionConfig } from './TransitionConfigs';
 
 export type HeaderMode = 'float' | 'screen' | 'none';
 
@@ -31,13 +33,9 @@ type SubViewProps = NavigationSceneRendererProps & {
   onNavigateBack: ?() => void,
 };
 
-type SubViewRenderer = (subViewProps: SubViewProps) => ?React.Element<*>;
+type Navigation = NavigationScreenProp<NavigationRoute, NavigationAction>;
 
-type DefaultProps = {
-  renderLeftComponent: SubViewRenderer,
-  renderRightComponent: SubViewRenderer,
-  renderTitleComponent: SubViewRenderer,
-};
+type SubViewRenderer = (subViewProps: SubViewProps) => ?React.Element<*>;
 
 export type HeaderProps = NavigationSceneRendererProps & {
   mode: HeaderMode,
@@ -45,6 +43,8 @@ export type HeaderProps = NavigationSceneRendererProps & {
   renderLeftComponent: SubViewRenderer,
   renderRightComponent: SubViewRenderer,
   renderTitleComponent: SubViewRenderer,
+  tintColor: ?string,
+  router: NavigationRouter,
   style?: any,
 };
 
@@ -53,31 +53,11 @@ type SubViewName = 'left' | 'title' | 'right';
 const APPBAR_HEIGHT = Platform.OS === 'ios' ? 44 : 56;
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : 0;
 
-class Header extends React.Component<DefaultProps, HeaderProps, *> {
+class Header extends React.Component<void, HeaderProps, void> {
 
   static HEIGHT = APPBAR_HEIGHT + STATUSBAR_HEIGHT;
   static Title = HeaderTitle;
   static BackButton = HeaderBackButton;
-
-  static defaultProps = {
-    renderTitleComponent: (props: SubViewProps) => {
-      const title = String(props.scene.route.title || '');
-      return <HeaderTitle>{title}</HeaderTitle>;
-    },
-
-    renderLeftComponent: (props: SubViewProps) => {
-      if (props.scene.index === 0 || !props.onNavigateBack) {
-        return null;
-      }
-      return (
-        <HeaderBackButton
-          onPress={props.onNavigateBack}
-        />
-      );
-    },
-
-    renderRightComponent: () => null,
-  };
 
   // propTypes for people who don't use Flow
   static propTypes = {
@@ -86,6 +66,7 @@ class Header extends React.Component<DefaultProps, HeaderProps, *> {
     renderLeftComponent: PropTypes.func,
     renderRightComponent: PropTypes.func,
     renderTitleComponent: PropTypes.func,
+    router: PropTypes.object,
     style: PropTypes.any,
   };
 
@@ -99,11 +80,60 @@ class Header extends React.Component<DefaultProps, HeaderProps, *> {
     );
   }
 
+  _getHeaderTitle(navigation: Navigation): ?string {
+    const header = this.props.router.getScreenConfig(navigation, 'header');
+    let title;
+    if (header && header.title) {
+      title = header.title;
+    } else {
+      title = this.props.router.getScreenConfig(navigation, 'title');
+    }
+    return typeof title === 'string' ? title : undefined;
+  }
+
+  _getHeaderTintColor(navigation: Navigation): ?string {
+    const header = this.props.router.getScreenConfig(navigation, 'header');
+    if (header && header.tintColor) {
+      return header.tintColor;
+    }
+    return undefined;
+  }
+
+  _renderTitleComponent = (props: SubViewProps) => {
+    const color = this._getHeaderTintColor(props.navigation);
+    const title = this._getHeaderTitle(props.navigation);
+    return <HeaderTitle style={color && ({ color })}>{title}</HeaderTitle>;
+  };
+
+  _renderLeftComponent = (props: SubViewProps) => {
+    if (props.scene.index === 0 || !props.onNavigateBack) {
+      return null;
+    }
+    const tintColor = this._getHeaderTintColor(props.navigation);
+    const previousNavigation = addNavigationHelpers({
+      ...props.navigation,
+      state: props.scenes[props.scene.index - 1].route,
+    });
+    const backButtonTitle = this._getHeaderTitle(previousNavigation);
+    return (
+      <HeaderBackButton
+        onPress={props.onNavigateBack}
+        tintColor={tintColor}
+        title={backButtonTitle}
+      />
+    );
+  };
+
+  _renderRightComponent = () => {
+    return null;
+  };
+
   _renderLeft(props: NavigationSceneRendererProps): ?React.Element<*> {
     return this._renderSubView(
       props,
       'left',
       this.props.renderLeftComponent,
+      this._renderLeftComponent,
       HeaderStyleInterpolator.forLeft,
     );
   }
@@ -124,6 +154,7 @@ class Header extends React.Component<DefaultProps, HeaderProps, *> {
       { ...props, style },
       'title',
       this.props.renderTitleComponent,
+      this._renderTitleComponent,
       HeaderStyleInterpolator.forCenter,
     );
   }
@@ -133,6 +164,7 @@ class Header extends React.Component<DefaultProps, HeaderProps, *> {
       props,
       'right',
       this.props.renderRightComponent,
+      this._renderRightComponent,
       HeaderStyleInterpolator.forRight,
     );
   }
@@ -141,6 +173,7 @@ class Header extends React.Component<DefaultProps, HeaderProps, *> {
     props: NavigationSceneRendererProps,
     name: SubViewName,
     renderer: SubViewRenderer,
+    defaultRenderer: SubViewRenderer,
     styleInterpolator: NavigationStyleInterpolator,
   ): ?React.Element<*> {
     const {
@@ -165,7 +198,12 @@ class Header extends React.Component<DefaultProps, HeaderProps, *> {
       ...props,
       onNavigateBack: this.props.onNavigateBack,
     };
-    const subView = renderer(subViewProps);
+
+    let subView = renderer(subViewProps);
+    if (subView === undefined) {
+      subView = defaultRenderer(subViewProps);
+    }
+
     if (subView === null) {
       return null;
     }
@@ -200,6 +238,10 @@ class Header extends React.Component<DefaultProps, HeaderProps, *> {
         const props = NavigationPropTypes.extractSceneRendererProps(this.props);
         props.scene = scene;
         props.index = index;
+        props.navigation = addNavigationHelpers({
+          ...this.props.navigation,
+          state: scene.route,
+        });
         return props;
       }): Array<NavigationSceneRendererProps>);
       leftComponents = scenesProps.map(this._renderLeft, this);
@@ -227,8 +269,8 @@ class Header extends React.Component<DefaultProps, HeaderProps, *> {
     return (
       <Animated.View {...rest} style={[styles.container, style]}>
         <View style={styles.appBar}>
-          {leftComponents}
           {titleComponents}
+          {leftComponents}
           {rightComponents}
         </View>
       </Animated.View>
