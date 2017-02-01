@@ -52,6 +52,8 @@ export default (
   );
   return {
     getStateForAction(action: NavigationAction, inputState: ?NavigationState): ?NavigationState {
+      action = actions.mapDeprecatedActionAndWarn(action)
+
       // Establish a default state
       let state = inputState;
       if (!state) {

@@ -357,4 +357,11 @@ describe('TabRouter', () => {
     const { path } = router.getPathAndParamsForState(state);
     expect(path).toEqual('f/Baz');
   });
+
+  test('Maps old actions (uses "getStateForAction returns null when navigating to same tab" test)', () => {
+    const router = TabRouter({ Foo: BareLeafRouteConfig, Bar: BareLeafRouteConfig }, { initialRouteName: 'Bar' });
+    const state = router.getStateForAction({ type: 'Init' });
+    const state2 = router.getStateForAction({ type: 'Navigate', routeName: 'Bar' }, state);
+    expect(state2).toEqual(null);
+  });
 });

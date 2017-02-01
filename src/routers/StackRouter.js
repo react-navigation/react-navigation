@@ -91,6 +91,8 @@ export default (
     },
 
     getStateForAction(action: NavigationStackAction, state: ?NavigationState) {
+      action = actions.mapDeprecatedActionAndWarn(action)
+
       // Set up the initial state if needed
       if (!state) {
         let route = {};
