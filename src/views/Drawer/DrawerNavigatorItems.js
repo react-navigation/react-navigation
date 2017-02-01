@@ -25,6 +25,7 @@ type Props = {
   inactiveTintColor?: string;
   inactiveBackgroundColor?: string;
   getLabelText: (scene: DrawerScene) => string;
+  getScreenConfig: (routeKey: string, configName: string) => string;
   renderIcon: (scene: DrawerScene) => ?React.Element<*>;
   style?: any;
 };
