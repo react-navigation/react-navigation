@@ -13,6 +13,7 @@ import Card from './Card';
 import CardStackStyleInterpolator from './CardStackStyleInterpolator';
 import CardStackPanResponder from './CardStackPanResponder';
 import Header from './Header';
+import HeaderBackButton from './HeaderBackButton';
 import NavigationPropTypes from '../PropTypes';
 import addNavigationHelpers from '../addNavigationHelpers';
 import SceneView from './SceneView';
@@ -21,6 +22,7 @@ import type {
   NavigationAction,
   NavigationScreenProp,
   NavigationState,
+  NavigationScene,
   NavigationRoute,
   NavigationSceneRenderer,
   NavigationSceneRendererProps,
@@ -191,6 +193,21 @@ class CardStack extends React.Component<DefaultProps, Props, void> {
     return transitionSpec;
   }
 
+  _getHeaderTitleForScene(scene: NavigationScene): ?(string | React.Element<*>) {
+    const navigation = this._getChildNavigation(scene);
+    const header = this.props.router.getScreenConfig(navigation, 'header');
+
+    let title = null;
+
+    if (header && header.title) {
+      title = header.title;
+    } else {
+      title = this.props.router.getScreenConfig(navigation, 'title');
+    }
+
+    return title;
+  }
+
   _renderHeader(props: NavigationTransitionProps, headerMode: HeaderMode): ?React.Element<*> {
     const navigation = this._getChildNavigation(props.scene);
     const header = this.props.router.getScreenConfig(navigation, 'header') || {};
@@ -219,17 +236,14 @@ class CardStack extends React.Component<DefaultProps, Props, void> {
           if (header && header.right) {
             return header.right;
           }
+          const { renderRightComponent } = this.props.headerComponent.defaultProps || {};
+          if (typeof renderRightComponent === 'function') {
+            return renderRightComponent(props);
+          }
           return null;
         }}
         renderTitleComponent={({ scene }) => {
-          const navigation = this._getChildNavigation(scene);
-          const header = this.props.router.getScreenConfig(navigation, 'header');
-          let title = null;
-          if (header && header.title) {
-            title = header.title;
-          } else {
-            title = this.props.router.getScreenConfig(navigation, 'title');
-          }
+          const title = this._getHeaderTitleForScene(scene);
           if (typeof title === 'string') {
             return <Header.Title>{title}</Header.Title>;
           }
