@@ -85,11 +85,8 @@ export default class TabBarTop extends PureComponent<DefaultProps, Props, void> 
         </Animated.Text>
       );
     }
-    return (
-      <Animated.View style={labelStyle}>
-        {label}
-      </Animated.View>
-    );
+
+    return label;
   };
 
   _renderIcon = (scene: TabScene) => {
