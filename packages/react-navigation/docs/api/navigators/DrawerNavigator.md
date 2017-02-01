@@ -79,7 +79,12 @@ this.props.navigation.navigate('DrawerClose'); // close drawer
 DrawerNavigator(RouteConfigs, DrawerNavigatorConfig)
 ```
 
-### Drawer Navigator Options
+### RouteConfigs
+
+The route configs object is a mapping from route name to a route config, which tells the navigator what to present for that route, see [example](https://github.com/coodoo/react-navigation/blob/master/docs/api/navigators/StackNavigator.md#routeconfigs) from `StackNavigator`.
+
+
+### DrawerNavigatorConfig
 
 - `drawerWidth` - Width of the drawer
 - `drawerPosition` - Options are `left` or `right`. Default is `left` position.
@@ -101,7 +106,7 @@ Several options get passed to the underlying router to modify navigation logic:
 - `inactiveBackgroundColor` - background color of the inactive label
 - `style` - style object for the content section
 
-Example:
+#### Example:
 
 ```js
 contentOptions: {
@@ -112,10 +117,19 @@ contentOptions: {
 }
 ```
 
-
 ### Navigator Props
 
-The navigator component created by `DrawerNavigator(...)` takes the following props,
+The navigator component created by `DrawerNavigator(...)` takes the following props:
 
-- `screenProps` - Props to pass to each child screen
+- `screenProps` - Pass down extra options to child screens, for example:
 
+
+ ```jsx
+ const DrawerNav = DrawerNavigator({
+   // config
+ });
+ 
+ <DrawerNav
+   screenProps={/* these will get passed to the screen components */}
+ />
+ ```
