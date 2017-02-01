@@ -71,11 +71,15 @@ export default class TabBarBottom extends PureComponent<DefaultProps, Props, voi
       inputRange,
       outputRange,
     });
-    return (
-      <Animated.Text style={[styles.label, { color }]}>
-        {this.props.getLabelText(scene)}
-      </Animated.Text>
-    );
+    const label = this.props.getLabelText(scene);
+    if (typeof label === 'string') {
+      return (
+        <Animated.Text style={[styles.label, { color }]}>
+          {label}
+        </Animated.Text>
+      );
+    }
+    return label;
   };
 
   _renderIcon = (scene: TabScene) => {

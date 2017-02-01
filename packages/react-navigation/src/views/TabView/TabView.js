@@ -86,7 +86,7 @@ class TabView extends PureComponent<void, Props, void> {
 
   _getLabelText = ({ route }: TabScene) => {
     const tabBar = this.props.router.getScreenConfig(this.props.childNavigationProps[route.key], 'tabBar');
-    if (tabBar && typeof tabBar.label === 'string') {
+    if (tabBar && typeof tabBar.label !== 'undefined') {
       return tabBar.label;
     } else {
       const title = this.props.router.getScreenConfig(this.props.childNavigationProps[route.key], 'title');

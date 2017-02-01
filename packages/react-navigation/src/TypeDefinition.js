@@ -146,7 +146,7 @@ export type TabBarConfig = {
   /**
    * Label text used by the tab bar.
    */
-  label?: string;
+  label?: string | React.Element<*>;
 };
 
 export type DrawerConfig = {

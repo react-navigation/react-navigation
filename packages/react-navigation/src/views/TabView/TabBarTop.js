@@ -78,11 +78,15 @@ export default class TabBarTop extends PureComponent<DefaultProps, Props, void> 
       outputRange,
     });
     const label = this.props.getLabelText(scene);
-    return (
-      <Animated.Text style={[styles.label, labelStyle, { color }]}>
-        {upperCaseLabel && label ? label.toUpperCase() : label}
-      </Animated.Text>
-    );
+    if (typeof label === 'string') {
+      return (
+        <Animated.Text style={[styles.label, labelStyle, { color }]}>
+          {label}
+        </Animated.Text>
+      );
+    }
+
+    return label;
   };
 
   _renderIcon = (scene: TabScene) => {
