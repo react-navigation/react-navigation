@@ -16,11 +16,12 @@ type Props = {
 };
 
 export default class SceneView extends PureComponent<void, Props, void> {
-  props: Props;
 
   static childContextTypes = {
     navigation: React.PropTypes.object.isRequired,
   };
+
+  props: Props;
 
   getChildContext(): ContextWithNavigation {
     return {
