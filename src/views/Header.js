@@ -275,7 +275,7 @@ class Header extends React.Component<void, HeaderProps, HeaderState> {
   }
 
   render(): React.Element<*> {
-    let children = null;
+    let children;
 
     if (this.props.mode === 'float') {
       const scenesProps: Array<NavigationSceneRendererProps> = this.props.scenes
