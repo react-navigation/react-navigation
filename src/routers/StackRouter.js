@@ -112,6 +112,8 @@ export default (
             routeName: initialRouteName,
             params: initialRouteParams,
           }));
+        } else {
+          route.params = initialRouteParams;
         }
         const params = (route.params || action.params) && {
           ...(route.params || {}),
