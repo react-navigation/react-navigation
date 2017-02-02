@@ -246,7 +246,7 @@ class Header extends React.Component<void, HeaderProps, void> {
   }
 
   render(): React.Element<*> {
-    let component = null;
+    let children = null;
 
     if (this.props.mode === 'float') {
       const scenesProps: Array<NavigationSceneRendererProps> = this.props.scenes
@@ -260,9 +260,9 @@ class Header extends React.Component<void, HeaderProps, void> {
           }),
         }));
 
-      component = scenesProps.map(this._renderHeader, this);
+      children = scenesProps.map(this._renderHeader, this);
     } else {
-      component = this._renderHeader({
+      children = this._renderHeader({
         ...this.props,
         position: new Animated.Value(this.props.scene.index),
         progress: new Animated.Value(0),
@@ -275,7 +275,7 @@ class Header extends React.Component<void, HeaderProps, void> {
     return (
       <Animated.View {...rest} style={[styles.container, style]}>
         <View style={styles.appBar}>
-          {component}
+          {children}
         </View>
       </Animated.View>
     );
