@@ -107,7 +107,7 @@ const HybridContainer = (ReactScreens) => {
         const routeConfig = router && router.getScreenConfig({
           state: routes[index], dispatch: () => {}
         }, index, true);
-        title = (routeConfig && routeConfig.title) || route.routeName;
+        title = (routeConfig && routeConfig.title) || router.routeName;
       }
       HybridNavigationManager.setTitle(rootTag, title || name);
     }
