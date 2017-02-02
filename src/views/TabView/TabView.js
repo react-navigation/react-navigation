@@ -158,7 +158,7 @@ class TabView extends PureComponent<void, Props, void> {
     let renderFooter;
 
     const { state } = this.props.navigation;
-    const tabBar = this.props.router.getScreenConfig(this.props.childNavigationProps[state.routes[state.index].routeName], 'tabBar');
+    const tabBar = this.props.router.getScreenConfig(this.props.childNavigationProps[state.routes[state.index].key], 'tabBar');
 
     if ((typeof tabBarComponent !== 'undefined') && (tabBar.visible !== false)) {
       if (tabBarPosition === 'bottom') {
