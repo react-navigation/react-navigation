@@ -5,6 +5,7 @@ import React, { PropTypes } from 'react';
 import {
   Animated,
   Platform,
+  Dimensions,
   StyleSheet,
   View,
 } from 'react-native';
@@ -209,11 +210,22 @@ class Header extends React.Component<void, HeaderProps, void> {
     }
 
     const pointerEvents = offset !== 0 || isStale ? 'none' : 'box-none';
+
+    const layout = name === 'left' || name === 'right'
+      ? this._getSubViewLayout(props, 'title')
+      : undefined;
+
+    const layoutStyle = layout && layout.width
+      ? { width: (Dimensions.get('window').width - layout.width) / 2}
+      : {};
+
     return (
       <Animated.View
         pointerEvents={pointerEvents}
+        onLayout={(e) => this._cacheSubViewLayout(e.nativeEvent.layout, props, name)}
         key={`${name}_${key}`}
         style={[
+          layoutStyle,
           styles.item,
           styles[name],
           props.style,
@@ -223,6 +235,23 @@ class Header extends React.Component<void, HeaderProps, void> {
         {subView}
       </Animated.View>
     );
+  }
+
+  _cacheSubViewLayout(
+    layout: Object,
+    props: NavigationSceneRendererProps,
+    name: SubViewName
+  ): void {
+    this.setState({
+      [`${props.scene.key}_${name}`]: layout,
+    });
+  }
+
+  _getSubViewLayout(
+    props: NavigationSceneRendererProps,
+    name: SubViewName
+  ): ?Object {
+    return (this.state || {})[`${props.scene.key}_${name}`];
   }
 
   _renderHeader(props: NavigationSceneRendererProps): React.Element<*> {
@@ -235,11 +264,11 @@ class Header extends React.Component<void, HeaderProps, void> {
 
     return (
       <View
-        style={StyleSheet.absoluteFill}
+        style={[StyleSheet.absoluteFill, styles.header]}
         key={`scene_${props.scene.key}`}
       >
-        {title}
         {left}
+        {title}
         {right}
       </View>
     );
@@ -298,28 +327,22 @@ const styles = StyleSheet.create({
     height: APPBAR_HEIGHT,
     position: 'relative',
   },
+  header: {
+    flexDirection: 'row',
+  },
   item: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   title: {
-    bottom: 0,
-    left: 40,
-    position: 'absolute',
-    right: 40,
-    top: 0,
+    flex: 1,
+    justifyContent: 'center',
   },
   left: {
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-    top: 0,
+    justifyContent: 'flex-start',
   },
   right: {
-    bottom: 0,
-    position: 'absolute',
-    right: 0,
-    top: 0,
+    justifyContent: 'flex-end',
   },
 });
 
