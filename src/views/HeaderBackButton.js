@@ -57,7 +57,6 @@ HeaderBackButton.defaultProps = {
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    justifyContent: 'center',
     flexDirection: 'row',
   },
   title: {

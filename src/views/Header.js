@@ -338,9 +338,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
-  left: {
-    justifyContent: 'flex-start',
-  },
   right: {
     justifyContent: 'flex-end',
   },
