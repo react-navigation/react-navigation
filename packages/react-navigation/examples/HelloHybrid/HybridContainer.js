@@ -97,6 +97,7 @@ const HybridContainer = (ReactScreens) => {
     componentWillUpdate(props, state) {
       const { name, rootTag } = props;
       const ScreenView = ReactScreens[name];
+
       if (!ScreenView) {
         console.log('Experiencing an error! Fix me!')
       }
@@ -107,7 +108,7 @@ const HybridContainer = (ReactScreens) => {
         const routeConfig = router && router.getScreenConfig({
           state: routes[index], dispatch: () => {}
         }, index, true);
-        title = (routeConfig && routeConfig.title) || route.routeName;
+        title = (routeConfig && routeConfig.title) || state.navState.routeName;
       }
       HybridNavigationManager.setTitle(rootTag, title || name);
     }
