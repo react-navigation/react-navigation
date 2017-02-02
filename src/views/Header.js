@@ -160,20 +160,9 @@ class Header extends React.Component<void, HeaderProps, HeaderState> {
     );
   }
 
-  _renderTitle(props: NavigationSceneRendererProps, options: *): ?React.Element<*> {
-    const style = {};
-
-    if (Platform.OS === 'android') {
-      if (!options.hasLeftComponent) {
-        style.left = 0;
-      }
-      if (!options.hasRightComponent) {
-        style.right = 0;
-      }
-    }
-
+  _renderTitle(props: NavigationSceneRendererProps): ?React.Element<*> {
     return this._renderSubView(
-      { ...props, style },
+      props,
       'title',
       this.props.renderTitleComponent,
       this._renderTitleComponent,
@@ -271,10 +260,7 @@ class Header extends React.Component<void, HeaderProps, HeaderState> {
   _renderHeader(props: NavigationSceneRendererProps): React.Element<*> {
     const left = this._renderLeft(props);
     const right = this._renderRight(props);
-    const title = this._renderTitle(props, {
-      hasLeftComponent: !!left,
-      hasRightComponent: !!right,
-    });
+    const title = this._renderTitle(props);
 
     return (
       <View
