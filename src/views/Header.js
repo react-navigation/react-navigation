@@ -38,6 +38,23 @@ type Navigation = NavigationScreenProp<NavigationRoute, NavigationAction>;
 
 type SubViewRenderer = (subViewProps: SubViewProps) => ?React.Element<*>;
 
+type LayoutEvent = {
+  nativeEvent: {
+    layout: {
+      x: number;
+      y: number;
+      width: number;
+      height: number;
+    },
+  };
+};
+
+type HeaderState = {
+  widths: {
+    [key: string]: number,
+  },
+};
+
 export type HeaderProps = NavigationSceneRendererProps & {
   mode: HeaderMode,
   onNavigateBack: ?Function,
@@ -54,7 +71,7 @@ type SubViewName = 'left' | 'title' | 'right';
 const APPBAR_HEIGHT = Platform.OS === 'ios' ? 44 : 56;
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : 0;
 
-class Header extends React.Component<void, HeaderProps, void> {
+class Header extends React.Component<void, HeaderProps, HeaderState> {
 
   static HEIGHT = APPBAR_HEIGHT + STATUSBAR_HEIGHT;
   static Title = HeaderTitle;
@@ -69,6 +86,10 @@ class Header extends React.Component<void, HeaderProps, void> {
     renderTitleComponent: PropTypes.func,
     router: PropTypes.object,
     style: PropTypes.any,
+  };
+
+  state = {
+    widths: {},
   };
 
   props: HeaderProps;
@@ -211,21 +232,31 @@ class Header extends React.Component<void, HeaderProps, void> {
 
     const pointerEvents = offset !== 0 || isStale ? 'none' : 'box-none';
 
-    const layout = name === 'left' || name === 'right'
-      ? this._getSubViewLayout(props, 'title')
+    // Only measure `title` component
+    const onLayout = name === 'title'
+      ? (e: LayoutEvent) => {
+        this.setState({
+          widths: {
+            ...this.state.widths,
+            [`${index}`]: e.nativeEvent.layout.width,
+          },
+        });
+      }
       : undefined;
 
-    const layoutStyle = layout && layout.width
-      ? { width: (Dimensions.get('window').width - layout.width) / 2}
-      : {};
+    const width = name === 'left' || name === 'right'
+      ? this.state.widths[`${index}`]
+      : undefined;
 
     return (
       <Animated.View
         pointerEvents={pointerEvents}
-        onLayout={(e) => this._cacheSubViewLayout(e.nativeEvent.layout, props, name)}
+        onLayout={onLayout}
         key={`${name}_${key}`}
         style={[
-          layoutStyle,
+          width && {
+            width: (Dimensions.get('window').width - width) / 2,
+          },
           styles.item,
           styles[name],
           props.style,
@@ -235,23 +266,6 @@ class Header extends React.Component<void, HeaderProps, void> {
         {subView}
       </Animated.View>
     );
-  }
-
-  _cacheSubViewLayout(
-    layout: Object,
-    props: NavigationSceneRendererProps,
-    name: SubViewName
-  ): void {
-    this.setState({
-      [`${props.scene.key}_${name}`]: layout,
-    });
-  }
-
-  _getSubViewLayout(
-    props: NavigationSceneRendererProps,
-    name: SubViewName
-  ): ?Object {
-    return (this.state || {})[`${props.scene.key}_${name}`];
   }
 
   _renderHeader(props: NavigationSceneRendererProps): React.Element<*> {
