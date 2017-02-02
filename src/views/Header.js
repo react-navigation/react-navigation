@@ -225,53 +225,57 @@ class Header extends React.Component<void, HeaderProps, void> {
     );
   }
 
-  render(): React.Element<*> {
-    // eslint-disable-next-line no-unused-vars
-    const { scenes, scene, style, position, progress, ...rest } = this.props;
+  _renderHeader(props: NavigationSceneRendererProps): React.Element<*> {
+    const left = this._renderLeft(props);
+    const right = this._renderRight(props);
+    const title = this._renderTitle(props, {
+      hasLeftComponent: !!left,
+      hasRightComponent: !!right,
+    });
 
-    let leftComponents = null;
-    let titleComponents = null;
-    let rightComponents = null;
+    return (
+      <View
+        style={StyleSheet.absoluteFill}
+        key={`scene_${props.scene.key}`}
+      >
+        {title}
+        {left}
+        {right}
+      </View>
+    );
+  }
+
+  render(): React.Element<*> {
+    let component = null;
 
     if (this.props.mode === 'float') {
-      const scenesProps = (scenes.map((scene: NavigationScene, index: number) => {
-        const props = NavigationPropTypes.extractSceneRendererProps(this.props);
-        props.scene = scene;
-        props.index = index;
-        props.navigation = addNavigationHelpers({
-          ...this.props.navigation,
-          state: scene.route,
-        });
-        return props;
-      }): Array<NavigationSceneRendererProps>);
-      leftComponents = scenesProps.map(this._renderLeft, this);
-      rightComponents = scenesProps.map(this._renderRight, this);
-      titleComponents = scenesProps.map((props: *, i: number) =>
-        this._renderTitle(props, {
-          hasLeftComponent: leftComponents && !!leftComponents[i],
-          hasRightComponent: rightComponents && !!rightComponents[i],
-        })
-      );
+      const scenesProps: Array<NavigationSceneRendererProps> = this.props.scenes
+        .map((scene: NavigationScene, index: number) => ({
+          ...NavigationPropTypes.extractSceneRendererProps(this.props),
+          scene,
+          index,
+          navigation: addNavigationHelpers({
+            ...this.props.navigation,
+            state: scene.route,
+          }),
+        }));
+
+      component = scenesProps.map(this._renderHeader, this);
     } else {
-      const staticRendererProps = {
+      component = this._renderHeader({
         ...this.props,
-        position: new Animated.Value(scene.index),
+        position: new Animated.Value(this.props.scene.index),
         progress: new Animated.Value(0),
-      };
-      leftComponents = this._renderLeft(staticRendererProps);
-      rightComponents = this._renderRight(staticRendererProps);
-      titleComponents = this._renderTitle(staticRendererProps, {
-        hasLeftComponent: !!leftComponents,
-        hasRightComponent: !!rightComponents,
       });
     }
+
+    // eslint-disable-next-line no-unused-vars
+    const { scenes, scene, style, position, progress, ...rest } = this.props;
 
     return (
       <Animated.View {...rest} style={[styles.container, style]}>
         <View style={styles.appBar}>
-          {titleComponents}
-          {leftComponents}
-          {rightComponents}
+          {component}
         </View>
       </Animated.View>
     );
@@ -292,6 +296,7 @@ const styles = StyleSheet.create({
   },
   appBar: {
     height: APPBAR_HEIGHT,
+    position: 'relative',
   },
   item: {
     flexDirection: 'row',
