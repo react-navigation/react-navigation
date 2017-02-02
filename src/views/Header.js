@@ -5,7 +5,6 @@ import React, { PropTypes } from 'react';
 import {
   Animated,
   Platform,
-  Dimensions,
   StyleSheet,
   View,
 } from 'react-native';
@@ -244,7 +243,7 @@ class Header extends React.Component<void, HeaderProps, HeaderState> {
         key={`${name}_${key}`}
         style={[
           width && {
-            width: (Dimensions.get('window').width - width) / 2,
+            width: (props.layout.initWidth - width) / 2,
           },
           styles.item,
           styles[name],
