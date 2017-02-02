@@ -127,9 +127,14 @@ The `Reset` action wipes the whole navigation state and replaces it with the res
 ```js
 import { NavigationActions } from 'react-navigation'
 
-NavigationActions.reset({
-  actions: NavigationActions.navigate({ routeName: 'Profile'}),
+const resetAction = NavigationActions.reset({
+  index: 0,
+  actions: [
+    NavigationActions.navigate({ routeName: 'Profile'})
+  ]
 })
+this.props.navigation.dispatch(resetAction)
+
 ```
 
 ### SetParams
