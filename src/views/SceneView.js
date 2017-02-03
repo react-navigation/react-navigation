@@ -19,6 +19,7 @@ export default class SceneView extends PureComponent<void, Props, void> {
 
   render() {
     const { screenProps, navigation, component: Component } = this.props;
-    return <Component {...screenProps} navigation={navigation} />;
+    // pass through screenProps as well for nested navigators
+    return <Component {...screenProps} screenProps={screenProps} navigation={navigation} />;
   }
 }
