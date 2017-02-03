@@ -99,10 +99,19 @@ class Header extends React.Component<void, HeaderProps, void> {
     return undefined;
   }
 
+  _getHeaderTitleStyle(navigation: Navigation): ?object {
+    const header = this.props.router.getScreenConfig(navigation, 'header');
+    if (header && header.titleStyle) {
+      return header.titleStyle;
+    }
+    return undefined;
+  }
+
   _renderTitleComponent = (props: SubViewProps) => {
+    const titleStyle = this._getHeaderTitleStyle(props.navigation);
     const color = this._getHeaderTintColor(props.navigation);
     const title = this._getHeaderTitle(props.navigation);
-    return <HeaderTitle style={color && ({ color })}>{title}</HeaderTitle>;
+    return <HeaderTitle style={[color && { color }, titleStyle]}>{title}</HeaderTitle>;
   };
 
   _renderLeftComponent = (props: SubViewProps) => {

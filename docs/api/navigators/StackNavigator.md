@@ -121,6 +121,7 @@ All `navigationOptions` for the `StackNavigator`:
   - `right` - Custom React Element to display on the right side of the header
   - `left` - Custom React Element to display on the left side of the header
   - `style` - Style object for the navigation bar
+  - `titleStyle` - Style object for the title component
   - `tintColor` - Tint color for the header
 
 ### Navigator Props
