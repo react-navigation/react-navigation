@@ -73,6 +73,28 @@ describe('TabRouter', () => {
     });
   });
 
+  test('Handles the SetParams action', () => {
+    const router = TabRouter({
+      Foo: {
+        screen: () => <div />,
+      },
+      Bar: {
+        screen: () => <div />,
+      },
+    }, {
+      initialRouteName: 'Bar',
+      initialRouteParams: { name: 'Zoo' },
+    });
+    const state = router.getStateForAction({ type: NavigationActions.INIT });
+    const state2 = router.getStateForAction({
+      type: NavigationActions.SET_PARAMS,
+      params: { name: 'Qux' },
+      key: 'Init',
+    }, state);
+    expect(state2 && state2.index).toEqual(0);
+    expect(state2 && state2.routes[0].params).toEqual({ name: 'Qux' });
+  });
+
   test('getStateForAction returns null when navigating to same tab', () => {
     const router = TabRouter({ Foo: BareLeafRouteConfig, Bar: BareLeafRouteConfig }, { initialRouteName: 'Bar' });
     const state = router.getStateForAction({ type: NavigationActions.INIT });
