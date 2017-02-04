@@ -97,6 +97,8 @@ export type NavigationScreenOption<T> =
     router?: NavigationRouter) => T
   | T;
 
+export type Style = Object | number | false | void;
+
 export type HeaderConfig = {
   /**
    * Title string used by the navigation bar, or a custom component
@@ -121,7 +123,12 @@ export type HeaderConfig = {
   /**
    * Style passed into navigation bar container
    */
-  style?: Object,
+  style?: Style,
+
+  /**
+   * Style passed into navigation bar title
+   */
+  titleStyle?: Style,
 
   // // Style of title text
   // titleTextStyle?: $NavigationThunk<Object>,
@@ -254,7 +261,7 @@ export type NavigationStackViewConfig = {
   mode?: 'card' | 'modal',
   headerMode?: HeaderMode,
   headerComponent?: ReactClass<HeaderProps>,
-  cardStyle?: Object
+  cardStyle?: Style
 };
 
 export type NavigationStackRouterConfig = {
