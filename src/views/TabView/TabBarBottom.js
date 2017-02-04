@@ -39,7 +39,7 @@ type Props = {
   getLabelText: (scene: TabScene) => string;
   renderIcon: (scene: TabScene) => React.Element<*>;
   style: any;
-  labelStyle: any?;
+  labelStyle?: any;
 };
 
 export default class TabBarBottom extends PureComponent<DefaultProps, Props, void> {
