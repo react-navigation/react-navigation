@@ -1,9 +1,33 @@
 ## Screen tracking and analytics
 
-This example shows how to use a middleware to track navigation between screens and send to Google Analytics. The approach is generic, should work with any mobile analytics SDK.
+This example shows how to do screen tracking and send to Google Analytics. The approach can be adapted to any other mobile analytics SDK. 
 
-### Create middleware
-`screenTracking` is a Redux middleware that gets called during navigation action. It sends the trasnsition to Google Analytics when the app transitions, i.e. previousScreen !== currentScreen, to a new screen.  
+### Use componentDidUpdate hook
+`componentDidUpdate` has access the previous and current navigation state and its a good place to do screen tracking.
+
+```
+import { GoogleAnalyticsTracker } from 'react-native-google-analytics-bridge';
+
+const tracker = new GoogleAnalyticsTracker(GA_TRACKING_ID);
+
+const screenName = (navState) => {
+  return navState ? navState.routes[navState.index].routeName : void 0;
+};
+
+const AppNavigator = StackNavigator(AppRouteConfigs);
+
+AppNavigator.prototype.componentDidUpdate = function(prevProps, prevState) {
+  const currScreen = screenName(this.state.nav);
+  const prevScreen = screenName(prevState.nav);
+  if (!!currScreen && currScreen != prevScreen) {
+    console.log('tracking screen', currScreen);
+    tracker.trackScreenView(currScreen);
+  }
+}
+```
+
+### Use Redux
+When using Redux, `screenTracking` can be written as a Redux middleware.
 
 ```
 import { GoogleAnalyticsTracker } from 'react-native-google-analytics-bridge';
