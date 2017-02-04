@@ -39,6 +39,7 @@ type Props = {
   getLabelText: (scene: TabScene) => string;
   renderIcon: (scene: TabScene) => React.Element<*>;
   style: any;
+  labelStyle?: any;
 };
 
 export default class TabBarBottom extends PureComponent<DefaultProps, Props, void> {
@@ -59,6 +60,7 @@ export default class TabBarBottom extends PureComponent<DefaultProps, Props, voi
       navigationState,
       activeTintColor,
       inactiveTintColor,
+      labelStyle,
     } = this.props;
     const { index } = scene;
     const { routes } = navigationState;
@@ -74,7 +76,7 @@ export default class TabBarBottom extends PureComponent<DefaultProps, Props, voi
     const label = this.props.getLabelText(scene);
     if (typeof label === 'string') {
       return (
-        <Animated.Text style={[styles.label, { color }]}>
+        <Animated.Text style={[styles.label, labelStyle, { color }]}>
           {label}
         </Animated.Text>
       );

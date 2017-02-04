@@ -106,12 +106,14 @@ Several options get passed to the underlying router to modify navigation logic:
 - `inactiveTintColor` - label and icon color of the inactive tab
 - `inactiveBackgroundColor` - background color of the inactive tab
 - `style` - style object for the tab bar
+- `labelStyle` - style object for the tab label
 
 Example:
 
 ```js
 tabBarOptions: {
   activeTintColor: '#e91e63',
+  labelStyle: { fontSize: 12 },
   style: {
     backgroundColor: 'blue',
   }
