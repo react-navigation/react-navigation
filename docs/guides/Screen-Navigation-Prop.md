@@ -110,13 +110,15 @@ The following actions are supported:
 ```js
 import { NavigationActions } from 'react-navigation'
 
-NavigationActions.navigate({
+const navigationAction = NavigationActions.navigate({
   routeName: 'Profile',
   params: {},
 
   // navigate can have a nested navigate action that will be run inside the child router
   action: NavigationActions.navigate({ routeName: 'SubProfileRoute'})
 })
+this.props.navigation.dispatch(navigationAction)
+
 ```
 
 
@@ -144,9 +146,11 @@ When dispatching `SetParams`, the router will produce a new state that has chang
 ```js
 import { NavigationActions } from 'react-navigation'
 
-NavigationActions.setParams({
+const setParamsAction = NavigationActions.setParams({
   params: {}, // these are the new params that will be merged into the existing route params
   // The key of the route that should get the new params
   key: 'screen-123',
 })
+this.props.navigation.dispatch(setParamsAction)
+
 ```
