@@ -23,7 +23,7 @@ const HybridContainer = (ReactScreens) => {
       let ScreenView = ReactScreens[name];
       let screenKey = name;
       let navState = null;
-      const action = NavigationActions.navigate({ routeName: name, params };
+      const action = NavigationActions.navigate({ routeName: name, params });
       if (!ScreenView) {
         // Deep linking magic here. Try each screen to see if the state changes
         // in response to this action. The first screen who returns
