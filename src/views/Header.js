@@ -50,7 +50,7 @@ type LayoutEvent = {
 
 type HeaderState = {
   widths: {
-    [key: string]: number,
+    [key: number]: number,
   },
 };
 
@@ -226,14 +226,14 @@ class Header extends React.Component<void, HeaderProps, HeaderState> {
         this.setState({
           widths: {
             ...this.state.widths,
-            [`${index}`]: e.nativeEvent.layout.width,
+            [index]: e.nativeEvent.layout.width,
           },
         });
       }
       : undefined;
 
     const width = name === 'left' || name === 'right'
-      ? this.state.widths[`${index}`]
+      ? this.state.widths[index]
       : undefined;
 
     return (
