@@ -37,6 +37,23 @@ type Navigation = NavigationScreenProp<NavigationRoute, NavigationAction>;
 
 type SubViewRenderer = (subViewProps: SubViewProps) => ?React.Element<*>;
 
+type LayoutEvent = {
+  nativeEvent: {
+    layout: {
+      x: number;
+      y: number;
+      width: number;
+      height: number;
+    },
+  };
+};
+
+type HeaderState = {
+  widths: {
+    [key: number]: number,
+  },
+};
+
 export type HeaderProps = NavigationSceneRendererProps & {
   mode: HeaderMode,
   onNavigateBack: ?Function,
@@ -53,7 +70,7 @@ type SubViewName = 'left' | 'title' | 'right';
 const APPBAR_HEIGHT = Platform.OS === 'ios' ? 44 : 56;
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : 0;
 
-class Header extends React.Component<void, HeaderProps, void> {
+class Header extends React.Component<void, HeaderProps, HeaderState> {
 
   static HEIGHT = APPBAR_HEIGHT + STATUSBAR_HEIGHT;
   static Title = HeaderTitle;
@@ -68,6 +85,10 @@ class Header extends React.Component<void, HeaderProps, void> {
     renderTitleComponent: PropTypes.func,
     router: PropTypes.object,
     style: PropTypes.any,
+  };
+
+  state = {
+    widths: {},
   };
 
   props: HeaderProps;
@@ -147,20 +168,9 @@ class Header extends React.Component<void, HeaderProps, void> {
     );
   }
 
-  _renderTitle(props: NavigationSceneRendererProps, options: *): ?React.Element<*> {
-    const style = {};
-
-    if (Platform.OS === 'android') {
-      if (!options.hasLeftComponent) {
-        style.left = 0;
-      }
-      if (!options.hasRightComponent) {
-        style.right = 0;
-      }
-    }
-
+  _renderTitle(props: NavigationSceneRendererProps): ?React.Element<*> {
     return this._renderSubView(
-      { ...props, style },
+      props,
       'title',
       this.props.renderTitleComponent,
       this._renderTitleComponent,
@@ -218,11 +228,32 @@ class Header extends React.Component<void, HeaderProps, void> {
     }
 
     const pointerEvents = offset !== 0 || isStale ? 'none' : 'box-none';
+
+    // Only measure `title` component
+    const onLayout = name === 'title'
+      ? (e: LayoutEvent) => {
+        this.setState({
+          widths: {
+            ...this.state.widths,
+            [index]: e.nativeEvent.layout.width,
+          },
+        });
+      }
+      : undefined;
+
+    const width = name === 'left' || name === 'right'
+      ? this.state.widths[index]
+      : undefined;
+
     return (
       <Animated.View
         pointerEvents={pointerEvents}
+        onLayout={onLayout}
         key={`${name}_${key}`}
         style={[
+          width && {
+            width: (props.layout.initWidth - width) / 2,
+          },
           styles.item,
           styles[name],
           props.style,
@@ -234,53 +265,54 @@ class Header extends React.Component<void, HeaderProps, void> {
     );
   }
 
-  render(): React.Element<*> {
-    // eslint-disable-next-line no-unused-vars
-    const { scenes, scene, style, position, progress, ...rest } = this.props;
+  _renderHeader(props: NavigationSceneRendererProps): React.Element<*> {
+    const left = this._renderLeft(props);
+    const right = this._renderRight(props);
+    const title = this._renderTitle(props);
 
-    let leftComponents = null;
-    let titleComponents = null;
-    let rightComponents = null;
+    return (
+      <View
+        style={[StyleSheet.absoluteFill, styles.header]}
+        key={`scene_${props.scene.key}`}
+      >
+        {left}
+        {title}
+        {right}
+      </View>
+    );
+  }
+
+  render(): React.Element<*> {
+    let children;
 
     if (this.props.mode === 'float') {
-      const scenesProps = (scenes.map((scene: NavigationScene, index: number) => {
-        const props = NavigationPropTypes.extractSceneRendererProps(this.props);
-        props.scene = scene;
-        props.index = index;
-        props.navigation = addNavigationHelpers({
-          ...this.props.navigation,
-          state: scene.route,
-        });
-        return props;
-      }): Array<NavigationSceneRendererProps>);
-      leftComponents = scenesProps.map(this._renderLeft, this);
-      rightComponents = scenesProps.map(this._renderRight, this);
-      titleComponents = scenesProps.map((props: *, i: number) =>
-        this._renderTitle(props, {
-          hasLeftComponent: leftComponents && !!leftComponents[i],
-          hasRightComponent: rightComponents && !!rightComponents[i],
-        })
-      );
+      const scenesProps: Array<NavigationSceneRendererProps> = this.props.scenes
+        .map((scene: NavigationScene, index: number) => ({
+          ...NavigationPropTypes.extractSceneRendererProps(this.props),
+          scene,
+          index,
+          navigation: addNavigationHelpers({
+            ...this.props.navigation,
+            state: scene.route,
+          }),
+        }));
+
+      children = scenesProps.map(this._renderHeader, this);
     } else {
-      const staticRendererProps = {
+      children = this._renderHeader({
         ...this.props,
-        position: new Animated.Value(scene.index),
+        position: new Animated.Value(this.props.scene.index),
         progress: new Animated.Value(0),
-      };
-      leftComponents = this._renderLeft(staticRendererProps);
-      rightComponents = this._renderRight(staticRendererProps);
-      titleComponents = this._renderTitle(staticRendererProps, {
-        hasLeftComponent: !!leftComponents,
-        hasRightComponent: !!rightComponents,
       });
     }
+
+    // eslint-disable-next-line no-unused-vars
+    const { scenes, scene, style, position, progress, ...rest } = this.props;
 
     return (
       <Animated.View {...rest} style={[styles.container, style]}>
         <View style={styles.appBar}>
-          {titleComponents}
-          {leftComponents}
-          {rightComponents}
+          {children}
         </View>
       </Animated.View>
     );
@@ -301,29 +333,21 @@ const styles = StyleSheet.create({
   },
   appBar: {
     height: APPBAR_HEIGHT,
+    position: 'relative',
+  },
+  header: {
+    flexDirection: 'row',
   },
   item: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   title: {
-    bottom: 0,
-    left: 40,
-    position: 'absolute',
-    right: 40,
-    top: 0,
-  },
-  left: {
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-    top: 0,
+    flex: 1,
+    justifyContent: 'center',
   },
   right: {
-    bottom: 0,
-    position: 'absolute',
-    right: 0,
-    top: 0,
+    justifyContent: 'flex-end',
   },
 });
 
