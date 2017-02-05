@@ -80,7 +80,7 @@ export default class TabBarTop extends PureComponent<DefaultProps, Props, void> 
     const label = this.props.getLabelText(scene);
     if (typeof label === 'string') {
       return (
-        <Animated.Text style={[styles.label, labelStyle, { color }]}>
+        <Animated.Text style={[styles.label, { color }, labelStyle]}>
           {label}
         </Animated.Text>
       );
