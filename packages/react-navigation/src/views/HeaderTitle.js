@@ -24,7 +24,6 @@ const styles = StyleSheet.create({
     color: 'rgba(0, 0, 0, .9)',
     textAlign: Platform.OS === 'ios' ? 'center' : 'left',
     marginHorizontal: 16,
-    backgroundColor: 'transparent',
   },
 });
 
