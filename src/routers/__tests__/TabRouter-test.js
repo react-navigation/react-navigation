@@ -83,15 +83,14 @@ describe('TabRouter', () => {
       },
     }, {
       initialRouteName: 'Bar',
-      initialRouteParams: { name: 'Zoo' },
     });
-    const state = router.getStateForAction({ type: NavigationActions.INIT });
     const state2 = router.getStateForAction({
-      type: NavigationActions.SET_PARAMS,
+      type: 'SetParams',
       params: { name: 'Qux' },
-      key: 'Init',
-    }, state);
-    expect(state2 && state2.index).toEqual(0);
+      key: 'Foo',
+    });
+
+    expect(state2 && state2.index).toEqual(1);
     expect(state2 && state2.routes[0].params).toEqual({ name: 'Qux' });
   });
 
