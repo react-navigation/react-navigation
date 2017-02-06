@@ -148,10 +148,13 @@ const createNavigationContainer = (
     render() {
       let navigation = this.props.navigation;
       if (this._isStateful()) {
-        navigation = addNavigationHelpers({
-          dispatch: this.dispatch.bind(this),
-          state: this.state.nav,
-        });
+        if (!this._navigation || this._navigation.state !== this.state.nav) {
+            this._navigation = addNavigationHelpers({
+              dispatch: this.dispatch.bind(this),
+              state: this.state.nav,
+            });
+        }
+        navigation = this._navigation;
       }
       return (
         <Component
