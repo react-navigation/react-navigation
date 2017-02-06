@@ -441,3 +441,7 @@ export type NavigationSceneRenderer = (
 export type NavigationStyleInterpolator = (
   props: NavigationSceneRendererProps,
 ) => Object;
+
+export type ContextWithNavigation = {
+  navigation: NavigationScreenProp<NavigationState, NavigationAction>;
+};

@@ -19,6 +19,7 @@ import ModalStack from './ModalStack';
 import StacksInTabs from './StacksInTabs';
 import SimpleStack from './SimpleStack';
 import SimpleTabs from './SimpleTabs';
+import WithNavigation from './WithNavigation';
 
 const ExampleRoutes = {
   SimpleStack: {
@@ -62,6 +63,11 @@ const ExampleRoutes = {
     description: 'Deep linking into a route in tab',
     screen: SimpleTabs,
     path: 'settings',
+  },
+  WithNavigation: {
+    name: 'withNavigation HOC',
+    description: 'Navigating using `withNavigation` HOC',
+    screen: WithNavigation,
   },
 };
 
