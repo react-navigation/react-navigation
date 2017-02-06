@@ -1,6 +1,7 @@
 /* @flow */
 
 import React from 'react';
+import hoistStatics from 'hoist-non-react-statics';
 
 import { ContextWithNavigation } from '../TypeDefinition';
 
@@ -15,5 +16,5 @@ export default function withNavigation(Component: ReactClass<T>) {
     navigation: React.PropTypes.object.isRequired,
   };
 
-  return componentWithNavigation;
+  return hoistStatics(componentWithNavigation, Component);
 }
