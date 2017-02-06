@@ -21,7 +21,7 @@ class MyHomeScreen extends React.Component {
     return (
       <Button
         onPress={() => this.props.navigation.navigate('Notifications')}
-        label="Go to notifications"
+        title="Go to notifications"
       />
     );
   }
@@ -44,7 +44,7 @@ class MyNotificationsScreen extends React.Component {
     return (
       <Button
         onPress={() => this.props.navigation.goBack()}
-        label="Go back home"
+        title="Go back home"
       />
     );
   }
