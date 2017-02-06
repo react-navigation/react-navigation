@@ -42,7 +42,9 @@ export default function withCachedChildNavigation<T: Props>(Comp: ReactClass<T>)
       navigation: NavigationScreenProp<NavigationState, NavigationAction>
     ) => {
       // Update props for each child route
-      this._childNavigationProps = {};
+      if (!this._childNavigationProps) {
+        this._childNavigationProps = {};
+      }
       navigation.state.routes.forEach((route: *) => {
         const childNavigation = this._childNavigationProps[route.key];
         if (childNavigation && childNavigation.state === route) {
