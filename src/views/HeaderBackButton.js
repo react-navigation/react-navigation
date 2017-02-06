@@ -31,11 +31,7 @@ const HeaderBackButton = ({ onPress, title, tintColor }: Props) => (
         source={require('./assets/back-icon.png')}
       />
       {Platform.OS === 'ios' && title && (
-        <Text
-          ellipsizeMode="middle"
-          style={[styles.title, { color: tintColor }]}
-          numberOfLines={1}
-        >
+        <Text style={[styles.title, { color: tintColor }]}>
           {title}
         </Text>
       )}
@@ -57,6 +53,7 @@ HeaderBackButton.defaultProps = {
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
+    justifyContent: 'center',
     flexDirection: 'row',
   },
   title: {
