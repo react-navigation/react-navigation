@@ -19,7 +19,7 @@ class MyScreen extends React.Component {
 
 Or, each option can be a function that takes the following arguments, and returns the value of the option.
 
-- `navigation` - the [navigation prop](/docs/intro/navigation-prop) for the screen, with the screen's route at `navigation.state`
+- `navigation` - the [navigation prop](/docs/navigators/navigation-prop) for the screen, with the screen's route at `navigation.state`
 - `childRouter` - The child router, if the screen is a navigator
 
 ```js
