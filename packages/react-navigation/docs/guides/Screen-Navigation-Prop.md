@@ -139,6 +139,22 @@ this.props.navigation.dispatch(resetAction)
 
 ```
 
+You can issue multiple actions, but make sure to set `index` correctly:
+
+```js
+import { NavigationActions } from 'react-navigation'
+
+const resetAction = NavigationActions.reset({
+  index: 1,
+  actions: [
+    NavigationActions.navigate({ routeName: 'Profile'}),
+    NavigationActions.navigate({ routeName: 'Settings'})
+  ]
+})
+this.props.navigation.dispatch(resetAction)
+
+```
+
 ### SetParams
 
 When dispatching `SetParams`, the router will produce a new state that has changed the params of a particular route, as identified by the key
