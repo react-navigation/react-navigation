@@ -95,6 +95,8 @@ class Transitioner extends React.Component<*, Props, State> {
     this._prevTransitionProps = null;
     this._transitionProps = buildTransitionProps(props, this.state);
     this._isMounted = false;
+    this._isTransitionRunning = false;
+    this._queuedTransition = null;
   }
 
   componentWillMount(): void {
@@ -121,6 +123,16 @@ class Transitioner extends React.Component<*, Props, State> {
       return;
     }
 
+    const indexHasChanged = nextProps.navigation.state.index !== this.props.navigation.state.index;
+    if (this._isTransitionRunning) {
+      this._queuedTransition = { nextProps, nextScenes, indexHasChanged };
+      return;
+    }
+
+    this._startTransition(nextProps, nextScenes, indexHasChanged);
+  }
+
+  _startTransition(nextProps: Props, nextScenes: Array<NavigationScene>, indexHasChanged: boolean) {
     const nextState = {
       ...this.state,
       scenes: nextScenes,
@@ -162,7 +174,7 @@ class Transitioner extends React.Component<*, Props, State> {
       ),
     ];
 
-    if (nextProps.navigation.state.index !== this.props.navigation.state.index) {
+    if (indexHasChanged) {
       animations.push(
         timing(
           position,
@@ -173,8 +185,8 @@ class Transitioner extends React.Component<*, Props, State> {
         ),
       );
     }
-
     // update scenes and play the transition
+    this._isTransitionRunning = true;
     this.setState(nextState, () => {
       nextProps.onTransitionStart && nextProps.onTransitionStart(
         this._transitionProps,
@@ -239,6 +251,16 @@ class Transitioner extends React.Component<*, Props, State> {
         this._transitionProps,
         prevTransitionProps,
       );
+      if (this._queuedTransition) {
+        this._startTransition(
+            this._queuedTransition.nextProps,
+            this._queuedTransition.nextScenes,
+            this._queuedTransition.indexHasChanged
+        );
+        this._queuedTransition = null;
+      } else {
+        this._isTransitionRunning = false;
+      }
     });
   }
 }
