@@ -96,7 +96,28 @@ The 2nd argument passed to the function are the default values for the `header` 
 
 ## Tab Navigation Options
 
-Coming Soon
+```js
+class TabScreen extends React.Component {
+
+  static navigationOptions = {
+    tabBar: ({ state }) => ({
+      label: 'Tab Label',
+      icon: ({ tintColor }) => (
+        <Image
+          source={require('./tab-icon.png')}
+          style={[styles.icon, {tintColor: tintColor}]}
+        />
+      ),
+      visible: true
+    }),
+  };
+
+};
+```
+
+- `label` - can be string or react component
+- `icon` - function that returns icon component
+- `visible` - true or false to show or hide the tab bar, if not set then defaults to true
 
 ## Stack Navigation Options
 
