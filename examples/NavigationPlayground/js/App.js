@@ -109,7 +109,13 @@ const AppNavigator = StackNavigator({
   mode: Platform.OS === 'ios' ? 'modal' : 'card',
 });
 
-export default () => <AppNavigator />;
+export default () => (
+  <AppNavigator
+    screenProps={{
+      exampleScreenProp: 'exampleScreenPropValue',
+    }}
+  />
+);
 
 const styles = StyleSheet.create({
   item: {

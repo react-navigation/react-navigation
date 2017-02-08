@@ -15,9 +15,11 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import SampleText from './SampleText';
 
-const MyNavScreen = ({ navigation, banner }) => (
+// exampleScreenProp passed through recursively from root AppNavigator
+const MyNavScreen = ({ navigation, banner, exampleScreenProp }) => (
   <ScrollView>
     <SampleText>{banner}</SampleText>
+    <SampleText>{exampleScreenProp}</SampleText>
     <Button
       onPress={() => navigation.navigate('Profile', { name: 'Jordan' })}
       title="Go to a profile screen"
@@ -37,34 +39,38 @@ const MyNavScreen = ({ navigation, banner }) => (
   </ScrollView>
 );
 
-const MyHomeScreen = ({ navigation }) => (
+const MyHomeScreen = ({ navigation, exampleScreenProp }) => (
   <MyNavScreen
     banner="Home Screen"
     navigation={navigation}
+    exampleScreenProp={exampleScreenProp}
   />
 );
 
-const MyProfileScreen = ({ navigation }) => (
+const MyProfileScreen = ({ navigation, exampleScreenProp }) => (
   <MyNavScreen
     banner={`${navigation.state.params.name}s Profile`}
     navigation={navigation}
+    exampleScreenProp={exampleScreenProp}
   />
 );
 MyProfileScreen.navigationOptions = {
   title: ({ state }) => `${state.params.name}'s Profile!`,
 };
 
-const MyNotificationsSettingsScreen = ({ navigation }) => (
+const MyNotificationsSettingsScreen = ({ navigation, exampleScreenProp }) => (
   <MyNavScreen
     banner="Notification Settings"
     navigation={navigation}
+    exampleScreenProp={exampleScreenProp}
   />
 );
 
-const MySettingsScreen = ({ navigation }) => (
+const MySettingsScreen = ({ navigation, exampleScreenProp }) => (
   <MyNavScreen
     banner="Settings"
     navigation={navigation}
+    exampleScreenProp={exampleScreenProp}
   />
 );
 
