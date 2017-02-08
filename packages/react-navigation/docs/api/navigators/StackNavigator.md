@@ -139,7 +139,7 @@ The navigator component created by `StackNavigator(...)` takes the following pro
  });
 
  <SomeStack
-   screenProps={/* these will get passed to the screen components */}
+   screenProps={/* this prop will get passed to the screen components as this.props.screenProps */}
  />
  ```
 

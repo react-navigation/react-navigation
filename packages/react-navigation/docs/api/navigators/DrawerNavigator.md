@@ -130,6 +130,6 @@ The navigator component created by `DrawerNavigator(...)` takes the following pr
  });
  
  <DrawerNav
-   screenProps={/* these will get passed to the screen components */}
+   screenProps={/* this prop will get passed to the screen components as this.props.screenProps */}
  />
  ```
