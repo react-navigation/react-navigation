@@ -26,6 +26,7 @@ type DefaultProps = {
   activeBackgroundColor: string;
   inactiveTintColor: string;
   inactiveBackgroundColor: string;
+  showLabel: boolean;
 };
 
 type Props = {
@@ -38,6 +39,7 @@ type Props = {
   jumpToIndex: (index: number) => void;
   getLabelText: (scene: TabScene) => string;
   renderIcon: (scene: TabScene) => React.Element<*>;
+  showLabel: boolean;
   style: any;
   labelStyle?: any;
 };
@@ -50,6 +52,7 @@ export default class TabBarBottom extends PureComponent<DefaultProps, Props, voi
     activeBackgroundColor: 'transparent',
     inactiveTintColor: '#929292', // Default inactive tint color in iOS 10
     inactiveBackgroundColor: 'transparent',
+    showLabel: true,
   };
 
   props: Props;
@@ -61,7 +64,11 @@ export default class TabBarBottom extends PureComponent<DefaultProps, Props, voi
       activeTintColor,
       inactiveTintColor,
       labelStyle,
+      showLabel,
     } = this.props;
+    if (showLabel === false) {
+      return null;
+    }
     const { index } = scene;
     const { routes } = navigationState;
     // Prepend '-1', so there are always at least 2 items in inputRange
