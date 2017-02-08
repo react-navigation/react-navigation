@@ -49,6 +49,8 @@ type Props = {
   navigation: NavigationScreenProp<NavigationState, NavigationAction>,
   router: NavigationRouter,
   cardStyle?: any,
+  onTransitionStart?: () => void,
+  onTransitionEnd?: () => void,
   style: any,
   gestureResponseDistance?: ?number,
   /**
@@ -163,6 +165,8 @@ class CardStack extends React.Component<DefaultProps, Props, void> {
         navigation={this.props.navigation}
         render={this._render}
         style={this.props.style}
+        onTransitionStart={this.props.onTransitionStart}
+        onTransitionEnd={this.props.onTransitionEnd}
       />
     );
   }
