@@ -6,7 +6,7 @@ This example shows how to do screen tracking and send to Google Analytics. The a
 
 `componentDidUpdate` has access the previous and current navigation state and its a good place to do screen tracking.
 
-```
+```js
 import { GoogleAnalyticsTracker } from 'react-native-google-analytics-bridge';
 
 const tracker = new GoogleAnalyticsTracker(GA_TRACKING_ID);
@@ -32,7 +32,7 @@ AppNavigator.prototype.componentDidUpdate = function(prevProps, prevState) {
 
 When using Redux, `screenTracking` can be written as a Redux middleware.
 
-```
+```js
 import { GoogleAnalyticsTracker } from 'react-native-google-analytics-bridge';
 
 const tracker = new GoogleAnalyticsTracker(GA_TRACKING_ID);
@@ -64,7 +64,8 @@ export default screenTracking;
 ### Create Redux store and apply the above middleware
 
 The `screenTracking` middleware can be applied to the store during its creation. See [Redux Integration](Redux-Integration.md) for details.
-```
+
+```js
 const store = createStore(
   combineReducers({
     nav: navReducer,
