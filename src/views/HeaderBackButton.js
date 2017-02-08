@@ -27,7 +27,11 @@ const HeaderBackButton = ({ onPress, title, tintColor }: Props) => (
   >
     <View style={styles.container}>
       <Image
-        style={[styles.button, { tintColor }]}
+        style={[
+          styles.icon,
+          title && styles.iconWithTitle,
+          { tintColor },
+        ]}
         source={require('./assets/back-icon.png')}
       />
       {Platform.OS === 'ios' && title && (
@@ -58,13 +62,16 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 17,
+    paddingRight: 10,
   },
-  button: Platform.OS === 'ios'
+  icon: Platform.OS === 'ios'
     ? {
-      height: 21,
-      width: 13,
-      margin: 10,
-      marginRight: 5,
+      height: 20,
+      width: 12,
+      marginLeft: 10,
+      marginRight: 22,
+      marginVertical: 12,
+      resizeMode: 'contain',
       transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }],
     }
     : {
@@ -74,6 +81,11 @@ const styles = StyleSheet.create({
       resizeMode: 'contain',
       transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }],
     },
+  iconWithTitle: Platform.OS === 'ios'
+    ? {
+      marginRight: 5,
+    }
+    : {},
 });
 
 export default HeaderBackButton;
