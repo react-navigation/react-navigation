@@ -85,6 +85,8 @@ Visual options:
   - `screen` - Each screen has a header attached to it and the header fades in and out together with the screen. This is a common pattern on Android.
   - `none` - No header will be rendered.
 - `cardStyle` - Use this prop to override or extend the default style for an individual card in stack.
+- `onTransitionStart` - Function to be invoked when the card transition animation is about to start.
+- `onTransitionEnd` - Function to be invoked once the card transition animation completes.
 
 
 ### Screen Navigation Options
@@ -135,12 +137,12 @@ The navigator component created by `StackNavigator(...)` takes the following pro
  const SomeStack = StackNavigator({
    // config
  });
- 
+
  <SomeStack
    screenProps={/* these will get passed to the screen components */}
  />
  ```
- 
+
 ### Examples
 
 See the examples [SimpleStack.js](https://github.com/react-community/react-navigation/tree/master/examples/NavigationPlayground/js/SimpleStack.js) and [ModalStack.js](https://github.com/react-community/react-navigation/tree/master/examples/NavigationPlayground/js/ModalStack.js) which you can run locally as part of the [NavigationPlayground](https://github.com/react-community/react-navigation/tree/master/examples/NavigationPlayground) app.
