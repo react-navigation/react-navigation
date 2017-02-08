@@ -186,12 +186,6 @@ export default class TabViewTransitioner extends PureComponent<DefaultProps, Pro
         // Prevent extra setState when index updated mid-transition
         if (this._nextIndex === index && this._mounted) {
           this.props.onRequestChangeTab(index);
-          // Change back to previous index if it didn't change
-          setTimeout(() => {
-            if (this.props.navigationState.index !== index) {
-              this._jumpToIndex(this.props.navigationState.index);
-            }
-          }, 0);
         }
       })
     );
