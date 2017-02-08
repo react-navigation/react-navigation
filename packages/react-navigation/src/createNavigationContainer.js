@@ -1,11 +1,11 @@
 /* @flow */
 
 import React from 'react';
+import invariant from 'fbjs/lib/invariant';
 import {
   BackAndroid,
   Linking,
-} from 'react-native';
-import invariant from 'fbjs/lib/invariant';
+} from './PlatformHelpers';
 import NavigationActions from './NavigationActions';
 import addNavigationHelpers from './addNavigationHelpers';
 
@@ -149,10 +149,10 @@ const createNavigationContainer = (
       let navigation = this.props.navigation;
       if (this._isStateful()) {
         if (!this._navigation || this._navigation.state !== this.state.nav) {
-            this._navigation = addNavigationHelpers({
-              dispatch: this.dispatch.bind(this),
-              state: this.state.nav,
-            });
+          this._navigation = addNavigationHelpers({
+            dispatch: this.dispatch.bind(this),
+            state: this.state.nav,
+          });
         }
         navigation = this._navigation;
       }
