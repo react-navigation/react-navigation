@@ -16,7 +16,7 @@ class MyNavView extends Component {
     return (
       <Transitioner
         configureTransition={this._configureTransition}
-        navigationState={this.props.navigation.state}
+        navigation={this.props.navigation}
         render={this._render}
         onTransitionStart={this.onTransitionStart}
         onTransitionEnd={this.onTransitionEnd}
