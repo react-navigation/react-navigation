@@ -162,7 +162,7 @@ The navigator component created by `TabNavigator(...)` takes the following props
  });
  
  <TabNav
-   screenProps={/* these will get passed to the screen components */}
+   screenProps={/* this prop will get passed to the screen components as this.props.screenProps */}
  />
  ```
  
