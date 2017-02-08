@@ -323,7 +323,6 @@ const styles = StyleSheet.create({
     left: 0,
     position: 'absolute',
     top: 0,
-    backgroundColor: 'red',
   },
   right: {
     bottom: 0,
