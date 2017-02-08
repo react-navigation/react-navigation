@@ -19,7 +19,6 @@ import ModalStack from './ModalStack';
 import StacksInTabs from './StacksInTabs';
 import SimpleStack from './SimpleStack';
 import SimpleTabs from './SimpleTabs';
-import WithNavigation from './WithNavigation';
 
 const ExampleRoutes = {
   SimpleStack: {
@@ -43,7 +42,7 @@ const ExampleRoutes = {
     screen: CustomTabs,
   },
   ModalStack: {
-    name: Platform.OS === 'ios' ? 'Modal Stack Example': 'Stack with Dynamic Header',
+    name: Platform.OS === 'ios' ? 'Modal Stack Example' : 'Stack with Dynamic Header',
     description: Platform.OS === 'ios' ? 'Stack navigation with modals' : 'Dynamically showing and hiding the header',
     screen: ModalStack,
   },
@@ -63,11 +62,6 @@ const ExampleRoutes = {
     description: 'Deep linking into a route in tab',
     screen: SimpleTabs,
     path: 'settings',
-  },
-  WithNavigation: {
-    name: 'withNavigation HOC',
-    description: 'Navigating using `withNavigation` HOC',
-    screen: WithNavigation,
   },
 };
 
