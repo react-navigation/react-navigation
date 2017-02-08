@@ -49,8 +49,8 @@ type Props = {
   navigation: NavigationScreenProp<NavigationState, NavigationAction>,
   router: NavigationRouter,
   cardStyle?: any,
-  onTransitionStart: () => void,
-  onTransitionEnd: () => void,
+  onTransitionStart?: () => void,
+  onTransitionEnd?: () => void,
   style: any,
   gestureResponseDistance?: ?number,
   /**
