@@ -128,6 +128,24 @@ export default (
         }
         // console.log({navId: order.join('-'), action, order, lastIndex: state.index, index: activeTabIndex});
       }
+      if (action.type === NavigationActions.SET_PARAMS) {
+        const lastRoute = state.routes.find(route => route.key === action.key);
+        if (lastRoute) {
+          const params = {
+            ...lastRoute.params,
+            ...action.params,
+          };
+          const routes = [...state.routes];
+          routes[state.routes.indexOf(lastRoute)] = {
+            ...lastRoute,
+            params,
+          };
+          return {
+            ...state,
+            routes,
+          };
+        }
+      }
       if (activeTabIndex !== state.index) {
         // console.log(`${order.join('-')}: Normal navigation`, {lastIndex: state.index, newIndex: activeTabIndex});
         return {
