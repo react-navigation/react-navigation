@@ -113,7 +113,7 @@ export default (
             params: initialRouteParams,
           }));
         } else {
-          route.params = initialRouteParams;
+          route = {...route, params: initialRouteParams};
         }
         const params = (route.params || action.params) && {
           ...(route.params || {}),
