@@ -105,6 +105,7 @@ Several options get passed to the underlying router to modify navigation logic:
 - `activeBackgroundColor` - background color of the active tab
 - `inactiveTintColor` - label and icon color of the inactive tab
 - `inactiveBackgroundColor` - background color of the inactive tab
+- `showLabel` - whether to show label for tab, default is true
 - `style` - style object for the tab bar
 - `labelStyle` - style object for the tab label
 
