@@ -58,7 +58,6 @@ const MyProfileScreen = ({ navigation }) => (
 MyProfileScreen.navigationOptions = {
   header: ({ state, setParams }) => ({
     title: `${state.params.name}'s Profile!`,
-    tintColor: '#007AFF',
     // Render a button on the right side of the header.
     // When pressed switches the screen to edit mode.
     right: (
