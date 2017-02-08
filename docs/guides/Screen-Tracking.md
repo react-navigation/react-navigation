@@ -3,6 +3,7 @@
 This example shows how to do screen tracking and send to Google Analytics. The approach can be adapted to any other mobile analytics SDK. 
 
 ### Use componentDidUpdate hook
+
 `componentDidUpdate` has access the previous and current navigation state and its a good place to do screen tracking.
 
 ```
@@ -20,13 +21,15 @@ AppNavigator.prototype.componentDidUpdate = function(prevProps, prevState) {
   const currScreen = screenName(this.state.nav);
   const prevScreen = screenName(prevState.nav);
   if (!!currScreen && currScreen != prevScreen) {
-    console.log('tracking screen', currScreen);
+    // the line below uses the Google Analytics tracker
+    // change the tracker here to use other Mobile analytics SDK.
     tracker.trackScreenView(currScreen);
   }
 }
 ```
 
 ### Use Redux
+
 When using Redux, `screenTracking` can be written as a Redux middleware.
 
 ```
@@ -48,7 +51,6 @@ const screenTracking = ({ getState }) => next => (action) => {
   const result = next(action);
   const nextScreen = getCurrentScreen(getState);
   if (nextScreen !== currentScreen) {
-    console.log('tracking middleware: ', nextScreen);
     // the line below uses the Google Analytics tracker
     // change the tracker here to use other Mobile analytics SDK.
     tracker.trackScreenView(nextScreen);
@@ -57,10 +59,10 @@ const screenTracking = ({ getState }) => next => (action) => {
 };
 
 export default screenTracking;
-
 ```
 
 ### Create Redux store and apply the above middleware
+
 The `screenTracking` middleware can be applied to the store during its creation. See [Redux Integration](Redux-Integration.md) for details.
 ```
 const store = createStore(
@@ -73,5 +75,4 @@ const store = createStore(
     ...
     ),
 );
-
 ```
