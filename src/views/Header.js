@@ -123,12 +123,11 @@ class Header extends React.Component<void, HeaderProps, void> {
       ...props.navigation,
       state: props.scenes[props.scene.index - 1].route,
     });
-    const backButtonTitle = this._getHeaderTitle(previousNavigation);
+//  const backButtonTitle = this._getHeaderTitle(previousNavigation);
     return (
       <HeaderBackButton
         onPress={props.onNavigateBack}
         tintColor={tintColor}
-        title={backButtonTitle}
       />
     );
   };
