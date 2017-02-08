@@ -119,16 +119,16 @@ class Header extends React.Component<void, HeaderProps, void> {
       return null;
     }
     const tintColor = this._getHeaderTintColor(props.navigation);
-    const previousNavigation = addNavigationHelpers({
-      ...props.navigation,
-      state: props.scenes[props.scene.index - 1].route,
-    });
-    const backButtonTitle = this._getHeaderTitle(previousNavigation);
+// @todo(grabbou): Implement truncating back again, then uncomment
+//     const previousNavigation = addNavigationHelpers({
+//       ...props.navigation,
+//       state: props.scenes[props.scene.index - 1].route,
+//     });
+//  const backButtonTitle = this._getHeaderTitle(previousNavigation);
     return (
       <HeaderBackButton
         onPress={props.onNavigateBack}
         tintColor={tintColor}
-        title={backButtonTitle}
       />
     );
   };
