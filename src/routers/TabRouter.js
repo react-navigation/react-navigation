@@ -128,7 +128,7 @@ export default (
         }
         // console.log({navId: order.join('-'), action, order, lastIndex: state.index, index: activeTabIndex});
       }
-      if (action.type === 'SetParams') {
+      if (action.type === NavigationActions.SET_PARAMS) {
         const lastRoute = state.routes.find(route => route.key === action.key);
         if (lastRoute) {
           const params = {
