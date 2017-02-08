@@ -119,16 +119,21 @@ class Header extends React.Component<void, HeaderProps, void> {
       return null;
     }
     const tintColor = this._getHeaderTintColor(props.navigation);
-    const previousNavigation = addNavigationHelpers({
-      ...props.navigation,
-      state: props.scenes[props.scene.index - 1].route,
-    });
-    const backButtonTitle = this._getHeaderTitle(previousNavigation);
+    // @todo(grabobu):
+    // We have implemented support for back button label (which works 100% fine),
+    // but when title is too long, it will overlap the <HeaderTitle />.
+    // We had to revert the PR implementing that because of Android issues,
+    // I will land it this week and re-enable that for next release.
+    //
+    // const previousNavigation = addNavigationHelpers({
+    //   ...props.navigation,
+    //   state: props.scenes[props.scene.index - 1].route,
+    // });
+    // const backButtonTitle = this._getHeaderTitle(previousNavigation);
     return (
       <HeaderBackButton
         onPress={props.onNavigateBack}
         tintColor={tintColor}
-        title={backButtonTitle}
       />
     );
   };
