@@ -13,7 +13,7 @@ type Props = {
 };
 
 const HeaderTitle = ({ style, ...rest }: Props) => (
-  <Text {...rest} style={[styles.title, style]} />
+  <Text numberOfLines={1} {...rest} style={[styles.title, style]} />
 );
 
 const styles = StyleSheet.create({
