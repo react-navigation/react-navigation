@@ -226,7 +226,7 @@ class Header extends React.Component<void, HeaderProps, HeaderState> {
     const pointerEvents = offset !== 0 || isStale ? 'none' : 'box-none';
 
     // Only measure `title` component
-    const onLayout = name === 'title'
+    const onLayoutIOS = Platform.OS === 'ios' && name === 'title'
       ? (e: LayoutEvent) => {
         this.setState({
           widths: {
@@ -244,7 +244,7 @@ class Header extends React.Component<void, HeaderProps, HeaderState> {
     return (
       <Animated.View
         pointerEvents={pointerEvents}
-        onLayout={onLayout}
+        onLayout={onLayoutIOS}
         key={`${name}_${key}`}
         style={[
           width && {
@@ -335,11 +335,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   item: {
-    alignItems: 'center',
-  },
-  title: {
     justifyContent: 'center',
   },
+  title: Platform.OS === 'android'
+    ? {
+      flex: 1,
+      alignItems: 'flex-start',
+    }
+    : {},
   left: {
     alignItems: 'flex-start',
   },
