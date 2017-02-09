@@ -64,6 +64,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   title: {
+    flex: 1,
     fontSize: 17,
     paddingRight: 10,
   },
