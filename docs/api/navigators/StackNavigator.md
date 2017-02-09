@@ -15,7 +15,7 @@ class MyHomeScreen extends React.Component {
     return (
       <Button
         onPress={() => this.props.navigation.navigate('Profile', {name: 'Lucy'})}
-        label="Go to Lucy's profile"
+        title="Go to Lucy's profile"
       />
     );
   }
