@@ -45,7 +45,6 @@ export type HeaderProps = NavigationSceneRendererProps & {
   renderTitleComponent: SubViewRenderer,
   tintColor: ?string,
   router: NavigationRouter,
-  style?: any,
 };
 
 type SubViewName = 'left' | 'title' | 'right';
@@ -230,7 +229,6 @@ class Header extends React.Component<void, HeaderProps, void> {
         style={[
           styles.item,
           styles[name],
-          props.style,
           styleInterpolator(props),
         ]}
       >
