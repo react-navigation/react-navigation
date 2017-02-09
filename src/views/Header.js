@@ -223,10 +223,6 @@ class Header extends React.Component<void, HeaderProps, HeaderState> {
       subView = defaultRenderer(subViewProps);
     }
 
-    if (subView === null) {
-      return null;
-    }
-
     const pointerEvents = offset !== 0 || isStale ? 'none' : 'box-none';
 
     // Only measure `title` component
@@ -339,15 +335,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   item: {
-    flexDirection: 'row',
     alignItems: 'center',
   },
   title: {
-    flex: 1,
     justifyContent: 'center',
   },
+  left: {
+    alignItems: 'flex-start',
+  },
   right: {
-    justifyContent: 'flex-end',
+    alignItems: 'flex-end',
   },
 });
 
