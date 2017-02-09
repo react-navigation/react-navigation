@@ -41,6 +41,18 @@ class App extends React.Component {
 }
 ```
 
-Now, your navigation state is stored with redux, and you can fire navigation actions using redux.
+Once you do this, your navigation state is stored within your redux store, at which point you can fire navigation actions using your redux dispatch function.
 
-When a navigator is given a `navigation` prop, it relinquishes control of the state. So you are now responsible for persisting state, handling deep linking, integrating the back button, etc.
+Keep in mind that when a navigator is given a `navigation` prop, it relinquishes control of its internal state. That means you are now responsible for persisting its state, handling any deep linking, integrating the back button, etc.
+
+Navigation state is automatically passed down from one navigator to another when you nest them. Note that in order for a child navigator to receive the state from a parent navigator, it should be defined as a `screen`.
+
+Applying this to the example above, you could instead define `AppNavigator` to contain a nested `TabNavigator` as follows:
+
+```js
+const AppNavigator = StackNavigator({
+  Home: { screen: MyTabNavigator },
+});
+```
+
+In this case, once you `connect` `AppNavigator` to Redux as is done in `AppWithNavigationState`, `MyTabNavigator` will automatically have access to navigation state as a `navigation` prop.
