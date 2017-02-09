@@ -34,6 +34,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: Platform.OS === 'ios' ? 44 : 56,
     backgroundColor: '#222',
+    borderBottomColor: 'rgba(0, 0, 0, 0.1)',
+    borderBottomWidth: Platform.OS === 'ios' ? StyleSheet.hairlineWidth : 0,
   },
   title: {
     flex: 1,

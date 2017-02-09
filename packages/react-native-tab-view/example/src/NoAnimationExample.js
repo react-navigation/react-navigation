@@ -4,12 +4,13 @@ import React, { Component } from 'react';
 import { Animated, View, TouchableWithoutFeedback, StyleSheet } from 'react-native';
 import { TabViewAnimated, TabViewPagerPan } from 'react-native-tab-view';
 import { Ionicons } from '@exponent/vector-icons';
+import ListViewExample from './ListViewExample';
 
 const AnimatedIcon = Animated.createAnimatedComponent(Ionicons);
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
+    flex: 1,
   },
   tabbar: {
     flexDirection: 'row',
@@ -17,7 +18,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f4f4f4',
   },
   tab: {
-    flexGrow: 1,
+    flex: 1,
     alignItems: 'center',
     borderTopWidth: StyleSheet.hairlineWidth,
     borderTopColor: 'rgba(0, 0, 0, .2)',
@@ -46,9 +47,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   page: {
-    flexGrow: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: '#f9f9f9',
   },
 });
 
@@ -140,15 +139,15 @@ export default class TopBarIconExample extends Component {
   _renderScene = ({ route }) => {
     switch (route.key) {
     case '1':
-      return <View style={[ styles.page, { backgroundColor: '#ff4081' } ]} />;
+      return <ListViewExample style={styles.page} />;
     case '2':
-      return <View style={[ styles.page, { backgroundColor: '#673ab7' } ]} />;
+      return <ListViewExample style={styles.page} />;
     case '3':
-      return <View style={[ styles.page, { backgroundColor: '#8bc34a' } ]} />;
+      return <ListViewExample style={styles.page} />;
     case '4':
-      return <View style={[ styles.page, { backgroundColor: '#2196f3' } ]} />;
+      return <ListViewExample style={styles.page} />;
     case '5':
-      return <View style={[ styles.page, { backgroundColor: '#3f51b5' } ]} />;
+      return <ListViewExample style={styles.page} />;
     default:
       return null;
     }

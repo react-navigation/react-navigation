@@ -7,7 +7,7 @@ import { Ionicons } from '@exponent/vector-icons';
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
+    flex: 1,
   },
   tabbar: {
     backgroundColor: '#222',
@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   indicator: {
-    flexGrow: 1,
+    flex: 1,
     backgroundColor: '#0084ff',
     margin: 4,
     borderRadius: 2,
@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     marginTop: -2,
   },
   page: {
-    flexGrow: 1,
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },

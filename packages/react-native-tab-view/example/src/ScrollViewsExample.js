@@ -7,7 +7,7 @@ import ListViewExample from './ListViewExample';
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
+    flex: 1,
   },
   indicator: {
     backgroundColor: '#ff4081',
