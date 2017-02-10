@@ -165,7 +165,7 @@ Check the [type definitions](src/TabViewTypeDefinitions.js) for details on shape
 
 ## Caveats
 
-`<TabViewAnimated />` and `<TabViewTransitioner />` implement `shouldComponentUpdate` to prevent unnecessary re-rendering. As a side-effect, the tabs won't re-render if something changes in the parent's state. If you need it to trigger a re-render, put it in the `navigationState`.
+`<TabViewAnimated />` is a `PureComponent` to prevent unnecessary re-rendering. As a side-effect, the tabs won't re-render if something changes in the parent's state. If you need it to trigger a re-render, put it in the `navigationState`.
 
 For example, consider you have a `loaded` property on state which should trigger re-render. You can have your state like the following -
 
