@@ -31,6 +31,7 @@ export default (routeConfigMap: NavigationRouteConfigMap, stackConfig: StackNavi
     onTransitionStart,
     onTransitionEnd,
     navigationOptions,
+    gesturesEnabled,
   } = stackConfig;
   const stackRouterConfig = {
     initialRouteName,
@@ -48,6 +49,7 @@ export default (routeConfigMap: NavigationRouteConfigMap, stackConfig: StackNavi
       cardStyle={cardStyle}
       onTransitionStart={onTransitionStart}
       onTransitionEnd={onTransitionEnd}
+      gesturesEnabled={gesturesEnabled}
     />
   )), containerOptions);
 };
