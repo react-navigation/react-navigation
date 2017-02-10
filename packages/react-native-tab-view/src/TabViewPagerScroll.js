@@ -27,11 +27,6 @@ const styles = StyleSheet.create({
     flex: 1,
     overflow: 'hidden',
   },
-
-  row: {
-    flexDirection: 'row',
-    alignItems: 'stretch',
-  },
 });
 
 type Props = SceneRendererProps & {
