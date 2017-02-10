@@ -438,9 +438,11 @@ export default class TabBar extends PureComponent<DefaultProps, Props, State> {
 
               return (
                 <TouchableItem
+                  accessible
                   borderless
                   key={route.key}
                   accessibilityTraits='button'
+                  accessibilityLabel={route.testID}
                   testID={route.testID}
                   pressColor={this.props.pressColor}
                   pressOpacity={this.props.pressOpacity}
