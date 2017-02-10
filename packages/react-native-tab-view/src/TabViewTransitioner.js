@@ -43,7 +43,6 @@ export default class TabViewTransitioner extends PureComponent<DefaultProps, Pro
       width: PropTypes.number.isRequired,
     }),
     canJumpToTab: PropTypes.func,
-    shouldOptimizeUpdates: PropTypes.bool,
   };
 
   static defaultProps = {

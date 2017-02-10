@@ -56,7 +56,6 @@ export default class TabViewAnimated extends PureComponent<DefaultProps, Props, 
     renderHeader: PropTypes.func,
     renderFooter: PropTypes.func,
     onChangePosition: PropTypes.func,
-    shouldOptimizeUpdates: PropTypes.bool,
     lazy: PropTypes.bool,
   };
 
@@ -88,33 +87,21 @@ export default class TabViewAnimated extends PureComponent<DefaultProps, Props, 
 
   _renderItems = (props: SceneRendererProps) => {
     const { renderPager, renderHeader, renderFooter } = this.props;
-    const { navigationState, layout } = props;
-    const currentRoute = navigationState.routes[navigationState.index];
+    const { navigationState } = props;
 
     return (
       <View style={styles.container}>
         {renderHeader && renderHeader(props)}
         {renderPager({
           ...props,
-          children: layout.width ? navigationState.routes.map((route, index) => (
-            <View key={route.key} style={{ width: layout.width, overflow: 'hidden' }}>
-              {this._renderScene({
-                ...props,
-                route,
-                index,
-                focused: index === props.navigationState.index,
-              })}
-            </View>
-          )) : (
-            <View key={currentRoute.key} style={styles.container}>
-              {this._renderScene({
-                ...props,
-                route: currentRoute,
-                index: navigationState.index,
-                focused: true,
-              })}
-            </View>
-          ),
+          children: navigationState.routes.map((route, index) => (
+            this._renderScene({
+              ...props,
+              route,
+              index,
+              focused: index === props.navigationState.index,
+            })
+          )),
         })}
         {renderFooter && renderFooter(props)}
       </View>

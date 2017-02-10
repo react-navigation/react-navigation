@@ -2,6 +2,7 @@
 
 import React, { PureComponent, Children, PropTypes } from 'react';
 import {
+  View,
   ViewPagerAndroid,
   StyleSheet,
 } from 'react-native';
@@ -20,6 +21,10 @@ type PageScrollState = 'dragging' | 'settling' | 'idle'
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
+  },
+
+  page: {
+    overflow: 'hidden',
   },
 });
 
@@ -124,7 +129,11 @@ export default class TabViewPagerAndroid extends PureComponent<void, Props, void
         style={styles.container}
         ref={this._setRef}
       >
-        {this.props.children}
+        {Children.map(this.props.children, (child, i) => (
+          <View key={i} style={styles.page}>
+            {child}
+          </View>
+        ))}
       </ViewPagerAndroid>
     );
   }

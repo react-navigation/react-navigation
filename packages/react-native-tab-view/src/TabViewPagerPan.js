@@ -1,11 +1,12 @@
 /* @flow */
 
-import React, { PureComponent, PropTypes } from 'react';
+import React, { PureComponent, Children, PropTypes } from 'react';
 import {
   Animated,
   PanResponder,
   Platform,
   StyleSheet,
+  View,
 } from 'react-native';
 import TabViewStyleInterpolator from './TabViewStyleInterpolator';
 import { SceneRendererPropType } from './TabViewPropTypes';
@@ -163,7 +164,11 @@ export default class TabViewPagerPan extends PureComponent<DefaultProps, Props, 
 
     return (
       <Animated.View style={[ styles.sheet, style, { width: layout.width * routes.length } ]} {...this._panResponder.panHandlers}>
-        {this.props.children}
+        {Children.map(this.props.children, (child, i) => (
+          <View key={navigationState.routes[i].key} style={{ width: layout.width }}>
+            {child}
+          </View>
+        ))}
       </Animated.View>
     );
   }

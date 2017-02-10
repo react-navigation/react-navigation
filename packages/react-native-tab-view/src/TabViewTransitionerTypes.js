@@ -19,5 +19,4 @@ export type TransitionerProps = {
   onChangePosition?: (value: number) => void;
   initialLayout?: Layout;
   canJumpToTab?: (route: Route) => boolean;
-  shouldOptimizeUpdates?: boolean;
 }
