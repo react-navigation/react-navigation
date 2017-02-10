@@ -145,7 +145,7 @@ export default class TabBarBottom extends PureComponent<DefaultProps, Props, voi
           const justifyContent = this.props.showIcon ? 'flex-end' : 'center';
           return (
             <TouchableWithoutFeedback key={route.key} onPress={() => jumpToIndex(index)}>
-              <Animated.View style={[styles.tab, { backgroundColor }, { justifyContent }]}>
+              <Animated.View style={[styles.tab, { backgroundColor, justifyContent }]}>
                 {this._renderIcon(scene)}
                 {this._renderLabel(scene)}
               </Animated.View>
