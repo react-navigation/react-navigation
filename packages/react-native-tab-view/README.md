@@ -96,7 +96,7 @@ export default class TabViewExample extends Component {
 
 The package exposes the following components,
 
-### `<TabViewTransitioner />`
+### `<TabViewAnimated />`
 
 Container component responsible for managing tab transitions
 
@@ -106,19 +106,12 @@ It accepts the following props,
 - `onRequestChangeTab` - callback for when the current tab changes, should do the `setState`
 - `onChangePosition` - callback called with position value as it changes (e.g. - on swipe or tab change), avoid doing anything expensive here
 - `canJumpToTab` - optional callback which accepts a route, and returns a boolean indicating whether jumping to the tab is allowed
+- `lazy` - whether to load tabs lazily when you start switching
 - `initialLayout` - optional object containing the initial `height` and `width`, can be passed to prevent the one frame delay in rendering
-- `render` - callback which renders the tab view, gets a special set of props as argument
-
-### `<TabViewAnimated />`
-
-A convenience wrapper around `<TabViewTransitioner />`
-
-It accepts the following props in addition to all the props accepted by `<TabViewTransitioner />` (except `render`),
 - `renderPager` - optional callback which renders a pager responsible for handling swipes
 - `renderHeader` - optional callback which renders a header, useful for a top tab bar
 - `renderFooter` - optional callback which renders a footer, useful for a bottom tab bar
 - `renderScene` - callback which renders a single scene
-- `lazy` - whether to load tabs lazily when you start switching
 
 ### `<TabViewPagerPan />`
 
