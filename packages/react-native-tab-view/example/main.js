@@ -35,7 +35,6 @@ const styles = StyleSheet.create({
     height: Platform.OS === 'ios' ? 44 : 56,
     backgroundColor: '#222',
     borderBottomColor: 'rgba(0, 0, 0, 0.1)',
-    borderBottomWidth: Platform.OS === 'ios' ? StyleSheet.hairlineWidth : 0,
   },
   title: {
     flex: 1,
@@ -156,12 +155,13 @@ export default class ExampleList extends Component {
     const backgroundColor = ExampleComponent && ExampleComponent.backgroundColor ? ExampleComponent.backgroundColor : '#222';
     const tintColor = ExampleComponent && ExampleComponent.tintColor ? ExampleComponent.tintColor : 'white';
     const appbarElevation = ExampleComponent && Number.isFinite(ExampleComponent.appbarElevation) ? ExampleComponent.appbarElevation : 4;
+    const borderBottomWidth = Platform.OS === 'ios' ? StyleSheet.hairlineWidth : 0;
 
     return (
       <View style={styles.container}>
         <StatusBar barStyle='light-content' />
         <View style={[ styles.statusbar, backgroundColor ? { backgroundColor } : null ]} />
-        <View style={[ styles.appbar, backgroundColor ? { backgroundColor } : null, appbarElevation ? { elevation: appbarElevation } : null ]}>
+        <View style={[ styles.appbar, backgroundColor ? { backgroundColor } : null, appbarElevation ? { elevation: appbarElevation, borderBottomWidth } : null ]}>
           {index > -1 ?
             <TouchableOpacity style={styles.button} onPress={this._handleNavigateBack}>
               <Ionicons

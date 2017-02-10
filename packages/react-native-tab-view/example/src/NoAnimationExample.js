@@ -1,8 +1,8 @@
 /* @flow */
 
 import React, { Component } from 'react';
-import { Animated, View, TouchableWithoutFeedback, StyleSheet } from 'react-native';
-import { TabViewAnimated, TabViewPagerPan } from 'react-native-tab-view';
+import { Animated, View, Platform, TouchableWithoutFeedback, StyleSheet } from 'react-native';
+import { TabViewAnimated, TabViewPagerPan, TabViewPagerScroll, TabViewPagerAndroid } from 'react-native-tab-view';
 import { Ionicons } from '@exponent/vector-icons';
 import ListViewExample from './ListViewExample';
 
@@ -47,6 +47,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   page: {
+    flex: 1,
     backgroundColor: '#f9f9f9',
   },
 });
@@ -139,22 +140,46 @@ export default class TopBarIconExample extends Component {
   _renderScene = ({ route }) => {
     switch (route.key) {
     case '1':
-      return <ListViewExample style={styles.page} />;
+      return <ListViewExample style={[ styles.page, { backgroundColor: '#E3F4DD' } ]} />;
     case '2':
-      return <ListViewExample style={styles.page} />;
+      return <ListViewExample style={[ styles.page, { backgroundColor: '#E6BDC5' } ]} />;
     case '3':
-      return <ListViewExample style={styles.page} />;
+      return <ListViewExample style={[ styles.page, { backgroundColor: '#9DB1B5' } ]} />;
     case '4':
-      return <ListViewExample style={styles.page} />;
+      return <ListViewExample style={[ styles.page, { backgroundColor: '#EDD8B5' } ]} />;
     case '5':
-      return <ListViewExample style={styles.page} />;
+      return <ListViewExample style={[ styles.page, { backgroundColor: '#9E9694' } ]} />;
     default:
       return null;
     }
   };
 
   _renderPager = (props) => {
-    return <TabViewPagerPan {...props} swipeEnabled={false} />;
+    switch (Platform.OS) {
+    case 'ios':
+      return (
+        <TabViewPagerScroll
+          {...props}
+          animationEnabled={false}
+          swipeEnabled={false}
+        />
+      );
+    case 'android':
+      return (
+        <TabViewPagerAndroid
+          {...props}
+          animationEnabled={false}
+          swipeEnabled={false}
+        />
+      );
+    default:
+      return (
+        <TabViewPagerPan
+          {...props}
+          swipeEnabled={false}
+        />
+      );
+    }
   };
 
   _configureTransition = () => null;
