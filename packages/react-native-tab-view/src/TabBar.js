@@ -221,6 +221,9 @@ export default class TabBar extends PureComponent<DefaultProps, Props, State> {
     if (typeof tabWidth === 'number') {
       return tabWidth;
     }
+    if (typeof tabWidth === 'string' && tabWidth.endsWith('%')) {
+      return layout.width * (parseFloat(tabWidth, 10) / 100);
+    }
     if (props.scrollEnabled) {
       return (layout.width / 5) * 2;
     }
@@ -415,7 +418,7 @@ export default class TabBar extends PureComponent<DefaultProps, Props, State> {
               }
 
               const passedTabStyle = StyleSheet.flatten(this.props.tabStyle);
-              const isWidthSet = passedTabStyle && typeof passedTabStyle.width === 'number' || scrollEnabled === true;
+              const isWidthSet = (passedTabStyle && typeof passedTabStyle.width !== 'undefined') || scrollEnabled === true;
               const tabContainerStyle = {};
 
               if (isWidthSet) {
