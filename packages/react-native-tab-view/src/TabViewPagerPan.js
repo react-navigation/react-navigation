@@ -165,7 +165,11 @@ export default class TabViewPagerPan extends PureComponent<DefaultProps, Props, 
     return (
       <Animated.View style={[ styles.sheet, style, { width: layout.width * routes.length } ]} {...this._panResponder.panHandlers}>
         {Children.map(this.props.children, (child, i) => (
-          <View key={navigationState.routes[i].key} style={{ width: layout.width }}>
+          <View
+            key={navigationState.routes[i].key}
+            testID={navigationState.routes[i].testID}
+            style={{ width: layout.width }}
+          >
             {child}
           </View>
         ))}

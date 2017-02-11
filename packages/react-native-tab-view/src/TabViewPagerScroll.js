@@ -149,11 +149,19 @@ export default class TabViewPagerScroll extends PureComponent<void, Props, void>
         ref={this._setRef}
       >
         {layout.width ? Children.map(children, (child, i) => (
-          <View key={navigationState.routes[i].key} style={{ width: layout.width, overflow: 'hidden' }}>
+          <View
+            key={navigationState.routes[i].key}
+            testID={navigationState.routes[i].testID}
+            style={{ width: layout.width, overflow: 'hidden' }}
+          >
             {child}
           </View>
         )) : (
-          <View key={navigationState.routes[navigationState.index].key} style={styles.page}>
+          <View
+            key={navigationState.routes[navigationState.index].key}
+            testID={navigationState.routes[navigationState.index].testID}
+            style={styles.page}
+          >
             {Children.toArray(children)[navigationState.index]}
           </View>
         )}
