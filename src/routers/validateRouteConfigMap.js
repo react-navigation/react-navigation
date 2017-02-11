@@ -34,10 +34,7 @@ function validateRouteConfigMap(routeConfigs: NavigationRouteConfigMap) {
 
     if (routeConfig.screen) {
       invariant(
-        // `screen: MyScreen`
         typeof (routeConfig.screen) === 'function',
-        //(!routeConfig.screen.navigation) &&
-        //(!routeConfig.component.router),
         `The component for route '${routeName}' must be a ` +
         'a React component. For example:\n\n' +
         'import MyScreen from \'./MyScreen\';\n' +

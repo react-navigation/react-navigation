@@ -62,20 +62,23 @@ test('should get config for screen', () => {
 
   const routes = [
     { key: 'A', routeName: 'Home' },
-    { key: 'B', routeName: 'Home', params: { user: 'jane', } },
+    { key: 'B', routeName: 'Home', params: { user: 'jane' } },
     { key: 'C', routeName: 'Settings' },
     { key: 'D', routeName: 'Notifications' },
-    { key: 'E', routeName: 'Notifications', params: { fullscreen: true, } },
+    { key: 'E', routeName: 'Notifications', params: { fullscreen: true } },
   ];
 
   expect(getScreenConfig(addNavigationHelpers({ state: routes[0], dispatch: () => false }), 'title')).toEqual('Welcome anonymous');
   expect(getScreenConfig(addNavigationHelpers({ state: routes[1], dispatch: () => false }), 'title')).toEqual('Welcome jane');
+  /* $FlowFixMe: we want tests to fail on undefined */
   expect(getScreenConfig(addNavigationHelpers({ state: routes[0], dispatch: () => false }), 'header').visible).toEqual(true);
   expect(getScreenConfig(addNavigationHelpers({ state: routes[2], dispatch: () => false }), 'title')).toEqual('Settings!!!');
   expect(getScreenConfig(addNavigationHelpers({ state: routes[2], dispatch: () => false }), 'permalink')).toEqual('');
+  /* $FlowFixMe: we want tests to fail on undefined */
   expect(getScreenConfig(addNavigationHelpers({ state: routes[2], dispatch: () => false }), 'header').visible).toEqual(false);
   expect(getScreenConfig(addNavigationHelpers({ state: routes[3], dispatch: () => false }), 'title')).toEqual('10 new notifications');
   expect(getScreenConfig(addNavigationHelpers({ state: routes[3], dispatch: () => false }), 'count')).toEqual(0);
+  /* $FlowFixMe: we want tests to fail on undefined */
   expect(getScreenConfig(addNavigationHelpers({ state: routes[4], dispatch: () => false }), 'header').visible).toEqual(false);
 });
 
@@ -120,13 +123,12 @@ test('should throw if the screen is not defined under the route config', () => {
 });
 
 test('should get recursive config for screen', () => {
-
   class NotificationScreen extends Component {
     static router = {
-      getScreenConfig: (navigation, optionName) => 'Baz',
+      getScreenConfig: () => 'Baz',
     };
     static navigationOptions = {
-      title: (navigation, childTitle) => `Bar ${childTitle}`,
+      title: (navigation: *, childTitle: *) => `Bar ${childTitle}`,
     };
   }
 
@@ -134,7 +136,7 @@ test('should get recursive config for screen', () => {
     Notifications: {
       screen: NotificationScreen,
       navigationOptions: {
-        title: (navigation, childTitle) => `Foo ${childTitle}`,
+        title: (navigation: *, childTitle: *) => `Foo ${childTitle}`,
       },
     },
   });
@@ -144,7 +146,7 @@ test('should get recursive config for screen', () => {
       key: 'A',
       routeName: 'Notifications',
       index: 0,
-      routes: [ { key: 'A', routeName: 'Anything' } ],
+      routes: [{ key: 'A', routeName: 'Anything' }],
     },
     dispatch: () => false,
   });
@@ -153,10 +155,9 @@ test('should get recursive config for screen', () => {
 });
 
 test('Allow passthrough configuration', () => {
-
   class NotificationScreen extends Component {
     static navigationOptions = {
-      tabBar: (navigation, tabBar) => ({ deepConfig: `also ${tabBar.color}` }),
+      tabBar: (navigation: *, tabBar: *) => ({ deepConfig: `also ${tabBar.color}` }),
     };
   }
 
@@ -174,5 +175,5 @@ test('Allow passthrough configuration', () => {
     dispatch: () => false,
   });
 
-  expect(getScreenConfig(childNavigation, 'tabBar', {color: 'red'})).toEqual({deepConfig: 'also red'});
+  expect(getScreenConfig(childNavigation, 'tabBar', { color: 'red' })).toEqual({ deepConfig: 'also red' });
 });

@@ -5,13 +5,13 @@ import React, { PureComponent } from 'react';
 import type {
   NavigationScreenProp,
   NavigationState,
+  NavigationRoute,
   NavigationAction,
-  ContextWithNavigation,
 } from '../TypeDefinition';
 
 type Props = {
   screenProps?: {};
-  navigation: NavigationScreenProp<NavigationState, NavigationAction>;
+  navigation: NavigationScreenProp<NavigationRoute, NavigationAction>;
   component: ReactClass<*>;
 };
 
@@ -24,7 +24,7 @@ export default class SceneView extends PureComponent<void, Props, void> {
 
   props: Props;
 
-  getChildContext(): ContextWithNavigation {
+  getChildContext() {
     return {
       navigation: this.props.navigation,
     };
