@@ -78,6 +78,17 @@ export default (
         // console.log(`${order.join('-')}: Initial state`, {state});
       }
 
+      // Merge any params from the action into all the child routes
+      if (action.params) {
+        state.routes = state.routes.map(route => ({
+          ...route,
+          params: {
+            ...route.params,
+            ...action.params,
+          }
+        }));
+      }
+
       // Let the current tab handle it
       const activeTabLastState = state.routes[state.index];
       const activeTabRouter = tabRouters[order[state.index]];
