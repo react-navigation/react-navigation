@@ -20,6 +20,10 @@ const MyNavScreen = ({ navigation, banner }) => (
       title="Go to a profile screen"
     />
     <Button
+      onPress={() => navigation.navigate('Photos', { name: 'Jane' })}
+      title="Go to a photos screen"
+    />
+    <Button
       onPress={() => navigation.goBack(null)}
       title="Go back"
     />
