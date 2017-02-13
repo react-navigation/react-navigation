@@ -33,18 +33,18 @@ export type TabViewConfig = {
   lazyLoad?: boolean;
 };
 
+export type TabScene = {
+  route: NavigationRoute;
+  focused: boolean;
+  index: number;
+  tintColor?: ?string;
+};
+
 type Props = TabViewConfig & {
   screenProps?: {},
   navigation: NavigationScreenProp<NavigationState, NavigationAction>;
   router: NavigationRouter,
   childNavigationProps: { [key: string]: NavigationScreenProp<NavigationRoute, NavigationAction> },
-};
-
-type TabScene = {
-  route: NavigationRoute;
-  focused: boolean;
-  index: number;
-  tintColor?: string;
 };
 
 let TabViewPager;
@@ -176,6 +176,7 @@ class TabView extends PureComponent<void, Props, void> {
     }
 
     return (
+      /* $FlowFixMe */
       <TabViewAnimated
         style={styles.container}
         navigationState={navigation.state}
@@ -193,7 +194,6 @@ class TabView extends PureComponent<void, Props, void> {
 
 const TabViewEnhanced = withCachedChildNavigation(TabView);
 
-/* $FlowFixMe */
 TabViewEnhanced.TabBarTop = TabBarTop;
 TabViewEnhanced.TabBarBottom = TabBarBottom;
 
