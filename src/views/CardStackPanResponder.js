@@ -99,7 +99,7 @@ class CardStackPanResponder extends AbstractPanResponder {
     this._addNativeListener(this._props.position);
   }
 
-  onMoveShouldSetPanResponder(event: any, gesture: any): boolean {
+  onMoveShouldSetPanResponder(event: {nativeEvent: {pageY: number, pageX: number}}, gesture: any): boolean {
     const props = this._props;
 
     if (props.navigationState.index !== props.scene.index) {
@@ -110,7 +110,7 @@ class CardStackPanResponder extends AbstractPanResponder {
     const isVertical = this._isVertical;
     const index = props.navigationState.index;
     const currentDragDistance = gesture[isVertical ? 'dy' : 'dx'];
-    const currentDragPosition = gesture[isVertical ? 'moveY' : 'moveX'];
+    const currentDragPosition = event.nativeEvent[isVertical ? 'pageY' : 'pageX'];
     const maxDragDistance = isVertical ?
       layout.height.__getValue() :
       layout.width.__getValue();
@@ -123,7 +123,7 @@ class CardStackPanResponder extends AbstractPanResponder {
       */
       props.gestureResponseDistance || 30;
 
-    if (positionMax != null && currentDragPosition > positionMax) {
+    if (positionMax != null && (currentDragPosition - currentDragDistance) > positionMax) {
       return false;
     }
 
