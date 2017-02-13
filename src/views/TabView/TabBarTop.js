@@ -81,7 +81,7 @@ export default class TabBarTop extends PureComponent<DefaultProps, Props, void> 
     if (typeof label === 'string') {
       return (
         <Animated.Text style={[styles.label, { color }, labelStyle]}>
-          {label}
+          {upperCaseLabel ? label.toUpperCase() : label}
         </Animated.Text>
       );
     }
