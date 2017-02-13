@@ -8,8 +8,13 @@ import {
   Text,
 } from 'react-native';
 
+import type {
+  Style,
+} from '../TypeDefinition';
+
 type Props = {
-  style?: any,
+  tintColor?: ?string;
+  style?: Style,
 };
 
 const HeaderTitle = ({ style, ...rest }: Props) => (

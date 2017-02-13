@@ -19,6 +19,7 @@ import type {
   NavigationAnimatedValue,
   NavigationLayout,
   NavigationScene,
+  NavigationState,
   NavigationRoute,
   NavigationAction,
   NavigationScreenProp,
@@ -31,7 +32,7 @@ type Props = {
     transitionProps: NavigationTransitionProps,
     prevTransitionProps: ?NavigationTransitionProps,
   ) => NavigationTransitionSpec,
-  navigation: NavigationScreenProp<NavigationRoute, NavigationAction>,
+  navigation: NavigationScreenProp<NavigationState, NavigationAction>,
   onTransitionEnd: () => void,
   onTransitionStart: () => void,
   render: (
@@ -58,6 +59,12 @@ class Transitioner extends React.Component<*, Props, State> {
   _prevTransitionProps: ?NavigationTransitionProps;
   _transitionProps: NavigationTransitionProps;
   _isMounted: boolean;
+  _isTransitionRunning: boolean;
+  _queuedTransition: ?{
+    nextProps: Props,
+    nextScenes: Array<NavigationScene>,
+    indexHasChanged: boolean,
+  };
 
   props: Props;
   state: State;

@@ -1,6 +1,4 @@
-/*
- * @flow
- */
+/* @flow */
 
 import React from 'react';
 import TabRouter from '../TabRouter';
@@ -377,7 +375,9 @@ describe('TabRouter', () => {
 
   test('Maps old actions (uses "getStateForAction returns null when navigating to same tab" test)', () => {
     const router = TabRouter({ Foo: BareLeafRouteConfig, Bar: BareLeafRouteConfig }, { initialRouteName: 'Bar' });
+    /* $FlowFixMe: these are for deprecated action names */
     const state = router.getStateForAction({ type: 'Init' });
+    /* $FlowFixMe: these are for deprecated action names */
     const state2 = router.getStateForAction({ type: 'Navigate', routeName: 'Bar' }, state);
     expect(state2).toEqual(null);
   });
