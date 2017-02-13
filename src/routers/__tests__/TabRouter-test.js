@@ -141,6 +141,42 @@ describe('TabRouter', () => {
     });
   });
 
+  test('Handles passing params to nested tabs', () => {
+    const ChildTabNavigator = () => <div />;
+    ChildTabNavigator.router = TabRouter({ Foo: BareLeafRouteConfig, Bar: BareLeafRouteConfig });
+    const router = TabRouter({ Foo: BareLeafRouteConfig, Baz: { screen: ChildTabNavigator } });
+    const action = router.getActionForPathAndParams('Baz', { foo: '42' });
+    const navAction = { type: NavigationActions.NAVIGATE, routeName: 'Baz', params: { foo: '42' } };
+    expect(action).toEqual(navAction);
+    const state = router.getStateForAction(navAction);
+    expect(state).toEqual({
+      index: 1,
+      routes: [
+        {
+          key: 'Foo',
+          routeName: 'Foo',
+        },
+        {
+          index: 0,
+          key: 'Baz',
+          routeName: 'Baz',
+          routes: [
+            {
+              key: 'Foo',
+              routeName: 'Foo',
+              params: { foo: '42' },
+            },
+            {
+              key: 'Bar',
+              routeName: 'Bar',
+              params: { foo: '42' },
+            },
+          ],
+        },
+      ],
+    });
+  });
+
   test('Handles initial deep linking into nested tabs', () => {
     const ChildTabNavigator = () => <div />;
     ChildTabNavigator.router = TabRouter({ Foo: BareLeafRouteConfig, Bar: BareLeafRouteConfig });
