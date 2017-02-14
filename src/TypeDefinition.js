@@ -29,10 +29,10 @@ export type NavigationState = {
    * Index refers to the active child route in the routes array.
    */
   index: number,
-  routes: Array<NavigationRoute>,
+  routes: Array<NavigationRoute | (NavigationRoute & NavigationState)>,
 };
 
-export interface NavigationRoute {
+export type NavigationRoute = {
   /**
    * React's key used by some navigators. No need to specify these manually,
    * they will be defined by the router.
@@ -52,7 +52,8 @@ export interface NavigationRoute {
    * e.g. `{ car_id: 123 }` in a route that displays a car.
    */
   params?: NavigationParams,
-}
+};
+
 
 export type NavigationRouter = {
   /**
@@ -92,12 +93,11 @@ export type NavigationRouter = {
 };
 
 export type NavigationScreenOption<T> =
+  | T
   | (navigation: NavigationScreenProp<NavigationRoute, NavigationAction>,
-    config: NavigationScreenOptionConfig,
-    router?: NavigationRouter) => T
-  | T;
+    config: T) => T;
 
-export type Style = Object | number | false | void;
+export type Style = { [key: string]: any } | number | false | null | void | Array<Style>;
 
 export type HeaderConfig = {
   /**
@@ -260,7 +260,7 @@ export type NavigationContainerConfig = {
 export type NavigationStackViewConfig = {
   mode?: 'card' | 'modal',
   headerMode?: HeaderMode,
-  headerComponent?: ReactClass<HeaderProps>,
+  headerComponent?: ReactClass<HeaderProps<*>>,
   cardStyle?: Style,
   onTransitionStart?: () => void,
   onTransitionEnd?: () => void
@@ -290,23 +290,18 @@ export type NavigationAction =
   | NavigationStackAction
   | NavigationTabAction;
 
-export type NavigationScreenRouteConfig = {
-  /** React component or navigator to render for this route */
-  screen: NavigationScreenComponent<*> | NavigationNavigator<*>,
+export type NavigationRouteConfig<T> = T & {
   navigationOptions?: NavigationScreenOptions,
   path?: string,
 };
 
-export type NavigationLazyScreenRouteConfig = {
-  /** React component or navigator to lazily require and render for this route */
-  getScreen: () => (NavigationScreenComponent<*> | NavigationNavigator<*>),
-  navigationOptions?: NavigationScreenOptions,
-  path?: string,
-};
-
-export type NavigationRouteConfig =
-  | NavigationScreenRouteConfig
-  | NavigationLazyScreenRouteConfig;
+export type NavigationScreenRouteConfig = NavigationScreenRouteConfig<{
+  // React component or navigator for this route */
+  screen: NavigationComponent,
+} | {
+  // React component to lazily require and render for this route */
+  getScreen: () => NavigationComponent,
+}>;
 
 export type NavigationPathsConfig = {
   [routeName: string]: string,
@@ -323,7 +318,7 @@ export type NavigationTabRouterConfig = {
 };
 
 export type NavigationRouteConfigMap = {
-  [routeName: string]: NavigationRouteConfig,
+  [routeName: string]: NavigationRouteConfig<*>,
 };
 
 export type NavigationDispatch<A> = (action: A) => boolean;
@@ -333,16 +328,14 @@ export type NavigationProp<S, A> = {
   dispatch: NavigationDispatch<A>,
 };
 
-export type NavigationScreenProp<S, A> = {
-  state: S,
-  dispatch: NavigationDispatch<A>,
-  goBack: (routeKey?: string) => boolean,
+export type NavigationScreenProp<S, A> = NavigationProp<S, A> & {
+  goBack: (routeKey?: ?string) => boolean,
   navigate: (routeName: string, params?: NavigationParams, action?: NavigationAction) => boolean,
   setParams: (newParams: NavigationParams) => boolean,
 };
 
 export type NavigationNavigatorProps = {
-  navigation: NavigationProp<NavigationState, NavigationAction>,
+  navigation: NavigationProp<NavigationRoute, NavigationAction>,
 };
 
 /**
@@ -396,7 +389,7 @@ export type NavigationTransitionProps = {
   // is the index of the scene
   scene: NavigationScene,
   index: number,
-  navigation: NavigationScreenProp<NavigationRoute, NavigationAction>,
+  navigation: NavigationScreenProp<*, NavigationAction>,
 
   // The gesture distance for `horizontal` and `vertical` transitions
   gestureResponseDistance?: ?number,
@@ -442,8 +435,4 @@ export type NavigationSceneRenderer = (
 
 export type NavigationStyleInterpolator = (
   props: NavigationSceneRendererProps,
-) => Object;
-
-export type ContextWithNavigation = {
-  navigation: NavigationScreenProp<NavigationState, NavigationAction>;
-};
+) => Style;

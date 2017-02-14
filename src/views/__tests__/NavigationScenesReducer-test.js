@@ -1,3 +1,4 @@
+/* @flow */
 
 import ScenesReducer from '../ScenesReducer';
 
@@ -7,7 +8,7 @@ import ScenesReducer from '../ScenesReducer';
 function testTransition(states) {
   const routes = states.map(keys => ({
     index: 0,
-    routes: keys.map(key => ({ key })),
+    routes: keys.map(key => ({ key, routeName: '' })),
   }));
 
   let scenes = [];
@@ -34,6 +35,7 @@ describe('ScenesReducer', () => {
         key: 'scene_1',
         route: {
           key: '1',
+          routeName: '',
         },
       },
       {
@@ -43,6 +45,7 @@ describe('ScenesReducer', () => {
         key: 'scene_2',
         route: {
           key: '2',
+          routeName: '',
         },
       },
     ]);
@@ -63,6 +66,7 @@ describe('ScenesReducer', () => {
         key: 'scene_1',
         route: {
           key: '1',
+          routeName: '',
         },
       },
       {
@@ -72,6 +76,7 @@ describe('ScenesReducer', () => {
         key: 'scene_2',
         route: {
           key: '2',
+          routeName: '',
         },
       },
       {
@@ -81,6 +86,7 @@ describe('ScenesReducer', () => {
         key: 'scene_3',
         route: {
           key: '3',
+          routeName: '',
         },
       },
     ]);
@@ -89,29 +95,30 @@ describe('ScenesReducer', () => {
   it('gets active scene when index changes', () => {
     const state1 = {
       index: 0,
-      routes: [{ key: '1' }, { key: '2' }],
+      routes: [{ key: '1', routeName: '' }, { key: '2', routeName: '' }],
     };
 
     const state2 = {
       index: 1,
-      routes: [{ key: '1' }, { key: '2' }],
+      routes: [{ key: '1', routeName: '' }, { key: '2', routeName: '' }],
     };
 
     const scenes1 = ScenesReducer([], state1, null);
     const scenes2 = ScenesReducer(scenes1, state2, state1);
-    const route = scenes2.find(scene => scene.isActive).route;
-    expect(route).toEqual({ key: '2' });
+    /* $FlowFixMe: We want tests to fail on undefined */
+    const route = scenes2.find((scene: *) => scene.isActive).route;
+    expect(route).toEqual({ key: '2', routeName: '' });
   });
 
   it('gets same scenes', () => {
     const state1 = {
       index: 0,
-      routes: [{ key: '1' }, { key: '2' }],
+      routes: [{ key: '1', routeName: '' }, { key: '2', routeName: '' }],
     };
 
     const state2 = {
       index: 0,
-      routes: [{ key: '1' }, { key: '2' }],
+      routes: [{ key: '1', routeName: '' }, { key: '2', routeName: '' }],
     };
 
     const scenes1 = ScenesReducer([], state1, null);
@@ -122,12 +129,12 @@ describe('ScenesReducer', () => {
   it('gets different scenes when keys are different', () => {
     const state1 = {
       index: 0,
-      routes: [{ key: '1' }, { key: '2' }],
+      routes: [{ key: '1', routeName: '' }, { key: '2', routeName: '' }],
     };
 
     const state2 = {
       index: 0,
-      routes: [{ key: '2' }, { key: '1' }],
+      routes: [{ key: '2', routeName: '' }, { key: '1', routeName: '' }],
     };
 
     const scenes1 = ScenesReducer([], state1, null);
@@ -138,12 +145,12 @@ describe('ScenesReducer', () => {
   it('gets different scenes when routes are different', () => {
     const state1 = {
       index: 0,
-      routes: [{ key: '1', x: 1 }, { key: '2', x: 2 }],
+      routes: [{ key: '1', x: 1, routeName: '' }, { key: '2', x: 2, routeName: '' }],
     };
 
     const state2 = {
       index: 0,
-      routes: [{ key: '1', x: 3 }, { key: '2', x: 4 }],
+      routes: [{ key: '1', x: 3, routeName: '' }, { key: '2', x: 4, routeName: '' }],
     };
 
     const scenes1 = ScenesReducer([], state1, null);
@@ -155,12 +162,12 @@ describe('ScenesReducer', () => {
   it('gets different scenes when state index changes', () => {
     const state1 = {
       index: 0,
-      routes: [{ key: '1', x: 1 }, { key: '2', x: 2 }],
+      routes: [{ key: '1', x: 1, routeName: '' }, { key: '2', x: 2, routeName: '' }],
     };
 
     const state2 = {
       index: 1,
-      routes: [{ key: '1', x: 1 }, { key: '2', x: 2 }],
+      routes: [{ key: '1', x: 1, routeName: '' }, { key: '2', x: 2, routeName: '' }],
     };
 
     const scenes1 = ScenesReducer([], state1, null);
@@ -183,6 +190,7 @@ describe('ScenesReducer', () => {
         key: 'scene_1',
         route: {
           key: '1',
+          routeName: '',
         },
       },
       {
@@ -192,6 +200,7 @@ describe('ScenesReducer', () => {
         key: 'scene_2',
         route: {
           key: '2',
+          routeName: '',
         },
       },
       {
@@ -201,6 +210,7 @@ describe('ScenesReducer', () => {
         key: 'scene_3',
         route: {
           key: '3',
+          routeName: '',
         },
       },
     ]);
@@ -220,6 +230,7 @@ describe('ScenesReducer', () => {
         key: 'scene_1',
         route: {
           key: '1',
+          routeName: '',
         },
       },
       {
@@ -229,6 +240,7 @@ describe('ScenesReducer', () => {
         key: 'scene_3',
         route: {
           key: '3',
+          routeName: '',
         },
       },
       {
@@ -238,6 +250,7 @@ describe('ScenesReducer', () => {
         key: 'scene_2',
         route: {
           key: '2',
+          routeName: '',
         },
       },
     ]);
@@ -258,6 +271,7 @@ describe('ScenesReducer', () => {
         key: 'scene_1',
         route: {
           key: '1',
+          routeName: '',
         },
       },
       {
@@ -267,6 +281,7 @@ describe('ScenesReducer', () => {
         key: 'scene_2',
         route: {
           key: '2',
+          routeName: '',
         },
       },
       {
@@ -276,6 +291,7 @@ describe('ScenesReducer', () => {
         key: 'scene_3',
         route: {
           key: '3',
+          routeName: '',
         },
       },
     ]);
