@@ -12,7 +12,9 @@ import TouchableItem from '../TouchableItem';
 import type {
   NavigationScreenProp,
   NavigationState,
+  NavigationRoute,
   NavigationAction,
+  Style,
 } from '../../TypeDefinition';
 import type {
   DrawerScene,
@@ -26,7 +28,7 @@ type Props = {
   inactiveBackgroundColor?: string;
   getLabelText: (scene: DrawerScene) => string;
   renderIcon: (scene: DrawerScene) => ?React.Element<*>;
-  style?: any;
+  style?: Style;
 };
 
 /**

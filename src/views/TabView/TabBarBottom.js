@@ -12,14 +12,12 @@ import TabBarIcon from './TabBarIcon';
 import type {
   NavigationRoute,
   NavigationState,
+  Style,
 } from '../../TypeDefinition';
 
-type TabScene = {
-  route: NavigationRoute;
-  focused: boolean;
-  index: number;
-  tintColor?: string;
-};
+import type {
+  TabScene,
+} from './TabView';
 
 type DefaultProps = {
   activeTintColor: string;
@@ -40,8 +38,8 @@ type Props = {
   getLabelText: (scene: TabScene) => string;
   renderIcon: (scene: TabScene) => React.Element<*>;
   showLabel: boolean;
-  style: any;
-  labelStyle?: any;
+  style?: Style;
+  labelStyle?: Style;
   showIcon: boolean;
 };
 

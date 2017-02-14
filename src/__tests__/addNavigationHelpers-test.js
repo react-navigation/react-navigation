@@ -17,7 +17,7 @@ describe('addNavigationHelpers', () => {
   it('handles Back action when the key is not defined', () => {
     const mockedDispatch = jest.fn(() => false).mockImplementationOnce(() => true);
     expect(addNavigationHelpers({
-      state: {},
+      state: { routeName: 'Home' },
       dispatch: mockedDispatch,
     }).goBack()).toEqual(true);
     expect(mockedDispatch).toBeCalledWith({ type: NavigationActions.BACK });
@@ -27,7 +27,7 @@ describe('addNavigationHelpers', () => {
   it('handles Navigate action', () => {
     const mockedDispatch = jest.fn(() => false).mockImplementationOnce(() => true);
     expect(addNavigationHelpers({
-      state: {},
+      state: { routeName: 'Home' },
       dispatch: mockedDispatch,
     }).navigate('Profile', { name: 'Matt' })).toEqual(true);
     expect(mockedDispatch).toBeCalledWith({
@@ -43,11 +43,11 @@ describe('addNavigationHelpers', () => {
     expect(addNavigationHelpers({
       state: { key: 'B', routeName: 'Settings' },
       dispatch: mockedDispatch,
-    }).setParams({ notificationsEnabled: true })).toEqual(true);
+    }).setParams({ notificationsEnabled: 'yes' })).toEqual(true);
     expect(mockedDispatch).toBeCalledWith({
       type: NavigationActions.SET_PARAMS,
       key: 'B',
-      params: { notificationsEnabled: true },
+      params: { notificationsEnabled: 'yes' },
     });
     expect(mockedDispatch.mock.calls.length).toBe(1);
   });

@@ -3,10 +3,23 @@
 import React from 'react';
 import hoistStatics from 'hoist-non-react-statics';
 
-import type { ContextWithNavigation } from '../TypeDefinition';
+import type {
+  NavigationState,
+  NavigationRoute,
+  NavigationAction,
+} from '../TypeDefinition';
 
-export default function withNavigation(Component: ReactClass<T>) {
-  const componentWithNavigation = (props: T, { navigation }: ContextWithNavigation) => (
+type Context = {
+  navigation: InjectedProps<NavigationState, NavigationAction>,
+};
+
+type InjectedProps = {
+  navigation: InjectedProps<NavigationState, NavigationAction>,
+};
+
+
+export default function withNavigation<T: *>(Component: ReactClass<T & InjectedProps>) {
+  const componentWithNavigation = (props: T, { navigation }: Context) => (
     <Component {...props} navigation={navigation} />
   );
 
