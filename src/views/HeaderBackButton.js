@@ -14,7 +14,7 @@ import TouchableItem from './TouchableItem';
 
 type Props = {
   onPress?: () => void,
-  title?: string,
+  title?: ?string,
   tintColor?: ?string;
 };
 
