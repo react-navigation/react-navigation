@@ -17,7 +17,9 @@ type Props = {
   screenProps?: {};
   router: NavigationRouter,
   navigation: NavigationScreenProp<NavigationState, NavigationAction>,
-  childNavigationProps: { [key: string]: NavigationScreenProp<NavigationRoute, NavigationAction> },
+  childNavigationProps: {
+    [key: string]: NavigationScreenProp<NavigationRoute, NavigationAction>;
+  },
 };
 
 /**

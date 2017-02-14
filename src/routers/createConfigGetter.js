@@ -8,10 +8,10 @@ import getScreenForRouteName from './getScreenForRouteName';
 import addNavigationHelpers from '../addNavigationHelpers';
 
 import type {
-  NavigationScreenProp,
-  NavigationRoute,
+  NavigationProp,
   NavigationAction,
   NavigationRouteConfigMap,
+  NavigationScreenOption,
   NavigationScreenOptions,
 } from '../TypeDefinition';
 
@@ -20,9 +20,9 @@ export default (
   defaultOptions?: NavigationScreenOptions
 ) =>
   (
-    navigation: NavigationScreenProp<NavigationRoute, NavigationAction>,
+    navigation: NavigationProp<*, NavigationAction>,
     optionName: string,
-    config?: Object
+    config?: NavigationScreenOption<*>
   ) => {
     const route = navigation.state;
     invariant(
@@ -55,7 +55,7 @@ export default (
       Component.navigationOptions,
       routeConfig.navigationOptions,
     ].reduce(
-      (acc: Object, options: NavigationScreenOptions) => {
+      (acc: *, options: NavigationScreenOptions) => {
         if (options && options[optionName] !== undefined) {
           return typeof options[optionName] === 'function'
             ? options[optionName](navigation, acc)

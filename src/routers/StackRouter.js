@@ -9,6 +9,7 @@ import StateUtils from '../StateUtils';
 import validateRouteConfigMap from './validateRouteConfigMap';
 
 import type {
+  NavigationRoute,
   NavigationAction,
   NavigationComponent,
   NavigationNavigateAction,
@@ -69,10 +70,8 @@ export default (
       const wildcardRe = pathToRegexp(`${pathPattern}/*`, keys);
       re = new RegExp(`(?:${re.source})|(?:${wildcardRe.source})`);
     }
-    paths[routeName] = {
-      re,
-      keys,
-    };
+      /* $FlowFixMe */
+    paths[routeName] = { re, keys };
   });
 
   return {
@@ -91,7 +90,7 @@ export default (
     },
 
     getStateForAction(action: NavigationStackAction, state: ?NavigationState) {
-      action = NavigationActions.mapDeprecatedActionAndWarn(action)
+      action = NavigationActions.mapDeprecatedActionAndWarn(action);
 
       // Set up the initial state if needed
       if (!state) {
@@ -157,7 +156,8 @@ export default (
       }
 
       if (action.type === NavigationActions.SET_PARAMS) {
-        const lastRoute = state.routes.find(route => route.key === action.key);
+        /* $FlowFixMe */
+        const lastRoute = state.routes.find((route: *) => route.key === action.key);
         if (lastRoute) {
           const params = {
             ...lastRoute.params,
@@ -180,7 +180,7 @@ export default (
 
         return {
           ...state,
-          routes: resetAction.actions.map((action: NavigationNavigateAction, index) => {
+          routes: resetAction.actions.map((action: NavigationNavigateAction, index: number) => {
             const router = childRouters[action.routeName];
             if (router) {
               return {
@@ -204,7 +204,9 @@ export default (
       if (action.type === NavigationActions.BACK) {
         let backRouteIndex = null;
         if (action.key) {
-          const backRoute = state.routes.find(route => route.key === action.key);
+          /* $FlowFixMe */
+          const backRoute = state.routes.find((route: *) => route.key === action.key);
+          /* $FlowFixMe */
           backRouteIndex = state.routes.indexOf(backRoute);
         }
         if (backRouteIndex == null) {
@@ -242,7 +244,9 @@ export default (
       let matchedRouteName;
       let pathMatch;
       let pathMatchKeys;
+
       for (const routeName in paths) {
+        /* $FlowFixMe */
         const { re, keys } = paths[routeName];
         pathMatch = re.exec(pathToResolve);
         if (pathMatch && pathMatch.length) {
@@ -264,21 +268,23 @@ export default (
       let nestedAction;
       if (childRouters[matchedRouteName]) {
         nestedAction = childRouters[matchedRouteName].getActionForPathAndParams(
+          /* $FlowFixMe */
           pathMatch.slice(pathMatchKeys.length).join('/')
         );
       }
 
       // reduce the matched pieces of the path into the params
       // of the route. `params` is null if there are no params.
-      const params = pathMatch.slice(1).reduce((result, matchResult, i) => {
+      /* $FlowFixMe */
+      const params = pathMatch.slice(1).reduce((result: *, matchResult: *, i: number) => {
         const key = pathMatchKeys[i];
         if (key.asterisk || !key) {
           return result;
         }
-        result = result || {};
+        const nextResult = result || {};
         const paramName = key.name;
-        result[paramName] = matchResult;
-        return result;
+        nextResult[paramName] = matchResult;
+        return nextResult;
       }, null);
 
       return NavigationActions.navigate({

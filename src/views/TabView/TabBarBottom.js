@@ -12,14 +12,12 @@ import TabBarIcon from './TabBarIcon';
 import type {
   NavigationRoute,
   NavigationState,
+  Style,
 } from '../../TypeDefinition';
 
-type TabScene = {
-  route: NavigationRoute;
-  focused: boolean;
-  index: number;
-  tintColor?: string;
-};
+import type {
+  TabScene,
+} from './TabView';
 
 type DefaultProps = {
   activeTintColor: string;
@@ -40,8 +38,9 @@ type Props = {
   getLabelText: (scene: TabScene) => string;
   renderIcon: (scene: TabScene) => React.Element<*>;
   showLabel: boolean;
-  style: any;
-  labelStyle?: any;
+  style?: Style;
+  labelStyle?: Style;
+  showIcon: boolean;
 };
 
 export default class TabBarBottom extends PureComponent<DefaultProps, Props, void> {
@@ -53,6 +52,7 @@ export default class TabBarBottom extends PureComponent<DefaultProps, Props, voi
     inactiveTintColor: '#929292', // Default inactive tint color in iOS 10
     inactiveBackgroundColor: 'transparent',
     showLabel: true,
+    showIcon: true,
   };
 
   props: Props;
@@ -98,7 +98,11 @@ export default class TabBarBottom extends PureComponent<DefaultProps, Props, voi
       activeTintColor,
       inactiveTintColor,
       renderIcon,
+      showIcon,
     } = this.props;
+    if (showIcon === false) {
+      return null;
+    }
     return (
       <TabBarIcon
         position={position}
@@ -136,9 +140,10 @@ export default class TabBarBottom extends PureComponent<DefaultProps, Props, voi
             inputRange,
             outputRange,
           });
+          const justifyContent = this.props.showIcon ? 'flex-end' : 'center';
           return (
             <TouchableWithoutFeedback key={route.key} onPress={() => jumpToIndex(index)}>
-              <Animated.View style={[styles.tab, { backgroundColor }]}>
+              <Animated.View style={[styles.tab, { backgroundColor, justifyContent }]}>
                 {this._renderIcon(scene)}
                 {this._renderLabel(scene)}
               </Animated.View>
