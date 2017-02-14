@@ -4,23 +4,24 @@ import React, { PureComponent } from 'react';
 
 import addNavigationHelpers from './addNavigationHelpers';
 
-
 import type {
   NavigationScreenProp,
-  NavigationState,
-  NavigationRoute,
   NavigationAction,
 } from './TypeDefinition';
 
-type Props = {
-  navigation: NavigationScreenProp<NavigationState, NavigationAction>,
+type InjectedProps<N> = {
+  childNavigationProps: {
+    [key: string]: N,
+  },
 };
 
 /**
  * HOC which caches the child navigation items.
  */
-export default function withCachedChildNavigation<T: Props>(Comp: ReactClass<T>): ReactClass<T> {
-  return class extends PureComponent<void, T, void> {
+export default function withCachedChildNavigation<T: *, N: *>(
+  Comp: ReactClass<T & InjectedProps<N>>
+): ReactClass<T> {
+  return class extends PureComponent {
 
     static displayName = `withCachedChildNavigation(${Comp.displayName || Comp.name})`;
 
@@ -35,11 +36,11 @@ export default function withCachedChildNavigation<T: Props>(Comp: ReactClass<T>)
     }
 
     _childNavigationProps: {
-      [key: string]: NavigationScreenProp<NavigationRoute, NavigationAction>,
+      [key: string]: NavigationScreenProp<N, NavigationAction>,
     };
 
     _updateNavigationProps = (
-      navigation: NavigationScreenProp<NavigationState, NavigationAction>
+      navigation: NavigationScreenProp<N, NavigationAction>
     ) => {
       // Update props for each child route
       if (!this._childNavigationProps) {

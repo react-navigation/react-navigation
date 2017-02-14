@@ -1,6 +1,6 @@
 # Navigators
 
-Navigators allow you define you application's navigation structure. Navigators also render common elements such as headers and tab bars which you can configure.
+Navigators allow you to define your application's navigation structure. Navigators also render common elements such as headers and tab bars which you can configure.
 
 Under the hood, navigators are plain React components.
 

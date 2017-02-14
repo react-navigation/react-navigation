@@ -110,6 +110,14 @@ const GuidesDocs = createNavigator(TabRouter({
     }),
     path: 'linking',
   },
+  ScreenTracking: {
+    screen: createDocPage({
+      doc: 'guides/Screen-Tracking',
+      title: 'Screen tracking and analytics',
+      linkName: 'Screen Tracking',
+    }),
+    path: 'screen-tracking',
+  },  
   Contributors: {
     screen: createDocPage({
       doc: 'guides/Contributors',

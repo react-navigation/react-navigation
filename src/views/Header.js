@@ -20,32 +20,32 @@ import addNavigationHelpers from '../addNavigationHelpers';
 import type {
   NavigationScene,
   NavigationRouter,
-  NavigationRoute,
+  NavigationState,
   NavigationAction,
   NavigationScreenProp,
   NavigationSceneRendererProps,
   NavigationStyleInterpolator,
+  Style,
 } from '../TypeDefinition';
 
 export type HeaderMode = 'float' | 'screen' | 'none';
 
 type SubViewProps = NavigationSceneRendererProps & {
-  onNavigateBack: ?() => void,
+  onNavigateBack?: () => void,
 };
 
-type Navigation = NavigationScreenProp<NavigationRoute, NavigationAction>;
+type Navigation = NavigationScreenProp<NavigationState, NavigationAction>;
 
 type SubViewRenderer = (subViewProps: SubViewProps) => ?React.Element<*>;
 
 export type HeaderProps = NavigationSceneRendererProps & {
   mode: HeaderMode,
-  onNavigateBack: ?Function,
+  onNavigateBack?: () => void,
   renderLeftComponent: SubViewRenderer,
   renderRightComponent: SubViewRenderer,
   renderTitleComponent: SubViewRenderer,
-  tintColor: ?string,
+  tintColor?: string,
   router: NavigationRouter,
-  style?: any,
 };
 
 type SubViewName = 'left' | 'title' | 'right';
@@ -120,7 +120,7 @@ class Header extends React.Component<void, HeaderProps, HeaderState> {
     return undefined;
   }
 
-  _getHeaderTitleStyle(navigation: Navigation): ?object {
+  _getHeaderTitleStyle(navigation: Navigation): Style {
     const header = this.props.router.getScreenConfig(navigation, 'header');
     if (header && header.titleStyle) {
       return header.titleStyle;
@@ -128,14 +128,14 @@ class Header extends React.Component<void, HeaderProps, HeaderState> {
     return undefined;
   }
 
-  _renderTitleComponent = (props: SubViewProps) => {
+  _renderTitleComponent = (props: SubViewProps): React.Element<HeaderTitle> => {
     const titleStyle = this._getHeaderTitleStyle(props.navigation);
     const color = this._getHeaderTintColor(props.navigation);
     const title = this._getHeaderTitle(props.navigation);
-    return <HeaderTitle style={[color && { color }, titleStyle]}>{title}</HeaderTitle>;
+    return <HeaderTitle style={[color ? { color } : null, titleStyle]}>{title}</HeaderTitle>;
   };
 
-  _renderLeftComponent = (props: SubViewProps) => {
+  _renderLeftComponent = (props: SubViewProps): ?React.Element<HeaderBackButton> => {
     if (props.scene.index === 0 || !props.onNavigateBack) {
       return null;
     }
@@ -154,19 +154,15 @@ class Header extends React.Component<void, HeaderProps, HeaderState> {
     );
   };
 
-  _renderRightComponent = () => {
-    return null;
-  };
+  _renderRightComponent = () => null;
 
-  _renderLeft(props: NavigationSceneRendererProps): ?React.Element<*> {
-    return this._renderSubView(
+  _renderLeft = (props: NavigationSceneRendererProps): ?React.Element<*> => this._renderSubView(
       props,
       'left',
       this.props.renderLeftComponent,
       this._renderLeftComponent,
       HeaderStyleInterpolator.forLeft,
     );
-  }
 
   _renderTitle(props: NavigationSceneRendererProps): ?React.Element<*> {
     return this._renderSubView(
@@ -178,15 +174,13 @@ class Header extends React.Component<void, HeaderProps, HeaderState> {
     );
   }
 
-  _renderRight(props: NavigationSceneRendererProps): ?React.Element<*> {
-    return this._renderSubView(
+  _renderRight = (props: NavigationSceneRendererProps): ?React.Element<*> => this._renderSubView(
       props,
       'right',
       this.props.renderRightComponent,
       this._renderRightComponent,
       HeaderStyleInterpolator.forRight,
     );
-  }
 
   _renderSubView(
     props: NavigationSceneRendererProps,
@@ -252,7 +246,6 @@ class Header extends React.Component<void, HeaderProps, HeaderState> {
           },
           styles.item,
           styles[name],
-          props.style,
           styleInterpolator(props),
         ]}
       >
@@ -299,7 +292,7 @@ class Header extends React.Component<void, HeaderProps, HeaderState> {
         ...this.props,
         position: new Animated.Value(this.props.scene.index),
         progress: new Animated.Value(0),
-      });
+      };
     }
 
     // eslint-disable-next-line no-unused-vars

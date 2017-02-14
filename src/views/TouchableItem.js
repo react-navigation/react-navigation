@@ -16,6 +16,9 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import type {
+  Style,
+} from '../TypeDefinition';
 
 const ANDROID_VERSION_LOLLIPOP = 21;
 
@@ -26,7 +29,7 @@ type Props = {
   pressColor?: string;
   activeOpacity?: number;
   children?: React.Element<*>;
-  style?: any;
+  style?: Style;
 };
 
 type DefaultProps = {
@@ -58,9 +61,11 @@ export default class TouchableItem extends Component<DefaultProps, Props, void> 
      * We need to pass the background prop to specify a borderless ripple effect.
      */
     if (Platform.OS === 'android' && Platform.Version >= ANDROID_VERSION_LOLLIPOP) {
+      const { style, ...rest } = this.props; // eslint-disable-line no-unused-vars
+
       return (
         <TouchableNativeFeedback
-          {...this.props}
+          {...rest}
           style={null}
           background={
             TouchableNativeFeedback.Ripple(
@@ -74,12 +79,12 @@ export default class TouchableItem extends Component<DefaultProps, Props, void> 
           </View>
         </TouchableNativeFeedback>
       );
-    } else {
-      return (
-        <TouchableOpacity {...this.props}>
-          {this.props.children}
-        </TouchableOpacity>
-      );
     }
+
+    return (
+      <TouchableOpacity {...this.props}>
+        {this.props.children}
+      </TouchableOpacity>
+    );
   }
 }

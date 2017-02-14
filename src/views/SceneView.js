@@ -5,16 +5,17 @@ import React, { PureComponent } from 'react';
 import type {
   NavigationScreenProp,
   NavigationState,
+  NavigationRoute,
   NavigationAction,
-  ContextWithNavigation,
 } from '../TypeDefinition';
 
 type Props = {
   screenProps?: {};
-  hideScreenPropsWarning?: boolean;
-  navigation: NavigationScreenProp<NavigationState, NavigationAction>;
+  navigation: NavigationScreenProp<NavigationRoute, NavigationAction>;
   component: ReactClass<*>;
 };
+
+let screenPropsWarningShown = false;
 
 export default class SceneView extends PureComponent<void, Props, void> {
   static childContextTypes = {
@@ -23,25 +24,25 @@ export default class SceneView extends PureComponent<void, Props, void> {
 
   props: Props;
 
-  getChildContext(): ContextWithNavigation {
+  getChildContext() {
     return {
       navigation: this.props.navigation,
     };
   }
 
   componentWillMount() {
-    if (this.props.screenProps !== undefined && !this.props.hideScreenPropsWarning) {
+    if (this.props.screenProps !== undefined && !screenPropsWarningShown) {
       console.warn(
         'Behaviour of screenProps has changed from initial beta. ' +
         'Components will now receive it as `this.props.screenProps` instead.\n' +
-        'Pass `hideScreenPropsWarning` to hide this warning.'
+        'This warning will be removed in future.'
       );
+      screenPropsWarningShown = true;
     }
   }
 
   render() {
     const {
-      hideScreenPropsWarning,
       screenProps,
       navigation,
       component: Component,
@@ -49,7 +50,6 @@ export default class SceneView extends PureComponent<void, Props, void> {
 
     return (
       <Component
-        hideScreenPropsWarning={hideScreenPropsWarning}
         screenProps={screenProps}
         navigation={navigation}
       />

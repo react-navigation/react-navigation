@@ -13,9 +13,9 @@ import {
 import TouchableItem from './TouchableItem';
 
 type Props = {
-  onPress: Function,
+  onPress?: () => void,
   title?: string,
-  tintColor?: string;
+  tintColor?: ?string;
 };
 
 const HeaderBackButton = ({ onPress, title, tintColor }: Props) => (
