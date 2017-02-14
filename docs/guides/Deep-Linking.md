@@ -2,7 +2,7 @@
 
 In this guide we will set up our app to handle external URIs. Let's start with the SimpleApp that [we created in the getting started guide](/docs/intro).
 
-In this example, we want a URI like `mychat://chats/Taylor` to open our app and link straight into Taylor's chat page.
+In this example, we want a URI like `mychat://chat/Taylor` to open our app and link straight into Taylor's chat page.
 
 ## Configuration
 

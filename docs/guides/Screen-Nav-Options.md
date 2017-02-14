@@ -19,7 +19,7 @@ class MyScreen extends React.Component {
 
 Or, each option can be a function that takes the following arguments, and returns the value of the option.
 
-- `navigation` - the [navigation prop](/docs/intro/navigation-prop) for the screen, with the screen's route at `navigation.state`
+- `navigation` - the [navigation prop](/docs/navigators/navigation-prop) for the screen, with the screen's route at `navigation.state`
 - `childRouter` - The child router, if the screen is a navigator
 
 ```js
@@ -96,7 +96,28 @@ The 2nd argument passed to the function are the default values for the `header` 
 
 ## Tab Navigation Options
 
-Coming Soon
+```js
+class TabScreen extends React.Component {
+
+  static navigationOptions = {
+    tabBar: ({ state }) => ({
+      label: 'Tab Label',
+      icon: ({ tintColor }) => (
+        <Image
+          source={require('./tab-icon.png')}
+          style={[styles.icon, {tintColor: tintColor}]}
+        />
+      ),
+      visible: true
+    }),
+  };
+
+};
+```
+
+- `label` - can be string or react component
+- `icon` - function that returns icon component
+- `visible` - true or false to show or hide the tab bar, if not set then defaults to true
 
 ## Stack Navigation Options
 

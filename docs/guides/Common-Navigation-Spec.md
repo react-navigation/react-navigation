@@ -56,8 +56,8 @@ A navigation-aware component that hosts other navigation-aware components. Most 
 The navigation prop should be provided to components who need access to navigation. If provided, it must follow this interface:
 
 ```javascript
-type BackAction = {type: 'Back'};
-type URIAction = {type: 'URI', uri: string};
+type BackAction = {type: 'Navigation/BACK'};
+type URIAction = {type: 'Navigation/URI', uri: string};
 
 interface Navigation<S, A> {
   dispatch(action: (A | BackAction | URIAction)): boolean;
@@ -81,7 +81,7 @@ const MyView = ({ navigation }) => {
 
 #### navigation.dispatch(action)
 
-The channel that a component can call to request navigation from its parent. When calling `dispatch`, you must provide an action object with a `type`. There are two special action types: 'Back' and 'URI'.
+The channel that a component can call to request navigation from its parent. When calling `dispatch`, you must provide an action object with a `type`. There are two special action types: 'Navigation/BACK' and 'Navigation/URI'.
 
 ```javascript
 const MyLink = ({ navigation }) => (
@@ -102,8 +102,8 @@ const MyLink = ({ navigation }) => (
 A router object may be statically defined on your component. If defined, it must follow this interface:
 
 ```javascript
-type BackAction = {type: 'Back'};
-type URIAction = {type: 'URI', uri: string};
+type BackAction = {type: 'Navigation/BACK'};
+type URIAction = {type: 'Navigation/URI', uri: string};
 
 interface Router<S, A> {
   getStateForAction(action: (A | BackAction | URIAction), lastState: ?S): ?S;
@@ -151,7 +151,7 @@ There are two special actions that can be fired into `navigation.dispatch` and c
 This action means the same thing as an Android back button press.
 
 ```
-type BackAction = { type: 'Back' };
+type BackAction = { type: 'Navigation/BACK' };
 ```
 
 #### URI Open Action
@@ -159,7 +159,7 @@ type BackAction = { type: 'Back' };
 Used to request the enclosing app or OS to open a link at a particular URI. If it is a web URI like `http` or `https`, the app may open a WebView to present the page. Or the app may open the URI in a web browser. In some cases, an app may choose to block a URI action or handle it differently.
 
 ```
-type URIAction = { type: 'URI', uri: string };
+type URIAction = { type: 'Navigation/URI', uri: string };
 ```
 
 
@@ -186,7 +186,7 @@ To block the Android back button:
 class Foo extends React.Component {
   static router = {
     getStateForAction(action, prevState = {}) {
-      if (action.type === 'Back') return null;
+      if (action.type === 'Navigation/BACK') return null;
       else return prevState;
     },
   };

@@ -27,6 +27,9 @@ export default (routeConfigMap: NavigationRouteConfigMap, stackConfig: StackNavi
     headerComponent,
     headerMode,
     mode,
+    cardStyle,
+    onTransitionStart,
+    onTransitionEnd,
     navigationOptions,
   } = stackConfig;
   const stackRouterConfig = {
@@ -42,6 +45,9 @@ export default (routeConfigMap: NavigationRouteConfigMap, stackConfig: StackNavi
       headerComponent={headerComponent}
       headerMode={headerMode}
       mode={mode}
+      cardStyle={cardStyle}
+      onTransitionStart={onTransitionStart}
+      onTransitionEnd={onTransitionEnd}
     />
   )), containerOptions);
 };

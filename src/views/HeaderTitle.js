@@ -8,12 +8,17 @@ import {
   Text,
 } from 'react-native';
 
+import type {
+  Style,
+} from '../TypeDefinition';
+
 type Props = {
-  style?: any,
+  tintColor?: ?string;
+  style?: Style,
 };
 
 const HeaderTitle = ({ style, ...rest }: Props) => (
-  <Text {...rest} style={[styles.title, style]} />
+  <Text numberOfLines={1} {...rest} style={[styles.title, style]} />
 );
 
 const styles = StyleSheet.create({

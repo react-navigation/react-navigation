@@ -12,15 +12,17 @@ import withCachedChildNavigation from '../../withCachedChildNavigation';
 import type {
   NavigationScreenProp,
   NavigationState,
+  NavigationRoute,
   NavigationAction,
   NavigationRouter,
+  Style,
 } from '../../TypeDefinition';
 
 import type {
   DrawerScene,
 } from './DrawerView';
 
-type Navigation = NavigationScreenProp<NavigationState, NavigationAction>;
+type Navigation = NavigationScreenProp<NavigationRoute, NavigationAction>;
 
 type Props = {
   router: NavigationRouter,
@@ -28,7 +30,7 @@ type Props = {
   childNavigationProps: { [key: string]: Navigation },
   contentComponent: ReactClass<*>,
   contentOptions?: {},
-  style?: any;
+  style?: Style;
 };
 
 /**

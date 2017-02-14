@@ -12,7 +12,9 @@ import TouchableItem from '../TouchableItem';
 import type {
   NavigationScreenProp,
   NavigationState,
+  NavigationRoute,
   NavigationAction,
+  Style,
 } from '../../TypeDefinition';
 import type {
   DrawerScene,
@@ -27,7 +29,7 @@ type Props = {
   getLabelText: (scene: DrawerScene) => string;
   getScreenConfig: (routeKey: string, configName: string) => string;
   renderIcon: (scene: DrawerScene) => ?React.Element<*>;
-  style?: any;
+  style?: Style;
 };
 
 /**

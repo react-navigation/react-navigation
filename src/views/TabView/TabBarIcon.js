@@ -8,25 +8,23 @@ import {
 } from 'react-native';
 
 import type {
-  NavigationRoute,
   NavigationState,
+  NavigationRoute,
+  Style,
 } from '../../TypeDefinition';
 
-type TabScene = {
-  route: NavigationRoute;
-  focused: boolean;
-  index: number;
-  tintColor?: string;
-};
+import type {
+  TabScene,
+} from './TabView';
 
 type Props = {
   activeTintColor: string;
   inactiveTintColor: string;
-  scene: TabScene,
+  scene: TabScene;
   position: Animated.Value;
   navigationState: NavigationState;
   renderIcon: (scene: TabScene) => React.Element<*>;
-  style?: any;
+  style?: Style;
 };
 
 export default class TabBarIcon extends PureComponent<void, Props, void> {

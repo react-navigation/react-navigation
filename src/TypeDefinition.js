@@ -29,10 +29,10 @@ export type NavigationState = {
    * Index refers to the active child route in the routes array.
    */
   index: number,
-  routes: Array<NavigationRoute>,
+  routes: Array<NavigationRoute | (NavigationRoute & NavigationState)>,
 };
 
-export interface NavigationRoute {
+export type NavigationRoute = {
   /**
    * React's key used by some navigators. No need to specify these manually,
    * they will be defined by the router.
@@ -52,7 +52,8 @@ export interface NavigationRoute {
    * e.g. `{ car_id: 123 }` in a route that displays a car.
    */
   params?: NavigationParams,
-}
+};
+
 
 export type NavigationRouter = {
   /**
@@ -92,10 +93,11 @@ export type NavigationRouter = {
 };
 
 export type NavigationScreenOption<T> =
+  | T
   | (navigation: NavigationScreenProp<NavigationRoute, NavigationAction>,
-    config: NavigationScreenOptionConfig,
-    router?: NavigationRouter) => T
-  | T;
+    config: T) => T;
+
+export type Style = { [key: string]: any } | number | false | null | void | Array<Style>;
 
 export type HeaderConfig = {
   /**
@@ -121,7 +123,12 @@ export type HeaderConfig = {
   /**
    * Style passed into navigation bar container
    */
-  style?: Object,
+  style?: Style,
+
+  /**
+   * Style passed into navigation bar title
+   */
+  titleStyle?: Style,
 
   // // Style of title text
   // titleTextStyle?: $NavigationThunk<Object>,
@@ -146,7 +153,7 @@ export type TabBarConfig = {
   /**
    * Label text used by the tab bar.
    */
-  label?: string;
+  label?: string | React.Element<*>;
 };
 
 export type DrawerConfig = {
@@ -203,7 +210,7 @@ export type NavigationParams = {
 };
 
 export type NavigationNavigateAction = {
-  type: 'Navigate',
+  type: 'Navigation/NAVIGATE',
   routeName: string,
   params?: NavigationParams,
 
@@ -212,12 +219,12 @@ export type NavigationNavigateAction = {
 };
 
 export type NavigationBackAction = {
-  type: 'Back',
+  type: 'Navigation/BACK',
   key?: ?string,
 };
 
 export type NavigationSetParamsAction = {
-  type: 'SetParams',
+  type: 'Navigation/SET_PARAMS',
 
   // The key of the route where the params should be set
   key: string,
@@ -227,13 +234,18 @@ export type NavigationSetParamsAction = {
 };
 
 export type NavigationInitAction = {
-  type: 'Init',
+  type: 'Navigation/INIT',
 };
 
 export type NavigationResetAction = {
-  type: 'Reset',
+  type: 'Navigation/RESET',
   index: number,
   actions: Array<NavigationNavigateAction>,
+};
+
+export type NavigationUriAction = {
+  type: 'Navigation/URI',
+  uri: string,
 };
 
 export type NavigationContainerOptions = {
@@ -248,7 +260,10 @@ export type NavigationContainerConfig = {
 export type NavigationStackViewConfig = {
   mode?: 'card' | 'modal',
   headerMode?: HeaderMode,
-  headerComponent?: ReactClass<HeaderProps>,
+  headerComponent?: ReactClass<HeaderProps<*>>,
+  cardStyle?: Style,
+  onTransitionStart?: () => void,
+  onTransitionEnd?: () => void
 };
 
 export type NavigationStackRouterConfig = {
@@ -275,23 +290,18 @@ export type NavigationAction =
   | NavigationStackAction
   | NavigationTabAction;
 
-export type NavigationScreenRouteConfig = {
-  /** React component or navigator to render for this route */
-  screen: NavigationScreenComponent<*> | NavigationNavigator<*>,
+export type NavigationRouteConfig<T> = T & {
   navigationOptions?: NavigationScreenOptions,
   path?: string,
 };
 
-export type NavigationLazyScreenRouteConfig = {
-  /** React component or navigator to lazily require and render for this route */
-  getScreen: () => (NavigationScreenComponent<*> | NavigationNavigator<*>),
-  navigationOptions?: NavigationScreenOptions,
-  path?: string,
-};
-
-export type NavigationRouteConfig =
-  | NavigationScreenRouteConfig
-  | NavigationLazyScreenRouteConfig;
+export type NavigationScreenRouteConfig = NavigationScreenRouteConfig<{
+  // React component or navigator for this route */
+  screen: NavigationComponent,
+} | {
+  // React component to lazily require and render for this route */
+  getScreen: () => NavigationComponent,
+}>;
 
 export type NavigationPathsConfig = {
   [routeName: string]: string,
@@ -302,13 +312,13 @@ export type NavigationTabRouterConfig = {
   paths?: NavigationPathsConfig,
   navigationOptions?: NavigationScreenOptions,
   order?: Array<string>, // todo: type these as the real route names rather than 'string'
-  
+
   // Does the back button cause the router to switch to the initial tab
   backBehavior?: 'none' | 'initialRoute', // defaults `initialRoute`
 };
 
 export type NavigationRouteConfigMap = {
-  [routeName: string]: NavigationRouteConfig,
+  [routeName: string]: NavigationRouteConfig<*>,
 };
 
 export type NavigationDispatch<A> = (action: A) => boolean;
@@ -318,16 +328,14 @@ export type NavigationProp<S, A> = {
   dispatch: NavigationDispatch<A>,
 };
 
-export type NavigationScreenProp<S, A> = {
-  state: S,
-  dispatch: NavigationDispatch<A>,
-  goBack: (routeKey?: string) => boolean,
+export type NavigationScreenProp<S, A> = NavigationProp<S, A> & {
+  goBack: (routeKey?: ?string) => boolean,
   navigate: (routeName: string, params?: NavigationParams, action?: NavigationAction) => boolean,
   setParams: (newParams: NavigationParams) => boolean,
 };
 
 export type NavigationNavigatorProps = {
-  navigation: NavigationProp<NavigationState, NavigationAction>,
+  navigation: NavigationProp<NavigationRoute, NavigationAction>,
 };
 
 /**
@@ -381,6 +389,7 @@ export type NavigationTransitionProps = {
   // is the index of the scene
   scene: NavigationScene,
   index: number,
+  navigation: NavigationScreenProp<*, NavigationAction>,
 
   // The gesture distance for `horizontal` and `vertical` transitions
   gestureResponseDistance?: ?number,
@@ -426,4 +435,4 @@ export type NavigationSceneRenderer = (
 
 export type NavigationStyleInterpolator = (
   props: NavigationSceneRendererProps,
-) => Object;
+) => Style;

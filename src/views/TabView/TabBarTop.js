@@ -9,16 +9,14 @@ import { TabBar } from 'react-native-tab-view';
 import TabBarIcon from './TabBarIcon';
 
 import type {
-  NavigationRoute,
   NavigationState,
+  NavigationRoute,
+  Style,
 } from '../../TypeDefinition';
 
-type TabScene = {
-  route: NavigationRoute;
-  focused: boolean;
-  index: number;
-  tintColor?: string;
-};
+import type {
+  TabScene,
+} from './TabView';
 
 type DefaultProps = {
   activeTintColor: string;
@@ -38,7 +36,7 @@ type Props = {
   navigationState: NavigationState;
   getLabelText: (scene: TabScene) => string;
   renderIcon: (scene: TabScene) => React.Element<*>;
-  labelStyle?: any;
+  labelStyle?: Style;
 };
 
 export default class TabBarTop extends PureComponent<DefaultProps, Props, void> {
@@ -78,11 +76,15 @@ export default class TabBarTop extends PureComponent<DefaultProps, Props, void> 
       outputRange,
     });
     const label = this.props.getLabelText(scene);
-    return (
-      <Animated.Text style={[styles.label, labelStyle, { color }]}>
-        {upperCaseLabel && label ? label.toUpperCase() : label}
-      </Animated.Text>
-    );
+    if (typeof label === 'string') {
+      return (
+        <Animated.Text style={[styles.label, { color }, labelStyle]}>
+          {upperCaseLabel ? label.toUpperCase() : label}
+        </Animated.Text>
+      );
+    }
+
+    return label;
   };
 
   _renderIcon = (scene: TabScene) => {
@@ -111,10 +113,12 @@ export default class TabBarTop extends PureComponent<DefaultProps, Props, void> 
   };
 
   render() {
+    // TODO: Define full proptypes
+    const props: any = this.props;
+
     return (
       <TabBar
-        {/* $FlowFixMe */
-          ...this.props}
+        {...props}
         renderIcon={this._renderIcon}
         renderLabel={this._renderLabel}
       />
