@@ -9,6 +9,7 @@ module.exports = {
   get StateUtils() { return require('./StateUtils').default; },
   get PropTypes() { return require('./PropTypes').default; },
   get addNavigationHelpers() { return require('./addNavigationHelpers').default; },
+  get NavigationActions() { return require('./NavigationActions').default; },
 
   // Navigators
   get createNavigator() { return require('./navigators/createNavigator').default; },
@@ -25,4 +26,7 @@ module.exports = {
   get CardStack() { return require('./views/CardStack').default; },
   get DrawerView() { return require('./views/Drawer/DrawerView').default; },
   get TabView() { return require('./views/TabView/TabView').default; },
+
+  // HOCs
+  get withNavigation() { return require('./views/withNavigation').default; },
 };

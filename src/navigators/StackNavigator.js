@@ -27,11 +27,16 @@ export default (routeConfigMap: NavigationRouteConfigMap, stackConfig: StackNavi
     headerComponent,
     headerMode,
     mode,
+    cardStyle,
+    onTransitionStart,
+    onTransitionEnd,
+    navigationOptions,
   } = stackConfig;
   const stackRouterConfig = {
     initialRouteName,
     initialRouteParams,
     paths,
+    navigationOptions,
   };
   const router = StackRouter(routeConfigMap, stackRouterConfig);
   return createNavigationContainer(createNavigator(router)(props => (
@@ -40,6 +45,9 @@ export default (routeConfigMap: NavigationRouteConfigMap, stackConfig: StackNavi
       headerComponent={headerComponent}
       headerMode={headerMode}
       mode={mode}
+      cardStyle={cardStyle}
+      onTransitionStart={onTransitionStart}
+      onTransitionEnd={onTransitionEnd}
     />
   )), containerOptions);
 };

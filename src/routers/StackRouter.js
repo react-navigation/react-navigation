@@ -2,12 +2,14 @@
 
 import pathToRegexp from 'path-to-regexp';
 
+import NavigationActions from '../NavigationActions';
 import createConfigGetter from './createConfigGetter';
 import getScreenForRouteName from './getScreenForRouteName';
 import StateUtils from '../StateUtils';
 import validateRouteConfigMap from './validateRouteConfigMap';
 
 import type {
+  NavigationRoute,
   NavigationAction,
   NavigationComponent,
   NavigationNavigateAction,
@@ -68,10 +70,8 @@ export default (
       const wildcardRe = pathToRegexp(`${pathPattern}/*`, keys);
       re = new RegExp(`(?:${re.source})|(?:${wildcardRe.source})`);
     }
-    paths[routeName] = {
-      re,
-      keys,
-    };
+      /* $FlowFixMe */
+    paths[routeName] = { re, keys };
   });
 
   return {
@@ -90,10 +90,12 @@ export default (
     },
 
     getStateForAction(action: NavigationStackAction, state: ?NavigationState) {
+      action = NavigationActions.mapDeprecatedActionAndWarn(action);
+
       // Set up the initial state if needed
       if (!state) {
         let route = {};
-        if (action.type === 'Navigate' && (childRouters[action.routeName] !== undefined)) {
+        if (action.type === NavigationActions.NAVIGATE && (childRouters[action.routeName] !== undefined)) {
           return {
             index: 0,
             routes: [
@@ -106,11 +108,10 @@ export default (
           };
         }
         if (initialChildRouter) {
-          route = initialChildRouter.getStateForAction({
-            type: 'Navigate',
+          route = initialChildRouter.getStateForAction(NavigationActions.navigate({
             routeName: initialRouteName,
             params: initialRouteParams,
-          });
+          }));
         }
         route = {
           ...route,
@@ -134,13 +135,13 @@ export default (
       }
 
       // Handle push/pop
-      if (action.type === 'Navigate' && childRouters[action.routeName] !== undefined) {
+      if (action.type === NavigationActions.NAVIGATE && childRouters[action.routeName] !== undefined) {
         const childRouter = childRouters[action.routeName];
         let route;
         if (childRouter) {
           route = {
             ...action,
-            ...childRouter.getStateForAction(action.action || { type: 'Init' }),
+            ...childRouter.getStateForAction(action.action || NavigationActions.init()),
             key: _getUuid(),
             routeName: action.routeName,
           };
@@ -154,8 +155,9 @@ export default (
         return StateUtils.push(state, route);
       }
 
-      if (action.type === 'SetParams') {
-        const lastRoute = state.routes.find(route => route.key === action.key);
+      if (action.type === NavigationActions.SET_PARAMS) {
+        /* $FlowFixMe */
+        const lastRoute = state.routes.find((route: *) => route.key === action.key);
         if (lastRoute) {
           const params = {
             ...lastRoute.params,
@@ -173,12 +175,12 @@ export default (
         }
       }
 
-      if (action.type === 'Reset') {
+      if (action.type === NavigationActions.RESET) {
         const resetAction = ((action: any): NavigationResetAction);
 
         return {
           ...state,
-          routes: resetAction.actions.map((action: NavigationNavigateAction, index) => {
+          routes: resetAction.actions.map((action: NavigationNavigateAction, index: number) => {
             const router = childRouters[action.routeName];
             if (router) {
               return {
@@ -199,10 +201,12 @@ export default (
         };
       }
 
-      if (action.type === 'Back') {
+      if (action.type === NavigationActions.BACK) {
         let backRouteIndex = null;
         if (action.key) {
-          const backRoute = state.routes.find(route => route.key === action.key);
+          /* $FlowFixMe */
+          const backRoute = state.routes.find((route: *) => route.key === action.key);
+          /* $FlowFixMe */
           backRouteIndex = state.routes.indexOf(backRoute);
         }
         if (backRouteIndex == null) {
@@ -230,10 +234,9 @@ export default (
       // If the path is empty (null or empty string)
       // just return the initial route action
       if (!pathToResolve) {
-        return {
-          type: 'Navigate',
+        return NavigationActions.navigate({
           routeName: initialRouteName,
-        };
+        });
       }
 
       // Attempt to match `pathToResolve` with a route in this router's
@@ -241,7 +244,9 @@ export default (
       let matchedRouteName;
       let pathMatch;
       let pathMatchKeys;
+
       for (const routeName in paths) {
+        /* $FlowFixMe */
         const { re, keys } = paths[routeName];
         pathMatch = re.exec(pathToResolve);
         if (pathMatch && pathMatch.length) {
@@ -263,32 +268,33 @@ export default (
       let nestedAction;
       if (childRouters[matchedRouteName]) {
         nestedAction = childRouters[matchedRouteName].getActionForPathAndParams(
+          /* $FlowFixMe */
           pathMatch.slice(pathMatchKeys.length).join('/')
         );
       }
 
       // reduce the matched pieces of the path into the params
       // of the route. `params` is null if there are no params.
-      const params = pathMatch.slice(1).reduce((result, matchResult, i) => {
+      /* $FlowFixMe */
+      const params = pathMatch.slice(1).reduce((result: *, matchResult: *, i: number) => {
         const key = pathMatchKeys[i];
         if (key.asterisk || !key) {
           return result;
         }
-        result = result || {};
+        const nextResult = result || {};
         const paramName = key.name;
-        result[paramName] = matchResult;
-        return result;
+        nextResult[paramName] = matchResult;
+        return nextResult;
       }, null);
 
-      return {
-        type: 'Navigate',
+      return NavigationActions.navigate({
         routeName: matchedRouteName,
         ...(params ? { params } : {}),
         ...(nestedAction ? { action: nestedAction } : {}),
-      };
+      });
     },
 
-    getScreenConfig: createConfigGetter(routeConfigs),
+    getScreenConfig: createConfigGetter(routeConfigs, stackConfig.navigationOptions),
 
   };
 };

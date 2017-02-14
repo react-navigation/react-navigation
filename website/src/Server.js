@@ -10,7 +10,7 @@ const ReactDOMServer = require('react-dom/server');
 
 import App from './App';
 
-import { addNavigationHelpers } from 'react-navigation';
+import { NavigationActions, addNavigationHelpers } from 'react-navigation';
 
 class ServerApp extends React.Component {
   static childContextTypes = {
@@ -41,7 +41,7 @@ function AppHandler(req, res) {
   const path = req.url.substr(1)
   let initAction = App.router.getActionForPathAndParams(path);
   if (!initAction) {
-    initAction = { type: 'Navigate', routeName: 'NotFound', params: { path } };
+    initAction = NavigationActions.navigate({ routeName: 'NotFound', params: { path } });
     status = 404;
   }
   const topNavigation = addNavigationHelpers({

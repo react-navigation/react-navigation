@@ -42,7 +42,7 @@ const ExampleRoutes = {
     screen: CustomTabs,
   },
   ModalStack: {
-    name: Platform.OS === 'ios' ? 'Modal Stack Example': 'Stack with Dynamic Header',
+    name: Platform.OS === 'ios' ? 'Modal Stack Example' : 'Stack with Dynamic Header',
     description: Platform.OS === 'ios' ? 'Stack navigation with modals' : 'Dynamically showing and hiding the header',
     screen: ModalStack,
   },
