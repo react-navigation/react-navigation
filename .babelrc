@@ -1,4 +1,5 @@
 {
+  "presets": ["react-native"],
   "env": {
     // For RN example development
     "development": {
@@ -21,7 +22,7 @@
         "transform-flow-strip-types",
       ],
     },
-    // For publishing to NPM for RN
+    // For publishing to NPM for web
     "publish-web": {
       "presets": ["es2015", "stage-1", "react"],
       "plugins": [

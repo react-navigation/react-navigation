@@ -20,7 +20,7 @@ class MyHomeScreen extends React.Component {
     return (
       <Button
         onPress={() => this.props.navigation.navigate('Notifications')}
-        label="Go to notifications"
+        title="Go to notifications"
       />
     );
   }
@@ -43,7 +43,7 @@ class MyNotificationsScreen extends React.Component {
     return (
       <Button
         onPress={() => this.props.navigation.goBack()}
-        label="Go back home"
+        title="Go back home"
       />
     );
   }
@@ -130,6 +130,6 @@ The navigator component created by `DrawerNavigator(...)` takes the following pr
  });
  
  <DrawerNav
-   screenProps={/* these will get passed to the screen components */}
+   screenProps={/* this prop will get passed to the screen components as this.props.screenProps */}
  />
  ```

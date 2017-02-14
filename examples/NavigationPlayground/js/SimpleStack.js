@@ -20,6 +20,10 @@ const MyNavScreen = ({ navigation, banner }) => (
       title="Go to a profile screen"
     />
     <Button
+      onPress={() => navigation.navigate('Photos', { name: 'Jane' })}
+      title="Go to a photos screen"
+    />
+    <Button
       onPress={() => navigation.goBack(null)}
       title="Go back"
     />
@@ -58,7 +62,6 @@ const MyProfileScreen = ({ navigation }) => (
 MyProfileScreen.navigationOptions = {
   header: ({ state, setParams }) => ({
     title: `${state.params.name}'s Profile!`,
-    tintColor: '#007AFF',
     // Render a button on the right side of the header.
     // When pressed switches the screen to edit mode.
     right: (

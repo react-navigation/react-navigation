@@ -1,6 +1,4 @@
-/**
- * @flow
- */
+/* @flow */
 
 import React from 'react';
 
@@ -359,7 +357,7 @@ describe('StackRouter', () => {
     const state3 = router.getStateForAction({ type: NavigationActions.NAVIGATE, routeName: 'Bar', params: { name: 'Foo' } }, state2);
     const state4 = router.getStateForAction({ type: NavigationActions.BACK, key: 'wrongKey' }, state3);
     expect(state3).toEqual(state4);
-    const state5 = router.getStateForAction({ type: NavigationActions.BACK, key: state3.routes[1].key }, state4);
+    const state5 = router.getStateForAction({ type: NavigationActions.BACK, key: state3 && state3.routes[1].key }, state4);
     expect(state5).toEqual(state);
   });
 
@@ -466,6 +464,7 @@ describe('StackRouter', () => {
 
     expect(state2 && state2.index).toEqual(0);
     expect(state2 && state2.routes[0].routeName).toEqual('Foo');
+    /* $FlowFixMe */
     expect(state2 && state2.routes[0].routes[0].routeName).toEqual('baz');
   });
 
@@ -497,7 +496,9 @@ describe('StackRouter', () => {
         screen: () => <div />,
       },
     });
+    /* $FlowFixMe: these are for deprecated action names */
     const state = router.getStateForAction({ type: 'Init' });
+    /* $FlowFixMe: these are for deprecated action names */
     const state2 = router.getStateForAction({ type: 'Reset', actions: [{ type: 'Navigate', routeName: 'Foo', params: { bar: '42' } }, { type: 'Navigate', routeName: 'Bar' }], index: 1 }, state);
     expect(state2 && state2.index).toEqual(1);
     expect(state2 && state2.routes[0].params).toEqual({ bar: '42' });

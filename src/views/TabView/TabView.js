@@ -33,18 +33,18 @@ export type TabViewConfig = {
   lazyLoad?: boolean;
 };
 
+export type TabScene = {
+  route: NavigationRoute;
+  focused: boolean;
+  index: number;
+  tintColor?: ?string;
+};
+
 type Props = TabViewConfig & {
   screenProps?: {},
   navigation: NavigationScreenProp<NavigationState, NavigationAction>;
   router: NavigationRouter,
   childNavigationProps: { [key: string]: NavigationScreenProp<NavigationRoute, NavigationAction> },
-};
-
-type TabScene = {
-  route: NavigationRoute;
-  focused: boolean;
-  index: number;
-  tintColor?: string;
 };
 
 let TabViewPager;
@@ -88,11 +88,10 @@ class TabView extends PureComponent<void, Props, void> {
     const tabBar = this.props.router.getScreenConfig(this.props.childNavigationProps[route.key], 'tabBar');
     if (tabBar && typeof tabBar.label !== 'undefined') {
       return tabBar.label;
-    } else {
-      const title = this.props.router.getScreenConfig(this.props.childNavigationProps[route.key], 'title');
-      if (typeof title === 'string') {
-        return title;
-      }
+    }
+    const title = this.props.router.getScreenConfig(this.props.childNavigationProps[route.key], 'title');
+    if (typeof title === 'string') {
+      return title;
     }
     return route.routeName;
   };
@@ -157,7 +156,12 @@ class TabView extends PureComponent<void, Props, void> {
     let renderHeader;
     let renderFooter;
 
-    if (typeof tabBarComponent !== 'undefined') {
+    const { state } = this.props.navigation;
+    const tabBar = this.props.router.getScreenConfig(this.props.childNavigationProps[state.routes[state.index].key], 'tabBar');
+
+    const tabBarVisible = tabBar ? tabBar.visible !== false : true;
+
+    if (tabBarComponent !== undefined && tabBarVisible) {
       if (tabBarPosition === 'bottom') {
         renderFooter = this._renderTabBar;
       } else {
@@ -172,6 +176,7 @@ class TabView extends PureComponent<void, Props, void> {
     }
 
     return (
+      /* $FlowFixMe */
       <TabViewAnimated
         style={styles.container}
         navigationState={navigation.state}
@@ -189,7 +194,6 @@ class TabView extends PureComponent<void, Props, void> {
 
 const TabViewEnhanced = withCachedChildNavigation(TabView);
 
-/* $FlowFixMe */
 TabViewEnhanced.TabBarTop = TabBarTop;
 TabViewEnhanced.TabBarBottom = TabBarBottom;
 

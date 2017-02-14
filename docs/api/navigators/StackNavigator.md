@@ -15,7 +15,7 @@ class MyHomeScreen extends React.Component {
     return (
       <Button
         onPress={() => this.props.navigation.navigate('Profile', {name: 'Lucy'})}
-        label="Go to Lucy's profile"
+        title="Go to Lucy's profile"
       />
     );
   }
@@ -85,6 +85,8 @@ Visual options:
   - `screen` - Each screen has a header attached to it and the header fades in and out together with the screen. This is a common pattern on Android.
   - `none` - No header will be rendered.
 - `cardStyle` - Use this prop to override or extend the default style for an individual card in stack.
+- `onTransitionStart` - Function to be invoked when the card transition animation is about to start.
+- `onTransitionEnd` - Function to be invoked once the card transition animation completes.
 
 
 ### Screen Navigation Options
@@ -121,6 +123,7 @@ All `navigationOptions` for the `StackNavigator`:
   - `right` - Custom React Element to display on the right side of the header
   - `left` - Custom React Element to display on the left side of the header
   - `style` - Style object for the navigation bar
+  - `titleStyle` - Style object for the title component
   - `tintColor` - Tint color for the header
 
 ### Navigator Props
@@ -134,12 +137,12 @@ The navigator component created by `StackNavigator(...)` takes the following pro
  const SomeStack = StackNavigator({
    // config
  });
- 
+
  <SomeStack
-   screenProps={/* these will get passed to the screen components */}
+   screenProps={/* this prop will get passed to the screen components as this.props.screenProps */}
  />
  ```
- 
+
 ### Examples
 
 See the examples [SimpleStack.js](https://github.com/react-community/react-navigation/tree/master/examples/NavigationPlayground/js/SimpleStack.js) and [ModalStack.js](https://github.com/react-community/react-navigation/tree/master/examples/NavigationPlayground/js/ModalStack.js) which you can run locally as part of the [NavigationPlayground](https://github.com/react-community/react-navigation/tree/master/examples/NavigationPlayground) app.

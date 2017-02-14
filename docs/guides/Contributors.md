@@ -68,7 +68,7 @@ The markdown from the `docs` folder gets generated and dumped into a json file a
 
 Often navigation needs are specific to certain apps. If your changes are unique to your app, you may want to fork the view or router that has changed. You can keep the source code in your app, or publish it on npm as a `react-navigation` compatible view or router.
 
-This library is intended to include highly standard and generic navigation patterns. But it
+This library is intended to include highly standard and generic navigation patterns.
 
 ### Major Changes
 

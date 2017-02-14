@@ -12,20 +12,19 @@ import TabBarIcon from './TabBarIcon';
 import type {
   NavigationRoute,
   NavigationState,
+  Style,
 } from '../../TypeDefinition';
 
-type TabScene = {
-  route: NavigationRoute;
-  focused: boolean;
-  index: number;
-  tintColor?: string;
-};
+import type {
+  TabScene,
+} from './TabView';
 
 type DefaultProps = {
   activeTintColor: string;
   activeBackgroundColor: string;
   inactiveTintColor: string;
   inactiveBackgroundColor: string;
+  showLabel: boolean;
 };
 
 type Props = {
@@ -38,7 +37,10 @@ type Props = {
   jumpToIndex: (index: number) => void;
   getLabelText: (scene: TabScene) => string;
   renderIcon: (scene: TabScene) => React.Element<*>;
-  style: any;
+  showLabel: boolean;
+  style?: Style;
+  labelStyle?: Style;
+  showIcon: boolean;
 };
 
 export default class TabBarBottom extends PureComponent<DefaultProps, Props, void> {
@@ -49,6 +51,8 @@ export default class TabBarBottom extends PureComponent<DefaultProps, Props, voi
     activeBackgroundColor: 'transparent',
     inactiveTintColor: '#929292', // Default inactive tint color in iOS 10
     inactiveBackgroundColor: 'transparent',
+    showLabel: true,
+    showIcon: true,
   };
 
   props: Props;
@@ -59,7 +63,12 @@ export default class TabBarBottom extends PureComponent<DefaultProps, Props, voi
       navigationState,
       activeTintColor,
       inactiveTintColor,
+      labelStyle,
+      showLabel,
     } = this.props;
+    if (showLabel === false) {
+      return null;
+    }
     const { index } = scene;
     const { routes } = navigationState;
     // Prepend '-1', so there are always at least 2 items in inputRange
@@ -74,7 +83,7 @@ export default class TabBarBottom extends PureComponent<DefaultProps, Props, voi
     const label = this.props.getLabelText(scene);
     if (typeof label === 'string') {
       return (
-        <Animated.Text style={[styles.label, { color }]}>
+        <Animated.Text style={[styles.label, { color }, labelStyle]}>
           {label}
         </Animated.Text>
       );
@@ -89,7 +98,11 @@ export default class TabBarBottom extends PureComponent<DefaultProps, Props, voi
       activeTintColor,
       inactiveTintColor,
       renderIcon,
+      showIcon,
     } = this.props;
+    if (showIcon === false) {
+      return null;
+    }
     return (
       <TabBarIcon
         position={position}
@@ -127,9 +140,10 @@ export default class TabBarBottom extends PureComponent<DefaultProps, Props, voi
             inputRange,
             outputRange,
           });
+          const justifyContent = this.props.showIcon ? 'flex-end' : 'center';
           return (
             <TouchableWithoutFeedback key={route.key} onPress={() => jumpToIndex(index)}>
-              <Animated.View style={[styles.tab, { backgroundColor }]}>
+              <Animated.View style={[styles.tab, { backgroundColor, justifyContent }]}>
                 {this._renderIcon(scene)}
                 {this._renderLabel(scene)}
               </Animated.View>

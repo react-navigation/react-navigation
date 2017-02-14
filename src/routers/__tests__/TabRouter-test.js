@@ -1,6 +1,4 @@
-/*
- * @flow
- */
+/* @flow */
 
 import React from 'react';
 import TabRouter from '../TabRouter';
@@ -71,6 +69,23 @@ describe('TabRouter', () => {
       index: 1,
       routes: [{ key: 'Foo', routeName: 'Foo' }, { key: 'Bar', routeName: 'Bar' }],
     });
+  });
+
+  test('Handles the SetParams action', () => {
+    const router = TabRouter({
+      Foo: {
+        screen: () => <div />,
+      },
+      Bar: {
+        screen: () => <div />,
+      },
+    });
+    const state2 = router.getStateForAction({
+      type: NavigationActions.SET_PARAMS,
+      params: { name: 'Qux' },
+      key: 'Foo',
+    });
+    expect(state2 && state2.routes[0].params).toEqual({ name: 'Qux' });
   });
 
   test('getStateForAction returns null when navigating to same tab', () => {
@@ -360,7 +375,9 @@ describe('TabRouter', () => {
 
   test('Maps old actions (uses "getStateForAction returns null when navigating to same tab" test)', () => {
     const router = TabRouter({ Foo: BareLeafRouteConfig, Bar: BareLeafRouteConfig }, { initialRouteName: 'Bar' });
+    /* $FlowFixMe: these are for deprecated action names */
     const state = router.getStateForAction({ type: 'Init' });
+    /* $FlowFixMe: these are for deprecated action names */
     const state2 = router.getStateForAction({ type: 'Navigate', routeName: 'Bar' }, state);
     expect(state2).toEqual(null);
   });

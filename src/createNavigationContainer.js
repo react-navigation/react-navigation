@@ -1,19 +1,21 @@
 /* @flow */
 
 import React from 'react';
+import invariant from 'fbjs/lib/invariant';
 import {
   BackAndroid,
   Linking,
-} from 'react-native';
-import invariant from 'fbjs/lib/invariant';
+} from './PlatformHelpers';
 import NavigationActions from './NavigationActions';
 import addNavigationHelpers from './addNavigationHelpers';
 
 import type {
+  NavigationRoute,
   NavigationAction,
   NavigationContainerOptions,
   NavigationProp,
   NavigationState,
+  NavigationScreenProp,
 } from './TypeDefinition';
 
 /**
@@ -22,16 +24,16 @@ import type {
  * This allows to use e.g. the StackNavigator and TabNavigator as root-level
  * components.
  */
-const createNavigationContainer = (
+export default function createNavigationContainer<T: *>(
   Component: ReactClass<*>,
   containerConfig?: NavigationContainerOptions
-) => {
+) {
   type Props = {
-    navigation: NavigationProp<NavigationState, NavigationAction>,
+    navigation: NavigationProp<T, NavigationAction>,
   };
 
   type State = {
-    nav: NavigationState,
+    nav: ?NavigationState,
   };
 
   function urlToPathAndParams(url: string) {
@@ -49,7 +51,7 @@ const createNavigationContainer = (
   }
 
   class NavigationContainer extends React.Component {
-    state: ?State;
+    state: State;
     props: Props;
 
     subs: ?{
@@ -75,12 +77,11 @@ const createNavigationContainer = (
 
     constructor(props: Props) {
       super(props);
-      this.state = null;
-      if (this._isStateful()) {
-        this.state = {
-          nav: Component.router.getStateForAction(NavigationActions.init()),
-        };
-      }
+      this.state = {
+        nav: this._isStateful()
+          ? Component.router.getStateForAction(NavigationActions.init())
+          : null,
+      };
     }
 
     componentDidMount() {
@@ -110,7 +111,7 @@ const createNavigationContainer = (
       this.subs && this.subs.remove();
     }
 
-    _handleOpenURL = ({ url }) => {
+    _handleOpenURL = ({ url }: { url: string }) => {
       console.log('Handling URL:', url);
       const parsedUrl = urlToPathAndParams(url);
       if (parsedUrl) {
@@ -145,13 +146,18 @@ const createNavigationContainer = (
       return false;
     };
 
+    _navigation: ?NavigationScreenProp<NavigationRoute, NavigationAction>;
+
     render() {
       let navigation = this.props.navigation;
       if (this._isStateful()) {
-        navigation = addNavigationHelpers({
-          dispatch: this.dispatch.bind(this),
-          state: this.state.nav,
-        });
+        if (!this._navigation || this._navigation.state !== this.state.nav) {
+          this._navigation = addNavigationHelpers({
+            dispatch: this.dispatch.bind(this),
+            state: this.state.nav,
+          });
+        }
+        navigation = this._navigation;
       }
       return (
         <Component
@@ -163,6 +169,5 @@ const createNavigationContainer = (
   }
 
   return NavigationContainer;
-};
+}
 
-export default createNavigationContainer;

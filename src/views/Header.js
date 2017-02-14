@@ -20,32 +20,32 @@ import addNavigationHelpers from '../addNavigationHelpers';
 import type {
   NavigationScene,
   NavigationRouter,
-  NavigationRoute,
+  NavigationState,
   NavigationAction,
   NavigationScreenProp,
   NavigationSceneRendererProps,
   NavigationStyleInterpolator,
+  Style,
 } from '../TypeDefinition';
 
 export type HeaderMode = 'float' | 'screen' | 'none';
 
 type SubViewProps = NavigationSceneRendererProps & {
-  onNavigateBack: ?() => void,
+  onNavigateBack?: () => void,
 };
 
-type Navigation = NavigationScreenProp<NavigationRoute, NavigationAction>;
+type Navigation = NavigationScreenProp<NavigationState, NavigationAction>;
 
 type SubViewRenderer = (subViewProps: SubViewProps) => ?React.Element<*>;
 
 export type HeaderProps = NavigationSceneRendererProps & {
   mode: HeaderMode,
-  onNavigateBack: ?Function,
+  onNavigateBack?: () => void,
   renderLeftComponent: SubViewRenderer,
   renderRightComponent: SubViewRenderer,
   renderTitleComponent: SubViewRenderer,
-  tintColor: ?string,
+  tintColor?: string,
   router: NavigationRouter,
-  style?: any,
 };
 
 type SubViewName = 'left' | 'title' | 'right';
@@ -99,46 +99,56 @@ class Header extends React.Component<void, HeaderProps, void> {
     return undefined;
   }
 
-  _renderTitleComponent = (props: SubViewProps) => {
+  _getHeaderTitleStyle(navigation: Navigation): Style {
+    const header = this.props.router.getScreenConfig(navigation, 'header');
+    if (header && header.titleStyle) {
+      return header.titleStyle;
+    }
+    return undefined;
+  }
+
+  _renderTitleComponent = (props: SubViewProps): React.Element<HeaderTitle> => {
+    const titleStyle = this._getHeaderTitleStyle(props.navigation);
     const color = this._getHeaderTintColor(props.navigation);
     const title = this._getHeaderTitle(props.navigation);
-    return <HeaderTitle style={color && ({ color })}>{title}</HeaderTitle>;
+    return <HeaderTitle style={[color ? { color } : null, titleStyle]}>{title}</HeaderTitle>;
   };
 
-  _renderLeftComponent = (props: SubViewProps) => {
+  _renderLeftComponent = (props: SubViewProps): ?React.Element<HeaderBackButton> => {
     if (props.scene.index === 0 || !props.onNavigateBack) {
       return null;
     }
     const tintColor = this._getHeaderTintColor(props.navigation);
-    const previousNavigation = addNavigationHelpers({
-      ...props.navigation,
-      state: props.scenes[props.scene.index - 1].route,
-    });
-    const backButtonTitle = this._getHeaderTitle(previousNavigation);
+    // @todo(grabobu):
+    // We have implemented support for back button label (which works 100% fine),
+    // but when title is too long, it will overlap the <HeaderTitle />.
+    // We had to revert the PR implementing that because of Android issues,
+    // I will land it this week and re-enable that for next release.
+    //
+    // const previousNavigation = addNavigationHelpers({
+    //   ...props.navigation,
+    //   state: props.scenes[props.scene.index - 1].route,
+    // });
+    // const backButtonTitle = this._getHeaderTitle(previousNavigation);
     return (
       <HeaderBackButton
         onPress={props.onNavigateBack}
         tintColor={tintColor}
-        title={backButtonTitle}
       />
     );
   };
 
-  _renderRightComponent = () => {
-    return null;
-  };
+  _renderRightComponent = () => null;
 
-  _renderLeft(props: NavigationSceneRendererProps): ?React.Element<*> {
-    return this._renderSubView(
+  _renderLeft = (props: NavigationSceneRendererProps): ?React.Element<*> => this._renderSubView(
       props,
       'left',
       this.props.renderLeftComponent,
       this._renderLeftComponent,
       HeaderStyleInterpolator.forLeft,
     );
-  }
 
-  _renderTitle(props: NavigationSceneRendererProps, options: *): ?React.Element<*> {
+  _renderTitle = (props: NavigationSceneRendererProps, options: *): ?React.Element<*> => {
     const style = {};
 
     if (Platform.OS === 'android') {
@@ -159,15 +169,13 @@ class Header extends React.Component<void, HeaderProps, void> {
     );
   }
 
-  _renderRight(props: NavigationSceneRendererProps): ?React.Element<*> {
-    return this._renderSubView(
+  _renderRight = (props: NavigationSceneRendererProps): ?React.Element<*> => this._renderSubView(
       props,
       'right',
       this.props.renderRightComponent,
       this._renderRightComponent,
       HeaderStyleInterpolator.forRight,
     );
-  }
 
   _renderSubView(
     props: NavigationSceneRendererProps,
@@ -216,7 +224,6 @@ class Header extends React.Component<void, HeaderProps, void> {
         style={[
           styles.item,
           styles[name],
-          props.style,
           styleInterpolator(props),
         ]}
       >
@@ -229,11 +236,10 @@ class Header extends React.Component<void, HeaderProps, void> {
     // eslint-disable-next-line no-unused-vars
     const { scenes, scene, style, position, progress, ...rest } = this.props;
 
-    let leftComponents = null;
-    let titleComponents = null;
-    let rightComponents = null;
+    let appBar = null;
 
     if (this.props.mode === 'float') {
+      // eslint-disable-next-line no-shadow
       const scenesProps = (scenes.map((scene: NavigationScene, index: number) => {
         const props = NavigationPropTypes.extractSceneRendererProps(this.props);
         props.scene = scene;
@@ -244,13 +250,21 @@ class Header extends React.Component<void, HeaderProps, void> {
         });
         return props;
       }): Array<NavigationSceneRendererProps>);
-      leftComponents = scenesProps.map(this._renderLeft, this);
-      rightComponents = scenesProps.map(this._renderRight, this);
-      titleComponents = scenesProps.map((props: *, i: number) =>
+      const leftComponents = scenesProps.map(this._renderLeft, this);
+      const rightComponents = scenesProps.map(this._renderRight, this);
+      const titleComponents = scenesProps.map((props: *, i: number) =>
         this._renderTitle(props, {
           hasLeftComponent: leftComponents && !!leftComponents[i],
           hasRightComponent: rightComponents && !!rightComponents[i],
         })
+      );
+
+      appBar = (
+        <View style={styles.appBar}>
+          {titleComponents}
+          {leftComponents}
+          {rightComponents}
+        </View>
       );
     } else {
       const staticRendererProps = {
@@ -258,21 +272,25 @@ class Header extends React.Component<void, HeaderProps, void> {
         position: new Animated.Value(scene.index),
         progress: new Animated.Value(0),
       };
-      leftComponents = this._renderLeft(staticRendererProps);
-      rightComponents = this._renderRight(staticRendererProps);
-      titleComponents = this._renderTitle(staticRendererProps, {
-        hasLeftComponent: !!leftComponents,
-        hasRightComponent: !!rightComponents,
+      const leftComponent = this._renderLeft(staticRendererProps);
+      const rightComponent = this._renderRight(staticRendererProps);
+      const titleComponent = this._renderTitle(staticRendererProps, {
+        hasLeftComponent: !!leftComponent,
+        hasRightComponent: !!rightComponent,
       });
+
+      appBar = (
+        <View style={styles.appBar}>
+          {titleComponent}
+          {leftComponent}
+          {rightComponent}
+        </View>
+      );
     }
 
     return (
       <Animated.View {...rest} style={[styles.container, style]}>
-        <View style={styles.appBar}>
-          {titleComponents}
-          {leftComponents}
-          {rightComponents}
-        </View>
+        {appBar}
       </Animated.View>
     );
   }
