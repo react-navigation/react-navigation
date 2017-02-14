@@ -106,7 +106,7 @@ export default (
             ],
           };
         }
-        
+
         let childState = {};
         if (initialChildRouter) {
           childState = initialChildRouter.getStateForAction(NavigationActions.navigate({
@@ -114,15 +114,13 @@ export default (
             params: initialRouteParams,
           }));
         }
-<<<<<<< HEAD
+
         const params = (route.params || action.params) && {
           ...(route.params || {}),
           ...(action.params || {}),
         };
-=======
 
->>>>>>> Fix issue, where initial route params are not set if router has a child router
-        route = {
+        const route = {
           ...childState,
           routeName: initialRouteName,
           params: initialRouteParams,
