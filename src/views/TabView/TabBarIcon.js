@@ -8,25 +8,23 @@ import {
 } from 'react-native';
 
 import type {
-  NavigationRoute,
   NavigationState,
+  NavigationRoute,
+  Style,
 } from '../../TypeDefinition';
 
-type TabScene = {
-  route: NavigationRoute;
-  focused: boolean;
-  index: number;
-  tintColor?: string;
-};
+import type {
+  TabScene,
+} from './TabView';
 
 type Props = {
   activeTintColor: string;
   inactiveTintColor: string;
-  scene: TabScene,
+  scene: TabScene;
   position: Animated.Value;
   navigationState: NavigationState;
   renderIcon: (scene: TabScene) => React.Element<*>;
-  style?: any;
+  style?: Style;
 };
 
 export default class TabBarIcon extends PureComponent<void, Props, void> {
@@ -42,7 +40,9 @@ export default class TabBarIcon extends PureComponent<void, Props, void> {
       style,
     } = this.props;
     const { route, index } = scene;
-    const inputRange = navigationState.routes.map((x: any, i: number) => i);
+    const { routes } = navigationState;
+    // Prepend '-1', so there are always at least 2 items in inputRange
+    const inputRange = [-1, ...routes.map((x: *, i: number) => i)];
     const activeOpacity = position.interpolate({
       inputRange,
       outputRange: inputRange.map((i: number) => (i === index ? 1 : 0)),

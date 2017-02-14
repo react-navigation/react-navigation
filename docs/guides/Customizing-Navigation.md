@@ -19,7 +19,7 @@ class MyNavigationAwareComponent extends React.Component {
             const state = lastState = { myMode: 'default' };
             if (action.type === 'MyAction') {
                 return { myMode: 'action' };
-            } else if (action.type === 'Back') {
+            } else if (action.type === NavigationActions.BACK) {
                 return { myMode: 'blockBackButton' };
             } else {
                 return state;

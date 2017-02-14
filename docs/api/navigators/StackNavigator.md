@@ -15,7 +15,7 @@ class MyHomeScreen extends React.Component {
     return (
       <Button
         onPress={() => this.props.navigation.navigate('Profile', {name: 'Lucy'})}
-        label="Go to Lucy's profile"
+        title="Go to Lucy's profile"
       />
     );
   }
@@ -50,13 +50,13 @@ StackNavigator({
 
     // `ProfileScreen` is a React component that will be the main content of the screen.
     screen: ProfileScreen,
-    // When `ProfileScreen` is loaded by the StackNavigator, it will be given a navigation prop.
+    // When `ProfileScreen` is loaded by the StackNavigator, it will be given a `navigation` prop.
 
     // Optional: When deep linking or using react-navigation in a web app, this path is used:
     path: 'people/:username',
     // The action and route params are extracted from the path.
 
-    // Optional: Override the navigation options for the screen
+    // Optional: Override the `navigationOptions` for the screen
     navigationOptions: {
       title: ({state}) => `${state.params.username}'s Profile'`,
     },
@@ -84,6 +84,9 @@ Visual options:
   - `float` - Render a single header that stays at the top and animates as screens are changed. This is a common pattern on iOS.
   - `screen` - Each screen has a header attached to it and the header fades in and out together with the screen. This is a common pattern on Android.
   - `none` - No header will be rendered.
+- `cardStyle` - Use this prop to override or extend the default style for an individual card in stack.
+- `onTransitionStart` - Function to be invoked when the card transition animation is about to start.
+- `onTransitionEnd` - Function to be invoked once the card transition animation completes.
 
 
 ### Screen Navigation Options
@@ -95,7 +98,7 @@ class ProfileScreen extends React.Component {
 
   static navigationOptions = {
 
-    title: `${state.params.name}'s Profile!`,
+    title: ({ state }) => `${state.params.name}'s Profile!`,
 
     header: ({ state, setParams }) => ({
       // Render a button on the right side of the header
@@ -117,16 +120,29 @@ All `navigationOptions` for the `StackNavigator`:
 - `header` - a config object for the header bar:
   - `visible` - Boolean toggle of header visibility. Only works when `headerMode` is `screen`.
   - `title` - Title string used by the navigation bar, or a custom React component
-  - `right` - Custom component displayed on the right side of the header
+  - `right` - Custom React Element to display on the right side of the header
+  - `left` - Custom React Element to display on the left side of the header
   - `style` - Style object for the navigation bar
+  - `titleStyle` - Style object for the title component
+  - `tintColor` - Tint color for the header
+
+### Navigator Props
+
+The navigator component created by `StackNavigator(...)` takes the following props:
+
+- `screenProps` - Pass down extra options to child screens, for example:
+
+
+ ```jsx
+ const SomeStack = StackNavigator({
+   // config
+ });
+
+ <SomeStack
+   screenProps={/* this prop will get passed to the screen components as this.props.screenProps */}
+ />
+ ```
 
 ### Examples
 
 See the examples [SimpleStack.js](https://github.com/react-community/react-navigation/tree/master/examples/NavigationPlayground/js/SimpleStack.js) and [ModalStack.js](https://github.com/react-community/react-navigation/tree/master/examples/NavigationPlayground/js/ModalStack.js) which you can run locally as part of the [NavigationPlayground](https://github.com/react-community/react-navigation/tree/master/examples/NavigationPlayground) app.
-
-
-### Navigator Props
-
-The navigator component created by `StackNavigator(...)` takes the following props,
-
-- `screenProps` - Props to pass to each child screen

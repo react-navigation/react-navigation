@@ -31,6 +31,7 @@ const DefaultDrawerConfig = {
    */
   drawerWidth: Dimensions.get('window').width - (Platform.OS === 'android' ? 56 : 64),
   contentComponent: DrawerView.Items,
+  drawerPosition: 'left',
 };
 
 const DrawerNavigator = (
@@ -43,6 +44,7 @@ const DrawerNavigator = (
     drawerWidth,
     contentComponent,
     contentOptions,
+    drawerPosition,
     ...tabsConfig
   } = mergedConfig;
   const contentRouter = TabRouter(routeConfigs, tabsConfig);
@@ -64,6 +66,7 @@ const DrawerNavigator = (
       drawerWidth={drawerWidth}
       contentComponent={contentComponent}
       contentOptions={contentOptions}
+      drawerPosition={drawerPosition}
     />
   ), containerConfig);
 };

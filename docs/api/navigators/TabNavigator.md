@@ -21,7 +21,7 @@ class MyHomeScreen extends React.Component {
     return (
       <Button
         onPress={() => this.props.navigation.navigate('Notifications')}
-        label="Go to notifications"
+        title="Go to notifications"
       />
     );
   }
@@ -44,7 +44,7 @@ class MyNotificationsScreen extends React.Component {
     return (
       <Button
         onPress={() => this.props.navigation.goBack()}
-        label="Go back home"
+        title="Go back home"
       />
     );
   }
@@ -71,7 +71,17 @@ const MyApp = TabNavigator({
 });
 ```
 
-### Tab Navigator Options
+## API Definition
+
+```js
+TabNavigator(RouteConfigs, TabNavigatorConfig)
+```
+
+### RouteConfigs
+
+The route configs object is a mapping from route name to a route config, which tells the navigator what to present for that route, see [example](https://github.com/coodoo/react-navigation/blob/master/docs/api/navigators/StackNavigator.md#routeconfigs) from `StackNavigator`.
+
+### TabNavigatorConfig
 
 - `tabBarComponent` - component to use as the tab bar, e.g. `TabView.TabBarBottom`
 (this is the default on iOS), `TabView.TabBarTop`
@@ -84,10 +94,10 @@ const MyApp = TabNavigator({
 
 Several options get passed to the underlying router to modify navigation logic:
 
-- `initialTab` - The routeName for the initial tab route when first loading
+- `initialRouteName` - The routeName for the initial tab route when first loading
 - `order` - Array of routeNames which defines the order of the tabs
 - `paths` - Provide a mapping of routeName to path config, which overrides the paths set in the routeConfigs.
-- `backBehavior` - Should the back button cause a tab switch to the initial tab? If yes, set to `initialTab`, otherwise `none`. Defaults to `initialTab` behavior.
+- `backBehavior` - Should the back button cause a tab switch to the initial tab? If yes, set to `initialRoute`, otherwise `none`. Defaults to `initialRoute` behavior.
 
 ### `tabBarOptions` for `TabBarBottom` (default tab bar on iOS)
 
@@ -95,13 +105,16 @@ Several options get passed to the underlying router to modify navigation logic:
 - `activeBackgroundColor` - background color of the active tab
 - `inactiveTintColor` - label and icon color of the inactive tab
 - `inactiveBackgroundColor` - background color of the inactive tab
+- `showLabel` - whether to show label for tab, default is true
 - `style` - style object for the tab bar
+- `labelStyle` - style object for the tab label
 
 Example:
 
 ```js
 tabBarOptions: {
   activeTintColor: '#e91e63',
+  labelStyle: { fontSize: 12 },
   style: {
     backgroundColor: 'blue',
   }
@@ -138,6 +151,18 @@ tabBarOptions: {
 
 ### Navigator Props
 
-The navigator component created by `TabNavigator(...)` takes the following props,
+The navigator component created by `TabNavigator(...)` takes the following props:
 
-- `screenProps` - Props to pass to each child screen
+- `screenProps` - Pass down extra options to child screens, for example:
+
+
+ ```jsx
+ const TabNav = TabNavigator({
+   // config
+ });
+ 
+ <TabNav
+   screenProps={/* this prop will get passed to the screen components as this.props.screenProps */}
+ />
+ ```
+ 

@@ -7,6 +7,7 @@ import {
   NativeModules,
 } from 'react-native';
 import {
+  NavigationActions,
   addNavigationHelpers,
 } from 'react-navigation';
 
@@ -22,7 +23,7 @@ const HybridContainer = (ReactScreens) => {
       let ScreenView = ReactScreens[name];
       let screenKey = name;
       let navState = null;
-      const action = { type: 'Navigate', routeName: name, params };
+      const action = NavigationActions.navigate({ routeName: name, params });
       if (!ScreenView) {
         // Deep linking magic here. Try each screen to see if the state changes
         // in response to this action. The first screen who returns
@@ -33,7 +34,7 @@ const HybridContainer = (ReactScreens) => {
             if (!V || !V.router || !V.router.getStateForAction) {
               return;
             }
-            const baseState = V.router.getStateForAction({ type: 'Init' });
+            const baseState = V.router.getStateForAction(NavigationActions.init());
             const linkedState = V.router.getStateForAction(action, baseState);
             if (baseState !== linkedState) {
               ScreenView = V;
@@ -77,7 +78,7 @@ const HybridContainer = (ReactScreens) => {
         this.setState({ navState });
         return true;
       }
-      if (action.type === 'Navigate') {
+      if (action.type === NavigationActions.NAVIGATE) {
         HybridNavigationManager.navigate(action.routeName, action.params || {});
       }
       return true;
@@ -96,6 +97,7 @@ const HybridContainer = (ReactScreens) => {
     componentWillUpdate(props, state) {
       const { name, rootTag } = props;
       const ScreenView = ReactScreens[name];
+
       if (!ScreenView) {
         console.log('Experiencing an error! Fix me!')
       }
@@ -106,7 +108,7 @@ const HybridContainer = (ReactScreens) => {
         const routeConfig = router && router.getScreenConfig({
           state: routes[index], dispatch: () => {}
         }, index, true);
-        title = (routeConfig && routeConfig.title) || route.routeName;
+        title = (routeConfig && routeConfig.title) || state.navState.routeName;
       }
       HybridNavigationManager.setTitle(rootTag, title || name);
     }

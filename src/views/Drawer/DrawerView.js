@@ -13,6 +13,7 @@ import type {
   NavigationRouter,
   NavigationState,
   NavigationAction,
+  Style,
 } from '../../TypeDefinition';
 
 export type DrawerScene = {
@@ -24,23 +25,22 @@ export type DrawerScene = {
 
 export type DrawerViewConfig = {
   drawerWidth: number,
+  drawerPosition: 'left' | 'right',
   contentComponent: ReactClass<*>,
   contentOptions?: {},
-  style?: any;
+  style?: Style;
 };
-
-type Navigation = NavigationScreenProp<NavigationState, NavigationAction>;
 
 type Props = DrawerViewConfig & {
   screenProps?: {};
   router: NavigationRouter,
-  navigation: Navigation,
+  navigation: NavigationScreenProp<NavigationState, NavigationAction>,
 };
 
 /**
  * Component that renders the drawer.
  */
-export default class DrawerView extends PureComponent<void, Props, void> {
+export default class DrawerView<T: *> extends PureComponent<void, Props, void> {
 
   static Items = DrawerNavigatorItems;
 
@@ -62,7 +62,7 @@ export default class DrawerView extends PureComponent<void, Props, void> {
     this._updateScreenNavigation(nextProps.navigation);
   }
 
-  _screenNavigationProp: Navigation;
+  _screenNavigationProp: NavigationScreenProp<T, NavigationAction>;
 
   _handleDrawerOpen = () => {
     const { navigation } = this.props;
@@ -81,9 +81,9 @@ export default class DrawerView extends PureComponent<void, Props, void> {
   };
 
   _updateScreenNavigation = (
-    navigation: Navigation
+    navigation: NavigationScreenProp<NavigationState, NavigationAction>
   ) => {
-    const navigationState: any = navigation.state.routes.find((route: *) => route.routeName === 'DrawerClose');
+    const navigationState = navigation.state.routes.find((route: *) => route.routeName === 'DrawerClose');
     if (this._screenNavigationProp && this._screenNavigationProp.state === navigationState) {
       return;
     }
@@ -93,8 +93,10 @@ export default class DrawerView extends PureComponent<void, Props, void> {
     });
   }
 
-  _getNavigationState = (navigation: Navigation) => {
-    const navigationState: any = navigation.state.routes.find((route: *) => route.routeName === 'DrawerClose');
+  _getNavigationState = (
+    navigation: NavigationScreenProp<NavigationState, NavigationAction>
+  ) => {
+    const navigationState = navigation.state.routes.find((route: *) => route.routeName === 'DrawerClose');
     return navigationState;
   };
 
@@ -119,7 +121,10 @@ export default class DrawerView extends PureComponent<void, Props, void> {
         onDrawerOpen={this._handleDrawerOpen}
         onDrawerClose={this._handleDrawerClose}
         renderNavigationView={this._renderNavigationView}
-        drawerPosition={DrawerLayout.positions.Left}
+        drawerPosition={
+          this.props.drawerPosition === 'right' ?
+          DrawerLayout.positions.Right : DrawerLayout.positions.Left
+        }
       >
         <DrawerScreen
           screenProps={this.props.screenProps}
