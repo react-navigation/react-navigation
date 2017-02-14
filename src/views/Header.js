@@ -219,7 +219,8 @@ class Header extends React.Component<void, HeaderProps, HeaderState> {
 
     const pointerEvents = offset !== 0 || isStale ? 'none' : 'box-none';
 
-    // Only measure `title` component
+    // On iOS, width of left/right components depends on the calculated
+    // size of the title.
     const onLayoutIOS = Platform.OS === 'ios' && name === 'title'
       ? (e: LayoutEvent) => {
         this.setState({
@@ -272,7 +273,7 @@ class Header extends React.Component<void, HeaderProps, HeaderState> {
   }
 
   render(): React.Element<*> {
-    let children;
+    let appBar;
 
     if (this.props.mode === 'float') {
       const scenesProps: Array<NavigationSceneRendererProps> = this.props.scenes
@@ -286,13 +287,13 @@ class Header extends React.Component<void, HeaderProps, HeaderState> {
           }),
         }));
 
-      children = scenesProps.map(this._renderHeader, this);
+      appBar = scenesProps.map(this._renderHeader, this);
     } else {
-      children = this._renderHeader({
+      appBar = this._renderHeader({
         ...this.props,
         position: new Animated.Value(this.props.scene.index),
         progress: new Animated.Value(0),
-      };
+      });
     }
 
     // eslint-disable-next-line no-unused-vars
@@ -301,7 +302,7 @@ class Header extends React.Component<void, HeaderProps, HeaderState> {
     return (
       <Animated.View {...rest} style={[styles.container, style]}>
         <View style={styles.appBar}>
-          {children}
+          {appBar}
         </View>
       </Animated.View>
     );
