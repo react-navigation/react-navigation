@@ -56,3 +56,14 @@ const AppNavigator = StackNavigator({
 ```
 
 In this case, once you `connect` `AppNavigator` to Redux as is done in `AppWithNavigationState`, `MyTabNavigator` will automatically have access to navigation state as a `navigation` prop.
+
+Tests-wise, to make jest work with react-navigation, you need to change the jest preset in the `package.json`, see [here](https://facebook.github.io/jest/docs/tutorial-react-native.html#transformignorepatterns-customization):
+
+```
+"jest": {
+  "preset": "react-native",
+  "transformIgnorePatterns": [
+    "node_modules/(?!(jest-)?react-native|react-navigation)"
+  ]
+}
+```
