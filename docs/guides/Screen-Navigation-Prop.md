@@ -10,7 +10,7 @@ Call this to link to another screen in your app. Takes the following arguments:
 
 - `routeName` - A destination routeName that has been registered somewhere in the app's router
 - `params` - Params to merge into the destination route
-- `action` - (advanced) The sub-action to run in the child router, if the screen is a navigator.
+- `action` - (advanced) The sub-action to run in the child router, if the screen is a navigator. See [Actions Doc]() for a full list of supported actions.
 
 ```js
 class HomeScreen extends React.Component {
@@ -104,69 +104,18 @@ Use dispatch to send any navigation action to the router. The other navigation f
 
 Note that if you want to dispatch react-navigation actions you should use the action creators provided in this library.
 
-The following actions are supported:
+See [Navigation Actions Docs]() for a full list of available actions.
 
-### Navigate
 ```js
 import { NavigationActions } from 'react-navigation'
 
-const navigationAction = NavigationActions.navigate({
+const navigateAction = NavigationActions.navigate({
   routeName: 'Profile',
   params: {},
 
   // navigate can have a nested navigate action that will be run inside the child router
   action: NavigationActions.navigate({ routeName: 'SubProfileRoute'})
 })
-this.props.navigation.dispatch(navigationAction)
-
-```
-
-
-### Reset
-
-The `Reset` action wipes the whole navigation state and replaces it with the result of several actions.
-
-```js
-import { NavigationActions } from 'react-navigation'
-
-const resetAction = NavigationActions.reset({
-  index: 0,
-  actions: [
-    NavigationActions.navigate({ routeName: 'Profile'})
-  ]
-})
-this.props.navigation.dispatch(resetAction)
-
-```
-
-You can issue multiple actions, but make sure to set `index` correctly:
-
-```js
-import { NavigationActions } from 'react-navigation'
-
-const resetAction = NavigationActions.reset({
-  index: 1,
-  actions: [
-    NavigationActions.navigate({ routeName: 'Profile'}),
-    NavigationActions.navigate({ routeName: 'Settings'})
-  ]
-})
-this.props.navigation.dispatch(resetAction)
-
-```
-
-### SetParams
-
-When dispatching `SetParams`, the router will produce a new state that has changed the params of a particular route, as identified by the key
-
-```js
-import { NavigationActions } from 'react-navigation'
-
-const setParamsAction = NavigationActions.setParams({
-  params: {}, // these are the new params that will be merged into the existing route params
-  // The key of the route that should get the new params
-  key: 'screen-123',
-})
-this.props.navigation.dispatch(setParamsAction)
+this.props.navigation.dispatch(navigateAction)
 
 ```
