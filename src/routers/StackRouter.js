@@ -113,10 +113,15 @@ export default (
             params: initialRouteParams,
           }));
         }
+        const params = (route.params || action.params) && {
+          ...(route.params || {}),
+          ...(action.params || {}),
+        };
         route = {
           ...route,
           routeName: initialRouteName,
           key: 'Init',
+          ...(params ? { params } : {}),
         };
         state = {
           index: 0,
