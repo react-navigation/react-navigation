@@ -285,8 +285,8 @@ class Header extends React.Component<void, HeaderProps, void> {
     }
 
     return (
-      <Animated.View {...rest} style={[styles.container, {marginTop: STATUSBAR_HEIGHT, height: APPBAR_HEIGHT}, style]}>
-        {children}
+      <Animated.View {...rest} style={[styles.container, style]}>
+        <View style={{flex: 1}}>{children}</View>
       </Animated.View>
     );
   }
@@ -294,6 +294,8 @@ class Header extends React.Component<void, HeaderProps, void> {
 
 const styles = StyleSheet.create({
   container: {
+    paddingTop: STATUSBAR_HEIGHT,
+    height: STATUSBAR_HEIGHT + APPBAR_HEIGHT,
     backgroundColor: Platform.OS === 'ios' ? '#EFEFF2' : '#FFF',
     shadowColor: 'black',
     shadowOpacity: 0.1,
