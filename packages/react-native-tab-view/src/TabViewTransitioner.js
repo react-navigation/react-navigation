@@ -170,7 +170,7 @@ export default class TabViewTransitioner extends PureComponent<DefaultProps, Pro
     if (canJumpToTab && !canJumpToTab(navigationState.routes[index])) {
       const lastPosition = this._getLastPosition();
       if (lastPosition !== navigationState.index) {
-        this._jumpToIndex(navigationState.index);
+        this._transitionTo(navigationState.index);
       }
       return;
     }
