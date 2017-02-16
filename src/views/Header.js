@@ -230,7 +230,7 @@ class Header extends React.Component<void, HeaderProps, HeaderState> {
       }
       : undefined;
 
-    const width = name === 'left' || name === 'right'
+    const titleWidth = name === 'left' || name === 'right'
       ? this.state.widths[index]
       : undefined;
 
@@ -240,8 +240,8 @@ class Header extends React.Component<void, HeaderProps, HeaderState> {
         onLayout={onLayoutIOS}
         key={`${name}_${key}`}
         style={[
-          width && {
-            width: (props.layout.initWidth - width) / 2,
+          titleWidth && {
+            width: (props.layout.initWidth - titleWidth) / 2,
           },
           styles.item,
           styles[name],
