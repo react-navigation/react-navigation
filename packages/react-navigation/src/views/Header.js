@@ -236,7 +236,7 @@ class Header extends React.Component<void, HeaderProps, void> {
     // eslint-disable-next-line no-unused-vars
     const { scenes, scene, style, position, progress, ...rest } = this.props;
 
-    let appBar = null;
+    let children = null;
 
     if (this.props.mode === 'float') {
       // eslint-disable-next-line no-shadow
@@ -259,13 +259,11 @@ class Header extends React.Component<void, HeaderProps, void> {
         })
       );
 
-      appBar = (
-        <View style={styles.appBar}>
-          {titleComponents}
-          {leftComponents}
-          {rightComponents}
-        </View>
-      );
+      children = [
+        titleComponents,
+        leftComponents,
+        rightComponents
+      ];
     } else {
       const staticRendererProps = {
         ...this.props,
@@ -279,18 +277,16 @@ class Header extends React.Component<void, HeaderProps, void> {
         hasRightComponent: !!rightComponent,
       });
 
-      appBar = (
-        <View style={styles.appBar}>
-          {titleComponent}
-          {leftComponent}
-          {rightComponent}
-        </View>
-      );
+      children = [
+        titleComponent,
+        leftComponent,
+        rightComponent
+      ];
     }
 
     return (
       <Animated.View {...rest} style={[styles.container, style]}>
-        {appBar}
+        <View style={styles.appBar}>{children}</View>
       </Animated.View>
     );
   }
@@ -299,6 +295,7 @@ class Header extends React.Component<void, HeaderProps, void> {
 const styles = StyleSheet.create({
   container: {
     paddingTop: STATUSBAR_HEIGHT,
+    height: STATUSBAR_HEIGHT + APPBAR_HEIGHT,
     backgroundColor: Platform.OS === 'ios' ? '#EFEFF2' : '#FFF',
     shadowColor: 'black',
     shadowOpacity: 0.1,
@@ -309,7 +306,7 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   appBar: {
-    height: APPBAR_HEIGHT,
+    flex: 1
   },
   item: {
     flexDirection: 'row',
