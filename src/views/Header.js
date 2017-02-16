@@ -25,6 +25,7 @@ import type {
   NavigationScreenProp,
   NavigationSceneRendererProps,
   NavigationStyleInterpolator,
+  LayoutEvent,
   Style,
 } from '../TypeDefinition';
 
@@ -49,17 +50,6 @@ export type HeaderProps = NavigationSceneRendererProps & {
 };
 
 type SubViewName = 'left' | 'title' | 'right';
-
-type LayoutEvent = {
-  nativeEvent: {
-    layout: {
-      x: number;
-      y: number;
-      width: number;
-      height: number;
-    },
-  };
-};
 
 type HeaderState = {
   widths: {
