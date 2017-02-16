@@ -110,6 +110,14 @@ class Header extends React.Component<void, HeaderProps, HeaderState> {
     return header.backTitle || this._getHeaderTitle(navigation);
   }
 
+  _getTruncatedBackButtonTitle(navigation: Navigation): ?string {
+    const header = this.props.router.getScreenConfig(navigation, 'header');
+    if (header && header.truncatedBackTitle) {
+      return header.truncatedBackTitle;
+    }
+    return undefined;
+  }
+
   _getHeaderTintColor(navigation: Navigation): ?string {
     const header = this.props.router.getScreenConfig(navigation, 'header');
     if (header && header.tintColor) {
@@ -143,11 +151,13 @@ class Header extends React.Component<void, HeaderProps, HeaderState> {
       state: props.scenes[props.scene.index - 1].route,
     });
     const backButtonTitle = this._getBackButtonTitle(previousNavigation);
+    const truncatedBackButtonTitle = this._getTruncatedBackButtonTitle(previousNavigation);
     return (
       <HeaderBackButton
         onPress={props.onNavigateBack}
         tintColor={tintColor}
         title={backButtonTitle}
+        truncatedTitle={truncatedBackButtonTitle}
       />
     );
   };
