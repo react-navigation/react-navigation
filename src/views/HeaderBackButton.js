@@ -55,6 +55,14 @@ class HeaderBackButton extends React.Component<DefaultProps, Props, State> {
       ? this.state.containerWidth < this.state.initialTextWidth
       : false;
 
+    const onContainerLayout = Platform.OS === 'ios'
+      ? ((e: LayoutEvent) => {
+        this.setState({
+          containerWidth: e.nativeEvent.layout.width,
+        });
+      })
+      : undefined;
+
     return (
       <TouchableItem
         delayPressIn={0}
@@ -63,11 +71,7 @@ class HeaderBackButton extends React.Component<DefaultProps, Props, State> {
         borderless
       >
         <View
-          onLayout={Platform.OS === 'ios' && ((e: LayoutEvent) => {
-            this.setState({
-              containerWidth: e.nativeEvent.layout.width,
-            });
-          })}
+          onLayout={onContainerLayout}
           style={styles.container}
         >
           <Image
