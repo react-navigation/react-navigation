@@ -17,11 +17,13 @@ import TouchableItem from './TouchableItem';
 type Props = {
   onPress?: () => void,
   title?: ?string,
-  tintColor?: ?string;
+  tintColor?: ?string,
+  truncatedTitle?: ?string,
 };
 
 type DefaultProps = {
   tintColor: ?string,
+  truncatedTitle: string,
 };
 
 type State = {
@@ -34,18 +36,20 @@ class HeaderBackButton extends React.Component<DefaultProps, Props, State> {
     onPress: PropTypes.func.isRequired,
     title: PropTypes.string,
     tintColor: PropTypes.string,
+    truncatedTitle: PropTypes.string,
   };
 
   static defaultProps = {
     tintColor: Platform.select({
       ios: '#037aff',
     }),
+    truncatedTitle: 'Back',
   };
 
   state = {};
 
   render() {
-    const { onPress, title, tintColor } = this.props;
+    const { onPress, title, tintColor, truncatedTitle } = this.props;
 
     const renderTruncated = this.state.containerWidth && this.state.initialTextWidth
       ? this.state.containerWidth < this.state.initialTextWidth
@@ -88,7 +92,7 @@ class HeaderBackButton extends React.Component<DefaultProps, Props, State> {
               style={[styles.title, { color: tintColor }]}
               numberOfLines={1}
             >
-              {renderTruncated ? 'Back' : title}
+              {renderTruncated ? truncatedTitle : title}
             </Text>
           )}
         </View>
