@@ -44,17 +44,6 @@ class HeaderBackButton extends React.Component<DefaultProps, Props, State> {
 
   state = {};
 
-  _updateLayoutWidth = (view: string) => {
-    return (e: LayoutEvent) => {
-      if (this.state[view] > 0) {
-        return;
-      }
-      this.setState({
-        [view]: e.nativeEvent.layout.x + e.nativeEvent.layout.width,
-      });
-    };
-  };
-
   render() {
     const { onPress, title, tintColor } = this.props;
 
