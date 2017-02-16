@@ -60,7 +60,9 @@ export default (
         const routes = order.map((routeName: string) => {
           const tabRouter = tabRouters[routeName];
           if (tabRouter) {
-            const childAction = action.action || NavigationActions.init({ params: action.params });
+            const childAction = action.action || NavigationActions.init({
+                ...(action.params ? { params: action.params } : {}),
+            });
             return {
               ...tabRouter.getStateForAction(childAction),
               key: routeName,
@@ -81,12 +83,13 @@ export default (
 
       if (action.type === NavigationActions.INIT) {
         // Merge any params from the action into all the child routes
-        if (action.params) {
+        const { params } = action;
+        if (params) {
           state.routes = state.routes.map(route => ({
             ...route,
             params: {
               ...route.params,
-              ...action.params,
+              ...params,
             }
           }));
         }

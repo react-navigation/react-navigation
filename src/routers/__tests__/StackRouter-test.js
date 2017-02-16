@@ -478,8 +478,9 @@ describe('StackRouter', () => {
     });
     const state = router.getStateForAction({ type: NavigationActions.INIT });
     const state2 = router.getStateForAction({ type: NavigationActions.NAVIGATE, routeName: 'Bar', params: { foo: '42' } }, state);
-    expect(state2.routes[1].params).toEqual({ foo: '42' });
-    expect(state2.routes[1].routes).toEqual([
+    expect(state2 && state2.routes[1].params).toEqual({ foo: '42' });
+    /* $FlowFixMe */
+    expect(state2 && state2.routes[1].routes).toEqual([
       {
         key: 'Init',
         routeName: 'Baz',
@@ -501,8 +502,9 @@ describe('StackRouter', () => {
     });
     const state = router.getStateForAction({ type: NavigationActions.INIT });
     const state2 = router.getStateForAction({ type: NavigationActions.NAVIGATE, routeName: 'Bar', params: { foo: '42' } }, state);
-    expect(state2.routes[1].params).toEqual({ foo: '42' });
-    expect(state2.routes[1].routes).toEqual([
+    expect(state2 && state2.routes[1].params).toEqual({ foo: '42' });
+    /* $FlowFixMe */
+    expect(state2 && state2.routes[1].routes).toEqual([
       {
         key: 'Baz',
         routeName: 'Baz',

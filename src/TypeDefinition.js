@@ -235,6 +235,7 @@ export type NavigationSetParamsAction = {
 
 export type NavigationInitAction = {
   type: 'Navigation/INIT',
+  params?: NavigationParams,
 };
 
 export type NavigationResetAction = {

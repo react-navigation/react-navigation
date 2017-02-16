@@ -166,7 +166,15 @@ describe('TabRouter', () => {
     // Ensure that navigating back and forth doesn't overwrite
     state = router.getStateForAction({ type: NavigationActions.NAVIGATE, routeName: 'Bar' }, state);
     state = router.getStateForAction({ type: NavigationActions.NAVIGATE, routeName: 'Boo' }, state);
-    expect(state.routes[1].routes[0].params).toEqual({ foo: '42', bar: '43' });
+    expect(state && state.routes[1]).toEqual({
+      index: 0,
+      key: 'Baz',
+      routeName: 'Baz',
+      routes: [
+        { key: 'Boo', routeName: 'Boo', params: { foo: '42', bar: '43' } },
+        { key: 'Bar', routeName: 'Bar', params: { foo: '42', bar: '43' } },
+      ],
+    });
   });
 
   test('Handles initial deep linking into nested tabs', () => {
