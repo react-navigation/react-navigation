@@ -59,11 +59,11 @@ class HeaderBackButton extends React.Component<DefaultProps, Props, State> {
         borderless
       >
         <View
-          onLayout={(e: LayoutEvent) => {
+          onLayout={Platform.OS === 'ios' && ((e: LayoutEvent) => {
             this.setState({
               containerWidth: e.nativeEvent.layout.width,
             });
-          }}
+          })}
           style={styles.container}
         >
           <Image
