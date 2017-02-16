@@ -31,12 +31,21 @@ const POSITION_THRESHOLD = 1 / 3;
 /**
  * The threshold (in pixels) to start the gesture action.
  */
-const RESPOND_THRESHOLD = 15;
+const RESPOND_THRESHOLD = 12;
 
 /**
- * The threshold (in pixels) to finish the gesture action.
+ * The distance of touch start from the edge of the screen where the gesture will be recognized
  */
-const DISTANCE_THRESHOLD = 100;
+const GESTURE_RESPONSE_DISTANCE = 35;
+
+/**
+ * The ratio between the gesture velocity and the animation velocity. This allows
+ * the velocity of a swipe release to carry on into the new animation.
+ *
+ * TODO: Understand and compute this ratio rather than using an approximation
+ */
+const GESTURE_ANIMATED_VELOCITY_RATIO = -4;
+
 
 /**
  * Primitive gesture directions.
@@ -121,7 +130,7 @@ class CardStackPanResponder extends AbstractPanResponder {
       * For horizontal scroll views, a distance of 30 from the left of the screen is the
       * standard maximum position to start touch responsiveness.
       */
-      props.gestureResponseDistance || 30;
+      props.gestureResponseDistance || GESTURE_RESPONSE_DISTANCE;
 
     if (positionMax != null && (currentDragPosition - currentDragDistance) > positionMax) {
       return false;
@@ -178,30 +187,46 @@ class CardStackPanResponder extends AbstractPanResponder {
     const props = this._props;
     const isVertical = this._isVertical;
     const axis = isVertical ? 'dy' : 'dx';
+    const velocity = gesture[isVertical ? 'vy' : 'vx'];
     const index = props.navigationState.index;
     const distance = I18nManager.isRTL && axis === 'dx' ?
       -gesture[axis] :
       gesture[axis];
 
+    // To asyncronously get the current animated value, we need to run stopAnimation:
     props.position.stopAnimation((value: number) => {
-      this._reset();
 
       if (!props.onNavigateBack) {
+        this._reset(velocity);
         return;
       }
 
+      // If the speed of the gesture release is significant, use that as the indication
+      // of intent
+      if (velocity < -0.5) {
+        this._reset(velocity);
+        return;
+      }
+      if (velocity > 0.5) {
+        this._goBack(velocity);
+        return;
+      }
+
+      // Then filter based on the distance the screen was moved. Over a third of the way swiped,
+      // and the back will happen.
       if (
-        distance > DISTANCE_THRESHOLD ||
         value <= index - POSITION_THRESHOLD
       ) {
-        props.onNavigateBack();
+        this._goBack(velocity);
+      } else {
+        this._reset(velocity);
       }
     });
   }
 
   onPanResponderTerminate(): void {
     this._isResponding = false;
-    this._reset();
+    this._reset(0);
   }
 
   onPanResponderTerminationRequest(event: any, gesture: any): boolean {
@@ -210,16 +235,37 @@ class CardStackPanResponder extends AbstractPanResponder {
     return false;
   }
 
-  _reset(): void {
+  _reset(velocity: number): void {
     const props = this._props;
-    Animated.timing(
+    Animated.spring(
       props.position,
       {
         toValue: props.navigationState.index,
         duration: ANIMATION_DURATION,
         useNativeDriver: props.position.__isNative,
+        velocity: velocity * GESTURE_ANIMATED_VELOCITY_RATIO,
+        bounciness: 0,
       }
     ).start();
+  }
+
+  _goBack(velocity: number) {
+    const props = this._props;
+    if (!props.onNavigateBack) {
+      return;
+    }
+    Animated.spring(
+      props.position,
+      {
+        toValue: Math.max(props.navigationState.index - 1, 0),
+        duration: ANIMATION_DURATION,
+        useNativeDriver: props.position.__isNative,
+        velocity: velocity * GESTURE_ANIMATED_VELOCITY_RATIO,
+        bounciness: 0,
+      }
+    ).start(() => {
+      this._props.onNavigateBack();
+    });
   }
 
   _addNativeListener(animatedValue) {
@@ -256,8 +302,6 @@ function forVertical(
 export default {
   // constants
   ANIMATION_DURATION,
-  DISTANCE_THRESHOLD,
-  POSITION_THRESHOLD,
   RESPOND_THRESHOLD,
 
   // enums

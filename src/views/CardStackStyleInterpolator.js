@@ -61,7 +61,10 @@ function forHorizontal(props: NavigationSceneRendererProps): Object {
 
   const index = scene.index;
   const inputRange = [index - 1, index, index + 0.99, index + 1];
-  const width = layout.initWidth;
+
+  // Add ~30px to the interpolated width screens width for horizontal movement. This allows
+  // the screen's shadow to go screen fully offscreen without abruptly dissapearing
+  const width = layout.initWidth + 30;
   const outputRange = I18nManager.isRTL ?
     ([-width, 0, 10, 10]: Array<number>) :
     ([width, 0, -10, -10]: Array<number>);
