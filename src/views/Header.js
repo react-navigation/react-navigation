@@ -20,7 +20,6 @@ import addNavigationHelpers from '../addNavigationHelpers';
 import type {
   NavigationScene,
   NavigationRouter,
-  NavigationState,
   NavigationAction,
   NavigationScreenProp,
   NavigationSceneRendererProps,
@@ -35,9 +34,9 @@ type SubViewProps = NavigationSceneRendererProps & {
   onNavigateBack?: () => void,
 };
 
-type Navigation = NavigationScreenProp<NavigationState, NavigationAction>;
+type Navigation = NavigationScreenProp<*, NavigationAction>;
 
-type SubViewRenderer = (subViewProps: SubViewProps) => ?React.Element<*>;
+type SubViewRenderer = (subViewProps: SubViewProps) => ?React.Element<any>;
 
 export type HeaderProps = NavigationSceneRendererProps & {
   mode: HeaderMode,
@@ -134,14 +133,20 @@ class Header extends React.Component<void, HeaderProps, HeaderState> {
     return undefined;
   }
 
-  _renderTitleComponent = (props: SubViewProps): React.Element<HeaderTitle> => {
+  _renderTitleComponent = (props: SubViewProps) => {
     const titleStyle = this._getHeaderTitleStyle(props.navigation);
     const color = this._getHeaderTintColor(props.navigation);
     const title = this._getHeaderTitle(props.navigation);
-    return <HeaderTitle style={[color ? { color } : null, titleStyle]}>{title}</HeaderTitle>;
+    return (
+      <HeaderTitle
+        style={[color ? { color } : null, titleStyle]}
+      >
+        {title}
+      </HeaderTitle>
+    );
   };
 
-  _renderLeftComponent = (props: SubViewProps): ?React.Element<HeaderBackButton> => {
+  _renderLeftComponent = (props: SubViewProps) => {
     if (props.scene.index === 0 || !props.onNavigateBack) {
       return null;
     }

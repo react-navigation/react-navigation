@@ -23,7 +23,7 @@ type Props = {
 
 type DefaultProps = {
   tintColor: ?string,
-  truncatedTitle: string,
+  truncatedTitle: ?string,
 };
 
 type State = {
