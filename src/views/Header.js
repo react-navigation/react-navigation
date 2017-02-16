@@ -112,6 +112,14 @@ class Header extends React.Component<void, HeaderProps, HeaderState> {
     return typeof title === 'string' ? title : undefined;
   }
 
+  _getBackButtonTitle(navigation: Navigation): ?string {
+    const header = this.props.router.getScreenConfig(navigation, 'header') || {};
+    if (header.backTitle === null) {
+      return undefined;
+    }
+    return header.backTitle || this._getHeaderTitle(navigation);
+  }
+
   _getHeaderTintColor(navigation: Navigation): ?string {
     const header = this.props.router.getScreenConfig(navigation, 'header');
     if (header && header.tintColor) {
@@ -144,7 +152,7 @@ class Header extends React.Component<void, HeaderProps, HeaderState> {
       ...props.navigation,
       state: props.scenes[props.scene.index - 1].route,
     });
-    const backButtonTitle = this._getHeaderTitle(previousNavigation);
+    const backButtonTitle = this._getBackButtonTitle(previousNavigation);
     return (
       <HeaderBackButton
         onPress={props.onNavigateBack}
