@@ -130,17 +130,4 @@ const styles = StyleSheet.create({
     : {},
 });
 
-
-function nextFrameAsync() {
-  return new Promise((resolve: () => void) => requestAnimationFrame(() => resolve()));
-}
-
-function measureWidthAsync(component: Ref): Promise<> {
-  return new Promise((resolve) => {
-    component.measure((x, y, width, height, pageX, pageY) => {
-      resolve({ x, y, width, height, pageX, pageY });
-    });
-  });
-}
-
 export default HeaderBackButton;
