@@ -175,7 +175,6 @@ export default class TabBar extends PureComponent<DefaultProps, Props, State> {
 
   _positionListener: Object;
   _scrollView: Object;
-  _scrollOffset: number = 0;
   _isManualScroll: boolean = false;
   _isMomentumScroll: boolean = false;
 
@@ -255,12 +254,11 @@ export default class TabBar extends PureComponent<DefaultProps, Props, State> {
   };
 
   _resetScrollOffset = (props: Props) => {
-    if (this._scrollOffset === 0 || !props.scrollEnabled || !this._scrollView) {
+    if (!props.scrollEnabled || !this._scrollView) {
       return;
     }
 
     const scrollAmount = this._getScrollAmount(props, props.navigationState.index);
-    this._scrollOffset = 0;
     this._scrollView.scrollTo({
       x: scrollAmount,
       animated: true,
@@ -276,9 +274,9 @@ export default class TabBar extends PureComponent<DefaultProps, Props, State> {
       return;
     }
 
-    const scrollAmount = this._getScrollAmount(this.props, index) + this._scrollOffset;
+    const scrollAmount = this._getScrollAmount(this.props, index);
     this._scrollView.scrollTo({
-      x: this._normalizeScrollValue(this.props, scrollAmount),
+      x: scrollAmount,
       animated: false,
     });
   };
@@ -290,7 +288,6 @@ export default class TabBar extends PureComponent<DefaultProps, Props, State> {
 
     const scrollAmount = this._getScrollAmount(this.props, this.props.navigationState.index);
     const scrollOffset = value - scrollAmount;
-    this._scrollOffset = scrollOffset;
 
     if (this._isMomentumScroll) {
       Animated.spring(this.state.offset, {
