@@ -189,13 +189,9 @@ class CardStackPanResponder extends AbstractPanResponder {
     const axis = isVertical ? 'dy' : 'dx';
     const velocity = gesture[isVertical ? 'vy' : 'vx'];
     const index = props.navigationState.index;
-    const distance = I18nManager.isRTL && axis === 'dx' ?
-      -gesture[axis] :
-      gesture[axis];
 
     // To asyncronously get the current animated value, we need to run stopAnimation:
     props.position.stopAnimation((value: number) => {
-
       if (!props.onNavigateBack) {
         this._reset(velocity);
         return;
@@ -263,12 +259,10 @@ class CardStackPanResponder extends AbstractPanResponder {
         velocity: velocity * GESTURE_ANIMATED_VELOCITY_RATIO,
         bounciness: 0,
       }
-    ).start(() => {
-      this._props.onNavigateBack();
-    });
+    ).start(props.onNavigateBack);
   }
 
-  _addNativeListener(animatedValue) {
+  _addNativeListener(animatedValue: Animated.Value) {
     if (!animatedValue.__isNative) {
       return;
     }
