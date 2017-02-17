@@ -48,20 +48,22 @@ class HeaderBackButton extends React.Component<DefaultProps, Props, State> {
 
   state = {};
 
+  _onContainerLayout = (e: LayoutEvent) => {
+    if (Platform.OS !== 'ios') {
+      return;
+    }
+
+    this.setState({
+      containerWidth: e.nativeEvent.layout.width,
+    });
+  };
+
   render() {
     const { onPress, title, tintColor, truncatedTitle } = this.props;
 
     const renderTruncated = this.state.containerWidth && this.state.initialTextWidth
       ? this.state.containerWidth < this.state.initialTextWidth
       : false;
-
-    const onContainerLayout = Platform.OS === 'ios'
-      ? ((e: LayoutEvent) => {
-        this.setState({
-          containerWidth: e.nativeEvent.layout.width,
-        });
-      })
-      : undefined;
 
     return (
       <TouchableItem
@@ -71,7 +73,7 @@ class HeaderBackButton extends React.Component<DefaultProps, Props, State> {
         borderless
       >
         <View
-          onLayout={onContainerLayout}
+          onLayout={this._onContainerLayout}
           style={styles.container}
         >
           <Image

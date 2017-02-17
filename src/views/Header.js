@@ -59,7 +59,7 @@ type HeaderState = {
 const APPBAR_HEIGHT = Platform.OS === 'ios' ? 44 : 56;
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : 0;
 
-class Header extends React.Component<void, HeaderProps, HeaderState> {
+class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
 
   static HEIGHT = APPBAR_HEIGHT + STATUSBAR_HEIGHT;
   static Title = HeaderTitle;
@@ -81,14 +81,6 @@ class Header extends React.Component<void, HeaderProps, HeaderState> {
   state = {
     widths: {},
   };
-
-  shouldComponentUpdate(nextProps: HeaderProps, nextState: any): boolean {
-    return ReactComponentWithPureRenderMixin.shouldComponentUpdate.call(
-      this,
-      nextProps,
-      nextState
-    );
-  }
 
   _getHeaderTitle(navigation: Navigation): ?string {
     const header = this.props.router.getScreenConfig(navigation, 'header');
@@ -159,13 +151,15 @@ class Header extends React.Component<void, HeaderProps, HeaderState> {
 
   _renderRightComponent = () => null;
 
-  _renderLeft = (props: NavigationSceneRendererProps): ?React.Element<*> => this._renderSubView(
+  _renderLeft(props: NavigationSceneRendererProps): ?React.Element<*> {
+    return this._renderSubView(
       props,
       'left',
       this.props.renderLeftComponent,
       this._renderLeftComponent,
       HeaderStyleInterpolator.forLeft,
     );
+  }
 
   _renderTitle(props: NavigationSceneRendererProps): ?React.Element<*> {
     return this._renderSubView(
@@ -177,13 +171,15 @@ class Header extends React.Component<void, HeaderProps, HeaderState> {
     );
   }
 
-  _renderRight = (props: NavigationSceneRendererProps): ?React.Element<*> => this._renderSubView(
+  _renderRight(props: NavigationSceneRendererProps): ?React.Element<*> {
+    return this._renderSubView(
       props,
       'right',
       this.props.renderRightComponent,
       this._renderRightComponent,
       HeaderStyleInterpolator.forRight,
     );
+  }
 
   _renderSubView(
     props: NavigationSceneRendererProps,
@@ -224,7 +220,7 @@ class Header extends React.Component<void, HeaderProps, HeaderState> {
 
     // On iOS, width of left/right components depends on the calculated
     // size of the title.
-    const onLayoutIOS = Platform.OS === 'ios' && name === 'title'
+    const onLayoutIOS = name === 'title'
       ? (e: LayoutEvent) => {
         this.setState({
           widths: {
@@ -275,7 +271,7 @@ class Header extends React.Component<void, HeaderProps, HeaderState> {
     );
   }
 
-  render(): React.Element<*> {
+  render() {
     let appBar;
 
     if (this.props.mode === 'float') {
