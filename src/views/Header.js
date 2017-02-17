@@ -9,6 +9,8 @@ import {
   View,
 } from 'react-native';
 
+import TVEventHandler from 'react-native/Libraries/Components/AppleTV/TVEventHandler';
+
 import ReactComponentWithPureRenderMixin from 'react/lib/ReactComponentWithPureRenderMixin';
 
 import HeaderTitle from './HeaderTitle';
@@ -78,6 +80,24 @@ class Header extends React.Component<void, HeaderProps, void> {
       nextProps,
       nextState
     );
+  }
+
+  _tvEventHandler: TVEventHandler;
+
+  componentDidMount(): void {
+    this._tvEventHandler = new TVEventHandler();
+    this._tvEventHandler.enable(this, function(cmp, evt) {
+      if (evt && evt.eventType === 'menu') {
+        cmp.props.onNavigateBack && cmp.props.onNavigateBack();
+      }
+    });
+  }
+
+  componentWillUnmount(): void {
+    if (this._tvEventHandler) {
+      this._tvEventHandler.disable();
+      delete this._tvEventHandler;
+    }
   }
 
   _getHeaderTitle(navigation: Navigation): ?string {
