@@ -17,4 +17,6 @@ module.exports = {
   get StackRouter() { return require('./routers/StackRouter').default; },
   get TabRouter() { return require('./routers/TabRouter').default; },
 
+  // HOCs
+  get withNavigation() { return require('./views/withNavigation').default; },
 };
