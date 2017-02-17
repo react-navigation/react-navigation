@@ -58,6 +58,15 @@ class HeaderBackButton extends React.PureComponent<DefaultProps, Props, State> {
     });
   };
 
+  _onTextLayout = (e: LayoutEvent) => {
+    if (this.state.initialTextWidth) {
+      return;
+    }
+    this.setState({
+      initialTextWidth: e.nativeEvent.layout.x + e.nativeEvent.layout.width,
+    });
+  };
+
   render() {
     const { onPress, title, tintColor, truncatedTitle } = this.props;
 
@@ -87,14 +96,7 @@ class HeaderBackButton extends React.PureComponent<DefaultProps, Props, State> {
           {Platform.OS === 'ios' && title && (
             <Text
               ellipsizeMode="middle"
-              onLayout={(e: LayoutEvent) => {
-                if (this.state.initialTextWidth) {
-                  return;
-                }
-                this.setState({
-                  initialTextWidth: e.nativeEvent.layout.x + e.nativeEvent.layout.width,
-                });
-              }}
+              onLayout={this._onTextLayout}
               style={[styles.title, { color: tintColor }]}
               numberOfLines={1}
             >
