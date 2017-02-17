@@ -52,7 +52,6 @@ class HeaderBackButton extends React.PureComponent<DefaultProps, Props, State> {
     if (Platform.OS !== 'ios') {
       return;
     }
-
     this.setState({
       containerWidth: e.nativeEvent.layout.width,
     });
