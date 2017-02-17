@@ -31,7 +31,7 @@ type State = {
   initialTextWidth?: number,
 };
 
-class HeaderBackButton extends React.Component<DefaultProps, Props, State> {
+class HeaderBackButton extends React.PureComponent<DefaultProps, Props, State> {
   static propTypes = {
     onPress: PropTypes.func.isRequired,
     title: PropTypes.string,
