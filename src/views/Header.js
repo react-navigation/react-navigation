@@ -323,7 +323,6 @@ const styles = StyleSheet.create({
   },
   appBar: {
     flex: 1,
-    position: 'relative',
   },
   header: {
     flexDirection: 'row',
