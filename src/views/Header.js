@@ -9,6 +9,7 @@ import {
   View,
 } from 'react-native';
 
+      /* $FlowFixMe */
 import TVEventHandler from 'react-native/Libraries/Components/AppleTV/TVEventHandler';
 
 import ReactComponentWithPureRenderMixin from 'react/lib/ReactComponentWithPureRenderMixin';
