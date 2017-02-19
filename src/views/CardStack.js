@@ -332,7 +332,7 @@ class CardStack extends Component<DefaultProps, Props, void> {
     let panHandlers = null;
 
     const cardStackConfig = this.props.router.getScreenConfig(
-      transitionProps.navigation,
+      props.navigation,
       'cardStack'
     ) || {};
     const gesturesEnabledConfig = cardStackConfig.gesturesEnabled;
