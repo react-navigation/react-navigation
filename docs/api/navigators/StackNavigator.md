@@ -125,7 +125,8 @@ All `navigationOptions` for the `StackNavigator`:
   - `style` - Style object for the navigation bar
   - `titleStyle` - Style object for the title component
   - `tintColor` - Tint color for the header
-- `gesturesEnabled` - Whether you can use gestures to dismiss this screen. Defaults to true on iOS, false on Android
+- `cardStack` - a config object for the card stack:
+  - `gesturesEnabled` - Whether you can use gestures to dismiss this screen. Defaults to true on iOS, false on Android
 
 ### Navigator Props
 
