@@ -185,6 +185,11 @@ export type NavigationScreenOptions = {
    * Options passed to the drawer for this screen.
    */
   drawer?: NavigationScreenOption<DrawerConfig>;
+  /**
+   * Whether you can use gestures to dismiss this screen.
+   * Defaults to true on iOS, false on Android.
+   */
+  gesturesEnabled?: bool,
 };
 
 export type NavigationScreenConfig = {

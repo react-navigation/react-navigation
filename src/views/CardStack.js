@@ -52,11 +52,6 @@ type Props = {
   style: Style,
   gestureResponseDistance?: ?number,
   /**
-   * If true, enable navigating back by swiping (see CardStackPanResponder).
-   * TODO move this to TransitionConfig.
-   */
-  gesturesEnabled: ?boolean,
-  /**
    * Optional custom animation when transitioning between screens.
    */
   transitionConfig?: () => TransitionConfig,
@@ -64,7 +59,6 @@ type Props = {
 
 type DefaultProps = {
   mode: 'card' | 'modal',
-  gesturesEnabled: boolean,
   headerComponent: ReactClass<*>,
 };
 
@@ -117,11 +111,6 @@ class CardStack extends Component<DefaultProps, Props, void> {
     transitionConfig: PropTypes.func,
 
     /**
-     * Enable gestures. Default value is true on iOS, false on Android.
-     */
-    gesturesEnabled: PropTypes.bool,
-
-    /**
      * The navigation prop, including the state and the dispatcher for the back
      * action. The dispatcher must handle the back action
      * ({ type: NavigationActions.BACK }), and the navigation state has this shape:
@@ -149,7 +138,6 @@ class CardStack extends Component<DefaultProps, Props, void> {
 
   static defaultProps: DefaultProps = {
     mode: 'card',
-    gesturesEnabled: Platform.OS === 'ios',
     headerComponent: Header,
   };
 
@@ -343,7 +331,15 @@ class CardStack extends Component<DefaultProps, Props, void> {
 
     let panHandlers = null;
 
-    if (this.props.gesturesEnabled) {
+    const gesturesEnabledConfig = this.props.router.getScreenConfig(
+      props.navigation,
+      'gesturesEnabled',
+    );
+    const gesturesEnabled =
+      (gesturesEnabledConfig === true || gesturesEnabledConfig === false)
+        ? gesturesEnabledConfig
+        : Platform.OS === 'ios';
+    if (gesturesEnabled) {
       let onNavigateBack = null;
       if (this.props.navigation.state.index !== 0) {
         onNavigateBack = () => this.props.navigation.dispatch(
