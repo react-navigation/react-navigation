@@ -33,6 +33,7 @@ AppNavigator.prototype.componentDidUpdate = function(prevProps, prevState) {
 When using Redux, `screenTracking` can be written as a Redux middleware.
 
 ```js
+import { NavigationActions } from 'react-navigation';
 import { GoogleAnalyticsTracker } from 'react-native-google-analytics-bridge';
 
 const tracker = new GoogleAnalyticsTracker(GA_TRACKING_ID);
@@ -45,7 +46,7 @@ function getCurrentScreen(getStateFn) {
 }
 
 const screenTracking = ({ getState }) => next => (action) => {
-  if (action.type !== 'Navigate' && action.type !== 'Back') return next(action);
+  if (action.type !== NavigationActions.NAVIGATE && action.type !== NavigationActions.BACK)) return next(action);
 
   const currentScreen = getCurrentScreen(getState);
   const result = next(action);
