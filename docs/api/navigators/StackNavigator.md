@@ -119,8 +119,8 @@ All `navigationOptions` for the `StackNavigator`:
 - `title` - a title (string) displayed in the header
 - `header` - a config object for the header bar:
   - `visible` - Boolean toggle of header visibility. Only works when `headerMode` is `screen`.
-  - `title` - Title string used by the navigation bar, or a custom React component
   - `backTitle` - Title string used by the back button or `null` to disable label. Defaults to `title` value by default
+  - `title` - Custom React Element to display in the middle of the header
   - `right` - Custom React Element to display on the right side of the header
   - `left` - Custom React Element to display on the left side of the header
   - `style` - Style object for the navigation bar

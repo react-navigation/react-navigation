@@ -223,13 +223,6 @@ class CardStack extends Component<DefaultProps, Props, void> {
         }}
         renderTitleComponent={(props: NavigationTransitionProps) => {
           const header = this.props.router.getScreenConfig(props.navigation, 'header') || {};
-          // When we return 'undefined' from 'renderXComponent', header treats them as not
-          // specified and default 'renderXComponent' functions are used. In case of 'title',
-          // we return 'undefined' in case of 'string' too because the default 'renderTitle'
-          // function in header handles them.
-          if (typeof header.title === 'string') {
-            return undefined;
-          }
           return header.title;
         }}
       />
