@@ -335,6 +335,9 @@ class CardStack extends Component<DefaultProps, Props, void> {
       props.navigation,
       'cardStack'
     ) || {};
+
+    // On iOS, the default behavior is to allow the user to pop a route by
+    // swiping the corresponding Card away. On Android this is off by default
     const gesturesEnabledConfig = cardStackConfig.gesturesEnabled;
     const gesturesEnabled = typeof gesturesEnabledConfig === 'boolean' ?
       gesturesEnabledConfig :
