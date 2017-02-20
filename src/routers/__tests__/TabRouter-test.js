@@ -144,8 +144,6 @@ describe('TabRouter', () => {
     ChildTabNavigator.router = TabRouter({ Boo: BareLeafRouteConfig, Bar: BareLeafRouteConfig });
     const router = TabRouter({ Foo: BareLeafRouteConfig, Baz: { screen: ChildTabNavigator } });
     const navAction = { type: NavigationActions.NAVIGATE, routeName: 'Baz', params: { foo: '42', bar: '43' } };
-    // const action = router.getActionForPathAndParams('Baz', { foo: '42' });
-    // expect(action).toEqual(navAction);
     let state = router.getStateForAction(navAction);
     expect(state).toEqual({
       index: 1,
