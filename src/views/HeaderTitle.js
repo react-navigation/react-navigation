@@ -23,7 +23,6 @@ const HeaderTitle = ({ style, ...rest }: Props) => (
 
 const styles = StyleSheet.create({
   title: {
-    flex: 1,
     fontSize: Platform.OS === 'ios' ? 17 : 18,
     fontWeight: Platform.OS === 'ios' ? '600' : '500',
     color: 'rgba(0, 0, 0, .9)',
