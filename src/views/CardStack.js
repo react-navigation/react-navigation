@@ -336,10 +336,9 @@ class CardStack extends Component<DefaultProps, Props, void> {
       'cardStack'
     ) || {};
     const gesturesEnabledConfig = cardStackConfig.gesturesEnabled;
-    const gesturesEnabled =
-      (gesturesEnabledConfig === true || gesturesEnabledConfig === false)
-        ? gesturesEnabledConfig
-        : Platform.OS === 'ios';
+    const gesturesEnabled = typeof gesturesEnabledConfig === 'boolean' ?
+      gesturesEnabledConfig :
+      Platform.OS === 'ios';
     if (gesturesEnabled) {
       let onNavigateBack = null;
       if (this.props.navigation.state.index !== 0) {
