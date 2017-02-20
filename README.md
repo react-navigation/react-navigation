@@ -4,6 +4,19 @@
 
 Browse the docs on [reactnavigation.org](https://reactnavigation.org/).
 
+## Motivation
+
+React Navigation is born from the React Native community's need for an
+extensible yet easy-to-use navigation solution. It replaces and improves
+upon several navigation libraries in the ecosystem, including Ex-Navigation,
+React Native's Navigator and NavigationExperimental components. React
+Navigation can also be used across React and React Native projects allowing
+for a higher degree of shared code.
+
+Once stable, NavigationExperimental will be depracated in favor of React
+Navigation. React Navigation is a collaboration between people from
+Facebook, Exponent and the React community at large.
+
 ## [Getting started](https://reactnavigation.org/docs/intro/)
 
 1. Create a new React Native App

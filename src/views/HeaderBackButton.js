@@ -10,55 +10,109 @@ import {
   StyleSheet,
 } from 'react-native';
 
+import type { LayoutEvent } from '../TypeDefinition';
+
 import TouchableItem from './TouchableItem';
 
 type Props = {
   onPress?: () => void,
-  title?: string,
-  tintColor?: ?string;
+  title?: ?string,
+  tintColor?: ?string,
+  truncatedTitle?: ?string,
 };
 
-const HeaderBackButton = ({ onPress, title, tintColor }: Props) => (
-  <TouchableItem
-    delayPressIn={0}
-    onPress={onPress}
-    style={styles.container}
-    borderless
-  >
-    <View style={styles.container}>
-      <Image
-        style={[
-          styles.icon,
-          title && styles.iconWithTitle,
-          { tintColor },
-        ]}
-        source={require('./assets/back-icon.png')}
-      />
-      {Platform.OS === 'ios' && title && (
-        <Text style={[styles.title, { color: tintColor }]}>
-          {title}
-        </Text>
-      )}
-    </View>
-  </TouchableItem>
-);
-
-HeaderBackButton.propTypes = {
-  onPress: PropTypes.func.isRequired,
-  tintColor: PropTypes.string,
+type DefaultProps = {
+  tintColor: ?string,
+  truncatedTitle: ?string,
 };
 
-HeaderBackButton.defaultProps = {
-  tintColor: Platform.select({
-    ios: '#037aff',
-  }),
+type State = {
+  containerWidth?: number,
+  initialTextWidth?: number,
 };
+
+class HeaderBackButton extends React.PureComponent<DefaultProps, Props, State> {
+  static propTypes = {
+    onPress: PropTypes.func.isRequired,
+    title: PropTypes.string,
+    tintColor: PropTypes.string,
+    truncatedTitle: PropTypes.string,
+  };
+
+  static defaultProps = {
+    tintColor: Platform.select({
+      ios: '#037aff',
+    }),
+    truncatedTitle: 'Back',
+  };
+
+  state = {};
+
+  _onContainerLayout = (e: LayoutEvent) => {
+    if (Platform.OS !== 'ios') {
+      return;
+    }
+    this.setState({
+      containerWidth: e.nativeEvent.layout.width,
+    });
+  };
+
+  _onTextLayout = (e: LayoutEvent) => {
+    if (this.state.initialTextWidth) {
+      return;
+    }
+    this.setState({
+      initialTextWidth: e.nativeEvent.layout.x + e.nativeEvent.layout.width,
+    });
+  };
+
+  render() {
+    const { onPress, title, tintColor, truncatedTitle } = this.props;
+
+    const renderTruncated = this.state.containerWidth && this.state.initialTextWidth
+      ? this.state.containerWidth < this.state.initialTextWidth
+      : false;
+
+    return (
+      <TouchableItem
+        delayPressIn={0}
+        onPress={onPress}
+        style={styles.container}
+        borderless
+      >
+        <View
+          onLayout={this._onContainerLayout}
+          style={styles.container}
+        >
+          <Image
+            style={[
+              styles.icon,
+              title && styles.iconWithTitle,
+              { tintColor },
+            ]}
+            source={require('./assets/back-icon.png')}
+          />
+          {Platform.OS === 'ios' && title && (
+            <Text
+              ellipsizeMode="middle"
+              onLayout={this._onTextLayout}
+              style={[styles.title, { color: tintColor }]}
+              numberOfLines={1}
+            >
+              {renderTruncated ? truncatedTitle : title}
+            </Text>
+          )}
+        </View>
+      </TouchableItem>
+    );
+  }
+}
 
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    justifyContent: 'center',
     flexDirection: 'row',
+    backgroundColor: 'transparent',
   },
   title: {
     fontSize: 17,
