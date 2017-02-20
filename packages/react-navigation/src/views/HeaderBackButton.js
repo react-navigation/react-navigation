@@ -112,6 +112,7 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     flexDirection: 'row',
+    backgroundColor: 'transparent',
   },
   title: {
     fontSize: 17,
