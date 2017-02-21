@@ -32,7 +32,7 @@ Now lets create the new file for our app implementation, `App.js`.
 
 ## Introducing Stack Navigator
 
-For our app, we want to use the `StackNavigator` because we want a conceptual 'stack' navigation, where each new screen is put on the top of the stack, and going back removes a screen from the top of the stack. Lets start with just one screen:
+For our app, we want to use the `StackNavigator` because we want a conceptual 'stack' navigation, where each new screen is put on the top of the stack and going back removes a screen from the top of the stack. Let's start with just one screen:
 
 ```js
 import React from 'react';
@@ -68,7 +68,65 @@ first-screen
 
 ## Adding a New Screen
 
-Lets create a button in the `HomeScreen` component that links to our second page:
+In our `App.js` file, let's add a new screen called `ChatScreen`:
+
+```js
+class ChatScreen extends React.Component {
+  static navigationOptions = {
+    title: 'Chat with Lucy',
+  };
+  render() {
+    return (
+      <View>
+        <Text>Chat with Lucy</Text>
+      </View>
+    );
+  }
+}
+```
+
+We can then add a button to our `HomeScreen` component that links to `ChatScreen` using the `routeName` `Chat`.
+
+```js
+class HomeScreen extends React.Component {
+  static navigationOptions = {
+    title: 'Welcome',
+  };
+  render() {
+    const { navigate } = this.props.navigation;
+    return (
+      <View>
+        <Text>Hello, Chat App!</Text>
+        <Button
+          onPress={() => navigate('Chat')}
+          title="Chat with Lucy"
+        />
+      </View>
+    );
+  }
+}
+```
+
+We're using the navigate function from the [screen navigation prop](/docs/navigators/navigation-prop) to go to `ChatScreen`. But that won't work until we add this to our `StackNavigator` like so:
+
+```js
+const SimpleApp = StackNavigator({
+  Home: { screen: HomeScreen },
+  Chat: { screen: ChatScreen },
+});
+```
+
+Now you can navigate to your new screen, and go back:
+
+```phone-example
+first-navigation
+```
+
+## Passing params
+
+Hardcoding a name into the `ChatScreen` isn't ideal. It'd be more useful if we could pass a name to be rendered instead, so let's do that.
+
+In addition to specifying the target `routeName` in the navigate function, we can pass params that will be put into the new route. First, we'll edit our `HomeScreen` component to pass a `name` param into the route.
 
 ```js
 class HomeScreen extends React.Component {
@@ -90,9 +148,7 @@ class HomeScreen extends React.Component {
 }
 ```
 
-We're using the navigate function from the [screen navigation prop](/docs/navigators/navigation-prop). In addition to specifying the target `routeName`, we can also pass params that will be put into the new route.
-
-Now let's create the Chat screen that displays the `name` param passed in through the route:
+We can then edit our `ChatScreen` component to display the `name` param that was passed in through the route:
 
 ```js
 class ChatScreen extends React.Component {
@@ -110,14 +166,9 @@ class ChatScreen extends React.Component {
     );
   }
 }
-
-const SimpleApp = StackNavigator({
-  Home: { screen: HomeScreen },
-  Chat: { screen: ChatScreen },
-});
 ```
 
-Now you can navigate to your new screen, and go back:
+Now you can see the name when you navigate to the Chat screen. Try changing the `name` param in `HomeScreen` and see what happens!
 
 ```phone-example
 first-navigation

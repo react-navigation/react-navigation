@@ -113,10 +113,15 @@ export default (
             params: initialRouteParams,
           }));
         }
+        const params = (route.params || action.params) && {
+          ...(route.params || {}),
+          ...(action.params || {}),
+        };
         route = {
           ...route,
           routeName: initialRouteName,
           key: 'Init',
+          ...(params ? { params } : {}),
         };
         state = {
           index: 0,
@@ -139,9 +144,10 @@ export default (
         const childRouter = childRouters[action.routeName];
         let route;
         if (childRouter) {
+          const childAction = action.action || NavigationActions.init({ params: action.params });
           route = {
             ...action,
-            ...childRouter.getStateForAction(action.action || NavigationActions.init()),
+            ...childRouter.getStateForAction(childAction),
             key: _getUuid(),
             routeName: action.routeName,
           };

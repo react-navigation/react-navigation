@@ -120,11 +120,14 @@ All `navigationOptions` for the `StackNavigator`:
 - `header` - a config object for the header bar:
   - `visible` - Boolean toggle of header visibility. Only works when `headerMode` is `screen`.
   - `title` - Title string used by the navigation bar, or a custom React component
+  - `backTitle` - Title string used by the back button or `null` to disable label. Defaults to `title` value by default
   - `right` - Custom React Element to display on the right side of the header
   - `left` - Custom React Element to display on the left side of the header
   - `style` - Style object for the navigation bar
   - `titleStyle` - Style object for the title component
   - `tintColor` - Tint color for the header
+- `cardStack` - a config object for the card stack:
+  - `gesturesEnabled` - Whether you can use gestures to dismiss this screen. Defaults to true on iOS, false on Android
 
 ### Navigator Props
 
