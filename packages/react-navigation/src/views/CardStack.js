@@ -290,13 +290,13 @@ class CardStack extends Component<DefaultProps, Props, void> {
       const maybeHeader =
         isHeaderHidden ? null : this._renderHeader(props, headerMode);
       return (
-        <View style={{ flex: 1 }}>
-          {maybeHeader}
+        <View style={styles.container}>
           <SceneView
             screenProps={this.props.screenProps}
             navigation={props.navigation}
             component={SceneComponent}
           />
+          {maybeHeader}
         </View>
       );
     }
