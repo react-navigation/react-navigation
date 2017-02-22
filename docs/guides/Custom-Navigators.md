@@ -64,22 +64,6 @@ A navigator can dispatch navigation actions, such as 'Go to a URI', 'Go back'.
 
 The dispatcher will return `true` if the action was successfully handled, otherwise `false`.
 
-## Navigation Containers
-
-The built in navigators can automatically behave like top-level navigators when the navigation prop is missing. This functionality provides a transparent navigation container, which is where the top-level navigation prop comes from.
-
-When rendering one of the included navigators, the navigation prop is optional. When it is missing, the container steps in and manages its own navigation state. It also handles URLs, external linking, and Android back button integration.
-
-For the purpose of convenience, the built-in navigators have this ability because behind the scenes they use `createNavigationContainer`. Usually, navigators require a navigation prop in order to function.
-
-### `containerOptions`
-
-These options can be used to configure a navigator when it is used at the top level.
-
-An error will be thrown if a navigator is configured with `containerOptions` and also receives a `navigation` prop, because in that case it would be unclear if the navigator should handle its own state.
-
-- `URIPrefix` - The prefix of the URIs that the app might handle. This will be used when handling a [deep link](/docs/guides/linking) to extract the path passed to the router.
-
 ## API for building custom navigators
 
 To help developers implement custom navigators, the following utilities are provided with React Navigation:
