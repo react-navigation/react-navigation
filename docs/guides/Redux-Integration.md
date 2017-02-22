@@ -7,10 +7,13 @@ With redux, your app's state is defined by a reducer. Each navigation router eff
 ```
 const AppNavigator = StackNavigator(AppRouteConfigs);
 
+const navReducer = (state, action) => {
+  const newState = AppNavigator.router.getStateForAction(action, state);
+  return newState || state;
+};
+
 const appReducer = combineReducers({
-  nav: (state, action) => (
-    AppNavigator.router.getStateForAction(action, state)
-  ),
+  navReducer,
   ...
 });
 
