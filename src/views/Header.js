@@ -220,7 +220,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
 
     // On iOS, width of left/right components depends on the calculated
     // size of the title.
-    const onLayoutIOS = name === 'title'
+    const onLayoutIOS = Platform.OS === 'ios' && name === 'title'
       ? (e: LayoutEvent) => {
         this.setState({
           widths: {
