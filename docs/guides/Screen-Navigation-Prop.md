@@ -120,7 +120,7 @@ Use dispatch to send any navigation action to the router. The other navigation f
 
 Note that if you want to dispatch react-navigation actions you should use the action creators provided in this library.
 
-See [Navigation Actions Docs]() for a full list of available actions.
+See [Navigation Actions Docs](navigation-actions) for a full list of available actions.
 
 ```js
 import { NavigationActions } from 'react-navigation'
