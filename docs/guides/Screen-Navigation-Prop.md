@@ -10,7 +10,9 @@ Each *screen* in your app will receive a navigation prop which contain the follo
 
 *NOTE:* The `navigation` prop is passed down to every navigation-aware component including navigators. The big exception is that a navigator's `navigation` prop may not have the helper functions (`navigate`, `goBack`, etc); it may only have `state` and `dispatch`. In order to `navigate` using the navigator's `navigation` prop, you will have to `dispatch` using an [action creator](navigation-actions).
 
-> Also, people don't always hook things up to redux correctly, because they mis-understand the navigator's top-level API, where the navigation prop is optional. The navigator will maintain its own state if it doesn't get a navigation prop, but this is not a feature you generally want to use when hooking your app up with redux. For navigators that are nested inside of your main navigator, you always want to pass the screen's navigation prop down. This allows your top-level navigator to communicate and provide state for all the children navigators. Only your top-level router needs to be integrated with redux, because all the other routers are inside it.
+*Notes regarding hooking things up with Redux*
+
+> People don't always hook things up to redux correctly, because they mis-understand the navigator's top-level API, where the navigation prop is optional. The navigator will maintain its own state if it doesn't get a navigation prop, but this is not a feature you generally want to use when hooking your app up with redux. For navigators that are nested inside of your main navigator, you always want to pass the screen's navigation prop down. This allows your top-level navigator to communicate and provide state for all the children navigators. Only your top-level router needs to be integrated with redux, because all the other routers are inside it.
 
 ## `navigate` - Link to other screens
 
