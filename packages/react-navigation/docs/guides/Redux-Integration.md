@@ -13,7 +13,7 @@ const navReducer = (state, action) => {
 };
 
 const appReducer = combineReducers({
-  navReducer,
+  nav: navReducer,
   ...
 });
 
