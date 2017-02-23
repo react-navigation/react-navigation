@@ -84,25 +84,38 @@ class TabView extends PureComponent<void, Props, void> {
     );
   };
 
-  _getLabelText = ({ route }: TabScene) => {
-    const tabBar = this.props.router.getScreenConfig(this.props.childNavigationProps[route.key], 'tabBar');
-    if (tabBar && typeof tabBar.label !== 'undefined') {
-      return tabBar.label;
+  _getLabel = ({ focused, route, tintColor }: TabScene) => {
+    const tabBar = this.props.router.getScreenConfig(
+      this.props.childNavigationProps[route.key],
+      'tabBar'
+    );
+
+    if (tabBar && tabBar.label) {
+      return typeof tabBar.label === 'function'
+        ? tabBar.label({ tintColor, focused })
+        : tabBar.label;
     }
-    const title = this.props.router.getScreenConfig(this.props.childNavigationProps[route.key], 'title');
+
+    const title = this.props.router.getScreenConfig(
+      this.props.childNavigationProps[route.key],
+      'title'
+    );
     if (typeof title === 'string') {
       return title;
     }
+
     return route.routeName;
   };
 
   _renderIcon = ({ focused, route, tintColor }: TabScene) => {
-    const tabBar = this.props.router.getScreenConfig(this.props.childNavigationProps[route.key], 'tabBar');
+    const tabBar = this.props.router.getScreenConfig(
+      this.props.childNavigationProps[route.key],
+      'tabBar'
+    );
     if (tabBar && tabBar.icon) {
-      return tabBar.icon({
-        tintColor,
-        focused,
-      });
+      return typeof tabBar.icon === 'function'
+        ? tabBar.icon({ tintColor, focused })
+        : tabBar.icon;
     }
     return null;
   };
@@ -121,7 +134,7 @@ class TabView extends PureComponent<void, Props, void> {
         {...props}
         {...tabBarOptions}
         navigation={this.props.navigation}
-        getLabelText={this._getLabelText}
+        getLabel={this._getLabel}
         renderIcon={this._renderIcon}
         animationEnabled={animationEnabled}
       />
