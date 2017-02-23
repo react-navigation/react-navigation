@@ -28,10 +28,11 @@ type Props = {
   inactiveBackgroundColor?: string;
   getLabelText: (scene: DrawerScene) => string;
   renderIcon: (scene: DrawerScene) => ?React.Element<*>;
+  renderItem: (scene: DrawerScene) => ?React.Element<*>;
   style?: Style;
 };
 
-/**
+/** 
  * Component that renders the navigation list in the drawer.
  */
 const DrawerNavigatorItems = ({
@@ -42,6 +43,7 @@ const DrawerNavigatorItems = ({
   inactiveBackgroundColor,
   getLabelText,
   renderIcon,
+  renderItem,
   style,
 }: Props) => (
   <View style={[styles.container, style]}>
@@ -51,6 +53,7 @@ const DrawerNavigatorItems = ({
       const backgroundColor = focused ? activeBackgroundColor : inactiveBackgroundColor;
       const scene = { route, index, focused, tintColor: color };
       const icon = renderIcon(scene);
+      const item = renderItem(scene);
       const label = getLabelText(scene);
       return (
         <TouchableItem
@@ -61,16 +64,18 @@ const DrawerNavigatorItems = ({
           }}
           delayPressIn={0}
         >
-          <View style={[styles.item, { backgroundColor }]}>
-            {icon ? (
-              <View style={[styles.icon, focused ? null : styles.inactiveIcon]}>
-                {icon}
-              </View>
-            ) : null}
-            <Text style={[styles.label, { color }]}>
-              {label}
-            </Text>
-          </View>
+          {item ||
+          (<View style={[styles.item, { backgroundColor }]}>
+              {icon ? (
+                <View style={[styles.icon, focused ? null : styles.inactiveIcon]}>
+                  {icon}
+                </View>
+              ) : null}
+              <Text style={[styles.label, { color }]}>
+                {label}
+              </Text>
+            </View>
+          )}
         </TouchableItem>
       );
     })}
@@ -101,7 +106,7 @@ const styles = StyleSheet.create({
   item: {
     flexDirection: 'row',
     alignItems: 'center',
-  },
+  },  
   icon: {
     marginHorizontal: 16,
     width: 24,

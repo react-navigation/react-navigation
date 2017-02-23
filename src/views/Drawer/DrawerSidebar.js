@@ -11,11 +11,11 @@ import withCachedChildNavigation from '../../withCachedChildNavigation';
 
 import type {
   NavigationScreenProp,
-  NavigationState,
-  NavigationRoute,
-  NavigationAction,
-  NavigationRouter,
-  Style,
+    NavigationState,
+    NavigationRoute,
+    NavigationAction,
+    NavigationRouter,
+    Style,
 } from '../../TypeDefinition';
 
 import type {
@@ -29,8 +29,8 @@ type Props = {
   navigation: Navigation,
   childNavigationProps: { [key: string]: Navigation },
   contentComponent: ReactClass<*>,
-  contentOptions?: {},
-  style?: Style;
+    contentOptions?: {},
+    style?: Style;
 };
 
 /**
@@ -72,6 +72,18 @@ class DrawerSidebar extends PureComponent<void, Props, void> {
     return null;
   };
 
+  _renderItem = ({ focused, route }: DrawerScene) => {
+    const drawer = this._getScreenConfig(route.key, 'drawer');
+    const label = this._getLabelText({ route });
+    if (drawer && drawer.item) {
+      return drawer.item({
+        focused,
+        label,
+      });
+    }
+    return null;
+  };
+
   render() {
     const ContentComponent = this.props.contentComponent;
     return (
@@ -81,6 +93,7 @@ class DrawerSidebar extends PureComponent<void, Props, void> {
           navigation={this.props.navigation}
           getLabelText={this._getLabelText}
           renderIcon={this._renderIcon}
+          renderItem={this._renderItem}
         />
       </View>
     );
