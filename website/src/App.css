@@ -13,6 +13,10 @@ body, #root, html {
 .main-section a:hover {
   color: #6b52ae;
 }
+.md-header a,
+.md-header a:hover {
+  color: inherit;
+}
 .nextLink {
   float: right;
 }
