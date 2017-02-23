@@ -79,7 +79,7 @@ class DrawerSidebar extends PureComponent<void, Props, void> {
         <ContentComponent
           {...this.props.contentOptions}
           navigation={this.props.navigation}
-          renderLabel={this._getLabel}
+          getLabel={this._getLabel}
           renderIcon={this._renderIcon}
         />
       </View>

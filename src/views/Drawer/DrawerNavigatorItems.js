@@ -26,7 +26,7 @@ type Props = {
   activeBackgroundColor?: string;
   inactiveTintColor?: string;
   inactiveBackgroundColor?: string;
-  renderLabel: (scene: DrawerScene) => ?(React.Element<*> | string);
+  getLabel: (scene: DrawerScene) => ?(React.Element<*> | string);
   renderIcon: (scene: DrawerScene) => ?React.Element<*>;
   style?: Style;
 };
@@ -40,7 +40,7 @@ const DrawerNavigatorItems = ({
   activeBackgroundColor,
   inactiveTintColor,
   inactiveBackgroundColor,
-  renderLabel,
+  getLabel,
   renderIcon,
   style,
 }: Props) => (
@@ -51,7 +51,7 @@ const DrawerNavigatorItems = ({
       const backgroundColor = focused ? activeBackgroundColor : inactiveBackgroundColor;
       const scene = { route, index, focused, tintColor: color };
       const icon = renderIcon(scene);
-      const label = renderLabel(scene);
+      const label = getLabel(scene);
       return (
         <TouchableItem
           key={route.key}
