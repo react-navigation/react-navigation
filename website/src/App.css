@@ -13,16 +13,19 @@ body, #root, html {
 .main-section a:hover {
   color: #6b52ae;
 }
-.md-header a:before {
+.md-header:before {
   display: block;
   content: " ";
   margin-top: -70px;
   height: 70px;
   visibility: hidden;
 }
-.md-header a,
-.md-header a:hover {
-  color: inherit;
+.md-header a {
+  visibility: hidden;
+  display: inline-block;
+}
+.md-header:hover a {
+  visibility: visible;
 }
 .nextLink {
   float: right;
