@@ -72,9 +72,10 @@ class DrawerSidebar extends PureComponent<void, Props, void> {
     return null;
   };
 
-  _renderItem = ({ focused, route }: DrawerScene) => {
+  _renderItem = (scene: DrawerScene) => {
+    const { focused, route } = scene;
     const drawer = this._getScreenConfig(route.key, 'drawer');
-    const label = this._getLabelText({ route });
+    const label = this._getLabelText(scene);
     if (drawer && drawer.item) {
       return drawer.item({
         focused,
