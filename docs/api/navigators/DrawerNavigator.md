@@ -117,6 +117,34 @@ contentOptions: {
 }
 ```
 
+### Screen Navigation Options
+
+Usually you define static `navigationOptions` on your screen component. For example:
+
+```jsx
+class ProfileScreen extends React.Component {
+
+  static navigationOptions = {
+
+    title: ({ state }) => `${state.params.name}'s Profile!`,
+
+    drawer: {
+      icon: (
+        <Image src={require('./my-icon.png')} />
+      ),
+    },
+  };
+  ...
+```
+
+All `navigationOptions` for the `DrawerNavigator`:
+
+- `title` - a title (string) of the scene
+- `drawer` - a config object for the drawer:
+  - `label` - String, React Element or a function that given `{ focused: boolean, tintColor: string }` returns a React.Element, to display in drawer sidebar. When undefined, scene `title` is used
+  - `icon` - React Element or a function, that given `{ focused: boolean, tintColor: string }` returns a React.Element, to display in drawer sidebar
+
+
 ### Navigator Props
 
 The navigator component created by `DrawerNavigator(...)` takes the following props:

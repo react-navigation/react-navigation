@@ -96,4 +96,4 @@ Card = createPointerEventsContainer(Card);
 Card.CardStackPanResponder = CardStackPanResponder;
 Card.CardStackStyleInterpolator = CardStackStyleInterpolator;
 
-module.exports = Card;
+export default Card;
