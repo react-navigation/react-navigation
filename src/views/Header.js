@@ -345,4 +345,4 @@ const styles = StyleSheet.create({
   },
 });
 
-module.exports = Header;
+export default Header;
