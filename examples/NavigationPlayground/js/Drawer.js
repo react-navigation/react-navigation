@@ -39,10 +39,11 @@ const InboxScreen = ({ navigation }) => (
 InboxScreen.navigationOptions = {
   drawer: {
     label: 'Inbox',
-    icon: (
+    icon: ({ tintColor }) => (
       <MaterialIcons
         name="move-to-inbox"
         size={24}
+        style={{ color: tintColor }}
       />
     ),
   },
@@ -57,10 +58,11 @@ const DraftsScreen = ({ navigation }) => (
 DraftsScreen.navigationOptions = {
   drawer: {
     label: 'Drafts',
-    icon: (
+    icon: ({ tintColor }) => (
       <MaterialIcons
         name="drafts"
         size={24}
+        style={{ color: tintColor }}
       />
     ),
   },
