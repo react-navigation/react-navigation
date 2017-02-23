@@ -174,8 +174,8 @@ All `navigationOptions` for the `TabNavigator`:
 - `title` - a title (string) of the scene
 - `tabBar` - a config object for the tab bar:
   - `visible` - Boolean toggle of tab bar visibility
-  - `icon` - Custom React Element or a function, that given `{ focused: boolean, tintColor: string }`, returns a React.Element to display in tab bar
-  - `label` - Optional title string of a tab displayed in the tab bar. When undefined, scene `title` is used. To hide, see `tabBarOptions.showLabel` in the previous section
+  - `icon` - React Element or a function that given `{ focused: boolean, tintColor: string }` returns a React.Element, to display in tab bar
+  - `label` - Title string of a tab displayed in the tab bar. When undefined, scene `title` is used. To hide, see `tabBarOptions.showLabel` in the previous section
   
 ### Navigator Props
 

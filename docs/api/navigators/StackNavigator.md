@@ -116,13 +116,13 @@ class ProfileScreen extends React.Component {
 
 All `navigationOptions` for the `StackNavigator`:
 
-- `title` - a title (string) displayed in the header
+- `title` - a title (string) of the scene
 - `header` - a config object for the header bar:
   - `visible` - Boolean toggle of header visibility. Only works when `headerMode` is `screen`.
-  - `title` - Title string used by the navigation bar, or a custom React component
-  - `backTitle` - Title string used by the back button or `null` to disable label. Defaults to `title` value by default
-  - `right` - Custom React Element to display on the right side of the header
-  - `left` - Custom React Element to display on the left side of the header
+  - `title` - String or React Element used by the navigation bar. Defaults to scene `title`
+  - `backTitle` - Title string used by the back button or `null` to disable label. Defaults to scene `title`
+  - `right` - React Element to display on the right side of the header
+  - `left` - React Element to display on the left side of the header
   - `style` - Style object for the navigation bar
   - `titleStyle` - Style object for the title component
   - `tintColor` - Tint color for the header

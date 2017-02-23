@@ -141,9 +141,9 @@ All `navigationOptions` for the `DrawerNavigator`:
 
 - `title` - a title (string) of the scene
 - `drawer` - a config object for the drawer:
-  - `label` - Optional title string displayed in the drawer sidebar. When undefined, scene `title` is used.
-  - `icon` - Custom React Element or a function, that given `{ focused: boolean, tintColor: string }`, returns a React.Element to display in drawer sidebar
-  
+  - `label` - String, React Element or a function that given `{ focused: boolean, tintColor: string }` returns a React.Element, to display in drawer sidebar. When undefined, scene `title` is used
+  - `icon` - React Element or a function, that given `{ focused: boolean, tintColor: string }` returns a React.Element, to display in drawer sidebar
+
 
 ### Navigator Props
 

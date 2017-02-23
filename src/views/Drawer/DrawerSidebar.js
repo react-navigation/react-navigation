@@ -47,10 +47,12 @@ class DrawerSidebar extends PureComponent<void, Props, void> {
     );
   }
 
-  _getLabelText = ({ route }: DrawerScene) => {
+  _renderLabel = ({ focused, tintColor, route }: DrawerScene) => {
     const drawer = this._getScreenConfig(route.key, 'drawer');
-    if (drawer && typeof drawer.label === 'string') {
-      return drawer.label;
+    if (drawer && drawer.label) {
+      return typeof drawer.label === 'function'
+        ? drawer.label({ tintColor, focused })
+        : drawer.label;
     }
 
     const title = this._getScreenConfig(route.key, 'title');
@@ -78,7 +80,7 @@ class DrawerSidebar extends PureComponent<void, Props, void> {
         <ContentComponent
           {...this.props.contentOptions}
           navigation={this.props.navigation}
-          getLabelText={this._getLabelText}
+          renderLabel={this._renderLabel}
           renderIcon={this._renderIcon}
         />
       </View>
