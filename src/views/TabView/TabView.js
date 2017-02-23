@@ -84,15 +84,26 @@ class TabView extends PureComponent<void, Props, void> {
     );
   };
 
-  _getLabelText = ({ route }: TabScene) => {
-    const tabBar = this.props.router.getScreenConfig(this.props.childNavigationProps[route.key], 'tabBar');
-    if (tabBar && typeof tabBar.label !== 'undefined') {
-      return tabBar.label;
+  _renderLabel = ({ focused, route, tintColor }: TabScene) => {
+    const tabBar = this.props.router.getScreenConfig(
+      this.props.childNavigationProps[route.key],
+      'tabBar'
+    );
+
+    if (tabBar && tabBar.label) {
+      return typeof tabBar.label === 'function'
+        ? tabBar.label({ tintColor, focused })
+        : tabBar.label;
     }
-    const title = this.props.router.getScreenConfig(this.props.childNavigationProps[route.key], 'title');
+
+    const title = this.props.router.getScreenConfig(
+      this.props.childNavigationProps[route.key],
+      'title'
+    );
     if (typeof title === 'string') {
       return title;
     }
+
     return route.routeName;
   };
 
@@ -123,7 +134,7 @@ class TabView extends PureComponent<void, Props, void> {
         {...props}
         {...tabBarOptions}
         navigation={this.props.navigation}
-        getLabelText={this._getLabelText}
+        renderLabel={this._renderLabel}
         renderIcon={this._renderIcon}
         animationEnabled={animationEnabled}
       />

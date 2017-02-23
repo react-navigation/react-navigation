@@ -34,7 +34,7 @@ type Props = {
   upperCaseLabel: boolean;
   position: Animated.Value;
   navigationState: NavigationState;
-  getLabelText: (scene: TabScene) => string;
+  renderLabel: (scene: TabScene) => ?(React.Element<*> | string);
   renderIcon: (scene: TabScene) => React.Element<*>;
   labelStyle?: Style;
 };
@@ -75,7 +75,8 @@ export default class TabBarTop extends PureComponent<DefaultProps, Props, void> 
       inputRange,
       outputRange,
     });
-    const label = this.props.getLabelText(scene);
+    
+    const label = this.props.renderLabel(scene);
     if (typeof label === 'string') {
       return (
         <Animated.Text style={[styles.label, { color }, labelStyle]}>
