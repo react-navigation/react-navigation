@@ -64,10 +64,9 @@ class DrawerSidebar extends PureComponent<void, Props, void> {
   _renderIcon = ({ focused, tintColor, route }: DrawerScene) => {
     const drawer = this._getScreenConfig(route.key, 'drawer');
     if (drawer && drawer.icon) {
-      return drawer.icon({
-        tintColor,
-        focused,
-      });
+      return typeof drawer.icon === 'function'
+        ? drawer.icon({ tintColor, focused })
+        : drawer.icon;
     }
     return null;
   };

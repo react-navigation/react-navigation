@@ -97,12 +97,14 @@ class TabView extends PureComponent<void, Props, void> {
   };
 
   _renderIcon = ({ focused, route, tintColor }: TabScene) => {
-    const tabBar = this.props.router.getScreenConfig(this.props.childNavigationProps[route.key], 'tabBar');
+    const tabBar = this.props.router.getScreenConfig(
+      this.props.childNavigationProps[route.key],
+      'tabBar'
+    );
     if (tabBar && tabBar.icon) {
-      return tabBar.icon({
-        tintColor,
-        focused,
-      });
+      return typeof tabBar.icon === 'function'
+        ? tabBar.icon({ tintColor, focused })
+        : tabBar.icon;
     }
     return null;
   };
