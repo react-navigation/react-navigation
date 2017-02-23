@@ -11,7 +11,6 @@ import withCachedChildNavigation from '../../withCachedChildNavigation';
 
 import type {
   NavigationScreenProp,
-  NavigationState,
   NavigationRoute,
   NavigationAction,
   NavigationRouter,

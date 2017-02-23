@@ -26,7 +26,7 @@ type Props = {
   activeBackgroundColor?: string;
   inactiveTintColor?: string;
   inactiveBackgroundColor?: string;
-  renderLabel: (scene: DrawerScene) => ?React.Element<*> | string;
+  renderLabel: (scene: DrawerScene) => ?(React.Element<*> | string);
   renderIcon: (scene: DrawerScene) => ?React.Element<*>;
   style?: Style;
 };
