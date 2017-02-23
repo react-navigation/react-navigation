@@ -30,7 +30,7 @@ export default function createNavigationContainer<T: *>(
 ) {
   type Props = {
     navigation: NavigationProp<T, NavigationAction>,
-    onNavigationStateChange?: (NavigationState) => void,
+    onNavigationStateChange?: (NavigationState, NavigationState) => void,
   };
 
   type State = {
@@ -116,6 +116,7 @@ export default function createNavigationContainer<T: *>(
         prevNavigationState !== navigationState
         && typeof this.props.onNavigationStateChange === 'function'
       ) {
+        // $FlowFixMe state is always defined, either this.state or props
         this.props.onNavigationStateChange(prevNavigationState, navigationState);
       }
     }
