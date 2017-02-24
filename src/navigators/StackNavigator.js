@@ -31,6 +31,7 @@ export default (routeConfigMap: NavigationRouteConfigMap, stackConfig: StackNavi
     onTransitionStart,
     onTransitionEnd,
     navigationOptions,
+    transitionConfig,
   } = stackConfig;
   const stackRouterConfig = {
     initialRouteName,
@@ -42,6 +43,7 @@ export default (routeConfigMap: NavigationRouteConfigMap, stackConfig: StackNavi
   return createNavigationContainer(createNavigator(router)(props => (
     <CardStack
       {...props}
+      transitionConfig={transitionConfig}
       headerComponent={headerComponent}
       headerMode={headerMode}
       mode={mode}

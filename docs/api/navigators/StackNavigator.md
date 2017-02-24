@@ -128,6 +128,22 @@ All `navigationOptions` for the `StackNavigator`:
   - `tintColor` - Tint color for the header
 - `cardStack` - a config object for the card stack:
   - `gesturesEnabled` - Whether you can use gestures to dismiss this screen. Defaults to true on iOS, false on Android
+- `transitionConfig` - a function returning an object that will override default animations in `CardStack`.
+Object has optional keys `transitionSpec` and `screenInterpolator`. Example:
+```js
+transitionConfig: () => ({
+  transitionSpec: {
+      // Default duration is 250 (to attempt to match default native behaviour). Override to reduce this.
+      duration: 160,
+      // Optional easing and timing keys (these are defaults)
+      easing: Easing.inOut(Easing.ease),
+      timing: Animated.timing
+    },
+    // screenInterpolator is a function that takes NavigationSceneRendererProps and determines how to interpolate scenes,
+    // by itself returning an object with `opacity` and `transform` keys. For examples, look at `CardStackStyleInterpolator.js`.
+    screenInterpolator: MyScreenInterpolator
+})
+```
 
 ### Navigator Props
 
