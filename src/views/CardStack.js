@@ -189,26 +189,19 @@ class CardStack extends Component<DefaultProps, Props, void> {
       'header'
     ) || {};
 
-    if (typeof headerConfig.bar !== 'undefined') {
-      invariant(
-        headerMode === 'screen',
-        'header.bar is only supported with headerMode: screen',
-      );
-      return typeof headerConfig.bar === 'function'
-        ? headerConfig.bar({
-          ...transitionProps,
-          router: this.props.router,
-        })
-        : headerConfig.bar;
+    if (headerConfig.bar === null || typeof headerConfig.bar !== 'function') {
+      return headerConfig.bar;
     }
 
+    const HeaderComponent = headerConfig.bar || Header;
+
     return (
-      <Header
+      <HeaderComponent
         {...transitionProps}
         router={this.props.router}
         style={headerConfig.style}
         mode={headerMode}
-        onNavigateBack={() => this.props.navigation.goBack(null)}
+        onNavigateBack={() => { this.props.navigation.goBack(null); }}
         renderLeftComponent={(props: NavigationTransitionProps) => {
           const header = this.props.router.getScreenConfig(props.navigation, 'header') || {};
           return header.left;

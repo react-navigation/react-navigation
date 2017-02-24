@@ -133,10 +133,7 @@ export type HeaderConfig = {
   /**
    * React element to display as a header
    */
-  bar?: React.Element<*>
-    | (
-      transitionProps: NavigationTransitionProps & { router: NavigationRouter }
-    ) => React.Element<*>,
+  bar?: React.Element<*> | HeaderProps => ReactElement<*>
 
   // // Style of title text
   // titleTextStyle?: $NavigationThunk<Object>,
@@ -281,7 +278,6 @@ export type NavigationContainerConfig = {
 export type NavigationStackViewConfig = {
   mode?: 'card' | 'modal',
   headerMode?: HeaderMode,
-  headerComponent?: ReactClass<HeaderProps<*>>,
   cardStyle?: Style,
   onTransitionStart?: () => void,
   onTransitionEnd?: () => void
