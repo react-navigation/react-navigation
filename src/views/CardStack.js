@@ -8,6 +8,8 @@ import {
   View,
 } from 'react-native';
 
+import invariant from 'fbjs/lib/invariant';
+
 import Transitioner from './Transitioner';
 import Card from './Card';
 import CardStackStyleInterpolator from './CardStackStyleInterpolator';
@@ -196,11 +198,11 @@ class CardStack extends Component<DefaultProps, Props, void> {
     ) || {};
 
     if (typeof headerConfig.bar !== 'undefined') {
-      if (headerMode === 'screen') {
-        return headerConfig.bar;
-      } else {
-        console.warn('header.bar is only supported with headerMode: screen. Ignoring');
-      }
+      invariant(
+        headerMode === 'screen',
+        'header.bar is only supported with headerMode: screen',
+      );
+      return headerConfig.bar;
     }
 
     return (
@@ -296,7 +298,7 @@ class CardStack extends Component<DefaultProps, Props, void> {
     if (headerMode === 'screen') {
       return (
         <View style={styles.container}>
-          <View style={{ flex: 1 }}>
+          <View style={styles.scene}>
             <SceneView
               screenProps={this.props.screenProps}
               navigation={props.navigation}
@@ -390,6 +392,9 @@ const styles = StyleSheet.create({
     flexDirection: 'column-reverse',
   },
   scenes: {
+    flex: 1,
+  },
+  scene: {
     flex: 1,
   },
 });
