@@ -11,12 +11,16 @@ import type {
   NavigationStackRouterConfig,
   NavigationStackViewConfig,
   NavigationRouteConfigMap,
+  TransitionConfig,
 } from '../TypeDefinition';
 
 export type StackNavigatorConfig =
   & NavigationContainerConfig
   & NavigationStackViewConfig
-  & NavigationStackRouterConfig;
+  & NavigationStackRouterConfig
+  & {
+    transitionConfig?: () => TransitionConfig
+  };
 
 export default (routeConfigMap: NavigationRouteConfigMap, stackConfig: StackNavigatorConfig = {}) => {
   const {
