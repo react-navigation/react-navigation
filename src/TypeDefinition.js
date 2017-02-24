@@ -130,6 +130,11 @@ export type HeaderConfig = {
    */
   titleStyle?: Style,
 
+  /**
+   * React element to display as a header
+   */
+  bar?: React.Element<*>,
+
   // // Style of title text
   // titleTextStyle?: $NavigationThunk<Object>,
   // // Tint color of navigation bar contents

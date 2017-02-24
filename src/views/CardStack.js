@@ -26,6 +26,7 @@ import type {
   NavigationSceneRendererProps,
   NavigationTransitionProps,
   NavigationRouter,
+  HeaderConfig,
   Style,
 } from '../TypeDefinition';
 
@@ -189,10 +190,18 @@ class CardStack extends Component<DefaultProps, Props, void> {
     transitionProps: NavigationTransitionProps,
     headerMode: HeaderMode
   ): ?React.Element<*> {
-    const headerConfig = this.props.router.getScreenConfig(
+    const headerConfig: HeaderConfig = this.props.router.getScreenConfig(
       transitionProps.navigation,
       'header'
     ) || {};
+
+    if (typeof headerConfig.bar !== 'undefined') {
+      if (headerMode === 'screen') {
+        return headerConfig.bar;
+      } else {
+        console.warn('header.bar is only supported with headerMode: screen. Ignoring');
+      }
+    }
 
     return (
       <this.props.headerComponent
@@ -283,22 +292,18 @@ class CardStack extends Component<DefaultProps, Props, void> {
     SceneComponent: ReactClass<*>,
     props: NavigationSceneRendererProps,
   ): React.Element<*> {
-    const header = this.props.router.getScreenConfig(props.navigation, 'header');
     const headerMode = this._getHeaderMode();
     if (headerMode === 'screen') {
-      const isHeaderHidden = header && header.visible === false;
-      const maybeHeader =
-        isHeaderHidden ? null : this._renderHeader(props, headerMode);
       return (
         <View style={styles.container}>
-          <View style={{flex: 1}}>
+          <View style={{ flex: 1 }}>
             <SceneView
               screenProps={this.props.screenProps}
               navigation={props.navigation}
               component={SceneComponent}
             />
           </View>
-          {maybeHeader}
+          {this._renderHeader(props, headerMode)}
         </View>
       );
     }
