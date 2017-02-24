@@ -118,7 +118,7 @@ All `navigationOptions` for the `StackNavigator`:
 
 - `title` - a title (string) of the scene
 - `header` - a config object for the header bar:
-  - `bar` - React Element to display as a header or `null` to hide it. Only works when `headerMode` is `screen`
+  - `bar` - React Element or a function that given `HeaderProps` returns a React Element, to display as a header. Only works when `headerMode` is `screen`. Setting to `null` hides header.
   - `title` - String or React Element used by the header. Defaults to scene `title`
   - `backTitle` - Title string used by the back button on iOS or `null` to disable label. Defaults to scene `title`
   - `right` - React Element to display on the right side of the header
