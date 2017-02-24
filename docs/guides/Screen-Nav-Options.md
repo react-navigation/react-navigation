@@ -97,26 +97,26 @@ The 2nd argument passed to the function are the default values for the `header` 
 
 ```js
 class TabScreen extends React.Component {
-
   static navigationOptions = {
     tabBar: ({ state }) => ({
       label: 'Tab Label',
       icon: ({ tintColor }) => (
         <Image
           source={require('./tab-icon.png')}
-          style={[styles.icon, {tintColor: tintColor}]}
+          style={[styles.icon, { tintColor: tintColor }]}
         />
       ),
-      visible: true
+      visible: true,
+      onChange: (route, prevRoute) => console.log(route, prevRoute),
     }),
   };
-
-};
+}
 ```
 
-- `label` - can be string or react component
-- `icon` - function that returns icon component
-- `visible` - true or false to show or hide the tab bar, if not set then defaults to true
+- `label` - label of the tab, can be a string or Component
+- `icon` - function that returns a Component for icon
+- `visible` - whether the tab should be displayed, defaults to true
+- `onChange` - a callback function that will be called when user moves to this tab
 
 ## Stack Navigation Options
 
