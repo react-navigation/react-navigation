@@ -45,7 +45,6 @@ const NativeAnimatedModule = NativeModules && NativeModules.NativeAnimatedModule
 type Props = {
   screenProps?: {};
   headerMode: HeaderMode,
-  headerComponent?: ReactClass<*>,
   mode: 'card' | 'modal',
   navigation: NavigationScreenProp<*, NavigationAction>,
   router: NavigationRouter,
@@ -62,7 +61,6 @@ type Props = {
 
 type DefaultProps = {
   mode: 'card' | 'modal',
-  headerComponent: ReactClass<*>,
 };
 
 class CardStack extends Component<DefaultProps, Props, void> {
@@ -90,11 +88,6 @@ class CardStack extends Component<DefaultProps, Props, void> {
      * is `screen` on Android and `float` on iOS.
      */
     headerMode: PropTypes.oneOf(['float', 'screen', 'none']),
-
-    /**
-     * Custom React component to be used as a header
-     */
-    headerComponent: PropTypes.func,
 
     /**
      * Style of the cards movement. Value could be `card` or `modal`.
@@ -141,7 +134,6 @@ class CardStack extends Component<DefaultProps, Props, void> {
 
   static defaultProps: DefaultProps = {
     mode: 'card',
-    headerComponent: Header,
   };
 
   componentWillMount() {
@@ -211,7 +203,7 @@ class CardStack extends Component<DefaultProps, Props, void> {
     }
 
     return (
-      <this.props.headerComponent
+      <Header
         {...transitionProps}
         router={this.props.router}
         style={headerConfig.style}
