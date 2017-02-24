@@ -35,7 +35,7 @@ type Props = {
   position: Animated.Value;
   navigationState: NavigationState;
   jumpToIndex: (index: number) => void;
-  getLabelText: (scene: TabScene) => string;
+  getLabel: (scene: TabScene) => ?(React.Element<*> | string);
   renderIcon: (scene: TabScene) => React.Element<*>;
   showLabel: boolean;
   style?: Style;
@@ -80,7 +80,8 @@ export default class TabBarBottom extends PureComponent<DefaultProps, Props, voi
       inputRange,
       outputRange,
     });
-    const label = this.props.getLabelText(scene);
+
+    const label = this.props.getLabel(scene);
     if (typeof label === 'string') {
       return (
         <Animated.Text style={[styles.label, { color }, labelStyle]}>
@@ -88,6 +89,7 @@ export default class TabBarBottom extends PureComponent<DefaultProps, Props, voi
         </Animated.Text>
       );
     }
+
     return label;
   };
 
