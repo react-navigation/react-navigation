@@ -52,7 +52,7 @@ type SubViewName = 'left' | 'title' | 'right';
 
 type HeaderState = {
   widths: {
-    [key: number]: number,
+    [key: string]: number,
   },
 };
 
@@ -225,14 +225,14 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
         this.setState({
           widths: {
             ...this.state.widths,
-            [index]: e.nativeEvent.layout.width,
+            [key]: e.nativeEvent.layout.width,
           },
         });
       }
       : undefined;
 
     const titleWidth = name === 'left' || name === 'right'
-      ? this.state.widths[index]
+      ? this.state.widths[key]
       : undefined;
 
     return (
