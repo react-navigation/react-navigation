@@ -11,8 +11,9 @@ import type {
   NavigationStackRouterConfig,
   NavigationStackViewConfig,
   NavigationRouteConfigMap,
-  TransitionConfig,
 } from '../TypeDefinition';
+
+import type { TransitionConfig } from '../views/TransitionConfigs';
 
 export type StackNavigatorConfig =
   & NavigationContainerConfig
