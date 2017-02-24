@@ -133,7 +133,10 @@ export type HeaderConfig = {
   /**
    * React element to display as a header
    */
-  bar?: React.Element<*>,
+  bar?: React.Element<*>
+    | (
+      transitionProps: NavigationTransitionProps & { router: NavigationRouter }
+    ) => React.Element<*>,
 
   // // Style of title text
   // titleTextStyle?: $NavigationThunk<Object>,
@@ -177,7 +180,7 @@ export type CardStackConfig = {
    * Whether you can use gestures to dismiss this screen.
    * Defaults to true on iOS, false on Android.
    */
-  gesturesEnabled?: bool;
+  gesturesEnabled?: boolean;
 };
 
 export type NavigationScreenOptions = {

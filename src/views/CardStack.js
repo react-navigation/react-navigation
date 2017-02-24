@@ -202,7 +202,12 @@ class CardStack extends Component<DefaultProps, Props, void> {
         headerMode === 'screen',
         'header.bar is only supported with headerMode: screen',
       );
-      return headerConfig.bar;
+      return typeof headerConfig.bar === 'function'
+        ? headerConfig.bar({
+          ...transitionProps,
+          router: this.props.router,
+        })
+        : headerConfig.bar;
     }
 
     return (
