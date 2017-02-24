@@ -154,6 +154,17 @@ export type TabBarConfig = {
    * Label text used by the tab bar.
    */
   label?: string | React.Element<*>;
+  /**
+   * Whether the tab bar is visible.
+   */
+  visible?: boolean;
+  /**
+   * Callback when the tab has been changed with a press or a swipe.
+   */
+  onChange?: (
+    route: { index: number, routeName: string },
+    prevRoute: { index: number, routeName: string }
+  ) => any;
 };
 
 export type DrawerConfig = {
