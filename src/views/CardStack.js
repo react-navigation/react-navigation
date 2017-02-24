@@ -187,7 +187,10 @@ class CardStack extends Component<DefaultProps, Props, void> {
       'header'
     ) || {};
 
-    if (headerConfig.bar === null || typeof headerConfig.bar !== 'function') {
+    if (
+      headerConfig.bar === null
+      || (headerConfig.bar && typeof headerConfig.bar !== 'function')
+    ) {
       return headerConfig.bar;
     }
 
