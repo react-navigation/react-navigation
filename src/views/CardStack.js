@@ -8,8 +8,6 @@ import {
   View,
 } from 'react-native';
 
-import invariant from 'fbjs/lib/invariant';
-
 import Transitioner from './Transitioner';
 import Card from './Card';
 import CardStackStyleInterpolator from './CardStackStyleInterpolator';
