@@ -171,18 +171,15 @@ class Transitioner extends React.Component<*, Props, State> {
     const { timing } = transitionSpec;
     delete transitionSpec.timing;
 
-    const animations = [
-      timing(
-        progress,
-        {
-          ...transitionSpec,
-          toValue: 1,
-        },
-      ),
-    ];
-
-    if (indexHasChanged) {
-      animations.push(
+    const animations = indexHasChanged
+      ? [
+        timing(
+          progress,
+          {
+            ...transitionSpec,
+            toValue: 1,
+          },
+        ),
         timing(
           position,
           {
@@ -190,8 +187,9 @@ class Transitioner extends React.Component<*, Props, State> {
             toValue: nextProps.navigation.state.index,
           },
         ),
-      );
-    }
+      ]
+      : [];
+
     // update scenes and play the transition
     this._isTransitionRunning = true;
     this.setState(nextState, () => {
