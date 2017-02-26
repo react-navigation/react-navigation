@@ -32,6 +32,7 @@ import type {
 
 import type {
   HeaderMode,
+  HeaderProps,
 } from './Header';
 
 import type { TransitionConfig } from './TransitionConfigs';
@@ -188,42 +189,42 @@ class CardStack extends Component<DefaultProps, Props, void> {
     ) || {};
 
     if (
-      headerConfig.bar === null
-      || (headerConfig.bar && typeof headerConfig.bar !== 'function')
+      typeof headerConfig.bar !== 'undefined'
+      && typeof headerConfig.bar !== 'function'
     ) {
       return headerConfig.bar;
     }
 
-    const HeaderComponent = headerConfig.bar || Header;
+    const renderHeader = headerConfig.bar || ((props: HeaderProps) => <Header {...props} />);
 
-    return (
-      <HeaderComponent
-        {...transitionProps}
-        router={this.props.router}
-        style={headerConfig.style}
-        mode={headerMode}
-        onNavigateBack={() => { this.props.navigation.goBack(null); }}
-        renderLeftComponent={(props: NavigationTransitionProps) => {
-          const header = this.props.router.getScreenConfig(props.navigation, 'header') || {};
-          return header.left;
-        }}
-        renderRightComponent={(props: NavigationTransitionProps) => {
-          const header = this.props.router.getScreenConfig(props.navigation, 'header') || {};
-          return header.right;
-        }}
-        renderTitleComponent={(props: NavigationTransitionProps) => {
-          const header = this.props.router.getScreenConfig(props.navigation, 'header') || {};
-          // When we return 'undefined' from 'renderXComponent', header treats them as not
-          // specified and default 'renderXComponent' functions are used. In case of 'title',
-          // we return 'undefined' in case of 'string' too because the default 'renderTitle'
-          // function in header handles them.
-          if (typeof header.title === 'string') {
-            return undefined;
-          }
-          return header.title;
-        }}
-      />
-    );
+    return renderHeader({
+      ...transitionProps,
+      router: this.props.router,
+      style: headerConfig.style,
+      mode: headerMode,
+      onNavigateBack: () => {
+        this.props.navigation.goBack(null);
+      },
+      renderLeftComponent: (props: NavigationTransitionProps) => {
+        const header = this.props.router.getScreenConfig(props.navigation, 'header') || {};
+        return header.left;
+      },
+      renderRightComponent: (props: NavigationTransitionProps) => {
+        const header = this.props.router.getScreenConfig(props.navigation, 'header') || {};
+        return header.left;
+      },
+      renderTitleComponent: (props: NavigationTransitionProps) => {
+        const header = this.props.router.getScreenConfig(props.navigation, 'header') || {};
+        // When we return 'undefined' from 'renderXComponent', header treats them as not
+        // specified and default 'renderXComponent' functions are used. In case of 'title',
+        // we return 'undefined' in case of 'string' too because the default 'renderTitle'
+        // function in header handles them.
+        if (typeof header.title === 'string') {
+          return undefined;
+        }
+        return header.title;
+      },
+    });
   }
 
   _render(props: NavigationTransitionProps): React.Element<*> {
