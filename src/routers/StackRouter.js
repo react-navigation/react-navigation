@@ -94,6 +94,7 @@ export default (
 
       // Set up the initial state if needed
       if (!state) {
+        let route = {};
         if (action.type === NavigationActions.NAVIGATE && (childRouters[action.routeName] !== undefined)) {
           return {
             index: 0,
@@ -107,9 +108,8 @@ export default (
           };
         }
 
-        let childState = {};
         if (initialChildRouter) {
-          childState = initialChildRouter.getStateForAction(NavigationActions.navigate({
+          route = initialChildRouter.getStateForAction(NavigationActions.navigate({
             routeName: initialRouteName,
             params: initialRouteParams,
           }));
@@ -120,11 +120,11 @@ export default (
           ...(action.params || {}),
         };
 
-        const route = {
-          ...childState,
+        route = {
+          ...route,
           routeName: initialRouteName,
-          params: initialRouteParams,
           key: 'Init',
+          params: initialRouteParams,
           ...(params ? { params } : {}),
         };
         state = {
