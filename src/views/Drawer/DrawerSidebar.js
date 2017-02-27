@@ -81,7 +81,7 @@ class DrawerSidebar extends PureComponent<void, Props, void> {
           navigation={this.props.navigation}
           getLabel={this._getLabel}
           renderIcon={this._renderIcon}
-          rotuer={this.props.router}
+          router={this.props.router}
         />
       </View>
     );
