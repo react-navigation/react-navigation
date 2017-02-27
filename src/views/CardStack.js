@@ -52,13 +52,19 @@ type Props = {
   style: Style,
   gestureResponseDistance?: ?number,
   /**
+   * If true, enable navigating back by swiping (see CardStackPanResponder).
+   * TODO move this to TransitionConfig.
+   */
+  gesturesEnabled: ?boolean,
+  /**
    * Optional custom animation when transitioning between screens.
    */
-  transitionConfig?: () => TransitionConfig,
+  transitionConfig?: TransitionConfig,
 };
 
 type DefaultProps = {
   mode: 'card' | 'modal',
+  gesturesEnabled: boolean,
   headerComponent: ReactClass<*>,
 };
 
@@ -111,6 +117,11 @@ class CardStack extends Component<DefaultProps, Props, void> {
     transitionConfig: PropTypes.func,
 
     /**
+     * Enable gestures. Default value is true on iOS, false on Android.
+     */
+    gesturesEnabled: PropTypes.bool,
+
+    /**
      * The navigation prop, including the state and the dispatcher for the back
      * action. The dispatcher must handle the back action
      * ({ type: NavigationActions.BACK }), and the navigation state has this shape:
@@ -138,6 +149,7 @@ class CardStack extends Component<DefaultProps, Props, void> {
 
   static defaultProps: DefaultProps = {
     mode: 'card',
+    gesturesEnabled: Platform.OS === 'ios',
     headerComponent: Header,
   };
 
@@ -271,8 +283,8 @@ class CardStack extends Component<DefaultProps, Props, void> {
     );
     if (this.props.transitionConfig) {
       return {
+        ...this.props.transitionConfig,
         ...defaultConfig,
-        ...this.props.transitionConfig(),
       };
     }
 
@@ -290,15 +302,13 @@ class CardStack extends Component<DefaultProps, Props, void> {
       const maybeHeader =
         isHeaderHidden ? null : this._renderHeader(props, headerMode);
       return (
-        <View style={styles.container}>
-          <View style={{flex: 1}}>
-            <SceneView
-              screenProps={this.props.screenProps}
-              navigation={props.navigation}
-              component={SceneComponent}
-            />
-          </View>
+        <View style={{ flex: 1 }}>
           {maybeHeader}
+          <SceneView
+            screenProps={this.props.screenProps}
+            navigation={props.navigation}
+            component={SceneComponent}
+          />
         </View>
       );
     }
@@ -315,10 +325,14 @@ class CardStack extends Component<DefaultProps, Props, void> {
     scene: NavigationScene
   ): NavigationScreenProp<*, NavigationAction> => {
     let navigation = this._childNavigationProps[scene.key];
+
     if (!navigation || navigation.state !== scene.route) {
       navigation = this._childNavigationProps[scene.key] = addNavigationHelpers({
         ...this.props.navigation,
-        state: scene.route,
+        state: {
+          ...scene.route,
+          stack: {...this.props.navigation.state}
+        },
       });
     }
     return navigation;
@@ -333,18 +347,7 @@ class CardStack extends Component<DefaultProps, Props, void> {
 
     let panHandlers = null;
 
-    const cardStackConfig = this.props.router.getScreenConfig(
-      props.navigation,
-      'cardStack'
-    ) || {};
-
-    // On iOS, the default behavior is to allow the user to pop a route by
-    // swiping the corresponding Card away. On Android this is off by default
-    const gesturesEnabledConfig = cardStackConfig.gesturesEnabled;
-    const gesturesEnabled = typeof gesturesEnabledConfig === 'boolean' ?
-      gesturesEnabledConfig :
-      Platform.OS === 'ios';
-    if (gesturesEnabled) {
+    if (this.props.gesturesEnabled) {
       let onNavigateBack = null;
       if (this.props.navigation.state.index !== 0) {
         onNavigateBack = () => this.props.navigation.dispatch(
