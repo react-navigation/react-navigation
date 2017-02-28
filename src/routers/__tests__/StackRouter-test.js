@@ -186,12 +186,13 @@ describe('StackRouter', () => {
   });
 
   test('Parses paths with a query', () => {
-    expect(TestStackRouter.getActionForPathAndParams('people/foo?code=test')).toEqual({
+    expect(TestStackRouter.getActionForPathAndParams('people/foo?code=test&foo=bar')).toEqual({
       type: NavigationActions.NAVIGATE,
       routeName: 'person',
       params: {
         id: 'foo',
         code: 'test',
+        foo: 'bar',
       },
     });
   });
