@@ -185,6 +185,17 @@ describe('StackRouter', () => {
     });
   });
 
+  test('Parses paths with a query', () => {
+    expect(TestStackRouter.getActionForPathAndParams('people/foo?code=test')).toEqual({
+      type: NavigationActions.NAVIGATE,
+      routeName: 'person',
+      params: {
+        id: 'foo',
+        code: 'test',
+      },
+    });
+  });
+
 
   test('Correctly parses a path without arguments into an action chain', () => {
     const uri = 'auth/login';
