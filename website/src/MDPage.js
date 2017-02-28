@@ -9,6 +9,26 @@ import CodeBlock from './CodeBlock';
 
 const safeString = s => slugify(s).replace(/\)/g, '-').replace(/\(/g, '-').replace(/^-/,'').replace(/-$/,'');
 
+const getHeadingForLevel = (level) => {
+  switch (level) {
+    case 2:
+      return 'h2';
+    case 3:
+      return 'h3';
+    case 4:
+      return 'h4';
+    case 5:
+      return 'h5';
+    case 6:
+      return 'h6';
+    case 7:
+      return 'h7';
+    default:
+    case 1:
+      return 'h1';
+  }
+};
+
 const MDPage = ({navigation, docPath}) => (
   <Markdown
     source={DocsMD[docPath]}
@@ -39,23 +59,12 @@ const MDPage = ({navigation, docPath}) => (
             return safeString(child.props.children);
           }
         }).join('-');
-        switch (level) {
-          case 2:
-            return <h2 id={id}>{children}</h2>;
-          case 3:
-            return <h3 id={id}>{children}</h3>;
-          case 4:
-            return <h4 id={id}>{children}</h4>;
-          case 5:
-            return <h5 id={id}>{children}</h5>;
-          case 6:
-            return <h6 id={id}>{children}</h6>;
-          case 7:
-            return <h7 id={id}>{children}</h7>;
-          default:
-          case 1:
-            return <h1 id={id}>{children}</h1>;
-        }
+        const Header = getHeadingForLevel(level);
+        return (
+          <Header id={id} className="md-header">
+            {children} <a href={`#${id}`} title={children}>#</a>
+          </Header>
+        );
       },
       link: ({children, href}) => {
         if (href.indexOf('PhoneGraphic:') === 0) {
