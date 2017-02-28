@@ -238,10 +238,10 @@ export default (
 
     getActionForPathAndParams(pathToResolve: string): ?NavigationAction {
       // If the path is empty (null or empty string)
-      // just return the initial route action
+      // just return back to the initial route
       if (!pathToResolve) {
-        return NavigationActions.navigate({
-          routeName: initialRouteName,
+        return NavigationActions.back({
+          key: 'Init',
         });
       }
 
