@@ -71,14 +71,14 @@ const MySettingsScreen = ({ navigation }) => (
 const MainTab = StackNavigator({
   Home: {
     screen: MyHomeScreen,
-    path: '/',
+    path: '',
     navigationOptions: {
       title: () => 'Welcome',
     },
   },
   Profile: {
     screen: MyProfileScreen,
-    path: '/people/:name',
+    path: 'people/:name',
     navigationOptions: {
       title: ({ state }) => `${state.params.name}'s Profile!`,
     },
@@ -88,7 +88,7 @@ const MainTab = StackNavigator({
 const SettingsTab = StackNavigator({
   Settings: {
     screen: MySettingsScreen,
-    path: '/',
+    path: '',
     navigationOptions: {
       title: () => 'Settings',
     },
@@ -104,7 +104,7 @@ const SettingsTab = StackNavigator({
 const StacksInTabs = TabNavigator({
   MainTab: {
     screen: MainTab,
-    path: '/',
+    path: '',
     navigationOptions: {
       tabBar: () => ({
         label: 'Home',
@@ -120,7 +120,7 @@ const StacksInTabs = TabNavigator({
   },
   SettingsTab: {
     screen: SettingsTab,
-    path: '/settings',
+    path: 'settings',
     navigationOptions: {
       tabBar: () => ({
         label: 'Settings',
