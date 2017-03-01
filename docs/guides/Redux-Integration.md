@@ -6,7 +6,7 @@ With redux, your app's state is defined by a reducer. Each navigation router eff
 
 ```
 
-import {addNavigationHelpers} from 'react-navigation';
+import { addNavigationHelpers } from 'react-navigation';
 
 const AppNavigator = StackNavigator(AppRouteConfigs);
 
