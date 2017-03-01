@@ -89,17 +89,8 @@ export default class TabBarBottom extends PureComponent<DefaultProps, Props, voi
         </Animated.Text>
       );
     }
-    
     if (typeof label === 'function') {
-      const st = [styles.label, { color: inactiveTintColor }, labelStyle];
-      const params = {
-        ...scene,
-        defaultStyles: StyleSheet.flatten(st)
-      };
-
-      return (
-        label(params)
-      )
+      return label(scene);
     }
 
     return label;
