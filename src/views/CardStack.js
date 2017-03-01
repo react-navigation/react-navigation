@@ -195,7 +195,7 @@ class CardStack extends Component<DefaultProps, Props, void> {
       return headerConfig.bar;
     }
 
-    const renderHeader = headerConfig.bar || ((props: HeaderProps) => <Header {...props} />);
+    const renderHeader = headerConfig.bar || ((props: *) => <Header {...props} />);
 
     return renderHeader({
       ...transitionProps,
