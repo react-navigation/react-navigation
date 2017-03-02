@@ -197,6 +197,17 @@ describe('StackRouter', () => {
     });
   });
 
+  test('Parses paths with an empty query value', () => {
+    expect(TestStackRouter.getActionForPathAndParams('people/foo?code=&foo=bar')).toEqual({
+      type: NavigationActions.NAVIGATE,
+      routeName: 'person',
+      params: {
+        id: 'foo',
+        code: '',
+        foo: 'bar',
+      },
+    });
+  });
 
   test('Correctly parses a path without arguments into an action chain', () => {
     const uri = 'auth/login';
