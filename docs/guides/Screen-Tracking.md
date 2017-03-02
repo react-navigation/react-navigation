@@ -23,9 +23,9 @@ const AppNavigator = StackNavigator(AppRouteConfigs);
 
 export default () => (
   <AppNavigator
-    onNavigationStateChange={(prevState, currentState) => {
+    onNavigationStateChange={(currentState, nextState) => {
       const currentScreen = getCurrentScreen(currentState);
-      const prevScreen = getCurrentScreen(prevState);
+      const nextScreen = getCurrentScreen(nextState);
 
       if (nextScreen !== currentScreen) {
         // the line below uses the Google Analytics tracker
