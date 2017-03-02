@@ -91,6 +91,16 @@ The route configs object is a mapping from route name to a route config, which t
 - `contentComponent` - Component to use to render the navigation items. Receives the `navigation` prop for the drawer. Defaults to `DrawerView.Items`.
 - `contentOptions` - Configure the drawer content, see below.
 
+#### Example:
+
+```js
+{
+  drawerWidth: 200,
+  drawerPosition: 'right',
+  contentComponent: props => <ScrollView><DrawerView.Items {...props} /></ScrollView>
+}
+```
+
 Several options get passed to the underlying router to modify navigation logic:
 
 - `initialRouteName` - The routeName for the initial route.
@@ -156,7 +166,7 @@ The navigator component created by `DrawerNavigator(...)` takes the following pr
  const DrawerNav = DrawerNavigator({
    // config
  });
- 
+
  <DrawerNav
    screenProps={/* this prop will get passed to the screen components as this.props.screenProps */}
  />
