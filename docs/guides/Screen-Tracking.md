@@ -16,7 +16,12 @@ function getCurrentScreen(navigationState) {
   if (!navigationState) {
     return null;
   }
-  return navigationState.routes[navigationState.index].routeName;
+  const route = navigationState.routes[navigationState.index];
+  // dive into nested navigators
+  if (route.routes) {
+    return getCurrentScreen(route);
+  }
+  return route.routeName;
 }
 
 const AppNavigator = StackNavigator(AppRouteConfigs);
