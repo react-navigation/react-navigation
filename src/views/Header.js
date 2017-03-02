@@ -231,8 +231,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
       }
       : undefined;
 
-    const titleWidth = this.state.widths[key];
-    const availableWidth = (props.layout.initWidth - titleWidth) / 2;
+    const availableWidth = (props.layout.initWidth - this.state.widths[key]) / 2;
 
     return (
       <Animated.View
