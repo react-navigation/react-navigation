@@ -231,9 +231,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
       }
       : undefined;
 
-    const titleWidth = name === 'left' || name === 'right'
-      ? this.state.widths[key]
-      : undefined;
+    const availableWidth = (props.layout.initWidth - this.state.widths[key]) / 2;
 
     return (
       <Animated.View
@@ -241,8 +239,8 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
         onLayout={onLayoutIOS}
         key={`${name}_${key}`}
         style={[
-          titleWidth && {
-            width: (props.layout.initWidth - titleWidth) / 2,
+          name !== 'title' && {
+            width: availableWidth > 70 ? availableWidth : 70,
           },
           styles.item,
           styles[name],
@@ -336,7 +334,9 @@ const styles = StyleSheet.create({
       flex: 1,
       alignItems: 'flex-start',
     }
-    : {},
+    : {
+      flex: 1,
+    },
   left: {
     alignItems: 'flex-start',
   },
