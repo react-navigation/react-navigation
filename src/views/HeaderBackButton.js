@@ -10,7 +10,7 @@ import {
   StyleSheet,
 } from 'react-native';
 
-import type { LayoutEvent } from '../TypeDefinition';
+import type { LayoutEvent, Style } from '../TypeDefinition';
 
 import TouchableItem from './TouchableItem';
 
@@ -19,6 +19,7 @@ type Props = {
   title?: ?string,
   tintColor?: ?string,
   truncatedTitle?: ?string,
+  style?: ?Style,
 };
 
 type DefaultProps = {
@@ -37,6 +38,7 @@ class HeaderBackButton extends React.PureComponent<DefaultProps, Props, State> {
     title: PropTypes.string,
     tintColor: PropTypes.string,
     truncatedTitle: PropTypes.string,
+    style: PropTypes.object,
   };
 
   static defaultProps = {
@@ -67,7 +69,7 @@ class HeaderBackButton extends React.PureComponent<DefaultProps, Props, State> {
   };
 
   render() {
-    const { onPress, title, tintColor, truncatedTitle } = this.props;
+    const { onPress, style, title, tintColor, truncatedTitle } = this.props;
 
     const renderTruncated = this.state.containerWidth && this.state.initialTextWidth
       ? this.state.containerWidth < this.state.initialTextWidth
@@ -77,7 +79,7 @@ class HeaderBackButton extends React.PureComponent<DefaultProps, Props, State> {
       <TouchableItem
         delayPressIn={0}
         onPress={onPress}
-        style={styles.container}
+        style={[styles.container, style]}
         borderless
       >
         <View
@@ -112,7 +114,6 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     flexDirection: 'row',
-    backgroundColor: 'transparent',
   },
   title: {
     fontSize: 17,
