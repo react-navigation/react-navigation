@@ -6,7 +6,14 @@ import {
 
 import type {
   NavigationSceneRendererProps,
+  NavigationStyleInterpolator,
 } from '../TypeDefinition';
+
+export type HeaderStyleInterpolatorSpec = {
+  forLeft: NavigationStyleInterpolator,
+  forCenter: NavigationStyleInterpolator,
+  forRight: NavigationStyleInterpolator,
+};
 
 /**
  * Utility that builds the style for the navigation header.

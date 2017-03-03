@@ -33,6 +33,10 @@ import type {
   HeaderMode,
 } from './Header';
 
+import type {
+  HeaderStyleInterpolatorSpec,
+} from './HeaderStyleInterpolator';
+
 import type { TransitionConfig } from './TransitionConfigs';
 
 import TransitionConfigs from './TransitionConfigs';
@@ -43,6 +47,7 @@ type Props = {
   screenProps?: {};
   headerMode: HeaderMode,
   headerComponent?: ReactClass<*>,
+  headerStyleInterpolator?: HeaderStyleInterpolatorSpec,
   mode: 'card' | 'modal',
   navigation: NavigationScreenProp<*, NavigationAction>,
   router: NavigationRouter,
@@ -96,6 +101,15 @@ class CardStack extends Component<DefaultProps, Props, void> {
      * Custom React component to be used as a header
      */
     headerComponent: PropTypes.func,
+
+    /**
+     * Custom header style interpolator when transitioning
+     */
+    headerStyleInterpolator: PropTypes.shape({
+      forLeft: PropTypes.func,
+      forCenter: PropTypes.func,
+      forRight: PropTypes.func,
+    }),
 
     /**
      * Style of the cards movement. Value could be `card` or `modal`.
@@ -204,6 +218,7 @@ class CardStack extends Component<DefaultProps, Props, void> {
         router={this.props.router}
         style={headerConfig.style}
         mode={headerMode}
+        styleInterpolator={this.props.headerStyleInterpolator}
         onNavigateBack={() => this.props.navigation.goBack(null)}
         renderLeftComponent={(props: NavigationTransitionProps) => {
           const header = this.props.router.getScreenConfig(props.navigation, 'header') || {};
