@@ -340,11 +340,11 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    backgroundColor: 'transparent',
   },
   item: {
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'transparent',
   },
   title: {
     bottom: 0,
