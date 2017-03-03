@@ -12,11 +12,16 @@ import { GoogleAnalyticsTracker } from 'react-native-google-analytics-bridge';
 const tracker = new GoogleAnalyticsTracker(GA_TRACKING_ID);
 
 // gets the current screen from navigation state
-function getCurrentScreen(navigationState) {
+function getCurrentRouteName(navigationState) {
   if (!navigationState) {
     return null;
   }
-  return navigationState.routes[navigationState.index].routeName;
+  const route = navigationState.routes[navigationState.index];
+  // dive into nested navigators
+  if (route.routes) {
+    return getCurrentRouteName(route);
+  }
+  return route.routeName;
 }
 
 const AppNavigator = StackNavigator(AppRouteConfigs);
@@ -24,13 +29,13 @@ const AppNavigator = StackNavigator(AppRouteConfigs);
 export default () => (
   <AppNavigator
     onNavigationStateChange={(prevState, currentState) => {
-      const currentScreen = getCurrentScreen(currentState);
-      const prevScreen = getCurrentScreen(prevState);
+      const currentScreen = getCurrentRouteName(currentState);
+      const prevScreen = getCurrentRouteName(prevState);
 
-      if (nextScreen !== currentScreen) {
+      if (prevScreen !== currentScreen) {
         // the line below uses the Google Analytics tracker
         // change the tracker here to use other Mobile analytics SDK.
-        tracker.trackScreenView(nextScreen);
+        tracker.trackScreenView(currentScreen);
       }
     }}
   />
@@ -40,7 +45,7 @@ export default () => (
 ### Screen tracking with Redux
 
 When using Redux, we can write a Redux middleware to track the screen. For this purpose,
-we will reuse `getCurrentScreen` from the previous section.
+we will reuse `getCurrentRouteName` from the previous section.
 
 ```js
 import { NavigationActions } from 'react-navigation';
@@ -56,9 +61,9 @@ const screenTracking = ({ getState }) => next => (action) => {
     return next(action);
   }
 
-  const currentScreen = getCurrentScreen(getState().navigation);
+  const currentScreen = getCurrentRouteName(getState().navigation);
   const result = next(action);
-  const nextScreen = getCurrentScreen(getState().navigation);
+  const nextScreen = getCurrentRouteName(getState().navigation);
   if (nextScreen !== currentScreen) {
     // the line below uses the Google Analytics tracker
     // change the tracker here to use other Mobile analytics SDK.
