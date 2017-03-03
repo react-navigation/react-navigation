@@ -181,17 +181,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
     );
   }
 
-  _renderTitle(props: NavigationSceneRendererProps): ?React.Element<*> {
-    return this._renderSubView(
-      props,
-      'title',
-      this.props.renderTitleComponent,
-      this._renderTitleComponent,
-      HeaderStyleInterpolator.forCenter,
-    );
-  }
-
-  _renderRight(props: NavigationSceneRendererProps, options: *): ?React.Element<*> {
+  _renderTitle(props: NavigationSceneRendererProps, options: *): ?React.Element<*> {
     const style = {};
 
     if (Platform.OS === 'android') {
@@ -203,6 +193,16 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
       }
     }
 
+    return this._renderSubView(
+      { ...props, style },
+      'title',
+      this.props.renderTitleComponent,
+      this._renderTitleComponent,
+      HeaderStyleInterpolator.forCenter,
+    );
+  }
+
+  _renderRight(props: NavigationSceneRendererProps): ?React.Element<*> {
     return this._renderSubView(
       props,
       'right',
@@ -247,6 +247,10 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
       subView = defaultRenderer(subViewProps);
     }
 
+    if (subView === null) {
+      return null;
+    }
+
     const pointerEvents = offset !== 0 || isStale ? 'none' : 'box-none';
 
     return (
@@ -254,9 +258,9 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
         pointerEvents={pointerEvents}
         key={`${name}_${key}`}
         style={[
-          props.style,
           styles.item,
           styles[name],
+          props.style,
           styleInterpolator(props),
         ]}
       >
@@ -352,6 +356,9 @@ const styles = StyleSheet.create({
     right: TITLE_OFFSET,
     top: 0,
     position: 'absolute',
+    alignItems: Platform.OS === 'android'
+      ? 'flex-start'
+      : 'center',
   },
   left: {
     left: 0,
