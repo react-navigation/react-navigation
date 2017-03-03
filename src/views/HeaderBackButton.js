@@ -10,7 +10,7 @@ import {
   StyleSheet,
 } from 'react-native';
 
-import type { LayoutEvent, Style } from '../TypeDefinition';
+import type { LayoutEvent } from '../TypeDefinition';
 
 import TouchableItem from './TouchableItem';
 

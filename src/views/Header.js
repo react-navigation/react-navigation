@@ -58,6 +58,7 @@ type HeaderState = {
 
 const APPBAR_HEIGHT = Platform.OS === 'ios' ? 44 : 56;
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : 0;
+const TITLE_OFFSET = Platform.OS === 'ios' ? 70 : 40;
 
 class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
 
@@ -346,8 +347,8 @@ const styles = StyleSheet.create({
   },
   title: {
     bottom: 0,
-    left: 70,
-    right: 70,
+    left: TITLE_OFFSET,
+    right: TITLE_OFFSET,
     top: 0,
     position: 'absolute',
   },
