@@ -254,6 +254,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
         pointerEvents={pointerEvents}
         key={`${name}_${key}`}
         style={[
+          props.style,
           styles.item,
           styles[name],
           styleInterpolator(props),
