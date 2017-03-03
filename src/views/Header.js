@@ -155,20 +155,15 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
       state: props.scenes[props.scene.index - 1].route,
     });
     const backButtonTitle = this._getBackButtonTitle(previousNavigation);
-
-    const titleWidth = this.state.widths[props.key];
-    const availableWidth = titleWidth
-      ? (props.layout.initWidth - titleWidth) / 2
+    const width = this.state.widths[props.key]
+      ? (props.layout.initWidth - this.state.widths[props.key]) / 2
       : undefined;
-    console.log(titleWidth, props.layout.initWidth);
     return (
       <HeaderBackButton
         onPress={props.onNavigateBack}
         tintColor={tintColor}
         title={backButtonTitle}
-        style={availableWidth && {
-          width: availableWidth > 70 ? availableWidth : 70,
-        }}
+        width={width}
       />
     );
   };
@@ -351,8 +346,8 @@ const styles = StyleSheet.create({
   },
   title: {
     bottom: 0,
-    left: 40,
-    right: 40,
+    left: 70,
+    right: 70,
     top: 0,
     position: 'absolute',
   },

@@ -19,7 +19,7 @@ type Props = {
   title?: ?string,
   tintColor?: ?string,
   truncatedTitle?: ?string,
-  style?: ?Style,
+  width?: ?number,
 };
 
 type DefaultProps = {
@@ -28,7 +28,6 @@ type DefaultProps = {
 };
 
 type State = {
-  containerWidth?: number,
   initialTextWidth?: number,
 };
 
@@ -38,7 +37,7 @@ class HeaderBackButton extends React.PureComponent<DefaultProps, Props, State> {
     title: PropTypes.string,
     tintColor: PropTypes.string,
     truncatedTitle: PropTypes.string,
-    style: PropTypes.object,
+    width: PropTypes.number,
   };
 
   static defaultProps = {
@@ -50,15 +49,6 @@ class HeaderBackButton extends React.PureComponent<DefaultProps, Props, State> {
 
   state = {};
 
-  _onContainerLayout = (e: LayoutEvent) => {
-    if (Platform.OS !== 'ios') {
-      return;
-    }
-    this.setState({
-      containerWidth: e.nativeEvent.layout.width,
-    });
-  };
-
   _onTextLayout = (e: LayoutEvent) => {
     if (this.state.initialTextWidth) {
       return;
@@ -69,23 +59,20 @@ class HeaderBackButton extends React.PureComponent<DefaultProps, Props, State> {
   };
 
   render() {
-    const { onPress, style, title, tintColor, truncatedTitle } = this.props;
+    const { onPress, width, title, tintColor, truncatedTitle } = this.props;
 
-    const renderTruncated = this.state.containerWidth && this.state.initialTextWidth
-      ? this.state.containerWidth < this.state.initialTextWidth
+    const renderTruncated = this.state.initialTextWidth && width
+      ? this.state.initialTextWidth > width
       : false;
 
     return (
       <TouchableItem
         delayPressIn={0}
         onPress={onPress}
-        style={[styles.container, style]}
+        style={styles.container}
         borderless
       >
-        <View
-          onLayout={this._onContainerLayout}
-          style={styles.container}
-        >
+        <View style={styles.container}>
           <Image
             style={[
               styles.icon,
@@ -96,7 +83,6 @@ class HeaderBackButton extends React.PureComponent<DefaultProps, Props, State> {
           />
           {Platform.OS === 'ios' && title && (
             <Text
-              ellipsizeMode="middle"
               onLayout={this._onTextLayout}
               style={[styles.title, { color: tintColor }]}
               numberOfLines={1}
