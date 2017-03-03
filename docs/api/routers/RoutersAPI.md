@@ -4,7 +4,7 @@ You can make your own router by building an object with the following functions:
 
 ```js
 const MyRouter = {
-  getStateForAction: (action) => ({}),
+  getStateForAction: (action, state) => ({}),
   getActionForPathAndParams: (path, params) => null,
   getPathAndParamsForState: (state) => null,
   getComponentForState: (state) => MyScreen,
@@ -51,7 +51,7 @@ Typically this should return a navigation state, with the following form:
 
 If the router has handled the action externally, or wants to swallow it without changing the navigation state, this function will return `null`.
 
-### `getComponentRouteName(routeName)`
+### `getComponentForRouteName(routeName)`
 
 Returns the child component or navigator for the given route name.
 
