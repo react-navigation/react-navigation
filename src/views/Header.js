@@ -307,7 +307,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
       appBar = scenesProps.map(this._renderHeader, this);
     } else {
       appBar = this._renderHeader({
-        ...this.props,
+        ...NavigationPropTypes.extractSceneRendererProps(this.props),
         position: new Animated.Value(this.props.scene.index),
         progress: new Animated.Value(0),
       });
