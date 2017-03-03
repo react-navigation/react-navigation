@@ -89,6 +89,9 @@ export default class TabBarBottom extends PureComponent<DefaultProps, Props, voi
         </Animated.Text>
       );
     }
+    if (typeof label === 'function') {
+      return label(scene);
+    }
 
     return label;
   };
