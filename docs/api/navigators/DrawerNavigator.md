@@ -93,6 +93,10 @@ The route configs object is a mapping from route name to a route config, which t
 
 #### Example:
 
+Default the `DrawerView` isn't scrollable.
+To achieve a scrollable `View`, you have to use the `contentComponent` to customize the container, 
+as you can see in the example below.
+
 ```js
 {
   drawerWidth: 200,
