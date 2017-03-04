@@ -5,6 +5,8 @@ To handle your app's navigation state in redux, you can pass your own `navigatio
 With redux, your app's state is defined by a reducer. Each navigation router effectively has a reducer, called `getStateForAction`. The following is a minimal example of how you might use navigators within a redux application:
 
 ```
+import { addNavigationHelpers } from 'react-navigation';
+
 const AppNavigator = StackNavigator(AppRouteConfigs);
 
 const navReducer = (state, action) => {
