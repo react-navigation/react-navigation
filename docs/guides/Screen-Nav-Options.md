@@ -84,7 +84,6 @@ class ProfileScreen extends React.Component {
     header: (navigation, defaultHeader) => ({
       ...defaultHeader,
       visible: true,
-      color: 'blue',
     }),
   }
   ...

@@ -14,6 +14,7 @@ import type {
   NavigationState,
   NavigationRoute,
   NavigationAction,
+  NavigationRouter,
   Style,
 } from '../../TypeDefinition';
 import type {
@@ -26,9 +27,10 @@ type Props = {
   activeBackgroundColor?: string;
   inactiveTintColor?: string;
   inactiveBackgroundColor?: string;
-  getLabelText: (scene: DrawerScene) => string;
+  getLabel: (scene: DrawerScene) => ?(React.Element<*> | string);
   renderIcon: (scene: DrawerScene) => ?React.Element<*>;
   style?: Style;
+  router: NavigationRouter;
 };
 
 /**
@@ -40,7 +42,7 @@ const DrawerNavigatorItems = ({
   activeBackgroundColor,
   inactiveTintColor,
   inactiveBackgroundColor,
-  getLabelText,
+  getLabel,
   renderIcon,
   style,
 }: Props) => (
@@ -51,7 +53,7 @@ const DrawerNavigatorItems = ({
       const backgroundColor = focused ? activeBackgroundColor : inactiveBackgroundColor;
       const scene = { route, index, focused, tintColor: color };
       const icon = renderIcon(scene);
-      const label = getLabelText(scene);
+      const label = getLabel(scene);
       return (
         <TouchableItem
           key={route.key}
@@ -67,9 +69,14 @@ const DrawerNavigatorItems = ({
                 {icon}
               </View>
             ) : null}
-            <Text style={[styles.label, { color }]}>
-              {label}
-            </Text>
+            {typeof label === 'string'
+              ? (
+                <Text style={[styles.label, { color }]}>
+                  {label}
+                </Text>
+              )
+              : label
+            }
           </View>
         </TouchableItem>
       );
