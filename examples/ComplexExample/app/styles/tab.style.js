@@ -1,6 +1,6 @@
 export default {
-    icon: {
-        marginTop: 0,
-        fontSize: 22
-    },
-}
+  icon: {
+    marginTop: 0,
+    fontSize: 22
+  }
+};

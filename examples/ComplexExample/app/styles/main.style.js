@@ -1,3 +1,3 @@
 export default {
-    backgroundColor: 'red'
-}
+  backgroundColor: "red"
+};
