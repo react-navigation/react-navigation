@@ -58,6 +58,7 @@ type HeaderState = {
 
 const APPBAR_HEIGHT = Platform.OS === 'ios' ? 44 : 56;
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : 0;
+const TITLE_OFFSET = Platform.OS === 'ios' ? 70 : 40;
 
 class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
 
@@ -121,8 +122,23 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
     const titleStyle = this._getHeaderTitleStyle(props.navigation);
     const color = this._getHeaderTintColor(props.navigation);
     const title = this._getHeaderTitle(props.navigation);
+
+    // On iOS, width of left/right components depends on the calculated
+    // size of the title.
+    const onLayoutIOS = Platform.OS === 'ios'
+      ? (e: LayoutEvent) => {
+        this.setState({
+          widths: {
+            ...this.state.widths,
+            [props.key]: e.nativeEvent.layout.width,
+          },
+        });
+      }
+      : undefined;
+
     return (
       <HeaderTitle
+        onLayout={onLayoutIOS}
         style={[color ? { color } : null, titleStyle]}
       >
         {title}
@@ -140,11 +156,15 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
       state: props.scenes[props.scene.index - 1].route,
     });
     const backButtonTitle = this._getBackButtonTitle(previousNavigation);
+    const width = this.state.widths[props.key]
+      ? (props.layout.initWidth - this.state.widths[props.key]) / 2
+      : undefined;
     return (
       <HeaderBackButton
         onPress={props.onNavigateBack}
         tintColor={tintColor}
         title={backButtonTitle}
+        width={width}
       />
     );
   };
@@ -161,9 +181,20 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
     );
   }
 
-  _renderTitle(props: NavigationSceneRendererProps): ?React.Element<*> {
+  _renderTitle(props: NavigationSceneRendererProps, options: *): ?React.Element<*> {
+    const style = {};
+
+    if (Platform.OS === 'android') {
+      if (!options.hasLeftComponent) {
+        style.left = 0;
+      }
+      if (!options.hasRightComponent) {
+        style.right = 0;
+      }
+    }
+
     return this._renderSubView(
-      props,
+      { ...props, style },
       'title',
       this.props.renderTitleComponent,
       this._renderTitleComponent,
@@ -216,36 +247,20 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
       subView = defaultRenderer(subViewProps);
     }
 
+    if (subView === null) {
+      return null;
+    }
+
     const pointerEvents = offset !== 0 || isStale ? 'none' : 'box-none';
-
-    // On iOS, width of left/right components depends on the calculated
-    // size of the title.
-    const onLayoutIOS = Platform.OS === 'ios' && name === 'title'
-      ? (e: LayoutEvent) => {
-        this.setState({
-          widths: {
-            ...this.state.widths,
-            [key]: e.nativeEvent.layout.width,
-          },
-        });
-      }
-      : undefined;
-
-    const titleWidth = name === 'left' || name === 'right'
-      ? this.state.widths[key]
-      : undefined;
 
     return (
       <Animated.View
         pointerEvents={pointerEvents}
-        onLayout={onLayoutIOS}
         key={`${name}_${key}`}
         style={[
-          titleWidth && {
-            width: (props.layout.initWidth - titleWidth) / 2,
-          },
           styles.item,
           styles[name],
+          props.style,
           styleInterpolator(props),
         ]}
       >
@@ -257,15 +272,18 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
   _renderHeader(props: NavigationSceneRendererProps): React.Element<*> {
     const left = this._renderLeft(props);
     const right = this._renderRight(props);
-    const title = this._renderTitle(props);
+    const title = this._renderTitle(props, {
+      hasLeftComponent: !!left,
+      hasRightComponent: !!right,
+    });
 
     return (
       <View
         style={[StyleSheet.absoluteFill, styles.header]}
         key={`scene_${props.scene.key}`}
       >
-        {left}
         {title}
+        {left}
         {right}
       </View>
     );
@@ -289,7 +307,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
       appBar = scenesProps.map(this._renderHeader, this);
     } else {
       appBar = this._renderHeader({
-        ...this.props,
+        ...NavigationPropTypes.extractSceneRendererProps(this.props),
         position: new Animated.Value(this.props.scene.index),
         progress: new Animated.Value(0),
       });
@@ -329,19 +347,30 @@ const styles = StyleSheet.create({
   },
   item: {
     justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: 'transparent',
   },
-  title: Platform.OS === 'android'
-    ? {
-      flex: 1,
-      alignItems: 'flex-start',
-    }
-    : {},
+  title: {
+    bottom: 0,
+    left: TITLE_OFFSET,
+    right: TITLE_OFFSET,
+    top: 0,
+    position: 'absolute',
+    alignItems: Platform.OS === 'android'
+      ? 'flex-start'
+      : 'center',
+  },
   left: {
-    alignItems: 'flex-start',
+    left: 0,
+    bottom: 0,
+    top: 0,
+    position: 'absolute',
   },
   right: {
-    alignItems: 'flex-end',
+    right: 0,
+    bottom: 0,
+    top: 0,
+    position: 'absolute',
   },
 });
 
