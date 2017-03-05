@@ -42,10 +42,6 @@ type Navigation = NavigationScreenProp<*, NavigationAction>;
 
 type SubViewRenderer = (subViewProps: SubViewProps) => ?React.Element<any>;
 
-type DefaultProps = {
-  styleInterpolator: HeaderStyleInterpolatorSpec,
-};
-
 export type HeaderProps = NavigationSceneRendererProps & {
   mode: HeaderMode,
   onNavigateBack?: () => void,
@@ -57,6 +53,7 @@ export type HeaderProps = NavigationSceneRendererProps & {
 };
 
 type SubViewName = 'left' | 'title' | 'right';
+type HeaderSubViewStyleInterpolatorName = 'Left' | 'Center' | 'Right';
 
 type HeaderState = {
   widths: {
@@ -68,7 +65,7 @@ const APPBAR_HEIGHT = Platform.OS === 'ios' ? 44 : 56;
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : 0;
 const TITLE_OFFSET = Platform.OS === 'ios' ? 70 : 40;
 
-class Header extends React.PureComponent<DefaultProps, HeaderProps, HeaderState> {
+class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
 
   static HEIGHT = APPBAR_HEIGHT + STATUSBAR_HEIGHT;
   static Title = HeaderTitle;
@@ -88,10 +85,6 @@ class Header extends React.PureComponent<DefaultProps, HeaderProps, HeaderState>
       forCenter: PropTypes.func,
       forRight: PropTypes.func,
     }),
-  };
-
-  static defaultProps = {
-    styleInterpolator: HeaderStyleInterpolator,
   };
 
   props: HeaderProps;
@@ -133,6 +126,20 @@ class Header extends React.PureComponent<DefaultProps, HeaderProps, HeaderState>
       return header.titleStyle;
     }
     return undefined;
+  }
+
+  _getStyleInterpolator(
+    name: HeaderSubViewStyleInterpolatorName
+  ): NavigationStyleInterpolator {
+    const forSubView = `for${name}`;
+    const styleInterpolatorForSubview = (
+      this.props.styleInterpolator &&
+      this.props.styleInterpolator[forSubView]
+    );
+    if (!!styleInterpolatorForSubview) {
+      return styleInterpolatorForSubview;
+    }
+    return HeaderStyleInterpolator[forSubView];
   }
 
   _renderTitleComponent = (props: SubViewProps) => {
@@ -194,7 +201,7 @@ class Header extends React.PureComponent<DefaultProps, HeaderProps, HeaderState>
       'left',
       this.props.renderLeftComponent,
       this._renderLeftComponent,
-      this.props.styleInterpolator.forLeft,
+      this._getStyleInterpolator('Left'),
     );
   }
 
@@ -215,7 +222,7 @@ class Header extends React.PureComponent<DefaultProps, HeaderProps, HeaderState>
       'title',
       this.props.renderTitleComponent,
       this._renderTitleComponent,
-      this.props.styleInterpolator.forCenter,
+      this._getStyleInterpolator('Center'),
     );
   }
 
@@ -225,7 +232,7 @@ class Header extends React.PureComponent<DefaultProps, HeaderProps, HeaderState>
       'right',
       this.props.renderRightComponent,
       this._renderRightComponent,
-      this.props.styleInterpolator.forRight,
+      this._getStyleInterpolator('Right'),
     );
   }
 
