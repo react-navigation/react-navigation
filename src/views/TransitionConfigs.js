@@ -90,7 +90,7 @@ function defaultTransitionConfig(
   // default mode animate card
   mode: 'string',
   // if mode == 'modal' , default direction is vertical
-  direction: 'string',
+  direction: 'string'
 ): TransitionConfig {
 
   if (

@@ -236,6 +236,9 @@ function canUseNativeDriver(isVertical: boolean): boolean {
 export default {
   forHorizontal,
   forVertical,
+  leftToRight,
+  topToBottom,
+  slideWithoutTransition,
   forFadeFromBottomAndroid,
   canUseNativeDriver,
 };
