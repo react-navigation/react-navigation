@@ -45,10 +45,12 @@ function forInitial(props: NavigationSceneRendererProps): Object {
   };
 }
 
+
+
 /**
- * Standard iOS-style slide in from the right.
+ * Widthout Transition.
  */
-function forHorizontal(props: NavigationSceneRendererProps): Object {
+function slideWithoutTransition(props: NavigationSceneRendererProps): Object {
   const {
     layout,
     position,
@@ -65,7 +67,47 @@ function forHorizontal(props: NavigationSceneRendererProps): Object {
   // Add ~30px to the interpolated width screens width for horizontal movement. This allows
   // the screen's shadow to go screen fully offscreen without abruptly dissapearing
   const width = layout.initWidth + 30;
-  const outputRange = I18nManager.isRTL ?
+  
+
+
+  const opacity = position.interpolate({
+    inputRange,
+    outputRange: ([1, 1, 0.3, 0]: Array<number>),
+  });
+
+  const translateY = 0;
+  const translateX = 0;
+
+  return {
+    opacity,
+    transform: [
+      { translateX },
+      { translateY },
+    ],
+  };
+}
+
+/**
+ * Standard iOS-style slide in from the right.
+ */
+function forHorizontal(props: NavigationSceneRendererProps, leftToRight: boolean = false): Object {
+  const {
+    layout,
+    position,
+    scene,
+  } = props;
+
+  if (!layout.isMeasured) {
+    return forInitial(props);
+  }
+
+  const index = scene.index;
+  const inputRange = [index - 1, index, index + 0.99, index + 1];
+
+  // Add ~30px to the interpolated width screens width for horizontal movement. This allows
+  // the screen's shadow to go screen fully offscreen without abruptly dissapearing
+  const width = layout.initWidth + 30;
+  const outputRange = I18nManager.isRTL || leftToRight ?
     ([-width, 0, 10, 10]: Array<number>) :
     ([width, 0, -10, -10]: Array<number>);
 
@@ -91,9 +133,23 @@ function forHorizontal(props: NavigationSceneRendererProps): Object {
 }
 
 /**
+ * Transition Left To Right
+ */
+function leftToRight(props: NavigationSceneRendererProps): Object {
+  return forHorizontal(NavigationSceneRendererProps, true);
+}
+
+/**
+ * Transition Top To Bottom
+ */
+function topToBottom(props: NavigationSceneRendererProps): Object {
+  return forVertical(NavigationSceneRendererProps, true);
+}
+
+/**
  * Standard iOS-style slide in from the bottom (used for modals).
  */
-function forVertical(props: NavigationSceneRendererProps): Object {
+function forVertical(props: NavigationSceneRendererProps, topToBottom: boolean = false): Object {
   const {
     layout,
     position,
@@ -108,6 +164,10 @@ function forVertical(props: NavigationSceneRendererProps): Object {
   const inputRange = [index - 1, index, index + 0.99, index + 1];
   const height = layout.initHeight;
 
+  const outputRange = topToBottom ?
+    ([-height, 0, 0, 0]: Array<number>) :
+    ([height, 0, 0, 0]: Array<number>);
+
   const opacity = position.interpolate({
     inputRange,
     outputRange: ([1, 1, 0.3, 0]: Array<number>),
@@ -116,7 +176,7 @@ function forVertical(props: NavigationSceneRendererProps): Object {
   const translateX = 0;
   const translateY = position.interpolate({
     inputRange,
-    outputRange: ([height, 0, 0, 0]: Array<number>),
+    outputRange,
   });
 
   return {

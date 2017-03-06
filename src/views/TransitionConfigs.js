@@ -40,6 +40,21 @@ const SlideFromRightIOS = ({
   screenInterpolator: CardStackStyleInterpolator.forHorizontal,
 } : TransitionConfig);
 
+// Left To Right transition
+const SlideLeftToRight = ({
+  screenInterpolator: CardStackStyleInterpolator.leftToRight,
+} : TransitionConfig);
+
+// Top To Bottom transition
+const SlideTopToBottom = ({
+  screenInterpolator: CardStackStyleInterpolator.topToBottom,
+} : TransitionConfig);
+
+// Without transition
+const SlideWithoutTransition = ({
+  screenInterpolator: CardStackStyleInterpolator.slideWithoutTransition,
+} : TransitionConfig);
+
 // Standard iOS navigation transition for modals
 const ModalSlideFromBottomIOS = ({
   screenInterpolator: CardStackStyleInterpolator.forVertical,
@@ -72,24 +87,42 @@ function defaultTransitionConfig(
   transitionProps: NavigationTransitionProps,
   // props for the old screen
   prevTransitionProps: NavigationTransitionProps,
-  // whether we're animating in/out a modal screen
-  isModal: boolean,
+  // default mode animate card
+  mode: 'string',
+  // if mode == 'modal' , default direction is vertical
+  direction: 'string',
 ): TransitionConfig {
-  if (Platform.OS === 'android') {
-    // Use the default Android animation no matter if the screen is a modal.
-    // Android doesn't have full-screen modals like iOS does, it has dialogs.
-    if (prevTransitionProps && (transitionProps.index < prevTransitionProps.index)) {
-      // Navigating back to the previous screen
-      return FadeOutToBottomAndroid;
-    }
-    return FadeInFromBottomAndroid;
-  } else {
-    // iOS and other platforms
-    if (isModal) {
-      return ModalSlideFromBottomIOS;
+
+  if (
+      mode === 'card' ||
+      // Use default Android animation if direction is vertical and mode is modal
+      (mode === 'modal' && direction === 'vertical' && Platform.OS === 'android') 
+    ) {
+    if (Platform.OS === 'android') {
+      // Use the default Android animation no matter if the screen is a modal.
+      // Android doesn't have full-screen modals like iOS does, it has dialogs.
+      if (prevTransitionProps && (transitionProps.index < prevTransitionProps.index)) {
+        // Navigating back to the previous screen
+        return FadeOutToBottomAndroid;
+      }
+      return FadeInFromBottomAndroid;
     } else {
+      // iOS and other platforms
       return SlideFromRightIOS;
     }
+  } else {
+    if(direction === 'horizontal') {
+      return SlideFromRightIOS;
+    } else if (direction === 'leftToRight') {
+      return SlideLeftToRight;
+    } else if (direction === 'topToBottom') {
+      return SlideTopToBottom;
+    } else if (direction === 'none') {
+      return SlideWithoutTransition;
+    }
+
+    return ModalSlideFromBottomIOS;
+    
   }
 }
 

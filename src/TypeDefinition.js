@@ -272,6 +272,7 @@ export type NavigationContainerConfig = {
 
 export type NavigationStackViewConfig = {
   mode?: 'card' | 'modal',
+  direction?: 'vertical' | 'horizontal' | 'leftToRight' | 'topToBottom' | 'none' | 'zoomIn',
   headerMode?: HeaderMode,
   headerComponent?: ReactClass<HeaderProps<*>>,
   cardStyle?: Style,
