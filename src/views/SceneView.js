@@ -37,7 +37,7 @@ export default class SceneView extends PureComponent<void, Props, void> {
 
     return (
       <Component
-        screenProps={screenProps}
+        {...this.props.screenProps}
         navigation={navigation}
       />
     );
