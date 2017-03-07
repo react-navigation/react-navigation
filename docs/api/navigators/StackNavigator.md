@@ -79,7 +79,14 @@ Visual options:
 
 - `mode` - Defines the style for rendering and transitions:
   - `card` - Use the standard iOS and Android screen transitions. This is the default.
-  - `modal` - Make the screens slide in from the bottom which is a common iOS pattern. Only works on iOS, has no effect on Android.
+  - `modal` - Make the screens slide in from the bottom.
+- `direction` - direction of animation when mode is modal
+  - `vertical` - Use the standard Android screen transitions, will be bottom to top. This is the default.
+  - `horizontal` - will be right to left .
+  - `leftToRight` - will be left to right .
+  - `topToBottom` - will be top to Bottom .
+  - `fade` - without transition .
+  
 - `headerMode` - Specifies how the header should be rendered:
   - `float` - Render a single header that stays at the top and animates as screens are changed. This is a common pattern on iOS.
   - `screen` - Each screen has a header attached to it and the header fades in and out together with the screen. This is a common pattern on Android.

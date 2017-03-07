@@ -117,7 +117,7 @@ function defaultTransitionConfig(
       return SlideLeftToRight;
     } else if (direction === 'topToBottom') {
       return SlideTopToBottom;
-    } else if (direction === 'none') {
+    } else if (direction === 'fade') {
       return SlideWithoutTransition;
     }
 

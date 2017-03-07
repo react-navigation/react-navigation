@@ -44,7 +44,7 @@ type Props = {
   headerMode: HeaderMode,
   headerComponent?: ReactClass<*>,
   mode: 'card' | 'modal',
-  direction: 'vertical' | 'horizontal' | 'leftToRight' | 'topToBottom' | 'none' | 'zoomIn',
+  direction: 'vertical' | 'horizontal' | 'leftToRight' | 'topToBottom' | 'fade' | 'zoomIn',
   navigation: NavigationScreenProp<*, NavigationAction>,
   router: NavigationRouter,
   cardStyle?: Style,
@@ -60,7 +60,7 @@ type Props = {
 
 type DefaultProps = {
   mode: 'card' | 'modal',
-  direction: 'vertical' | 'horizontal' | 'leftToRight' | 'topToBottom' | 'none' | 'zoomIn',
+  direction: 'vertical' | 'horizontal' | 'leftToRight' | 'topToBottom' | 'fade' | 'zoomIn',
   headerComponent: ReactClass<*>,
 };
 
@@ -105,7 +105,7 @@ class CardStack extends Component<DefaultProps, Props, void> {
      * Style of direction animation if mod === 'mode'.
      * Default value is `vertical`.
      */
-    direction: PropTypes.oneOf(['vertical', 'horizontal', 'leftToRight', 'topToBottom', 'none', 'zoomIn']),
+    direction: PropTypes.oneOf(['vertical', 'horizontal', 'leftToRight', 'topToBottom', 'fade', 'zoomIn']),
 
     /**
      * The distance from the edge of the card which gesture response can start
