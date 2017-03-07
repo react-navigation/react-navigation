@@ -89,6 +89,9 @@ export default class TabBarBottom extends PureComponent<DefaultProps, Props, voi
         </Animated.Text>
       );
     }
+    if (typeof label === 'function') {
+      return label(scene);
+    }
 
     return label;
   };
@@ -166,7 +169,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f4f4f4', // Default background color in iOS 10
   },
   tab: {
-    flexGrow: 1,
+    flex: 1,
     alignItems: 'stretch',
     justifyContent: 'flex-end',
   },

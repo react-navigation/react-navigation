@@ -15,8 +15,6 @@ type Props = {
   component: ReactClass<*>;
 };
 
-let screenPropsWarningShown = false;
-
 export default class SceneView extends PureComponent<void, Props, void> {
   static childContextTypes = {
     navigation: React.PropTypes.object.isRequired,
@@ -28,17 +26,6 @@ export default class SceneView extends PureComponent<void, Props, void> {
     return {
       navigation: this.props.navigation,
     };
-  }
-
-  componentWillMount() {
-    if (this.props.screenProps !== undefined && !screenPropsWarningShown) {
-      console.warn(
-        'Behaviour of screenProps has changed from initial beta. ' +
-        'Components will now receive it as `this.props.screenProps` instead.\n' +
-        'This warning will be removed in future.'
-      );
-      screenPropsWarningShown = true;
-    }
   }
 
   render() {
