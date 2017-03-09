@@ -114,10 +114,12 @@ Example:
 ```js
 tabBarOptions: {
   activeTintColor: '#e91e63',
-  labelStyle: { fontSize: 12 },
+  labelStyle: {
+    fontSize: 12,
+  },
   style: {
     backgroundColor: 'blue',
-  }
+  },
 }
 ```
 
@@ -145,7 +147,7 @@ tabBarOptions: {
   },
   style: {
     backgroundColor: 'blue',
-  }
+  },
 }
 ```
 
