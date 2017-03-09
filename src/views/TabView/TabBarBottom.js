@@ -62,30 +62,30 @@ export default class TabBarBottom extends PureComponent<DefaultProps, Props, Sta
 
   props: Props;
 
-	keyboardDidShowListener: React.EmitterSubscription;
-	keyboardDidHideListener: React.EmitterSubscription;
+  keyboardDidShowListener: React.EmitterSubscription;
+  keyboardDidHideListener: React.EmitterSubscription;
 
   state = {
     keyboardVisible: false,
   }
 
-	componentWillMount() {
-		this.keyboardDidShowListener = Keyboard.addListener("keyboardDidShow", this._keyboardDidShow);
-		this.keyboardDidHideListener = Keyboard.addListener("keyboardDidHide", this._keyboardDidHide);
-	}
+  componentWillMount() {
+    this.keyboardDidShowListener = Keyboard.addListener("keyboardDidShow", this._keyboardDidShow);
+    this.keyboardDidHideListener = Keyboard.addListener("keyboardDidHide", this._keyboardDidHide);
+  }
 
-	componentWillUnmount() {
-		this.keyboardDidShowListener.remove();
-		this.keyboardDidHideListener.remove();
-	}
+  componentWillUnmount() {
+    this.keyboardDidShowListener.remove();
+    this.keyboardDidHideListener.remove();
+  }
 
-	_keyboardDidShow = (e) => {
-		this.setState({ keyboardVisible: true });
-	}
+  _keyboardDidShow = (e) => {
+    this.setState({ keyboardVisible: true });
+  }
 
-	_keyboardDidHide = () => {
-		this.setState({ keyboardVisible: false });
-	}
+  _keyboardDidHide = () => {
+    this.setState({ keyboardVisible: false });
+  }
 
   _renderLabel = (scene: TabScene) => {
     const {
