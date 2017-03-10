@@ -68,7 +68,7 @@
     "fbjs": "^0.8.5",
     "hoist-non-react-statics": "^1.2.0",
     "path-to-regexp": "^1.7.0",
-    "react-native-drawer-layout": "^1.1.0",
+    "react-native-drawer-layout-polyfill": "^1.0.4",
     "react-native-tab-view": "^0.0.56"
   },
   "jest": {

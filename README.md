@@ -13,7 +13,7 @@ React Native's Navigator and NavigationExperimental components. React
 Navigation can also be used across React and React Native projects allowing
 for a higher degree of shared code.
 
-Once stable, NavigationExperimental will be depracated in favor of React
+Once stable, NavigationExperimental will be deprecated in favor of React
 Navigation. React Navigation is a collaboration between people from
 Facebook, Exponent and the React community at large.
 
