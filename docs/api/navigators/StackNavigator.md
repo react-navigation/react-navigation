@@ -125,6 +125,10 @@ All `navigationOptions` for the `StackNavigator`:
   - `left` - React Element to display on the left side of the header
   - `style` - Style object for the header
   - `titleStyle` - Style object for the title component
+  - `componentStyle` - a config object for styling header components
+    - `title` - Style object for the title component
+    - `left` - Style object for the left component
+    - `right` - Style object for the right component
   - `tintColor` - Tint color for the header
 - `cardStack` - a config object for the card stack:
   - `gesturesEnabled` - Whether you can use gestures to dismiss this screen. Defaults to true on iOS, false on Android

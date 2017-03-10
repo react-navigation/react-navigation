@@ -118,6 +118,14 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
     return undefined;
   }
 
+  _getHeaderComponentStyle(navigation: Navigation, name: SubViewName): Style {
+    const header = this.props.router.getScreenConfig(navigation, 'header');
+    if (header && header.componentStyle && header.componentStyle[name]) {
+      return header.componentStyle[name];
+    }
+    return undefined;
+  }
+
   _renderTitleComponent = (props: SubViewProps) => {
     const titleStyle = this._getHeaderTitleStyle(props.navigation);
     const color = this._getHeaderTintColor(props.navigation);
@@ -253,6 +261,11 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
 
     const pointerEvents = offset !== 0 || isStale ? 'none' : 'box-none';
 
+    const componentStyle = this._getHeaderComponentStyle(
+      props.navigation,
+      name
+    );
+
     return (
       <Animated.View
         pointerEvents={pointerEvents}
@@ -261,6 +274,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
           styles.item,
           styles[name],
           props.style,
+          componentStyle,
           styleInterpolator(props),
         ]}
       >
