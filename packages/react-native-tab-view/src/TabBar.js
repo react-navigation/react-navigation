@@ -7,6 +7,7 @@ import {
   View,
   Text,
   ScrollView,
+  Platform,
 } from 'react-native';
 import TouchableItem from './TouchableItem';
 import { SceneRendererPropType } from './TabViewPropTypes';
@@ -17,7 +18,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scroll: {
-    overflow: 'scroll',
+    overflow: Platform.OS === 'web' ? 'auto' : 'scroll',
   },
   tabBar: {
     backgroundColor: '#2196f3',
