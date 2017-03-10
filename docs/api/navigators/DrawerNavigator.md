@@ -88,7 +88,7 @@ The route configs object is a mapping from route name to a route config, which t
 
 - `drawerWidth` - Width of the drawer
 - `drawerPosition` - Options are `left` or `right`. Default is `left` position.
-- `contentComponent` - Component to use to render the navigation items. Receives the `navigation` prop for the drawer. Defaults to `DrawerView.Items`.
+- `contentComponent` - Component to use to render a container with the navigation items. Receives the `navigation` prop for the drawer. Defaults to `DrawerView.Items`.
 - `contentOptions` - Configure the drawer content, see below.
 
 Several options get passed to the underlying router to modify navigation logic:
@@ -97,6 +97,24 @@ Several options get passed to the underlying router to modify navigation logic:
 - `order` - Array of routeNames which defines the order of the drawer items.
 - `paths` - Provide a mapping of routeName to path config, which overrides the paths set in the routeConfigs.
 - `backBehavior` - Should the back button cause switch to the initial route? If yes, set to `initialRoute`, otherwise `none`. Defaults to `initialRoute` behavior.
+
+### Overriding `contentComponent`
+
+You can easily override the default component used by `react-navigation`:
+
+```js
+const CustomDrawerContentComponent = (props) => (
+  <View style={style.container}>
+    <DrawerView.Items {...props} />
+  </View>
+);
+
+const styles = StyleSheet.create({
+  container : {
+    flex : 1,
+  },
+});
+```
 
 ### `contentOptions` for `DrawerView.Items`
 
@@ -156,7 +174,7 @@ The navigator component created by `DrawerNavigator(...)` takes the following pr
  const DrawerNav = DrawerNavigator({
    // config
  });
- 
+
  <DrawerNav
    screenProps={/* this prop will get passed to the screen components as this.props.screenProps */}
  />
