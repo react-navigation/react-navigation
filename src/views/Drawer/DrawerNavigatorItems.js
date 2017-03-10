@@ -14,6 +14,7 @@ import type {
   NavigationState,
   NavigationRoute,
   NavigationAction,
+  NavigationRouter,
   Style,
 } from '../../TypeDefinition';
 import type {
@@ -29,6 +30,7 @@ type Props = {
   getLabel: (scene: DrawerScene) => ?(React.Element<*> | string);
   renderIcon: (scene: DrawerScene) => ?React.Element<*>;
   style?: Style;
+  router: NavigationRouter;
 };
 
 /**
