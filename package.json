@@ -69,7 +69,7 @@
     "hoist-non-react-statics": "^1.2.0",
     "path-to-regexp": "^1.7.0",
     "react-native-drawer-layout-polyfill": "^1.0.4",
-    "react-native-tab-view": "^0.0.56"
+    "react-native-tab-view": "^0.0.57"
   },
   "jest": {
     "notify": true,
