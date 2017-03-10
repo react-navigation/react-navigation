@@ -126,12 +126,6 @@ export type HeaderConfig = {
   style?: Style,
 
   /**
-   * Style passed into navigation bar title
-   */
-  titleStyle?: Style,
-
-
-  /**
    * Styles passed into navigation bar components
    */
   componentStyle?: {

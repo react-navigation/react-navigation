@@ -124,7 +124,6 @@ All `navigationOptions` for the `StackNavigator`:
   - `right` - React Element to display on the right side of the header
   - `left` - React Element to display on the left side of the header
   - `style` - Style object for the header
-  - `titleStyle` - Style object for the title component
   - `componentStyle` - a config object for styling header components
     - `title` - Style object for the title component
     - `left` - Style object for the left component
