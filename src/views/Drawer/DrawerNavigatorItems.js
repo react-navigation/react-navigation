@@ -4,6 +4,7 @@ import React, { PropTypes } from 'react';
 import {
   View,
   Text,
+  Platform,
   StyleSheet,
 } from 'react-native';
 
@@ -12,9 +13,7 @@ import TouchableItem from '../TouchableItem';
 import type {
   NavigationScreenProp,
   NavigationState,
-  NavigationRoute,
   NavigationAction,
-  NavigationRouter,
   Style,
 } from '../../TypeDefinition';
 import type {
@@ -30,7 +29,6 @@ type Props = {
   getLabel: (scene: DrawerScene) => ?(React.Element<*> | string);
   renderIcon: (scene: DrawerScene) => ?React.Element<*>;
   style?: Style;
-  router: NavigationRouter;
 };
 
 /**
@@ -103,7 +101,8 @@ DrawerNavigatorItems.defaultProps = {
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 4,
+    marginTop: Platform.OS === 'ios' ? 20 : 0,
+    paddingVertical: 4,
   },
   item: {
     flexDirection: 'row',
