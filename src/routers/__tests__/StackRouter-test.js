@@ -557,6 +557,45 @@ describe('StackRouter', () => {
     expect(state && state.routes[0]).toEqual({ key: 'Init', routeName: 'Bar' });
   });
 
+  test('Gets deep path', () => {
+    const ScreenA = () => <div />;
+    const ScreenB = () => <div />;
+    ScreenA.router = StackRouter({
+      Boo: { path: 'boo', screen: ScreenB },
+      Baz: { path: 'baz/:bazId', screen: ScreenB },
+    });
+    const router = StackRouter({
+      Foo: {
+        path: 'f/:id',
+        screen: ScreenA,
+      },
+      Bar: {
+        screen: ScreenB,
+      },
+    });
+
+    const state = {
+      index: 0,
+      routes: [
+        {
+          index: 1,
+          key: 'Foo',
+          routeName: 'Foo',
+          params: {
+            id: '123',
+          },
+          routes: [
+            { key: 'Boo', routeName: 'Boo' },
+            { key: 'Baz', routeName: 'Baz', params: { bazId: '321' } },
+          ],
+        },
+        { key: 'Bar', routeName: 'Bar' },
+      ],
+    };
+    const { path } = router.getPathAndParamsForState(state);
+    expect(path).toEqual('f/123/baz/321');
+  });
+
   test('Maps old actions (uses "Handles the reset action" test)', () => {
     const router = StackRouter({
       Foo: {
