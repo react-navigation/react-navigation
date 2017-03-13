@@ -88,7 +88,7 @@ The route configs object is a mapping from route name to a route config, which t
 
 - `drawerWidth` - Width of the drawer
 - `drawerPosition` - Options are `left` or `right`. Default is `left` position.
-- `contentComponent` - Component to use to render a container with the navigation items. Receives the `navigation` prop for the drawer. Defaults to `DrawerView.Items`.
+- `contentComponent` - Component used to render the content of the drawer, for example, navigation items. Receives the `navigation` prop for the drawer. Defaults to `DrawerView.Items`. For more information, see below.
 - `contentOptions` - Configure the drawer content, see below.
 
 Several options get passed to the underlying router to modify navigation logic:
@@ -98,7 +98,7 @@ Several options get passed to the underlying router to modify navigation logic:
 - `paths` - Provide a mapping of routeName to path config, which overrides the paths set in the routeConfigs.
 - `backBehavior` - Should the back button cause switch to the initial route? If yes, set to `initialRoute`, otherwise `none`. Defaults to `initialRoute` behavior.
 
-### Overriding `contentComponent`
+### Providing a custom `contentComponent`
 
 You can easily override the default component used by `react-navigation`:
 
