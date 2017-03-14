@@ -22,10 +22,14 @@ import type {
   NavigationSceneRendererProps,
   NavigationTransitionProps,
   NavigationRouter,
+  HeaderConfig,
   Style,
 } from '../TypeDefinition';
 
-import type { HeaderMode } from './Header';
+import type {
+  HeaderMode,
+  HeaderProps,
+} from './Header';
 
 import type { TransitionConfig } from './TransitionConfigs';
 
@@ -51,7 +55,7 @@ type Props = {
   /**
    * Optional custom animation when transitioning between screens.
    */
-  transitionConfig?: () => TransitionConfig,
+    transitionConfig?: () => TransitionConfig,
 };
 
 type DefaultProps = {
@@ -239,48 +243,54 @@ class CardStack extends Component<DefaultProps, Props, void> {
     transitionProps: NavigationTransitionProps,
     headerMode: HeaderMode
   ): ?React.Element<*> {
-    const headerConfig = this.props.router.getScreenConfig(
-      transitionProps.navigation,
-      'header'
-    ) || {};
+    const headerConfig: HeaderConfig = this.props.router.getScreenConfig(
+        transitionProps.navigation,
+        'header'
+      ) || {};
 
-    return (
-      <this.props.headerComponent
-        {...transitionProps}
-        router={this.props.router}
-        style={headerConfig.style}
-        mode={headerMode}
-        onNavigateBack={() => this.props.navigation.goBack(null)}
-        renderLeftComponent={(props: NavigationTransitionProps) => {
-          const header = this.props.router.getScreenConfig(
+    const headerProps = {
+      ...transitionProps,
+      router: this.props.router,
+      style: headerConfig.style,
+      mode: headerMode,
+      onNavigateBack: () => this.props.navigation.goBack(null),
+      renderLeftComponent: (props: NavigationTransitionProps) => {
+        const header = this.props.router.getScreenConfig(
             props.navigation,
             'header'
           ) || {};
-          return header.left;
-        }}
-        renderRightComponent={(props: NavigationTransitionProps) => {
-          const header = this.props.router.getScreenConfig(
+        return header.left;
+      },
+      renderRightComponent: (props: NavigationTransitionProps) => {
+        const header = this.props.router.getScreenConfig(
             props.navigation,
             'header'
           ) || {};
-          return header.right;
-        }}
-        renderTitleComponent={(props: NavigationTransitionProps) => {
-          const header = this.props.router.getScreenConfig(
+        return header.right;
+      },
+      renderTitleComponent: (props: NavigationTransitionProps) => {
+        const header = this.props.router.getScreenConfig(
             props.navigation,
             'header'
           ) || {};
-          // When we return 'undefined' from 'renderXComponent', header treats them as not
-          // specified and default 'renderXComponent' functions are used. In case of 'title',
-          // we return 'undefined' in case of 'string' too because the default 'renderTitle'
-          // function in header handles them.
-          if (typeof header.title === 'string') {
-            return undefined;
-          }
-          return header.title;
-        }}
-      />
-    );
+        // When we return 'undefined' from 'renderXComponent', header treats them as not
+        // specified and default 'renderXComponent' functions are used. In case of 'title',
+        // we return 'undefined' in case of 'string' too because the default 'renderTitle'
+        // function in header handles them.
+        if (typeof header.title === 'string') {
+          return undefined;
+        }
+        return header.title;
+      },
+    };
+
+    if (React.isValidElement(headerConfig.component)) {
+      return headerConfig.component;
+    } else if (typeof headerConfig.component === 'function') {
+      return headerConfig.component(headerProps);
+    }
+
+    return <this.props.headerComponent {...headerProps} />;
   }
 
   _animatedSubscribe(props) {
@@ -306,12 +316,12 @@ class CardStack extends Component<DefaultProps, Props, void> {
 
   _reset(position: Animated.Value, resetToIndex: number, velocity: number): void {
     Animated.timing(position, {
-        toValue: resetToIndex,
-        duration: ANIMATION_DURATION,
-        useNativeDriver: position.__isNative,
-        velocity: velocity * GESTURE_ANIMATED_VELOCITY_RATIO,
-        bounciness: 0,
-      })
+      toValue: resetToIndex,
+      duration: ANIMATION_DURATION,
+      useNativeDriver: position.__isNative,
+      velocity: velocity * GESTURE_ANIMATED_VELOCITY_RATIO,
+      bounciness: 0,
+    })
       .start();
   }
 
@@ -324,12 +334,12 @@ class CardStack extends Component<DefaultProps, Props, void> {
     this._immediateIndex = toValue;
 
     Animated.timing(props.position, {
-        toValue,
-        duration: ANIMATION_DURATION,
-        useNativeDriver: props.position.__isNative,
-        velocity: velocity * GESTURE_ANIMATED_VELOCITY_RATIO,
-        bounciness: 0,
-      })
+      toValue,
+      duration: ANIMATION_DURATION,
+      useNativeDriver: props.position.__isNative,
+      velocity: velocity * GESTURE_ANIMATED_VELOCITY_RATIO,
+      bounciness: 0,
+    })
       .start(({finished}) => {
         this._immediateIndex = null;
         if (!this._isResponding) {
@@ -372,7 +382,7 @@ class CardStack extends Component<DefaultProps, Props, void> {
         const currentDragDistance = gesture[isVertical ? 'dy' : 'dx'];
         const currentDragPosition = event.nativeEvent[
           isVertical ? 'pageY' : 'pageX'
-        ];
+          ];
         const axisLength = isVertical
           ? layout.height.__getValue()
           : layout.width.__getValue();
@@ -511,7 +521,7 @@ class CardStack extends Component<DefaultProps, Props, void> {
         : this._renderHeader(props, headerMode);
       return (
         <View style={styles.container}>
-          <View style={{ flex: 1 }}>
+          <View style={styles.scene}>
             <SceneView
               screenProps={this.props.screenProps}
               navigation={props.navigation}
@@ -538,7 +548,7 @@ class CardStack extends Component<DefaultProps, Props, void> {
     if (!navigation || navigation.state !== scene.route) {
       navigation = this._childNavigationProps[
         scene.key
-      ] = addNavigationHelpers({
+        ] = addNavigationHelpers({
         ...this.props.navigation,
         state: scene.route,
       });
@@ -556,9 +566,9 @@ class CardStack extends Component<DefaultProps, Props, void> {
     let panHandlers = null;
 
     const cardStackConfig = this.props.router.getScreenConfig(
-      props.navigation,
-      'cardStack'
-    ) || {};
+        props.navigation,
+        'cardStack'
+      ) || {};
 
     const SceneComponent = this.props.router.getComponentForRouteName(
       props.scene.route.routeName
@@ -587,6 +597,9 @@ const styles = StyleSheet.create({
     flexDirection: 'column-reverse',
   },
   scenes: {
+    flex: 1,
+  },
+  scene: {
     flex: 1,
   },
 });

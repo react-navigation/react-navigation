@@ -130,6 +130,11 @@ export type HeaderConfig = {
    */
   titleStyle?: Style,
 
+  /**
+   * Renders a custom header component
+   */
+  component?: React.Element<*>,
+
   // // Style of title text
   // titleTextStyle?: $NavigationThunk<Object>,
   // // Tint color of navigation bar contents
@@ -172,7 +177,7 @@ export type CardStackConfig = {
    * Whether you can use gestures to dismiss this screen.
    * Defaults to true on iOS, false on Android.
    */
-  gesturesEnabled?: bool;
+  gesturesEnabled?: boolean;
 };
 
 export type NavigationScreenOptions = {
