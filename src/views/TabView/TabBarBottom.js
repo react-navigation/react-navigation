@@ -129,6 +129,7 @@ export default class TabBarBottom extends PureComponent<DefaultProps, Props, voi
       activeBackgroundColor,
       inactiveBackgroundColor,
       style,
+      onTabPress,
     } = this.props;
     const { routes } = navigationState;
     // Prepend '-1', so there are always at least 2 items in inputRange
@@ -147,7 +148,12 @@ export default class TabBarBottom extends PureComponent<DefaultProps, Props, voi
           });
           const justifyContent = this.props.showIcon ? 'flex-end' : 'center';
           return (
-            <TouchableWithoutFeedback key={route.key} onPress={() => jumpToIndex(index)}>
+            <TouchableWithoutFeedback key={route.key} onPress={() => {
+             if (onTabPress) {
+              onTabPress(routes[index].key)
+             }
+             jumpToIndex(index)
+            }}>
               <Animated.View style={[styles.tab, { backgroundColor, justifyContent }]}>
                 {this._renderIcon(scene)}
                 {this._renderLabel(scene)}
