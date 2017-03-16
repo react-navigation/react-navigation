@@ -4,7 +4,7 @@ You can make your own router by building an object with the following functions:
 
 ```js
 const MyRouter = {
-  getStateForAction: (action) => ({}),
+  getStateForAction: (action, state) => ({}),
   getActionForPathAndParams: (path, params) => null,
   getPathAndParamsForState: (state) => null,
   getComponentForState: (state) => MyScreen,
