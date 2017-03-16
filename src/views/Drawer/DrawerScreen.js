@@ -23,7 +23,7 @@ type Props = {
 };
 
 /**
- * Component that renders child screen of the drawer.
+ * Component that renders the child screen of the drawer.
  */
 class DrawerScreen extends PureComponent<void, Props, void> {
   props: Props;

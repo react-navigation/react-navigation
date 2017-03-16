@@ -122,7 +122,6 @@ Object.assign(MyApp.router, {
           routeName: 'Friends',
         }),
       });
-      return null;
     }
     return previousGetActionForPathAndParams(path, params);
   },

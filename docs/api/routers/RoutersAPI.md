@@ -66,7 +66,7 @@ Say a router `getStateForAction` outputs a state like this:
 }
 ```
 
-Based on the routeNames in the state, the router is responsible for returning valid components when calling `router.getComponentRouteName('Foo')` or `router.getComponentRouteName('Bar')`.
+Based on the routeNames in the state, the router is responsible for returning valid components when calling `router.getComponentForRouteName('Foo')` or `router.getComponentForRouteName('Bar')`.
 
 ### `getComponentForState(state)`
 
