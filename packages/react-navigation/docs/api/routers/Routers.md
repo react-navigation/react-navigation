@@ -122,7 +122,6 @@ MyApp.router = {
           routeName: 'Friends',
         }),
       });
-      return null;
     }
     return MyApp.router.getStateForAction(action, state);
   },
