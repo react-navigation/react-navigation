@@ -9,7 +9,7 @@ import {
 import createNavigator from './createNavigator';
 import createNavigationContainer from '../createNavigationContainer';
 import TabRouter from '../routers/TabRouter';
-import DrawerScreen from '../views/Drawer/DrawerScreen';
+import DefaultDrawerScreen from '../views/Drawer/DrawerScreen';
 import DrawerView from '../views/Drawer/DrawerView';
 
 import type { DrawerViewConfig } from '../views/Drawer/DrawerView';
@@ -30,6 +30,7 @@ const DefaultDrawerConfig = {
    * https://material.io/guidelines/patterns/navigation-drawer.html
    */
   drawerWidth: Dimensions.get('window').width - (Platform.OS === 'android' ? 56 : 64),
+  drawerScreenComponent: DefaultDrawerScreen,
   contentComponent: DrawerView.Items,
   drawerPosition: 'left',
 };
@@ -42,11 +43,15 @@ const DrawerNavigator = (
   const {
     containerConfig,
     drawerWidth,
+    drawerScreenComponent,
     contentComponent,
     contentOptions,
     drawerPosition,
     ...tabsConfig
   } = mergedConfig;
+
+  const DrawerScreen = drawerScreenComponent;
+
   const contentRouter = TabRouter(routeConfigs, tabsConfig);
   const drawerRouter = TabRouter({
     DrawerClose: {
