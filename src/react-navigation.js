@@ -25,6 +25,7 @@ module.exports = {
   get Transitioner() { return require('./views/Transitioner').default; },
   get CardStack() { return require('./views/CardStack').default; },
   get DrawerView() { return require('./views/Drawer/DrawerView').default; },
+  get DrawerScreen() { return require('./views/Drawer/DrawerScreen').default },
   get TabView() { return require('./views/TabView/TabView').default; },
 
   // HOCs
