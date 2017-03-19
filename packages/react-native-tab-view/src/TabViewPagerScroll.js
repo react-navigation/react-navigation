@@ -155,10 +155,10 @@ export default class TabViewPagerScroll extends PureComponent<void, Props, void>
             style={
               layout.width ?
                 { width: layout.width, overflow: 'hidden' } :
-                i === 0 ? styles.page : null
+                i === navigationState.index ? styles.page : null
             }
           >
-            {i === 0 || layout.width ? child : null}
+            {i === navigationState.index || layout.width ? child : null}
           </View>
         ))}
       </ScrollView>
