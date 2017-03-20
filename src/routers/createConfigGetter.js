@@ -66,6 +66,7 @@ export default (
             }
             return acc;
           }
+          return option;
         }
         return acc;
       },
