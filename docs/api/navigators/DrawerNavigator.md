@@ -90,6 +90,7 @@ The route configs object is a mapping from route name to a route config, which t
 - `drawerPosition` - Options are `left` or `right`. Default is `left` position.
 - `contentComponent` - Component to use to render the navigation items. Receives the `navigation` prop for the drawer. Defaults to `DrawerView.Items`.
 - `contentOptions` - Configure the drawer content, see below.
+- `drawerScreenComponent` - Component used to render the navigation items. Defaults to `DrawerScreen`. This can be used when one wants to [insert a component](https://github.com/react-community/react-navigation/blob/master/docs/guides/Decorating-ScreenComponent.md) in every screen of the navigator.
 
 Several options get passed to the underlying router to modify navigation logic:
 
