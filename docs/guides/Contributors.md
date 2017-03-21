@@ -6,11 +6,11 @@ React navigation was initially developed on macOS 10.12, with node 7+, and react
 
 ## Development
 
-### 0. Fork and install
+### 0. Fork the repo
 
-Fork [`react-navigation`](https://github.com/react-community/react-navigation) on GitHub
+- Fork [`react-navigation`](https://github.com/react-community/react-navigation) on GitHub
 
-_next:_
+- Run these commands in the terminal:
 
 ```
 git clone https://github.com/<USERNAME>/react-navigation.git`
@@ -86,6 +86,4 @@ Simple bug fixes are welcomed in pull requests! Please check for duplicate PRs b
 
 #### Make sure to sync up with the state of upstream before submitting a PR:
 
-- `git fetch upstream`
-- `git checkout master`
-- `git merge upstream/master`
+- `git rebase upstream/master`
