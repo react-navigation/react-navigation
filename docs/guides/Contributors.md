@@ -86,4 +86,5 @@ Simple bug fixes are welcomed in pull requests! Please check for duplicate PRs b
 
 #### Make sure to sync up with the state of upstream before submitting a PR:
 
-- `git rebase upstream/master`
+- `git fetch upstream/master`
+- `git rebase upstream/master master`
