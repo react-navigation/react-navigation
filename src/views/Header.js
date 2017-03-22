@@ -123,7 +123,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
     if (header && header.numberOfLines) {
       return header.numberOfLines;
     }
-    return undefined;
+    return 1;
   }
 
   _renderTitleComponent = (props: SubViewProps) => {
