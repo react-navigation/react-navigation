@@ -16,11 +16,15 @@ export default function<S: *> (navigation: NavigationProp<S, NavigationAction>) 
   return {
     ...navigation,
     goBack: (key?: ?string): boolean => {
-      if (key === undefined || key == null) {
+      if (key === undefined) {
+        key = navigation.state.key
+      }
+      else if (key == null && 'index' in navigation.state && 'routes' in navigation.state) {
         const index = navigation.state.index
         const route = navigation.state.routes[index]
         key = route.key
       }
+      
       return navigation.dispatch(NavigationActions.back({
         key: key,
       }))
