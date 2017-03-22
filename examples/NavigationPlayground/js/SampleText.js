@@ -10,7 +10,13 @@ import {
 /**
  * Used across examples as a screen placeholder.
  */
-const SampleText = ({ children }) => (
+ import type { Children } from 'react';
+
+const SampleText = ({
+  children
+}: {
+  children?: Children
+}) => (
   <Text style={styles.sampleText}>{children}</Text>
 );
 
