@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
 - `inactiveTintColor` - label and icon color of the inactive label
 - `inactiveBackgroundColor` - background color of the inactive label
 - `style` - style object for the content section
-- `labelStyle` - style object to overwrite `Text` style inside content section, when your title is a string
+- `labelStyle` - style object to overwrite `Text` style inside content section, when your label is a string
 
 #### Example:
 
