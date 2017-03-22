@@ -15,10 +15,11 @@ import type {
 type Props = {
   tintColor?: ?string;
   style?: Style,
+  numberOfLines?: number
 };
 
-const HeaderTitle = ({ style, ...rest }: Props) => (
-  <Text numberOfLines={1} {...rest} style={[styles.title, style]} />
+const HeaderTitle = ({ style, numberOfLines, ...rest }: Props) => (
+  <Text numberOfLines={numberOfLines || 1} {...rest} style={[styles.title, style]} />
 );
 
 const styles = StyleSheet.create({

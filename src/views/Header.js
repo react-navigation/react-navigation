@@ -118,10 +118,19 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
     return undefined;
   }
 
+  _getHeaderTitleLines = (navigation: Navigation): number => {
+    const header = this.props.router.getScreenConfig(navigation, 'header');
+    if (header && header.numberOfLines) {
+      return header.numberOfLines;
+    }
+    return undefined;
+  }
+
   _renderTitleComponent = (props: SubViewProps) => {
     const titleStyle = this._getHeaderTitleStyle(props.navigation);
     const color = this._getHeaderTintColor(props.navigation);
     const title = this._getHeaderTitle(props.navigation);
+    const titleLines = this._getHeaderTitleLines(props.navigation);
 
     // On iOS, width of left/right components depends on the calculated
     // size of the title.
@@ -138,6 +147,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
 
     return (
       <HeaderTitle
+        numberOfLines={titleLines}
         onLayout={onLayoutIOS}
         style={[color ? { color } : null, titleStyle]}
       >
