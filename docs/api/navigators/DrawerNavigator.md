@@ -88,7 +88,7 @@ The route configs object is a mapping from route name to a route config, which t
 
 - `drawerWidth` - Width of the drawer
 - `drawerPosition` - Options are `left` or `right`. Default is `left` position.
-- `contentComponent` - Component to use to render the navigation items. Receives the `navigation` prop for the drawer. Defaults to `DrawerView.Items`.
+- `contentComponent` - Component used to render the content of the drawer, for example, navigation items. Receives the `navigation` prop for the drawer. Defaults to `DrawerView.Items`. For more information, see below.
 - `contentOptions` - Configure the drawer content, see below.
 
 Several options get passed to the underlying router to modify navigation logic:
@@ -97,6 +97,24 @@ Several options get passed to the underlying router to modify navigation logic:
 - `order` - Array of routeNames which defines the order of the drawer items.
 - `paths` - Provide a mapping of routeName to path config, which overrides the paths set in the routeConfigs.
 - `backBehavior` - Should the back button cause switch to the initial route? If yes, set to `initialRoute`, otherwise `none`. Defaults to `initialRoute` behavior.
+
+### Providing a custom `contentComponent`
+
+You can easily override the default component used by `react-navigation`:
+
+```js
+const CustomDrawerContentComponent = (props) => (
+  <View style={style.container}>
+    <DrawerView.Items {...props} />
+  </View>
+);
+
+const styles = StyleSheet.create({
+  container : {
+    flex : 1,
+  },
+});
+```
 
 ### `contentOptions` for `DrawerView.Items`
 
@@ -117,6 +135,34 @@ contentOptions: {
 }
 ```
 
+### Screen Navigation Options
+
+Usually you define static `navigationOptions` on your screen component. For example:
+
+```jsx
+class ProfileScreen extends React.Component {
+
+  static navigationOptions = {
+
+    title: ({ state }) => `${state.params.name}'s Profile!`,
+
+    drawer: {
+      icon: (
+        <Image src={require('./my-icon.png')} />
+      ),
+    },
+  };
+  ...
+```
+
+All `navigationOptions` for the `DrawerNavigator`:
+
+- `title` - a title (string) of the scene
+- `drawer` - a config object for the drawer:
+  - `label` - String, React Element or a function that given `{ focused: boolean, tintColor: string }` returns a React.Element, to display in drawer sidebar. When undefined, scene `title` is used
+  - `icon` - React Element or a function, that given `{ focused: boolean, tintColor: string }` returns a React.Element, to display in drawer sidebar
+
+
 ### Navigator Props
 
 The navigator component created by `DrawerNavigator(...)` takes the following props:
@@ -128,7 +174,7 @@ The navigator component created by `DrawerNavigator(...)` takes the following pr
  const DrawerNav = DrawerNavigator({
    // config
  });
- 
+
  <DrawerNav
    screenProps={/* this prop will get passed to the screen components as this.props.screenProps */}
  />

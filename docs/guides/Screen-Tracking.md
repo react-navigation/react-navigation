@@ -2,35 +2,50 @@
 
 This example shows how to do screen tracking and send to Google Analytics. The approach can be adapted to any other mobile analytics SDK. 
 
-### Use componentDidUpdate hook
+### Screen tracking
 
-`componentDidUpdate` has access the previous and current navigation state and its a good place to do screen tracking.
+When using built-in navigation container, we can use `onNavigationStateChange` to track the screen.
 
 ```js
 import { GoogleAnalyticsTracker } from 'react-native-google-analytics-bridge';
 
 const tracker = new GoogleAnalyticsTracker(GA_TRACKING_ID);
 
-const screenName = (navState) => {
-  return navState ? navState.routes[navState.index].routeName : void 0;
-};
+// gets the current screen from navigation state
+function getCurrentRouteName(navigationState) {
+  if (!navigationState) {
+    return null;
+  }
+  const route = navigationState.routes[navigationState.index];
+  // dive into nested navigators
+  if (route.routes) {
+    return getCurrentRouteName(route);
+  }
+  return route.routeName;
+}
 
 const AppNavigator = StackNavigator(AppRouteConfigs);
 
-AppNavigator.prototype.componentDidUpdate = function(prevProps, prevState) {
-  const currScreen = screenName(this.state.nav);
-  const prevScreen = screenName(prevState.nav);
-  if (!!currScreen && currScreen != prevScreen) {
-    // the line below uses the Google Analytics tracker
-    // change the tracker here to use other Mobile analytics SDK.
-    tracker.trackScreenView(currScreen);
-  }
-}
+export default () => (
+  <AppNavigator
+    onNavigationStateChange={(prevState, currentState) => {
+      const currentScreen = getCurrentRouteName(currentState);
+      const prevScreen = getCurrentRouteName(prevState);
+
+      if (prevScreen !== currentScreen) {
+        // the line below uses the Google Analytics tracker
+        // change the tracker here to use other Mobile analytics SDK.
+        tracker.trackScreenView(currentScreen);
+      }
+    }}
+  />
+);
 ```
 
-### Use Redux
+### Screen tracking with Redux
 
-When using Redux, `screenTracking` can be written as a Redux middleware.
+When using Redux, we can write a Redux middleware to track the screen. For this purpose,
+we will reuse `getCurrentRouteName` from the previous section.
 
 ```js
 import { NavigationActions } from 'react-navigation';
@@ -38,19 +53,17 @@ import { GoogleAnalyticsTracker } from 'react-native-google-analytics-bridge';
 
 const tracker = new GoogleAnalyticsTracker(GA_TRACKING_ID);
 
-// gets the current screen from navigation state
-function getCurrentScreen(getStateFn) {
-  const navigationState = getStateFn().nav;
-  if (!navigationState) { return null; }
-  return navigationState.routes[navigationState.index].routeName;
-}
-
 const screenTracking = ({ getState }) => next => (action) => {
-  if (action.type !== NavigationActions.NAVIGATE && action.type !== NavigationActions.BACK)) return next(action);
+  if (
+    action.type !== NavigationActions.NAVIGATE
+    && action.type !== NavigationActions.BACK
+  ) {
+    return next(action);
+  }
 
-  const currentScreen = getCurrentScreen(getState);
+  const currentScreen = getCurrentRouteName(getState().navigation);
   const result = next(action);
-  const nextScreen = getCurrentScreen(getState);
+  const nextScreen = getCurrentRouteName(getState().navigation);
   if (nextScreen !== currentScreen) {
     // the line below uses the Google Analytics tracker
     // change the tracker here to use other Mobile analytics SDK.
@@ -69,7 +82,7 @@ The `screenTracking` middleware can be applied to the store during its creation.
 ```js
 const store = createStore(
   combineReducers({
-    nav: navReducer,
+    navigation: navigationReducer,
     ...
   }),
   applyMiddleware(

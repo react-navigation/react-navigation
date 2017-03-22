@@ -13,6 +13,20 @@ body, #root, html {
 .main-section a:hover {
   color: #6b52ae;
 }
+.md-header:before {
+  display: block;
+  content: " ";
+  margin-top: -70px;
+  height: 70px;
+  visibility: hidden;
+}
+.md-header a {
+  visibility: hidden;
+  display: inline-block;
+}
+.md-header:hover a {
+  visibility: visible;
+}
 .nextLink {
   float: right;
 }

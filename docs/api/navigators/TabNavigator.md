@@ -34,7 +34,7 @@ class MyNotificationsScreen extends React.Component {
       icon: ({ tintColor }) => (
         <Image
           source={require('./notif-icon.png')}
-          style={[styles.tabIcon, {tintColor: tintColor}]}
+          style={[styles.icon, {tintColor: tintColor}]}
         />
       ),
     },
@@ -114,10 +114,12 @@ Example:
 ```js
 tabBarOptions: {
   activeTintColor: '#e91e63',
-  labelStyle: { fontSize: 12 },
+  labelStyle: {
+    fontSize: 12,
+  },
   style: {
     backgroundColor: 'blue',
-  }
+  },
 }
 ```
 
@@ -145,10 +147,38 @@ tabBarOptions: {
   },
   style: {
     backgroundColor: 'blue',
-  }
+  },
 }
 ```
 
+### Screen Navigation Options
+
+Usually you define static `navigationOptions` on your screen component. For example:
+
+```jsx
+class ProfileScreen extends React.Component {
+
+  static navigationOptions = {
+
+    title: ({ state }) => `${state.params.name}'s Profile!`,
+
+    tabBar: ({ state, setParams }) => ({
+      icon: (
+        <Image src={require('./my-icon.png')} />
+      ),
+    }),
+  };
+  ...
+```
+
+All `navigationOptions` for the `TabNavigator`:
+
+- `title` - a title (string) of the scene
+- `tabBar` - a config object for the tab bar:
+  - `visible` - Boolean toggle of tab bar visibility
+  - `icon` - React Element or a function that given `{ focused: boolean, tintColor: string }` returns a React.Element, to display in tab bar
+  - `label` - Title string of a tab displayed in the tab bar. When undefined, scene `title` is used. To hide, see `tabBarOptions.showLabel` in the previous section
+  
 ### Navigator Props
 
 The navigator component created by `TabNavigator(...)` takes the following props:

@@ -139,6 +139,42 @@ describe('TabRouter', () => {
     });
   });
 
+  test('Handles passing params to nested tabs', () => {
+    const ChildTabNavigator = () => <div />;
+    ChildTabNavigator.router = TabRouter({ Boo: BareLeafRouteConfig, Bar: BareLeafRouteConfig });
+    const router = TabRouter({ Foo: BareLeafRouteConfig, Baz: { screen: ChildTabNavigator } });
+    const navAction = { type: NavigationActions.NAVIGATE, routeName: 'Baz', params: { foo: '42', bar: '43' } };
+    let state = router.getStateForAction(navAction);
+    expect(state).toEqual({
+      index: 1,
+      routes: [
+        { key: 'Foo', routeName: 'Foo' },
+        {
+          index: 0,
+          key: 'Baz',
+          routeName: 'Baz',
+          routes: [
+            { key: 'Boo', routeName: 'Boo', params: { foo: '42', bar: '43' } },
+            { key: 'Bar', routeName: 'Bar', params: { foo: '42', bar: '43' } },
+          ],
+        },
+      ],
+    });
+
+    // Ensure that navigating back and forth doesn't overwrite
+    state = router.getStateForAction({ type: NavigationActions.NAVIGATE, routeName: 'Bar' }, state);
+    state = router.getStateForAction({ type: NavigationActions.NAVIGATE, routeName: 'Boo' }, state);
+    expect(state && state.routes[1]).toEqual({
+      index: 0,
+      key: 'Baz',
+      routeName: 'Baz',
+      routes: [
+        { key: 'Boo', routeName: 'Boo', params: { foo: '42', bar: '43' } },
+        { key: 'Bar', routeName: 'Bar', params: { foo: '42', bar: '43' } },
+      ],
+    });
+  });
+
   test('Handles initial deep linking into nested tabs', () => {
     const ChildTabNavigator = () => <div />;
     ChildTabNavigator.router = TabRouter({ Foo: BareLeafRouteConfig, Bar: BareLeafRouteConfig });

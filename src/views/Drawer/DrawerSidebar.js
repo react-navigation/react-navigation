@@ -11,7 +11,6 @@ import withCachedChildNavigation from '../../withCachedChildNavigation';
 
 import type {
   NavigationScreenProp,
-  NavigationState,
   NavigationRoute,
   NavigationAction,
   NavigationRouter,
@@ -34,7 +33,7 @@ type Props = {
 };
 
 /**
- * Component that renders child screen of the drawer.
+ * Component that renders the sidebar screen of the drawer.
  */
 class DrawerSidebar extends PureComponent<void, Props, void> {
   props: Props;
@@ -47,10 +46,12 @@ class DrawerSidebar extends PureComponent<void, Props, void> {
     );
   }
 
-  _getLabelText = ({ route }: DrawerScene) => {
+  _getLabel = ({ focused, tintColor, route }: DrawerScene) => {
     const drawer = this._getScreenConfig(route.key, 'drawer');
-    if (drawer && typeof drawer.label === 'string') {
-      return drawer.label;
+    if (drawer && drawer.label) {
+      return typeof drawer.label === 'function'
+        ? drawer.label({ tintColor, focused })
+        : drawer.label;
     }
 
     const title = this._getScreenConfig(route.key, 'title');
@@ -64,10 +65,9 @@ class DrawerSidebar extends PureComponent<void, Props, void> {
   _renderIcon = ({ focused, tintColor, route }: DrawerScene) => {
     const drawer = this._getScreenConfig(route.key, 'drawer');
     if (drawer && drawer.icon) {
-      return drawer.icon({
-        tintColor,
-        focused,
-      });
+      return typeof drawer.icon === 'function'
+        ? drawer.icon({ tintColor, focused })
+        : drawer.icon;
     }
     return null;
   };
@@ -79,8 +79,9 @@ class DrawerSidebar extends PureComponent<void, Props, void> {
         <ContentComponent
           {...this.props.contentOptions}
           navigation={this.props.navigation}
-          getLabelText={this._getLabelText}
+          getLabel={this._getLabel}
           renderIcon={this._renderIcon}
+          router={this.props.router}
         />
       </View>
     );
@@ -93,6 +94,5 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    paddingTop: Platform.OS === 'ios' ? 20 : 0,
   },
 });
