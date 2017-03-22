@@ -33,7 +33,7 @@ type Props = {
 };
 
 /**
- * Component that renders child screen of the drawer.
+ * Component that renders the sidebar screen of the drawer.
  */
 class DrawerSidebar extends PureComponent<void, Props, void> {
   props: Props;
@@ -94,6 +94,5 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    paddingTop: Platform.OS === 'ios' ? 20 : 0,
   },
 });

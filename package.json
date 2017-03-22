@@ -1,6 +1,6 @@
 {
   "name": "react-navigation",
-  "version": "1.0.0-beta.6",
+  "version": "1.0.0-beta.7",
   "description": "React Navigation",
   "main": "src/react-navigation.js",
   "sources": {
@@ -37,23 +37,23 @@
     "src"
   ],
   "devDependencies": {
-    "babel-cli": "^6.18.0",
-    "babel-core": "^6.18.2",
+    "babel-cli": "^6.24.0",
+    "babel-core": "^6.24.0",
     "babel-eslint": "^7.0.0",
-    "babel-jest": "^17.0.2",
-    "babel-preset-es2015": "^6.18.0",
-    "babel-preset-react": "^6.22.0",
+    "babel-jest": "^19.0.0",
+    "babel-preset-es2015": "^6.24.0",
+    "babel-preset-react": "^6.23.0",
     "babel-preset-react-native": "^1.9.0",
     "babel-preset-react-native-syntax": "^1.0.0",
     "babel-preset-stage-1": "^6.16.0",
-    "eslint": "^3.9.1",
-    "eslint-config-airbnb": "^12.0.0",
-    "eslint-plugin-flowtype": "^2.19.0",
-    "eslint-plugin-import": "^1.16.0",
-    "eslint-plugin-jsx-a11y": "^2.2.2",
-    "eslint-plugin-react": "^6.3.0",
+    "eslint": "^3.17.1",
+    "eslint-config-airbnb": "^14.1.0",
+    "eslint-plugin-flowtype": "^2.30.3",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^4.0.0",
+    "eslint-plugin-react": "^6.10.0",
     "flow-bin": "^0.37.4",
-    "jest": "^18.1.0",
+    "jest": "^19.0.2",
     "react": "~15.4.2",
     "react-native": "^0.41.2",
     "react-native-vector-icons": "^3.0.0",
@@ -69,7 +69,7 @@
     "hoist-non-react-statics": "^1.2.0",
     "path-to-regexp": "^1.7.0",
     "react-native-drawer-layout-polyfill": "^1.0.4",
-    "react-native-tab-view": "^0.0.56"
+    "react-native-tab-view": "^0.0.57"
   },
   "jest": {
     "notify": true,

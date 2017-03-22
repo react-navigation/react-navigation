@@ -105,8 +105,8 @@ const MyApp = StackNavigator({
 }, {
   initialRouteName: 'Home',
 })
-MyApp.router = {
-  ...MyApp.router,
+const previousGetActionForPathAndParams = MyApp.router.getActionForPathAndParams
+Object.assign(MyApp.router, {
   getActionForPathAndParams(path, params) {
     if (
       path === 'my/custom/path' &&
@@ -122,9 +122,8 @@ MyApp.router = {
           routeName: 'Friends',
         }),
       });
-      return null;
     }
-    return MyApp.router.getStateForAction(action, state);
+    return previousGetActionForPathAndParams(path, params);
   },
 };
 ```
