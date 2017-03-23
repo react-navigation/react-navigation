@@ -126,12 +126,21 @@ export default (
         };
         state = {
           index: 0,
+          key: 'Root',
           routes: [route],
         };
       }
 
       // Check if the current scene wants to handle the action
-      const currentRoute = state.routes[state.index];
+      let currentIndex
+      if (action.type === NavigationActions.RESET && action.key) {
+        currentIndex = StateUtils.indexOf(state, action.key)
+        action.key = null
+      } else if (action.key != null) {
+        currentIndex = state.index
+      }
+      //const currentIndex = action.type === NavigationActions.RESET && StateUtils.indexOf(state, action.key) ? action.key : state.index;
+      const currentRoute = state.routes[currentIndex];
       const childRouter = childRouters[currentRoute.routeName];
       if (childRouter) {
         const route = childRouter.getStateForAction(action, currentRoute);
