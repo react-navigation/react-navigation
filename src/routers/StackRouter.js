@@ -126,17 +126,22 @@ export default (
         };
         state = {
           index: 0,
+          key: 'Root',
           routes: [route],
         };
       }
 
-      // Check if the current scene wants to handle the action
-      const currentRoute = state.routes[state.index];
-      const childRouter = childRouters[currentRoute.routeName];
-      if (childRouter) {
-        const route = childRouter.getStateForAction(action, currentRoute);
-        if (route && route !== currentRoute) {
-          return StateUtils.replaceAt(state, currentRoute.key, route);
+      // Check if a child scene wants to handle the action
+      if(action.key !== 'Root') {
+        const childIndex = action.key ? StateUtils.indexOf(state, action.key) : state.index;
+        const childRoute = state.routes[childIndex];
+        const childRouter = childRouters[childRoute.routeName];
+        if (childRouter) {
+          delete action.key;
+          const route = childRouter.getStateForAction(action, childRoute);
+          if (route && route !== childRoute) {
+            return StateUtils.replaceAt(state, childRoute.key, route);
+          }
         }
       }
 
