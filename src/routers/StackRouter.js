@@ -126,14 +126,14 @@ export default (
         };
         state = {
           index: 0,
-          key: 'Root',
           routes: [route],
         };
       }
 
       // Check if a child scene wants to handle the action
-      if(action.key !== 'Root') {
-        const childIndex = action.key ? StateUtils.indexOf(state, action.key) : state.index;
+      if(action.key !== null) {
+        const keyIndex = action.key ? StateUtils.indexOf(state, action.key) : -1
+        const childIndex = keyIndex >= 0 ? keyIndex : state.index;
         const childRoute = state.routes[childIndex];
         const childRouter = childRouters[childRoute.routeName];
         if (childRouter) {

@@ -488,6 +488,7 @@ describe('StackRouter', () => {
     expect(state2 && state2.routes[0].routes[0].routeName).toEqual('baz');
   });
 
+
   test('Handles the navigate action with params and nested StackRouter', () => {
     const ChildNavigator = () => <div />;
     ChildNavigator.router = StackRouter({ Baz: { screen: () => <div /> } });
