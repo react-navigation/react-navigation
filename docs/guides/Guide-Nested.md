@@ -4,6 +4,13 @@ It is common in mobile apps to compose various forms of navigation. The routers 
 
 For our chat app, we want to put several tabs on the first screen, to view recent chat threads or all contacts.
 
+Before we get started, lets import the TabNavigator module. At the top of your file (`App.js`), add:
+
+```js
+import { TabNavigator} from "react-navigation";
+```
+With that out of the way, we can continue.
+
 ## Introducing Tab Navigator
 
 Lets create a new `TabNavigator` in our `App.js`:
