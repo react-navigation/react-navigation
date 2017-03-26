@@ -248,18 +248,10 @@ class CardStackPanResponder extends AbstractPanResponder {
   _goBack(velocity: number) {
     const props = this._props;
     if (!props.onNavigateBack) {
+      this._reset(velocity);
       return;
     }
-    Animated.spring(
-      props.position,
-      {
-        toValue: Math.max(props.navigationState.index - 1, 0),
-        duration: ANIMATION_DURATION,
-        useNativeDriver: props.position.__isNative,
-        velocity: velocity * GESTURE_ANIMATED_VELOCITY_RATIO,
-        bounciness: 0,
-      }
-    ).start(props.onNavigateBack);
+    props.onNavigateBack();
   }
 
   _addNativeListener(animatedValue: Animated.Value) {
