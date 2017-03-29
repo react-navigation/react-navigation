@@ -264,6 +264,9 @@ export type NavigationUriAction = {
 export type NavigationContainerOptions = {
   // This is used to extract the path from the URI passed to the app for a deep link
   URIPrefix?: string,
+
+  // This is used to log useful debugging information about scene transitions and url handling
+  loggingEnabled: boolean,
 };
 
 export type NavigationContainerConfig = {

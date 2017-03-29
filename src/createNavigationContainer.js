@@ -51,6 +51,8 @@ export default function createNavigationContainer<T: *>(
     };
   }
 
+  const { loggingEnabled } = containerConfig || {};
+
   class NavigationContainer extends React.Component {
     state: State;
     props: Props;
@@ -93,7 +95,9 @@ export default function createNavigationContainer<T: *>(
         Linking.addEventListener('url', this._handleOpenURL);
         Linking.getInitialURL().then((url: string) => {
           if (url) {
-            console.log('Handling URL:', url);
+            if (loggingEnabled) {
+              console.log('Handling URL:', url);
+            }
             const parsedUrl = urlToPathAndParams(url);
             if (parsedUrl) {
               const { path, params } = parsedUrl;
@@ -127,7 +131,9 @@ export default function createNavigationContainer<T: *>(
     }
 
     _handleOpenURL = ({ url }: { url: string }) => {
-      console.log('Handling URL:', url);
+      if (loggingEnabled) {
+        console.log('Handling URL:', url);
+      }
       const parsedUrl = urlToPathAndParams(url);
       if (parsedUrl) {
         const { path, params } = parsedUrl;
@@ -146,14 +152,16 @@ export default function createNavigationContainer<T: *>(
       const nav = Component.router.getStateForAction(action, state.nav);
 
       if (nav && nav !== state.nav) {
-        if (console.group) {
-          console.group('Navigation Dispatch: ');
-          console.log('Action: ', action);
-          console.log('New State: ', nav);
-          console.log('Last State: ', state.nav);
-          console.groupEnd();
-        } else {
-          console.log('Navigation Dispatch: ', { action, newState: nav, lastState: state.nav });
+        if (loggingEnabled) {
+          if (console.group) {
+            console.group('Navigation Dispatch: ');
+            console.log('Action: ', action);
+            console.log('New State: ', nav);
+            console.log('Last State: ', state.nav);
+            console.groupEnd();
+          } else {
+            console.log('Navigation Dispatch: ', { action, newState: nav, lastState: state.nav });
+          }
         }
         this.setState({ nav });
         return true;
@@ -185,4 +193,3 @@ export default function createNavigationContainer<T: *>(
 
   return NavigationContainer;
 }
-
