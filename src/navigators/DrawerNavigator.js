@@ -41,7 +41,6 @@ const DrawerNavigator = (
   const mergedConfig = { ...DefaultDrawerConfig, ...config };
   const {
     containerConfig,
-    drawerLockMode,
     drawerWidth,
     contentComponent,
     contentOptions,
@@ -64,7 +63,6 @@ const DrawerNavigator = (
   return createNavigationContainer(createNavigator(drawerRouter)((props: *) =>
     <DrawerView
       {...props}
-      drawerLockMode={drawerLockMode}
       drawerWidth={drawerWidth}
       contentComponent={contentComponent}
       contentOptions={contentOptions}

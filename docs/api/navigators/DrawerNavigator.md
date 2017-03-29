@@ -86,7 +86,6 @@ The route configs object is a mapping from route name to a route config, which t
 
 ### DrawerNavigatorConfig
 
-- `drawerLockMode` - Specifies the [lock mode](https://facebook.github.io/react-native/docs/drawerlayoutandroid.html#drawerlockmode) of the drawer.
 - `drawerWidth` - Width of the drawer
 - `drawerPosition` - Options are `left` or `right`. Default is `left` position.
 - `contentComponent` - Component used to render the content of the drawer, for example, navigation items. Receives the `navigation` prop for the drawer. Defaults to `DrawerView.Items`. For more information, see below.
@@ -161,6 +160,7 @@ All `navigationOptions` for the `DrawerNavigator`:
 - `title` - a title (string) of the scene
 - `drawer` - a config object for the drawer:
   - `label` - String, React Element or a function that given `{ focused: boolean, tintColor: string }` returns a React.Element, to display in drawer sidebar. When undefined, scene `title` is used
+  - `lockMode` - Specifies the [lock mode](https://facebook.github.io/react-native/docs/drawerlayoutandroid.html#drawerlockmode) of the drawer.
   - `icon` - React Element or a function, that given `{ focused: boolean, tintColor: string }` returns a React.Element, to display in drawer sidebar
 
 
