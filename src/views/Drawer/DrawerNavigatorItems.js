@@ -29,6 +29,7 @@ type Props = {
   getLabel: (scene: DrawerScene) => ?(React.Element<*> | string);
   renderIcon: (scene: DrawerScene) => ?React.Element<*>;
   style?: Style;
+  labelStyle?: Style;
 };
 
 /**
@@ -43,6 +44,7 @@ const DrawerNavigatorItems = ({
   getLabel,
   renderIcon,
   style,
+  labelStyle,
 }: Props) => (
   <View style={[styles.container, style]}>
     {navigation.state.routes.map((route: *, index: number) => {
@@ -69,7 +71,7 @@ const DrawerNavigatorItems = ({
             ) : null}
             {typeof label === 'string'
               ? (
-                <Text style={[styles.label, { color }]}>
+                <Text style={[styles.label, { color }, labelStyle]}>
                   {label}
                 </Text>
               )
