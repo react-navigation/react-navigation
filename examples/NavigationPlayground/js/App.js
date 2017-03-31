@@ -19,6 +19,7 @@ import ModalStack from './ModalStack';
 import StacksInTabs from './StacksInTabs';
 import SimpleStack from './SimpleStack';
 import SimpleTabs from './SimpleTabs';
+import Transitions from './Transitions';
 
 const ExampleRoutes = {
   SimpleStack: {
@@ -63,6 +64,12 @@ const ExampleRoutes = {
     screen: SimpleTabs,
     path: 'settings',
   },
+  Transitions: {
+    name: 'Custom Transitions',
+    description: 'Custom, complex transitions',
+    screen: Transitions,
+    path: 'transitions',
+  },
 };
 
 const MainScreen = ({ navigation }) => (
@@ -103,7 +110,8 @@ const AppNavigator = StackNavigator({
   mode: Platform.OS === 'ios' ? 'modal' : 'card',
 });
 
-export default () => <AppNavigator />;
+// export default () => <AppNavigator />;
+export default Transitions; // TODO change it back
 
 const styles = StyleSheet.create({
   item: {
