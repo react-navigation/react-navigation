@@ -132,6 +132,7 @@ const SimpleTabs = TabNavigator({
   },
 }, {
   tabBarOptions: {
+    showIcon: true,
     activeTintColor: Platform.OS === 'ios' ? '#e91e63' : '#fff',
   },
 });
