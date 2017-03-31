@@ -88,20 +88,20 @@ The route configs object is a mapping from route name to a route config, which t
 
 - `drawerWidth` - Width of the drawer
 - `drawerPosition` - Options are `left` or `right`. Default is `left` position.
-- `contentComponent` - Component used to render the content of the drawer, for example, navigation items. Receives the `navigation` prop for the drawer. Defaults to `DrawerView.Items`. For more information, see below.
-- `contentOptions` - Configure the drawer content, see below.
+- `drawerComponent` - Component used to render the content of the drawer, for example, navigation items. Receives the `navigation` prop for the drawer. Defaults to `DrawerView.Items`. For more information, see below.
+- `drawerOptions` - Configure the drawer content, see below.
 
 #### Example:
 
 Default the `DrawerView` isn't scrollable.
-To achieve a scrollable `View`, you have to use the `contentComponent` to customize the container, 
+To achieve a scrollable `View`, you have to use the `drawerComponent` to customize the container, 
 as you can see in the example below.
 
 ```js
 {
   drawerWidth: 200,
   drawerPosition: 'right',
-  contentComponent: props => <ScrollView><DrawerView.Items {...props} /></ScrollView>
+  drawerComponent: props => <ScrollView><DrawerView.Items {...props} /></ScrollView>
 }
 ```
 
@@ -112,12 +112,12 @@ Several options get passed to the underlying router to modify navigation logic:
 - `paths` - Provide a mapping of routeName to path config, which overrides the paths set in the routeConfigs.
 - `backBehavior` - Should the back button cause switch to the initial route? If yes, set to `initialRoute`, otherwise `none`. Defaults to `initialRoute` behavior.
 
-### Providing a custom `contentComponent`
+### Providing a custom `drawerComponent`
 
 You can easily override the default component used by `react-navigation`:
 
 ```js
-const CustomDrawerContentComponent = (props) => (
+const CustomDrawerDrawerComponent = (props) => (
   <View style={style.container}>
     <DrawerView.Items {...props} />
   </View>
@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
 });
 ```
 
-### `contentOptions` for `DrawerView.Items`
+### `drawerOptions` for `DrawerView.Items`
 
 - `activeTintColor` - label and icon color of the active label
 - `activeBackgroundColor` - background color of the active label
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
 #### Example:
 
 ```js
-contentOptions: {
+drawerOptions: {
   activeTintColor: '#e91e63',
   style: {
     marginVertical: 0,
