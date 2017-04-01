@@ -1,7 +1,7 @@
 /* @flow */
 
 import React, { PropTypes, Component } from 'react';
-import { Animated, StyleSheet, NativeModules, PanResponder, Platform, View, I18nManager, Keyboard } from 'react-native';
+import { Animated, StyleSheet, PanResponder, Platform, View, I18nManager, Keyboard } from 'react-native';
 
 import Transitioner from './Transitioner';
 import Card from './Card';
@@ -11,6 +11,7 @@ import NavigationPropTypes from '../PropTypes';
 import NavigationActions from '../NavigationActions';
 import addNavigationHelpers from '../addNavigationHelpers';
 import SceneView from './SceneView';
+import withTransition from './Transition/withTransition';
 
 import clamp from 'clamp';
 
@@ -29,12 +30,7 @@ import type { HeaderMode } from './Header';
 
 import type { TransitionConfig } from './TransitionConfigs';
 
-import TransitionConfigs from './TransitionConfigs';
-
 const emptyFunction = () => {};
-
-const NativeAnimatedModule = NativeModules &&
-  NativeModules.NativeAnimatedModule;
 
 type Props = {
   screenProps?: {},
@@ -199,7 +195,7 @@ class CardStack extends Component<DefaultProps, Props, void> {
   render() {
     return (
       <Transitioner
-        configureTransition={this._configureTransition}
+        configureTransition={this.props.configureTransition}
         navigation={this.props.navigation}
         render={this._render}
         style={this.props.style}
@@ -208,32 +204,6 @@ class CardStack extends Component<DefaultProps, Props, void> {
       />
     );
   }
-
-  _configureTransition = (
-    // props for the new screen
-    transitionProps: NavigationTransitionProps,
-    // props for the old screen
-    prevTransitionProps: NavigationTransitionProps
-  ) => {
-    const isModal = this.props.mode === 'modal';
-    // Copy the object so we can assign useNativeDriver below
-    // (avoid Flow error, transitionSpec is of type NavigationTransitionSpec).
-    const transitionSpec = {
-      ...this._getTransitionConfig(
-        transitionProps,
-        prevTransitionProps
-      ).transitionSpec,
-    };
-    if (
-      !!NativeAnimatedModule &&
-      // Native animation support also depends on the transforms used:
-      CardStackStyleInterpolator.canUseNativeDriver(isModal)
-    ) {
-      // Internal undocumented prop
-      transitionSpec.useNativeDriver = true;
-    }
-    return transitionSpec;
-  };
 
   _renderHeader(
     transitionProps: NavigationTransitionProps,
@@ -448,6 +418,8 @@ class CardStack extends Component<DefaultProps, Props, void> {
     });
     const gesturesEnabled = this.props.mode === 'card' && Platform.OS === 'ios';
     const handlers = gesturesEnabled ? responder.panHandlers : {};
+    const extraLayers = this.props.renderExtraLayers &&
+      this.props.renderExtraLayers(props);
     return (
       <View
         {...handlers}
@@ -460,6 +432,7 @@ class CardStack extends Component<DefaultProps, Props, void> {
           }))}
         </View>
         {floatingHeader}
+        {extraLayers}
       </View>
     );
   }
@@ -472,27 +445,6 @@ class CardStack extends Component<DefaultProps, Props, void> {
       return 'screen';
     }
     return 'float';
-  }
-
-  _getTransitionConfig(
-    // props for the new screen
-    transitionProps: NavigationTransitionProps,
-    // props for the old screen
-    prevTransitionProps: NavigationTransitionProps
-  ): TransitionConfig {
-    const defaultConfig = TransitionConfigs.defaultTransitionConfig(
-      transitionProps,
-      prevTransitionProps,
-      this.props.mode === 'modal'
-    );
-    if (this.props.transitionConfig) {
-      return {
-        ...defaultConfig,
-        ...this.props.transitionConfig(),
-      };
-    }
-
-    return defaultConfig;
   }
 
   _renderInnerCard(
@@ -549,9 +501,9 @@ class CardStack extends Component<DefaultProps, Props, void> {
   _renderScene(props: NavigationSceneRendererProps): React.Element<*> {
     const isModal = this.props.mode === 'modal';
 
-    /* $FlowFixMe */
-    const { screenInterpolator } = this._getTransitionConfig();
-    const style = screenInterpolator && screenInterpolator(props);
+    // /* $FlowFixMe */
+    // const { screenInterpolator } = this._getTransitionConfig();
+    // const style = screenInterpolator && screenInterpolator(props);
 
     let panHandlers = null;
 
@@ -563,6 +515,8 @@ class CardStack extends Component<DefaultProps, Props, void> {
     const SceneComponent = this.props.router.getComponentForRouteName(
       props.scene.route.routeName
     );
+    const extraProps = this.props.createExtraSceneProps &&
+      this.props.createExtraSceneProps(props);
 
     return (
       <Card
@@ -571,7 +525,8 @@ class CardStack extends Component<DefaultProps, Props, void> {
         panHandlers={null}
         renderScene={(sceneProps: *) =>
           this._renderInnerCard(SceneComponent, sceneProps)}
-        style={[style, this.props.cardStyle]}
+        style={this.props.cardStyle}
+        {...extraProps}
       />
     );
   }
@@ -591,4 +546,10 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CardStack;
+export default withTransition(CardStack);
+
+/*
+TODO:
+- _configureTransition: doesn't work any more..
+- test defaultHideCardStyle: can we create it without using prevTransitionProps?
+*/
