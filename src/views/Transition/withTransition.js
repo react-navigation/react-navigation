@@ -146,8 +146,7 @@ export default function withTransition(CardStackComp: React.Component) {
       return convertStyleMap(styleMap, interpolate, 'processTransform');
     }
 
-    _createInPlaceTransitionStyleMap(
-      transitionProps: NavigationTransitionProps) {
+    _createInPlaceTransitionStyleMap(transitionProps: NavigationTransitionProps) {
       const fromRouteName = this._fromRoute && this._fromRoute.routeName;
       const toRouteName = this._toRoute && this._toRoute.routeName;
 
@@ -311,7 +310,7 @@ export default function withTransition(CardStackComp: React.Component) {
     _createExtraSceneProps(props: NavigationSceneRendererProps, prevTransitionProps) {
       const defaultHideCardStyle = this._createDefaultHideCardStyle(props);
       const style = [defaultHideCardStyle, this.props.cardStyle];
-      const transitionStyleMap = this._createInPlaceTransitionStyleMap(props, prevTransitionProps);
+      const transitionStyleMap = this._createInPlaceTransitionStyleMap(props);
       return {
         style,
         onLayout: this._measureTransitionItems,
