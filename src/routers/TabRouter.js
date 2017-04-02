@@ -35,6 +35,8 @@ export default (
   const initialRouteIndex = order.indexOf(initialRouteName);
   const backBehavior = config.backBehavior || 'initialRoute';
   const shouldBackNavigateToInitialRoute = backBehavior === 'initialRoute';
+  const shouldBackNavigateToLastActiveTab = backBehavior === 'previousRoute';
+  const backstack = [initialRouteIndex];
   const tabRouters = {};
   order.forEach((routeName: string) => {
     const routeConfig = routeConfigs[routeName];
@@ -132,10 +134,20 @@ export default (
         action.key === activeTabLastState.key;
       if (
         action.type === NavigationActions.BACK &&
-        isBackEligible &&
-        shouldBackNavigateToInitialRoute
+        isBackEligible
       ) {
-        activeTabIndex = initialRouteIndex;
+        if (shouldBackNavigateToInitialRoute) {
+          activeTabIndex = initialRouteIndex;
+        } else if (shouldBackNavigateToLastActiveTab && backstack.length > 1) {
+          backstack.pop();
+          const backRouteIndex = backstack[backstack.length - 1];
+          if (backRouteIndex >= 0) {
+            return {
+              ...state,
+              index: backRouteIndex,
+            };
+          }
+        }
       }
       let didNavigate = false;
       if (action.type === NavigationActions.NAVIGATE) {
@@ -200,6 +212,7 @@ export default (
         }
       }
       if (activeTabIndex !== state.index) {
+        backstack.push(activeTabIndex);
         return {
           ...state,
           index: activeTabIndex,
