@@ -288,26 +288,21 @@ export default function withTransition(CardStackComp: React.Component) {
      * 
      * @param {*} props
      */
-    _createDefaultHideCardStyle(
-      props: NavigationSceneRendererProps,
-      prevTransitionProps: NavigationTransitionProps) {
+    _createDefaultHideCardStyle(props: NavigationSceneRendererProps) {
       const currentIndex = props.index;
-      const prevIndex = prevTransitionProps && prevTransitionProps.index;
+      const prevIndex = this._fromRoute && this._fromRoute.index;
       const sceneIndex = props.scene.index;
-      console.log('prevIndex', prevIndex, 'currentIndex', currentIndex, 'sceneIndex', sceneIndex);
       const opacity = (_.isNil(prevIndex) && currentIndex === sceneIndex) || prevIndex === sceneIndex ? 1 : 0;
-      // console.log('prevIndex', prevIndex, 'sceneIndex', sceneIndex, 'opacity', opacity);
+      // console.log('prevIndex', prevIndex, 'sceneIndex', sceneIndex, 'opacity', opacity, 'fromRoute', this._fromRoute, 'toRoute', this._toRoute);
       return { opacity };
     }
 
-    _renderExtraLayers(
-      props: NavigationSceneRendererProps,
-      prevTransitionProps: NavigationTransitionProps) {
+    _renderExtraLayers(props: NavigationSceneRendererProps) {
       const overlay = this._renderOverlay(props);
       return overlay;
     }
 
-    _createExtraSceneProps(props: NavigationSceneRendererProps, prevTransitionProps) {
+    _createExtraSceneProps(props: NavigationSceneRendererProps) {
       const defaultHideCardStyle = this._createDefaultHideCardStyle(props);
       const style = [defaultHideCardStyle, this.props.cardStyle];
       const transitionStyleMap = this._createInPlaceTransitionStyleMap(props);
