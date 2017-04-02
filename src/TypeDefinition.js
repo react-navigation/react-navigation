@@ -275,8 +275,8 @@ export type NavigationTabRouterConfig = {
   navigationOptions?: NavigationScreenConfig<NavigationTabScreenOptions>,
   order?: Array<string>, // todo: type these as the real route names rather than 'string'
 
-  // Does the back button cause the router to switch to the initial tab
-  backBehavior?: 'none' | 'initialRoute' | 'previousRoute', // defaults `initialRoute`
+  // Custom back button behavior
+  backBehavior?: 'none' | 'initialRoute' | 'previousRoute' | 'uniqueRoute', // defaults `initialRoute`
 };
 
 export type NavigationTabScreenOptions = NavigationScreenOptions & {

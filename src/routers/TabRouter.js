@@ -35,8 +35,9 @@ export default (
   const initialRouteIndex = order.indexOf(initialRouteName);
   const backBehavior = config.backBehavior || 'initialRoute';
   const shouldBackNavigateToInitialRoute = backBehavior === 'initialRoute';
-  const shouldBackNavigateToLastActiveTab = backBehavior === 'previousRoute';
-  const backstack = [initialRouteIndex];
+  const shouldBackNavigateToLastActiveTab = backBehavior === 'previousRoute' || 'uniqueRoute';
+  const shouldDeduplicateBackstack = backBehavior === 'uniqueRoute';
+  const backstack = [];
   const tabRouters = {};
   order.forEach((routeName: string) => {
     const routeConfig = routeConfigs[routeName];
@@ -138,15 +139,12 @@ export default (
       ) {
         if (shouldBackNavigateToInitialRoute) {
           activeTabIndex = initialRouteIndex;
-        } else if (shouldBackNavigateToLastActiveTab && backstack.length > 1) {
-          backstack.pop();
-          const backRouteIndex = backstack[backstack.length - 1];
-          if (backRouteIndex >= 0) {
-            return {
-              ...state,
-              index: backRouteIndex,
-            };
-          }
+        } else if (shouldBackNavigateToLastActiveTab && backstack.length >= 1) {
+          const previousIndex = backstack.pop();
+          return {
+            ...state,
+            index: previousIndex,
+          };
         }
       }
       let didNavigate = false;
@@ -212,7 +210,14 @@ export default (
         }
       }
       if (activeTabIndex !== state.index) {
-        backstack.push(activeTabIndex);
+        if (shouldDeduplicateBackstack) {
+          const oldBackstackIndex = backstack.findIndex(
+            (index: number) => activeTabIndex === index);
+          if (oldBackstackIndex > -1) {
+            backstack.splice(oldBackstackIndex, 1);
+          }
+        }
+        backstack.push(state.index);
         return {
           ...state,
           index: activeTabIndex,

@@ -49,7 +49,13 @@ Config options that are also passed to the router.
 - `initialRouteName` - The routeName for the initial tab route when first loading
 - `order` - Array of routeNames which defines the order of the tabs
 - `paths` - Provide a mapping of routeName to path config, which overrides the paths set in the routeConfigs.
-- `backBehavior` - Should the back button cause a tab switch to the initial tab? If yes, set to `initialRoute`, otherwise `none`. Defaults to `initialRoute` behavior.
+- `backBehavior` - Customize back button behavior.
+    - `initialRoute` Causes switch to the initial tab.
+    - `previousRoute` Causes switch to previously selected tab.
+    - `uniqueRoute` Same as `previousRoute`, but it removes duplicate tabs from the backstack.
+    - `none` No custom back button behavior.
+
+   Defaults to `initialRoute` behavior.
 
 ### Supported Actions
 
