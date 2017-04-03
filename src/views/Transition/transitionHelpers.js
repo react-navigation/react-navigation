@@ -6,7 +6,7 @@ function createIdRegexFilter(idRegexes) {
   return (id: string) => idRegexes.every(idRegex => id.match(idRegex));
 }
 
-export function initTransition(Transition, ...idRegexes) {
+export function bindTransition(Transition, ...idRegexes) {
   return Transition && Transition(createIdRegexFilter(idRegexes));
 }
 

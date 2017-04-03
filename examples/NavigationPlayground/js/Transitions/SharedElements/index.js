@@ -8,7 +8,7 @@ import { Transition } from 'react-navigation';
 import _ from 'lodash';
 import faker from 'faker';
 
-const {createTransition, initTransition, together, sq, Transitions} = Transition;
+const {createTransition, bindTransition, together, sq, Transitions} = Transition;
 
 const Slide = createTransition({
   getStyleMap(
@@ -38,9 +38,9 @@ const Slide = createTransition({
   } 
 });
 
-const SharedImage = initTransition(Transitions.SharedElement, /image-.+/);
-const CrossFadeScene = initTransition(Transitions.CrossFade, /\$scene.+/);
-const SlideScene = initTransition(Slide, /\$scene.+/);
+const SharedImage = bindTransition(Transitions.SharedElement, /image-.+/);
+const CrossFadeScene = bindTransition(Transitions.CrossFade, /\$scene.+/);
+const SlideScene = bindTransition(Slide, /\$scene.+/);
 
 const StaggeredAppear = (filter) => ({
   filter,
