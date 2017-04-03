@@ -194,10 +194,11 @@ export default function withTransition(CardStackComp: React.Component) {
         styleMap = styleMap && this._replaceFromToInStyleMap(styleMap, fromRouteName, toRouteName);
 
         // TODO what if an item is the parent of another item?
-        const clones = itemsToClone.map(item => {
+        const clones = itemsToClone.map((item, idx) => {
           const animatedStyle = styleMap && styleMap[item.routeName] && styleMap[item.routeName][item.id];
           return React.cloneElement(item.reactElement, {
             style: [item.reactElement.props.style, styles.clonedItem, animatedStyle],
+            key: `clone-${idx}`
           }, []);
         });
         const animatedContainerStyle = {
