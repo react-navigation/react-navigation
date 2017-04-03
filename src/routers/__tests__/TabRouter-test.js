@@ -641,44 +641,6 @@ describe('TabRouter', () => {
     expect(state5).toEqual(expectedState);
     const state6 = router.getStateForAction({ type: NavigationActions.BACK }, state5);
     const expectedState2 = {
-      index: 1,
-      routes: [{ key: 'Foo', routeName: 'Foo' }, { key: 'Bar', routeName: 'Bar' }, { key: 'Dur', routeName: 'Dur' }],
-    };
-    expect(state6).toEqual(expectedState2);
-    const state7 = router.getStateForAction({ type: NavigationActions.BACK }, state6);
-    const expectedState3 = {
-      index: 0,
-      routes: [{ key: 'Foo', routeName: 'Foo' }, { key: 'Bar', routeName: 'Bar' }, { key: 'Dur', routeName: 'Dur' }],
-    };
-    expect(state7).toEqual(expectedState3);
-    const state8 = router.getStateForAction({ type: NavigationActions.BACK }, state7);
-    expect(state8).toEqual(expectedState3);
-  });
-
-  test('Handles back navigation with unique route set', () => {
-    const ScreenA = () => <div />;
-    const ScreenB = () => <div />;
-    const ScreenC = () => <div />;
-
-    const router = TabRouter({
-      Foo: { screen: ScreenA },
-      Bar: { screen: ScreenB },
-      Dur: { screen: ScreenC },
-    }, {
-      backBehavior: 'uniqueRoute',
-    });
-    const state = router.getStateForAction({ type: NavigationActions.INIT });
-    const state2 = router.getStateForAction({ type: NavigationActions.NAVIGATE, routeName: 'Bar' }, state);
-    const state3 = router.getStateForAction({ type: NavigationActions.NAVIGATE, routeName: 'Dur' }, state2);
-    const state4 = router.getStateForAction({ type: NavigationActions.NAVIGATE, routeName: 'Bar' }, state3);
-    const state5 = router.getStateForAction({ type: NavigationActions.BACK }, state4);
-    const expectedState = {
-      index: 2,
-      routes: [{ key: 'Foo', routeName: 'Foo' }, { key: 'Bar', routeName: 'Bar' }, { key: 'Dur', routeName: 'Dur' }],
-    };
-    expect(state5).toEqual(expectedState);
-    const state6 = router.getStateForAction({ type: NavigationActions.BACK }, state5);
-    const expectedState2 = {
       index: 0,
       routes: [{ key: 'Foo', routeName: 'Foo' }, { key: 'Bar', routeName: 'Bar' }, { key: 'Dur', routeName: 'Dur' }],
     };

@@ -276,7 +276,7 @@ export type NavigationTabRouterConfig = {
   order?: Array<string>, // todo: type these as the real route names rather than 'string'
 
   // Custom back button behavior
-  backBehavior?: 'none' | 'initialRoute' | 'previousRoute' | 'uniqueRoute', // defaults `initialRoute`
+  backBehavior?: 'none' | 'initialRoute' | 'previousRoute', // defaults `initialRoute`
 };
 
 export type NavigationTabScreenOptions = NavigationScreenOptions & {

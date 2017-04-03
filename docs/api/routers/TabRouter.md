@@ -51,8 +51,7 @@ Config options that are also passed to the router.
 - `paths` - Provide a mapping of routeName to path config, which overrides the paths set in the routeConfigs.
 - `backBehavior` - Customize back button behavior.
     - `initialRoute` Causes switch to the initial tab.
-    - `previousRoute` Causes switch to previously selected tab.
-    - `uniqueRoute` Same as `previousRoute`, but it removes duplicate tabs from the backstack.
+    - `previousRoute` Causes switch to previously selected tab. Removes duplicates from the backstack.
     - `none` No custom back button behavior.
 
    Defaults to `initialRoute` behavior.

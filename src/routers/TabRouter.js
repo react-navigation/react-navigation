@@ -35,8 +35,7 @@ export default (
   const initialRouteIndex = order.indexOf(initialRouteName);
   const backBehavior = config.backBehavior || 'initialRoute';
   const shouldBackNavigateToInitialRoute = backBehavior === 'initialRoute';
-  const shouldBackNavigateToLastActiveTab = backBehavior === 'previousRoute' || 'uniqueRoute';
-  const shouldDeduplicateBackstack = backBehavior === 'uniqueRoute';
+  const shouldBackNavigateToLastActiveTab = backBehavior === 'previousRoute';
   const backstack = [];
   const tabRouters = {};
   order.forEach((routeName: string) => {
@@ -210,12 +209,10 @@ export default (
         }
       }
       if (activeTabIndex !== state.index) {
-        if (shouldDeduplicateBackstack) {
-          const oldBackstackIndex = backstack.findIndex(
-            (index: number) => activeTabIndex === index);
-          if (oldBackstackIndex > -1) {
-            backstack.splice(oldBackstackIndex, 1);
-          }
+        const oldBackstackIndex = backstack.findIndex(
+          (index: number) => activeTabIndex === index);
+        if (oldBackstackIndex > -1) {
+          backstack.splice(oldBackstackIndex, 1);
         }
         backstack.push(state.index);
         return {
