@@ -9,6 +9,8 @@ import TransitionConfigs from '../TransitionConfigs';
 import TransitionItems from './TransitionItems';
 import { convertStyleMap } from './transitionHelpers';
 
+const { bindTransition, sq, Transitions } = Transition;
+
 const NativeAnimatedModule = NativeModules &&
   NativeModules.NativeAnimatedModule;
 
@@ -100,11 +102,11 @@ export default function withTransition(CardStackComp: React.Component) {
     }
 
     _createSharedElementTransition(fromRoute, toRoute) {
-      const SharedImage = initTransition(Transitions.SharedElement, /image-.+/);
-      const CrossFadeScene = initTransition(Transitions.CrossFade, /\$scene.+/);
+      const SharedElement = bindTransition(Transitions.SharedElement, /image-.+/);
+      const CrossFadeScene = bindTransition(Transitions.CrossFade, /\$scene.+/);
       const transition = (fromRoute.index < toRoute.index
-        ? sq(SharedImage(0.9), CrossFadeScene(0.1))
-        : sq(CrossFadeScene(0.1), SharedImage(0.9))
+        ? sq(SharedElement(0.9), CrossFadeScene(0.1))
+        : sq(CrossFadeScene(0.1), SharedElement(0.9))
       );
       return {
         // from: 'PhotoGrid', to: 'PhotoDetail',
