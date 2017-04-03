@@ -3,8 +3,11 @@
 
 import React from 'react';
 import TabRouter from '../TabRouter';
+import StackRouter from '../StackRouter';
 
 import NavigationActions from '../../NavigationActions';
+
+import type { NavigationRoute, NavigationState } from '../../TypeDefinition';
 
 const INIT_ACTION = { type: NavigationActions.INIT };
 
@@ -603,5 +606,72 @@ describe('TabRouter', () => {
         { key: 'b', routeName: 'b', params },
       ],
     });
+  });
+
+  test('Inner actions are only unpacked if the current tab matches', () => {
+    const PlainScreen = () => <div />;
+    const ScreenA = () => <div />;
+    const ScreenB = () => <div />;
+    ScreenB.router = StackRouter({
+      Baz: { screen: PlainScreen },
+      Zoo: { screen: PlainScreen },
+    });
+    ScreenA.router = StackRouter({
+      Bar: { screen: PlainScreen },
+      Boo: { screen: ScreenB },
+    });
+    const router = TabRouter({
+      Foo: { screen: ScreenA },
+    });
+    const screenApreState = {
+      index: 0,
+      key: 'Init',
+      routeName: 'Foo',
+      routes: [{ key: 'Init', routeName: 'Bar' }],
+    };
+    const preState = {
+      index: 0,
+      routes: [screenApreState],
+    };
+
+    type ComparableRoute = {
+      routeName?: string,
+      routes?: Array<ComparableRoute>,
+    };
+
+    type RouteOrState =
+      | NavigationRoute
+      | NavigationState
+      | (NavigationRoute & NavigationState);
+
+    const comparable = (state: RouteOrState): ComparableRoute => {
+      let result = {};
+      if (typeof state.routeName === 'string') {
+        result = { ...result, routeName: state.routeName };
+      }
+      if (state.routes instanceof Array) {
+        result = {
+          ...result,
+          routes: state.routes.map(comparable),
+        };
+      }
+      return result;
+    };
+
+    const action = NavigationActions.navigate({
+      routeName: 'Boo',
+      action: NavigationActions.navigate({ routeName: 'Zoo' }),
+    });
+
+    const expectedState = ScreenA.router.getStateForAction(
+      action,
+      screenApreState
+    );
+    const state = router.getStateForAction(action, preState);
+    const innerState = state ? state.routes[0] : state;
+
+    expect(expectedState && comparable(expectedState)).toEqual(
+      innerState && comparable(innerState)
+    );
   });
 });
