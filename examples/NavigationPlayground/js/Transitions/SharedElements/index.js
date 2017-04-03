@@ -8,7 +8,6 @@ import { Transition } from 'react-navigation';
 import _ from 'lodash';
 import faker from 'faker';
 
-
 const App = StackNavigator({
   PhotoGrid: {
     screen: PhotoGrid,
