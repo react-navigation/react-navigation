@@ -79,7 +79,7 @@ class PhotoGrid extends Component {
     return (
       <Touchable onPress={() => onPhotoPressed(photo)} key={photo.url}>
         <View style={styles.cell}>
-          <Transition.Image id={`image-${photo.url}`}
+          <Transition.SharedElement.Image id={`image-${photo.url}`}
             source={photo.image} style={styles.image} />
         </View>
       </Touchable>

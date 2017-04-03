@@ -99,6 +99,20 @@ export default function withTransition(CardStackComp: React.Component) {
       }
     }
 
+    _createSharedElementTransition(fromRoute, toRoute) {
+      const SharedImage = initTransition(Transitions.SharedElement, /image-.+/);
+      const CrossFadeScene = initTransition(Transitions.CrossFade, /\$scene.+/);
+      const transition = (fromRoute.index < toRoute.index
+        ? sq(SharedImage(0.9), CrossFadeScene(0.1))
+        : sq(CrossFadeScene(0.1), SharedImage(0.9))
+      );
+      return {
+        // from: 'PhotoGrid', to: 'PhotoDetail',
+        transition,
+        // config: { duration: 650 }
+      };
+    }
+
     _findTransitionContainer() {
       const fromRouteName = this._fromRoute && this._fromRoute.routeName;
       const toRouteName = this._toRoute && this._toRoute.routeName;
