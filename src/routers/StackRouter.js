@@ -222,7 +222,7 @@ export default (
           /* $FlowFixMe */
           const backRoute = state.routes.find((route: *) => route.key === action.key);
           /* $FlowFixMe */
-          backRouteIndex = state.routes.indexOf(backRoute);
+          backRouteIndex = state.routes.indexOf(backRoute) - 1;
         }
         if (backRouteIndex == null) {
           return StateUtils.pop(state);

@@ -163,7 +163,7 @@ export default function ScenesReducer(
   let k = null;
   let v = null;
   staleScenes.forEach(scene => {
-    let {key} = scene;
+    let { key } = scene;
     k = key;
     v = scene;
   });
