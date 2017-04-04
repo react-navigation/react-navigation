@@ -46,18 +46,12 @@ const createAnimatedComponent = Component => {
   }
 };
 
-// function findTransitionConfig(transitionConfigs: Array<*>, routeName: string, prevRouteName: string) {
-//   return transitionConfigs.find(c => c.from === prevRouteName && c.to === routeName);
-// }
-
 function createTransitionComponent(Component) {
   class TransitionComponent extends React.Component {
     _component: any;
     static contextTypes = {
       registerTransitionItem: React.PropTypes.func,
       unregisterTransitionItem: React.PropTypes.func,
-      // transitionProps: React.PropTypes.object,
-      // transitionConfigs: React.PropTypes.array,
       routeName: React.PropTypes.string,
       transitionStylesChange: React.PropTypes.object,
     };
@@ -75,50 +69,21 @@ function createTransitionComponent(Component) {
       this._component.setNativeProps(props);
     }
 
-    // _hideTransitionViewUntilDone(transitionProps) {
-    //   const {position, scene: {index}} = transitionProps;
-    //   const opacity = position.interpolate({
-    //     inputRange: [index - 1, index - 0.01, index, index + 0.01, index + 1],
-    //     outputRange: [0, 0, 1, 0, 0],
-    //   });
-    //   return { opacity };
-    // }
-
     _getTransitionStyle() {
-      // const {id} = this.props;
-      // const {routeName, prevRouteName, transitionProps, transitionConfigs} = this.context;
-      // const transitionConfig = findTransitionConfig(transitionConfigs, routeName, prevRouteName);
-      // const transition = transitionConfig && transitionConfig.transition;
-      // const appliesToMe = transition && (!!!transition.filter || transition.filter(id));
-      // if (transition && appliesToMe) {
-      //   return (transition.shouldClone && transition.shouldClone(id, routeName)
-      //     ? this._hideTransitionViewUntilDone(transitionProps)
-      //     : transition.createAnimatedStyle(id, routeName, transitionProps)
-      //   );
-      // } else {
-      //   // TODO this default should be set somewhere else
-      //   return {};//TransitionConfigs.defaultTransitionConfig(transitionProps).screenInterpolator(transitionProps));
-      // }
-      const {id} = this.props;
-      const {routeName} = this.context;
-      const {transitionStyleMap} = this.state;
+      const { id } = this.props;
+      const { routeName } = this.context;
+      const { transitionStyleMap } = this.state;
       return transitionStyleMap && transitionStyleMap[routeName] && transitionStyleMap[routeName][id];
     }
 
     render() {
-      // collapsable={false} is required for UIManager.measureInWindow to get the actual measurements
-      // instead of undefined, see https://github.com/facebook/react-native/issues/9382
-      /*return (
-        <View collapsable={false}
-          ref={c => this._component = c} style={{ flex: 1 }}>
-          {this._getAnimatedChild()}
-        </View>
-      )*/
-      const {id, ...rest} = this.props;
+      const { id, ...rest } = this.props;
       const AnimatedComponent = createAnimatedComponent(Component);
       const animatedStyle = this._getTransitionStyle();
       // console.log(`======> id=${id} styleInTransitionComp`, animatedStyle, 'props.style', this.props.style)
       return (
+        // collapsable={false} is required for UIManager.measureInWindow to get the actual measurements
+        // instead of undefined, see https://github.com/facebook/react-native/issues/9382
         <AnimatedComponent {...rest}
           ref={c => this._component = c}
           collapsable={false}
@@ -128,7 +93,7 @@ function createTransitionComponent(Component) {
     }
 
     _updateTransitionStyleMap(transitionStyleMap) {
-      this.setState({transitionStyleMap});
+      this.setState({ transitionStyleMap });
     }
 
     componentDidMount() {
