@@ -113,6 +113,7 @@ export default function withTransition(CardStackComp: React.Component) {
       );
       return {
         transition,
+        config: { duration: 550 }
       }
     }
 
@@ -132,42 +133,45 @@ export default function withTransition(CardStackComp: React.Component) {
     }
 
     _getDefaultTransitionContainer() {
+      let tc;
       if (this._includesMatchingSharedElements()) {
-        return this._createSharedElementTransition();
+        tc = this._createSharedElementTransition();
+      } else {
+        const direction = this._fromRoute && this._toRoute &&
+          Math.sign(this._toRoute.index - this._fromRoute.index);
+        const isModal = this.props.mode === 'modal';
+        const defaultTransitionConfig = TransitionConfigs.defaultTransitionConfig(direction, isModal);
+        const transition = createTransition({
+          getStyleMap(
+            itemsOnFromRoute: Array<*>, 
+            itemsOnToRoute: Array<*>,
+            transitionProps: NavigationSceneRendererProps,
+          ) {
+            const createStyles = (items: Array<*>) => items.reduce((result, item) => {
+              const interpolator = defaultTransitionConfig.screenInterpolator;
+              result[item.id] = interpolator(transitionProps);
+              return result;
+            }, {});
+            return {
+              from: createStyles(itemsOnFromRoute),
+              to: createStyles(itemsOnToRoute),
+            };
+          },
+        });
+        const boundTransition = bindTransition(transition, /\$scene-.+/);
+        tc = {
+          // The parameter "1" below is required to create the transition object, but
+          // its value has no effect since we return interpolated styles from the 
+          // transition, instead of the raw input/output ranges.
+          transition: boundTransition(1),
+          config: defaultTransitionConfig.transitionSpec,
+        };
       }
-
-      const direction = this._fromRoute && this._toRoute &&
-        Math.sign(this._toRoute.index - this._fromRoute.index);
-      const isModal = this.props.mode === 'modal';
-      const defaultTransitionConfig = TransitionConfigs.defaultTransitionConfig(direction, isModal);
-      const transition = createTransition({
-        getStyleMap(
-          itemsOnFromRoute: Array<*>, 
-          itemsOnToRoute: Array<*>,
-          transitionProps: NavigationSceneRendererProps,
-        ) {
-          const createStyles = (items: Array<*>) => items.reduce((result, item) => {
-            const interpolator = defaultTransitionConfig.screenInterpolator;
-            result[item.id] = interpolator(transitionProps);
-            return result;
-          }, {});
-          return {
-            from: createStyles(itemsOnFromRoute),
-            to: createStyles(itemsOnToRoute),
-          };
-        },
-      });
-      const boundTransition = bindTransition(transition, /\$scene-.+/);
-      return {
-        // The parameter "1" below is required to create the transition object, but
-        // its value has no effect since we return interpolated styles from the 
-        // transition, instead of the raw input/output ranges.
-        transition: boundTransition(1),
-        config: defaultTransitionConfig.transitionSpec,
-      };
+      tc.isDefault = true;
+      return tc;
     }
 
-    _findTransitionContainer() {
+    _getTransitionContainer() {
       const fromRouteName = this._fromRoute && this._fromRoute.routeName;
       const toRouteName = this._toRoute && this._toRoute.routeName;
       if (this.props.transitionConfigs) {
@@ -182,7 +186,7 @@ export default function withTransition(CardStackComp: React.Component) {
     }
 
     _getTransition() {
-      const tc = this._findTransitionContainer();
+      const tc = this._getTransitionContainer();
       return tc && tc.transition;
     }
 
@@ -390,6 +394,51 @@ export default function withTransition(CardStackComp: React.Component) {
       }
     }
 
+    _getFromToItems(filter: (item: TransitionItem) => boolean) {
+      const isOnRoute = route => item => item.routeName === (route && route.routeName);
+      const filteredItems = this.state.transitionItems.items().filter(filter);
+
+      const fromItems = filteredItems.filter(isOnRoute(this._fromRoute));
+      const toItems = filteredItems.filter(isOnRoute(this._toRoute));
+      return { fromItems, toItems };
+    }
+
+    /**
+     * If no custom transitions are configured, and there is a shared element on EITHER "from"
+     * OR "to" route, use sharedElementTransition to configure Transitioner, instead of what's
+     * returned from _getTransitionContainer(). 
+     *
+     * The reason is that _getTransitionContainer() may return the platform default transition 
+     * when the shared elements on the "to" route are not registered yet. Because at that point, 
+     * there are no matching shared elements on "from" and "to" routes. If we use that transition
+     * to configure the Transitioner, it'll set useNativeDriver to true, which causes an error
+     * when the shared element transition is executed shortly after.
+     *  
+     * Side effects of this approach:
+     * 1. If there is a shared element on the "from" route, the animation will always be configured as: 
+     *    useNativeDriver=false, duration: 550, no matter if there is actually a matching 
+     *    shared element on the to route. The animation will still be the default animation though. 
+     *    For example, when navigating from PhotoGrid to Settings, the default platform transition will
+     *    run, but its duration on Android is 550ms. A workaround is to configure a custom transition for
+     *    this particular route.
+     */
+    _getTransitionContainerForConfig() {
+      const tc = this._getTransitionContainer();
+      if (tc.isDefault) {
+        const { fromItems, toItems } = this._getFromToItems(i => i.type === 'sharedElement');
+        const hasSharedElement = fromItems.length > 0 || toItems.length > 0;
+        if (hasSharedElement) {
+          return this._createSharedElementTransition();
+        }
+      }
+      return tc;
+    }
+
+    _getTransitionForConfig() {
+      const tc = this._getTransitionContainerForConfig();
+      return tc && tc.transition;
+    }
+
     _configureTransition = (
       // props for the new screen
       transitionProps: NavigationTransitionProps,
@@ -405,7 +454,7 @@ export default function withTransition(CardStackComp: React.Component) {
           prevTransitionProps
         ),
       };
-      const transition = this._getTransition();
+      const transition = this._getTransitionForConfig();
       if (
         !!NativeAnimatedModule &&
         // Native animation support also depends on the transforms used:
@@ -428,7 +477,7 @@ export default function withTransition(CardStackComp: React.Component) {
         prevTransitionProps,
         this.props.mode === 'modal'
       ).transitionSpec;
-      const tc = this._findTransitionContainer();
+      const tc = this._getTransitionContainerForConfig();
       if (tc) {
         return {
           ...defaultConfig,
