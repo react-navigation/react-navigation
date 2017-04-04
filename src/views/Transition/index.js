@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   View,
   Image,
@@ -9,10 +10,18 @@ import { createTransition, bindTransition } from './transitionHelpers';
 import { together, sequence, tg, sq } from './composition';
 import Transitions from './Transitions';
 
+const TransitionView = createTransitionComponent(View); 
+const TransitionImage = createTransitionComponent(Image); 
+const TransitionText = createTransitionComponent(Text); 
+
+function withType(type: string, C) {
+  return props => <C {...props} type={type} />;
+}
+
 export default {
-  View: createTransitionComponent(View),
-  Image: createTransitionComponent(Image),
-  Text: createTransitionComponent(Text),
+  View: TransitionView,
+  Image: TransitionImage,
+  Text: TransitionText,
   createTransitionComponent,
   createTransition,
   bindTransition,
@@ -21,4 +30,10 @@ export default {
   tg,
   sq,
   Transitions,
+  SharedElement: {
+    View: withType('sharedElement', TransitionView),
+    Image: withType('sharedElement', TransitionImage),
+    Text: withType('sharedElement', TransitionView),
+    create: (C) => withType('sharedElement', createTransitionComponent(C)),
+  },
 }

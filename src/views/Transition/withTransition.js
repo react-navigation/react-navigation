@@ -7,7 +7,8 @@ import _ from 'lodash';
 import TransitionConfigs from '../TransitionConfigs';
 
 import TransitionItems from './TransitionItems';
-import { convertStyleMap, createTransition, bindTransition, sq } from './transitionHelpers';
+import { convertStyleMap, createTransition, bindTransition } from './transitionHelpers';
+import { sq } from './composition';
 
 import Transitions from './Transitions';
 
@@ -122,9 +123,7 @@ export default function withTransition(CardStackComp: React.Component) {
     _getMatchingSharedElementIds() {
       const items = this.state.transitionItems.items();
       const isSharedElementOnRoute = (route) => (item) => (
-        item.type === 'sharedElement' && (
-          item.routeName === route && route.routeName
-        )
+        item.type === 'sharedElement' && item.routeName === (route && route.routeName)
       );
       const fromItems = items.filter(isSharedElementOnRoute(this._fromRoute));
       const toItems = items.filter(isSharedElementOnRoute(this._toRoute));
