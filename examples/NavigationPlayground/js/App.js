@@ -65,8 +65,8 @@ const ExampleRoutes = {
     path: 'settings',
   },
   Transitions: {
-    name: 'Custom Transitions',
-    description: 'Custom, complex transitions',
+    name: 'Shared Element Transition',
+    description: 'Shared element transition',
     screen: Transitions,
     path: 'transitions',
   },
