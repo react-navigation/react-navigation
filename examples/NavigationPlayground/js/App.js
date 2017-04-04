@@ -110,8 +110,7 @@ const AppNavigator = StackNavigator({
   mode: Platform.OS === 'ios' ? 'modal' : 'card',
 });
 
-// export default () => <AppNavigator />;
-export default Transitions; // TODO change it back
+export default () => <AppNavigator />;
 
 const styles = StyleSheet.create({
   item: {
