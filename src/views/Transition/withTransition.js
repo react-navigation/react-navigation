@@ -170,15 +170,15 @@ export default function withTransition(CardStackComp: React.Component) {
     _findTransitionContainer() {
       const fromRouteName = this._fromRoute && this._fromRoute.routeName;
       const toRouteName = this._toRoute && this._toRoute.routeName;
-      let transition = this._getDefaultTransitionContainer();
       if (this.props.transitionConfigs) {
         const transitions = this.props.transitionConfigs.filter(c => (
           (c.from === fromRouteName || c.from === '*') &&
           (c.to === toRouteName || c.to === '*')));
         invariant(transitions.length <= 1, `More than one transitions found from "${fromRouteName}" to "${toRouteName}".`);
-        if (transitions.length > 0) transition = transitions[0];
+        return transitions[0] || this._getDefaultTransitionContainer();
+      } else {
+        return this._getDefaultTransitionContainer();
       }
-      return transition;
     }
 
     _getTransition() {
