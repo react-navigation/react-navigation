@@ -7,6 +7,7 @@ import {
   Text,
   Dimensions,
   StyleSheet,
+  Button,
 } from 'react-native';
 import faker from 'faker';
 import _ from 'lodash';
@@ -62,10 +63,14 @@ class PhotoGrid extends Component {
   }
   render() {
     return (
-      <ListView
-        dataSource={ds.cloneWithRows(photoRows)}
-        renderRow={this.renderRow.bind(this)}
-      />);
+      <View>
+        <ListView
+          dataSource={ds.cloneWithRows(photoRows)}
+          renderRow={this.renderRow.bind(this)}
+        />
+        <Button title="Go back" onPress={() => this.props.navigation.goBack(null)} style={styles.goBack} />
+      </View>
+    );
   }
   renderRow(photos) {
     return (
@@ -97,6 +102,12 @@ const styles = StyleSheet.create({
   image: {
     width: photoWidth,
     height: photoWidth,
+  },
+  goBack: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
   }
 })
 
