@@ -201,6 +201,7 @@ class TabView extends PureComponent<void, Props, void> {
         renderPager={this._renderPager}
         configureTransition={configureTransition}
         onRequestChangeTab={this._handlePageChanged}
+        screenProps={this.props.screenProps}
       />
     );
   }
