@@ -18,19 +18,21 @@ export class TransitionItem {
   nativeHandle: any;
   metrics: ?Metrics;
   shouldMeasure: boolean;
-  constructor(id: string, routeName: string, reactElement: React.Element<*>, nativeHandle: any, metrics:?Metrics, shouldMeasure: boolean = false) {
+  constructor(config = {}) {
+    const {id, routeName, reactElement, nativeHandle, metrics, shouldMeasure, type} = config;
     this.id = id;
     this.routeName = routeName;
     this.reactElement = reactElement;
     this.nativeHandle = nativeHandle;
     this.metrics = metrics;
-    this.shouldMeasure = shouldMeasure;
+    this.shouldMeasure = shouldMeasure || false;
+    this.type = type;
   }
   clone() {
-    return new TransitionItem(this.id, this.routeName, this.reactElement, this.nativeHandle, this.metrics, this.shouldMeasure);
+    return new TransitionItem(this);
   }
   toString() {
-    return `${this.id} ${this.routeName} handle=${this.nativeHandle} ${JSON.stringify(this.metrics)} shouldMeasure=${this.shouldMeasure}`;
+    return `id=${this.id} routeName=${this.routeName} handle=${this.nativeHandle} ${JSON.stringify(this.metrics)} shouldMeasure=${this.shouldMeasure}`;
   }
   isMeasured() {
     const isNumber = n => typeof n === 'number';

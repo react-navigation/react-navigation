@@ -138,12 +138,13 @@ function createTransitionComponent(Component) {
 
       if (registerTransitionItem) {
         const nativeHandle = findNodeHandle(this);
-        registerTransitionItem(new TransitionItem(
-          this.props.id,
-          this.context.routeName,
-          this.render(),
+        registerTransitionItem(new TransitionItem({
+          id: this.props.id,
+          type: this.props.type,
+          routeName: this.context.routeName,
+          reactElement: this.render(),
           nativeHandle,
-        ));
+        }));
       }
     }
 
