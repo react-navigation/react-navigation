@@ -100,7 +100,7 @@ export default function withTransition(CardStackComp: React.Component) {
     }
 
     _getDefaultTransitionContainer() {
-      const direction = this._fromRoute && this._toRoute && 
+      const direction = this._fromRoute && this._toRoute &&
         Math.sign(this._toRoute.index - this._fromRoute.index);
       const isModal = this.props.mode === 'modal';
       const defaultTransitionConfig = TransitionConfigs.defaultTransitionConfig(direction, isModal);
@@ -133,14 +133,15 @@ export default function withTransition(CardStackComp: React.Component) {
     _findTransitionContainer() {
       const fromRouteName = this._fromRoute && this._fromRoute.routeName;
       const toRouteName = this._toRoute && this._toRoute.routeName;
-      const transitions = (this.props.transitionConfigs
-        ? this.props.transitionConfigs.filter(c => (
+      let transition = this._getDefaultTransitionContainer();
+      if (this.props.transitionConfigs) {
+        const transitions = this.props.transitionConfigs.filter(c => (
           (c.from === fromRouteName || c.from === '*') &&
-          (c.to === toRouteName || c.to === '*')))
-        : [this._getDefaultTransitionContainer()]
-      );
-      invariant(transitions.length <= 1, `More than one transitions found from "${fromRouteName}" to "${toRouteName}".`);
-      return transitions[0];
+          (c.to === toRouteName || c.to === '*')));
+        invariant(transitions.length <= 1, `More than one transitions found from "${fromRouteName}" to "${toRouteName}".`);
+        if (transitions.length > 0) transition = transitions[0];
+      }
+      return transition;
     }
 
     _getTransition() {
@@ -160,7 +161,6 @@ export default function withTransition(CardStackComp: React.Component) {
     }
 
     _interpolateStyleMap(styleMap, transitionProps: NavigationTransitionProps) {
-      console.log('=====> going to interpolate', styleMap)
       const interpolate = (value) => {
         if (typeof value.__getAnimatedValue === 'function') return value;
 
