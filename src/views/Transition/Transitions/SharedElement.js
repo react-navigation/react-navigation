@@ -22,8 +22,7 @@ const SharedElement = createTransition({
   },
   getStyleMapForClones(
     itemsOnFromRoute: Array<*>, 
-    itemsOnToRoute: Array<*>, 
-    transitionProps) {
+    itemsOnToRoute: Array<*>) {
     const itemIdsOnBoth = _.intersectionWith(itemsOnFromRoute, itemsOnToRoute, (i1, i2) => i1.id === i2.id)
       .map(item => item.id);
     const createSharedItemStyle = (result, id) => {

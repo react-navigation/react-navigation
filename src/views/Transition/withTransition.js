@@ -7,7 +7,7 @@ import _ from 'lodash';
 import TransitionConfigs from '../TransitionConfigs';
 
 import TransitionItems from './TransitionItems';
-import { convertStyleMap } from './transitionHelpers';
+import { convertStyleMap, createTransition, bindTransition } from './transitionHelpers';
 
 const NativeAnimatedModule = NativeModules &&
   NativeModules.NativeAnimatedModule;
@@ -99,12 +99,46 @@ export default function withTransition(CardStackComp: React.Component) {
       }
     }
 
+    _getDefaultTransitionContainer() {
+      const direction = this._fromRoute && this._toRoute && 
+        Math.sign(this._toRoute.index - this._fromRoute.index);
+      const isModal = this.props.mode === 'modal';
+      const defaultTransitionConfig = TransitionConfigs.defaultTransitionConfig(direction, isModal);
+      const transition = createTransition({
+        getStyleMap(
+          itemsOnFromRoute: Array<*>, 
+          itemsOnToRoute: Array<*>,
+          transitionProps: NavigationSceneRendererProps,
+        ) {
+          const createStyles = (items: Array<*>) => items.reduce((result, item) => {
+            const interpolator = defaultTransitionConfig.screenInterpolator;
+            result[item.id] = interpolator(transitionProps);
+            return result;
+          }, {});
+          return {
+            from: createStyles(itemsOnFromRoute),
+            to: createStyles(itemsOnToRoute),
+          };
+        },
+      });
+      const boundTransition = bindTransition(transition, /\$scene-.+/);
+      return {
+        // The parameter below doesn't make a difference since we return interpolated 
+        // styles from the transition.
+        transition: boundTransition(1),
+        config: defaultTransitionConfig.transitionSpec,
+      };
+    }
+
     _findTransitionContainer() {
       const fromRouteName = this._fromRoute && this._fromRoute.routeName;
       const toRouteName = this._toRoute && this._toRoute.routeName;
-      const transitions = this.props.transitionConfigs.filter(c => (
-        (c.from === fromRouteName || c.from === '*') &&
-        (c.to === toRouteName || c.to === '*')));
+      const transitions = (this.props.transitionConfigs
+        ? this.props.transitionConfigs.filter(c => (
+          (c.from === fromRouteName || c.from === '*') &&
+          (c.to === toRouteName || c.to === '*')))
+        : [this._getDefaultTransitionContainer()]
+      );
       invariant(transitions.length <= 1, `More than one transitions found from "${fromRouteName}" to "${toRouteName}".`);
       return transitions[0];
     }
@@ -126,7 +160,10 @@ export default function withTransition(CardStackComp: React.Component) {
     }
 
     _interpolateStyleMap(styleMap, transitionProps: NavigationTransitionProps) {
+      console.log('=====> going to interpolate', styleMap)
       const interpolate = (value) => {
+        if (typeof value.__getAnimatedValue === 'function') return value;
+
         const delta = this._toRoute.index - this._fromRoute.index;
         const { position } = transitionProps;
         let { inputRange, outputRange } = value;
@@ -146,7 +183,7 @@ export default function withTransition(CardStackComp: React.Component) {
       return convertStyleMap(styleMap, interpolate, 'processTransform');
     }
 
-    _createInPlaceTransitionStyleMap(transitionProps: NavigationTransitionProps) {
+    _createInPlaceTransitionStyleMap(transitionProps: NavigationSceneRendererProps) {
       const fromRouteName = this._fromRoute && this._fromRoute.routeName;
       const toRouteName = this._toRoute && this._toRoute.routeName;
 
@@ -176,6 +213,8 @@ export default function withTransition(CardStackComp: React.Component) {
         }
       };
       inPlaceStyleMap = this._replaceFromToInStyleMap(inPlaceStyleMap, fromRouteName, toRouteName);
+
+      // console.log('=>>>>> inPlaceStyleMap', inPlaceStyleMap);
 
       return inPlaceStyleMap;
     }
