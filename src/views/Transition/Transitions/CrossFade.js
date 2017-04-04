@@ -1,11 +1,12 @@
 // @flow
 
 import { createTransition } from '../transitionHelpers';
+import { TransitionItem } from '../TransitionItems';
 
 const CrossFade = createTransition({
   getStyleMap(
-    itemsOnFromRoute: Array<*>, 
-    itemsOnToRoute: Array<*>, 
+    itemsOnFromRoute: Array<TransitionItem>, 
+    itemsOnToRoute: Array<TransitionItem>, 
   ) {
     const fade = (outputRange) => (result, item) => {
       result[item.id] = { opacity: { outputRange } };

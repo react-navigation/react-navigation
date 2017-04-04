@@ -7,6 +7,7 @@ import _ from 'lodash';
 import TransitionConfigs from '../TransitionConfigs';
 
 import TransitionItems from './TransitionItems';
+import { TransitionItem } from './TransitionItems';
 import { convertStyleMap, createTransition, bindTransition } from './transitionHelpers';
 import { sq } from './composition';
 
@@ -143,11 +144,11 @@ export default function withTransition(CardStackComp: React.Component) {
         const defaultTransitionConfig = TransitionConfigs.defaultTransitionConfig(direction, isModal);
         const transition = createTransition({
           getStyleMap(
-            itemsOnFromRoute: Array<*>, 
-            itemsOnToRoute: Array<*>,
+            itemsOnFromRoute: Array<TransitionItem>, 
+            itemsOnToRoute: Array<TransitionItem>,
             transitionProps: NavigationSceneRendererProps,
           ) {
-            const createStyles = (items: Array<*>) => items.reduce((result, item) => {
+            const createStyles = (items: Array<TransitionItem>) => items.reduce((result, item) => {
               const interpolator = defaultTransitionConfig.screenInterpolator;
               result[item.id] = interpolator(transitionProps);
               return result;
@@ -260,7 +261,7 @@ export default function withTransition(CardStackComp: React.Component) {
       return inPlaceStyleMap;
     }
 
-    _renderOverlay(transitionProps) {
+    _renderOverlay(transitionProps: NavigationTransitionProps) {
       const fromRouteName = this._fromRoute && this._fromRoute.routeName;
       const toRouteName = this._toRoute && this._toRoute.routeName;
       const transition = this._getTransition();
