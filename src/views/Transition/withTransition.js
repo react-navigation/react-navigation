@@ -123,8 +123,9 @@ export default function withTransition(CardStackComp: React.Component) {
       });
       const boundTransition = bindTransition(transition, /\$scene-.+/);
       return {
-        // The parameter below doesn't make a difference since we return interpolated 
-        // styles from the transition.
+        // The parameter "1" below is required to create the transition object, but
+        // its value has no effect since we return interpolated styles from the 
+        // transition, instead of the raw input/output ranges.
         transition: boundTransition(1),
         config: defaultTransitionConfig.transitionSpec,
       };
