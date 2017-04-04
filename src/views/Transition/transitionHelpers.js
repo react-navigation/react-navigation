@@ -2,16 +2,20 @@
 import invariant from 'invariant';
 import _ from 'lodash';
 
-function createIdRegexFilter(idRegexes) {
-  return (id: string) => idRegexes.every(idRegex => id.match(idRegex));
+type IdOrRegex = string | RegExp;
+
+function createIdRegexFilter(idOrRegexes: Array<IdOrRegex>) {
+  return (id: string) => idOrRegexes.every(idOrRegex => (
+    _.isRegExp(idOrRegex) ? id.match(idOrRegex) : id === idOrRegex
+  ));
 }
 
-export function bindTransition(Transition, ...idRegexes) {
-  return Transition && Transition(createIdRegexFilter(idRegexes));
+export function bindTransition(Transition, ...idOrRegexes) {
+  return Transition && Transition(createIdRegexFilter(idOrRegexes));
 }
 
 const isTransformProp = (prop: string) => (
-  ['perspective', 'rotate', 'rotateX', 'rotateY', 'rotateZ', 
+  ['perspective', 'rotate', 'rotateX', 'rotateY', 'rotateZ',
     'scale', 'scaleX', 'scaleY', 'translateX', 'translateY', 'skewX', 'skewY'].includes(prop)
 );
 
@@ -19,7 +23,7 @@ const mergeTransform = (transforms: ?Array<*>, prop: string, value: object) => {
   const array = transforms || [];
   const index = array.find(t => !_.isNil(t[prop]));
   if (index >= 0) array[index][prop] = value;
-  else array.push({[prop]: value});
+  else array.push({ [prop]: value });
   return array;
 }
 

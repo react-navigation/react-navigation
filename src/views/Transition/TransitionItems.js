@@ -8,8 +8,11 @@ export type Metrics = {
   height: number,
 }
 
+type TransitionItemType = 'sharedElement';
+
 export class TransitionItem {
   id: string;
+  type: ?TransitionItemType;
   routeName: string;
   reactElement: React.Element<*>;
   nativeHandle: any;

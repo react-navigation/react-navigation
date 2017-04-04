@@ -7,9 +7,9 @@ import _ from 'lodash';
 import TransitionConfigs from '../TransitionConfigs';
 
 import TransitionItems from './TransitionItems';
-import { convertStyleMap, createTransition, bindTransition } from './transitionHelpers';
+import { convertStyleMap, createTransition, bindTransition, sq } from './transitionHelpers';
 
-const { bindTransition, sq, Transitions } = Transition;
+import Transitions from './Transitions';
 
 const NativeAnimatedModule = NativeModules &&
   NativeModules.NativeAnimatedModule;
@@ -101,21 +101,42 @@ export default function withTransition(CardStackComp: React.Component) {
       }
     }
 
-    _createSharedElementTransition(fromRoute, toRoute) {
-      const SharedElement = bindTransition(Transitions.SharedElement, /image-.+/);
-      const CrossFadeScene = bindTransition(Transitions.CrossFade, /\$scene.+/);
+    _createSharedElementTransition() {
+      const ids = this._getMatchingSharedElementIds();
+      const fromRoute = this._fromRoute, toRoute = this._toRoute;
+      const sharedElement = bindTransition(Transitions.SharedElement, ...ids);
+      const crossFadeScene = bindTransition(Transitions.CrossFade, /\$scene.+/);
       const transition = (fromRoute.index < toRoute.index
-        ? sq(SharedElement(0.9), CrossFadeScene(0.1))
-        : sq(CrossFadeScene(0.1), SharedElement(0.9))
+        ? sq(sharedElement(0.9), crossFadeScene(0.1))
+        : sq(crossFadeScene(0.1), sharedElement(0.9))
       );
       return {
-        // from: 'PhotoGrid', to: 'PhotoDetail',
         transition,
-        // config: { duration: 650 }
       }
     }
 
+    _includesMatchingSharedElements() {
+      return this._getMatchingSharedElementIds().length > 0;
+    }
+
+    _getMatchingSharedElementIds() {
+      const items = this.state.transitionItems.items();
+      const isSharedElementOnRoute = (route) => (item) => (
+        item.type === 'sharedElement' && (
+          item.routeName === route && route.routeName
+        )
+      );
+      const fromItems = items.filter(isSharedElementOnRoute(this._fromRoute));
+      const toItems = items.filter(isSharedElementOnRoute(this._toRoute));
+      return _.intersectionWith(fromItems, toItems, (i1, i2) => i1.id === i2.id)
+        .map(item => item.id);
+    }
+
     _getDefaultTransitionContainer() {
+      if (this._includesMatchingSharedElements()) {
+        return this._createSharedElementTransition();
+      }
+
       const direction = this._fromRoute && this._toRoute &&
         Math.sign(this._toRoute.index - this._fromRoute.index);
       const isModal = this.props.mode === 'modal';
