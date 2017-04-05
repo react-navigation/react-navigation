@@ -27,7 +27,7 @@ const MyNavScreen = ({ navigation, banner }) => (
       title="Go to notification settings"
     />
     <Button
-      onPress={() => navigation.navigate('Settings')}
+      onPress={() => navigation.navigate('SettingsTab')}
       title="Go to settings"
     />
     <Button
@@ -68,29 +68,9 @@ const MySettingsScreen = ({ navigation }) => (
   />
 );
 
-const MainTab = StackNavigator({
-  Home: {
-    screen: MyHomeScreen,
-    path: '/',
-    navigationOptions: {
-      title: () => 'Welcome',
-    },
-  },
-});
-
-const SettingsTab = StackNavigator({
-  Settings: {
-    screen: MySettingsScreen,
-    path: '/',
-    navigationOptions: {
-      title: () => 'Settings',
-    },
-  },
-});
-
 const TabNav = TabNavigator({
   MainTab: {
-    screen: MainTab,
+    screen: MyHomeScreen,
     path: '/',
     navigationOptions: {
       tabBar: () => ({
@@ -106,7 +86,7 @@ const TabNav = TabNavigator({
     },
   },
   SettingsTab: {
-    screen: SettingsTab,
+    screen: MySettingsScreen,
     path: '/settings',
     navigationOptions: {
       tabBar: () => ({

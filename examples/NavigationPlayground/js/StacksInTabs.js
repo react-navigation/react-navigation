@@ -27,7 +27,7 @@ const MyNavScreen = ({ navigation, banner }) => (
       title="Go to notification settings"
     />
     <Button
-      onPress={() => navigation.navigate('Settings')}
+      onPress={() => navigation.navigate('SettingsTab')}
       title="Go to settings"
     />
     <Button
