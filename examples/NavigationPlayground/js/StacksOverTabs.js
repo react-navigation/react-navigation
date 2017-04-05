@@ -76,13 +76,6 @@ const MainTab = StackNavigator({
       title: () => 'Welcome',
     },
   },
-  Profile: {
-    screen: MyProfileScreen,
-    path: '/people/:name',
-    navigationOptions: {
-      title: ({ state }) => `${state.params.name}'s Profile!`,
-    },
-  },
 });
 
 const SettingsTab = StackNavigator({
@@ -93,15 +86,9 @@ const SettingsTab = StackNavigator({
       title: () => 'Settings',
     },
   },
-  NotifSettings: {
-    screen: MyNotificationsSettingsScreen,
-    navigationOptions: {
-      title: () => 'Notification Settings',
-    },
-  },
 });
 
-const StacksInTabs = TabNavigator({
+const TabNav = TabNavigator({
   MainTab: {
     screen: MainTab,
     path: '/',
@@ -140,4 +127,25 @@ const StacksInTabs = TabNavigator({
   swipeEnabled: false,
 });
 
-export default StacksInTabs;
+const StacksOverTabs = StackNavigator({
+  Root: {
+    screen: TabNav,
+  },
+  NotifSettings: {
+    screen: MyNotificationsSettingsScreen,
+    navigationOptions: {
+      title: () => 'Notification Settings',
+    },
+  },
+  Profile: {
+    screen: MyProfileScreen,
+    path: '/people/:name',
+    navigationOptions: {
+      title: ({ state }) => `${state.params.name}'s Profile!`,
+    },
+  },
+}, {
+  headerMode: 'none',
+});
+
+export default StacksOverTabs;
