@@ -488,6 +488,33 @@ describe('StackRouter', () => {
     expect(state2 && state2.routes[0].routes[0].routeName).toEqual('baz');
   });
 
+  test('Handles the reset action with a key', () => {
+    const ChildRouter = StackRouter({
+      baz: {
+        screen: () => <div />,
+      },
+    });
+
+    const ChildNavigator = () => <div />;
+    ChildNavigator.router = ChildRouter;
+
+    const router = StackRouter({
+      Foo: {
+        screen: ChildNavigator,
+      },
+      Bar: {
+        screen: () => <div />,
+      },
+    });
+    const state = router.getStateForAction({ type: NavigationActions.INIT });
+    const state2 = router.getStateForAction({ type: NavigationActions.NAVIGATE, routeName: 'Foo', action: { type: NavigationActions.NAVIGATE, routeName: 'baz' }}, state);
+    const state3 = router.getStateForAction({ type: NavigationActions.RESET, key: 'Init', actions: [{ type: NavigationActions.NAVIGATE, routeName: 'Foo' }], index: 0 }, state2);
+    const state4 = router.getStateForAction({ type: NavigationActions.RESET, key: null, actions: [{ type: NavigationActions.NAVIGATE, routeName: 'Bar' }], index: 0 }, state3);
+
+    expect(state4 && state4.index).toEqual(0);
+    expect(state4 && state4.routes[0].routeName).toEqual('Bar');
+  });
+
   test('Handles the navigate action with params and nested StackRouter', () => {
     const ChildNavigator = () => <div />;
     ChildNavigator.router = StackRouter({ Baz: { screen: () => <div /> } });
