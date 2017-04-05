@@ -251,7 +251,9 @@ export default (
         });
       }
 
-      // Attempt to match `pathToResolve` with a route in this router's
+      const [pathNameToResolve, queryString] = pathToResolve.split('?');
+
+      // Attempt to match `pathNameToResolve` with a route in this router's
       // routeConfigs
       let matchedRouteName;
       let pathMatch;
@@ -260,7 +262,7 @@ export default (
       for (const routeName in paths) {
         /* $FlowFixMe */
         const { re, keys } = paths[routeName];
-        pathMatch = re.exec(pathToResolve);
+        pathMatch = re.exec(pathNameToResolve);
         if (pathMatch && pathMatch.length) {
           pathMatchKeys = keys;
           matchedRouteName = routeName;
@@ -285,6 +287,18 @@ export default (
         );
       }
 
+      // reduce the items of the query string. any query params may
+      // be overridden by path params
+      const queryParams = (queryString || '').split('&').reduce((result: *, item: string) => {
+        if (item !== '') {
+          const nextResult = result || {};
+          const [key, value] = item.split('=');
+          nextResult[key] = value;
+          return nextResult;
+        }
+        return result;
+      }, null);
+
       // reduce the matched pieces of the path into the params
       // of the route. `params` is null if there are no params.
       /* $FlowFixMe */
@@ -297,7 +311,8 @@ export default (
         const paramName = key.name;
         nextResult[paramName] = matchResult;
         return nextResult;
-      }, null);
+      }, queryParams);
+
 
       return NavigationActions.navigate({
         routeName: matchedRouteName,
