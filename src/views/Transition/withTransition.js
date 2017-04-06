@@ -56,10 +56,10 @@ export default function withTransition(CardStackComp: React.Component) {
         return true;
       } else {
         return (
-          this.state.transitionItems !== nextState.transitionItems &&
-          nextState.transitionItems.areAllMeasured() &&
-          // prevent unnecesary updates when registering/unregistering transition items
-          this.state.transitionItems.count() === nextState.transitionItems.count()
+          this.state.transitionItems !== nextState.transitionItems
+            && nextState.transitionItems.areAllMeasured()
+            // prevent unnecesary updates when registering/unregistering transition items
+            && this.state.transitionItems.count() === nextState.transitionItems.count()
         );
       }
     }
@@ -144,7 +144,7 @@ export default function withTransition(CardStackComp: React.Component) {
         const defaultTransitionConfig = TransitionConfigs.defaultTransitionConfig(direction, isModal);
         const transition = createTransition({
           getStyleMap(
-            itemsOnFromRoute: Array<TransitionItem>, 
+            itemsOnFromRoute: Array<TransitionItem>,
             itemsOnToRoute: Array<TransitionItem>,
             transitionProps: NavigationSceneRendererProps,
           ) {
@@ -388,9 +388,26 @@ export default function withTransition(CardStackComp: React.Component) {
       const defaultHideCardStyle = this._createDefaultHideCardStyle(props);
       const style = [defaultHideCardStyle, this.props.cardStyle];
       const transitionStyleMap = this._createInPlaceTransitionStyleMap(props);
+      const toRouteName = this._toRoute && this._toRoute.routeName;
+      const navigatingToNewRoute = this._fromRoute && this._toRoute
+        && this._fromRoute.index < this._toRoute.index;
+      const that = this;
+      // Force the component to update when moving to a new scene and the new scene is laid out.
+      // This is necessary since we need to wait for the transition items on the 
+      // new scene to register themselves before creating transitions. Otherwise
+      // the resulting transition will be incomplete/incorrect.
+      //
+      // Once the scene is laid out, we can assume the transition items on it have
+      // already registered.
+      const onLayout = async () => {
+        if (navigatingToNewRoute && props.scene.route.routeName === toRouteName) {
+          that.forceUpdate();
+        }
+        await that._measureTransitionItems();
+      }
       return {
         style,
-        onLayout: this._measureTransitionItems,
+        onLayout,
         transitionStyleMap,
       }
     }
