@@ -29,7 +29,7 @@ const SharedElement = createTransition({
     const createSharedItemStyle = (result, id) => {
       const fromItem = itemsOnFromRoute.find(item => item.id === id);
       const toItem = itemsOnToRoute.find(item => item.id === id);
-      console.log('fromItem', fromItem.toString(), 'toItem', toItem.toString());
+      // console.log('fromItem', fromItem.toString(), 'toItem', toItem.toString());
       const left = {
         outputRange: [fromItem.metrics.x, toItem.metrics.x]
       };
