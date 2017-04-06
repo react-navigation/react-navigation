@@ -75,7 +75,7 @@ function defaultTransitionConfig(
   if (Platform.OS === 'android') {
     // Use the default Android animation no matter if the screen is a modal.
     // Android doesn't have full-screen modals like iOS does, it has dialogs.
-    if (direction < 1) {
+    if (direction < 0) {
       // Navigating back to the previous screen
       return FadeOutToBottomAndroid;
     }
