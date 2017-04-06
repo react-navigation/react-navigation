@@ -10,18 +10,18 @@ import { createTransition, bindTransition } from './transitionHelpers';
 import { together, sequence, tg, sq } from './composition';
 import Transitions from './Transitions';
 
-const TransitionView = createTransitionComponent(View); 
-const TransitionImage = createTransitionComponent(Image); 
-const TransitionText = createTransitionComponent(Text); 
-
 function withType(type: string, C) {
   return props => <C {...props} type={type} />;
 }
 
+function createSharedElementComponent(C) {
+  return withType('sharedElement', createTransitionComponent(C));
+}
+
 export default {
-  View: TransitionView,
-  Image: TransitionImage,
-  Text: TransitionText,
+  View: createTransitionComponent(View),
+  Image: createTransitionComponent(Image),
+  Text: createTransitionComponent(Text),
   createTransitionComponent,
   createTransition,
   bindTransition,
@@ -31,9 +31,9 @@ export default {
   sq,
   Transitions,
   SharedElement: {
-    View: withType('sharedElement', TransitionView),
-    Image: withType('sharedElement', TransitionImage),
-    Text: withType('sharedElement', TransitionView),
-    create: (C) => withType('sharedElement', createTransitionComponent(C)),
+    View: createSharedElementComponent(View),
+    Image: createSharedElementComponent(Image),
+    Text: createSharedElementComponent(Text),
+    createComponent: createSharedElementComponent,
   },
 }
