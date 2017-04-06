@@ -10,12 +10,12 @@ import { createTransition, bindTransition } from './transitionHelpers';
 import { together, sequence, tg, sq } from './composition';
 import Transitions from './Transitions';
 
-function withType(type: string, C) {
-  return props => <C {...props} type={type} />;
+function withTransitionType(type: string, C) {
+  return props => <C {...props} transitionType={type} />;
 }
 
 function createSharedElementComponent(C) {
-  return withType('sharedElement', createTransitionComponent(C));
+  return withTransitionType('sharedElement', createTransitionComponent(C));
 }
 
 export default {
