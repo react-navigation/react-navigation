@@ -175,15 +175,27 @@ export default function withTransition(CardStackComp: React.Component) {
     _getTransitionContainer() {
       const fromRouteName = this._fromRoute && this._fromRoute.routeName;
       const toRouteName = this._toRoute && this._toRoute.routeName;
-      if (this.props.transitionConfigs) {
-        const transitions = this.props.transitionConfigs.filter(c => (
-          (c.from === fromRouteName || c.from === '*') &&
-          (c.to === toRouteName || c.to === '*')));
-        invariant(transitions.length <= 1, `More than one transitions found from "${fromRouteName}" to "${toRouteName}".`);
-        return transitions[0] || this._getDefaultTransitionContainer();
-      } else {
-        return this._getDefaultTransitionContainer();
+
+      const getCompTransitionConfigs = (routeName: string) => {
+        const comp = routeName && this.props.router.getComponentForRouteName(routeName);
+        const navOps = comp && comp.navigationOptions;
+        const cardStackOps = navOps && navOps.cardStack;
+        const compTransitionConfigs = cardStackOps && cardStackOps.transitions;
+        return compTransitionConfigs || [];
       }
+
+      const transitionConfigs = _.unionWith(
+        getCompTransitionConfigs(fromRouteName).map(tc => ({ ...tc, from: fromRouteName })),
+        getCompTransitionConfigs(toRouteName).map(tc => ({ ...tc, to: toRouteName })),
+        (this.props.transitionConfigs || []),
+        (a, b) => a.from === b.from && a.to === b.to
+      );
+
+      const transitions = transitionConfigs.filter(c => (
+        (c.from === fromRouteName || c.from === '*') &&
+        (c.to === toRouteName || c.to === '*')));
+      invariant(transitions.length <= 1, `More than one transitions found from "${fromRouteName}" to "${toRouteName}".`);
+      return transitions[0] || this._getDefaultTransitionContainer();
     }
 
     _getTransition() {
