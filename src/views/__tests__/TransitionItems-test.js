@@ -162,10 +162,11 @@ describe('TransitionItems', () => {
 
 describe('TransitionItem', () => {
   it('clone', () => {
-    const item = new TransitionItem({id: 'blah', routeName: 'momo'});
+    const item = new TransitionItem({id: 'blah', routeName: 'momo', transitionType: 'sharedElement'});
     const cloned = item.clone();
     expect(cloned.id).toBe(item.id);
     expect(cloned.routeName).toBe(item.routeName);
+    expect(cloned.transitionType).toBe(item.transitionType);
   })
 })
 

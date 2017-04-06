@@ -105,7 +105,7 @@ function createTransitionComponent(Component) {
         const nativeHandle = findNodeHandle(this);
         registerTransitionItem(new TransitionItem({
           id: this.props.id,
-          type: this.props.type,
+          transitionType: this.props.transitionType,
           routeName: this.context.routeName,
           reactElement: this.render(),
           nativeHandle,

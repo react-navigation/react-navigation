@@ -12,21 +12,21 @@ type TransitionItemType = 'sharedElement';
 
 export class TransitionItem {
   id: string;
-  type: ?TransitionItemType;
+  transitionType: ?TransitionItemType;
   routeName: string;
   reactElement: React.Element<*>;
   nativeHandle: any;
   metrics: ?Metrics;
   shouldMeasure: boolean;
   constructor(config = {}) {
-    const {id, routeName, reactElement, nativeHandle, metrics, shouldMeasure, type} = config;
+    const {id, routeName, reactElement, nativeHandle, metrics, shouldMeasure, transitionType} = config;
     this.id = id;
     this.routeName = routeName;
     this.reactElement = reactElement;
     this.nativeHandle = nativeHandle;
     this.metrics = metrics;
     this.shouldMeasure = shouldMeasure || false;
-    this.type = type;
+    this.transitionType = transitionType;
   }
   clone() {
     return new TransitionItem(this);

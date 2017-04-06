@@ -123,7 +123,7 @@ export default function withTransition(CardStackComp: React.Component) {
     }
 
     _getMatchingSharedElementIds() {
-      const {fromItems, toItems} = this._getFromToItems(i => i.type === 'sharedElement');
+      const {fromItems, toItems} = this._getFromToItems(i => i.transitionType === 'sharedElement');
       return _.intersectionWith(fromItems, toItems, (i1, i2) => i1.id === i2.id)
         .map(item => item.id);
     }
@@ -452,7 +452,7 @@ export default function withTransition(CardStackComp: React.Component) {
     _getTransitionContainerForConfig() {
       const tc = this._getTransitionContainer();
       if (tc.isDefault) {
-        const { fromItems, toItems } = this._getFromToItems(i => i.type === 'sharedElement');
+        const { fromItems, toItems } = this._getFromToItems(i => i.transitionType === 'sharedElement');
         const hasSharedElement = fromItems.length > 0 || toItems.length > 0;
         if (hasSharedElement) {
           return this._createSharedElementTransition();
