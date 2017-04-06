@@ -72,7 +72,13 @@ Now you can press play in Xcode, or re-build on the command line:
 react-native run-ios
 ```
 
-To test the URI in iOS, open safari and type `mychat://chat/Taylor`.
+To test the URI on the simulator, run the following:
+
+```
+xcrun simctl openurl booted mychat://chat/Taylor
+```
+
+To test the URI on a real device, open Safari and type `mychat://chat/Taylor`.
 
 ## Android
 

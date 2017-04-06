@@ -130,13 +130,17 @@ export default (
         };
       }
 
-      // Check if the current scene wants to handle the action
-      const currentRoute = state.routes[state.index];
-      const childRouter = childRouters[currentRoute.routeName];
-      if (childRouter) {
-        const route = childRouter.getStateForAction(action, currentRoute);
-        if (route && route !== currentRoute) {
-          return StateUtils.replaceAt(state, currentRoute.key, route);
+      // Check if a child scene wants to handle the action as long as it is not a reset to the root stack
+      if(action.type !== NavigationActions.RESET || action.key !== null) {
+        const keyIndex = action.key ? StateUtils.indexOf(state, action.key) : -1
+        const childIndex = keyIndex >= 0 ? keyIndex : state.index;
+        const childRoute = state.routes[childIndex];
+        const childRouter = childRouters[childRoute.routeName];
+        if (childRouter) {
+          const route = childRouter.getStateForAction(action, childRoute);
+          if (route && route !== childRoute) {
+            return StateUtils.replaceAt(state, childRoute.key, route);
+          }
         }
       }
 
@@ -246,7 +250,9 @@ export default (
         });
       }
 
-      // Attempt to match `pathToResolve` with a route in this router's
+      const [pathNameToResolve, queryString] = pathToResolve.split('?');
+
+      // Attempt to match `pathNameToResolve` with a route in this router's
       // routeConfigs
       let matchedRouteName;
       let pathMatch;
@@ -255,7 +261,7 @@ export default (
       for (const routeName in paths) {
         /* $FlowFixMe */
         const { re, keys } = paths[routeName];
-        pathMatch = re.exec(pathToResolve);
+        pathMatch = re.exec(pathNameToResolve);
         if (pathMatch && pathMatch.length) {
           pathMatchKeys = keys;
           matchedRouteName = routeName;
@@ -280,6 +286,18 @@ export default (
         );
       }
 
+      // reduce the items of the query string. any query params may
+      // be overridden by path params
+      const queryParams = (queryString || '').split('&').reduce((result: *, item: string) => {
+        if (item !== '') {
+          const nextResult = result || {};
+          const [key, value] = item.split('=');
+          nextResult[key] = value;
+          return nextResult;
+        }
+        return result;
+      }, null);
+
       // reduce the matched pieces of the path into the params
       // of the route. `params` is null if there are no params.
       /* $FlowFixMe */
@@ -292,7 +310,8 @@ export default (
         const paramName = key.name;
         nextResult[paramName] = matchResult;
         return nextResult;
-      }, null);
+      }, queryParams);
+
 
       return NavigationActions.navigate({
         routeName: matchedRouteName,
