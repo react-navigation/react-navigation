@@ -91,6 +91,20 @@ The route configs object is a mapping from route name to a route config, which t
 - `contentComponent` - Component used to render the content of the drawer, for example, navigation items. Receives the `navigation` prop for the drawer. Defaults to `DrawerView.Items`. For more information, see below.
 - `contentOptions` - Configure the drawer content, see below.
 
+#### Example:
+
+Default the `DrawerView` isn't scrollable.
+To achieve a scrollable `View`, you have to use the `contentComponent` to customize the container, 
+as you can see in the example below.
+
+```js
+{
+  drawerWidth: 200,
+  drawerPosition: 'right',
+  contentComponent: props => <ScrollView><DrawerView.Items {...props} /></ScrollView>
+}
+```
+
 Several options get passed to the underlying router to modify navigation logic:
 
 - `initialRouteName` - The routeName for the initial route.
@@ -123,6 +137,7 @@ const styles = StyleSheet.create({
 - `inactiveTintColor` - label and icon color of the inactive label
 - `inactiveBackgroundColor` - background color of the inactive label
 - `style` - style object for the content section
+- `labelStyle` - style object to overwrite `Text` style inside content section, when your label is a string
 
 #### Example:
 

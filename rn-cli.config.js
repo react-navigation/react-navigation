@@ -14,6 +14,7 @@ const examples = [
   'NavigationPlayground',
   'HelloHybrid',
   'LinkingExample',
+  'ReduxExample',
   'Chat',
 ];
 

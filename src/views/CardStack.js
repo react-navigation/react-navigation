@@ -446,7 +446,15 @@ class CardStack extends Component<DefaultProps, Props, void> {
         });
       },
     });
-    const gesturesEnabled = this.props.mode === 'card' && Platform.OS === 'ios';
+
+    const cardStackConfig = this.props.router.getScreenConfig(
+      props.navigation,
+      'cardStack'
+    ) || {};
+
+    const gesturesEnabled = typeof cardStackConfig.gesturesEnabled === 'boolean' ?
+      cardStackConfig.gesturesEnabled :
+      this.props.mode === 'card' && Platform.OS === 'ios';
     const handlers = gesturesEnabled ? responder.panHandlers : {};
     return (
       <View
