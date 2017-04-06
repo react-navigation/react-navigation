@@ -13,8 +13,13 @@ import {
 import { TransitionItem } from './TransitionItems';
 import TransitionConfigs from '../TransitionConfigs';
 
-const statefulize = Component => {
+import type {
+  TransitionStyleMap,
+} from '../../TypeDefinition';
+
+const statefulize = (Component: ReactClass<*>) => {
   class Statefulized extends React.Component {
+    _component: ReactClass<*>;
     // This is needed to avoid error from PointerEventsContainer
     setNativeProps(props) {
       this._component.setNativeProps(props);
@@ -46,17 +51,31 @@ const createAnimatedComponent = Component => {
   }
 };
 
-function createTransitionComponent(Component) {
+type Props = Object;
+
+type State = {
+  transitionStyleMap: ?TransitionStyleMap,
+}
+
+type Context = {
+  registerTransitionItem: (item: TransitionItem) => void,
+  unregisterTransitionItem: (id: string, routeName: string) => void,
+  routeName: string,
+  transitionStyleMapChange: React.PropTypes.object,
+}
+
+function createTransitionComponent(Component: ReactClass<*>) {
   class TransitionComponent extends React.Component {
     _component: any;
+    state: State;
     static contextTypes = {
       registerTransitionItem: React.PropTypes.func,
       unregisterTransitionItem: React.PropTypes.func,
       routeName: React.PropTypes.string,
-      transitionStylesChange: React.PropTypes.object,
+      transitionStyleMapChange: React.PropTypes.object,
     };
 
-    constructor(props, context) {
+    constructor(props: Props, context: Context) {
       super(props, context);
       this._updateTransitionStyleMap = this._updateTransitionStyleMap.bind(this);
       this.state = {
@@ -65,7 +84,7 @@ function createTransitionComponent(Component) {
     }
 
     // This is needed to pass the invariant in PointerEventsContainer
-    setNativeProps(props) {
+    setNativeProps(props: any) {
       this._component.setNativeProps(props);
     }
 
@@ -93,14 +112,14 @@ function createTransitionComponent(Component) {
       );
     }
 
-    _updateTransitionStyleMap(transitionStyleMap) {
+    _updateTransitionStyleMap(transitionStyleMap: TransitionStyleMap) {
       this.setState({ transitionStyleMap });
     }
 
     componentDidMount() {
-      const { registerTransitionItem, transitionStylesChange } = this.context;
+      const { registerTransitionItem, transitionStyleMapChange } = this.context;
 
-      transitionStylesChange && transitionStylesChange.subscribe(this._updateTransitionStyleMap);
+      transitionStyleMapChange && transitionStyleMapChange.subscribe(this._updateTransitionStyleMap);
 
       if (registerTransitionItem) {
         const nativeHandle = findNodeHandle(this);
@@ -115,9 +134,9 @@ function createTransitionComponent(Component) {
     }
 
     componentWillUnmount() {
-      const { unregisterTransitionItem, transitionStylesChange } = this.context;
+      const { unregisterTransitionItem, transitionStyleMapChange } = this.context;
 
-      transitionStylesChange && transitionStylesChange.unsubscribe(this._updateTransitionStyleMap);
+      transitionStyleMapChange && transitionStyleMapChange.unsubscribe(this._updateTransitionStyleMap);
       unregisterTransitionItem && unregisterTransitionItem(this.props.id, this.context.routeName);
     }
   }

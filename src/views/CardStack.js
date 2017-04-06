@@ -24,6 +24,7 @@ import type {
   NavigationTransitionProps,
   NavigationRouter,
   Style,
+  NavigationTransitionSpec,
 } from '../TypeDefinition';
 
 import type { HeaderMode } from './Header';
@@ -48,6 +49,12 @@ type Props = {
    * Optional custom animation when transitioning between screens.
    */
   transitionConfig?: () => TransitionConfig,
+  configureTransition: (
+    transitionProps: NavigationTransitionProps,
+    prevTransitionProps: ?NavigationTransitionProps,
+  ) => NavigationTransitionSpec,
+  renderExtraLayers?: (props: NavigationTransitionProps) => React.Element<*>,
+  createExtraSceneProps?: (props: NavigationSceneRendererProps) => Object,
 };
 
 type DefaultProps = {

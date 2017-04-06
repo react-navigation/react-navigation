@@ -461,3 +461,9 @@ export type LayoutEvent = {
     },
   };
 };
+
+export type TransitionStyleMap = {
+  [routeName: string]: {
+    [id: string]: Object,
+  }
+};
