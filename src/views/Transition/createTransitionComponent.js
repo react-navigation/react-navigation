@@ -88,6 +88,7 @@ function createTransitionComponent(Component) {
           ref={c => this._component = c}
           collapsable={false}
           style={[this.props.style, animatedStyle]}
+          componentType={Component.displayName || Component.name}
         />
       );
     }
