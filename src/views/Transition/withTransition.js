@@ -392,7 +392,6 @@ export default function withTransition(CardStackComp: React.Component) {
       const defaultHideCardStyle = this._createDefaultHideCardStyle(props);
       const style = [defaultHideCardStyle, this.props.cardStyle];
       const transitionStyleMap = this._createInPlaceTransitionStyleMap(props);
-      const that = this;
       // Force the component to update when moving to a new scene and the new scene is laid out.
       // This is necessary since we need to wait for the transition items on the 
       // new scene to register themselves before creating transitions. Otherwise
@@ -402,17 +401,17 @@ export default function withTransition(CardStackComp: React.Component) {
       // already registered.
 
       const onLayout = async () => {
-        const toRouteName = that._toRoute && that._toRoute.routeName;
-        const navigatingToNewRoute = that._fromRoute && that._toRoute
-          && that._fromRoute.index < that._toRoute.index;
+        const toRouteName = this._toRoute && this._toRoute.routeName;
+        const navigatingToNewRoute = this._fromRoute && this._toRoute
+          && this._fromRoute.index < this._toRoute.index;
         if (
           navigatingToNewRoute
           && props.scene.route.routeName === toRouteName
-          && _.isNil(that._getTransition().getItemsToMeasure)
+          && _.isNil(this._getTransition().getItemsToMeasure)
         ) {
-          that.forceUpdate();
+          this.forceUpdate();
         }
-        await that._measureTransitionItems();
+        await this._measureTransitionItems();
       }
       return {
         style,
