@@ -71,6 +71,8 @@ class HeaderBackButton extends React.PureComponent<DefaultProps, Props, State> {
         onPress={onPress}
         style={styles.container}
         borderless
+        accessible
+        accessibilityLabel="back button"
       >
         <View style={styles.container}>
           <Image
