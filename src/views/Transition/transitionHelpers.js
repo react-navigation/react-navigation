@@ -5,7 +5,7 @@ import _ from 'lodash';
 type IdOrRegex = string | RegExp;
 
 function createIdRegexFilter(idOrRegexes: Array<IdOrRegex>) {
-  return (id: string) => idOrRegexes.every(idOrRegex => (
+  return (id: string) => idOrRegexes.some(idOrRegex => (
     _.isRegExp(idOrRegex) ? id.match(idOrRegex) : id === idOrRegex
   ));
 }
