@@ -4,6 +4,7 @@ import {
 
 import PhotoGrid from './PhotoGrid';
 import PhotoDetail from './PhotoDetail';
+import PhotoMoreDetail from './PhotoMoreDetail';
 import { Transition } from 'react-navigation';
 import _ from 'lodash';
 import faker from 'faker';
@@ -14,6 +15,9 @@ const App = StackNavigator({
   },
   PhotoDetail: {
     screen: PhotoDetail,
+  },
+  PhotoMoreDetail: {
+    screen: PhotoMoreDetail,
   }
 });
 

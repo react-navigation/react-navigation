@@ -24,9 +24,12 @@ const PhotoDetail = (props) => {
   const openMoreDetails = photo => props.navigation.navigate('PhotoMoreDetail', { photo });
   const renderHeader = () => (
     <View>
-      <Transition.SharedElement.Image id={`image-${url}`} source={image} style={styles.image} />
+      <Touchable onPress={() => openMoreDetails(photo)}>
+        <Transition.SharedElement.Image id={`image-${url}`} source={image} style={styles.image} />
+      </Touchable>
       <View style={styles.titleContainer} onLayout={this._onLayout}>
-        <Text style={[styles.text, styles.title]}>{title}</Text>
+        <Transition.SharedElement.Text id={`title-${url}`}
+          style={[styles.text, styles.title]}>{title}</Transition.SharedElement.Text>
       </View>
       <Text style={[styles.text]}>{description}</Text>
     </View>
