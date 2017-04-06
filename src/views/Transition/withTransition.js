@@ -57,9 +57,9 @@ export default function withTransition(CardStackComp: React.Component) {
       } else {
         return (
           this.state.transitionItems !== nextState.transitionItems
-            && nextState.transitionItems.areAllMeasured()
-            // prevent unnecesary updates when registering/unregistering transition items
-            && this.state.transitionItems.count() === nextState.transitionItems.count()
+          && nextState.transitionItems.areAllMeasured()
+          // prevent unnecesary updates when registering/unregistering transition items
+          && this.state.transitionItems.count() === nextState.transitionItems.count()
         );
       }
     }
@@ -191,15 +191,12 @@ export default function withTransition(CardStackComp: React.Component) {
       return tc && tc.transition;
     }
 
-    _getFilteredFromToItems(transition, fromRouteName: string, toRouteName: string) {
-      const isRoute = route => item => item.routeName === route;
-      const filterPass = item => transition && (!!!transition.filter || transition.filter(item.id));
-
-      const filteredItems = this.state.transitionItems.items().filter(filterPass);
-
-      const fromItems = filteredItems.filter(isRoute(fromRouteName));
-      const toItems = filteredItems.filter(isRoute(toRouteName));
-      return { from: fromItems, to: toItems };
+    _getFilteredFromToItems() {
+      const transition = this._getTransition();
+      const transitionFilter = item => (
+        transition && (!!!transition.filter || transition.filter(item.id))
+      );
+      return this._getFromToItems(transitionFilter);
     }
 
     _interpolateStyleMap(styleMap, transitionProps: NavigationTransitionProps) {
@@ -234,7 +231,7 @@ export default function withTransition(CardStackComp: React.Component) {
         return null;
       }
 
-      const { from: fromItems, to: toItems } = this._getFilteredFromToItems(transition, fromRouteName, toRouteName);
+      const { fromItems, toItems } = this._getFilteredFromToItems();
       const itemsToClone = transition.getItemsToClone && transition.getItemsToClone(fromItems, toItems);
 
       const hideUntilDone = (items, onFromRoute: boolean) => items && items.reduce((result, item) => {
@@ -266,7 +263,7 @@ export default function withTransition(CardStackComp: React.Component) {
       const toRouteName = this._toRoute && this._toRoute.routeName;
       const transition = this._getTransition();
       if (transition && this.state.transitionItems.areAllMeasured()) {
-        const { from: fromItems, to: toItems } = this._getFilteredFromToItems(transition, fromRouteName, toRouteName);
+        const { fromItems, toItems } = this._getFilteredFromToItems();
         const itemsToClone = transition.getItemsToClone && transition.getItemsToClone(fromItems, toItems);
         if (!itemsToClone) return null;
 
@@ -356,8 +353,8 @@ export default function withTransition(CardStackComp: React.Component) {
         const transition = this._getTransition();
         let itemsToMeasure = [];
         if (transition && transition.getItemsToMeasure) {
-          const { from, to } = this._getFilteredFromToItems(transition, fromRoute.routeName, toRoute.routeName);
-          itemsToMeasure = transition.getItemsToMeasure(from, to);
+          const { fromItems, toItems } = this._getFilteredFromToItems();
+          itemsToMeasure = transition.getItemsToMeasure(fromItems, toItems);
         }
         this._setTransitionItemsState(prevItems => prevItems.setShouldMeasure(itemsToMeasure),
           () => this._measureItems());
@@ -388,9 +385,6 @@ export default function withTransition(CardStackComp: React.Component) {
       const defaultHideCardStyle = this._createDefaultHideCardStyle(props);
       const style = [defaultHideCardStyle, this.props.cardStyle];
       const transitionStyleMap = this._createInPlaceTransitionStyleMap(props);
-      const toRouteName = this._toRoute && this._toRoute.routeName;
-      const navigatingToNewRoute = this._fromRoute && this._toRoute
-        && this._fromRoute.index < this._toRoute.index;
       const that = this;
       // Force the component to update when moving to a new scene and the new scene is laid out.
       // This is necessary since we need to wait for the transition items on the 
@@ -399,8 +393,16 @@ export default function withTransition(CardStackComp: React.Component) {
       //
       // Once the scene is laid out, we can assume the transition items on it have
       // already registered.
+
       const onLayout = async () => {
-        if (navigatingToNewRoute && props.scene.route.routeName === toRouteName) {
+        const toRouteName = that._toRoute && that._toRoute.routeName;
+        const navigatingToNewRoute = that._fromRoute && that._toRoute
+          && that._fromRoute.index < that._toRoute.index;
+        if (
+          navigatingToNewRoute
+          && props.scene.route.routeName === toRouteName
+          && _.isNil(that._getTransition().getItemsToMeasure)
+        ) {
           that.forceUpdate();
         }
         await that._measureTransitionItems();
