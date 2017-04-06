@@ -17,6 +17,7 @@ import CustomTabs from './CustomTabs';
 import Drawer from './Drawer';
 import ModalStack from './ModalStack';
 import StacksInTabs from './StacksInTabs';
+import StacksOverTabs from './StacksOverTabs';
 import SimpleStack from './SimpleStack';
 import SimpleTabs from './SimpleTabs';
 
@@ -50,6 +51,11 @@ const ExampleRoutes = {
     name: 'Stacks in Tabs',
     description: 'Nested stack navigation in tabs',
     screen: StacksInTabs,
+  },
+  StacksOverTabs: {
+    name: 'Stacks over Tabs',
+    description: 'Nested stack navigation that pushes on top of tabs',
+    screen: StacksOverTabs,
   },
   LinkStack: {
     name: 'Link in Stack',
