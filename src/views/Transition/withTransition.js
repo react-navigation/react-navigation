@@ -123,12 +123,7 @@ export default function withTransition(CardStackComp: React.Component) {
     }
 
     _getMatchingSharedElementIds() {
-      const items = this.state.transitionItems.items();
-      const isSharedElementOnRoute = (route) => (item) => (
-        item.type === 'sharedElement' && item.routeName === (route && route.routeName)
-      );
-      const fromItems = items.filter(isSharedElementOnRoute(this._fromRoute));
-      const toItems = items.filter(isSharedElementOnRoute(this._toRoute));
+      const {fromItems, toItems} = this._getFromToItems(i => i.type === 'sharedElement');
       return _.intersectionWith(fromItems, toItems, (i1, i2) => i1.id === i2.id)
         .map(item => item.id);
     }
@@ -284,11 +279,11 @@ export default function withTransition(CardStackComp: React.Component) {
         styleMap = styleMap && this._replaceFromToInStyleMap(styleMap, fromRouteName, toRouteName);
 
         // TODO what if an item is the parent of another item?
-        const clones = itemsToClone.map((item, idx) => {
+        const clones = itemsToClone.map((item) => {
           const animatedStyle = styleMap && styleMap[item.routeName] && styleMap[item.routeName][item.id];
           return React.cloneElement(item.reactElement, {
             style: [item.reactElement.props.style, styles.clonedItem, animatedStyle],
-            key: `clone-${idx}`
+            key: `clone-${item.id}`
           }, []);
         });
         const animatedContainerStyle = {
