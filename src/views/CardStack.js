@@ -555,9 +555,3 @@ const styles = StyleSheet.create({
 });
 
 export default withTransition(CardStack);
-
-/*
-TODO:
-- _configureTransition: doesn't work any more..
-- test defaultHideCardStyle: can we create it without using prevTransitionProps?
-*/
