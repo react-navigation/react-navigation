@@ -626,7 +626,7 @@ babel-preset-es2015-node@^6.1.1:
     babel-plugin-transform-es2015-unicode-regex "6.x"
     semver "5.x"
 
-babel-preset-exponent@1.0.0:
+babel-preset-exponent@1.0.0, babel-preset-exponent@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/babel-preset-exponent/-/babel-preset-exponent-1.0.0.tgz#07045ee1a6483952367c267f2acac74749257d7f"
   dependencies:
