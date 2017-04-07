@@ -41,6 +41,7 @@ type Props = {
   style?: Style;
   labelStyle?: Style;
   showIcon: boolean;
+  showTab: boolean;
 };
 
 export default class TabBarBottom extends PureComponent<DefaultProps, Props, void> {
@@ -53,6 +54,7 @@ export default class TabBarBottom extends PureComponent<DefaultProps, Props, voi
     inactiveBackgroundColor: 'transparent',
     showLabel: true,
     showIcon: true,
+    showTab: true,
   };
 
   props: Props;
@@ -138,6 +140,7 @@ export default class TabBarBottom extends PureComponent<DefaultProps, Props, voi
         {navigationState.routes.map((route: NavigationRoute, index: number) => {
           const focused = index === navigationState.index;
           const scene = { route, index, focused };
+          const shouldRenderTab = this.props.shouldRenderTab(scene);
           const outputRange = inputRange.map((inputIndex: number) =>
             (inputIndex === index ? activeBackgroundColor : inactiveBackgroundColor)
           );
@@ -146,6 +149,11 @@ export default class TabBarBottom extends PureComponent<DefaultProps, Props, voi
             outputRange,
           });
           const justifyContent = this.props.showIcon ? 'flex-end' : 'center';
+
+          if (!shouldRenderTab) {
+            return null;
+          }
+
           return (
             <TouchableWithoutFeedback key={route.key} onPress={() => jumpToIndex(index)}>
               <Animated.View style={[styles.tab, { backgroundColor, justifyContent }]}>

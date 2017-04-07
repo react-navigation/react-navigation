@@ -89,7 +89,6 @@ class TabView extends PureComponent<void, Props, void> {
       this.props.childNavigationProps[route.key],
       'tabBar'
     );
-
     if (tabBar && tabBar.label) {
       return typeof tabBar.label === 'function'
         ? tabBar.label({ tintColor, focused })
@@ -120,11 +119,20 @@ class TabView extends PureComponent<void, Props, void> {
     return null;
   };
 
+  _shouldRenderTab = ({ focused, route, tintColor }: TabScene) => {
+    const tabBar = this.props.router.getScreenConfig(
+      this.props.childNavigationProps[route.key],
+      'tabBar'
+    );
+    return (tabBar && tabBar.showTab == false ? false : true);
+  };
+
   _renderTabBar = (props: *) => {
     const {
       tabBarOptions,
       tabBarComponent: TabBarComponent,
       animationEnabled,
+      router
     } = this.props;
     if (typeof TabBarComponent === 'undefined') {
       return null;
@@ -136,6 +144,7 @@ class TabView extends PureComponent<void, Props, void> {
         navigation={this.props.navigation}
         getLabel={this._getLabel}
         renderIcon={this._renderIcon}
+        shouldRenderTab={this._shouldRenderTab}
         animationEnabled={animationEnabled}
       />
     );
@@ -201,11 +210,11 @@ class TabView extends PureComponent<void, Props, void> {
         renderPager={this._renderPager}
         configureTransition={configureTransition}
         onRequestChangeTab={this._handlePageChanged}
-        screenProps={this.props.screenProps}
       />
     );
   }
 }
+
 
 const TabViewEnhanced = withCachedChildNavigation(TabView);
 
