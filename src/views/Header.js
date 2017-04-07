@@ -108,6 +108,14 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
     return undefined;
   }
 
+  _getHeaderTruncatedBackTitle(navigation: Navigation): ?string {
+    const header = this.props.router.getScreenConfig(navigation, 'header');
+    if (header && header.truncatedBackTitle) {
+      return header.truncatedBackTitle;
+    }
+    return undefined;
+  }
+
   _getHeaderTitleStyle(navigation: Navigation): Style {
     const header = this.props.router.getScreenConfig(navigation, 'header');
     if (header && header.titleStyle) {
@@ -149,6 +157,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
       return null;
     }
     const tintColor = this._getHeaderTintColor(props.navigation);
+    const truncatedBackTitle = this._getHeaderTruncatedBackTitle(props.navigation);
     const previousNavigation = addNavigationHelpers({
       ...props.navigation,
       state: props.scenes[props.scene.index - 1].route,
@@ -161,6 +170,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
       <HeaderBackButton
         onPress={props.onNavigateBack}
         tintColor={tintColor}
+        truncatedTitle={truncatedBackTitle}
         title={backButtonTitle}
         width={width}
       />
