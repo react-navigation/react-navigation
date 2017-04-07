@@ -126,9 +126,13 @@ export type HeaderConfig = {
   style?: Style,
 
   /**
-   * Style passed into navigation bar title
+   * Styles passed into navigation bar components
    */
-  titleStyle?: Style,
+  componentStyle?: {
+    left?: Style,
+    title?: Style,
+    right?: Style,
+  },
 
   // // Style of title text
   // titleTextStyle?: $NavigationThunk<Object>,
