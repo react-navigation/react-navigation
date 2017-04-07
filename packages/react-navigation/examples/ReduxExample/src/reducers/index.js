@@ -3,6 +3,7 @@ import { NavigationActions } from 'react-navigation';
 
 import { AppNavigator } from '../navigators/AppNavigator';
 
+// Start with two routes: The Main screen, with the Login screen on top.
 const initialNavState = {
   index: 1,
   routes: [

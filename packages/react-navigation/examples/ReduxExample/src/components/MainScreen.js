@@ -19,6 +19,9 @@ const MainScreen = () => (
     <AuthButton />
   </View>
 );
+
 MainScreen.navigationOptions = {
   title: 'Home Screen',
 };
+
+export default MainScreen;
