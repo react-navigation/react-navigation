@@ -26,14 +26,14 @@ type Props = {
   onPress: Function,
   delayPressIn?: number;
   borderless?: boolean;
-  pressColor?: string;
+  pressColor?: ?string;
   activeOpacity?: number;
   children?: React.Element<*>;
   style?: Style;
 };
 
 type DefaultProps = {
-  pressColor: string;
+  pressColor: ?string;
 };
 
 export default class TouchableItem extends Component<DefaultProps, Props, void> {
