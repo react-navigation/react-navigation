@@ -16,7 +16,7 @@ import TouchableItem from './TouchableItem';
 
 type Props = {
   onPress?: () => void,
-  pressColor?: ?string,
+  pressColorAndroid?: ?string,
   title?: ?string,
   tintColor?: ?string,
   truncatedTitle?: ?string,
@@ -24,7 +24,7 @@ type Props = {
 };
 
 type DefaultProps = {
-  pressColor: ?string,
+  pressColorAndroid: ?string,
   tintColor: ?string,
   truncatedTitle: ?string,
 };
@@ -36,7 +36,7 @@ type State = {
 class HeaderBackButton extends React.PureComponent<DefaultProps, Props, State> {
   static propTypes = {
     onPress: PropTypes.func.isRequired,
-    pressColor: PropTypes.string,
+    pressColorAndroid: PropTypes.string,
     title: PropTypes.string,
     tintColor: PropTypes.string,
     truncatedTitle: PropTypes.string,
@@ -44,7 +44,7 @@ class HeaderBackButton extends React.PureComponent<DefaultProps, Props, State> {
   };
 
   static defaultProps = {
-    pressColor: 'rgba(0, 0, 0, .32)',
+    pressColorAndroid: 'rgba(0, 0, 0, .32)',
     tintColor: Platform.select({
       ios: '#037aff',
     }),
@@ -63,7 +63,7 @@ class HeaderBackButton extends React.PureComponent<DefaultProps, Props, State> {
   };
 
   render() {
-    const { onPress, pressColor, width, title, tintColor, truncatedTitle } = this.props;
+    const { onPress, pressColorAndroid, width, title, tintColor, truncatedTitle } = this.props;
 
     const renderTruncated = this.state.initialTextWidth && width
       ? this.state.initialTextWidth > width
@@ -73,7 +73,7 @@ class HeaderBackButton extends React.PureComponent<DefaultProps, Props, State> {
       <TouchableItem
         delayPressIn={0}
         onPress={onPress}
-        pressColor={pressColor}
+        pressColor={pressColorAndroid}
         style={styles.container}
         borderless
       >
