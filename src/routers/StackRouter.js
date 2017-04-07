@@ -137,7 +137,6 @@ export default (
         const childRoute = state.routes[childIndex];
         const childRouter = childRouters[childRoute.routeName];
         if (childRouter) {
-          delete action.key;
           const route = childRouter.getStateForAction(action, childRoute);
           if (route && route !== childRoute) {
             return StateUtils.replaceAt(state, childRoute.key, route);

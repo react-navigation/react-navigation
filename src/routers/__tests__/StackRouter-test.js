@@ -467,6 +467,38 @@ describe('StackRouter', () => {
     expect(state2 && state2.routes[0].params).toEqual({ name: 'Qux' });
   });
 
+  test('Handles the setParams action with nested routers', () => {
+    const ChildNavigator = () => <div />;
+    const GrandChildNavigator = () => <div />;
+    GrandChildNavigator.router = StackRouter({
+      Quux: { screen: () => <div />, },
+      Corge: { screen: () => <div />, },
+    });
+    ChildNavigator.router = TabRouter({
+      Baz: { screen: GrandChildNavigator, },
+      Qux: { screen: () => <div />, },
+    });
+    const router = StackRouter({
+      Foo: { screen: ChildNavigator, },
+      Bar: { screen: () => <div />, },
+    });
+    const state = router.getStateForAction({ type: NavigationActions.INIT });
+    const state2 = router.getStateForAction({
+      type: NavigationActions.SET_PARAMS,
+      params: { name: 'foobar' },
+      key: 'Init',
+    }, state);
+    expect(state2 && state2.index).toEqual(0);
+    /* $FlowFixMe */
+    expect(state2 && state2.routes[0].routes[0].routes).toEqual([
+      {
+        key: 'Init',
+        routeName: 'Quux',
+        params: { name: 'foobar' },
+      },
+    ]);
+  });
+
   test('Handles the reset action', () => {
     const router = StackRouter({
       Foo: {
