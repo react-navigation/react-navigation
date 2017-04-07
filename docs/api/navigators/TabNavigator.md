@@ -34,7 +34,7 @@ class MyNotificationsScreen extends React.Component {
       icon: ({ tintColor }) => (
         <Image
           source={require('./notif-icon.png')}
-          style={[styles.tabIcon, {tintColor: tintColor}]}
+          style={[styles.icon, {tintColor: tintColor}]}
         />
       ),
     },
@@ -79,7 +79,7 @@ TabNavigator(RouteConfigs, TabNavigatorConfig)
 
 ### RouteConfigs
 
-The route configs object is a mapping from route name to a route config, which tells the navigator what to present for that route, see [example](https://github.com/coodoo/react-navigation/blob/master/docs/api/navigators/StackNavigator.md#routeconfigs) from `StackNavigator`.
+The route configs object is a mapping from route name to a route config, which tells the navigator what to present for that route, see [example](/docs/api/navigators/StackNavigator.md#routeconfigs) from `StackNavigator`.
 
 ### TabNavigatorConfig
 

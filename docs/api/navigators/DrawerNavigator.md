@@ -81,15 +81,29 @@ DrawerNavigator(RouteConfigs, DrawerNavigatorConfig)
 
 ### RouteConfigs
 
-The route configs object is a mapping from route name to a route config, which tells the navigator what to present for that route, see [example](https://github.com/coodoo/react-navigation/blob/master/docs/api/navigators/StackNavigator.md#routeconfigs) from `StackNavigator`.
+The route configs object is a mapping from route name to a route config, which tells the navigator what to present for that route, see [example](/docs/api/navigators/StackNavigator.md#routeconfigs) from `StackNavigator`.
 
 
 ### DrawerNavigatorConfig
 
 - `drawerWidth` - Width of the drawer
 - `drawerPosition` - Options are `left` or `right`. Default is `left` position.
-- `contentComponent` - Component to use to render the navigation items. Receives the `navigation` prop for the drawer. Defaults to `DrawerView.Items`.
+- `contentComponent` - Component used to render the content of the drawer, for example, navigation items. Receives the `navigation` prop for the drawer. Defaults to `DrawerView.Items`. For more information, see below.
 - `contentOptions` - Configure the drawer content, see below.
+
+#### Example:
+
+Default the `DrawerView` isn't scrollable.
+To achieve a scrollable `View`, you have to use the `contentComponent` to customize the container, 
+as you can see in the example below.
+
+```js
+{
+  drawerWidth: 200,
+  drawerPosition: 'right',
+  contentComponent: props => <ScrollView><DrawerView.Items {...props} /></ScrollView>
+}
+```
 
 Several options get passed to the underlying router to modify navigation logic:
 
@@ -98,6 +112,24 @@ Several options get passed to the underlying router to modify navigation logic:
 - `paths` - Provide a mapping of routeName to path config, which overrides the paths set in the routeConfigs.
 - `backBehavior` - Should the back button cause switch to the initial route? If yes, set to `initialRoute`, otherwise `none`. Defaults to `initialRoute` behavior.
 
+### Providing a custom `contentComponent`
+
+You can easily override the default component used by `react-navigation`:
+
+```js
+const CustomDrawerContentComponent = (props) => (
+  <View style={style.container}>
+    <DrawerView.Items {...props} />
+  </View>
+);
+
+const styles = StyleSheet.create({
+  container : {
+    flex : 1,
+  },
+});
+```
+
 ### `contentOptions` for `DrawerView.Items`
 
 - `activeTintColor` - label and icon color of the active label
@@ -105,6 +137,7 @@ Several options get passed to the underlying router to modify navigation logic:
 - `inactiveTintColor` - label and icon color of the inactive label
 - `inactiveBackgroundColor` - background color of the inactive label
 - `style` - style object for the content section
+- `labelStyle` - style object to overwrite `Text` style inside content section, when your label is a string
 
 #### Example:
 
@@ -156,7 +189,7 @@ The navigator component created by `DrawerNavigator(...)` takes the following pr
  const DrawerNav = DrawerNavigator({
    // config
  });
- 
+
  <DrawerNav
    screenProps={/* this prop will get passed to the screen components as this.props.screenProps */}
  />
