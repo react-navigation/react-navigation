@@ -506,7 +506,7 @@ class CardStack extends Component<DefaultProps, Props, void> {
   _renderInnerCard(
     SceneComponent: ReactClass<*>,
     props: NavigationSceneRendererProps
-  ): React.Element<*> {
+  ): React$Element<any> {
     const header = this.props.router.getScreenConfig(
       props.navigation,
       'header'
