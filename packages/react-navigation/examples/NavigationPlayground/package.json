@@ -3,8 +3,8 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
-    "react": "~15.4.2",
-    "react-native": "^0.41.2",
+    "react": "16.0.0-alpha.6",
+    "react-native": "^0.43.2",
     "react-native-vector-icons": "^4.0.1"
   },
   "devDependencies": {}
