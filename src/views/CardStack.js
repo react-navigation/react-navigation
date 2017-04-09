@@ -378,11 +378,17 @@ class CardStack extends Component<DefaultProps, Props, void> {
           : layout.width.__getValue();
         const axisHasBeenMeasured = !! axisLength;
 
-        // Measure the distance from the touch to the edge of the screen
-        const screenEdgeDistance = currentDragPosition - currentDragDistance;
-        // GESTURE_RESPONSE_DISTANCE is about 30 or 35
-        if (screenEdgeDistance > GESTURE_RESPONSE_DISTANCE) {
-          // Reject touches that started in the middle of the screen
+        const positionMax = isVertical ?
+          this.props.gestureResponseDistance :
+          /**
+          * For horizontal scroll views, a distance of GESTURE_RESPONSE_DISTANCE from the left of the screen is the
+          * standard maximum position to start touch responsiveness.
+          */
+          this.props.gestureResponseDistance || GESTURE_RESPONSE_DISTANCE;
+
+          // console.log('onMoveShouldSetPanResponder props', props);
+
+        if (positionMax != null && (currentDragPosition - currentDragDistance) > positionMax) {
           return false;
         }
 
