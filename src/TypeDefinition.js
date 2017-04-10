@@ -407,8 +407,8 @@ export type NavigationTransitionProps = {
   index: number,
   navigation: NavigationScreenProp<*, NavigationAction >,
 
-    // The gesture distance for `horizontal` and `vertical` transitions
-    gestureResponseDistance ?: ?number,
+  // The gesture distance for `horizontal` and `vertical` transitions
+  gestureResponseDistance ?: ?number,
 };
 
 // The scene renderer props are nearly identical to the props used for rendering
@@ -475,13 +475,13 @@ export type TransitionFilter = (id: string) => boolean;
 type GetTransitionStyleMapConfig = (
   itemsOnFromRoute: Array<TransitionItem>,
   itemsOnToRoute: Array<TransitionItem>,
-  transitionProps?: NavigationSceneRendererProps,
+  transitionProps: NavigationSceneRendererProps,
 ) => ?TransitionStyleMap
 
 type GetItemsConfig = (
   itemsOnFromRoute: Array<TransitionItem>,
   itemsOnToRoute: Array<TransitionItem>,
-) => ?Array<TransitionItem>
+) => ?Array < TransitionItem >
 
 export type TransitionConfig = {
   canUseNativeDriver?: () => boolean,
@@ -494,7 +494,7 @@ export type TransitionConfig = {
 type GetTransitionStyleMap = (
   itemsOnFromRoute: Array<TransitionItem>,
   itemsOnToRoute: Array<TransitionItem>,
-  transitionProps?: NavigationSceneRendererProps,
+  transitionProps: NavigationSceneRendererProps,
 ) => TransitionStyleMap
 
 type GetItems = (

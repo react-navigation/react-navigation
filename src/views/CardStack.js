@@ -516,10 +516,6 @@ class CardStack extends Component<DefaultProps, Props, void> {
   _renderScene(props: NavigationSceneRendererProps): React.Element<*> {
     const isModal = this.props.mode === 'modal';
 
-    // /* $FlowFixMe */
-    // const { screenInterpolator } = this._getTransitionConfig();
-    // const style = screenInterpolator && screenInterpolator(props);
-
     let panHandlers = null;
 
     const cardStackConfig = this.props.router.getScreenConfig(

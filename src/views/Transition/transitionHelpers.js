@@ -3,10 +3,10 @@ import invariant from 'invariant';
 import _ from 'lodash';
 import type {
   TransitionStyleMap,
-  UnboundTransition,
-  BoundTransition,
-  TransitionConfig,
-  TransitionFilter,
+    UnboundTransition,
+    BoundTransition,
+    TransitionConfig,
+    TransitionFilter,
 } from '../../TypeDefinition';
 
 type IdOrRegex = string | RegExp;
@@ -76,7 +76,7 @@ export function createTransition(transitionConfig: TransitionConfig): UnboundTra
       const originalStyleMap = getStyleMapFun(...args);
       if (originalStyleMap) return normalizeInputRange(originalStyleMap, duration);
     }
-    return {};
+    return { from: {}, to: {} };
   };
   const createGetItems = (getItemsFun) => (...args) => (
     (getItemsFun && getItemsFun(...args)) || []

@@ -1,8 +1,9 @@
 // @flow
+import invariant from 'invariant';
 
 import { together, sequence } from '../Transition/composition';
 import { createTransition, bindTransition } from '../Transition/transitionHelpers';
-import { initTestTransition, assertIoRanges, ioRanges } from './transitionTestUtils';
+import { initTestTransition, assertIoRanges, ioRanges, stubTransitionSceneProps } from './transitionTestUtils';
 
 describe('together', () => {
   it('accepts the union of ids that are accepted by all composed transitions', () => {
@@ -21,6 +22,7 @@ describe('together', () => {
     const B = initTestTransition('b', null, [b1, b2]);
     const combined = together(A(0.1), B(0.5));
     const styleMap = combined.getStyleMap([], []);
+    invariant(styleMap.from && styleMap.id1, 'Test data: styleMap must contain from.id1');
     const { from: {id1: {a, b}}} = styleMap;
     assertIoRanges(a, {inputRange: [0, 0.1], outputRange: [a1, a2]});
     assertIoRanges(b, {inputRange: [0, 0.5], outputRange: [b1, b2]});
@@ -33,7 +35,7 @@ describe('sequence', () => {
     const A = initTestTransition('a', null, [a1, a2]);
     const B = initTestTransition('b', null, [b1, b2]);
     const combined = sequence(A(0.1), B(0.2));
-    const styleMap = combined.getStyleMap([], []);
+    const styleMap = combined.getStyleMap([], [], stubTransitionSceneProps);
     const { from: {id1: {a, b}}} = styleMap;
     assertIoRanges(a, {inputRange: [0, 0.1], outputRange: [a1, a2]});
     assertIoRanges(b, {inputRange: [0.1, 0.3], outputRange: [b1, b2]});
@@ -44,7 +46,7 @@ describe('sequence', () => {
     const B = initTestTransition('b', null, [b1, b2]);
     const C = initTestTransition('c', null, [c1, c2]);
     const combined = sequence(A(0.1), B(0.2), C(0.3));
-    const styleMap = combined.getStyleMap([], []);
+    const styleMap = combined.getStyleMap([], [], stubTransitionSceneProps);
     const { from: {id1: {a, b, c}}} = styleMap;
     assertIoRanges(a, {inputRange: [0, 0.1], outputRange: [a1, a2]});
     assertIoRanges(b, {inputRange: [0.1, 0.3], outputRange: [b1, b2]});
@@ -56,7 +58,7 @@ describe('sequence', () => {
     const B = initTestTransition('b', null, [b1, b2]);
     const C = initTestTransition('c', null, [c1, c2]);
     const combined = sequence(A(0.1), sequence(B(0.2), C(0.3)));
-    const styleMap = combined.getStyleMap([], []);
+    const styleMap = combined.getStyleMap([], [], stubTransitionSceneProps);
     const { from: {id1: {a, b, c}}} = styleMap;
     assertIoRanges(a, {inputRange: [0, 0.1], outputRange: [a1, a2]});
     assertIoRanges(b, {inputRange: [0.1, 0.3], outputRange: [b1, b2]});
@@ -77,7 +79,7 @@ describe('Mixing together and sequence', () => {
     const B = initTestTransition('b', null, [b1, b2]);
     const C = initTestTransition('c', null, [c1, c2]);
     const combined = sequence(A(0.1), together(B(0.2), C(0.4)));
-    const styleMap = combined.getStyleMap([], []);
+    const styleMap = combined.getStyleMap([], [], stubTransitionSceneProps);
     const { from: {id1: {a, b, c}}} = styleMap;
     assertIoRanges(a, {inputRange: [0, 0.1], outputRange: [a1, a2]});
     assertIoRanges(b, {inputRange: [0.1, 0.3], outputRange: [b1, b2]});
@@ -89,7 +91,7 @@ describe('Mixing together and sequence', () => {
     const B = initTestTransition('b', null, [b1, b2]);
     const C = initTestTransition('c', null, [c1, c2]);
     const combined = sequence(together(A(0.1), B(0.2)), C(0.4));
-    const styleMap = combined.getStyleMap([], []);
+    const styleMap = combined.getStyleMap([], [], stubTransitionSceneProps);
     const { from: {id1: {a, b, c}}} = styleMap;
     assertIoRanges(a, {inputRange: [0, 0.1], outputRange: [a1, a2]});
     assertIoRanges(b, {inputRange: [0, 0.2], outputRange: [b1, b2]});
