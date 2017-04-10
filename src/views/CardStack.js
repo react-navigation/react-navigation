@@ -344,7 +344,9 @@ class CardStack extends Component<DefaultProps, Props, void> {
     let floatingHeader = null;
     const headerMode = this._getHeaderMode();
     if (headerMode === 'float') {
-      floatingHeader = this._renderHeader(props, headerMode);
+      const header = this.props.router.getScreenConfig(props.navigation, 'header') || {}; 
+      const isHiddenHeader = header && header.visible === false;
+      floatingHeader = isHiddenHeader ? null : this._renderHeader(props, headerMode);
     }
 
     const responder = PanResponder.create({
