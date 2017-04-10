@@ -27,8 +27,8 @@ type Props = {
   router: NavigationRouter,
   navigation: Navigation,
   childNavigationProps: { [key: string]: Navigation },
-  contentComponent: ReactClass<*>,
-  contentOptions?: {},
+  drawerComponent: ReactClass<*>,
+  drawerOptions?: {},
   style?: Style;
 };
 
@@ -73,11 +73,11 @@ class DrawerSidebar extends PureComponent<void, Props, void> {
   };
 
   render() {
-    const ContentComponent = this.props.contentComponent;
+    const DrawerComponent = this.props.drawerComponent;
     return (
       <View style={[styles.container, this.props.style]}>
-        <ContentComponent
-          {...this.props.contentOptions}
+        <DrawerComponent
+          {...this.props.drawerOptions}
           navigation={this.props.navigation}
           getLabel={this._getLabel}
           renderIcon={this._renderIcon}

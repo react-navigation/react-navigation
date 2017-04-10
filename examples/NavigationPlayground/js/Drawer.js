@@ -79,7 +79,7 @@ const DrawerExample = DrawerNavigator({
   },
 }, {
   initialRouteName: 'Drafts',
-  contentOptions: {
+  drawerOptions: {
     activeTintColor: '#e91e63',
   },
 });

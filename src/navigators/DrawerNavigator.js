@@ -30,7 +30,7 @@ const DefaultDrawerConfig = {
    * https://material.io/guidelines/patterns/navigation-drawer.html
    */
   drawerWidth: Dimensions.get('window').width - (Platform.OS === 'android' ? 56 : 64),
-  contentComponent: DrawerView.Items,
+  drawerComponent: DrawerView.Items,
   drawerPosition: 'left',
 };
 
@@ -42,8 +42,8 @@ const DrawerNavigator = (
   const {
     containerConfig,
     drawerWidth,
-    contentComponent,
-    contentOptions,
+    drawerComponent,
+    drawerOptions,
     drawerPosition,
     ...tabsConfig
   } = mergedConfig;
@@ -64,8 +64,8 @@ const DrawerNavigator = (
     <DrawerView
       {...props}
       drawerWidth={drawerWidth}
-      contentComponent={contentComponent}
-      contentOptions={contentOptions}
+      drawerComponent={drawerComponent}
+      drawerOptions={drawerOptions}
       drawerPosition={drawerPosition}
     />
   ), containerConfig);
