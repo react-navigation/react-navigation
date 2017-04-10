@@ -18,7 +18,7 @@ export class TransitionItem {
   nativeHandle: any;
   metrics: ?Metrics;
   shouldMeasure: boolean;
-  constructor(config = {}) {
+  constructor(config: Object = {}) {
     const {id, routeName, reactElement, nativeHandle, metrics, shouldMeasure, transitionType} = config;
     this.id = id;
     this.routeName = routeName;
@@ -32,11 +32,11 @@ export class TransitionItem {
     return new TransitionItem(this);
   }
   toString() {
-    return `id=${this.id} routeName=${this.routeName} handle=${this.nativeHandle} ${JSON.stringify(this.metrics)} shouldMeasure=${this.shouldMeasure}`;
+    return `id=${this.id} routeName=${this.routeName} handle=${this.nativeHandle} ${JSON.stringify(this.metrics)} shouldMeasure=${String(this.shouldMeasure)}`;
   }
   isMeasured() {
     const isNumber = n => typeof n === 'number';
-    const metricsValid = (m: Metrics) => m && [m.x, m.y, m.width, m.height].every(isNumber);
+    const metricsValid = (m: ?Metrics) => m && [m.x, m.y, m.width, m.height].every(isNumber);
     return metricsValid(this.metrics);
   }
 }

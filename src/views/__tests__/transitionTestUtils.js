@@ -1,7 +1,14 @@
 // @flow
 import { createTransition, bindTransition } from '../Transition/transitionHelpers';
+import type {
+  BoundTransition,
+} from '../../TypeDefinition';
 
-export function initTestTransition(prop, inputRange, outputRange, filterRegex = /foo/) {
+export function initTestTransition(
+  prop: string, 
+  inputRange: ?Array<number>, 
+  outputRange: Array<*>, 
+  filterRegex: RegExp = /foo/): BoundTransition {
   const transition = createTransition({
     getStyleMap() {
       return {
@@ -14,12 +21,17 @@ export function initTestTransition(prop, inputRange, outputRange, filterRegex = 
   return bindTransition(transition, filterRegex);
 }
 
-export function assertIoRanges(actual, expected) {
+type StyleInterpolation = {
+  inputRange?: ?Array<number>,
+  outputRange: Array<*>,
+}
+
+export function assertIoRanges(actual: StyleInterpolation, expected: StyleInterpolation) {
   expect(actual.inputRange).toEqual(expected.inputRange);
   expect(actual.outputRange).toEqual(expected.outputRange);
 }
 
-export function ioRanges(inputRange, outputRange) {
+export function ioRanges(inputRange: Array<number>, outputRange: Array<*>) {
   return {inputRange, outputRange};
 }
 

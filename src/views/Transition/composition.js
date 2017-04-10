@@ -1,7 +1,16 @@
-import _ from 'lodash';
-import { convertStyleMap } from './transitionHelpers';
+// @flow
 
-function combineCommonProps(transitions) {
+import _ from 'lodash';
+import invariant from 'invariant';
+import { convertStyleMap } from './transitionHelpers';
+import type {
+  Transition,
+  NavigationSceneRendererProps,
+  TransitionStyleMap,
+} from '../../TypeDefinition';
+import { TransitionItem } from './TransitionItems';
+
+function combineCommonProps(transitions: Array<Transition>) {
   const filter = (id: string) => transitions.some(t => t.filter(id));
   const getItemsOp = (op: string) => (
     itemsOnFromRoute: Array<*>, 
@@ -13,7 +22,9 @@ function combineCommonProps(transitions) {
       return result;
     }, []);
   const canUseNativeDriver = () => (
-    transitions.every(t => _.isNil(t.canUseNativeDriver) || t.canUseNativeDriver())
+    transitions.every(t => (t.canUseNativeDriver === undefined
+      || t.canUseNativeDriver === null
+      || t.canUseNativeDriver()))
   );
   const getItemsToClone = getItemsOp('getItemsToClone');
   const getItemsToMeasure = getItemsOp('getItemsToMeasure');
@@ -52,14 +63,16 @@ const mergeStyle = (style1, style2) => {
 
 const mergeStyles = (styles1, styles2) => {
   if ([styles1, styles2].some(_.isNil)) return styles1 || styles2;
+  invariant(styles1 && styles2);
   const ids = _.union(Object.keys(styles1), Object.keys(styles2));
   return ids.reduce((result, id) => {
+    invariant(styles1 && styles2);
     result[id] = mergeStyle(styles1[id], styles2[id]);
     return result;
   }, {});
 };
 
-const mergeStyleMap = (left, right) => ({
+const mergeStyleMap = (left, right): TransitionStyleMap => ({
   from: mergeStyles(left && left.from, right && right.from),
   to: mergeStyles(left && left.to, right && right.to),
 });
@@ -67,11 +80,11 @@ const mergeStyleMap = (left, right) => ({
 // http://stackoverflow.com/a/10474055/71133
 const toFixed = (n: number) => Math.round(n * 1e12) / 1e12;
 
-export function sequence(...transitions) {
+export function sequence(...transitions: Array<Transition>): Transition {
   const getStyleMapOp = (op: string) => (
-    itemsOnFromRoute: Array<*>, 
-    itemsOnToRoute: Array<*>, 
-    transitionProps) => {
+    itemsOnFromRoute: Array<TransitionItem>,
+    itemsOnToRoute: Array<TransitionItem>,
+    transitionProps?: NavigationSceneRendererProps) => {
     const finalResult = transitions.reduce((result, t) => {
       const fromItems = itemsOnFromRoute.filter(i => t.filter(i.id));
       const toItems = itemsOnToRoute.filter(i => t.filter(i.id));
@@ -96,11 +109,11 @@ export function sequence(...transitions) {
   };
 }
 
-export function together(...transitions) {
+export function together(...transitions: Array<Transition>) {
   const getStyleMapOp = (op: string) => (
     itemsOnFromRoute: Array<*>, 
     itemsOnToRoute: Array<*>, 
-    transitionProps) => transitions.reduce((result, t) => {
+    transitionProps?: NavigationSceneRendererProps) => transitions.reduce((result, t) => {
       // TODO duplicated code in sequence
       const fromItems = itemsOnFromRoute.filter(i => t.filter(i.id));
       const toItems = itemsOnToRoute.filter(i => t.filter(i.id));

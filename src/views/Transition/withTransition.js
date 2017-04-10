@@ -13,6 +13,13 @@ import { sq } from './composition';
 
 import Transitions from './Transitions';
 
+import type {
+  NavigationRoute,
+  NavigationTransitionProps,
+  NavigationSceneRendererProps,
+  Transition,
+} from '../../TypeDefinition';
+
 const NativeAnimatedModule = NativeModules &&
   NativeModules.NativeAnimatedModule;
 
@@ -20,8 +27,23 @@ const NativeAnimatedModule = NativeModules &&
 const OVERLAY_OPACITY_INPUT_RANGE_DELTA = 0.0001;
 const CLONE_ITEMS_OPACITY_INPUT_RANGE_DELTA = 0.01;
 
-export default function withTransition(CardStackComp: React.Component) {
+type Props = Object;
+
+type State = {
+  transitionItems: TransitionItems,
+};
+
+type Route = NavigationRoute & {
+  index: number,
+}
+
+export default function withTransition(CardStackComp: ReactClass<*>) {
   return class CompWithTransition extends React.Component {
+    state: State;
+    _receivedDifferentNavigationProp: boolean;
+    _fromRoute: Route;
+    _toRoute: Route;
+
     static childContextTypes = {
       registerTransitionItem: React.PropTypes.func,
       unregisterTransitionItem: React.PropTypes.func,
@@ -40,8 +62,8 @@ export default function withTransition(CardStackComp: React.Component) {
       };
     }
 
-    constructor(props: Props, context) {
-      super(props, context);
+    constructor(props: Props) {
+      super(props);
       this._configureTransition = this._configureTransition.bind(this);
       this._createExtraSceneProps = this._createExtraSceneProps.bind(this);
       this._renderExtraLayers = this._renderExtraLayers.bind(this);
@@ -51,7 +73,7 @@ export default function withTransition(CardStackComp: React.Component) {
       }
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(nextProps: Props, nextState: State) {
       if (this.props !== nextProps) {
         return true;
       } else {
@@ -64,7 +86,7 @@ export default function withTransition(CardStackComp: React.Component) {
       }
     }
 
-    componentWillReceiveProps(nextProps) {
+    componentWillReceiveProps(nextProps: Props) {
       if (this.props.navigation !== nextProps.navigation) {
         const getRoute = props => props.navigation && {
           ...props.navigation.state.routes[props.navigation.state.index],
@@ -77,7 +99,9 @@ export default function withTransition(CardStackComp: React.Component) {
         this._receivedDifferentNavigationProp = true;
         // When coming back from scene, onLayout won't be triggered, we'll need to do it manually.
         this._setTransitionItemsState(prevItems => prevItems.removeAllMetrics(),
-          () => fromRoute.index > toRoute.index && this._measureTransitionItems());
+          () => {
+            if (fromRoute.index > toRoute.index) this._measureTransitionItems();
+          });
       }
     }
 
@@ -114,7 +138,8 @@ export default function withTransition(CardStackComp: React.Component) {
       );
       return {
         transition,
-        config: { duration: 550 }
+        config: { duration: 550 },
+        isDefault: true,
       }
     }
 
@@ -130,11 +155,12 @@ export default function withTransition(CardStackComp: React.Component) {
 
     _getDefaultTransitionContainer() {
       let tc;
-      if (this._includesMatchingSharedElements()) {
+      if (!this._fromRoute || !this._toRoute) {
+        return undefined;
+      } else if (this._includesMatchingSharedElements()) {
         tc = this._createSharedElementTransition();
       } else {
-        const direction = this._fromRoute && this._toRoute &&
-          Math.sign(this._toRoute.index - this._fromRoute.index);
+        const direction = Math.sign(this._toRoute.index - this._fromRoute.index);
         const isModal = this.props.mode === 'modal';
         const defaultTransitionConfig = TransitionConfigs.defaultTransitionConfig(direction, isModal);
         const transition = createTransition({
@@ -145,7 +171,7 @@ export default function withTransition(CardStackComp: React.Component) {
           ) {
             const createStyles = (items: Array<TransitionItem>) => items.reduce((result, item) => {
               const interpolator = defaultTransitionConfig.screenInterpolator;
-              result[item.id] = interpolator(transitionProps);
+              result[item.id] = interpolator && interpolator(transitionProps);
               return result;
             }, {});
             return {
@@ -161,17 +187,19 @@ export default function withTransition(CardStackComp: React.Component) {
           // transition, instead of the raw input/output ranges.
           transition: boundTransition(1),
           config: defaultTransitionConfig.transitionSpec,
+          isDefault: true,
         };
       }
-      tc.isDefault = true;
       return tc;
     }
 
     _getTransitionContainer() {
-      const fromRouteName = this._fromRoute && this._fromRoute.routeName;
-      const toRouteName = this._toRoute && this._toRoute.routeName;
+      if (!!!this._fromRoute || !!!this._toRoute) return undefined;
 
-      const getCompTransitionConfigs = (routeName: string) => {
+      const fromRouteName = this._fromRoute.routeName;
+      const toRouteName = this._toRoute.routeName;
+
+      const getCompTransitionConfigs = (routeName: ?string) => {
         const comp = routeName && this.props.router.getComponentForRouteName(routeName);
         const navOps = comp && comp.navigationOptions;
         const cardStackOps = navOps && navOps.cardStack;
@@ -199,9 +227,10 @@ export default function withTransition(CardStackComp: React.Component) {
     }
 
     _getFilteredFromToItems() {
+      //TODO should not call this at all if not in transition, change all the code in this file!
       const transition = this._getTransition();
       const transitionFilter = item => (
-        transition && (!!!transition.filter || transition.filter(item.id))
+        (!!!transition.filter || transition.filter(item.id))
       );
       return this._getFromToItems(transitionFilter);
     }
@@ -230,8 +259,9 @@ export default function withTransition(CardStackComp: React.Component) {
     }
 
     _createInPlaceTransitionStyleMap(transitionProps: NavigationSceneRendererProps) {
-      const fromRouteName = this._fromRoute && this._fromRoute.routeName;
-      const toRouteName = this._toRoute && this._toRoute.routeName;
+      if (!!!this._fromRoute || !!!this._toRoute) return undefined;
+      const fromRouteName = this._fromRoute.routeName;
+      const toRouteName = this._toRoute.routeName;
 
       const transition = this._getTransition();
       if (!transition || !this.state.transitionItems.areAllMeasured()) {
@@ -266,8 +296,10 @@ export default function withTransition(CardStackComp: React.Component) {
     }
 
     _renderOverlay(transitionProps: NavigationTransitionProps) {
-      const fromRouteName = this._fromRoute && this._fromRoute.routeName;
-      const toRouteName = this._toRoute && this._toRoute.routeName;
+      if (!!!this._fromRoute || !!!this._toRoute) return undefined;
+      const fromRouteName = this._fromRoute.routeName;
+      const toRouteName = this._toRoute.routeName;
+
       const transition = this._getTransition();
       if (transition && this.state.transitionItems.areAllMeasured()) {
         const { fromItems, toItems } = this._getFilteredFromToItems();
@@ -302,7 +334,7 @@ export default function withTransition(CardStackComp: React.Component) {
       }
     }
 
-    _measure(item: TransitionItem): Promise<Metrics> {
+    _measure(item: TransitionItem) {
       return new Promise((resolve, reject) => {
         UIManager.measureInWindow(
           item.nativeHandle,
@@ -317,7 +349,7 @@ export default function withTransition(CardStackComp: React.Component) {
       });
     }
 
-    _setTransitionItemsState(fun, callback) {
+    _setTransitionItemsState(fun: TransitionItems => TransitionItems, callback) {
       this.setState(prevState => {
         const newItems = fun(prevState.transitionItems);
         return (newItems !== prevState.transitionItems
@@ -348,7 +380,7 @@ export default function withTransition(CardStackComp: React.Component) {
       console.log(`====> _measureItems took ${new Date() - then} ms`);
     }
 
-    async _measureTransitionItems() {
+    _measureTransitionItems = async () => {
       // This guarantees that the measurement is only done after navigation.
       // avoid unnecesary state updates when onLayout is called, e.g. when scrolling a ListView
       if (!!!this._receivedDifferentNavigationProp) return;
@@ -383,12 +415,12 @@ export default function withTransition(CardStackComp: React.Component) {
       return { opacity };
     }
 
-    _renderExtraLayers(props: NavigationSceneRendererProps) {
+    _renderExtraLayers = (props: NavigationSceneRendererProps) => {
       const overlay = this._renderOverlay(props);
       return overlay;
     }
 
-    _createExtraSceneProps(props: NavigationSceneRendererProps) {
+    _createExtraSceneProps = (props: NavigationSceneRendererProps) => {
       const defaultHideCardStyle = this._createDefaultHideCardStyle(props);
       const style = [defaultHideCardStyle, this.props.cardStyle];
       const transitionStyleMap = this._createInPlaceTransitionStyleMap(props);
@@ -404,10 +436,12 @@ export default function withTransition(CardStackComp: React.Component) {
         const toRouteName = this._toRoute && this._toRoute.routeName;
         const navigatingToNewRoute = this._fromRoute && this._toRoute
           && this._fromRoute.index < this._toRoute.index;
+        const transition = this._getTransition();
         if (
           navigatingToNewRoute
           && props.scene.route.routeName === toRouteName
-          && _.isNil(this._getTransition().getItemsToMeasure)
+          && transition
+          && _.isNil(transition.getItemsToMeasure)
         ) {
           this.forceUpdate();
         }
@@ -450,7 +484,7 @@ export default function withTransition(CardStackComp: React.Component) {
      */
     _getTransitionContainerForConfig() {
       const tc = this._getTransitionContainer();
-      if (tc.isDefault) {
+      if (tc && tc.isDefault) {
         const { fromItems, toItems } = this._getFromToItems(i => i.transitionType === 'sharedElement');
         const hasSharedElement = fromItems.length > 0 || toItems.length > 0;
         if (hasSharedElement) {
@@ -460,7 +494,7 @@ export default function withTransition(CardStackComp: React.Component) {
       return tc;
     }
 
-    _getTransitionForConfig() {
+    _getTransitionForConfig(): ?Transition {
       const tc = this._getTransitionContainerForConfig();
       return tc && tc.transition;
     }
@@ -471,6 +505,8 @@ export default function withTransition(CardStackComp: React.Component) {
       // props for the old screen
       prevTransitionProps: NavigationTransitionProps
     ) => {
+      if (!this._isInTransition()) return undefined;
+      
       const isModal = this.props.mode === 'modal';
       // Copy the object so we can assign useNativeDriver below
       // (avoid Flow error, transitionSpec is of type NavigationTransitionSpec).
@@ -492,15 +528,26 @@ export default function withTransition(CardStackComp: React.Component) {
       return transitionSpec;
     };
 
+    _getTransitionDirection() {
+      invariant(this._isInTransition(), 'Not in transition');
+      return Math.sign(this._toRoute.index - this._fromRoute.index);
+    }
+
+    _isInTransition() {
+      return this._fromRoute && this._toRoute;
+    }
+
     _getTransitionConfig(
       // props for the new screen
       transitionProps: NavigationTransitionProps,
       // props for the old screen
       prevTransitionProps: NavigationTransitionProps
-    ): TransitionConfig {
+    ) {
+      if (!this._isInTransition()) return undefined;
+
+      const direction = this._getTransitionDirection();
       const defaultConfig = TransitionConfigs.defaultTransitionConfig(
-        transitionProps,
-        prevTransitionProps,
+        direction,
         this.props.mode === 'modal'
       ).transitionSpec;
       const tc = this._getTransitionContainerForConfig();

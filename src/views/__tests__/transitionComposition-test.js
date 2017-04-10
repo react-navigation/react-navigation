@@ -9,7 +9,7 @@ describe('together', () => {
     const dummy = createTransition({});
     const t1 = bindTransition(dummy, /foo/);
     const t2 = bindTransition(dummy, /bar/);
-    const composed = together(t1(), t2());
+    const composed = together(t1(1), t2(1));
     expect(composed.filter('foo')).toBe(true);
     expect(composed.filter('bar')).toBe(true);
     expect(composed.filter('blue2')).toBe(false);

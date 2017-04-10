@@ -12,6 +12,7 @@ import {
 
 import { TransitionItem } from './TransitionItems';
 import TransitionConfigs from '../TransitionConfigs';
+import TransitionStyleMapChange from './TransitionStyleMapChange';
 
 import type {
   TransitionStyleMap,
@@ -61,7 +62,7 @@ type Context = {
   registerTransitionItem: (item: TransitionItem) => void,
   unregisterTransitionItem: (id: string, routeName: string) => void,
   routeName: string,
-  transitionStyleMapChange: React.PropTypes.object,
+  transitionStyleMapChange: TransitionStyleMapChange,
 }
 
 function createTransitionComponent(Component: ReactClass<*>) {
@@ -77,7 +78,6 @@ function createTransitionComponent(Component: ReactClass<*>) {
 
     constructor(props: Props, context: Context) {
       super(props, context);
-      this._updateTransitionStyleMap = this._updateTransitionStyleMap.bind(this);
       this.state = {
         transitionStyleMap: null,
       }
@@ -119,7 +119,7 @@ function createTransitionComponent(Component: ReactClass<*>) {
     componentDidMount() {
       const { registerTransitionItem, transitionStyleMapChange } = this.context;
 
-      transitionStyleMapChange && transitionStyleMapChange.subscribe(this._updateTransitionStyleMap);
+      transitionStyleMapChange && transitionStyleMapChange.subscribe(this._updateTransitionStyleMap.bind(this));
 
       if (registerTransitionItem) {
         const nativeHandle = findNodeHandle(this);

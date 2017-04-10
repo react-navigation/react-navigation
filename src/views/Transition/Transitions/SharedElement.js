@@ -2,14 +2,13 @@
 
 import _ from 'lodash';
 import ReactNativePropRegistry from 'ReactNativePropRegistry';
+import invariant from 'invariant';
 
 import { createTransition } from '../transitionHelpers';
 import { TransitionItem } from '../TransitionItems';
 
-// var ReactNativePropRegistry = require('ReactNativePropRegistry');
-// if (!ReactNativePropRegistry) throw 'ReactNativePropRegistry not found'
-
 const animateWidthHeight = (fromItem: TransitionItem, toItem: TransitionItem) => {
+  invariant(fromItem.metrics && toItem.metrics, 'Both fromItem and toItem must contain metrics');
   const left = {
     outputRange: [fromItem.metrics.x, toItem.metrics.x]
   };
@@ -51,6 +50,7 @@ const animateFontSize = (fromItem: TransitionItem, toItem: TransitionItem) => {
 };
 
 const animateScale = (fromItem: TransitionItem, toItem: TransitionItem) => {
+  invariant(fromItem.metrics && toItem.metrics, 'Both fromItem and toItem must contain metrics');
   const toVsFromScaleX = toItem.metrics.width / fromItem.metrics.width;
   const toVsFromScaleY = toItem.metrics.height / fromItem.metrics.height;
   const scaleX = {
@@ -104,6 +104,7 @@ const SharedElement = createTransition({
       const fromItem = itemsOnFromRoute.find(item => item.id === id);
       const toItem = itemsOnToRoute.find(item => item.id === id);
       // console.log('fromItem', fromItem.toString(), 'toItem', toItem.toString());
+      invariant(fromItem && toItem, 'Both fromItem and toItem must be in itemsOnFromRoute and itemsOnToRoute');
 
       const elementType = getElementType(fromItem);
       let style;
