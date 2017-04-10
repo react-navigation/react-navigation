@@ -81,8 +81,8 @@ const GuideDocs = createNavigator(TabRouter({
 }))(NavView);
 
 GuideDocs.navigationOptions = {
-  linkName: () => 'Getting Started',
-  icon: () => 'pt-icon-flows',
+  linkName: 'Getting Started',
+  icon: 'pt-icon-flows',
 };
 
 const GuidesDocs = createNavigator(TabRouter({
@@ -290,11 +290,9 @@ const DocsPage = createNavigator(TabRouter({
     path: 'views',
   },
 }))(PageWithSidebar);
-DocsPage.navigationOptions = {
-  title: ({ state, dispatch }, childTitle) => {
-    return `${childTitle} | React Navigation`;
-  },
-};
+DocsPage.navigationOptions = ({ prevOptions }) => ({
+  title: `${prevOptions.title} | React Navigation`,
+});
 
 const IntroPost = () => <h1> Hello, world!</h1>;
 IntroPost.navigationOptions = {

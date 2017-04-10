@@ -5,16 +5,14 @@ Used to easily set up a screen with a drawer navigation.
 ```js
 class MyHomeScreen extends React.Component {
   static navigationOptions = {
-    drawer: () => ({
-      label: 'Home',
-      icon: ({ tintColor }) => (
-        <Image
-          source={require('./chats-icon.png')}
-          style={[styles.icon, {tintColor: tintColor}]}
-        />
-      ),
-    }),
-  }
+    drawerLabel: 'Home',
+    drawerIcon: ({ tintColor }) => (
+      <Image
+        source={require('./chats-icon.png')}
+        style={[styles.icon, {tintColor: tintColor}]}
+      />
+    ),
+  };
 
   render() {
     return (
@@ -28,16 +26,14 @@ class MyHomeScreen extends React.Component {
 
 class MyNotificationsScreen extends React.Component {
   static navigationOptions = {
-    drawer: () => ({
-      label: 'Notifications',
-      icon: ({ tintColor }) => (
-        <Image
-          source={require('./notif-icon.png')}
-          style={[styles.tabIcon, {tintColor: tintColor}]}
-        />
-      ),
-    }),
-  }
+    drawerLabel: 'Notifications',
+    drawerIcon: ({ tintColor }) => (
+      <Image
+        source={require('./notif-icon.png')}
+        style={[styles.tabIcon, {tintColor: tintColor}]}
+      />
+    ),
+  };
 
   render() {
     return (
@@ -110,8 +106,8 @@ const CustomDrawerContentComponent = (props) => (
 );
 
 const styles = StyleSheet.create({
-  container : {
-    flex : 1,
+  container: {
+    flex: 1,
   },
 });
 ```
@@ -142,25 +138,22 @@ Usually you define static `navigationOptions` on your screen component. For exam
 ```jsx
 class ProfileScreen extends React.Component {
 
-  static navigationOptions = {
+  static navigationOptions = ({ navigation }) => ({
 
-    title: ({ state }) => `${state.params.name}'s Profile!`,
+    title: `${navigation.state.params.name}'s Profile!`,
 
-    drawer: {
-      icon: (
-        <Image src={require('./my-icon.png')} />
-      ),
-    },
-  };
+    drawerIcon: (
+      <Image src={require('./my-icon.png')} />
+    ),
+  });
   ...
 ```
 
 All `navigationOptions` for the `DrawerNavigator`:
 
 - `title` - a title (string) of the scene
-- `drawer` - a config object for the drawer:
-  - `label` - String, React Element or a function that given `{ focused: boolean, tintColor: string }` returns a React.Element, to display in drawer sidebar. When undefined, scene `title` is used
-  - `icon` - React Element or a function, that given `{ focused: boolean, tintColor: string }` returns a React.Element, to display in drawer sidebar
+- `drawerLabel` - String, React Element or a function that given `{ focused: boolean, tintColor: string }` returns a React.Element, to display in drawer sidebar. When undefined, scene `title` is used
+- `drawerIcon` - React Element or a function, that given `{ focused: boolean, tintColor: string }` returns a React.Element, to display in drawer sidebar
 
 
 ### Navigator Props
@@ -176,6 +169,6 @@ The navigator component created by `DrawerNavigator(...)` takes the following pr
  });
 
  <DrawerNav
-   screenProps={/* this prop will get passed to the screen components as this.props.screenProps */}
+   screenProps={/* this prop will get passed to the screen components and nav options as props.screenProps */}
  />
  ```

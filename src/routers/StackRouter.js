@@ -31,7 +31,7 @@ function _getUuid() {
 export default (
   routeConfigs: NavigationRouteConfigMap,
   stackConfig: NavigationStackRouterConfig = {},
-): NavigationRouter => {
+): NavigationRouter<*, *, *> => {
   // Fail fast on invalid route definitions
   validateRouteConfigMap(routeConfigs);
 
@@ -301,7 +301,7 @@ export default (
       });
     },
 
-    getScreenConfig: createConfigGetter(routeConfigs, stackConfig.navigationOptions),
+    getScreenOptions: createConfigGetter(routeConfigs, stackConfig.navigationOptions),
 
   };
 };

@@ -15,6 +15,7 @@ import type {
   NavigationRouteConfigMap,
   NavigationParams,
   NavigationRouter,
+  NavigationRoute,
   NavigationNavigateAction,
   NavigationTabRouterConfig,
 } from '../TypeDefinition';
@@ -22,7 +23,7 @@ import type {
 export default (
   routeConfigs: NavigationRouteConfigMap,
   config: NavigationTabRouterConfig = {}
-): NavigationRouter => {
+): NavigationRouter<*, *, *> => {
   // Fail fast on invalid route definitions
   validateRouteConfigMap(routeConfigs);
 
@@ -91,7 +92,7 @@ export default (
               ...route.params,
               ...params,
             }
-          }));
+          }: NavigationRoute));
         }
       }
 
@@ -163,10 +164,10 @@ export default (
             ...action.params,
           };
           const routes = [...state.routes];
-          routes[state.routes.indexOf(lastRoute)] = {
+          routes[state.routes.indexOf(lastRoute)] = ({
             ...lastRoute,
             params,
-          };
+          }: NavigationRoute);
           return {
             ...state,
             routes,
@@ -288,6 +289,6 @@ export default (
       }).find((action: *) => !!action) || null;
     },
 
-    getScreenConfig: createConfigGetter(routeConfigs, config.navigationOptions),
+    getScreenOptions: createConfigGetter(routeConfigs, config.navigationOptions),
   };
 };
