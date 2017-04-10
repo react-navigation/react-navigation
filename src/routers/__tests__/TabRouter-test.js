@@ -105,7 +105,8 @@ describe('TabRouter', () => {
     const ChildTabNavigator = () => <div />;
     ChildTabNavigator.router = TabRouter({ Foo: BareLeafRouteConfig, Bar: BareLeafRouteConfig });
     const router = TabRouter({ Foo: BareLeafRouteConfig, Baz: { screen: ChildTabNavigator }, Boo: BareLeafRouteConfig });
-    const action = router.getActionForPathAndParams('Baz/Bar', { foo: '42' });
+    const params = { foo: '42' };
+    const action = router.getActionForPathAndParams('Baz/Bar', params);
     const navAction = { type: NavigationActions.NAVIGATE, routeName: 'Baz', action: { type: NavigationActions.NAVIGATE, routeName: 'Bar', params: { foo: '42' } } };
     expect(action).toEqual(navAction);
     const state = router.getStateForAction(navAction);
@@ -128,6 +129,7 @@ describe('TabRouter', () => {
             {
               key: 'Bar',
               routeName: 'Bar',
+              params,
             },
           ],
         },
@@ -321,11 +323,10 @@ describe('TabRouter', () => {
         screen: ScreenB,
       },
     });
-    const action = router.getActionForPathAndParams('b/anything', { foo: '42' });
+    const params = { foo: '42' };
+    const action = router.getActionForPathAndParams('b/anything', params);
     const expectedAction = {
-      params: {
-        foo: '42',
-      },
+      params,
       routeName: 'Bar',
       type: NavigationActions.NAVIGATE,
     };
@@ -340,7 +341,10 @@ describe('TabRouter', () => {
     const state2 = router.getStateForAction(expectedAction, state);
     const expectedState2 = {
       index: 1,
-      routes: [{ key: 'Foo', routeName: 'Foo' }, { key: 'Bar', routeName: 'Bar' }],
+      routes: [
+        { key: 'Foo', routeName: 'Foo' },
+        { key: 'Bar', routeName: 'Bar', params },
+      ],
     };
     expect(state2).toEqual(expectedState2);
     expect(router.getComponentForState(expectedState)).toEqual(ScreenA);
@@ -416,5 +420,40 @@ describe('TabRouter', () => {
     /* $FlowFixMe: these are for deprecated action names */
     const state2 = router.getStateForAction({ type: 'Navigate', routeName: 'Bar' }, state);
     expect(state2).toEqual(null);
+  });
+
+  test('Can navigate to other tab (no router) with params', () => {
+    const ScreenA = () => <div />;
+    const ScreenB = () => <div />;
+
+    const router = TabRouter({
+      a: { screen: ScreenA },
+      b: { screen: ScreenB },
+    });
+
+    const state0 = router.getStateForAction(INIT_ACTION);
+
+    expect(state0).toEqual({
+      index: 0,
+      routes: [
+        { key: 'a', routeName: 'a' },
+        { key: 'b', routeName: 'b' },
+      ],
+    });
+
+    const params = { key: 'value' };
+
+    const state1 = router.getStateForAction(
+      { type: NavigationActions.NAVIGATE, routeName: 'b', params },
+      state0,
+    );
+
+    expect(state1).toEqual({
+      index: 1,
+      routes: [
+        { key: 'a', routeName: 'a' },
+        { key: 'b', routeName: 'b', params },
+      ],
+    });
   });
 });
