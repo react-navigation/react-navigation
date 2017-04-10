@@ -262,6 +262,12 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
 
     const pointerEvents = offset !== 0 || isStale ? 'none' : 'box-none';
 
+    const subViewStyle = (
+      name === 'title' ?
+      this._getHeaderTitleStyle(props.navigation) :
+      undefined
+    );
+
     return (
       <Animated.View
         pointerEvents={pointerEvents}
@@ -270,6 +276,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
           styles.item,
           styles[name],
           props.style,
+          subViewStyle,
           styleInterpolator(props),
         ]}
       >
