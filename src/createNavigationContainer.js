@@ -143,6 +143,16 @@ export default function createNavigationContainer<T: *>(
       if (!this._isStateful()) {
         return false;
       }
+
+      // For SET_PARAMS, we need to ensure that we serialize the state in the following way
+      // Needed to prevent race conditions when SET_PARAMS is called in quick successions across
+      // different route keys, e.g. when screens in TabNavigator call setParams
+      // in componentWillMount
+      if (action.type === NavigationActions.SET_PARAMS) {
+        this.setState(({ nav }: *) => ({ nav: Component.router.getStateForAction(action, nav) }));
+        return true;
+      }
+
       const nav = Component.router.getStateForAction(action, state.nav);
 
       if (nav && nav !== state.nav) {
