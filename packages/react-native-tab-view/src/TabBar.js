@@ -8,6 +8,7 @@ import {
   Text,
   ScrollView,
   Platform,
+  I18nManager,
 } from 'react-native';
 import TouchableItem from './TouchableItem';
 import { SceneRendererPropType } from './TabViewPropTypes';
@@ -195,7 +196,7 @@ export default class TabBar extends PureComponent<DefaultProps, Props, State> {
       return this.props.renderIndicator(props);
     }
     const { width, position } = props;
-    const translateX = Animated.multiply(position, width);
+    const translateX = Animated.multiply(Animated.multiply(position, width), I18nManager.isRTL ? -1 : 1);
     return (
       <Animated.View
         style={[ styles.indicator, { width, transform: [ { translateX } ] }, this.props.indicatorStyle ]}

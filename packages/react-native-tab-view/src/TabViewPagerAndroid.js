@@ -5,6 +5,7 @@ import {
   View,
   ViewPagerAndroid,
   StyleSheet,
+  I18nManager,
 } from 'react-native';
 import { SceneRendererPropType } from './TabViewPropTypes';
 import type { SceneRendererProps } from './TabViewTypeDefinitions';
@@ -43,7 +44,7 @@ export default class TabViewPagerAndroid extends PureComponent<void, Props, void
   };
 
   componentWillMount() {
-    this._currentIndex = this.props.navigationState.index;
+    this._currentIndex = this._getPageIndex(this.props.navigationState.index);
     this._jumpListener = this.props.subscribe('jump', this._handleJump);
   }
 
@@ -51,7 +52,7 @@ export default class TabViewPagerAndroid extends PureComponent<void, Props, void
     if (this.props.layout !== nextProps.layout || Children.count(this.props.children) !== Children.count(nextProps.children)) {
       global.requestAnimationFrame(() => {
         if (this._viewPager) {
-          this._viewPager.setPageWithoutAnimation(nextProps.navigationState.index);
+          this._viewPager.setPageWithoutAnimation(this._getPageIndex(nextProps.navigationState.index));
         }
       });
     }
@@ -73,13 +74,21 @@ export default class TabViewPagerAndroid extends PureComponent<void, Props, void
   _isIdle: boolean = true;
   _currentIndex: number;
 
+  _getPageIndex = (index: number) => (
+    I18nManager.isRTL ?
+      (Children.count(this.props.children) - 1) - index :
+      index
+  )
+
   _setPage = (index: number) => {
-    if (this._viewPager && this._currentIndex !== index) {
-      this._currentIndex = index;
+    const pageIndex = this._getPageIndex(index);
+
+    if (this._viewPager && this._currentIndex !== pageIndex) {
+      this._currentIndex = pageIndex;
       if (this.props.animationEnabled !== false) {
-        this._viewPager.setPage(index);
+        this._viewPager.setPage(pageIndex);
       } else {
-        this._viewPager.setPageWithoutAnimation(index);
+        this._viewPager.setPageWithoutAnimation(pageIndex);
       }
     }
   }
@@ -93,7 +102,7 @@ export default class TabViewPagerAndroid extends PureComponent<void, Props, void
   _handlePageScroll = (e: PageScrollEvent) => {
     if (this._isDrag) {
       this.props.position.setValue(
-        e.nativeEvent.position + e.nativeEvent.offset
+        this._getPageIndex(e.nativeEvent.position) + (e.nativeEvent.offset * (I18nManager.isRTL ? -1 : 1))
       );
     }
   };
@@ -104,25 +113,35 @@ export default class TabViewPagerAndroid extends PureComponent<void, Props, void
       this._isDrag = true;
     } else if (e === 'idle') {
       this._isDrag = false;
-      if (this._currentIndex !== this.props.navigationState.index) {
+      if (this._currentIndex !== this._getPageIndex(this.props.navigationState.index)) {
         this.props.jumpToIndex(this._currentIndex);
       }
     }
   };
 
   _handlePageSelected = (e: PageScrollEvent) => {
-    this._currentIndex = e.nativeEvent.position;
+    this._currentIndex = this._getPageIndex(e.nativeEvent.position);
   };
 
   _setRef = (el: Object) => (this._viewPager = el);
 
   render() {
     const { children, navigationState, swipeEnabled } = this.props;
+    const tabContents = Children.map(children, (child, i) => (
+      <View
+        key={navigationState.routes[i].key}
+        testID={navigationState.routes[i].testID}
+        style={styles.page}
+      >
+        {child}
+      </View>
+    ));
+
     return (
       <ViewPagerAndroid
         key={navigationState.routes.length}
         keyboardDismissMode='on-drag'
-        initialPage={navigationState.index}
+        initialPage={this._getPageIndex(navigationState.index)}
         scrollEnabled={swipeEnabled !== false}
         onPageScroll={this._handlePageScroll}
         onPageScrollStateChanged={this._handlePageScrollStateChanged}
@@ -130,15 +149,7 @@ export default class TabViewPagerAndroid extends PureComponent<void, Props, void
         style={styles.container}
         ref={this._setRef}
       >
-        {Children.map(children, (child, i) => (
-          <View
-            key={navigationState.routes[i].key}
-            testID={navigationState.routes[i].testID}
-            style={styles.page}
-          >
-            {child}
-          </View>
-        ))}
+        {I18nManager.isRTL ? tabContents.reverse() : tabContents}
       </ViewPagerAndroid>
     );
   }
