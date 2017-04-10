@@ -15,9 +15,9 @@ import Transitions from './Transitions';
 
 import type {
   NavigationRoute,
-  NavigationTransitionProps,
-  NavigationSceneRendererProps,
-  Transition,
+    NavigationTransitionProps,
+    NavigationSceneRendererProps,
+    Transition,
 } from '../../TypeDefinition';
 
 const NativeAnimatedModule = NativeModules &&
@@ -27,7 +27,7 @@ const NativeAnimatedModule = NativeModules &&
 const OVERLAY_OPACITY_INPUT_RANGE_DELTA = 0.0001;
 const CLONE_ITEMS_OPACITY_INPUT_RANGE_DELTA = 0.01;
 
-type Props = Object;
+type Props = Object; // TODO perhaps should import CardStack's props?
 
 type State = {
   transitionItems: TransitionItems,
@@ -41,8 +41,8 @@ export default function withTransition(CardStackComp: ReactClass<*>) {
   return class CompWithTransition extends React.Component {
     state: State;
     _receivedDifferentNavigationProp: boolean;
-    _fromRoute: Route;
-    _toRoute: Route;
+    _fromRoute: ?Route;
+    _toRoute: ?Route;
 
     static childContextTypes = {
       registerTransitionItem: React.PropTypes.func,
@@ -127,12 +127,12 @@ export default function withTransition(CardStackComp: ReactClass<*>) {
       }
     }
 
-    _createSharedElementTransition() {
+    _createSharedElementTransition() {      
       const ids = this._getMatchingSharedElementIds();
-      const fromRoute = this._fromRoute, toRoute = this._toRoute;
       const sharedElement = bindTransition(Transitions.SharedElement, ...ids);
       const crossFadeScene = bindTransition(Transitions.CrossFade, /\$scene.+/);
-      const transition = (fromRoute.index < toRoute.index
+      invariant(this._fromRoute && this._toRoute, "Must be called during transition");
+      const transition = (this._fromRoute.index < this._toRoute.index
         ? sq(sharedElement(0.9), crossFadeScene(0.1))
         : sq(crossFadeScene(0.1), sharedElement(0.9))
       );
@@ -148,18 +148,17 @@ export default function withTransition(CardStackComp: ReactClass<*>) {
     }
 
     _getMatchingSharedElementIds() {
-      const {fromItems, toItems} = this._getFromToItems(i => i.transitionType === 'sharedElement');
+      const { fromItems, toItems } = this._getFromToItems(i => i.transitionType === 'sharedElement');
       return _.intersectionWith(fromItems, toItems, (i1, i2) => i1.id === i2.id)
         .map(item => item.id);
     }
 
     _getDefaultTransitionContainer() {
       let tc;
-      if (!this._fromRoute || !this._toRoute) {
-        return undefined;
-      } else if (this._includesMatchingSharedElements()) {
+      if (this._includesMatchingSharedElements()) {
         tc = this._createSharedElementTransition();
       } else {
+        invariant(this._fromRoute && this._toRoute, "Must be called during transition");
         const direction = Math.sign(this._toRoute.index - this._fromRoute.index);
         const isModal = this.props.mode === 'modal';
         const defaultTransitionConfig = TransitionConfigs.defaultTransitionConfig(direction, isModal);
@@ -194,7 +193,7 @@ export default function withTransition(CardStackComp: ReactClass<*>) {
     }
 
     _getTransitionContainer() {
-      if (!!!this._fromRoute || !!!this._toRoute) return undefined;
+      invariant(this._fromRoute && this._toRoute, "Must be called during transition");
 
       const fromRouteName = this._fromRoute.routeName;
       const toRouteName = this._toRoute.routeName;
@@ -223,12 +222,13 @@ export default function withTransition(CardStackComp: ReactClass<*>) {
 
     _getTransition() {
       const tc = this._getTransitionContainer();
-      return tc && tc.transition;
+      return tc.transition;
     }
 
     _getFilteredFromToItems() {
-      //TODO should not call this at all if not in transition, change all the code in this file!
+      invariant(this._fromRoute && this._toRoute, "Must be called during transition");
       const transition = this._getTransition();
+      invariant(transition, 'transition should not be undefined');
       const transitionFilter = item => (
         (!!!transition.filter || transition.filter(item.id))
       );
@@ -236,14 +236,19 @@ export default function withTransition(CardStackComp: ReactClass<*>) {
     }
 
     _interpolateStyleMap(styleMap, transitionProps: NavigationTransitionProps) {
+      invariant(this._fromRoute && this._toRoute, "Must be called during transition");
+
       const interpolate = (value) => {
         if (typeof value.__getAnimatedValue === 'function') return value;
-
+        invariant(this._fromRoute && this._toRoute, "Must be called during transition");
         const delta = this._toRoute.index - this._fromRoute.index;
         const { position } = transitionProps;
         let { inputRange, outputRange } = value;
         // Make sure the full [0, 1] inputRange is covered to avoid accidental output values
-        inputRange = [0, ...inputRange, 1].map(r => this._fromRoute.index + r * delta);
+        inputRange = [0, ...inputRange, 1].map(r => {
+          invariant(this._fromRoute && this._toRoute, "Must be called during transition");
+          return this._fromRoute.index + r * delta
+        });
         outputRange = [outputRange[0], ...outputRange, outputRange[outputRange.length - 1]];
         if (delta < 0) {
           inputRange = inputRange.reverse();
@@ -259,12 +264,13 @@ export default function withTransition(CardStackComp: ReactClass<*>) {
     }
 
     _createInPlaceTransitionStyleMap(transitionProps: NavigationSceneRendererProps) {
-      if (!!!this._fromRoute || !!!this._toRoute) return undefined;
+      invariant(this._fromRoute && this._toRoute, "Must be called during transition");
+
       const fromRouteName = this._fromRoute.routeName;
       const toRouteName = this._toRoute.routeName;
 
       const transition = this._getTransition();
-      if (!transition || !this.state.transitionItems.areAllMeasured()) {
+      if (!!!transition || !this.state.transitionItems.areAllMeasured()) {
         return null;
       }
 
@@ -296,7 +302,8 @@ export default function withTransition(CardStackComp: ReactClass<*>) {
     }
 
     _renderOverlay(transitionProps: NavigationTransitionProps) {
-      if (!!!this._fromRoute || !!!this._toRoute) return undefined;
+      invariant(this._fromRoute && this._toRoute, "Must be called during transition");
+
       const fromRouteName = this._fromRoute.routeName;
       const toRouteName = this._toRoute.routeName;
 
@@ -416,14 +423,21 @@ export default function withTransition(CardStackComp: ReactClass<*>) {
     }
 
     _renderExtraLayers = (props: NavigationSceneRendererProps) => {
-      const overlay = this._renderOverlay(props);
-      return overlay;
+      if (this._isInTransition()) {
+        const overlay = this._renderOverlay(props);
+        return overlay;
+      } else {
+        return undefined;
+      }
     }
 
     _createExtraSceneProps = (props: NavigationSceneRendererProps) => {
       const defaultHideCardStyle = this._createDefaultHideCardStyle(props);
       const style = [defaultHideCardStyle, this.props.cardStyle];
+      if (!this._isInTransition()) return { style };
+
       const transitionStyleMap = this._createInPlaceTransitionStyleMap(props);
+
       // Force the component to update when moving to a new scene and the new scene is laid out.
       // This is necessary since we need to wait for the transition items on the 
       // new scene to register themselves before creating transitions. Otherwise
@@ -431,7 +445,6 @@ export default function withTransition(CardStackComp: ReactClass<*>) {
       //
       // Once the scene is laid out, we can assume the transition items on it have
       // already registered.
-
       const onLayout = async () => {
         const toRouteName = this._toRoute && this._toRoute.routeName;
         const navigatingToNewRoute = this._fromRoute && this._toRoute
@@ -484,7 +497,7 @@ export default function withTransition(CardStackComp: ReactClass<*>) {
      */
     _getTransitionContainerForConfig() {
       const tc = this._getTransitionContainer();
-      if (tc && tc.isDefault) {
+      if (tc.isDefault) {
         const { fromItems, toItems } = this._getFromToItems(i => i.transitionType === 'sharedElement');
         const hasSharedElement = fromItems.length > 0 || toItems.length > 0;
         if (hasSharedElement) {
@@ -494,9 +507,9 @@ export default function withTransition(CardStackComp: ReactClass<*>) {
       return tc;
     }
 
-    _getTransitionForConfig(): ?Transition {
+    _getTransitionForConfig() {
       const tc = this._getTransitionContainerForConfig();
-      return tc && tc.transition;
+      return tc.transition;
     }
 
     _configureTransition = (
@@ -506,7 +519,7 @@ export default function withTransition(CardStackComp: ReactClass<*>) {
       prevTransitionProps: NavigationTransitionProps
     ) => {
       if (!this._isInTransition()) return undefined;
-      
+
       const isModal = this.props.mode === 'modal';
       // Copy the object so we can assign useNativeDriver below
       // (avoid Flow error, transitionSpec is of type NavigationTransitionSpec).
@@ -529,7 +542,7 @@ export default function withTransition(CardStackComp: ReactClass<*>) {
     };
 
     _getTransitionDirection() {
-      invariant(this._isInTransition(), 'Not in transition');
+      invariant(this._fromRoute && this._toRoute, "Must be called during transition");
       return Math.sign(this._toRoute.index - this._fromRoute.index);
     }
 
