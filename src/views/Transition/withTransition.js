@@ -403,7 +403,9 @@ export default function withTransition(CardStackComp: ReactClass<*>) {
           itemsToMeasure = transition.getItemsToMeasure(fromItems, toItems);
         }
         this._setTransitionItemsState(prevItems => prevItems.setShouldMeasure(itemsToMeasure),
-          () => this._measureItems());
+          () => {
+            this._measureItems();
+          });
       }
     }
 

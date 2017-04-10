@@ -472,31 +472,46 @@ export type TransitionStyleMap = {
 
 export type TransitionFilter = (id: string) => boolean;
 
-export type GetTransitionStyleMap = (
+type GetTransitionStyleMapConfig = (
   itemsOnFromRoute: Array<TransitionItem>,
   itemsOnToRoute: Array<TransitionItem>,
   transitionProps?: NavigationSceneRendererProps,
 ) => ?TransitionStyleMap
 
+type GetItemsConfig = (
+  itemsOnFromRoute: Array<TransitionItem>,
+  itemsOnToRoute: Array<TransitionItem>,
+) => ?Array<TransitionItem>
+
 export type TransitionConfig = {
   canUseNativeDriver?: () => boolean,
-  getStyleMap?: GetTransitionStyleMap,
-  getStyleMapForClones?: GetTransitionStyleMap,
-  getItemsToClone?: (
-    itemsOnFromRoute: Array<TransitionItem>,
-    itemsOnToRoute: Array<TransitionItem>,
-  ) => ?Array<TransitionItem>,
-  getItemsToMeasure?: (
-    itemsOnFromRoute: Array<TransitionItem>,
-    itemsOnToRoute: Array<TransitionItem>,
-  ) => ?Array<TransitionItem>,
+  getStyleMap?: GetTransitionStyleMapConfig,
+  getStyleMapForClones?: GetTransitionStyleMapConfig,
+  getItemsToClone?: GetItemsConfig,
+  getItemsToMeasure?: GetItemsConfig,
 };
+
+type GetTransitionStyleMap = (
+  itemsOnFromRoute: Array<TransitionItem>,
+  itemsOnToRoute: Array<TransitionItem>,
+  transitionProps?: NavigationSceneRendererProps,
+) => TransitionStyleMap
+
+type GetItems = (
+  itemsOnFromRoute: Array<TransitionItem>,
+  itemsOnToRoute: Array<TransitionItem>,
+) => Array<TransitionItem>
 
 export type Transition = {
   filter: TransitionFilter,
   duration: number,
   start?: number,
-} & TransitionConfig;
+  canUseNativeDriver: () => boolean,
+  getStyleMap: GetTransitionStyleMap,
+  getStyleMapForClones: GetTransitionStyleMap,
+  getItemsToClone: GetItems,
+  getItemsToMeasure: GetItems,
+};
 
 export type BoundTransition = (duration: number) => Transition
 

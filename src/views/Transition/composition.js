@@ -63,10 +63,10 @@ const mergeStyle = (style1, style2) => {
 
 const mergeStyles = (styles1, styles2) => {
   if ([styles1, styles2].some(_.isNil)) return styles1 || styles2;
-  invariant(styles1 && styles2);
+  invariant(styles1 && styles2, 'Both styles should be non-null');
   const ids = _.union(Object.keys(styles1), Object.keys(styles2));
   return ids.reduce((result, id) => {
-    invariant(styles1 && styles2);
+    invariant(styles1 && styles2, 'Both styles should be non-null');
     result[id] = mergeStyle(styles1[id], styles2[id]);
     return result;
   }, {});
