@@ -9,6 +9,8 @@ For our chat app, we want to put several tabs on the first screen, to view recen
 Lets create a new `TabNavigator` in our `App.js`:
 
 ```js
+import { TabNavigator } from "react-navigation";
+
 class RecentChatsScreen extends React.Component {
   render() {
     return <Text>List of recent chats</Text>
