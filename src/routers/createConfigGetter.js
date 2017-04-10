@@ -57,9 +57,16 @@ export default (
     ].reduce(
       (acc: *, options: NavigationScreenOptions) => {
         if (options && options[optionName] !== undefined) {
-          return typeof options[optionName] === 'function'
+          const option = typeof options[optionName] === 'function'
             ? options[optionName](navigation, acc)
             : options[optionName];
+          if (acc && typeof acc === 'object') {
+            for (var attr in option) {
+              acc[attr] = option[attr];
+            }
+            return acc;
+          }
+          return option;
         }
         return acc;
       },
