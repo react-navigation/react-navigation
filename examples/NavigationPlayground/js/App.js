@@ -75,6 +75,18 @@ const ExampleRoutes = {
     screen: SimpleTabs,
     path: 'settings',
   },
+  LinkStackRootWithinTab: {
+    name: 'Link to stack root within tab',
+    description: 'Deep linking into a route in tab',
+    screen: StacksInTabs,
+    path: 'settings',
+  },
+  LinkStackSecondaryScreenWithinTab: {
+    name: 'Link to stack secondary screen within tab',
+    description: 'Deep linking into a route in a stack in a tab',
+    screen: StacksInTabs,
+    path: 'people/Jordan',
+  },
 };
 
 const MainScreen = ({ navigation }) => (

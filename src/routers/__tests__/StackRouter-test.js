@@ -630,7 +630,7 @@ describe('StackRouter', () => {
       },
     }, { initialRouteName: 'Bar' });
     const action = router.getActionForPathAndParams('');
-    expect(action).toEqual({ type: NavigationActions.NAVIGATE, routeName: 'Bar' });
+    expect(action).toEqual({ type: NavigationActions.BACK, key: 'Init' });
     let state = null;
     if (action) {
       state = router.getStateForAction(action);
