@@ -71,15 +71,15 @@ const normalizeInputRange = (styleMap: TransitionStyleMap, duration: number) => 
 
 export function createTransition(transitionConfig: TransitionConfig): UnboundTransition {
   const { getStyleMap, getStyleMapForClones, canUseNativeDriver, getItemsToMeasure, getItemsToClone } = transitionConfig;
-  const createGetStyleMap = (getStyleMapFun, duration) => (...args) => {
+  const createGetStyleMap = (getStyleMapFun, duration) => (fromItems, toItems, sceneProps) => {
     if (getStyleMapFun) {
-      const originalStyleMap = getStyleMapFun(...args);
+      const originalStyleMap = getStyleMapFun(fromItems, toItems, sceneProps);
       if (originalStyleMap) return normalizeInputRange(originalStyleMap, duration);
     }
     return { from: {}, to: {} };
   };
-  const createGetItems = (getItemsFun) => (...args) => (
-    (getItemsFun && getItemsFun(...args)) || []
+  const createGetItems = (getItemsFun) => (fromItems, toItems) => (
+    (getItemsFun && getItemsFun(fromItems, toItems)) || []
   );
   return (filter) => (duration: number) => ({
     filter,
