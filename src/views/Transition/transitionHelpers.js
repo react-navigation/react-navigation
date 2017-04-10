@@ -7,7 +7,6 @@ import type {
   BoundTransition,
   TransitionConfig,
   TransitionFilter,
-  GetTransitionStyleMap,
 } from '../../TypeDefinition';
 
 type IdOrRegex = string | RegExp;
@@ -35,7 +34,7 @@ const mergeTransform = (transforms: ?Array<*>, prop: string, value: Object) => {
   return array;
 }
 
-export function convertStyleMap(styleMap: ?TransitionStyleMap, convertStyleValue: (styleValue: Object) => any, processTransform: ?string) {
+export function convertStyleMap(styleMap: TransitionStyleMap, convertStyleValue: (styleValue: Object) => any, processTransform: ?string) {
   const accumulateStyle = (result, styleValue, prop) => {
     let convertedValue;
     if (styleValue && _.isArray(styleValue.outputRange)) {
@@ -55,31 +54,40 @@ export function convertStyleMap(styleMap: ?TransitionStyleMap, convertStyleValue
     result[id] = _.reduce(style, accumulateStyle, {});
     return result;
   };
-  return styleMap && _.reduce(styleMap, (result, styles, route) => {
+  return _.reduce(styleMap, (result, styles, route) => {
     result[route] = _.reduce(styles, accumulateStyles, {});
     return result;
   }, {});
 }
 
-const mashStyleMap = (styleMap: ?TransitionStyleMap, duration: number) => {
+const normalizeInputRange = (styleMap: TransitionStyleMap, duration: number) => {
   invariant(duration >= 0 && duration <= 1, 'duration must be in [0, 1]');
-  const mash = (styleValue) => ({
+  const normalize = (styleValue) => ({
     ...styleValue,
     inputRange: styleValue.inputRange.map(v => v * duration),
   });
-  return convertStyleMap(styleMap, mash);
+  return convertStyleMap(styleMap, normalize);
 }
 
 export function createTransition(transitionConfig: TransitionConfig): UnboundTransition {
-  const { getStyleMap, getStyleMapForClones, canUseNativeDriver, ...rest } = transitionConfig;
+  const { getStyleMap, getStyleMapForClones, canUseNativeDriver, getItemsToMeasure, getItemsToClone } = transitionConfig;
+  const createGetStyleMap = (getStyleMapFun, duration) => (...args) => {
+    if (getStyleMapFun) {
+      const originalStyleMap = getStyleMapFun(...args);
+      if (originalStyleMap) return normalizeInputRange(originalStyleMap, duration);
+    }
+    return {};
+  };
+  const createGetItems = (getItemsFun) => (...args) => (
+    (getItemsFun && getItemsFun(...args)) || []
+  );
   return (filter) => (duration: number) => ({
     filter,
     duration,
     canUseNativeDriver: canUseNativeDriver || (() => true),
-    getStyleMap: (...args) => (transitionConfig.getStyleMap && 
-      mashStyleMap(transitionConfig.getStyleMap(...args), duration)),
-    getStyleMapForClones: (...args) => (transitionConfig.getStyleMapForClones && 
-      mashStyleMap(transitionConfig.getStyleMapForClones(...args), duration)),
-    ...rest,
+    getStyleMap: createGetStyleMap(getStyleMap, duration),
+    getStyleMapForClones: createGetStyleMap(getStyleMapForClones, duration),
+    getItemsToMeasure: createGetItems(getItemsToMeasure),
+    getItemsToClone: createGetItems(getItemsToClone),
   });
 }

@@ -127,7 +127,7 @@ export default function withTransition(CardStackComp: ReactClass<*>) {
       }
     }
 
-    _createSharedElementTransition() {      
+    _createSharedElementTransition() {
       const ids = this._getMatchingSharedElementIds();
       const sharedElement = bindTransition(Transitions.SharedElement, ...ids);
       const crossFadeScene = bindTransition(Transitions.CrossFade, /\$scene.+/);
@@ -393,19 +393,15 @@ export default function withTransition(CardStackComp: ReactClass<*>) {
       if (!!!this._receivedDifferentNavigationProp) return;
       this._receivedDifferentNavigationProp = false;
 
-      const fromRoute = this._fromRoute;
-      const toRoute = this._toRoute;
-      if (fromRoute && toRoute) {
-        const transition = this._getTransition();
-        let itemsToMeasure = [];
-        if (transition && transition.getItemsToMeasure) {
-          const { fromItems, toItems } = this._getFilteredFromToItems();
-          itemsToMeasure = transition.getItemsToMeasure(fromItems, toItems);
+      if (this._isInTransition()) {
+        const { fromItems, toItems } = this._getFilteredFromToItems();
+        const itemsToMeasure = this._getTransition().getItemsToMeasure(fromItems, toItems);
+        if (itemsToMeasure.length > 0) {
+          this._setTransitionItemsState(prevItems => prevItems.setShouldMeasure(itemsToMeasure),
+            () => {
+              this._measureItems();
+            });
         }
-        this._setTransitionItemsState(prevItems => prevItems.setShouldMeasure(itemsToMeasure),
-          () => {
-            this._measureItems();
-          });
       }
     }
 
@@ -440,27 +436,28 @@ export default function withTransition(CardStackComp: ReactClass<*>) {
 
       const transitionStyleMap = this._createInPlaceTransitionStyleMap(props);
 
-      // Force the component to update when moving to a new scene and the new scene is laid out.
-      // This is necessary since we need to wait for the transition items on the 
-      // new scene to register themselves before creating transitions. Otherwise
-      // the resulting transition will be incomplete/incorrect.
-      //
-      // Once the scene is laid out, we can assume the transition items on it have
-      // already registered.
       const onLayout = async () => {
-        const toRouteName = this._toRoute && this._toRoute.routeName;
-        const navigatingToNewRoute = this._fromRoute && this._toRoute
-          && this._fromRoute.index < this._toRoute.index;
-        const transition = this._getTransition();
-        if (
-          navigatingToNewRoute
-          && props.scene.route.routeName === toRouteName
-          && transition
-          && _.isNil(transition.getItemsToMeasure)
-        ) {
-          this.forceUpdate();
+        if (this._isInTransition) {
+          const navigatingToNewRoute = this._getTransitionDirection() > 0;
+          invariant(this._fromRoute && this._toRoute, "Must be called during transition");
+          // Force the component to update when moving to a new scene and the new scene is laid out.
+          // This is necessary since we need to wait for the transition items on the 
+          // new scene to register themselves before creating transitions. Otherwise
+          // the resulting transition will be incomplete/incorrect.
+          //
+          // Once the scene is laid out, we can assume the transition items on it have
+          // already registered.
+          if (
+            navigatingToNewRoute
+            && props.scene.route.routeName === this._toRoute.routeName
+          ) {
+            const { fromItems, toItems } = this._getFilteredFromToItems();
+            if (this._getTransition().getItemsToMeasure(fromItems, toItems).length === 0) {
+              this.forceUpdate();
+            }
+          }
+          await this._measureTransitionItems();
         }
-        await this._measureTransitionItems();
       }
       return {
         style,
