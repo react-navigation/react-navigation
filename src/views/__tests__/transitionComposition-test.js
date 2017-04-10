@@ -22,7 +22,7 @@ describe('together', () => {
     const B = initTestTransition('b', null, [b1, b2]);
     const combined = together(A(0.1), B(0.5));
     const styleMap = combined.getStyleMap([], []);
-    invariant(styleMap.from && styleMap.id1, 'Test data: styleMap must contain from.id1');
+    invariant(styleMap.from && styleMap.from.id1, 'Test data: styleMap must contain from.id1');
     const { from: {id1: {a, b}}} = styleMap;
     assertIoRanges(a, {inputRange: [0, 0.1], outputRange: [a1, a2]});
     assertIoRanges(b, {inputRange: [0, 0.5], outputRange: [b1, b2]});
