@@ -543,12 +543,16 @@ class CardStack extends Component<DefaultProps, Props, void> {
     scene: NavigationScene
   ): NavigationScreenProp<*, NavigationAction> => {
     let navigation = this._childNavigationProps[scene.key];
+
     if (!navigation || navigation.state !== scene.route) {
       navigation = this._childNavigationProps[
         scene.key
       ] = addNavigationHelpers({
         ...this.props.navigation,
-        state: scene.route,
+        state: {
+          ...scene.route,
+          stack: {...this.props.navigation.state}
+        },
       });
     }
     return navigation;
