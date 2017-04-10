@@ -50,9 +50,9 @@ const MyProfileScreen = ({ navigation }) => (
     navigation={navigation}
   />
 );
-MyProfileScreen.navigationOptions = ({ navigation }) => ({
-  title: `${navigation.state.params.name}'s Profile!`,
-});
+MyProfileScreen.navigationOptions = {
+  title: ({ state }) => `${state.params.name}'s Profile!`,
+};
 
 const MyNotificationsSettingsScreen = ({ navigation }) => (
   <MyNavScreen
@@ -68,66 +68,37 @@ const MySettingsScreen = ({ navigation }) => (
   />
 );
 
-const MainTab = StackNavigator({
-  Home: {
+const TabNav = TabNavigator({
+  MainTab: {
     screen: MyHomeScreen,
     path: '/',
     navigationOptions: {
-      title: 'Welcome',
-    },
-  },
-  Profile: {
-    screen: MyProfileScreen,
-    path: '/people/:name',
-    navigationOptions: ({ navigation }) => ({
-      title: `${navigation.state.params.name}'s Profile!`,
-    }),
-  },
-});
-
-const SettingsTab = StackNavigator({
-  Settings: {
-    screen: MySettingsScreen,
-    path: '/',
-    navigationOptions: () => ({
-      title: 'Settings',
-    }),
-  },
-  NotifSettings: {
-    screen: MyNotificationsSettingsScreen,
-    navigationOptions: {
-      title: 'Notification Settings',
-    },
-  },
-});
-
-const StacksInTabs = TabNavigator({
-  MainTab: {
-    screen: MainTab,
-    path: '/',
-    navigationOptions: {
-      tabBarLabel: 'Home',
-      tabBarIcon: ({ tintColor, focused }) => (
-        <Ionicons
-          name={focused ? 'ios-home' : 'ios-home-outline'}
-          size={26}
-          style={{ color: tintColor }}
-        />
-      ),
+      tabBar: () => ({
+        label: 'Home',
+        icon: ({ tintColor, focused }) => (
+          <Ionicons
+            name={focused ? 'ios-home' : 'ios-home-outline'}
+            size={26}
+            style={{ color: tintColor }}
+          />
+        ),
+      }),
     },
   },
   SettingsTab: {
-    screen: SettingsTab,
+    screen: MySettingsScreen,
     path: '/settings',
     navigationOptions: {
-      tabBarLabel: 'Settings',
-      tabBarIcon: ({ tintColor, focused }) => (
-        <Ionicons
-          name={focused ? 'ios-settings' : 'ios-settings-outline'}
-          size={26}
-          style={{ color: tintColor }}
-        />
-      ),
+      tabBar: () => ({
+        label: 'Settings',
+        icon: ({ tintColor, focused }) => (
+          <Ionicons
+            name={focused ? 'ios-settings' : 'ios-settings-outline'}
+            size={26}
+            style={{ color: tintColor }}
+          />
+        ),
+      }),
     },
   },
 }, {
@@ -136,4 +107,25 @@ const StacksInTabs = TabNavigator({
   swipeEnabled: false,
 });
 
-export default StacksInTabs;
+const StacksOverTabs = StackNavigator({
+  Root: {
+    screen: TabNav,
+  },
+  NotifSettings: {
+    screen: MyNotificationsSettingsScreen,
+    navigationOptions: {
+      title: () => 'Notification Settings',
+    },
+  },
+  Profile: {
+    screen: MyProfileScreen,
+    path: '/people/:name',
+    navigationOptions: {
+      title: ({ state }) => `${state.params.name}'s Profile!`,
+    },
+  },
+}, {
+  headerMode: 'none',
+});
+
+export default StacksOverTabs;

@@ -123,6 +123,7 @@ All `navigationOptions` for the `StackNavigator`:
 - `headerStyle` - Style object for the header
 - `headerTitleStyle` - Style object for the title component
 - `headerTintColor` - Tint color for the header
+- `headerPressColorAndroid` - Color for material ripple (Android >= 5.0 only)
 - `gesturesEnabled` - Whether you can use gestures to dismiss this screen. Defaults to true on iOS, false on Android
 
 ### Navigator Props
