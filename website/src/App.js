@@ -55,7 +55,7 @@ const createDocPage = (
   );
   Page.navigationOptions = {
     doc: config.doc,
-    title: 5,
+    title: config.title,
     linkName: config.linkName,
   };
   return Page;
