@@ -105,18 +105,15 @@ export default function withTransition(CardStackComp: ReactClass<*>) {
       }
     }
 
-    _hideTransitionViewUntilDone(transitionProps, onFromRoute: boolean) {
-      const { progress } = transitionProps;
-      const opacity = (onFromRoute
-        ? progress.interpolate({
-          inputRange: [0, CLONE_ITEMS_OPACITY_INPUT_RANGE_DELTA, 1],
-          outputRange: [1, 0, 0],
-        })
-        : progress.interpolate({
-          inputRange: [0, 1 - CLONE_ITEMS_OPACITY_INPUT_RANGE_DELTA, 1],
-          outputRange: [0, 0, 1],
-        })
-      );
+    _hideTransitionViewUntilDone(transitionProps: NavigationSceneRendererProps) {
+      const { position } = transitionProps;
+      const sceneIndex = transitionProps.scene.index;
+      const opacity = position.interpolate({
+        inputRange: [sceneIndex - CLONE_ITEMS_OPACITY_INPUT_RANGE_DELTA, 
+          sceneIndex, sceneIndex + CLONE_ITEMS_OPACITY_INPUT_RANGE_DELTA,],
+        outputRange: [0, 1, 0],
+      });
+
       return { opacity };
     }
 
@@ -277,8 +274,8 @@ export default function withTransition(CardStackComp: ReactClass<*>) {
       const { fromItems, toItems } = this._getFilteredFromToItems();
       const itemsToClone = transition.getItemsToClone && transition.getItemsToClone(fromItems, toItems);
 
-      const hideUntilDone = (items, onFromRoute: boolean) => items && items.reduce((result, item) => {
-        result[item.id] = this._hideTransitionViewUntilDone(transitionProps, onFromRoute);
+      const hideUntilDone = (items) => items && items.reduce((result, item) => {
+        result[item.id] = this._hideTransitionViewUntilDone(transitionProps);
         return result;
       }, {});
 
@@ -287,11 +284,11 @@ export default function withTransition(CardStackComp: ReactClass<*>) {
       let inPlaceStyleMap = {
         from: {
           ...styleMap && styleMap.from,
-          ...hideUntilDone(itemsToClone, true), //TODO should we separate itemsToClone into from and to?
+          ...hideUntilDone(itemsToClone), //TODO should we separate itemsToClone into from and to?
         },
         to: {
           ...styleMap && styleMap.to,
-          ...hideUntilDone(itemsToClone, false),
+          ...hideUntilDone(itemsToClone),
         }
       };
       inPlaceStyleMap = this._replaceFromToInStyleMap(inPlaceStyleMap, fromRouteName, toRouteName);
