@@ -84,11 +84,11 @@ The path/params that are output from this should form an action when passed back
 
 ### `getScreenOptions(navigation, screenProps)`
 
-Used to retrieve the navigation options for a screen. Must provide the screen's current navigation prop, and the name of the option to be retrieved.
+Used to retrieve the navigation options for a screen. Must provide the screen's current navigation prop and optionally, other props that your navigation options may need to consume.
 
 - `navigation` - This is the navigation prop that the screen will use, where the state refers to the screen's route/state. Dispatch will trigger actions in the context of that screen.
 - `screenProps` - Other props that your navigation options may need to consume
-- `lastConfig` - The previous set of options that are default or provided by the previous configurer
+- `prevOptions` - The previous set of options that are default or provided by the previous configurer
 
 Inside an example view, perhaps you need to fetch the configured title:
 ```js

@@ -15,11 +15,10 @@ import type {
   NavigationScreenConfig,
   NavigationScreenConfigProps,
   NavigationScreenOptions,
-  NavigationState,
 } from '../TypeDefinition';
 
 function applyConfig(
-  configurer?: NavigationScreenConfig,
+  configurer: ?NavigationScreenConfig,
   prevOptions: NavigationScreenOptions,
   configProps: NavigationScreenConfigProps,
 ): NavigationScreenOptions {
@@ -46,10 +45,11 @@ export default (
     navigation: NavigationScreenProp<NavigationRoute, NavigationAction>,
     screenProps: ?Object,
   ) => {
-    const {state, dispatch} = navigation;
+    const { state, dispatch } = navigation;
     const route = state;
     // $FlowFixMe
-    const {routes, index} = (route: NavigationStateRoute);
+    const { routes, index } = (route: NavigationStateRoute);
+
     invariant(
       route.routeName &&
       typeof route.routeName === 'string',
@@ -78,7 +78,7 @@ export default (
     const routeScreenConfig = routeConfig.navigationOptions;
     const componentScreenConfig = Component.navigationOptions;
 
-    const configOptions = { navigation, screenProps: screenProps ||{} };
+    const configOptions = { navigation, screenProps: screenProps || {} };
 
     outputConfig = applyConfig(navigatorScreenConfig, outputConfig, configOptions);
     outputConfig = applyConfig(componentScreenConfig, outputConfig, configOptions);
