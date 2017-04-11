@@ -98,40 +98,9 @@ The 2nd argument passed to the function are the default values for the `header` 
 
 ## Navigation Option Reference
 
-#### `title`
-Set a generic title that can be used as a fallback for `headerTitle` and `tabBarLabel`
+List of available navigation options depends on the `navigator`the screen is added to.
 
-#### `headerTitle`
-A string or a React Element for the title of the header
-
-#### `headerRight`
-A string or a React Element for the right button area of the header
-
-#### `headerLeft`
-A string or a React Element for the left button area of the header, (overrides the back button)
-
-#### `headerBackTitle`
-Override the title string of the back button, rather than taking the title of the screen before it
-
-#### `headerTintColor`
-
-#### `headerStyle`
-#### `headerTitleStyle`
-
-#### `headerVisible`
-
-
-#### `tabBarLabel`
-Can be string or react component
-
-#### `tabBarLabelActive`
-Function that returns icon component
-
-#### `tabBarIcon`
-Function that returns icon component
-
-#### `tabBarIconActive`
-Function that returns icon component
-
-#### `tabBarVisible`
-True or false to show or hide the tab bar, if not set then defaults to true
+Check available options when:
+- inside [`drawer navigator`](/docs/navigators/drawer#Screen-Navigation-Options)
+- inside [`stack navigator`](/docs/navigators/stack#Screen-Navigation-Options)
+- inside [`tab navigator`](/docs/navigators/tab#Screen-Navigation-Options)

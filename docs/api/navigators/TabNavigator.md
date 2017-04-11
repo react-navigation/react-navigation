@@ -150,24 +150,6 @@ tabBarOptions: {
 
 ### Screen Navigation Options
 
-Usually you define static `navigationOptions` on your screen component. For example:
-
-```jsx
-class ProfileScreen extends React.Component {
-
-  static navigationOptions = ({ navigation }) => ({
-
-    title: `${navigation.state.params.name}'s Profile!`,
-
-    tabBarIcon: (
-      <Image src={require('./my-icon.png')} />
-    ),
-  });
-  ...
-```
-
-All `navigationOptions` for the `TabNavigator`:
-
 - `title` - a title (string) of the scene
 - `tabBarVisible` - Boolean toggle of tab bar visibility
 - `tabBarIcon` - React Element or a function that given `{ focused: boolean, tintColor: string }` returns a React.Element, to display in tab bar

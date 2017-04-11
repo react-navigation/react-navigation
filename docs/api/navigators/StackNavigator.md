@@ -91,29 +91,6 @@ Visual options:
 
 ### Screen Navigation Options
 
-Usually you define static `navigationOptions` on your screen component. For example:
-
-```jsx
-class ProfileScreen extends React.Component {
-
-  static navigationOptions = ({navigation}) => ({
-
-    title: `${navigation.state.params.name}'s Profile!`,
-
-    // Render a button on the right side of the header
-    // When pressed switches the screen to edit mode.
-    headerRight: (
-      <Button
-        title={state.params.editing ? 'Done' : 'Edit'}
-        onPress={() => navigation.setParams({editing: state.params.editing ? false : true})}
-      />
-    ),
-  });
-  ...
-```
-
-All `navigationOptions` for the `StackNavigator`:
-
 - `title` - a title (string) of the scene
 - `headerVisible` - Boolean toggle of header visibility. Only works when `headerMode` is `screen`.
 - `headerTitle` - String or React Element used by the header. Defaults to scene `title`

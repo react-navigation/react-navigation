@@ -90,7 +90,7 @@ The route configs object is a mapping from route name to a route config, which t
 #### Example:
 
 Default the `DrawerView` isn't scrollable.
-To achieve a scrollable `View`, you have to use the `contentComponent` to customize the container, 
+To achieve a scrollable `View`, you have to use the `contentComponent` to customize the container,
 as you can see in the example below.
 
 ```js
@@ -147,24 +147,6 @@ contentOptions: {
 ```
 
 ### Screen Navigation Options
-
-Usually you define static `navigationOptions` on your screen component. For example:
-
-```jsx
-class ProfileScreen extends React.Component {
-
-  static navigationOptions = ({ navigation }) => ({
-
-    title: `${navigation.state.params.name}'s Profile!`,
-
-    drawerIcon: (
-      <Image src={require('./my-icon.png')} />
-    ),
-  });
-  ...
-```
-
-All `navigationOptions` for the `DrawerNavigator`:
 
 - `title` - a title (string) of the scene
 - `drawerLabel` - String, React Element or a function that given `{ focused: boolean, tintColor: string }` returns a React.Element, to display in drawer sidebar. When undefined, scene `title` is used
