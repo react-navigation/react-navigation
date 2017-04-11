@@ -18,6 +18,7 @@ import type {
   NavigationRoute,
   NavigationNavigateAction,
   NavigationTabRouterConfig,
+  NavigationTabScreenOptions,
 } from '../TypeDefinition';
 
 export default (
@@ -239,7 +240,9 @@ export default (
       return state;
     },
 
-    getComponentForState(state: NavigationState): NavigationScreenComponent<*> {
+    getComponentForState(
+      state: NavigationState,
+    ): NavigationScreenComponent<*, NavigationTabScreenOptions> {
       const routeName = order[state.index];
       invariant(
         routeName,

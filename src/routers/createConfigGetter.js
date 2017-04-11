@@ -17,8 +17,8 @@ import type {
 } from '../TypeDefinition';
 
 function applyConfig(
-  configurer: ?NavigationScreenConfig,
-  prevOptions: *,
+  configurer: ?NavigationScreenConfig<Object>,
+  prevOptions: Object,
   configProps: NavigationScreenConfigProps,
 ): * {
   if (typeof configurer === 'function') {
@@ -38,7 +38,7 @@ function applyConfig(
 
 export default (
   routeConfigs: NavigationRouteConfigMap,
-  navigatorScreenConfig?: NavigationScreenConfig,
+  navigatorScreenConfig?: NavigationScreenConfig<Object>,
 ) =>
   (
     navigation: NavigationScreenProp<NavigationRoute, NavigationAction>,
@@ -52,7 +52,7 @@ export default (
     invariant(
       route.routeName &&
       typeof route.routeName === 'string',
-      'Cannot get config because the route does not have a routeName.'
+      'Cannot get config because the route does not have a routeName.',
     );
 
     const Component = getScreenForRouteName(routeConfigs, route.routeName);

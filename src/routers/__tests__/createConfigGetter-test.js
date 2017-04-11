@@ -91,7 +91,7 @@ test('should throw if the route does not exist', () => {
   ];
 
   expect(
-    () => getScreenOptions(addNavigationHelpers({ state: routes[0], dispatch: () => false }), {})
+    () => getScreenOptions(addNavigationHelpers({ state: routes[0], dispatch: () => false }), {}),
   ).toThrowError("There is no route defined for key Settings.\nMust be one of: 'Home'");
 });
 

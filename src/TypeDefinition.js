@@ -143,17 +143,18 @@ export type NavigationScreenConfigProps = {
   screenProps: Object,
 };
 
-export type NavigationScreenConfig = NavigationScreenOptions | NavigationScreenConfigProps => NavigationScreenOptions;
+export type NavigationScreenConfig<Options> = Options
+  | NavigationScreenConfigProps => Options;
 
-export type NavigationComponent = NavigationScreenComponent<*> | NavigationNavigator<*, *, *, *>;
+export type NavigationComponent = NavigationScreenComponent<*, *> | NavigationNavigator<*, *, *, *>;
 
-export type NavigationScreenComponent<T> = ReactClass<T> & {
-  navigationOptions?: NavigationScreenConfig,
+export type NavigationScreenComponent<T, O> = ReactClass<T> & {
+  navigationOptions?: NavigationScreenConfig<O>,
 };
 
 export type NavigationNavigator<T, State, Action, Options> = ReactClass<T> & {
   router?: NavigationRouter<State, Action, Options>,
-  navigationOptions?: NavigationScreenConfig,
+  navigationOptions?: NavigationScreenConfig<Options>,
 };
 
 export type NavigationParams = {
@@ -234,7 +235,7 @@ export type NavigationStackRouterConfig = {
   initialRouteName?: string,
   initialRouteParams?: NavigationParams,
   paths?: NavigationPathsConfig,
-  navigationOptions?: NavigationScreenConfig,
+  navigationOptions?: NavigationScreenConfig<NavigationStackScreenOptions>,
 };
 
 export type NavigationStackAction =
@@ -255,7 +256,7 @@ export type NavigationAction =
   | NavigationTabAction;
 
 export type NavigationRouteConfig<T> = T & {
-  navigationOptions?: NavigationScreenConfig,
+  navigationOptions?: NavigationScreenConfig<*>,
   path?: string,
 };
 
@@ -274,7 +275,7 @@ export type NavigationPathsConfig = {
 export type NavigationTabRouterConfig = {
   initialRouteName?: string,
   paths?: NavigationPathsConfig,
-  navigationOptions?: NavigationScreenOptions,
+  navigationOptions?: NavigationScreenConfig<NavigationTabScreenOptions>,
   order?: Array<string>, // todo: type these as the real route names rather than 'string'
 
   // Does the back button cause the router to switch to the initial tab
