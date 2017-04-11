@@ -131,8 +131,6 @@ class CardStack extends Component {
   }
 
   componentWillReceiveProps(props: Props) {
-    console.log('Controlled Card stack recieving props ',props.navigation.state);
-    // wipe out cached navigation options if the screenProps or scene state changes
     if (props.screenProps !== this.props.screenProps) {
       this._screenDetails = {};
     }
