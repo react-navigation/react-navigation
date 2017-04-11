@@ -8,8 +8,10 @@ import {
 
 import type {
   HeaderMode,
-  HeaderProps,
+    HeaderProps,
 } from './views/Header';
+
+import { TransitionItem } from './views/Transition/TransitionItems';
 
 /**
  * NavigationState is a tree of routes for a single navigator, where each child
@@ -72,7 +74,7 @@ export type NavigationRouter = {
    */
   getActionForPathAndParams: (path: string, params?: NavigationParams) => ?NavigationAction,
 
-  getPathAndParamsForState: (state: NavigationState) => {path: string, params?: NavigationParams},
+  getPathAndParamsForState: (state: NavigationState) => { path: string, params?: NavigationParams },
 
   getComponentForRouteName: (routeName: string) => NavigationComponent,
 
@@ -94,7 +96,7 @@ export type NavigationRouter = {
 
 export type NavigationScreenOption<T> =
   | T
-  | (navigation: NavigationScreenProp<NavigationRoute, NavigationAction>,
+  | (navigation: NavigationScreenProp < NavigationRoute, NavigationAction >,
     config: T) => T;
 
 export type Style = { [key: string]: any } | number | false | null | void | Array<Style>;
@@ -105,30 +107,30 @@ export type HeaderConfig = {
    */
   title?: string | React.Element<*>;
 
-  /**
-   * Whether the navigation bar is visible.
-   */
-  visible?: boolean;
+/**
+ * Whether the navigation bar is visible.
+ */
+visible ?: boolean;
 
-  /**
-   * Renders a custom right component
-   */
-  right?: React.Element<*>,
+/**
+ * Renders a custom right component
+ */
+right ?: React.Element <*>,
 
   /**
    * Renders a custom left component
    */
-  left?: React.Element<*>,
+  left ?: React.Element <*>,
 
   /**
    * Style passed into navigation bar container
    */
-  style?: Style,
+  style ?: Style,
 
   /**
    * Style passed into navigation bar title
    */
-  titleStyle?: Style,
+  titleStyle ?: Style,
 
   // // Style of title text
   // titleTextStyle?: $NavigationThunk<Object>,
@@ -149,22 +151,22 @@ export type TabBarConfig = {
   /**
    * Icon used by the tab bar.
    */
-  icon?: (options: { tintColor: string, focused: boolean }) => ?React.Element<*>;
-  /**
-   * Label text used by the tab bar.
-   */
-  label?: string | React.Element<*>;
+  icon?: (options: { tintColor: string, focused: boolean }) => ?React.Element <*>;
+/**
+ * Label text used by the tab bar.
+ */
+label ?: string | React.Element <*>;
 };
 
 export type DrawerConfig = {
   /**
    * Icon used by the drawer.
    */
-  icon?: (options: { tintColor: string, focused: boolean }) => ?React.Element<*>;
-  /**
-   * Label text used by the drawer.
-   */
-  label?: string;
+  icon?: (options: { tintColor: string, focused: boolean }) => ?React.Element <*>;
+/**
+ * Label text used by the drawer.
+ */
+label ?: string;
 };
 
 export type CardStackConfig = {
@@ -206,7 +208,7 @@ export type NavigationScreenConfig = {
   drawer?: DrawerConfig;
 };
 
-export type NavigationComponent = NavigationScreenComponent<*> | NavigationNavigator<*>;
+export type NavigationComponent = NavigationScreenComponent<*> | NavigationNavigator <*>;
 
 export type NavigationScreenComponent<T> = ReactClass<T> & {
   navigationOptions?: NavigationScreenOptions,
@@ -275,9 +277,9 @@ export type NavigationStackViewConfig = {
   mode?: 'card' | 'modal',
   headerMode?: HeaderMode,
   headerComponent?: ReactClass<HeaderProps<*>>,
-  cardStyle?: Style,
-  onTransitionStart?: () => void,
-  onTransitionEnd?: () => void
+    cardStyle ?: Style,
+    onTransitionStart ?: () => void,
+    onTransitionEnd ?: () => void
 };
 
 export type NavigationStackRouterConfig = {
@@ -313,9 +315,9 @@ export type NavigationScreenRouteConfig = NavigationScreenRouteConfig<{
   // React component or navigator for this route */
   screen: NavigationComponent,
 } | {
-  // React component to lazily require and render for this route */
-  getScreen: () => NavigationComponent,
-}>;
+    // React component to lazily require and render for this route */
+    getScreen: () => NavigationComponent,
+  }>;
 
 export type NavigationPathsConfig = {
   [routeName: string]: string,
@@ -403,10 +405,10 @@ export type NavigationTransitionProps = {
   // is the index of the scene
   scene: NavigationScene,
   index: number,
-  navigation: NavigationScreenProp<*, NavigationAction>,
+  navigation: NavigationScreenProp<*, NavigationAction >,
 
   // The gesture distance for `horizontal` and `vertical` transitions
-  gestureResponseDistance?: ?number,
+  gestureResponseDistance ?: ?number,
 };
 
 // The scene renderer props are nearly identical to the props used for rendering
@@ -445,7 +447,7 @@ export type NavigationAnimationSetter = (
 
 export type NavigationSceneRenderer = (
   props: NavigationSceneRendererProps,
-) => ?React.Element<*>;
+) => ?React.Element <*>;
 
 export type NavigationStyleInterpolator = (
   props: NavigationSceneRendererProps,
@@ -461,3 +463,56 @@ export type LayoutEvent = {
     },
   };
 };
+
+export type TransitionStyleMap = {
+  [routeName: string]: {
+    [id: string]: Object,
+  }
+};
+
+export type TransitionFilter = (id: string) => boolean;
+
+type GetTransitionStyleMapConfig = (
+  itemsOnFromRoute: Array<TransitionItem>,
+  itemsOnToRoute: Array<TransitionItem>,
+  transitionProps: NavigationSceneRendererProps,
+) => ?TransitionStyleMap
+
+type GetItemsConfig = (
+  itemsOnFromRoute: Array<TransitionItem>,
+  itemsOnToRoute: Array<TransitionItem>,
+) => ?Array < TransitionItem >
+
+export type TransitionConfig = {
+  canUseNativeDriver?: () => boolean,
+  getStyleMap?: GetTransitionStyleMapConfig,
+  getStyleMapForClones?: GetTransitionStyleMapConfig,
+  getItemsToClone?: GetItemsConfig,
+  getItemsToMeasure?: GetItemsConfig,
+};
+
+type GetTransitionStyleMap = (
+  itemsOnFromRoute: Array<TransitionItem>,
+  itemsOnToRoute: Array<TransitionItem>,
+  transitionProps: NavigationSceneRendererProps,
+) => TransitionStyleMap
+
+type GetItems = (
+  itemsOnFromRoute: Array<TransitionItem>,
+  itemsOnToRoute: Array<TransitionItem>,
+) => Array<TransitionItem>
+
+export type Transition = {
+  filter: TransitionFilter,
+  duration: number,
+  start?: number,
+  canUseNativeDriver: () => boolean,
+  getStyleMap: GetTransitionStyleMap,
+  getStyleMapForClones: GetTransitionStyleMap,
+  getItemsToClone: GetItems,
+  getItemsToMeasure: GetItems,
+};
+
+export type BoundTransition = (duration: number) => Transition
+
+export type UnboundTransition = (filter: TransitionFilter) => BoundTransition

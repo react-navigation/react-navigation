@@ -21,6 +21,7 @@ import StacksInTabs from './StacksInTabs';
 import StacksOverTabs from './StacksOverTabs';
 import SimpleStack from './SimpleStack';
 import SimpleTabs from './SimpleTabs';
+import Transitions from './Transitions';
 
 const ExampleRoutes = {
   SimpleStack: {
@@ -74,6 +75,12 @@ const ExampleRoutes = {
     description: 'Deep linking into a route in tab',
     screen: SimpleTabs,
     path: 'settings',
+  },
+  Transitions: {
+    name: 'Shared Element Transition',
+    description: 'Shared element transition',
+    screen: Transitions,
+    path: 'transitions',
   },
 };
 

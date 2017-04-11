@@ -29,4 +29,6 @@ module.exports = {
 
   // HOCs
   get withNavigation() { return require('./views/withNavigation').default; },
+
+    get Transition() { return require('./views/Transition').default; },
 };

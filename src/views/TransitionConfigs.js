@@ -68,17 +68,14 @@ const FadeOutToBottomAndroid = ({
 } : TransitionConfig);
 
 function defaultTransitionConfig(
-  // props for the new screen
-  transitionProps: NavigationTransitionProps,
-  // props for the old screen
-  prevTransitionProps: NavigationTransitionProps,
+  direction: number,
   // whether we're animating in/out a modal screen
   isModal: boolean,
 ): TransitionConfig {
   if (Platform.OS === 'android') {
     // Use the default Android animation no matter if the screen is a modal.
     // Android doesn't have full-screen modals like iOS does, it has dialogs.
-    if (prevTransitionProps && (transitionProps.index < prevTransitionProps.index)) {
+    if (direction < 0) {
       // Navigating back to the previous screen
       return FadeOutToBottomAndroid;
     }
