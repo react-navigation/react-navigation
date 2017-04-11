@@ -10,7 +10,6 @@ import validateRouteConfigMap from './validateRouteConfigMap';
 import getScreenConfigDeprecated from './getScreenConfigDeprecated';
 
 import type {
-  NavigationRoute,
   NavigationAction,
   NavigationComponent,
   NavigationNavigateAction,

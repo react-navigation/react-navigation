@@ -309,6 +309,7 @@ export default (
     },
 
     getScreenOptions: createConfigGetter(routeConfigs, config.navigationOptions),
+ 
     getScreenConfig: getScreenConfigDeprecated,
   };
 };
