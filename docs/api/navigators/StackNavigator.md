@@ -91,17 +91,49 @@ Visual options:
 
 ### Screen Navigation Options
 
-- `title` - a title (string) of the scene
-- `headerVisible` - Boolean toggle of header visibility. Only works when `headerMode` is `screen`.
-- `headerTitle` - String or React Element used by the header. Defaults to scene `title`
-- `headerBackTitle` - Title string used by the back button on iOS or `null` to disable label. Defaults to scene `title`
-- `headerRight` - String or React Element to display on the right side of the header
-- `headerLeft` - String or React Element to display on the left side of the header
-- `headerStyle` - Style object for the header
-- `headerTitleStyle` - Style object for the title component
-- `headerTintColor` - Tint color for the header
-- `headerPressColorAndroid` - Color for material ripple (Android >= 5.0 only)
-- `gesturesEnabled` - Whether you can use gestures to dismiss this screen. Defaults to true on iOS, false on Android
+#### `title`
+
+Generic title that can be used as a fallback for `headerTitle` and `tabBarLabel`
+
+#### `headerVisible`
+
+True or false to show or hide the header. Only works when `headerMode` is `screen`. Default value is `true`.
+
+#### `headerTitle`
+
+String or React Element used by the header. Defaults to scene `title`
+
+#### `headerBackTitle`
+
+Title string used by the back button on iOS or `null` to disable label. Defaults to scene `title`
+
+#### `headerRight`
+
+String or React Element to display on the right side of the header
+
+#### `headerLeft`
+
+String or React Element to display on the left side of the header
+
+#### `headerStyle`
+
+Style object for the header
+
+#### `headerTitleStyle`
+
+Style object for the title component
+
+#### `headerTintColor`
+
+Tint color for the header
+
+#### `headerPressColorAndroid`
+
+Color for material ripple (Android >= 5.0 only)
+
+#### `gesturesEnabled`
+
+Whether you can use gestures to dismiss this screen. Defaults to true on iOS, false on Android
 
 ### Navigator Props
 

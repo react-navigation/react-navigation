@@ -150,10 +150,21 @@ tabBarOptions: {
 
 ### Screen Navigation Options
 
-- `title` - a title (string) of the scene
-- `tabBarVisible` - Boolean toggle of tab bar visibility
-- `tabBarIcon` - React Element or a function that given `{ focused: boolean, tintColor: string }` returns a React.Element, to display in tab bar
-- `tabBarLabel` - Title string of a tab displayed in the tab bar. When undefined, scene `title` is used. To hide, see `tabBarOptions.showLabel` in the previous section
+#### `title`
+
+Generic title that can be used as a fallback for `headerTitle` and `tabBarLabel`
+
+#### `tabBarVisible`
+
+True or false to show or hide the tab bar, if not set then defaults to true
+
+#### `tabBarIcon`
+
+React Element or a function that given `{ focused: boolean, tintColor: string }` returns a React.Element, to display in tab bar
+
+#### `tabBarLabel`
+
+Title string of a tab displayed in the tab bar. When undefined, scene `title` is used. To hide, see `tabBarOptions.showLabel` in the previous section.
 
 ### Navigator Props
 
