@@ -137,7 +137,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
       return null;
     }
     const details = this.props.getScreenDetails(props.scene);
-    const {headerLeft} = details.options;
+    const {headerLeft, headerPressColorAndroid} = details.options;
     if (headerLeft) {
       return headerLeft;
     }
@@ -148,6 +148,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
     return (
       <HeaderBackButton
         onPress={() => this.props.navigation.goBack(null)}
+        pressColorAndroid={headerPressColorAndroid}
         tintColor={details.options.headerTintColor}
         title={backButtonTitle}
         width={width}

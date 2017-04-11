@@ -39,6 +39,7 @@ type Props = {
   getLabel: (scene: TabScene) => ?(React.Element<*> | string);
   renderIcon: (scene: TabScene) => React.Element<*>;
   labelStyle?: Style;
+  iconStyle?: Style;
 };
 
 export default class TabBarTop extends PureComponent<DefaultProps, Props, void> {
@@ -101,6 +102,7 @@ export default class TabBarTop extends PureComponent<DefaultProps, Props, void> 
       inactiveTintColor,
       renderIcon,
       showIcon,
+      iconStyle,
     } = this.props;
     if (showIcon === false) {
       return null;
@@ -113,7 +115,7 @@ export default class TabBarTop extends PureComponent<DefaultProps, Props, void> 
         inactiveTintColor={inactiveTintColor}
         renderIcon={renderIcon}
         scene={scene}
-        style={styles.icon}
+        style={[styles.icon, iconStyle]}
       />
     );
   };

@@ -1,5 +1,7 @@
 # Configuring the Header
 
+Header is only available for StackNavigator.
+
 In the previous example, we created a StackNavigator to display several screens in our app.
 
 

@@ -13,6 +13,7 @@ const config = require('react-native/packager/rn-cli.config');
 const examples = [
   'NavigationPlayground',
   'LinkingExample',
+  'ReduxExample',
   'Chat',
 ];
 

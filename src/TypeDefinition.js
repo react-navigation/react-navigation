@@ -209,6 +209,7 @@ export type NavigationInitAction = {
 export type NavigationResetAction = {
   type: 'Navigation/RESET',
   index: number,
+  key?: ?string,
   actions: Array<NavigationNavigateAction>,
 };
 

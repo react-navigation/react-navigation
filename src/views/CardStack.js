@@ -338,8 +338,10 @@ class CardStack extends Component {
         });
       },
     });
+    
     const gesturesEnabled = mode === 'card' && Platform.OS === 'ios';
     const handlers = gesturesEnabled ? responder.panHandlers : {};
+    
     return (
       <View
         {...handlers}
