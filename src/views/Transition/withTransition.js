@@ -311,7 +311,7 @@ export default function withTransition(CardStackComp: ReactClass<*>) {
       if (transition && this.state.transitionItems.areAllMeasured()) {
         const { fromItems, toItems } = this._getFilteredFromToItems();
         const itemsToClone = transition.getItemsToClone && transition.getItemsToClone(fromItems, toItems);
-        if (!itemsToClone) return null;
+        if (itemsToClone.length === 0) return null;
 
         let styleMap = transition.getStyleMapForClones &&
           this._interpolateStyleMap(transition.getStyleMapForClones(fromItems, toItems, transitionProps), transitionProps);
