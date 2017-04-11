@@ -9,8 +9,6 @@ import {
   View,
 } from 'react-native';
 
-import ReactComponentWithPureRenderMixin from 'react/lib/ReactComponentWithPureRenderMixin';
-
 import HeaderTitle from './HeaderTitle';
 import HeaderBackButton from './HeaderBackButton';
 import HeaderStyleInterpolator from './HeaderStyleInterpolator';
@@ -41,6 +39,7 @@ type SubViewRenderer = (subViewProps: SubViewProps) => ?React.Element<any>;
 export type HeaderProps = NavigationSceneRendererProps & {
   mode: HeaderMode,
   onNavigateBack?: () => void,
+  pressColorAndroid?: string,
   renderLeftComponent: SubViewRenderer,
   renderRightComponent: SubViewRenderer,
   renderTitleComponent: SubViewRenderer,
@@ -110,6 +109,14 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
     return undefined;
   }
 
+  _getHeaderPressColorAndroid(navigation: Navigation): ?string {
+    const header = this.props.router.getScreenConfig(navigation, 'header');
+    if (header && header.pressColorAndroid) {
+      return header.pressColorAndroid;
+    }
+    return undefined;
+  }
+
   _getHeaderTitleStyle(navigation: Navigation): Style {
     const header = this.props.router.getScreenConfig(navigation, 'header');
     if (header && header.titleStyle) {
@@ -151,6 +158,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
       return null;
     }
     const tintColor = this._getHeaderTintColor(props.navigation);
+    const pressColorAndroid = this._getHeaderPressColorAndroid(props.navigation);
     const previousNavigation = addNavigationHelpers({
       ...props.navigation,
       state: props.scenes[props.scene.index - 1].route,
@@ -162,6 +170,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
     return (
       <HeaderBackButton
         onPress={props.onNavigateBack}
+        pressColorAndroid={pressColorAndroid}
         tintColor={tintColor}
         title={backButtonTitle}
         width={width}

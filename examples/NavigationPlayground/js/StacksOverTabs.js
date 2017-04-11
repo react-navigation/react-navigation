@@ -68,42 +68,9 @@ const MySettingsScreen = ({ navigation }) => (
   />
 );
 
-const MainTab = StackNavigator({
-  Home: {
-    screen: MyHomeScreen,
-    path: '/',
-    navigationOptions: {
-      title: () => 'Welcome',
-    },
-  },
-  Profile: {
-    screen: MyProfileScreen,
-    path: '/people/:name',
-    navigationOptions: {
-      title: ({ state }) => `${state.params.name}'s Profile!`,
-    },
-  },
-});
-
-const SettingsTab = StackNavigator({
-  Settings: {
-    screen: MySettingsScreen,
-    path: '/',
-    navigationOptions: {
-      title: () => 'Settings',
-    },
-  },
-  NotifSettings: {
-    screen: MyNotificationsSettingsScreen,
-    navigationOptions: {
-      title: () => 'Notification Settings',
-    },
-  },
-});
-
-const StacksInTabs = TabNavigator({
+const TabNav = TabNavigator({
   MainTab: {
-    screen: MainTab,
+    screen: MyHomeScreen,
     path: '/',
     navigationOptions: {
       tabBar: () => ({
@@ -119,7 +86,7 @@ const StacksInTabs = TabNavigator({
     },
   },
   SettingsTab: {
-    screen: SettingsTab,
+    screen: MySettingsScreen,
     path: '/settings',
     navigationOptions: {
       tabBar: () => ({
@@ -140,4 +107,25 @@ const StacksInTabs = TabNavigator({
   swipeEnabled: false,
 });
 
-export default StacksInTabs;
+const StacksOverTabs = StackNavigator({
+  Root: {
+    screen: TabNav,
+  },
+  NotifSettings: {
+    screen: MyNotificationsSettingsScreen,
+    navigationOptions: {
+      title: () => 'Notification Settings',
+    },
+  },
+  Profile: {
+    screen: MyProfileScreen,
+    path: '/people/:name',
+    navigationOptions: {
+      title: ({ state }) => `${state.params.name}'s Profile!`,
+    },
+  },
+}, {
+  headerMode: 'none',
+});
+
+export default StacksOverTabs;
