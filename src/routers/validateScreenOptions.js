@@ -11,7 +11,7 @@ const deprecatedKeys = ['tabBar', 'header'];
  * Make sure screen options returned by the `getScreenOption`
  * are valid
  */
-export default (screenOptions: *, route: NavigationRoute): * => {
+export default (screenOptions: *, route: NavigationRoute) => {
   const keys: Array<string> = Object.keys(screenOptions);
 
   const deprecatedKey = keys.find(
@@ -80,6 +80,4 @@ export default (screenOptions: *, route: NavigationRoute): * => {
       ].join('\n'),
     );
   }
-
-  return screenOptions;
 };
