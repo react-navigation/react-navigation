@@ -98,9 +98,9 @@ The 2nd argument passed to the function are the default values for the `header` 
 
 ## Navigation Option Reference
 
-List of available navigation options depends on the `navigator`the screen is added to.
+List of available navigation options depends on the `navigator` the screen is added to.
 
-Check available options when:
-- inside [`drawer navigator`](/docs/navigators/drawer#Screen-Navigation-Options)
-- inside [`stack navigator`](/docs/navigators/stack#Screen-Navigation-Options)
-- inside [`tab navigator`](/docs/navigators/tab#Screen-Navigation-Options)
+Check available options for:
+- [`drawer navigator`](/docs/navigators/drawer#Screen-Navigation-Options)
+- [`stack navigator`](/docs/navigators/stack#Screen-Navigation-Options)
+- [`tab navigator`](/docs/navigators/tab#Screen-Navigation-Options)
