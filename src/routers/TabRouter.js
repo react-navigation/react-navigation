@@ -160,7 +160,6 @@ export default (
 
           if (newChildState && newChildState !== childState) {
             const routes = [...state.routes];
-            /* $FlowFixMe */
             routes[activeTabIndex] = newChildState;
             return {
               ...state,

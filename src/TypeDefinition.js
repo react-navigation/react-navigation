@@ -56,28 +56,7 @@ export type NavigationLeafRoute = {
   params?: NavigationParams,
 };
 
-export type NavigationStateRoute = {
-  /**
-   * React's key used by some navigators. No need to specify these manually,
-   * they will be defined by the router.
-   */
-  key: string,
-  /**
-   * For example 'Home'.
-   * This is used as a key in a route config when creating a navigator.
-   */
-  routeName: string,
-  /**
-   * Path is an advanced feature used for deep linking and on the web.
-   */
-  path?: string,
-  /**
-   * Params passed to this route when navigating to it,
-   * e.g. `{ car_id: 123 }` in a route that displays a car.
-   */
-  params?: NavigationParams,
-
-
+export type NavigationStateRoute = NavigationLeafRoute & {
   index: number,
   routes: Array<NavigationRoute>,
 };
