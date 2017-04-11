@@ -159,6 +159,7 @@ export default (
 
           if (newChildState && newChildState !== childState) {
             const routes = [...state.routes];
+            /* $FlowFixMe */
             routes[activeTabIndex] = newChildState;
             return {
               ...state,
@@ -171,7 +172,7 @@ export default (
       if (action.type === NavigationActions.SET_PARAMS) {
         const lastRoute = state.routes.find(
           /* $FlowFixMe */
-          (route: *) => route.key === action.key
+          (route: *) => route.key === action.key,
         );
         if (lastRoute) {
           const params = {
