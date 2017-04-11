@@ -7,6 +7,7 @@ import createConfigGetter from './createConfigGetter';
 import getScreenForRouteName from './getScreenForRouteName';
 import StateUtils from '../StateUtils';
 import validateRouteConfigMap from './validateRouteConfigMap';
+import getScreenConfigDeprecated from './getScreenConfigDeprecated';
 
 import type {
   NavigationRoute,
@@ -322,5 +323,6 @@ export default (
 
     getScreenOptions: createConfigGetter(routeConfigs, stackConfig.navigationOptions),
 
+    getScreenConfig: getScreenConfigDeprecated,
   };
 };

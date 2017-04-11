@@ -24,7 +24,10 @@ function applyConfig(
   if (typeof configurer === 'function') {
     return {
       ...navigationOptions,
-      ...configurer({ ...configProps, navigationOptions }),
+      ...configurer({
+        ...configProps,
+        navigationOptions,
+      }),
     };
   }
   if (typeof configurer === 'object') {

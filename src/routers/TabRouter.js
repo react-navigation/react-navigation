@@ -6,6 +6,7 @@ import createConfigGetter from './createConfigGetter';
 
 import NavigationActions from '../NavigationActions';
 import validateRouteConfigMap from './validateRouteConfigMap';
+import getScreenConfigDeprecated from './getScreenConfigDeprecated';
 
 import type {
   NavigationAction,
@@ -92,7 +93,7 @@ export default (
             params: {
               ...route.params,
               ...params,
-            }
+            },
           }: NavigationRoute));
         }
       }
@@ -103,7 +104,7 @@ export default (
       if (activeTabRouter) {
         const activeTabState = activeTabRouter.getStateForAction(
           action.action || action,
-          activeTabLastState
+          activeTabLastState,
         );
         if (!activeTabState && inputState) {
           return null;
@@ -308,5 +309,6 @@ export default (
     },
 
     getScreenOptions: createConfigGetter(routeConfigs, config.navigationOptions),
+    getScreenConfig: getScreenConfigDeprecated,
   };
 };
