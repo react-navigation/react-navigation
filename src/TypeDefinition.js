@@ -134,7 +134,7 @@ export type NavigationScreenDetails<T> = {
   navigation: NavigationScreenProp<NavigationRoute, NavigationAction>,
 };
 
-type NavigationScreenOptions = {
+export type NavigationScreenOptions = {
   title?: string,
 };
 
@@ -150,8 +150,8 @@ export type NavigationScreenConfig<Options> = Options
 
 export type NavigationComponent = NavigationScreenComponent<*, *> | NavigationNavigator<*, *, *, *>;
 
-export type NavigationScreenComponent<T, O> = ReactClass<T> & {
-  navigationOptions?: NavigationScreenConfig<O>,
+export type NavigationScreenComponent<T, Options> = ReactClass<T> & {
+  navigationOptions?: NavigationScreenConfig<Options>,
 };
 
 export type NavigationNavigator<T, State, Action, Options> = ReactClass<T> & {

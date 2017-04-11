@@ -17,8 +17,8 @@ import type {
 } from '../TypeDefinition';
 
 function applyConfig(
-  configurer: ?NavigationScreenConfig<Object>,
-  navigationOptions: Object,
+  configurer: ?NavigationScreenConfig<*>,
+  navigationOptions: *,
   configProps: NavigationScreenConfigProps,
 ): * {
   if (typeof configurer === 'function') {
@@ -38,7 +38,7 @@ function applyConfig(
 
 export default (
   routeConfigs: NavigationRouteConfigMap,
-  navigatorScreenConfig?: NavigationScreenConfig<Object>,
+  navigatorScreenConfig?: NavigationScreenConfig<*>,
 ) =>
   (
     navigation: NavigationScreenProp<NavigationRoute, NavigationAction>,
