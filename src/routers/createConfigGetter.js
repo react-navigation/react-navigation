@@ -18,22 +18,22 @@ import type {
 
 function applyConfig(
   configurer: ?NavigationScreenConfig<Object>,
-  prevOptions: Object,
+  navigationOptions: Object,
   configProps: NavigationScreenConfigProps,
 ): * {
   if (typeof configurer === 'function') {
     return {
-      ...prevOptions,
-      ...configurer({ ...configProps, prevOptions }),
+      ...navigationOptions,
+      ...configurer({ ...configProps, navigationOptions }),
     };
   }
   if (typeof configurer === 'object') {
     return {
-      ...prevOptions,
+      ...navigationOptions,
       ...configurer,
     };
   }
-  return prevOptions;
+  return navigationOptions;
 }
 
 export default (

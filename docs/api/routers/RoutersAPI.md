@@ -88,7 +88,7 @@ Used to retrieve the navigation options for a screen. Must provide the screen's 
 
 - `navigation` - This is the navigation prop that the screen will use, where the state refers to the screen's route/state. Dispatch will trigger actions in the context of that screen.
 - `screenProps` - Other props that your navigation options may need to consume
-- `prevOptions` - The previous set of options that are default or provided by the previous configurer
+- `navigationOptions` - The previous set of options that are default or provided by the previous configurer
 
 Inside an example view, perhaps you need to fetch the configured title:
 ```js

@@ -144,7 +144,9 @@ export type NavigationScreenConfigProps = {
 };
 
 export type NavigationScreenConfig<Options> = Options
-  | NavigationScreenConfigProps => Options;
+  | NavigationScreenConfigProps & {
+    navigationOptions: NavigationScreenProp<NavigationRoute, NavigationAction>
+  } => Options;
 
 export type NavigationComponent = NavigationScreenComponent<*, *> | NavigationNavigator<*, *, *, *>;
 

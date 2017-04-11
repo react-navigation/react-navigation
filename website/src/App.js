@@ -19,9 +19,10 @@ import type {
   NavigationScreenComponent,
 } from 'react-navigation';
 
-export type ScreenOptions = {
+type ScreenOptions = {
   linkName: string,
-  icon: string
+  icon: string,
+  title: string,
 };
 
 const NavView = ({navigation, router}) => {
@@ -45,7 +46,7 @@ type DocPageConfig = {
 
 const createDocPage = (
   config: DocPageConfig,
-): (() => React.Element<*>) => {
+): (() => NavigationScreenComponent<*, ScreenOptions>) => {
   const Page: NavigationScreenComponent<*, ScreenOptions> = ({ navigation }) => (
     <MDPage
       docPath={config.doc}
@@ -54,7 +55,7 @@ const createDocPage = (
   );
   Page.navigationOptions = {
     doc: config.doc,
-    title: config.title,
+    title: 5,
     linkName: config.linkName,
   };
   return Page;
@@ -297,8 +298,8 @@ const DocsPage = createNavigator(TabRouter({
     path: 'views',
   },
 }))(PageWithSidebar);
-DocsPage.navigationOptions = ({ prevOptions }) => ({
-  title: `${prevOptions.title} | React Navigation`,
+DocsPage.navigationOptions = ({ navigationOptions }) => ({
+  title: `${navigationOptions.title} | React Navigation`,
 });
 
 const IntroPost = () => <h1> Hello, world!</h1>;
