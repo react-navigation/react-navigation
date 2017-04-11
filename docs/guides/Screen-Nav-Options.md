@@ -22,7 +22,7 @@ Or, the options can be a function that takes the following arguments, and return
 - `props` - The same props that are available to the screen component
   - `navigation` - The [navigation prop](/docs/navigators/navigation-prop) for the screen, with the screen's route at `navigation.state`
   - `screenProps` - The props passing from above the navigator component
-  - `prevOptions` - The default or previous options that would be used if new values are not provided
+  - `navigationOptions` - The default or previous options that would be used if new values are not provided
 
 ```js
 class ProfileScreen extends React.Component {
