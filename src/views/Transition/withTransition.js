@@ -325,9 +325,14 @@ export default function withTransition(CardStackComp: ReactClass<*>) {
             key: `clone-${item.id}`
           }, []);
         });
+        invariant(this._fromRoute && this._toRoute, "Must be called during transition");
+        const fromIndex = this._fromRoute.index;
+        const toIndex = this._toRoute.index;
+        const maxIndex = Math.max(fromIndex, toIndex);
+        const minIndex = Math.min(fromIndex, toIndex);
         const animatedContainerStyle = {
-          opacity: transitionProps.progress.interpolate({
-            inputRange: [0, OVERLAY_OPACITY_INPUT_RANGE_DELTA, 1 - OVERLAY_OPACITY_INPUT_RANGE_DELTA, 1],
+          opacity: transitionProps.position.interpolate({
+            inputRange: [minIndex, minIndex + OVERLAY_OPACITY_INPUT_RANGE_DELTA, maxIndex - OVERLAY_OPACITY_INPUT_RANGE_DELTA, maxIndex],
             outputRange: [0, 1, 1, 0],
           })
         };
