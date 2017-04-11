@@ -14,14 +14,13 @@ import type {
   NavigationRouteConfigMap,
   NavigationScreenConfig,
   NavigationScreenConfigProps,
-  NavigationScreenOptions,
 } from '../TypeDefinition';
 
 function applyConfig(
   configurer: ?NavigationScreenConfig,
-  prevOptions: NavigationScreenOptions,
+  prevOptions: *,
   configProps: NavigationScreenConfigProps,
-): NavigationScreenOptions {
+): * {
   if (typeof configurer === 'function') {
     return {
       ...prevOptions,
@@ -43,7 +42,7 @@ export default (
 ) =>
   (
     navigation: NavigationScreenProp<NavigationRoute, NavigationAction>,
-    screenProps: ?Object,
+    screenProps: *,
   ) => {
     const { state, dispatch } = navigation;
     const route = state;

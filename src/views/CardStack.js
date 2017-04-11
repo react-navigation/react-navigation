@@ -16,11 +16,9 @@ import type {
   NavigationScreenProp,
   NavigationScene,
   NavigationRouter,
-  NavigationRoute,
   NavigationState,
   NavigationScreenDetails,
-  NavigationTransitionProps,
-  NavigationScreenOptions,
+  NavigationStackScreenOptions,
   Style,
 } from '../TypeDefinition';
 
@@ -39,7 +37,7 @@ type Props = {
   headerComponent?: ReactClass<*>,
   mode: 'card' | 'modal',
   navigation: NavigationScreenProp<NavigationState, NavigationAction>,
-  router: NavigationRouter<NavigationState, NavigationAction, NavigationScreenOptions>,
+  router: NavigationRouter<NavigationState, NavigationAction, NavigationStackScreenOptions>,
   cardStyle?: Style,
   onTransitionStart?: () => void,
   onTransitionEnd?: () => void,
@@ -120,7 +118,7 @@ class CardStack extends Component {
   _immediateIndex: ?number = null;
 
   _screenDetails: {
-    [key: string]: ?NavigationScreenDetails,
+    [key: string]: ?NavigationScreenDetails<NavigationStackScreenOptions>,
   } = {};
 
   props: Props;
@@ -142,9 +140,9 @@ class CardStack extends Component {
   }
 
   _getScreenDetails = (
-    scene: NavigationScene
-  ): NavigationScreenDetails => {
-    const {screenProps, navigation, router} = this.props;
+    scene: NavigationScene,
+  ): NavigationScreenDetails<*> => {
+    const { screenProps, navigation, router } = this.props;
     let screenDetails = this._screenDetails[scene.key];
     if (!screenDetails || screenDetails.state !== scene.route) {
       const screenNavigation = addNavigationHelpers({

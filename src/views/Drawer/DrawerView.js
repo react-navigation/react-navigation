@@ -13,7 +13,7 @@ import type {
   NavigationRouter,
   NavigationState,
   NavigationAction,
-  NavigationScreenOptions,
+  NavigationDrawerScreenOptions,
   Style,
 } from '../../TypeDefinition';
 
@@ -34,7 +34,7 @@ export type DrawerViewConfig = {
 
 type Props = DrawerViewConfig & {
   screenProps?: {};
-  router: NavigationRouter<NavigationState, NavigationAction, NavigationScreenOptions>,
+  router: NavigationRouter<NavigationState, NavigationAction, NavigationDrawerScreenOptions>,
   navigation: NavigationScreenProp<NavigationState, NavigationAction>,
 };
 

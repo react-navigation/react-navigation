@@ -4,16 +4,14 @@ import React, { PureComponent } from 'react';
 
 import type {
   NavigationScreenProp,
-  NavigationState,
   NavigationRoute,
   NavigationAction,
-  NavigationScreenOptions,
 } from '../TypeDefinition';
 
 type Props = {
   screenProps?: {};
   navigation: NavigationScreenProp<NavigationRoute, NavigationAction>;
-  navigationOptions: NavigationScreenOptions,
+  navigationOptions: *,
   component: ReactClass<*>;
 };
 

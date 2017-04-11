@@ -13,30 +13,25 @@ import HeaderTitle from './HeaderTitle';
 import HeaderBackButton from './HeaderBackButton';
 import HeaderStyleInterpolator from './HeaderStyleInterpolator';
 import NavigationPropTypes from '../PropTypes';
-import addNavigationHelpers from '../addNavigationHelpers';
 
 import type {
   NavigationScene,
   NavigationRouter,
   NavigationAction,
-  NavigationScreenProp,
   NavigationSceneRendererProps,
   NavigationStyleInterpolator,
   NavigationScreenDetails,
-  NavigationScreenOptions,
+  NavigationStackScreenOptions,
   NavigationState,
   LayoutEvent,
-  Style,
 } from '../TypeDefinition';
 
 export type HeaderMode = 'float' | 'screen' | 'none';
 
-type Navigation = NavigationScreenProp<*, NavigationAction>;
-
 export type HeaderProps = NavigationSceneRendererProps & {
   mode: HeaderMode,
-  router: NavigationRouter<NavigationState, NavigationAction, NavigationScreenOptions>,
-  getScreenDetails: NavigationScene => NavigationScreenDetails,
+  router: NavigationRouter<NavigationState, NavigationAction, NavigationStackScreenOptions>,
+  getScreenDetails: NavigationScene => NavigationScreenDetails<NavigationStackScreenOptions>,
 };
 
 type SceneProps = {

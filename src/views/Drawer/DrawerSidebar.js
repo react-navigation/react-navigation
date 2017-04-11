@@ -14,7 +14,7 @@ import type {
   NavigationRoute,
   NavigationAction,
   NavigationRouter,
-  NavigationScreenOptions,
+  NavigationDrawerScreenOptions,
   NavigationState,
   Style,
 } from '../../TypeDefinition';
@@ -26,7 +26,7 @@ import type {
 type Navigation = NavigationScreenProp<NavigationRoute, NavigationAction>;
 
 type Props = {
-  router: NavigationRouter<NavigationState, NavigationAction, NavigationScreenOptions>,
+  router: NavigationRouter<NavigationState, NavigationAction, NavigationDrawerScreenOptions>,
   navigation: Navigation,
   childNavigationProps: { [key: string]: Navigation },
   contentComponent: ReactClass<*>,

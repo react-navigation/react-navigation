@@ -82,6 +82,10 @@ export type NavigationStateRoute = {
   routes: Array<NavigationRoute>,
 };
 
+export type NavigationScreenOptionsGetter<Options, Action> = (
+  navigation: NavigationScreenProp<NavigationRoute, Action>,
+  screenProps?: {},
+) => Options;
 
 export type NavigationRouter<State, Action, Options> = {
   /**
@@ -114,10 +118,7 @@ export type NavigationRouter<State, Action, Options> = {
    *
    *  {routeName: 'Foo', key: '123'}
    */
-  getScreenOptions: (
-    navigation: NavigationScreenProp<NavigationRoute, Action>,
-    screenProps?: {},
-  ) => Options,
+  getScreenOptions: NavigationScreenOptionsGetter<Options, Action>
 };
 
 export type NavigationScreenOption<T> =
@@ -127,32 +128,14 @@ export type NavigationScreenOption<T> =
 
 export type Style = { [key: string]: any } | number | false | null | void | Array<Style>;
 
-export type NavigationScreenDetails = {
-  options: NavigationScreenOptions,
+export type NavigationScreenDetails<T> = {
+  options: T,
   state: NavigationRoute,
   navigation: NavigationScreenProp<NavigationRoute, NavigationAction>,
 };
 
-export type NavigationScreenOptions = {
-
+type NavigationScreenOptions = {
   title?: string,
-
-  headerTitle?: string | React.Element<*>,
-  headerTitleStyle?: Style,
-  headerLeft?: string | React.Element<*>,
-  headerBackTitle?: string,
-  headerRight?: string | React.Element<*>,
-  headerStyle?: Style,
-  headerVisible?: boolean,
-
-  tabBarIcon?: React.Element<*> | (options: { tintColor: ?string, focused: boolean }) => ?React.Element<*>,
-  tabBarLabel?: string,
-  tabBarVisible?: boolean,
-
-  drawerIcon?: React.Element<*> | (options: { tintColor: ?string, focused: boolean }) => ?React.Element<*>,
-  drawerLabel?: React.Element<*> | (options: { tintColor: ?string, focused: boolean }) => ?React.Element<*>,
-
-  gesturesEnabled?: boolean,
 };
 
 export type NavigationScreenConfigProps = {
@@ -236,6 +219,17 @@ export type NavigationStackViewConfig = {
   onTransitionEnd?: () => void
 };
 
+export type NavigationStackScreenOptions = NavigationScreenOptions & {
+  headerTitle?: string | React.Element<*>,
+  headerTitleStyle?: Style,
+  headerLeft?: string | React.Element<*>,
+  headerBackTitle?: string,
+  headerRight?: string | React.Element<*>,
+  headerStyle?: Style,
+  headerVisible?: boolean,
+  gesturesEnabled?: boolean,
+};
+
 export type NavigationStackRouterConfig = {
   initialRouteName?: string,
   initialRouteParams?: NavigationParams,
@@ -285,6 +279,20 @@ export type NavigationTabRouterConfig = {
 
   // Does the back button cause the router to switch to the initial tab
   backBehavior?: 'none' | 'initialRoute', // defaults `initialRoute`
+};
+
+export type NavigationTabScreenOptions = NavigationScreenOptions & {
+  tabBarIcon?: React.Element<*>
+    | (options: { tintColor: ?string, focused: boolean }) => ?React.Element<*>,
+  tabBarLabel?: string,
+  tabBarVisible?: boolean,
+};
+
+export type NavigationDrawerScreenOptions = NavigationScreenOptions & {
+  drawerIcon?: React.Element<*>
+    | (options: { tintColor: ?string, focused: boolean }) => ?React.Element<*>,
+  drawerLabel?: React.Element<*>
+    | (options: { tintColor: ?string, focused: boolean }) => ?React.Element<*>,
 };
 
 export type NavigationRouteConfigMap = {
