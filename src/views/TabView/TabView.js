@@ -68,9 +68,23 @@ class TabView extends PureComponent<void, Props, void> {
   props: Props;
 
   _handlePageChanged = (index: number) => {
-    const { navigation } = this.props;
-    navigation.navigate(
-      navigation.state.routes[index].routeName);
+    const { navigation, router, childNavigationProps } = this.props;
+    const nextRoute = navigation.state.routes[index];
+    navigation.navigate(nextRoute.routeName);
+
+    const tabBar = router.getScreenConfig(childNavigationProps[nextRoute.key], 'tabBar');
+    if (tabBar && typeof tabBar.onChange === 'function') {
+      const prevIndex = navigation.state.index;
+      const prevRouteName = navigation.state.routes[prevIndex].routeName;
+
+      tabBar.onChange({
+        index,
+        routeName: nextRoute.routeName,
+      }, {
+        index: prevIndex,
+        routeName: prevRouteName,
+      });
+    }
   };
 
   _renderScene = ({ route }: any) => {

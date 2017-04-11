@@ -128,7 +128,7 @@ export default (
       }
       let didNavigate = false;
       if (action.type === NavigationActions.NAVIGATE) {
-        const navigateAction = ((action: *): NavigationNavigateAction);
+        const navigateAction: NavigationNavigateAction = action;
         didNavigate = !!order.find((tabId: string, i: number) => {
           if (tabId === navigateAction.routeName) {
             activeTabIndex = i;
