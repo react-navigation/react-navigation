@@ -9,10 +9,10 @@ import type {
 } from '../TypeDefinition';
 
 type Props = {
-  screenProps?: {};
-  navigation: NavigationScreenProp<NavigationRoute, NavigationAction>;
+  screenProps?: {},
+  navigation: NavigationScreenProp<NavigationRoute, NavigationAction>,
   navigationOptions: *,
-  component: ReactClass<*>;
+  component: ReactClass<*>,
 };
 
 export default class SceneView extends PureComponent<void, Props, void> {

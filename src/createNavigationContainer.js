@@ -2,10 +2,7 @@
 
 import React from 'react';
 import invariant from 'fbjs/lib/invariant';
-import {
-  BackAndroid,
-  Linking,
-} from './PlatformHelpers';
+import { BackAndroid, Linking } from './PlatformHelpers';
 import NavigationActions from './NavigationActions';
 import addNavigationHelpers from './addNavigationHelpers';
 
@@ -26,7 +23,7 @@ import type {
  */
 export default function createNavigationContainer<T: *>(
   Component: ReactClass<*>,
-  containerConfig?: NavigationContainerOptions
+  containerConfig?: NavigationContainerOptions,
 ) {
   type Props = {
     navigation: NavigationProp<T, NavigationAction>,
@@ -67,14 +64,14 @@ export default function createNavigationContainer<T: *>(
         invariant(
           !containerConfig,
           'This navigator has a container config AND a navigation prop, so it is ' +
-          'unclear if it should own its own state. Remove the containerConfig ' +
-          'if the navigator should get its state from the navigation prop. If the ' +
-          'navigator should maintain its own state, do not pass a navigation prop.'
+            'unclear if it should own its own state. Remove the containerConfig ' +
+            'if the navigator should get its state from the navigation prop. If the ' +
+            'navigator should maintain its own state, do not pass a navigation prop.',
         );
         return false;
       }
       return true;
-    }
+    };
 
     constructor(props: Props) {
       super(props);
@@ -88,8 +85,7 @@ export default function createNavigationContainer<T: *>(
     componentDidMount() {
       if (this._isStateful()) {
         this.subs = BackAndroid.addEventListener('backPress', () =>
-           this.dispatch(NavigationActions.back())
-        );
+          this.dispatch(NavigationActions.back()));
         Linking.addEventListener('url', this._handleOpenURL);
         Linking.getInitialURL().then((url: string) => {
           if (url) {
@@ -97,7 +93,10 @@ export default function createNavigationContainer<T: *>(
             const parsedUrl = urlToPathAndParams(url);
             if (parsedUrl) {
               const { path, params } = parsedUrl;
-              const action = Component.router.getActionForPathAndParams(path, params);
+              const action = Component.router.getActionForPathAndParams(
+                path,
+                params,
+              );
               if (action) {
                 this.dispatch(action);
               }
@@ -108,16 +107,16 @@ export default function createNavigationContainer<T: *>(
     }
 
     componentDidUpdate(prevProps: Props, prevState: State) {
-      const [prevNavigationState, navigationState] = this._isStateful()
+      const [prevNavState, navState] = this._isStateful()
         ? [prevState.nav, this.state.nav]
         : [prevProps.navigation.state, this.props.navigation.state];
 
       if (
-        prevNavigationState !== navigationState
-        && typeof this.props.onNavigationStateChange === 'function'
+        prevNavState !== navState &&
+        typeof this.props.onNavigationStateChange === 'function'
       ) {
-        // $FlowFixMe state is always defined, either this.state or props
-        this.props.onNavigationStateChange(prevNavigationState, navigationState);
+        /* $FlowFixMe */
+        this.props.onNavigationStateChange(prevNavState, navState);
       }
     }
 
@@ -153,7 +152,11 @@ export default function createNavigationContainer<T: *>(
           console.log('Last State: ', state.nav);
           console.groupEnd();
         } else {
-          console.log('Navigation Dispatch: ', { action, newState: nav, lastState: state.nav });
+          console.log('Navigation Dispatch: ', {
+            action,
+            newState: nav,
+            lastState: state.nav,
+          });
         }
         this.setState({ nav });
         return true;
@@ -174,15 +177,9 @@ export default function createNavigationContainer<T: *>(
         }
         navigation = this._navigation;
       }
-      return (
-        <Component
-          {...this.props}
-          navigation={navigation}
-        />
-      );
+      return <Component {...this.props} navigation={navigation} />;
     }
   }
 
   return NavigationContainer;
 }
-

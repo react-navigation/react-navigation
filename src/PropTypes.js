@@ -1,13 +1,9 @@
 /* @flow */
 
 import { PropTypes } from 'react';
-import {
-  Animated,
-} from 'react-native';
+import { Animated } from 'react-native';
 
-import type {
-  NavigationSceneRendererProps,
-} from './TypeDefinition';
+import type { NavigationSceneRendererProps } from './TypeDefinition';
 
 /**
  * React component PropTypes Definitions. Consider using this as a supplementary
