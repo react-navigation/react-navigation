@@ -87,9 +87,9 @@ class MainScreen extends React.Component {
 }`,
 'ProfileScreen.js': `\
 class ProfileScreen extends React.Component {
-  static navigationOptions = {
-    title: ({route}) => route.params.name,
-  };
+  static navigationOptions = ({navigation}) => ({
+    title: navigation.state.params.name,
+  });
   render() {
     const { goBack } = this.props.navigation;
     return (
@@ -122,7 +122,7 @@ const BasicApp = TabNavigator({
 'MainScreen.js': `\
 class MainScreen extends React.Component {
   static navigationOptions = {
-    label: 'Home',
+    tabBarLabel: 'Home',
   };
   render() {
     const { navigate } = this.props.navigation;
@@ -137,7 +137,7 @@ class MainScreen extends React.Component {
 'SetupScreen.js': `\
 class SetupScreen extends React.Component {
   static navigationOptions = {
-    label: 'Setup',
+    tabBarLabel: 'Setup',
   };
   render() {
     const { goBack } = this.props.navigation;
