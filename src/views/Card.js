@@ -7,7 +7,6 @@ import {
   StyleSheet,
 } from 'react-native';
 
-import CardStackPanResponder from './CardStackPanResponder';
 import CardStackStyleInterpolator from './CardStackStyleInterpolator';
 import createPointerEventsContainer from './PointerEventsContainer';
 import NavigationPropTypes from '../PropTypes';
@@ -56,16 +55,8 @@ class Card extends React.Component<any, Props, any> {
       CardStackStyleInterpolator.forHorizontal(props) :
       style;
 
-    const viewPanHandlers = panHandlers === undefined ?
-      CardStackPanResponder.forHorizontal({
-        ...props,
-        onNavigateBack: this.props.onNavigateBack,
-      }) :
-      panHandlers;
-
     return (
       <Animated.View
-        {...viewPanHandlers}
         pointerEvents={pointerEvents}
         ref={this.props.onComponentRef}
         style={[styles.main, viewStyle]}
@@ -93,7 +84,6 @@ const styles = StyleSheet.create({
 
 Card = createPointerEventsContainer(Card);
 
-Card.CardStackPanResponder = CardStackPanResponder;
 Card.CardStackStyleInterpolator = CardStackStyleInterpolator;
 
 export default Card;
