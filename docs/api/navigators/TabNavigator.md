@@ -136,6 +136,7 @@ tabBarOptions: {
 - `tabStyle` - style object for the tab
 - `indicatorStyle` - style object for the tab indicator (line at the bottom of the tab)
 - `labelStyle` - style object for the tab label
+- `iconStyle` - style object for the tab icon
 - `style` - style object for the tab bar
 
 Example:

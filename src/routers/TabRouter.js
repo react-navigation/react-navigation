@@ -136,12 +136,27 @@ export default (
           }
           return false;
         });
-        if (didNavigate && action.action) {
+        if (didNavigate) {
+          const childState = state.routes[activeTabIndex];
+          let newChildState;
+
           const tabRouter = tabRouters[action.routeName];
-          const newChildState = tabRouter
-            ? tabRouter.getStateForAction(action.action, state.routes[activeTabIndex])
-            : null;
-          if (newChildState && newChildState !== state.routes[activeTabIndex]) {
+
+          if (action.action) {
+            newChildState = tabRouter
+              ? tabRouter.getStateForAction(action.action, childState)
+              : null;
+          } else if (!tabRouter && action.params) {
+            newChildState = {
+              ...childState,
+              params: {
+                ...(childState.params || {}),
+                ...action.params,
+              },
+            };
+          }
+
+          if (newChildState && newChildState !== childState) {
             const routes = [...state.routes];
             routes[activeTabIndex] = newChildState;
             return {

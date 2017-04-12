@@ -18,7 +18,7 @@ type Props = {
 };
 
 const HeaderTitle = ({ style, ...rest }: Props) => (
-  <Text numberOfLines={1} {...rest} style={[styles.title, style]} />
+  <Text numberOfLines={1} {...rest} style={[styles.title, style]} accessibilityTraits="header" />
 );
 
 const styles = StyleSheet.create({
