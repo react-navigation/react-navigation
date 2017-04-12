@@ -113,7 +113,7 @@ export default function ScenesReducer(
     };
     invariant(
       !nextKeys.has(key),
-      `navigationState.routes[${index}].key "${key}" conflicts with ` +
+      `navigation.state.routes[${index}].key "${key}" conflicts with ` +
         'another route!'
     );
     nextKeys.add(key);

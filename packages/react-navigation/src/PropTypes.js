@@ -35,6 +35,12 @@ const navigationState = PropTypes.shape({
   routes: PropTypes.arrayOf(navigationRoute),
 });
 
+/* NavigationProp  */
+const navigation = PropTypes.shape({
+  state: navigationState.isRequired,
+  dispatch: PropTypes.func.isRequired,
+});
+
 /* NavigationLayout */
 const layout = PropTypes.shape({
   height: animatedValue,
@@ -56,8 +62,7 @@ const scene = PropTypes.shape({
 /* NavigationSceneRendererProps */
 const SceneRendererProps = {
   layout: layout.isRequired,
-  navigationState: navigationState.isRequired,
-  navigation: PropTypes.object,
+  navigation: navigation.isRequired,
   position: animatedValue.isRequired,
   progress: animatedValue.isRequired,
   scene: scene.isRequired,
@@ -91,7 +96,7 @@ function extractSceneRendererProps(
   return {
     index: props.index,
     layout: props.layout,
-    navigationState: props.navigationState,
+    navigation: props.navigation,
     position: props.position,
     progress: props.progress,
     scene: props.scene,
@@ -111,6 +116,7 @@ export default {
   SceneRenderer,
   action,
   navigationState,
+  navigation,
   navigationRoute,
   panHandlers,
 };

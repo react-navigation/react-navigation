@@ -7,9 +7,9 @@ import createConfigGetter from './createConfigGetter';
 import getScreenForRouteName from './getScreenForRouteName';
 import StateUtils from '../StateUtils';
 import validateRouteConfigMap from './validateRouteConfigMap';
+import getScreenConfigDeprecated from './getScreenConfigDeprecated';
 
 import type {
-  NavigationRoute,
   NavigationAction,
   NavigationComponent,
   NavigationNavigateAction,
@@ -31,7 +31,7 @@ function _getUuid() {
 export default (
   routeConfigs: NavigationRouteConfigMap,
   stackConfig: NavigationStackRouterConfig = {},
-): NavigationRouter => {
+): NavigationRouter<*, *, *> => {
   // Fail fast on invalid route definitions
   validateRouteConfigMap(routeConfigs);
 
@@ -320,7 +320,8 @@ export default (
       });
     },
 
-    getScreenConfig: createConfigGetter(routeConfigs, stackConfig.navigationOptions),
+    getScreenOptions: createConfigGetter(routeConfigs, stackConfig.navigationOptions),
 
+    getScreenConfig: getScreenConfigDeprecated,
   };
 };

@@ -16,7 +16,6 @@ import addNavigationHelpers from '../addNavigationHelpers';
 import NavigationPropTypes from '../PropTypes';
 
 import type {
-  NavigationAnimatedValue,
   NavigationLayout,
   NavigationScene,
   NavigationState,
@@ -44,8 +43,8 @@ type Props = {
 
 type State = {
   layout: NavigationLayout,
-  position: NavigationAnimatedValue,
-  progress: NavigationAnimatedValue,
+  position: Animated.Value,
+  progress: Animated.Value,
   scenes: Array<NavigationScene>,
 };
 
@@ -291,11 +290,7 @@ function buildTransitionProps(
 
   return {
     layout,
-    navigationState: navigation.state,
-    navigation: addNavigationHelpers({
-      ...navigation,
-      state: scene.route,
-    }),
+    navigation,
     position,
     progress,
     scenes,
