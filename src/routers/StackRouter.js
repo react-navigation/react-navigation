@@ -166,7 +166,7 @@ export default (
 
       if (action.type === NavigationActions.SET_PARAMS) {
         /* $FlowFixMe */
-        const lastRoute = state.routes.find((route: *) => route.key === action.key);
+        const lastRoute = state.routes.find((route: *) => route.routeName === action.key);
         if (lastRoute) {
           const params = {
             ...lastRoute.params,
