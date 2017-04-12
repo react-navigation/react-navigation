@@ -6,7 +6,7 @@ import React from 'react';
 import {
   Button,
   ScrollView,
-  StyleSheet,
+  Text,
 } from 'react-native';
 import {
   StackNavigator,
@@ -67,7 +67,7 @@ MyHeaderTestScreen.navigationOptions = ({navigation}) => {
   return {
     headerVisible,
     headerBackTitle: 'wow',
-    headerRight: 'wow2',
+    headerRight: <Text>wow2</Text>,
     title: 'Now you see me',
   };
 };
