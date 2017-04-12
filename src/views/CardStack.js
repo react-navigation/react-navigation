@@ -305,11 +305,12 @@ class CardStack extends Component {
         const value = clamp(index - 1, currentValue, index);
         position.setValue(value);
       },
-      onPanResponderTerminationRequest: (event: any, gesture: any) => {
+      onPanResponderTerminationRequest: (
+        event: any,
+        gesture: any,
         // Returning false will prevent other views from becoming responder while
         // the navigation view is the responder (mid-gesture)
-        return false;
-      },
+      ) => false,
       onPanResponderRelease: (event: any, gesture: any) => {
         if (!this._isResponding) {
           return;

@@ -81,14 +81,12 @@ function defaultTransitionConfig(
       return FadeOutToBottomAndroid;
     }
     return FadeInFromBottomAndroid;
-  } else {
-    // iOS and other platforms
-    if (isModal) {
-      return ModalSlideFromBottomIOS;
-    } else {
-      return SlideFromRightIOS;
-    }
   }
+  // iOS and other platforms
+  if (isModal) {
+    return ModalSlideFromBottomIOS;
+  }
+  return SlideFromRightIOS;
 }
 
 function getTransitionConfig(

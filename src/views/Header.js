@@ -85,9 +85,8 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
       return headerBackTitle;
     } else if (lastScene) {
       return this._getHeaderTitleString(lastScene);
-    } else {
-      return null;
     }
+    return null;
   }
 
   _renderTitleComponent = (props: SceneProps) => {
@@ -215,7 +214,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
       return null;
     }
 
-    let subView = renderer(props);
+    const subView = renderer(props);
 
     if (subView == null) {
       return null;
