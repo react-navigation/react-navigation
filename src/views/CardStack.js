@@ -1,7 +1,7 @@
 /* @flow */
 
-import React, { PropTypes, Component } from 'react';
-import { Animated, StyleSheet, PanResponder, Platform, View, I18nManager, Keyboard } from 'react-native';
+import React, { Component } from 'react';
+import { Animated, StyleSheet, PanResponder, Platform, View, I18nManager } from 'react-native';
 
 import Card from './Card';
 import NavigationActions from '../NavigationActions';
@@ -122,11 +122,6 @@ class CardStack extends Component {
   } = {};
 
   props: Props;
-
-  constructor(props: Props) {
-    console.log('Controlled Card stack init ',props.navigation.state);
-    super(props);
-  }
 
   componentWillReceiveProps(props: Props) {
     if (props.screenProps !== this.props.screenProps) {

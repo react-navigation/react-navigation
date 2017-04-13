@@ -121,12 +121,9 @@ export default class TabBarTop extends PureComponent<DefaultProps, Props, void> 
   };
 
   render() {
-    // TODO: Define full proptypes
-    const props: any = this.props;
-
     return (
       <TabBar
-        {...props}
+        {...this.props}
         renderIcon={this._renderIcon}
         renderLabel={this._renderLabel}
       />

@@ -1,3 +1,5 @@
+'no babel-plugin-flow-react-proptypes'; // doesn't support intersection yet
+
 /* @flow */
 
 import React from 'react';
@@ -27,7 +29,7 @@ import type {
 
 export type HeaderMode = 'float' | 'screen' | 'none';
 
-export type HeaderProps = {
+export type HeaderProps = NavigationSceneRendererProps & {
   mode: HeaderMode,
   router: NavigationRouter<NavigationState, NavigationAction, NavigationStackScreenOptions>,
   getScreenDetails: NavigationScene => NavigationScreenDetails<NavigationStackScreenOptions>,

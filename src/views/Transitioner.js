@@ -45,8 +45,6 @@ type State = {
   scenes: Array<NavigationScene>,
 };
 
-const { PropTypes } = React;
-
 const DefaultTransitionSpec = TransitionConfigs.DefaultTransitionSpec;
 
 class Transitioner extends React.Component<*, Props, State> {
