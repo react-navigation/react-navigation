@@ -28,6 +28,7 @@
     "run-playground-ios": "cd examples/NavigationPlayground && react-native run-ios",
     "run-playground-android": "cd examples/NavigationPlayground && react-native run-android",
     "test": "jest",
+    "lint": "eslint src",
     "flow": "flow",
     "prepublish": "npm run clean && npm run build"
   },
@@ -41,6 +42,7 @@
     "babel-core": "^6.24.0",
     "babel-eslint": "^7.0.0",
     "babel-jest": "^19.0.0",
+    "babel-plugin-flow-react-proptypes": "^1.0.0",
     "babel-preset-es2015": "^6.24.0",
     "babel-preset-react": "^6.23.0",
     "babel-preset-react-native": "^1.9.0",
@@ -54,6 +56,7 @@
     "eslint-plugin-react": "^6.10.0",
     "flow-bin": "^0.37.4",
     "jest": "^19.0.2",
+    "prop-types": "^15.5.8",
     "react": "~15.4.2",
     "react-native": "^0.41.2",
     "react-native-vector-icons": "^3.0.0",

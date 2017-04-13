@@ -12,14 +12,11 @@ import invariant from 'fbjs/lib/invariant';
 
 import NavigationScenesReducer from './ScenesReducer';
 import TransitionConfigs from './TransitionConfigs';
-import addNavigationHelpers from '../addNavigationHelpers';
-import NavigationPropTypes from '../PropTypes';
 
 import type {
   NavigationLayout,
   NavigationScene,
   NavigationState,
-  NavigationRoute,
   NavigationAction,
   NavigationScreenProp,
   NavigationTransitionProps,
@@ -32,13 +29,13 @@ type Props = {
     prevTransitionProps: ?NavigationTransitionProps,
   ) => NavigationTransitionSpec,
   navigation: NavigationScreenProp<NavigationState, NavigationAction>,
-  onTransitionEnd: () => void,
-  onTransitionStart: () => void,
+  onTransitionEnd?: () => void,
+  onTransitionStart?: () => void,
   render: (
     transitionProps: NavigationTransitionProps,
     prevTransitionProps: ?NavigationTransitionProps
   ) => any,
-  style: any,
+  style?: any,
 };
 
 type State = {
@@ -47,8 +44,6 @@ type State = {
   progress: Animated.Value,
   scenes: Array<NavigationScene>,
 };
-
-const { PropTypes } = React;
 
 const DefaultTransitionSpec = TransitionConfigs.DefaultTransitionSpec;
 
@@ -67,16 +62,6 @@ class Transitioner extends React.Component<*, Props, State> {
 
   props: Props;
   state: State;
-
-  static propTypes = {
-    configureTransition: PropTypes.func,
-    navigation: PropTypes.shape({
-      state: NavigationPropTypes.navigationState.isRequired,
-    }).isRequired,
-    onTransitionEnd: PropTypes.func,
-    onTransitionStart: PropTypes.func,
-    render: PropTypes.func.isRequired,
-  };
 
   constructor(props: Props, context: any) {
     super(props, context);

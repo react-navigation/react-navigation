@@ -9,7 +9,7 @@
  * On iOS you can pass the props of TouchableOpacity, on Android pass the props
  * of TouchableNativeFeedback.
  */
-import React, { Component, PropTypes, Children } from 'react';
+import React, { Component, Children } from 'react';
 import {
   Platform,
   TouchableNativeFeedback,
@@ -37,16 +37,6 @@ type DefaultProps = {
 };
 
 export default class TouchableItem extends Component<DefaultProps, Props, void> {
-  static propTypes = {
-    onPress: PropTypes.func,
-    delayPressIn: PropTypes.number,
-    borderless: PropTypes.bool,
-    pressColor: PropTypes.string,
-    activeOpacity: PropTypes.number,
-    children: PropTypes.node.isRequired,
-    style: View.propTypes.style,
-  };
-
   static defaultProps = {
     pressColor: 'rgba(0, 0, 0, .32)',
   };

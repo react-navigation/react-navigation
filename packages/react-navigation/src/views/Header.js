@@ -1,6 +1,8 @@
+'no babel-plugin-flow-react-proptypes'; // doesn't support intersection yet
+
 /* @flow */
 
-import React, { PropTypes } from 'react';
+import React from 'react';
 
 import {
   Animated,
@@ -12,7 +14,6 @@ import {
 import HeaderTitle from './HeaderTitle';
 import HeaderBackButton from './HeaderBackButton';
 import HeaderStyleInterpolator from './HeaderStyleInterpolator';
-import NavigationPropTypes from '../PropTypes';
 
 import type {
   NavigationScene,
@@ -55,18 +56,9 @@ const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : 0;
 const TITLE_OFFSET = Platform.OS === 'ios' ? 70 : 40;
 
 class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
-
   static HEIGHT = APPBAR_HEIGHT + STATUSBAR_HEIGHT;
   static Title = HeaderTitle;
   static BackButton = HeaderBackButton;
-
-  // propTypes for people who don't use Flow
-  static propTypes = {
-    ...NavigationPropTypes.SceneRendererProps,
-    router: PropTypes.object,
-  };
-
-  props: HeaderProps;
 
   state = {
     widths: {},
