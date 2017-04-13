@@ -9,12 +9,14 @@ import type {
   NavigationScreenProp,
   NavigationState,
   NavigationAction,
+  NavigationRoute,
   Style,
 } from '../../TypeDefinition';
 import type { DrawerScene } from './DrawerView.js';
 
 type Props = {
   navigation: NavigationScreenProp<NavigationState, NavigationAction>,
+  items?: Array<NavigationRoute>,
   activeTintColor?: string,
   activeBackgroundColor?: string,
   inactiveTintColor?: string,
@@ -30,7 +32,11 @@ type Props = {
  */
 const DrawerNavigatorItems = (
   {
-    navigation,
+    navigation: {
+      state,
+      navigate,
+    },
+    items,
     activeTintColor,
     activeBackgroundColor,
     inactiveTintColor,
@@ -42,8 +48,8 @@ const DrawerNavigatorItems = (
   }: Props,
 ) => (
   <View style={[styles.container, style]}>
-    {navigation.state.routes.map((route: *, index: number) => {
-      const focused = navigation.state.index === index;
+    {(items || state.routes).map((route: NavigationRoute, index: number) => {
+      const focused = state.routes[state.index].key === route.key;
       const color = focused ? activeTintColor : inactiveTintColor;
       const backgroundColor = focused
         ? activeBackgroundColor
@@ -55,8 +61,8 @@ const DrawerNavigatorItems = (
         <TouchableItem
           key={route.key}
           onPress={() => {
-            navigation.navigate('DrawerClose');
-            navigation.navigate(route.routeName);
+            navigate('DrawerClose');
+            navigate(route.routeName);
           }}
           delayPressIn={0}
         >
