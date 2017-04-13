@@ -12,6 +12,7 @@ import type {
   NavigationScreenProp,
   NavigationAction,
   NavigationRoute,
+  NavigationStateRoute,
   NavigationRouteConfigMap,
   NavigationScreenConfig,
   NavigationScreenConfigProps,

@@ -4,7 +4,6 @@ import React from 'react';
 
 import type {
   NavigationRouter,
-  NavigationRoute,
   NavigationNavigator,
   NavigationNavigatorProps,
   NavigationRouteConfigMap,
