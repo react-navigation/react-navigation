@@ -57,12 +57,6 @@ type Props = {
   index: number,
 };
 
-type DefaultProps = {
-  mode: 'card' | 'modal',
-  headerComponent: ReactClass<*>,
-};
-
-
 /**
  * The duration of the card animation in milliseconds.
  */
@@ -85,7 +79,6 @@ const RESPOND_THRESHOLD = 12;
  */
 const GESTURE_RESPONSE_DISTANCE = 35;
 
-
 /**
  * The ratio between the gesture velocity and the animation velocity. This allows
  * the velocity of a swipe release to carry on into the new animation.
@@ -93,7 +86,6 @@ const GESTURE_RESPONSE_DISTANCE = 35;
  * TODO: Understand and compute this ratio rather than using an approximation
  */
 const GESTURE_ANIMATED_VELOCITY_RATIO = -4;
-
 
 class CardStack extends Component {
 
