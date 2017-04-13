@@ -202,23 +202,21 @@ class TabView extends PureComponent<void, Props, void> {
       configureTransition = this._configureTransition;
     }
 
-    return (
-      /* $FlowFixMe */
-      (
-        <TabViewAnimated
-          style={styles.container}
-          navigationState={this.props.navigation.state}
-          lazy={lazyLoad}
-          renderHeader={renderHeader}
-          renderFooter={renderFooter}
-          renderScene={this._renderScene}
-          renderPager={this._renderPager}
-          configureTransition={configureTransition}
-          onRequestChangeTab={this._handlePageChanged}
-          screenProps={this.props.screenProps}
-        />
-      )
-    );
+    const props = {
+      style: styles.container,
+      navigationState: this.props.navigation.state,
+      lazy: lazyLoad,
+      renderHeader,
+      renderFooter,
+      renderScene: this._renderScene,
+      renderPager: this._renderPager,
+      configureTransition,
+      onRequestChangeTab: this._handlePageChanged,
+      screenProps: this.props.screenProps,
+    };
+
+    /* $FlowFixMe */
+    return <TabViewAnimated {...props} />;
   }
 }
 
