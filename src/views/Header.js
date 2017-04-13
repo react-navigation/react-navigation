@@ -128,9 +128,6 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
   };
 
   _renderLeftComponent = (props: SceneProps) => {
-    if (props.scene.index === 0) {
-      return null;
-    }
     const details = this.props.getScreenDetails(props.scene);
     const {headerLeft, headerPressColorAndroid} = details.options;
     if (headerLeft) {
