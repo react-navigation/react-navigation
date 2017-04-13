@@ -217,8 +217,8 @@ export default (
       }
 
       if (action.type === NavigationActions.SET_PARAMS) {
-        /* $FlowFixMe */
         const lastRoute = state.routes.find(
+          /* $FlowFixMe */
           (route: *) => route.key === action.key,
         );
         if (lastRoute) {
@@ -269,8 +269,8 @@ export default (
       if (action.type === NavigationActions.BACK) {
         let backRouteIndex = null;
         if (action.key) {
-          /* $FlowFixMe */
           const backRoute = state.routes.find(
+            /* $FlowFixMe */
             (route: *) => route.key === action.key,
           );
           /* $FlowFixMe */
@@ -290,9 +290,7 @@ export default (
       return state;
     },
 
-    getPathAndParamsForState(
-      state: NavigationState,
-    ): { path: string, params?: NavigationParams } {
+    getPathAndParamsForState(): { path: string, params?: NavigationParams } {
       // TODO: implement this!
       return {
         path: '',

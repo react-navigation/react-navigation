@@ -107,19 +107,16 @@ export default function createNavigationContainer<T: *>(
     }
 
     componentDidUpdate(prevProps: Props, prevState: State) {
-      const [prevNavigationState, navigationState] = this._isStateful()
+      const [prevNavState, navState] = this._isStateful()
         ? [prevState.nav, this.state.nav]
         : [prevProps.navigation.state, this.props.navigation.state];
 
       if (
-        prevNavigationState !== navigationState &&
+        prevNavState !== navState &&
         typeof this.props.onNavigationStateChange === 'function'
       ) {
         // $FlowFixMe state is always defined, either this.state or props
-        this.props.onNavigationStateChange(
-          prevNavigationState,
-          navigationState,
-        );
+        this.props.onNavigationStateChange(prevNavState, navState);
       }
     }
 
@@ -129,7 +126,6 @@ export default function createNavigationContainer<T: *>(
     }
 
     _handleOpenURL = ({ url }: { url: string }) => {
-      console.log('Handling URL:', url);
       const parsedUrl = urlToPathAndParams(url);
       if (parsedUrl) {
         const { path, params } = parsedUrl;
