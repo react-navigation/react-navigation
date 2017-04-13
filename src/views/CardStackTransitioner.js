@@ -163,7 +163,7 @@ class CardStackTransitioner extends Component<DefaultProps, Props, void> {
       headerMode,
       mode,
       router,
-      style,
+      cardStyle,
     } = this.props;
     return (
       <CardStack
@@ -171,7 +171,7 @@ class CardStackTransitioner extends Component<DefaultProps, Props, void> {
         headerMode={headerMode}
         mode={mode}
         router={router}
-        style={style}
+        style={cardStyle}
         {...props}
       />
     );
