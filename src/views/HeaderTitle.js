@@ -31,8 +31,4 @@ const styles = StyleSheet.create({
   },
 });
 
-HeaderTitle.propTypes = {
-  style: Text.propTypes.style,
-};
-
 export default HeaderTitle;
