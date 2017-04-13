@@ -18,8 +18,9 @@ type InjectedProps = {
   navigation: InjectedProps<NavigationState, NavigationAction>,
 };
 
-
-export default function withNavigation<T: *>(Component: ReactClass<T & InjectedProps>) {
+export default function withNavigation<T: *>(
+  Component: ReactClass<T & InjectedProps>,
+) {
   const componentWithNavigation = (props: T, { navigation }: Context) => (
     <Component {...props} navigation={navigation} />
   );

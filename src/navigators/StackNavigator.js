@@ -14,12 +14,12 @@ import type {
   NavigationRouteConfigMap,
 } from '../TypeDefinition';
 
-export type StackNavigatorConfig =
-  & NavigationContainerConfig
-  & NavigationStackViewConfig
-  & NavigationStackRouterConfig;
+export type StackNavigatorConfig = NavigationContainerConfig & NavigationStackViewConfig & NavigationStackRouterConfig;
 
-export default (routeConfigMap: NavigationRouteConfigMap, stackConfig: StackNavigatorConfig = {}) => {
+export default (
+  routeConfigMap: NavigationRouteConfigMap,
+  stackConfig: StackNavigatorConfig = {},
+) => {
   const {
     containerOptions,
     initialRouteName,
@@ -40,15 +40,23 @@ export default (routeConfigMap: NavigationRouteConfigMap, stackConfig: StackNavi
     navigationOptions,
   };
   const router = StackRouter(routeConfigMap, stackRouterConfig);
-  return createNavigationContainer(createNavigator(router, routeConfigMap, stackConfig, NavigatorTypes.STACK)(props => (
-    <CardStackTransitioner
-      {...props}
-      headerComponent={headerComponent}
-      headerMode={headerMode}
-      mode={mode}
-      cardStyle={cardStyle}
-      onTransitionStart={onTransitionStart}
-      onTransitionEnd={onTransitionEnd}
-    />
-  )), containerOptions);
+  return createNavigationContainer(
+    createNavigator(
+      router,
+      routeConfigMap,
+      stackConfig,
+      NavigatorTypes.STACK,
+    )(props => (
+      <CardStackTransitioner
+        {...props}
+        headerComponent={headerComponent}
+        headerMode={headerMode}
+        mode={mode}
+        cardStyle={cardStyle}
+        onTransitionStart={onTransitionStart}
+        onTransitionEnd={onTransitionEnd}
+      />
+    )),
+    containerOptions,
+  );
 };

@@ -4,12 +4,7 @@
 
 import React from 'react';
 
-import {
-  Animated,
-  Platform,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { Animated, Platform, StyleSheet, View } from 'react-native';
 
 import HeaderTitle from './HeaderTitle';
 import HeaderBackButton from './HeaderBackButton';
@@ -32,7 +27,9 @@ export type HeaderMode = 'float' | 'screen' | 'none';
 export type HeaderProps = NavigationSceneRendererProps & {
   mode: HeaderMode,
   router: NavigationRouter<NavigationState, NavigationAction, NavigationStackScreenOptions>,
-  getScreenDetails: NavigationScene => NavigationScreenDetails<NavigationStackScreenOptions>,
+  getScreenDetails: (
+    NavigationScene,
+  ) => NavigationScreenDetails<NavigationStackScreenOptions>,
 };
 
 type SceneProps = {
@@ -99,13 +96,13 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
     // size of the title.
     const onLayoutIOS = Platform.OS === 'ios'
       ? (e: LayoutEvent) => {
-        this.setState({
-          widths: {
-            ...this.state.widths,
-            [props.scene.key]: e.nativeEvent.layout.width,
-          },
-        });
-      }
+          this.setState({
+            widths: {
+              ...this.state.widths,
+              [props.scene.key]: e.nativeEvent.layout.width,
+            },
+          });
+        }
       : undefined;
 
     return (
@@ -143,7 +140,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
 
   _renderRightComponent = (props: SceneProps) => {
     const details = this.props.getScreenDetails(props.scene);
-    const {headerRight} = details.options;
+    const { headerRight } = details.options;
     return headerRight || null;
   };
 
@@ -260,12 +257,13 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
     let appBar;
 
     if (this.props.mode === 'float') {
-      const scenesProps: Array<NavigationSceneRendererProps> = this.props.scenes
-        .map((scene: NavigationScene) => ({
+      const scenesProps: Array<NavigationSceneRendererProps> = this.props.scenes.map(
+        (scene: NavigationScene) => ({
           position: this.props.position,
           progress: this.props.progress,
           scene,
-        }));
+        }),
+      );
       appBar = scenesProps.map(this._renderHeader, this);
     } else {
       appBar = this._renderHeader({
@@ -276,7 +274,14 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
     }
 
     // eslint-disable-next-line no-unused-vars
-    const { scenes, scene, position, screenProps, progress, ...rest } = this.props;
+    const {
+      scenes,
+      scene,
+      position,
+      screenProps,
+      progress,
+      ...rest
+    } = this.props;
 
     const { options } = this.props.getScreenDetails(scene, screenProps);
     const style = options.headerStyle;
@@ -321,9 +326,7 @@ const styles = StyleSheet.create({
     right: TITLE_OFFSET,
     top: 0,
     position: 'absolute',
-    alignItems: Platform.OS === 'android'
-      ? 'flex-start'
-      : 'center',
+    alignItems: Platform.OS === 'android' ? 'flex-start' : 'center',
   },
   left: {
     left: 0,

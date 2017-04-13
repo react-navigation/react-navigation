@@ -70,12 +70,11 @@ export default (
       const wildcardRe = pathToRegexp(`${pathPattern}/*`, keys);
       re = new RegExp(`(?:${re.source})|(?:${wildcardRe.source})`);
     }
-      /* $FlowFixMe */
+    /* $FlowFixMe */
     paths[routeName] = { re, keys };
   });
 
   return {
-
     getComponentForState(state: NavigationState): NavigationComponent {
       const activeChildRoute = state.routes[state.index];
       const { routeName } = activeChildRoute;
@@ -95,7 +94,10 @@ export default (
       // Set up the initial state if needed
       if (!state) {
         let route = {};
-        if (action.type === NavigationActions.NAVIGATE && (childRouters[action.routeName] !== undefined)) {
+        if (
+          action.type === NavigationActions.NAVIGATE &&
+          childRouters[action.routeName] !== undefined
+        ) {
           return {
             index: 0,
             routes: [
@@ -108,12 +110,16 @@ export default (
           };
         }
         if (initialChildRouter) {
-          route = initialChildRouter.getStateForAction(NavigationActions.navigate({
-            routeName: initialRouteName,
-            params: initialRouteParams,
-          }));
+          route = initialChildRouter.getStateForAction(
+            NavigationActions.navigate({
+              routeName: initialRouteName,
+              params: initialRouteParams,
+            }),
+          );
         }
-        const params = (route.params || action.params || initialRouteParams) && {
+        const params = (route.params ||
+          action.params ||
+          initialRouteParams) && {
           ...(route.params || {}),
           ...(action.params || {}),
           ...(initialRouteParams || {}),
@@ -131,8 +137,10 @@ export default (
       }
 
       // Check if a child scene wants to handle the action as long as it is not a reset to the root stack
-      if(action.type !== NavigationActions.RESET || action.key !== null) {
-        const keyIndex = action.key ? StateUtils.indexOf(state, action.key) : -1
+      if (action.type !== NavigationActions.RESET || action.key !== null) {
+        const keyIndex = action.key
+          ? StateUtils.indexOf(state, action.key)
+          : -1;
         const childIndex = keyIndex >= 0 ? keyIndex : state.index;
         const childRoute = state.routes[childIndex];
         const childRouter = childRouters[childRoute.routeName];
@@ -148,11 +156,15 @@ export default (
       }
 
       // Handle explicit push navigation action
-      if (action.type === NavigationActions.NAVIGATE && childRouters[action.routeName] !== undefined) {
+      if (
+        action.type === NavigationActions.NAVIGATE &&
+        childRouters[action.routeName] !== undefined
+      ) {
         const childRouter = childRouters[action.routeName];
         let route;
         if (childRouter) {
-          const childAction = action.action || NavigationActions.init({ params: action.params });
+          const childAction = action.action ||
+            NavigationActions.init({ params: action.params });
           route = {
             params: action.params,
             ...childRouter.getStateForAction(childAction),
@@ -177,9 +189,14 @@ export default (
           const childRouter = childRouters[childRouterName];
           if (childRouter) {
             // For each child router, start with a blank state
-            const initChildRoute = childRouter.getStateForAction(NavigationActions.init());
+            const initChildRoute = childRouter.getStateForAction(
+              NavigationActions.init(),
+            );
             // Then check to see if the router handles our navigate action
-            const navigatedChildRoute = childRouter.getStateForAction(action, initChildRoute);
+            const navigatedChildRoute = childRouter.getStateForAction(
+              action,
+              initChildRoute,
+            );
             let routeToPush = null;
             if (navigatedChildRoute === null) {
               // Push the route if the router has 'handled' the action and returned null
@@ -201,7 +218,9 @@ export default (
 
       if (action.type === NavigationActions.SET_PARAMS) {
         /* $FlowFixMe */
-        const lastRoute = state.routes.find((route: *) => route.key === action.key);
+        const lastRoute = state.routes.find(
+          (route: *) => route.key === action.key,
+        );
         if (lastRoute) {
           const params = {
             ...lastRoute.params,
@@ -224,23 +243,25 @@ export default (
 
         return {
           ...state,
-          routes: resetAction.actions.map((action: NavigationNavigateAction, index: number) => {
-            const router = childRouters[action.routeName];
-            if (router) {
-              return {
+          routes: resetAction.actions.map(
+            (action: NavigationNavigateAction, index: number) => {
+              const router = childRouters[action.routeName];
+              if (router) {
+                return {
+                  ...action,
+                  ...router.getStateForAction(action),
+                  routeName: action.routeName,
+                  key: `Init${index}`,
+                };
+              }
+              const route = {
                 ...action,
-                ...router.getStateForAction(action),
-                routeName: action.routeName,
                 key: `Init${index}`,
               };
-            }
-            const route = {
-              ...action,
-              key: `Init${index}`,
-            };
-            delete route.type;
-            return route;
-          }),
+              delete route.type;
+              return route;
+            },
+          ),
           index: action.index,
         };
       }
@@ -249,7 +270,9 @@ export default (
         let backRouteIndex = null;
         if (action.key) {
           /* $FlowFixMe */
-          const backRoute = state.routes.find((route: *) => route.key === action.key);
+          const backRoute = state.routes.find(
+            (route: *) => route.key === action.key,
+          );
           /* $FlowFixMe */
           backRouteIndex = state.routes.indexOf(backRoute);
         }
@@ -267,7 +290,9 @@ export default (
       return state;
     },
 
-    getPathAndParamsForState(state: NavigationState): {path: string, params?: NavigationParams} {
+    getPathAndParamsForState(
+      state: NavigationState,
+    ): { path: string, params?: NavigationParams } {
       // TODO: implement this!
       return {
         path: '',
@@ -315,36 +340,41 @@ export default (
       if (childRouters[matchedRouteName]) {
         nestedAction = childRouters[matchedRouteName].getActionForPathAndParams(
           /* $FlowFixMe */
-          pathMatch.slice(pathMatchKeys.length).join('/')
+          pathMatch.slice(pathMatchKeys.length).join('/'),
         );
       }
 
       // reduce the items of the query string. any query params may
       // be overridden by path params
-      const queryParams = (queryString || '').split('&').reduce((result: *, item: string) => {
-        if (item !== '') {
-          const nextResult = result || {};
-          const [key, value] = item.split('=');
-          nextResult[key] = value;
-          return nextResult;
-        }
-        return result;
-      }, null);
+      const queryParams = (queryString || '').split('&').reduce(
+        (result: *, item: string) => {
+          if (item !== '') {
+            const nextResult = result || {};
+            const [key, value] = item.split('=');
+            nextResult[key] = value;
+            return nextResult;
+          }
+          return result;
+        },
+        null,
+      );
 
       // reduce the matched pieces of the path into the params
       // of the route. `params` is null if there are no params.
       /* $FlowFixMe */
-      const params = pathMatch.slice(1).reduce((result: *, matchResult: *, i: number) => {
-        const key = pathMatchKeys[i];
-        if (key.asterisk || !key) {
-          return result;
-        }
-        const nextResult = result || {};
-        const paramName = key.name;
-        nextResult[paramName] = matchResult;
-        return nextResult;
-      }, queryParams);
-
+      const params = pathMatch.slice(1).reduce(
+        (result: *, matchResult: *, i: number) => {
+          const key = pathMatchKeys[i];
+          if (key.asterisk || !key) {
+            return result;
+          }
+          const nextResult = result || {};
+          const paramName = key.name;
+          nextResult[paramName] = matchResult;
+          return nextResult;
+        },
+        queryParams,
+      );
 
       return NavigationActions.navigate({
         routeName: matchedRouteName,
@@ -353,7 +383,10 @@ export default (
       });
     },
 
-    getScreenOptions: createConfigGetter(routeConfigs, stackConfig.navigationOptions),
+    getScreenOptions: createConfigGetter(
+      routeConfigs,
+      stackConfig.navigationOptions,
+    ),
 
     getScreenConfig: getScreenConfigDeprecated,
   };

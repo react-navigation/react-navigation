@@ -30,6 +30,7 @@
     "test": "jest",
     "lint": "eslint src",
     "flow": "flow",
+    "precommit": "lint-staged",
     "prepublish": "npm run clean && npm run build"
   },
   "files": [
@@ -50,6 +51,7 @@
     "babel-preset-stage-1": "^6.16.0",
     "eslint": "^3.17.1",
     "eslint-config-airbnb": "^14.1.0",
+    "eslint-config-prettier": "^1.5.0",
     "eslint-plugin-flowtype": "^2.30.3",
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^4.0.0",
@@ -60,7 +62,10 @@
     "react": "~15.4.2",
     "react-native": "^0.41.2",
     "react-native-vector-icons": "^3.0.0",
-    "react-test-renderer": "^15.4.2"
+    "react-test-renderer": "^15.4.2",
+    "husky": "^0.13.3",
+    "lint-staged": "^3.4.0",
+    "prettier": "^0.22.0"
   },
   "peerDependencies": {
     "react": "*",
@@ -83,6 +88,12 @@
     ],
     "modulePathIgnorePatterns": [
       "examples"
+    ]
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier --single-quote --trailing-comma all --write",
+      "git add"
     ]
   }
 }
