@@ -34,15 +34,6 @@ type State = {
 };
 
 class HeaderBackButton extends React.PureComponent<DefaultProps, Props, State> {
-  static propTypes = {
-    onPress: PropTypes.func.isRequired,
-    pressColorAndroid: PropTypes.string,
-    title: PropTypes.string,
-    tintColor: PropTypes.string,
-    truncatedTitle: PropTypes.string,
-    width: PropTypes.number,
-  };
-
   static defaultProps = {
     pressColorAndroid: 'rgba(0, 0, 0, .32)',
     tintColor: Platform.select({
