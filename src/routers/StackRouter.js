@@ -138,32 +138,65 @@ export default (
         const childRouter = childRouters[childRoute.routeName];
         if (childRouter) {
           const route = childRouter.getStateForAction(action, childRoute);
+          if (route === null) {
+            return state;
+          }
           if (route && route !== childRoute) {
             return StateUtils.replaceAt(state, childRoute.key, route);
           }
         }
       }
 
-      // Handle push/pop
+      // Handle explicit push navigation action
       if (action.type === NavigationActions.NAVIGATE && childRouters[action.routeName] !== undefined) {
         const childRouter = childRouters[action.routeName];
         let route;
         if (childRouter) {
           const childAction = action.action || NavigationActions.init({ params: action.params });
           route = {
-            ...action,
+            params: action.params,
             ...childRouter.getStateForAction(childAction),
             key: _getUuid(),
             routeName: action.routeName,
           };
         } else {
           route = {
-            ...action,
+            params: action.params,
             key: _getUuid(),
             routeName: action.routeName,
           };
         }
         return StateUtils.push(state, route);
+      }
+
+      // Handle navigation to other child routers that are not yet pushed
+      if (action.type === NavigationActions.NAVIGATE) {
+        const childRouterNames = Object.keys(childRouters);
+        for (let i = 0; i < childRouterNames.length; i++) {
+          const childRouterName = childRouterNames[i];
+          const childRouter = childRouters[childRouterName];
+          if (childRouter) {
+            // For each child router, start with a blank state
+            const initChildRoute = childRouter.getStateForAction(NavigationActions.init());
+            // Then check to see if the router handles our navigate action
+            const navigatedChildRoute = childRouter.getStateForAction(action, initChildRoute);
+            let routeToPush = null;
+            if (navigatedChildRoute === null) {
+              // Push the route if the router has 'handled' the action and returned null
+              routeToPush = initChildRoute;
+            } else if (navigatedChildRoute !== initChildRoute) {
+              // Push the route if the state has changed in response to this navigation
+              routeToPush = navigatedChildRoute;
+            }
+            if (routeToPush) {
+              return StateUtils.push(state, {
+                ...routeToPush,
+                key: _getUuid(),
+                routeName: childRouterName,
+              });
+            }
+          }
+        }
       }
 
       if (action.type === NavigationActions.SET_PARAMS) {
