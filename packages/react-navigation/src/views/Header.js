@@ -81,16 +81,15 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
   }
 
   _getBackButtonTitleString(scene: NavigationScene): ?string {
-    const sceneOptions = this.props.getScreenDetails(scene).options;
-    const {headerBackTitle} = sceneOptions;
-    const lastScene = scene.index && this.props.scenes.find(s => s.index === scene.index - 1);
-    if (headerBackTitle || headerBackTitle === null) {
-      return headerBackTitle;
-    } else if (lastScene) {
-      return this._getHeaderTitleString(lastScene);
-    } else {
+    const lastScene = this.props.scenes.find(s => s.index === scene.index - 1);
+    if (!lastScene) {
       return null;
     }
+    const { headerBackTitle } = this.props.getScreenDetails(lastScene).options;
+    if (headerBackTitle || headerBackTitle === null) {
+      return headerBackTitle;
+    }
+    return this._getHeaderTitleString(lastScene);
   }
 
   _renderTitleComponent = (props: SceneProps) => {
@@ -128,13 +127,12 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
   };
 
   _renderLeftComponent = (props: SceneProps) => {
+    const options = this.props.getScreenDetails(props.scene).options;
+    if (typeof options.headerLeft !== 'undefined') {
+      return options.headerLeft;
+    }
     if (props.scene.index === 0) {
       return null;
-    }
-    const details = this.props.getScreenDetails(props.scene);
-    const {headerLeft, headerPressColorAndroid} = details.options;
-    if (headerLeft) {
-      return headerLeft;
     }
     const backButtonTitle = this._getBackButtonTitleString(props.scene);
     const width = this.state.widths[props.scene.key]
@@ -143,8 +141,8 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
     return (
       <HeaderBackButton
         onPress={() => this.props.navigation.goBack(null)}
-        pressColorAndroid={headerPressColorAndroid}
-        tintColor={details.options.headerTintColor}
+        pressColorAndroid={options.headerPressColorAndroid}
+        tintColor={options.headerTintColor}
         title={backButtonTitle}
         width={width}
       />
