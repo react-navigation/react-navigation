@@ -2,10 +2,7 @@
 
 import invariant from 'fbjs/lib/invariant';
 
-import type {
-  NavigationRoute,
-  NavigationState,
-} from './TypeDefinition';
+import type { NavigationRoute, NavigationState } from './TypeDefinition';
 
 /**
  * Utilities to perform atomic operation with navigate state and routes.
@@ -16,7 +13,6 @@ import type {
  * ```
  */
 const StateUtils = {
-
   /**
    * Gets a route by key. If the route isn't found, returns `null`.
    */

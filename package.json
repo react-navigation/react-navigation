@@ -29,6 +29,7 @@
     "run-playground-android": "cd examples/NavigationPlayground && react-native run-android",
     "test": "jest",
     "flow": "flow",
+    "precommit": "lint-staged",
     "prepublish": "npm run clean && npm run build"
   },
   "files": [
@@ -48,12 +49,16 @@
     "babel-preset-stage-1": "^6.16.0",
     "eslint": "^3.17.1",
     "eslint-config-airbnb": "^14.1.0",
+    "eslint-config-prettier": "^1.5.0",
     "eslint-plugin-flowtype": "^2.30.3",
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^4.0.0",
     "eslint-plugin-react": "^6.10.0",
     "flow-bin": "^0.37.4",
+    "husky": "^0.13.3",
     "jest": "^19.0.2",
+    "lint-staged": "^3.4.0",
+    "prettier": "^0.22.0",
     "react": "~15.4.2",
     "react-native": "^0.41.2",
     "react-native-vector-icons": "^3.0.0",
@@ -69,7 +74,7 @@
     "hoist-non-react-statics": "^1.2.0",
     "path-to-regexp": "^1.7.0",
     "react-native-drawer-layout-polyfill": "1.2.0",
-    "react-native-tab-view": "^0.0.57"
+    "react-native-tab-view": "^0.0.58"
   },
   "jest": {
     "notify": true,
@@ -80,6 +85,12 @@
     ],
     "modulePathIgnorePatterns": [
       "examples"
+    ]
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier --single-quote --trailing-comma all --write",
+      "git add"
     ]
   }
 }

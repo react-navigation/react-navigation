@@ -2,10 +2,7 @@
 
 import React, { PropTypes } from 'react';
 
-import {
-  Animated,
-  StyleSheet,
-} from 'react-native';
+import { Animated, StyleSheet } from 'react-native';
 
 import createPointerEventsContainer from './PointerEventsContainer';
 import NavigationPropTypes from '../PropTypes';
