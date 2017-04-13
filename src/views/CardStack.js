@@ -1,6 +1,7 @@
 /* @flow */
 
 import React, { Component } from 'react';
+import clamp from 'clamp';
 import {
   Animated,
   StyleSheet,
@@ -14,8 +15,6 @@ import Card from './Card';
 import NavigationActions from '../NavigationActions';
 import addNavigationHelpers from '../addNavigationHelpers';
 import SceneView from './SceneView';
-
-import clamp from 'clamp';
 
 import type {
   NavigationAction,
@@ -85,6 +84,15 @@ const RESPOND_THRESHOLD = 12;
  */
 const GESTURE_RESPONSE_DISTANCE = 35;
 
+const animatedSubscribeValue = (animatedValue: Animated.Value) => {
+  if (!animatedValue.__isNative) {
+    return;
+  }
+  if (Object.keys(animatedValue._listeners).length === 0) {
+    animatedValue.addListener(emptyFunction);
+  }
+};
+
 /**
  * The ratio between the gesture velocity and the animation velocity. This allows
  * the velocity of a swipe release to carry on into the new animation.
@@ -124,7 +132,7 @@ class CardStack extends Component {
     if (props.screenProps !== this.props.screenProps) {
       this._screenDetails = {};
     }
-    props.scenes.forEach(newScene => {
+    props.scenes.forEach((newScene: *) => {
       if (
         this._screenDetails[newScene.key] &&
         this._screenDetails[newScene.key].state !== newScene.route
@@ -166,7 +174,8 @@ class CardStack extends Component {
     );
   }
 
-  _animatedSubscribe(props) {
+  // eslint-disable-next-line class-methods-use-this
+  _animatedSubscribe(props: Props) {
     // Hack to make this work with native driven animations. We add a single listener
     // so the JS value of the following animated values gets updated. We rely on
     // some Animated private APIs and not doing so would require using a bunch of
@@ -174,17 +183,9 @@ class CardStack extends Component {
     // when we'd do that with the current structure we have. `stopAnimation` callback
     // is also broken with native animated values that have no listeners so if we
     // want to remove this we have to fix this too.
-    this._animatedSubscribeValue(props.layout.width);
-    this._animatedSubscribeValue(props.layout.height);
-    this._animatedSubscribeValue(props.position);
-  }
-  _animatedSubscribeValue(animatedValue) {
-    if (!animatedValue.__isNative) {
-      return;
-    }
-    if (Object.keys(animatedValue._listeners).length === 0) {
-      animatedValue.addListener(emptyFunction);
-    }
+    animatedSubscribeValue(props.layout.width);
+    animatedSubscribeValue(props.layout.height);
+    animatedSubscribeValue(props.position);
   }
 
   _reset(resetToIndex: number, velocity: number): void {
@@ -211,9 +212,9 @@ class CardStack extends Component {
       useNativeDriver: position.__isNative,
       velocity: velocity * GESTURE_ANIMATED_VELOCITY_RATIO,
       bounciness: 0,
-    }).start(({ finished }) => {
+    }).start(() => {
       this._immediateIndex = null;
-      const backFromScene = scenes.find(s => s.index === toValue + 1);
+      const backFromScene = scenes.find((s: *) => s.index === toValue + 1);
       if (!this._isResponding && backFromScene) {
         navigation.dispatch(
           NavigationActions.back({ key: backFromScene.route.key }),
@@ -294,18 +295,16 @@ class CardStack extends Component {
         const value = clamp(index - 1, currentValue, index);
         position.setValue(value);
       },
-      onPanResponderTerminationRequest: (event: any, gesture: any) => {
+      onPanResponderTerminationRequest: () =>
         // Returning false will prevent other views from becoming responder while
         // the navigation view is the responder (mid-gesture)
-        return false;
-      },
+        false,
       onPanResponderRelease: (event: any, gesture: any) => {
         if (!this._isResponding) {
           return;
         }
         this._isResponding = false;
         const isVertical = false;
-        const axis = isVertical ? 'dy' : 'dx';
         const velocity = gesture[isVertical ? 'vy' : 'vx'];
         const immediateIndex = this._immediateIndex == null
           ? index
@@ -341,7 +340,7 @@ class CardStack extends Component {
     return (
       <View {...handlers} style={styles.container}>
         <View style={styles.scenes}>
-          {scenes.map((scene: NavigationScene) => this._renderCard(scene))}
+          {scenes.map((s: *) => this._renderCard(s))}
         </View>
         {floatingHeader}
       </View>
@@ -394,7 +393,7 @@ class CardStack extends Component {
     );
   }
 
-  _renderCard = (scene): React.Element<*> => {
+  _renderCard = (scene: NavigationScene): React.Element<*> => {
     const isModal = this.props.mode === 'modal';
 
     /* $FlowFixMe */
@@ -415,10 +414,11 @@ class CardStack extends Component {
       <Card
         {...this.props}
         key={`card_${scene.key}`}
-        children={this._renderInnerScene(SceneComponent, scene)}
         style={[style, this.props.cardStyle]}
         scene={scene}
-      />
+      >
+        {this._renderInnerScene(SceneComponent, scene)}
+      </Card>
     );
   };
 }

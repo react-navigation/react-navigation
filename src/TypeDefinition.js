@@ -252,15 +252,13 @@ export type NavigationRouteConfig<T> = T & {
   path?: string,
 };
 
-export type NavigationScreenRouteConfig = NavigationScreenRouteConfig<
+export type NavigationScreenRouteConfig =
   | {
-      // React component or navigator for this route */
       screen: NavigationComponent,
     }
   | {
-      // React component to lazily require and render for this route */
       getScreen: () => NavigationComponent,
-    }>;
+    };
 
 export type NavigationPathsConfig = {
   [routeName: string]: string,

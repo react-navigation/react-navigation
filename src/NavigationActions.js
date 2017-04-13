@@ -8,7 +8,7 @@ const SET_PARAMS = namespacedAction('SET_PARAMS');
 const URI = namespacedAction('URI');
 
 const createAction = (type: string) =>
-  (payload: object = {}) => ({
+  (payload: Object = {}) => ({
     type,
     ...payload,
   });
@@ -29,7 +29,7 @@ const deprecatedActionMap = {
   Uri: URI,
 };
 
-const mapDeprecatedActionAndWarn = (action: object) => {
+const mapDeprecatedActionAndWarn = (action: Object) => {
   const mappedType = deprecatedActionMap[action.type];
   if (!mappedType) {
     return action;

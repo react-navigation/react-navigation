@@ -128,7 +128,9 @@ export default class DrawerView<T: *> extends PureComponent<void, Props, void> {
     );
     return (
       <DrawerLayout
-        ref={(c: *) => this._drawer = c}
+        ref={(c: *) => {
+          this._drawer = c;
+        }}
         drawerWidth={this.props.drawerWidth}
         onDrawerOpen={this._handleDrawerOpen}
         onDrawerClose={this._handleDrawerClose}

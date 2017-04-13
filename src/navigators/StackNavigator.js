@@ -46,7 +46,7 @@ export default (
       routeConfigMap,
       stackConfig,
       NavigatorTypes.STACK,
-    )(props => (
+    )((props: *) => (
       <CardStackTransitioner
         {...props}
         headerComponent={headerComponent}

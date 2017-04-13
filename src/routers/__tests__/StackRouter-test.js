@@ -1,4 +1,5 @@
 /* @flow */
+/* eslint no-shadow:0 react/no-multi-comp:0 */
 
 import React from 'react';
 
@@ -141,11 +142,11 @@ describe('StackRouter', () => {
         return <div />;
       }
     };
-    const BazScreen = React.createClass({
+    const BazScreen = class extends React.Component {
       render() {
         return <div />;
-      },
-    });
+      }
+    };
     const router = StackRouter({
       foo: {
         screen: FooScreen,
@@ -170,11 +171,11 @@ describe('StackRouter', () => {
         return <div />;
       }
     };
-    const BazScreen = React.createClass({
+    const BazScreen = class extends React.Component {
       render() {
         return <div />;
-      },
-    });
+      }
+    };
     const router = StackRouter({
       foo: {
         getScreen: () => FooScreen,

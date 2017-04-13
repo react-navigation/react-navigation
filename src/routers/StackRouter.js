@@ -88,8 +88,11 @@ export default (
       return getScreenForRouteName(routeConfigs, routeName);
     },
 
-    getStateForAction(action: NavigationStackAction, state: ?NavigationState) {
-      action = NavigationActions.mapDeprecatedActionAndWarn(action);
+    getStateForAction(
+      passedAction: NavigationStackAction,
+      state: ?NavigationState,
+    ) {
+      const action = NavigationActions.mapDeprecatedActionAndWarn(passedAction);
 
       // Set up the initial state if needed
       if (!state) {
@@ -131,6 +134,7 @@ export default (
           ...(params ? { params } : {}),
         };
         state = {
+          // eslint-disable-line no-param-reassign
           index: 0,
           routes: [route],
         };
@@ -239,23 +243,23 @@ export default (
       }
 
       if (action.type === NavigationActions.RESET) {
-        const resetAction = ((action: any): NavigationResetAction);
+        const resetAction: NavigationResetAction = action;
 
         return {
           ...state,
           routes: resetAction.actions.map(
-            (action: NavigationNavigateAction, index: number) => {
-              const router = childRouters[action.routeName];
+            (childAction: NavigationNavigateAction, index: number) => {
+              const router = childRouters[childAction.routeName];
               if (router) {
                 return {
-                  ...action,
-                  ...router.getStateForAction(action),
-                  routeName: action.routeName,
+                  ...childAction,
+                  ...router.getStateForAction(childAction),
+                  routeName: childAction.routeName,
                   key: `Init${index}`,
                 };
               }
               const route = {
-                ...action,
+                ...childAction,
                 key: `Init${index}`,
               };
               delete route.type;
@@ -314,9 +318,10 @@ export default (
       let pathMatch;
       let pathMatchKeys;
 
-      for (const routeName in paths) {
+      // eslint-disable-next-line no-restricted-syntax
+      for (const [routeName, path] of Object.entries(paths)) {
         /* $FlowFixMe */
-        const { re, keys } = paths[routeName];
+        const { re, keys } = path;
         pathMatch = re.exec(pathNameToResolve);
         if (pathMatch && pathMatch.length) {
           pathMatchKeys = keys;

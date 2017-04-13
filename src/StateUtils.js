@@ -17,7 +17,7 @@ const StateUtils = {
    * Gets a route by key. If the route isn't found, returns `null`.
    */
   get(state: NavigationState, key: string): ?NavigationRoute {
-    return state.routes.find(route => route.key === key) || null;
+    return state.routes.find((route: *) => route.key === key) || null;
   },
 
   /**
@@ -25,7 +25,7 @@ const StateUtils = {
    * routes of the navigation state, or -1 if it is not present.
    */
   indexOf(state: NavigationState, key: string): number {
-    return state.routes.map(route => route.key).indexOf(key);
+    return state.routes.map((route: *) => route.key).indexOf(key);
   },
 
   /**
@@ -33,7 +33,7 @@ const StateUtils = {
    * routes of the navigation state.
    */
   has(state: NavigationState, key: string): boolean {
-    return !!state.routes.some(route => route.key === key);
+    return !!state.routes.some((route: *) => route.key === key);
   },
 
   /**
@@ -181,7 +181,7 @@ const StateUtils = {
     const nextIndex: number = index === undefined ? routes.length - 1 : index;
 
     if (state.routes.length === routes.length && state.index === nextIndex) {
-      const compare = (route, ii) => routes[ii] === route;
+      const compare = (route: *, ii: *) => routes[ii] === route;
       if (state.routes.every(compare)) {
         return state;
       }

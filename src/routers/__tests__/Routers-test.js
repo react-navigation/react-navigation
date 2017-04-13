@@ -1,4 +1,5 @@
 /* @flow */
+/* eslint react/no-multi-comp:0 */
 
 import React from 'react';
 
@@ -33,7 +34,7 @@ Object.keys(ROUTERS).forEach((routerName: string) => {
         render() {
           return <div />;
         }
-        static navigationOptions = ({ navigation }) => ({
+        static navigationOptions = ({ navigation }: *) => ({
           title: `Baz-${navigation.state.params.id}`,
         });
       }

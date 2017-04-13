@@ -9,7 +9,6 @@ import type {
   NavigationAction,
   NavigationScreenProp,
   NavigationState,
-  NavigationRoute,
   Style,
 } from '../../TypeDefinition';
 

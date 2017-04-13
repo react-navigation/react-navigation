@@ -4,11 +4,7 @@ import React from 'react';
 import propTypes from 'prop-types';
 import hoistStatics from 'hoist-non-react-statics';
 
-import type {
-  NavigationState,
-  NavigationRoute,
-  NavigationAction,
-} from '../TypeDefinition';
+import type { NavigationState, NavigationAction } from '../TypeDefinition';
 
 type Context = {
   navigation: InjectedProps<NavigationState, NavigationAction>,

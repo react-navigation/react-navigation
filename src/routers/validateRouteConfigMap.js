@@ -1,4 +1,8 @@
+/** @flow */
+
 import invariant from 'fbjs/lib/invariant';
+
+import type { NavigationRouteConfigMap } from '../TypeDefinition';
 
 /**
  * Make sure the config passed e.g. to StackRouter, TabRouter has

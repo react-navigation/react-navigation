@@ -67,6 +67,9 @@ class HeaderBackButton extends React.PureComponent<DefaultProps, Props, State> {
       ? this.state.initialTextWidth > width
       : false;
 
+    // eslint-disable-next-line global-require
+    const asset = require('./assets/back-icon.png');
+
     return (
       <TouchableItem
         delayPressIn={0}
@@ -78,7 +81,7 @@ class HeaderBackButton extends React.PureComponent<DefaultProps, Props, State> {
         <View style={styles.container}>
           <Image
             style={[styles.icon, title && styles.iconWithTitle, { tintColor }]}
-            source={require('./assets/back-icon.png')}
+            source={asset}
           />
           {Platform.OS === 'ios' &&
             title &&

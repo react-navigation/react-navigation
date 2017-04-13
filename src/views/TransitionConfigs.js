@@ -1,5 +1,7 @@
 /* @flow */
 
+import { Animated, Easing, Platform } from 'react-native';
+
 import type {
   NavigationSceneRendererProps,
   NavigationTransitionProps,
@@ -7,9 +9,6 @@ import type {
 } from '../TypeDefinition';
 
 import CardStackStyleInterpolator from './CardStackStyleInterpolator';
-import HeaderStyleInterpolator from './HeaderStyleInterpolator';
-
-import { Animated, Easing, Platform } from 'react-native';
 
 /**
  * Describes a visual transition from one screen to another.
@@ -81,14 +80,12 @@ function defaultTransitionConfig(
       return FadeOutToBottomAndroid;
     }
     return FadeInFromBottomAndroid;
-  } else {
-    // iOS and other platforms
-    if (isModal) {
-      return ModalSlideFromBottomIOS;
-    } else {
-      return SlideFromRightIOS;
-    }
   }
+  // iOS and other platforms
+  if (isModal) {
+    return ModalSlideFromBottomIOS;
+  }
+  return SlideFromRightIOS;
 }
 
 function getTransitionConfig(

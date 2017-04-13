@@ -130,7 +130,6 @@ function forFadeFromBottomAndroid(props: NavigationSceneRendererProps): Object {
 
   const index = scene.index;
   const inputRange = [index - 1, index, index + 0.99, index + 1];
-  const height = layout.initHeight;
 
   const opacity = position.interpolate({
     inputRange,
@@ -149,7 +148,7 @@ function forFadeFromBottomAndroid(props: NavigationSceneRendererProps): Object {
   };
 }
 
-function canUseNativeDriver(isVertical: boolean): boolean {
+function canUseNativeDriver(): boolean {
   // The native driver can be enabled for this interpolator animating
   // opacity, translateX, and translateY is supported by the native animation
   // driver on iOS and Android.

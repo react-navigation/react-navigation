@@ -92,7 +92,7 @@ export default (
         const { params } = action;
         if (params) {
           state.routes = state.routes.map(
-            route =>
+            (route: *) =>
               ({
                 ...route,
                 params: {

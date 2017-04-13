@@ -85,7 +85,7 @@ export default function ScenesReducer(
   const staleScenes: Map<string, NavigationScene> = new Map();
 
   // Populate stale scenes from previous scenes marked as stale.
-  scenes.forEach(scene => {
+  scenes.forEach((scene: *) => {
     const { key } = scene;
     if (scene.isStale) {
       staleScenes.set(key, scene);
@@ -94,7 +94,7 @@ export default function ScenesReducer(
   });
 
   const nextKeys = new Set();
-  nextState.routes.forEach((route, index) => {
+  nextState.routes.forEach((route: *, index: *) => {
     const key = SCENE_KEY_PREFIX + route.key;
     const scene = {
       index,
@@ -120,7 +120,7 @@ export default function ScenesReducer(
 
   if (prevState) {
     // Look at the previous routes and classify any removed scenes as `stale`.
-    prevState.routes.forEach((route: NavigationRoute, index) => {
+    prevState.routes.forEach((route: NavigationRoute, index: *) => {
       const key = SCENE_KEY_PREFIX + route.key;
       if (freshScenes.has(key)) {
         return;
@@ -137,7 +137,7 @@ export default function ScenesReducer(
 
   const nextScenes = [];
 
-  const mergeScene = nextScene => {
+  const mergeScene = (nextScene: *) => {
     const { key } = nextScene;
     const prevScene = prevScenes.has(key) ? prevScenes.get(key) : null;
     if (prevScene && areScenesShallowEqual(prevScene, nextScene)) {
@@ -155,7 +155,7 @@ export default function ScenesReducer(
   nextScenes.sort(compareScenes);
 
   let activeScenesCount = 0;
-  nextScenes.forEach((scene, ii) => {
+  nextScenes.forEach((scene: *, ii: *) => {
     const isActive = !scene.isStale && scene.index === nextState.index;
     if (isActive !== scene.isActive) {
       nextScenes[ii] = {
@@ -180,7 +180,7 @@ export default function ScenesReducer(
 
   if (
     nextScenes.some(
-      (scene, index) => !areScenesShallowEqual(scenes[index], scene),
+      (scene: *, index: *) => !areScenesShallowEqual(scenes[index], scene),
     )
   ) {
     return nextScenes;

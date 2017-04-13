@@ -1,6 +1,6 @@
-'no babel-plugin-flow-react-proptypes'; // doesn't support intersection yet
-
 /* @flow */
+
+'no babel-plugin-flow-react-proptypes';
 
 import React from 'react';
 
@@ -70,7 +70,9 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
   }
 
   _getBackButtonTitleString(scene: NavigationScene): ?string {
-    const lastScene = this.props.scenes.find(s => s.index === scene.index - 1);
+    const lastScene = this.props.scenes.find(
+      (s: *) => s.index === scene.index - 1,
+    );
     if (!lastScene) {
       return null;
     }
@@ -205,7 +207,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
       return null;
     }
 
-    let subView = renderer(props);
+    const subView = renderer(props);
 
     if (subView == null) {
       return null;

@@ -10,7 +10,10 @@
     "flowtype"
   ],
   "env": {
-    "jasmine": true
+    "jasmine": true,
+  },
+  "globals": {
+    "ReactClass": true
   },
   "rules": {
     "no-underscore-dangle": 0,

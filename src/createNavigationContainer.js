@@ -170,6 +170,7 @@ export default function createNavigationContainer<T: *>(
       if (this._isStateful()) {
         if (!this._navigation || this._navigation.state !== this.state.nav) {
           this._navigation = addNavigationHelpers({
+            // eslint-disable-next-line react/jsx-no-bind
             dispatch: this.dispatch.bind(this),
             state: this.state.nav,
           });
