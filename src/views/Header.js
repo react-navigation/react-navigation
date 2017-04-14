@@ -1,5 +1,3 @@
-'no babel-plugin-flow-react-proptypes'; // doesn't support intersection yet
-
 /* @flow */
 
 import React from 'react';
