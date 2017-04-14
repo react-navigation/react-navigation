@@ -2,7 +2,8 @@
 
 import React from 'react';
 
-// @todo figure out how to use Animated.Value type in web context
+// @todo when we split types into common, native and web,
+// we can properly change Animated.Value to its real value
 type AnimatedValue = *;
 
 export type HeaderMode = 'float' | 'screen' | 'none';
