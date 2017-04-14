@@ -1,11 +1,15 @@
-var path = require('path');
-var fs = require('fs');
+const path = require('path');
+const fs = require('fs');
 
 // Make sure any symlinks in the project folder are resolved:
 // https://github.com/facebookincubator/create-react-app/issues/637
-var appDirectory = fs.realpathSync(process.cwd());
+const appDirectory = fs.realpathSync(process.cwd());
 function resolveApp(relativePath) {
   return path.resolve(appDirectory, relativePath);
+}
+
+function resolveOwn(relativePath) {
+  return path.resolve(__dirname, relativePath);
 }
 
 // We support resolving modules according to `NODE_PATH`.
@@ -19,7 +23,7 @@ function resolveApp(relativePath) {
 // It will then be used by Webpack configs.
 // Jest doesn’t need this because it already handles `NODE_PATH` out of the box.
 
-var nodePaths = (process.env.NODE_PATH || '')
+const nodePaths = (process.env.NODE_PATH || '')
   .split(process.platform === 'win32' ? ';' : ':')
   .filter(Boolean)
   .map(resolveApp);
@@ -39,7 +43,7 @@ module.exports = {
   testsSetup: resolveApp('src/setupTests.js'),
   appNodeModules: resolveApp('node_modules'),
   ownNodeModules: resolveApp('node_modules'),
-  nodePaths: nodePaths,
+  nodePaths,
 };
 
 // config before publish: we're in ./packages/react-scripts/config/
@@ -59,6 +63,6 @@ if (
     testsSetup: resolveOwn('../template/src/setupTests.js'),
     appNodeModules: resolveOwn('../node_modules'),
     ownNodeModules: resolveOwn('../node_modules'),
-    nodePaths: nodePaths,
+    nodePaths,
   };
 }

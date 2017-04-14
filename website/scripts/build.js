@@ -46,9 +46,8 @@ function getDifferenceLabel(currentSize, previousSize) {
     return chalk.yellow(`+${fileSize}`);
   } else if (difference < 0) {
     return chalk.green(fileSize);
-  } else {
-    return '';
   }
+  return '';
 }
 
 // First, read the current file sizes in build directory.
@@ -63,7 +62,7 @@ recursive(paths.appBuild, (err, fileNames) => {
         memo[key] = gzipSize(contents);
         return memo;
       },
-      {},
+      {}
     );
 
   // Remove all content but keep the directory so that
@@ -80,7 +79,7 @@ recursive(paths.appBuild, (err, fileNames) => {
 
   fs.copySync(
     path.join(paths.appRoot, 'docs-dist.json'),
-    path.join(paths.appBuild, 'docs-dist.json'),
+    path.join(paths.appBuild, 'docs-dist.json')
   );
   const libPkgPath = path.join(paths.libRoot, 'package.json');
 
@@ -126,13 +125,13 @@ recursive(paths.appBuild, (err, fileNames) => {
             appPackageJson.server.dependencies,
             {
               'react-navigation': '',
-            },
+            }
           ),
-        },
+        }
       ),
       null,
-      2,
-    ),
+      2
+    )
   );
 });
 
@@ -143,7 +142,7 @@ function printFileSizes(stats, previousSizeMap) {
     .assets.filter(asset => /\.(js|css)$/.test(asset.name))
     .map(asset => {
       const fileContents = fs.readFileSync(
-        `${paths.appBuildPublic}/${asset.name}`,
+        `${paths.appBuildPublic}/${asset.name}`
       );
       const size = gzipSize(fileContents);
       const previousSize = previousSizeMap[removeFileNameHash(asset.name)];
@@ -158,7 +157,7 @@ function printFileSizes(stats, previousSizeMap) {
   assets.sort((a, b) => b.size - a.size);
   const longestSizeLabelLength = Math.max.apply(
     null,
-    assets.map(a => stripAnsi(a.sizeLabel).length),
+    assets.map(a => stripAnsi(a.sizeLabel).length)
   );
   assets.forEach(asset => {
     let sizeLabel = asset.sizeLabel;
@@ -168,7 +167,7 @@ function printFileSizes(stats, previousSizeMap) {
       sizeLabel += rightPadding;
     }
     console.log(
-      `  ${sizeLabel}  ${chalk.dim(asset.folder + path.sep)}${chalk.cyan(asset.name)}`,
+      `  ${sizeLabel}  ${chalk.dim(asset.folder + path.sep)}${chalk.cyan(asset.name)}`
     );
   });
 }
@@ -213,10 +212,10 @@ function build(previousSizeMap) {
     if (homepagePath && homepagePath.indexOf('.github.io/') !== -1) {
       // "homepage": "http://user.github.io/project"
       console.log(
-        `The project was built assuming it is hosted at ${chalk.green(publicPath)}.`,
+        `The project was built assuming it is hosted at ${chalk.green(publicPath)}.`
       );
       console.log(
-        `You can control this with the ${chalk.green('homepage')} field in your ${chalk.cyan('package.json')}.`,
+        `You can control this with the ${chalk.green('homepage')} field in your ${chalk.cyan('package.json')}.`
       );
       console.log();
       console.log(`The ${chalk.cyan('build')} folder is ready to be deployed.`);
@@ -225,14 +224,14 @@ function build(previousSizeMap) {
       console.log(`  ${chalk.cyan('npm')} install --save-dev gh-pages`);
       console.log();
       console.log(
-        `Add the following script in your ${chalk.cyan('package.json')}.`,
+        `Add the following script in your ${chalk.cyan('package.json')}.`
       );
       console.log();
       console.log(`    ${chalk.dim('// ...')}`);
       console.log(`    ${chalk.yellow('"scripts"')}: {`);
       console.log(`      ${chalk.dim('// ...')}`);
       console.log(
-        `      ${chalk.yellow('"deploy"')}: ${chalk.yellow('"gh-pages -d build"')}`,
+        `      ${chalk.yellow('"deploy"')}: ${chalk.yellow('"gh-pages -d build"')}`
       );
       console.log('    }');
       console.log();
@@ -243,10 +242,10 @@ function build(previousSizeMap) {
     } else if (publicPath !== '/') {
       // "homepage": "http://mywebsite.com/project"
       console.log(
-        `The project was built assuming it is hosted at ${chalk.green(publicPath)}.`,
+        `The project was built assuming it is hosted at ${chalk.green(publicPath)}.`
       );
       console.log(
-        `You can control this with the ${chalk.green('homepage')} field in your ${chalk.cyan('package.json')}.`,
+        `You can control this with the ${chalk.green('homepage')} field in your ${chalk.cyan('package.json')}.`
       );
       console.log();
       console.log(`The ${chalk.cyan('build')} folder is ready to be deployed.`);
@@ -254,23 +253,23 @@ function build(previousSizeMap) {
     } else {
       // no homepage or "homepage": "http://mywebsite.com"
       console.log(
-        'The project was built assuming it is hosted at the server root.',
+        'The project was built assuming it is hosted at the server root.'
       );
       if (homepagePath) {
         // "homepage": "http://mywebsite.com"
         console.log(
-          `You can control this with the ${chalk.green('homepage')} field in your ${chalk.cyan('package.json')}.`,
+          `You can control this with the ${chalk.green('homepage')} field in your ${chalk.cyan('package.json')}.`
         );
         console.log();
       } else {
         // no homepage
         console.log(
-          `To override this, specify the ${chalk.green('homepage')} in your ${chalk.cyan('package.json')}.`,
+          `To override this, specify the ${chalk.green('homepage')} in your ${chalk.cyan('package.json')}.`
         );
         console.log('For example, add this to build it for GitHub Pages:');
         console.log();
         console.log(
-          `  ${chalk.green('"homepage"')}${chalk.cyan(': ')}${chalk.green('"http://myname.github.io/myapp"')}${chalk.cyan(',')}`,
+          `  ${chalk.green('"homepage"')}${chalk.cyan(': ')}${chalk.green('"http://myname.github.io/myapp"')}${chalk.cyan(',')}`
         );
         console.log();
       }

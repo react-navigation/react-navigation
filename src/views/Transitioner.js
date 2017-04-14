@@ -22,14 +22,14 @@ import type {
 type Props = {
   configureTransition: (
     transitionProps: NavigationTransitionProps,
-    prevTransitionProps: ?NavigationTransitionProps,
+    prevTransitionProps: ?NavigationTransitionProps
   ) => NavigationTransitionSpec,
   navigation: NavigationScreenProp<NavigationState, NavigationAction>,
   onTransitionEnd?: () => void,
   onTransitionStart?: () => void,
   render: (
     transitionProps: NavigationTransitionProps,
-    prevTransitionProps: ?NavigationTransitionProps,
+    prevTransitionProps: ?NavigationTransitionProps
   ) => any,
   style?: any,
 };
@@ -103,7 +103,7 @@ class Transitioner extends React.Component<*, Props, State> {
     const nextScenes = NavigationScenesReducer(
       this.state.scenes,
       nextProps.navigation.state,
-      this.props.navigation.state,
+      this.props.navigation.state
     );
 
     if (nextScenes === this.state.scenes) {
@@ -123,7 +123,7 @@ class Transitioner extends React.Component<*, Props, State> {
   _startTransition(
     nextProps: Props,
     nextScenes: Array<NavigationScene>,
-    indexHasChanged: boolean,
+    indexHasChanged: boolean
   ) {
     const nextState = {
       ...this.state,
@@ -144,7 +144,7 @@ class Transitioner extends React.Component<*, Props, State> {
     const transitionUserSpec = nextProps.configureTransition
       ? nextProps.configureTransition(
           this._transitionProps,
-          this._prevTransitionProps,
+          this._prevTransitionProps
         )
       : null;
 
@@ -175,7 +175,7 @@ class Transitioner extends React.Component<*, Props, State> {
       nextProps.onTransitionStart &&
         nextProps.onTransitionStart(
           this._transitionProps,
-          this._prevTransitionProps,
+          this._prevTransitionProps
         );
       Animated.parallel(animations).start(this._onTransitionEnd);
     });
@@ -237,7 +237,7 @@ class Transitioner extends React.Component<*, Props, State> {
         this._startTransition(
           this._queuedTransition.nextProps,
           this._queuedTransition.nextScenes,
-          this._queuedTransition.indexHasChanged,
+          this._queuedTransition.indexHasChanged
         );
         this._queuedTransition = null;
       } else {
@@ -249,7 +249,7 @@ class Transitioner extends React.Component<*, Props, State> {
 
 function buildTransitionProps(
   props: Props,
-  state: State,
+  state: State
 ): NavigationTransitionProps {
   const {
     navigation,

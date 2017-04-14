@@ -59,7 +59,7 @@ const DrawerExample = DrawerNavigator(
     contentOptions: {
       activeTintColor: '#e91e63',
     },
-  },
+  }
 );
 
 const styles = StyleSheet.create({

@@ -121,7 +121,7 @@ const AppNavigator = StackNavigator(
    * which conflicts with the drawer example gesture
    */
     mode: Platform.OS === 'ios' ? 'modal' : 'card',
-  },
+  }
 );
 
 export default () => <AppNavigator />;

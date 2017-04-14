@@ -28,7 +28,7 @@ export type HeaderProps = NavigationSceneRendererProps & {
   mode: HeaderMode,
   router: NavigationRouter<NavigationState, NavigationAction, NavigationStackScreenOptions>,
   getScreenDetails: (
-    NavigationScene,
+    NavigationScene
   ) => NavigationScreenDetails<NavigationStackScreenOptions>,
 };
 
@@ -71,7 +71,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
 
   _getBackButtonTitleString(scene: NavigationScene): ?string {
     const lastScene = this.props.scenes.find(
-      (s: *) => s.index === scene.index - 1,
+      (s: *) => s.index === scene.index - 1
     );
     if (!lastScene) {
       return null;
@@ -151,7 +151,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
       props,
       'left',
       this._renderLeftComponent,
-      HeaderStyleInterpolator.forLeft,
+      HeaderStyleInterpolator.forLeft
     );
   }
 
@@ -171,7 +171,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
       { ...props, style },
       'title',
       this._renderTitleComponent,
-      HeaderStyleInterpolator.forCenter,
+      HeaderStyleInterpolator.forCenter
     );
   }
 
@@ -180,7 +180,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
       props,
       'right',
       this._renderRightComponent,
-      HeaderStyleInterpolator.forRight,
+      HeaderStyleInterpolator.forRight
     );
   }
 
@@ -188,7 +188,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
     props: SceneProps,
     name: SubViewName,
     renderer: SubViewRenderer,
-    styleInterpolator: NavigationStyleInterpolator,
+    styleInterpolator: NavigationStyleInterpolator
   ): ?React.Element<*> {
     const {
       scene,
@@ -264,7 +264,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
           position: this.props.position,
           progress: this.props.progress,
           scene,
-        }),
+        })
       );
       appBar = scenesProps.map(this._renderHeader, this);
     } else {

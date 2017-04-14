@@ -74,7 +74,7 @@ class CardStackTransitioner extends Component<DefaultProps, Props, void> {
     // props for the new screen
     transitionProps: NavigationTransitionProps,
     // props for the old screen
-    prevTransitionProps: NavigationTransitionProps,
+    prevTransitionProps: NavigationTransitionProps
   ) => {
     const isModal = this.props.mode === 'modal';
     // Copy the object so we can assign useNativeDriver below
@@ -84,7 +84,7 @@ class CardStackTransitioner extends Component<DefaultProps, Props, void> {
         this.props.transitionConfig,
         transitionProps,
         prevTransitionProps,
-        isModal,
+        isModal
       ).transitionSpec,
     };
     if (

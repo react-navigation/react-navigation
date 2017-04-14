@@ -67,7 +67,7 @@ export default class TabBarTop
     const inputRange = [-1, ...routes.map((x: *, i: number) => i)];
     const outputRange = inputRange.map(
       (inputIndex: number) =>
-        inputIndex === index ? activeTintColor : inactiveTintColor,
+        inputIndex === index ? activeTintColor : inactiveTintColor
     );
     const color = position.interpolate({
       inputRange,

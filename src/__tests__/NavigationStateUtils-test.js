@@ -42,7 +42,7 @@ describe('StateUtils', () => {
       routes: [{ key: 'a', routeName }, { key: 'b', routeName }],
     };
     expect(NavigationStateUtils.push(state, { key: 'b', routeName })).toEqual(
-      newState,
+      newState
     );
   });
 
@@ -147,7 +147,7 @@ describe('StateUtils', () => {
       routes: [{ key: 'a', routeName }, { key: 'c', routeName }],
     };
     expect(
-      NavigationStateUtils.replaceAt(state, 'b', { key: 'c', routeName }),
+      NavigationStateUtils.replaceAt(state, 'b', { key: 'c', routeName })
     ).toEqual(newState);
   });
 
@@ -161,7 +161,7 @@ describe('StateUtils', () => {
       routes: [{ key: 'a', routeName }, { key: 'c', routeName }],
     };
     expect(
-      NavigationStateUtils.replaceAtIndex(state, 1, { key: 'c', routeName }),
+      NavigationStateUtils.replaceAtIndex(state, 1, { key: 'c', routeName })
     ).toEqual(newState);
   });
 
@@ -171,7 +171,7 @@ describe('StateUtils', () => {
       routes: [{ key: 'a', routeName }, { key: 'b', routeName }],
     };
     expect(
-      NavigationStateUtils.replaceAtIndex(state, 1, state.routes[1]),
+      NavigationStateUtils.replaceAtIndex(state, 1, state.routes[1])
     ).toEqual(state);
   });
 
@@ -189,7 +189,7 @@ describe('StateUtils', () => {
       NavigationStateUtils.reset(state, [
         { key: 'x', routeName },
         { key: 'y', routeName },
-      ]),
+      ])
     ).toEqual(newState);
 
     expect(() => {
@@ -210,15 +210,15 @@ describe('StateUtils', () => {
       NavigationStateUtils.reset(
         state,
         [{ key: 'x', routeName }, { key: 'y', routeName }],
-        0,
-      ),
+        0
+      )
     ).toEqual(newState);
 
     expect(() => {
       NavigationStateUtils.reset(
         state,
         [{ key: 'x', routeName }, { key: 'y', routeName }],
-        100,
+        100
       );
     }).toThrow();
   });

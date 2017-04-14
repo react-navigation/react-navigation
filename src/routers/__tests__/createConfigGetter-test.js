@@ -56,7 +56,7 @@ test('should get config for screen', () => {
           title: '10 new notifications',
         },
       },
-    },
+    }
   );
 
   const routes = [
@@ -70,50 +70,50 @@ test('should get config for screen', () => {
   expect(
     getScreenOptions(
       addNavigationHelpers({ state: routes[0], dispatch: () => false }),
-      {},
-    ).title,
+      {}
+    ).title
   ).toEqual('Welcome anonymous');
   expect(
     getScreenOptions(
       addNavigationHelpers({ state: routes[1], dispatch: () => false }),
-      {},
-    ).title,
+      {}
+    ).title
   ).toEqual('Welcome jane');
   expect(
     getScreenOptions(
       addNavigationHelpers({ state: routes[0], dispatch: () => false }),
-      {},
-    ).headerVisible,
+      {}
+    ).headerVisible
   ).toEqual(true);
   expect(
     getScreenOptions(
       addNavigationHelpers({ state: routes[2], dispatch: () => false }),
-      {},
-    ).title,
+      {}
+    ).title
   ).toEqual('Settings!!!');
   expect(
     getScreenOptions(
       addNavigationHelpers({ state: routes[2], dispatch: () => false }),
-      {},
-    ).headerVisible,
+      {}
+    ).headerVisible
   ).toEqual(false);
   expect(
     getScreenOptions(
       addNavigationHelpers({ state: routes[3], dispatch: () => false }),
-      {},
-    ).title,
+      {}
+    ).title
   ).toEqual('10 new notifications');
   expect(
     getScreenOptions(
       addNavigationHelpers({ state: routes[3], dispatch: () => false }),
-      {},
-    ).headerVisible,
+      {}
+    ).headerVisible
   ).toEqual(true);
   expect(
     getScreenOptions(
       addNavigationHelpers({ state: routes[4], dispatch: () => false }),
-      {},
-    ).headerVisible,
+      {}
+    ).headerVisible
   ).toEqual(false);
 });
 
@@ -135,9 +135,9 @@ test('should throw if the route does not exist', () => {
   expect(() =>
     getScreenOptions(
       addNavigationHelpers({ state: routes[0], dispatch: () => false }),
-      {},
+      {}
     )).toThrowError(
-    "There is no route defined for key Settings.\nMust be one of: 'Home'",
+    "There is no route defined for key Settings.\nMust be one of: 'Home'"
   );
 });
 
@@ -152,6 +152,6 @@ test('should throw if the screen is not defined under the route config', () => {
 
   expect(() =>
     getScreenOptions(
-      addNavigationHelpers({ state: routes[0], dispatch: () => false }),
+      addNavigationHelpers({ state: routes[0], dispatch: () => false })
     )).toThrowError('Route Home must define a screen or a getScreen.');
 });

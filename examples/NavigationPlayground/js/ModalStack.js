@@ -62,7 +62,7 @@ const ProfileNavigator = StackNavigator(
   },
   {
     navigationOptions: { headerVisible: false },
-  },
+  }
 );
 
 const MyHeaderTestScreen = ({ navigation }) => (
@@ -89,7 +89,7 @@ const ModalStack = StackNavigator(
   },
   {
     mode: 'modal',
-  },
+  }
 );
 
 export default ModalStack;

@@ -21,7 +21,7 @@ export type TabNavigatorConfig = NavigationTabRouterConfig & TabViewConfig & Nav
 
 const TabNavigator = (
   routeConfigs: NavigationRouteConfigMap,
-  config: TabNavigatorConfig = {},
+  config: TabNavigatorConfig = {}
 ) => {
   // Use the look native to the platform by default
   const mergedConfig = { ...TabNavigator.Presets.Default, ...config };
@@ -41,7 +41,7 @@ const TabNavigator = (
       router,
       routeConfigs,
       config,
-      NavigatorTypes.STACK,
+      NavigatorTypes.STACK
     )((props: *) => (
       <TabView
         {...props}
@@ -53,7 +53,7 @@ const TabNavigator = (
         lazyLoad={lazyLoad}
       />
     )),
-    containerOptions,
+    containerOptions
   );
 };
 

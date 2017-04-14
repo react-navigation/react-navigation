@@ -39,7 +39,7 @@ const DrawerNavigatorItems = (
     renderIcon,
     style,
     labelStyle,
-  }: Props,
+  }: Props
 ) => (
   <View style={[styles.container, style]}>
     {navigation.state.routes.map((route: *, index: number) => {

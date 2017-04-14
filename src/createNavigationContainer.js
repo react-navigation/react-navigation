@@ -23,7 +23,7 @@ import type {
  */
 export default function createNavigationContainer<T: *>(
   Component: ReactClass<*>,
-  containerConfig?: NavigationContainerOptions,
+  containerConfig?: NavigationContainerOptions
 ) {
   type Props = {
     navigation: NavigationProp<T, NavigationAction>,
@@ -66,7 +66,7 @@ export default function createNavigationContainer<T: *>(
           'This navigator has a container config AND a navigation prop, so it is ' +
             'unclear if it should own its own state. Remove the containerConfig ' +
             'if the navigator should get its state from the navigation prop. If the ' +
-            'navigator should maintain its own state, do not pass a navigation prop.',
+            'navigator should maintain its own state, do not pass a navigation prop.'
         );
         return false;
       }
@@ -95,7 +95,7 @@ export default function createNavigationContainer<T: *>(
               const { path, params } = parsedUrl;
               const action = Component.router.getActionForPathAndParams(
                 path,
-                params,
+                params
               );
               if (action) {
                 this.dispatch(action);

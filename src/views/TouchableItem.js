@@ -34,7 +34,8 @@ type DefaultProps = {
   pressColor: ?string,
 };
 
-export default class TouchableItem extends Component<DefaultProps, Props, void> {
+export default class TouchableItem
+  extends Component<DefaultProps, Props, void> {
   static defaultProps = {
     pressColor: 'rgba(0, 0, 0, .32)',
   };
@@ -59,7 +60,7 @@ export default class TouchableItem extends Component<DefaultProps, Props, void> 
           style={null}
           background={TouchableNativeFeedback.Ripple(
             this.props.pressColor,
-            this.props.borderless,
+            this.props.borderless
           )}
         >
           <View style={this.props.style}>

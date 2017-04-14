@@ -18,7 +18,7 @@ export type StackNavigatorConfig = NavigationContainerConfig & NavigationStackVi
 
 export default (
   routeConfigMap: NavigationRouteConfigMap,
-  stackConfig: StackNavigatorConfig = {},
+  stackConfig: StackNavigatorConfig = {}
 ) => {
   const {
     containerOptions,
@@ -45,7 +45,7 @@ export default (
       router,
       routeConfigMap,
       stackConfig,
-      NavigatorTypes.STACK,
+      NavigatorTypes.STACK
     )((props: *) => (
       <CardStackTransitioner
         {...props}
@@ -57,6 +57,6 @@ export default (
         onTransitionEnd={onTransitionEnd}
       />
     )),
-    containerOptions,
+    containerOptions
   );
 };

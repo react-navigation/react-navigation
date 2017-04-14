@@ -12,7 +12,7 @@ function validateRouteConfigMap(routeConfigs: NavigationRouteConfigMap) {
   const routeNames = Object.keys(routeConfigs);
   invariant(
     routeNames.length > 0,
-    'Please specify at least one route when configuring a navigator.',
+    'Please specify at least one route when configuring a navigator.'
   );
 
   routeNames.forEach((routeName: string) => {
@@ -26,14 +26,14 @@ function validateRouteConfigMap(routeConfigs: NavigationRouteConfigMap) {
         '...\n' +
         `${routeName}: {\n` +
         '  screen: MyScreen,\n' +
-        '}',
+        '}'
     );
 
     if (routeConfig.screen && routeConfig.getScreen) {
       invariant(
         false,
         `Route '${routeName}' should declare a screen or ` +
-          'a getScreen, not both.',
+          'a getScreen, not both.'
       );
     }
 
@@ -52,7 +52,7 @@ function validateRouteConfigMap(routeConfigs: NavigationRouteConfigMap) {
           '...\n' +
           `${routeName}: {\n` +
           '  screen: MyNavigator,\n' +
-          '}',
+          '}'
       );
     }
   });

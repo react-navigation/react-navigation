@@ -19,12 +19,12 @@ function nav(state = initialNavState, action) {
     case 'Login':
       return AppNavigator.router.getStateForAction(
         NavigationActions.back(),
-        state,
+        state
       );
     case 'Logout':
       return AppNavigator.router.getStateForAction(
         NavigationActions.navigate({ routeName: 'Login' }),
-        state,
+        state
       );
     default:
       return AppNavigator.router.getStateForAction(action, state);

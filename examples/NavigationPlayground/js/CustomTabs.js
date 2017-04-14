@@ -47,7 +47,7 @@ const MySettingsScreen = ({ navigation }) => (
 const CustomTabBar = (
   {
     navigation,
-  },
+  }
 ) => {
   const { routes } = navigation.state;
   return (
@@ -69,7 +69,7 @@ const CustomTabView = (
   {
     router,
     navigation,
-  },
+  }
 ) => {
   const { routes, index } = navigation.state;
   const ActiveScreen = router.getComponentForState(navigation.state);
@@ -104,11 +104,11 @@ const CustomTabRouter = TabRouter(
   {
     // Change this to start on a different tab
     initialRouteName: 'Home',
-  },
+  }
 );
 
 const CustomTabs = createNavigationContainer(
-  createNavigator(CustomTabRouter)(CustomTabView),
+  createNavigator(CustomTabRouter)(CustomTabView)
 );
 
 const styles = StyleSheet.create({
