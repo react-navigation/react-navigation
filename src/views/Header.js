@@ -1,6 +1,8 @@
+'no babel-plugin-flow-react-proptypes'; // doesn't support intersection yet
+
 /* @flow */
 
-import React, { PropTypes } from 'react';
+import React from 'react';
 
 import {
   Animated,
@@ -12,7 +14,6 @@ import {
 import HeaderTitle from './HeaderTitle';
 import HeaderBackButton from './HeaderBackButton';
 import HeaderStyleInterpolator from './HeaderStyleInterpolator';
-import NavigationPropTypes from '../PropTypes';
 
 import type {
   NavigationScene,
@@ -55,18 +56,9 @@ const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : 0;
 const TITLE_OFFSET = Platform.OS === 'ios' ? 70 : 40;
 
 class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
-
   static HEIGHT = APPBAR_HEIGHT + STATUSBAR_HEIGHT;
   static Title = HeaderTitle;
   static BackButton = HeaderBackButton;
-
-  // propTypes for people who don't use Flow
-  static propTypes = {
-    ...NavigationPropTypes.SceneRendererProps,
-    router: PropTypes.object,
-  };
-
-  props: HeaderProps;
 
   state = {
     widths: {},
@@ -81,16 +73,15 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
   }
 
   _getBackButtonTitleString(scene: NavigationScene): ?string {
-    const sceneOptions = this.props.getScreenDetails(scene).options;
-    const {headerBackTitle} = sceneOptions;
-    const lastScene = scene.index && this.props.scenes.find(s => s.index === scene.index - 1);
-    if (headerBackTitle || headerBackTitle === null) {
-      return headerBackTitle;
-    } else if (lastScene) {
-      return this._getHeaderTitleString(lastScene);
-    } else {
+    const lastScene = this.props.scenes.find(s => s.index === scene.index - 1);
+    if (!lastScene) {
       return null;
     }
+    const { headerBackTitle } = this.props.getScreenDetails(lastScene).options;
+    if (headerBackTitle || headerBackTitle === null) {
+      return headerBackTitle;
+    }
+    return this._getHeaderTitleString(lastScene);
   }
 
   _renderTitleComponent = (props: SceneProps) => {
@@ -128,13 +119,12 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
   };
 
   _renderLeftComponent = (props: SceneProps) => {
+    const options = this.props.getScreenDetails(props.scene).options;
+    if (typeof options.headerLeft !== 'undefined') {
+      return options.headerLeft;
+    }
     if (props.scene.index === 0) {
       return null;
-    }
-    const details = this.props.getScreenDetails(props.scene);
-    const {headerLeft, headerPressColorAndroid} = details.options;
-    if (headerLeft) {
-      return headerLeft;
     }
     const backButtonTitle = this._getBackButtonTitleString(props.scene);
     const width = this.state.widths[props.scene.key]
@@ -143,8 +133,8 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
     return (
       <HeaderBackButton
         onPress={() => this.props.navigation.goBack(null)}
-        pressColorAndroid={headerPressColorAndroid}
-        tintColor={details.options.headerTintColor}
+        pressColorAndroid={options.headerPressColorAndroid}
+        tintColor={options.headerTintColor}
         title={backButtonTitle}
         width={width}
       />

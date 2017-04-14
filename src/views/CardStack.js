@@ -1,7 +1,7 @@
 /* @flow */
 
-import React, { PropTypes, Component } from 'react';
-import { Animated, StyleSheet, PanResponder, Platform, View, I18nManager, Keyboard } from 'react-native';
+import React, { Component } from 'react';
+import { Animated, StyleSheet, PanResponder, Platform, View, I18nManager } from 'react-native';
 
 import Card from './Card';
 import NavigationActions from '../NavigationActions';
@@ -41,7 +41,7 @@ type Props = {
   cardStyle?: Style,
   onTransitionStart?: () => void,
   onTransitionEnd?: () => void,
-  style: any,
+  style?: any,
   /**
    * Optional custom animation when transitioning between screens.
    */
@@ -56,12 +56,6 @@ type Props = {
   scene: NavigationScene,
   index: number,
 };
-
-type DefaultProps = {
-  mode: 'card' | 'modal',
-  headerComponent: ReactClass<*>,
-};
-
 
 /**
  * The duration of the card animation in milliseconds.
@@ -85,7 +79,6 @@ const RESPOND_THRESHOLD = 12;
  */
 const GESTURE_RESPONSE_DISTANCE = 35;
 
-
 class CardStack extends Component {
 
   /**
@@ -104,11 +97,6 @@ class CardStack extends Component {
   } = {};
 
   props: Props;
-
-  constructor(props: Props) {
-    console.log('Controlled Card stack init ',props.navigation.state);
-    super(props);
-  }
 
   componentWillReceiveProps(props: Props) {
     if (props.screenProps !== this.props.screenProps) {
