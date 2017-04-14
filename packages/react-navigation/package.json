@@ -56,7 +56,6 @@
     "eslint-plugin-react": "^6.10.0",
     "flow-bin": "^0.37.4",
     "jest": "^19.0.2",
-    "prop-types": "^15.5.8",
     "react": "~15.4.2",
     "react-native": "^0.41.2",
     "react-native-vector-icons": "^3.0.0",
@@ -71,6 +70,7 @@
     "fbjs": "^0.8.5",
     "hoist-non-react-statics": "^1.2.0",
     "path-to-regexp": "^1.7.0",
+    "prop-types": "^15.5.8",
     "react-native-drawer-layout-polyfill": "1.2.0",
     "react-native-tab-view": "^0.0.57"
   },
