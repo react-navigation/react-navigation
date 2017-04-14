@@ -1,6 +1,6 @@
-'no babel-plugin-flow-react-proptypes'; // doesn't support intersection yet
-
 /* @flow */
+
+'no babel-plugin-flow-react-proptypes';
 
 import React from 'react';
 
@@ -17,23 +17,10 @@ import HeaderStyleInterpolator from './HeaderStyleInterpolator';
 
 import type {
   NavigationScene,
-  NavigationRouter,
-  NavigationAction,
-  NavigationSceneRendererProps,
   NavigationStyleInterpolator,
-  NavigationScreenDetails,
-  NavigationStackScreenOptions,
-  NavigationState,
   LayoutEvent,
+  HeaderProps,
 } from '../TypeDefinition';
-
-export type HeaderMode = 'float' | 'screen' | 'none';
-
-export type HeaderProps = NavigationSceneRendererProps & {
-  mode: HeaderMode,
-  router: NavigationRouter<NavigationState, NavigationAction, NavigationStackScreenOptions>,
-  getScreenDetails: NavigationScene => NavigationScreenDetails<NavigationStackScreenOptions>,
-};
 
 type SceneProps = {
   scene: NavigationScene,
@@ -132,7 +119,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
       : undefined;
     return (
       <HeaderBackButton
-        onPress={() => this.props.navigation.goBack(null)}
+        onPress={() => { this.props.navigation.goBack(null); }}
         pressColorAndroid={options.headerPressColorAndroid}
         tintColor={options.headerTintColor}
         title={backButtonTitle}
@@ -208,7 +195,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
       return null;
     }
 
-    let subView = renderer(props);
+    const subView = renderer(props);
 
     if (subView == null) {
       return null;
@@ -260,7 +247,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
     let appBar;
 
     if (this.props.mode === 'float') {
-      const scenesProps: Array<NavigationSceneRendererProps> = this.props.scenes
+      const scenesProps: Array<SceneProps> = this.props.scenes
         .map((scene: NavigationScene) => ({
           position: this.props.position,
           progress: this.props.progress,
