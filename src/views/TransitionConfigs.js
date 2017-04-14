@@ -30,6 +30,7 @@ export type TransitionConfig = {
 const DefaultTransitionSpec = ({
   // The following options are meant to mimic the nav animations of iOS 10
   duration: 250,
+  easing: Easing.inOut(Easing.ease),
   timing: Animated.timing,
 } : NavigationTransitionSpec);
 
