@@ -92,12 +92,15 @@
     ]
   },
   "lint-staged": {
-    "src/*.js": [
-      "eslint --fix"
-    ],
-    "*.js": [
-      "prettier --single-quote --trailing-comma es5 --write",
-      "git add"
-    ]
+    "concurrent": false,
+    "linters": {
+      "src/**/*.js": [
+        "eslint --fix"
+      ],
+      "*.js": [
+        "prettier --single-quote --trailing-comma es5 --write",
+        "git add"
+      ]
+    }
   }
 }
