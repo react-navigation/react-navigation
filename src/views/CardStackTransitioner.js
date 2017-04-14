@@ -17,12 +17,9 @@ import type {
   NavigationState,
   NavigationTransitionProps,
   NavigationRouter,
+  HeaderMode,
   Style,
 } from '../TypeDefinition';
-
-import type { HeaderMode } from './Header';
-
-import type { TransitionConfig } from './TransitionConfigs';
 
 const NativeAnimatedModule = NativeModules &&
   NativeModules.NativeAnimatedModule;
