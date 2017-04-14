@@ -85,7 +85,7 @@ const RESPOND_THRESHOLD = 12;
  */
 const GESTURE_RESPONSE_DISTANCE = 35;
 
-const tSubscribeValue = (animatedValue: Animated.Value) => {
+const animatedSubscribeValue = (animatedValue: Animated.Value) => {
   if (!animatedValue.__isNative) {
     return;
   }

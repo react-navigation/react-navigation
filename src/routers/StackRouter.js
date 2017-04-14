@@ -133,8 +133,8 @@ export default (
           key: 'Init',
           ...(params ? { params } : {}),
         };
+        // eslint-disable-next-line no-param-reassign
         state = {
-          // eslint-disable-line no-param-reassign
           index: 0,
           routes: [route],
         };
