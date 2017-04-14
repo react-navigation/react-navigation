@@ -70,9 +70,9 @@
     "fbjs": "^0.8.5",
     "hoist-non-react-statics": "^1.2.0",
     "path-to-regexp": "^1.7.0",
+    "prop-types": "^15.5.8",
     "react-native-drawer-layout-polyfill": "1.2.0",
-    "react-native-tab-view": "^0.0.57",
-    "prop-types": "^15.5.8"
+    "react-native-tab-view": "^0.0.57"
   },
   "jest": {
     "notify": true,
