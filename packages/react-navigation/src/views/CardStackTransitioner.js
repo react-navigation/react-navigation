@@ -12,7 +12,6 @@ import Header from './Header';
 const NativeAnimatedModule = NativeModules &&
   NativeModules.NativeAnimatedModule;
 
-
 import type {
   NavigationAction,
   NavigationSceneRenderer,
@@ -21,14 +20,11 @@ import type {
   NavigationState,
   NavigationTransitionProps,
   NavigationRouter,
+  HeaderMode,
   Style,
 } from '../TypeDefinition';
 
-
-import type { HeaderMode } from './Header';
-
 import type { TransitionConfig } from './TransitionConfigs';
-
 
 type Props = {
   screenProps?: {},

@@ -1,5 +1,4 @@
 {
-  "presets": ["react-native"],
   "env": {
     // For RN example development
     "development": {
