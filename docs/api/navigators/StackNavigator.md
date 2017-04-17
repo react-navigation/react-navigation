@@ -99,10 +99,6 @@ Generic title that can be used as a fallback for `headerTitle` and `tabBarLabel`
 
 Title string used by the back button on iOS or `null` to disable label. Defaults to `title`.
 
-#### `headerBackTitleStyle`
-
-Style object for the title string used by the back button.
-
 #### `headerVisible`
 
 True or false to show or hide the header. Only works when `headerMode` is `screen`. Default value is `true`.
@@ -114,6 +110,10 @@ String or React Element used by the header. Defaults to scene `title`
 #### `headerBackTitle`
 
 Title string used by the back button on iOS or `null` to disable label. Defaults to scene `title`
+
+#### `headerBackTitleStyle`
+
+Style object for the title string used by the back button.
 
 #### `headerRight`
 
