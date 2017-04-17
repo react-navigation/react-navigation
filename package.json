@@ -42,7 +42,7 @@
     "babel-core": "^6.24.0",
     "babel-eslint": "^7.0.0",
     "babel-jest": "^19.0.0",
-    "babel-plugin-flow-react-proptypes": "grabbou/babel-plugin-flow-react-proptypes#release",
+    "babel-plugin-flow-react-proptypes": "^1.2.0",
     "babel-preset-es2015": "^6.24.0",
     "babel-preset-react": "^6.23.0",
     "babel-preset-react-native": "^1.9.0",
