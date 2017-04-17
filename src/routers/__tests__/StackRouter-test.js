@@ -407,7 +407,7 @@ describe('StackRouter', () => {
     const state4 = router.getStateForAction({ type: NavigationActions.BACK, key: 'wrongKey' }, state3);
     expect(state3).toEqual(state4);
     const state5 = router.getStateForAction({ type: NavigationActions.BACK, key: state3 && state3.routes[1].key }, state4);
-    expect(state5).toEqual(state);
+    expect(state5).toEqual(state2);
   });
 
   test('Handle initial route navigation', () => {
