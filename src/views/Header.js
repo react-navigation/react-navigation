@@ -81,6 +81,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
 
     const titleStyle = details.options.headerTitleStyle;
     const color = details.options.headerTintColor;
+    const backTitleStyle = details.options.headerBackTitleStyle;
 
     // On iOS, width of left/right components depends on the calculated
     // size of the title.
@@ -124,6 +125,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
         tintColor={options.headerTintColor}
         title={backButtonTitle}
         width={width}
+        titleStyle={backTitleStyle}
       />
     );
   };
