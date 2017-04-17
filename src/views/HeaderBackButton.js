@@ -12,7 +12,7 @@ import {
 
 import type {
   LayoutEvent,
-  Style
+  Style,
 } from '../TypeDefinition';
 
 import TouchableItem from './TouchableItem';
@@ -58,7 +58,15 @@ class HeaderBackButton extends React.PureComponent<DefaultProps, Props, State> {
   };
 
   render() {
-    const { onPress, pressColorAndroid, width, title, tintColor, truncatedTitle, titleStyle } = this.props;
+    const {
+      onPress,
+      pressColorAndroid,
+      width,
+      title,
+      tintColor,
+      truncatedTitle,
+      titleStyle,
+    } = this.props;
 
     const renderTruncated = this.state.initialTextWidth && width
       ? this.state.initialTextWidth > width
