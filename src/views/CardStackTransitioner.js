@@ -12,7 +12,6 @@ import Header from './Header';
 const NativeAnimatedModule = NativeModules &&
   NativeModules.NativeAnimatedModule;
 
-
 import type {
   NavigationAction,
   NavigationSceneRenderer,
@@ -21,14 +20,11 @@ import type {
   NavigationState,
   NavigationTransitionProps,
   NavigationRouter,
+  HeaderMode,
   Style,
 } from '../TypeDefinition';
 
-
-import type { HeaderMode } from './Header';
-
 import type { TransitionConfig } from './TransitionConfigs';
-
 
 type Props = {
   screenProps?: {},
@@ -103,19 +99,23 @@ class CardStackTransitioner extends Component<DefaultProps, Props, void> {
 
   _render = (props: NavigationTransitionProps): React.Element<*> => {
     const {
+      screenProps,
       headerComponent,
       headerMode,
       mode,
       router,
+      style,
       cardStyle,
     } = this.props;
     return (
       <CardStack
+        screenProps={screenProps}
         headerComponent={headerComponent}
         headerMode={headerMode}
         mode={mode}
         router={router}
-        style={cardStyle}
+        cardStyle={cardStyle}
+        style={style}
         {...props}
       />
     );

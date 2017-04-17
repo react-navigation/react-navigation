@@ -19,17 +19,15 @@ import type {
   NavigationState,
   NavigationScreenDetails,
   NavigationStackScreenOptions,
+  HeaderMode,
   Style,
 } from '../TypeDefinition';
-
-import type { HeaderMode } from './Header';
 
 import type { TransitionConfig } from './TransitionConfigs';
 
 import TransitionConfigs from './TransitionConfigs';
 
 const emptyFunction = () => {};
-
 
 type Props = {
   screenProps?: {},

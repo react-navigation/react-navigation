@@ -2,14 +2,17 @@
 
 import React from 'react';
 
-import {
-  Animated,
-} from 'react-native';
+// @todo when we split types into common, native and web,
+// we can properly change Animated.Value to its real value
+type AnimatedValue = *;
 
-import type {
-  HeaderMode,
-  HeaderProps,
-} from './views/Header';
+export type HeaderMode = 'float' | 'screen' | 'none';
+
+export type HeaderProps = NavigationSceneRendererProps & {
+  mode: HeaderMode,
+  router: NavigationRouter<NavigationState, NavigationAction, NavigationStackScreenOptions>,
+  getScreenDetails: NavigationScene => NavigationScreenDetails<NavigationStackScreenOptions>,
+};
 
 /**
  * NavigationState is a tree of routes for a single navigator, where each child
@@ -204,9 +207,11 @@ export type NavigationStackViewConfig = {
 export type NavigationStackScreenOptions = NavigationScreenOptions & {
   headerTitle?: string | React.Element<*>,
   headerTitleStyle?: Style,
-  headerLeft?: string | React.Element<*>,
+  headerTintColor?: string,
+  headerLeft?: React.Element<*>,
   headerBackTitle?: string,
-  headerRight?: string | React.Element<*>,
+  headerPressColorAndroid?: string,
+  headerRight?: React.Element<*>,
   headerStyle?: Style,
   headerVisible?: boolean,
   gesturesEnabled?: boolean,
@@ -308,11 +313,11 @@ export type NavigationNavigatorProps = {
 export type NavigationGestureDirection = 'horizontal' | 'vertical';
 
 export type NavigationLayout = {
-  height: Animated.Value,
+  height: AnimatedValue,
   initHeight: number,
   initWidth: number,
   isMeasured: boolean,
-  width: Animated.Value,
+  width: AnimatedValue,
 };
 
 export type NavigationScene = {
@@ -331,14 +336,14 @@ export type NavigationTransitionProps = {
   navigation: NavigationScreenProp<NavigationState, NavigationAction>,
 
   // The progressive index of the transitioner's navigation state.
-  position: Animated.Value,
+  position: AnimatedValue,
 
   // The value that represents the progress of the transition when navigation
   // state changes from one to another. Its numberic value will range from 0
   // to 1.
   //  progress.__getAnimatedValue() < 1 : transtion is happening.
   //  progress.__getAnimatedValue() == 1 : transtion completes.
-  progress: Animated.Value,
+  progress: AnimatedValue,
 
   // All the scenes of the transitioner.
   scenes: Array<NavigationScene>,
@@ -350,6 +355,8 @@ export type NavigationTransitionProps = {
   // is the index of the scene
   scene: NavigationScene,
   index: number,
+
+  screenProps?: {},
 };
 
 // The scene renderer props are nearly identical to the props used for rendering
@@ -362,11 +369,11 @@ export type NavigationTransitionSpec = {
   // An easing function from `Easing`.
   easing?: () => any,
   // A timing function such as `Animated.timing`.
-  timing?: (value: Animated.Value, config: any) => any,
+  timing?: (value: AnimatedValue, config: any) => any,
 };
 
 export type NavigationAnimationSetter = (
-  position: Animated.Value,
+  position: AnimatedValue,
   newState: NavigationState,
   lastState: NavigationState,
 ) => void;
