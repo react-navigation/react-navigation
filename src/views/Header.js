@@ -15,6 +15,7 @@ import type {
   NavigationStyleInterpolator,
   LayoutEvent,
   HeaderProps,
+  Style,
 } from '../TypeDefinition';
 
 type SceneProps = {
@@ -78,6 +79,24 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
     ).options.headerTruncatedBackTitle;
   }
 
+  _getBackButtonTitleStyle(scene: NavigationScene): ?Style {
+    const lastScene = this._getLastScene(scene);
+    if (!lastScene) {
+      return null;
+    }
+    const {
+      headerBackTitleStyle,
+      headerBackTitle,
+      headerTitleStyle,
+    } = this.props.getScreenDetails(lastScene).options;
+
+    if (headerBackTitle === null) {
+      return null;
+    }
+
+    return headerBackTitleStyle || headerTitleStyle;
+  }
+
   _renderTitleComponent = (props: SceneProps) => {
     const details = this.props.getScreenDetails(props.scene);
     const headerTitle = details.options.headerTitle;
@@ -124,6 +143,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
     const truncatedBackButtonTitle = this._getTruncatedBackButtonTitle(
       props.scene,
     );
+    const backButtonTitleStyle = this._getBackButtonTitleStyle(props.scene);
     const width = this.state.widths[props.scene.key]
       ? (this.props.layout.initWidth - this.state.widths[props.scene.key]) / 2
       : undefined;
@@ -136,6 +156,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
         tintColor={options.headerTintColor}
         title={backButtonTitle}
         truncatedTitle={truncatedBackButtonTitle}
+        titleStyle={backButtonTitleStyle}
         width={width}
       />
     );
