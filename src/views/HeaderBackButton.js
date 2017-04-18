@@ -54,7 +54,7 @@ class HeaderBackButton extends React.PureComponent<DefaultProps, Props, State> {
   };
 
   render() {
-    const { onPress, pressColorAndroid, width, title, tintColor, truncatedTitle } = this.props;
+    const { onPress, pressColorAndroid, width, title, tintColor, truncatedTitle, style } = this.props;
 
     const renderTruncated = this.state.initialTextWidth && width
       ? this.state.initialTextWidth > width
@@ -80,7 +80,7 @@ class HeaderBackButton extends React.PureComponent<DefaultProps, Props, State> {
           {Platform.OS === 'ios' && title && (
             <Text
               onLayout={this._onTextLayout}
-              style={[styles.title, { color: tintColor }]}
+              style={[styles.title, { color: tintColor }, style]}
               numberOfLines={1}
             >
               {renderTruncated ? truncatedTitle : title}
