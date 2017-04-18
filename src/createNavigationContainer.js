@@ -12,11 +12,18 @@ import addNavigationHelpers from './addNavigationHelpers';
 import type {
   NavigationRoute,
   NavigationAction,
-  NavigationContainerOptions,
   NavigationProp,
   NavigationState,
   NavigationScreenProp,
 } from './TypeDefinition';
+
+type ContainerProps = {
+  uriPrefix?: string,
+};
+
+type State = {
+  nav: ?NavigationState,
+};
 
 /**
  * Create an HOC that injects the navigation and manages the navigation state
@@ -26,32 +33,13 @@ import type {
  */
 export default function createNavigationContainer<T: *>(
   Component: ReactClass<*>,
-  containerConfig?: NavigationContainerOptions
 ) {
-  type Props = {
-    navigation: NavigationProp<T, NavigationAction>,
+  type Props = ContainerProps & {
+    navigation?: NavigationProp<T, NavigationAction>,
     onNavigationStateChange?: (NavigationState, NavigationState) => void,
   };
 
-  type State = {
-    nav: ?NavigationState,
-  };
-
-  function urlToPathAndParams(url: string) {
-    const params = {};
-    const URIPrefix = containerConfig && containerConfig.URIPrefix;
-    const delimiter = URIPrefix || '://';
-    let path = url.split(delimiter)[1];
-    if (!path) {
-      path = url;
-    }
-    return {
-      path,
-      params,
-    };
-  }
-
-  class NavigationContainer extends React.Component {
+  class NavigationContainer extends React.Component<void, Props, State> {
     state: State;
     props: Props;
 
@@ -61,23 +49,11 @@ export default function createNavigationContainer<T: *>(
 
     static router = Component.router;
 
-    _isStateful: () => boolean = () => {
-      const hasNavProp = !!this.props.navigation;
-      if (hasNavProp) {
-        invariant(
-          !containerConfig,
-          'This navigator has a container config AND a navigation prop, so it is ' +
-          'unclear if it should own its own state. Remove the containerConfig ' +
-          'if the navigator should get its state from the navigation prop. If the ' +
-          'navigator should maintain its own state, do not pass a navigation prop.'
-        );
-        return false;
-      }
-      return true;
-    }
-
     constructor(props: Props) {
       super(props);
+
+      this._validateProps(props);
+
       this.state = {
         nav: this._isStateful()
           ? Component.router.getStateForAction(NavigationActions.init())
@@ -85,26 +61,68 @@ export default function createNavigationContainer<T: *>(
       };
     }
 
-    componentDidMount() {
-      if (this._isStateful()) {
-        this.subs = BackAndroid.addEventListener('backPress', () =>
-           this.dispatch(NavigationActions.back())
-        );
-        Linking.addEventListener('url', this._handleOpenURL);
-        Linking.getInitialURL().then((url: string) => {
-          if (url) {
-            console.log('Handling URL:', url);
-            const parsedUrl = urlToPathAndParams(url);
-            if (parsedUrl) {
-              const { path, params } = parsedUrl;
-              const action = Component.router.getActionForPathAndParams(path, params);
-              if (action) {
-                this.dispatch(action);
-              }
-            }
-          }
-        });
+    _getContainerProps(props: Props = this.props): ContainerProps {
+      const { navigation, onNavigationStateChange, ...containerProps } = props;
+      return containerProps;
+    }
+
+    _isStateful(): boolean {
+      return this.props.navigation;
+    }
+
+    _validateProps(props: Props) {
+      invariant(
+        !this._isStateful() && Object.keys(this._getContainerProps(props)).length === 0,
+        'This navigator has a container config AND a navigation prop, so it is ' +
+        'unclear if it should own its own state. Remove the containerConfig ' +
+        'if the navigator should get its state from the navigation prop. If the ' +
+        'navigator should maintain its own state, do not pass a navigation prop.',
+      );
+    }
+
+    _urlToPathAndParams(url: string) {
+      const params = {};
+      const delimiter = this.props.uriPrefix || '://';
+      let path = url.split(delimiter)[1];
+      if (!path) {
+        path = url;
       }
+      return {
+        path,
+        params,
+      };
+    }
+
+    _handleOpenURL = (url: string) => {
+      const parsedUrl = this._urlToPathAndParams(url);
+      if (parsedUrl) {
+        const { path, params } = parsedUrl;
+        const action = Component.router.getActionForPathAndParams(path, params);
+        if (action) {
+          this.dispatch(action);
+        }
+      }
+    };
+
+    componentWillReceiveProps(nextProps: *) {
+      this._validateProps(nextProps);
+    }
+
+    componentDidMount() {
+      if (!this._isStateful()) {
+        return;
+      }
+
+      this.subs = BackAndroid.addEventListener(
+        'backPress',
+        () => this.dispatch(NavigationActions.back()),
+      );
+
+      Linking.addEventListener('url', ({ url }: { url: string }) => {
+        this._handleOpenURL(url);
+      });
+
+      Linking.getInitialURL().then((url: string) => this._handleOpenURL(url));
     }
 
     componentDidUpdate(prevProps: Props, prevState: State) {
@@ -116,7 +134,6 @@ export default function createNavigationContainer<T: *>(
         prevNavigationState !== navigationState
         && typeof this.props.onNavigationStateChange === 'function'
       ) {
-        // $FlowFixMe state is always defined, either this.state or props
         this.props.onNavigationStateChange(prevNavigationState, navigationState);
       }
     }
@@ -126,25 +143,12 @@ export default function createNavigationContainer<T: *>(
       this.subs && this.subs.remove();
     }
 
-    _handleOpenURL = ({ url }: { url: string }) => {
-      console.log('Handling URL:', url);
-      const parsedUrl = urlToPathAndParams(url);
-      if (parsedUrl) {
-        const { path, params } = parsedUrl;
-        const action = Component.router.getActionForPathAndParams(path, params);
-        if (action) {
-          this.dispatch(action);
-        }
-      }
-    };
-
     dispatch = (action: NavigationAction) => {
       const { state } = this;
       if (!this._isStateful()) {
         return false;
       }
       const nav = Component.router.getStateForAction(action, state.nav);
-
       if (nav && nav !== state.nav) {
         if (console.group) {
           console.group('Navigation Dispatch: ');
@@ -168,7 +172,7 @@ export default function createNavigationContainer<T: *>(
       if (this._isStateful()) {
         if (!this._navigation || this._navigation.state !== this.state.nav) {
           this._navigation = addNavigationHelpers({
-            dispatch: this.dispatch.bind(this),
+            dispatch: this.dispatch,
             state: this.state.nav,
           });
         }

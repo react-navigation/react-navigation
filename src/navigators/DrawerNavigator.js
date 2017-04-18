@@ -15,13 +15,11 @@ import NavigatorTypes from './NavigatorTypes';
 
 import type { DrawerViewConfig } from '../views/Drawer/DrawerView';
 import type {
-  NavigationContainerConfig,
   NavigationRouteConfigMap,
   NavigationTabRouterConfig,
 } from '../TypeDefinition';
 
 export type DrawerNavigatorConfig =
-  & NavigationContainerConfig
   & NavigationTabRouterConfig
   & DrawerViewConfig;
 
@@ -69,7 +67,7 @@ const DrawerNavigator = (
       contentOptions={contentOptions}
       drawerPosition={drawerPosition}
     />
-  ), containerConfig);
+  ));
 };
 
 export default DrawerNavigator;

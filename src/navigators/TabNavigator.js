@@ -12,15 +12,13 @@ import NavigatorTypes from './NavigatorTypes';
 import type { TabViewConfig } from '../views/TabView/TabView';
 
 import type {
-  NavigationContainerConfig,
   NavigationRouteConfigMap,
   NavigationTabRouterConfig,
 } from '../TypeDefinition';
 
 export type TabNavigatorConfig =
   & NavigationTabRouterConfig
-  & TabViewConfig
-  & NavigationContainerConfig;
+  & TabViewConfig;
 
 const TabNavigator = (
   routeConfigs: NavigationRouteConfigMap,
@@ -29,7 +27,6 @@ const TabNavigator = (
   // Use the look native to the platform by default
   const mergedConfig = { ...TabNavigator.Presets.Default, ...config };
   const {
-    containerOptions,
     tabBarComponent,
     tabBarPosition,
     tabBarOptions,
@@ -49,7 +46,7 @@ const TabNavigator = (
       animationEnabled={animationEnabled}
       lazyLoad={lazyLoad}
     />
-  ), containerOptions);
+  ));
 };
 
 const Presets = {

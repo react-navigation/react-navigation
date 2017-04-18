@@ -186,15 +186,6 @@ export type NavigationUriAction = {
   uri: string,
 };
 
-export type NavigationContainerOptions = {
-  // This is used to extract the path from the URI passed to the app for a deep link
-  URIPrefix?: string,
-};
-
-export type NavigationContainerConfig = {
-  containerOptions?: NavigationContainerOptions,
-};
-
 export type NavigationStackViewConfig = {
   mode?: 'card' | 'modal',
   headerMode?: HeaderMode,
