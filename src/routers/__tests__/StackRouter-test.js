@@ -283,6 +283,32 @@ describe('StackRouter', () => {
     });
   });
 
+  test('Pushes other navigators when navigating to an unopened route name', () => {
+    const Bar = () => <div />;
+    Bar.router = StackRouter({
+      baz: { screen: () => <div /> },
+      qux: { screen: () => <div /> },
+    })
+    const TestRouter = StackRouter({
+      foo: { screen: () => <div /> },
+      bar: { screen: Bar },
+    })
+    const initState = TestRouter.getStateForAction(NavigationActions.init());
+    expect(initState).toEqual({
+      index: 0,
+      routes: [
+        { key: 'Init', routeName: 'foo' }
+      ]
+    });
+    const pushedState = TestRouter.getStateForAction(NavigationActions.navigate({ routeName: 'qux' }), initState);
+    // $FlowFixMe
+    expect(pushedState.index).toEqual(1);
+    // $FlowFixMe
+    expect(pushedState.routes[1].index).toEqual(1);
+    // $FlowFixMe
+    expect(pushedState.routes[1].routes[1].routeName).toEqual('qux');
+  });
+
   test('Handle basic stack logic for plain components', () => {
     const FooScreen = () => <div />;
     const BarScreen = () => <div />;

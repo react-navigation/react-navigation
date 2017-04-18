@@ -55,6 +55,18 @@ MyProfileScreen.navigationOptions = ({ navigation }) => ({
   title: `${navigation.state.params.name}'s Profile!`,
 });
 
+const ProfileNavigator = StackNavigator({
+  Home: {
+    screen: MyHomeScreen,
+  },
+  Profile: {
+    path: 'people/:name',
+    screen: MyProfileScreen,
+  },
+}, {
+  navigationOptions: {headerVisible: false},
+});
+
 const MyHeaderTestScreen = ({ navigation }) => (
   <MyNavScreen
     banner={`Full screen view`}
@@ -66,8 +78,6 @@ MyHeaderTestScreen.navigationOptions = ({navigation}) => {
   const headerVisible = !header || header === 'visible';
   return {
     headerVisible,
-    headerBackTitle: 'wow',
-    headerRight: <Text>wow2</Text>,
     title: 'Now you see me',
   };
 };
@@ -76,9 +86,8 @@ const ModalStack = StackNavigator({
   Home: {
     screen: MyHomeScreen,
   },
-  Profile: {
-    path: 'people/:name',
-    screen: MyProfileScreen,
+  ProfileNavigator: {
+    screen: ProfileNavigator,
   },
   HeaderTest: {screen: MyHeaderTestScreen},
 }, {

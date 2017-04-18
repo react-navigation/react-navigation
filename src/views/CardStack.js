@@ -1,7 +1,7 @@
 /* @flow */
 
-import React, { PropTypes, Component } from 'react';
-import { Animated, StyleSheet, PanResponder, Platform, View, I18nManager, Keyboard } from 'react-native';
+import React, { Component } from 'react';
+import { Animated, StyleSheet, PanResponder, Platform, View, I18nManager } from 'react-native';
 
 import Card from './Card';
 import NavigationActions from '../NavigationActions';
@@ -19,17 +19,15 @@ import type {
   NavigationState,
   NavigationScreenDetails,
   NavigationStackScreenOptions,
+  HeaderMode,
   Style,
 } from '../TypeDefinition';
-
-import type { HeaderMode } from './Header';
 
 import type { TransitionConfig } from './TransitionConfigs';
 
 import TransitionConfigs from './TransitionConfigs';
 
 const emptyFunction = () => {};
-
 
 type Props = {
   screenProps?: {},
@@ -41,7 +39,7 @@ type Props = {
   cardStyle?: Style,
   onTransitionStart?: () => void,
   onTransitionEnd?: () => void,
-  style: any,
+  style?: any,
   /**
    * Optional custom animation when transitioning between screens.
    */
@@ -56,12 +54,6 @@ type Props = {
   scene: NavigationScene,
   index: number,
 };
-
-type DefaultProps = {
-  mode: 'card' | 'modal',
-  headerComponent: ReactClass<*>,
-};
-
 
 /**
  * The duration of the card animation in milliseconds.
@@ -85,7 +77,6 @@ const RESPOND_THRESHOLD = 12;
  */
 const GESTURE_RESPONSE_DISTANCE = 35;
 
-
 /**
  * The ratio between the gesture velocity and the animation velocity. This allows
  * the velocity of a swipe release to carry on into the new animation.
@@ -93,7 +84,6 @@ const GESTURE_RESPONSE_DISTANCE = 35;
  * TODO: Understand and compute this ratio rather than using an approximation
  */
 const GESTURE_ANIMATED_VELOCITY_RATIO = -4;
-
 
 class CardStack extends Component {
 
@@ -122,11 +112,6 @@ class CardStack extends Component {
   } = {};
 
   props: Props;
-
-  constructor(props: Props) {
-    console.log('Controlled Card stack init ',props.navigation.state);
-    super(props);
-  }
 
   componentWillReceiveProps(props: Props) {
     if (props.screenProps !== this.props.screenProps) {
