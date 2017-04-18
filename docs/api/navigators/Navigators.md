@@ -52,6 +52,8 @@ For the purpose of convenience, the built-in navigators have this ability becaus
 
 Sometimes it is useful to know when navigation state managed by the top-level navigator changes. For this purpose, this function gets called every time with the previous state and the new state of the navigation.
 
+For top-level navigator, this function prints state updates by default.
+
 ### `containerOptions`
 
 These options can be used to configure a navigator when it is used at the top level.
