@@ -19,6 +19,19 @@ import type {
   NavigationScreenProp,
 } from './TypeDefinition';
 
+type DefaultProps = {
+  onNavigationStateChange: (NavigationState, NavigationState) => void,
+};
+
+type Props<T> = {
+  navigation: NavigationProp<T, NavigationAction>,
+  onNavigationStateChange?: (NavigationState, NavigationState) => void,
+};
+
+type State = {
+  nav: ?NavigationState,
+};
+
 const defaultNavigationChangeHandler: NavigationChangeHandler = (action: *, prevNav: *, nav: *) => {
   /* eslint-disable no-console */
   if (console.group) {
@@ -43,19 +56,6 @@ export default function createNavigationContainer<T: *>(
   Component: ReactClass<*>,
   containerConfig?: NavigationContainerOptions,
 ) {
-  type DefaultProps = {
-    onNavigationStateChange: (NavigationState, NavigationState) => void,
-  };
-
-  type Props = {
-    navigation: NavigationProp<T, NavigationAction>,
-    onNavigationStateChange?: (NavigationState, NavigationState) => void,
-  };
-
-  type State = {
-    nav: ?NavigationState,
-  };
-
   function urlToPathAndParams(url: string) {
     const params = {};
     const URIPrefix = containerConfig && containerConfig.URIPrefix;
@@ -75,9 +75,9 @@ export default function createNavigationContainer<T: *>(
     ? containerConfig.onNavigationChange
     : defaultNavigationChangeHandler;
 
-  class NavigationContainer extends React.Component<DefaultProps, Props, State> {
+  class NavigationContainer extends React.Component<DefaultProps, Props<T>, State> {
     state: State;
-    props: Props;
+    props: Props<T>;
 
     static defaultProps = {
       onNavigationStateChange: () => {},
@@ -104,7 +104,7 @@ export default function createNavigationContainer<T: *>(
       return true;
     }
 
-    constructor(props: Props) {
+    constructor(props: Props<T>) {
       super(props);
       this.state = {
         nav: this._isStateful()
@@ -134,12 +134,13 @@ export default function createNavigationContainer<T: *>(
       }
     }
 
-    componentDidUpdate(prevProps: Props, prevState: State) {
+    componentDidUpdate(prevProps: Props<T>, prevState: State) {
       const [prevNavigationState, navigationState] = this._isStateful()
         ? [prevState.nav, this.state.nav]
         : [prevProps.navigation.state, this.props.navigation.state];
 
       if (prevNavigationState !== navigationState) {
+        // $FlowFixMe state is always defined, either this.state or props
         this.props.onNavigationStateChange(prevNavigationState, navigationState);
       }
     }
