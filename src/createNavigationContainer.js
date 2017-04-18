@@ -52,7 +52,7 @@ export default function createNavigationContainer<T: *>(
     };
   }
 
-  class NavigationContainer extends React.Component<{}, Props<T>, State> {
+  class NavigationContainer extends React.Component<void, Props<T>, State> {
     state: State;
     props: Props<T>;
 
