@@ -44,11 +44,12 @@ export default function createNavigationContainer<T: *>(
   containerConfig?: NavigationContainerOptions,
 ) {
   type DefaultProps = {
-    onNavigationStateChange?: (NavigationState, NavigationState) => void,
+    onNavigationStateChange: (NavigationState, NavigationState) => void,
   };
 
-  type Props = DefaultProps & {
+  type Props = {
     navigation: NavigationProp<T, NavigationAction>,
+    onNavigationStateChange?: (NavigationState, NavigationState) => void,
   };
 
   type State = {
