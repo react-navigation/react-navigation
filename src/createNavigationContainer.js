@@ -13,7 +13,6 @@ import type {
   NavigationRoute,
   NavigationAction,
   NavigationContainerOptions,
-  NavigationChangeHandler,
   NavigationProp,
   NavigationState,
   NavigationScreenProp,

@@ -186,16 +186,9 @@ export type NavigationUriAction = {
   uri: string,
 };
 
-export type NavigationChangeHandler = (
-  action: NavigationAction,
-  prevNav: NavigationState,
-  nav: NavigationState,
-) => void;
-
 export type NavigationContainerOptions = {
   // This is used to extract the path from the URI passed to the app for a deep link
   URIPrefix?: string,
-  onNavigationChange?: NavigationChangeHandler,
 };
 
 export type NavigationContainerConfig = {
