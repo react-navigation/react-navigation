@@ -94,19 +94,19 @@ export default function create(
 
     _computePointerEvents(): string {
       const {
-        navigationState,
+        navigation,
         position,
         scene,
       } = this.props;
 
-      if (scene.isStale || navigationState.index !== scene.index) {
+      if (scene.isStale || navigation.state.index !== scene.index) {
         // The scene isn't focused.
-        return scene.index > navigationState.index ?
+        return scene.index > navigation.state.index ?
           'box-only' :
           'none';
       }
 
-      const offset = position.__getAnimatedValue() - navigationState.index;
+      const offset = position.__getAnimatedValue() - navigation.state.index;
       if (Math.abs(offset) > MIN_POSITION_OFFSET) {
         // The positon is still away from scene's index.
         // Scene's children should not receive touches until the position

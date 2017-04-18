@@ -72,30 +72,32 @@ Based on the routeNames in the state, the router is responsible for returning va
 
 Returns the active component for a deep navigation state.
 
-### `getActionForPathAndParams`
+### `getActionForPathAndParams(path, params)`
 
 Returns an optional navigation action that should be used when the user navigates to this path and provides optional query parameters.
 
-### `getPathAndParamsForState`
+### `getPathAndParamsForState(state)`
 
 Returns the path and params that can be put into the URL to link the user back to the same spot in the app.
 
 The path/params that are output from this should form an action when passed back into the router's `getActionForPathAndParams`. That action should take you to a similar state once passed through `getStateForAction`.
 
-### `getScreenConfig`
+### `getScreenOptions(navigation, screenProps)`
 
-Used to retrieve the navigation options for a route. Must provide the screen's current navigation prop, and the name of the option to be retrieved.
+Used to retrieve the navigation options for a screen. Must provide the screen's current navigation prop and optionally, other props that your navigation options may need to consume.
 
 - `navigation` - This is the navigation prop that the screen will use, where the state refers to the screen's route/state. Dispatch will trigger actions in the context of that screen.
-- `optionName` - What named option is being fetched, such as 'title'
+- `screenProps` - Other props that your navigation options may need to consume
+- `navigationOptions` - The previous set of options that are default or provided by the previous configurer
 
 Inside an example view, perhaps you need to fetch the configured title:
 ```js
 // First, prepare a navigation prop for your child, or re-use one if already available.
-const childNavigation = addNavigationHelpers({
+const screenNavigation = addNavigationHelpers({
   // In this case we use navigation.state.index because we want the title for the active route.
   state: navigation.state.routes[navigation.state.index],
   dispatch: navigation.dispatch,
-})
-const screenTitle = this.props.router.getScreenConfig(childNavigation, 'title');
+});
+const options = this.props.router.getScreenOptions(screenNavigation, {});
+const title = options.title;
 ```

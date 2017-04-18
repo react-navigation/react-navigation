@@ -7,6 +7,7 @@ import createNavigator from './createNavigator';
 import createNavigationContainer from '../createNavigationContainer';
 import TabRouter from '../routers/TabRouter';
 import TabView from '../views/TabView/TabView';
+import NavigatorTypes from './NavigatorTypes';
 
 import type { TabViewConfig } from '../views/TabView/TabView';
 
@@ -38,7 +39,7 @@ const TabNavigator = (
     ...tabsConfig
   } = mergedConfig;
   const router = TabRouter(routeConfigs, tabsConfig);
-  return createNavigationContainer(createNavigator(router)((props: *) =>
+  return createNavigationContainer(createNavigator(router, routeConfigs, config, NavigatorTypes.STACK)((props: *) =>
     <TabView
       {...props}
       tabBarComponent={tabBarComponent}
