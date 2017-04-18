@@ -31,13 +31,20 @@ module.exports = (NavigationAwareView) => {
       };
     }
     componentWillUpdate(props, state) {
-      const {path} = NavigationAwareView.router.getPathAndParamsForState(state);
-      const uri = `/${path}`;
+      const {path, params} = NavigationAwareView.router.getPathAndParamsForState(state);
+      const maybeHash = params && params.hash ? `#${params.hash}` : '';
+      const uri = `/${path}${maybeHash}`;
       if (window.location.pathname !== uri) {
         window.history.pushState({}, state.title, uri);
       }
       const navigation = addNavigationHelpers({state: state.routes[state.index], dispatch: this.dispatch});
       document.title = NavigationAwareView.router.getScreenOptions(navigation).title;
+    }
+    componentDidUpdate() {
+      const {params} = NavigationAwareView.router.getPathAndParamsForState(this.state);
+      if (params && params.hash) {
+        document.getElementById(params.hash).scrollIntoView();
+      }
     }
     dispatch = (action) => {
       const state = NavigationAwareView.router.getStateForAction(action, this.state);
