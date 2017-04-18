@@ -86,13 +86,8 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
     }
     const {
       headerBackTitleStyle,
-      headerBackTitle,
       headerTitleStyle,
     } = this.props.getScreenDetails(lastScene).options;
-
-    if (headerBackTitle === null) {
-      return null;
-    }
 
     return headerBackTitleStyle || headerTitleStyle;
   }
