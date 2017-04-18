@@ -19,31 +19,14 @@ import type {
   NavigationScreenProp,
 } from './TypeDefinition';
 
-type DefaultProps = {
-  onNavigationStateChange: (NavigationState, NavigationState) => void,
-};
-
 type Props<T> = {
   navigation: NavigationProp<T, NavigationAction>,
-  onNavigationStateChange?: (NavigationState, NavigationState) => void,
+  onNavigationStateChange?: (NavigationState, NavigationState, NavigationAction) => void,
 };
 
 type State = {
   nav: ?NavigationState,
-};
-
-const defaultNavigationChangeHandler: NavigationChangeHandler = (action: *, prevNav: *, nav: *) => {
-  /* eslint-disable no-console */
-  if (console.group) {
-    console.group('Navigation Dispatch: ');
-    console.log('Action: ', action);
-    console.log('New State: ', nav);
-    console.log('Last State: ', prevNav);
-    console.groupEnd();
-  } else {
-    console.log('Navigation Dispatch: ', { action, newState: nav, lastState: prevNav });
-  }
-  /* eslint-enable no-console */
+  action: ?NavigationAction,
 };
 
 /**
@@ -70,18 +53,9 @@ export default function createNavigationContainer<T: *>(
     };
   }
 
-  const onNavigationChange: ?NavigationChangeHandler = containerConfig
-    && typeof containerConfig.onNavigationChange !== 'undefined'
-    ? containerConfig.onNavigationChange
-    : defaultNavigationChangeHandler;
-
-  class NavigationContainer extends React.Component<DefaultProps, Props<T>, State> {
+  class NavigationContainer extends React.Component<{}, Props<T>, State> {
     state: State;
     props: Props<T>;
-
-    static defaultProps = {
-      onNavigationStateChange: () => {},
-    };
 
     subs: ?{
       remove: () => void,
@@ -106,11 +80,14 @@ export default function createNavigationContainer<T: *>(
 
     constructor(props: Props<T>) {
       super(props);
-      this.state = {
-        nav: this._isStateful()
-          ? Component.router.getStateForAction(NavigationActions.init())
-          : null,
-      };
+      this.state = this._isStateful()
+        ? {
+          nav: Component.router.getStateForAction(NavigationActions.init()),
+          action: NavigationActions.init(),
+        } : {
+          nav: null,
+          action: null,
+        };
     }
 
     componentDidMount() {
@@ -135,19 +112,47 @@ export default function createNavigationContainer<T: *>(
     }
 
     componentDidUpdate(prevProps: Props<T>, prevState: State) {
-      const [prevNavigationState, navigationState] = this._isStateful()
+      const [prevNav, nav] = this._isStateful()
         ? [prevState.nav, this.state.nav]
         : [prevProps.navigation.state, this.props.navigation.state];
 
-      if (prevNavigationState !== navigationState) {
+      if (prevNav !== nav) {
         // $FlowFixMe state is always defined, either this.state or props
-        this.props.onNavigationStateChange(prevNavigationState, navigationState);
+        this._onNavigationStateChange(prevNav, nav, this.state.action);
       }
     }
 
     componentWillUnmount() {
       Linking.removeEventListener('url', this._handleOpenURL);
       this.subs && this.subs.remove();
+    }
+
+    _onNavigationStateChange(
+      prevNav: NavigationState,
+      nav: NavigationState,
+      action: NavigationAction,
+    ) {
+      // For top-level navigator, we print by default
+      if (
+        typeof this.props.onNavigationStateChange === 'undefined'
+        && this._isStateful()
+      ) {
+        /* eslint-disable no-console */
+        if (console.group) {
+          console.group('Navigation Dispatch: ');
+          console.log('Action: ', action);
+          console.log('New State: ', nav);
+          console.log('Last State: ', prevNav);
+          console.groupEnd();
+        } else {
+          console.log('Navigation Dispatch: ', { action, newState: nav, lastState: prevNav });
+        }
+        /* eslint-enable no-console */
+      }
+
+      if (typeof this.props.onNavigationStateChange === 'function') {
+        this.props.onNavigationStateChange(prevNav, nav, action);
+      }
     }
 
     _handleOpenURL = ({ url }: { url: string }) => {
@@ -168,11 +173,7 @@ export default function createNavigationContainer<T: *>(
       }
       const nav = Component.router.getStateForAction(action, state.nav);
       if (nav && nav !== state.nav) {
-        this.setState({ nav }, () => {
-          if (typeof onNavigationChange === 'function') {
-            onNavigationChange(action, state.nav, nav);
-          }
-        });
+        this.setState({ nav, action });
         return true;
       }
       return false;
