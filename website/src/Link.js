@@ -24,8 +24,13 @@ const Linkable = (Inner) => {
       } else if (href) {
         const match = href.match(/^\/(.*)/);
         if (match) {
-          const path = match[1];
-          const action = this.context.getActionForPathAndParams(path);
+          const pathParts = match[1].split('#');
+          const path = pathParts[0];
+          let params = {};
+          if (pathParts.length) {
+            params.hash = pathParts[1];
+          }
+          const action = this.context.getActionForPathAndParams(path, params);
           return action;
         }
         return null;
