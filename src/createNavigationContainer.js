@@ -20,7 +20,7 @@ import type {
 
 type Props<T> = {
   navigation: NavigationProp<T, NavigationAction>,
-  onNavigationStateChange?: (NavigationState, NavigationState, NavigationAction) => void,
+  onNavigationStateChange?: (NavigationState, NavigationState) => void,
 };
 
 type State = {
@@ -132,7 +132,7 @@ export default function createNavigationContainer<T: *>(
       action: NavigationAction,
     ) {
       if (typeof this.props.onNavigationStateChange === 'function') {
-        this.props.onNavigationStateChange(prevNav, nav, action);
+        this.props.onNavigationStateChange(prevNav, nav);
         return;
       }
 
