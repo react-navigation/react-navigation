@@ -46,6 +46,7 @@ const DrawerNavigator = (
     contentComponent,
     contentOptions,
     drawerPosition,
+    style,
     ...tabsConfig
   } = mergedConfig;
   const contentRouter = TabRouter(routeConfigs, tabsConfig);
@@ -68,6 +69,7 @@ const DrawerNavigator = (
       contentComponent={contentComponent}
       contentOptions={contentOptions}
       drawerPosition={drawerPosition}
+      style={style}
     />
   ), containerConfig);
 };
