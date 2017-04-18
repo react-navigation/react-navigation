@@ -17,8 +17,15 @@ import type {
   NavigationScreenProp,
 } from './TypeDefinition';
 
-type ContainerProps = {
+type NavigationContainerProps = {
   uriPrefix?: string,
+  onNavigationStateChange?: (NavigationState, NavigationState) => void,
+};
+
+type Props<T> = NavigationContainerProps & {
+  navigation: NavigationProp<T, NavigationAction>,
+  screenProps?: {};
+  navigationOptions: *,
 };
 
 type State = {
@@ -34,14 +41,9 @@ type State = {
 export default function createNavigationContainer<T: *>(
   Component: ReactClass<*>,
 ) {
-  type Props = ContainerProps & {
-    navigation?: NavigationProp<T, NavigationAction>,
-    onNavigationStateChange?: (NavigationState, NavigationState) => void,
-  };
-
-  class NavigationContainer extends React.Component<void, Props, State> {
+  class NavigationContainer extends React.Component<void, Props<T>, State> {
     state: State;
-    props: Props;
+    props: Props<T>;
 
     subs: ?{
       remove: () => void,
@@ -49,7 +51,7 @@ export default function createNavigationContainer<T: *>(
 
     static router = Component.router;
 
-    constructor(props: Props) {
+    constructor(props: Props<T>) {
       super(props);
 
       this._validateProps(props);
@@ -61,18 +63,22 @@ export default function createNavigationContainer<T: *>(
       };
     }
 
-    _getContainerProps(props: Props = this.props): ContainerProps {
-      const { navigation, onNavigationStateChange, ...containerProps } = props;
-      return containerProps;
-    }
-
     _isStateful(): boolean {
-      return this.props.navigation;
+      return !this.props.navigation;
     }
 
-    _validateProps(props: Props) {
+    _validateProps(props: Props<T>) {
+      if (this._isStateful()) {
+        return;
+      }
+
+      const {
+        navigation, screenProps, navigationOptions, onNavigationStateChange,
+        ...containerProps
+      } = props;
+
       invariant(
-        !this._isStateful() && Object.keys(this._getContainerProps(props)).length === 0,
+        Object.keys(containerProps).length === 0,
         'This navigator has a container config AND a navigation prop, so it is ' +
         'unclear if it should own its own state. Remove the containerConfig ' +
         'if the navigator should get its state from the navigation prop. If the ' +
@@ -122,10 +128,10 @@ export default function createNavigationContainer<T: *>(
         this._handleOpenURL(url);
       });
 
-      Linking.getInitialURL().then((url: string) => this._handleOpenURL(url));
+      Linking.getInitialURL().then((url: string) => url && this._handleOpenURL(url));
     }
 
-    componentDidUpdate(prevProps: Props, prevState: State) {
+    componentDidUpdate(prevProps: Props<T>, prevState: State) {
       const [prevNavigationState, navigationState] = this._isStateful()
         ? [prevState.nav, this.state.nav]
         : [prevProps.navigation.state, this.props.navigation.state];

@@ -36,7 +36,7 @@ Next, let's configure our navigation container to extract the path from the app'
 const SimpleApp = StackNavigator({...});
 
 // on Android, the URI prefix typically contains a host in addition to scheme
-cosnt prefix = Platform.OS == 'android' ? 'mychat://mychat/' : 'mychat://';
+const prefix = Platform.OS == 'android' ? 'mychat://mychat/' : 'mychat://';
 
 const MainApp = () => <SimpleApp uriPrefix={prefix} />;
 ```
