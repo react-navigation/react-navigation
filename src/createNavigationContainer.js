@@ -131,15 +131,12 @@ export default function createNavigationContainer<T: *>(
       nav: NavigationState,
       action: NavigationAction,
     ) {
-      if (typeof this.props.onNavigationStateChange === 'function') {
+      if (this.props.onNavigationStateChange) {
         this.props.onNavigationStateChange(prevNav, nav);
         return;
       }
 
-      if (
-        typeof this.props.onNavigationStateChange === 'undefined'
-        && this._isStateful()
-      ) {
+      if (this._isStateful()) {
         /* eslint-disable no-console */
         if (console.group) {
           console.group('Navigation Dispatch: ');
