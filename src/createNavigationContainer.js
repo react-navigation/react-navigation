@@ -73,10 +73,12 @@ export default function createNavigationContainer<T: *>(
         ...containerProps
       } = props;
 
+      const keys = Object.keys(containerProps);
+
       invariant(
-        Object.keys(containerProps).length === 0,
-        'This navigator has a container config AND a navigation prop, so it is ' +
-        'unclear if it should own its own state. Remove the containerConfig ' +
+        keys.length === 0,
+        'This navigator has both navigation and container props, so it is ' +
+        `unclear if it should own its own state. Remove props: "${keys.join(', ')}" ` +
         'if the navigator should get its state from the navigation prop. If the ' +
         'navigator should maintain its own state, do not pass a navigation prop.',
       );
