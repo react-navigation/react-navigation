@@ -131,7 +131,11 @@ export default function createNavigationContainer<T: *>(
       nav: NavigationState,
       action: NavigationAction,
     ) {
-      // For top-level navigator, we print by default
+      if (typeof this.props.onNavigationStateChange === 'function') {
+        this.props.onNavigationStateChange(prevNav, nav, action);
+        return;
+      }
+
       if (
         typeof this.props.onNavigationStateChange === 'undefined'
         && this._isStateful()
@@ -147,10 +151,6 @@ export default function createNavigationContainer<T: *>(
           console.log('Navigation Dispatch: ', { action, newState: nav, lastState: prevNav });
         }
         /* eslint-enable no-console */
-      }
-
-      if (typeof this.props.onNavigationStateChange === 'function') {
-        this.props.onNavigationStateChange(prevNav, nav, action);
       }
     }
 
