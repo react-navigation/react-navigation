@@ -10,7 +10,7 @@ import {
   StyleSheet,
 } from 'react-native';
 
-import type { LayoutEvent } from '../TypeDefinition';
+import type { LayoutEvent, Style } from '../TypeDefinition';
 
 import TouchableItem from './TouchableItem';
 
@@ -21,6 +21,7 @@ type Props = {
   tintColor?: ?string,
   truncatedTitle?: ?string,
   width?: ?number,
+  style?: Style,
 };
 
 type DefaultProps = {
