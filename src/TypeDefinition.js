@@ -292,9 +292,10 @@ export type NavigationScreenProp<S, A> = {
   setParams: (newParams: NavigationParams) => boolean,
 };
 
-export type NavigationNavigatorProps = {
-  navigation: NavigationProp<NavigationRoute, NavigationAction>,
+export type NavigationNavigatorProps<T> = {
+  navigation: NavigationProp<T, NavigationAction>,
   screenProps: *,
+  navigationOptions: *,
 };
 
 /**

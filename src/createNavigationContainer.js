@@ -12,9 +12,9 @@ import addNavigationHelpers from './addNavigationHelpers';
 import type {
   NavigationRoute,
   NavigationAction,
-  NavigationProp,
   NavigationState,
   NavigationScreenProp,
+  NavigationNavigatorProps,
 } from './TypeDefinition';
 
 type NavigationContainerProps = {
@@ -22,11 +22,7 @@ type NavigationContainerProps = {
   onNavigationStateChange?: (NavigationState, NavigationState) => void,
 };
 
-type Props<T> = NavigationContainerProps & {
-  navigation: NavigationProp<T, NavigationAction>,
-  screenProps?: {};
-  navigationOptions: *,
-};
+type Props<T> = NavigationContainerProps & NavigationNavigatorProps<T>;
 
 type State = {
   nav: ?NavigationState,
