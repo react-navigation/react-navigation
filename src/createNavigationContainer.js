@@ -36,7 +36,13 @@ type State = {
  */
 export default function createNavigationContainer<T: *>(
   Component: ReactClass<NavigationNavigatorProps<T>>,
+  containerOptions?: {},
 ) {
+  invariant(
+    typeof containerOptions === 'undefined',
+    'containerOptions.URIPrefix has been removed. Pass the uriPrefix prop to the navigator instead',
+  );
+
   class NavigationContainer extends React.Component<void, Props<T>, State> {
     state: State;
     props: Props<T>;

@@ -20,6 +20,7 @@ import type {
 } from '../TypeDefinition';
 
 export type DrawerNavigatorConfig =
+  & { containerConfig?: void }
   & NavigationTabRouterConfig
   & DrawerViewConfig;
 
@@ -46,11 +47,12 @@ const DrawerNavigator = (
     drawerPosition,
     ...tabsConfig
   } = mergedConfig;
+
   const contentRouter = TabRouter(routeConfigs, tabsConfig);
   const drawerRouter = TabRouter({
     DrawerClose: {
-      screen: createNavigator(contentRouter, routeConfigs, config, NavigatorTypes.DRAWER)((props: *) =>
-        <DrawerScreen {...props} />
+      screen: createNavigator(contentRouter, routeConfigs, config, NavigatorTypes.DRAWER)(
+        (props: *) => <DrawerScreen {...props} />,
       ),
     },
     DrawerOpen: {
@@ -59,15 +61,20 @@ const DrawerNavigator = (
   }, {
     initialRouteName: 'DrawerClose',
   });
-  return createNavigationContainer(createNavigator(drawerRouter, routeConfigs, config, NavigatorTypes.DRAWER)((props: *) =>
-    <DrawerView
-      {...props}
-      drawerWidth={drawerWidth}
-      contentComponent={contentComponent}
-      contentOptions={contentOptions}
-      drawerPosition={drawerPosition}
-    />
-  ));
+
+  const navigator = createNavigator(drawerRouter, routeConfigs, config, NavigatorTypes.DRAWER)(
+    (props: *) => (
+      <DrawerView
+        {...props}
+        drawerWidth={drawerWidth}
+        contentComponent={contentComponent}
+        contentOptions={contentOptions}
+        drawerPosition={drawerPosition}
+      />
+    ),
+  );
+
+  return createNavigationContainer(navigator, containerConfig);
 };
 
 export default DrawerNavigator;
