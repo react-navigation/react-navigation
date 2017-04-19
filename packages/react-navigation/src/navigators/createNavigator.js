@@ -11,7 +11,7 @@ import type {
 } from '../TypeDefinition';
 
 import type {
-  NavigatorType
+  NavigatorType,
 } from './NavigatorTypes';
 
 /**
@@ -20,7 +20,7 @@ import type {
 const createNavigator = (router: NavigationRouter<*, *, *>, routeConfigs: NavigationRouteConfigMap, navigatorConfig: any, navigatorType: NavigatorType) =>
   (View: NavigationNavigator<*, *, *, *>) => {
     class Navigator extends React.Component {
-      props: NavigationNavigatorProps;
+      props: NavigationNavigatorProps<*>;
 
       static router = router;
 
