@@ -4,7 +4,6 @@
     "development": {
       "presets": ["react-native"],
       "plugins": [
-        "flow-react-proptypes",
         "transform-flow-strip-types"
       ]
     },
