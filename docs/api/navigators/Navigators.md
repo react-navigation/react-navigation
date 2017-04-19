@@ -48,9 +48,9 @@ When rendering one of the included navigators, the navigation prop is optional. 
 
 For the purpose of convenience, the built-in navigators have this ability because behind the scenes they use `createNavigationContainer`. Usually, navigators require a navigation prop in order to function.
 
-### `onNavigationStateChange(prevState, newState)`
+### `onNavigationStateChange(prevState, newState, action)`
 
-Sometimes it is useful to know when navigation state managed by the top-level navigator changes. For this purpose, this function gets called every time with the previous state and the new state of the navigation.
+Sometimes it is useful to know when navigation state managed by the top-level navigator changes. For this purpose, this function gets called every time with the previous state, the new state of the navigation and the action that issued state change.
 
 ### `uriPrefix`
 
