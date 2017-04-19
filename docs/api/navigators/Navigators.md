@@ -50,7 +50,7 @@ For the purpose of convenience, the built-in navigators have this ability becaus
 
 ### `onNavigationStateChange(prevState, newState, action)`
 
-Sometimes it is useful to know when navigation state managed by the top-level navigator changes. For this purpose, this function gets called every time with the previous state, the new state of the navigation and the action that issued state change.
+Function that gets called every time navigation state managed by the navigator changes. It receives the previous state, the new state of the navigation and the action that issued state change. By default it prints state changes to the console.
 
 ### `uriPrefix`
 
