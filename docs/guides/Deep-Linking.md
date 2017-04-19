@@ -30,17 +30,15 @@ const SimpleApp = StackNavigator({
 
 ### URI Prefix
 
-Next, let's configure our navigation container to extract the path from the app's incoming URI. When configuring a top-level navigator, we can provide `containerOptions`:
+Next, let's configure our navigation container to extract the path from the app's incoming URI. 
 
 ```js
-const SimpleApp = StackNavigator({
-  ...
-}, {
-  containerOptions: {
-    // on Android, the URI prefix typically contains a host in addition to scheme
-    URIPrefix: Platform.OS == 'android' ? 'mychat://mychat/' : 'mychat://',
-  },
-});
+const SimpleApp = StackNavigator({...});
+
+// on Android, the URI prefix typically contains a host in addition to scheme
+const prefix = Platform.OS == 'android' ? 'mychat://mychat/' : 'mychat://';
+
+const MainApp = () => <SimpleApp uriPrefix={prefix} />;
 ```
 
 ## iOS
