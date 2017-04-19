@@ -592,8 +592,10 @@ describe('StackRouter', () => {
         { key: 'Bar', routeName: 'Bar' },
       ],
     };
-    const { path } = router.getPathAndParamsForState(state);
+    const { path, params } = router.getPathAndParamsForState(state);
     expect(path).toEqual('f/123/baz/321');
+    expect(params.id).toEqual('123');
+    expect(params.bazId).toEqual('321');
   });
 
   test('Maps old actions (uses "Handles the reset action" test)', () => {
