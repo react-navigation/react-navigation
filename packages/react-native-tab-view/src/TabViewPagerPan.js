@@ -9,7 +9,6 @@ import {
   View,
   I18nManager,
 } from 'react-native';
-import TabViewStyleInterpolator from './TabViewStyleInterpolator';
 import { SceneRendererPropType } from './TabViewPropTypes';
 import type { SceneRendererProps } from './TabViewTypeDefinitions';
 import type { GestureEvent, GestureState } from './PanResponderTypes';
@@ -158,18 +157,28 @@ export default class TabViewPagerPan extends PureComponent<DefaultProps, Props, 
   };
 
   render() {
-    const { navigationState, layout } = this.props;
+    const { layout, position, navigationState, style } = this.props;
+    const { width } = layout;
     const { routes } = navigationState;
 
-    const style = TabViewStyleInterpolator.forHorizontal(this.props);
+    // Prepend '-1', so there are always at least 2 items in inputRange
+    const inputRange = [ -1, ...routes.map((x, i) => i) ];
+    const outputRange = inputRange.map(i =>
+      width * i * (I18nManager.isRTL ? 1 : -1)
+    );
+
+    const translateX = position.interpolate({
+      inputRange,
+      outputRange,
+    });
 
     return (
-      <Animated.View style={[ styles.sheet, style, { width: layout.width * routes.length } ]} {...this._panResponder.panHandlers}>
+      <Animated.View style={[ styles.sheet, style, { width: routes.length * width, transform: [ { translateX } ] } ]} {...this._panResponder.panHandlers}>
         {Children.map(this.props.children, (child, i) => (
           <View
             key={navigationState.routes[i].key}
             testID={navigationState.routes[i].testID}
-            style={{ width: layout.width }}
+            style={{ width }}
           >
             {child}
           </View>
