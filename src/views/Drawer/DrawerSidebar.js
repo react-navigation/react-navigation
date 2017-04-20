@@ -14,6 +14,8 @@ import type {
   NavigationRoute,
   NavigationAction,
   NavigationRouter,
+  NavigationDrawerScreenOptions,
+  NavigationState,
   Style,
 } from '../../TypeDefinition';
 
@@ -24,11 +26,12 @@ import type {
 type Navigation = NavigationScreenProp<NavigationRoute, NavigationAction>;
 
 type Props = {
-  router: NavigationRouter,
+  router: NavigationRouter<NavigationState, NavigationAction, NavigationDrawerScreenOptions>,
   navigation: Navigation,
   childNavigationProps: { [key: string]: Navigation },
   contentComponent: ReactClass<*>,
   contentOptions?: {},
+  screenProps?: {},
   style?: Style;
 };
 
@@ -38,23 +41,22 @@ type Props = {
 class DrawerSidebar extends PureComponent<void, Props, void> {
   props: Props;
 
-  _getScreenConfig = (routeKey: string, configName: string) => {
+  _getScreenOptions = (routeKey: string) => {
     const DrawerScreen = this.props.router.getComponentForRouteName('DrawerClose');
-    return DrawerScreen.router.getScreenConfig(
+    return DrawerScreen.router.getScreenOptions(
       this.props.childNavigationProps[routeKey],
-      configName
+      this.props.screenProps
     );
   }
 
   _getLabel = ({ focused, tintColor, route }: DrawerScene) => {
-    const drawer = this._getScreenConfig(route.key, 'drawer');
-    if (drawer && drawer.label) {
-      return typeof drawer.label === 'function'
-        ? drawer.label({ tintColor, focused })
-        : drawer.label;
+    const {drawerLabel, title} = this._getScreenOptions(route.key);
+    if (drawerLabel) {
+      return typeof drawerLabel === 'function'
+        ? drawerLabel({ tintColor, focused })
+        : drawerLabel;
     }
 
-    const title = this._getScreenConfig(route.key, 'title');
     if (typeof title === 'string') {
       return title;
     }
@@ -63,11 +65,11 @@ class DrawerSidebar extends PureComponent<void, Props, void> {
   };
 
   _renderIcon = ({ focused, tintColor, route }: DrawerScene) => {
-    const drawer = this._getScreenConfig(route.key, 'drawer');
-    if (drawer && drawer.icon) {
-      return typeof drawer.icon === 'function'
-        ? drawer.icon({ tintColor, focused })
-        : drawer.icon;
+    const {drawerIcon} = this._getScreenOptions(route.key);
+    if (drawerIcon) {
+      return typeof drawerIcon === 'function'
+        ? drawerIcon({ tintColor, focused })
+        : drawerIcon;
     }
     return null;
   };

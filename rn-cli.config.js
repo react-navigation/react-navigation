@@ -12,10 +12,8 @@ const config = require('react-native/packager/rn-cli.config');
 
 const examples = [
   'NavigationPlayground',
-  'HelloHybrid',
   'LinkingExample',
   'ReduxExample',
-  'Chat',
 ];
 
 config.getBlacklist = () => (

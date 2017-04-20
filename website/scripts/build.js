@@ -157,6 +157,7 @@ function printErrors(summary, errors) {
   console.log();
   errors.forEach((err) => {
     console.log(err.message || err);
+    console.log(err.stack);
     console.log();
   });
 }
