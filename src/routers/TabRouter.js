@@ -194,10 +194,11 @@ export default (
       if (activeTabIndex !== state.index) {
         const routes = [...state.routes];
         const activeRoute = routes[activeTabIndex];
-        routes[activeTabIndex] = {
-            ...activeRoute,
-            params: action.params,
-         };
+        if(!activeRoute.routes && action.params)
+          routes[activeTabIndex] = {
+              ...activeRoute,
+              params: action.params,
+          };
         return {
           ...state,
           routes,
