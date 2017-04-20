@@ -44,7 +44,7 @@ export default class TabViewPagerAndroid extends PureComponent<void, Props, void
   };
 
   componentWillMount() {
-    this._currentIndex = this._getPageIndex(this.props.navigationState.index);
+    this._currentIndex = this.props.navigationState.index;
     this._jumpListener = this.props.subscribe('jump', this._handleJump);
   }
 
@@ -52,7 +52,12 @@ export default class TabViewPagerAndroid extends PureComponent<void, Props, void
     if (this.props.layout !== nextProps.layout || Children.count(this.props.children) !== Children.count(nextProps.children)) {
       global.requestAnimationFrame(() => {
         if (this._viewPager) {
-          this._viewPager.setPageWithoutAnimation(this._getPageIndex(nextProps.navigationState.index));
+          const { navigationState } = nextProps;
+          const page = I18nManager.isRTL ?
+            navigationState.routes.length - (navigationState.index + 1) :
+            navigationState.index;
+
+          this._viewPager.setPageWithoutAnimation(page);
         }
       });
     }
@@ -74,21 +79,19 @@ export default class TabViewPagerAndroid extends PureComponent<void, Props, void
   _isIdle: boolean = true;
   _currentIndex: number;
 
-  _getPageIndex = (index: number) => (
+  _getPageIndex = (index: number) =>
     I18nManager.isRTL ?
-      (Children.count(this.props.children) - 1) - index :
-      index
-  )
+      this.props.navigationState.routes.length - (index + 1) :
+      index;
 
   _setPage = (index: number) => {
-    const pageIndex = this._getPageIndex(index);
-
-    if (this._viewPager && this._currentIndex !== pageIndex) {
-      this._currentIndex = pageIndex;
+    if (this._viewPager && this._currentIndex !== index) {
+      this._currentIndex = index;
+      const page = this._getPageIndex(index);
       if (this.props.animationEnabled !== false) {
-        this._viewPager.setPage(pageIndex);
+        this._viewPager.setPage(page);
       } else {
-        this._viewPager.setPageWithoutAnimation(pageIndex);
+        this._viewPager.setPageWithoutAnimation(page);
       }
     }
   }
@@ -113,7 +116,7 @@ export default class TabViewPagerAndroid extends PureComponent<void, Props, void
       this._isDrag = true;
     } else if (e === 'idle') {
       this._isDrag = false;
-      if (this._currentIndex !== this._getPageIndex(this.props.navigationState.index)) {
+      if (this._currentIndex !== this.props.navigationState.index) {
         this.props.jumpToIndex(this._currentIndex);
       }
     }
@@ -127,7 +130,7 @@ export default class TabViewPagerAndroid extends PureComponent<void, Props, void
 
   render() {
     const { children, navigationState, swipeEnabled } = this.props;
-    const tabContents = Children.map(children, (child, i) => (
+    const content = Children.map(children, (child, i) => (
       <View
         key={navigationState.routes[i].key}
         testID={navigationState.routes[i].testID}
@@ -137,11 +140,17 @@ export default class TabViewPagerAndroid extends PureComponent<void, Props, void
       </View>
     ));
 
+    if (I18nManager.isRTL) {
+      content.reverse();
+    }
+
+    const initialPage = this._getPageIndex(navigationState.index);
+
     return (
       <ViewPagerAndroid
         key={navigationState.routes.length}
         keyboardDismissMode='on-drag'
-        initialPage={this._getPageIndex(navigationState.index)}
+        initialPage={initialPage}
         scrollEnabled={swipeEnabled !== false}
         onPageScroll={this._handlePageScroll}
         onPageScrollStateChanged={this._handlePageScrollStateChanged}
@@ -149,7 +158,7 @@ export default class TabViewPagerAndroid extends PureComponent<void, Props, void
         style={styles.container}
         ref={this._setRef}
       >
-        {I18nManager.isRTL ? tabContents.reverse() : tabContents}
+        {content}
       </ViewPagerAndroid>
     );
   }

@@ -357,7 +357,7 @@ export default class TabBar extends PureComponent<DefaultProps, Props, State> {
       this.state.offset
     ).interpolate({
       inputRange: [ -maxDistance, 0 ],
-      outputRange: ([ -maxDistance, 0 ]: Array<number>),
+      outputRange: [ -maxDistance, 0 ],
       extrapolate: 'clamp',
     });
 
