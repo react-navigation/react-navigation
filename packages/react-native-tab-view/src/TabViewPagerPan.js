@@ -157,7 +157,7 @@ export default class TabViewPagerPan extends PureComponent<DefaultProps, Props, 
   };
 
   render() {
-    const { layout, position, navigationState, style } = this.props;
+    const { layout, position, navigationState, children, style } = this.props;
     const { width } = layout;
     const { routes } = navigationState;
 
@@ -173,14 +173,24 @@ export default class TabViewPagerPan extends PureComponent<DefaultProps, Props, 
     });
 
     return (
-      <Animated.View style={[ styles.sheet, style, { width: routes.length * width, transform: [ { translateX } ] } ]} {...this._panResponder.panHandlers}>
-        {Children.map(this.props.children, (child, i) => (
+      <Animated.View
+        style={[
+          styles.sheet,
+          style,
+          width ? { width: routes.length * width, transform: [ { translateX } ] } : null,
+        ]} {...this._panResponder.panHandlers}
+      >
+        {Children.map(children, (child, i) => (
           <View
             key={navigationState.routes[i].key}
             testID={navigationState.routes[i].testID}
-            style={{ width }}
+            style={
+              width ?
+                { width, overflow: 'hidden' } :
+                i === navigationState.index ? StyleSheet.absoluteFill : null
+            }
           >
-            {child}
+            {i === navigationState.index || width ? child : null}
           </View>
         ))}
       </Animated.View>
