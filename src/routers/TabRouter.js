@@ -192,8 +192,15 @@ export default (
         }
       }
       if (activeTabIndex !== state.index) {
+        const route = [...state.routes];
+        const activeRoute = routes[activeTabIndex];
+        routes[activeTabIndex] = {
+            ...activeRoute,
+            params: action.params,
+         };
         return {
           ...state,
+          routes,
           index: activeTabIndex,
         };
       } else if (didNavigate && !inputState) {
