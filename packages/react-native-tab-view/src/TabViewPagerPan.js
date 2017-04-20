@@ -165,7 +165,7 @@ export default class TabViewPagerPan
   };
 
   render() {
-    const { layout, position, navigationState, children, style } = this.props;
+    const { layout, position, navigationState, children } = this.props;
     const { width } = layout;
     const { routes } = navigationState;
 
@@ -184,7 +184,6 @@ export default class TabViewPagerPan
       <Animated.View
         style={[
           styles.sheet,
-          style,
           width
             ? { width: routes.length * width, transform: [{ translateX }] }
             : null,
