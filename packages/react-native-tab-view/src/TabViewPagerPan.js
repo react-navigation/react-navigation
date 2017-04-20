@@ -7,6 +7,7 @@ import {
   Platform,
   StyleSheet,
   View,
+  I18nManager,
 } from 'react-native';
 import TabViewStyleInterpolator from './TabViewStyleInterpolator';
 import { SceneRendererPropType } from './TabViewPropTypes';
@@ -101,7 +102,7 @@ export default class TabViewPagerPan extends PureComponent<DefaultProps, Props, 
       Math.abs(gestureState.dx) > this.props.swipeDistanceThreshold ||
       Math.abs(gestureState.vx) > swipeVelocityThreshold
     ) {
-      const nextIndex = index - (gestureState.dx / Math.abs(gestureState.dx));
+      const nextIndex = index - ((gestureState.dx / Math.abs(gestureState.dx)) * (I18nManager.isRTL ? -1 : 1));
       if (this._isIndexInRange(nextIndex)) {
         return nextIndex;
       }
@@ -132,7 +133,7 @@ export default class TabViewPagerPan extends PureComponent<DefaultProps, Props, 
   _respondToGesture = (evt: GestureEvent, gestureState: GestureState) => {
     const { layout: { width } } = this.props;
     const currentPosition = typeof this._lastValue === 'number' ? this._lastValue : this.props.navigationState.index;
-    const nextPosition = currentPosition - (gestureState.dx / width);
+    const nextPosition = currentPosition - ((gestureState.dx / width) * (I18nManager.isRTL ? -1 : 1));
     if (this._isMoving === null) {
       this._isMoving = this._isMovingHorzontally(evt, gestureState);
     }

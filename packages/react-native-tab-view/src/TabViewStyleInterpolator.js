@@ -1,5 +1,6 @@
 /* @flow */
 
+import { I18nManager } from 'react-native';
 import type { SceneRendererProps } from './TabViewTypeDefinitions';
 
 function forHorizontal(props: SceneRendererProps) {
@@ -8,9 +9,9 @@ function forHorizontal(props: SceneRendererProps) {
   const { routes } = navigationState;
   // Prepend '-1', so there are always at least 2 items in inputRange
   const inputRange = [ -1, ...routes.map((x, i) => i) ];
-  const outputRange = inputRange.map(i => {
-    return width * i * -1;
-  });
+  const outputRange = inputRange.map(i =>
+    width * i * (I18nManager.isRTL ? 1 : -1)
+  );
 
   const translateX = position.interpolate({
     inputRange,
