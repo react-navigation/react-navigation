@@ -31,6 +31,7 @@ type Props = SceneRendererProps & {
   swipeDistanceThreshold: number,
   swipeVelocityThreshold: number,
   children?: any,
+  style?: any,
 };
 
 const DEAD_ZONE = 12;
