@@ -1,29 +1,33 @@
 /* @flow */
 
 import React, { PureComponent, PropTypes } from 'react';
-import {
-  Animated,
-  View,
-} from 'react-native';
+import { Animated, View } from 'react-native';
 import { NavigationStatePropType } from './TabViewPropTypes';
-import type { SubscriptionName, SceneRendererProps, Layout } from './TabViewTypeDefinitions';
-import type { TransitionConfigurator, TransitionerProps } from './TabViewTransitionerTypes';
+import type {
+  SubscriptionName,
+  SceneRendererProps,
+  Layout,
+} from './TabViewTypeDefinitions';
+import type {
+  TransitionConfigurator,
+  TransitionerProps,
+} from './TabViewTransitionerTypes';
 
 type DefaultProps = {
-  configureTransition: TransitionConfigurator;
-  initialLayout: Layout;
-}
+  configureTransition: TransitionConfigurator,
+  initialLayout: Layout,
+};
 
 type Props = TransitionerProps & {
-  render: (props: SceneRendererProps) => ?React.Element<*>;
-}
+  render: (props: SceneRendererProps) => ?React.Element<*>,
+};
 
 type State = {
   layout: Layout & {
-    measured: boolean;
-  };
-  position: Animated.Value;
-}
+    measured: boolean,
+  },
+  position: Animated.Value,
+};
 
 const DefaultTransitionSpec = {
   timing: Animated.spring,
@@ -31,7 +35,8 @@ const DefaultTransitionSpec = {
   friction: 35,
 };
 
-export default class TabViewTransitioner extends PureComponent<DefaultProps, Props, State> {
+export default class TabViewTransitioner
+  extends PureComponent<DefaultProps, Props, State> {
   static propTypes = {
     navigationState: NavigationStatePropType.isRequired,
     render: PropTypes.func.isRequired,
@@ -69,7 +74,9 @@ export default class TabViewTransitioner extends PureComponent<DefaultProps, Pro
 
   componentDidMount() {
     this._mounted = true;
-    this._positionListener = this.state.position.addListener(this._trackPosition);
+    this._positionListener = this.state.position.addListener(
+      this._trackPosition,
+    );
   }
 
   componentDidUpdate(prevProps: Props) {
@@ -109,7 +116,9 @@ export default class TabViewTransitioner extends PureComponent<DefaultProps, Pro
   _handleLayout = (e: any) => {
     const { height, width } = e.nativeEvent.layout;
 
-    if (this.state.layout.width === width && this.state.layout.height === height) {
+    if (
+      this.state.layout.width === width && this.state.layout.height === height
+    ) {
       return;
     }
 
@@ -131,7 +140,7 @@ export default class TabViewTransitioner extends PureComponent<DefaultProps, Pro
       getLastPosition: this._getLastPosition,
       subscribe: this._addSubscription,
     };
-  }
+  };
 
   _transitionTo = (toValue: number, callback: ?Function) => {
     const lastPosition = this._getLastPosition();
@@ -143,7 +152,10 @@ export default class TabViewTransitioner extends PureComponent<DefaultProps, Pro
     };
     let transitionSpec;
     if (this.props.configureTransition) {
-      transitionSpec = this.props.configureTransition(currentTransitionProps, nextTransitionProps);
+      transitionSpec = this.props.configureTransition(
+        currentTransitionProps,
+        nextTransitionProps,
+      );
     }
     if (transitionSpec) {
       const { timing, ...transitionConfig } = transitionSpec;
@@ -157,7 +169,7 @@ export default class TabViewTransitioner extends PureComponent<DefaultProps, Pro
         callback();
       }
     }
-  }
+  };
 
   _jumpToIndex = (index: number) => {
     if (!this._mounted) {
@@ -186,7 +198,7 @@ export default class TabViewTransitioner extends PureComponent<DefaultProps, Pro
         if (this._nextIndex === index && this._mounted) {
           this.props.onRequestChangeTab(index);
         }
-      })
+      }),
     );
   };
 

@@ -38,7 +38,8 @@
     "babel-preset-react-native": "^1.9.1",
     "enzyme": "^2.7.1",
     "enzyme-to-json": "^1.4.5",
-    "eslint": "^3.12.2",
+    "eslint": "^3.19.0",
+    "eslint-config-prettier": "^1.7.0",
     "eslint-plugin-babel": "^4.0.0",
     "eslint-plugin-flowtype": "^2.29.1",
     "eslint-plugin-import": "^2.2.0",
@@ -46,6 +47,7 @@
     "eslint-plugin-react-native": "^2.2.1",
     "flow-bin": "^0.36.0",
     "jest": "^18.1.0",
+    "prettier": "^1.2.2",
     "react": "^15.4.2",
     "react-addons-test-utils": "^15.4.2",
     "react-dom": "^15.4.2",
@@ -58,5 +60,8 @@
   },
   "jest": {
     "preset": "react-native"
+  },
+  "dependencies": {
+    "eslint-plugin-prettier": "^2.0.1"
   }
 }

@@ -23,7 +23,6 @@ const styles = StyleSheet.create({
 });
 
 export default class ListViewExample extends Component {
-
   static appbarElevation = 0;
 
   state = {
@@ -57,7 +56,7 @@ export default class ListViewExample extends Component {
     });
   };
 
-  _renderRow = (index) => {
+  _renderRow = index => {
     return (
       <View style={styles.row}>
         <Text style={styles.text}>{index}</Text>
@@ -76,7 +75,7 @@ export default class ListViewExample extends Component {
         dataSource={this.state.dataSource}
         renderRow={this._renderRow}
         onEndReached={this._genRows}
-        ref={el => (this._root = el)}
+        ref={el => this._root = el}
       />
     );
   }

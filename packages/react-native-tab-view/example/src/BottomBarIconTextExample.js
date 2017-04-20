@@ -50,7 +50,6 @@ const styles = StyleSheet.create({
 });
 
 export default class TopBarIconExample extends Component {
-
   static title = 'Bottom bar with indicator';
   static appbarElevation = 4;
 
@@ -67,20 +66,20 @@ export default class TopBarIconExample extends Component {
     ],
   };
 
-  _handleChangeTab = (index) => {
+  _handleChangeTab = index => {
     this.setState({
       index,
     });
   };
 
-  _renderIndicator = (props) => {
+  _renderIndicator = props => {
     const { width, position } = props;
 
     const translateX = Animated.multiply(position, width);
 
     return (
       <Animated.View
-        style={[ styles.container, { width, transform: [ { translateX } ] } ]}
+        style={[styles.container, { width, transform: [{ translateX }] }]}
       >
         <View style={styles.indicator} />
       </Animated.View>
@@ -88,13 +87,7 @@ export default class TopBarIconExample extends Component {
   };
 
   _renderIcon = ({ route }: any) => {
-    return (
-      <Ionicons
-        name={route.icon}
-        size={24}
-        style={styles.icon}
-      />
-    );
+    return <Ionicons name={route.icon} size={24} style={styles.icon} />;
   };
 
   _renderBadge = ({ route }) => {
@@ -108,7 +101,7 @@ export default class TopBarIconExample extends Component {
     return null;
   };
 
-  _renderFooter = (props) => {
+  _renderFooter = props => {
     return (
       <TabBar
         {...props}
@@ -123,21 +116,21 @@ export default class TopBarIconExample extends Component {
 
   _renderScene = ({ route }) => {
     switch (route.key) {
-    case '1':
-      return <View style={[ styles.page, { backgroundColor: '#ff4081' } ]} />;
-    case '2':
-      return <View style={[ styles.page, { backgroundColor: '#673ab7' } ]} />;
-    case '3':
-      return <View style={[ styles.page, { backgroundColor: '#4caf50' } ]} />;
-    default:
-      return null;
+      case '1':
+        return <View style={[styles.page, { backgroundColor: '#ff4081' }]} />;
+      case '2':
+        return <View style={[styles.page, { backgroundColor: '#673ab7' }]} />;
+      case '3':
+        return <View style={[styles.page, { backgroundColor: '#4caf50' }]} />;
+      default:
+        return null;
     }
   };
 
   render() {
     return (
       <TabViewAnimated
-        style={[ styles.container, this.props.style ]}
+        style={[styles.container, this.props.style]}
         navigationState={this.state}
         renderScene={this._renderScene}
         renderFooter={this._renderFooter}

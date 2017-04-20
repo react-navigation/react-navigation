@@ -2,7 +2,14 @@
 /* eslint-disable import/no-commonjs */
 
 import React, { Component } from 'react';
-import { Animated, View, Image, Text, Dimensions, StyleSheet } from 'react-native';
+import {
+  Animated,
+  View,
+  Image,
+  Text,
+  Dimensions,
+  StyleSheet,
+} from 'react-native';
 import { TabViewAnimated, TabViewPagerPan } from 'react-native-tab-view';
 
 const styles = StyleSheet.create({
@@ -42,7 +49,7 @@ const ALBUMS = {
   'Bat Out of Hell': require('../assets/album-art-2.jpg'),
   Homogenic: require('../assets/album-art-3.jpg'),
   'Number of the Beast': require('../assets/album-art-4.jpg'),
-  'It\'s Blitz': require('../assets/album-art-5.jpg'),
+  "It's Blitz": require('../assets/album-art-5.jpg'),
   'The Man-Machine': require('../assets/album-art-6.jpg'),
   'The Score': require('../assets/album-art-7.jpg'),
   'Lost Horizons': require('../assets/album-art-8.jpg'),
@@ -54,7 +61,6 @@ const initialLayout = {
 };
 
 export default class CoverflowExample extends Component {
-
   static title = 'Coverflow';
   static appbarElevation = 0;
 
@@ -72,9 +78,9 @@ export default class CoverflowExample extends Component {
     const { routes } = navigationState;
     const currentIndex = routes.indexOf(route);
     // Prepend '-1', so there are always at least 2 items in inputRange
-    const inputRange = [ -1, ...routes.map((x, i) => i) ];
+    const inputRange = [-1, ...routes.map((x, i) => i)];
     const translateOutputRange = inputRange.map(i => {
-      return ((width / 2) * (currentIndex - i)) * -1;
+      return width / 2 * (currentIndex - i) * -1;
     });
     const scaleOutputRange = inputRange.map(i => {
       if (currentIndex === i) {
@@ -105,23 +111,20 @@ export default class CoverflowExample extends Component {
     });
 
     return {
-      transform: [
-        { translateX },
-        { scale },
-      ],
+      transform: [{ translateX }, { scale }],
       opacity,
     };
   };
 
-  _handleChangeTab = (index) => {
+  _handleChangeTab = index => {
     this.setState({
       index,
     });
   };
 
-  _renderScene = (props) => {
+  _renderScene = props => {
     return (
-      <Animated.View style={[ styles.page, this._buildCoverFlowStyle(props) ]}>
+      <Animated.View style={[styles.page, this._buildCoverFlowStyle(props)]}>
         <View style={styles.album}>
           <Image source={ALBUMS[props.route.key]} style={styles.cover} />
         </View>
@@ -130,14 +133,14 @@ export default class CoverflowExample extends Component {
     );
   };
 
-  _renderPager = (props) => {
+  _renderPager = props => {
     return <TabViewPagerPan {...props} />;
   };
 
   render() {
     return (
       <TabViewAnimated
-        style={[ styles.container, this.props.style ]}
+        style={[styles.container, this.props.style]}
         navigationState={this.state}
         renderPager={this._renderPager}
         renderScene={this._renderScene}

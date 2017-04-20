@@ -1,11 +1,7 @@
 /* @flow */
 
 import React, { PureComponent, PropTypes } from 'react';
-import {
-  Platform,
-  View,
-  StyleSheet,
-} from 'react-native';
+import { Platform, View, StyleSheet } from 'react-native';
 import TabViewTransitioner from './TabViewTransitioner';
 import { NavigationStatePropType } from './TabViewPropTypes';
 import type { Scene, SceneRendererProps } from './TabViewTypeDefinitions';
@@ -19,36 +15,37 @@ const styles = StyleSheet.create({
 });
 
 type DefaultProps = {
-  renderPager: (props: SceneRendererProps) => React.Element<*>;
-}
+  renderPager: (props: SceneRendererProps) => React.Element<*>,
+};
 
 type Props = TransitionerProps & {
-  renderPager: (props: SceneRendererProps) => React.Element<*>;
-  renderScene: (props: SceneRendererProps & Scene) => ?React.Element<*>;
-  renderHeader?: (props: SceneRendererProps) => ?React.Element<*>;
-  renderFooter?: (props: SceneRendererProps) => ?React.Element<*>;
-  lazy?: boolean;
-}
+  renderPager: (props: SceneRendererProps) => React.Element<*>,
+  renderScene: (props: SceneRendererProps & Scene) => ?React.Element<*>,
+  renderHeader?: (props: SceneRendererProps) => ?React.Element<*>,
+  renderFooter?: (props: SceneRendererProps) => ?React.Element<*>,
+  lazy?: boolean,
+};
 
 type State = {
-  loaded: Array<number>;
-}
+  loaded: Array<number>,
+};
 
 let TabViewPager;
 
 switch (Platform.OS) {
-case 'android':
-  TabViewPager = require('./TabViewPagerAndroid').default;
-  break;
-case 'ios':
-  TabViewPager = require('./TabViewPagerScroll').default;
-  break;
-default:
-  TabViewPager = require('./TabViewPagerPan').default;
-  break;
+  case 'android':
+    TabViewPager = require('./TabViewPagerAndroid').default;
+    break;
+  case 'ios':
+    TabViewPager = require('./TabViewPagerScroll').default;
+    break;
+  default:
+    TabViewPager = require('./TabViewPagerPan').default;
+    break;
 }
 
-export default class TabViewAnimated extends PureComponent<DefaultProps, Props, State> {
+export default class TabViewAnimated
+  extends PureComponent<DefaultProps, Props, State> {
   static propTypes = {
     navigationState: NavigationStatePropType.isRequired,
     renderPager: PropTypes.func.isRequired,
@@ -67,7 +64,7 @@ export default class TabViewAnimated extends PureComponent<DefaultProps, Props, 
     super(props);
 
     this.state = {
-      loaded: [ this.props.navigationState.index ],
+      loaded: [this.props.navigationState.index],
     };
   }
 
@@ -94,14 +91,14 @@ export default class TabViewAnimated extends PureComponent<DefaultProps, Props, 
         {renderHeader && renderHeader(props)}
         {renderPager({
           ...props,
-          children: navigationState.routes.map((route, index) => (
+          children: navigationState.routes.map((route, index) =>
             this._renderScene({
               ...props,
               route,
               index,
               focused: index === props.navigationState.index,
-            })
-          )),
+            }),
+          ),
         })}
         {renderFooter && renderFooter(props)}
       </View>
@@ -123,7 +120,7 @@ export default class TabViewAnimated extends PureComponent<DefaultProps, Props, 
         return;
       }
       this.setState({
-        loaded: [ ...loaded, next ],
+        loaded: [...loaded, next],
       });
     }
   };

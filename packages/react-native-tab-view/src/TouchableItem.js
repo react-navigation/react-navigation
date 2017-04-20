@@ -11,19 +11,20 @@ import {
 const LOLLIPOP = 21;
 
 type Props = {
-  delayPressIn?: number;
-  borderless?: boolean;
-  pressColor?: string;
-  pressOpacity?: number;
-  children?: React.Element<*>;
-  style?: any;
-}
+  delayPressIn?: number,
+  borderless?: boolean,
+  pressColor?: string,
+  pressOpacity?: number,
+  children?: React.Element<*>,
+  style?: any,
+};
 
 type DefaultProps = {
-  pressColor: string;
-}
+  pressColor: string,
+};
 
-export default class TouchableItem extends PureComponent<DefaultProps, Props, void> {
+export default class TouchableItem
+  extends PureComponent<DefaultProps, Props, void> {
   static propTypes = {
     delayPressIn: PropTypes.number,
     borderless: PropTypes.bool,
@@ -53,11 +54,7 @@ export default class TouchableItem extends PureComponent<DefaultProps, Props, vo
       );
     } else {
       return (
-        <TouchableOpacity
-          {...rest}
-          style={style}
-          activeOpacity={pressOpacity}
-        >
+        <TouchableOpacity {...rest} style={style} activeOpacity={pressOpacity}>
           {this.props.children}
         </TouchableOpacity>
       );

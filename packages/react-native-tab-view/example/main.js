@@ -152,35 +152,64 @@ export default class ExampleList extends Component {
     const { index } = this.state;
 
     const ExampleComponent = EXAMPLE_COMPONENTS[index] || null;
-    const backgroundColor = ExampleComponent && ExampleComponent.backgroundColor ? ExampleComponent.backgroundColor : '#222';
-    const tintColor = ExampleComponent && ExampleComponent.tintColor ? ExampleComponent.tintColor : 'white';
-    const appbarElevation = ExampleComponent && Number.isFinite(ExampleComponent.appbarElevation) ? ExampleComponent.appbarElevation : 4;
-    const borderBottomWidth = Platform.OS === 'ios' ? StyleSheet.hairlineWidth : 0;
+    const backgroundColor = ExampleComponent && ExampleComponent.backgroundColor
+      ? ExampleComponent.backgroundColor
+      : '#222';
+    const tintColor = ExampleComponent && ExampleComponent.tintColor
+      ? ExampleComponent.tintColor
+      : 'white';
+    const appbarElevation = ExampleComponent &&
+      Number.isFinite(ExampleComponent.appbarElevation)
+      ? ExampleComponent.appbarElevation
+      : 4;
+    const borderBottomWidth = Platform.OS === 'ios'
+      ? StyleSheet.hairlineWidth
+      : 0;
 
     return (
       <View style={styles.container}>
-        <StatusBar barStyle='light-content' />
-        <View style={[ styles.statusbar, backgroundColor ? { backgroundColor } : null ]} />
-        <View style={[ styles.appbar, backgroundColor ? { backgroundColor } : null, appbarElevation ? { elevation: appbarElevation, borderBottomWidth } : null ]}>
-          {index > -1 ?
-            <TouchableOpacity style={styles.button} onPress={this._handleNavigateBack}>
-              <Ionicons
-                name={Platform.OS === 'android' ? 'md-arrow-back' : 'ios-arrow-back'}
-                size={24}
-                color={tintColor}
-              />
-            </TouchableOpacity> : null
-          }
-          <Text style={[ styles.title, tintColor ? { color: tintColor } : null ]}>
+        <StatusBar barStyle="light-content" />
+        <View
+          style={[
+            styles.statusbar,
+            backgroundColor ? { backgroundColor } : null,
+          ]}
+        />
+        <View
+          style={[
+            styles.appbar,
+            backgroundColor ? { backgroundColor } : null,
+            appbarElevation
+              ? { elevation: appbarElevation, borderBottomWidth }
+              : null,
+          ]}
+        >
+          {index > -1
+            ? <TouchableOpacity
+                style={styles.button}
+                onPress={this._handleNavigateBack}
+              >
+                <Ionicons
+                  name={
+                    Platform.OS === 'android'
+                      ? 'md-arrow-back'
+                      : 'ios-arrow-back'
+                  }
+                  size={24}
+                  color={tintColor}
+                />
+              </TouchableOpacity>
+            : null}
+          <Text style={[styles.title, tintColor ? { color: tintColor } : null]}>
             {index > -1 ? EXAMPLE_COMPONENTS[index].title : this.state.title}
           </Text>
           {index > -1 ? <View style={styles.button} /> : null}
         </View>
-        {index === -1 ? (
-          <ScrollView>
-            {EXAMPLE_COMPONENTS.map(this._renderItem)}
-          </ScrollView>
-        ) : (ExampleComponent ? <ExampleComponent /> : null)}
+        {index === -1
+          ? <ScrollView>
+              {EXAMPLE_COMPONENTS.map(this._renderItem)}
+            </ScrollView>
+          : ExampleComponent ? <ExampleComponent /> : null}
       </View>
     );
   }

@@ -1,22 +1,18 @@
 /* @flow */
 
 import React, { PureComponent, Children, PropTypes } from 'react';
-import {
-  View,
-  ScrollView,
-  StyleSheet,
-} from 'react-native';
+import { View, ScrollView, StyleSheet } from 'react-native';
 import { SceneRendererPropType } from './TabViewPropTypes';
 import type { SceneRendererProps } from './TabViewTypeDefinitions';
 
 type ScrollEvent = {
   nativeEvent: {
     contentOffset: {
-      x: number;
-      y: number;
-    };
-  };
-}
+      x: number,
+      y: number,
+    },
+  },
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -30,11 +26,12 @@ const styles = StyleSheet.create({
 });
 
 type Props = SceneRendererProps & {
-  swipeEnabled?: boolean;
-  children?: any;
-}
+  swipeEnabled?: boolean,
+  children?: any,
+};
 
-export default class TabViewPagerScroll extends PureComponent<void, Props, void> {
+export default class TabViewPagerScroll
+  extends PureComponent<void, Props, void> {
   static propTypes = {
     ...SceneRendererPropType,
     swipeEnabled: PropTypes.bool,
@@ -43,13 +40,21 @@ export default class TabViewPagerScroll extends PureComponent<void, Props, void>
 
   componentDidMount() {
     this._scrollTo(this.props.navigationState.index * this.props.layout.width);
-    this._positionListener = this.props.subscribe('position', this._updatePosition);
+    this._positionListener = this.props.subscribe(
+      'position',
+      this._updatePosition,
+    );
   }
 
   componentDidUpdate(prevProps: Props) {
-    if (prevProps.layout !== this.props.layout || Children.count(prevProps.children) !== Children.count(this.props.children)) {
+    if (
+      prevProps.layout !== this.props.layout ||
+      Children.count(prevProps.children) !== Children.count(this.props.children)
+    ) {
       global.requestAnimationFrame(() =>
-        this._scrollTo(this.props.navigationState.index * this.props.layout.width)
+        this._scrollTo(
+          this.props.navigationState.index * this.props.layout.width,
+        ),
       );
     }
   }
@@ -107,7 +112,9 @@ export default class TabViewPagerScroll extends PureComponent<void, Props, void>
     this._isMomentumScroll = false;
     this._isManualScroll = false;
 
-    const nextIndex = Math.round(e.nativeEvent.contentOffset.x / this.props.layout.width);
+    const nextIndex = Math.round(
+      e.nativeEvent.contentOffset.x / this.props.layout.width,
+    );
     this.props.jumpToIndex(nextIndex);
   };
 
@@ -116,11 +123,11 @@ export default class TabViewPagerScroll extends PureComponent<void, Props, void>
       return;
     }
     this.props.position.setValue(
-      e.nativeEvent.contentOffset.x / this.props.layout.width
+      e.nativeEvent.contentOffset.x / this.props.layout.width,
     );
   };
 
-  _setRef = (el: Object) => (this._scrollView = el);
+  _setRef = (el: Object) => this._scrollView = el;
 
   render() {
     const { children, layout, navigationState } = this.props;
@@ -129,8 +136,8 @@ export default class TabViewPagerScroll extends PureComponent<void, Props, void>
         horizontal
         pagingEnabled
         directionalLockEnabled
-        keyboardDismissMode='on-drag'
-        keyboardShouldPersistTaps='always'
+        keyboardDismissMode="on-drag"
+        keyboardShouldPersistTaps="always"
         scrollEnabled={this.props.swipeEnabled}
         automaticallyAdjustContentInsets={false}
         bounces={false}
@@ -143,7 +150,10 @@ export default class TabViewPagerScroll extends PureComponent<void, Props, void>
         onScrollEndDrag={this._handleEndDrag}
         onMomentumScrollBegin={this._handleMomentumScrollBegin}
         onMomentumScrollEnd={this._handleMomentumScrollEnd}
-        contentOffset={{ x: this.props.navigationState.index * this.props.layout.width, y: 0 }}
+        contentOffset={{
+          x: this.props.navigationState.index * this.props.layout.width,
+          y: 0,
+        }}
         style={styles.container}
         contentContainerStyle={layout.width ? null : styles.container}
         ref={this._setRef}
@@ -153,9 +163,9 @@ export default class TabViewPagerScroll extends PureComponent<void, Props, void>
             key={navigationState.routes[i].key}
             testID={navigationState.routes[i].testID}
             style={
-              layout.width ?
-                { width: layout.width, overflow: 'hidden' } :
-                i === navigationState.index ? styles.page : null
+              layout.width
+                ? { width: layout.width, overflow: 'hidden' }
+                : i === navigationState.index ? styles.page : null
             }
           >
             {i === navigationState.index || layout.width ? child : null}

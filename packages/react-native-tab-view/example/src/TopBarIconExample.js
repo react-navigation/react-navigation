@@ -23,7 +23,6 @@ const styles = StyleSheet.create({
 });
 
 export default class TopBarIconExample extends Component {
-
   static title = 'Icon only top bar';
   static appbarElevation = 0;
 
@@ -40,23 +39,17 @@ export default class TopBarIconExample extends Component {
     ],
   };
 
-  _handleChangeTab = (index) => {
+  _handleChangeTab = index => {
     this.setState({
       index,
     });
   };
 
   _renderIcon = ({ route }: any) => {
-    return (
-      <Ionicons
-        name={route.icon}
-        size={24}
-        color='white'
-      />
-    );
+    return <Ionicons name={route.icon} size={24} color="white" />;
   };
 
-  _renderHeader = (props) => {
+  _renderHeader = props => {
     return (
       <TabBar
         {...props}
@@ -69,21 +62,21 @@ export default class TopBarIconExample extends Component {
 
   _renderScene = ({ route }) => {
     switch (route.key) {
-    case '1':
-      return <View style={[ styles.page, { backgroundColor: '#ff4081' } ]} />;
-    case '2':
-      return <View style={[ styles.page, { backgroundColor: '#673ab7' } ]} />;
-    case '3':
-      return <View style={[ styles.page, { backgroundColor: '#4caf50' } ]} />;
-    default:
-      return null;
+      case '1':
+        return <View style={[styles.page, { backgroundColor: '#ff4081' }]} />;
+      case '2':
+        return <View style={[styles.page, { backgroundColor: '#673ab7' }]} />;
+      case '3':
+        return <View style={[styles.page, { backgroundColor: '#4caf50' }]} />;
+      default:
+        return null;
     }
   };
 
   render() {
     return (
       <TabViewAnimated
-        style={[ styles.container, this.props.style ]}
+        style={[styles.container, this.props.style]}
         navigationState={this.state}
         renderScene={this._renderScene}
         renderHeader={this._renderHeader}

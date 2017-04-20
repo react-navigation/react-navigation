@@ -1,8 +1,19 @@
 /* @flow */
 
 import React, { Component } from 'react';
-import { Animated, View, Platform, TouchableWithoutFeedback, StyleSheet } from 'react-native';
-import { TabViewAnimated, TabViewPagerPan, TabViewPagerScroll, TabViewPagerAndroid } from 'react-native-tab-view';
+import {
+  Animated,
+  View,
+  Platform,
+  TouchableWithoutFeedback,
+  StyleSheet,
+} from 'react-native';
+import {
+  TabViewAnimated,
+  TabViewPagerPan,
+  TabViewPagerScroll,
+  TabViewPagerAndroid,
+} from 'react-native-tab-view';
 import { Ionicons } from '@exponent/vector-icons';
 import ListViewExample from './ListViewExample';
 
@@ -53,7 +64,6 @@ const styles = StyleSheet.create({
 });
 
 export default class TopBarIconExample extends Component {
-
   static title = 'No animation';
   static backgroundColor = '#f4f4f4';
   static tintColor = '#222';
@@ -74,7 +84,7 @@ export default class TopBarIconExample extends Component {
     ],
   };
 
-  _handleChangeTab = (index) => {
+  _handleChangeTab = index => {
     this.setState({
       index,
     });
@@ -82,13 +92,15 @@ export default class TopBarIconExample extends Component {
 
   _renderLabel = ({ position, navigationState }) => ({ route, index }) => {
     const inputRange = navigationState.routes.map((x, i) => i);
-    const outputRange = inputRange.map(inputIndex => inputIndex === index ? '#2196f3' : '#939393');
+    const outputRange = inputRange.map(
+      inputIndex => (inputIndex === index ? '#2196f3' : '#939393'),
+    );
     const color = position.interpolate({
       inputRange,
       outputRange,
     });
     return (
-      <Animated.Text style={[ styles.label, { color } ]}>
+      <Animated.Text style={[styles.label, { color }]}>
         {route.title}
       </Animated.Text>
     );
@@ -98,23 +110,23 @@ export default class TopBarIconExample extends Component {
     const inputRange = navigationState.routes.map((x, i) => i);
     const filledOpacity = position.interpolate({
       inputRange,
-      outputRange: inputRange.map(i => i === index ? 1 : 0),
+      outputRange: inputRange.map(i => (i === index ? 1 : 0)),
     });
     const outlineOpacity = position.interpolate({
       inputRange,
-      outputRange: inputRange.map(i => i === index ? 0 : 1),
+      outputRange: inputRange.map(i => (i === index ? 0 : 1)),
     });
     return (
       <View style={styles.iconContainer}>
         <AnimatedIcon
           name={route.icon}
           size={26}
-          style={[ styles.icon, { opacity: filledOpacity } ]}
+          style={[styles.icon, { opacity: filledOpacity }]}
         />
         <AnimatedIcon
           name={route.icon + '-outline'}
           size={26}
-          style={[ styles.icon, styles.outline, { opacity: outlineOpacity } ]}
+          style={[styles.icon, styles.outline, { opacity: outlineOpacity }]}
         />
       </View>
     );
@@ -125,7 +137,10 @@ export default class TopBarIconExample extends Component {
       <View style={styles.tabbar}>
         {props.navigationState.routes.map((route, index) => {
           return (
-            <TouchableWithoutFeedback key={route.key} onPress={() => props.jumpToIndex(index)}>
+            <TouchableWithoutFeedback
+              key={route.key}
+              onPress={() => props.jumpToIndex(index)}
+            >
               <Animated.View style={styles.tab}>
                 {this._renderIcon(props)({ route, index })}
                 {this._renderLabel(props)({ route, index })}
@@ -139,46 +154,61 @@ export default class TopBarIconExample extends Component {
 
   _renderScene = ({ route }) => {
     switch (route.key) {
-    case '1':
-      return <ListViewExample style={[ styles.page, { backgroundColor: '#E3F4DD' } ]} />;
-    case '2':
-      return <ListViewExample style={[ styles.page, { backgroundColor: '#E6BDC5' } ]} />;
-    case '3':
-      return <ListViewExample style={[ styles.page, { backgroundColor: '#9DB1B5' } ]} />;
-    case '4':
-      return <ListViewExample style={[ styles.page, { backgroundColor: '#EDD8B5' } ]} />;
-    case '5':
-      return <ListViewExample style={[ styles.page, { backgroundColor: '#9E9694' } ]} />;
-    default:
-      return null;
+      case '1':
+        return (
+          <ListViewExample
+            style={[styles.page, { backgroundColor: '#E3F4DD' }]}
+          />
+        );
+      case '2':
+        return (
+          <ListViewExample
+            style={[styles.page, { backgroundColor: '#E6BDC5' }]}
+          />
+        );
+      case '3':
+        return (
+          <ListViewExample
+            style={[styles.page, { backgroundColor: '#9DB1B5' }]}
+          />
+        );
+      case '4':
+        return (
+          <ListViewExample
+            style={[styles.page, { backgroundColor: '#EDD8B5' }]}
+          />
+        );
+      case '5':
+        return (
+          <ListViewExample
+            style={[styles.page, { backgroundColor: '#9E9694' }]}
+          />
+        );
+      default:
+        return null;
     }
   };
 
-  _renderPager = (props) => {
+  _renderPager = props => {
     switch (Platform.OS) {
-    case 'ios':
-      return (
-        <TabViewPagerScroll
-          {...props}
-          animationEnabled={false}
-          swipeEnabled={false}
-        />
-      );
-    case 'android':
-      return (
-        <TabViewPagerAndroid
-          {...props}
-          animationEnabled={false}
-          swipeEnabled={false}
-        />
-      );
-    default:
-      return (
-        <TabViewPagerPan
-          {...props}
-          swipeEnabled={false}
-        />
-      );
+      case 'ios':
+        return (
+          <TabViewPagerScroll
+            {...props}
+            animationEnabled={false}
+            swipeEnabled={false}
+          />
+        );
+      case 'android':
+        return (
+          <TabViewPagerAndroid
+            {...props}
+            animationEnabled={false}
+            swipeEnabled={false}
+          />
+        );
+      default:
+        return <TabViewPagerPan {...props} swipeEnabled={false} />;
     }
   };
 
@@ -187,7 +217,7 @@ export default class TopBarIconExample extends Component {
   render() {
     return (
       <TabViewAnimated
-        style={[ styles.container, this.props.style ]}
+        style={[styles.container, this.props.style]}
         navigationState={this.state}
         configureTransition={this._configureTransition}
         renderPager={this._renderPager}
