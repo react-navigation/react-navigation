@@ -192,7 +192,7 @@ export default (
         }
       }
       if (activeTabIndex !== state.index) {
-        const route = [...state.routes];
+        const routes = [...state.routes];
         const activeRoute = routes[activeTabIndex];
         routes[activeTabIndex] = {
             ...activeRoute,
