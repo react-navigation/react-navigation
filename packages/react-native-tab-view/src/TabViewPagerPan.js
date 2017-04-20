@@ -31,7 +31,6 @@ type Props = SceneRendererProps & {
   swipeDistanceThreshold: number,
   swipeVelocityThreshold: number,
   children?: any,
-  style?: any,
 };
 
 const DEAD_ZONE = 12;
@@ -197,7 +196,7 @@ export default class TabViewPagerPan
             testID={navigationState.routes[i].testID}
             style={
               width
-                ? { width, overflow: 'hidden' }
+                ? { width }
                 : i === navigationState.index ? StyleSheet.absoluteFill : null
             }
           >
