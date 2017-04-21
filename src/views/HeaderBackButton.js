@@ -62,6 +62,8 @@ class HeaderBackButton extends React.PureComponent<DefaultProps, Props, State> {
 
     return (
       <TouchableItem
+        accessibilityComponentType="button"
+        accessibilityTraits="button"
         delayPressIn={0}
         onPress={onPress}
         pressColor={pressColorAndroid}
