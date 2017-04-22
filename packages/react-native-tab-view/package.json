@@ -61,7 +61,8 @@
     "react-native": "*"
   },
   "jest": {
-    "preset": "react-native"
+    "preset": "react-native",
+    "modulePathIgnorePatterns": ["<rootDir>/example/node_modules"]
   },
   "dependencies": {
     "prop-types": "^15.5.8"
