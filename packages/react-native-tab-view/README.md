@@ -113,6 +113,8 @@ It accepts the following props,
 - `renderFooter` - optional callback which renders a footer, useful for a bottom tab bar
 - `renderScene` - callback which renders a single scene
 
+Any other props are passed to the underlying pager.
+
 ### `<TabViewPagerPan />`
 
 Pager component based on `PanResponder`

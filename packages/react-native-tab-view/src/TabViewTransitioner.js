@@ -20,6 +20,7 @@ type DefaultProps = {
 
 type Props = TransitionerProps & {
   render: (props: SceneRendererProps) => ?React.Element<*>,
+  style?: any,
 };
 
 type State = {
@@ -48,6 +49,7 @@ export default class TabViewTransitioner
       width: PropTypes.number.isRequired,
     }),
     canJumpToTab: PropTypes.func,
+    style: View.propTypes.style,
   };
 
   static defaultProps = {
@@ -226,7 +228,7 @@ export default class TabViewTransitioner
 
   render() {
     return (
-      <View {...this.props} onLayout={this._handleLayout}>
+      <View style={this.props.style} onLayout={this._handleLayout}>
         {this.props.render(this._buildSceneRendererProps())}
       </View>
     );

@@ -83,7 +83,20 @@ export default class TabViewAnimated
   };
 
   _renderItems = (props: SceneRendererProps) => {
-    const { renderPager, renderHeader, renderFooter } = this.props;
+    const {
+      navigationState: _,
+      configureTransition,
+      onRequestChangeTab,
+      onChangePosition,
+      canJumpToTab,
+      lazy,
+      initialLayout,
+      renderPager,
+      renderHeader,
+      renderFooter,
+      renderScene,
+      ...rest
+    } = this.props;
     const { navigationState } = props;
 
     return (
@@ -91,12 +104,13 @@ export default class TabViewAnimated
         {renderHeader && renderHeader(props)}
         {renderPager({
           ...props,
+          ...rest,
           children: navigationState.routes.map((route, index) =>
             this._renderScene({
               ...props,
               route,
               index,
-              focused: index === props.navigationState.index,
+              focused: index === navigationState.index,
             }),
           ),
         })}
