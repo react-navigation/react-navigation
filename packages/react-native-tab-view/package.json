@@ -10,7 +10,7 @@
     "test": "jest",
     "flow": "flow",
     "lint": "eslint **/*.js",
-    "prettier": "prettier --single-quote --trailing-comma all --write \"{src,example/src}/**/*.js\"" 
+    "prettier": "prettier --single-quote --trailing-comma all --write \"{src,example/src}/**/*.js\""
   },
   "keywords": [
     "react-native-component",
@@ -62,5 +62,8 @@
   },
   "jest": {
     "preset": "react-native"
+  },
+  "dependencies": {
+    "prop-types": "^15.5.8"
   }
 }

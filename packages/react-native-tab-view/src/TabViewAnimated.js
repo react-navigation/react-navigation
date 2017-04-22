@@ -1,6 +1,7 @@
 /* @flow */
 
-import React, { PureComponent, PropTypes } from 'react';
+import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 import { Platform, View, StyleSheet } from 'react-native';
 import TabViewTransitioner from './TabViewTransitioner';
 import { NavigationStatePropType } from './TabViewPropTypes';

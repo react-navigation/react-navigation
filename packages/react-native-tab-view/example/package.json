@@ -8,12 +8,13 @@
   "dependencies": {
     "@expo/vector-icons": "^4.0.0",
     "expo": "~16.0.0",
+    "prop-types": "^15.5.8",
     "react": "16.0.0-alpha.6",
     "react-native": "git+https://github.com/expo/react-native.git#sdk-16.0.0"
   },
   "devDependencies": {
     "babel-plugin-module-resolver": "^2.7.0",
     "babel-preset-expo": "^1.0.0"
-},
+  },
   "main": "main.js"
 }

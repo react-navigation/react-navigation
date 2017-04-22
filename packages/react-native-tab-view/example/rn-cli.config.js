@@ -7,6 +7,6 @@ module.exports = {
     return [__dirname, path.resolve(__dirname, '..', 'src')];
   },
   getProvidesModuleNodeModules() {
-    return ['react-native', 'react'];
+    return ['react-native', 'react', 'prop-types'];
   },
 };

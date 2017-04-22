@@ -1,6 +1,7 @@
 /* @flow */
 
-import React, { PureComponent, Children, PropTypes } from 'react';
+import React, { PureComponent, Children } from 'react';
+import PropTypes from 'prop-types';
 import {
   TouchableNativeFeedback,
   TouchableOpacity,

@@ -1,6 +1,7 @@
 /* @flow */
 
-import React, { PureComponent, Children, PropTypes } from 'react';
+import React, { PureComponent, Children } from 'react';
+import PropTypes from 'prop-types';
 import { View, ScrollView, StyleSheet } from 'react-native';
 import { SceneRendererPropType } from './TabViewPropTypes';
 import type { SceneRendererProps } from './TabViewTypeDefinitions';
