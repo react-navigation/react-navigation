@@ -8,8 +8,9 @@
   ],
   "scripts": {
     "test": "jest",
+    "flow": "flow",
     "lint": "eslint **/*.js",
-    "flow": "flow"
+    "prettier": "prettier --single-quote --trailing-comma all --write \"{src,example/src}/**/*.js\"" 
   },
   "keywords": [
     "react-native-component",

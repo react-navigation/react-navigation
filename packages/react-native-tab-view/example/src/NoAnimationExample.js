@@ -8,12 +8,7 @@ import {
   TouchableWithoutFeedback,
   StyleSheet,
 } from 'react-native';
-import {
-  TabViewAnimated,
-  TabViewPagerPan,
-  TabViewPagerScroll,
-  TabViewPagerAndroid,
-} from 'react-native-tab-view';
+import { TabViewAnimated } from 'react-native-tab-view';
 import { Ionicons } from '@expo/vector-icons';
 import ListViewExample from './ListViewExample';
 
@@ -189,29 +184,6 @@ export default class TopBarIconExample extends Component {
     }
   };
 
-  _renderPager = props => {
-    switch (Platform.OS) {
-      case 'ios':
-        return (
-          <TabViewPagerScroll
-            {...props}
-            animationEnabled={false}
-            swipeEnabled={false}
-          />
-        );
-      case 'android':
-        return (
-          <TabViewPagerAndroid
-            {...props}
-            animationEnabled={false}
-            swipeEnabled={false}
-          />
-        );
-      default:
-        return <TabViewPagerPan {...props} swipeEnabled={false} />;
-    }
-  };
-
   _configureTransition = () => null;
 
   render() {
@@ -220,10 +192,11 @@ export default class TopBarIconExample extends Component {
         style={[styles.container, this.props.style]}
         navigationState={this.state}
         configureTransition={this._configureTransition}
-        renderPager={this._renderPager}
         renderScene={this._renderScene}
         renderFooter={this._renderFooter}
         onRequestChangeTab={this._handleChangeTab}
+        animationEnabled={false}
+        swipeEnabled={false}
       />
     );
   }
