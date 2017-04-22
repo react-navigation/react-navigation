@@ -616,3 +616,23 @@ p + .example-section .phone {
     margin-bottom: 40px;
   }
 }
+.versionselector {
+  flex: 1;
+  flex-basis: 0;
+  display: flex;
+  flex-direction: column;
+  color: #555;
+  padding-top: 15px;
+}
+.versionselector .versionbutton {
+  text-transform: uppercase;
+}
+.versionselector ul {
+  text-align: right;
+  background: #ffffff;
+  border-radius: 3px;
+  box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.1), 0 1px 1px rgba(16, 22, 26, 0.2);
+  z-index: 1;
+  margin-left: 180px;
+  padding-left: 0px !important;
+}
