@@ -6,7 +6,7 @@ React navigation was initially developed on macOS 10.12, with node 7+, and react
 
 ## Development
 
-### 0. Fork the repo
+### Fork the repo
 
 - Fork [`react-navigation`](https://github.com/react-community/react-navigation) on GitHub
 
@@ -19,7 +19,7 @@ git remote add upstream https://github.com/react-community/react-navigation.git
 npm install
 ```
 
-### 1. Run the example app
+### Run the example app
 
 ```
 cd examples/NavigationPlayground
@@ -35,7 +35,7 @@ npm run run-playground-ios
 
 You can also simply run e.g. `react-native run-android` from within the example app directory (instead of `npm run run-playground-android` from the root `react-navigation` directory); both do the same thing.
 
-### 2. Run the website
+### Run the website
 
 For development mode and live-reloading:
 
@@ -51,7 +51,7 @@ To run the website in production mode with server rendering:
 npm run prod
 ```
 
-### 3. Run tests, run flow
+### Run tests and type-checking
 
 ```
 jest
@@ -62,7 +62,7 @@ Tests must pass for your changes to be accepted and merged.
 
 Flow is not yet passing, but your code should be flow checked and we expect that your changes do not introduce any flow errors.
 
-### 4. Developing Docs
+### Developing Docs
 
 The docs are indexed in [App.js](https://github.com/react-community/react-navigation/blob/master/website/src/App.js), where all the pages are declared alongside the titles. To test the docs, follow the above instructions for running the website. Changing existing markdown files should not require any testing.
 
