@@ -263,7 +263,8 @@ export type NavigationTabRouterConfig = {
 export type NavigationTabScreenOptions = NavigationScreenOptions & {
   tabBarIcon?: React.Element<*>
     | (options: { tintColor: ?string, focused: boolean }) => ?React.Element<*>,
-  tabBarLabel?: string,
+  tabBarLabel?: string | React.Element<*>
+    | (options: { tintColor: ?string, focused: boolean }) => ?React.Element<*>,
   tabBarVisible?: boolean,
 };
 
