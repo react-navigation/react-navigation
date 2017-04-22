@@ -1,3 +1,5 @@
 {
-"presets": ["react-native"]
+  "presets": [
+    "react-native"
+  ]
 }
