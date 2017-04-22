@@ -87,86 +87,6 @@ const GESTURE_ANIMATED_VELOCITY_RATIO = -4;
 
 class CardStack extends Component {
 
-<<<<<<< HEAD
-  static Card = Card;
-  static Header = Header;
-
-  static propTypes = {
-    /**
-     * Custom style applied to the card.
-     */
-    cardStyle: PropTypes.any,
-
-    /**
-     * Style of the stack header. `float` means the header persists and is shared
-     * for all screens. When set to `screen`, each header is rendered within the
-     * card, and will animate in together.
-     *
-     * The default for `modal` mode is `screen`, and the default for `card` mode
-     * is `screen` on Android and `float` on iOS.
-     */
-    headerMode: PropTypes.oneOf(['float', 'screen', 'none']),
-
-    /**
-     * Custom React component to be used as a header
-     */
-    headerComponent: PropTypes.func,
-
-    /**
-     * Style of the cards movement. Value could be `card` or `modal`.
-     * Default value is `card`.
-     */
-    mode: PropTypes.oneOf(['card', 'modal']),
-
-    /**
-     * Style of direction animation if mod === 'mode'.
-     * Default value is `vertical`.
-     */
-    direction: PropTypes.oneOf(['vertical', 'horizontal', 'leftToRight', 'topToBottom', 'fade', 'zoomIn']),
-
-    /**
-     * The distance from the edge of the card which gesture response can start
-     * for. Default value is `30`.
-     */
-    gestureResponseDistance: PropTypes.number,
-
-    /**
-     * Optional custom animation when transitioning between screens.
-     */
-    transitionConfig: PropTypes.func,
-
-    /**
-     * The navigation prop, including the state and the dispatcher for the back
-     * action. The dispatcher must handle the back action
-     * ({ type: NavigationActions.BACK }), and the navigation state has this shape:
-     *
-     * ```js
-     * const navigationState = {
-     *   index: 0, // the index of the selected route.
-     *   routes: [ // A list of routes.
-     *     {key: 'page 1'}, // The 1st route.
-     *     {key: 'page 2'}, // The second route.
-     *   ],
-     * };
-     * ```
-     */
-    navigation: PropTypes.shape({
-      state: NavigationPropTypes.navigationState.isRequired,
-      dispatch: PropTypes.func.isRequired,
-    }).isRequired,
-
-    /**
-     * Custom style applied to the cards stack.
-     */
-    style: View.propTypes.style,
-  };
-
-  static defaultProps: DefaultProps = {
-    mode: 'card',
-    direction: 'vertical',
-    headerComponent: Header,
-  };
-=======
   /**
    * Used to identify the starting point of the position when the gesture starts, such that it can
    * be updated according to its relative position. This means that a card can effectively be
@@ -177,7 +97,6 @@ class CardStack extends Component {
 
   // tracks if a touch is currently happening
   _isResponding: boolean = false;
->>>>>>> c384e3371cde074663f3cd3d2cec7adecc8ae05e
 
   /**
    * immediateIndex is used to represent the expected index that we will be on after a
@@ -427,7 +346,6 @@ class CardStack extends Component {
     }
     return 'float';
   }
-
 
   _renderInnerScene(
     SceneComponent: ReactClass<*>,
