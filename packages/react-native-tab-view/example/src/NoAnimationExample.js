@@ -14,7 +14,7 @@ import {
   TabViewPagerScroll,
   TabViewPagerAndroid,
 } from 'react-native-tab-view';
-import { Ionicons } from '@exponent/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import ListViewExample from './ListViewExample';
 
 const AnimatedIcon = Animated.createAnimatedComponent(Ionicons);

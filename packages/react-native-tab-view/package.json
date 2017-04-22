@@ -2,13 +2,13 @@
   "name": "react-native-tab-view",
   "version": "0.0.59",
   "description": "Tab view component for React Native",
-  "main": "index.js",
+  "main": "src/index.js",
   "files": [
     "src/"
   ],
   "scripts": {
     "test": "jest",
-    "lint": "eslint src/**/*.js",
+    "lint": "eslint **/*.js",
     "flow": "flow"
   },
   "keywords": [
@@ -33,27 +33,27 @@
   },
   "homepage": "https://github.com/react-native-community/react-native-tabview#readme",
   "devDependencies": {
-    "babel-eslint": "^7.1.1",
-    "babel-jest": "^18.0.0",
+    "babel-eslint": "^7.2.3",
+    "babel-jest": "^19.0.0",
     "babel-preset-react-native": "^1.9.1",
-    "enzyme": "^2.7.1",
-    "enzyme-to-json": "^1.4.5",
+    "enzyme": "^2.8.2",
+    "enzyme-to-json": "^1.5.1",
     "eslint": "^3.19.0",
     "eslint-config-prettier": "^1.7.0",
-    "eslint-plugin-babel": "^4.0.0",
-    "eslint-plugin-flowtype": "^2.29.1",
+    "eslint-plugin-babel": "^4.1.1",
+    "eslint-plugin-flowtype": "^2.32.1",
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-prettier": "^2.0.1",
-    "eslint-plugin-react": "^6.8.0",
-    "eslint-plugin-react-native": "^2.2.1",
-    "flow-bin": "^0.36.0",
-    "jest": "^18.1.0",
+    "eslint-plugin-react": "^6.10.3",
+    "eslint-plugin-react-native": "^2.3.2",
+    "flow-bin": "^0.38.0",
+    "jest": "^19.0.2",
     "prettier": "^1.2.2",
-    "react": "^15.4.2",
-    "react-addons-test-utils": "^15.4.2",
-    "react-dom": "^15.4.2",
-    "react-native": "^0.40.0",
-    "react-test-renderer": "^15.4.2"
+    "react": "~15.4.1",
+    "react-addons-test-utils": "~15.4.1",
+    "react-dom": "~15.4.1",
+    "react-native": "~0.42.0",
+    "react-test-renderer": "~15.4.1"
   },
   "peerDependencies": {
     "react": "*",

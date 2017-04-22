@@ -362,7 +362,7 @@ export default class TabBar extends PureComponent<DefaultProps, Props, State> {
     this._isManualScroll = false;
   };
 
-  _setRef = (el: Object) => this._scrollView = el;
+  _setRef = (el: Object) => (this._scrollView = el);
 
   render() {
     const { position, navigationState, scrollEnabled } = this.props;

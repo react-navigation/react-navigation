@@ -3,7 +3,7 @@
 import React, { Component } from 'react';
 import { Animated, View, Text, StyleSheet } from 'react-native';
 import { TabViewAnimated, TabBar } from 'react-native-tab-view';
-import { Ionicons } from '@exponent/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 
 const styles = StyleSheet.create({
   container: {

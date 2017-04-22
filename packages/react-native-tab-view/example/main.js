@@ -1,6 +1,6 @@
 /* @flow */
 
-import Exponent from 'exponent';
+import Expo from 'expo';
 import React, { Component } from 'react';
 import {
   AsyncStorage,
@@ -12,7 +12,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { Ionicons } from '@exponent/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import TopBarTextExample from './src/TopBarTextExample';
 import TopBarIconExample from './src/TopBarIconExample';
 import BottomBarIconTextExample from './src/BottomBarIconTextExample';
@@ -91,7 +91,7 @@ export default class ExampleList extends Component {
       require('./assets/album-art-6.jpg'),
       require('./assets/album-art-7.jpg'),
       require('./assets/album-art-8.jpg'),
-    ].map(image => Exponent.Asset.fromModule(image).downloadAsync());
+    ].map(image => Expo.Asset.fromModule(image).downloadAsync());
   }
 
   _persistNavigationState = async (currentIndex: number) => {
@@ -215,4 +215,4 @@ export default class ExampleList extends Component {
   }
 }
 
-Exponent.registerRootComponent(ExampleList);
+Expo.registerRootComponent(ExampleList);

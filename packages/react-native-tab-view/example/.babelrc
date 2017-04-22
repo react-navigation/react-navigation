@@ -1,12 +1,18 @@
 {
   "presets": [
-    "react-native-stage-0/decorator-support"
+    "expo"
   ],
-  "env": {
-    "development": {
-      "plugins": [
-        "transform-react-jsx-source"
-      ]
-    }
-  }
+  "plugins": [
+    ["module-resolver", {
+      "alias": {
+        "react-native-tab-view": "../src",
+        "@expo/vector-icons/lib/create-icon-set": "react-native-vector-icons/lib/create-icon-set",
+        "@expo/vector-icons/lib/icon-button": "react-native-vector-icons/lib/icon-button",
+        "@expo/vector-icons/lib/create-icon-set-from-fontello": "react-native-vector-icons/lib/create-icon-set-from-fontello",
+        "@expo/vector-icons/lib/create-icon-set-from-icomoon": "react-native-vector-icons/lib/create-icon-set-from-icomoon",
+        "@expo/vector-icons/lib/icon-button": "react-native-vector-icons/lib/icon-button",
+        "@expo/vector-icons/glyphmaps": "react-native-vector-icons/glyphmaps"
+      }
+    }]
+  ]
 }

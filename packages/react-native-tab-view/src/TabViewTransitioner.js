@@ -117,7 +117,8 @@ export default class TabViewTransitioner
     const { height, width } = e.nativeEvent.layout;
 
     if (
-      this.state.layout.width === width && this.state.layout.height === height
+      this.state.layout.width === width &&
+      this.state.layout.height === height
     ) {
       return;
     }

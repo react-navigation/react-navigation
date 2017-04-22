@@ -126,7 +126,7 @@ export default class TabViewPagerAndroid
     this._currentIndex = this._getPageIndex(e.nativeEvent.position);
   };
 
-  _setRef = (el: Object) => this._viewPager = el;
+  _setRef = (el: Object) => (this._viewPager = el);
 
   render() {
     const { children, navigationState, swipeEnabled } = this.props;

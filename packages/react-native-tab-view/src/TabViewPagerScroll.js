@@ -127,7 +127,7 @@ export default class TabViewPagerScroll
     );
   };
 
-  _setRef = (el: Object) => this._scrollView = el;
+  _setRef = (el: Object) => (this._scrollView = el);
 
   render() {
     const { children, layout, navigationState } = this.props;

@@ -75,7 +75,7 @@ export default class ListViewExample extends Component {
         dataSource={this.state.dataSource}
         renderRow={this._renderRow}
         onEndReached={this._genRows}
-        ref={el => this._root = el}
+        ref={el => (this._root = el)}
       />
     );
   }

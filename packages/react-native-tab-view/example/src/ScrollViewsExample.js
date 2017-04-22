@@ -111,21 +111,21 @@ export default class TopBarTextExample extends Component {
       case '1':
         return (
           <ListViewExample
-            ref={el => this._first = el}
+            ref={el => (this._first = el)}
             style={[styles.page, { backgroundColor: '#E3F4DD' }]}
           />
         );
       case '2':
         return (
           <ListViewExample
-            ref={el => this._second = el}
+            ref={el => (this._second = el)}
             style={[styles.page, { backgroundColor: '#E6BDC5' }]}
           />
         );
       case '3':
         return (
           <ListViewExample
-            ref={el => this._third = el}
+            ref={el => (this._third = el)}
             style={[styles.page, { backgroundColor: '#EDD8B5' }]}
           />
         );
