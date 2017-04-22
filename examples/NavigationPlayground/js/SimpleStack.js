@@ -59,18 +59,22 @@ const MyProfileScreen = ({ navigation }) => (
     navigation={navigation}
   />
 );
-MyProfileScreen.navigationOptions = {
-  header: ({ state, setParams }) => ({
-    title: `${state.params.name}'s Profile!`,
+
+MyProfileScreen.navigationOptions = props => {
+  const {navigation} = props;
+  const {state, setParams} = navigation;
+  const {params} = state;
+  return {
+    headerTitle: `${params.name}'s Profile!`,
     // Render a button on the right side of the header.
     // When pressed switches the screen to edit mode.
-    right: (
+    headerRight: (
       <Button
-        title={state.params.mode === 'edit' ? 'Done' : 'Edit'}
-        onPress={() => setParams({ mode: state.params.mode === 'edit' ? '' : 'edit' })}
+        title={params.mode === 'edit' ? 'Done' : 'Edit'}
+        onPress={() => setParams({ mode: params.mode === 'edit' ? '' : 'edit' })}
       />
     ),
-  }),
+  };
 };
 
 const SimpleStack = StackNavigator({

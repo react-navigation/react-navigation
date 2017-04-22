@@ -62,15 +62,14 @@ class PageWithSidebar extends Component {
                 state: route,
                 dispatch,
               });
-              const linkName = router.getScreenConfig(childNavigation, 'linkName');
-              const icon = router.getScreenConfig(childNavigation, 'icon');
+              const options = router.getScreenOptions(childNavigation, {});
               const isActive = state.index === i;
               return (
                 <span key={i}>
                   <LinkableLi
                     to={route.routeName}
-                    className={"pt-menu-header "+icon+' '+(isActive?'active':'')}>
-                    <h6>{linkName}</h6>
+                    className={"pt-menu-header "+options.icon+' '+(isActive?'active':'')}>
+                    <h6>{options.linkName}</h6>
                   </LinkableLi>
                   <div>
                     {route.routes && route.routes.map((childRoute, childI) => {
@@ -79,7 +78,8 @@ class PageWithSidebar extends Component {
                         state: childRoute,
                         dispatch,
                       });
-                      const routerLinkName = DocComponent.router && DocComponent.router.getScreenConfig(secondChildNavigation, 'linkName');
+                      const secondOptions = DocComponent.router && DocComponent.router.getScreenOptions(secondChildNavigation, {});
+                      const routerLinkName = secondOptions && secondOptions.linkName;
                       const linkName = routerLinkName || childRoute.routeName;
                       return (
                         <Link

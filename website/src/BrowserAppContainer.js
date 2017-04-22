@@ -22,7 +22,8 @@ module.exports = (NavigationAwareView) => {
   class NavigationContainer extends React.Component {
     state = initialState;
     componentDidMount() {
-      document.title = NavigationAwareView.router.getScreenConfig({state: this.state.routes[this.state.index], dispatch: this.dispatch}, 'title');
+      const navigation = addNavigationHelpers({state: this.state.routes[this.state.index], dispatch: this.dispatch});
+      document.title = NavigationAwareView.router.getScreenOptions(navigation).title;
       window.onpopstate = (e) => {
         e.preventDefault();
         const action = getAction(NavigationAwareView.router, window.location.pathname.substr(1));
@@ -30,12 +31,20 @@ module.exports = (NavigationAwareView) => {
       };
     }
     componentWillUpdate(props, state) {
-      const {path} = NavigationAwareView.router.getPathAndParamsForState(state);
-      const uri = `/${path}`;
+      const {path, params} = NavigationAwareView.router.getPathAndParamsForState(state);
+      const maybeHash = params && params.hash ? `#${params.hash}` : '';
+      const uri = `/${path}${maybeHash}`;
       if (window.location.pathname !== uri) {
         window.history.pushState({}, state.title, uri);
       }
-      document.title = NavigationAwareView.router.getScreenConfig({state: state.routes[state.index], dispatch: this.dispatch}, 'title');
+      const navigation = addNavigationHelpers({state: state.routes[state.index], dispatch: this.dispatch});
+      document.title = NavigationAwareView.router.getScreenOptions(navigation).title;
+    }
+    componentDidUpdate() {
+      const {params} = NavigationAwareView.router.getPathAndParamsForState(this.state);
+      if (params && params.hash) {
+        document.getElementById(params.hash).scrollIntoView();
+      }
     }
     dispatch = (action) => {
       const state = NavigationAwareView.router.getStateForAction(action, this.state);

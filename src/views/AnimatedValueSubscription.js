@@ -1,14 +1,12 @@
 /* @flow */
 
-import type {
-  NavigationAnimatedValue,
-} from '../TypeDefinition';
+import { Animated } from 'react-native';
 
 export default class AnimatedValueSubscription {
-  _value: NavigationAnimatedValue;
+  _value: Animated.Value;
   _token: string;
 
-  constructor(value: NavigationAnimatedValue, callback: Function) {
+  constructor(value: Animated.Value, callback: Function) {
     this._value = value;
     this._token = value.addListener(callback);
   }

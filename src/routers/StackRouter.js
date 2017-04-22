@@ -7,9 +7,9 @@ import createConfigGetter from './createConfigGetter';
 import getScreenForRouteName from './getScreenForRouteName';
 import StateUtils from '../StateUtils';
 import validateRouteConfigMap from './validateRouteConfigMap';
+import getScreenConfigDeprecated from './getScreenConfigDeprecated';
 
 import type {
-  NavigationRoute,
   NavigationAction,
   NavigationComponent,
   NavigationNavigateAction,
@@ -31,7 +31,7 @@ function _getUuid() {
 export default (
   routeConfigs: NavigationRouteConfigMap,
   stackConfig: NavigationStackRouterConfig = {},
-): NavigationRouter => {
+): NavigationRouter<*, *, *> => {
   // Fail fast on invalid route definitions
   validateRouteConfigMap(routeConfigs);
 
@@ -50,7 +50,7 @@ export default (
   });
 
   const {
-    initialRouteParams = {},
+    initialRouteParams,
   } = stackConfig;
 
   const initialRouteName = stackConfig.initialRouteName || routeNames[0];
@@ -113,9 +113,10 @@ export default (
             params: initialRouteParams,
           }));
         }
-        const params = (route.params || action.params) && {
+        const params = (route.params || action.params || initialRouteParams) && {
           ...(route.params || {}),
           ...(action.params || {}),
+          ...(initialRouteParams || {}),
         };
         route = {
           ...route,
@@ -129,36 +130,73 @@ export default (
         };
       }
 
-      // Check if the current scene wants to handle the action
-      const currentRoute = state.routes[state.index];
-      const childRouter = childRouters[currentRoute.routeName];
-      if (childRouter) {
-        const route = childRouter.getStateForAction(action, currentRoute);
-        if (route && route !== currentRoute) {
-          return StateUtils.replaceAt(state, currentRoute.key, route);
+      // Check if a child scene wants to handle the action as long as it is not a reset to the root stack
+      if(action.type !== NavigationActions.RESET || action.key !== null) {
+        const keyIndex = action.key ? StateUtils.indexOf(state, action.key) : -1
+        const childIndex = keyIndex >= 0 ? keyIndex : state.index;
+        const childRoute = state.routes[childIndex];
+        const childRouter = childRouters[childRoute.routeName];
+        if (childRouter) {
+          const route = childRouter.getStateForAction(action, childRoute);
+          if (route === null) {
+            return state;
+          }
+          if (route && route !== childRoute) {
+            return StateUtils.replaceAt(state, childRoute.key, route);
+          }
         }
       }
 
-      // Handle push/pop
+      // Handle explicit push navigation action
       if (action.type === NavigationActions.NAVIGATE && childRouters[action.routeName] !== undefined) {
         const childRouter = childRouters[action.routeName];
         let route;
         if (childRouter) {
           const childAction = action.action || NavigationActions.init({ params: action.params });
           route = {
-            ...action,
+            params: action.params,
             ...childRouter.getStateForAction(childAction),
             key: _getUuid(),
             routeName: action.routeName,
           };
         } else {
           route = {
-            ...action,
+            params: action.params,
             key: _getUuid(),
             routeName: action.routeName,
           };
         }
         return StateUtils.push(state, route);
+      }
+
+      // Handle navigation to other child routers that are not yet pushed
+      if (action.type === NavigationActions.NAVIGATE) {
+        const childRouterNames = Object.keys(childRouters);
+        for (let i = 0; i < childRouterNames.length; i++) {
+          const childRouterName = childRouterNames[i];
+          const childRouter = childRouters[childRouterName];
+          if (childRouter) {
+            // For each child router, start with a blank state
+            const initChildRoute = childRouter.getStateForAction(NavigationActions.init());
+            // Then check to see if the router handles our navigate action
+            const navigatedChildRoute = childRouter.getStateForAction(action, initChildRoute);
+            let routeToPush = null;
+            if (navigatedChildRoute === null) {
+              // Push the route if the router has 'handled' the action and returned null
+              routeToPush = initChildRoute;
+            } else if (navigatedChildRoute !== initChildRoute) {
+              // Push the route if the state has changed in response to this navigation
+              routeToPush = navigatedChildRoute;
+            }
+            if (routeToPush) {
+              return StateUtils.push(state, {
+                ...routeToPush,
+                key: _getUuid(),
+                routeName: childRouterName,
+              });
+            }
+          }
+        }
       }
 
       if (action.type === NavigationActions.SET_PARAMS) {
@@ -245,7 +283,9 @@ export default (
         });
       }
 
-      // Attempt to match `pathToResolve` with a route in this router's
+      const [pathNameToResolve, queryString] = pathToResolve.split('?');
+
+      // Attempt to match `pathNameToResolve` with a route in this router's
       // routeConfigs
       let matchedRouteName;
       let pathMatch;
@@ -254,7 +294,7 @@ export default (
       for (const routeName in paths) {
         /* $FlowFixMe */
         const { re, keys } = paths[routeName];
-        pathMatch = re.exec(pathToResolve);
+        pathMatch = re.exec(pathNameToResolve);
         if (pathMatch && pathMatch.length) {
           pathMatchKeys = keys;
           matchedRouteName = routeName;
@@ -279,6 +319,18 @@ export default (
         );
       }
 
+      // reduce the items of the query string. any query params may
+      // be overridden by path params
+      const queryParams = (queryString || '').split('&').reduce((result: *, item: string) => {
+        if (item !== '') {
+          const nextResult = result || {};
+          const [key, value] = item.split('=');
+          nextResult[key] = value;
+          return nextResult;
+        }
+        return result;
+      }, null);
+
       // reduce the matched pieces of the path into the params
       // of the route. `params` is null if there are no params.
       /* $FlowFixMe */
@@ -291,7 +343,8 @@ export default (
         const paramName = key.name;
         nextResult[paramName] = matchResult;
         return nextResult;
-      }, null);
+      }, queryParams);
+
 
       return NavigationActions.navigate({
         routeName: matchedRouteName,
@@ -300,7 +353,8 @@ export default (
       });
     },
 
-    getScreenConfig: createConfigGetter(routeConfigs, stackConfig.navigationOptions),
+    getScreenOptions: createConfigGetter(routeConfigs, stackConfig.navigationOptions),
 
+    getScreenConfig: getScreenConfigDeprecated,
   };
 };

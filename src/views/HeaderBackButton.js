@@ -1,6 +1,6 @@
 /* @flow */
 
-import React, { PropTypes } from 'react';
+import React from 'react';
 import {
   I18nManager,
   Image,
@@ -16,6 +16,7 @@ import TouchableItem from './TouchableItem';
 
 type Props = {
   onPress?: () => void,
+  pressColorAndroid?: ?string,
   title?: ?string,
   tintColor?: ?string,
   truncatedTitle?: ?string,
@@ -23,6 +24,7 @@ type Props = {
 };
 
 type DefaultProps = {
+  pressColorAndroid: ?string,
   tintColor: ?string,
   truncatedTitle: ?string,
 };
@@ -32,15 +34,8 @@ type State = {
 };
 
 class HeaderBackButton extends React.PureComponent<DefaultProps, Props, State> {
-  static propTypes = {
-    onPress: PropTypes.func.isRequired,
-    title: PropTypes.string,
-    tintColor: PropTypes.string,
-    truncatedTitle: PropTypes.string,
-    width: PropTypes.number,
-  };
-
   static defaultProps = {
+    pressColorAndroid: 'rgba(0, 0, 0, .32)',
     tintColor: Platform.select({
       ios: '#037aff',
     }),
@@ -59,7 +54,7 @@ class HeaderBackButton extends React.PureComponent<DefaultProps, Props, State> {
   };
 
   render() {
-    const { onPress, width, title, tintColor, truncatedTitle } = this.props;
+    const { onPress, pressColorAndroid, width, title, tintColor, truncatedTitle } = this.props;
 
     const renderTruncated = this.state.initialTextWidth && width
       ? this.state.initialTextWidth > width
@@ -69,6 +64,7 @@ class HeaderBackButton extends React.PureComponent<DefaultProps, Props, State> {
       <TouchableItem
         delayPressIn={0}
         onPress={onPress}
+        pressColor={pressColorAndroid}
         style={styles.container}
         borderless
       >

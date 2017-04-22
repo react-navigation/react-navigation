@@ -16,7 +16,7 @@ const MyApp = StackRouter({
 
 ### RouteConfig
 
-A basic stack router have a route config. Here is an example configuration:
+A basic stack router expects a route config object. Here is an example configuration:
 
 ```js
 const MyApp = StackRouter({ // This is the RouteConfig:
@@ -50,7 +50,7 @@ Each item in the config may have the following:
 
 Config options that are also passed to the stack router.
 
-- `initalRouteName` - The routeName for the default route when the stack first loads
+- `initialRouteName` - The routeName for the default route when the stack first loads
 - `initialRouteParams` - Default params of the initial route
 - `paths` - Provide a mapping of routeName to path config, which overrides the paths set in the routeConfigs.
 

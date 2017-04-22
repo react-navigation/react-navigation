@@ -28,11 +28,11 @@ import type {
  */
 function forInitial(props: NavigationSceneRendererProps): Object {
   const {
-    navigationState,
+    navigation,
     scene,
   } = props;
 
-  const focused = navigationState.index === scene.index;
+  const focused = navigation.state.index === scene.index;
   const opacity = focused ? 1 : 0;
   // If not focused, move the scene far away.
   const translate = focused ? 0 : 1000000;
