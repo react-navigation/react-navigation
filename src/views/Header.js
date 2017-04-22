@@ -59,8 +59,12 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
     return sceneOptions.title;
   }
 
+  _getLastScene(scene: NavigationScene): ?NavigationScene {
+    return this.props.scenes.find(s => s.index === scene.index - 1);
+  }
+
   _getBackButtonTitleString(scene: NavigationScene): ?string {
-    const lastScene = this.props.scenes.find(s => s.index === scene.index - 1);
+    const lastScene = this._getLastScene(scene);
     if (!lastScene) {
       return null;
     }
@@ -69,6 +73,14 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
       return headerBackTitle;
     }
     return this._getHeaderTitleString(lastScene);
+  }
+
+  _getTruncatedBackButtonTitle(scene: NavigationScene): ?string {
+    const lastScene = this._getLastScene(scene);
+    if (!lastScene) {
+      return null;
+    }
+    return this.props.getScreenDetails(lastScene).options.headerTruncatedBackTitle;
   }
 
   _renderTitleComponent = (props: SceneProps) => {
@@ -114,6 +126,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
       return null;
     }
     const backButtonTitle = this._getBackButtonTitleString(props.scene);
+    const truncatedBackButtonTitle = this._getTruncatedBackButtonTitle(props.scene);
     const width = this.state.widths[props.scene.key]
       ? (this.props.layout.initWidth - this.state.widths[props.scene.key]) / 2
       : undefined;
@@ -123,7 +136,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
         pressColorAndroid={options.headerPressColorAndroid}
         tintColor={options.headerTintColor}
         title={backButtonTitle}
-        truncatedTitle={options.headerTruncatedBackTitle}
+        truncatedTitle={truncatedBackButtonTitle}
         width={width}
       />
     );
