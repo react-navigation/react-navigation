@@ -61,7 +61,7 @@ export default (
   routeNames.forEach((routeName: string) => {
     let pathPattern = paths[routeName] || routeConfigs[routeName].path;
     const matchExact = !!pathPattern && !childRouters[routeName];
-    if (!pathPattern) {
+    if (typeof pathPattern !== 'string') {
       pathPattern = routeName;
     }
     const keys = [];
@@ -71,7 +71,7 @@ export default (
       re = new RegExp(`(?:${re.source})|(?:${wildcardRe.source})`);
     }
       /* $FlowFixMe */
-    paths[routeName] = { re, keys };
+    paths[routeName] = { re, keys, toPath: pathToRegexp.compile(pathPattern) };
   });
 
   return {
@@ -267,10 +267,25 @@ export default (
       return state;
     },
 
-    getPathAndParamsForState(state: NavigationState): {path: string, params?: NavigationParams} {
-      // TODO: implement this!
+    getPathAndParamsForState(
+      state: NavigationState
+    ): { path: string, params?: NavigationParams } {
+      const route = state.routes[state.index];
+      const routeName = route.routeName;
+      const screen = getScreenForRouteName(routeConfigs, routeName);
+      const subPath = paths[routeName].toPath(route.params);
+      let path = subPath;
+      let params = route.params;
+      if (screen && screen.router) {
+        // If it has a router it's a navigator.
+        // If it doesn't have router it's an ordinary React component.
+        const child = screen.router.getPathAndParamsForState(route);
+        path = subPath ? `${subPath}/${child.path}` : child.path;
+        params = child.params ? { ...params, ...child.params } : params;
+      }
       return {
-        path: '',
+        path,
+        params,
       };
     },
 
