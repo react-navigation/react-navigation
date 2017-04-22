@@ -34,6 +34,7 @@
   },
   "homepage": "https://github.com/react-native-community/react-native-tabview#readme",
   "devDependencies": {
+    "@expo/vector-icons": "^4.0.0",
     "babel-eslint": "^7.2.3",
     "babel-jest": "^19.0.0",
     "babel-preset-react-native": "^1.9.1",
@@ -62,7 +63,9 @@
   },
   "jest": {
     "preset": "react-native",
-    "modulePathIgnorePatterns": ["<rootDir>/example/node_modules"]
+    "modulePathIgnorePatterns": [
+      "<rootDir>/example/node_modules"
+    ]
   },
   "dependencies": {
     "prop-types": "^15.5.8"
