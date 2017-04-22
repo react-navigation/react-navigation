@@ -19,3 +19,8 @@ deployment:
     commands:
       - yarn run build-docs
       - ./scripts/deploy-website.sh
+
+test:
+  post:
+    - cd examples/NavigationPlayground && yarn install && yarn test
+    - cd examples/ReduxExample && yarn install && yarn test
