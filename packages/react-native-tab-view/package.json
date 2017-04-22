@@ -43,6 +43,7 @@
     "eslint-plugin-babel": "^4.0.0",
     "eslint-plugin-flowtype": "^2.29.1",
     "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-prettier": "^2.0.1",
     "eslint-plugin-react": "^6.8.0",
     "eslint-plugin-react-native": "^2.2.1",
     "flow-bin": "^0.36.0",
@@ -60,8 +61,5 @@
   },
   "jest": {
     "preset": "react-native"
-  },
-  "dependencies": {
-    "eslint-plugin-prettier": "^2.0.1"
   }
 }
