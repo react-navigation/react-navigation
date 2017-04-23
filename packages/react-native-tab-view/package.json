@@ -25,14 +25,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/react-native-community/react-native-tabview.git"
+    "url": "git+https://github.com/react-native-community/react-native-tab-view.git"
   },
   "author": "Satyajit Sahoo <satyajit.happy@gmail.com> (https://github.com/satya164/)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/react-native-community/react-native-tabview/issues"
+    "url": "https://github.com/react-native-community/react-native-tab-view/issues"
   },
-  "homepage": "https://github.com/react-native-community/react-native-tabview#readme",
+  "homepage": "https://github.com/react-native-community/react-native-tab-view#readme",
   "devDependencies": {
     "@expo/vector-icons": "^4.0.0",
     "babel-eslint": "^7.2.3",
