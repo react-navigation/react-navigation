@@ -52,10 +52,6 @@ For the purpose of convenience, the built-in navigators have this ability becaus
 
 Sometimes it is useful to know when navigation state managed by the top-level navigator changes. For this purpose, this function gets called every time with the previous state and the new state of the navigation.
 
-### `containerOptions`
+### `uriPrefix`
 
-These options can be used to configure a navigator when it is used at the top level.
-
-An error will be thrown if a navigator is configured with `containerOptions` and also receives a `navigation` prop, because in that case it would be unclear if the navigator should handle its own state.
-
-- `URIPrefix` - The prefix of the URIs that the app might handle. This will be used when handling a [deep link](/docs/guides/linking) to extract the path passed to the router.
+The prefix of the URIs that the app might handle. This will be used when handling a [deep link](/docs/guides/linking) to extract the path passed to the router.

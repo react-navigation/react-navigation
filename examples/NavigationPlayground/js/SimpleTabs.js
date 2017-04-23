@@ -41,16 +41,14 @@ const MyHomeScreen = ({ navigation }) => (
 );
 
 MyHomeScreen.navigationOptions = {
-  tabBar: {
-    label: 'Home',
-    icon: ({ tintColor, focused }) => (
-      <Ionicons
-        name={focused ? 'ios-home' : 'ios-home-outline'}
-        size={26}
-        style={{ color: tintColor }}
-      />
-    ),
-  },
+  tabBarLabel: 'Home',
+  tabBarIcon: ({ tintColor, focused }) => (
+    <Ionicons
+      name={focused ? 'ios-home' : 'ios-home-outline'}
+      size={26}
+      style={{ color: tintColor }}
+    />
+  ),
 };
 
 const MyPeopleScreen = ({ navigation }) => (
@@ -61,16 +59,14 @@ const MyPeopleScreen = ({ navigation }) => (
 );
 
 MyPeopleScreen.navigationOptions = {
-  tabBar: {
-    label: 'People',
-    icon: ({ tintColor, focused }) => (
-      <Ionicons
-        name={focused ? 'ios-people' : 'ios-people-outline'}
-        size={26}
-        style={{ color: tintColor }}
-      />
-    ),
-  },
+  tabBarLabel: 'People',
+  tabBarIcon: ({ tintColor, focused }) => (
+    <Ionicons
+      name={focused ? 'ios-people' : 'ios-people-outline'}
+      size={26}
+      style={{ color: tintColor }}
+    />
+  ),
 };
 
 const MyChatScreen = ({ navigation }) => (
@@ -81,16 +77,14 @@ const MyChatScreen = ({ navigation }) => (
 );
 
 MyChatScreen.navigationOptions = {
-  tabBar: {
-    label: 'Chat',
-    icon: ({ tintColor, focused }) => (
-      <Ionicons
-        name={focused ? 'ios-chatboxes' : 'ios-chatboxes-outline'}
-        size={26}
-        style={{ color: tintColor }}
-      />
-    ),
-  },
+  tabBarLabel: 'Chat',
+  tabBarIcon: ({ tintColor, focused }) => (
+    <Ionicons
+      name={focused ? 'ios-chatboxes' : 'ios-chatboxes-outline'}
+      size={26}
+      style={{ color: tintColor }}
+    />
+  ),
 };
 
 const MySettingsScreen = ({ navigation }) => (
@@ -101,16 +95,14 @@ const MySettingsScreen = ({ navigation }) => (
 );
 
 MySettingsScreen.navigationOptions = {
-  tabBar: {
-    label: 'Settings',
-    icon: ({ tintColor, focused }) => (
-      <Ionicons
-        name={focused ? 'ios-settings' : 'ios-settings-outline'}
-        size={26}
-        style={{ color: tintColor }}
-      />
-    ),
-  },
+  tabBarLabel: 'Settings',
+  tabBarIcon: ({ tintColor, focused }) => (
+    <Ionicons
+      name={focused ? 'ios-settings' : 'ios-settings-outline'}
+      size={26}
+      style={{ color: tintColor }}
+    />
+  ),
 };
 
 const SimpleTabs = TabNavigator({

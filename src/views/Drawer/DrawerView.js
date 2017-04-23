@@ -13,6 +13,7 @@ import type {
   NavigationRouter,
   NavigationState,
   NavigationAction,
+  NavigationDrawerScreenOptions,
   Style,
 } from '../../TypeDefinition';
 
@@ -33,7 +34,7 @@ export type DrawerViewConfig = {
 
 type Props = DrawerViewConfig & {
   screenProps?: {};
-  router: NavigationRouter,
+  router: NavigationRouter<NavigationState, NavigationAction, NavigationDrawerScreenOptions>,
   navigation: NavigationScreenProp<NavigationState, NavigationAction>,
 };
 
@@ -102,6 +103,7 @@ export default class DrawerView<T: *> extends PureComponent<void, Props, void> {
 
   _renderNavigationView = () => (
     <DrawerSidebar
+      screenProps={this.props.screenProps}
       navigation={this._screenNavigationProp}
       router={this.props.router}
       contentComponent={this.props.contentComponent}

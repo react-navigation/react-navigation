@@ -23,7 +23,7 @@ public class MainApplication extends Application implements ReactApplication {
     }
 
     @Override
-    protected boolean getUseDeveloperSupport() {
+    public boolean getUseDeveloperSupport() {
       return BuildConfig.DEBUG;
     }
 

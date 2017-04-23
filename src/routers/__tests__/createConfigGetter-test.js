@@ -2,19 +2,20 @@
 
 import { Component } from 'react';
 import createConfigGetter from '../createConfigGetter';
-
 import addNavigationHelpers from '../../addNavigationHelpers';
+import type {
+  NavigationScreenOptionsGetter,
+  NavigationStackScreenOptions,
+} from '../../TypeDefinition';
 
 test('should get config for screen', () => {
   /* eslint-disable react/no-multi-comp */
 
   class HomeScreen extends Component {
-    static navigationOptions = {
-      title: ({ state }: *) => `Welcome ${state.params ? state.params.user : 'anonymous'}`,
-      header: {
-        visible: true,
-      },
-    };
+    static navigationOptions = ({ navigation }) => ({
+      title: `Welcome ${navigation.state.params ? navigation.state.params.user : 'anonymous'}`,
+      headerVisible: true,
+    });
 
     render() {
       return null;
@@ -24,10 +25,7 @@ test('should get config for screen', () => {
   class SettingsScreen extends Component {
     static navigationOptions = {
       title: 'Settings!!!',
-      permalink: '',
-      header: {
-        visible: false,
-      },
+      headerVisible: false,
     };
 
     render() {
@@ -36,26 +34,23 @@ test('should get config for screen', () => {
   }
 
   class NotificationScreen extends Component {
-    static navigationOptions = {
-      title: () => '42',
-      header: ({ state }: *) => ({
-        visible: state.params ? !state.params.fullscreen : true,
-      }),
-    };
+    static navigationOptions = ({ navigation }) => ({
+      title: '42',
+      headerVisible: navigation.state.params ? !navigation.state.params.fullscreen : true,
+    });
 
     render() {
       return null;
     }
   }
 
-  const getScreenConfig = createConfigGetter({
+  const getScreenOptions: NavigationScreenOptionsGetter<NavigationStackScreenOptions, *> = createConfigGetter({
     Home: { screen: HomeScreen },
     Settings: { screen: SettingsScreen },
     Notifications: {
       screen: NotificationScreen,
       navigationOptions: {
-        title: () => '10 new notifications',
-        count: 0,
+        title: '10 new notifications',
       },
     },
   });
@@ -68,18 +63,14 @@ test('should get config for screen', () => {
     { key: 'E', routeName: 'Notifications', params: { fullscreen: true } },
   ];
 
-  expect(getScreenConfig(addNavigationHelpers({ state: routes[0], dispatch: () => false }), 'title')).toEqual('Welcome anonymous');
-  expect(getScreenConfig(addNavigationHelpers({ state: routes[1], dispatch: () => false }), 'title')).toEqual('Welcome jane');
-  /* $FlowFixMe: we want tests to fail on undefined */
-  expect(getScreenConfig(addNavigationHelpers({ state: routes[0], dispatch: () => false }), 'header').visible).toEqual(true);
-  expect(getScreenConfig(addNavigationHelpers({ state: routes[2], dispatch: () => false }), 'title')).toEqual('Settings!!!');
-  expect(getScreenConfig(addNavigationHelpers({ state: routes[2], dispatch: () => false }), 'permalink')).toEqual('');
-  /* $FlowFixMe: we want tests to fail on undefined */
-  expect(getScreenConfig(addNavigationHelpers({ state: routes[2], dispatch: () => false }), 'header').visible).toEqual(false);
-  expect(getScreenConfig(addNavigationHelpers({ state: routes[3], dispatch: () => false }), 'title')).toEqual('10 new notifications');
-  expect(getScreenConfig(addNavigationHelpers({ state: routes[3], dispatch: () => false }), 'count')).toEqual(0);
-  /* $FlowFixMe: we want tests to fail on undefined */
-  expect(getScreenConfig(addNavigationHelpers({ state: routes[4], dispatch: () => false }), 'header').visible).toEqual(false);
+  expect(getScreenOptions(addNavigationHelpers({ state: routes[0], dispatch: () => false }), {}).title).toEqual('Welcome anonymous');
+  expect(getScreenOptions(addNavigationHelpers({ state: routes[1], dispatch: () => false }), {}).title).toEqual('Welcome jane');
+  expect(getScreenOptions(addNavigationHelpers({ state: routes[0], dispatch: () => false }), {}).headerVisible).toEqual(true);
+  expect(getScreenOptions(addNavigationHelpers({ state: routes[2], dispatch: () => false }), {}).title).toEqual('Settings!!!');
+  expect(getScreenOptions(addNavigationHelpers({ state: routes[2], dispatch: () => false }), {}).headerVisible).toEqual(false);
+  expect(getScreenOptions(addNavigationHelpers({ state: routes[3], dispatch: () => false }), {}).title).toEqual('10 new notifications');
+  expect(getScreenOptions(addNavigationHelpers({ state: routes[3], dispatch: () => false }), {}).headerVisible).toEqual(true);
+  expect(getScreenOptions(addNavigationHelpers({ state: routes[4], dispatch: () => false }), {}).headerVisible).toEqual(false);
 });
 
 test('should throw if the route does not exist', () => {
@@ -88,12 +79,10 @@ test('should throw if the route does not exist', () => {
   const HomeScreen = () => null;
   HomeScreen.navigationOptions = {
     title: 'Home screen',
-    header: {
-      visible: true,
-    },
+    headerVisible: true,
   };
 
-  const getScreenConfig = createConfigGetter({
+  const getScreenOptions = createConfigGetter({
     Home: { screen: HomeScreen },
   });
 
@@ -102,14 +91,14 @@ test('should throw if the route does not exist', () => {
   ];
 
   expect(
-    () => getScreenConfig({ state: routes[0], dispatch: () => false }, 'title')
+    () => getScreenOptions(addNavigationHelpers({ state: routes[0], dispatch: () => false }), {}),
   ).toThrowError("There is no route defined for key Settings.\nMust be one of: 'Home'");
 });
 
 test('should throw if the screen is not defined under the route config', () => {
   /* eslint-disable react/no-multi-comp */
 
-  const getScreenConfig = createConfigGetter({
+  const getScreenOptions = createConfigGetter({
     Home: {},
   });
 
@@ -118,62 +107,6 @@ test('should throw if the screen is not defined under the route config', () => {
   ];
 
   expect(
-    () => getScreenConfig({ state: routes[0], dispatch: () => false }, 'title')
+    () => getScreenOptions(addNavigationHelpers({ state: routes[0], dispatch: () => false }))
   ).toThrowError('Route Home must define a screen or a getScreen.');
-});
-
-test('should get recursive config for screen', () => {
-  class NotificationScreen extends Component {
-    static router = {
-      getScreenConfig: () => 'Baz',
-    };
-    static navigationOptions = {
-      title: (navigation: *, childTitle: *) => `Bar ${childTitle}`,
-    };
-  }
-
-  const getScreenConfig = createConfigGetter({
-    Notifications: {
-      screen: NotificationScreen,
-      navigationOptions: {
-        title: (navigation: *, childTitle: *) => `Foo ${childTitle}`,
-      },
-    },
-  });
-
-  const childNavigation = addNavigationHelpers({
-    state: {
-      key: 'A',
-      routeName: 'Notifications',
-      index: 0,
-      routes: [{ key: 'A', routeName: 'Anything' }],
-    },
-    dispatch: () => false,
-  });
-
-  expect(getScreenConfig(childNavigation, 'title')).toEqual('Foo Bar Baz');
-});
-
-test('Allow passthrough configuration', () => {
-  class NotificationScreen extends Component {
-    static navigationOptions = {
-      tabBar: (navigation: *, tabBar: *) => ({ deepConfig: `also ${tabBar.color}` }),
-    };
-  }
-
-  const getScreenConfig = createConfigGetter({
-    Notifications: {
-      screen: NotificationScreen,
-    },
-  });
-
-  const childNavigation = addNavigationHelpers({
-    state: {
-      key: 'A',
-      routeName: 'Notifications',
-    },
-    dispatch: () => false,
-  });
-
-  expect(getScreenConfig(childNavigation, 'tabBar', { color: 'red' })).toEqual({ deepConfig: 'also red' });
 });
