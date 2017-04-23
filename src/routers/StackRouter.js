@@ -1,5 +1,3 @@
-/* @flow */
-
 import pathToRegexp from 'path-to-regexp';
 
 import NavigationActions from '../NavigationActions';
@@ -201,7 +199,7 @@ export default (
 
       if (action.type === NavigationActions.SET_PARAMS) {
         /* $FlowFixMe */
-        const lastRoute = state.routes.find((route: *) => route.key === action.key);
+        const lastRoute = state.routes.find((route: *) => route.routeName === action.key);
         if (lastRoute) {
           const params = {
             ...lastRoute.params,
@@ -234,9 +232,13 @@ export default (
                 key: `Init${index}`,
               };
             }
+            const params = {
+              ...(action.params || {}),
+            };
             const route = {
               ...action,
               key: `Init${index}`,
+              ...(params ? { params } : {}),
             };
             delete route.type;
             return route;
@@ -249,9 +251,9 @@ export default (
         let backRouteIndex = null;
         if (action.key) {
           /* $FlowFixMe */
-          const backRoute = state.routes.find((route: *) => route.key === action.key);
+          const backRoute = state.routes.find((route: *) => route.routeName === action.key);
           /* $FlowFixMe */
-          backRouteIndex = state.routes.indexOf(backRoute);
+          backRouteIndex = state.routes.indexOf(backRoute)+1;
         }
         if (backRouteIndex == null) {
           return StateUtils.pop(state);
