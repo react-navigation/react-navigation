@@ -102,7 +102,9 @@ class TabView extends PureComponent<void, Props, void> {
     );
 
     if (options.tabBarLabel) {
-      return options.tabBarLabel;
+      return typeof options.tabBarLabel === 'function'
+        ? options.tabBarLabel({ tintColor, focused })
+        : options.tabBarLabel;
     }
 
     if (typeof options.title === 'string') {
