@@ -201,6 +201,7 @@ export type NavigationStackScreenOptions = NavigationScreenOptions & {
   headerTintColor?: string,
   headerLeft?: React.Element<*>,
   headerBackTitle?: string,
+  headerTruncatedBackTitle?: string,
   headerPressColorAndroid?: string,
   headerRight?: React.Element<*>,
   headerStyle?: Style,
@@ -262,7 +263,8 @@ export type NavigationTabRouterConfig = {
 export type NavigationTabScreenOptions = NavigationScreenOptions & {
   tabBarIcon?: React.Element<*>
     | (options: { tintColor: ?string, focused: boolean }) => ?React.Element<*>,
-  tabBarLabel?: string,
+  tabBarLabel?: string | React.Element<*>
+    | (options: { tintColor: ?string, focused: boolean }) => ?React.Element<*>,
   tabBarVisible?: boolean,
 };
 
