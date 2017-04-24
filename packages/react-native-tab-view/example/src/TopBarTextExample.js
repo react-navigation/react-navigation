@@ -5,6 +5,8 @@ import { View, StyleSheet } from 'react-native';
 import { TabViewAnimated, TabBar } from 'react-native-tab-view';
 import SimplePage from './SimplePage';
 
+import type { NavigationState } from 'react-native-tab-view/types';
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -24,7 +26,14 @@ const styles = StyleSheet.create({
   },
 });
 
-export default class TopBarTextExample extends PureComponent {
+type Route = {
+  key: string,
+  title: string,
+};
+
+type State = NavigationState<Route>;
+
+export default class TopBarTextExample extends PureComponent<void, *, State> {
   static title = 'Scrollable top bar';
   static appbarElevation = 0;
 
@@ -32,7 +41,7 @@ export default class TopBarTextExample extends PureComponent {
     style: View.propTypes.style,
   };
 
-  state = {
+  state: State = {
     index: 1,
     routes: [
       { key: '1', title: 'First' },
@@ -61,8 +70,8 @@ export default class TopBarTextExample extends PureComponent {
     );
   };
 
-  _renderScene = scene => {
-    switch (scene.route.key) {
+  _renderScene = ({ route }) => {
+    switch (route.key) {
       case '1':
         return (
           <SimplePage

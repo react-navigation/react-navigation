@@ -11,6 +11,8 @@ import { TabViewAnimated } from 'react-native-tab-view';
 import { Ionicons } from '@expo/vector-icons';
 import BasicListView from './BasicListView';
 
+import type { NavigationState } from 'react-native-tab-view/types';
+
 const AnimatedIcon = Animated.createAnimatedComponent(Ionicons);
 
 const styles = StyleSheet.create({
@@ -57,7 +59,15 @@ const styles = StyleSheet.create({
   },
 });
 
-export default class TopBarIconExample extends PureComponent {
+type Route = {
+  key: string,
+  title: string,
+  icon: string,
+};
+
+type State = NavigationState<Route>;
+
+export default class TopBarIconExample extends PureComponent<void, *, State> {
   static title = 'No animation';
   static backgroundColor = '#f4f4f4';
   static tintColor = '#222';
@@ -67,7 +77,7 @@ export default class TopBarIconExample extends PureComponent {
     style: View.propTypes.style,
   };
 
-  state = {
+  state: State = {
     index: 0,
     routes: [
       { key: '1', title: 'Featured', icon: 'ios-star' },
@@ -100,7 +110,10 @@ export default class TopBarIconExample extends PureComponent {
     );
   };
 
-  _renderIcon = ({ navigationState, position }) => ({ route, index }: any) => {
+  _renderIcon = ({ navigationState, position }) => ({
+    route,
+    index,
+  }: { route: Route, index: number }) => {
     const inputRange = navigationState.routes.map((x, i) => i);
     const filledOpacity = position.interpolate({
       inputRange,

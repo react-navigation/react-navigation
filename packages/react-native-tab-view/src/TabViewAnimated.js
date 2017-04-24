@@ -5,8 +5,13 @@ import PropTypes from 'prop-types';
 import { Platform, View, StyleSheet } from 'react-native';
 import TabViewTransitioner from './TabViewTransitioner';
 import { NavigationStatePropType } from './TabViewPropTypes';
-import type { Scene, SceneRendererProps } from './TabViewTypeDefinitions';
-import type { TransitionerProps } from './TabViewTransitionerTypes';
+import type {
+  Scene,
+  SceneRendererProps,
+  NavigationState,
+  Layout,
+  Route,
+} from './TabViewTypeDefinitions';
 
 const styles = StyleSheet.create({
   container: {
@@ -15,15 +20,20 @@ const styles = StyleSheet.create({
   },
 });
 
-type DefaultProps = {
-  renderPager: (props: SceneRendererProps) => React.Element<*>,
+type DefaultProps<T> = {
+  renderPager: (props: SceneRendererProps<T>) => React.Element<*>,
 };
 
-type Props = TransitionerProps & {
-  renderPager: (props: SceneRendererProps) => React.Element<*>,
-  renderScene: (props: SceneRendererProps & Scene) => ?React.Element<*>,
-  renderHeader?: (props: SceneRendererProps) => ?React.Element<*>,
-  renderFooter?: (props: SceneRendererProps) => ?React.Element<*>,
+type Props<T> = {
+  navigationState: NavigationState<T>,
+  onRequestChangeTab: (index: number) => void,
+  onChangePosition?: (value: number) => void,
+  initialLayout?: Layout,
+  canJumpToTab?: (route: T) => boolean,
+  renderPager: (props: SceneRendererProps<T>) => React.Element<*>,
+  renderScene: (props: SceneRendererProps<T> & Scene<T>) => ?React.Element<*>,
+  renderHeader?: (props: SceneRendererProps<T>) => ?React.Element<*>,
+  renderFooter?: (props: SceneRendererProps<T>) => ?React.Element<*>,
   lazy?: boolean,
 };
 
@@ -45,8 +55,8 @@ switch (Platform.OS) {
     break;
 }
 
-export default class TabViewAnimated
-  extends PureComponent<DefaultProps, Props, State> {
+export default class TabViewAnimated<T: Route<*>>
+  extends PureComponent<DefaultProps<T>, Props<T>, State> {
   static propTypes = {
     navigationState: NavigationStatePropType.isRequired,
     renderPager: PropTypes.func.isRequired,
@@ -58,10 +68,10 @@ export default class TabViewAnimated
   };
 
   static defaultProps = {
-    renderPager: (props: SceneRendererProps) => <TabViewPager {...props} />,
+    renderPager: (props: SceneRendererProps<*>) => <TabViewPager {...props} />,
   };
 
-  constructor(props: Props) {
+  constructor(props: Props<T>) {
     super(props);
 
     this.state = {
@@ -71,8 +81,9 @@ export default class TabViewAnimated
 
   state: State;
 
-  _renderScene = (props: SceneRendererProps & Scene) => {
-    const { renderScene, navigationState, lazy } = this.props;
+  _renderScene = (props: SceneRendererProps<T> & Scene<T>) => {
+    const { renderScene, lazy } = this.props;
+    const { navigationState } = props;
     const { loaded } = this.state;
     if (lazy) {
       if (loaded.includes(navigationState.routes.indexOf(props.route))) {
@@ -83,11 +94,10 @@ export default class TabViewAnimated
     return renderScene(props);
   };
 
-  _renderItems = (props: SceneRendererProps) => {
+  _renderItems = (props: *) => {
     const {
       /* eslint-disable no-unused-vars */
       navigationState: _,
-      configureTransition,
       onRequestChangeTab,
       onChangePosition,
       canJumpToTab,

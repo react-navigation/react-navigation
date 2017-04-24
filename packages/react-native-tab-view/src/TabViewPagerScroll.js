@@ -4,7 +4,7 @@ import React, { PureComponent, Children } from 'react';
 import PropTypes from 'prop-types';
 import { Platform, View, ScrollView, StyleSheet } from 'react-native';
 import { SceneRendererPropType } from './TabViewPropTypes';
-import type { SceneRendererProps } from './TabViewTypeDefinitions';
+import type { SceneRendererProps, Route } from './TabViewTypeDefinitions';
 
 type ScrollEvent = {
   nativeEvent: {
@@ -30,14 +30,14 @@ type State = {
   initialOffset: { x: number, y: number },
 };
 
-type Props = SceneRendererProps & {
+type Props<T> = SceneRendererProps<T> & {
   animationEnabled?: boolean,
   swipeEnabled?: boolean,
   children?: any,
 };
 
-export default class TabViewPagerScroll
-  extends PureComponent<void, Props, State> {
+export default class TabViewPagerScroll<T: Route<*>>
+  extends PureComponent<void, Props<T>, State> {
   static propTypes = {
     ...SceneRendererPropType,
     animationEnabled: PropTypes.bool,
@@ -45,7 +45,7 @@ export default class TabViewPagerScroll
     children: PropTypes.node,
   };
 
-  constructor(props: Props) {
+  constructor(props: Props<T>) {
     super(props);
     this.state = {
       initialOffset: {
@@ -65,7 +65,7 @@ export default class TabViewPagerScroll
     this._resetListener = this.props.subscribe('reset', this._scrollTo);
   }
 
-  componentDidUpdate(prevProps: Props) {
+  componentDidUpdate(prevProps: Props<T>) {
     const amount = this.props.navigationState.index * this.props.layout.width;
     if (
       prevProps.navigationState !== this.props.navigationState ||

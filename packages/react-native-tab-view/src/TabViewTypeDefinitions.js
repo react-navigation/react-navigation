@@ -2,21 +2,15 @@
 
 import { Animated } from 'react-native';
 
-export type SubscriptionName = 'reset' | 'position';
+export type Route<T> = T & { key: string };
 
-export type Route = {
-  key: string,
-  title?: string,
-  testID?: string,
-};
-
-export type NavigationState = {
+export type NavigationState<T: { key: string }> = {
   index: number,
-  routes: Array<Route>,
+  routes: Array<T>,
 };
 
-export type Scene = {
-  route: Route,
+export type Scene<T> = {
+  route: T,
   focused: boolean,
   index: number,
 };
@@ -26,11 +20,11 @@ export type Layout = {
   width: number,
 };
 
-export type SceneRendererProps = {
+export type SceneRendererProps<T> = {
   layout: Layout & {
     measured: boolean,
   },
-  navigationState: NavigationState,
+  navigationState: NavigationState<T>,
   position: Animated.Value,
   jumpToIndex: (index: number) => void,
   getLastPosition: () => number,
@@ -39,3 +33,5 @@ export type SceneRendererProps = {
     callback: Function,
   ) => { remove: Function },
 };
+
+export type SubscriptionName = 'reset' | 'position';

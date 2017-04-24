@@ -4,7 +4,7 @@ import React, { PureComponent, Children } from 'react';
 import PropTypes from 'prop-types';
 import { View, ViewPagerAndroid, StyleSheet, I18nManager } from 'react-native';
 import { SceneRendererPropType } from './TabViewPropTypes';
-import type { SceneRendererProps } from './TabViewTypeDefinitions';
+import type { SceneRendererProps, Route } from './TabViewTypeDefinitions';
 
 type PageScrollEvent = {
   nativeEvent: {
@@ -25,14 +25,14 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props = SceneRendererProps & {
+type Props<T> = SceneRendererProps<T> & {
   animationEnabled?: boolean,
   swipeEnabled?: boolean,
   children?: any,
 };
 
-export default class TabViewPagerAndroid
-  extends PureComponent<void, Props, void> {
+export default class TabViewPagerAndroid<T: Route<*>>
+  extends PureComponent<void, Props<T>, void> {
   static propTypes = {
     ...SceneRendererPropType,
     animationEnabled: PropTypes.bool,
@@ -48,7 +48,7 @@ export default class TabViewPagerAndroid
     this._resetListener = this.props.subscribe('reset', this._handlePageChange);
   }
 
-  componentWillReceiveProps(nextProps: Props) {
+  componentWillReceiveProps(nextProps: Props<T>) {
     if (
       this.props.layout !== nextProps.layout ||
       Children.count(this.props.children) !== Children.count(nextProps.children)

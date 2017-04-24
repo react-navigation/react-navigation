@@ -7,16 +7,22 @@ import { NavigationStatePropType } from './TabViewPropTypes';
 import type {
   SubscriptionName,
   SceneRendererProps,
+  NavigationState,
   Layout,
+  Route,
 } from './TabViewTypeDefinitions';
-import type { TransitionerProps } from './TabViewTransitionerTypes';
 
 type DefaultProps = {
   initialLayout: Layout,
 };
 
-type Props = TransitionerProps & {
-  render: (props: SceneRendererProps) => ?React.Element<*>,
+type Props<T> = {
+  navigationState: NavigationState<T>,
+  onRequestChangeTab: (index: number) => void,
+  onChangePosition?: (value: number) => void,
+  initialLayout?: Layout,
+  canJumpToTab?: (route: T) => boolean,
+  render: (props: SceneRendererProps<T>) => ?React.Element<*>,
   style?: any,
 };
 
@@ -27,8 +33,8 @@ type State = {
   position: Animated.Value,
 };
 
-export default class TabViewTransitioner
-  extends PureComponent<DefaultProps, Props, State> {
+export default class TabViewTransitioner<T: Route<*>>
+  extends PureComponent<DefaultProps, Props<T>, State> {
   static propTypes = {
     navigationState: NavigationStatePropType.isRequired,
     render: PropTypes.func.isRequired,
@@ -49,7 +55,7 @@ export default class TabViewTransitioner
     },
   };
 
-  constructor(props: Props) {
+  constructor(props: Props<T>) {
     super(props);
 
     this.state = {
@@ -117,7 +123,7 @@ export default class TabViewTransitioner
     });
   };
 
-  _buildSceneRendererProps = (): SceneRendererProps => {
+  _buildSceneRendererProps = (): SceneRendererProps<*> => {
     return {
       layout: this.state.layout,
       navigationState: this.props.navigationState,

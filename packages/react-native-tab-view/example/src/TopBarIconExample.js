@@ -2,9 +2,11 @@
 
 import React, { PureComponent } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { TabViewAnimated, TabBar } from 'react-native-tab-view';
 import { Ionicons } from '@expo/vector-icons';
+import { TabViewAnimated, TabBar } from 'react-native-tab-view';
 import SimplePage from './SimplePage';
+
+import type { NavigationState } from 'react-native-tab-view/types';
 
 const styles = StyleSheet.create({
   container: {
@@ -18,7 +20,14 @@ const styles = StyleSheet.create({
   },
 });
 
-export default class TopBarIconExample extends PureComponent {
+type Route = {
+  key: string,
+  icon: string,
+};
+
+type State = NavigationState<Route>;
+
+export default class TopBarIconExample extends PureComponent<void, *, State> {
   static title = 'Icon only top bar';
   static appbarElevation = 0;
 
@@ -26,7 +35,7 @@ export default class TopBarIconExample extends PureComponent {
     style: View.propTypes.style,
   };
 
-  state = {
+  state: State = {
     index: 0,
     routes: [
       { key: '1', icon: 'md-restaurant' },
@@ -41,7 +50,7 @@ export default class TopBarIconExample extends PureComponent {
     });
   };
 
-  _renderIcon = ({ route }: any) => {
+  _renderIcon = ({ route }) => {
     return <Ionicons name={route.icon} size={24} color="white" />;
   };
 
@@ -56,8 +65,8 @@ export default class TopBarIconExample extends PureComponent {
     );
   };
 
-  _renderScene = scene => {
-    switch (scene.route.key) {
+  _renderScene = ({ route }) => {
+    switch (route.key) {
       case '1':
         return (
           <SimplePage

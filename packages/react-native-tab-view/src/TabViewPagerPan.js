@@ -11,9 +11,7 @@ import {
   I18nManager,
 } from 'react-native';
 import { SceneRendererPropType } from './TabViewPropTypes';
-import type { SceneRendererProps } from './TabViewTypeDefinitions';
-import type { GestureEvent, GestureState } from './PanResponderTypes';
-import type { TransitionConfigurator } from './TabViewTransitionerTypes';
+import type { SceneRendererProps, Route } from './TabViewTypeDefinitions';
 
 const styles = StyleSheet.create({
   sheet: {
@@ -23,13 +21,53 @@ const styles = StyleSheet.create({
   },
 });
 
+type GestureEvent = {
+  nativeEvent: {
+    changedTouches: Array<*>,
+    identifier: number,
+    locationX: number,
+    locationY: number,
+    pageX: number,
+    pageY: number,
+    target: number,
+    timestamp: number,
+    touches: Array<*>,
+  },
+};
+
+type GestureState = {
+  stateID: number,
+  moveX: number,
+  moveY: number,
+  x0: number,
+  y0: number,
+  dx: number,
+  dy: number,
+  vx: number,
+  vy: number,
+  numberActiveTouches: number,
+};
+
+type TransitionProps = {
+  progress: number,
+};
+
+type TransitionSpec = {
+  timing: Function,
+};
+
+type TransitionConfigurator = (
+  currentTransitionProps: TransitionProps,
+  nextTransitionProps: TransitionProps,
+) => TransitionSpec;
+
 type DefaultProps = {
   configureTransition: TransitionConfigurator,
   swipeDistanceThreshold: number,
   swipeVelocityThreshold: number,
 };
 
-type Props = SceneRendererProps & {
+type Props<T> = SceneRendererProps<T> & {
   configureTransition: TransitionConfigurator,
   animationEnabled?: boolean,
   swipeEnabled?: boolean,
@@ -46,8 +84,8 @@ const DefaultTransitionSpec = {
   friction: 35,
 };
 
-export default class TabViewPagerPan
-  extends PureComponent<DefaultProps, Props, void> {
+export default class TabViewPagerPan<T: Route<*>>
+  extends PureComponent<DefaultProps, Props<T>, void> {
   static propTypes = {
     ...SceneRendererPropType,
     configureTransition: PropTypes.func.isRequired,
@@ -84,7 +122,7 @@ export default class TabViewPagerPan
     this._resetListener = this.props.subscribe('reset', this._transitionTo);
   }
 
-  componentDidUpdate(prevProps: Props) {
+  componentDidUpdate(prevProps: Props<T>) {
     if (prevProps.navigationState.index !== this.props.navigationState.index) {
       this._transitionTo(this.props.navigationState.index);
     }

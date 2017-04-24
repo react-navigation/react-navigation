@@ -1,6 +1,8 @@
 /* eslint-disable import/no-commonjs */
 
 const path = require('path');
+const escape = require('escape-string-regexp');
+const blacklist = require('react-native/packager/blacklist');
 
 module.exports = {
   getProjectRoots() {
