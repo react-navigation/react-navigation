@@ -138,6 +138,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
         title={backButtonTitle}
         truncatedTitle={truncatedBackButtonTitle}
         width={width}
+        style={options.headerTitleStyle}
       />
     );
   };
