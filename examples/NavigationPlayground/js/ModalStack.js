@@ -3,8 +3,14 @@
  */
 
 import React from 'react';
-import { Button, ScrollView, Text } from 'react-native';
-import { StackNavigator } from 'react-navigation';
+import {
+  Button,
+  ScrollView,
+  Text,
+} from 'react-native';
+import {
+  StackNavigator,
+} from 'react-navigation';
 import SampleText from './SampleText';
 
 const MyNavScreen = ({ navigation, banner }) => (
@@ -18,23 +24,22 @@ const MyNavScreen = ({ navigation, banner }) => (
       onPress={() => navigation.navigate('HeaderTest')}
       title="Go to a header toggle screen"
     />
-    {navigation.state.routeName === 'HeaderTest' &&
-      <Button
-        title="Toggle Header"
-        onPress={() =>
-          navigation.setParams({
-            header: !navigation.state.params ||
-              navigation.state.params.header === 'visible'
-              ? 'none'
-              : 'visible',
-          })}
-      />}
-    <Button onPress={() => navigation.goBack(null)} title="Go back" />
+    {navigation.state.routeName === 'HeaderTest' && <Button
+      title="Toggle Header"
+      onPress={() => navigation.setParams({ header: (!navigation.state.params || navigation.state.params.header === 'visible') ? 'none' : 'visible' })}
+    />}
+    <Button
+      onPress={() => navigation.goBack(null)}
+      title="Go back"
+    />
   </ScrollView>
 );
 
 const MyHomeScreen = ({ navigation }) => (
-  <MyNavScreen banner="Home Screen" navigation={navigation} />
+  <MyNavScreen
+    banner="Home Screen"
+    navigation={navigation}
+  />
 );
 MyHomeScreen.navigationOptions = {
   title: 'Welcome',
@@ -50,25 +55,25 @@ MyProfileScreen.navigationOptions = ({ navigation }) => ({
   title: `${navigation.state.params.name}'s Profile!`,
 });
 
-const ProfileNavigator = StackNavigator(
-  {
-    Home: {
-      screen: MyHomeScreen,
-    },
-    Profile: {
-      path: 'people/:name',
-      screen: MyProfileScreen,
-    },
+const ProfileNavigator = StackNavigator({
+  Home: {
+    screen: MyHomeScreen,
   },
-  {
-    navigationOptions: { headerVisible: false },
-  }
-);
+  Profile: {
+    path: 'people/:name',
+    screen: MyProfileScreen,
+  },
+}, {
+  navigationOptions: {headerVisible: false},
+});
 
 const MyHeaderTestScreen = ({ navigation }) => (
-  <MyNavScreen banner={`Full screen view`} navigation={navigation} />
+  <MyNavScreen
+    banner={`Full screen view`}
+    navigation={navigation}
+  />
 );
-MyHeaderTestScreen.navigationOptions = ({ navigation }) => {
+MyHeaderTestScreen.navigationOptions = ({navigation}) => {
   const header = navigation.state.params && navigation.state.params.header;
   const headerVisible = !header || header === 'visible';
   return {
@@ -77,19 +82,16 @@ MyHeaderTestScreen.navigationOptions = ({ navigation }) => {
   };
 };
 
-const ModalStack = StackNavigator(
-  {
-    Home: {
-      screen: MyHomeScreen,
-    },
-    ProfileNavigator: {
-      screen: ProfileNavigator,
-    },
-    HeaderTest: { screen: MyHeaderTestScreen },
+const ModalStack = StackNavigator({
+  Home: {
+    screen: MyHomeScreen,
   },
-  {
-    mode: 'modal',
-  }
-);
+  ProfileNavigator: {
+    screen: ProfileNavigator,
+  },
+  HeaderTest: {screen: MyHeaderTestScreen},
+}, {
+  mode: 'modal',
+});
 
 export default ModalStack;

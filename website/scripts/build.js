@@ -46,8 +46,9 @@ function getDifferenceLabel(currentSize, previousSize) {
     return chalk.yellow(`+${fileSize}`);
   } else if (difference < 0) {
     return chalk.green(fileSize);
+  } else {
+    return '';
   }
-  return '';
 }
 
 // First, read the current file sizes in build directory.
@@ -55,15 +56,12 @@ function getDifferenceLabel(currentSize, previousSize) {
 recursive(paths.appBuild, (err, fileNames) => {
   const previousSizeMap = (fileNames || [])
     .filter(fileName => /\.(js|css)$/.test(fileName))
-    .reduce(
-      (memo, fileName) => {
-        const contents = fs.readFileSync(fileName);
-        const key = removeFileNameHash(fileName);
-        memo[key] = gzipSize(contents);
-        return memo;
-      },
-      {}
-    );
+    .reduce((memo, fileName) => {
+      const contents = fs.readFileSync(fileName);
+      const key = removeFileNameHash(fileName);
+      memo[key] = gzipSize(contents);
+      return memo;
+    }, {});
 
   // Remove all content but keep the directory so that
   // if you're in it, you don't end up in Trash
@@ -85,65 +83,46 @@ recursive(paths.appBuild, (err, fileNames) => {
 
   const navLibPackageJson = require(libPkgPath);
 
-  exec('babel', ['src', '--out-dir', paths.appBuildLib], {
-    cwd: paths.appRoot,
-  });
 
-  fs.readdirSync(paths.appBuildLib).forEach(module => {
+  exec('babel', [ 'src', '--out-dir', paths.appBuildLib], {cwd: paths.appRoot});
+
+  fs.readdirSync(paths.appBuildLib).forEach((module) => {
     const modulePath = path.join(paths.appBuildLib, module);
-    let moduleData = fs.readFileSync(modulePath, { encoding: 'utf8' });
+    let moduleData = fs.readFileSync(modulePath, {encoding: 'utf8'});
     // This is a dangerous shameful hack but it allows the website source to use a standard-looking import:
-    moduleData = moduleData
-      .split("require('react-navigation'")
-      .join("require('../react-navigation/react-navigation.web'");
+    moduleData = moduleData.split("require('react-navigation'").join("require('../react-navigation/react-navigation.web'");
     fs.writeFileSync(modulePath, moduleData);
   });
 
   const libPath = path.join(paths.appBuild, 'react-navigation');
   fs.mkdirSync(libPath);
 
-  fs.copySync(path.join(paths.libRoot, 'lib'), libPath);
+  fs.copySync(
+    path.join(paths.libRoot, 'lib'),
+    libPath
+  );
 
   // fs.writeFileSync(path.join(libPath, 'package.json'), JSON.stringify(Object.assign({}, navLibPackageJson, {
   //   main: 'lib/react-navigation',
   // }), null, 2));
 
-  fs.writeFileSync(
-    path.join(paths.appBuild, 'package.json'),
-    JSON.stringify(
-      Object.assign(
-        {
-          version: '1.0.0',
-          name: 'web-build',
-        },
-        appPackageJson.server,
-        {
-          dependencies: Object.assign(
-            {},
-            appPackageJson.dependencies,
-            navLibPackageJson.dependencies,
-            appPackageJson.server.dependencies,
-            {
-              'react-navigation': '',
-            }
-          ),
-        }
-      ),
-      null,
-      2
-    )
-  );
+  fs.writeFileSync(path.join(paths.appBuild, 'package.json'), JSON.stringify(Object.assign({
+    version: '1.0.0',
+    name: 'web-build',
+  }, appPackageJson.server, {
+    dependencies: Object.assign({}, appPackageJson.dependencies, navLibPackageJson.dependencies, appPackageJson.server.dependencies, {
+      'react-navigation': '',
+    }),
+  }), null, 2));
+
 });
 
 // Print a detailed summary of build files.
 function printFileSizes(stats, previousSizeMap) {
-  const assets = stats
-    .toJson()
-    .assets.filter(asset => /\.(js|css)$/.test(asset.name))
-    .map(asset => {
-      const fileContents = fs.readFileSync(
-        `${paths.appBuildPublic}/${asset.name}`
-      );
+  const assets = stats.toJson().assets
+    .filter(asset => /\.(js|css)$/.test(asset.name))
+    .map((asset) => {
+      const fileContents = fs.readFileSync(`${paths.appBuildPublic}/${asset.name}`);
       const size = gzipSize(fileContents);
       const previousSize = previousSizeMap[removeFileNameHash(asset.name)];
       const difference = getDifferenceLabel(size, previousSize);
@@ -155,11 +134,10 @@ function printFileSizes(stats, previousSizeMap) {
       };
     });
   assets.sort((a, b) => b.size - a.size);
-  const longestSizeLabelLength = Math.max.apply(
-    null,
+  const longestSizeLabelLength = Math.max.apply(null,
     assets.map(a => stripAnsi(a.sizeLabel).length)
   );
-  assets.forEach(asset => {
+  assets.forEach((asset) => {
     let sizeLabel = asset.sizeLabel;
     const sizeLength = stripAnsi(sizeLabel).length;
     if (sizeLength < longestSizeLabelLength) {
@@ -167,7 +145,8 @@ function printFileSizes(stats, previousSizeMap) {
       sizeLabel += rightPadding;
     }
     console.log(
-      `  ${sizeLabel}  ${chalk.dim(asset.folder + path.sep)}${chalk.cyan(asset.name)}`
+      `  ${sizeLabel
+      }  ${chalk.dim(asset.folder + path.sep)}${chalk.cyan(asset.name)}`
     );
   });
 }
@@ -176,7 +155,7 @@ function printFileSizes(stats, previousSizeMap) {
 function printErrors(summary, errors) {
   console.log(chalk.red(summary));
   console.log();
-  errors.forEach(err => {
+  errors.forEach((err) => {
     console.log(err.message || err);
     console.log(err.stack);
     console.log();
@@ -212,28 +191,20 @@ function build(previousSizeMap) {
     const publicPath = config.output.publicPath;
     if (homepagePath && homepagePath.indexOf('.github.io/') !== -1) {
       // "homepage": "http://user.github.io/project"
-      console.log(
-        `The project was built assuming it is hosted at ${chalk.green(publicPath)}.`
-      );
-      console.log(
-        `You can control this with the ${chalk.green('homepage')} field in your ${chalk.cyan('package.json')}.`
-      );
+      console.log(`The project was built assuming it is hosted at ${chalk.green(publicPath)}.`);
+      console.log(`You can control this with the ${chalk.green('homepage')} field in your ${chalk.cyan('package.json')}.`);
       console.log();
       console.log(`The ${chalk.cyan('build')} folder is ready to be deployed.`);
       console.log(`To publish it at ${chalk.green(homepagePath)}, run:`);
       console.log();
       console.log(`  ${chalk.cyan('npm')} install --save-dev gh-pages`);
       console.log();
-      console.log(
-        `Add the following script in your ${chalk.cyan('package.json')}.`
-      );
+      console.log(`Add the following script in your ${chalk.cyan('package.json')}.`);
       console.log();
       console.log(`    ${chalk.dim('// ...')}`);
       console.log(`    ${chalk.yellow('"scripts"')}: {`);
       console.log(`      ${chalk.dim('// ...')}`);
-      console.log(
-        `      ${chalk.yellow('"deploy"')}: ${chalk.yellow('"gh-pages -d build"')}`
-      );
+      console.log(`      ${chalk.yellow('"deploy"')}: ${chalk.yellow('"gh-pages -d build"')}`);
       console.log('    }');
       console.log();
       console.log('Then run:');
@@ -242,36 +213,24 @@ function build(previousSizeMap) {
       console.log();
     } else if (publicPath !== '/') {
       // "homepage": "http://mywebsite.com/project"
-      console.log(
-        `The project was built assuming it is hosted at ${chalk.green(publicPath)}.`
-      );
-      console.log(
-        `You can control this with the ${chalk.green('homepage')} field in your ${chalk.cyan('package.json')}.`
-      );
+      console.log(`The project was built assuming it is hosted at ${chalk.green(publicPath)}.`);
+      console.log(`You can control this with the ${chalk.green('homepage')} field in your ${chalk.cyan('package.json')}.`);
       console.log();
       console.log(`The ${chalk.cyan('build')} folder is ready to be deployed.`);
       console.log();
     } else {
       // no homepage or "homepage": "http://mywebsite.com"
-      console.log(
-        'The project was built assuming it is hosted at the server root.'
-      );
+      console.log('The project was built assuming it is hosted at the server root.');
       if (homepagePath) {
         // "homepage": "http://mywebsite.com"
-        console.log(
-          `You can control this with the ${chalk.green('homepage')} field in your ${chalk.cyan('package.json')}.`
-        );
+        console.log(`You can control this with the ${chalk.green('homepage')} field in your ${chalk.cyan('package.json')}.`);
         console.log();
       } else {
         // no homepage
-        console.log(
-          `To override this, specify the ${chalk.green('homepage')} in your ${chalk.cyan('package.json')}.`
-        );
+        console.log(`To override this, specify the ${chalk.green('homepage')} in your ${chalk.cyan('package.json')}.`);
         console.log('For example, add this to build it for GitHub Pages:');
         console.log();
-        console.log(
-          `  ${chalk.green('"homepage"')}${chalk.cyan(': ')}${chalk.green('"http://myname.github.io/myapp"')}${chalk.cyan(',')}`
-        );
+        console.log(`  ${chalk.green('"homepage"')}${chalk.cyan(': ')}${chalk.green('"http://myname.github.io/myapp"')}${chalk.cyan(',')}`);
         console.log();
       }
       console.log(`The ${chalk.cyan('build')} folder is ready to be deployed.`);
