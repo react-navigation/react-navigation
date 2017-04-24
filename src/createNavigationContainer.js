@@ -16,7 +16,7 @@ import type {
 
 type NavigationContainerProps = {
   uriPrefix?: string,
-  onNavigationStateChange?: (NavigationState, NavigationState) => void,
+  onNavigationStateChange?: (NavigationState, NavigationState, NavigationAction) => void,
 };
 
 type Props<T> = NavigationContainerProps & NavigationNavigatorProps<T>;
@@ -75,7 +75,6 @@ export default function createNavigationContainer<T: *>(
         navigation,
         screenProps,
         navigationOptions,
-        onNavigationStateChange,
         ...containerProps
       } = props;
 
@@ -114,6 +113,34 @@ export default function createNavigationContainer<T: *>(
       }
     };
 
+    _onNavigationStateChange(
+      prevNav: NavigationState,
+      nav: NavigationState,
+      action: NavigationAction,
+    ) {
+      if (
+        typeof this.props.onNavigationStateChange === 'undefined'
+        && this._isStateful()
+      ) {
+        /* eslint-disable no-console */
+        if (console.group) {
+          console.group('Navigation Dispatch: ');
+          console.log('Action: ', action);
+          console.log('New State: ', nav);
+          console.log('Last State: ', prevNav);
+          console.groupEnd();
+        } else {
+          console.log('Navigation Dispatch: ', { action, newState: nav, lastState: prevNav });
+        }
+        /* eslint-enable no-console */
+        return;
+      }
+
+      if (typeof this.props.onNavigationStateChange === 'function') {
+        this.props.onNavigationStateChange(prevNav, nav, action);
+      }
+    }
+
     componentWillReceiveProps(nextProps: *) {
       this._validateProps(nextProps);
     }
@@ -135,22 +162,6 @@ export default function createNavigationContainer<T: *>(
       );
     }
 
-    componentDidUpdate(prevProps: Props<T>, prevState: State) {
-      const [prevNavigationState, navigationState] = this._isStateful()
-        ? [prevState.nav, this.state.nav]
-        : [prevProps.navigation.state, this.props.navigation.state];
-
-      if (
-        prevNavigationState !== navigationState &&
-        typeof this.props.onNavigationStateChange === 'function'
-      ) {
-        this.props.onNavigationStateChange(
-          prevNavigationState,
-          navigationState,
-        );
-      }
-    }
-
     componentWillUnmount() {
       Linking.removeEventListener('url', this._handleOpenURL);
       this.subs && this.subs.remove();
@@ -163,20 +174,7 @@ export default function createNavigationContainer<T: *>(
       }
       const nav = Component.router.getStateForAction(action, state.nav);
       if (nav && nav !== state.nav) {
-        if (console.group) {
-          console.group('Navigation Dispatch: ');
-          console.log('Action: ', action);
-          console.log('New State: ', nav);
-          console.log('Last State: ', state.nav);
-          console.groupEnd();
-        } else {
-          console.log('Navigation Dispatch: ', {
-            action,
-            newState: nav,
-            lastState: state.nav,
-          });
-        }
-        this.setState({ nav });
+        this.setState({ nav }, () => this._onNavigationStateChange(state.nav, nav, action));
         return true;
       }
       return false;
