@@ -63,11 +63,10 @@ export default class TabViewPagerScroll
 
   componentDidUpdate(prevProps: Props) {
     const amount = this.props.navigationState.index * this.props.layout.width;
-    if (prevProps.layout !== this.props.layout) {
-      this._scrollTo(amount, false);
-    }
     if (prevProps.navigationState !== this.props.navigationState) {
       global.requestAnimationFrame(() => this._scrollTo(amount));
+    } else if (prevProps.layout !== this.props.layout) {
+      this._scrollTo(amount, false);
     }
   }
 
