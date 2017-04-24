@@ -64,15 +64,18 @@ Imagine the following scenario:
 Your `TabNavigator` represents one of the screens in the app, and is nested within a top-level `StackNavigator`:
 
 ```
-StackNavigator:
-  - route1: A screen
-  - route2: A TabNavigator
+StackNavigator({
+  route1: { screen: RouteOne },
+  route2: { screen: MyTabNavigator },
+}, {
+  headerMode: 'screen',
+});
 ```
 
 Now, when `route2` is active, you would like to hide the header. It's easy to hide the header for `route1`, and it should also be easy to do it for `route2`. This is what Default Navigation Options are for - they are simply `navigationOptions` set on a navigator:
 
 ```js
-TabNavigator({
+const MyTabNavigator = TabNavigator({
   profile: ProfileScreen,
   ...
 }, {
