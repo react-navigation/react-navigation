@@ -176,3 +176,7 @@ The navigator component created by `DrawerNavigator(...)` takes the following pr
    screenProps={/* this prop will get passed to the screen components and nav options as props.screenProps */}
  />
  ```
+ 
+ ### Nesting `DrawerNavigation`
+ 
+Please bear in mind that if you nest the DrawerNavigation, the drawer will show below the parent navigation.
