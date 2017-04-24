@@ -22,6 +22,8 @@ describe('validateRouteConfigMap', () => {
   });
   test('Fails on bad object', () => {
     const invalidMap = {
+      // @todo fix flow, this should error as no screen/getScreen
+      // provided
       Home: {
         foo: 'bar',
       },

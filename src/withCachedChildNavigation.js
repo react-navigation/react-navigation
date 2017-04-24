@@ -4,10 +4,7 @@ import React, { PureComponent } from 'react';
 
 import addNavigationHelpers from './addNavigationHelpers';
 
-import type {
-  NavigationScreenProp,
-  NavigationAction,
-} from './TypeDefinition';
+import type { NavigationScreenProp, NavigationAction } from './TypeDefinition';
 
 type InjectedProps<N> = {
   childNavigationProps: {
@@ -19,10 +16,9 @@ type InjectedProps<N> = {
  * HOC which caches the child navigation items.
  */
 export default function withCachedChildNavigation<T: *, N: *>(
-  Comp: ReactClass<T & InjectedProps<N>>
+  Comp: ReactClass<T & InjectedProps<N>>,
 ): ReactClass<T> {
   return class extends PureComponent {
-
     static displayName = `withCachedChildNavigation(${Comp.displayName || Comp.name})`;
 
     props: T;
@@ -40,7 +36,7 @@ export default function withCachedChildNavigation<T: *, N: *>(
     };
 
     _updateNavigationProps = (
-      navigation: NavigationScreenProp<N, NavigationAction>
+      navigation: NavigationScreenProp<N, NavigationAction>,
     ) => {
       // Update props for each child route
       if (!this._childNavigationProps) {
@@ -56,7 +52,7 @@ export default function withCachedChildNavigation<T: *, N: *>(
           state: route,
         });
       });
-    }
+    };
 
     render() {
       return (

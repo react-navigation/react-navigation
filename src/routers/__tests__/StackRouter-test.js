@@ -1,4 +1,5 @@
 /* @flow */
+/* eslint no-shadow:0 react/no-multi-comp:0 */
 
 import React from 'react';
 
@@ -80,21 +81,25 @@ describe('StackRouter', () => {
       },
     });
 
-    expect(router.getComponentForState({
-      index: 0,
-      routes: [
-        { key: 'a', routeName: 'foo' },
-        { key: 'b', routeName: 'bar' },
-        { key: 'c', routeName: 'foo' },
-      ],
-    })).toBe(FooScreen);
-    expect(router.getComponentForState({
-      index: 1,
-      routes: [
-        { key: 'a', routeName: 'foo' },
-        { key: 'b', routeName: 'bar' },
-      ],
-    })).toBe(BarScreen);
+    expect(
+      router.getComponentForState({
+        index: 0,
+        routes: [
+          { key: 'a', routeName: 'foo' },
+          { key: 'b', routeName: 'bar' },
+          { key: 'c', routeName: 'foo' },
+        ],
+      }),
+    ).toBe(FooScreen);
+    expect(
+      router.getComponentForState({
+        index: 1,
+        routes: [
+          { key: 'a', routeName: 'foo' },
+          { key: 'b', routeName: 'bar' },
+        ],
+      }),
+    ).toBe(BarScreen);
   });
 
   test('Handles getScreen in getComponentForState', () => {
@@ -109,27 +114,39 @@ describe('StackRouter', () => {
       },
     });
 
-    expect(router.getComponentForState({
-      index: 0,
-      routes: [
-        { key: 'a', routeName: 'foo' },
-        { key: 'b', routeName: 'bar' },
-        { key: 'c', routeName: 'foo' },
-      ],
-    })).toBe(FooScreen);
-    expect(router.getComponentForState({
-      index: 1,
-      routes: [
-        { key: 'a', routeName: 'foo' },
-        { key: 'b', routeName: 'bar' },
-      ],
-    })).toBe(BarScreen);
+    expect(
+      router.getComponentForState({
+        index: 0,
+        routes: [
+          { key: 'a', routeName: 'foo' },
+          { key: 'b', routeName: 'bar' },
+          { key: 'c', routeName: 'foo' },
+        ],
+      }),
+    ).toBe(FooScreen);
+    expect(
+      router.getComponentForState({
+        index: 1,
+        routes: [
+          { key: 'a', routeName: 'foo' },
+          { key: 'b', routeName: 'bar' },
+        ],
+      }),
+    ).toBe(BarScreen);
   });
 
   test('Gets the screen for given route', () => {
     const FooScreen = () => <div />;
-    const BarScreen = class extends React.Component { render() { return <div />; } };
-    const BazScreen = React.createClass({ render() { return <div />; } });
+    const BarScreen = class extends React.Component {
+      render() {
+        return <div />;
+      }
+    };
+    const BazScreen = class extends React.Component {
+      render() {
+        return <div />;
+      }
+    };
     const router = StackRouter({
       foo: {
         screen: FooScreen,
@@ -149,8 +166,16 @@ describe('StackRouter', () => {
 
   test('Handles getScreen in getComponent', () => {
     const FooScreen = () => <div />;
-    const BarScreen = class extends React.Component { render() { return <div />; } };
-    const BazScreen = React.createClass({ render() { return <div />; } });
+    const BarScreen = class extends React.Component {
+      render() {
+        return <div />;
+      }
+    };
+    const BazScreen = class extends React.Component {
+      render() {
+        return <div />;
+      }
+    };
     const router = StackRouter({
       foo: {
         getScreen: () => FooScreen,
@@ -186,7 +211,9 @@ describe('StackRouter', () => {
   });
 
   test('Parses paths with a query', () => {
-    expect(TestStackRouter.getActionForPathAndParams('people/foo?code=test&foo=bar')).toEqual({
+    expect(
+      TestStackRouter.getActionForPathAndParams('people/foo?code=test&foo=bar'),
+    ).toEqual({
       type: NavigationActions.NAVIGATE,
       routeName: 'person',
       params: {
@@ -198,7 +225,9 @@ describe('StackRouter', () => {
   });
 
   test('Parses paths with an empty query value', () => {
-    expect(TestStackRouter.getActionForPathAndParams('people/foo?code=&foo=bar')).toEqual({
+    expect(
+      TestStackRouter.getActionForPathAndParams('people/foo?code=&foo=bar'),
+    ).toEqual({
       type: NavigationActions.NAVIGATE,
       routeName: 'person',
       params: {
@@ -288,19 +317,20 @@ describe('StackRouter', () => {
     Bar.router = StackRouter({
       baz: { screen: () => <div /> },
       qux: { screen: () => <div /> },
-    })
+    });
     const TestRouter = StackRouter({
       foo: { screen: () => <div /> },
       bar: { screen: Bar },
-    })
+    });
     const initState = TestRouter.getStateForAction(NavigationActions.init());
     expect(initState).toEqual({
       index: 0,
-      routes: [
-        { key: 'Init', routeName: 'foo' }
-      ]
+      routes: [{ key: 'Init', routeName: 'foo' }],
     });
-    const pushedState = TestRouter.getStateForAction(NavigationActions.navigate({ routeName: 'qux' }), initState);
+    const pushedState = TestRouter.getStateForAction(
+      NavigationActions.navigate({ routeName: 'qux' }),
+      initState,
+    );
     // $FlowFixMe
     expect(pushedState.index).toEqual(1);
     // $FlowFixMe
@@ -330,12 +360,22 @@ describe('StackRouter', () => {
         },
       ],
     });
-    const state2 = router.getStateForAction({ type: NavigationActions.NAVIGATE, routeName: 'Bar', params: { name: 'Zoom' } }, state);
+    const state2 = router.getStateForAction(
+      {
+        type: NavigationActions.NAVIGATE,
+        routeName: 'Bar',
+        params: { name: 'Zoom' },
+      },
+      state,
+    );
     expect(state2 && state2.index).toEqual(1);
     expect(state2 && state2.routes[1].routeName).toEqual('Bar');
     expect(state2 && state2.routes[1].params).toEqual({ name: 'Zoom' });
     expect(state2 && state2.routes.length).toEqual(2);
-    const state3 = router.getStateForAction({ type: NavigationActions.BACK }, state2);
+    const state3 = router.getStateForAction(
+      { type: NavigationActions.BACK },
+      state2,
+    );
     expect(state3).toEqual({
       index: 0,
       routes: [
@@ -373,12 +413,22 @@ describe('StackRouter', () => {
         },
       ],
     });
-    const state2 = router.getStateForAction({ type: NavigationActions.NAVIGATE, routeName: 'Bar', params: { name: 'Zoom' } }, state);
+    const state2 = router.getStateForAction(
+      {
+        type: NavigationActions.NAVIGATE,
+        routeName: 'Bar',
+        params: { name: 'Zoom' },
+      },
+      state,
+    );
     expect(state2 && state2.index).toEqual(1);
     expect(state2 && state2.routes[1].routeName).toEqual('Bar');
     expect(state2 && state2.routes[1].params).toEqual({ name: 'Zoom' });
     expect(state2 && state2.routes.length).toEqual(2);
-    const state3 = router.getStateForAction({ type: NavigationActions.BACK }, state2);
+    const state3 = router.getStateForAction(
+      { type: NavigationActions.BACK },
+      state2,
+    );
     expect(state3).toEqual({
       index: 0,
       routes: [
@@ -402,25 +452,48 @@ describe('StackRouter', () => {
       },
     });
     const state = router.getStateForAction({ type: NavigationActions.INIT });
-    const state2 = router.getStateForAction({ type: NavigationActions.NAVIGATE, routeName: 'Bar', params: { name: 'Zoom' } }, state);
-    const state3 = router.getStateForAction({ type: NavigationActions.NAVIGATE, routeName: 'Bar', params: { name: 'Foo' } }, state2);
-    const state4 = router.getStateForAction({ type: NavigationActions.BACK, key: 'wrongKey' }, state3);
+    const state2 = router.getStateForAction(
+      {
+        type: NavigationActions.NAVIGATE,
+        routeName: 'Bar',
+        params: { name: 'Zoom' },
+      },
+      state,
+    );
+    const state3 = router.getStateForAction(
+      {
+        type: NavigationActions.NAVIGATE,
+        routeName: 'Bar',
+        params: { name: 'Foo' },
+      },
+      state2,
+    );
+    const state4 = router.getStateForAction(
+      { type: NavigationActions.BACK, key: 'wrongKey' },
+      state3,
+    );
     expect(state3).toEqual(state4);
-    const state5 = router.getStateForAction({ type: NavigationActions.BACK, key: state3 && state3.routes[1].key }, state4);
+    const state5 = router.getStateForAction(
+      { type: NavigationActions.BACK, key: state3 && state3.routes[1].key },
+      state4,
+    );
     expect(state5).toEqual(state);
   });
 
   test('Handle initial route navigation', () => {
     const FooScreen = () => <div />;
     const BarScreen = () => <div />;
-    const router = StackRouter({
-      Foo: {
-        screen: FooScreen,
+    const router = StackRouter(
+      {
+        Foo: {
+          screen: FooScreen,
+        },
+        Bar: {
+          screen: BarScreen,
+        },
       },
-      Bar: {
-        screen: BarScreen,
-      },
-    }, { initialRouteName: 'Bar' });
+      { initialRouteName: 'Bar' },
+    );
     const state = router.getStateForAction({ type: NavigationActions.INIT });
     expect(state).toEqual({
       index: 0,
@@ -435,11 +508,14 @@ describe('StackRouter', () => {
 
   test('Initial route params appear in nav state', () => {
     const FooScreen = () => <div />;
-    const router = StackRouter({
-      Foo: {
-        screen: FooScreen,
+    const router = StackRouter(
+      {
+        Foo: {
+          screen: FooScreen,
+        },
       },
-    }, { initialRouteName: 'Bar', initialRouteParams: { foo: 'bar' } });
+      { initialRouteName: 'Bar', initialRouteParams: { foo: 'bar' } },
+    );
     const state = router.getStateForAction({ type: NavigationActions.INIT });
     expect(state).toEqual({
       index: 0,
@@ -465,30 +541,43 @@ describe('StackRouter', () => {
       },
     });
     const state = router.getStateForAction({ type: NavigationActions.INIT });
-    const state2 = router.getStateForAction({ type: NavigationActions.NAVIGATE, routeName: 'Bar', params: { bar: '42' } }, state);
+    const state2 = router.getStateForAction(
+      {
+        type: NavigationActions.NAVIGATE,
+        routeName: 'Bar',
+        params: { bar: '42' },
+      },
+      state,
+    );
     expect(state2).not.toBeNull();
     expect(state2 && state2.index).toEqual(1);
     expect(state2 && state2.routes[1].params).toEqual({ bar: '42' });
   });
 
   test('Handles the SetParams action', () => {
-    const router = StackRouter({
-      Foo: {
-        screen: () => <div />,
+    const router = StackRouter(
+      {
+        Foo: {
+          screen: () => <div />,
+        },
+        Bar: {
+          screen: () => <div />,
+        },
       },
-      Bar: {
-        screen: () => <div />,
+      {
+        initialRouteName: 'Bar',
+        initialRouteParams: { name: 'Zoo' },
       },
-    }, {
-      initialRouteName: 'Bar',
-      initialRouteParams: { name: 'Zoo' },
-    });
+    );
     const state = router.getStateForAction({ type: NavigationActions.INIT });
-    const state2 = router.getStateForAction({
-      type: NavigationActions.SET_PARAMS,
-      params: { name: 'Qux' },
-      key: 'Init',
-    }, state);
+    const state2 = router.getStateForAction(
+      {
+        type: NavigationActions.SET_PARAMS,
+        params: { name: 'Qux' },
+        key: 'Init',
+      },
+      state,
+    );
     expect(state2 && state2.index).toEqual(0);
     expect(state2 && state2.routes[0].params).toEqual({ name: 'Qux' });
   });
@@ -497,23 +586,26 @@ describe('StackRouter', () => {
     const ChildNavigator = () => <div />;
     const GrandChildNavigator = () => <div />;
     GrandChildNavigator.router = StackRouter({
-      Quux: { screen: () => <div />, },
-      Corge: { screen: () => <div />, },
+      Quux: { screen: () => <div /> },
+      Corge: { screen: () => <div /> },
     });
     ChildNavigator.router = TabRouter({
-      Baz: { screen: GrandChildNavigator, },
-      Qux: { screen: () => <div />, },
+      Baz: { screen: GrandChildNavigator },
+      Qux: { screen: () => <div /> },
     });
     const router = StackRouter({
-      Foo: { screen: ChildNavigator, },
-      Bar: { screen: () => <div />, },
+      Foo: { screen: ChildNavigator },
+      Bar: { screen: () => <div /> },
     });
     const state = router.getStateForAction({ type: NavigationActions.INIT });
-    const state2 = router.getStateForAction({
-      type: NavigationActions.SET_PARAMS,
-      params: { name: 'foobar' },
-      key: 'Init',
-    }, state);
+    const state2 = router.getStateForAction(
+      {
+        type: NavigationActions.SET_PARAMS,
+        params: { name: 'foobar' },
+        key: 'Init',
+      },
+      state,
+    );
     expect(state2 && state2.index).toEqual(0);
     /* $FlowFixMe */
     expect(state2 && state2.routes[0].routes[0].routes).toEqual([
@@ -535,7 +627,21 @@ describe('StackRouter', () => {
       },
     });
     const state = router.getStateForAction({ type: NavigationActions.INIT });
-    const state2 = router.getStateForAction({ type: NavigationActions.RESET, actions: [{ type: NavigationActions.NAVIGATE, routeName: 'Foo', params: { bar: '42' } }, { type: NavigationActions.NAVIGATE, routeName: 'Bar' }], index: 1 }, state);
+    const state2 = router.getStateForAction(
+      {
+        type: NavigationActions.RESET,
+        actions: [
+          {
+            type: NavigationActions.NAVIGATE,
+            routeName: 'Foo',
+            params: { bar: '42' },
+          },
+          { type: NavigationActions.NAVIGATE, routeName: 'Bar' },
+        ],
+        index: 1,
+      },
+      state,
+    );
     expect(state2 && state2.index).toEqual(1);
     expect(state2 && state2.routes[0].params).toEqual({ bar: '42' });
     expect(state2 && state2.routes[0].routeName).toEqual('Foo');
@@ -561,7 +667,14 @@ describe('StackRouter', () => {
       },
     });
     const state = router.getStateForAction({ type: NavigationActions.INIT });
-    const state2 = router.getStateForAction({ type: NavigationActions.RESET, actions: [{ type: NavigationActions.NAVIGATE, routeName: 'Foo' }], index: 0 }, state);
+    const state2 = router.getStateForAction(
+      {
+        type: NavigationActions.RESET,
+        actions: [{ type: NavigationActions.NAVIGATE, routeName: 'Foo' }],
+        index: 0,
+      },
+      state,
+    );
 
     expect(state2 && state2.index).toEqual(0);
     expect(state2 && state2.routes[0].routeName).toEqual('Foo');
@@ -588,9 +701,32 @@ describe('StackRouter', () => {
       },
     });
     const state = router.getStateForAction({ type: NavigationActions.INIT });
-    const state2 = router.getStateForAction({ type: NavigationActions.NAVIGATE, routeName: 'Foo', action: { type: NavigationActions.NAVIGATE, routeName: 'baz' }}, state);
-    const state3 = router.getStateForAction({ type: NavigationActions.RESET, key: 'Init', actions: [{ type: NavigationActions.NAVIGATE, routeName: 'Foo' }], index: 0 }, state2);
-    const state4 = router.getStateForAction({ type: NavigationActions.RESET, key: null, actions: [{ type: NavigationActions.NAVIGATE, routeName: 'Bar' }], index: 0 }, state3);
+    const state2 = router.getStateForAction(
+      {
+        type: NavigationActions.NAVIGATE,
+        routeName: 'Foo',
+        action: { type: NavigationActions.NAVIGATE, routeName: 'baz' },
+      },
+      state,
+    );
+    const state3 = router.getStateForAction(
+      {
+        type: NavigationActions.RESET,
+        key: 'Init',
+        actions: [{ type: NavigationActions.NAVIGATE, routeName: 'Foo' }],
+        index: 0,
+      },
+      state2,
+    );
+    const state4 = router.getStateForAction(
+      {
+        type: NavigationActions.RESET,
+        key: null,
+        actions: [{ type: NavigationActions.NAVIGATE, routeName: 'Bar' }],
+        index: 0,
+      },
+      state3,
+    );
 
     expect(state4 && state4.index).toEqual(0);
     expect(state4 && state4.routes[0].routeName).toEqual('Bar');
@@ -601,11 +737,18 @@ describe('StackRouter', () => {
     ChildNavigator.router = StackRouter({ Baz: { screen: () => <div /> } });
 
     const router = StackRouter({
-      Foo: { screen: () => <div />, },
-      Bar: { screen: ChildNavigator, },
+      Foo: { screen: () => <div /> },
+      Bar: { screen: ChildNavigator },
     });
     const state = router.getStateForAction({ type: NavigationActions.INIT });
-    const state2 = router.getStateForAction({ type: NavigationActions.NAVIGATE, routeName: 'Bar', params: { foo: '42' } }, state);
+    const state2 = router.getStateForAction(
+      {
+        type: NavigationActions.NAVIGATE,
+        routeName: 'Bar',
+        params: { foo: '42' },
+      },
+      state,
+    );
     expect(state2 && state2.routes[1].params).toEqual({ foo: '42' });
     /* $FlowFixMe */
     expect(state2 && state2.routes[1].routes).toEqual([
@@ -625,11 +768,18 @@ describe('StackRouter', () => {
     });
 
     const router = StackRouter({
-      Foo: { screen: () => <div />, },
-      Bar: { screen: ChildNavigator, },
+      Foo: { screen: () => <div /> },
+      Bar: { screen: ChildNavigator },
     });
     const state = router.getStateForAction({ type: NavigationActions.INIT });
-    const state2 = router.getStateForAction({ type: NavigationActions.NAVIGATE, routeName: 'Bar', params: { foo: '42' } }, state);
+    const state2 = router.getStateForAction(
+      {
+        type: NavigationActions.NAVIGATE,
+        routeName: 'Bar',
+        params: { foo: '42' },
+      },
+      state,
+    );
     expect(state2 && state2.routes[1].params).toEqual({ foo: '42' });
     /* $FlowFixMe */
     expect(state2 && state2.routes[1].routes).toEqual([
@@ -647,16 +797,22 @@ describe('StackRouter', () => {
   });
 
   test('Handles empty URIs', () => {
-    const router = StackRouter({
-      Foo: {
-        screen: () => <div />,
+    const router = StackRouter(
+      {
+        Foo: {
+          screen: () => <div />,
+        },
+        Bar: {
+          screen: () => <div />,
+        },
       },
-      Bar: {
-        screen: () => <div />,
-      },
-    }, { initialRouteName: 'Bar' });
+      { initialRouteName: 'Bar' },
+    );
     const action = router.getActionForPathAndParams('');
-    expect(action).toEqual({ type: NavigationActions.NAVIGATE, routeName: 'Bar' });
+    expect(action).toEqual({
+      type: NavigationActions.NAVIGATE,
+      routeName: 'Bar',
+    });
     let state = null;
     if (action) {
       state = router.getStateForAction(action);
@@ -677,7 +833,17 @@ describe('StackRouter', () => {
     /* $FlowFixMe: these are for deprecated action names */
     const state = router.getStateForAction({ type: 'Init' });
     /* $FlowFixMe: these are for deprecated action names */
-    const state2 = router.getStateForAction({ type: 'Reset', actions: [{ type: 'Navigate', routeName: 'Foo', params: { bar: '42' } }, { type: 'Navigate', routeName: 'Bar' }], index: 1 }, state);
+    const state2 = router.getStateForAction(
+      {
+        type: 'Reset',
+        actions: [
+          { type: 'Navigate', routeName: 'Foo', params: { bar: '42' } },
+          { type: 'Navigate', routeName: 'Bar' },
+        ],
+        index: 1,
+      },
+      state,
+    );
     expect(state2 && state2.index).toEqual(1);
     expect(state2 && state2.routes[0].params).toEqual({ bar: '42' });
     expect(state2 && state2.routes[0].routeName).toEqual('Foo');

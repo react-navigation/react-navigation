@@ -43,20 +43,24 @@ export default (
   };
 
   const router = StackRouter(routeConfigMap, stackRouterConfig);
-  const navigator = createNavigator(router, routeConfigMap, stackConfig, NavigatorTypes.STACK)(
-    (props: *) => (
-      <CardStackTransitioner
-        {...props}
-        headerComponent={headerComponent}
-        headerMode={headerMode}
-        mode={mode}
-        cardStyle={cardStyle}
-        transitionConfig={transitionConfig}
-        onTransitionStart={onTransitionStart}
-        onTransitionEnd={onTransitionEnd}
-      />
-    ),
-  );
+
+  const navigator = createNavigator(
+    router,
+    routeConfigMap,
+    stackConfig,
+    NavigatorTypes.STACK,
+  )((props: *) => (
+    <CardStackTransitioner
+      {...props}
+      headerComponent={headerComponent}
+      headerMode={headerMode}
+      mode={mode}
+      cardStyle={cardStyle}
+      transitionConfig={transitionConfig}
+      onTransitionStart={onTransitionStart}
+      onTransitionEnd={onTransitionEnd}
+    />
+  ));
 
   return createNavigationContainer(navigator, stackConfig.containerOptions);
 };
