@@ -1,23 +1,16 @@
 /* @flow */
 
 import React, { PureComponent } from 'react';
-import {
-  Animated,
-  View,
-  StyleSheet,
-} from 'react-native';
+import { Animated, View, StyleSheet } from 'react-native';
 
 import type {
   NavigationAction,
   NavigationState,
   NavigationScreenProp,
-  NavigationRoute,
   Style,
 } from '../../TypeDefinition';
 
-import type {
-  TabScene,
-} from './TabView';
+import type { TabScene } from './TabView';
 
 type Props = {
   activeTintColor: string,
@@ -47,11 +40,11 @@ export default class TabBarIcon extends PureComponent<void, Props, void> {
     const inputRange = [-1, ...routes.map((x: *, i: number) => i)];
     const activeOpacity = position.interpolate({
       inputRange,
-      outputRange: inputRange.map((i: number) => (i === index ? 1 : 0)),
+      outputRange: inputRange.map((i: number) => i === index ? 1 : 0),
     });
     const inactiveOpacity = position.interpolate({
       inputRange,
-      outputRange: inputRange.map((i: number) => (i === index ? 0 : 1)),
+      outputRange: inputRange.map((i: number) => i === index ? 0 : 1),
     });
     // We render the icon twice at the same position on top of each other:
     // active and inactive one, so we can fade between them.

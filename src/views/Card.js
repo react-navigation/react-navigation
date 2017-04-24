@@ -1,19 +1,12 @@
 /* @flow */
 
-import React, { PropTypes } from 'react';
+import React from 'react';
 
-import {
-  Animated,
-  StyleSheet,
-} from 'react-native';
+import { Animated, StyleSheet } from 'react-native';
 
 import createPointerEventsContainer from './PointerEventsContainer';
-import NavigationPropTypes from '../PropTypes';
 
-import type {
-  NavigationSceneRenderer,
-  NavigationSceneRendererProps,
-} from '../TypeDefinition';
+import type { NavigationSceneRendererProps } from '../TypeDefinition';
 
 type Props = NavigationSceneRendererProps & {
   children: React.Children<*>,
@@ -28,19 +21,10 @@ type Props = NavigationSceneRendererProps & {
 class Card extends React.Component<any, Props, any> {
   props: Props;
 
-  static propTypes = {
-    ...NavigationPropTypes.SceneRendererProps,
-    onComponentRef: PropTypes.func.isRequired,
-    pointerEvents: PropTypes.string.isRequired,
-    children: PropTypes.any.isRequired,
-    style: PropTypes.any,
-  };
-
   render() {
     const {
       children,
       pointerEvents,
-      scene,
       style,
     } = this.props;
     return (

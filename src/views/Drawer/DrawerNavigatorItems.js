@@ -1,12 +1,7 @@
 /* @flow */
 
-import React, { PropTypes } from 'react';
-import {
-  View,
-  Text,
-  Platform,
-  StyleSheet,
-} from 'react-native';
+import React from 'react';
+import { View, Text, Platform, StyleSheet } from 'react-native';
 
 import TouchableItem from '../TouchableItem';
 
@@ -16,41 +11,43 @@ import type {
   NavigationAction,
   Style,
 } from '../../TypeDefinition';
-import type {
-  DrawerScene,
-} from './DrawerView.js';
+import type { DrawerScene } from './DrawerView.js';
 
 type Props = {
-  navigation: NavigationScreenProp<NavigationState, NavigationAction>;
-  activeTintColor?: string;
-  activeBackgroundColor?: string;
-  inactiveTintColor?: string;
-  inactiveBackgroundColor?: string;
-  getLabel: (scene: DrawerScene) => ?(React.Element<*> | string);
-  renderIcon: (scene: DrawerScene) => ?React.Element<*>;
-  style?: Style;
-  labelStyle?: Style;
+  navigation: NavigationScreenProp<NavigationState, NavigationAction>,
+  activeTintColor?: string,
+  activeBackgroundColor?: string,
+  inactiveTintColor?: string,
+  inactiveBackgroundColor?: string,
+  getLabel: (scene: DrawerScene) => ?(React.Element<*> | string),
+  renderIcon: (scene: DrawerScene) => ?React.Element<*>,
+  style?: Style,
+  labelStyle?: Style,
 };
 
 /**
  * Component that renders the navigation list in the drawer.
  */
-const DrawerNavigatorItems = ({
-  navigation,
-  activeTintColor,
-  activeBackgroundColor,
-  inactiveTintColor,
-  inactiveBackgroundColor,
-  getLabel,
-  renderIcon,
-  style,
-  labelStyle,
-}: Props) => (
+const DrawerNavigatorItems = (
+  {
+    navigation,
+    activeTintColor,
+    activeBackgroundColor,
+    inactiveTintColor,
+    inactiveBackgroundColor,
+    getLabel,
+    renderIcon,
+    style,
+    labelStyle,
+  }: Props,
+) => (
   <View style={[styles.container, style]}>
     {navigation.state.routes.map((route: *, index: number) => {
       const focused = navigation.state.index === index;
       const color = focused ? activeTintColor : inactiveTintColor;
-      const backgroundColor = focused ? activeBackgroundColor : inactiveBackgroundColor;
+      const backgroundColor = focused
+        ? activeBackgroundColor
+        : inactiveBackgroundColor;
       const scene = { route, index, focused, tintColor: color };
       const icon = renderIcon(scene);
       const label = getLabel(scene);
@@ -64,34 +61,24 @@ const DrawerNavigatorItems = ({
           delayPressIn={0}
         >
           <View style={[styles.item, { backgroundColor }]}>
-            {icon ? (
-              <View style={[styles.icon, focused ? null : styles.inactiveIcon]}>
-                {icon}
-              </View>
-            ) : null}
+            {icon
+              ? <View
+                  style={[styles.icon, focused ? null : styles.inactiveIcon]}
+                >
+                  {icon}
+                </View>
+              : null}
             {typeof label === 'string'
-              ? (
-                <Text style={[styles.label, { color }, labelStyle]}>
+              ? <Text style={[styles.label, { color }, labelStyle]}>
                   {label}
                 </Text>
-              )
-              : label
-            }
+              : label}
           </View>
         </TouchableItem>
       );
     })}
   </View>
 );
-
-DrawerNavigatorItems.propTypes = {
-  navigation: PropTypes.object.isRequired,
-  activeTintColor: PropTypes.string,
-  activeBackgroundColor: PropTypes.string,
-  inactiveTintColor: PropTypes.string,
-  inactiveBackgroundColor: PropTypes.string,
-  style: View.propTypes.style,
-};
 
 /* Material design specs - https://material.io/guidelines/patterns/navigation-drawer.html#navigation-drawer-specs */
 DrawerNavigatorItems.defaultProps = {
