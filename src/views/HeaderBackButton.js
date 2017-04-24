@@ -60,12 +60,12 @@ class HeaderBackButton extends React.PureComponent<DefaultProps, Props, State> {
       ? this.state.initialTextWidth > width
       : false;
   
-    const title = renderTruncated ? truncatedTitle : title; 
+    const backButtonTitle = renderTruncated ? truncatedTitle : title; 
     
     return (
       <TouchableItem
         accessibilityComponentType="button"
-        accessibilityLabel={title}
+        accessibilityLabel={backButtonTitle}
         accessibilityTraits="button"
         delayPressIn={0}
         onPress={onPress}
@@ -88,7 +88,7 @@ class HeaderBackButton extends React.PureComponent<DefaultProps, Props, State> {
               style={[styles.title, { color: tintColor }]}
               numberOfLines={1}
             >
-              {title}
+              {backButtonTitle}
             </Text>
           )}
         </View>
