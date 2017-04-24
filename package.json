@@ -72,7 +72,7 @@
     "path-to-regexp": "^1.7.0",
     "prop-types": "^15.5.8",
     "react-native-drawer-layout-polyfill": "1.2.0",
-    "react-native-tab-view": "^0.0.57"
+    "react-native-tab-view": "^0.0.59"
   },
   "jest": {
     "notify": true,
