@@ -65,9 +65,10 @@ function forHorizontal(props: NavigationSceneRendererProps): Object {
   // Add ~30px to the interpolated width screens width for horizontal movement. This allows
   // the screen's shadow to go screen fully offscreen without abruptly dissapearing
   const width = layout.initWidth + 30;
+  const slideDistance = width * 0.3;
   const outputRange = I18nManager.isRTL ?
-    ([-width, 0, 10, 10]: Array<number>) :
-    ([width, 0, -10, -10]: Array<number>);
+    ([-width, 0, slideDistance, slideDistance]: Array<number>) :
+    ([width, 0, -slideDistance, -slideDistance]: Array<number>);
 
 
   const opacity = position.interpolate({
