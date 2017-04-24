@@ -48,6 +48,15 @@ module.exports = {
   get CardStack() {
     return require('./views/CardStack').default;
   },
+  get Card() {
+    return require('./views/Card').default;
+  },
+  get Header() {
+    return require('./views/Header').default;
+  },
+  get HeaderBackButton() {
+    return require('./views/HeaderBackButton').default;
+  },
   get DrawerView() {
     return require('./views/Drawer/DrawerView').default;
   },
