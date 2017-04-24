@@ -23,6 +23,9 @@ module.exports = {
   // Views
   get Transitioner() { return require('./views/Transitioner').default; },
   get CardStack() { return require('./views/CardStack').default; },
+  get Card() { return require('./views/Card').default; },
+  get Header() { return require('./views/Header').default; },
+  get HeaderBackButton() { return require('./views/HeaderBackButton').default; },
   get DrawerView() { return require('./views/Drawer/DrawerView').default; },
   get TabView() { return require('./views/TabView/TabView').default; },
 
