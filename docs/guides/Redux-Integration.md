@@ -19,10 +19,7 @@ const appReducer = combineReducers({
   ...
 });
 
-@connect(state => ({
-  nav: state.nav,
-}))
-class AppWithNavigationState extends React.Component {
+class App extends React.Component {
   render() {
     return (
       <AppNavigator navigation={addNavigationHelpers({
@@ -33,9 +30,15 @@ class AppWithNavigationState extends React.Component {
   }
 }
 
+const mapStateToProps = (state) => ({
+  nav: state.nav
+});
+
+const AppWithNavigationState = connect(mapStateToProps)(App);
+
 const store = createStore(appReducer);
 
-class App extends React.Component {
+class Root extends React.Component {
   render() {
     return (
       <Provider store={store}>
