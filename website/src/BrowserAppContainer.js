@@ -1,6 +1,6 @@
 
 import React from 'react';
-
+import PropTypes from 'prop-types';
 import { NavigationActions, addNavigationHelpers } from 'react-navigation';
 
 function getAction(router, path, params) {
@@ -83,9 +83,9 @@ module.exports = (NavigationAwareView) => {
       return NavigationAwareView.router.getActionForPathAndParams(path, params);
     }
     static childContextTypes = {
-      getActionForPathAndParams: React.PropTypes.func.isRequired,
-      getURIForAction: React.PropTypes.func.isRequired,
-      dispatch: React.PropTypes.func.isRequired,
+      getActionForPathAndParams: PropTypes.func.isRequired,
+      getURIForAction: PropTypes.func.isRequired,
+      dispatch: PropTypes.func.isRequired,
     };
     getChildContext() {
       return {

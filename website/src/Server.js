@@ -7,6 +7,7 @@ const join = require('path').join;
 const basicAuth = require('basic-auth-connect');
 const server = require('express');
 const ReactDOMServer = require('react-dom/server');
+import PropTypes from 'prop-types';
 
 import App from './App';
 
@@ -14,9 +15,9 @@ import { NavigationActions, addNavigationHelpers } from 'react-navigation';
 
 class ServerApp extends React.Component {
   static childContextTypes = {
-    getURIForAction: React.PropTypes.func.isRequired,
-    getActionForPathAndParams: React.PropTypes.func.isRequired,
-    dispatch: React.PropTypes.func.isRequired,
+    getURIForAction: PropTypes.func.isRequired,
+    getActionForPathAndParams: PropTypes.func.isRequired,
+    dispatch: PropTypes.func.isRequired,
   };
   getChildContext() {
     return {

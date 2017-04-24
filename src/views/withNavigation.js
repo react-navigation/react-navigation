@@ -1,7 +1,7 @@
 /* @flow */
 
 import React from 'react';
-import propTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import hoistStatics from 'hoist-non-react-statics';
 
 import type {
@@ -27,7 +27,7 @@ export default function withNavigation<T: *>(Component: ReactClass<T & InjectedP
   componentWithNavigation.displayName = `withNavigation(${Component.displayName || Component.name})`;
 
   componentWithNavigation.contextTypes = {
-    navigation: propTypes.object.isRequired,
+    navigation: PropTypes.object.isRequired,
   };
 
   return hoistStatics(componentWithNavigation, Component);

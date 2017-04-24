@@ -1,10 +1,11 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { addNavigationHelpers, StackNavigator } from 'react-navigation';
 
 import LoginScreen from '../components/LoginScreen';
 import MainScreen from '../components/MainScreen';
 import ProfileScreen from '../components/ProfileScreen';
+import PropTypes from 'prop-types';
 
 export const AppNavigator = StackNavigator({
   Login: { screen: LoginScreen },
