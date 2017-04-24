@@ -85,6 +85,7 @@ export default class TabViewAnimated
 
   _renderItems = (props: SceneRendererProps) => {
     const {
+      /* eslint-disable no-unused-vars */
       navigationState: _,
       configureTransition,
       onRequestChangeTab,
@@ -92,10 +93,11 @@ export default class TabViewAnimated
       canJumpToTab,
       lazy,
       initialLayout,
+      renderScene,
+      /* eslint-enable no-unused-vars */
       renderPager,
       renderHeader,
       renderFooter,
-      renderScene,
       ...rest
     } = this.props;
     const { navigationState } = props;

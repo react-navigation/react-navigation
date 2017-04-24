@@ -10,7 +10,7 @@
     "test": "jest",
     "flow": "flow",
     "lint": "eslint **/*.js",
-    "prettier": "prettier --single-quote --trailing-comma all --write \"{src,example/src}/**/*.js\""
+    "format": "eslint --fix **/*.js"
   },
   "keywords": [
     "react-native-component",
