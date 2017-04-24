@@ -28,9 +28,8 @@ import type {
   NavigationStackScreenOptions,
   HeaderMode,
   Style,
+  TransitionConfig,
 } from '../TypeDefinition';
-
-import type { TransitionConfig } from './TransitionConfigs';
 
 import TransitionConfigs from './TransitionConfigs';
 
