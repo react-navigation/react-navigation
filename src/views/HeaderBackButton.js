@@ -66,9 +66,9 @@ class HeaderBackButton extends React.PureComponent<DefaultProps, Props, State> {
     const renderTruncated = this.state.initialTextWidth && width
       ? this.state.initialTextWidth > width
       : false;
-    
-    const backButtonTitle = renderTruncated ? truncatedTitle : title; 
-   
+
+    const backButtonTitle = renderTruncated ? truncatedTitle : title;
+
     // eslint-disable-next-line global-require
     const asset = require('./assets/back-icon.png');
 
