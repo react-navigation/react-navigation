@@ -246,21 +246,16 @@ export default (
       }
 
       if (action.type === NavigationActions.BACK) {
-        let backRouteIndex = null;
-        if (action.key) {
-          /* $FlowFixMe */
-          const backRoute = state.routes.find((route: *) => route.key === action.key);
-          /* $FlowFixMe */
-          backRouteIndex = state.routes.indexOf(backRoute);
-        }
-        if (backRouteIndex == null) {
+        let backRouteIndex = action.key ? StateUtils.indexOf(state, action.key) : null;
+
+        if (backRouteIndex === null) {
           return StateUtils.pop(state);
         }
-        if (backRouteIndex > 0) {
+        if (backRouteIndex >= 0) {
           return {
             ...state,
-            routes: state.routes.slice(0, backRouteIndex),
-            index: backRouteIndex - 1,
+            routes: state.routes.slice(0, backRouteIndex + 1),
+            index: backRouteIndex,
           };
         }
       }
