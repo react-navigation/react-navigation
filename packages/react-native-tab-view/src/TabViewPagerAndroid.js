@@ -42,7 +42,10 @@ export default class TabViewPagerAndroid
 
   componentWillMount() {
     this._currentIndex = this.props.navigationState.index;
-    this._jumpListener = this.props.subscribe('jump', this._handleJump);
+  }
+
+  componentDidMount() {
+    this._resetListener = this.props.subscribe('reset', this._handlePageChange);
   }
 
   componentWillReceiveProps(nextProps: Props) {
@@ -64,20 +67,17 @@ export default class TabViewPagerAndroid
   }
 
   componentDidUpdate() {
-    if (this._isIdle) {
-      this._setPage(this.props.navigationState.index);
-    }
+    this._handlePageChange(this.props.navigationState.index);
   }
 
   componentWillUnmount() {
-    this._jumpListener.remove();
+    this._resetListener.remove();
   }
 
-  _jumpListener: Object;
+  _resetListener: Object;
   _viewPager: Object;
-  _isDrag: boolean = false;
   _isIdle: boolean = true;
-  _currentIndex: number;
+  _currentIndex = 0;
 
   _getPageIndex = (index: number) =>
     (I18nManager.isRTL
@@ -85,8 +85,7 @@ export default class TabViewPagerAndroid
       : index);
 
   _setPage = (index: number) => {
-    if (this._viewPager && this._currentIndex !== index) {
-      this._currentIndex = index;
+    if (this._viewPager) {
       const page = this._getPageIndex(index);
       if (this.props.animationEnabled !== false) {
         this._viewPager.setPage(page);
@@ -96,35 +95,28 @@ export default class TabViewPagerAndroid
     }
   };
 
-  _handleJump = (index: number) => {
-    if (this._isIdle) {
+  _handlePageChange = (index: number) => {
+    if (this._isIdle && this._currentIndex !== index) {
       this._setPage(index);
+      this._currentIndex = index;
     }
   };
 
   _handlePageScroll = (e: PageScrollEvent) => {
-    if (this._isDrag) {
-      this.props.position.setValue(
-        this._getPageIndex(e.nativeEvent.position) +
-          e.nativeEvent.offset * (I18nManager.isRTL ? -1 : 1),
-      );
-    }
+    this.props.position.setValue(
+      this._getPageIndex(e.nativeEvent.position) +
+        e.nativeEvent.offset * (I18nManager.isRTL ? -1 : 1),
+    );
   };
 
   _handlePageScrollStateChanged = (e: PageScrollState) => {
     this._isIdle = e === 'idle';
-    if (e === 'dragging') {
-      this._isDrag = true;
-    } else if (e === 'idle') {
-      this._isDrag = false;
-      if (this._currentIndex !== this.props.navigationState.index) {
-        this.props.jumpToIndex(this._currentIndex);
-      }
-    }
+    this.props.jumpToIndex(this._currentIndex);
   };
 
   _handlePageSelected = (e: PageScrollEvent) => {
-    this._currentIndex = this._getPageIndex(e.nativeEvent.position);
+    const index = this._getPageIndex(e.nativeEvent.position);
+    this._currentIndex = index;
   };
 
   _setRef = (el: Object) => (this._viewPager = el);

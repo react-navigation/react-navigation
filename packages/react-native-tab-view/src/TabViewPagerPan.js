@@ -13,6 +13,7 @@ import {
 import { SceneRendererPropType } from './TabViewPropTypes';
 import type { SceneRendererProps } from './TabViewTypeDefinitions';
 import type { GestureEvent, GestureState } from './PanResponderTypes';
+import type { TransitionConfigurator } from './TabViewTransitionerTypes';
 
 const styles = StyleSheet.create({
   sheet: {
@@ -23,11 +24,13 @@ const styles = StyleSheet.create({
 });
 
 type DefaultProps = {
+  configureTransition: TransitionConfigurator,
   swipeDistanceThreshold: number,
   swipeVelocityThreshold: number,
 };
 
 type Props = SceneRendererProps & {
+  configureTransition: TransitionConfigurator,
   swipeEnabled?: boolean,
   swipeDistanceThreshold: number,
   swipeVelocityThreshold: number,
@@ -36,10 +39,17 @@ type Props = SceneRendererProps & {
 
 const DEAD_ZONE = 12;
 
+const DefaultTransitionSpec = {
+  timing: Animated.spring,
+  tension: 300,
+  friction: 35,
+};
+
 export default class TabViewPagerPan
   extends PureComponent<DefaultProps, Props, void> {
   static propTypes = {
     ...SceneRendererPropType,
+    configureTransition: PropTypes.func.isRequired,
     swipeEnabled: PropTypes.bool,
     swipeDistanceThreshold: PropTypes.number.isRequired,
     swipeVelocityThreshold: PropTypes.number.isRequired,
@@ -47,6 +57,11 @@ export default class TabViewPagerPan
   };
 
   static defaultProps = {
+    configureTransition: () => DefaultTransitionSpec,
+    initialLayout: {
+      height: 0,
+      width: 0,
+    },
     swipeDistanceThreshold: 120,
     swipeVelocityThreshold: 0.25,
   };
@@ -63,7 +78,22 @@ export default class TabViewPagerPan
     });
   }
 
+  componentDidMount() {
+    this._resetListener = this.props.subscribe('reset', this._transitionTo);
+  }
+
+  componentDidUpdate(prevProps: Props) {
+    if (prevProps.navigationState.index !== this.props.navigationState.index) {
+      this._transitionTo(this.props.navigationState.index);
+    }
+  }
+
+  componentWillUnmount() {
+    this._resetListener.remove();
+  }
+
   _panResponder: Object;
+  _resetListener: Object;
   _lastValue = null;
   _isMoving = null;
   _startDirection = 0;
@@ -73,7 +103,7 @@ export default class TabViewPagerPan
     return index >= 0 && index <= routes.length - 1;
   };
 
-  _isMovingHorzontally = (evt: GestureEvent, gestureState: GestureState) => {
+  _isMovingHorizontally = (evt: GestureEvent, gestureState: GestureState) => {
     return (
       Math.abs(gestureState.dx) > Math.abs(gestureState.dy * 3) &&
       Math.abs(gestureState.vx) > Math.abs(gestureState.vy * 3)
@@ -121,7 +151,7 @@ export default class TabViewPagerPan
     }
     const { navigationState: { routes, index } } = this.props;
     const canMove =
-      this._isMovingHorzontally(evt, gestureState) &&
+      this._isMovingHorizontally(evt, gestureState) &&
       ((gestureState.dx >= DEAD_ZONE && index >= 0) ||
         (gestureState.dx <= -DEAD_ZONE && index <= routes.length - 1));
     if (canMove) {
@@ -143,7 +173,7 @@ export default class TabViewPagerPan
     const nextPosition =
       currentPosition - gestureState.dx / width * (I18nManager.isRTL ? -1 : 1);
     if (this._isMoving === null) {
-      this._isMoving = this._isMovingHorzontally(evt, gestureState);
+      this._isMoving = this._isMovingHorizontally(evt, gestureState);
     }
     if (this._isMoving && this._isIndexInRange(nextPosition)) {
       this.props.position.setValue(nextPosition);
@@ -156,13 +186,40 @@ export default class TabViewPagerPan
     if (currentValue !== currentIndex) {
       if (this._isMoving && !this._isReverseDirection(gestureState)) {
         const nextIndex = this._getNextIndex(evt, gestureState);
-        this.props.jumpToIndex(nextIndex);
+        this._transitionTo(nextIndex);
       } else {
-        this.props.jumpToIndex(currentIndex);
+        this._transitionTo(currentIndex);
       }
     }
     this._lastValue = null;
     this._isMoving = null;
+  };
+
+  _transitionTo = (toValue: number) => {
+    const lastPosition = this.props.getLastPosition();
+    const currentTransitionProps = {
+      progress: lastPosition,
+    };
+    const nextTransitionProps = {
+      progress: toValue,
+    };
+    let transitionSpec;
+    if (this.props.configureTransition) {
+      transitionSpec = this.props.configureTransition(
+        currentTransitionProps,
+        nextTransitionProps,
+      );
+    }
+    if (transitionSpec) {
+      const { timing, ...transitionConfig } = transitionSpec;
+      timing(this.props.position, {
+        ...transitionConfig,
+        toValue,
+      }).start(() => this.props.jumpToIndex(toValue));
+    } else {
+      this.props.position.setValue(toValue);
+      this.props.jumpToIndex(toValue);
+    }
   };
 
   render() {

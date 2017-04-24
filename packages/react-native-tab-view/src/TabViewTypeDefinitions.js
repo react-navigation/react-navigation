@@ -2,7 +2,7 @@
 
 import { Animated } from 'react-native';
 
-export type SubscriptionName = 'jump' | 'position';
+export type SubscriptionName = 'reset' | 'position';
 
 export type Route = {
   key: string,

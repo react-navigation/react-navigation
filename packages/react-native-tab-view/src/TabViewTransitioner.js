@@ -9,13 +9,9 @@ import type {
   SceneRendererProps,
   Layout,
 } from './TabViewTypeDefinitions';
-import type {
-  TransitionConfigurator,
-  TransitionerProps,
-} from './TabViewTransitionerTypes';
+import type { TransitionerProps } from './TabViewTransitionerTypes';
 
 type DefaultProps = {
-  configureTransition: TransitionConfigurator,
   initialLayout: Layout,
 };
 
@@ -31,18 +27,11 @@ type State = {
   position: Animated.Value,
 };
 
-const DefaultTransitionSpec = {
-  timing: Animated.spring,
-  tension: 300,
-  friction: 35,
-};
-
 export default class TabViewTransitioner
   extends PureComponent<DefaultProps, Props, State> {
   static propTypes = {
     navigationState: NavigationStatePropType.isRequired,
     render: PropTypes.func.isRequired,
-    configureTransition: PropTypes.func.isRequired,
     onRequestChangeTab: PropTypes.func.isRequired,
     onChangePosition: PropTypes.func,
     initialLayout: PropTypes.shape({
@@ -54,7 +43,6 @@ export default class TabViewTransitioner
   };
 
   static defaultProps = {
-    configureTransition: () => DefaultTransitionSpec,
     initialLayout: {
       height: 0,
       width: 0,
@@ -80,12 +68,6 @@ export default class TabViewTransitioner
     this._positionListener = this.state.position.addListener(
       this._trackPosition,
     );
-  }
-
-  componentDidUpdate(prevProps: Props) {
-    if (prevProps.navigationState.index !== this.props.navigationState.index) {
-      this._transitionTo(this.props.navigationState.index);
-    }
   }
 
   componentWillUnmount() {
@@ -146,35 +128,6 @@ export default class TabViewTransitioner
     };
   };
 
-  _transitionTo = (toValue: number, callback: ?Function) => {
-    const lastPosition = this._getLastPosition();
-    const currentTransitionProps = {
-      progress: lastPosition,
-    };
-    const nextTransitionProps = {
-      progress: toValue,
-    };
-    let transitionSpec;
-    if (this.props.configureTransition) {
-      transitionSpec = this.props.configureTransition(
-        currentTransitionProps,
-        nextTransitionProps,
-      );
-    }
-    if (transitionSpec) {
-      const { timing, ...transitionConfig } = transitionSpec;
-      timing(this.state.position, {
-        ...transitionConfig,
-        toValue,
-      }).start(callback);
-    } else {
-      this.state.position.setValue(toValue);
-      if (callback) {
-        callback();
-      }
-    }
-  };
-
   _jumpToIndex = (index: number) => {
     if (!this._mounted) {
       // We are no longer mounted, this is a no-op
@@ -184,26 +137,13 @@ export default class TabViewTransitioner
     const { canJumpToTab, navigationState } = this.props;
 
     if (canJumpToTab && !canJumpToTab(navigationState.routes[index])) {
-      const lastPosition = this._getLastPosition();
-      if (lastPosition !== navigationState.index) {
-        this._transitionTo(navigationState.index);
-      }
+      this._triggerEvent('reset', navigationState.index);
       return;
     }
 
-    this._triggerEvent('jump', index);
-    this._nextIndex = index;
-    this._transitionTo(index, () =>
-      global.requestAnimationFrame(() => {
-        if (this.props.navigationState.index === index) {
-          return;
-        }
-        // Prevent extra setState when index updated mid-transition
-        if (this._nextIndex === index && this._mounted) {
-          this.props.onRequestChangeTab(index);
-        }
-      }),
-    );
+    if (index !== navigationState.index) {
+      this.props.onRequestChangeTab(index);
+    }
   };
 
   _addSubscription = (event: SubscriptionName, callback: Function) => {
