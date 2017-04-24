@@ -2,17 +2,11 @@
 
 import React from 'react';
 
-import {
-  Animated,
-  StyleSheet,
-} from 'react-native';
+import { Animated, StyleSheet } from 'react-native';
 
 import createPointerEventsContainer from './PointerEventsContainer';
 
-import type {
-  NavigationSceneRenderer,
-  NavigationSceneRendererProps,
-} from '../TypeDefinition';
+import type { NavigationSceneRendererProps } from '../TypeDefinition';
 
 type Props = NavigationSceneRendererProps & {
   children: React.Children<*>,
@@ -31,7 +25,6 @@ class Card extends React.Component<any, Props, any> {
     const {
       children,
       pointerEvents,
-      scene,
       style,
     } = this.props;
     return (

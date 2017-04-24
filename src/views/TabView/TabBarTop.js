@@ -1,10 +1,7 @@
 /* @flow */
 
 import React, { PureComponent } from 'react';
-import {
-  Animated,
-  StyleSheet,
-} from 'react-native';
+import { Animated, StyleSheet } from 'react-native';
 import { TabBar } from 'react-native-tab-view';
 import TabBarIcon from './TabBarIcon';
 
@@ -15,34 +12,32 @@ import type {
   Style,
 } from '../../TypeDefinition';
 
-import type {
-  TabScene,
-} from './TabView';
+import type { TabScene } from './TabView';
 
 type DefaultProps = {
-  activeTintColor: string;
-  inactiveTintColor: string;
-  showIcon: boolean;
-  showLabel: boolean;
-  upperCaseLabel: boolean;
+  activeTintColor: string,
+  inactiveTintColor: string,
+  showIcon: boolean,
+  showLabel: boolean,
+  upperCaseLabel: boolean,
 };
 
 type Props = {
-  activeTintColor: string;
-  inactiveTintColor: string;
-  showIcon: boolean;
-  showLabel: boolean;
-  upperCaseLabel: boolean;
-  position: Animated.Value;
-  navigation: NavigationScreenProp<NavigationState, NavigationAction>;
-  getLabel: (scene: TabScene) => ?(React.Element<*> | string);
-  renderIcon: (scene: TabScene) => React.Element<*>;
-  labelStyle?: Style;
-  iconStyle?: Style;
+  activeTintColor: string,
+  inactiveTintColor: string,
+  showIcon: boolean,
+  showLabel: boolean,
+  upperCaseLabel: boolean,
+  position: Animated.Value,
+  navigation: NavigationScreenProp<NavigationState, NavigationAction>,
+  getLabel: (scene: TabScene) => ?(React.Element<*> | string),
+  renderIcon: (scene: TabScene) => React.Element<*>,
+  labelStyle?: Style,
+  iconStyle?: Style,
 };
 
-export default class TabBarTop extends PureComponent<DefaultProps, Props, void> {
-
+export default class TabBarTop
+  extends PureComponent<DefaultProps, Props, void> {
   static defaultProps = {
     activeTintColor: '#fff',
     inactiveTintColor: '#fff',
@@ -70,8 +65,9 @@ export default class TabBarTop extends PureComponent<DefaultProps, Props, void> 
     const { routes } = navigation.state;
     // Prepend '-1', so there are always at least 2 items in inputRange
     const inputRange = [-1, ...routes.map((x: *, i: number) => i)];
-    const outputRange = inputRange.map((inputIndex: number) =>
-      (inputIndex === index ? activeTintColor : inactiveTintColor)
+    const outputRange = inputRange.map(
+      (inputIndex: number) =>
+        inputIndex === index ? activeTintColor : inactiveTintColor,
     );
     const color = position.interpolate({
       inputRange,

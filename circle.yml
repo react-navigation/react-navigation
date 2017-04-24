@@ -17,6 +17,3 @@ deployment:
     commands:
       - yarn run build-docs
       - ./scripts/deploy-website.sh
-test:
-  pre:
-    - yarn run flow

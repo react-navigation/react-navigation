@@ -2,10 +2,7 @@
 
 import React from 'react';
 import invariant from 'fbjs/lib/invariant';
-import {
-  BackAndroid,
-  Linking,
-} from './PlatformHelpers';
+import { BackAndroid, Linking } from './PlatformHelpers';
 import NavigationActions from './NavigationActions';
 import addNavigationHelpers from './addNavigationHelpers';
 
@@ -19,7 +16,11 @@ import type {
 
 type NavigationContainerProps = {
   uriPrefix?: string,
-  onNavigationStateChange?: (NavigationState, NavigationState, NavigationAction) => void,
+  onNavigationStateChange?: (
+    NavigationState,
+    NavigationState,
+    NavigationAction,
+  ) => void,
 };
 
 type Props<T> = NavigationContainerProps & NavigationNavigatorProps<T>;
@@ -75,7 +76,9 @@ export default function createNavigationContainer<T: *>(
       }
 
       const {
-        navigation, screenProps, navigationOptions,
+        navigation,
+        screenProps,
+        navigationOptions,
         ...containerProps
       } = props;
 
@@ -84,9 +87,9 @@ export default function createNavigationContainer<T: *>(
       invariant(
         keys.length === 0,
         'This navigator has both navigation and container props, so it is ' +
-        `unclear if it should own its own state. Remove props: "${keys.join(', ')}" ` +
-        'if the navigator should get its state from the navigation prop. If the ' +
-        'navigator should maintain its own state, do not pass a navigation prop.',
+          `unclear if it should own its own state. Remove props: "${keys.join(', ')}" ` +
+          'if the navigator should get its state from the navigation prop. If the ' +
+          'navigator should maintain its own state, do not pass a navigation prop.',
       );
     }
 
@@ -120,8 +123,8 @@ export default function createNavigationContainer<T: *>(
       action: NavigationAction,
     ) {
       if (
-        typeof this.props.onNavigationStateChange === 'undefined'
-        && this._isStateful()
+        typeof this.props.onNavigationStateChange === 'undefined' &&
+        this._isStateful()
       ) {
         /* eslint-disable no-console */
         if (console.group) {
@@ -131,7 +134,11 @@ export default function createNavigationContainer<T: *>(
           console.log('Last State: ', prevNav);
           console.groupEnd();
         } else {
-          console.log('Navigation Dispatch: ', { action, newState: nav, lastState: prevNav });
+          console.log('Navigation Dispatch: ', {
+            action,
+            newState: nav,
+            lastState: prevNav,
+          });
         }
         /* eslint-enable no-console */
         return;
@@ -151,16 +158,16 @@ export default function createNavigationContainer<T: *>(
         return;
       }
 
-      this.subs = BackAndroid.addEventListener(
-        'backPress',
-        () => this.dispatch(NavigationActions.back()),
-      );
+      this.subs = BackAndroid.addEventListener('backPress', () =>
+        this.dispatch(NavigationActions.back()));
 
       Linking.addEventListener('url', ({ url }: { url: string }) => {
         this._handleOpenURL(url);
       });
 
-      Linking.getInitialURL().then((url: string) => url && this._handleOpenURL(url));
+      Linking.getInitialURL().then(
+        (url: string) => url && this._handleOpenURL(url),
+      );
     }
 
     componentWillUnmount() {
@@ -175,7 +182,8 @@ export default function createNavigationContainer<T: *>(
       }
       const nav = Component.router.getStateForAction(action, state.nav);
       if (nav && nav !== state.nav) {
-        this.setState({ nav }, () => this._onNavigationStateChange(state.nav, nav, action));
+        this.setState({ nav }, () =>
+          this._onNavigationStateChange(state.nav, nav, action));
         return true;
       }
       return false;
@@ -194,15 +202,9 @@ export default function createNavigationContainer<T: *>(
         }
         navigation = this._navigation;
       }
-      return (
-        <Component
-          {...this.props}
-          navigation={navigation}
-        />
-      );
+      return <Component {...this.props} navigation={navigation} />;
     }
   }
 
   return NavigationContainer;
 }
-
