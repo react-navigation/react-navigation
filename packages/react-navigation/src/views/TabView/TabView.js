@@ -1,10 +1,7 @@
 /* @flow */
 
 import React, { PureComponent } from 'react';
-import {
-  Platform,
-  StyleSheet,
-} from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 import {
   TabViewAnimated,
   TabViewPagerAndroid,
@@ -26,33 +23,35 @@ import type {
 } from '../../TypeDefinition';
 
 export type TabViewConfig = {
-  tabBarComponent?: ReactClass<*>;
-  tabBarPosition?: 'top' | 'bottom';
-  tabBarOptions?: {};
-  swipeEnabled?: boolean;
-  animationEnabled?: boolean;
-  lazyLoad?: boolean;
+  tabBarComponent?: ReactClass<*>,
+  tabBarPosition?: 'top' | 'bottom',
+  tabBarOptions?: {},
+  swipeEnabled?: boolean,
+  animationEnabled?: boolean,
+  lazyLoad?: boolean,
 };
 
 export type TabScene = {
-  route: NavigationRoute;
-  focused: boolean;
-  index: number;
-  tintColor?: ?string;
+  route: NavigationRoute,
+  focused: boolean,
+  index: number,
+  tintColor?: ?string,
 };
 
 type Props = {
-  tabBarComponent?: ReactClass<*>;
-  tabBarPosition?: 'top' | 'bottom';
-  tabBarOptions?: {};
-  swipeEnabled?: boolean;
-  animationEnabled?: boolean;
-  lazyLoad?: boolean;
+  tabBarComponent?: ReactClass<*>,
+  tabBarPosition?: 'top' | 'bottom',
+  tabBarOptions?: {},
+  swipeEnabled?: boolean,
+  animationEnabled?: boolean,
+  lazyLoad?: boolean,
 
   screenProps?: {},
-  navigation: NavigationScreenProp<NavigationState, NavigationAction>;
+  navigation: NavigationScreenProp<NavigationState, NavigationAction>,
   router: NavigationRouter<NavigationState, NavigationAction, NavigationTabScreenOptions>,
-  childNavigationProps: { [key: string]: NavigationScreenProp<NavigationRoute, NavigationAction> },
+  childNavigationProps: {
+    [key: string]: NavigationScreenProp<NavigationRoute, NavigationAction>,
+  },
 };
 
 let TabViewPager;
@@ -69,7 +68,6 @@ switch (Platform.OS) {
 }
 
 class TabView extends PureComponent<void, Props, void> {
-
   static TabBarTop = TabBarTop;
   static TabBarBottom = TabBarBottom;
 
@@ -77,28 +75,32 @@ class TabView extends PureComponent<void, Props, void> {
 
   _handlePageChanged = (index: number) => {
     const { navigation } = this.props;
-    navigation.navigate(
-      navigation.state.routes[index].routeName);
+    navigation.navigate(navigation.state.routes[index].routeName);
   };
 
   _renderScene = ({ route }: any) => {
     const { screenProps } = this.props;
     const childNavigation = this.props.childNavigationProps[route.key];
-    const TabComponent = this.props.router.getComponentForRouteName(route.routeName);
+    const TabComponent = this.props.router.getComponentForRouteName(
+      route.routeName,
+    );
     return (
       <SceneView
         screenProps={screenProps}
         component={TabComponent}
         navigation={childNavigation}
-        navigationOptions={this.props.router.getScreenOptions(childNavigation, screenProps)}
+        navigationOptions={this.props.router.getScreenOptions(
+          childNavigation,
+          screenProps,
+        )}
       />
     );
   };
 
-  _getLabel = ({ focused, route, tintColor }: TabScene) => {
+  _getLabel = ({ route, tintColor, focused }: TabScene) => {
     const options = this.props.router.getScreenOptions(
       this.props.childNavigationProps[route.key],
-      this.props.screenProps || {}
+      this.props.screenProps || {},
     );
 
     if (options.tabBarLabel) {
@@ -117,7 +119,7 @@ class TabView extends PureComponent<void, Props, void> {
   _renderIcon = ({ focused, route, tintColor }: TabScene) => {
     const options = this.props.router.getScreenOptions(
       this.props.childNavigationProps[route.key],
-      this.props.screenProps || {}
+      this.props.screenProps || {},
     );
     if (options.tabBarIcon) {
       return typeof options.tabBarIcon === 'function'
@@ -168,7 +170,6 @@ class TabView extends PureComponent<void, Props, void> {
   render() {
     const {
       router,
-      navigation,
       tabBarComponent,
       tabBarPosition,
       animationEnabled,
@@ -182,10 +183,12 @@ class TabView extends PureComponent<void, Props, void> {
     const { state } = this.props.navigation;
     const options = router.getScreenOptions(
       this.props.childNavigationProps[state.routes[state.index].key],
-      screenProps || {}
+      screenProps || {},
     );
 
-    const tabBarVisible = options.tabBarVisible == null ? true : options.tabBarVisible;
+    const tabBarVisible = options.tabBarVisible == null
+      ? true
+      : options.tabBarVisible;
 
     if (tabBarComponent !== undefined && tabBarVisible) {
       if (tabBarPosition === 'bottom') {
@@ -201,21 +204,21 @@ class TabView extends PureComponent<void, Props, void> {
       configureTransition = this._configureTransition;
     }
 
-    return (
-      /* $FlowFixMe */
-      <TabViewAnimated
-        style={styles.container}
-        navigationState={this.props.navigation.state}
-        lazy={lazyLoad}
-        renderHeader={renderHeader}
-        renderFooter={renderFooter}
-        renderScene={this._renderScene}
-        renderPager={this._renderPager}
-        configureTransition={configureTransition}
-        onRequestChangeTab={this._handlePageChanged}
-        screenProps={this.props.screenProps}
-      />
-    );
+    const props = {
+      style: styles.container,
+      navigationState: this.props.navigation.state,
+      lazy: lazyLoad,
+      renderHeader,
+      renderFooter,
+      renderScene: this._renderScene,
+      renderPager: this._renderPager,
+      configureTransition,
+      onRequestChangeTab: this._handlePageChanged,
+      screenProps: this.props.screenProps,
+    };
+
+    /* $FlowFixMe */
+    return <TabViewAnimated {...props} />;
   }
 }
 
