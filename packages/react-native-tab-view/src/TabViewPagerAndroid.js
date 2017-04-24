@@ -26,8 +26,8 @@ const styles = StyleSheet.create({
 });
 
 type Props = SceneRendererProps & {
-  swipeEnabled?: boolean,
   animationEnabled?: boolean,
+  swipeEnabled?: boolean,
   children?: any,
 };
 
@@ -35,8 +35,8 @@ export default class TabViewPagerAndroid
   extends PureComponent<void, Props, void> {
   static propTypes = {
     ...SceneRendererPropType,
-    swipeEnabled: PropTypes.bool,
     animationEnabled: PropTypes.bool,
+    swipeEnabled: PropTypes.bool,
     children: PropTypes.node,
   };
 

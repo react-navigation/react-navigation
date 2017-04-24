@@ -31,6 +31,7 @@ type DefaultProps = {
 
 type Props = SceneRendererProps & {
   configureTransition: TransitionConfigurator,
+  animationEnabled?: boolean,
   swipeEnabled?: boolean,
   swipeDistanceThreshold: number,
   swipeVelocityThreshold: number,
@@ -50,6 +51,7 @@ export default class TabViewPagerPan
   static propTypes = {
     ...SceneRendererPropType,
     configureTransition: PropTypes.func.isRequired,
+    animationEnabled: PropTypes.bool,
     swipeEnabled: PropTypes.bool,
     swipeDistanceThreshold: PropTypes.number.isRequired,
     swipeVelocityThreshold: PropTypes.number.isRequired,
@@ -203,14 +205,11 @@ export default class TabViewPagerPan
     const nextTransitionProps = {
       progress: toValue,
     };
-    let transitionSpec;
-    if (this.props.configureTransition) {
-      transitionSpec = this.props.configureTransition(
+    if (this.props.animationEnabled !== false) {
+      const transitionSpec = this.props.configureTransition(
         currentTransitionProps,
         nextTransitionProps,
       );
-    }
-    if (transitionSpec) {
       const { timing, ...transitionConfig } = transitionSpec;
       timing(this.props.position, {
         ...transitionConfig,

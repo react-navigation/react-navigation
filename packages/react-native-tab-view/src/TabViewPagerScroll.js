@@ -2,7 +2,7 @@
 
 import React, { PureComponent, Children } from 'react';
 import PropTypes from 'prop-types';
-import { View, ScrollView, StyleSheet } from 'react-native';
+import { Platform, View, ScrollView, StyleSheet } from 'react-native';
 import { SceneRendererPropType } from './TabViewPropTypes';
 import type { SceneRendererProps } from './TabViewTypeDefinitions';
 
@@ -31,6 +31,7 @@ type State = {
 };
 
 type Props = SceneRendererProps & {
+  animationEnabled?: boolean,
   swipeEnabled?: boolean,
   children?: any,
 };
@@ -39,6 +40,7 @@ export default class TabViewPagerScroll
   extends PureComponent<void, Props, State> {
   static propTypes = {
     ...SceneRendererPropType,
+    animationEnabled: PropTypes.bool,
     swipeEnabled: PropTypes.bool,
     children: PropTypes.node,
   };
@@ -53,6 +55,8 @@ export default class TabViewPagerScroll
     };
   }
 
+  state: State;
+
   componentDidMount() {
     this._scrollTo(
       this.props.navigationState.index * this.props.layout.width,
@@ -63,10 +67,19 @@ export default class TabViewPagerScroll
 
   componentDidUpdate(prevProps: Props) {
     const amount = this.props.navigationState.index * this.props.layout.width;
-    if (prevProps.navigationState !== this.props.navigationState) {
-      global.requestAnimationFrame(() => this._scrollTo(amount));
-    } else if (prevProps.layout !== this.props.layout) {
-      this._scrollTo(amount, false);
+    if (
+      prevProps.navigationState !== this.props.navigationState ||
+      prevProps.layout !== this.props.layout
+    ) {
+      if (Platform.OS === 'android') {
+        global.requestAnimationFrame(() => this._scrollTo(amount));
+      } else {
+        if (prevProps.layout !== this.props.layout) {
+          this._scrollTo(amount, false);
+        } else {
+          this._scrollTo(amount);
+        }
+      }
     }
   }
 
@@ -77,7 +90,7 @@ export default class TabViewPagerScroll
   _resetListener: Object;
   _scrollView: Object;
 
-  _scrollTo = (x: number, animated = true) => {
+  _scrollTo = (x: number, animated = this.props.animationEnabled !== false) => {
     if (this._scrollView) {
       this._scrollView.scrollTo({
         x,

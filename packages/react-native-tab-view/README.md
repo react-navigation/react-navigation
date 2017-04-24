@@ -102,7 +102,6 @@ Container component responsible for managing tab transitions
 
 It accepts the following props,
 - `navigationState` - the current navigation state
-- `configureTransition` - optional callback which returns a configuration for the transition, return `null` to disable animation
 - `onRequestChangeTab` - callback for when the current tab changes, should do the `setState`
 - `onChangePosition` - callback called with position value as it changes (e.g. - on swipe or tab change), avoid doing anything expensive here
 - `canJumpToTab` - optional callback which accepts a route, and returns a boolean indicating whether jumping to the tab is allowed
@@ -120,6 +119,8 @@ Any other props are passed to the underlying pager.
 Pager component based on `PanResponder`
 
 It accepts the following props,
+- `configureTransition` - optional callback which returns a configuration for the transition
+- `animationEnabled` - whether to enable page change animation
 - `swipeEnabled` - whether to enable swipe gestures
 - `swipeDistanceThreshold` - minimum swipe distance to trigger page switch
 - `swipeVelocityThreshold` - minimum swipe velocity to trigger page switch
@@ -130,6 +131,7 @@ It accepts the following props,
 Pager component based on `ScrollView` (default on iOS)
 
 It accepts the following props,
+- `animationEnabled` - whether to enable page change animation
 - `swipeEnabled` - whether to enable swipe gestures
 - `children` - React Element(s) to render
 
@@ -138,8 +140,8 @@ It accepts the following props,
 Pager component based on `ViewPagerAndroid` (default on Android)
 
 It accepts the following props,
-- `swipeEnabled` - whether to enable swipe gestures
 - `animationEnabled` - whether to enable page change animation
+- `swipeEnabled` - whether to enable swipe gestures
 - `children` - React Element(s) to render
 
 ### `<TabBar />`

@@ -13,7 +13,7 @@ export type TransitionSpec = {
 export type TransitionConfigurator = (
   currentTransitionProps: TransitionProps,
   nextTransitionProps: TransitionProps,
-) => ?TransitionSpec;
+) => TransitionSpec;
 
 export type TransitionerProps = {
   navigationState: NavigationState,
