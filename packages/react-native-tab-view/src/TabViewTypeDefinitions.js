@@ -2,7 +2,7 @@
 
 import { Animated } from 'react-native';
 
-export type Route<T> = T & { key: string };
+export type Route<T: { key: string, testID?: string }> = T;
 
 export type NavigationState<T: { key: string }> = {
   index: number,

@@ -2,8 +2,7 @@
 
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { Platform, View, StyleSheet } from 'react-native';
-import TabViewTransitioner from './TabViewTransitioner';
+import { Animated, Platform, View, StyleSheet } from 'react-native';
 import { NavigationStatePropType } from './TabViewPropTypes';
 import type {
   Scene,
@@ -11,6 +10,7 @@ import type {
   NavigationState,
   Layout,
   Route,
+  SubscriptionName,
 } from './TabViewTypeDefinitions';
 
 const styles = StyleSheet.create({
@@ -35,10 +35,15 @@ type Props<T> = {
   renderHeader?: (props: SceneRendererProps<T>) => ?React.Element<*>,
   renderFooter?: (props: SceneRendererProps<T>) => ?React.Element<*>,
   lazy?: boolean,
+  style?: any,
 };
 
 type State = {
   loaded: Array<number>,
+  layout: Layout & {
+    measured: boolean,
+  },
+  position: Animated.Value,
 };
 
 let TabViewPager;
@@ -59,16 +64,27 @@ export default class TabViewAnimated<T: Route<*>>
   extends PureComponent<DefaultProps<T>, Props<T>, State> {
   static propTypes = {
     navigationState: NavigationStatePropType.isRequired,
+    onRequestChangeTab: PropTypes.func.isRequired,
+    onChangePosition: PropTypes.func,
+    initialLayout: PropTypes.shape({
+      height: PropTypes.number.isRequired,
+      width: PropTypes.number.isRequired,
+    }),
+    canJumpToTab: PropTypes.func,
     renderPager: PropTypes.func.isRequired,
     renderScene: PropTypes.func.isRequired,
     renderHeader: PropTypes.func,
     renderFooter: PropTypes.func,
-    onChangePosition: PropTypes.func,
     lazy: PropTypes.bool,
+    style: View.propTypes.style,
   };
 
   static defaultProps = {
     renderPager: (props: SceneRendererProps<*>) => <TabViewPager {...props} />,
+    initialLayout: {
+      height: 0,
+      width: 0,
+    },
   };
 
   constructor(props: Props<T>) {
@@ -76,10 +92,33 @@ export default class TabViewAnimated<T: Route<*>>
 
     this.state = {
       loaded: [this.props.navigationState.index],
+      layout: {
+        ...this.props.initialLayout,
+        measured: false,
+      },
+      position: new Animated.Value(this.props.navigationState.index),
     };
   }
 
   state: State;
+
+  componentDidMount() {
+    this._mounted = true;
+    this._positionListener = this.state.position.addListener(
+      this._trackPosition,
+    );
+  }
+
+  componentWillUnmount() {
+    this._mounted = false;
+    this.state.position.removeListener(this._positionListener);
+  }
+
+  _mounted: boolean = false;
+  _nextIndex: ?number;
+  _lastPosition: ?number;
+  _positionListener: string;
+  _subscriptions: { [key: SubscriptionName]: Array<Function> } = {};
 
   _renderScene = (props: SceneRendererProps<T> & Scene<T>) => {
     const { renderScene, lazy } = this.props;
@@ -92,44 +131,6 @@ export default class TabViewAnimated<T: Route<*>>
       return null;
     }
     return renderScene(props);
-  };
-
-  _renderItems = (props: *) => {
-    const {
-      /* eslint-disable no-unused-vars */
-      navigationState: _,
-      onRequestChangeTab,
-      onChangePosition,
-      canJumpToTab,
-      lazy,
-      initialLayout,
-      renderScene,
-      /* eslint-enable no-unused-vars */
-      renderPager,
-      renderHeader,
-      renderFooter,
-      ...rest
-    } = this.props;
-    const { navigationState } = props;
-
-    return (
-      <View style={styles.container}>
-        {renderHeader && renderHeader(props)}
-        {renderPager({
-          ...props,
-          ...rest,
-          children: navigationState.routes.map((route, index) =>
-            this._renderScene({
-              ...props,
-              route,
-              index,
-              focused: index === navigationState.index,
-            }),
-          ),
-        })}
-        {renderFooter && renderFooter(props)}
-      </View>
-    );
   };
 
   _handleChangePosition = (value: number) => {
@@ -152,14 +153,131 @@ export default class TabViewAnimated<T: Route<*>>
     }
   };
 
+  _trackPosition = (e: { value: number }) => {
+    this._triggerEvent('position', e.value);
+    this._lastPosition = e.value;
+    const { onChangePosition } = this.props;
+    if (onChangePosition) {
+      onChangePosition(e.value);
+    }
+  };
+
+  _getLastPosition = () => {
+    if (typeof this._lastPosition === 'number') {
+      return this._lastPosition;
+    } else {
+      return this.props.navigationState.index;
+    }
+  };
+
+  _handleLayout = (e: any) => {
+    const { height, width } = e.nativeEvent.layout;
+
+    if (
+      this.state.layout.width === width &&
+      this.state.layout.height === height
+    ) {
+      return;
+    }
+
+    this.setState({
+      layout: {
+        measured: true,
+        height,
+        width,
+      },
+    });
+  };
+
+  _buildSceneRendererProps = (): SceneRendererProps<*> => {
+    return {
+      layout: this.state.layout,
+      navigationState: this.props.navigationState,
+      position: this.state.position,
+      jumpToIndex: this._jumpToIndex,
+      getLastPosition: this._getLastPosition,
+      subscribe: this._addSubscription,
+    };
+  };
+
+  _jumpToIndex = (index: number) => {
+    if (!this._mounted) {
+      // We are no longer mounted, this is a no-op
+      return;
+    }
+
+    const { canJumpToTab, navigationState } = this.props;
+
+    if (canJumpToTab && !canJumpToTab(navigationState.routes[index])) {
+      this._triggerEvent('reset', navigationState.index);
+      return;
+    }
+
+    if (index !== navigationState.index) {
+      this.props.onRequestChangeTab(index);
+    }
+  };
+
+  _addSubscription = (event: SubscriptionName, callback: Function) => {
+    if (!this._subscriptions[event]) {
+      this._subscriptions[event] = [];
+    }
+    this._subscriptions[event].push(callback);
+    return {
+      remove: () => {
+        const index = this._subscriptions[event].indexOf(callback);
+        if (index > -1) {
+          this._subscriptions[event].splice(index, 1);
+        }
+      },
+    };
+  };
+
+  _triggerEvent = (event: SubscriptionName, value: any) => {
+    if (this._subscriptions[event]) {
+      this._subscriptions[event].forEach(fn => fn(value));
+    }
+  };
+
   render() {
+    const {
+      /* eslint-disable no-unused-vars */
+      navigationState,
+      onRequestChangeTab,
+      onChangePosition,
+      canJumpToTab,
+      lazy,
+      initialLayout,
+      renderScene,
+      /* eslint-enable no-unused-vars */
+      renderPager,
+      renderHeader,
+      renderFooter,
+      ...rest
+    } = this.props;
+    const props = this._buildSceneRendererProps();
+
     return (
-      <TabViewTransitioner
-        {...this.props}
+      <View
+        onLayout={this._handleLayout}
         loaded={this.state.loaded}
-        onChangePosition={this._handleChangePosition}
-        render={this._renderItems}
-      />
+        style={[styles.container, this.props.style]}
+      >
+        {renderHeader && renderHeader(props)}
+        {renderPager({
+          ...props,
+          ...rest,
+          children: navigationState.routes.map((route, index) =>
+            this._renderScene({
+              ...props,
+              route,
+              index,
+              focused: index === navigationState.index,
+            }),
+          ),
+        })}
+        {renderFooter && renderFooter(props)}
+      </View>
     );
   }
 }
