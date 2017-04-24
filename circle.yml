@@ -1,8 +1,9 @@
 machine:
   node:
-    version: 6.9.4
+    version: 6
   pre:
     - mkdir ~/.yarn-cache
+
 dependencies:
   pre:
     - curl -o- -L https://yarnpkg.com/install.sh | bash
@@ -11,12 +12,15 @@ dependencies:
   override:
     - yarn install
     - cd website && yarn install
+
 deployment:
   website-prod:
     branch: master
     commands:
       - yarn run build-docs
       - ./scripts/deploy-website.sh
+
 test:
-  pre:
-    - yarn run flow
+  post:
+    - cd examples/NavigationPlayground && yarn add file:../.. && yarn install && yarn test
+    - cd examples/ReduxExample && yarn add file:../.. && yarn install && yarn test

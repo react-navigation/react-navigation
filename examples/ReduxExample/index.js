@@ -23,3 +23,5 @@ class ReduxExampleApp extends React.Component {
 }
 
 AppRegistry.registerComponent('ReduxExample', () => ReduxExampleApp);
+
+export default ReduxExampleApp;
