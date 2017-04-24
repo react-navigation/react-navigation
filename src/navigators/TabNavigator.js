@@ -12,21 +12,22 @@ import NavigatorTypes from './NavigatorTypes';
 import type { TabViewConfig } from '../views/TabView/TabView';
 
 import type {
-  NavigationContainerConfig,
   NavigationRouteConfigMap,
   NavigationTabRouterConfig,
 } from '../TypeDefinition';
 
-export type TabNavigatorConfig = NavigationTabRouterConfig & TabViewConfig & NavigationContainerConfig;
+export type TabNavigatorConfig =
+  & { containerOptions?: void }
+  & NavigationTabRouterConfig
+  & TabViewConfig;
 
 const TabNavigator = (
   routeConfigs: NavigationRouteConfigMap,
-  config: TabNavigatorConfig = {}
+  config: TabNavigatorConfig = {},
 ) => {
   // Use the look native to the platform by default
   const mergedConfig = { ...TabNavigator.Presets.Default, ...config };
   const {
-    containerOptions,
     tabBarComponent,
     tabBarPosition,
     tabBarOptions,
@@ -35,14 +36,11 @@ const TabNavigator = (
     lazyLoad,
     ...tabsConfig
   } = mergedConfig;
+
   const router = TabRouter(routeConfigs, tabsConfig);
-  return createNavigationContainer(
-    createNavigator(
-      router,
-      routeConfigs,
-      config,
-      NavigatorTypes.STACK
-    )((props: *) => (
+
+  const navigator = createNavigator(router, routeConfigs, config, NavigatorTypes.STACK)(
+    (props: *) => (
       <TabView
         {...props}
         tabBarComponent={tabBarComponent}
@@ -52,9 +50,10 @@ const TabNavigator = (
         animationEnabled={animationEnabled}
         lazyLoad={lazyLoad}
       />
-    )),
-    containerOptions
+    ),
   );
+
+  return createNavigationContainer(navigator, tabsConfig.containerOptions);
 };
 
 const Presets = {

@@ -12,12 +12,14 @@ import NavigatorTypes from './NavigatorTypes';
 
 import type { DrawerViewConfig } from '../views/Drawer/DrawerView';
 import type {
-  NavigationContainerConfig,
   NavigationRouteConfigMap,
   NavigationTabRouterConfig,
 } from '../TypeDefinition';
 
-export type DrawerNavigatorConfig = NavigationContainerConfig & NavigationTabRouterConfig & DrawerViewConfig;
+export type DrawerNavigatorConfig =
+  & { containerConfig?: void }
+  & NavigationTabRouterConfig
+  & DrawerViewConfig;
 
 const DefaultDrawerConfig = {
   /*
@@ -43,32 +45,24 @@ const DrawerNavigator = (
     drawerPosition,
     ...tabsConfig
   } = mergedConfig;
+
   const contentRouter = TabRouter(routeConfigs, tabsConfig);
-  const drawerRouter = TabRouter(
-    {
-      DrawerClose: {
-        screen: createNavigator(
-          contentRouter,
-          routeConfigs,
-          config,
-          NavigatorTypes.DRAWER
-        )((props: *) => <DrawerScreen {...props} />),
-      },
-      DrawerOpen: {
-        screen: () => null,
-      },
+
+  const drawerRouter = TabRouter({
+    DrawerClose: {
+      screen: createNavigator(contentRouter, routeConfigs, config, NavigatorTypes.DRAWER)(
+        (props: *) => <DrawerScreen {...props} />,
+      ),
     },
-    {
-      initialRouteName: 'DrawerClose',
-    }
-  );
-  return createNavigationContainer(
-    createNavigator(
-      drawerRouter,
-      routeConfigs,
-      config,
-      NavigatorTypes.DRAWER
-    )((props: *) => (
+    DrawerOpen: {
+      screen: () => null,
+    },
+  }, {
+    initialRouteName: 'DrawerClose',
+  });
+
+  const navigator = createNavigator(drawerRouter, routeConfigs, config, NavigatorTypes.DRAWER)(
+    (props: *) => (
       <DrawerView
         {...props}
         drawerWidth={drawerWidth}
@@ -76,9 +70,10 @@ const DrawerNavigator = (
         contentOptions={contentOptions}
         drawerPosition={drawerPosition}
       />
-    )),
-    containerConfig
+    ),
   );
+
+  return createNavigationContainer(navigator, containerConfig);
 };
 
 export default DrawerNavigator;

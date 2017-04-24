@@ -99,6 +99,7 @@ class CardStackTransitioner extends Component<DefaultProps, Props, void> {
 
   _render = (props: NavigationTransitionProps): React.Element<*> => {
     const {
+      screenProps,
       headerComponent,
       headerMode,
       mode,
@@ -108,6 +109,7 @@ class CardStackTransitioner extends Component<DefaultProps, Props, void> {
     } = this.props;
     return (
       <CardStack
+        screenProps={screenProps}
         headerComponent={headerComponent}
         headerMode={headerMode}
         mode={mode}

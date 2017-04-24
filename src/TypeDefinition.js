@@ -202,15 +202,6 @@ export type NavigationUriAction = {
   uri: string,
 };
 
-export type NavigationContainerOptions = {
-  // This is used to extract the path from the URI passed to the app for a deep link
-  URIPrefix?: string,
-};
-
-export type NavigationContainerConfig = {
-  containerOptions?: NavigationContainerOptions,
-};
-
 export type NavigationStackViewConfig = {
   mode?: 'card' | 'modal',
   headerMode?: HeaderMode,
@@ -226,6 +217,7 @@ export type NavigationStackScreenOptions = NavigationScreenOptions & {
   headerTintColor?: string,
   headerLeft?: React.Element<*>,
   headerBackTitle?: string,
+  headerTruncatedBackTitle?: string,
   headerPressColorAndroid?: string,
   headerRight?: React.Element<*>,
   headerStyle?: Style,
@@ -290,7 +282,12 @@ export type NavigationTabScreenOptions = NavigationScreenOptions & {
     | ((
       options: { tintColor: ?string, focused: boolean }
     ) => ?React.Element<*>),
-  tabBarLabel?: string,
+  tabBarLabel?: 
+    | string
+    | React.Element<*>
+    | ((
+       options: { tintColor: ?string, focused: boolean })
+    ) => ?React.Element<*>),
   tabBarVisible?: boolean,
 };
 
@@ -330,9 +327,10 @@ export type NavigationScreenProp<S, A> = {
   setParams: (newParams: NavigationParams) => boolean,
 };
 
-export type NavigationNavigatorProps = {
-  navigation: NavigationProp<NavigationRoute, NavigationAction>,
+export type NavigationNavigatorProps<T> = {
+  navigation: NavigationProp<T, NavigationAction>,
   screenProps: *,
+  navigationOptions: *,
 };
 
 /**

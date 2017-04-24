@@ -8,20 +8,21 @@ import StackRouter from '../routers/StackRouter';
 import NavigatorTypes from './NavigatorTypes';
 
 import type {
-  NavigationContainerConfig,
   NavigationStackRouterConfig,
   NavigationStackViewConfig,
   NavigationRouteConfigMap,
 } from '../TypeDefinition';
 
-export type StackNavigatorConfig = NavigationContainerConfig & NavigationStackViewConfig & NavigationStackRouterConfig;
+export type StackNavigatorConfig =
+  & { containerOptions?: void }
+  & NavigationStackViewConfig
+  & NavigationStackRouterConfig;
 
 export default (
   routeConfigMap: NavigationRouteConfigMap,
-  stackConfig: StackNavigatorConfig = {}
+  stackConfig: StackNavigatorConfig = {},
 ) => {
   const {
-    containerOptions,
     initialRouteName,
     initialRouteParams,
     paths,
@@ -39,14 +40,11 @@ export default (
     paths,
     navigationOptions,
   };
+
   const router = StackRouter(routeConfigMap, stackRouterConfig);
-  return createNavigationContainer(
-    createNavigator(
-      router,
-      routeConfigMap,
-      stackConfig,
-      NavigatorTypes.STACK
-    )((props: *) => (
+
+  const navigator = createNavigator(router, routeConfigMap, stackConfig, NavigatorTypes.STACK)(
+    (props: *) => (
       <CardStackTransitioner
         {...props}
         headerComponent={headerComponent}
@@ -56,7 +54,8 @@ export default (
         onTransitionStart={onTransitionStart}
         onTransitionEnd={onTransitionEnd}
       />
-    )),
-    containerOptions
+    ),
   );
+
+  return createNavigationContainer(navigator, stackConfig.containerOptions);
 };

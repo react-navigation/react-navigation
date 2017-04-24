@@ -43,10 +43,10 @@ module.exports = NavigationAwareView => {
       };
     }
     componentWillUpdate(props, state) {
-      const { path } = NavigationAwareView.router.getPathAndParamsForState(
-        state,
-      );
-      const uri = `/${path}`;
+      const {path, params} = NavigationAwareView.router.getPathAndParamsForState(state);
+      const maybeHash = params && params.hash ? `#${params.hash}` : '';
+      const uri = `/${path}${maybeHash}`;
+
       if (window.location.pathname !== uri) {
         window.history.pushState({}, state.title, uri);
       }
@@ -58,11 +58,14 @@ module.exports = NavigationAwareView => {
         navigation,
       ).title;
     }
-    dispatch = action => {
-      const state = NavigationAwareView.router.getStateForAction(
-        action,
-        this.state,
-      );
+    componentDidUpdate() {
+      const {params} = NavigationAwareView.router.getPathAndParamsForState(this.state);
+      if (params && params.hash) {
+        document.getElementById(params.hash).scrollIntoView();
+      }
+    }
+    dispatch = (action) => {
+      const state = NavigationAwareView.router.getStateForAction(action, this.state);
 
       if (!state) {
         console.log('Dispatched action did not change state: ', { action });
