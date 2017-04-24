@@ -69,7 +69,7 @@ StackNavigator:
   - route2: A TabNavigator
 ```
 
-Now, when `route2` is active, you would like to hide the header. It's easy to hide the header for `route1`, and it should also be easy to do it for `route2`. This is what Default Navigation Options are for - they are simply `navigationOptions` set on a navigator:
+Set `headerMode: "screen"` in StackNavigatorConfig. Now, when `route2` is active, you would like to hide the header. It's easy to hide the header for `route1`, and it should also be easy to do it for `route2`. This is what Default Navigation Options are for - they are simply `navigationOptions` set on a navigator:
 
 ```js
 TabNavigator({
