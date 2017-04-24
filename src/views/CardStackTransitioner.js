@@ -1,16 +1,13 @@
 /* @flow */
 
 import React, { Component } from 'react';
-import { NativeModules, View } from 'react-native';
+import { NativeModules } from 'react-native';
 
 import CardStack from './CardStack';
 import CardStackStyleInterpolator from './CardStackStyleInterpolator';
 import Transitioner from './Transitioner';
 import TransitionConfigs from './TransitionConfigs';
 import Header from './Header';
-
-const NativeAnimatedModule = NativeModules &&
-  NativeModules.NativeAnimatedModule;
 
 import type {
   NavigationAction,
@@ -22,9 +19,11 @@ import type {
   NavigationRouter,
   HeaderMode,
   Style,
+  TransitionConfig,
 } from '../TypeDefinition';
 
-import type { TransitionConfig } from './TransitionConfigs';
+const NativeAnimatedModule = NativeModules &&
+  NativeModules.NativeAnimatedModule;
 
 type Props = {
   screenProps?: {},
@@ -73,7 +72,7 @@ class CardStackTransitioner extends Component<DefaultProps, Props, void> {
     // props for the new screen
     transitionProps: NavigationTransitionProps,
     // props for the old screen
-    prevTransitionProps: NavigationTransitionProps
+    prevTransitionProps: NavigationTransitionProps,
   ) => {
     const isModal = this.props.mode === 'modal';
     // Copy the object so we can assign useNativeDriver below
@@ -104,8 +103,9 @@ class CardStackTransitioner extends Component<DefaultProps, Props, void> {
       headerMode,
       mode,
       router,
-      style,
       cardStyle,
+      transitionConfig,
+      style,
     } = this.props;
     return (
       <CardStack
@@ -115,6 +115,7 @@ class CardStackTransitioner extends Component<DefaultProps, Props, void> {
         mode={mode}
         router={router}
         cardStyle={cardStyle}
+        transitionConfig={transitionConfig}
         style={style}
         {...props}
       />
