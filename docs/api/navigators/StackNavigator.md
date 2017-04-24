@@ -114,11 +114,11 @@ Title string used by the back button when `headerBackTitle` doesn't fit on the s
 
 #### `headerRight`
 
-String or React Element to display on the right side of the header
+React Element to display on the right side of the header
 
 #### `headerLeft`
 
-String or React Element to display on the left side of the header
+React Element to display on the left side of the header
 
 #### `headerStyle`
 
