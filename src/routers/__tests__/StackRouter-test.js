@@ -185,6 +185,29 @@ describe('StackRouter', () => {
     });
   });
 
+  test('Parses paths with a query', () => {
+    expect(TestStackRouter.getActionForPathAndParams('people/foo?code=test&foo=bar')).toEqual({
+      type: NavigationActions.NAVIGATE,
+      routeName: 'person',
+      params: {
+        id: 'foo',
+        code: 'test',
+        foo: 'bar',
+      },
+    });
+  });
+
+  test('Parses paths with an empty query value', () => {
+    expect(TestStackRouter.getActionForPathAndParams('people/foo?code=&foo=bar')).toEqual({
+      type: NavigationActions.NAVIGATE,
+      routeName: 'person',
+      params: {
+        id: 'foo',
+        code: '',
+        foo: 'bar',
+      },
+    });
+  });
 
   test('Correctly parses a path without arguments into an action chain', () => {
     const uri = 'auth/login';
@@ -258,6 +281,32 @@ describe('StackRouter', () => {
         },
       },
     });
+  });
+
+  test('Pushes other navigators when navigating to an unopened route name', () => {
+    const Bar = () => <div />;
+    Bar.router = StackRouter({
+      baz: { screen: () => <div /> },
+      qux: { screen: () => <div /> },
+    })
+    const TestRouter = StackRouter({
+      foo: { screen: () => <div /> },
+      bar: { screen: Bar },
+    })
+    const initState = TestRouter.getStateForAction(NavigationActions.init());
+    expect(initState).toEqual({
+      index: 0,
+      routes: [
+        { key: 'Init', routeName: 'foo' }
+      ]
+    });
+    const pushedState = TestRouter.getStateForAction(NavigationActions.navigate({ routeName: 'qux' }), initState);
+    // $FlowFixMe
+    expect(pushedState.index).toEqual(1);
+    // $FlowFixMe
+    expect(pushedState.routes[1].index).toEqual(1);
+    // $FlowFixMe
+    expect(pushedState.routes[1].routes[1].routeName).toEqual('qux');
   });
 
   test('Handle basic stack logic for plain components', () => {
@@ -444,6 +493,38 @@ describe('StackRouter', () => {
     expect(state2 && state2.routes[0].params).toEqual({ name: 'Qux' });
   });
 
+  test('Handles the setParams action with nested routers', () => {
+    const ChildNavigator = () => <div />;
+    const GrandChildNavigator = () => <div />;
+    GrandChildNavigator.router = StackRouter({
+      Quux: { screen: () => <div />, },
+      Corge: { screen: () => <div />, },
+    });
+    ChildNavigator.router = TabRouter({
+      Baz: { screen: GrandChildNavigator, },
+      Qux: { screen: () => <div />, },
+    });
+    const router = StackRouter({
+      Foo: { screen: ChildNavigator, },
+      Bar: { screen: () => <div />, },
+    });
+    const state = router.getStateForAction({ type: NavigationActions.INIT });
+    const state2 = router.getStateForAction({
+      type: NavigationActions.SET_PARAMS,
+      params: { name: 'foobar' },
+      key: 'Init',
+    }, state);
+    expect(state2 && state2.index).toEqual(0);
+    /* $FlowFixMe */
+    expect(state2 && state2.routes[0].routes[0].routes).toEqual([
+      {
+        key: 'Init',
+        routeName: 'Quux',
+        params: { name: 'foobar' },
+      },
+    ]);
+  });
+
   test('Handles the reset action', () => {
     const router = StackRouter({
       Foo: {
@@ -486,6 +567,33 @@ describe('StackRouter', () => {
     expect(state2 && state2.routes[0].routeName).toEqual('Foo');
     /* $FlowFixMe */
     expect(state2 && state2.routes[0].routes[0].routeName).toEqual('baz');
+  });
+
+  test('Handles the reset action with a key', () => {
+    const ChildRouter = StackRouter({
+      baz: {
+        screen: () => <div />,
+      },
+    });
+
+    const ChildNavigator = () => <div />;
+    ChildNavigator.router = ChildRouter;
+
+    const router = StackRouter({
+      Foo: {
+        screen: ChildNavigator,
+      },
+      Bar: {
+        screen: () => <div />,
+      },
+    });
+    const state = router.getStateForAction({ type: NavigationActions.INIT });
+    const state2 = router.getStateForAction({ type: NavigationActions.NAVIGATE, routeName: 'Foo', action: { type: NavigationActions.NAVIGATE, routeName: 'baz' }}, state);
+    const state3 = router.getStateForAction({ type: NavigationActions.RESET, key: 'Init', actions: [{ type: NavigationActions.NAVIGATE, routeName: 'Foo' }], index: 0 }, state2);
+    const state4 = router.getStateForAction({ type: NavigationActions.RESET, key: null, actions: [{ type: NavigationActions.NAVIGATE, routeName: 'Bar' }], index: 0 }, state3);
+
+    expect(state4 && state4.index).toEqual(0);
+    expect(state4 && state4.routes[0].routeName).toEqual('Bar');
   });
 
   test('Handles the navigate action with params and nested StackRouter', () => {

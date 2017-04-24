@@ -6,6 +6,7 @@ import createConfigGetter from './createConfigGetter';
 
 import NavigationActions from '../NavigationActions';
 import validateRouteConfigMap from './validateRouteConfigMap';
+import getScreenConfigDeprecated from './getScreenConfigDeprecated';
 
 import type {
   NavigationAction,
@@ -15,14 +16,16 @@ import type {
   NavigationRouteConfigMap,
   NavigationParams,
   NavigationRouter,
+  NavigationRoute,
   NavigationNavigateAction,
   NavigationTabRouterConfig,
+  NavigationTabScreenOptions,
 } from '../TypeDefinition';
 
 export default (
   routeConfigs: NavigationRouteConfigMap,
   config: NavigationTabRouterConfig = {}
-): NavigationRouter => {
+): NavigationRouter<*, *, *> => {
   // Fail fast on invalid route definitions
   validateRouteConfigMap(routeConfigs);
 
@@ -90,8 +93,8 @@ export default (
             params: {
               ...route.params,
               ...params,
-            }
-          }));
+            },
+          }: NavigationRoute));
         }
       }
 
@@ -101,7 +104,7 @@ export default (
       if (activeTabRouter) {
         const activeTabState = activeTabRouter.getStateForAction(
           action.action || action,
-          activeTabLastState
+          activeTabLastState,
         );
         if (!activeTabState && inputState) {
           return null;
@@ -136,12 +139,27 @@ export default (
           }
           return false;
         });
-        if (didNavigate && action.action) {
+        if (didNavigate) {
+          const childState = state.routes[activeTabIndex];
+          let newChildState;
+
           const tabRouter = tabRouters[action.routeName];
-          const newChildState = tabRouter
-            ? tabRouter.getStateForAction(action.action, state.routes[activeTabIndex])
-            : null;
-          if (newChildState && newChildState !== state.routes[activeTabIndex]) {
+
+          if (action.action) {
+            newChildState = tabRouter
+              ? tabRouter.getStateForAction(action.action, childState)
+              : null;
+          } else if (!tabRouter && action.params) {
+            newChildState = {
+              ...childState,
+              params: {
+                ...(childState.params || {}),
+                ...action.params,
+              },
+            };
+          }
+
+          if (newChildState && newChildState !== childState) {
             const routes = [...state.routes];
             routes[activeTabIndex] = newChildState;
             return {
@@ -155,7 +173,7 @@ export default (
       if (action.type === NavigationActions.SET_PARAMS) {
         const lastRoute = state.routes.find(
           /* $FlowFixMe */
-          (route: *) => route.key === action.key
+          (route: *) => route.key === action.key,
         );
         if (lastRoute) {
           const params = {
@@ -163,10 +181,10 @@ export default (
             ...action.params,
           };
           const routes = [...state.routes];
-          routes[state.routes.indexOf(lastRoute)] = {
+          routes[state.routes.indexOf(lastRoute)] = ({
             ...lastRoute,
             params,
-          };
+          }: NavigationRoute);
           return {
             ...state,
             routes,
@@ -222,7 +240,9 @@ export default (
       return state;
     },
 
-    getComponentForState(state: NavigationState): NavigationScreenComponent<*> {
+    getComponentForState(
+      state: NavigationState,
+    ): NavigationScreenComponent<*, NavigationTabScreenOptions> {
       const routeName = order[state.index];
       invariant(
         routeName,
@@ -288,6 +308,8 @@ export default (
       }).find((action: *) => !!action) || null;
     },
 
-    getScreenConfig: createConfigGetter(routeConfigs, config.navigationOptions),
+    getScreenOptions: createConfigGetter(routeConfigs, config.navigationOptions),
+ 
+    getScreenConfig: getScreenConfigDeprecated,
   };
 };
