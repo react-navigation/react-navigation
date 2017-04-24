@@ -8,18 +8,6 @@ import SimplePage from './SimplePage';
 
 import type { NavigationState } from 'react-native-tab-view/types';
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  tabbar: {
-    backgroundColor: '#222',
-  },
-  indicator: {
-    backgroundColor: '#ffeb3b',
-  },
-});
-
 type Route = {
   key: string,
   icon: string,
@@ -105,3 +93,15 @@ export default class TopBarIconExample extends PureComponent<void, *, State> {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  tabbar: {
+    backgroundColor: '#222',
+  },
+  indicator: {
+    backgroundColor: '#ffeb3b',
+  },
+});

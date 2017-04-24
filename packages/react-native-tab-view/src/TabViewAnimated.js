@@ -13,13 +13,6 @@ import type {
   SubscriptionName,
 } from './TabViewTypeDefinitions';
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    overflow: 'hidden',
-  },
-});
-
 type DefaultProps<T> = {
   renderPager: (props: SceneRendererProps<T>) => React.Element<*>,
 };
@@ -281,3 +274,10 @@ export default class TabViewAnimated<T: Route<*>>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    overflow: 'hidden',
+  },
+});

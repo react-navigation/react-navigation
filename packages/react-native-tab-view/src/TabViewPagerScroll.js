@@ -15,17 +15,6 @@ type ScrollEvent = {
   },
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flexGrow: 1,
-  },
-
-  page: {
-    flex: 1,
-    overflow: 'hidden',
-  },
-});
-
 type State = {
   initialOffset: { x: number, y: number },
 };
@@ -154,3 +143,14 @@ export default class TabViewPagerScroll<T: Route<*>>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flexGrow: 1,
+  },
+
+  page: {
+    flex: 1,
+    overflow: 'hidden',
+  },
+});

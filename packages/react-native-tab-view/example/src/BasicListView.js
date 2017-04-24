@@ -3,25 +3,6 @@
 import React, { PureComponent } from 'react';
 import { ListView, View, Text, StyleSheet } from 'react-native';
 
-const styles = StyleSheet.create({
-  container: {
-    padding: 8,
-  },
-  row: {
-    margin: 8,
-    padding: 16,
-    borderRadius: 3,
-    backgroundColor: 'rgba(0, 0, 0, .1)',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  text: {
-    color: 'rgba(0, 0, 0, .4)',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-});
-
 export default class ListViewExample extends PureComponent {
   state = {
     data: [],
@@ -78,3 +59,22 @@ export default class ListViewExample extends PureComponent {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 8,
+  },
+  row: {
+    margin: 8,
+    padding: 16,
+    borderRadius: 3,
+    backgroundColor: 'rgba(0, 0, 0, .1)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  text: {
+    color: 'rgba(0, 0, 0, .4)',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+});

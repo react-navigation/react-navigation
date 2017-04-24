@@ -8,50 +8,6 @@ import SimplePage from './SimplePage';
 
 import type { NavigationState } from 'react-native-tab-view/types';
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  tabbar: {
-    backgroundColor: '#222',
-  },
-  tab: {
-    padding: 0,
-  },
-  icon: {
-    backgroundColor: 'transparent',
-    color: 'white',
-  },
-  indicator: {
-    flex: 1,
-    backgroundColor: '#0084ff',
-    margin: 4,
-    borderRadius: 2,
-  },
-  badge: {
-    marginTop: 4,
-    marginRight: 32,
-    backgroundColor: '#f44336',
-    height: 24,
-    width: 24,
-    borderRadius: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
-    elevation: 4,
-  },
-  count: {
-    color: '#fff',
-    fontSize: 12,
-    fontWeight: 'bold',
-    marginTop: -2,
-  },
-  page: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
-
 type Route = {
   key: string,
   title: string,
@@ -165,3 +121,42 @@ export default class TopBarIconExample extends PureComponent<void, *, State> {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  tabbar: {
+    backgroundColor: '#222',
+  },
+  tab: {
+    padding: 0,
+  },
+  icon: {
+    backgroundColor: 'transparent',
+    color: 'white',
+  },
+  indicator: {
+    flex: 1,
+    backgroundColor: '#0084ff',
+    margin: 4,
+    borderRadius: 2,
+  },
+  badge: {
+    marginTop: 4,
+    marginRight: 32,
+    backgroundColor: '#f44336',
+    height: 24,
+    width: 24,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 4,
+  },
+  count: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: 'bold',
+    marginTop: -2,
+  },
+});

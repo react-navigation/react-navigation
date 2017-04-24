@@ -13,14 +13,6 @@ import {
 import { SceneRendererPropType } from './TabViewPropTypes';
 import type { SceneRendererProps, Route } from './TabViewTypeDefinitions';
 
-const styles = StyleSheet.create({
-  sheet: {
-    flexGrow: 1,
-    flexDirection: 'row',
-    alignItems: 'stretch',
-  },
-});
-
 type GestureEvent = {
   nativeEvent: {
     changedTouches: Array<*>,
@@ -302,3 +294,11 @@ export default class TabViewPagerPan<T: Route<*>>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  sheet: {
+    flexGrow: 1,
+    flexDirection: 'row',
+    alignItems: 'stretch',
+  },
+});

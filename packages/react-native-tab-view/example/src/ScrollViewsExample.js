@@ -7,30 +7,6 @@ import BasicListView from './BasicListView';
 
 import type { NavigationState } from 'react-native-tab-view/types';
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  indicator: {
-    backgroundColor: '#ff4081',
-  },
-  label: {
-    fontSize: 13,
-    fontWeight: 'bold',
-    margin: 8,
-  },
-  tabbar: {
-    backgroundColor: '#fff',
-  },
-  tab: {
-    opacity: 1,
-    width: 90,
-  },
-  page: {
-    backgroundColor: '#f9f9f9',
-  },
-});
-
 type Route = {
   key: string,
   title: string,
@@ -155,3 +131,27 @@ export default class TopBarTextExample extends PureComponent<void, *, State> {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  indicator: {
+    backgroundColor: '#ff4081',
+  },
+  label: {
+    fontSize: 13,
+    fontWeight: 'bold',
+    margin: 8,
+  },
+  tabbar: {
+    backgroundColor: '#fff',
+  },
+  tab: {
+    opacity: 1,
+    width: 90,
+  },
+  page: {
+    backgroundColor: '#f9f9f9',
+  },
+});

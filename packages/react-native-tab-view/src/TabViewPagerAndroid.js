@@ -15,16 +15,6 @@ type PageScrollEvent = {
 
 type PageScrollState = 'dragging' | 'settling' | 'idle';
 
-const styles = StyleSheet.create({
-  container: {
-    flexGrow: 1,
-  },
-
-  page: {
-    overflow: 'hidden',
-  },
-});
-
 type Props<T> = SceneRendererProps<T> & {
   animationEnabled?: boolean,
   swipeEnabled?: boolean,
@@ -156,3 +146,13 @@ export default class TabViewPagerAndroid<T: Route<*>>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flexGrow: 1,
+  },
+
+  page: {
+    overflow: 'hidden',
+  },
+});

@@ -20,47 +20,6 @@ import NoAnimationExample from './NoAnimationExample';
 import ScrollViewsExample from './ScrollViewsExample';
 import CoverflowExample from './CoverflowExample';
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f5f5f5',
-  },
-  statusbar: {
-    backgroundColor: '#222',
-    height: Platform.OS === 'ios' ? 20 : 25,
-  },
-  appbar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    height: Platform.OS === 'ios' ? 44 : 56,
-    backgroundColor: '#222',
-    borderBottomColor: 'rgba(0, 0, 0, 0.1)',
-  },
-  title: {
-    flex: 1,
-    margin: 16,
-    textAlign: Platform.OS === 'ios' ? 'center' : 'left',
-    fontSize: Platform.OS === 'ios' ? 20 : 18,
-    color: '#fff',
-  },
-  button: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: 56,
-    padding: Platform.OS === 'ios' ? 12 : 16,
-  },
-  touchable: {
-    padding: 16,
-    backgroundColor: '#fff',
-    borderBottomWidth: 1,
-    borderBottomColor: 'rgba(0, 0, 0, .06)',
-  },
-  item: {
-    fontSize: 16,
-    color: '#333',
-  },
-});
-
 const PERSISTENCE_KEY = 'index_persistence';
 
 const EXAMPLE_COMPONENTS = [
@@ -214,5 +173,46 @@ export default class ExampleList extends PureComponent {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+  },
+  statusbar: {
+    backgroundColor: '#222',
+    height: Platform.OS === 'ios' ? 20 : 25,
+  },
+  appbar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    height: Platform.OS === 'ios' ? 44 : 56,
+    backgroundColor: '#222',
+    borderBottomColor: 'rgba(0, 0, 0, 0.1)',
+  },
+  title: {
+    flex: 1,
+    margin: 16,
+    textAlign: Platform.OS === 'ios' ? 'center' : 'left',
+    fontSize: Platform.OS === 'ios' ? 20 : 18,
+    color: '#fff',
+  },
+  button: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: 56,
+    padding: Platform.OS === 'ios' ? 12 : 16,
+  },
+  touchable: {
+    padding: 16,
+    backgroundColor: '#fff',
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(0, 0, 0, .06)',
+  },
+  item: {
+    fontSize: 16,
+    color: '#333',
+  },
+});
 
 Expo.registerRootComponent(ExampleList);

@@ -15,50 +15,6 @@ import type { NavigationState } from 'react-native-tab-view/types';
 
 const AnimatedIcon = Animated.createAnimatedComponent(Ionicons);
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  tabbar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    backgroundColor: '#f4f4f4',
-  },
-  tab: {
-    flex: 1,
-    alignItems: 'center',
-    borderTopWidth: StyleSheet.hairlineWidth,
-    borderTopColor: 'rgba(0, 0, 0, .2)',
-    paddingTop: 4.5,
-  },
-  iconContainer: {
-    height: 26,
-    width: 26,
-  },
-  icon: {
-    position: 'absolute',
-    textAlign: 'center',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    color: '#0084ff',
-  },
-  outline: {
-    color: '#939393',
-  },
-  label: {
-    fontSize: 10,
-    marginTop: 3,
-    marginBottom: 1.5,
-    backgroundColor: 'transparent',
-  },
-  page: {
-    flex: 1,
-    backgroundColor: '#f9f9f9',
-  },
-});
-
 type Route = {
   key: string,
   title: string,
@@ -210,3 +166,47 @@ export default class TopBarIconExample extends PureComponent<void, *, State> {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  tabbar: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: '#f4f4f4',
+  },
+  tab: {
+    flex: 1,
+    alignItems: 'center',
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: 'rgba(0, 0, 0, .2)',
+    paddingTop: 4.5,
+  },
+  iconContainer: {
+    height: 26,
+    width: 26,
+  },
+  icon: {
+    position: 'absolute',
+    textAlign: 'center',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    color: '#0084ff',
+  },
+  outline: {
+    color: '#939393',
+  },
+  label: {
+    fontSize: 10,
+    marginTop: 3,
+    marginBottom: 1.5,
+    backgroundColor: 'transparent',
+  },
+  page: {
+    flex: 1,
+    backgroundColor: '#f9f9f9',
+  },
+});

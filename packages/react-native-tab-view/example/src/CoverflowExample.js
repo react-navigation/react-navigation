@@ -14,38 +14,6 @@ import { TabViewAnimated, TabViewPagerPan } from 'react-native-tab-view';
 
 import type { NavigationState } from 'react-native-tab-view/types';
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#222',
-  },
-  page: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  album: {
-    backgroundColor: '#000',
-    width: 200,
-    height: 200,
-    elevation: 12,
-    shadowColor: '#000000',
-    shadowOpacity: 0.5,
-    shadowRadius: 8,
-    shadowOffset: {
-      height: 8,
-    },
-  },
-  cover: {
-    width: 200,
-    height: 200,
-  },
-  label: {
-    margin: 16,
-    color: '#fff',
-  },
-});
-
 const ALBUMS = {
   'Abbey Road': require('../assets/album-art-1.jpg'),
   'Bat Out of Hell': require('../assets/album-art-2.jpg'),
@@ -158,3 +126,35 @@ export default class CoverflowExample extends PureComponent<void, *, State> {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#222',
+  },
+  page: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  album: {
+    backgroundColor: '#000',
+    width: 200,
+    height: 200,
+    elevation: 12,
+    shadowColor: '#000000',
+    shadowOpacity: 0.5,
+    shadowRadius: 8,
+    shadowOffset: {
+      height: 8,
+    },
+  },
+  cover: {
+    width: 200,
+    height: 200,
+  },
+  label: {
+    margin: 16,
+    color: '#fff',
+  },
+});
