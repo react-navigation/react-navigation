@@ -9,8 +9,6 @@ import Transitioner from './Transitioner';
 import TransitionConfigs from './TransitionConfigs';
 import Header from './Header';
 
-import type { TransitionConfig } from './TransitionConfigs';
-
 import type {
   NavigationAction,
   NavigationSceneRenderer,
@@ -21,6 +19,7 @@ import type {
   NavigationRouter,
   HeaderMode,
   Style,
+  TransitionConfig,
 } from '../TypeDefinition';
 
 const NativeAnimatedModule = NativeModules &&
@@ -104,8 +103,9 @@ class CardStackTransitioner extends Component<DefaultProps, Props, void> {
       headerMode,
       mode,
       router,
-      style,
       cardStyle,
+      transitionConfig,
+      style,
     } = this.props;
     return (
       <CardStack
@@ -115,6 +115,7 @@ class CardStackTransitioner extends Component<DefaultProps, Props, void> {
         mode={mode}
         router={router}
         cardStyle={cardStyle}
+        transitionConfig={transitionConfig}
         style={style}
         {...props}
       />
