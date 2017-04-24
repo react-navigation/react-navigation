@@ -12,6 +12,9 @@ const styles = StyleSheet.create({
   tabbar: {
     backgroundColor: '#222',
   },
+  tab: {
+    width: 120,
+  },
   indicator: {
     backgroundColor: '#ffeb3b',
   },
@@ -52,6 +55,7 @@ export default class TopBarTextExample extends PureComponent {
         scrollEnabled
         indicatorStyle={styles.indicator}
         style={styles.tabbar}
+        tabStyle={styles.tab}
         labelStyle={styles.label}
       />
     );
