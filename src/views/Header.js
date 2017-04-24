@@ -81,15 +81,13 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
 
   _getBackButtonTitleStyle(scene: NavigationScene): ?Style {
     const lastScene = this._getLastScene(scene);
+    const { headerBackTitleStyle } = this.props.getScreenDetails(scene).options;
     if (!lastScene) {
-      return null;
+      return headerBackTitleStyle;
     }
-    const {
-      headerBackTitleStyle,
-      headerTitleStyle,
-    } = this.props.getScreenDetails(lastScene).options;
+    const { headerTitleStyle } = this.props.getScreenDetails(lastScene).options;
 
-    return headerBackTitleStyle || headerTitleStyle;
+    return [headerTitleStyle, headerBackTitleStyle];
   }
 
   _renderTitleComponent = (props: SceneProps) => {
