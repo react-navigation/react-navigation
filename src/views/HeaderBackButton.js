@@ -54,11 +54,21 @@ class HeaderBackButton extends React.PureComponent<DefaultProps, Props, State> {
   };
 
   render() {
-    const { onPress, pressColorAndroid, width, title, tintColor, truncatedTitle } = this.props;
+    const {
+      onPress,
+      pressColorAndroid,
+      width,
+      title,
+      tintColor,
+      truncatedTitle,
+    } = this.props;
 
     const renderTruncated = this.state.initialTextWidth && width
       ? this.state.initialTextWidth > width
       : false;
+
+    // eslint-disable-next-line global-require
+    const asset = require('./assets/back-icon.png');
 
     return (
       <TouchableItem
@@ -70,22 +80,18 @@ class HeaderBackButton extends React.PureComponent<DefaultProps, Props, State> {
       >
         <View style={styles.container}>
           <Image
-            style={[
-              styles.icon,
-              title && styles.iconWithTitle,
-              { tintColor },
-            ]}
-            source={require('./assets/back-icon.png')}
+            style={[styles.icon, title && styles.iconWithTitle, { tintColor }]}
+            source={asset}
           />
-          {Platform.OS === 'ios' && title && (
+          {Platform.OS === 'ios' &&
+            title &&
             <Text
               onLayout={this._onTextLayout}
               style={[styles.title, { color: tintColor }]}
               numberOfLines={1}
             >
               {renderTruncated ? truncatedTitle : title}
-            </Text>
-          )}
+            </Text>}
         </View>
       </TouchableItem>
     );
@@ -104,25 +110,25 @@ const styles = StyleSheet.create({
   },
   icon: Platform.OS === 'ios'
     ? {
-      height: 20,
-      width: 12,
-      marginLeft: 10,
-      marginRight: 22,
-      marginVertical: 12,
-      resizeMode: 'contain',
-      transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }],
-    }
+        height: 20,
+        width: 12,
+        marginLeft: 10,
+        marginRight: 22,
+        marginVertical: 12,
+        resizeMode: 'contain',
+        transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }],
+      }
     : {
-      height: 24,
-      width: 24,
-      margin: 16,
-      resizeMode: 'contain',
-      transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }],
-    },
+        height: 24,
+        width: 24,
+        margin: 16,
+        resizeMode: 'contain',
+        transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }],
+      },
   iconWithTitle: Platform.OS === 'ios'
     ? {
-      marginRight: 5,
-    }
+        marginRight: 5,
+      }
     : {},
 });
 

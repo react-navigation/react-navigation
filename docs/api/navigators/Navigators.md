@@ -48,14 +48,12 @@ When rendering one of the included navigators, the navigation prop is optional. 
 
 For the purpose of convenience, the built-in navigators have this ability because behind the scenes they use `createNavigationContainer`. Usually, navigators require a navigation prop in order to function.
 
-### `onNavigationStateChange(prevState, newState)`
+Top-level navigators accept the following props:  
 
-Sometimes it is useful to know when navigation state managed by the top-level navigator changes. For this purpose, this function gets called every time with the previous state and the new state of the navigation.
+### `onNavigationStateChange(prevState, newState, action)`
 
-### `containerOptions`
+Function that gets called every time navigation state managed by the navigator changes. It receives the previous state, the new state of the navigation and the action that issued state change. By default it prints state changes to the console.
 
-These options can be used to configure a navigator when it is used at the top level.
+### `uriPrefix`
 
-An error will be thrown if a navigator is configured with `containerOptions` and also receives a `navigation` prop, because in that case it would be unclear if the navigator should handle its own state.
-
-- `URIPrefix` - The prefix of the URIs that the app might handle. This will be used when handling a [deep link](/docs/guides/linking) to extract the path passed to the router.
+The prefix of the URIs that the app might handle. This will be used when handling a [deep link](/docs/guides/linking) to extract the path passed to the router.

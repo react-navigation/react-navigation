@@ -4,12 +4,7 @@
 
 import React from 'react';
 
-import {
-  Animated,
-  Platform,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { Animated, Platform, StyleSheet, View } from 'react-native';
 
 import HeaderTitle from './HeaderTitle';
 import HeaderBackButton from './HeaderBackButton';
@@ -59,8 +54,12 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
     return sceneOptions.title;
   }
 
+  _getLastScene(scene: NavigationScene): ?NavigationScene {
+    return this.props.scenes.find((s: *) => s.index === scene.index - 1);
+  }
+
   _getBackButtonTitleString(scene: NavigationScene): ?string {
-    const lastScene = this.props.scenes.find(s => s.index === scene.index - 1);
+    const lastScene = this._getLastScene(scene);
     if (!lastScene) {
       return null;
     }
@@ -69,6 +68,16 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
       return headerBackTitle;
     }
     return this._getHeaderTitleString(lastScene);
+  }
+
+  _getTruncatedBackButtonTitle(scene: NavigationScene): ?string {
+    const lastScene = this._getLastScene(scene);
+    if (!lastScene) {
+      return null;
+    }
+    return this.props.getScreenDetails(
+      lastScene,
+    ).options.headerTruncatedBackTitle;
   }
 
   _renderTitleComponent = (props: SceneProps) => {
@@ -86,13 +95,13 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
     // size of the title.
     const onLayoutIOS = Platform.OS === 'ios'
       ? (e: LayoutEvent) => {
-        this.setState({
-          widths: {
-            ...this.state.widths,
-            [props.scene.key]: e.nativeEvent.layout.width,
-          },
-        });
-      }
+          this.setState({
+            widths: {
+              ...this.state.widths,
+              [props.scene.key]: e.nativeEvent.layout.width,
+            },
+          });
+        }
       : undefined;
 
     return (
@@ -114,15 +123,21 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
       return null;
     }
     const backButtonTitle = this._getBackButtonTitleString(props.scene);
+    const truncatedBackButtonTitle = this._getTruncatedBackButtonTitle(
+      props.scene,
+    );
     const width = this.state.widths[props.scene.key]
       ? (this.props.layout.initWidth - this.state.widths[props.scene.key]) / 2
       : undefined;
     return (
       <HeaderBackButton
-        onPress={() => { this.props.navigation.goBack(null); }}
+        onPress={() => {
+          this.props.navigation.goBack(null);
+        }}
         pressColorAndroid={options.headerPressColorAndroid}
         tintColor={options.headerTintColor}
         title={backButtonTitle}
+        truncatedTitle={truncatedBackButtonTitle}
         width={width}
       />
     );
@@ -130,7 +145,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
 
   _renderRightComponent = (props: SceneProps) => {
     const details = this.props.getScreenDetails(props.scene);
-    const {headerRight} = details.options;
+    const { headerRight } = details.options;
     return headerRight || null;
   };
 
@@ -247,12 +262,13 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
     let appBar;
 
     if (this.props.mode === 'float') {
-      const scenesProps: Array<SceneProps> = this.props.scenes
-        .map((scene: NavigationScene) => ({
+      const scenesProps: Array<SceneProps> = this.props.scenes.map(
+        (scene: NavigationScene) => ({
           position: this.props.position,
           progress: this.props.progress,
           scene,
-        }));
+        }),
+      );
       appBar = scenesProps.map(this._renderHeader, this);
     } else {
       appBar = this._renderHeader({
@@ -263,7 +279,14 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
     }
 
     // eslint-disable-next-line no-unused-vars
-    const { scenes, scene, position, screenProps, progress, ...rest } = this.props;
+    const {
+      scenes,
+      scene,
+      position,
+      screenProps,
+      progress,
+      ...rest
+    } = this.props;
 
     const { options } = this.props.getScreenDetails(scene, screenProps);
     const style = options.headerStyle;
@@ -308,9 +331,7 @@ const styles = StyleSheet.create({
     right: TITLE_OFFSET,
     top: 0,
     position: 'absolute',
-    alignItems: Platform.OS === 'ios'
-      ? 'center'
-      : 'flex-start',
+    alignItems: Platform.OS === 'ios' ? 'center' : 'flex-start',
   },
   left: {
     left: 0,
