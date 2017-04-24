@@ -1,7 +1,7 @@
 /* @flow */
 
 import Expo from 'expo';
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import {
   AsyncStorage,
   Platform,
@@ -72,7 +72,7 @@ const EXAMPLE_COMPONENTS = [
   CoverflowExample,
 ];
 
-export default class ExampleList extends Component {
+export default class ExampleList extends PureComponent {
   state = {
     title: 'Examples',
     index: -1,

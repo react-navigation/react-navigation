@@ -1,9 +1,9 @@
 /* @flow */
 
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { Animated, View, StyleSheet } from 'react-native';
 import { TabViewAnimated, TabBar } from 'react-native-tab-view';
-import ListViewExample from './ListViewExample';
+import BasicListView from './BasicListView';
 
 const styles = StyleSheet.create({
   container: {
@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export default class TopBarTextExample extends Component {
+export default class TopBarTextExample extends PureComponent {
   static title = 'Scroll views';
   static backgroundColor = '#fff';
   static tintColor = '#222';
@@ -110,21 +110,21 @@ export default class TopBarTextExample extends Component {
     switch (route.key) {
       case '1':
         return (
-          <ListViewExample
+          <BasicListView
             ref={el => (this._first = el)}
             style={[styles.page, { backgroundColor: '#E3F4DD' }]}
           />
         );
       case '2':
         return (
-          <ListViewExample
+          <BasicListView
             ref={el => (this._second = el)}
             style={[styles.page, { backgroundColor: '#E6BDC5' }]}
           />
         );
       case '3':
         return (
-          <ListViewExample
+          <BasicListView
             ref={el => (this._third = el)}
             style={[styles.page, { backgroundColor: '#EDD8B5' }]}
           />

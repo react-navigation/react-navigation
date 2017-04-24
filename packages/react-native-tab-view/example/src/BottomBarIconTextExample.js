@@ -1,9 +1,10 @@
 /* @flow */
 
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { Animated, View, Text, StyleSheet } from 'react-native';
 import { TabViewAnimated, TabBar } from 'react-native-tab-view';
 import { Ionicons } from '@expo/vector-icons';
+import SimplePage from './SimplePage';
 
 const styles = StyleSheet.create({
   container: {
@@ -49,7 +50,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export default class TopBarIconExample extends Component {
+export default class TopBarIconExample extends PureComponent {
   static title = 'Bottom bar with indicator';
   static appbarElevation = 4;
 
@@ -114,14 +115,29 @@ export default class TopBarIconExample extends Component {
     );
   };
 
-  _renderScene = ({ route }) => {
-    switch (route.key) {
+  _renderScene = scene => {
+    switch (scene.route.key) {
       case '1':
-        return <View style={[styles.page, { backgroundColor: '#ff4081' }]} />;
+        return (
+          <SimplePage
+            state={this.state}
+            style={{ backgroundColor: '#ff4081' }}
+          />
+        );
       case '2':
-        return <View style={[styles.page, { backgroundColor: '#673ab7' }]} />;
+        return (
+          <SimplePage
+            state={this.state}
+            style={{ backgroundColor: '#673ab7' }}
+          />
+        );
       case '3':
-        return <View style={[styles.page, { backgroundColor: '#4caf50' }]} />;
+        return (
+          <SimplePage
+            state={this.state}
+            style={{ backgroundColor: '#4caf50' }}
+          />
+        );
       default:
         return null;
     }

@@ -1,6 +1,6 @@
 /* @flow */
 
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { ListView, View, Text, StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
@@ -22,9 +22,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export default class ListViewExample extends Component {
-  static appbarElevation = 0;
-
+export default class ListViewExample extends PureComponent {
   state = {
     data: [],
     dataSource: new ListView.DataSource({

@@ -1,16 +1,15 @@
 /* @flow */
 
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import {
   Animated,
   View,
-  Platform,
   TouchableWithoutFeedback,
   StyleSheet,
 } from 'react-native';
 import { TabViewAnimated } from 'react-native-tab-view';
 import { Ionicons } from '@expo/vector-icons';
-import ListViewExample from './ListViewExample';
+import BasicListView from './BasicListView';
 
 const AnimatedIcon = Animated.createAnimatedComponent(Ionicons);
 
@@ -58,7 +57,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export default class TopBarIconExample extends Component {
+export default class TopBarIconExample extends PureComponent {
   static title = 'No animation';
   static backgroundColor = '#f4f4f4';
   static tintColor = '#222';
@@ -151,31 +150,31 @@ export default class TopBarIconExample extends Component {
     switch (route.key) {
       case '1':
         return (
-          <ListViewExample
+          <BasicListView
             style={[styles.page, { backgroundColor: '#E3F4DD' }]}
           />
         );
       case '2':
         return (
-          <ListViewExample
+          <BasicListView
             style={[styles.page, { backgroundColor: '#E6BDC5' }]}
           />
         );
       case '3':
         return (
-          <ListViewExample
+          <BasicListView
             style={[styles.page, { backgroundColor: '#9DB1B5' }]}
           />
         );
       case '4':
         return (
-          <ListViewExample
+          <BasicListView
             style={[styles.page, { backgroundColor: '#EDD8B5' }]}
           />
         );
       case '5':
         return (
-          <ListViewExample
+          <BasicListView
             style={[styles.page, { backgroundColor: '#9E9694' }]}
           />
         );

@@ -1,8 +1,9 @@
 /* @flow */
 
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { TabViewAnimated, TabBar } from 'react-native-tab-view';
+import SimplePage from './SimplePage';
 
 const styles = StyleSheet.create({
   container: {
@@ -10,11 +11,6 @@ const styles = StyleSheet.create({
   },
   tabbar: {
     backgroundColor: '#222',
-  },
-  page: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   indicator: {
     backgroundColor: '#ffeb3b',
@@ -25,7 +21,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export default class TopBarTextExample extends Component {
+export default class TopBarTextExample extends PureComponent {
   static title = 'Scrollable top bar';
   static appbarElevation = 0;
 
@@ -61,16 +57,36 @@ export default class TopBarTextExample extends Component {
     );
   };
 
-  _renderScene = ({ route }) => {
-    switch (route.key) {
+  _renderScene = scene => {
+    switch (scene.route.key) {
       case '1':
-        return <View style={[styles.page, { backgroundColor: '#ff4081' }]} />;
+        return (
+          <SimplePage
+            state={this.state}
+            style={{ backgroundColor: '#ff4081' }}
+          />
+        );
       case '2':
-        return <View style={[styles.page, { backgroundColor: '#673ab7' }]} />;
+        return (
+          <SimplePage
+            state={this.state}
+            style={{ backgroundColor: '#673ab7' }}
+          />
+        );
       case '3':
-        return <View style={[styles.page, { backgroundColor: '#8bc34a' }]} />;
+        return (
+          <SimplePage
+            state={this.state}
+            style={{ backgroundColor: '#4caf50' }}
+          />
+        );
       case '4':
-        return <View style={[styles.page, { backgroundColor: '#2196f3' }]} />;
+        return (
+          <SimplePage
+            state={this.state}
+            style={{ backgroundColor: '#2196f3' }}
+          />
+        );
       default:
         return null;
     }

@@ -1,7 +1,7 @@
 /* @flow */
 /* eslint-disable import/no-commonjs */
 
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import {
   Animated,
   View,
@@ -60,7 +60,7 @@ const initialLayout = {
   width: Dimensions.get('window').width,
 };
 
-export default class CoverflowExample extends Component {
+export default class CoverflowExample extends PureComponent {
   static title = 'Coverflow';
   static appbarElevation = 0;
 
