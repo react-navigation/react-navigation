@@ -1,10 +1,7 @@
 /* @flow */
 
 import React from 'react';
-import {
-  Dimensions,
-  Platform,
-} from 'react-native';
+import { Dimensions, Platform } from 'react-native';
 
 import createNavigator from './createNavigator';
 import createNavigationContainer from '../createNavigationContainer';
@@ -29,14 +26,15 @@ const DefaultDrawerConfig = {
    * Default drawer width is screen width - header width
    * https://material.io/guidelines/patterns/navigation-drawer.html
    */
-  drawerWidth: Dimensions.get('window').width - (Platform.OS === 'android' ? 56 : 64),
+  drawerWidth: Dimensions.get('window').width -
+    (Platform.OS === 'android' ? 56 : 64),
   contentComponent: DrawerView.Items,
   drawerPosition: 'left',
 };
 
 const DrawerNavigator = (
   routeConfigs: NavigationRouteConfigMap,
-  config: DrawerNavigatorConfig,
+  config: DrawerNavigatorConfig
 ) => {
   const mergedConfig = { ...DefaultDrawerConfig, ...config };
   const {
@@ -49,6 +47,7 @@ const DrawerNavigator = (
   } = mergedConfig;
 
   const contentRouter = TabRouter(routeConfigs, tabsConfig);
+
   const drawerRouter = TabRouter({
     DrawerClose: {
       screen: createNavigator(contentRouter, routeConfigs, config, NavigatorTypes.DRAWER)(

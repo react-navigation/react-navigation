@@ -6,9 +6,7 @@ import invariant from 'fbjs/lib/invariant';
 
 import AnimatedValueSubscription from './AnimatedValueSubscription';
 
-import type {
-  NavigationSceneRendererProps,
-} from '../TypeDefinition';
+import type { NavigationSceneRendererProps } from '../TypeDefinition';
 
 type Props = NavigationSceneRendererProps;
 
@@ -19,13 +17,11 @@ const MIN_POSITION_OFFSET = 0.01;
  * `pointerEvents` property for a component whenever navigation position
  * changes.
  */
-export default function create(
-  Component: ReactClass<*>,
-): ReactClass<*> {
+export default function create(Component: ReactClass<*>): ReactClass<*> {
   class Container extends React.Component<any, Props, any> {
     _component: any;
     _onComponentRef: (view: any) => void;
-    _onPositionChange: (data: {value: number}) => void;
+    _onPositionChange: (data: { value: number }) => void;
     _pointerEvents: string;
     _positionListener: ?AnimatedValueSubscription;
 
@@ -69,7 +65,7 @@ export default function create(
       if (component) {
         invariant(
           typeof component.setNativeProps === 'function',
-          'component must implement method `setNativeProps`',
+          'component must implement method `setNativeProps`'
         );
       }
     }
@@ -78,7 +74,7 @@ export default function create(
       this._positionListener && this._positionListener.remove();
       this._positionListener = new AnimatedValueSubscription(
         props.position,
-        this._onPositionChange,
+        this._onPositionChange
       );
     }
 
@@ -101,9 +97,7 @@ export default function create(
 
       if (scene.isStale || navigation.state.index !== scene.index) {
         // The scene isn't focused.
-        return scene.index > navigation.state.index ?
-          'box-only' :
-          'none';
+        return scene.index > navigation.state.index ? 'box-only' : 'none';
       }
 
       const offset = position.__getAnimatedValue() - navigation.state.index;

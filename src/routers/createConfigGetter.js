@@ -12,6 +12,7 @@ import type {
   NavigationScreenProp,
   NavigationAction,
   NavigationRoute,
+  NavigationStateRoute,
   NavigationRouteConfigMap,
   NavigationScreenConfig,
   NavigationScreenConfigProps,
@@ -20,7 +21,7 @@ import type {
 function applyConfig(
   configurer: ?NavigationScreenConfig<*>,
   navigationOptions: *,
-  configProps: NavigationScreenConfigProps,
+  configProps: NavigationScreenConfigProps
 ): * {
   if (typeof configurer === 'function') {
     return {
@@ -42,11 +43,11 @@ function applyConfig(
 
 export default (
   routeConfigs: NavigationRouteConfigMap,
-  navigatorScreenConfig?: NavigationScreenConfig<*>,
+  navigatorScreenConfig?: NavigationScreenConfig<*>
 ) =>
   (
     navigation: NavigationScreenProp<NavigationRoute, NavigationAction>,
-    screenProps: *,
+    screenProps: *
   ) => {
     const { state, dispatch } = navigation;
     const route = state;
@@ -54,9 +55,8 @@ export default (
     const { routes, index } = (route: NavigationStateRoute);
 
     invariant(
-      route.routeName &&
-      typeof route.routeName === 'string',
-      'Cannot get config because the route does not have a routeName.',
+      route.routeName && typeof route.routeName === 'string',
+      'Cannot get config because the route does not have a routeName.'
     );
 
     const Component = getScreenForRouteName(routeConfigs, route.routeName);
@@ -73,7 +73,10 @@ export default (
         state: childRoute,
         dispatch,
       });
-      outputConfig = Component.router.getScreenOptions(childNavigation, screenProps);
+      outputConfig = Component.router.getScreenOptions(
+        childNavigation,
+        screenProps
+      );
     }
 
     const routeConfig = routeConfigs[route.routeName];
@@ -83,8 +86,16 @@ export default (
 
     const configOptions = { navigation, screenProps: screenProps || {} };
 
-    outputConfig = applyConfig(navigatorScreenConfig, outputConfig, configOptions);
-    outputConfig = applyConfig(componentScreenConfig, outputConfig, configOptions);
+    outputConfig = applyConfig(
+      navigatorScreenConfig,
+      outputConfig,
+      configOptions
+    );
+    outputConfig = applyConfig(
+      componentScreenConfig,
+      outputConfig,
+      configOptions
+    );
     outputConfig = applyConfig(routeScreenConfig, outputConfig, configOptions);
 
     validateScreenOptions(outputConfig, route);

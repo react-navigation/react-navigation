@@ -2,10 +2,7 @@
 
 import React from 'react';
 import invariant from 'fbjs/lib/invariant';
-import {
-  BackAndroid,
-  Linking,
-} from './PlatformHelpers';
+import { BackAndroid, Linking } from './PlatformHelpers';
 import NavigationActions from './NavigationActions';
 import addNavigationHelpers from './addNavigationHelpers';
 
@@ -141,8 +138,8 @@ export default function createNavigationContainer<T: *>(
         : [prevProps.navigation.state, this.props.navigation.state];
 
       if (
-        prevNavigationState !== navigationState
-        && typeof this.props.onNavigationStateChange === 'function'
+        prevNavState !== navState &&
+        typeof this.props.onNavigationStateChange === 'function'
       ) {
         this.props.onNavigationStateChange(prevNavigationState, navigationState);
       }
@@ -167,7 +164,11 @@ export default function createNavigationContainer<T: *>(
           console.log('Last State: ', state.nav);
           console.groupEnd();
         } else {
-          console.log('Navigation Dispatch: ', { action, newState: nav, lastState: state.nav });
+          console.log('Navigation Dispatch: ', {
+            action,
+            newState: nav,
+            lastState: state.nav,
+          });
         }
         this.setState({ nav });
         return true;
@@ -188,15 +189,9 @@ export default function createNavigationContainer<T: *>(
         }
         navigation = this._navigation;
       }
-      return (
-        <Component
-          {...this.props}
-          navigation={navigation}
-        />
-      );
+      return <Component {...this.props} navigation={navigation} />;
     }
   }
 
   return NavigationContainer;
 }
-

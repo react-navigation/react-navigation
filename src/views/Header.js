@@ -4,12 +4,7 @@
 
 import React from 'react';
 
-import {
-  Animated,
-  Platform,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { Animated, Platform, StyleSheet, View } from 'react-native';
 
 import HeaderTitle from './HeaderTitle';
 import HeaderBackButton from './HeaderBackButton';
@@ -98,13 +93,13 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
     // size of the title.
     const onLayoutIOS = Platform.OS === 'ios'
       ? (e: LayoutEvent) => {
-        this.setState({
-          widths: {
-            ...this.state.widths,
-            [props.scene.key]: e.nativeEvent.layout.width,
-          },
-        });
-      }
+          this.setState({
+            widths: {
+              ...this.state.widths,
+              [props.scene.key]: e.nativeEvent.layout.width,
+            },
+          });
+        }
       : undefined;
 
     return (
@@ -144,7 +139,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
 
   _renderRightComponent = (props: SceneProps) => {
     const details = this.props.getScreenDetails(props.scene);
-    const {headerRight} = details.options;
+    const { headerRight } = details.options;
     return headerRight || null;
   };
 
@@ -153,7 +148,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
       props,
       'left',
       this._renderLeftComponent,
-      HeaderStyleInterpolator.forLeft,
+      HeaderStyleInterpolator.forLeft
     );
   }
 
@@ -173,7 +168,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
       { ...props, style },
       'title',
       this._renderTitleComponent,
-      HeaderStyleInterpolator.forCenter,
+      HeaderStyleInterpolator.forCenter
     );
   }
 
@@ -182,7 +177,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
       props,
       'right',
       this._renderRightComponent,
-      HeaderStyleInterpolator.forRight,
+      HeaderStyleInterpolator.forRight
     );
   }
 
@@ -190,7 +185,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
     props: SceneProps,
     name: SubViewName,
     renderer: SubViewRenderer,
-    styleInterpolator: NavigationStyleInterpolator,
+    styleInterpolator: NavigationStyleInterpolator
   ): ?React.Element<*> {
     const {
       scene,
@@ -266,7 +261,8 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
           position: this.props.position,
           progress: this.props.progress,
           scene,
-        }));
+        })
+      );
       appBar = scenesProps.map(this._renderHeader, this);
     } else {
       appBar = this._renderHeader({
@@ -277,7 +273,14 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
     }
 
     // eslint-disable-next-line no-unused-vars
-    const { scenes, scene, position, screenProps, progress, ...rest } = this.props;
+    const {
+      scenes,
+      scene,
+      position,
+      screenProps,
+      progress,
+      ...rest
+    } = this.props;
 
     const { options } = this.props.getScreenDetails(scene, screenProps);
     const style = options.headerStyle;

@@ -42,6 +42,7 @@ export default (
   };
 
   const router = StackRouter(routeConfigMap, stackRouterConfig);
+
   const navigator = createNavigator(router, routeConfigMap, stackConfig, NavigatorTypes.STACK)(
     (props: *) => (
       <CardStackTransitioner

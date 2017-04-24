@@ -38,6 +38,7 @@ const TabNavigator = (
   } = mergedConfig;
 
   const router = TabRouter(routeConfigs, tabsConfig);
+
   const navigator = createNavigator(router, routeConfigs, config, NavigatorTypes.STACK)(
     (props: *) => (
       <TabView
@@ -93,7 +94,9 @@ const Presets = {
 TabNavigator.Presets = {
   iOSBottomTabs: Presets.iOSBottomTabs,
   AndroidTopTabs: Presets.AndroidTopTabs,
-  Default: Platform.OS === 'ios' ? Presets.iOSBottomTabs : Presets.AndroidTopTabs,
+  Default: Platform.OS === 'ios'
+    ? Presets.iOSBottomTabs
+    : Presets.AndroidTopTabs,
 };
 
 export default TabNavigator;

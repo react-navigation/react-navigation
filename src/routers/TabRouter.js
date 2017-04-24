@@ -38,7 +38,9 @@ export default (
   const tabRouters = {};
   order.forEach((routeName: string) => {
     const routeConfig = routeConfigs[routeName];
-    paths[routeName] = typeof routeConfig.path === 'string' ? routeConfig.path : routeName;
+    paths[routeName] = typeof routeConfig.path === 'string'
+      ? routeConfig.path
+      : routeName;
     tabRouters[routeName] = null;
     if (routeConfig.screen && routeConfig.screen.router) {
       tabRouters[routeName] = routeConfig.screen.router;
@@ -47,14 +49,14 @@ export default (
   invariant(
     initialRouteIndex !== -1,
     `Invalid initialRouteName '${initialRouteName}' for TabRouter. ` +
-    `Should be one of ${order.map((n: *) => `"${n}"`).join(', ')}`
+      `Should be one of ${order.map((n: *) => `"${n}"`).join(', ')}`
   );
   return {
     getStateForAction(
       action: NavigationAction | { action: NavigationAction },
       inputState?: ?NavigationState
     ): ?NavigationState {
-       // eslint-disable-next-line no-param-reassign
+      // eslint-disable-next-line no-param-reassign
       action = NavigationActions.mapDeprecatedActionAndWarn(action);
 
       // Establish a default state
@@ -63,9 +65,10 @@ export default (
         const routes = order.map((routeName: string) => {
           const tabRouter = tabRouters[routeName];
           if (tabRouter) {
-            const childAction = action.action || NavigationActions.init({
+            const childAction = action.action ||
+              NavigationActions.init({
                 ...(action.params ? { params: action.params } : {}),
-            });
+              });
             return {
               ...tabRouter.getStateForAction(childAction),
               key: routeName,
@@ -88,13 +91,16 @@ export default (
         // Merge any params from the action into all the child routes
         const { params } = action;
         if (params) {
-          state.routes = state.routes.map(route => ({
-            ...route,
-            params: {
-              ...route.params,
-              ...params,
-            },
-          }: NavigationRoute));
+          state.routes = state.routes.map(
+            (route: *) =>
+              ({
+                ...route,
+                params: {
+                  ...route.params,
+                  ...params,
+                },
+              }: NavigationRoute)
+          );
         }
       }
 
@@ -104,7 +110,7 @@ export default (
       if (activeTabRouter) {
         const activeTabState = activeTabRouter.getStateForAction(
           action.action || action,
-          activeTabLastState,
+          activeTabLastState
         );
         if (!activeTabState && inputState) {
           return null;
@@ -122,10 +128,12 @@ export default (
       // Handle tab changing. Do this after letting the current tab try to
       // handle the action, to allow inner tabs to change first
       let activeTabIndex = state.index;
-      const isBackEligible = action.key == null || action.key === activeTabLastState.key;
+      const isBackEligible = action.key == null ||
+        action.key === activeTabLastState.key;
       if (
         action.type === NavigationActions.BACK &&
-        isBackEligible && shouldBackNavigateToInitialRoute
+        isBackEligible &&
+        shouldBackNavigateToInitialRoute
       ) {
         activeTabIndex = initialRouteIndex;
       }
@@ -173,7 +181,7 @@ export default (
       if (action.type === NavigationActions.SET_PARAMS) {
         const lastRoute = state.routes.find(
           /* $FlowFixMe */
-          (route: *) => route.key === action.key,
+          (route: *) => route.key === action.key
         );
         if (lastRoute) {
           const params = {
@@ -241,7 +249,7 @@ export default (
     },
 
     getComponentForState(
-      state: NavigationState,
+      state: NavigationState
     ): NavigationScreenComponent<*, NavigationTabScreenOptions> {
       const routeName = order[state.index];
       invariant(
@@ -286,30 +294,45 @@ export default (
      * This will return null if there is no action matched
      */
     getActionForPathAndParams(path: string, params: ?NavigationParams) {
-      return order.map((tabId: string) => {
-        const parts = path.split('/');
-        const pathToTest = paths[tabId];
-        if (parts[0] === pathToTest) {
-          const tabRouter = tabRouters[tabId];
-          const action: NavigationNavigateAction = NavigationActions.navigate({
-            routeName: tabId,
-          });
-          if (tabRouter && tabRouter.getActionForPathAndParams) {
-            action.action = tabRouter.getActionForPathAndParams(parts.slice(1).join('/'), params);
-          } else if (params) {
-            action.params = params;
+      return order
+        .map((tabId: string) => {
+          const parts = path.split('/');
+          const pathToTest = paths[tabId];
+          if (parts[0] === pathToTest) {
+            const tabRouter = tabRouters[tabId];
+            const action: NavigationNavigateAction = NavigationActions.navigate(
+              {
+                routeName: tabId,
+              }
+            );
+            if (tabRouter && tabRouter.getActionForPathAndParams) {
+              action.action = tabRouter.getActionForPathAndParams(
+                parts.slice(1).join('/'),
+                params
+              );
+            } else if (params) {
+              action.params = params;
+            }
+            return action;
           }
-          return action;
-        }
-        return null;
-      }).find((action: *) => !!action) || order.map((tabId: string) => {
-        const tabRouter = tabRouters[tabId];
-        return tabRouter && tabRouter.getActionForPathAndParams(path, params);
-      }).find((action: *) => !!action) || null;
+          return null;
+        })
+        .find((action: *) => !!action) ||
+        order
+          .map((tabId: string) => {
+            const tabRouter = tabRouters[tabId];
+            return tabRouter &&
+              tabRouter.getActionForPathAndParams(path, params);
+          })
+          .find((action: *) => !!action) ||
+        null;
     },
 
-    getScreenOptions: createConfigGetter(routeConfigs, config.navigationOptions),
- 
+    getScreenOptions: createConfigGetter(
+      routeConfigs,
+      config.navigationOptions
+    ),
+
     getScreenConfig: getScreenConfigDeprecated,
   };
 };

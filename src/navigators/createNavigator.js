@@ -4,7 +4,6 @@ import React from 'react';
 
 import type {
   NavigationRouter,
-  NavigationRoute,
   NavigationNavigator,
   NavigationNavigatorProps,
   NavigationRouteConfigMap,
@@ -17,7 +16,12 @@ import type {
 /**
  * Creates a navigator based on a router and a view that renders the screens.
  */
-const createNavigator = (router: NavigationRouter<*, *, *>, routeConfigs: NavigationRouteConfigMap, navigatorConfig: any, navigatorType: NavigatorType) =>
+const createNavigator = (
+  router: NavigationRouter<*, *, *>,
+  routeConfigs: NavigationRouteConfigMap,
+  navigatorConfig: any,
+  navigatorType: NavigatorType
+) =>
   (View: NavigationNavigator<*, *, *, *>) => {
     class Navigator extends React.Component {
       props: NavigationNavigatorProps<*>;
@@ -29,12 +33,7 @@ const createNavigator = (router: NavigationRouter<*, *, *>, routeConfigs: Naviga
       static navigatorType = navigatorType;
 
       render() {
-        return (
-          <View
-            {...this.props}
-            router={router}
-          />
-        );
+        return <View {...this.props} router={router} />;
       }
     }
 

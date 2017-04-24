@@ -1,7 +1,7 @@
 /* @flow */
 
 import React, { Component } from 'react';
-import { NativeModules, View } from 'react-native';
+import { NativeModules } from 'react-native';
 
 import CardStack from './CardStack';
 import CardStackStyleInterpolator from './CardStackStyleInterpolator';
@@ -9,8 +9,7 @@ import Transitioner from './Transitioner';
 import TransitionConfigs from './TransitionConfigs';
 import Header from './Header';
 
-const NativeAnimatedModule = NativeModules &&
-  NativeModules.NativeAnimatedModule;
+import type { TransitionConfig } from './TransitionConfigs';
 
 import type {
   NavigationAction,
@@ -24,7 +23,8 @@ import type {
   Style,
 } from '../TypeDefinition';
 
-import type { TransitionConfig } from './TransitionConfigs';
+const NativeAnimatedModule = NativeModules &&
+  NativeModules.NativeAnimatedModule;
 
 type Props = {
   screenProps?: {},
@@ -83,7 +83,7 @@ class CardStackTransitioner extends Component<DefaultProps, Props, void> {
         this.props.transitionConfig,
         transitionProps,
         prevTransitionProps,
-        isModal,
+        isModal
       ).transitionSpec,
     };
     if (

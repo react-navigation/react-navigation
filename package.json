@@ -27,9 +27,11 @@
     "start": "node ./node_modules/react-native/local-cli/cli.js start --config ./rn-cli.config.js",
     "run-playground-ios": "cd examples/NavigationPlayground && react-native run-ios",
     "run-playground-android": "cd examples/NavigationPlayground && react-native run-android",
-    "test": "jest",
+    "test": "npm run lint && npm run flow && npm run jest",
+    "jest": "jest",
     "lint": "eslint src",
     "flow": "flow",
+    "precommit": "lint-staged",
     "prepublish": "npm run clean && npm run build"
   },
   "files": [
@@ -50,6 +52,7 @@
     "babel-preset-stage-1": "^6.16.0",
     "eslint": "^3.17.1",
     "eslint-config-airbnb": "^14.1.0",
+    "eslint-config-prettier": "^1.5.0",
     "eslint-plugin-flowtype": "^2.30.3",
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^4.0.0",
@@ -58,6 +61,9 @@
     "jest": "^19.0.2",
     "react": "16.0.0-alpha.6",
     "react-native": "^0.43.2",
+    "prettier": "^0.22.0",
+    "lint-staged": "^3.4.0",
+    "husky": "^0.13.3",
     "react-native-vector-icons": "^3.0.0",
     "react-test-renderer": "^15.4.2"
   },
@@ -84,5 +90,17 @@
     "modulePathIgnorePatterns": [
       "examples"
     ]
+  },
+  "lint-staged": {
+    "concurrent": false,
+    "linters": {
+      "src/**/*.js": [
+        "eslint --fix"
+      ],
+      "*.js": [
+        "prettier --single-quote --trailing-comma es5 --write",
+        "git add"
+      ]
+    }
   }
 }

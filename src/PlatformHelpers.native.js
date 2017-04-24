@@ -1,12 +1,5 @@
 /* @flow */
 
-import {
-  BackAndroid,
-  Linking,
-} from 'react-native';
+import { BackAndroid, Linking } from 'react-native';
 
-export {
-  BackAndroid,
-  Linking,
-};
-
+export { BackAndroid, Linking };
