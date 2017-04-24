@@ -85,6 +85,7 @@ Visual options:
   - `screen` - Each screen has a header attached to it and the header fades in and out together with the screen. This is a common pattern on Android.
   - `none` - No header will be rendered.
 - `cardStyle` - Use this prop to override or extend the default style for an individual card in stack.
+- `transitionConfig` - Function to return an object that overrides default screen transitions.
 - `onTransitionStart` - Function to be invoked when the card transition animation is about to start.
 - `onTransitionEnd` - Function to be invoked once the card transition animation completes.
 

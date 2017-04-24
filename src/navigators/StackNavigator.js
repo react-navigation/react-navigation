@@ -30,6 +30,7 @@ export default (
     headerMode,
     mode,
     cardStyle,
+    transitionConfig,
     onTransitionStart,
     onTransitionEnd,
     navigationOptions,
@@ -55,6 +56,7 @@ export default (
       headerMode={headerMode}
       mode={mode}
       cardStyle={cardStyle}
+      transitionConfig={transitionConfig}
       onTransitionStart={onTransitionStart}
       onTransitionEnd={onTransitionEnd}
     />
