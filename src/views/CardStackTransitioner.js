@@ -22,9 +22,8 @@ import type {
   NavigationRouter,
   HeaderMode,
   Style,
+  TransitionConfig,
 } from '../TypeDefinition';
-
-import type { TransitionConfig } from './TransitionConfigs';
 
 type Props = {
   screenProps?: {},
