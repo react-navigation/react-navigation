@@ -30,8 +30,8 @@
     "test": "npm run lint && npm run flow && npm run jest",
     "jest": "jest",
     "lint": "eslint src",
+    "format": "eslint --fix src",
     "flow": "flow",
-    "precommit": "lint-staged",
     "prepublish": "npm run clean && npm run build"
   },
   "files": [
@@ -56,14 +56,13 @@
     "eslint-plugin-flowtype": "^2.30.3",
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^4.0.0",
+    "eslint-plugin-prettier": "^2.0.1",
     "eslint-plugin-react": "^6.10.0",
     "flow-bin": "^0.40.0",
     "jest": "^19.0.2",
+    "prettier": "^0.22.0",
     "react": "16.0.0-alpha.6",
     "react-native": "^0.43.2",
-    "prettier": "^0.22.0",
-    "lint-staged": "^3.4.0",
-    "husky": "^0.13.3",
     "react-native-vector-icons": "^3.0.0",
     "react-test-renderer": "^15.4.2"
   },
@@ -90,17 +89,5 @@
     "modulePathIgnorePatterns": [
       "examples"
     ]
-  },
-  "lint-staged": {
-    "concurrent": false,
-    "linters": {
-      "src/**/*.js": [
-        "eslint --fix"
-      ],
-      "*.js": [
-        "prettier --single-quote --trailing-comma es5 --write",
-        "git add"
-      ]
-    }
   }
 }

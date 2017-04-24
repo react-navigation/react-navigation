@@ -9,9 +9,7 @@ import type {
   NavigationRouteConfigMap,
 } from '../TypeDefinition';
 
-import type {
-  NavigatorType,
-} from './NavigatorTypes';
+import type { NavigatorType } from './NavigatorTypes';
 
 /**
  * Creates a navigator based on a router and a view that renders the screens.
@@ -20,7 +18,7 @@ const createNavigator = (
   router: NavigationRouter<*, *, *>,
   routeConfigs: NavigationRouteConfigMap,
   navigatorConfig: any,
-  navigatorType: NavigatorType
+  navigatorType: NavigatorType,
 ) =>
   (View: NavigationNavigator<*, *, *, *>) => {
     class Navigator extends React.Component {

@@ -39,19 +39,22 @@ const TabNavigator = (
 
   const router = TabRouter(routeConfigs, tabsConfig);
 
-  const navigator = createNavigator(router, routeConfigs, config, NavigatorTypes.STACK)(
-    (props: *) => (
-      <TabView
-        {...props}
-        tabBarComponent={tabBarComponent}
-        tabBarPosition={tabBarPosition}
-        tabBarOptions={tabBarOptions}
-        swipeEnabled={swipeEnabled}
-        animationEnabled={animationEnabled}
-        lazyLoad={lazyLoad}
-      />
-    ),
-  );
+  const navigator = createNavigator(
+    router,
+    routeConfigs,
+    config,
+    NavigatorTypes.STACK,
+  )((props: *) => (
+    <TabView
+      {...props}
+      tabBarComponent={tabBarComponent}
+      tabBarPosition={tabBarPosition}
+      tabBarOptions={tabBarOptions}
+      swipeEnabled={swipeEnabled}
+      animationEnabled={animationEnabled}
+      lazyLoad={lazyLoad}
+    />
+  ));
 
   return createNavigationContainer(navigator, tabsConfig.containerOptions);
 };

@@ -162,7 +162,7 @@ class CardStack extends Component {
 
   _renderHeader(
     scene: NavigationScene,
-    headerMode: HeaderMode
+    headerMode: HeaderMode,
   ): ?React.Element<*> {
     return (
       <this.props.headerComponent
@@ -217,7 +217,7 @@ class CardStack extends Component {
       const backFromScene = scenes.find((s: *) => s.index === toValue + 1);
       if (!this._isResponding && backFromScene) {
         navigation.dispatch(
-          NavigationActions.back({ key: backFromScene.route.key })
+          NavigationActions.back({ key: backFromScene.route.key }),
         );
       }
     });
@@ -244,7 +244,7 @@ class CardStack extends Component {
       },
       onMoveShouldSetPanResponder: (
         event: { nativeEvent: { pageY: number, pageX: number } },
-        gesture: any
+        gesture: any,
       ) => {
         const layout = this.props.layout;
         if (index !== scene.index) {
@@ -401,13 +401,13 @@ class CardStack extends Component {
       this.props.transitionConfig,
       {},
       {},
-      isModal
+      isModal,
     );
     const style = screenInterpolator &&
       screenInterpolator({ ...this.props, scene });
 
     const SceneComponent = this.props.router.getComponentForRouteName(
-      scene.route.routeName
+      scene.route.routeName,
     );
 
     return (

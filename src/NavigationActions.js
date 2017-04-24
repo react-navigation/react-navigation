@@ -44,7 +44,7 @@ const mapDeprecatedActionAndWarn = (action: Object) => {
       "the 'actions' object.",
       'See https://github.com/react-community/react-navigation/pull/120 for',
       'more details.',
-    ].join(' ')
+    ].join(' '),
   );
 
   return {

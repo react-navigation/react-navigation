@@ -68,7 +68,7 @@ function defaultTransitionConfig(
   // props for the old screen
   prevTransitionProps: NavigationTransitionProps,
   // whether we're animating in/out a modal screen
-  isModal: boolean
+  isModal: boolean,
 ): TransitionConfig {
   if (Platform.OS === 'android') {
     // Use the default Android animation no matter if the screen is a modal.
@@ -94,12 +94,12 @@ function getTransitionConfig(
   transitionProps: NavigationTransitionProps,
   // props for the old screen
   prevTransitionProps: NavigationTransitionProps,
-  isModal: boolean
+  isModal: boolean,
 ): TransitionConfig {
   const defaultConfig = defaultTransitionConfig(
     transitionProps,
     prevTransitionProps,
-    isModal
+    isModal,
   );
   if (transitionConfigurer) {
     return {

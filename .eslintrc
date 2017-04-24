@@ -7,15 +7,21 @@
   ],
   "parser": "babel-eslint",
   "plugins": [
-    "flowtype"
+    "flowtype",
+    "prettier"
   ],
   "env": {
-    "jasmine": true,
+    "jasmine": true
   },
   "globals": {
     "ReactClass": true
   },
   "rules": {
+    "prettier/prettier": ["error", {
+      "trailingComma": "all",
+      "singleQuote": true
+    }],
+
     "no-underscore-dangle": 0,
     "no-use-before-define": 0,
     "no-unused-expressions": 0,

@@ -83,10 +83,10 @@ export default class DrawerView<T: *> extends PureComponent<void, Props, void> {
   };
 
   _updateScreenNavigation = (
-    navigation: NavigationScreenProp<NavigationState, NavigationAction>
+    navigation: NavigationScreenProp<NavigationState, NavigationAction>,
   ) => {
     const navigationState = navigation.state.routes.find(
-      (route: *) => route.routeName === 'DrawerClose'
+      (route: *) => route.routeName === 'DrawerClose',
     );
     if (
       this._screenNavigationProp &&
@@ -101,10 +101,10 @@ export default class DrawerView<T: *> extends PureComponent<void, Props, void> {
   };
 
   _getNavigationState = (
-    navigation: NavigationScreenProp<NavigationState, NavigationAction>
+    navigation: NavigationScreenProp<NavigationState, NavigationAction>,
   ) => {
     const navigationState = navigation.state.routes.find(
-      (route: *) => route.routeName === 'DrawerClose'
+      (route: *) => route.routeName === 'DrawerClose',
     );
     return navigationState;
   };
@@ -124,7 +124,7 @@ export default class DrawerView<T: *> extends PureComponent<void, Props, void> {
 
   render() {
     const DrawerScreen = this.props.router.getComponentForRouteName(
-      'DrawerClose'
+      'DrawerClose',
     );
     return (
       <DrawerLayout

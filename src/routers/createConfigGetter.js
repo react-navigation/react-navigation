@@ -21,7 +21,7 @@ import type {
 function applyConfig(
   configurer: ?NavigationScreenConfig<*>,
   navigationOptions: *,
-  configProps: NavigationScreenConfigProps
+  configProps: NavigationScreenConfigProps,
 ): * {
   if (typeof configurer === 'function') {
     return {
@@ -43,11 +43,11 @@ function applyConfig(
 
 export default (
   routeConfigs: NavigationRouteConfigMap,
-  navigatorScreenConfig?: NavigationScreenConfig<*>
+  navigatorScreenConfig?: NavigationScreenConfig<*>,
 ) =>
   (
     navigation: NavigationScreenProp<NavigationRoute, NavigationAction>,
-    screenProps: *
+    screenProps: *,
   ) => {
     const { state, dispatch } = navigation;
     const route = state;
@@ -56,7 +56,7 @@ export default (
 
     invariant(
       route.routeName && typeof route.routeName === 'string',
-      'Cannot get config because the route does not have a routeName.'
+      'Cannot get config because the route does not have a routeName.',
     );
 
     const Component = getScreenForRouteName(routeConfigs, route.routeName);
@@ -66,7 +66,7 @@ export default (
     if (Component.router) {
       invariant(
         route && routes && index != null,
-        `Expect nav state to have routes and index, ${JSON.stringify(route)}`
+        `Expect nav state to have routes and index, ${JSON.stringify(route)}`,
       );
       const childRoute = routes[index];
       const childNavigation = addNavigationHelpers({
@@ -75,7 +75,7 @@ export default (
       });
       outputConfig = Component.router.getScreenOptions(
         childNavigation,
-        screenProps
+        screenProps,
       );
     }
 
@@ -89,12 +89,12 @@ export default (
     outputConfig = applyConfig(
       navigatorScreenConfig,
       outputConfig,
-      configOptions
+      configOptions,
     );
     outputConfig = applyConfig(
       componentScreenConfig,
       outputConfig,
-      configOptions
+      configOptions,
     );
     outputConfig = applyConfig(routeScreenConfig, outputConfig, configOptions);
 

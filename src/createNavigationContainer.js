@@ -72,7 +72,10 @@ export default function createNavigationContainer<T: *>(
       }
 
       const {
-        navigation, screenProps, navigationOptions, onNavigationStateChange,
+        navigation,
+        screenProps,
+        navigationOptions,
+        onNavigationStateChange,
         ...containerProps
       } = props;
 
@@ -81,9 +84,9 @@ export default function createNavigationContainer<T: *>(
       invariant(
         keys.length === 0,
         'This navigator has both navigation and container props, so it is ' +
-        `unclear if it should own its own state. Remove props: "${keys.join(', ')}" ` +
-        'if the navigator should get its state from the navigation prop. If the ' +
-        'navigator should maintain its own state, do not pass a navigation prop.',
+          `unclear if it should own its own state. Remove props: "${keys.join(', ')}" ` +
+          'if the navigator should get its state from the navigation prop. If the ' +
+          'navigator should maintain its own state, do not pass a navigation prop.',
       );
     }
 
@@ -120,16 +123,16 @@ export default function createNavigationContainer<T: *>(
         return;
       }
 
-      this.subs = BackAndroid.addEventListener(
-        'backPress',
-        () => this.dispatch(NavigationActions.back()),
-      );
+      this.subs = BackAndroid.addEventListener('backPress', () =>
+        this.dispatch(NavigationActions.back()));
 
       Linking.addEventListener('url', ({ url }: { url: string }) => {
         this._handleOpenURL(url);
       });
 
-      Linking.getInitialURL().then((url: string) => url && this._handleOpenURL(url));
+      Linking.getInitialURL().then(
+        (url: string) => url && this._handleOpenURL(url),
+      );
     }
 
     componentDidUpdate(prevProps: Props<T>, prevState: State) {
@@ -138,10 +141,13 @@ export default function createNavigationContainer<T: *>(
         : [prevProps.navigation.state, this.props.navigation.state];
 
       if (
-        prevNavState !== navState &&
+        prevNavigationState !== navigationState &&
         typeof this.props.onNavigationStateChange === 'function'
       ) {
-        this.props.onNavigationStateChange(prevNavigationState, navigationState);
+        this.props.onNavigationStateChange(
+          prevNavigationState,
+          navigationState,
+        );
       }
     }
 

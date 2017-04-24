@@ -30,7 +30,7 @@ function _getUuid() {
 
 export default (
   routeConfigs: NavigationRouteConfigMap,
-  stackConfig: NavigationStackRouterConfig = {}
+  stackConfig: NavigationStackRouterConfig = {},
 ): NavigationRouter<*, *, *> => {
   // Fail fast on invalid route definitions
   validateRouteConfigMap(routeConfigs);
@@ -90,7 +90,7 @@ export default (
 
     getStateForAction(
       passedAction: NavigationStackAction,
-      state: ?NavigationState
+      state: ?NavigationState,
     ) {
       const action = NavigationActions.mapDeprecatedActionAndWarn(passedAction);
 
@@ -117,7 +117,7 @@ export default (
             NavigationActions.navigate({
               routeName: initialRouteName,
               params: initialRouteParams,
-            })
+            }),
           );
         }
         const params = (route.params ||
@@ -194,12 +194,12 @@ export default (
           if (childRouter) {
             // For each child router, start with a blank state
             const initChildRoute = childRouter.getStateForAction(
-              NavigationActions.init()
+              NavigationActions.init(),
             );
             // Then check to see if the router handles our navigate action
             const navigatedChildRoute = childRouter.getStateForAction(
               action,
-              initChildRoute
+              initChildRoute,
             );
             let routeToPush = null;
             if (navigatedChildRoute === null) {
@@ -223,7 +223,7 @@ export default (
       if (action.type === NavigationActions.SET_PARAMS) {
         const lastRoute = state.routes.find(
           /* $FlowFixMe */
-          (route: *) => route.key === action.key
+          (route: *) => route.key === action.key,
         );
         if (lastRoute) {
           const params = {
@@ -264,7 +264,7 @@ export default (
               };
               delete route.type;
               return route;
-            }
+            },
           ),
           index: action.index,
         };
@@ -275,7 +275,7 @@ export default (
         if (action.key) {
           const backRoute = state.routes.find(
             /* $FlowFixMe */
-            (route: *) => route.key === action.key
+            (route: *) => route.key === action.key,
           );
           /* $FlowFixMe */
           backRouteIndex = state.routes.indexOf(backRoute);
@@ -343,7 +343,7 @@ export default (
       if (childRouters[matchedRouteName]) {
         nestedAction = childRouters[matchedRouteName].getActionForPathAndParams(
           /* $FlowFixMe */
-          pathMatch.slice(pathMatchKeys.length).join('/')
+          pathMatch.slice(pathMatchKeys.length).join('/'),
         );
       }
 
@@ -359,7 +359,7 @@ export default (
           }
           return result;
         },
-        null
+        null,
       );
 
       // reduce the matched pieces of the path into the params
@@ -376,7 +376,7 @@ export default (
           nextResult[paramName] = matchResult;
           return nextResult;
         },
-        queryParams
+        queryParams,
       );
 
       return NavigationActions.navigate({
@@ -388,7 +388,7 @@ export default (
 
     getScreenOptions: createConfigGetter(
       routeConfigs,
-      stackConfig.navigationOptions
+      stackConfig.navigationOptions,
     ),
 
     getScreenConfig: getScreenConfigDeprecated,

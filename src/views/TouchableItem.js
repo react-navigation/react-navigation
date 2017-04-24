@@ -60,7 +60,7 @@ export default class TouchableItem
           style={null}
           background={TouchableNativeFeedback.Ripple(
             this.props.pressColor,
-            this.props.borderless
+            this.props.borderless,
           )}
         >
           <View style={this.props.style}>
