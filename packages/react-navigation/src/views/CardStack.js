@@ -333,7 +333,12 @@ class CardStack extends Component {
       },
     });
 
-    const gesturesEnabled = mode === 'card' && Platform.OS === 'ios';
+    const { options } = this._getScreenDetails(scene);
+    const gesturesEnabled = mode === 'card' && (
+        typeof options.gesturesEnabled === 'boolean' ? options.gesturesEnabled
+        : Platform.OS === 'ios'
+    )
+
     const handlers = gesturesEnabled ? responder.panHandlers : {};
 
     return (
