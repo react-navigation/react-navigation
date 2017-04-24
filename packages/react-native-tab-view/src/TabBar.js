@@ -130,7 +130,7 @@ export default class TabBar extends PureComponent<DefaultProps, Props, State> {
       (route.title ? route.title.toUpperCase() : null),
   };
 
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
 
     let initialVisibility = 0;
