@@ -9,8 +9,6 @@ import Transitioner from './Transitioner';
 import TransitionConfigs from './TransitionConfigs';
 import Header from './Header';
 
-import type { TransitionConfig } from './TransitionConfigs';
-
 import type {
   NavigationAction,
   NavigationSceneRenderer,
