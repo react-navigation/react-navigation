@@ -114,6 +114,17 @@ class TabView extends PureComponent<void, Props, void> {
     return route.routeName;
   };
 
+  _getTabPressCallback = ({ route }: TabScene): Function => {
+    const tabBar = this.props.router.getScreenConfig(
+      this.props.childNavigationProps[route.key],
+      'tabBar'
+    );
+    if (tabBar && typeof tabBar.onTabPress === 'function') {
+      return tabBar.onTabPress;
+    }
+    return () => {};
+  };
+
   _renderIcon = ({ focused, route, tintColor }: TabScene) => {
     const options = this.props.router.getScreenOptions(
       this.props.childNavigationProps[route.key],
@@ -142,6 +153,7 @@ class TabView extends PureComponent<void, Props, void> {
         {...tabBarOptions}
         navigation={this.props.navigation}
         getLabel={this._getLabel}
+        getTabPressCallback={this._getTabPressCallback}
         renderIcon={this._renderIcon}
         animationEnabled={animationEnabled}
       />

@@ -36,6 +36,7 @@ type Props = {
   position: Animated.Value;
   navigation: NavigationScreenProp<NavigationState, NavigationAction>;
   getLabel: (scene: TabScene) => ?(React.Element<*> | string);
+  getTabPressCallback: (scene: TabScene) => Function;
   renderIcon: (scene: TabScene) => React.Element<*>;
   labelStyle?: Style;
   iconStyle?: Style;
@@ -52,6 +53,23 @@ export default class TabBarTop extends PureComponent<DefaultProps, Props, void> 
   };
 
   props: Props;
+
+  _onTabPress = (route: NavigationRoute) => {
+    const { navigationState, getTabPressCallback } = this.props;
+    const { routes } = navigationState;
+    const routesLength = routes.length;
+    let index = -1;
+    for (let i = 0; i < routesLength; i++) {
+      if (routes[i] === route) {
+        index = i;
+        break;
+      }
+    }
+    const focused = index === navigationState.index;
+    const scene = { route, index, focused };
+    const onTabPress = getTabPressCallback(scene);
+    onTabPress(scene);
+  }
 
   _renderLabel = (scene: TabScene) => {
     const {
@@ -126,6 +144,7 @@ export default class TabBarTop extends PureComponent<DefaultProps, Props, void> 
     return (
       <TabBar
         {...props}
+        onTabPress={this._onTabPress}
         renderIcon={this._renderIcon}
         renderLabel={this._renderLabel}
       />
