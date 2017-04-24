@@ -1,4 +1,8 @@
+/** @flow */
+
 import invariant from 'fbjs/lib/invariant';
+
+import type { NavigationRouteConfigMap } from '../TypeDefinition';
 
 /**
  * Make sure the config passed e.g. to StackRouter, TabRouter has
@@ -8,7 +12,7 @@ function validateRouteConfigMap(routeConfigs: NavigationRouteConfigMap) {
   const routeNames = Object.keys(routeConfigs);
   invariant(
     routeNames.length > 0,
-    'Please specify at least one route when configuring a navigator.'
+    'Please specify at least one route when configuring a navigator.',
   );
 
   routeNames.forEach((routeName: string) => {
@@ -17,37 +21,38 @@ function validateRouteConfigMap(routeConfigs: NavigationRouteConfigMap) {
     invariant(
       routeConfig.screen || routeConfig.getScreen,
       `Route '${routeName}' should declare a screen. ` +
-      'For example:\n\n' +
-      'import MyScreen from \'./MyScreen\';\n' +
-      '...\n' +
-      `${routeName}: {\n` +
-      '  screen: MyScreen,\n' +
-      '}'
+        'For example:\n\n' +
+        "import MyScreen from './MyScreen';\n" +
+        '...\n' +
+        `${routeName}: {\n` +
+        '  screen: MyScreen,\n' +
+        '}',
     );
 
     if (routeConfig.screen && routeConfig.getScreen) {
-      invariant(false,
+      invariant(
+        false,
         `Route '${routeName}' should declare a screen or ` +
-        'a getScreen, not both.'
+          'a getScreen, not both.',
       );
     }
 
     if (routeConfig.screen) {
       invariant(
-        typeof (routeConfig.screen) === 'function',
+        typeof routeConfig.screen === 'function',
         `The component for route '${routeName}' must be a ` +
-        'a React component. For example:\n\n' +
-        'import MyScreen from \'./MyScreen\';\n' +
-        '...\n' +
-        `${routeName}: {\n` +
-        '  screen: MyScreen,\n' +
-        '}\n\n' +
-        'You can also use a navigator:\n\n' +
-        'import MyNavigator from \'./MyNavigator\';\n' +
-        '...\n' +
-        `${routeName}: {\n` +
-        '  screen: MyNavigator,\n' +
-        '}'
+          'a React component. For example:\n\n' +
+          "import MyScreen from './MyScreen';\n" +
+          '...\n' +
+          `${routeName}: {\n` +
+          '  screen: MyScreen,\n' +
+          '}\n\n' +
+          'You can also use a navigator:\n\n' +
+          "import MyNavigator from './MyNavigator';\n" +
+          '...\n' +
+          `${routeName}: {\n` +
+          '  screen: MyNavigator,\n' +
+          '}',
       );
     }
   });
