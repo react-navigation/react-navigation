@@ -63,7 +63,13 @@ function forHorizontal(props: NavigationSceneRendererProps): Object {
   // Add [index - 1, index - 0.99] to the interpolated opacity for screen transition.
   // This makes the screen's shadow to disappear smoothly.
   const opacity = position.interpolate({
-    inputRange: ([index - 1, index - 0.99, index, index + 0.99, index + 1]: Array<number>),
+    inputRange: ([
+      index - 1,
+      index - 0.99,
+      index,
+      index + 0.99,
+      index + 1,
+    ]: Array<number>),
     outputRange: ([0, 1, 1, 0.3, 0]: Array<number>),
   });
 
@@ -97,7 +103,13 @@ function forVertical(props: NavigationSceneRendererProps): Object {
   const height = layout.initHeight;
 
   const opacity = position.interpolate({
-    inputRange: ([index - 1, index - 0.99, index, index + 0.99, index + 1]: Array<number>),
+    inputRange: ([
+      index - 1,
+      index - 0.99,
+      index,
+      index + 0.99,
+      index + 1,
+    ]: Array<number>),
     outputRange: ([0, 1, 1, 0.3, 0]: Array<number>),
   });
 
