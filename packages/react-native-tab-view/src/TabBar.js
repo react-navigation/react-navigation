@@ -419,6 +419,7 @@ export default class TabBar extends PureComponent<DefaultProps, Props, State> {
             scrollsToTop={false}
             showsHorizontalScrollIndicator={false}
             automaticallyAdjustContentInsets={false}
+            overScrollMode="never"
             contentContainerStyle={[
               styles.tabContent,
               scrollEnabled ? null : styles.container,
