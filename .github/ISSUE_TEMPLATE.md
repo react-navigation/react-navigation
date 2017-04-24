@@ -3,7 +3,7 @@ BEFORE YOU SUBMIT please search open/closed issues since someone might have aske
 -->
 
 ### Current Behavior
-<!--- If describing a bug, tell us what happens instead of the expected behavior -->
+<!--- If describing a bug, tell us what happens instead of the expected behavior. Provide a screenshot when possible -->
 <!--- If suggesting a change/improvement, explain the difference from current behavior -->
 
 ### Expected Behavior
