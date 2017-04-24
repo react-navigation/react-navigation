@@ -6,6 +6,7 @@ import {
   View,
   TouchableWithoutFeedback,
   StyleSheet,
+  Keyboard
 } from 'react-native';
 import TabBarIcon from './TabBarIcon';
 
@@ -45,7 +46,11 @@ type Props = {
   showIcon: boolean;
 };
 
-export default class TabBarBottom extends PureComponent<DefaultProps, Props, void> {
+type State = {
+  keyboardVisible: boolean;
+}
+
+export default class TabBarBottom extends PureComponent<DefaultProps, Props, State> {
 
   // See https://developer.apple.com/library/content/documentation/UserExperience/Conceptual/UIKitUICatalog/UITabBar.html
   static defaultProps = {
@@ -58,6 +63,31 @@ export default class TabBarBottom extends PureComponent<DefaultProps, Props, voi
   };
 
   props: Props;
+
+  keyboardDidShowListener: React.EmitterSubscription;
+  keyboardDidHideListener: React.EmitterSubscription;
+
+  state = {
+    keyboardVisible: false,
+  }
+
+  componentWillMount() {
+    this.keyboardDidShowListener = Keyboard.addListener("keyboardDidShow", this._keyboardDidShow);
+    this.keyboardDidHideListener = Keyboard.addListener("keyboardDidHide", this._keyboardDidHide);
+  }
+
+  componentWillUnmount() {
+    this.keyboardDidShowListener.remove();
+    this.keyboardDidHideListener.remove();
+  }
+
+  _keyboardDidShow = (e) => {
+    this.setState({ keyboardVisible: true });
+  }
+
+  _keyboardDidHide = () => {
+    this.setState({ keyboardVisible: false });
+  }
 
   _renderLabel = (scene: TabScene) => {
     const {
@@ -135,6 +165,11 @@ export default class TabBarBottom extends PureComponent<DefaultProps, Props, voi
     const { routes } = navigation.state;
     // Prepend '-1', so there are always at least 2 items in inputRange
     const inputRange = [-1, ...routes.map((x: *, i: number) => i)];
+
+    if (this.state.keyboardVisible) {
+      return null;
+    }
+
     return (
       <View style={[styles.tabBar, style]}>
         {routes.map((route: NavigationRoute, index: number) => {
