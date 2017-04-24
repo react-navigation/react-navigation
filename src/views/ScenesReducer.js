@@ -93,6 +93,7 @@ export default function ScenesReducer(
   const staleScenes: Map<string, NavigationScene> = new Map();
 
   // Populate stale scenes from previous scenes marked as stale.
+
   scenes.forEach((scene) => {
     const { key } = scene;
     if (scene.isStale) {
@@ -157,7 +158,21 @@ export default function ScenesReducer(
     }
   });
 
-  staleScenes.forEach(mergeScene);
+
+  // work around for flashing scenes
+  let k = null;
+  let v = null;
+  staleScenes.forEach(scene => {
+    let { key } = scene;
+    k = key;
+    v = scene;
+  });
+
+  newStaleScenes = k && v ? new Map([[k, v]]) : new Map();
+  newStaleScenes.forEach(mergeScene);
+  // staleScenes.forEach(mergeScene);
+  // work around end
+
   freshScenes.forEach(mergeScene);
 
   nextScenes.sort(compareScenes);

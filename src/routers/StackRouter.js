@@ -91,7 +91,6 @@ export default (
 
     getStateForAction(action: NavigationStackAction, state: ?NavigationState) {
       action = NavigationActions.mapDeprecatedActionAndWarn(action);
-
       // Set up the initial state if needed
       if (!state) {
         let route = {};
@@ -247,20 +246,29 @@ export default (
 
       if (action.type === NavigationActions.BACK) {
         let backRouteIndex = null;
+
+        if (action.routeName) {
+          backRouteIndex = state.routes.findIndex((route: *) => route.routeName === action.routeName);
+        }
+
+        if (action.numberOfPages) {
+          backRouteIndex = state.index - action.numberOfPages;
+        }
+
         if (action.key) {
           /* $FlowFixMe */
           const backRoute = state.routes.find((route: *) => route.key === action.key);
           /* $FlowFixMe */
-          backRouteIndex = state.routes.indexOf(backRoute);
+          backRouteIndex = state.routes.indexOf(backRoute) - 1;
         }
         if (backRouteIndex == null) {
           return StateUtils.pop(state);
         }
-        if (backRouteIndex > 0) {
+        if (backRouteIndex > -1) {
           return {
             ...state,
-            routes: state.routes.slice(0, backRouteIndex),
-            index: backRouteIndex - 1,
+            routes: state.routes.slice(0, backRouteIndex + 1),
+            index: backRouteIndex,
           };
         }
       }

@@ -9,7 +9,7 @@ describe('addNavigationHelpers', () => {
     expect(addNavigationHelpers({
       state: { key: 'A', routeName: 'Home' },
       dispatch: mockedDispatch,
-    }).goBack('A')).toEqual(true);
+    }).goBack({ key: 'A' })).toEqual(true);
     expect(mockedDispatch).toBeCalledWith({ type: NavigationActions.BACK, key: 'A' });
     expect(mockedDispatch.mock.calls.length).toBe(1);
   });

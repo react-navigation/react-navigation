@@ -15,9 +15,7 @@ import NavigationActions from './NavigationActions';
 export default function<S: *> (navigation: NavigationProp<S, NavigationAction>) {
   return {
     ...navigation,
-    goBack: (key?: ?string): boolean => navigation.dispatch(NavigationActions.back({
-      key: key === undefined ? navigation.state.key : key,
-    })),
+    goBack: (params?: ?object): boolean => navigation.dispatch(NavigationActions.back(params)),
     navigate: (
       routeName: string,
       params?: NavigationParams,
