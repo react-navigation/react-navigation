@@ -98,7 +98,7 @@ Generic title that can be used as a fallback for `headerTitle` and `tabBarLabel`
 
 #### `header`
 
-React Element or a function that given `HeaderProps` returns a React Element, to display as a header. Setting to `null` hides header.
+React Element or a function that given `HeaderProps` returns a React Element, to display as a header.
 
 #### `headerVisible`
 
