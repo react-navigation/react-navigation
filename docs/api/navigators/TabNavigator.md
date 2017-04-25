@@ -79,8 +79,8 @@ The route configs object is a mapping from route name to a route config, which t
 
 ### TabNavigatorConfig
 
-- `tabBarComponent` - component to use as the tab bar, e.g. `TabView.TabBarBottom`
-(this is the default on iOS), `TabView.TabBarTop`
+- `tabBarComponent` - component to use as the tab bar, e.g. `TabBarBottom`
+(this is the default on iOS), `TabBarTop`
 (this is the default on Android)
 - `tabBarPosition` - position of the tab bar, can be `'top'` or `'bottom'`
 - `swipeEnabled` - whether to allow swiping between tabs

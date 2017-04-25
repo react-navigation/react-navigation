@@ -7,6 +7,9 @@ import createNavigator from './createNavigator';
 import createNavigationContainer from '../createNavigationContainer';
 import TabRouter from '../routers/TabRouter';
 import TabView from '../views/TabView/TabView';
+import TabBarTop from '../views/TabView/TabBarTop';
+import TabBarBottom from '../views/TabView/TabBarBottom';
+
 import NavigatorTypes from './NavigatorTypes';
 
 import type { TabViewConfig } from '../views/TabView/TabView';
@@ -61,14 +64,14 @@ const TabNavigator = (
 
 const Presets = {
   iOSBottomTabs: {
-    tabBarComponent: TabView.TabBarBottom,
+    tabBarComponent: TabBarBottom,
     tabBarPosition: 'bottom',
     swipeEnabled: false,
     animationEnabled: false,
     lazyLoad: false,
   },
   AndroidTopTabs: {
-    tabBarComponent: TabView.TabBarTop,
+    tabBarComponent: TabBarTop,
     tabBarPosition: 'top',
     swipeEnabled: true,
     animationEnabled: true,
