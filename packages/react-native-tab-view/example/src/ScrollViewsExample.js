@@ -15,7 +15,7 @@ type Route = {
 type State = NavigationState<Route>;
 
 export default class TopBarTextExample extends PureComponent<void, *, State> {
-  static title = 'Scroll views';
+  static title = 'Scroll views with lazy load';
   static backgroundColor = '#fff';
   static tintColor = '#222';
   static appbarElevation = 0;
@@ -105,6 +105,7 @@ export default class TopBarTextExample extends PureComponent<void, *, State> {
           <BasicListView
             ref={el => (this._second = el)}
             style={[styles.page, { backgroundColor: '#E6BDC5' }]}
+            initialListSize={1}
           />
         );
       case '3':
@@ -112,6 +113,7 @@ export default class TopBarTextExample extends PureComponent<void, *, State> {
           <BasicListView
             ref={el => (this._third = el)}
             style={[styles.page, { backgroundColor: '#EDD8B5' }]}
+            initialListSize={1}
           />
         );
       default:
@@ -127,6 +129,7 @@ export default class TopBarTextExample extends PureComponent<void, *, State> {
         renderScene={this._renderScene}
         renderHeader={this._renderHeader}
         onRequestChangeTab={this._handleChangeTab}
+        lazy
       />
     );
   }

@@ -148,6 +148,7 @@ export default class TabViewAnimated<T: Route<*>>
   };
 
   _trackPosition = (e: { value: number }) => {
+    this._handleChangePosition(e.value);
     this._triggerEvent('position', e.value);
     this._lastPosition = e.value;
     const { onChangePosition } = this.props;
