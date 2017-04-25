@@ -104,6 +104,6 @@ The 2nd argument passed to the function are the default values for the `header` 
 List of available navigation options depends on the `navigator` the screen is added to.
 
 Check available options for:
-- [`drawer navigator`](/docs/navigators/drawer#Screen-Navigation-Options)
-- [`stack navigator`](/docs/navigators/stack#Screen-Navigation-Options)
-- [`tab navigator`](/docs/navigators/tab#Screen-Navigation-Options)
+- [`drawer navigator`](/docs/api/navigators/DrawerNavigator.md#screen-navigation-options)
+- [`stack navigator`](/docs/api/navigators/StackNavigator.md#screen-navigation-options)
+- [`tab navigator`](/docs/api/navigators/TabNavigator.md#screen-navigation-options)
