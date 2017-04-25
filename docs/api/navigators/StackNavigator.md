@@ -138,7 +138,7 @@ Color for material ripple (Android >= 5.0 only)
 
 #### `gesturesEnabled`
 
-Whether you can use gestures to dismiss this screen. Defaults to true on iOS, false on Android. This value when set is only respected in `mode` == `card`.
+Whether you can use gestures to dismiss this screen. Defaults to true on iOS, false on Android.
 
 ### Navigator Props
 
