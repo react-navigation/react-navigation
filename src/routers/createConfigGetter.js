@@ -6,7 +6,6 @@ import invariant from 'fbjs/lib/invariant';
 
 import getScreenForRouteName from './getScreenForRouteName';
 import addNavigationHelpers from '../addNavigationHelpers';
-import validateScreenOptions from './validateScreenOptions';
 
 import type {
   NavigationScreenProp,
@@ -97,8 +96,6 @@ export default (
       configOptions,
     );
     outputConfig = applyConfig(routeScreenConfig, outputConfig, configOptions);
-
-    validateScreenOptions(outputConfig, route);
 
     return outputConfig;
   };

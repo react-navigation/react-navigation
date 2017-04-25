@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 
 import Card from './Card';
+import Header from './Header';
 import NavigationActions from '../NavigationActions';
 import addNavigationHelpers from '../addNavigationHelpers';
 import SceneView from './SceneView';
@@ -100,7 +101,7 @@ const animatedSubscribeValue = (animatedValue: Animated.Value) => {
  */
 const GESTURE_ANIMATED_VELOCITY_RATIO = -4;
 
-class CardStack extends Component {
+class CardStack extends Component<void, Props, void> {
   /**
    * Used to identify the starting point of the position when the gesture starts, such that it can
    * be updated according to its relative position. This means that a card can effectively be
@@ -163,14 +164,24 @@ class CardStack extends Component {
     scene: NavigationScene,
     headerMode: HeaderMode,
   ): ?React.Element<*> {
-    return (
-      <this.props.headerComponent
-        {...this.props}
-        scene={scene}
-        mode={headerMode}
-        getScreenDetails={this._getScreenDetails}
-      />
-    );
+    const { header } = this._getScreenDetails(scene).options;
+
+    if (typeof header !== 'undefined' && typeof header !== 'function') {
+      return header;
+    }
+
+    const renderHeader = header || ((props: *) => <Header {...props} />);
+
+    // We need to explicitly exclude `mode` since Flow doesn't see
+    // mode: headerMode override below and reports prop mismatch
+    const { mode, ...passProps } = this.props;
+
+    return renderHeader({
+      ...passProps,
+      scene,
+      mode: headerMode,
+      getScreenDetails: this._getScreenDetails,
+    });
   }
 
   // eslint-disable-next-line class-methods-use-this

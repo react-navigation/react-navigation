@@ -207,7 +207,6 @@ export type NavigationUriAction = {
 export type NavigationStackViewConfig = {
   mode?: 'card' | 'modal',
   headerMode?: HeaderMode,
-  headerComponent?: ReactClass<HeaderProps<*>>,
   cardStyle?: Style,
   transitionConfig?: () => TransitionConfig,
   onTransitionStart?: () => void,
@@ -215,6 +214,7 @@ export type NavigationStackViewConfig = {
 };
 
 export type NavigationStackScreenOptions = NavigationScreenOptions & {
+  header?: React.Element<*> | ((HeaderProps) => React.Element<*>),
   headerTitle?: string | React.Element<*>,
   headerTitleStyle?: Style,
   headerTintColor?: string,
