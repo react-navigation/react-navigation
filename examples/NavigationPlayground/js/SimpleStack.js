@@ -6,11 +6,9 @@ import React from 'react';
 import {
   Button,
   ScrollView,
-  Text,
 } from 'react-native';
 import {
   StackNavigator,
-  Header,
 } from 'react-navigation';
 import SampleText from './SampleText';
 
