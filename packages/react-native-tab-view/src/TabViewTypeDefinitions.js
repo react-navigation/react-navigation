@@ -57,3 +57,5 @@ export type PagerProps = {
   swipeVelocityThreshold?: number,
   children?: *,
 };
+
+export type Style = Object | number | false | null | void | Array<Style>;

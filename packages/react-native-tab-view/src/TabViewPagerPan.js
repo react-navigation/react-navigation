@@ -56,7 +56,7 @@ type Props<T> = SceneRendererProps<T> & {
   swipeEnabled?: boolean,
   swipeDistanceThreshold: number,
   swipeVelocityThreshold: number,
-  children?: any,
+  children?: React.Element<any>,
 };
 
 const DEAD_ZONE = 12;

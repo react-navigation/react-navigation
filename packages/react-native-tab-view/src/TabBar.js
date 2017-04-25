@@ -17,6 +17,7 @@ import type {
   Scene,
   SceneRendererProps,
   Route,
+  Style,
 } from './TabViewTypeDefinitions';
 
 type IndicatorProps<T> = SceneRendererProps<T> & {
@@ -40,15 +41,15 @@ type Props<T> = SceneRendererProps<T> & {
   pressColor?: string,
   pressOpacity?: number,
   getLabelText: (scene: Scene<T>) => ?string,
-  renderLabel?: (scene: Scene<T>) => ?React.Element<*>,
-  renderIcon?: (scene: Scene<T>) => ?React.Element<*>,
-  renderBadge?: (scene: Scene<T>) => ?React.Element<*>,
-  renderIndicator?: (props: IndicatorProps<T>) => ?React.Element<*>,
+  renderLabel?: (scene: Scene<T>) => ?React.Element<any>,
+  renderIcon?: (scene: Scene<T>) => ?React.Element<any>,
+  renderBadge?: (scene: Scene<T>) => ?React.Element<any>,
+  renderIndicator?: (props: IndicatorProps<T>) => ?React.Element<any>,
   onTabPress?: Function,
-  tabStyle?: any,
-  indicatorStyle?: any,
-  labelStyle?: any,
-  style?: any,
+  tabStyle?: Style,
+  indicatorStyle?: Style,
+  labelStyle?: Style,
+  style?: Style,
 };
 
 type State = {

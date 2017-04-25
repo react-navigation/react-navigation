@@ -22,7 +22,7 @@ type State = {
 type Props<T> = SceneRendererProps<T> & {
   animationEnabled?: boolean,
   swipeEnabled?: boolean,
-  children?: any,
+  children?: React.Element<any>,
 };
 
 export default class TabViewPagerScroll<T: Route<*>>

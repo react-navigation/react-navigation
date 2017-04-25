@@ -8,6 +8,7 @@ import {
   Platform,
   View,
 } from 'react-native';
+import type { Style } from './TabViewTypeDefinitions';
 
 const LOLLIPOP = 21;
 
@@ -16,8 +17,8 @@ type Props = {
   borderless?: boolean,
   pressColor?: string,
   pressOpacity?: number,
-  children?: React.Element<*>,
-  style?: any,
+  children?: React.Element<any>,
+  style?: Style,
 };
 
 type DefaultProps = {

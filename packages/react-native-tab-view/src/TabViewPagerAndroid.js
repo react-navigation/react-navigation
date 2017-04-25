@@ -18,7 +18,7 @@ type PageScrollState = 'dragging' | 'settling' | 'idle';
 type Props<T> = SceneRendererProps<T> & {
   animationEnabled?: boolean,
   swipeEnabled?: boolean,
-  children?: any,
+  children?: React.Element<any>,
 };
 
 export default class TabViewPagerAndroid<T: Route<*>>
