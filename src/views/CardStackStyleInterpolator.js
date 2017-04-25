@@ -1,12 +1,8 @@
 /* @flow */
 
-import {
-  I18nManager,
-} from 'react-native';
+import { I18nManager } from 'react-native';
 
-import type {
-  NavigationSceneRendererProps,
-} from '../TypeDefinition';
+import type { NavigationSceneRendererProps } from '../TypeDefinition';
 
 /**
  * Utility that builds the style for the card in the cards stack.
@@ -38,10 +34,7 @@ function forInitial(props: NavigationSceneRendererProps): Object {
   const translate = focused ? 0 : 1000000;
   return {
     opacity,
-    transform: [
-      { translateX: translate },
-      { translateY: translate },
-    ],
+    transform: [{ translateX: translate }, { translateY: translate }],
   };
 }
 
@@ -65,10 +58,9 @@ function forHorizontal(props: NavigationSceneRendererProps): Object {
   // Add ~30px to the interpolated width screens width for horizontal movement. This allows
   // the screen's shadow to go screen fully offscreen without abruptly dissapearing
   const width = layout.initWidth + 30;
-  const outputRange = I18nManager.isRTL ?
-    ([-width, 0, 10, 10]: Array<number>) :
-    ([width, 0, -10, -10]: Array<number>);
-
+  const outputRange = I18nManager.isRTL
+    ? ([-width, 0, 10, 10]: Array<number>)
+    : ([width, 0, -10, -10]: Array<number>);
 
   const opacity = position.interpolate({
     inputRange,
@@ -83,10 +75,7 @@ function forHorizontal(props: NavigationSceneRendererProps): Object {
 
   return {
     opacity,
-    transform: [
-      { translateX },
-      { translateY },
-    ],
+    transform: [{ translateX }, { translateY }],
   };
 }
 
@@ -121,10 +110,7 @@ function forVertical(props: NavigationSceneRendererProps): Object {
 
   return {
     opacity,
-    transform: [
-      { translateX },
-      { translateY },
-    ],
+    transform: [{ translateX }, { translateY }],
   };
 }
 
@@ -144,7 +130,6 @@ function forFadeFromBottomAndroid(props: NavigationSceneRendererProps): Object {
 
   const index = scene.index;
   const inputRange = [index - 1, index, index + 0.99, index + 1];
-  const height = layout.initHeight;
 
   const opacity = position.interpolate({
     inputRange,
@@ -159,14 +144,11 @@ function forFadeFromBottomAndroid(props: NavigationSceneRendererProps): Object {
 
   return {
     opacity,
-    transform: [
-      { translateX },
-      { translateY },
-    ],
+    transform: [{ translateX }, { translateY }],
   };
 }
 
-function canUseNativeDriver(isVertical: boolean): boolean {
+function canUseNativeDriver(): boolean {
   // The native driver can be enabled for this interpolator animating
   // opacity, translateX, and translateY is supported by the native animation
   // driver on iOS and Android.
