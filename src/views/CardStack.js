@@ -101,7 +101,7 @@ const animatedSubscribeValue = (animatedValue: Animated.Value) => {
  */
 const GESTURE_ANIMATED_VELOCITY_RATIO = -4;
 
-class CardStack extends Component<void, Props, void> {
+class CardStack extends Component {
   /**
    * Used to identify the starting point of the position when the gesture starts, such that it can
    * be updated according to its relative position. This means that a card can effectively be
