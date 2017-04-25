@@ -11,7 +11,11 @@ import {
   I18nManager,
 } from 'react-native';
 import { SceneRendererPropType } from './TabViewPropTypes';
-import type { SceneRendererProps, Route } from './TabViewTypeDefinitions';
+import type {
+  SceneRendererProps,
+  Route,
+  TransitionConfigurator,
+} from './TabViewTypeDefinitions';
 
 type GestureEvent = {
   nativeEvent: {
@@ -39,19 +43,6 @@ type GestureState = {
   vy: number,
   numberActiveTouches: number,
 };
-
-type TransitionProps = {
-  progress: number,
-};
-
-type TransitionSpec = {
-  timing: Function,
-};
-
-type TransitionConfigurator = (
-  currentTransitionProps: TransitionProps,
-  nextTransitionProps: TransitionProps,
-) => TransitionSpec;
 
 type DefaultProps = {
   configureTransition: TransitionConfigurator,

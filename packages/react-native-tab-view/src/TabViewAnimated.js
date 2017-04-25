@@ -11,19 +11,20 @@ import type {
   Layout,
   Route,
   SubscriptionName,
+  PagerProps,
 } from './TabViewTypeDefinitions';
 
 type DefaultProps<T> = {
-  renderPager: (props: SceneRendererProps<T>) => React.Element<*>,
+  renderPager: (props: SceneRendererProps<T> & PagerProps) => React.Element<*>,
 };
 
-type Props<T> = {
+type Props<T> = PagerProps & {
   navigationState: NavigationState<T>,
   onRequestChangeTab: (index: number) => void,
   onChangePosition?: (value: number) => void,
   initialLayout?: Layout,
   canJumpToTab?: (route: T) => boolean,
-  renderPager: (props: SceneRendererProps<T>) => React.Element<*>,
+  renderPager: (props: SceneRendererProps<T> & PagerProps) => React.Element<*>,
   renderScene: (props: SceneRendererProps<T> & Scene<T>) => ?React.Element<*>,
   renderHeader?: (props: SceneRendererProps<T>) => ?React.Element<*>,
   renderFooter?: (props: SceneRendererProps<T>) => ?React.Element<*>,

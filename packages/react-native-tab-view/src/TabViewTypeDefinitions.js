@@ -35,3 +35,25 @@ export type SceneRendererProps<T> = {
 };
 
 export type SubscriptionName = 'reset' | 'position';
+
+export type TransitionProps = {
+  progress: number,
+};
+
+export type TransitionSpec = {
+  timing: Function,
+};
+
+export type TransitionConfigurator = (
+  currentTransitionProps: TransitionProps,
+  nextTransitionProps: TransitionProps,
+) => TransitionSpec;
+
+export type PagerProps = {
+  configureTransition?: TransitionConfigurator,
+  animationEnabled?: boolean,
+  swipeEnabled?: boolean,
+  swipeDistanceThreshold?: number,
+  swipeVelocityThreshold?: number,
+  children?: *,
+};
