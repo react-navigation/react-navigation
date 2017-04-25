@@ -8,8 +8,6 @@ import {
   TabViewPagerScroll,
   TabViewPagerPan,
 } from 'react-native-tab-view';
-import TabBarTop from './TabBarTop';
-import TabBarBottom from './TabBarBottom';
 import SceneView from '../SceneView';
 import withCachedChildNavigation from '../../withCachedChildNavigation';
 
