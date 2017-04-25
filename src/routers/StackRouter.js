@@ -294,10 +294,13 @@ export default (
       return state;
     },
 
-    getPathAndParamsForState(): { path: string, params?: NavigationParams } {
+    getPathAndParamsForState(
+      state: NavigationState,
+    ): { path: string, params?: NavigationParams } {
       const route = state.routes[state.index];
       const routeName = route.routeName;
       const screen = getScreenForRouteName(routeConfigs, routeName);
+      /* $FlowFixMe */
       const subPath = paths[routeName].toPath(route.params);
       let path = subPath;
       let params = route.params;

@@ -858,7 +858,9 @@ describe('StackRouter', () => {
     };
     const { path, params } = router.getPathAndParamsForState(state);
     expect(path).toEqual('f/123/baz/321');
+    /* $FlowFixMe: params.id has to exist */
     expect(params.id).toEqual('123');
+    /* $FlowFixMe: params.bazId has to exist */
     expect(params.bazId).toEqual('321');
   });
 
