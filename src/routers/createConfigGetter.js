@@ -6,7 +6,7 @@ import invariant from 'fbjs/lib/invariant';
 
 import getScreenForRouteName from './getScreenForRouteName';
 import addNavigationHelpers from '../addNavigationHelpers';
-import validateScreenOptions from '../validateScreenOptions';
+import validateScreenOptions from './validateScreenOptions';
 
 import type {
   NavigationScreenProp,
