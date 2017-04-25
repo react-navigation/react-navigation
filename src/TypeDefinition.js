@@ -214,7 +214,7 @@ export type NavigationStackViewConfig = {
 };
 
 export type NavigationStackScreenOptions = NavigationScreenOptions & {
-  header?: React.Element<*> | ((HeaderProps) => React.Element<*>),
+  header?: ?(React.Element<*> | ((HeaderProps) => React.Element<*>)),
   headerTitle?: string | React.Element<*>,
   headerTitleStyle?: Style,
   headerTintColor?: string,
