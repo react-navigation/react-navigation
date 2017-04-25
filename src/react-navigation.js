@@ -56,6 +56,9 @@ module.exports = {
   get Header() {
     return require('./views/Header').default;
   },
+  get HeaderTitle() {
+    return require('./views/HeaderTitle').default;
+  },
   get HeaderBackButton() {
     return require('./views/HeaderBackButton').default;
   },
