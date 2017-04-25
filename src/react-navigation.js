@@ -51,17 +51,32 @@ module.exports = {
   get Card() {
     return require('./views/Card').default;
   },
+
+  // Header
   get Header() {
     return require('./views/Header').default;
   },
   get HeaderBackButton() {
     return require('./views/HeaderBackButton').default;
   },
+
+  // DrawerView
   get DrawerView() {
     return require('./views/Drawer/DrawerView').default;
   },
+  get DrawerItems() {
+    return require('./views/Drawer/DrawerNavigatorItems').default;
+  },
+
+  // TabView
   get TabView() {
     return require('./views/TabView/TabView').default;
+  },
+  get TabBarTop() {
+    return require('./views/TabView/TabBarTop').default;
+  },
+  get TabBarBottom() {
+    return require('./views/TabView/TabBarBottom').default;
   },
 
   // HOCs
