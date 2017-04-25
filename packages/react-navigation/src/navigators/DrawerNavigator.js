@@ -8,6 +8,8 @@ import createNavigationContainer from '../createNavigationContainer';
 import TabRouter from '../routers/TabRouter';
 import DrawerScreen from '../views/Drawer/DrawerScreen';
 import DrawerView from '../views/Drawer/DrawerView';
+import DrawerItems from '../views/Drawer/DrawerNavigatorItems';
+
 import NavigatorTypes from './NavigatorTypes';
 
 import type { DrawerViewConfig } from '../views/Drawer/DrawerView';
@@ -28,7 +30,7 @@ const DefaultDrawerConfig = {
    */
   drawerWidth: Dimensions.get('window').width -
     (Platform.OS === 'android' ? 56 : 64),
-  contentComponent: DrawerView.Items,
+  contentComponent: DrawerItems,
   drawerPosition: 'left',
 };
 

@@ -39,8 +39,6 @@ const TITLE_OFFSET = Platform.OS === 'ios' ? 70 : 40;
 
 class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
   static HEIGHT = APPBAR_HEIGHT + STATUSBAR_HEIGHT;
-  static Title = HeaderTitle;
-  static BackButton = HeaderBackButton;
 
   state = {
     widths: {},

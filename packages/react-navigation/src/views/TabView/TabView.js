@@ -8,8 +8,6 @@ import {
   TabViewPagerScroll,
   TabViewPagerPan,
 } from 'react-native-tab-view';
-import TabBarTop from './TabBarTop';
-import TabBarBottom from './TabBarBottom';
 import SceneView from '../SceneView';
 import withCachedChildNavigation from '../../withCachedChildNavigation';
 
@@ -68,9 +66,6 @@ switch (Platform.OS) {
 }
 
 class TabView extends PureComponent<void, Props, void> {
-  static TabBarTop = TabBarTop;
-  static TabBarBottom = TabBarBottom;
-
   props: Props;
 
   _handlePageChanged = (index: number) => {
@@ -223,9 +218,6 @@ class TabView extends PureComponent<void, Props, void> {
 }
 
 const TabViewEnhanced = withCachedChildNavigation(TabView);
-
-TabViewEnhanced.TabBarTop = TabBarTop;
-TabViewEnhanced.TabBarBottom = TabBarBottom;
 
 export default TabViewEnhanced;
 
