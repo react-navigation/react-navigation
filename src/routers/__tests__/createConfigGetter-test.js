@@ -14,7 +14,7 @@ test('should get config for screen', () => {
   class HomeScreen extends Component {
     static navigationOptions = ({ navigation }: *) => ({
       title: `Welcome ${navigation.state.params ? navigation.state.params.user : 'anonymous'}`,
-      headerVisible: true,
+      gesturesEnabled: true,
     });
 
     render() {
@@ -25,7 +25,7 @@ test('should get config for screen', () => {
   class SettingsScreen extends Component {
     static navigationOptions = {
       title: 'Settings!!!',
-      headerVisible: false,
+      gesturesEnabled: false,
     };
 
     render() {
@@ -36,7 +36,7 @@ test('should get config for screen', () => {
   class NotificationScreen extends Component {
     static navigationOptions = ({ navigation }: *) => ({
       title: '42',
-      headerVisible: navigation.state.params
+      gesturesEnabled: navigation.state.params
         ? !navigation.state.params.fullscreen
         : true,
     });
@@ -83,7 +83,7 @@ test('should get config for screen', () => {
     getScreenOptions(
       addNavigationHelpers({ state: routes[0], dispatch: () => false }),
       {},
-    ).headerVisible,
+    ).gesturesEnabled,
   ).toEqual(true);
   expect(
     getScreenOptions(
@@ -95,7 +95,7 @@ test('should get config for screen', () => {
     getScreenOptions(
       addNavigationHelpers({ state: routes[2], dispatch: () => false }),
       {},
-    ).headerVisible,
+    ).gesturesEnabled,
   ).toEqual(false);
   expect(
     getScreenOptions(
@@ -107,13 +107,13 @@ test('should get config for screen', () => {
     getScreenOptions(
       addNavigationHelpers({ state: routes[3], dispatch: () => false }),
       {},
-    ).headerVisible,
+    ).gesturesEnabled,
   ).toEqual(true);
   expect(
     getScreenOptions(
       addNavigationHelpers({ state: routes[4], dispatch: () => false }),
       {},
-    ).headerVisible,
+    ).gesturesEnabled,
   ).toEqual(false);
 });
 
@@ -123,7 +123,7 @@ test('should throw if the route does not exist', () => {
   const HomeScreen = () => null;
   HomeScreen.navigationOptions = {
     title: 'Home screen',
-    headerVisible: true,
+    gesturesEnabled: true,
   };
 
   const getScreenOptions = createConfigGetter({
