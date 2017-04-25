@@ -85,7 +85,7 @@ The route configs object is a mapping from route name to a route config, which t
 - `tabBarPosition` - position of the tab bar, can be `'top'` or `'bottom'`
 - `swipeEnabled` - whether to allow swiping between tabs
 - `animationEnabled` - whether to animate when changing tabs
-- `lazyLoad` - whether to lazily render tabs as needed as opposed to rendering them upfront
+- `lazy` - whether to lazily render tabs as needed as opposed to rendering them upfront
 - `tabBarOptions` - configure the tab bar, see below.
 
 Several options get passed to the underlying router to modify navigation logic:
