@@ -224,7 +224,6 @@ export type NavigationStackScreenOptions = NavigationScreenOptions & {
   headerPressColorAndroid?: string,
   headerRight?: React.Element<*>,
   headerStyle?: Style,
-  headerVisible?: boolean,
   gesturesEnabled?: boolean,
 };
 

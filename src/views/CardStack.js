@@ -380,10 +380,6 @@ class CardStack extends Component {
     const { screenProps } = this.props;
     const headerMode = this._getHeaderMode();
     if (headerMode === 'screen') {
-      const isHeaderHidden = options.headerVisible === false;
-      const maybeHeader = isHeaderHidden
-        ? null
-        : this._renderHeader(scene, headerMode);
       return (
         <View style={styles.container}>
           <View style={{ flex: 1 }}>
@@ -394,7 +390,7 @@ class CardStack extends Component {
               navigationOptions={options}
             />
           </View>
-          {maybeHeader}
+          {this._renderHeader(scene, headerMode)}
         </View>
       );
     }
