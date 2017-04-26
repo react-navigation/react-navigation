@@ -82,7 +82,8 @@ const RESPOND_THRESHOLD = 12;
 /**
  * The distance of touch start from the edge of the screen where the gesture will be recognized
  */
-const GESTURE_RESPONSE_DISTANCE = 35;
+const GESTURE_RESPONSE_DISTANCE_HORIZONTAL = 35;
+const GESTURE_RESPONSE_DISTANCE_VERTICAL = 135;
 
 const animatedSubscribeValue = (animatedValue: Animated.Value) => {
   if (!animatedValue.__isNative) {
@@ -260,7 +261,7 @@ class CardStack extends Component {
         if (index !== scene.index) {
           return false;
         }
-        const isVertical = false; // todo: bring back gestures for mode=modal
+        const isVertical = mode === 'modal';
         const immediateIndex = this._immediateIndex == null
           ? index
           : this._immediateIndex;
@@ -275,8 +276,12 @@ class CardStack extends Component {
 
         // Measure the distance from the touch to the edge of the screen
         const screenEdgeDistance = currentDragPosition - currentDragDistance;
-        // GESTURE_RESPONSE_DISTANCE is about 30 or 35
-        if (screenEdgeDistance > GESTURE_RESPONSE_DISTANCE) {
+        // Compare to the gesture distance relavant to card or modal
+        const gestureResponseDistance = isVertical
+          ? GESTURE_RESPONSE_DISTANCE_VERTICAL
+          : GESTURE_RESPONSE_DISTANCE_HORIZONTAL;
+        // GESTURE_RESPONSE_DISTANCE is about 30 or 35. Or 135 for modals
+        if (screenEdgeDistance > gestureResponseDistance) {
           // Reject touches that started in the middle of the screen
           return false;
         }
@@ -293,7 +298,7 @@ class CardStack extends Component {
       onPanResponderMove: (event: any, gesture: any) => {
         // Handle the moving touches for our granted responder
         const layout = this.props.layout;
-        const isVertical = false;
+        const isVertical = mode === 'modal';
         const startValue = this._gestureStartValue;
         const axis = isVertical ? 'dy' : 'dx';
         const distance = isVertical
@@ -314,7 +319,7 @@ class CardStack extends Component {
           return;
         }
         this._isResponding = false;
-        const isVertical = false;
+        const isVertical = mode === 'modal';
         const velocity = gesture[isVertical ? 'vy' : 'vx'];
         const immediateIndex = this._immediateIndex == null
           ? index
@@ -345,10 +350,9 @@ class CardStack extends Component {
     });
 
     const { options } = this._getScreenDetails(scene);
-    const gesturesEnabled = mode === 'card' &&
-      (typeof options.gesturesEnabled === 'boolean'
-        ? options.gesturesEnabled
-        : Platform.OS === 'ios');
+    const gesturesEnabled = typeof options.gesturesEnabled === 'boolean'
+      ? options.gesturesEnabled
+      : Platform.OS === 'ios';
 
     const handlers = gesturesEnabled ? responder.panHandlers : {};
 
