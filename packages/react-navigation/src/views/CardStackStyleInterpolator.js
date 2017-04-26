@@ -53,18 +53,24 @@ function forHorizontal(props: NavigationSceneRendererProps): Object {
   }
 
   const index = scene.index;
-  const inputRange = [index - 1, index, index + 0.99, index + 1];
+  const inputRange = [index - 1, index, index + 1];
 
-  // Add ~30px to the interpolated width screens width for horizontal movement. This allows
-  // the screen's shadow to go screen fully offscreen without abruptly dissapearing
-  const width = layout.initWidth + 30;
+  const width = layout.initWidth;
   const outputRange = I18nManager.isRTL
-    ? ([-width, 0, 10, 10]: Array<number>)
-    : ([width, 0, -10, -10]: Array<number>);
+    ? ([-width, 0, 10]: Array<number>)
+    : ([width, 0, -10]: Array<number>);
 
+  // Add [index - 1, index - 0.99] to the interpolated opacity for screen transition.
+  // This makes the screen's shadow to disappear smoothly.
   const opacity = position.interpolate({
-    inputRange,
-    outputRange: ([1, 1, 0.3, 0]: Array<number>),
+    inputRange: ([
+      index - 1,
+      index - 0.99,
+      index,
+      index + 0.99,
+      index + 1,
+    ]: Array<number>),
+    outputRange: ([0, 1, 1, 0.3, 0]: Array<number>),
   });
 
   const translateY = 0;
@@ -94,18 +100,23 @@ function forVertical(props: NavigationSceneRendererProps): Object {
   }
 
   const index = scene.index;
-  const inputRange = [index - 1, index, index + 0.99, index + 1];
   const height = layout.initHeight;
 
   const opacity = position.interpolate({
-    inputRange,
-    outputRange: ([1, 1, 0.3, 0]: Array<number>),
+    inputRange: ([
+      index - 1,
+      index - 0.99,
+      index,
+      index + 0.99,
+      index + 1,
+    ]: Array<number>),
+    outputRange: ([0, 1, 1, 0.3, 0]: Array<number>),
   });
 
   const translateX = 0;
   const translateY = position.interpolate({
-    inputRange,
-    outputRange: ([height, 0, 0, 0]: Array<number>),
+    inputRange: ([index - 1, index, index + 1]: Array<number>),
+    outputRange: ([height, 0, 0]: Array<number>),
   });
 
   return {
