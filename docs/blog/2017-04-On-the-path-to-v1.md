@@ -10,4 +10,4 @@ Today we're excited to announce the release of [beta 9](https://github.com/react
 
 The community has experienced some thrash by a few of our earlier beta releases. So, starting with [this release](https://github.com/react-community/react-navigation/releases/tag/v1.0.0-beta.9), we will include detailed [release notes](https://github.com/react-community/react-navigation/releases) about any API changes, new features, and bug fixes.
 
-After the stabilization and release of v1, we're excited to explore new ways of customizing transitions, and overriding navigation components. There are some exciting proposals about these new APIs, and we look forward to the community's feedback and involvement.
+After the stabilization and release of v1, we're excited to explore new ways of customizing transitions, and overriding navigation components. There are some [exciting proposals](https://github.com/react-community/react-navigation/issues/1263) about these new APIs, and we look forward to the community's feedback and involvement.
