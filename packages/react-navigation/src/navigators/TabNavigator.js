@@ -36,7 +36,7 @@ const TabNavigator = (
     tabBarOptions,
     swipeEnabled,
     animationEnabled,
-    lazyLoad,
+    lazy,
     ...tabsConfig
   } = mergedConfig;
 
@@ -55,7 +55,7 @@ const TabNavigator = (
       tabBarOptions={tabBarOptions}
       swipeEnabled={swipeEnabled}
       animationEnabled={animationEnabled}
-      lazyLoad={lazyLoad}
+      lazy={lazy}
     />
   ));
 
@@ -68,14 +68,14 @@ const Presets = {
     tabBarPosition: 'bottom',
     swipeEnabled: false,
     animationEnabled: false,
-    lazyLoad: false,
+    lazy: false,
   },
   AndroidTopTabs: {
     tabBarComponent: TabBarTop,
     tabBarPosition: 'top',
     swipeEnabled: true,
     animationEnabled: true,
-    lazyLoad: false,
+    lazy: false,
   },
 };
 
