@@ -26,7 +26,6 @@ export default (
     initialRouteName,
     initialRouteParams,
     paths,
-    headerComponent,
     headerMode,
     mode,
     cardStyle,
@@ -52,7 +51,6 @@ export default (
   )((props: *) => (
     <CardStackTransitioner
       {...props}
-      headerComponent={headerComponent}
       headerMode={headerMode}
       mode={mode}
       cardStyle={cardStyle}

@@ -96,9 +96,9 @@ Visual options:
 
 Generic title that can be used as a fallback for `headerTitle` and `tabBarLabel`
 
-#### `headerVisible`
+#### `header`
 
-True or false to show or hide the header. Only works when `headerMode` is `screen`. Default value is `true`.
+React Element or a function that given `HeaderProps` returns a React Element, to display as a header. Setting to `null` hides header.
 
 #### `headerTitle`
 
