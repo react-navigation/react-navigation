@@ -250,7 +250,7 @@ class CardStack extends Component {
         if (index !== scene.index) {
           return false;
         }
-        const isVertical = mode === 'modal'; // todo: bring back gestures for mode=modal
+        const isVertical = mode === 'modal';
         const immediateIndex = this._immediateIndex == null
           ? index
           : this._immediateIndex;
