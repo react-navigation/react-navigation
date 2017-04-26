@@ -2,7 +2,7 @@
 
 import React, { PureComponent } from 'react';
 import { StyleSheet } from 'react-native';
-import { TabViewAnimated } from 'react-native-tab-view';
+import { TabViewAnimated, TabViewPagerPan } from 'react-native-tab-view';
 import SceneView from '../SceneView';
 import withCachedChildNavigation from '../../withCachedChildNavigation';
 
@@ -127,6 +127,8 @@ class TabView extends PureComponent<void, Props, void> {
     );
   };
 
+  _renderPager = (props: *) => <TabViewPagerPan {...props} />;
+
   render() {
     const {
       router,
@@ -140,6 +142,7 @@ class TabView extends PureComponent<void, Props, void> {
 
     let renderHeader;
     let renderFooter;
+    let renderPager;
 
     const { state } = this.props.navigation;
     const options = router.getScreenOptions(
@@ -159,17 +162,22 @@ class TabView extends PureComponent<void, Props, void> {
       }
     }
 
+    if (animationEnabled === false && swipeEnabled === false) {
+      renderPager = this._renderPager;
+    }
+
     const props = {
-      style: styles.container,
-      navigationState: this.props.navigation.state,
       lazy,
-      renderHeader,
-      renderFooter,
       animationEnabled,
       swipeEnabled,
+      renderPager,
+      renderHeader,
+      renderFooter,
       renderScene: this._renderScene,
       onRequestChangeTab: this._handlePageChanged,
+      navigationState: this.props.navigation.state,
       screenProps: this.props.screenProps,
+      style: styles.container,
     };
 
     return <TabViewAnimated {...props} />;
