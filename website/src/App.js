@@ -309,6 +309,14 @@ IntroPost.navigationOptions = {
 };
 
 const BlogHistoryPage = createNavigator(TabRouter({
+  RoadToV1: {
+    screen: createDocPage({
+      doc: 'blog/2017-04-On-the-path-to-v1',
+      title: 'On the path to v1',
+      linkName: 'On the path to v1',
+    }),
+    path: '2017/4/On-the-path-to-v1',
+  },
   IntroPost: {
     screen: createDocPage({
       doc: 'blog/2017-01-Introducing-React-Navigation',
