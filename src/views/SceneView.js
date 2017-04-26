@@ -13,7 +13,6 @@ import type {
 type Props = {
   screenProps?: {},
   navigation: NavigationScreenProp<NavigationRoute, NavigationAction>,
-  navigationOptions: *,
   component: ReactClass<NavigationNavigatorProps<NavigationRoute>>,
 };
 
@@ -34,16 +33,9 @@ export default class SceneView extends PureComponent<void, Props, void> {
     const {
       screenProps,
       navigation,
-      navigationOptions,
       component: Component,
     } = this.props;
 
-    return (
-      <Component
-        screenProps={screenProps}
-        navigation={navigation}
-        navigationOptions={navigationOptions}
-      />
-    );
+    return <Component screenProps={screenProps} navigation={navigation} />;
   }
 }

@@ -66,10 +66,6 @@ class TabView extends PureComponent<void, Props, void> {
         screenProps={screenProps}
         component={TabComponent}
         navigation={childNavigation}
-        navigationOptions={this.props.router.getScreenOptions(
-          childNavigation,
-          screenProps,
-        )}
       />
     );
   };
