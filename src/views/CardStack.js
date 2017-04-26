@@ -81,8 +81,8 @@ const RESPOND_THRESHOLD = 12;
 /**
  * The distance of touch start from the edge of the screen where the gesture will be recognized
  */
-const GESTURE_RESPONSE_DISTANCE_SIDE = 35;
-const GESTURE_RESPONSE_DISTANCE_TOP = 135;
+const GESTURE_RESPONSE_DISTANCE_HORIZONTAL = 35;
+const GESTURE_RESPONSE_DISTANCE_VERTICAL = 135;
 
 const animatedSubscribeValue = (animatedValue: Animated.Value) => {
   if (!animatedValue.__isNative) {
@@ -267,8 +267,8 @@ class CardStack extends Component {
         const screenEdgeDistance = currentDragPosition - currentDragDistance;
         // Compare to the gesture distance relavant to card or modal
         const gestureResponseDistance = isVertical
-          ? GESTURE_RESPONSE_DISTANCE_TOP
-          : GESTURE_RESPONSE_DISTANCE_SIDE;
+          ? GESTURE_RESPONSE_DISTANCE_VERTICAL
+          : GESTURE_RESPONSE_DISTANCE_HORIZONTAL;
         // GESTURE_RESPONSE_DISTANCE is about 30 or 35. Or 135 for modals
         if (screenEdgeDistance > gestureResponseDistance) {
           // Reject touches that started in the middle of the screen
