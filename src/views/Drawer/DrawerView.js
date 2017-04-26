@@ -4,7 +4,6 @@ import React, { PureComponent } from 'react';
 import DrawerLayout from 'react-native-drawer-layout-polyfill';
 
 import addNavigationHelpers from '../../addNavigationHelpers';
-import DrawerNavigatorItems from './DrawerNavigatorItems';
 import DrawerSidebar from './DrawerSidebar';
 
 import type {
@@ -42,8 +41,6 @@ type Props = DrawerViewConfig & {
  * Component that renders the drawer.
  */
 export default class DrawerView<T: *> extends PureComponent<void, Props, void> {
-  static Items = DrawerNavigatorItems;
-
   props: Props;
 
   componentWillMount() {

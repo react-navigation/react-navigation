@@ -96,9 +96,9 @@ Visual options:
 
 Generic title that can be used as a fallback for `headerTitle` and `tabBarLabel`
 
-#### `headerVisible`
+#### `header`
 
-True or false to show or hide the header. Only works when `headerMode` is `screen`. Default value is `true`.
+React Element or a function that given `HeaderProps` returns a React Element, to display as a header. Setting to `null` hides header.
 
 #### `headerTitle`
 
@@ -114,11 +114,11 @@ Title string used by the back button when `headerBackTitle` doesn't fit on the s
 
 #### `headerRight`
 
-String or React Element to display on the right side of the header
+React Element to display on the right side of the header
 
 #### `headerLeft`
 
-String or React Element to display on the left side of the header
+React Element to display on the left side of the header
 
 #### `headerStyle`
 
@@ -138,7 +138,7 @@ Color for material ripple (Android >= 5.0 only)
 
 #### `gesturesEnabled`
 
-Whether you can use gestures to dismiss this screen. Defaults to true on iOS, false on Android
+Whether you can use gestures to dismiss this screen. Defaults to true on iOS, false on Android.
 
 ### Navigator Props
 

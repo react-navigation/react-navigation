@@ -4,26 +4,30 @@ import { NavigationActions } from 'react-navigation';
 import { AppNavigator } from '../navigators/AppNavigator';
 
 // Start with two routes: The Main screen, with the Login screen on top.
-const initialNavState = {
-  index: 1,
-  routes: [
-    { key: 'InitA', routeName: 'Main' },
-    { key: 'InitB', routeName: 'Login' },
-  ],
-};
-
-const initialAuthState = { isLoggedIn: false };
+const firstAction = AppNavigator.router.getActionForPathAndParams('Main');
+const tempNavState = AppNavigator.router.getStateForAction(firstAction);
+const secondAction = AppNavigator.router.getActionForPathAndParams('Login');
+const initialNavState = AppNavigator.router.getStateForAction(secondAction, tempNavState);
 
 function nav(state = initialNavState, action) {
+  let nextState;
   switch (action.type) {
     case 'Login':
-      return AppNavigator.router.getStateForAction(NavigationActions.back(), state);
+      nextState = AppNavigator.router.getStateForAction(NavigationActions.back(), state);
+      break;
     case 'Logout':
-      return AppNavigator.router.getStateForAction(NavigationActions.navigate({ routeName: 'Login' }), state);
+      nextState = AppNavigator.router.getStateForAction(NavigationActions.navigate({ routeName: 'Login' }), state);
+      break;
     default:
-      return AppNavigator.router.getStateForAction(action, state);
+      nextState = AppNavigator.router.getStateForAction(action, state);
+      break;
   }
+
+  // Simply return the original `state` if `nextState` is null or undefined.
+  return nextState || state;
 }
+
+const initialAuthState = { isLoggedIn: false };
 
 function auth(state = initialAuthState, action) {
   switch (action.type) {

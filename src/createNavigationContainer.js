@@ -78,7 +78,6 @@ export default function createNavigationContainer<T: *>(
       const {
         navigation,
         screenProps,
-        navigationOptions,
         ...containerProps
       } = props;
 

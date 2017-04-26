@@ -7,7 +7,6 @@ import CardStack from './CardStack';
 import CardStackStyleInterpolator from './CardStackStyleInterpolator';
 import Transitioner from './Transitioner';
 import TransitionConfigs from './TransitionConfigs';
-import Header from './Header';
 
 import type {
   NavigationAction,
@@ -28,7 +27,6 @@ const NativeAnimatedModule = NativeModules &&
 type Props = {
   screenProps?: {},
   headerMode: HeaderMode,
-  headerComponent?: ReactClass<*>,
   mode: 'card' | 'modal',
   navigation: NavigationScreenProp<NavigationState, NavigationAction>,
   router: NavigationRouter<NavigationState, NavigationAction, NavigationStackScreenOptions>,
@@ -44,7 +42,6 @@ type Props = {
 
 type DefaultProps = {
   mode: 'card' | 'modal',
-  headerComponent: ReactClass<*>,
 };
 
 class CardStackTransitioner extends Component<DefaultProps, Props, void> {
@@ -52,7 +49,6 @@ class CardStackTransitioner extends Component<DefaultProps, Props, void> {
 
   static defaultProps: DefaultProps = {
     mode: 'card',
-    headerComponent: Header,
   };
 
   render() {
@@ -99,7 +95,6 @@ class CardStackTransitioner extends Component<DefaultProps, Props, void> {
   _render = (props: NavigationTransitionProps): React.Element<*> => {
     const {
       screenProps,
-      headerComponent,
       headerMode,
       mode,
       router,
@@ -110,7 +105,6 @@ class CardStackTransitioner extends Component<DefaultProps, Props, void> {
     return (
       <CardStack
         screenProps={screenProps}
-        headerComponent={headerComponent}
         headerMode={headerMode}
         mode={mode}
         router={router}

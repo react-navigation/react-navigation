@@ -40,27 +40,25 @@ const MyApp = StackNavigator({
 }, {
   initialRouteName: 'Home',
 })
-MyApp.router = {
-  ...MyApp.router,
-  getStateForAction(action, state) {
-    if (state && action.type === 'PushTwoProfiles') {
-      const routes = [
-        ...state.routes,
-        {key: 'A', routeName: 'Profile', params: { name: action.name1 }},
-        {key: 'B', routeName: 'Profile', params: { name: action.name2 }},
-      ];
-      return {
-        ...state,
-        routes,
-        index: routes.length - 1,
-      };
-    }
-    return MyApp.router.getStateForAction(action, state);
-  },
+
+const defaultGetStateForAction = MyApp.router.getStateForAction;
+
+MyApp.router.getStateForAction = (action, state) => {
+  if (state && action.type === 'PushTwoProfiles') {
+    const routes = [
+      ...state.routes,
+      {key: 'A', routeName: 'Profile', params: { name: action.name1 }},
+      {key: 'B', routeName: 'Profile', params: { name: action.name2 }},
+    ];
+    return {
+      ...state,
+      routes,
+      index: routes.length - 1,
+    };
+  }
+  return defaultGetStateForAction(action, state);
 };
 ```
-
-
 
 ### Blocking Navigation Actions
 
@@ -73,20 +71,21 @@ const MyStackRouter = StackRouter({
 }, {
   initialRouteName: 'Home',
 })
-const MyAppRouter = {
-  ...MyStackRouter,
-  getStateForAction(action, state) {
-    if (
-      state &&
-      action.type === NavigationActions.BACK &&
-      state.routes[state.index].params.isEditing
-    ) {
-      // Returning null from getStateForAction means that the action
-      // has been handled/blocked, but there is not a new state
-      return null;
-    }
-    return MyStackRouter.getStateForAction(action, state);
-  },
+
+const defaultGetStateForAction = MyStackRouter.router.getStateForAction;
+
+MyStackRouter.router.getStateForAction = (action, state) => {
+  if (
+    state &&
+    action.type === NavigationActions.BACK &&
+    state.routes[state.index].params.isEditing
+  ) {
+    // Returning null from getStateForAction means that the action
+    // has been handled/blocked, but there is not a new state
+    return null;
+  }
+  
+  return defaultGetStateForAction(action, state);
 };
 ```
 
@@ -105,7 +104,8 @@ const MyApp = StackNavigator({
 }, {
   initialRouteName: 'Home',
 })
-const previousGetActionForPathAndParams = MyApp.router.getActionForPathAndParams
+const previousGetActionForPathAndParams = MyApp.router.getActionForPathAndParams;
+
 Object.assign(MyApp.router, {
   getActionForPathAndParams(path, params) {
     if (

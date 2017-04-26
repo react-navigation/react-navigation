@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 
 import Card from './Card';
+import Header from './Header';
 import NavigationActions from '../NavigationActions';
 import addNavigationHelpers from '../addNavigationHelpers';
 import SceneView from './SceneView';
@@ -81,7 +82,8 @@ const RESPOND_THRESHOLD = 12;
 /**
  * The distance of touch start from the edge of the screen where the gesture will be recognized
  */
-const GESTURE_RESPONSE_DISTANCE = 35;
+const GESTURE_RESPONSE_DISTANCE_HORIZONTAL = 35;
+const GESTURE_RESPONSE_DISTANCE_VERTICAL = 135;
 
 const animatedSubscribeValue = (animatedValue: Animated.Value) => {
   if (!animatedValue.__isNative) {
@@ -163,14 +165,24 @@ class CardStack extends Component {
     scene: NavigationScene,
     headerMode: HeaderMode,
   ): ?React.Element<*> {
-    return (
-      <this.props.headerComponent
-        {...this.props}
-        scene={scene}
-        mode={headerMode}
-        getScreenDetails={this._getScreenDetails}
-      />
-    );
+    const { header } = this._getScreenDetails(scene).options;
+
+    if (typeof header !== 'undefined' && typeof header !== 'function') {
+      return header;
+    }
+
+    const renderHeader = header || ((props: *) => <Header {...props} />);
+
+    // We need to explicitly exclude `mode` since Flow doesn't see
+    // mode: headerMode override below and reports prop mismatch
+    const { mode, ...passProps } = this.props;
+
+    return renderHeader({
+      ...passProps,
+      scene,
+      mode: headerMode,
+      getScreenDetails: this._getScreenDetails,
+    });
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -249,7 +261,7 @@ class CardStack extends Component {
         if (index !== scene.index) {
           return false;
         }
-        const isVertical = false; // todo: bring back gestures for mode=modal
+        const isVertical = mode === 'modal';
         const immediateIndex = this._immediateIndex == null
           ? index
           : this._immediateIndex;
@@ -264,8 +276,12 @@ class CardStack extends Component {
 
         // Measure the distance from the touch to the edge of the screen
         const screenEdgeDistance = currentDragPosition - currentDragDistance;
-        // GESTURE_RESPONSE_DISTANCE is about 30 or 35
-        if (screenEdgeDistance > GESTURE_RESPONSE_DISTANCE) {
+        // Compare to the gesture distance relavant to card or modal
+        const gestureResponseDistance = isVertical
+          ? GESTURE_RESPONSE_DISTANCE_VERTICAL
+          : GESTURE_RESPONSE_DISTANCE_HORIZONTAL;
+        // GESTURE_RESPONSE_DISTANCE is about 30 or 35. Or 135 for modals
+        if (screenEdgeDistance > gestureResponseDistance) {
           // Reject touches that started in the middle of the screen
           return false;
         }
@@ -282,7 +298,7 @@ class CardStack extends Component {
       onPanResponderMove: (event: any, gesture: any) => {
         // Handle the moving touches for our granted responder
         const layout = this.props.layout;
-        const isVertical = false;
+        const isVertical = mode === 'modal';
         const startValue = this._gestureStartValue;
         const axis = isVertical ? 'dy' : 'dx';
         const distance = isVertical
@@ -303,7 +319,7 @@ class CardStack extends Component {
           return;
         }
         this._isResponding = false;
-        const isVertical = false;
+        const isVertical = mode === 'modal';
         const velocity = gesture[isVertical ? 'vy' : 'vx'];
         const immediateIndex = this._immediateIndex == null
           ? index
@@ -333,7 +349,11 @@ class CardStack extends Component {
       },
     });
 
-    const gesturesEnabled = mode === 'card' && Platform.OS === 'ios';
+    const { options } = this._getScreenDetails(scene);
+    const gesturesEnabled = typeof options.gesturesEnabled === 'boolean'
+      ? options.gesturesEnabled
+      : Platform.OS === 'ios';
+
     const handlers = gesturesEnabled ? responder.panHandlers : {};
 
     return (
@@ -364,10 +384,6 @@ class CardStack extends Component {
     const { screenProps } = this.props;
     const headerMode = this._getHeaderMode();
     if (headerMode === 'screen') {
-      const isHeaderHidden = options.headerVisible === false;
-      const maybeHeader = isHeaderHidden
-        ? null
-        : this._renderHeader(scene, headerMode);
       return (
         <View style={styles.container}>
           <View style={{ flex: 1 }}>
@@ -375,10 +391,9 @@ class CardStack extends Component {
               screenProps={screenProps}
               navigation={navigation}
               component={SceneComponent}
-              navigationOptions={options}
             />
           </View>
-          {maybeHeader}
+          {this._renderHeader(scene, headerMode)}
         </View>
       );
     }
@@ -387,7 +402,6 @@ class CardStack extends Component {
         screenProps={this.props.screenProps}
         navigation={navigation}
         component={SceneComponent}
-        navigationOptions={options}
       />
     );
   }
