@@ -3,7 +3,7 @@ import invariant from 'fbjs/lib/invariant';
 
 import type { NavigationRoute } from '../TypeDefinition';
 
-const deprecatedKeys = ['tabBar', 'header'];
+const deprecatedKeys = ['tabBar'];
 
 /**
  * Make sure screen options returned by the `getScreenOption`

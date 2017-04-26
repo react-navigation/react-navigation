@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 
 import Card from './Card';
+import Header from './Header';
 import NavigationActions from '../NavigationActions';
 import addNavigationHelpers from '../addNavigationHelpers';
 import SceneView from './SceneView';
@@ -163,14 +164,24 @@ class CardStack extends Component {
     scene: NavigationScene,
     headerMode: HeaderMode,
   ): ?React.Element<*> {
-    return (
-      <this.props.headerComponent
-        {...this.props}
-        scene={scene}
-        mode={headerMode}
-        getScreenDetails={this._getScreenDetails}
-      />
-    );
+    const { header } = this._getScreenDetails(scene).options;
+
+    if (typeof header !== 'undefined' && typeof header !== 'function') {
+      return header;
+    }
+
+    const renderHeader = header || ((props: *) => <Header {...props} />);
+
+    // We need to explicitly exclude `mode` since Flow doesn't see
+    // mode: headerMode override below and reports prop mismatch
+    const { mode, ...passProps } = this.props;
+
+    return renderHeader({
+      ...passProps,
+      scene,
+      mode: headerMode,
+      getScreenDetails: this._getScreenDetails,
+    });
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -369,10 +380,6 @@ class CardStack extends Component {
     const { screenProps } = this.props;
     const headerMode = this._getHeaderMode();
     if (headerMode === 'screen') {
-      const isHeaderHidden = options.headerVisible === false;
-      const maybeHeader = isHeaderHidden
-        ? null
-        : this._renderHeader(scene, headerMode);
       return (
         <View style={styles.container}>
           <View style={{ flex: 1 }}>
@@ -383,7 +390,7 @@ class CardStack extends Component {
               navigationOptions={options}
             />
           </View>
-          {maybeHeader}
+          {this._renderHeader(scene, headerMode)}
         </View>
       );
     }
