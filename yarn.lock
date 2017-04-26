@@ -3921,11 +3921,11 @@ react-native-drawer-layout@1.2.0:
   dependencies:
     react-native-dismiss-keyboard "1.0.0"
 
-react-native-tab-view@^0.0.59:
-  version "0.0.59"
-  resolved "https://registry.yarnpkg.com/react-native-tab-view/-/react-native-tab-view-0.0.59.tgz#2cd1d809a5699fcc5d45fa6fc08deb21d3f81fea"
+react-native-tab-view@^0.0.61:
+  version "0.0.61"
+  resolved "https://registry.yarnpkg.com/react-native-tab-view/-/react-native-tab-view-0.0.61.tgz#9f5446c9ad33158b87f0bccf5004fbff79ca1f92"
   dependencies:
-    eslint-plugin-prettier "^2.0.1"
+    prop-types "^15.5.8"
 
 react-native-vector-icons@^3.0.0:
   version "3.0.0"

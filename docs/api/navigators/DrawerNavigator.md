@@ -84,7 +84,7 @@ The route configs object is a mapping from route name to a route config, which t
 
 - `drawerWidth` - Width of the drawer
 - `drawerPosition` - Options are `left` or `right`. Default is `left` position.
-- `contentComponent` - Component used to render the content of the drawer, for example, navigation items. Receives the `navigation` prop for the drawer. Defaults to `DrawerView.Items`. For more information, see below.
+- `contentComponent` - Component used to render the content of the drawer, for example, navigation items. Receives the `navigation` prop for the drawer. Defaults to `DrawerItems`. For more information, see below.
 - `contentOptions` - Configure the drawer content, see below.
 
 #### Example:
@@ -97,7 +97,7 @@ as you can see in the example below.
 {
   drawerWidth: 200,
   drawerPosition: 'right',
-  contentComponent: props => <ScrollView><DrawerView.Items {...props} /></ScrollView>
+  contentComponent: props => <ScrollView><DrawerItems {...props} /></ScrollView>
 }
 ```
 
@@ -113,9 +113,11 @@ Several options get passed to the underlying router to modify navigation logic:
 You can easily override the default component used by `react-navigation`:
 
 ```js
+import { DrawerItems } from 'react-navigation';
+
 const CustomDrawerContentComponent = (props) => (
   <View style={style.container}>
-    <DrawerView.Items {...props} />
+    <DrawerItems {...props} />
   </View>
 );
 
@@ -126,7 +128,7 @@ const styles = StyleSheet.create({
 });
 ```
 
-### `contentOptions` for `DrawerView.Items`
+### `contentOptions` for `DrawerItems`
 
 - `activeTintColor` - label and icon color of the active label
 - `activeBackgroundColor` - background color of the active label

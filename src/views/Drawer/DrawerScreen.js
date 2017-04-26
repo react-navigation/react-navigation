@@ -44,10 +44,6 @@ class DrawerScreen extends PureComponent<void, Props, void> {
         screenProps={screenProps}
         component={Content}
         navigation={childNavigation}
-        navigationOptions={router.getScreenOptions(
-          childNavigation,
-          screenProps,
-        )}
       />
     );
   }

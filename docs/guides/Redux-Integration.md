@@ -9,9 +9,13 @@ import { addNavigationHelpers } from 'react-navigation';
 
 const AppNavigator = StackNavigator(AppRouteConfigs);
 
-const navReducer = (state, action) => {
-  const newState = AppNavigator.router.getStateForAction(action, state);
-  return (newState ? newState : state)
+const initialState = AppNavigator.router.getStateForAction(AppNavigator.router.getActionForPathAndParams('Login'));
+
+const navReducer = (state = initialState, action) => {
+  const nextState = AppNavigator.router.getStateForAction(action, state);
+
+  // Simply return the original `state` if `nextState` is null or undefined.
+  return nextState || state;
 };
 
 const appReducer = combineReducers({
@@ -64,6 +68,10 @@ const AppNavigator = StackNavigator({
 ```
 
 In this case, once you `connect` `AppNavigator` to Redux as is done in `AppWithNavigationState`, `MyTabNavigator` will automatically have access to navigation state as a `navigation` prop.
+
+## Full example
+
+There's a working example app with redux [here](https://github.com/react-community/react-navigation/tree/master/examples/ReduxExample) if you want to try it out yourself.
 
 ## Mocking tests
 
