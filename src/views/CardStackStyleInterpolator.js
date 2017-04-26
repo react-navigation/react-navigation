@@ -71,6 +71,7 @@ function forHorizontal(props: NavigationSceneRendererProps): Object {
   const translateX = position.interpolate({
     inputRange,
     outputRange,
+    extrapolate: 'clamp',
   });
 
   return {
@@ -106,6 +107,7 @@ function forVertical(props: NavigationSceneRendererProps): Object {
   const translateY = position.interpolate({
     inputRange,
     outputRange: ([height, 0, 0, 0]: Array<number>),
+    extrapolate: 'clamp',
   });
 
   return {
