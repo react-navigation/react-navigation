@@ -36,7 +36,6 @@ export default (
   const backBehavior = config.backBehavior || 'initialRoute';
   const shouldBackNavigateToInitialRoute = backBehavior === 'initialRoute';
   const shouldBackNavigateToLastActiveTab = backBehavior === 'previousRoute';
-  const backstack = [];
   const tabRouters = {};
   order.forEach((routeName: string) => {
     const routeConfig = routeConfigs[routeName];
@@ -82,10 +81,18 @@ export default (
             routeName,
           };
         });
-        state = {
-          routes,
-          index: initialRouteIndex,
-        };
+        if (shouldBackNavigateToLastActiveTab) {
+          state = {
+            routes,
+            index: initialRouteIndex,
+            backstack: [],
+          };
+        } else {
+          state = {
+            routes,
+            index: initialRouteIndex,
+          };
+        }
         // console.log(`${order.join('-')}: Initial state`, {state});
       }
 
@@ -132,17 +139,21 @@ export default (
       let activeTabIndex = state.index;
       const isBackEligible = action.key == null ||
         action.key === activeTabLastState.key;
-      if (
-        action.type === NavigationActions.BACK &&
-        isBackEligible
-      ) {
+      if (action.type === NavigationActions.BACK && isBackEligible) {
         if (shouldBackNavigateToInitialRoute) {
           activeTabIndex = initialRouteIndex;
-        } else if (shouldBackNavigateToLastActiveTab && backstack.length >= 1) {
-          const previousIndex = backstack.pop();
+        } else if (
+          shouldBackNavigateToLastActiveTab &&
+          state.backstack !== undefined &&
+          state.backstack.length >= 1
+        ) {
+          const previousIndex = state.backstack[state.backstack.length - 1];
           return {
             ...state,
             index: previousIndex,
+            backstack: [
+              ...state.backstack.slice(0, state.backstack.length - 1),
+            ],
           };
         }
       }
@@ -209,16 +220,28 @@ export default (
         }
       }
       if (activeTabIndex !== state.index) {
-        const oldBackstackIndex = backstack.findIndex(
-          (index: number) => activeTabIndex === index);
-        if (oldBackstackIndex > -1) {
-          backstack.splice(oldBackstackIndex, 1);
-        }
-        backstack.push(state.index);
-        return {
+        const newState = {
           ...state,
           index: activeTabIndex,
         };
+        if (
+          shouldBackNavigateToLastActiveTab && state.backstack !== undefined
+        ) {
+          const oldBackstackIndex = state.backstack.findIndex(
+            (index: number) => activeTabIndex === index,
+          );
+          let oldBackstack: Array<number> = state.backstack !== undefined
+            ? state.backstack
+            : [];
+          if (oldBackstackIndex > -1 && oldBackstack.length > 0) {
+            oldBackstack = [
+              ...oldBackstack.slice(0, oldBackstackIndex),
+              ...oldBackstack.slice(oldBackstackIndex + 1),
+            ];
+          }
+          newState.backstack = [...oldBackstack, state.index];
+        }
+        return newState;
       } else if (didNavigate && !inputState) {
         return state;
       } else if (didNavigate) {

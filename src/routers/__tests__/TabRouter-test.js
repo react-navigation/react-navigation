@@ -637,15 +637,15 @@ describe('TabRouter', () => {
     const expectedState = {
       index: 2,
       routes: [{ key: 'Foo', routeName: 'Foo' }, { key: 'Bar', routeName: 'Bar' }, { key: 'Dur', routeName: 'Dur' }],
+      backstack: [0],
     };
     expect(state5).toEqual(expectedState);
     const state6 = router.getStateForAction({ type: NavigationActions.BACK }, state5);
     const expectedState2 = {
       index: 0,
       routes: [{ key: 'Foo', routeName: 'Foo' }, { key: 'Bar', routeName: 'Bar' }, { key: 'Dur', routeName: 'Dur' }],
+      backstack: [],
     };
     expect(state6).toEqual(expectedState2);
-    const state7 = router.getStateForAction({ type: NavigationActions.BACK }, state6);
-    expect(state7).toEqual(expectedState2);
   });
 });

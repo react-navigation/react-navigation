@@ -35,6 +35,7 @@ export type NavigationState = {
    */
   index: number,
   routes: Array<NavigationRoute>,
+  backstack?: Array<number>,
 };
 
 export type NavigationRoute = NavigationLeafRoute | NavigationStateRoute;
