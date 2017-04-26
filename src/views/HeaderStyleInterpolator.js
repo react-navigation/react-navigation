@@ -20,8 +20,8 @@ function forLeft(props: NavigationSceneRendererProps): Object {
   const { index } = scene;
   return {
     opacity: position.interpolate({
-      inputRange: [index - 1, index, index + 1],
-      outputRange: ([0, 1, 0]: Array<number>),
+      inputRange: [index - 1, index - 0.5, index, index + 0.5, index + 1],
+      outputRange: ([0, 0, 1, 0, 0]: Array<number>),
     }),
   };
 }
