@@ -387,7 +387,6 @@ class CardStack extends Component {
               screenProps={screenProps}
               navigation={navigation}
               component={SceneComponent}
-              navigationOptions={options}
             />
           </View>
           {this._renderHeader(scene, headerMode)}
@@ -399,7 +398,6 @@ class CardStack extends Component {
         screenProps={this.props.screenProps}
         navigation={navigation}
         component={SceneComponent}
-        navigationOptions={options}
       />
     );
   }
