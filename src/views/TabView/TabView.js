@@ -1,7 +1,7 @@
 /* @flow */
 
 import React, { PureComponent } from 'react';
-import { StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { TabViewAnimated, TabViewPagerPan } from 'react-native-tab-view';
 import SceneView from '../SceneView';
 import withCachedChildNavigation from '../../withCachedChildNavigation';
@@ -62,11 +62,13 @@ class TabView extends PureComponent<void, Props, void> {
       route.routeName,
     );
     return (
-      <SceneView
-        screenProps={screenProps}
-        component={TabComponent}
-        navigation={childNavigation}
-      />
+      <View style={styles.page}>
+        <SceneView
+          screenProps={screenProps}
+          component={TabComponent}
+          navigation={childNavigation}
+        />
+      </View>
     );
   };
 
@@ -180,12 +182,15 @@ class TabView extends PureComponent<void, Props, void> {
   }
 }
 
-const TabViewEnhanced = withCachedChildNavigation(TabView);
-
-export default TabViewEnhanced;
+export default withCachedChildNavigation(TabView);
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+
+  page: {
+    flex: 1,
+    overflow: 'hidden',
   },
 });
