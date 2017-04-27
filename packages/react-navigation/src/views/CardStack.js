@@ -200,7 +200,7 @@ class CardStack extends Component {
   }
 
   _reset(resetToIndex: number, velocity: number): void {
-    Animated.timing(this.props.position, {
+    Animated.spring(this.props.position, {
       toValue: resetToIndex,
       duration: ANIMATION_DURATION,
       useNativeDriver: this.props.position.__isNative,
@@ -217,7 +217,7 @@ class CardStack extends Component {
     // dispatched at the end of the transition.
     this._immediateIndex = toValue;
 
-    Animated.timing(position, {
+    Animated.spring(position, {
       toValue,
       duration: ANIMATION_DURATION,
       useNativeDriver: position.__isNative,
