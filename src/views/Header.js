@@ -228,6 +228,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
             // todo: determine if we really need to splat all this.props
             ...this.props,
             ...props,
+            widths: this.state.widths,
           }),
         ]}
       >
