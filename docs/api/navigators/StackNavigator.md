@@ -126,11 +126,11 @@ Style object for the header
 
 #### `headerTitleStyle`
 
-Style object for the title component. These styles are also applied to the `headerBackTitle`
+Style object for the title component
 
 #### `headerBackTitleStyle`
 
-Style object for the back title, can override styles applied using `headerTitleStyle`
+Style object for the back title
 
 #### `headerTintColor`
 
