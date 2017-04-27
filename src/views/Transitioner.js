@@ -156,7 +156,11 @@ class Transitioner extends React.Component<*, Props, State> {
     const { timing } = transitionSpec;
     delete transitionSpec.timing;
 
-    const animations = indexHasChanged
+    const toValue = nextProps.navigation.state.index;
+    const positionHasChanged = position.__getValue() !== toValue;
+
+    // if swiped back, indexHasChanged == true && positionHasChanged == false
+    const animations = indexHasChanged && positionHasChanged
       ? [
           timing(progress, {
             ...transitionSpec,
