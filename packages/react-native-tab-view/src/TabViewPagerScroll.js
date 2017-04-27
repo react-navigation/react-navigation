@@ -60,14 +60,13 @@ export default class TabViewPagerScroll<T: Route<*>>
       prevProps.navigationState !== this.props.navigationState ||
       prevProps.layout !== this.props.layout
     ) {
-      if (Platform.OS === 'android') {
+      if (
+        Platform.OS === 'android' ||
+        prevProps.navigationState !== this.props.navigationState
+      ) {
         global.requestAnimationFrame(() => this._scrollTo(amount));
       } else {
-        if (prevProps.layout !== this.props.layout) {
-          this._scrollTo(amount, false);
-        } else {
-          this._scrollTo(amount);
-        }
+        this._scrollTo(amount, false);
       }
     }
   }
