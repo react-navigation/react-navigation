@@ -78,9 +78,10 @@ export default class TabViewPagerScroll<T: Route<*>>
 
   _resetListener: Object;
   _scrollView: Object;
+  _isIdle: boolean = true;
 
   _scrollTo = (x: number, animated = this.props.animationEnabled !== false) => {
-    if (this._scrollView) {
+    if (this._isIdle && this._scrollView) {
       this._scrollView.scrollTo({
         x,
         animated,
@@ -92,10 +93,12 @@ export default class TabViewPagerScroll<T: Route<*>>
     const nextIndex = Math.round(
       e.nativeEvent.contentOffset.x / this.props.layout.width,
     );
+    this._isIdle = true;
     this.props.jumpToIndex(nextIndex);
   };
 
   _handleScroll = (e: ScrollEvent) => {
+    this._isIdle = false;
     this.props.position.setValue(
       e.nativeEvent.contentOffset.x / this.props.layout.width,
     );

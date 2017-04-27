@@ -30,7 +30,8 @@ export default class TabViewPagerAndroid<T: Route<*>>
     children: PropTypes.node,
   };
 
-  componentWillMount() {
+  constructor(props: Props<T>) {
+    super(props);
     this._currentIndex = this.props.navigationState.index;
   }
 
