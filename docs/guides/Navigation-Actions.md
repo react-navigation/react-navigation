@@ -41,6 +41,7 @@ The `Reset` action wipes the whole navigation state and replaces it with the res
 
 - `index` - *number* - required - Index of the active route on `routes` array in navigation `state`.
 - `actions` - *array* - required - Array of Navigation Actions that will replace the navigation state.
+- `key` - *string or null* - optional - If set, the navigator with the given key will reset. If null, the root navigator will reset.
 
 ```js
 import { NavigationActions } from 'react-navigation'
