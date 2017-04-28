@@ -136,6 +136,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
         tintColor={options.headerTintColor}
         title={backButtonTitle}
         truncatedTitle={truncatedBackButtonTitle}
+        titleStyle={options.headerBackTitleStyle}
         width={width}
       />
     );
