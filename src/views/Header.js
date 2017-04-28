@@ -127,11 +127,12 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
     const width = this.state.widths[props.scene.key]
       ? (this.props.layout.initWidth - this.state.widths[props.scene.key]) / 2
       : undefined;
+    const onPress = () => {
+      this.props.navigation.goBack(null);
+    };
     return (
       <HeaderBackButton
-        onPress={() => {
-          this.props.navigation.goBack(null);
-        }}
+        onPress={options.headerLeftOnPress || onPress}
         pressColorAndroid={options.headerPressColorAndroid}
         tintColor={options.headerTintColor}
         title={backButtonTitle}
