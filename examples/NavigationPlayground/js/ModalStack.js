@@ -26,7 +26,9 @@ const MyNavScreen = ({ navigation, banner }) => (
     />
     {navigation.state.routeName === 'HeaderTest' && <Button
       title="Toggle Header"
-      onPress={() => navigation.setParams({ header: (!navigation.state.params || navigation.state.params.header === 'visible') ? 'none' : 'visible' })}
+      onPress={() => navigation.setParams({
+        headerVisible: (!navigation.state.params || !navigation.state.params.headerVisible),
+      })}
     />}
     <Button
       onPress={() => navigation.goBack(null)}
@@ -64,7 +66,9 @@ const ProfileNavigator = StackNavigator({
     screen: MyProfileScreen,
   },
 }, {
-  navigationOptions: {headerVisible: false},
+  navigationOptions: {
+    header: null,
+  },
 });
 
 const MyHeaderTestScreen = ({ navigation }) => (
@@ -73,11 +77,10 @@ const MyHeaderTestScreen = ({ navigation }) => (
     navigation={navigation}
   />
 );
-MyHeaderTestScreen.navigationOptions = ({navigation}) => {
-  const header = navigation.state.params && navigation.state.params.header;
-  const headerVisible = !header || header === 'visible';
+MyHeaderTestScreen.navigationOptions = ({ navigation }) => {
+  const headerVisible = navigation.state.params && navigation.state.params.headerVisible;
   return {
-    headerVisible,
+    header: headerVisible ? undefined : null,
     title: 'Now you see me',
   };
 };
