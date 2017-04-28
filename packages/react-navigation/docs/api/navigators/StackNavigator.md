@@ -128,6 +128,10 @@ Style object for the header
 
 Style object for the title component
 
+#### `headerBackTitleStyle`
+
+Style object for the back title
+
 #### `headerTintColor`
 
 Tint color for the header
