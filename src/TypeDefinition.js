@@ -14,6 +14,7 @@ export type HeaderProps = NavigationSceneRendererProps & {
   getScreenDetails: (
     NavigationScene,
   ) => NavigationScreenDetails<NavigationStackScreenOptions>,
+  style: Style,
 };
 
 /**
