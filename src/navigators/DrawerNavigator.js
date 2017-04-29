@@ -66,6 +66,9 @@ const DrawerNavigator = (
     },
     {
       initialRouteName: 'DrawerClose',
+      navigationOptions: {
+        header: null,
+      },
     },
   );
 
