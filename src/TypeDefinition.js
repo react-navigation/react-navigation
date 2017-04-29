@@ -413,6 +413,8 @@ export type TransitionConfig = {
   screenInterpolator?: (props: NavigationSceneRendererProps) => Object,
 };
 
+export type TransitionState = 'active' | 'inactive';
+
 export type NavigationAnimationSetter = (
   position: AnimatedValue,
   newState: NavigationState,

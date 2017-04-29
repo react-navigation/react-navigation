@@ -19,6 +19,7 @@ import type {
   HeaderMode,
   Style,
   TransitionConfig,
+  TransitionState
 } from '../TypeDefinition';
 
 const NativeAnimatedModule = NativeModules &&
@@ -44,12 +45,23 @@ type DefaultProps = {
   mode: 'card' | 'modal',
 };
 
+type State = {
+  transitionState: TransitionState
+}
+
 class CardStackTransitioner extends Component<DefaultProps, Props, void> {
   _render: NavigationSceneRenderer;
 
   static defaultProps: DefaultProps = {
     mode: 'card',
   };
+
+  state: State;
+
+  constructor() {
+    super();
+    this.state = { transitionState: 'inactive' };
+  }
 
   render() {
     return (
@@ -58,10 +70,26 @@ class CardStackTransitioner extends Component<DefaultProps, Props, void> {
         navigation={this.props.navigation}
         render={this._render}
         style={this.props.style}
-        onTransitionStart={this.props.onTransitionStart}
-        onTransitionEnd={this.props.onTransitionEnd}
+        onTransitionStart={this.onTransitionStart.bind(this)}
+        onTransitionEnd={this.onTransitionEnd.bind(this)}
       />
     );
+  }
+
+  onTransitionStart(...args) {
+    const fromRoute = args[1].navigation.state.routes.slice(-1)[0];
+    const toRoute = args[0].navigation.state.routes.slice(-1)[0];
+
+    this.setState({ transitionState: 'active', fromScenes: args[3], toScenes: args[2]})
+
+    if (this.props.onTransitionStart) this.props.onTransitionStart(...args)
+  }
+
+  onTransitionEnd(...args) {
+    // Reverse fromScenes and toScenes in case the pan gesture needs them
+    this.setState({ transitionState: 'inactive', fromScenes: this.state.toScenes, toScenes: this.state.fromScenes })
+
+    if (this.props.onTransitionEnd) this.props.onTransitionEnd(...args)
   }
 
   _configureTransition = (
@@ -110,6 +138,9 @@ class CardStackTransitioner extends Component<DefaultProps, Props, void> {
         router={router}
         cardStyle={cardStyle}
         transitionConfig={transitionConfig}
+        transitionState={this.state.transitionState}
+        fromScenes={this.state.fromScenes}
+        toScenes={this.state.toScenes}
         style={style}
         {...props}
       />
