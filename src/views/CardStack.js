@@ -52,7 +52,7 @@ type Props = {
    * Optional custom animation when transitioning between screens.
    */
   transitionConfig?: () => TransitionConfig,
-  transitionState: () => TransitionState,
+  transitionState: TransitionState,
 
   // NavigationTransitionProps:
   layout: NavigationLayout,
@@ -61,13 +61,15 @@ type Props = {
   progress: Animated.Value,
   scenes: Array<NavigationScene>,
   scene: NavigationScene,
+  fromScenes?: Array<NavigationScene>,
+  toScenes?: Array<NavigationScene>,
   index: number,
 };
 
 type State = {
   // tracks if a touch is currently happening
-  isResponding: boolean;
-}
+  isResponding: boolean,
+};
 
 /**
  * The duration of the card animation in milliseconds.
@@ -154,7 +156,10 @@ class CardStack extends Component {
       }
     });
 
-    if (props.transitionState === 'inactive' && props.transitionState !== this.props.transitionState) {
+    if (
+      props.transitionState === 'inactive' &&
+      props.transitionState !== this.props.transitionState
+    ) {
       this._isTransitioningAfterPan = false;
     }
   }
@@ -265,12 +270,16 @@ class CardStack extends Component {
     const { index } = navigation.state;
     const responder = PanResponder.create({
       onPanResponderTerminate: () => {
-        this.setState({ isResponding: false});
+        this.setState({
+          isResponding: false,
+        });
         this._reset(index, 0);
       },
       onPanResponderGrant: () => {
         position.stopAnimation((value: number) => {
-          this.setState({ isResponding: true});
+          this.setState({
+            isResponding: true,
+          });
           this._gestureStartValue = value;
         });
       },
@@ -388,17 +397,33 @@ class CardStack extends Component {
   }
 
   _shouldEmbedHeader(): boolean {
-    if (this._isTransitioningAfterPan) return true;
-    if (this.props.transitionState === 'inactive' && !this.state.isResponding) return false;
+    const { fromScenes, toScenes, transitionState } = this.props;
+    const { isResponding } = this.state;
 
-    const fromScene = this.props.fromScenes.filter(scene => scene.isActive)[0]
-    const toScene = this.props.toScenes.filter(scene => scene.isActive)[0]
+    if (this._isTransitioningAfterPan) {
+      return true;
+    }
+    if (transitionState === 'inactive' && !isResponding) {
+      return false;
+    }
 
-    const fromScreenDetails = this._getScreenDetails(fromScene);
-    const toScreenDetails = this._getScreenDetails(toScene);
+    if (!fromScenes || !toScenes) {
+      return false;
+    }
 
-    const fromSceneHasHeader = (fromScreenDetails.options.header !== null)
-    const toSceneHasHeader = (toScreenDetails.options.header !== null)
+    const activeFromScenes = fromScenes.filter(
+      (scene: NavigationScene) => scene.isActive,
+    );
+
+    const activeToScenes = toScenes.filter(
+      (scene: NavigationScene) => scene.isActive,
+    );
+
+    const fromScreenDetails = this._getScreenDetails(activeFromScenes[0]);
+    const toScreenDetails = this._getScreenDetails(activeToScenes[0]);
+
+    const fromSceneHasHeader = fromScreenDetails.options.header !== null;
+    const toSceneHasHeader = toScreenDetails.options.header !== null;
 
     if (!fromSceneHasHeader && toSceneHasHeader) return true;
     if (!fromSceneHasHeader && !toSceneHasHeader) return true;
@@ -409,18 +434,29 @@ class CardStack extends Component {
   }
 
   _shouldFloatHeader(): boolean {
+    const { fromScenes, toScenes } = this.props;
+
     if (this._shouldEmbedHeader()) return false;
 
     if (!this._isTransitioningAfterPan) return true;
 
-    const fromScene = this.props.fromScenes.filter(scene => scene.isActive)[0]
-    const toScene = this.props.toScenes.filter(scene => scene.isActive)[0]
+    if (!fromScenes || !toScenes) {
+      return true;
+    }
 
-    const fromScreenDetails = this._getScreenDetails(fromScene);
-    const toScreenDetails = this._getScreenDetails(toScene);
+    const activeFromScenes = fromScenes.filter(
+      (scene: NavigationScene) => scene.isActive,
+    );
 
-    const fromSceneHasHeader = (fromScreenDetails.options.header !== null)
-    const toSceneHasHeader = (toScreenDetails.options.header !== null)
+    const activeToScenes = toScenes.filter(
+      (scene: NavigationScene) => scene.isActive,
+    );
+
+    const fromScreenDetails = this._getScreenDetails(activeFromScenes[0]);
+    const toScreenDetails = this._getScreenDetails(activeToScenes[0]);
+
+    const fromSceneHasHeader = fromScreenDetails.options.header !== null;
+    const toSceneHasHeader = toScreenDetails.options.header !== null;
 
     if (!fromSceneHasHeader && toSceneHasHeader) return false;
     if (!fromSceneHasHeader && !toSceneHasHeader) return false;
@@ -448,7 +484,10 @@ class CardStack extends Component {
     const { screenProps } = this.props;
     const headerMode = this._getHeaderMode();
     const shouldEmbedHeader = this._shouldEmbedHeader();
-    const header = (headerMode === 'screen' || shouldEmbedHeader) ? this._renderHeader(scene, headerMode) : null;
+    let header = null;
+    if (headerMode === 'screen' || shouldEmbedHeader) {
+      header = this._renderHeader(scene, headerMode);
+    }
     return (
       <View style={styles.container}>
         <View style={{ flex: 1 }}>
