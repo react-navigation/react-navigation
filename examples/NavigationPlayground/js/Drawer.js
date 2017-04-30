@@ -87,7 +87,7 @@ RefreshButton.navigationOptions = ({ navigation }) => ({
 const MailboxesLabel = () => null;
 MailboxesLabel.navigationOptions = {
   drawerLabel: 'Mailboxes',
-  drawerOnPress: () => {},
+  drawerOnPress: null,
 };
 
 const DrawerExample = DrawerNavigator({

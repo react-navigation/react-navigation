@@ -61,6 +61,29 @@ const DrawerNavigatorItems = (
       const icon = renderIcon(scene);
       const label = getLabel(scene);
 
+      const drawerItem = (
+        <View style={[styles.item, { backgroundColor }]}>
+          {icon
+            ? <View style={[styles.icon, focused ? null : styles.inactiveIcon]}>
+                {icon}
+              </View>
+            : null}
+          {typeof label === 'string'
+            ? <Text style={[styles.label, { color }, labelStyle]}>
+                {label}
+              </Text>
+            : label}
+        </View>
+      );
+
+      if (drawerOnPress === null) {
+        return (
+          <View key={route.key}>
+            {drawerItem}
+          </View>
+        );
+      }
+
       return (
         <TouchableItem
           key={route.key}
@@ -74,20 +97,7 @@ const DrawerNavigatorItems = (
           }
           delayPressIn={0}
         >
-          <View style={[styles.item, { backgroundColor }]}>
-            {icon
-              ? <View
-                  style={[styles.icon, focused ? null : styles.inactiveIcon]}
-                >
-                  {icon}
-                </View>
-              : null}
-            {typeof label === 'string'
-              ? <Text style={[styles.label, { color }, labelStyle]}>
-                  {label}
-                </Text>
-              : label}
-          </View>
+          {drawerItem}
         </TouchableItem>
       );
     })}
