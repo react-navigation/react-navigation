@@ -163,6 +163,11 @@ String, React Element or a function that given `{ focused: boolean, tintColor: s
 
 React Element or a function, that given `{ focused: boolean, tintColor: string }` returns a React.Element, to display in drawer sidebar
 
+#### `drawerOnPress`
+
+Callback to handle tap events. Typical behavior would be to call `navigation.navigate('DrawerClose')` after performing your other logic.
+If explicitly set to `null`, there will be no touch feedback for this drawer item; this can be used e.g. for header items / section separators.
+
 ### Navigator Props
 
 The navigator component created by `DrawerNavigator(...)` takes the following props:

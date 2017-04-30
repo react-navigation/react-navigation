@@ -23,6 +23,7 @@ type Props = {
   inactiveBackgroundColor?: string,
   getLabel: (scene: DrawerScene) => ?(React.Element<*> | string),
   renderIcon: (scene: DrawerScene) => ?React.Element<*>,
+  getDrawerOnPress: (scene: DrawerScene) => ?() => void,
   style?: Style,
   labelStyle?: Style,
 };
@@ -43,12 +44,14 @@ const DrawerNavigatorItems = (
     inactiveBackgroundColor,
     getLabel,
     renderIcon,
+    getScreenOptions,
     style,
     labelStyle,
   }: Props,
 ) => (
   <View style={[styles.container, style]}>
     {(items || state.routes).map((route: NavigationRoute, index: number) => {
+      const { drawerOnPress } = getScreenOptions(route.key);
       const focused = state.routes[state.index].key === route.key;
       const color = focused ? activeTintColor : inactiveTintColor;
       const backgroundColor = focused
@@ -57,13 +60,18 @@ const DrawerNavigatorItems = (
       const scene = { route, index, focused, tintColor: color };
       const icon = renderIcon(scene);
       const label = getLabel(scene);
+
       return (
         <TouchableItem
           key={route.key}
-          onPress={() => {
-            navigate('DrawerClose');
-            navigate(route.routeName);
-          }}
+          onPress={
+            drawerOnPress
+              ? () => drawerOnPress()
+              : () => {
+                  navigate('DrawerClose');
+                  navigate(route.routeName);
+                }
+          }
           delayPressIn={0}
         >
           <View style={[styles.item, { backgroundColor }]}>
