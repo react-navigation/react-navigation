@@ -24,6 +24,7 @@ export type DrawerScene = {
 };
 
 export type DrawerViewConfig = {
+  drawerLockMode: 'unlocked' | 'locked-closed' | 'locked-open',
   drawerWidth: number,
   drawerPosition: 'left' | 'right',
   contentComponent: ReactClass<*>,
