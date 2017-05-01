@@ -137,6 +137,7 @@ const styles = StyleSheet.create({
 ### `contentOptions` for `DrawerItems`
 
 - `items` - the array of routes, can be modified or overridden
+- `itemComponent` - a component to use in place of `DrawerNavigatorItem` for each item
 - `activeItemKey` - key identifying the active route
 - `activeTintColor` - label and icon color of the active label
 - `activeBackgroundColor` - background color of the active label
