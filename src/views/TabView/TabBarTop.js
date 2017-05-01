@@ -74,7 +74,8 @@ export default class TabBarTop
       outputRange,
     });
 
-    const label = this.props.getLabel(scene);
+    const tintColor = scene.focused ? activeTintColor : inactiveTintColor;
+    const label = this.props.getLabel({ ...scene, tintColor });
     if (typeof label === 'string') {
       return (
         <Animated.Text style={[styles.label, { color }, labelStyle]}>
@@ -83,7 +84,7 @@ export default class TabBarTop
       );
     }
     if (typeof label === 'function') {
-      return label(scene);
+      return label({ ...scene, tintColor });
     }
 
     return label;
