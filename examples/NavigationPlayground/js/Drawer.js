@@ -145,7 +145,7 @@ const DrawerExample = DrawerNavigator(drawerRoutes, {
   contentOptions: {
     activeTintColor: '#e91e63',
     items: drawerItems,
-    drawerItemComponent: CustomDrawerItem,
+    itemComponent: CustomDrawerItem,
   },
 });
 

@@ -16,6 +16,7 @@ import type {
 type Props = {
   navigation: NavigationScreenProp<NavigationState, NavigationAction>,
   items?: Array<NavigationRoute>,
+  itemComponent: ReactClass<*>,
   style?: Style,
 };
 
@@ -26,17 +27,18 @@ const DrawerNavigatorItems = (
   {
     navigation,
     items,
+    itemComponent: ItemComponent,
     style,
-    drawerItemComponent: DrawerItemComponent,
     ...drawerItemProps
   }: Props,
 ) => (
   <View style={[styles.container, style]}>
     {(items || navigation.state.routes)
-      .map((route: NavigationRoute) => (
-        <DrawerItemComponent
+      .map((route: NavigationRoute, index: number) => (
+        <ItemComponent
           {...drawerItemProps}
           key={route.key}
+          index={index}
           navigation={navigation}
           route={route}
         />
@@ -45,7 +47,7 @@ const DrawerNavigatorItems = (
 );
 
 DrawerNavigatorItems.defaultProps = {
-  drawerItemComponent: DrawerNavigatorItem,
+  itemComponent: DrawerNavigatorItem,
 };
 
 const styles = StyleSheet.create({
