@@ -4,14 +4,15 @@
 
 import React from 'react';
 import {
+  View,
   Button,
   Platform,
   ScrollView,
   StyleSheet,
-  Text,
 } from 'react-native';
 import {
   DrawerNavigator,
+  DrawerItems,
   DrawerItem,
 } from 'react-navigation';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -66,29 +67,48 @@ DraftsScreen.navigationOptions = {
 };
 
 const CustomDrawerItem = (props) => {
-  const { route: item } = props;
-
-  // Simply render the default component if the item is a route.
-  if (item.routeName) {
-    return (
-      <DrawerItem {...props} />
-    );
-  }
+  const { item, focused, activeTintColor, inactiveTintColor } = props;
+  const tintColor = focused ? activeTintColor : inactiveTintColor;
 
   const screenOptions = typeof item.screenOptions === 'function'
     ? item.screenOptions(props)
     : item.screenOptions;
+  const { drawerIcon, drawerLabel, drawerOnPress } = screenOptions;
 
-  const { drawerIcon, drawerLabel } = screenOptions;
-
-  // If it's not a route, override a few of the props to make it render nicely.
   return (
     <DrawerItem
       {...props}
-      renderIcon={(iconProps) => drawerIcon ? drawerIcon(iconProps) : null}
-      getLabel={() => drawerLabel}
-      getScreenOptions={() => screenOptions}
+      focused={false}
+      icon={drawerIcon ? drawerIcon({ tintColor }) : null}
+      label={drawerLabel}
+      onPress={drawerOnPress}
     />
+  );
+};
+
+const CustomDrawerItems = (props) => {
+  const { items } = props;
+
+  return (
+    <View style={[styles.drawerContainer]}>
+      {items.map((item) => {
+        const { routeName, key } = item;
+
+        // Simply render the default component if the item is a route.
+        if (routeName) {
+          return (
+            <DrawerItems
+              {...props}
+              key={key}
+              items={[item]}
+              style={styles.drawerContainerInner}
+            />
+          );
+        }
+
+        return <CustomDrawerItem {...props} key={key} item={item} />;
+      })}
+    </View>
   );
 };
 
@@ -145,13 +165,21 @@ const DrawerExample = DrawerNavigator(drawerRoutes, {
   contentOptions: {
     activeTintColor: '#e91e63',
     items: drawerItems,
-    itemComponent: CustomDrawerItem,
   },
+  contentComponent: CustomDrawerItems,
 });
 
 const styles = StyleSheet.create({
   container: {
     marginTop: Platform.OS === 'ios' ? 20 : 0,
+  },
+  drawerContainer: {
+    marginTop: Platform.OS === 'ios' ? 20 : 0,
+    paddingVertical: 4,
+  },
+  drawerContainerInner: {
+    marginTop: 0,
+    paddingVertical: 0,
   },
 });
 

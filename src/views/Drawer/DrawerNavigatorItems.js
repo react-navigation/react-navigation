@@ -12,12 +12,21 @@ import type {
   NavigationRoute,
   Style,
 } from '../../TypeDefinition';
+import type { DrawerScene } from './DrawerView.js';
 
 type Props = {
   navigation: NavigationScreenProp<NavigationState, NavigationAction>,
   items?: Array<NavigationRoute>,
   itemComponent: ReactClass<*>,
+  getScreenOptions: (routeKey: string) => { drawerOnPress?: () => void },
+  activeTintColor?: string,
+  activeBackgroundColor?: string,
+  inactiveTintColor?: string,
+  inactiveBackgroundColor?: string,
+  getLabel: (scene: DrawerScene) => ?(React.Element<*> | string),
+  renderIcon: (scene: DrawerScene) => ?React.Element<*>,
   style?: Style,
+  labelStyle?: Style,
 };
 
 /**
@@ -25,28 +34,55 @@ type Props = {
  */
 const DrawerNavigatorItems = (
   {
-    navigation,
+    navigation: {
+      state,
+      navigate,
+    },
     items,
     itemComponent: ItemComponent,
+    getScreenOptions,
+    activeTintColor,
+    inactiveTintColor,
+    getLabel,
+    renderIcon,
     style,
     ...drawerItemProps
   }: Props,
 ) => (
   <View style={[styles.container, style]}>
-    {(items || navigation.state.routes)
-      .map((route: NavigationRoute, index: number) => (
+    {(items || state.routes).map((route: NavigationRoute, index: number) => {
+      const focused = state.routes[state.index].key === route.key;
+      const tintColor = focused ? activeTintColor : inactiveTintColor;
+      const scene = { route, focused, index, tintColor };
+      const icon = renderIcon(scene);
+      const label = getLabel(scene);
+      const { drawerOnPress } = getScreenOptions(route.key);
+      const onPress = drawerOnPress === undefined
+        ? () => {
+            navigate('DrawerClose');
+            navigate(route.routeName);
+          }
+        : drawerOnPress;
+
+      return (
         <ItemComponent
           {...drawerItemProps}
+          activeTintColor={activeTintColor}
+          inactiveTintColor={inactiveTintColor}
           key={route.key}
           index={index}
-          navigation={navigation}
-          route={route}
+          focused={focused}
+          icon={icon}
+          label={label}
+          onPress={onPress}
         />
-      ))}
+      );
+    })}
   </View>
 );
 
 DrawerNavigatorItems.defaultProps = {
+  ...DrawerNavigatorItem.defaultProps,
   itemComponent: DrawerNavigatorItem,
 };
 

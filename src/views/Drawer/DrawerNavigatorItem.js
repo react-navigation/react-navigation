@@ -5,28 +5,18 @@ import { View, Text, StyleSheet } from 'react-native';
 
 import TouchableItem from '../TouchableItem';
 
-import type {
-  NavigationScreenProp,
-  NavigationState,
-  NavigationAction,
-  NavigationRoute,
-  Style,
-} from '../../TypeDefinition';
-import type { DrawerScene } from './DrawerView.js';
+import type { Style } from '../../TypeDefinition';
 
 type Props = {
-  index: number,
-  navigation: NavigationScreenProp<NavigationState, NavigationAction>,
-  route: NavigationRoute,
   activeTintColor?: string,
   activeBackgroundColor?: string,
   inactiveTintColor?: string,
   inactiveBackgroundColor?: string,
-  getLabel: (scene: DrawerScene) => ?(React.Element<*> | string),
-  renderIcon: (scene: DrawerScene) => ?React.Element<*>,
-  getScreenOptions: (routeKey: string) => { drawerOnPress?: () => void },
-  getDrawerOnPress: (scene: DrawerScene) => ?() => void,
   labelStyle?: Style,
+  focused?: string,
+  icon?: React.Element<*>,
+  label?: React.Element<*> | string,
+  onPress?: () => void,
 };
 
 /**
@@ -34,31 +24,21 @@ type Props = {
  */
 const DrawerNavigatorItem = (
   {
-    index,
-    navigation: {
-      state,
-      navigate,
-    },
-    route,
     activeTintColor,
     activeBackgroundColor,
     inactiveTintColor,
     inactiveBackgroundColor,
-    getLabel,
-    renderIcon,
-    getScreenOptions,
     labelStyle,
+    focused,
+    icon,
+    label,
+    onPress,
   }: Props,
 ) => {
-  const { drawerOnPress } = getScreenOptions(route.key);
-  const focused = state.routes[state.index].key === route.key;
-  const color = focused ? activeTintColor : inactiveTintColor;
+  const tintColor = focused ? activeTintColor : inactiveTintColor;
   const backgroundColor = focused
     ? activeBackgroundColor
     : inactiveBackgroundColor;
-  const scene = { route, focused, index, tintColor: color };
-  const icon = renderIcon(scene);
-  const label = getLabel(scene);
 
   const drawerItem = (
     <View style={[styles.item, { backgroundColor }]}>
@@ -68,29 +48,19 @@ const DrawerNavigatorItem = (
           </View>
         : null}
       {typeof label === 'string'
-        ? <Text style={[styles.label, { color }, labelStyle]}>
+        ? <Text style={[styles.label, { color: tintColor }, labelStyle]}>
             {label}
           </Text>
         : label}
     </View>
   );
 
-  if (drawerOnPress === null) {
+  if (!onPress) {
     return drawerItem;
   }
 
   return (
-    <TouchableItem
-      onPress={
-        drawerOnPress
-          ? () => drawerOnPress()
-          : () => {
-              navigate('DrawerClose');
-              navigate(route.routeName);
-            }
-      }
-      delayPressIn={0}
-    >
+    <TouchableItem onPress={onPress} delayPressIn={0}>
       {drawerItem}
     </TouchableItem>
   );
