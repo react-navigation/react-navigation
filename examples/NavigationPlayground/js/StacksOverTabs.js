@@ -20,15 +20,15 @@ const MyNavScreen = ({ navigation, banner }) => (
     <SampleText>{banner}</SampleText>
     <Button
       onPress={() => navigation.navigate('Profile', { name: 'Jordan' })}
-      title="Go to a profile screen"
+      title="Open profile screen"
     />
     <Button
       onPress={() => navigation.navigate('NotifSettings')}
-      title="Go to notification settings"
+      title="Open notifications screen"
     />
     <Button
       onPress={() => navigation.navigate('SettingsTab')}
-      title="Go to settings"
+      title="Go to settings tab"
     />
     <Button
       onPress={() => navigation.goBack(null)}
@@ -56,14 +56,14 @@ MyProfileScreen.navigationOptions = ({ navigation }) => {
 
 const MyNotificationsSettingsScreen = ({ navigation }) => (
   <MyNavScreen
-    banner="Notification Settings"
+    banner="Notifications Screen"
     navigation={navigation}
   />
 );
 
 const MySettingsScreen = ({ navigation }) => (
   <MyNavScreen
-    banner="Settings"
+    banner="Settings Screen"
     navigation={navigation}
   />
 );
@@ -73,6 +73,7 @@ const TabNav = TabNavigator({
     screen: MyHomeScreen,
     path: '/',
     navigationOptions: {
+      title: 'Welcome',
       tabBarLabel: 'Home',
       tabBarIcon: ({ tintColor, focused }) => (
         <Ionicons
@@ -87,7 +88,7 @@ const TabNav = TabNavigator({
     screen: MySettingsScreen,
     path: '/settings',
     navigationOptions: {
-      tabBarLabel: 'Settings',
+      title: 'Settings',
       tabBarIcon: ({ tintColor, focused }) => (
         <Ionicons
           name={focused ? 'ios-settings' : 'ios-settings-outline'}
@@ -110,7 +111,7 @@ const StacksOverTabs = StackNavigator({
   NotifSettings: {
     screen: MyNotificationsSettingsScreen,
     navigationOptions: {
-      title: 'Notification Settings',
+      title: 'Notifications',
     },
   },
   Profile: {
@@ -120,8 +121,6 @@ const StacksOverTabs = StackNavigator({
       title: `${navigation.state.params.name}'s Profile!`
     },
   },
-}, {
-  headerMode: 'none',
 });
 
 export default StacksOverTabs;
