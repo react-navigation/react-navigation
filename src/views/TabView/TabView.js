@@ -19,6 +19,7 @@ export type TabViewConfig = {
   tabBarComponent?: ReactClass<*>,
   tabBarPosition?: 'top' | 'bottom',
   tabBarOptions?: {},
+  tabBarOnPress?: () => void,
   swipeEnabled?: boolean,
   animationEnabled?: boolean,
   lazy?: boolean,
@@ -35,6 +36,7 @@ type Props = {
   tabBarComponent?: ReactClass<*>,
   tabBarPosition?: 'top' | 'bottom',
   tabBarOptions?: {},
+  tabBarOnPress?: () => void,
   swipeEnabled?: boolean,
   animationEnabled?: boolean,
   lazy?: boolean,
@@ -122,6 +124,7 @@ class TabView extends PureComponent<void, Props, void> {
         {...props}
         {...tabBarOptions}
         screenProps={this.props.screenProps}
+        onPress={this.props.tabBarOnPress}
         navigation={this.props.navigation}
         getLabel={this._getLabel}
         renderIcon={this._renderIcon}
