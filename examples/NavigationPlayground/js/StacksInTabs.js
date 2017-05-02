@@ -50,9 +50,6 @@ const MyProfileScreen = ({ navigation }) => (
     navigation={navigation}
   />
 );
-MyProfileScreen.navigationOptions = ({ navigation }) => ({
-  title: `${navigation.state.params.name}'s Profile!`,
-});
 
 const MyNotificationsSettingsScreen = ({ navigation }) => (
   <MyNavScreen
