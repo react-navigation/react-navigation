@@ -1,5 +1,9 @@
 /* @flow */
 
+import type {
+  StyleObj,
+} from 'react-native/Libraries/StyleSheet/StyleSheetTypes';
+
 import { Animated } from 'react-native';
 
 export type Route<T: { key: string, testID?: string }> = T;
@@ -58,4 +62,4 @@ export type PagerProps = {
   children?: *,
 };
 
-export type Style = Object | number | false | null | void | Array<Style>;
+export type Style = StyleObj;

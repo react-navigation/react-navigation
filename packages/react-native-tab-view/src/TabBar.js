@@ -70,8 +70,6 @@ export default class TabBar<T: Route<*>>
     renderLabel: PropTypes.func,
     renderIndicator: PropTypes.func,
     onTabPress: PropTypes.func,
-    tabStyle: View.propTypes.style,
-    indicatorStyle: View.propTypes.style,
     labelStyle: Text.propTypes.style,
     style: PropTypes.any,
   };
