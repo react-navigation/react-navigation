@@ -42,7 +42,6 @@ export default function<S: *>(navigation: NavigationProp<S, NavigationAction>) {
           },
           500,
         );
-
         return true;
       }
       return false;
