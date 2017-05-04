@@ -116,6 +116,7 @@ test('Handles deep action', () => {
       {
         key: 'Init',
         routeName: 'Bar',
+        params: {},
       },
     ],
   };

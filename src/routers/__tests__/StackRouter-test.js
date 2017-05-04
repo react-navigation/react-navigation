@@ -357,6 +357,7 @@ describe('StackRouter', () => {
         {
           key: 'Init',
           routeName: 'Foo',
+          params: {},
         },
       ],
     });
@@ -382,6 +383,7 @@ describe('StackRouter', () => {
         {
           key: 'Init',
           routeName: 'Foo',
+          params: {},
         },
       ],
     });
@@ -410,6 +412,7 @@ describe('StackRouter', () => {
         {
           key: 'Init',
           routeName: 'Foo',
+          params: {},
         },
       ],
     });
@@ -435,6 +438,7 @@ describe('StackRouter', () => {
         {
           key: 'Init',
           routeName: 'Foo',
+          params: {},
         },
       ],
     });
@@ -501,6 +505,7 @@ describe('StackRouter', () => {
         {
           key: 'Init',
           routeName: 'Bar',
+          params: {},
         },
       ],
     });

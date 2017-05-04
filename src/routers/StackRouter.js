@@ -112,6 +112,7 @@ export default (
             ],
           };
         }
+
         if (initialChildRouter) {
           route = initialChildRouter.getStateForAction(
             NavigationActions.navigate({
@@ -127,10 +128,12 @@ export default (
           ...(action.params || {}),
           ...(initialRouteParams || {}),
         };
+
         route = {
           ...route,
           routeName: initialRouteName,
           key: 'Init',
+          params: initialRouteParams,
           ...(params ? { params } : {}),
         };
         // eslint-disable-next-line no-param-reassign
