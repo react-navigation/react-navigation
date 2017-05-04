@@ -186,7 +186,11 @@ export default (
       }
 
       // Handle navigation to other child routers that are not yet pushed
-      if (action.type === NavigationActions.NAVIGATE) {
+      if (
+        action.type === NavigationActions.NAVIGATE &&
+        action.routeName !== 'DrawerOpen' &&
+        action.routeName !== 'DrawerClose'
+      ) {
         const childRouterNames = Object.keys(childRouters);
         for (let i = 0; i < childRouterNames.length; i++) {
           const childRouterName = childRouterNames[i];
