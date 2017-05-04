@@ -45,7 +45,7 @@ type Props<T> = SceneRendererProps<T> & {
   renderIcon?: (scene: Scene<T>) => ?React.Element<any>,
   renderBadge?: (scene: Scene<T>) => ?React.Element<any>,
   renderIndicator?: (props: IndicatorProps<T>) => ?React.Element<any>,
-  onTabPress?: Function,
+  onTabPress?: (scene: Scene<T>) => void,
   tabStyle?: Style,
   indicatorStyle?: Style,
   labelStyle?: Style,
@@ -462,7 +462,7 @@ export default class TabBar<T: Route<*>>
                     const { onTabPress, jumpToIndex } = this.props;
                     jumpToIndex(i);
                     if (onTabPress) {
-                      onTabPress(routes[i]);
+                      onTabPress(scene);
                     }
                   }}
                   style={tabContainerStyle}

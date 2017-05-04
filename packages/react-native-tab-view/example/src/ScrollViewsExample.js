@@ -43,7 +43,7 @@ export default class TopBarTextExample extends PureComponent<void, *, State> {
     });
   };
 
-  _handleTabItemPress = route => {
+  _handleTabItemPress = ({ route }) => {
     if (route !== this.state.routes[this.state.index]) {
       return;
     }
