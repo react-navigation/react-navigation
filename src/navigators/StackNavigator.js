@@ -52,7 +52,7 @@ export default (
     <CardStackTransitioner
       {...props}
       headerMode={headerMode}
-      mode={props.screenProps.mode || mode}
+      mode={props.screenProps && props.screenProps.mode || mode}
       cardStyle={cardStyle}
       transitionConfig={transitionConfig}
       onTransitionStart={onTransitionStart}
