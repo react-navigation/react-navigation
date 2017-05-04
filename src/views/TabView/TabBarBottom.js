@@ -32,16 +32,15 @@ type Props = {
   navigation: NavigationScreenProp<NavigationState, NavigationAction>,
   jumpToIndex: (index: number) => void,
   getLabel: (scene: TabScene) => ?(React.Element<*> | string),
+  getOnPress: (
+    scene: TabScene
+  ) => (scene: TabScene, jumpToIndex: (index: number) => void) => void,
   renderIcon: (scene: TabScene) => React.Element<*>,
   showLabel: boolean,
   style?: ViewStyleProp,
   labelStyle?: TextStyleProp,
   tabStyle?: ViewStyleProp,
   showIcon: boolean,
-  onPress?: (
-    route: NavigationRoute,
-    jumpToIndex: (index: number) => void
-  ) => void,
 };
 
 export default class TabBarBottom extends PureComponent<
@@ -132,8 +131,8 @@ export default class TabBarBottom extends PureComponent<
     const {
       position,
       navigation,
-      onPress,
       jumpToIndex,
+      getOnPress,
       activeBackgroundColor,
       inactiveBackgroundColor,
       style,
@@ -147,6 +146,7 @@ export default class TabBarBottom extends PureComponent<
         {routes.map((route: NavigationRoute, index: number) => {
           const focused = index === navigation.state.index;
           const scene = { route, index, focused };
+          const onPress = getOnPress(scene);
           const outputRange = inputRange.map(
             (inputIndex: number) =>
               inputIndex === index
@@ -162,7 +162,7 @@ export default class TabBarBottom extends PureComponent<
             <TouchableWithoutFeedback
               key={route.key}
               onPress={() =>
-                onPress ? onPress(route, jumpToIndex) : jumpToIndex(index)}
+                onPress ? onPress(scene, jumpToIndex) : jumpToIndex(index)}
             >
               <Animated.View
                 style={[

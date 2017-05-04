@@ -6,7 +6,6 @@ import { TabBar } from 'react-native-tab-view';
 import TabBarIcon from './TabBarIcon';
 
 import type {
-  NavigationRoute,
   NavigationAction,
   NavigationScreenProp,
   NavigationState,
@@ -32,11 +31,14 @@ type Props = {
   upperCaseLabel: boolean,
   position: Animated.Value,
   navigation: NavigationScreenProp<NavigationState, NavigationAction>,
+  jumpToIndex: (index: number) => void,
   getLabel: (scene: TabScene) => ?(React.Element<*> | string),
+  getOnPress: (
+    scene: TabScene
+  ) => (scene: TabScene, jumpToIndex: (index: number) => void) => void,
   renderIcon: (scene: TabScene) => React.Element<*>,
   labelStyle?: TextStyleProp,
   iconStyle?: ViewStyleProp,
-  onPress?: () => void,
 };
 
 export default class TabBarTop extends PureComponent<
@@ -122,22 +124,27 @@ export default class TabBarTop extends PureComponent<
     );
   };
 
+  _handleOnPress = (scene: TabScene) => {
+    const { getOnPress, jumpToIndex }: Props = this.props;
+
+    const onPress = getOnPress(scene);
+
+    if (onPress) {
+      onPress(scene, jumpToIndex);
+    } else {
+      jumpToIndex(scene.index);
+    }
+  };
+
   render() {
     // TODO: Define full proptypes
     const props: any = this.props;
 
-    const onPress = props.onPress
-      ? (route: NavigationRoute) => props.onPress(route, props.jumpToIndex)
-      : undefined;
-
     return (
       <TabBar
         {...props}
-        onTabPress={onPress}
-        jumpToIndex={
-          /* Disable the default jumpToIndex if a custom onPress handler was defined. */
-          onPress ? () => {} : props.jumpToIndex
-        }
+        onTabPress={this._handleOnPress}
+        jumpToIndex={() => {}}
         renderIcon={this._renderIcon}
         renderLabel={this._renderLabel}
       />

@@ -2,6 +2,8 @@
 
 import React from 'react';
 
+import type { TabScene } from './views/TabView/TabView';
+
 import {
   Animated,
   type ViewProps,
@@ -335,6 +337,10 @@ export type NavigationTabScreenOptions = {
         *
       >),
   tabBarVisible?: boolean,
+  tabBarOnPress?: (
+    scene: TabScene,
+    jumpToIndex: (index: number) => void
+  ) => void,
 };
 
 /**

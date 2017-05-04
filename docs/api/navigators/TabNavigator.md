@@ -88,7 +88,6 @@ The route configs object is a mapping from route name to a route config, which t
 - `swipeEnabled` - whether to allow swiping between tabs
 - `animationEnabled` - whether to animate when changing tabs
 - `lazy` - whether to lazily render tabs as needed as opposed to rendering them upfront
-- `tabBarOnPress` - callback to handle tap events; arguments are the `route` that was tapped and a `jumpToIndex` method that can perform the navigation for you
 - `tabBarOptions` - configure the tab bar, see below.
 
 Several options get passed to the underlying router to modify navigation logic:
@@ -172,6 +171,10 @@ React Element or a function that given `{ focused: boolean, tintColor: string }`
 #### `tabBarLabel`
 
 Title string of a tab displayed in the tab bar or React Element or a function that given `{ focused: boolean, tintColor: string }` returns a React.Element, to display in tab bar. When undefined, scene `title` is used. To hide, see `tabBarOptions.showLabel` in the previous section.
+
+#### `tabBarOnPress`
+
+Callback to handle tap events; arguments are the `scene: { route, index }` that was tapped and a `jumpToIndex` method that can perform the navigation for you.
 
 ### Navigator Props
 
