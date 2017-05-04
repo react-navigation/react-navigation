@@ -8,7 +8,6 @@ import {
   Platform,
   ScrollView,
   StyleSheet,
-  Text,
 } from 'react-native';
 import {
   DrawerNavigator,
