@@ -305,6 +305,7 @@ export type NavigationDrawerScreenOptions = NavigationScreenOptions & {
     | ((
       options: { tintColor: ?string, focused: boolean },
     ) => ?React.Element<*>),
+  drawerLockMode?: 'unlocked' | 'locked-close' | 'locked-open', // defaults `unlocked`
 };
 
 export type NavigationRouteConfigMap = {
