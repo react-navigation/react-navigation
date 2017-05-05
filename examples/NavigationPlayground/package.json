@@ -2,14 +2,28 @@
   "name": "NavigationPlayground",
   "version": "0.0.1",
   "private": true,
+  "scripts": {
+    "test": "jest"
+  },
   "dependencies": {
-    "@exponent/vector-icons": "~4.0.0",
-    "exponent": "~13.1.0",
-    "react": "~15.4.2",
-    "react-native": "github:exponent/react-native#sdk-13.0.0",
-    "react-native-vector-icons": "^4.0.0"
+    "react": "16.0.0-alpha.6",
+    "react-native": "^0.43.2",
+    "react-native-vector-icons": "^4.0.1"
   },
   "devDependencies": {
-    "babel-preset-exponent": "^1.0.0"
+    "babel-jest": "^19.0.0",
+    "jest": "^19.0.2",
+    "react-navigation": "git+https://github.com/react-community/react-navigation.git",
+    "react-test-renderer": "^15.5.4"
+  },
+  "jest": {
+    "preset": "react-native",
+    "setupFiles": [
+      "<rootDir>/../../jest-setup.js"
+    ],
+    "transformIgnorePatterns": [
+      "node_modules/(?!react-native|react-navigation)/",
+      "__exponent"
+    ]
   }
 }

@@ -1,50 +1,45 @@
 /* @flow */
 
 import React, { PureComponent } from 'react';
-import {
-  Animated,
-  View,
-  TouchableWithoutFeedback,
-  StyleSheet,
-} from 'react-native';
+import { Animated, TouchableWithoutFeedback, StyleSheet } from 'react-native';
 import TabBarIcon from './TabBarIcon';
 
 import type {
+  NavigationAction,
   NavigationRoute,
   NavigationState,
+  NavigationScreenProp,
   Style,
 } from '../../TypeDefinition';
 
-import type {
-  TabScene,
-} from './TabView';
+import type { TabScene } from './TabView';
 
 type DefaultProps = {
-  activeTintColor: string;
-  activeBackgroundColor: string;
-  inactiveTintColor: string;
-  inactiveBackgroundColor: string;
-  showLabel: boolean;
+  activeTintColor: string,
+  activeBackgroundColor: string,
+  inactiveTintColor: string,
+  inactiveBackgroundColor: string,
+  showLabel: boolean,
 };
 
 type Props = {
-  activeTintColor: string;
-  activeBackgroundColor: string;
-  inactiveTintColor: string;
-  inactiveBackgroundColor: string;
-  position: Animated.Value;
-  navigationState: NavigationState;
-  jumpToIndex: (index: number) => void;
-  getLabel: (scene: TabScene) => ?(React.Element<*> | string);
-  renderIcon: (scene: TabScene) => React.Element<*>;
-  showLabel: boolean;
-  style?: Style;
-  labelStyle?: Style;
-  showIcon: boolean;
+  activeTintColor: string,
+  activeBackgroundColor: string,
+  inactiveTintColor: string,
+  inactiveBackgroundColor: string,
+  position: Animated.Value,
+  navigation: NavigationScreenProp<NavigationState, NavigationAction>,
+  jumpToIndex: (index: number) => void,
+  getLabel: (scene: TabScene) => ?(React.Element<*> | string),
+  renderIcon: (scene: TabScene) => React.Element<*>,
+  showLabel: boolean,
+  style?: Style,
+  labelStyle?: Style,
+  showIcon: boolean,
 };
 
-export default class TabBarBottom extends PureComponent<DefaultProps, Props, void> {
-
+export default class TabBarBottom
+  extends PureComponent<DefaultProps, Props, void> {
   // See https://developer.apple.com/library/content/documentation/UserExperience/Conceptual/UIKitUICatalog/UITabBar.html
   static defaultProps = {
     activeTintColor: '#3478f6', // Default active tint color in iOS 10
@@ -60,7 +55,7 @@ export default class TabBarBottom extends PureComponent<DefaultProps, Props, voi
   _renderLabel = (scene: TabScene) => {
     const {
       position,
-      navigationState,
+      navigation,
       activeTintColor,
       inactiveTintColor,
       labelStyle,
@@ -70,11 +65,12 @@ export default class TabBarBottom extends PureComponent<DefaultProps, Props, voi
       return null;
     }
     const { index } = scene;
-    const { routes } = navigationState;
+    const { routes } = navigation.state;
     // Prepend '-1', so there are always at least 2 items in inputRange
     const inputRange = [-1, ...routes.map((x: *, i: number) => i)];
-    const outputRange = inputRange.map((inputIndex: number) =>
-      (inputIndex === index ? activeTintColor : inactiveTintColor)
+    const outputRange = inputRange.map(
+      (inputIndex: number) =>
+        inputIndex === index ? activeTintColor : inactiveTintColor,
     );
     const color = position.interpolate({
       inputRange,
@@ -99,7 +95,7 @@ export default class TabBarBottom extends PureComponent<DefaultProps, Props, voi
   _renderIcon = (scene: TabScene) => {
     const {
       position,
-      navigationState,
+      navigation,
       activeTintColor,
       inactiveTintColor,
       renderIcon,
@@ -111,7 +107,7 @@ export default class TabBarBottom extends PureComponent<DefaultProps, Props, voi
     return (
       <TabBarIcon
         position={position}
-        navigationState={navigationState}
+        navigation={navigation}
         activeTintColor={activeTintColor}
         inactiveTintColor={inactiveTintColor}
         renderIcon={renderIcon}
@@ -124,22 +120,25 @@ export default class TabBarBottom extends PureComponent<DefaultProps, Props, voi
   render() {
     const {
       position,
-      navigationState,
+      navigation,
       jumpToIndex,
       activeBackgroundColor,
       inactiveBackgroundColor,
       style,
     } = this.props;
-    const { routes } = navigationState;
+    const { routes } = navigation.state;
     // Prepend '-1', so there are always at least 2 items in inputRange
     const inputRange = [-1, ...routes.map((x: *, i: number) => i)];
     return (
-      <View style={[styles.tabBar, style]}>
-        {navigationState.routes.map((route: NavigationRoute, index: number) => {
-          const focused = index === navigationState.index;
+      <Animated.View style={[styles.tabBar, style]}>
+        {routes.map((route: NavigationRoute, index: number) => {
+          const focused = index === navigation.state.index;
           const scene = { route, index, focused };
-          const outputRange = inputRange.map((inputIndex: number) =>
-            (inputIndex === index ? activeBackgroundColor : inactiveBackgroundColor)
+          const outputRange = inputRange.map(
+            (inputIndex: number) =>
+              inputIndex === index
+                ? activeBackgroundColor
+                : inactiveBackgroundColor,
           );
           const backgroundColor = position.interpolate({
             inputRange,
@@ -147,15 +146,20 @@ export default class TabBarBottom extends PureComponent<DefaultProps, Props, voi
           });
           const justifyContent = this.props.showIcon ? 'flex-end' : 'center';
           return (
-            <TouchableWithoutFeedback key={route.key} onPress={() => jumpToIndex(index)}>
-              <Animated.View style={[styles.tab, { backgroundColor, justifyContent }]}>
+            <TouchableWithoutFeedback
+              key={route.key}
+              onPress={() => jumpToIndex(index)}
+            >
+              <Animated.View
+                style={[styles.tab, { backgroundColor, justifyContent }]}
+              >
                 {this._renderIcon(scene)}
                 {this._renderLabel(scene)}
               </Animated.View>
             </TouchableWithoutFeedback>
           );
         })}
-      </View>
+      </Animated.View>
     );
   }
 }

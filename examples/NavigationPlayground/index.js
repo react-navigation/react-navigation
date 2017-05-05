@@ -5,3 +5,5 @@ import {
 import App from './js/App';
 
 AppRegistry.registerComponent('NavigationPlayground', () => App);
+
+export default App;

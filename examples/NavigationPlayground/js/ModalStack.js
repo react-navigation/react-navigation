@@ -6,7 +6,7 @@ import React from 'react';
 import {
   Button,
   ScrollView,
-  StyleSheet,
+  Text,
 } from 'react-native';
 import {
   StackNavigator,
@@ -26,7 +26,9 @@ const MyNavScreen = ({ navigation, banner }) => (
     />
     {navigation.state.routeName === 'HeaderTest' && <Button
       title="Toggle Header"
-      onPress={() => navigation.setParams({ header: (navigation.state.params && navigation.state.params.header === 'visible') ? 'none' : 'visible' })}
+      onPress={() => navigation.setParams({
+        headerVisible: (!navigation.state.params || !navigation.state.params.headerVisible),
+      })}
     />}
     <Button
       onPress={() => navigation.goBack(null)}
@@ -51,9 +53,23 @@ const MyProfileScreen = ({ navigation }) => (
     navigation={navigation}
   />
 );
-MyProfileScreen.navigationOptions = {
-  title: ({ state }) => `${state.params.name}'s Profile!`,
-};
+MyProfileScreen.navigationOptions = ({ navigation }) => ({
+  title: `${navigation.state.params.name}'s Profile!`,
+});
+
+const ProfileNavigator = StackNavigator({
+  Home: {
+    screen: MyHomeScreen,
+  },
+  Profile: {
+    path: 'people/:name',
+    screen: MyProfileScreen,
+  },
+}, {
+  navigationOptions: {
+    header: null,
+  },
+});
 
 const MyHeaderTestScreen = ({ navigation }) => (
   <MyNavScreen
@@ -61,20 +77,20 @@ const MyHeaderTestScreen = ({ navigation }) => (
     navigation={navigation}
   />
 );
-MyHeaderTestScreen.navigationOptions = {
-  header: ({state}) => ({
-    visible: !!state.params && state.params.header === 'visible',
+MyHeaderTestScreen.navigationOptions = ({ navigation }) => {
+  const headerVisible = navigation.state.params && navigation.state.params.headerVisible;
+  return {
+    header: headerVisible ? undefined : null,
     title: 'Now you see me',
-  }),
+  };
 };
 
 const ModalStack = StackNavigator({
   Home: {
     screen: MyHomeScreen,
   },
-  Profile: {
-    path: 'people/:name',
-    screen: MyProfileScreen,
+  ProfileNavigator: {
+    screen: ProfileNavigator,
   },
   HeaderTest: {screen: MyHeaderTestScreen},
 }, {

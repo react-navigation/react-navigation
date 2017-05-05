@@ -54,7 +54,7 @@ function AppHandler(req, res) {
   });
 
   const Component = App.router.getComponentForState(topNavigation.state);
-  const title = App.router.getScreenConfig(screenNavigation, 'title');
+  const { title } = App.router.getScreenOptions(screenNavigation, {});
   const app = <ServerApp navigation={topNavigation} />;
   const body = ReactDOMServer.renderToString(app);
   let html = indexHtml;

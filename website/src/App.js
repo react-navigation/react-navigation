@@ -19,6 +19,12 @@ import type {
   NavigationScreenComponent,
 } from 'react-navigation';
 
+type ScreenOptions = {
+  linkName: string,
+  icon: string,
+  title: string,
+};
+
 const NavView = ({navigation, router}) => {
   const {state} = navigation;
   const Component = router.getComponentForState(state);
@@ -38,8 +44,10 @@ type DocPageConfig = {
   linkName: string,
 };
 
-const createDocPage = (config: DocPageConfig): (() => NavigationScreenComponent<*>) => {
-  const Page = ({navigation}) => (
+const createDocPage = (
+  config: DocPageConfig,
+): (() => NavigationScreenComponent<*, ScreenOptions>) => {
+  const Page: NavigationScreenComponent<*, ScreenOptions> = ({ navigation }) => (
     <MDPage
       docPath={config.doc}
       navigation={navigation}
@@ -81,8 +89,8 @@ const GuideDocs = createNavigator(TabRouter({
 }))(NavView);
 
 GuideDocs.navigationOptions = {
-  linkName: () => 'Getting Started',
-  icon: () => 'pt-icon-flows',
+  linkName: 'Getting Started',
+  icon: 'pt-icon-flows',
 };
 
 const GuidesDocs = createNavigator(TabRouter({
@@ -290,11 +298,9 @@ const DocsPage = createNavigator(TabRouter({
     path: 'views',
   },
 }))(PageWithSidebar);
-DocsPage.navigationOptions = {
-  title: ({ state, dispatch }, childTitle) => {
-    return `${childTitle} | React Navigation`;
-  },
-};
+DocsPage.navigationOptions = ({ navigationOptions }) => ({
+  title: `${navigationOptions.title} | React Navigation`,
+});
 
 const IntroPost = () => <h1> Hello, world!</h1>;
 IntroPost.navigationOptions = {
@@ -303,6 +309,14 @@ IntroPost.navigationOptions = {
 };
 
 const BlogHistoryPage = createNavigator(TabRouter({
+  RoadToV1: {
+    screen: createDocPage({
+      doc: 'blog/2017-04-On-the-path-to-v1',
+      title: 'On the path to v1',
+      linkName: 'On the path to v1',
+    }),
+    path: '2017/4/On-the-path-to-v1',
+  },
   IntroPost: {
     screen: createDocPage({
       doc: 'blog/2017-01-Introducing-React-Navigation',

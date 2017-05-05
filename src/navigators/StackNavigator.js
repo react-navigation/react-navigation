@@ -3,31 +3,33 @@
 import React from 'react';
 import createNavigationContainer from '../createNavigationContainer';
 import createNavigator from './createNavigator';
-import CardStack from '../views/CardStack';
+import CardStackTransitioner from '../views/CardStackTransitioner';
 import StackRouter from '../routers/StackRouter';
+import NavigatorTypes from './NavigatorTypes';
 
 import type {
-  NavigationContainerConfig,
   NavigationStackRouterConfig,
   NavigationStackViewConfig,
   NavigationRouteConfigMap,
 } from '../TypeDefinition';
 
 export type StackNavigatorConfig =
-  & NavigationContainerConfig
+  & { containerOptions?: void }
   & NavigationStackViewConfig
   & NavigationStackRouterConfig;
 
-export default (routeConfigMap: NavigationRouteConfigMap, stackConfig: StackNavigatorConfig = {}) => {
+export default (
+  routeConfigMap: NavigationRouteConfigMap,
+  stackConfig: StackNavigatorConfig = {},
+) => {
   const {
-    containerOptions,
     initialRouteName,
     initialRouteParams,
     paths,
-    headerComponent,
     headerMode,
     mode,
     cardStyle,
+    transitionConfig,
     onTransitionStart,
     onTransitionEnd,
     navigationOptions,
@@ -38,16 +40,25 @@ export default (routeConfigMap: NavigationRouteConfigMap, stackConfig: StackNavi
     paths,
     navigationOptions,
   };
+
   const router = StackRouter(routeConfigMap, stackRouterConfig);
-  return createNavigationContainer(createNavigator(router)(props => (
-    <CardStack
+
+  const navigator = createNavigator(
+    router,
+    routeConfigMap,
+    stackConfig,
+    NavigatorTypes.STACK,
+  )((props: *) => (
+    <CardStackTransitioner
       {...props}
-      headerComponent={headerComponent}
       headerMode={headerMode}
       mode={mode}
       cardStyle={cardStyle}
+      transitionConfig={transitionConfig}
       onTransitionStart={onTransitionStart}
       onTransitionEnd={onTransitionEnd}
     />
-  )), containerOptions);
+  ));
+
+  return createNavigationContainer(navigator, stackConfig.containerOptions);
 };
