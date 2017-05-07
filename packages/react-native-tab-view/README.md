@@ -27,7 +27,7 @@ Requires React Native version >= 0.36.
 ## Installation
 
 ```sh
-npm install --save react-native-tab-view
+yarn add react-native-tab-view
 ```
 
 
@@ -38,19 +38,8 @@ import React, { Component } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  page: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
-
-const FirstRoute = () => <View style={[ styles.page, { backgroundColor: '#ff4081' } ]} />;
-const SecondRoute = () => <View style={[ styles.page, { backgroundColor: '#673ab7' } ]} />;
+const FirstRoute = () => <View style={[ styles.container, { backgroundColor: '#ff4081' } ]} />;
+const SecondRoute = () => <View style={[ styles.container, { backgroundColor: '#673ab7' } ]} />;
 
 export default class TabViewExample extends Component {
   state = {
@@ -82,6 +71,12 @@ export default class TabViewExample extends Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
 ```
 
 
@@ -151,10 +146,10 @@ It accepts the following props,
 - `pressColor` - color for material ripple (Android >= 5.0 only)
 - `pressOpacity` - opacity for pressed tab (iOS and Android < 5.0 only)
 - `scrollEnabled` - whether to enable scrollable tabs
-- `tabWidth` - optional custom tab width
 - `tabStyle` - style object for the tab
 - `indicatorStyle` - style object for the tab indicator
 - `labelStyle` - style object for the tab label
+- `style` - style object for the tab bar
 
 
 Check the [type definitions](src/TabViewTypeDefinitions.js) for details on shape of different objects.
@@ -162,7 +157,7 @@ Check the [type definitions](src/TabViewTypeDefinitions.js) for details on shape
 
 ## Caveats
 
-`<TabViewAnimated />` is a `PureComponent` to prevent unnecessary re-rendering. As a side-effect, the tabs won't re-render if something changes in the parent's state. If you need it to trigger a re-render, put it in the `navigationState`.
+`<TabViewAnimated />` is a `PureComponent` to prevent unnecessary re-rendering. As a side-effect, the tabs won't re-render if something changes in the parent's state/props. If you need it to trigger a re-render, put it in the `navigationState`.
 
 For example, consider you have a `loaded` property on state which should trigger re-render. You can have your state like the following -
 
@@ -229,9 +224,9 @@ renderScene = ({ route }) => {
 Where `<HomeComponent />` is a `PureComponent`.
 
 
-### Avoid one frame delay before tab view appears
+### Avoid one frame delay
 
-We need to measure the width of the container and hence need to wait before rendering. This is especially visible when you are rendering more than one tab on screen, such as coverflow. If you know the initial width upfront, you can pass it in and we won't need to wait for measuring it. Most of the time, it's just the window width.
+We need to measure the width of the container and hence need to wait before rendering some elements on the screen. If you know the initial width upfront, you can pass it in and we won't need to wait for measuring it. Most of the time, it's just the window width.
 
 For example, pass the following `initialLayout` to `TabViewAnimated`:
 
