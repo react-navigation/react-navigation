@@ -49,13 +49,19 @@ export default class TopBarTextExample extends PureComponent<void, *, State> {
     }
     switch (route.key) {
       case '1':
-        this._first.scrollTo({ y: 0 });
+        if (this._first) {
+          this._first.scrollTo({ y: 0 });
+        }
         break;
       case '2':
-        this._second.scrollTo({ y: 0 });
+        if (this._second) {
+          this._second.scrollTo({ y: 0 });
+        }
         break;
       case '3':
-        this._third.scrollTo({ y: 0 });
+        if (this._third) {
+          this._third.scrollTo({ y: 0 });
+        }
         break;
     }
   };
