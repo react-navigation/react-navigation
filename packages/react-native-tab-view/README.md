@@ -36,7 +36,7 @@ npm install --save react-native-tab-view
 ```js
 import React, { Component } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { TabViewAnimated, TabBar } from 'react-native-tab-view';
+import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
 
 const styles = StyleSheet.create({
   container: {
@@ -49,6 +49,9 @@ const styles = StyleSheet.create({
   },
 });
 
+const FirstRoute = () => <View style={[ styles.page, { backgroundColor: '#ff4081' } ]} />;
+const SecondRoute = () => <View style={[ styles.page, { backgroundColor: '#673ab7' } ]} />;
+
 export default class TabViewExample extends Component {
   state = {
     index: 0,
@@ -58,24 +61,14 @@ export default class TabViewExample extends Component {
     ],
   };
 
-  _handleChangeTab = (index) => {
-    this.setState({ index });
-  };
+  _handleChangeTab = index => this.setState({ index });
 
-  _renderHeader = (props) => {
-    return <TabBar {...props} />;
-  };
+  _renderHeader = props => <TabBar {...props} />;
 
-  _renderScene = ({ route }) => {
-    switch (route.key) {
-    case '1':
-      return <View style={[ styles.page, { backgroundColor: '#ff4081' } ]} />;
-    case '2':
-      return <View style={[ styles.page, { backgroundColor: '#673ab7' } ]} />;
-    default:
-      return null;
-    }
-  };
+  _renderScene = SceneMap({
+    '1': FirstRoute,
+    '2': SecondRoute,
+  });
 
   render() {
     return (
@@ -107,10 +100,10 @@ It accepts the following props,
 - `canJumpToTab` - optional callback which accepts a route, and returns a boolean indicating whether jumping to the tab is allowed
 - `lazy` - whether to load tabs lazily when you start switching
 - `initialLayout` - optional object containing the initial `height` and `width`, can be passed to prevent the one frame delay in rendering
-- `renderPager` - optional callback which renders a pager responsible for handling swipes
-- `renderHeader` - optional callback which renders a header, useful for a top tab bar
-- `renderFooter` - optional callback which renders a footer, useful for a bottom tab bar
-- `renderScene` - callback which renders a single scene
+- `renderPager` - optional callback which returns a react element to handle swipe gesture and animation
+- `renderHeader` - optional callback which returns a react element to use as top tab bar
+- `renderFooter` - optional callback which returns a react element to use as bottom tab bar
+- `renderScene` - callback which returns a react element to use as a scene
 
 Any other props are passed to the underlying pager.
 

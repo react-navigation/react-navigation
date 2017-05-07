@@ -71,9 +71,9 @@ export default class TabViewPagerAndroid<T: Route<*>>
   _currentIndex = 0;
 
   _getPageIndex = (index: number) =>
-    (I18nManager.isRTL
+    I18nManager.isRTL
       ? this.props.navigationState.routes.length - (index + 1)
-      : index);
+      : index;
 
   _setPage = (index: number) => {
     if (this._viewPager) {

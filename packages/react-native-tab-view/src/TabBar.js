@@ -78,7 +78,7 @@ export default class TabBar<T: Route<*>>
 
   static defaultProps = {
     getLabelText: ({ route }) =>
-      (route.title ? route.title.toUpperCase() : null),
+      route.title ? route.title.toUpperCase() : null,
   };
 
   constructor(props: Props<T>) {

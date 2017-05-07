@@ -17,4 +17,7 @@ module.exports = {
   get TabBar() {
     return require('./TabBar').default;
   },
+  get SceneMap() {
+    return require('./SceneMap').default;
+  },
 };
