@@ -263,7 +263,7 @@ export default class TabViewAnimated<T: Route<*>>
         loaded={this.state.loaded}
         style={[styles.container, this.props.style]}
       >
-        {renderHeader && renderHeader(props)}
+        {renderHeader && <View collapsable={false}>{renderHeader(props)}</View>}
         {renderPager({
           ...props,
           ...rest,
@@ -276,7 +276,7 @@ export default class TabViewAnimated<T: Route<*>>
             }),
           ),
         })}
-        {renderFooter && renderFooter(props)}
+        {renderFooter && <View collapsable={false}>{renderFooter(props)}</View>}
       </View>
     );
   }
