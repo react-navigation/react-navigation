@@ -223,6 +223,7 @@ renderScene = ({ route }) => {
 
 Where `<HomeComponent />` is a `PureComponent`.
 
+If you are using the `SceneMap` helper, the scenes are already optimized with `PureComponent` and won't re-render if parent's state changes.
 
 ### Avoid one frame delay
 
