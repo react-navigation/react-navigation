@@ -13,6 +13,7 @@ import type { Style } from './TabViewTypeDefinitions';
 const LOLLIPOP = 21;
 
 type Props = {
+  onPress: Function,
   delayPressIn?: number,
   borderless?: boolean,
   pressColor?: string,
@@ -28,6 +29,7 @@ type DefaultProps = {
 export default class TouchableItem
   extends PureComponent<DefaultProps, Props, void> {
   static propTypes = {
+    onPress: PropTypes.func.isRequired,
     delayPressIn: PropTypes.number,
     borderless: PropTypes.bool,
     pressColor: PropTypes.string,
@@ -40,6 +42,10 @@ export default class TouchableItem
     pressColor: 'rgba(255, 255, 255, .4)',
   };
 
+  _handlePress = () => {
+    global.requestAnimationFrame(this.props.onPress);
+  };
+
   render() {
     const { style, pressOpacity, pressColor, borderless, ...rest } = this.props;
 
@@ -47,6 +53,7 @@ export default class TouchableItem
       return (
         <TouchableNativeFeedback
           {...rest}
+          onPress={this._handlePress}
           background={TouchableNativeFeedback.Ripple(pressColor, borderless)}
         >
           <View style={style}>
@@ -56,7 +63,12 @@ export default class TouchableItem
       );
     } else {
       return (
-        <TouchableOpacity {...rest} style={style} activeOpacity={pressOpacity}>
+        <TouchableOpacity
+          {...rest}
+          onPress={this._handlePress}
+          style={style}
+          activeOpacity={pressOpacity}
+        >
           {this.props.children}
         </TouchableOpacity>
       );
