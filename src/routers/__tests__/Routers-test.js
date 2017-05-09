@@ -90,6 +90,12 @@ test('Handles no-op actions with tabs within stack router', () => {
     type: NavigationActions.NAVIGATE,
     routeName: 'Qux',
   });
+  /* $FlowFixMe */
+  expect(state1.routes[0].key).toEqual('Init-id-0-0');
+  /* $FlowFixMe */
+  expect(state2.routes[0].key).toEqual('Init-id-0-1');
+  /* $FlowFixMe */
+  state1.routes[0].key = state2.routes[0].key;
   expect(state1).toEqual(state2);
   const state3 = TestRouter.getStateForAction(
     { type: NavigationActions.NAVIGATE, routeName: 'Zap' },
@@ -114,7 +120,7 @@ test('Handles deep action', () => {
     index: 0,
     routes: [
       {
-        key: 'Init',
+        key: 'Init-id-0-2',
         routeName: 'Bar',
       },
     ],
@@ -153,6 +159,12 @@ test('Supports lazily-evaluated getScreen', () => {
     type: NavigationActions.NAVIGATE,
     routeName: 'Qux',
   });
+  /* $FlowFixMe */
+  expect(state1.routes[0].key).toEqual('Init-id-0-4');
+  /* $FlowFixMe */
+  expect(state2.routes[0].key).toEqual('Init-id-0-5');
+  /* $FlowFixMe */
+  state1.routes[0].key = state2.routes[0].key;
   expect(state1).toEqual(state2);
   const state3 = TestRouter.getStateForAction(
     { type: NavigationActions.NAVIGATE, routeName: 'Zap' },
