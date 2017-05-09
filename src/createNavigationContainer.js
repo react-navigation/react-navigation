@@ -2,7 +2,7 @@
 
 import React from 'react';
 import invariant from 'fbjs/lib/invariant';
-import { BackAndroid, Linking } from './PlatformHelpers';
+import { BackHandler, Linking } from './PlatformHelpers';
 import NavigationActions from './NavigationActions';
 import addNavigationHelpers from './addNavigationHelpers';
 
@@ -157,7 +157,7 @@ export default function createNavigationContainer<T: *>(
         return;
       }
 
-      this.subs = BackAndroid.addEventListener('backPress', () =>
+      this.subs = BackHandler.addEventListener('backPress', () =>
         this.dispatch(NavigationActions.back()));
 
       Linking.addEventListener('url', ({ url }: { url: string }) => {
