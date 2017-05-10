@@ -17,6 +17,7 @@ Requires React Native version >= 0.36.
 - Both top and bottom tab bars
 - Follows Material Design spec
 - Highly customizable
+- Fully typed with [Flow](https://flow.org/)
 
 
 ## Demo
@@ -34,14 +35,14 @@ yarn add react-native-tab-view
 ## Example
 
 ```js
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
 
 const FirstRoute = () => <View style={[ styles.container, { backgroundColor: '#ff4081' } ]} />;
 const SecondRoute = () => <View style={[ styles.container, { backgroundColor: '#673ab7' } ]} />;
 
-export default class TabViewExample extends Component {
+export default class TabViewExample extends PureComponent {
   state = {
     index: 0,
     routes: [
@@ -86,9 +87,10 @@ The package exposes the following components,
 
 ### `<TabViewAnimated />`
 
-Container component responsible for managing tab transitions
+Container component responsible for managing tab transitions.
 
-It accepts the following props,
+#### Props
+
 - `navigationState` - the current navigation state
 - `onRequestChangeTab` - callback for when the current tab changes, should do the `setState`
 - `onChangePosition` - callback called with position value as it changes (e.g. - on swipe or tab change), avoid doing anything expensive here
@@ -104,9 +106,10 @@ Any other props are passed to the underlying pager.
 
 ### `<TabViewPagerPan />`
 
-Pager component based on `PanResponder`
+Pager component based on `PanResponder`.
 
-It accepts the following props,
+#### Props
+
 - `configureTransition` - optional callback which returns a configuration for the transition
 - `animationEnabled` - whether to enable page change animation
 - `swipeEnabled` - whether to enable swipe gestures
@@ -116,39 +119,42 @@ It accepts the following props,
 
 ### `<TabViewPagerScroll />`
 
-Pager component based on `ScrollView` (default on iOS)
+Pager component based on `ScrollView` (default on iOS).
 
-It accepts the following props,
+#### Props
+
 - `animationEnabled` - whether to enable page change animation
 - `swipeEnabled` - whether to enable swipe gestures
 - `children` - React Element(s) to render
 
 ### `<TabViewPagerAndroid />`
 
-Pager component based on `ViewPagerAndroid` (default on Android)
+Pager component based on `ViewPagerAndroid` (default on Android).
 
-It accepts the following props,
+#### Props
+
 - `animationEnabled` - whether to enable page change animation
 - `swipeEnabled` - whether to enable swipe gestures
 - `children` - React Element(s) to render
 
 ### `<TabBar />`
 
-Material design themed top tab bar
+Material design themed tab bar. Can be used as both top and bottom tab bar.
 
-It accepts the following props,
+#### Props
+
 - `getLabelText` - optional callback which receives the current scene and returns the tab label
 - `renderIcon` - optional callback which receives the current scene and returns a React Element to be used as a icon
 - `renderLabel` - optional callback which receives the current scene and returns a React Element to be used as a label
 - `renderIndicator` - optional callback which receives the current scene and returns a React Element to be used as a tab indicator
 - `renderBadge` - optional callback which receives the current scene and returns a React Element to be used as a badge
-- `onTabPress` - optional callback invoked on tab press, useful for things like scroll to top; receives the scene of the tab that was pressed
+- `onTabPress` - optional callback invoked on tab press which receives the scene for the pressed tab, useful for things like scroll to top
 - `pressColor` - color for material ripple (Android >= 5.0 only)
 - `pressOpacity` - opacity for pressed tab (iOS and Android < 5.0 only)
 - `scrollEnabled` - whether to enable scrollable tabs
-- `tabStyle` - style object for the tab
-- `indicatorStyle` - style object for the tab indicator
-- `labelStyle` - style object for the tab label
+- `tabStyle` - style object for the individual tabs in the tab bar
+- `indicatorStyle` - style object for the active indicator
+- `labelStyle` - style object for the tab item label
 - `style` - style object for the tab bar
 
 
@@ -159,7 +165,7 @@ Check the [type definitions](src/TabViewTypeDefinitions.js) for details on shape
 
 `<TabViewAnimated />` is a `PureComponent` to prevent unnecessary re-rendering. As a side-effect, the tabs won't re-render if something changes in the parent's state/props. If you need it to trigger a re-render, put it in the `navigationState`.
 
-For example, consider you have a `loaded` property on state which should trigger re-render. You can have your state like the following -
+For example, consider you have a `loaded` property on state which should trigger re-render. You can have your state like the following:
 
 ```js
 state = {
