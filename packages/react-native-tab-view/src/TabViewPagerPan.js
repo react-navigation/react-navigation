@@ -117,6 +117,7 @@ export default class TabViewPagerPan<T: Route<*>>
 
   _panResponder: Object;
   _resetListener: Object;
+  _pendingIndex = null;
   _lastValue = null;
   _isMoving = null;
   _startDirection = 0;
@@ -142,7 +143,9 @@ export default class TabViewPagerPan<T: Route<*>>
   };
 
   _getNextIndex = (evt: GestureEvent, gestureState: GestureState) => {
-    const { index } = this.props.navigationState;
+    const currentIndex = typeof this._pendingIndex === 'number'
+      ? this._pendingIndex
+      : this.props.navigationState.index;
 
     let swipeVelocityThreshold = this.props.swipeVelocityThreshold;
 
@@ -157,7 +160,7 @@ export default class TabViewPagerPan<T: Route<*>>
       Math.abs(gestureState.vx) > swipeVelocityThreshold
     ) {
       const nextIndex =
-        index -
+        currentIndex -
         gestureState.dx /
           Math.abs(gestureState.dx) *
           (I18nManager.isRTL ? -1 : 1);
@@ -165,7 +168,7 @@ export default class TabViewPagerPan<T: Route<*>>
         return nextIndex;
       }
     }
-    return index;
+    return currentIndex;
   };
 
   _canMoveScreen = (evt: GestureEvent, gestureState: GestureState) => {
@@ -226,19 +229,29 @@ export default class TabViewPagerPan<T: Route<*>>
     const nextTransitionProps = {
       progress: toValue,
     };
+
+    this._pendingIndex = toValue;
+
     if (this.props.animationEnabled !== false) {
       const transitionSpec = this.props.configureTransition(
         currentTransitionProps,
         nextTransitionProps,
       );
       const { timing, ...transitionConfig } = transitionSpec;
+
       timing(this.props.position, {
         ...transitionConfig,
         toValue,
-      }).start(() => this.props.jumpToIndex(toValue));
+      }).start(({ finished }) => {
+        if (finished) {
+          this.props.jumpToIndex(toValue);
+          this._pendingIndex = null;
+        }
+      });
     } else {
       this.props.position.setValue(toValue);
       this.props.jumpToIndex(toValue);
+      this._pendingIndex = null;
     }
   };
 
