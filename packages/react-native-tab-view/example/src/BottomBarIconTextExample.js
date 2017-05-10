@@ -20,10 +20,6 @@ export default class TopBarIconExample extends PureComponent<void, *, State> {
   static title = 'Bottom bar with indicator';
   static appbarElevation = 4;
 
-  static propTypes = {
-    style: View.propTypes.style,
-  };
-
   state: State = {
     index: 0,
     routes: [

@@ -75,7 +75,6 @@ export default class TabViewAnimated<T: Route<*>>
     renderHeader: PropTypes.func,
     renderFooter: PropTypes.func,
     lazy: PropTypes.bool,
-    style: View.propTypes.style,
   };
 
   static defaultProps = {

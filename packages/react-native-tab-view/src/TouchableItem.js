@@ -35,7 +35,6 @@ export default class TouchableItem
     pressColor: PropTypes.string,
     pressOpacity: PropTypes.number,
     children: PropTypes.node.isRequired,
-    style: View.propTypes.style,
   };
 
   static defaultProps = {
@@ -47,6 +46,7 @@ export default class TouchableItem
   };
 
   render() {
+    // eslint-disable-next-line react/prop-types
     const { style, pressOpacity, pressColor, borderless, ...rest } = this.props;
 
     if (Platform.OS === 'android' && Platform.Version >= LOLLIPOP) {

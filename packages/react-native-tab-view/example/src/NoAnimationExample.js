@@ -29,10 +29,6 @@ export default class TopBarIconExample extends PureComponent<void, *, State> {
   static tintColor = '#222';
   static appbarElevation = 4;
 
-  static propTypes = {
-    style: View.propTypes.style,
-  };
-
   state: State = {
     index: 0,
     routes: [

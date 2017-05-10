@@ -1,7 +1,7 @@
 /* @flow */
 
 import React, { PureComponent } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { TabViewAnimated, TabBar } from 'react-native-tab-view';
 import SimplePage from './SimplePage';
 
@@ -17,10 +17,6 @@ type State = NavigationState<Route>;
 export default class TopBarTextExample extends PureComponent<void, *, State> {
   static title = 'Scrollable top bar';
   static appbarElevation = 0;
-
-  static propTypes = {
-    style: View.propTypes.style,
-  };
 
   state: State = {
     index: 1,
