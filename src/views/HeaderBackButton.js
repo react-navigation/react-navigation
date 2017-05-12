@@ -79,6 +79,7 @@ class HeaderBackButton extends React.PureComponent<DefaultProps, Props, State> {
         accessibilityComponentType="button"
         accessibilityLabel={backButtonTitle}
         accessibilityTraits="button"
+        testID="header-back"
         delayPressIn={0}
         onPress={onPress}
         pressColor={pressColorAndroid}
