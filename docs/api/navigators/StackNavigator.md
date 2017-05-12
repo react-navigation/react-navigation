@@ -120,6 +120,10 @@ React Element to display on the right side of the header
 
 React Element to display on the left side of the header
 
+#### `headerBack`
+
+React Element to display on the left side of the header, that is wrapped to act as a back button.
+
 #### `headerStyle`
 
 Style object for the header
