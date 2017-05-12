@@ -30,7 +30,7 @@ class MyNotificationsScreen extends React.Component {
     drawerIcon: ({ tintColor }) => (
       <Image
         source={require('./notif-icon.png')}
-        style={[styles.tabIcon, {tintColor: tintColor}]}
+        style={[styles.icon, {tintColor: tintColor}]}
       />
     ),
   };
