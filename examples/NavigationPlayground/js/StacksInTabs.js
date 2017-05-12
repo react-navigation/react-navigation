@@ -20,15 +20,15 @@ const MyNavScreen = ({ navigation, banner }) => (
     <SampleText>{banner}</SampleText>
     <Button
       onPress={() => navigation.navigate('Profile', { name: 'Jordan' })}
-      title="Go to a profile screen"
+      title="Open profile screen"
     />
     <Button
       onPress={() => navigation.navigate('NotifSettings')}
-      title="Go to notification settings"
+      title="Open notifications screen"
     />
     <Button
       onPress={() => navigation.navigate('SettingsTab')}
-      title="Go to settings"
+      title="Go to settings tab"
     />
     <Button
       onPress={() => navigation.goBack(null)}
@@ -50,20 +50,17 @@ const MyProfileScreen = ({ navigation }) => (
     navigation={navigation}
   />
 );
-MyProfileScreen.navigationOptions = ({ navigation }) => ({
-  title: `${navigation.state.params.name}'s Profile!`,
-});
 
 const MyNotificationsSettingsScreen = ({ navigation }) => (
   <MyNavScreen
-    banner="Notification Settings"
+    banner="Notifications Screen"
     navigation={navigation}
   />
 );
 
 const MySettingsScreen = ({ navigation }) => (
   <MyNavScreen
-    banner="Settings"
+    banner="Settings Screen"
     navigation={navigation}
   />
 );
@@ -96,7 +93,7 @@ const SettingsTab = StackNavigator({
   NotifSettings: {
     screen: MyNotificationsSettingsScreen,
     navigationOptions: {
-      title: 'Notification Settings',
+      title: 'Notifications',
     },
   },
 });
