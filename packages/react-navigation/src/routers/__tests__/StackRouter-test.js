@@ -325,7 +325,7 @@ describe('StackRouter', () => {
     const initState = TestRouter.getStateForAction(NavigationActions.init());
     expect(initState).toEqual({
       index: 0,
-      routes: [{ key: 'Init', routeName: 'foo' }],
+      routes: [{ key: 'Init-id-0-0', routeName: 'foo' }],
     });
     const pushedState = TestRouter.getStateForAction(
       NavigationActions.navigate({ routeName: 'qux' }),
@@ -355,7 +355,7 @@ describe('StackRouter', () => {
       index: 0,
       routes: [
         {
-          key: 'Init',
+          key: 'Init-id-0-4',
           routeName: 'Foo',
         },
       ],
@@ -380,7 +380,7 @@ describe('StackRouter', () => {
       index: 0,
       routes: [
         {
-          key: 'Init',
+          key: 'Init-id-0-4',
           routeName: 'Foo',
         },
       ],
@@ -408,7 +408,7 @@ describe('StackRouter', () => {
       index: 0,
       routes: [
         {
-          key: 'Init',
+          key: 'Init-id-0-6',
           routeName: 'Foo',
         },
       ],
@@ -433,7 +433,7 @@ describe('StackRouter', () => {
       index: 0,
       routes: [
         {
-          key: 'Init',
+          key: 'Init-id-0-6',
           routeName: 'Foo',
         },
       ],
@@ -499,7 +499,7 @@ describe('StackRouter', () => {
       index: 0,
       routes: [
         {
-          key: 'Init',
+          key: 'Init-id-0-12',
           routeName: 'Bar',
         },
       ],
@@ -521,7 +521,7 @@ describe('StackRouter', () => {
       index: 0,
       routes: [
         {
-          key: 'Init',
+          key: 'Init-id-0-13',
           routeName: 'Bar',
           params: { foo: 'bar' },
         },
@@ -574,7 +574,7 @@ describe('StackRouter', () => {
       {
         type: NavigationActions.SET_PARAMS,
         params: { name: 'Qux' },
-        key: 'Init',
+        key: 'Init-id-0-16',
       },
       state,
     );
@@ -602,7 +602,7 @@ describe('StackRouter', () => {
       {
         type: NavigationActions.SET_PARAMS,
         params: { name: 'foobar' },
-        key: 'Init',
+        key: 'Init-id-0-17',
       },
       state,
     );
@@ -610,7 +610,7 @@ describe('StackRouter', () => {
     /* $FlowFixMe */
     expect(state2 && state2.routes[0].routes[0].routes).toEqual([
       {
-        key: 'Init',
+        key: 'Init-id-0-17',
         routeName: 'Quux',
         params: { name: 'foobar' },
       },
@@ -753,7 +753,7 @@ describe('StackRouter', () => {
     /* $FlowFixMe */
     expect(state2 && state2.routes[1].routes).toEqual([
       {
-        key: 'Init',
+        key: 'Init-id-0-26',
         routeName: 'Baz',
         params: { foo: '42' },
       },
@@ -818,7 +818,11 @@ describe('StackRouter', () => {
       state = router.getStateForAction(action);
     }
     expect(state && state.index).toEqual(0);
-    expect(state && state.routes[0]).toEqual({ key: 'Init', routeName: 'Bar' });
+    expect(state && state.routes[0]).toEqual({
+      key: 'Init-id-0-30',
+      routeName: 'Bar',
+      type: undefined,
+    });
   });
 
   test('Gets deep path', () => {
