@@ -15,7 +15,7 @@ import type {
 } from './TypeDefinition';
 
 type NavigationContainerProps = {
-  uriPrefix?: string,
+  uriPrefix?: string | RegExp,
   onNavigationStateChange?: (
     NavigationState,
     NavigationState,
