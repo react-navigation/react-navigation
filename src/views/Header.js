@@ -136,6 +136,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
         tintColor={options.headerTintColor}
         title={backButtonTitle}
         truncatedTitle={truncatedBackButtonTitle}
+        titleStyle={options.headerBackTitleStyle}
         width={width}
       />
     );
@@ -283,14 +284,15 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
       position,
       screenProps,
       progress,
+      style,
       ...rest
     } = this.props;
 
     const { options } = this.props.getScreenDetails(scene, screenProps);
-    const style = options.headerStyle;
+    const headerStyle = options.headerStyle;
 
     return (
-      <Animated.View {...rest} style={[styles.container, style]}>
+      <Animated.View {...rest} style={[styles.container, headerStyle, style]}>
         <View style={styles.appBar}>
           {appBar}
         </View>
