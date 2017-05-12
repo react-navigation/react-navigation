@@ -114,11 +114,11 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
 
   _renderLeftComponent = (props: SceneProps) => {
     const options = this.props.getScreenDetails(props.scene).options;
-    if (typeof options.headerLeft !== 'undefined') {
-      return options.headerLeft;
-    }
     if (props.scene.index === 0) {
       return null;
+    }
+    if (typeof options.headerLeft !== 'undefined') {
+      return options.headerLeft({navigation: this.props.navigation});
     }
     const backButtonTitle = this._getBackButtonTitleString(props.scene);
     const truncatedBackButtonTitle = this._getTruncatedBackButtonTitle(
@@ -136,7 +136,6 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
         tintColor={options.headerTintColor}
         title={backButtonTitle}
         truncatedTitle={truncatedBackButtonTitle}
-        titleStyle={options.headerBackTitleStyle}
         width={width}
       />
     );
@@ -284,15 +283,14 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
       position,
       screenProps,
       progress,
-      style,
       ...rest
     } = this.props;
 
     const { options } = this.props.getScreenDetails(scene, screenProps);
-    const headerStyle = options.headerStyle;
+    const style = options.headerStyle;
 
     return (
-      <Animated.View {...rest} style={[styles.container, headerStyle, style]}>
+      <Animated.View {...rest} style={[styles.container, style]}>
         <View style={styles.appBar}>
           {appBar}
         </View>
