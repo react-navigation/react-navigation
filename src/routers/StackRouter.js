@@ -107,7 +107,7 @@ export default (
               {
                 ...action,
                 type: undefined,
-                key: 'Init',
+                key: `Init-${_getUuid()}`,
               },
             ],
           };
@@ -130,7 +130,7 @@ export default (
         route = {
           ...route,
           routeName: initialRouteName,
-          key: 'Init',
+          key: `Init-${_getUuid()}`,
           ...(params ? { params } : {}),
         };
         // eslint-disable-next-line no-param-reassign

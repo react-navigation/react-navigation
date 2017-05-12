@@ -17,3 +17,5 @@ jest.mock('ScrollView', () => {
   }
   return ScrollView;
 });
+
+Date.now = jest.fn(() => 0);
