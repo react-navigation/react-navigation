@@ -248,19 +248,19 @@ export default (
         return {
           ...state,
           routes: resetAction.actions.map(
-            (childAction: NavigationNavigateAction, index: number) => {
+            (childAction: NavigationNavigateAction) => {
               const router = childRouters[childAction.routeName];
               if (router) {
                 return {
                   ...childAction,
                   ...router.getStateForAction(childAction),
                   routeName: childAction.routeName,
-                  key: `Init${index}`,
+                  key: _getUuid(),
                 };
               }
               const route = {
                 ...childAction,
-                key: `Init${index}`,
+                key: _getUuid(),
               };
               delete route.type;
               return route;
