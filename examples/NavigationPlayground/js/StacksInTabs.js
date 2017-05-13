@@ -128,9 +128,12 @@ const StacksInTabs = TabNavigator({
     },
   },
 }, {
-  tabBarPosition: 'bottom',
-  animationEnabled: false,
+  tabBarOptions: {
+    showIcon: true,
+  },
   swipeEnabled: false,
+  animationEnabled: false,
+  tabBarPosition: 'bottom',
 });
 
 export default StacksInTabs;
