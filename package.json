@@ -62,7 +62,7 @@
     "jest": "^19.0.2",
     "prettier": "^0.22.0",
     "react": "16.0.0-alpha.6",
-    "react-native": "^0.43.2",
+    "react-native": "^0.44.0",
     "react-native-vector-icons": "^3.0.0",
     "react-test-renderer": "^15.4.2"
   },
