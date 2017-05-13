@@ -6,6 +6,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "prop-types": "^15.5.8",
     "react": "16.0.0-alpha.6",
     "react-native": "^0.43.2",
     "react-native-vector-icons": "^4.0.1"

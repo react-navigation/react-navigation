@@ -1,7 +1,8 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { Button } from 'react-native';
 import { NavigationActions } from 'react-navigation';
+import PropTypes from 'prop-types';
 
 const AuthButton = ({ logout, loginScreen, isLoggedIn }) => (
   <Button

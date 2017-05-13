@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import {
   Button,
@@ -7,6 +7,7 @@ import {
   View,
 } from 'react-native';
 import { NavigationActions } from 'react-navigation';
+import PropTypes from 'prop-types';
 
 const styles = StyleSheet.create({
   welcome: {

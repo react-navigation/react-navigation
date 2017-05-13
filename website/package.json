@@ -54,6 +54,7 @@
   "dependencies": {
     "@blueprintjs/core": "^1.0.1",
     "prismjs": "^1.6.0",
+    "prop-types": "^15.5.8",
     "react": "~15.3.2",
     "react-addons-css-transition-group": "~15.3.2",
     "react-dom": "~15.3.2",
