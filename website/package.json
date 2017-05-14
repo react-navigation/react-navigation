@@ -6,7 +6,6 @@
     "autoprefixer": "6.5.1",
     "babel-cli": "^6.18.0",
     "babel-core": "6.17.0",
-    "babel-eslint": "7.0.0",
     "babel-jest": "16.0.0",
     "babel-loader": "6.2.5",
     "babel-plugin-flow-react-proptypes": "grabbou/babel-plugin-flow-react-proptypes#release",
@@ -18,13 +17,6 @@
     "css-loader": "0.25.0",
     "detect-port": "1.0.1",
     "dotenv": "2.0.0",
-    "eslint": "3.8.1",
-    "eslint-config-react-app": "^0.3.0",
-    "eslint-loader": "1.6.0",
-    "eslint-plugin-flowtype": "2.21.0",
-    "eslint-plugin-import": "2.0.1",
-    "eslint-plugin-jsx-a11y": "2.2.3",
-    "eslint-plugin-react": "6.4.1",
     "extract-text-webpack-plugin": "1.0.1",
     "file-loader": "0.9.0",
     "filesize": "3.3.0",
@@ -102,8 +94,5 @@
     "presets": [
       "react-app"
     ]
-  },
-  "eslintConfig": {
-    "extends": "react-app"
   }
 }
