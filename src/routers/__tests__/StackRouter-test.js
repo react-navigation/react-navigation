@@ -1,5 +1,5 @@
 /* @flow */
-/* eslint no-shadow:0 react/no-multi-comp:0 */
+/* eslint no-shadow:0, react/no-multi-comp:0, react/display-name:0 */
 
 import React from 'react';
 
