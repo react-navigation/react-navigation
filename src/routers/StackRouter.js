@@ -177,13 +177,13 @@ export default (
 
           // check if only child router is changing,
           // and call `replaceAtIndex` instead
-          const index = state.routes.length - 1
-          const parentRoute = state.routes[index]
+          const index = state.routes.length - 1;
+          const parentRoute = state.routes[index];
 
           if (action.routeName === parentRoute.routeName
             && shallowEqual(action.params, parentRoute.params)) {
-            route.key = parentRoute.key // key needs to stay the same
-            return StateUtils.replaceAtIndex(state, index, route)
+            route.key = parentRoute.key; // key needs to stay the same
+            return StateUtils.replaceAtIndex(state, index, route);
           }
         } else {
           route = {
