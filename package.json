@@ -27,12 +27,12 @@
     "start": "node ./node_modules/react-native/local-cli/cli.js start --config ./rn-cli.config.js",
     "run-playground-ios": "cd examples/NavigationPlayground && react-native run-ios",
     "run-playground-android": "cd examples/NavigationPlayground && react-native run-android",
-    "test": "npm run lint && npm run flow && npm run jest",
+    "test": "npm run lint && npm run flow-check && npm run jest",
     "jest": "jest",
     "lint": "eslint .",
     "format": "eslint --fix .",
     "flow": "flow",
-    "flow-check": "flow check --show-all-errors | flow-result-checker",
+    "flow-check": "flow check --show-all-errors",
     "prepublish": "npm run clean && npm run build"
   },
   "files": [
