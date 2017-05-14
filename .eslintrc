@@ -22,7 +22,7 @@
   },
   "rules": {
     "prettier/prettier": ["error", {
-      "trailingComma": "all",
+      "trailingComma": "es5",
       "singleQuote": true
     }],
 
