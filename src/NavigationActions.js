@@ -7,11 +7,10 @@ const RESET = namespacedAction('RESET');
 const SET_PARAMS = namespacedAction('SET_PARAMS');
 const URI = namespacedAction('URI');
 
-const createAction = (type: string) =>
-  (payload: Object = {}) => ({
-    type,
-    ...payload,
-  });
+const createAction = (type: string) => (payload: Object = {}) => ({
+  type,
+  ...payload,
+});
 
 const back = createAction(BACK);
 const init = createAction(INIT);
@@ -44,7 +43,7 @@ const mapDeprecatedActionAndWarn = (action: Object) => {
       "the 'actions' object.",
       'See https://github.com/react-community/react-navigation/pull/120 for',
       'more details.',
-    ].join(' '),
+    ].join(' ')
   );
 
   return {
