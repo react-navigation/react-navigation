@@ -1,5 +1,5 @@
 /* @flow */
-/* eslint no-shadow:0 react/no-multi-comp:0 */
+/* eslint no-shadow:0, react/no-multi-comp:0, react/display-name:0 */
 
 import React from 'react';
 
@@ -752,11 +752,11 @@ describe('StackRouter', () => {
     expect(state2 && state2.routes[1].params).toEqual({ foo: '42' });
     /* $FlowFixMe */
     expect(state2 && state2.routes[1].routes).toEqual([
-      {
-        key: 'Init-id-0-26',
+      /* $FlowFixMe */
+      expect.objectContaining({
         routeName: 'Baz',
         params: { foo: '42' },
-      },
+      }),
     ]);
   });
 
@@ -818,11 +818,13 @@ describe('StackRouter', () => {
       state = router.getStateForAction(action);
     }
     expect(state && state.index).toEqual(0);
-    expect(state && state.routes[0]).toEqual({
-      key: 'Init-id-0-30',
-      routeName: 'Bar',
-      type: undefined,
-    });
+    expect(state && state.routes[0]).toEqual(
+      // $FlowFixMe
+      expect.objectContaining({
+        routeName: 'Bar',
+        type: undefined,
+      })
+    );
   });
 
   test('Gets deep path', () => {
