@@ -10,6 +10,8 @@ import {
   Platform,
   View,
   I18nManager,
+  Dimensions,
+  Easing,
 } from 'react-native';
 
 import Card from './Card';
@@ -35,6 +37,8 @@ import type {
 import TransitionConfigs from './TransitionConfigs';
 
 const emptyFunction = () => {};
+
+const windowSize = Dimensions.get('window');
 
 type Props = {
   screenProps?: {},
@@ -65,7 +69,7 @@ type Props = {
 /**
  * The duration of the card animation in milliseconds.
  */
-const ANIMATION_DURATION = 200;
+const ANIMATION_DURATION = 250;
 
 /**
  * The gesture distance threshold to trigger the back behavior. For instance,
@@ -93,14 +97,6 @@ const animatedSubscribeValue = (animatedValue: Animated.Value) => {
     animatedValue.addListener(emptyFunction);
   }
 };
-
-/**
- * The ratio between the gesture velocity and the animation velocity. This allows
- * the velocity of a swipe release to carry on into the new animation.
- *
- * TODO: Understand and compute this ratio rather than using an approximation
- */
-const GESTURE_ANIMATED_VELOCITY_RATIO = -4;
 
 class CardStack extends Component {
   /**
@@ -199,17 +195,16 @@ class CardStack extends Component {
     animatedSubscribeValue(props.position);
   }
 
-  _reset(resetToIndex: number, velocity: number): void {
-    Animated.spring(this.props.position, {
+  _reset(resetToIndex: number, duration: number): void {
+    Animated.timing(this.props.position, {
       toValue: resetToIndex,
-      duration: ANIMATION_DURATION,
+      duration,
+      easing: Easing.inOut(Easing.ease),
       useNativeDriver: this.props.position.__isNative,
-      velocity: velocity * GESTURE_ANIMATED_VELOCITY_RATIO,
-      bounciness: 0,
     }).start();
   }
 
-  _goBack(backFromIndex: number, velocity: number) {
+  _goBack(backFromIndex: number, duration: number) {
     const { navigation, position, scenes } = this.props;
     const toValue = Math.max(backFromIndex - 1, 0);
 
@@ -217,12 +212,11 @@ class CardStack extends Component {
     // dispatched at the end of the transition.
     this._immediateIndex = toValue;
 
-    Animated.spring(position, {
+    Animated.timing(position, {
       toValue,
-      duration: ANIMATION_DURATION,
+      duration,
+      easing: Easing.inOut(Easing.ease),
       useNativeDriver: position.__isNative,
-      velocity: velocity * GESTURE_ANIMATED_VELOCITY_RATIO,
-      bounciness: 0,
     }).start(() => {
       this._immediateIndex = null;
       const backFromScene = scenes.find((s: *) => s.index === toValue + 1);
@@ -319,31 +313,39 @@ class CardStack extends Component {
           return;
         }
         this._isResponding = false;
-        const isVertical = mode === 'modal';
-        const velocity = gesture[isVertical ? 'vy' : 'vx'];
+
         const immediateIndex = this._immediateIndex == null
           ? index
           : this._immediateIndex;
+
+        const isVertical = mode === 'modal';
+        const fullDistance = isVertical ? windowSize.height : windowSize.width;
+        const movedDistance = gesture[isVertical ? 'moveY' : 'moveX'];
+        const defaultVelocity = fullDistance / ANIMATION_DURATION;
+        const gestureVelocity = gesture[isVertical ? 'vy' : 'vx'];
+        const velocity = Math.max(gestureVelocity, defaultVelocity);
+        const resetDuration = movedDistance / velocity;
+        const goBackDuration = (fullDistance - movedDistance) / velocity;
 
         // To asyncronously get the current animated value, we need to run stopAnimation:
         position.stopAnimation((value: number) => {
           // If the speed of the gesture release is significant, use that as the indication
           // of intent
-          if (velocity < -0.5) {
-            this._reset(immediateIndex, velocity);
+          if (gestureVelocity < -0.5) {
+            this._reset(immediateIndex, resetDuration);
             return;
           }
-          if (velocity > 0.5) {
-            this._goBack(immediateIndex, velocity);
+          if (gestureVelocity > 0.5) {
+            this._goBack(immediateIndex, goBackDuration);
             return;
           }
 
           // Then filter based on the distance the screen was moved. Over a third of the way swiped,
           // and the back will happen.
           if (value <= index - POSITION_THRESHOLD) {
-            this._goBack(immediateIndex, velocity);
+            this._goBack(immediateIndex, goBackDuration);
           } else {
-            this._reset(immediateIndex, velocity);
+            this._reset(immediateIndex, resetDuration);
           }
         });
       },
