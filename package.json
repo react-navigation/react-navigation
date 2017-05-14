@@ -28,6 +28,7 @@
     "run-playground-ios": "cd examples/NavigationPlayground && react-native run-ios",
     "run-playground-android": "cd examples/NavigationPlayground && react-native run-android",
     "test": "npm run lint && npm run flow-check && npm run jest",
+    "codecov": "codecov",
     "jest": "jest",
     "lint": "eslint .",
     "format": "eslint --fix .",
@@ -51,6 +52,7 @@
     "babel-preset-react-native": "^1.9.2",
     "babel-preset-react-native-syntax": "^1.0.0",
     "babel-preset-stage-1": "^6.24.1",
+    "codecov": "^2.2.0",
     "eslint": "^3.19.0",
     "eslint-config-prettier": "^2.1.0",
     "eslint-plugin-flowtype": "^2.33.0",
@@ -87,6 +89,8 @@
     "setupFiles": [
       "<rootDir>/jest-setup.js"
     ],
+    "coverageDirectory": "./coverage/",
+    "collectCoverage": true,
     "modulePathIgnorePatterns": [
       "examples"
     ]
