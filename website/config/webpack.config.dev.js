@@ -19,7 +19,9 @@ const publicUrl = '';
 // Get environment variables to inject into our app.
 const env = getClientEnvironment(publicUrl);
 
-console.log(paths.nodePaths.concat([path.resolve(__dirname, '../node_modules')]));
+console.log(
+  paths.nodePaths.concat([path.resolve(__dirname, '../node_modules')])
+);
 
 // This is the development configuration.
 // It is focused on developer experience and fast rebuilds.
@@ -71,7 +73,9 @@ module.exports = {
     // We use `fallback` instead of `root` because we want `node_modules` to "win"
     // if there any conflicts. This matches Node resolution mechanism.
     // https://github.com/facebookincubator/create-react-app/issues/253
-    fallback: paths.nodePaths.concat([path.resolve(__dirname, '../node_modules')]),
+    fallback: paths.nodePaths.concat([
+      path.resolve(__dirname, '../node_modules'),
+    ]),
     // These are the reasonable defaults supported by the Node ecosystem.
     // We also include JSX as a common component filename extension to support
     // some tools, although we do not recommend using it, see:
@@ -103,7 +107,6 @@ module.exports = {
         include: paths.appSrc,
         loader: 'babel',
         query: {
-
           // This is a feature of `babel-loader` for webpack (not Babel itself).
           // It enables caching results in ./node_modules/.cache/react-scripts/
           // directory for faster rebuilds. We use findCacheDir() because of:

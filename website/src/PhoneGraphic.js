@@ -4,18 +4,20 @@ export default class PhoneGraphic extends Component {
   props: { sources: { android: string, iphone: string } };
   state = { activeExample: this.props.alt ? 'android' : 'iphone' };
   render() {
-    const {activeExample} = this.state;
+    const { activeExample } = this.state;
     return (
       <div className="example-section">
         <div className="buttonbar">
           <a
             className={activeExample === 'android'}
-            onClick={() => this.setState({ activeExample: 'android' })}>
+            onClick={() => this.setState({ activeExample: 'android' })}
+          >
             Android
           </a>
           <a
             className={activeExample === 'iphone'}
-            onClick={() => this.setState({ activeExample: 'iphone' })}>
+            onClick={() => this.setState({ activeExample: 'iphone' })}
+          >
             iPhone
           </a>
         </div>
