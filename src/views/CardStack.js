@@ -10,7 +10,6 @@ import {
   Platform,
   View,
   I18nManager,
-  Dimensions,
   Easing,
 } from 'react-native';
 
@@ -37,8 +36,6 @@ import type {
 import TransitionConfigs from './TransitionConfigs';
 
 const emptyFunction = () => {};
-
-const windowSize = Dimensions.get('window');
 
 type Props = {
   screenProps?: {},
@@ -67,7 +64,9 @@ type Props = {
 };
 
 /**
- * The duration of the card animation in milliseconds.
+ * The max duration of the card animation in milliseconds after released gesture.
+ * The actual duration should be always less then that because the rest distance 
+ * is always less then the full distance of the layout.
  */
 const ANIMATION_DURATION = 250;
 
@@ -234,8 +233,10 @@ class CardStack extends Component {
     if (headerMode === 'float') {
       floatingHeader = this._renderHeader(this.props.scene, headerMode);
     }
-    const { navigation, position, scene, mode, scenes } = this.props;
+    const { navigation, position, layout, scene, scenes, mode } = this.props;
     const { index } = navigation.state;
+    const isVertical = mode === 'modal';
+
     const responder = PanResponder.create({
       onPanResponderTerminate: () => {
         this._isResponding = false;
@@ -251,11 +252,9 @@ class CardStack extends Component {
         event: { nativeEvent: { pageY: number, pageX: number } },
         gesture: any,
       ) => {
-        const layout = this.props.layout;
         if (index !== scene.index) {
           return false;
         }
-        const isVertical = mode === 'modal';
         const immediateIndex = this._immediateIndex == null
           ? index
           : this._immediateIndex;
@@ -291,16 +290,14 @@ class CardStack extends Component {
       },
       onPanResponderMove: (event: any, gesture: any) => {
         // Handle the moving touches for our granted responder
-        const layout = this.props.layout;
-        const isVertical = mode === 'modal';
         const startValue = this._gestureStartValue;
         const axis = isVertical ? 'dy' : 'dx';
-        const distance = isVertical
+        const axisDistance = isVertical
           ? layout.height.__getValue()
           : layout.width.__getValue();
         const currentValue = I18nManager.isRTL && axis === 'dx'
-          ? startValue + gesture[axis] / distance
-          : startValue - gesture[axis] / distance;
+          ? startValue + gesture[axis] / axisDistance
+          : startValue - gesture[axis] / axisDistance;
         const value = clamp(index - 1, currentValue, index);
         position.setValue(value);
       },
@@ -318,14 +315,16 @@ class CardStack extends Component {
           ? index
           : this._immediateIndex;
 
-        const isVertical = mode === 'modal';
-        const fullDistance = isVertical ? windowSize.height : windowSize.width;
+        // Calculate animate duration according to gesture speed and moved distance
+        const axisDistance = isVertical
+          ? layout.height.__getValue()
+          : layout.width.__getValue();
         const movedDistance = gesture[isVertical ? 'moveY' : 'moveX'];
-        const defaultVelocity = fullDistance / ANIMATION_DURATION;
+        const defaultVelocity = axisDistance / ANIMATION_DURATION;
         const gestureVelocity = gesture[isVertical ? 'vy' : 'vx'];
         const velocity = Math.max(gestureVelocity, defaultVelocity);
         const resetDuration = movedDistance / velocity;
-        const goBackDuration = (fullDistance - movedDistance) / velocity;
+        const goBackDuration = (axisDistance - movedDistance) / velocity;
 
         // To asyncronously get the current animated value, we need to run stopAnimation:
         position.stopAnimation((value: number) => {
