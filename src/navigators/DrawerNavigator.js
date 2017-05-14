@@ -61,11 +61,11 @@ const DrawerNavigator = (
           config,
           NavigatorTypes.DRAWER,
         )((props: *) => <DrawerScreen {...props} />),
-        path: closePath
+        path: closePath,
       },
       DrawerOpen: {
         screen: () => null,
-        path: openPath
+        path: openPath,
       },
     },
     {
