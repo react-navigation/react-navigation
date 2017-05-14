@@ -1,7 +1,5 @@
-
 import React from 'react';
 const Markdown = require('react-markdown');
-const DocsMD = require('../docs-dist.json');
 import Link from './Link';
 import PhoneGraphic from './PhoneGraphic';
 const slugify = require('slugify');
@@ -29,9 +27,20 @@ const getHeadingForLevel = (level) => {
   }
 };
 
+const isDefined = (obj) => obj !== undefined;
+
+const getDocsMD = (docPath, navigation) => {
+  const { state } = navigation;
+  const docVersion = (isDefined(state) && isDefined(state.params))
+    ? state.params.version
+    : 'edge';
+  const DocsMD = require(`../docs/${docVersion}.json`);
+  return DocsMD[docPath];
+};
+
 const MDPage = ({navigation, docPath}) => (
   <Markdown
-    source={DocsMD[docPath]}
+    source={getDocsMD(docPath, navigation)}
     className="md-section"
     renderers={{
       CodeBlock: ({literal, language}) => {
@@ -67,10 +76,6 @@ const MDPage = ({navigation, docPath}) => (
         );
       },
       link: ({children, href}) => {
-        if (href.indexOf('PhoneGraphic:') === 0) {
-          const graphicName = href.split('PhoneGraphic:')[1];
-
-        }
         return (
           <Link
             children={children}
