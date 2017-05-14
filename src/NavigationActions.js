@@ -1,11 +1,15 @@
-const namespacedAction = (action: string) => `Navigation/${action}`;
+/**
+ * @flow
+ */
 
-const BACK = namespacedAction('BACK');
-const INIT = namespacedAction('INIT');
-const NAVIGATE = namespacedAction('NAVIGATE');
-const RESET = namespacedAction('RESET');
-const SET_PARAMS = namespacedAction('SET_PARAMS');
-const URI = namespacedAction('URI');
+import type { NavigationAction } from './TypeDefinition';
+
+const BACK = 'Navigation/BACK';
+const INIT = 'Navigation/INIT';
+const NAVIGATE = 'Navigation/NAVIGATE';
+const RESET = 'Navigation/RESET';
+const SET_PARAMS = 'Navigation/SET_PARAMS';
+const URI = 'Navigation/URI';
 
 const createAction = (type: string) => (payload: Object = {}) => ({
   type,

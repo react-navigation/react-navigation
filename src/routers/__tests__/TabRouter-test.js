@@ -1,4 +1,5 @@
 /* @flow */
+/* eslint react/display-name:0 */
 
 import React from 'react';
 import TabRouter from '../TabRouter';
