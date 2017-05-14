@@ -12,11 +12,9 @@ import CardStackStyleInterpolator from './CardStackStyleInterpolator';
 
 // Used for all animations unless overriden
 const DefaultTransitionSpec = ({
-  // The following options are meant to mimic the nav animations of iOS 10
   duration: 250,
-  timing: Animated.spring,
-  bounciness: 0,
-  speed: 9,
+  easing: Easing.inOut(Easing.ease),
+  timing: Animated.timing,
 }: NavigationTransitionSpec);
 
 // Standard iOS navigation transition
