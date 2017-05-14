@@ -51,20 +51,20 @@ Object.keys(ROUTERS).forEach((routerName: string) => {
       expect(
         router.getScreenOptions(
           addNavigationHelpers({ state: routes[0], dispatch: () => false }),
-          {},
-        ).title,
+          {}
+        ).title
       ).toEqual(undefined);
       expect(
         router.getScreenOptions(
           addNavigationHelpers({ state: routes[1], dispatch: () => false }),
-          {},
-        ).title,
+          {}
+        ).title
       ).toEqual('BarTitle');
       expect(
         router.getScreenOptions(
           addNavigationHelpers({ state: routes[2], dispatch: () => false }),
-          {},
-        ).title,
+          {}
+        ).title
       ).toEqual('Baz-123');
     });
   });
@@ -99,7 +99,7 @@ test('Handles no-op actions with tabs within stack router', () => {
   expect(state1).toEqual(state2);
   const state3 = TestRouter.getStateForAction(
     { type: NavigationActions.NAVIGATE, routeName: 'Zap' },
-    state2,
+    state2
   );
   expect(state2).toEqual(state3);
 });
@@ -132,7 +132,7 @@ test('Handles deep action', () => {
       routeName: 'Foo',
       action: { type: NavigationActions.NAVIGATE, routeName: 'Zoo' },
     },
-    state1,
+    state1
   );
   expect(state2 && state2.index).toEqual(1);
   /* $FlowFixMe */
@@ -168,7 +168,7 @@ test('Supports lazily-evaluated getScreen', () => {
   expect(state1).toEqual(state2);
   const state3 = TestRouter.getStateForAction(
     { type: NavigationActions.NAVIGATE, routeName: 'Zap' },
-    state2,
+    state2
   );
   expect(state2).toEqual(state3);
 });
