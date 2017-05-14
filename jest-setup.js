@@ -6,14 +6,16 @@ jest.mock('Linking', () => ({
   removeEventListener: jest.fn(),
   openURL: jest.fn(),
   canOpenURL: jest.fn(),
-  getInitialURL: jest.fn().mockImplementation((value: string) => Promise.resolve(value)),
+  getInitialURL: jest
+    .fn()
+    .mockImplementation((value: string) => Promise.resolve(value)),
 }));
 
 // See https://github.com/facebook/react-native/issues/11659
 jest.mock('ScrollView', () => {
   const RealComponent = require.requireActual('ScrollView');
   class ScrollView extends RealComponent {
-    scrollTo = () => {}
+    scrollTo = () => {};
   }
   return ScrollView;
 });
