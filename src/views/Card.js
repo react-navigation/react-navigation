@@ -22,11 +22,7 @@ class Card extends React.Component<any, Props, any> {
   props: Props;
 
   render() {
-    const {
-      children,
-      pointerEvents,
-      style,
-    } = this.props;
+    const { children, pointerEvents, style } = this.props;
     return (
       <Animated.View
         pointerEvents={pointerEvents}

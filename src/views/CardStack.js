@@ -43,7 +43,11 @@ type Props = {
   headerComponent?: ReactClass<*>,
   mode: 'card' | 'modal',
   navigation: NavigationScreenProp<NavigationState, NavigationAction>,
-  router: NavigationRouter<NavigationState, NavigationAction, NavigationStackScreenOptions>,
+  router: NavigationRouter<
+    NavigationState,
+    NavigationAction,
+    NavigationStackScreenOptions
+  >,
   cardStyle?: Style,
   onTransitionStart?: () => void,
   onTransitionEnd?: () => void,
@@ -158,7 +162,7 @@ class CardStack extends Component {
 
   _renderHeader(
     scene: NavigationScene,
-    headerMode: HeaderMode,
+    headerMode: HeaderMode
   ): ?React.Element<*> {
     const { header } = this._getScreenDetails(scene).options;
 
@@ -221,7 +225,7 @@ class CardStack extends Component {
       const backFromScene = scenes.find((s: *) => s.index === toValue + 1);
       if (!this._isResponding && backFromScene) {
         navigation.dispatch(
-          NavigationActions.back({ key: backFromScene.route.key }),
+          NavigationActions.back({ key: backFromScene.route.key })
         );
       }
     });
@@ -250,7 +254,7 @@ class CardStack extends Component {
       },
       onMoveShouldSetPanResponder: (
         event: { nativeEvent: { pageY: number, pageX: number } },
-        gesture: any,
+        gesture: any
       ) => {
         if (index !== scene.index) {
           return false;
@@ -259,9 +263,8 @@ class CardStack extends Component {
           ? index
           : this._immediateIndex;
         const currentDragDistance = gesture[isVertical ? 'dy' : 'dx'];
-        const currentDragPosition = event.nativeEvent[
-          isVertical ? 'pageY' : 'pageX'
-        ];
+        const currentDragPosition =
+          event.nativeEvent[isVertical ? 'pageY' : 'pageX'];
         const axisLength = isVertical
           ? layout.height.__getValue()
           : layout.width.__getValue();
@@ -279,13 +282,12 @@ class CardStack extends Component {
           return false;
         }
 
-        const hasDraggedEnough = Math.abs(currentDragDistance) >
-          RESPOND_THRESHOLD;
+        const hasDraggedEnough =
+          Math.abs(currentDragDistance) > RESPOND_THRESHOLD;
 
         const isOnFirstCard = immediateIndex === 0;
-        const shouldSetResponder = hasDraggedEnough &&
-          axisHasBeenMeasured &&
-          !isOnFirstCard;
+        const shouldSetResponder =
+          hasDraggedEnough && axisHasBeenMeasured && !isOnFirstCard;
         return shouldSetResponder;
       },
       onPanResponderMove: (event: any, gesture: any) => {
@@ -379,7 +381,7 @@ class CardStack extends Component {
 
   _renderInnerScene(
     SceneComponent: ReactClass<*>,
-    scene: NavigationScene,
+    scene: NavigationScene
   ): React.Element<any> {
     const { navigation } = this._getScreenDetails(scene);
     const { screenProps } = this.props;
@@ -415,13 +417,13 @@ class CardStack extends Component {
       this.props.transitionConfig,
       {},
       {},
-      isModal,
+      isModal
     );
-    const style = screenInterpolator &&
-      screenInterpolator({ ...this.props, scene });
+    const style =
+      screenInterpolator && screenInterpolator({ ...this.props, scene });
 
     const SceneComponent = this.props.router.getComponentForRouteName(
-      scene.route.routeName,
+      scene.route.routeName
     );
 
     return (

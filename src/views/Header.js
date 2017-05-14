@@ -73,9 +73,8 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
     if (!lastScene) {
       return null;
     }
-    return this.props.getScreenDetails(
-      lastScene,
-    ).options.headerTruncatedBackTitle;
+    return this.props.getScreenDetails(lastScene).options
+      .headerTruncatedBackTitle;
   }
 
   _renderTitleComponent = (props: SceneProps) => {
@@ -122,7 +121,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
     }
     const backButtonTitle = this._getBackButtonTitleString(props.scene);
     const truncatedBackButtonTitle = this._getTruncatedBackButtonTitle(
-      props.scene,
+      props.scene
     );
     const width = this.state.widths[props.scene.key]
       ? (this.props.layout.initWidth - this.state.widths[props.scene.key]) / 2
@@ -153,7 +152,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
       props,
       'left',
       this._renderLeftComponent,
-      HeaderStyleInterpolator.forLeft,
+      HeaderStyleInterpolator.forLeft
     );
   }
 
@@ -173,7 +172,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
       { ...props, style },
       'title',
       this._renderTitleComponent,
-      HeaderStyleInterpolator.forCenter,
+      HeaderStyleInterpolator.forCenter
     );
   }
 
@@ -182,7 +181,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
       props,
       'right',
       this._renderRightComponent,
-      HeaderStyleInterpolator.forRight,
+      HeaderStyleInterpolator.forRight
     );
   }
 
@@ -190,16 +189,10 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
     props: SceneProps,
     name: SubViewName,
     renderer: SubViewRenderer,
-    styleInterpolator: NavigationStyleInterpolator,
+    styleInterpolator: NavigationStyleInterpolator
   ): ?React.Element<*> {
-    const {
-      scene,
-    } = props;
-    const {
-      index,
-      isStale,
-      key,
-    } = scene;
+    const { scene } = props;
+    const { index, isStale, key } = scene;
 
     const offset = this.props.navigation.state.index - index;
 
@@ -261,13 +254,13 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
     let appBar;
 
     if (this.props.mode === 'float') {
-      const scenesProps: Array<SceneProps> = this.props.scenes.map(
-        (scene: NavigationScene) => ({
-          position: this.props.position,
-          progress: this.props.progress,
-          scene,
-        }),
-      );
+      const scenesProps: Array<
+        SceneProps
+      > = this.props.scenes.map((scene: NavigationScene) => ({
+        position: this.props.position,
+        progress: this.props.progress,
+        scene,
+      }));
       appBar = scenesProps.map(this._renderHeader, this);
     } else {
       appBar = this._renderHeader({

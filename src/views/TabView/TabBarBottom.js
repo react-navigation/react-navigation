@@ -70,7 +70,7 @@ export default class TabBarBottom
     const inputRange = [-1, ...routes.map((x: *, i: number) => i)];
     const outputRange = inputRange.map(
       (inputIndex: number) =>
-        inputIndex === index ? activeTintColor : inactiveTintColor,
+        inputIndex === index ? activeTintColor : inactiveTintColor
     );
     const color = position.interpolate({
       inputRange,
@@ -140,7 +140,7 @@ export default class TabBarBottom
             (inputIndex: number) =>
               inputIndex === index
                 ? activeBackgroundColor
-                : inactiveBackgroundColor,
+                : inactiveBackgroundColor
           );
           const backgroundColor = position.interpolate({
             inputRange,

@@ -6,6 +6,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "prop-types": "^15.5.10",
     "react": "16.0.0-alpha.6",
     "react-native": "0.43.3",
     "react-redux": "5.0.4",

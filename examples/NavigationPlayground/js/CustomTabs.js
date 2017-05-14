@@ -33,29 +33,18 @@ const MyNavScreen = ({ navigation, banner }) => (
 );
 
 const MyHomeScreen = ({ navigation }) => (
-  <MyNavScreen
-    banner="Home Screen"
-    navigation={navigation}
-  />
+  <MyNavScreen banner="Home Screen" navigation={navigation} />
 );
 
 const MyNotificationsScreen = ({ navigation }) => (
-  <MyNavScreen
-    banner="Notifications Screen"
-    navigation={navigation}
-  />
+  <MyNavScreen banner="Notifications Screen" navigation={navigation} />
 );
 
 const MySettingsScreen = ({ navigation }) => (
-  <MyNavScreen
-    banner="Settings Screen"
-    navigation={navigation}
-  />
+  <MyNavScreen banner="Settings Screen" navigation={navigation} />
 );
 
-const CustomTabBar = ({
-  navigation,
-}) => {
+const CustomTabBar = ({ navigation }) => {
   const { routes } = navigation.state;
   return (
     <View style={styles.tabContainer}>
@@ -70,12 +59,9 @@ const CustomTabBar = ({
       ))}
     </View>
   );
-}
+};
 
-const CustomTabView = ({
-  router,
-  navigation,
-}) => {
+const CustomTabView = ({ router, navigation }) => {
   const { routes, index } = navigation.state;
   const ActiveScreen = router.getComponentForState(navigation.state);
   return (
@@ -91,25 +77,30 @@ const CustomTabView = ({
   );
 };
 
-const CustomTabRouter = TabRouter({
-  Home: {
-    screen: MyHomeScreen,
-    path: '',
+const CustomTabRouter = TabRouter(
+  {
+    Home: {
+      screen: MyHomeScreen,
+      path: '',
+    },
+    Notifications: {
+      screen: MyNotificationsScreen,
+      path: 'notifications',
+    },
+    Settings: {
+      screen: MySettingsScreen,
+      path: 'settings',
+    },
   },
-  Notifications: {
-    screen: MyNotificationsScreen,
-    path: 'notifications',
-  },
-  Settings: {
-    screen: MySettingsScreen,
-    path: 'settings',
-  },
-}, {
-  // Change this to start on a different tab
-  initialRouteName: 'Home',
-});
+  {
+    // Change this to start on a different tab
+    initialRouteName: 'Home',
+  }
+);
 
-const CustomTabs = createNavigationContainer(createNavigator(CustomTabRouter)(CustomTabView));
+const CustomTabs = createNavigationContainer(
+  createNavigator(CustomTabRouter)(CustomTabView)
+);
 
 const styles = StyleSheet.create({
   container: {
@@ -127,7 +118,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ddd',
     borderRadius: 4,
-  }
+  },
 });
 
 export default CustomTabs;
