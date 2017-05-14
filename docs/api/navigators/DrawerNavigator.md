@@ -130,6 +130,8 @@ const styles = StyleSheet.create({
 
 ### `contentOptions` for `DrawerItems`
 
+- `items` - an array of routes to use in place of `navigation.state.routes`
+- `itemComponent` - a component to use in place of `DrawerNavigatorItem` for each item
 - `activeTintColor` - label and icon color of the active label
 - `activeBackgroundColor` - background color of the active label
 - `inactiveTintColor` - label and icon color of the inactive label
@@ -161,6 +163,11 @@ String, React Element or a function that given `{ focused: boolean, tintColor: s
 #### `drawerIcon`
 
 React Element or a function, that given `{ focused: boolean, tintColor: string }` returns a React.Element, to display in drawer sidebar
+
+#### `drawerOnPress`
+
+Callback to handle tap events. Typical behavior would be to call `navigation.navigate('DrawerClose')` after performing your other logic.
+If explicitly set to `null`, there will be no touch feedback for this drawer item; this can be used e.g. for header items / section separators.
 
 ### Navigator Props
 

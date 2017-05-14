@@ -70,6 +70,9 @@ module.exports = {
   get DrawerItems() {
     return require('./views/Drawer/DrawerNavigatorItems').default;
   },
+  get DrawerItem() {
+    return require('./views/Drawer/DrawerNavigatorItem').default;
+  },
 
   // TabView
   get TabView() {
