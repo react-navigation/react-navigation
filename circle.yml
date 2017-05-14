@@ -15,8 +15,8 @@ dependencies:
   override:
     - yarn
     - cd website && yarn
-    - cd examples/NavigationPlayground && yarn add file:../.. && yarn 
-    - cd examples/ReduxExample && yarn add file:../.. && yarn 
+    - cd examples/NavigationPlayground && yarn 
+    - cd examples/ReduxExample && yarn 
 
 test:
   post:
