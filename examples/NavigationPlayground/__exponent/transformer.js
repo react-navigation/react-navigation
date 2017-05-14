@@ -19,21 +19,23 @@ const reactTransformPlugin = require('babel-plugin-react-transform').default;
 const hmrTransform = 'react-transform-hmr/lib/index.js';
 const transformPath = require.resolve(hmrTransform);
 
-const makeHMRConfig =  function(options, filename) {
-  const transform = filename ?
-      './' + path.relative(path.dirname(filename), transformPath) : // packager can't handle absolute paths
-      hmrTransform;
+const makeHMRConfig = function(options, filename) {
+  const transform = filename
+    ? './' + path.relative(path.dirname(filename), transformPath) // packager can't handle absolute paths
+    : hmrTransform;
 
   return {
     plugins: [
       [
         reactTransformPlugin,
         {
-          transforms: [{
-            transform,
-            imports: ['react-native'],
-            locals: ['module'],
-          }],
+          transforms: [
+            {
+              transform,
+              imports: ['react-native'],
+              locals: ['module'],
+            },
+          ],
         },
       ],
     ],
@@ -42,13 +44,22 @@ const makeHMRConfig =  function(options, filename) {
 
 const buildAliasPreset = (reactNativePath, reactPath) => ({
   plugins: [
-    [require('babel-plugin-module-resolver').default, {
-      alias: Object.assign({}, {
-        'react-native': path.resolve(`${reactNativePath || './node_modules/react-native'}`),
-        react: path.resolve(`${reactPath || './node_modules/react'}`),
-      }, require('babel-preset-exponent').plugins[0][1].alias),
-      cwd: path.resolve(__dirname, '..'),
-    }],
+    [
+      require('babel-plugin-module-resolver').default,
+      {
+        alias: Object.assign(
+          {},
+          {
+            'react-native': path.resolve(
+              `${reactNativePath || './node_modules/react-native'}`
+            ),
+            react: path.resolve(`${reactPath || './node_modules/react'}`),
+          },
+          require('babel-preset-exponent').plugins[0][1].alias
+        ),
+        cwd: path.resolve(__dirname, '..'),
+      },
+    ],
   ],
 });
 
@@ -59,7 +70,10 @@ const buildAliasPreset = (reactNativePath, reactPath) => ({
 function buildBabelConfig(filename, options) {
   const exponentBabelPreset = require('babel-preset-exponent');
   const babelConfig = {
-    presets: [...exponentBabelPreset.presets, buildAliasPreset(options.reactNativePath, options.reactPath)],
+    presets: [
+      ...exponentBabelPreset.presets,
+      buildAliasPreset(options.reactNativePath, options.reactPath),
+    ],
     plugins: [],
   };
 
@@ -97,7 +111,7 @@ function transform(src, filename, options) {
   };
 }
 
-module.exports = function (data, callback) {
+module.exports = function(data, callback) {
   let result;
   try {
     result = transform(data.sourceCode, data.filename, data.options);

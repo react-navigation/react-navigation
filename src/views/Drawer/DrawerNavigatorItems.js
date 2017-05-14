@@ -28,19 +28,17 @@ type Props = {
 /**
  * Component that renders the navigation list in the drawer.
  */
-const DrawerNavigatorItems = (
-  {
-    navigation,
-    activeTintColor,
-    activeBackgroundColor,
-    inactiveTintColor,
-    inactiveBackgroundColor,
-    getLabel,
-    renderIcon,
-    style,
-    labelStyle,
-  }: Props,
-) => (
+const DrawerNavigatorItems = ({
+  navigation,
+  activeTintColor,
+  activeBackgroundColor,
+  inactiveTintColor,
+  inactiveBackgroundColor,
+  getLabel,
+  renderIcon,
+  style,
+  labelStyle,
+}: Props) => (
   <View style={[styles.container, style]}>
     {navigation.state.routes.map((route: *, index: number) => {
       const focused = navigation.state.index === index;

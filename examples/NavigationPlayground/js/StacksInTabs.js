@@ -3,14 +3,8 @@
  */
 
 import React from 'react';
-import {
-  Button,
-  ScrollView,
-} from 'react-native';
-import {
-  StackNavigator,
-  TabNavigator,
-} from 'react-navigation';
+import { Button, ScrollView } from 'react-native';
+import { StackNavigator, TabNavigator } from 'react-navigation';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import SampleText from './SampleText';
@@ -30,18 +24,12 @@ const MyNavScreen = ({ navigation, banner }) => (
       onPress={() => navigation.navigate('SettingsTab')}
       title="Go to settings tab"
     />
-    <Button
-      onPress={() => navigation.goBack(null)}
-      title="Go back"
-    />
+    <Button onPress={() => navigation.goBack(null)} title="Go back" />
   </ScrollView>
 );
 
 const MyHomeScreen = ({ navigation }) => (
-  <MyNavScreen
-    banner="Home Screen"
-    navigation={navigation}
-  />
+  <MyNavScreen banner="Home Screen" navigation={navigation} />
 );
 
 const MyProfileScreen = ({ navigation }) => (
@@ -52,17 +40,11 @@ const MyProfileScreen = ({ navigation }) => (
 );
 
 const MyNotificationsSettingsScreen = ({ navigation }) => (
-  <MyNavScreen
-    banner="Notifications Screen"
-    navigation={navigation}
-  />
+  <MyNavScreen banner="Notifications Screen" navigation={navigation} />
 );
 
 const MySettingsScreen = ({ navigation }) => (
-  <MyNavScreen
-    banner="Settings Screen"
-    navigation={navigation}
-  />
+  <MyNavScreen banner="Settings Screen" navigation={navigation} />
 );
 
 const MainTab = StackNavigator({
@@ -98,39 +80,42 @@ const SettingsTab = StackNavigator({
   },
 });
 
-const StacksInTabs = TabNavigator({
-  MainTab: {
-    screen: MainTab,
-    path: '/',
-    navigationOptions: {
-      tabBarLabel: 'Home',
-      tabBarIcon: ({ tintColor, focused }) => (
-        <Ionicons
-          name={focused ? 'ios-home' : 'ios-home-outline'}
-          size={26}
-          style={{ color: tintColor }}
-        />
-      ),
+const StacksInTabs = TabNavigator(
+  {
+    MainTab: {
+      screen: MainTab,
+      path: '/',
+      navigationOptions: {
+        tabBarLabel: 'Home',
+        tabBarIcon: ({ tintColor, focused }) => (
+          <Ionicons
+            name={focused ? 'ios-home' : 'ios-home-outline'}
+            size={26}
+            style={{ color: tintColor }}
+          />
+        ),
+      },
+    },
+    SettingsTab: {
+      screen: SettingsTab,
+      path: '/settings',
+      navigationOptions: {
+        tabBarLabel: 'Settings',
+        tabBarIcon: ({ tintColor, focused }) => (
+          <Ionicons
+            name={focused ? 'ios-settings' : 'ios-settings-outline'}
+            size={26}
+            style={{ color: tintColor }}
+          />
+        ),
+      },
     },
   },
-  SettingsTab: {
-    screen: SettingsTab,
-    path: '/settings',
-    navigationOptions: {
-      tabBarLabel: 'Settings',
-      tabBarIcon: ({ tintColor, focused }) => (
-        <Ionicons
-          name={focused ? 'ios-settings' : 'ios-settings-outline'}
-          size={26}
-          style={{ color: tintColor }}
-        />
-      ),
-    },
-  },
-}, {
-  tabBarPosition: 'bottom',
-  animationEnabled: false,
-  swipeEnabled: false,
-});
+  {
+    tabBarPosition: 'bottom',
+    animationEnabled: false,
+    swipeEnabled: false,
+  }
+);
 
 export default StacksInTabs;

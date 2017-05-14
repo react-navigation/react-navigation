@@ -3,14 +3,8 @@
  */
 
 import React from 'react';
-import {
-  Button,
-  ScrollView,
-} from 'react-native';
-import {
-  StackNavigator,
-  TabNavigator,
-} from 'react-navigation';
+import { Button, ScrollView } from 'react-native';
+import { StackNavigator, TabNavigator } from 'react-navigation';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import SampleText from './SampleText';
@@ -30,18 +24,12 @@ const MyNavScreen = ({ navigation, banner }) => (
       onPress={() => navigation.navigate('SettingsTab')}
       title="Go to settings tab"
     />
-    <Button
-      onPress={() => navigation.goBack(null)}
-      title="Go back"
-    />
+    <Button onPress={() => navigation.goBack(null)} title="Go back" />
   </ScrollView>
 );
 
 const MyHomeScreen = ({ navigation }) => (
-  <MyNavScreen
-    banner="Home Screen"
-    navigation={navigation}
-  />
+  <MyNavScreen banner="Home Screen" navigation={navigation} />
 );
 
 const MyProfileScreen = ({ navigation }) => (
@@ -52,54 +40,51 @@ const MyProfileScreen = ({ navigation }) => (
 );
 
 const MyNotificationsSettingsScreen = ({ navigation }) => (
-  <MyNavScreen
-    banner="Notifications Screen"
-    navigation={navigation}
-  />
+  <MyNavScreen banner="Notifications Screen" navigation={navigation} />
 );
 
 const MySettingsScreen = ({ navigation }) => (
-  <MyNavScreen
-    banner="Settings Screen"
-    navigation={navigation}
-  />
+  <MyNavScreen banner="Settings Screen" navigation={navigation} />
 );
 
-const TabNav = TabNavigator({
-  MainTab: {
-    screen: MyHomeScreen,
-    path: '/',
-    navigationOptions: {
-      title: 'Welcome',
-      tabBarLabel: 'Home',
-      tabBarIcon: ({ tintColor, focused }) => (
-        <Ionicons
-          name={focused ? 'ios-home' : 'ios-home-outline'}
-          size={26}
-          style={{ color: tintColor }}
-        />
-      ),
+const TabNav = TabNavigator(
+  {
+    MainTab: {
+      screen: MyHomeScreen,
+      path: '/',
+      navigationOptions: {
+        title: 'Welcome',
+        tabBarLabel: 'Home',
+        tabBarIcon: ({ tintColor, focused }) => (
+          <Ionicons
+            name={focused ? 'ios-home' : 'ios-home-outline'}
+            size={26}
+            style={{ color: tintColor }}
+          />
+        ),
+      },
+    },
+    SettingsTab: {
+      screen: MySettingsScreen,
+      path: '/settings',
+      navigationOptions: {
+        title: 'Settings',
+        tabBarIcon: ({ tintColor, focused }) => (
+          <Ionicons
+            name={focused ? 'ios-settings' : 'ios-settings-outline'}
+            size={26}
+            style={{ color: tintColor }}
+          />
+        ),
+      },
     },
   },
-  SettingsTab: {
-    screen: MySettingsScreen,
-    path: '/settings',
-    navigationOptions: {
-      title: 'Settings',
-      tabBarIcon: ({ tintColor, focused }) => (
-        <Ionicons
-          name={focused ? 'ios-settings' : 'ios-settings-outline'}
-          size={26}
-          style={{ color: tintColor }}
-        />
-      ),
-    },
-  },
-}, {
-  tabBarPosition: 'bottom',
-  animationEnabled: false,
-  swipeEnabled: false,
-});
+  {
+    tabBarPosition: 'bottom',
+    animationEnabled: false,
+    swipeEnabled: false,
+  }
+);
 
 const StacksOverTabs = StackNavigator({
   Root: {
@@ -115,7 +100,7 @@ const StacksOverTabs = StackNavigator({
     screen: MyProfileScreen,
     path: '/people/:name',
     navigationOptions: ({ navigation }) => {
-      title: `${navigation.state.params.name}'s Profile!`
+      title: `${navigation.state.params.name}'s Profile!`;
     },
   },
 });
