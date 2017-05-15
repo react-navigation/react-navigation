@@ -1,7 +1,5 @@
 /* @flow */
 
-/* @flow */
-
 import {
   BackAndroid as OldBackAndroid,
   BackHandler as NewBackAndroid,
