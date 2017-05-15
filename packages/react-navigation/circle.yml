@@ -9,7 +9,8 @@ jobs:
       - checkout
       - restore_cache:
           key: v1-react-navigation-{{ .Branch }} # generate cache per branch
-      - run: ./scripts/test.sh
+      - run: yarn # install root deps
+      - run: ./scripts/test.sh # run tests
       - save_cache:
           key: v1-react-navigation-{{ .Branch }} # generate cache per branch
           paths:
