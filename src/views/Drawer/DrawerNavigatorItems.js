@@ -12,17 +12,19 @@ import type {
   NavigationRoute,
   Style,
 } from '../../TypeDefinition';
-import type { DrawerScene } from './DrawerView.js';
+import type { DrawerScene, DrawerItem } from './DrawerView.js';
 
 type Props = {
   navigation: NavigationScreenProp<NavigationState, NavigationAction>,
-  items?: Array<NavigationRoute>,
+  items: Array<NavigationRoute>,
+  activeItemKey?: string,
   activeTintColor?: string,
   activeBackgroundColor?: string,
   inactiveTintColor?: string,
   inactiveBackgroundColor?: string,
   getLabel: (scene: DrawerScene) => ?(React.Element<*> | string),
   renderIcon: (scene: DrawerScene) => ?React.Element<*>,
+  onItemPress: (info: DrawerItem) => void,
   style?: Style,
   labelStyle?: Style,
 };
@@ -30,26 +32,23 @@ type Props = {
 /**
  * Component that renders the navigation list in the drawer.
  */
-const DrawerNavigatorItems = (
-  {
-    navigation: {
-      state,
-      navigate,
-    },
-    items,
-    activeTintColor,
-    activeBackgroundColor,
-    inactiveTintColor,
-    inactiveBackgroundColor,
-    getLabel,
-    renderIcon,
-    style,
-    labelStyle,
-  }: Props
-) => (
+const DrawerNavigatorItems = ({
+  navigation: { state, navigate },
+  items,
+  activeItemKey,
+  activeTintColor,
+  activeBackgroundColor,
+  inactiveTintColor,
+  inactiveBackgroundColor,
+  getLabel,
+  renderIcon,
+  onItemPress,
+  style,
+  labelStyle,
+}: Props) => (
   <View style={[styles.container, style]}>
-    {(items || state.routes).map((route: NavigationRoute, index: number) => {
-      const focused = state.routes[state.index].key === route.key;
+    {items.map((route: NavigationRoute, index: number) => {
+      const focused = activeItemKey === route.key;
       const color = focused ? activeTintColor : inactiveTintColor;
       const backgroundColor = focused
         ? activeBackgroundColor
@@ -61,8 +60,7 @@ const DrawerNavigatorItems = (
         <TouchableItem
           key={route.key}
           onPress={() => {
-            navigate('DrawerClose');
-            navigate(route.routeName);
+            onItemPress({ route, focused });
           }}
           delayPressIn={0}
         >
