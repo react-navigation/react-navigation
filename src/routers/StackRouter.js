@@ -56,7 +56,7 @@ export default (
   const initialRouteName = stackConfig.initialRouteName || routeNames[0];
 
   // If stateName is not explicitly set, just use the initialRouteName as default
-  const stateName = stackConfig.stateName || initialRouteName;
+  const stateName: string = stackConfig.stateName || initialRouteName;
 
   const initialChildRouter = childRouters[initialRouteName];
   const paths = stackConfig.paths || {};

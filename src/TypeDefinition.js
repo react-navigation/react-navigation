@@ -33,6 +33,7 @@ export type NavigationState = {
   /**
    * Index refers to the active child route in the routes array.
    */
+  stateName?: string,
   index: number,
   routes: Array<NavigationRoute>,
 };
@@ -231,6 +232,7 @@ export type NavigationStackScreenOptions = NavigationScreenOptions & {
 export type NavigationStackRouterConfig = {
   initialRouteName?: string,
   initialRouteParams?: NavigationParams,
+  stateName?: string,
   paths?: NavigationPathsConfig,
   navigationOptions?: NavigationScreenConfig<NavigationStackScreenOptions>,
 };

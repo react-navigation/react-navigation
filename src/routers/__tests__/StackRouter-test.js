@@ -815,14 +815,17 @@ describe('StackRouter', () => {
       {
         type: NavigationActions.RESET,
         stateName: 'MainNavigator',
-        actions: [{ type: NavigationActions.NAVIGATE, routeName: 'Baz' }],
+        actions: [{ type: NavigationActions.NAVIGATE, routeName: 'Bar' }],
         index: 0,
       },
       otherState2,
     );
 
-    const routeLength = otherState3.routes.length;
+    /* $FlowFixMe */
+    const routeLength = otherState2.routes.length;
+    /* $FlowFixMe */
     expect(otherState3.index).toEqual(1);
+    /* $FlowFixMe */
     expect(otherState3.routes[routeLength - 1].routeName).toEqual('Foo');
   });
 
