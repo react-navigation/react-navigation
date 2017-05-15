@@ -21,6 +21,13 @@ const NavigationLinks = ({ navigation, className, reverse }) => {
       );
     }),
 
+    <a
+      href="https://exp.host/@react-navigation/NavigationPlayground"
+      key="demo"
+    >
+      Demo
+    </a>,
+
     <a href="https://github.com/react-community/react-navigation" key="github">
       GitHub
     </a>,
