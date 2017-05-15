@@ -6,6 +6,6 @@ import {
   Linking,
 } from 'react-native';
 
-let BackHandler = NewBackAndroid || OldBackAndroid;
+const BackHandler = NewBackAndroid || OldBackAndroid;
 
 export { BackHandler, Linking };
