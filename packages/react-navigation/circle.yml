@@ -1,33 +1,31 @@
-machine:
-  node:
-    version: 6
-  environment:
-    PATH: "${PATH}:${HOME}/${CIRCLE_PROJECT_REPONAME}/node_modules/.bin"
-
-dependencies:
-  pre:
-    - curl -o- -L https://yarnpkg.com/install.sh | bash
-  cache_directories:
-    - ~/.cache/yarn
-    - ./website/node_modules
-    - ./examples/NavigationPlayground/node_modules
-    - ./examples/ReduxExample/node_modules
-  override:
-    - yarn
-    - cd website && yarn
-    - cd examples/NavigationPlayground && yarn 
-    - cd examples/ReduxExample && yarn 
-
-test:
-  override:
-    - ./scripts/test.sh:
-        parallel: true
-  post:
-    - yarn codecov
-
-deployment:
-  website-prod:
-    branch: master
-    commands:
-      - yarn run build-docs
-      - ./scripts/deploy-website.sh
+version: 2
+jobs:
+  build:
+    docker:
+      - image: reactcommunity/node-ci:7.10.0 # custom image -- includes ocaml, libelf1, Yarn
+    parallelism: 3
+    working_directory: ~/react-navigation
+    steps:
+      - checkout
+      - restore_cache:
+          key: v1-react-navigation-{{ .Branch }} # generate cache per branch
+      - run: 
+          command: |
+            yarn
+            cd website && yarn && cd ../
+            cd examples/NavigationPlayground && yarn && cd ../../ 
+            cd examples/ReduxExample && yarn && cd ../../
+      - save_cache:
+          key: v1-react-navigation-{{ .Branch }} # generate cache per branch
+          paths:
+            - ~/.cache/yarn
+            - ~/react-navigation/website/node_modules
+            - ~/react-navigation/examples/NavigationPlayground/node_modules
+            - ~/react-navigation/examples/ReduxExample/node_modules
+      - run: ./scripts/test.sh
+      - deploy:
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              yarn run build-docs
+              ./scripts/deploy-website.sh
+            fi
