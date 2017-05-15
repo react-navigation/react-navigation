@@ -38,7 +38,7 @@ const MDPage = ({ navigation, docPath }) => (
     source={DocsMD[docPath]}
     className="md-section"
     renderers={{
-      CodeBlock: function CodeBlock({ literal, language }) {
+      CodeBlock: function CodeBlockComponent({ literal, language }) {
         if (language === 'phone-example') {
           const graphicName = literal.trim();
           return (
@@ -53,7 +53,7 @@ const MDPage = ({ navigation, docPath }) => (
         }
         return <CodeBlock code={literal} />;
       },
-      Heading: function Heading({ level, children }) {
+      Heading: function HeadingComponent({ level, children }) {
         let id = React.Children
           .map(children, child => {
             if (typeof child === 'string') {
@@ -70,7 +70,7 @@ const MDPage = ({ navigation, docPath }) => (
           </Header>
         );
       },
-      link: function link({ children, href }) {
+      link: function LinkComponent({ children, href }) {
         if (href.indexOf('PhoneGraphic:') === 0) {
           const graphicName = href.split('PhoneGraphic:')[1];
         }
