@@ -8,12 +8,12 @@
   "dependencies": {
     "react": "16.0.0-alpha.6",
     "react-native": "^0.44.0",
-    "react-native-vector-icons": "^4.1.1"
+    "react-native-vector-icons": "^4.1.1",
+    "react-navigation": "file:../.."
   },
   "devDependencies": {
     "babel-jest": "^20.0.1",
     "jest": "^20.0.1",
-    "react-navigation": "file:../..",
     "react-test-renderer": "^15.5.4"
   },
   "jest": {
