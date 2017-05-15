@@ -7,6 +7,7 @@ jobs:
     working_directory: ~/react-navigation
     steps:
       - checkout
+      - run: apt install ocaml libelf1
       - run: curl -o- -L https://yarnpkg.com/install.sh | bash
       - restore_cache:
           key: v1-react-navigation-{{ .Branch }} # generate cache per branch
@@ -24,7 +25,6 @@ jobs:
             - ~/react-navigation/examples/NavigationPlayground/node_modules
             - ~/react-navigation/examples/ReduxExample/node_modules
       - run: ./scripts/test.sh
-      - run: yarn codecov
       - deploy:
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
