@@ -20,11 +20,7 @@ dependencies:
 
 test:
   override:
-    - yarn test:
-        parallel: true
-    - cd examples/NavigationPlayground && yarn test:
-        parallel: true
-    - cd examples/ReduxExample && yarn test:
+    - ./scripts/test.sh:
         parallel: true
   post:
     - yarn codecov
