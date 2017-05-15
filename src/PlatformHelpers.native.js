@@ -6,8 +6,6 @@ import {
   Linking,
 } from 'react-native';
 
-const fullVersion = require('react-native/package.json').version.split('.')[1];
-
-let BackHandler = fullVersion < 44 ? OldBackAndroid : NewBackAndroid;
+let BackHandler = NewBackAndroid || OldBackAndroid;
 
 export { BackHandler, Linking };
