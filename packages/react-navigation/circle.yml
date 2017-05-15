@@ -19,10 +19,15 @@ dependencies:
     - cd examples/ReduxExample && yarn 
 
 test:
+  override:
+    - yarn test:
+        parallel: true
+    - cd examples/NavigationPlayground && yarn test:
+        parallel: true
+    - cd examples/ReduxExample && yarn test:
+        parallel: true
   post:
     - yarn codecov
-    - cd examples/NavigationPlayground && yarn test
-    - cd examples/ReduxExample && yarn test
 
 deployment:
   website-prod:
