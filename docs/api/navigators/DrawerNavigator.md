@@ -1,6 +1,6 @@
 # DrawerNavigator
 
-Used to easily set up a screen with a drawer navigation.
+Used to easily set up a screen with a drawer navigation. For a live example please see [our expo demo](https://exp.host/@react-navigation/NavigationPlayground).
 
 ```js
 class MyHomeScreen extends React.Component {
