@@ -5,8 +5,6 @@ jobs:
       - image: node:7.10.0
     parallelism: 3
     working_directory: ~/react-navigation
-    environment:
-      - PATH: "${PATH}:${HOME}/${CIRCLE_PROJECT_REPONAME}/node_modules/.bin"
     steps:
       - checkout
       - run: curl -o- -L https://yarnpkg.com/install.sh | bash
