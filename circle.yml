@@ -21,7 +21,12 @@ jobs:
       - deploy:
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              # deploy website
               cd website && yarn && cd ../
               yarn run build-docs
               ./scripts/deploy-website.sh
+
+              # deploy expo playground demo
+              yarn global add exp && exp login -u "$EXPO_USERNAME" -p "$EXPO_PASSWORD"
+              cd examples/ExpoNavigationPlayground && npm install && exp publish
             fi
