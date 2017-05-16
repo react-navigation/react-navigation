@@ -1,7 +1,7 @@
 /* @flow */
 
 import pathToRegexp from 'path-to-regexp';
-import shallowEqual from 'fbjs/lib/shallowEqual';
+import areEqual from 'fbjs/lib/areEqual';
 
 import NavigationActions from '../NavigationActions';
 import createConfigGetter from './createConfigGetter';
@@ -174,17 +174,6 @@ export default (
             key: _getUuid(),
             routeName: action.routeName,
           };
-
-          // check if only child router is changing,
-          // and call `replaceAtIndex` instead
-          const index = state.routes.length - 1;
-          const parentRoute = state.routes[index];
-
-          if (action.routeName === parentRoute.routeName
-            && shallowEqual(action.params, parentRoute.params)) {
-            route.key = parentRoute.key; // key needs to stay the same
-            return StateUtils.replaceAtIndex(state, index, route);
-          }
         } else {
           route = {
             params: action.params,
@@ -192,6 +181,16 @@ export default (
             routeName: action.routeName,
           };
         }
+
+        const index = state.routes.length - 1;
+        const lastRoute = state.routes[index];
+
+        if (action.routeName === lastRoute.routeName
+          && areEqual(action.params, lastRoute.params)) {
+          route.key = lastRoute.key;
+          return StateUtils.replaceAtIndex(state, index, route);
+        }
+
         return StateUtils.push(state, route);
       }
 
