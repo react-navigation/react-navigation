@@ -3,7 +3,7 @@
 
 *Learn once, navigate anywhere.*
 
-Browse the docs on [reactnavigation.org](https://reactnavigation.org/).
+Browse the docs on [reactnavigation.org](https://reactnavigation.org/) or try it out on [our expo demo](https://exp.host/@react-navigation/NavigationPlayground).
 
 ## Motivation
 
