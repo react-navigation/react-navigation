@@ -3,9 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
-    "react-native-scripts": "0.0.29",
+    "babel-jest": "^20.0.1",
+    "jest": "^20.0.1",
     "jest-expo": "^0.4.0",
-    "react-test-renderer": "16.0.0-alpha.6"
+    "react-navigation": "file:../..",
+    "react-test-renderer": "15.5.4"
   },
   "main": "./examples/node_modules/react-native-scripts/build/bin/crna-entry.js",
   "scripts": {
@@ -18,14 +20,16 @@
   "dependencies": {
     "expo": "^16.0.0",
     "react": "16.0.0-alpha.6",
-    "react-native": "^0.43.4",
-    "react-navigation": "file:../.."
+    "react-native": "^0.43.4"
   },
   "jest": {
     "preset": "jest-expo",
+    "modulePathIgnorePatterns": [
+      "/node_modules\/.*\/react-native/",
+      "/node_modules\/.*\/react/"
+    ],
     "transformIgnorePatterns": [
-      "node_modules/(?!react-native|react-navigation)/",
-      "examples/ReduxExample/"
+      "/node_modules\/(?!react-native|react-navigation)/"
     ]
   }
 }
