@@ -12,7 +12,7 @@ describe('addNavigationHelpers', () => {
       addNavigationHelpers({
         state: { key: 'A', routeName: 'Home' },
         dispatch: mockedDispatch,
-      }).goBack('A'),
+      }).goBack('A')
     ).toEqual(true);
     expect(mockedDispatch).toBeCalledWith({
       type: NavigationActions.BACK,
@@ -29,7 +29,7 @@ describe('addNavigationHelpers', () => {
       addNavigationHelpers({
         state: { routeName: 'Home' },
         dispatch: mockedDispatch,
-      }).goBack(),
+      }).goBack()
     ).toEqual(true);
     expect(mockedDispatch).toBeCalledWith({ type: NavigationActions.BACK });
     expect(mockedDispatch.mock.calls.length).toBe(1);
@@ -43,7 +43,7 @@ describe('addNavigationHelpers', () => {
       addNavigationHelpers({
         state: { routeName: 'Home' },
         dispatch: mockedDispatch,
-      }).navigate('Profile', { name: 'Matt' }),
+      }).navigate('Profile', { name: 'Matt' })
     ).toEqual(true);
     expect(mockedDispatch).toBeCalledWith({
       type: NavigationActions.NAVIGATE,
@@ -61,7 +61,7 @@ describe('addNavigationHelpers', () => {
       addNavigationHelpers({
         state: { key: 'B', routeName: 'Settings' },
         dispatch: mockedDispatch,
-      }).setParams({ notificationsEnabled: 'yes' }),
+      }).setParams({ notificationsEnabled: 'yes' })
     ).toEqual(true);
     expect(mockedDispatch).toBeCalledWith({
       type: NavigationActions.SET_PARAMS,
