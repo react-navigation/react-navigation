@@ -50,7 +50,8 @@ export default class TouchableItem
      * We need to pass the background prop to specify a borderless ripple effect.
      */
     if (
-      Platform.OS === 'android' && Platform.Version >= ANDROID_VERSION_LOLLIPOP
+      Platform.OS === 'android' &&
+      Platform.Version >= ANDROID_VERSION_LOLLIPOP
     ) {
       const { style, ...rest } = this.props; // eslint-disable-line no-unused-vars
 
@@ -60,7 +61,7 @@ export default class TouchableItem
           style={null}
           background={TouchableNativeFeedback.Ripple(
             this.props.pressColor,
-            this.props.borderless,
+            this.props.borderless
           )}
         >
           <View style={this.props.style}>

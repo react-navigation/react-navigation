@@ -41,7 +41,11 @@ type Props = {
 
   screenProps?: {},
   navigation: NavigationScreenProp<NavigationState, NavigationAction>,
-  router: NavigationRouter<NavigationState, NavigationAction, NavigationTabScreenOptions>,
+  router: NavigationRouter<
+    NavigationState,
+    NavigationAction,
+    NavigationTabScreenOptions
+  >,
   childNavigationProps: {
     [key: string]: NavigationScreenProp<NavigationRoute, NavigationAction>,
   },
@@ -59,7 +63,7 @@ class TabView extends PureComponent<void, Props, void> {
     const { screenProps } = this.props;
     const childNavigation = this.props.childNavigationProps[route.key];
     const TabComponent = this.props.router.getComponentForRouteName(
-      route.routeName,
+      route.routeName
     );
     return (
       <View style={styles.page}>
@@ -75,7 +79,7 @@ class TabView extends PureComponent<void, Props, void> {
   _getLabel = ({ route, tintColor, focused }: TabScene) => {
     const options = this.props.router.getScreenOptions(
       this.props.childNavigationProps[route.key],
-      this.props.screenProps || {},
+      this.props.screenProps || {}
     );
 
     if (options.tabBarLabel) {
@@ -94,7 +98,7 @@ class TabView extends PureComponent<void, Props, void> {
   _renderIcon = ({ focused, route, tintColor }: TabScene) => {
     const options = this.props.router.getScreenOptions(
       this.props.childNavigationProps[route.key],
-      this.props.screenProps || {},
+      this.props.screenProps || {}
     );
     if (options.tabBarIcon) {
       return typeof options.tabBarIcon === 'function'
@@ -145,7 +149,7 @@ class TabView extends PureComponent<void, Props, void> {
     const { state } = this.props.navigation;
     const options = router.getScreenOptions(
       this.props.childNavigationProps[state.routes[state.index].key],
-      screenProps || {},
+      screenProps || {}
     );
 
     const tabBarVisible = options.tabBarVisible == null

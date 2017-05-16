@@ -12,11 +12,9 @@ import CardStackStyleInterpolator from './CardStackStyleInterpolator';
 
 // Used for all animations unless overriden
 const DefaultTransitionSpec = ({
-  // The following options are meant to mimic the nav animations of iOS 10
   duration: 250,
-  timing: Animated.spring,
-  bounciness: 0,
-  speed: 9,
+  easing: Easing.inOut(Easing.ease),
+  timing: Animated.timing,
 }: NavigationTransitionSpec);
 
 // Standard iOS navigation transition
@@ -57,13 +55,14 @@ function defaultTransitionConfig(
   // props for the old screen
   prevTransitionProps: NavigationTransitionProps,
   // whether we're animating in/out a modal screen
-  isModal: boolean,
+  isModal: boolean
 ): TransitionConfig {
   if (Platform.OS === 'android') {
     // Use the default Android animation no matter if the screen is a modal.
     // Android doesn't have full-screen modals like iOS does, it has dialogs.
     if (
-      prevTransitionProps && transitionProps.index < prevTransitionProps.index
+      prevTransitionProps &&
+      transitionProps.index < prevTransitionProps.index
     ) {
       // Navigating back to the previous screen
       return FadeOutToBottomAndroid;
@@ -83,12 +82,12 @@ function getTransitionConfig(
   transitionProps: NavigationTransitionProps,
   // props for the old screen
   prevTransitionProps: NavigationTransitionProps,
-  isModal: boolean,
+  isModal: boolean
 ): TransitionConfig {
   const defaultConfig = defaultTransitionConfig(
     transitionProps,
     prevTransitionProps,
-    isModal,
+    isModal
   );
   if (transitionConfigurer) {
     return {

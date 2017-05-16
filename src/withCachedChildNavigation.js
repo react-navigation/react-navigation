@@ -16,7 +16,7 @@ type InjectedProps<N> = {
  * HOC which caches the child navigation items.
  */
 export default function withCachedChildNavigation<T: *, N: *>(
-  Comp: ReactClass<T & InjectedProps<N>>,
+  Comp: ReactClass<T & InjectedProps<N>>
 ): ReactClass<T> {
   return class extends PureComponent {
     static displayName = `withCachedChildNavigation(${Comp.displayName || Comp.name})`;
@@ -36,7 +36,7 @@ export default function withCachedChildNavigation<T: *, N: *>(
     };
 
     _updateNavigationProps = (
-      navigation: NavigationScreenProp<N, NavigationAction>,
+      navigation: NavigationScreenProp<N, NavigationAction>
     ) => {
       // Update props for each child route
       if (!this._childNavigationProps) {

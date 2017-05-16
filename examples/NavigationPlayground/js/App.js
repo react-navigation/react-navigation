@@ -49,8 +49,12 @@ const ExampleRoutes = {
     screen: CustomTabs,
   },
   ModalStack: {
-    name: Platform.OS === 'ios' ? 'Modal Stack Example' : 'Stack with Dynamic Header',
-    description: Platform.OS === 'ios' ? 'Stack navigation with modals' : 'Dynamically showing and hiding the header',
+    name: Platform.OS === 'ios'
+      ? 'Modal Stack Example'
+      : 'Stack with Dynamic Header',
+    description: Platform.OS === 'ios'
+      ? 'Stack navigation with modals'
+      : 'Dynamically showing and hiding the header',
     screen: ModalStack,
   },
   StacksInTabs: {
@@ -80,7 +84,7 @@ const ExampleRoutes = {
 const MainScreen = ({ navigation }) => (
   <ScrollView>
     <Banner />
-    {Object.keys(ExampleRoutes).map((routeName: string) =>
+    {Object.keys(ExampleRoutes).map((routeName: string) => (
       <TouchableOpacity
         key={routeName}
         onPress={() => {
@@ -92,28 +96,33 @@ const MainScreen = ({ navigation }) => (
       >
         <View style={styles.item}>
           <Text style={styles.title}>{ExampleRoutes[routeName].name}</Text>
-          <Text style={styles.description}>{ExampleRoutes[routeName].description}</Text>
+          <Text style={styles.description}>
+            {ExampleRoutes[routeName].description}
+          </Text>
         </View>
       </TouchableOpacity>
-    )}
+    ))}
   </ScrollView>
 );
 
-const AppNavigator = StackNavigator({
-  ...ExampleRoutes,
-  Index: {
-    screen: MainScreen,
+const AppNavigator = StackNavigator(
+  {
+    ...ExampleRoutes,
+    Index: {
+      screen: MainScreen,
+    },
   },
-}, {
-  initialRouteName: 'Index',
-  headerMode: 'none',
+  {
+    initialRouteName: 'Index',
+    headerMode: 'none',
 
-  /*
+    /*
    * Use modal on iOS because the card mode comes from the right,
    * which conflicts with the drawer example gesture
    */
-  mode: Platform.OS === 'ios' ? 'modal' : 'card',
-});
+    mode: Platform.OS === 'ios' ? 'modal' : 'card',
+  }
+);
 
 export default () => <AppNavigator />;
 

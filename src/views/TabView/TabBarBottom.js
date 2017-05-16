@@ -70,14 +70,15 @@ export default class TabBarBottom
     const inputRange = [-1, ...routes.map((x: *, i: number) => i)];
     const outputRange = inputRange.map(
       (inputIndex: number) =>
-        inputIndex === index ? activeTintColor : inactiveTintColor,
+        inputIndex === index ? activeTintColor : inactiveTintColor
     );
     const color = position.interpolate({
       inputRange,
       outputRange,
     });
 
-    const label = this.props.getLabel(scene);
+    const tintColor = scene.focused ? activeTintColor : inactiveTintColor;
+    const label = this.props.getLabel({ ...scene, tintColor });
     if (typeof label === 'string') {
       return (
         <Animated.Text style={[styles.label, { color }, labelStyle]}>
@@ -85,8 +86,9 @@ export default class TabBarBottom
         </Animated.Text>
       );
     }
+
     if (typeof label === 'function') {
-      return label(scene);
+      return label({ ...scene, tintColor });
     }
 
     return label;
@@ -138,7 +140,7 @@ export default class TabBarBottom
             (inputIndex: number) =>
               inputIndex === index
                 ? activeBackgroundColor
-                : inactiveBackgroundColor,
+                : inactiveBackgroundColor
           );
           const backgroundColor = position.interpolate({
             inputRange,

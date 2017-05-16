@@ -65,7 +65,7 @@ export default function create(Component: ReactClass<*>): ReactClass<*> {
       if (component) {
         invariant(
           typeof component.setNativeProps === 'function',
-          'component must implement method `setNativeProps`',
+          'component must implement method `setNativeProps`'
         );
       }
     }
@@ -74,7 +74,7 @@ export default function create(Component: ReactClass<*>): ReactClass<*> {
       this._positionListener && this._positionListener.remove();
       this._positionListener = new AnimatedValueSubscription(
         props.position,
-        this._onPositionChange,
+        this._onPositionChange
       );
     }
 
@@ -89,11 +89,7 @@ export default function create(Component: ReactClass<*>): ReactClass<*> {
     }
 
     _computePointerEvents(): string {
-      const {
-        navigation,
-        position,
-        scene,
-      } = this.props;
+      const { navigation, position, scene } = this.props;
 
       if (scene.isStale || navigation.state.index !== scene.index) {
         // The scene isn't focused.

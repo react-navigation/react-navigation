@@ -1,29 +1,35 @@
 {
   "name": "NavigationPlayground",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "private": true,
+  "devDependencies": {
+    "babel-jest": "^20.0.1",
+    "jest": "^20.0.1",
+    "jest-expo": "^0.4.0",
+    "react-navigation": "file:../..",
+    "react-test-renderer": "15.5.4"
+  },
+  "main": "./examples/node_modules/react-native-scripts/build/bin/crna-entry.js",
   "scripts": {
-    "test": "jest"
+    "start": "react-native-scripts start",
+    "eject": "react-native-scripts eject",
+    "android": "react-native-scripts android",
+    "ios": "react-native-scripts ios",
+    "test": "node node_modules/jest/bin/jest.js"
   },
   "dependencies": {
+    "expo": "^16.0.0",
     "react": "16.0.0-alpha.6",
-    "react-native": "^0.43.2",
-    "react-native-vector-icons": "^4.0.1"
-  },
-  "devDependencies": {
-    "babel-jest": "^19.0.0",
-    "jest": "^19.0.2",
-    "react-navigation": "git+https://github.com/react-community/react-navigation.git",
-    "react-test-renderer": "^15.5.4"
+    "react-native": "^0.43.4"
   },
   "jest": {
-    "preset": "react-native",
-    "setupFiles": [
-      "<rootDir>/../../jest-setup.js"
+    "preset": "jest-expo",
+    "modulePathIgnorePatterns": [
+      "/node_modules\/.*\/react-native/",
+      "/node_modules\/.*\/react/"
     ],
     "transformIgnorePatterns": [
-      "node_modules/(?!react-native|react-navigation)/",
-      "__exponent"
+      "/node_modules\/(?!react-native|react-navigation)/"
     ]
   }
 }
