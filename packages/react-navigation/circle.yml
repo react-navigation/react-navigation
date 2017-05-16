@@ -27,6 +27,6 @@ jobs:
               ./scripts/deploy-website.sh
 
               # deploy expo playground demo
-              yarn global add exp && exp login -u "$EXPO_USERNAME" -p "$EXPO_PASSWORD"
-              cd examples/ExpoNavigationPlayground && npm install && exp publish
+              exp login -u "$EXPO_USERNAME" -p "$EXPO_PASSWORD"
+              cd examples/ExpoNavigationPlayground && yarn && exp publish
             fi
