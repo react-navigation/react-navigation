@@ -23,9 +23,6 @@
   },
   "jest": {
     "preset": "jest-expo",
-    "setupFiles": [
-      "<rootDir>/../../jest-setup.js"
-    ],
     "transformIgnorePatterns": [
       "node_modules/(?!react-native|react-navigation)/",
       "examples/ReduxExample/"
