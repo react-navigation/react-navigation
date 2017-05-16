@@ -8,7 +8,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: v1-react-navigation-{{ .Branch }} # generate cache per branch
+          key: v2-react-navigation-{{ .Branch }} # generate cache per branch
       - run: yarn # install root deps
       - run: ./scripts/test.sh # run tests
       - deploy:
@@ -24,7 +24,7 @@ jobs:
               cd examples/ExpoNavigationPlayground && yarn && exp publish
             fi
       - save_cache:
-          key: v1-react-navigation-{{ .Branch }} # generate cache per branch
+          key: v2-react-navigation-{{ .Branch }} # generate cache per branch
           paths:
             - ~/.cache/yarn
             - ~/react-navigation/website/node_modules
