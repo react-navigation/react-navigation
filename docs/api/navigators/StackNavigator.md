@@ -118,7 +118,7 @@ React Element to display on the right side of the header
 
 #### `headerLeft`
 
-React Element to display on the left side of the header
+React Element or a function that given `HeaderLeftProps` returns a React Element, to display on left side of the header
 
 #### `headerStyle`
 

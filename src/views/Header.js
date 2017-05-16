@@ -113,9 +113,17 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
 
   _renderLeftComponent = (props: SceneProps) => {
     const options = this.props.getScreenDetails(props.scene).options;
-    if (typeof options.headerLeft !== 'undefined') {
-      return options.headerLeft;
+
+    const { headerLeft } = options;
+
+    if (typeof headerLeft !== 'undefined' && typeof headerLeft !== 'function') {
+      return headerLeft;
     }
+
+    if (typeof headerLeft === 'function') {
+      return headerLeft(this.props);
+    }
+
     if (props.scene.index === 0) {
       return null;
     }
