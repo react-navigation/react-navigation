@@ -20,9 +20,8 @@ jobs:
               ./scripts/deploy-website.sh
 
               # deploy expo playground demo
-              exp login -u "$EXPO_USERNAME" -p "$EXPO_PASSWORD"
-              echo fs.inotify.max_user_watches=524288 | tee -a /etc/sysctl.conf && sysctl -p
-              cd examples/NavigationPlayground && exp publish
+              # exp login -u "$EXPO_USERNAME" -p "$EXPO_PASSWORD"
+              # cd examples/NavigationPlayground && exp publish
             fi
       - save_cache:
           key: v2-react-navigation-{{ .Branch }} # generate cache per branch
