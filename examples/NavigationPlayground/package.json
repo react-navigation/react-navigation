@@ -13,7 +13,7 @@
     "eject": "react-native-scripts eject",
     "android": "react-native-scripts android",
     "ios": "react-native-scripts ios",
-    "test": "jest"
+    "test": "node node_modules/jest/bin/jest.js"
   },
   "dependencies": {
     "expo": "^16.0.0",
