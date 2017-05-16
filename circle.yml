@@ -10,9 +10,9 @@ jobs:
       - restore_cache:
           # cache by branch + package.json, by branch, and then master
           keys: 
-            - v2-react-navigation-{{ .Branch }}-{{ checksum "package.json" }}
-            - v2-react-navigation-{{ .Branch }}
-            - v2-react-navigation-master
+            - v3-react-navigation-{{ .Branch }}-{{ checksum "package.json" }}
+            - v3-react-navigation-{{ .Branch }}
+            - v3-react-navigation-master
       - run: yarn # install root deps
       - run: ./scripts/test.sh # run tests
       - deploy:
@@ -28,7 +28,7 @@ jobs:
               # cd examples/NavigationPlayground && exp publish
             fi
       - save_cache:
-          key: v2-react-navigation-{{ .Branch }}-{{ checksum "package.json" }}
+          key: v3-react-navigation-{{ .Branch }}-{{ checksum "package.json" }}
           paths:
             - ~/.cache/yarn
             - ~/react-navigation/website/node_modules
