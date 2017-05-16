@@ -1,29 +1,33 @@
 {
   "name": "NavigationPlayground",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "private": true,
+  "devDependencies": {
+    "react-native-scripts": "0.0.29",
+    "jest-expo": "^0.4.0",
+    "react-test-renderer": "16.0.0-alpha.6"
+  },
+  "main": "./examples/node_modules/react-native-scripts/build/bin/crna-entry.js",
   "scripts": {
-    "test": "jest"
+    "start": "react-native-scripts start",
+    "eject": "react-native-scripts eject",
+    "android": "react-native-scripts android",
+    "ios": "react-native-scripts ios",
+    "test": "node node_modules/jest/bin/jest.js --watch"
   },
   "dependencies": {
+    "expo": "^16.0.0",
     "react": "16.0.0-alpha.6",
-    "react-native": "^0.44.0",
-    "react-native-vector-icons": "^4.1.1",
-    "react-navigation": "file:../.."
-  },
-  "devDependencies": {
-    "babel-jest": "^20.0.1",
-    "jest": "^20.0.1",
-    "react-test-renderer": "^15.5.4"
+    "react-native": "^0.43.4"
   },
   "jest": {
-    "preset": "react-native",
+    "preset": "jest-expo",
     "setupFiles": [
       "<rootDir>/../../jest-setup.js"
     ],
     "transformIgnorePatterns": [
       "node_modules/(?!react-native|react-navigation)/",
-      "__exponent"
+      "examples/ReduxExample/"
     ]
   }
 }
