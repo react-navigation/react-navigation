@@ -21,7 +21,7 @@ jobs:
 
               # deploy expo playground demo
               exp login -u "$EXPO_USERNAME" -p "$EXPO_PASSWORD"
-              cd examples/ExpoNavigationPlayground && yarn && exp publish
+              cd examples/NavigationPlayground && yarn && exp publish
             fi
       - save_cache:
           key: v2-react-navigation-{{ .Branch }} # generate cache per branch
