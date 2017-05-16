@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: reactcommunity/node-ci:7.10.0 # custom image -- includes ocaml, libelf1, Yarn
+      - image: reactcommunity/node-ci:7.10.0-0 # custom image -- includes ocaml, libelf1, Yarn
     parallelism: 3
     working_directory: ~/react-navigation
     steps:
@@ -11,13 +11,6 @@ jobs:
           key: v1-react-navigation-{{ .Branch }} # generate cache per branch
       - run: yarn # install root deps
       - run: ./scripts/test.sh # run tests
-      - save_cache:
-          key: v1-react-navigation-{{ .Branch }} # generate cache per branch
-          paths:
-            - ~/.cache/yarn
-            - ~/react-navigation/website/node_modules
-            - ~/react-navigation/examples/NavigationPlayground/node_modules
-            - ~/react-navigation/examples/ReduxExample/node_modules
       - deploy:
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
@@ -30,3 +23,10 @@ jobs:
               exp login -u "$EXPO_USERNAME" -p "$EXPO_PASSWORD"
               cd examples/ExpoNavigationPlayground && yarn && exp publish
             fi
+      - save_cache:
+          key: v1-react-navigation-{{ .Branch }} # generate cache per branch
+          paths:
+            - ~/.cache/yarn
+            - ~/react-navigation/website/node_modules
+            - ~/react-navigation/examples/NavigationPlayground/node_modules
+            - ~/react-navigation/examples/ReduxExample/node_modules
