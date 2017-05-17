@@ -19,7 +19,7 @@ import type {
 } from '../TypeDefinition';
 
 export type DrawerNavigatorConfig =
-  & { containerConfig?: void }
+  & { containerConfig?: void, closePath?: string, openPath?: string }
   & NavigationTabRouterConfig
   & DrawerViewConfig;
 
