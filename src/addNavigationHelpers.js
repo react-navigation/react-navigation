@@ -13,25 +13,35 @@ import type {
 import NavigationActions from './NavigationActions';
 
 export default function<S: *>(navigation: NavigationProp<S, NavigationAction>) {
+  const oldDispatch = navigation.dispatch
+
+  navigation.dispatch = (action: NavigationAction): NavigationAction => {
+    action.navKey = typeof action.navKey !== 'undefined'
+      ? action.navKey
+      : navigation.navKey
+
+    return oldDispatch(action)
+  }
+
   return {
     ...navigation,
     goBack: (key?: ?string): boolean =>
       navigation.dispatch(
         NavigationActions.back({
           key: key === undefined ? navigation.state.key : key,
-        })
+        }),
       ),
     navigate: (
       routeName: string,
       params?: NavigationParams,
-      action?: NavigationAction
+      action?: NavigationAction,
     ): boolean =>
       navigation.dispatch(
         NavigationActions.navigate({
           routeName,
           params,
           action,
-        })
+        }),
       ),
     /**
      * For updating current route params. For example the nav bar title and
@@ -43,7 +53,7 @@ export default function<S: *>(navigation: NavigationProp<S, NavigationAction>) {
         NavigationActions.setParams({
           params,
           key: navigation.state.key,
-        })
+        }),
       ),
   };
 }
