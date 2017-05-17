@@ -412,6 +412,10 @@ class CardStack extends Component {
   _renderCard = (scene: NavigationScene): React.Element<*> => {
     const isModal = this.props.mode === 'modal';
 
+    const { transitionInteractivityThreshold } = this._getScreenDetails(
+      scene
+    ).options;
+
     /* $FlowFixMe */
     const { screenInterpolator } = TransitionConfigs.getTransitionConfig(
       this.props.transitionConfig,
@@ -432,6 +436,7 @@ class CardStack extends Component {
         key={`card_${scene.key}`}
         style={[style, this.props.cardStyle]}
         scene={scene}
+        interactivityThreshold={transitionInteractivityThreshold}
       >
         {this._renderInnerScene(SceneComponent, scene)}
       </Card>

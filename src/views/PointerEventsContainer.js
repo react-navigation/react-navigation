@@ -89,7 +89,12 @@ export default function create(Component: ReactClass<*>): ReactClass<*> {
     }
 
     _computePointerEvents(): string {
-      const { navigation, position, scene } = this.props;
+      const {
+        navigation,
+        position,
+        scene,
+        interactivityThreshold,
+      } = this.props;
 
       if (scene.isStale || navigation.state.index !== scene.index) {
         // The scene isn't focused.
@@ -97,7 +102,10 @@ export default function create(Component: ReactClass<*>): ReactClass<*> {
       }
 
       const offset = position.__getAnimatedValue() - navigation.state.index;
-      if (Math.abs(offset) > MIN_POSITION_OFFSET) {
+      const threshold = interactivityThreshold != null
+        ? interactivityThreshold
+        : MIN_POSITION_OFFSET;
+      if (Math.abs(offset) > threshold) {
         // The positon is still away from scene's index.
         // Scene's children should not receive touches until the position
         // is close enough to scene's index.
