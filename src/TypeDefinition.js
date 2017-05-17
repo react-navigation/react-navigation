@@ -175,7 +175,7 @@ export type NavigationNavigateAction = {
 
 export type NavigationBackAction = {
   type: 'Navigation/BACK',
-  navKey: string,
+  navKey?: ?string,
   key?: ?string,
 };
 

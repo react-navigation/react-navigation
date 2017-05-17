@@ -61,7 +61,7 @@ export default (
       action = NavigationActions.mapDeprecatedActionAndWarn(action);
 
       if (action.navKey && action.navKey !== navKey) {
-        return state
+        return inputState
       }
 
       // Establish a default state
