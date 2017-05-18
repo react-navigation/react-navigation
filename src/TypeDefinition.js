@@ -169,7 +169,7 @@ export type NavigationNavigator<T, State, Action, Options> = ReactClass<T> & {
 };
 
 export type NavigationParams = {
-  [key: string]: string,
+  [key: string]: mixed,
 };
 
 export type NavigationNavigateAction = {
