@@ -124,7 +124,7 @@ import {
   AppRegistry,
   Text,
   View,
-  Button
+  Button,
 } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 ```
