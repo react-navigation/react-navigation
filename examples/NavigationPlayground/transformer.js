@@ -9,7 +9,7 @@
  * Note: This is a fork of the fb-specific transform.js
  * Specifically, it uses 'babel-plugin-module-resolver' to rewrite requires for
  * 'react-native' and 'react' to point to the passed in paths from the transformer
- * options, and also utilizes babel-preset-exponent for other Exponent specific transforms.
+ * options, and also utilizes babel-preset-expo for other Exponent specific transforms.
  */
 
 const path = require('path');
@@ -55,7 +55,7 @@ const buildAliasPreset = (reactNativePath, reactPath) => ({
             ),
             react: path.resolve(`${reactPath || './node_modules/react'}`),
           },
-          require('babel-preset-exponent').plugins[0][1].alias
+          require('babel-preset-expo').plugins[0][1].alias
         ),
         cwd: path.resolve(__dirname, '..'),
       },
@@ -68,7 +68,7 @@ const buildAliasPreset = (reactNativePath, reactPath) => ({
  * config object with the appropriate plugins.
  */
 function buildBabelConfig(filename, options) {
-  const exponentBabelPreset = require('babel-preset-exponent');
+  const exponentBabelPreset = require('babel-preset-expo');
   const babelConfig = {
     presets: [
       ...exponentBabelPreset.presets,
