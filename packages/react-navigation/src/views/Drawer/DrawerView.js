@@ -23,6 +23,11 @@ export type DrawerScene = {
   tintColor?: string,
 };
 
+export type DrawerItem = {
+  route: NavigationRoute,
+  focused: boolean,
+};
+
 export type DrawerViewConfig = {
   drawerWidth: number,
   drawerPosition: 'left' | 'right',
