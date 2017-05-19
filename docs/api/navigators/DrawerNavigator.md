@@ -1,6 +1,6 @@
 # DrawerNavigator
 
-Used to easily set up a screen with a drawer navigation.
+Used to easily set up a screen with a drawer navigation. For a live example please see [our expo demo](https://exp.host/@react-navigation/NavigationPlayground).
 
 ```js
 class MyHomeScreen extends React.Component {
@@ -30,7 +30,7 @@ class MyNotificationsScreen extends React.Component {
     drawerIcon: ({ tintColor }) => (
       <Image
         source={require('./notif-icon.png')}
-        style={[styles.tabIcon, {tintColor: tintColor}]}
+        style={[styles.icon, {tintColor: tintColor}]}
       />
     ),
   };
@@ -130,10 +130,13 @@ const styles = StyleSheet.create({
 
 ### `contentOptions` for `DrawerItems`
 
+- `items` - the array of routes, can be modified or overridden
+- `activeItemKey` - key identifying the active route
 - `activeTintColor` - label and icon color of the active label
 - `activeBackgroundColor` - background color of the active label
 - `inactiveTintColor` - label and icon color of the inactive label
 - `inactiveBackgroundColor` - background color of the inactive label
+- `onItemPress(route)` - function to be invoked when an item is pressed
 - `style` - style object for the content section
 - `labelStyle` - style object to overwrite `Text` style inside content section, when your label is a string
 

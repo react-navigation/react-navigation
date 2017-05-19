@@ -1,8 +1,8 @@
-
 const path = require('path');
 const express = require('express');
 const fs = require('fs');
 const React = require('react');
+const PropTypes = require('prop-types');
 const join = require('path').join;
 const basicAuth = require('basic-auth-connect');
 const server = require('express');
@@ -14,14 +14,14 @@ import { NavigationActions, addNavigationHelpers } from 'react-navigation';
 
 class ServerApp extends React.Component {
   static childContextTypes = {
-    getURIForAction: React.PropTypes.func.isRequired,
-    getActionForPathAndParams: React.PropTypes.func.isRequired,
-    dispatch: React.PropTypes.func.isRequired,
+    getURIForAction: PropTypes.func.isRequired,
+    getActionForPathAndParams: PropTypes.func.isRequired,
+    dispatch: PropTypes.func.isRequired,
   };
   getChildContext() {
     return {
       dispatch: this.props.navigation.dispatch,
-      getURIForAction: (action) => {
+      getURIForAction: action => {
         const state = App.router.getStateForAction(action);
         let { path } = App.router.getPathAndParamsForState(state);
         return `/${path}`;
@@ -34,19 +34,24 @@ class ServerApp extends React.Component {
   }
 }
 
-const indexHtml = fs.readFileSync(join(__dirname, '../public/index.html'), { encoding: 'utf8' });
+const indexHtml = fs.readFileSync(join(__dirname, '../public/index.html'), {
+  encoding: 'utf8',
+});
 
 function AppHandler(req, res) {
   let status = 200;
-  const path = req.url.substr(1)
+  const path = req.url.substr(1);
   let initAction = App.router.getActionForPathAndParams(path);
   if (!initAction) {
-    initAction = NavigationActions.navigate({ routeName: 'NotFound', params: { path } });
+    initAction = NavigationActions.navigate({
+      routeName: 'NotFound',
+      params: { path },
+    });
     status = 404;
   }
   const topNavigation = addNavigationHelpers({
     state: App.router.getStateForAction(initAction),
-    dispatch: (action) => false,
+    dispatch: action => false,
   });
   const screenNavigation = addNavigationHelpers({
     state: topNavigation.state.routes[topNavigation.state.index],
@@ -58,7 +63,9 @@ function AppHandler(req, res) {
   const app = <ServerApp navigation={topNavigation} />;
   const body = ReactDOMServer.renderToString(app);
   let html = indexHtml;
-  html = html.split('<div id="root"></div>').join(`<div id="root">${body}</div>`)
+  html = html
+    .split('<div id="root"></div>')
+    .join(`<div id="root">${body}</div>`);
   if (title) {
     html = html.split('<title></title>').join(`<title>${title}</title>`);
   }

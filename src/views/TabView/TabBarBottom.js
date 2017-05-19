@@ -1,12 +1,7 @@
 /* @flow */
 
 import React, { PureComponent } from 'react';
-import {
-  Animated,
-  View,
-  TouchableWithoutFeedback,
-  StyleSheet,
-} from 'react-native';
+import { Animated, TouchableWithoutFeedback, StyleSheet } from 'react-native';
 import TabBarIcon from './TabBarIcon';
 
 import type {
@@ -79,14 +74,15 @@ export default class TabBarBottom
     const inputRange = [-1, ...routes.map((x: *, i: number) => i)];
     const outputRange = inputRange.map(
       (inputIndex: number) =>
-        inputIndex === index ? activeTintColor : inactiveTintColor,
+        inputIndex === index ? activeTintColor : inactiveTintColor
     );
     const color = position.interpolate({
       inputRange,
       outputRange,
     });
 
-    const label = this.props.getLabel(scene);
+    const tintColor = scene.focused ? activeTintColor : inactiveTintColor;
+    const label = this.props.getLabel({ ...scene, tintColor });
     if (typeof label === 'string') {
       return (
         <Animated.Text
@@ -97,8 +93,9 @@ export default class TabBarBottom
         </Animated.Text>
       );
     }
+
     if (typeof label === 'function') {
-      return label(scene);
+      return label({ ...scene, tintColor });
     }
 
     return label;
@@ -142,7 +139,7 @@ export default class TabBarBottom
     // Prepend '-1', so there are always at least 2 items in inputRange
     const inputRange = [-1, ...routes.map((x: *, i: number) => i)];
     return (
-      <View style={[styles.tabBar, style]}>
+      <Animated.View style={[styles.tabBar, style]}>
         {routes.map((route: NavigationRoute, index: number) => {
           const focused = index === navigation.state.index;
           const scene = { route, index, focused };
@@ -150,7 +147,7 @@ export default class TabBarBottom
             (inputIndex: number) =>
               inputIndex === index
                 ? activeBackgroundColor
-                : inactiveBackgroundColor,
+                : inactiveBackgroundColor
           );
           const backgroundColor = position.interpolate({
             inputRange,
@@ -171,7 +168,7 @@ export default class TabBarBottom
             </TouchableWithoutFeedback>
           );
         })}
-      </View>
+      </Animated.View>
     );
   }
 }

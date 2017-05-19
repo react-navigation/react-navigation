@@ -15,11 +15,11 @@ import type {
 } from './TypeDefinition';
 
 type NavigationContainerProps = {
-  uriPrefix?: string,
+  uriPrefix?: string | RegExp,
   onNavigationStateChange?: (
     NavigationState,
     NavigationState,
-    NavigationAction,
+    NavigationAction
   ) => void,
 };
 
@@ -37,11 +37,11 @@ type State = {
  */
 export default function createNavigationContainer<T: *>(
   Component: ReactClass<NavigationNavigatorProps<T>>,
-  containerOptions?: {},
+  containerOptions?: {}
 ) {
   invariant(
     typeof containerOptions === 'undefined',
-    'containerOptions.URIPrefix has been removed. Pass the uriPrefix prop to the navigator instead',
+    'containerOptions.URIPrefix has been removed. Pass the uriPrefix prop to the navigator instead'
   );
 
   class NavigationContainer extends React.Component<void, Props<T>, State> {
@@ -75,11 +75,7 @@ export default function createNavigationContainer<T: *>(
         return;
       }
 
-      const {
-        navigation,
-        screenProps,
-        ...containerProps
-      } = props;
+      const { navigation, screenProps, ...containerProps } = props;
 
       const keys = Object.keys(containerProps);
 
@@ -88,7 +84,7 @@ export default function createNavigationContainer<T: *>(
         'This navigator has both navigation and container props, so it is ' +
           `unclear if it should own its own state. Remove props: "${keys.join(', ')}" ` +
           'if the navigator should get its state from the navigation prop. If the ' +
-          'navigator should maintain its own state, do not pass a navigation prop.',
+          'navigator should maintain its own state, do not pass a navigation prop.'
       );
     }
 
@@ -119,7 +115,7 @@ export default function createNavigationContainer<T: *>(
     _onNavigationStateChange(
       prevNav: NavigationState,
       nav: NavigationState,
-      action: NavigationAction,
+      action: NavigationAction
     ) {
       if (
         typeof this.props.onNavigationStateChange === 'undefined' &&
@@ -158,14 +154,15 @@ export default function createNavigationContainer<T: *>(
       }
 
       this.subs = BackAndroid.addEventListener('backPress', () =>
-        this.dispatch(NavigationActions.back()));
+        this.dispatch(NavigationActions.back())
+      );
 
       Linking.addEventListener('url', ({ url }: { url: string }) => {
         this._handleOpenURL(url);
       });
 
       Linking.getInitialURL().then(
-        (url: string) => url && this._handleOpenURL(url),
+        (url: string) => url && this._handleOpenURL(url)
       );
     }
 
@@ -182,7 +179,8 @@ export default function createNavigationContainer<T: *>(
       const nav = Component.router.getStateForAction(action, state.nav);
       if (nav && nav !== state.nav) {
         this.setState({ nav }, () =>
-          this._onNavigationStateChange(state.nav, nav, action));
+          this._onNavigationStateChange(state.nav, nav, action)
+        );
         return true;
       }
       return false;

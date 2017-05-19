@@ -10,7 +10,7 @@ import {
   StyleSheet,
 } from 'react-native';
 
-import type { LayoutEvent } from '../TypeDefinition';
+import type { LayoutEvent, Style } from '../TypeDefinition';
 
 import TouchableItem from './TouchableItem';
 
@@ -18,6 +18,7 @@ type Props = {
   onPress?: () => void,
   pressColorAndroid?: ?string,
   title?: ?string,
+  titleStyle?: ?Style,
   tintColor?: ?string,
   truncatedTitle?: ?string,
   width?: ?number,
@@ -59,6 +60,7 @@ class HeaderBackButton extends React.PureComponent<DefaultProps, Props, State> {
       pressColorAndroid,
       width,
       title,
+      titleStyle,
       tintColor,
       truncatedTitle,
     } = this.props;
@@ -77,6 +79,7 @@ class HeaderBackButton extends React.PureComponent<DefaultProps, Props, State> {
         accessibilityComponentType="button"
         accessibilityLabel={backButtonTitle}
         accessibilityTraits="button"
+        testID="header-back"
         delayPressIn={0}
         onPress={onPress}
         pressColor={pressColorAndroid}
@@ -92,7 +95,7 @@ class HeaderBackButton extends React.PureComponent<DefaultProps, Props, State> {
             title &&
             <Text
               onLayout={this._onTextLayout}
-              style={[styles.title, { color: tintColor }]}
+              style={[styles.title, { color: tintColor }, titleStyle]}
               numberOfLines={1}
             >
               {backButtonTitle}

@@ -19,14 +19,14 @@ import type {
   NavigationTabRouterConfig,
 } from '../TypeDefinition';
 
-export type TabNavigatorConfig =
-  & { containerOptions?: void }
-  & NavigationTabRouterConfig
-  & TabViewConfig;
+export type TabNavigatorConfig = {
+  containerOptions?: void,
+} & NavigationTabRouterConfig &
+  TabViewConfig;
 
 const TabNavigator = (
   routeConfigs: NavigationRouteConfigMap,
-  config: TabNavigatorConfig = {},
+  config: TabNavigatorConfig = {}
 ) => {
   // Use the look native to the platform by default
   const mergedConfig = { ...TabNavigator.Presets.Default, ...config };
@@ -46,7 +46,7 @@ const TabNavigator = (
     router,
     routeConfigs,
     config,
-    NavigatorTypes.STACK,
+    NavigatorTypes.STACK
   )((props: *) => (
     <TabView
       {...props}
