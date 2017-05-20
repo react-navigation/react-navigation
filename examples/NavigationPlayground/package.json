@@ -2,14 +2,7 @@
   "name": "NavigationPlayground",
   "version": "0.1.0",
   "private": true,
-  "devDependencies": {
-    "babel-jest": "^20.0.1",
-    "jest": "^20.0.1",
-    "jest-expo": "^0.4.0",
-    "react-navigation": "file:../..",
-    "react-test-renderer": "15.5.4"
-  },
-  "main": "./examples/node_modules/react-native-scripts/build/bin/crna-entry.js",
+  "main": "./node_modules/react-native-scripts/build/bin/crna-entry.js",
   "scripts": {
     "start": "react-native-scripts start",
     "eject": "react-native-scripts eject",
@@ -18,18 +11,19 @@
     "test": "node node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "expo": "^16.0.0",
+    "expo": "^17.0.0",
     "react": "16.0.0-alpha.6",
-    "react-native": "^0.43.4"
+    "react-native": "^0.44.0",
+    "react-navigation": "^1.0.0-beta.9"
+  },
+  "devDependencies": {
+    "jest-expo": "^1.0.1",
+    "react-native-scripts": "^0.0.29"
   },
   "jest": {
     "preset": "jest-expo",
-    "modulePathIgnorePatterns": [
-      "/node_modules\/.*\/react-native/",
-      "/node_modules\/.*\/react/"
-    ],
     "transformIgnorePatterns": [
-      "/node_modules\/(?!react-native|react-navigation)/"
+      "/node_modules/(?!react-navigation)/"
     ]
   }
 }
