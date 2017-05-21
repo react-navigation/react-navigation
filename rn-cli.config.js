@@ -15,7 +15,7 @@ const examples = [
   'NavigationPlayground',
   'HelloHybrid',
   'LinkingExample',
-  'Chat'
+  'Chat',
 ];
 
 config.getBlacklist = () => (
