@@ -93,7 +93,7 @@ export default (
       const action = NavigationActions.mapDeprecatedActionAndWarn(passedAction);
 
       if (action.navKey && action.navKey !== navKey) {
-        return state
+        return state;
       }
 
       // Set up the initial state if needed

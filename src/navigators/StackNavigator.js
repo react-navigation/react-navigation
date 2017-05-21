@@ -33,7 +33,7 @@ export default (
     onTransitionStart,
     onTransitionEnd,
     navigationOptions,
-    navKey
+    navKey,
   } = stackConfig;
   const stackRouterConfig = {
     initialRouteName,
@@ -49,7 +49,7 @@ export default (
     router,
     routeConfigMap,
     stackConfig,
-    NavigatorTypes.STACK,
+    NavigatorTypes.STACK
   )((props: *) => (
     <CardStackTransitioner
       {...props}
