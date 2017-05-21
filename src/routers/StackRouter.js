@@ -315,7 +315,10 @@ export default (
       };
     },
 
-    getActionForPathAndParams(pathToResolve: string): ?NavigationAction {
+    getActionForPathAndParams(
+      pathToResolve: string,
+      inputParams: ?NavigationParams
+    ): ?NavigationAction {
       // If the path is empty (null or empty string)
       // just return the initial route action
       if (!pathToResolve) {
@@ -363,7 +366,7 @@ export default (
 
       // reduce the items of the query string. any query params may
       // be overridden by path params
-      const queryParams = (queryString || '')
+      const queryParams = inputParams || (queryString || '')
         .split('&')
         .reduce((result: *, item: string) => {
           if (item !== '') {
