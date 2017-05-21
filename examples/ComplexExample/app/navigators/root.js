@@ -11,7 +11,7 @@ export default StackNavigator(
   {
     App: {
       screen: TabNavigator,
-      navigationOptions: { header: { visible: false } }
+      navigationOptions: { header: null }
     },
     Settings: { screen: Settings }
   },

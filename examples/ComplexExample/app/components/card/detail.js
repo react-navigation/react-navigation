@@ -22,15 +22,14 @@ function mapStateToProps(state) {
 }
 
 class Detail extends Component {
-  static navigationOptions = {
-    title: ({ state }) => `${state.params.item.title}`,
-    header: ({ state, goBack }, defaultHeader) => ({
-      style: headerStyle,
-      titleStyle: titleStyle,
-      right: state.params && state.params.right,
-      left: <ButtonBack goBack={goBack} />
-    })
-  };
+
+  static navigationOptions = ({ navigation, screenProps}) => ({
+    title: `${navigation.state.params.item.title}`,
+    headerStyle,
+    headerTitleStyle: titleStyle,
+    headerRight: navigation.state.params && navigation.state.params.right,
+    headerLeft: <ButtonBack goBack={navigation.goBack} />
+  });
 
   // Link right header button to component
   // In this case we want the button to bookmark the detail item

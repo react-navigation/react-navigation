@@ -22,15 +22,14 @@ function mapStateToProps(state) {
 }
 
 class Home extends Component {
-  static navigationOptions = {
+
+  static navigationOptions = ({ navigation, screenProps}) => ({
     title: "News Feed",
-    header: ({ state, setParams, navigate }) => ({
-      style: headerStyle,
-      titleStyle: titleStyle,
-      right: <ButtonRight icon="menu" onPress={() => navigate("Settings")} />,
-      left: null
-    })
-  };
+    headerStyle,
+    headerTitleStyle: titleStyle,
+    headerRight: <ButtonRight icon="menu" onPress={() => navigation.navigate("Settings")} />,
+    headerLeft: null
+  });
 
   // Fetch detail items
   // Example only options defined

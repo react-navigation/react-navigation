@@ -28,34 +28,36 @@ export default TabNavigator(
     List: {
       screen: Home,
       navigationOptions: {
-        tabBar: { label: "", icon: props => <Tab {...props} icon="home" /> }
+        tabBarLabel: "",
+        tabBarIcon: props => <Tab {...props} icon="home" />
       }
     },
     Groups: {
       screen: Home,
       navigationOptions: {
-        tabBar: { label: "", icon: props => <Tab {...props} icon="chat" /> }
+        tabBarLabel: "",
+        tabBarIcon: props => <Tab {...props} icon="chat" />
       }
     },
     Stats: {
       screen: Home,
       navigationOptions: {
-        tabBar: {
-          label: "",
-          icon: props => <Tab {...props} icon="show-chart" />
-        }
+        tabBarLabel: "",
+        tabBarIcon: props => <Tab {...props} icon="show-chart" />
       }
     },
     User: {
       screen: Home,
       navigationOptions: {
-        tabBar: { label: "", icon: props => <Tab {...props} icon="person" /> }
+        tabBarLabel: "",
+        tabBarIcon: props => <Tab {...props} icon="person" />
       }
     },
     Admin: {
       screen: Home,
       navigationOptions: {
-        tabBar: { label: "", icon: props => <Tab {...props} icon="settings" /> }
+        tabBarLabel: "",
+        tabBarIcon: props => <Tab {...props} icon="settings" />
       }
     }
   },
