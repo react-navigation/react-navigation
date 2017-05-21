@@ -15,8 +15,10 @@ import { StackNavigator } from 'react-navigation';
 import Banner from './Banner';
 import CustomTabs from './CustomTabs';
 import Drawer from './Drawer';
+import TabsInDrawer from './TabsInDrawer';
 import ModalStack from './ModalStack';
 import StacksInTabs from './StacksInTabs';
+import StacksOverTabs from './StacksOverTabs';
 import SimpleStack from './SimpleStack';
 import SimpleTabs from './SimpleTabs';
 
@@ -36,20 +38,34 @@ const ExampleRoutes = {
     description: 'Android-style drawer navigation',
     screen: Drawer,
   },
+  TabsInDrawer: {
+    name: 'Drawer + Tabs Example',
+    description: 'A drawer combined with tabs',
+    screen: TabsInDrawer,
+  },
   CustomTabs: {
     name: 'Custom Tabs',
     description: 'Custom tabs with tab router',
     screen: CustomTabs,
   },
   ModalStack: {
-    name: Platform.OS === 'ios' ? 'Modal Stack Example' : 'Stack with Dynamic Header',
-    description: Platform.OS === 'ios' ? 'Stack navigation with modals' : 'Dynamically showing and hiding the header',
+    name: Platform.OS === 'ios'
+      ? 'Modal Stack Example'
+      : 'Stack with Dynamic Header',
+    description: Platform.OS === 'ios'
+      ? 'Stack navigation with modals'
+      : 'Dynamically showing and hiding the header',
     screen: ModalStack,
   },
   StacksInTabs: {
     name: 'Stacks in Tabs',
     description: 'Nested stack navigation in tabs',
     screen: StacksInTabs,
+  },
+  StacksOverTabs: {
+    name: 'Stacks over Tabs',
+    description: 'Nested stack navigation that pushes on top of tabs',
+    screen: StacksOverTabs,
   },
   LinkStack: {
     name: 'Link in Stack',
@@ -68,7 +84,7 @@ const ExampleRoutes = {
 const MainScreen = ({ navigation }) => (
   <ScrollView>
     <Banner />
-    {Object.keys(ExampleRoutes).map((routeName: String) =>
+    {Object.keys(ExampleRoutes).map((routeName: string) => (
       <TouchableOpacity
         key={routeName}
         onPress={() => {
@@ -80,28 +96,33 @@ const MainScreen = ({ navigation }) => (
       >
         <View style={styles.item}>
           <Text style={styles.title}>{ExampleRoutes[routeName].name}</Text>
-          <Text style={styles.description}>{ExampleRoutes[routeName].description}</Text>
+          <Text style={styles.description}>
+            {ExampleRoutes[routeName].description}
+          </Text>
         </View>
       </TouchableOpacity>
-    )}
+    ))}
   </ScrollView>
 );
 
-const AppNavigator = StackNavigator({
-  ...ExampleRoutes,
-  Index: {
-    screen: MainScreen,
+const AppNavigator = StackNavigator(
+  {
+    ...ExampleRoutes,
+    Index: {
+      screen: MainScreen,
+    },
   },
-}, {
-  initialRouteName: 'Index',
-  headerMode: 'none',
+  {
+    initialRouteName: 'Index',
+    headerMode: 'none',
 
-  /*
+    /*
    * Use modal on iOS because the card mode comes from the right,
    * which conflicts with the drawer example gesture
    */
-  mode: Platform.OS === 'ios' ? 'modal' : 'card',
-});
+    mode: Platform.OS === 'ios' ? 'modal' : 'card',
+  }
+);
 
 export default () => <AppNavigator />;
 

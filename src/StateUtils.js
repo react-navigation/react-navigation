@@ -2,10 +2,7 @@
 
 import invariant from 'fbjs/lib/invariant';
 
-import type {
-  NavigationRoute,
-  NavigationState,
-} from './TypeDefinition';
+import type { NavigationRoute, NavigationState } from './TypeDefinition';
 
 /**
  * Utilities to perform atomic operation with navigate state and routes.
@@ -16,12 +13,11 @@ import type {
  * ```
  */
 const StateUtils = {
-
   /**
    * Gets a route by key. If the route isn't found, returns `null`.
    */
   get(state: NavigationState, key: string): ?NavigationRoute {
-    return state.routes.find(route => route.key === key) || null;
+    return state.routes.find((route: *) => route.key === key) || null;
   },
 
   /**
@@ -29,7 +25,7 @@ const StateUtils = {
    * routes of the navigation state, or -1 if it is not present.
    */
   indexOf(state: NavigationState, key: string): number {
-    return state.routes.map(route => route.key).indexOf(key);
+    return state.routes.map((route: *) => route.key).indexOf(key);
   },
 
   /**
@@ -37,7 +33,7 @@ const StateUtils = {
    * routes of the navigation state.
    */
   has(state: NavigationState, key: string): boolean {
-    return !!state.routes.some(route => route.key === key);
+    return !!state.routes.some((route: *) => route.key === key);
   },
 
   /**
@@ -49,7 +45,7 @@ const StateUtils = {
     invariant(
       StateUtils.indexOf(state, route.key) === -1,
       'should not push route with duplicated key %s',
-      route.key,
+      route.key
     );
 
     const routes = state.routes.slice();
@@ -130,7 +126,7 @@ const StateUtils = {
   replaceAt(
     state: NavigationState,
     key: string,
-    route: NavigationRoute,
+    route: NavigationRoute
   ): NavigationState {
     const index = StateUtils.indexOf(state, key);
     return StateUtils.replaceAtIndex(state, index, route);
@@ -144,13 +140,13 @@ const StateUtils = {
   replaceAtIndex(
     state: NavigationState,
     index: number,
-    route: NavigationRoute,
+    route: NavigationRoute
   ): NavigationState {
     invariant(
       !!state.routes[index],
       'invalid index %s for replacing route %s',
       index,
-      route.key,
+      route.key
     );
 
     if (state.routes[index] === route) {
@@ -175,17 +171,17 @@ const StateUtils = {
   reset(
     state: NavigationState,
     routes: Array<NavigationRoute>,
-    index?: number,
+    index?: number
   ): NavigationState {
     invariant(
       routes.length && Array.isArray(routes),
-      'invalid routes to replace',
+      'invalid routes to replace'
     );
 
     const nextIndex: number = index === undefined ? routes.length - 1 : index;
 
     if (state.routes.length === routes.length && state.index === nextIndex) {
-      const compare = (route, ii) => routes[ii] === route;
+      const compare = (route: *, ii: *) => routes[ii] === route;
       if (state.routes.every(compare)) {
         return state;
       }

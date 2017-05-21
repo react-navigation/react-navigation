@@ -1,6 +1,6 @@
 /* @flow */
 
-import React, { PropTypes } from 'react';
+import React from 'react';
 import {
   I18nManager,
   Image,
@@ -10,36 +10,33 @@ import {
   StyleSheet,
 } from 'react-native';
 
-import type { LayoutEvent } from '../TypeDefinition';
+import type { LayoutEvent, Style } from '../TypeDefinition';
 
 import TouchableItem from './TouchableItem';
 
 type Props = {
   onPress?: () => void,
+  pressColorAndroid?: ?string,
   title?: ?string,
+  titleStyle?: ?Style,
   tintColor?: ?string,
   truncatedTitle?: ?string,
+  width?: ?number,
 };
 
 type DefaultProps = {
+  pressColorAndroid: ?string,
   tintColor: ?string,
   truncatedTitle: ?string,
 };
 
 type State = {
-  containerWidth?: number,
   initialTextWidth?: number,
 };
 
 class HeaderBackButton extends React.PureComponent<DefaultProps, Props, State> {
-  static propTypes = {
-    onPress: PropTypes.func.isRequired,
-    title: PropTypes.string,
-    tintColor: PropTypes.string,
-    truncatedTitle: PropTypes.string,
-  };
-
   static defaultProps = {
+    pressColorAndroid: 'rgba(0, 0, 0, .32)',
     tintColor: Platform.select({
       ios: '#037aff',
     }),
@@ -47,15 +44,6 @@ class HeaderBackButton extends React.PureComponent<DefaultProps, Props, State> {
   };
 
   state = {};
-
-  _onContainerLayout = (e: LayoutEvent) => {
-    if (Platform.OS !== 'ios') {
-      return;
-    }
-    this.setState({
-      containerWidth: e.nativeEvent.layout.width,
-    });
-  };
 
   _onTextLayout = (e: LayoutEvent) => {
     if (this.state.initialTextWidth) {
@@ -67,41 +55,51 @@ class HeaderBackButton extends React.PureComponent<DefaultProps, Props, State> {
   };
 
   render() {
-    const { onPress, title, tintColor, truncatedTitle } = this.props;
+    const {
+      onPress,
+      pressColorAndroid,
+      width,
+      title,
+      titleStyle,
+      tintColor,
+      truncatedTitle,
+    } = this.props;
 
-    const renderTruncated = this.state.containerWidth && this.state.initialTextWidth
-      ? this.state.containerWidth < this.state.initialTextWidth
+    const renderTruncated = this.state.initialTextWidth && width
+      ? this.state.initialTextWidth > width
       : false;
+
+    const backButtonTitle = renderTruncated ? truncatedTitle : title;
+
+    // eslint-disable-next-line global-require
+    const asset = require('./assets/back-icon.png');
 
     return (
       <TouchableItem
+        accessibilityComponentType="button"
+        accessibilityLabel={backButtonTitle}
+        accessibilityTraits="button"
+        testID="header-back"
         delayPressIn={0}
         onPress={onPress}
+        pressColor={pressColorAndroid}
         style={styles.container}
         borderless
       >
-        <View
-          onLayout={this._onContainerLayout}
-          style={styles.container}
-        >
+        <View style={styles.container}>
           <Image
-            style={[
-              styles.icon,
-              title && styles.iconWithTitle,
-              { tintColor },
-            ]}
-            source={require('./assets/back-icon.png')}
+            style={[styles.icon, title && styles.iconWithTitle, { tintColor }]}
+            source={asset}
           />
-          {Platform.OS === 'ios' && title && (
+          {Platform.OS === 'ios' &&
+            title &&
             <Text
-              ellipsizeMode="middle"
               onLayout={this._onTextLayout}
-              style={[styles.title, { color: tintColor }]}
+              style={[styles.title, { color: tintColor }, titleStyle]}
               numberOfLines={1}
             >
-              {renderTruncated ? truncatedTitle : title}
-            </Text>
-          )}
+              {backButtonTitle}
+            </Text>}
         </View>
       </TouchableItem>
     );
@@ -120,25 +118,25 @@ const styles = StyleSheet.create({
   },
   icon: Platform.OS === 'ios'
     ? {
-      height: 20,
-      width: 12,
-      marginLeft: 10,
-      marginRight: 22,
-      marginVertical: 12,
-      resizeMode: 'contain',
-      transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }],
-    }
+        height: 20,
+        width: 12,
+        marginLeft: 10,
+        marginRight: 22,
+        marginVertical: 12,
+        resizeMode: 'contain',
+        transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }],
+      }
     : {
-      height: 24,
-      width: 24,
-      margin: 16,
-      resizeMode: 'contain',
-      transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }],
-    },
+        height: 24,
+        width: 24,
+        margin: 16,
+        resizeMode: 'contain',
+        transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }],
+      },
   iconWithTitle: Platform.OS === 'ios'
     ? {
-      marginRight: 5,
-    }
+        marginRight: 5,
+      }
     : {},
 });
 

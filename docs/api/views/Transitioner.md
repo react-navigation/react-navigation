@@ -75,8 +75,8 @@ _configureTransition(transitionProps, prevTransitionProps) {
 - An object of type [NavigationTransitionSpec](https://github.com/react-community/react-navigation/blob/master/src/TypeDefinition.js#L316) that will be fed into an Animated timing function as its config
 
 
-### `navigationState` object
-A plain object that represents the navigation state
+### `navigation` prop
+An object with `state` that represents the navigation state, with `routes` and an active route `index`. Also includes `dispatch` and other methods for requesting actions.
 
 #### Example value
 

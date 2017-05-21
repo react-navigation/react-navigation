@@ -1,12 +1,8 @@
 /* @flow */
 
-import {
-  I18nManager,
-} from 'react-native';
+import { I18nManager } from 'react-native';
 
-import type {
-  NavigationSceneRendererProps,
-} from '../TypeDefinition';
+import type { NavigationSceneRendererProps } from '../TypeDefinition';
 
 /**
  * Utility that builds the style for the navigation header.
@@ -24,8 +20,8 @@ function forLeft(props: NavigationSceneRendererProps): Object {
   const { index } = scene;
   return {
     opacity: position.interpolate({
-      inputRange: [index - 1, index, index + 1],
-      outputRange: ([0, 1, 0]: Array<number>),
+      inputRange: [index - 1, index - 0.5, index, index + 0.5, index + 1],
+      outputRange: ([0, 0, 1, 0, 0]: Array<number>),
     }),
   };
 }
@@ -42,9 +38,9 @@ function forCenter(props: NavigationSceneRendererProps): Object {
       {
         translateX: position.interpolate({
           inputRange: [index - 1, index + 1],
-          outputRange: I18nManager.isRTL ?
-            ([-200, 200]: Array<number>) :
-            ([200, -200]: Array<number>),
+          outputRange: I18nManager.isRTL
+            ? ([-200, 200]: Array<number>)
+            : ([200, -200]: Array<number>),
         }),
       },
     ],

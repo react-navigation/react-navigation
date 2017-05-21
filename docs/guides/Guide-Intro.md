@@ -126,7 +126,7 @@ first-navigation
 
 Hardcoding a name into the `ChatScreen` isn't ideal. It'd be more useful if we could pass a name to be rendered instead, so let's do that.
 
-In addition to specifying the target `routeName` in the navigate function, we can pass params that will be put into the new route. First, we'll edit our `HomeScreen` component to pass a `name` param into the route.
+In addition to specifying the target `routeName` in the navigate function, we can pass params that will be put into the new route. First, we'll edit our `HomeScreen` component to pass a `user` param into the route.
 
 ```js
 class HomeScreen extends React.Component {
@@ -148,14 +148,14 @@ class HomeScreen extends React.Component {
 }
 ```
 
-We can then edit our `ChatScreen` component to display the `name` param that was passed in through the route:
+We can then edit our `ChatScreen` component to display the `user` param that was passed in through the route:
 
 ```js
 class ChatScreen extends React.Component {
-  static navigationOptions = {
-    // Nav options can be defined as a function of the navigation prop:
-    title: ({ state }) => `Chat with ${state.params.user}`,
-  };
+  // Nav options can be defined as a function of the screen's props:
+  static navigationOptions = ({ navigation }) => ({
+    title: `Chat with ${navigation.state.params.user}`,
+  });
   render() {
     // The screen's current route is passed in to `props.navigation.state`:
     const { params } = this.props.navigation.state;
@@ -168,7 +168,7 @@ class ChatScreen extends React.Component {
 }
 ```
 
-Now you can see the name when you navigate to the Chat screen. Try changing the `name` param in `HomeScreen` and see what happens!
+Now you can see the name when you navigate to the Chat screen. Try changing the `user` param in `HomeScreen` and see what happens!
 
 ```phone-example
 first-navigation

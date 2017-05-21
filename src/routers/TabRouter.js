@@ -6,6 +6,7 @@ import createConfigGetter from './createConfigGetter';
 
 import NavigationActions from '../NavigationActions';
 import validateRouteConfigMap from './validateRouteConfigMap';
+import getScreenConfigDeprecated from './getScreenConfigDeprecated';
 
 import type {
   NavigationAction,
@@ -15,14 +16,16 @@ import type {
   NavigationRouteConfigMap,
   NavigationParams,
   NavigationRouter,
+  NavigationRoute,
   NavigationNavigateAction,
   NavigationTabRouterConfig,
+  NavigationTabScreenOptions,
 } from '../TypeDefinition';
 
 export default (
   routeConfigs: NavigationRouteConfigMap,
   config: NavigationTabRouterConfig = {}
-): NavigationRouter => {
+): NavigationRouter<*, *, *> => {
   // Fail fast on invalid route definitions
   validateRouteConfigMap(routeConfigs);
 
@@ -35,7 +38,9 @@ export default (
   const tabRouters = {};
   order.forEach((routeName: string) => {
     const routeConfig = routeConfigs[routeName];
-    paths[routeName] = typeof routeConfig.path === 'string' ? routeConfig.path : routeName;
+    paths[routeName] = typeof routeConfig.path === 'string'
+      ? routeConfig.path
+      : routeName;
     tabRouters[routeName] = null;
     if (routeConfig.screen && routeConfig.screen.router) {
       tabRouters[routeName] = routeConfig.screen.router;
@@ -44,14 +49,14 @@ export default (
   invariant(
     initialRouteIndex !== -1,
     `Invalid initialRouteName '${initialRouteName}' for TabRouter. ` +
-    `Should be one of ${order.map((n: *) => `"${n}"`).join(', ')}`
+      `Should be one of ${order.map((n: *) => `"${n}"`).join(', ')}`
   );
   return {
     getStateForAction(
       action: NavigationAction | { action: NavigationAction },
       inputState?: ?NavigationState
     ): ?NavigationState {
-       // eslint-disable-next-line no-param-reassign
+      // eslint-disable-next-line no-param-reassign
       action = NavigationActions.mapDeprecatedActionAndWarn(action);
 
       // Establish a default state
@@ -60,9 +65,11 @@ export default (
         const routes = order.map((routeName: string) => {
           const tabRouter = tabRouters[routeName];
           if (tabRouter) {
-            const childAction = action.action || NavigationActions.init({
+            const childAction =
+              action.action ||
+              NavigationActions.init({
                 ...(action.params ? { params: action.params } : {}),
-            });
+              });
             return {
               ...tabRouter.getStateForAction(childAction),
               key: routeName,
@@ -85,13 +92,16 @@ export default (
         // Merge any params from the action into all the child routes
         const { params } = action;
         if (params) {
-          state.routes = state.routes.map(route => ({
-            ...route,
-            params: {
-              ...route.params,
-              ...params,
-            }
-          }));
+          state.routes = state.routes.map(
+            (route: *) =>
+              ({
+                ...route,
+                params: {
+                  ...route.params,
+                  ...params,
+                },
+              }: NavigationRoute)
+          );
         }
       }
 
@@ -119,10 +129,12 @@ export default (
       // Handle tab changing. Do this after letting the current tab try to
       // handle the action, to allow inner tabs to change first
       let activeTabIndex = state.index;
-      const isBackEligible = action.key == null || action.key === activeTabLastState.key;
+      const isBackEligible =
+        action.key == null || action.key === activeTabLastState.key;
       if (
         action.type === NavigationActions.BACK &&
-        isBackEligible && shouldBackNavigateToInitialRoute
+        isBackEligible &&
+        shouldBackNavigateToInitialRoute
       ) {
         activeTabIndex = initialRouteIndex;
       }
@@ -136,12 +148,27 @@ export default (
           }
           return false;
         });
-        if (didNavigate && action.action) {
+        if (didNavigate) {
+          const childState = state.routes[activeTabIndex];
+          let newChildState;
+
           const tabRouter = tabRouters[action.routeName];
-          const newChildState = tabRouter
-            ? tabRouter.getStateForAction(action.action, state.routes[activeTabIndex])
-            : null;
-          if (newChildState && newChildState !== state.routes[activeTabIndex]) {
+
+          if (action.action) {
+            newChildState = tabRouter
+              ? tabRouter.getStateForAction(action.action, childState)
+              : null;
+          } else if (!tabRouter && action.params) {
+            newChildState = {
+              ...childState,
+              params: {
+                ...(childState.params || {}),
+                ...action.params,
+              },
+            };
+          }
+
+          if (newChildState && newChildState !== childState) {
             const routes = [...state.routes];
             routes[activeTabIndex] = newChildState;
             return {
@@ -163,10 +190,10 @@ export default (
             ...action.params,
           };
           const routes = [...state.routes];
-          routes[state.routes.indexOf(lastRoute)] = {
+          routes[state.routes.indexOf(lastRoute)] = ({
             ...lastRoute,
             params,
-          };
+          }: NavigationRoute);
           return {
             ...state,
             routes,
@@ -222,7 +249,9 @@ export default (
       return state;
     },
 
-    getComponentForState(state: NavigationState): NavigationScreenComponent<*> {
+    getComponentForState(
+      state: NavigationState
+    ): NavigationScreenComponent<*, NavigationTabScreenOptions> {
       const routeName = order[state.index];
       invariant(
         routeName,
@@ -266,28 +295,48 @@ export default (
      * This will return null if there is no action matched
      */
     getActionForPathAndParams(path: string, params: ?NavigationParams) {
-      return order.map((tabId: string) => {
-        const parts = path.split('/');
-        const pathToTest = paths[tabId];
-        if (parts[0] === pathToTest) {
-          const tabRouter = tabRouters[tabId];
-          const action: NavigationNavigateAction = NavigationActions.navigate({
-            routeName: tabId,
-          });
-          if (tabRouter && tabRouter.getActionForPathAndParams) {
-            action.action = tabRouter.getActionForPathAndParams(parts.slice(1).join('/'), params);
-          } else if (params) {
-            action.params = params;
-          }
-          return action;
-        }
-        return null;
-      }).find((action: *) => !!action) || order.map((tabId: string) => {
-        const tabRouter = tabRouters[tabId];
-        return tabRouter && tabRouter.getActionForPathAndParams(path, params);
-      }).find((action: *) => !!action) || null;
+      return (
+        order
+          .map((tabId: string) => {
+            const parts = path.split('/');
+            const pathToTest = paths[tabId];
+            if (parts[0] === pathToTest) {
+              const tabRouter = tabRouters[tabId];
+              const action: NavigationNavigateAction = NavigationActions.navigate(
+                {
+                  routeName: tabId,
+                }
+              );
+              if (tabRouter && tabRouter.getActionForPathAndParams) {
+                action.action = tabRouter.getActionForPathAndParams(
+                  parts.slice(1).join('/'),
+                  params
+                );
+              } else if (params) {
+                action.params = params;
+              }
+              return action;
+            }
+            return null;
+          })
+          .find((action: *) => !!action) ||
+        order
+          .map((tabId: string) => {
+            const tabRouter = tabRouters[tabId];
+            return (
+              tabRouter && tabRouter.getActionForPathAndParams(path, params)
+            );
+          })
+          .find((action: *) => !!action) ||
+        null
+      );
     },
 
-    getScreenConfig: createConfigGetter(routeConfigs, config.navigationOptions),
+    getScreenOptions: createConfigGetter(
+      routeConfigs,
+      config.navigationOptions
+    ),
+
+    getScreenConfig: getScreenConfigDeprecated,
   };
 };

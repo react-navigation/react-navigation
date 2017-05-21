@@ -6,63 +6,98 @@ import invariant from 'fbjs/lib/invariant';
 
 import getScreenForRouteName from './getScreenForRouteName';
 import addNavigationHelpers from '../addNavigationHelpers';
+import validateScreenOptions from './validateScreenOptions';
 
 import type {
-  NavigationProp,
+  NavigationScreenProp,
   NavigationAction,
+  NavigationRoute,
+  NavigationStateRoute,
   NavigationRouteConfigMap,
-  NavigationScreenOption,
-  NavigationScreenOptions,
+  NavigationScreenConfig,
+  NavigationScreenConfigProps,
 } from '../TypeDefinition';
+
+function applyConfig(
+  configurer: ?NavigationScreenConfig<*>,
+  navigationOptions: *,
+  configProps: NavigationScreenConfigProps
+): * {
+  if (typeof configurer === 'function') {
+    return {
+      ...navigationOptions,
+      ...configurer({
+        ...configProps,
+        navigationOptions,
+      }),
+    };
+  }
+  if (typeof configurer === 'object') {
+    return {
+      ...navigationOptions,
+      ...configurer,
+    };
+  }
+  return navigationOptions;
+}
 
 export default (
   routeConfigs: NavigationRouteConfigMap,
-  defaultOptions?: NavigationScreenOptions
-) =>
-  (
-    navigation: NavigationProp<*, NavigationAction>,
-    optionName: string,
-    config?: NavigationScreenOption<*>
-  ) => {
-    const route = navigation.state;
+  navigatorScreenConfig?: NavigationScreenConfig<*>
+) => (
+  navigation: NavigationScreenProp<NavigationRoute, NavigationAction>,
+  screenProps: *
+) => {
+  const { state, dispatch } = navigation;
+  const route = state;
+  // $FlowFixMe
+  const { routes, index } = (route: NavigationStateRoute);
+
+  invariant(
+    route.routeName && typeof route.routeName === 'string',
+    'Cannot get config because the route does not have a routeName.'
+  );
+
+  const Component = getScreenForRouteName(routeConfigs, route.routeName);
+
+  let outputConfig = {};
+
+  if (Component.router) {
     invariant(
-      route.routeName &&
-      typeof route.routeName === 'string',
-      'Cannot get config because the route does not have a routeName.'
+      route && routes && index != null,
+      `Expect nav state to have routes and index, ${JSON.stringify(route)}`
     );
-
-    const Component = getScreenForRouteName(routeConfigs, route.routeName);
-
-    let outputConfig = config || null;
-
-    if (Component.router) {
-      const { state, dispatch } = navigation;
-      invariant(
-        state && state.routes && state.index != null,
-        `Expect nav state to have routes and index, ${JSON.stringify(route)}`
-      );
-      const childNavigation = addNavigationHelpers({
-        state: state.routes[state.index],
-        dispatch,
-      });
-      outputConfig = Component.router.getScreenConfig(childNavigation, optionName);
-    }
-
-    const routeConfig = routeConfigs[route.routeName];
-
-    return [
-      defaultOptions,
-      Component.navigationOptions,
-      routeConfig.navigationOptions,
-    ].reduce(
-      (acc: *, options: NavigationScreenOptions) => {
-        if (options && options[optionName] !== undefined) {
-          return typeof options[optionName] === 'function'
-            ? options[optionName](navigation, acc)
-            : options[optionName];
-        }
-        return acc;
-      },
-      outputConfig,
+    const childRoute = routes[index];
+    const childNavigation = addNavigationHelpers({
+      state: childRoute,
+      dispatch,
+    });
+    outputConfig = Component.router.getScreenOptions(
+      childNavigation,
+      screenProps
     );
-  };
+  }
+
+  const routeConfig = routeConfigs[route.routeName];
+
+  const routeScreenConfig = routeConfig.navigationOptions;
+  const componentScreenConfig = Component.navigationOptions;
+
+  const configOptions = { navigation, screenProps: screenProps || {} };
+
+  outputConfig = applyConfig(
+    navigatorScreenConfig,
+    outputConfig,
+    configOptions
+  );
+  outputConfig = applyConfig(
+    componentScreenConfig,
+    outputConfig,
+    configOptions
+  );
+  outputConfig = applyConfig(routeScreenConfig, outputConfig, configOptions);
+
+  validateScreenOptions(outputConfig, route);
+
+  return outputConfig;
+};
