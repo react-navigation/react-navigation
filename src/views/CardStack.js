@@ -78,7 +78,7 @@ type State = {
 
 /**
  * The max duration of the card animation in milliseconds after released gesture.
- * The actual duration should be always less then that because the rest distance 
+ * The actual duration should be always less then that because the rest distance
  * is always less then the full distance of the layout.
  */
 const ANIMATION_DURATION = 500;
@@ -272,7 +272,6 @@ class CardStack extends Component {
         floatingHeader = this._renderHeader(scene, headerMode);
       }
     }
-    const { navigation, position, layout, scene, scenes, mode } = this.props;
     const { index } = navigation.state;
     const isVertical = mode === 'modal';
 
