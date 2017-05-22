@@ -53,12 +53,12 @@ StackNavigator({
     // When `ProfileScreen` is loaded by the StackNavigator, it will be given a `navigation` prop.
 
     // Optional: When deep linking or using react-navigation in a web app, this path is used:
-    path: 'people/:username',
+    path: 'people/:name',
     // The action and route params are extracted from the path.
 
     // Optional: Override the `navigationOptions` for the screen
     navigationOptions: ({navigation}) => ({
-      title: `${navigation.state.params.username}'s Profile'`,
+      title: `${navigation.state.params.name}'s Profile'`,
     }),
   },
 
@@ -94,7 +94,7 @@ Visual options:
 
 #### `title`
 
-Generic title that can be used as a fallback for `headerTitle` and `tabBarLabel`
+String that can be used as a fallback for `headerTitle` and `tabBarLabel`
 
 #### `header`
 
@@ -164,3 +164,5 @@ The navigator component created by `StackNavigator(...)` takes the following pro
 ### Examples
 
 See the examples [SimpleStack.js](https://github.com/react-community/react-navigation/tree/master/examples/NavigationPlayground/js/SimpleStack.js) and [ModalStack.js](https://github.com/react-community/react-navigation/tree/master/examples/NavigationPlayground/js/ModalStack.js) which you can run locally as part of the [NavigationPlayground](https://github.com/react-community/react-navigation/tree/master/examples/NavigationPlayground) app.
+
+You can view these examples directly on your phone by visiting [our expo demo](https://exp.host/@react-navigation/NavigationPlayground).

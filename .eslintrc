@@ -1,12 +1,16 @@
 {
   "extends": [
-    "airbnb",
+    "plugin:flowtype/recommended",
+    "plugin:react/recommended",
+    "plugin:import/errors",
+    "plugin:import/warnings",
     "prettier",
     "prettier/flowtype",
     "prettier/react"
   ],
   "parser": "babel-eslint",
   "plugins": [
+    "react",
     "flowtype",
     "prettier"
   ],
@@ -18,7 +22,7 @@
   },
   "rules": {
     "prettier/prettier": ["error", {
-      "trailingComma": "all",
+      "trailingComma": "es5",
       "singleQuote": true
     }],
 
@@ -65,7 +69,7 @@
   },
   "settings": {
     "flowtype": {
-      "onlyFilesWithFlowAnnotation": false
+      "onlyFilesWithFlowAnnotation": true
     }
   }
 }

@@ -2,20 +2,11 @@
 
 import React from 'react';
 
-import {
-  Image,
-  Platform,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { Image, Platform, StyleSheet, Text, View } from 'react-native';
 
 const Banner = () => (
   <View style={styles.banner}>
-    <Image
-      source={require('./assets/NavLogo.png')}
-      style={styles.image}
-    />
+    <Image source={require('./assets/NavLogo.png')} style={styles.image} />
     <Text style={styles.title}>React Navigation Examples</Text>
   </View>
 );

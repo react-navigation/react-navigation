@@ -23,15 +23,19 @@ import type {
   TransitionState,
 } from '../TypeDefinition';
 
-const NativeAnimatedModule = NativeModules &&
-  NativeModules.NativeAnimatedModule;
+const NativeAnimatedModule =
+  NativeModules && NativeModules.NativeAnimatedModule;
 
 type Props = {
   screenProps?: {},
   headerMode: HeaderMode,
   mode: 'card' | 'modal',
   navigation: NavigationScreenProp<NavigationState, NavigationAction>,
-  router: NavigationRouter<NavigationState, NavigationAction, NavigationStackScreenOptions>,
+  router: NavigationRouter<
+    NavigationState,
+    NavigationAction,
+    NavigationStackScreenOptions
+  >,
   cardStyle?: Style,
   onTransitionStart?: () => void,
   onTransitionEnd?: () => void,
@@ -110,7 +114,7 @@ class CardStackTransitioner extends Component<DefaultProps, Props, State> {
     // props for the new screen
     transitionProps: NavigationTransitionProps,
     // props for the old screen
-    prevTransitionProps: NavigationTransitionProps,
+    prevTransitionProps: NavigationTransitionProps
   ) => {
     const isModal = this.props.mode === 'modal';
     // Copy the object so we can assign useNativeDriver below
@@ -120,7 +124,7 @@ class CardStackTransitioner extends Component<DefaultProps, Props, State> {
         this.props.transitionConfig,
         transitionProps,
         prevTransitionProps,
-        isModal,
+        isModal
       ).transitionSpec,
     };
     if (
