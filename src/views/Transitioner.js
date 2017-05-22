@@ -179,7 +179,7 @@ class Transitioner extends React.Component<*, Props, State> {
       nextProps.onTransitionStart &&
         nextProps.onTransitionStart(
           this._transitionProps,
-          this._prevTransitionProps
+          this._prevTransitionProps,
           this.state.scenes,
           scenes,
         );
