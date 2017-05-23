@@ -102,6 +102,32 @@ describe('TabRouter', () => {
     });
   });
 
+  test('Can pass initial state params to routes', () => {
+    const router = TabRouter({
+      Foo: BareLeafRouteConfig,
+      Bar: BareLeafRouteConfig,
+    });
+    const state = router.getStateForAction(
+      { type: NavigationActions.INIT },
+      {
+        index: 1,
+        params: { name: 'value' },
+        routes: [
+          { key: 'Foo', routeName: 'Foo' },
+          { key: 'Bar', routeName: 'Bar' },
+        ],
+      }
+    );
+    expect(state).toEqual({
+      index: 1,
+      params: { name: 'value' },
+      routes: [
+        { key: 'Foo', routeName: 'Foo', params: { name: 'value' } },
+        { key: 'Bar', routeName: 'Bar', params: { name: 'value' } },
+      ],
+    });
+  });
+
   test('Handles the SetParams action', () => {
     const router = TabRouter({
       Foo: {

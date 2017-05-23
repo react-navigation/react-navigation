@@ -89,9 +89,12 @@ export default (
       }
 
       if (action.type === NavigationActions.INIT) {
-        // Merge any params from the action into all the child routes
-        const { params } = action;
-        if (params) {
+        // Merge any params from the action and state into all the child routes
+        const params = {
+          ...(action.params || {}),
+          ...(state.params || {}),
+        };
+        if (Object.keys(params).length > 0) {
           state.routes = state.routes.map(
             (route: *) =>
               ({
