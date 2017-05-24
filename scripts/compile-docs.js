@@ -31,6 +31,6 @@ names.map(function(name) {
 });
 
 fs.writeFileSync(
-  'website' + path.sep + 'docs-dist.json',
+  path.join('website', 'src', 'docs-dist.json'),
   JSON.stringify(mdData)
 );
