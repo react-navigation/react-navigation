@@ -118,8 +118,8 @@ const styles = StyleSheet.create({
   },
   icon: Platform.OS === 'ios'
     ? {
-        height: 20,
-        width: 12,
+        height: 21,
+        width: 13,
         marginLeft: 10,
         marginRight: 22,
         marginVertical: 12,
