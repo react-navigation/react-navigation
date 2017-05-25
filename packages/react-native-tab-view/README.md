@@ -205,7 +205,7 @@ renderScene = ({ route }) => {
     return (
       <View style={styles.page}>
         <Avatar />
-        <NewsFeed />>
+        <NewsFeed />
       </View>
     );
   default:
