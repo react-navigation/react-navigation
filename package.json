@@ -76,7 +76,6 @@
   },
   "dependencies": {
     "clamp": "^1.0.1",
-    "fbjs": "^0.8.12",
     "hoist-non-react-statics": "^1.2.0",
     "path-to-regexp": "^1.7.0",
     "prop-types": "^15.5.10",
