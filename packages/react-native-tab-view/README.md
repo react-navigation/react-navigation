@@ -262,10 +262,3 @@ renderScene = ({ route }) => {
   return <MySceneComponent route={route} />;
 };
 ```
-
-
-## Troubleshooting
-
-### `TabBar` disappears or shows weird behaviour when conditionally rendering items
-
-`zIndex` in React Native is buggy on Android, which results in weird behaviour when you remove adjacent items from the hierarchy. You can try setting `zIndex` to `0` for the `TabBar` to avoid the issue.

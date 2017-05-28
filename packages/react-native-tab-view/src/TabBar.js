@@ -516,7 +516,8 @@ const styles = StyleSheet.create({
     shadowOffset: {
       height: StyleSheet.hairlineWidth,
     },
-    zIndex: 1,
+    // We don't need zIndex on Android, disable it since it's buggy
+    zIndex: Platform.OS === 'android' ? 0 : 1,
   },
   tabContent: {
     flexDirection: 'row',
