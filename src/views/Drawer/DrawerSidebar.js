@@ -12,12 +12,13 @@ import type {
   NavigationRouter,
   NavigationDrawerScreenOptions,
   NavigationState,
+  NavigationStateRoute,
   Style,
 } from '../../TypeDefinition';
 
-import type { DrawerScene } from './DrawerView';
+import type { DrawerScene, DrawerItem } from './DrawerView';
 
-type Navigation = NavigationScreenProp<NavigationRoute, NavigationAction>;
+type Navigation = NavigationScreenProp<NavigationStateRoute, NavigationAction>;
 
 type Props = {
   router: NavigationRouter<
@@ -74,15 +75,27 @@ class DrawerSidebar extends PureComponent<void, Props, void> {
     return null;
   };
 
+  _onItemPress = ({ route }: DrawerItem) => {
+    this.props.navigation.navigate('DrawerClose');
+    this.props.navigation.navigate(route.routeName);
+  };
+
   render() {
     const ContentComponent = this.props.contentComponent;
+    const { state } = this.props.navigation;
     return (
       <View style={[styles.container, this.props.style]}>
         <ContentComponent
           {...this.props.contentOptions}
           navigation={this.props.navigation}
+          items={state.routes}
+          activeItemKey={
+            state.routes[state.index] && state.routes[state.index].key
+          }
+          screenProps={this.props.screenProps}
           getLabel={this._getLabel}
           renderIcon={this._renderIcon}
+          onItemPress={this._onItemPress}
           router={this.props.router}
         />
       </View>

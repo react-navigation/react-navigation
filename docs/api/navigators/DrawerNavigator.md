@@ -130,10 +130,13 @@ const styles = StyleSheet.create({
 
 ### `contentOptions` for `DrawerItems`
 
+- `items` - the array of routes, can be modified or overridden
+- `activeItemKey` - key identifying the active route
 - `activeTintColor` - label and icon color of the active label
 - `activeBackgroundColor` - background color of the active label
 - `inactiveTintColor` - label and icon color of the inactive label
 - `inactiveBackgroundColor` - background color of the inactive label
+- `onItemPress(route)` - function to be invoked when an item is pressed
 - `style` - style object for the content section
 - `labelStyle` - style object to overwrite `Text` style inside content section, when your label is a string
 
