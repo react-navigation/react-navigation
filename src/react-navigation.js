@@ -45,6 +45,9 @@ module.exports = {
   get Transitioner() {
     return require('./views/Transitioner').default;
   },
+  get CardStackTransitioner() {
+    return require('./views/CardStackTransitioner').default;
+  },
   get CardStack() {
     return require('./views/CardStack').default;
   },
