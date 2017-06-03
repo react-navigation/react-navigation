@@ -29,6 +29,7 @@ export type DrawerItem = {
 };
 
 export type DrawerViewConfig = {
+  drawerLockMode: 'unlocked' | 'locked-closed' | 'locked-open',
   drawerWidth: number,
   drawerPosition: 'left' | 'right',
   contentComponent: ReactClass<*>,
@@ -132,11 +133,25 @@ export default class DrawerView<T: *> extends PureComponent<void, Props, void> {
     const DrawerScreen = this.props.router.getComponentForRouteName(
       'DrawerClose'
     );
+
+    const screenNavigation = addNavigationHelpers({
+      state: this._screenNavigationProp.state,
+      dispatch: this._screenNavigationProp.dispatch,
+    });
+
+    const config = this.props.router.getScreenOptions(
+      screenNavigation,
+      'drawer',
+    );
+
     return (
       <DrawerLayout
         ref={(c: *) => {
           this._drawer = c;
         }}
+        drawerLockMode={
+          this.props.screenProps.lockMode || (config && config.lockMode)
+        }
         drawerWidth={this.props.drawerWidth}
         onDrawerOpen={this._handleDrawerOpen}
         onDrawerClose={this._handleDrawerClose}
