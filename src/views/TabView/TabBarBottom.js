@@ -1,7 +1,7 @@
 /* @flow */
 
 import React, { PureComponent } from 'react';
-import { Animated, TouchableWithoutFeedback, StyleSheet } from 'react-native';
+import { Animated, TouchableWithoutFeedback, StyleSheet, Keyboard } from 'react-native';
 import TabBarIcon from './TabBarIcon';
 
 import type {
@@ -39,8 +39,12 @@ type Props = {
   showIcon: boolean,
 };
 
+type State = {
+  isVisible: boolean
+}
+
 export default class TabBarBottom
-  extends PureComponent<DefaultProps, Props, void> {
+  extends PureComponent<DefaultProps, Props, State> {
   // See https://developer.apple.com/library/content/documentation/UserExperience/Conceptual/UIKitUICatalog/UITabBar.html
   static defaultProps = {
     activeTintColor: '#3478f6', // Default active tint color in iOS 10
@@ -52,6 +56,37 @@ export default class TabBarBottom
   };
 
   props: Props;
+
+  state: State;
+
+  state = {
+    isVisible: true
+  }
+
+  _keyboardDidShowSub = undefined
+  _keyboardDidHideSub = undefined
+
+  componentWillMount() {
+    this._keyboardDidShowSub = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow)
+    this._keyboardDidHideSub = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide)
+  }
+
+  componentWillUnmount() {
+    this._keyboardDidShowSub !== undefined && this._keyboardDidShowSub.remove()
+    this._keyboardDidShowSub !== undefined && this._keyboardDidHideSub.remove()
+  }
+
+  _keyboardDidShow = () => {
+    this.setState({
+      isVisible: false
+    })
+  }
+
+  _keyboardDidHide = () => {
+    this.setState({
+      isVisible: true
+    })
+  }
 
   _renderLabel = (scene: TabScene) => {
     const {
@@ -133,7 +168,7 @@ export default class TabBarBottom
     const { routes } = navigation.state;
     // Prepend '-1', so there are always at least 2 items in inputRange
     const inputRange = [-1, ...routes.map((x: *, i: number) => i)];
-    return (
+    return this.state.isVisible ? (
       <Animated.View style={[styles.tabBar, style]}>
         {routes.map((route: NavigationRoute, index: number) => {
           const focused = index === navigation.state.index;
@@ -168,7 +203,7 @@ export default class TabBarBottom
           );
         })}
       </Animated.View>
-    );
+    ) : null;
   }
 }
 
