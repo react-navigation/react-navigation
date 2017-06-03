@@ -42,6 +42,7 @@ const DrawerNavigator = (
   const {
     containerConfig,
     drawerWidth,
+    drawerLockMode,
     contentComponent,
     contentOptions,
     drawerPosition,
@@ -77,6 +78,7 @@ const DrawerNavigator = (
   )((props: *) => (
     <DrawerView
       {...props}
+      drawerLockMode={drawerLockMode}
       drawerWidth={drawerWidth}
       contentComponent={contentComponent}
       contentOptions={contentOptions}
