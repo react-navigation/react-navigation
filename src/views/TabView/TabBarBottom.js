@@ -73,7 +73,7 @@ export default class TabBarBottom
 
   componentWillUnmount() {
     this._keyboardDidShowSub !== undefined && this._keyboardDidShowSub.remove()
-    this._keyboardDidShowSub !== undefined && this._keyboardDidHideSub.remove()
+    this._keyboardDidHideSub !== undefined && this._keyboardDidHideSub.remove()
   }
 
   _keyboardDidShow = () => {
