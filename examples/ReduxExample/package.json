@@ -1,34 +1,32 @@
 {
   "name": "ReduxExample",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "private": true,
+  "main": "./node_modules/react-native-scripts/build/bin/crna-entry.js",
   "scripts": {
-    "test": "jest"
+    "start": "react-native-scripts start",
+    "eject": "react-native-scripts eject",
+    "android": "react-native-scripts android",
+    "ios": "react-native-scripts ios",
+    "test": "node node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "prop-types": "^15.5.10",
+    "expo": "^17.0.0",
     "react": "16.0.0-alpha.6",
     "react-native": "^0.44.0",
+    "react-navigation": "^1.0.0-beta.9",
     "react-redux": "5.0.4",
     "redux": "3.6.0"
   },
   "devDependencies": {
-    "babel-jest": "^20.0.1",
-    "jest": "^20.0.1",
-    "react-navigation": "file:../..",
-    "react-test-renderer": "15.5.4"
+    "jest-expo": "^1.0.0",
+    "react-native-scripts": "0.0.29",
+    "react-test-renderer": "16.0.0-alpha.6"
   },
   "jest": {
-    "preset": "react-native",
-    "setupFiles": [
-      "<rootDir>/../../jest-setup.js"
-    ],
-    "modulePathIgnorePatterns": [
-      "/node_modules\/.*\/react-native/",
-      "/node_modules\/.*\/react/"
-    ],
+    "preset": "jest-expo",
     "transformIgnorePatterns": [
-      "/node_modules\/(?!react-native|react-navigation)/"
+      "/node_modules/(?!react-navigation)/"
     ]
   }
 }

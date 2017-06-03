@@ -1,10 +1,11 @@
 import React from 'react';
-const Markdown = require('react-markdown');
-const DocsMD = require('../docs-dist.json');
 import Link from './Link';
 import PhoneGraphic from './PhoneGraphic';
-const slugify = require('slugify');
 import CodeBlock from './CodeBlock';
+
+const Markdown = require('react-markdown');
+const DocsMD = require('./docs-dist.json');
+const slugify = require('slugify');
 
 const safeString = s =>
   slugify(s)

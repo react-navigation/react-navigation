@@ -1,7 +1,4 @@
-coverage
-flow-typed
-node_modules
-lib*
+**/flow-typed/**
 
-## Temporary
+#temporary
 examples

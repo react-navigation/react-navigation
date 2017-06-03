@@ -1,0 +1,33 @@
+0 silly input [ 'eslint', '.' ]
+1 silly flags { _: [ 'exec' ],
+1 silly flags   sort: true,
+1 silly flags   scope: [ 'website', 'react-navigation' ],
+1 silly flags   concurrency: 4,
+1 silly flags   command: 'eslint',
+1 silly flags   args: [ '.' ] }
+2 verbose rootPath /Users/adam/Development/exponent/oss/react-navigation
+3 info version 2.0.0-rc.4
+4 info versioning independent
+5 silly isInitialized
+6 silly isInitialized true
+7 silly existsSync /Users/adam/Development/exponent/oss/react-navigation/VERSION
+8 info scope [ 'website', 'react-navigation' ]
+9 silly initialize attempt
+10 silly initialize success
+11 silly execute attempt
+12 error exec Errored while executing 'eslint .' in 'website'
+13 error execute Error: Command failed: eslint .
+13 error execute     at Promise.all.then.arr (/Users/adam/Development/exponent/oss/react-navigation/node_modules/execa/index.js:210:11)
+13 error execute     at process._tickCallback (internal/process/next_tick.js:109:7)
+13 error execute  callback with error
+13 error execute  { Error: Command failed: eslint .
+13 error execute     at Promise.all.then.arr (/Users/adam/Development/exponent/oss/react-navigation/node_modules/execa/index.js:210:11)
+13 error execute     at process._tickCallback (internal/process/next_tick.js:109:7)
+13 error execute   code: 1,
+13 error execute   killed: false,
+13 error execute   stdout: null,
+13 error execute   stderr: null,
+13 error execute   failed: true,
+13 error execute   signal: null,
+13 error execute   cmd: 'eslint .',
+13 error execute   timedOut: false }
