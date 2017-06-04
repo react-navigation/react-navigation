@@ -153,8 +153,8 @@ We can then edit our `ChatScreen` component to display the `user` param that was
 ```js
 class ChatScreen extends React.Component {
   // Nav options can be defined as a function of the screen's props:
-  static navigationOptions = ({ navigation }) => ({
-    title: `Chat with ${navigation.state.params.user}`,
+  static navigationOptions = ({ props }) => ({
+    title: `Chat with ${props.navigation.state.params.user}`,
   });
   render() {
     // The screen's current route is passed in to `props.navigation.state`:
