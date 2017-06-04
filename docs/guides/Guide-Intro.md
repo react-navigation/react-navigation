@@ -116,6 +116,19 @@ const SimpleApp = StackNavigator({
 });
 ```
 
+Because we use 'View' and 'Button', remember add them in import section.
+
+```js
+import React from 'react';
+import {
+  AppRegistry,
+  Text,
+  View,
+  Button,
+} from 'react-native';
+import { StackNavigator } from 'react-navigation';
+```
+
 Now you can navigate to your new screen, and go back:
 
 ```phone-example
