@@ -4,7 +4,7 @@ import React from 'react';
 
 import { Animated, StyleSheet, View } from 'react-native';
 
-import invariant from 'fbjs/lib/invariant';
+import invariant from '../utils/invariant';
 
 import NavigationScenesReducer from './ScenesReducer';
 import TransitionConfigs from './TransitionConfigs';
