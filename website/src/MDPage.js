@@ -64,8 +64,10 @@ const MDPage = ({ navigation, docPath }) => (
           })
           .join('-');
         const Header = getHeadingForLevel(level);
+        const linkHeader = id ? '' : 'link-header';
+        const className = `md-header ${linkHeader}`;
         return (
-          <Header id={id} className="md-header">
+          <Header id={id} className={className}>
             {children} <a href={`#${id}`} title={children}>#</a>
           </Header>
         );

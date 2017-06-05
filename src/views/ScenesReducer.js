@@ -1,7 +1,7 @@
 /* @flow */
 
-import invariant from 'fbjs/lib/invariant';
-import shallowEqual from 'fbjs/lib/shallowEqual';
+import invariant from '../utils/invariant';
+import shallowEqual from '../utils/shallowEqual';
 
 import type {
   NavigationRoute,

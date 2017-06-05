@@ -27,6 +27,10 @@ body, #root, html {
 .md-header:hover a {
   visibility: visible;
 }
+.link-header a:first-of-type {
+  visibility: visible;
+  color: #182026;
+}
 .nextLink {
   float: right;
 }

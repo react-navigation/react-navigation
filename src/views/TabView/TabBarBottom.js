@@ -35,6 +35,7 @@ type Props = {
   showLabel: boolean,
   style?: Style,
   labelStyle?: Style,
+  tabStyle?: Style,
   showIcon: boolean,
 };
 
@@ -127,6 +128,7 @@ export default class TabBarBottom
       activeBackgroundColor,
       inactiveBackgroundColor,
       style,
+      tabStyle,
     } = this.props;
     const { routes } = navigation.state;
     // Prepend '-1', so there are always at least 2 items in inputRange
@@ -153,7 +155,11 @@ export default class TabBarBottom
               onPress={() => jumpToIndex(index)}
             >
               <Animated.View
-                style={[styles.tab, { backgroundColor, justifyContent }]}
+                style={[
+                  styles.tab,
+                  { backgroundColor, justifyContent },
+                  tabStyle,
+                ]}
               >
                 {this._renderIcon(scene)}
                 {this._renderLabel(scene)}
