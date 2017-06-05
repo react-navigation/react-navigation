@@ -72,6 +72,8 @@ export default (
     paths[routeName] = { re, keys, toPath: pathToRegexp.compile(pathPattern) };
   });
 
+  let inProgressNavigationRouteName: ?string = null;
+
   return {
     getComponentForState(state: NavigationState): NavigationComponent {
       const activeChildRoute = state.routes[state.index];
@@ -110,6 +112,7 @@ export default (
             ],
           };
         }
+
         if (initialChildRouter) {
           route = initialChildRouter.getStateForAction(
             NavigationActions.navigate({
@@ -137,6 +140,16 @@ export default (
           routes: [route],
         };
       }
+
+      // Check if action wants to route to the route that is in-progress navigating
+      if (
+        inProgressNavigationRouteName !== null &&
+        inProgressNavigationRouteName === passedAction.routeName
+      ) {
+        inProgressNavigationRouteName = null;
+        return false;
+      }
+      inProgressNavigationRouteName = passedAction.routeName;
 
       // Check if a child scene wants to handle the action as long as it is not a reset to the root stack
       if (action.type !== NavigationActions.RESET || action.key !== null) {
