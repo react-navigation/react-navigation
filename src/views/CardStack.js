@@ -358,9 +358,13 @@ class CardStack extends Component {
       : Platform.OS === 'ios';
 
     const handlers = gesturesEnabled ? responder.panHandlers : {};
+    const containerStyle = [
+      styles.container,
+      this._getTransitionConfig().containerStyle,
+    ];
 
     return (
-      <View {...handlers} style={styles.container}>
+      <View {...handlers} style={containerStyle}>
         <View style={styles.scenes}>
           {scenes.map((s: *) => this._renderCard(s))}
         </View>
@@ -409,16 +413,20 @@ class CardStack extends Component {
     );
   }
 
-  _renderCard = (scene: NavigationScene): React.Element<*> => {
+  _getTransitionConfig = () => {
     const isModal = this.props.mode === 'modal';
 
     /* $FlowFixMe */
-    const { screenInterpolator } = TransitionConfigs.getTransitionConfig(
+    return TransitionConfigs.getTransitionConfig(
       this.props.transitionConfig,
       {},
       {},
       isModal
     );
+  };
+
+  _renderCard = (scene: NavigationScene): React.Element<*> => {
+    const { screenInterpolator } = this._getTransitionConfig();
     const style =
       screenInterpolator && screenInterpolator({ ...this.props, scene });
 
