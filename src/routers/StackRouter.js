@@ -140,14 +140,22 @@ export default (
         };
       }
 
-      if (action.type === NavigationActions.NAVIGATE) {
+      if (passedAction.type === 'Navigation/BACK') {
+        inProgressNavigationRouteName = null;
+      }
+
+      if (
+        action.type === NavigationActions.NAVIGATE &&
+        passedAction.routeName !== 'DrawerOpen' &&
+        passedAction.routeName !== 'DrawerClose'
+      ) {
         // Check if action wants to route to the route that is in-progress navigating
         if (
           inProgressNavigationRouteName !== null &&
           inProgressNavigationRouteName === passedAction.routeName
         ) {
           inProgressNavigationRouteName = null;
-          return false;
+          return;
         }
         inProgressNavigationRouteName = passedAction.routeName;
       }
@@ -233,6 +241,7 @@ export default (
       }
 
       if (action.type === NavigationActions.SET_PARAMS) {
+        inProgressNavigationRouteName = null;
         const lastRoute = state.routes.find(
           /* $FlowFixMe */
           (route: *) => route.key === action.key
@@ -284,6 +293,7 @@ export default (
 
       if (action.type === NavigationActions.BACK) {
         let backRouteIndex = null;
+        inProgressNavigationRouteName = null;
         if (action.key) {
           const backRoute = state.routes.find(
             /* $FlowFixMe */
