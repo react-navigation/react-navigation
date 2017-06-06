@@ -140,15 +140,17 @@ export default (
         };
       }
 
-      // Check if action wants to route to the route that is in-progress navigating
-      if (
-        inProgressNavigationRouteName !== null &&
-        inProgressNavigationRouteName === passedAction.routeName
-      ) {
-        inProgressNavigationRouteName = null;
-        return false;
+      if (action.type === NavigationActions.NAVIGATE) {
+        // Check if action wants to route to the route that is in-progress navigating
+        if (
+          inProgressNavigationRouteName !== null &&
+          inProgressNavigationRouteName === passedAction.routeName
+        ) {
+          inProgressNavigationRouteName = null;
+          return false;
+        }
+        inProgressNavigationRouteName = passedAction.routeName;
       }
-      inProgressNavigationRouteName = passedAction.routeName;
 
       // Check if a child scene wants to handle the action as long as it is not a reset to the root stack
       if (action.type !== NavigationActions.RESET || action.key !== null) {
