@@ -52,7 +52,7 @@ A screen has access to its route via `this.props.navigation.state`. Each will re
   routeName: 'profile',
   //a unique identifier used to sort routes
   key: 'main0',
-  //an optional object of string options for this screen
+  //an optional object of options for this screen
   params: { hello: 'world' }
 }
 ```
