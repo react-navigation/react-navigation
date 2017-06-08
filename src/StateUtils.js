@@ -1,6 +1,6 @@
 /* @flow */
 
-import invariant from 'fbjs/lib/invariant';
+import invariant from './utils/invariant';
 
 import type { NavigationRoute, NavigationState } from './TypeDefinition';
 

@@ -46,7 +46,7 @@ const TabNavigator = (
     router,
     routeConfigs,
     config,
-    NavigatorTypes.STACK
+    NavigatorTypes.TABS
   )((props: *) => (
     <TabView
       {...props}
