@@ -22,6 +22,7 @@ npm install
 ### Run the example app
 
 ```
+npm install
 cd examples/NavigationPlayground
 npm install
 cd ../..
@@ -32,8 +33,6 @@ npm run run-playground-android
 # OR:
 npm run run-playground-ios
 ```
-
-(If you cloned this repository specifically to run this playground: you need to run `npm install` in the main directory before running the above.)
 
 You can also simply run e.g. `react-native run-android` from within the example app directory (instead of `npm run run-playground-android` from the root `react-navigation` directory); both do the same thing.
 
