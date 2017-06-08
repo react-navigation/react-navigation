@@ -35,6 +35,9 @@ const DefaultDrawerConfig = {
   drawerPosition: 'left',
   drawerBackgroundColor: 'white',
   useNativeAnimations: true,
+  drawerOpenRoute: 'DrawerOpen',
+  drawerCloseRoute: 'DrawerClose',
+  drawerToggleRoute: 'DrawerToggle',
 };
 
 const DrawerNavigator = (
@@ -51,6 +54,9 @@ const DrawerNavigator = (
     drawerPosition,
     useNativeAnimations,
     drawerBackgroundColor,
+    drawerOpenRoute,
+    drawerCloseRoute,
+    drawerToggleRoute,
     ...tabsConfig
   } = mergedConfig;
 
@@ -58,7 +64,7 @@ const DrawerNavigator = (
 
   const drawerRouter = TabRouter(
     {
-      DrawerClose: {
+      [drawerCloseRoute]: {
         screen: createNavigator(
           contentRouter,
           routeConfigs,
@@ -68,15 +74,15 @@ const DrawerNavigator = (
           // from withCachedChildNavigation for some reason. $FlowFixMe
         )((props: *) => <DrawerScreen {...props} />),
       },
-      DrawerOpen: {
+      [drawerOpenRoute]: {
         screen: () => null,
       },
-      DrawerToggle: {
+      [drawerToggleRoute]: {
         screen: () => null,
       },
     },
     {
-      initialRouteName: 'DrawerClose',
+      initialRouteName: drawerCloseRoute,
     }
   );
 
@@ -95,6 +101,9 @@ const DrawerNavigator = (
       contentComponent={contentComponent}
       contentOptions={contentOptions}
       drawerPosition={drawerPosition}
+      drawerOpenRoute={drawerOpenRoute}
+      drawerCloseRoute={drawerCloseRoute}
+      drawerToggleRoute={drawerToggleRoute}
     />
   ));
 
