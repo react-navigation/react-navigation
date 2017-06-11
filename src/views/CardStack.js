@@ -321,10 +321,10 @@ class CardStack extends Component {
         const axisDistance = isVertical
           ? layout.height.__getValue()
           : layout.width.__getValue();
-        const movedDistance = gesture[isVertical ? 'moveY' : 'moveX'];
-        const defaultVelocity = axisDistance / ANIMATION_DURATION;
+        const movedDistance = gesture[isVertical ? 'dy' : 'dx'];
         const gestureVelocity = gesture[isVertical ? 'vy' : 'vx'];
-        const velocity = Math.max(gestureVelocity, defaultVelocity);
+        const defaultVelocity = axisDistance / ANIMATION_DURATION;
+        const velocity = Math.max(Math.abs(gestureVelocity), defaultVelocity);
         const resetDuration = movedDistance / velocity;
         const goBackDuration = (axisDistance - movedDistance) / velocity;
 
