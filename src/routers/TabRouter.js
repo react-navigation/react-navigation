@@ -190,6 +190,12 @@ export default (
             ...state,
             routes,
           };
+        } else {
+          // Don't navigate on SET_PARAMS
+          // Fix for https://github.com/react-community/react-navigation/issues/1711
+          return {
+            ...state,
+          };
         }
       }
       if (activeTabIndex !== state.index) {
