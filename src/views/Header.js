@@ -128,6 +128,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
       : undefined;
     return (
       <HeaderBackButton
+        source={options.headerBackButtonIcon}
         onPress={() => {
           this.props.navigation.goBack(null);
         }}
