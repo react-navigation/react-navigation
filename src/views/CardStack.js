@@ -10,6 +10,7 @@ import {
   Platform,
   View,
   I18nManager,
+  Easing,
 } from 'react-native';
 
 import Card from './Card';
@@ -42,7 +43,11 @@ type Props = {
   headerComponent?: ReactClass<*>,
   mode: 'card' | 'modal',
   navigation: NavigationScreenProp<NavigationState, NavigationAction>,
-  router: NavigationRouter<NavigationState, NavigationAction, NavigationStackScreenOptions>,
+  router: NavigationRouter<
+    NavigationState,
+    NavigationAction,
+    NavigationStackScreenOptions
+  >,
   cardStyle?: Style,
   onTransitionStart?: () => void,
   onTransitionEnd?: () => void,
@@ -63,26 +68,28 @@ type Props = {
 };
 
 /**
- * The duration of the card animation in milliseconds.
+ * The max duration of the card animation in milliseconds after released gesture.
+ * The actual duration should be always less then that because the rest distance 
+ * is always less then the full distance of the layout.
  */
-const ANIMATION_DURATION = 200;
+const ANIMATION_DURATION = 500;
 
 /**
  * The gesture distance threshold to trigger the back behavior. For instance,
- * `1 / 3` means that moving greater than 1 / 3 of the width of the screen will
+ * `1/2` means that moving greater than 1/2 of the width of the screen will
  * trigger a back action
  */
-const POSITION_THRESHOLD = 1 / 3;
+const POSITION_THRESHOLD = 1 / 2;
 
 /**
  * The threshold (in pixels) to start the gesture action.
  */
-const RESPOND_THRESHOLD = 12;
+const RESPOND_THRESHOLD = 20;
 
 /**
  * The distance of touch start from the edge of the screen where the gesture will be recognized
  */
-const GESTURE_RESPONSE_DISTANCE_HORIZONTAL = 35;
+const GESTURE_RESPONSE_DISTANCE_HORIZONTAL = 25;
 const GESTURE_RESPONSE_DISTANCE_VERTICAL = 135;
 
 const animatedSubscribeValue = (animatedValue: Animated.Value) => {
@@ -93,14 +100,6 @@ const animatedSubscribeValue = (animatedValue: Animated.Value) => {
     animatedValue.addListener(emptyFunction);
   }
 };
-
-/**
- * The ratio between the gesture velocity and the animation velocity. This allows
- * the velocity of a swipe release to carry on into the new animation.
- *
- * TODO: Understand and compute this ratio rather than using an approximation
- */
-const GESTURE_ANIMATED_VELOCITY_RATIO = -4;
 
 class CardStack extends Component {
   /**
@@ -163,7 +162,7 @@ class CardStack extends Component {
 
   _renderHeader(
     scene: NavigationScene,
-    headerMode: HeaderMode,
+    headerMode: HeaderMode
   ): ?React.Element<*> {
     const { header } = this._getScreenDetails(scene).options;
 
@@ -199,17 +198,16 @@ class CardStack extends Component {
     animatedSubscribeValue(props.position);
   }
 
-  _reset(resetToIndex: number, velocity: number): void {
-    Animated.spring(this.props.position, {
+  _reset(resetToIndex: number, duration: number): void {
+    Animated.timing(this.props.position, {
       toValue: resetToIndex,
-      duration: ANIMATION_DURATION,
+      duration,
+      easing: Easing.linear(),
       useNativeDriver: this.props.position.__isNative,
-      velocity: velocity * GESTURE_ANIMATED_VELOCITY_RATIO,
-      bounciness: 0,
     }).start();
   }
 
-  _goBack(backFromIndex: number, velocity: number) {
+  _goBack(backFromIndex: number, duration: number) {
     const { navigation, position, scenes } = this.props;
     const toValue = Math.max(backFromIndex - 1, 0);
 
@@ -217,18 +215,17 @@ class CardStack extends Component {
     // dispatched at the end of the transition.
     this._immediateIndex = toValue;
 
-    Animated.spring(position, {
+    Animated.timing(position, {
       toValue,
-      duration: ANIMATION_DURATION,
+      duration,
+      easing: Easing.linear(),
       useNativeDriver: position.__isNative,
-      velocity: velocity * GESTURE_ANIMATED_VELOCITY_RATIO,
-      bounciness: 0,
     }).start(() => {
       this._immediateIndex = null;
       const backFromScene = scenes.find((s: *) => s.index === toValue + 1);
       if (!this._isResponding && backFromScene) {
         navigation.dispatch(
-          NavigationActions.back({ key: backFromScene.route.key }),
+          NavigationActions.back({ key: backFromScene.route.key })
         );
       }
     });
@@ -240,8 +237,10 @@ class CardStack extends Component {
     if (headerMode === 'float') {
       floatingHeader = this._renderHeader(this.props.scene, headerMode);
     }
-    const { navigation, position, scene, mode, scenes } = this.props;
+    const { navigation, position, layout, scene, scenes, mode } = this.props;
     const { index } = navigation.state;
+    const isVertical = mode === 'modal';
+
     const responder = PanResponder.create({
       onPanResponderTerminate: () => {
         this._isResponding = false;
@@ -255,20 +254,17 @@ class CardStack extends Component {
       },
       onMoveShouldSetPanResponder: (
         event: { nativeEvent: { pageY: number, pageX: number } },
-        gesture: any,
+        gesture: any
       ) => {
-        const layout = this.props.layout;
         if (index !== scene.index) {
           return false;
         }
-        const isVertical = mode === 'modal';
         const immediateIndex = this._immediateIndex == null
           ? index
           : this._immediateIndex;
         const currentDragDistance = gesture[isVertical ? 'dy' : 'dx'];
-        const currentDragPosition = event.nativeEvent[
-          isVertical ? 'pageY' : 'pageX'
-        ];
+        const currentDragPosition =
+          event.nativeEvent[isVertical ? 'pageY' : 'pageX'];
         const axisLength = isVertical
           ? layout.height.__getValue()
           : layout.width.__getValue();
@@ -280,33 +276,30 @@ class CardStack extends Component {
         const gestureResponseDistance = isVertical
           ? GESTURE_RESPONSE_DISTANCE_VERTICAL
           : GESTURE_RESPONSE_DISTANCE_HORIZONTAL;
-        // GESTURE_RESPONSE_DISTANCE is about 30 or 35. Or 135 for modals
+        // GESTURE_RESPONSE_DISTANCE is about 25 or 30. Or 135 for modals
         if (screenEdgeDistance > gestureResponseDistance) {
           // Reject touches that started in the middle of the screen
           return false;
         }
 
-        const hasDraggedEnough = Math.abs(currentDragDistance) >
-          RESPOND_THRESHOLD;
+        const hasDraggedEnough =
+          Math.abs(currentDragDistance) > RESPOND_THRESHOLD;
 
         const isOnFirstCard = immediateIndex === 0;
-        const shouldSetResponder = hasDraggedEnough &&
-          axisHasBeenMeasured &&
-          !isOnFirstCard;
+        const shouldSetResponder =
+          hasDraggedEnough && axisHasBeenMeasured && !isOnFirstCard;
         return shouldSetResponder;
       },
       onPanResponderMove: (event: any, gesture: any) => {
         // Handle the moving touches for our granted responder
-        const layout = this.props.layout;
-        const isVertical = mode === 'modal';
         const startValue = this._gestureStartValue;
         const axis = isVertical ? 'dy' : 'dx';
-        const distance = isVertical
+        const axisDistance = isVertical
           ? layout.height.__getValue()
           : layout.width.__getValue();
         const currentValue = I18nManager.isRTL && axis === 'dx'
-          ? startValue + gesture[axis] / distance
-          : startValue - gesture[axis] / distance;
+          ? startValue + gesture[axis] / axisDistance
+          : startValue - gesture[axis] / axisDistance;
         const value = clamp(index - 1, currentValue, index);
         position.setValue(value);
       },
@@ -319,31 +312,41 @@ class CardStack extends Component {
           return;
         }
         this._isResponding = false;
-        const isVertical = mode === 'modal';
-        const velocity = gesture[isVertical ? 'vy' : 'vx'];
+
         const immediateIndex = this._immediateIndex == null
           ? index
           : this._immediateIndex;
+
+        // Calculate animate duration according to gesture speed and moved distance
+        const axisDistance = isVertical
+          ? layout.height.__getValue()
+          : layout.width.__getValue();
+        const movedDistance = gesture[isVertical ? 'moveY' : 'moveX'];
+        const defaultVelocity = axisDistance / ANIMATION_DURATION;
+        const gestureVelocity = gesture[isVertical ? 'vy' : 'vx'];
+        const velocity = Math.max(gestureVelocity, defaultVelocity);
+        const resetDuration = movedDistance / velocity;
+        const goBackDuration = (axisDistance - movedDistance) / velocity;
 
         // To asyncronously get the current animated value, we need to run stopAnimation:
         position.stopAnimation((value: number) => {
           // If the speed of the gesture release is significant, use that as the indication
           // of intent
-          if (velocity < -0.5) {
-            this._reset(immediateIndex, velocity);
+          if (gestureVelocity < -0.5) {
+            this._reset(immediateIndex, resetDuration);
             return;
           }
-          if (velocity > 0.5) {
-            this._goBack(immediateIndex, velocity);
+          if (gestureVelocity > 0.5) {
+            this._goBack(immediateIndex, goBackDuration);
             return;
           }
 
           // Then filter based on the distance the screen was moved. Over a third of the way swiped,
           // and the back will happen.
           if (value <= index - POSITION_THRESHOLD) {
-            this._goBack(immediateIndex, velocity);
+            this._goBack(immediateIndex, goBackDuration);
           } else {
-            this._reset(immediateIndex, velocity);
+            this._reset(immediateIndex, resetDuration);
           }
         });
       },
@@ -378,7 +381,7 @@ class CardStack extends Component {
 
   _renderInnerScene(
     SceneComponent: ReactClass<*>,
-    scene: NavigationScene,
+    scene: NavigationScene
   ): React.Element<any> {
     const { navigation } = this._getScreenDetails(scene);
     const { screenProps } = this.props;
@@ -414,13 +417,13 @@ class CardStack extends Component {
       this.props.transitionConfig,
       {},
       {},
-      isModal,
+      isModal
     );
-    const style = screenInterpolator &&
-      screenInterpolator({ ...this.props, scene });
+    const style =
+      screenInterpolator && screenInterpolator({ ...this.props, scene });
 
     const SceneComponent = this.props.router.getComponentForRouteName(
-      scene.route.routeName,
+      scene.route.routeName
     );
 
     return (

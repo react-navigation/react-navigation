@@ -1,6 +1,6 @@
 # TabNavigator
 
-Used to easily set up a screen with several tabs with a TabRouter.
+Used to easily set up a screen with several tabs with a TabRouter. For a live example please see [our expo demo](https://exp.host/@react-navigation/NavigationPlayground).
 
 ```js
 class MyHomeScreen extends React.Component {
@@ -104,6 +104,7 @@ Several options get passed to the underlying router to modify navigation logic:
 - `showLabel` - whether to show label for tab, default is true
 - `style` - style object for the tab bar
 - `labelStyle` - style object for the tab label
+- `tabStyle` - style object for the tab
 
 Example:
 
@@ -141,6 +142,9 @@ Example:
 tabBarOptions: {
   labelStyle: {
     fontSize: 12,
+  },
+  tabStyle: {
+    width: 100,    
   },
   style: {
     backgroundColor: 'blue',
