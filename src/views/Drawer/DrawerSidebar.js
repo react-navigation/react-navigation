@@ -75,9 +75,11 @@ class DrawerSidebar extends PureComponent<void, Props, void> {
     return null;
   };
 
-  _onItemPress = ({ route }: DrawerItem) => {
+  _onItemPress = ({ route, focused }: DrawerItem) => {
     this.props.navigation.navigate('DrawerClose');
-    this.props.navigation.navigate(route.routeName);
+    if (!focused) {
+      this.props.navigation.navigate(route.routeName);
+    }
   };
 
   render() {
