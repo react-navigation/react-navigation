@@ -139,7 +139,7 @@ export default (
       }
 
       // Check if a child scene wants to handle the action as long as it is not a reset to the root stack
-      if (action.type !== NavigationActions.RESET || action.key !== null) {
+      if (action.type !== NavigationActions.RESET || (action.key !== undefined && action !== null)) {
         const keyIndex = action.key
           ? StateUtils.indexOf(state, action.key)
           : -1;
