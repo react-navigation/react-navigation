@@ -129,7 +129,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
     return (
       <HeaderBackButton
         onPress={() => {
-          this.props.navigation.goBack(null);
+          this.props.navigation.goBack(this.props.scene.route.key);
         }}
         pressColorAndroid={options.headerPressColorAndroid}
         tintColor={options.headerTintColor}
