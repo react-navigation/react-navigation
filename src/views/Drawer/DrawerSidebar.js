@@ -44,8 +44,12 @@ class DrawerSidebar extends PureComponent<void, Props, void> {
     const DrawerScreen = this.props.router.getComponentForRouteName(
       'DrawerClose'
     );
+    const {[routeKey]: childNavigation} = this.props.childNavigationProps;
     return DrawerScreen.router.getScreenOptions(
-      this.props.childNavigationProps[routeKey],
+      childNavigation.state.index !== undefined ? {
+        ...childNavigation, 
+        state: {... childNavigation.state, index: 0}
+      } : childNavigation,
       this.props.screenProps
     );
   };
