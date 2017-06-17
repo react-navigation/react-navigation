@@ -51,10 +51,11 @@ class HomeScreen extends React.Component {
   }
 }
 
-const SimpleApp = StackNavigator({
+export default SimpleApp = StackNavigator({
   Home: { screen: HomeScreen },
 });
 
+// skip this line if using Create React Native App
 AppRegistry.registerComponent('SimpleApp', () => SimpleApp);
 ```
 
