@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import { Platform, StyleSheet, Text } from 'react-native';
+import { Platform, StyleSheet, Animated } from 'react-native';
 
 import type { Style } from '../TypeDefinition';
 
@@ -11,14 +11,13 @@ type Props = {
   style?: Style,
 };
 
-const HeaderTitle = ({ style, ...rest }: Props) => (
-  <Text
+const HeaderTitle = ({ style, ...rest }: Props) =>
+  <Animated.Text
     numberOfLines={1}
     {...rest}
     style={[styles.title, style]}
     accessibilityTraits="header"
-  />
-);
+  />;
 
 const styles = StyleSheet.create({
   title: {
