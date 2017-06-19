@@ -77,6 +77,10 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
       .headerTruncatedBackTitle;
   }
 
+  _navigateBack = () => {
+    this.props.navigation.goBack(null);
+  };
+
   _renderTitleComponent = (props: SceneProps) => {
     const details = this.props.getScreenDetails(props.scene);
     const headerTitle = details.options.headerTitle;
@@ -128,9 +132,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
       : undefined;
     return (
       <HeaderBackButton
-        onPress={() => {
-          this.props.navigation.goBack(null);
-        }}
+        onPress={this._navigateBack}
         pressColorAndroid={options.headerPressColorAndroid}
         tintColor={options.headerTintColor}
         title={backButtonTitle}
