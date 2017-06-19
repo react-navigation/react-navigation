@@ -284,9 +284,7 @@ class CardStack extends Component {
       },
       onPanResponderGrant: () => {
         position.stopAnimation((value: number) => {
-          this.setState({
-            isResponding: true,
-          });
+          this.state.isResponding = true
           this._gestureStartValue = value;
         });
       },
