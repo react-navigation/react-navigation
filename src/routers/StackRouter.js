@@ -278,7 +278,7 @@ export default (
           /* $FlowFixMe */
           backRouteIndex = state.routes.indexOf(backRoute);
         }
-        if (backRouteIndex == null) {
+        if (backRouteIndex == null && state.routes.length > 0) {
           return StateUtils.pop(state);
         }
         if (backRouteIndex > 0) {
