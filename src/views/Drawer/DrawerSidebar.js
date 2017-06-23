@@ -8,13 +8,13 @@ import NavigationActions from '../../NavigationActions';
 
 import type {
   NavigationScreenProp,
-    NavigationRoute,
-    NavigationAction,
-    NavigationRouter,
-    NavigationDrawerScreenOptions,
-    NavigationState,
-    NavigationStateRoute,
-    Style,
+  NavigationRoute,
+  NavigationAction,
+  NavigationRouter,
+  NavigationDrawerScreenOptions,
+  NavigationState,
+  NavigationStateRoute,
+  Style,
 } from '../../TypeDefinition';
 
 import type { DrawerScene, DrawerItem } from './DrawerView';
@@ -23,9 +23,9 @@ type Navigation = NavigationScreenProp<NavigationStateRoute, NavigationAction>;
 
 type Props = {
   router: NavigationRouter<
-  NavigationState,
-  NavigationAction,
-  NavigationDrawerScreenOptions
+    NavigationState,
+    NavigationAction,
+    NavigationDrawerScreenOptions
   >,
   navigation: Navigation,
   childNavigationProps: { [key: string]: Navigation },
@@ -45,12 +45,14 @@ class DrawerSidebar extends PureComponent<void, Props, void> {
     const DrawerScreen = this.props.router.getComponentForRouteName(
       'DrawerClose'
     );
-    const {[routeKey]: childNavigation} = this.props.childNavigationProps;
+    const { [routeKey]: childNavigation } = this.props.childNavigationProps;
     return DrawerScreen.router.getScreenOptions(
-      childNavigation.state.index !== undefined ? {
-        ...childNavigation, 
-        state: {... childNavigation.state, index: 0}
-      } : childNavigation,
+      childNavigation.state.index !== undefined
+        ? {
+            ...childNavigation,
+            state: { ...childNavigation.state, index: 0 },
+          }
+        : childNavigation,
       this.props.screenProps
     );
   };
@@ -82,7 +84,9 @@ class DrawerSidebar extends PureComponent<void, Props, void> {
 
   _onItemPress = ({ route }: DrawerItem) => {
     this.props.navigation.navigate('DrawerClose');
-    const subAction = (route.index !== undefined && route.index !== 0) ? NavigationActions.navigate({ routeName: route.routes[0].routeName }) : undefined;
+    const subAction = route.index !== undefined && route.index !== 0
+      ? NavigationActions.navigate({ routeName: route.routes[0].routeName })
+      : undefined;
     this.props.navigation.navigate(route.routeName, undefined, subAction);
   };
 
