@@ -205,7 +205,7 @@ export default class TabBar<T: Route<*>>
       return tabWidth;
     }
     if (typeof tabWidth === 'string' && tabWidth.endsWith('%')) {
-      return layout.width * (parseFloat(tabWidth, 10) / 100);
+      return layout.width * (parseFloat(tabWidth) / 100);
     }
     if (props.scrollEnabled) {
       return layout.width / 5 * 2;
