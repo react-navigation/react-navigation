@@ -4,16 +4,17 @@ import React, { PureComponent } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import withCachedChildNavigation from '../../withCachedChildNavigation';
+import NavigationActions from '../../NavigationActions';
 
 import type {
   NavigationScreenProp,
-  NavigationRoute,
-  NavigationAction,
-  NavigationRouter,
-  NavigationDrawerScreenOptions,
-  NavigationState,
-  NavigationStateRoute,
-  Style,
+    NavigationRoute,
+    NavigationAction,
+    NavigationRouter,
+    NavigationDrawerScreenOptions,
+    NavigationState,
+    NavigationStateRoute,
+    Style,
 } from '../../TypeDefinition';
 
 import type { DrawerScene, DrawerItem } from './DrawerView';
@@ -22,9 +23,9 @@ type Navigation = NavigationScreenProp<NavigationStateRoute, NavigationAction>;
 
 type Props = {
   router: NavigationRouter<
-    NavigationState,
-    NavigationAction,
-    NavigationDrawerScreenOptions
+  NavigationState,
+  NavigationAction,
+  NavigationDrawerScreenOptions
   >,
   navigation: Navigation,
   childNavigationProps: { [key: string]: Navigation },
@@ -81,7 +82,8 @@ class DrawerSidebar extends PureComponent<void, Props, void> {
 
   _onItemPress = ({ route }: DrawerItem) => {
     this.props.navigation.navigate('DrawerClose');
-    this.props.navigation.navigate(route.routeName);
+    const subAction = (route.index !== undefined && route.index !== 0) ? NavigationActions.navigate({ routeName: route.routes[0].routeName }) : undefined;
+    this.props.navigation.navigate(route.routeName, undefined, subAction);
   };
 
   render() {
