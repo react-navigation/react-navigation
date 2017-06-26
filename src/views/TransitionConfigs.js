@@ -27,12 +27,18 @@ const IOSTransitionSpec = ({
 const SlideFromRightIOS = ({
   transitionSpec: IOSTransitionSpec,
   screenInterpolator: CardStackStyleInterpolator.forHorizontal,
+  containerStyle: {
+    backgroundColor: '#000',
+  },
 }: TransitionConfig);
 
 // Standard iOS navigation transition for modals
 const ModalSlideFromBottomIOS = ({
   transitionSpec: IOSTransitionSpec,
   screenInterpolator: CardStackStyleInterpolator.forVertical,
+  containerStyle: {
+    backgroundColor: '#000',
+  },
 }: TransitionConfig);
 
 // Standard Android navigation transition when opening an Activity
