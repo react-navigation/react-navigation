@@ -108,6 +108,10 @@ String or React Element used by the header. Defaults to scene `title`
 
 Title string used by the back button on iOS, or `null` to disable label. Defaults to the previous scene's `headerTitle`
 
+#### `headerBackImage`
+
+Image asset used by the back button.
+
 #### `headerTruncatedBackTitle`
 
 Title string used by the back button when `headerBackTitle` doesn't fit on the screen. `"Back"` by default.
