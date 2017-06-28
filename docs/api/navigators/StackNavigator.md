@@ -110,7 +110,7 @@ Title string used by the back button on iOS, or `null` to disable label. Default
 
 #### `headerBackImage`
 
-The image source (either a remote URL {{uri: 'path/to/image'}} or a local file resource  {require('path/to/image')}) used by the back button.
+The image source (either a remote URL `{{uri: 'path/to/image'}}` or a local file resource  `{require('path/to/image')}`) used by the back button.
 
 #### `headerTruncatedBackTitle`
 
