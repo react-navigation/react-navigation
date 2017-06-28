@@ -296,11 +296,14 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    paddingTop: STATUSBAR_HEIGHT,
-    backgroundColor: Platform.OS === 'ios' ? '#EFEFF2' : '#FFF',
-    height: STATUSBAR_HEIGHT + APPBAR_HEIGHT,
+let platformContainerStyles;
+if (Platform.OS === 'ios') {
+  platformContainerStyles = {
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: 'rgba(0, 0, 0, .3)',
+  };
+} else {
+  platformContainerStyles = {
     shadowColor: 'black',
     shadowOpacity: 0.1,
     shadowRadius: StyleSheet.hairlineWidth,
@@ -308,6 +311,15 @@ const styles = StyleSheet.create({
       height: StyleSheet.hairlineWidth,
     },
     elevation: 4,
+  };
+}
+
+const styles = StyleSheet.create({
+  container: {
+    paddingTop: STATUSBAR_HEIGHT,
+    backgroundColor: Platform.OS === 'ios' ? '#F7F7F7' : '#FFF',
+    height: STATUSBAR_HEIGHT + APPBAR_HEIGHT,
+    ...platformContainerStyles,
   },
   appBar: {
     flex: 1,
