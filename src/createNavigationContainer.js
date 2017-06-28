@@ -2,7 +2,7 @@
 
 import React from 'react';
 import invariant from './utils/invariant';
-import { BackAndroid, Linking } from './PlatformHelpers';
+import { BackHandler, Linking } from './PlatformHelpers';
 import NavigationActions from './NavigationActions';
 import addNavigationHelpers from './addNavigationHelpers';
 
@@ -154,7 +154,7 @@ export default function createNavigationContainer<T: *>(
         return;
       }
 
-      this.subs = BackAndroid.addEventListener('backPress', () =>
+      this.subs = BackHandler.addEventListener('hardwareBackPress', () =>
         this.dispatch(NavigationActions.back())
       );
 
