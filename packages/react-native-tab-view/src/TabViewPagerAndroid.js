@@ -44,7 +44,7 @@ export default class TabViewPagerAndroid<T: Route<*>>
       this.props.layout !== nextProps.layout ||
       Children.count(this.props.children) !== Children.count(nextProps.children)
     ) {
-      global.requestAnimationFrame(() => {
+      this._animationFrameCallback = () => {
         if (this._viewPager) {
           const { navigationState } = nextProps;
           const page = I18nManager.isRTL
@@ -53,7 +53,19 @@ export default class TabViewPagerAndroid<T: Route<*>>
 
           this._viewPager.setPageWithoutAnimation(page);
         }
-      });
+      };
+
+      if (!this._isRequestingAnimationFrame) {
+        this._isRequestingAnimationFrame = true;
+
+        global.requestAnimationFrame(() => {
+          this._isRequestingAnimationFrame = false;
+
+          if (this._animationFrameCallback) {
+            this._animationFrameCallback();
+          }
+        });
+      }
     }
   }
 
@@ -65,6 +77,8 @@ export default class TabViewPagerAndroid<T: Route<*>>
     this._resetListener.remove();
   }
 
+  _animationFrameCallback: ?() => void;
+  _isRequestingAnimationFrame: boolean = false;
   _resetListener: Object;
   _viewPager: Object;
   _isIdle: boolean = true;
@@ -77,6 +91,8 @@ export default class TabViewPagerAndroid<T: Route<*>>
 
   _setPage = (index: number) => {
     if (this._viewPager) {
+      this._animationFrameCallback = null;
+
       const page = this._getPageIndex(index);
       if (this.props.animationEnabled !== false) {
         this._viewPager.setPage(page);
