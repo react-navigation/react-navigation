@@ -55,6 +55,14 @@ function validateRouteConfigMap(routeConfigs: NavigationRouteConfigMap) {
           '}'
       );
     }
+
+    if (routeConfig.path) {
+      invariant(
+        routeConfig.path[0] !== '/',
+        `Invalid path '${routeConfig.path}' for route '${routeName}'. ` +
+          `Path should not start with the slash symbol`
+      );
+    }
   });
 }
 
