@@ -94,7 +94,7 @@ Visual options:
 
 #### `title`
 
-String that can be used as a fallback for `headerTitle` and `tabBarLabel`
+String that can be used as a fallback for `headerTitle`
 
 #### `header`
 
