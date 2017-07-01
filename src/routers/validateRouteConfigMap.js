@@ -60,7 +60,7 @@ function validateRouteConfigMap(routeConfigs: NavigationRouteConfigMap) {
       invariant(
         routeConfig.path[0] !== '/',
         `Invalid path '${routeConfig.path}' for route '${routeName}'. ` +
-          `Path should not start with the slash symbol`
+          `Path should not start with the "/" character.`
       );
     }
   });
