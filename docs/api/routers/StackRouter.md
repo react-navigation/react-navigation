@@ -41,7 +41,7 @@ const MyApp = StackRouter({ // This is the RouteConfig:
 
 Each item in the config may have the following:
 
-- `path` - Specify the path (should not start with the "/" character) and params to be parsed for item in the stack
+- `path` - Specify the path and params to be parsed for an item in the stack. The path value should not start with the `/` character.
 - `screen` - Specify the screen component or child navigator
 - `getScreen` - Set a lazy getter for a screen component (but not navigators)
 
