@@ -15,7 +15,7 @@ import type {
   NavigationStyleInterpolator,
   LayoutEvent,
   HeaderProps,
-} from '../TypeDefinition';
+} from '../../TypeDefinition';
 
 type SceneProps = {
   scene: NavigationScene,
@@ -23,7 +23,7 @@ type SceneProps = {
   progress: Animated.Value,
 };
 
-type SubViewRenderer = (props: SceneProps) => ?React.Element<any>;
+type SubViewRenderer<T> = (props: SceneProps) => ?React.Element<T>;
 
 type SubViewName = 'left' | 'title' | 'right';
 
@@ -81,7 +81,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
     this.props.navigation.goBack(null);
   };
 
-  _renderTitleComponent = (props: SceneProps) => {
+  _renderTitleComponent = (props: SceneProps): ?React.Element<*> => {
     const details = this.props.getScreenDetails(props.scene);
     const headerTitle = details.options.headerTitle;
     if (headerTitle && typeof headerTitle !== 'string') {
@@ -115,7 +115,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
     );
   };
 
-  _renderLeftComponent = (props: SceneProps) => {
+  _renderLeftComponent = (props: SceneProps): ?React.Element<*> => {
     const options = this.props.getScreenDetails(props.scene).options;
     if (typeof options.headerLeft !== 'undefined') {
       return options.headerLeft;
@@ -143,7 +143,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
     );
   };
 
-  _renderRightComponent = (props: SceneProps) => {
+  _renderRightComponent = (props: SceneProps): ?React.Element<*> => {
     const details = this.props.getScreenDetails(props.scene);
     const { headerRight } = details.options;
     return headerRight || null;
@@ -187,10 +187,10 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
     );
   }
 
-  _renderSubView(
+  _renderSubView<T>(
     props: SceneProps,
     name: SubViewName,
-    renderer: SubViewRenderer,
+    renderer: SubViewRenderer<T>,
     styleInterpolator: NavigationStyleInterpolator
   ): ?React.Element<*> {
     const { scene } = props;
@@ -283,7 +283,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
       ...rest
     } = this.props;
 
-    const { options } = this.props.getScreenDetails(scene, screenProps);
+    const { options } = this.props.getScreenDetails(scene);
     const headerStyle = options.headerStyle;
 
     return (

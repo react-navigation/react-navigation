@@ -163,7 +163,7 @@ export default function createNavigationContainer<T: *>(
       });
 
       Linking.getInitialURL().then(
-        (url: string) => url && this._handleOpenURL(url)
+        (url: ?string) => url && this._handleOpenURL(url)
       );
     }
 

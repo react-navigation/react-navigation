@@ -5,18 +5,18 @@ declare module 'react-native' {
   declare type Color = string | number;
 
   declare type Transform =
-    { perspective: number } |
-    { scale: number } |
-    { scaleX: number } |
-    { scaleY: number } |
-    { translateX: number } |
-    { translateY: number } |
-    { rotate: string } |
-    { rotateX: string } |
-    { rotateY: string } |
-    { rotateZ: string } |
-    { skewX: string } |
-    { skewY: string };
+    { perspective: number | AnimatedInterpolation | AnimatedValue } |
+    { scale: number | AnimatedInterpolation | AnimatedValue } |
+    { scaleX: number | AnimatedInterpolation | AnimatedValue } |
+    { scaleY: number | AnimatedInterpolation | AnimatedValue } |
+    { translateX: number | AnimatedInterpolation | AnimatedValue } |
+    { translateY: number | AnimatedInterpolation | AnimatedValue } |
+    { rotate: string | AnimatedInterpolation | AnimatedValue } |
+    { rotateX: string | AnimatedInterpolation | AnimatedValue } |
+    { rotateY: string | AnimatedInterpolation | AnimatedValue } |
+    { rotateZ: string | AnimatedInterpolation | AnimatedValue } |
+    { skewX: string | AnimatedInterpolation | AnimatedValue } |
+    { skewY: string | AnimatedInterpolation | AnimatedValue };
 
   declare type TransformPropTypes = {|
     transform?: Array<Transform>
@@ -580,7 +580,7 @@ declare module 'react-native' {
   declare type StylePropTypes = {|
     ...LayoutPropTypes,
     ...ShadowPropTypes,
-    ...TransformPropTypes,
+    ...$Exact<TransformPropTypes>,
     ...ExtraImageStylePropTypes,
     ...ExtraTextStylePropTypes,
     ...ExtraViewStylePropTypes,
@@ -588,8 +588,8 @@ declare module 'react-native' {
 
   declare type StyleId = number;
 
-  declare type Styles = {[key: string]: StylePropTypes};
-  declare type StyleRuleSet<S: Styles> = {[key: $Keys<S>]: StyleId};
+  declare export type StyleDefinition = {[key: string]: StylePropTypes};
+  declare type StyleRuleSet<S: StyleDefinition> = {[key: $Keys<S>]: StyleId};
   declare type StyleProp<T, V> = false | null | void | T | V | Array<StyleProp<T, V>>;
 
   declare export var StyleSheet: {|
@@ -597,7 +597,7 @@ declare module 'react-native' {
     absoluteFill: StyleId,
     absoluteFillObject: Object,
     flatten: (style: StyleProp<StylePropTypes, StyleId>) => StylePropTypes,
-    create<S: Styles>(styles: S): StyleRuleSet<S>,
+    create<S: StyleDefinition>(styles: S): StyleRuleSet<S>,
     setStyleAttributePreprocessor(property: string, process: (nextProp: mixed) => mixed): void,
   |};
 
@@ -671,8 +671,8 @@ declare module 'react-native' {
 
   declare type ViewDefaultProps = {
   };
-
-  declare type ViewProps = {
+  
+  declare type RCTViewAttributes = {
     accessible?: boolean,
     accessibilityLabel?: React$PropType$Primitive<any>,
     accessibilityComponentType?: AccessibilityComponentType,
@@ -684,6 +684,23 @@ declare module 'react-native' {
     onMagicTap?: Function,
     testID?: string,
     nativeID?: string,
+    pointerEvents?: 'box-none'| 'none'| 'box-only'| 'auto',
+    removeClippedSubviews?: boolean,
+    renderToHardwareTextureAndroid?: boolean,
+    shouldRasterizeIOS?: boolean,
+    collapsable?: boolean,
+    needsOffscreenAlphaCompositing?: boolean,
+    hitSlop?: EdgeInsetsProp,
+    /**
+     * Invoked on mount and layout changes with
+     *
+     *   `{nativeEvent: {layout: {x, y, width, height}}}`
+     */
+    onLayout?: Function,
+  }
+
+  declare export type ViewProps = {
+    ...$Exact<RCTViewAttributes>,
     onResponderGrant?: Function,
     onResponderMove?: Function,
     onResponderReject?: Function,
@@ -694,18 +711,11 @@ declare module 'react-native' {
     onStartShouldSetResponderCapture?: Function,
     onMoveShouldSetResponder?: Function,
     onMoveShouldSetResponderCapture?: Function,
-    hitSlop?: EdgeInsetsProp,
-    pointerEvents?: 'box-none'| 'none'| 'box-only'| 'auto',
-    style?: StyleProp<ViewStylePropTypes, StyleId>,
-    removeClippedSubviews?: boolean,
-    renderToHardwareTextureAndroid?: boolean,
-    shouldRasterizeIOS?: boolean,
-    collapsable?: boolean,
-    needsOffscreenAlphaCompositing?: boolean,
+    style?: StyleProp<ViewStylePropTypes, StyleId>,    
     children?: React$Element<*>,
   };
 
-  declare export class View extends React$Component<void, ViewProps, void> {
+  declare class BaseView<D, P, S> extends React$Component<D, P, S> {
     blur(): void,
     focus(): void,
     measure(callback: MeasureOnSuccessCallback): void,
@@ -715,8 +725,22 @@ declare module 'react-native' {
       onSuccess: MeasureLayoutOnSuccessCallback,
       onFail: () => void,
     ): void,
-    setNativeProps(nativeProps: ViewProps): void,
+    setNativeProps(nativeProps: P): void,
   }
+  
+  declare export class View extends BaseView<ViewDefaultProps, ViewProps, void> {}
+  
+  declare export type AnimatedViewStylePropTypes = {
+    ...$Exact<ViewStylePropTypes>,
+    ...({ [key: $Keys<ViewStylePropTypes>]: AnimatedValue | AnimatedInterpolation })
+  };
+  
+  declare type AnimatedViewProps = {
+    ...$Exact<ViewProps>,
+    style: StyleProp<AnimatedViewStylePropTypes, StyleId>,
+  }
+  
+  declare class AnimatedView extends BaseView<ViewDefaultProps, AnimatedViewProps, void> {}
 
   declare type TextDefaultProps = {
     accessible: true,
@@ -725,7 +749,8 @@ declare module 'react-native' {
     disabled: false,
   };
 
-  declare type TextProps = {
+  declare export type TextProps = {
+    ...$Exact<RCTViewAttributes>,
     /**
      * When `numberOfLines` is set, this prop defines how text will be truncated.
      * `numberOfLines` must be set in conjunction with this prop.
@@ -759,12 +784,6 @@ declare module 'react-native' {
      * @platform android
      */
     textBreakStrategy?: 'simple' | 'highQuality' | 'balanced',
-    /**
-     * Invoked on mount and layout changes with
-     *
-     *   `{nativeEvent: {layout: {x, y, width, height}}}`
-     */
-    onLayout?: Function,
     /**
      * This function is called on press.
      *
@@ -842,7 +861,7 @@ declare module 'react-native' {
     children?: React$Element<*>,
   };
 
-  declare export class Text extends React$Component<TextDefaultProps, TextProps, void> {
+  declare class BaseText<D, P, S> extends React$Component<D, P, S> {    
     blur(): void,
     focus(): void,
     measure(callback: MeasureOnSuccessCallback): void,
@@ -852,8 +871,22 @@ declare module 'react-native' {
       onSuccess: MeasureLayoutOnSuccessCallback,
       onFail: () => void,
     ): void,
-    setNativeProps(nativeProps: TextProps): void,
+    setNativeProps(nativeProps: P): void,
   }
+  
+  declare export class Text extends BaseText<TextDefaultProps, TextProps, void> {}
+  
+  declare type AnimatedTextStylePropTypes = {
+    ...$Exact<TextStylePropTypes>,
+    ...({ [key: $Keys<TextStylePropTypes>]: AnimatedValue | AnimatedInterpolation })
+  };
+  
+  declare type AnimatedTextProps = {
+    ...$Exact<TextProps>,
+    style: StyleProp<AnimatedTextStylePropTypes, StyleId>,
+  };
+  
+  declare class AnimatedText extends BaseText<TextDefaultProps, AnimatedTextProps, void> {}
 
   declare type ImageUriSourcePropType = {
     uri: string,
@@ -1056,7 +1089,7 @@ declare module 'react-native' {
     scale: number,
   };
 
-  declare export class Image extends React$Component<void, ImageProps, void> {
+  declare class BaseImage<D, P, S> extends React$Component<D, P, S> {
     static resizeMode: ImageResizeModeEnum,
     /**
      * Retrieve the width and height (in pixels) of an image prior to displaying it.
@@ -1113,12 +1146,26 @@ declare module 'react-native' {
       onSuccess: MeasureLayoutOnSuccessCallback,
       onFail: () => void,
     ): void,
-    setNativeProps(nativeProps: ImageProps): void,
+    setNativeProps(nativeProps: P): void,
   }
+  
+  declare export class Image extends BaseImage<void, ImageProps, void> {}
+  
+  declare type AnimatedImageStylePropTypes = {
+    ...$Exact<ImageStylePropTypes>,
+    ...({ [key: $Keys<ImageStylePropTypes>]: AnimatedValue | AnimatedInterpolation })
+  };
+  
+  declare type AnimatedImageProps = {
+    ...$Exact<ImageProps>,
+    style: StyleProp<AnimatedImageStylePropTypes, StyleId>,
+  };
+  
+  declare class AnimatedImage extends BaseView<void, AnimatedImageProps, void> {}
 
 
   declare type ScrollViewProps = {
-    ...ViewProps,
+    ...$Exact<ViewProps>,
     /**
      * Controls whether iOS should automatically adjust the content inset
      * for scroll views that are placed behind a navigation bar or
@@ -1417,9 +1464,9 @@ declare module 'react-native' {
     overScrollMode?: 'auto' | 'always' | 'never',
   }
 
-  declare export class ScrollView extends React$Component<void, ScrollViewProps, void> {
+  declare export class BaseScrollView<D, P, S> extends React$Component<D, P, S> {
     // TODO(lmr): ScrollResponder.Mixin?
-    setNativeProps(props: ScrollViewProps): void,
+    setNativeProps(props: P): void,
 
     /**
      * Returns a reference to the underlying scroll responder, which supports
@@ -1462,7 +1509,21 @@ declare module 'react-native' {
       options?: { animated?: boolean },
     ): void,
   }
-
+  
+  declare export class ScrollView extends BaseScrollView<void, ScrollViewProps, void> {}
+  
+  declare type AnimatedScrollViewStyleProps = {
+    ...$Exact<ViewStylePropTypes>,
+    ...({ [key: $Keys<ViewStylePropTypes>]: AnimatedValue | AnimatedInterpolation })
+  };
+  
+  declare type AnimatedScrollViewProps = {
+    ...$Exact<ScrollViewProps>,
+    style: StyleProp<AnimatedScrollViewStyleProps, StyleId>,
+  };
+  
+  declare class AnimatedScrollView extends BaseView<void, AnimatedScrollViewProps, void> {}
+  
   declare export var Platform: {|
     OS: 'ios' | 'android',
     Version: number,
@@ -2011,7 +2072,7 @@ declare module 'react-native' {
      * see [Issue#7070](https://github.com/facebook/react-native/issues/7070)
      * for more detail.
      *
-     * [Styles](docs/style.html)
+     * [StyleDefinition](docs/style.html)
      */
     style?: StyleProp<TextStylePropTypes, StyleId>,
     /**
@@ -2490,7 +2551,8 @@ declare module 'react-native' {
     setDeadline(deadline: number): void,
   |};
 
-  declare type EasingFunction = (t: number) => number;
+  declare type EasingFunction = (t?: number) => number;
+  declare type EasingFunctionGenerator = (s: number) => EasingFunction;
 
   declare export var Easing: {|
     step0: (n: number) => EasingFunction,
@@ -2506,7 +2568,7 @@ declare module 'react-native' {
      * n = 4: http://easings.net/#easeInQuart
      * n = 5: http://easings.net/#easeInQuint
      */
-    poly: EasingFunction,
+    poly: EasingFunctionGenerator,
 
     /**
      * A sinusoidal function.
@@ -2595,10 +2657,6 @@ declare module 'react-native' {
     inOut(easing: EasingFunction): EasingFunction,
   |};
 
-
-
-
-
   declare type ExtrapolateType = 'extend' | 'identity' | 'clamp';
   declare type InterpolationConfigType = {
     inputRange: Array<number>,
@@ -2681,6 +2739,12 @@ declare module 'react-native' {
   declare type ValueListenerCallback = (state: {value: number}) => void;
 
   declare class AnimatedValue extends AnimatedWithChildren {
+    __isNative: boolean,
+    __getValue: () => number,
+    __getAnimatedValue: () => number,
+    
+    _listeners: { [key: string]: mixed },
+    
     constructor(value: number): void,
     /**
      * Directly set the value.  This will stop any animations running on the value
@@ -2883,7 +2947,7 @@ declare module 'react-native' {
 
   }
 
-  declare var Animated: {|
+  declare export var Animated: {|
     /**
      * Standard value class for driving animations.  Typically initialized with
      * `new Animated.Value(0);`
@@ -3049,6 +3113,11 @@ declare module 'react-native' {
      */
     forkEvent(event: ?AnimatedEvent | ?Function, listener: Function): AnimatedEvent | Function,
     unforkEvent(event: ?AnimatedEvent | ?Function, listener: Function): void ,
+    
+    Text: Class<AnimatedText>,
+    View: Class<AnimatedView>,
+    Image: Class<AnimatedImage>,
+    ScrollView: Class<AnimatedScrollView>,
   |};
 
   declare export function findNodeHandle(componentOrHandle: any): ?number;
@@ -3135,7 +3204,12 @@ declare module 'react-native' {
     tvParallaxProperties?: Object,
   };
 
-  declare export class TouchableOpacity extends React$Component<typeof TouchableOpacity.defaultProps, TouchableOpacityProps, void> {
+  declare type TouchableOpacityDefaultProps = {
+    activeOpacity: number,
+    focusedOpacity: number,
+  };
+
+  declare export class TouchableOpacity extends React$Component<TouchableOpacityDefaultProps, TouchableOpacityProps, void> {
     static defaultProps: {
       activeOpacity: 0.2,
       focusedOpacity: 0.7,
@@ -3220,8 +3294,8 @@ declare module 'react-native' {
      */
     background: {
       type: 'RippleAndroid',
-      color?: number,
-      borderless?: boolean,
+      color: number,
+      borderless: boolean,
     } | {
       type: 'ThemeAttrAndroid',
       attribute: string,
@@ -3238,8 +3312,13 @@ declare module 'react-native' {
      */
     useForeground?: boolean,
   };
+  
+  declare type TouchableNativeFeedbackDefaultProps = {
+    activeOpacity: number,
+    underlayColor: string,
+  };
 
-  declare export class TouchableNativeFeedback extends React$Component<typeof TouchableNativeFeedback.defaultProps, TouchableNativeFeedbackProps, void> {
+  declare export class TouchableNativeFeedback extends React$Component<TouchableNativeFeedbackDefaultProps, TouchableNativeFeedbackProps, void> {
     static defaultProps: {
       activeOpacity: 0.85,
       underlayColor: 'black',
@@ -4318,7 +4397,7 @@ declare module 'react-native' {
   // declare export var Image: any;
   // declare export var Dimensions: any;
   // declare export var ScrollView: any;
-  // declare export var Animated: any; // yes // TODO(lmr): View/Text/Image/ScrollView
+  // declare export var Animated: any; // yes
   // declare export var Alert: any; // yes
   // declare export var TouchableHighlight: any;
   // declare export var ActivityIndicator: any;

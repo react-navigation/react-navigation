@@ -13,7 +13,7 @@ import type {
   NavigationState,
   NavigationAction,
   NavigationDrawerScreenOptions,
-  Style,
+  ViewStyleProp,
 } from '../../TypeDefinition';
 
 export type DrawerScene = {
@@ -33,7 +33,7 @@ export type DrawerViewConfig = {
   drawerPosition: 'left' | 'right',
   contentComponent: ReactClass<*>,
   contentOptions?: {},
-  style?: Style,
+  style?: ViewStyleProp,
 };
 
 type Props = DrawerViewConfig & {

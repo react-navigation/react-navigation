@@ -9,7 +9,8 @@ import type {
   NavigationRoute,
   NavigationState,
   NavigationScreenProp,
-  Style,
+  ViewStyleProp,
+  TextStyleProp,
 } from '../../TypeDefinition';
 
 import type { TabScene } from './TabView';
@@ -33,17 +34,14 @@ type Props = {
   getLabel: (scene: TabScene) => ?(React.Element<*> | string),
   renderIcon: (scene: TabScene) => React.Element<*>,
   showLabel: boolean,
-  style?: Style,
-  labelStyle?: Style,
-  tabStyle?: Style,
+  style?: ViewStyleProp,
+  labelStyle?: TextStyleProp,
+  tabStyle?: ViewStyleProp,
   showIcon: boolean,
 };
 
-export default class TabBarBottom extends PureComponent<
-  DefaultProps,
-  Props,
-  void
-> {
+export default class TabBarBottom
+  extends PureComponent<DefaultProps, Props, void> {
   // See https://developer.apple.com/library/content/documentation/UserExperience/Conceptual/UIKitUICatalog/UITabBar.html
   static defaultProps = {
     activeTintColor: '#3478f6', // Default active tint color in iOS 10
@@ -78,7 +76,7 @@ export default class TabBarBottom extends PureComponent<
     );
     const color = position.interpolate({
       inputRange,
-      outputRange,
+      outputRange: (outputRange: Array<string>),
     });
 
     const tintColor = scene.focused ? activeTintColor : inactiveTintColor;
@@ -149,7 +147,7 @@ export default class TabBarBottom extends PureComponent<
           );
           const backgroundColor = position.interpolate({
             inputRange,
-            outputRange,
+            outputRange: (outputRange: Array<string>),
           });
           const justifyContent = this.props.showIcon ? 'flex-end' : 'center';
           return (

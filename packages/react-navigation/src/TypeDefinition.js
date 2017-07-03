@@ -2,13 +2,29 @@
 
 import React from 'react';
 
-// @todo when we split types into common, native and web,
-// we can properly change Animated.Value to its real value
-type AnimatedValue = *;
+import {
+  Animated,
+  type ViewProps,
+  type TextProps,
+  type StyleDefinition,
+  type AnimatedViewStylePropTypes,
+} from 'react-native';
+
+export type ViewStyleProp = $PropertyType<ViewProps, 'style'>;
+export type TextStyleProp = $PropertyType<TextProps, 'style'>;
+export type AnimatedViewStyleProp = $PropertyType<
+  $PropertyType<Animated.View, 'props'>,
+  'style'
+>;
+export type AnimatedTextStyleProp = $PropertyType<
+  $PropertyType<Animated.Text, 'props'>,
+  'style'
+>;
 
 export type HeaderMode = 'float' | 'screen' | 'none';
 
-export type HeaderProps = NavigationSceneRendererProps & {
+export type HeaderProps = {
+  ...$Exact<NavigationSceneRendererProps>,
   mode: HeaderMode,
   router: NavigationRouter<
     NavigationState,
@@ -18,7 +34,7 @@ export type HeaderProps = NavigationSceneRendererProps & {
   getScreenDetails: NavigationScene => NavigationScreenDetails<
     NavigationStackScreenOptions
   >,
-  style: Style,
+  style: ViewStyleProp,
 };
 
 /**
@@ -66,7 +82,8 @@ export type NavigationLeafRoute = {
   params?: NavigationParams,
 };
 
-export type NavigationStateRoute = NavigationLeafRoute & {
+export type NavigationStateRoute = {
+  ...$Exact<NavigationLeafRoute>,
   index: number,
   routes: Array<NavigationRoute>,
 };
@@ -121,14 +138,6 @@ export type NavigationScreenOption<T> =
     navigation: NavigationScreenProp<NavigationRoute, NavigationAction>,
     config: T
   ) => T);
-
-export type Style =
-  | { [key: string]: any }
-  | number
-  | false
-  | null
-  | void
-  | Array<Style>;
 
 export type NavigationScreenDetails<T> = {
   options: T,
@@ -216,24 +225,25 @@ export type NavigationUriAction = {
 export type NavigationStackViewConfig = {
   mode?: 'card' | 'modal',
   headerMode?: HeaderMode,
-  cardStyle?: Style,
+  cardStyle?: ViewStyleProp,
   transitionConfig?: () => TransitionConfig,
   onTransitionStart?: () => void,
   onTransitionEnd?: () => void,
 };
 
-export type NavigationStackScreenOptions = NavigationScreenOptions & {
+export type NavigationStackScreenOptions = {
+  ...$Exact<NavigationScreenOptions>,
   header?: ?(React.Element<*> | (HeaderProps => React.Element<*>)),
   headerTitle?: string | React.Element<*>,
-  headerTitleStyle?: Style,
+  headerTitleStyle?: AnimatedTextStyleProp,
   headerTintColor?: string,
   headerLeft?: React.Element<*>,
   headerBackTitle?: string,
   headerTruncatedBackTitle?: string,
-  headerBackTitleStyle?: Style,
+  headerBackTitleStyle?: TextStyleProp,
   headerPressColorAndroid?: string,
   headerRight?: React.Element<*>,
-  headerStyle?: Style,
+  headerStyle?: ViewStyleProp,
   gesturesEnabled?: boolean,
 };
 
@@ -352,11 +362,11 @@ export type NavigationNavigatorProps<T> = {
 export type NavigationGestureDirection = 'horizontal' | 'vertical';
 
 export type NavigationLayout = {
-  height: AnimatedValue,
+  height: Animated.Value,
   initHeight: number,
   initWidth: number,
   isMeasured: boolean,
-  width: AnimatedValue,
+  width: Animated.Value,
 };
 
 export type NavigationScene = {
@@ -375,14 +385,14 @@ export type NavigationTransitionProps = {
   navigation: NavigationScreenProp<NavigationState, NavigationAction>,
 
   // The progressive index of the transitioner's navigation state.
-  position: AnimatedValue,
+  position: Animated.Value,
 
   // The value that represents the progress of the transition when navigation
   // state changes from one to another. Its numberic value will range from 0
   // to 1.
   //  progress.__getAnimatedValue() < 1 : transtion is happening.
   //  progress.__getAnimatedValue() == 1 : transtion completes.
-  progress: AnimatedValue,
+  progress: Animated.Value,
 
   // All the scenes of the transitioner.
   scenes: Array<NavigationScene>,
@@ -406,9 +416,9 @@ export type NavigationSceneRendererProps = NavigationTransitionProps;
 export type NavigationTransitionSpec = {
   duration?: number,
   // An easing function from `Easing`.
-  easing?: (t: number) => number,
+  easing?: (t?: number) => number,
   // A timing function such as `Animated.timing`.
-  timing?: (value: AnimatedValue, config: any) => any,
+  timing?: (value: Animated.Value, config: any) => any,
 };
 
 /**
@@ -422,11 +432,11 @@ export type TransitionConfig = {
   screenInterpolator?: (props: NavigationSceneRendererProps) => Object,
   // The style of the container. Useful when a scene doesn't have
   // 100% opacity and the underlying container is visible.
-  containerStyle?: Style,
+  containerStyle?: $PropertyType<ViewProps, 'style'>,
 };
 
 export type NavigationAnimationSetter = (
-  position: AnimatedValue,
+  position: Animated.Value,
   newState: NavigationState,
   lastState: NavigationState
 ) => void;
@@ -435,7 +445,7 @@ export type NavigationSceneRenderer = () => ?React.Element<*>;
 
 export type NavigationStyleInterpolator = (
   props: NavigationSceneRendererProps
-) => Style;
+) => AnimatedViewStylePropTypes;
 
 export type LayoutEvent = {
   nativeEvent: {

@@ -17,7 +17,7 @@ import type {
   NavigationTransitionProps,
   NavigationRouter,
   HeaderMode,
-  Style,
+  ViewStyleProp,
   TransitionConfig,
 } from '../TypeDefinition';
 
@@ -34,10 +34,10 @@ type Props = {
     NavigationAction,
     NavigationStackScreenOptions
   >,
-  cardStyle?: Style,
+  cardStyle?: ViewStyleProp,
   onTransitionStart?: () => void,
   onTransitionEnd?: () => void,
-  style: Style,
+  style: ViewStyleProp,
   /**
    * Optional custom animation when transitioning between screens.
    */
@@ -88,7 +88,7 @@ class CardStackTransitioner extends Component<DefaultProps, Props, void> {
     if (
       !!NativeAnimatedModule &&
       // Native animation support also depends on the transforms used:
-      CardStackStyleInterpolator.canUseNativeDriver(isModal)
+      CardStackStyleInterpolator.canUseNativeDriver()
     ) {
       // Internal undocumented prop
       transitionSpec.useNativeDriver = true;
