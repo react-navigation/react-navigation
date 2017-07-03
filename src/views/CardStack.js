@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 
 import Card from './Card';
-import Header from './Header';
+import Header from './Header/Header';
 import NavigationActions from '../NavigationActions';
 import addNavigationHelpers from '../addNavigationHelpers';
 import SceneView from './SceneView';
@@ -29,7 +29,7 @@ import type {
   NavigationScreenDetails,
   NavigationStackScreenOptions,
   HeaderMode,
-  Style,
+  ViewStyleProp,
   TransitionConfig,
 } from '../TypeDefinition';
 
@@ -47,10 +47,10 @@ type Props = {
     NavigationAction,
     NavigationStackScreenOptions
   >,
-  cardStyle?: Style,
+  cardStyle?: ViewStyleProp,
   onTransitionStart?: () => void,
   onTransitionEnd?: () => void,
-  style?: any,
+  style?: any, // TODO: Remove
   /**
    * Optional custom animation when transitioning between screens.
    */

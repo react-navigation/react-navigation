@@ -14,7 +14,7 @@ import type {
   NavigationDrawerScreenOptions,
   NavigationState,
   NavigationStateRoute,
-  Style,
+  ViewStyleProp,
 } from '../../TypeDefinition';
 
 import type { DrawerScene, DrawerItem } from './DrawerView';
@@ -32,7 +32,7 @@ type Props = {
   contentComponent: ReactClass<*>,
   contentOptions?: {},
   screenProps?: {},
-  style?: Style,
+  style?: ViewStyleProp,
 };
 
 /**

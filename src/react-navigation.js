@@ -57,13 +57,13 @@ module.exports = {
 
   // Header
   get Header() {
-    return require('./views/Header').default;
+    return require('./views/Header/Header').default;
   },
   get HeaderTitle() {
-    return require('./views/HeaderTitle').default;
+    return require('./views/Header/HeaderTitle').default;
   },
   get HeaderBackButton() {
-    return require('./views/HeaderBackButton').default;
+    return require('./views/Header/HeaderBackButton').default;
   },
 
   // DrawerView

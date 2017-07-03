@@ -10,22 +10,22 @@ import {
   StyleSheet,
 } from 'react-native';
 
-import type { LayoutEvent, Style } from '../TypeDefinition';
+import type { LayoutEvent, TextStyleProp } from '../../TypeDefinition';
 
-import TouchableItem from './TouchableItem';
+import TouchableItem from '../TouchableItem';
 
 type Props = {
   onPress?: () => void,
-  pressColorAndroid?: ?string,
+  pressColorAndroid?: string,
   title?: ?string,
-  titleStyle?: ?Style,
+  titleStyle?: ?TextStyleProp,
   tintColor?: ?string,
   truncatedTitle?: ?string,
   width?: ?number,
 };
 
 type DefaultProps = {
-  pressColorAndroid: ?string,
+  pressColorAndroid: string,
   tintColor: ?string,
   truncatedTitle: ?string,
 };
@@ -88,14 +88,22 @@ class HeaderBackButton extends React.PureComponent<DefaultProps, Props, State> {
       >
         <View style={styles.container}>
           <Image
-            style={[styles.icon, title && styles.iconWithTitle, { tintColor }]}
+            style={[
+              styles.icon,
+              !!title && styles.iconWithTitle,
+              !!tintColor && { tintColor },
+            ]}
             source={asset}
           />
           {Platform.OS === 'ios' &&
             title &&
             <Text
               onLayout={this._onTextLayout}
-              style={[styles.title, { color: tintColor }, titleStyle]}
+              style={[
+                styles.title,
+                !!tintColor && { color: tintColor },
+                titleStyle,
+              ]}
               numberOfLines={1}
             >
               {backButtonTitle}

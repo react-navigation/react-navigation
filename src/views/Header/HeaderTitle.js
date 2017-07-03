@@ -2,17 +2,23 @@
 
 import React from 'react';
 
-import { Platform, StyleSheet, Animated } from 'react-native';
+import { Text, View, Platform, StyleSheet, Animated } from 'react-native';
 
-import type { Style } from '../TypeDefinition';
+type AnimatedTextStyleProp = $PropertyType<
+  $PropertyType<Animated.Text, 'props'>,
+  'style'
+>;
 
 type Props = {
-  tintColor?: ?string,
-  style?: Style,
+  children: React$Element<*>,
+  selectionColor?: string | number,
+  style?: AnimatedTextStyleProp,
 };
 
+const AnimatedText = Animated.Text;
+
 const HeaderTitle = ({ style, ...rest }: Props) => (
-  <Animated.Text
+  <AnimatedText
     numberOfLines={1}
     {...rest}
     style={[styles.title, style]}

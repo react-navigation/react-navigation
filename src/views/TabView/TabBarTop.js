@@ -9,7 +9,8 @@ import type {
   NavigationAction,
   NavigationScreenProp,
   NavigationState,
-  Style,
+  ViewStyleProp,
+  TextStyleProp,
 } from '../../TypeDefinition';
 
 import type { TabScene } from './TabView';
@@ -32,8 +33,8 @@ type Props = {
   navigation: NavigationScreenProp<NavigationState, NavigationAction>,
   getLabel: (scene: TabScene) => ?(React.Element<*> | string),
   renderIcon: (scene: TabScene) => React.Element<*>,
-  labelStyle?: Style,
-  iconStyle?: Style,
+  labelStyle?: TextStyleProp,
+  iconStyle?: ViewStyleProp,
 };
 
 export default class TabBarTop
@@ -71,7 +72,7 @@ export default class TabBarTop
     );
     const color = position.interpolate({
       inputRange,
-      outputRange,
+      outputRange: (outputRange: Array<string>),
     });
 
     const tintColor = scene.focused ? activeTintColor : inactiveTintColor;
