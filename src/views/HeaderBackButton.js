@@ -18,6 +18,7 @@ type Props = {
   onPress?: () => void,
   pressColorAndroid?: ?string,
   title?: ?string,
+  asset?: ?any,
   titleStyle?: ?Style,
   tintColor?: ?string,
   truncatedTitle?: ?string,
@@ -72,7 +73,7 @@ class HeaderBackButton extends React.PureComponent<DefaultProps, Props, State> {
     const backButtonTitle = renderTruncated ? truncatedTitle : title;
 
     // eslint-disable-next-line global-require
-    const asset = require('./assets/back-icon.png');
+    const asset = this.props.asset || require('./assets/back-icon.png');
 
     return (
       <TouchableItem
