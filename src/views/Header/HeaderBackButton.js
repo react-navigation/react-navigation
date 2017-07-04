@@ -65,9 +65,10 @@ class HeaderBackButton extends React.PureComponent<DefaultProps, Props, State> {
       truncatedTitle,
     } = this.props;
 
-    const renderTruncated = this.state.initialTextWidth && width
-      ? this.state.initialTextWidth > width
-      : false;
+    const renderTruncated =
+      this.state.initialTextWidth && width
+        ? this.state.initialTextWidth > width
+        : false;
 
     const backButtonTitle = renderTruncated ? truncatedTitle : title;
 
@@ -124,28 +125,30 @@ const styles = StyleSheet.create({
     fontSize: 17,
     paddingRight: 10,
   },
-  icon: Platform.OS === 'ios'
-    ? {
-        height: 21,
-        width: 13,
-        marginLeft: 10,
-        marginRight: 22,
-        marginVertical: 12,
-        resizeMode: 'contain',
-        transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }],
-      }
-    : {
-        height: 24,
-        width: 24,
-        margin: 16,
-        resizeMode: 'contain',
-        transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }],
-      },
-  iconWithTitle: Platform.OS === 'ios'
-    ? {
-        marginRight: 5,
-      }
-    : {},
+  icon:
+    Platform.OS === 'ios'
+      ? {
+          height: 21,
+          width: 13,
+          marginLeft: 10,
+          marginRight: 22,
+          marginVertical: 12,
+          resizeMode: 'contain',
+          transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }],
+        }
+      : {
+          height: 24,
+          width: 24,
+          margin: 16,
+          resizeMode: 'contain',
+          transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }],
+        },
+  iconWithTitle:
+    Platform.OS === 'ios'
+      ? {
+          marginRight: 5,
+        }
+      : {},
 });
 
 export default HeaderBackButton;

@@ -37,8 +37,11 @@ type Props = {
   iconStyle?: ViewStyleProp,
 };
 
-export default class TabBarTop
-  extends PureComponent<DefaultProps, Props, void> {
+export default class TabBarTop extends PureComponent<
+  DefaultProps,
+  Props,
+  void
+> {
   static defaultProps = {
     activeTintColor: '#fff',
     inactiveTintColor: '#fff',

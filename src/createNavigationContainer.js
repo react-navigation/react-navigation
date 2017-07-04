@@ -82,7 +82,9 @@ export default function createNavigationContainer<T: *>(
       invariant(
         keys.length === 0,
         'This navigator has both navigation and container props, so it is ' +
-          `unclear if it should own its own state. Remove props: "${keys.join(', ')}" ` +
+          `unclear if it should own its own state. Remove props: "${keys.join(
+            ', '
+          )}" ` +
           'if the navigator should get its state from the navigation prop. If the ' +
           'navigator should maintain its own state, do not pass a navigation prop.'
       );

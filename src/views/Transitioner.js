@@ -157,18 +157,19 @@ class Transitioner extends React.Component<*, Props, State> {
     const positionHasChanged = position.__getValue() !== toValue;
 
     // if swiped back, indexHasChanged == true && positionHasChanged == false
-    const animations = indexHasChanged && positionHasChanged
-      ? [
-          timing(progress, {
-            ...transitionSpec,
-            toValue: 1,
-          }),
-          timing(position, {
-            ...transitionSpec,
-            toValue: nextProps.navigation.state.index,
-          }),
-        ]
-      : [];
+    const animations =
+      indexHasChanged && positionHasChanged
+        ? [
+            timing(progress, {
+              ...transitionSpec,
+              toValue: 1,
+            }),
+            timing(position, {
+              ...transitionSpec,
+              toValue: nextProps.navigation.state.index,
+            }),
+          ]
+        : [];
 
     // update scenes and play the transition
     this._isTransitionRunning = true;
