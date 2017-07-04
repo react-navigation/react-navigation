@@ -4413,6 +4413,7 @@ declare module 'react-native' {
   // declare export var InteractionManager: any; // yes
   // declare export var Easing: any; // yes
   // declare export var TouchableNativeFeedback: any;
+  declare export var Button: any;
   declare export var NativeModules: any;
   declare export var Modal: any;
   declare export var ColorPropType: any;
