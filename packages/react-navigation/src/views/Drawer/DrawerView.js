@@ -115,7 +115,7 @@ export default class DrawerView<T: *> extends PureComponent<void, Props, void> {
     return navigationState;
   };
 
-  _renderNavigationView = () => (
+  _renderNavigationView = () =>
     <DrawerSidebar
       screenProps={this.props.screenProps}
       navigation={this._screenNavigationProp}
@@ -123,8 +123,7 @@ export default class DrawerView<T: *> extends PureComponent<void, Props, void> {
       contentComponent={this.props.contentComponent}
       contentOptions={this.props.contentOptions}
       style={this.props.style}
-    />
-  );
+    />;
 
   _drawer: any;
 

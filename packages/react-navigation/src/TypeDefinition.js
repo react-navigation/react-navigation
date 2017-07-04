@@ -135,9 +135,9 @@ export type NavigationRouter<State, Action, Options> = {
 export type NavigationScreenOption<T> =
   | T
   | ((
-    navigation: NavigationScreenProp<NavigationRoute, NavigationAction>,
-    config: T
-  ) => T);
+      navigation: NavigationScreenProp<NavigationRoute, NavigationAction>,
+      config: T
+    ) => T);
 
 export type NavigationScreenDetails<T> = {
   options: T,
@@ -157,12 +157,12 @@ export type NavigationScreenConfigProps = {
 export type NavigationScreenConfig<Options> =
   | Options
   | (NavigationScreenConfigProps &
-    (({
-      navigationOptions: NavigationScreenProp<
-        NavigationRoute,
-        NavigationAction
-      >,
-    }) => Options));
+      (({
+        navigationOptions: NavigationScreenProp<
+          NavigationRoute,
+          NavigationAction
+        >,
+      }) => Options));
 
 export type NavigationComponent =
   | NavigationScreenComponent<*, *>
@@ -302,14 +302,14 @@ export type NavigationTabScreenOptions = NavigationScreenOptions & {
   tabBarIcon?:
     | React.Element<*>
     | ((options: { tintColor: ?string, focused: boolean }) => ?React.Element<
-      *
-    >),
+        *
+      >),
   tabBarLabel?:
     | string
     | React.Element<*>
     | ((options: { tintColor: ?string, focused: boolean }) => ?React.Element<
-      *
-    >),
+        *
+      >),
   tabBarVisible?: boolean,
 };
 
@@ -317,13 +317,13 @@ export type NavigationDrawerScreenOptions = NavigationScreenOptions & {
   drawerIcon?:
     | React.Element<*>
     | ((options: { tintColor: ?string, focused: boolean }) => ?React.Element<
-      *
-    >),
+        *
+      >),
   drawerLabel?:
     | React.Element<*>
     | ((options: { tintColor: ?string, focused: boolean }) => ?React.Element<
-      *
-    >),
+        *
+      >),
 };
 
 export type NavigationRouteConfigMap = {

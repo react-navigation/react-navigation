@@ -19,7 +19,7 @@ const createNavigator = (
   routeConfigs: NavigationRouteConfigMap,
   navigatorConfig: any,
   navigatorType: NavigatorType
-) => (View: NavigationNavigator<*, *, *, *>) => {
+) => (NavigationView: NavigationNavigator<*, *, *, *>) => {
   class Navigator extends React.Component {
     props: NavigationNavigatorProps<*>;
 
@@ -30,7 +30,7 @@ const createNavigator = (
     static navigatorType = navigatorType;
 
     render() {
-      return <View {...this.props} router={router} />;
+      return <NavigationView {...this.props} router={router} />;
     }
   }
 
