@@ -5,7 +5,7 @@ import { NativeModules } from 'react-native';
 
 import CardStack from './CardStack';
 import CardStackStyleInterpolator from './CardStackStyleInterpolator';
-import Transitioner from './Transitioner';
+import Transitioner from '../Transitioner';
 import TransitionConfigs from './TransitionConfigs';
 
 import type {
@@ -19,7 +19,7 @@ import type {
   HeaderMode,
   ViewStyleProp,
   TransitionConfig,
-} from '../TypeDefinition';
+} from '../../TypeDefinition';
 
 const NativeAnimatedModule =
   NativeModules && NativeModules.NativeAnimatedModule;

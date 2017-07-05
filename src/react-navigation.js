@@ -46,13 +46,13 @@ module.exports = {
     return require('./views/Transitioner').default;
   },
   get CardStackTransitioner() {
-    return require('./views/CardStackTransitioner').default;
+    return require('./views/CardStack/CardStackTransitioner').default;
   },
   get CardStack() {
-    return require('./views/CardStack').default;
+    return require('./views/CardStack/CardStack').default;
   },
   get Card() {
-    return require('./views/Card').default;
+    return require('./views/CardStack/Card').default;
   },
 
   // Header

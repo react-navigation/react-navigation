@@ -21,21 +21,71 @@ export type AnimatedTextStyleProp = $PropertyType<
   'style'
 >;
 
-export type HeaderMode = 'float' | 'screen' | 'none';
+/**
+ * Navigation State + Action
+ */
 
-export type HeaderProps = {
-  ...$Exact<NavigationSceneRendererProps>,
-  mode: HeaderMode,
-  router: NavigationRouter<
-    NavigationState,
-    NavigationAction,
-    NavigationStackScreenOptions
-  >,
-  getScreenDetails: NavigationScene => NavigationScreenDetails<
-    NavigationStackScreenOptions
-  >,
-  style: ViewStyleProp,
+export type NavigationParams = {
+  [key: string]: mixed,
 };
+
+export type NavigationNavigateAction = {
+  type: 'Navigation/NAVIGATE',
+  routeName: string,
+  params?: NavigationParams,
+
+  // The action to run inside the sub-router
+  action?: NavigationNavigateAction,
+};
+
+export type NavigationBackAction = {
+  type: 'Navigation/BACK',
+  key?: ?string,
+};
+
+export type NavigationSetParamsAction = {
+  type: 'Navigation/SET_PARAMS',
+
+  // The key of the route where the params should be set
+  key: string,
+
+  // The new params to merge into the existing route params
+  params?: NavigationParams,
+};
+
+export type NavigationInitAction = {
+  type: 'Navigation/INIT',
+  params?: NavigationParams,
+};
+
+export type NavigationResetAction = {
+  type: 'Navigation/RESET',
+  index: number,
+  key?: ?string,
+  actions: Array<NavigationNavigateAction>,
+};
+
+export type NavigationUriAction = {
+  type: 'Navigation/URI',
+  uri: string,
+};
+
+export type NavigationStackAction =
+  | NavigationInitAction
+  | NavigationNavigateAction
+  | NavigationBackAction
+  | NavigationSetParamsAction
+  | NavigationResetAction;
+
+export type NavigationTabAction =
+  | NavigationInitAction
+  | NavigationNavigateAction
+  | NavigationBackAction;
+
+export type NavigationAction =
+  | NavigationInitAction
+  | NavigationStackAction
+  | NavigationTabAction;
 
 /**
  * NavigationState is a tree of routes for a single navigator, where each child
@@ -88,6 +138,10 @@ export type NavigationStateRoute = {
   routes: Array<NavigationRoute>,
 };
 
+/**
+ * Router
+ */
+
 export type NavigationScreenOptionsGetter<Options, Action> = (
   navigation: NavigationScreenProp<NavigationRoute, Action>,
   screenProps?: {}
@@ -132,13 +186,6 @@ export type NavigationRouter<State, Action, Options> = {
   getScreenOptions: NavigationScreenOptionsGetter<Options, Action>,
 };
 
-export type NavigationScreenOption<T> =
-  | T
-  | ((
-      navigation: NavigationScreenProp<NavigationRoute, NavigationAction>,
-      config: T
-    ) => T);
-
 export type NavigationScreenDetails<T> = {
   options: T,
   state: NavigationRoute,
@@ -151,18 +198,18 @@ export type NavigationScreenOptions = {
 
 export type NavigationScreenConfigProps = {
   navigation: NavigationScreenProp<NavigationRoute, NavigationAction>,
-  screenProps: Object,
+  screenProps: {},
 };
 
 export type NavigationScreenConfig<Options> =
   | Options
-  | (NavigationScreenConfigProps &
-      (({
-        navigationOptions: NavigationScreenProp<
-          NavigationRoute,
-          NavigationAction
-        >,
-      }) => Options));
+  | (({
+      ...$Exact<NavigationScreenConfigProps>,
+      navigationOptions: NavigationScreenProp<
+        NavigationRoute,
+        NavigationAction
+      >,
+    }) => Options);
 
 export type NavigationComponent =
   | NavigationScreenComponent<*, *>
@@ -177,59 +224,51 @@ export type NavigationNavigator<T, State, Action, Options> = ReactClass<T> & {
   navigationOptions?: NavigationScreenConfig<Options>,
 };
 
-export type NavigationParams = {
-  [key: string]: mixed,
+export type NavigationRouteConfig<T: {}> = {
+  ...$Exact<T>,
+  navigationOptions?: NavigationScreenConfig<*>,
+  path?: string,
 };
 
-export type NavigationNavigateAction = {
-  type: 'Navigation/NAVIGATE',
-  routeName: string,
-  params?: NavigationParams,
+export type NavigationScreenRouteConfig =
+  | {
+      screen: NavigationComponent,
+    }
+  | {
+      getScreen: () => NavigationComponent,
+    };
 
-  // The action to run inside the sub-router
-  action?: NavigationNavigateAction,
+export type NavigationPathsConfig = {
+  [routeName: string]: string,
 };
 
-export type NavigationBackAction = {
-  type: 'Navigation/BACK',
-  key?: ?string,
+export type NavigationRouteConfigMap = {
+  [routeName: string]: NavigationRouteConfig<*>,
 };
 
-export type NavigationSetParamsAction = {
-  type: 'Navigation/SET_PARAMS',
+/**
+ * Header
+ */
 
-  // The key of the route where the params should be set
-  key: string,
+export type HeaderMode = 'float' | 'screen' | 'none';
 
-  // The new params to merge into the existing route params
-  params?: NavigationParams,
+export type HeaderProps = {
+  ...$Exact<NavigationSceneRendererProps>,
+  mode: HeaderMode,
+  router: NavigationRouter<
+    NavigationState,
+    NavigationAction,
+    NavigationStackScreenOptions
+  >,
+  getScreenDetails: NavigationScene => NavigationScreenDetails<
+    NavigationStackScreenOptions
+  >,
+  style: ViewStyleProp,
 };
 
-export type NavigationInitAction = {
-  type: 'Navigation/INIT',
-  params?: NavigationParams,
-};
-
-export type NavigationResetAction = {
-  type: 'Navigation/RESET',
-  index: number,
-  key?: ?string,
-  actions: Array<NavigationNavigateAction>,
-};
-
-export type NavigationUriAction = {
-  type: 'Navigation/URI',
-  uri: string,
-};
-
-export type NavigationStackViewConfig = {
-  mode?: 'card' | 'modal',
-  headerMode?: HeaderMode,
-  cardStyle?: ViewStyleProp,
-  transitionConfig?: () => TransitionConfig,
-  onTransitionStart?: () => void,
-  onTransitionEnd?: () => void,
-};
+/**
+ * Stack Navigator
+ */
 
 export type NavigationStackScreenOptions = {
   ...$Exact<NavigationScreenOptions>,
@@ -254,39 +293,23 @@ export type NavigationStackRouterConfig = {
   navigationOptions?: NavigationScreenConfig<NavigationStackScreenOptions>,
 };
 
-export type NavigationStackAction =
-  | NavigationInitAction
-  | NavigationNavigateAction
-  | NavigationBackAction
-  | NavigationSetParamsAction
-  | NavigationResetAction;
-
-export type NavigationTabAction =
-  | NavigationInitAction
-  | NavigationNavigateAction
-  | NavigationBackAction;
-
-export type NavigationAction =
-  | NavigationInitAction
-  | NavigationStackAction
-  | NavigationTabAction;
-
-export type NavigationRouteConfig<T> = T & {
-  navigationOptions?: NavigationScreenConfig<*>,
-  path?: string,
+export type NavigationStackViewConfig = {
+  mode?: 'card' | 'modal',
+  headerMode?: HeaderMode,
+  cardStyle?: ViewStyleProp,
+  transitionConfig?: () => TransitionConfig,
+  onTransitionStart?: () => void,
+  onTransitionEnd?: () => void,
 };
 
-export type NavigationScreenRouteConfig =
-  | {
-      screen: NavigationComponent,
-    }
-  | {
-      getScreen: () => NavigationComponent,
-    };
-
-export type NavigationPathsConfig = {
-  [routeName: string]: string,
+export type StackNavigatorConfig = {
+  ...$Exact<NavigationStackViewConfig>,
+  ...$Exact<NavigationStackRouterConfig>,
 };
+
+/**
+ * Tab Navigator
+ */
 
 export type NavigationTabRouterConfig = {
   initialRouteName?: string,
@@ -298,7 +321,8 @@ export type NavigationTabRouterConfig = {
   backBehavior?: 'none' | 'initialRoute', // defaults `initialRoute`
 };
 
-export type NavigationTabScreenOptions = NavigationScreenOptions & {
+export type NavigationTabScreenOptions = {
+  ...$Exact<NavigationScreenOptions>,
   tabBarIcon?:
     | React.Element<*>
     | ((options: { tintColor: ?string, focused: boolean }) => ?React.Element<
@@ -313,7 +337,12 @@ export type NavigationTabScreenOptions = NavigationScreenOptions & {
   tabBarVisible?: boolean,
 };
 
-export type NavigationDrawerScreenOptions = NavigationScreenOptions & {
+/**
+ * Drawer
+ */
+
+export type NavigationDrawerScreenOptions = {
+  ...$Exact<NavigationScreenOptions>,
   drawerIcon?:
     | React.Element<*>
     | ((options: { tintColor: ?string, focused: boolean }) => ?React.Element<
@@ -326,9 +355,9 @@ export type NavigationDrawerScreenOptions = NavigationScreenOptions & {
       >),
 };
 
-export type NavigationRouteConfigMap = {
-  [routeName: string]: NavigationRouteConfig<*>,
-};
+/**
+ * Navigator Prop
+ */
 
 export type NavigationDispatch<A> = (action: A) => boolean;
 
@@ -349,10 +378,10 @@ export type NavigationScreenProp<S, A> = {
   setParams: (newParams: NavigationParams) => boolean,
 };
 
-export type NavigationNavigatorProps<T> = {
-  navigation: NavigationProp<T, NavigationAction>,
+export type NavigationNavigatorProps<O, S> = {
+  navigation: NavigationProp<S, NavigationAction>,
   screenProps: *,
-  navigationOptions: *,
+  navigationOptions: O,
 };
 
 /**
@@ -429,7 +458,7 @@ export type TransitionConfig = {
   transitionSpec?: NavigationTransitionSpec,
   // How to animate position and opacity of the screen
   // based on the value generated by the transitionSpec
-  screenInterpolator?: (props: NavigationSceneRendererProps) => Object,
+  screenInterpolator?: (props: NavigationSceneRendererProps) => {},
   // The style of the container. Useful when a scene doesn't have
   // 100% opacity and the underlying container is visible.
   containerStyle?: $PropertyType<ViewProps, 'style'>,

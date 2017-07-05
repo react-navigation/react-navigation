@@ -84,7 +84,7 @@ const DrawerNavigator = (
     />
   );
 
-  return createNavigationContainer(navigator, containerConfig);
+  return createNavigationContainer(navigator);
 };
 
 export default DrawerNavigator;

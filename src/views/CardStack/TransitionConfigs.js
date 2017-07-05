@@ -6,16 +6,9 @@ import type {
   NavigationTransitionProps,
   NavigationTransitionSpec,
   TransitionConfig,
-} from '../TypeDefinition';
+} from '../../TypeDefinition';
 
 import CardStackStyleInterpolator from './CardStackStyleInterpolator';
-
-// Used for all animations unless overriden
-const DefaultTransitionSpec = ({
-  duration: 250,
-  easing: Easing.inOut(Easing.ease),
-  timing: Animated.timing,
-}: NavigationTransitionSpec);
 
 const IOSTransitionSpec = ({
   duration: 500,
@@ -113,7 +106,6 @@ function getTransitionConfig(
 }
 
 export default {
-  DefaultTransitionSpec,
   defaultTransitionConfig,
   getTransitionConfig,
 };

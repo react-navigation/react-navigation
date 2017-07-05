@@ -14,10 +14,10 @@ import {
 } from 'react-native';
 
 import Card from './Card';
-import Header from './Header/Header';
-import NavigationActions from '../NavigationActions';
-import addNavigationHelpers from '../addNavigationHelpers';
-import SceneView from './SceneView';
+import Header from '../Header/Header';
+import NavigationActions from '../../NavigationActions';
+import addNavigationHelpers from '../../addNavigationHelpers';
+import SceneView from '../SceneView';
 
 import type {
   NavigationAction,
@@ -31,7 +31,7 @@ import type {
   HeaderMode,
   ViewStyleProp,
   TransitionConfig,
-} from '../TypeDefinition';
+} from '../../TypeDefinition';
 
 import TransitionConfigs from './TransitionConfigs';
 
@@ -42,6 +42,7 @@ type Props = {
   headerMode: HeaderMode,
   headerComponent?: ReactClass<*>,
   mode: 'card' | 'modal',
+  navigation: NavigationScreenProp<NavigationState, NavigationAction>,
   router: NavigationRouter<
     NavigationState,
     NavigationAction,
