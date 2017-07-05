@@ -12,6 +12,7 @@ import type {
   NavigationState,
   NavigationScreenProp,
   NavigationNavigatorProps,
+  NavigationNavigator,
 } from './TypeDefinition';
 
 type NavigationContainerProps = {
@@ -23,7 +24,7 @@ type NavigationContainerProps = {
   ) => void,
 };
 
-type Props<T> = NavigationContainerProps & NavigationNavigatorProps<T>;
+type Props<O, S> = NavigationContainerProps & NavigationNavigatorProps<O, S>;
 
 type State = {
   nav: ?NavigationState,
@@ -35,18 +36,12 @@ type State = {
  * This allows to use e.g. the StackNavigator and TabNavigator as root-level
  * components.
  */
-export default function createNavigationContainer<T: *>(
-  Component: ReactClass<NavigationNavigatorProps<T>>,
-  containerOptions?: {}
+export default function createNavigationContainer<S: *, O>(
+  Component: NavigationNavigator<*, S, *, O>
 ) {
-  invariant(
-    typeof containerOptions === 'undefined',
-    'containerOptions.URIPrefix has been removed. Pass the uriPrefix prop to the navigator instead'
-  );
-
-  class NavigationContainer extends React.Component<void, Props<T>, State> {
+  class NavigationContainer extends React.Component<void, Props<O, S>, State> {
     state: State;
-    props: Props<T>;
+    props: Props<O, S>;
 
     subs: ?{
       remove: () => void,
@@ -54,7 +49,7 @@ export default function createNavigationContainer<T: *>(
 
     static router = Component.router;
 
-    constructor(props: Props<T>) {
+    constructor(props: Props<O, S>) {
       super(props);
 
       this._validateProps(props);
@@ -70,7 +65,7 @@ export default function createNavigationContainer<T: *>(
       return !this.props.navigation;
     }
 
-    _validateProps(props: Props<T>) {
+    _validateProps(props: Props<O, S>) {
       if (this._isStateful()) {
         return;
       }

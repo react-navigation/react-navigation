@@ -3,20 +3,14 @@
 import React from 'react';
 import createNavigationContainer from '../createNavigationContainer';
 import createNavigator from './createNavigator';
-import CardStackTransitioner from '../views/CardStackTransitioner';
+import CardStackTransitioner from '../views/CardStack/CardStackTransitioner';
 import StackRouter from '../routers/StackRouter';
 import NavigatorTypes from './NavigatorTypes';
 
 import type {
-  NavigationStackRouterConfig,
-  NavigationStackViewConfig,
   NavigationRouteConfigMap,
+  StackNavigatorConfig,
 } from '../TypeDefinition';
-
-export type StackNavigatorConfig = {
-  containerOptions?: void,
-} & NavigationStackViewConfig &
-  NavigationStackRouterConfig;
 
 export default (
   routeConfigMap: NavigationRouteConfigMap,
@@ -44,6 +38,7 @@ export default (
 
   const router = StackRouter(routeConfigMap, stackRouterConfig);
 
+  // Create a navigator with CardStackTransitioner as the view
   const navigator = createNavigator(
     router,
     routeConfigMap,
@@ -61,5 +56,5 @@ export default (
     />
   );
 
-  return createNavigationContainer(navigator, stackConfig.containerOptions);
+  return createNavigationContainer(navigator);
 };

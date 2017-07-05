@@ -59,7 +59,7 @@ const TabNavigator = (
     />
   );
 
-  return createNavigationContainer(navigator, tabsConfig.containerOptions);
+  return createNavigationContainer(navigator);
 };
 
 const Presets = {

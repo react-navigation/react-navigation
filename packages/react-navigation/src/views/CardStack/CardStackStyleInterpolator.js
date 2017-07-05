@@ -2,7 +2,7 @@
 
 import { I18nManager, type AnimatedViewStylePropTypes } from 'react-native';
 
-import type { NavigationSceneRendererProps } from '../TypeDefinition';
+import type { NavigationSceneRendererProps } from '../../TypeDefinition';
 
 /**
  * Utility that builds the style for the card in the cards stack.
