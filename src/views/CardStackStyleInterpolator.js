@@ -50,8 +50,8 @@ function forHorizontal(props: NavigationSceneRendererProps): Object {
 
   const width = layout.initWidth;
   const outputRange = I18nManager.isRTL
-    ? ([-width, 0, 10]: Array<number>)
-    : ([width, 0, -10]: Array<number>);
+    ? ([-width, 0, width * 0.3]: Array<number>)
+    : ([width, 0, width * -0.3]: Array<number>);
 
   // Add [index - 1, index - 0.99] to the interpolated opacity for screen transition.
   // This makes the screen's shadow to disappear smoothly.
@@ -63,7 +63,7 @@ function forHorizontal(props: NavigationSceneRendererProps): Object {
       index + 0.99,
       index + 1,
     ]: Array<number>),
-    outputRange: ([0, 1, 1, 0.3, 0]: Array<number>),
+    outputRange: ([0, 1, 1, 0.85, 0]: Array<number>),
   });
 
   const translateY = 0;
@@ -99,7 +99,7 @@ function forVertical(props: NavigationSceneRendererProps): Object {
       index + 0.99,
       index + 1,
     ]: Array<number>),
-    outputRange: ([0, 1, 1, 0.3, 0]: Array<number>),
+    outputRange: ([0, 1, 1, 0.85, 0]: Array<number>),
   });
 
   const translateX = 0;
