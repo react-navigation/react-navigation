@@ -95,11 +95,10 @@ class DrawerSidebar extends PureComponent<void, Props, void> {
           "if an array of routes exists on NavigationRoute, then we can " +
             "conclude it is an NavigationStateRoute",
         );
-        const routeName: string = route.routes[0].routeName;
         // if the child screen is a StackRouter then always navigate to its
         // first screen (see #1914)
         subAction = NavigationActions.navigate({
-          routeName: routeName,
+          routeName: route.routes[0].routeName,
         });
       }
       this.props.navigation.navigate(route.routeName, undefined, subAction);
