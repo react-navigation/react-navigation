@@ -31,6 +31,7 @@ import type {
   HeaderMode,
   Style,
   TransitionConfig,
+  NavigationTransitionProps,
 } from '../TypeDefinition';
 
 import TransitionConfigs from './TransitionConfigs';
@@ -48,8 +49,14 @@ type Props = {
     NavigationStackScreenOptions
   >,
   cardStyle?: Style,
-  onTransitionStart?: () => void,
-  onTransitionEnd?: () => void,
+  onTransitionStart?: (
+    transitionProps: NavigationTransitionProps,
+    prevTransitionProps: ?NavigationTransitionProps,
+  ) => void,
+  onTransitionEnd?: (
+    transitionProps: NavigationTransitionProps,
+    prevTransitionProps: ?NavigationTransitionProps,
+  ) => void,
   style?: any,
   /**
    * Optional custom animation when transitioning between screens.

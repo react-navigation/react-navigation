@@ -144,7 +144,7 @@ function forFadeFromBottomAndroid(props: NavigationSceneRendererProps): Object {
   };
 }
 
-function canUseNativeDriver(): boolean {
+function canUseNativeDriver(isModal: boolean): boolean {
   // The native driver can be enabled for this interpolator animating
   // opacity, translateX, and translateY is supported by the native animation
   // driver on iOS and Android.

@@ -218,8 +218,14 @@ export type NavigationStackViewConfig = {
   headerMode?: HeaderMode,
   cardStyle?: Style,
   transitionConfig?: () => TransitionConfig,
-  onTransitionStart?: () => void,
-  onTransitionEnd?: () => void,
+  onTransitionStart?: (
+    transitionProps: NavigationTransitionProps,
+    prevTransitionProps: ?NavigationTransitionProps,
+  ) => void,
+  onTransitionEnd?: (
+    transitionProps: NavigationTransitionProps,
+    prevTransitionProps: ?NavigationTransitionProps,
+  ) => void,
 };
 
 export type NavigationStackScreenOptions = NavigationScreenOptions & {

@@ -25,8 +25,14 @@ type Props = {
     prevTransitionProps: ?NavigationTransitionProps
   ) => NavigationTransitionSpec,
   navigation: NavigationScreenProp<NavigationState, NavigationAction>,
-  onTransitionEnd?: () => void,
-  onTransitionStart?: () => void,
+  onTransitionStart?: (
+    transitionProps: NavigationTransitionProps,
+    prevTransitionProps: ?NavigationTransitionProps,
+  ) => void,
+  onTransitionEnd?: (
+    transitionProps: NavigationTransitionProps,
+    prevTransitionProps: ?NavigationTransitionProps,
+  ) => void,
   render: (
     transitionProps: NavigationTransitionProps,
     prevTransitionProps: ?NavigationTransitionProps
