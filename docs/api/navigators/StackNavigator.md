@@ -132,6 +132,10 @@ Style object for the title component
 
 Style object for the back title
 
+#### `headerBackButtonIcon`
+
+Default icon for back button
+
 #### `headerTintColor`
 
 Tint color for the header

@@ -132,6 +132,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
       : undefined;
     return (
       <HeaderBackButton
+        source={options.headerBackButtonIcon}
         onPress={this._navigateBack}
         pressColorAndroid={options.headerPressColorAndroid}
         tintColor={options.headerTintColor}
