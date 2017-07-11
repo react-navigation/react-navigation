@@ -9,7 +9,7 @@ function crawl(location) {
     var stat = fs.statSync(join(location, name));
     if (stat.isDirectory()) {
       crawl(join(location, name));
-    } else {
+    } else if (name[0] !== '.') {
       files.push(join(location, name));
     }
   });

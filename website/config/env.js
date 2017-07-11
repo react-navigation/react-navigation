@@ -22,7 +22,10 @@ function getClientEnvironment(publicUrl) {
         PUBLIC_URL: JSON.stringify(publicUrl),
       }
     );
-  return { 'process.env': processEnv };
+  return {
+    'process.env': processEnv,
+    __DEV__: process.env.NODE_ENV === 'production' ? false : true,
+  };
 }
 
 module.exports = getClientEnvironment;

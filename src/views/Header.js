@@ -35,7 +35,7 @@ type HeaderState = {
 
 const APPBAR_HEIGHT = Platform.OS === 'ios' ? 44 : 56;
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : 0;
-const TITLE_OFFSET = Platform.OS === 'ios' ? 70 : 40;
+const TITLE_OFFSET = Platform.OS === 'ios' ? 70 : 56;
 
 class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
   static HEIGHT = APPBAR_HEIGHT + STATUSBAR_HEIGHT;
@@ -76,6 +76,10 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
     return this.props.getScreenDetails(lastScene).options
       .headerTruncatedBackTitle;
   }
+
+  _navigateBack = () => {
+    this.props.navigation.goBack(null);
+  };
 
   _renderTitleComponent = (props: SceneProps) => {
     const details = this.props.getScreenDetails(props.scene);
@@ -128,9 +132,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
       : undefined;
     return (
       <HeaderBackButton
-        onPress={() => {
-          this.props.navigation.goBack(null);
-        }}
+        onPress={this._navigateBack}
         pressColorAndroid={options.headerPressColorAndroid}
         tintColor={options.headerTintColor}
         title={backButtonTitle}

@@ -42,7 +42,6 @@ type Props = {
   headerMode: HeaderMode,
   headerComponent?: ReactClass<*>,
   mode: 'card' | 'modal',
-  navigation: NavigationScreenProp<NavigationState, NavigationAction>,
   router: NavigationRouter<
     NavigationState,
     NavigationAction,
@@ -321,10 +320,10 @@ class CardStack extends Component {
         const axisDistance = isVertical
           ? layout.height.__getValue()
           : layout.width.__getValue();
-        const movedDistance = gesture[isVertical ? 'moveY' : 'moveX'];
-        const defaultVelocity = axisDistance / ANIMATION_DURATION;
+        const movedDistance = gesture[isVertical ? 'dy' : 'dx'];
         const gestureVelocity = gesture[isVertical ? 'vy' : 'vx'];
-        const velocity = Math.max(gestureVelocity, defaultVelocity);
+        const defaultVelocity = axisDistance / ANIMATION_DURATION;
+        const velocity = Math.max(Math.abs(gestureVelocity), defaultVelocity);
         const resetDuration = movedDistance / velocity;
         const goBackDuration = (axisDistance - movedDistance) / velocity;
 
@@ -358,9 +357,13 @@ class CardStack extends Component {
       : Platform.OS === 'ios';
 
     const handlers = gesturesEnabled ? responder.panHandlers : {};
+    const containerStyle = [
+      styles.container,
+      this._getTransitionConfig().containerStyle,
+    ];
 
     return (
-      <View {...handlers} style={styles.container}>
+      <View {...handlers} style={containerStyle}>
         <View style={styles.scenes}>
           {scenes.map((s: *) => this._renderCard(s))}
         </View>
@@ -409,16 +412,20 @@ class CardStack extends Component {
     );
   }
 
-  _renderCard = (scene: NavigationScene): React.Element<*> => {
+  _getTransitionConfig = () => {
     const isModal = this.props.mode === 'modal';
 
     /* $FlowFixMe */
-    const { screenInterpolator } = TransitionConfigs.getTransitionConfig(
+    return TransitionConfigs.getTransitionConfig(
       this.props.transitionConfig,
       {},
       {},
       isModal
     );
+  };
+
+  _renderCard = (scene: NavigationScene): React.Element<*> => {
+    const { screenInterpolator } = this._getTransitionConfig();
     const style =
       screenInterpolator && screenInterpolator({ ...this.props, scene });
 
