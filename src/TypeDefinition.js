@@ -235,6 +235,7 @@ export type NavigationStackScreenOptions = NavigationScreenOptions & {
   headerRight?: React.Element<*>,
   headerStyle?: Style,
   gesturesEnabled?: boolean,
+  transitionInteractivityThreshold?: number,
 };
 
 export type NavigationStackRouterConfig = {
@@ -394,6 +395,9 @@ export type NavigationTransitionProps = {
   // is the index of the scene
   scene: NavigationScene,
   index: number,
+
+  // The progress value at which the scene will accept pointer events.
+  interactivityThreshold?: number,
 
   screenProps?: {},
 };
