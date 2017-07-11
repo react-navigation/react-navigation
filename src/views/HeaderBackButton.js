@@ -22,6 +22,7 @@ type Props = {
   tintColor?: ?string,
   truncatedTitle?: ?string,
   width?: ?number,
+  buttonImage?: ?Image.propTypes.source,
 };
 
 type DefaultProps = {
@@ -63,6 +64,7 @@ class HeaderBackButton extends React.PureComponent<DefaultProps, Props, State> {
       titleStyle,
       tintColor,
       truncatedTitle,
+      buttonImage,
     } = this.props;
 
     const renderTruncated = this.state.initialTextWidth && width
@@ -72,7 +74,7 @@ class HeaderBackButton extends React.PureComponent<DefaultProps, Props, State> {
     const backButtonTitle = renderTruncated ? truncatedTitle : title;
 
     // eslint-disable-next-line global-require
-    const asset = require('./assets/back-icon.png');
+    const asset = buttonImage || require('./assets/back-icon.png');
 
     return (
       <TouchableItem

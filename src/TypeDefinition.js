@@ -1,6 +1,7 @@
 /* @flow */
 
 import React from 'react';
+import { Image } from 'react-native';
 
 // @todo when we split types into common, native and web,
 // we can properly change Animated.Value to its real value
@@ -229,6 +230,7 @@ export type NavigationStackScreenOptions = NavigationScreenOptions & {
   headerTintColor?: string,
   headerLeft?: React.Element<*>,
   headerBackTitle?: string,
+  headerBackImage?: Image.propTypes.source,
   headerTruncatedBackTitle?: string,
   headerBackTitleStyle?: Style,
   headerPressColorAndroid?: string,
