@@ -31,6 +31,7 @@ export default (
 
   const order = config.order || Object.keys(routeConfigs);
   const paths = config.paths || {};
+  const navKey = config.navKey;
   const initialRouteName = config.initialRouteName || order[0];
   const initialRouteIndex = order.indexOf(initialRouteName);
   const backBehavior = config.backBehavior || 'initialRoute';
@@ -58,6 +59,10 @@ export default (
     ): ?NavigationState {
       // eslint-disable-next-line no-param-reassign
       action = NavigationActions.mapDeprecatedActionAndWarn(action);
+
+      if (action.navKey && action.navKey !== navKey) {
+        return inputState;
+      }
 
       // Establish a default state
       let state = inputState;

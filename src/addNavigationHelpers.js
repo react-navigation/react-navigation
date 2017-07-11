@@ -13,6 +13,16 @@ import type {
 import NavigationActions from './NavigationActions';
 
 export default function<S: *>(navigation: NavigationProp<S, NavigationAction>) {
+  const oldDispatch = navigation.dispatch;
+
+  navigation.dispatch = (action: NavigationAction) => {
+    action.navKey = typeof action.navKey !== 'undefined'
+      ? action.navKey
+      : navigation.navKey;
+
+    return oldDispatch(action);
+  };
+
   return {
     ...navigation,
     goBack: (key?: ?string): boolean =>

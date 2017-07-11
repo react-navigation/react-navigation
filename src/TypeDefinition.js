@@ -175,6 +175,7 @@ export type NavigationParams = {
 export type NavigationNavigateAction = {
   type: 'Navigation/NAVIGATE',
   routeName: string,
+  navKey?: ?string,
   params?: NavigationParams,
 
   // The action to run inside the sub-router
@@ -183,11 +184,13 @@ export type NavigationNavigateAction = {
 
 export type NavigationBackAction = {
   type: 'Navigation/BACK',
+  navKey?: ?string,
   key?: ?string,
 };
 
 export type NavigationSetParamsAction = {
   type: 'Navigation/SET_PARAMS',
+  navKey?: ?string,
 
   // The key of the route where the params should be set
   key: string,
@@ -198,12 +201,14 @@ export type NavigationSetParamsAction = {
 
 export type NavigationInitAction = {
   type: 'Navigation/INIT',
+  navKey?: ?string,
   params?: NavigationParams,
 };
 
 export type NavigationResetAction = {
   type: 'Navigation/RESET',
   index: number,
+  navKey?: ?string,
   key?: ?string,
   actions: Array<NavigationNavigateAction>,
 };
@@ -211,6 +216,7 @@ export type NavigationResetAction = {
 export type NavigationUriAction = {
   type: 'Navigation/URI',
   uri: string,
+  navKey?: ?string,
 };
 
 export type NavigationStackViewConfig = {
@@ -242,6 +248,7 @@ export type NavigationStackRouterConfig = {
   initialRouteParams?: NavigationParams,
   paths?: NavigationPathsConfig,
   navigationOptions?: NavigationScreenConfig<NavigationStackScreenOptions>,
+  navKey?: ?string,
 };
 
 export type NavigationStackAction =
@@ -286,6 +293,7 @@ export type NavigationTabRouterConfig = {
 
   // Does the back button cause the router to switch to the initial tab
   backBehavior?: 'none' | 'initialRoute', // defaults `initialRoute`
+  navKey?: ?string,
 };
 
 export type NavigationTabScreenOptions = NavigationScreenOptions & {
@@ -325,6 +333,7 @@ export type NavigationDispatch<A> = (action: A) => boolean;
 export type NavigationProp<S, A> = {
   state: S,
   dispatch: NavigationDispatch<A>,
+  navKey?: ?string,
 };
 
 export type NavigationScreenProp<S, A> = {
@@ -447,3 +456,4 @@ export type LayoutEvent = {
     },
   },
 };
+

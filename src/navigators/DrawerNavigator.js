@@ -65,6 +65,7 @@ const DrawerNavigator = (
       },
     },
     {
+      navKey: tabsConfig.navKey,
       initialRouteName: 'DrawerClose',
     }
   );

@@ -49,7 +49,7 @@ export default (
     }
   });
 
-  const { initialRouteParams } = stackConfig;
+  const { initialRouteParams, navKey } = stackConfig;
 
   const initialRouteName = stackConfig.initialRouteName || routeNames[0];
 
@@ -91,6 +91,10 @@ export default (
       state: ?NavigationState
     ) {
       const action = NavigationActions.mapDeprecatedActionAndWarn(passedAction);
+
+      if (action.navKey && action.navKey !== navKey) {
+        return state;
+      }
 
       // Set up the initial state if needed
       if (!state) {

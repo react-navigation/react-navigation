@@ -13,14 +13,14 @@ import type {
   NavigationRouteConfigMap,
 } from '../TypeDefinition';
 
-export type StackNavigatorConfig = {
-  containerOptions?: void,
-} & NavigationStackViewConfig &
-  NavigationStackRouterConfig;
+export type StackNavigatorConfig =
+  & { containerOptions?: void }
+  & NavigationStackViewConfig
+  & NavigationStackRouterConfig;
 
 export default (
   routeConfigMap: NavigationRouteConfigMap,
-  stackConfig: StackNavigatorConfig = {}
+  stackConfig: StackNavigatorConfig = {},
 ) => {
   const {
     initialRouteName,
@@ -33,12 +33,14 @@ export default (
     onTransitionStart,
     onTransitionEnd,
     navigationOptions,
+    navKey,
   } = stackConfig;
   const stackRouterConfig = {
     initialRouteName,
     initialRouteParams,
     paths,
     navigationOptions,
+    navKey,
   };
 
   const router = StackRouter(routeConfigMap, stackRouterConfig);
