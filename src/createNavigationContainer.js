@@ -37,12 +37,14 @@ type State = {
  */
 export default function createNavigationContainer<T: *>(
   Component: ReactClass<NavigationNavigatorProps<T>>,
-  containerOptions?: {}
+  stackConfig?: {}
 ) {
   invariant(
     typeof containerOptions === 'undefined',
     'containerOptions.URIPrefix has been removed. Pass the uriPrefix prop to the navigator instead'
   );
+
+  const { containerOptions, hardwareBackHandled } = stackConfig;
 
   class NavigationContainer extends React.Component<void, Props<T>, State> {
     state: State;
@@ -153,9 +155,11 @@ export default function createNavigationContainer<T: *>(
         return;
       }
 
-      this.subs = BackAndroid.addEventListener('backPress', () =>
-        this.dispatch(NavigationActions.back())
-      );
+      if (hardwareBackHandled !== false) {
+        this.subs = BackAndroid.addEventListener('backPress', () =>
+          this.dispatch(NavigationActions.back())
+        );
+      }
 
       Linking.addEventListener('url', ({ url }: { url: string }) => {
         this._handleOpenURL(url);

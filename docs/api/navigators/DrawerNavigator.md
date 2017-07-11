@@ -86,6 +86,7 @@ The route configs object is a mapping from route name to a route config, which t
 - `drawerPosition` - Options are `left` or `right`. Default is `left` position.
 - `contentComponent` - Component used to render the content of the drawer, for example, navigation items. Receives the `navigation` prop for the drawer. Defaults to `DrawerItems`. For more information, see below.
 - `contentOptions` - Configure the drawer content, see below.
+- `hardwareBackHandled` - Whether or not the hardware back button should invoke `goBack`.  Defaults to `true`.
 
 #### Example:
 
@@ -181,7 +182,7 @@ The navigator component created by `DrawerNavigator(...)` takes the following pr
    screenProps={/* this prop will get passed to the screen components and nav options as props.screenProps */}
  />
  ```
- 
+
  ### Nesting `DrawerNavigation`
- 
+
 Please bear in mind that if you nest the DrawerNavigation, the drawer will show below the parent navigation.

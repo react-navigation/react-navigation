@@ -60,5 +60,5 @@ export default (
     />
   ));
 
-  return createNavigationContainer(navigator, stackConfig.containerOptions);
+  return createNavigationContainer(navigator, stackConfig);
 };

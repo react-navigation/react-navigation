@@ -74,6 +74,7 @@ Options for the router:
 - `initialRouteParams` - The params for the initial route
 - `navigationOptions` - Default navigation options to use for screens
 - `paths` - A mapping of overrides for the paths set in the route configs
+- `hardwareBackHandled` - Whether or not the hardware back button should invoke `goBack`.  Defaults to `true`.
 
 Visual options:
 

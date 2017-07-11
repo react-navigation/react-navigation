@@ -94,6 +94,7 @@ Several options get passed to the underlying router to modify navigation logic:
 - `order` - Array of routeNames which defines the order of the tabs
 - `paths` - Provide a mapping of routeName to path config, which overrides the paths set in the routeConfigs.
 - `backBehavior` - Should the back button cause a tab switch to the initial tab? If yes, set to `initialRoute`, otherwise `none`. Defaults to `initialRoute` behavior.
+- `hardwareBackHandled` - Whether or not the hardware back button should invoke the set `backBehavior`.  Defaults to `true`.
 
 ### `tabBarOptions` for `TabBarBottom` (default tab bar on iOS)
 

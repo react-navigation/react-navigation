@@ -242,6 +242,7 @@ export type NavigationStackRouterConfig = {
   initialRouteParams?: NavigationParams,
   paths?: NavigationPathsConfig,
   navigationOptions?: NavigationScreenConfig<NavigationStackScreenOptions>,
+  hardwareBackHandled?: boolean, // defaults true
 };
 
 export type NavigationStackAction =
@@ -286,6 +287,7 @@ export type NavigationTabRouterConfig = {
 
   // Does the back button cause the router to switch to the initial tab
   backBehavior?: 'none' | 'initialRoute', // defaults `initialRoute`
+  hardwareBackHandled?: boolean, // defaults true
 };
 
 export type NavigationTabScreenOptions = NavigationScreenOptions & {
