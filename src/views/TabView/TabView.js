@@ -127,7 +127,7 @@ class TabView extends PureComponent<void, Props, void> {
       screenProps || {}
     );
 
-    const tabBarVisible = options.tabBarVisible == null
+    const tabBarVisible = options.tabBarVisible === null
       ? true
       : options.tabBarVisible;
 
