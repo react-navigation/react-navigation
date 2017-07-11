@@ -117,11 +117,11 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
 
   _renderLeftComponent = (props: SceneProps) => {
     const options = this.props.getScreenDetails(props.scene).options;
-    if (typeof options.headerLeft !== 'undefined') {
-      return options.headerLeft;
-    }
     if (props.scene.index === 0) {
       return null;
+    }
+    if (typeof options.headerLeft !== 'undefined') {
+      return options.headerLeft({navigation: this.props.navigation});
     }
     const backButtonTitle = this._getBackButtonTitleString(props.scene);
     const truncatedBackButtonTitle = this._getTruncatedBackButtonTitle(
