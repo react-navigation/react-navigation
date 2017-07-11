@@ -38,9 +38,11 @@ export default (
   const tabRouters = {};
   order.forEach((routeName: string) => {
     const routeConfig = routeConfigs[routeName];
-    paths[routeName] = typeof routeConfig.path === 'string'
-      ? routeConfig.path
-      : routeName;
+    if (!paths[routeName]) {
+      paths[routeName] = typeof routeConfig.path === 'string'
+        ? routeConfig.path
+        : routeName;
+    }
     tabRouters[routeName] = null;
     if (routeConfig.screen && routeConfig.screen.router) {
       tabRouters[routeName] = routeConfig.screen.router;
