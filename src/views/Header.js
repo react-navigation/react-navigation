@@ -7,6 +7,7 @@ import React from 'react';
 import { Animated, Platform, StyleSheet, View } from 'react-native';
 
 import HeaderTitle from './HeaderTitle';
+import HeaderBackButtonWrapper from './HeaderBackButtonWrapper';
 import HeaderBackButton from './HeaderBackButton';
 import HeaderStyleInterpolator from './HeaderStyleInterpolator';
 
@@ -54,6 +55,30 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
 
   _getLastScene(scene: NavigationScene): ?NavigationScene {
     return this.props.scenes.find((s: *) => s.index === scene.index - 1);
+  }
+
+  _getBackButtonElement(props: SceneProps): ?React.Element {
+    const options = this.props.getScreenDetails(props.scene).options;
+    const width = this.state.widths[props.scene.key]
+      ? (this.props.layout.initWidth - this.state.widths[props.scene.key]) / 2
+      : undefined;
+
+    let backButtonElement = options.headerBack;
+    if (backButtonElement === null || backButtonElement === undefined) {
+      const backButtonTitle = this._getBackButtonTitleString(props.scene);
+      const truncatedBackButtonTitle = this._getTruncatedBackButtonTitle(props.scene);
+      const asset = require('./assets/back-icon.png');
+      backButtonElement = (
+        <HeaderBackButton
+          tintColor={options.headerTintColor}
+          title={backButtonTitle}
+          truncatedTitle={truncatedBackButtonTitle}
+          titleStyle={options.headerBackTitleStyle}
+          width={width}
+        />
+      );
+    }
+    return backButtonElement;
   }
 
   _getBackButtonTitleString(scene: NavigationScene): ?string {
@@ -123,23 +148,14 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
     if (props.scene.index === 0) {
       return null;
     }
-    const backButtonTitle = this._getBackButtonTitleString(props.scene);
-    const truncatedBackButtonTitle = this._getTruncatedBackButtonTitle(
-      props.scene
-    );
-    const width = this.state.widths[props.scene.key]
-      ? (this.props.layout.initWidth - this.state.widths[props.scene.key]) / 2
-      : undefined;
+    const backButtonElement = this._getBackButtonElement(props);
     return (
-      <HeaderBackButton
+      <HeaderBackButtonWrapper
         onPress={this._navigateBack}
         pressColorAndroid={options.headerPressColorAndroid}
-        tintColor={options.headerTintColor}
-        title={backButtonTitle}
-        truncatedTitle={truncatedBackButtonTitle}
-        titleStyle={options.headerBackTitleStyle}
-        width={width}
-      />
+      >
+        {backButtonElement}
+      </HeaderBackButtonWrapper>
     );
   };
 
