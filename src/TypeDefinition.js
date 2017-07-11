@@ -425,6 +425,8 @@ export type TransitionConfig = {
   containerStyle?: Style,
 };
 
+export type TransitionState = 'active' | 'inactive';
+
 export type NavigationAnimationSetter = (
   position: AnimatedValue,
   newState: NavigationState,

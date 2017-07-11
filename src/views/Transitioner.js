@@ -172,11 +172,16 @@ class Transitioner extends React.Component<*, Props, State> {
 
     // update scenes and play the transition
     this._isTransitionRunning = true;
+
+    const scenes = this.state.scenes;
+
     this.setState(nextState, () => {
       nextProps.onTransitionStart &&
         nextProps.onTransitionStart(
           this._transitionProps,
-          this._prevTransitionProps
+          this._prevTransitionProps,
+          this.state.scenes,
+          scenes,
         );
       Animated.parallel(animations).start(this._onTransitionEnd);
     });

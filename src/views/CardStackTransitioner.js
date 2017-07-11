@@ -10,6 +10,7 @@ import TransitionConfigs from './TransitionConfigs';
 
 import type {
   NavigationAction,
+  NavigationScene,
   NavigationSceneRenderer,
   NavigationScreenProp,
   NavigationStackScreenOptions,
@@ -19,6 +20,7 @@ import type {
   HeaderMode,
   Style,
   TransitionConfig,
+  TransitionState,
 } from '../TypeDefinition';
 
 const NativeAnimatedModule =
@@ -48,12 +50,31 @@ type DefaultProps = {
   mode: 'card' | 'modal',
 };
 
-class CardStackTransitioner extends Component<DefaultProps, Props, void> {
+type State = {
+  transitionState: TransitionState,
+  toScenes?: Array<NavigationScene>,
+  fromScenes?: Array<NavigationScene>,
+};
+
+class CardStackTransitioner extends Component<DefaultProps, Props, State> {
   _render: NavigationSceneRenderer;
+  _onTransitionStart: () => void;
+  _onTransitionEnd: () => void;
 
   static defaultProps: DefaultProps = {
     mode: 'card',
   };
+
+  state: State;
+
+  constructor() {
+    super();
+    this.state = {
+      transitionState: 'inactive',
+    };
+    this._onTransitionStart = this._onTransitionStart.bind(this);
+    this._onTransitionEnd = this._onTransitionEnd.bind(this);
+  }
 
   render() {
     return (
@@ -62,10 +83,31 @@ class CardStackTransitioner extends Component<DefaultProps, Props, void> {
         navigation={this.props.navigation}
         render={this._render}
         style={this.props.style}
-        onTransitionStart={this.props.onTransitionStart}
-        onTransitionEnd={this.props.onTransitionEnd}
+        onTransitionStart={this._onTransitionStart}
+        onTransitionEnd={this._onTransitionEnd}
       />
     );
+  }
+
+  _onTransitionStart(...args: Array<any>) {
+    this.setState({
+      transitionState: 'active',
+      fromScenes: args[3],
+      toScenes: args[2],
+    });
+
+    if (this.props.onTransitionStart) this.props.onTransitionStart(...args);
+  }
+
+  _onTransitionEnd(...args: Array<any>) {
+    // Reverse fromScenes and toScenes in case the pan gesture needs them
+    this.setState({
+      transitionState: 'inactive',
+      fromScenes: this.state.toScenes,
+      toScenes: this.state.fromScenes,
+    });
+
+    if (this.props.onTransitionEnd) this.props.onTransitionEnd(...args);
   }
 
   _configureTransition = (
@@ -114,6 +156,9 @@ class CardStackTransitioner extends Component<DefaultProps, Props, void> {
         router={router}
         cardStyle={cardStyle}
         transitionConfig={transitionConfig}
+        transitionState={this.state.transitionState}
+        fromScenes={this.state.fromScenes}
+        toScenes={this.state.toScenes}
         style={style}
         {...props}
       />

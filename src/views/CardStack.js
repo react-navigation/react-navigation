@@ -31,6 +31,7 @@ import type {
   HeaderMode,
   Style,
   TransitionConfig,
+  TransitionState,
 } from '../TypeDefinition';
 
 import TransitionConfigs from './TransitionConfigs';
@@ -55,6 +56,7 @@ type Props = {
    * Optional custom animation when transitioning between screens.
    */
   transitionConfig?: () => TransitionConfig,
+  transitionState: TransitionState,
 
   // NavigationTransitionProps:
   layout: NavigationLayout,
@@ -63,12 +65,19 @@ type Props = {
   progress: Animated.Value,
   scenes: Array<NavigationScene>,
   scene: NavigationScene,
+  fromScenes?: Array<NavigationScene>,
+  toScenes?: Array<NavigationScene>,
   index: number,
+};
+
+type State = {
+  // tracks if a touch is currently happening
+  isResponding: boolean,
 };
 
 /**
  * The max duration of the card animation in milliseconds after released gesture.
- * The actual duration should be always less then that because the rest distance 
+ * The actual duration should be always less then that because the rest distance
  * is always less then the full distance of the layout.
  */
 const ANIMATION_DURATION = 500;
@@ -89,7 +98,7 @@ const RESPOND_THRESHOLD = 20;
  * The distance of touch start from the edge of the screen where the gesture will be recognized
  */
 const GESTURE_RESPONSE_DISTANCE_HORIZONTAL = 25;
-const GESTURE_RESPONSE_DISTANCE_VERTICAL = 135;
+const GESTURE_RESPONSE_DISTANCE_VERTICAL = 64;
 
 const animatedSubscribeValue = (animatedValue: Animated.Value) => {
   if (!animatedValue.__isNative) {
@@ -100,6 +109,14 @@ const animatedSubscribeValue = (animatedValue: Animated.Value) => {
   }
 };
 
+/**
+ * The ratio between the gesture velocity and the animation velocity. This allows
+ * the velocity of a swipe release to carry on into the new animation.
+ *
+ * TODO: Understand and compute this ratio rather than using an approximation
+ */
+const GESTURE_ANIMATED_VELOCITY_RATIO = -4;
+
 class CardStack extends Component {
   /**
    * Used to identify the starting point of the position when the gesture starts, such that it can
@@ -108,9 +125,6 @@ class CardStack extends Component {
    * corresponding location for the touch.
    */
   _gestureStartValue: number = 0;
-
-  // tracks if a touch is currently happening
-  _isResponding: boolean = false;
 
   /**
    * immediateIndex is used to represent the expected index that we will be on after a
@@ -121,11 +135,19 @@ class CardStack extends Component {
    */
   _immediateIndex: ?number = null;
 
+  _isTransitioningAfterPan: boolean = false;
+
   _screenDetails: {
     [key: string]: ?NavigationScreenDetails<NavigationStackScreenOptions>,
   } = {};
 
   props: Props;
+  state: State;
+
+  constructor() {
+    super();
+    this.state = { isResponding: false };
+  }
 
   componentWillReceiveProps(props: Props) {
     if (props.screenProps !== this.props.screenProps) {
@@ -139,6 +161,13 @@ class CardStack extends Component {
         this._screenDetails[newScene.key] = null;
       }
     });
+
+    if (
+      props.transitionState === 'inactive' &&
+      props.transitionState !== this.props.transitionState
+    ) {
+      this._isTransitioningAfterPan = false;
+    }
   }
 
   _getScreenDetails = (scene: NavigationScene): NavigationScreenDetails<*> => {
@@ -214,6 +243,8 @@ class CardStack extends Component {
     // dispatched at the end of the transition.
     this._immediateIndex = toValue;
 
+    this._isTransitioningAfterPan = true;
+
     Animated.timing(position, {
       toValue,
       duration,
@@ -222,7 +253,7 @@ class CardStack extends Component {
     }).start(() => {
       this._immediateIndex = null;
       const backFromScene = scenes.find((s: *) => s.index === toValue + 1);
-      if (!this._isResponding && backFromScene) {
+      if (!this.state.isResponding && backFromScene) {
         navigation.dispatch(
           NavigationActions.back({ key: backFromScene.route.key })
         );
@@ -231,23 +262,28 @@ class CardStack extends Component {
   }
 
   render(): React.Element<*> {
+    const { navigation, position, layout, scene, mode, scenes } = this.props;
     let floatingHeader = null;
     const headerMode = this._getHeaderMode();
     if (headerMode === 'float') {
-      floatingHeader = this._renderHeader(this.props.scene, headerMode);
+      const shouldFloatHeader = this._shouldFloatHeader();
+      if (shouldFloatHeader) {
+        floatingHeader = this._renderHeader(scene, headerMode);
+      }
     }
-    const { navigation, position, layout, scene, scenes, mode } = this.props;
     const { index } = navigation.state;
     const isVertical = mode === 'modal';
 
     const responder = PanResponder.create({
       onPanResponderTerminate: () => {
-        this._isResponding = false;
+        this.setState({
+          isResponding: false,
+        });
         this._reset(index, 0);
       },
       onPanResponderGrant: () => {
         position.stopAnimation((value: number) => {
-          this._isResponding = true;
+          this.state.isResponding = true
           this._gestureStartValue = value;
         });
       },
@@ -307,10 +343,10 @@ class CardStack extends Component {
         // the navigation view is the responder (mid-gesture)
         false,
       onPanResponderRelease: (event: any, gesture: any) => {
-        if (!this._isResponding) {
+        if (!this.state.isResponding) {
           return;
         }
-        this._isResponding = false;
+        this.setState({ isResponding: false });
 
         const immediateIndex = this._immediateIndex == null
           ? index
@@ -372,6 +408,76 @@ class CardStack extends Component {
     );
   }
 
+  _shouldEmbedHeader(): boolean {
+    const { fromScenes, toScenes, transitionState } = this.props;
+    const { isResponding } = this.state;
+
+    if (this._isTransitioningAfterPan) {
+      return true;
+    }
+    if (transitionState === 'inactive' && !isResponding) {
+      return false;
+    }
+
+    if (!fromScenes || !toScenes) {
+      return false;
+    }
+
+    const activeFromScenes = fromScenes.filter(
+      (scene: NavigationScene) => scene.isActive,
+    );
+
+    const activeToScenes = toScenes.filter(
+      (scene: NavigationScene) => scene.isActive,
+    );
+
+    const fromScreenDetails = this._getScreenDetails(activeFromScenes[0]);
+    const toScreenDetails = this._getScreenDetails(activeToScenes[0]);
+
+    const fromSceneHasHeader = fromScreenDetails.options.header !== null;
+    const toSceneHasHeader = toScreenDetails.options.header !== null;
+
+    if (!fromSceneHasHeader && toSceneHasHeader) return true;
+    if (!fromSceneHasHeader && !toSceneHasHeader) return true;
+    if (fromSceneHasHeader && !toSceneHasHeader) return true;
+    if (fromSceneHasHeader && toSceneHasHeader) return false;
+
+    return false;
+  }
+
+  _shouldFloatHeader(): boolean {
+    const { fromScenes, toScenes } = this.props;
+
+    if (this._shouldEmbedHeader()) return false;
+
+    if (!this._isTransitioningAfterPan) return true;
+
+    if (!fromScenes || !toScenes) {
+      return true;
+    }
+
+    const activeFromScenes = fromScenes.filter(
+      (scene: NavigationScene) => scene.isActive,
+    );
+
+    const activeToScenes = toScenes.filter(
+      (scene: NavigationScene) => scene.isActive,
+    );
+
+    const fromScreenDetails = this._getScreenDetails(activeFromScenes[0]);
+    const toScreenDetails = this._getScreenDetails(activeToScenes[0]);
+
+    const fromSceneHasHeader = fromScreenDetails.options.header !== null;
+    const toSceneHasHeader = toScreenDetails.options.header !== null;
+
+    if (!fromSceneHasHeader && toSceneHasHeader) return false;
+    if (!fromSceneHasHeader && !toSceneHasHeader) return false;
+    if (fromSceneHasHeader && !toSceneHasHeader) return false;
+    if (fromSceneHasHeader && toSceneHasHeader) return true;
+
+    return true;
+  }
+
   _getHeaderMode(): HeaderMode {
     if (this.props.headerMode) {
       return this.props.headerMode;
@@ -389,26 +495,22 @@ class CardStack extends Component {
     const { navigation } = this._getScreenDetails(scene);
     const { screenProps } = this.props;
     const headerMode = this._getHeaderMode();
-    if (headerMode === 'screen') {
-      return (
-        <View style={styles.container}>
-          <View style={{ flex: 1 }}>
-            <SceneView
-              screenProps={screenProps}
-              navigation={navigation}
-              component={SceneComponent}
-            />
-          </View>
-          {this._renderHeader(scene, headerMode)}
-        </View>
-      );
+    const shouldEmbedHeader = this._shouldEmbedHeader();
+    let header = null;
+    if (headerMode === 'screen' || shouldEmbedHeader) {
+      header = this._renderHeader(scene, headerMode);
     }
     return (
-      <SceneView
-        screenProps={this.props.screenProps}
-        navigation={navigation}
-        component={SceneComponent}
-      />
+      <View style={styles.container}>
+        <View style={{ flex: 1 }}>
+          <SceneView
+            screenProps={screenProps}
+            navigation={navigation}
+            component={SceneComponent}
+          />
+        </View>
+        {header}
+      </View>
     );
   }
 
