@@ -22,6 +22,7 @@ npm install
 ### Run the example app
 
 ```
+npm install
 cd examples/NavigationPlayground
 npm install
 cd ../..

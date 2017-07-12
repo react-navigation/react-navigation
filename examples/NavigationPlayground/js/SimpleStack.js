@@ -3,13 +3,8 @@
  */
 
 import React from 'react';
-import {
-  Button,
-  ScrollView,
-} from 'react-native';
-import {
-  StackNavigator,
-} from 'react-navigation';
+import { Button, ScrollView } from 'react-native';
+import { StackNavigator } from 'react-navigation';
 import SampleText from './SampleText';
 
 const MyNavScreen = ({ navigation, banner }) => (
@@ -23,18 +18,12 @@ const MyNavScreen = ({ navigation, banner }) => (
       onPress={() => navigation.navigate('Photos', { name: 'Jane' })}
       title="Go to a photos screen"
     />
-    <Button
-      onPress={() => navigation.goBack(null)}
-      title="Go back"
-    />
+    <Button onPress={() => navigation.goBack(null)} title="Go back" />
   </ScrollView>
 );
 
 const MyHomeScreen = ({ navigation }) => (
-  <MyNavScreen
-    banner="Home Screen"
-    navigation={navigation}
-  />
+  <MyNavScreen banner="Home Screen" navigation={navigation} />
 );
 MyHomeScreen.navigationOptions = {
   title: 'Welcome',
@@ -52,18 +41,15 @@ MyPhotosScreen.navigationOptions = {
 
 const MyProfileScreen = ({ navigation }) => (
   <MyNavScreen
-    banner={
-      `${navigation.state.params.mode === 'edit' ? 'Now Editing ' : ''
-      }${navigation.state.params.name}'s Profile`
-    }
+    banner={`${navigation.state.params.mode === 'edit' ? 'Now Editing ' : ''}${navigation.state.params.name}'s Profile`}
     navigation={navigation}
   />
 );
 
 MyProfileScreen.navigationOptions = props => {
-  const {navigation} = props;
-  const {state, setParams} = navigation;
-  const {params} = state;
+  const { navigation } = props;
+  const { state, setParams } = navigation;
+  const { params } = state;
   return {
     headerTitle: `${params.name}'s Profile!`,
     // Render a button on the right side of the header.
@@ -71,7 +57,8 @@ MyProfileScreen.navigationOptions = props => {
     headerRight: (
       <Button
         title={params.mode === 'edit' ? 'Done' : 'Edit'}
-        onPress={() => setParams({ mode: params.mode === 'edit' ? '' : 'edit' })}
+        onPress={() =>
+          setParams({ mode: params.mode === 'edit' ? '' : 'edit' })}
       />
     ),
   };

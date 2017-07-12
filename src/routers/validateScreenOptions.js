@@ -1,5 +1,5 @@
 /* @flow */
-import invariant from 'fbjs/lib/invariant';
+import invariant from '../utils/invariant';
 
 import type { NavigationRoute } from '../TypeDefinition';
 
@@ -28,7 +28,7 @@ export default (screenOptions: *, route: NavigationRoute) => {
         '({ navigation }) => ({',
         '    title: navigation.state...',
         '})',
-      ].join('\n'),
+      ].join('\n')
     );
   }
 
@@ -48,7 +48,7 @@ export default (screenOptions: *, route: NavigationRoute) => {
         '({ navigation }) => ({',
         `    ${deprecatedKey}Key: navigation.state...`,
         '})',
-      ].join('\n'),
+      ].join('\n')
     );
   }
 
@@ -62,7 +62,7 @@ export default (screenOptions: *, route: NavigationRoute) => {
         '{',
         `    ${deprecatedKey}: {`,
         ...Object.keys(screenOptions[deprecatedKey]).map(
-          (key: string) => `        ${key}: ...,`,
+          (key: string) => `        ${key}: ...,`
         ),
         '    },',
         '}',
@@ -71,10 +71,10 @@ export default (screenOptions: *, route: NavigationRoute) => {
         '{',
         ...Object.keys(screenOptions[deprecatedKey]).map(
           (key: string) =>
-            `    ${deprecatedKey + key[0].toUpperCase() + key.slice(1)}: ...,`,
+            `    ${deprecatedKey + key[0].toUpperCase() + key.slice(1)}: ...,`
         ),
         '}',
-      ].join('\n'),
+      ].join('\n')
     );
   }
 };

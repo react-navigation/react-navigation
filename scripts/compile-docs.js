@@ -9,7 +9,7 @@ function crawl(location) {
     var stat = fs.statSync(join(location, name));
     if (stat.isDirectory()) {
       crawl(join(location, name));
-    } else {
+    } else if (name[0] !== '.') {
       files.push(join(location, name));
     }
   });
@@ -17,7 +17,7 @@ function crawl(location) {
 crawl('docs');
 
 var names = files.map(function(file) {
-  const nameWithExt = file.split('docs'+path.sep)[1];
+  const nameWithExt = file.split('docs' + path.sep)[1];
   const name = nameWithExt.split('.md')[0];
   return name;
 });
@@ -25,7 +25,12 @@ var names = files.map(function(file) {
 var mdData = {};
 
 names.map(function(name) {
-  mdData[name] = fs.readFileSync('docs'+path.sep+name+'.md', {encoding: 'utf8'});
+  mdData[name] = fs.readFileSync('docs' + path.sep + name + '.md', {
+    encoding: 'utf8',
+  });
 });
 
-fs.writeFileSync('website'+path.sep+'docs-dist.json', JSON.stringify(mdData));
+fs.writeFileSync(
+  'website' + path.sep + 'docs-dist.json',
+  JSON.stringify(mdData)
+);

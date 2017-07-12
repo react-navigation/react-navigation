@@ -28,7 +28,7 @@ const MyApp = StackRouter({ // This is the RouteConfig:
     screen: ProfileScreen,
     path: 'profile/:name',
   },
-  Settings {
+  Settings: {
     // This can be handy to lazily require a screen:
     getScreen: () => require('Settings').default,
     // Note: Child navigators cannot be configured using getScreen because
