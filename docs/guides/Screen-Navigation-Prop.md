@@ -116,9 +116,9 @@ class HomeScreen extends React.Component {
 }
 ```
 
-*Notes regarding key on go back from*
+*Going Back from a Specific Screen*
 
-Let see following event history example:
+Consider the following navigation stack history:
 ```... 
 navigation.navigate(SCREEN_KEY_A);
 ...
@@ -129,7 +129,7 @@ navigation.navigate(SCREEN_KEY_C);
 navigation.navigate(SCREEN_KEY_D);
 ```
 
-Now you are on *Screen D* and want to go straight back to *screen A* (popping D, C, and B).
+Now you are on *Screen D* and want to go back to *screen A* (popping D, C, and B).
 Then you need to supply a key to goBack *FROM*:
 
 ```
