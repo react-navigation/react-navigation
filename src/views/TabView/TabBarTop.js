@@ -67,14 +67,15 @@ export default class TabBarTop
     const inputRange = [-1, ...routes.map((x: *, i: number) => i)];
     const outputRange = inputRange.map(
       (inputIndex: number) =>
-        inputIndex === index ? activeTintColor : inactiveTintColor,
+        inputIndex === index ? activeTintColor : inactiveTintColor
     );
     const color = position.interpolate({
       inputRange,
       outputRange,
     });
 
-    const label = this.props.getLabel(scene);
+    const tintColor = scene.focused ? activeTintColor : inactiveTintColor;
+    const label = this.props.getLabel({ ...scene, tintColor });
     if (typeof label === 'string') {
       return (
         <Animated.Text style={[styles.label, { color }, labelStyle]}>
@@ -83,7 +84,7 @@ export default class TabBarTop
       );
     }
     if (typeof label === 'function') {
-      return label(scene);
+      return label({ ...scene, tintColor });
     }
 
     return label;

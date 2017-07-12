@@ -1,4 +1,5 @@
 /* @flow */
+/* eslint react/display-name:0 */
 
 import React from 'react';
 import TabRouter from '../TabRouter';
@@ -30,7 +31,7 @@ describe('TabRouter', () => {
     expect(state).toEqual(expectedState);
     const state2 = router.getStateForAction(
       { type: NavigationActions.NAVIGATE, routeName: 'Bar' },
-      state,
+      state
     );
     const expectedState2 = {
       index: 1,
@@ -44,7 +45,7 @@ describe('TabRouter', () => {
     expect(router.getComponentForState(expectedState2)).toEqual(ScreenB);
     const state3 = router.getStateForAction(
       { type: NavigationActions.NAVIGATE, routeName: 'Bar' },
-      state2,
+      state2
     );
     expect(state3).toEqual(null);
   });
@@ -67,7 +68,7 @@ describe('TabRouter', () => {
     expect(state).toEqual(expectedState);
     const state2 = router.getStateForAction(
       { type: NavigationActions.NAVIGATE, routeName: 'Bar' },
-      state,
+      state
     );
     const expectedState2 = {
       index: 1,
@@ -81,7 +82,7 @@ describe('TabRouter', () => {
     expect(router.getComponentForState(expectedState2)).toEqual(ScreenB);
     const state3 = router.getStateForAction(
       { type: NavigationActions.NAVIGATE, routeName: 'Bar' },
-      state2,
+      state2
     );
     expect(state3).toEqual(null);
   });
@@ -89,7 +90,7 @@ describe('TabRouter', () => {
   test('Can set the initial tab', () => {
     const router = TabRouter(
       { Foo: BareLeafRouteConfig, Bar: BareLeafRouteConfig },
-      { initialRouteName: 'Bar' },
+      { initialRouteName: 'Bar' }
     );
     const state = router.getStateForAction({ type: NavigationActions.INIT });
     expect(state).toEqual({
@@ -121,12 +122,12 @@ describe('TabRouter', () => {
   test('getStateForAction returns null when navigating to same tab', () => {
     const router = TabRouter(
       { Foo: BareLeafRouteConfig, Bar: BareLeafRouteConfig },
-      { initialRouteName: 'Bar' },
+      { initialRouteName: 'Bar' }
     );
     const state = router.getStateForAction({ type: NavigationActions.INIT });
     const state2 = router.getStateForAction(
       { type: NavigationActions.NAVIGATE, routeName: 'Bar' },
-      state,
+      state
     );
     expect(state2).toEqual(null);
   });
@@ -233,11 +234,11 @@ describe('TabRouter', () => {
     // Ensure that navigating back and forth doesn't overwrite
     state = router.getStateForAction(
       { type: NavigationActions.NAVIGATE, routeName: 'Bar' },
-      state,
+      state
     );
     state = router.getStateForAction(
       { type: NavigationActions.NAVIGATE, routeName: 'Boo' },
-      state,
+      state
     );
     expect(state && state.routes[1]).toEqual({
       index: 0,
@@ -283,7 +284,7 @@ describe('TabRouter', () => {
     });
     const state2 = router.getStateForAction(
       { type: NavigationActions.NAVIGATE, routeName: 'Foo' },
-      state,
+      state
     );
     expect(state2).toEqual({
       index: 1,
@@ -303,7 +304,7 @@ describe('TabRouter', () => {
     });
     const state3 = router.getStateForAction(
       { type: NavigationActions.NAVIGATE, routeName: 'Foo' },
-      state2,
+      state2
     );
     expect(state3).toEqual(null);
   });
@@ -362,7 +363,7 @@ describe('TabRouter', () => {
     });
     const state2 = router.getStateForAction(
       { type: NavigationActions.NAVIGATE, routeName: 'Zap' },
-      state,
+      state
     );
     expect(state2).toEqual({
       index: 0,
@@ -397,7 +398,7 @@ describe('TabRouter', () => {
     });
     const state3 = router.getStateForAction(
       { type: NavigationActions.NAVIGATE, routeName: 'Zap' },
-      state2,
+      state2
     );
     expect(state3).toEqual(null);
     const state4 = router.getStateForAction({
@@ -550,14 +551,14 @@ describe('TabRouter', () => {
   test('Maps old actions (uses "getStateForAction returns null when navigating to same tab" test)', () => {
     const router = TabRouter(
       { Foo: BareLeafRouteConfig, Bar: BareLeafRouteConfig },
-      { initialRouteName: 'Bar' },
+      { initialRouteName: 'Bar' }
     );
     /* $FlowFixMe: these are for deprecated action names */
     const state = router.getStateForAction({ type: 'Init' });
     /* $FlowFixMe: these are for deprecated action names */
     const state2 = router.getStateForAction(
       { type: 'Navigate', routeName: 'Bar' },
-      state,
+      state
     );
     expect(state2).toEqual(null);
   });
@@ -582,7 +583,7 @@ describe('TabRouter', () => {
 
     const state1 = router.getStateForAction(
       { type: NavigationActions.NAVIGATE, routeName: 'b', params },
-      state0,
+      state0
     );
 
     expect(state1).toEqual({

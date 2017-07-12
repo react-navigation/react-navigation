@@ -1,6 +1,6 @@
 /* @flow */
 
-import invariant from 'fbjs/lib/invariant';
+import invariant from './utils/invariant';
 
 import type { NavigationRoute, NavigationState } from './TypeDefinition';
 
@@ -45,7 +45,7 @@ const StateUtils = {
     invariant(
       StateUtils.indexOf(state, route.key) === -1,
       'should not push route with duplicated key %s',
-      route.key,
+      route.key
     );
 
     const routes = state.routes.slice();
@@ -126,7 +126,7 @@ const StateUtils = {
   replaceAt(
     state: NavigationState,
     key: string,
-    route: NavigationRoute,
+    route: NavigationRoute
   ): NavigationState {
     const index = StateUtils.indexOf(state, key);
     return StateUtils.replaceAtIndex(state, index, route);
@@ -140,13 +140,13 @@ const StateUtils = {
   replaceAtIndex(
     state: NavigationState,
     index: number,
-    route: NavigationRoute,
+    route: NavigationRoute
   ): NavigationState {
     invariant(
       !!state.routes[index],
       'invalid index %s for replacing route %s',
       index,
-      route.key,
+      route.key
     );
 
     if (state.routes[index] === route) {
@@ -171,11 +171,11 @@ const StateUtils = {
   reset(
     state: NavigationState,
     routes: Array<NavigationRoute>,
-    index?: number,
+    index?: number
   ): NavigationState {
     invariant(
       routes.length && Array.isArray(routes),
-      'invalid routes to replace',
+      'invalid routes to replace'
     );
 
     const nextIndex: number = index === undefined ? routes.length - 1 : index;

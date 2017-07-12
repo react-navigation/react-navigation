@@ -1,10 +1,10 @@
 /*
  * @flow
  */
-import invariant from 'fbjs/lib/invariant';
+import invariant from '../utils/invariant';
 
 export default () =>
   invariant(
     false,
-    '`getScreenConfig` has been replaced with `getScreenOptions`',
+    '`getScreenConfig` has been replaced with `getScreenOptions`'
   );

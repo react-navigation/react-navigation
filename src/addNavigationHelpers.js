@@ -19,19 +19,19 @@ export default function<S: *>(navigation: NavigationProp<S, NavigationAction>) {
       navigation.dispatch(
         NavigationActions.back({
           key: key === undefined ? navigation.state.key : key,
-        }),
+        })
       ),
     navigate: (
       routeName: string,
       params?: NavigationParams,
-      action?: NavigationAction,
+      action?: NavigationAction
     ): boolean =>
       navigation.dispatch(
         NavigationActions.navigate({
           routeName,
           params,
           action,
-        }),
+        })
       ),
     /**
      * For updating current route params. For example the nav bar title and
@@ -43,7 +43,7 @@ export default function<S: *>(navigation: NavigationProp<S, NavigationAction>) {
         NavigationActions.setParams({
           params,
           key: navigation.state.key,
-        }),
+        })
       ),
   };
 }

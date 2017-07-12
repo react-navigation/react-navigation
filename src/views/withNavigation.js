@@ -15,7 +15,7 @@ type InjectedProps = {
 };
 
 export default function withNavigation<T: *>(
-  Component: ReactClass<T & InjectedProps>,
+  Component: ReactClass<T & InjectedProps>
 ) {
   const componentWithNavigation = (props: T, { navigation }: Context) => (
     <Component {...props} navigation={navigation} />

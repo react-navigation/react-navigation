@@ -9,7 +9,4 @@ import '@blueprintjs/core/dist/blueprint.css';
 
 const ClientApp = BrowserAppContainer(App);
 
-ReactDOM.render(
-  <ClientApp />,
-  document.getElementById('root')
-);
+ReactDOM.render(<ClientApp />, document.getElementById('root'));

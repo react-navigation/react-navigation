@@ -1,6 +1,6 @@
 /* @flow */
 
-import invariant from 'fbjs/lib/invariant';
+import invariant from '../utils/invariant';
 
 import type {
   NavigationComponent,
@@ -13,7 +13,7 @@ import type {
  */
 export default function getScreenForRouteName( // eslint-disable-line consistent-return
   routeConfigs: NavigationRouteConfigMap,
-  routeName: string,
+  routeName: string
 ): NavigationComponent {
   const routeConfig = routeConfigs[routeName];
 
@@ -22,7 +22,7 @@ export default function getScreenForRouteName( // eslint-disable-line consistent
     `There is no route defined for key ${routeName}.\n` +
       `Must be one of: ${Object.keys(routeConfigs)
         .map((a: string) => `'${a}'`)
-        .join(',')}`,
+        .join(',')}`
   );
 
   if (routeConfig.screen) {
@@ -36,7 +36,7 @@ export default function getScreenForRouteName( // eslint-disable-line consistent
       `The getScreen defined for route '${routeName} didn't return a valid ` +
         'screen or navigator.\n\n' +
         'Please pass it like this:\n' +
-        `${routeName}: {\n  getScreen: () => require('./MyScreen').default\n}`,
+        `${routeName}: {\n  getScreen: () => require('./MyScreen').default\n}`
     );
     return screen;
   }
