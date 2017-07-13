@@ -5,6 +5,7 @@ import { StyleSheet, View } from 'react-native';
 
 import withCachedChildNavigation from '../../withCachedChildNavigation';
 import NavigationActions from '../../NavigationActions';
+import invariant from '../../utils/invariant';
 
 import type {
   NavigationScreenProp,
@@ -85,9 +86,21 @@ class DrawerSidebar extends PureComponent<void, Props, void> {
   _onItemPress = ({ route, focused }: DrawerItem) => {
     this.props.navigation.navigate('DrawerClose');
     if (!focused) {
-      const subAction = route.index !== undefined && route.index !== 0 // if the child screen is a StackRouter then always navigate to its first screen (see #1914)
-        ? NavigationActions.navigate({ routeName: route.routes[0].routeName })
-        : undefined;
+      let subAction = undefined;
+      if (Array.isArray(route.routes)) {
+        invariant(
+          route.routes[0] &&
+            typeof route.routes[0] === 'object' &&
+            typeof route.routes[0].routeName === 'string',
+          "if an array of routes exists on NavigationRoute, then we can " +
+            "conclude it is an NavigationStateRoute",
+        );
+        // if the child screen is a StackRouter then always navigate to its
+        // first screen (see #1914)
+        subAction = NavigationActions.navigate({
+          routeName: route.routes[0].routeName,
+        });
+      }
       this.props.navigation.navigate(route.routeName, undefined, subAction);
     }
   };

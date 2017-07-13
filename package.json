@@ -45,7 +45,7 @@
     "babel-cli": "^6.24.1",
     "babel-core": "^6.24.1",
     "babel-eslint": "^7.2.3",
-    "babel-jest": "^20.0.1",
+    "babel-jest": "^20.0.3",
     "babel-plugin-flow-react-proptypes": "^2.2.1",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
@@ -61,12 +61,12 @@
     "eslint-plugin-jsx-a11y": "^5.0.1",
     "eslint-plugin-prettier": "^2.0.1",
     "eslint-plugin-react": "^7.0.1",
-    "flow-bin": "0.42.0",
-    "jest": "^20.0.1",
+    "flow-bin": "^0.47.0",
+    "jest": "^20.0.4",
     "prettier": "^1.3.1",
     "prettier-eslint": "^6.2.2",
-    "react": "16.0.0-alpha.6",
-    "react-native": "^0.44.0",
+    "react": "^16.0.0-alpha.12",
+    "react-native": "^0.46.1",
     "react-native-vector-icons": "^4.1.1",
     "react-test-renderer": "^15.4.2"
   },
@@ -80,7 +80,7 @@
     "path-to-regexp": "^1.7.0",
     "prop-types": "^15.5.10",
     "react-native-drawer-layout-polyfill": "^1.3.1",
-    "react-native-tab-view": "^0.0.66"
+    "react-native-tab-view": "^0.0.67"
   },
   "jest": {
     "notify": true,

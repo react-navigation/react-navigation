@@ -283,7 +283,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
       ...rest
     } = this.props;
 
-    const { options } = this.props.getScreenDetails(scene, screenProps);
+    const { options } = this.props.getScreenDetails(scene);
     const headerStyle = options.headerStyle;
 
     return (
