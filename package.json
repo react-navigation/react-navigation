@@ -71,7 +71,7 @@
     "react-test-renderer": "^15.4.2"
   },
   "peerDependencies": {
-    "react": "*",
+    "react": "* || ^16.0.0-0",
     "react-native": "*"
   },
   "dependencies": {
