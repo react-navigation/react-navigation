@@ -276,6 +276,14 @@ const ViewsDocs = createNavigator(
       }),
       path: 'transitioner',
     },
+    WithNavigation: {
+      screen: createDocPage({
+        doc: 'api/withNavigation',
+        title: 'WithNavigation',
+        linkName: 'withNavigation',
+      }),
+      path: 'with-navigation',
+    },
   })
 )(NavView);
 ViewsDocs.navigationOptions = {
