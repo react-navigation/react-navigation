@@ -23,6 +23,7 @@
     "jest-expo": "^18.0.0",
     "react-addons-test-utils": "16.0.0-alpha.3",
     "react-native-scripts": "^0.0.50",
+    "react-navigation": "file:../..",
     "react-test-renderer": "16.0.0-alpha.13"
   },
   "jest": {

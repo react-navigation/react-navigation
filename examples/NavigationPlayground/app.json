@@ -13,7 +13,7 @@
       "hideExponentText": false
     },
     "sdkVersion": "18.0.0",
-    "entryPoint": "./node_modules/react-native-scripts/build/bin/crna-entry.js",
+    "entryPoint": "./examples/NavigationPlayground/node_modules/react-native-scripts/build/bin/crna-entry.js",
     "packagerOpts": {
       "projectRoots": "",
       "assetExts": [
