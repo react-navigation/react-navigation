@@ -18,8 +18,7 @@
       "assetExts": [
         "ttf",
         "mp4"
-      ],
-      "config": "./rn-cli.config.js"
+      ]
     },
     "ios": {
       "supportsTablet": true
