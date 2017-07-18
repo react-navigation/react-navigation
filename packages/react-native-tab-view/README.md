@@ -1,13 +1,15 @@
-# React Native Tab View [![npm version](https://img.shields.io/npm/v/react-native-tab-view.svg?style=flat)](https://www.npmjs.com/package/react-native-tab-view)
+# React Native Tab View
+
+[![npm version](https://img.shields.io/npm/v/react-native-tab-view.svg)](https://www.npmjs.com/package/react-native-tab-view)
+[![travis](https://img.shields.io/travis/react-native-community/react-native-tab-view.svg)](https://travis-ci.org/react-native-community/react-native-tab-view)
+[![license](https://img.shields.io/packagist/l/react-native-community/react-native-tab-view.svg)](https://opensource.org/licenses/MIT)
 
 A cross-platform Tab View component for React Native.
 
 This is a JavaScript-only implementation of swipeable tab views. It's super customizable, allowing you to do things like coverflow.
 
-- [Run the example app to see it in action](https://getexponent.com/@satya164/react-native-tab-view-demos).
+- [Run the example app to see it in action](https://expo.io/@satya164/react-native-tab-view-demos).
 - Checkout the [example/](https://github.com/react-native-community/react-native-tab-view/tree/master/example) folder for source code.
-
-Requires React Native version >= 0.36.
 
 
 ## Features
@@ -262,3 +264,24 @@ renderScene = ({ route }) => {
   return <MySceneComponent route={route} />;
 };
 ```
+
+
+## Contributing
+
+While developing, you can run the [example app](/example/README.md) to test your changes.
+
+Make sure the tests still pass, and your code passes Flow and ESLint. Run the following to verify:
+
+```sh
+yarn test
+yarn run flow
+yarn run lint
+```
+
+To fix formatting errors, run the following:
+
+```
+yarn run lint -- --fix
+```
+
+Remember to add tests for your change if possible.
