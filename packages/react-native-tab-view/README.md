@@ -117,6 +117,8 @@ Pager component based on `PanResponder`.
 - `swipeEnabled` - whether to enable swipe gestures
 - `swipeDistanceThreshold` - minimum swipe distance to trigger page switch
 - `swipeVelocityThreshold` - minimum swipe velocity to trigger page switch
+- `onSwipeStart` - optional callback when a swipe gesture starts
+- `onSwipeEnd` - optional callback when a swipe gesture ends
 - `children` - React Element(s) to render
 
 ### `<TabViewPagerScroll />`
