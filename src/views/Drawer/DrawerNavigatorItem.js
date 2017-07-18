@@ -38,20 +38,28 @@ const DrawerNavigatorItem = ({
     ? activeBackgroundColor
     : inactiveBackgroundColor;
 
+  const drawerItem = (
+    <View style={[styles.item, { backgroundColor }]}>
+      {icon
+        ? <View style={[styles.icon, focused ? null : styles.inactiveIcon]}>
+            {icon}
+          </View>
+        : null}
+      {typeof label === 'string'
+        ? <Text style={[styles.label, { color: tintColor }, labelStyle]}>
+            {label}
+          </Text>
+        : label}
+    </View>
+  );
+
+  if (!onPress) {
+    return drawerItem;
+  }
+
   return (
     <TouchableItem onPress={onPress} delayPressIn={0}>
-      <View style={[styles.item, { backgroundColor }]}>
-        {icon
-          ? <View style={[styles.icon, focused ? null : styles.inactiveIcon]}>
-              {icon}
-            </View>
-          : null}
-        {typeof label === 'string'
-          ? <Text style={[styles.label, { color: tintColor }, labelStyle]}>
-              {label}
-            </Text>
-          : label}
-      </View>
+      {drawerItem}
     </TouchableItem>
   );
 };
