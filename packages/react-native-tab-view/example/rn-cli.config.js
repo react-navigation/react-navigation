@@ -14,7 +14,7 @@ module.exports = {
   getBlacklistRE() {
     return blacklist([
       new RegExp(
-        `^${escape(path.resolve(__dirname, '..', 'node_modules'))}\\/.*$` // eslint-disable-line prettier/prettier
+        `^${escape(path.resolve(__dirname, '..', 'node_modules'))}\\/.*$`
       ),
     ]);
   },

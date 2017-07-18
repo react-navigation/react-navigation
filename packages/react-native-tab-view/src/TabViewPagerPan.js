@@ -67,8 +67,11 @@ const DefaultTransitionSpec = {
   friction: 35,
 };
 
-export default class TabViewPagerPan<T: Route<*>>
-  extends PureComponent<DefaultProps, Props<T>, void> {
+export default class TabViewPagerPan<T: Route<*>> extends PureComponent<
+  DefaultProps,
+  Props<T>,
+  void
+> {
   static propTypes = {
     ...SceneRendererPropType,
     configureTransition: PropTypes.func.isRequired,
@@ -143,9 +146,10 @@ export default class TabViewPagerPan<T: Route<*>>
   };
 
   _getNextIndex = (evt: GestureEvent, gestureState: GestureState) => {
-    const currentIndex = typeof this._pendingIndex === 'number'
-      ? this._pendingIndex
-      : this.props.navigationState.index;
+    const currentIndex =
+      typeof this._pendingIndex === 'number'
+        ? this._pendingIndex
+        : this.props.navigationState.index;
 
     let swipeVelocityThreshold = this.props.swipeVelocityThreshold;
 
@@ -193,9 +197,10 @@ export default class TabViewPagerPan<T: Route<*>>
 
   _respondToGesture = (evt: GestureEvent, gestureState: GestureState) => {
     const { layout: { width } } = this.props;
-    const currentPosition = typeof this._lastValue === 'number'
-      ? this._lastValue
-      : this.props.navigationState.index;
+    const currentPosition =
+      typeof this._lastValue === 'number'
+        ? this._lastValue
+        : this.props.navigationState.index;
     const nextPosition =
       currentPosition - gestureState.dx / width * (I18nManager.isRTL ? -1 : 1);
     if (this._isMoving === null) {
@@ -235,7 +240,7 @@ export default class TabViewPagerPan<T: Route<*>>
     if (this.props.animationEnabled !== false) {
       const transitionSpec = this.props.configureTransition(
         currentTransitionProps,
-        nextTransitionProps,
+        nextTransitionProps
       );
       const { timing, ...transitionConfig } = transitionSpec;
 
@@ -263,7 +268,7 @@ export default class TabViewPagerPan<T: Route<*>>
     // Prepend '-1', so there are always at least 2 items in inputRange
     const inputRange = [-1, ...routes.map((x, i) => i)];
     const outputRange = inputRange.map(
-      i => width * i * (I18nManager.isRTL ? 1 : -1),
+      i => width * i * (I18nManager.isRTL ? 1 : -1)
     );
 
     const translateX = position.interpolate({
@@ -281,7 +286,7 @@ export default class TabViewPagerPan<T: Route<*>>
         ]}
         {...this._panResponder.panHandlers}
       >
-        {Children.map(children, (child, i) => (
+        {Children.map(children, (child, i) =>
           <View
             key={navigationState.routes[i].key}
             testID={navigationState.routes[i].testID}
@@ -293,7 +298,7 @@ export default class TabViewPagerPan<T: Route<*>>
           >
             {i === navigationState.index || width ? child : null}
           </View>
-        ))}
+        )}
       </Animated.View>
     );
   }

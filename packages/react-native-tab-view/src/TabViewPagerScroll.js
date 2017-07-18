@@ -25,8 +25,11 @@ type Props<T> = SceneRendererProps<T> & {
   children?: React.Element<any>,
 };
 
-export default class TabViewPagerScroll<T: Route<*>>
-  extends PureComponent<void, Props<T>, State> {
+export default class TabViewPagerScroll<T: Route<*>> extends PureComponent<
+  void,
+  Props<T>,
+  State
+> {
   static propTypes = {
     ...SceneRendererPropType,
     animationEnabled: PropTypes.bool,
@@ -49,7 +52,7 @@ export default class TabViewPagerScroll<T: Route<*>>
   componentDidMount() {
     this._scrollTo(
       this.props.navigationState.index * this.props.layout.width,
-      false,
+      false
     );
     this._resetListener = this.props.subscribe('reset', this._scrollTo);
   }
@@ -93,7 +96,7 @@ export default class TabViewPagerScroll<T: Route<*>>
 
   _handleMomentumScrollEnd = (e: ScrollEvent) => {
     const nextIndex = Math.round(
-      e.nativeEvent.contentOffset.x / this.props.layout.width,
+      e.nativeEvent.contentOffset.x / this.props.layout.width
     );
     this._isIdle = true;
     this.props.jumpToIndex(nextIndex);
@@ -103,7 +106,7 @@ export default class TabViewPagerScroll<T: Route<*>>
     this._isIdle =
       Math.abs(e.nativeEvent.contentOffset.x - this._nextOffset) < 0.1;
     this.props.position.setValue(
-      e.nativeEvent.contentOffset.x / this.props.layout.width,
+      e.nativeEvent.contentOffset.x / this.props.layout.width
     );
   };
 
@@ -132,7 +135,7 @@ export default class TabViewPagerScroll<T: Route<*>>
         contentContainerStyle={layout.width ? null : styles.container}
         ref={this._setRef}
       >
-        {Children.map(children, (child, i) => (
+        {Children.map(children, (child, i) =>
           <View
             key={navigationState.routes[i].key}
             testID={navigationState.routes[i].testID}
@@ -144,7 +147,7 @@ export default class TabViewPagerScroll<T: Route<*>>
           >
             {i === navigationState.index || layout.width ? child : null}
           </View>
-        ))}
+        )}
       </ScrollView>
     );
   }

@@ -65,7 +65,7 @@ export default class TopBarTextExample extends PureComponent<void, *, State> {
   _renderLabel = props => ({ route, index }) => {
     const inputRange = props.navigationState.routes.map((x, i) => i);
     const outputRange = inputRange.map(
-      inputIndex => (inputIndex === index ? '#D6356C' : '#222'),
+      inputIndex => (inputIndex === index ? '#D6356C' : '#222')
     );
     const color = props.position.interpolate({
       inputRange,

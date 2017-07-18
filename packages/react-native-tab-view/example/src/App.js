@@ -98,7 +98,9 @@ export default class ExampleList extends PureComponent {
         style={styles.touchable}
         onPress={() => this._handleNavigate(i)}
       >
-        <Text style={styles.item}>{i + 1}. {component.title}</Text>
+        <Text style={styles.item}>
+          {i + 1}. {component.title}
+        </Text>
       </TouchableOpacity>
     );
   };
@@ -111,19 +113,20 @@ export default class ExampleList extends PureComponent {
     const { index } = this.state;
 
     const ExampleComponent = EXAMPLE_COMPONENTS[index] || null;
-    const backgroundColor = ExampleComponent && ExampleComponent.backgroundColor
-      ? ExampleComponent.backgroundColor
-      : '#222';
-    const tintColor = ExampleComponent && ExampleComponent.tintColor
-      ? ExampleComponent.tintColor
-      : 'white';
-    const appbarElevation = ExampleComponent &&
-      Number.isFinite(ExampleComponent.appbarElevation)
-      ? ExampleComponent.appbarElevation
-      : 4;
-    const borderBottomWidth = Platform.OS === 'ios'
-      ? StyleSheet.hairlineWidth
-      : 0;
+    const backgroundColor =
+      ExampleComponent && ExampleComponent.backgroundColor
+        ? ExampleComponent.backgroundColor
+        : '#222';
+    const tintColor =
+      ExampleComponent && ExampleComponent.tintColor
+        ? ExampleComponent.tintColor
+        : 'white';
+    const appbarElevation =
+      ExampleComponent && Number.isFinite(ExampleComponent.appbarElevation)
+        ? ExampleComponent.appbarElevation
+        : 4;
+    const borderBottomWidth =
+      Platform.OS === 'ios' ? StyleSheet.hairlineWidth : 0;
 
     return (
       <View style={styles.container}>

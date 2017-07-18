@@ -58,8 +58,11 @@ type State = {
   initialOffset: { x: number, y: number },
 };
 
-export default class TabBar<T: Route<*>>
-  extends PureComponent<DefaultProps<T>, Props<T>, State> {
+export default class TabBar<T: Route<*>> extends PureComponent<
+  DefaultProps<T>,
+  Props<T>,
+  State
+> {
   static propTypes = {
     ...SceneRendererPropType,
     scrollEnabled: PropTypes.bool,
@@ -109,7 +112,7 @@ export default class TabBar<T: Route<*>>
     this._adjustScroll(this.props.navigationState.index);
     this._positionListener = this.props.subscribe(
       'position',
-      this._adjustScroll,
+      this._adjustScroll
     );
   }
 
@@ -136,7 +139,7 @@ export default class TabBar<T: Route<*>>
         prevProps.tabStyle !== this.props.tabStyle)
     ) {
       global.requestAnimationFrame(() =>
-        this._adjustScroll(this.props.navigationState.index),
+        this._adjustScroll(this.props.navigationState.index)
       );
     }
   }
@@ -159,7 +162,9 @@ export default class TabBar<T: Route<*>>
       return null;
     }
     return (
-      <Text style={[styles.tabLabel, this.props.labelStyle]}>{label}</Text>
+      <Text style={[styles.tabLabel, this.props.labelStyle]}>
+        {label}
+      </Text>
     );
   };
 
@@ -170,7 +175,7 @@ export default class TabBar<T: Route<*>>
     const { width, position } = props;
     const translateX = Animated.multiply(
       Animated.multiply(position, width),
-      I18nManager.isRTL ? -1 : 1,
+      I18nManager.isRTL ? -1 : 1
     );
     return (
       <Animated.View
@@ -244,7 +249,7 @@ export default class TabBar<T: Route<*>>
 
     const scrollAmount = this._getScrollAmount(
       props,
-      props.navigationState.index,
+      props.navigationState.index
     );
     this._scrollView.scrollTo({
       x: scrollAmount,
@@ -275,7 +280,7 @@ export default class TabBar<T: Route<*>>
 
     const scrollAmount = this._getScrollAmount(
       this.props,
-      this.props.navigationState.index,
+      this.props.navigationState.index
     );
     const scrollOffset = value - scrollAmount;
 
@@ -335,7 +340,7 @@ export default class TabBar<T: Route<*>>
     // Prepend '-1', so there are always at least 2 items in inputRange
     const inputRange = [-1, ...routes.map((x, i) => i)];
     const translateOutputRange = inputRange.map(
-      i => this._getScrollAmount(this.props, i) * -1,
+      i => this._getScrollAmount(this.props, i) * -1
     );
 
     const translateX = Animated.add(
@@ -343,7 +348,7 @@ export default class TabBar<T: Route<*>>
         inputRange,
         outputRange: translateOutputRange,
       }),
-      this.state.offset,
+      this.state.offset
     ).interpolate({
       inputRange: [-maxDistance, 0],
       outputRange: [-maxDistance, 0],
@@ -392,14 +397,14 @@ export default class TabBar<T: Route<*>>
             {routes.map((route, i) => {
               const focused = index === i;
               const outputRange = inputRange.map(
-                inputIndex => (inputIndex === i ? 1 : 0.7),
+                inputIndex => (inputIndex === i ? 1 : 0.7)
               );
               const opacity = Animated.multiply(
                 this.state.visibility,
                 position.interpolate({
                   inputRange,
                   outputRange,
-                }),
+                })
               );
               const scene = {
                 route,

@@ -17,7 +17,7 @@ import type {
 
 type DefaultProps<T> = {
   renderPager: (
-    props: SceneRendererProps<T> & PagerProps,
+    props: SceneRendererProps<T> & PagerProps
   ) => React.Element<any>,
 };
 
@@ -28,7 +28,7 @@ type Props<T> = PagerProps & {
   initialLayout?: Layout,
   canJumpToTab?: (route: T) => boolean,
   renderPager: (
-    props: SceneRendererProps<T> & PagerProps,
+    props: SceneRendererProps<T> & PagerProps
   ) => React.Element<any>,
   renderScene: (props: SceneRendererProps<T> & Scene<T>) => ?React.Element<any>,
   renderHeader?: (props: SceneRendererProps<T>) => ?React.Element<any>,
@@ -59,8 +59,11 @@ switch (Platform.OS) {
     break;
 }
 
-export default class TabViewAnimated<T: Route<*>>
-  extends PureComponent<DefaultProps<T>, Props<T>, State> {
+export default class TabViewAnimated<T: Route<*>> extends PureComponent<
+  DefaultProps<T>,
+  Props<T>,
+  State
+> {
   static propTypes = {
     navigationState: NavigationStatePropType.isRequired,
     onIndexChange: PropTypes.func.isRequired,
@@ -103,7 +106,7 @@ export default class TabViewAnimated<T: Route<*>>
   componentDidMount() {
     this._mounted = true;
     this._positionListener = this.state.position.addListener(
-      this._trackPosition,
+      this._trackPosition
     );
   }
 
@@ -289,7 +292,7 @@ export default class TabViewAnimated<T: Route<*>>
               route,
               index,
               focused: index === navigationState.index,
-            }),
+            })
           ),
         })}
         {renderFooter && renderFooter(props)}

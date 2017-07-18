@@ -1,8 +1,6 @@
 /* @flow */
 
-import type {
-  StyleObj,
-} from 'react-native/Libraries/StyleSheet/StyleSheetTypes';
+import type { StyleObj } from 'react-native/Libraries/StyleSheet/StyleSheetTypes';
 
 import { Animated } from 'react-native';
 
@@ -34,7 +32,7 @@ export type SceneRendererProps<T> = {
   getLastPosition: () => number,
   subscribe: (
     event: SubscriptionName,
-    callback: Function,
+    callback: Function
   ) => { remove: Function },
 };
 
@@ -50,7 +48,7 @@ export type TransitionSpec = {
 
 export type TransitionConfigurator = (
   currentTransitionProps: TransitionProps,
-  nextTransitionProps: TransitionProps,
+  nextTransitionProps: TransitionProps
 ) => TransitionSpec;
 
 export type PagerProps = {

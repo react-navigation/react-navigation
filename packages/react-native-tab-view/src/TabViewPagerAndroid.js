@@ -21,8 +21,11 @@ type Props<T> = SceneRendererProps<T> & {
   children?: React.Element<any>,
 };
 
-export default class TabViewPagerAndroid<T: Route<*>>
-  extends PureComponent<void, Props<T>, void> {
+export default class TabViewPagerAndroid<T: Route<*>> extends PureComponent<
+  void,
+  Props<T>,
+  void
+> {
   static propTypes = {
     ...SceneRendererPropType,
     animationEnabled: PropTypes.bool,
@@ -112,7 +115,7 @@ export default class TabViewPagerAndroid<T: Route<*>>
   _handlePageScroll = (e: PageScrollEvent) => {
     this.props.position.setValue(
       this._getPageIndex(e.nativeEvent.position) +
-        e.nativeEvent.offset * (I18nManager.isRTL ? -1 : 1),
+        e.nativeEvent.offset * (I18nManager.isRTL ? -1 : 1)
     );
   };
 
@@ -130,7 +133,7 @@ export default class TabViewPagerAndroid<T: Route<*>>
 
   render() {
     const { children, navigationState, swipeEnabled } = this.props;
-    const content = Children.map(children, (child, i) => (
+    const content = Children.map(children, (child, i) =>
       <View
         key={navigationState.routes[i].key}
         testID={navigationState.routes[i].testID}
@@ -138,7 +141,7 @@ export default class TabViewPagerAndroid<T: Route<*>>
       >
         {child}
       </View>
-    ));
+    );
 
     if (I18nManager.isRTL) {
       content.reverse();

@@ -26,8 +26,11 @@ type DefaultProps = {
   pressColor: string,
 };
 
-export default class TouchableItem
-  extends PureComponent<DefaultProps, Props, void> {
+export default class TouchableItem extends PureComponent<
+  DefaultProps,
+  Props,
+  void
+> {
   static propTypes = {
     onPress: PropTypes.func.isRequired,
     delayPressIn: PropTypes.number,

@@ -100,7 +100,9 @@ export default class CoverflowExample extends PureComponent<void, *, State> {
         <View style={styles.album}>
           <Image source={ALBUMS[props.route.key]} style={styles.cover} />
         </View>
-        <Text style={styles.label}>{props.route.key}</Text>
+        <Text style={styles.label}>
+          {props.route.key}
+        </Text>
       </Animated.View>
     );
   };
