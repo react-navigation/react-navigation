@@ -23,8 +23,8 @@ type DefaultProps<T> = {
 
 type Props<T> = PagerProps & {
   navigationState: NavigationState<T>,
-  onRequestChangeTab: (index: number) => void,
-  onChangePosition?: (value: number) => void,
+  onIndexChange: (index: number) => void,
+  onPositionChange?: ({ value: number }) => void,
   initialLayout?: Layout,
   canJumpToTab?: (route: T) => boolean,
   renderPager: (
@@ -63,8 +63,8 @@ export default class TabViewAnimated<T: Route<*>>
   extends PureComponent<DefaultProps<T>, Props<T>, State> {
   static propTypes = {
     navigationState: NavigationStatePropType.isRequired,
-    onRequestChangeTab: PropTypes.func.isRequired,
-    onChangePosition: PropTypes.func,
+    onIndexChange: PropTypes.func.isRequired,
+    onPositionChange: PropTypes.func,
     initialLayout: PropTypes.shape({
       height: PropTypes.number.isRequired,
       width: PropTypes.number.isRequired,
@@ -131,10 +131,22 @@ export default class TabViewAnimated<T: Route<*>>
     return renderScene(props);
   };
 
-  _handleChangePosition = (value: number) => {
-    const { onChangePosition, navigationState, lazy } = this.props;
+  _handlePositionChange = (value: number) => {
+    const {
+      /* $FlowFixMe */
+      onChangePosition,
+      onPositionChange,
+      navigationState,
+      lazy,
+    } = this.props;
     if (onChangePosition) {
+      console.warn(
+        '`onChangePosition` is deprecated. Use `onPositionChange` instead.'
+      );
       onChangePosition(value);
+    }
+    if (onPositionChange) {
+      onPositionChange({ value });
     }
     const { loaded } = this.state;
     if (lazy) {
@@ -152,13 +164,9 @@ export default class TabViewAnimated<T: Route<*>>
   };
 
   _trackPosition = (e: { value: number }) => {
-    this._handleChangePosition(e.value);
+    this._handlePositionChange(e.value);
     this._triggerEvent('position', e.value);
     this._lastPosition = e.value;
-    const { onChangePosition } = this.props;
-    if (onChangePosition) {
-      onChangePosition(e.value);
-    }
   };
 
   _getLastPosition = () => {
@@ -213,7 +221,16 @@ export default class TabViewAnimated<T: Route<*>>
     }
 
     if (index !== navigationState.index) {
-      this.props.onRequestChangeTab(index);
+      this.props.onIndexChange(index);
+
+      /* $FlowFixMe */
+      if (this.props.onRequestChangeTab) {
+        console.warn(
+          '`onRequestChangeTab` is deprecated. Use `onIndexChange` instead.'
+        );
+        /* $FlowFixMe */
+        this.props.onRequestChangeTab(index);
+      }
     }
   };
 
@@ -242,8 +259,8 @@ export default class TabViewAnimated<T: Route<*>>
     const {
       /* eslint-disable no-unused-vars */
       navigationState,
-      onRequestChangeTab,
-      onChangePosition,
+      onIndexChange,
+      onPositionChange,
       canJumpToTab,
       lazy,
       initialLayout,

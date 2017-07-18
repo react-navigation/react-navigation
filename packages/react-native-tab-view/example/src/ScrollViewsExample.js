@@ -33,7 +33,7 @@ export default class TopBarTextExample extends PureComponent<void, *, State> {
   _second: Object;
   _third: Object;
 
-  _handleChangeTab = index => {
+  _handleIndexChange = index => {
     this.setState({
       index,
     });
@@ -130,7 +130,7 @@ export default class TopBarTextExample extends PureComponent<void, *, State> {
         navigationState={this.state}
         renderScene={this._renderScene}
         renderHeader={this._renderHeader}
-        onRequestChangeTab={this._handleChangeTab}
+        onIndexChange={this._handleIndexChange}
         lazy
       />
     );

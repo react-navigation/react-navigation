@@ -51,7 +51,7 @@ export default class TabViewExample extends PureComponent {
     ],
   };
 
-  _handleChangeTab = index => this.setState({ index });
+  _handleIndexChange = index => this.setState({ index });
 
   _renderHeader = props => <TabBar {...props} />;
 
@@ -67,7 +67,7 @@ export default class TabViewExample extends PureComponent {
         navigationState={this.state}
         renderScene={this._renderScene}
         renderHeader={this._renderHeader}
-        onRequestChangeTab={this._handleChangeTab}
+        onIndexChange={this._handleIndexChange}
       />
     );
   }
@@ -92,7 +92,7 @@ Container component responsible for managing tab transitions.
 #### Props
 
 - `navigationState` - the current navigation state
-- `onRequestChangeTab` - callback for when the current tab changes, should do the `setState`
+- `onIndexChange` - callback for when the current tab index changes, should do the `setState`
 - `onPositionChange` - callback called with position value as it changes (e.g. - on swipe or tab change), avoid doing anything expensive here
 - `canJumpToTab` - optional callback which accepts a route, and returns a boolean indicating whether jumping to the tab is allowed
 - `lazy` - whether to load tabs lazily when you start switching
@@ -185,7 +185,7 @@ Then pass `this.state` as the `navigationState` prop to `<TabViewAnimated />` or
   navigationState={this.state}
   renderScene={this._renderPage}
   renderHeader={this._renderHeader}
-  onRequestChangeTab={this._handleChangeTab}
+  onIndexChange={this._handleIndexChange}
 />
 ```
 

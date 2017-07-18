@@ -29,7 +29,7 @@ export default class TopBarIconExample extends PureComponent<void, *, State> {
     ],
   };
 
-  _handleChangeTab = index => {
+  _handleIndexChange = index => {
     this.setState({
       index,
     });
@@ -112,7 +112,7 @@ export default class TopBarIconExample extends PureComponent<void, *, State> {
         navigationState={this.state}
         renderScene={this._renderScene}
         renderFooter={this._renderFooter}
-        onRequestChangeTab={this._handleChangeTab}
+        onIndexChange={this._handleIndexChange}
       />
     );
   }
