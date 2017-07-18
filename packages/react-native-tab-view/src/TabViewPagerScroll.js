@@ -100,7 +100,8 @@ export default class TabViewPagerScroll<T: Route<*>>
   };
 
   _handleScroll = (e: ScrollEvent) => {
-    this._isIdle = e.nativeEvent.contentOffset.x === this._nextOffset;
+    this._isIdle =
+      Math.abs(e.nativeEvent.contentOffset.x - this._nextOffset) < 0.1;
     this.props.position.setValue(
       e.nativeEvent.contentOffset.x / this.props.layout.width,
     );
