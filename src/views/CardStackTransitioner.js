@@ -35,6 +35,7 @@ type Props = {
     NavigationStackScreenOptions
   >,
   cardStyle?: Style,
+  gestureResponseDistance?: number,
   onTransitionStart?: () => void,
   onTransitionEnd?: () => void,
   style: Style,
@@ -103,6 +104,7 @@ class CardStackTransitioner extends Component<DefaultProps, Props, void> {
       mode,
       router,
       cardStyle,
+      gestureResponseDistance,
       transitionConfig,
       style,
     } = this.props;
@@ -113,6 +115,7 @@ class CardStackTransitioner extends Component<DefaultProps, Props, void> {
         mode={mode}
         router={router}
         cardStyle={cardStyle}
+        gestureResponseDistance={gestureResponseDistance}
         transitionConfig={transitionConfig}
         style={style}
         {...props}
