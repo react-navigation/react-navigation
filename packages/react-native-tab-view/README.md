@@ -2,7 +2,7 @@
 
 [![npm version](https://img.shields.io/npm/v/react-native-tab-view.svg)](https://www.npmjs.com/package/react-native-tab-view)
 [![travis](https://img.shields.io/travis/react-native-community/react-native-tab-view.svg)](https://travis-ci.org/react-native-community/react-native-tab-view)
-[![license](https://img.shields.io/packagist/l/react-native-community/react-native-tab-view.svg)](https://opensource.org/licenses/MIT)
+[![license](https://img.shields.io/github/license/react-native-community/react-native-tab-view.svg)](https://opensource.org/licenses/MIT)
 
 A cross-platform Tab View component for React Native.
 
