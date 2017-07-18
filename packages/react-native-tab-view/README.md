@@ -93,7 +93,7 @@ Container component responsible for managing tab transitions.
 
 - `navigationState` - the current navigation state
 - `onRequestChangeTab` - callback for when the current tab changes, should do the `setState`
-- `onChangePosition` - callback called with position value as it changes (e.g. - on swipe or tab change), avoid doing anything expensive here
+- `onPositionChange` - callback called with position value as it changes (e.g. - on swipe or tab change), avoid doing anything expensive here
 - `canJumpToTab` - optional callback which accepts a route, and returns a boolean indicating whether jumping to the tab is allowed
 - `lazy` - whether to load tabs lazily when you start switching
 - `initialLayout` - optional object containing the initial `height` and `width`, can be passed to prevent the one frame delay in rendering
