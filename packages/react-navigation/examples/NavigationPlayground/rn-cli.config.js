@@ -25,6 +25,7 @@ config.getBlacklist = () => [
   ),
   new RegExp(`${path.resolve(__dirname, '../..')}/node_modules/react/(.*)`),
   new RegExp(`${path.resolve(__dirname, '../..')}/lib-rn/(.*)`),
+  new RegExp(`${path.resolve(__dirname, '../..')}/lib/(.*)`),
   ...getBlacklistForExample(CURRENT_EXAMPLE)
 ];
 
