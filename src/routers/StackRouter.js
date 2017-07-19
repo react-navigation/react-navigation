@@ -99,15 +99,21 @@ export default (
           action.type === NavigationActions.NAVIGATE &&
           childRouters[action.routeName] !== undefined
         ) {
+          let definedRoute = {
+            ...action,
+            type: undefined,
+            key: `Init-${_getUuid()}`,
+          };
+          if (childRouters[action.routeName] !== null) {
+            definedRoute = Object.assign(
+              {},
+              childRouters[action.routeName].getStateForAction(action),
+              definedRoute
+            );
+          }
           return {
             index: 0,
-            routes: [
-              {
-                ...action,
-                type: undefined,
-                key: `Init-${_getUuid()}`,
-              },
-            ],
+            routes: [definedRoute],
           };
         }
         if (initialChildRouter) {
