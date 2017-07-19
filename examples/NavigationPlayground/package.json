@@ -11,7 +11,7 @@
     "test": "node node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "expo": "^18.0.0",
+    "expo": "^18.0.9",
     "flow-bin": "^0.49.1",
     "react": "16.0.0-alpha.12",
     "react-native": "^0.45.1",
@@ -20,12 +20,20 @@
   "devDependencies": {
     "babel-jest": "^20.0.1",
     "jest": "^20.0.1",
-    "jest-expo": "^0.4.0",
-    "react-native-scripts": "^0.0.40",
-    "react-test-renderer": "15.5.4"
+    "jest-expo": "^18.0.0",
+    "react-addons-test-utils": "16.0.0-alpha.3",
+    "react-native-scripts": "^0.0.50",
+    "react-test-renderer": "16.0.0-alpha.13"
   },
   "jest": {
     "preset": "jest-expo",
+    "moduleFileExtensions": [
+      "web.js",
+      "js",
+      "json",
+      "jsx",
+      "node"
+    ],
     "modulePathIgnorePatterns": [
       "/node_modules/.*/react-native/",
       "/node_modules/.*/react/"
