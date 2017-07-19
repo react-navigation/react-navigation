@@ -152,8 +152,11 @@ export default function createNavigationContainer<T: *>(
       if (!this._isStateful()) {
         return;
       }
-
-      this.subs = BackAndroid.addEventListener('backPress', () =>
+      
+      this.subs = BackAndroid.addEventListener('hardwareBackPress', () =>
+        this.dispatch(NavigationActions.back())
+      );
+      this.legacySubs = BackAndroid.addEventListener('backPress', () =>
         this.dispatch(NavigationActions.back())
       );
 
@@ -169,6 +172,7 @@ export default function createNavigationContainer<T: *>(
     componentWillUnmount() {
       Linking.removeEventListener('url', this._handleOpenURL);
       this.subs && this.subs.remove();
+      this.legacySubs && this.legacySubs.remove();
     }
 
     dispatch = (action: NavigationAction) => {
