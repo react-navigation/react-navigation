@@ -43,6 +43,32 @@ DraftsScreen.navigationOptions = {
   ),
 };
 
+const onTapAccount = (accountName, navigation) => {
+  navigation.setParams({
+    currAccount: accountName,
+    showAccounts: false,
+  });
+};
+
+// Items to be rendered after tapping "Choose Account".
+// These could be loaded via network request, for example.
+const accountItems = [
+  {
+    key: 'Alice',
+    screenOptions: ({ navigation }) => ({
+      drawerLabel: 'Alice',
+      onPress: () => onTapAccount('Alice', navigation),
+    }),
+  },
+  {
+    key: 'Bob',
+    screenOptions: ({ navigation }) => ({
+      drawerLabel: 'Bob',
+      onPress: () => onTapAccount('Bob', navigation),
+    }),
+  },
+];
+
 const CustomDrawerItem = (props) => {
   const { item, focused, activeTintColor, inactiveTintColor, onPress: defaultOnPress } = props;
 
@@ -66,10 +92,12 @@ const CustomDrawerItem = (props) => {
 
 const CustomDrawerItems = (props) => {
   const { items, onItemPress, ...itemProps } = props;
+  const { navigation: { state: { params: { showAccounts } } } } = itemProps;
+  const itemsToShow = showAccounts ? accountItems : items;
 
   return (
     <View style={[styles.drawerContainer]}>
-      {items.map((item) => {
+      {itemsToShow.map((item) => {
         const { routeName, key } = item;
 
         // Simply render the default component if the item is a route.
@@ -115,6 +143,22 @@ const drawerRoutes = {
 // This array is optional; if you don't provide it,
 // the drawer will automatically show all of your routes that were defined above.
 const customDrawerItems = [
+  {
+    key: 'ChooseAccount',
+    screenOptions: ({ navigation }) => ({
+      drawerLabel: navigation.state.params.currAccount || 'Sign in...',
+      drawerIcon: ({ tintColor }) => (
+        <MaterialIcons
+          name="account-circle"
+          size={24}
+          style={{ color: tintColor }}
+        />
+      ),
+      onPress: () => {
+        navigation.setParams({ showAccounts: true });
+      },
+    }),
+  },
   {
     key: 'RefreshButton',
     screenOptions: ({ navigation }) => ({
