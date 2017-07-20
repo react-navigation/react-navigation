@@ -14,10 +14,10 @@ import {
 } from 'react-native';
 
 import Card from './Card';
-import Header from './Header';
-import NavigationActions from '../NavigationActions';
-import addNavigationHelpers from '../addNavigationHelpers';
-import SceneView from './SceneView';
+import Header from '../Header/Header';
+import NavigationActions from '../../NavigationActions';
+import addNavigationHelpers from '../../addNavigationHelpers';
+import SceneView from '../SceneView';
 
 import type {
   NavigationAction,
@@ -29,9 +29,9 @@ import type {
   NavigationScreenDetails,
   NavigationStackScreenOptions,
   HeaderMode,
-  Style,
+  ViewStyleProp,
   TransitionConfig,
-} from '../TypeDefinition';
+} from '../../TypeDefinition';
 
 import TransitionConfigs from './TransitionConfigs';
 
@@ -42,16 +42,17 @@ type Props = {
   headerMode: HeaderMode,
   headerComponent?: ReactClass<*>,
   mode: 'card' | 'modal',
+  navigation: NavigationScreenProp<NavigationState, NavigationAction>,
   router: NavigationRouter<
     NavigationState,
     NavigationAction,
     NavigationStackScreenOptions
   >,
-  cardStyle?: Style,
+  cardStyle?: ViewStyleProp,
   gestureResponseDistance?: number,
   onTransitionStart?: () => void,
   onTransitionEnd?: () => void,
-  style?: any,
+  style?: any, // TODO: Remove
   /**
    * Optional custom animation when transitioning between screens.
    */
@@ -259,9 +260,8 @@ class CardStack extends Component {
         if (index !== scene.index) {
           return false;
         }
-        const immediateIndex = this._immediateIndex == null
-          ? index
-          : this._immediateIndex;
+        const immediateIndex =
+          this._immediateIndex == null ? index : this._immediateIndex;
         const currentDragDistance = gesture[isVertical ? 'dy' : 'dx'];
         const currentDragPosition =
           event.nativeEvent[isVertical ? 'pageY' : 'pageX'];
@@ -299,9 +299,10 @@ class CardStack extends Component {
         const axisDistance = isVertical
           ? layout.height.__getValue()
           : layout.width.__getValue();
-        const currentValue = I18nManager.isRTL && axis === 'dx'
-          ? startValue + gesture[axis] / axisDistance
-          : startValue - gesture[axis] / axisDistance;
+        const currentValue =
+          I18nManager.isRTL && axis === 'dx'
+            ? startValue + gesture[axis] / axisDistance
+            : startValue - gesture[axis] / axisDistance;
         const value = clamp(index - 1, currentValue, index);
         position.setValue(value);
       },
@@ -315,9 +316,8 @@ class CardStack extends Component {
         }
         this._isResponding = false;
 
-        const immediateIndex = this._immediateIndex == null
-          ? index
-          : this._immediateIndex;
+        const immediateIndex =
+          this._immediateIndex == null ? index : this._immediateIndex;
 
         // Calculate animate duration according to gesture speed and moved distance
         const axisDistance = isVertical
@@ -355,9 +355,10 @@ class CardStack extends Component {
     });
 
     const { options } = this._getScreenDetails(scene);
-    const gesturesEnabled = typeof options.gesturesEnabled === 'boolean'
-      ? options.gesturesEnabled
-      : Platform.OS === 'ios';
+    const gesturesEnabled =
+      typeof options.gesturesEnabled === 'boolean'
+        ? options.gesturesEnabled
+        : Platform.OS === 'ios';
 
     const handlers = gesturesEnabled ? responder.panHandlers : {};
     const containerStyle = [

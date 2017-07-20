@@ -14,7 +14,7 @@ import type {
   NavigationDrawerScreenOptions,
   NavigationState,
   NavigationStateRoute,
-  Style,
+  ViewStyleProp,
 } from '../../TypeDefinition';
 
 import type { DrawerScene, DrawerItem } from './DrawerView';
@@ -32,7 +32,7 @@ type Props = {
   contentComponent: ReactClass<*>,
   contentOptions?: {},
   screenProps?: {},
-  style?: Style,
+  style?: ViewStyleProp,
 };
 
 /**
@@ -85,9 +85,14 @@ class DrawerSidebar extends PureComponent<void, Props, void> {
   _onItemPress = ({ route, focused }: DrawerItem) => {
     this.props.navigation.navigate('DrawerClose');
     if (!focused) {
-      const subAction = route.index !== undefined && route.index !== 0 // if the child screen is a StackRouter then always navigate to its first screen (see #1914)
-        ? NavigationActions.navigate({ routeName: route.routes[0].routeName })
-        : undefined;
+      let subAction;
+      // if the child screen is a StackRouter then always navigate to its first screen (see #1914)
+      if (route.index !== undefined && route.index !== 0) {
+        route = ((route: any): NavigationStateRoute);
+        subAction = NavigationActions.navigate({
+          routeName: route.routes[0].routeName,
+        });
+      }
       this.props.navigation.navigate(route.routeName, undefined, subAction);
     }
   };
