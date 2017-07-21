@@ -9,15 +9,17 @@ First, make sure you're [all set up to use React Native](http://facebook.github.
 
 ```sh
 # Create a new React Native App
-react-native init SimpleApp
+create-react-native-app SimpleApp
+
 cd SimpleApp
 
 # Install the latest version of react-navigation from npm
 npm install --save react-navigation
 
 # Run the new app
-react-native run-android # or:
-react-native run-ios
+npm start
+
+#This will start a development server for you, and print a QR code in your terminal.
 ```
 
 Verify that you can successfully see the bare sample app run on iOS and/or Android:
@@ -26,9 +28,7 @@ Verify that you can successfully see the bare sample app run on iOS and/or Andro
 bare-project
 ```
 
-We want to share code on iOS and Android, so lets delete the contents of `index.ios.js` and `index.android.js` and replace it with `import './App';`.
-
-Now lets create the new file for our app implementation, `App.js`.
+Now lets implement this on `App.js`.
 
 ## Introducing Stack Navigator
 
@@ -37,7 +37,6 @@ For our app, we want to use the `StackNavigator` because we want a conceptual 's
 ```js
 import React from 'react';
 import {
-  AppRegistry,
   Text,
 } from 'react-native';
 import { StackNavigator } from 'react-navigation';
@@ -55,7 +54,8 @@ const SimpleApp = StackNavigator({
   Home: { screen: HomeScreen },
 });
 
-AppRegistry.registerComponent('SimpleApp', () => SimpleApp);
+//You need AppRegistry if you are still using react-native init
+//AppRegistry.registerComponent('SimpleApp', () => SimpleApp);
 ```
 
 The `title` of the screen is configurable on the [static `navigationOptions`](/docs/navigators/navigation-options), where many options can be set to configure the presentation of the screen in the navigator.
