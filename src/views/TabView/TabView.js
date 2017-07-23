@@ -127,9 +127,10 @@ class TabView extends PureComponent<void, Props, void> {
       screenProps || {}
     );
 
-    const tabBarVisible = options.tabBarVisible === null
-      ? true
-      : options.tabBarVisible;
+    const tabBarVisible =
+      options.tabBarVisible === null || options.tabBarVisible === undefined
+        ? true
+        : options.tabBarVisible;
 
     return (
       <TabBarComponent
@@ -139,9 +140,9 @@ class TabView extends PureComponent<void, Props, void> {
         getLabel={this._getLabel}
         renderIcon={this._renderIcon}
         animationEnabled={animationEnabled}
-        style={!tabBarVisible && styles.hidden }
+        style={tabBarVisible ? undefined : styles.hidden}
       />
-    )
+    );
   };
 
   _renderPager = (props: *) => <TabViewPagerPan {...props} />;
@@ -200,7 +201,7 @@ const styles = StyleSheet.create({
     flex: 1,
     overflow: 'hidden',
   },
-  
+
   hidden: {
     height: 0,
     opacity: 0,
