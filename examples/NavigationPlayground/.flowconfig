@@ -30,12 +30,24 @@
 ; Ignore react-native-fbads dependency of the expo sdk
 .*/node_modules/react-native-fbads/*
 
+.*/node_modules/react-native-tab-view/.*
+
+; Ignore react-native
+.*/node_modules/react-native/.*
+
+.*/react-navigation/lib-rn/.*
+.*/react-navigation/lib/.*
+.*/react-navigation/src/.*
+.*/react-navigation/node_modules/.*
+
+.*/react-navigation/examples/ReduxExample/.*
+.*/react-navigation/website/.*
+
 [include]
 
 [libs]
-node_modules/react-native/Libraries/react-native/react-native-interface.js
-node_modules/react-native/flow
-flow/
+../../flow-typed/react-native.js
+../../flow/react-navigation.js
 
 [options]
 module.system=haste
@@ -58,6 +70,3 @@ suppress_comment=\\(.\\|\n\\)*\\$FlowFixedInNextDeploy
 suppress_comment=\\(.\\|\n\\)*\\$FlowExpectedError
 
 unsafe.enable_getters_and_setters=true
-
-[version]
-^0.40.0

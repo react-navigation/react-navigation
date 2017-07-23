@@ -1,8 +1,16 @@
 /* @flow */
 
-import { I18nManager } from 'react-native';
+import {
+  I18nManager,
+  Animated,
+  type StyleDefinition,
+  type AnimatedViewStylePropTypes,
+} from 'react-native';
 
-import type { NavigationSceneRendererProps } from '../TypeDefinition';
+import type {
+  NavigationSceneRendererProps,
+  AnimatedViewStyleProp,
+} from '../../TypeDefinition';
 
 /**
  * Utility that builds the style for the navigation header.
@@ -15,7 +23,9 @@ import type { NavigationSceneRendererProps } from '../TypeDefinition';
  * +-------------+-------------+-------------+
  */
 
-function forLeft(props: NavigationSceneRendererProps): Object {
+function forLeft(
+  props: NavigationSceneRendererProps
+): AnimatedViewStylePropTypes {
   const { position, scene } = props;
   const { index } = scene;
   return {
@@ -26,7 +36,9 @@ function forLeft(props: NavigationSceneRendererProps): Object {
   };
 }
 
-function forCenter(props: NavigationSceneRendererProps): Object {
+function forCenter(
+  props: NavigationSceneRendererProps
+): AnimatedViewStylePropTypes {
   const { position, scene } = props;
   const { index } = scene;
   return {
@@ -47,7 +59,9 @@ function forCenter(props: NavigationSceneRendererProps): Object {
   };
 }
 
-function forRight(props: NavigationSceneRendererProps): Object {
+function forRight(
+  props: NavigationSceneRendererProps
+): AnimatedViewStylePropTypes {
   const { position, scene } = props;
   const { index } = scene;
   return {
