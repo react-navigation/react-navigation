@@ -125,5 +125,5 @@ Object.assign(MyApp.router, {
     }
     return previousGetActionForPathAndParams(path, params);
   },
-};
+});
 ```
