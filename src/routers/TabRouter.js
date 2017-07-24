@@ -55,7 +55,6 @@ export default (
       passedAction: NavigationAction | { action: NavigationAction },
       inputState?: ?NavigationState
     ): ?NavigationState {
-      // eslint-disable-next-line no-param-reassign
       let action = NavigationActions.mapDeprecatedActionAndWarn(passedAction);
 
       // Support flux standard actions by expanding payload
