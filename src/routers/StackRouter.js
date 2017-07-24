@@ -1,5 +1,5 @@
 /* @flow */
-
+import { isFSA } from 'flux-standard-action';
 import pathToRegexp from 'path-to-regexp';
 
 import NavigationActions from '../NavigationActions';
@@ -93,7 +93,15 @@ export default (
       passedAction: NavigationStackAction,
       state: ?NavigationState
     ) {
-      const action = NavigationActions.mapDeprecatedActionAndWarn(passedAction);
+      let action = NavigationActions.mapDeprecatedActionAndWarn(passedAction);
+
+      // Support flux standard actions by expanding payload
+      if (isFSA(action)) {
+        action = {
+          ...action,
+          ...action.payload,
+        };
+      }
 
       // Set up the initial state if needed
       if (!state) {

@@ -2,6 +2,7 @@
 /* eslint no-shadow:0, react/no-multi-comp:0, react/display-name:0 */
 
 import React from 'react';
+import { createAction } from 'redux-actions';
 
 import StackRouter from '../StackRouter';
 import TabRouter from '../TabRouter';
@@ -895,5 +896,57 @@ describe('StackRouter', () => {
     expect(state2 && state2.routes[0].params).toEqual({ bar: '42' });
     expect(state2 && state2.routes[0].routeName).toEqual('Foo');
     expect(state2 && state2.routes[1].routeName).toEqual('Bar');
+  });
+
+  test('Handle basic stack logic for components with router and Flux Standard Action', () => {
+    const FooScreen = () => <div />;
+    const BarScreen = () => <div />;
+    BarScreen.router = StackRouter({
+      Xyz: {
+        screen: () => null,
+      },
+    });
+    const router = StackRouter({
+      Foo: {
+        screen: FooScreen,
+      },
+      Bar: {
+        screen: BarScreen,
+      },
+    });
+    const stateAction = createAction(NavigationActions.INIT);
+    const state = router.getStateForAction(stateAction());
+    expect(state).toEqual({
+      index: 0,
+      routes: [
+        {
+          key: 'Init-id-0-39',
+          routeName: 'Foo',
+        },
+      ],
+    });
+    const state2Action = createAction(NavigationActions.NAVIGATE);
+    const state2 = router.getStateForAction(
+      state2Action({
+        routeName: 'Bar',
+        params: { name: 'Zoom' },
+      }),
+      state
+    );
+    expect(state2 && state2.index).toEqual(1);
+    expect(state2 && state2.routes[1].routeName).toEqual('Bar');
+    expect(state2 && state2.routes[1].params).toEqual({ name: 'Zoom' });
+    expect(state2 && state2.routes.length).toEqual(2);
+    const state3Action = createAction(NavigationActions.BACK);
+    const state3 = router.getStateForAction(state3Action(), state2);
+    expect(state3).toEqual({
+      index: 0,
+      routes: [
+        {
+          key: 'Init-id-0-39',
+          routeName: 'Foo',
+        },
+      ],
+    });
   });
 });
