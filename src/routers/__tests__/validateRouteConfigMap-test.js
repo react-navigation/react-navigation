@@ -43,8 +43,8 @@ describe('validateRouteConfigMap', () => {
     const invalidMap = {
       Home: {
         screen: ListScreen,
-        path: '/home'
-      }
+        path: '/home',
+      },
     };
     expect(() => validateRouteConfigMap(invalidMap)).toThrow();
   });
