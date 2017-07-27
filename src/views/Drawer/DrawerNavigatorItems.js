@@ -84,7 +84,6 @@ const DrawerNavigatorItems = ({
       );
     })}
   </View>;
-);
 
 /* Material design specs - https://material.io/guidelines/patterns/navigation-drawer.html#navigation-drawer-specs */
 DrawerNavigatorItems.defaultProps = {
