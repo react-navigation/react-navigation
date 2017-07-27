@@ -143,7 +143,6 @@ class TabView extends React.PureComponent<Props> {
       tabBarOptions,
       tabBarComponent: TabBarComponent,
       animationEnabled,
-      configureTransition,
     } = this.props;
     if (typeof TabBarComponent === 'undefined') {
       return null;
@@ -159,7 +158,6 @@ class TabView extends React.PureComponent<Props> {
         getOnPress={this._getOnPress}
         renderIcon={this._renderIcon}
         animationEnabled={animationEnabled}
-        configureTransition={configureTransition}
       />
     );
   };
