@@ -47,7 +47,7 @@ const DrawerNavigatorItems = ({
   style,
   labelStyle,
   drawerItemStyle
-}: Props) => (
+}: Props) => 
   <View style={[styles.container, style]}>
     {items.map((route: NavigationRoute, index: number) => {
       const focused = activeItemKey === route.key;
@@ -83,7 +83,7 @@ const DrawerNavigatorItems = ({
         </TouchableItem>
       );
     })}
-  </View>
+  </View>;
 );
 
 /* Material design specs - https://material.io/guidelines/patterns/navigation-drawer.html#navigation-drawer-specs */
