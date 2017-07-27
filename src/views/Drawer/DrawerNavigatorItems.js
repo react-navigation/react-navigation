@@ -10,7 +10,8 @@ import type {
   NavigationState,
   NavigationAction,
   NavigationRoute,
-  Style,
+  ViewStyleProp,
+  TextStyleProp,
 } from '../../TypeDefinition';
 import type { DrawerScene, DrawerItem } from './DrawerView.js';
 
@@ -25,9 +26,9 @@ type Props = {
   getLabel: (scene: DrawerScene) => ?(React.Element<*> | string),
   renderIcon: (scene: DrawerScene) => ?React.Element<*>,
   onItemPress: (info: DrawerItem) => void,
-  style?: Style,
-  drawerItemStyle?: Style,
-  labelStyle?: Style,
+  style?: ViewStyleProp,
+  drawerItemStyle?: ViewStyleProp,
+  labelStyle?: TextStyleProp,
 };
 
 /**
