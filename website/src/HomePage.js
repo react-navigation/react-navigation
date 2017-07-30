@@ -6,14 +6,13 @@ import CodeBlock from './CodeBlock';
 
 import Link from './Link';
 
-const GettingStartedButton = () => (
+const GettingStartedButton = () =>
   <div className="cta-row">
     <Link className="cta" to="GettingStarted">
       <span className="label">Get Started</span>
       <span className="icon pt-icon-arrow-right" />
     </Link>
-  </div>
-);
+  </div>;
 
 const ExampleCodeBrowser = (config, ExampleFiles) => {
   const fileNames = Object.keys(ExampleFiles);
@@ -164,7 +163,6 @@ class HomePage extends Component {
       <div className="home-container">
         <div className="hero-bg" />
         <div className="home-body">
-
           <div className="hero">
             <h1>Navigation for React Native</h1>
             <div className="video">
@@ -183,7 +181,8 @@ class HomePage extends Component {
             <div className="section-inner">
               <h1>Easy-to-Use Navigators</h1>
               <h3>
-                Start quickly with built-in navigators that deliver a seamless out-of-the box experience.
+                Start quickly with built-in navigators that deliver a seamless
+                out-of-the box experience.
               </h3>
 
               <StackExampleBrowser />
@@ -194,7 +193,8 @@ class HomePage extends Component {
             <div className="section-inner">
               <h1>Components built for iOS and Android</h1>
               <h3>
-                Navigation views that deliver 60fps animations, and utilize native components to deliver a great look and feel.
+                Navigation views that deliver 60fps animations, and utilize
+                native components to deliver a great look and feel.
               </h3>
 
               <TabExampleBrowser alt />
@@ -205,14 +205,15 @@ class HomePage extends Component {
             <div className="section-inner">
               <h1>Routers built for the future</h1>
               <h3>
-                Routers define the relationship between URIs, actions, and navigation state. Share navigation logic between mobile apps, web apps, and server rendering.
+                Routers define the relationship between URIs, actions, and
+                navigation state. Share navigation logic between mobile apps,
+                web apps, and server rendering.
               </h3>
               <GettingStartedButton />
             </div>
           </div>
 
           <Footer />
-
         </div>
         <div className="hero-screen" />
       </div>

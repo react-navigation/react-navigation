@@ -7,7 +7,7 @@ import type {
   NavigationAction,
   NavigationState,
   NavigationScreenProp,
-  Style,
+  ViewStyleProp,
 } from '../../TypeDefinition';
 
 import type { TabScene } from './TabView';
@@ -19,7 +19,7 @@ type Props = {
   position: Animated.Value,
   navigation: NavigationScreenProp<NavigationState, NavigationAction>,
   renderIcon: (scene: TabScene) => React.Element<*>,
-  style?: Style,
+  style?: ViewStyleProp,
 };
 
 export default class TabBarIcon extends PureComponent<void, Props, void> {
