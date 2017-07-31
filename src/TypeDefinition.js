@@ -297,7 +297,7 @@ export type NavigationStackViewConfig = {
   mode?: 'card' | 'modal',
   headerMode?: HeaderMode,
   cardStyle?: ViewStyleProp,
-  gestureResponseDistance?: number,
+  gestureResponseDistance?: { vertical?: number, horizontal?: number },
   transitionConfig?: () => TransitionConfig,
   onTransitionStart?: () => void,
   onTransitionEnd?: () => void,

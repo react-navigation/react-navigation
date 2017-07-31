@@ -273,11 +273,14 @@ class CardStack extends Component {
         // Measure the distance from the touch to the edge of the screen
         const screenEdgeDistance = currentDragPosition - currentDragDistance;
         // Compare to the gesture distance relavant to card or modal
-        const gestureResponseDistance =
-          this.props.gestureResponseDistance ||
-          (isVertical
-            ? GESTURE_RESPONSE_DISTANCE_VERTICAL
-            : GESTURE_RESPONSE_DISTANCE_HORIZONTAL);
+        const {
+          gestureResponseDistance: userGestureResponseDistance = {},
+        } = this.props;
+        const gestureResponseDistance = isVertical
+          ? userGestureResponseDistance.vertical ||
+            GESTURE_RESPONSE_DISTANCE_VERTICAL
+          : userGestureResponseDistance.horizontal ||
+            GESTURE_RESPONSE_DISTANCE_HORIZONTAL;
         // GESTURE_RESPONSE_DISTANCE is about 25 or 30. Or 135 for modals
         if (screenEdgeDistance > gestureResponseDistance) {
           // Reject touches that started in the middle of the screen

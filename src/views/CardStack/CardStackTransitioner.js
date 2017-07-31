@@ -35,7 +35,7 @@ type Props = {
     NavigationStackScreenOptions
   >,
   cardStyle?: ViewStyleProp,
-  gestureResponseDistance?: number,
+  gestureResponseDistance?: { vertical?: number, horizontal?: number },
   onTransitionStart?: () => void,
   onTransitionEnd?: () => void,
   style: ViewStyleProp,
