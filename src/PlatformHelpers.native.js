@@ -2,10 +2,10 @@
 
 import {
   BackAndroid as DeprecatedBackAndroid,
-  BackHandler,
+  BackHandler as ModernBackHandler,
   Linking,
 } from 'react-native';
 
-const BackAndroid = BackHandler || DeprecatedBackAndroid;
+const BackHandler = ModernBackHandler || DeprecatedBackAndroid;
 
-export { BackAndroid, Linking };
+export { BackHandler, Linking };
