@@ -224,8 +224,6 @@ export default class TabViewAnimated<T: Route<*>> extends PureComponent<
     }
 
     if (index !== navigationState.index) {
-      this.props.onIndexChange(index);
-
       /* $FlowFixMe */
       if (this.props.onRequestChangeTab) {
         console.warn(
@@ -234,6 +232,7 @@ export default class TabViewAnimated<T: Route<*>> extends PureComponent<
         /* $FlowFixMe */
         this.props.onRequestChangeTab(index);
       }
+      this.props.onIndexChange(index);
     }
   };
 
