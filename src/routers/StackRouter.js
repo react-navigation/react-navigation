@@ -243,7 +243,9 @@ export default (
         }
       }
 
-      if (action.type === NavigationActions.RESET) {
+      // if action key is provided make sure it's matching navigation state
+      if (action.type === NavigationActions.RESET &&
+      (!action.key || action.key === state.key)) {
         const resetAction: NavigationResetAction = action;
 
         return {
