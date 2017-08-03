@@ -39,6 +39,15 @@ describe('validateRouteConfigMap', () => {
     };
     expect(() => validateRouteConfigMap(invalidMap)).toThrow();
   });
+  test('Fails if path has a leading slash symbol', () => {
+    const invalidMap = {
+      Home: {
+        screen: ListScreen,
+        path: '/home',
+      },
+    };
+    expect(() => validateRouteConfigMap(invalidMap)).toThrow();
+  });
   test('Succeeds on a valid config', () => {
     const invalidMap = {
       Home: {
