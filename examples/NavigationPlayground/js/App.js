@@ -105,6 +105,10 @@ const MainScreen = ({ navigation }) => (
   </ScrollView>
 );
 
+MainScreen.navigationOptions = {
+  mode: 'modal',
+}
+
 const AppNavigator = StackNavigator(
   {
     ...ExampleRoutes,
