@@ -37,6 +37,7 @@ const MyPhotosScreen = ({ navigation }) => (
 );
 MyPhotosScreen.navigationOptions = {
   title: 'Photos',
+  mode: 'modal'
 };
 
 const MyProfileScreen = ({ navigation }) => (
