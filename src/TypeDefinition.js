@@ -284,6 +284,7 @@ export type NavigationStackScreenOptions = {
   headerRight?: React.Element<*>,
   headerStyle?: ViewStyleProp,
   gesturesEnabled?: boolean,
+  gestureResponseDistance?: { vertical?: number, horizontal?: number },
 };
 
 export type NavigationStackRouterConfig = {
@@ -297,7 +298,6 @@ export type NavigationStackViewConfig = {
   mode?: 'card' | 'modal',
   headerMode?: HeaderMode,
   cardStyle?: ViewStyleProp,
-  gestureResponseDistance?: { vertical?: number, horizontal?: number },
   transitionConfig?: () => TransitionConfig,
   onTransitionStart?: () => void,
   onTransitionEnd?: () => void,

@@ -49,7 +49,6 @@ type Props = {
     NavigationStackScreenOptions
   >,
   cardStyle?: ViewStyleProp,
-  gestureResponseDistance?: { vertical?: number, horizontal?: number },
   onTransitionStart?: () => void,
   onTransitionEnd?: () => void,
   style?: any, // TODO: Remove
@@ -275,7 +274,7 @@ class CardStack extends Component {
         // Compare to the gesture distance relavant to card or modal
         const {
           gestureResponseDistance: userGestureResponseDistance = {},
-        } = this.props;
+        } = this._getScreenDetails(scene).options;
         const gestureResponseDistance = isVertical
           ? userGestureResponseDistance.vertical ||
             GESTURE_RESPONSE_DISTANCE_VERTICAL

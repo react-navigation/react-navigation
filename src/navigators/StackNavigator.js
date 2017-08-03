@@ -23,7 +23,6 @@ export default (
     headerMode,
     mode,
     cardStyle,
-    gestureResponseDistance,
     transitionConfig,
     onTransitionStart,
     onTransitionEnd,
@@ -51,7 +50,6 @@ export default (
       headerMode={headerMode}
       mode={mode}
       cardStyle={cardStyle}
-      gestureResponseDistance={gestureResponseDistance}
       transitionConfig={transitionConfig}
       onTransitionStart={onTransitionStart}
       onTransitionEnd={onTransitionEnd}
