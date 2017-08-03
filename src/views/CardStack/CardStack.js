@@ -416,7 +416,7 @@ class CardStack extends Component {
   _getTransitionConfig = () => {
     let isModal = this.props.mode === 'modal';
     // Get mode from navigationOptions if they exist
-    if (this._screenDetails.options.mode) {
+    if (this._getScreenDetails(scene).options.mode) {
       isModal = this._screenDetails.mode === 'modal';
     }
 
