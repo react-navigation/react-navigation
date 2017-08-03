@@ -239,7 +239,8 @@ class CardStack extends Component {
     }
     const { navigation, position, layout, scene, scenes, mode } = this.props;
     const { index } = navigation.state;
-    const isVertical = mode === 'modal';
+    const modeFromOptions = this._getScreenDetails(this.props.scene).options.mode;
+    const isVertical = modeFromOptions === 'modal' || mode === 'modal';
 
     const responder = PanResponder.create({
       onPanResponderTerminate: () => {
@@ -377,7 +378,8 @@ class CardStack extends Component {
     if (this.props.headerMode) {
       return this.props.headerMode;
     }
-    if (Platform.OS === 'android' || this.props.mode === 'modal') {
+    const modeFromOptions = this._getScreenDetails(this.props.scene).options.mode;
+    if (modeFromOptions === 'modal' || Platform.OS === 'android' || this.props.mode === 'modal') {
       return 'screen';
     }
     return 'float';
@@ -415,10 +417,9 @@ class CardStack extends Component {
 
   _getTransitionConfig = () => {
     let isModal = this.props.mode === 'modal';
-    // Get mode from navigationOptions if they exist
-    if (this._getScreenDetails(scene).options.mode) {
-      isModal = this._screenDetails.mode === 'modal';
-    }
+    // Use mode defined in options if available
+    const modeFromOptions = this._getScreenDetails(this.props.scene).options.mode;
+    isModal = modeFromOptions ? modeFromOptions  === 'modal' : isModal;
 
     /* $FlowFixMe */
     return TransitionConfigs.getTransitionConfig(
