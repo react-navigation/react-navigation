@@ -414,6 +414,8 @@ class CardStack extends Component {
   }
 
   _getTransitionConfig = () => {
+    const modalByScene = this._screenDetails[this.props.scene];
+    console.log(modalByScene);
     const isModal = this.props.mode === 'modal';
 
     /* $FlowFixMe */
