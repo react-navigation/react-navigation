@@ -25,6 +25,7 @@ type IndicatorProps<T> = SceneRendererProps<T> & {
 
 type Props<T> = SceneRendererProps<T> & {
   scrollEnabled?: boolean,
+  bounces?: boolean,
   pressColor?: string,
   pressOpacity?: number,
   getLabelText: (scene: Scene<T>) => ?string,
@@ -51,6 +52,7 @@ export default class TabBar<T: *> extends React.Component<Props<T>, State> {
   static propTypes = {
     ...SceneRendererPropType,
     scrollEnabled: PropTypes.bool,
+    bounces: PropTypes.bool,
     pressColor: TouchableItem.propTypes.pressColor,
     pressOpacity: TouchableItem.propTypes.pressOpacity,
     getLabelText: PropTypes.func,
@@ -331,7 +333,7 @@ export default class TabBar<T: *> extends React.Component<Props<T>, State> {
     (this._scrollView = el && el._component);
 
   render() {
-    const { position, navigationState, scrollEnabled } = this.props;
+    const { position, navigationState, scrollEnabled, bounces } = this.props;
     const { routes, index } = navigationState;
     const tabWidth = this._getTabWidth(this.props);
     const tabBarWidth = tabWidth * routes.length;
@@ -361,7 +363,7 @@ export default class TabBar<T: *> extends React.Component<Props<T>, State> {
             horizontal
             keyboardShouldPersistTaps="handled"
             scrollEnabled={scrollEnabled}
-            bounces={false}
+            bounces={bounces}
             alwaysBounceHorizontal={false}
             scrollsToTop={false}
             showsHorizontalScrollIndicator={false}
