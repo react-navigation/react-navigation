@@ -121,6 +121,7 @@ class TabView extends PureComponent<void, Props, void> {
       <TabBarComponent
         {...props}
         {...tabBarOptions}
+        screenProps={this.props.screenProps}
         navigation={this.props.navigation}
         getLabel={this._getLabel}
         renderIcon={this._renderIcon}
