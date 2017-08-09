@@ -8,6 +8,7 @@ import getScreenForRouteName from './getScreenForRouteName';
 import StateUtils from '../StateUtils';
 import validateRouteConfigMap from './validateRouteConfigMap';
 import getScreenConfigDeprecated from './getScreenConfigDeprecated';
+import shallowEqual from '../utils/shallowEqual';
 
 import type {
   NavigationAction,
@@ -27,6 +28,18 @@ const uniqueBaseId = `id-${Date.now()}`;
 let uuidCount = 0;
 function _getUuid() {
   return `${uniqueBaseId}-${uuidCount++}`;
+}
+
+function _isIdempotent(prevRoute, route) {
+  // check first if optional key is provided and if it's not equal to the existing one do a shallow comparison on route name and params if provided any
+  // consider only initial params if any provided for idempotency, not the ones set by SET_PARAMS
+  if (route.key) {
+    return route.key === prevRoute.key;
+  } else {
+    const prevParams = prevRoute._initParams || prevRoute.params;
+    const paramsEqual = !route.params || shallowEqual(prevParams, route.params);
+    return prevRoute.routeName === route.routeName && paramsEqual;
+  }
 }
 
 export default (
@@ -173,17 +186,25 @@ export default (
           route = {
             params: action.params,
             ...childRouter.getStateForAction(childAction),
-            key: _getUuid(),
+            key: action.key,
             routeName: action.routeName,
           };
         } else {
           route = {
             params: action.params,
-            key: _getUuid(),
+            key: action.key,
             routeName: action.routeName,
           };
         }
-        return StateUtils.push(state, route);
+        // idempotent push for consecutive screens
+        if (!_isIdempotent(state.routes[state.index], route)) {
+          return StateUtils.push(state, {
+            ...route,
+            key: route.key || _getUuid(),
+          });
+        } else {
+          return null;
+        }
       }
 
       // Handle navigation to other child routers that are not yet pushed
@@ -211,11 +232,13 @@ export default (
               routeToPush = navigatedChildRoute;
             }
             if (routeToPush) {
-              return StateUtils.push(state, {
-                ...routeToPush,
-                key: _getUuid(),
-                routeName: childRouterName,
-              });
+              routeToPush.routeName = childRouterName;
+              if (!_isIdempotent(state.routes[state.index], routeToPush)) {
+                return StateUtils.push(state, {
+                  ...routeToPush,
+                  key: action.key || _getUuid(),
+                });
+              }
             }
           }
         }
@@ -231,9 +254,12 @@ export default (
             ...lastRoute.params,
             ...action.params,
           };
+          // store initial params if SET_PARAMS was called. initial params are beeing used for idempotency checks
+          const _initParams = lastRoute._initParams ? lastRoute._initParams : lastRoute.params;
           const routes = [...state.routes];
           routes[state.routes.indexOf(lastRoute)] = {
             ...lastRoute,
+            _initParams,
             params,
           };
           return {
@@ -256,12 +282,12 @@ export default (
                   ...childAction,
                   ...router.getStateForAction(childAction),
                   routeName: childAction.routeName,
-                  key: _getUuid(),
+                  key: childAction.key || _getUuid(),
                 };
               }
               const route = {
                 ...childAction,
-                key: _getUuid(),
+                key: childAction.key || _getUuid(),
               };
               delete route.type;
               return route;

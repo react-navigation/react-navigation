@@ -54,6 +54,9 @@ export default function createNavigationContainer<S: *, O>(
 
       this._validateProps(props);
 
+      this.stateLocked = false;
+      this.queuedActions = [];
+
       this.state = {
         nav: this._isStateful()
           ? Component.router.getStateForAction(NavigationActions.init())
@@ -169,16 +172,27 @@ export default function createNavigationContainer<S: *, O>(
       this.subs && this.subs.remove();
     }
 
-    dispatch = (action: NavigationAction) => {
+    dispatch = (action: NavigationAction, completionHandler = null) => {
+      if(this.stateLocked) {
+        this.queuedActions.push(action)
+        return;
+      }
       const { state } = this;
       if (!this._isStateful()) {
         return false;
       }
       const nav = Component.router.getStateForAction(action, state.nav);
       if (nav && nav !== state.nav) {
-        this.setState({ nav }, () =>
-          this._onNavigationStateChange(state.nav, nav, action)
-        );
+        this.stateLocked = true
+        this.setState({ nav }, () => {
+          this.stateLocked = false;
+          completionHandler && completionHandler(state.nav, nav, action);
+          this._onNavigationStateChange(state.nav, nav, action);
+        
+          if (this.queuedActions.length > 0) {
+            this.dispatch(this.queuedActions.shift());
+          }
+        });
         return true;
       }
       return false;
