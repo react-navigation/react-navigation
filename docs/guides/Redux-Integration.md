@@ -4,7 +4,7 @@ To handle your app's navigation state in redux, you can pass your own `navigatio
 
 With redux, your app's state is defined by a reducer. Each navigation router effectively has a reducer, called `getStateForAction`. The following is a minimal example of how you might use navigators within a redux application:
 
-```
+```es6
 import { addNavigationHelpers } from 'react-navigation';
 
 const AppNavigator = StackNavigator(AppRouteConfigs);
@@ -61,7 +61,7 @@ Navigation state is automatically passed down from one navigator to another when
 
 Applying this to the example above, you could instead define `AppNavigator` to contain a nested `TabNavigator` as follows:
 
-```js
+```es6
 const AppNavigator = StackNavigator({
   Home: { screen: MyTabNavigator },
 });
@@ -77,7 +77,7 @@ There's a working example app with redux [here](https://github.com/react-communi
 
 To make jest tests work with your react-navigation app, you need to change the jest preset in the `package.json`, see [here](https://facebook.github.io/jest/docs/tutorial-react-native.html#transformignorepatterns-customization):
 
-```
+```es6
 "jest": {
   "preset": "react-native",
   "transformIgnorePatterns": [
