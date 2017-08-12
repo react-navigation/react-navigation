@@ -2,11 +2,11 @@
 
 import React from 'react';
 
-import invariant from '../utils/invariant';
+import invariant from '../../utils/invariant';
 
-import AnimatedValueSubscription from './AnimatedValueSubscription';
+import AnimatedValueSubscription from '../AnimatedValueSubscription';
 
-import type { NavigationSceneRendererProps } from '../TypeDefinition';
+import type { NavigationSceneRendererProps } from '../../TypeDefinition';
 
 type Props = NavigationSceneRendererProps;
 

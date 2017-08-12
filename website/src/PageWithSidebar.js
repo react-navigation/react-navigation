@@ -31,9 +31,9 @@ class PageWithSidebar extends Component {
       prevAction = NavigationActions.navigate({
         routeName: state.routes[prev].routeName,
         action: NavigationActions.navigate({
-          routeName: state.routes[prev].routes[
-            state.routes[prev].routes.length - 1
-          ].routeName,
+          routeName:
+            state.routes[prev].routes[state.routes[prev].routes.length - 1]
+              .routeName,
         }),
       });
     }
@@ -61,7 +61,6 @@ class PageWithSidebar extends Component {
     return (
       <div className="page-body">
         <div className="inner-page-body">
-
           <div className="left-sidebar">
             <ul className="pt-menu pt-elevation-1 navmenu">
               {state.routes &&
@@ -81,12 +80,14 @@ class PageWithSidebar extends Component {
                         to={route.routeName}
                         className={
                           'pt-menu-header ' +
-                            options.icon +
-                            ' ' +
-                            (isActive ? 'active' : '')
+                          options.icon +
+                          ' ' +
+                          (isActive ? 'active' : '')
                         }
                       >
-                        <h6>{options.linkName}</h6>
+                        <h6>
+                          {options.linkName}
+                        </h6>
                       </LinkableLi>
                       <div>
                         {route.routes &&
@@ -110,7 +111,9 @@ class PageWithSidebar extends Component {
                             return (
                               <Link
                                 to={childRoute.routeName}
-                                className={`pt-menu-item page ${isChildActive ? 'active' : ''}`}
+                                className={`pt-menu-item page ${isChildActive
+                                  ? 'active'
+                                  : ''}`}
                                 key={childI}
                               >
                                 {linkName}
@@ -134,13 +137,15 @@ class PageWithSidebar extends Component {
               >
                 {' '}Edit on GitHub
               </Link>}
-            {prevAction && <Link to={prevAction}>Previous: {prevName}</Link>}
+            {prevAction &&
+              <Link to={prevAction}>
+                Previous: {prevName}
+              </Link>}
             {nextAction &&
               <Link to={nextAction} className="nextLink">
                 Next: {nextName}
               </Link>}
           </div>
-
         </div>
       </div>
     );

@@ -47,7 +47,7 @@ const TabNavigator = (
     routeConfigs,
     config,
     NavigatorTypes.TABS
-  )((props: *) => (
+  )((props: *) =>
     <TabView
       {...props}
       tabBarComponent={tabBarComponent}
@@ -57,9 +57,9 @@ const TabNavigator = (
       animationEnabled={animationEnabled}
       lazy={lazy}
     />
-  ));
+  );
 
-  return createNavigationContainer(navigator, tabsConfig.containerOptions);
+  return createNavigationContainer(navigator);
 };
 
 const Presets = {
@@ -100,9 +100,8 @@ const Presets = {
 TabNavigator.Presets = {
   iOSBottomTabs: Presets.iOSBottomTabs,
   AndroidTopTabs: Presets.AndroidTopTabs,
-  Default: Platform.OS === 'ios'
-    ? Presets.iOSBottomTabs
-    : Presets.AndroidTopTabs,
+  Default:
+    Platform.OS === 'ios' ? Presets.iOSBottomTabs : Presets.AndroidTopTabs,
 };
 
 export default TabNavigator;
