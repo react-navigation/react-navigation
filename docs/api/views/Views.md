@@ -6,7 +6,7 @@ Navigation views are controlled React components that can present the current na
 
 ## Built in Views
 
-- [CardStack](https://github.com/react-community/react-navigation/blob/master/src/views/CardStack.js) - Present a stack that looks suitable on any platform
+- [CardStack](https://github.com/react-community/react-navigation/blob/master/src/views/CardStack/CardStack.js) - Present a stack that looks suitable on any platform
     + [Card](https://github.com/react-community/react-navigation/blob/master/src/views/Card.js) - Present one card from the card stack, with gestures
     + [Header](https://github.com/react-community/react-navigation/blob/master/src/views/Header.js) - The header view for the card stack
 - [Tabs](https://github.com/react-community/react-navigation/blob/master/src/views/TabView) - A configurable tab switcher / pager
