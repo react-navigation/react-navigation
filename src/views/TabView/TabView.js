@@ -39,7 +39,7 @@ type Props = {
   swipeEnabled?: boolean,
   animationEnabled?: boolean,
   lazy?: boolean,
-  initialLayout?: func,
+  initialLayout?: undefined,
 
   screenProps?: {},
   navigation: NavigationScreenProp<NavigationState, NavigationAction>,
