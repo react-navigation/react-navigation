@@ -22,6 +22,7 @@ export type TabViewConfig = {
   swipeEnabled?: boolean,
   animationEnabled?: boolean,
   lazy?: boolean,
+  initialLayout?: func,
 };
 
 export type TabScene = {
@@ -38,6 +39,7 @@ type Props = {
   swipeEnabled?: boolean,
   animationEnabled?: boolean,
   lazy?: boolean,
+  initialLayout?: func,
 
   screenProps?: {},
   navigation: NavigationScreenProp<NavigationState, NavigationAction>,
@@ -140,6 +142,7 @@ class TabView extends PureComponent<void, Props, void> {
       animationEnabled,
       swipeEnabled,
       lazy,
+      initialLayout,
       screenProps,
     } = this.props;
 
@@ -170,6 +173,7 @@ class TabView extends PureComponent<void, Props, void> {
 
     const props = {
       lazy,
+      initialLayout,
       animationEnabled,
       swipeEnabled,
       renderPager,
