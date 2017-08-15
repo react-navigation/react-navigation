@@ -3,6 +3,8 @@
 import React, { PureComponent } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { TabViewAnimated, TabViewPagerPan } from 'react-native-tab-view';
+import { Layout } from
+'react-native-tab-view/src/TabViewTypeDefinitions';
 import SceneView from '../SceneView';
 import withCachedChildNavigation from '../../withCachedChildNavigation';
 
@@ -22,7 +24,7 @@ export type TabViewConfig = {
   swipeEnabled?: boolean,
   animationEnabled?: boolean,
   lazy?: boolean,
-  initialLayout?: func,
+  initialLayout?: Layout,
 };
 
 export type TabScene = {
@@ -39,7 +41,7 @@ type Props = {
   swipeEnabled?: boolean,
   animationEnabled?: boolean,
   lazy?: boolean,
-  initialLayout?: undefined,
+  initialLayout?: Layout,
 
   screenProps?: {},
   navigation: NavigationScreenProp<NavigationState, NavigationAction>,
