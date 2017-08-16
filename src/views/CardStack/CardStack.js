@@ -14,10 +14,10 @@ import {
 } from 'react-native';
 
 import Card from './Card';
-import Header from './Header';
-import NavigationActions from '../NavigationActions';
-import addNavigationHelpers from '../addNavigationHelpers';
-import SceneView from './SceneView';
+import Header from '../Header/Header';
+import NavigationActions from '../../NavigationActions';
+import addNavigationHelpers from '../../addNavigationHelpers';
+import SceneView from '../SceneView';
 
 import type {
   NavigationAction,
@@ -29,9 +29,9 @@ import type {
   NavigationScreenDetails,
   NavigationStackScreenOptions,
   HeaderMode,
-  Style,
+  ViewStyleProp,
   TransitionConfig,
-} from '../TypeDefinition';
+} from '../../TypeDefinition';
 
 import TransitionConfigs from './TransitionConfigs';
 
@@ -48,10 +48,10 @@ type Props = {
     NavigationAction,
     NavigationStackScreenOptions
   >,
-  cardStyle?: Style,
+  cardStyle?: ViewStyleProp,
   onTransitionStart?: () => void,
   onTransitionEnd?: () => void,
-  style?: any,
+  style?: any, // TODO: Remove
   /**
    * Optional custom animation when transitioning between screens.
    */
@@ -259,9 +259,8 @@ class CardStack extends Component {
         if (index !== scene.index) {
           return false;
         }
-        const immediateIndex = this._immediateIndex == null
-          ? index
-          : this._immediateIndex;
+        const immediateIndex =
+          this._immediateIndex == null ? index : this._immediateIndex;
         const currentDragDistance = gesture[isVertical ? 'dy' : 'dx'];
         const currentDragPosition =
           event.nativeEvent[isVertical ? 'pageY' : 'pageX'];
@@ -297,9 +296,10 @@ class CardStack extends Component {
         const axisDistance = isVertical
           ? layout.height.__getValue()
           : layout.width.__getValue();
-        const currentValue = I18nManager.isRTL && axis === 'dx'
-          ? startValue + gesture[axis] / axisDistance
-          : startValue - gesture[axis] / axisDistance;
+        const currentValue =
+          I18nManager.isRTL && axis === 'dx'
+            ? startValue + gesture[axis] / axisDistance
+            : startValue - gesture[axis] / axisDistance;
         const value = clamp(index - 1, currentValue, index);
         position.setValue(value);
       },
@@ -313,18 +313,17 @@ class CardStack extends Component {
         }
         this._isResponding = false;
 
-        const immediateIndex = this._immediateIndex == null
-          ? index
-          : this._immediateIndex;
+        const immediateIndex =
+          this._immediateIndex == null ? index : this._immediateIndex;
 
         // Calculate animate duration according to gesture speed and moved distance
         const axisDistance = isVertical
           ? layout.height.__getValue()
           : layout.width.__getValue();
-        const movedDistance = gesture[isVertical ? 'moveY' : 'moveX'];
-        const defaultVelocity = axisDistance / ANIMATION_DURATION;
+        const movedDistance = gesture[isVertical ? 'dy' : 'dx'];
         const gestureVelocity = gesture[isVertical ? 'vy' : 'vx'];
-        const velocity = Math.max(gestureVelocity, defaultVelocity);
+        const defaultVelocity = axisDistance / ANIMATION_DURATION;
+        const velocity = Math.max(Math.abs(gestureVelocity), defaultVelocity);
         const resetDuration = movedDistance / velocity;
         const goBackDuration = (axisDistance - movedDistance) / velocity;
 
@@ -353,14 +352,19 @@ class CardStack extends Component {
     });
 
     const { options } = this._getScreenDetails(scene);
-    const gesturesEnabled = typeof options.gesturesEnabled === 'boolean'
-      ? options.gesturesEnabled
-      : Platform.OS === 'ios';
+    const gesturesEnabled =
+      typeof options.gesturesEnabled === 'boolean'
+        ? options.gesturesEnabled
+        : Platform.OS === 'ios';
 
     const handlers = gesturesEnabled ? responder.panHandlers : {};
+    const containerStyle = [
+      styles.container,
+      this._getTransitionConfig().containerStyle,
+    ];
 
     return (
-      <View {...handlers} style={styles.container}>
+      <View {...handlers} style={containerStyle}>
         <View style={styles.scenes}>
           {scenes.map((s: *) => this._renderCard(s))}
         </View>
@@ -409,16 +413,20 @@ class CardStack extends Component {
     );
   }
 
-  _renderCard = (scene: NavigationScene): React.Element<*> => {
+  _getTransitionConfig = () => {
     const isModal = this.props.mode === 'modal';
 
     /* $FlowFixMe */
-    const { screenInterpolator } = TransitionConfigs.getTransitionConfig(
+    return TransitionConfigs.getTransitionConfig(
       this.props.transitionConfig,
       {},
       {},
       isModal
     );
+  };
+
+  _renderCard = (scene: NavigationScene): React.Element<*> => {
+    const { screenInterpolator } = this._getTransitionConfig();
     const style =
       screenInterpolator && screenInterpolator({ ...this.props, scene });
 

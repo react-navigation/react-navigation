@@ -1,8 +1,8 @@
 /* @flow */
 
-import { I18nManager } from 'react-native';
+import { I18nManager, type AnimatedViewStylePropTypes } from 'react-native';
 
-import type { NavigationSceneRendererProps } from '../TypeDefinition';
+import type { NavigationSceneRendererProps } from '../../TypeDefinition';
 
 /**
  * Utility that builds the style for the card in the cards stack.
@@ -22,7 +22,9 @@ import type { NavigationSceneRendererProps } from '../TypeDefinition';
 /**
  * Render the initial style when the initial layout isn't measured yet.
  */
-function forInitial(props: NavigationSceneRendererProps): Object {
+function forInitial(
+  props: NavigationSceneRendererProps
+): AnimatedViewStylePropTypes {
   const { navigation, scene } = props;
 
   const focused = navigation.state.index === scene.index;
@@ -38,7 +40,9 @@ function forInitial(props: NavigationSceneRendererProps): Object {
 /**
  * Standard iOS-style slide in from the right.
  */
-function forHorizontal(props: NavigationSceneRendererProps): Object {
+function forHorizontal(
+  props: NavigationSceneRendererProps
+): AnimatedViewStylePropTypes {
   const { layout, position, scene } = props;
 
   if (!layout.isMeasured) {
@@ -50,8 +54,8 @@ function forHorizontal(props: NavigationSceneRendererProps): Object {
 
   const width = layout.initWidth;
   const outputRange = I18nManager.isRTL
-    ? ([-width, 0, 10]: Array<number>)
-    : ([width, 0, -10]: Array<number>);
+    ? ([-width, 0, width * 0.3]: Array<number>)
+    : ([width, 0, width * -0.3]: Array<number>);
 
   // Add [index - 1, index - 0.99] to the interpolated opacity for screen transition.
   // This makes the screen's shadow to disappear smoothly.
@@ -63,7 +67,7 @@ function forHorizontal(props: NavigationSceneRendererProps): Object {
       index + 0.99,
       index + 1,
     ]: Array<number>),
-    outputRange: ([0, 1, 1, 0.3, 0]: Array<number>),
+    outputRange: ([0, 1, 1, 0.85, 0]: Array<number>),
   });
 
   const translateY = 0;
@@ -81,7 +85,9 @@ function forHorizontal(props: NavigationSceneRendererProps): Object {
 /**
  * Standard iOS-style slide in from the bottom (used for modals).
  */
-function forVertical(props: NavigationSceneRendererProps): Object {
+function forVertical(
+  props: NavigationSceneRendererProps
+): AnimatedViewStylePropTypes {
   const { layout, position, scene } = props;
 
   if (!layout.isMeasured) {
@@ -99,7 +105,7 @@ function forVertical(props: NavigationSceneRendererProps): Object {
       index + 0.99,
       index + 1,
     ]: Array<number>),
-    outputRange: ([0, 1, 1, 0.3, 0]: Array<number>),
+    outputRange: ([0, 1, 1, 0.85, 0]: Array<number>),
   });
 
   const translateX = 0;
@@ -117,7 +123,9 @@ function forVertical(props: NavigationSceneRendererProps): Object {
 /**
  * Standard Android-style fade in from the bottom.
  */
-function forFadeFromBottomAndroid(props: NavigationSceneRendererProps): Object {
+function forFadeFromBottomAndroid(
+  props: NavigationSceneRendererProps
+): AnimatedViewStylePropTypes {
   const { layout, position, scene } = props;
 
   if (!layout.isMeasured) {

@@ -276,6 +276,14 @@ const ViewsDocs = createNavigator(
       }),
       path: 'transitioner',
     },
+    WithNavigation: {
+      screen: createDocPage({
+        doc: 'api/withNavigation',
+        title: 'WithNavigation',
+        linkName: 'withNavigation',
+      }),
+      path: 'with-navigation',
+    },
   })
 )(NavView);
 ViewsDocs.navigationOptions = {
@@ -355,11 +363,10 @@ const BlogPage = createNavigator(
   })
 )(PageWithSidebar);
 
-const NotFoundError = () => (
+const NotFoundError = () =>
   <div className="errorScreen">
     <h1>Page not found</h1>
-  </div>
-);
+  </div>;
 
 const App = createNavigator(
   TabRouter({

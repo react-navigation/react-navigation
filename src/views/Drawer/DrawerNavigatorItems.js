@@ -10,7 +10,8 @@ import type {
   NavigationState,
   NavigationAction,
   NavigationRoute,
-  Style,
+  ViewStyleProp,
+  TextStyleProp,
 } from '../../TypeDefinition';
 import type { DrawerScene, DrawerItem } from './DrawerView.js';
 
@@ -25,8 +26,8 @@ type Props = {
   getLabel: (scene: DrawerScene) => ?(React.Element<*> | string),
   renderIcon: (scene: DrawerScene) => ?React.Element<*>,
   onItemPress: (info: DrawerItem) => void,
-  style?: Style,
-  labelStyle?: Style,
+  style?: ViewStyleProp,
+  labelStyle?: TextStyleProp,
 };
 
 /**
@@ -45,7 +46,7 @@ const DrawerNavigatorItems = ({
   onItemPress,
   style,
   labelStyle,
-}: Props) => (
+}: Props) =>
   <View style={[styles.container, style]}>
     {items.map((route: NavigationRoute, index: number) => {
       const focused = activeItemKey === route.key;
@@ -81,8 +82,7 @@ const DrawerNavigatorItems = ({
         </TouchableItem>
       );
     })}
-  </View>
-);
+  </View>;
 
 /* Material design specs - https://material.io/guidelines/patterns/navigation-drawer.html#navigation-drawer-specs */
 DrawerNavigatorItems.defaultProps = {

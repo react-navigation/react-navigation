@@ -15,7 +15,7 @@ import type {
   NavigationStyleInterpolator,
   LayoutEvent,
   HeaderProps,
-} from '../TypeDefinition';
+} from '../../TypeDefinition';
 
 type SceneProps = {
   scene: NavigationScene,
@@ -23,7 +23,7 @@ type SceneProps = {
   progress: Animated.Value,
 };
 
-type SubViewRenderer = (props: SceneProps) => ?React.Element<any>;
+type SubViewRenderer<T> = (props: SceneProps) => ?React.Element<T>;
 
 type SubViewName = 'left' | 'title' | 'right';
 
@@ -35,7 +35,7 @@ type HeaderState = {
 
 const APPBAR_HEIGHT = Platform.OS === 'ios' ? 44 : 56;
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : 0;
-const TITLE_OFFSET = Platform.OS === 'ios' ? 70 : 40;
+const TITLE_OFFSET = Platform.OS === 'ios' ? 70 : 56;
 
 class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
   static HEIGHT = APPBAR_HEIGHT + STATUSBAR_HEIGHT;
@@ -77,7 +77,11 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
       .headerTruncatedBackTitle;
   }
 
-  _renderTitleComponent = (props: SceneProps) => {
+  _navigateBack = () => {
+    this.props.navigation.goBack(null);
+  };
+
+  _renderTitleComponent = (props: SceneProps): ?React.Element<*> => {
     const details = this.props.getScreenDetails(props.scene);
     const headerTitle = details.options.headerTitle;
     if (headerTitle && typeof headerTitle !== 'string') {
@@ -90,16 +94,17 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
 
     // On iOS, width of left/right components depends on the calculated
     // size of the title.
-    const onLayoutIOS = Platform.OS === 'ios'
-      ? (e: LayoutEvent) => {
-          this.setState({
-            widths: {
-              ...this.state.widths,
-              [props.scene.key]: e.nativeEvent.layout.width,
-            },
-          });
-        }
-      : undefined;
+    const onLayoutIOS =
+      Platform.OS === 'ios'
+        ? (e: LayoutEvent) => {
+            this.setState({
+              widths: {
+                ...this.state.widths,
+                [props.scene.key]: e.nativeEvent.layout.width,
+              },
+            });
+          }
+        : undefined;
 
     return (
       <HeaderTitle
@@ -111,7 +116,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
     );
   };
 
-  _renderLeftComponent = (props: SceneProps) => {
+  _renderLeftComponent = (props: SceneProps): ?React.Element<*> => {
     const options = this.props.getScreenDetails(props.scene).options;
     if (typeof options.headerLeft !== 'undefined') {
       return options.headerLeft;
@@ -128,9 +133,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
       : undefined;
     return (
       <HeaderBackButton
-        onPress={() => {
-          this.props.navigation.goBack(null);
-        }}
+        onPress={this._navigateBack}
         pressColorAndroid={options.headerPressColorAndroid}
         tintColor={options.headerTintColor}
         title={backButtonTitle}
@@ -141,7 +144,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
     );
   };
 
-  _renderRightComponent = (props: SceneProps) => {
+  _renderRightComponent = (props: SceneProps): ?React.Element<*> => {
     const details = this.props.getScreenDetails(props.scene);
     const { headerRight } = details.options;
     return headerRight || null;
@@ -185,10 +188,10 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
     );
   }
 
-  _renderSubView(
+  _renderSubView<T>(
     props: SceneProps,
     name: SubViewName,
-    renderer: SubViewRenderer,
+    renderer: SubViewRenderer<T>,
     styleInterpolator: NavigationStyleInterpolator
   ): ?React.Element<*> {
     const { scene } = props;
@@ -281,7 +284,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
       ...rest
     } = this.props;
 
-    const { options } = this.props.getScreenDetails(scene, screenProps);
+    const { options } = this.props.getScreenDetails(scene);
     const headerStyle = options.headerStyle;
 
     return (
@@ -294,11 +297,14 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    paddingTop: STATUSBAR_HEIGHT,
-    backgroundColor: Platform.OS === 'ios' ? '#EFEFF2' : '#FFF',
-    height: STATUSBAR_HEIGHT + APPBAR_HEIGHT,
+let platformContainerStyles;
+if (Platform.OS === 'ios') {
+  platformContainerStyles = {
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: 'rgba(0, 0, 0, .3)',
+  };
+} else {
+  platformContainerStyles = {
     shadowColor: 'black',
     shadowOpacity: 0.1,
     shadowRadius: StyleSheet.hairlineWidth,
@@ -306,6 +312,15 @@ const styles = StyleSheet.create({
       height: StyleSheet.hairlineWidth,
     },
     elevation: 4,
+  };
+}
+
+const styles = StyleSheet.create({
+  container: {
+    paddingTop: STATUSBAR_HEIGHT,
+    backgroundColor: Platform.OS === 'ios' ? '#F7F7F7' : '#FFF',
+    height: STATUSBAR_HEIGHT + APPBAR_HEIGHT,
+    ...platformContainerStyles,
   },
   appBar: {
     flex: 1,
