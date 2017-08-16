@@ -83,7 +83,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
 
   _renderTitleComponent = (props: SceneProps): ?React.Element<*> => {
     const details = this.props.getScreenDetails(props.scene);
-    const headerTitle = details.options.headerTitle;
+    const headerTitle = details.options.title;
     if (headerTitle && typeof headerTitle !== 'string') {
       return headerTitle;
     }
