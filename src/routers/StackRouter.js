@@ -23,12 +23,6 @@ import type {
   NavigationStackScreenOptions,
 } from '../TypeDefinition';
 
-const uniqueBaseId = `id-${Date.now()}`;
-let uuidCount = 0;
-function _getUuid() {
-  return `${uniqueBaseId}-${uuidCount++}`;
-}
-
 export default (
   routeConfigs: NavigationRouteConfigMap,
   stackConfig: NavigationStackRouterConfig = {}
@@ -108,7 +102,7 @@ export default (
               {
                 ...action,
                 type: undefined,
-                key: `Init-${_getUuid()}`,
+                key: action.key === undefined ? action.routeName : action.key,
               },
             ],
           };
@@ -131,7 +125,7 @@ export default (
         route = {
           ...route,
           routeName: initialRouteName,
-          key: `Init-${_getUuid()}`,
+          key: initialRouteName,
           ...(params ? { params } : {}),
         };
         // eslint-disable-next-line no-param-reassign
@@ -173,17 +167,22 @@ export default (
           route = {
             params: action.params,
             ...childRouter.getStateForAction(childAction),
-            key: _getUuid(),
+            key: action.key === undefined ? action.routeName : action.key,
             routeName: action.routeName,
           };
         } else {
           route = {
             params: action.params,
-            key: _getUuid(),
+            key: action.key === undefined ? action.routeName : action.key,
             routeName: action.routeName,
           };
         }
-        return StateUtils.push(state, route);
+        // idempotent push for two consecutive screens
+        if (state.routes[state.index].key !== route.key) {
+          return StateUtils.push(state, route);
+        } else {
+          return null;
+        }
       }
 
       // Handle navigation to other child routers that are not yet pushed
@@ -210,10 +209,11 @@ export default (
               // Push the route if the state has changed in response to this navigation
               routeToPush = navigatedChildRoute;
             }
-            if (routeToPush) {
+            var actionKey = action.key === undefined ? childRouterName : action.key;
+            if (routeToPush && state.routes[state.index].key !== actionKey) { 
               return StateUtils.push(state, {
                 ...routeToPush,
-                key: _getUuid(),
+                key: actionKey,
                 routeName: childRouterName,
               });
             }
@@ -256,12 +256,12 @@ export default (
                   ...childAction,
                   ...router.getStateForAction(childAction),
                   routeName: childAction.routeName,
-                  key: _getUuid(),
+                  key: childAction.key === undefined ? childAction.routeName : childAction.key,
                 };
               }
               const route = {
                 ...childAction,
-                key: _getUuid(),
+                key: childAction.key === undefined ? childAction.routeName : childAction.key,
               };
               delete route.type;
               return route;
