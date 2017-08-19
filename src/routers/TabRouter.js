@@ -62,6 +62,15 @@ export default (
       let state = inputState;
       if (!state) {
         const routes = order.map((routeName: string) => {
+          let accessibilityLabel;
+          if (
+            routeConfigs[routeName].screen &&
+            routeConfigs[routeName].screen.navigationOptions
+          ) {
+            accessibilityLabel =
+              routeConfigs[routeName].screen.navigationOptions
+                .accessibilityLabel;
+          }
           const tabRouter = tabRouters[routeName];
           if (tabRouter) {
             const childAction =
@@ -73,11 +82,13 @@ export default (
               ...tabRouter.getStateForAction(childAction),
               key: routeName,
               routeName,
+              accessibilityLabel,
             };
           }
           return {
             key: routeName,
             routeName,
+            accessibilityLabel,
           };
         });
         state = {

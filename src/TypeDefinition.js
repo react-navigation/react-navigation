@@ -130,6 +130,14 @@ export type NavigationLeafRoute = {
    * e.g. `{ car_id: 123 }` in a route that displays a car.
    */
   params?: NavigationParams,
+  /**
+   * Generic title that can be used as a fallback for accessibilityLabel.
+   */
+  title?: string,
+  /**
+   * A label use by VoiceOver to identify the element.
+   */
+  accessibilityLabel?: string,
 };
 
 export type NavigationStateRoute = {
