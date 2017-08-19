@@ -11,7 +11,7 @@ For usage questions, please use the following resources:
 ---
 
 ### Current Behavior
-- _If describing a bug, tell us what happens instead of the expected behavior. Provide a screenshot when possible and full code sample_
+- _If describing a bug, tell us what happens. Provide a screenshot when possible and full code sample_
 - _If suggesting a change/improvement, explain the difference from current behavior_
 
 ### Expected Behavior
