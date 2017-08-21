@@ -189,6 +189,9 @@ export default (
       // Handle navigation to other child routers that are not yet pushed
       if (action.type === NavigationActions.NAVIGATE) {
         const childRouterNames = Object.keys(childRouters);
+        if (!childRouterNames.includes(action.routeName)) {
+          console.warn("Can't find route name '" + action.routeName + "'");
+        }
         for (let i = 0; i < childRouterNames.length; i++) {
           const childRouterName = childRouterNames[i];
           const childRouter = childRouters[childRouterName];
