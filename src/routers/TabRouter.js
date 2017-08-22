@@ -73,11 +73,17 @@ export default (
               ...tabRouter.getStateForAction(childAction),
               key: routeName,
               routeName,
+              accessibilityLabel,
             };
+          }
+          let accessibilityLabel;
+          if(routeConfigs[routeName].screen.navigationOptions) {
+            accessibilityLabel = routeConfigs[routeName].screen.navigationOptions.accessibilityLabel
           }
           return {
             key: routeName,
             routeName,
+            accessibilityLabel,
           };
         });
         state = {
