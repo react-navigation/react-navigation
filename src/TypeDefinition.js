@@ -135,7 +135,7 @@ export type NavigationLeafRoute = {
    */
   title?: string,
   /**
-   * A label use by VoiceOver to identify the element.
+   * A label used by VoiceOver to identify the element.
    */
   accessibilityLabel?: string,
 };
