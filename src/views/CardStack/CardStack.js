@@ -377,7 +377,6 @@ class CardStack extends Component {
     if (this.props.headerMode) {
       return this.props.headerMode;
     }
-    const modeFromOptions = this._getScreenDetails(this.props.scene).options.mode;
     if (this._isModal() || Platform.OS === 'android' || this.props.mode === 'modal') {
       return 'screen';
     }
@@ -398,7 +397,8 @@ class CardStack extends Component {
     // when navigating back, we should ask modal mode from the scene we are leaving in order to match animation style
     const animationDefinerScene = isBackNavigation ? scenes[scenes.length - 1] : scene;
     const modeFromOptions = this._getScreenDetails(animationDefinerScene).options.mode;
-    return modeFromOptions === 'modal' || mode === 'modal';
+    console.log(modeFromOptions, mode);
+    return modeFromOptions ? modeFromOptions === 'modal' : mode === 'modal';
   }
  
   _renderInnerScene(

@@ -18,9 +18,24 @@ const MyNavScreen = ({ navigation, banner }) => (
       onPress={() => navigation.navigate('Photos', { name: 'Jane' })}
       title="Go to a photos screen"
     />
+    <Button
+      onPress={() => navigation.navigate('Modal')}
+      title="Modal 'popup' style screen"
+    />
     <Button onPress={() => navigation.goBack(null)} title="Go back" />
   </ScrollView>
 );
+
+const Modal = ({navigation}) => (
+  <MyNavScreen
+    banner={`Modal in Screen Navigator`}
+    navigation={navigation}
+  />
+)
+Modal.navigationOptions = {
+  title: 'Modal mode',
+  mode: 'modal'
+}
 
 const MyHomeScreen = ({ navigation }) => (
   <MyNavScreen banner="Home Screen" navigation={navigation} />
@@ -37,7 +52,6 @@ const MyPhotosScreen = ({ navigation }) => (
 );
 MyPhotosScreen.navigationOptions = {
   title: 'Photos',
-  mode: 'modal'
 };
 
 const MyProfileScreen = ({ navigation }) => (
@@ -77,6 +91,9 @@ const SimpleStack = StackNavigator({
     path: 'photos/:name',
     screen: MyPhotosScreen,
   },
+  Modal: {
+    screen: Modal
+  }
 });
 
 export default SimpleStack;
