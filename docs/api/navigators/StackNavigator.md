@@ -144,6 +144,10 @@ Color for material ripple (Android >= 5.0 only)
 
 Whether you can use gestures to dismiss this screen. Defaults to true on iOS, false on Android.
 
+#### `mode`
+
+Defines mode for an individual screen (show a modal in a card stack, or a card stack in a modal). Accepts "modal" or "card".
+
 ### Navigator Props
 
 The navigator component created by `StackNavigator(...)` takes the following props:
