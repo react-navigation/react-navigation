@@ -16,14 +16,25 @@ type Props = {
 };
 
 const AnimatedText = Animated.Text;
+const AnimatedView = Animated.View;
 
-const HeaderTitle = ({ style, ...rest }: Props) =>
-  <AnimatedText
-    numberOfLines={1}
-    {...rest}
-    style={[styles.title, style]}
-    accessibilityTraits="header"
-  />;
+const HeaderTitle = ({ style, ...rest }: Props) => {
+  if (typeof rest.children == 'text') {
+    return <AnimatedText
+      numberOfLines={1}
+      {...rest}
+      style={[styles.title, style]}
+      accessibilityTraits="header"
+    />;
+  }
+  else {
+    return <AnimatedView
+      {...rest}
+      style={[style]}
+      accessibilityTraits="header"
+    />;
+  }
+}
 
 const styles = StyleSheet.create({
   title: {
