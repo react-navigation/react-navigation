@@ -116,7 +116,7 @@ You can easily override the default component used by `react-navigation`:
 import { DrawerItems } from 'react-navigation';
 
 const CustomDrawerContentComponent = (props) => (
-  <View style={style.container}>
+  <View style={styles.container}>
     <DrawerItems {...props} />
   </View>
 );
