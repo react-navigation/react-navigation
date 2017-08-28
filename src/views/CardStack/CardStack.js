@@ -402,10 +402,10 @@ class CardStack extends Component {
     const animationDefinerScene = isBackNavigation
       ? scenes[scenes.length - 1]
       : scene;
-    const modeFromOptions = this._getScreenDetails(animationDefinerScene)
-      .options.mode;
-    console.log(modeFromOptions, mode);
-    return modeFromOptions ? modeFromOptions === 'modal' : mode === 'modal';
+    const screenOptions = this._getScreenDetails(animationDefinerScene).options;
+    return screenOptions.mode
+      ? screenOptions.mode === 'modal'
+      : mode === 'modal';
   }
 
   _renderInnerScene(

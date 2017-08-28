@@ -103,12 +103,18 @@ class CardStackTransitioner extends Component<DefaultProps, Props, void> {
 
   _getMode() {
     const { navigation, mode, router } = this.props;
-    const screenOptions =
+    let screenOptions;
+    if (
       this.props.navigation.state.routes &&
-      this.props.navigation.state.routes[1] &&
+      this.props.navigation.state.routes[1]
+    ) {
       router.getScreenOptions(
-        addNavigationHelpers({ state: this.props.navigation.state.routes[1] })
+        addNavigationHelpers({
+          state: this.props.navigation.state.routes[1],
+          dispatch: this.props.navigation.dispatch,
+        })
       );
+    }
     return screenOptions && screenOptions.mode ? screenOptions.mode : mode;
   }
 
