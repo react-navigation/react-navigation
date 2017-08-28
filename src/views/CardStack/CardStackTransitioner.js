@@ -77,7 +77,6 @@ class CardStackTransitioner extends Component<DefaultProps, Props, void> {
     // props for the old screen
     prevTransitionProps: NavigationTransitionProps
   ) => {
-
     // const isModal = this._getMode() === 'modal';
     const isModal = this.props.mode === 'modal';
 
@@ -103,10 +102,13 @@ class CardStackTransitioner extends Component<DefaultProps, Props, void> {
   };
 
   _getMode() {
-    const {navigation, mode, router} = this.props;
-    const screenOptions = this.props.navigation.state.routes && 
-    this.props.navigation.state.routes[1] && 
-    router.getScreenOptions(addNavigationHelpers({state: this.props.navigation.state.routes[1]}));
+    const { navigation, mode, router } = this.props;
+    const screenOptions =
+      this.props.navigation.state.routes &&
+      this.props.navigation.state.routes[1] &&
+      router.getScreenOptions(
+        addNavigationHelpers({ state: this.props.navigation.state.routes[1] })
+      );
     return screenOptions && screenOptions.mode ? screenOptions.mode : mode;
   }
 

@@ -377,7 +377,11 @@ class CardStack extends Component {
     if (this.props.headerMode) {
       return this.props.headerMode;
     }
-    if (this._isModal() || Platform.OS === 'android' || this.props.mode === 'modal') {
+    if (
+      this._isModal() ||
+      Platform.OS === 'android' ||
+      this.props.mode === 'modal'
+    ) {
       return 'screen';
     }
     return 'float';
@@ -395,12 +399,15 @@ class CardStack extends Component {
     // may be there is a better way to detect back navigation here?
     const isBackNavigation = index < scenes.length - 1;
     // when navigating back, we should ask modal mode from the scene we are leaving in order to match animation style
-    const animationDefinerScene = isBackNavigation ? scenes[scenes.length - 1] : scene;
-    const modeFromOptions = this._getScreenDetails(animationDefinerScene).options.mode;
+    const animationDefinerScene = isBackNavigation
+      ? scenes[scenes.length - 1]
+      : scene;
+    const modeFromOptions = this._getScreenDetails(animationDefinerScene)
+      .options.mode;
     console.log(modeFromOptions, mode);
     return modeFromOptions ? modeFromOptions === 'modal' : mode === 'modal';
   }
- 
+
   _renderInnerScene(
     SceneComponent: ReactClass<*>,
     scene: NavigationScene
@@ -432,7 +439,6 @@ class CardStack extends Component {
   }
 
   _getTransitionConfig = () => {
-
     /* $FlowFixMe */
     return TransitionConfigs.getTransitionConfig(
       this.props.transitionConfig,
