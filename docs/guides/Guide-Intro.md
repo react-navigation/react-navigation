@@ -32,7 +32,7 @@ npm install --save react-navigation
 # Run the new app
 npm start
 
-#This will start a development server for you, and print a QR code in your terminal.
+# This will start a development server for you and print a QR code in your terminal.
 ```
 
 Verify that you can successfully see the bare sample app run on iOS and/or Android:
@@ -70,7 +70,7 @@ const SimpleApp = StackNavigator({
   Home: { screen: HomeScreen },
 });
 
-//if you are using create-react-native-app you don't need this line
+// if you are using create-react-native-app you don't need this line
 AppRegistry.registerComponent('SimpleApp', () => SimpleApp);
 ```
 
