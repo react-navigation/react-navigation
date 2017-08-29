@@ -61,6 +61,8 @@ const MyApp = TabNavigator({
     screen: MyNotificationsScreen,
   },
 }, {
+  tabBarPosition: 'top',
+  animationEnabled: true,
   tabBarOptions: {
     activeTintColor: '#e91e63',
   },
