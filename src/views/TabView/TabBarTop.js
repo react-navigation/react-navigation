@@ -31,6 +31,7 @@ type Props = {
   upperCaseLabel: boolean,
   position: Animated.Value,
   navigation: NavigationScreenProp<NavigationState, NavigationAction>,
+  getAccessibility: (scene: TabScene) => ?(React.Element<*> | string),
   getLabel: (scene: TabScene) => ?(React.Element<*> | string),
   renderIcon: (scene: TabScene) => React.Element<*>,
   labelStyle?: TextStyleProp,
@@ -127,6 +128,7 @@ export default class TabBarTop extends PureComponent<
     return (
       <TabBar
         {...props}
+        getAccessibilityLabel={this.props.getAccessibility}
         renderIcon={this._renderIcon}
         renderLabel={this._renderLabel}
       />
