@@ -10,22 +10,22 @@ import {
   StyleSheet,
 } from 'react-native';
 
-import type { LayoutEvent, Style } from '../TypeDefinition';
+import type { LayoutEvent, TextStyleProp } from '../../TypeDefinition';
 
-import TouchableItem from './TouchableItem';
+import TouchableItem from '../TouchableItem';
 
 type Props = {
   onPress?: () => void,
-  pressColorAndroid?: ?string,
+  pressColorAndroid?: string,
   title?: ?string,
-  titleStyle?: ?Style,
+  titleStyle?: ?TextStyleProp,
   tintColor?: ?string,
   truncatedTitle?: ?string,
   width?: ?number,
 };
 
 type DefaultProps = {
-  pressColorAndroid: ?string,
+  pressColorAndroid: string,
   tintColor: ?string,
   truncatedTitle: ?string,
 };
@@ -65,14 +65,15 @@ class HeaderBackButton extends React.PureComponent<DefaultProps, Props, State> {
       truncatedTitle,
     } = this.props;
 
-    const renderTruncated = this.state.initialTextWidth && width
-      ? this.state.initialTextWidth > width
-      : false;
+    const renderTruncated =
+      this.state.initialTextWidth && width
+        ? this.state.initialTextWidth > width
+        : false;
 
     const backButtonTitle = renderTruncated ? truncatedTitle : title;
 
     // eslint-disable-next-line global-require
-    const asset = require('./assets/back-icon.png');
+    const asset = require('../assets/back-icon.png');
 
     return (
       <TouchableItem
@@ -88,14 +89,22 @@ class HeaderBackButton extends React.PureComponent<DefaultProps, Props, State> {
       >
         <View style={styles.container}>
           <Image
-            style={[styles.icon, title && styles.iconWithTitle, { tintColor }]}
+            style={[
+              styles.icon,
+              !!title && styles.iconWithTitle,
+              !!tintColor && { tintColor },
+            ]}
             source={asset}
           />
           {Platform.OS === 'ios' &&
             title &&
             <Text
               onLayout={this._onTextLayout}
-              style={[styles.title, { color: tintColor }, titleStyle]}
+              style={[
+                styles.title,
+                !!tintColor && { color: tintColor },
+                titleStyle,
+              ]}
               numberOfLines={1}
             >
               {backButtonTitle}
@@ -116,28 +125,30 @@ const styles = StyleSheet.create({
     fontSize: 17,
     paddingRight: 10,
   },
-  icon: Platform.OS === 'ios'
-    ? {
-        height: 21,
-        width: 13,
-        marginLeft: 10,
-        marginRight: 22,
-        marginVertical: 12,
-        resizeMode: 'contain',
-        transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }],
-      }
-    : {
-        height: 24,
-        width: 24,
-        margin: 16,
-        resizeMode: 'contain',
-        transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }],
-      },
-  iconWithTitle: Platform.OS === 'ios'
-    ? {
-        marginRight: 5,
-      }
-    : {},
+  icon:
+    Platform.OS === 'ios'
+      ? {
+          height: 21,
+          width: 13,
+          marginLeft: 10,
+          marginRight: 22,
+          marginVertical: 12,
+          resizeMode: 'contain',
+          transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }],
+        }
+      : {
+          height: 24,
+          width: 24,
+          margin: 16,
+          resizeMode: 'contain',
+          transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }],
+        },
+  iconWithTitle:
+    Platform.OS === 'ios'
+      ? {
+          marginRight: 5,
+        }
+      : {},
 });
 
 export default HeaderBackButton;

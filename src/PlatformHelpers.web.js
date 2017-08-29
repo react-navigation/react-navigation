@@ -6,6 +6,6 @@ export const Linking = {
   getInitialURL: () => Promise.reject('Unsupported platform'),
 };
 
-export const BackAndroid = {
+export const BackHandler = {
   addEventListener: () => {},
 };

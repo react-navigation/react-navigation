@@ -10,18 +10,18 @@ import type {
   NavigationNavigatorProps,
 } from '../TypeDefinition';
 
-type Props = {
+type Props<O> = {
   screenProps?: {},
   navigation: NavigationScreenProp<NavigationRoute, NavigationAction>,
-  component: ReactClass<NavigationNavigatorProps<NavigationRoute>>,
+  component: ReactClass<NavigationNavigatorProps<O, NavigationRoute>>,
 };
 
-export default class SceneView extends PureComponent<void, Props, void> {
+export default class SceneView<O> extends PureComponent<void, Props<O>, void> {
   static childContextTypes = {
     navigation: propTypes.object.isRequired,
   };
 
-  props: Props;
+  props: Props<O>;
 
   getChildContext() {
     return {
