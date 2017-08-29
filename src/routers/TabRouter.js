@@ -63,12 +63,10 @@ export default (
       if (!state) {
         const routes = order.map((routeName: string) => {
           let accessibilityLabel;
-          if (
-            routeConfigs[routeName].navigationOptions
-          ) {
+          if ([routeName].navigationOptions &&
+            routeConfigs[routeName].navigationOptions.accessibilityLabel) {
             accessibilityLabel =
-              routeConfigs[routeName].navigationOptions
-                .accessibilityLabel;
+              routeConfigs[routeName].navigationOptions.accessibilityLabel;
           }
           const tabRouter = tabRouters[routeName];
           if (tabRouter) {
