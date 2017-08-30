@@ -2,16 +2,16 @@
 
 To handle your app's navigation state in redux, you can pass your own `navigation` prop to a navigator. Your navigation prop must provide the current state, as well as access to a dispatcher to handle navigation options.
 
-With redux, your app's state is defined by a reducer. Each navigation router effectively has a reducer, called `getStateForAction`. The following is a minimal example of how you might use navigators within a redux application:
+With redux, your app's state is defined by a reducer. Each navigation router effectively has a reducer, called `getStateForAction`. You can dispatch `NavigationActions.init` to initialize your router state.
+
+The following is a minimal example of how you might use navigators within a redux application:
 
 ```
-import { addNavigationHelpers } from 'react-navigation';
+import { addNavigationHelpers, NavigationActions } from 'react-navigation';
 
 const AppNavigator = StackNavigator(AppRouteConfigs);
 
-const initialState = AppNavigator.router.getStateForAction(AppNavigator.router.getActionForPathAndParams('Login'));
-
-const navReducer = (state = initialState, action) => {
+const navReducer = (state, action) => {
   const nextState = AppNavigator.router.getStateForAction(action, state);
 
   // Simply return the original `state` if `nextState` is null or undefined.
@@ -24,12 +24,20 @@ const appReducer = combineReducers({
 });
 
 class App extends React.Component {
+  componentWillMount() {
+    this.navigation.dispatch(NavigationActions.init());
+  }
+
+  get navigation() {
+    return addNavigationHelpers({
+      dispatch: this.props.dispatch,
+      state: this.props.nav,
+    })
+  }
+
   render() {
     return (
-      <AppNavigator navigation={addNavigationHelpers({
-        dispatch: this.props.dispatch,
-        state: this.props.nav,
-      })} />
+      <AppNavigator navigation={this.navigation} />
     );
   }
 }
