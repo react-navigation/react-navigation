@@ -9,6 +9,8 @@ const INIT = 'Navigation/INIT';
 const NAVIGATE = 'Navigation/NAVIGATE';
 const RESET = 'Navigation/RESET';
 const SET_PARAMS = 'Navigation/SET_PARAMS';
+const SET_TRANSITION_END = 'Navigation/SET_TRANSITION_END';
+const SET_TRANSITION_START = 'Navigation/SET_TRANSITION_START';
 const URI = 'Navigation/URI';
 
 const createAction = (type: string) => (payload: Object = {}) => ({
@@ -21,6 +23,8 @@ const init = createAction(INIT);
 const navigate = createAction(NAVIGATE);
 const reset = createAction(RESET);
 const setParams = createAction(SET_PARAMS);
+const setTransitionStart = createAction(SET_TRANSITION_START);
+const setTransitionEnd = createAction(SET_TRANSITION_END);
 const uri = createAction(URI);
 
 const deprecatedActionMap = {
@@ -29,6 +33,8 @@ const deprecatedActionMap = {
   Navigate: NAVIGATE,
   Reset: RESET,
   SetParams: SET_PARAMS,
+  SetTransitionStart: SET_TRANSITION_START,
+  SetTransitionEnd: SET_TRANSITION_END,
   Uri: URI,
 };
 
@@ -63,6 +69,8 @@ export default {
   NAVIGATE,
   RESET,
   SET_PARAMS,
+  SET_TRANSITION_START,
+  SET_TRANSITION_END,
   URI,
 
   // Action creators
@@ -71,6 +79,8 @@ export default {
   navigate,
   reset,
   setParams,
+  setTransitionStart,
+  setTransitionEnd,
   uri,
 
   // TODO: Remove once old actions are deprecated

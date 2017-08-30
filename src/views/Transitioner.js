@@ -175,6 +175,9 @@ class Transitioner extends React.Component<*, Props, State> {
           ]
         : [];
 
+    if (indexHasChanged) {
+      nextProps.navigation.setTransitionStart();
+    }
     // update scenes and play the transition
     this._isTransitionRunning = true;
     this.setState(nextState, () => {
@@ -183,7 +186,9 @@ class Transitioner extends React.Component<*, Props, State> {
           this._transitionProps,
           this._prevTransitionProps
         );
-      Animated.parallel(animations).start(this._onTransitionEnd);
+      Animated.parallel(animations).start(() =>
+        this._onTransitionEnd(indexHasChanged)
+      );
     });
   }
 
@@ -222,7 +227,7 @@ class Transitioner extends React.Component<*, Props, State> {
     this.setState(nextState);
   }
 
-  _onTransitionEnd(): void {
+  _onTransitionEnd(indexHasChanged: boolean): void {
     if (!this._isMounted) {
       return;
     }
@@ -235,6 +240,10 @@ class Transitioner extends React.Component<*, Props, State> {
     };
 
     this._transitionProps = buildTransitionProps(this.props, nextState);
+
+    if (indexHasChanged) {
+      this.props.navigation.setTransitionEnd();
+    }
 
     this.setState(nextState, () => {
       this.props.onTransitionEnd &&

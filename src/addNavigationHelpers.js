@@ -33,6 +33,10 @@ export default function<S: *>(navigation: NavigationProp<S, NavigationAction>) {
           action,
         })
       ),
+    setTransitionStart: () =>
+      navigation.dispatch(NavigationActions.setTransitionStart()),
+    setTransitionEnd: () =>
+      navigation.dispatch(NavigationActions.setTransitionEnd()),
     /**
      * For updating current route params. For example the nav bar title and
      * buttons are based on the route params.
