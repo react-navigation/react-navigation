@@ -3,6 +3,8 @@
 
 *Learn once, navigate anywhere.*
 
+NOTE: the library is in beta and is not suitable for production apps with nontrivial navigation structure
+
 Browse the docs on [reactnavigation.org](https://reactnavigation.org/) or try it out on [our expo demo](https://exp.host/@react-navigation/NavigationPlayground).
 
 ## Motivation
