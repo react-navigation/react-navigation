@@ -88,7 +88,7 @@ In this case, the NavigatorWrappingScreen is not a navigator, but it renders a n
 class NavigatorWrappingScreen extends React.Component {
   render() {
     return (
-      <View>
+      <View style={{flex: 1}}>
         <SomeComponent/>
         <MainScreenNavigator/>
       </View>
