@@ -2,7 +2,7 @@
 
 import React from 'react';
 import invariant from './utils/invariant';
-import { BackHandler, Linking } from './PlatformHelpers';
+import { BackHandler, Linking, isLoggingEnabled } from './PlatformHelpers';
 import NavigationActions from './NavigationActions';
 import addNavigationHelpers from './addNavigationHelpers';
 
@@ -117,7 +117,7 @@ export default function createNavigationContainer<S: *, O>(
       if (
         typeof this.props.onNavigationStateChange === 'undefined' &&
         this._isStateful() &&
-        !!process.env.REACT_NAV_LOGGING
+        isLoggingEnabled
       ) {
         /* eslint-disable no-console */
         if (console.group) {
