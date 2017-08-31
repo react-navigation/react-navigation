@@ -9,3 +9,5 @@ export const Linking = {
 export const BackHandler = {
   addEventListener: () => {},
 };
+
+export const isLoggingEnabled = !!process.env.REACT_NAV_LOGGING;

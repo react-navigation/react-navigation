@@ -5,7 +5,9 @@ import {
   BackHandler as ModernBackHandler,
   Linking,
 } from 'react-native';
+import Config from 'react-native-config';
 
 const BackHandler = ModernBackHandler || DeprecatedBackAndroid;
+const isLoggingEnabled = !!Config.REACT_NAV_LOGGING;
 
-export { BackHandler, Linking };
+export { BackHandler, Linking, isLoggingEnabled };

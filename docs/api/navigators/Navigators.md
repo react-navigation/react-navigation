@@ -22,7 +22,7 @@ To learn how to create screens, read about:
 
 ### Calling Navigate on Top Level Component
 
-In case you want to use Navigator from the same level you declare it you can use react's [`ref`](https://facebook.github.io/react/docs/refs-and-the-dom.html#the-ref-callback-attribute) option:  
+In case you want to use Navigator from the same level you declare it you can use react's [`ref`](https://facebook.github.io/react/docs/refs-and-the-dom.html#the-ref-callback-attribute) option:
 ```js
 const AppNavigator = StackNavigator(SomeAppRouteConfigs);
 
@@ -38,7 +38,7 @@ class App extends React.Component {
   }
 }
 ```
-Please notice that this solution should only be used on the top level navigator.  
+Please notice that this solution should only be used on the top level navigator.
 
 ## Navigation Containers
 
@@ -48,11 +48,11 @@ When rendering one of the included navigators, the navigation prop is optional. 
 
 For the purpose of convenience, the built-in navigators have this ability because behind the scenes they use `createNavigationContainer`. Usually, navigators require a navigation prop in order to function.
 
-Top-level navigators accept the following props:  
+Top-level navigators accept the following props:
 
 ### `onNavigationStateChange(prevState, newState, action)`
 
-Function that gets called every time navigation state managed by the navigator changes. It receives the previous state, the new state of the navigation and the action that issued state change. By default it prints state changes to the console.
+Function that gets called every time navigation state managed by the navigator changes. It receives the previous state, the new state of the navigation and the action that issued state change. By default it prints state changes to the console if the `REACT_NAV_LOGGING` environment variable is set.
 
 ### `uriPrefix`
 
