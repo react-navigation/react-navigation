@@ -164,7 +164,6 @@ export default function ScenesReducer(
 
   const newStaleScenes = k && v ? new Map([[k, v]]) : new Map();
   newStaleScenes.forEach(mergeScene);
-  // staleScenes.forEach(mergeScene);
   // work around end
 
   freshScenes.forEach(mergeScene);
