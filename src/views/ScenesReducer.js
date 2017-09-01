@@ -151,7 +151,21 @@ export default function ScenesReducer(
     }
   };
 
-  staleScenes.forEach(mergeScene);
+  // staleScenes.forEach(mergeScene);
+  // work around for flashing scenes
+  let k = null;
+  let v = null;
+  debugger;
+  staleScenes.forEach((scene: *) => {
+    const { key } = scene;
+    k = key;
+    v = scene;
+  });
+
+  const newStaleScenes = k && v ? new Map([[k, v]]) : new Map();
+  newStaleScenes.forEach(mergeScene);
+  // work around end
+
   freshScenes.forEach(mergeScene);
 
   nextScenes.sort(compareScenes);
