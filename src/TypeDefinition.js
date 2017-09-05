@@ -277,6 +277,7 @@ export type NavigationStackScreenOptions = {
   headerTitleStyle?: AnimatedTextStyleProp,
   headerTintColor?: string,
   headerLeft?: React.Element<*>,
+  headerBack?: React.Element<*>,
   headerBackTitle?: string,
   headerTruncatedBackTitle?: string,
   headerBackTitleStyle?: TextStyleProp,
