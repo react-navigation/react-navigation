@@ -30,6 +30,7 @@ declare module 'react-navigation' {
   
   declare var DrawerView: any;
   declare var DrawerItems: any;
+  declare var DrawerItem: any;
   
   declare var TabView: any;
   declare var TabBarTop: any;
