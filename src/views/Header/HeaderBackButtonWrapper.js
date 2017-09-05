@@ -10,9 +10,9 @@ import {
   StyleSheet,
 } from 'react-native';
 
-import type { LayoutEvent } from '../TypeDefinition';
+import type { LayoutEvent } from '../../TypeDefinition';
 
-import TouchableItem from './TouchableItem';
+import TouchableItem from '../TouchableItem';
 
 type Props = {
   onPress?: () => void,
