@@ -134,7 +134,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
       const truncatedBackButtonTitle = this._getTruncatedBackButtonTitle(
         props.scene,
       );
-      const asset = require('./assets/back-icon.png');
+      const asset = require('../assets/back-icon.png');
       backButtonElement = (
         <HeaderBackButton
           tintColor={options.headerTintColor}
