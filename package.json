@@ -46,6 +46,7 @@
     "react-native": "*"
   },
   "dependencies": {
+    "babel-plugin-transform-define": "^1.3.0",
     "clamp": "^1.0.1",
     "hoist-non-react-statics": "^2.2.0",
     "path-to-regexp": "^1.7.0",

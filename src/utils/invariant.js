@@ -24,7 +24,7 @@
 
 var validateFormat = function(format) {};
 
-if (global.__DEV__) {
+if (__DEV__) {
   validateFormat = function(format) {
     if (format === undefined) {
       throw new Error('invariant requires an error message argument');
