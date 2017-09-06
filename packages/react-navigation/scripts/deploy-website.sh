@@ -14,4 +14,4 @@ NOW=`pwd`/node_modules/.bin/now
 
 cd build
 
-$NOW -t $NOW_TOKEN --force && sleep 5 && $NOW alias
+$NOW -t $NOW_TOKEN --force && sleep 5 && $NOW -t $NOW_TOKEN alias
