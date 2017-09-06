@@ -106,13 +106,15 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
           }
         : undefined;
 
+    const UsedHeaderTitle = details.options.HeaderTitleComponent ?
+      details.options.HeaderTitleComponent : HeaderTitle;
     return (
-      <HeaderTitle
+      <UsedHeaderTitle
         onLayout={onLayoutIOS}
         style={[color ? { color } : null, titleStyle]}
       >
         {titleString}
-      </HeaderTitle>
+      </UsedHeaderTitle>
     );
   };
 
@@ -131,8 +133,10 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
     const width = this.state.widths[props.scene.key]
       ? (this.props.layout.initWidth - this.state.widths[props.scene.key]) / 2
       : undefined;
+    const UsedBackButton = options.HeaderLeftComponent ?
+      options.HeaderLeftComponent : HeaderBackButton;
     return (
-      <HeaderBackButton
+      <UsedBackButton
         onPress={this._navigateBack}
         pressColorAndroid={options.headerPressColorAndroid}
         tintColor={options.headerTintColor}
