@@ -176,7 +176,7 @@ class TabView extends PureComponent<void, Props, void> {
       renderHeader,
       renderFooter,
       renderScene: this._renderScene,
-      onRequestChangeTab: this._handlePageChanged,
+      onIndexChange: this._handlePageChanged,
       navigationState: this.props.navigation.state,
       screenProps: this.props.screenProps,
       style: styles.container,
