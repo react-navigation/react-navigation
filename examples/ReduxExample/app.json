@@ -1,9 +1,9 @@
 {
   "expo": {
-    "name": "NavigationPlayground",
-    "description": "Try out react-navigation now with this awesome playground",
+    "name": "ReduxExample",
+    "description": "Try out react-navigation with this awesome Redux example",
     "version": "1.0.0",
-    "slug": "NavigationPlayground",
+    "slug": "ReduxExample",
     "privacy": "public",
     "orientation": "portrait",
     "primaryColor": "#cccccc",
