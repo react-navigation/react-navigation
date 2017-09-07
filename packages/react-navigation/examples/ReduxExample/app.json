@@ -1,0 +1,27 @@
+{
+  "expo": {
+    "name": "ReduxExample",
+    "description": "Try out react-navigation with this awesome Redux example",
+    "version": "1.0.0",
+    "slug": "ReduxExample",
+    "privacy": "public",
+    "orientation": "portrait",
+    "primaryColor": "#cccccc",
+    "icon": "./assets/icons/react-navigation.png",
+    "loading": {
+      "icon": "./assets/icons/react-navigation.png",
+      "hideExponentText": false
+    },
+    "sdkVersion": "20.0.0",
+    "entryPoint": "./node_modules/react-native-scripts/build/bin/crna-entry.js",
+    "packagerOpts": {
+      "assetExts": [
+        "ttf",
+        "mp4"
+      ]
+    },
+    "ios": {
+      "supportsTablet": true
+    }
+  }
+}
