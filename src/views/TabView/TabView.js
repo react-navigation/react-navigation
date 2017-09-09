@@ -95,6 +95,25 @@ class TabView extends PureComponent<void, Props, void> {
     return route.routeName;
   };
 
+  _getAccessibility = ({ route }: TabScene) => {
+    const options = this.props.router.getScreenOptions(
+      this.props.childNavigationProps[route.key],
+      this.props.screenProps || {}
+    );
+
+    if (options.accessibilityLabel) {
+      return typeof options.accessibilityLabel === 'function'
+        ? options.accessibilityLabel()
+        : options.accessibilityLabel;
+    }
+
+    if (typeof options.accessibilityLabel === 'string') {
+      return options.accessibilityLabel;
+    }
+
+    return route.routeName;
+  };
+
   _renderIcon = ({ focused, route, tintColor }: TabScene) => {
     const options = this.props.router.getScreenOptions(
       this.props.childNavigationProps[route.key],
@@ -123,6 +142,7 @@ class TabView extends PureComponent<void, Props, void> {
         {...tabBarOptions}
         screenProps={this.props.screenProps}
         navigation={this.props.navigation}
+        getAccessibility={this._getAccessibility}
         getLabel={this._getLabel}
         renderIcon={this._renderIcon}
         animationEnabled={animationEnabled}
