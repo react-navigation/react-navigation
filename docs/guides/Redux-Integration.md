@@ -4,7 +4,7 @@ To handle your app's navigation state in redux, you can pass your own `navigatio
 
 With redux, your app's state is defined by a reducer. Each navigation router effectively has a reducer, called `getStateForAction`. The following is a minimal example of how you might use navigators within a redux application:
 
-```
+```js
 import { addNavigationHelpers } from 'react-navigation';
 
 const AppNavigator = StackNavigator(AppRouteConfigs);
@@ -55,7 +55,7 @@ class Root extends React.Component {
 
 Once you do this, your navigation state is stored within your redux store, at which point you can fire navigation actions using your redux dispatch function.
 
-Keep in mind that when a navigator is given a `navigation` prop, it relinquishes control of its internal state. That means you are now responsible for persisting its state, handling any deep linking, integrating the back button, etc.
+Keep in mind that when a navigator is given a `navigation` prop, it relinquishes control of its internal state. That means you are now responsible for persisting its state, handling any deep linking, [Handling the Hardware Back Button in Android](#handling-the-hardware-back-button-in-android), etc.
 
 Navigation state is automatically passed down from one navigator to another when you nest them. Note that in order for a child navigator to receive the state from a parent navigator, it should be defined as a `screen`.
 
@@ -77,7 +77,7 @@ There's a working example app with redux [here](https://github.com/react-communi
 
 To make jest tests work with your react-navigation app, you need to change the jest preset in the `package.json`, see [here](https://facebook.github.io/jest/docs/tutorial-react-native.html#transformignorepatterns-customization):
 
-```
+```JSON
 "jest": {
   "preset": "react-native",
   "transformIgnorePatterns": [
@@ -85,3 +85,46 @@ To make jest tests work with your react-navigation app, you need to change the j
   ]
 }
 ```
+
+## Handling the Hardware Back Button in Android
+
+By using the following snippet, your nav component will be aware of the back button press actions and will correctly interact with your stack. This is really useful on Android.
+
+```js
+import React from "react";
+import { BackHandler } from "react-native";
+import { addNavigationHelpers, NavigationActions } from "react-navigation";
+
+const AppNavigation = TabNavigator(
+  {
+    Home: { screen: HomeScreen },
+    Settings: { screen: SettingScreen }
+  }
+);
+
+class ReduxNavigation extends React.Component {
+  componentDidMount() {
+    BackHandler.addEventListener("hardwareBackPress", this.onBackPress);
+  }
+  componentWillUnmount() {
+    BackHandler.removeEventListener("hardwareBackPress", this.onBackPress);
+  }
+  onBackPress = () => {
+    const { dispatch, nav } = this.props;
+    if (nav.index === 0) {
+      return false;
+    }
+    dispatch(NavigationActions.back());
+    return true;
+  };
+
+  render() {
+    const { dispatch, nav } = this.props;
+    const navigation = addNavigationHelpers({
+      dispatch,
+      state: nav
+    });
+
+    return <AppNavigation navigation={navigation} />;
+  }
+}

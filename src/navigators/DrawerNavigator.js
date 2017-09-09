@@ -63,6 +63,9 @@ const DrawerNavigator = (
       DrawerOpen: {
         screen: () => null,
       },
+      DrawerToggle: {
+        screen: () => null,
+      },
     },
     {
       initialRouteName: 'DrawerClose',
