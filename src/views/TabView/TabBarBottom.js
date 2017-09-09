@@ -153,10 +153,13 @@ export default class TabBarBottom extends PureComponent<
             outputRange: (outputRange: Array<string>),
           });
           const justifyContent = this.props.showIcon ? 'flex-end' : 'center';
+          const accessibilityLabel = route.accessibilityLabel || route.title;
           return (
             <TouchableWithoutFeedback
               key={route.key}
               onPress={() => jumpToIndex(index)}
+              accessible={true}
+              accessibilityLabel={accessibilityLabel}
             >
               <Animated.View
                 style={[
