@@ -208,7 +208,6 @@ const styles = StyleSheet.create({
   },
 
   hidden: {
-    height: 0,
-    opacity: 0,
+    display: 'none',
   },
 });
