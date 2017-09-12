@@ -32,7 +32,7 @@ const DefaultDrawerConfig = {
     Dimensions.get('window').width - (Platform.OS === 'android' ? 56 : 64),
   contentComponent: DrawerItems,
   drawerPosition: 'left',
-  useNativeAnimations: false,
+  useNativeAnimations: true,
 };
 
 const DrawerNavigator = (
