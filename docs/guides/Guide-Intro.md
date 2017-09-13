@@ -56,6 +56,8 @@ const SimpleApp = StackNavigator({
 });
 
 AppRegistry.registerComponent('SimpleApp', () => SimpleApp);
+
+export default SimpleApp;
 ```
 
 The `title` of the screen is configurable on the [static `navigationOptions`](/docs/navigators/navigation-options), where many options can be set to configure the presentation of the screen in the navigator.
