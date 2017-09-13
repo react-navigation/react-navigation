@@ -49,7 +49,7 @@ const DefaultTransitionSpec = ({
 
 class Transitioner extends React.Component<*, Props, State> {
   _onLayout: (event: any) => void;
-  _onTransitionEnd: () => void;
+  _onTransitionEnd: (indexHasChanged: boolean) => void;
   _prevTransitionProps: ?NavigationTransitionProps;
   _transitionProps: NavigationTransitionProps;
   _isMounted: boolean;
