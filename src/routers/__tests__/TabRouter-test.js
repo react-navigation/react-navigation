@@ -562,7 +562,7 @@ describe('TabRouter', () => {
       state
     );
     expect(state2).toEqual(null);
-    expect(console.warn).toBeCalled();
+    expect(console.warn).toBeCalledWith(expect.stringContaining("The action type 'Init' has been renamed to 'Navigation/INIT'"));
   });
 
   test('Can navigate to other tab (no router) with params', () => {

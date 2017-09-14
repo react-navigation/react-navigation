@@ -896,6 +896,6 @@ describe('StackRouter', () => {
     expect(state2 && state2.routes[0].params).toEqual({ bar: '42' });
     expect(state2 && state2.routes[0].routeName).toEqual('Foo');
     expect(state2 && state2.routes[1].routeName).toEqual('Bar');
-    expect(console.warn).toBeCalled();
+    expect(console.warn).toBeCalledWith(expect.stringContaining("The action type 'Init' has been renamed to 'Navigation/INIT'"));
   });
 });
