@@ -91,6 +91,9 @@
     ],
     "coverageDirectory": "./coverage/",
     "collectCoverage": true,
+    "coveragePathIgnorePatterns": [
+      "jest-setup.js"
+    ],
     "modulePathIgnorePatterns": [
       "examples"
     ]
