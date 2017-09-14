@@ -24,12 +24,16 @@ To learn how to create screens, read about:
 
 In case you want to use Navigator from the same level you declare it you can use react's [`ref`](https://facebook.github.io/react/docs/refs-and-the-dom.html#the-ref-callback-attribute) option:  
 ```js
+import { NavigationActions } from 'react-navigation';
+
 const AppNavigator = StackNavigator(SomeAppRouteConfigs);
 
 class App extends React.Component {
   someEvent() {
     // call navigate for AppNavigator here:
-    this.navigator && this.navigator.dispatch({ type: 'Navigate', routeName, params });
+    this.navigator && this.navigator.dispatch(
+      NavigationActions.navigate({ routeName: someRouteName })
+    );
   }
   render() {
     return (

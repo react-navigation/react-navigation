@@ -34,6 +34,7 @@ export type DrawerViewConfig = {
   contentComponent: ReactClass<*>,
   contentOptions?: {},
   style?: ViewStyleProp,
+  useNativeAnimations: boolean,
 };
 
 type Props = DrawerViewConfig & {
@@ -145,6 +146,7 @@ export default class DrawerView<T: *> extends PureComponent<void, Props, void> {
         drawerWidth={this.props.drawerWidth}
         onDrawerOpen={this._handleDrawerOpen}
         onDrawerClose={this._handleDrawerClose}
+        useNativeAnimations={this.props.useNativeAnimations}
         renderNavigationView={this._renderNavigationView}
         drawerPosition={
           this.props.drawerPosition === 'right'
