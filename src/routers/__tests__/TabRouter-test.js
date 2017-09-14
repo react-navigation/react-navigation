@@ -549,6 +549,7 @@ describe('TabRouter', () => {
   });
 
   test('Maps old actions (uses "getStateForAction returns null when navigating to same tab" test)', () => {
+    global.console.warn = jest.fn();
     const router = TabRouter(
       { Foo: BareLeafRouteConfig, Bar: BareLeafRouteConfig },
       { initialRouteName: 'Bar' }
@@ -561,6 +562,7 @@ describe('TabRouter', () => {
       state
     );
     expect(state2).toEqual(null);
+    expect(console.warn).toBeCalled();
   });
 
   test('Can navigate to other tab (no router) with params', () => {
