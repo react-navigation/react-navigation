@@ -2,6 +2,7 @@
 /* eslint react/display-name:0 */
 
 import React from 'react';
+import { createAction } from 'redux-actions';
 import TabRouter from '../TabRouter';
 
 import NavigationActions from '../../NavigationActions';
@@ -45,6 +46,46 @@ describe('TabRouter', () => {
     expect(router.getComponentForState(expectedState2)).toEqual(ScreenB);
     const state3 = router.getStateForAction(
       { type: NavigationActions.NAVIGATE, routeName: 'Bar' },
+      state2
+    );
+    expect(state3).toEqual(null);
+  });
+
+  test('Handles basic tab logic with Flux Standard Action', () => {
+    const ScreenA = () => <div />;
+    const ScreenB = () => <div />;
+    const router = TabRouter({
+      Foo: { screen: ScreenA },
+      Bar: { screen: ScreenB },
+    });
+    const stateAction = createAction(NavigationActions.INIT);
+    const state = router.getStateForAction(stateAction());
+    const expectedState = {
+      index: 0,
+      routes: [
+        { key: 'Foo', routeName: 'Foo' },
+        { key: 'Bar', routeName: 'Bar' },
+      ],
+    };
+    expect(state).toEqual(expectedState);
+    const state2Action = createAction(NavigationActions.NAVIGATE);
+    const state2 = router.getStateForAction(
+      state2Action({ routeName: 'Bar' }),
+      state
+    );
+    const expectedState2 = {
+      index: 1,
+      routes: [
+        { key: 'Foo', routeName: 'Foo' },
+        { key: 'Bar', routeName: 'Bar' },
+      ],
+    };
+    expect(state2).toEqual(expectedState2);
+    expect(router.getComponentForState(expectedState)).toEqual(ScreenA);
+    expect(router.getComponentForState(expectedState2)).toEqual(ScreenB);
+    const state3Action = createAction(NavigationActions.NAVIGATE);
+    const state3 = router.getStateForAction(
+      state3Action({ routeName: 'Bar' }),
       state2
     );
     expect(state3).toEqual(null);

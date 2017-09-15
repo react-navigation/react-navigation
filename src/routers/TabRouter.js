@@ -1,5 +1,5 @@
 /* @flow */
-
+import { isFSA } from 'flux-standard-action';
 import invariant from '../utils/invariant';
 import getScreenForRouteName from './getScreenForRouteName';
 import createConfigGetter from './createConfigGetter';
@@ -52,11 +52,18 @@ export default (
   );
   return {
     getStateForAction(
-      action: NavigationAction | { action: NavigationAction },
+      passedAction: NavigationAction | { action: NavigationAction },
       inputState?: ?NavigationState
     ): ?NavigationState {
-      // eslint-disable-next-line no-param-reassign
-      action = NavigationActions.mapDeprecatedActionAndWarn(action);
+      let action = NavigationActions.mapDeprecatedActionAndWarn(passedAction);
+
+      // Support flux standard actions by expanding payload
+      if (isFSA(action)) {
+        action = {
+          ...action,
+          ...action.payload,
+        };
+      }
 
       // Establish a default state
       let state = inputState;
