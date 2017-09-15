@@ -13,6 +13,6 @@ Navigation views are controlled React components that can present the current na
 - [Drawer](https://github.com/react-community/react-navigation/blob/master/src/views/Drawer/DrawerView.js) - A view with a drawer that slides from the left
 
 
-## [Transitioner](/docs/views/transitioner)
+## Transitioner
 
 `Transitioner` manages the animations during the transition and can be used to build fully custom navigation views. It is used inside the `CardStack` view. [Learn more about Transitioner here.](/docs/views/transitioner)
