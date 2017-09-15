@@ -63,7 +63,7 @@ const CustomTabBar = ({ navigation }) => {
 
 const CustomTabView = ({ router, navigation }) => {
   const { routes, index } = navigation.state;
-  const ActiveScreen = router.getComponentForState(navigation.state);
+  const ActiveScreen = router.getComponentForRouteName(routes[index].routeName);
   return (
     <View style={styles.container}>
       <CustomTabBar navigation={navigation} />

@@ -2,8 +2,8 @@ version: 2
 jobs:
   build:
     docker:
-      - image: reactcommunity/node-ci:7.10.0-1 # custom image -- includes ocaml, libelf1, Yarn
-    parallelism: 3
+      - image: reactcommunity/node-ci:8.4.0-0 # custom image -- includes ocaml, libelf1, Yarn
+    parallelism: 2
     working_directory: ~/react-navigation
     steps:
       - checkout

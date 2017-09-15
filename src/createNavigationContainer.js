@@ -2,7 +2,7 @@
 
 import React from 'react';
 import invariant from './utils/invariant';
-import { BackAndroid, Linking } from './PlatformHelpers';
+import { BackHandler, Linking } from './PlatformHelpers';
 import NavigationActions from './NavigationActions';
 import addNavigationHelpers from './addNavigationHelpers';
 
@@ -12,6 +12,7 @@ import type {
   NavigationState,
   NavigationScreenProp,
   NavigationNavigatorProps,
+  NavigationNavigator,
 } from './TypeDefinition';
 
 type NavigationContainerProps = {
@@ -23,7 +24,7 @@ type NavigationContainerProps = {
   ) => void,
 };
 
-type Props<T> = NavigationContainerProps & NavigationNavigatorProps<T>;
+type Props<O, S> = NavigationContainerProps & NavigationNavigatorProps<O, S>;
 
 type State = {
   nav: ?NavigationState,
@@ -35,18 +36,12 @@ type State = {
  * This allows to use e.g. the StackNavigator and TabNavigator as root-level
  * components.
  */
-export default function createNavigationContainer<T: *>(
-  Component: ReactClass<NavigationNavigatorProps<T>>,
-  containerOptions?: {}
+export default function createNavigationContainer<S: *, O>(
+  Component: NavigationNavigator<*, S, *, O>
 ) {
-  invariant(
-    typeof containerOptions === 'undefined',
-    'containerOptions.URIPrefix has been removed. Pass the uriPrefix prop to the navigator instead'
-  );
-
-  class NavigationContainer extends React.Component<void, Props<T>, State> {
+  class NavigationContainer extends React.Component<void, Props<O, S>, State> {
     state: State;
-    props: Props<T>;
+    props: Props<O, S>;
 
     subs: ?{
       remove: () => void,
@@ -54,7 +49,7 @@ export default function createNavigationContainer<T: *>(
 
     static router = Component.router;
 
-    constructor(props: Props<T>) {
+    constructor(props: Props<O, S>) {
       super(props);
 
       this._validateProps(props);
@@ -70,7 +65,7 @@ export default function createNavigationContainer<T: *>(
       return !this.props.navigation;
     }
 
-    _validateProps(props: Props<T>) {
+    _validateProps(props: Props<O, S>) {
       if (this._isStateful()) {
         return;
       }
@@ -82,7 +77,9 @@ export default function createNavigationContainer<T: *>(
       invariant(
         keys.length === 0,
         'This navigator has both navigation and container props, so it is ' +
-          `unclear if it should own its own state. Remove props: "${keys.join(', ')}" ` +
+          `unclear if it should own its own state. Remove props: "${keys.join(
+            ', '
+          )}" ` +
           'if the navigator should get its state from the navigation prop. If the ' +
           'navigator should maintain its own state, do not pass a navigation prop.'
       );
@@ -101,7 +98,7 @@ export default function createNavigationContainer<T: *>(
       };
     }
 
-    _handleOpenURL = (url: string) => {
+    _handleOpenURL = ({ url }: { url: string }) => {
       const parsedUrl = this._urlToPathAndParams(url);
       if (parsedUrl) {
         const { path, params } = parsedUrl;
@@ -119,7 +116,8 @@ export default function createNavigationContainer<T: *>(
     ) {
       if (
         typeof this.props.onNavigationStateChange === 'undefined' &&
-        this._isStateful()
+        this._isStateful() &&
+        !!process.env.REACT_NAV_LOGGING
       ) {
         /* eslint-disable no-console */
         if (console.group) {
@@ -153,16 +151,14 @@ export default function createNavigationContainer<T: *>(
         return;
       }
 
-      this.subs = BackAndroid.addEventListener('backPress', () =>
+      this.subs = BackHandler.addEventListener('hardwareBackPress', () =>
         this.dispatch(NavigationActions.back())
       );
 
-      Linking.addEventListener('url', ({ url }: { url: string }) => {
-        this._handleOpenURL(url);
-      });
+      Linking.addEventListener('url', this._handleOpenURL);
 
       Linking.getInitialURL().then(
-        (url: string) => url && this._handleOpenURL(url)
+        (url: ?string) => url && this._handleOpenURL({ url })
       );
     }
 

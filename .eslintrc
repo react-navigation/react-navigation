@@ -41,7 +41,7 @@
     "react/jsx-filename-extension": [
       0, { "extensions": [".js", ".jsx"] }
     ],
-   
+
     "react/sort-comp": 0,
     "react/prefer-stateless-function": 0,
 
@@ -54,7 +54,7 @@
       2,
       "boolean"
     ],
-    "flowtype/no-weak-types": 1,
+    "flowtype/no-weak-types": 0,
     "flowtype/require-parameter-type": 2,
     "flowtype/require-return-type": [
       0,
@@ -70,6 +70,13 @@
   "settings": {
     "flowtype": {
       "onlyFilesWithFlowAnnotation": true
+    }
+  },
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "modules": true
     }
   }
 }

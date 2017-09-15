@@ -13,7 +13,7 @@ import type {
   NavigationState,
   NavigationAction,
   NavigationDrawerScreenOptions,
-  Style,
+  ViewStyleProp,
 } from '../../TypeDefinition';
 
 export type DrawerScene = {
@@ -33,7 +33,8 @@ export type DrawerViewConfig = {
   drawerPosition: 'left' | 'right',
   contentComponent: ReactClass<*>,
   contentOptions?: {},
-  style?: Style,
+  style?: ViewStyleProp,
+  useNativeAnimations: boolean,
 };
 
 type Props = DrawerViewConfig & {
@@ -63,6 +64,12 @@ export default class DrawerView<T: *> extends PureComponent<void, Props, void> {
       const { routes, index } = nextProps.navigation.state;
       if (routes[index].routeName === 'DrawerOpen') {
         this._drawer.openDrawer();
+      } else if (routes[index].routeName === 'DrawerToggle') {
+        if (this._drawer.state.drawerShown) {
+          this.props.navigation.navigate('DrawerClose');
+        } else {
+          this.props.navigation.navigate('DrawerOpen');
+        }
       } else {
         this._drawer.closeDrawer();
       }
@@ -115,7 +122,7 @@ export default class DrawerView<T: *> extends PureComponent<void, Props, void> {
     return navigationState;
   };
 
-  _renderNavigationView = () => (
+  _renderNavigationView = () =>
     <DrawerSidebar
       screenProps={this.props.screenProps}
       navigation={this._screenNavigationProp}
@@ -123,8 +130,7 @@ export default class DrawerView<T: *> extends PureComponent<void, Props, void> {
       contentComponent={this.props.contentComponent}
       contentOptions={this.props.contentOptions}
       style={this.props.style}
-    />
-  );
+    />;
 
   _drawer: any;
 
@@ -140,6 +146,7 @@ export default class DrawerView<T: *> extends PureComponent<void, Props, void> {
         drawerWidth={this.props.drawerWidth}
         onDrawerOpen={this._handleDrawerOpen}
         onDrawerClose={this._handleDrawerClose}
+        useNativeAnimations={this.props.useNativeAnimations}
         renderNavigationView={this._renderNavigationView}
         drawerPosition={
           this.props.drawerPosition === 'right'

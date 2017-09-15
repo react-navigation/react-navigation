@@ -9,7 +9,8 @@ import type {
   NavigationAction,
   NavigationScreenProp,
   NavigationState,
-  Style,
+  ViewStyleProp,
+  TextStyleProp,
 } from '../../TypeDefinition';
 
 import type { TabScene } from './TabView';
@@ -30,14 +31,21 @@ type Props = {
   upperCaseLabel: boolean,
   position: Animated.Value,
   navigation: NavigationScreenProp<NavigationState, NavigationAction>,
+  jumpToIndex: (index: number) => void,
   getLabel: (scene: TabScene) => ?(React.Element<*> | string),
+  getOnPress: (
+    scene: TabScene
+  ) => (scene: TabScene, jumpToIndex: (index: number) => void) => void,
   renderIcon: (scene: TabScene) => React.Element<*>,
-  labelStyle?: Style,
-  iconStyle?: Style,
+  labelStyle?: TextStyleProp,
+  iconStyle?: ViewStyleProp,
 };
 
-export default class TabBarTop
-  extends PureComponent<DefaultProps, Props, void> {
+export default class TabBarTop extends PureComponent<
+  DefaultProps,
+  Props,
+  void
+> {
   static defaultProps = {
     activeTintColor: '#fff',
     inactiveTintColor: '#fff',
@@ -71,7 +79,7 @@ export default class TabBarTop
     );
     const color = position.interpolate({
       inputRange,
-      outputRange,
+      outputRange: (outputRange: Array<string>),
     });
 
     const tintColor = scene.focused ? activeTintColor : inactiveTintColor;
@@ -116,6 +124,18 @@ export default class TabBarTop
     );
   };
 
+  _handleOnPress = (scene: TabScene) => {
+    const { getOnPress, jumpToIndex }: Props = this.props;
+
+    const onPress = getOnPress(scene);
+
+    if (onPress) {
+      onPress(scene, jumpToIndex);
+    } else {
+      jumpToIndex(scene.index);
+    }
+  };
+
   render() {
     // TODO: Define full proptypes
     const props: any = this.props;
@@ -123,6 +143,8 @@ export default class TabBarTop
     return (
       <TabBar
         {...props}
+        onTabPress={this._handleOnPress}
+        jumpToIndex={() => {}}
         renderIcon={this._renderIcon}
         renderLabel={this._renderLabel}
       />
