@@ -60,4 +60,4 @@ We have an active channel on the [Reactiflux](https://www.reactiflux.com/) commu
 
 ## Helpful Resources
 
-= [React Navigation Links](https://github.com/react-navigation/react-navigation-links)
+- [React Navigation Links](https://github.com/react-navigation/react-navigation-links)
