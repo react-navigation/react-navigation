@@ -98,7 +98,7 @@ export default function createNavigationContainer<S: *, O>(
       };
     }
 
-    _handleOpenURL = (url: string) => {
+    _handleOpenURL = ({ url }: { url: string }) => {
       const parsedUrl = this._urlToPathAndParams(url);
       if (parsedUrl) {
         const { path, params } = parsedUrl;
@@ -155,12 +155,10 @@ export default function createNavigationContainer<S: *, O>(
         this.dispatch(NavigationActions.back())
       );
 
-      Linking.addEventListener('url', ({ url }: { url: string }) => {
-        this._handleOpenURL(url);
-      });
+      Linking.addEventListener('url', this._handleOpenURL);
 
       Linking.getInitialURL().then(
-        (url: ?string) => url && this._handleOpenURL(url)
+        (url: ?string) => url && this._handleOpenURL({ url })
       );
     }
 

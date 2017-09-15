@@ -32,6 +32,7 @@ const DefaultDrawerConfig = {
     Dimensions.get('window').width - (Platform.OS === 'android' ? 56 : 64),
   contentComponent: DrawerItems,
   drawerPosition: 'left',
+  useNativeAnimations: true,
 };
 
 const DrawerNavigator = (
@@ -45,6 +46,7 @@ const DrawerNavigator = (
     contentComponent,
     contentOptions,
     drawerPosition,
+    useNativeAnimations,
     ...tabsConfig
   } = mergedConfig;
 
@@ -63,6 +65,9 @@ const DrawerNavigator = (
       DrawerOpen: {
         screen: () => null,
       },
+      DrawerToggle: {
+        screen: () => null,
+      },
     },
     {
       initialRouteName: 'DrawerClose',
@@ -77,6 +82,7 @@ const DrawerNavigator = (
   )((props: *) =>
     <DrawerView
       {...props}
+      useNativeAnimations={useNativeAnimations}
       drawerWidth={drawerWidth}
       contentComponent={contentComponent}
       contentOptions={contentOptions}
