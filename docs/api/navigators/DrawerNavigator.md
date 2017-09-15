@@ -68,6 +68,12 @@ To open and close drawer, navigate to `'DrawerOpen'` and `'DrawerClose'` respect
 this.props.navigation.navigate('DrawerOpen'); // open drawer
 this.props.navigation.navigate('DrawerClose'); // close drawer
 ```
+If you would like to toggle the drawer you can navigate to `'DrawerToggle'`, and this will choose which navigation is appropriate for you given the drawers current state.
+
+```js
+// fires 'DrawerOpen'/'DrawerClose' accordingly
+this.props.navigation.navigate('DrawerToggle');
+```
 
 ## API Definition
 
@@ -86,6 +92,7 @@ The route configs object is a mapping from route name to a route config, which t
 - `drawerPosition` - Options are `left` or `right`. Default is `left` position.
 - `contentComponent` - Component used to render the content of the drawer, for example, navigation items. Receives the `navigation` prop for the drawer. Defaults to `DrawerItems`. For more information, see below.
 - `contentOptions` - Configure the drawer content, see below.
+- `useNativeAnimations` - Enable native animations. Default is `true`.
 
 #### Example:
 
@@ -181,7 +188,7 @@ The navigator component created by `DrawerNavigator(...)` takes the following pr
    screenProps={/* this prop will get passed to the screen components and nav options as props.screenProps */}
  />
  ```
- 
+
  ### Nesting `DrawerNavigation`
- 
+
 Please bear in mind that if you nest the DrawerNavigation, the drawer will show below the parent navigation.
