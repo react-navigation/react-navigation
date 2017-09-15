@@ -33,6 +33,7 @@ npm install --save react-navigation
 npm start
 
 # This will start a development server for you and print a QR code in your terminal.
+```
 
 Verify that you can successfully see the bare sample app run on iOS and/or Android:
 
@@ -65,7 +66,7 @@ class HomeScreen extends React.Component {
   }
 }
 
-const SimpleApp = StackNavigator({
+export default const SimpleApp = StackNavigator({
   Home: { screen: HomeScreen },
 });
 
@@ -125,7 +126,7 @@ class HomeScreen extends React.Component {
 We're using the navigate function from the [screen navigation prop](/docs/navigators/navigation-prop) to go to `ChatScreen`. But that won't work until we add this to our `StackNavigator` like so:
 
 ```js
-const SimpleApp = StackNavigator({
+export default const SimpleApp = StackNavigator({
   Home: { screen: HomeScreen },
   Chat: { screen: ChatScreen },
 });
