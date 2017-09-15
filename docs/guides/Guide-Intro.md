@@ -55,6 +55,8 @@ const SimpleApp = StackNavigator({
   Home: { screen: HomeScreen },
 });
 
+export default SimpleApp;
+
 AppRegistry.registerComponent('SimpleApp', () => SimpleApp);
 ```
 
