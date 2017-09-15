@@ -92,6 +92,7 @@ The route configs object is a mapping from route name to a route config, which t
 - `drawerPosition` - Options are `left` or `right`. Default is `left` position.
 - `contentComponent` - Component used to render the content of the drawer, for example, navigation items. Receives the `navigation` prop for the drawer. Defaults to `DrawerItems`. For more information, see below.
 - `contentOptions` - Configure the drawer content, see below.
+- `useNativeAnimations` - Enable native animations. Default is `true`.
 
 #### Example:
 
