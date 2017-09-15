@@ -53,9 +53,15 @@ const SimpleApp = StackNavigator({
 Because `MainScreenNavigator` is being used as a screen, we can give it `navigationOptions`:
 
 ```js
-MainScreenNavigator.navigationOptions = {
-  title: 'My Chats',
-};
+const SimpleApp = StackNavigator({
+  Home: { 
+    screen: MainScreenNavigator,
+    navigationOptions: {
+      title: 'My Chats',
+    },
+  },
+  Chat: { screen: ChatScreen },
+})
 ```
 
 Lets also add a button to each tab that links to a chat:
