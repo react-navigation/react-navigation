@@ -2,6 +2,7 @@ import React from 'react';
 
 import Link from './Link';
 import Footer from './Footer';
+import DocSearchBar from './DocSearchBar';
 import { addNavigationHelpers } from 'react-navigation';
 
 const NavigationLinks = ({ navigation, className, reverse }) => {
@@ -81,7 +82,7 @@ class AppFrame extends React.Component {
             </Link>
 
             <NavigationLinks navigation={navigation} className="navbuttons" />
-
+            <DocSearchBar />
             {hasChildNavigation &&
               <span
                 className={`pt-icon-properties openMenuButton ${isMobileMenuOpen
