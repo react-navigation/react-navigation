@@ -14,6 +14,7 @@ import type {
 } from '../../TypeDefinition';
 
 import type { TabScene } from './TabView';
+import { isIphoneX } from '../../utils/device';
 
 type DefaultProps = {
   activeTintColor: string,
@@ -182,13 +183,15 @@ export default class TabBarBottom extends PureComponent<
   }
 }
 
+const HOME_ACTIVITY_INDICATOR = isIphoneX() ? 34 : 0;
 const styles = StyleSheet.create({
   tabBar: {
-    height: 49, // Default tab bar height in iOS 10
+    height: 49 + HOME_ACTIVITY_INDICATOR, // Default tab bar height in iOS 10
     flexDirection: 'row',
     borderTopWidth: StyleSheet.hairlineWidth,
     borderTopColor: 'rgba(0, 0, 0, .3)',
     backgroundColor: '#F7F7F7', // Default background color in iOS 10
+    paddingBottom: HOME_ACTIVITY_INDICATOR,
   },
   tab: {
     flex: 1,
