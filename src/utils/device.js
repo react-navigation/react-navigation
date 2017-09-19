@@ -12,6 +12,7 @@ export const isIphoneX = (): boolean => {
   );
 };
 
-export const isLandscape = (): boolean => {
+export const isLandscape = (d: ?object): boolean => {
+  if (d) return d.window.width > d.window.height;
   return width > height;
 };

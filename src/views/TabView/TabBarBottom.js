@@ -14,7 +14,7 @@ import type {
 } from '../../TypeDefinition';
 
 import type { TabScene } from './TabView';
-import { isIphoneX } from '../../utils/device';
+import { isIphoneX, isLandscape } from '../../utils/device';
 
 type DefaultProps = {
   activeTintColor: string,

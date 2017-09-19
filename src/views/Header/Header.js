@@ -4,7 +4,7 @@
 
 import React from 'react';
 
-import { Animated, Platform, StyleSheet, View } from 'react-native';
+import { Animated, Platform, StyleSheet, View, Dimensions } from 'react-native';
 
 import HeaderTitle from './HeaderTitle';
 import HeaderBackButton from './HeaderBackButton';
@@ -16,6 +16,7 @@ import type {
   LayoutEvent,
   HeaderProps,
 } from '../../TypeDefinition';
+import { isIphoneX, isLandscape } from '../../utils/device';
 
 type SceneProps = {
   scene: NavigationScene,
@@ -33,15 +34,40 @@ type HeaderState = {
   },
 };
 
+const getStatusBarHeight = (dimensions: ?object) => {
+  if (Platform.OS === 'android' || isLandscape(dimensions)) {
+    return 0;
+  }
+
+  if (isIphoneX()) {
+    return 44;
+  }
+
+  return 20;
+};
+
 const APPBAR_HEIGHT = Platform.OS === 'ios' ? 44 : 56;
-const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : 0;
 const TITLE_OFFSET = Platform.OS === 'ios' ? 70 : 56;
+const STATUSBAR_HEIGHT = getStatusBarHeight();
 
 class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
   static HEIGHT = APPBAR_HEIGHT + STATUSBAR_HEIGHT;
 
   state = {
     widths: {},
+    statusBarHeight: STATUSBAR_HEIGHT,
+  };
+
+  componentDidMount() {
+    Dimensions.addEventListener('change', this._orientationChange);
+  }
+
+  componentWillUnmount() {
+    Dimensions.removeEventListener('change', this._orientationChange);
+  }
+
+  _orientationChange = (dimensions: ?object) => {
+    this.setState({ statusBarHeight: getStatusBarHeight(dimensions) });
   };
 
   _getHeaderTitleString(scene: NavigationScene): ?string {
@@ -283,12 +309,19 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
       style,
       ...rest
     } = this.props;
+    const { statusBarHeight } = this.state;
 
     const { options } = this.props.getScreenDetails(scene);
     const headerStyle = options.headerStyle;
+    const containerStyles = [
+      styles.container,
+      { paddingTop: statusBarHeight, height: APPBAR_HEIGHT + statusBarHeight },
+      headerStyle,
+      style,
+    ];
 
     return (
-      <Animated.View {...rest} style={[styles.container, headerStyle, style]}>
+      <Animated.View {...rest} style={containerStyles}>
         <View style={styles.appBar}>
           {appBar}
         </View>
@@ -317,9 +350,7 @@ if (Platform.OS === 'ios') {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: STATUSBAR_HEIGHT,
     backgroundColor: Platform.OS === 'ios' ? '#F7F7F7' : '#FFF',
-    height: STATUSBAR_HEIGHT + APPBAR_HEIGHT,
     ...platformContainerStyles,
   },
   appBar: {
