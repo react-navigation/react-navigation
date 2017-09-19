@@ -2,7 +2,7 @@
   "name": "react-navigation",
   "version": "1.0.0-beta.12",
   "description": "React Navigation",
-  "main": "src/react-navigation.js",
+  "main": "lib/react-navigation.js",
   "sources": {
     "react-native-v1": "lib-rn/react-navigation.js",
     "web": "lib/react-navigation.web.js"
