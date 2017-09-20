@@ -382,8 +382,8 @@ export type NavigationScreenProp<S, A> = {
 
 export type NavigationNavigatorProps<O, S> = {
   navigation: NavigationProp<S, NavigationAction>,
-  screenProps: *,
-  navigationOptions: O,
+  screenProps?: *,
+  navigationOptions?: O,
 };
 
 /**
