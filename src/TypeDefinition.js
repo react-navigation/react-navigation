@@ -451,7 +451,7 @@ export type NavigationSceneRendererProps = NavigationTransitionProps;
 export type NavigationTransitionSpec = {
   duration?: number,
   // An easing function from `Easing`.
-  easing?: (t?: number) => number,
+  easing?: (t: number) => number,
   // A timing function such as `Animated.timing`.
   timing?: (value: Animated.Value, config: any) => any,
 };
