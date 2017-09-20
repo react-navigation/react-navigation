@@ -75,6 +75,8 @@ export default (
     paths[routeName] = { re, keys, toPath: pathToRegexp.compile(pathPattern) };
   });
 
+  let inProgressNavigationRouteName = null;
+
   return {
     getComponentForState(state: NavigationState): NavigationComponent {
       const activeChildRoute = state.routes[state.index];
@@ -139,6 +141,26 @@ export default (
           index: 0,
           routes: [route],
         };
+      }
+
+      if (passedAction.type === 'Navigation/BACK') {
+        inProgressNavigationRouteName = null;
+      }
+
+      if (
+        action.type === NavigationActions.NAVIGATE &&
+        passedAction.routeName !== 'DrawerOpen' &&
+        passedAction.routeName !== 'DrawerClose'
+      ) {
+        // Check if action wants to route to the route that is in-progress navigating
+        if (
+          inProgressNavigationRouteName !== null &&
+          inProgressNavigationRouteName === passedAction.routeName
+        ) {
+          inProgressNavigationRouteName = null;
+          return;
+        }
+        inProgressNavigationRouteName = passedAction.routeName;
       }
 
       // Check if a child scene wants to handle the action as long as it is not a reset to the root stack
@@ -222,6 +244,7 @@ export default (
       }
 
       if (action.type === NavigationActions.SET_PARAMS) {
+        inProgressNavigationRouteName = null;
         const lastRoute = state.routes.find(
           /* $FlowFixMe */
           (route: *) => route.key === action.key
@@ -273,6 +296,7 @@ export default (
 
       if (action.type === NavigationActions.BACK) {
         let backRouteIndex = null;
+        inProgressNavigationRouteName = null;
         if (action.key) {
           const backRoute = state.routes.find(
             /* $FlowFixMe */
