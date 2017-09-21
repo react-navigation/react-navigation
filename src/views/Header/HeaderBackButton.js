@@ -12,11 +12,7 @@ import {
 
 import type { LayoutEvent, TextStyleProp } from '../../TypeDefinition';
 
-import TouchableItem from '../TouchableItem';
-
 type Props = {
-  onPress?: () => void,
-  pressColorAndroid?: string,
   title?: ?string,
   titleStyle?: ?TextStyleProp,
   tintColor?: ?string,
@@ -25,7 +21,6 @@ type Props = {
 };
 
 type DefaultProps = {
-  pressColorAndroid: string,
   tintColor: ?string,
   truncatedTitle: ?string,
 };
@@ -36,7 +31,6 @@ type State = {
 
 class HeaderBackButton extends React.PureComponent<DefaultProps, Props, State> {
   static defaultProps = {
-    pressColorAndroid: 'rgba(0, 0, 0, .32)',
     tintColor: Platform.select({
       ios: '#037aff',
     }),
@@ -56,8 +50,6 @@ class HeaderBackButton extends React.PureComponent<DefaultProps, Props, State> {
 
   render() {
     const {
-      onPress,
-      pressColorAndroid,
       width,
       title,
       titleStyle,
@@ -76,41 +68,21 @@ class HeaderBackButton extends React.PureComponent<DefaultProps, Props, State> {
     const asset = require('../assets/back-icon.png');
 
     return (
-      <TouchableItem
-        accessibilityComponentType="button"
-        accessibilityLabel={backButtonTitle}
-        accessibilityTraits="button"
-        testID="header-back"
-        delayPressIn={0}
-        onPress={onPress}
-        pressColor={pressColorAndroid}
-        style={styles.container}
-        borderless
-      >
-        <View style={styles.container}>
-          <Image
-            style={[
-              styles.icon,
-              !!title && styles.iconWithTitle,
-              !!tintColor && { tintColor },
-            ]}
-            source={asset}
-          />
-          {Platform.OS === 'ios' &&
-            title &&
-            <Text
-              onLayout={this._onTextLayout}
-              style={[
-                styles.title,
-                !!tintColor && { color: tintColor },
-                titleStyle,
-              ]}
-              numberOfLines={1}
-            >
-              {backButtonTitle}
-            </Text>}
-        </View>
-      </TouchableItem>
+      <View style={styles.container}>
+        <Image
+          style={[styles.icon, title && styles.iconWithTitle, { tintColor }]}
+          source={asset}
+        />
+        {Platform.OS === 'ios' &&
+          title &&
+          <Text
+            onLayout={this._onTextLayout}
+            style={[styles.title, { color: tintColor }, titleStyle]}
+            numberOfLines={1}
+          >
+            {backButtonTitle}
+          </Text>}
+      </View>
     );
   }
 }
