@@ -356,9 +356,10 @@ export type NavigationDrawerScreenOptions = {
       >),
   drawerLabel?:
     | React.Element<*>
-    | ((options: { tintColor: ?string, focused: boolean }) => ?React.Element<
-        *
-      >),
+    | ((
+      options: { tintColor: ?string, focused: boolean },
+    ) => ?React.Element<*>),
+    drawerLockMode?: 'unlocked' | 'locked-close' | 'locked-open', // defaults `unlocked`
 };
 
 /**
