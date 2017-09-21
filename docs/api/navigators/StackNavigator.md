@@ -94,7 +94,7 @@ Visual options:
 
 #### `title`
 
-String that can be used as a fallback for `headerTitle` and `tabBarLabel`
+String that can be used as a fallback for `headerTitle`. Additionally, will be used as a fallback for `tabBarLabel` (if nested in a TabNavigator) or `drawerLabel` (if nested in a DrawerNavigator). 
 
 #### `header`
 
@@ -106,7 +106,7 @@ String or React Element used by the header. Defaults to scene `title`
 
 #### `headerBackTitle`
 
-Title string used by the back button on iOS or `null` to disable label. Defaults to scene `title`
+Title string used by the back button on iOS, or `null` to disable label. Defaults to the previous scene's `headerTitle`
 
 #### `headerTruncatedBackTitle`
 

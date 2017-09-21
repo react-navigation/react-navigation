@@ -41,6 +41,10 @@ Facebook, Exponent and the React community at large.
   react-native run-ios
   ```
 
+## Community
+
+We have an active channel on the [Reactiflux](https://www.reactiflux.com/) community. It's the best place to show off things you've made with the library, ask for help, or just hang out and discuss the project. This also helps keep the [issues](https://github.com/react-community/react-navigation/issues) manageable.
+
 ## Advanced guide
 
 - [Redux integration](https://reactnavigation.org/docs/guides/redux)
@@ -54,3 +58,6 @@ Facebook, Exponent and the React community at large.
 - [Routers](https://reactnavigation.org/docs/routers/)
 - [Views](https://reactnavigation.org/docs/views/)
 
+## Helpful Resources
+
+- [React Navigation Links](https://github.com/react-navigation/react-navigation-links)

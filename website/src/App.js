@@ -276,6 +276,14 @@ const ViewsDocs = createNavigator(
       }),
       path: 'transitioner',
     },
+    WithNavigation: {
+      screen: createDocPage({
+        doc: 'api/withNavigation',
+        title: 'WithNavigation',
+        linkName: 'withNavigation',
+      }),
+      path: 'with-navigation',
+    },
   })
 )(NavView);
 ViewsDocs.navigationOptions = {
@@ -323,6 +331,14 @@ IntroPost.navigationOptions = {
 
 const BlogHistoryPage = createNavigator(
   TabRouter({
+    RenewedV1: {
+      screen: createDocPage({
+        doc: 'blog/2017-09-Renewed-v1',
+        title: 'A (Renewed) Path to React Navigation V1',
+        linkName: 'A (Renewed) Path to React Navigation V1',
+      }),
+      path: '2017/9/Renewed-v1',
+    },
     RoadToV1: {
       screen: createDocPage({
         doc: 'blog/2017-04-On-the-path-to-v1',
@@ -355,11 +371,10 @@ const BlogPage = createNavigator(
   })
 )(PageWithSidebar);
 
-const NotFoundError = () => (
+const NotFoundError = () =>
   <div className="errorScreen">
     <h1>Page not found</h1>
-  </div>
-);
+  </div>;
 
 const App = createNavigator(
   TabRouter({

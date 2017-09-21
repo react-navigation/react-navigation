@@ -33,7 +33,7 @@ const getHeadingForLevel = level => {
   }
 };
 
-const MDPage = ({ navigation, docPath }) => (
+const MDPage = ({ navigation, docPath }) =>
   <Markdown
     source={DocsMD[docPath]}
     className="md-section"
@@ -64,9 +64,14 @@ const MDPage = ({ navigation, docPath }) => (
           })
           .join('-');
         const Header = getHeadingForLevel(level);
+        const linkHeader = id ? '' : 'link-header';
+        const className = `md-header ${linkHeader}`;
         return (
-          <Header id={id} className="md-header">
-            {children} <a href={`#${id}`} title={children}>#</a>
+          <Header id={id} className={className}>
+            {children}{' '}
+            <a href={`#${id}`} title={children}>
+              #
+            </a>
           </Header>
         );
       },
@@ -74,10 +79,13 @@ const MDPage = ({ navigation, docPath }) => (
         if (href.indexOf('PhoneGraphic:') === 0) {
           const graphicName = href.split('PhoneGraphic:')[1];
         }
-        return <Link href={href}>{children}</Link>;
+        return (
+          <Link href={href}>
+            {children}
+          </Link>
+        );
       },
     }}
-  />
-);
+  />;
 
 export default MDPage;

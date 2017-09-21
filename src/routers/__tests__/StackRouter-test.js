@@ -752,7 +752,6 @@ describe('StackRouter', () => {
     expect(state2 && state2.routes[1].params).toEqual({ foo: '42' });
     /* $FlowFixMe */
     expect(state2 && state2.routes[1].routes).toEqual([
-      /* $FlowFixMe */
       expect.objectContaining({
         routeName: 'Baz',
         params: { foo: '42' },
@@ -819,7 +818,6 @@ describe('StackRouter', () => {
     }
     expect(state && state.index).toEqual(0);
     expect(state && state.routes[0]).toEqual(
-      // $FlowFixMe
       expect.objectContaining({
         routeName: 'Bar',
         type: undefined,
@@ -871,6 +869,7 @@ describe('StackRouter', () => {
   });
 
   test('Maps old actions (uses "Handles the reset action" test)', () => {
+    global.console.warn = jest.fn();
     const router = StackRouter({
       Foo: {
         screen: () => <div />,
@@ -897,5 +896,10 @@ describe('StackRouter', () => {
     expect(state2 && state2.routes[0].params).toEqual({ bar: '42' });
     expect(state2 && state2.routes[0].routeName).toEqual('Foo');
     expect(state2 && state2.routes[1].routeName).toEqual('Bar');
+    expect(console.warn).toBeCalledWith(
+      expect.stringContaining(
+        "The action type 'Init' has been renamed to 'Navigation/INIT'"
+      )
+    );
   });
 });

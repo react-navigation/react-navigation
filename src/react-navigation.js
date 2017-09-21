@@ -45,22 +45,25 @@ module.exports = {
   get Transitioner() {
     return require('./views/Transitioner').default;
   },
+  get CardStackTransitioner() {
+    return require('./views/CardStack/CardStackTransitioner').default;
+  },
   get CardStack() {
-    return require('./views/CardStack').default;
+    return require('./views/CardStack/CardStack').default;
   },
   get Card() {
-    return require('./views/Card').default;
+    return require('./views/CardStack/Card').default;
   },
 
   // Header
   get Header() {
-    return require('./views/Header').default;
+    return require('./views/Header/Header').default;
   },
   get HeaderTitle() {
-    return require('./views/HeaderTitle').default;
+    return require('./views/Header/HeaderTitle').default;
   },
   get HeaderBackButton() {
-    return require('./views/HeaderBackButton').default;
+    return require('./views/Header/HeaderBackButton').default;
   },
 
   // DrawerView
