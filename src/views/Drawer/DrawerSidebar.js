@@ -4,6 +4,7 @@ import React, { PureComponent } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import withCachedChildNavigation from '../../withCachedChildNavigation';
+import NavigationActions from '../../NavigationActions';
 
 import type {
   NavigationScreenProp,
@@ -12,21 +13,26 @@ import type {
   NavigationRouter,
   NavigationDrawerScreenOptions,
   NavigationState,
-  Style,
+  NavigationStateRoute,
+  ViewStyleProp,
 } from '../../TypeDefinition';
 
-import type { DrawerScene } from './DrawerView';
+import type { DrawerScene, DrawerItem } from './DrawerView';
 
-type Navigation = NavigationScreenProp<NavigationRoute, NavigationAction>;
+type Navigation = NavigationScreenProp<NavigationStateRoute, NavigationAction>;
 
 type Props = {
-  router: NavigationRouter<NavigationState, NavigationAction, NavigationDrawerScreenOptions>,
+  router: NavigationRouter<
+    NavigationState,
+    NavigationAction,
+    NavigationDrawerScreenOptions
+  >,
   navigation: Navigation,
   childNavigationProps: { [key: string]: Navigation },
   contentComponent: ReactClass<*>,
   contentOptions?: {},
   screenProps?: {},
-  style?: Style,
+  style?: ViewStyleProp,
 };
 
 /**
@@ -37,11 +43,17 @@ class DrawerSidebar extends PureComponent<void, Props, void> {
 
   _getScreenOptions = (routeKey: string) => {
     const DrawerScreen = this.props.router.getComponentForRouteName(
-      'DrawerClose',
+      'DrawerClose'
     );
+    const { [routeKey]: childNavigation } = this.props.childNavigationProps;
     return DrawerScreen.router.getScreenOptions(
-      this.props.childNavigationProps[routeKey],
-      this.props.screenProps,
+      childNavigation.state.index !== undefined // if the child screen is a StackRouter then always show the screen options of its first screen (see #1914)
+        ? {
+            ...childNavigation,
+            state: { ...childNavigation.state, index: 0 },
+          }
+        : childNavigation,
+      this.props.screenProps
     );
   };
 
@@ -70,15 +82,37 @@ class DrawerSidebar extends PureComponent<void, Props, void> {
     return null;
   };
 
+  _onItemPress = ({ route, focused }: DrawerItem) => {
+    this.props.navigation.navigate('DrawerClose');
+    if (!focused) {
+      let subAction;
+      // if the child screen is a StackRouter then always navigate to its first screen (see #1914)
+      if (route.index !== undefined && route.index !== 0) {
+        route = ((route: any): NavigationStateRoute);
+        subAction = NavigationActions.navigate({
+          routeName: route.routes[0].routeName,
+        });
+      }
+      this.props.navigation.navigate(route.routeName, undefined, subAction);
+    }
+  };
+
   render() {
     const ContentComponent = this.props.contentComponent;
+    const { state } = this.props.navigation;
     return (
       <View style={[styles.container, this.props.style]}>
         <ContentComponent
           {...this.props.contentOptions}
           navigation={this.props.navigation}
+          items={state.routes}
+          activeItemKey={
+            state.routes[state.index] && state.routes[state.index].key
+          }
+          screenProps={this.props.screenProps}
           getLabel={this._getLabel}
           renderIcon={this._renderIcon}
+          onItemPress={this._onItemPress}
           router={this.props.router}
         />
       </View>

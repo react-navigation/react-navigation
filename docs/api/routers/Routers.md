@@ -8,7 +8,7 @@ Routers define a component's navigation state, and they allow the developer to d
 `react-navigation` ships with a few standard routers:
 
 - [StackRouter](/docs/routers/stack)
-- [TabRouter](/docs/routers/tabs)
+- [TabRouter](/docs/routers/tab)
 
 
 ## Using Routers
@@ -125,5 +125,5 @@ Object.assign(MyApp.router, {
     }
     return previousGetActionForPathAndParams(path, params);
   },
-};
+});
 ```

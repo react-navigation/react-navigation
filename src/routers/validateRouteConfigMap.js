@@ -1,6 +1,6 @@
 /** @flow */
 
-import invariant from 'fbjs/lib/invariant';
+import invariant from '../utils/invariant';
 
 import type { NavigationRouteConfigMap } from '../TypeDefinition';
 
@@ -12,7 +12,7 @@ function validateRouteConfigMap(routeConfigs: NavigationRouteConfigMap) {
   const routeNames = Object.keys(routeConfigs);
   invariant(
     routeNames.length > 0,
-    'Please specify at least one route when configuring a navigator.',
+    'Please specify at least one route when configuring a navigator.'
   );
 
   routeNames.forEach((routeName: string) => {
@@ -26,14 +26,14 @@ function validateRouteConfigMap(routeConfigs: NavigationRouteConfigMap) {
         '...\n' +
         `${routeName}: {\n` +
         '  screen: MyScreen,\n' +
-        '}',
+        '}'
     );
 
     if (routeConfig.screen && routeConfig.getScreen) {
       invariant(
         false,
         `Route '${routeName}' should declare a screen or ` +
-          'a getScreen, not both.',
+          'a getScreen, not both.'
       );
     }
 
@@ -41,7 +41,7 @@ function validateRouteConfigMap(routeConfigs: NavigationRouteConfigMap) {
       invariant(
         typeof routeConfig.screen === 'function',
         `The component for route '${routeName}' must be a ` +
-          'a React component. For example:\n\n' +
+          'React component. For example:\n\n' +
           "import MyScreen from './MyScreen';\n" +
           '...\n' +
           `${routeName}: {\n` +
@@ -52,7 +52,7 @@ function validateRouteConfigMap(routeConfigs: NavigationRouteConfigMap) {
           '...\n' +
           `${routeName}: {\n` +
           '  screen: MyNavigator,\n' +
-          '}',
+          '}'
       );
     }
   });

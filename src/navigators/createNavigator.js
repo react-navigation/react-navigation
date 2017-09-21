@@ -14,15 +14,17 @@ import type { NavigatorType } from './NavigatorTypes';
 /**
  * Creates a navigator based on a router and a view that renders the screens.
  */
-const createNavigator = (
-  router: NavigationRouter<*, *, *>,
+export default function createNavigator<C: *, S, A, NavigatorConfig, Options>(
+  router: NavigationRouter<S, A, Options>,
   routeConfigs: NavigationRouteConfigMap,
-  navigatorConfig: any,
-  navigatorType: NavigatorType,
-) =>
-  (View: NavigationNavigator<*, *, *, *>) => {
+  navigatorConfig: NavigatorConfig,
+  navigatorType: NavigatorType
+) {
+  return (
+    NavigationView: ReactClass<C>
+  ): NavigationNavigator<C, S, A, Options> => {
     class Navigator extends React.Component {
-      props: NavigationNavigatorProps<*>;
+      props: NavigationNavigatorProps<Options, S>;
 
       static router = router;
 
@@ -31,11 +33,10 @@ const createNavigator = (
       static navigatorType = navigatorType;
 
       render() {
-        return <View {...this.props} router={router} />;
+        return <NavigationView {...this.props} router={router} />;
       }
     }
 
     return Navigator;
   };
-
-export default createNavigator;
+}

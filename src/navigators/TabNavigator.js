@@ -19,14 +19,14 @@ import type {
   NavigationTabRouterConfig,
 } from '../TypeDefinition';
 
-export type TabNavigatorConfig =
-  & { containerOptions?: void }
-  & NavigationTabRouterConfig
-  & TabViewConfig;
+export type TabNavigatorConfig = {
+  containerOptions?: void,
+} & NavigationTabRouterConfig &
+  TabViewConfig;
 
 const TabNavigator = (
   routeConfigs: NavigationRouteConfigMap,
-  config: TabNavigatorConfig = {},
+  config: TabNavigatorConfig = {}
 ) => {
   // Use the look native to the platform by default
   const mergedConfig = { ...TabNavigator.Presets.Default, ...config };
@@ -46,8 +46,8 @@ const TabNavigator = (
     router,
     routeConfigs,
     config,
-    NavigatorTypes.STACK,
-  )((props: *) => (
+    NavigatorTypes.TABS
+  )((props: *) =>
     <TabView
       {...props}
       tabBarComponent={tabBarComponent}
@@ -57,9 +57,9 @@ const TabNavigator = (
       animationEnabled={animationEnabled}
       lazy={lazy}
     />
-  ));
+  );
 
-  return createNavigationContainer(navigator, tabsConfig.containerOptions);
+  return createNavigationContainer(navigator);
 };
 
 const Presets = {
@@ -100,9 +100,8 @@ const Presets = {
 TabNavigator.Presets = {
   iOSBottomTabs: Presets.iOSBottomTabs,
   AndroidTopTabs: Presets.AndroidTopTabs,
-  Default: Platform.OS === 'ios'
-    ? Presets.iOSBottomTabs
-    : Presets.AndroidTopTabs,
+  Default:
+    Platform.OS === 'ios' ? Presets.iOSBottomTabs : Presets.AndroidTopTabs,
 };
 
 export default TabNavigator;

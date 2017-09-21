@@ -1,6 +1,6 @@
 # DrawerNavigator
 
-Used to easily set up a screen with a drawer navigation.
+Used to easily set up a screen with a drawer navigation. For a live example please see [our expo demo](https://exp.host/@react-navigation/NavigationPlayground).
 
 ```js
 class MyHomeScreen extends React.Component {
@@ -30,7 +30,7 @@ class MyNotificationsScreen extends React.Component {
     drawerIcon: ({ tintColor }) => (
       <Image
         source={require('./notif-icon.png')}
-        style={[styles.tabIcon, {tintColor: tintColor}]}
+        style={[styles.icon, {tintColor: tintColor}]}
       />
     ),
   };
@@ -68,6 +68,12 @@ To open and close drawer, navigate to `'DrawerOpen'` and `'DrawerClose'` respect
 this.props.navigation.navigate('DrawerOpen'); // open drawer
 this.props.navigation.navigate('DrawerClose'); // close drawer
 ```
+If you would like to toggle the drawer you can navigate to `'DrawerToggle'`, and this will choose which navigation is appropriate for you given the drawers current state.
+
+```js
+// fires 'DrawerOpen'/'DrawerClose' accordingly
+this.props.navigation.navigate('DrawerToggle');
+```
 
 ## API Definition
 
@@ -86,6 +92,7 @@ The route configs object is a mapping from route name to a route config, which t
 - `drawerPosition` - Options are `left` or `right`. Default is `left` position.
 - `contentComponent` - Component used to render the content of the drawer, for example, navigation items. Receives the `navigation` prop for the drawer. Defaults to `DrawerItems`. For more information, see below.
 - `contentOptions` - Configure the drawer content, see below.
+- `useNativeAnimations` - Enable native animations. Default is `true`.
 
 #### Example:
 
@@ -116,7 +123,7 @@ You can easily override the default component used by `react-navigation`:
 import { DrawerItems } from 'react-navigation';
 
 const CustomDrawerContentComponent = (props) => (
-  <View style={style.container}>
+  <View style={styles.container}>
     <DrawerItems {...props} />
   </View>
 );
@@ -130,10 +137,13 @@ const styles = StyleSheet.create({
 
 ### `contentOptions` for `DrawerItems`
 
+- `items` - the array of routes, can be modified or overridden
+- `activeItemKey` - key identifying the active route
 - `activeTintColor` - label and icon color of the active label
 - `activeBackgroundColor` - background color of the active label
 - `inactiveTintColor` - label and icon color of the inactive label
 - `inactiveBackgroundColor` - background color of the inactive label
+- `onItemPress(route)` - function to be invoked when an item is pressed
 - `style` - style object for the content section
 - `labelStyle` - style object to overwrite `Text` style inside content section, when your label is a string
 
@@ -182,7 +192,7 @@ The navigator component created by `DrawerNavigator(...)` takes the following pr
    screenProps={/* this prop will get passed to the screen components and nav options as props.screenProps */}
  />
  ```
- 
+
  ### Nesting `DrawerNavigation`
- 
+
 Please bear in mind that if you nest the DrawerNavigation, the drawer will show below the parent navigation.

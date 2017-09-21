@@ -9,41 +9,47 @@ import type {
   NavigationScreenProp,
   NavigationState,
   NavigationAction,
-  Style,
+  NavigationRoute,
+  ViewStyleProp,
+  TextStyleProp,
 } from '../../TypeDefinition';
-import type { DrawerScene } from './DrawerView.js';
+import type { DrawerScene, DrawerItem } from './DrawerView.js';
 
 type Props = {
   navigation: NavigationScreenProp<NavigationState, NavigationAction>,
+  items: Array<NavigationRoute>,
+  activeItemKey?: string,
   activeTintColor?: string,
   activeBackgroundColor?: string,
   inactiveTintColor?: string,
   inactiveBackgroundColor?: string,
   getLabel: (scene: DrawerScene) => ?(React.Element<*> | string),
   renderIcon: (scene: DrawerScene) => ?React.Element<*>,
-  style?: Style,
-  labelStyle?: Style,
+  onItemPress: (info: DrawerItem) => void,
+  style?: ViewStyleProp,
+  labelStyle?: TextStyleProp,
 };
 
 /**
  * Component that renders the navigation list in the drawer.
  */
-const DrawerNavigatorItems = (
-  {
-    navigation,
-    activeTintColor,
-    activeBackgroundColor,
-    inactiveTintColor,
-    inactiveBackgroundColor,
-    getLabel,
-    renderIcon,
-    style,
-    labelStyle,
-  }: Props,
-) => (
+const DrawerNavigatorItems = ({
+  navigation: { state, navigate },
+  items,
+  activeItemKey,
+  activeTintColor,
+  activeBackgroundColor,
+  inactiveTintColor,
+  inactiveBackgroundColor,
+  getLabel,
+  renderIcon,
+  onItemPress,
+  style,
+  labelStyle,
+}: Props) =>
   <View style={[styles.container, style]}>
-    {navigation.state.routes.map((route: *, index: number) => {
-      const focused = navigation.state.index === index;
+    {items.map((route: NavigationRoute, index: number) => {
+      const focused = activeItemKey === route.key;
       const color = focused ? activeTintColor : inactiveTintColor;
       const backgroundColor = focused
         ? activeBackgroundColor
@@ -55,8 +61,7 @@ const DrawerNavigatorItems = (
         <TouchableItem
           key={route.key}
           onPress={() => {
-            navigation.navigate('DrawerClose');
-            navigation.navigate(route.routeName);
+            onItemPress({ route, focused });
           }}
           delayPressIn={0}
         >
@@ -77,8 +82,7 @@ const DrawerNavigatorItems = (
         </TouchableItem>
       );
     })}
-  </View>
-);
+  </View>;
 
 /* Material design specs - https://material.io/guidelines/patterns/navigation-drawer.html#navigation-drawer-specs */
 DrawerNavigatorItems.defaultProps = {

@@ -16,27 +16,31 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import type { Style } from '../TypeDefinition';
+import type { ViewStyleProp } from '../TypeDefinition';
 
 const ANDROID_VERSION_LOLLIPOP = 21;
 
 type Props = {
-  onPress: Function,
+  onPress: () => void,
   delayPressIn?: number,
   borderless?: boolean,
-  pressColor?: ?string,
+  pressColor?: string,
   activeOpacity?: number,
   children?: React.Element<*>,
-  style?: Style,
+  style?: ViewStyleProp,
 };
 
 type DefaultProps = {
-  pressColor: ?string,
+  pressColor: string,
 };
 
-export default class TouchableItem
-  extends Component<DefaultProps, Props, void> {
+export default class TouchableItem extends Component<
+  DefaultProps,
+  Props,
+  void
+> {
   static defaultProps = {
+    borderless: false,
     pressColor: 'rgba(0, 0, 0, .32)',
   };
 
@@ -50,17 +54,17 @@ export default class TouchableItem
      * We need to pass the background prop to specify a borderless ripple effect.
      */
     if (
-      Platform.OS === 'android' && Platform.Version >= ANDROID_VERSION_LOLLIPOP
+      Platform.OS === 'android' &&
+      Platform.Version >= ANDROID_VERSION_LOLLIPOP
     ) {
       const { style, ...rest } = this.props; // eslint-disable-line no-unused-vars
-
       return (
         <TouchableNativeFeedback
           {...rest}
           style={null}
           background={TouchableNativeFeedback.Ripple(
-            this.props.pressColor,
-            this.props.borderless,
+            this.props.pressColor || '',
+            this.props.borderless || false
           )}
         >
           <View style={this.props.style}>

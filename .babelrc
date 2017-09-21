@@ -18,7 +18,6 @@
     "publish-rn": {
       "presets": ["react-native-syntax"],
       "plugins": [
-        "flow-react-proptypes",
         "transform-flow-strip-types"
       ]
     },
@@ -26,8 +25,10 @@
     "publish-web": {
       "presets": ["es2015", "stage-1", "react"],
       "plugins": [
-        "flow-react-proptypes",
-        "transform-flow-strip-types"
+        "transform-flow-strip-types",
+        ["transform-define", {
+          "__DEV__": false
+        }]
       ]
     }
   }

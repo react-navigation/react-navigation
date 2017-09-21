@@ -41,7 +41,11 @@ type Props = {
 
   screenProps?: {},
   navigation: NavigationScreenProp<NavigationState, NavigationAction>,
-  router: NavigationRouter<NavigationState, NavigationAction, NavigationTabScreenOptions>,
+  router: NavigationRouter<
+    NavigationState,
+    NavigationAction,
+    NavigationTabScreenOptions
+  >,
   childNavigationProps: {
     [key: string]: NavigationScreenProp<NavigationRoute, NavigationAction>,
   },
@@ -59,7 +63,7 @@ class TabView extends PureComponent<void, Props, void> {
     const { screenProps } = this.props;
     const childNavigation = this.props.childNavigationProps[route.key];
     const TabComponent = this.props.router.getComponentForRouteName(
-      route.routeName,
+      route.routeName
     );
     return (
       <View style={styles.page}>
@@ -75,7 +79,7 @@ class TabView extends PureComponent<void, Props, void> {
   _getLabel = ({ route, tintColor, focused }: TabScene) => {
     const options = this.props.router.getScreenOptions(
       this.props.childNavigationProps[route.key],
-      this.props.screenProps || {},
+      this.props.screenProps || {}
     );
 
     if (options.tabBarLabel) {
@@ -91,10 +95,19 @@ class TabView extends PureComponent<void, Props, void> {
     return route.routeName;
   };
 
+  _getOnPress = ({ route }: TabScene) => {
+    const options = this.props.router.getScreenOptions(
+      this.props.childNavigationProps[route.key],
+      this.props.screenProps || {}
+    );
+
+    return options.tabBarOnPress;
+  };
+
   _renderIcon = ({ focused, route, tintColor }: TabScene) => {
     const options = this.props.router.getScreenOptions(
       this.props.childNavigationProps[route.key],
-      this.props.screenProps || {},
+      this.props.screenProps || {}
     );
     if (options.tabBarIcon) {
       return typeof options.tabBarIcon === 'function'
@@ -117,8 +130,10 @@ class TabView extends PureComponent<void, Props, void> {
       <TabBarComponent
         {...props}
         {...tabBarOptions}
+        screenProps={this.props.screenProps}
         navigation={this.props.navigation}
         getLabel={this._getLabel}
+        getOnPress={this._getOnPress}
         renderIcon={this._renderIcon}
         animationEnabled={animationEnabled}
       />
@@ -145,12 +160,11 @@ class TabView extends PureComponent<void, Props, void> {
     const { state } = this.props.navigation;
     const options = router.getScreenOptions(
       this.props.childNavigationProps[state.routes[state.index].key],
-      screenProps || {},
+      screenProps || {}
     );
 
-    const tabBarVisible = options.tabBarVisible == null
-      ? true
-      : options.tabBarVisible;
+    const tabBarVisible =
+      options.tabBarVisible == null ? true : options.tabBarVisible;
 
     if (tabBarComponent !== undefined && tabBarVisible) {
       if (tabBarPosition === 'bottom') {
@@ -172,7 +186,7 @@ class TabView extends PureComponent<void, Props, void> {
       renderHeader,
       renderFooter,
       renderScene: this._renderScene,
-      onRequestChangeTab: this._handlePageChanged,
+      onIndexChange: this._handlePageChanged,
       navigationState: this.props.navigation.state,
       screenProps: this.props.screenProps,
       style: styles.container,
