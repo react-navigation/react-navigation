@@ -12,7 +12,7 @@ const MyNavScreen = ({ navigation, banner }) => (
   <ScrollView style={styles.container}>
     <SampleText>{banner}</SampleText>
     <Button
-      onPress={() => navigation.navigate('DrawerOpen')}
+      onPress={() => navigation.navigate({ routeName: 'DrawerOpen' })}
       title="Open drawer"
     />
     <Button onPress={() => navigation.goBack(null)} title="Go back" />
