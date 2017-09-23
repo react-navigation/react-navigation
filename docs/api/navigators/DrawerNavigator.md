@@ -65,14 +65,14 @@ const MyApp = DrawerNavigator({
 To open and close drawer, navigate to `'DrawerOpen'` and `'DrawerClose'` respectively.
 
 ```js
-this.props.navigation.navigate('DrawerOpen'); // open drawer
-this.props.navigation.navigate('DrawerClose'); // close drawer
+this.props.navigation.navigate({ routeName: 'DrawerOpen' }); // open drawer
+this.props.navigation.navigate({ routeName: 'DrawerClose' }); // close drawer
 ```
 If you would like to toggle the drawer you can navigate to `'DrawerToggle'`, and this will choose which navigation is appropriate for you given the drawers current state.
 
 ```js
 // fires 'DrawerOpen'/'DrawerClose' accordingly
-this.props.navigation.navigate('DrawerToggle');
+this.props.navigation.navigate({ routeName: 'DrawerToggle' });
 ```
 
 ## API Definition
