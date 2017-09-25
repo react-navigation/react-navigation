@@ -169,6 +169,13 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
       if (!options.hasRightComponent) {
         style.right = 0;
       }
+    } else if (
+      Platform.OS === 'ios' &&
+      !options.hasLeftComponent &&
+      !options.hasRightComponent
+    ) {
+      style.left = 0;
+      style.right = 0;
     }
 
     return this._renderSubView(
