@@ -37,7 +37,7 @@ const DefaultDrawerConfig = {
 
 const DrawerNavigator = (
   routeConfigs: NavigationRouteConfigMap,
-  config: DrawerNavigatorConfig
+  config: DrawerNavigatorConfig = {}
 ) => {
   const mergedConfig = { ...DefaultDrawerConfig, ...config };
   const {
