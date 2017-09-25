@@ -14,7 +14,7 @@
   "dependencies": {
     "expo": "^20.1.2",
     "react": "16.0.0-alpha.12",
-    "react-native": "~0.48.3",
+    "react-native": "~0.48.4",
     "react-navigation": "file:../.."
   },
   "devDependencies": {
