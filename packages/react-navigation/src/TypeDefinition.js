@@ -282,6 +282,7 @@ export type NavigationStackScreenOptions = {
   headerRight?: React.Element<*>,
   headerStyle?: ViewStyleProp,
   gesturesEnabled?: boolean,
+  gestureResponseDistance?: { vertical?: number, horizontal?: number },
 };
 
 export type NavigationStackRouterConfig = {
