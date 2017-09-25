@@ -2,6 +2,8 @@
 
 import React from 'react';
 
+import type { TabScene } from './views/TabView/TabView';
+
 import {
   Animated,
   type ViewProps,
@@ -336,6 +338,10 @@ export type NavigationTabScreenOptions = {
         *
       >),
   tabBarVisible?: boolean,
+  tabBarOnPress?: (
+    scene: TabScene,
+    jumpToIndex: (index: number) => void
+  ) => void,
 };
 
 /**
@@ -354,6 +360,7 @@ export type NavigationDrawerScreenOptions = {
     | ((options: { tintColor: ?string, focused: boolean }) => ?React.Element<
         *
       >),
+  drawerLockMode?: 'unlocked' | 'locked-closed' | 'locked-open',
 };
 
 /**
