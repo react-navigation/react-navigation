@@ -9,7 +9,7 @@ Building a custom router allows you to change the navigation logic of your compo
 
 A router can be defined like this:
 
-```
+```js
 class MyNavigationAwareComponent extends React.Component {
 
     static router = {
