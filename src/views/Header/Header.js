@@ -289,9 +289,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
 
     return (
       <Animated.View {...rest} style={[styles.container, headerStyle, style]}>
-        <View style={styles.appBar}>
-          {appBar}
-        </View>
+        <View style={styles.appBar}>{appBar}</View>
       </Animated.View>
     );
   }
