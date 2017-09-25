@@ -14,6 +14,8 @@
 .*/Libraries/react-native/React.js
 .*/Libraries/react-native/ReactNative.js
 
+.*/react-navigation/node_modules/.*
+
 ; Additional create-react-native-app ignores
 
 ; Ignore duplicate module providers
