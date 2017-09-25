@@ -21,8 +21,9 @@ type InjectedProps = {
 export default function withNavigation<T: *>(
   Component: ReactClass<T & InjectedProps>
 ) {
-  const componentWithNavigation = (props: T, { navigation }: Context) =>
-    <Component {...props} navigation={navigation} />;
+  const componentWithNavigation = (props: T, { navigation }: Context) => (
+    <Component {...props} navigation={navigation} />
+  );
 
   componentWithNavigation.displayName = `withNavigation(${Component.displayName ||
     Component.name})`;
