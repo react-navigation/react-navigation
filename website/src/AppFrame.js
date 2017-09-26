@@ -21,6 +21,13 @@ const NavigationLinks = ({ navigation, className, reverse }) => {
       );
     }),
 
+    <a
+      href="https://exp.host/@react-navigation/NavigationPlayground"
+      key="demo"
+    >
+      Demo
+    </a>,
+
     <a href="https://github.com/react-community/react-navigation" key="github">
       GitHub
     </a>,
@@ -28,11 +35,7 @@ const NavigationLinks = ({ navigation, className, reverse }) => {
   if (reverse) {
     links = links.reverse();
   }
-  return (
-    <div className={className}>
-      {links}
-    </div>
-  );
+  return <div className={className}>{links}</div>;
 };
 
 class AppFrame extends React.Component {
@@ -59,10 +62,8 @@ class AppFrame extends React.Component {
     const hasChildNavigation = !!route.routes;
     return (
       <div className={`main-app ${isMobileMenuOpen ? 'mobileMenuActive' : ''}`}>
-
         <nav className="pt-navbar" id="navbar">
           <div className="inner-navbar">
-
             <Link
               className="pt-navbar-group pt-align-left project-title"
               to="Home"
@@ -72,24 +73,24 @@ class AppFrame extends React.Component {
                 role="presentation"
                 className="logo"
               />
-              <h1 className="pt-navbar-heading">
-                React Navigation
-              </h1>
+              <h1 className="pt-navbar-heading">React Navigation</h1>
             </Link>
 
             <NavigationLinks navigation={navigation} className="navbuttons" />
 
-            {hasChildNavigation &&
+            {hasChildNavigation && (
               <span
-                className={`pt-icon-properties openMenuButton ${isMobileMenuOpen ? 'active' : ''}`}
+                className={`pt-icon-properties openMenuButton ${isMobileMenuOpen
+                  ? 'active'
+                  : ''}`}
                 onClick={() => {
                   this.setState(s => ({
                     isMobileMenuOpen: !s.isMobileMenuOpen,
                   }));
                   window.scrollTo(0, 0);
                 }}
-              />}
-
+              />
+            )}
           </div>
         </nav>
 

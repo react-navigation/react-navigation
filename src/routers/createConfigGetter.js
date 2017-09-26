@@ -2,7 +2,7 @@
  * @flow
  */
 
-import invariant from 'fbjs/lib/invariant';
+import invariant from '../utils/invariant';
 
 import getScreenForRouteName from './getScreenForRouteName';
 import addNavigationHelpers from '../addNavigationHelpers';
@@ -18,9 +18,9 @@ import type {
   NavigationScreenConfigProps,
 } from '../TypeDefinition';
 
-function applyConfig(
-  configurer: ?NavigationScreenConfig<*>,
-  navigationOptions: *,
+function applyConfig<T: {}>(
+  configurer: ?NavigationScreenConfig<T>,
+  navigationOptions: any,
   configProps: NavigationScreenConfigProps
 ): * {
   if (typeof configurer === 'function') {

@@ -1,7 +1,7 @@
 /*
  * @flow
  */
-import invariant from 'fbjs/lib/invariant';
+import invariant from '../utils/invariant';
 
 export default () =>
   invariant(

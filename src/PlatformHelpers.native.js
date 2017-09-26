@@ -1,5 +1,11 @@
 /* @flow */
 
-import { BackAndroid, Linking } from 'react-native';
+import {
+  BackAndroid as DeprecatedBackAndroid,
+  BackHandler as ModernBackHandler,
+  Linking,
+} from 'react-native';
 
-export { BackAndroid, Linking };
+const BackHandler = ModernBackHandler || DeprecatedBackAndroid;
+
+export { BackHandler, Linking };

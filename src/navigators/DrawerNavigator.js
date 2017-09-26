@@ -28,23 +28,26 @@ const DefaultDrawerConfig = {
    * Default drawer width is screen width - header width
    * https://material.io/guidelines/patterns/navigation-drawer.html
    */
-  drawerWidth: Dimensions.get('window').width -
-    (Platform.OS === 'android' ? 56 : 64),
+  drawerWidth:
+    Dimensions.get('window').width - (Platform.OS === 'android' ? 56 : 64),
   contentComponent: DrawerItems,
   drawerPosition: 'left',
+  useNativeAnimations: true,
 };
 
 const DrawerNavigator = (
   routeConfigs: NavigationRouteConfigMap,
-  config: DrawerNavigatorConfig
+  config: DrawerNavigatorConfig = {}
 ) => {
   const mergedConfig = { ...DefaultDrawerConfig, ...config };
   const {
     containerConfig,
     drawerWidth,
+    drawerLockMode,
     contentComponent,
     contentOptions,
     drawerPosition,
+    useNativeAnimations,
     ...tabsConfig
   } = mergedConfig;
 
@@ -63,6 +66,9 @@ const DrawerNavigator = (
       DrawerOpen: {
         screen: () => null,
       },
+      DrawerToggle: {
+        screen: () => null,
+      },
     },
     {
       initialRouteName: 'DrawerClose',
@@ -77,6 +83,8 @@ const DrawerNavigator = (
   )((props: *) => (
     <DrawerView
       {...props}
+      drawerLockMode={drawerLockMode}
+      useNativeAnimations={useNativeAnimations}
       drawerWidth={drawerWidth}
       contentComponent={contentComponent}
       contentOptions={contentOptions}
@@ -84,7 +92,7 @@ const DrawerNavigator = (
     />
   ));
 
-  return createNavigationContainer(navigator, containerConfig);
+  return createNavigationContainer(navigator);
 };
 
 export default DrawerNavigator;
