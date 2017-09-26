@@ -36,11 +36,7 @@ const NavigationLinks = ({ navigation, className, reverse }) => {
   if (reverse) {
     links = links.reverse();
   }
-  return (
-    <div className={className}>
-      {links}
-    </div>
-  );
+  return <div className={className}>{links}</div>;
 };
 
 class AppFrame extends React.Component {
@@ -94,7 +90,8 @@ class AppFrame extends React.Component {
                   }));
                   window.scrollTo(0, 0);
                 }}
-              />}
+              />
+            )}
           </div>
         </nav>
 

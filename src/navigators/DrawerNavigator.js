@@ -37,12 +37,13 @@ const DefaultDrawerConfig = {
 
 const DrawerNavigator = (
   routeConfigs: NavigationRouteConfigMap,
-  config: DrawerNavigatorConfig
+  config: DrawerNavigatorConfig = {}
 ) => {
   const mergedConfig = { ...DefaultDrawerConfig, ...config };
   const {
     containerConfig,
     drawerWidth,
+    drawerLockMode,
     contentComponent,
     contentOptions,
     drawerPosition,
@@ -79,16 +80,17 @@ const DrawerNavigator = (
     routeConfigs,
     config,
     NavigatorTypes.DRAWER
-  )((props: *) =>
+  )((props: *) => (
     <DrawerView
       {...props}
+      drawerLockMode={drawerLockMode}
       useNativeAnimations={useNativeAnimations}
       drawerWidth={drawerWidth}
       contentComponent={contentComponent}
       contentOptions={contentOptions}
       drawerPosition={drawerPosition}
     />
-  );
+  ));
 
   return createNavigationContainer(navigator);
 };

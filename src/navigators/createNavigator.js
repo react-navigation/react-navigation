@@ -16,9 +16,9 @@ import type { NavigatorType } from './NavigatorTypes';
  */
 export default function createNavigator<C: *, S, A, NavigatorConfig, Options>(
   router: NavigationRouter<S, A, Options>,
-  routeConfigs: NavigationRouteConfigMap,
-  navigatorConfig: NavigatorConfig,
-  navigatorType: NavigatorType
+  routeConfigs?: NavigationRouteConfigMap,
+  navigatorConfig?: NavigatorConfig,
+  navigatorType?: NavigatorType
 ) {
   return (
     NavigationView: ReactClass<C>
