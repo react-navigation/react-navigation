@@ -20,6 +20,21 @@ react-native run-android # or:
 react-native run-ios
 ```
 
+If you are using `create-react-native-app` instead of `react-native init`, then:
+```sh
+# Create a new React Native App
+create-react-native-app SimpleApp
+cd SimpleApp
+
+# Install the latest version of react-navigation from npm
+npm install --save react-navigation
+
+# Run the new app
+npm start
+
+# This will start a development server for you and print a QR code in your terminal.
+```
+
 Verify that you can successfully see the bare sample app run on iOS and/or Android:
 
 ```phone-example
@@ -51,10 +66,11 @@ class HomeScreen extends React.Component {
   }
 }
 
-const SimpleApp = StackNavigator({
+export default const SimpleApp = StackNavigator({
   Home: { screen: HomeScreen },
 });
 
+// if you are using create-react-native-app you don't need this line
 AppRegistry.registerComponent('SimpleApp', () => SimpleApp);
 ```
 
@@ -110,7 +126,7 @@ class HomeScreen extends React.Component {
 We're using the navigate function from the [screen navigation prop](/docs/navigators/navigation-prop) to go to `ChatScreen`. But that won't work until we add this to our `StackNavigator` like so:
 
 ```js
-const SimpleApp = StackNavigator({
+export default const SimpleApp = StackNavigator({
   Home: { screen: HomeScreen },
   Chat: { screen: ChatScreen },
 });

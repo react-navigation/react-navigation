@@ -94,7 +94,7 @@ Visual options:
 
 #### `title`
 
-String that can be used as a fallback for `headerTitle` and `tabBarLabel`
+String that can be used as a fallback for `headerTitle`. Additionally, will be used as a fallback for `tabBarLabel` (if nested in a TabNavigator) or `drawerLabel` (if nested in a DrawerNavigator). 
 
 #### `header`
 
@@ -143,6 +143,13 @@ Color for material ripple (Android >= 5.0 only)
 #### `gesturesEnabled`
 
 Whether you can use gestures to dismiss this screen. Defaults to true on iOS, false on Android.
+
+#### `gestureResponseDistance`
+
+Object to override the distance of touch start from the edge of the screen to recognize gestures. It takes the following properties:
+
+- `horizontal` - *number* - Distance for horizontal direction. Defaults to 25.
+- `vertical` - *number* - Distance for vertical direction. Defaults to 135.
 
 ### Navigator Props
 

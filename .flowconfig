@@ -5,9 +5,6 @@
 ; Ignore templates for 'react-native init'
 .*/local-cli/templates/.*
 
-; Ignore the website subdir
-.*/node_modules/react-native/website/.*
-
 ; Ignore "BUCK" generated dirs
 .*/node_modules/react-native/\.buckd/
 
@@ -19,13 +16,7 @@
 <PROJECT_ROOT>/website/node_modules/react-native/.*
 <PROJECT_ROOT>/website/node_modules/fbjs/.*
 
-; Ignore misc packages
-.*/node_modules/eslint-.*
-.*/node_modules/react-native-tab-view/.*
-
-; Ignore react-native
-.*/node_modules/react-native/.*
-
+; Ignore transpiled folders and examples folder
 <PROJECT_ROOT>/lib
 <PROJECT_ROOT>/lib-rn
 <PROJECT_ROOT>/examples
@@ -33,6 +24,8 @@
 [include]
 
 [libs]
+node_modules/react-native/Libraries/react-native/react-native-interface.js
+node_modules/react-native/flow
 
 [options]
 module.system=haste
