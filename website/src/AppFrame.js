@@ -41,12 +41,14 @@ const NavigationLinks = ({ navigation, className, reverse }) => {
 
 class AppFrame extends React.Component {
   state = { isMobileMenuOpen: false };
+
   componentWillReceiveProps(props) {
     if (this.props.navigation.state !== props.navigation.state) {
       this.setState({ isMobileMenuOpen: false });
       window.scrollTo(0, 0);
     }
   }
+
   render() {
     const { navigation, router } = this.props;
     const { isMobileMenuOpen } = this.state;
@@ -79,7 +81,7 @@ class AppFrame extends React.Component {
 
             <NavigationLinks navigation={navigation} className="navbuttons" />
             <DocSearchBar />
-            {hasChildNavigation &&
+            {hasChildNavigation && (
               <span
                 className={`pt-icon-properties openMenuButton ${isMobileMenuOpen
                   ? 'active'
