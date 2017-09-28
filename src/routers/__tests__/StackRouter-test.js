@@ -474,7 +474,7 @@ describe('StackRouter', () => {
     );
     expect(state3).toEqual(state4);
     const state5 = router.getStateForAction(
-      { type: NavigationActions.BACK, key: state3 && state3.routes[1].key },
+      { type: NavigationActions.BACK, key: state3 && state3.routes[0].key },
       state4
     );
     expect(state5).toEqual(state);
