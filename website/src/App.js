@@ -15,7 +15,7 @@ import {
   createNavigator,
 } from 'react-navigation';
 
-import type { NavigationScreenComponent } from 'react-navigation';
+import type { NavigationScreenComponent } from 'react-navigation/src/TypeDefinition';
 
 type ScreenOptions = {
   linkName: string,
@@ -371,10 +371,11 @@ const BlogPage = createNavigator(
   })
 )(PageWithSidebar);
 
-const NotFoundError = () =>
+const NotFoundError = () => (
   <div className="errorScreen">
     <h1>Page not found</h1>
-  </div>;
+  </div>
+);
 
 const App = createNavigator(
   TabRouter({
