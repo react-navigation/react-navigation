@@ -288,10 +288,13 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
 
     const { options } = this.props.getScreenDetails(scene);
     const headerStyle = options.headerStyle;
-    const statusBarHeight = isLandscape ? 0 : STATUSBAR_HEIGHT;
+    const landscapeAwareStatusBarHeight = isLandscape ? 0 : STATUSBAR_HEIGHT;
     const containerStyles = [
       styles.container,
-      { paddingTop: statusBarHeight, height: APPBAR_HEIGHT + statusBarHeight },
+      {
+        paddingTop: landscapeAwareStatusBarHeight,
+        height: APPBAR_HEIGHT + landscapeAwareStatusBarHeight,
+      },
       headerStyle,
       style,
     ];
