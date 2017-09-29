@@ -126,6 +126,7 @@ class TabBarBottom extends PureComponent<DefaultProps, Props, void> {
       inactiveTintColor,
       renderIcon,
       showIcon,
+      showLabel,
     } = this.props;
     if (showIcon === false) {
       return null;
@@ -138,7 +139,7 @@ class TabBarBottom extends PureComponent<DefaultProps, Props, void> {
         inactiveTintColor={inactiveTintColor}
         renderIcon={renderIcon}
         scene={scene}
-        style={styles.icon}
+        style={showLabel ? {} : styles.icon}
       />
     );
   };
@@ -223,7 +224,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flexDirection: 'row',
   },
-  icon: {},
+  icon: {
+    flexGrow: 1,
+  },
   label: {
     textAlign: 'center',
     fontSize: 10,
