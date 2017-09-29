@@ -30,12 +30,12 @@ export type DrawerItem = {
 
 export type DrawerViewConfig = {
   drawerLockMode?: 'unlocked' | 'locked-closed' | 'locked-open',
-  drawerWidth?: number,
-  drawerPosition?: 'left' | 'right',
-  contentComponent?: ReactClass<*>,
+  drawerWidth: number,
+  drawerPosition: 'left' | 'right',
+  contentComponent: ReactClass<*>,
   contentOptions?: {},
   style?: ViewStyleProp,
-  useNativeAnimations?: boolean,
+  useNativeAnimations: boolean,
 };
 
 type Props = DrawerViewConfig & {

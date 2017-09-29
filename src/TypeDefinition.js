@@ -4,12 +4,16 @@ import React from 'react';
 
 import type { TabScene } from './views/TabView/TabView';
 
-import type { StyleObj } from 'react-native/Libraries/StyleSheet/StyleSheetTypes';
+import {
+  Animated,
+  type ViewProps,
+  type TextProps,
+  type StyleDefinition,
+  type AnimatedViewStylePropTypes,
+} from 'react-native';
 
-import { Animated, View, Text } from 'react-native';
-
-export type ViewStyleProp = StyleObj;
-export type TextStyleProp = StyleObj;
+export type ViewStyleProp = $PropertyType<ViewProps, 'style'>;
+export type TextStyleProp = $PropertyType<TextProps, 'style'>;
 export type AnimatedViewStyleProp = $PropertyType<
   $PropertyType<Animated.View, 'props'>,
   'style'
@@ -282,7 +286,6 @@ export type NavigationStackScreenOptions = {
   headerRight?: React.Element<*>,
   headerStyle?: ViewStyleProp,
   gesturesEnabled?: boolean,
-  gestureResponseDistance?: { vertical?: number, horizontal?: number },
 };
 
 export type NavigationStackRouterConfig = {
@@ -383,9 +386,9 @@ export type NavigationScreenProp<S, A> = {
 };
 
 export type NavigationNavigatorProps<O, S> = {
-  navigation?: NavigationProp<S, NavigationAction>,
-  screenProps?: *,
-  navigationOptions?: O,
+  navigation: NavigationProp<S, NavigationAction>,
+  screenProps: *,
+  navigationOptions: O,
 };
 
 /**
@@ -449,7 +452,7 @@ export type NavigationSceneRendererProps = NavigationTransitionProps;
 export type NavigationTransitionSpec = {
   duration?: number,
   // An easing function from `Easing`.
-  easing?: (t: number) => number,
+  easing?: (t?: number) => number,
   // A timing function such as `Animated.timing`.
   timing?: (value: Animated.Value, config: any) => any,
 };
@@ -465,7 +468,7 @@ export type TransitionConfig = {
   screenInterpolator?: (props: NavigationSceneRendererProps) => {},
   // The style of the container. Useful when a scene doesn't have
   // 100% opacity and the underlying container is visible.
-  containerStyle?: ViewStyleProp,
+  containerStyle?: $PropertyType<ViewProps, 'style'>,
 };
 
 export type NavigationAnimationSetter = (
@@ -478,7 +481,7 @@ export type NavigationSceneRenderer = () => ?React.Element<*>;
 
 export type NavigationStyleInterpolator = (
   props: NavigationSceneRendererProps
-) => AnimatedViewStyleProp;
+) => AnimatedViewStylePropTypes;
 
 export type LayoutEvent = {
   nativeEvent: {
