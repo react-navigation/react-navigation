@@ -15,7 +15,7 @@ import {
   createNavigator,
 } from 'react-navigation';
 
-import type { NavigationScreenComponent } from 'react-navigation/src/TypeDefinition';
+import type { NavigationScreenComponent } from 'react-navigation';
 
 type ScreenOptions = {
   linkName: string,

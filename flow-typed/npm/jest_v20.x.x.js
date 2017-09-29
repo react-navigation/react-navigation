@@ -1,8 +1,8 @@
-// flow-typed signature: 5960ed076fe29ecf92f57584d68acf98
-// flow-typed version: b2a49dc910/jest_v20.x.x/flow_>=v0.39.x
+// flow-typed signature: a0369c11661f437ec4ccdd805579ddcf
+// flow-typed version: c4b9fea7c9/jest_v20.x.x/flow_>=v0.33.x
 
-type JestMockFn<TArguments: $ReadOnlyArray<*>, TReturn> = {
-  (...args: TArguments): TReturn,
+type JestMockFn = {
+  (...args: Array<any>): any,
   /**
    * An object for introspecting mock calls
    */
@@ -12,24 +12,24 @@ type JestMockFn<TArguments: $ReadOnlyArray<*>, TReturn> = {
      * function. Each call is represented by an array of arguments that were
      * passed during the call.
      */
-    calls: Array<TArguments>,
+    calls: Array<Array<any>>,
     /**
      * An array that contains all the object instances that have been
      * instantiated from this mock function.
      */
-    instances: Array<TReturn>
+    instances: mixed
   },
   /**
    * Resets all information stored in the mockFn.mock.calls and
    * mockFn.mock.instances arrays. Often this is useful when you want to clean
    * up a mock's usage data between two assertions.
    */
-  mockClear(): void,
+  mockClear(): Function,
   /**
    * Resets all information stored in the mock. This is useful when you want to
    * completely restore a mock back to its initial state.
    */
-  mockReset(): void,
+  mockReset(): Function,
   /**
    * Removes the mock and restores the initial implementation. This is useful
    * when you want to mock functions in certain test cases and restore the
@@ -37,24 +37,20 @@ type JestMockFn<TArguments: $ReadOnlyArray<*>, TReturn> = {
    * works when mock was created with jest.spyOn. Thus you have to take care of
    * restoration yourself when manually assigning jest.fn().
    */
-  mockRestore(): void,
+  mockRestore(): Function,
   /**
    * Accepts a function that should be used as the implementation of the mock.
    * The mock itself will still record all calls that go into and instances
    * that come from itself -- the only difference is that the implementation
    * will also be executed when the mock is called.
    */
-  mockImplementation(
-    fn: (...args: TArguments) => TReturn,
-  ): JestMockFn<TArguments, TReturn>,
+  mockImplementation(fn: Function): JestMockFn,
   /**
    * Accepts a function that will be used as an implementation of the mock for
    * one call to the mocked function. Can be chained so that multiple function
    * calls produce different results.
    */
-  mockImplementationOnce(
-    fn: (...args: TArguments) => TReturn,
-  ): JestMockFn<TArguments, TReturn>,
+  mockImplementationOnce(fn: Function): JestMockFn,
   /**
    * Just a simple sugar function for returning `this`
    */
@@ -62,11 +58,11 @@ type JestMockFn<TArguments: $ReadOnlyArray<*>, TReturn> = {
   /**
    * Deprecated: use jest.fn(() => value) instead
    */
-  mockReturnValue(value: TReturn): JestMockFn<TArguments, TReturn>,
+  mockReturnValue(value: any): JestMockFn,
   /**
    * Sugar for only returning a value once inside your mock
    */
-  mockReturnValueOnce(value: TReturn): JestMockFn<TArguments, TReturn>
+  mockReturnValueOnce(value: any): JestMockFn
 };
 
 type JestAsymmetricEqualityType = {
@@ -328,9 +324,7 @@ type JestObjectType = {
    * Returns a new, unused mock function. Optionally takes a mock
    * implementation.
    */
-  fn<TArguments: $ReadOnlyArray<*>, TReturn>(
-    implementation?: (...args: TArguments) => TReturn,
-  ): JestMockFn<TArguments, TReturn>,
+  fn(implementation?: Function): JestMockFn,
   /**
    * Determines if the given function is a mocked function.
    */
@@ -410,7 +404,7 @@ type JestObjectType = {
    * Creates a mock function similar to jest.fn but also tracks calls to
    * object[methodName].
    */
-  spyOn(object: Object, methodName: string): JestMockFn<any, any>
+  spyOn(object: Object, methodName: string): JestMockFn
 };
 
 type JestSpyType = {
@@ -418,30 +412,30 @@ type JestSpyType = {
 };
 
 /** Runs this function after every test inside this context */
-declare function afterEach(fn: (done: () => void) => ?Promise<mixed>, timeout?: number): void;
+declare function afterEach(fn: Function): void;
 /** Runs this function before every test inside this context */
-declare function beforeEach(fn: (done: () => void) => ?Promise<mixed>, timeout?: number): void;
+declare function beforeEach(fn: Function): void;
 /** Runs this function after all tests have finished inside this context */
-declare function afterAll(fn: (done: () => void) => ?Promise<mixed>, timeout?: number): void;
+declare function afterAll(fn: Function): void;
 /** Runs this function before any tests have started inside this context */
-declare function beforeAll(fn: (done: () => void) => ?Promise<mixed>, timeout?: number): void;
+declare function beforeAll(fn: Function): void;
 
 /** A context for grouping tests together */
 declare var describe: {
   /**
    * Creates a block that groups together several related tests in one "test suite"
    */
-  (name: string, fn: () => void): void,
+  (name: string, fn: Function): void,
 
   /**
    * Only run this describe block
    */
-  only(name: string, fn: () => void): void,
+  only(name: string, fn: Function): void,
 
   /**
    * Skip running this describe block
    */
-  skip(name: string, fn: () => void): void,
+  skip(name: string, fn: Function): void,
 };
 
 
@@ -452,39 +446,31 @@ declare var it: {
    *
    * @param {string} Name of Test
    * @param {Function} Test
-   * @param {number} Timeout for the test, in milliseconds.
    */
-  (name: string, fn?: (done: () => void) => ?Promise<mixed>, timeout?: number): void,
+  (name: string, fn?: Function): ?Promise<void>,
   /**
    * Only run this test
    *
    * @param {string} Name of Test
    * @param {Function} Test
-   * @param {number} Timeout for the test, in milliseconds.
    */
-  only(name: string, fn?: (done: () => void) => ?Promise<mixed>, timeout?: number): void,
+  only(name: string, fn?: Function): ?Promise<void>,
   /**
    * Skip running this test
    *
    * @param {string} Name of Test
    * @param {Function} Test
-   * @param {number} Timeout for the test, in milliseconds.
    */
-  skip(name: string, fn?: (done: () => void) => ?Promise<mixed>, timeout?: number): void,
+  skip(name: string, fn?: Function): ?Promise<void>,
   /**
    * Run the test concurrently
    *
    * @param {string} Name of Test
    * @param {Function} Test
-   * @param {number} Timeout for the test, in milliseconds.
    */
-  concurrent(name: string, fn?: (done: () => void) => ?Promise<mixed>, timeout?: number): void,
+  concurrent(name: string, fn?: Function): ?Promise<void>
 };
-declare function fit(
-  name: string,
-  fn: (done: () => void) => ?Promise<mixed>,
-  timeout?: number,
-): void;
+declare function fit(name: string, fn: Function): ?Promise<void>;
 /** An individual test unit */
 declare var test: typeof it;
 /** A disabled group of tests */
