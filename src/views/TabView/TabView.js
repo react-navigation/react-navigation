@@ -146,6 +146,11 @@ class TabView extends PureComponent<void, Props, void> {
         ? true
         : options.tabBarVisible;
 
+    const tabBarStyles = [
+      tabBarVisible ? undefined : styles.hidden,
+      tabBarOptions ? tabBarOptions.style : undefined,
+    ];
+
     return (
       <TabBarComponent
         {...props}
@@ -155,10 +160,7 @@ class TabView extends PureComponent<void, Props, void> {
         getOnPress={this._getOnPress}
         renderIcon={this._renderIcon}
         animationEnabled={animationEnabled}
-        style={[
-          tabBarVisible ? undefined : styles.hidden,
-          tabBarOptions && tabBarOptions.style,
-        ]}
+        style={tabBarStyles}
       />
     );
   };
