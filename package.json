@@ -83,7 +83,7 @@
     "react": "16.0.0-alpha.12",
     "react-native": "^0.48.4",
     "react-native-vector-icons": "^4.2.0",
-    "react-test-renderer": "^15.6.1"
+    "react-test-renderer": "^16.0.0"
   },
   "jest": {
     "notify": true,

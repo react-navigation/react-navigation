@@ -17,8 +17,10 @@ type State = {
   isLandscape: boolean,
 };
 
-const isOrientationLandscape = ({ width, height }: WindowDimensions): boolean =>
-  width > height;
+export const isOrientationLandscape = ({
+  width,
+  height,
+}: WindowDimensions): boolean => width > height;
 
 export default function<T: *>(WrappedComponent: ReactClass<T & InjectedProps>) {
   class withOrientation extends React.Component<void, T, State> {
