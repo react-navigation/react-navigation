@@ -6,21 +6,23 @@ Let's use React Navigation to build a simple chat application for Android and iO
 
 First, make sure you're [all set up to use React Native](http://facebook.github.io/react-native/docs/getting-started.html). Next, create a new project and add `react-navigation`:
 
-
 ```sh
 # Create a new React Native App
 react-native init SimpleApp
+cd SimpleApp
 cd SimpleApp
 
 # Install the latest version of react-navigation from npm
 npm install --save react-navigation
 
 # Run the new app
-react-native run-android # or:
+react-native run-android
+# or:
 react-native run-ios
 ```
 
 If you are using `create-react-native-app` instead of `react-native init`, then:
+
 ```sh
 # Create a new React Native App
 create-react-native-app SimpleApp
@@ -47,7 +49,7 @@ Now lets create the new file for our app implementation, `App.js`.
 
 ## Introducing Stack Navigator
 
-For our app, we want to use the `StackNavigator` because we want a conceptual 'stack' navigation, where each new screen is put on the top of the stack and going back removes a screen from the top of the stack. Let's start with just one screen:
+For our app, we want to use the `StackNavigator` because conceptually we want to obtain a 'card stack' effect of movement, where each new screen is put on the top of the stack and going back removes a screen from the top of the stack. Let's start with just one screen:
 
 ```js
 import React from 'react';
@@ -66,7 +68,7 @@ class HomeScreen extends React.Component {
   }
 }
 
-export default const SimpleApp = StackNavigator({
+export const SimpleApp = StackNavigator({
   Home: { screen: HomeScreen },
 });
 
@@ -84,9 +86,15 @@ first-screen
 
 ## Adding a New Screen
 
-In our `App.js` file, let's add a new screen called `ChatScreen`:
+In our `App.js` file, let's add a new screen called `ChatScreen`, defining it under `HomeScreen`:
 
 ```js
+// ...
+
+class HomeScreen extends React.Component {
+    //...
+}
+
 class ChatScreen extends React.Component {
   static navigationOptions = {
     title: 'Chat with Lucy',
@@ -99,9 +107,11 @@ class ChatScreen extends React.Component {
     );
   }
 }
+
+export const SimpleApp = StackNavigator({ //... })
 ```
 
-We can then add a button to our `HomeScreen` component that links to `ChatScreen` using the `routeName` `Chat`.
+We can then add a button to our `HomeScreen` component that links to `ChatScreen`: we need to use the provided method `navigate` (from the [screen navigation prop](/docs/navigators/navigation-prop)) by giving it the `routeName` of the screen we want to reach, in this case `Chat`.
 
 ```js
 class HomeScreen extends React.Component {
@@ -123,10 +133,12 @@ class HomeScreen extends React.Component {
 }
 ```
 
-We're using the navigate function from the [screen navigation prop](/docs/navigators/navigation-prop) to go to `ChatScreen`. But that won't work until we add this to our `StackNavigator` like so:
+(*don't forget to import View and Button from react-native: * `import { AppRegistry, Text, View, Button } from 'react-native';`)
+
+But that won't work until we say to our `StackNavigator` of the existence of the `Chat` screen, like so:
 
 ```js
-export default const SimpleApp = StackNavigator({
+export const SimpleApp = StackNavigator({
   Home: { screen: HomeScreen },
   Chat: { screen: ChatScreen },
 });
