@@ -22,12 +22,14 @@ class Card extends React.Component<any, Props, any> {
   props: Props;
 
   render() {
-    const { children, pointerEvents, style } = this.props;
+    const { isActive, children, pointerEvents, style, options, screenProps, scene } = this.props;
+    
     return (
       <Animated.View
         pointerEvents={pointerEvents}
         ref={this.props.onComponentRef}
         style={[styles.main, style]}
+        importantForAccessibility={scene.isActive ? 'yes' : 'no-hide-descendants'}
       >
         {children}
       </Animated.View>

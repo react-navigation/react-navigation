@@ -503,6 +503,7 @@ class CardStack extends Component {
     if (headerMode === 'screen' || shouldEmbedHeader) {
       header = this._renderHeader(scene, headerMode);
     }
+
     return (
       <View style={styles.container}>
         <View style={{ flex: 1 }}>
@@ -510,6 +511,7 @@ class CardStack extends Component {
             screenProps={screenProps}
             navigation={navigation}
             component={SceneComponent}
+            isActive={scene.isActive}
           />
         </View>
         {header}
@@ -544,6 +546,7 @@ class CardStack extends Component {
         key={`card_${scene.key}`}
         style={[style, this.props.cardStyle]}
         scene={scene}
+        screenProps={this.props.screenProps}
       >
         {this._renderInnerScene(SceneComponent, scene)}
       </Card>
