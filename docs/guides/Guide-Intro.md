@@ -10,7 +10,6 @@ First, make sure you're [all set up to use React Native](http://facebook.github.
 # Create a new React Native App
 react-native init SimpleApp
 cd SimpleApp
-cd SimpleApp
 
 # Install the latest version of react-navigation from npm
 npm install --save react-navigation
@@ -43,9 +42,7 @@ Verify that you can successfully see the bare sample app run on iOS and/or Andro
 bare-project
 ```
 
-We want to share code on iOS and Android, so lets delete the contents of `index.ios.js` and `index.android.js` and replace it with `import './App';`.
-
-Now lets create the new file for our app implementation, `App.js`.
+We want to share code on iOS and Android, so let's delete the contents of `index.ios.js` and `index.android.js` and replace it with `import './App';` - after which, we need to create create the new file for our app implementation, `App.js` (if you used `create-react-native-app` this has been already done)
 
 ## Introducing Stack Navigator
 
@@ -72,8 +69,44 @@ export const SimpleApp = StackNavigator({
   Home: { screen: HomeScreen },
 });
 
-// if you are using create-react-native-app you don't need this line
 AppRegistry.registerComponent('SimpleApp', () => SimpleApp);
+```
+
+If you used `create-react-native-app` the already existing `App.js` will be modified to
+
+```js
+import React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { StackNavigator } from 'react-navigation';
+
+class HomeScreen extends React.Component {
+  static navigationOptions = {
+    title: 'Welcome'
+  };
+  render() {
+    return <Text>Hello, Navigation!</Text>;
+  }
+}
+
+const SimpleApp = StackNavigator({
+  Home: { screen: HomeScreen }
+});
+
+export default class App extends React.Component {
+  render() {
+    return <SimpleApp />;
+  }
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center'
+  }
+});
+
 ```
 
 The `title` of the screen is configurable on the [static `navigationOptions`](/docs/navigators/navigation-options), where many options can be set to configure the presentation of the screen in the navigator.
@@ -108,7 +141,6 @@ class ChatScreen extends React.Component {
   }
 }
 
-export const SimpleApp = StackNavigator({ //... })
 ```
 
 We can then add a button to our `HomeScreen` component that links to `ChatScreen`: we need to use the provided method `navigate` (from the [screen navigation prop](/docs/navigators/navigation-prop)) by giving it the `routeName` of the screen we want to reach, in this case `Chat`.
