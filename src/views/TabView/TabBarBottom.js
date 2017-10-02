@@ -35,6 +35,7 @@ type Props = {
   getOnPress: (
     scene: TabScene
   ) => (scene: TabScene, jumpToIndex: (index: number) => void) => void,
+  getTestIDProps: (scene: TabScene) => (scene: TabScene) => any,
   renderIcon: (scene: TabScene) => React.Element<*>,
   showLabel: boolean,
   style?: ViewStyleProp,
@@ -127,12 +128,19 @@ export default class TabBarBottom extends PureComponent<
     );
   };
 
+  _renderTestIDProps = (scene: TabScene) => {
+    const testIDProps =
+      this.props.getTestIDProps && this.props.getTestIDProps(scene);
+    return testIDProps;
+  };
+
   render() {
     const {
       position,
       navigation,
       jumpToIndex,
       getOnPress,
+      getTestIDProps,
       activeBackgroundColor,
       inactiveBackgroundColor,
       style,
@@ -158,9 +166,13 @@ export default class TabBarBottom extends PureComponent<
             outputRange: (outputRange: Array<string>),
           });
           const justifyContent = this.props.showIcon ? 'flex-end' : 'center';
+          const extraProps = this._renderTestIDProps(scene) || {};
+          const { testID, accessibilityLabel } = extraProps;
           return (
             <TouchableWithoutFeedback
               key={route.key}
+              testID={testID}
+              accessibilityLabel={accessibilityLabel}
               onPress={() =>
                 onPress ? onPress(scene, jumpToIndex) : jumpToIndex(index)}
             >

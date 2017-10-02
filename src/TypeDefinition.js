@@ -335,6 +335,7 @@ export type NavigationTabScreenOptions = {
         *
       >),
   tabBarVisible?: boolean,
+  tabBarTestIDProps?: { testID?: string, accessibilityLabel?: string },
   tabBarOnPress?: (
     scene: TabScene,
     jumpToIndex: (index: number) => void
