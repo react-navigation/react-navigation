@@ -8,6 +8,8 @@ import {
   View,
   Platform,
   StyleSheet,
+  AccessibilityInfo,
+  findNodeHandle
 } from 'react-native';
 
 import type { LayoutEvent, Style } from '../TypeDefinition';
@@ -54,6 +56,26 @@ class HeaderBackButton extends React.PureComponent<DefaultProps, Props, State> {
     });
   };
 
+  componentDidMount () {
+    // This resets the accessibiltiy to this button when it mounts with a delay for the animation to complete
+    // This component must still be mounted
+      
+  this._isMounted = false
+    setTimeout(() => {
+      if (!this._isMounted) return
+
+      const handle = findNodeHandle(this)
+
+      if (handle) {
+        AccessibilityInfo.setAccessibilityFocus(handle)
+      }
+    }, 300)
+  }
+
+  componentWillUnmount () {
+    this._isMounted = false
+  }
+
   render() {
     const {
       onPress,
@@ -76,8 +98,9 @@ class HeaderBackButton extends React.PureComponent<DefaultProps, Props, State> {
 
     return (
       <TouchableItem
+        ref="headerBackButton"
         accessibilityComponentType="button"
-        accessibilityLabel={backButtonTitle}
+        accessibilityLabel={backButtonTitle || 'Back'}
         accessibilityTraits="button"
         testID="header-back"
         delayPressIn={0}
