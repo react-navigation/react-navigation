@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Footer = () =>
+const Footer = () => (
   <div className="footer">
     <div className="inner-footer">
       <section className="copyright">
@@ -13,6 +13,7 @@ const Footer = () =>
         </a>
       </section>
     </div>
-  </div>;
+  </div>
+);
 
 export default Footer;
