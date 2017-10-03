@@ -90,6 +90,8 @@ const SimpleApp = StackNavigator({
 ```
 In this case, the NavigatorWrappingScreen is not a navigator, but it renders a navigator as part of its output.
 
+If this navigator renders blank then change `<View>` to `<View style={{flex: 1}}>`.
+
 ```js
 class NavigatorWrappingScreen extends React.Component {
   render() {
