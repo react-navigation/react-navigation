@@ -262,6 +262,7 @@ export type HeaderProps = {
     NavigationStackScreenOptions
   >,
   style: ViewStyleProp,
+  isLandscape?: boolean,
 };
 
 /**
