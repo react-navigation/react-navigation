@@ -208,7 +208,7 @@ class HomeScreen extends React.Component {
 }
 ```
 
-We can then edit our `ChatScreen` component to display the `user` param that was passed in through the route:
+Notice we're using Button, make sure to import it from 'react-native'. We can then edit our `ChatScreen` component to display the `user` param that was passed in through the route:
 
 ```js
 class ChatScreen extends React.Component {
