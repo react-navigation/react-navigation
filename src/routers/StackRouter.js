@@ -360,7 +360,7 @@ export default (
       if (childRouters[matchedRouteName]) {
         nestedAction = childRouters[matchedRouteName].getActionForPathAndParams(
           /* $FlowFixMe */
-          pathMatch.slice(pathMatchKeys.length).join('/')
+          pathMatch.slice(pathMatchKeys.length).join('/') + '?' + queryString
         );
       }
 
