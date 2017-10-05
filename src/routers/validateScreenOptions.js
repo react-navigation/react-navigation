@@ -14,7 +14,7 @@ export default (screenOptions: *, route: NavigationRoute) => {
   const deprecatedKey = keys.find((key: *) => deprecatedKeys.includes(key));
 
   if (typeof screenOptions.title === 'function') {
-    console.error(
+    throw new Error(
       [
         `\`title\` cannot be defined as a function in navigation options for \`${route.routeName}\` screen. \n`,
         'Try replacing the following:',
@@ -31,7 +31,7 @@ export default (screenOptions: *, route: NavigationRoute) => {
   }
 
   if (deprecatedKey && typeof screenOptions[deprecatedKey] === 'function') {
-    console.error(
+    throw new Error(
       [
         `\`${deprecatedKey}\` cannot be defined as a function in navigation options for \`${route.routeName}\` screen. \n`,
         'Try replacing the following:',
@@ -50,7 +50,7 @@ export default (screenOptions: *, route: NavigationRoute) => {
   }
 
   if (deprecatedKey && typeof screenOptions[deprecatedKey] === 'object') {
-    console.error(
+    throw new Error(
       [
         `Invalid key \`${deprecatedKey}\` defined in navigation options for \`${route.routeName}\` screen.`,
         '\n',

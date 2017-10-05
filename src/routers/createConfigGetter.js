@@ -64,7 +64,7 @@ export default (
 
   if (Component.router) {
     if (!route || !routes || index == null) {
-      console.error(
+      throw new Error(
         `Expect nav state to have routes and index, ${JSON.stringify(route)}`
       );
     }

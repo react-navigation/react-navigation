@@ -46,7 +46,7 @@ export default (
     }
   });
   if (initialRouteIndex === -1) {
-    console.error(
+    throw new Error(
       `Invalid initialRouteName '${initialRouteName}' for TabRouter. ` +
         `Should be one of ${order.map((n: *) => `"${n}"`).join(', ')}`
     );

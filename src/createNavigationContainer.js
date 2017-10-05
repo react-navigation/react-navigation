@@ -74,7 +74,7 @@ export default function createNavigationContainer<S: *, O>(
       const keys = Object.keys(containerProps);
 
       if (keys.length !== 0) {
-        console.error(
+        throw new Error(
           'This navigator has both navigation and container props, so it is ' +
             `unclear if it should own its own state. Remove props: "${keys.join(
               ', '
