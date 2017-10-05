@@ -42,5 +42,5 @@ export default function getScreenForRouteName( // eslint-disable-line consistent
     return screen;
   }
 
-  invariant(`Route ${routeName} must define a screen or a getScreen.`);
+  invariant(false, `Route ${routeName} must define a screen or a getScreen.`);
 }
