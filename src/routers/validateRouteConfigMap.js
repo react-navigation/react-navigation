@@ -19,7 +19,7 @@ function validateRouteConfigMap(routeConfigs: NavigationRouteConfigMap) {
     const routeConfig = routeConfigs[routeName];
 
     if (!routeConfig.screen && !routeConfig.getScreen) {
-      console.error(
+      throw new Error(
         `Route '${routeName}' should declare a screen. ` +
           'For example:\n\n' +
           "import MyScreen from './MyScreen';\n" +
@@ -29,14 +29,14 @@ function validateRouteConfigMap(routeConfigs: NavigationRouteConfigMap) {
           '}'
       );
     } else if (routeConfig.screen && routeConfig.getScreen) {
-      console.error(
+      throw new Error(
         `Route '${routeName}' should declare a screen or ` +
           'a getScreen, not both.'
       );
     }
 
     if (routeConfig.screen && typeof routeConfig.screen !== 'function') {
-      console.error(
+      throw new Error(
         `The component for route '${routeName}' must be a ` +
           'React component. For example:\n\n' +
           "import MyScreen from './MyScreen';\n" +
