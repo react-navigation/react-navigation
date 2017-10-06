@@ -17,13 +17,14 @@ export default function getScreenForRouteName( // eslint-disable-line consistent
 ): NavigationComponent {
   const routeConfig = routeConfigs[routeName];
 
-  invariant(
-    routeConfig,
-    `There is no route defined for key ${routeName}.\n` +
-      `Must be one of: ${Object.keys(routeConfigs)
-        .map((a: string) => `'${a}'`)
-        .join(',')}`
-  );
+  if (!routeConfig) {
+    throw new Error(
+      `There is no route defined for key ${routeName}.\n` +
+        `Must be one of: ${Object.keys(routeConfigs)
+          .map((a: string) => `'${a}'`)
+          .join(',')}`
+    );
+  }
 
   if (routeConfig.screen) {
     return routeConfig.screen;
@@ -41,5 +42,5 @@ export default function getScreenForRouteName( // eslint-disable-line consistent
     return screen;
   }
 
-  invariant(false, `Route ${routeName} must define a screen or a getScreen.`);
+  throw new Error(`Route ${routeName} must define a screen or a getScreen.`);
 }
