@@ -36,6 +36,7 @@ export type DrawerViewConfig = {
   contentOptions?: {},
   style?: ViewStyleProp,
   useNativeAnimations?: boolean,
+  drawerBackgroundColor?: String,
 };
 
 type Props = DrawerViewConfig & {
@@ -160,6 +161,7 @@ export default class DrawerView<T: *> extends PureComponent<void, Props, void> {
           (this.props.screenProps && this.props.screenProps.drawerLockMode) ||
           (config && config.drawerLockMode)
         }
+        drawerBackgroundColor={this.props.drawerBackgroundColor}
         drawerWidth={this.props.drawerWidth}
         onDrawerOpen={this._handleDrawerOpen}
         onDrawerClose={this._handleDrawerClose}
