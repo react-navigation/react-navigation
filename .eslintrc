@@ -26,50 +26,57 @@
       "singleQuote": true
     }],
 
-    "no-underscore-dangle": 0,
-    "no-use-before-define": 0,
-    "no-unused-expressions": 0,
-    "new-cap": 0,
-    "no-plusplus": 0,
-    "no-class-assign": 0,
-    "no-duplicate-imports": 0,
+    "no-underscore-dangle": "off",
+    "no-use-before-define": "off",
+    "no-unused-expressions": "off",
+    "new-cap": "off",
+    "no-plusplus": "off",
+    "no-class-assign": "off",
+    "no-duplicate-imports": "off",
 
-    "import/extensions": 0,
-    "import/no-extraneous-dependencies": 0,
-    "import/no-unresolved": 0,
+    "import/extensions": "off",
+    "import/no-extraneous-dependencies": "off",
+    "import/no-unresolved": "off",
 
     "react/jsx-filename-extension": [
-      0, { "extensions": [".js", ".jsx"] }
+      "off", { "extensions": [".js", ".jsx"] }
     ],
-   
-    "react/sort-comp": 0,
-    "react/prefer-stateless-function": 0,
 
-    "react/forbid-prop-types": 1,
-    "react/prop-types": 0,
-    "react/require-default-props": 0,
-    "react/no-unused-prop-types": 0,
+    "react/sort-comp": "off",
+    "react/prefer-stateless-function": "off",
+
+    "react/forbid-prop-types": "warn",
+    "react/prop-types": "off",
+    "react/require-default-props": "off",
+    "react/no-unused-prop-types": "off",
 
     "flowtype/boolean-style": [
-      2,
+      "error",
       "boolean"
     ],
-    "flowtype/no-weak-types": 0,
-    "flowtype/require-parameter-type": 2,
+    "flowtype/no-weak-types": "off",
+    "flowtype/require-parameter-type": "error",
     "flowtype/require-return-type": [
-      0,
+      "off",
       "always",
       {
         "annotateUndefined": "never"
       }
     ],
-    "flowtype/require-valid-file-annotation": 2,
-    "flowtype/use-flow-type": 1,
-    "flowtype/valid-syntax": 1
+    "flowtype/require-valid-file-annotation": "error",
+    "flowtype/use-flow-type": "warn",
+    "flowtype/valid-syntax": "warn"
   },
   "settings": {
     "flowtype": {
       "onlyFilesWithFlowAnnotation": true
+    }
+  },
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "modules": true
     }
   }
 }

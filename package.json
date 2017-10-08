@@ -1,6 +1,6 @@
 {
   "name": "react-navigation",
-  "version": "1.0.0-beta.12",
+  "version": "1.0.0-beta.13",
   "description": "React Navigation",
   "main": "src/react-navigation.js",
   "sources": {
@@ -34,6 +34,7 @@
     "format": "eslint --fix .",
     "flow": "flow",
     "flow-check": "flow check --show-all-errors",
+    "precommit": "lint-staged",
     "prepublish": "npm run clean && npm run build"
   },
   "files": [
@@ -46,12 +47,13 @@
     "react-native": "*"
   },
   "dependencies": {
+    "babel-plugin-transform-define": "^1.3.0",
     "clamp": "^1.0.1",
     "hoist-non-react-statics": "^2.2.0",
     "path-to-regexp": "^1.7.0",
     "prop-types": "^15.5.10",
     "react-native-drawer-layout-polyfill": "^1.3.2",
-    "react-native-tab-view": "~0.0.67"
+    "react-native-tab-view": "^0.0.69"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
@@ -72,14 +74,16 @@
     "eslint-plugin-jsx-a11y": "^6.0.2",
     "eslint-plugin-prettier": "^2.1.2",
     "eslint-plugin-react": "^7.1.0",
-    "flow-bin": "^0.49.1",
+    "flow-bin": "^0.51.0",
+    "husky": "^0.14.3",
     "jest": "^20.0.4",
+    "lint-staged": "^4.2.1",
     "prettier": "^1.5.3",
     "prettier-eslint": "^6.4.2",
     "react": "16.0.0-alpha.12",
-    "react-native": "^0.45.1",
+    "react-native": "^0.48.4",
     "react-native-vector-icons": "^4.2.0",
-    "react-test-renderer": "^15.6.1"
+    "react-test-renderer": "^16.0.0"
   },
   "jest": {
     "notify": true,
@@ -90,8 +94,20 @@
     ],
     "coverageDirectory": "./coverage/",
     "collectCoverage": true,
+    "collectCoverageFrom": [
+      "src/**/*.js"
+    ],
+    "coveragePathIgnorePatterns": [
+      "jest-setup.js"
+    ],
     "modulePathIgnorePatterns": [
       "examples"
+    ]
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "git add"
     ]
   }
 }

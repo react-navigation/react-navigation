@@ -17,13 +17,14 @@ type Props = {
 
 const AnimatedText = Animated.Text;
 
-const HeaderTitle = ({ style, ...rest }: Props) =>
+const HeaderTitle = ({ style, ...rest }: Props) => (
   <AnimatedText
     numberOfLines={1}
     {...rest}
     style={[styles.title, style]}
     accessibilityTraits="header"
-  />;
+  />
+);
 
 const styles = StyleSheet.create({
   title: {
