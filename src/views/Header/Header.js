@@ -107,7 +107,6 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
         : undefined;
 
     const UsedHeaderTitle = details.options.HeaderTitleComponent || HeaderTitle;
-    
     return (
       <UsedHeaderTitle
         onLayout={onLayoutIOS}
