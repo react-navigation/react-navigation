@@ -106,8 +106,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
           }
         : undefined;
 
-    const UsedHeaderTitle = details.options.HeaderTitleComponent ?
-      details.options.HeaderTitleComponent : HeaderTitle;
+    const UsedHeaderTitle = details.options.HeaderTitleComponent || HeaderTitle;
     return (
       <UsedHeaderTitle
         onLayout={onLayoutIOS}
@@ -133,8 +132,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
     const width = this.state.widths[props.scene.key]
       ? (this.props.layout.initWidth - this.state.widths[props.scene.key]) / 2
       : undefined;
-    const UsedBackButton = options.HeaderLeftComponent ?
-      options.HeaderLeftComponent : HeaderBackButton;
+    const UsedBackButton = options.HeaderLeftComponent || HeaderBackButton;
     return (
       <UsedBackButton
         onPress={this._navigateBack}
