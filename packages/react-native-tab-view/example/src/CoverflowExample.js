@@ -40,7 +40,7 @@ export default class CoverflowExample extends PureComponent<*, State> {
   static title = 'Coverflow';
   static appbarElevation = 0;
 
-  state: State = {
+  state = {
     index: 2,
     routes: Object.keys(ALBUMS).map(key => ({ key })),
   };

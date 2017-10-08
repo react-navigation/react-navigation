@@ -5,14 +5,13 @@ import PropTypes from 'prop-types';
 import {
   Animated,
   PanResponder,
-  Platform,
   StyleSheet,
   View,
-  I18nManager,
+  Platform,
 } from 'react-native';
-import { SceneRendererPropType } from './TabViewPropTypes';
+import { PagerRendererPropType } from './TabViewPropTypes';
 import type {
-  SceneRendererProps,
+  PagerRendererProps,
   Route,
   TransitionConfigurator,
 } from './TabViewTypeDefinitions';
@@ -46,15 +45,12 @@ type GestureState = {
 
 type GestureHandler = (event: GestureEvent, state: GestureState) => void;
 
-type Props<T> = SceneRendererProps<T> & {
-  configureTransition: TransitionConfigurator,
-  animationEnabled?: boolean,
-  swipeEnabled?: boolean,
-  swipeDistanceThreshold: number,
-  swipeVelocityThreshold: number,
+type Props<T> = PagerRendererProps<T> & {
+  configureTransition?: TransitionConfigurator,
+  swipeDistanceThreshold?: number,
+  swipeVelocityThreshold?: number,
   onSwipeStart?: GestureHandler,
   onSwipeEnd?: GestureHandler,
-  children?: React.Node,
 };
 
 const DEAD_ZONE = 12;
@@ -69,15 +65,12 @@ export default class TabViewPagerPan<T: Route<*>> extends React.Component<
   Props<T>
 > {
   static propTypes = {
-    ...SceneRendererPropType,
+    ...PagerRendererPropType,
     configureTransition: PropTypes.func.isRequired,
-    animationEnabled: PropTypes.bool,
-    swipeEnabled: PropTypes.bool,
-    swipeDistanceThreshold: PropTypes.number.isRequired,
-    swipeVelocityThreshold: PropTypes.number.isRequired,
+    swipeDistanceThreshold: PropTypes.number,
+    swipeVelocityThreshold: PropTypes.number,
     onSwipeStart: PropTypes.func,
     onSwipeEnd: PropTypes.func,
-    children: PropTypes.node,
   };
 
   static defaultProps = {
@@ -86,8 +79,6 @@ export default class TabViewPagerPan<T: Route<*>> extends React.Component<
       height: 0,
       width: 0,
     },
-    swipeDistanceThreshold: 120,
-    swipeVelocityThreshold: 0.25,
   };
 
   componentWillMount() {
@@ -116,40 +107,58 @@ export default class TabViewPagerPan<T: Route<*>> extends React.Component<
     this._resetListener && this._resetListener.remove();
   }
 
-  _panResponder: Object;
-  _resetListener: Object;
-  _pendingIndex = null;
-  _lastValue = null;
-  _isMoving = null;
-  _startDirection = 0;
-
-  _isIndexInRange = (index: number) => {
-    const { routes } = this.props.navigationState;
-    return index >= 0 && index <= routes.length - 1;
-  };
-
   _isMovingHorizontally = (evt: GestureEvent, gestureState: GestureState) => {
     return (
-      Math.abs(gestureState.dx) > Math.abs(gestureState.dy * 3) &&
-      Math.abs(gestureState.vx) > Math.abs(gestureState.vy * 3)
+      Math.abs(gestureState.dx) > Math.abs(gestureState.dy * 2) &&
+      Math.abs(gestureState.vx) > Math.abs(gestureState.vy * 2)
     );
   };
 
-  _isReverseDirection = (gestureState: GestureState) => {
-    if (this._startDirection > 0) {
-      return gestureState.vx < 0;
-    } else {
-      return gestureState.vx > 0;
+  _canMoveScreen = (evt: GestureEvent, gestureState: GestureState) => {
+    if (this.props.swipeEnabled === false) {
+      return false;
     }
+
+    const { navigationState: { routes, index } } = this.props;
+
+    return (
+      this._isMovingHorizontally(evt, gestureState) &&
+      ((gestureState.dx >= DEAD_ZONE && index >= 0) ||
+        (gestureState.dx <= -DEAD_ZONE && index <= routes.length - 1))
+    );
   };
 
-  _getNextIndex = (evt: GestureEvent, gestureState: GestureState) => {
-    const currentIndex =
-      typeof this._pendingIndex === 'number'
-        ? this._pendingIndex
-        : this.props.navigationState.index;
+  _startGesture = (evt: GestureEvent, gestureState: GestureState) => {
+    if (typeof this.props.onSwipeStart === 'function') {
+      this.props.onSwipeStart(evt, gestureState);
+    }
 
-    let swipeVelocityThreshold = this.props.swipeVelocityThreshold;
+    this.props.panX.stopAnimation();
+  };
+
+  _respondToGesture = (evt: GestureEvent, gestureState: GestureState) => {
+    const { navigationState: { routes, index } } = this.props;
+
+    if (
+      // swiping left
+      (gestureState.dx > 0 && index <= 0) ||
+      // swiping right
+      (gestureState.dx < 0 && index >= routes.length - 1)
+    ) {
+      return;
+    }
+
+    this.props.panX.setValue(gestureState.dx);
+  };
+
+  _finishGesture = (evt: GestureEvent, gestureState: GestureState) => {
+    const {
+      navigationState,
+      layout,
+      swipeDistanceThreshold = layout.width / 1.75,
+    } = this.props;
+
+    let { swipeVelocityThreshold = 0.15 } = this.props;
 
     if (Platform.OS === 'android') {
       // on Android, velocity is way lower due to timestamp being in nanosecond
@@ -157,127 +166,71 @@ export default class TabViewPagerPan<T: Route<*>> extends React.Component<
       swipeVelocityThreshold /= 1000000;
     }
 
+    const currentIndex =
+      typeof this._pendingIndex === 'number'
+        ? this._pendingIndex
+        : navigationState.index;
+
+    let nextIndex = currentIndex;
+
     if (
-      Math.abs(gestureState.dx) > this.props.swipeDistanceThreshold ||
-      Math.abs(gestureState.vx) > swipeVelocityThreshold
+      Math.abs(gestureState.dx) > Math.abs(gestureState.dy) &&
+      Math.abs(gestureState.vx) > Math.abs(gestureState.vy) &&
+      (Math.abs(gestureState.dx) > swipeDistanceThreshold ||
+        Math.abs(gestureState.vx) > swipeVelocityThreshold)
     ) {
-      const nextIndex =
-        currentIndex -
-        gestureState.dx /
-          Math.abs(gestureState.dx) *
-          (I18nManager.isRTL ? -1 : 1);
-      if (this._isIndexInRange(nextIndex)) {
-        return nextIndex;
-      }
-    }
-    return currentIndex;
-  };
-
-  _canMoveScreen = (evt: GestureEvent, gestureState: GestureState) => {
-    if (this.props.swipeEnabled === false) {
-      return false;
-    }
-    const { navigationState: { routes, index } } = this.props;
-    const canMove =
-      this._isMovingHorizontally(evt, gestureState) &&
-      ((gestureState.dx >= DEAD_ZONE && index >= 0) ||
-        (gestureState.dx <= -DEAD_ZONE && index <= routes.length - 1));
-    if (canMove) {
-      this._startDirection = gestureState.dx;
-    }
-    return canMove;
-  };
-
-  _startGesture = (evt: GestureEvent, gestureState: GestureState) => {
-    if (typeof this.props.onSwipeStart === 'function') {
-      this.props.onSwipeStart(evt, gestureState);
-    }
-    this._lastValue = this.props.getLastPosition();
-    this.props.position.stopAnimation();
-  };
-
-  _respondToGesture = (evt: GestureEvent, gestureState: GestureState) => {
-    const { layout: { width } } = this.props;
-    const currentPosition =
-      typeof this._lastValue === 'number'
-        ? this._lastValue
-        : this.props.navigationState.index;
-    const nextPosition =
-      currentPosition - gestureState.dx / width * (I18nManager.isRTL ? -1 : 1);
-    if (this._isMoving === null) {
-      this._isMoving = this._isMovingHorizontally(evt, gestureState);
-    }
-    if (this._isMoving && this._isIndexInRange(nextPosition)) {
-      this.props.position.setValue(nextPosition);
-    }
-  };
-
-  _finishGesture = (evt: GestureEvent, gestureState: GestureState) => {
-    if (typeof this.props.onSwipeEnd === 'function') {
-      this.props.onSwipeEnd(evt, gestureState);
-    }
-    const currentIndex = this.props.navigationState.index;
-    const currentValue = this.props.getLastPosition();
-    if (currentValue !== currentIndex) {
-      if (this._isMoving && !this._isReverseDirection(gestureState)) {
-        const nextIndex = this._getNextIndex(evt, gestureState);
-        this._transitionTo(nextIndex);
-      } else {
-        this._transitionTo(currentIndex);
-      }
-    }
-    this._lastValue = null;
-    this._isMoving = null;
-  };
-
-  _transitionTo = (toValue: number) => {
-    const lastPosition = this.props.getLastPosition();
-    const currentTransitionProps = {
-      progress: lastPosition,
-    };
-    const nextTransitionProps = {
-      progress: toValue,
-    };
-
-    this._pendingIndex = toValue;
-
-    if (this.props.animationEnabled !== false) {
-      const transitionSpec = this.props.configureTransition(
-        currentTransitionProps,
-        nextTransitionProps
+      nextIndex = Math.min(
+        Math.max(0, currentIndex - gestureState.dx / Math.abs(gestureState.dx)),
+        navigationState.routes.length - 1
       );
-      const { timing, ...transitionConfig } = transitionSpec;
-
-      timing(this.props.position, {
-        ...transitionConfig,
-        toValue,
-      }).start(({ finished }) => {
-        if (finished) {
-          this.props.jumpToIndex(toValue);
-          this._pendingIndex = null;
-        }
-      });
-    } else {
-      this.props.position.setValue(toValue);
-      this.props.jumpToIndex(toValue);
-      this._pendingIndex = null;
     }
+
+    this._transitionTo(isFinite(nextIndex) ? nextIndex : currentIndex);
   };
+
+  _transitionTo = (index: number) => {
+    const offset = -index * this.props.layout.width;
+
+    if (this.props.animationEnabled === false) {
+      this.props.panX.setValue(0);
+      this.props.offsetX.setValue(offset);
+      return;
+    }
+
+    const { timing, ...transitionConfig } = DefaultTransitionSpec;
+
+    Animated.parallel([
+      timing(this.props.panX, {
+        ...transitionConfig,
+        toValue: 0,
+      }),
+      timing(this.props.offsetX, {
+        ...transitionConfig,
+        toValue: offset,
+      }),
+    ]).start(({ finished }) => {
+      if (finished) {
+        this.props.jumpToIndex(index);
+        this._pendingIndex = null;
+      }
+    });
+
+    this._pendingIndex = index;
+  };
+
+  _panResponder: any;
+  _resetListener: any;
+  _pendingIndex: ?number;
 
   render() {
-    const { layout, position, navigationState, children } = this.props;
+    const { panX, offsetX, navigationState, layout, children } = this.props;
     const { width } = layout;
     const { routes } = navigationState;
-
-    // Prepend '-1', so there are always at least 2 items in inputRange
-    const inputRange = [-1, ...routes.map((x, i) => i)];
-    const outputRange = inputRange.map(
-      i => width * i * (I18nManager.isRTL ? 1 : -1)
-    );
-
-    const translateX = position.interpolate({
-      inputRange,
-      outputRange,
+    const maxTranslate = width * (routes.length - 1);
+    const translateX = Animated.add(panX, offsetX).interpolate({
+      inputRange: [-maxTranslate, 0],
+      outputRange: [-maxTranslate, 0],
+      extrapolate: 'clamp',
     });
 
     return (
@@ -285,7 +238,10 @@ export default class TabViewPagerPan<T: Route<*>> extends React.Component<
         style={[
           styles.sheet,
           width
-            ? { width: routes.length * width, transform: [{ translateX }] }
+            ? {
+                width: routes.length * width,
+                transform: [{ translateX }],
+              }
             : null,
         ]}
         {...this._panResponder.panHandlers}

@@ -18,7 +18,7 @@ export default class TopBarTextExample extends PureComponent<*, State> {
   static title = 'Scrollable top bar';
   static appbarElevation = 0;
 
-  state: State = {
+  state = {
     index: 1,
     routes: [
       { key: '1', title: 'First' },

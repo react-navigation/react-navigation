@@ -21,7 +21,7 @@ import type {
 } from './TabViewTypeDefinitions';
 
 type IndicatorProps<T> = SceneRendererProps<T> & {
-  width: Animated.Value,
+  width: number,
 };
 
 type ScrollEvent = {
@@ -48,11 +48,11 @@ type Props<T> = SceneRendererProps<T> & {
   style?: Style,
 };
 
-type State = {
+type State = {|
   offset: Animated.Value,
   visibility: Animated.Value,
-  initialOffset: { x: number, y: number },
-};
+  initialOffset: {| x: number, y: number |},
+|};
 
 export default class TabBar<T: Route<*>> extends React.PureComponent<
   Props<T>,
@@ -100,8 +100,6 @@ export default class TabBar<T: Route<*>> extends React.PureComponent<
       },
     };
   }
-
-  state: State;
 
   componentDidMount() {
     this._adjustScroll(this.props.navigationState.index);
@@ -165,9 +163,16 @@ export default class TabBar<T: Route<*>> extends React.PureComponent<
     if (typeof this.props.renderIndicator !== 'undefined') {
       return this.props.renderIndicator(props);
     }
-    const { width, position } = props;
+    const { width, position, navigationState } = props;
     const translateX = Animated.multiply(
-      Animated.multiply(position, width),
+      Animated.multiply(
+        position.interpolate({
+          inputRange: [0, navigationState.routes.length - 1],
+          outputRange: [0, navigationState.routes.length - 1],
+          extrapolate: 'clamp',
+        }),
+        width
+      ),
       I18nManager.isRTL ? -1 : 1
     );
     return (
@@ -252,6 +257,7 @@ export default class TabBar<T: Route<*>> extends React.PureComponent<
     Animated.timing(this.state.offset, {
       toValue: 0,
       duration: 150,
+      useNativeDriver: this.props.useNativeDriver,
     }).start();
   };
 
@@ -284,6 +290,7 @@ export default class TabBar<T: Route<*>> extends React.PureComponent<
         toValue: -scrollOffset,
         tension: 300,
         friction: 35,
+        useNativeDriver: this.props.useNativeDriver,
       }).start();
     } else {
       this.state.offset.setValue(-scrollOffset);
@@ -363,7 +370,7 @@ export default class TabBar<T: Route<*>> extends React.PureComponent<
         >
           {this._renderIndicator({
             ...this.props,
-            width: new Animated.Value(finalTabWidth),
+            width: finalTabWidth,
           })}
         </Animated.View>
         <View style={styles.scroll}>

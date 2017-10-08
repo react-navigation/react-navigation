@@ -2,29 +2,32 @@
 
 import React, { PureComponent } from 'react';
 import { StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { TabViewAnimated, TabBar } from 'react-native-tab-view';
+import {
+  TabViewAnimated,
+  TabBar,
+  TabViewPagerExperimental,
+} from 'react-native-tab-view';
 import SimplePage from './SimplePage';
 
 import type { NavigationState } from 'react-native-tab-view/types';
 
 type Route = {
   key: string,
-  icon: string,
+  title: string,
 };
 
 type State = NavigationState<Route>;
 
-export default class TopBarIconExample extends PureComponent<*, State> {
-  static title = 'Icon only top bar';
+export default class NativeDriverExample extends PureComponent<*, State> {
+  static title = 'With native animations';
   static appbarElevation = 0;
 
   state = {
-    index: 0,
+    index: 1,
     routes: [
-      { key: '1', icon: 'md-restaurant' },
-      { key: '2', icon: 'md-bicycle' },
-      { key: '3', icon: 'md-color-palette' },
+      { key: '1', title: 'First' },
+      { key: '2', title: 'Second' },
+      { key: '3', title: 'Third' },
     ],
   };
 
@@ -34,17 +37,14 @@ export default class TopBarIconExample extends PureComponent<*, State> {
     });
   };
 
-  _renderIcon = ({ route }) => {
-    return <Ionicons name={route.icon} size={24} color="white" />;
-  };
-
   _renderHeader = props => {
     return (
       <TabBar
         {...props}
         indicatorStyle={styles.indicator}
-        renderIcon={this._renderIcon}
         style={styles.tabbar}
+        tabStyle={styles.tab}
+        labelStyle={styles.label}
       />
     );
   };
@@ -72,10 +72,19 @@ export default class TopBarIconExample extends PureComponent<*, State> {
             style={{ backgroundColor: '#4caf50' }}
           />
         );
+      case '4':
+        return (
+          <SimplePage
+            state={this.state}
+            style={{ backgroundColor: '#2196f3' }}
+          />
+        );
       default:
         return null;
     }
   };
+
+  _renderPager = props => <TabViewPagerExperimental {...props} />;
 
   render() {
     return (
@@ -84,7 +93,9 @@ export default class TopBarIconExample extends PureComponent<*, State> {
         navigationState={this.state}
         renderScene={this._renderScene}
         renderHeader={this._renderHeader}
+        renderPager={this._renderPager}
         onIndexChange={this._handleIndexChange}
+        useNativeDriver
       />
     );
   }
@@ -97,7 +108,14 @@ const styles = StyleSheet.create({
   tabbar: {
     backgroundColor: '#222',
   },
+  tab: {
+    width: 120,
+  },
   indicator: {
     backgroundColor: '#ffeb3b',
+  },
+  label: {
+    color: '#fff',
+    fontWeight: '400',
   },
 });

@@ -30,7 +30,7 @@ This is a JavaScript-only implementation of swipeable tab views. It's super cust
 ## Installation
 
 ```sh
-yarn add react-native-tab-view
+yarn add react-native-tab-view react-native-gesture-handler
 ```
 
 
@@ -85,7 +85,9 @@ const styles = StyleSheet.create({
 
 ## API
 
-The package exposes the following components,
+The package exposes a `TabViewAnimated` component which manages the state and animated values, and renders components such as the headers, footers and the pager. Pager components render the routes as pages, as well as handle the gestures and transitions. Various pager components are implemented in the library to provide the best experience according to the platform. The pager best suited to the platform is automatically used by default.
+
+Check the [type definitions](src/TabViewTypeDefinitions.js) for details on shape of different props.
 
 ### `<TabViewAnimated />`
 
@@ -99,47 +101,12 @@ Container component responsible for managing tab transitions.
 - `canJumpToTab` - optional callback which accepts a route, and returns a boolean indicating whether jumping to the tab is allowed
 - `lazy` - whether to load tabs lazily when you start switching
 - `initialLayout` - optional object containing the initial `height` and `width`, can be passed to prevent the one frame delay in rendering
-- `renderPager` - optional callback which returns a react element to handle swipe gesture and animation
 - `renderHeader` - optional callback which returns a react element to use as top tab bar
 - `renderFooter` - optional callback which returns a react element to use as bottom tab bar
+- `renderPager` - optional callback which returns a react element to handle swipe gesture and animation
 - `renderScene` - callback which returns a react element to use as a scene
 
 Any other props are passed to the underlying pager.
-
-### `<TabViewPagerPan />`
-
-Pager component based on `PanResponder`.
-
-#### Props
-
-- `configureTransition` - optional callback which returns a configuration for the transition
-- `animationEnabled` - whether to enable page change animation
-- `swipeEnabled` - whether to enable swipe gestures
-- `swipeDistanceThreshold` - minimum swipe distance to trigger page switch
-- `swipeVelocityThreshold` - minimum swipe velocity to trigger page switch
-- `onSwipeStart` - optional callback when a swipe gesture starts
-- `onSwipeEnd` - optional callback when a swipe gesture ends
-- `children` - React Element(s) to render
-
-### `<TabViewPagerScroll />`
-
-Pager component based on `ScrollView` (default on iOS).
-
-#### Props
-
-- `animationEnabled` - whether to enable page change animation
-- `swipeEnabled` - whether to enable swipe gestures
-- `children` - React Element(s) to render
-
-### `<TabViewPagerAndroid />`
-
-Pager component based on `ViewPagerAndroid` (default on Android).
-
-#### Props
-
-- `animationEnabled` - whether to enable page change animation
-- `swipeEnabled` - whether to enable swipe gestures
-- `children` - React Element(s) to render
 
 ### `<TabBar />`
 
@@ -156,13 +123,61 @@ Material design themed tab bar. Can be used as both top and bottom tab bar.
 - `pressColor` - color for material ripple (Android >= 5.0 only)
 - `pressOpacity` - opacity for pressed tab (iOS and Android < 5.0 only)
 - `scrollEnabled` - whether to enable scrollable tabs
+- `useNativeDriver` - whether to use native animations
 - `tabStyle` - style object for the individual tabs in the tab bar
 - `indicatorStyle` - style object for the active indicator
 - `labelStyle` - style object for the tab item label
 - `style` - style object for the tab bar
 
+### `<TabViewPagerPan />`
 
-Check the [type definitions](src/TabViewTypeDefinitions.js) for details on shape of different objects.
+Cross-platform pager based on the [`PanResponder`](https://facebook.github.io/react-native/docs/panresponder.html).
+
+#### Props
+
+- `configureTransition` - optional callback which returns a configuration for the transition
+- `animationEnabled` - whether to enable page change animation
+- `swipeEnabled` - whether to enable swipe gestures
+- `swipeDistanceThreshold` - minimum swipe distance to trigger page switch
+- `swipeVelocityThreshold` - minimum swipe velocity to trigger page switch
+- `onSwipeStart` - optional callback when a swipe gesture starts
+- `onSwipeEnd` - optional callback when a swipe gesture ends
+- `children` - React Element(s) to render
+
+### `<TabViewPagerScroll />`
+
+Cross-platform pager based on [`ScrollView`](https://facebook.github.io/react-native/docs/scrollview.html) (default on iOS).
+
+#### Props
+
+- `animationEnabled` - whether to enable page change animation
+- `swipeEnabled` - whether to enable swipe gestures
+- `children` - React Element(s) to render
+
+There are some caveats when using this pager on Android, such as poor support for intial index other than `0` and weird animation curves.
+
+### `<TabViewPagerAndroid />`
+
+Android only pager based on `ViewPagerAndroid` (default on Android).
+
+#### Props
+
+- `animationEnabled` - whether to enable page change animation
+- `swipeEnabled` - whether to enable swipe gestures
+- `children` - React Element(s) to render
+
+### `<TabViewPagerExperimental />`
+
+Cross-platform pager component based on [`react-native-gesture-handler`](https://github.com/kmagiera/react-native-gesture-handler).
+
+#### Props
+
+- `animationEnabled` - whether to enable page change animation
+- `swipeEnabled` - whether to enable swipe gestures
+- `useNativeDriver` - whether to use native animations
+- `children` - React Element(s) to render
+
+This pager is still experimental as the underlying library is still in alpha. To use this pager, you'll need to [link the `react-native-gesture-handler` library](https://github.com/kmagiera/react-native-gesture-handler#installation).
 
 
 ## Caveats
@@ -187,7 +202,7 @@ Then pass `this.state` as the `navigationState` prop to `<TabViewAnimated />` or
 ```js
 <TabViewAnimated
   navigationState={this.state}
-  renderScene={this._renderPage}
+  renderScene={this._renderScene}
   renderHeader={this._renderHeader}
   onIndexChange={this._handleIndexChange}
 />
@@ -195,6 +210,23 @@ Then pass `this.state` as the `navigationState` prop to `<TabViewAnimated />` or
 
 
 ## Optimization Tips
+
+### Use native driver
+
+Using native animations and gestures can greatly improve the performance. To use native animations and gestures, you will need to use `TabViewPagerExperimental` as your pager and pass `useNativeDriver` in `TabViewAnimated`.
+
+```js
+<TabViewAnimated
+  navigationState={this.state}
+  renderPager={this._renderPager}
+  renderScene={this._renderScene}
+  renderHeader={this._renderHeader}
+  onIndexChange={this._handleIndexChange}
+  useNativeDriver
+/>
+```
+
+_NOTE:_ Native animations are supported only for properties such as `opacity` and `translation`. If you are using a custom tab bar or indicator, you need to make sure that you animate only these style properties.
 
 ### Avoid unnecessary re-renders
 

@@ -21,23 +21,23 @@ type Props<T> = PagerProps & {
   onPositionChange?: ({ value: number }) => void,
   initialLayout?: Layout,
   canJumpToTab?: (route: T) => boolean,
-  renderPager: (
-    props: SceneRendererProps<T> & PagerProps
-  ) => React.Element<any>,
+  renderPager: (props: *) => React.Element<any>,
   renderScene: (props: SceneRendererProps<T> & Scene<T>) => ?React.Element<any>,
   renderHeader?: (props: SceneRendererProps<T>) => ?React.Element<any>,
   renderFooter?: (props: SceneRendererProps<T>) => ?React.Element<any>,
+  useNativeDriver?: boolean,
   lazy?: boolean,
   style?: Style,
 };
 
-type State = {
+type State = {|
   loaded: Array<number>,
-  layout: Layout & {
-    measured: boolean,
-  },
-  position: Animated.Value,
-};
+  layout: Layout & { measured: boolean },
+  layoutXY: Animated.ValueXY,
+  panX: Animated.Value,
+  offsetX: Animated.Value,
+  position: any,
+|};
 
 let TabViewPager;
 
@@ -74,45 +74,92 @@ export default class TabViewAnimated<T: Route<*>> extends React.Component<
   };
 
   static defaultProps = {
-    renderPager: (props: SceneRendererProps<*>) => <TabViewPager {...props} />,
+    renderPager: props => <TabViewPager {...props} />,
     initialLayout: {
       height: 0,
       width: 0,
     },
+    useNativeDriver: false,
   };
 
   constructor(props: Props<T>) {
     super(props);
 
+    const { navigationState } = this.props;
+    const layout = {
+      ...this.props.initialLayout,
+      measured: false,
+    };
+
+    const panX = new Animated.Value(0);
+    const offsetX = new Animated.Value(-navigationState.index * layout.width);
+    const layoutXY = new Animated.ValueXY({
+      x: layout.width || 0.001,
+      y: layout.height || 0.001,
+    });
+    const position = Animated.multiply(
+      Animated.divide(Animated.add(panX, offsetX), layoutXY.x),
+      -1
+    );
+
     this.state = {
-      loaded: [this.props.navigationState.index],
-      layout: {
-        ...this.props.initialLayout,
-        measured: false,
-      },
-      position: new Animated.Value(this.props.navigationState.index),
+      loaded: [navigationState.index],
+      layout,
+      layoutXY,
+      panX,
+      offsetX,
+      position,
     };
   }
 
-  state: State;
-
   componentDidMount() {
     this._mounted = true;
-    this._positionListener = this.state.position.addListener(
-      this._trackPosition
-    );
+    this._panXListener = this.state.panX.addListener(this._trackPanX);
+    this._offsetXListener = this.state.offsetX.addListener(this._trackOffsetX);
   }
 
   componentWillUnmount() {
     this._mounted = false;
-    this.state.position.removeListener(this._positionListener);
+    this.state.panX.removeListener(this._panXListener);
+    this.state.offsetX.removeListener(this._offsetXListener);
   }
 
   _mounted: boolean = false;
   _nextIndex: ?number;
-  _lastPosition: ?number;
-  _positionListener: string;
+  _lastPanX: ?number;
+  _lastOffsetX: ?number;
+  _panXListener: string;
+  _offsetXListener: string;
   _subscriptions: { [key: SubscriptionName]: Array<Function> } = {};
+
+  _trackPanX = e => {
+    this._lastPanX = e.value;
+    this._trackPosition();
+  };
+
+  _trackOffsetX = e => {
+    this._lastOffsetX = e.value;
+    this._trackPosition();
+  };
+
+  _trackPosition = () => {
+    const value = this._getLastPosition();
+    this._handlePositionChange(value);
+    this._triggerEvent('position', value);
+  };
+
+  _getLastPosition = () => {
+    const { navigationState } = this.props;
+    const { layout } = this.state;
+
+    const panX = typeof this._lastPanX === 'number' ? this._lastPanX : 0;
+    const offsetX =
+      typeof this._lastOffsetX === 'number'
+        ? this._lastOffsetX
+        : -navigationState.index * layout.width;
+
+    return (panX + offsetX) / -(layout.width || 0.001);
+  };
 
   _renderScene = (props: SceneRendererProps<T> & Scene<T>) => {
     const { renderScene, lazy } = this.props;
@@ -147,20 +194,6 @@ export default class TabViewAnimated<T: Route<*>> extends React.Component<
     }
   };
 
-  _trackPosition = (e: { value: number }) => {
-    this._handlePositionChange(e.value);
-    this._triggerEvent('position', e.value);
-    this._lastPosition = e.value;
-  };
-
-  _getLastPosition = () => {
-    if (typeof this._lastPosition === 'number') {
-      return this._lastPosition;
-    } else {
-      return this.props.navigationState.index;
-    }
-  };
-
   _handleLayout = (e: any) => {
     const { height, width } = e.nativeEvent.layout;
 
@@ -171,6 +204,8 @@ export default class TabViewAnimated<T: Route<*>> extends React.Component<
       return;
     }
 
+    this.state.offsetX.setValue(-this.props.navigationState.index * width);
+    this.state.layoutXY.setValue({ x: width, y: height });
     this.setState({
       layout: {
         measured: true,
@@ -180,16 +215,15 @@ export default class TabViewAnimated<T: Route<*>> extends React.Component<
     });
   };
 
-  _buildSceneRendererProps = (): SceneRendererProps<*> => {
-    return {
-      layout: this.state.layout,
-      navigationState: this.props.navigationState,
-      position: this.state.position,
-      jumpToIndex: this._jumpToIndex,
-      getLastPosition: this._getLastPosition,
-      subscribe: this._addSubscription,
-    };
-  };
+  _buildSceneRendererProps = (): SceneRendererProps<*> => ({
+    layout: this.state.layout,
+    navigationState: this.props.navigationState,
+    position: this.state.position,
+    jumpToIndex: this._jumpToIndex,
+    getLastPosition: this._getLastPosition,
+    subscribe: this._addSubscription,
+    useNativeDriver: this.props.useNativeDriver === true,
+  });
 
   _jumpToIndex = (index: number) => {
     if (!this._mounted) {
@@ -258,6 +292,8 @@ export default class TabViewAnimated<T: Route<*>> extends React.Component<
         {renderPager({
           ...props,
           ...rest,
+          panX: this.state.panX,
+          offsetX: this.state.offsetX,
           children: navigationState.routes.map((route, index) =>
             this._renderScene({
               ...props,

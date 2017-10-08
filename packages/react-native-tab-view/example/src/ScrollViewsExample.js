@@ -20,7 +20,7 @@ export default class TopBarTextExample extends PureComponent<*, State> {
   static tintColor = '#222';
   static appbarElevation = 0;
 
-  state: State = {
+  state = {
     index: 0,
     routes: [
       { key: '1', title: 'First' },
