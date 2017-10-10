@@ -104,6 +104,10 @@ React Element or a function that given `HeaderProps` returns a React Element, to
 
 String or React Element used by the header. Defaults to scene `title`
 
+#### `headerTitleAllowFontScaling`
+
+Whether header title font should scale to respect Text Size accessibility settings. Defaults to true
+
 #### `headerBackTitle`
 
 Title string used by the back button on iOS, or `null` to disable label. Defaults to the previous scene's `headerTitle`
