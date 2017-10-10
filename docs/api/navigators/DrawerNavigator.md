@@ -104,7 +104,8 @@ as you can see in the example below.
 {
   drawerWidth: 200,
   drawerPosition: 'right',
-  contentComponent: props => <ScrollView><DrawerItems {...props} /></ScrollView>
+  contentComponent: props => <ScrollView><DrawerItems {...props} /></ScrollView>,
+  drawerBackgroundColor: 'transparent'
 }
 ```
 
