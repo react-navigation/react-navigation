@@ -42,7 +42,7 @@ Verify that you can successfully see the bare sample app run on iOS and/or Andro
 bare-project
 ```
 
-We want to share code on iOS and Android, so let's delete the contents of `index.ios.js` and `index.android.js` and replace it with `import './App';` - after which, we need to create create the new file for our app implementation, `App.js` (if you used `create-react-native-app` this has been already done)
+We want to share code on iOS and Android, so let's delete the contents of `index.ios.js` and `index.android.js` and replace it with `import './App';` - after which, we need to create the new file for our app implementation, `App.js` (if you used `create-react-native-app` this has been already done)
 
 ## Introducing Stack Navigator
 
