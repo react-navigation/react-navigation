@@ -4,7 +4,7 @@
 
 React Navigation is born from the React Native community's need for an extensible yet easy-to-use navigation solution based on Javascript.
 
-React Navigation is a result of a collaboration between developers from Facebook, Expo and the React community at large: it replaces and improves upon several navigation libraries in the ecosystem, including Ex-Navigation, React Native's Navigator and NavigationExperimental components.
+React Navigation is the result of a collaboration between developers from Facebook, Expo and the React community at large: it replaces and improves upon several navigation libraries in the ecosystem, including Ex-Navigation, React Native's Navigator and NavigationExperimental components.
 
 * [Installation](#installation)
 * [Community contributions](#community-contributions)
