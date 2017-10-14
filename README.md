@@ -2,7 +2,9 @@
 
 *Learn once, navigate anywhere.*
 
-React Navigation is born from the React Native community's need for an extensible yet easy-to-use navigation solution based on Javascript. React Navigation was born from a collaboration between developers from Facebook, Expo and the React community at large: it replaces and improves upon several navigation libraries in the ecosystem, including Ex-Navigation, React Native's Navigator and NavigationExperimental components.
+React Navigation is born from the React Native community's need for an extensible yet easy-to-use navigation solution based on Javascript.
+
+React Navigation is a result of a collaboration between developers from Facebook, Expo and the React community at large: it replaces and improves upon several navigation libraries in the ecosystem, including Ex-Navigation, React Native's Navigator and NavigationExperimental components.
 
 * [Installation](#installation)
 * [Community contributions](#community-contributions)
@@ -15,9 +17,9 @@ React Navigation is born from the React Native community's need for an extensibl
 * [FAQs](#faqs)
   * [Is this library actively maintained?](#is-this-library-actively-maintained)
   * [When is version 1.0.0 going to be released?](#when-is-version-100-going-to-be-released)
+  * [I'm having troubles using the library, what can I do?](#im-having-troubles-using-the-library-what-can-i-do)
   * [How can I help?](#how-can-i-help)
   * [Is this the only library available for navigation?](#is-this-the-only-library-available-for-navigation)
-  * [I'm having troubles using the library, what can I do?](#im-having-troubles-using-the-library-what-can-i-do)
   * [Can I use this library for web?](#can-i-use-this-library-for-web)
 * [Code of conduct](#code-of-conduct)
 * [License](#license)
@@ -97,6 +99,12 @@ Yes! You can find the changelog for every release [here](https://github.com/reac
 
 As soon as all the tasks [here](https://github.com/react-community/react-navigation/issues/2585) have been completed. You can read more about it in the [blog](https://reactnavigation.org/blog/2017/9/Renewed-v1).
 
+#### I'm having troubles using the library, what can I do?
+
+Head to the [issues](https://github.com/react-community/react-navigation/issues) and do a quick search: if you think you are experiencing a bug chances are somebody already opened an issue for it. If instead you are having more general problems, use [Stack Overflow](https://stackoverflow.com/search?q=react-navigation) - which is better suited and helps keeping the Issues section of the repo clean. Alternatively you could join the [Reactiflux](https://www.reactiflux.com/) community on Discord where there are React Native and React Navigation channels with helpful people who might be able to answer you.
+
+You should **only** open a new issue if you believe that you are experiencing a bug or have a feature request, and please **follow** the dedicated template - it will help everyone helping you (and may get closed if it doesn't).
+
 #### How can I help?
 
 Glad you ask! This library is a community effort: it can only be great if we all help out in one way or another 😄 . If you feel like you aren't experienced enough using react navigation to contribute, you can still make an impact by:
@@ -116,12 +124,6 @@ If you feel brave enough you can submit a PR: follow the [Contributors guide](ht
 #### Is this the only library available for navigation?
 
 No: there are some other libraries - which, depending on your project, can be better or worse suited for your project. They differ in the approach and implementation from `react-navigation`, but share the common goal of helping you create a good React Native application; you can find a general round up in the [React Native docs](http://facebook.github.io/react-native/docs/navigation.html).
-
-#### I'm having troubles using the library, what can I do?
-
-Head to the [issues](https://github.com/react-community/react-navigation/issues) and do a quick search: if you think you are experiencing a bug chances are somebody already opened an issue for it. If instead you are having more general problems, use [Stack Overflow](https://stackoverflow.com/search?q=react-navigation) - which is better suited and helps keeping the Issues section of the repo clean. Alternatively you could join the [Reactiflux](https://www.reactiflux.com/) community on Discord where there are React Native and React Navigation channels with helpful people who might be able to answer you.
-
-You should **only** open a new issue if you believe that you are experiencing a bug or have a feature request, and please **follow** the dedicated template - it will help everyone helping you (and may get closed if it doesn't).
 
 #### Can I use this library for web?
 
