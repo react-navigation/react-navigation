@@ -137,6 +137,7 @@ tabBarOptions: {
 - `labelStyle` - style object for the tab label
 - `iconStyle` - style object for the tab icon
 - `style` - style object for the tab bar
+- `labelNumberOfLines` - defines the number of lines for the tab bar item title
 
 Example:
 

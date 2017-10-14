@@ -21,6 +21,7 @@ type DefaultProps = {
   inactiveTintColor: string,
   inactiveBackgroundColor: string,
   showLabel: boolean,
+  labelNumberOfLines: number,
 };
 
 type Props = {
@@ -41,6 +42,7 @@ type Props = {
   labelStyle?: TextStyleProp,
   tabStyle?: ViewStyleProp,
   showIcon: boolean,
+  labelNumberOfLines?: number,
 };
 
 export default class TabBarBottom extends PureComponent<
@@ -56,6 +58,7 @@ export default class TabBarBottom extends PureComponent<
     inactiveBackgroundColor: 'transparent',
     showLabel: true,
     showIcon: true,
+    labelNumberOfLines: 1,
   };
 
   props: Props;
@@ -68,6 +71,7 @@ export default class TabBarBottom extends PureComponent<
       inactiveTintColor,
       labelStyle,
       showLabel,
+      labelNumberOfLines,
     } = this.props;
     if (showLabel === false) {
       return null;
@@ -89,7 +93,10 @@ export default class TabBarBottom extends PureComponent<
     const label = this.props.getLabel({ ...scene, tintColor });
     if (typeof label === 'string') {
       return (
-        <Animated.Text style={[styles.label, { color }, labelStyle]}>
+        <Animated.Text
+          style={[styles.label, { color }, labelStyle]}
+          numberOfLines={labelNumberOfLines}
+        >
           {label}
         </Animated.Text>
       );
