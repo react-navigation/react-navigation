@@ -15,7 +15,6 @@ React Navigation is the result of a collaboration between developers from Facebo
   * [Comparisons and Discussion](##comparisons-and-discussion)
   * [Example Projects](#example-projects)
 * [FAQs](#faqs)
-  * [Is this library actively maintained?](#is-this-library-actively-maintained)
   * [When is version 1.0.0 going to be released?](#when-is-version-100-going-to-be-released)
   * [I'm having troubles using the library, what can I do?](#im-having-troubles-using-the-library-what-can-i-do)
   * [How can I help?](#how-can-i-help)
@@ -94,13 +93,11 @@ A lot of developers poured their knowledge in blog posts, and other repos - we w
 
 ## FAQs
 
-#### Is this library actively maintained?
-
-Yes! You can find the changelog for every release [here](https://github.com/react-community/react-navigation/releases).
-
 #### When is version 1.0.0 going to be released?
 
 As soon as all the tasks [here](https://github.com/react-community/react-navigation/issues/2585) have been completed. You can read more about it in the [blog](https://reactnavigation.org/blog/2017/9/Renewed-v1).
+
+(in the meantime, you can find the changelog for every release [here](https://github.com/react-community/react-navigation/releases))
 
 #### I'm having troubles using the library, what can I do?
 
@@ -122,7 +119,7 @@ Glad you ask! This library is a community effort: it can only be great if we all
 
 1. Providing feedback on the open [PRs](https://github.com/react-community/react-navigation/pulls).
 
-If you feel brave enough you can submit a PR: follow the [Contributors guide](https://reactnavigation.org/docs/guides/contributors) to find out how. Even [fixing a typo in the documentation](https://github.com/react-community/react-navigation/pull/2727) is a worthy contribution!
+If you feel brave enough you can submit a PR: follow the [Contributors guide](https://reactnavigation.org/docs/guides/contributors) to find out how. If you don't know where to start, check the ones with the label [`Type: Good First Task`](https://github.com/react-community/react-navigation/labels/Type%3A%20Good%20First%20Task) - even [fixing a typo in the documentation](https://github.com/react-community/react-navigation/pull/2727) is a worthy contribution!
 
 #### Is this the only library available for navigation?
 
@@ -130,7 +127,7 @@ No: there are some other libraries - which, depending on your project, can be be
 
 #### Can I use this library for web?
 
-This library originally planned to support web too - but at the moment [it is not a priority](https://github.com/react-community/react-navigation/issues/2585#issuecomment-330338793) for v1.0; a lot of work is necessary to reach it as-is and we had to freeze this support (consider it [experimental](https://reactnavigation.org/docs/guides/web)).
+This library originally planned to support web too - but at the moment [it is not a priority](https://github.com/react-community/react-navigation/issues/2585#issuecomment-330338793) for v1.0; a lot of work is necessary to reach it as-is and we had to freeze this support (consider it ["experimental"](https://reactnavigation.org/docs/guides/web)).
 
 ## Code of conduct
 
