@@ -5,8 +5,20 @@
 React Navigation is born from the React Native community's need for an extensible yet easy-to-use navigation solution based on Javascript. React Navigation was born from a collaboration between developers from Facebook, Expo and the React community at large: it replaces and improves upon several navigation libraries in the ecosystem, including Ex-Navigation, React Native's Navigator and NavigationExperimental components.
 
 * [Installation](#installation)
-* [FAQs](#faqs)
 * [Community contributions](#community-contributions)
+  * [Introduction to the library](#introduction-to-the-library)
+  * [Basic Tutorials](#basic-tutorials)
+  * [Intermediate Concepts](#intermediate-concepts)
+  * [Advanced Topics](#advanced-topics)
+  * [Comparisons and Discussion](##comparisons-and-discussion)
+  * [Example Projects](#example-projects)
+* [FAQs](#faqs)
+  * [Is this library actively maintained?](#is-this-library-actively-maintained)
+  * [When is version 1.0.0 going to be released?](#when-is-version-100-going-to-be-released)
+  * [How can I help?](#how-can-i-help)
+  * [Is this the only library available for navigation?](#is-this-the-only-library-available-for-navigation)
+  * [I'm having troubles using the library, what can I do?](#im-having-troubles-using-the-library-what-can-i-do)
+  * [Can I use this library for web?](#can-i-use-this-library-for-web)
 * [Code of conduct](#code-of-conduct)
 * [License](#license)
 
@@ -36,6 +48,44 @@ To get started and learn how the library work, follow the [introduction](https:/
 * [Navigators](https://reactnavigation.org/docs/navigators/)
 * [Routers](https://reactnavigation.org/docs/routers/)
 * [Views](https://reactnavigation.org/docs/views/)
+
+## Community contributions
+
+Here we'll try to keep a tutorial and resource links on React Navigation and React Native to help someone who wants to learn about React Navigation and React Native and techniques to handle navigation effectively.
+
+#### Introduction to the library
+
+* [Getting Started with React Navigation](https://hackernoon.com/getting-started-with-react-navigation-the-navigation-solution-for-react-native-ea3f4bd786a4)
+
+#### Basic Tutorials
+
+* [Basic ReactNavigation Example App and Tutorial](http://docs.nativebase.io/docs/examples/navigation/StackNavigationExample.html)
+* [Understanding Navigation in React Native](https://www.codementor.io/blessingoraz/understanding-navigation-in-react-native-a3wlcxmzu?published=1#.WXfDlvk_ooE.twitter)
+* [Comprehensive routing and navigation in React Native made easy](https://medium.com/@kevinle/comprehensive-routing-and-navigation-in-react-native-made-easy-6383e6cdc293)
+* [Replace a Screen Using React Navigation](https://medium.com/handlebar-labs/replace-a-screen-using-react-navigation-a503eab207eb)
+
+#### Intermediate Concepts
+
+* [Using React Navigation and Redux in your React Native Application](https://medium.com/modus-create-front-end-development/using-react-navigation-and-redux-in-your-react-native-application-efac33265138)
+* [React-Navigation, complete Redux state management, tab-bar, and multiple navigators](https://medium.com/@parkerdan/react-navigation-with-complete-redux-state-management-tab-bar-and-multiple-navigators-ed30a69d9a4d)
+* [Custom Drawer with React-Navigation in React-Native](http://www.skywardsoftwares.co.in/react-native/custom-drawer-with-react-navigation-in-react-native/)
+
+#### Advanced Topics
+
+* [Full Stack React Native Development using GraphCool and Apollo Subscriptions + React Navigation](https://medium.com/react-native-training/full-stack-react-native-development-using-graphcool-and-apollo-subscriptions-react-navigation-cdb3e1374c05)
+
+#### Comparisons and Discussion
+
+* [Migrate from ExNavigation to React Navigation](https://hackernoon.com/migrate-from-exnavigation-to-react-navigation-1af661ec5082)
+* [Playing with React Navigation and Airbnb's Native Navigation](https://medium.com/@ericvicenti/playing-with-react-navigation-and-airbnbs-native-navigation-4e49fc765489)
+* [How we restructured our app with React Navigation](https://m.oursky.com/how-we-restructured-our-app-with-react-navigation-98a89e219c26)
+* [What’s Happening with Navigation in React Native?](https://blog.revisify.com/whats-happening-with-navigation-in-react-native-c193535888c3)
+
+#### Example Projects
+
+* [Yaba-Social](https://github.com/allpwrfulroot/yaba-social)
+* [React Native Boilerplate with React Navigation and Redux integration](https://github.com/verybluebot/react-native-boilerplate)
+
 
 ## FAQs
 
@@ -75,44 +125,7 @@ You should **only** open a new issue if you believe that you are experiencing a 
 
 #### Can I use this library for web?
 
-This library originally planned to support web too - but at the moment is not a priority for v1.0; a lot of work is necessary to reach it as-is and we had to freeze this support (consider it [experimental](https://reactnavigation.org/docs/guides/web)). [Read more](https://github.com/react-community/react-navigation/issues/2585#issuecomment-330338793).
-
-## Community contributions
-
-Here we'll try to keep a tutorial and resource links on React Navigation and React Native to help someone who wants to learn about React Navigation and React Native and techniques to handle navigation effectively.
-
-#### Getting Started
-
-- [Getting Started with React Navigation](https://hackernoon.com/getting-started-with-react-navigation-the-navigation-solution-for-react-native-ea3f4bd786a4)
-
-#### Basic Tutorials
-
-- [Basic ReactNavigation Example App and Tutorial](http://docs.nativebase.io/docs/examples/navigation/StackNavigationExample.html)
-- [Understanding Navigation in React Native](https://www.codementor.io/blessingoraz/understanding-navigation-in-react-native-a3wlcxmzu?published=1#.WXfDlvk_ooE.twitter)
-- [Comprehensive routing and navigation in React Native made easy](https://medium.com/@kevinle/comprehensive-routing-and-navigation-in-react-native-made-easy-6383e6cdc293)
-- [Replace a Screen Using React Navigation](https://medium.com/handlebar-labs/replace-a-screen-using-react-navigation-a503eab207eb)
-
-#### Intermediate Concepts
-
-- [Using React Navigation and Redux in your React Native Application](https://medium.com/modus-create-front-end-development/using-react-navigation-and-redux-in-your-react-native-application-efac33265138)
-- [React-Navigation, complete Redux state management, tab-bar, and multiple navigators](https://medium.com/@parkerdan/react-navigation-with-complete-redux-state-management-tab-bar-and-multiple-navigators-ed30a69d9a4d)
-- [Custom Drawer with React-Navigation in React-Native](http://www.skywardsoftwares.co.in/react-native/custom-drawer-with-react-navigation-in-react-native/)
-
-#### Advanced Topics
-
-- [Full Stack React Native Development using GraphCool and Apollo Subscriptions + React Navigation](https://medium.com/react-native-training/full-stack-react-native-development-using-graphcool-and-apollo-subscriptions-react-navigation-cdb3e1374c05)
-
-#### Comparisons and Discussion
-
-- [Migrate from ExNavigation to React Navigation](https://hackernoon.com/migrate-from-exnavigation-to-react-navigation-1af661ec5082)
-- [Playing with React Navigation and Airbnb's Native Navigation](https://medium.com/@ericvicenti/playing-with-react-navigation-and-airbnbs-native-navigation-4e49fc765489)
-- [How we restructured our app with React Navigation](https://m.oursky.com/how-we-restructured-our-app-with-react-navigation-98a89e219c26)
-- [What’s Happening with Navigation in React Native?](https://blog.revisify.com/whats-happening-with-navigation-in-react-native-c193535888c3)
-
-#### Example Projects
-
-- [Yaba-Social](https://github.com/allpwrfulroot/yaba-social)
-- [React Native Boilerplate with React Navigation and Redux integration](https://github.com/verybluebot/react-native-boilerplate)
+This library originally planned to support web too - but at the moment [it is not a priority](https://github.com/react-community/react-navigation/issues/2585#issuecomment-330338793) for v1.0; a lot of work is necessary to reach it as-is and we had to freeze this support (consider it [experimental](https://reactnavigation.org/docs/guides/web)).
 
 ## Code of conduct
 
