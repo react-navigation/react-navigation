@@ -30,14 +30,14 @@ To get started and learn how the library work, follow the [introduction](https:/
 
 ### Advanced guides
 
-- [Redux integration](https://reactnavigation.org/docs/guides/redux)
-- [Deep linking](https://reactnavigation.org/docs/guides/linking)
+* [Redux integration](https://reactnavigation.org/docs/guides/redux)
+* [Deep linking](https://reactnavigation.org/docs/guides/linking)
 
 ### React Navigation API
 
-- [Navigators](https://reactnavigation.org/docs/navigators/)
-- [Routers](https://reactnavigation.org/docs/routers/)
-- [Views](https://reactnavigation.org/docs/views/)
+* [Navigators](https://reactnavigation.org/docs/navigators/)
+* [Routers](https://reactnavigation.org/docs/routers/)
+* [Views](https://reactnavigation.org/docs/views/)
 
 ## FAQs
 
@@ -67,13 +67,13 @@ If you feel brave enough you can submit a PR: follow the [Contributors guide](ht
 
 #### Is this the only library available for navigation?
 
-No: there are some other libraries - which, depending on your project, can be better or worse suited for your project. They differ in the approach and implementation from `react-navigation`, but share the common goal of helping you create a good React Native application; you can find general round up in the [React Native docs](http://facebook.github.io/react-native/docs/navigation.html).
+No: there are some other libraries - which, depending on your project, can be better or worse suited for your project. They differ in the approach and implementation from `react-navigation`, but share the common goal of helping you create a good React Native application; you can find a general round up in the [React Native docs](http://facebook.github.io/react-native/docs/navigation.html).
 
 #### I'm having troubles using the library, what can I do?
 
-Head to the [issues](https://github.com/react-community/react-navigation/issues) and do a quick search: if you think you are experiencing a bug chances are somebody already opened an issue for it. If instead you are having more general problems, use [Stack Overflow](https://stackoverflow.com/search?q=react-navigation) - which is better suited and helps keeping the Issues section of the clean of noise. Alternatively you could join the [Reactiflux](https://www.reactiflux.com/) community on Discord where there are React Native and React Navigation channels with helpful people who might be able to answer you.
+Head to the [issues](https://github.com/react-community/react-navigation/issues) and do a quick search: if you think you are experiencing a bug chances are somebody already opened an issue for it. If instead you are having more general problems, use [Stack Overflow](https://stackoverflow.com/search?q=react-navigation) - which is better suited and helps keeping the Issues section of the repo clean. Alternatively you could join the [Reactiflux](https://www.reactiflux.com/) community on Discord where there are React Native and React Navigation channels with helpful people who might be able to answer you.
 
-You should only open a new issue if you believe that you are experiencing a bug or have a feature request, and please follow the dedicated template - it will help everyone helping you (and may get closed if it doesn't).
+You should **only** open a new issue if you believe that you are experiencing a bug or have a feature request, and please **follow** the dedicated template - it will help everyone helping you (and may get closed if it doesn't).
 
 #### Can I use this library for web?
 
