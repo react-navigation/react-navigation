@@ -38,14 +38,16 @@ Since the library is a JS-based solution, to install the latest version of react
   npm install --save react-navigation
   ```
 
-To get started and learn how the library work, follow the [introduction](https://reactnavigation.org/docs/intro/).
+## Get Started
 
-### Advanced guides
+To learn how the library work, head to the [introduction](https://reactnavigation.org/docs/intro/) on the website for a quick tutorial that will cover all the basics.
+
+#### Advanced guides
 
 * [Redux integration](https://reactnavigation.org/docs/guides/redux)
 * [Deep linking](https://reactnavigation.org/docs/guides/linking)
 
-### React Navigation API
+#### React Navigation API
 
 * [Navigators](https://reactnavigation.org/docs/navigators/)
 * [Routers](https://reactnavigation.org/docs/routers/)
@@ -53,7 +55,7 @@ To get started and learn how the library work, follow the [introduction](https:/
 
 ## Community contributions
 
-Here we'll try to keep a tutorial and resource links on React Navigation and React Native to help someone who wants to learn about React Navigation and React Native and techniques to handle navigation effectively.
+A lot of developers poured their knowledge in blog posts, and other repos - we will try to keep here a list of tutorials and resources to help someone who wants to learn about React Navigation and techniques to handle navigation effectively.
 
 #### Introduction to the library
 
@@ -71,6 +73,7 @@ Here we'll try to keep a tutorial and resource links on React Navigation and Rea
 * [Using React Navigation and Redux in your React Native Application](https://medium.com/modus-create-front-end-development/using-react-navigation-and-redux-in-your-react-native-application-efac33265138)
 * [React-Navigation, complete Redux state management, tab-bar, and multiple navigators](https://medium.com/@parkerdan/react-navigation-with-complete-redux-state-management-tab-bar-and-multiple-navigators-ed30a69d9a4d)
 * [Custom Drawer with React-Navigation in React-Native](http://www.skywardsoftwares.co.in/react-native/custom-drawer-with-react-navigation-in-react-native/)
+* [React Navigation Drawer - a tutorial series](https://shift.infinite.red/react-navigation-drawer-tutorial-a802fc3ee6dc)
 
 #### Advanced Topics
 
