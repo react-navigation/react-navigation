@@ -2,9 +2,7 @@
 
 *Learn once, navigate anywhere.*
 
-React Navigation is born from the React Native community's need for an extensible yet easy-to-use navigation solution based on Javascript. It replaces and improves upon several navigation libraries in the ecosystem, including Ex-Navigation, React Native's Navigator and NavigationExperimental components.
-
-Once stable, NavigationExperimental will be deprecated in favor of React Navigation. React Navigation was born from a collaboration between developers from Facebook, Expo and the React community at large; now it evolved in a pure community-maintained project.
+React Navigation is born from the React Native community's need for an extensible yet easy-to-use navigation solution based on Javascript. React Navigation was born from a collaboration between developers from Facebook, Expo and the React community at large: it replaces and improves upon several navigation libraries in the ecosystem, including Ex-Navigation, React Native's Navigator and NavigationExperimental components.
 
 * [Installation](#installation)
 * [FAQs](#faqs)
