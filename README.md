@@ -14,6 +14,7 @@ React Navigation is the result of a collaboration between developers from Facebo
   * [Advanced Topics](#advanced-topics)
   * [Comparisons and Discussion](##comparisons-and-discussion)
   * [Example Projects](#example-projects)
+  * [Libraries](#libraries)
 * [FAQs](#faqs)
   * [When is version 1.0.0 going to be released?](#when-is-version-100-going-to-be-released)
   * [I'm having troubles using the library, what can I do?](#im-having-troubles-using-the-library-what-can-i-do)
@@ -39,7 +40,7 @@ Since the library is a JS-based solution, to install the latest version of react
 
 ## Get Started
 
-To learn how the library work, head to the [introduction](https://reactnavigation.org/docs/intro/) on the website for a quick tutorial that will cover all the basics.
+To learn how the library work, head to the [introduction](https://reactnavigation.org/docs/intro/) on the website for a quick tutorial that will cover all the basics - or try it out [our expo demo](https://exp.host/@react-navigation/NavigationPlayground).
 
 #### Advanced guides
 
@@ -90,6 +91,10 @@ A lot of developers poured their knowledge in blog posts, and other repos - we w
 * [Yaba-Social](https://github.com/allpwrfulroot/yaba-social)
 * [React Native Boilerplate with React Navigation and Redux integration](https://github.com/verybluebot/react-native-boilerplate)
 
+#### Libraries
+
+* [react-navigation-addons](https://github.com/satya164/react-navigation-addons)
+* [react-navigation-props-mapper](https://github.com/vonovak/react-navigation-props-mapper)
 
 ## FAQs
 
