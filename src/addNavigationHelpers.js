@@ -18,7 +18,7 @@ export default function<S: *>(navigation: NavigationProp<S, NavigationAction>) {
     goBack: (key?: ?string): boolean =>
       navigation.dispatch(
         NavigationActions.back({
-          key: key === undefined ? navigation.state.key : key,
+          key: key,
         })
       ),
     navigate: (
