@@ -28,6 +28,10 @@ const MyHomeScreen = ({ navigation }) => (
 );
 
 MyHomeScreen.navigationOptions = {
+  tabBarTestIDProps: {
+    testID: 'TEST_ID_HOME',
+    accessibilityLabel: 'TEST_ID_HOME_ACLBL',
+  },
   tabBarLabel: 'Home',
   tabBarIcon: ({ tintColor, focused }) => (
     <Ionicons
