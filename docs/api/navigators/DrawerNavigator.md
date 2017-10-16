@@ -87,11 +87,12 @@ The route configs object is a mapping from route name to a route config, which t
 
 
 ### DrawerNavigatorConfig
-- `drawerWidth` - Width of the drawer
+- `drawerWidth` - Width of the drawer.
 - `drawerPosition` - Options are `left` or `right`. Default is `left` position.
 - `contentComponent` - Component used to render the content of the drawer, for example, navigation items. Receives the `navigation` prop for the drawer. Defaults to `DrawerItems`. For more information, see below.
 - `contentOptions` - Configure the drawer content, see below.
 - `useNativeAnimations` - Enable native animations. Default is `true`.
+- `drawerBackgroundColor` - Use the Drawer background for some color. The Default is `white`.
 
 #### Example:
 
@@ -103,7 +104,8 @@ as you can see in the example below.
 {
   drawerWidth: 200,
   drawerPosition: 'right',
-  contentComponent: props => <ScrollView><DrawerItems {...props} /></ScrollView>
+  contentComponent: props => <ScrollView><DrawerItems {...props} /></ScrollView>,
+  drawerBackgroundColor: 'transparent'
 }
 ```
 
@@ -173,7 +175,7 @@ React Element or a function, that given `{ focused: boolean, tintColor: string }
 
 #### `drawerLockMode`
 
-Specifies the [lock mode](https://facebook.github.io/react-native/docs/drawerlayoutandroid.html#drawerlockmode) of the drawer. This can also update dynamically by using screenProps.lockMode on your top level router.
+Specifies the [lock mode](https://facebook.github.io/react-native/docs/drawerlayoutandroid.html#drawerlockmode) of the drawer. This can also update dynamically by using screenProps.drawerLockMode on your top level router.
 
 ### Navigator Props
 

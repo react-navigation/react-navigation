@@ -104,6 +104,10 @@ React Element or a function that given `HeaderProps` returns a React Element, to
 
 String or React Element used by the header. Defaults to scene `title`
 
+#### `headerTitleAllowFontScaling`
+
+Whether header title font should scale to respect Text Size accessibility settings. Defaults to true
+
 #### `headerBackTitle`
 
 Title string used by the back button on iOS, or `null` to disable label. Defaults to the previous scene's `headerTitle`
@@ -173,3 +177,45 @@ The navigator component created by `StackNavigator(...)` takes the following pro
 See the examples [SimpleStack.js](https://github.com/react-community/react-navigation/tree/master/examples/NavigationPlayground/js/SimpleStack.js) and [ModalStack.js](https://github.com/react-community/react-navigation/tree/master/examples/NavigationPlayground/js/ModalStack.js) which you can run locally as part of the [NavigationPlayground](https://github.com/react-community/react-navigation/tree/master/examples/NavigationPlayground) app.
 
 You can view these examples directly on your phone by visiting [our expo demo](https://exp.host/@react-navigation/NavigationPlayground).
+
+#### Modal StackNavigator with Custom Screen Transitions
+
+ ```js
+const ModalNavigator = StackNavigator(
+  {
+    Main: { screen: Main },
+    Login: { screen: Login },
+  },
+  {
+    headerMode: 'none',
+    mode: 'modal',
+    navigationOptions: {
+      gesturesEnabled: false,
+    },
+    transitionConfig: () => ({
+      transitionSpec: {
+        duration: 300,
+        easing: Easing.out(Easing.poly(4)),
+        timing: Animated.timing,
+      },
+      screenInterpolator: sceneProps => {
+        const { layout, position, scene } = sceneProps;
+        const { index } = scene;
+
+        const height = layout.initHeight;
+        const translateY = position.interpolate({
+          inputRange: [index - 1, index, index + 1],
+          outputRange: [height, 0, 0],
+        });
+
+        const opacity = position.interpolate({
+          inputRange: [index - 1, index - 0.99, index],
+          outputRange: [0, 1, 1],
+        });
+
+        return { opacity, transform: [{ translateY }] };
+      },
+    }),
+  }
+);
+ ```

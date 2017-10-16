@@ -21,6 +21,7 @@ type DefaultProps = {
   showIcon: boolean,
   showLabel: boolean,
   upperCaseLabel: boolean,
+  allowFontScaling: boolean,
 };
 
 type Props = {
@@ -29,6 +30,7 @@ type Props = {
   showIcon: boolean,
   showLabel: boolean,
   upperCaseLabel: boolean,
+  allowFontScaling: boolean,
   position: Animated.Value,
   navigation: NavigationScreenProp<NavigationState, NavigationAction>,
   jumpToIndex: (index: number) => void,
@@ -46,12 +48,13 @@ export default class TabBarTop extends PureComponent<
   Props,
   void
 > {
-  static defaultProps = {
+  static defaultProps: DefaultProps = {
     activeTintColor: '#fff',
     inactiveTintColor: '#fff',
     showIcon: false,
     showLabel: true,
     upperCaseLabel: true,
+    allowFontScaling: true,
   };
 
   props: Props;
@@ -65,6 +68,7 @@ export default class TabBarTop extends PureComponent<
       showLabel,
       upperCaseLabel,
       labelStyle,
+      allowFontScaling,
     } = this.props;
     if (showLabel === false) {
       return null;
@@ -86,7 +90,10 @@ export default class TabBarTop extends PureComponent<
     const label = this.props.getLabel({ ...scene, tintColor });
     if (typeof label === 'string') {
       return (
-        <Animated.Text style={[styles.label, { color }, labelStyle]}>
+        <Animated.Text
+          style={[styles.label, { color }, labelStyle]}
+          allowFontScaling={allowFontScaling}
+        >
           {upperCaseLabel ? label.toUpperCase() : label}
         </Animated.Text>
       );

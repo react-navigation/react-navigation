@@ -21,6 +21,8 @@ type DefaultProps = {
   inactiveTintColor: string,
   inactiveBackgroundColor: string,
   showLabel: boolean,
+  showIcon: boolean,
+  allowFontScaling: boolean,
 };
 
 type Props = {
@@ -28,6 +30,9 @@ type Props = {
   activeBackgroundColor: string,
   inactiveTintColor: string,
   inactiveBackgroundColor: string,
+  showLabel: boolean,
+  showIcon: boolean,
+  allowFontScaling: boolean,
   position: Animated.Value,
   navigation: NavigationScreenProp<NavigationState, NavigationAction>,
   jumpToIndex: (index: number) => void,
@@ -37,11 +42,9 @@ type Props = {
   ) => (scene: TabScene, jumpToIndex: (index: number) => void) => void,
   getTestIDProps: (scene: TabScene) => (scene: TabScene) => any,
   renderIcon: (scene: TabScene) => React.Element<*>,
-  showLabel: boolean,
   style?: ViewStyleProp,
   labelStyle?: TextStyleProp,
   tabStyle?: ViewStyleProp,
-  showIcon: boolean,
 };
 
 export default class TabBarBottom extends PureComponent<
@@ -50,13 +53,14 @@ export default class TabBarBottom extends PureComponent<
   void
 > {
   // See https://developer.apple.com/library/content/documentation/UserExperience/Conceptual/UIKitUICatalog/UITabBar.html
-  static defaultProps = {
+  static defaultProps: DefaultProps = {
     activeTintColor: '#3478f6', // Default active tint color in iOS 10
     activeBackgroundColor: 'transparent',
     inactiveTintColor: '#929292', // Default inactive tint color in iOS 10
     inactiveBackgroundColor: 'transparent',
     showLabel: true,
     showIcon: true,
+    allowFontScaling: true,
   };
 
   props: Props;
@@ -69,6 +73,7 @@ export default class TabBarBottom extends PureComponent<
       inactiveTintColor,
       labelStyle,
       showLabel,
+      allowFontScaling,
     } = this.props;
     if (showLabel === false) {
       return null;
@@ -90,7 +95,10 @@ export default class TabBarBottom extends PureComponent<
     const label = this.props.getLabel({ ...scene, tintColor });
     if (typeof label === 'string') {
       return (
-        <Animated.Text style={[styles.label, { color }, labelStyle]}>
+        <Animated.Text
+          style={[styles.label, { color }, labelStyle]}
+          allowFontScaling={allowFontScaling}
+        >
           {label}
         </Animated.Text>
       );
