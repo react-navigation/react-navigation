@@ -28,6 +28,8 @@ type DefaultProps = {
   inactiveTintColor: string,
   inactiveBackgroundColor: string,
   showLabel: boolean,
+  showIcon: boolean,
+  allowFontScaling: boolean,
 };
 
 type Props = {
@@ -35,6 +37,9 @@ type Props = {
   activeBackgroundColor: string,
   inactiveTintColor: string,
   inactiveBackgroundColor: string,
+  showLabel: boolean,
+  showIcon: boolean,
+  allowFontScaling: boolean,
   position: Animated.Value,
   navigation: NavigationScreenProp<NavigationState, NavigationAction>,
   jumpToIndex: (index: number) => void,
@@ -42,26 +47,27 @@ type Props = {
   getOnPress: (
     scene: TabScene
   ) => (scene: TabScene, jumpToIndex: (index: number) => void) => void,
+  getTestIDProps: (scene: TabScene) => (scene: TabScene) => any,
   renderIcon: (scene: TabScene) => React.Element<*>,
-  showLabel: boolean,
   style?: ViewStyleProp,
   labelStyle?: TextStyleProp,
   tabStyle?: ViewStyleProp,
-  showIcon: boolean,
-  isLandscape: boolean,
+  showIcon?: boolean,
+  isLandscape?: boolean,
 };
 
 const majorVersionIOS = parseInt(Platform.Version, 10);
 
 class TabBarBottom extends PureComponent<DefaultProps, Props, void> {
   // See https://developer.apple.com/library/content/documentation/UserExperience/Conceptual/UIKitUICatalog/UITabBar.html
-  static defaultProps = {
+  static defaultProps: DefaultProps = {
     activeTintColor: '#3478f6', // Default active tint color in iOS 10
     activeBackgroundColor: 'transparent',
     inactiveTintColor: '#929292', // Default inactive tint color in iOS 10
     inactiveBackgroundColor: 'transparent',
     showLabel: true,
     showIcon: true,
+    allowFontScaling: true,
   };
 
   props: Props;
@@ -76,6 +82,7 @@ class TabBarBottom extends PureComponent<DefaultProps, Props, void> {
       showLabel,
       showIcon,
       isLandscape,
+      allowFontScaling,
     } = this.props;
     if (showLabel === false) {
       return null;
@@ -108,6 +115,7 @@ class TabBarBottom extends PureComponent<DefaultProps, Props, void> {
       return (
         <Animated.Text
           style={[styles.label, { color, marginLeft, marginTop }, labelStyle]}
+          allowFontScaling={allowFontScaling}
         >
           {label}
         </Animated.Text>
@@ -147,12 +155,19 @@ class TabBarBottom extends PureComponent<DefaultProps, Props, void> {
     );
   };
 
+  _renderTestIDProps = (scene: TabScene) => {
+    const testIDProps =
+      this.props.getTestIDProps && this.props.getTestIDProps(scene);
+    return testIDProps;
+  };
+
   render() {
     const {
       position,
       navigation,
       jumpToIndex,
       getOnPress,
+      getTestIDProps,
       activeBackgroundColor,
       inactiveBackgroundColor,
       style,
@@ -178,10 +193,16 @@ class TabBarBottom extends PureComponent<DefaultProps, Props, void> {
             inputRange,
             outputRange: (outputRange: Array<string>),
           });
-
+      
+          const justifyContent = this.props.showIcon ? 'flex-end' : 'center';
+          const extraProps = this._renderTestIDProps(scene) || {};
+          const { testID, accessibilityLabel } = extraProps;
+      
           return (
             <TouchableWithoutFeedback
               key={route.key}
+              testID={testID}
+              accessibilityLabel={accessibilityLabel}
               onPress={() =>
                 onPress ? onPress(scene, jumpToIndex) : jumpToIndex(index)}
             >

@@ -107,6 +107,7 @@ Several options get passed to the underlying router to modify navigation logic:
 - `style` - style object for the tab bar
 - `labelStyle` - style object for the tab label
 - `tabStyle` - style object for the tab
+- `allowFontScaling` - whether label font should scale to respect Text Size accessibility settings, default is true
 
 Example:
 
@@ -137,6 +138,7 @@ tabBarOptions: {
 - `labelStyle` - style object for the tab label
 - `iconStyle` - style object for the tab icon
 - `style` - style object for the tab bar
+- `allowFontScaling` - whether label font should scale to respect Text Size accessibility settings, default is true
 
 Example:
 

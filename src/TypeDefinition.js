@@ -274,6 +274,7 @@ export type NavigationStackScreenOptions = {
   header?: ?(React.Element<*> | (HeaderProps => React.Element<*>)),
   headerTitle?: string | React.Element<*>,
   headerTitleStyle?: AnimatedTextStyleProp,
+  headerTitleAllowFontScaling?: boolean,
   headerTintColor?: string,
   headerLeft?: React.Element<*>,
   headerBackTitle?: string,
@@ -335,6 +336,7 @@ export type NavigationTabScreenOptions = {
         *
       >),
   tabBarVisible?: boolean,
+  tabBarTestIDProps?: { testID?: string, accessibilityLabel?: string },
   tabBarOnPress?: (
     scene: TabScene,
     jumpToIndex: (index: number) => void
