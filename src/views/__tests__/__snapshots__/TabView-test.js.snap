@@ -52,14 +52,17 @@ exports[`TabBarBottom renders successfully 1`] = `
           "alignItems": "center",
           "backgroundColor": "rgba(0, 0, 0, 0)",
           "flex": 1,
-          "flexDirection": "column",
           "justifyContent": "flex-end",
         }
       }
       testID={undefined}
     >
       <View
-        style={Object {}}
+        style={
+          Object {
+            "flexGrow": 1,
+          }
+        }
       >
         <View
           collapsable={undefined}
