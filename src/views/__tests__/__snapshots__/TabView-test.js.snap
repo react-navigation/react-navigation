@@ -105,7 +105,7 @@ exports[`TabBarBottom renders successfully 1`] = `
             "fontSize": 10,
             "marginBottom": 1.5,
             "marginLeft": 0,
-            "marginTop": 15,
+            "marginTop": 0,
             "textAlign": "center",
           }
         }

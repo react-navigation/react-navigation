@@ -193,11 +193,11 @@ class TabBarBottom extends PureComponent<DefaultProps, Props, void> {
             inputRange,
             outputRange: (outputRange: Array<string>),
           });
-      
+
           const justifyContent = this.props.showIcon ? 'flex-end' : 'center';
           const extraProps = this._renderTestIDProps(scene) || {};
           const { testID, accessibilityLabel } = extraProps;
-      
+
           return (
             <TouchableWithoutFeedback
               key={route.key}
