@@ -1,8 +1,15 @@
 /* @flow */
 
 import React, { PureComponent } from 'react';
-import { Animated, TouchableWithoutFeedback, StyleSheet } from 'react-native';
+import {
+  Animated,
+  TouchableWithoutFeedback,
+  StyleSheet,
+  View,
+  Platform,
+} from 'react-native';
 import TabBarIcon from './TabBarIcon';
+import withOrientation from '../withOrientation';
 
 import type {
   NavigationAction,
@@ -45,13 +52,13 @@ type Props = {
   style?: ViewStyleProp,
   labelStyle?: TextStyleProp,
   tabStyle?: ViewStyleProp,
+  showIcon?: boolean,
+  isLandscape?: boolean,
 };
 
-export default class TabBarBottom extends PureComponent<
-  DefaultProps,
-  Props,
-  void
-> {
+const majorVersionIOS = parseInt(Platform.Version, 10);
+
+class TabBarBottom extends PureComponent<DefaultProps, Props, void> {
   // See https://developer.apple.com/library/content/documentation/UserExperience/Conceptual/UIKitUICatalog/UITabBar.html
   static defaultProps: DefaultProps = {
     activeTintColor: '#3478f6', // Default active tint color in iOS 10
@@ -73,6 +80,8 @@ export default class TabBarBottom extends PureComponent<
       inactiveTintColor,
       labelStyle,
       showLabel,
+      showIcon,
+      isLandscape,
       allowFontScaling,
     } = this.props;
     if (showLabel === false) {
@@ -93,10 +102,19 @@ export default class TabBarBottom extends PureComponent<
 
     const tintColor = scene.focused ? activeTintColor : inactiveTintColor;
     const label = this.props.getLabel({ ...scene, tintColor });
+    let marginLeft = 0;
+    if (isLandscape && showIcon && majorVersionIOS >= 11) {
+      marginLeft = LABEL_LEFT_MARGIN;
+    }
+    let marginTop = 0;
+    if (!isLandscape && showIcon && majorVersionIOS >= 11) {
+      marginTop = LABEL_TOP_MARGIN;
+    }
+
     if (typeof label === 'string') {
       return (
         <Animated.Text
-          style={[styles.label, { color }, labelStyle]}
+          style={[styles.label, { color, marginLeft, marginTop }, labelStyle]}
           allowFontScaling={allowFontScaling}
         >
           {label}
@@ -119,6 +137,7 @@ export default class TabBarBottom extends PureComponent<
       inactiveTintColor,
       renderIcon,
       showIcon,
+      showLabel,
     } = this.props;
     if (showIcon === false) {
       return null;
@@ -131,7 +150,7 @@ export default class TabBarBottom extends PureComponent<
         inactiveTintColor={inactiveTintColor}
         renderIcon={renderIcon}
         scene={scene}
-        style={styles.icon}
+        style={showLabel && majorVersionIOS >= 11 ? {} : styles.icon}
       />
     );
   };
@@ -153,6 +172,7 @@ export default class TabBarBottom extends PureComponent<
       inactiveBackgroundColor,
       style,
       tabStyle,
+      isLandscape,
     } = this.props;
     const { routes } = navigation.state;
     // Prepend '-1', so there are always at least 2 items in inputRange
@@ -173,9 +193,11 @@ export default class TabBarBottom extends PureComponent<
             inputRange,
             outputRange: (outputRange: Array<string>),
           });
+
           const justifyContent = this.props.showIcon ? 'flex-end' : 'center';
           const extraProps = this._renderTestIDProps(scene) || {};
           const { testID, accessibilityLabel } = extraProps;
+
           return (
             <TouchableWithoutFeedback
               key={route.key}
@@ -187,7 +209,9 @@ export default class TabBarBottom extends PureComponent<
               <Animated.View
                 style={[
                   styles.tab,
-                  { backgroundColor, justifyContent },
+                  isLandscape && majorVersionIOS >= 11 && styles.tabLandscape,
+                  !isLandscape && majorVersionIOS >= 11 && styles.tabPortrait,
+                  { backgroundColor },
                   tabStyle,
                 ]}
               >
@@ -202,18 +226,28 @@ export default class TabBarBottom extends PureComponent<
   }
 }
 
+const LABEL_LEFT_MARGIN = 20;
+const LABEL_TOP_MARGIN = 15;
 const styles = StyleSheet.create({
   tabBar: {
-    height: 49, // Default tab bar height in iOS 10
+    height: 49, // Default tab bar height in iOS 10+
     flexDirection: 'row',
     borderTopWidth: StyleSheet.hairlineWidth,
     borderTopColor: 'rgba(0, 0, 0, .3)',
-    backgroundColor: '#F7F7F7', // Default background color in iOS 10
+    backgroundColor: '#F7F7F7', // Default background color in iOS 10+
   },
   tab: {
     flex: 1,
-    alignItems: 'stretch',
+    alignItems: 'center',
     justifyContent: 'flex-end',
+  },
+  tabPortrait: {
+    justifyContent: 'flex-end',
+    flexDirection: 'column',
+  },
+  tabLandscape: {
+    justifyContent: 'center',
+    flexDirection: 'row',
   },
   icon: {
     flexGrow: 1,
@@ -225,3 +259,5 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
 });
+
+export default withOrientation(TabBarBottom);
