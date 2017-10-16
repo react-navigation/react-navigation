@@ -150,7 +150,7 @@ class TabBarBottom extends PureComponent<DefaultProps, Props, void> {
         inactiveTintColor={inactiveTintColor}
         renderIcon={renderIcon}
         scene={scene}
-        style={showLabel ? {} : styles.icon}
+        style={showLabel && majorVersionIOS >= 11 ? {} : styles.icon}
       />
     );
   };
@@ -209,7 +209,8 @@ class TabBarBottom extends PureComponent<DefaultProps, Props, void> {
               <Animated.View
                 style={[
                   styles.tab,
-                  isLandscape ? styles.tabLandscape : styles.tabPortrait,
+                  isLandscape && majorVersionIOS >= 11 && styles.tabLandscape,
+                  !isLandscape && majorVersionIOS >= 11 && styles.tabPortrait,
                   { backgroundColor },
                   tabStyle,
                 ]}
