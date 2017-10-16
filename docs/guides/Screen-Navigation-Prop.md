@@ -90,7 +90,7 @@ class ProfileScreen extends React.Component {
 
 ## `goBack` - Close the active screen and move back
 
-Optionally provide a key, which specifies the route to go back from. By default, goBack will close the route that it is called from. If the goal is to go back *anywhere*, without specifying what is getting closed, call `.goBack(null);`
+Optionally provide a key, which specifies the route to go back from. By default, goBack will close the currently active route (which most of the time is the route that it is called from).
 
 ```js
 class HomeScreen extends React.Component {
@@ -101,10 +101,6 @@ class HomeScreen extends React.Component {
         <Button
           onPress={() => goBack()}
           title="Go back from this HomeScreen"
-        />
-        <Button
-          onPress={() => goBack(null)}
-          title="Go back anywhere"
         />
         <Button
           onPress={() => goBack('screen-123')}
