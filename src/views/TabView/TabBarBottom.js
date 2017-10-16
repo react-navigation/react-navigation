@@ -6,6 +6,7 @@ import {
   TouchableWithoutFeedback,
   StyleSheet,
   View,
+  Platform,
 } from 'react-native';
 import TabBarIcon from './TabBarIcon';
 import withOrientation from '../withOrientation';
@@ -50,6 +51,8 @@ type Props = {
   isLandscape: boolean,
 };
 
+const majorVersionIOS = parseInt(Platform.Version, 10);
+
 class TabBarBottom extends PureComponent<DefaultProps, Props, void> {
   // See https://developer.apple.com/library/content/documentation/UserExperience/Conceptual/UIKitUICatalog/UITabBar.html
   static defaultProps = {
@@ -93,11 +96,11 @@ class TabBarBottom extends PureComponent<DefaultProps, Props, void> {
     const tintColor = scene.focused ? activeTintColor : inactiveTintColor;
     const label = this.props.getLabel({ ...scene, tintColor });
     let marginLeft = 0;
-    if (isLandscape && showIcon) {
+    if (isLandscape && showIcon && majorVersionIOS >= 11) {
       marginLeft = LABEL_LEFT_MARGIN;
     }
     let marginTop = 0;
-    if (!isLandscape && showIcon) {
+    if (!isLandscape && showIcon && majorVersionIOS >= 11) {
       marginTop = LABEL_TOP_MARGIN;
     }
 
