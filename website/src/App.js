@@ -63,26 +63,50 @@ const GuideDocs = createNavigator(
     GettingStarted: {
       screen: createDocPage({
         doc: 'guides/Guide-Intro',
-        title: 'Hello Mobile Navigation',
-        linkName: 'Hello Mobile Navigation',
+        title: 'Introduction',
+        linkName: 'Introduction',
       }),
       path: '',
+    },
+    Installation: {
+      screen: createDocPage({
+        doc: 'guides/Guide-Installation',
+        title: 'Installation',
+        linkName: 'Installation',
+      }),
+      path: 'installation',
+    },
+    BasicExample: {
+      screen: createDocPage({
+        doc: 'guides/Guide-Basic-Example',
+        title: 'Basic App',
+        linkName: 'Basic App',
+      }),
+      path: 'basic-app',
     },
     NestedNavigator: {
       screen: createDocPage({
         doc: 'guides/Guide-Nested',
-        title: 'Nesting Navigators',
-        linkName: 'Nesting Navigators',
+        title: 'Basic App: Nesting Navigators',
+        linkName: 'Basic App: Nesting Navigators',
       }),
       path: 'nesting',
     },
     ConfiguringHeaders: {
       screen: createDocPage({
         doc: 'guides/Guide-Headers',
-        title: 'Configuring Headers',
-        linkName: 'Configuring Headers',
+        title: 'Basic App: Configuring Headers',
+        linkName: 'Basic App: Configuring Headers',
       }),
       path: 'headers',
+    },
+    NavigationPlayground: {
+      screen: createDocPage({
+        doc: 'guides/Guide-Navigation-Playground',
+        title: 'Navigation Playground',
+        linkName: 'Navigation Playground',
+      }),
+      path: 'navigation-playground',
     },
   })
 )(NavView);
