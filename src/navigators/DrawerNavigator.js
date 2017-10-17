@@ -25,8 +25,6 @@ export type DrawerNavigatorConfig = {
 
 const { height, width } = Dimensions.get('window');
 
-console.log(height, width, Math.min(height, width));
-
 const DefaultDrawerConfig = {
   /*
    * Default drawer width is screen width - header width
