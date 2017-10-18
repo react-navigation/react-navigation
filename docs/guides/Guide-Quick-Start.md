@@ -1,4 +1,4 @@
-# Installing React Navigation
+# Quick Start Guide
 
 To get started with React Navigation, all you have to do is install the `react-navigation` npm package.
 

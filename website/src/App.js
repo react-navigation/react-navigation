@@ -68,13 +68,13 @@ const GuideDocs = createNavigator(
       }),
       path: '',
     },
-    Installation: {
+    QuickStart: {
       screen: createDocPage({
-        doc: 'guides/Guide-Installation',
-        title: 'Installation',
-        linkName: 'Installation',
+        doc: 'guides/Guide-Quick-Start',
+        title: 'Quick Start',
+        linkName: 'Quick Start',
       }),
-      path: 'installation',
+      path: 'quick-start',
     },
     BasicExample: {
       screen: createDocPage({
