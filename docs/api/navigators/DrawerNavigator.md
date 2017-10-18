@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
 - `onItemPress(route)` - function to be invoked when an item is pressed
 - `style` - style object for the content section
 - `labelStyle` - style object to overwrite `Text` style inside content section, when your label is a string
-
+- `itemStyle` - style object for the item content section
 #### Example:
 
 ```js
