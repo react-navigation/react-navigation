@@ -205,3 +205,112 @@ This will ensure the `tabBarLabel` is consistent (important when using nested na
 You can view the complete finished code below:
 
 <div data-snack-id="BJZ2GVVpb" data-snack-platform="ios" data-snack-preview="true" data-snack-theme="light" style="overflow:hidden;background:#fafafa;border:1px solid rgba(0,0,0,.16);border-radius:4px;height:505px;width:100%"></div>
+
+## Creating a DrawerNavigator
+
+To get started with `TabNavigator` first import and create a new `RootTabs` component.
+
+```javascript
+import { DrawerNavigator } from 'react-navigation';
+
+const RootDrawer = DrawerNavigator({
+
+});
+
+export default RootDrawer;
+```
+
+We then need to create some screens and add them to our `DrawerNavigator`.
+
+```javascript
+import React from 'react';
+import { View, Text } from 'react-native';
+import { DrawerNavigator } from 'react-navigation';
+
+const HomeScreen = () => (
+  <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+    <Text>Home Screen</Text>
+  </View>
+);
+
+const ProfileScreen = () => (
+  <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+    <Text>Profile Screen</Text>
+  </View>
+);
+
+const RootDrawer = DrawerNavigator({
+  Home: {
+    screen: HomeScreen,
+  },
+  Profile: {
+    screen: ProfileScreen,
+  },
+});
+
+export default RootDrawer;
+```
+
+Getting there! Now let's explicity set a label and icon for the drawer items.
+
+> We'll be using `react-native-vector-icons` in the example. If you don't have it installed in your project already please do so.
+
+```javascript
+...
+import Ionicons from 'react-native-vector-icons/Ionicons';
+
+...
+
+const RootDrawer = DrawerNavigator({
+  Home: {
+    screen: HomeScreen,
+    navigationOptions: {
+      drawerLabel: 'Home',
+      drawerIcon: ({ tintColor, focused }) => (
+        <Ionicons
+          name={focused ? 'ios-home' : 'ios-home-outline'}
+          size={20}
+          style={{ color: tintColor }}
+        />
+      ),
+    },
+  },
+  Profile: {
+    screen: ProfileScreen,
+    navigationOptions: {
+      drawerLabel: 'Profile',
+      drawerIcon: ({ tintColor, focused }) => (
+        <Ionicons
+          name={focused ? 'ios-person' : 'ios-person-outline'}
+          size={20}
+          style={{ color: tintColor }}
+        />
+      ),
+    },
+  },
+});
+
+export default RootDrawer;
+```
+
+To open the drawer you can swipe from the left edge of the screen to the right. You've also got the option to open the drawer view `navigation.navigate('DrawerToggle')`, which we'll add to the Home component now. Make sure you import the `Button` component from `react-native`.
+
+```javascript
+...
+
+const HomeScreen = ({ navigation }) => (
+  <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+    <Text>Home Screen</Text>
+    <Button
+      onPress={() => navigation.navigate('DrawerToggle')}
+      title="Open Drawer"
+    />
+  </View>
+);
+
+...
+```
+
+You can view the finished code below.
+
+<div data-snack-id="rk90N44a-" data-snack-platform="ios" data-snack-preview="true" data-snack-theme="light" style="overflow:hidden;background:#fafafa;border:1px solid rgba(0,0,0,.16);border-radius:4px;height:505px;width:100%"></div>
