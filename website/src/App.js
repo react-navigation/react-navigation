@@ -79,34 +79,26 @@ const GuideDocs = createNavigator(
     BasicExample: {
       screen: createDocPage({
         doc: 'guides/Guide-Basic-Example',
-        title: 'Basic App',
-        linkName: 'Basic App',
+        title: 'Hello Mobile Navigation',
+        linkName: 'Hello Mobile Navigation',
       }),
       path: 'basic-app',
     },
     NestedNavigator: {
       screen: createDocPage({
         doc: 'guides/Guide-Nested',
-        title: 'Basic App: Nesting Navigators',
-        linkName: 'Basic App: Nesting Navigators',
+        title: 'Nesting Navigators',
+        linkName: 'Nesting Navigators',
       }),
       path: 'nesting',
     },
     ConfiguringHeaders: {
       screen: createDocPage({
         doc: 'guides/Guide-Headers',
-        title: 'Basic App: Configuring Headers',
-        linkName: 'Basic App: Configuring Headers',
+        title: 'Configuring Headers',
+        linkName: 'Configuring Headers',
       }),
       path: 'headers',
-    },
-    NavigationPlayground: {
-      screen: createDocPage({
-        doc: 'guides/Guide-Navigation-Playground',
-        title: 'Navigation Playground',
-        linkName: 'Navigation Playground',
-      }),
-      path: 'navigation-playground',
     },
   })
 )(NavView);
