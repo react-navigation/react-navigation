@@ -67,13 +67,19 @@ a.editLink {
 .md-section > ul,
 .md-section > ol,
 .md-section > pre,
-.md-section > p {
+.md-section > p,
+.md-section > blockquote {
   margin: 15px 0 0 0;
 }
 .md-section ul li,
 .md-section ol li {
   margin: 15px 0 0 0;
 }
+
+.md-section .snack {
+  margin: 15px 0 0 0;
+}
+
 .errorScreen {
   height: 100%;
   margin: 100px;

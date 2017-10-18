@@ -111,7 +111,7 @@ const HomeScreen = ({ navigation }) => (
 
 And there you have it! That's the basics of using the [StackNavigator](/docs/navigators/stack), and React Navigation as a whole. Here's the full code from this example:
 
-<div data-snack-id="HJlnU0XTb" data-snack-platform="ios" data-snack-preview="true" data-snack-theme="light" style="overflow:hidden;background:#fafafa;border:1px solid rgba(0,0,0,.16);border-radius:4px;height:505px;width:100%"></div>
+<div class="snack" data-snack-id="HJlnU0XTb" data-snack-platform="ios" data-snack-preview="true" data-snack-theme="light" style="overflow:hidden;background:#fafafa;border:1px solid rgba(0,0,0,.16);border-radius:4px;height:505px;width:100%"></div>
 
 ## Creating a TabNavigator
 
@@ -204,7 +204,7 @@ This will ensure the `tabBarLabel` is consistent (important when using nested na
 
 You can view the complete finished code below:
 
-<div data-snack-id="BJZ2GVVpb" data-snack-platform="ios" data-snack-preview="true" data-snack-theme="light" style="overflow:hidden;background:#fafafa;border:1px solid rgba(0,0,0,.16);border-radius:4px;height:505px;width:100%"></div>
+<div class="snack" data-snack-id="BJZ2GVVpb" data-snack-platform="ios" data-snack-preview="true" data-snack-theme="light" style="overflow:hidden;background:#fafafa;border:1px solid rgba(0,0,0,.16);border-radius:4px;height:505px;width:100%"></div>
 
 ## Creating a DrawerNavigator
 
@@ -313,4 +313,4 @@ const HomeScreen = ({ navigation }) => (
 
 You can view the finished code below.
 
-<div data-snack-id="rk90N44a-" data-snack-platform="ios" data-snack-preview="true" data-snack-theme="light" style="overflow:hidden;background:#fafafa;border:1px solid rgba(0,0,0,.16);border-radius:4px;height:505px;width:100%"></div>
+<div class="snack" data-snack-id="rk90N44a-" data-snack-platform="ios" data-snack-preview="true" data-snack-theme="light" style="overflow:hidden;background:#fafafa;border:1px solid rgba(0,0,0,.16);border-radius:4px;height:505px;width:100%"></div>
