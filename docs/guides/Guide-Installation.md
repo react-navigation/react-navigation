@@ -142,7 +142,7 @@ const HomeScreen = () => (
 
 const ProfileScreen = () => (
   <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-    <Text>Home Screen</Text>
+    <Text>Profile Screen</Text>
   </View>
 );
 
@@ -164,7 +164,7 @@ Getting there! Now let's explicity set a label and icon for the tab bar.
 
 ```javascript
 ...
-import Icon from 'react-native-vector-icons/Ionicons';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 ...
 
@@ -173,12 +173,35 @@ const RootTabs = TabNavigator({
     screen: HomeScreen,
     navigationOptions: {
       tabBarLabel: 'Home',
+      tabBarIcon: ({ tintColor, focused }) => (
+        <Ionicons
+          name={focused ? 'ios-home' : 'ios-home-outline'}
+          size={26}
+          style={{ color: tintColor }}
+        />
+      ),
     },
   },
   Profile: {
     screen: ProfileScreen,
+    navigationOptions: {
+      tabBarLabel: 'Profile',
+      tabBarIcon: ({ tintColor, focused }) => (
+        <Ionicons
+          name={focused ? 'ios-person' : 'ios-person-outline'}
+          size={26}
+          style={{ color: tintColor }}
+        />
+      ),
+    },
   },
 });
 
 export default RootTabs;
 ```
+
+This will ensure the `tabBarLabel` is consistent (important when using nested navigators) and it will set a `tabBarIcon`. This icon will only be visible on iOS by default given the tab bar component used, which aligns with standard design patterns on Android.
+
+You can view the complete finished code below:
+
+<div data-snack-id="BJZ2GVVpb" data-snack-platform="ios" data-snack-preview="true" data-snack-theme="light" style="overflow:hidden;background:#fafafa;border:1px solid rgba(0,0,0,.16);border-radius:4px;height:505px;width:100%"></div>
