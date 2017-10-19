@@ -9,6 +9,7 @@ import {
   Platform,
 } from 'react-native';
 import TabBarIcon from './TabBarIcon';
+import SafeAreaView from '../SafeAreaView';
 import withOrientation from '../withOrientation';
 
 import type {
@@ -168,51 +169,63 @@ class TabBarBottom extends React.PureComponent<Props> {
     const { routes } = navigation.state;
     // Prepend '-1', so there are always at least 2 items in inputRange
     const inputRange = [-1, ...routes.map((x: *, i: number) => i)];
+
+    const tabBarStyle = [
+      styles.tabBar,
+      isLandscape ? styles.tabBarLandscape : styles.tabBarPortrait,
+      style,
+    ];
+
     return (
-      <Animated.View style={[styles.tabBar, style]}>
-        {routes.map((route: NavigationRoute, index: number) => {
-          const focused = index === navigation.state.index;
-          const scene = { route, index, focused };
-          const onPress = getOnPress(scene);
-          const outputRange = inputRange.map(
-            (inputIndex: number) =>
-              inputIndex === index
-                ? activeBackgroundColor
-                : inactiveBackgroundColor
-          );
-          const backgroundColor = position.interpolate({
-            inputRange,
-            outputRange: (outputRange: Array<string>),
-          });
+      <SafeAreaView
+        style={styles.tabBarContainer}
+        insetOverride={{ bottom: 'always' }}
+      >
+        <Animated.View style={tabBarStyle}>
+          {routes.map((route: NavigationRoute, index: number) => {
+            const focused = index === navigation.state.index;
+            const scene = { route, index, focused };
+            const onPress = getOnPress(scene);
+            const outputRange = inputRange.map(
+              (inputIndex: number) =>
+                inputIndex === index
+                  ? activeBackgroundColor
+                  : inactiveBackgroundColor
+            );
+            const backgroundColor = position.interpolate({
+              inputRange,
+              outputRange: (outputRange: Array<string>),
+            });
 
-          const justifyContent = this.props.showIcon ? 'flex-end' : 'center';
-          const extraProps = this._renderTestIDProps(scene) || {};
-          const { testID, accessibilityLabel } = extraProps;
+            const justifyContent = this.props.showIcon ? 'flex-end' : 'center';
+            const extraProps = this._renderTestIDProps(scene) || {};
+            const { testID, accessibilityLabel } = extraProps;
 
-          return (
-            <TouchableWithoutFeedback
-              key={route.key}
-              testID={testID}
-              accessibilityLabel={accessibilityLabel}
-              onPress={() =>
-                onPress ? onPress(scene, jumpToIndex) : jumpToIndex(index)}
-            >
-              <Animated.View
-                style={[
-                  styles.tab,
-                  isLandscape && useHorizontalTabs && styles.tabLandscape,
-                  !isLandscape && useHorizontalTabs && styles.tabPortrait,
-                  { backgroundColor },
-                  tabStyle,
-                ]}
+            return (
+              <TouchableWithoutFeedback
+                key={route.key}
+                testID={testID}
+                accessibilityLabel={accessibilityLabel}
+                onPress={() =>
+                  onPress ? onPress(scene, jumpToIndex) : jumpToIndex(index)}
               >
-                {this._renderIcon(scene)}
-                {this._renderLabel(scene)}
-              </Animated.View>
-            </TouchableWithoutFeedback>
-          );
-        })}
-      </Animated.View>
+                <Animated.View
+                  style={[
+                    styles.tab,
+                    isLandscape && useHorizontalTabs && styles.tabLandscape,
+                    !isLandscape && useHorizontalTabs && styles.tabPortrait,
+                    { backgroundColor },
+                    tabStyle,
+                  ]}
+                >
+                  {this._renderIcon(scene)}
+                  {this._renderLabel(scene)}
+                </Animated.View>
+              </TouchableWithoutFeedback>
+            );
+          })}
+        </Animated.View>
+      </SafeAreaView>
     );
   }
 }
@@ -220,12 +233,20 @@ class TabBarBottom extends React.PureComponent<Props> {
 const LABEL_LEFT_MARGIN = 20;
 const LABEL_TOP_MARGIN = 15;
 const styles = StyleSheet.create({
-  tabBar: {
-    height: 49, // Default tab bar height in iOS 10+
-    flexDirection: 'row',
+  tabBarContainer: {
+    backgroundColor: '#F7F7F7', // Default background color in iOS 10
     borderTopWidth: StyleSheet.hairlineWidth,
     borderTopColor: 'rgba(0, 0, 0, .3)',
-    backgroundColor: '#F7F7F7', // Default background color in iOS 10+
+  },
+  tabBar: {
+    // height: 49, // Default tab bar height in iOS 10+
+    flexDirection: 'row',
+  },
+  tabBarLandscape: {
+    height: 29,
+  },
+  tabBarPortrait: {
+    height: 49,
   },
   tab: {
     flex: 1,

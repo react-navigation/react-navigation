@@ -6,6 +6,7 @@ import { TabViewAnimated, TabViewPagerPan } from 'react-native-tab-view';
 import type { Layout } from 'react-native-tab-view/src/TabViewTypeDefinitions';
 import SceneView from '../SceneView';
 import withCachedChildNavigation from '../../withCachedChildNavigation';
+import SafeAreaView from '../SafeAreaView';
 
 import type {
   NavigationScreenProp,

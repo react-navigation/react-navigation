@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { DeviceInfo, SafeAreaView, View } from 'react-native';
+import { DeviceInfo, View } from 'react-native';
 import withOrientation from './withOrientation';
 
 const { isIPhoneX_deprecated: isIPhoneX } = DeviceInfo;
@@ -26,6 +26,24 @@ class SafeView extends Component {
     };
   };
 
+  getInset = key => {
+    const { isLandscape } = this.props;
+    switch (key) {
+      case 'horizontal':
+      case 'right':
+      case 'left': {
+        return isLandscape ? 44 : 0;
+      }
+      case 'vertical':
+      case 'top': {
+        return isLandscape ? 0 : 44;
+      }
+      case 'bottom': {
+        return isLandscape ? 24 : 34;
+      }
+    }
+  };
+
   render() {
     const { insetOverride, isLandscape, children, style } = this.props;
 
@@ -37,31 +55,34 @@ class SafeView extends Component {
 
     if (insetOverride) {
       Object.keys(insetOverride).forEach(key => {
+        let inset = insetOverride[key];
+
+        if (inset === 'always') {
+          inset = this.getInset(key);
+        }
+
+        if (inset === 'never') {
+          inset = 0;
+        }
+
         switch (key) {
           case 'horizontal': {
-            safeAreaStyle.paddingLeft = insetOverride[key];
-            safeAreaStyle.paddingRight = insetOverride[key];
+            safeAreaStyle.paddingLeft = inset;
+            safeAreaStyle.paddingRight = inset;
             break;
           }
           case 'vertical': {
-            safeAreaStyle.paddingTop = insetOverride[key];
-            safeAreaStyle.paddingBottom = insetOverride[key];
+            safeAreaStyle.paddingTop = inset;
+            safeAreaStyle.paddingBottom = inset;
             break;
           }
-          case 'left': {
-            safeAreaStyle.paddingLeft = insetOverride[key];
-            break;
-          }
-          case 'right': {
-            safeAreaStyle.paddingRight = insetOverride[key];
-            break;
-          }
-          case 'top': {
-            safeAreaStyle.paddingTop = insetOverride[key];
-            break;
-          }
+          case 'left':
+          case 'right':
+          case 'top':
           case 'bottom': {
-            safeAreaStyle.paddingBottom = insetOverride[key];
+            const [first] = key;
+            const padding = `padding${first.toUpperCase()}${key.slice(1)}`;
+            safeAreaStyle[padding] = inset;
             break;
           }
         }
@@ -69,7 +90,11 @@ class SafeView extends Component {
     }
 
     return (
-      <View onLayout={this._onLayout} style={[style, safeAreaStyle]}>
+      <View
+        onLayout={this._onLayout}
+        style={[style, safeAreaStyle]}
+        //ref={c => (this.view = c)}
+      >
         {this.props.children}
       </View>
     );
@@ -81,16 +106,28 @@ class SafeView extends Component {
     const WIDTH = isLandscape ? DEVICE_HEIGHT : DEVICE_WIDTH;
     const HEIGHT = isLandscape ? DEVICE_WIDTH : DEVICE_HEIGHT;
 
+    // if (this.view) {
+    // this.view.measure((x, y, width, height) => {
     const touchesTop = y === 0;
     const touchesBottom = y + height === HEIGHT;
     const touchesLeft = x === 0;
     const touchesRight = x + width === WIDTH;
 
     if (verbose) {
-      console.log(isLandscape, y, height, y + height, HEIGHT);
+      // console.log(this.view);
+      console.log(
+        isLandscape ? 'landscape' : 'portrait',
+        `\ny:${y.toFixed(2)} + height:${height.toFixed(2)} = ${(y + height
+        ).toFixed(2)} =? ${HEIGHT}`,
+        `\nx:${x.toFixed(2)} + width:${width.toFixed(2)} = ${(x + width
+        ).toFixed(2)} =? ${WIDTH}\n`
+      );
+      // console.log(pageX, pageY);
     }
 
     this.setState({ touchesTop, touchesBottom, touchesLeft, touchesRight });
+    // });
+    // }
   };
 }
 
