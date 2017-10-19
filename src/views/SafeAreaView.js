@@ -47,32 +47,6 @@ class SafeView extends Component {
         const touchesLeft = x === 0;
         const touchesRight = x + width === WIDTH;
 
-        if (verbose) {
-          console.log('\n');
-          console.log(
-            'x',
-            lx,
-            x,
-            '\ny',
-            ly,
-            y,
-            '\nwidth',
-            lwidth,
-            width,
-            '\nheight',
-            lheight,
-            height
-          );
-          console.log(
-            isLandscape ? 'landscape' : 'portrait',
-            `\ny:${y.toFixed(2)} + height:${height.toFixed(2)} = ${(y + height
-            ).toFixed(2)} =? ${HEIGHT}`,
-            `\nx:${x.toFixed(2)} + width:${width.toFixed(2)} = ${(x + width
-            ).toFixed(2)} =? ${WIDTH}`
-          );
-          console.log('\n');
-        }
-
         this.setState({ touchesTop, touchesBottom, touchesLeft, touchesRight });
       });
     }
