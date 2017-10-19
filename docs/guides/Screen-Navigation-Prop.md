@@ -116,6 +116,26 @@ class HomeScreen extends React.Component {
 }
 ```
 
+*Going back from a specific screen*
+
+Consider the following navigation stack history:
+```... 
+navigation.navigate(SCREEN_KEY_A);
+...
+navigation.navigate(SCREEN_KEY_B);
+...
+navigation.navigate(SCREEN_KEY_C);
+...
+navigation.navigate(SCREEN_KEY_D);
+```
+
+Now you are on *screen D* and want to go back to *screen A* (popping D, C, and B).
+Then you need to supply a key to goBack *FROM*:
+
+```
+navigation.goBack(SCREEN_KEY_B) // will go to screen A FROM screen B
+```
+
 ## `dispatch` - Send an action to the router
 
 Use dispatch to send any navigation action to the router. The other navigation functions use dispatch behind the scenes.

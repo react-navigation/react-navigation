@@ -10,7 +10,8 @@ import type {
   NavigationState,
   NavigationAction,
   NavigationRoute,
-  Style,
+  ViewStyleProp,
+  TextStyleProp,
 } from '../../TypeDefinition';
 import type { DrawerScene, DrawerItem } from './DrawerView.js';
 
@@ -25,8 +26,8 @@ type Props = {
   getLabel: (scene: DrawerScene) => ?(React.Element<*> | string),
   renderIcon: (scene: DrawerScene) => ?React.Element<*>,
   onItemPress: (info: DrawerItem) => void,
-  style?: Style,
-  labelStyle?: Style,
+  style?: ViewStyleProp,
+  labelStyle?: TextStyleProp,
 };
 
 /**
@@ -65,18 +66,16 @@ const DrawerNavigatorItems = ({
           delayPressIn={0}
         >
           <View style={[styles.item, { backgroundColor }]}>
-            {icon
-              ? <View
-                  style={[styles.icon, focused ? null : styles.inactiveIcon]}
-                >
-                  {icon}
-                </View>
-              : null}
-            {typeof label === 'string'
-              ? <Text style={[styles.label, { color }, labelStyle]}>
-                  {label}
-                </Text>
-              : label}
+            {icon ? (
+              <View style={[styles.icon, focused ? null : styles.inactiveIcon]}>
+                {icon}
+              </View>
+            ) : null}
+            {typeof label === 'string' ? (
+              <Text style={[styles.label, { color }, labelStyle]}>{label}</Text>
+            ) : (
+              label
+            )}
           </View>
         </TouchableItem>
       );

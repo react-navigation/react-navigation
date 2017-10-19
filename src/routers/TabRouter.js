@@ -38,19 +38,19 @@ export default (
   const tabRouters = {};
   order.forEach((routeName: string) => {
     const routeConfig = routeConfigs[routeName];
-    paths[routeName] = typeof routeConfig.path === 'string'
-      ? routeConfig.path
-      : routeName;
+    paths[routeName] =
+      typeof routeConfig.path === 'string' ? routeConfig.path : routeName;
     tabRouters[routeName] = null;
     if (routeConfig.screen && routeConfig.screen.router) {
       tabRouters[routeName] = routeConfig.screen.router;
     }
   });
-  invariant(
-    initialRouteIndex !== -1,
-    `Invalid initialRouteName '${initialRouteName}' for TabRouter. ` +
-      `Should be one of ${order.map((n: *) => `"${n}"`).join(', ')}`
-  );
+  if (initialRouteIndex === -1) {
+    throw new Error(
+      `Invalid initialRouteName '${initialRouteName}' for TabRouter. ` +
+        `Should be one of ${order.map((n: *) => `"${n}"`).join(', ')}`
+    );
+  }
   return {
     getStateForAction(
       action: NavigationAction | { action: NavigationAction },
