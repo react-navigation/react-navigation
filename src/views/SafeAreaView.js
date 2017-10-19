@@ -14,19 +14,121 @@ class SafeView extends Component {
     touchesRight: true,
   };
 
-  defaultSafeAreaStyle = () => {
-    const { touchesTop, touchesBottom, touchesLeft, touchesRight } = this.state;
-    const { isLandscape } = this.props;
+  render() {
+    const { isLandscape, children, style } = this.props;
 
-    return {
+    if (!isIPhoneX) {
+      return <View style={style}>{this.props.children}</View>;
+    }
+
+    const safeAreaStyle = this._getSafeAreaStyle();
+
+    return (
+      <View
+        onLayout={this._onLayout}
+        style={[style, safeAreaStyle]}
+        ref={c => (this.view = c)}
+      >
+        {this.props.children}
+      </View>
+    );
+  }
+
+  _onLayout = ({ nativeEvent: { layout: { x, y, width, height } } }) => {
+    const { isLandscape, verbose } = this.props;
+
+    const WIDTH = isLandscape ? DEVICE_HEIGHT : DEVICE_WIDTH;
+    const HEIGHT = isLandscape ? DEVICE_WIDTH : DEVICE_HEIGHT;
+
+    if (this.view) {
+      this.view.measureInWindow((lx, ly, lwidth, lheight) => {
+        const touchesTop = y === 0;
+        const touchesBottom = y + height === HEIGHT;
+        const touchesLeft = x === 0;
+        const touchesRight = x + width === WIDTH;
+
+        if (verbose) {
+          console.log('\n');
+          console.log(
+            'x',
+            lx,
+            x,
+            '\ny',
+            ly,
+            y,
+            '\nwidth',
+            lwidth,
+            width,
+            '\nheight',
+            lheight,
+            height
+          );
+          console.log(
+            isLandscape ? 'landscape' : 'portrait',
+            `\ny:${y.toFixed(2)} + height:${height.toFixed(2)} = ${(y + height
+            ).toFixed(2)} =? ${HEIGHT}`,
+            `\nx:${x.toFixed(2)} + width:${width.toFixed(2)} = ${(x + width
+            ).toFixed(2)} =? ${WIDTH}`
+          );
+          console.log('\n');
+        }
+
+        this.setState({ touchesTop, touchesBottom, touchesLeft, touchesRight });
+      });
+    }
+  };
+
+  _getSafeAreaStyle = () => {
+    const { touchesTop, touchesBottom, touchesLeft, touchesRight } = this.state;
+    const { insetOverride, isLandscape } = this.props;
+
+    const style = {
       paddingTop: touchesTop ? (isLandscape ? 0 : 44) : 0,
       paddingBottom: touchesBottom ? (isLandscape ? 24 : 34) : 0,
       paddingLeft: touchesLeft ? (isLandscape ? 44 : 0) : 0,
       paddingRight: touchesRight ? (isLandscape ? 44 : 0) : 0,
     };
+
+    if (insetOverride) {
+      Object.keys(insetOverride).forEach(key => {
+        let inset = insetOverride[key];
+
+        if (inset === 'always') {
+          inset = this._getInset(key);
+        }
+
+        if (inset === 'never') {
+          inset = 0;
+        }
+
+        switch (key) {
+          case 'horizontal': {
+            style.paddingLeft = inset;
+            style.paddingRight = inset;
+            break;
+          }
+          case 'vertical': {
+            style.paddingTop = inset;
+            style.paddingBottom = inset;
+            break;
+          }
+          case 'left':
+          case 'right':
+          case 'top':
+          case 'bottom': {
+            const [first] = key;
+            const padding = `padding${first.toUpperCase()}${key.slice(1)}`;
+            style[padding] = inset;
+            break;
+          }
+        }
+      });
+    }
+
+    return style;
   };
 
-  getInset = key => {
+  _getInset = key => {
     const { isLandscape } = this.props;
     switch (key) {
       case 'horizontal':
@@ -42,92 +144,6 @@ class SafeView extends Component {
         return isLandscape ? 24 : 34;
       }
     }
-  };
-
-  render() {
-    const { insetOverride, isLandscape, children, style } = this.props;
-
-    if (!isIPhoneX) {
-      return <View style={style}>{this.props.children}</View>;
-    }
-
-    const safeAreaStyle = this.defaultSafeAreaStyle();
-
-    if (insetOverride) {
-      Object.keys(insetOverride).forEach(key => {
-        let inset = insetOverride[key];
-
-        if (inset === 'always') {
-          inset = this.getInset(key);
-        }
-
-        if (inset === 'never') {
-          inset = 0;
-        }
-
-        switch (key) {
-          case 'horizontal': {
-            safeAreaStyle.paddingLeft = inset;
-            safeAreaStyle.paddingRight = inset;
-            break;
-          }
-          case 'vertical': {
-            safeAreaStyle.paddingTop = inset;
-            safeAreaStyle.paddingBottom = inset;
-            break;
-          }
-          case 'left':
-          case 'right':
-          case 'top':
-          case 'bottom': {
-            const [first] = key;
-            const padding = `padding${first.toUpperCase()}${key.slice(1)}`;
-            safeAreaStyle[padding] = inset;
-            break;
-          }
-        }
-      });
-    }
-
-    return (
-      <View
-        onLayout={this._onLayout}
-        style={[style, safeAreaStyle]}
-        //ref={c => (this.view = c)}
-      >
-        {this.props.children}
-      </View>
-    );
-  }
-
-  _onLayout = ({ nativeEvent: { layout: { x, y, width, height } } }) => {
-    const { isLandscape, verbose } = this.props;
-
-    const WIDTH = isLandscape ? DEVICE_HEIGHT : DEVICE_WIDTH;
-    const HEIGHT = isLandscape ? DEVICE_WIDTH : DEVICE_HEIGHT;
-
-    // if (this.view) {
-    // this.view.measure((x, y, width, height) => {
-    const touchesTop = y === 0;
-    const touchesBottom = y + height === HEIGHT;
-    const touchesLeft = x === 0;
-    const touchesRight = x + width === WIDTH;
-
-    if (verbose) {
-      // console.log(this.view);
-      console.log(
-        isLandscape ? 'landscape' : 'portrait',
-        `\ny:${y.toFixed(2)} + height:${height.toFixed(2)} = ${(y + height
-        ).toFixed(2)} =? ${HEIGHT}`,
-        `\nx:${x.toFixed(2)} + width:${width.toFixed(2)} = ${(x + width
-        ).toFixed(2)} =? ${WIDTH}\n`
-      );
-      // console.log(pageX, pageY);
-    }
-
-    this.setState({ touchesTop, touchesBottom, touchesLeft, touchesRight });
-    // });
-    // }
   };
 }
 
