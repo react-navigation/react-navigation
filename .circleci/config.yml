@@ -16,7 +16,6 @@ jobs:
       - run: yarn # install root deps
       - run: ./scripts/test.sh # run tests
       - setup_remote_docker
-        docker_layer_caching: true # (3)
       - deploy:
           command: |
             set -x
