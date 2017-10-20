@@ -76,6 +76,7 @@ const app = express();
 app.get('/', AppHandler);
 app.use(express.static(join(__dirname, '../public')));
 app.get('*', AppHandler);
-app.listen(3000, () => {
-  console.log('Started on 3000!');
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Started on ${PORT}!`);
 });
