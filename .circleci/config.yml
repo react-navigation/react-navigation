@@ -15,6 +15,7 @@ jobs:
             - v3-react-navigation-master
       - run: yarn # install root deps
       - run: ./scripts/test.sh # run tests
+      - setup_remote_docker
       - deploy:
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
