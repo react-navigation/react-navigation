@@ -73,6 +73,18 @@ function AppHandler(req, res) {
 }
 
 const app = express();
+app.use(function(req, res, next) {
+  var str = 'www.';
+
+  if (req.host.indexOf(str) === 0) {
+    res.redirect(
+      301,
+      req.protocol + '://' + req.host.slice(str.length) + req.originalUrl
+    );
+  } else {
+    next();
+  }
+});
 app.get('/', AppHandler);
 app.use(express.static(join(__dirname, '../public')));
 app.get('*', AppHandler);
