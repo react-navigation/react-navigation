@@ -1,8 +1,11 @@
 /* @flow */
 
-import { I18nManager, type AnimatedViewStylePropTypes } from 'react-native';
+import { I18nManager } from 'react-native';
 
-import type { NavigationSceneRendererProps } from '../../TypeDefinition';
+import type {
+  NavigationSceneRendererProps,
+  AnimatedViewStyleProp,
+} from '../../TypeDefinition';
 
 /**
  * Utility that builds the style for the card in the cards stack.
@@ -24,7 +27,7 @@ import type { NavigationSceneRendererProps } from '../../TypeDefinition';
  */
 function forInitial(
   props: NavigationSceneRendererProps
-): AnimatedViewStylePropTypes {
+): AnimatedViewStyleProp {
   const { navigation, scene } = props;
 
   const focused = navigation.state.index === scene.index;
@@ -42,7 +45,7 @@ function forInitial(
  */
 function forHorizontal(
   props: NavigationSceneRendererProps
-): AnimatedViewStylePropTypes {
+): AnimatedViewStyleProp {
   const { layout, position, scene } = props;
 
   if (!layout.isMeasured) {
@@ -87,7 +90,7 @@ function forHorizontal(
  */
 function forVertical(
   props: NavigationSceneRendererProps
-): AnimatedViewStylePropTypes {
+): AnimatedViewStyleProp {
   const { layout, position, scene } = props;
 
   if (!layout.isMeasured) {
@@ -125,7 +128,7 @@ function forVertical(
  */
 function forFadeFromBottomAndroid(
   props: NavigationSceneRendererProps
-): AnimatedViewStylePropTypes {
+): AnimatedViewStyleProp {
   const { layout, position, scene } = props;
 
   if (!layout.isMeasured) {

@@ -45,11 +45,12 @@ export default (
       tabRouters[routeName] = routeConfig.screen.router;
     }
   });
-  invariant(
-    initialRouteIndex !== -1,
-    `Invalid initialRouteName '${initialRouteName}' for TabRouter. ` +
-      `Should be one of ${order.map((n: *) => `"${n}"`).join(', ')}`
-  );
+  if (initialRouteIndex === -1) {
+    throw new Error(
+      `Invalid initialRouteName '${initialRouteName}' for TabRouter. ` +
+        `Should be one of ${order.map((n: *) => `"${n}"`).join(', ')}`
+    );
+  }
   return {
     getStateForAction(
       action: NavigationAction | { action: NavigationAction },
