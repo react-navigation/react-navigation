@@ -56,7 +56,9 @@ type Props = {
   isLandscape?: boolean,
 };
 
-const majorVersionIOS = parseInt(Platform.Version, 10);
+const majorVersion = parseInt(Platform.Version, 10);
+const isIos = Platform.OS === 'ios';
+const useHorizontalTabs = majorVersion >= 11 && isIos;
 
 class TabBarBottom extends PureComponent<DefaultProps, Props, void> {
   // See https://developer.apple.com/library/content/documentation/UserExperience/Conceptual/UIKitUICatalog/UITabBar.html
@@ -103,11 +105,11 @@ class TabBarBottom extends PureComponent<DefaultProps, Props, void> {
     const tintColor = scene.focused ? activeTintColor : inactiveTintColor;
     const label = this.props.getLabel({ ...scene, tintColor });
     let marginLeft = 0;
-    if (isLandscape && showIcon && majorVersionIOS >= 11) {
+    if (isLandscape && showIcon && useHorizontalTabs) {
       marginLeft = LABEL_LEFT_MARGIN;
     }
     let marginTop = 0;
-    if (!isLandscape && showIcon && majorVersionIOS >= 11) {
+    if (!isLandscape && showIcon && useHorizontalTabs) {
       marginTop = LABEL_TOP_MARGIN;
     }
 
@@ -150,7 +152,7 @@ class TabBarBottom extends PureComponent<DefaultProps, Props, void> {
         inactiveTintColor={inactiveTintColor}
         renderIcon={renderIcon}
         scene={scene}
-        style={showLabel && majorVersionIOS >= 11 ? {} : styles.icon}
+        style={showLabel && useHorizontalTabs ? {} : styles.icon}
       />
     );
   };
@@ -209,8 +211,8 @@ class TabBarBottom extends PureComponent<DefaultProps, Props, void> {
               <Animated.View
                 style={[
                   styles.tab,
-                  isLandscape && majorVersionIOS >= 11 && styles.tabLandscape,
-                  !isLandscape && majorVersionIOS >= 11 && styles.tabPortrait,
+                  isLandscape && useHorizontalTabs && styles.tabLandscape,
+                  !isLandscape && useHorizontalTabs && styles.tabPortrait,
                   { backgroundColor },
                   tabStyle,
                 ]}
@@ -238,7 +240,7 @@ const styles = StyleSheet.create({
   },
   tab: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: isIos ? 'center' : 'stretch',
     justifyContent: 'flex-end',
   },
   tabPortrait: {
