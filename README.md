@@ -18,6 +18,7 @@ React Navigation is the result of a collaboration between developers from Facebo
 * [FAQs](#faqs)
   * [When is version 1.0.0 going to be released?](#when-is-version-100-going-to-be-released)
   * [I'm having troubles using the library, what can I do?](#im-having-troubles-using-the-library-what-can-i-do)
+  * [My app is really slow!](#my-app-is-really-slow)
   * [How can I help?](#how-can-i-help)
   * [Is this the only library available for navigation?](#is-this-the-only-library-available-for-navigation)
   * [Can I use this library for web?](#can-i-use-this-library-for-web)
