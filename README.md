@@ -110,6 +110,16 @@ Head to the [issues](https://github.com/react-community/react-navigation/issues)
 
 You should **only** open a new issue if you believe that you are experiencing a bug or have a feature request, and please **follow** the dedicated template - it will help everyone helping you (and may get closed if it doesn't).
 
+#### My app is really slow!
+
+We are aware that the performances can be improved - we will work on this (keep an eye on the roadmap linked above). In the meantime, please refer to these few issues for specific information regarding:
+
+* [Tab Navigators](https://github.com/react-community/react-navigation/issues/739)
+
+* [Stack Navigator](https://github.com/react-community/react-navigation/issues/608)
+
+In particular, refer to [this comment](https://github.com/react-community/react-navigation/issues/608#issuecomment-328635042) (and the [one after](https://github.com/react-community/react-navigation/issues/608#issuecomment-333386346) that) to learn more about how you can try improving performances in your code.
+
 #### How can I help?
 
 Glad you ask! This library is a community effort: it can only be great if we all help out in one way or another 😄 . If you feel like you aren't experienced enough using react navigation to contribute, you can still make an impact by:
