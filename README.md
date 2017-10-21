@@ -117,7 +117,7 @@ We are aware that the performances can be improved - we will work on this (keep 
 
 * [Tab Navigators](https://github.com/react-community/react-navigation/issues/739)
 
-* [Stack Navigator](https://github.com/react-community/react-navigation/issues/608)
+* [Stack Navigators](https://github.com/react-community/react-navigation/issues/608)
 
 In particular, refer to [this comment](https://github.com/react-community/react-navigation/issues/608#issuecomment-328635042) (and the [one after](https://github.com/react-community/react-navigation/issues/608#issuecomment-333386346) that) to learn more about how you can try improving performances in your code.
 
