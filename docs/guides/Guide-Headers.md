@@ -79,4 +79,61 @@ Now, the header can interact with the screen route/state:
 header-interaction
 ```
 
+### Header interaction with screen component
+
+Sometimes it is necesarry for header to access properties of the screen component such as functions or state.
+
+Let's say we want to create an 'edit contact info' screen with a save button in the header. We want the save button to be replaced by an `ActivityIndicator` while saving.
+
+```js
+class EditInfoScreen extends React.Component {
+  static navigationOptions = ({ navigation }) => {
+    const { params = {} } = navigation.state;
+    let headerRight = (
+      <Button
+        title="Save"
+        onPress={params.handleSave ? params.handleSave : () => null}
+      />
+    );
+    if (params.isSaving) {
+      headerRight = <ActivityIndicator />;
+    }
+    return { headerRight };
+  };
+
+  state = {
+    nickname: 'Lucy jacuzzi'
+  }
+
+  _handleSave = () => {
+    // Update state, show ActivityIndicator
+    this.props.navigation.setParams({ isSaving: true });
+    
+    // Fictional function to save information in a store somewhere
+    saveInfo().then(() => {
+      this.props.navigation.setParams({ isSaving: false});
+    })
+  }
+
+  componentDidMount() {
+    // We can only set the function after the component has been initialized
+    this.props.navigation.setParams({ handleSave: this._handleSave });
+  }
+
+  render() {
+    return (
+      <TextInput
+        onChangeText={(nickname) => this.setState({ nickname })}
+        placeholder={'Nickname'}
+        value={this.state.nickname}
+      />
+    );
+  }
+}
+```
+
+**Note**: Since the `handleSave`-param is only set on component mount it is not immidiately available in the `navigationOptions`-function. We want to avoid 'flickering' and therefore pass down an empty function to the `Button`-component before `handleSave` is set. This ensures immidate rendering of the button and no ugly flickering.
+
+
+
 To see the rest of the header options, see the [navigation options document](/docs/navigators/navigation-options#Stack-Navigation-Options).
