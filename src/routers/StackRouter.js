@@ -273,10 +273,10 @@ export default (
 
       if (action.type === NavigationActions.BACK) {
         let backRouteIndex = null;
-        if (action.key) {
+        if (action.routeKey) {
           const backRoute = state.routes.find(
             /* $FlowFixMe */
-            (route: *) => route.key === action.key
+            (route: *) => route.key === action.routeKey
           );
           /* $FlowFixMe */
           backRouteIndex = state.routes.indexOf(backRoute);
