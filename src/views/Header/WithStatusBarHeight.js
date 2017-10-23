@@ -34,7 +34,7 @@ export default class WithStatusBarHeight extends React.Component<
   constructor(props: Props) {
     super(props);
 
-    const initialHeight = isIos ? 20 : StatusBar.currentHeight;
+    const initialHeight = isIos ? 20 : 0;
     this.state = { statusBarTop: 0, statusBarHeight: initialHeight };
     if (isIos) {
       this.fetchInitialHeightIOS();
