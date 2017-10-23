@@ -9,6 +9,7 @@ import {
   View,
 } from 'react-native';
 import type { Style } from './TabViewTypeDefinitions';
+import type { Node } from 'react';
 
 const LOLLIPOP = 21;
 
@@ -18,19 +19,11 @@ type Props = {
   borderless?: boolean,
   pressColor?: string,
   pressOpacity?: number,
-  children?: React.Element<any>,
+  children?: Node,
   style?: Style,
 };
 
-type DefaultProps = {
-  pressColor: string,
-};
-
-export default class TouchableItem extends PureComponent<
-  DefaultProps,
-  Props,
-  void
-> {
+export default class TouchableItem extends PureComponent<Props> {
   static propTypes = {
     onPress: PropTypes.func.isRequired,
     delayPressIn: PropTypes.number,

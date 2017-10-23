@@ -23,7 +23,7 @@ type Route = {
 
 type State = NavigationState<Route>;
 
-export default class TopBarIconExample extends PureComponent<void, *, State> {
+export default class TopBarIconExample extends PureComponent<*, State> {
   static title = 'No animation';
   static backgroundColor = '#f4f4f4';
   static tintColor = '#222';

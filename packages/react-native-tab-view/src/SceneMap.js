@@ -3,7 +3,7 @@
 import React, { PureComponent } from 'react';
 
 export default function SceneMap(scenes: { [key: string]: Function }) {
-  class SceneComponent extends PureComponent<void, *, void> {
+  class SceneComponent extends PureComponent<*> {
     render() {
       /* eslint-disable react/prop-types */
       return React.createElement(scenes[this.props.route.key], this.props);

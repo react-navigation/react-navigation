@@ -14,7 +14,7 @@ type Route = {
 
 type State = NavigationState<Route>;
 
-export default class TopBarTextExample extends PureComponent<void, *, State> {
+export default class TopBarTextExample extends PureComponent<*, State> {
   static title = 'Scrollable top bar';
   static appbarElevation = 0;
 

@@ -36,7 +36,7 @@ type Route = {
 
 type State = NavigationState<Route>;
 
-export default class CoverflowExample extends PureComponent<void, *, State> {
+export default class CoverflowExample extends PureComponent<*, State> {
   static title = 'Coverflow';
   static appbarElevation = 0;
 

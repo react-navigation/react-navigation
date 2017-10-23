@@ -14,7 +14,7 @@ type Route = {
 
 type State = NavigationState<Route>;
 
-export default class TopBarTextExample extends PureComponent<void, *, State> {
+export default class TopBarTextExample extends PureComponent<*, State> {
   static title = 'Scroll views with lazy load';
   static backgroundColor = '#fff';
   static tintColor = '#222';
@@ -29,9 +29,9 @@ export default class TopBarTextExample extends PureComponent<void, *, State> {
     ],
   };
 
-  _first: Object;
-  _second: Object;
-  _third: Object;
+  _first: ?BasicListView;
+  _second: ?BasicListView;
+  _third: ?BasicListView;
 
   _handleIndexChange = index => {
     this.setState({
@@ -98,14 +98,14 @@ export default class TopBarTextExample extends PureComponent<void, *, State> {
       case '1':
         return (
           <BasicListView
-            ref={el => (this._first = el)}
+            ref={(el: ?BasicListView) => (this._first = el)}
             style={[styles.page, { backgroundColor: '#E3F4DD' }]}
           />
         );
       case '2':
         return (
           <BasicListView
-            ref={el => (this._second = el)}
+            ref={(el: ?BasicListView) => (this._second = el)}
             style={[styles.page, { backgroundColor: '#E6BDC5' }]}
             initialListSize={1}
           />
@@ -113,7 +113,7 @@ export default class TopBarTextExample extends PureComponent<void, *, State> {
       case '3':
         return (
           <BasicListView
-            ref={el => (this._third = el)}
+            ref={(el: ?BasicListView) => (this._third = el)}
             style={[styles.page, { backgroundColor: '#EDD8B5' }]}
             initialListSize={1}
           />

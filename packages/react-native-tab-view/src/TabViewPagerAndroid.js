@@ -4,6 +4,7 @@ import React, { PureComponent, Children } from 'react';
 import PropTypes from 'prop-types';
 import { View, ViewPagerAndroid, StyleSheet, I18nManager } from 'react-native';
 import { SceneRendererPropType } from './TabViewPropTypes';
+import type { Node } from 'react';
 import type { SceneRendererProps, Route } from './TabViewTypeDefinitions';
 
 type PageScrollEvent = {
@@ -18,13 +19,11 @@ type PageScrollState = 'dragging' | 'settling' | 'idle';
 type Props<T> = SceneRendererProps<T> & {
   animationEnabled?: boolean,
   swipeEnabled?: boolean,
-  children?: React.Element<any>,
+  children?: Node,
 };
 
 export default class TabViewPagerAndroid<T: Route<*>> extends PureComponent<
-  void,
-  Props<T>,
-  void
+  Props<T>
 > {
   static propTypes = {
     ...SceneRendererPropType,
@@ -83,7 +82,7 @@ export default class TabViewPagerAndroid<T: Route<*>> extends PureComponent<
   _animationFrameCallback: ?() => void;
   _isRequestingAnimationFrame: boolean = false;
   _resetListener: Object;
-  _viewPager: Object;
+  _viewPager: ?ViewPagerAndroid;
   _isIdle: boolean = true;
   _currentIndex = 0;
 
@@ -93,14 +92,15 @@ export default class TabViewPagerAndroid<T: Route<*>> extends PureComponent<
       : index;
 
   _setPage = (index: number) => {
-    if (this._viewPager) {
+    const { _viewPager } = this;
+    if (_viewPager) {
       this._animationFrameCallback = null;
 
       const page = this._getPageIndex(index);
       if (this.props.animationEnabled !== false) {
-        this._viewPager.setPage(page);
+        _viewPager.setPage(page);
       } else {
-        this._viewPager.setPageWithoutAnimation(page);
+        _viewPager.setPageWithoutAnimation(page);
       }
     }
   };
@@ -129,7 +129,7 @@ export default class TabViewPagerAndroid<T: Route<*>> extends PureComponent<
     this._currentIndex = index;
   };
 
-  _setRef = (el: Object) => (this._viewPager = el);
+  _setRef = (el: ?ViewPagerAndroid) => (this._viewPager = el);
 
   render() {
     const { children, navigationState, swipeEnabled } = this.props;

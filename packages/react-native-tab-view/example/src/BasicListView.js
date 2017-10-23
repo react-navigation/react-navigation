@@ -3,7 +3,12 @@
 import React, { PureComponent } from 'react';
 import { ListView, View, Text, StyleSheet } from 'react-native';
 
-export default class ListViewExample extends PureComponent {
+type State = {
+  data: Array<number>,
+  dataSource: ListView.DataSource,
+};
+
+export default class ListViewExample extends PureComponent<{}, State> {
   state = {
     data: [],
     dataSource: new ListView.DataSource({
@@ -15,7 +20,7 @@ export default class ListViewExample extends PureComponent {
     this._genRows();
   }
 
-  _root: Object;
+  _root: ?ListView;
 
   _genRows = () => {
     const data = this.state.data.slice(0);
@@ -45,7 +50,7 @@ export default class ListViewExample extends PureComponent {
     );
   };
 
-  scrollTo = (...args: any) => this._root.scrollTo(...args);
+  scrollTo = (...args: any) => this._root && this._root.scrollTo(...args);
 
   render() {
     return (
@@ -56,7 +61,7 @@ export default class ListViewExample extends PureComponent {
         dataSource={this.state.dataSource}
         renderRow={this._renderRow}
         onEndReached={this._genRows}
-        ref={el => (this._root = el)}
+        ref={(el: ?ListView) => (this._root = el)}
       />
     );
   }

@@ -11,6 +11,7 @@ import {
   I18nManager,
 } from 'react-native';
 import { SceneRendererPropType } from './TabViewPropTypes';
+import type { Node } from 'react';
 import type {
   SceneRendererProps,
   Route,
@@ -46,12 +47,6 @@ type GestureState = {
 
 type GestureHandler = (event: GestureEvent, state: GestureState) => void;
 
-type DefaultProps = {
-  configureTransition: TransitionConfigurator,
-  swipeDistanceThreshold: number,
-  swipeVelocityThreshold: number,
-};
-
 type Props<T> = SceneRendererProps<T> & {
   configureTransition: TransitionConfigurator,
   animationEnabled?: boolean,
@@ -60,7 +55,7 @@ type Props<T> = SceneRendererProps<T> & {
   swipeVelocityThreshold: number,
   onSwipeStart?: GestureHandler,
   onSwipeEnd?: GestureHandler,
-  children?: React.Element<any>,
+  children?: Node,
 };
 
 const DEAD_ZONE = 12;
@@ -72,9 +67,7 @@ const DefaultTransitionSpec = {
 };
 
 export default class TabViewPagerPan<T: Route<*>> extends PureComponent<
-  DefaultProps,
-  Props<T>,
-  void
+  Props<T>
 > {
   static propTypes = {
     ...SceneRendererPropType,

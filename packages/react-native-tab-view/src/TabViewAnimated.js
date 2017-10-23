@@ -4,6 +4,7 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { Animated, Platform, View, StyleSheet } from 'react-native';
 import { NavigationStatePropType } from './TabViewPropTypes';
+import type { Element } from 'react';
 import type {
   Scene,
   SceneRendererProps,
@@ -15,24 +16,16 @@ import type {
   Style,
 } from './TabViewTypeDefinitions';
 
-type DefaultProps<T> = {
-  renderPager: (
-    props: SceneRendererProps<T> & PagerProps
-  ) => React.Element<any>,
-};
-
 type Props<T> = PagerProps & {
   navigationState: NavigationState<T>,
   onIndexChange: (index: number) => void,
   onPositionChange?: ({ value: number }) => void,
   initialLayout?: Layout,
   canJumpToTab?: (route: T) => boolean,
-  renderPager: (
-    props: SceneRendererProps<T> & PagerProps
-  ) => React.Element<any>,
-  renderScene: (props: SceneRendererProps<T> & Scene<T>) => ?React.Element<any>,
-  renderHeader?: (props: SceneRendererProps<T>) => ?React.Element<any>,
-  renderFooter?: (props: SceneRendererProps<T>) => ?React.Element<any>,
+  renderPager: (props: SceneRendererProps<T> & PagerProps) => Element<any>,
+  renderScene: (props: SceneRendererProps<T> & Scene<T>) => ?Element<any>,
+  renderHeader?: (props: SceneRendererProps<T>) => ?Element<any>,
+  renderFooter?: (props: SceneRendererProps<T>) => ?Element<any>,
   lazy?: boolean,
   style?: Style,
 };
@@ -60,7 +53,6 @@ switch (Platform.OS) {
 }
 
 export default class TabViewAnimated<T: Route<*>> extends PureComponent<
-  DefaultProps<T>,
   Props<T>,
   State
 > {

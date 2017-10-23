@@ -15,7 +15,7 @@ type Route = {
 
 type State = NavigationState<Route>;
 
-export default class TopBarIconExample extends PureComponent<void, *, State> {
+export default class TopBarIconExample extends PureComponent<*, State> {
   static title = 'Icon only top bar';
   static appbarElevation = 0;
 

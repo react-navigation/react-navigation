@@ -31,7 +31,13 @@ const EXAMPLE_COMPONENTS = [
   CoverflowExample,
 ];
 
-export default class ExampleList extends PureComponent {
+type State = {
+  title: string,
+  index: number,
+  restoring: boolean,
+};
+
+export default class ExampleList extends PureComponent<{}, State> {
   state = {
     title: 'Examples',
     index: -1,

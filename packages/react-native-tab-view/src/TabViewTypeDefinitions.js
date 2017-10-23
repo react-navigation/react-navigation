@@ -2,6 +2,8 @@
 
 import type { StyleObj } from 'react-native/Libraries/StyleSheet/StyleSheetTypes';
 
+import type { Node } from 'react';
+
 import { Animated } from 'react-native';
 
 export type Route<T: { key: string, testID?: string }> = T;
@@ -57,7 +59,7 @@ export type PagerProps = {
   swipeEnabled?: boolean,
   swipeDistanceThreshold?: number,
   swipeVelocityThreshold?: number,
-  children?: *,
+  children?: Node,
 };
 
 export type Style = StyleObj;

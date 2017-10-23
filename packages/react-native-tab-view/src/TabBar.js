@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import TouchableItem from './TouchableItem';
 import { SceneRendererPropType } from './TabViewPropTypes';
+import type { Element } from 'react';
 import type {
   Scene,
   SceneRendererProps,
@@ -32,19 +33,15 @@ type ScrollEvent = {
   },
 };
 
-type DefaultProps<T> = {
-  getLabelText: (scene: Scene<T>) => ?string,
-};
-
 type Props<T> = SceneRendererProps<T> & {
   scrollEnabled?: boolean,
   pressColor?: string,
   pressOpacity?: number,
   getLabelText: (scene: Scene<T>) => ?string,
-  renderLabel?: (scene: Scene<T>) => ?React.Element<any>,
-  renderIcon?: (scene: Scene<T>) => ?React.Element<any>,
-  renderBadge?: (scene: Scene<T>) => ?React.Element<any>,
-  renderIndicator?: (props: IndicatorProps<T>) => ?React.Element<any>,
+  renderLabel?: (scene: Scene<T>) => ?Element<any>,
+  renderIcon?: (scene: Scene<T>) => ?Element<any>,
+  renderBadge?: (scene: Scene<T>) => ?Element<any>,
+  renderIndicator?: (props: IndicatorProps<T>) => ?Element<any>,
   onTabPress?: (scene: Scene<T>) => void,
   tabStyle?: Style,
   indicatorStyle?: Style,
@@ -59,7 +56,6 @@ type State = {
 };
 
 export default class TabBar<T: Route<*>> extends PureComponent<
-  DefaultProps<T>,
   Props<T>,
   State
 > {
@@ -149,7 +145,7 @@ export default class TabBar<T: Route<*>> extends PureComponent<
   }
 
   _positionListener: Object;
-  _scrollView: Object;
+  _scrollView: ?ScrollView;
   _isManualScroll: boolean = false;
   _isMomentumScroll: boolean = false;
 
@@ -251,10 +247,11 @@ export default class TabBar<T: Route<*>> extends PureComponent<
       props,
       props.navigationState.index
     );
-    this._scrollView.scrollTo({
-      x: scrollAmount,
-      animated: true,
-    });
+    this._scrollView &&
+      this._scrollView.scrollTo({
+        x: scrollAmount,
+        animated: true,
+      });
     Animated.timing(this.state.offset, {
       toValue: 0,
       duration: 150,
@@ -267,10 +264,11 @@ export default class TabBar<T: Route<*>> extends PureComponent<
     }
 
     const scrollAmount = this._getScrollAmount(this.props, index);
-    this._scrollView.scrollTo({
-      x: scrollAmount,
-      animated: false,
-    });
+    this._scrollView &&
+      this._scrollView.scrollTo({
+        x: scrollAmount,
+        animated: false,
+      });
   };
 
   _adjustOffset = (value: number) => {
@@ -328,7 +326,7 @@ export default class TabBar<T: Route<*>> extends PureComponent<
     this._isManualScroll = false;
   };
 
-  _setRef = (el: Object) => (this._scrollView = el);
+  _setRef = (el: ?ScrollView) => (this._scrollView = el);
 
   render() {
     const { position, navigationState, scrollEnabled } = this.props;
