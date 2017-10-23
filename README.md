@@ -119,7 +119,7 @@ We are aware that the performances can be improved - we will work on this (keep 
 
 * [Stack Navigators](https://github.com/react-community/react-navigation/issues/608)
 
-In particular, refer to [this comment](https://github.com/react-community/react-navigation/issues/608#issuecomment-328635042) (and the [one after](https://github.com/react-community/react-navigation/issues/608#issuecomment-333386346) that) to learn more about how you can try improving performances in your code.
+In particular, refer to [this comment](https://github.com/react-community/react-navigation/issues/608#issuecomment-328635042) (and the [one after](https://github.com/react-community/react-navigation/issues/608#issuecomment-333386346) that) to learn more about how you can try improving the performance of your code.
 
 #### How can I help?
 
