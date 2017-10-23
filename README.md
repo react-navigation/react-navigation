@@ -18,6 +18,7 @@ React Navigation is the result of a collaboration between developers from Facebo
 * [FAQs](#faqs)
   * [When is version 1.0.0 going to be released?](#when-is-version-100-going-to-be-released)
   * [I'm having troubles using the library, what can I do?](#im-having-troubles-using-the-library-what-can-i-do)
+  * [My app is really slow!](#my-app-is-really-slow)
   * [How can I help?](#how-can-i-help)
   * [Is this the only library available for navigation?](#is-this-the-only-library-available-for-navigation)
   * [Can I use this library for web?](#can-i-use-this-library-for-web)
@@ -109,6 +110,16 @@ As soon as all the tasks [here](https://github.com/react-community/react-navigat
 Head to the [issues](https://github.com/react-community/react-navigation/issues) and do a quick search: if you think you are experiencing a bug chances are somebody already opened an issue for it. If instead you are having more general problems, use [Stack Overflow](https://stackoverflow.com/search?q=react-navigation) - which is better suited and helps keeping the Issues section of the repo clean. Alternatively you could join the [Reactiflux](https://www.reactiflux.com/) community on Discord where there are React Native and React Navigation channels with helpful people who might be able to answer you.
 
 You should **only** open a new issue if you believe that you are experiencing a bug or have a feature request, and please **follow** the dedicated template - it will help everyone helping you (and may get closed if it doesn't).
+
+#### My app is really slow!
+
+We are aware that the performances can be improved - we will work on this (keep an eye on the roadmap linked above). In the meantime, please refer to these few issues for specific information regarding:
+
+* [Tab Navigators](https://github.com/react-community/react-navigation/issues/739)
+
+* [Stack Navigators](https://github.com/react-community/react-navigation/issues/608)
+
+In particular, refer to [this comment](https://github.com/react-community/react-navigation/issues/608#issuecomment-328635042) (and the [one after](https://github.com/react-community/react-navigation/issues/608#issuecomment-333386346) that) to learn more about how you can try improving the performance of your code.
 
 #### How can I help?
 
