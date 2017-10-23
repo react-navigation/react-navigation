@@ -146,8 +146,8 @@ const styles = StyleSheet.create({
 - `inactiveBackgroundColor` - background color of the inactive label
 - `onItemPress(route)` - function to be invoked when an item is pressed
 - `style` - style object for the content section
+- `itemsContainerStyle` - style object for the single item, which can contain an Icon and/or a Label
 - `labelStyle` - style object to overwrite `Text` style inside content section, when your label is a string
-- `itemStyle` - style object for the item content section
 #### Example:
 
 ```js

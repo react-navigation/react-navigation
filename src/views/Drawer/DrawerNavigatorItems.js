@@ -27,8 +27,9 @@ type Props = {
   renderIcon: (scene: DrawerScene) => ?React.Element<*>,
   onItemPress: (info: DrawerItem) => void,
   style?: ViewStyleProp,
+  itemsContainerStyle?: ViewStyleProp,
   labelStyle?: TextStyleProp,
-  itemStyle?: ViewStyleProp,
+  
 };
 
 /**
@@ -46,8 +47,8 @@ const DrawerNavigatorItems = ({
   renderIcon,
   onItemPress,
   style,
+  itemsContainerStyle,
   labelStyle,
-  itemStyle,
 }: Props) => (
   <View style={[styles.container, style]}>
     {items.map((route: NavigationRoute, index: number) => {
@@ -67,7 +68,7 @@ const DrawerNavigatorItems = ({
           }}
           delayPressIn={0}
         >
-          <View style={[styles.item, { backgroundColor }, itemStyle]}>
+          <View style={[styles.item, { backgroundColor }, itemsContainerStyle]}>
             {icon ? (
               <View style={[styles.icon, focused ? null : styles.inactiveIcon]}>
                 {icon}
