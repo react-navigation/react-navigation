@@ -22,7 +22,7 @@ Call this to link to another screen in your app. Takes the following arguments:
 
 - `routeName` - A destination routeName that has been registered somewhere in the app's router
 - `params` - Params to merge into the destination route
-- `action` - (advanced) The sub-action to run in the child router, if the screen is a navigator. See [Actions Doc](Navigation-Actions.md) for a full list of supported actions.
+- `action` - (advanced) The sub-action to run in the child router, if the screen is a navigator. See [Actions Doc](navigation-actions) for a full list of supported actions.
 
 ```js
 class HomeScreen extends React.Component {
