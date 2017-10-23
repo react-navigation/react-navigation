@@ -369,6 +369,7 @@ export default class TabBar<T: Route<*>> extends React.PureComponent<
         <View style={styles.scroll}>
           <ScrollView
             horizontal
+            keyboardShouldPersistTaps="always"
             scrollEnabled={scrollEnabled}
             bounces={false}
             alwaysBounceHorizontal={false}
