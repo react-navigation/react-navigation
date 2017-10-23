@@ -6,7 +6,7 @@ import type { TabScene } from './views/TabView/TabView';
 
 import type { StyleObj } from 'react-native/Libraries/StyleSheet/StyleSheetTypes';
 
-import { Animated, View, Text } from 'react-native';
+import { Animated } from 'react-native';
 
 export type ViewStyleProp = StyleObj;
 export type TextStyleProp = StyleObj;
