@@ -152,32 +152,30 @@ export default class ExampleList extends PureComponent<{}, State> {
               : null,
           ]}
         >
-          {index > -1
-            ? <TouchableOpacity
-                style={styles.button}
-                onPress={this._handleNavigateBack}
-              >
-                <Ionicons
-                  name={
-                    Platform.OS === 'android'
-                      ? 'md-arrow-back'
-                      : 'ios-arrow-back'
-                  }
-                  size={24}
-                  color={tintColor}
-                />
-              </TouchableOpacity>
-            : null}
+          {index > -1 ? (
+            <TouchableOpacity
+              style={styles.button}
+              onPress={this._handleNavigateBack}
+            >
+              <Ionicons
+                name={
+                  Platform.OS === 'android' ? 'md-arrow-back' : 'ios-arrow-back'
+                }
+                size={24}
+                color={tintColor}
+              />
+            </TouchableOpacity>
+          ) : null}
           <Text style={[styles.title, tintColor ? { color: tintColor } : null]}>
             {index > -1 ? EXAMPLE_COMPONENTS[index].title : this.state.title}
           </Text>
           {index > -1 ? <View style={styles.button} /> : null}
         </View>
-        {index === -1
-          ? <ScrollView>
-              {EXAMPLE_COMPONENTS.map(this._renderItem)}
-            </ScrollView>
-          : ExampleComponent ? <ExampleComponent /> : null}
+        {index === -1 ? (
+          <ScrollView>{EXAMPLE_COMPONENTS.map(this._renderItem)}</ScrollView>
+        ) : ExampleComponent ? (
+          <ExampleComponent />
+        ) : null}
       </View>
     );
   }

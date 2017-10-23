@@ -1,6 +1,6 @@
 /* @flow */
 
-import React, { PureComponent } from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import {
   Animated,
@@ -13,7 +13,6 @@ import {
 } from 'react-native';
 import TouchableItem from './TouchableItem';
 import { SceneRendererPropType } from './TabViewPropTypes';
-import type { Element } from 'react';
 import type {
   Scene,
   SceneRendererProps,
@@ -38,10 +37,10 @@ type Props<T> = SceneRendererProps<T> & {
   pressColor?: string,
   pressOpacity?: number,
   getLabelText: (scene: Scene<T>) => ?string,
-  renderLabel?: (scene: Scene<T>) => ?Element<any>,
-  renderIcon?: (scene: Scene<T>) => ?Element<any>,
-  renderBadge?: (scene: Scene<T>) => ?Element<any>,
-  renderIndicator?: (props: IndicatorProps<T>) => ?Element<any>,
+  renderLabel?: (scene: Scene<T>) => ?React.Element<any>,
+  renderIcon?: (scene: Scene<T>) => ?React.Element<any>,
+  renderBadge?: (scene: Scene<T>) => ?React.Element<any>,
+  renderIndicator?: (props: IndicatorProps<T>) => ?React.Element<any>,
   onTabPress?: (scene: Scene<T>) => void,
   tabStyle?: Style,
   indicatorStyle?: Style,
@@ -55,7 +54,7 @@ type State = {
   initialOffset: { x: number, y: number },
 };
 
-export default class TabBar<T: Route<*>> extends PureComponent<
+export default class TabBar<T: Route<*>> extends React.PureComponent<
   Props<T>,
   State
 > {
@@ -158,9 +157,7 @@ export default class TabBar<T: Route<*>> extends PureComponent<
       return null;
     }
     return (
-      <Text style={[styles.tabLabel, this.props.labelStyle]}>
-        {label}
-      </Text>
+      <Text style={[styles.tabLabel, this.props.labelStyle]}>{label}</Text>
     );
   };
 
@@ -482,16 +479,16 @@ export default class TabBar<T: Route<*>> extends PureComponent<
                       {icon}
                       {label}
                     </Animated.View>
-                    {badge
-                      ? <Animated.View
-                          style={[
-                            styles.badge,
-                            { opacity: this.state.visibility },
-                          ]}
-                        >
-                          {badge}
-                        </Animated.View>
-                      : null}
+                    {badge ? (
+                      <Animated.View
+                        style={[
+                          styles.badge,
+                          { opacity: this.state.visibility },
+                        ]}
+                      >
+                        {badge}
+                      </Animated.View>
+                    ) : null}
                   </View>
                 </TouchableItem>
               );

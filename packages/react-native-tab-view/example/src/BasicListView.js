@@ -43,9 +43,7 @@ export default class ListViewExample extends PureComponent<{}, State> {
   _renderRow = index => {
     return (
       <View style={styles.row}>
-        <Text style={styles.text}>
-          {index}
-        </Text>
+        <Text style={styles.text}>{index}</Text>
       </View>
     );
   };

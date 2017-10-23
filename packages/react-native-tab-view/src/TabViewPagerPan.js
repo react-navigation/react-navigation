@@ -1,6 +1,6 @@
 /* @flow */
 
-import React, { PureComponent, Children } from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import {
   Animated,
@@ -11,7 +11,6 @@ import {
   I18nManager,
 } from 'react-native';
 import { SceneRendererPropType } from './TabViewPropTypes';
-import type { Node } from 'react';
 import type {
   SceneRendererProps,
   Route,
@@ -55,7 +54,7 @@ type Props<T> = SceneRendererProps<T> & {
   swipeVelocityThreshold: number,
   onSwipeStart?: GestureHandler,
   onSwipeEnd?: GestureHandler,
-  children?: Node,
+  children?: React.Node,
 };
 
 const DEAD_ZONE = 12;
@@ -66,7 +65,7 @@ const DefaultTransitionSpec = {
   friction: 35,
 };
 
-export default class TabViewPagerPan<T: Route<*>> extends PureComponent<
+export default class TabViewPagerPan<T: Route<*>> extends React.Component<
   Props<T>
 > {
   static propTypes = {
@@ -291,7 +290,7 @@ export default class TabViewPagerPan<T: Route<*>> extends PureComponent<
         ]}
         {...this._panResponder.panHandlers}
       >
-        {Children.map(children, (child, i) =>
+        {React.Children.map(children, (child, i) => (
           <View
             key={navigationState.routes[i].key}
             testID={navigationState.routes[i].testID}
@@ -303,7 +302,7 @@ export default class TabViewPagerPan<T: Route<*>> extends PureComponent<
           >
             {i === navigationState.index || width ? child : null}
           </View>
-        )}
+        ))}
       </Animated.View>
     );
   }

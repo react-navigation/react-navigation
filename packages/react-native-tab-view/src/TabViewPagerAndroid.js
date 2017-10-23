@@ -1,10 +1,9 @@
 /* @flow */
 
-import React, { PureComponent, Children } from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import { View, ViewPagerAndroid, StyleSheet, I18nManager } from 'react-native';
 import { SceneRendererPropType } from './TabViewPropTypes';
-import type { Node } from 'react';
 import type { SceneRendererProps, Route } from './TabViewTypeDefinitions';
 
 type PageScrollEvent = {
@@ -19,10 +18,10 @@ type PageScrollState = 'dragging' | 'settling' | 'idle';
 type Props<T> = SceneRendererProps<T> & {
   animationEnabled?: boolean,
   swipeEnabled?: boolean,
-  children?: Node,
+  children?: React.Node,
 };
 
-export default class TabViewPagerAndroid<T: Route<*>> extends PureComponent<
+export default class TabViewPagerAndroid<T: Route<*>> extends React.Component<
   Props<T>
 > {
   static propTypes = {
@@ -44,7 +43,8 @@ export default class TabViewPagerAndroid<T: Route<*>> extends PureComponent<
   componentWillReceiveProps(nextProps: Props<T>) {
     if (
       this.props.layout !== nextProps.layout ||
-      Children.count(this.props.children) !== Children.count(nextProps.children)
+      React.Children.count(this.props.children) !==
+        React.Children.count(nextProps.children)
     ) {
       this._animationFrameCallback = () => {
         if (this._viewPager) {
@@ -133,7 +133,7 @@ export default class TabViewPagerAndroid<T: Route<*>> extends PureComponent<
 
   render() {
     const { children, navigationState, swipeEnabled } = this.props;
-    const content = Children.map(children, (child, i) =>
+    const content = React.Children.map(children, (child, i) => (
       <View
         key={navigationState.routes[i].key}
         testID={navigationState.routes[i].testID}
@@ -141,7 +141,7 @@ export default class TabViewPagerAndroid<T: Route<*>> extends PureComponent<
       >
         {child}
       </View>
-    );
+    ));
 
     if (I18nManager.isRTL) {
       content.reverse();

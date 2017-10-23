@@ -8,17 +8,17 @@
     "ios": "react-native-scripts ios"
   },
   "dependencies": {
-    "@expo/vector-icons": "^5.0.0",
-    "escape-string-regexp": "^1.0.5",
-    "expo": "~18.0.0",
-    "prop-types": "^15.5.8",
-    "react": "16.0.0-alpha.12",
-    "react-native": "~0.45.0"
+    "@expo/vector-icons": "^6.1.0",
+    "expo": "~22.0.0",
+    "prop-types": "^15.5.10",
+    "react": "16.0.0-beta.5",
+    "react-native": "~0.49.3"
   },
   "devDependencies": {
-    "babel-plugin-module-resolver": "^2.7.0",
-    "babel-preset-expo": "^1.0.1",
-    "react-native-scripts": "0.0.50"
+    "babel-plugin-module-resolver": "^2.7.1",
+    "babel-preset-expo": "^4.0.0",
+    "glob-to-regexp": "^0.3.0",
+    "react-native-scripts": "1.5.0"
   },
-  "main": "main.js"
+  "main": "App.js"
 }
