@@ -128,19 +128,7 @@ export default class TabViewAnimated<T: Route<*>> extends React.Component<
   };
 
   _handlePositionChange = (value: number) => {
-    const {
-      /* $FlowFixMe */
-      onChangePosition,
-      onPositionChange,
-      navigationState,
-      lazy,
-    } = this.props;
-    if (onChangePosition) {
-      console.warn(
-        '`onChangePosition` is deprecated. Use `onPositionChange` instead.'
-      );
-      onChangePosition(value);
-    }
+    const { onPositionChange, navigationState, lazy } = this.props;
     if (onPositionChange) {
       onPositionChange({ value });
     }
@@ -217,14 +205,6 @@ export default class TabViewAnimated<T: Route<*>> extends React.Component<
     }
 
     if (index !== navigationState.index) {
-      /* $FlowFixMe */
-      if (this.props.onRequestChangeTab) {
-        console.warn(
-          '`onRequestChangeTab` is deprecated. Use `onIndexChange` instead.'
-        );
-        /* $FlowFixMe */
-        this.props.onRequestChangeTab(index);
-      }
       this.props.onIndexChange(index);
     }
   };
