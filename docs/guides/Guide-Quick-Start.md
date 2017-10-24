@@ -160,7 +160,7 @@ export default RootTabs;
 
 Getting there! Now let's explicity set a label and icon for the tab bar.
 
-> We'll be using `react-native-vector-icons` in the example. If you don't have it installed in your project already please do so.
+> We'll be using [`react-native-vector-icons`](https://github.com/oblador/react-native-vector-icons) in the example. If you don't have it installed in your project already please do so.
 
 ```javascript
 ...
@@ -208,7 +208,7 @@ You can view the complete finished code below:
 
 ## Creating a DrawerNavigator
 
-To get started with `TabNavigator` first import and create a new `RootTabs` component.
+To get started with `DrawerNavigator` first import and create a new `RootDrawer` component.
 
 ```javascript
 import { DrawerNavigator } from 'react-navigation';

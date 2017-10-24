@@ -1,6 +1,6 @@
 # Hello Mobile Navigation
 
-Let's use React Navigation to build a simple chat application for Android and iOS.
+Let's use React Navigation to build a simple chat-like application for Android and iOS.
 
 ## Setup and Installation
 
@@ -42,7 +42,7 @@ Verify that you can successfully see the bare sample app run on iOS and/or Andro
 bare-project
 ```
 
-We want to share code on iOS and Android, so let's delete the contents of `index.ios.js` and `index.android.js` and replace it with `import './App';` - after which, we need to create the new file for our app implementation, `App.js` (if you used `create-react-native-app` this has been already done)
+We want to share code on iOS and Android, so let's delete the contents of `index.js` (or `index.ios.js` and `index.android.js` if using a React Native version before 0.49) and replace it with `import './App';` - after which, we need to create the new file for our app implementation, `App.js` (if you used `create-react-native-app` this has been already done)
 
 ## Introducing Stack Navigator
 
@@ -165,7 +165,7 @@ class HomeScreen extends React.Component {
 }
 ```
 
-(*don't forget to import View and Button from react-native: * `import { AppRegistry, Text, View, Button } from 'react-native';`)
+(*don't forget to import View and Button from react-native:* `import { AppRegistry, Text, View, Button } from 'react-native';`)
 
 But that won't work until we say to our `StackNavigator` of the existence of the `Chat` screen, like so:
 

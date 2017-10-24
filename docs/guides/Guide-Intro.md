@@ -20,4 +20,4 @@ Dive into the basics of React Navigation by creating a new React Native project,
 Curious of the various capabilities of React Navigation? Browse the official example app, which will demonstrates various patterns with React Navigation.
 
 4. [Community Contributions](https://github.com/react-community/react-navigation#community-contributions)
-With the flexibility of React Navigation we won't be able to cover ever possible situation, but another developer may have! Browse our list of community contributions to find topics that may answer your questions.
+With the flexibility of React Navigation we won't be able to cover every possible situation, but another developer may have! Browse our list of community contributions to find topics that may answer your questions.
