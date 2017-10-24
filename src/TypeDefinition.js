@@ -493,3 +493,8 @@ export type LayoutEvent = {
     },
   },
 };
+
+export type SceneIndicesForInterpolationInputRange = {
+  first: number,
+  last: number,
+};
