@@ -869,6 +869,7 @@ describe('StackRouter', () => {
   });
 
   test('Maps old actions (uses "Handles the reset action" test)', () => {
+    global.console.warn = jest.fn();
     const router = StackRouter({
       Foo: {
         screen: () => <div />,
@@ -895,5 +896,72 @@ describe('StackRouter', () => {
     expect(state2 && state2.routes[0].params).toEqual({ bar: '42' });
     expect(state2 && state2.routes[0].routeName).toEqual('Foo');
     expect(state2 && state2.routes[1].routeName).toEqual('Bar');
+    expect(console.warn).toBeCalledWith(
+      expect.stringContaining(
+        "The action type 'Init' has been renamed to 'Navigation/INIT'"
+      )
+    );
+  });
+
+  test('Querystring params get passed to nested deep link', () => {
+    // uri with two non-empty query param values
+    const uri = 'main/p/4/list/10259959195?code=test&foo=bar';
+    const action = TestStackRouter.getActionForPathAndParams(uri);
+    expect(action).toEqual({
+      type: NavigationActions.NAVIGATE,
+      routeName: 'main',
+      params: {
+        code: 'test',
+        foo: 'bar',
+      },
+      action: {
+        type: NavigationActions.NAVIGATE,
+        routeName: 'profile',
+        params: {
+          id: '4',
+          code: 'test',
+          foo: 'bar',
+        },
+        action: {
+          type: NavigationActions.NAVIGATE,
+          routeName: 'list',
+          params: {
+            id: '10259959195',
+            code: 'test',
+            foo: 'bar',
+          },
+        },
+      },
+    });
+
+    // uri with one empty and one non-empty query param value
+    const uri2 = 'main/p/4/list/10259959195?code=&foo=bar';
+    const action2 = TestStackRouter.getActionForPathAndParams(uri2);
+    expect(action2).toEqual({
+      type: NavigationActions.NAVIGATE,
+      routeName: 'main',
+      params: {
+        code: '',
+        foo: 'bar',
+      },
+      action: {
+        type: NavigationActions.NAVIGATE,
+        routeName: 'profile',
+        params: {
+          id: '4',
+          code: '',
+          foo: 'bar',
+        },
+        action: {
+          type: NavigationActions.NAVIGATE,
+          routeName: 'list',
+          params: {
+            id: '10259959195',
+            code: '',
+            foo: 'bar',
+          },
+        },
+      },
+    });
   });
 });

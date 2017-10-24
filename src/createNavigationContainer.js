@@ -1,7 +1,6 @@
 /* @flow */
 
 import React from 'react';
-import invariant from './utils/invariant';
 import { BackHandler, Linking } from './PlatformHelpers';
 import NavigationActions from './NavigationActions';
 import addNavigationHelpers from './addNavigationHelpers';
@@ -74,15 +73,16 @@ export default function createNavigationContainer<S: *, O>(
 
       const keys = Object.keys(containerProps);
 
-      invariant(
-        keys.length === 0,
-        'This navigator has both navigation and container props, so it is ' +
-          `unclear if it should own its own state. Remove props: "${keys.join(
-            ', '
-          )}" ` +
-          'if the navigator should get its state from the navigation prop. If the ' +
-          'navigator should maintain its own state, do not pass a navigation prop.'
-      );
+      if (keys.length !== 0) {
+        throw new Error(
+          'This navigator has both navigation and container props, so it is ' +
+            `unclear if it should own its own state. Remove props: "${keys.join(
+              ', '
+            )}" ` +
+            'if the navigator should get its state from the navigation prop. If the ' +
+            'navigator should maintain its own state, do not pass a navigation prop.'
+        );
+      }
     }
 
     _urlToPathAndParams(url: string) {
@@ -98,7 +98,7 @@ export default function createNavigationContainer<S: *, O>(
       };
     }
 
-    _handleOpenURL = (url: string) => {
+    _handleOpenURL = ({ url }: { url: string }) => {
       const parsedUrl = this._urlToPathAndParams(url);
       if (parsedUrl) {
         const { path, params } = parsedUrl;
@@ -155,12 +155,10 @@ export default function createNavigationContainer<S: *, O>(
         this.dispatch(NavigationActions.back())
       );
 
-      Linking.addEventListener('url', ({ url }: { url: string }) => {
-        this._handleOpenURL(url);
-      });
+      Linking.addEventListener('url', this._handleOpenURL);
 
       Linking.getInitialURL().then(
-        (url: ?string) => url && this._handleOpenURL(url)
+        (url: ?string) => url && this._handleOpenURL({ url })
       );
     }
 
