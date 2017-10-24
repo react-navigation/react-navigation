@@ -63,10 +63,11 @@ export default (
   let outputConfig = {};
 
   if (Component.router) {
-    invariant(
-      route && routes && index != null,
-      `Expect nav state to have routes and index, ${JSON.stringify(route)}`
-    );
+    if (!route || !routes || index == null) {
+      throw new Error(
+        `Expect nav state to have routes and index, ${JSON.stringify(route)}`
+      );
+    }
     const childRoute = routes[index];
     const childNavigation = addNavigationHelpers({
       state: childRoute,

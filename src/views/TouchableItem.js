@@ -75,9 +75,7 @@ export default class TouchableItem extends Component<
     }
 
     return (
-      <TouchableOpacity {...this.props}>
-        {this.props.children}
-      </TouchableOpacity>
+      <TouchableOpacity {...this.props}>{this.props.children}</TouchableOpacity>
     );
   }
 }

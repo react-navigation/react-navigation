@@ -108,6 +108,7 @@ Several options get passed to the underlying router to modify navigation logic:
 - `style` - Style object for the tab bar.
 - `labelStyle` - Style object for the tab label.
 - `tabStyle` - Style object for the tab.
+- `allowFontScaling` - Whether label font should scale to respect Text Size accessibility settings, default is true.
 
 Example:
 
@@ -138,6 +139,7 @@ tabBarOptions: {
 - `labelStyle` - Style object for the tab label.
 - `iconStyle` - Style object for the tab icon.
 - `style` - Style object for the tab bar.
+- `allowFontScaling` - Whether label font should scale to respect Text Size accessibility settings, default is true.
 
 Example:
 
@@ -172,6 +174,10 @@ React Element or a function that given `{ focused: boolean, tintColor: string }`
 #### `tabBarLabel`
 
 Title string of a tab displayed in the tab bar or React Element or a function that given `{ focused: boolean, tintColor: string }` returns a React.Element, to display in tab bar. When undefined, scene `title` is used. To hide, see `tabBarOptions.showLabel` in the previous section.
+
+#### `tabBarOnPress`
+
+Callback to handle tap events; arguments are the `scene: { route, index }` that was tapped and a `jumpToIndex` method that can perform the navigation for you.
 
 ### Navigator Props
 

@@ -98,6 +98,24 @@ class TabView extends PureComponent<void, Props, void> {
     return route.routeName;
   };
 
+  _getOnPress = ({ route }: TabScene) => {
+    const options = this.props.router.getScreenOptions(
+      this.props.childNavigationProps[route.key],
+      this.props.screenProps || {}
+    );
+
+    return options.tabBarOnPress;
+  };
+
+  _getTestIDProps = ({ route }: TabScene) => {
+    const options = this.props.router.getScreenOptions(
+      this.props.childNavigationProps[route.key],
+      this.props.screenProps || {}
+    );
+
+    return options.tabBarTestIDProps;
+  };
+
   _renderIcon = ({ focused, route, tintColor }: TabScene) => {
     const options = this.props.router.getScreenOptions(
       this.props.childNavigationProps[route.key],
@@ -127,6 +145,8 @@ class TabView extends PureComponent<void, Props, void> {
         screenProps={this.props.screenProps}
         navigation={this.props.navigation}
         getLabel={this._getLabel}
+        getTestIDProps={this._getTestIDProps}
+        getOnPress={this._getOnPress}
         renderIcon={this._renderIcon}
         animationEnabled={animationEnabled}
       />
@@ -181,7 +201,7 @@ class TabView extends PureComponent<void, Props, void> {
       renderHeader,
       renderFooter,
       renderScene: this._renderScene,
-      onRequestChangeTab: this._handlePageChanged,
+      onIndexChange: this._handlePageChanged,
       navigationState: this.props.navigation.state,
       screenProps: this.props.screenProps,
       style: styles.container,
