@@ -81,7 +81,7 @@ header-interaction
 
 ### Header interaction with screen component
 
-Sometimes it is necesarry for header to access properties of the screen component such as functions or state.
+Sometimes it is necessary for the header to access properties of the screen component such as functions or state.
 
 Let's say we want to create an 'edit contact info' screen with a save button in the header. We want the save button to be replaced by an `ActivityIndicator` while saving.
 
