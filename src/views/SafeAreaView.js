@@ -14,7 +14,8 @@ const { isIPhoneX_deprecated } = DeviceInfo;
 const X_WIDTH = 375;
 const X_HEIGHT = 812;
 
-const { minor } = NativeModules.PlatformConstants.reactNativeVersion;
+const { PlatformConstants = {} } = NativeModules;
+const { minor = 0 } = PlatformConstants.reactNativeVersion || {};
 
 const isIPhoneX = (() => {
   if (minor >= 50) {
