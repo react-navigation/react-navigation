@@ -424,7 +424,7 @@ export type NavigationTransitionProps = {
   position: Animated.Value,
 
   // The value that represents the progress of the transition when navigation
-  // state changes from one to another. Its numberic value will range from 0
+  // state changes from one to another. Its numeric value will range from 0
   // to 1.
   //  progress.__getAnimatedValue() < 1 : transtion is happening.
   //  progress.__getAnimatedValue() == 1 : transtion completes.
