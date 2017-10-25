@@ -49,7 +49,7 @@ const DrawerNavigatorItems = ({
   itemsContainerStyle,
   itemStyle,
   labelStyle,
-  iconContainerStyle
+  iconContainerStyle,
 }: Props) => (
   <View style={[styles.container, itemsContainerStyle]}>
     {items.map((route: NavigationRoute, index: number) => {
@@ -71,13 +71,7 @@ const DrawerNavigatorItems = ({
         >
           <View style={[styles.item, { backgroundColor }, itemStyle]}>
             {icon ? (
-              <View 
-                style={[
-                  styles.icon, 
-                  focused ? null : styles.inactiveIcon, 
-                  iconContainerStyle
-                ]}
-              >
+              <View style={[styles.icon, focused ? null : styles.inactiveIcon, iconContainerStyle]}>
                 {icon}
               </View>
             ) : null}
