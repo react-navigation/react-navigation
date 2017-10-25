@@ -71,7 +71,13 @@ const DrawerNavigatorItems = ({
         >
           <View style={[styles.item, { backgroundColor }, itemStyle]}>
             {icon ? (
-              <View style={[styles.icon, focused ? null : styles.inactiveIcon, iconContainerStyle]}>
+              <View
+                style={[
+                  styles.icon,
+                  focused ? null : styles.inactiveIcon,
+                  iconContainerStyle,
+                ]}
+              >
                 {icon}
               </View>
             ) : null}
