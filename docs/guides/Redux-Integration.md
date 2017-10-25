@@ -115,7 +115,7 @@ class ReduxNavigation extends React.Component {
     if (nav.index === 0) {
       return false;
     }
-    dispatch(NavigationActions.back());
+    this.props.dispatch(NavigationActions.back());
     return true;
   };
 
