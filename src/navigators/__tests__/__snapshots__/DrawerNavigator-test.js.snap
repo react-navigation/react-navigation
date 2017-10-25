@@ -151,6 +151,7 @@ exports[`DrawerNavigator renders successfully 1`] = `
                     Object {
                       "backgroundColor": "rgba(0, 0, 0, .04)",
                     },
+                    undefined,
                   ],
                   Object {
                     "paddingBottom": 0,
