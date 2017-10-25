@@ -179,7 +179,7 @@ class TabBarBottom extends React.PureComponent<Props> {
     return (
       <SafeAreaView
         style={styles.tabBarContainer}
-        insetOverride={{ bottom: 'always' }}
+        forceInset={{ bottom: 'always' }}
       >
         <Animated.View style={tabBarStyle}>
           {routes.map((route: NavigationRoute, index: number) => {

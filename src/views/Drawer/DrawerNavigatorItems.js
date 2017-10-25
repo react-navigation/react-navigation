@@ -51,7 +51,7 @@ const DrawerNavigatorItems = ({
   labelStyle,
   iconContainerStyle,
 }: Props) => (
-  <SafeAreaView insetOverride={{ horizontal: 0 }}>
+  <SafeAreaView forceInset={{ horizontal: 'never' }}>
     <View style={[styles.container, itemsContainerStyle]}>
       {items.map((route: NavigationRoute, index: number) => {
         const focused = activeItemKey === route.key;
@@ -70,10 +70,7 @@ const DrawerNavigatorItems = ({
             }}
             delayPressIn={0}
           >
-            <SafeAreaView
-              style={[styles.item, { backgroundColor }, itemStyle]}
-              insetOverride={{ vertical: 0 }}
-            >
+            <SafeAreaView style={[styles.item, { backgroundColor }, itemStyle]}>
               {icon ? (
                 <View
                   style={[

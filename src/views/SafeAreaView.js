@@ -1,10 +1,29 @@
 import React, { Component } from 'react';
-import { DeviceInfo, View } from 'react-native';
+import {
+  DeviceInfo,
+  Dimensions,
+  NativeModules,
+  SafeAreaView,
+  View,
+} from 'react-native';
 import withOrientation from './withOrientation';
 
-const { isIPhoneX_deprecated: isIPhoneX } = DeviceInfo;
-const DEVICE_WIDTH = 375;
-const DEVICE_HEIGHT = 812;
+const { isIPhoneX_deprecated } = DeviceInfo;
+const X_WIDTH = 375;
+const X_HEIGHT = 812;
+
+const { minor } = NativeModules.PlatformConstants.reactNativeVersion;
+
+const isIPhoneX = (() => {
+  if (minor >= 50) {
+    return isIPhoneX_deprecated;
+  }
+
+  const { height, width } = Dimensions.get('window');
+  return height === X_HEIGHT && width === X_WIDTH;
+})();
+
+console.log(minor, isIPhoneX);
 
 class SafeView extends Component {
   state = {
@@ -12,22 +31,27 @@ class SafeView extends Component {
     touchesBottom: true,
     touchesLeft: true,
     touchesRight: true,
+    orientation: null,
   };
 
   render() {
-    const { isLandscape, children, style } = this.props;
+    const { forceInset = false, isLandscape, children, style } = this.props;
 
     if (!isIPhoneX) {
       return <View style={style}>{this.props.children}</View>;
+    }
+
+    if (!forceInset && minor >= 50) {
+      return <SafeAreaView style={style}>{this.props.children}</SafeAreaView>;
     }
 
     const safeAreaStyle = this._getSafeAreaStyle();
 
     return (
       <View
+        ref={c => (this.view = c)}
         onLayout={this._onLayout}
         style={[style, safeAreaStyle]}
-        ref={c => (this.view = c)}
       >
         {this.props.children}
       </View>
@@ -35,26 +59,54 @@ class SafeView extends Component {
   }
 
   _onLayout = ({ nativeEvent: { layout: { x, y, width, height } } }) => {
-    const { isLandscape, verbose } = this.props;
-
-    const WIDTH = isLandscape ? DEVICE_HEIGHT : DEVICE_WIDTH;
-    const HEIGHT = isLandscape ? DEVICE_WIDTH : DEVICE_HEIGHT;
-
-    if (this.view) {
-      this.view.measureInWindow((lx, ly, lwidth, lheight) => {
-        const touchesTop = y === 0;
-        const touchesBottom = y + height === HEIGHT;
-        const touchesLeft = x === 0;
-        const touchesRight = x + width === WIDTH;
-
-        this.setState({ touchesTop, touchesBottom, touchesLeft, touchesRight });
-      });
+    const { isLandscape } = this.props;
+    const { orientation } = this.state;
+    const newOrientation = isLandscape ? 'landscape' : 'portrait';
+    if (orientation && orientation === newOrientation) {
+      return;
     }
+
+    const WIDTH = isLandscape ? X_HEIGHT : X_WIDTH;
+    const HEIGHT = isLandscape ? X_WIDTH : X_HEIGHT;
+
+    this.view.measureInWindow((winX, winY, winWidth, winHeight) => {
+      let realY = winY;
+      let realX = winX;
+
+      while (realY >= HEIGHT) {
+        realY -= HEIGHT;
+      }
+
+      while (realX >= WIDTH) {
+        realX -= WIDTH;
+      }
+
+      while (realY < 0) {
+        realY += HEIGHT;
+      }
+
+      while (realX < 0) {
+        realX += WIDTH;
+      }
+
+      const touchesTop = realY === 0;
+      const touchesBottom = realY + height >= HEIGHT;
+      const touchesLeft = realX === 0;
+      const touchesRight = realX + width >= WIDTH;
+
+      this.setState({
+        touchesTop,
+        touchesBottom,
+        touchesLeft,
+        touchesRight,
+        orientation: newOrientation,
+      });
+    });
   };
 
   _getSafeAreaStyle = () => {
     const { touchesTop, touchesBottom, touchesLeft, touchesRight } = this.state;
-    const { insetOverride, isLandscape } = this.props;
+    const { forceInset, isLandscape } = this.props;
 
     const style = {
       paddingTop: touchesTop ? (isLandscape ? 0 : 44) : 0,
@@ -63,9 +115,9 @@ class SafeView extends Component {
       paddingRight: touchesRight ? (isLandscape ? 44 : 0) : 0,
     };
 
-    if (insetOverride) {
-      Object.keys(insetOverride).forEach(key => {
-        let inset = insetOverride[key];
+    if (forceInset) {
+      Object.keys(forceInset).forEach(key => {
+        let inset = forceInset[key];
 
         if (inset === 'always') {
           inset = this._getInset(key);
@@ -90,8 +142,8 @@ class SafeView extends Component {
           case 'right':
           case 'top':
           case 'bottom': {
-            const [first] = key;
-            const padding = `padding${first.toUpperCase()}${key.slice(1)}`;
+            const [firstLtr] = key;
+            const padding = `padding${firstLtr.toUpperCase()}${key.slice(1)}`;
             style[padding] = inset;
             break;
           }
