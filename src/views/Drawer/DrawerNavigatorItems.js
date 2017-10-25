@@ -28,7 +28,7 @@ type Props = {
   onItemPress: (info: DrawerItem) => void,
   itemsContainerStyle?: ViewStyleProp,
   itemStyle?: ViewStyleProp,
-  labelStyle?: TextStyleProp
+  labelStyle?: TextStyleProp,
 };
 
 /**
