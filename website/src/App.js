@@ -63,10 +63,26 @@ const GuideDocs = createNavigator(
     GettingStarted: {
       screen: createDocPage({
         doc: 'guides/Guide-Intro',
+        title: 'Introduction',
+        linkName: 'Introduction',
+      }),
+      path: '',
+    },
+    QuickStart: {
+      screen: createDocPage({
+        doc: 'guides/Guide-Quick-Start',
+        title: 'Quick Start',
+        linkName: 'Quick Start',
+      }),
+      path: 'quick-start',
+    },
+    BasicExample: {
+      screen: createDocPage({
+        doc: 'guides/Guide-Basic-Example',
         title: 'Hello Mobile Navigation',
         linkName: 'Hello Mobile Navigation',
       }),
-      path: '',
+      path: 'basic-app',
     },
     NestedNavigator: {
       screen: createDocPage({
