@@ -239,6 +239,10 @@ export default (
       });
       // console.log(`${order.join('-')}: Processed other tabs:`, {lastIndex: state.index, index});
 
+      // keep active tab index if action type is SET_PARAMS
+      index =
+        action.type === NavigationActions.SET_PARAMS ? state.index : index;
+
       if (index !== state.index || routes !== state.routes) {
         return {
           ...state,
