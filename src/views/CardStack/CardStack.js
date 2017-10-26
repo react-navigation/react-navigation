@@ -31,6 +31,7 @@ import type {
   ViewStyleProp,
   TransitionConfig,
   NavigationStackAction,
+  NavigationRoute,
 } from '../../TypeDefinition';
 
 import TransitionConfigs from './TransitionConfigs';
@@ -143,8 +144,10 @@ class CardStack extends React.Component<Props> {
     const { screenProps, navigation, router } = this.props;
     let screenDetails = this._screenDetails[scene.key];
     if (!screenDetails || screenDetails.state !== scene.route) {
-      const screenNavigation = addNavigationHelpers({
-        ...navigation,
+      const screenNavigation: NavigationScreenProp<
+        NavigationRoute
+      > = addNavigationHelpers({
+        dispatch: navigation.dispatch,
         state: scene.route,
       });
       screenDetails = {
