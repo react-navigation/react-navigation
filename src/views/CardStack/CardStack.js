@@ -1,6 +1,6 @@
 /* @flow */
 
-import React, { Component } from 'react';
+import * as React from 'react';
 
 import clamp from 'clamp';
 import {
@@ -40,9 +40,8 @@ const emptyFunction = () => {};
 type Props = {
   screenProps?: {},
   headerMode: HeaderMode,
-  headerComponent?: ReactClass<*>,
+  headerComponent?: React.ComponentType<*>,
   mode: 'card' | 'modal',
-  navigation: NavigationScreenProp<NavigationState, NavigationAction>,
   router: NavigationRouter<
     NavigationState,
     NavigationAction,
@@ -101,7 +100,7 @@ const animatedSubscribeValue = (animatedValue: Animated.Value) => {
   }
 };
 
-class CardStack extends Component {
+class CardStack extends React.Component<Props> {
   /**
    * Used to identify the starting point of the position when the gesture starts, such that it can
    * be updated according to its relative position. This means that a card can effectively be
@@ -125,8 +124,6 @@ class CardStack extends Component {
   _screenDetails: {
     [key: string]: ?NavigationScreenDetails<NavigationStackScreenOptions>,
   } = {};
-
-  props: Props;
 
   componentWillReceiveProps(props: Props) {
     if (props.screenProps !== this.props.screenProps) {
@@ -160,10 +157,7 @@ class CardStack extends Component {
     return screenDetails;
   };
 
-  _renderHeader(
-    scene: NavigationScene,
-    headerMode: HeaderMode
-  ): ?React.Element<*> {
+  _renderHeader(scene: NavigationScene, headerMode: HeaderMode): ?React.Node {
     const { header } = this._getScreenDetails(scene).options;
 
     if (typeof header !== 'undefined' && typeof header !== 'function') {
@@ -231,7 +225,7 @@ class CardStack extends Component {
     });
   }
 
-  render(): React.Element<*> {
+  render(): React.Node {
     let floatingHeader = null;
     const headerMode = this._getHeaderMode();
     if (headerMode === 'float') {
@@ -389,9 +383,9 @@ class CardStack extends Component {
   }
 
   _renderInnerScene(
-    SceneComponent: ReactClass<*>,
+    SceneComponent: React.ComponentType<*>,
     scene: NavigationScene
-  ): React.Element<any> {
+  ): React.Node {
     const { navigation } = this._getScreenDetails(scene);
     const { screenProps } = this.props;
     const headerMode = this._getHeaderMode();
@@ -430,7 +424,7 @@ class CardStack extends Component {
     );
   };
 
-  _renderCard = (scene: NavigationScene): React.Element<*> => {
+  _renderCard = (scene: NavigationScene): React.Node => {
     const { screenInterpolator } = this._getTransitionConfig();
     const style =
       screenInterpolator && screenInterpolator({ ...this.props, scene });

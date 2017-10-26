@@ -1,6 +1,6 @@
 /* @flow */
 
-import React from 'react';
+import * as React from 'react';
 import { View, Text, Platform, StyleSheet } from 'react-native';
 
 import TouchableItem from '../TouchableItem';
@@ -23,8 +23,8 @@ type Props = {
   activeBackgroundColor?: string,
   inactiveTintColor?: string,
   inactiveBackgroundColor?: string,
-  getLabel: (scene: DrawerScene) => ?(React.Element<*> | string),
-  renderIcon: (scene: DrawerScene) => ?React.Element<*>,
+  getLabel: (scene: DrawerScene) => ?(React.Node | string),
+  renderIcon: (scene: DrawerScene) => ?React.Node,
   onItemPress: (info: DrawerItem) => void,
   itemsContainerStyle?: ViewStyleProp,
   itemStyle?: ViewStyleProp,

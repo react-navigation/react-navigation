@@ -1,6 +1,6 @@
 /* @flow */
 
-import React from 'react';
+import * as React from 'react';
 import propTypes from 'prop-types';
 import hoistStatics from 'hoist-non-react-statics';
 
@@ -18,8 +18,8 @@ type InjectedProps = {
   navigation: NavigationScreenProp<NavigationState, NavigationAction>,
 };
 
-export default function withNavigation<T: *>(
-  Component: ReactClass<T & InjectedProps>
+export default function withNavigation<T: {}>(
+  Component: React.ComponentType<T & InjectedProps>
 ) {
   const componentWithNavigation = (props: T, { navigation }: Context) => (
     <Component {...props} navigation={navigation} />

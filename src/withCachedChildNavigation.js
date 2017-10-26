@@ -1,6 +1,6 @@
 /* @flow */
 
-import React, { PureComponent } from 'react';
+import * as React from 'react';
 
 import addNavigationHelpers from './addNavigationHelpers';
 
@@ -16,13 +16,11 @@ type InjectedProps<N> = {
  * HOC which caches the child navigation items.
  */
 export default function withCachedChildNavigation<T: *, N: *>(
-  Comp: ReactClass<T & InjectedProps<N>>
-): ReactClass<T> {
-  return class extends PureComponent {
+  Comp: React.ComponentType<T & InjectedProps<N>>
+): React.ComponentType<T> {
+  return class extends React.PureComponent<T> {
     static displayName = `withCachedChildNavigation(${Comp.displayName ||
       Comp.name})`;
-
-    props: T;
 
     componentWillMount() {
       this._updateNavigationProps(this.props.navigation);

@@ -1,6 +1,6 @@
 /* @flow */
 
-import React from 'react';
+import * as React from 'react';
 
 import { Animated, Easing, StyleSheet, View } from 'react-native';
 
@@ -29,7 +29,7 @@ type Props = {
   render: (
     transitionProps: NavigationTransitionProps,
     prevTransitionProps: ?NavigationTransitionProps
-  ) => any,
+  ) => React.Node,
   style?: any,
 };
 
@@ -47,7 +47,7 @@ const DefaultTransitionSpec = ({
   timing: Animated.timing,
 }: NavigationTransitionSpec);
 
-class Transitioner extends React.Component<*, Props, State> {
+class Transitioner extends React.Component<Props, State> {
   _onLayout: (event: any) => void;
   _onTransitionEnd: () => void;
   _prevTransitionProps: ?NavigationTransitionProps;
@@ -59,9 +59,6 @@ class Transitioner extends React.Component<*, Props, State> {
     nextScenes: Array<NavigationScene>,
     indexHasChanged: boolean,
   };
-
-  props: Props;
-  state: State;
 
   constructor(props: Props, context: any) {
     super(props, context);

@@ -1,6 +1,6 @@
 /* @flow */
 
-import React, { PureComponent } from 'react';
+import * as React from 'react';
 import { Animated, View, StyleSheet } from 'react-native';
 
 import type {
@@ -18,13 +18,11 @@ type Props = {
   scene: TabScene,
   position: Animated.Value,
   navigation: NavigationScreenProp<NavigationState, NavigationAction>,
-  renderIcon: (scene: TabScene) => React.Element<*>,
+  renderIcon: (scene: TabScene) => React.Node,
   style?: ViewStyleProp,
 };
 
-export default class TabBarIcon extends PureComponent<void, Props, void> {
-  props: Props;
-
+export default class TabBarIcon extends React.PureComponent<Props> {
   render() {
     const {
       position,

@@ -1,6 +1,6 @@
 /* @flow */
 
-import React, { PureComponent } from 'react';
+import * as React from 'react';
 import DrawerLayout from 'react-native-drawer-layout-polyfill';
 
 import addNavigationHelpers from '../../addNavigationHelpers';
@@ -32,34 +32,36 @@ export type DrawerViewConfig = {
   drawerLockMode?: 'unlocked' | 'locked-closed' | 'locked-open',
   drawerWidth?: number,
   drawerPosition?: 'left' | 'right',
-  contentComponent?: ReactClass<*>,
+  contentComponent?: React.ComponentType<*>,
   contentOptions?: {},
   style?: ViewStyleProp,
   useNativeAnimations?: boolean,
-  drawerBackgroundColor?: String,
+  drawerBackgroundColor?: string,
 };
 
-type Props = DrawerViewConfig & {
-  screenProps?: {},
+export type DrawerViewPropsExceptRouter = DrawerViewConfig & {
+  navigation: NavigationScreenProp<NavigationState, NavigationAction>,
+};
+
+export type DrawerViewProps = DrawerViewPropsExceptRouter & {
   router: NavigationRouter<
     NavigationState,
     NavigationAction,
     NavigationDrawerScreenOptions
   >,
-  navigation: NavigationScreenProp<NavigationState, NavigationAction>,
 };
 
 /**
  * Component that renders the drawer.
  */
-export default class DrawerView<T: *> extends PureComponent<void, Props, void> {
-  props: Props;
-
+export default class DrawerView<T: *> extends React.PureComponent<
+  DrawerViewProps
+> {
   componentWillMount() {
     this._updateScreenNavigation(this.props.navigation);
   }
 
-  componentWillReceiveProps(nextProps: Props) {
+  componentWillReceiveProps(nextProps: DrawerViewProps) {
     if (
       this.props.navigation.state.index !== nextProps.navigation.state.index
     ) {

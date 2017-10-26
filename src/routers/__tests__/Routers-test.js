@@ -1,7 +1,7 @@
 /* @flow */
 /* eslint react/no-multi-comp:0 */
 
-import React from 'react';
+import * as React from 'react';
 
 import StackRouter from '../StackRouter';
 import TabRouter from '../TabRouter';
@@ -19,18 +19,18 @@ Object.keys(ROUTERS).forEach((routerName: string) => {
 
   describe(`General router features - ${routerName}`, () => {
     test('title is configurable using navigationOptions and getScreenOptions', () => {
-      class FooView extends React.Component {
+      class FooView extends React.Component<void> {
         render() {
           return <div />;
         }
       }
-      class BarView extends React.Component {
+      class BarView extends React.Component<void> {
         render() {
           return <div />;
         }
         static navigationOptions = { title: 'BarTitle' };
       }
-      class BazView extends React.Component {
+      class BazView extends React.Component<void> {
         render() {
           return <div />;
         }
@@ -135,7 +135,6 @@ test('Handles deep action', () => {
     state1
   );
   expect(state2 && state2.index).toEqual(1);
-  /* $FlowFixMe */
   expect(state2 && state2.routes[1].index).toEqual(1);
 });
 

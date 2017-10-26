@@ -38,7 +38,7 @@ type State = {
 export default function createNavigationContainer<S: *, O>(
   Component: NavigationNavigator<*, S, *, O>
 ) {
-  class NavigationContainer extends React.Component<void, Props<O, S>, State> {
+  class NavigationContainer extends React.Component<Props<O, S>, State> {
     state: State;
     props: Props<O, S>;
 

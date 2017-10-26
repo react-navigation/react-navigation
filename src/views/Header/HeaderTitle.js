@@ -1,6 +1,6 @@
 /* @flow */
 
-import React from 'react';
+import * as React from 'react';
 
 import { Text, View, Platform, StyleSheet, Animated } from 'react-native';
 
@@ -10,7 +10,7 @@ type AnimatedTextStyleProp = $PropertyType<
 >;
 
 type Props = {
-  children: React$Element<*>,
+  children: React.ChildrenArray<*>,
   selectionColor?: string | number,
   style?: AnimatedTextStyleProp,
 };

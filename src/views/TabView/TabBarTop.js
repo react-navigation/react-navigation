@@ -1,6 +1,6 @@
 /* @flow */
 
-import React, { PureComponent } from 'react';
+import * as React from 'react';
 import { Animated, StyleSheet } from 'react-native';
 import { TabBar } from 'react-native-tab-view';
 import TabBarIcon from './TabBarIcon';
@@ -15,15 +15,6 @@ import type {
 
 import type { TabScene } from './TabView';
 
-type DefaultProps = {
-  activeTintColor: string,
-  inactiveTintColor: string,
-  showIcon: boolean,
-  showLabel: boolean,
-  upperCaseLabel: boolean,
-  allowFontScaling: boolean,
-};
-
 type Props = {
   activeTintColor: string,
   inactiveTintColor: string,
@@ -34,21 +25,17 @@ type Props = {
   position: Animated.Value,
   navigation: NavigationScreenProp<NavigationState, NavigationAction>,
   jumpToIndex: (index: number) => void,
-  getLabel: (scene: TabScene) => ?(React.Element<*> | string),
+  getLabel: (scene: TabScene) => ?(React.Node | string),
   getOnPress: (
     scene: TabScene
   ) => (scene: TabScene, jumpToIndex: (index: number) => void) => void,
-  renderIcon: (scene: TabScene) => React.Element<*>,
+  renderIcon: (scene: TabScene) => React.Node,
   labelStyle?: TextStyleProp,
   iconStyle?: ViewStyleProp,
 };
 
-export default class TabBarTop extends PureComponent<
-  DefaultProps,
-  Props,
-  void
-> {
-  static defaultProps: DefaultProps = {
+export default class TabBarTop extends React.PureComponent<Props> {
+  static defaultProps = {
     activeTintColor: '#fff',
     inactiveTintColor: '#fff',
     showIcon: false,
@@ -56,8 +43,6 @@ export default class TabBarTop extends PureComponent<
     upperCaseLabel: true,
     allowFontScaling: true,
   };
-
-  props: Props;
 
   _renderLabel = (scene: TabScene) => {
     const {

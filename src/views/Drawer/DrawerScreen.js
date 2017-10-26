@@ -1,6 +1,6 @@
 /* @flow */
 
-import React, { PureComponent } from 'react';
+import * as React from 'react';
 
 import SceneView from '../SceneView';
 import withCachedChildNavigation from '../../withCachedChildNavigation';
@@ -30,9 +30,7 @@ type Props = {
 /**
  * Component that renders the child screen of the drawer.
  */
-class DrawerScreen extends PureComponent<void, Props, void> {
-  props: Props;
-
+class DrawerScreen extends React.PureComponent<Props> {
   render() {
     const {
       router,

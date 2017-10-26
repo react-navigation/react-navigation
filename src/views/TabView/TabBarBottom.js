@@ -1,6 +1,6 @@
 /* @flow */
 
-import React, { PureComponent } from 'react';
+import * as React from 'react';
 import {
   Animated,
   TouchableWithoutFeedback,
@@ -22,16 +22,6 @@ import type {
 
 import type { TabScene } from './TabView';
 
-type DefaultProps = {
-  activeTintColor: string,
-  activeBackgroundColor: string,
-  inactiveTintColor: string,
-  inactiveBackgroundColor: string,
-  showLabel: boolean,
-  showIcon: boolean,
-  allowFontScaling: boolean,
-};
-
 type Props = {
   activeTintColor: string,
   activeBackgroundColor: string,
@@ -43,26 +33,26 @@ type Props = {
   position: Animated.Value,
   navigation: NavigationScreenProp<NavigationState, NavigationAction>,
   jumpToIndex: (index: number) => void,
-  getLabel: (scene: TabScene) => ?(React.Element<*> | string),
+  getLabel: (scene: TabScene) => ?(React.Node | string),
   getOnPress: (
     scene: TabScene
   ) => (scene: TabScene, jumpToIndex: (index: number) => void) => void,
   getTestIDProps: (scene: TabScene) => (scene: TabScene) => any,
-  renderIcon: (scene: TabScene) => React.Element<*>,
+  renderIcon: (scene: TabScene) => React.Node,
   style?: ViewStyleProp,
   labelStyle?: TextStyleProp,
   tabStyle?: ViewStyleProp,
   showIcon?: boolean,
-  isLandscape?: boolean,
+  isLandscape: boolean,
 };
 
 const majorVersion = parseInt(Platform.Version, 10);
 const isIos = Platform.OS === 'ios';
 const useHorizontalTabs = majorVersion >= 11 && isIos;
 
-class TabBarBottom extends PureComponent<DefaultProps, Props, void> {
+class TabBarBottom extends React.PureComponent<Props> {
   // See https://developer.apple.com/library/content/documentation/UserExperience/Conceptual/UIKitUICatalog/UITabBar.html
-  static defaultProps: DefaultProps = {
+  static defaultProps = {
     activeTintColor: '#3478f6', // Default active tint color in iOS 10
     activeBackgroundColor: 'transparent',
     inactiveTintColor: '#929292', // Default inactive tint color in iOS 10

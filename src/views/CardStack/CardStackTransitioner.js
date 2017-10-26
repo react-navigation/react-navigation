@@ -1,6 +1,6 @@
 /* @flow */
 
-import React, { Component } from 'react';
+import * as React from 'react';
 import { NativeModules } from 'react-native';
 
 import CardStack from './CardStack';
@@ -44,14 +44,10 @@ type Props = {
   transitionConfig?: () => TransitionConfig,
 };
 
-type DefaultProps = {
-  mode: 'card' | 'modal',
-};
-
-class CardStackTransitioner extends Component<DefaultProps, Props, void> {
+class CardStackTransitioner extends React.Component<Props> {
   _render: NavigationSceneRenderer;
 
-  static defaultProps: DefaultProps = {
+  static defaultProps = {
     mode: 'card',
   };
 
@@ -96,7 +92,7 @@ class CardStackTransitioner extends Component<DefaultProps, Props, void> {
     return transitionSpec;
   };
 
-  _render = (props: NavigationTransitionProps): React.Element<*> => {
+  _render = (props: NavigationTransitionProps): React.Node => {
     const {
       screenProps,
       headerMode,
