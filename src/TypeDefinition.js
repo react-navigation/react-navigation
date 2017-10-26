@@ -203,10 +203,7 @@ export type NavigationScreenConfig<Options> =
   | Options
   | (({
       ...$Exact<NavigationScreenConfigProps>,
-      navigationOptions: NavigationScreenProp<
-        NavigationRoute,
-        NavigationAction
-      >,
+      navigationOptions: Options,
     }) => Options);
 
 export type NavigationComponent =
