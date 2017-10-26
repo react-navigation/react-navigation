@@ -8,19 +8,32 @@ import type {
   NavigationAction,
   NavigationProp,
   NavigationParams,
+  NavigationScreenProp,
 } from './TypeDefinition';
 
 import NavigationActions from './NavigationActions';
+import invariant from './utils/invariant';
 
-export default function<S: *>(navigation: NavigationProp<S, NavigationAction>) {
+export default function<S: {}>(
+  navigation: NavigationProp<S, NavigationAction>
+): NavigationScreenProp<S, NavigationAction> {
   return {
     ...navigation,
-    goBack: (key?: ?string): boolean =>
-      navigation.dispatch(
+    goBack: (key?: ?string): boolean => {
+      let actualizedKey: ?string = key;
+      if (key === undefined && navigation.state.key) {
+        invariant(
+          typeof navigation.state.key === 'string',
+          'key should be a string'
+        );
+        actualizedKey = navigation.state.key;
+      }
+      return navigation.dispatch(
         NavigationActions.back({
-          key: key === undefined ? navigation.state.key : key,
+          key: actualizedKey,
         })
-      ),
+      );
+    },
     navigate: (
       routeName: string,
       params?: NavigationParams,
@@ -38,12 +51,13 @@ export default function<S: *>(navigation: NavigationProp<S, NavigationAction>) {
      * buttons are based on the route params.
      * This means `setParams` can be used to update nav bar for example.
      */
-    setParams: (params: NavigationParams): boolean =>
-      navigation.dispatch(
+    setParams: (params: NavigationParams): boolean => {
+      return navigation.dispatch(
         NavigationActions.setParams({
           params,
-          key: navigation.state.key,
+          key: navigation.state.key ? navigation.state.key : null,
         })
-      ),
+      );
+    },
   };
 }
