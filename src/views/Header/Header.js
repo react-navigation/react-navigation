@@ -9,6 +9,7 @@ import { Animated, Platform, StyleSheet, View } from 'react-native';
 import HeaderTitle from './HeaderTitle';
 import HeaderBackButton from './HeaderBackButton';
 import HeaderStyleInterpolator from './HeaderStyleInterpolator';
+import withOrientation from '../withOrientation';
 
 import type {
   NavigationScene,
@@ -91,6 +92,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
 
     const titleStyle = details.options.headerTitleStyle;
     const color = details.options.headerTintColor;
+    const allowFontScaling = details.options.headerTitleAllowFontScaling;
 
     // On iOS, width of left/right components depends on the calculated
     // size of the title.
@@ -109,6 +111,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
     return (
       <HeaderTitle
         onLayout={onLayoutIOS}
+        allowFontScaling={allowFontScaling == null ? true : allowFontScaling}
         style={[color ? { color } : null, titleStyle]}
       >
         {titleString}
@@ -288,17 +291,26 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
       screenProps,
       progress,
       style,
+      isLandscape,
       ...rest
     } = this.props;
 
     const { options } = this.props.getScreenDetails(scene);
     const headerStyle = options.headerStyle;
+    const landscapeAwareStatusBarHeight = isLandscape ? 0 : STATUSBAR_HEIGHT;
+    const containerStyles = [
+      styles.container,
+      {
+        paddingTop: landscapeAwareStatusBarHeight,
+        height: APPBAR_HEIGHT + landscapeAwareStatusBarHeight,
+      },
+      headerStyle,
+      style,
+    ];
 
     return (
-      <Animated.View {...rest} style={[styles.container, headerStyle, style]}>
-        <View style={styles.appBar}>
-          {appBar}
-        </View>
+      <Animated.View {...rest} style={containerStyles}>
+        <View style={styles.appBar}>{appBar}</View>
       </Animated.View>
     );
   }
@@ -324,9 +336,7 @@ if (Platform.OS === 'ios') {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: STATUSBAR_HEIGHT,
     backgroundColor: Platform.OS === 'ios' ? '#F7F7F7' : '#FFF',
-    height: STATUSBAR_HEIGHT + APPBAR_HEIGHT,
     ...platformContainerStyles,
   },
   appBar: {
@@ -362,4 +372,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Header;
+export default withOrientation(Header);

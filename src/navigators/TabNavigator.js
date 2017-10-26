@@ -47,7 +47,7 @@ const TabNavigator = (
     routeConfigs,
     config,
     NavigatorTypes.TABS
-  )((props: *) =>
+  )((props: *) => (
     <TabView
       {...props}
       tabBarComponent={tabBarComponent}
@@ -57,7 +57,7 @@ const TabNavigator = (
       animationEnabled={animationEnabled}
       lazy={lazy}
     />
-  );
+  ));
 
   return createNavigationContainer(navigator);
 };

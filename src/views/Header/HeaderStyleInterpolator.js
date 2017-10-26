@@ -1,11 +1,6 @@
 /* @flow */
 
-import {
-  I18nManager,
-  Animated,
-  type StyleDefinition,
-  type AnimatedViewStylePropTypes,
-} from 'react-native';
+import { I18nManager } from 'react-native';
 
 import type {
   NavigationSceneRendererProps,
@@ -23,9 +18,7 @@ import type {
  * +-------------+-------------+-------------+
  */
 
-function forLeft(
-  props: NavigationSceneRendererProps
-): AnimatedViewStylePropTypes {
+function forLeft(props: NavigationSceneRendererProps): AnimatedViewStyleProp {
   const { position, scene } = props;
   const { index } = scene;
   return {
@@ -36,9 +29,7 @@ function forLeft(
   };
 }
 
-function forCenter(
-  props: NavigationSceneRendererProps
-): AnimatedViewStylePropTypes {
+function forCenter(props: NavigationSceneRendererProps): AnimatedViewStyleProp {
   const { position, scene } = props;
   const { index } = scene;
   return {
@@ -59,9 +50,7 @@ function forCenter(
   };
 }
 
-function forRight(
-  props: NavigationSceneRendererProps
-): AnimatedViewStylePropTypes {
+function forRight(props: NavigationSceneRendererProps): AnimatedViewStyleProp {
   const { position, scene } = props;
   const { index } = scene;
   return {

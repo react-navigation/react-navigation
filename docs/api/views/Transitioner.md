@@ -108,7 +108,7 @@ There are a few important properties of the `transitionProps` and `prevTransitio
 
 - `scenes: Array<NavigationScene>` - a list of all available scenes
 - `position: NavigationAnimatedValue` - the progressive index of the transitioner's navigation state
-- `progress: NavigationAnimatedValue` - the value that represents the progress of the transition when navigation state changes from one to another. Its numberic value will range from 0 to 1.
+- `progress: NavigationAnimatedValue` - the value that represents the progress of the transition when navigation state changes from one to another. Its numeric value will range from 0 to 1.
 
 For the complete list of properties of `NavigationTransitionProps`, check out its [flow definition](https://github.com/react-community/react-navigation/blob/master/src/TypeDefinition.js#L273).
 
