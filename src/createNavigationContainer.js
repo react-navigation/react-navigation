@@ -25,8 +25,8 @@ type NavigationContainerProps = {
 
 type Props<O, S> = NavigationContainerProps & NavigationNavigatorProps<O, S>;
 
-type State = {
-  nav: ?NavigationState,
+type State<S> = {
+  nav: ?S,
 };
 
 /**
@@ -38,10 +38,7 @@ type State = {
 export default function createNavigationContainer<S: *, O>(
   Component: NavigationNavigator<*, S, *, O>
 ) {
-  class NavigationContainer extends React.Component<Props<O, S>, State> {
-    state: State;
-    props: Props<O, S>;
-
+  class NavigationContainer extends React.Component<Props<O, S>, State<S>> {
     subs: ?{
       remove: () => void,
     } = null;
