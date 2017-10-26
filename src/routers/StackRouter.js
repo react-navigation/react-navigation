@@ -10,7 +10,6 @@ import validateRouteConfigMap from './validateRouteConfigMap';
 import getScreenConfigDeprecated from './getScreenConfigDeprecated';
 
 import type {
-  NavigationAction,
   NavigationComponent,
   NavigationNavigateAction,
   NavigationRouter,
@@ -32,7 +31,11 @@ function _getUuid() {
 export default (
   routeConfigs: NavigationRouteConfigMap,
   stackConfig: NavigationStackRouterConfig = {}
-): NavigationRouter<*, *, NavigationStackScreenOptions> => {
+): NavigationRouter<
+  NavigationState,
+  NavigationStackAction,
+  NavigationStackScreenOptions
+> => {
   // Fail fast on invalid route definitions
   validateRouteConfigMap(routeConfigs);
 
@@ -90,11 +93,9 @@ export default (
     },
 
     getStateForAction(
-      passedAction: NavigationStackAction,
+      action: NavigationStackAction,
       state: ?NavigationState
-    ) {
-      const action = NavigationActions.mapDeprecatedActionAndWarn(passedAction);
-
+    ): ?NavigationState {
       // Set up the initial state if needed
       if (!state) {
         let route = {};
@@ -124,10 +125,10 @@ export default (
         const params = (route.params ||
           action.params ||
           initialRouteParams) && {
-            ...(route.params || {}),
-            ...(action.params || {}),
-            ...(initialRouteParams || {}),
-          };
+          ...(route.params || {}),
+          ...(action.params || {}),
+          ...(initialRouteParams || {}),
+        };
         route = {
           ...route,
           routeName: initialRouteName,
@@ -318,7 +319,7 @@ export default (
       };
     },
 
-    getActionForPathAndParams(pathToResolve: string): ?NavigationAction {
+    getActionForPathAndParams(pathToResolve: string): ?NavigationStackAction {
       // If the path is empty (null or empty string)
       // just return the initial route action
       if (!pathToResolve) {

@@ -8,7 +8,6 @@ import TouchableItem from '../TouchableItem';
 import type {
   NavigationScreenProp,
   NavigationState,
-  NavigationAction,
   NavigationRoute,
   ViewStyleProp,
   TextStyleProp,
@@ -16,7 +15,7 @@ import type {
 import type { DrawerScene, DrawerItem } from './DrawerView.js';
 
 type Props = {
-  navigation: NavigationScreenProp<NavigationState, NavigationAction>,
+  navigation: NavigationScreenProp<NavigationState>,
   items: Array<NavigationRoute>,
   activeItemKey?: string,
   activeTintColor?: string,

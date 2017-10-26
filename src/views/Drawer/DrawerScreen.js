@@ -9,21 +9,21 @@ import type {
   NavigationScreenProp,
   NavigationState,
   NavigationRoute,
-  NavigationAction,
   NavigationRouter,
   NavigationDrawerScreenOptions,
+  NavigationTabAction,
 } from '../../TypeDefinition';
 
 type Props = {
   screenProps?: {},
   router: NavigationRouter<
     NavigationState,
-    NavigationAction,
+    NavigationTabAction,
     NavigationDrawerScreenOptions
   >,
-  navigation: NavigationScreenProp<NavigationState, NavigationAction>,
+  navigation: NavigationScreenProp<NavigationState>,
   childNavigationProps: {
-    [key: string]: NavigationScreenProp<NavigationRoute, NavigationAction>,
+    [key: string]: NavigationScreenProp<NavigationRoute>,
   },
 };
 

@@ -12,7 +12,6 @@ import type {
   NavigationLayout,
   NavigationScene,
   NavigationState,
-  NavigationAction,
   NavigationScreenProp,
   NavigationTransitionProps,
   NavigationTransitionSpec,
@@ -23,7 +22,7 @@ type Props = {
     transitionProps: NavigationTransitionProps,
     prevTransitionProps: ?NavigationTransitionProps
   ) => NavigationTransitionSpec,
-  navigation: NavigationScreenProp<NavigationState, NavigationAction>,
+  navigation: NavigationScreenProp<NavigationState>,
   onTransitionEnd?: (...args: Array<mixed>) => void,
   onTransitionStart?: (...args: Array<mixed>) => void,
   render: (

@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import addNavigationHelpers from './addNavigationHelpers';
 
-import type { NavigationScreenProp, NavigationAction } from './TypeDefinition';
+import type { NavigationScreenProp } from './TypeDefinition';
 
 type InjectedProps<N> = {
   childNavigationProps: {
@@ -31,12 +31,10 @@ export default function withCachedChildNavigation<T: *, N: *>(
     }
 
     _childNavigationProps: {
-      [key: string]: NavigationScreenProp<N, NavigationAction>,
+      [key: string]: NavigationScreenProp<N>,
     };
 
-    _updateNavigationProps = (
-      navigation: NavigationScreenProp<N, NavigationAction>
-    ) => {
+    _updateNavigationProps = (navigation: NavigationScreenProp<N>) => {
       // Update props for each child route
       if (!this._childNavigationProps) {
         this._childNavigationProps = {};

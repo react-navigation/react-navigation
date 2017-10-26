@@ -4,14 +4,15 @@ import React from 'react';
 import { BackHandler, Linking } from './PlatformHelpers';
 import NavigationActions from './NavigationActions';
 import addNavigationHelpers from './addNavigationHelpers';
+import invariant from './utils/invariant';
 
 import type {
-  NavigationRoute,
   NavigationAction,
   NavigationState,
   NavigationScreenProp,
   NavigationNavigatorProps,
   NavigationNavigator,
+  PossiblyDeprecatedNavigationAction,
 } from './TypeDefinition';
 
 type NavigationContainerProps = {
@@ -35,7 +36,7 @@ type State<S> = {
  * This allows to use e.g. the StackNavigator and TabNavigator as root-level
  * components.
  */
-export default function createNavigationContainer<S: *, O>(
+export default function createNavigationContainer<S: NavigationState, O: {}>(
   Component: NavigationNavigator<*, S, *, O>
 ) {
   class NavigationContainer extends React.Component<Props<O, S>, State<S>> {
@@ -164,30 +165,34 @@ export default function createNavigationContainer<S: *, O>(
       this.subs && this.subs.remove();
     }
 
-    dispatch = (action: NavigationAction) => {
-      const { state } = this;
+    dispatch = (inputAction: PossiblyDeprecatedNavigationAction) => {
+      const action = NavigationActions.mapDeprecatedActionAndWarn(inputAction);
       if (!this._isStateful()) {
         return false;
       }
-      const nav = Component.router.getStateForAction(action, state.nav);
-      if (nav && nav !== state.nav) {
+      const oldNav = this.state.nav;
+      invariant(oldNav, 'should be set in constructor if stateful');
+      const nav = Component.router.getStateForAction(action, oldNav);
+      if (nav && nav !== oldNav) {
         this.setState({ nav }, () =>
-          this._onNavigationStateChange(state.nav, nav, action)
+          this._onNavigationStateChange(oldNav, nav, action)
         );
         return true;
       }
       return false;
     };
 
-    _navigation: ?NavigationScreenProp<NavigationRoute, NavigationAction>;
+    _navigation: ?NavigationScreenProp<NavigationState>;
 
     render() {
       let navigation = this.props.navigation;
       if (this._isStateful()) {
-        if (!this._navigation || this._navigation.state !== this.state.nav) {
+        const nav = this.state.nav;
+        invariant(nav, 'should be set in constructor if stateful');
+        if (!this._navigation || this._navigation.state !== nav) {
           this._navigation = addNavigationHelpers({
             dispatch: this.dispatch,
-            state: this.state.nav,
+            state: nav,
           });
         }
         navigation = this._navigation;

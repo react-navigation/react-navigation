@@ -6,7 +6,6 @@ import { TabBar } from 'react-native-tab-view';
 import TabBarIcon from './TabBarIcon';
 
 import type {
-  NavigationAction,
   NavigationScreenProp,
   NavigationState,
   ViewStyleProp,
@@ -23,7 +22,7 @@ type Props = {
   upperCaseLabel: boolean,
   allowFontScaling: boolean,
   position: Animated.Value,
-  navigation: NavigationScreenProp<NavigationState, NavigationAction>,
+  navigation: NavigationScreenProp<NavigationState>,
   jumpToIndex: (index: number) => void,
   getLabel: (scene: TabScene) => ?(React.Node | string),
   getOnPress: (

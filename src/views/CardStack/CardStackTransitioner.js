@@ -9,7 +9,6 @@ import Transitioner from '../Transitioner';
 import TransitionConfigs from './TransitionConfigs';
 
 import type {
-  NavigationAction,
   NavigationSceneRenderer,
   NavigationScreenProp,
   NavigationStackScreenOptions,
@@ -19,6 +18,7 @@ import type {
   HeaderMode,
   ViewStyleProp,
   TransitionConfig,
+  NavigationStackAction,
 } from '../../TypeDefinition';
 
 const NativeAnimatedModule =
@@ -28,10 +28,10 @@ type Props = {
   screenProps?: {},
   headerMode: HeaderMode,
   mode: 'card' | 'modal',
-  navigation: NavigationScreenProp<NavigationState, NavigationAction>,
+  navigation: NavigationScreenProp<NavigationState>,
   router: NavigationRouter<
     NavigationState,
-    NavigationAction,
+    NavigationStackAction,
     NavigationStackScreenOptions
   >,
   cardStyle?: ViewStyleProp,

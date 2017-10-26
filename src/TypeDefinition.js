@@ -27,46 +27,87 @@ export type NavigationParams = {
   [key: string]: mixed,
 };
 
-export type NavigationNavigateAction = {
+export type NavigationNavigateAction = {|
   type: 'Navigation/NAVIGATE',
   routeName: string,
   params?: NavigationParams,
 
   // The action to run inside the sub-router
   action?: NavigationNavigateAction,
-};
+|};
 
-export type NavigationBackAction = {
+export type DeprecatedNavigationNavigateAction = {|
+  type: 'Navigate',
+  routeName: string,
+  params?: NavigationParams,
+
+  // The action to run inside the sub-router
+  action?: NavigationNavigateAction | DeprecatedNavigationNavigateAction,
+|};
+
+export type NavigationBackAction = {|
   type: 'Navigation/BACK',
   key?: ?string,
-};
+|};
 
-export type NavigationSetParamsAction = {
+export type DeprecatedNavigationBackAction = {|
+  type: 'Back',
+  key?: ?string,
+|};
+
+export type NavigationSetParamsAction = {|
   type: 'Navigation/SET_PARAMS',
 
   // The key of the route where the params should be set
   key: string,
 
   // The new params to merge into the existing route params
-  params?: NavigationParams,
-};
+  params: NavigationParams,
+|};
 
-export type NavigationInitAction = {
+export type DeprecatedNavigationSetParamsAction = {|
+  type: 'SetParams',
+
+  // The key of the route where the params should be set
+  key: string,
+
+  // The new params to merge into the existing route params
+  params: NavigationParams,
+|};
+
+export type NavigationInitAction = {|
   type: 'Navigation/INIT',
   params?: NavigationParams,
-};
+|};
 
-export type NavigationResetAction = {
+export type DeprecatedNavigationInitAction = {|
+  type: 'Init',
+  params?: NavigationParams,
+|};
+
+export type NavigationResetAction = {|
   type: 'Navigation/RESET',
   index: number,
   key?: ?string,
   actions: Array<NavigationNavigateAction>,
-};
+|};
 
-export type NavigationUriAction = {
+export type DeprecatedNavigationResetAction = {|
+  type: 'Reset',
+  index: number,
+  key?: ?string,
+  actions: Array<NavigationNavigateAction | DeprecatedNavigationNavigateAction>,
+|};
+
+export type NavigationUriAction = {|
   type: 'Navigation/URI',
   uri: string,
-};
+|};
+
+export type DeprecatedNavigationUriAction = {|
+  type: 'Uri',
+  uri: string,
+|};
 
 export type NavigationStackAction =
   | NavigationInitAction
@@ -75,15 +116,36 @@ export type NavigationStackAction =
   | NavigationSetParamsAction
   | NavigationResetAction;
 
+export type DeprecatedNavigationStackAction =
+  | DeprecatedNavigationInitAction
+  | DeprecatedNavigationNavigateAction
+  | DeprecatedNavigationBackAction
+  | DeprecatedNavigationSetParamsAction
+  | DeprecatedNavigationResetAction;
+
 export type NavigationTabAction =
   | NavigationInitAction
   | NavigationNavigateAction
   | NavigationBackAction;
 
+export type DeprecatedNavigationTabAction =
+  | DeprecatedNavigationInitAction
+  | DeprecatedNavigationNavigateAction
+  | DeprecatedNavigationBackAction;
+
 export type NavigationAction =
   | NavigationInitAction
   | NavigationStackAction
   | NavigationTabAction;
+
+export type DeprecatedNavigationAction =
+  | DeprecatedNavigationInitAction
+  | DeprecatedNavigationStackAction
+  | DeprecatedNavigationTabAction;
+
+export type PossiblyDeprecatedNavigationAction =
+  | NavigationAction
+  | DeprecatedNavigationAction;
 
 /**
  * NavigationState is a tree of routes for a single navigator, where each child
@@ -136,16 +198,26 @@ export type NavigationStateRoute = {
   routes: Array<NavigationRoute>,
 };
 
+export type DrawerNavigationState = {
+  ...$Exact<NavigationLeafRoute>,
+  index: number,
+  routes: [],
+};
+
 /**
  * Router
  */
 
-export type NavigationScreenOptionsGetter<Options, Action> = (
-  navigation: NavigationScreenProp<NavigationRoute, Action>,
+export type NavigationScreenOptionsGetter<Options> = (
+  navigation: NavigationScreenProp<NavigationRoute>,
   screenProps?: {}
 ) => Options;
 
-export type NavigationRouter<State, Action, Options> = {
+export type NavigationRouter<
+  State: NavigationState,
+  Action: NavigationAction,
+  Options: {}
+> = {
   /**
    * The reducer that outputs the new navigation state for a given action, with
    * an optional previous state. When the action is considered handled but the
@@ -181,13 +253,13 @@ export type NavigationRouter<State, Action, Options> = {
    *
    *  {routeName: 'Foo', key: '123'}
    */
-  getScreenOptions: NavigationScreenOptionsGetter<Options, Action>,
+  getScreenOptions: NavigationScreenOptionsGetter<Options>,
 };
 
 export type NavigationScreenDetails<T> = {
   options: T,
   state: NavigationRoute,
-  navigation: NavigationScreenProp<NavigationRoute, NavigationAction>,
+  navigation: NavigationScreenProp<NavigationRoute>,
 };
 
 export type NavigationScreenOptions = {
@@ -195,7 +267,7 @@ export type NavigationScreenOptions = {
 };
 
 export type NavigationScreenConfigProps = {
-  navigation: NavigationScreenProp<NavigationRoute, NavigationAction>,
+  navigation: NavigationScreenProp<NavigationRoute>,
   screenProps: {},
 };
 
@@ -216,11 +288,11 @@ export type NavigationScreenComponent<T, Options> = React.ComponentType<T> & {
 
 export type NavigationNavigator<
   T,
-  State,
-  Action,
-  Options
+  State: NavigationState,
+  Action: NavigationAction,
+  Options: {}
 > = React.ComponentType<T> & {
-  router?: NavigationRouter<State, Action, Options>,
+  router: NavigationRouter<State, Action, Options>,
   navigationOptions?: NavigationScreenConfig<Options>,
 };
 
@@ -359,27 +431,29 @@ export type NavigationDrawerScreenOptions = {
  * Navigator Prop
  */
 
-export type NavigationDispatch<A> = (action: A) => boolean;
+export type NavigationDispatch = (
+  action: PossiblyDeprecatedNavigationAction
+) => boolean;
 
-export type NavigationProp<S, A> = {
+export type NavigationProp<S> = {
   state: S,
-  dispatch: NavigationDispatch<A>,
+  dispatch: NavigationDispatch,
 };
 
-export type NavigationScreenProp<S, A> = {
+export type NavigationScreenProp<S: {}> = {
   state: S,
-  dispatch: NavigationDispatch<A>,
+  dispatch: NavigationDispatch,
   goBack: (routeKey?: ?string) => boolean,
   navigate: (
     routeName: string,
     params?: NavigationParams,
-    action?: NavigationAction
+    action?: NavigationNavigateAction
   ) => boolean,
   setParams: (newParams: NavigationParams) => boolean,
 };
 
-export type NavigationNavigatorProps<O, S> = {
-  navigation?: NavigationProp<S, NavigationAction>,
+export type NavigationNavigatorProps<O: {}, S: {}> = {
+  navigation?: NavigationProp<S>,
   screenProps?: *,
   navigationOptions?: O,
 };
@@ -411,7 +485,7 @@ export type NavigationTransitionProps = {
   layout: NavigationLayout,
 
   // The destination navigation state of the transition
-  navigation: NavigationScreenProp<NavigationState, NavigationAction>,
+  navigation: NavigationScreenProp<NavigationState>,
 
   // The progressive index of the transitioner's navigation state.
   position: Animated.Value,

@@ -4,7 +4,6 @@ import * as React from 'react';
 import { Animated, View, StyleSheet } from 'react-native';
 
 import type {
-  NavigationAction,
   NavigationState,
   NavigationScreenProp,
   ViewStyleProp,
@@ -17,7 +16,7 @@ type Props = {
   inactiveTintColor: string,
   scene: TabScene,
   position: Animated.Value,
-  navigation: NavigationScreenProp<NavigationState, NavigationAction>,
+  navigation: NavigationScreenProp<NavigationState>,
   renderIcon: (scene: TabScene) => React.Node,
   style?: ViewStyleProp,
 };

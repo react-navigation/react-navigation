@@ -20,7 +20,6 @@ import addNavigationHelpers from '../../addNavigationHelpers';
 import SceneView from '../SceneView';
 
 import type {
-  NavigationAction,
   NavigationLayout,
   NavigationScreenProp,
   NavigationScene,
@@ -31,6 +30,7 @@ import type {
   HeaderMode,
   ViewStyleProp,
   TransitionConfig,
+  NavigationStackAction,
 } from '../../TypeDefinition';
 
 import TransitionConfigs from './TransitionConfigs';
@@ -44,7 +44,7 @@ type Props = {
   mode: 'card' | 'modal',
   router: NavigationRouter<
     NavigationState,
-    NavigationAction,
+    NavigationStackAction,
     NavigationStackScreenOptions
   >,
   cardStyle?: ViewStyleProp,
@@ -58,7 +58,7 @@ type Props = {
 
   // NavigationTransitionProps:
   layout: NavigationLayout,
-  navigation: NavigationScreenProp<NavigationState, NavigationAction>,
+  navigation: NavigationScreenProp<NavigationState>,
   position: Animated.Value,
   progress: Animated.Value,
   scenes: Array<NavigationScene>,

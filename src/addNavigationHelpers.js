@@ -5,18 +5,18 @@
  */
 
 import type {
-  NavigationAction,
   NavigationProp,
   NavigationParams,
   NavigationScreenProp,
+  NavigationNavigateAction,
 } from './TypeDefinition';
 
 import NavigationActions from './NavigationActions';
 import invariant from './utils/invariant';
 
 export default function<S: {}>(
-  navigation: NavigationProp<S, NavigationAction>
-): NavigationScreenProp<S, NavigationAction> {
+  navigation: NavigationProp<S>
+): NavigationScreenProp<S> {
   return {
     ...navigation,
     goBack: (key?: ?string): boolean => {
@@ -29,22 +29,16 @@ export default function<S: {}>(
         actualizedKey = navigation.state.key;
       }
       return navigation.dispatch(
-        NavigationActions.back({
-          key: actualizedKey,
-        })
+        NavigationActions.back({ key: actualizedKey })
       );
     },
     navigate: (
       routeName: string,
       params?: NavigationParams,
-      action?: NavigationAction
+      action?: NavigationNavigateAction
     ): boolean =>
       navigation.dispatch(
-        NavigationActions.navigate({
-          routeName,
-          params,
-          action,
-        })
+        NavigationActions.navigate({ routeName, params, action })
       ),
     /**
      * For updating current route params. For example the nav bar title and
@@ -52,12 +46,12 @@ export default function<S: {}>(
      * This means `setParams` can be used to update nav bar for example.
      */
     setParams: (params: NavigationParams): boolean => {
-      return navigation.dispatch(
-        NavigationActions.setParams({
-          params,
-          key: navigation.state.key ? navigation.state.key : null,
-        })
+      invariant(
+        navigation.state.key && typeof navigation.state.key === 'string',
+        'setParams cannot be called by root navigator'
       );
+      const key = navigation.state.key;
+      return navigation.dispatch(NavigationActions.setParams({ params, key }));
     },
   };
 }

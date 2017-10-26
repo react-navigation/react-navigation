@@ -12,7 +12,6 @@ import TabBarIcon from './TabBarIcon';
 import withOrientation from '../withOrientation';
 
 import type {
-  NavigationAction,
   NavigationRoute,
   NavigationState,
   NavigationScreenProp,
@@ -31,7 +30,7 @@ type Props = {
   showIcon: boolean,
   allowFontScaling: boolean,
   position: Animated.Value,
-  navigation: NavigationScreenProp<NavigationState, NavigationAction>,
+  navigation: NavigationScreenProp<NavigationState>,
   jumpToIndex: (index: number) => void,
   getLabel: (scene: TabScene) => ?(React.Node | string),
   getOnPress: (

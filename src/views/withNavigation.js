@@ -4,18 +4,14 @@ import * as React from 'react';
 import propTypes from 'prop-types';
 import hoistStatics from 'hoist-non-react-statics';
 
-import type {
-  NavigationScreenProp,
-  NavigationState,
-  NavigationAction,
-} from '../TypeDefinition';
+import type { NavigationScreenProp, NavigationState } from '../TypeDefinition';
 
 type Context = {
-  navigation: NavigationScreenProp<NavigationState, NavigationAction>,
+  navigation: NavigationScreenProp<NavigationState>,
 };
 
 type InjectedProps = {
-  navigation: NavigationScreenProp<NavigationState, NavigationAction>,
+  navigation: NavigationScreenProp<NavigationState>,
 };
 
 export default function withNavigation<T: {}>(

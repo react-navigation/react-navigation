@@ -49,8 +49,7 @@ test('should get config for screen', () => {
   }
 
   const getScreenOptions: NavigationScreenOptionsGetter<
-    NavigationStackScreenOptions,
-    *
+    NavigationStackScreenOptions
   > = createConfigGetter({
     Home: { screen: HomeScreen },
     Settings: { screen: SettingsScreen },

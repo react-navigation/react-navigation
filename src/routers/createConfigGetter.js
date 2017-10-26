@@ -10,7 +10,6 @@ import validateScreenOptions from './validateScreenOptions';
 
 import type {
   NavigationScreenProp,
-  NavigationAction,
   NavigationRoute,
   NavigationStateRoute,
   NavigationRouteConfigMap,
@@ -44,10 +43,7 @@ function applyConfig<T: {}>(
 export default (
   routeConfigs: NavigationRouteConfigMap,
   navigatorScreenConfig?: NavigationScreenConfig<*>
-) => (
-  navigation: NavigationScreenProp<NavigationRoute, NavigationAction>,
-  screenProps: *
-) => {
+) => (navigation: NavigationScreenProp<NavigationRoute>, screenProps: *) => {
   const { state, dispatch } = navigation;
   const route = state;
   // $FlowFixMe

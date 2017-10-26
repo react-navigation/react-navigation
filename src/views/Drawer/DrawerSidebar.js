@@ -10,22 +10,22 @@ import invariant from '../../utils/invariant';
 import type {
   NavigationScreenProp,
   NavigationRoute,
-  NavigationAction,
   NavigationRouter,
   NavigationDrawerScreenOptions,
   NavigationState,
   NavigationStateRoute,
   ViewStyleProp,
+  NavigationTabAction,
 } from '../../TypeDefinition';
 
 import type { DrawerScene, DrawerItem } from './DrawerView';
 
-type Navigation = NavigationScreenProp<NavigationRoute, NavigationAction>;
+type Navigation = NavigationScreenProp<NavigationRoute>;
 
 type Props = {
   router: NavigationRouter<
     NavigationState,
-    NavigationAction,
+    NavigationTabAction,
     NavigationDrawerScreenOptions
   >,
   navigation: Navigation,

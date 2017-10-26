@@ -7,6 +7,8 @@ import type {
   NavigationNavigator,
   NavigationNavigatorProps,
   NavigationRouteConfigMap,
+  NavigationAction,
+  NavigationState,
 } from '../TypeDefinition';
 
 import type { NavigatorType } from './NavigatorTypes';
@@ -16,8 +18,8 @@ import type { NavigatorType } from './NavigatorTypes';
  */
 export default function createNavigator<
   C: {},
-  S,
-  A,
+  S: NavigationState,
+  A: NavigationAction,
   NavigatorConfig,
   Options: {}
 >(
