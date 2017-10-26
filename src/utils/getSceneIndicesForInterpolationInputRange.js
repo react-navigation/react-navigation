@@ -21,27 +21,27 @@ function getSceneIndicesForInterpolationInputRange(
     const targetSceneIndexInScenes = scenes.findIndex(
       (item: NavigationScene) => item.isActive
     );
-    const targetSceneIndexValue = scenes[targetSceneIndexInScenes].index;
-    const lastSceneIndexValue = scenes[lastSceneIndexInScenes].index;
+    const targetSceneIndex = scenes[targetSceneIndexInScenes].index;
+    const lastSceneIndex = scenes[lastSceneIndexInScenes].index;
 
     if (
-      index !== targetSceneIndexValue &&
+      index !== targetSceneIndex &&
       currentSceneIndexInScenes === lastSceneIndexInScenes
     ) {
       return {
-        first: Math.min(targetSceneIndexValue, index - 1),
+        first: Math.min(targetSceneIndex, index - 1),
         last: index + 1,
       };
     } else if (
-      index === targetSceneIndexValue &&
+      index === targetSceneIndex &&
       currentSceneIndexInScenes === targetSceneIndexInScenes
     ) {
       return {
         first: index - 1,
-        last: Math.max(lastSceneIndexValue, index + 1),
+        last: Math.max(lastSceneIndex, index + 1),
       };
     } else if (
-      index === targetSceneIndexValue ||
+      index === targetSceneIndex ||
       currentSceneIndexInScenes > targetSceneIndexInScenes
     ) {
       return null;
