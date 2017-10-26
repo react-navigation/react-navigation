@@ -67,13 +67,19 @@ a.editLink {
 .md-section > ul,
 .md-section > ol,
 .md-section > pre,
-.md-section > p {
+.md-section > p,
+.md-section > blockquote {
   margin: 15px 0 0 0;
 }
 .md-section ul li,
 .md-section ol li {
   margin: 15px 0 0 0;
 }
+
+.md-section .snack {
+  margin: 15px 0 0 0;
+}
+
 .errorScreen {
   height: 100%;
   margin: 100px;
@@ -137,7 +143,7 @@ a.cta:hover {
   justify-content: space-between;
   padding: 0 25px;
   margin: 0 auto;
-  max-width: 980px;
+  max-width: 1280px;
   display: flex;
   flex-direction: row;
 }
@@ -189,7 +195,7 @@ li:hover .metabuttons {
   flex: 1;
   margin: 25px auto;
   width: 100%;
-  max-width: 980px;
+  max-width: 1280px;
   margin-top: 85px;
 }
 .inner-page-body {
@@ -200,12 +206,12 @@ li:hover .metabuttons {
   margin-left: 25px;
 }
 .left-sidebar {
-  width: 225px;
+  width: 260px;
   margin-right: 25px;
 }
 .left-sidebar,
 .left-sidebar .navmenu {
-  width: 225px;
+  width: 260px;
 }
 
 .footer {
@@ -215,7 +221,7 @@ li:hover .metabuttons {
 
 .inner-footer {
   margin: 0 auto;
-  max-width: 980px;
+  max-width: 1280px;
   padding: 25px;
 }
 img.logo {
