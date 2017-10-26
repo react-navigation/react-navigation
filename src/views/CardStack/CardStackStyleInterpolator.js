@@ -7,7 +7,7 @@ import type {
   AnimatedViewStyleProp,
 } from '../../TypeDefinition';
 
-import getFirstAndLastSceneIndicesForInterpolationInputRange from '../../utils/getFirstAndLastSceneIndicesForInterpolationInputRange';
+import getSceneIndicesForInterpolationInputRange from '../../utils/getSceneIndicesForInterpolationInputRange';
 
 /**
  * Utility that builds the style for the card in the cards stack.
@@ -53,7 +53,7 @@ function forHorizontal(
   if (!layout.isMeasured) {
     return forInitial(props);
   }
-  const interpolate = getFirstAndLastSceneIndicesForInterpolationInputRange(props); // eslint-disable-line
+  const interpolate = getSceneIndicesForInterpolationInputRange(props);
 
   if (!interpolate) return { opacity: 0 };
 
@@ -90,7 +90,7 @@ function forVertical(
   if (!layout.isMeasured) {
     return forInitial(props);
   }
-  const interpolate = getFirstAndLastSceneIndicesForInterpolationInputRange(props); // eslint-disable-line
+  const interpolate = getSceneIndicesForInterpolationInputRange(props);
 
   if (!interpolate) return { opacity: 0 };
 
@@ -125,7 +125,7 @@ function forFadeFromBottomAndroid(
   if (!layout.isMeasured) {
     return forInitial(props);
   }
-  const interpolate = getFirstAndLastSceneIndicesForInterpolationInputRange(props); // eslint-disable-line
+  const interpolate = getSceneIndicesForInterpolationInputRange(props);
 
   if (!interpolate) return { opacity: 0 };
 
@@ -159,7 +159,7 @@ function forFade(props: NavigationSceneRendererProps): AnimatedViewStyleProp {
   if (!layout.isMeasured) {
     return forInitial(props);
   }
-  const interpolate = getFirstAndLastSceneIndicesForInterpolationInputRange(props); // eslint-disable-line
+  const interpolate = getSceneIndicesForInterpolationInputRange(props);
 
   if (!interpolate) return { opacity: 0 };
 

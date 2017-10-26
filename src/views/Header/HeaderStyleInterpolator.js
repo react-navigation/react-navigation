@@ -8,7 +8,7 @@ import type {
   AnimatedViewStyleProp,
 } from '../../TypeDefinition';
 
-import getFirstAndLastSceneIndicesForInterpolationInputRange from '../../utils/getFirstAndLastSceneIndicesForInterpolationInputRange';
+import getSceneIndicesForInterpolationInputRange from '../../utils/getSceneIndicesForInterpolationInputRange';
 
 /**
  * Utility that builds the style for the navigation header.
@@ -23,7 +23,7 @@ import getFirstAndLastSceneIndicesForInterpolationInputRange from '../../utils/g
 
 function forLeft(props: NavigationSceneRendererProps): AnimatedViewStyleProp {
   const { position, scene, scenes } = props;
-  const interpolate = getFirstAndLastSceneIndicesForInterpolationInputRange(props); // eslint-disable-line
+  const interpolate = getSceneIndicesForInterpolationInputRange(props);
 
   if (!interpolate) return { opacity: 0 };
 
@@ -48,7 +48,7 @@ function forLeft(props: NavigationSceneRendererProps): AnimatedViewStyleProp {
 
 function forCenter(props: NavigationSceneRendererProps): AnimatedViewStyleProp {
   const { position, scene } = props;
-  const interpolate = getFirstAndLastSceneIndicesForInterpolationInputRange(props); // eslint-disable-line
+  const interpolate = getSceneIndicesForInterpolationInputRange(props);
 
   if (!interpolate) return { opacity: 0 };
 
@@ -76,7 +76,7 @@ function forCenter(props: NavigationSceneRendererProps): AnimatedViewStyleProp {
 
 function forRight(props: NavigationSceneRendererProps): AnimatedViewStyleProp {
   const { position, scene } = props;
-  const interpolate = getFirstAndLastSceneIndicesForInterpolationInputRange(props); // eslint-disable-line
+  const interpolate = getSceneIndicesForInterpolationInputRange(props);
 
   if (!interpolate) return { opacity: 0 };
   const { first, last } = interpolate;
