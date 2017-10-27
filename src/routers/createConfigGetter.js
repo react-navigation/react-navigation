@@ -56,7 +56,8 @@ export default (
 
   let outputConfig = {};
 
-  if (Component.router) {
+  const router = Component.router;
+  if (router) {
     // $FlowFixMe
     const { routes, index } = (route: NavigationStateRoute);
     if (!route || !routes || index == null) {
@@ -69,10 +70,7 @@ export default (
       state: childRoute,
       dispatch,
     });
-    outputConfig = Component.router.getScreenOptions(
-      childNavigation,
-      screenProps
-    );
+    outputConfig = router.getScreenOptions(childNavigation, screenProps);
   }
 
   const routeConfig = routeConfigs[route.routeName];
