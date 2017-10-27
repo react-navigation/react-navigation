@@ -58,12 +58,14 @@ const ExampleRoutes = {
     screen: CustomTransitioner,
   },
   ModalStack: {
-    name: Platform.OS === 'ios'
-      ? 'Modal Stack Example'
-      : 'Stack with Dynamic Header',
-    description: Platform.OS === 'ios'
-      ? 'Stack navigation with modals'
-      : 'Dynamically showing and hiding the header',
+    name:
+      Platform.OS === 'ios'
+        ? 'Modal Stack Example'
+        : 'Stack with Dynamic Header',
+    description:
+      Platform.OS === 'ios'
+        ? 'Stack navigation with modals'
+        : 'Dynamically showing and hiding the header',
     screen: ModalStack,
   },
   StacksInTabs: {
@@ -91,38 +93,32 @@ const ExampleRoutes = {
 };
 
 const MainScreen = ({ navigation }) => (
-  <SafeAreaView
-    forceInset={{ horizontal: 'never', bottom: 'never' }}
-    style={{ flex: 1 }}
-  >
-    <ScrollView style={{ flex: 1 }} contentInsetAdjustmentBehavior="automatic">
-      <Banner />
-      {Object.keys(ExampleRoutes).map((routeName: string) => (
-        <TouchableOpacity
-          key={routeName}
-          onPress={() => {
-            const { path, params, screen } = ExampleRoutes[routeName];
-            const { router } = screen;
-            const action =
-              path && router.getActionForPathAndParams(path, params);
-            navigation.navigate(routeName, {}, action);
-          }}
+  <ScrollView style={{ flex: 1 }} contentInsetAdjustmentBehavior="automatic">
+    <Banner />
+    {Object.keys(ExampleRoutes).map((routeName: string) => (
+      <TouchableOpacity
+        key={routeName}
+        onPress={() => {
+          const { path, params, screen } = ExampleRoutes[routeName];
+          const { router } = screen;
+          const action = path && router.getActionForPathAndParams(path, params);
+          navigation.navigate(routeName, {}, action);
+        }}
+      >
+        <SafeAreaView
+          style={styles.itemContainer}
+          forceInset={{ vertical: 'never' }}
         >
-          <SafeAreaView
-            style={styles.itemContainer}
-            forceInset={{ vertical: 'never' }}
-          >
-            <View style={styles.item}>
-              <Text style={styles.title}>{ExampleRoutes[routeName].name}</Text>
-              <Text style={styles.description}>
-                {ExampleRoutes[routeName].description}
-              </Text>
-            </View>
-          </SafeAreaView>
-        </TouchableOpacity>
-      ))}
-    </ScrollView>
-  </SafeAreaView>
+          <View style={styles.item}>
+            <Text style={styles.title}>{ExampleRoutes[routeName].name}</Text>
+            <Text style={styles.description}>
+              {ExampleRoutes[routeName].description}
+            </Text>
+          </View>
+        </SafeAreaView>
+      </TouchableOpacity>
+    ))}
+  </ScrollView>
 );
 
 const AppNavigator = StackNavigator(

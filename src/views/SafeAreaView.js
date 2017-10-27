@@ -11,8 +11,13 @@ import {
 import withOrientation from './withOrientation';
 
 const { isIPhoneX_deprecated } = DeviceInfo;
+// See https://mydevice.io/devices/ for device dimensions
 const X_WIDTH = 375;
 const X_HEIGHT = 812;
+const PAD_WIDTH = 768;
+const PAD_HEIGHT = 1024;
+
+const { height: D_HEIGHT, width: D_WIDTH } = Dimensions.get('window');
 
 const { PlatformConstants = {} } = NativeModules;
 const { minor = 0 } = PlatformConstants.reactNativeVersion || {};
@@ -22,13 +27,40 @@ const isIPhoneX = (() => {
     return isIPhoneX_deprecated;
   }
 
-  const { height, width } = Dimensions.get('window');
   return (
     Platform.OS === 'ios' &&
-    ((height === X_HEIGHT && width === X_WIDTH) ||
-      (height === X_WIDTH && width === X_HEIGHT))
+    ((D_HEIGHT === X_HEIGHT && D_WIDTH === X_WIDTH) ||
+      (D_HEIGHT === X_WIDTH && D_WIDTH === X_HEIGHT))
   );
 })();
+
+const isIPad = (() => {
+  if (Platform.OS !== 'ios' || isIPhoneX) return false;
+
+  // if portrait and width is smaller than iPad width
+  if (D_HEIGHT > D_WIDTH && D_WIDTH < PAD_WIDTH) {
+    return false;
+  }
+
+  // if landscape and height is smaller that iPad height
+  if (D_WIDTH > D_HEIGHT && D_HEIGHT < PAD_WIDTH) {
+    return false;
+  }
+
+  return true;
+})();
+
+const statusBarHeight = isLandscape => {
+  if (isIPhoneX) {
+    return isLandscape ? 0 : 44;
+  }
+
+  if (isIPad) {
+    return 20;
+  }
+
+  return isLandscape ? 0 : 20;
+};
 
 class SafeView extends Component {
   state = {
@@ -45,24 +77,12 @@ class SafeView extends Component {
     });
   }
 
-  componentWillReceiveProps(nextProps) {
-    const { isLandscape, verbose } = nextProps;
-    if (verbose) console.log(isLandscape);
+  componentWillReceiveProps() {
     this._onLayout();
   }
 
   render() {
-    const {
-      forceInset = false,
-      isLandscape,
-      children,
-      style,
-      verbose,
-    } = this.props;
-
-    // if (verbose) {
-    //   console.log(isLandscape);
-    // }
+    const { forceInset = false, isLandscape, children, style } = this.props;
 
     if (!Platform.OS === 'ios') {
       return <View style={style}>{this.props.children}</View>;
@@ -88,7 +108,7 @@ class SafeView extends Component {
   _onLayout = () => {
     if (!this.view) return;
 
-    const { isLandscape, verbose } = this.props;
+    const { isLandscape } = this.props;
     const { orientation } = this.state;
     const newOrientation = isLandscape ? 'landscape' : 'portrait';
     if (orientation && orientation === newOrientation) {
@@ -116,12 +136,6 @@ class SafeView extends Component {
 
       while (realX < 0) {
         realX += WIDTH;
-      }
-
-      if (verbose) {
-        console.log(realY, winHeight);
-        console.log('');
-        console.log(realX, winWidth);
       }
 
       const touchesTop = realY === 0;
@@ -199,7 +213,7 @@ class SafeView extends Component {
       }
       case 'vertical':
       case 'top': {
-        return isLandscape ? 0 : isIPhoneX ? 44 : 20;
+        return statusBarHeight(isLandscape);
       }
       case 'bottom': {
         return isIPhoneX ? (isLandscape ? 24 : 34) : 0;
