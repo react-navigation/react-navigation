@@ -46,8 +46,6 @@ export default (
 ) => (navigation: NavigationScreenProp<NavigationRoute>, screenProps: *) => {
   const { state, dispatch } = navigation;
   const route = state;
-  // $FlowFixMe
-  const { routes, index } = (route: NavigationStateRoute);
 
   invariant(
     route.routeName && typeof route.routeName === 'string',
@@ -59,6 +57,8 @@ export default (
   let outputConfig = {};
 
   if (Component.router) {
+    // $FlowFixMe
+    const { routes, index } = (route: NavigationStateRoute);
     if (!route || !routes || index == null) {
       throw new Error(
         `Expect nav state to have routes and index, ${JSON.stringify(route)}`
