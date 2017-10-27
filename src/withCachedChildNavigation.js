@@ -10,39 +10,41 @@ import type {
   NavigationRoute,
 } from './TypeDefinition';
 
-type InputProps<NavState: NavigationState> = {
-  navigation: NavigationScreenProp<NavState>,
+type InputProps = {
+  navigation: NavigationScreenProp<NavigationState>,
 };
-type OutputProps<NavState: NavigationRoute> = {
+type OutputProps = {
   childNavigationProps: {
-    [key: string]: NavigationScreenProp<NavState>,
+    [key: string]: NavigationScreenProp<NavigationRoute>,
   },
 };
 
 /**
  * HOC which caches the child navigation items.
  */
-export default function withCachedChildNavigation<T: {}, N: NavigationRoute>(
-  Comp: React.ComponentType<T & OutputProps<N>>
-): React.ComponentType<T> {
+export default function withCachedChildNavigation(
+  Comp: React.ComponentType<InputProps & OutputProps>
+): React.ComponentType<InputProps> {
   // $FlowFixMe StatelessFunctionalComponent missing displayName Flow < 0.54.0
   const displayName: string = Comp.displayName || Comp.name;
-  return class extends React.PureComponent<T> {
+  return class extends React.PureComponent<InputProps> {
     static displayName = `withCachedChildNavigation(${displayName})`;
 
     componentWillMount() {
       this._updateNavigationProps(this.props.navigation);
     }
 
-    componentWillReceiveProps(nextProps: T) {
+    componentWillReceiveProps(nextProps: InputProps) {
       this._updateNavigationProps(nextProps.navigation);
     }
 
     _childNavigationProps: {
-      [key: string]: NavigationScreenProp<N>,
+      [key: string]: NavigationScreenProp<NavigationRoute>,
     };
 
-    _updateNavigationProps = (navigation: NavigationScreenProp<N>) => {
+    _updateNavigationProps = (
+      navigation: NavigationScreenProp<NavigationState>
+    ) => {
       // Update props for each child route
       if (!this._childNavigationProps) {
         this._childNavigationProps = {};
