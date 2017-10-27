@@ -10,6 +10,7 @@ import HeaderTitle from './HeaderTitle';
 import HeaderBackButton from './HeaderBackButton';
 import HeaderStyleInterpolator from './HeaderStyleInterpolator';
 import withOrientation from '../withOrientation';
+import { isIphoneX } from '../../Helper/iphoneXHelper';
 
 import type {
   NavigationScene,
@@ -291,11 +292,12 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
     const { options } = this.props.getScreenDetails(scene);
     const headerStyle = options.headerStyle;
     const landscapeAwareStatusBarHeight = isLandscape ? 0 : STATUSBAR_HEIGHT;
+    const iphoneXPaddingTop = isIphoneX ? 24 : 0
     const containerStyles = [
       styles.container,
       {
-        paddingTop: landscapeAwareStatusBarHeight,
-        height: APPBAR_HEIGHT + landscapeAwareStatusBarHeight,
+        paddingTop: landscapeAwareStatusBarHeight + iphoneXPaddingTop,
+        height: APPBAR_HEIGHT + landscapeAwareStatusBarHeight + iphoneXPaddingTop,
       },
       headerStyle,
       style,
