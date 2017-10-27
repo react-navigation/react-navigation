@@ -6,11 +6,12 @@ Navigation views are controlled React components that can present the current na
 
 ## Built in Views
 
-- [CardStack](https://github.com/react-community/react-navigation/blob/master/src/views/CardStack.js) - Present a stack that looks suitable on any platform
-    + [Card](https://github.com/react-community/react-navigation/blob/master/src/views/Card.js) - Present one card from the card stack, with gestures
-    + [Header](https://github.com/react-community/react-navigation/blob/master/src/views/Header.js) - The header view for the card stack
-- [Tabs](https://github.com/react-community/react-navigation/blob/master/src/views/TabView) - A configurable tab switcher / pager
-- [Drawer](https://github.com/react-community/react-navigation/tree/master/src/views/Drawer) - A view with a drawer that slides from the left
+- [CardStack](https://github.com/react-community/react-navigation/blob/master/src/views/CardStack/CardStack.js) - Present a stack that looks suitable on any platform
+    + [Card](https://github.com/react-community/react-navigation/blob/master/src/views/CardStack/Card.js) - Present one card from the card stack, with gestures
+    + [Header](https://github.com/react-community/react-navigation/blob/master/src/views/Header/Header.js) - The header view for the card stack
+- [Tabs](https://github.com/react-community/react-navigation/blob/master/src/views/TabView/TabView.js) - A configurable tab switcher / pager
+- [Drawer](https://github.com/react-community/react-navigation/blob/master/src/views/Drawer/DrawerView.js) - A view with a drawer that slides from the left
+
 
 ## [Transitioner](/docs/views/transitioner)
 

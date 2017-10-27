@@ -84,7 +84,11 @@ function defaultTransitionConfig(
 }
 
 function getTransitionConfig(
-  transitionConfigurer?: () => TransitionConfig,
+  transitionConfigurer?: (
+    transitionProps: NavigationTransitionProps,
+    prevTransitionProps: NavigationTransitionProps,
+    isModal: boolean
+  ) => TransitionConfig,
   // props for the new screen
   transitionProps: NavigationTransitionProps,
   // props for the old screen
@@ -99,7 +103,7 @@ function getTransitionConfig(
   if (transitionConfigurer) {
     return {
       ...defaultConfig,
-      ...transitionConfigurer(),
+      ...transitionConfigurer(transitionProps, prevTransitionProps, isModal),
     };
   }
   return defaultConfig;

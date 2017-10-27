@@ -61,6 +61,8 @@ const MyApp = TabNavigator({
     screen: MyNotificationsScreen,
   },
 }, {
+  tabBarPosition: 'top',
+  animationEnabled: true,
   tabBarOptions: {
     activeTintColor: '#e91e63',
   },
@@ -105,6 +107,7 @@ Several options get passed to the underlying router to modify navigation logic:
 - `style` - style object for the tab bar
 - `labelStyle` - style object for the tab label
 - `tabStyle` - style object for the tab
+- `allowFontScaling` - whether label font should scale to respect Text Size accessibility settings, default is true
 
 Example:
 
@@ -135,6 +138,7 @@ tabBarOptions: {
 - `labelStyle` - style object for the tab label
 - `iconStyle` - style object for the tab icon
 - `style` - style object for the tab bar
+- `allowFontScaling` - whether label font should scale to respect Text Size accessibility settings, default is true
 
 Example:
 
@@ -169,6 +173,10 @@ React Element or a function that given `{ focused: boolean, tintColor: string }`
 #### `tabBarLabel`
 
 Title string of a tab displayed in the tab bar or React Element or a function that given `{ focused: boolean, tintColor: string }` returns a React.Element, to display in tab bar. When undefined, scene `title` is used. To hide, see `tabBarOptions.showLabel` in the previous section.
+
+#### `tabBarOnPress`
+
+Callback to handle tap events; arguments are the `scene: { route, index }` that was tapped and a `jumpToIndex` method that can perform the navigation for you.
 
 ### Navigator Props
 

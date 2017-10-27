@@ -1,6 +1,9 @@
 /* @flow */
 
 import React from 'react';
+import { ScreenOrientation } from 'expo';
+
+ScreenOrientation.allow(ScreenOrientation.Orientation.ALL);
 
 import {
   Platform,
@@ -14,6 +17,7 @@ import { StackNavigator } from 'react-navigation';
 
 import Banner from './Banner';
 import CustomTabs from './CustomTabs';
+import CustomTransitioner from './CustomTransitioner';
 import Drawer from './Drawer';
 import TabsInDrawer from './TabsInDrawer';
 import ModalStack from './ModalStack';
@@ -47,6 +51,11 @@ const ExampleRoutes = {
     name: 'Custom Tabs',
     description: 'Custom tabs with tab router',
     screen: CustomTabs,
+  },
+  CustomTransitioner: {
+    name: 'Custom Transitioner',
+    description: 'Custom transitioner with stack router',
+    screen: CustomTransitioner,
   },
   ModalStack: {
     name: Platform.OS === 'ios'
