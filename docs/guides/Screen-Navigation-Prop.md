@@ -90,31 +90,7 @@ class ProfileScreen extends React.Component {
 
 ## `goBack` - Close the active screen and move back
 
-Optionally provide a key, which specifies the route to go back from. By default, goBack will close the route that it is called from. If the goal is to go back *anywhere*, without specifying what is getting closed, call `.goBack(null);`
-
-```js
-class HomeScreen extends React.Component {
-  render() {
-    const {goBack} = this.props.navigation;
-    return (
-      <View>
-        <Button
-          onPress={() => goBack()}
-          title="Go back from this HomeScreen"
-        />
-        <Button
-          onPress={() => goBack(null)}
-          title="Go back anywhere"
-        />
-        <Button
-          onPress={() => goBack('screen-123')}
-          title="Go back from screen-123"
-        />
-      </View>
-     )
-   }
-}
-```
+Optionally provide a key, which specifies the route to go back from. By default, goBack will close the route that it is called from.
 
 *Going back from a specific screen*
 
@@ -134,6 +110,32 @@ Then you need to supply a key to goBack *FROM*:
 
 ```
 navigation.goBack(SCREEN_KEY_B) // will go to screen A FROM screen B
+```
+
+If the goal is to go back from the currently active route, call `.goBack(null);`
+
+```js
+class HomeScreen extends React.Component {
+  render() {
+    const {goBack} = this.props.navigation;
+    return (
+      <View>
+        <Button
+          onPress={() => goBack()}
+          title="Go back from this HomeScreen"
+        />
+        <Button
+          onPress={() => goBack(null)}
+          title="Go back from the currently active route"
+        />
+        <Button
+          onPress={() => goBack('screen-123')}
+          title="Go back from screen-123"
+        />
+      </View>
+     )
+   }
+}
 ```
 
 ## `dispatch` - Send an action to the router
