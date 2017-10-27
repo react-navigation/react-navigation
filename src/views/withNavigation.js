@@ -21,8 +21,9 @@ export default function withNavigation<T: {}>(
     <Component {...props} navigation={navigation} />
   );
 
-  componentWithNavigation.displayName = `withNavigation(${Component.displayName ||
-    Component.name})`;
+  // $FlowFixMe StatelessFunctionalComponent missing displayName Flow < 0.54.0
+  const displayName: string = Component.displayName || Component.name;
+  componentWithNavigation.displayName = `withNavigation(${displayName})`;
 
   componentWithNavigation.contextTypes = {
     navigation: propTypes.object.isRequired,

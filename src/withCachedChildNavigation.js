@@ -25,9 +25,10 @@ type OutputProps<NavState: NavigationRoute> = {
 export default function withCachedChildNavigation<T: {}, N: NavigationRoute>(
   Comp: React.ComponentType<T & OutputProps<N>>
 ): React.ComponentType<T> {
+  // $FlowFixMe StatelessFunctionalComponent missing displayName Flow < 0.54.0
+  const displayName: string = Comp.displayName || Comp.name;
   return class extends React.PureComponent<T> {
-    static displayName = `withCachedChildNavigation(${Comp.displayName ||
-      Comp.name})`;
+    static displayName = `withCachedChildNavigation(${displayName})`;
 
     componentWillMount() {
       this._updateNavigationProps(this.props.navigation);
