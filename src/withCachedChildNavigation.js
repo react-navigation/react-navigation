@@ -4,19 +4,26 @@ import * as React from 'react';
 
 import addNavigationHelpers from './addNavigationHelpers';
 
-import type { NavigationScreenProp } from './TypeDefinition';
+import type {
+  NavigationScreenProp,
+  NavigationState,
+  NavigationRoute,
+} from './TypeDefinition';
 
-type InjectedProps<N> = {
+type InputProps<NavState: NavigationState> = {
+  navigation: NavigationScreenProp<NavState>,
+};
+type OutputProps<NavState: NavigationRoute> = {
   childNavigationProps: {
-    [key: string]: N,
+    [key: string]: NavigationScreenProp<NavState>,
   },
 };
 
 /**
  * HOC which caches the child navigation items.
  */
-export default function withCachedChildNavigation<T: *, N: *>(
-  Comp: React.ComponentType<T & InjectedProps<N>>
+export default function withCachedChildNavigation<T: {}, N: NavigationRoute>(
+  Comp: React.ComponentType<T & OutputProps<N>>
 ): React.ComponentType<T> {
   return class extends React.PureComponent<T> {
     static displayName = `withCachedChildNavigation(${Comp.displayName ||
@@ -45,7 +52,7 @@ export default function withCachedChildNavigation<T: *, N: *>(
           return;
         }
         this._childNavigationProps[route.key] = addNavigationHelpers({
-          ...navigation,
+          dispatch: navigation.dispatch,
           state: route,
         });
       });
