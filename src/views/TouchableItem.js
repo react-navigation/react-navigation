@@ -21,7 +21,7 @@ import type { ViewStyleProp } from '../TypeDefinition';
 const ANDROID_VERSION_LOLLIPOP = 21;
 
 type Props = {
-  onPress: () => void,
+  onPress?: () => void,
   delayPressIn?: number,
   borderless?: boolean,
   pressColor?: string,
