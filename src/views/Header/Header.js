@@ -10,7 +10,7 @@ import HeaderTitle from './HeaderTitle';
 import HeaderBackButton from './HeaderBackButton';
 import HeaderStyleInterpolator from './HeaderStyleInterpolator';
 import withOrientation from '../withOrientation';
-import { isIphoneX } from '../../Helper/iphoneXHelper';
+import { isIphoneX } from '../../Helper/IphoneXHelper';
 
 import type {
   NavigationScene,
