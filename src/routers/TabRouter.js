@@ -177,8 +177,9 @@ export default (
         }
       }
       if (action.type === NavigationActions.SET_PARAMS) {
+        const key = action.key;
         const lastRoute = state.routes.find(
-          (route: NavigationRoute) => route.key === action.key
+          (route: NavigationRoute) => route.key === key
         );
         if (lastRoute) {
           const params = {

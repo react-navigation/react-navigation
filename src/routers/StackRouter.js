@@ -20,6 +20,7 @@ import type {
   NavigationStackAction,
   NavigationStackRouterConfig,
   NavigationStackScreenOptions,
+  NavigationRoute,
 } from '../TypeDefinition';
 
 const uniqueBaseId = `id-${Date.now()}`;
@@ -223,9 +224,9 @@ export default (
       }
 
       if (action.type === NavigationActions.SET_PARAMS) {
+        const key = action.key;
         const lastRoute = state.routes.find(
-          /* $FlowFixMe */
-          (route: *) => route.key === action.key
+          (route: NavigationRoute) => route.key === key
         );
         if (lastRoute) {
           const params = {
@@ -273,11 +274,11 @@ export default (
       }
 
       if (action.type === NavigationActions.BACK) {
+        const key = action.key;
         let backRouteIndex = null;
-        if (action.key) {
+        if (key) {
           const backRoute = state.routes.find(
-            /* $FlowFixMe */
-            (route: *) => route.key === action.key
+            (route: NavigationRoute) => route.key === key
           );
           /* $FlowFixMe */
           backRouteIndex = state.routes.indexOf(backRoute);
