@@ -20,16 +20,16 @@ import type {
 
 import type { DrawerScene, DrawerItem } from './DrawerView';
 
-type Navigation = NavigationScreenProp<NavigationRoute>;
-
 type Props = {
   router: NavigationRouter<
     NavigationState,
     NavigationTabAction,
     NavigationDrawerScreenOptions
   >,
-  navigation: Navigation,
-  childNavigationProps: { [key: string]: Navigation },
+  navigation: NavigationScreenProp<NavigationState>,
+  childNavigationProps: {
+    [key: string]: NavigationScreenProp<NavigationRoute>,
+  },
   contentComponent: React.ComponentType<*>,
   contentOptions?: {},
   screenProps?: {},
