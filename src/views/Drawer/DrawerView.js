@@ -54,7 +54,7 @@ export type DrawerViewProps = DrawerViewPropsExceptRouter & {
 /**
  * Component that renders the drawer.
  */
-export default class DrawerView<T: *> extends React.PureComponent<
+export default class DrawerView<T: NavigationRoute> extends React.PureComponent<
   DrawerViewProps
 > {
   componentWillMount() {
@@ -112,7 +112,7 @@ export default class DrawerView<T: *> extends React.PureComponent<
       return;
     }
     this._screenNavigationProp = addNavigationHelpers({
-      ...navigation,
+      dispatch: navigation.dispatch,
       state: navigationState,
     });
   };

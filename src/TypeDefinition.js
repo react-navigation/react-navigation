@@ -282,9 +282,9 @@ export type NavigationComponent =
   | NavigationScreenComponent<*, *>
   | NavigationNavigator<*, *, *, *>;
 
-export type NavigationScreenComponent<T, Options> = React.ComponentType<T> & {
-  navigationOptions?: NavigationScreenConfig<Options>,
-};
+export type NavigationScreenComponent<T: {}, Options: {}> = React.ComponentType<
+  T
+> & { navigationOptions?: NavigationScreenConfig<Options> };
 
 export type NavigationNavigator<
   T,
