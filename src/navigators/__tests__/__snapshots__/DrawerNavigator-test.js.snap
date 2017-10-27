@@ -143,16 +143,9 @@ exports[`DrawerNavigator renders successfully 1`] = `
               onLayout={[Function]}
               style={
                 Array [
-                  Array [
-                    Object {
-                      "alignItems": "center",
-                      "flexDirection": "row",
-                    },
-                    Object {
-                      "backgroundColor": "rgba(0, 0, 0, .04)",
-                    },
-                    undefined,
-                  ],
+                  Object {
+                    "backgroundColor": "rgba(0, 0, 0, .04)",
+                  },
                   Object {
                     "paddingBottom": 0,
                     "paddingLeft": 0,
@@ -162,26 +155,38 @@ exports[`DrawerNavigator renders successfully 1`] = `
                 ]
               }
             >
-              <Text
-                accessible={true}
-                allowFontScaling={true}
-                disabled={false}
-                ellipsizeMode="tail"
+              <View
                 style={
                   Array [
                     Object {
-                      "fontWeight": "bold",
-                      "margin": 16,
-                    },
-                    Object {
-                      "color": "#2196f3",
+                      "alignItems": "center",
+                      "flexDirection": "row",
                     },
                     undefined,
                   ]
                 }
               >
-                Welcome anonymous
-              </Text>
+                <Text
+                  accessible={true}
+                  allowFontScaling={true}
+                  disabled={false}
+                  ellipsizeMode="tail"
+                  style={
+                    Array [
+                      Object {
+                        "fontWeight": "bold",
+                        "margin": 16,
+                      },
+                      Object {
+                        "color": "#2196f3",
+                      },
+                      undefined,
+                    ]
+                  }
+                >
+                  Welcome anonymous
+                </Text>
+              </View>
             </View>
           </View>
         </View>
