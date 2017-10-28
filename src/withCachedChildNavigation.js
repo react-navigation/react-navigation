@@ -22,19 +22,19 @@ type OutputProps = {
 /**
  * HOC which caches the child navigation items.
  */
-export default function withCachedChildNavigation(
-  Comp: React.ComponentType<InputProps & OutputProps>
-): React.ComponentType<InputProps> {
+export default function withCachedChildNavigation<T: InputProps>(
+  Comp: React.ComponentType<OutputProps & T>
+): React.ComponentType<T> {
   // $FlowFixMe StatelessFunctionalComponent missing displayName Flow < 0.54.0
   const displayName: string = Comp.displayName || Comp.name;
-  return class extends React.PureComponent<InputProps> {
+  return class extends React.PureComponent<T> {
     static displayName = `withCachedChildNavigation(${displayName})`;
 
     componentWillMount() {
       this._updateNavigationProps(this.props.navigation);
     }
 
-    componentWillReceiveProps(nextProps: InputProps) {
+    componentWillReceiveProps(nextProps: T) {
       this._updateNavigationProps(nextProps.navigation);
     }
 
