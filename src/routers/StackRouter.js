@@ -21,6 +21,7 @@ import type {
   NavigationStackRouterConfig,
   NavigationStackScreenOptions,
   NavigationRoute,
+  NavigationStateRoute,
 } from '../TypeDefinition';
 
 const uniqueBaseId = `id-${Date.now()}`;
@@ -308,9 +309,11 @@ export default (
       let path = subPath;
       let params = route.params;
       if (screen && screen.router) {
+        // $FlowFixMe there's no way type the specific shape of the nav state
+        const stateRoute: NavigationStateRoute = route;
         // If it has a router it's a navigator.
         // If it doesn't have router it's an ordinary React component.
-        const child = screen.router.getPathAndParamsForState(route);
+        const child = screen.router.getPathAndParamsForState(stateRoute);
         path = subPath ? `${subPath}/${child.path}` : child.path;
         params = child.params ? { ...params, ...child.params } : params;
       }
