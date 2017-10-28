@@ -441,12 +441,12 @@ export type NavigationDispatch = (
 ) => boolean;
 
 export type NavigationProp<S> = {
-  state: S,
+  +state: S,
   dispatch: NavigationDispatch,
 };
 
 export type NavigationScreenProp<S: {}> = {
-  state: S,
+  +state: S,
   dispatch: NavigationDispatch,
   goBack: (routeKey?: ?string) => boolean,
   navigate: (
