@@ -37,6 +37,7 @@ export type DrawerViewConfig = {
   style?: ViewStyleProp,
   useNativeAnimations?: boolean,
   drawerBackgroundColor?: string,
+  screenProps?: {},
 };
 
 export type DrawerViewPropsExceptRouter = DrawerViewConfig & {
