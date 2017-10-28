@@ -23,7 +23,7 @@ type InjectedProps<S: NavigationState, A: NavigationAction, O: {}> = {
  */
 export default function createNavigator<
   S: NavigationState,
-  A: NavigationAction,
+  A: *,
   NavigatorConfig,
   O: {}
 >(
