@@ -30,7 +30,7 @@ type Props = {
   childNavigationProps: {
     [key: string]: NavigationScreenProp<NavigationRoute>,
   },
-  contentComponent: React.ComponentType<*>,
+  contentComponent: ?React.ComponentType<*>,
   contentOptions?: {},
   screenProps?: {},
   style?: ViewStyleProp,
@@ -104,6 +104,9 @@ class DrawerSidebar extends React.PureComponent<Props> {
 
   render() {
     const ContentComponent = this.props.contentComponent;
+    if (!ContentComponent) {
+      return null;
+    }
     const { state } = this.props.navigation;
     invariant(this.props.navigation.state.index, 'should be set');
     return (
