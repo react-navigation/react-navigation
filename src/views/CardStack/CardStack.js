@@ -32,6 +32,7 @@ import type {
   TransitionConfig,
   NavigationStackAction,
   NavigationRoute,
+  NavigationComponent,
 } from '../../TypeDefinition';
 
 import TransitionConfigs from './TransitionConfigs';
@@ -386,7 +387,7 @@ class CardStack extends React.Component<Props> {
   }
 
   _renderInnerScene(
-    SceneComponent: React.ComponentType<*>,
+    SceneComponent: NavigationComponent,
     scene: NavigationScene
   ): React.Node {
     const { navigation } = this._getScreenDetails(scene);

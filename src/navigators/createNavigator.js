@@ -36,7 +36,7 @@ export default function createNavigator<
     NavigationView: React.ComponentType<
       InjectedProps<S, A, O> & NavigationNavigatorProps<O, S>
     >
-  ): NavigationNavigator<S, A, O, NavigationNavigatorProps<O, S>> => {
+  ): NavigationNavigator<S, A, O> => {
     class Navigator extends React.Component<NavigationNavigatorProps<O, S>> {
       static router = router;
 

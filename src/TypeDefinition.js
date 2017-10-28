@@ -281,14 +281,13 @@ export type NavigationScreenConfig<Options> =
     }) => Options);
 
 export type NavigationComponent =
-  | NavigationScreenComponent<*, *, *>
-  | NavigationNavigator<*, *, *, *>;
+  | NavigationScreenComponent<NavigationRoute, *>
+  | NavigationNavigator<NavigationStateRoute, *, *>;
 
 export type NavigationScreenComponent<
   Route: NavigationRoute,
-  Options: {},
-  Props: NavigationNavigatorProps<Options, Route>
-> = React.ComponentType<Props> & {
+  Options: {}
+> = React.ComponentType<NavigationNavigatorProps<Options, Route>> & {
   router?: void,
   navigationOptions?: NavigationScreenConfig<Options>,
 };
@@ -296,9 +295,8 @@ export type NavigationScreenComponent<
 export type NavigationNavigator<
   State: NavigationState,
   Action: NavigationAction,
-  Options: {},
-  Props: NavigationNavigatorProps<Options, State>
-> = React.ComponentType<Props> & {
+  Options: {}
+> = React.ComponentType<NavigationNavigatorProps<Options, *>> & {
   router: NavigationRouter<State, Action, Options>,
   navigationOptions?: NavigationScreenConfig<Options>,
 };

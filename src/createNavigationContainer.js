@@ -10,7 +10,6 @@ import type {
   NavigationAction,
   NavigationState,
   NavigationScreenProp,
-  NavigationNavigatorProps,
   NavigationNavigator,
   PossiblyDeprecatedNavigationAction,
   NavigationInitAction,
@@ -42,14 +41,7 @@ export default function createNavigationContainer<
   S: NavigationState,
   A: NavigationAction,
   O: {}
->(
-  Component: NavigationNavigator<
-    S,
-    A | NavigationInitAction,
-    O,
-    NavigationNavigatorProps<O, S>
-  >
-) {
+>(Component: NavigationNavigator<S, A | NavigationInitAction, O>) {
   class NavigationContainer extends React.Component<Props<O, S>, State<S>> {
     subs: ?{
       remove: () => void,
