@@ -289,6 +289,7 @@ export type NavigationScreenComponent<
   Options: {},
   Props: NavigationNavigatorProps<Options, Route>
 > = React.ComponentType<Props> & {
+  router?: void,
   navigationOptions?: NavigationScreenConfig<Options>,
 };
 
