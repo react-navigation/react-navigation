@@ -10,7 +10,6 @@ import getScreenConfigDeprecated from './getScreenConfigDeprecated';
 
 import type {
   NavigationComponent,
-  NavigationScreenComponent,
   NavigationState,
   NavigationRouteConfigMap,
   NavigationParams,
@@ -250,9 +249,7 @@ export default (
       return state;
     },
 
-    getComponentForState(
-      state: NavigationState
-    ): NavigationScreenComponent<*, NavigationTabScreenOptions> {
+    getComponentForState(state: NavigationState): NavigationComponent {
       const routeName = order[state.index];
       invariant(
         routeName,
