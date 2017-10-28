@@ -208,7 +208,7 @@ export type DrawerNavigationState = {
  * Router
  */
 
-export type NavigationScreenOptionsGetter<Options> = (
+export type NavigationScreenOptionsGetter<Options: {}> = (
   navigation: NavigationScreenProp<NavigationRoute>,
   screenProps?: {}
 ) => Options;
@@ -389,10 +389,10 @@ export type StackNavigatorConfig = {
  * Tab Navigator
  */
 
-export type NavigationTabRouterConfig = {
+export type NavigationTabRouterConfig<Options: {}> = {
   initialRouteName?: string,
   paths?: NavigationPathsConfig,
-  navigationOptions?: NavigationScreenConfig<NavigationTabScreenOptions>,
+  navigationOptions?: NavigationScreenConfig<Options>,
   order?: Array<string>, // todo: type these as the real route names rather than 'string'
 
   // Does the back button cause the router to switch to the initial tab

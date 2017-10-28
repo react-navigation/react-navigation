@@ -23,7 +23,7 @@ import type {
 
 export default (
   routeConfigs: NavigationRouteConfigMap,
-  config: NavigationTabRouterConfig = {}
+  config: NavigationTabRouterConfig<*> = {}
 ): NavigationRouter<NavigationState, NavigationTabAction, *> => {
   // Fail fast on invalid route definitions
   validateRouteConfigMap(routeConfigs);

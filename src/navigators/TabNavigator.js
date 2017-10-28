@@ -17,11 +17,12 @@ import type { TabViewConfig } from '../views/TabView/TabView';
 import type {
   NavigationRouteConfigMap,
   NavigationTabRouterConfig,
+  NavigationTabScreenOptions,
 } from '../TypeDefinition';
 
 export type TabNavigatorConfig = {
   containerOptions?: void,
-} & NavigationTabRouterConfig &
+} & NavigationTabRouterConfig<NavigationTabScreenOptions> &
   TabViewConfig;
 
 const TabNavigator = (
