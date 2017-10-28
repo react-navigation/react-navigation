@@ -104,7 +104,8 @@ export default class DrawerView<T: NavigationRoute> extends React.PureComponent<
   _updateScreenNavigation = (
     navigation: NavigationScreenProp<NavigationState>
   ) => {
-    const navigationState = navigation.state.routes.find(
+    // $FlowFixMe there's no way type the specific shape of the nav state
+    const navigationState: NavigationStateRoute = navigation.state.routes.find(
       (route: *) => route.routeName === 'DrawerClose'
     );
     if (
