@@ -262,9 +262,9 @@ export type NavigationScreenDetails<T> = {
   navigation: NavigationScreenProp<NavigationRoute>,
 };
 
-export type NavigationScreenOptions = {
+export type NavigationScreenOptions = {|
   title?: string,
-};
+|};
 
 export type NavigationScreenConfigProps = {
   navigation: NavigationScreenProp<NavigationRoute>,
@@ -346,7 +346,7 @@ export type HeaderProps = {
  * Stack Navigator
  */
 
-export type NavigationStackScreenOptions = {
+export type NavigationStackScreenOptions = {|
   ...$Exact<NavigationScreenOptions>,
   header?: ?(React.Node | (HeaderProps => React.Node)),
   headerTitle?: string | React.Node,
@@ -362,7 +362,7 @@ export type NavigationStackScreenOptions = {
   headerStyle?: ViewStyleProp,
   gesturesEnabled?: boolean,
   gestureResponseDistance?: { vertical?: number, horizontal?: number },
-};
+|};
 
 export type NavigationStackRouterConfig = {
   initialRouteName?: string,
@@ -399,7 +399,7 @@ export type NavigationTabRouterConfig<Options: {}> = {
   backBehavior?: 'none' | 'initialRoute', // defaults `initialRoute`
 };
 
-export type NavigationTabScreenOptions = {
+export type NavigationTabScreenOptions = {|
   ...$Exact<NavigationScreenOptions>,
   tabBarIcon?:
     | React.Node
@@ -414,13 +414,13 @@ export type NavigationTabScreenOptions = {
     scene: TabScene,
     jumpToIndex: (index: number) => void
   ) => void,
-};
+|};
 
 /**
  * Drawer
  */
 
-export type NavigationDrawerScreenOptions = {
+export type NavigationDrawerScreenOptions = {|
   ...$Exact<NavigationScreenOptions>,
   drawerIcon?:
     | React.Node
@@ -429,7 +429,7 @@ export type NavigationDrawerScreenOptions = {
     | React.Node
     | ((options: { tintColor: ?string, focused: boolean }) => ?React.Node),
   drawerLockMode?: 'unlocked' | 'locked-closed' | 'locked-open',
-};
+|};
 
 /**
  * Navigator Prop
