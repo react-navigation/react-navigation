@@ -9,39 +9,49 @@ import type {
   NavigationScreenProp,
   NavigationState,
   NavigationAction,
-  Style,
+  NavigationRoute,
+  ViewStyleProp,
+  TextStyleProp,
 } from '../../TypeDefinition';
-import type { DrawerScene } from './DrawerView.js';
+import type { DrawerScene, DrawerItem } from './DrawerView.js';
 
 type Props = {
   navigation: NavigationScreenProp<NavigationState, NavigationAction>,
+  items: Array<NavigationRoute>,
+  activeItemKey?: string,
   activeTintColor?: string,
   activeBackgroundColor?: string,
   inactiveTintColor?: string,
   inactiveBackgroundColor?: string,
   getLabel: (scene: DrawerScene) => ?(React.Element<*> | string),
   renderIcon: (scene: DrawerScene) => ?React.Element<*>,
-  style?: Style,
-  labelStyle?: Style,
+  onItemPress: (info: DrawerItem) => void,
+  itemsContainerStyle?: ViewStyleProp,
+  itemStyle?: ViewStyleProp,
+  labelStyle?: TextStyleProp,
 };
 
 /**
  * Component that renders the navigation list in the drawer.
  */
 const DrawerNavigatorItems = ({
-  navigation,
+  navigation: { state, navigate },
+  items,
+  activeItemKey,
   activeTintColor,
   activeBackgroundColor,
   inactiveTintColor,
   inactiveBackgroundColor,
   getLabel,
   renderIcon,
-  style,
+  onItemPress,
+  itemsContainerStyle,
+  itemStyle,
   labelStyle,
 }: Props) => (
-  <View style={[styles.container, style]}>
-    {navigation.state.routes.map((route: *, index: number) => {
-      const focused = navigation.state.index === index;
+  <View style={[styles.container, itemsContainerStyle]}>
+    {items.map((route: NavigationRoute, index: number) => {
+      const focused = activeItemKey === route.key;
       const color = focused ? activeTintColor : inactiveTintColor;
       const backgroundColor = focused
         ? activeBackgroundColor
@@ -53,24 +63,21 @@ const DrawerNavigatorItems = ({
         <TouchableItem
           key={route.key}
           onPress={() => {
-            navigation.navigate('DrawerClose');
-            navigation.navigate(route.routeName);
+            onItemPress({ route, focused });
           }}
           delayPressIn={0}
         >
-          <View style={[styles.item, { backgroundColor }]}>
-            {icon
-              ? <View
-                  style={[styles.icon, focused ? null : styles.inactiveIcon]}
-                >
-                  {icon}
-                </View>
-              : null}
-            {typeof label === 'string'
-              ? <Text style={[styles.label, { color }, labelStyle]}>
-                  {label}
-                </Text>
-              : label}
+          <View style={[styles.item, { backgroundColor }, itemStyle]}>
+            {icon ? (
+              <View style={[styles.icon, focused ? null : styles.inactiveIcon]}>
+                {icon}
+              </View>
+            ) : null}
+            {typeof label === 'string' ? (
+              <Text style={[styles.label, { color }, labelStyle]}>{label}</Text>
+            ) : (
+              label
+            )}
           </View>
         </TouchableItem>
       );

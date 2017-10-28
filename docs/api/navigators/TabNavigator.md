@@ -1,6 +1,6 @@
 # TabNavigator
 
-Used to easily set up a screen with several tabs with a TabRouter.
+Used to easily set up a screen with several tabs with a TabRouter. For a live example please see [our expo demo](https://exp.host/@react-navigation/NavigationPlayground).
 
 ```js
 class MyHomeScreen extends React.Component {
@@ -61,6 +61,8 @@ const MyApp = TabNavigator({
     screen: MyNotificationsScreen,
   },
 }, {
+  tabBarPosition: 'top',
+  animationEnabled: true,
   tabBarOptions: {
     activeTintColor: '#e91e63',
   },
@@ -104,6 +106,8 @@ Several options get passed to the underlying router to modify navigation logic:
 - `showLabel` - whether to show label for tab, default is true
 - `style` - style object for the tab bar
 - `labelStyle` - style object for the tab label
+- `tabStyle` - style object for the tab
+- `allowFontScaling` - whether label font should scale to respect Text Size accessibility settings, default is true
 
 Example:
 
@@ -134,6 +138,7 @@ tabBarOptions: {
 - `labelStyle` - style object for the tab label
 - `iconStyle` - style object for the tab icon
 - `style` - style object for the tab bar
+- `allowFontScaling` - whether label font should scale to respect Text Size accessibility settings, default is true
 
 Example:
 
@@ -141,6 +146,9 @@ Example:
 tabBarOptions: {
   labelStyle: {
     fontSize: 12,
+  },
+  tabStyle: {
+    width: 100,    
   },
   style: {
     backgroundColor: 'blue',
@@ -165,6 +173,10 @@ React Element or a function that given `{ focused: boolean, tintColor: string }`
 #### `tabBarLabel`
 
 Title string of a tab displayed in the tab bar or React Element or a function that given `{ focused: boolean, tintColor: string }` returns a React.Element, to display in tab bar. When undefined, scene `title` is used. To hide, see `tabBarOptions.showLabel` in the previous section.
+
+#### `tabBarOnPress`
+
+Callback to handle tap events; arguments are the `scene: { route, index }` that was tapped and a `jumpToIndex` method that can perform the navigation for you.
 
 ### Navigator Props
 

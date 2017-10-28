@@ -1,0 +1,43 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: reactcommunity/node-ci:8.4.0-0 # custom image -- includes ocaml, libelf1, Yarn
+    parallelism: 2
+    working_directory: ~/react-navigation
+    steps:
+      - checkout
+      - restore_cache:
+          # cache by branch + package.json, by branch, and then master
+          keys: 
+            - v3-react-navigation-{{ .Branch }}-{{ checksum "package.json" }}
+            - v3-react-navigation-{{ .Branch }}
+            - v3-react-navigation-master
+      - run: yarn # install root deps
+      - run: ./scripts/test.sh # run tests
+      - setup_remote_docker
+      - deploy:
+          command: |
+            set -x
+              VER="17.03.0-ce"
+              curl -L -o /tmp/docker-$VER.tgz https://get.docker.com/builds/Linux/x86_64/docker-$VER.tgz
+              tar -xz -C /tmp -f /tmp/docker-$VER.tgz
+              mv /tmp/docker/* /usr/bin
+            
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              # deploy website
+              cd website && yarn && cd ../
+              yarn run build-docs
+              ./scripts/deploy-website.sh
+
+              # deploy expo playground demo
+              # exp login -u "$EXPO_USERNAME" -p "$EXPO_PASSWORD"
+              # cd examples/NavigationPlayground && exp publish
+            fi
+      - save_cache:
+          key: v3-react-navigation-{{ .Branch }}-{{ checksum "package.json" }}
+          paths:
+            - ~/.cache/yarn
+            - ~/react-navigation/website/node_modules
+            - ~/react-navigation/examples/NavigationPlayground/node_modules
+            - ~/react-navigation/examples/ReduxExample/node_modules

@@ -17,7 +17,7 @@ class MyScreen extends React.Component {
 
 **Dynamic Configuration**
 
-Or, the options can be a function that takes the following arguments, and returns an object of navigation options that will be override the route-defined and navigator-defined navigationOptions.
+Or, the options can be a function that takes the following arguments, and returns an object of navigation options that will override the route-defined and navigator-defined navigationOptions.
 
 - `props` - The same props that are available to the screen component
   - `navigation` - The [navigation prop](/docs/navigators/navigation-prop) for the screen, with the screen's route at `navigation.state`
@@ -99,6 +99,6 @@ class ProfileScreen extends React.Component {
 List of available navigation options depends on the `navigator` the screen is added to.
 
 Check available options for:
-- [`drawer navigator`](/docs/api/navigators/DrawerNavigator.md#screen-navigation-options)
-- [`stack navigator`](/docs/api/navigators/StackNavigator.md#screen-navigation-options)
-- [`tab navigator`](/docs/api/navigators/TabNavigator.md#screen-navigation-options)
+- [`drawer navigator`](/docs/navigators/drawer#Screen-Navigation-Options)
+- [`stack navigator`](/docs/navigators/stack#Screen-Navigation-Options)
+- [`tab navigator`](/docs/navigators/tab#Screen-Navigation-Options)

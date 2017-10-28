@@ -21,6 +21,7 @@ import type {
   NavigationState,
   NavigationStackAction,
   NavigationStackRouterConfig,
+  NavigationStackScreenOptions,
 } from '../TypeDefinition';
 
 const uniqueBaseId = `id-${Date.now()}`;
@@ -32,13 +33,14 @@ function _getUuid() {
 export default (
   routeConfigs: NavigationRouteConfigMap,
   stackConfig: NavigationStackRouterConfig = {}
-): NavigationRouter<*, *, *> => {
+): NavigationRouter<*, *, NavigationStackScreenOptions> => {
   // Fail fast on invalid route definitions
   validateRouteConfigMap(routeConfigs);
 
   const childRouters = {};
   const routeNames = Object.keys(routeConfigs);
 
+  // Loop through routes and find child routers
   routeNames.forEach((routeName: string) => {
     const screen = getScreenForRouteName(routeConfigs, routeName);
     if (screen && screen.router) {
@@ -57,6 +59,7 @@ export default (
   const initialChildRouter = childRouters[initialRouteName];
   const paths = stackConfig.paths || {};
 
+  // Build paths for each route
   routeNames.forEach((routeName: string) => {
     let pathPattern = paths[routeName] || routeConfigs[routeName].path;
     const matchExact = !!pathPattern && !childRouters[routeName];
@@ -122,10 +125,10 @@ export default (
         const params = (route.params ||
           action.params ||
           initialRouteParams) && {
-          ...(route.params || {}),
-          ...(action.params || {}),
-          ...(initialRouteParams || {}),
-        };
+            ...(route.params || {}),
+            ...(action.params || {}),
+            ...(initialRouteParams || {}),
+          };
         route = {
           ...route,
           routeName: initialRouteName,
@@ -365,10 +368,11 @@ export default (
       // get the action for the path AFTER the matched path for this
       // router
       let nestedAction;
+      let nestedQueryString = queryString ? '?' + queryString : '';
       if (childRouters[matchedRouteName]) {
         nestedAction = childRouters[matchedRouteName].getActionForPathAndParams(
           /* $FlowFixMe */
-          pathMatch.slice(pathMatchKeys.length).join('/')
+          pathMatch.slice(pathMatchKeys.length).join('/') + nestedQueryString
         );
       }
 

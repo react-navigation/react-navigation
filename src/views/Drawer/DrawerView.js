@@ -13,7 +13,7 @@ import type {
   NavigationState,
   NavigationAction,
   NavigationDrawerScreenOptions,
-  Style,
+  ViewStyleProp,
 } from '../../TypeDefinition';
 
 export type DrawerScene = {
@@ -23,12 +23,20 @@ export type DrawerScene = {
   tintColor?: string,
 };
 
+export type DrawerItem = {
+  route: NavigationRoute,
+  focused: boolean,
+};
+
 export type DrawerViewConfig = {
-  drawerWidth: number,
-  drawerPosition: 'left' | 'right',
-  contentComponent: ReactClass<*>,
+  drawerLockMode?: 'unlocked' | 'locked-closed' | 'locked-open',
+  drawerWidth?: number,
+  drawerPosition?: 'left' | 'right',
+  contentComponent?: ReactClass<*>,
   contentOptions?: {},
-  style?: Style,
+  style?: ViewStyleProp,
+  useNativeAnimations?: boolean,
+  drawerBackgroundColor?: String,
 };
 
 type Props = DrawerViewConfig & {
@@ -58,6 +66,12 @@ export default class DrawerView<T: *> extends PureComponent<void, Props, void> {
       const { routes, index } = nextProps.navigation.state;
       if (routes[index].routeName === 'DrawerOpen') {
         this._drawer.openDrawer();
+      } else if (routes[index].routeName === 'DrawerToggle') {
+        if (this._drawer.state.drawerShown) {
+          this.props.navigation.navigate('DrawerClose');
+        } else {
+          this.props.navigation.navigate('DrawerOpen');
+        }
       } else {
         this._drawer.closeDrawer();
       }
@@ -127,14 +141,31 @@ export default class DrawerView<T: *> extends PureComponent<void, Props, void> {
     const DrawerScreen = this.props.router.getComponentForRouteName(
       'DrawerClose'
     );
+
+    const screenNavigation = addNavigationHelpers({
+      state: this._screenNavigationProp.state,
+      dispatch: this._screenNavigationProp.dispatch,
+    });
+
+    const config = this.props.router.getScreenOptions(
+      screenNavigation,
+      this.props.screenProps
+    );
+
     return (
       <DrawerLayout
         ref={(c: *) => {
           this._drawer = c;
         }}
+        drawerLockMode={
+          (this.props.screenProps && this.props.screenProps.drawerLockMode) ||
+          (config && config.drawerLockMode)
+        }
+        drawerBackgroundColor={this.props.drawerBackgroundColor}
         drawerWidth={this.props.drawerWidth}
         onDrawerOpen={this._handleDrawerOpen}
         onDrawerClose={this._handleDrawerClose}
+        useNativeAnimations={this.props.useNativeAnimations}
         renderNavigationView={this._renderNavigationView}
         drawerPosition={
           this.props.drawerPosition === 'right'
