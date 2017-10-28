@@ -26,7 +26,7 @@ type Props = {
     NavigationTabAction,
     NavigationDrawerScreenOptions
   >,
-  navigation: NavigationScreenProp<NavigationState>,
+  navigation: NavigationScreenProp<NavigationStateRoute>,
   childNavigationProps: {
     [key: string]: NavigationScreenProp<NavigationRoute>,
   },

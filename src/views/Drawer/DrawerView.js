@@ -14,6 +14,7 @@ import type {
   NavigationDrawerScreenOptions,
   ViewStyleProp,
   NavigationTabAction,
+  NavigationStateRoute,
 } from '../../TypeDefinition';
 
 export type DrawerScene = {
@@ -82,7 +83,7 @@ export default class DrawerView<T: NavigationRoute> extends React.PureComponent<
     this._updateScreenNavigation(nextProps.navigation);
   }
 
-  _screenNavigationProp: NavigationScreenProp<T>;
+  _screenNavigationProp: NavigationScreenProp<NavigationStateRoute>;
 
   _handleDrawerOpen = () => {
     const { navigation } = this.props;

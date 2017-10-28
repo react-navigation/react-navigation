@@ -10,8 +10,8 @@ import type {
   NavigationRoute,
 } from './TypeDefinition';
 
-type InputProps = {
-  navigation: NavigationScreenProp<NavigationState>,
+type InputProps<State: NavigationState> = {
+  navigation: NavigationScreenProp<State>,
 };
 type OutputProps = {
   childNavigationProps: {
@@ -22,9 +22,10 @@ type OutputProps = {
 /**
  * HOC which caches the child navigation items.
  */
-export default function withCachedChildNavigation<T: InputProps>(
-  Comp: React.ComponentType<OutputProps & T>
-): React.ComponentType<T> {
+export default function withCachedChildNavigation<
+  State: NavigationState,
+  T: InputProps<State>
+>(Comp: React.ComponentType<OutputProps & T>): React.ComponentType<T> {
   // $FlowFixMe StatelessFunctionalComponent missing displayName Flow < 0.54.0
   const displayName: string = Comp.displayName || Comp.name;
   return class extends React.PureComponent<T> {
