@@ -9,31 +9,35 @@ import type {
   NavigationRouteConfigMap,
   NavigationAction,
   NavigationState,
+  NavigationScreenProp,
 } from '../TypeDefinition';
 
 import type { NavigatorType } from './NavigatorTypes';
+
+type InjectedProps<S: NavigationState, A: NavigationAction, O: {}> = {
+  router: NavigationRouter<S, A, O>,
+};
 
 /**
  * Creates a navigator based on a router and a view that renders the screens.
  */
 export default function createNavigator<
-  C: {},
   S: NavigationState,
   A: NavigationAction,
   NavigatorConfig,
-  Options: {}
+  O: {}
 >(
-  router: NavigationRouter<S, A, Options>,
+  router: NavigationRouter<S, A, O>,
   routeConfigs?: NavigationRouteConfigMap,
   navigatorConfig?: NavigatorConfig,
   navigatorType?: NavigatorType
 ) {
   return (
-    NavigationView: React.ComponentType<C>
-  ): NavigationNavigator<C, S, A, Options> => {
-    class Navigator extends React.Component<
-      NavigationNavigatorProps<Options, S>
-    > {
+    NavigationView: React.ComponentType<
+      InjectedProps<S, A, O> & NavigationNavigatorProps<O, S>
+    >
+  ): NavigationNavigator<S, A, O, NavigationNavigatorProps<O, S>> => {
+    class Navigator extends React.Component<NavigationNavigatorProps<O, S>> {
       static router = router;
 
       static routeConfigs = routeConfigs;

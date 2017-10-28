@@ -13,18 +13,20 @@ import type {
   NavigationNavigatorProps,
   NavigationNavigator,
   PossiblyDeprecatedNavigationAction,
+  NavigationInitAction,
 } from './TypeDefinition';
 
-type NavigationContainerProps = {
+type Props<O, S> = {
   uriPrefix?: string | RegExp,
   onNavigationStateChange?: (
     NavigationState,
     NavigationState,
     NavigationAction
   ) => void,
+  navigation?: NavigationScreenProp<S>,
+  screenProps?: *,
+  navigationOptions?: O,
 };
-
-type Props<O, S> = NavigationContainerProps & NavigationNavigatorProps<O, S>;
 
 type State<S> = {
   nav: ?S,
@@ -36,8 +38,17 @@ type State<S> = {
  * This allows to use e.g. the StackNavigator and TabNavigator as root-level
  * components.
  */
-export default function createNavigationContainer<S: NavigationState, O: {}>(
-  Component: NavigationNavigator<*, S, *, O>
+export default function createNavigationContainer<
+  S: NavigationState,
+  A: NavigationAction,
+  O: {}
+>(
+  Component: NavigationNavigator<
+    S,
+    A | NavigationInitAction,
+    O,
+    NavigationNavigatorProps<O, S>
+  >
 ) {
   class NavigationContainer extends React.Component<Props<O, S>, State<S>> {
     subs: ?{
@@ -166,7 +177,10 @@ export default function createNavigationContainer<S: NavigationState, O: {}>(
     }
 
     dispatch = (inputAction: PossiblyDeprecatedNavigationAction) => {
-      const action = NavigationActions.mapDeprecatedActionAndWarn(inputAction);
+      // $FlowFixMe remove after we deprecate the old actions
+      const action: A = NavigationActions.mapDeprecatedActionAndWarn(
+        inputAction
+      );
       if (!this._isStateful()) {
         return false;
       }
@@ -182,7 +196,7 @@ export default function createNavigationContainer<S: NavigationState, O: {}>(
       return false;
     };
 
-    _navigation: ?NavigationScreenProp<NavigationState>;
+    _navigation: ?NavigationScreenProp<S>;
 
     render() {
       let navigation = this.props.navigation;
@@ -197,6 +211,7 @@ export default function createNavigationContainer<S: NavigationState, O: {}>(
         }
         navigation = this._navigation;
       }
+      invariant(navigation, 'failed to get navigation');
       return <Component {...this.props} navigation={navigation} />;
     }
   }
