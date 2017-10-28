@@ -126,12 +126,14 @@ export type DeprecatedNavigationStackAction =
 export type NavigationTabAction =
   | NavigationInitAction
   | NavigationNavigateAction
-  | NavigationBackAction;
+  | NavigationBackAction
+  | NavigationSetParamsAction;
 
 export type DeprecatedNavigationTabAction =
   | DeprecatedNavigationInitAction
   | DeprecatedNavigationNavigateAction
-  | DeprecatedNavigationBackAction;
+  | DeprecatedNavigationBackAction
+  | DeprecatedNavigationSetParamsAction;
 
 export type NavigationAction =
   | NavigationInitAction
