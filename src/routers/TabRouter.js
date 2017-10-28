@@ -45,11 +45,12 @@ export default (
       tabRouters[routeName] = routeConfig.screen.router;
     }
   });
-  invariant(
-    initialRouteIndex !== -1,
-    `Invalid initialRouteName '${initialRouteName}' for TabRouter. ` +
-      `Should be one of ${order.map((n: *) => `"${n}"`).join(', ')}`
-  );
+  if (initialRouteIndex === -1) {
+    throw new Error(
+      `Invalid initialRouteName '${initialRouteName}' for TabRouter. ` +
+        `Should be one of ${order.map((n: *) => `"${n}"`).join(', ')}`
+    );
+  }
   return {
     getStateForAction(
       action: NavigationAction | { action: NavigationAction },
@@ -237,6 +238,10 @@ export default (
         return false;
       });
       // console.log(`${order.join('-')}: Processed other tabs:`, {lastIndex: state.index, index});
+
+      // keep active tab index if action type is SET_PARAMS
+      index =
+        action.type === NavigationActions.SET_PARAMS ? state.index : index;
 
       if (index !== state.index || routes !== state.routes) {
         return {
