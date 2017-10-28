@@ -750,6 +750,7 @@ describe('StackRouter', () => {
       state
     );
     expect(state2 && state2.routes[1].params).toEqual({ foo: '42' });
+    /* $FlowFixMe */
     expect(state2 && state2.routes[1].routes).toEqual([
       expect.objectContaining({
         routeName: 'Baz',
@@ -779,6 +780,7 @@ describe('StackRouter', () => {
       state
     );
     expect(state2 && state2.routes[1].params).toEqual({ foo: '42' });
+    /* $FlowFixMe */
     expect(state2 && state2.routes[1].routes).toEqual([
       {
         key: 'Baz',

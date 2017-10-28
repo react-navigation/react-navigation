@@ -135,6 +135,7 @@ test('Handles deep action', () => {
     state1
   );
   expect(state2 && state2.index).toEqual(1);
+  /* $FlowFixMe */
   expect(state2 && state2.routes[1].index).toEqual(1);
 });
 
