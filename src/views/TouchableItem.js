@@ -67,7 +67,7 @@ export default class TouchableItem extends Component<
             this.props.borderless || false
           )}
         >
-          <View style={this.props.style}>
+          <View style={style}>
             {Children.only(this.props.children)}
           </View>
         </TouchableNativeFeedback>
