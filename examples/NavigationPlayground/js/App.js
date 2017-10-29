@@ -1,6 +1,9 @@
 /* @flow */
 
 import React from 'react';
+import { ScreenOrientation } from 'expo';
+
+ScreenOrientation.allow(ScreenOrientation.Orientation.ALL);
 
 import {
   Platform,

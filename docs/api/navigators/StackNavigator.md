@@ -85,7 +85,10 @@ Visual options:
   - `screen` - Each screen has a header attached to it and the header fades in and out together with the screen. This is a common pattern on Android.
   - `none` - No header will be rendered.
 - `cardStyle` - Use this prop to override or extend the default style for an individual card in stack.
-- `transitionConfig` - Function to return an object that overrides default screen transitions.
+- `transitionConfig` - Function to return an object that is merged with the default screen transitions (take a look at TransitionConfig in [type definitions](https://github.com/react-community/react-navigation/blob/master/src/TypeDefinition.js)). Provided function will be passed the following arguments:
+	- `transitionProps` - Transition props for the new screen.
+	- `prevTransitionProps` - Transitions props for the old screen.
+	- `isModal` - Boolean specifying if screen is modal.
 - `onTransitionStart` - Function to be invoked when the card transition animation is about to start.
 - `onTransitionEnd` - Function to be invoked once the card transition animation completes.
 
@@ -103,6 +106,10 @@ React Element or a function that given `HeaderProps` returns a React Element, to
 #### `headerTitle`
 
 String or React Element used by the header. Defaults to scene `title`
+
+#### `headerTitleAllowFontScaling`
+
+Whether header title font should scale to respect Text Size accessibility settings. Defaults to true
 
 #### `headerBackTitle`
 
