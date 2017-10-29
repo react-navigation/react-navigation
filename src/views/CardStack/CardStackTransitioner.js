@@ -37,7 +37,6 @@ type Props = {
   cardStyle?: ViewStyleProp,
   onTransitionStart?: () => void,
   onTransitionEnd?: () => void,
-  style: ViewStyleProp,
   /**
    * Optional custom animation when transitioning between screens.
    */
@@ -57,7 +56,6 @@ class CardStackTransitioner extends React.Component<Props> {
         configureTransition={this._configureTransition}
         navigation={this.props.navigation}
         render={this._render}
-        style={this.props.style}
         onTransitionStart={this.props.onTransitionStart}
         onTransitionEnd={this.props.onTransitionEnd}
       />
@@ -100,7 +98,6 @@ class CardStackTransitioner extends React.Component<Props> {
       router,
       cardStyle,
       transitionConfig,
-      style,
     } = this.props;
     return (
       <CardStack
@@ -110,7 +107,6 @@ class CardStackTransitioner extends React.Component<Props> {
         router={router}
         cardStyle={cardStyle}
         transitionConfig={transitionConfig}
-        style={style}
         {...props}
       />
     );

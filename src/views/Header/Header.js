@@ -298,7 +298,6 @@ class Header extends React.PureComponent<Props, State> {
       position,
       screenProps,
       progress,
-      style,
       isLandscape,
       ...rest
     } = this.props;
@@ -313,7 +312,6 @@ class Header extends React.PureComponent<Props, State> {
         height: APPBAR_HEIGHT + landscapeAwareStatusBarHeight,
       },
       headerStyle,
-      style,
     ];
 
     return (

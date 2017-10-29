@@ -52,7 +52,6 @@ type Props = {
   cardStyle?: ViewStyleProp,
   onTransitionStart?: () => void,
   onTransitionEnd?: () => void,
-  style?: any, // TODO: Remove
   /**
    * Optional custom animation when transitioning between screens.
    */

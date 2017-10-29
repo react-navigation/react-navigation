@@ -29,7 +29,6 @@ type Props = {
     transitionProps: NavigationTransitionProps,
     prevTransitionProps: ?NavigationTransitionProps
   ) => React.Node,
-  style?: any,
 };
 
 type State = {
@@ -185,7 +184,7 @@ class Transitioner extends React.Component<Props, State> {
 
   render() {
     return (
-      <View onLayout={this._onLayout} style={[styles.main, this.props.style]}>
+      <View onLayout={this._onLayout} style={[styles.main]}>
         {this.props.render(this._transitionProps, this._prevTransitionProps)}
       </View>
     );

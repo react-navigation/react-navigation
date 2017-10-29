@@ -340,7 +340,6 @@ export type HeaderProps = {
   getScreenDetails: NavigationScene => NavigationScreenDetails<
     NavigationStackScreenOptions
   >,
-  style: ViewStyleProp,
 };
 
 /**
