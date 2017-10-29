@@ -148,6 +148,8 @@ const styles = StyleSheet.create({
 - `itemsContainerStyle` - style object for the content section
 - `itemStyle` - style object for the single item, which can contain an Icon and/or a Label
 - `labelStyle` - style object to overwrite `Text` style inside content section, when your label is a string
+- `iconContainerStyle` - style object to overwrite `View` icon container styles.
+
 #### Example:
 
 ```js
@@ -155,6 +157,9 @@ contentOptions: {
   activeTintColor: '#e91e63',
   itemsContainerStyle: {
     marginVertical: 0,
+  },
+  iconContainerStyle: {
+    opacity: 1
   }
 }
 ```
