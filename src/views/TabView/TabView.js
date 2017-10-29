@@ -1,7 +1,7 @@
 /* @flow */
 
 import React, { PureComponent } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Platform, Dimensions } from 'react-native';
 import { TabViewAnimated, TabViewPagerPan } from 'react-native-tab-view';
 import type { Layout } from 'react-native-tab-view/src/TabViewTypeDefinitions';
 import SceneView from '../SceneView';
@@ -54,7 +54,18 @@ type Props = {
   },
 };
 
-class TabView extends PureComponent<void, Props, void> {
+let defaultInitialLayout = undefined;
+if (Platform.OS === 'android') {
+  // fix for https://github.com/react-native-community/react-native-tab-view/issues/312
+  const { width, height } = Dimensions.get('window');
+  defaultInitialLayout = { width, height };
+}
+
+class TabView extends PureComponent<$Shape<Props>, Props, void> {
+  static defaultProps = {
+    initialLayout: defaultInitialLayout,
+  };
+
   props: Props;
 
   _handlePageChanged = (index: number) => {
