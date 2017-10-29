@@ -1,7 +1,7 @@
 /* @flow */
 
 import React, { PureComponent } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Platform } from 'react-native';
 import { TabViewAnimated, TabViewPagerPan } from 'react-native-tab-view';
 import type { Layout } from 'react-native-tab-view/src/TabViewTypeDefinitions';
 import SceneView from '../SceneView';
@@ -20,6 +20,7 @@ export type TabViewConfig = {
   tabBarComponent?: ReactClass<*>,
   tabBarPosition?: 'top' | 'bottom',
   tabBarOptions?: {},
+  initialLayout?: { width: number, height: number },
   swipeEnabled?: boolean,
   animationEnabled?: boolean,
   lazy?: boolean,
@@ -37,6 +38,7 @@ type Props = {
   tabBarComponent?: ReactClass<*>,
   tabBarPosition?: 'top' | 'bottom',
   tabBarOptions?: {},
+  initialLayout?: { width: number, height: number },
   swipeEnabled?: boolean,
   animationEnabled?: boolean,
   lazy?: boolean,
@@ -206,6 +208,9 @@ class TabView extends PureComponent<void, Props, void> {
       screenProps: this.props.screenProps,
       style: styles.container,
     };
+    if (Platform.OS === 'android') {
+      props.initialLayout = { width: 1, height: 0 };
+    }
 
     return <TabViewAnimated {...props} />;
   }
