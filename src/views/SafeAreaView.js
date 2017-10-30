@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import {
   DeviceInfo,
   Dimensions,
+  InteractionManager,
   NativeModules,
+  Platform,
   SafeAreaView,
   View,
 } from 'react-native';
@@ -20,10 +22,12 @@ const isIPhoneX = (() => {
   }
 
   const { height, width } = Dimensions.get('window');
-  return height === X_HEIGHT && width === X_WIDTH;
+  return (
+    Platform.OS === 'ios' &&
+    ((height === X_HEIGHT && width === X_WIDTH) ||
+      (height === X_WIDTH && width === X_HEIGHT))
+  );
 })();
-
-console.log(minor, isIPhoneX);
 
 class SafeView extends Component {
   state = {
@@ -34,10 +38,32 @@ class SafeView extends Component {
     orientation: null,
   };
 
-  render() {
-    const { forceInset = false, isLandscape, children, style } = this.props;
+  componentDidMount() {
+    InteractionManager.runAfterInteractions(() => {
+      this._onLayout();
+    });
+  }
 
-    if (!isIPhoneX) {
+  componentWillReceiveProps(nextProps) {
+    const { isLandscape, verbose } = nextProps;
+    if (verbose) console.log(isLandscape);
+    this._onLayout();
+  }
+
+  render() {
+    const {
+      forceInset = false,
+      isLandscape,
+      children,
+      style,
+      verbose,
+    } = this.props;
+
+    // if (verbose) {
+    //   console.log(isLandscape);
+    // }
+
+    if (!Platform.OS === 'ios') {
       return <View style={style}>{this.props.children}</View>;
     }
 
@@ -58,8 +84,10 @@ class SafeView extends Component {
     );
   }
 
-  _onLayout = ({ nativeEvent: { layout: { x, y, width, height } } }) => {
-    const { isLandscape } = this.props;
+  _onLayout = () => {
+    if (!this.view) return;
+
+    const { isLandscape, verbose } = this.props;
     const { orientation } = this.state;
     const newOrientation = isLandscape ? 'landscape' : 'portrait';
     if (orientation && orientation === newOrientation) {
@@ -89,10 +117,16 @@ class SafeView extends Component {
         realX += WIDTH;
       }
 
+      if (verbose) {
+        console.log(realY, winHeight);
+        console.log('');
+        console.log(realX, winWidth);
+      }
+
       const touchesTop = realY === 0;
-      const touchesBottom = realY + height >= HEIGHT;
+      const touchesBottom = realY + winHeight >= HEIGHT;
       const touchesLeft = realX === 0;
-      const touchesRight = realX + width >= WIDTH;
+      const touchesRight = realX + winWidth >= WIDTH;
 
       this.setState({
         touchesTop,
@@ -109,10 +143,10 @@ class SafeView extends Component {
     const { forceInset, isLandscape } = this.props;
 
     const style = {
-      paddingTop: touchesTop ? (isLandscape ? 0 : 44) : 0,
-      paddingBottom: touchesBottom ? (isLandscape ? 24 : 34) : 0,
-      paddingLeft: touchesLeft ? (isLandscape ? 44 : 0) : 0,
-      paddingRight: touchesRight ? (isLandscape ? 44 : 0) : 0,
+      paddingTop: touchesTop ? this._getInset('top') : 0,
+      paddingBottom: touchesBottom ? this._getInset('bottom') : 0,
+      paddingLeft: touchesLeft ? this._getInset('left') : 0,
+      paddingRight: touchesRight ? this._getInset('right') : 0,
     };
 
     if (forceInset) {
@@ -160,14 +194,14 @@ class SafeView extends Component {
       case 'horizontal':
       case 'right':
       case 'left': {
-        return isLandscape ? 44 : 0;
+        return isLandscape ? (isIPhoneX ? 44 : 0) : 0;
       }
       case 'vertical':
       case 'top': {
-        return isLandscape ? 0 : 44;
+        return isLandscape ? 0 : isIPhoneX ? 44 : 20;
       }
       case 'bottom': {
-        return isLandscape ? 24 : 34;
+        return isIPhoneX ? (isLandscape ? 24 : 34) : 0;
       }
     }
   };
