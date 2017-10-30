@@ -20,7 +20,6 @@ export type TabViewConfig = {
   tabBarComponent?: ReactClass<*>,
   tabBarPosition?: 'top' | 'bottom',
   tabBarOptions?: {},
-  initialLayout?: { width: number, height: number },
   swipeEnabled?: boolean,
   animationEnabled?: boolean,
   lazy?: boolean,
@@ -38,7 +37,6 @@ type Props = {
   tabBarComponent?: ReactClass<*>,
   tabBarPosition?: 'top' | 'bottom',
   tabBarOptions?: {},
-  initialLayout?: { width: number, height: number },
   swipeEnabled?: boolean,
   animationEnabled?: boolean,
   lazy?: boolean,
@@ -56,7 +54,14 @@ type Props = {
   },
 };
 
-class TabView extends PureComponent<void, Props, void> {
+class TabView extends PureComponent<$Shape<Props>, Props, void> {
+  static defaultProps = {
+    // fix for https://github.com/react-native-community/react-native-tab-view/issues/312
+    initialLayout: Platform.select({
+      android: { width: 1, height: 0 },
+    }),
+  };
+
   props: Props;
 
   _handlePageChanged = (index: number) => {
@@ -208,9 +213,6 @@ class TabView extends PureComponent<void, Props, void> {
       screenProps: this.props.screenProps,
       style: styles.container,
     };
-    if (Platform.OS === 'android') {
-      props.initialLayout = { width: 1, height: 0 };
-    }
 
     return <TabViewAnimated {...props} />;
   }
