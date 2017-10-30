@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`StackNavigator applies correct values when headerRight is present 1`] = `
+exports[`StackNavigator renders successfully 1`] = `
 <View
   onLayout={[Function]}
   style={
@@ -75,81 +75,36 @@ exports[`StackNavigator applies correct values when headerRight is present 1`] =
       />
     </View>
     <View
-      cardStyle={undefined}
-      collapsable={undefined}
-      getScreenDetails={[Function]}
-      headerMode={undefined}
-      index={0}
-      layout={
-        Object {
-          "height": 0,
-          "initHeight": 0,
-          "initWidth": 0,
-          "isMeasured": false,
-          "width": 0,
-        }
-      }
-      mode="float"
-      navigation={
-        Object {
-          "dispatch": [Function],
-          "goBack": [Function],
-          "navigate": [Function],
-          "setParams": [Function],
-          "state": Object {
-            "index": 0,
-            "routes": Array [
-              Object {
-                "key": "Init-id-0-1",
-                "routeName": "Home",
-              },
-            ],
-          },
-        }
-      }
-      router={
-        Object {
-          "getActionForPathAndParams": [Function],
-          "getComponentForRouteName": [Function],
-          "getComponentForState": [Function],
-          "getPathAndParamsForState": [Function],
-          "getScreenConfig": [Function],
-          "getScreenOptions": [Function],
-          "getStateForAction": [Function],
-        }
-      }
+      onLayout={[Function]}
       style={
-        Object {
-          "backgroundColor": "#F7F7F7",
-          "borderBottomColor": "rgba(0, 0, 0, .3)",
-          "borderBottomWidth": 0.5,
-          "height": 64,
-          "paddingTop": 20,
-        }
+        Array [
+          Object {
+            "backgroundColor": "#F7F7F7",
+            "borderBottomColor": "rgba(0, 0, 0, .3)",
+            "borderBottomWidth": 0.5,
+          },
+          Object {
+            "paddingBottom": 0,
+            "paddingLeft": 0,
+            "paddingRight": 0,
+            "paddingTop": 20,
+          },
+        ]
       }
-      transitionConfig={undefined}
     >
       <View
-        style={
+        cardStyle={undefined}
+        collapsable={undefined}
+        getScreenDetails={[Function]}
+        headerMode={undefined}
+        index={0}
+        layout={
           Object {
-            "flex": 1,
-          }
-        }
-      >
-        <View
-          style={
-            Array [
-              Object {
-                "bottom": 0,
-                "left": 0,
-                "position": "absolute",
-                "right": 0,
-                "top": 0,
-              },
-              Object {
-                "flexDirection": "row",
-              },
-            ]
+            "height": 0,
+            "initHeight": 0,
+            "initWidth": 0,
+            "isMeasured": false,
+            "width": 0,
           }
         >
           <View
@@ -262,160 +217,109 @@ exports[`StackNavigator renders successfully 1`] = `
         Object {
           "flex": 1,
         }
-      }
-    >
-      <View
-        collapsable={undefined}
-        pointerEvents="auto"
-        style={
+        mode="float"
+        navigation={
           Object {
-            "backgroundColor": "#E9E9EF",
-            "bottom": 0,
-            "left": 0,
-            "opacity": 1,
-            "position": "absolute",
-            "right": 0,
-            "shadowColor": "black",
-            "shadowOffset": Object {
-              "height": 0,
-              "width": 0,
+            "dispatch": [Function],
+            "goBack": [Function],
+            "navigate": [Function],
+            "setParams": [Function],
+            "state": Object {
+              "index": 0,
+              "routes": Array [
+                Object {
+                  "key": "Init-id-0-0",
+                  "routeName": "Home",
+                },
+              ],
             },
-            "shadowOpacity": 0.2,
-            "shadowRadius": 5,
-            "top": 0,
-            "transform": Array [
-              Object {
-                "translateX": 0,
-              },
-              Object {
-                "translateY": 0,
-              },
-            ],
           }
         }
-      />
-    </View>
-    <View
-      cardStyle={undefined}
-      collapsable={undefined}
-      getScreenDetails={[Function]}
-      headerMode={undefined}
-      index={0}
-      layout={
-        Object {
-          "height": 0,
-          "initHeight": 0,
-          "initWidth": 0,
-          "isMeasured": false,
-          "width": 0,
+        router={
+          Object {
+            "getActionForPathAndParams": [Function],
+            "getComponentForRouteName": [Function],
+            "getComponentForState": [Function],
+            "getPathAndParamsForState": [Function],
+            "getScreenConfig": [Function],
+            "getScreenOptions": [Function],
+            "getStateForAction": [Function],
+          }
         }
-      }
-      mode="float"
-      navigation={
-        Object {
-          "dispatch": [Function],
-          "goBack": [Function],
-          "navigate": [Function],
-          "setParams": [Function],
-          "state": Object {
-            "index": 0,
-            "routes": Array [
-              Object {
-                "key": "Init-id-0-0",
-                "routeName": "Home",
-              },
-            ],
-          },
-        }
-      }
-      router={
-        Object {
-          "getActionForPathAndParams": [Function],
-          "getComponentForRouteName": [Function],
-          "getComponentForState": [Function],
-          "getPathAndParamsForState": [Function],
-          "getScreenConfig": [Function],
-          "getScreenOptions": [Function],
-          "getStateForAction": [Function],
-        }
-      }
-      style={
-        Object {
-          "backgroundColor": "#F7F7F7",
-          "borderBottomColor": "rgba(0, 0, 0, .3)",
-          "borderBottomWidth": 0.5,
-          "height": 64,
-          "paddingTop": 20,
-        }
-      }
-      transitionConfig={undefined}
-    >
-      <View
         style={
           Object {
-            "flex": 1,
+            "height": 44,
           }
         }
+        transitionConfig={undefined}
       >
         <View
           style={
-            Array [
-              Object {
-                "bottom": 0,
-                "left": 0,
-                "position": "absolute",
-                "right": 0,
-                "top": 0,
-              },
-              Object {
-                "flexDirection": "row",
-              },
-            ]
+            Object {
+              "flex": 1,
+            }
           }
         >
           <View
-            collapsable={undefined}
-            pointerEvents="box-none"
             style={
-              Object {
-                "alignItems": "center",
-                "backgroundColor": "transparent",
-                "bottom": 0,
-                "justifyContent": "center",
-                "left": 0,
-                "opacity": 1,
-                "position": "absolute",
-                "right": 0,
-                "top": 0,
-                "transform": Array [
-                  Object {
-                    "translateX": 0,
-                  },
-                ],
-              }
+              Array [
+                Object {
+                  "bottom": 0,
+                  "left": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                },
+                Object {
+                  "flexDirection": "row",
+                },
+              ]
             }
           >
-            <Text
-              accessibilityTraits="header"
-              accessible={true}
-              allowFontScaling={true}
+            <View
               collapsable={undefined}
-              disabled={false}
-              ellipsizeMode="tail"
-              numberOfLines={1}
-              onLayout={[Function]}
+              pointerEvents="box-none"
               style={
                 Object {
-                  "color": "rgba(0, 0, 0, .9)",
-                  "fontSize": 17,
-                  "fontWeight": "600",
-                  "marginHorizontal": 16,
-                  "textAlign": "center",
+                  "alignItems": "center",
+                  "backgroundColor": "transparent",
+                  "bottom": 0,
+                  "justifyContent": "center",
+                  "left": 70,
+                  "opacity": 1,
+                  "position": "absolute",
+                  "right": 70,
+                  "top": 0,
+                  "transform": Array [
+                    Object {
+                      "translateX": 0,
+                    },
+                  ],
                 }
               }
             >
-              Welcome anonymous
-            </Text>
+              <Text
+                accessibilityTraits="header"
+                accessible={true}
+                allowFontScaling={true}
+                collapsable={undefined}
+                disabled={false}
+                ellipsizeMode="tail"
+                numberOfLines={1}
+                onLayout={[Function]}
+                style={
+                  Object {
+                    "color": "rgba(0, 0, 0, .9)",
+                    "fontSize": 17,
+                    "fontWeight": "600",
+                    "marginHorizontal": 16,
+                    "textAlign": "center",
+                  }
+                }
+              >
+                Welcome anonymous
+              </Text>
+            </View>
           </View>
         </View>
       </View>

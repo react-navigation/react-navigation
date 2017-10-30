@@ -92,74 +92,96 @@ exports[`DrawerNavigator renders successfully 1`] = `
       }
     >
       <View
+        onLayout={[Function]}
         style={
           Array [
-            Object {
-              "marginTop": 20,
-              "paddingVertical": 4,
-            },
             undefined,
+            Object {
+              "paddingBottom": 0,
+              "paddingLeft": 0,
+              "paddingRight": 0,
+              "paddingTop": 20,
+            },
           ]
         }
       >
         <View
-          accessibilityComponentType={undefined}
-          accessibilityLabel={undefined}
-          accessibilityTraits={undefined}
-          accessible={true}
-          collapsable={undefined}
-          hitSlop={undefined}
-          isTVSelectable={true}
-          nativeID={undefined}
-          onLayout={undefined}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
           style={
-            Object {
-              "opacity": 1,
-            }
+            Array [
+              Object {
+                "paddingVertical": 4,
+              },
+              undefined,
+            ]
           }
-          testID={undefined}
-          tvParallaxProperties={undefined}
         >
           <View
+            accessibilityComponentType={undefined}
+            accessibilityLabel={undefined}
+            accessibilityTraits={undefined}
+            accessible={true}
+            collapsable={undefined}
+            hitSlop={undefined}
+            isTVSelectable={true}
+            nativeID={undefined}
+            onLayout={undefined}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
             style={
-              Array [
-                Object {
-                  "alignItems": "center",
-                  "flexDirection": "row",
-                },
-                Object {
-                  "backgroundColor": "rgba(0, 0, 0, .04)",
-                },
-                undefined,
-              ]
+              Object {
+                "opacity": 1,
+              }
             }
+            testID={undefined}
+            tvParallaxProperties={undefined}
           >
-            <Text
-              accessible={true}
-              allowFontScaling={true}
-              disabled={false}
-              ellipsizeMode="tail"
+            <View
+              onLayout={[Function]}
               style={
                 Array [
+                  Array [
+                    Object {
+                      "alignItems": "center",
+                      "flexDirection": "row",
+                    },
+                    Object {
+                      "backgroundColor": "rgba(0, 0, 0, .04)",
+                    },
+                  ],
                   Object {
-                    "fontWeight": "bold",
-                    "margin": 16,
+                    "paddingBottom": 0,
+                    "paddingLeft": 0,
+                    "paddingRight": 0,
+                    "paddingTop": 20,
                   },
-                  Object {
-                    "color": "#2196f3",
-                  },
-                  undefined,
                 ]
               }
             >
-              Welcome anonymous
-            </Text>
+              <Text
+                accessible={true}
+                allowFontScaling={true}
+                disabled={false}
+                ellipsizeMode="tail"
+                style={
+                  Array [
+                    Object {
+                      "fontWeight": "bold",
+                      "margin": 16,
+                    },
+                    Object {
+                      "color": "#2196f3",
+                    },
+                    undefined,
+                  ]
+                }
+              >
+                Welcome anonymous
+              </Text>
+            </View>
           </View>
         </View>
       </View>
