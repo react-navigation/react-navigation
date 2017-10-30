@@ -6,6 +6,7 @@ import * as React from 'react';
 
 import {
   Animated,
+  Dimensions,
   Platform,
   StyleSheet,
   View,
@@ -15,6 +16,7 @@ import {
 import HeaderTitle from './HeaderTitle';
 import HeaderBackButton from './HeaderBackButton';
 import HeaderStyleInterpolator from './HeaderStyleInterpolator';
+import SafeAreaView from '../SafeAreaView';
 import withOrientation from '../withOrientation';
 
 import type {
@@ -42,13 +44,11 @@ type State = {
 };
 
 const APPBAR_HEIGHT = Platform.OS === 'ios' ? 44 : 56;
-const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : 0;
+const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 0 : 0;
 const TITLE_OFFSET = Platform.OS === 'ios' ? 70 : 56;
 
 type Props = HeaderProps & { isLandscape: boolean };
 class Header extends React.PureComponent<Props, State> {
-  static HEIGHT = APPBAR_HEIGHT + STATUSBAR_HEIGHT;
-
   state = {
     widths: {},
   };
@@ -305,19 +305,21 @@ class Header extends React.PureComponent<Props, State> {
     const { options } = this.props.getScreenDetails(scene);
     const headerStyle = options.headerStyle;
     const landscapeAwareStatusBarHeight = isLandscape ? 0 : STATUSBAR_HEIGHT;
+    const appBarHeight = Platform.OS === 'ios' ? (isLandscape ? 32 : 44) : 56;
     const containerStyles = [
-      styles.container,
       {
-        paddingTop: landscapeAwareStatusBarHeight,
-        height: APPBAR_HEIGHT + landscapeAwareStatusBarHeight,
+        // paddingTop: landscapeAwareStatusBarHeight,
+        height: appBarHeight, // + landscapeAwareStatusBarHeight,
       },
       headerStyle,
     ];
 
     return (
-      <Animated.View {...rest} style={containerStyles}>
-        <View style={styles.appBar}>{appBar}</View>
-      </Animated.View>
+      <SafeAreaView style={styles.container}>
+        <Animated.View {...rest} style={containerStyles}>
+          <View style={styles.appBar}>{appBar}</View>
+        </Animated.View>
+      </SafeAreaView>
     );
   }
 }
