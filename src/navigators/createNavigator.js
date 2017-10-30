@@ -14,7 +14,7 @@ import type {
 
 import type { NavigatorType } from './NavigatorTypes';
 
-type InjectedProps<S: NavigationState, A: NavigationAction, O: {}> = {
+type InjectedProps<S: NavigationState, A: NavigationAction, O: *> = {
   router: NavigationRouter<S, A, O>,
 };
 
@@ -25,7 +25,7 @@ export default function createNavigator<
   S: NavigationState,
   A: *,
   NavigatorConfig,
-  O: {}
+  O: *
 >(
   router: NavigationRouter<S, A, O>,
   routeConfigs?: NavigationRouteConfigMap,
