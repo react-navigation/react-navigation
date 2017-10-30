@@ -108,7 +108,7 @@ class DrawerSidebar extends React.PureComponent<Props> {
       return null;
     }
     const { state } = this.props.navigation;
-    invariant(this.props.navigation.state.index, 'should be set');
+    invariant(typeof state.index === 'number', 'should be set');
     return (
       <View style={[styles.container, this.props.style]}>
         <ContentComponent
