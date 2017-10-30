@@ -9,8 +9,8 @@ import { Animated, Platform, StyleSheet, View } from 'react-native';
 import HeaderTitle from './HeaderTitle';
 import HeaderBackButton from './HeaderBackButton';
 import HeaderStyleInterpolator from './HeaderStyleInterpolator';
-import withOrientation from '../withOrientation';
-
+import WithStatusBarHeight from './WithStatusBarHeight';
+import type { StatusBarHeightState } from './WithStatusBarHeight';
 import type {
   NavigationScene,
   NavigationStyleInterpolator,
@@ -35,12 +35,13 @@ type HeaderState = {
 };
 
 const APPBAR_HEIGHT = Platform.OS === 'ios' ? 44 : 56;
-const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : 0;
 const TITLE_OFFSET = Platform.OS === 'ios' ? 70 : 56;
 
-class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
-  static HEIGHT = APPBAR_HEIGHT + STATUSBAR_HEIGHT;
-
+export default class Header extends React.PureComponent<
+  void,
+  HeaderProps,
+  HeaderState
+> {
   state = {
     widths: {},
   };
@@ -264,54 +265,59 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
   }
 
   render() {
-    let appBar;
-
-    if (this.props.mode === 'float') {
-      const scenesProps: Array<
-        SceneProps
-      > = this.props.scenes.map((scene: NavigationScene) => ({
-        position: this.props.position,
-        progress: this.props.progress,
-        scene,
-      }));
-      appBar = scenesProps.map(this._renderHeader, this);
-    } else {
-      appBar = this._renderHeader({
-        position: new Animated.Value(this.props.scene.index),
-        progress: new Animated.Value(0),
-        scene: this.props.scene,
-      });
-    }
-
-    // eslint-disable-next-line no-unused-vars
-    const {
-      scenes,
-      scene,
-      position,
-      screenProps,
-      progress,
-      style,
-      isLandscape,
-      ...rest
-    } = this.props;
-
-    const { options } = this.props.getScreenDetails(scene);
-    const headerStyle = options.headerStyle;
-    const landscapeAwareStatusBarHeight = isLandscape ? 0 : STATUSBAR_HEIGHT;
-    const containerStyles = [
-      styles.container,
-      {
-        paddingTop: landscapeAwareStatusBarHeight,
-        height: APPBAR_HEIGHT + landscapeAwareStatusBarHeight,
-      },
-      headerStyle,
-      style,
-    ];
-
     return (
-      <Animated.View {...rest} style={containerStyles}>
-        <View style={styles.appBar}>{appBar}</View>
-      </Animated.View>
+      <WithStatusBarHeight
+        render={({ statusBarTop, statusBarHeight }: StatusBarHeightState) => {
+          let appBar;
+
+          if (this.props.mode === 'float') {
+            const scenesProps: Array<
+              SceneProps
+            > = this.props.scenes.map((scene: NavigationScene) => ({
+              position: this.props.position,
+              progress: this.props.progress,
+              scene,
+            }));
+            appBar = scenesProps.map(this._renderHeader, this);
+          } else {
+            appBar = this._renderHeader({
+              position: new Animated.Value(this.props.scene.index),
+              progress: new Animated.Value(0),
+              scene: this.props.scene,
+            });
+          }
+
+          // eslint-disable-next-line no-unused-vars
+          const {
+            scenes,
+            scene,
+            position,
+            screenProps,
+            progress,
+            style,
+            ...rest
+          } = this.props;
+
+          const { options } = this.props.getScreenDetails(scene);
+          const headerStyle = options.headerStyle;
+          const totalStatusBarHeight = statusBarTop + statusBarHeight;
+          const containerStyles = [
+            styles.container,
+            {
+              paddingTop: totalStatusBarHeight,
+              height: APPBAR_HEIGHT + totalStatusBarHeight,
+            },
+            headerStyle,
+            style,
+          ];
+
+          return (
+            <Animated.View {...rest} style={containerStyles}>
+              <View style={styles.appBar}>{appBar}</View>
+            </Animated.View>
+          );
+        }}
+      />
     );
   }
 }
@@ -371,5 +377,3 @@ const styles = StyleSheet.create({
     position: 'absolute',
   },
 });
-
-export default withOrientation(Header);
