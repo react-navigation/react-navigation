@@ -37,26 +37,19 @@
   },
   "devDependencies": {
     "@expo/vector-icons": "^6.1.0",
-    "babel-eslint": "^8.0.1",
     "babel-jest": "^21.2.0",
     "babel-preset-react-native": "^4.0.0",
     "enzyme": "3.1.0",
     "enzyme-adapter-react-16": "^1.0.2",
     "enzyme-to-json": "^3.1.4",
-    "eslint": "^4.9.0",
-    "eslint-config-prettier": "^2.6.0",
-    "eslint-plugin-babel": "^4.1.2",
-    "eslint-plugin-flowtype": "^2.39.1",
-    "eslint-plugin-import": "^2.8.0",
-    "eslint-plugin-prettier": "^2.3.1",
-    "eslint-plugin-react": "^7.4.0",
-    "eslint-plugin-react-native": "^3.1.0",
+    "eslint": "^4.10.0",
+    "eslint-config-satya164": "^1.0.1",
     "flow-bin": "~0.53.1",
     "jest": "^21.2.1",
     "prettier": "^1.7.4",
     "react": "16.0.0-beta.5",
     "react-dom": "16.0.0-beta.5",
-    "react-native": "~0.49.3",
+    "react-native": "~0.49.5",
     "react-test-renderer": "16.0.0-beta.5"
   },
   "peerDependencies": {
@@ -70,6 +63,7 @@
     ],
     "modulePathIgnorePatterns": [
       "<rootDir>/example/node_modules"
-    ]
+    ],
+    "snapshotSerializers": ["enzyme-to-json/serializer"]
   }
 }

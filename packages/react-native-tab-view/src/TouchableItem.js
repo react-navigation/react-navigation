@@ -41,7 +41,6 @@ export default class TouchableItem extends React.Component<Props> {
   };
 
   render() {
-    // eslint-disable-next-line react/prop-types
     const { style, pressOpacity, pressColor, borderless, ...rest } = this.props;
 
     if (Platform.OS === 'android' && Platform.Version >= LOLLIPOP) {

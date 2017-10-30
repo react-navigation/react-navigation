@@ -1,8 +1,8 @@
 # React Native Tab View
 
-[![npm version](https://img.shields.io/npm/v/react-native-tab-view.svg)](https://www.npmjs.com/package/react-native-tab-view)
-[![travis](https://img.shields.io/travis/react-native-community/react-native-tab-view.svg)](https://travis-ci.org/react-native-community/react-native-tab-view)
-[![license](https://img.shields.io/github/license/react-native-community/react-native-tab-view.svg)](https://opensource.org/licenses/MIT)
+[![Build Status][build-badge]][build]
+[![Version][version-badge]][package]
+[![MIT License][license-badge]][license]
 
 A cross-platform Tab View component for React Native.
 
@@ -282,8 +282,16 @@ yarn run lint
 
 To fix formatting errors, run the following:
 
-```
+```sh
 yarn run lint -- --fix
 ```
 
 Remember to add tests for your change if possible.
+
+<!-- badges -->
+[build-badge]: https://img.shields.io/circleci/project/github/react-native-community/react-native-tab-view/master.svg?style=flat-square
+[build]: https://circleci.com/gh/react-native-community/react-native-tab-view
+[version-badge]: https://img.shields.io/npm/v/react-native-tab-view.svg?style=flat-square
+[package]: https://www.npmjs.com/package/react-native-tab-view
+[license-badge]: https://img.shields.io/npm/l/react-native-tab-view.svg?style=flat-square
+[license]: https://opensource.org/licenses/MIT
