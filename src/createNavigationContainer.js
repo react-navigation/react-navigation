@@ -39,8 +39,8 @@ type State<S> = {
  */
 export default function createNavigationContainer<
   S: NavigationState,
-  A: NavigationAction,
-  O: {}
+  A: *,
+  O: *
 >(Component: NavigationNavigator<S, A | NavigationInitAction, O>) {
   class NavigationContainer extends React.Component<Props<O, S>, State<S>> {
     subs: ?{
