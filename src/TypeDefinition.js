@@ -368,7 +368,7 @@ export type NavigationStackRouterConfig = {
   initialRouteName?: string,
   initialRouteParams?: NavigationParams,
   paths?: NavigationPathsConfig,
-  navigationOptions?: NavigationScreenConfig<NavigationStackScreenOptions>,
+  navigationOptions?: NavigationScreenConfig<*>,
 };
 
 export type NavigationStackViewConfig = {
@@ -389,10 +389,10 @@ export type StackNavigatorConfig = {
  * Tab Navigator
  */
 
-export type NavigationTabRouterConfig<Options: {}> = {
+export type NavigationTabRouterConfig = {
   initialRouteName?: string,
   paths?: NavigationPathsConfig,
-  navigationOptions?: NavigationScreenConfig<Options>,
+  navigationOptions?: NavigationScreenConfig<*>,
   order?: Array<string>, // todo: type these as the real route names rather than 'string'
 
   // Does the back button cause the router to switch to the initial tab

@@ -16,12 +16,11 @@ import type { DrawerViewConfig } from '../views/Drawer/DrawerView';
 import type {
   NavigationRouteConfigMap,
   NavigationTabRouterConfig,
-  NavigationDrawerScreenOptions,
 } from '../TypeDefinition';
 
 export type DrawerNavigatorConfig = {
   containerConfig?: void,
-} & NavigationTabRouterConfig<NavigationDrawerScreenOptions> &
+} & NavigationTabRouterConfig &
   DrawerViewConfig;
 
 const { height, width } = Dimensions.get('window');

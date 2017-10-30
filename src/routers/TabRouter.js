@@ -17,14 +17,13 @@ import type {
   NavigationRoute,
   NavigationNavigateAction,
   NavigationTabRouterConfig,
-  NavigationTabScreenOptions,
   NavigationTabAction,
   NavigationStateRoute,
 } from '../TypeDefinition';
 
 export default (
   routeConfigs: NavigationRouteConfigMap,
-  config: NavigationTabRouterConfig<*> = {}
+  config: NavigationTabRouterConfig = {}
 ): NavigationRouter<NavigationState, NavigationTabAction, *> => {
   // Fail fast on invalid route definitions
   validateRouteConfigMap(routeConfigs);
