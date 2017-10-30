@@ -57,7 +57,7 @@ export default class TouchableItem extends Component<
       Platform.OS === 'android' &&
       Platform.Version >= ANDROID_VERSION_LOLLIPOP
     ) {
-      const { style, ...rest } = this.props; // eslint-disable-line no-unused-vars
+      const { style, ...rest } = this.props;
       return (
         <TouchableNativeFeedback
           {...rest}
