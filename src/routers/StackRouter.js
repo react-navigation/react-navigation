@@ -284,11 +284,11 @@ export default (
         if (backRouteIndex == null) {
           return StateUtils.pop(state);
         }
-        if (backRouteIndex > 0) {
+        if (backRouteIndex > -1) {
           return {
             ...state,
-            routes: state.routes.slice(0, backRouteIndex),
-            index: backRouteIndex - 1,
+            routes: state.routes.slice(0, backRouteIndex + 1),
+            index: backRouteIndex,
           };
         }
       }
