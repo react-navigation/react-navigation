@@ -11,6 +11,8 @@ const RESET = 'Navigation/RESET';
 const SET_PARAMS = 'Navigation/SET_PARAMS';
 const URI = 'Navigation/URI';
 
+export const constants = { BACK, INIT, NAVIGATE, RESET, SET_PARAMS, URI };
+
 const createAction = (type: string) => (payload: Object = {}) => ({
   type,
   ...payload,
@@ -22,6 +24,8 @@ const navigate = createAction(NAVIGATE);
 const reset = createAction(RESET);
 const setParams = createAction(SET_PARAMS);
 const uri = createAction(URI);
+
+export const creators = { back, init, navigate, reset, setParams, uri };
 
 const deprecatedActionMap = {
   Back: BACK,
@@ -58,20 +62,10 @@ const mapDeprecatedActionAndWarn = (action: Object) => {
 
 export default {
   // Action constants
-  BACK,
-  INIT,
-  NAVIGATE,
-  RESET,
-  SET_PARAMS,
-  URI,
+  ...constants,
 
   // Action creators
-  back,
-  init,
-  navigate,
-  reset,
-  setParams,
-  uri,
+  ...creators,
 
   // TODO: Remove once old actions are deprecated
   mapDeprecatedActionAndWarn,
