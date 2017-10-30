@@ -37,6 +37,7 @@ const TabNavigator = (
     swipeEnabled,
     animationEnabled,
     lazy,
+    initialLayout,
     ...tabsConfig
   } = mergedConfig;
 
@@ -46,7 +47,7 @@ const TabNavigator = (
     router,
     routeConfigs,
     config,
-    NavigatorTypes.STACK
+    NavigatorTypes.TABS
   )((props: *) => (
     <TabView
       {...props}
@@ -56,10 +57,11 @@ const TabNavigator = (
       swipeEnabled={swipeEnabled}
       animationEnabled={animationEnabled}
       lazy={lazy}
+      initialLayout={initialLayout}
     />
   ));
 
-  return createNavigationContainer(navigator, tabsConfig.containerOptions);
+  return createNavigationContainer(navigator);
 };
 
 const Presets = {
@@ -69,6 +71,7 @@ const Presets = {
     swipeEnabled: false,
     animationEnabled: false,
     lazy: false,
+    initialLayout: undefined,
   },
   AndroidTopTabs: {
     tabBarComponent: TabBarTop,
@@ -76,6 +79,7 @@ const Presets = {
     swipeEnabled: true,
     animationEnabled: true,
     lazy: false,
+    initialLayout: undefined,
   },
 };
 
@@ -100,9 +104,8 @@ const Presets = {
 TabNavigator.Presets = {
   iOSBottomTabs: Presets.iOSBottomTabs,
   AndroidTopTabs: Presets.AndroidTopTabs,
-  Default: Platform.OS === 'ios'
-    ? Presets.iOSBottomTabs
-    : Presets.AndroidTopTabs,
+  Default:
+    Platform.OS === 'ios' ? Presets.iOSBottomTabs : Presets.AndroidTopTabs,
 };
 
 export default TabNavigator;
