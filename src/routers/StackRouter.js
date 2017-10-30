@@ -141,6 +141,48 @@ export default (
         };
       }
 
+      // params can be set while in transition
+      if (action.type === NavigationActions.SET_PARAMS) {
+        const lastRoute = state.routes.find(
+          /* $FlowFixMe */
+          (route: *) => route.key === action.key
+        );
+        if (lastRoute) {
+          const params = {
+            ...lastRoute.params,
+            ...action.params,
+          };
+          const routes = [...state.routes];
+          routes[state.routes.indexOf(lastRoute)] = {
+            ...lastRoute,
+            params,
+          };
+          return {
+            ...state,
+            routes,
+          };
+        }
+      }
+
+      // when in a transition, do not allow new transitions to start
+      if (action.type === NavigationActions.SET_TRANSITION_START) {
+        return {
+          ...state,
+          inTransition: true,
+        };
+      }
+
+      if (action.type === NavigationActions.SET_TRANSITION_END) {
+        return {
+          ...state,
+          inTransition: false,
+        };
+      }
+
+      if (state.inTransition) {
+        return state;
+      }
+
       // Check if a child scene wants to handle the action as long as it is not a reset to the root stack
       if (action.type !== NavigationActions.RESET || action.key !== null) {
         const keyIndex = action.key
@@ -218,28 +260,6 @@ export default (
               });
             }
           }
-        }
-      }
-
-      if (action.type === NavigationActions.SET_PARAMS) {
-        const lastRoute = state.routes.find(
-          /* $FlowFixMe */
-          (route: *) => route.key === action.key
-        );
-        if (lastRoute) {
-          const params = {
-            ...lastRoute.params,
-            ...action.params,
-          };
-          const routes = [...state.routes];
-          routes[state.routes.indexOf(lastRoute)] = {
-            ...lastRoute,
-            params,
-          };
-          return {
-            ...state,
-            routes,
-          };
         }
       }
 

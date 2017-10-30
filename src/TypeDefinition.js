@@ -383,6 +383,8 @@ export type NavigationScreenProp<S, A> = {
     action?: NavigationAction
   ) => boolean,
   setParams: (newParams: NavigationParams) => boolean,
+  setTransitionStart: () => boolean,
+  setTransitionEnd: () => boolean,
 };
 
 export type NavigationNavigatorProps<O, S> = {
