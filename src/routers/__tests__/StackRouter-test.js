@@ -878,20 +878,19 @@ describe('StackRouter', () => {
         screen: () => <div />,
       },
     });
-    /* $FlowFixMe: these are for deprecated action names */
-    const state = router.getStateForAction({ type: 'Init' });
-    /* $FlowFixMe: these are for deprecated action names */
-    const state2 = router.getStateForAction(
-      {
-        type: 'Reset',
-        actions: [
-          { type: 'Navigate', routeName: 'Foo', params: { bar: '42' } },
-          { type: 'Navigate', routeName: 'Bar' },
-        ],
-        index: 1,
-      },
-      state
-    );
+    const initAction = NavigationActions.mapDeprecatedActionAndWarn({
+      type: 'Init',
+    });
+    const state = router.getStateForAction(initAction);
+    const resetAction = NavigationActions.mapDeprecatedActionAndWarn({
+      type: 'Reset',
+      actions: [
+        { type: 'Navigate', routeName: 'Foo', params: { bar: '42' } },
+        { type: 'Navigate', routeName: 'Bar' },
+      ],
+      index: 1,
+    });
+    const state2 = router.getStateForAction(resetAction, state);
     expect(state2 && state2.index).toEqual(1);
     expect(state2 && state2.routes[0].params).toEqual({ bar: '42' });
     expect(state2 && state2.routes[0].routeName).toEqual('Foo');
