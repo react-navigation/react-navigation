@@ -60,7 +60,7 @@ const majorVersion = parseInt(Platform.Version, 10);
 const isIos = Platform.OS === 'ios';
 const useHorizontalTabs = majorVersion >= 11 && isIos;
 
-class TabBarBottom extends PureComponent<DefaultProps, Props, void> {
+export default class TabBarBottom extends PureComponent<DefaultProps, Props, void> {
   // See https://developer.apple.com/library/content/documentation/UserExperience/Conceptual/UIKitUICatalog/UITabBar.html
   static defaultProps: DefaultProps = {
     activeTintColor: '#3478f6', // Default active tint color in iOS 10
@@ -262,4 +262,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default withOrientation(TabBarBottom);
+// export default withOrientation(TabBarBottom);
