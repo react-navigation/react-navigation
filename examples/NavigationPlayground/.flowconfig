@@ -40,6 +40,9 @@
 .*/react-navigation/examples/ReduxExample/.*
 .*/react-navigation/website/.*
 
+; This package is required by Expo and causes Flow errors
+.*/node_modules/react-native-gesture-handler/.*
+
 [include]
 
 [libs]
