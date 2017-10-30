@@ -13,7 +13,7 @@ import {
   Text,
   View,
 } from 'react-native';
-import { StackNavigator } from 'react-navigation';
+import { SafeAreaView, StackNavigator } from 'react-navigation';
 
 import Banner from './Banner';
 import CustomTabs from './CustomTabs';
@@ -91,27 +91,38 @@ const ExampleRoutes = {
 };
 
 const MainScreen = ({ navigation }) => (
-  <ScrollView>
-    <Banner />
-    {Object.keys(ExampleRoutes).map((routeName: string) => (
-      <TouchableOpacity
-        key={routeName}
-        onPress={() => {
-          const { path, params, screen } = ExampleRoutes[routeName];
-          const { router } = screen;
-          const action = path && router.getActionForPathAndParams(path, params);
-          navigation.navigate(routeName, {}, action);
-        }}
-      >
-        <View style={styles.item}>
-          <Text style={styles.title}>{ExampleRoutes[routeName].name}</Text>
-          <Text style={styles.description}>
-            {ExampleRoutes[routeName].description}
-          </Text>
-        </View>
-      </TouchableOpacity>
-    ))}
-  </ScrollView>
+  <SafeAreaView
+    forceInset={{ horizontal: 'never', bottom: 'never' }}
+    style={{ flex: 1 }}
+  >
+    <ScrollView style={{ flex: 1 }} contentInsetAdjustmentBehavior="automatic">
+      <Banner />
+      {Object.keys(ExampleRoutes).map((routeName: string) => (
+        <TouchableOpacity
+          key={routeName}
+          onPress={() => {
+            const { path, params, screen } = ExampleRoutes[routeName];
+            const { router } = screen;
+            const action =
+              path && router.getActionForPathAndParams(path, params);
+            navigation.navigate(routeName, {}, action);
+          }}
+        >
+          <SafeAreaView
+            style={styles.itemContainer}
+            forceInset={{ vertical: 'never' }}
+          >
+            <View style={styles.item}>
+              <Text style={styles.title}>{ExampleRoutes[routeName].name}</Text>
+              <Text style={styles.description}>
+                {ExampleRoutes[routeName].description}
+              </Text>
+            </View>
+          </SafeAreaView>
+        </TouchableOpacity>
+      ))}
+    </ScrollView>
+  </SafeAreaView>
 );
 
 const AppNavigator = StackNavigator(
@@ -137,9 +148,11 @@ export default () => <AppNavigator />;
 
 const styles = StyleSheet.create({
   item: {
-    backgroundColor: '#fff',
     paddingHorizontal: 16,
     paddingVertical: 12,
+  },
+  itemContainer: {
+    backgroundColor: '#fff',
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: '#ddd',
   },
