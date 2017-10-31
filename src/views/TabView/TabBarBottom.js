@@ -172,7 +172,9 @@ class TabBarBottom extends React.PureComponent<Props> {
 
     const tabBarStyle = [
       styles.tabBar,
-      isLandscape ? styles.tabBarLandscape : styles.tabBarPortrait,
+      isLandscape && useHorizontalTabs
+        ? styles.tabBarLandscape
+        : styles.tabBarPortrait,
       style,
     ];
 
