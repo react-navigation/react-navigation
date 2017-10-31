@@ -84,7 +84,7 @@ class SafeView extends Component {
   render() {
     const { forceInset = false, isLandscape, children, style } = this.props;
 
-    if (!Platform.OS === 'ios') {
+    if (Platform.OS !== 'ios') {
       return <View style={style}>{this.props.children}</View>;
     }
 
@@ -187,8 +187,7 @@ class SafeView extends Component {
           case 'right':
           case 'top':
           case 'bottom': {
-            const [firstLtr] = key;
-            const padding = `padding${firstLtr.toUpperCase()}${key.slice(1)}`;
+            const padding = `padding${key[0].toUpperCase()}${key.slice(1)}`;
             style[padding] = inset;
             break;
           }
