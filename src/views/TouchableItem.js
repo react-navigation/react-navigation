@@ -9,7 +9,7 @@
  * On iOS you can pass the props of TouchableOpacity, on Android pass the props
  * of TouchableNativeFeedback.
  */
-import React, { Component, Children } from 'react';
+import * as React from 'react';
 import {
   Platform,
   TouchableNativeFeedback,
@@ -21,24 +21,16 @@ import type { ViewStyleProp } from '../TypeDefinition';
 const ANDROID_VERSION_LOLLIPOP = 21;
 
 type Props = {
-  onPress: () => void,
+  onPress?: () => void,
   delayPressIn?: number,
   borderless?: boolean,
   pressColor?: string,
   activeOpacity?: number,
-  children?: React.Element<*>,
+  children?: React.ChildrenArray<*>,
   style?: ViewStyleProp,
 };
 
-type DefaultProps = {
-  pressColor: string,
-};
-
-export default class TouchableItem extends Component<
-  DefaultProps,
-  Props,
-  void
-> {
+export default class TouchableItem extends React.Component<Props> {
   static defaultProps = {
     borderless: false,
     pressColor: 'rgba(0, 0, 0, .32)',
@@ -68,7 +60,7 @@ export default class TouchableItem extends Component<
           )}
         >
           <View style={this.props.style}>
-            {Children.only(this.props.children)}
+            {React.Children.only(this.props.children)}
           </View>
         </TouchableNativeFeedback>
       );

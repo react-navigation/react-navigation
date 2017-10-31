@@ -1,35 +1,36 @@
 /* @flow */
 
-import React, { PureComponent } from 'react';
+import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import withCachedChildNavigation from '../../withCachedChildNavigation';
 import NavigationActions from '../../NavigationActions';
+import invariant from '../../utils/invariant';
 
 import type {
   NavigationScreenProp,
   NavigationRoute,
-  NavigationAction,
   NavigationRouter,
   NavigationDrawerScreenOptions,
   NavigationState,
   NavigationStateRoute,
   ViewStyleProp,
+  NavigationTabAction,
 } from '../../TypeDefinition';
 
 import type { DrawerScene, DrawerItem } from './DrawerView';
 
-type Navigation = NavigationScreenProp<NavigationStateRoute, NavigationAction>;
-
 type Props = {
   router: NavigationRouter<
     NavigationState,
-    NavigationAction,
+    NavigationTabAction,
     NavigationDrawerScreenOptions
   >,
-  navigation: Navigation,
-  childNavigationProps: { [key: string]: Navigation },
-  contentComponent: ReactClass<*>,
+  navigation: NavigationScreenProp<NavigationStateRoute>,
+  childNavigationProps: {
+    [key: string]: NavigationScreenProp<NavigationRoute>,
+  },
+  contentComponent: ?React.ComponentType<*>,
   contentOptions?: {},
   screenProps?: {},
   style?: ViewStyleProp,
@@ -38,12 +39,16 @@ type Props = {
 /**
  * Component that renders the sidebar screen of the drawer.
  */
-class DrawerSidebar extends PureComponent<void, Props, void> {
+class DrawerSidebar extends React.PureComponent<Props> {
   props: Props;
 
   _getScreenOptions = (routeKey: string) => {
     const DrawerScreen = this.props.router.getComponentForRouteName(
       'DrawerClose'
+    );
+    invariant(
+      DrawerScreen.router,
+      'NavigationComponent with routeName DrawerClose should be a Navigator'
     );
     const { [routeKey]: childNavigation } = this.props.childNavigationProps;
     return DrawerScreen.router.getScreenOptions(
@@ -99,7 +104,11 @@ class DrawerSidebar extends PureComponent<void, Props, void> {
 
   render() {
     const ContentComponent = this.props.contentComponent;
+    if (!ContentComponent) {
+      return null;
+    }
     const { state } = this.props.navigation;
+    invariant(typeof state.index === 'number', 'should be set');
     return (
       <View style={[styles.container, this.props.style]}>
         <ContentComponent

@@ -60,7 +60,7 @@ function defaultTransitionConfig(
   // props for the new screen
   transitionProps: NavigationTransitionProps,
   // props for the old screen
-  prevTransitionProps: NavigationTransitionProps,
+  prevTransitionProps: ?NavigationTransitionProps,
   // whether we're animating in/out a modal screen
   isModal: boolean
 ): TransitionConfig {
@@ -86,13 +86,13 @@ function defaultTransitionConfig(
 function getTransitionConfig(
   transitionConfigurer?: (
     transitionProps: NavigationTransitionProps,
-    prevTransitionProps: NavigationTransitionProps,
+    prevTransitionProps: ?NavigationTransitionProps,
     isModal: boolean
   ) => TransitionConfig,
   // props for the new screen
   transitionProps: NavigationTransitionProps,
   // props for the old screen
-  prevTransitionProps: NavigationTransitionProps,
+  prevTransitionProps: ?NavigationTransitionProps,
   isModal: boolean
 ): TransitionConfig {
   const defaultConfig = defaultTransitionConfig(

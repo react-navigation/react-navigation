@@ -15,7 +15,11 @@ import {
   createNavigator,
 } from 'react-navigation';
 
-import type { NavigationScreenComponent } from 'react-navigation/src/TypeDefinition';
+import type {
+  NavigationScreenComponent,
+  NavigationScreenProp,
+  NavigationRoute,
+} from 'react-navigation/src/TypeDefinition';
 
 type ScreenOptions = {
   linkName: string,
@@ -44,11 +48,11 @@ type DocPageConfig = {
 
 const createDocPage = (
   config: DocPageConfig
-): (() => NavigationScreenComponent<*, ScreenOptions>) => {
-  const Page: NavigationScreenComponent<*, ScreenOptions> = ({
+): NavigationScreenComponent<*, *> => {
+  const Page = ({
     navigation,
   }: {
-    navigation: any,
+    navigation: NavigationScreenProp<NavigationRoute>,
   }) => <MDPage docPath={config.doc} navigation={navigation} />;
   Page.navigationOptions = {
     doc: config.doc,
