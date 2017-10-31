@@ -49,6 +49,8 @@ const TabNavigator = (
     config,
     NavigatorTypes.TABS
   )((props: *) => (
+    // Flow doesn't realize TabView already has childNavigationProps from
+    // withCachedChildNavigation for some reason. $FlowFixMe
     <TabView
       {...props}
       tabBarComponent={tabBarComponent}

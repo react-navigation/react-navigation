@@ -2,7 +2,18 @@
  * @flow
  */
 
-import type { NavigationAction } from './TypeDefinition';
+import type {
+  NavigationAction,
+  PossiblyDeprecatedNavigationAction,
+  DeprecatedNavigationNavigateAction,
+  NavigationInitAction,
+  NavigationNavigateAction,
+  NavigationBackAction,
+  NavigationSetParamsAction,
+  NavigationResetAction,
+  NavigationUriAction,
+  NavigationParams,
+} from './TypeDefinition';
 
 const BACK = 'Navigation/BACK';
 const INIT = 'Navigation/INIT';
@@ -11,49 +22,118 @@ const RESET = 'Navigation/RESET';
 const SET_PARAMS = 'Navigation/SET_PARAMS';
 const URI = 'Navigation/URI';
 
-const createAction = (type: string) => (payload: Object = {}) => ({
-  type,
-  ...payload,
+const back = (payload: { key?: ?string } = {}): NavigationBackAction => ({
+  type: BACK,
+  key: payload.key,
+});
+const init = (
+  payload: { params?: NavigationParams } = {}
+): NavigationInitAction => {
+  const action: NavigationInitAction = {
+    type: INIT,
+  };
+  if (payload.params) {
+    action.params = payload.params;
+  }
+  return action;
+};
+const navigate = (payload: {
+  routeName: string,
+  params?: ?NavigationParams,
+  action?: ?NavigationNavigateAction,
+}): NavigationNavigateAction => {
+  const action: NavigationNavigateAction = {
+    type: NAVIGATE,
+    routeName: payload.routeName,
+  };
+  if (payload.params) {
+    action.params = payload.params;
+  }
+  if (payload.action) {
+    action.action = payload.action;
+  }
+  return action;
+};
+const reset = (payload: {
+  index: number,
+  key?: ?string,
+  actions: Array<NavigationNavigateAction>,
+}): NavigationResetAction => ({
+  type: RESET,
+  index: payload.index,
+  key: payload.key,
+  actions: payload.actions,
+});
+const setParams = (payload: {
+  key: string,
+  params: NavigationParams,
+}): NavigationSetParamsAction => ({
+  type: SET_PARAMS,
+  key: payload.key,
+  params: payload.params,
+});
+const uri = (payload: { uri: string }): NavigationUriAction => ({
+  type: URI,
+  uri: payload.uri,
 });
 
-const back = createAction(BACK);
-const init = createAction(INIT);
-const navigate = createAction(NAVIGATE);
-const reset = createAction(RESET);
-const setParams = createAction(SET_PARAMS);
-const uri = createAction(URI);
-
-const deprecatedActionMap = {
-  Back: BACK,
-  Init: INIT,
-  Navigate: NAVIGATE,
-  Reset: RESET,
-  SetParams: SET_PARAMS,
-  Uri: URI,
+const mapDeprecatedNavigateAction = (
+  action: NavigationNavigateAction | DeprecatedNavigationNavigateAction
+): NavigationNavigateAction => {
+  if (action.type === 'Navigate') {
+    const payload: Object = {
+      routeName: action.routeName,
+      params: action.params,
+    };
+    if (action.action) {
+      payload.action = mapDeprecatedNavigateAction(action.action);
+    }
+    return navigate(payload);
+  }
+  return action;
 };
 
-const mapDeprecatedActionAndWarn = (action: Object) => {
-  const mappedType = deprecatedActionMap[action.type];
-  if (!mappedType) {
-    return action;
+const mapDeprecatedAction = (
+  action: PossiblyDeprecatedNavigationAction
+): NavigationAction => {
+  if (action.type === 'Back') {
+    return back(action);
+  } else if (action.type === 'Init') {
+    return init(action);
+  } else if (action.type === 'Navigate') {
+    return mapDeprecatedNavigateAction(action);
+  } else if (action.type === 'Reset') {
+    return reset({
+      index: action.index,
+      key: action.key,
+      actions: action.actions.map(mapDeprecatedNavigateAction),
+    });
+  } else if (action.type === 'SetParams') {
+    return setParams(action);
   }
+  return action;
+};
 
-  console.warn(
-    [
-      `The action type '${action.type}' has been renamed to '${mappedType}'.`,
-      `'${action.type}' will continue to work while in beta but will be removed`,
-      'in the first major release. Moving forward, you should use the',
-      'action constants and action creators exported by this library in',
-      "the 'actions' object.",
-      'See https://github.com/react-community/react-navigation/pull/120 for',
-      'more details.',
-    ].join(' ')
-  );
-
-  return {
-    ...action,
-    type: deprecatedActionMap[action.type],
-  };
+const mapDeprecatedActionAndWarn = (
+  action: PossiblyDeprecatedNavigationAction
+): NavigationAction => {
+  const newAction = mapDeprecatedAction(action);
+  if (newAction !== action) {
+    const oldType = action.type;
+    const newType = newAction.type;
+    console.warn(
+      [
+        `The action type '${oldType}' has been renamed to '${newType}'.`,
+        `'${oldType}' will continue to work while in beta but will be removed`,
+        'in the first major release. Moving forward, you should use the',
+        'action constants and action creators exported by this library in',
+        "the 'actions' object.",
+        'See https://github.com/react-community/react-navigation/pull/120 for',
+        'more details.',
+      ].join(' ')
+    );
+  }
+  return newAction;
 };
 
 export default {

@@ -69,7 +69,7 @@ const CustomTabView = ({ router, navigation }) => {
       <CustomTabBar navigation={navigation} />
       <ActiveScreen
         navigation={addNavigationHelpers({
-          ...navigation,
+          dispatch: navigation.dispatch,
           state: routes[index],
         })}
       />
