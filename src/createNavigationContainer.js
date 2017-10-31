@@ -171,16 +171,16 @@ export default function createNavigationContainer<S: *, O>(
       return new Promise((resolve: Function, reject: Function) => {
         const { state } = this;
         if (!this._isStateful()) {
-          return reject();
+          reject();
+          return;
         }
         const nav = Component.router.getStateForAction(action, state.nav);
         if (nav && nav !== state.nav) {
-          this.setState({ nav }, () =>
-            this._onNavigationStateChange(state.nav, nav, action)
-          );
-          return resolve();
+          this.setState({ nav }, () => {
+            this._onNavigationStateChange(state.nav, nav, action);
+            resolve();
+          });
         }
-        return reject();
       });
     };
 
