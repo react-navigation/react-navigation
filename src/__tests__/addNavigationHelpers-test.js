@@ -6,14 +6,14 @@ import addNavigationHelpers from '../addNavigationHelpers';
 describe('addNavigationHelpers', () => {
   it('handles Back action', () => {
     const mockedDispatch = jest
-      .fn(() => false)
-      .mockImplementationOnce(() => true);
+      .fn(() => Promise.reject())
+      .mockImplementationOnce(() => Promise.resolve());
     expect(
       addNavigationHelpers({
         state: { key: 'A', routeName: 'Home' },
         dispatch: mockedDispatch,
       }).goBack('A')
-    ).toEqual(true);
+    ).toEqual(Promise.resolve());
     expect(mockedDispatch).toBeCalledWith({
       type: NavigationActions.BACK,
       key: 'A',
@@ -23,28 +23,28 @@ describe('addNavigationHelpers', () => {
 
   it('handles Back action when the key is not defined', () => {
     const mockedDispatch = jest
-      .fn(() => false)
-      .mockImplementationOnce(() => true);
+      .fn(() => Promise.reject())
+      .mockImplementationOnce(() => Promise.resolve());
     expect(
       addNavigationHelpers({
         state: { routeName: 'Home' },
         dispatch: mockedDispatch,
       }).goBack()
-    ).toEqual(true);
+    ).toEqual(Promise.resolve());
     expect(mockedDispatch).toBeCalledWith({ type: NavigationActions.BACK });
     expect(mockedDispatch.mock.calls.length).toBe(1);
   });
 
   it('handles Navigate action', () => {
     const mockedDispatch = jest
-      .fn(() => false)
-      .mockImplementationOnce(() => true);
+      .fn(() => Promise.reject())
+      .mockImplementationOnce(() => Promise.resolve());
     expect(
       addNavigationHelpers({
         state: { routeName: 'Home' },
         dispatch: mockedDispatch,
       }).navigate('Profile', { name: 'Matt' })
-    ).toEqual(true);
+    ).toEqual(Promise.resolve());
     expect(mockedDispatch).toBeCalledWith({
       type: NavigationActions.NAVIGATE,
       params: { name: 'Matt' },
@@ -55,14 +55,14 @@ describe('addNavigationHelpers', () => {
 
   it('handles SetParams action', () => {
     const mockedDispatch = jest
-      .fn(() => false)
-      .mockImplementationOnce(() => true);
+      .fn(() => Promise.reject())
+      .mockImplementationOnce(() => Promise.resolve());
     expect(
       addNavigationHelpers({
         state: { key: 'B', routeName: 'Settings' },
         dispatch: mockedDispatch,
       }).setParams({ notificationsEnabled: 'yes' })
-    ).toEqual(true);
+    ).toEqual(Promise.resolve());
     expect(mockedDispatch).toBeCalledWith({
       type: NavigationActions.SET_PARAMS,
       key: 'B',

@@ -366,7 +366,7 @@ export type NavigationDrawerScreenOptions = {
  * Navigator Prop
  */
 
-export type NavigationDispatch<A> = (action: A) => boolean;
+export type NavigationDispatch<A> = (action: A) => Promise<any>;
 
 export type NavigationProp<S, A> = {
   state: S,
@@ -376,13 +376,13 @@ export type NavigationProp<S, A> = {
 export type NavigationScreenProp<S, A> = {
   state: S,
   dispatch: NavigationDispatch<A>,
-  goBack: (routeKey?: ?string) => boolean,
+  goBack: (routeKey?: ?string) => Promise<any>,
   navigate: (
     routeName: string,
     params?: NavigationParams,
     action?: NavigationAction
-  ) => boolean,
-  setParams: (newParams: NavigationParams) => boolean,
+  ) => Promise<any>,
+  setParams: (newParams: NavigationParams) => Promise<any>,
 };
 
 export type NavigationNavigatorProps<O, S> = {

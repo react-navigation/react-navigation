@@ -50,19 +50,28 @@ Object.keys(ROUTERS).forEach((routerName: string) => {
       ];
       expect(
         router.getScreenOptions(
-          addNavigationHelpers({ state: routes[0], dispatch: () => false }),
+          addNavigationHelpers({
+            state: routes[0],
+            dispatch: () => Promise.reject(),
+          }),
           {}
         ).title
       ).toEqual(undefined);
       expect(
         router.getScreenOptions(
-          addNavigationHelpers({ state: routes[1], dispatch: () => false }),
+          addNavigationHelpers({
+            state: routes[1],
+            dispatch: () => Promise.reject(),
+          }),
           {}
         ).title
       ).toEqual('BarTitle');
       expect(
         router.getScreenOptions(
-          addNavigationHelpers({ state: routes[2], dispatch: () => false }),
+          addNavigationHelpers({
+            state: routes[2],
+            dispatch: () => Promise.reject(),
+          }),
           {}
         ).title
       ).toEqual('Baz-123');
