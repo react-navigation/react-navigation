@@ -168,18 +168,20 @@ export default function createNavigationContainer<S: *, O>(
     }
 
     dispatch = (action: NavigationAction) => {
-      const { state } = this;
-      if (!this._isStateful()) {
-        return false;
-      }
-      const nav = Component.router.getStateForAction(action, state.nav);
-      if (nav && nav !== state.nav) {
-        this.setState({ nav }, () =>
-          this._onNavigationStateChange(state.nav, nav, action)
-        );
-        return true;
-      }
-      return false;
+      return new Promise((resolve: Function, reject: Function) => {
+        const { state } = this;
+        if (!this._isStateful()) {
+          reject();
+          return;
+        }
+        const nav = Component.router.getStateForAction(action, state.nav);
+        if (nav && nav !== state.nav) {
+          this.setState({ nav }, () => {
+            this._onNavigationStateChange(state.nav, nav, action);
+            resolve();
+          });
+        }
+      });
     };
 
     _navigation: ?NavigationScreenProp<NavigationRoute, NavigationAction>;

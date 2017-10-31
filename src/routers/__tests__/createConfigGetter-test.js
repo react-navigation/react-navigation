@@ -72,49 +72,73 @@ test('should get config for screen', () => {
 
   expect(
     getScreenOptions(
-      addNavigationHelpers({ state: routes[0], dispatch: () => false }),
+      addNavigationHelpers({
+        state: routes[0],
+        dispatch: () => Promise.reject(),
+      }),
       {}
     ).title
   ).toEqual('Welcome anonymous');
   expect(
     getScreenOptions(
-      addNavigationHelpers({ state: routes[1], dispatch: () => false }),
+      addNavigationHelpers({
+        state: routes[1],
+        dispatch: () => Promise.reject(),
+      }),
       {}
     ).title
   ).toEqual('Welcome jane');
   expect(
     getScreenOptions(
-      addNavigationHelpers({ state: routes[0], dispatch: () => false }),
+      addNavigationHelpers({
+        state: routes[0],
+        dispatch: () => Promise.reject(),
+      }),
       {}
     ).gesturesEnabled
   ).toEqual(true);
   expect(
     getScreenOptions(
-      addNavigationHelpers({ state: routes[2], dispatch: () => false }),
+      addNavigationHelpers({
+        state: routes[2],
+        dispatch: () => Promise.reject(),
+      }),
       {}
     ).title
   ).toEqual('Settings!!!');
   expect(
     getScreenOptions(
-      addNavigationHelpers({ state: routes[2], dispatch: () => false }),
+      addNavigationHelpers({
+        state: routes[2],
+        dispatch: () => Promise.reject(),
+      }),
       {}
     ).gesturesEnabled
   ).toEqual(false);
   expect(
     getScreenOptions(
-      addNavigationHelpers({ state: routes[3], dispatch: () => false }),
+      addNavigationHelpers({
+        state: routes[3],
+        dispatch: () => Promise.reject(),
+      }),
       {}
     ).title
   ).toEqual('10 new notifications');
   expect(
     getScreenOptions(
-      addNavigationHelpers({ state: routes[3], dispatch: () => false }),
+      addNavigationHelpers({
+        state: routes[3],
+        dispatch: () => Promise.reject(),
+      }),
       {}
     ).gesturesEnabled
   ).toEqual(true);
   expect(
     getScreenOptions(
-      addNavigationHelpers({ state: routes[4], dispatch: () => false }),
+      addNavigationHelpers({
+        state: routes[4],
+        dispatch: () => Promise.reject(),
+      }),
       {}
     ).gesturesEnabled
   ).toEqual(false);
@@ -137,7 +161,10 @@ test('should throw if the route does not exist', () => {
 
   expect(() =>
     getScreenOptions(
-      addNavigationHelpers({ state: routes[0], dispatch: () => false }),
+      addNavigationHelpers({
+        state: routes[0],
+        dispatch: () => Promise.reject(),
+      }),
       {}
     )
   ).toThrowError(
@@ -156,7 +183,10 @@ test('should throw if the screen is not defined under the route config', () => {
 
   expect(() =>
     getScreenOptions(
-      addNavigationHelpers({ state: routes[0], dispatch: () => false })
+      addNavigationHelpers({
+        state: routes[0],
+        dispatch: () => Promise.reject(),
+      })
     )
   ).toThrowError('Route Home must define a screen or a getScreen.');
 });

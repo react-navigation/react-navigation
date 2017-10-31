@@ -15,7 +15,7 @@ import NavigationActions from './NavigationActions';
 export default function<S: *>(navigation: NavigationProp<S, NavigationAction>) {
   return {
     ...navigation,
-    goBack: (key?: ?string): boolean =>
+    goBack: (key?: ?string): Promise<any> =>
       navigation.dispatch(
         NavigationActions.back({
           key: key === undefined ? navigation.state.key : key,
@@ -25,7 +25,7 @@ export default function<S: *>(navigation: NavigationProp<S, NavigationAction>) {
       routeName: string,
       params?: NavigationParams,
       action?: NavigationAction
-    ): boolean =>
+    ): Promise<any> =>
       navigation.dispatch(
         NavigationActions.navigate({
           routeName,
@@ -38,7 +38,7 @@ export default function<S: *>(navigation: NavigationProp<S, NavigationAction>) {
      * buttons are based on the route params.
      * This means `setParams` can be used to update nav bar for example.
      */
-    setParams: (params: NavigationParams): boolean =>
+    setParams: (params: NavigationParams): Promise<any> =>
       navigation.dispatch(
         NavigationActions.setParams({
           params,
