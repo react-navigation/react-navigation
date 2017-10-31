@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { View, Text, Platform, StyleSheet } from 'react-native';
 
+import SafeAreaView from '../SafeAreaView';
 import TouchableItem from '../TouchableItem';
 
 import type {
@@ -50,46 +51,55 @@ const DrawerNavigatorItems = ({
   labelStyle,
   iconContainerStyle,
 }: Props) => (
-  <View style={[styles.container, itemsContainerStyle]}>
-    {items.map((route: NavigationRoute, index: number) => {
-      const focused = activeItemKey === route.key;
-      const color = focused ? activeTintColor : inactiveTintColor;
-      const backgroundColor = focused
-        ? activeBackgroundColor
-        : inactiveBackgroundColor;
-      const scene = { route, index, focused, tintColor: color };
-      const icon = renderIcon(scene);
-      const label = getLabel(scene);
-      return (
-        <TouchableItem
-          key={route.key}
-          onPress={() => {
-            onItemPress({ route, focused });
-          }}
-          delayPressIn={0}
-        >
-          <View style={[styles.item, { backgroundColor }, itemStyle]}>
-            {icon ? (
-              <View
-                style={[
-                  styles.icon,
-                  focused ? null : styles.inactiveIcon,
-                  iconContainerStyle,
-                ]}
-              >
-                {icon}
+  <SafeAreaView forceInset={{ horizontal: 'never', top: 'always' }}>
+    <View style={[styles.container, itemsContainerStyle]}>
+      {items.map((route: NavigationRoute, index: number) => {
+        const focused = activeItemKey === route.key;
+        const color = focused ? activeTintColor : inactiveTintColor;
+        const backgroundColor = focused
+          ? activeBackgroundColor
+          : inactiveBackgroundColor;
+        const scene = { route, index, focused, tintColor: color };
+        const icon = renderIcon(scene);
+        const label = getLabel(scene);
+        return (
+          <TouchableItem
+            key={route.key}
+            onPress={() => {
+              onItemPress({ route, focused });
+            }}
+            delayPressIn={0}
+          >
+            <SafeAreaView
+              style={{ backgroundColor }}
+              forceInset={{ horizontal: 'always' }}
+            >
+              <View style={[styles.item, itemStyle]}>
+                {icon ? (
+                  <View
+                    style={[
+                      styles.icon,
+                      focused ? null : styles.inactiveIcon,
+                      iconContainerStyle,
+                    ]}
+                  >
+                    {icon}
+                  </View>
+                ) : null}
+                {typeof label === 'string' ? (
+                  <Text style={[styles.label, { color }, labelStyle]}>
+                    {label}
+                  </Text>
+                ) : (
+                  label
+                )}
               </View>
-            ) : null}
-            {typeof label === 'string' ? (
-              <Text style={[styles.label, { color }, labelStyle]}>{label}</Text>
-            ) : (
-              label
-            )}
-          </View>
-        </TouchableItem>
-      );
-    })}
-  </View>
+            </SafeAreaView>
+          </TouchableItem>
+        );
+      })}
+    </View>
+  </SafeAreaView>
 );
 
 /* Material design specs - https://material.io/guidelines/patterns/navigation-drawer.html#navigation-drawer-specs */
@@ -102,7 +112,6 @@ DrawerNavigatorItems.defaultProps = {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: Platform.OS === 'ios' ? 20 : 0,
     paddingVertical: 4,
   },
   item: {
