@@ -21,100 +21,116 @@ exports[`TabBarBottom renders successfully 1`] = `
   }
 >
   <View
-    collapsable={undefined}
+    onLayout={[Function]}
     style={
-      Object {
-        "backgroundColor": "#F7F7F7",
-        "borderTopColor": "rgba(0, 0, 0, .3)",
-        "borderTopWidth": 0.5,
-        "flexDirection": "row",
-        "height": 49,
-      }
+      Array [
+        Object {
+          "backgroundColor": "#F7F7F7",
+          "borderTopColor": "rgba(0, 0, 0, .3)",
+          "borderTopWidth": 0.5,
+        },
+        Object {
+          "paddingBottom": 0,
+          "paddingLeft": 0,
+          "paddingRight": 0,
+          "paddingTop": 20,
+        },
+      ]
     }
   >
     <View
-      accessibilityComponentType={undefined}
-      accessibilityLabel={undefined}
-      accessibilityTraits={undefined}
-      accessible={true}
       collapsable={undefined}
-      hitSlop={undefined}
-      nativeID={undefined}
-      onLayout={undefined}
-      onResponderGrant={[Function]}
-      onResponderMove={[Function]}
-      onResponderRelease={[Function]}
-      onResponderTerminate={[Function]}
-      onResponderTerminationRequest={[Function]}
-      onStartShouldSetResponder={[Function]}
       style={
         Object {
-          "alignItems": "center",
-          "backgroundColor": "rgba(0, 0, 0, 0)",
-          "flex": 1,
-          "justifyContent": "flex-end",
+          "flexDirection": "row",
+          "height": 49,
         }
       }
-      testID={undefined}
     >
       <View
-        style={
-          Object {
-            "flexGrow": 1,
-          }
-        }
-      >
-        <View
-          collapsable={undefined}
-          style={
-            Object {
-              "alignItems": "center",
-              "bottom": 0,
-              "justifyContent": "center",
-              "left": 0,
-              "opacity": 1,
-              "position": "absolute",
-              "right": 0,
-              "top": 0,
-            }
-          }
-        />
-        <View
-          collapsable={undefined}
-          style={
-            Object {
-              "alignItems": "center",
-              "bottom": 0,
-              "justifyContent": "center",
-              "left": 0,
-              "opacity": 0,
-              "position": "absolute",
-              "right": 0,
-              "top": 0,
-            }
-          }
-        />
-      </View>
-      <Text
+        accessibilityComponentType={undefined}
+        accessibilityLabel={undefined}
+        accessibilityTraits={undefined}
         accessible={true}
-        allowFontScaling={true}
         collapsable={undefined}
-        disabled={false}
-        ellipsizeMode="tail"
+        hitSlop={undefined}
+        nativeID={undefined}
+        onLayout={undefined}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
         style={
           Object {
-            "backgroundColor": "transparent",
-            "color": "rgba(52, 120, 246, 1)",
-            "fontSize": 10,
-            "marginBottom": 1.5,
-            "marginLeft": 0,
-            "marginTop": 0,
-            "textAlign": "center",
+            "alignItems": "center",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "flex": 1,
+            "justifyContent": "flex-end",
           }
         }
+        testID={undefined}
       >
-        s1
-      </Text>
+        <View
+          style={
+            Object {
+              "flexGrow": 1,
+            }
+          }
+        >
+          <View
+            collapsable={undefined}
+            style={
+              Object {
+                "alignItems": "center",
+                "bottom": 0,
+                "justifyContent": "center",
+                "left": 0,
+                "opacity": 1,
+                "position": "absolute",
+                "right": 0,
+                "top": 0,
+              }
+            }
+          />
+          <View
+            collapsable={undefined}
+            style={
+              Object {
+                "alignItems": "center",
+                "bottom": 0,
+                "justifyContent": "center",
+                "left": 0,
+                "opacity": 0,
+                "position": "absolute",
+                "right": 0,
+                "top": 0,
+              }
+            }
+          />
+        </View>
+        <Text
+          accessible={true}
+          allowFontScaling={true}
+          collapsable={undefined}
+          disabled={false}
+          ellipsizeMode="tail"
+          style={
+            Object {
+              "backgroundColor": "transparent",
+              "color": "rgba(52, 120, 246, 1)",
+              "fontSize": 10,
+              "marginBottom": 1.5,
+              "marginLeft": 0,
+              "marginTop": 0,
+              "textAlign": "center",
+            }
+          }
+        >
+          s1
+        </Text>
+      </View>
     </View>
   </View>
   <RCTScrollView
