@@ -276,25 +276,48 @@ export default (
 
       if (action.type === NavigationActions.BACK) {
         const key = action.key;
-        let backRouteIndex = null;
+        let backRouteIndex = -1;
         if (key) {
-          const backRoute = state.routes.find(
+          backRouteIndex = state.routes.findIndex(
             (route: NavigationRoute) => route.key === key
           );
-          /* $FlowFixMe */
-          backRouteIndex = state.routes.indexOf(backRoute);
+          if (backRouteIndex < 0) {
+            backRouteIndex = state.routes.length;
+          }
+        } else {
+          backRouteIndex = state.routes.length - 1;
         }
-        if (backRouteIndex == null) {
-          return StateUtils.pop(state);
+
+        let newRoutes = null;
+        if (backRouteIndex > 0 && backRouteIndex !== state.routes.length) {
+          newRoutes = state.routes.slice(0, backRouteIndex);
         }
-        if (backRouteIndex > 0) {
-          return {
-            ...state,
-            routes: state.routes.slice(0, backRouteIndex),
-            index: backRouteIndex - 1,
+
+        const lastRouteIndex = backRouteIndex > 0 ? backRouteIndex - 1 : 0;
+        if (action.params) {
+          if (!newRoutes) {
+            newRoutes = [...state.routes];
+          }
+          const lastRoute = newRoutes[lastRouteIndex];
+          const params = {
+            ...lastRoute.params,
+            ...action.params,
+          };
+          newRoutes[lastRouteIndex] = {
+            ...lastRoute,
+            params,
           };
         }
+        if (newRoutes) {
+          return {
+            ...state,
+            routes: newRoutes,
+            index: lastRouteIndex,
+          };
+        }
+        return state;
       }
+
       return state;
     },
 

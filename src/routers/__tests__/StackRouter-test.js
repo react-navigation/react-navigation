@@ -963,4 +963,56 @@ describe('StackRouter', () => {
       },
     });
   });
+
+  test('Handle goBack with params', () => {
+    const FooScreen = () => <div />;
+    FooScreen.router = StackRouter({
+      Aaa: {
+        screen: () => <div />,
+      },
+      Bbb: {
+        screen: () => <div />,
+      },
+    });
+    const BarScreen = () => <div />;
+    const router = StackRouter({
+      Ccc: {
+        screen: FooScreen,
+      },
+      Ddd: {
+        screen: BarScreen,
+      },
+    });
+    const state = router.getStateForAction({ type: NavigationActions.INIT });
+    const state2 = router.getStateForAction(
+      {
+        type: NavigationActions.NAVIGATE,
+        routeName: 'Bbb',
+        params: { name: 'Zoom' },
+      },
+      state
+    );
+    const state3 = router.getStateForAction(
+      {
+        type: NavigationActions.NAVIGATE,
+        routeName: 'Ddd',
+        params: { name: 'Boom' },
+      },
+      state2
+    );
+    const state4 = router.getStateForAction(
+      { type: NavigationActions.BACK, params: { name: 'Doom' } },
+      state3
+    );
+    expect(state4).toEqual({
+      ...state2,
+      routes: [
+        {
+          // $FlowFixMe
+          ...state2.routes[0],
+          params: { name: 'Doom' },
+        },
+      ],
+    });
+  });
 });
