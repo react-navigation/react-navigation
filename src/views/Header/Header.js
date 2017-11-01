@@ -66,7 +66,7 @@ class Header extends React.PureComponent<Props, State> {
   }
 
   _getBackButtonElement(props: SceneProps): ?React.Node {
-    const options = this.props.getScreenDetails(props.scene).options
+    const options = this.props.getScreenDetails(props.scene).options;
     const width = this.state.widths[props.scene.key]
       ? (this.props.layout.initWidth - this.state.widths[props.scene.key]) / 2
       : undefined;
@@ -75,7 +75,9 @@ class Header extends React.PureComponent<Props, State> {
     if (!!backButtonElement) return backButtonElement;
 
     const backButtonTitle = this._getBackButtonTitleString(props.scene);
-    const truncatedBackButtonTitle = this._getTruncatedBackButtonTitle(props.scene);
+    const truncatedBackButtonTitle = this._getTruncatedBackButtonTitle(
+      props.scene
+    );
     backButtonElement = (
       <HeaderBackButton
         tintColor={options.headerTintColor}

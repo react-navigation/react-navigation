@@ -1,12 +1,7 @@
 /* @flow */
 
 import * as React from 'react';
-import {
-  I18nManager,
-  View,
-  Platform,
-  StyleSheet,
-} from 'react-native';
+import { I18nManager, View, Platform, StyleSheet } from 'react-native';
 
 import TouchableItem from '../TouchableItem';
 
@@ -24,7 +19,11 @@ type DefaultProps = {
 
 type State = {};
 
-class HeaderBackButtonWrapper extends React.PureComponent<DefaultProps, Props, State> {
+class HeaderBackButtonWrapper extends React.PureComponent<
+  DefaultProps,
+  Props,
+  State
+> {
   static defaultProps = {
     pressColorAndroid: 'rgba(0, 0, 0, .32)',
     accessibilityLabel: 'Back',
@@ -52,9 +51,7 @@ class HeaderBackButtonWrapper extends React.PureComponent<DefaultProps, Props, S
         style={styles.container}
         borderless
       >
-        <View style={[styles.container, styles.backContainer]}>
-          {children}
-        </View>
+        <View style={[styles.container, styles.backContainer]}>{children}</View>
       </TouchableItem>
     );
   }
@@ -66,17 +63,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: 'transparent',
   },
-  backContainer: Platform.OS === 'ios'
-    ? {
-        marginLeft: 10,
-        marginRight: 22,
-        marginVertical: 12,
-        transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }],
-      }
-    : {
-        margin: 16,
-        transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }],
-    },
+  backContainer:
+    Platform.OS === 'ios'
+      ? {
+          marginLeft: 10,
+          marginRight: 22,
+          marginVertical: 12,
+          transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }],
+        }
+      : {
+          margin: 16,
+          transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }],
+        },
 });
 
 export default HeaderBackButtonWrapper;

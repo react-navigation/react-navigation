@@ -44,13 +44,7 @@ class HeaderBackButton extends React.PureComponent<Props, State> {
   };
 
   render() {
-    const {
-      width,
-      title,
-      titleStyle,
-      tintColor,
-      truncatedTitle,
-    } = this.props;
+    const { width, title, titleStyle, tintColor, truncatedTitle } = this.props;
 
     const renderTruncated =
       this.state.initialTextWidth && width
