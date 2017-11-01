@@ -3,13 +3,13 @@
  */
 
 import React from 'react';
-import { Button, Platform, ScrollView, StyleSheet } from 'react-native';
-import { TabNavigator } from 'react-navigation';
+import { Button, Platform, ScrollView, View } from 'react-native';
+import { SafeAreaView, TabNavigator } from 'react-navigation';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import SampleText from './SampleText';
 
 const MyNavScreen = ({ navigation, banner }) => (
-  <ScrollView style={styles.container}>
+  <SafeAreaView forceInset={{ horizontal: 'always', top: 'always' }}>
     <SampleText>{banner}</SampleText>
     <Button
       onPress={() => navigation.navigate('Home')}
@@ -20,7 +20,7 @@ const MyNavScreen = ({ navigation, banner }) => (
       title="Go to settings tab"
     />
     <Button onPress={() => navigation.goBack(null)} title="Go back" />
-  </ScrollView>
+  </SafeAreaView>
 );
 
 const MyHomeScreen = ({ navigation }) => (
@@ -112,11 +112,5 @@ const SimpleTabs = TabNavigator(
     },
   }
 );
-
-const styles = StyleSheet.create({
-  container: {
-    marginTop: Platform.OS === 'ios' ? 20 : 0,
-  },
-});
 
 export default SimpleTabs;

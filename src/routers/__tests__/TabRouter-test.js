@@ -554,13 +554,17 @@ describe('TabRouter', () => {
       { Foo: BareLeafRouteConfig, Bar: BareLeafRouteConfig },
       { initialRouteName: 'Bar' }
     );
+    const initAction = NavigationActions.mapDeprecatedActionAndWarn({
+      type: 'Init',
+    });
     /* $FlowFixMe: these are for deprecated action names */
-    const state = router.getStateForAction({ type: 'Init' });
+    const state = router.getStateForAction(initAction);
+    const navigateAction = NavigationActions.mapDeprecatedActionAndWarn({
+      type: 'Navigate',
+      routeName: 'Bar',
+    });
     /* $FlowFixMe: these are for deprecated action names */
-    const state2 = router.getStateForAction(
-      { type: 'Navigate', routeName: 'Bar' },
-      state
-    );
+    const state2 = router.getStateForAction(navigateAction, state);
     expect(state2).toEqual(null);
     expect(console.warn).toBeCalledWith(
       expect.stringContaining(

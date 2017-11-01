@@ -64,6 +64,8 @@ const DrawerNavigator = (
           routeConfigs,
           config,
           NavigatorTypes.DRAWER
+          // Flow doesn't realize DrawerScreen already has childNavigationProps
+          // from withCachedChildNavigation for some reason. $FlowFixMe
         )((props: *) => <DrawerScreen {...props} />),
       },
       DrawerOpen: {

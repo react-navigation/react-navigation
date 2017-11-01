@@ -11,7 +11,7 @@ import type {
  * Simple helper that gets a single screen (React component or navigator)
  * out of the navigator config.
  */
-export default function getScreenForRouteName( // eslint-disable-line consistent-return
+export default function getScreenForRouteName(
   routeConfigs: NavigationRouteConfigMap,
   routeName: string
 ): NavigationComponent {
