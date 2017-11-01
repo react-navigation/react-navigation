@@ -1,7 +1,7 @@
 /* @flow */
 /* eslint no-shadow:0, react/no-multi-comp:0, react/display-name:0 */
 
-import React from 'react';
+import * as React from 'react';
 
 import StackRouter from '../StackRouter';
 import TabRouter from '../TabRouter';
@@ -37,7 +37,7 @@ AuthNavigator.router = StackRouter({
 
 const BarScreen = () => <div />;
 
-class FooNavigator extends React.Component {
+class FooNavigator extends React.Component<void> {
   static router = StackRouter({
     bar: {
       path: 'b/:barThing',
@@ -137,12 +137,12 @@ describe('StackRouter', () => {
 
   test('Gets the screen for given route', () => {
     const FooScreen = () => <div />;
-    const BarScreen = class extends React.Component {
+    const BarScreen = class extends React.Component<void> {
       render() {
         return <div />;
       }
     };
-    const BazScreen = class extends React.Component {
+    const BazScreen = class extends React.Component<void> {
       render() {
         return <div />;
       }
@@ -166,12 +166,12 @@ describe('StackRouter', () => {
 
   test('Handles getScreen in getComponent', () => {
     const FooScreen = () => <div />;
-    const BarScreen = class extends React.Component {
+    const BarScreen = class extends React.Component<void> {
       render() {
         return <div />;
       }
     };
-    const BazScreen = class extends React.Component {
+    const BazScreen = class extends React.Component<void> {
       render() {
         return <div />;
       }
@@ -878,20 +878,19 @@ describe('StackRouter', () => {
         screen: () => <div />,
       },
     });
-    /* $FlowFixMe: these are for deprecated action names */
-    const state = router.getStateForAction({ type: 'Init' });
-    /* $FlowFixMe: these are for deprecated action names */
-    const state2 = router.getStateForAction(
-      {
-        type: 'Reset',
-        actions: [
-          { type: 'Navigate', routeName: 'Foo', params: { bar: '42' } },
-          { type: 'Navigate', routeName: 'Bar' },
-        ],
-        index: 1,
-      },
-      state
-    );
+    const initAction = NavigationActions.mapDeprecatedActionAndWarn({
+      type: 'Init',
+    });
+    const state = router.getStateForAction(initAction);
+    const resetAction = NavigationActions.mapDeprecatedActionAndWarn({
+      type: 'Reset',
+      actions: [
+        { type: 'Navigate', routeName: 'Foo', params: { bar: '42' } },
+        { type: 'Navigate', routeName: 'Bar' },
+      ],
+      index: 1,
+    });
+    const state2 = router.getStateForAction(resetAction, state);
     expect(state2 && state2.index).toEqual(1);
     expect(state2 && state2.routes[0].params).toEqual({ bar: '42' });
     expect(state2 && state2.routes[0].routeName).toEqual('Foo');

@@ -4,30 +4,38 @@
 
 import React from 'react';
 import { Button, ScrollView, Text } from 'react-native';
-import { StackNavigator } from 'react-navigation';
+import { SafeAreaView, StackNavigator } from 'react-navigation';
 import SampleText from './SampleText';
 
 const MyNavScreen = ({ navigation, banner }) => (
-  <ScrollView>
-    <SampleText>{banner}</SampleText>
-    <Button
-      onPress={() => navigation.navigate('Profile', { name: 'Jane' })}
-      title="Go to a profile screen"
-    />
-    <Button
-      onPress={() => navigation.navigate('HeaderTest')}
-      title="Go to a header toggle screen"
-    />
-    {navigation.state.routeName === 'HeaderTest' &&
+  <ScrollView contentInsetAdjustmentBehavior="automatic">
+    <SafeAreaView
+      forceInset={{
+        top: navigation.state.routeName === 'HeaderTest' ? 'always' : 'never',
+      }}
+    >
+      <SampleText>{banner}</SampleText>
       <Button
-        title="Toggle Header"
-        onPress={() =>
-          navigation.setParams({
-            headerVisible: !navigation.state.params ||
-              !navigation.state.params.headerVisible,
-          })}
-      />}
-    <Button onPress={() => navigation.goBack(null)} title="Go back" />
+        onPress={() => navigation.navigate('Profile', { name: 'Jane' })}
+        title="Go to a profile screen"
+      />
+      <Button
+        onPress={() => navigation.navigate('HeaderTest')}
+        title="Go to a header toggle screen"
+      />
+      {navigation.state.routeName === 'HeaderTest' && (
+        <Button
+          title="Toggle Header"
+          onPress={() =>
+            navigation.setParams({
+              headerVisible:
+                !navigation.state.params ||
+                !navigation.state.params.headerVisible,
+            })}
+        />
+      )}
+      <Button onPress={() => navigation.goBack(null)} title="Go back" />
+    </SafeAreaView>
   </ScrollView>
 );
 
