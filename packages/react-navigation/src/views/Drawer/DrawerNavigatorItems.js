@@ -26,6 +26,7 @@ type Props = {
   getLabel: (scene: DrawerScene) => ?(React.Node | string),
   renderIcon: (scene: DrawerScene) => ?React.Node,
   onItemPress: (info: DrawerItem) => void,
+  itemsContainerForceInset?: Object,
   itemsContainerStyle?: ViewStyleProp,
   itemStyle?: ViewStyleProp,
   labelStyle?: TextStyleProp,
@@ -46,12 +47,13 @@ const DrawerNavigatorItems = ({
   getLabel,
   renderIcon,
   onItemPress,
+  itemsContainerForceInset = { horizontal: 'never', top: 'always' },
   itemsContainerStyle,
   itemStyle,
   labelStyle,
   iconContainerStyle,
 }: Props) => (
-  <SafeAreaView forceInset={{ horizontal: 'never', top: 'always' }}>
+  <SafeAreaView forceInset={itemsContainerForceInset}>
     <View style={[styles.container, itemsContainerStyle]}>
       {items.map((route: NavigationRoute, index: number) => {
         const focused = activeItemKey === route.key;
