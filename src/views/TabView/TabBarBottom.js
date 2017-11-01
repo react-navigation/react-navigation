@@ -48,15 +48,13 @@ type Props = {
   isLandscape: boolean,
 };
 
-
 type State = {
-  isVisible: boolean
-}
+  isVisible: boolean,
+};
 
 const majorVersion = parseInt(Platform.Version, 10);
 const isIos = Platform.OS === 'ios';
 const useHorizontalTabs = majorVersion >= 11 && isIos;
-
 
 class TabBarBottom extends React.PureComponent<Props> {
   // See https://developer.apple.com/library/content/documentation/UserExperience/Conceptual/UIKitUICatalog/UITabBar.html
@@ -75,33 +73,39 @@ class TabBarBottom extends React.PureComponent<Props> {
   state: State;
 
   state = {
-    isVisible: true
-  }
+    isVisible: true,
+  };
 
-  _keyboardDidShowSub = undefined
-  _keyboardDidHideSub = undefined
+  _keyboardDidShowSub = undefined;
+  _keyboardDidHideSub = undefined;
 
   componentWillMount() {
-    this._keyboardDidShowSub = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow)
-    this._keyboardDidHideSub = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide)
+    this._keyboardDidShowSub = Keyboard.addListener(
+      'keyboardDidShow',
+      this._keyboardDidShow
+    );
+    this._keyboardDidHideSub = Keyboard.addListener(
+      'keyboardDidHide',
+      this._keyboardDidHide
+    );
   }
 
   componentWillUnmount() {
-    this._keyboardDidShowSub !== undefined && this._keyboardDidShowSub.remove()
-    this._keyboardDidHideSub !== undefined && this._keyboardDidHideSub.remove()
+    this._keyboardDidShowSub !== undefined && this._keyboardDidShowSub.remove();
+    this._keyboardDidHideSub !== undefined && this._keyboardDidHideSub.remove();
   }
 
   _keyboardDidShow = () => {
     this.setState({
-      isVisible: false
-    })
-  }
+      isVisible: false,
+    });
+  };
 
   _keyboardDidHide = () => {
     this.setState({
-      isVisible: true
-    })
-  }
+      isVisible: true,
+    });
+  };
 
   _renderLabel = (scene: TabScene) => {
     const {
