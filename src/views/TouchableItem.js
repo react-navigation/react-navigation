@@ -49,7 +49,7 @@ export default class TouchableItem extends React.Component<Props> {
       Platform.OS === 'android' &&
       Platform.Version >= ANDROID_VERSION_LOLLIPOP
     ) {
-      const { style, ...rest } = this.props; // eslint-disable-line no-unused-vars
+      const { style, ...rest } = this.props;
       return (
         <TouchableNativeFeedback
           {...rest}
@@ -59,9 +59,7 @@ export default class TouchableItem extends React.Component<Props> {
             this.props.borderless || false
           )}
         >
-          <View style={this.props.style}>
-            {React.Children.only(this.props.children)}
-          </View>
+          <View style={style}>{React.Children.only(this.props.children)}</View>
         </TouchableNativeFeedback>
       );
     }
