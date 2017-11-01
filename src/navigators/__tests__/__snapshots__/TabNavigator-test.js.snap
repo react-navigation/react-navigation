@@ -68,11 +68,15 @@ exports[`TabNavigator renders successfully 1`] = `
     onLayout={[Function]}
     style={
       Array [
-        Object {
-          "backgroundColor": "#F7F7F7",
-          "borderTopColor": "rgba(0, 0, 0, .3)",
-          "borderTopWidth": 0.5,
-        },
+        Array [
+          Object {
+            "borderTopColor": "rgba(0, 0, 0, .3)",
+            "borderTopWidth": 0.5,
+          },
+          Object {
+            "backgroundColor": "#F7F7F7",
+          },
+        ],
         Object {
           "paddingBottom": 0,
           "paddingLeft": 0,
