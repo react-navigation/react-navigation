@@ -42,16 +42,20 @@ function compareScenes(one: NavigationScene, two: NavigationScene): number {
 /**
  * Whether two routes are the same.
  */
-function areScenesShallowEqual(
+export function areScenesShallowEqual(
   one: NavigationScene,
-  two: NavigationScene
+  two: NavigationScene,
+  routesEqual: (
+    ?NavigationRoute,
+    ?NavigationRoute
+  ) => boolean = areRoutesShallowEqual
 ): boolean {
   return (
     one.key === two.key &&
     one.index === two.index &&
     one.isStale === two.isStale &&
     one.isActive === two.isActive &&
-    areRoutesShallowEqual(one.route, two.route)
+    routesEqual(one.route, two.route)
   );
 }
 

@@ -6,10 +6,13 @@ import { Animated, Easing, StyleSheet, View } from 'react-native';
 
 import invariant from '../utils/invariant';
 
-import NavigationScenesReducer from './ScenesReducer';
+import NavigationScenesReducer, {
+  areScenesShallowEqual,
+} from './ScenesReducer';
 
 import type {
   NavigationLayout,
+  NavigationRoute,
   NavigationScene,
   NavigationState,
   NavigationScreenProp,
@@ -105,12 +108,28 @@ class Transitioner extends React.Component<Props, State> {
       this.props.navigation.state
     );
 
-    if (nextScenes === this.state.scenes) {
-      return;
-    }
-
     const indexHasChanged =
       nextProps.navigation.state.index !== this.props.navigation.state.index;
+
+    if (!indexHasChanged) {
+      if (nextScenes === this.state.scenes) {
+        return;
+      }
+      // Only route parameters are to be changed; no need to initiate transition.
+      if (
+        !this._isTransitionRunning &&
+        compareSceneSets(nextScenes, this.state.scenes)
+      ) {
+        const nextState = {
+          ...this.state,
+          scenes: nextScenes,
+        };
+        this._transitionProps = buildTransitionProps(nextProps, nextState);
+        this.setState(nextState);
+        return;
+      }
+    }
+
     if (this._isTransitionRunning) {
       this._queuedTransition = { nextProps, nextScenes, indexHasChanged };
       return;
@@ -277,6 +296,42 @@ function isSceneNotStale(scene: NavigationScene): boolean {
 
 function isSceneActive(scene: NavigationScene): boolean {
   return scene.isActive;
+}
+
+function areRoutesEqualOnKey(
+  one: ?NavigationRoute,
+  two: ?NavigationRoute
+): boolean {
+  if (!one || !two) {
+    return one === two;
+  }
+
+  if (one.key !== two.key) {
+    return false;
+  }
+
+  return true;
+}
+
+function compareSceneSets(
+  scenes1: Array<NavigationScene>,
+  scenes2: Array<NavigationScene>
+): boolean {
+  if (scenes1.length !== scenes2.length) {
+    return false;
+  }
+  for (const s1 of scenes1) {
+    const s2 = scenes2.find((s: *) => {
+      return s1.index === s.index;
+    });
+    if (
+      s2 === undefined ||
+      !areScenesShallowEqual(s1, s2, areRoutesEqualOnKey)
+    ) {
+      return false;
+    }
+  }
+  return true;
 }
 
 const styles = StyleSheet.create({
