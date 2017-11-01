@@ -13,23 +13,15 @@ type Props = {
 };
 
 type DefaultProps = {
-  pressColorAndroid: ?string,
+  pressColorAndroid: string,
   accessibilityLabel: string,
 };
 
-type State = {};
-
-class HeaderBackButtonWrapper extends React.PureComponent<
-  DefaultProps,
-  Props,
-  State
-> {
+class HeaderBackButtonWrapper extends React.PureComponent<DefaultProps, Props> {
   static defaultProps = {
     pressColorAndroid: 'rgba(0, 0, 0, .32)',
     accessibilityLabel: 'Back',
   };
-
-  state = {};
 
   render() {
     const {
