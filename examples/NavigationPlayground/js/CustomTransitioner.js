@@ -10,28 +10,27 @@ import {
 } from 'react-native';
 import {
   Transitioner,
+  SafeAreaView,
   StackRouter,
   createNavigationContainer,
   addNavigationHelpers,
-  createNavigator
+  createNavigator,
 } from 'react-navigation';
 import SampleText from './SampleText';
 
 const MyNavScreen = ({ navigation, banner }) => (
-  <View>
+  <SafeAreaView forceInset={{ top: 'always' }}>
     <SampleText>{banner}</SampleText>
-    {navigation.state && navigation.state.routeName !== 'Settings' &&
-      <Button
-        onPress={() => navigation.navigate('Settings')}
-        title="Go to a settings screen"
-      />
-    }
-    
-    <Button
-      onPress={() => navigation.goBack(null)}
-      title="Go back"
-    />
-  </View>
+    {navigation.state &&
+      navigation.state.routeName !== 'Settings' && (
+        <Button
+          onPress={() => navigation.navigate('Settings')}
+          title="Go to a settings screen"
+        />
+      )}
+
+    <Button onPress={() => navigation.goBack(null)} title="Go back" />
+  </SafeAreaView>
 );
 
 const MyHomeScreen = ({ navigation }) => (
@@ -63,13 +62,11 @@ class CustomNavigationView extends Component {
   }
 
   _render = (transitionProps, prevTransitionProps) => {
-    const scenes = transitionProps.scenes.map(scene => this._renderScene(transitionProps, scene));
-    return (
-      <View style={{ flex: 1 }}>
-        {scenes}
-      </View>
+    const scenes = transitionProps.scenes.map(scene =>
+      this._renderScene(transitionProps, scene)
     );
-  }
+    return <View style={{ flex: 1 }}>{scenes}</View>;
+  };
 
   _renderScene = (transitionProps, scene) => {
     const { navigation, router } = this.props;
@@ -84,9 +81,7 @@ class CustomNavigationView extends Component {
 
     const animation = {
       opacity: animatedValue,
-      transform: [
-        { scale: animatedValue },
-      ],
+      transform: [{ scale: animatedValue }],
     };
 
     // The prop `router` is populated when we call `createNavigator`.
@@ -100,8 +95,8 @@ class CustomNavigationView extends Component {
           })}
         />
       </Animated.View>
-    )
-  }
+    );
+  };
 }
 
 const CustomRouter = StackRouter({
@@ -116,9 +111,6 @@ const CustomTransitioner = createNavigationContainer(
 export default CustomTransitioner;
 
 const styles = StyleSheet.create({
-  container: {
-    marginTop: Platform.OS === 'ios' ? 20 : 0,
-  },
   view: {
     position: 'absolute',
     left: 0,

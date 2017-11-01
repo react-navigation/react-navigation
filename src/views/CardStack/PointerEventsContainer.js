@@ -1,6 +1,6 @@
 /* @flow */
 
-import React from 'react';
+import * as React from 'react';
 
 import invariant from '../../utils/invariant';
 
@@ -17,15 +17,15 @@ const MIN_POSITION_OFFSET = 0.01;
  * `pointerEvents` property for a component whenever navigation position
  * changes.
  */
-export default function create(Component: ReactClass<*>): ReactClass<*> {
-  class Container extends React.Component<any, Props, any> {
+export default function create(
+  Component: React.ComponentType<*>
+): React.ComponentType<*> {
+  class Container extends React.Component<Props> {
     _component: any;
     _onComponentRef: (view: any) => void;
     _onPositionChange: (data: { value: number }) => void;
     _pointerEvents: string;
     _positionListener: ?AnimatedValueSubscription;
-
-    props: Props;
 
     constructor(props: Props, context: any) {
       super(props, context);

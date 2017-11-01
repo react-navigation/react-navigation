@@ -9,9 +9,7 @@ import validateRouteConfigMap from './validateRouteConfigMap';
 import getScreenConfigDeprecated from './getScreenConfigDeprecated';
 
 import type {
-  NavigationAction,
   NavigationComponent,
-  NavigationScreenComponent,
   NavigationState,
   NavigationRouteConfigMap,
   NavigationParams,
@@ -19,13 +17,14 @@ import type {
   NavigationRoute,
   NavigationNavigateAction,
   NavigationTabRouterConfig,
-  NavigationTabScreenOptions,
+  NavigationTabAction,
+  NavigationStateRoute,
 } from '../TypeDefinition';
 
 export default (
   routeConfigs: NavigationRouteConfigMap,
   config: NavigationTabRouterConfig = {}
-): NavigationRouter<*, *, *> => {
+): NavigationRouter<NavigationState, NavigationTabAction, *> => {
   // Fail fast on invalid route definitions
   validateRouteConfigMap(routeConfigs);
 
@@ -53,12 +52,9 @@ export default (
   }
   return {
     getStateForAction(
-      action: NavigationAction | { action: NavigationAction },
+      action: NavigationTabAction,
       inputState?: ?NavigationState
     ): ?NavigationState {
-      // eslint-disable-next-line no-param-reassign
-      action = NavigationActions.mapDeprecatedActionAndWarn(action);
-
       // Establish a default state
       let state = inputState;
       if (!state) {
@@ -180,9 +176,9 @@ export default (
         }
       }
       if (action.type === NavigationActions.SET_PARAMS) {
+        const key = action.key;
         const lastRoute = state.routes.find(
-          /* $FlowFixMe */
-          (route: *) => route.key === action.key
+          (route: NavigationRoute) => route.key === key
         );
         if (lastRoute) {
           const params = {
@@ -253,9 +249,7 @@ export default (
       return state;
     },
 
-    getComponentForState(
-      state: NavigationState
-    ): NavigationScreenComponent<*, NavigationTabScreenOptions> {
+    getComponentForState(state: NavigationState): NavigationComponent {
       const routeName = order[state.index];
       invariant(
         routeName,
@@ -281,9 +275,11 @@ export default (
       let path = subPath;
       let params = route.params;
       if (screen && screen.router) {
+        // $FlowFixMe there's no way type the specific shape of the nav state
+        const stateRoute: NavigationStateRoute = route;
         // If it has a router it's a navigator.
         // If it doesn't have router it's an ordinary React component.
-        const child = screen.router.getPathAndParamsForState(route);
+        const child = screen.router.getPathAndParamsForState(stateRoute);
         path = subPath ? `${subPath}/${child.path}` : child.path;
         params = child.params ? { ...params, ...child.params } : params;
       }
@@ -298,7 +294,10 @@ export default (
      *
      * This will return null if there is no action matched
      */
-    getActionForPathAndParams(path: string, params: ?NavigationParams) {
+    getActionForPathAndParams(
+      path: string,
+      params: ?NavigationParams
+    ): ?NavigationTabAction {
       return (
         order
           .map((tabId: string) => {

@@ -106,6 +106,7 @@ Several options get passed to the underlying router to modify navigation logic:
 - `inactiveBackgroundColor` - Background color of the inactive tab.
 - `showLabel` - Whether to show label for tab, default is true.
 - `style` - Style object for the tab bar.
+- `backgroundColor` - Color string that overrides default backgroundColor.
 - `labelStyle` - Style object for the tab label.
 - `tabStyle` - Style object for the tab.
 - `allowFontScaling` - Whether label font should scale to respect Text Size accessibility settings, default is true.
@@ -169,11 +170,11 @@ True or false to show or hide the tab bar, if not set then defaults to true.
 
 #### `tabBarIcon`
 
-React Element or a function that given `{ focused: boolean, tintColor: string }` returns a React.Element, to display in tab bar.
+React Element or a function that given `{ focused: boolean, tintColor: string }` returns a React.Node, to display in tab bar.
 
 #### `tabBarLabel`
 
-Title string of a tab displayed in the tab bar or React Element or a function that given `{ focused: boolean, tintColor: string }` returns a React.Element, to display in tab bar. When undefined, scene `title` is used. To hide, see `tabBarOptions.showLabel` in the previous section.
+Title string of a tab displayed in the tab bar or React Element or a function that given `{ focused: boolean, tintColor: string }` returns a React.Node, to display in tab bar. When undefined, scene `title` is used. To hide, see `tabBarOptions.showLabel` in the previous section.
 
 #### `tabBarOnPress`
 

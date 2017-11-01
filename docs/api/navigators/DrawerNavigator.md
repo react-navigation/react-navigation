@@ -145,6 +145,7 @@ const styles = StyleSheet.create({
 - `inactiveTintColor` - label and icon color of the inactive label
 - `inactiveBackgroundColor` - background color of the inactive label
 - `onItemPress(route)` - function to be invoked when an item is pressed
+- `itemsContainerForceInset` - override default forceInset on the SafeAreaView that wraps the items container component
 - `itemsContainerStyle` - style object for the content section
 - `itemStyle` - style object for the single item, which can contain an Icon and/or a Label
 - `labelStyle` - style object to overwrite `Text` style inside content section, when your label is a string
@@ -172,11 +173,11 @@ Generic title that can be used as a fallback for `headerTitle` and `drawerLabel`
 
 #### `drawerLabel`
 
-String, React Element or a function that given `{ focused: boolean, tintColor: string }` returns a React.Element, to display in drawer sidebar. When undefined, scene `title` is used
+String, React Element or a function that given `{ focused: boolean, tintColor: string }` returns a React.Node, to display in drawer sidebar. When undefined, scene `title` is used
 
 #### `drawerIcon`
 
-React Element or a function, that given `{ focused: boolean, tintColor: string }` returns a React.Element, to display in drawer sidebar
+React Element or a function, that given `{ focused: boolean, tintColor: string }` returns a React.Node, to display in drawer sidebar
 
 #### `drawerLockMode`
 

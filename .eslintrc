@@ -17,9 +17,6 @@
   "env": {
     "jasmine": true
   },
-  "globals": {
-    "ReactClass": true
-  },
   "rules": {
     "prettier/prettier": ["error", {
       "trailingComma": "es5",
