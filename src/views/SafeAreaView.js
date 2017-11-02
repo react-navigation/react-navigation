@@ -6,6 +6,7 @@ import {
   NativeModules,
   Platform,
   SafeAreaView,
+  StyleSheet,
   View,
 } from 'react-native';
 import withOrientation from './withOrientation';
@@ -88,17 +89,13 @@ class SafeView extends Component {
       return <View style={style}>{this.props.children}</View>;
     }
 
-    if (!forceInset && minor >= 50) {
-      return <SafeAreaView style={style}>{this.props.children}</SafeAreaView>;
-    }
-
     const safeAreaStyle = this._getSafeAreaStyle();
 
     return (
       <View
         ref={c => (this.view = c)}
         onLayout={this._onLayout}
-        style={[style, safeAreaStyle]}
+        style={safeAreaStyle}
       >
         {this.props.children}
       </View>
@@ -153,7 +150,19 @@ class SafeView extends Component {
     const { touchesTop, touchesBottom, touchesLeft, touchesRight } = this.state;
     const { forceInset, isLandscape } = this.props;
 
+    const {
+      padding = 0,
+      paddingVertical = padding,
+      paddingHorizontal = padding,
+      paddingTop = paddingVertical,
+      paddingBottom = paddingVertical,
+      paddingLeft = paddingHorizontal,
+      paddingRight = paddingHorizontal,
+      ...viewStyle
+    } = StyleSheet.flatten(this.props.style || {});
+
     const style = {
+      ...viewStyle,
       paddingTop: touchesTop ? this._getInset('top') : 0,
       paddingBottom: touchesBottom ? this._getInset('bottom') : 0,
       paddingLeft: touchesLeft ? this._getInset('left') : 0,
@@ -194,6 +203,21 @@ class SafeView extends Component {
         }
       });
     }
+
+    // new height/width should only include padding from insets
+    // height/width should not be affected by padding from style obj
+    if (style.height && typeof style.height === 'number') {
+      style.height += style.paddingTop + style.paddingBottom;
+    }
+
+    if (style.width && typeof style.width === 'number') {
+      style.width += style.paddingLeft + style.paddingRight;
+    }
+
+    style.paddingTop += paddingTop;
+    style.paddingBottom += paddingBottom;
+    style.paddingLeft += paddingLeft;
+    style.paddingRight += paddingRight;
 
     return style;
   };
