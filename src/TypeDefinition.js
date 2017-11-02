@@ -360,7 +360,7 @@ export type NavigationStackScreenOptions = {|
   headerPressColorAndroid?: string,
   headerRight?: React.Node,
   headerStyle?: ViewStyleProp,
-  headerBackgroundColor?: string,
+  headerContainerStyle?: string,
   gesturesEnabled?: boolean,
   gestureResponseDistance?: { vertical?: number, horizontal?: number },
 |};

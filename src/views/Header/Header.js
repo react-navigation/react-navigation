@@ -302,12 +302,9 @@ class Header extends React.PureComponent<Props, State> {
     } = this.props;
 
     const { options } = this.props.getScreenDetails(scene);
-    const {
-      headerStyle,
-      headerBackgroundColor = Platform.OS === 'ios' ? '#F7F7F7' : '#FFF',
-    } = options;
+    const { headerStyle, headerContainerStyle } = options;
     const appBarHeight = Platform.OS === 'ios' ? (isLandscape ? 32 : 44) : 56;
-    const containerStyles = [
+    const headerStyles = [
       {
         height: appBarHeight,
       },
@@ -316,10 +313,10 @@ class Header extends React.PureComponent<Props, State> {
 
     return (
       <SafeAreaView
-        style={[styles.container, { backgroundColor: headerBackgroundColor }]}
+        style={[styles.container, headerContainerStyle]}
         forceInset={{ top: 'always', bottom: 'never' }}
       >
-        <Animated.View {...rest} style={containerStyles}>
+        <Animated.View {...rest} style={headerStyles}>
           <View style={styles.appBar}>{appBar}</View>
         </Animated.View>
       </SafeAreaView>
@@ -347,6 +344,7 @@ if (Platform.OS === 'ios') {
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: Platform.OS === 'ios' ? '#F7F7F7' : '#FFF',
     ...platformContainerStyles,
   },
   appBar: {
