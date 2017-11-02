@@ -1,19 +1,17 @@
 /* @flow */
 
-import React from 'react';
+import * as React from 'react';
 
-import { Animated, StyleSheet, View } from 'react-native';
+import { Animated, Easing, StyleSheet, View } from 'react-native';
 
-import invariant from 'fbjs/lib/invariant';
+import invariant from '../utils/invariant';
 
 import NavigationScenesReducer from './ScenesReducer';
-import TransitionConfigs from './TransitionConfigs';
 
 import type {
   NavigationLayout,
   NavigationScene,
   NavigationState,
-  NavigationAction,
   NavigationScreenProp,
   NavigationTransitionProps,
   NavigationTransitionSpec,
@@ -24,14 +22,13 @@ type Props = {
     transitionProps: NavigationTransitionProps,
     prevTransitionProps: ?NavigationTransitionProps
   ) => NavigationTransitionSpec,
-  navigation: NavigationScreenProp<NavigationState, NavigationAction>,
-  onTransitionEnd?: () => void,
-  onTransitionStart?: () => void,
+  navigation: NavigationScreenProp<NavigationState>,
+  onTransitionEnd?: (...args: Array<mixed>) => void,
+  onTransitionStart?: (...args: Array<mixed>) => void,
   render: (
     transitionProps: NavigationTransitionProps,
     prevTransitionProps: ?NavigationTransitionProps
-  ) => any,
-  style?: any,
+  ) => React.Node,
 };
 
 type State = {
@@ -41,9 +38,14 @@ type State = {
   scenes: Array<NavigationScene>,
 };
 
-const DefaultTransitionSpec = TransitionConfigs.DefaultTransitionSpec;
+// Used for all animations unless overriden
+const DefaultTransitionSpec = ({
+  duration: 250,
+  easing: Easing.inOut(Easing.ease),
+  timing: Animated.timing,
+}: NavigationTransitionSpec);
 
-class Transitioner extends React.Component<*, Props, State> {
+class Transitioner extends React.Component<Props, State> {
   _onLayout: (event: any) => void;
   _onTransitionEnd: () => void;
   _prevTransitionProps: ?NavigationTransitionProps;
@@ -55,9 +57,6 @@ class Transitioner extends React.Component<*, Props, State> {
     nextScenes: Array<NavigationScene>,
     indexHasChanged: boolean,
   };
-
-  props: Props;
-  state: State;
 
   constructor(props: Props, context: any) {
     super(props, context);
@@ -157,18 +156,19 @@ class Transitioner extends React.Component<*, Props, State> {
     const positionHasChanged = position.__getValue() !== toValue;
 
     // if swiped back, indexHasChanged == true && positionHasChanged == false
-    const animations = indexHasChanged && positionHasChanged
-      ? [
-          timing(progress, {
-            ...transitionSpec,
-            toValue: 1,
-          }),
-          timing(position, {
-            ...transitionSpec,
-            toValue: nextProps.navigation.state.index,
-          }),
-        ]
-      : [];
+    const animations =
+      indexHasChanged && positionHasChanged
+        ? [
+            timing(progress, {
+              ...transitionSpec,
+              toValue: 1,
+            }),
+            timing(position, {
+              ...transitionSpec,
+              toValue: nextProps.navigation.state.index,
+            }),
+          ]
+        : [];
 
     // update scenes and play the transition
     this._isTransitionRunning = true;
@@ -184,7 +184,7 @@ class Transitioner extends React.Component<*, Props, State> {
 
   render() {
     return (
-      <View onLayout={this._onLayout} style={[styles.main, this.props.style]}>
+      <View onLayout={this._onLayout} style={[styles.main]}>
         {this.props.render(this._transitionProps, this._prevTransitionProps)}
       </View>
     );

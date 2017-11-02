@@ -131,6 +131,33 @@ recursive(paths.appBuild, (err, fileNames) => {
       2
     )
   );
+
+  fs.writeFileSync(
+    path.join(paths.appBuild, 'Dockerfile'),
+    `
+    FROM mhart/alpine-node:8.7.0
+    
+    ENV NODE_ENV production
+
+    RUN apk add --update curl tini && \
+        curl -o /bin/yarn https://nightly.yarnpkg.com/yarn-1.2.1-20171019.2356.js && \
+        chmod +x /bin/yarn
+        
+    RUN adduser -D myuser && mkdir -p /opt/app && chown -R myuser /opt/app
+    
+    ADD package.json /opt/app/package.json
+    RUN cd /opt/app && yarn
+    
+    ADD . /opt/app
+    WORKDIR /opt/app
+    
+    RUN chown -R myuser /opt/app && chmod -R 777 /opt/app
+    
+    USER myuser
+
+    CMD ["node", "/opt/app/lib/Server.js"]
+    `
+  );
 });
 
 // Print a detailed summary of build files.
@@ -165,7 +192,9 @@ function printFileSizes(stats, previousSizeMap) {
       sizeLabel += rightPadding;
     }
     console.log(
-      `  ${sizeLabel}  ${chalk.dim(asset.folder + path.sep)}${chalk.cyan(asset.name)}`
+      `  ${sizeLabel}  ${chalk.dim(asset.folder + path.sep)}${chalk.cyan(
+        asset.name
+      )}`
     );
   });
 }
@@ -211,10 +240,14 @@ function build(previousSizeMap) {
     if (homepagePath && homepagePath.indexOf('.github.io/') !== -1) {
       // "homepage": "http://user.github.io/project"
       console.log(
-        `The project was built assuming it is hosted at ${chalk.green(publicPath)}.`
+        `The project was built assuming it is hosted at ${chalk.green(
+          publicPath
+        )}.`
       );
       console.log(
-        `You can control this with the ${chalk.green('homepage')} field in your ${chalk.cyan('package.json')}.`
+        `You can control this with the ${chalk.green(
+          'homepage'
+        )} field in your ${chalk.cyan('package.json')}.`
       );
       console.log();
       console.log(`The ${chalk.cyan('build')} folder is ready to be deployed.`);
@@ -230,7 +263,9 @@ function build(previousSizeMap) {
       console.log(`    ${chalk.yellow('"scripts"')}: {`);
       console.log(`      ${chalk.dim('// ...')}`);
       console.log(
-        `      ${chalk.yellow('"deploy"')}: ${chalk.yellow('"gh-pages -d build"')}`
+        `      ${chalk.yellow('"deploy"')}: ${chalk.yellow(
+          '"gh-pages -d build"'
+        )}`
       );
       console.log('    }');
       console.log();
@@ -241,10 +276,14 @@ function build(previousSizeMap) {
     } else if (publicPath !== '/') {
       // "homepage": "http://mywebsite.com/project"
       console.log(
-        `The project was built assuming it is hosted at ${chalk.green(publicPath)}.`
+        `The project was built assuming it is hosted at ${chalk.green(
+          publicPath
+        )}.`
       );
       console.log(
-        `You can control this with the ${chalk.green('homepage')} field in your ${chalk.cyan('package.json')}.`
+        `You can control this with the ${chalk.green(
+          'homepage'
+        )} field in your ${chalk.cyan('package.json')}.`
       );
       console.log();
       console.log(`The ${chalk.cyan('build')} folder is ready to be deployed.`);
@@ -257,18 +296,24 @@ function build(previousSizeMap) {
       if (homepagePath) {
         // "homepage": "http://mywebsite.com"
         console.log(
-          `You can control this with the ${chalk.green('homepage')} field in your ${chalk.cyan('package.json')}.`
+          `You can control this with the ${chalk.green(
+            'homepage'
+          )} field in your ${chalk.cyan('package.json')}.`
         );
         console.log();
       } else {
         // no homepage
         console.log(
-          `To override this, specify the ${chalk.green('homepage')} in your ${chalk.cyan('package.json')}.`
+          `To override this, specify the ${chalk.green(
+            'homepage'
+          )} in your ${chalk.cyan('package.json')}.`
         );
         console.log('For example, add this to build it for GitHub Pages:');
         console.log();
         console.log(
-          `  ${chalk.green('"homepage"')}${chalk.cyan(': ')}${chalk.green('"http://myname.github.io/myapp"')}${chalk.cyan(',')}`
+          `  ${chalk.green('"homepage"')}${chalk.cyan(': ')}${chalk.green(
+            '"http://myname.github.io/myapp"'
+          )}${chalk.cyan(',')}`
         );
         console.log();
       }

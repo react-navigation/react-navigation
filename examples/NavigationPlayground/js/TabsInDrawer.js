@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { Button, Platform, ScrollView, StyleSheet } from 'react-native';
+import { Button, Platform, ScrollView } from 'react-native';
 import { TabNavigator, DrawerNavigator } from 'react-navigation';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import SimpleTabs from './SimpleTabs';
@@ -39,12 +39,6 @@ const TabsInDrawer = DrawerNavigator({
         ),
       }),
     },
-  },
-});
-
-const styles = StyleSheet.create({
-  container: {
-    marginTop: Platform.OS === 'ios' ? 20 : 0,
   },
 });
 
