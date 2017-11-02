@@ -105,8 +105,8 @@ Several options get passed to the underlying router to modify navigation logic:
 - `inactiveTintColor` - Label and icon color of the inactive tab.
 - `inactiveBackgroundColor` - Background color of the inactive tab.
 - `showLabel` - Whether to show label for tab, default is true.
+- `containerStyle` - Style object to override default styles on the tab bar container such as backgroundColor and border.
 - `style` - Style object for the tab bar.
-- `backgroundColor` - Color string that overrides default backgroundColor.
 - `labelStyle` - Style object for the tab label.
 - `tabStyle` - Style object for the tab.
 - `allowFontScaling` - Whether label font should scale to respect Text Size accessibility settings, default is true.
