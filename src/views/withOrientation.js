@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react';
+import * as React from 'react';
 import { Dimensions } from 'react-native';
 import hoistNonReactStatic from 'hoist-non-react-statics';
 
@@ -22,10 +22,10 @@ export const isOrientationLandscape = ({
   height,
 }: WindowDimensions): boolean => width > height;
 
-export default function<T: *>(WrappedComponent: ReactClass<T & InjectedProps>) {
-  class withOrientation extends React.Component<void, T, State> {
-    state: State;
-
+export default function<T: {}>(
+  WrappedComponent: React.ComponentType<T & InjectedProps>
+) {
+  class withOrientation extends React.Component<T, State> {
     constructor() {
       super();
 
