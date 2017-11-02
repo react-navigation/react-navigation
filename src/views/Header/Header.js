@@ -308,6 +308,7 @@ class Header extends React.PureComponent<Props, State> {
     } = options;
     const appBarHeight = Platform.OS === 'ios' ? (isLandscape ? 32 : 44) : 56;
     const containerStyles = [
+      styles.container,
       {
         height: appBarHeight,
       },
@@ -316,7 +317,7 @@ class Header extends React.PureComponent<Props, State> {
 
     return (
       <SafeAreaView
-        style={[styles.container, { backgroundColor: headerBackgroundColor }]}
+        style={{ backgroundColor: headerBackgroundColor }}
         forceInset={{ top: 'always', bottom: 'never' }}
       >
         <Animated.View {...rest} style={containerStyles}>
