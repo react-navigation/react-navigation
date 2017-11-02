@@ -63,6 +63,18 @@ const statusBarHeight = isLandscape => {
   return isLandscape ? 0 : 20;
 };
 
+const doubleFromPercentString = percent => {
+  if (!percent.includes('%')) {
+    return 0;
+  }
+
+  const dbl = parseFloat(percent) / 100;
+
+  if (isNaN(dbl)) return 0;
+
+  return dbl;
+};
+
 class SafeView extends Component {
   state = {
     touchesTop: true,
@@ -70,6 +82,8 @@ class SafeView extends Component {
     touchesLeft: true,
     touchesRight: true,
     orientation: null,
+    viewWidth: 0,
+    viewHeight: 0,
   };
 
   componentDidMount() {
@@ -142,6 +156,8 @@ class SafeView extends Component {
         touchesLeft,
         touchesRight,
         orientation: newOrientation,
+        viewWidth: winWidth,
+        viewHeight: winHeight,
       });
     });
   };
@@ -150,18 +166,13 @@ class SafeView extends Component {
     const { touchesTop, touchesBottom, touchesLeft, touchesRight } = this.state;
     const { forceInset, isLandscape } = this.props;
 
-    // get padding values from style to add back in after insets are determined
-    // default precedence: padding[Side] -> vertical | horizontal -> padding -> 0
     const {
-      padding = 0,
-      paddingVertical = padding,
-      paddingHorizontal = padding,
-      paddingTop = paddingVertical,
-      paddingBottom = paddingVertical,
-      paddingLeft = paddingHorizontal,
-      paddingRight = paddingHorizontal,
-      ...viewStyle
-    } = StyleSheet.flatten(this.props.style || {});
+      paddingTop,
+      paddingBottom,
+      paddingLeft,
+      paddingRight,
+      viewStyle,
+    } = this._getViewStyles();
 
     const style = {
       ...viewStyle,
@@ -222,6 +233,46 @@ class SafeView extends Component {
     style.paddingRight += paddingRight;
 
     return style;
+  };
+
+  _getViewStyles = () => {
+    const { viewWidth } = this.state;
+    // get padding values from style to add back in after insets are determined
+    // default precedence: padding[Side] -> vertical | horizontal -> padding -> 0
+    let {
+      padding = 0,
+      paddingVertical = padding,
+      paddingHorizontal = padding,
+      paddingTop = paddingVertical,
+      paddingBottom = paddingVertical,
+      paddingLeft = paddingHorizontal,
+      paddingRight = paddingHorizontal,
+      ...viewStyle
+    } = StyleSheet.flatten(this.props.style || {});
+
+    if (typeof paddingTop !== 'number') {
+      paddingTop = doubleFromPercentString(paddingTop) * viewWidth;
+    }
+
+    if (typeof paddingBottom !== 'number') {
+      paddingBottom = doubleFromPercentString(paddingBottom) * viewWidth;
+    }
+
+    if (typeof paddingLeft !== 'number') {
+      paddingLeft = doubleFromPercentString(paddingLeft) * viewWidth;
+    }
+
+    if (typeof paddingRight !== 'number') {
+      paddingRight = doubleFromPercentString(paddingRight) * viewWidth;
+    }
+
+    return {
+      paddingTop,
+      paddingBottom,
+      paddingLeft,
+      paddingRight,
+      viewStyle,
+    };
   };
 
   _getInset = key => {
