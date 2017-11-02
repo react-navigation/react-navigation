@@ -1,51 +1,63 @@
 /* @flow */
 
-import React, { PureComponent } from 'react';
+import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import withCachedChildNavigation from '../../withCachedChildNavigation';
+import NavigationActions from '../../NavigationActions';
+import invariant from '../../utils/invariant';
 
 import type {
   NavigationScreenProp,
   NavigationRoute,
-  NavigationAction,
   NavigationRouter,
   NavigationDrawerScreenOptions,
   NavigationState,
   NavigationStateRoute,
-  Style,
+  ViewStyleProp,
+  NavigationTabAction,
 } from '../../TypeDefinition';
 
 import type { DrawerScene, DrawerItem } from './DrawerView';
 
-type Navigation = NavigationScreenProp<NavigationStateRoute, NavigationAction>;
-
 type Props = {
   router: NavigationRouter<
     NavigationState,
-    NavigationAction,
+    NavigationTabAction,
     NavigationDrawerScreenOptions
   >,
-  navigation: Navigation,
-  childNavigationProps: { [key: string]: Navigation },
-  contentComponent: ReactClass<*>,
+  navigation: NavigationScreenProp<NavigationStateRoute>,
+  childNavigationProps: {
+    [key: string]: NavigationScreenProp<NavigationRoute>,
+  },
+  contentComponent: ?React.ComponentType<*>,
   contentOptions?: {},
   screenProps?: {},
-  style?: Style,
+  style?: ViewStyleProp,
 };
 
 /**
  * Component that renders the sidebar screen of the drawer.
  */
-class DrawerSidebar extends PureComponent<void, Props, void> {
+class DrawerSidebar extends React.PureComponent<Props> {
   props: Props;
 
   _getScreenOptions = (routeKey: string) => {
     const DrawerScreen = this.props.router.getComponentForRouteName(
       'DrawerClose'
     );
+    invariant(
+      DrawerScreen.router,
+      'NavigationComponent with routeName DrawerClose should be a Navigator'
+    );
+    const { [routeKey]: childNavigation } = this.props.childNavigationProps;
     return DrawerScreen.router.getScreenOptions(
-      this.props.childNavigationProps[routeKey],
+      childNavigation.state.index !== undefined // if the child screen is a StackRouter then always show the screen options of its first screen (see #1914)
+        ? {
+            ...childNavigation,
+            state: { ...childNavigation.state, index: 0 },
+          }
+        : childNavigation,
       this.props.screenProps
     );
   };
@@ -75,14 +87,28 @@ class DrawerSidebar extends PureComponent<void, Props, void> {
     return null;
   };
 
-  _onItemPress = ({ route }: DrawerItem) => {
+  _onItemPress = ({ route, focused }: DrawerItem) => {
     this.props.navigation.navigate('DrawerClose');
-    this.props.navigation.navigate(route.routeName);
+    if (!focused) {
+      let subAction;
+      // if the child screen is a StackRouter then always navigate to its first screen (see #1914)
+      if (route.index !== undefined && route.index !== 0) {
+        route = ((route: any): NavigationStateRoute);
+        subAction = NavigationActions.navigate({
+          routeName: route.routes[0].routeName,
+        });
+      }
+      this.props.navigation.navigate(route.routeName, undefined, subAction);
+    }
   };
 
   render() {
     const ContentComponent = this.props.contentComponent;
+    if (!ContentComponent) {
+      return null;
+    }
     const { state } = this.props.navigation;
+    invariant(typeof state.index === 'number', 'should be set');
     return (
       <View style={[styles.container, this.props.style]}>
         <ContentComponent
@@ -108,6 +134,5 @@ export default withCachedChildNavigation(DrawerSidebar);
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
   },
 });

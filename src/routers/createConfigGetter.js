@@ -10,7 +10,6 @@ import validateScreenOptions from './validateScreenOptions';
 
 import type {
   NavigationScreenProp,
-  NavigationAction,
   NavigationRoute,
   NavigationStateRoute,
   NavigationRouteConfigMap,
@@ -18,9 +17,9 @@ import type {
   NavigationScreenConfigProps,
 } from '../TypeDefinition';
 
-function applyConfig(
-  configurer: ?NavigationScreenConfig<*>,
-  navigationOptions: *,
+function applyConfig<T: {}>(
+  configurer: ?NavigationScreenConfig<T>,
+  navigationOptions: any,
   configProps: NavigationScreenConfigProps
 ): * {
   if (typeof configurer === 'function') {
@@ -44,14 +43,9 @@ function applyConfig(
 export default (
   routeConfigs: NavigationRouteConfigMap,
   navigatorScreenConfig?: NavigationScreenConfig<*>
-) => (
-  navigation: NavigationScreenProp<NavigationRoute, NavigationAction>,
-  screenProps: *
-) => {
+) => (navigation: NavigationScreenProp<NavigationRoute>, screenProps: *) => {
   const { state, dispatch } = navigation;
   const route = state;
-  // $FlowFixMe
-  const { routes, index } = (route: NavigationStateRoute);
 
   invariant(
     route.routeName && typeof route.routeName === 'string',
@@ -62,20 +56,21 @@ export default (
 
   let outputConfig = {};
 
-  if (Component.router) {
-    invariant(
-      route && routes && index != null,
-      `Expect nav state to have routes and index, ${JSON.stringify(route)}`
-    );
+  const router = Component.router;
+  if (router) {
+    // $FlowFixMe
+    const { routes, index } = (route: NavigationStateRoute);
+    if (!route || !routes || index == null) {
+      throw new Error(
+        `Expect nav state to have routes and index, ${JSON.stringify(route)}`
+      );
+    }
     const childRoute = routes[index];
     const childNavigation = addNavigationHelpers({
       state: childRoute,
       dispatch,
     });
-    outputConfig = Component.router.getScreenOptions(
-      childNavigation,
-      screenProps
-    );
+    outputConfig = router.getScreenOptions(childNavigation, screenProps);
   }
 
   const routeConfig = routeConfigs[route.routeName];

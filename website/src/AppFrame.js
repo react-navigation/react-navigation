@@ -2,6 +2,7 @@ import React from 'react';
 
 import Link from './Link';
 import Footer from './Footer';
+import DocSearchBar from './DocSearchBar';
 import { addNavigationHelpers } from 'react-navigation';
 
 const NavigationLinks = ({ navigation, className, reverse }) => {
@@ -35,21 +36,19 @@ const NavigationLinks = ({ navigation, className, reverse }) => {
   if (reverse) {
     links = links.reverse();
   }
-  return (
-    <div className={className}>
-      {links}
-    </div>
-  );
+  return <div className={className}>{links}</div>;
 };
 
 class AppFrame extends React.Component {
   state = { isMobileMenuOpen: false };
+
   componentWillReceiveProps(props) {
     if (this.props.navigation.state !== props.navigation.state) {
       this.setState({ isMobileMenuOpen: false });
       window.scrollTo(0, 0);
     }
   }
+
   render() {
     const { navigation, router } = this.props;
     const { isMobileMenuOpen } = this.state;
@@ -66,10 +65,8 @@ class AppFrame extends React.Component {
     const hasChildNavigation = !!route.routes;
     return (
       <div className={`main-app ${isMobileMenuOpen ? 'mobileMenuActive' : ''}`}>
-
         <nav className="pt-navbar" id="navbar">
           <div className="inner-navbar">
-
             <Link
               className="pt-navbar-group pt-align-left project-title"
               to="Home"
@@ -79,24 +76,24 @@ class AppFrame extends React.Component {
                 role="presentation"
                 className="logo"
               />
-              <h1 className="pt-navbar-heading">
-                React Navigation
-              </h1>
+              <h1 className="pt-navbar-heading">React Navigation</h1>
             </Link>
 
             <NavigationLinks navigation={navigation} className="navbuttons" />
-
-            {hasChildNavigation &&
+            <DocSearchBar />
+            {hasChildNavigation && (
               <span
-                className={`pt-icon-properties openMenuButton ${isMobileMenuOpen ? 'active' : ''}`}
+                className={`pt-icon-properties openMenuButton ${isMobileMenuOpen
+                  ? 'active'
+                  : ''}`}
                 onClick={() => {
                   this.setState(s => ({
                     isMobileMenuOpen: !s.isMobileMenuOpen,
                   }));
                   window.scrollTo(0, 0);
                 }}
-              />}
-
+              />
+            )}
           </div>
         </nav>
 

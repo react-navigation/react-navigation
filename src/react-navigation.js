@@ -1,5 +1,5 @@
 /*
- * @noflow - get/set properties not yet supported by flow. also `...require(x)` is broken #6560135
+ * @flow
  */
 
 /* eslint global-require: 0 */
@@ -46,24 +46,27 @@ module.exports = {
     return require('./views/Transitioner').default;
   },
   get CardStackTransitioner() {
-    return require('./views/CardStackTransitioner').default;
+    return require('./views/CardStack/CardStackTransitioner').default;
   },
   get CardStack() {
-    return require('./views/CardStack').default;
+    return require('./views/CardStack/CardStack').default;
   },
   get Card() {
-    return require('./views/Card').default;
+    return require('./views/CardStack/Card').default;
+  },
+  get SafeAreaView() {
+    return require('./views/SafeAreaView').default;
   },
 
   // Header
   get Header() {
-    return require('./views/Header').default;
+    return require('./views/Header/Header').default;
   },
   get HeaderTitle() {
-    return require('./views/HeaderTitle').default;
+    return require('./views/Header/HeaderTitle').default;
   },
   get HeaderBackButton() {
-    return require('./views/HeaderBackButton').default;
+    return require('./views/Header/HeaderBackButton').default;
   },
 
   // DrawerView

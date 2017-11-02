@@ -17,7 +17,7 @@ class MyScreen extends React.Component {
 
 **Dynamic Configuration**
 
-Or, the options can be a function that takes the following arguments, and returns an object of navigation options that will be override the route-defined and navigator-defined navigationOptions.
+Or, the options can be a function that takes the following arguments, and returns an object of navigation options that will override the route-defined and navigator-defined navigationOptions.
 
 - `props` - The same props that are available to the screen component
   - `navigation` - The [navigation prop](/docs/navigators/navigation-prop) for the screen, with the screen's route at `navigation.state`

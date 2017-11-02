@@ -1,7 +1,7 @@
 /* @flow */
 /* eslint no-shadow:0, react/no-multi-comp:0, react/display-name:0 */
 
-import React from 'react';
+import * as React from 'react';
 
 import StackRouter from '../StackRouter';
 import TabRouter from '../TabRouter';
@@ -37,7 +37,7 @@ AuthNavigator.router = StackRouter({
 
 const BarScreen = () => <div />;
 
-class FooNavigator extends React.Component {
+class FooNavigator extends React.Component<void> {
   static router = StackRouter({
     bar: {
       path: 'b/:barThing',
@@ -137,12 +137,12 @@ describe('StackRouter', () => {
 
   test('Gets the screen for given route', () => {
     const FooScreen = () => <div />;
-    const BarScreen = class extends React.Component {
+    const BarScreen = class extends React.Component<void> {
       render() {
         return <div />;
       }
     };
-    const BazScreen = class extends React.Component {
+    const BazScreen = class extends React.Component<void> {
       render() {
         return <div />;
       }
@@ -166,12 +166,12 @@ describe('StackRouter', () => {
 
   test('Handles getScreen in getComponent', () => {
     const FooScreen = () => <div />;
-    const BarScreen = class extends React.Component {
+    const BarScreen = class extends React.Component<void> {
       render() {
         return <div />;
       }
     };
-    const BazScreen = class extends React.Component {
+    const BazScreen = class extends React.Component<void> {
       render() {
         return <div />;
       }
@@ -752,7 +752,6 @@ describe('StackRouter', () => {
     expect(state2 && state2.routes[1].params).toEqual({ foo: '42' });
     /* $FlowFixMe */
     expect(state2 && state2.routes[1].routes).toEqual([
-      /* $FlowFixMe */
       expect.objectContaining({
         routeName: 'Baz',
         params: { foo: '42' },
@@ -819,7 +818,6 @@ describe('StackRouter', () => {
     }
     expect(state && state.index).toEqual(0);
     expect(state && state.routes[0]).toEqual(
-      // $FlowFixMe
       expect.objectContaining({
         routeName: 'Bar',
         type: undefined,
@@ -871,6 +869,7 @@ describe('StackRouter', () => {
   });
 
   test('Maps old actions (uses "Handles the reset action" test)', () => {
+    global.console.warn = jest.fn();
     const router = StackRouter({
       Foo: {
         screen: () => <div />,
@@ -879,23 +878,89 @@ describe('StackRouter', () => {
         screen: () => <div />,
       },
     });
-    /* $FlowFixMe: these are for deprecated action names */
-    const state = router.getStateForAction({ type: 'Init' });
-    /* $FlowFixMe: these are for deprecated action names */
-    const state2 = router.getStateForAction(
-      {
-        type: 'Reset',
-        actions: [
-          { type: 'Navigate', routeName: 'Foo', params: { bar: '42' } },
-          { type: 'Navigate', routeName: 'Bar' },
-        ],
-        index: 1,
-      },
-      state
-    );
+    const initAction = NavigationActions.mapDeprecatedActionAndWarn({
+      type: 'Init',
+    });
+    const state = router.getStateForAction(initAction);
+    const resetAction = NavigationActions.mapDeprecatedActionAndWarn({
+      type: 'Reset',
+      actions: [
+        { type: 'Navigate', routeName: 'Foo', params: { bar: '42' } },
+        { type: 'Navigate', routeName: 'Bar' },
+      ],
+      index: 1,
+    });
+    const state2 = router.getStateForAction(resetAction, state);
     expect(state2 && state2.index).toEqual(1);
     expect(state2 && state2.routes[0].params).toEqual({ bar: '42' });
     expect(state2 && state2.routes[0].routeName).toEqual('Foo');
     expect(state2 && state2.routes[1].routeName).toEqual('Bar');
+    expect(console.warn).toBeCalledWith(
+      expect.stringContaining(
+        "The action type 'Init' has been renamed to 'Navigation/INIT'"
+      )
+    );
+  });
+
+  test('Querystring params get passed to nested deep link', () => {
+    // uri with two non-empty query param values
+    const uri = 'main/p/4/list/10259959195?code=test&foo=bar';
+    const action = TestStackRouter.getActionForPathAndParams(uri);
+    expect(action).toEqual({
+      type: NavigationActions.NAVIGATE,
+      routeName: 'main',
+      params: {
+        code: 'test',
+        foo: 'bar',
+      },
+      action: {
+        type: NavigationActions.NAVIGATE,
+        routeName: 'profile',
+        params: {
+          id: '4',
+          code: 'test',
+          foo: 'bar',
+        },
+        action: {
+          type: NavigationActions.NAVIGATE,
+          routeName: 'list',
+          params: {
+            id: '10259959195',
+            code: 'test',
+            foo: 'bar',
+          },
+        },
+      },
+    });
+
+    // uri with one empty and one non-empty query param value
+    const uri2 = 'main/p/4/list/10259959195?code=&foo=bar';
+    const action2 = TestStackRouter.getActionForPathAndParams(uri2);
+    expect(action2).toEqual({
+      type: NavigationActions.NAVIGATE,
+      routeName: 'main',
+      params: {
+        code: '',
+        foo: 'bar',
+      },
+      action: {
+        type: NavigationActions.NAVIGATE,
+        routeName: 'profile',
+        params: {
+          id: '4',
+          code: '',
+          foo: 'bar',
+        },
+        action: {
+          type: NavigationActions.NAVIGATE,
+          routeName: 'list',
+          params: {
+            id: '10259959195',
+            code: '',
+            foo: 'bar',
+          },
+        },
+      },
+    });
   });
 });

@@ -65,6 +65,8 @@ MyApp.router.getStateForAction = (action, state) => {
 Sometimes you may want to prevent some navigation activity, depending on your route.
 
 ```js
+import { NavigationActions } from 'react-navigation'
+
 const MyStackRouter = StackRouter({
   Home: { screen: HomeScreen },
   Profile: { screen: ProfileScreen },
@@ -125,5 +127,5 @@ Object.assign(MyApp.router, {
     }
     return previousGetActionForPathAndParams(path, params);
   },
-};
+});
 ```

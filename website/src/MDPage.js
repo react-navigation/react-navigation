@@ -68,7 +68,10 @@ const MDPage = ({ navigation, docPath }) => (
         const className = `md-header ${linkHeader}`;
         return (
           <Header id={id} className={className}>
-            {children} <a href={`#${id}`} title={children}>#</a>
+            {children}{' '}
+            <a href={`#${id}`} title={children}>
+              #
+            </a>
           </Header>
         );
       },
