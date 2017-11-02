@@ -26,12 +26,11 @@ exports[`TabBarBottom renders successfully 1`] = `
       Array [
         Array [
           Object {
+            "backgroundColor": "#F7F7F7",
             "borderTopColor": "rgba(0, 0, 0, .3)",
             "borderTopWidth": 0.5,
           },
-          Object {
-            "backgroundColor": "#F7F7F7",
-          },
+          undefined,
         ],
         Object {
           "paddingBottom": 0,

@@ -80,12 +80,11 @@ exports[`StackNavigator applies correct values when headerRight is present 1`] =
         Array [
           Array [
             Object {
+              "backgroundColor": "#F7F7F7",
               "borderBottomColor": "rgba(0, 0, 0, .3)",
               "borderBottomWidth": 0.5,
             },
-            Object {
-              "backgroundColor": "#F7F7F7",
-            },
+            undefined,
           ],
           Object {
             "paddingBottom": 0,
@@ -320,12 +319,11 @@ exports[`StackNavigator renders successfully 1`] = `
         Array [
           Array [
             Object {
+              "backgroundColor": "#F7F7F7",
               "borderBottomColor": "rgba(0, 0, 0, .3)",
               "borderBottomWidth": 0.5,
             },
-            Object {
-              "backgroundColor": "#F7F7F7",
-            },
+            undefined,
           ],
           Object {
             "paddingBottom": 0,
