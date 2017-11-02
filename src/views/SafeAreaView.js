@@ -150,6 +150,8 @@ class SafeView extends Component {
     const { touchesTop, touchesBottom, touchesLeft, touchesRight } = this.state;
     const { forceInset, isLandscape } = this.props;
 
+    // get padding values from style to add back in after insets are determined
+    // default precedence: padding[Side] -> vertical | horizontal -> padding -> 0
     const {
       padding = 0,
       paddingVertical = padding,
