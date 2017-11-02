@@ -27,20 +27,18 @@ function forLeft(props: NavigationSceneRendererProps): AnimatedViewStyleProp {
 
   if (!interpolate) return { opacity: 0 };
 
-  const activeScene = scenes.find((item: NavigationScene) => item.isActive);
-  const activeIndex = scenes.findIndex(
-    (item: NavigationScene) => item === activeScene
-  );
-  const currentIndex = scenes.findIndex(
-    (item: NavigationScene) => item === scene
-  );
-  const deviation = Math.abs((activeIndex - currentIndex) / 2);
   const { first, last } = interpolate;
   const index = scene.index;
 
   return {
     opacity: position.interpolate({
-      inputRange: [first, first + deviation, index, last - deviation, last],
+      inputRange: [
+        first,
+        first + Math.abs(index - first) / 2,
+        index,
+        last - Math.abs(last - index) / 2,
+        last,
+      ],
       outputRange: ([0, 0, 1, 0, 0]: Array<number>),
     }),
   };
