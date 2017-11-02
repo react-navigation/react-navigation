@@ -70,9 +70,7 @@ class TabBarBottom extends React.PureComponent<Props, State> {
 
   props: Props;
 
-  state: State;
-
-  state = {
+  state: State = {
     isVisible: true,
   };
 
