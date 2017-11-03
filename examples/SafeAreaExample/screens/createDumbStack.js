@@ -1,6 +1,14 @@
 import React from 'react';
 import { StackNavigator } from 'react-navigation';
-import { Dimensions, Button, ScrollView, Text, View, StatusBar } from 'react-native';
+import {
+  Dimensions,
+  Button,
+  Platform,
+  ScrollView,
+  Text,
+  View,
+  StatusBar,
+} from 'react-native';
 import { ScreenOrientation } from 'expo';
 
 const Separator = () => (
@@ -12,6 +20,14 @@ const Separator = () => (
       marginHorizontal: 50,
       marginTop: 15,
       marginBottom: 15,
+    }}
+  />
+);
+
+const Spacer = () => (
+  <View
+    style={{
+      marginBottom: Platform.OS === 'android' ? 20 : 5,
     }}
   />
 );
@@ -33,21 +49,23 @@ export default (navigationOptions = {}) => {
 
     render() {
       return (
-        <ScrollView style={{flex: 1}}>
-        <View
-          style={{
-            paddingTop: 30,
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
-          <Button onPress={this._goBack} title="Go back" />
-          <Separator />
-          <Button onPress={this._setPortrait} title="Set portrait" />
-          <Button onPress={this._setLandscape} title="Set landscape" />
-          <Separator />
-          <Button onPress={this._hideStatusBar} title="Hide status bar" />
-          <Button onPress={this._showStatusBar} title="Show status bar" />
-        </View>
+        <ScrollView style={{ flex: 1 }}>
+          <View
+            style={{
+              paddingTop: 30,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <Button onPress={this._goBack} title="Go back" />
+            <Separator />
+            <Button onPress={this._setPortrait} title="Set portrait" />
+            <Spacer />
+            <Button onPress={this._setLandscape} title="Set landscape" />
+            <Separator />
+            <Button onPress={this._hideStatusBar} title="Hide status bar" />
+            <Spacer />
+            <Button onPress={this._showStatusBar} title="Show status bar" />
+          </View>
         </ScrollView>
       );
     }
@@ -58,19 +76,19 @@ export default (navigationOptions = {}) => {
 
     _setPortrait = () => {
       ScreenOrientation.allow(ScreenOrientation.Orientation.PORTRAIT);
-    }
+    };
 
     _setLandscape = () => {
       ScreenOrientation.allow(ScreenOrientation.Orientation.LANDSCAPE);
-    }
+    };
 
     _hideStatusBar = () => {
       StatusBar.setHidden(true, 'slide');
-    }
+    };
 
     _showStatusBar = () => {
       StatusBar.setHidden(false, 'slide');
-    }
+    };
   }
 
   return StackNavigator({
@@ -78,4 +96,4 @@ export default (navigationOptions = {}) => {
       screen: DumbScreen,
     },
   });
-}
+};
