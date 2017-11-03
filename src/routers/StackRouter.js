@@ -323,7 +323,10 @@ export default (
       };
     },
 
-    getActionForPathAndParams(pathToResolve: string): ?NavigationStackAction {
+    getActionForPathAndParams(
+      pathToResolve: string,
+      inputParams: ?NavigationParams
+    ): ?NavigationStackAction {
       // If the path is empty (null or empty string)
       // just return the initial route action
       if (!pathToResolve) {
@@ -372,9 +375,9 @@ export default (
 
       // reduce the items of the query string. any query params may
       // be overridden by path params
-      const queryParams = (queryString || '')
-        .split('&')
-        .reduce((result: *, item: string) => {
+      const queryParams =
+        inputParams ||
+        (queryString || '').split('&').reduce((result: *, item: string) => {
           if (item !== '') {
             const nextResult = result || {};
             const [key, value] = item.split('=');
