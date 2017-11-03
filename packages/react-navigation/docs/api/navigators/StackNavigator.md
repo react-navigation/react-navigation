@@ -135,10 +135,6 @@ Style object for the header
 
 Style object for the title component
 
-### `headerBackgroundColor`
-
-Color string that overrides default background color.
-
 #### `headerBackTitleStyle`
 
 Style object for the back title
