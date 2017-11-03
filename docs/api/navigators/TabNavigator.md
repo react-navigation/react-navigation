@@ -81,32 +81,34 @@ The route configs object is a mapping from route name to a route config, which t
 
 ### TabNavigatorConfig
 
-- `tabBarComponent` - component to use as the tab bar, e.g. `TabBarBottom`
+- `tabBarComponent` - Component to use as the tab bar, e.g. `TabBarBottom`
 (this is the default on iOS), `TabBarTop`
-(this is the default on Android)
-- `tabBarPosition` - position of the tab bar, can be `'top'` or `'bottom'`
-- `swipeEnabled` - whether to allow swiping between tabs
-- `animationEnabled` - whether to animate when changing tabs
-- `lazy` - whether to lazily render tabs as needed as opposed to rendering them upfront
-- `tabBarOptions` - configure the tab bar, see below.
+(this is the default on Android).
+- `tabBarPosition` - Position of the tab bar, can be `'top'` or `'bottom'`.
+- `swipeEnabled` - Whether to allow swiping between tabs.
+- `animationEnabled` - Whether to animate when changing tabs.
+- `lazy` - Whether to lazily render tabs as needed as opposed to rendering them upfront.
+- `initialLayout` - Optional object containing the initial `height` and `width`, can be passed to prevent the one frame delay in [react-native-tab-view](https://github.com/react-native-community/react-native-tab-view#avoid-one-frame-delay) rendering.
+- `tabBarOptions` - Configure the tab bar, see below.
 
 Several options get passed to the underlying router to modify navigation logic:
 
-- `initialRouteName` - The routeName for the initial tab route when first loading
-- `order` - Array of routeNames which defines the order of the tabs
+- `initialRouteName` - The routeName for the initial tab route when first loading.
+- `order` - Array of routeNames which defines the order of the tabs.
 - `paths` - Provide a mapping of routeName to path config, which overrides the paths set in the routeConfigs.
 - `backBehavior` - Should the back button cause a tab switch to the initial tab? If yes, set to `initialRoute`, otherwise `none`. Defaults to `initialRoute` behavior.
 
 ### `tabBarOptions` for `TabBarBottom` (default tab bar on iOS)
 
-- `activeTintColor` - label and icon color of the active tab
-- `activeBackgroundColor` - background color of the active tab
-- `inactiveTintColor` - label and icon color of the inactive tab
-- `inactiveBackgroundColor` - background color of the inactive tab
-- `showLabel` - whether to show label for tab, default is true
-- `style` - style object for the tab bar
-- `labelStyle` - style object for the tab label
-- `tabStyle` - style object for the tab
+- `activeTintColor` - Label and icon color of the active tab.
+- `activeBackgroundColor` - Background color of the active tab.
+- `inactiveTintColor` - Label and icon color of the inactive tab.
+- `inactiveBackgroundColor` - Background color of the inactive tab.
+- `showLabel` - Whether to show label for tab, default is true.
+- `style` - Style object for the tab bar.
+- `labelStyle` - Style object for the tab label.
+- `tabStyle` - Style object for the tab.
+- `allowFontScaling` - Whether label font should scale to respect Text Size accessibility settings, default is true.
 
 Example:
 
@@ -124,19 +126,20 @@ tabBarOptions: {
 
 ### `tabBarOptions` for `TabBarTop` (default tab bar on Android)
 
-- `activeTintColor` - label and icon color of the active tab
-- `inactiveTintColor` - label and icon color of the inactive tab
-- `showIcon` - whether to show icon for tab, default is false
-- `showLabel` - whether to show label for tab, default is true
-- `upperCaseLabel` - whether to make label uppercase, default is true
-- `pressColor` - color for material ripple (Android >= 5.0 only)
-- `pressOpacity` - opacity for pressed tab (iOS and Android < 5.0 only)
-- `scrollEnabled` - whether to enable scrollable tabs
-- `tabStyle` - style object for the tab
-- `indicatorStyle` - style object for the tab indicator (line at the bottom of the tab)
-- `labelStyle` - style object for the tab label
-- `iconStyle` - style object for the tab icon
-- `style` - style object for the tab bar
+- `activeTintColor` - Label and icon color of the active tab.
+- `inactiveTintColor` - Label and icon color of the inactive tab.
+- `showIcon` - Whether to show icon for tab, default is false.
+- `showLabel` - Whether to show label for tab, default is true.
+- `upperCaseLabel` - Whether to make label uppercase, default is true.
+- `pressColor` - Color for material ripple (Android >= 5.0 only).
+- `pressOpacity` - Opacity for pressed tab (iOS and Android < 5.0 only).
+- `scrollEnabled` - Whether to enable scrollable tabs.
+- `tabStyle` - Style object for the tab.
+- `indicatorStyle` - Style object for the tab indicator (line at the bottom of the tab).
+- `labelStyle` - Style object for the tab label.
+- `iconStyle` - Style object for the tab icon.
+- `style` - Style object for the tab bar.
+- `allowFontScaling` - Whether label font should scale to respect Text Size accessibility settings, default is true.
 
 Example:
 
@@ -158,19 +161,19 @@ tabBarOptions: {
 
 #### `title`
 
-Generic title that can be used as a fallback for `headerTitle` and `tabBarLabel`
+Generic title that can be used as a fallback for `headerTitle` and `tabBarLabel`.
 
 #### `tabBarVisible`
 
-True or false to show or hide the tab bar, if not set then defaults to true
+True or false to show or hide the tab bar, if not set then defaults to true.
 
 #### `tabBarIcon`
 
-React Element or a function that given `{ focused: boolean, tintColor: string }` returns a React.Element, to display in tab bar
+React Element or a function that given `{ focused: boolean, tintColor: string }` returns a React.Node, to display in tab bar.
 
 #### `tabBarLabel`
 
-Title string of a tab displayed in the tab bar or React Element or a function that given `{ focused: boolean, tintColor: string }` returns a React.Element, to display in tab bar. When undefined, scene `title` is used. To hide, see `tabBarOptions.showLabel` in the previous section.
+Title string of a tab displayed in the tab bar or React Element or a function that given `{ focused: boolean, tintColor: string }` returns a React.Node, to display in tab bar. When undefined, scene `title` is used. To hide, see `tabBarOptions.showLabel` in the previous section.
 
 #### `tabBarOnPress`
 

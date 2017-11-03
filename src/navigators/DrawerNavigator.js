@@ -23,15 +23,17 @@ export type DrawerNavigatorConfig = {
 } & NavigationTabRouterConfig &
   DrawerViewConfig;
 
+const { height, width } = Dimensions.get('window');
+
 const DefaultDrawerConfig = {
   /*
    * Default drawer width is screen width - header width
    * https://material.io/guidelines/patterns/navigation-drawer.html
    */
-  drawerWidth:
-    Dimensions.get('window').width - (Platform.OS === 'android' ? 56 : 64),
+  drawerWidth: Math.min(height, width) - (Platform.OS === 'android' ? 56 : 64),
   contentComponent: DrawerItems,
   drawerPosition: 'left',
+  drawerBackgroundColor: 'white',
   useNativeAnimations: true,
 };
 
@@ -48,6 +50,7 @@ const DrawerNavigator = (
     contentOptions,
     drawerPosition,
     useNativeAnimations,
+    drawerBackgroundColor,
     ...tabsConfig
   } = mergedConfig;
 
@@ -61,6 +64,8 @@ const DrawerNavigator = (
           routeConfigs,
           config,
           NavigatorTypes.DRAWER
+          // Flow doesn't realize DrawerScreen already has childNavigationProps
+          // from withCachedChildNavigation for some reason. $FlowFixMe
         )((props: *) => <DrawerScreen {...props} />),
       },
       DrawerOpen: {
@@ -83,6 +88,7 @@ const DrawerNavigator = (
   )((props: *) => (
     <DrawerView
       {...props}
+      drawerBackgroundColor={drawerBackgroundColor}
       drawerLockMode={drawerLockMode}
       useNativeAnimations={useNativeAnimations}
       drawerWidth={drawerWidth}
