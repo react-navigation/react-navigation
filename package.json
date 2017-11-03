@@ -1,6 +1,6 @@
 {
   "name": "react-navigation",
-  "version": "1.0.0-beta.16",
+  "version": "1.0.0-beta.17",
   "description": "React Navigation",
   "main": "src/react-navigation.js",
   "sources": {
@@ -27,6 +27,8 @@
     "start": "npm run run-playground-ios",
     "run-playground-ios": "cd examples/NavigationPlayground && npm run ios",
     "run-playground-android": "cd examples/NavigationPlayground && npm run android",
+    "run-redux-android": "cd examples/ReduxExample && react-native run-android",
+    "run-redux-ios": "cd examples/ReduxExample && react-native run-ios",
     "test": "npm run lint && npm run flow-check && npm run jest",
     "codecov": "codecov",
     "jest": "jest",

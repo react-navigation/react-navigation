@@ -65,33 +65,21 @@ exports[`TabNavigator renders successfully 1`] = `
     </View>
   </View>
   <View
-    onLayout={[Function]}
-    style={
-      Array [
-        Array [
-          Object {
-            "borderTopColor": "rgba(0, 0, 0, .3)",
-            "borderTopWidth": 0.5,
-          },
-          Object {
-            "backgroundColor": "#F7F7F7",
-          },
-        ],
+    collapsable={undefined}
+  >
+    <View
+      onLayout={[Function]}
+      style={
         Object {
+          "backgroundColor": "#F7F7F7",
+          "borderTopColor": "rgba(0, 0, 0, .3)",
+          "borderTopWidth": 0.5,
+          "flexDirection": "row",
+          "height": 49,
           "paddingBottom": 0,
           "paddingLeft": 0,
           "paddingRight": 0,
-          "paddingTop": 20,
-        },
-      ]
-    }
-  >
-    <View
-      collapsable={undefined}
-      style={
-        Object {
-          "flexDirection": "row",
-          "height": 49,
+          "paddingTop": 0,
         }
       }
     >
