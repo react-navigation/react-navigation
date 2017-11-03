@@ -44,10 +44,18 @@ type State = {
 };
 
 const APPBAR_HEIGHT = Platform.OS === 'ios' ? 44 : 56;
+const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : 0;
 const TITLE_OFFSET = Platform.OS === 'ios' ? 70 : 56;
 
 type Props = HeaderProps & { isLandscape: boolean };
 class Header extends React.PureComponent<Props, State> {
+  static get HEIGHT() {
+    console.warn(
+      'Header.HEIGHT is deprecated and will be removed before react-navigation comes out of beta.'
+    );
+    return APPBAR_HEIGHT + STATUSBAR_HEIGHT;
+  }
+
   state = {
     widths: {},
   };
