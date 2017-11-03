@@ -75,77 +75,65 @@ exports[`StackNavigator applies correct values when headerRight is present 1`] =
       />
     </View>
     <View
-      onLayout={[Function]}
-      style={
-        Array [
-          Array [
-            Object {
-              "borderBottomColor": "rgba(0, 0, 0, .3)",
-              "borderBottomWidth": 0.5,
-            },
-            Object {
-              "backgroundColor": "#F7F7F7",
-            },
-          ],
+      cardStyle={undefined}
+      collapsable={undefined}
+      getScreenDetails={[Function]}
+      headerMode={undefined}
+      index={0}
+      layout={
+        Object {
+          "height": 0,
+          "initHeight": 0,
+          "initWidth": 0,
+          "isMeasured": false,
+          "width": 0,
+        }
+      }
+      mode="float"
+      navigation={
+        Object {
+          "dispatch": [Function],
+          "goBack": [Function],
+          "navigate": [Function],
+          "setParams": [Function],
+          "state": Object {
+            "index": 0,
+            "routes": Array [
+              Object {
+                "key": "Init-id-0-1",
+                "routeName": "Home",
+              },
+            ],
+          },
+        }
+      }
+      router={
+        Object {
+          "getActionForPathAndParams": [Function],
+          "getComponentForRouteName": [Function],
+          "getComponentForState": [Function],
+          "getPathAndParamsForState": [Function],
+          "getScreenConfig": [Function],
+          "getScreenOptions": [Function],
+          "getStateForAction": [Function],
+        }
+      }
+      transitionConfig={undefined}
+    >
+      <View
+        onLayout={[Function]}
+        style={
           Object {
+            "backgroundColor": "#F7F7F7",
+            "borderBottomColor": "rgba(0, 0, 0, .3)",
+            "borderBottomWidth": 0.5,
+            "height": 64,
             "paddingBottom": 0,
             "paddingLeft": 0,
             "paddingRight": 0,
             "paddingTop": 20,
-          },
-        ]
-      }
-    >
-      <View
-        cardStyle={undefined}
-        collapsable={undefined}
-        getScreenDetails={[Function]}
-        headerMode={undefined}
-        index={0}
-        layout={
-          Object {
-            "height": 0,
-            "initHeight": 0,
-            "initWidth": 0,
-            "isMeasured": false,
-            "width": 0,
           }
         }
-        mode="float"
-        navigation={
-          Object {
-            "dispatch": [Function],
-            "goBack": [Function],
-            "navigate": [Function],
-            "setParams": [Function],
-            "state": Object {
-              "index": 0,
-              "routes": Array [
-                Object {
-                  "key": "Init-id-0-1",
-                  "routeName": "Home",
-                },
-              ],
-            },
-          }
-        }
-        router={
-          Object {
-            "getActionForPathAndParams": [Function],
-            "getComponentForRouteName": [Function],
-            "getComponentForState": [Function],
-            "getPathAndParamsForState": [Function],
-            "getScreenConfig": [Function],
-            "getScreenOptions": [Function],
-            "getStateForAction": [Function],
-          }
-        }
-        style={
-          Object {
-            "height": 44,
-          }
-        }
-        transitionConfig={undefined}
       >
         <View
           style={
@@ -315,77 +303,65 @@ exports[`StackNavigator renders successfully 1`] = `
       />
     </View>
     <View
-      onLayout={[Function]}
-      style={
-        Array [
-          Array [
-            Object {
-              "borderBottomColor": "rgba(0, 0, 0, .3)",
-              "borderBottomWidth": 0.5,
-            },
-            Object {
-              "backgroundColor": "#F7F7F7",
-            },
-          ],
+      cardStyle={undefined}
+      collapsable={undefined}
+      getScreenDetails={[Function]}
+      headerMode={undefined}
+      index={0}
+      layout={
+        Object {
+          "height": 0,
+          "initHeight": 0,
+          "initWidth": 0,
+          "isMeasured": false,
+          "width": 0,
+        }
+      }
+      mode="float"
+      navigation={
+        Object {
+          "dispatch": [Function],
+          "goBack": [Function],
+          "navigate": [Function],
+          "setParams": [Function],
+          "state": Object {
+            "index": 0,
+            "routes": Array [
+              Object {
+                "key": "Init-id-0-0",
+                "routeName": "Home",
+              },
+            ],
+          },
+        }
+      }
+      router={
+        Object {
+          "getActionForPathAndParams": [Function],
+          "getComponentForRouteName": [Function],
+          "getComponentForState": [Function],
+          "getPathAndParamsForState": [Function],
+          "getScreenConfig": [Function],
+          "getScreenOptions": [Function],
+          "getStateForAction": [Function],
+        }
+      }
+      transitionConfig={undefined}
+    >
+      <View
+        onLayout={[Function]}
+        style={
           Object {
+            "backgroundColor": "#F7F7F7",
+            "borderBottomColor": "rgba(0, 0, 0, .3)",
+            "borderBottomWidth": 0.5,
+            "height": 64,
             "paddingBottom": 0,
             "paddingLeft": 0,
             "paddingRight": 0,
             "paddingTop": 20,
-          },
-        ]
-      }
-    >
-      <View
-        cardStyle={undefined}
-        collapsable={undefined}
-        getScreenDetails={[Function]}
-        headerMode={undefined}
-        index={0}
-        layout={
-          Object {
-            "height": 0,
-            "initHeight": 0,
-            "initWidth": 0,
-            "isMeasured": false,
-            "width": 0,
           }
         }
-        mode="float"
-        navigation={
-          Object {
-            "dispatch": [Function],
-            "goBack": [Function],
-            "navigate": [Function],
-            "setParams": [Function],
-            "state": Object {
-              "index": 0,
-              "routes": Array [
-                Object {
-                  "key": "Init-id-0-0",
-                  "routeName": "Home",
-                },
-              ],
-            },
-          }
-        }
-        router={
-          Object {
-            "getActionForPathAndParams": [Function],
-            "getComponentForRouteName": [Function],
-            "getComponentForState": [Function],
-            "getPathAndParamsForState": [Function],
-            "getScreenConfig": [Function],
-            "getScreenOptions": [Function],
-            "getStateForAction": [Function],
-          }
-        }
-        style={
-          Object {
-            "height": 44,
-          }
-        }
-        transitionConfig={undefined}
       >
         <View
           style={
