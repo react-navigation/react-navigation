@@ -5,7 +5,6 @@ import React from 'react';
 
 import StackRouter from '../StackRouter';
 import TabRouter from '../TabRouter';
-import StackRouter from '../StackRouter';
 
 import NavigationActions from '../../NavigationActions';
 
@@ -677,59 +676,64 @@ describe('TabRouter', () => {
     );
   });
 
-  test('Handles the tab selection action when moving to tabrouter', () => {
-    const ChildNavigator = () => <div />;
-    ChildNavigator.router = TabRouter({
-      FooTabs: BareLeafRouteConfig,
-      BarTabs: BareLeafRouteConfig,
-    });
+  test(
+    'Given a StackRouter with nested TabRouter, it is possible to reset ' +
+      'the StackRouter and navigate to an arbitrary tab (BarTab) in the ' +
+      'TabRouter by supplying sub-actions to the RESET action.',
+    () => {
+      const ChildNavigator = () => <div />;
+      ChildNavigator.router = TabRouter({
+        FooTab: BareLeafRouteConfig,
+        BarTab: BareLeafRouteConfig,
+      });
 
-    const BarScreen = () => <div />;
-    const router = StackRouter({
-      BarStack: {
-        screen: BarScreen,
-      },
-      FooStack: {
-        screen: ChildNavigator,
-      },
-    });
-    const state = router.getStateForAction({ type: NavigationActions.INIT });
-    const state2 = router.getStateForAction(
-      {
-        index: 0,
-        type: NavigationActions.RESET,
-        params: { key: 'a' },
-        actions: [
-          NavigationActions.navigate({
-            index: 0,
-            routeName: 'FooStack',
-            params: { key: 'b' },
-            action: NavigationActions.navigate({ routeName: 'BarTabs' }),
-          }),
-        ],
-      },
-      state
-    );
-
-    expect(state2).toEqual({
-      index: 0,
-      routes: [
+      const BarScreen = () => <div />;
+      const router = StackRouter({
+        BarStack: {
+          screen: BarScreen,
+        },
+        FooStack: {
+          screen: ChildNavigator,
+        },
+      });
+      const state = router.getStateForAction({ type: NavigationActions.INIT });
+      const state2 = router.getStateForAction(
         {
-          action: {
-            routeName: 'BarTabs',
+          index: 0,
+          type: NavigationActions.RESET,
+          params: { key: 'a' },
+          actions: [
+            NavigationActions.navigate({
+              index: 0,
+              routeName: 'FooStack',
+              params: { key: 'b' },
+              action: NavigationActions.navigate({ routeName: 'BarTab' }),
+            }),
+          ],
+        },
+        state
+      );
+
+      expect(state2).toEqual({
+        index: 0,
+        routes: [
+          {
+            action: {
+              routeName: 'BarTab',
+              type: 'Navigation/NAVIGATE',
+            },
+            index: 1,
+            params: { key: 'b' },
+            key: 'id-0-1',
+            routeName: 'FooStack',
+            routes: [
+              { key: 'FooTab', routeName: 'FooTab' },
+              { key: 'BarTab', routeName: 'BarTab' },
+            ],
             type: 'Navigation/NAVIGATE',
           },
-          index: 1,
-          params: { key: 'b' },
-          key: 'id-0-1',
-          routeName: 'FooStack',
-          routes: [
-            { key: 'FooTabs', routeName: 'FooTabs' },
-            { key: 'BarTabs', routeName: 'BarTabs' },
-          ],
-          type: 'Navigation/NAVIGATE',
-        },
-      ],
-    });
-  });
+        ],
+      });
+    }
+  );
 });
