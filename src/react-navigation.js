@@ -4,6 +4,8 @@
 
 /* eslint global-require: 0 */
 
+/*:: export type * from './TypeDefinition'; */
+
 module.exports = {
   // Core
   get createNavigationContainer() {
