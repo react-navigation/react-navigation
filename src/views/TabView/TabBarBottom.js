@@ -219,53 +219,53 @@ class TabBarBottom extends React.PureComponent<Props, State> {
     ];
 
     return this.state.isVisible ? (
-        <SafeAreaView
-          style={tabBarStyle}
-          forceInset={{ bottom: 'always', top: 'never' }}
-        >
-          {routes.map((route: NavigationRoute, index: number) => {
-            const focused = index === navigation.state.index;
-            const scene = { route, index, focused };
-            const onPress = getOnPress(scene);
-            const outputRange = inputRange.map(
-              (inputIndex: number) =>
-                inputIndex === index
-                  ? activeBackgroundColor
-                  : inactiveBackgroundColor
-            );
-            const backgroundColor = position.interpolate({
-              inputRange,
-              outputRange: (outputRange: Array<string>),
-            });
+      <SafeAreaView
+        style={tabBarStyle}
+        forceInset={{ bottom: 'always', top: 'never' }}
+      >
+        {routes.map((route: NavigationRoute, index: number) => {
+          const focused = index === navigation.state.index;
+          const scene = { route, index, focused };
+          const onPress = getOnPress(scene);
+          const outputRange = inputRange.map(
+            (inputIndex: number) =>
+              inputIndex === index
+                ? activeBackgroundColor
+                : inactiveBackgroundColor
+          );
+          const backgroundColor = position.interpolate({
+            inputRange,
+            outputRange: (outputRange: Array<string>),
+          });
 
-            const justifyContent = this.props.showIcon ? 'flex-end' : 'center';
-            const extraProps = this._renderTestIDProps(scene) || {};
-            const { testID, accessibilityLabel } = extraProps;
+          const justifyContent = this.props.showIcon ? 'flex-end' : 'center';
+          const extraProps = this._renderTestIDProps(scene) || {};
+          const { testID, accessibilityLabel } = extraProps;
 
-            return (
-              <TouchableWithoutFeedback
-                key={route.key}
-                testID={testID}
-                accessibilityLabel={accessibilityLabel}
-                onPress={() =>
-                  onPress ? onPress(scene, jumpToIndex) : jumpToIndex(index)}
+          return (
+            <TouchableWithoutFeedback
+              key={route.key}
+              testID={testID}
+              accessibilityLabel={accessibilityLabel}
+              onPress={() =>
+                onPress ? onPress(scene, jumpToIndex) : jumpToIndex(index)}
+            >
+              <Animated.View
+                style={[
+                  styles.tab,
+                  isLandscape && useHorizontalTabs && styles.tabLandscape,
+                  !isLandscape && useHorizontalTabs && styles.tabPortrait,
+                  { backgroundColor },
+                  tabStyle,
+                ]}
               >
-                <Animated.View
-                  style={[
-                    styles.tab,
-                    isLandscape && useHorizontalTabs && styles.tabLandscape,
-                    !isLandscape && useHorizontalTabs && styles.tabPortrait,
-                    { backgroundColor },
-                    tabStyle,
-                  ]}
-                >
-                  {this._renderIcon(scene)}
-                  {this._renderLabel(scene)}
-                </Animated.View>
-              </TouchableWithoutFeedback>
-            );
-          })}
-        </SafeAreaView>
+                {this._renderIcon(scene)}
+                {this._renderLabel(scene)}
+              </Animated.View>
+            </TouchableWithoutFeedback>
+          );
+        })}
+      </SafeAreaView>
     ) : null;
   }
 }
