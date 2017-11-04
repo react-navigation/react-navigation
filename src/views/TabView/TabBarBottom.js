@@ -219,7 +219,6 @@ class TabBarBottom extends React.PureComponent<Props, State> {
     ];
 
     return this.state.isVisible ? (
-      <Animated.View>
         <SafeAreaView
           style={tabBarStyle}
           forceInset={{ bottom: 'always', top: 'never' }}
@@ -267,7 +266,6 @@ class TabBarBottom extends React.PureComponent<Props, State> {
             );
           })}
         </SafeAreaView>
-      </Animated.View>
     ) : null;
   }
 }
