@@ -1,0 +1,15 @@
+{
+  "main": "node_modules/expo/AppEntry.js",
+  "private": true,
+  "dependencies": {
+    "expo": "^22.0.1",
+    "react": "16.0.0-beta.5",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-22.0.1.tar.gz",
+    "react-native-platform-touchable": "^1.1.1",
+    "react-navigation": "^1.0.0-beta.16"
+  },
+  "name": "SafeAreaExample",
+  "version": "0.0.0",
+  "description": "Hello Expo!",
+  "author": null
+}

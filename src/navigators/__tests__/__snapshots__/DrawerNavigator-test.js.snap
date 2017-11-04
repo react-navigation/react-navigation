@@ -94,15 +94,12 @@ exports[`DrawerNavigator renders successfully 1`] = `
       <View
         onLayout={[Function]}
         style={
-          Array [
-            undefined,
-            Object {
-              "paddingBottom": 0,
-              "paddingLeft": 0,
-              "paddingRight": 0,
-              "paddingTop": 20,
-            },
-          ]
+          Object {
+            "paddingBottom": 0,
+            "paddingLeft": 0,
+            "paddingRight": 0,
+            "paddingTop": 20,
+          }
         }
       >
         <View
@@ -142,17 +139,13 @@ exports[`DrawerNavigator renders successfully 1`] = `
             <View
               onLayout={[Function]}
               style={
-                Array [
-                  Object {
-                    "backgroundColor": "rgba(0, 0, 0, .04)",
-                  },
-                  Object {
-                    "paddingBottom": 0,
-                    "paddingLeft": 0,
-                    "paddingRight": 0,
-                    "paddingTop": 20,
-                  },
-                ]
+                Object {
+                  "backgroundColor": "rgba(0, 0, 0, .04)",
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "paddingRight": 0,
+                  "paddingTop": 20,
+                }
               }
             >
               <View
