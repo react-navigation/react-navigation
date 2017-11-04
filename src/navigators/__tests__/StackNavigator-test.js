@@ -30,4 +30,18 @@ describe('StackNavigator', () => {
 
     expect(rendered).toMatchSnapshot();
   });
+
+  it('applies correct values when headerRight is present', () => {
+    const MyStackNavigator = StackNavigator({
+      Home: {
+        screen: HomeScreen,
+        navigationOptions: {
+          headerRight: <View />,
+        },
+      },
+    });
+    const rendered = renderer.create(<MyStackNavigator />).toJSON();
+
+    expect(rendered).toMatchSnapshot();
+  });
 });

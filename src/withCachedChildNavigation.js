@@ -1,28 +1,34 @@
 /* @flow */
 
-import React, { PureComponent } from 'react';
+import * as React from 'react';
 
 import addNavigationHelpers from './addNavigationHelpers';
 
-import type { NavigationScreenProp, NavigationAction } from './TypeDefinition';
+import type {
+  NavigationScreenProp,
+  NavigationState,
+  NavigationRoute,
+} from './TypeDefinition';
 
-type InjectedProps<N> = {
+type InputProps = {
+  +navigation: NavigationScreenProp<NavigationState>,
+};
+type OutputProps = {
   childNavigationProps: {
-    [key: string]: N,
+    +[key: string]: NavigationScreenProp<NavigationRoute>,
   },
 };
 
 /**
  * HOC which caches the child navigation items.
  */
-export default function withCachedChildNavigation<T: *, N: *>(
-  Comp: ReactClass<T & InjectedProps<N>>
-): ReactClass<T> {
-  return class extends PureComponent {
-    static displayName = `withCachedChildNavigation(${Comp.displayName ||
-      Comp.name})`;
-
-    props: T;
+export default function withCachedChildNavigation<T: InputProps>(
+  Comp: React.ComponentType<OutputProps & T>
+): React.ComponentType<T> {
+  // $FlowFixMe StatelessFunctionalComponent missing displayName Flow < 0.54.0
+  const displayName: string = Comp.displayName || Comp.name;
+  return class extends React.PureComponent<T> {
+    static displayName = `withCachedChildNavigation(${displayName})`;
 
     componentWillMount() {
       this._updateNavigationProps(this.props.navigation);
@@ -33,11 +39,11 @@ export default function withCachedChildNavigation<T: *, N: *>(
     }
 
     _childNavigationProps: {
-      [key: string]: NavigationScreenProp<N, NavigationAction>,
+      [key: string]: NavigationScreenProp<NavigationRoute>,
     };
 
     _updateNavigationProps = (
-      navigation: NavigationScreenProp<N, NavigationAction>
+      navigation: NavigationScreenProp<NavigationState>
     ) => {
       // Update props for each child route
       if (!this._childNavigationProps) {
@@ -49,7 +55,7 @@ export default function withCachedChildNavigation<T: *, N: *>(
           return;
         }
         this._childNavigationProps[route.key] = addNavigationHelpers({
-          ...navigation,
+          dispatch: navigation.dispatch,
           state: route,
         });
       });
