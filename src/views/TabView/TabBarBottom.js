@@ -65,6 +65,7 @@ class TabBarBottom extends React.PureComponent<Props, State> {
     showLabel: true,
     showIcon: true,
     allowFontScaling: true,
+    hideIndex: [],
   };
 
   props: Props;
@@ -257,6 +258,7 @@ class TabBarBottom extends React.PureComponent<Props, State> {
                     isLandscape && useHorizontalTabs && styles.tabLandscape,
                     !isLandscape && useHorizontalTabs && styles.tabPortrait,
                     { backgroundColor },
+                    { display: this.props.hideIndex.indexOf( index) > -1 ? 'none' : 'flex'    },
                     tabStyle,
                   ]}
                 >
