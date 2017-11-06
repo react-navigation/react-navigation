@@ -135,7 +135,7 @@ Glad you ask! This library is a community effort: it can only be great if we all
 
 1. Providing feedback on the open [PRs](https://github.com/react-community/react-navigation/pulls).
 
-If you feel brave enough you can submit a PR: follow the [Contributors guide](https://reactnavigation.org/docs/guides/contributors) to find out how. If you don't know where to start, check the ones with the label [`Type: Good First Task`](https://github.com/react-community/react-navigation/labels/Type%3A%20Good%20First%20Task) - even [fixing a typo in the documentation](https://github.com/react-community/react-navigation/pull/2727) is a worthy contribution!
+If you feel brave enough you can submit a PR: follow the [Contributors guide](https://reactnavigation.org/docs/guides/contributors) to find out how. If you don't know where to start, check the ones with the label [`good first issue`](https://github.com/react-community/react-navigation/labels/good%20first%20issue) - even [fixing a typo in the documentation](https://github.com/react-community/react-navigation/pull/2727) is a worthy contribution!
 
 #### Is this the only library available for navigation?
 
