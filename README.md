@@ -12,7 +12,7 @@ React Navigation is the result of a collaboration between developers from Facebo
   * [Basic Tutorials](#basic-tutorials)
   * [Intermediate Concepts](#intermediate-concepts)
   * [Advanced Topics](#advanced-topics)
-  * [Comparisons and Discussion](##comparisons-and-discussion)
+  * [Comparisons and Discussion](#comparisons-and-discussion)
   * [Example Projects](#example-projects)
   * [Libraries](#libraries)
 * [FAQs](#faqs)
