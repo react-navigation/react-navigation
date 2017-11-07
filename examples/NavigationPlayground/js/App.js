@@ -13,7 +13,7 @@ import {
   Text,
   View,
 } from 'react-native';
-import { StackNavigator } from 'react-navigation';
+import { SafeAreaView, StackNavigator } from 'react-navigation';
 
 import Banner from './Banner';
 import CustomTabs from './CustomTabs';
@@ -58,12 +58,14 @@ const ExampleRoutes = {
     screen: CustomTransitioner,
   },
   ModalStack: {
-    name: Platform.OS === 'ios'
-      ? 'Modal Stack Example'
-      : 'Stack with Dynamic Header',
-    description: Platform.OS === 'ios'
-      ? 'Stack navigation with modals'
-      : 'Dynamically showing and hiding the header',
+    name:
+      Platform.OS === 'ios'
+        ? 'Modal Stack Example'
+        : 'Stack with Dynamic Header',
+    description:
+      Platform.OS === 'ios'
+        ? 'Stack navigation with modals'
+        : 'Dynamically showing and hiding the header',
     screen: ModalStack,
   },
   StacksInTabs: {
@@ -91,7 +93,7 @@ const ExampleRoutes = {
 };
 
 const MainScreen = ({ navigation }) => (
-  <ScrollView>
+  <ScrollView style={{ flex: 1 }} contentInsetAdjustmentBehavior="automatic">
     <Banner />
     {Object.keys(ExampleRoutes).map((routeName: string) => (
       <TouchableOpacity
@@ -103,12 +105,17 @@ const MainScreen = ({ navigation }) => (
           navigation.navigate(routeName, {}, action);
         }}
       >
-        <View style={styles.item}>
-          <Text style={styles.title}>{ExampleRoutes[routeName].name}</Text>
-          <Text style={styles.description}>
-            {ExampleRoutes[routeName].description}
-          </Text>
-        </View>
+        <SafeAreaView
+          style={styles.itemContainer}
+          forceInset={{ vertical: 'never' }}
+        >
+          <View style={styles.item}>
+            <Text style={styles.title}>{ExampleRoutes[routeName].name}</Text>
+            <Text style={styles.description}>
+              {ExampleRoutes[routeName].description}
+            </Text>
+          </View>
+        </SafeAreaView>
       </TouchableOpacity>
     ))}
   </ScrollView>
@@ -137,9 +144,11 @@ export default () => <AppNavigator />;
 
 const styles = StyleSheet.create({
   item: {
-    backgroundColor: '#fff',
     paddingHorizontal: 16,
     paddingVertical: 12,
+  },
+  itemContainer: {
+    backgroundColor: '#fff',
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: '#ddd',
   },

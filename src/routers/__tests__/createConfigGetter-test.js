@@ -11,7 +11,7 @@ import type {
 test('should get config for screen', () => {
   /* eslint-disable react/no-multi-comp */
 
-  class HomeScreen extends Component {
+  class HomeScreen extends Component<void> {
     static navigationOptions = ({ navigation }: *) => ({
       title: `Welcome ${navigation.state.params
         ? navigation.state.params.user
@@ -24,7 +24,7 @@ test('should get config for screen', () => {
     }
   }
 
-  class SettingsScreen extends Component {
+  class SettingsScreen extends Component<void> {
     static navigationOptions = {
       title: 'Settings!!!',
       gesturesEnabled: false,
@@ -35,7 +35,7 @@ test('should get config for screen', () => {
     }
   }
 
-  class NotificationScreen extends Component {
+  class NotificationScreen extends Component<void> {
     static navigationOptions = ({ navigation }: *) => ({
       title: '42',
       gesturesEnabled: navigation.state.params
@@ -49,8 +49,7 @@ test('should get config for screen', () => {
   }
 
   const getScreenOptions: NavigationScreenOptionsGetter<
-    NavigationStackScreenOptions,
-    *
+    NavigationStackScreenOptions
   > = createConfigGetter({
     Home: { screen: HomeScreen },
     Settings: { screen: SettingsScreen },

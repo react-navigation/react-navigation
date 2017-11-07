@@ -12,12 +12,13 @@ React Navigation is the result of a collaboration between developers from Facebo
   * [Basic Tutorials](#basic-tutorials)
   * [Intermediate Concepts](#intermediate-concepts)
   * [Advanced Topics](#advanced-topics)
-  * [Comparisons and Discussion](##comparisons-and-discussion)
+  * [Comparisons and Discussion](#comparisons-and-discussion)
   * [Example Projects](#example-projects)
   * [Libraries](#libraries)
 * [FAQs](#faqs)
   * [When is version 1.0.0 going to be released?](#when-is-version-100-going-to-be-released)
   * [I'm having troubles using the library, what can I do?](#im-having-troubles-using-the-library-what-can-i-do)
+  * [My app is really slow!](#my-app-is-really-slow)
   * [How can I help?](#how-can-i-help)
   * [Is this the only library available for navigation?](#is-this-the-only-library-available-for-navigation)
   * [Can I use this library for web?](#can-i-use-this-library-for-web)
@@ -110,6 +111,16 @@ Head to the [issues](https://github.com/react-community/react-navigation/issues)
 
 You should **only** open a new issue if you believe that you are experiencing a bug or have a feature request, and please **follow** the dedicated template - it will help everyone helping you (and may get closed if it doesn't).
 
+#### My app is really slow!
+
+We are aware that the performances can be improved - we will work on this (keep an eye on the roadmap linked above). In the meantime, please refer to these few issues for specific information regarding:
+
+* [Tab Navigators](https://github.com/react-community/react-navigation/issues/739)
+
+* [Stack Navigators](https://github.com/react-community/react-navigation/issues/608)
+
+In particular, refer to [this comment](https://github.com/react-community/react-navigation/issues/608#issuecomment-328635042) (and the [one after](https://github.com/react-community/react-navigation/issues/608#issuecomment-333386346) that) to learn more about how you can try improving the performance of your code.
+
 #### How can I help?
 
 Glad you ask! This library is a community effort: it can only be great if we all help out in one way or another 😄 . If you feel like you aren't experienced enough using react navigation to contribute, you can still make an impact by:
@@ -124,7 +135,7 @@ Glad you ask! This library is a community effort: it can only be great if we all
 
 1. Providing feedback on the open [PRs](https://github.com/react-community/react-navigation/pulls).
 
-If you feel brave enough you can submit a PR: follow the [Contributors guide](https://reactnavigation.org/docs/guides/contributors) to find out how. If you don't know where to start, check the ones with the label [`Type: Good First Task`](https://github.com/react-community/react-navigation/labels/Type%3A%20Good%20First%20Task) - even [fixing a typo in the documentation](https://github.com/react-community/react-navigation/pull/2727) is a worthy contribution!
+If you feel brave enough you can submit a PR: follow the [Contributors guide](https://reactnavigation.org/docs/guides/contributors) to find out how. If you don't know where to start, check the ones with the label [`good first issue`](https://github.com/react-community/react-navigation/labels/good%20first%20issue) - even [fixing a typo in the documentation](https://github.com/react-community/react-navigation/pull/2727) is a worthy contribution!
 
 #### Is this the only library available for navigation?
 
