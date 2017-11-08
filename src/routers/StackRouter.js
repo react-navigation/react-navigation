@@ -61,24 +61,41 @@ export default (
   const initialRouteName = stackConfig.initialRouteName || routeNames[0];
 
   const initialChildRouter = childRouters[initialRouteName];
-  const paths = stackConfig.paths || {};
+  const pathsByRouteNames = { ...stackConfig.paths } || {};
+  let paths = [];
 
   // Build paths for each route
   routeNames.forEach((routeName: string) => {
-    let pathPattern = paths[routeName] || routeConfigs[routeName].path;
-    const matchExact = !!pathPattern && !childRouters[routeName];
-    if (typeof pathPattern !== 'string') {
+    let pathPattern =
+      pathsByRouteNames[routeName] || routeConfigs[routeName].path;
+    let matchExact = !!pathPattern && !childRouters[routeName];
+    if (pathPattern === undefined) {
       pathPattern = routeName;
     }
     const keys = [];
-    let re = pathToRegexp(pathPattern, keys);
+    let re, toPath, priority;
+    if (!!pathPattern) {
+      // pathPattern may be either a string or a regexp object according to path-to-regexp docs.
+      re = pathToRegexp(pathPattern, keys);
+      toPath = pathToRegexp.compile(pathPattern);
+      priority = 0;
+    } else {
+      // for wildcard match
+      re = pathToRegexp('*', keys);
+      toPath = () => '';
+      matchExact = true;
+      priority = -1;
+    }
     if (!matchExact) {
       const wildcardRe = pathToRegexp(`${pathPattern}/*`, keys);
       re = new RegExp(`(?:${re.source})|(?:${wildcardRe.source})`);
     }
-    /* $FlowFixMe */
-    paths[routeName] = { re, keys, toPath: pathToRegexp.compile(pathPattern) };
+    pathsByRouteNames[routeName] = { re, keys, toPath, priority };
   });
+
+  paths = Object.entries(pathsByRouteNames);
+  /* $FlowFixMe */
+  paths.sort((a: [string, *], b: [string, *]) => b[1].priority - a[1].priority);
 
   return {
     getComponentForState(state: NavigationState): NavigationComponent {
@@ -304,8 +321,7 @@ export default (
       const route = state.routes[state.index];
       const routeName = route.routeName;
       const screen = getScreenForRouteName(routeConfigs, routeName);
-      /* $FlowFixMe */
-      const subPath = paths[routeName].toPath(route.params);
+      const subPath = pathsByRouteNames[routeName].toPath(route.params);
       let path = subPath;
       let params = route.params;
       if (screen && screen.router) {
@@ -344,7 +360,7 @@ export default (
       let pathMatchKeys;
 
       // eslint-disable-next-line no-restricted-syntax
-      for (const [routeName, path] of Object.entries(paths)) {
+      for (const [routeName, path] of paths) {
         /* $FlowFixMe */
         const { re, keys } = path;
         pathMatch = re.exec(pathNameToResolve);
@@ -371,6 +387,9 @@ export default (
           /* $FlowFixMe */
           pathMatch.slice(pathMatchKeys.length).join('/') + nestedQueryString
         );
+        if (!nestedAction) {
+          return null;
+        }
       }
 
       // reduce the items of the query string. any query params may

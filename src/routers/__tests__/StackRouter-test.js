@@ -55,6 +55,10 @@ const TestStackRouter = StackRouter({
   main: {
     screen: MainNavigator,
   },
+  baz: {
+    path: null,
+    screen: FooNavigator,
+  },
   auth: {
     screen: AuthNavigator,
   },
@@ -269,6 +273,22 @@ describe('StackRouter', () => {
           params: {
             id: '10259959195',
           },
+        },
+      },
+    });
+  });
+
+  test('Correctly parses a path to the router connected to another router through a pure wildcard route into an action chain', () => {
+    const uri = 'b/123';
+    const action = TestStackRouter.getActionForPathAndParams(uri);
+    expect(action).toEqual({
+      type: NavigationActions.NAVIGATE,
+      routeName: 'baz',
+      action: {
+        type: NavigationActions.NAVIGATE,
+        routeName: 'bar',
+        params: {
+          barThing: '123',
         },
       },
     });
@@ -862,6 +882,49 @@ describe('StackRouter', () => {
     };
     const { path, params } = router.getPathAndParamsForState(state);
     expect(path).toEqual('f/123/baz/321');
+    /* $FlowFixMe: params.id has to exist */
+    expect(params.id).toEqual('123');
+    /* $FlowFixMe: params.bazId has to exist */
+    expect(params.bazId).toEqual('321');
+  });
+
+  test('Gets deep path with pure wildcard match', () => {
+    const ScreenA = () => <div />;
+    const ScreenB = () => <div />;
+    ScreenA.router = StackRouter({
+      Boo: { path: 'boo', screen: ScreenB },
+      Baz: { path: 'baz/:bazId', screen: ScreenB },
+    });
+    const router = StackRouter({
+      Foo: {
+        path: null,
+        screen: ScreenA,
+      },
+      Bar: {
+        screen: ScreenB,
+      },
+    });
+
+    const state = {
+      index: 0,
+      routes: [
+        {
+          index: 1,
+          key: 'Foo',
+          routeName: 'Foo',
+          params: {
+            id: '123',
+          },
+          routes: [
+            { key: 'Boo', routeName: 'Boo' },
+            { key: 'Baz', routeName: 'Baz', params: { bazId: '321' } },
+          ],
+        },
+        { key: 'Bar', routeName: 'Bar' },
+      ],
+    };
+    const { path, params } = router.getPathAndParamsForState(state);
+    expect(path).toEqual('baz/321');
     /* $FlowFixMe: params.id has to exist */
     expect(params.id).toEqual('123');
     /* $FlowFixMe: params.bazId has to exist */
