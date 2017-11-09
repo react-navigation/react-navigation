@@ -1,7 +1,7 @@
 /* @flow */
 /* eslint react/no-multi-comp:0 */
 
-import React from 'react';
+import * as React from 'react';
 
 import StackRouter from '../StackRouter';
 import TabRouter from '../TabRouter';
@@ -19,18 +19,18 @@ Object.keys(ROUTERS).forEach((routerName: string) => {
 
   describe(`General router features - ${routerName}`, () => {
     test('title is configurable using navigationOptions and getScreenOptions', () => {
-      class FooView extends React.Component {
+      class FooView extends React.Component<void> {
         render() {
           return <div />;
         }
       }
-      class BarView extends React.Component {
+      class BarView extends React.Component<void> {
         render() {
           return <div />;
         }
         static navigationOptions = { title: 'BarTitle' };
       }
-      class BazView extends React.Component {
+      class BazView extends React.Component<void> {
         render() {
           return <div />;
         }
@@ -51,20 +51,20 @@ Object.keys(ROUTERS).forEach((routerName: string) => {
       expect(
         router.getScreenOptions(
           addNavigationHelpers({ state: routes[0], dispatch: () => false }),
-          {},
-        ).title,
+          {}
+        ).title
       ).toEqual(undefined);
       expect(
         router.getScreenOptions(
           addNavigationHelpers({ state: routes[1], dispatch: () => false }),
-          {},
-        ).title,
+          {}
+        ).title
       ).toEqual('BarTitle');
       expect(
         router.getScreenOptions(
           addNavigationHelpers({ state: routes[2], dispatch: () => false }),
-          {},
-        ).title,
+          {}
+        ).title
       ).toEqual('Baz-123');
     });
   });
@@ -90,10 +90,16 @@ test('Handles no-op actions with tabs within stack router', () => {
     type: NavigationActions.NAVIGATE,
     routeName: 'Qux',
   });
+  /* $FlowFixMe */
+  expect(state1.routes[0].key).toEqual('Init-id-0-0');
+  /* $FlowFixMe */
+  expect(state2.routes[0].key).toEqual('Init-id-0-1');
+  /* $FlowFixMe */
+  state1.routes[0].key = state2.routes[0].key;
   expect(state1).toEqual(state2);
   const state3 = TestRouter.getStateForAction(
     { type: NavigationActions.NAVIGATE, routeName: 'Zap' },
-    state2,
+    state2
   );
   expect(state2).toEqual(state3);
 });
@@ -114,7 +120,7 @@ test('Handles deep action', () => {
     index: 0,
     routes: [
       {
-        key: 'Init',
+        key: 'Init-id-0-2',
         routeName: 'Bar',
       },
     ],
@@ -126,7 +132,7 @@ test('Handles deep action', () => {
       routeName: 'Foo',
       action: { type: NavigationActions.NAVIGATE, routeName: 'Zoo' },
     },
-    state1,
+    state1
   );
   expect(state2 && state2.index).toEqual(1);
   /* $FlowFixMe */
@@ -153,10 +159,16 @@ test('Supports lazily-evaluated getScreen', () => {
     type: NavigationActions.NAVIGATE,
     routeName: 'Qux',
   });
+  /* $FlowFixMe */
+  expect(state1.routes[0].key).toEqual('Init-id-0-4');
+  /* $FlowFixMe */
+  expect(state2.routes[0].key).toEqual('Init-id-0-5');
+  /* $FlowFixMe */
+  state1.routes[0].key = state2.routes[0].key;
   expect(state1).toEqual(state2);
   const state3 = TestRouter.getStateForAction(
     { type: NavigationActions.NAVIGATE, routeName: 'Zap' },
-    state2,
+    state2
   );
   expect(state2).toEqual(state3);
 });

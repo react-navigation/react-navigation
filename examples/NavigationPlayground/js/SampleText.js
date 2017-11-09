@@ -2,21 +2,14 @@
 
 import React from 'react';
 
-import {
-  StyleSheet,
-  Text,
-} from 'react-native';
+import { StyleSheet, Text } from 'react-native';
 
 /**
  * Used across examples as a screen placeholder.
  */
- import type { Children } from 'react';
+import type { ChildrenArray } from 'react';
 
-const SampleText = ({
-  children
-}: {
-  children?: Children
-}) => (
+const SampleText = ({ children }: { children?: ChildrenArray<*> }) => (
   <Text style={styles.sampleText}>{children}</Text>
 );
 

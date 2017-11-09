@@ -1,5 +1,16 @@
 {
-  "presets": [
-    "react-native"
-  ]
+  "presets": ["babel-preset-expo"],
+  "plugins": [
+    ["module-resolver", {
+      "alias": {
+        "react-native": "./node_modules/react-native",
+        "react": "./node_modules/react"
+      }
+    }]
+  ],
+  "env": {
+    "development": {
+      "plugins": ["transform-react-jsx-source"]
+    }
+  }
 }

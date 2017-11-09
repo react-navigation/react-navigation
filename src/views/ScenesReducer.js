@@ -1,7 +1,7 @@
 /* @flow */
 
-import invariant from 'fbjs/lib/invariant';
-import shallowEqual from 'fbjs/lib/shallowEqual';
+import invariant from '../utils/invariant';
+import shallowEqual from '../utils/shallowEqual';
 
 import type {
   NavigationRoute,
@@ -44,13 +44,15 @@ function compareScenes(one: NavigationScene, two: NavigationScene): number {
  */
 function areScenesShallowEqual(
   one: NavigationScene,
-  two: NavigationScene,
+  two: NavigationScene
 ): boolean {
-  return one.key === two.key &&
+  return (
+    one.key === two.key &&
     one.index === two.index &&
     one.isStale === two.isStale &&
     one.isActive === two.isActive &&
-    areRoutesShallowEqual(one.route, two.route);
+    areRoutesShallowEqual(one.route, two.route)
+  );
 }
 
 /**
@@ -58,7 +60,7 @@ function areScenesShallowEqual(
  */
 function areRoutesShallowEqual(
   one: ?NavigationRoute,
-  two: ?NavigationRoute,
+  two: ?NavigationRoute
 ): boolean {
   if (!one || !two) {
     return one === two;
@@ -74,7 +76,7 @@ function areRoutesShallowEqual(
 export default function ScenesReducer(
   scenes: Array<NavigationScene>,
   nextState: NavigationState,
-  prevState: ?NavigationState,
+  prevState: ?NavigationState
 ): Array<NavigationScene> {
   if (prevState === nextState) {
     return scenes;
@@ -106,7 +108,7 @@ export default function ScenesReducer(
     invariant(
       !nextKeys.has(key),
       `navigation.state.routes[${index}].key "${key}" conflicts with ` +
-        'another route!',
+        'another route!'
     );
     nextKeys.add(key);
 
@@ -171,7 +173,7 @@ export default function ScenesReducer(
   invariant(
     activeScenesCount === 1,
     'there should always be only one scene active, not %s.',
-    activeScenesCount,
+    activeScenesCount
   );
 
   if (nextScenes.length !== scenes.length) {
@@ -180,7 +182,7 @@ export default function ScenesReducer(
 
   if (
     nextScenes.some(
-      (scene: *, index: *) => !areScenesShallowEqual(scenes[index], scene),
+      (scene: *, index: *) => !areScenesShallowEqual(scenes[index], scene)
     )
   ) {
     return nextScenes;

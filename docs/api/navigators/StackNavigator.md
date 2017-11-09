@@ -53,12 +53,12 @@ StackNavigator({
     // When `ProfileScreen` is loaded by the StackNavigator, it will be given a `navigation` prop.
 
     // Optional: When deep linking or using react-navigation in a web app, this path is used:
-    path: 'people/:username',
+    path: 'people/:name',
     // The action and route params are extracted from the path.
 
     // Optional: Override the `navigationOptions` for the screen
     navigationOptions: ({navigation}) => ({
-      title: `${navigation.state.params.username}'s Profile'`,
+      title: `${navigation.state.params.name}'s Profile'`,
     }),
   },
 
@@ -85,7 +85,10 @@ Visual options:
   - `screen` - Each screen has a header attached to it and the header fades in and out together with the screen. This is a common pattern on Android.
   - `none` - No header will be rendered.
 - `cardStyle` - Use this prop to override or extend the default style for an individual card in stack.
-- `transitionConfig` - Function to return an object that overrides default screen transitions.
+- `transitionConfig` - Function to return an object that is merged with the default screen transitions (take a look at TransitionConfig in [type definitions](https://github.com/react-community/react-navigation/blob/master/src/TypeDefinition.js)). Provided function will be passed the following arguments:
+	- `transitionProps` - Transition props for the new screen.
+	- `prevTransitionProps` - Transitions props for the old screen.
+	- `isModal` - Boolean specifying if screen is modal.
 - `onTransitionStart` - Function to be invoked when the card transition animation is about to start.
 - `onTransitionEnd` - Function to be invoked once the card transition animation completes.
 
@@ -94,7 +97,7 @@ Visual options:
 
 #### `title`
 
-Generic title that can be used as a fallback for `headerTitle` and `tabBarLabel`
+String that can be used as a fallback for `headerTitle`. Additionally, will be used as a fallback for `tabBarLabel` (if nested in a TabNavigator) or `drawerLabel` (if nested in a DrawerNavigator). 
 
 #### `header`
 
@@ -104,9 +107,13 @@ React Element or a function that given `HeaderProps` returns a React Element, to
 
 String or React Element used by the header. Defaults to scene `title`
 
+#### `headerTitleAllowFontScaling`
+
+Whether header title font should scale to respect Text Size accessibility settings. Defaults to true
+
 #### `headerBackTitle`
 
-Title string used by the back button on iOS or `null` to disable label. Defaults to scene `title`
+Title string used by the back button on iOS, or `null` to disable label. Defaults to the previous scene's `headerTitle`
 
 #### `headerTruncatedBackTitle`
 
@@ -144,6 +151,13 @@ Color for material ripple (Android >= 5.0 only)
 
 Whether you can use gestures to dismiss this screen. Defaults to true on iOS, false on Android.
 
+#### `gestureResponseDistance`
+
+Object to override the distance of touch start from the edge of the screen to recognize gestures. It takes the following properties:
+
+- `horizontal` - *number* - Distance for horizontal direction. Defaults to 25.
+- `vertical` - *number* - Distance for vertical direction. Defaults to 135.
+
 ### Navigator Props
 
 The navigator component created by `StackNavigator(...)` takes the following props:
@@ -164,3 +178,47 @@ The navigator component created by `StackNavigator(...)` takes the following pro
 ### Examples
 
 See the examples [SimpleStack.js](https://github.com/react-community/react-navigation/tree/master/examples/NavigationPlayground/js/SimpleStack.js) and [ModalStack.js](https://github.com/react-community/react-navigation/tree/master/examples/NavigationPlayground/js/ModalStack.js) which you can run locally as part of the [NavigationPlayground](https://github.com/react-community/react-navigation/tree/master/examples/NavigationPlayground) app.
+
+You can view these examples directly on your phone by visiting [our expo demo](https://exp.host/@react-navigation/NavigationPlayground).
+
+#### Modal StackNavigator with Custom Screen Transitions
+
+ ```js
+const ModalNavigator = StackNavigator(
+  {
+    Main: { screen: Main },
+    Login: { screen: Login },
+  },
+  {
+    headerMode: 'none',
+    mode: 'modal',
+    navigationOptions: {
+      gesturesEnabled: false,
+    },
+    transitionConfig: () => ({
+      transitionSpec: {
+        duration: 300,
+        easing: Easing.out(Easing.poly(4)),
+        timing: Animated.timing,
+      },
+      screenInterpolator: sceneProps => {
+        const { layout, position, scene } = sceneProps;
+        const { index } = scene;
+
+        const height = layout.initHeight;
+        const translateY = position.interpolate({
+          inputRange: [index - 1, index, index + 1],
+          outputRange: [height, 0, 0],
+        });
+
+        const opacity = position.interpolate({
+          inputRange: [index - 1, index - 0.99, index],
+          outputRange: [0, 1, 1],
+        });
+
+        return { opacity, transform: [{ translateY }] };
+      },
+    }),
+  }
+);
+ ```
