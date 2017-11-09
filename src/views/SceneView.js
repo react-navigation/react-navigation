@@ -34,10 +34,13 @@ export default class SceneView extends React.PureComponent<Props> {
     const comp: any = (
       <Component screenProps={screenProps} navigation={navigation} />
     );
-    const originalMethod = comp.type.prototype.shouldComponentUpdate;
-    if (originalMethod && scene) {
+    if (scene) {
+      const originalMethod = comp.type.prototype.shouldComponentUpdate;
       comp.type.prototype.shouldComponentUpdate = function(...args: [*]) {
-        return scene.isActive && originalMethod.apply(this, args);
+        return (
+          scene.isActive &&
+          (!originalMethod || originalMethod.apply(this, args))
+        );
       };
     }
     return comp;
