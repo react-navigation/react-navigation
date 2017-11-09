@@ -361,7 +361,6 @@ export type NavigationStackScreenOptions = {|
   headerPressColorAndroid?: string,
   headerRight?: React.Node,
   headerStyle?: ViewStyleProp,
-  headerBackgroundColor?: string,
   gesturesEnabled?: boolean,
   gestureResponseDistance?: { vertical?: number, horizontal?: number },
 |};

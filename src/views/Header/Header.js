@@ -44,10 +44,18 @@ type State = {
 };
 
 const APPBAR_HEIGHT = Platform.OS === 'ios' ? 44 : 56;
+const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : 0;
 const TITLE_OFFSET = Platform.OS === 'ios' ? 70 : 56;
 
 type Props = HeaderProps & { isLandscape: boolean };
 class Header extends React.PureComponent<Props, State> {
+  static get HEIGHT() {
+    console.warn(
+      'Header.HEIGHT is deprecated and will be removed before react-navigation comes out of beta.'
+    );
+    return APPBAR_HEIGHT + STATUSBAR_HEIGHT;
+  }
+
   state = {
     widths: {},
   };
@@ -302,12 +310,10 @@ class Header extends React.PureComponent<Props, State> {
     } = this.props;
 
     const { options } = this.props.getScreenDetails(scene);
-    const {
-      headerStyle,
-      headerBackgroundColor = Platform.OS === 'ios' ? '#F7F7F7' : '#FFF',
-    } = options;
+    const { headerStyle } = options;
     const appBarHeight = Platform.OS === 'ios' ? (isLandscape ? 32 : 44) : 56;
     const containerStyles = [
+      styles.container,
       {
         height: appBarHeight,
       },
@@ -315,14 +321,14 @@ class Header extends React.PureComponent<Props, State> {
     ];
 
     return (
-      <SafeAreaView
-        style={[styles.container, { backgroundColor: headerBackgroundColor }]}
-        forceInset={{ top: 'always', bottom: 'never' }}
-      >
-        <Animated.View {...rest} style={containerStyles}>
+      <Animated.View {...rest}>
+        <SafeAreaView
+          style={containerStyles}
+          forceInset={{ top: 'always', bottom: 'never' }}
+        >
           <View style={styles.appBar}>{appBar}</View>
-        </Animated.View>
-      </SafeAreaView>
+        </SafeAreaView>
+      </Animated.View>
     );
   }
 }
@@ -347,6 +353,7 @@ if (Platform.OS === 'ios') {
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: Platform.OS === 'ios' ? '#F7F7F7' : '#FFF',
     ...platformContainerStyles,
   },
   appBar: {

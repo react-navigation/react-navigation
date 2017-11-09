@@ -7,6 +7,7 @@ import {
   StyleSheet,
   View,
   Platform,
+  Keyboard,
 } from 'react-native';
 import TabBarIcon from './TabBarIcon';
 import SafeAreaView from '../SafeAreaView';
@@ -40,18 +41,21 @@ type Props = {
   getTestIDProps: (scene: TabScene) => (scene: TabScene) => any,
   renderIcon: (scene: TabScene) => React.Node,
   style?: ViewStyleProp,
-  backgroundColor?: string,
   labelStyle?: TextStyleProp,
   tabStyle?: ViewStyleProp,
   showIcon?: boolean,
   isLandscape: boolean,
 };
 
+type State = {
+  isVisible: boolean,
+};
+
 const majorVersion = parseInt(Platform.Version, 10);
 const isIos = Platform.OS === 'ios';
 const useHorizontalTabs = majorVersion >= 11 && isIos;
 
-class TabBarBottom extends React.PureComponent<Props> {
+class TabBarBottom extends React.PureComponent<Props, State> {
   // See https://developer.apple.com/library/content/documentation/UserExperience/Conceptual/UIKitUICatalog/UITabBar.html
   static defaultProps = {
     activeTintColor: '#3478f6', // Default active tint color in iOS 10
@@ -64,6 +68,41 @@ class TabBarBottom extends React.PureComponent<Props> {
   };
 
   props: Props;
+
+  state: State = {
+    isVisible: true,
+  };
+
+  _keyboardDidShowSub = undefined;
+  _keyboardDidHideSub = undefined;
+
+  componentWillMount() {
+    this._keyboardDidShowSub = Keyboard.addListener(
+      'keyboardDidShow',
+      this._keyboardDidShow
+    );
+    this._keyboardDidHideSub = Keyboard.addListener(
+      'keyboardDidHide',
+      this._keyboardDidHide
+    );
+  }
+
+  componentWillUnmount() {
+    this._keyboardDidShowSub !== undefined && this._keyboardDidShowSub.remove();
+    this._keyboardDidHideSub !== undefined && this._keyboardDidHideSub.remove();
+  }
+
+  _keyboardDidShow = () => {
+    this.setState({
+      isVisible: false,
+    });
+  };
+
+  _keyboardDidHide = () => {
+    this.setState({
+      isVisible: true,
+    });
+  };
 
   _renderLabel = (scene: TabScene) => {
     const {
@@ -165,7 +204,6 @@ class TabBarBottom extends React.PureComponent<Props> {
       inactiveBackgroundColor,
       style,
       tabStyle,
-      backgroundColor = '#F7F7F7', // Default background color in iOS 10
       isLandscape,
     } = this.props;
     const { routes } = navigation.state;
@@ -180,12 +218,12 @@ class TabBarBottom extends React.PureComponent<Props> {
       style,
     ];
 
-    return (
-      <SafeAreaView
-        style={[styles.tabBarContainer, { backgroundColor }]}
-        forceInset={{ bottom: 'always' }}
-      >
-        <Animated.View style={tabBarStyle}>
+    return this.state.isVisible ? (
+      <Animated.View>
+        <SafeAreaView
+          style={tabBarStyle}
+          forceInset={{ bottom: 'always', top: 'never' }}
+        >
           {routes.map((route: NavigationRoute, index: number) => {
             const focused = index === navigation.state.index;
             const scene = { route, index, focused };
@@ -228,20 +266,19 @@ class TabBarBottom extends React.PureComponent<Props> {
               </TouchableWithoutFeedback>
             );
           })}
-        </Animated.View>
-      </SafeAreaView>
-    );
+        </SafeAreaView>
+      </Animated.View>
+    ) : null;
   }
 }
 
 const LABEL_LEFT_MARGIN = 20;
 const LABEL_TOP_MARGIN = 15;
 const styles = StyleSheet.create({
-  tabBarContainer: {
+  tabBar: {
+    backgroundColor: '#F7F7F7', // Default background color in iOS 10
     borderTopWidth: StyleSheet.hairlineWidth,
     borderTopColor: 'rgba(0, 0, 0, .3)',
-  },
-  tabBar: {
     flexDirection: 'row',
   },
   tabBarLandscape: {
