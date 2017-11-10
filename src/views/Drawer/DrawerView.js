@@ -53,7 +53,7 @@ export type DrawerViewProps = DrawerViewPropsExceptRouter & {
     NavigationState,
     NavigationTabAction,
     NavigationDrawerScreenOptions
-    >,
+  >,
 };
 
 /**
@@ -61,7 +61,7 @@ export type DrawerViewProps = DrawerViewPropsExceptRouter & {
  */
 export default class DrawerView<T: NavigationRoute> extends React.PureComponent<
   DrawerViewProps
-  > {
+> {
   componentWillMount() {
     this._updateScreenNavigation(this.props.navigation);
   }
@@ -70,7 +70,11 @@ export default class DrawerView<T: NavigationRoute> extends React.PureComponent<
     if (
       this.props.navigation.state.index !== nextProps.navigation.state.index
     ) {
-      const { drawerOpenRoute, drawerCloseRoute, drawerToggleRoute } = this.props;
+      const {
+        drawerOpenRoute,
+        drawerCloseRoute,
+        drawerToggleRoute,
+      } = this.props;
       const { routes, index } = nextProps.navigation.state;
       if (routes[index].routeName === drawerOpenRoute) {
         this._drawer.openDrawer();
