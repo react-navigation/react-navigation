@@ -6,11 +6,11 @@ import {
   NativeModules,
   Platform,
   SafeAreaView,
+  StyleSheet,
   View,
 } from 'react-native';
 import withOrientation from './withOrientation';
 
-const { isIPhoneX_deprecated } = DeviceInfo;
 // See https://mydevice.io/devices/ for device dimensions
 const X_WIDTH = 375;
 const X_HEIGHT = 812;
@@ -23,8 +23,10 @@ const { PlatformConstants = {} } = NativeModules;
 const { minor = 0 } = PlatformConstants.reactNativeVersion || {};
 
 const isIPhoneX = (() => {
+  if (Platform.OS === 'web') return false;
+
   if (minor >= 50) {
-    return isIPhoneX_deprecated;
+    return DeviceInfo.isIPhoneX_deprecated;
   }
 
   return (
@@ -62,6 +64,18 @@ const statusBarHeight = isLandscape => {
   return isLandscape ? 0 : 20;
 };
 
+const doubleFromPercentString = percent => {
+  if (!percent.includes('%')) {
+    return 0;
+  }
+
+  const dbl = parseFloat(percent) / 100;
+
+  if (isNaN(dbl)) return 0;
+
+  return dbl;
+};
+
 class SafeView extends Component {
   state = {
     touchesTop: true,
@@ -69,6 +83,8 @@ class SafeView extends Component {
     touchesLeft: true,
     touchesRight: true,
     orientation: null,
+    viewWidth: 0,
+    viewHeight: 0,
   };
 
   componentDidMount() {
@@ -88,17 +104,13 @@ class SafeView extends Component {
       return <View style={style}>{this.props.children}</View>;
     }
 
-    if (!forceInset && minor >= 50) {
-      return <SafeAreaView style={style}>{this.props.children}</SafeAreaView>;
-    }
-
     const safeAreaStyle = this._getSafeAreaStyle();
 
     return (
       <View
         ref={c => (this.view = c)}
         onLayout={this._onLayout}
-        style={[style, safeAreaStyle]}
+        style={safeAreaStyle}
       >
         {this.props.children}
       </View>
@@ -145,6 +157,8 @@ class SafeView extends Component {
         touchesLeft,
         touchesRight,
         orientation: newOrientation,
+        viewWidth: winWidth,
+        viewHeight: winHeight,
       });
     });
   };
@@ -153,7 +167,16 @@ class SafeView extends Component {
     const { touchesTop, touchesBottom, touchesLeft, touchesRight } = this.state;
     const { forceInset, isLandscape } = this.props;
 
+    const {
+      paddingTop,
+      paddingBottom,
+      paddingLeft,
+      paddingRight,
+      viewStyle,
+    } = this._getViewStyles();
+
     const style = {
+      ...viewStyle,
       paddingTop: touchesTop ? this._getInset('top') : 0,
       paddingBottom: touchesBottom ? this._getInset('bottom') : 0,
       paddingLeft: touchesLeft ? this._getInset('left') : 0,
@@ -195,7 +218,62 @@ class SafeView extends Component {
       });
     }
 
+    // new height/width should only include padding from insets
+    // height/width should not be affected by padding from style obj
+    if (style.height && typeof style.height === 'number') {
+      style.height += style.paddingTop + style.paddingBottom;
+    }
+
+    if (style.width && typeof style.width === 'number') {
+      style.width += style.paddingLeft + style.paddingRight;
+    }
+
+    style.paddingTop += paddingTop;
+    style.paddingBottom += paddingBottom;
+    style.paddingLeft += paddingLeft;
+    style.paddingRight += paddingRight;
+
     return style;
+  };
+
+  _getViewStyles = () => {
+    const { viewWidth } = this.state;
+    // get padding values from style to add back in after insets are determined
+    // default precedence: padding[Side] -> vertical | horizontal -> padding -> 0
+    let {
+      padding = 0,
+      paddingVertical = padding,
+      paddingHorizontal = padding,
+      paddingTop = paddingVertical,
+      paddingBottom = paddingVertical,
+      paddingLeft = paddingHorizontal,
+      paddingRight = paddingHorizontal,
+      ...viewStyle
+    } = StyleSheet.flatten(this.props.style || {});
+
+    if (typeof paddingTop !== 'number') {
+      paddingTop = doubleFromPercentString(paddingTop) * viewWidth;
+    }
+
+    if (typeof paddingBottom !== 'number') {
+      paddingBottom = doubleFromPercentString(paddingBottom) * viewWidth;
+    }
+
+    if (typeof paddingLeft !== 'number') {
+      paddingLeft = doubleFromPercentString(paddingLeft) * viewWidth;
+    }
+
+    if (typeof paddingRight !== 'number') {
+      paddingRight = doubleFromPercentString(paddingRight) * viewWidth;
+    }
+
+    return {
+      paddingTop,
+      paddingBottom,
+      paddingLeft,
+      paddingRight,
+      viewStyle,
+    };
   };
 
   _getInset = key => {
