@@ -148,7 +148,7 @@ const GuidesDocs = createNavigator(
     },
     Contributors: {
       screen: createDocPage({
-        doc: 'guides/Contributors',
+        doc: 'CONTRIBUTING',
         title: 'Contributors Guide',
         linkName: 'Contributors',
       }),
