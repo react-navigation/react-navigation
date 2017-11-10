@@ -35,14 +35,15 @@ const DefaultDrawerConfig = {
   drawerPosition: 'left',
   drawerBackgroundColor: 'white',
   useNativeAnimations: true,
-  drawerOpenRoute: 'DrawerOpen',
-  drawerCloseRoute: 'DrawerClose',
-  drawerToggleRoute: 'DrawerToggle',
 };
 
 const DrawerNavigator = (
   routeConfigs: NavigationRouteConfigMap,
-  config: DrawerNavigatorConfig = {}
+  config: DrawerNavigatorConfig = {
+    drawerOpenRoute: 'DrawerOpen',
+    drawerCloseRoute: 'DrawerClose',
+    drawerToggleRoute: 'DrawerToggle',
+  }
 ) => {
   const mergedConfig = { ...DefaultDrawerConfig, ...config };
   const {
