@@ -1,7 +1,7 @@
 /* @flow */
 
 import React, { PureComponent } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 import {
   TabViewAnimated,
   TabBar,
@@ -17,6 +17,11 @@ type Route = {
 };
 
 type State = NavigationState<Route>;
+
+const initialLayout = {
+  height: 0,
+  width: Dimensions.get('window').width,
+};
 
 export default class NativeDriverExample extends PureComponent<*, State> {
   static title = 'With native animations';
@@ -95,6 +100,7 @@ export default class NativeDriverExample extends PureComponent<*, State> {
         renderHeader={this._renderHeader}
         renderPager={this._renderPager}
         onIndexChange={this._handleIndexChange}
+        initialLayout={initialLayout}
         useNativeDriver
       />
     );

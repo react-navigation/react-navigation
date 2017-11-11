@@ -38,8 +38,13 @@ yarn add react-native-tab-view react-native-gesture-handler
 
 ```js
 import React, { PureComponent } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Dimensions } from 'react-native';
 import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
+
+const initialLayout = {
+  height: 0,
+  width: Dimensions.get('window').width,
+};
 
 const FirstRoute = () => <View style={[ styles.container, { backgroundColor: '#ff4081' } ]} />;
 const SecondRoute = () => <View style={[ styles.container, { backgroundColor: '#673ab7' } ]} />;
@@ -48,8 +53,8 @@ export default class TabViewExample extends PureComponent {
   state = {
     index: 0,
     routes: [
-      { key: '1', title: 'First' },
-      { key: '2', title: 'Second' },
+      { key: 'first', title: 'First' },
+      { key: 'second', title: 'Second' },
     ],
   };
 
@@ -58,8 +63,8 @@ export default class TabViewExample extends PureComponent {
   _renderHeader = props => <TabBar {...props} />;
 
   _renderScene = SceneMap({
-    '1': FirstRoute,
-    '2': SecondRoute,
+    first: FirstRoute,
+    second: SecondRoute,
   });
 
   render() {
@@ -70,6 +75,7 @@ export default class TabViewExample extends PureComponent {
         renderScene={this._renderScene}
         renderHeader={this._renderHeader}
         onIndexChange={this._handleIndexChange}
+        initialLayout={initialLayout}
       />
     );
   }
