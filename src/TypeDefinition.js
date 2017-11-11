@@ -354,6 +354,7 @@ export type NavigationStackScreenOptions = {|
   headerTitleAllowFontScaling?: boolean,
   headerTintColor?: string,
   headerLeft?: React.Node,
+  headerBack?: React.Node,
   headerBackTitle?: string,
   headerTruncatedBackTitle?: string,
   headerBackTitleStyle?: TextStyleProp,
