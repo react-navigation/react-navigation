@@ -106,28 +106,23 @@ export default class TabBar<T: Route<*>> extends React.PureComponent<
     );
   }
 
-  componentWillUpdate(nextProps: Props<T>) {
-    if (this.props.navigationState !== nextProps.navigationState) {
-      this._resetScrollOffset(nextProps);
-    }
-
+  componentDidUpdate(prevProps: Props<T>) {
+    const prevTabWidth = this._getTabWidth(prevProps);
     const currentTabWidth = this._getTabWidth(this.props);
-    const nextTabWidth = this._getTabWidth(nextProps);
 
-    if (currentTabWidth !== nextTabWidth && nextTabWidth) {
+    if (prevTabWidth !== currentTabWidth && currentTabWidth) {
       this.state.visibility.setValue(1);
     }
-  }
 
-  componentDidUpdate(prevProps: Props<T>) {
-    if (
-      this.props.scrollEnabled &&
-      (prevProps.layout !== this.props.layout ||
-        prevProps.tabStyle !== this.props.tabStyle)
-    ) {
-      global.requestAnimationFrame(() =>
-        this._adjustScroll(this.props.navigationState.index)
-      );
+    if (this.props.scrollEnabled) {
+      if (prevProps.navigationState !== this.props.navigationState) {
+        this._resetScrollOffset(this.props);
+      } else if (
+        prevProps.layout !== this.props.layout ||
+        prevTabWidth !== currentTabWidth
+      ) {
+        this._adjustScroll(this.props.navigationState.index);
+      }
     }
   }
 
@@ -139,6 +134,7 @@ export default class TabBar<T: Route<*>> extends React.PureComponent<
   _scrollView: ?ScrollView;
   _isManualScroll: boolean = false;
   _isMomentumScroll: boolean = false;
+  _scrollOffset: number = 0;
 
   _renderLabel = (scene: Scene<*>) => {
     if (typeof this.props.renderLabel !== 'undefined') {
@@ -258,9 +254,10 @@ export default class TabBar<T: Route<*>> extends React.PureComponent<
     }
 
     const scrollAmount = this._getScrollAmount(this.props, index);
+
     this._scrollView &&
       this._scrollView.scrollTo({
-        x: scrollAmount,
+        x: scrollAmount + this._scrollOffset,
         animated: false,
       });
   };
@@ -286,6 +283,8 @@ export default class TabBar<T: Route<*>> extends React.PureComponent<
     } else {
       this.state.offset.setValue(-scrollOffset);
     }
+
+    this._scrollOffset = scrollOffset;
   };
 
   _handleScroll = (e: ScrollEvent) => {
