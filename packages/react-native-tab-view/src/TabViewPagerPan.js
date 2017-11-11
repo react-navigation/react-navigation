@@ -179,9 +179,14 @@ export default class TabViewPagerPan<T: Route<*>> extends React.Component<
       (Math.abs(gestureState.dx) > swipeDistanceThreshold ||
         Math.abs(gestureState.vx) > swipeVelocityThreshold)
     ) {
-      nextIndex = Math.min(
-        Math.max(0, currentIndex - gestureState.dx / Math.abs(gestureState.dx)),
-        navigationState.routes.length - 1
+      nextIndex = Math.round(
+        Math.min(
+          Math.max(
+            0,
+            currentIndex - gestureState.dx / Math.abs(gestureState.dx)
+          ),
+          navigationState.routes.length - 1
+        )
       );
     }
 

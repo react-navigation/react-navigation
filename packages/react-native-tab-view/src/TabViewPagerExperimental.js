@@ -68,9 +68,11 @@ export default class TabViewPagerExperimental<
         (Math.abs(translationX) > swipeDistanceThreshold ||
           Math.abs(velocityX) > swipeVelocityThreshold)
       ) {
-        nextIndex = Math.min(
-          Math.max(0, currentIndex - translationX / Math.abs(translationX)),
-          navigationState.routes.length - 1
+        nextIndex = Math.round(
+          Math.min(
+            Math.max(0, currentIndex - translationX / Math.abs(translationX)),
+            navigationState.routes.length - 1
+          )
         );
       }
 
