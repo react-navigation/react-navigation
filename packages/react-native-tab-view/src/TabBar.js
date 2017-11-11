@@ -6,7 +6,6 @@ import {
   Animated,
   StyleSheet,
   View,
-  Text,
   ScrollView,
   Platform,
   I18nManager,
@@ -68,7 +67,7 @@ export default class TabBar<T: Route<*>> extends React.PureComponent<
     renderLabel: PropTypes.func,
     renderIndicator: PropTypes.func,
     onTabPress: PropTypes.func,
-    labelStyle: Text.propTypes.style,
+    labelStyle: PropTypes.any,
     style: PropTypes.any,
   };
 
@@ -150,7 +149,9 @@ export default class TabBar<T: Route<*>> extends React.PureComponent<
       return null;
     }
     return (
-      <Text style={[styles.tabLabel, this.props.labelStyle]}>{label}</Text>
+      <Animated.Text style={[styles.tabLabel, this.props.labelStyle]}>
+        {label}
+      </Animated.Text>
     );
   };
 
