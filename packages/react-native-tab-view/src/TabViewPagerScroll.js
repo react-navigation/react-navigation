@@ -1,7 +1,7 @@
 /* @flow */
 
 import * as React from 'react';
-import { View, ScrollView, StyleSheet } from 'react-native';
+import { View, ScrollView, StyleSheet, Platform } from 'react-native';
 import { PagerRendererPropType } from './TabViewPropTypes';
 import type { PagerRendererProps, Route } from './TabViewTypeDefinitions';
 
@@ -80,6 +80,7 @@ export default class TabViewPagerScroll<T: Route<*>> extends React.Component<
   _resetListener: Object;
   _currentOffset: ?number;
   _isIdle: boolean = true;
+  _isFirst: boolean = Platform.OS === 'ios';
 
   _scrollTo = (x: number, animated = this.props.animationEnabled !== false) => {
     if (animated && !this._isIdle) {
@@ -110,6 +111,11 @@ export default class TabViewPagerScroll<T: Route<*>> extends React.Component<
   };
 
   _handleScroll = (e: ScrollEvent) => {
+    if (this._isFirst) {
+      this._isFirst = false;
+      return;
+    }
+
     const { navigationState, layout } = this.props;
     const offset = navigationState.index * layout.width;
 
