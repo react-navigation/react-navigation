@@ -1,6 +1,6 @@
 # Redux Integration
 
-To handle your app's navigation state in redux, you can pass your own `navigation` prop to a navigator. Your navigation prop must provide the current state, as well as access to a dispatcher to handle navigation options.
+To handle your app's navigation state in redux, you can pass your own `navigation` prop to a navigator. Once you pass your own navigation prop to the navigator, the navigator loses defualt [`navigation`](https://reactnavigation.org/docs/navigators/navigation-prop) prop. So we have to pass the two basic and must have properties of `navigation` prop namely `state` and `dispatch`, else we will not be able to access `this.props.navigation.state` and `this.props.navigation.dispatch` in the components. The state will be fed from the reducer assigned to handle navigation state and the `dispatch` will be redux's default `dispatch`. Thus we will be able to dispatch normal redux actions using `this.props.navigation.dispatch(ACTION)`, reducer will update the navigation state on the basis of dispatched action, the new navigation state will then be passed to the navigator. Following is the detailed explanation of how things work:
 
 With redux, your app's state is defined by a reducer. Each navigation router effectively has a reducer, called `getStateForAction`. The following is a minimal example of how you might use navigators within a redux application:
 
