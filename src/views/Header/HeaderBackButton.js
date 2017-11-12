@@ -1,6 +1,6 @@
 /* @flow */
 
-import React from 'react';
+import * as React from 'react';
 import {
   I18nManager,
   Image,
@@ -24,17 +24,11 @@ type Props = {
   width?: ?number,
 };
 
-type DefaultProps = {
-  pressColorAndroid: string,
-  tintColor: ?string,
-  truncatedTitle: ?string,
-};
-
 type State = {
   initialTextWidth?: number,
 };
 
-class HeaderBackButton extends React.PureComponent<DefaultProps, Props, State> {
+class HeaderBackButton extends React.PureComponent<Props, State> {
   static defaultProps = {
     pressColorAndroid: 'rgba(0, 0, 0, .32)',
     tintColor: Platform.select({
@@ -97,18 +91,19 @@ class HeaderBackButton extends React.PureComponent<DefaultProps, Props, State> {
             source={asset}
           />
           {Platform.OS === 'ios' &&
-            title &&
-            <Text
-              onLayout={this._onTextLayout}
-              style={[
-                styles.title,
-                !!tintColor && { color: tintColor },
-                titleStyle,
-              ]}
-              numberOfLines={1}
-            >
-              {backButtonTitle}
-            </Text>}
+            title && (
+              <Text
+                onLayout={this._onTextLayout}
+                style={[
+                  styles.title,
+                  !!tintColor && { color: tintColor },
+                  titleStyle,
+                ]}
+                numberOfLines={1}
+              >
+                {backButtonTitle}
+              </Text>
+            )}
         </View>
       </TouchableItem>
     );
