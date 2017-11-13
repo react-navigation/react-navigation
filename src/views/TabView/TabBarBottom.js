@@ -41,6 +41,7 @@ type Props = {
   getTestIDProps: (scene: TabScene) => (scene: TabScene) => any,
   renderIcon: (scene: TabScene) => React.Node,
   style?: ViewStyleProp,
+  animateStyle?: ViewStyleProp,
   labelStyle?: TextStyleProp,
   tabStyle?: ViewStyleProp,
   showIcon?: boolean,
@@ -203,6 +204,7 @@ class TabBarBottom extends React.PureComponent<Props, State> {
       activeBackgroundColor,
       inactiveBackgroundColor,
       style,
+      animateStyle,
       tabStyle,
       isLandscape,
     } = this.props;
@@ -219,7 +221,7 @@ class TabBarBottom extends React.PureComponent<Props, State> {
     ];
 
     return this.state.isVisible ? (
-      <Animated.View>
+      <Animated.View style={animateStyle}>
         <SafeAreaView
           style={tabBarStyle}
           forceInset={{ bottom: 'always', top: 'never' }}
