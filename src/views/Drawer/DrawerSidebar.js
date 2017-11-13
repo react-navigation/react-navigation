@@ -7,6 +7,8 @@ import withCachedChildNavigation from '../../withCachedChildNavigation';
 import NavigationActions from '../../NavigationActions';
 import invariant from '../../utils/invariant';
 
+import SafeAreaView from '../SafeAreaView';
+
 import type {
   NavigationScreenProp,
   NavigationRoute,
@@ -110,7 +112,10 @@ class DrawerSidebar extends React.PureComponent<Props> {
     const { state } = this.props.navigation;
     invariant(typeof state.index === 'number', 'should be set');
     return (
-      <View style={[styles.container, this.props.style]}>
+      <SafeAreaView
+        style={[styles.container, this.props.style]}
+        forceInset={{ top: 'always', horizontal: 'never' }}
+      >
         <ContentComponent
           {...this.props.contentOptions}
           navigation={this.props.navigation}
@@ -124,7 +129,7 @@ class DrawerSidebar extends React.PureComponent<Props> {
           onItemPress={this._onItemPress}
           router={this.props.router}
         />
-      </View>
+      </SafeAreaView>
     );
   }
 }
