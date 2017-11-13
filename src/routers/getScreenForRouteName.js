@@ -11,19 +11,20 @@ import type {
  * Simple helper that gets a single screen (React component or navigator)
  * out of the navigator config.
  */
-export default function getScreenForRouteName( // eslint-disable-line consistent-return
+export default function getScreenForRouteName(
   routeConfigs: NavigationRouteConfigMap,
   routeName: string
 ): NavigationComponent {
   const routeConfig = routeConfigs[routeName];
 
-  invariant(
-    routeConfig,
-    `There is no route defined for key ${routeName}.\n` +
-      `Must be one of: ${Object.keys(routeConfigs)
-        .map((a: string) => `'${a}'`)
-        .join(',')}`
-  );
+  if (!routeConfig) {
+    throw new Error(
+      `There is no route defined for key ${routeName}.\n` +
+        `Must be one of: ${Object.keys(routeConfigs)
+          .map((a: string) => `'${a}'`)
+          .join(',')}`
+    );
+  }
 
   if (routeConfig.screen) {
     return routeConfig.screen;
@@ -41,5 +42,5 @@ export default function getScreenForRouteName( // eslint-disable-line consistent
     return screen;
   }
 
-  invariant(false, `Route ${routeName} must define a screen or a getScreen.`);
+  throw new Error(`Route ${routeName} must define a screen or a getScreen.`);
 }

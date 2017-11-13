@@ -67,13 +67,19 @@ a.editLink {
 .md-section > ul,
 .md-section > ol,
 .md-section > pre,
-.md-section > p {
+.md-section > p,
+.md-section > blockquote {
   margin: 15px 0 0 0;
 }
 .md-section ul li,
 .md-section ol li {
   margin: 15px 0 0 0;
 }
+
+.md-section .snack {
+  margin: 15px 0 0 0;
+}
+
 .errorScreen {
   height: 100%;
   margin: 100px;
@@ -137,7 +143,7 @@ a.cta:hover {
   justify-content: space-between;
   padding: 0 25px;
   margin: 0 auto;
-  max-width: 980px;
+  max-width: 1280px;
   display: flex;
   flex-direction: row;
 }
@@ -189,7 +195,7 @@ li:hover .metabuttons {
   flex: 1;
   margin: 25px auto;
   width: 100%;
-  max-width: 980px;
+  max-width: 1280px;
   margin-top: 85px;
 }
 .inner-page-body {
@@ -200,12 +206,12 @@ li:hover .metabuttons {
   margin-left: 25px;
 }
 .left-sidebar {
-  width: 225px;
+  width: 260px;
   margin-right: 25px;
 }
 .left-sidebar,
 .left-sidebar .navmenu {
-  width: 225px;
+  width: 260px;
 }
 
 .footer {
@@ -215,7 +221,7 @@ li:hover .metabuttons {
 
 .inner-footer {
   margin: 0 auto;
-  max-width: 980px;
+  max-width: 1280px;
   padding: 25px;
 }
 img.logo {
@@ -495,10 +501,94 @@ p + .example-section .phone {
   margin: 80px 0;
 }
 
-@media  screen and (max-width: 1100px) {
+.search-wrapper {
+  padding-top: 10px;
+  margin-left: 25px;
+}
+
+input#doc-search {
+  font-family: inherit;
+  padding: 0 10px 0 10px;
+  height: 30px;
+  font-size: 16px;
+  line-height: 20px;
+  border-radius: 4px;
+  border: 1px #bfbfbf solid;
+  color: inherit;
+  outline: none;
+  width: 170px;
+  -moz-transition: 0.5s width ease;
+  -ms-transition: 0.5s width ease;
+  -o-transition: 0.5s width ease;
+  -webkit-transition: 0.5s width ease;
+  transition: 0.5s width ease;
+}
+
+input#doc-search:focus {
+  width: 200px;
+}
+
+/* Bottom border of each suggestion */
+.algolia-docsearch-suggestion {
+  border-bottom-color: #6b52ae;
+}
+
+/* Main category headers */
+.algolia-docsearch-suggestion--category-header span {
+  background-color: #fff;
+  color: #6b52ae;
+  font-size: 18px;
+}
+
+.algolia-autocomplete .algolia-docsearch-suggestion--highlight {
+  color: #6b52ae;
+  background-color: transparent;
+}
+
+.algolia-autocomplete .algolia-docsearch-suggestion--text .algolia-docsearch-suggestion--highlight {
+  color: #6b52ae;
+  box-shadow: inset 0 -2px 0 0 rgba(107, 82, 174, 0.56)
+}
+
+/* Highlighted search terms */
+.algolia-docsearch-suggestion--highlight {
+  color: #6b52ae;
+}
+
+/* Currently selected suggestion */
+.aa-cursor .algolia-docsearch-suggestion--content {
+  color: #6b52ae;
+}
+
+.aa-cursor .algolia-docsearch-suggestion {
+  background: #EBEBFB;
+}
+
+/* For bigger screens, when displaying results in two columns */
+@media (min-width: 768px) {
+  /* Bottom border of each suggestion */
+  .algolia-docsearch-suggestion {
+    border-bottom-color: #7671df;
+  }
+
+  /* Left column, with secondary category header */
+  .algolia-docsearch-suggestion--subcategory-column {
+    border-right-color: #7671df;
+    color: #4E4726;
+  }
+}
+
+@media screen and (max-width: 960px) {
+  .search-wrapper {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 1100px) {
   .home-container .example-section .buttonbar {
     display: block;
   }
+
   .home-container .example-section .phone .false {
     display: none;
   }

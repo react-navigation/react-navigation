@@ -6,13 +6,14 @@ import CodeBlock from './CodeBlock';
 
 import Link from './Link';
 
-const GettingStartedButton = () =>
+const GettingStartedButton = () => (
   <div className="cta-row">
     <Link className="cta" to="GettingStarted">
       <span className="label">Get Started</span>
       <span className="icon pt-icon-arrow-right" />
     </Link>
-  </div>;
+  </div>
+);
 
 const ExampleCodeBrowser = (config, ExampleFiles) => {
   const fileNames = Object.keys(ExampleFiles);

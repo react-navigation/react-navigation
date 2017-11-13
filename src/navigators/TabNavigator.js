@@ -37,6 +37,7 @@ const TabNavigator = (
     swipeEnabled,
     animationEnabled,
     lazy,
+    initialLayout,
     ...tabsConfig
   } = mergedConfig;
 
@@ -47,7 +48,9 @@ const TabNavigator = (
     routeConfigs,
     config,
     NavigatorTypes.TABS
-  )((props: *) =>
+  )((props: *) => (
+    // Flow doesn't realize TabView already has childNavigationProps from
+    // withCachedChildNavigation for some reason. $FlowFixMe
     <TabView
       {...props}
       tabBarComponent={tabBarComponent}
@@ -56,8 +59,9 @@ const TabNavigator = (
       swipeEnabled={swipeEnabled}
       animationEnabled={animationEnabled}
       lazy={lazy}
+      initialLayout={initialLayout}
     />
-  );
+  ));
 
   return createNavigationContainer(navigator);
 };
@@ -69,6 +73,7 @@ const Presets = {
     swipeEnabled: false,
     animationEnabled: false,
     lazy: false,
+    initialLayout: undefined,
   },
   AndroidTopTabs: {
     tabBarComponent: TabBarTop,
@@ -76,6 +81,7 @@ const Presets = {
     swipeEnabled: true,
     animationEnabled: true,
     lazy: false,
+    initialLayout: undefined,
   },
 };
 

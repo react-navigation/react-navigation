@@ -2,13 +2,22 @@
 
 'no babel-plugin-flow-react-proptypes';
 
-import React from 'react';
+import * as React from 'react';
 
-import { Animated, Platform, StyleSheet, View } from 'react-native';
+import {
+  Animated,
+  Dimensions,
+  Platform,
+  StyleSheet,
+  View,
+  ViewPropTypes,
+} from 'react-native';
 
 import HeaderTitle from './HeaderTitle';
 import HeaderBackButton from './HeaderBackButton';
 import HeaderStyleInterpolator from './HeaderStyleInterpolator';
+import SafeAreaView from '../SafeAreaView';
+import withOrientation from '../withOrientation';
 
 import type {
   NavigationScene,
@@ -21,13 +30,14 @@ type SceneProps = {
   scene: NavigationScene,
   position: Animated.Value,
   progress: Animated.Value,
+  style?: ViewPropTypes.style,
 };
 
-type SubViewRenderer<T> = (props: SceneProps) => ?React.Element<T>;
+type SubViewRenderer<T> = (props: SceneProps) => ?React.Node;
 
 type SubViewName = 'left' | 'title' | 'right';
 
-type HeaderState = {
+type State = {
   widths: {
     [key: string]: number,
   },
@@ -37,8 +47,14 @@ const APPBAR_HEIGHT = Platform.OS === 'ios' ? 44 : 56;
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : 0;
 const TITLE_OFFSET = Platform.OS === 'ios' ? 70 : 56;
 
-class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
-  static HEIGHT = APPBAR_HEIGHT + STATUSBAR_HEIGHT;
+type Props = HeaderProps & { isLandscape: boolean };
+class Header extends React.PureComponent<Props, State> {
+  static get HEIGHT() {
+    console.warn(
+      'Header.HEIGHT is deprecated and will be removed before react-navigation comes out of beta.'
+    );
+    return APPBAR_HEIGHT + STATUSBAR_HEIGHT;
+  }
 
   state = {
     widths: {},
@@ -81,7 +97,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
     this.props.navigation.goBack(null);
   };
 
-  _renderTitleComponent = (props: SceneProps): ?React.Element<*> => {
+  _renderTitleComponent = (props: SceneProps): ?React.Node => {
     const details = this.props.getScreenDetails(props.scene);
     const headerTitle = details.options.headerTitle;
     if (headerTitle && typeof headerTitle !== 'string') {
@@ -91,6 +107,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
 
     const titleStyle = details.options.headerTitleStyle;
     const color = details.options.headerTintColor;
+    const allowFontScaling = details.options.headerTitleAllowFontScaling;
 
     // On iOS, width of left/right components depends on the calculated
     // size of the title.
@@ -109,6 +126,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
     return (
       <HeaderTitle
         onLayout={onLayoutIOS}
+        allowFontScaling={allowFontScaling == null ? true : allowFontScaling}
         style={[color ? { color } : null, titleStyle]}
       >
         {titleString}
@@ -116,7 +134,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
     );
   };
 
-  _renderLeftComponent = (props: SceneProps): ?React.Element<*> => {
+  _renderLeftComponent = (props: SceneProps): ?React.Node => {
     const options = this.props.getScreenDetails(props.scene).options;
     if (typeof options.headerLeft !== 'undefined') {
       return options.headerLeft;
@@ -144,13 +162,13 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
     );
   };
 
-  _renderRightComponent = (props: SceneProps): ?React.Element<*> => {
+  _renderRightComponent = (props: SceneProps): ?React.Node => {
     const details = this.props.getScreenDetails(props.scene);
     const { headerRight } = details.options;
     return headerRight || null;
   };
 
-  _renderLeft(props: SceneProps): ?React.Element<*> {
+  _renderLeft(props: SceneProps): ?React.Node {
     return this._renderSubView(
       props,
       'left',
@@ -159,7 +177,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
     );
   }
 
-  _renderTitle(props: SceneProps, options: *): ?React.Element<*> {
+  _renderTitle(props: SceneProps, options: *): ?React.Node {
     const style = {};
 
     if (Platform.OS === 'android') {
@@ -169,6 +187,13 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
       if (!options.hasRightComponent) {
         style.right = 0;
       }
+    } else if (
+      Platform.OS === 'ios' &&
+      !options.hasLeftComponent &&
+      !options.hasRightComponent
+    ) {
+      style.left = 0;
+      style.right = 0;
     }
 
     return this._renderSubView(
@@ -179,7 +204,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
     );
   }
 
-  _renderRight(props: SceneProps): ?React.Element<*> {
+  _renderRight(props: SceneProps): ?React.Node {
     return this._renderSubView(
       props,
       'right',
@@ -193,7 +218,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
     name: SubViewName,
     renderer: SubViewRenderer<T>,
     styleInterpolator: NavigationStyleInterpolator
-  ): ?React.Element<*> {
+  ): ?React.Node {
     const { scene } = props;
     const { index, isStale, key } = scene;
 
@@ -233,7 +258,7 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
     );
   }
 
-  _renderHeader(props: SceneProps): React.Element<*> {
+  _renderHeader(props: SceneProps): React.Node {
     const left = this._renderLeft(props);
     const right = this._renderRight(props);
     const title = this._renderTitle(props, {
@@ -280,18 +305,29 @@ class Header extends React.PureComponent<void, HeaderProps, HeaderState> {
       position,
       screenProps,
       progress,
-      style,
+      isLandscape,
       ...rest
     } = this.props;
 
     const { options } = this.props.getScreenDetails(scene);
-    const headerStyle = options.headerStyle;
+    const { headerStyle } = options;
+    const appBarHeight = Platform.OS === 'ios' ? (isLandscape ? 32 : 44) : 56;
+    const containerStyles = [
+      styles.container,
+      {
+        height: appBarHeight,
+      },
+      headerStyle,
+    ];
 
     return (
-      <Animated.View {...rest} style={[styles.container, headerStyle, style]}>
-        <View style={styles.appBar}>
-          {appBar}
-        </View>
+      <Animated.View {...rest}>
+        <SafeAreaView
+          style={containerStyles}
+          forceInset={{ top: 'always', bottom: 'never' }}
+        >
+          <View style={styles.appBar}>{appBar}</View>
+        </SafeAreaView>
       </Animated.View>
     );
   }
@@ -317,9 +353,7 @@ if (Platform.OS === 'ios') {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: STATUSBAR_HEIGHT,
     backgroundColor: Platform.OS === 'ios' ? '#F7F7F7' : '#FFF',
-    height: STATUSBAR_HEIGHT + APPBAR_HEIGHT,
     ...platformContainerStyles,
   },
   appBar: {
@@ -355,4 +389,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Header;
+export default withOrientation(Header);
