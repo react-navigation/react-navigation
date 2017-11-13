@@ -30,6 +30,18 @@ function _getUuid() {
   return `${uniqueBaseId}-${uuidCount++}`;
 }
 
+function _getCurrentRouteName(navigationState) {
+  if (!navigationState) {
+    return null;
+  }
+  const route = navigationState.routes[navigationState.index];
+  // dive into nested navigators
+  if (route.routes) {
+    return _getCurrentRouteName(route);
+  }
+  return route.routeName;
+}
+
 export default (
   routeConfigs: NavigationRouteConfigMap,
   stackConfig: NavigationStackRouterConfig = {}
@@ -180,6 +192,12 @@ export default (
             routeName: action.routeName,
           };
         } else {
+          if (_getCurrentRouteName(state) === action.routeName) {
+            // Don't do anything if going to the same route name
+            return {
+              ...state,
+            };
+          }
           route = {
             params: action.params,
             key: _getUuid(),
