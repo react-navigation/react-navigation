@@ -112,7 +112,6 @@ class DrawerSidebar extends React.PureComponent<Props> {
     return (
       <View style={[styles.container, this.props.style]}>
         <ContentComponent
-          {...this.props.contentOptions}
           navigation={this.props.navigation}
           items={state.routes}
           activeItemKey={
@@ -123,6 +122,7 @@ class DrawerSidebar extends React.PureComponent<Props> {
           renderIcon={this._renderIcon}
           onItemPress={this._onItemPress}
           router={this.props.router}
+          {...this.props.contentOptions}
         />
       </View>
     );
