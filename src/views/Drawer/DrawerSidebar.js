@@ -36,6 +36,7 @@ type Props = {
   contentOptions?: {},
   screenProps?: {},
   style?: ViewStyleProp,
+  drawerPosition?: 'left' | 'right',
 };
 
 /**
