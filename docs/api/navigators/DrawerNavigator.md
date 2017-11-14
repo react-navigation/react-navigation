@@ -94,21 +94,6 @@ The route configs object is a mapping from route name to a route config, which t
 - `useNativeAnimations` - Enable native animations. Default is `true`.
 - `drawerBackgroundColor` - Use the Drawer background for some color. The Default is `white`.
 
-#### Example:
-
-Default the `DrawerView` isn't scrollable.
-To achieve a scrollable `View`, you have to use the `contentComponent` to customize the container,
-as you can see in the example below.
-
-```js
-{
-  drawerWidth: 200,
-  drawerPosition: 'right',
-  contentComponent: props => <ScrollView><DrawerItems {...props} /></ScrollView>,
-  drawerBackgroundColor: 'transparent'
-}
-```
-
 Several options get passed to the underlying router to modify navigation logic:
 
 - `initialRouteName` - The routeName for the initial route.
@@ -118,15 +103,17 @@ Several options get passed to the underlying router to modify navigation logic:
 
 ### Providing a custom `contentComponent`
 
-You can easily override the default component used by `react-navigation`:
+The default component for the drawer is scrollable and only contains links for the routes in the RouteConfig. You can easily override the default component to add a header, footer, or other content to the drawer. By default the drawer is scrollable and supports iPhone X safe area. If you customize the content, be sure to wrap the content in a SafeAreaView:
 
 ```js
-import { DrawerItems } from 'react-navigation';
+import { DrawerItems, SafeAreaView } from 'react-navigation';
 
 const CustomDrawerContentComponent = (props) => (
-  <View style={styles.container}>
-    <DrawerItems {...props} />
-  </View>
+  <ScrollView>
+    <SafeAreaView style={styles.container} forceInset={{ top: 'always', horizontal: 'never' }}>
+      <DrawerItems {...props} />
+    </SafeAreaView>
+  </ScrollView>
 );
 
 const styles = StyleSheet.create({
