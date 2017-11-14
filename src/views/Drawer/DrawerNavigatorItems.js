@@ -31,6 +31,7 @@ type Props = {
   itemStyle?: ViewStyleProp,
   labelStyle?: TextStyleProp,
   iconContainerStyle?: ViewStyleProp,
+  drawerPosition: 'left' | 'right',
 };
 
 /**
@@ -51,6 +52,7 @@ const DrawerNavigatorItems = ({
   itemStyle,
   labelStyle,
   iconContainerStyle,
+  drawerPosition,
 }: Props) => (
   <View style={[styles.container, itemsContainerStyle]}>
     {items.map((route: NavigationRoute, index: number) => {
@@ -72,7 +74,11 @@ const DrawerNavigatorItems = ({
         >
           <SafeAreaView
             style={{ backgroundColor }}
-            forceInset={{ horizontal: 'always' }}
+            forceInset={{
+              [drawerPosition]: 'always',
+              [drawerPosition === 'left' ? 'right' : 'left']: 'never',
+              vertical: 'never',
+            }}
           >
             <View style={[styles.item, itemStyle]}>
               {icon ? (
