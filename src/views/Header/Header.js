@@ -100,7 +100,7 @@ class Header extends React.PureComponent<Props, State> {
   _renderTitleComponent = (props: SceneProps): ?React.Node => {
     const details = this.props.getScreenDetails(props.scene);
     const headerTitle = details.options.headerTitle;
-    if (headerTitle && typeof headerTitle !== 'string') {
+    if (React.isValidElement(headerTitle)) {
       return headerTitle;
     }
     const titleString = this._getHeaderTitleString(props.scene);
@@ -123,21 +123,21 @@ class Header extends React.PureComponent<Props, State> {
           }
         : undefined;
 
-    const UsedHeaderTitle = details.options.HeaderTitleComponent || HeaderTitle;
+    const RenderedHeaderTitle = headerTitle || HeaderTitle;
     return (
-      <UsedHeaderTitle
+      <RenderedHeaderTitle
         onLayout={onLayoutIOS}
         allowFontScaling={allowFontScaling == null ? true : allowFontScaling}
         style={[color ? { color } : null, titleStyle]}
       >
         {titleString}
-      </UsedHeaderTitle>
+      </RenderedHeaderTitle>
     );
   };
 
   _renderLeftComponent = (props: SceneProps): ?React.Node => {
     const options = this.props.getScreenDetails(props.scene).options;
-    if (typeof options.headerLeft !== 'undefined') {
+    if (React.isValidElement(options.headerLeft)) {
       return options.headerLeft;
     }
     if (props.scene.index === 0) {
@@ -150,9 +150,9 @@ class Header extends React.PureComponent<Props, State> {
     const width = this.state.widths[props.scene.key]
       ? (this.props.layout.initWidth - this.state.widths[props.scene.key]) / 2
       : undefined;
-    const UsedBackButton = options.HeaderLeftComponent || HeaderBackButton;
+    const RenderedLeftComponent = options.headerLeft || HeaderBackButton;
     return (
-      <UsedBackButton
+      <RenderedLeftComponent
         onPress={this._navigateBack}
         pressColorAndroid={options.headerPressColorAndroid}
         tintColor={options.headerTintColor}
