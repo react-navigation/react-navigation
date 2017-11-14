@@ -81,146 +81,157 @@ exports[`DrawerNavigator renders successfully 1`] = `
       }
     }
   >
-    <RCTScrollView
-      DEPRECATED_sendUpdatedChildFrames={false}
-      alwaysBounceHorizontal={undefined}
-      alwaysBounceVertical={false}
-      onContentSizeChange={null}
-      onMomentumScrollBegin={[Function]}
-      onMomentumScrollEnd={[Function]}
-      onResponderGrant={[Function]}
-      onResponderReject={[Function]}
-      onResponderRelease={[Function]}
-      onResponderTerminate={undefined}
-      onResponderTerminationRequest={[Function]}
-      onScroll={[Function]}
-      onScrollBeginDrag={[Function]}
-      onScrollEndDrag={[Function]}
-      onScrollShouldSetResponder={[Function]}
-      onStartShouldSetResponder={[Function]}
-      onStartShouldSetResponderCapture={[Function]}
-      onTouchEnd={[Function]}
-      onTouchMove={[Function]}
-      onTouchStart={[Function]}
-      scrollEventThrottle={undefined}
-      sendMomentumEvents={false}
+    <View
       style={
         Array [
           Object {
-            "flexDirection": "column",
-            "flexGrow": 1,
-            "flexShrink": 1,
-            "overflow": "scroll",
+            "flex": 1,
           },
           undefined,
         ]
       }
     >
-      <RCTScrollContentView
-        collapsable={false}
-        removeClippedSubviews={undefined}
+      <RCTScrollView
+        DEPRECATED_sendUpdatedChildFrames={false}
+        alwaysBounceHorizontal={undefined}
+        alwaysBounceVertical={false}
+        onContentSizeChange={null}
+        onMomentumScrollBegin={[Function]}
+        onMomentumScrollEnd={[Function]}
+        onResponderGrant={[Function]}
+        onResponderReject={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={undefined}
+        onResponderTerminationRequest={[Function]}
+        onScroll={[Function]}
+        onScrollBeginDrag={[Function]}
+        onScrollEndDrag={[Function]}
+        onScrollShouldSetResponder={[Function]}
+        onStartShouldSetResponder={[Function]}
+        onStartShouldSetResponderCapture={[Function]}
+        onTouchEnd={[Function]}
+        onTouchMove={[Function]}
+        onTouchStart={[Function]}
+        scrollEventThrottle={undefined}
+        sendMomentumEvents={false}
         style={
           Array [
-            undefined,
+            Object {
+              "flexDirection": "column",
+              "flexGrow": 1,
+              "flexShrink": 1,
+              "overflow": "scroll",
+            },
             undefined,
           ]
         }
       >
-        <View
-          onLayout={[Function]}
+        <RCTScrollContentView
+          collapsable={false}
+          removeClippedSubviews={undefined}
           style={
-            Object {
-              "paddingBottom": 0,
-              "paddingLeft": 0,
-              "paddingRight": 0,
-              "paddingTop": 20,
-            }
+            Array [
+              undefined,
+              undefined,
+            ]
           }
         >
           <View
+            onLayout={[Function]}
             style={
-              Array [
-                Object {
-                  "paddingVertical": 4,
-                },
-                undefined,
-              ]
+              Object {
+                "paddingBottom": 0,
+                "paddingLeft": 0,
+                "paddingRight": 0,
+                "paddingTop": 20,
+              }
             }
           >
             <View
-              accessibilityComponentType={undefined}
-              accessibilityLabel={undefined}
-              accessibilityTraits={undefined}
-              accessible={true}
-              collapsable={undefined}
-              hitSlop={undefined}
-              isTVSelectable={true}
-              nativeID={undefined}
-              onLayout={undefined}
-              onResponderGrant={[Function]}
-              onResponderMove={[Function]}
-              onResponderRelease={[Function]}
-              onResponderTerminate={[Function]}
-              onResponderTerminationRequest={[Function]}
-              onStartShouldSetResponder={[Function]}
               style={
-                Object {
-                  "opacity": 1,
-                }
+                Array [
+                  Object {
+                    "paddingVertical": 4,
+                  },
+                  undefined,
+                ]
               }
-              testID={undefined}
-              tvParallaxProperties={undefined}
             >
               <View
-                onLayout={[Function]}
+                accessibilityComponentType={undefined}
+                accessibilityLabel={undefined}
+                accessibilityTraits={undefined}
+                accessible={true}
+                collapsable={undefined}
+                hitSlop={undefined}
+                isTVSelectable={true}
+                nativeID={undefined}
+                onLayout={undefined}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
                 style={
                   Object {
-                    "backgroundColor": "rgba(0, 0, 0, .04)",
-                    "paddingBottom": 0,
-                    "paddingLeft": 0,
-                    "paddingRight": 0,
-                    "paddingTop": 0,
+                    "opacity": 1,
                   }
                 }
+                testID={undefined}
+                tvParallaxProperties={undefined}
               >
                 <View
+                  onLayout={[Function]}
                   style={
-                    Array [
-                      Object {
-                        "alignItems": "center",
-                        "flexDirection": "row",
-                      },
-                      undefined,
-                    ]
+                    Object {
+                      "backgroundColor": "rgba(0, 0, 0, .04)",
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "paddingRight": 0,
+                      "paddingTop": 0,
+                    }
                   }
                 >
-                  <Text
-                    accessible={true}
-                    allowFontScaling={true}
-                    disabled={false}
-                    ellipsizeMode="tail"
+                  <View
                     style={
                       Array [
                         Object {
-                          "fontWeight": "bold",
-                          "margin": 16,
-                        },
-                        Object {
-                          "color": "#2196f3",
+                          "alignItems": "center",
+                          "flexDirection": "row",
                         },
                         undefined,
                       ]
                     }
                   >
-                    Welcome anonymous
-                  </Text>
+                    <Text
+                      accessible={true}
+                      allowFontScaling={true}
+                      disabled={false}
+                      ellipsizeMode="tail"
+                      style={
+                        Array [
+                          Object {
+                            "fontWeight": "bold",
+                            "margin": 16,
+                          },
+                          Object {
+                            "color": "#2196f3",
+                          },
+                          undefined,
+                        ]
+                      }
+                    >
+                      Welcome anonymous
+                    </Text>
+                  </View>
                 </View>
               </View>
             </View>
           </View>
-        </View>
-      </RCTScrollContentView>
-    </RCTScrollView>
+        </RCTScrollContentView>
+      </RCTScrollView>
+    </View>
   </View>
 </View>
 `;
