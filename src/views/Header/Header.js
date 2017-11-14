@@ -123,7 +123,10 @@ class Header extends React.PureComponent<Props, State> {
           }
         : undefined;
 
-    const RenderedHeaderTitle = headerTitle || HeaderTitle;
+    const RenderedHeaderTitle =
+      headerTitle && typeof headerTitle !== 'string'
+        ? headerTitle
+        : HeaderTitle;
     return (
       <RenderedHeaderTitle
         onLayout={onLayoutIOS}
