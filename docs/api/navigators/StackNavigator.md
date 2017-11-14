@@ -125,7 +125,7 @@ React Element to display on the right side of the header.
 
 #### `headerLeft`
 
-React Element or Component to display on the left side of the header. When a component is used, it receives a number of props from when rendered (`onPress`, `title`, `titleStyle` and more - check `Header.js` for the complete list).
+React Element or Component to display on the left side of the header. When a component is used, it receives a number of props when rendered (`onPress`, `title`, `titleStyle` and more - check `Header.js` for the complete list).
 
 #### `headerStyle`
 
