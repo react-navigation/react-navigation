@@ -73,10 +73,10 @@ exports[`DrawerNavigator renders successfully 1`] = `
         "top": 0,
         "transform": Array [
           Object {
-            "translateX": -686,
+            "translateX": -320,
           },
         ],
-        "width": 686,
+        "width": 320,
         "zIndex": 1001,
       }
     }
