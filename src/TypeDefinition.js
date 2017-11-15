@@ -351,11 +351,11 @@ export type HeaderProps = {
 export type NavigationStackScreenOptions = {|
   ...$Exact<NavigationScreenOptions>,
   header?: ?(React.Node | (HeaderProps => React.Node)),
-  headerTitle?: string | React.Node,
+  headerTitle?: string | React.Node | React.ComponentType<any>,
   headerTitleStyle?: AnimatedTextStyleProp,
   headerTitleAllowFontScaling?: boolean,
   headerTintColor?: string,
-  headerLeft?: React.Node,
+  headerLeft?: React.Node | React.ComponentType<any>,
   headerBackTitle?: string,
   headerTruncatedBackTitle?: string,
   headerBackTitleStyle?: TextStyleProp,
