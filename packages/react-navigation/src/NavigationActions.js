@@ -22,60 +22,81 @@ const RESET = 'Navigation/RESET';
 const SET_PARAMS = 'Navigation/SET_PARAMS';
 const URI = 'Navigation/URI';
 
-const back = (payload: { key?: ?string } = {}): NavigationBackAction => ({
-  type: BACK,
-  key: payload.key,
-});
-const init = (
-  payload: { params?: NavigationParams } = {}
-): NavigationInitAction => {
-  const action: NavigationInitAction = {
-    type: INIT,
-  };
-  if (payload.params) {
-    action.params = payload.params;
-  }
-  return action;
+const createAction = (type: string, fn: any) => {
+  fn.toString = () => type;
+  return fn;
 };
-const navigate = (payload: {
-  routeName: string,
-  params?: ?NavigationParams,
-  action?: ?NavigationNavigateAction,
-}): NavigationNavigateAction => {
-  const action: NavigationNavigateAction = {
-    type: NAVIGATE,
-    routeName: payload.routeName,
-  };
-  if (payload.params) {
-    action.params = payload.params;
+
+const back = createAction(
+  BACK,
+  (payload: { key?: ?string } = {}): NavigationBackAction => ({
+    type: BACK,
+    key: payload.key,
+  })
+);
+const init = createAction(
+  INIT,
+  (payload: { params?: NavigationParams } = {}): NavigationInitAction => {
+    const action: NavigationInitAction = {
+      type: INIT,
+    };
+    if (payload.params) {
+      action.params = payload.params;
+    }
+    return action;
   }
-  if (payload.action) {
-    action.action = payload.action;
+);
+const navigate = createAction(
+  NAVIGATE,
+  (payload: {
+    routeName: string,
+    params?: ?NavigationParams,
+    action?: ?NavigationNavigateAction,
+  }): NavigationNavigateAction => {
+    const action: NavigationNavigateAction = {
+      type: NAVIGATE,
+      routeName: payload.routeName,
+    };
+    if (payload.params) {
+      action.params = payload.params;
+    }
+    if (payload.action) {
+      action.action = payload.action;
+    }
+    return action;
   }
-  return action;
-};
-const reset = (payload: {
-  index: number,
-  key?: ?string,
-  actions: Array<NavigationNavigateAction>,
-}): NavigationResetAction => ({
-  type: RESET,
-  index: payload.index,
-  key: payload.key,
-  actions: payload.actions,
-});
-const setParams = (payload: {
-  key: string,
-  params: NavigationParams,
-}): NavigationSetParamsAction => ({
-  type: SET_PARAMS,
-  key: payload.key,
-  params: payload.params,
-});
-const uri = (payload: { uri: string }): NavigationUriAction => ({
-  type: URI,
-  uri: payload.uri,
-});
+);
+const reset = createAction(
+  RESET,
+  (payload: {
+    index: number,
+    key?: ?string,
+    actions: Array<NavigationNavigateAction>,
+  }): NavigationResetAction => ({
+    type: RESET,
+    index: payload.index,
+    key: payload.key,
+    actions: payload.actions,
+  })
+);
+const setParams = createAction(
+  SET_PARAMS,
+  (payload: {
+    key: string,
+    params: NavigationParams,
+  }): NavigationSetParamsAction => ({
+    type: SET_PARAMS,
+    key: payload.key,
+    params: payload.params,
+  })
+);
+const uri = createAction(
+  URI,
+  (payload: { uri: string }): NavigationUriAction => ({
+    type: URI,
+    uri: payload.uri,
+  })
+);
 
 const mapDeprecatedNavigateAction = (
   action: NavigationNavigateAction | DeprecatedNavigationNavigateAction
