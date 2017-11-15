@@ -432,6 +432,40 @@ describe('StackRouter', () => {
       Baz: { screen: () => <div /> },
       Qux: { screen: () => <div /> },
     });
+  test('Handle navigation to nested navigator', () => {
+    const state = TestStackRouter.getStateForAction({
+      type: NavigationActions.INIT,
+    });
+    const action = TestStackRouter.getActionForPathAndParams('fo/22/b/hello');
+    /* $FlowFixMe */
+    const state2 = TestStackRouter.getStateForAction(action);
+    expect(state2).toEqual({
+      index: 0,
+      routes: [
+        {
+          index: 0,
+          key: 'Init-id-0-14',
+          routeName: 'foo',
+          params: {
+            fooThing: '22',
+          },
+          routes: [
+            {
+              routeName: 'bar',
+              key: 'Init-id-0-13',
+              params: {
+                barThing: 'hello',
+              },
+            },
+          ],
+        },
+      ],
+    });
+  });
+
+  test('Handle goBack identified by key', () => {
+    const FooScreen = () => <div />;
+    const BarScreen = () => <div />;
     const router = StackRouter({
       Foo: { screen: () => <div /> },
       Bar: { screen: ChildNavigator },
