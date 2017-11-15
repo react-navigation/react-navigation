@@ -74,7 +74,7 @@ export default (
     }
     const keys = [];
     let re, toPath, priority;
-    if (!!pathPattern) {
+    if (typeof pathPattern === 'string') {
       // pathPattern may be either a string or a regexp object according to path-to-regexp docs.
       re = pathToRegexp(pathPattern, keys);
       toPath = pathToRegexp.compile(pathPattern);
@@ -343,14 +343,6 @@ export default (
       pathToResolve: string,
       inputParams: ?NavigationParams
     ): ?NavigationStackAction {
-      // If the path is empty (null or empty string)
-      // just return the initial route action
-      if (!pathToResolve) {
-        return NavigationActions.navigate({
-          routeName: initialRouteName,
-        });
-      }
-
       const [pathNameToResolve, queryString] = pathToResolve.split('?');
 
       // Attempt to match `pathNameToResolve` with a route in this router's
@@ -373,6 +365,13 @@ export default (
 
       // We didn't match -- return null
       if (!matchedRouteName) {
+        // If the path is empty (null or empty string)
+        // just return the initial route action
+        if (!pathToResolve) {
+          return NavigationActions.navigate({
+            routeName: initialRouteName,
+          });
+        }
         return null;
       }
 

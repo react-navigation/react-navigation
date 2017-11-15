@@ -891,9 +891,13 @@ describe('StackRouter', () => {
   test('Gets deep path with pure wildcard match', () => {
     const ScreenA = () => <div />;
     const ScreenB = () => <div />;
+    const ScreenC = () => <div />;
     ScreenA.router = StackRouter({
-      Boo: { path: 'boo', screen: ScreenB },
+      Boo: { path: 'boo', screen: ScreenC },
       Baz: { path: 'baz/:bazId', screen: ScreenB },
+    });
+    ScreenC.router = StackRouter({
+      Boo2: { path: '', screen: ScreenB },
     });
     const router = StackRouter({
       Foo: {
@@ -905,30 +909,66 @@ describe('StackRouter', () => {
       },
     });
 
-    const state = {
-      index: 0,
-      routes: [
-        {
-          index: 1,
-          key: 'Foo',
-          routeName: 'Foo',
-          params: {
-            id: '123',
+    {
+      const state = {
+        index: 0,
+        routes: [
+          {
+            index: 1,
+            key: 'Foo',
+            routeName: 'Foo',
+            params: {
+              id: '123',
+            },
+            routes: [
+              {
+                index: 0,
+                key: 'Boo',
+                routeName: 'Boo',
+                routes: [{ key: 'Boo2', routeName: 'Boo2' }],
+              },
+              { key: 'Baz', routeName: 'Baz', params: { bazId: '321' } },
+            ],
           },
-          routes: [
-            { key: 'Boo', routeName: 'Boo' },
-            { key: 'Baz', routeName: 'Baz', params: { bazId: '321' } },
-          ],
-        },
-        { key: 'Bar', routeName: 'Bar' },
-      ],
-    };
-    const { path, params } = router.getPathAndParamsForState(state);
-    expect(path).toEqual('baz/321');
-    /* $FlowFixMe: params.id has to exist */
-    expect(params.id).toEqual('123');
-    /* $FlowFixMe: params.bazId has to exist */
-    expect(params.bazId).toEqual('321');
+          { key: 'Bar', routeName: 'Bar' },
+        ],
+      };
+      const { path, params } = router.getPathAndParamsForState(state);
+      expect(path).toEqual('baz/321');
+      /* $FlowFixMe: params.id has to exist */
+      expect(params.id).toEqual('123');
+      /* $FlowFixMe: params.bazId has to exist */
+      expect(params.bazId).toEqual('321');
+    }
+
+    {
+      const state = {
+        index: 0,
+        routes: [
+          {
+            index: 0,
+            key: 'Foo',
+            routeName: 'Foo',
+            params: {
+              id: '123',
+            },
+            routes: [
+              {
+                index: 0,
+                key: 'Boo',
+                routeName: 'Boo',
+                routes: [{ key: 'Boo2', routeName: 'Boo2' }],
+              },
+              { key: 'Baz', routeName: 'Baz', params: { bazId: '321' } },
+            ],
+          },
+          { key: 'Bar', routeName: 'Bar' },
+        ],
+      };
+      const { path, params } = router.getPathAndParamsForState(state);
+      expect(path).toEqual('boo/');
+      expect(params).toEqual({ id: '123' });
+    }
   });
 
   test('Maps old actions (uses "Handles the reset action" test)', () => {
