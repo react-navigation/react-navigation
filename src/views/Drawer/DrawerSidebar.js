@@ -7,6 +7,8 @@ import withCachedChildNavigation from '../../withCachedChildNavigation';
 import NavigationActions from '../../NavigationActions';
 import invariant from '../../utils/invariant';
 
+import SafeAreaView from '../SafeAreaView';
+
 import type {
   NavigationScreenProp,
   NavigationRoute,
@@ -34,6 +36,7 @@ type Props = {
   contentOptions?: {},
   screenProps?: {},
   style?: ViewStyleProp,
+  drawerPosition?: 'left' | 'right',
 };
 
 /**
@@ -123,6 +126,7 @@ class DrawerSidebar extends React.PureComponent<Props> {
           renderIcon={this._renderIcon}
           onItemPress={this._onItemPress}
           router={this.props.router}
+          drawerPosition={this.props.drawerPosition}
         />
       </View>
     );
