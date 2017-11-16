@@ -76,7 +76,11 @@ export default (
   const routeConfig = routeConfigs[route.routeName];
 
   const routeScreenConfig = routeConfig.navigationOptions;
-  const componentScreenConfig = Component.navigationOptions;
+  const componentScreenConfig = (
+    typeof Component.navigationOptions === 'function'
+    ? Component.navigationOptions.bind(Component)
+    : Component.navigationOptions
+  );
 
   const configOptions = { navigation, screenProps: screenProps || {} };
 
