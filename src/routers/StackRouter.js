@@ -30,6 +30,14 @@ function _getUuid() {
   return `${uniqueBaseId}-${uuidCount++}`;
 }
 
+function isEmpty(obj: ?Object): boolean {
+  if (!obj) return true;
+  for (let key in obj) {
+    return false;
+  }
+  return true;
+}
+
 export default (
   routeConfigs: NavigationRouteConfigMap,
   stackConfig: NavigationStackRouterConfig = {}
@@ -375,17 +383,17 @@ export default (
 
       // reduce the items of the query string. any query params may
       // be overridden by path params
-      const queryParams =
-        inputParams ||
-        (queryString || '').split('&').reduce((result: *, item: string) => {
-          if (item !== '') {
-            const nextResult = result || {};
-            const [key, value] = item.split('=');
-            nextResult[key] = value;
-            return nextResult;
-          }
-          return result;
-        }, null);
+      const queryParams = !isEmpty(inputParams)
+        ? inputParams
+        : (queryString || '').split('&').reduce((result: *, item: string) => {
+            if (item !== '') {
+              const nextResult = result || {};
+              const [key, value] = item.split('=');
+              nextResult[key] = value;
+              return nextResult;
+            }
+            return result;
+          }, null);
 
       // reduce the matched pieces of the path into the params
       // of the route. `params` is null if there are no params.
