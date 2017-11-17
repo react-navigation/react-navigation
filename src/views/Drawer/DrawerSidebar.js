@@ -119,7 +119,7 @@ class DrawerSidebar extends React.PureComponent<Props> {
           navigation={this.props.navigation}
           items={state.routes}
           activeItemKey={
-            state.routes[state.index] && state.routes[state.index].key
+            state.routes[state.index] ? state.routes[state.index].key : null
           }
           screenProps={this.props.screenProps}
           getLabel={this._getLabel}
