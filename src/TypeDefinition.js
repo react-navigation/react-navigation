@@ -205,11 +205,7 @@ export type NavigationScreenOptionsGetter<Options: {}> = (
   screenProps?: {}
 ) => Options;
 
-export type NavigationRouter<
-  State: NavigationState,
-  Action: NavigationAction,
-  Options: {}
-> = {
+export type NavigationRouter<State: NavigationState, Action: *, Options: {}> = {
   /**
    * The reducer that outputs the new navigation state for a given action, with
    * an optional previous state. When the action is considered handled but the
@@ -284,7 +280,7 @@ export type NavigationScreenComponent<
 
 export type NavigationNavigator<
   State: NavigationState,
-  Action: NavigationAction,
+  Action: *,
   Options: {}
 > = React.ComponentType<NavigationNavigatorProps<Options, *>> & {
   router: NavigationRouter<State, Action, Options>,

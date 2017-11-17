@@ -7,14 +7,13 @@ import type {
   NavigationNavigator,
   NavigationNavigatorProps,
   NavigationRouteConfigMap,
-  NavigationAction,
   NavigationState,
   NavigationScreenProp,
 } from '../TypeDefinition';
 
 import type { NavigatorType } from './NavigatorTypes';
 
-type InjectedProps<S: NavigationState, A: NavigationAction, O: *> = {
+type InjectedProps<S: NavigationState, A: *, O: *> = {
   router: NavigationRouter<S, A, O>,
 };
 
