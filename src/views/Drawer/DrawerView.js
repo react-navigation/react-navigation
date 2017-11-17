@@ -61,7 +61,7 @@ type DrawerViewState = {
 /**
  * Component that renders the drawer.
  */
-export default class DrawerView<T: NavigationRoute> extends React.PureComponent<
+export default class DrawerView extends React.PureComponent<
   DrawerViewProps,
   DrawerViewState
 > {
