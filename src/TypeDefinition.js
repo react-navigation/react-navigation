@@ -109,41 +109,19 @@ export type DeprecatedNavigationUriAction = {|
   uri: string,
 |};
 
-export type NavigationStackAction =
+export type NavigationAction =
   | NavigationInitAction
   | NavigationNavigateAction
   | NavigationBackAction
   | NavigationSetParamsAction
   | NavigationResetAction;
 
-export type DeprecatedNavigationStackAction =
+export type DeprecatedNavigationAction =
   | DeprecatedNavigationInitAction
   | DeprecatedNavigationNavigateAction
   | DeprecatedNavigationBackAction
   | DeprecatedNavigationSetParamsAction
   | DeprecatedNavigationResetAction;
-
-export type NavigationTabAction =
-  | NavigationInitAction
-  | NavigationNavigateAction
-  | NavigationBackAction
-  | NavigationSetParamsAction;
-
-export type DeprecatedNavigationTabAction =
-  | DeprecatedNavigationInitAction
-  | DeprecatedNavigationNavigateAction
-  | DeprecatedNavigationBackAction
-  | DeprecatedNavigationSetParamsAction;
-
-export type NavigationAction =
-  | NavigationInitAction
-  | NavigationStackAction
-  | NavigationTabAction;
-
-export type DeprecatedNavigationAction =
-  | DeprecatedNavigationInitAction
-  | DeprecatedNavigationStackAction
-  | DeprecatedNavigationTabAction;
 
 export type PossiblyDeprecatedNavigationAction =
   | NavigationAction
@@ -205,13 +183,13 @@ export type NavigationScreenOptionsGetter<Options: {}> = (
   screenProps?: {}
 ) => Options;
 
-export type NavigationRouter<State: NavigationState, Action: *, Options: {}> = {
+export type NavigationRouter<State: NavigationState, Options: {}> = {
   /**
    * The reducer that outputs the new navigation state for a given action, with
    * an optional previous state. When the action is considered handled but the
    * state is unchanged, the output state is null.
    */
-  getStateForAction: (action: Action, lastState: ?State) => ?State,
+  getStateForAction: (action: NavigationAction, lastState: ?State) => ?State,
 
   /**
    * Maps a URI-like string to an action. This can be mapped to a state
@@ -220,7 +198,7 @@ export type NavigationRouter<State: NavigationState, Action: *, Options: {}> = {
   getActionForPathAndParams: (
     path: string,
     params?: NavigationParams
-  ) => ?Action,
+  ) => ?NavigationAction,
 
   getPathAndParamsForState: (
     state: State
@@ -268,7 +246,7 @@ export type NavigationScreenConfig<Options> =
 
 export type NavigationComponent =
   | NavigationScreenComponent<NavigationRoute, *>
-  | NavigationNavigator<NavigationStateRoute, *, *>;
+  | NavigationNavigator<NavigationStateRoute, *>;
 
 export type NavigationScreenComponent<
   Route: NavigationRoute,
@@ -280,10 +258,9 @@ export type NavigationScreenComponent<
 
 export type NavigationNavigator<
   State: NavigationState,
-  Action: *,
   Options: {}
 > = React.ComponentType<NavigationNavigatorProps<Options, *>> & {
-  router: NavigationRouter<State, Action, Options>,
+  router: NavigationRouter<State, Options>,
   navigationOptions?: NavigationScreenConfig<Options>,
 };
 
@@ -318,11 +295,7 @@ export type HeaderMode = 'float' | 'screen' | 'none';
 export type HeaderProps = {
   ...$Exact<NavigationSceneRendererProps>,
   mode: HeaderMode,
-  router: NavigationRouter<
-    NavigationState,
-    NavigationAction,
-    NavigationStackScreenOptions
-  >,
+  router: NavigationRouter<NavigationState, NavigationStackScreenOptions>,
   getScreenDetails: NavigationScene => NavigationScreenDetails<
     NavigationStackScreenOptions
   >,

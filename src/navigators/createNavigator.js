@@ -13,8 +13,8 @@ import type {
 
 import type { NavigatorType } from './NavigatorTypes';
 
-type InjectedProps<S: NavigationState, A: *, O: *> = {
-  router: NavigationRouter<S, A, O>,
+type InjectedProps<S: NavigationState, O: *> = {
+  router: NavigationRouter<S, O>,
 };
 
 /**
@@ -22,20 +22,19 @@ type InjectedProps<S: NavigationState, A: *, O: *> = {
  */
 export default function createNavigator<
   S: NavigationState,
-  A: *,
   NavigatorConfig,
   O: *
 >(
-  router: NavigationRouter<S, A, O>,
+  router: NavigationRouter<S, O>,
   routeConfigs?: NavigationRouteConfigMap,
   navigatorConfig?: NavigatorConfig,
   navigatorType?: NavigatorType
 ) {
   return (
     NavigationView: React.ComponentType<
-      InjectedProps<S, A, O> & NavigationNavigatorProps<O, S>
+      InjectedProps<S, O> & NavigationNavigatorProps<O, S>
     >
-  ): NavigationNavigator<S, A, O> => {
+  ): NavigationNavigator<S, O> => {
     class Navigator extends React.Component<NavigationNavigatorProps<O, S>> {
       static router = router;
 

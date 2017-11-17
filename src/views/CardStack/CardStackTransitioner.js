@@ -18,7 +18,6 @@ import type {
   HeaderMode,
   ViewStyleProp,
   TransitionConfig,
-  NavigationStackAction,
 } from '../../TypeDefinition';
 
 const NativeAnimatedModule =
@@ -29,11 +28,7 @@ type Props = {
   headerMode: HeaderMode,
   mode: 'card' | 'modal',
   navigation: NavigationScreenProp<NavigationState>,
-  router: NavigationRouter<
-    NavigationState,
-    NavigationStackAction,
-    NavigationStackScreenOptions
-  >,
+  router: NavigationRouter<NavigationState, NavigationStackScreenOptions>,
   cardStyle?: ViewStyleProp,
   onTransitionStart?: () => void,
   onTransitionEnd?: () => void,

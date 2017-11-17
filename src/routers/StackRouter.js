@@ -18,11 +18,11 @@ import type {
   NavigationResetAction,
   NavigationParams,
   NavigationState,
-  NavigationStackAction,
   NavigationStackRouterConfig,
   NavigationStackScreenOptions,
   NavigationRoute,
   NavigationStateRoute,
+  NavigationAction,
 } from '../TypeDefinition';
 
 const uniqueBaseId = `id-${Date.now()}`;
@@ -42,11 +42,7 @@ function isEmpty(obj: ?Object): boolean {
 export default (
   routeConfigs: NavigationRouteConfigMap,
   stackConfig: NavigationStackRouterConfig = {}
-): NavigationRouter<
-  NavigationState,
-  NavigationStackAction,
-  NavigationStackScreenOptions
-> => {
+): NavigationRouter<NavigationState, NavigationStackScreenOptions> => {
   // Fail fast on invalid route definitions
   validateRouteConfigMap(routeConfigs);
 
@@ -104,7 +100,7 @@ export default (
     },
 
     getStateForAction(
-      action: NavigationStackAction,
+      action: NavigationAction,
       state: ?NavigationState
     ): ?NavigationState {
       // Set up the initial state if needed
@@ -339,7 +335,7 @@ export default (
     getActionForPathAndParams(
       pathToResolve: string,
       inputParams: ?NavigationParams
-    ): ?NavigationStackAction {
+    ): ?NavigationAction {
       // If the path is empty (null or empty string)
       // just return the initial route action
       if (!pathToResolve) {

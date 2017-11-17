@@ -17,17 +17,12 @@ import type {
   NavigationState,
   NavigationStateRoute,
   ViewStyleProp,
-  NavigationTabAction,
 } from '../../TypeDefinition';
 
 import type { DrawerScene, DrawerItem } from './DrawerView';
 
 type Props = {
-  router: NavigationRouter<
-    NavigationState,
-    NavigationTabAction,
-    NavigationDrawerScreenOptions
-  >,
+  router: NavigationRouter<NavigationState, NavigationDrawerScreenOptions>,
   navigation: NavigationScreenProp<NavigationStateRoute>,
   childNavigationProps: {
     [key: string]: NavigationScreenProp<NavigationRoute>,

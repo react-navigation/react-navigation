@@ -14,7 +14,6 @@ import type {
   NavigationState,
   NavigationDrawerScreenOptions,
   ViewStyleProp,
-  NavigationTabAction,
   NavigationStateRoute,
 } from '../../TypeDefinition';
 
@@ -47,11 +46,7 @@ export type DrawerViewPropsExceptRouter = DrawerViewConfig & {
 };
 
 export type DrawerViewProps = DrawerViewPropsExceptRouter & {
-  router: NavigationRouter<
-    NavigationState,
-    NavigationTabAction,
-    NavigationDrawerScreenOptions
-  >,
+  router: NavigationRouter<NavigationState, NavigationDrawerScreenOptions>,
 };
 
 type DrawerViewState = {

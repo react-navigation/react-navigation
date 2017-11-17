@@ -14,7 +14,6 @@ import type {
   NavigationState,
   NavigationRouter,
   NavigationTabScreenOptions,
-  NavigationStackAction,
 } from '../../TypeDefinition';
 
 export type TabViewConfig = {
@@ -45,11 +44,7 @@ type Props = {
 
   screenProps?: {},
   navigation: NavigationScreenProp<NavigationState>,
-  router: NavigationRouter<
-    NavigationState,
-    NavigationStackAction,
-    NavigationTabScreenOptions
-  >,
+  router: NavigationRouter<NavigationState, NavigationTabScreenOptions>,
   childNavigationProps: {
     [key: string]: NavigationScreenProp<NavigationRoute>,
   },

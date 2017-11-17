@@ -37,8 +37,8 @@ type State = {
  * This allows to use e.g. the StackNavigator and TabNavigator as root-level
  * components.
  */
-export default function createNavigationContainer<A: *, O: *>(
-  Component: NavigationNavigator<NavigationState, A | NavigationInitAction, O>
+export default function createNavigationContainer<O: *>(
+  Component: NavigationNavigator<NavigationState, O>
 ) {
   class NavigationContainer extends React.Component<Props<O>, State> {
     subs: ?{
@@ -177,10 +177,7 @@ export default function createNavigationContainer<A: *, O: *>(
     _nav: ?NavigationState;
 
     dispatch = (inputAction: PossiblyDeprecatedNavigationAction) => {
-      // $FlowFixMe remove after we deprecate the old actions
-      const action: A = NavigationActions.mapDeprecatedActionAndWarn(
-        inputAction
-      );
+      const action = NavigationActions.mapDeprecatedActionAndWarn(inputAction);
       if (!this._isStateful()) {
         return false;
       }
