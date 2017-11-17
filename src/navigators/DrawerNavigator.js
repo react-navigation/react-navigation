@@ -24,8 +24,6 @@ export type DrawerNavigatorConfig = {
 } & NavigationTabRouterConfig &
   DrawerViewConfig;
 
-const { height, width } = Dimensions.get('window');
-
 const defaultContentComponent = (props: *) => (
   <ScrollView alwaysBounceVertical={false}>
     <SafeAreaView forceInset={{ top: 'always', horizontal: 'never' }}>
@@ -35,11 +33,21 @@ const defaultContentComponent = (props: *) => (
 );
 
 const DefaultDrawerConfig = {
-  /*
-   * Default drawer width is screen width - header width
-   * https://material.io/guidelines/patterns/navigation-drawer.html
-   */
-  drawerWidth: Math.min(height, width) - (Platform.OS === 'android' ? 56 : 64),
+  drawerWidth: () => {
+    /*
+     * Default drawer width is screen width - header height
+     * with a max width of 280 on mobile and 320 on tablet
+     * https://material.io/guidelines/patterns/navigation-drawer.html
+     */
+    const { height, width } = Dimensions.get('window');
+    const smallerAxisSize = Math.min(height, width);
+    const isLandscape = width > height;
+    const isTablet = smallerAxisSize >= 600;
+    const appBarHeight = Platform.OS === 'ios' ? (isLandscape ? 32 : 44) : 56;
+    const maxWidth = isTablet ? 320 : 280;
+
+    return Math.min(smallerAxisSize - appBarHeight, maxWidth);
+  },
   contentComponent: defaultContentComponent,
   drawerPosition: 'left',
   drawerBackgroundColor: 'white',
