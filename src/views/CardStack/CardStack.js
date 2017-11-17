@@ -418,10 +418,11 @@ class CardStack extends React.Component<Props> {
   _getTransitionConfig = () => {
     const isModal = this.props.mode === 'modal';
 
-    /* $FlowFixMe */
     return TransitionConfigs.getTransitionConfig(
       this.props.transitionConfig,
+      /* $FlowFixMe */
       {},
+      /* $FlowFixMe */
       {},
       isModal
     );
