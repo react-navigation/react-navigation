@@ -194,11 +194,7 @@ export type NavigationLeafRoute = {
   params?: NavigationParams,
 };
 
-export type NavigationStateRoute = {
-  ...$Exact<NavigationLeafRoute>,
-  index: number,
-  routes: Array<NavigationRoute>,
-};
+export type NavigationStateRoute = NavigationLeafRoute & NavigationState;
 
 /**
  * Router
