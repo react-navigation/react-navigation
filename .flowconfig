@@ -25,6 +25,7 @@
 <PROJECT_ROOT>/lib
 <PROJECT_ROOT>/lib-rn
 <PROJECT_ROOT>/examples
+<PROJECT_ROOT>/website/build
 
 [include]
 
