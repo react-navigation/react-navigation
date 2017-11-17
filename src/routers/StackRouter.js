@@ -8,6 +8,7 @@ import getScreenForRouteName from './getScreenForRouteName';
 import StateUtils from '../StateUtils';
 import validateRouteConfigMap from './validateRouteConfigMap';
 import getScreenConfigDeprecated from './getScreenConfigDeprecated';
+import invariant from '../utils/invariant';
 
 import type {
   NavigationComponent,
@@ -159,6 +160,10 @@ export default (
           : -1;
         const childIndex = keyIndex >= 0 ? keyIndex : state.index;
         const childRoute = state.routes[childIndex];
+        invariant(
+          childRoute,
+          `StateUtils erroneously thought index ${childIndex} exists`
+        );
         const childRouter = childRouters[childRoute.routeName];
         if (childRouter) {
           const route = childRouter.getStateForAction(action, childRoute);
