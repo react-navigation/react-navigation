@@ -66,7 +66,7 @@ export default class TabViewPagerAndroid<T: Route<*>> extends React.Component<
   }
 
   componentWillUnmount() {
-    this._resetListener.remove();
+    this._resetListener && this._resetListener.remove();
   }
 
   _animationFrameCallback: ?() => void;
