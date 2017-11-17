@@ -430,7 +430,7 @@ export type NavigationProp<S> = {
   dispatch: NavigationDispatch,
 };
 
-export type NavigationScreenProp<S: {}> = {
+export type NavigationScreenProp<+S> = {
   +state: S,
   dispatch: NavigationDispatch,
   goBack: (routeKey?: ?string) => boolean,
