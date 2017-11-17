@@ -200,12 +200,6 @@ export type NavigationStateRoute = {
   routes: Array<NavigationRoute>,
 };
 
-export type DrawerNavigationState = {
-  ...$Exact<NavigationLeafRoute>,
-  index: number,
-  routes: [],
-};
-
 /**
  * Router
  */
