@@ -41,6 +41,7 @@ export default function createNavigator<
       static routeConfigs = routeConfigs;
       static navigatorConfig = navigatorConfig;
       static navigatorType = navigatorType;
+      static navigationOptions = null;
 
       render() {
         return <NavigationView {...this.props} router={router} />;
