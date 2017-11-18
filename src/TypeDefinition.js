@@ -417,7 +417,7 @@ export type NavigationScreenProp<+S> = {
 
 export type NavigationNavigatorProps<O: {}, S: {}> = {
   navigation: NavigationScreenProp<S>,
-  screenProps?: *,
+  screenProps?: {},
   navigationOptions?: O,
 };
 

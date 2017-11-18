@@ -23,7 +23,7 @@ type Props<O> = {
     NavigationAction
   ) => void,
   navigation?: NavigationScreenProp<NavigationState>,
-  screenProps?: *,
+  screenProps?: {},
   navigationOptions?: O,
 };
 
@@ -37,7 +37,7 @@ type State = {
  * This allows to use e.g. the StackNavigator and TabNavigator as root-level
  * components.
  */
-export default function createNavigationContainer<O: *>(
+export default function createNavigationContainer<O: {}>(
   Component: NavigationNavigator<NavigationState, O>
 ) {
   class NavigationContainer extends React.Component<Props<O>, State> {
@@ -141,7 +141,7 @@ export default function createNavigationContainer<O: *>(
       }
     }
 
-    componentWillReceiveProps(nextProps: *) {
+    componentWillReceiveProps(nextProps: Props<O>) {
       this._validateProps(nextProps);
     }
 
