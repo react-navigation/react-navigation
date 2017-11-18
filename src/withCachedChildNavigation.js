@@ -26,7 +26,6 @@ export default function withCachedChildNavigation<
   S: NavigationState,
   T: InputProps<S>
 >(Comp: React.ComponentType<OutputProps & T>): React.ComponentType<T> {
-  // $FlowFixMe StatelessFunctionalComponent missing displayName Flow < 0.54.0
   const displayName: string = Comp.displayName || Comp.name;
   return class extends React.PureComponent<T> {
     static displayName = `withCachedChildNavigation(${displayName})`;

@@ -1,9 +1,9 @@
 /* @flow */
 
-import React from 'react';
+import * as React from 'react';
 import { Dimensions, Platform, ScrollView } from 'react-native';
 
-import createNavigator from './createNavigator';
+import createNavigator, { type NavigatorProps } from './createNavigator';
 import createNavigationContainer from '../createNavigationContainer';
 import TabRouter from '../routers/TabRouter';
 import DrawerScreen from '../views/Drawer/DrawerScreen';
@@ -15,14 +15,25 @@ import NavigatorTypes from './NavigatorTypes';
 
 import type { DrawerViewConfig } from '../views/Drawer/DrawerView';
 import type {
+  NavigationState,
   NavigationRouteConfigMap,
   NavigationTabRouterConfig,
+  NavigationDrawerScreenOptions,
 } from '../TypeDefinition';
 
 export type DrawerNavigatorConfig = {
   containerConfig?: void,
 } & NavigationTabRouterConfig &
   DrawerViewConfig;
+
+// A stack navigators props are the intersection between
+// the base navigator props (navgiation, screenProps, etc)
+// and the view's props
+type DrawerNavigatorProps = NavigatorProps<
+  NavigationState,
+  NavigationDrawerScreenOptions
+> &
+  React.ElementProps<typeof DrawerView>;
 
 const defaultContentComponent = (props: *) => (
   <ScrollView alwaysBounceVertical={false}>
@@ -102,7 +113,7 @@ const DrawerNavigator = (
     routeConfigs,
     config,
     NavigatorTypes.DRAWER
-  )((props: *) => (
+  )((props: DrawerNavigatorProps) => (
     <DrawerView
       {...props}
       drawerBackgroundColor={drawerBackgroundColor}
