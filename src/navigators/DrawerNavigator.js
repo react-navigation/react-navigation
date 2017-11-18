@@ -35,7 +35,9 @@ type DrawerNavigatorProps = NavigatorProps<
 > &
   React.ElementProps<typeof DrawerView>;
 
-const defaultContentComponent = (props: *) => (
+const defaultContentComponent = (
+  props: React.ElementProps<typeof DrawerItems>
+) => (
   <ScrollView alwaysBounceVertical={false}>
     <SafeAreaView forceInset={{ top: 'always', horizontal: 'never' }}>
       <DrawerItems {...props} />
