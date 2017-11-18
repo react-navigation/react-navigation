@@ -145,6 +145,13 @@ export default function createNavigationContainer<A: *, O: *>(
       this._validateProps(nextProps);
     }
 
+    componentDidUpdate() {
+      // Clear cached _nav every tick
+      if (this._nav === this.state.nav) {
+        this._nav = null;
+      }
+    }
+
     componentDidMount() {
       if (!this._isStateful()) {
         return;
@@ -166,6 +173,9 @@ export default function createNavigationContainer<A: *, O: *>(
       this.subs && this.subs.remove();
     }
 
+    // Per-tick temporary storage for state.nav
+    _nav: ?NavigationState;
+
     dispatch = (inputAction: PossiblyDeprecatedNavigationAction) => {
       // $FlowFixMe remove after we deprecate the old actions
       const action: A = NavigationActions.mapDeprecatedActionAndWarn(
@@ -174,10 +184,13 @@ export default function createNavigationContainer<A: *, O: *>(
       if (!this._isStateful()) {
         return false;
       }
-      const oldNav = this.state.nav;
+      this._nav = this._nav || this.state.nav;
+      const oldNav = this._nav;
       invariant(oldNav, 'should be set in constructor if stateful');
       const nav = Component.router.getStateForAction(action, oldNav);
       if (nav && nav !== oldNav) {
+        // Cache updates to state.nav during the tick to ensure that subsequent calls will not discard this change
+        this._nav = nav;
         this.setState({ nav }, () =>
           this._onNavigationStateChange(oldNav, nav, action)
         );
