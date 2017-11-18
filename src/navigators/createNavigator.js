@@ -13,40 +13,44 @@ import type {
 
 import type { NavigatorType } from './NavigatorTypes';
 
-// NavigatorCreator type
-type _NavigatorCreator<Props: {}, S, O> = (
-  NavigationView: React.ComponentType<InjectedProps<S, O> & Props>
-) => NavigationNavigator<S, O>;
-
-// Type of the View passed into createNavigator
-type NavigationViewType<Props: {}, S, O> = React.ComponentType<
-  InjectedProps<S, O> & Props
->;
-
 // Props we want createNavigator to Inject
-type InjectedProps<S, O> = {
+type RouterProp<S: NavigationState, O: {}> = {
   router: NavigationRouter<S, O>,
 };
 
 // Export this type so that navigators can use this to type their props
-export type NavigatorProps<S: NavigationState, O: {}> = InjectedProps<S, O> &
+export type NavigatorProps<S: NavigationState, O: {}> = RouterProp<S, O> &
   NavigationNavigatorProps<O, S>;
+
+// Type of the View passed into createNavigator
+type NavigationViewType<
+  Props: {},
+  S: NavigationState,
+  O: *
+> = React.ComponentType<NavigationNavigatorProps<O, S> & Props>;
+
+// NavigatorCreator type
+type _NavigatorCreator<NavigationViewProps: {}, S: NavigationState, O: {}> = (
+  NavigationView: React.ComponentType<RouterProp<S, O> & NavigationViewProps>
+) => NavigationNavigator<S, O, NavigationViewProps>;
 
 /**
  * Creates a navigator based on a router and a view that renders the screens.
  */
 export default function createNavigator<
-  NavigationViewProps: {},
   S: NavigationState,
   O: {},
-  NavigatorConfig: {}
+  NavigatorConfig: {},
+  NavigationViewProps: NavigationNavigatorProps<O, S>
 >(
   router: NavigationRouter<S, O>,
   routeConfigs?: NavigationRouteConfigMap,
   navigatorConfig?: NavigatorConfig,
   navigatorType?: NavigatorType
 ): _NavigatorCreator<NavigationViewProps, S, O> {
-  return (NavigationView: NavigationViewType<NavigationViewProps, S, O>) => {
+  return (
+    NavigationView: React.ComponentType<RouterProp<S, O> & NavigationViewProps>
+  ): NavigationNavigator<S, O, NavigationViewProps> => {
     class Navigator extends React.Component<NavigationViewProps> {
       static router = router;
 
@@ -60,6 +64,6 @@ export default function createNavigator<
       }
     }
 
-    return ((Navigator: any): NavigationNavigator<S, O>);
+    return Navigator;
   };
 }

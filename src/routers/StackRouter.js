@@ -386,7 +386,7 @@ export default (
       // be overridden by path params
       const queryParams = !isEmpty(inputParams)
         ? inputParams
-        : (queryString || '').split('&').reduce((result: *, item: string) => {
+        : (queryString || '').split('&').reduce((result, item) => {
             if (item !== '') {
               const nextResult = result || {};
               const [key, value] = item.split('=');

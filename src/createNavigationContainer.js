@@ -6,6 +6,8 @@ import NavigationActions from './NavigationActions';
 import addNavigationHelpers from './addNavigationHelpers';
 import invariant from './utils/invariant';
 
+import type { NavigatorProps } from './navigators/createNavigator';
+
 import type {
   NavigationAction,
   NavigationState,
@@ -13,22 +15,20 @@ import type {
   NavigationNavigator,
   PossiblyDeprecatedNavigationAction,
   NavigationInitAction,
+  NavigationNavigatorProps,
 } from './TypeDefinition';
 
-type Props<O> = {
+type Props<S, O> = NavigatorProps<S, O> & {
   uriPrefix?: string | RegExp,
   onNavigationStateChange?: (
     NavigationState,
     NavigationState,
     NavigationAction
   ) => void,
-  navigation?: NavigationScreenProp<NavigationState>,
-  screenProps?: {},
-  navigationOptions?: O,
 };
 
-type State = {
-  nav: ?NavigationState,
+type State<NavState> = {
+  nav: ?NavState,
 };
 
 /**
@@ -37,17 +37,18 @@ type State = {
  * This allows to use e.g. the StackNavigator and TabNavigator as root-level
  * components.
  */
-export default function createNavigationContainer<O: {}>(
-  Component: NavigationNavigator<NavigationState, O>
+export default function createNavigationContainer<S: NavigationState, O: {}>(
+  // Let the NavigationNavigator props flowwwww
+  Component: NavigationNavigator<S, O, *>
 ) {
-  class NavigationContainer extends React.Component<Props<O>, State> {
+  class NavigationContainer extends React.Component<Props<S, O>, State<S>> {
     subs: ?{
       remove: () => void,
     } = null;
 
     static router = Component.router;
 
-    constructor(props: Props<O>) {
+    constructor(props: Props<S, O>) {
       super(props);
 
       this._validateProps(props);
@@ -63,7 +64,7 @@ export default function createNavigationContainer<O: {}>(
       return !this.props.navigation;
     }
 
-    _validateProps(props: Props<O>) {
+    _validateProps(props: Props<S, O>) {
       if (this._isStateful()) {
         return;
       }
@@ -141,7 +142,7 @@ export default function createNavigationContainer<O: {}>(
       }
     }
 
-    componentWillReceiveProps(nextProps: Props<O>) {
+    componentWillReceiveProps(nextProps: Props<S, O>) {
       this._validateProps(nextProps);
     }
 

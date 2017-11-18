@@ -245,21 +245,23 @@ export type NavigationScreenConfig<Options> =
     }) => Options);
 
 export type NavigationComponent =
-  | NavigationScreenComponent<NavigationRoute, *>
-  | NavigationNavigator<NavigationStateRoute, *>;
+  | NavigationScreenComponent<NavigationRoute, *, *>
+  | NavigationNavigator<NavigationStateRoute, *, *>;
 
 export type NavigationScreenComponent<
   Route: NavigationRoute,
-  Options: {}
-> = React.ComponentType<NavigationNavigatorProps<Options, Route>> & {
+  Options: {},
+  Props: {}
+> = React.ComponentType<NavigationNavigatorProps<Options, Route> & Props> & {
   router?: void,
   navigationOptions?: NavigationScreenConfig<Options>,
 };
 
 export type NavigationNavigator<
   State: NavigationState,
-  Options: {}
-> = React.ComponentType<NavigationNavigatorProps<Options, *>> & {
+  Options: {},
+  Props: {}
+> = React.ComponentType<NavigationNavigatorProps<Options, State> & Props> & {
   router: NavigationRouter<State, Options>,
   navigationOptions?: ?NavigationScreenConfig<Options>,
 };
@@ -292,8 +294,7 @@ export type NavigationRouteConfigMap = {
 
 export type HeaderMode = 'float' | 'screen' | 'none';
 
-export type HeaderProps = {
-  ...$Exact<NavigationSceneRendererProps>,
+export type HeaderProps = NavigationSceneRendererProps & {
   mode: HeaderMode,
   router: NavigationRouter<NavigationState, NavigationStackScreenOptions>,
   getScreenDetails: NavigationScene => NavigationScreenDetails<
@@ -305,8 +306,7 @@ export type HeaderProps = {
  * Stack Navigator
  */
 
-export type NavigationStackScreenOptions = {|
-  ...$Exact<NavigationScreenOptions>,
+export type NavigationStackScreenOptions = NavigationScreenOptions & {
   header?: ?(React.Node | (HeaderProps => React.Node)),
   headerTitle?: string | React.Node | React.ComponentType<any>,
   headerTitleStyle?: AnimatedTextStyleProp,
@@ -321,7 +321,7 @@ export type NavigationStackScreenOptions = {|
   headerStyle?: ViewStyleProp,
   gesturesEnabled?: boolean,
   gestureResponseDistance?: { vertical?: number, horizontal?: number },
-|};
+};
 
 export type NavigationStackRouterConfig = {
   initialRouteName?: string,
