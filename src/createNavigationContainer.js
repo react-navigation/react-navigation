@@ -6,8 +6,6 @@ import NavigationActions from './NavigationActions';
 import addNavigationHelpers from './addNavigationHelpers';
 import invariant from './utils/invariant';
 
-import type { NavigatorProps } from './navigators/createNavigator';
-
 import type {
   NavigationAction,
   NavigationState,
@@ -18,13 +16,16 @@ import type {
   NavigationNavigatorProps,
 } from './TypeDefinition';
 
-type Props<S, O> = NavigatorProps<S, O> & {
+type Props<S, O> = {
   uriPrefix?: string | RegExp,
   onNavigationStateChange?: (
     NavigationState,
     NavigationState,
     NavigationAction
   ) => void,
+  navigation?: NavigationScreenProp<S>,
+  screenProps?: *,
+  navigationOptions?: O,
 };
 
 type State<NavState> = {

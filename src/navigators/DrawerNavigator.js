@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { Dimensions, Platform, ScrollView } from 'react-native';
 
-import createNavigator, { type NavigatorProps } from './createNavigator';
+import createNavigator from './createNavigator';
 import createNavigationContainer from '../createNavigationContainer';
 import TabRouter from '../routers/TabRouter';
 import DrawerScreen from '../views/Drawer/DrawerScreen';
@@ -19,6 +19,7 @@ import type {
   NavigationRouteConfigMap,
   NavigationTabRouterConfig,
   NavigationDrawerScreenOptions,
+  NavigationNavigatorProps,
 } from '../TypeDefinition';
 
 export type DrawerNavigatorConfig = {
@@ -29,9 +30,9 @@ export type DrawerNavigatorConfig = {
 // A stack navigators props are the intersection between
 // the base navigator props (navgiation, screenProps, etc)
 // and the view's props
-type DrawerNavigatorProps = NavigatorProps<
-  NavigationState,
-  NavigationDrawerScreenOptions
+type DrawerNavigatorProps = NavigationNavigatorProps<
+  NavigationDrawerScreenOptions,
+  NavigationState
 > &
   React.ElementProps<typeof DrawerView>;
 

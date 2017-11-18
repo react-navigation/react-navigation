@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { Platform } from 'react-native';
 
-import createNavigator, { type NavigatorProps } from './createNavigator';
+import createNavigator from './createNavigator';
 import createNavigationContainer from '../createNavigationContainer';
 import TabRouter from '../routers/TabRouter';
 import TabView from '../views/TabView/TabView';
@@ -19,6 +19,7 @@ import type {
   NavigationRouteConfigMap,
   NavigationTabRouterConfig,
   NavigationTabScreenOptions,
+  NavigationNavigatorProps,
 } from '../TypeDefinition';
 
 export type TabNavigatorConfig = {
@@ -29,9 +30,9 @@ export type TabNavigatorConfig = {
 // A tab navigators props are the intersection between
 // the base navigator props (navgiation, screenProps, etc)
 // and the view's props
-type TabNavigatorProps = NavigatorProps<
-  NavigationState,
-  NavigationTabScreenOptions
+type TabNavigatorProps = NavigationNavigatorProps<
+  NavigationTabScreenOptions,
+  NavigationState
 > &
   React.ElementProps<typeof TabView>;
 

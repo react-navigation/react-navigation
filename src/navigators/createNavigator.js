@@ -18,17 +18,6 @@ type RouterProp<S: NavigationState, O: {}> = {
   router: NavigationRouter<S, O>,
 };
 
-// Export this type so that navigators can use this to type their props
-export type NavigatorProps<S: NavigationState, O: {}> = RouterProp<S, O> &
-  NavigationNavigatorProps<O, S>;
-
-// Type of the View passed into createNavigator
-type NavigationViewType<
-  Props: {},
-  S: NavigationState,
-  O: *
-> = React.ComponentType<NavigationNavigatorProps<O, S> & Props>;
-
 // NavigatorCreator type
 type _NavigatorCreator<NavigationViewProps: {}, S: NavigationState, O: {}> = (
   NavigationView: React.ComponentType<RouterProp<S, O> & NavigationViewProps>

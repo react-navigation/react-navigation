@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import createNavigationContainer from '../createNavigationContainer';
-import createNavigator, { type NavigatorProps } from './createNavigator';
+import createNavigator from './createNavigator';
 import CardStackTransitioner from '../views/CardStack/CardStackTransitioner';
 import StackRouter from '../routers/StackRouter';
 import NavigatorTypes from './NavigatorTypes';
@@ -12,14 +12,15 @@ import type {
   StackNavigatorConfig,
   NavigationState,
   NavigationStackScreenOptions,
+  NavigationNavigatorProps,
 } from '../TypeDefinition';
 
 // A stack navigators props are the intersection between
 // the base navigator props (navgiation, screenProps, etc)
 // and the view's props
-type StackNavigatorProps = NavigatorProps<
-  NavigationState,
-  NavigationStackScreenOptions
+type StackNavigatorProps = NavigationNavigatorProps<
+  NavigationStackScreenOptions,
+  NavigationState
 > &
   React.ElementProps<typeof CardStackTransitioner>;
 
