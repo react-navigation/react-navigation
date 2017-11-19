@@ -208,6 +208,7 @@ class TabView extends React.PureComponent<Props> {
       style: styles.container,
     };
 
+    // $FlowFixMe: mismatch with react-native-tab-view type
     return <TabViewAnimated {...props} />;
   }
 }
