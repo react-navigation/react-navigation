@@ -13,7 +13,6 @@ import type {
   NavigationNavigator,
   PossiblyDeprecatedNavigationAction,
   NavigationInitAction,
-  NavigationNavigatorProps,
 } from './TypeDefinition';
 
 type Props<S, O> = {

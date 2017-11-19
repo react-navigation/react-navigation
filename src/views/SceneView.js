@@ -11,7 +11,7 @@ import type {
 
 type Props = {
   screenProps?: {},
-  navigation: NavigationScreenProp<*>,
+  navigation: NavigationScreenProp<any>,
   component: NavigationComponent,
 };
 
