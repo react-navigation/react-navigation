@@ -7,12 +7,14 @@ import type {
   NavigationScreenProp,
   NavigationComponent,
   NavigationRoute,
+  NavigationScene,
 } from '../TypeDefinition';
 
 type Props = {
   screenProps?: {},
   navigation: NavigationScreenProp<*>,
   component: NavigationComponent,
+  scene?: NavigationScene,
 };
 
 export default class SceneView extends React.PureComponent<Props> {
@@ -27,8 +29,20 @@ export default class SceneView extends React.PureComponent<Props> {
   }
 
   render() {
-    const { screenProps, navigation, component: Component } = this.props;
+    const { screenProps, navigation, component: Component, scene } = this.props;
 
-    return <Component screenProps={screenProps} navigation={navigation} />;
+    const comp: any = (
+      <Component screenProps={screenProps} navigation={navigation} />
+    );
+    if (scene) {
+      const originalMethod = comp.type.prototype.shouldComponentUpdate;
+      comp.type.prototype.shouldComponentUpdate = function(...args: [*]) {
+        return (
+          scene.isActive &&
+          (!originalMethod || originalMethod.apply(this, args))
+        );
+      };
+    }
+    return comp;
   }
 }
