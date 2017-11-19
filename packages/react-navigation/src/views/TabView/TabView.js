@@ -104,7 +104,7 @@ class TabView extends React.PureComponent<Props> {
     return route.routeName;
   };
 
-  _getOnPress = ({ route }: TabScene) => {
+  _getOnPress = (previousScene: TabScene, { route }: TabScene) => {
     const options = this.props.router.getScreenOptions(
       this.props.childNavigationProps[route.key],
       this.props.screenProps || {}
