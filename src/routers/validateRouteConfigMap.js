@@ -35,7 +35,11 @@ function validateRouteConfigMap(routeConfigs: NavigationRouteConfigMap) {
       );
     }
 
-    if (routeConfig.screen && typeof routeConfig.screen !== 'function') {
+    if (
+      routeConfig.screen &&
+      typeof routeConfig.screen !== 'function' &&
+      typeof routeConfig.screen !== 'string'
+    ) {
       throw new Error(
         `The component for route '${routeName}' must be a ` +
           'React component. For example:\n\n' +
