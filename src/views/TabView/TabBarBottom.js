@@ -53,15 +53,11 @@ type Props = {
   isLandscape: boolean,
 };
 
-type State = {
-  isVisible: boolean,
-};
-
 const majorVersion = parseInt(Platform.Version, 10);
 const isIos = Platform.OS === 'ios';
 const useHorizontalTabs = majorVersion >= 11 && isIos;
 
-class TabBarBottom extends React.PureComponent<Props, State> {
+class TabBarBottom extends React.PureComponent<Props> {
   // See https://developer.apple.com/library/content/documentation/UserExperience/Conceptual/UIKitUICatalog/UITabBar.html
   static defaultProps = {
     activeTintColor: '#3478f6', // Default active tint color in iOS 10
@@ -71,43 +67,6 @@ class TabBarBottom extends React.PureComponent<Props, State> {
     showLabel: true,
     showIcon: true,
     allowFontScaling: true,
-  };
-
-  props: Props;
-
-  state: State = {
-    isVisible: true,
-  };
-
-  _keyboardDidShowSub = undefined;
-  _keyboardDidHideSub = undefined;
-
-  componentWillMount() {
-    this._keyboardDidShowSub = Keyboard.addListener(
-      'keyboardDidShow',
-      this._keyboardDidShow
-    );
-    this._keyboardDidHideSub = Keyboard.addListener(
-      'keyboardDidHide',
-      this._keyboardDidHide
-    );
-  }
-
-  componentWillUnmount() {
-    this._keyboardDidShowSub !== undefined && this._keyboardDidShowSub.remove();
-    this._keyboardDidHideSub !== undefined && this._keyboardDidHideSub.remove();
-  }
-
-  _keyboardDidShow = () => {
-    this.setState({
-      isVisible: false,
-    });
-  };
-
-  _keyboardDidHide = () => {
-    this.setState({
-      isVisible: true,
-    });
   };
 
   _renderLabel = (scene: TabScene) => {
@@ -226,7 +185,7 @@ class TabBarBottom extends React.PureComponent<Props, State> {
       style,
     ];
 
-    return this.state.isVisible ? (
+    return (
       <Animated.View style={animateStyle}>
         <SafeAreaView
           style={tabBarStyle}
@@ -278,7 +237,7 @@ class TabBarBottom extends React.PureComponent<Props, State> {
           })}
         </SafeAreaView>
       </Animated.View>
-    ) : null;
+    );
   }
 }
 
