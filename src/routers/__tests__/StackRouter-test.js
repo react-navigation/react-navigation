@@ -1020,6 +1020,41 @@ describe('StackRouter', () => {
     expect(state).toEqual(state7);
   });
 
+  test('Handle more pops than routes exist', () => {
+    const FooScreen = () => <div />;
+    const BarScreen = () => <div />;
+    const router = StackRouter({
+      Foo: {
+        screen: FooScreen,
+      },
+      Bar: {
+        screen: BarScreen,
+      },
+    });
+    const state = router.getStateForAction({ type: NavigationActions.INIT });
+    const state2 = router.getStateForAction(
+      {
+        type: NavigationActions.NAVIGATE,
+        routeName: 'Bar',
+        params: { name: 'Zoom' },
+      },
+      state
+    );
+    const state3 = router.getStateForAction(
+      {
+        type: NavigationActions.NAVIGATE,
+        routeName: 'Bar',
+        params: { name: 'Foo' },
+      },
+      state2
+    );
+    const state4 = router.getStateForAction(
+      { type: NavigationActions.POP, numberOfScreens: 20 },
+      state3
+    );
+    expect(state).toEqual(state4);
+  });
+
   test('Handle pop to top', () => {
     const FooScreen = () => <div />;
     const BarScreen = () => <div />;
