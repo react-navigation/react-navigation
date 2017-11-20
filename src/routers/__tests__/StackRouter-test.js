@@ -963,4 +963,110 @@ describe('StackRouter', () => {
       },
     });
   });
+
+  test('Handle pop', () => {
+    const FooScreen = () => <div />;
+    const BarScreen = () => <div />;
+    const router = StackRouter({
+      Foo: {
+        screen: FooScreen,
+      },
+      Bar: {
+        screen: BarScreen,
+      },
+    });
+    const state = router.getStateForAction({ type: NavigationActions.INIT });
+    const state2 = router.getStateForAction(
+      {
+        type: NavigationActions.NAVIGATE,
+        routeName: 'Bar',
+        params: { name: 'Zoom' },
+      },
+      state
+    );
+    const state3 = router.getStateForAction(
+      {
+        type: NavigationActions.NAVIGATE,
+        routeName: 'Bar',
+        params: { name: 'Foo' },
+      },
+      state2
+    );
+    const state4 = router.getStateForAction(
+      {
+        type: NavigationActions.NAVIGATE,
+        routeName: 'Bar',
+        params: { name: 'Baz' },
+      },
+      state3
+    );
+    const state5 = router.getStateForAction(
+      { type: NavigationActions.POP, numberOfScreens: 2 },
+      state4
+    );
+    expect(state2).toEqual(state5);
+
+    const state6 = router.getStateForAction(
+      { type: NavigationActions.POP },
+      state5
+    );
+    expect(state).toEqual(state6);
+
+    // handle "over pop"
+    const state7 = router.getStateForAction(
+      { type: NavigationActions.POP, numberOfScreens: 2 },
+      state6
+    );
+    expect(state).toEqual(state7);
+  });
+
+  test('Handle pop to top', () => {
+    const FooScreen = () => <div />;
+    const BarScreen = () => <div />;
+    const router = StackRouter({
+      Foo: {
+        screen: FooScreen,
+      },
+      Bar: {
+        screen: BarScreen,
+      },
+    });
+    const state = router.getStateForAction({ type: NavigationActions.INIT });
+    const state2 = router.getStateForAction(
+      {
+        type: NavigationActions.NAVIGATE,
+        routeName: 'Bar',
+        params: { name: 'Zoom' },
+      },
+      state
+    );
+    const state3 = router.getStateForAction(
+      {
+        type: NavigationActions.NAVIGATE,
+        routeName: 'Bar',
+        params: { name: 'Foo' },
+      },
+      state2
+    );
+    const state4 = router.getStateForAction(
+      {
+        type: NavigationActions.NAVIGATE,
+        routeName: 'Bar',
+        params: { name: 'Baz' },
+      },
+      state3
+    );
+    const state5 = router.getStateForAction(
+      { type: NavigationActions.POP_TO_TOP },
+      state4
+    );
+    expect(state).toEqual(state5);
+
+    // Handle "over pop"
+    const state6 = router.getStateForAction(
+      { type: NavigationActions.POP_TO_TOP },
+      state5
+    );
+    expect(state).toEqual(state6);
+  });
 });
