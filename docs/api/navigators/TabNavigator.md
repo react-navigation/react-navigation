@@ -177,7 +177,13 @@ Title string of a tab displayed in the tab bar or React Element or a function th
 
 #### `tabBarOnPress`
 
-Callback to handle tap events; arguments are the `scene: { route, index }` that was tapped and a `jumpToIndex` method that can perform the navigation for you.
+Callback to handle tap events; the argument is an object containing:
+
+* the `previousScene: { route, index }` which is the scene we are leaving
+* the `scene: { route, index }` that was tapped
+* the `jumpToIndex` method that can perform the navigation for you
+
+Useful for adding a custom logic before the transition to the next scene (the tapped one) starts.
 
 ### Navigator Props
 

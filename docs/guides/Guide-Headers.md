@@ -132,7 +132,7 @@ class EditInfoScreen extends React.Component {
 }
 ```
 
-**Note**: Since the `handleSave`-param is only set on component mount it is not immidiately available in the `navigationOptions`-function. Before `handleSave` is set we pass down an empty function to the `Button`-component in order to make it render immidiately and avoid flickering.
+**Note**: Since the `handleSave`-param is only set on component mount it is not immediately available in the `navigationOptions`-function. Before `handleSave` is set we pass down an empty function to the `Button`-component in order to make it render immediately and avoid flickering.
 
 
 To see the rest of the header options, see the [navigation options document](/docs/navigators/navigation-options#Stack-Navigation-Options).
