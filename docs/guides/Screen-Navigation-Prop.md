@@ -7,6 +7,8 @@ Each *screen* in your app will receive a navigation prop which contain the follo
 * `setParams` - (helper) make changes to route's params
 * `goBack` - (helper) close active screen and move back
 * `dispatch` - send an action to router
+* `pop` - (helper) pop a screen off of the stack
+* `popToTop` - (helper) go back to the initial screen in the stack
 
 *NOTE:* The `navigation` prop is passed down to every navigation-aware component including navigators. The big exception is that a navigator's `navigation` prop may not have the helper functions (`navigate`, `goBack`, etc); it may only have `state` and `dispatch`. In order to `navigate` using the navigator's `navigation` prop, you will have to `dispatch` using an [action creator](navigation-actions).
 
@@ -119,7 +121,7 @@ class HomeScreen extends React.Component {
 *Going back from a specific screen*
 
 Consider the following navigation stack history:
-```... 
+```...
 navigation.navigate(SCREEN_KEY_A);
 ...
 navigation.navigate(SCREEN_KEY_B);
@@ -156,4 +158,48 @@ const navigateAction = NavigationActions.navigate({
 })
 this.props.navigation.dispatch(navigateAction)
 
+```
+
+## `pop` - Pop a screen off of the stack
+
+Optionally provide a number of screens to go back. By default it will go to the previous screen.
+
+```js
+class HomeScreen extends React.Component {
+  render() {
+    const { pop } = this.props.navigation;
+    return (
+      <View>
+        <Button
+          onPress={() => pop()}
+          title="Go back from this HomeScreen"
+        />
+        <Button
+          onPress={() => pop(3)}
+          title="Go back 3 screens"
+        />
+      </View>
+     )
+   }
+}
+```
+
+## `popToTop` - Go back to the initial screen in the stack
+
+Jump back to the top of the current stack.
+
+```js
+class HomeScreen extends React.Component {
+  render() {
+    const { popToTop } = this.props.navigation;
+    return (
+      <View>
+        <Button
+          onPress={() => popToTop()}
+          title="Go back from this HomeScreen"
+        />
+      </View>
+     )
+   }
+}
 ```
