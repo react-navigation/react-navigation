@@ -18,9 +18,9 @@ const MyNavScreen = ({ navigation, banner }) => (
       onPress={() => navigation.navigate('Photos', { name: 'Jane' })}
       title="Go to a photos screen"
     />
-    {/* <Button onPress={() => navigation.goBack(null)} title="Go back" /> */}
-    <Button onPress={() => navigation.dispatch({ type: 'POP', numberOfScreens: 8 })} title="Pop" />
-    <Button onPress={() => navigation.dispatch({ type: 'POP_TO_TOP' })} title="Pop to top" />
+    <Button onPress={() => navigation.goBack(null)} title="Go back" />
+    <Button onPress={() => navigation.pop(1)} title="Pop" />
+    <Button onPress={() => navigation.popToTop()} title="Pop to top" />
   </SafeAreaView>
 );
 
@@ -81,43 +81,5 @@ const SimpleStack = StackNavigator({
     screen: MyPhotosScreen,
   },
 });
-
-// const defaultGetStateForAction = SimpleStack.router.getStateForAction;
-// SimpleStack.router.getStateForAction = (action, state) => {
-//   if (state && action.type === 'POP') {
-//     let numberOfScreens = action.numberOfScreens || 1;
-//     if (state.index <= 0) {
-//       // TODO: How do I make this pass up to parent nav?
-//       return state;
-//     }
-
-//     if (numberOfScreens >= state.routes.length) {
-//       numberOfScreens = state.routes.length - 1;
-//     }
-
-//     const routes = state.routes.slice(0, numberOfScreens * -1);
-//     return {
-//       ...state,
-//       routes,
-//       index: routes.length - 1,
-//     };
-//   }
-
-//   if (state && action.type === 'POP_TO_TOP') {
-//     if (state.index <= 0) {
-//       // TODO: How do I make this pass up to parent nav?
-//       return state;
-//     }
-
-//     const routes = state.routes.slice(0, (state.routes.length - 1) * -1);
-//     return {
-//       ...state,
-//       routes,
-//       index: routes.length - 1,
-//     };
-//   }
-
-//   return defaultGetStateForAction(action, state);
-// };
 
 export default SimpleStack;
