@@ -22,6 +22,10 @@ export type TabViewConfig = {
   tabBarOptions?: {},
   swipeEnabled?: boolean,
   animationEnabled?: boolean,
+  configureTransition?: (
+    currentTransitionProps: Object,
+    nextTransitionProps: Object
+  ) => Object,
   lazy?: boolean,
   initialLayout?: Layout,
 };
@@ -39,6 +43,10 @@ type Props = {
   tabBarOptions?: {},
   swipeEnabled?: boolean,
   animationEnabled?: boolean,
+  configureTransition?: (
+    currentTransitionProps: Object,
+    nextTransitionProps: Object
+  ) => Object,
   lazy?: boolean,
   initialLayout: Layout,
 
@@ -162,6 +170,7 @@ class TabView extends React.PureComponent<Props> {
       tabBarComponent,
       tabBarPosition,
       animationEnabled,
+      configureTransition,
       swipeEnabled,
       lazy,
       initialLayout,
@@ -189,7 +198,10 @@ class TabView extends React.PureComponent<Props> {
       }
     }
 
-    if (animationEnabled === false && swipeEnabled === false) {
+    if (
+      (animationEnabled === false && swipeEnabled === false) ||
+      typeof configureTransition === 'function'
+    ) {
       renderPager = this._renderPager;
     }
 
@@ -197,6 +209,7 @@ class TabView extends React.PureComponent<Props> {
       lazy,
       initialLayout,
       animationEnabled,
+      configureTransition,
       swipeEnabled,
       renderPager,
       renderHeader,
