@@ -175,7 +175,7 @@ export default function createNavigationContainer<S: NavigationState, O: {}>(
     }
 
     // Per-tick temporary storage for state.nav
-    _nav: ?NavigationState;
+    _nav: ?S;
 
     dispatch = (inputAction: PossiblyDeprecatedNavigationAction) => {
       const action = NavigationActions.mapDeprecatedActionAndWarn(inputAction);
