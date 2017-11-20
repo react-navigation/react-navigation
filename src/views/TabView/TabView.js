@@ -14,7 +14,6 @@ import type {
   NavigationState,
   NavigationRouter,
   NavigationTabScreenOptions,
-  NavigationStackAction,
 } from '../../TypeDefinition';
 
 export type TabViewConfig = {
@@ -45,11 +44,7 @@ type Props = {
 
   screenProps?: {},
   navigation: NavigationScreenProp<NavigationState>,
-  router: NavigationRouter<
-    NavigationState,
-    NavigationStackAction,
-    NavigationTabScreenOptions
-  >,
+  router: NavigationRouter<NavigationState, NavigationTabScreenOptions>,
   childNavigationProps: {
     [key: string]: NavigationScreenProp<NavigationRoute>,
   },
@@ -213,6 +208,7 @@ class TabView extends React.PureComponent<Props> {
       style: styles.container,
     };
 
+    // $FlowFixMe: mismatch with react-native-tab-view type
     return <TabViewAnimated {...props} />;
   }
 }

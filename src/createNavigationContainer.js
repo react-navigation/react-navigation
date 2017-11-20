@@ -15,20 +15,20 @@ import type {
   NavigationInitAction,
 } from './TypeDefinition';
 
-type Props<O> = {
+type Props<S, O> = {
   uriPrefix?: string | RegExp,
   onNavigationStateChange?: (
     NavigationState,
     NavigationState,
     NavigationAction
   ) => void,
-  navigation?: NavigationScreenProp<NavigationState>,
+  navigation?: NavigationScreenProp<S>,
   screenProps?: *,
   navigationOptions?: O,
 };
 
-type State = {
-  nav: ?NavigationState,
+type State<NavState> = {
+  nav: ?NavState,
 };
 
 /**
@@ -37,17 +37,18 @@ type State = {
  * This allows to use e.g. the StackNavigator and TabNavigator as root-level
  * components.
  */
-export default function createNavigationContainer<A: *, O: *>(
-  Component: NavigationNavigator<NavigationState, A | NavigationInitAction, O>
+export default function createNavigationContainer<S: NavigationState, O: {}>(
+  // Let the NavigationNavigator props flowwwww
+  Component: NavigationNavigator<S, O, *>
 ) {
-  class NavigationContainer extends React.Component<Props<O>, State> {
+  class NavigationContainer extends React.Component<Props<S, O>, State<S>> {
     subs: ?{
       remove: () => void,
     } = null;
 
     static router = Component.router;
 
-    constructor(props: Props<O>) {
+    constructor(props: Props<S, O>) {
       super(props);
 
       this._validateProps(props);
@@ -63,7 +64,7 @@ export default function createNavigationContainer<A: *, O: *>(
       return !this.props.navigation;
     }
 
-    _validateProps(props: Props<O>) {
+    _validateProps(props: Props<S, O>) {
       if (this._isStateful()) {
         return;
       }
@@ -141,7 +142,7 @@ export default function createNavigationContainer<A: *, O: *>(
       }
     }
 
-    componentWillReceiveProps(nextProps: *) {
+    componentWillReceiveProps(nextProps: Props<S, O>) {
       this._validateProps(nextProps);
     }
 
@@ -174,13 +175,10 @@ export default function createNavigationContainer<A: *, O: *>(
     }
 
     // Per-tick temporary storage for state.nav
-    _nav: ?NavigationState;
+    _nav: ?S;
 
     dispatch = (inputAction: PossiblyDeprecatedNavigationAction) => {
-      // $FlowFixMe remove after we deprecate the old actions
-      const action: A = NavigationActions.mapDeprecatedActionAndWarn(
-        inputAction
-      );
+      const action = NavigationActions.mapDeprecatedActionAndWarn(inputAction);
       if (!this._isStateful()) {
         return false;
       }

@@ -1,6 +1,6 @@
 /* @flow */
 
-import React from 'react';
+import * as React from 'react';
 import { Dimensions, Platform, ScrollView } from 'react-native';
 
 import createNavigator from './createNavigator';
@@ -15,8 +15,11 @@ import NavigatorTypes from './NavigatorTypes';
 
 import type { DrawerViewConfig } from '../views/Drawer/DrawerView';
 import type {
+  NavigationState,
   NavigationRouteConfigMap,
   NavigationTabRouterConfig,
+  NavigationDrawerScreenOptions,
+  NavigationNavigatorProps,
 } from '../TypeDefinition';
 
 export type DrawerNavigatorConfig = {
@@ -24,7 +27,18 @@ export type DrawerNavigatorConfig = {
 } & NavigationTabRouterConfig &
   DrawerViewConfig;
 
-const defaultContentComponent = (props: *) => (
+// A stack navigators props are the intersection between
+// the base navigator props (navgiation, screenProps, etc)
+// and the view's props
+type DrawerNavigatorProps = NavigationNavigatorProps<
+  NavigationDrawerScreenOptions,
+  NavigationState
+> &
+  React.ElementProps<typeof DrawerView>;
+
+const defaultContentComponent = (
+  props: React.ElementProps<typeof DrawerItems>
+) => (
   <ScrollView alwaysBounceVertical={false}>
     <SafeAreaView forceInset={{ top: 'always', horizontal: 'never' }}>
       <DrawerItems {...props} />
@@ -81,9 +95,9 @@ const DrawerNavigator = (
           routeConfigs,
           config,
           NavigatorTypes.DRAWER
-          // Flow doesn't realize DrawerScreen already has childNavigationProps
-          // from withCachedChildNavigation for some reason. $FlowFixMe
-        )((props: *) => <DrawerScreen {...props} />),
+        )((props: React.ElementProps<typeof DrawerScreen>) => (
+          <DrawerScreen {...props} />
+        )),
       },
       DrawerOpen: {
         screen: () => null,
@@ -102,7 +116,7 @@ const DrawerNavigator = (
     routeConfigs,
     config,
     NavigatorTypes.DRAWER
-  )((props: *) => (
+  )((props: DrawerNavigatorProps) => (
     <DrawerView
       {...props}
       drawerBackgroundColor={drawerBackgroundColor}

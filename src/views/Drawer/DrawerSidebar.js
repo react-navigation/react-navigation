@@ -17,17 +17,12 @@ import type {
   NavigationState,
   NavigationStateRoute,
   ViewStyleProp,
-  NavigationTabAction,
 } from '../../TypeDefinition';
 
 import type { DrawerScene, DrawerItem } from './DrawerView';
 
 type Props = {
-  router: NavigationRouter<
-    NavigationState,
-    NavigationTabAction,
-    NavigationDrawerScreenOptions
-  >,
+  router: NavigationRouter<NavigationState, NavigationDrawerScreenOptions>,
   navigation: NavigationScreenProp<NavigationStateRoute>,
   childNavigationProps: {
     [key: string]: NavigationScreenProp<NavigationRoute>,
@@ -119,7 +114,7 @@ class DrawerSidebar extends React.PureComponent<Props> {
           navigation={this.props.navigation}
           items={state.routes}
           activeItemKey={
-            state.routes[state.index] && state.routes[state.index].key
+            state.routes[state.index] ? state.routes[state.index].key : null
           }
           screenProps={this.props.screenProps}
           getLabel={this._getLabel}

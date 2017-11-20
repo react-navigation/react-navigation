@@ -18,7 +18,7 @@ import type { DrawerScene, DrawerItem } from './DrawerView.js';
 type Props = {
   navigation: NavigationScreenProp<NavigationState>,
   items: Array<NavigationRoute>,
-  activeItemKey?: string,
+  activeItemKey?: ?string,
   activeTintColor?: string,
   activeBackgroundColor?: string,
   inactiveTintColor?: string,

@@ -48,7 +48,7 @@ type DocPageConfig = {
 
 const createDocPage = (
   config: DocPageConfig
-): NavigationScreenComponent<*, *> => {
+): NavigationScreenComponent<*, *, *> => {
   const Page = ({
     navigation,
   }: {

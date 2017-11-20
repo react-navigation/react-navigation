@@ -12,16 +12,16 @@
     "test": "node node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "expo": "^22.0.0",
-    "react": "16.0.0-beta.5",
-    "react-native": "^0.49.3",
+    "expo": "^23.0.0",
+    "react": "16.0.0",
+    "react-native": "^0.50.3",
     "react-navigation": "file:../.."
   },
   "devDependencies": {
     "babel-jest": "^21.0.0",
-    "flow-bin": "0.53.0",
+    "flow-bin": "^0.56.0",
     "jest": "^21.0.1",
-    "jest-expo": "^22.0.0",
+    "jest-expo": "^23.0.0",
     "react-addons-test-utils": "16.0.0-alpha.3",
     "react-native-scripts": "^1.5.0",
     "react-test-renderer": "16.0.0-alpha.12"
