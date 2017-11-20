@@ -98,4 +98,22 @@ describe('actions', () => {
       uri: 'http://google.com',
     });
   });
+
+  it('exports pop action and type', () => {
+    expect(NavigationActions.pop.toString()).toEqual(NavigationActions.POP);
+    expect(NavigationActions.pop()).toEqual({ type: NavigationActions.POP });
+    expect(NavigationActions.pop({ numberOfScreens: 3 })).toEqual({
+      type: NavigationActions.POP,
+      numberOfScreens: 3,
+    });
+  });
+
+  it('exports pop to top action and type', () => {
+    expect(NavigationActions.popToTop.toString()).toEqual(
+      NavigationActions.POP_TO_TOP
+    );
+    expect(NavigationActions.popToTop()).toEqual({
+      type: NavigationActions.POP_TO_TOP,
+    });
+  });
 });

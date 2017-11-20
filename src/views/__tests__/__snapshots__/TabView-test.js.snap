@@ -220,6 +220,8 @@ exports[`TabBarBottom renders successfully 1`] = `
                 "dispatch": undefined,
                 "goBack": [Function],
                 "navigate": [Function],
+                "pop": [Function],
+                "popToTop": [Function],
                 "setParams": [Function],
                 "state": Object {
                   "key": "s1",

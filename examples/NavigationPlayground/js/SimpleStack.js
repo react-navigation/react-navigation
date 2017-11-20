@@ -82,42 +82,42 @@ const SimpleStack = StackNavigator({
   },
 });
 
-const defaultGetStateForAction = SimpleStack.router.getStateForAction;
-SimpleStack.router.getStateForAction = (action, state) => {
-  if (state && action.type === 'POP') {
-    let numberOfScreens = action.numberOfScreens || 1;
-    if (state.index <= 0) {
-      // TODO: How do I make this pass up to parent nav?
-      return state;
-    }
+// const defaultGetStateForAction = SimpleStack.router.getStateForAction;
+// SimpleStack.router.getStateForAction = (action, state) => {
+//   if (state && action.type === 'POP') {
+//     let numberOfScreens = action.numberOfScreens || 1;
+//     if (state.index <= 0) {
+//       // TODO: How do I make this pass up to parent nav?
+//       return state;
+//     }
 
-    if (numberOfScreens >= state.routes.length) {
-      numberOfScreens = state.routes.length - 1;
-    }
+//     if (numberOfScreens >= state.routes.length) {
+//       numberOfScreens = state.routes.length - 1;
+//     }
 
-    const routes = state.routes.slice(0, numberOfScreens * -1);
-    return {
-      ...state,
-      routes,
-      index: routes.length - 1,
-    };
-  }
+//     const routes = state.routes.slice(0, numberOfScreens * -1);
+//     return {
+//       ...state,
+//       routes,
+//       index: routes.length - 1,
+//     };
+//   }
 
-  if (state && action.type === 'POP_TO_TOP') {
-    if (state.index <= 0) {
-      // TODO: How do I make this pass up to parent nav?
-      return state;
-    }
+//   if (state && action.type === 'POP_TO_TOP') {
+//     if (state.index <= 0) {
+//       // TODO: How do I make this pass up to parent nav?
+//       return state;
+//     }
 
-    const routes = state.routes.slice(0, (state.routes.length - 1) * -1);
-    return {
-      ...state,
-      routes,
-      index: routes.length - 1,
-    };
-  }
+//     const routes = state.routes.slice(0, (state.routes.length - 1) * -1);
+//     return {
+//       ...state,
+//       routes,
+//       index: routes.length - 1,
+//     };
+//   }
 
-  return defaultGetStateForAction(action, state);
-};
+//   return defaultGetStateForAction(action, state);
+// };
 
 export default SimpleStack;
