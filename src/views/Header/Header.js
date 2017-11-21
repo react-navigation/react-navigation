@@ -142,7 +142,10 @@ class Header extends React.PureComponent<Props, State> {
   _renderLeftComponent = (props: SceneProps): ?React.Node => {
     // $FlowFixMe
     const { options } = this.props.getScreenDetails(props.scene);
-    if (React.isValidElement(options.headerLeft)) {
+    if (
+      React.isValidElement(options.headerLeft) ||
+      options.headerLeft === null
+    ) {
       return options.headerLeft;
     }
     if (props.scene.index === 0) {
