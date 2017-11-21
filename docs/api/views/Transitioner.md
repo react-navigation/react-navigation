@@ -182,6 +182,8 @@ onTransitionStart: (transitionProps: NavigationTransitionProps, prevTransitionPr
 ### `onTransitionEnd` function
 Invoked once the transition animation completes.
 
+If you return a promise from `onTransitionEnd`, any queued transition animations will begin after the promise is resolved.
+
 #### Flow definition
 ```js
 onTransitionEnd: () => void
