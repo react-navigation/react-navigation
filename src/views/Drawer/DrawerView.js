@@ -14,7 +14,6 @@ import type {
   NavigationState,
   NavigationDrawerScreenOptions,
   ViewStyleProp,
-  NavigationTabAction,
   NavigationStateRoute,
 } from '../../TypeDefinition';
 
@@ -50,11 +49,7 @@ export type DrawerViewPropsExceptRouter = DrawerViewConfig & {
 };
 
 export type DrawerViewProps = DrawerViewPropsExceptRouter & {
-  router: NavigationRouter<
-    NavigationState,
-    NavigationTabAction,
-    NavigationDrawerScreenOptions
-  >,
+  router: NavigationRouter<NavigationState, NavigationDrawerScreenOptions>,
 };
 
 type DrawerViewState = {
@@ -64,7 +59,7 @@ type DrawerViewState = {
 /**
  * Component that renders the drawer.
  */
-export default class DrawerView<T: NavigationRoute> extends React.PureComponent<
+export default class DrawerView extends React.PureComponent<
   DrawerViewProps,
   DrawerViewState
 > {

@@ -17,14 +17,14 @@ import type {
   NavigationRoute,
   NavigationNavigateAction,
   NavigationTabRouterConfig,
-  NavigationTabAction,
   NavigationStateRoute,
+  NavigationAction,
 } from '../TypeDefinition';
 
 export default (
   routeConfigs: NavigationRouteConfigMap,
   config: NavigationTabRouterConfig = {}
-): NavigationRouter<NavigationState, NavigationTabAction, *> => {
+): NavigationRouter<NavigationState, *> => {
   // Fail fast on invalid route definitions
   validateRouteConfigMap(routeConfigs);
 
@@ -52,7 +52,7 @@ export default (
   }
   return {
     getStateForAction(
-      action: NavigationTabAction,
+      action: NavigationAction,
       inputState?: ?NavigationState
     ): ?NavigationState {
       // Establish a default state
@@ -297,7 +297,7 @@ export default (
     getActionForPathAndParams(
       path: string,
       params: ?NavigationParams
-    ): ?NavigationTabAction {
+    ): ?NavigationAction {
       return (
         order
           .map((tabId: string) => {
