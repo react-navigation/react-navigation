@@ -8,6 +8,7 @@ import getScreenForRouteName from './getScreenForRouteName';
 import StateUtils from '../StateUtils';
 import validateRouteConfigMap from './validateRouteConfigMap';
 import getScreenConfigDeprecated from './getScreenConfigDeprecated';
+import invariant from '../utils/invariant';
 
 import type {
   NavigationComponent,
@@ -17,11 +18,11 @@ import type {
   NavigationResetAction,
   NavigationParams,
   NavigationState,
-  NavigationStackAction,
   NavigationStackRouterConfig,
   NavigationStackScreenOptions,
   NavigationRoute,
   NavigationStateRoute,
+  NavigationAction,
 } from '../TypeDefinition';
 
 const uniqueBaseId = `id-${Date.now()}`;
@@ -30,14 +31,18 @@ function _getUuid() {
   return `${uniqueBaseId}-${uuidCount++}`;
 }
 
+function isEmpty(obj: ?Object): boolean {
+  if (!obj) return true;
+  for (let key in obj) {
+    return false;
+  }
+  return true;
+}
+
 export default (
   routeConfigs: NavigationRouteConfigMap,
   stackConfig: NavigationStackRouterConfig = {}
-): NavigationRouter<
-  NavigationState,
-  NavigationStackAction,
-  NavigationStackScreenOptions
-> => {
+): NavigationRouter<NavigationState, NavigationStackScreenOptions> => {
   // Fail fast on invalid route definitions
   validateRouteConfigMap(routeConfigs);
 
@@ -95,7 +100,7 @@ export default (
     },
 
     getStateForAction(
-      action: NavigationStackAction,
+      action: NavigationAction,
       state: ?NavigationState
     ): ?NavigationState {
       // Set up the initial state if needed
@@ -151,6 +156,10 @@ export default (
           : -1;
         const childIndex = keyIndex >= 0 ? keyIndex : state.index;
         const childRoute = state.routes[childIndex];
+        invariant(
+          childRoute,
+          `StateUtils erroneously thought index ${childIndex} exists`
+        );
         const childRouter = childRouters[childRoute.routeName];
         if (childRouter) {
           const route = childRouter.getStateForAction(action, childRoute);
@@ -326,7 +335,7 @@ export default (
     getActionForPathAndParams(
       pathToResolve: string,
       inputParams: ?NavigationParams
-    ): ?NavigationStackAction {
+    ): ?NavigationAction {
       // If the path is empty (null or empty string)
       // just return the initial route action
       if (!pathToResolve) {
@@ -375,17 +384,17 @@ export default (
 
       // reduce the items of the query string. any query params may
       // be overridden by path params
-      const queryParams =
-        inputParams ||
-        (queryString || '').split('&').reduce((result: *, item: string) => {
-          if (item !== '') {
-            const nextResult = result || {};
-            const [key, value] = item.split('=');
-            nextResult[key] = value;
-            return nextResult;
-          }
-          return result;
-        }, null);
+      const queryParams = !isEmpty(inputParams)
+        ? inputParams
+        : (queryString || '').split('&').reduce((result, item) => {
+            if (item !== '') {
+              const nextResult = result || {};
+              const [key, value] = item.split('=');
+              nextResult[key] = value;
+              return nextResult;
+            }
+            return result;
+          }, null);
 
       // reduce the matched pieces of the path into the params
       // of the route. `params` is null if there are no params.

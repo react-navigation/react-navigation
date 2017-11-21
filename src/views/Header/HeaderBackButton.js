@@ -91,7 +91,7 @@ class HeaderBackButton extends React.PureComponent<Props, State> {
             source={asset}
           />
           {Platform.OS === 'ios' &&
-            title && (
+            typeof backButtonTitle === 'string' && (
               <Text
                 onLayout={this._onTextLayout}
                 style={[

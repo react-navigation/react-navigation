@@ -66,6 +66,7 @@ exports[`TabNavigator renders successfully 1`] = `
   </View>
   <View
     collapsable={undefined}
+    style={undefined}
   >
     <View
       onLayout={[Function]}
@@ -150,7 +151,6 @@ exports[`TabNavigator renders successfully 1`] = `
           accessible={true}
           allowFontScaling={true}
           collapsable={undefined}
-          disabled={false}
           ellipsizeMode="tail"
           style={
             Object {

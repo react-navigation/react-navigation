@@ -73,10 +73,10 @@ exports[`DrawerNavigator renders successfully 1`] = `
         "top": 0,
         "transform": Array [
           Object {
-            "translateX": -686,
+            "translateX": -320,
           },
         ],
-        "width": 686,
+        "width": 320,
         "zIndex": 1001,
       }
     }
@@ -91,99 +91,145 @@ exports[`DrawerNavigator renders successfully 1`] = `
         ]
       }
     >
-      <View
-        onLayout={[Function]}
+      <RCTScrollView
+        DEPRECATED_sendUpdatedChildFrames={false}
+        alwaysBounceHorizontal={undefined}
+        alwaysBounceVertical={false}
+        onContentSizeChange={null}
+        onMomentumScrollBegin={[Function]}
+        onMomentumScrollEnd={[Function]}
+        onResponderGrant={[Function]}
+        onResponderReject={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={undefined}
+        onResponderTerminationRequest={[Function]}
+        onScroll={[Function]}
+        onScrollBeginDrag={[Function]}
+        onScrollEndDrag={[Function]}
+        onScrollShouldSetResponder={[Function]}
+        onStartShouldSetResponder={[Function]}
+        onStartShouldSetResponderCapture={[Function]}
+        onTouchEnd={[Function]}
+        onTouchMove={[Function]}
+        onTouchStart={[Function]}
+        scrollEventThrottle={undefined}
+        sendMomentumEvents={false}
         style={
-          Object {
-            "paddingBottom": 0,
-            "paddingLeft": 0,
-            "paddingRight": 0,
-            "paddingTop": 20,
-          }
+          Array [
+            Object {
+              "flexDirection": "column",
+              "flexGrow": 1,
+              "flexShrink": 1,
+              "overflow": "scroll",
+            },
+            undefined,
+          ]
         }
       >
-        <View
+        <RCTScrollContentView
+          collapsable={false}
+          removeClippedSubviews={undefined}
           style={
             Array [
-              Object {
-                "paddingVertical": 4,
-              },
+              undefined,
               undefined,
             ]
           }
         >
           <View
-            accessibilityComponentType={undefined}
-            accessibilityLabel={undefined}
-            accessibilityTraits={undefined}
-            accessible={true}
-            collapsable={undefined}
-            hitSlop={undefined}
-            isTVSelectable={true}
-            nativeID={undefined}
-            onLayout={undefined}
-            onResponderGrant={[Function]}
-            onResponderMove={[Function]}
-            onResponderRelease={[Function]}
-            onResponderTerminate={[Function]}
-            onResponderTerminationRequest={[Function]}
-            onStartShouldSetResponder={[Function]}
+            onLayout={[Function]}
             style={
               Object {
-                "opacity": 1,
+                "paddingBottom": 0,
+                "paddingLeft": 0,
+                "paddingRight": 0,
+                "paddingTop": 20,
               }
             }
-            testID={undefined}
-            tvParallaxProperties={undefined}
           >
             <View
-              onLayout={[Function]}
               style={
-                Object {
-                  "backgroundColor": "rgba(0, 0, 0, .04)",
-                  "paddingBottom": 0,
-                  "paddingLeft": 0,
-                  "paddingRight": 0,
-                  "paddingTop": 20,
-                }
+                Array [
+                  Object {
+                    "paddingVertical": 4,
+                  },
+                  undefined,
+                ]
               }
             >
               <View
+                accessibilityComponentType={undefined}
+                accessibilityLabel={undefined}
+                accessibilityTraits={undefined}
+                accessible={true}
+                collapsable={undefined}
+                hitSlop={undefined}
+                isTVSelectable={true}
+                nativeID={undefined}
+                onLayout={undefined}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
                 style={
-                  Array [
-                    Object {
-                      "alignItems": "center",
-                      "flexDirection": "row",
-                    },
-                    undefined,
-                  ]
+                  Object {
+                    "opacity": 1,
+                  }
                 }
+                testID={undefined}
+                tvParallaxProperties={undefined}
               >
-                <Text
-                  accessible={true}
-                  allowFontScaling={true}
-                  disabled={false}
-                  ellipsizeMode="tail"
+                <View
+                  onLayout={[Function]}
                   style={
-                    Array [
-                      Object {
-                        "fontWeight": "bold",
-                        "margin": 16,
-                      },
-                      Object {
-                        "color": "#2196f3",
-                      },
-                      undefined,
-                    ]
+                    Object {
+                      "backgroundColor": "rgba(0, 0, 0, .04)",
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "paddingRight": 0,
+                      "paddingTop": 0,
+                    }
                   }
                 >
-                  Welcome anonymous
-                </Text>
+                  <View
+                    style={
+                      Array [
+                        Object {
+                          "alignItems": "center",
+                          "flexDirection": "row",
+                        },
+                        undefined,
+                      ]
+                    }
+                  >
+                    <Text
+                      accessible={true}
+                      allowFontScaling={true}
+                      ellipsizeMode="tail"
+                      style={
+                        Array [
+                          Object {
+                            "fontWeight": "bold",
+                            "margin": 16,
+                          },
+                          Object {
+                            "color": "#2196f3",
+                          },
+                          undefined,
+                        ]
+                      }
+                    >
+                      Welcome anonymous
+                    </Text>
+                  </View>
+                </View>
               </View>
             </View>
           </View>
-        </View>
-      </View>
+        </RCTScrollContentView>
+      </RCTScrollView>
     </View>
   </View>
 </View>

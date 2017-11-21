@@ -1,6 +1,7 @@
 /* @flow */
 
 import * as React from 'react';
+import { Dimensions } from 'react-native';
 import DrawerLayout from 'react-native-drawer-layout-polyfill';
 
 import addNavigationHelpers from '../../addNavigationHelpers';
@@ -13,7 +14,6 @@ import type {
   NavigationState,
   NavigationDrawerScreenOptions,
   ViewStyleProp,
-  NavigationTabAction,
   NavigationStateRoute,
 } from '../../TypeDefinition';
 
@@ -31,7 +31,7 @@ export type DrawerItem = {
 
 export type DrawerViewConfig = {
   drawerLockMode?: 'unlocked' | 'locked-closed' | 'locked-open',
-  drawerWidth?: number,
+  drawerWidth?: number | (() => number),
   drawerPosition?: 'left' | 'right',
   contentComponent?: React.ComponentType<*>,
   contentOptions?: {},
@@ -46,21 +46,35 @@ export type DrawerViewPropsExceptRouter = DrawerViewConfig & {
 };
 
 export type DrawerViewProps = DrawerViewPropsExceptRouter & {
-  router: NavigationRouter<
-    NavigationState,
-    NavigationTabAction,
-    NavigationDrawerScreenOptions
-  >,
+  router: NavigationRouter<NavigationState, NavigationDrawerScreenOptions>,
+};
+
+type DrawerViewState = {
+  drawerWidth?: number,
 };
 
 /**
  * Component that renders the drawer.
  */
-export default class DrawerView<T: NavigationRoute> extends React.PureComponent<
-  DrawerViewProps
+export default class DrawerView extends React.PureComponent<
+  DrawerViewProps,
+  DrawerViewState
 > {
+  state: DrawerViewState = {
+    drawerWidth:
+      typeof this.props.drawerWidth === 'function'
+        ? this.props.drawerWidth()
+        : this.props.drawerWidth,
+  };
+
   componentWillMount() {
     this._updateScreenNavigation(this.props.navigation);
+
+    Dimensions.addEventListener('change', this._updateWidth);
+  }
+
+  componentWillUnmount() {
+    Dimensions.removeEventListener('change', this._updateWidth);
   }
 
   componentWillReceiveProps(nextProps: DrawerViewProps) {
@@ -120,6 +134,17 @@ export default class DrawerView<T: NavigationRoute> extends React.PureComponent<
     });
   };
 
+  _updateWidth = () => {
+    const drawerWidth =
+      typeof this.props.drawerWidth === 'function'
+        ? this.props.drawerWidth()
+        : this.props.drawerWidth;
+
+    if (this.state.drawerWidth !== drawerWidth) {
+      this.setState({ drawerWidth });
+    }
+  };
+
   _getNavigationState = (navigation: NavigationScreenProp<NavigationState>) => {
     const navigationState = navigation.state.routes.find(
       (route: *) => route.routeName === 'DrawerClose'
@@ -134,6 +159,7 @@ export default class DrawerView<T: NavigationRoute> extends React.PureComponent<
       router={this.props.router}
       contentComponent={this.props.contentComponent}
       contentOptions={this.props.contentOptions}
+      drawerPosition={this.props.drawerPosition}
       style={this.props.style}
     />
   );
@@ -165,7 +191,7 @@ export default class DrawerView<T: NavigationRoute> extends React.PureComponent<
           (config && config.drawerLockMode)
         }
         drawerBackgroundColor={this.props.drawerBackgroundColor}
-        drawerWidth={this.props.drawerWidth}
+        drawerWidth={this.state.drawerWidth}
         onDrawerOpen={this._handleDrawerOpen}
         onDrawerClose={this._handleDrawerClose}
         useNativeAnimations={this.props.useNativeAnimations}

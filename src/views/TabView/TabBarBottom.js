@@ -7,6 +7,7 @@ import {
   StyleSheet,
   View,
   Platform,
+  Keyboard,
 } from 'react-native';
 import TabBarIcon from './TabBarIcon';
 import SafeAreaView from '../SafeAreaView';
@@ -35,11 +36,17 @@ type Props = {
   jumpToIndex: (index: number) => void,
   getLabel: (scene: TabScene) => ?(React.Node | string),
   getOnPress: (
+    previousScene: NavigationRoute,
     scene: TabScene
-  ) => (scene: TabScene, jumpToIndex: (index: number) => void) => void,
+  ) => ({
+    previousScene: NavigationRoute,
+    scene: TabScene,
+    jumpToIndex: (index: number) => void,
+  }) => void,
   getTestIDProps: (scene: TabScene) => (scene: TabScene) => any,
   renderIcon: (scene: TabScene) => React.Node,
   style?: ViewStyleProp,
+  animateStyle?: ViewStyleProp,
   labelStyle?: TextStyleProp,
   tabStyle?: ViewStyleProp,
   showIcon?: boolean,
@@ -61,8 +68,6 @@ class TabBarBottom extends React.PureComponent<Props> {
     showIcon: true,
     allowFontScaling: true,
   };
-
-  props: Props;
 
   _renderLabel = (scene: TabScene) => {
     const {
@@ -163,10 +168,12 @@ class TabBarBottom extends React.PureComponent<Props> {
       activeBackgroundColor,
       inactiveBackgroundColor,
       style,
+      animateStyle,
       tabStyle,
       isLandscape,
     } = this.props;
     const { routes } = navigation.state;
+    const previousScene = routes[navigation.state.index];
     // Prepend '-1', so there are always at least 2 items in inputRange
     const inputRange = [-1, ...routes.map((x: *, i: number) => i)];
 
@@ -179,7 +186,7 @@ class TabBarBottom extends React.PureComponent<Props> {
     ];
 
     return (
-      <Animated.View>
+      <Animated.View style={animateStyle}>
         <SafeAreaView
           style={tabBarStyle}
           forceInset={{ bottom: 'always', top: 'never' }}
@@ -187,7 +194,7 @@ class TabBarBottom extends React.PureComponent<Props> {
           {routes.map((route: NavigationRoute, index: number) => {
             const focused = index === navigation.state.index;
             const scene = { route, index, focused };
-            const onPress = getOnPress(scene);
+            const onPress = getOnPress(previousScene, scene);
             const outputRange = inputRange.map(
               (inputIndex: number) =>
                 inputIndex === index
@@ -209,7 +216,9 @@ class TabBarBottom extends React.PureComponent<Props> {
                 testID={testID}
                 accessibilityLabel={accessibilityLabel}
                 onPress={() =>
-                  onPress ? onPress(scene, jumpToIndex) : jumpToIndex(index)}
+                  onPress
+                    ? onPress({ previousScene, scene, jumpToIndex })
+                    : jumpToIndex(index)}
               >
                 <Animated.View
                   style={[
