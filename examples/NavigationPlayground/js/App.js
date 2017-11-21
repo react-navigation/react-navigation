@@ -25,6 +25,7 @@ import StacksInTabs from './StacksInTabs';
 import StacksOverTabs from './StacksOverTabs';
 import SimpleStack from './SimpleStack';
 import SimpleTabs from './SimpleTabs';
+import TabAnimations from './TabAnimations';
 
 const ExampleRoutes = {
   SimpleStack: {
@@ -89,6 +90,11 @@ const ExampleRoutes = {
     description: 'Deep linking into a route in tab',
     screen: SimpleTabs,
     path: 'settings',
+  },
+  TabAnimations: {
+    name: 'Animated Tabs Example',
+    description: 'Tab transitions have custom animations',
+    screen: TabAnimations,
   },
 };
 

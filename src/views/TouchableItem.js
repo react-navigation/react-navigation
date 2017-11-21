@@ -26,7 +26,7 @@ type Props = {
   borderless?: boolean,
   pressColor?: string,
   activeOpacity?: number,
-  children?: React.ChildrenArray<*>,
+  children?: React.Node,
   style?: ViewStyleProp,
 };
 
