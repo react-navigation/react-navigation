@@ -48,7 +48,7 @@ type DocPageConfig = {
 
 const createDocPage = (
   config: DocPageConfig
-): NavigationScreenComponent<*, *> => {
+): NavigationScreenComponent<*, *, *> => {
   const Page = ({
     navigation,
   }: {
@@ -148,7 +148,7 @@ const GuidesDocs = createNavigator(
     },
     Contributors: {
       screen: createDocPage({
-        doc: 'guides/Contributors',
+        doc: 'CONTRIBUTING',
         title: 'Contributors Guide',
         linkName: 'Contributors',
       }),

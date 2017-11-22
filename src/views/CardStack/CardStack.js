@@ -30,7 +30,6 @@ import type {
   HeaderMode,
   ViewStyleProp,
   TransitionConfig,
-  NavigationStackAction,
   NavigationRoute,
   NavigationComponent,
 } from '../../TypeDefinition';
@@ -44,11 +43,7 @@ type Props = {
   headerMode: HeaderMode,
   headerComponent?: React.ComponentType<*>,
   mode: 'card' | 'modal',
-  router: NavigationRouter<
-    NavigationState,
-    NavigationStackAction,
-    NavigationStackScreenOptions
-  >,
+  router: NavigationRouter<NavigationState, NavigationStackScreenOptions>,
   cardStyle?: ViewStyleProp,
   onTransitionStart?: () => void,
   onTransitionEnd?: () => void,
@@ -418,10 +413,11 @@ class CardStack extends React.Component<Props> {
   _getTransitionConfig = () => {
     const isModal = this.props.mode === 'modal';
 
-    /* $FlowFixMe */
     return TransitionConfigs.getTransitionConfig(
       this.props.transitionConfig,
+      /* $FlowFixMe */
       {},
+      /* $FlowFixMe */
       {},
       isModal
     );

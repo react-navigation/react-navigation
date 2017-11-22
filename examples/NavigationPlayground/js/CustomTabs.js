@@ -75,6 +75,7 @@ const CustomTabView = ({ router, navigation }) => {
           dispatch: navigation.dispatch,
           state: routes[index],
         })}
+        screenProps={{}}
       />
     </SafeAreaView>
   );

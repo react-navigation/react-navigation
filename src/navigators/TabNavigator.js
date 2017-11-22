@@ -1,6 +1,6 @@
 /* @flow */
 
-import React from 'react';
+import * as React from 'react';
 import { Platform } from 'react-native';
 
 import createNavigator from './createNavigator';
@@ -15,14 +15,26 @@ import NavigatorTypes from './NavigatorTypes';
 import type { TabViewConfig } from '../views/TabView/TabView';
 
 import type {
+  NavigationState,
   NavigationRouteConfigMap,
   NavigationTabRouterConfig,
+  NavigationTabScreenOptions,
+  NavigationNavigatorProps,
 } from '../TypeDefinition';
 
 export type TabNavigatorConfig = {
   containerOptions?: void,
 } & NavigationTabRouterConfig &
   TabViewConfig;
+
+// A tab navigators props are the intersection between
+// the base navigator props (navgiation, screenProps, etc)
+// and the view's props
+type TabNavigatorProps = NavigationNavigatorProps<
+  NavigationTabScreenOptions,
+  NavigationState
+> &
+  React.ElementProps<typeof TabView>;
 
 const TabNavigator = (
   routeConfigs: NavigationRouteConfigMap,
@@ -36,6 +48,7 @@ const TabNavigator = (
     tabBarOptions,
     swipeEnabled,
     animationEnabled,
+    configureTransition,
     lazy,
     initialLayout,
     ...tabsConfig
@@ -48,9 +61,7 @@ const TabNavigator = (
     routeConfigs,
     config,
     NavigatorTypes.TABS
-  )((props: *) => (
-    // Flow doesn't realize TabView already has childNavigationProps from
-    // withCachedChildNavigation for some reason. $FlowFixMe
+  )((props: TabNavigatorProps) => (
     <TabView
       {...props}
       tabBarComponent={tabBarComponent}
@@ -58,6 +69,7 @@ const TabNavigator = (
       tabBarOptions={tabBarOptions}
       swipeEnabled={swipeEnabled}
       animationEnabled={animationEnabled}
+      configureTransition={configureTransition}
       lazy={lazy}
       initialLayout={initialLayout}
     />
