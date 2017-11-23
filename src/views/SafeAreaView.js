@@ -101,9 +101,18 @@ class SafeView extends Component {
   }
 
   render() {
-    const { forceInset = false, isLandscape, children, style } = this.props;
+    const {
+      forceInset = false,
+      enableOnAndroid,
+      isLandscape,
+      children,
+      style,
+    } = this.props;
 
-    if (Platform.OS !== 'ios') {
+    if (
+      Platform.OS !== 'ios' &&
+      !(enableOnAndroid && Platform.OS === 'android')
+    ) {
       return <View style={style}>{this.props.children}</View>;
     }
 
