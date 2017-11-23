@@ -111,6 +111,7 @@ class SafeView extends Component {
         ref={c => (this.view = c)}
         onLayout={this._onLayout}
         style={safeAreaStyle}
+        {...this.props}
       >
         {this.props.children}
       </View>
