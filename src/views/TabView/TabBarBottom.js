@@ -8,6 +8,7 @@ import {
   View,
   Platform,
   Keyboard,
+  Dimensions,
 } from 'react-native';
 import TabBarIcon from './TabBarIcon';
 import SafeAreaView from '../SafeAreaView';
@@ -53,11 +54,23 @@ type Props = {
   isLandscape: boolean,
 };
 
+type State = {
+  viewWidth: number,
+  maxTabItemWidth: number,
+};
+
 const majorVersion = parseInt(Platform.Version, 10);
 const isIos = Platform.OS === 'ios';
-const useHorizontalTabs = majorVersion >= 11 && isIos;
+const canUseHorizontalTabs = majorVersion >= 11 && isIos;
+const isPad =
+  Dimensions.get('window').height / Dimensions.get('window').width < 1.6;
 
-class TabBarBottom extends React.PureComponent<Props> {
+class TabBarBottom extends React.PureComponent<Props, State> {
+  state = {
+    viewWidth: 0,
+    maxTabItemWidth: 0,
+  };
+
   // See https://developer.apple.com/library/content/documentation/UserExperience/Conceptual/UIKitUICatalog/UITabBar.html
   static defaultProps = {
     activeTintColor: '#3478f6', // Default active tint color in iOS 10
@@ -99,19 +112,18 @@ class TabBarBottom extends React.PureComponent<Props> {
 
     const tintColor = scene.focused ? activeTintColor : inactiveTintColor;
     const label = this.props.getLabel({ ...scene, tintColor });
-    let marginLeft = 0;
-    if (isLandscape && showIcon && useHorizontalTabs) {
-      marginLeft = LABEL_LEFT_MARGIN;
-    }
-    let marginTop = 0;
-    if (!isLandscape && showIcon && useHorizontalTabs) {
-      marginTop = LABEL_TOP_MARGIN;
-    }
 
     if (typeof label === 'string') {
       return (
         <Animated.Text
-          style={[styles.label, { color, marginLeft, marginTop }, labelStyle]}
+          style={[
+            styles.label,
+            { color },
+            showIcon && this.shouldUseHorizontalTabs()
+              ? styles.labelBeside
+              : styles.labelBeneath,
+            labelStyle,
+          ]}
           allowFontScaling={allowFontScaling}
         >
           {label}
@@ -147,7 +159,7 @@ class TabBarBottom extends React.PureComponent<Props> {
         inactiveTintColor={inactiveTintColor}
         renderIcon={renderIcon}
         scene={scene}
-        style={showLabel && useHorizontalTabs ? {} : styles.icon}
+        style={showLabel && this.shouldUseHorizontalTabs() ? {} : styles.icon}
       />
     );
   };
@@ -157,6 +169,21 @@ class TabBarBottom extends React.PureComponent<Props> {
       this.props.getTestIDProps && this.props.getTestIDProps(scene);
     return testIDProps;
   };
+  shouldUseHorizontalTabs() {
+    const { routes } = this.props.navigation.state;
+    const { maxTabItemWidth, viewWidth } = this.state;
+    const { isLandscape } = this.props;
+    if (isPad) {
+      if (viewWidth === 0 || maxTabItemWidth === 0) return true;
+      return (
+        canUseHorizontalTabs &&
+        // maxTabItemWidth + 10 ensures that there is a 5pt margin on each side of the widest item
+        routes.length * (maxTabItemWidth + 10) < viewWidth
+      );
+    } else {
+      return canUseHorizontalTabs && isLandscape;
+    }
+  }
 
   render() {
     const {
@@ -179,14 +206,19 @@ class TabBarBottom extends React.PureComponent<Props> {
 
     const tabBarStyle = [
       styles.tabBar,
-      isLandscape && useHorizontalTabs
-        ? styles.tabBarLandscape
-        : styles.tabBarPortrait,
+      this.shouldUseHorizontalTabs() && !isPad
+        ? styles.tabBarCompact
+        : styles.tabBarRegular,
       style,
     ];
 
     return (
-      <Animated.View style={animateStyle}>
+      <Animated.View
+        style={animateStyle}
+        onLayout={evt => {
+          this.setState({ viewWidth: evt.nativeEvent.layout.width });
+        }}
+      >
         <SafeAreaView
           style={tabBarStyle}
           forceInset={{ bottom: 'always', top: 'never' }}
@@ -220,17 +252,25 @@ class TabBarBottom extends React.PureComponent<Props> {
                     ? onPress({ previousScene, scene, jumpToIndex })
                     : jumpToIndex(index)}
               >
-                <Animated.View
-                  style={[
-                    styles.tab,
-                    isLandscape && useHorizontalTabs && styles.tabLandscape,
-                    !isLandscape && useHorizontalTabs && styles.tabPortrait,
-                    { backgroundColor },
-                    tabStyle,
-                  ]}
-                >
-                  {this._renderIcon(scene)}
-                  {this._renderLabel(scene)}
+                <Animated.View style={[styles.tab, { backgroundColor }]}>
+                  <View
+                    onLayout={evt => {
+                      const { maxTabItemWidth } = this.state;
+                      let itemWidth = evt.nativeEvent.layout.width;
+                      if (itemWidth > maxTabItemWidth)
+                        this.setState({ maxTabItemWidth: itemWidth });
+                    }}
+                    style={[
+                      styles.tab,
+                      this.shouldUseHorizontalTabs()
+                        ? styles.tabLandscape
+                        : styles.tabPortrait,
+                      tabStyle,
+                    ]}
+                  >
+                    {this._renderIcon(scene)}
+                    {this._renderLabel(scene)}
+                  </View>
                 </Animated.View>
               </TouchableWithoutFeedback>
             );
@@ -241,8 +281,6 @@ class TabBarBottom extends React.PureComponent<Props> {
   }
 }
 
-const LABEL_LEFT_MARGIN = 20;
-const LABEL_TOP_MARGIN = 15;
 const styles = StyleSheet.create({
   tabBar: {
     backgroundColor: '#F7F7F7', // Default background color in iOS 10
@@ -250,16 +288,15 @@ const styles = StyleSheet.create({
     borderTopColor: 'rgba(0, 0, 0, .3)',
     flexDirection: 'row',
   },
-  tabBarLandscape: {
+  tabBarCompact: {
     height: 29,
   },
-  tabBarPortrait: {
+  tabBarRegular: {
     height: 49,
   },
   tab: {
     flex: 1,
     alignItems: isIos ? 'center' : 'stretch',
-    justifyContent: 'flex-end',
   },
   tabPortrait: {
     justifyContent: 'flex-end',
@@ -274,9 +311,15 @@ const styles = StyleSheet.create({
   },
   label: {
     textAlign: 'center',
+    backgroundColor: 'transparent',
+  },
+  labelBeneath: {
     fontSize: 10,
     marginBottom: 1.5,
-    backgroundColor: 'transparent',
+  },
+  labelBeside: {
+    fontSize: 13,
+    marginLeft: 20,
   },
 });
 
