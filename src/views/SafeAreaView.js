@@ -5,8 +5,8 @@ import {
   InteractionManager,
   NativeModules,
   Platform,
-  StatusBar,
   SafeAreaView,
+  StatusBar,
   StyleSheet,
   View,
 } from 'react-native';
@@ -103,7 +103,7 @@ class SafeView extends Component {
   render() {
     const {
       forceInset = false,
-      enableOnAndroid,
+      enableOnAndroid = true,
       isLandscape,
       children,
       style,
