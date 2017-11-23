@@ -5,6 +5,7 @@ import {
   InteractionManager,
   NativeModules,
   Platform,
+  StatusBar,
   SafeAreaView,
   StyleSheet,
   View,
@@ -53,6 +54,8 @@ const isIPad = (() => {
 })();
 
 const statusBarHeight = isLandscape => {
+  if (StatusBar.currentHeight) return StatusBar.currentHeight;
+
   if (isIPhoneX) {
     return isLandscape ? 0 : 44;
   }
