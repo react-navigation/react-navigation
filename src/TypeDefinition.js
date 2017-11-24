@@ -228,9 +228,9 @@ export type NavigationScreenDetails<T> = {
   navigation: NavigationScreenProp<NavigationRoute>,
 };
 
-export type NavigationScreenOptions = {|
+export type NavigationScreenOptions = {
   title?: string,
-|};
+};
 
 export type NavigationScreenConfigProps = {
   navigation: NavigationScreenProp<NavigationRoute>,
@@ -418,6 +418,31 @@ export type NavigationScreenProp<+S> = {
 export type NavigationNavigatorProps<O: {}, S: {}> = {
   navigation: NavigationScreenProp<S>,
   screenProps?: {},
+  navigationOptions?: O,
+};
+
+/**
+ * Navigation container
+ */
+
+export type NavigationContainer<
+  State: NavigationState,
+  Options: {},
+  Props: {}
+> = React.ComponentType<NavigationContainerProps<State, Options> & Props> & {
+  router: NavigationRouter<State, Options>,
+  navigationOptions?: ?NavigationScreenConfig<Options>,
+};
+
+export type NavigationContainerProps<S: {}, O: {}> = {
+  uriPrefix?: string | RegExp,
+  onNavigationStateChange?: (
+    NavigationState,
+    NavigationState,
+    NavigationAction
+  ) => void,
+  navigation?: NavigationScreenProp<S>,
+  screenProps?: *,
   navigationOptions?: O,
 };
 
