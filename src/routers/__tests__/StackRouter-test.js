@@ -1,7 +1,7 @@
 /* @flow */
 /* eslint no-shadow:0, react/no-multi-comp:0, react/display-name:0 */
 
-import * as React from 'react';
+import React from 'react';
 
 import StackRouter from '../StackRouter';
 import TabRouter from '../TabRouter';
