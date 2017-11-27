@@ -153,7 +153,7 @@ For a comprehensive tutorial on how to create custom transitions, see this [blog
 
 #### Flow definition
 ```js
-render: (transitionProps: NavigationTransitionProps, prevTransitionProps: ?NavigationTransitionProps) => React.Element<*>,
+render: (transitionProps: NavigationTransitionProps, prevTransitionProps: ?NavigationTransitionProps) => React.Node,
 ```
 
 #### Parameters
