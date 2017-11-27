@@ -13,19 +13,9 @@ import type {
   NavigationNavigator,
   PossiblyDeprecatedNavigationAction,
   NavigationInitAction,
+  NavigationContainerProps,
+  NavigationContainer,
 } from './TypeDefinition';
-
-type Props<S, O> = {
-  uriPrefix?: string | RegExp,
-  onNavigationStateChange?: (
-    NavigationState,
-    NavigationState,
-    NavigationAction
-  ) => void,
-  navigation?: NavigationScreenProp<S>,
-  screenProps?: *,
-  navigationOptions?: O,
-};
 
 type State<NavState> = {
   nav: ?NavState,
@@ -40,15 +30,19 @@ type State<NavState> = {
 export default function createNavigationContainer<S: NavigationState, O: {}>(
   // Let the NavigationNavigator props flowwwww
   Component: NavigationNavigator<S, O, *>
-) {
-  class NavigationContainer extends React.Component<Props<S, O>, State<S>> {
+): NavigationContainer<S, O, *> {
+  class NavigationContainer extends React.Component<
+    NavigationContainerProps<S, O>,
+    State<S>
+  > {
     subs: ?{
       remove: () => void,
     } = null;
 
     static router = Component.router;
+    static navigationOptions = null;
 
-    constructor(props: Props<S, O>) {
+    constructor(props: NavigationContainerProps<S, O>) {
       super(props);
 
       this._validateProps(props);
@@ -64,7 +58,7 @@ export default function createNavigationContainer<S: NavigationState, O: {}>(
       return !this.props.navigation;
     }
 
-    _validateProps(props: Props<S, O>) {
+    _validateProps(props: NavigationContainerProps<S, O>) {
       if (this._isStateful()) {
         return;
       }
@@ -142,7 +136,7 @@ export default function createNavigationContainer<S: NavigationState, O: {}>(
       }
     }
 
-    componentWillReceiveProps(nextProps: Props<S, O>) {
+    componentWillReceiveProps(nextProps: NavigationContainerProps<S, O>) {
       this._validateProps(nextProps);
     }
 
