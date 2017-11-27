@@ -1,6 +1,6 @@
 /* @flow */
 
-import * as React from 'react';
+import React from 'react';
 import { Animated, StyleSheet } from 'react-native';
 import { TabBar } from 'react-native-tab-view';
 import TabBarIcon from './TabBarIcon';

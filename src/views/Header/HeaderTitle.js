@@ -1,6 +1,6 @@
 /* @flow */
 
-import * as React from 'react';
+import React from 'react';
 
 import { Text, View, Platform, StyleSheet, Animated } from 'react-native';
 

@@ -2,7 +2,7 @@
  * @flow
  */
 
-import * as React from 'react';
+import React from 'react';
 
 type Props = { sources: { android: string, iphone: string } };
 type State = { activeExample: string };
