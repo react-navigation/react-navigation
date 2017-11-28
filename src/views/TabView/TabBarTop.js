@@ -122,8 +122,9 @@ export default class TabBarTop extends React.PureComponent<Props> {
     );
   };
 
-  _handleOnPress = (previousScene: NavigationRoute, scene: TabScene) => {
-    const { getOnPress, jumpToIndex }: Props = this.props;
+  _handleOnPress = (scene: TabScene) => {
+    const { getOnPress, jumpToIndex, navigation }: Props = this.props;
+    const previousScene = navigation.state.routes[navigation.state.index];
     const onPress = getOnPress(previousScene, scene);
 
     if (onPress) {
@@ -136,8 +137,6 @@ export default class TabBarTop extends React.PureComponent<Props> {
   render() {
     // TODO: Define full proptypes
     const props: any = this.props;
-    const { state } = props.navigation;
-    const previousScene = state.routes[state.index];
 
     return (
       <TabBar
