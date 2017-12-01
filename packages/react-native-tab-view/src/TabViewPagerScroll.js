@@ -40,35 +40,29 @@ export default class TabViewPagerScroll<T: Route<*>> extends React.Component<
   }
 
   componentDidMount() {
-    global.requestAnimationFrame(() =>
+    if (this.props.layout.width) {
       this._scrollTo(
         this.props.navigationState.index * this.props.layout.width,
         false
-      )
-    );
-    this._resetListener = this.props.subscribe('reset', this._scrollTo);
-  }
-
-  componentWillReceiveProps(nextProps: Props<T>) {
-    if (!this.props.layout.measured && nextProps.layout.measured) {
-      const { navigationState, layout } = nextProps;
-      this.setState({
-        initialOffset: {
-          x: navigationState.index * layout.width,
-          y: 0,
-        },
-      });
+      );
     }
+
+    this._resetListener = this.props.subscribe('reset', this._scrollTo);
   }
 
   componentDidUpdate(prevProps: Props<T>) {
     if (
-      prevProps.navigationState !== this.props.navigationState ||
-      prevProps.layout !== this.props.layout
+      prevProps.layout !== this.props.layout ||
+      prevProps.navigationState !== this.props.navigationState
     ) {
       const { navigationState, layout } = this.props;
       const offset = navigationState.index * layout.width;
-      this._scrollTo(offset);
+
+      if (prevProps.layout.width !== this.props.layout.width) {
+        this._scrollTo(offset, false);
+      } else {
+        this._scrollTo(offset);
+      }
     }
   }
 
@@ -79,18 +73,15 @@ export default class TabViewPagerScroll<T: Route<*>> extends React.Component<
   _scrollView: ?ScrollView;
   _resetListener: Object;
   _currentOffset: ?number;
+  _isIdleCallback: any;
   _isIdle: boolean = true;
-  _isFirst: boolean = Platform.OS === 'ios';
 
   _scrollTo = (x: number, animated = this.props.animationEnabled !== false) => {
     if (animated && !this._isIdle) {
       return;
     }
 
-    this.props.offsetX.setValue(-x);
-    this.props.panX.setValue(0);
-
-    if (x !== this._currentOffset && this._scrollView) {
+    if (this._scrollView) {
       this._scrollView.scrollTo({
         x,
         animated,
@@ -111,18 +102,20 @@ export default class TabViewPagerScroll<T: Route<*>> extends React.Component<
   };
 
   _handleScroll = (e: ScrollEvent) => {
-    if (this._isFirst) {
-      this._isFirst = false;
-      return;
-    }
+    this._currentOffset = e.nativeEvent.contentOffset.x;
 
     const { navigationState, layout } = this.props;
     const offset = navigationState.index * layout.width;
 
+    this.props.offsetX.setValue(-offset);
     this.props.panX.setValue(offset - e.nativeEvent.contentOffset.x);
 
     this._isIdle = false;
-    this._currentOffset = e.nativeEvent.contentOffset.x;
+
+    global.cancelAnimationFrame(this._isIdleCallback);
+    this._isIdleCallback = global.requestAnimationFrame(() => {
+      this._isIdle = true;
+    });
   };
 
   render() {
@@ -141,7 +134,7 @@ export default class TabViewPagerScroll<T: Route<*>> extends React.Component<
         alwaysBounceHorizontal={false}
         scrollsToTop={false}
         showsHorizontalScrollIndicator={false}
-        scrollEventThrottle={16}
+        scrollEventThrottle={1}
         onScroll={this._handleScroll}
         onScrollAnimationEnd={this._handleScrollAnimationEnd}
         onMomentumScrollEnd={this._handleMomentumScrollEnd}
@@ -172,7 +165,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-
   page: {
     flex: 1,
     overflow: 'hidden',
