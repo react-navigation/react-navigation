@@ -14,7 +14,6 @@ import type {
   NavigationState,
   NavigationRouter,
   NavigationTabScreenOptions,
-  NavigationStackAction,
 } from '../../TypeDefinition';
 
 export type TabViewConfig = {
@@ -23,6 +22,10 @@ export type TabViewConfig = {
   tabBarOptions?: {},
   swipeEnabled?: boolean,
   animationEnabled?: boolean,
+  configureTransition?: (
+    currentTransitionProps: Object,
+    nextTransitionProps: Object
+  ) => Object,
   lazy?: boolean,
   initialLayout?: Layout,
 };
@@ -40,16 +43,16 @@ type Props = {
   tabBarOptions?: {},
   swipeEnabled?: boolean,
   animationEnabled?: boolean,
+  configureTransition?: (
+    currentTransitionProps: Object,
+    nextTransitionProps: Object
+  ) => Object,
   lazy?: boolean,
   initialLayout: Layout,
 
   screenProps?: {},
   navigation: NavigationScreenProp<NavigationState>,
-  router: NavigationRouter<
-    NavigationState,
-    NavigationStackAction,
-    NavigationTabScreenOptions
-  >,
+  router: NavigationRouter<NavigationState, NavigationTabScreenOptions>,
   childNavigationProps: {
     [key: string]: NavigationScreenProp<NavigationRoute>,
   },
@@ -104,7 +107,7 @@ class TabView extends React.PureComponent<Props> {
     return route.routeName;
   };
 
-  _getOnPress = ({ route }: TabScene) => {
+  _getOnPress = (previousScene: TabScene, { route }: TabScene) => {
     const options = this.props.router.getScreenOptions(
       this.props.childNavigationProps[route.key],
       this.props.screenProps || {}
@@ -167,6 +170,7 @@ class TabView extends React.PureComponent<Props> {
       tabBarComponent,
       tabBarPosition,
       animationEnabled,
+      configureTransition,
       lazy,
       initialLayout,
       screenProps,
@@ -184,7 +188,7 @@ class TabView extends React.PureComponent<Props> {
 
     const tabBarVisible =
       options.tabBarVisible == null ? true : options.tabBarVisible;
-      
+
     const swipeEnabled =
       options.swipeEnabled == null ? this.props.swipeEnabled : options.swipeEnabled; 
 
@@ -196,7 +200,10 @@ class TabView extends React.PureComponent<Props> {
       }
     }
 
-    if (animationEnabled === false && swipeEnabled === false) {
+    if (
+      (animationEnabled === false && swipeEnabled === false) ||
+      typeof configureTransition === 'function'
+    ) {
       renderPager = this._renderPager;
     }
 
@@ -204,6 +211,7 @@ class TabView extends React.PureComponent<Props> {
       lazy,
       initialLayout,
       animationEnabled,
+      configureTransition,
       swipeEnabled,
       renderPager,
       renderHeader,
@@ -215,6 +223,7 @@ class TabView extends React.PureComponent<Props> {
       style: styles.container,
     };
 
+    // $FlowFixMe: mismatch with react-native-tab-view type
     return <TabViewAnimated {...props} />;
   }
 }
