@@ -33,11 +33,10 @@ export default class TopBarTextExample extends PureComponent<*, State> {
   _second: ?BasicListView;
   _third: ?BasicListView;
 
-  _handleIndexChange = index => {
+  _handleIndexChange = index =>
     this.setState({
       index,
     });
-  };
 
   _handleTabItemPress = ({ route }) => {
     if (route !== this.state.routes[this.state.index]) {
@@ -79,19 +78,17 @@ export default class TopBarTextExample extends PureComponent<*, State> {
     );
   };
 
-  _renderHeader = props => {
-    return (
-      <TabBar
-        {...props}
-        pressColor="rgba(255, 64, 129, .5)"
-        onTabPress={this._handleTabItemPress}
-        renderLabel={this._renderLabel(props)}
-        indicatorStyle={styles.indicator}
-        tabStyle={styles.tab}
-        style={styles.tabbar}
-      />
-    );
-  };
+  _renderHeader = props => (
+    <TabBar
+      {...props}
+      pressColor="rgba(255, 64, 129, .5)"
+      onTabPress={this._handleTabItemPress}
+      renderLabel={this._renderLabel(props)}
+      indicatorStyle={styles.indicator}
+      tabStyle={styles.tab}
+      style={styles.tabbar}
+    />
+  );
 
   _renderScene = ({ route }) => {
     switch (route.key) {

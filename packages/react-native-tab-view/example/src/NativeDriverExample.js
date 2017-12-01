@@ -36,23 +36,19 @@ export default class NativeDriverExample extends PureComponent<*, State> {
     ],
   };
 
-  _handleIndexChange = index => {
+  _handleIndexChange = index =>
     this.setState({
       index,
     });
-  };
 
-  _renderHeader = props => {
-    return (
-      <TabBar
-        {...props}
-        indicatorStyle={styles.indicator}
-        style={styles.tabbar}
-        tabStyle={styles.tab}
-        labelStyle={styles.label}
-      />
-    );
-  };
+  _renderHeader = props => (
+    <TabBar
+      {...props}
+      indicatorStyle={styles.indicator}
+      style={styles.tabbar}
+      labelStyle={styles.label}
+    />
+  );
 
   _renderScene = ({ route }) => {
     switch (route.key) {
@@ -113,9 +109,6 @@ const styles = StyleSheet.create({
   },
   tabbar: {
     backgroundColor: '#222',
-  },
-  tab: {
-    width: 120,
   },
   indicator: {
     backgroundColor: '#ffeb3b',

@@ -40,11 +40,10 @@ export default class TopBarIconExample extends PureComponent<*, State> {
     ],
   };
 
-  _handleIndexChange = index => {
+  _handleIndexChange = index =>
     this.setState({
       index,
     });
-  };
 
   _renderLabel = ({ position, navigationState }) => ({ route, index }) => {
     const inputRange = navigationState.routes.map((x, i) => i);
@@ -94,25 +93,23 @@ export default class TopBarIconExample extends PureComponent<*, State> {
     );
   };
 
-  _renderFooter = props => {
-    return (
-      <View style={styles.tabbar}>
-        {props.navigationState.routes.map((route, index) => {
-          return (
-            <TouchableWithoutFeedback
-              key={route.key}
-              onPress={() => props.jumpToIndex(index)}
-            >
-              <Animated.View style={styles.tab}>
-                {this._renderIcon(props)({ route, index })}
-                {this._renderLabel(props)({ route, index })}
-              </Animated.View>
-            </TouchableWithoutFeedback>
-          );
-        })}
-      </View>
-    );
-  };
+  _renderFooter = props => (
+    <View style={styles.tabbar}>
+      {props.navigationState.routes.map((route, index) => {
+        return (
+          <TouchableWithoutFeedback
+            key={route.key}
+            onPress={() => props.jumpToIndex(index)}
+          >
+            <Animated.View style={styles.tab}>
+              {this._renderIcon(props)({ route, index })}
+              {this._renderLabel(props)({ route, index })}
+            </Animated.View>
+          </TouchableWithoutFeedback>
+        );
+      })}
+    </View>
+  );
 
   _renderScene = ({ route }) => {
     switch (route.key) {

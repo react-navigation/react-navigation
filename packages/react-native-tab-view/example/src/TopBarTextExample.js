@@ -33,24 +33,21 @@ export default class TopBarTextExample extends PureComponent<*, State> {
     ],
   };
 
-  _handleIndexChange = index => {
+  _handleIndexChange = index =>
     this.setState({
       index,
     });
-  };
 
-  _renderHeader = props => {
-    return (
-      <TabBar
-        {...props}
-        scrollEnabled
-        indicatorStyle={styles.indicator}
-        style={styles.tabbar}
-        tabStyle={styles.tab}
-        labelStyle={styles.label}
-      />
-    );
-  };
+  _renderHeader = props => (
+    <TabBar
+      {...props}
+      scrollEnabled
+      indicatorStyle={styles.indicator}
+      style={styles.tabbar}
+      tabStyle={styles.tab}
+      labelStyle={styles.label}
+    />
+  );
 
   _renderScene = ({ route }) => {
     switch (route.key) {

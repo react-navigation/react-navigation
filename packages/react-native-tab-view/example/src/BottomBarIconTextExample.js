@@ -29,11 +29,10 @@ export default class BottomBarIconExample extends PureComponent<*, State> {
     ],
   };
 
-  _handleIndexChange = index => {
+  _handleIndexChange = index =>
     this.setState({
       index,
     });
-  };
 
   _renderIndicator = props => {
     const { width, position } = props;
@@ -49,9 +48,9 @@ export default class BottomBarIconExample extends PureComponent<*, State> {
     );
   };
 
-  _renderIcon = ({ route }) => {
-    return <Ionicons name={route.icon} size={24} style={styles.icon} />;
-  };
+  _renderIcon = ({ route }) => (
+    <Ionicons name={route.icon} size={24} style={styles.icon} />
+  );
 
   _renderBadge = ({ route }) => {
     if (route.key === '2') {
@@ -64,18 +63,16 @@ export default class BottomBarIconExample extends PureComponent<*, State> {
     return null;
   };
 
-  _renderFooter = props => {
-    return (
-      <TabBar
-        {...props}
-        renderIcon={this._renderIcon}
-        renderBadge={this._renderBadge}
-        renderIndicator={this._renderIndicator}
-        style={styles.tabbar}
-        tabStyle={styles.tab}
-      />
-    );
-  };
+  _renderFooter = props => (
+    <TabBar
+      {...props}
+      renderIcon={this._renderIcon}
+      renderBadge={this._renderBadge}
+      renderIndicator={this._renderIndicator}
+      style={styles.tabbar}
+      tabStyle={styles.tab}
+    />
+  );
 
   _renderScene = ({ route }) => {
     switch (route.key) {

@@ -88,26 +88,21 @@ export default class CoverflowExample extends PureComponent<*, State> {
     };
   };
 
-  _handleIndexChange = index => {
+  _handleIndexChange = index =>
     this.setState({
       index,
     });
-  };
 
-  _renderScene = props => {
-    return (
-      <Animated.View style={[styles.page, this._buildCoverFlowStyle(props)]}>
-        <View style={styles.album}>
-          <Image source={ALBUMS[props.route.key]} style={styles.cover} />
-        </View>
-        <Text style={styles.label}>{props.route.key}</Text>
-      </Animated.View>
-    );
-  };
+  _renderScene = props => (
+    <Animated.View style={[styles.page, this._buildCoverFlowStyle(props)]}>
+      <View style={styles.album}>
+        <Image source={ALBUMS[props.route.key]} style={styles.cover} />
+      </View>
+      <Text style={styles.label}>{props.route.key}</Text>
+    </Animated.View>
+  );
 
-  _renderPager = props => {
-    return <TabViewPagerPan {...props} />;
-  };
+  _renderPager = props => <TabViewPagerPan {...props} />;
 
   render() {
     return (

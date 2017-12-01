@@ -28,15 +28,14 @@ export default class TopBarIconExample extends PureComponent<*, State> {
     ],
   };
 
-  _handleIndexChange = index => {
+  _handleIndexChange = index =>
     this.setState({
       index,
     });
-  };
 
-  _renderIcon = ({ route }) => {
-    return <Ionicons name={route.icon} size={24} color="white" />;
-  };
+  _renderIcon = ({ route }) => (
+    <Ionicons name={route.icon} size={24} color="white" />
+  );
 
   _renderHeader = props => {
     return (

@@ -40,13 +40,11 @@ export default class ListViewExample extends PureComponent<{}, State> {
     });
   };
 
-  _renderRow = index => {
-    return (
-      <View style={styles.row}>
-        <Text style={styles.text}>{index}</Text>
-      </View>
-    );
-  };
+  _renderRow = index => (
+    <View style={styles.row}>
+      <Text style={styles.text}>{index}</Text>
+    </View>
+  );
 
   scrollTo = (...args: any) => this._root && this._root.scrollTo(...args);
 
