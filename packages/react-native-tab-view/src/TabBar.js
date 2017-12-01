@@ -92,6 +92,10 @@ export default class TabBar<T: Route<*>> extends React.PureComponent<
 
   componentDidMount() {
     this._adjustScroll(this.props.navigationState.index);
+    this._positionListener = this.props.subscribe(
+      'position',
+      this._adjustScroll
+    );
   }
 
   componentDidUpdate(prevProps: Props<T>) {
@@ -103,17 +107,27 @@ export default class TabBar<T: Route<*>> extends React.PureComponent<
     }
 
     if (
-      prevProps.navigationState !== this.props.navigationState ||
-      prevProps.layout !== this.props.layout ||
-      prevTabWidth !== currentTabWidth
+      (prevProps.navigationState !== this.props.navigationState ||
+        prevProps.layout !== this.props.layout ||
+        prevTabWidth !== currentTabWidth) &&
+      this.props.navigationState.index !== this._pendingIndex
     ) {
       this._resetScroll(this.props.navigationState.index);
+      this._pendingIndex = null;
     }
+  }
+
+  componentWillUnmount() {
+    this._positionListener.remove();
   }
 
   _scrollView: ?ScrollView;
   _isManualScroll: boolean = false;
   _isMomentumScroll: boolean = false;
+  _pendingIndex: ?number;
+  _scrollDelta: number = 0;
+  _scrollResetCallback: any;
+  _positionListener: { remove: () => void };
 
   _renderLabel = (scene: Scene<*>) => {
     if (typeof this.props.renderLabel !== 'undefined') {
@@ -182,31 +196,64 @@ export default class TabBar<T: Route<*>> extends React.PureComponent<
     return layout.width / navigationState.routes.length;
   };
 
-  _getScrollAmount = (props: Props<T>, i: number) => {
+  _handleTabPress = (scene: Scene<*>) => {
+    this._pendingIndex = scene.index;
+    this.props.jumpToIndex(scene.index);
+    if (this.props.onTabPress) {
+      this.props.onTabPress(scene);
+    }
+  };
+
+  _handleScroll = event => {
+    if (this._isManualScroll) {
+      this._scrollDelta =
+        this._getScrollAmount(this.props, this.props.navigationState.index) -
+        event.nativeEvent.contentOffset.x;
+    }
+  };
+
+  _normalizeScrollValue = (props: Props<T>, value: number) => {
     const { layout, navigationState } = props;
     const tabWidth = this._getTabWidth(props);
     const tabBarWidth = tabWidth * navigationState.routes.length;
     const maxDistance = tabBarWidth - layout.width;
+
+    return Math.max(Math.min(value, maxDistance), 0);
+  };
+
+  _getScrollAmount = (props: Props<T>, i: number) => {
+    const { layout } = props;
+    const tabWidth = this._getTabWidth(props);
     const centerDistance = tabWidth * (i + 1 / 2);
     const scrollAmount = centerDistance - layout.width / 2;
 
-    return Math.max(Math.min(scrollAmount, maxDistance), 0);
+    return this._normalizeScrollValue(props, scrollAmount);
   };
 
   _adjustScroll = (value: number) => {
-    if (this.props.scrollEnabled && this._scrollView) {
-      this._scrollView.scrollTo({
-        x: this._getScrollAmount(this.props, value),
-        animated: false,
-      });
+    if (this.props.scrollEnabled) {
+      global.cancelAnimationFrame(this._scrollResetCallback);
+      this._scrollView &&
+        this._scrollView.scrollTo({
+          x: this._normalizeScrollValue(
+            this.props,
+            this._getScrollAmount(this.props, value) - this._scrollDelta
+          ),
+          animated: false,
+        });
     }
   };
 
   _resetScroll = (value: number) => {
-    if (this.props.scrollEnabled && this._scrollView) {
-      this._scrollView.scrollTo({
-        x: this._getScrollAmount(this.props, value),
-        animated: true,
+    if (this.props.scrollEnabled) {
+      global.cancelAnimationFrame(this._scrollResetCallback);
+      this._scrollResetCallback = global.requestAnimationFrame(() => {
+        this._scrollDelta = 0;
+        this._scrollView &&
+          this._scrollView.scrollTo({
+            x: this._getScrollAmount(this.props, value),
+            animated: true,
+          });
       });
     }
   };
@@ -293,7 +340,7 @@ export default class TabBar<T: Route<*>> extends React.PureComponent<
                   },
                 },
               ],
-              { useNativeDriver: true }
+              { useNativeDriver: true, listener: this._handleScroll }
             )}
             onScrollBeginDrag={this._handleBeginDrag}
             onScrollEndDrag={this._handleEndDrag}
@@ -370,13 +417,7 @@ export default class TabBar<T: Route<*>> extends React.PureComponent<
                   pressColor={this.props.pressColor}
                   pressOpacity={this.props.pressOpacity}
                   delayPressIn={0}
-                  onPress={() => {
-                    const { onTabPress, jumpToIndex } = this.props;
-                    jumpToIndex(i);
-                    if (onTabPress) {
-                      onTabPress(scene);
-                    }
-                  }}
+                  onPress={() => this._handleTabPress(scene)}
                   style={tabContainerStyle}
                 >
                   <View pointerEvents="none" style={styles.container}>
