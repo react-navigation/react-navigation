@@ -3,13 +3,13 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { Animated, StyleSheet, View } from 'react-native';
-import * as GestureHandler from 'react-native-gesture-handler';
 import { PagerRendererPropType } from './TabViewPropTypes';
 import type { PagerRendererProps, Route } from './TabViewTypeDefinitions';
 
 type Props<T> = PagerRendererProps<T> & {
   swipeDistanceThreshold?: number,
   swipeVelocityThreshold?: number,
+  GestureHandler: any,
 };
 
 const DefaultTransitionSpec = {
@@ -25,6 +25,14 @@ export default class TabViewPagerExperimental<
     ...PagerRendererPropType,
     swipeDistanceThreshold: PropTypes.number,
     swipeVelocityThreshold: PropTypes.number,
+    GestureHandler: PropTypes.object,
+  };
+
+  static defaultProps = {
+    GestureHandler:
+      global.__expo && global.__expo.DangerZone
+        ? global.__expo.DangerZone.GestureHandler
+        : undefined,
   };
 
   componentDidMount() {
@@ -42,6 +50,8 @@ export default class TabViewPagerExperimental<
   }
 
   _handleHandlerStateChange = event => {
+    const { GestureHandler } = this.props;
+
     if (event.nativeEvent.state === GestureHandler.State.END) {
       const {
         navigationState,
@@ -118,6 +128,7 @@ export default class TabViewPagerExperimental<
 
   render() {
     const {
+      GestureHandler,
       panX,
       offsetX,
       layout,

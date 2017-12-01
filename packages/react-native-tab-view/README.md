@@ -178,13 +178,21 @@ Cross-platform pager component based on [`react-native-gesture-handler`](https:/
 
 #### Props
 
+- `GestureHandler` - the gesture handler module to use
 - `animationEnabled` - whether to enable page change animation
 - `swipeEnabled` - whether to enable swipe gestures
 - `useNativeDriver` - whether to use native animations
 - `children` - React Element(s) to render
 
-This pager is still experimental as the underlying library is still in alpha. To use this pager, you'll need to [link the `react-native-gesture-handler` library](https://github.com/kmagiera/react-native-gesture-handler#installation).
+This pager is still experimental as the underlying library is still in alpha. To use this pager, you'll need to [link the `react-native-gesture-handler` library](https://github.com/kmagiera/react-native-gesture-handler#installation), and pass it as a prop to the pager:
 
+```js
+import * as GestureHandler from 'react-native-gesture-handler';
+
+...
+
+<TabViewPagerExperimental {...props} GestureHandler={GestureHandler} />
+```
 
 ## Caveats
 

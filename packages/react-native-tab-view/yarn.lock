@@ -4182,12 +4182,6 @@ react-dom@16.0.0-beta.5:
     object-assign "^4.1.0"
     prop-types "^15.5.6"
 
-react-native-gesture-handler@1.0.0-alpha.29:
-  version "1.0.0-alpha.29"
-  resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-1.0.0-alpha.29.tgz#1e18afcb4b6db530d244c72efac654cb4ea0cfb6"
-  dependencies:
-    prop-types "^15.5.10"
-
 react-native-vector-icons@4.4.2:
   version "4.4.2"
   resolved "https://registry.yarnpkg.com/react-native-vector-icons/-/react-native-vector-icons-4.4.2.tgz#090f42ee0396c4cc4eae0ddaa518028ba8df40c7"
