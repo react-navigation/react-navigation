@@ -18,7 +18,7 @@ import type { DrawerScene, DrawerItem } from './DrawerView.js';
 type Props = {
   navigation: NavigationScreenProp<NavigationState>,
   items: Array<NavigationRoute>,
-  activeItemKey?: string,
+  activeItemKey?: ?string,
   activeTintColor?: string,
   activeBackgroundColor?: string,
   inactiveTintColor?: string,
@@ -31,6 +31,7 @@ type Props = {
   itemStyle?: ViewStyleProp,
   labelStyle?: TextStyleProp,
   iconContainerStyle?: ViewStyleProp,
+  drawerPosition: 'left' | 'right',
 };
 
 /**
@@ -47,61 +48,63 @@ const DrawerNavigatorItems = ({
   getLabel,
   renderIcon,
   onItemPress,
-  itemsContainerForceInset = { horizontal: 'never', top: 'always' },
   itemsContainerStyle,
   itemStyle,
   labelStyle,
   iconContainerStyle,
+  drawerPosition,
 }: Props) => (
-  <SafeAreaView forceInset={itemsContainerForceInset}>
-    <View style={[styles.container, itemsContainerStyle]}>
-      {items.map((route: NavigationRoute, index: number) => {
-        const focused = activeItemKey === route.key;
-        const color = focused ? activeTintColor : inactiveTintColor;
-        const backgroundColor = focused
-          ? activeBackgroundColor
-          : inactiveBackgroundColor;
-        const scene = { route, index, focused, tintColor: color };
-        const icon = renderIcon(scene);
-        const label = getLabel(scene);
-        return (
-          <TouchableItem
-            key={route.key}
-            onPress={() => {
-              onItemPress({ route, focused });
+  <View style={[styles.container, itemsContainerStyle]}>
+    {items.map((route: NavigationRoute, index: number) => {
+      const focused = activeItemKey === route.key;
+      const color = focused ? activeTintColor : inactiveTintColor;
+      const backgroundColor = focused
+        ? activeBackgroundColor
+        : inactiveBackgroundColor;
+      const scene = { route, index, focused, tintColor: color };
+      const icon = renderIcon(scene);
+      const label = getLabel(scene);
+      return (
+        <TouchableItem
+          key={route.key}
+          onPress={() => {
+            onItemPress({ route, focused });
+          }}
+          delayPressIn={0}
+        >
+          <SafeAreaView
+            style={{ backgroundColor }}
+            forceInset={{
+              [drawerPosition]: 'always',
+              [drawerPosition === 'left' ? 'right' : 'left']: 'never',
+              vertical: 'never',
             }}
-            delayPressIn={0}
           >
-            <SafeAreaView
-              style={{ backgroundColor }}
-              forceInset={{ horizontal: 'always' }}
-            >
-              <View style={[styles.item, itemStyle]}>
-                {icon ? (
-                  <View
-                    style={[
-                      styles.icon,
-                      focused ? null : styles.inactiveIcon,
-                      iconContainerStyle,
-                    ]}
-                  >
-                    {icon}
-                  </View>
-                ) : null}
-                {typeof label === 'string' ? (
-                  <Text style={[styles.label, { color }, labelStyle]}>
-                    {label}
-                  </Text>
-                ) : (
-                  label
-                )}
-              </View>
-            </SafeAreaView>
-          </TouchableItem>
-        );
-      })}
-    </View>
-  </SafeAreaView>
+            <View style={[styles.item, itemStyle]}>
+              {icon ? (
+                <View
+                  style={[
+                    styles.icon,
+                    focused ? null : styles.inactiveIcon,
+                    iconContainerStyle,
+                  ]}
+                >
+                  {icon}
+                </View>
+              ) : null}
+              {typeof label === 'string' ? (
+                <Text style={[styles.label, { color }, labelStyle]}>
+                  {label}
+                </Text>
+              ) : (
+                label
+              )}
+            </View>
+          </SafeAreaView>
+        </TouchableItem>
+      );
+    })}
+  </View>
 );
 
 /* Material design specs - https://material.io/guidelines/patterns/navigation-drawer.html#navigation-drawer-specs */

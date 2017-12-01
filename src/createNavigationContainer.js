@@ -13,22 +13,12 @@ import type {
   NavigationNavigator,
   PossiblyDeprecatedNavigationAction,
   NavigationInitAction,
+  NavigationContainerProps,
+  NavigationContainer,
 } from './TypeDefinition';
 
-type Props<O> = {
-  uriPrefix?: string | RegExp,
-  onNavigationStateChange?: (
-    NavigationState,
-    NavigationState,
-    NavigationAction
-  ) => void,
-  navigation?: NavigationScreenProp<NavigationState>,
-  screenProps?: *,
-  navigationOptions?: O,
-};
-
-type State = {
-  nav: ?NavigationState,
+type State<NavState> = {
+  nav: ?NavState,
 };
 
 /**
@@ -37,17 +27,22 @@ type State = {
  * This allows to use e.g. the StackNavigator and TabNavigator as root-level
  * components.
  */
-export default function createNavigationContainer<A: *, O: *>(
-  Component: NavigationNavigator<NavigationState, A | NavigationInitAction, O>
-) {
-  class NavigationContainer extends React.Component<Props<O>, State> {
+export default function createNavigationContainer<S: NavigationState, O: {}>(
+  // Let the NavigationNavigator props flowwwww
+  Component: NavigationNavigator<S, O, *>
+): NavigationContainer<S, O, *> {
+  class NavigationContainer extends React.Component<
+    NavigationContainerProps<S, O>,
+    State<S>
+  > {
     subs: ?{
       remove: () => void,
     } = null;
 
     static router = Component.router;
+    static navigationOptions = null;
 
-    constructor(props: Props<O>) {
+    constructor(props: NavigationContainerProps<S, O>) {
       super(props);
 
       this._validateProps(props);
@@ -63,7 +58,7 @@ export default function createNavigationContainer<A: *, O: *>(
       return !this.props.navigation;
     }
 
-    _validateProps(props: Props<O>) {
+    _validateProps(props: NavigationContainerProps<S, O>) {
       if (this._isStateful()) {
         return;
       }
@@ -141,8 +136,15 @@ export default function createNavigationContainer<A: *, O: *>(
       }
     }
 
-    componentWillReceiveProps(nextProps: *) {
+    componentWillReceiveProps(nextProps: NavigationContainerProps<S, O>) {
       this._validateProps(nextProps);
+    }
+
+    componentDidUpdate() {
+      // Clear cached _nav every tick
+      if (this._nav === this.state.nav) {
+        this._nav = null;
+      }
     }
 
     componentDidMount() {
@@ -166,18 +168,21 @@ export default function createNavigationContainer<A: *, O: *>(
       this.subs && this.subs.remove();
     }
 
+    // Per-tick temporary storage for state.nav
+    _nav: ?S;
+
     dispatch = (inputAction: PossiblyDeprecatedNavigationAction) => {
-      // $FlowFixMe remove after we deprecate the old actions
-      const action: A = NavigationActions.mapDeprecatedActionAndWarn(
-        inputAction
-      );
+      const action = NavigationActions.mapDeprecatedActionAndWarn(inputAction);
       if (!this._isStateful()) {
         return false;
       }
-      const oldNav = this.state.nav;
+      this._nav = this._nav || this.state.nav;
+      const oldNav = this._nav;
       invariant(oldNav, 'should be set in constructor if stateful');
       const nav = Component.router.getStateForAction(action, oldNav);
       if (nav && nav !== oldNav) {
+        // Cache updates to state.nav during the tick to ensure that subsequent calls will not discard this change
+        this._nav = nav;
         this.setState({ nav }, () =>
           this._onNavigationStateChange(oldNav, nav, action)
         );

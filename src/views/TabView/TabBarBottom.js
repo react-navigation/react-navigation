@@ -36,26 +36,28 @@ type Props = {
   jumpToIndex: (index: number) => void,
   getLabel: (scene: TabScene) => ?(React.Node | string),
   getOnPress: (
+    previousScene: NavigationRoute,
     scene: TabScene
-  ) => (scene: TabScene, jumpToIndex: (index: number) => void) => void,
+  ) => ({
+    previousScene: NavigationRoute,
+    scene: TabScene,
+    jumpToIndex: (index: number) => void,
+  }) => void,
   getTestIDProps: (scene: TabScene) => (scene: TabScene) => any,
   renderIcon: (scene: TabScene) => React.Node,
   style?: ViewStyleProp,
+  animateStyle?: ViewStyleProp,
   labelStyle?: TextStyleProp,
   tabStyle?: ViewStyleProp,
   showIcon?: boolean,
   isLandscape: boolean,
 };
 
-type State = {
-  isVisible: boolean,
-};
-
 const majorVersion = parseInt(Platform.Version, 10);
 const isIos = Platform.OS === 'ios';
 const useHorizontalTabs = majorVersion >= 11 && isIos;
 
-class TabBarBottom extends React.PureComponent<Props, State> {
+class TabBarBottom extends React.PureComponent<Props> {
   // See https://developer.apple.com/library/content/documentation/UserExperience/Conceptual/UIKitUICatalog/UITabBar.html
   static defaultProps = {
     activeTintColor: '#3478f6', // Default active tint color in iOS 10
@@ -65,43 +67,6 @@ class TabBarBottom extends React.PureComponent<Props, State> {
     showLabel: true,
     showIcon: true,
     allowFontScaling: true,
-  };
-
-  props: Props;
-
-  state: State = {
-    isVisible: true,
-  };
-
-  _keyboardDidShowSub = undefined;
-  _keyboardDidHideSub = undefined;
-
-  componentWillMount() {
-    this._keyboardDidShowSub = Keyboard.addListener(
-      'keyboardDidShow',
-      this._keyboardDidShow
-    );
-    this._keyboardDidHideSub = Keyboard.addListener(
-      'keyboardDidHide',
-      this._keyboardDidHide
-    );
-  }
-
-  componentWillUnmount() {
-    this._keyboardDidShowSub !== undefined && this._keyboardDidShowSub.remove();
-    this._keyboardDidHideSub !== undefined && this._keyboardDidHideSub.remove();
-  }
-
-  _keyboardDidShow = () => {
-    this.setState({
-      isVisible: false,
-    });
-  };
-
-  _keyboardDidHide = () => {
-    this.setState({
-      isVisible: true,
-    });
   };
 
   _renderLabel = (scene: TabScene) => {
@@ -203,10 +168,12 @@ class TabBarBottom extends React.PureComponent<Props, State> {
       activeBackgroundColor,
       inactiveBackgroundColor,
       style,
+      animateStyle,
       tabStyle,
       isLandscape,
     } = this.props;
     const { routes } = navigation.state;
+    const previousScene = routes[navigation.state.index];
     // Prepend '-1', so there are always at least 2 items in inputRange
     const inputRange = [-1, ...routes.map((x: *, i: number) => i)];
 
@@ -218,8 +185,8 @@ class TabBarBottom extends React.PureComponent<Props, State> {
       style,
     ];
 
-    return this.state.isVisible ? (
-      <Animated.View>
+    return (
+      <Animated.View style={animateStyle}>
         <SafeAreaView
           style={tabBarStyle}
           forceInset={{ bottom: 'always', top: 'never' }}
@@ -227,7 +194,7 @@ class TabBarBottom extends React.PureComponent<Props, State> {
           {routes.map((route: NavigationRoute, index: number) => {
             const focused = index === navigation.state.index;
             const scene = { route, index, focused };
-            const onPress = getOnPress(scene);
+            const onPress = getOnPress(previousScene, scene);
             const outputRange = inputRange.map(
               (inputIndex: number) =>
                 inputIndex === index
@@ -249,7 +216,9 @@ class TabBarBottom extends React.PureComponent<Props, State> {
                 testID={testID}
                 accessibilityLabel={accessibilityLabel}
                 onPress={() =>
-                  onPress ? onPress(scene, jumpToIndex) : jumpToIndex(index)}
+                  onPress
+                    ? onPress({ previousScene, scene, jumpToIndex })
+                    : jumpToIndex(index)}
               >
                 <Animated.View
                   style={[
@@ -268,7 +237,7 @@ class TabBarBottom extends React.PureComponent<Props, State> {
           })}
         </SafeAreaView>
       </Animated.View>
-    ) : null;
+    );
   }
 }
 
