@@ -294,14 +294,20 @@ export default class TabViewAnimated<T: Route<*>> extends React.Component<
           ...rest,
           panX: this.state.panX,
           offsetX: this.state.offsetX,
-          children: navigationState.routes.map((route, index) =>
-            this._renderScene({
+          children: navigationState.routes.map((route, index) => {
+            const scene = this._renderScene({
               ...props,
               route,
               index,
               focused: index === navigationState.index,
-            })
-          ),
+            });
+
+            if (scene) {
+              return React.cloneElement(scene, { key: route.key });
+            }
+
+            return scene;
+          }),
         })}
         {renderFooter && renderFooter(props)}
       </View>
