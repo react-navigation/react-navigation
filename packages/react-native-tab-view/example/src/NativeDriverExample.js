@@ -9,14 +9,14 @@ import {
 } from 'react-native-tab-view';
 import SimplePage from './SimplePage';
 
-import type { NavigationState } from 'react-native-tab-view/types';
+import type { Route, NavigationState } from 'react-native-tab-view/types';
 
-type Route = {
-  key: string,
-  title: string,
-};
-
-type State = NavigationState<Route>;
+type State = NavigationState<
+  Route<{
+    key: string,
+    title: string,
+  }>
+>;
 
 const initialLayout = {
   height: 0,

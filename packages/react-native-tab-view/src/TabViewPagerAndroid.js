@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { View, ViewPagerAndroid, StyleSheet, I18nManager } from 'react-native';
 import { PagerRendererPropType } from './TabViewPropTypes';
-import type { PagerRendererProps, Route } from './TabViewTypeDefinitions';
+import type { PagerRendererProps } from './TabViewTypeDefinitions';
 
 type PageScrollEvent = {
   nativeEvent: {
@@ -16,7 +16,7 @@ type PageScrollState = 'dragging' | 'settling' | 'idle';
 
 type Props<T> = PagerRendererProps<T>;
 
-export default class TabViewPagerAndroid<T: Route<*>> extends React.Component<
+export default class TabViewPagerAndroid<T: *> extends React.Component<
   Props<T>
 > {
   static propTypes = PagerRendererPropType;

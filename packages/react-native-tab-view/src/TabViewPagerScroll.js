@@ -1,9 +1,9 @@
 /* @flow */
 
 import * as React from 'react';
-import { View, ScrollView, StyleSheet, Platform } from 'react-native';
+import { View, ScrollView, StyleSheet } from 'react-native';
 import { PagerRendererPropType } from './TabViewPropTypes';
-import type { PagerRendererProps, Route } from './TabViewTypeDefinitions';
+import type { PagerRendererProps } from './TabViewTypeDefinitions';
 
 type ScrollEvent = {
   nativeEvent: {
@@ -20,7 +20,7 @@ type State = {|
 
 type Props<T> = PagerRendererProps<T>;
 
-export default class TabViewPagerScroll<T: Route<*>> extends React.Component<
+export default class TabViewPagerScroll<T: *> extends React.Component<
   Props<T>,
   State
 > {

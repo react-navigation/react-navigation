@@ -6,15 +6,15 @@ import { Ionicons } from '@expo/vector-icons';
 import { TabViewAnimated, TabBar } from 'react-native-tab-view';
 import SimplePage from './SimplePage';
 
-import type { NavigationState } from 'react-native-tab-view/types';
+import type { Route, NavigationState } from 'react-native-tab-view/types';
 
-type Route = {
-  key: string,
-  title: string,
-  icon: string,
-};
-
-type State = NavigationState<Route>;
+type State = NavigationState<
+  Route<{
+    key: string,
+    title: string,
+    icon: string,
+  }>
+>;
 
 export default class BottomBarIconExample extends PureComponent<*, State> {
   static title = 'Bottom bar with indicator';

@@ -9,7 +9,6 @@ import type {
   SceneRendererProps,
   NavigationState,
   Layout,
-  Route,
   SubscriptionName,
   PagerProps,
   Style,
@@ -53,7 +52,7 @@ switch (Platform.OS) {
     break;
 }
 
-export default class TabViewAnimated<T: Route<*>> extends React.Component<
+export default class TabViewAnimated<T: *> extends React.Component<
   Props<T>,
   State
 > {

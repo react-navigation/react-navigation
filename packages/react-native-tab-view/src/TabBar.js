@@ -15,7 +15,6 @@ import { SceneRendererPropType } from './TabViewPropTypes';
 import type {
   Scene,
   SceneRendererProps,
-  Route,
   Style,
 } from './TabViewTypeDefinitions';
 
@@ -45,10 +44,7 @@ type State = {|
   initialOffset: {| x: number, y: number |},
 |};
 
-export default class TabBar<T: Route<*>> extends React.PureComponent<
-  Props<T>,
-  State
-> {
+export default class TabBar<T: *> extends React.PureComponent<Props<T>, State> {
   static propTypes = {
     ...SceneRendererPropType,
     scrollEnabled: PropTypes.bool,
@@ -65,7 +61,7 @@ export default class TabBar<T: Route<*>> extends React.PureComponent<
 
   static defaultProps = {
     getLabelText: ({ route }) =>
-      route.title ? route.title.toUpperCase() : null,
+      typeof route.title === 'string' ? route.title.toUpperCase() : route.title,
   };
 
   constructor(props: Props<T>) {
@@ -171,7 +167,7 @@ export default class TabBar<T: Route<*>> extends React.PureComponent<
     );
   };
 
-  _getTabWidth = (props: Props<T>) => {
+  _getTabWidth = props => {
     const { layout, navigationState, tabStyle } = props;
     const flattened = StyleSheet.flatten(tabStyle);
 
@@ -212,7 +208,7 @@ export default class TabBar<T: Route<*>> extends React.PureComponent<
     }
   };
 
-  _normalizeScrollValue = (props: Props<T>, value: number) => {
+  _normalizeScrollValue = (props, value) => {
     const { layout, navigationState } = props;
     const tabWidth = this._getTabWidth(props);
     const tabBarWidth = tabWidth * navigationState.routes.length;
@@ -221,7 +217,7 @@ export default class TabBar<T: Route<*>> extends React.PureComponent<
     return Math.max(Math.min(value, maxDistance), 0);
   };
 
-  _getScrollAmount = (props: Props<T>, i: number) => {
+  _getScrollAmount = (props, i) => {
     const { layout } = props;
     const tabWidth = this._getTabWidth(props);
     const centerDistance = tabWidth * (i + 1 / 2);

@@ -12,7 +12,6 @@ import {
 import { PagerRendererPropType } from './TabViewPropTypes';
 import type {
   PagerRendererProps,
-  Route,
   TransitionConfigurator,
 } from './TabViewTypeDefinitions';
 
@@ -61,9 +60,7 @@ const DefaultTransitionSpec = {
   friction: 35,
 };
 
-export default class TabViewPagerPan<T: Route<*>> extends React.Component<
-  Props<T>
-> {
+export default class TabViewPagerPan<T: *> extends React.Component<Props<T>> {
   static propTypes = {
     ...PagerRendererPropType,
     configureTransition: PropTypes.func.isRequired,

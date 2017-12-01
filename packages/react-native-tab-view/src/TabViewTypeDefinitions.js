@@ -4,9 +4,9 @@ import { Animated } from 'react-native';
 import type { Node } from 'react';
 import type { StyleObj } from 'react-native/Libraries/StyleSheet/StyleSheetTypes';
 
-export type Route<T: { key: string, testID?: string }> = T;
+export type Route<T: { key: string }> = $Exact<T>;
 
-export type NavigationState<T: { key: string }> = {
+export type NavigationState<T> = {
   index: number,
   routes: Array<T>,
 };

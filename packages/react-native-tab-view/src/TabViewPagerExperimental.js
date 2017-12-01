@@ -4,7 +4,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { Animated, StyleSheet, View } from 'react-native';
 import { PagerRendererPropType } from './TabViewPropTypes';
-import type { PagerRendererProps, Route } from './TabViewTypeDefinitions';
+import type { PagerRendererProps } from './TabViewTypeDefinitions';
 
 type Props<T> = PagerRendererProps<T> & {
   swipeDistanceThreshold?: number,
@@ -18,9 +18,9 @@ const DefaultTransitionSpec = {
   friction: 25,
 };
 
-export default class TabViewPagerExperimental<
-  T: Route<*>
-> extends React.Component<Props<T>> {
+export default class TabViewPagerExperimental<T: *> extends React.Component<
+  Props<T>
+> {
   static propTypes = {
     ...PagerRendererPropType,
     swipeDistanceThreshold: PropTypes.number,

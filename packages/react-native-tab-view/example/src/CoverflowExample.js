@@ -12,13 +12,13 @@ import {
 } from 'react-native';
 import { TabViewAnimated, TabViewPagerPan } from 'react-native-tab-view';
 
-import type { NavigationState } from 'react-native-tab-view/types';
+import type { Route, NavigationState } from 'react-native-tab-view/types';
 
-type Route = {
-  key: string,
-};
-
-type State = NavigationState<Route>;
+type State = NavigationState<
+  Route<{
+    key: string,
+  }>
+>;
 
 const ALBUMS = {
   'Abbey Road': require('../assets/album-art-1.jpg'),
