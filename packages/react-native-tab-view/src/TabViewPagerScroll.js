@@ -76,11 +76,11 @@ export default class TabViewPagerScroll<T: Route<*>> extends React.Component<
       const offset = this.props.navigationState.index * this.props.layout.width;
       this._isInitial = true;
       this._scrollTo(offset, false);
-
-      setTimeout(() => {
-        this._isInitial = false;
-      }, 150);
     }
+
+    setTimeout(() => {
+      this._isInitial = false;
+    }, 150);
   };
 
   _scrollTo = (x: number, animated = this.props.animationEnabled !== false) => {
