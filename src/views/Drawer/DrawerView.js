@@ -33,6 +33,9 @@ export type DrawerViewConfig = {
   drawerLockMode?: 'unlocked' | 'locked-closed' | 'locked-open',
   drawerWidth?: number | (() => number),
   drawerPosition?: 'left' | 'right',
+  drawerOpenRoute: string,
+  drawerCloseRoute: string,
+  drawerToggleRoute: string,
   contentComponent?: React.ComponentType<*>,
   contentOptions?: {},
   style?: ViewStyleProp,
@@ -81,14 +84,19 @@ export default class DrawerView extends React.PureComponent<
     if (
       this.props.navigation.state.index !== nextProps.navigation.state.index
     ) {
+      const {
+        drawerOpenRoute,
+        drawerCloseRoute,
+        drawerToggleRoute,
+      } = this.props;
       const { routes, index } = nextProps.navigation.state;
-      if (routes[index].routeName === 'DrawerOpen') {
+      if (routes[index].routeName === drawerOpenRoute) {
         this._drawer.openDrawer();
-      } else if (routes[index].routeName === 'DrawerToggle') {
+      } else if (routes[index].routeName === drawerToggleRoute) {
         if (this._drawer.state.drawerShown) {
-          this.props.navigation.navigate('DrawerClose');
+          this.props.navigation.navigate(drawerCloseRoute);
         } else {
-          this.props.navigation.navigate('DrawerOpen');
+          this.props.navigation.navigate(drawerOpenRoute);
         }
       } else {
         this._drawer.closeDrawer();
@@ -100,27 +108,28 @@ export default class DrawerView extends React.PureComponent<
   _screenNavigationProp: NavigationScreenProp<NavigationStateRoute>;
 
   _handleDrawerOpen = () => {
-    const { navigation } = this.props;
+    const { navigation, drawerOpenRoute } = this.props;
     const { routes, index } = navigation.state;
-    if (routes[index].routeName !== 'DrawerOpen') {
-      this.props.navigation.navigate('DrawerOpen');
+    if (routes[index].routeName !== drawerOpenRoute) {
+      this.props.navigation.navigate(drawerOpenRoute);
     }
   };
 
   _handleDrawerClose = () => {
-    const { navigation } = this.props;
+    const { navigation, drawerCloseRoute } = this.props;
     const { routes, index } = navigation.state;
-    if (routes[index].routeName !== 'DrawerClose') {
-      this.props.navigation.navigate('DrawerClose');
+    if (routes[index].routeName !== drawerCloseRoute) {
+      this.props.navigation.navigate(drawerCloseRoute);
     }
   };
 
   _updateScreenNavigation = (
     navigation: NavigationScreenProp<NavigationState>
   ) => {
+    const { drawerCloseRoute } = this.props;
     // $FlowFixMe there's no way type the specific shape of the nav state
     const navigationState: NavigationStateRoute = navigation.state.routes.find(
-      (route: *) => route.routeName === 'DrawerClose'
+      (route: *) => route.routeName === drawerCloseRoute
     );
     if (
       this._screenNavigationProp &&
@@ -146,8 +155,9 @@ export default class DrawerView extends React.PureComponent<
   };
 
   _getNavigationState = (navigation: NavigationScreenProp<NavigationState>) => {
+    const { drawerCloseRoute } = this.props;
     const navigationState = navigation.state.routes.find(
-      (route: *) => route.routeName === 'DrawerClose'
+      (route: *) => route.routeName === drawerCloseRoute
     );
     return navigationState;
   };
@@ -168,7 +178,7 @@ export default class DrawerView extends React.PureComponent<
 
   render() {
     const DrawerScreen = this.props.router.getComponentForRouteName(
-      'DrawerClose'
+      this.props.drawerCloseRoute
     );
 
     const screenNavigation = addNavigationHelpers({
