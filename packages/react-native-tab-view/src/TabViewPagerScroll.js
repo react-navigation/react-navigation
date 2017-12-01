@@ -40,19 +40,13 @@ export default class TabViewPagerScroll<T: Route<*>> extends React.Component<
   }
 
   componentDidMount() {
-    if (this.props.layout.width) {
-      this._scrollTo(
-        this.props.navigationState.index * this.props.layout.width,
-        false
-      );
-    }
-
+    this._setInitialPage();
     this._resetListener = this.props.subscribe('reset', this._scrollTo);
   }
 
   componentDidUpdate(prevProps: Props<T>) {
     if (
-      prevProps.layout !== this.props.layout ||
+      prevProps.layout.width !== this.props.layout.width ||
       prevProps.navigationState !== this.props.navigationState
     ) {
       const { navigationState, layout } = this.props;
@@ -75,6 +69,19 @@ export default class TabViewPagerScroll<T: Route<*>> extends React.Component<
   _currentOffset: ?number;
   _isIdleCallback: any;
   _isIdle: boolean = true;
+  _isInitial: boolean = true;
+
+  _setInitialPage = () => {
+    if (this.props.layout.width) {
+      const offset = this.props.navigationState.index * this.props.layout.width;
+      this._isInitial = true;
+      this._scrollTo(offset, false);
+
+      setTimeout(() => {
+        this._isInitial = false;
+      }, 150);
+    }
+  };
 
   _scrollTo = (x: number, animated = this.props.animationEnabled !== false) => {
     if (animated && !this._isIdle) {
@@ -102,6 +109,10 @@ export default class TabViewPagerScroll<T: Route<*>> extends React.Component<
   };
 
   _handleScroll = (e: ScrollEvent) => {
+    if (this._isInitial) {
+      return;
+    }
+
     this._currentOffset = e.nativeEvent.contentOffset.x;
 
     const { navigationState, layout } = this.props;
@@ -111,11 +122,6 @@ export default class TabViewPagerScroll<T: Route<*>> extends React.Component<
     this.props.panX.setValue(offset - e.nativeEvent.contentOffset.x);
 
     this._isIdle = false;
-
-    global.cancelAnimationFrame(this._isIdleCallback);
-    this._isIdleCallback = global.requestAnimationFrame(() => {
-      this._isIdle = true;
-    });
   };
 
   render() {
