@@ -14,8 +14,8 @@ type Props<T> = PagerRendererProps<T> & {
 
 const DefaultTransitionSpec = {
   timing: Animated.spring,
-  tension: 300,
-  friction: 35,
+  tension: 75,
+  friction: 25,
 };
 
 export default class TabViewPagerExperimental<
@@ -86,11 +86,14 @@ export default class TabViewPagerExperimental<
         );
       }
 
-      this._transitionTo(isFinite(nextIndex) ? nextIndex : currentIndex);
+      this._transitionTo(
+        isFinite(nextIndex) ? nextIndex : currentIndex,
+        velocityX
+      );
     }
   };
 
-  _transitionTo = (index: number) => {
+  _transitionTo = (index: number, velocity?: number) => {
     const offset = -index * this.props.layout.width;
 
     if (this.props.animationEnabled === false) {
@@ -106,11 +109,13 @@ export default class TabViewPagerExperimental<
       timing(this.props.panX, {
         ...transitionConfig,
         toValue: 0,
+        velocity,
         useNativeDriver,
       }),
       timing(this.props.offsetX, {
         ...transitionConfig,
         toValue: offset,
+        velocity,
         useNativeDriver,
       }),
     ]).start(({ finished }) => {
