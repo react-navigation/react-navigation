@@ -26,7 +26,6 @@ export type TabViewConfig = {
     currentTransitionProps: Object,
     nextTransitionProps: Object
   ) => Object,
-  lazy?: boolean,
   initialLayout?: Layout,
 };
 
@@ -47,7 +46,6 @@ type Props = {
     currentTransitionProps: Object,
     nextTransitionProps: Object
   ) => Object,
-  lazy?: boolean,
   initialLayout: Layout,
 
   screenProps?: {},
@@ -171,7 +169,6 @@ class TabView extends React.PureComponent<Props> {
       tabBarPosition,
       animationEnabled,
       configureTransition,
-      lazy,
       initialLayout,
       screenProps,
     } = this.props;
@@ -210,7 +207,6 @@ class TabView extends React.PureComponent<Props> {
     }
 
     const props = {
-      lazy,
       initialLayout,
       animationEnabled,
       configureTransition,
@@ -225,7 +221,6 @@ class TabView extends React.PureComponent<Props> {
       style: styles.container,
     };
 
-    // $FlowFixMe: mismatch with react-native-tab-view type
     return <TabViewAnimated {...props} />;
   }
 }
