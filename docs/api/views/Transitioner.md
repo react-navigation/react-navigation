@@ -166,19 +166,23 @@ render: (transitionProps: NavigationTransitionProps, prevTransitionProps: ?Navig
 ### `onTransitionStart` function
 Invoked when the transition animation is about to start.
 
+If you return a promise from `onTransitionStart`, the transition animation will begin after the promise is resolved.
+
 #### Flow definition
 ```js
-onTransitionStart: (transitionProps: NavigationTransitionProps, prevTransitionProps: ?NavigationTransitionProps) => void,
+onTransitionStart: (transitionProps: NavigationTransitionProps, prevTransitionProps: ?NavigationTransitionProps) => (Promise | void),
 ```
 #### Parameters
 - `transitionProps`: the current [NavigationTransitionProps](https://github.com/react-community/react-navigation/blob/master/src/TypeDefinition.js#L273) created from the current state and props
 - `prevTransitionProps`: the previous [NavigationTransitionProps](https://github.com/react-community/react-navigation/blob/master/src/TypeDefinition.js#L273) created from the previous state and props
 
 #### Returns
-- none.
+- `Promise` to delay the start of the transition animation, or none to begin the transition animation immediately.
 
 ### `onTransitionEnd` function
 Invoked once the transition animation completes.
+
+If you return a promise from `onTransitionEnd`, any queued transition animations will begin after the promise is resolved.
 
 #### Flow definition
 ```js

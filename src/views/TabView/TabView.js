@@ -195,7 +195,6 @@ class TabView extends React.PureComponent<Props> {
       tabBarPosition,
       animationEnabled,
       configureTransition,
-      swipeEnabled,
       lazy,
       initialLayout,
       screenProps,
@@ -204,6 +203,11 @@ class TabView extends React.PureComponent<Props> {
     let renderHeader;
     let renderFooter;
     let renderPager;
+
+    const swipeEnabled =
+      options.swipeEnabled == null
+        ? this.props.swipeEnabled
+        : options.swipeEnabled;
 
     if (tabBarComponent !== undefined) {
       if (tabBarPosition === 'bottom') {
