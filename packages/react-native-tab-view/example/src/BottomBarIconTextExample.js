@@ -13,6 +13,7 @@ type State = NavigationState<
     key: string,
     title: string,
     icon: string,
+    color: string,
   }>
 >;
 
@@ -23,9 +24,14 @@ export default class BottomBarIconExample extends PureComponent<*, State> {
   state = {
     index: 0,
     routes: [
-      { key: '1', title: 'First', icon: 'ios-speedometer' },
-      { key: '2', title: 'Second', icon: 'ios-game-controller-b' },
-      { key: '3', title: 'Third', icon: 'ios-basketball' },
+      { key: '1', title: 'First', icon: 'ios-speedometer', color: '#F44336' },
+      {
+        key: '2',
+        title: 'Second',
+        icon: 'ios-game-controller-b',
+        color: '#4CAF50',
+      },
+      { key: '3', title: 'Third', icon: 'ios-basketball', color: '#3F51B5' },
     ],
   };
 
@@ -36,14 +42,52 @@ export default class BottomBarIconExample extends PureComponent<*, State> {
 
   _renderIndicator = props => {
     const { width, position } = props;
+    const inputRange = [
+      0,
+      0.48,
+      0.49,
+      0.51,
+      0.52,
+      1,
+      1.48,
+      1.49,
+      1.51,
+      1.52,
+      2,
+    ];
 
-    const translateX = Animated.multiply(position, width);
+    const scale = position.interpolate({
+      inputRange,
+      outputRange: inputRange.map(x => (Math.trunc(x) === x ? 2 : 0.1)),
+    });
+    const opacity = position.interpolate({
+      inputRange,
+      outputRange: inputRange.map(x => {
+        const d = x - Math.trunc(x);
+        return d === 0.49 || d === 0.51 ? 0 : 1;
+      }),
+    });
+    const translateX = position.interpolate({
+      inputRange: inputRange,
+      outputRange: inputRange.map(x => Math.round(x) * width),
+    });
+    const backgroundColor = position.interpolate({
+      inputRange,
+      outputRange: inputRange.map(
+        x => props.navigationState.routes[Math.round(x)].color
+      ),
+    });
 
     return (
       <Animated.View
         style={[styles.container, { width, transform: [{ translateX }] }]}
       >
-        <View style={styles.indicator} />
+        <Animated.View
+          style={[
+            styles.indicator,
+            { backgroundColor, opacity, transform: [{ scale }] },
+          ]}
+        />
       </Animated.View>
     );
   };
@@ -63,49 +107,29 @@ export default class BottomBarIconExample extends PureComponent<*, State> {
     return null;
   };
 
+  _getLabelText = ({ route }) => route.title;
+
   _renderFooter = props => (
     <TabBar
       {...props}
+      getLabelText={this._getLabelText}
       renderIcon={this._renderIcon}
       renderBadge={this._renderBadge}
       renderIndicator={this._renderIndicator}
-      style={styles.tabbar}
+      labelStyle={styles.label}
       tabStyle={styles.tab}
+      style={styles.tabbar}
     />
   );
 
-  _renderScene = ({ route }) => {
-    switch (route.key) {
-      case '1':
-        return (
-          <SimplePage
-            state={this.state}
-            style={{ backgroundColor: '#ff4081' }}
-          />
-        );
-      case '2':
-        return (
-          <SimplePage
-            state={this.state}
-            style={{ backgroundColor: '#673ab7' }}
-          />
-        );
-      case '3':
-        return (
-          <SimplePage
-            state={this.state}
-            style={{ backgroundColor: '#4caf50' }}
-          />
-        );
-      default:
-        return null;
-    }
-  };
+  _renderScene = ({ route }) => (
+    <SimplePage state={this.state} style={{ backgroundColor: route.color }} />
+  );
 
   render() {
     return (
       <TabViewAnimated
-        style={[styles.container, this.props.style]}
+        style={this.props.style}
         navigationState={this.state}
         renderScene={this._renderScene}
         renderFooter={this._renderFooter}
@@ -116,9 +140,6 @@ export default class BottomBarIconExample extends PureComponent<*, State> {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   tabbar: {
     backgroundColor: '#222',
   },
@@ -129,11 +150,22 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     color: 'white',
   },
-  indicator: {
+  label: {
+    fontSize: 12,
+    marginTop: 2,
+  },
+  container: {
     flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    opacity: 0.8,
+  },
+  indicator: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
     backgroundColor: '#0084ff',
-    margin: 4,
-    borderRadius: 2,
+    margin: 6,
   },
   badge: {
     marginTop: 4,
