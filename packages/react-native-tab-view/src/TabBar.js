@@ -41,7 +41,7 @@ type Props<T> = SceneRendererProps<T> & {
 type State = {|
   visibility: Animated.Value,
   scrollAmount: Animated.Value,
-  initialOffset: {| x: number, y: number |},
+  initialOffset: ?{| x: number, y: number |},
 |};
 
 export default class TabBar<T: *> extends React.PureComponent<Props<T>, State> {
@@ -76,13 +76,21 @@ export default class TabBar<T: *> extends React.PureComponent<Props<T>, State> {
       }
     }
 
+    const initialOffset =
+      this.props.scrollEnabled && this.props.layout.width
+        ? {
+            x: this._getScrollAmount(
+              this.props,
+              this.props.navigationState.index
+            ),
+            y: 0,
+          }
+        : undefined;
+
     this.state = {
       visibility: new Animated.Value(initialVisibility),
       scrollAmount: new Animated.Value(0),
-      initialOffset: {
-        x: this._getScrollAmount(this.props, this.props.navigationState.index),
-        y: 0,
-      },
+      initialOffset,
     };
   }
 
@@ -108,7 +116,10 @@ export default class TabBar<T: *> extends React.PureComponent<Props<T>, State> {
         prevTabWidth !== currentTabWidth) &&
       this.props.navigationState.index !== this._pendingIndex
     ) {
-      this._resetScroll(this.props.navigationState.index);
+      this._resetScroll(
+        this.props.navigationState.index,
+        Boolean(prevProps.layout.width)
+      );
       this._pendingIndex = null;
     }
   }
@@ -211,7 +222,10 @@ export default class TabBar<T: *> extends React.PureComponent<Props<T>, State> {
   _normalizeScrollValue = (props, value) => {
     const { layout, navigationState } = props;
     const tabWidth = this._getTabWidth(props);
-    const tabBarWidth = tabWidth * navigationState.routes.length;
+    const tabBarWidth = Math.max(
+      tabWidth * navigationState.routes.length,
+      layout.width
+    );
     const maxDistance = tabBarWidth - layout.width;
 
     return Math.max(Math.min(value, maxDistance), 0);
@@ -240,7 +254,7 @@ export default class TabBar<T: *> extends React.PureComponent<Props<T>, State> {
     }
   };
 
-  _resetScroll = (value: number) => {
+  _resetScroll = (value: number, animated = true) => {
     if (this.props.scrollEnabled) {
       global.cancelAnimationFrame(this._scrollResetCallback);
       this._scrollResetCallback = global.requestAnimationFrame(() => {
@@ -248,7 +262,7 @@ export default class TabBar<T: *> extends React.PureComponent<Props<T>, State> {
         this._scrollView &&
           this._scrollView.scrollTo({
             x: this._getScrollAmount(this.props, value),
-            animated: true,
+            animated,
           });
       });
     }
