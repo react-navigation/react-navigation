@@ -15,7 +15,7 @@ type State = NavigationState<
 >;
 
 export default class TopBarTextExample extends PureComponent<*, State> {
-  static title = 'Scroll views with lazy load';
+  static title = 'Scroll views';
   static backgroundColor = '#fff';
   static tintColor = '#222';
   static appbarElevation = 0;

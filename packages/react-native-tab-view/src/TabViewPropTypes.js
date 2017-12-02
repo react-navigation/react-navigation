@@ -22,7 +22,6 @@ export const SceneRendererPropType = {
   navigationState: NavigationStatePropType.isRequired,
   position: PropTypes.object.isRequired,
   jumpToIndex: PropTypes.func.isRequired,
-  getLastPosition: PropTypes.func.isRequired,
   subscribe: PropTypes.func.isRequired,
   useNativeDriver: PropTypes.bool,
 };
@@ -37,7 +36,6 @@ export const PagerRendererPropType = {
   panX: PropTypes.instanceOf(Animated.Value).isRequired,
   offsetX: PropTypes.instanceOf(Animated.Value).isRequired,
   jumpToIndex: PropTypes.func.isRequired,
-  getLastPosition: PropTypes.func.isRequired,
   subscribe: PropTypes.func.isRequired,
   animationEnabled: PropTypes.bool,
   swipeEnabled: PropTypes.bool,

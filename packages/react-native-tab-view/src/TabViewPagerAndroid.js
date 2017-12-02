@@ -30,47 +30,22 @@ export default class TabViewPagerAndroid<T: *> extends React.Component<
     this._resetListener = this.props.subscribe('reset', this._handlePageChange);
   }
 
-  componentWillReceiveProps(nextProps: Props<T>) {
+  componentDidUpdate(prevProps: Props<T>) {
     if (
-      this.props.layout !== nextProps.layout ||
-      React.Children.count(this.props.children) !==
-        React.Children.count(nextProps.children)
+      this.props.layout !== prevProps.layout ||
+      this.props.navigationState.routes.length !==
+        prevProps.navigationState.routes.length ||
+      this.props.navigationState.index !== prevProps.navigationState.index
     ) {
-      this._animationFrameCallback = () => {
-        if (this._viewPager) {
-          const { navigationState } = nextProps;
-          const page = I18nManager.isRTL
-            ? navigationState.routes.length - (navigationState.index + 1)
-            : navigationState.index;
-
-          this._viewPager.setPageWithoutAnimation(page);
-        }
-      };
-
-      if (!this._isRequestingAnimationFrame) {
-        this._isRequestingAnimationFrame = true;
-
-        global.requestAnimationFrame(() => {
-          this._isRequestingAnimationFrame = false;
-
-          if (this._animationFrameCallback) {
-            this._animationFrameCallback();
-          }
-        });
-      }
+      this._handlePageChange(this.props.navigationState.index);
     }
-  }
-
-  componentDidUpdate() {
-    this._handlePageChange(this.props.navigationState.index);
   }
 
   componentWillUnmount() {
     this._resetListener && this._resetListener.remove();
   }
 
-  _animationFrameCallback: ?() => void;
-  _isRequestingAnimationFrame: boolean = false;
+  _pageChangeCallabck: any;
   _resetListener: Object;
   _viewPager: ?ViewPagerAndroid;
   _isIdle: boolean = true;
@@ -81,16 +56,16 @@ export default class TabViewPagerAndroid<T: *> extends React.Component<
       ? this.props.navigationState.routes.length - (index + 1)
       : index;
 
-  _setPage = (index: number) => {
-    const { _viewPager } = this;
-    if (_viewPager) {
-      this._animationFrameCallback = null;
+  _setPage = (index: number, animated = true) => {
+    const pager = this._viewPager;
 
+    if (pager) {
       const page = this._getPageIndex(index);
-      if (this.props.animationEnabled !== false) {
-        _viewPager.setPage(page);
+
+      if (this.props.animationEnabled === false || animated === false) {
+        pager.setPageWithoutAnimation(page);
       } else {
-        _viewPager.setPageWithoutAnimation(page);
+        pager.setPage(page);
       }
     }
   };

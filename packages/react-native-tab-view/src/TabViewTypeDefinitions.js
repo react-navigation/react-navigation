@@ -29,7 +29,6 @@ export type SceneRendererProps<T> = {
   navigationState: NavigationState<T>,
   position: any,
   jumpToIndex: (index: number) => void,
-  getLastPosition: () => number,
   subscribe: (
     event: SubscriptionName,
     callback: Function
@@ -45,7 +44,6 @@ export type PagerRendererProps<T> = {
   panX: Animated.Value,
   offsetX: Animated.Value,
   jumpToIndex: (index: number) => void,
-  getLastPosition: () => number,
   subscribe: (
     event: SubscriptionName,
     callback: Function
