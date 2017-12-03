@@ -52,7 +52,7 @@
       "boolean"
     ],
     "flowtype/no-weak-types": "off",
-    "flowtype/require-parameter-type": "error",
+    "flowtype/require-parameter-type": "off",
     "flowtype/require-return-type": [
       "off",
       "always",

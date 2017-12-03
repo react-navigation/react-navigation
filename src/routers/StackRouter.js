@@ -8,6 +8,7 @@ import getScreenForRouteName from './getScreenForRouteName';
 import StateUtils from '../StateUtils';
 import validateRouteConfigMap from './validateRouteConfigMap';
 import getScreenConfigDeprecated from './getScreenConfigDeprecated';
+import invariant from '../utils/invariant';
 
 import type {
   NavigationComponent,
@@ -17,11 +18,11 @@ import type {
   NavigationResetAction,
   NavigationParams,
   NavigationState,
-  NavigationStackAction,
   NavigationStackRouterConfig,
   NavigationStackScreenOptions,
   NavigationRoute,
   NavigationStateRoute,
+  NavigationAction,
 } from '../TypeDefinition';
 
 const uniqueBaseId = `id-${Date.now()}`;
@@ -41,11 +42,7 @@ function isEmpty(obj: ?Object): boolean {
 export default (
   routeConfigs: NavigationRouteConfigMap,
   stackConfig: NavigationStackRouterConfig = {}
-): NavigationRouter<
-  NavigationState,
-  NavigationStackAction,
-  NavigationStackScreenOptions
-> => {
+): NavigationRouter<NavigationState, NavigationStackScreenOptions> => {
   // Fail fast on invalid route definitions
   validateRouteConfigMap(routeConfigs);
 
@@ -103,7 +100,7 @@ export default (
     },
 
     getStateForAction(
-      action: NavigationStackAction,
+      action: NavigationAction,
       state: ?NavigationState
     ): ?NavigationState {
       // Set up the initial state if needed
@@ -159,6 +156,10 @@ export default (
           : -1;
         const childIndex = keyIndex >= 0 ? keyIndex : state.index;
         const childRoute = state.routes[childIndex];
+        invariant(
+          childRoute,
+          `StateUtils erroneously thought index ${childIndex} exists`
+        );
         const childRouter = childRouters[childRoute.routeName];
         if (childRouter) {
           const route = childRouter.getStateForAction(action, childRoute);
@@ -334,7 +335,7 @@ export default (
     getActionForPathAndParams(
       pathToResolve: string,
       inputParams: ?NavigationParams
-    ): ?NavigationStackAction {
+    ): ?NavigationAction {
       // If the path is empty (null or empty string)
       // just return the initial route action
       if (!pathToResolve) {
@@ -385,7 +386,7 @@ export default (
       // be overridden by path params
       const queryParams = !isEmpty(inputParams)
         ? inputParams
-        : (queryString || '').split('&').reduce((result: *, item: string) => {
+        : (queryString || '').split('&').reduce((result, item) => {
             if (item !== '') {
               const nextResult = result || {};
               const [key, value] = item.split('=');

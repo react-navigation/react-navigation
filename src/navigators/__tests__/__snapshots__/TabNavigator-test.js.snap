@@ -151,7 +151,6 @@ exports[`TabNavigator renders successfully 1`] = `
           accessible={true}
           allowFontScaling={true}
           collapsable={undefined}
-          disabled={false}
           ellipsizeMode="tail"
           style={
             Object {

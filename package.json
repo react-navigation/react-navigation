@@ -1,6 +1,6 @@
 {
   "name": "react-navigation",
-  "version": "1.0.0-beta.19",
+  "version": "1.0.0-beta.21",
   "description": "React Navigation",
   "main": "src/react-navigation.js",
   "sources": {
@@ -76,14 +76,14 @@
     "eslint-plugin-jsx-a11y": "^6.0.2",
     "eslint-plugin-prettier": "^2.1.2",
     "eslint-plugin-react": "^7.1.0",
-    "flow-bin": "0.53.0",
+    "flow-bin": "^0.56.0",
     "husky": "^0.14.3",
     "jest": "^20.0.4",
     "lint-staged": "^4.2.1",
     "prettier": "^1.5.3",
     "prettier-eslint": "^6.4.2",
-    "react": "16.0.0-beta.5",
-    "react-native": "^0.49.3",
+    "react": "16.0.0",
+    "react-native": "^0.50.3",
     "react-native-vector-icons": "^4.2.0",
     "react-test-renderer": "^16.0.0"
   },
