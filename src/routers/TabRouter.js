@@ -106,7 +106,7 @@ export default (
       const activeTabRouter = tabRouters[order[state.index]];
       if (activeTabRouter) {
         const activeTabState = activeTabRouter.getStateForAction(
-          action.action || action,
+          action || action.action,
           activeTabLastState
         );
         if (!activeTabState && inputState) {
