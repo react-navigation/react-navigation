@@ -158,6 +158,10 @@ Object to override the distance of touch start from the edge of the screen to re
 - `horizontal` - *number* - Distance for horizontal direction. Defaults to 25.
 - `vertical` - *number* - Distance for vertical direction. Defaults to 135.
 
+#### `gestureDirection`
+
+Object to override the direction for dismiss gestures. `default` for normal behaviour depending on `I18nManager.isRTL` value. `inverted` for inverted direction.
+
 ### Navigator Props
 
 The navigator component created by `StackNavigator(...)` takes the following props:
