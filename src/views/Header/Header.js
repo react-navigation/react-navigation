@@ -179,11 +179,13 @@ class Header extends React.PureComponent<Props, State> {
   };
 
   _renderLeft(props: SceneProps): ?React.Node {
+    const interpolator =
+      this.props.leftInterpolator || HeaderStyleInterpolator.forLeft;
     return this._renderSubView(
       props,
       'left',
       this._renderLeftComponent,
-      HeaderStyleInterpolator.forLeft
+      interpolator
     );
   }
 
@@ -206,20 +208,25 @@ class Header extends React.PureComponent<Props, State> {
       style.right = 0;
     }
 
+    const interpolator =
+      this.props.titleInterpolator || HeaderStyleInterpolator.forCenter;
+
     return this._renderSubView(
       { ...props, style },
       'title',
       this._renderTitleComponent,
-      HeaderStyleInterpolator.forCenter
+      interpolator
     );
   }
 
   _renderRight(props: SceneProps): ?React.Node {
+    const interpolator =
+      this.props.rightInterpolator || HeaderStyleInterpolator.forRight;
     return this._renderSubView(
       props,
       'right',
       this._renderRightComponent,
-      HeaderStyleInterpolator.forRight
+      interpolator
     );
   }
 
