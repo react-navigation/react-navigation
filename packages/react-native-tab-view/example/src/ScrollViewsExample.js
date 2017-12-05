@@ -128,7 +128,6 @@ export default class TopBarTextExample extends PureComponent<*, State> {
         renderScene={this._renderScene}
         renderHeader={this._renderHeader}
         onIndexChange={this._handleIndexChange}
-        lazy
       />
     );
   }
