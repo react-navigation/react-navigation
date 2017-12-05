@@ -21,13 +21,13 @@ export default class TabViewPagerAndroid<T: *> extends React.Component<
 > {
   static propTypes = PagerRendererPropType;
 
+  static defaultProps = {
+    canJumpToTab: () => true,
+  };
+
   constructor(props: Props<T>) {
     super(props);
     this._currentIndex = this.props.navigationState.index;
-  }
-
-  componentDidMount() {
-    this._resetListener = this.props.subscribe('reset', this._handlePageChange);
   }
 
   componentDidUpdate(prevProps: Props<T>) {
@@ -41,12 +41,7 @@ export default class TabViewPagerAndroid<T: *> extends React.Component<
     }
   }
 
-  componentWillUnmount() {
-    this._resetListener && this._resetListener.remove();
-  }
-
   _pageChangeCallabck: any;
-  _resetListener: Object;
   _viewPager: ?ViewPagerAndroid;
   _isIdle: boolean = true;
   _currentIndex = 0;
@@ -92,7 +87,15 @@ export default class TabViewPagerAndroid<T: *> extends React.Component<
 
   _handlePageScrollStateChanged = (e: PageScrollState) => {
     this._isIdle = e === 'idle';
-    this.props.jumpToIndex(this._currentIndex);
+
+    let nextIndex = this._currentIndex;
+
+    if (this.props.canJumpToTab(this.props.navigationState.routes[nextIndex])) {
+      this.props.jumpToIndex(nextIndex);
+    } else {
+      this._setPage(this.props.navigationState.index);
+      this._currentIndex = this.props.navigationState.index;
+    }
   };
 
   _handlePageSelected = (e: PageScrollEvent) => {

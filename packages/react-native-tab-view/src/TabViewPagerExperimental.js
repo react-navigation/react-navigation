@@ -33,20 +33,13 @@ export default class TabViewPagerExperimental<T: *> extends React.Component<
       global.__expo && global.__expo.DangerZone
         ? global.__expo.DangerZone.GestureHandler
         : undefined,
+    canJumpToTab: () => true,
   };
-
-  componentDidMount() {
-    this._resetListener = this.props.subscribe('reset', this._transitionTo);
-  }
 
   componentDidUpdate(prevProps: Props<T>) {
     if (prevProps.navigationState.index !== this.props.navigationState.index) {
       this._transitionTo(this.props.navigationState.index);
     }
-  }
-
-  componentWillUnmount() {
-    this._resetListener.remove();
   }
 
   _handleHandlerStateChange = event => {
@@ -86,10 +79,14 @@ export default class TabViewPagerExperimental<T: *> extends React.Component<
         );
       }
 
-      this._transitionTo(
-        isFinite(nextIndex) ? nextIndex : currentIndex,
-        velocityX
-      );
+      if (
+        !isFinite(nextIndex) ||
+        !this.props.canJumpToTab(this.props.navigationState.routes[nextIndex])
+      ) {
+        nextIndex = currentIndex;
+      }
+
+      this._transitionTo(nextIndex, velocityX);
     }
   };
 
@@ -128,7 +125,6 @@ export default class TabViewPagerExperimental<T: *> extends React.Component<
     this._pendingIndex = index;
   };
 
-  _resetListener: any;
   _pendingIndex: ?number;
 
   render() {

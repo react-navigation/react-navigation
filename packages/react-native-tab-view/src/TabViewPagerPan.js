@@ -71,6 +71,7 @@ export default class TabViewPagerPan<T: *> extends React.Component<Props<T>> {
   };
 
   static defaultProps = {
+    canJumpToTab: () => true,
     configureTransition: () => DefaultTransitionSpec,
     initialLayout: {
       height: 0,
@@ -90,18 +91,10 @@ export default class TabViewPagerPan<T: *> extends React.Component<Props<T>> {
     });
   }
 
-  componentDidMount() {
-    this._resetListener = this.props.subscribe('reset', this._transitionTo);
-  }
-
   componentDidUpdate(prevProps: Props<T>) {
     if (prevProps.navigationState.index !== this.props.navigationState.index) {
       this._transitionTo(this.props.navigationState.index);
     }
-  }
-
-  componentWillUnmount() {
-    this._resetListener && this._resetListener.remove();
   }
 
   _isMovingHorizontally = (evt: GestureEvent, gestureState: GestureState) => {
@@ -187,7 +180,14 @@ export default class TabViewPagerPan<T: *> extends React.Component<Props<T>> {
       );
     }
 
-    this._transitionTo(isFinite(nextIndex) ? nextIndex : currentIndex);
+    if (
+      !isFinite(nextIndex) ||
+      !this.props.canJumpToTab(this.props.navigationState.routes[nextIndex])
+    ) {
+      nextIndex = currentIndex;
+    }
+
+    this._transitionTo(nextIndex);
   };
 
   _transitionTo = (index: number) => {
@@ -221,7 +221,6 @@ export default class TabViewPagerPan<T: *> extends React.Component<Props<T>> {
   };
 
   _panResponder: any;
-  _resetListener: any;
   _pendingIndex: ?number;
 
   render() {

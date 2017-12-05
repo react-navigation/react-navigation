@@ -14,6 +14,8 @@ export const NavigationStatePropType = PropTypes.shape({
 });
 
 export const SceneRendererPropType = {
+  panX: PropTypes.object.isRequired,
+  offsetX: PropTypes.object.isRequired,
   layout: PropTypes.shape({
     measured: PropTypes.bool.isRequired,
     height: PropTypes.number.isRequired,
@@ -22,7 +24,6 @@ export const SceneRendererPropType = {
   navigationState: NavigationStatePropType.isRequired,
   position: PropTypes.object.isRequired,
   jumpToIndex: PropTypes.func.isRequired,
-  subscribe: PropTypes.func.isRequired,
   useNativeDriver: PropTypes.bool,
 };
 
@@ -35,8 +36,8 @@ export const PagerRendererPropType = {
   navigationState: NavigationStatePropType.isRequired,
   panX: PropTypes.instanceOf(Animated.Value).isRequired,
   offsetX: PropTypes.instanceOf(Animated.Value).isRequired,
+  canJumpToTab: PropTypes.func.isRequired,
   jumpToIndex: PropTypes.func.isRequired,
-  subscribe: PropTypes.func.isRequired,
   animationEnabled: PropTypes.bool,
   swipeEnabled: PropTypes.bool,
   useNativeDriver: PropTypes.bool,

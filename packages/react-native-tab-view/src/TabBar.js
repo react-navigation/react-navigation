@@ -96,10 +96,7 @@ export default class TabBar<T: *> extends React.PureComponent<Props<T>, State> {
 
   componentDidMount() {
     this._adjustScroll(this.props.navigationState.index);
-    this._positionListener = this.props.subscribe(
-      'position',
-      this._adjustScroll
-    );
+    this.props.scrollEnabled && this._startTrackingPosition();
   }
 
   componentDidUpdate(prevProps: Props<T>) {
@@ -125,7 +122,7 @@ export default class TabBar<T: *> extends React.PureComponent<Props<T>, State> {
   }
 
   componentWillUnmount() {
-    this._positionListener.remove();
+    this._stopTrackingPosition();
   }
 
   _scrollView: ?ScrollView;
@@ -134,7 +131,39 @@ export default class TabBar<T: *> extends React.PureComponent<Props<T>, State> {
   _pendingIndex: ?number;
   _scrollDelta: number = 0;
   _scrollResetCallback: any;
-  _positionListener: { remove: () => void };
+  _lastPanX: ?number;
+  _lastOffsetX: ?number;
+  _panXListener: string;
+  _offsetXListener: string;
+
+  _startTrackingPosition = () => {
+    this._offsetXListener = this.props.offsetX.addListener(({ value }) => {
+      this._lastOffsetX = value;
+      this._handlePosition();
+    });
+    this._panXListener = this.props.panX.addListener(({ value }) => {
+      this._lastPanX = value;
+      this._handlePosition();
+    });
+  };
+
+  _stopTrackingPosition = () => {
+    this.props.offsetX.removeListener(this._offsetXListener);
+    this.props.panX.removeListener(this._panXListener);
+  };
+
+  _handlePosition = () => {
+    const { navigationState, layout } = this.props;
+    const panX = typeof this._lastPanX === 'number' ? this._lastPanX : 0;
+    const offsetX =
+      typeof this._lastOffsetX === 'number'
+        ? this._lastOffsetX
+        : -navigationState.index * layout.width;
+
+    const value = (panX + offsetX) / -(layout.width || 0.001);
+
+    this._adjustScroll(value);
+  };
 
   _renderLabel = (scene: Scene<*>) => {
     if (typeof this.props.renderLabel !== 'undefined') {

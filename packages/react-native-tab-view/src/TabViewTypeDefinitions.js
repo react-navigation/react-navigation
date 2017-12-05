@@ -27,12 +27,10 @@ export type SceneRendererProps<T> = {
     measured: boolean,
   },
   navigationState: NavigationState<T>,
+  panX: Animated.Value,
+  offsetX: Animated.Value,
   position: any,
   jumpToIndex: (index: number) => void,
-  subscribe: (
-    event: SubscriptionName,
-    callback: Function
-  ) => { remove: Function },
   useNativeDriver: boolean,
 };
 
@@ -43,18 +41,13 @@ export type PagerRendererProps<T> = {
   navigationState: NavigationState<T>,
   panX: Animated.Value,
   offsetX: Animated.Value,
+  canJumpToTab: (route: T) => boolean,
   jumpToIndex: (index: number) => void,
-  subscribe: (
-    event: SubscriptionName,
-    callback: Function
-  ) => { remove: Function },
   useNativeDriver: boolean,
   animationEnabled?: boolean,
   swipeEnabled?: boolean,
   children: Node,
 };
-
-export type SubscriptionName = 'reset' | 'position';
 
 export type TransitionProps = {
   progress: number,
@@ -69,7 +62,8 @@ export type TransitionConfigurator = (
   nextTransitionProps: TransitionProps
 ) => TransitionSpec;
 
-export type PagerProps = {
+export type PagerProps<T> = {
+  canJumpToTab: (route: T) => boolean,
   configureTransition?: TransitionConfigurator,
   animationEnabled?: boolean,
   swipeEnabled?: boolean,
