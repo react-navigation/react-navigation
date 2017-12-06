@@ -282,7 +282,27 @@ export default (
           index: action.index,
         };
       }
-
+      if (action.type === NavigationActions.BACK && action.routeName) {
+        const routeName = action.routeName;
+        let backRouteIndex = null;
+        if (routeName) {
+          const backRoute = state.routes.find(
+            (route: NavigationRoute) => route.routeName === routeName
+          );
+          /* $FlowFixMe */
+          backRouteIndex = state.routes.indexOf(backRoute);
+        }
+        if (backRouteIndex == null) {
+          return StateUtils.pop(state);
+        }
+        if (backRouteIndex > 0) {
+          return {
+            ...state,
+            routes: state.routes.slice(0, backRouteIndex),
+            index: backRouteIndex - 1,
+          };
+        }
+      }
       if (action.type === NavigationActions.BACK) {
         const key = action.key;
         let backRouteIndex = null;
