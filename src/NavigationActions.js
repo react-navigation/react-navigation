@@ -29,9 +29,13 @@ const createAction = (type: string, fn: any) => {
 
 const back = createAction(
   BACK,
-  (payload: { key?: ?string } = {}): NavigationBackAction => ({
+  (
+    payload: { key?: ?string, routeName?: ?string, toRouteName?: ?string } = {}
+  ): NavigationBackAction => ({
     type: BACK,
     key: payload.key,
+    routeName: payload.routeName,
+    toRouteName: payload.toRouteName,
   })
 );
 const init = createAction(
