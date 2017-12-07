@@ -61,9 +61,7 @@ export default (
         const routes = order.map((routeName: string) => {
           const tabRouter = tabRouters[routeName];
           if (tabRouter) {
-            const childAction = NavigationActions.init({
-              ...(action.params ? { params: action.params } : {}),
-            });
+            const childAction = NavigationActions.init();
             return {
               ...tabRouter.getStateForAction(childAction),
               key: routeName,

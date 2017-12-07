@@ -215,7 +215,6 @@ describe('TabRouter', () => {
     const navAction = {
       type: NavigationActions.NAVIGATE,
       routeName: 'Baz',
-      params: { foo: '42', bar: '43' },
     };
     let state = router.getStateForAction(navAction);
     expect(state).toEqual({
@@ -227,8 +226,8 @@ describe('TabRouter', () => {
           key: 'Baz',
           routeName: 'Baz',
           routes: [
-            { key: 'Boo', routeName: 'Boo', params: { foo: '42', bar: '43' } },
-            { key: 'Bar', routeName: 'Bar', params: { foo: '42', bar: '43' } },
+            { key: 'Boo', routeName: 'Boo' },
+            { key: 'Bar', routeName: 'Bar' },
           ],
         },
       ],
@@ -248,8 +247,8 @@ describe('TabRouter', () => {
       key: 'Baz',
       routeName: 'Baz',
       routes: [
-        { key: 'Boo', routeName: 'Boo', params: { foo: '42', bar: '43' } },
-        { key: 'Bar', routeName: 'Bar', params: { foo: '42', bar: '43' } },
+        { key: 'Boo', routeName: 'Boo' },
+        { key: 'Bar', routeName: 'Bar' },
       ],
     });
   });
