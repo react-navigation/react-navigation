@@ -282,12 +282,22 @@ export default (
           index: action.index,
         };
       }
-      if (action.type === NavigationActions.BACK && action.routeName) {
-        const routeName = action.routeName;
+      if (action.type === NavigationActions.BACK) {
         let backRouteIndex = null;
+        let backRouteKey = null;
+        const routeName = action.toRouteName || action.routeName;
         if (routeName) {
           const backRoute = state.routes.find(
-            (route: NavigationRoute) => route.routeName === routeName
+            (route: NavigationRoute) => route.routeName === action.routeName
+          );
+          /* $FlowFixMe */
+          backRouteIndex = state.routes.indexOf(backRoute);
+          if (backRoute) {
+            backRouteKey = backRoute.key;
+          }
+        } else if (action.key) {
+          const backRoute = state.routes.find(
+            (route: NavigationRoute) => route.key === action.key
           );
           /* $FlowFixMe */
           backRouteIndex = state.routes.indexOf(backRoute);
@@ -295,26 +305,12 @@ export default (
         if (backRouteIndex == null) {
           return StateUtils.pop(state);
         }
-        if (backRouteIndex > 0) {
+        if (action.toRouteName && StateUtils.has(state, backRouteKey)) {
           return {
             ...state,
-            routes: state.routes.slice(0, backRouteIndex),
-            index: backRouteIndex - 1,
+            routes: state.routes.slice(0, backRouteIndex + 1),
+            index: backRouteIndex,
           };
-        }
-      }
-      if (action.type === NavigationActions.BACK) {
-        const key = action.key;
-        let backRouteIndex = null;
-        if (key) {
-          const backRoute = state.routes.find(
-            (route: NavigationRoute) => route.key === key
-          );
-          /* $FlowFixMe */
-          backRouteIndex = state.routes.indexOf(backRoute);
-        }
-        if (backRouteIndex == null) {
-          return StateUtils.pop(state);
         }
         if (backRouteIndex > 0) {
           return {

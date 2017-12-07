@@ -49,6 +49,7 @@ export type NavigationBackAction = {|
   type: 'Navigation/BACK',
   key?: ?string,
   routeName?: ?string,
+  toRouteName?: ?string,
 |};
 
 export type DeprecatedNavigationBackAction = {|
