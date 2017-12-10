@@ -701,7 +701,6 @@ describe('TabRouter', () => {
         {
           index: 0,
           type: NavigationActions.RESET,
-          params: { key: 'a' },
           actions: [
             NavigationActions.navigate({
               index: 0,
@@ -724,7 +723,7 @@ describe('TabRouter', () => {
             },
             index: 1,
             params: { key: 'b' },
-            key: 'id-0-1',
+            key: 'id-0-5',
             routeName: 'FooStack',
             routes: [
               { key: 'FooTab', routeName: 'FooTab' },
