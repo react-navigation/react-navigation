@@ -103,7 +103,6 @@ Container component responsible for managing tab transitions.
 
 - `navigationState` - the current navigation state
 - `onIndexChange` - callback for when the current tab index changes, should do the `setState`
-- `onPositionChange` - callback called with position value as it changes (e.g. - on swipe or tab change), avoid doing anything expensive here
 - `canJumpToTab` - optional callback which accepts a route, and returns a boolean indicating whether jumping to the tab is allowed
 - `initialLayout` - optional object containing the initial `height` and `width`, can be passed to prevent the one frame delay in rendering
 - `renderHeader` - optional callback which returns a react element to use as top tab bar
