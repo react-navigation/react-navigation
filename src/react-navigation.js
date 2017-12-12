@@ -1,8 +1,10 @@
 /*
- * @noflow - get/set properties not yet supported by flow. also `...require(x)` is broken #6560135
+ * @flow
  */
 
 /* eslint global-require: 0 */
+
+/*:: export type * from './TypeDefinition'; */
 
 module.exports = {
   // Core
@@ -53,6 +55,9 @@ module.exports = {
   },
   get Card() {
     return require('./views/CardStack/Card').default;
+  },
+  get SafeAreaView() {
+    return require('./views/SafeAreaView').default;
   },
 
   // Header

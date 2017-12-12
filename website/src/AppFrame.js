@@ -2,6 +2,7 @@ import React from 'react';
 
 import Link from './Link';
 import Footer from './Footer';
+import DocSearchBar from './DocSearchBar';
 import { addNavigationHelpers } from 'react-navigation';
 
 const NavigationLinks = ({ navigation, className, reverse }) => {
@@ -35,21 +36,19 @@ const NavigationLinks = ({ navigation, className, reverse }) => {
   if (reverse) {
     links = links.reverse();
   }
-  return (
-    <div className={className}>
-      {links}
-    </div>
-  );
+  return <div className={className}>{links}</div>;
 };
 
 class AppFrame extends React.Component {
   state = { isMobileMenuOpen: false };
+
   componentWillReceiveProps(props) {
     if (this.props.navigation.state !== props.navigation.state) {
       this.setState({ isMobileMenuOpen: false });
       window.scrollTo(0, 0);
     }
   }
+
   render() {
     const { navigation, router } = this.props;
     const { isMobileMenuOpen } = this.state;
@@ -81,8 +80,8 @@ class AppFrame extends React.Component {
             </Link>
 
             <NavigationLinks navigation={navigation} className="navbuttons" />
-
-            {hasChildNavigation &&
+            <DocSearchBar />
+            {hasChildNavigation && (
               <span
                 className={`pt-icon-properties openMenuButton ${isMobileMenuOpen
                   ? 'active'
@@ -93,7 +92,8 @@ class AppFrame extends React.Component {
                   }));
                   window.scrollTo(0, 0);
                 }}
-              />}
+              />
+            )}
           </div>
         </nav>
 

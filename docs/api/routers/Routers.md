@@ -13,7 +13,7 @@ Routers define a component's navigation state, and they allow the developer to d
 
 ## Using Routers
 
-To make a navigator manually, put a static `router` on a component. (To quickly make a navigator with a built-in component, it may be easier to use a [Navigator Factory](/docs/navigators) instead)
+To make a navigator manually, put a static `router` on a component. (To quickly make a navigator with a built-in component, it may be easier to use a [built-in navigator](/docs/navigators) instead)
 
 ```js
 class MyNavigator extends React.Component {
@@ -65,6 +65,8 @@ MyApp.router.getStateForAction = (action, state) => {
 Sometimes you may want to prevent some navigation activity, depending on your route.
 
 ```js
+import { NavigationActions } from 'react-navigation'
+
 const MyStackRouter = StackRouter({
   Home: { screen: HomeScreen },
   Profile: { screen: ProfileScreen },

@@ -131,6 +131,33 @@ recursive(paths.appBuild, (err, fileNames) => {
       2
     )
   );
+
+  fs.writeFileSync(
+    path.join(paths.appBuild, 'Dockerfile'),
+    `
+    FROM mhart/alpine-node:8.7.0
+    
+    ENV NODE_ENV production
+
+    RUN apk add --update curl tini && \
+        curl -o /bin/yarn https://nightly.yarnpkg.com/yarn-1.2.1-20171019.2356.js && \
+        chmod +x /bin/yarn
+        
+    RUN adduser -D myuser && mkdir -p /opt/app && chown -R myuser /opt/app
+    
+    ADD package.json /opt/app/package.json
+    RUN cd /opt/app && yarn
+    
+    ADD . /opt/app
+    WORKDIR /opt/app
+    
+    RUN chown -R myuser /opt/app && chmod -R 777 /opt/app
+    
+    USER myuser
+
+    CMD ["node", "/opt/app/lib/Server.js"]
+    `
+  );
 });
 
 // Print a detailed summary of build files.
