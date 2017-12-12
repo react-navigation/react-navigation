@@ -19,12 +19,14 @@ import Banner from './Banner';
 import CustomTabs from './CustomTabs';
 import CustomTransitioner from './CustomTransitioner';
 import Drawer from './Drawer';
+import MultipleDrawer from './MultipleDrawer';
 import TabsInDrawer from './TabsInDrawer';
 import ModalStack from './ModalStack';
 import StacksInTabs from './StacksInTabs';
 import StacksOverTabs from './StacksOverTabs';
 import SimpleStack from './SimpleStack';
 import SimpleTabs from './SimpleTabs';
+import TabAnimations from './TabAnimations';
 
 const ExampleRoutes = {
   SimpleStack: {
@@ -41,6 +43,11 @@ const ExampleRoutes = {
     name: 'Drawer Example',
     description: 'Android-style drawer navigation',
     screen: Drawer,
+  },
+  MultipleDrawer: {
+    name: 'Multiple Drawer Example',
+    description: 'Add any drawer you need',
+    screen: MultipleDrawer,
   },
   TabsInDrawer: {
     name: 'Drawer + Tabs Example',
@@ -89,6 +96,11 @@ const ExampleRoutes = {
     description: 'Deep linking into a route in tab',
     screen: SimpleTabs,
     path: 'settings',
+  },
+  TabAnimations: {
+    name: 'Animated Tabs Example',
+    description: 'Tab transitions have custom animations',
+    screen: TabAnimations,
   },
 };
 

@@ -14,26 +14,20 @@ import type {
   NavigationStackScreenOptions,
   NavigationState,
   NavigationTransitionProps,
+  NavigationNavigatorProps,
   NavigationRouter,
   HeaderMode,
   ViewStyleProp,
   TransitionConfig,
-  NavigationStackAction,
 } from '../../TypeDefinition';
 
 const NativeAnimatedModule =
   NativeModules && NativeModules.NativeAnimatedModule;
 
 type Props = {
-  screenProps?: {},
   headerMode: HeaderMode,
   mode: 'card' | 'modal',
-  navigation: NavigationScreenProp<NavigationState>,
-  router: NavigationRouter<
-    NavigationState,
-    NavigationStackAction,
-    NavigationStackScreenOptions
-  >,
+  router: NavigationRouter<NavigationState, NavigationStackScreenOptions>,
   cardStyle?: ViewStyleProp,
   onTransitionStart?: () => void,
   onTransitionEnd?: () => void,
@@ -41,7 +35,7 @@ type Props = {
    * Optional custom animation when transitioning between screens.
    */
   transitionConfig?: () => TransitionConfig,
-};
+} & NavigationNavigatorProps<NavigationStackScreenOptions, NavigationState>;
 
 class CardStackTransitioner extends React.Component<Props> {
   _render: NavigationSceneRenderer;

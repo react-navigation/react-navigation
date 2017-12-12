@@ -11,7 +11,7 @@ import type {
 
 type Props = {
   screenProps?: {},
-  navigation: NavigationScreenProp<*>,
+  navigation: NavigationScreenProp<any>,
   component: NavigationComponent,
 };
 
@@ -28,7 +28,6 @@ export default class SceneView extends React.PureComponent<Props> {
 
   render() {
     const { screenProps, navigation, component: Component } = this.props;
-
     return <Component screenProps={screenProps} navigation={navigation} />;
   }
 }

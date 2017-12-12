@@ -10,7 +10,7 @@ type AnimatedTextStyleProp = $PropertyType<
 >;
 
 type Props = {
-  children: React.ChildrenArray<*>,
+  children: React.Node,
   selectionColor?: string | number,
   style?: AnimatedTextStyleProp,
 };
