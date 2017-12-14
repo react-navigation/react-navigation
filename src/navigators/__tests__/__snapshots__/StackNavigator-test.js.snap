@@ -89,6 +89,7 @@ exports[`StackNavigator applies correct values when headerRight is present 1`] =
           "width": 0,
         }
       }
+      leftInterpolator={[Function]}
       mode="float"
       navigation={
         Object {
@@ -107,6 +108,7 @@ exports[`StackNavigator applies correct values when headerRight is present 1`] =
           },
         }
       }
+      rightInterpolator={[Function]}
       router={
         Object {
           "getActionForPathAndParams": [Function],
@@ -118,6 +120,7 @@ exports[`StackNavigator applies correct values when headerRight is present 1`] =
           "getStateForAction": [Function],
         }
       }
+      titleInterpolator={[Function]}
       transitionConfig={undefined}
     >
       <View
@@ -316,6 +319,7 @@ exports[`StackNavigator renders successfully 1`] = `
           "width": 0,
         }
       }
+      leftInterpolator={[Function]}
       mode="float"
       navigation={
         Object {
@@ -334,6 +338,7 @@ exports[`StackNavigator renders successfully 1`] = `
           },
         }
       }
+      rightInterpolator={[Function]}
       router={
         Object {
           "getActionForPathAndParams": [Function],
@@ -345,6 +350,7 @@ exports[`StackNavigator renders successfully 1`] = `
           "getStateForAction": [Function],
         }
       }
+      titleInterpolator={[Function]}
       transitionConfig={undefined}
     >
       <View
