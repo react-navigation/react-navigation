@@ -61,11 +61,7 @@ export default (
         const routes = order.map((routeName: string) => {
           const tabRouter = tabRouters[routeName];
           if (tabRouter) {
-            const childAction =
-              action.action ||
-              NavigationActions.init({
-                ...(action.params ? { params: action.params } : {}),
-              });
+            const childAction = NavigationActions.init();
             return {
               ...tabRouter.getStateForAction(childAction),
               key: routeName,
@@ -106,7 +102,7 @@ export default (
       const activeTabRouter = tabRouters[order[state.index]];
       if (activeTabRouter) {
         const activeTabState = activeTabRouter.getStateForAction(
-          action.action || action,
+          action,
           activeTabLastState
         );
         if (!activeTabState && inputState) {
