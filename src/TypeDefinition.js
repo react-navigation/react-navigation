@@ -300,9 +300,9 @@ export type HeaderProps = NavigationSceneRendererProps & {
   getScreenDetails: NavigationScene => NavigationScreenDetails<
     NavigationStackScreenOptions
   >,
-  leftInterpolator?: (props: NavigationSceneRendererProps) => {},
-  titleInterpolator?: (props: NavigationSceneRendererProps) => {},
-  rightInterpolator?: (props: NavigationSceneRendererProps) => {},
+  leftInterpolator: (props: NavigationSceneRendererProps) => {},
+  titleInterpolator: (props: NavigationSceneRendererProps) => {},
+  rightInterpolator: (props: NavigationSceneRendererProps) => {},
 };
 
 /**

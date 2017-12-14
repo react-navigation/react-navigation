@@ -49,6 +49,12 @@ const TITLE_OFFSET = Platform.OS === 'ios' ? 70 : 56;
 
 type Props = HeaderProps & { isLandscape: boolean };
 class Header extends React.PureComponent<Props, State> {
+  static defaultProps = {
+    leftInterpolator: HeaderStyleInterpolator.forLeft,
+    titleInterpolator: HeaderStyleInterpolator.forCenter,
+    rightInterpolator: HeaderStyleInterpolator.forRight,
+  };
+
   static get HEIGHT() {
     console.warn(
       'Header.HEIGHT is deprecated and will be removed before react-navigation comes out of beta.'
@@ -179,13 +185,11 @@ class Header extends React.PureComponent<Props, State> {
   };
 
   _renderLeft(props: SceneProps): ?React.Node {
-    const interpolator =
-      this.props.leftInterpolator || HeaderStyleInterpolator.forLeft;
     return this._renderSubView(
       props,
       'left',
       this._renderLeftComponent,
-      interpolator
+      this.props.leftInterpolator
     );
   }
 
@@ -208,25 +212,20 @@ class Header extends React.PureComponent<Props, State> {
       style.right = 0;
     }
 
-    const interpolator =
-      this.props.titleInterpolator || HeaderStyleInterpolator.forCenter;
-
     return this._renderSubView(
       { ...props, style },
       'title',
       this._renderTitleComponent,
-      interpolator
+      this.props.titleInterpolator
     );
   }
 
   _renderRight(props: SceneProps): ?React.Node {
-    const interpolator =
-      this.props.rightInterpolator || HeaderStyleInterpolator.forRight;
     return this._renderSubView(
       props,
       'right',
       this._renderRightComponent,
-      interpolator
+      this.props.rightInterpolator
     );
   }
 
