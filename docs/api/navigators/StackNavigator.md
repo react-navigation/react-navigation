@@ -222,3 +222,5 @@ const ModalNavigator = StackNavigator(
   }
 );
  ```
+
+Header transitions can also be configured using `headerLeftInterpolator`, `headerTitleInterpolator` and `headerRightInterpolator` fields under `transitionConfig`.
