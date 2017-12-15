@@ -329,12 +329,11 @@ class CardStack extends React.Component<Props> {
         const axisDistance = isVertical
           ? layout.height.__getValue()
           : layout.width.__getValue();
-        const movedDistance = gestureDirectionInverted
-          ? -gesture[isVertical ? 'dy' : 'dx']
-          : gesture[isVertical ? 'dy' : 'dx'];
-        const gestureVelocity = gestureDirectionInverted
-          ? -gesture[isVertical ? 'vy' : 'vx']
-          : gesture[isVertical ? 'vy' : 'vx'];
+        const movementDirection = gestureDirectionInverted ? -1 : 1;
+        const movedDistance =
+          movementDirection * gesture[isVertical ? 'dy' : 'dx'];
+        const gestureVelocity =
+          movementDirection * gesture[isVertical ? 'vy' : 'vx'];
         const defaultVelocity = axisDistance / ANIMATION_DURATION;
         const velocity = Math.max(Math.abs(gestureVelocity), defaultVelocity);
         const resetDuration = gestureDirectionInverted

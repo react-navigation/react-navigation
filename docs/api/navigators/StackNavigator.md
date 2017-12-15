@@ -160,7 +160,7 @@ Object to override the distance of touch start from the edge of the screen to re
 
 #### `gestureDirection`
 
-Object to override the direction for dismiss gestures. `default` for normal behaviour depending on `I18nManager.isRTL` value. `inverted` for inverted direction.
+String to override the direction for dismiss gesture. `default` for normal behaviour or `inverted` for right-to-left swipes.
 
 ### Navigator Props
 
