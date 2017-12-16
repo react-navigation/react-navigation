@@ -5,15 +5,15 @@ import ScenesReducer from '../ScenesReducer';
 /**
  * Simulate scenes transtion with changes of navigation states.
  */
-function testTransition(states) {
-  const routes = states.map(keys => ({
+function testTransition(states: *) {
+  const routes = states.map((keys: *) => ({
     index: 0,
-    routes: keys.map(key => ({ key, routeName: '' })),
+    routes: keys.map((key: *) => ({ key, routeName: '' })),
   }));
 
   let scenes = [];
   let prevState = null;
-  routes.forEach((nextState) => {
+  routes.forEach((nextState: *) => {
     scenes = ScenesReducer(scenes, nextState, prevState);
     prevState = nextState;
   });
@@ -23,9 +23,7 @@ function testTransition(states) {
 
 describe('ScenesReducer', () => {
   it('gets initial scenes', () => {
-    const scenes = testTransition([
-      ['1', '2'],
-    ]);
+    const scenes = testTransition([['1', '2']]);
 
     expect(scenes).toEqual([
       {
@@ -53,10 +51,7 @@ describe('ScenesReducer', () => {
 
   it('pushes new scenes', () => {
     // Transition from ['1', '2'] to ['1', '2', '3'].
-    const scenes = testTransition([
-      ['1', '2'],
-      ['1', '2', '3'],
-    ]);
+    const scenes = testTransition([['1', '2'], ['1', '2', '3']]);
 
     expect(scenes).toEqual([
       {
@@ -145,12 +140,18 @@ describe('ScenesReducer', () => {
   it('gets different scenes when routes are different', () => {
     const state1 = {
       index: 0,
-      routes: [{ key: '1', x: 1, routeName: '' }, { key: '2', x: 2, routeName: '' }],
+      routes: [
+        { key: '1', x: 1, routeName: '' },
+        { key: '2', x: 2, routeName: '' },
+      ],
     };
 
     const state2 = {
       index: 0,
-      routes: [{ key: '1', x: 3, routeName: '' }, { key: '2', x: 4, routeName: '' }],
+      routes: [
+        { key: '1', x: 3, routeName: '' },
+        { key: '2', x: 4, routeName: '' },
+      ],
     };
 
     const scenes1 = ScenesReducer([], state1, null);
@@ -158,16 +159,21 @@ describe('ScenesReducer', () => {
     expect(scenes1).not.toBe(scenes2);
   });
 
-
   it('gets different scenes when state index changes', () => {
     const state1 = {
       index: 0,
-      routes: [{ key: '1', x: 1, routeName: '' }, { key: '2', x: 2, routeName: '' }],
+      routes: [
+        { key: '1', x: 1, routeName: '' },
+        { key: '2', x: 2, routeName: '' },
+      ],
     };
 
     const state2 = {
       index: 1,
-      routes: [{ key: '1', x: 1, routeName: '' }, { key: '2', x: 2, routeName: '' }],
+      routes: [
+        { key: '1', x: 1, routeName: '' },
+        { key: '2', x: 2, routeName: '' },
+      ],
     };
 
     const scenes1 = ScenesReducer([], state1, null);
@@ -177,10 +183,7 @@ describe('ScenesReducer', () => {
 
   it('pops scenes', () => {
     // Transition from ['1', '2', '3'] to ['1', '2'].
-    const scenes = testTransition([
-      ['1', '2', '3'],
-      ['1', '2'],
-    ]);
+    const scenes = testTransition([['1', '2', '3'], ['1', '2']]);
 
     expect(scenes).toEqual([
       {
@@ -217,10 +220,7 @@ describe('ScenesReducer', () => {
   });
 
   it('replaces scenes', () => {
-    const scenes = testTransition([
-      ['1', '2'],
-      ['3'],
-    ]);
+    const scenes = testTransition([['1', '2'], ['3']]);
 
     expect(scenes).toEqual([
       {
@@ -257,11 +257,7 @@ describe('ScenesReducer', () => {
   });
 
   it('revives scenes', () => {
-    const scenes = testTransition([
-      ['1', '2'],
-      ['3'],
-      ['2'],
-    ]);
+    const scenes = testTransition([['1', '2'], ['3'], ['2']]);
 
     expect(scenes).toEqual([
       {

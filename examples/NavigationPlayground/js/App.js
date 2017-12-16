@@ -1,6 +1,9 @@
 /* @flow */
 
 import React from 'react';
+import { ScreenOrientation } from 'expo';
+
+ScreenOrientation.allow(ScreenOrientation.Orientation.ALL);
 
 import {
   Platform,
@@ -10,17 +13,20 @@ import {
   Text,
   View,
 } from 'react-native';
-import { StackNavigator } from 'react-navigation';
+import { SafeAreaView, StackNavigator } from 'react-navigation';
 
 import Banner from './Banner';
 import CustomTabs from './CustomTabs';
+import CustomTransitioner from './CustomTransitioner';
 import Drawer from './Drawer';
+import MultipleDrawer from './MultipleDrawer';
 import TabsInDrawer from './TabsInDrawer';
 import ModalStack from './ModalStack';
 import StacksInTabs from './StacksInTabs';
 import StacksOverTabs from './StacksOverTabs';
 import SimpleStack from './SimpleStack';
 import SimpleTabs from './SimpleTabs';
+import TabAnimations from './TabAnimations';
 
 const ExampleRoutes = {
   SimpleStack: {
@@ -38,6 +44,11 @@ const ExampleRoutes = {
     description: 'Android-style drawer navigation',
     screen: Drawer,
   },
+  MultipleDrawer: {
+    name: 'Multiple Drawer Example',
+    description: 'Add any drawer you need',
+    screen: MultipleDrawer,
+  },
   TabsInDrawer: {
     name: 'Drawer + Tabs Example',
     description: 'A drawer combined with tabs',
@@ -48,9 +59,20 @@ const ExampleRoutes = {
     description: 'Custom tabs with tab router',
     screen: CustomTabs,
   },
+  CustomTransitioner: {
+    name: 'Custom Transitioner',
+    description: 'Custom transitioner with stack router',
+    screen: CustomTransitioner,
+  },
   ModalStack: {
-    name: Platform.OS === 'ios' ? 'Modal Stack Example' : 'Stack with Dynamic Header',
-    description: Platform.OS === 'ios' ? 'Stack navigation with modals' : 'Dynamically showing and hiding the header',
+    name:
+      Platform.OS === 'ios'
+        ? 'Modal Stack Example'
+        : 'Stack with Dynamic Header',
+    description:
+      Platform.OS === 'ios'
+        ? 'Stack navigation with modals'
+        : 'Dynamically showing and hiding the header',
     screen: ModalStack,
   },
   StacksInTabs: {
@@ -75,12 +97,17 @@ const ExampleRoutes = {
     screen: SimpleTabs,
     path: 'settings',
   },
+  TabAnimations: {
+    name: 'Animated Tabs Example',
+    description: 'Tab transitions have custom animations',
+    screen: TabAnimations,
+  },
 };
 
 const MainScreen = ({ navigation }) => (
-  <ScrollView>
+  <ScrollView style={{ flex: 1 }} contentInsetAdjustmentBehavior="automatic">
     <Banner />
-    {Object.keys(ExampleRoutes).map((routeName: string) =>
+    {Object.keys(ExampleRoutes).map((routeName: string) => (
       <TouchableOpacity
         key={routeName}
         onPress={() => {
@@ -90,38 +117,50 @@ const MainScreen = ({ navigation }) => (
           navigation.navigate(routeName, {}, action);
         }}
       >
-        <View style={styles.item}>
-          <Text style={styles.title}>{ExampleRoutes[routeName].name}</Text>
-          <Text style={styles.description}>{ExampleRoutes[routeName].description}</Text>
-        </View>
+        <SafeAreaView
+          style={styles.itemContainer}
+          forceInset={{ vertical: 'never' }}
+        >
+          <View style={styles.item}>
+            <Text style={styles.title}>{ExampleRoutes[routeName].name}</Text>
+            <Text style={styles.description}>
+              {ExampleRoutes[routeName].description}
+            </Text>
+          </View>
+        </SafeAreaView>
       </TouchableOpacity>
-    )}
+    ))}
   </ScrollView>
 );
 
-const AppNavigator = StackNavigator({
-  ...ExampleRoutes,
-  Index: {
-    screen: MainScreen,
+const AppNavigator = StackNavigator(
+  {
+    ...ExampleRoutes,
+    Index: {
+      screen: MainScreen,
+    },
   },
-}, {
-  initialRouteName: 'Index',
-  headerMode: 'none',
+  {
+    initialRouteName: 'Index',
+    headerMode: 'none',
 
-  /*
+    /*
    * Use modal on iOS because the card mode comes from the right,
    * which conflicts with the drawer example gesture
    */
-  mode: Platform.OS === 'ios' ? 'modal' : 'card',
-});
+    mode: Platform.OS === 'ios' ? 'modal' : 'card',
+  }
+);
 
 export default () => <AppNavigator />;
 
 const styles = StyleSheet.create({
   item: {
-    backgroundColor: '#fff',
     paddingHorizontal: 16,
     paddingVertical: 12,
+  },
+  itemContainer: {
+    backgroundColor: '#fff',
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: '#ddd',
   },

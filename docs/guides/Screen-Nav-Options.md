@@ -17,7 +17,7 @@ class MyScreen extends React.Component {
 
 **Dynamic Configuration**
 
-Or, the options can be a function that takes the following arguments, and returns an object of navigation options that will be override the route-defined and navigator-defined navigationOptions.
+Or, the options can be a function that takes the following arguments, and returns an object of navigation options that will override the route-defined and navigator-defined navigationOptions.
 
 - `props` - The same props that are available to the screen component
   - `navigation` - The [navigation prop](/docs/navigators/navigation-prop) for the screen, with the screen's route at `navigation.state`
@@ -64,37 +64,35 @@ Imagine the following scenario:
 Your `TabNavigator` represents one of the screens in the app, and is nested within a top-level `StackNavigator`:
 
 ```
-StackNavigator:
-  - route1: A screen
-  - route2: A TabNavigator
+StackNavigator({
+  route1: { screen: RouteOne },
+  route2: { screen: MyTabNavigator },
+});
 ```
 
-Now, when `route2` is active, you would like to hide the header. It's easy to hide the header for `route1`, and it should also be easy to do it for `route2`. This is what Default Navigation Options are for - they are simply `navigationOptions` set on a navigator:
+Now, when `route2` is active, you would like to change the tint color of a header. It's easy to do it for `route1`, and it should also be easy to do it for `route2`. This is what Default Navigation Options are for - they are simply `navigationOptions` set on a navigator:
 
 ```js
-TabNavigator({
+const MyTabNavigator = TabNavigator({
   profile: ProfileScreen,
   ...
 }, {
   navigationOptions: {
-    headerVisible: false,
+    headerTintColor: 'blue',
   },
 });
 ```
 
-Note that you can still decide to **also** specify the `navigationOptions` on the screens at the leaf level - e.g.  the `ProfileScreen` above. The `navigationOptions` from the screen will be merged key-by-key with the default options coming from the navigator. Whenever both the navigator and screen define the same option (e.g. `headerVisible`), the screen wins. Therefore, you could make the header visible again when `ProfileScreen` is active.
+Note that you can still decide to **also** specify the `navigationOptions` on the screens at the leaf level - e.g.  the `ProfileScreen` above. The `navigationOptions` from the screen will be merged key-by-key with the default options coming from the navigator. Whenever both the navigator and screen define the same option (e.g. `headerTintColor`), the screen wins. Therefore, you could change the tint color when `ProfileScreen` is active by doing the following:
 
 ```js
 class ProfileScreen extends React.Component {
   static navigationOptions = {
-    headerVisible: true,
+    headerTintColor: 'black',
   };
   ...
 }
 ```
-
-The 2nd argument passed to the function are the default values for the `header` as defined on the navigator.
-
 
 ## Navigation Option Reference
 

@@ -1,44 +1,58 @@
 /* @flow */
 
-import React from 'react';
+import * as React from 'react';
 
 import type {
   NavigationRouter,
-  NavigationRoute,
   NavigationNavigator,
   NavigationNavigatorProps,
   NavigationRouteConfigMap,
+  NavigationState,
+  NavigationScreenProp,
 } from '../TypeDefinition';
 
-import type {
-  NavigatorType,
-} from './NavigatorTypes';
+import type { NavigatorType } from './NavigatorTypes';
+
+// Props we want createNavigator to Inject
+type RouterProp<S: NavigationState, O: {}> = {
+  router: NavigationRouter<S, O>,
+};
+
+// NavigatorCreator type
+type _NavigatorCreator<NavigationViewProps: {}, S: NavigationState, O: {}> = (
+  NavigationView: React.ComponentType<RouterProp<S, O> & NavigationViewProps>
+) => NavigationNavigator<S, O, NavigationViewProps>;
 
 /**
  * Creates a navigator based on a router and a view that renders the screens.
  */
-const createNavigator = (router: NavigationRouter<*, *, *>, routeConfigs: NavigationRouteConfigMap, navigatorConfig: any, navigatorType: NavigatorType) =>
-  (View: NavigationNavigator<*, *, *, *>) => {
-    class Navigator extends React.Component {
-      props: NavigationNavigatorProps<*>;
-
+export default function createNavigator<
+  S: NavigationState,
+  O: {},
+  NavigatorConfig: {},
+  NavigationViewProps: NavigationNavigatorProps<O, S>
+>(
+  router: NavigationRouter<S, O>,
+  routeConfigs?: NavigationRouteConfigMap,
+  navigatorConfig?: NavigatorConfig,
+  navigatorType?: NavigatorType
+): _NavigatorCreator<NavigationViewProps, S, O> {
+  return (
+    NavigationView: React.ComponentType<RouterProp<S, O> & NavigationViewProps>
+  ): NavigationNavigator<S, O, NavigationViewProps> => {
+    class Navigator extends React.Component<NavigationViewProps> {
       static router = router;
 
       static routeConfigs = routeConfigs;
       static navigatorConfig = navigatorConfig;
       static navigatorType = navigatorType;
+      static navigationOptions = null;
 
       render() {
-        return (
-          <View
-            {...this.props}
-            router={router}
-          />
-        );
+        return <NavigationView {...this.props} router={router} />;
       }
     }
 
     return Navigator;
   };
-
-export default createNavigator;
+}

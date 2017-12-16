@@ -6,14 +6,12 @@ set -e
 # show where we are on the machine
 pwd
 
-echo $NOW_JSON_CONTENTS > ~/.now.json
-
 cd website
 
 npm run build
 
-NOW=`pwd`/node_modules/.bin/now
-
 cd build
 
-$NOW --force && sleep 5 && $NOW alias
+docker login -e $HEROKU_LOGIN -u $HEROKU_LOGIN -p $HEROKU_API_KEY registry.heroku.com
+docker build . -t registry.heroku.com/react-navigation/web
+docker push registry.heroku.com/react-navigation/web
