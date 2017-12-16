@@ -6,6 +6,7 @@ import {
   NativeModules,
   Platform,
   SafeAreaView,
+  StatusBar,
   StyleSheet,
   View,
 } from 'react-native';
@@ -53,6 +54,8 @@ const isIPad = (() => {
 })();
 
 const statusBarHeight = isLandscape => {
+  if (StatusBar.currentHeight) return StatusBar.currentHeight;
+
   if (isIPhoneX) {
     return isLandscape ? 0 : 44;
   }
@@ -98,9 +101,18 @@ class SafeView extends Component {
   }
 
   render() {
-    const { forceInset = false, isLandscape, children, style } = this.props;
+    const {
+      forceInset = false,
+      enableOnAndroid = true,
+      isLandscape,
+      children,
+      style,
+    } = this.props;
 
-    if (Platform.OS !== 'ios') {
+    if (
+      Platform.OS !== 'ios' &&
+      !(enableOnAndroid && Platform.OS === 'android')
+    ) {
       return <View style={style}>{this.props.children}</View>;
     }
 
