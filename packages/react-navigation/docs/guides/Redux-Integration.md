@@ -61,7 +61,7 @@ class Root extends React.Component {
 
 Once you do this, your navigation state is stored within your redux store, at which point you can fire navigation actions using your redux dispatch function.
 
-Keep in mind that when a navigator is given a `navigation` prop, it relinquishes control of its internal state. That means you are now responsible for persisting its state, handling any deep linking, [Handling the Hardware Back Button in Android](#handling-the-hardware-back-button-in-android), etc.
+Keep in mind that when a navigator is given a `navigation` prop, it relinquishes control of its internal state. That means you are now responsible for persisting its state, handling any deep linking, [Handling the Hardware Back Button in Android](#Handling-the-Hardware-Back-Button-in-Android), etc.
 
 Navigation state is automatically passed down from one navigator to another when you nest them. Note that in order for a child navigator to receive the state from a parent navigator, it should be defined as a `screen`.
 
