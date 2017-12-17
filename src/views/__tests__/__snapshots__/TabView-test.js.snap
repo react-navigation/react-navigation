@@ -25,6 +25,7 @@ exports[`TabBarBottom renders successfully 1`] = `
     style={undefined}
   >
     <View
+      collapsable={undefined}
       onLayout={[Function]}
       style={
         Object {
