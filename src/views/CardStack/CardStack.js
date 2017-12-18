@@ -306,7 +306,7 @@ class CardStack extends React.Component<Props> {
           ? layout.height.__getValue()
           : layout.width.__getValue();
         const currentValue =
-          (I18nManager.isRTL && axis === 'dx') || gestureDirectionInverted
+          (I18nManager.isRTL && axis === 'dx') !== gestureDirectionInverted
             ? startValue + gesture[axis] / axisDistance
             : startValue - gesture[axis] / axisDistance;
         const value = clamp(index - 1, currentValue, index);
