@@ -163,6 +163,11 @@ class CardStack extends React.Component<Props> {
     }
 
     const renderHeader = header || ((props: *) => <Header {...props} />);
+    const {
+      headerLeftInterpolator,
+      headerTitleInterpolator,
+      headerRightInterpolator,
+    } = this._getTransitionConfig();
 
     // We need to explicitly exclude `mode` since Flow doesn't see
     // mode: headerMode override below and reports prop mismatch
@@ -173,6 +178,9 @@ class CardStack extends React.Component<Props> {
       scene,
       mode: headerMode,
       getScreenDetails: this._getScreenDetails,
+      leftInterpolator: headerLeftInterpolator,
+      titleInterpolator: headerTitleInterpolator,
+      rightInterpolator: headerRightInterpolator,
     });
   }
 
