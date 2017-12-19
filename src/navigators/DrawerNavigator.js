@@ -24,6 +24,9 @@ import type {
 
 export type DrawerNavigatorConfig = {
   containerConfig?: void,
+  drawerOpenRoute?: string,
+  drawerCloseRoute?: string,
+  drawerToggleRoute?: string,
 } & NavigationTabRouterConfig &
   DrawerViewConfig;
 
