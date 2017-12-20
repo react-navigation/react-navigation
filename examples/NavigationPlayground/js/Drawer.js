@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { Button, Platform, ScrollView } from 'react-native';
+import { Button, Platform, ScrollView, StatusBar } from 'react-native';
 import { DrawerNavigator, SafeAreaView } from 'react-navigation';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import SampleText from './SampleText';
@@ -18,6 +18,7 @@ const MyNavScreen = ({ navigation, banner }) => (
       />
       <Button onPress={() => navigation.goBack(null)} title="Go back" />
     </SafeAreaView>
+    <StatusBar barStyle="default" />
   </ScrollView>
 );
 
@@ -57,6 +58,9 @@ const DrawerExample = DrawerNavigator(
     },
   },
   {
+    drawerOpenRoute: 'DrawerOpen',
+    drawerCloseRoute: 'DrawerClose',
+    drawerToggleRoute: 'DrawerToggle',
     initialRouteName: 'Drafts',
     contentOptions: {
       activeTintColor: '#e91e63',
