@@ -92,8 +92,13 @@ class DrawerSidebar extends React.PureComponent<Props> {
       // if the child screen is a StackRouter then always navigate to its first screen (see #1914)
       if (route.index !== undefined && route.index !== 0) {
         route = ((route: any): NavigationStateRoute);
-        subAction = NavigationActions.navigate({
-          routeName: route.routes[0].routeName,
+        subAction = NavigationActions.reset({
+          index: 0,
+          actions: [
+            NavigationActions.navigate({
+              routeName: route.routes[0].routeName,
+            }),
+          ],
         });
       }
       this.props.navigation.navigate(route.routeName, undefined, subAction);
