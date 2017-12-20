@@ -62,3 +62,5 @@ The stack router may respond to the following navigation actions. The router wil
 - Back - Goes back (pops)
 - Reset - Clears the stack and provides new actions to create a fully new navigation state
 - SetParams - An action that a screen dispatches to change the params of the current route.
+- Pop - Goes back one of multiple screens
+- PopToTop - Goes back to the root of the stack

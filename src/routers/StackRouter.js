@@ -304,6 +304,38 @@ export default (
           };
         }
       }
+
+      if (action.type === NavigationActions.POP) {
+        let numberOfScreens = action.numberOfScreens || 1;
+        if (state.index <= 0) {
+          return state;
+        }
+
+        if (numberOfScreens >= state.routes.length) {
+          numberOfScreens = state.routes.length - 1;
+        }
+
+        const routes = state.routes.slice(0, numberOfScreens * -1);
+        return {
+          ...state,
+          routes,
+          index: routes.length - 1,
+        };
+      }
+
+      if (action.type === NavigationActions.POP_TO_TOP) {
+        if (state.index <= 0) {
+          return state;
+        }
+
+        const routes = state.routes.slice(0, (state.routes.length - 1) * -1);
+        return {
+          ...state,
+          routes,
+          index: routes.length - 1,
+        };
+      }
+
       return state;
     },
 

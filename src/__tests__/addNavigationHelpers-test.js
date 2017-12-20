@@ -70,4 +70,56 @@ describe('addNavigationHelpers', () => {
     });
     expect(mockedDispatch.mock.calls.length).toBe(1);
   });
+
+  it('handles Pop action', () => {
+    const mockedDispatch = jest
+      .fn(() => false)
+      .mockImplementationOnce(() => true);
+
+    expect(
+      addNavigationHelpers({
+        state: { key: 'A', routeName: 'Home' },
+        dispatch: mockedDispatch,
+      }).pop(1)
+    ).toEqual(true);
+    expect(mockedDispatch).toBeCalledWith({
+      type: NavigationActions.POP,
+      numberOfScreens: 1,
+    });
+    expect(mockedDispatch.mock.calls.length).toBe(1);
+  });
+
+  it('handles Pop action when the number of screens is not defined', () => {
+    const mockedDispatch = jest
+      .fn(() => false)
+      .mockImplementationOnce(() => true);
+
+    expect(
+      addNavigationHelpers({
+        state: { key: 'A', routeName: 'Home' },
+        dispatch: mockedDispatch,
+      }).pop()
+    ).toEqual(true);
+    expect(mockedDispatch).toBeCalledWith({
+      type: NavigationActions.POP,
+    });
+    expect(mockedDispatch.mock.calls.length).toBe(1);
+  });
+
+  it('handles PopToTop action', () => {
+    const mockedDispatch = jest
+      .fn(() => false)
+      .mockImplementationOnce(() => true);
+
+    expect(
+      addNavigationHelpers({
+        state: { key: 'A', routeName: 'Home' },
+        dispatch: mockedDispatch,
+      }).popToTop()
+    ).toEqual(true);
+    expect(mockedDispatch).toBeCalledWith({
+      type: NavigationActions.POP_TO_TOP,
+    });
+    expect(mockedDispatch.mock.calls.length).toBe(1);
+  });
 });

@@ -10,6 +10,8 @@ The following actions are supported:
 * [Back](#Back) - Go back to previous state
 * [Set Params](#SetParams) - Set Params for given route
 * [Init](#Init) - Used to initialize first state if state is undefined
+* [Pop](#Pop) - Used to go back N number of screens
+* [PopToTop](#PopToTop) - Used to go back to the root of the current stack
 
 The action creator functions define `toString()` to return the action type, which enables easy usage with third-party Redux libraries, including redux-actions and redux-saga.
 
@@ -108,4 +110,29 @@ const setParamsAction = NavigationActions.setParams({
 })
 this.props.navigation.dispatch(setParamsAction)
 
+```
+
+### Pop
+
+Go back/pop to previous screen in the stack and close the current screen. `pop` action creator takes in one optional parameter:
+- `numberOfScreens` - *number or null* - optional - If set, navigation will go back the given number of screens. If null, navigation will go back one screen.
+
+```js
+import { NavigationActions } from 'react-navigation'
+
+const popAction = NavigationActions.pop({
+  numberOfScreens: 1,
+})
+this.props.navigation.dispatch(popAction)
+```
+
+### PopToTop
+
+Go back/pop to the root of the current stack and close the current screen.
+
+```js
+import { NavigationActions } from 'react-navigation'
+
+const popToTopAction = NavigationActions.popToTop()
+this.props.navigation.dispatch(popToTopAction)
 ```

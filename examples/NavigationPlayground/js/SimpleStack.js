@@ -19,6 +19,8 @@ const MyNavScreen = ({ navigation, banner }) => (
       title="Go to a photos screen"
     />
     <Button onPress={() => navigation.goBack(null)} title="Go back" />
+    <Button onPress={() => navigation.pop(1)} title="Pop" />
+    <Button onPress={() => navigation.popToTop()} title="Pop to top" />
   </SafeAreaView>
 );
 

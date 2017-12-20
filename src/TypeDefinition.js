@@ -109,12 +109,23 @@ export type DeprecatedNavigationUriAction = {|
   uri: string,
 |};
 
+export type NavigationPopAction = {|
+  type: 'Navigation/POP',
+  numberOfScreens?: ?number,
+|};
+
+export type NavigationPopToTopAction = {|
+  type: 'Navigation/POP_TO_TOP',
+|};
+
 export type NavigationAction =
   | NavigationInitAction
   | NavigationNavigateAction
   | NavigationBackAction
   | NavigationSetParamsAction
-  | NavigationResetAction;
+  | NavigationResetAction
+  | NavigationPopAction
+  | NavigationPopToTopAction;
 
 export type DeprecatedNavigationAction =
   | DeprecatedNavigationInitAction
@@ -417,6 +428,8 @@ export type NavigationScreenProp<+S> = {
     action?: NavigationNavigateAction
   ) => boolean,
   setParams: (newParams: NavigationParams) => boolean,
+  pop: (numberOfScreens?: ?number) => boolean,
+  popToTop: () => boolean,
 };
 
 export type NavigationNavigatorProps<O: {}, S: {}> = {

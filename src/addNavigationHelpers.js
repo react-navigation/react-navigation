@@ -53,5 +53,15 @@ export default function<S: {}>(
       const key = navigation.state.key;
       return navigation.dispatch(NavigationActions.setParams({ params, key }));
     },
+
+    pop: (numberOfScreens?: ?number): boolean => {
+      return navigation.dispatch(
+        NavigationActions.pop({ numberOfScreens: numberOfScreens })
+      );
+    },
+
+    popToTop: (): boolean => {
+      return navigation.dispatch(NavigationActions.popToTop());
+    },
   };
 }

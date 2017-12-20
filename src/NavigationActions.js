@@ -13,6 +13,8 @@ import type {
   NavigationResetAction,
   NavigationUriAction,
   NavigationParams,
+  NavigationPopAction,
+  NavigationPopToTopAction,
 } from './TypeDefinition';
 
 const BACK = 'Navigation/BACK';
@@ -21,6 +23,8 @@ const NAVIGATE = 'Navigation/NAVIGATE';
 const RESET = 'Navigation/RESET';
 const SET_PARAMS = 'Navigation/SET_PARAMS';
 const URI = 'Navigation/URI';
+const POP = 'Navigation/POP';
+const POP_TO_TOP = 'Navigation/POP_TO_TOP';
 
 const createAction = (type: string, fn: any) => {
   fn.toString = () => type;
@@ -97,6 +101,16 @@ const uri = createAction(
     uri: payload.uri,
   })
 );
+const pop = createAction(
+  POP,
+  (payload: { numberOfScreens?: ?number } = {}): NavigationPopAction => ({
+    type: POP,
+    numberOfScreens: payload.numberOfScreens,
+  })
+);
+const popToTop = createAction(POP_TO_TOP, (): NavigationPopToTopAction => ({
+  type: POP_TO_TOP,
+}));
 
 const mapDeprecatedNavigateAction = (
   action: NavigationNavigateAction | DeprecatedNavigationNavigateAction
@@ -165,6 +179,8 @@ export default {
   RESET,
   SET_PARAMS,
   URI,
+  POP,
+  POP_TO_TOP,
 
   // Action creators
   back,
@@ -173,6 +189,8 @@ export default {
   reset,
   setParams,
   uri,
+  pop,
+  popToTop,
 
   // TODO: Remove once old actions are deprecated
   mapDeprecatedActionAndWarn,
