@@ -22,6 +22,7 @@ export default Banner;
 const styles = StyleSheet.create({
   bannerContainer: {
     backgroundColor: '#673ab7',
+    paddingTop: 20,
   },
   banner: {
     flexDirection: 'row',
