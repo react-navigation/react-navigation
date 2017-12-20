@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { Button, Platform, ScrollView, View } from 'react-native';
+import { Button, Platform, ScrollView, StatusBar, View } from 'react-native';
 import { SafeAreaView, TabNavigator } from 'react-navigation';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import SampleText from './SampleText';
@@ -20,6 +20,7 @@ const MyNavScreen = ({ navigation, banner }) => (
       title="Go to settings tab"
     />
     <Button onPress={() => navigation.goBack(null)} title="Go back" />
+    <StatusBar barStyle="default" />
   </SafeAreaView>
 );
 
