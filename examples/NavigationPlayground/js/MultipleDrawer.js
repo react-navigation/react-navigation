@@ -55,6 +55,9 @@ const DrawerExample = DrawerNavigator(
     },
   },
   {
+    drawerOpenRoute: 'DrawerOpen',
+    drawerCloseRoute: 'DrawerClose',
+    drawerToggleRoute: 'DrawerToggle',
     initialRouteName: 'Drafts',
     contentOptions: {
       activeTintColor: '#e91e63',
@@ -67,8 +70,9 @@ const MainDrawerExample = DrawerNavigator({
     screen: DrawerExample,
   },
 }, {
-  drawerOpenRoute: 'FooDrawerOpen',
-  drawerCloseRoute: 'FooDrawerClose',
+    drawerOpenRoute: 'DrawerOpen',
+    drawerCloseRoute: 'DrawerClose',
+    drawerToggleRoute: 'DrawerToggle',
 });
 
 const styles = StyleSheet.create({
