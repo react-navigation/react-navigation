@@ -1,12 +1,13 @@
 import React, { Component, PropTypes } from 'react';
 import {
-  StyleSheet,
-  Platform,
-  Easing,
-  View,
   Animated,
-  Image,
   Button,
+  Easing,
+  Image,
+  Platform,
+  StatusBar,
+  StyleSheet,
+  View,
 } from 'react-native';
 import {
   Transitioner,
@@ -30,6 +31,7 @@ const MyNavScreen = ({ navigation, banner }) => (
       )}
 
     <Button onPress={() => navigation.goBack(null)} title="Go back" />
+    <StatusBar barStyle="default" />
   </SafeAreaView>
 );
 

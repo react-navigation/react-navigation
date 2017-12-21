@@ -1,7 +1,7 @@
 /* @flow */
 
 import React from 'react';
-import { ScreenOrientation } from 'expo';
+import { Constants, ScreenOrientation } from 'expo';
 
 ScreenOrientation.allow(ScreenOrientation.Orientation.ALL);
 
@@ -11,6 +11,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Text,
+  StatusBar,
   View,
 } from 'react-native';
 import { SafeAreaView, StackNavigator } from 'react-navigation';
@@ -44,11 +45,11 @@ const ExampleRoutes = {
     description: 'Android-style drawer navigation',
     screen: Drawer,
   },
-  MultipleDrawer: {
-    name: 'Multiple Drawer Example',
-    description: 'Add any drawer you need',
-    screen: MultipleDrawer,
-  },
+  // MultipleDrawer: {
+  //   name: 'Multiple Drawer Example',
+  //   description: 'Add any drawer you need',
+  //   screen: MultipleDrawer,
+  // },
   TabsInDrawer: {
     name: 'Drawer + Tabs Example',
     description: 'A drawer combined with tabs',
@@ -104,34 +105,47 @@ const ExampleRoutes = {
   },
 };
 
-const MainScreen = ({ navigation }) => (
-  <ScrollView style={{ flex: 1 }} contentInsetAdjustmentBehavior="automatic">
-    <Banner />
-    {Object.keys(ExampleRoutes).map((routeName: string) => (
-      <TouchableOpacity
-        key={routeName}
-        onPress={() => {
-          const { path, params, screen } = ExampleRoutes[routeName];
-          const { router } = screen;
-          const action = path && router.getActionForPathAndParams(path, params);
-          navigation.navigate(routeName, {}, action);
-        }}
-      >
-        <SafeAreaView
-          style={styles.itemContainer}
-          forceInset={{ vertical: 'never' }}
-        >
-          <View style={styles.item}>
-            <Text style={styles.title}>{ExampleRoutes[routeName].name}</Text>
-            <Text style={styles.description}>
-              {ExampleRoutes[routeName].description}
-            </Text>
-          </View>
-        </SafeAreaView>
-      </TouchableOpacity>
-    ))}
-  </ScrollView>
-);
+class MainScreen extends React.Component<*> {
+  render() {
+    const { navigation } = this.props;
+
+    return (
+      <View style={{ flex: 1 }}>
+        <ScrollView style={{ flex: 1 }}>
+          <Banner />
+          {Object.keys(ExampleRoutes).map((routeName: string) => (
+            <TouchableOpacity
+              key={routeName}
+              onPress={() => {
+                const { path, params, screen } = ExampleRoutes[routeName];
+                const { router } = screen;
+                const action =
+                  path && router.getActionForPathAndParams(path, params);
+                navigation.navigate(routeName, {}, action);
+              }}
+            >
+              <SafeAreaView
+                style={styles.itemContainer}
+                forceInset={{ vertical: 'never' }}
+              >
+                <View style={styles.item}>
+                  <Text style={styles.title}>
+                    {ExampleRoutes[routeName].name}
+                  </Text>
+                  <Text style={styles.description}>
+                    {ExampleRoutes[routeName].description}
+                  </Text>
+                </View>
+              </SafeAreaView>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+        <StatusBar barStyle="light-content" />
+        <View style={styles.statusBarUnderlay} />
+      </View>
+    );
+  }
+}
 
 const AppNavigator = StackNavigator(
   {
@@ -170,6 +184,14 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginBottom: 20,
     resizeMode: 'contain',
+  },
+  statusBarUnderlay: {
+    backgroundColor: '#673ab7',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: Constants.statusBarHeight,
   },
   title: {
     fontSize: 16,
