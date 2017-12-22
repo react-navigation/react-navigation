@@ -88,6 +88,7 @@ export default class TabViewAnimated<T: *> extends React.Component<
     const panX = new Animated.Value(0);
     const offsetX = new Animated.Value(-navigationState.index * layout.width);
     const layoutXY = new Animated.ValueXY({
+      // This is hacky, but we need to make sure that the value is never 0
       x: layout.width || 0.001,
       y: layout.height || 0.001,
     });
@@ -132,7 +133,11 @@ export default class TabViewAnimated<T: *> extends React.Component<
     }
 
     this.state.offsetX.setValue(-this.props.navigationState.index * width);
-    this.state.layoutXY.setValue({ x: width, y: height });
+    this.state.layoutXY.setValue({
+      // This is hacky, but we need to make sure that the value is never 0
+      x: width || 0.001,
+      y: height || 0.001,
+    });
     this.setState({
       layout: {
         measured: true,
