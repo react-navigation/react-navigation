@@ -7,9 +7,12 @@ import {
   TouchableWithoutFeedback,
   StyleSheet,
 } from 'react-native';
-import { TabViewAnimated } from 'react-native-tab-view';
+import { TabViewAnimated, SceneMap } from 'react-native-tab-view';
 import { Ionicons } from '@expo/vector-icons';
-import BasicListView from './BasicListView';
+import Albums from './shared/Albums';
+import Article from './shared/Article';
+import Chat from './shared/Chat';
+import Contacts from './shared/Contacts';
 
 import type { Route, NavigationState } from 'react-native-tab-view/types';
 
@@ -25,18 +28,18 @@ type State = NavigationState<
 
 export default class TopBarIconExample extends React.Component<*, State> {
   static title = 'No animation';
-  static backgroundColor = '#f4f4f4';
-  static tintColor = '#222';
+  static backgroundColor = '#fafafa';
+  static tintColor = '#263238';
   static appbarElevation = 4;
+  static statusBarStyle = 'dark-content';
 
   state = {
     index: 0,
     routes: [
-      { key: '1', title: 'Featured', icon: 'ios-star' },
-      { key: '2', title: 'Playlists', icon: 'ios-albums' },
-      { key: '3', title: 'Near Me', icon: 'ios-navigate' },
-      { key: '4', title: 'Search', icon: 'ios-search' },
-      { key: '5', title: 'Updates', icon: 'ios-download' },
+      { key: 'contacts', title: 'Contacts', icon: 'ios-people' },
+      { key: 'albums', title: 'Albums', icon: 'ios-albums' },
+      { key: 'article', title: 'Article', icon: 'ios-paper' },
+      { key: 'chat', title: 'Chat', icon: 'ios-chatboxes' },
     ],
   };
 
@@ -105,42 +108,12 @@ export default class TopBarIconExample extends React.Component<*, State> {
     </View>
   );
 
-  _renderScene = ({ route }) => {
-    switch (route.key) {
-      case '1':
-        return (
-          <BasicListView
-            style={[styles.page, { backgroundColor: '#E3F4DD' }]}
-          />
-        );
-      case '2':
-        return (
-          <BasicListView
-            style={[styles.page, { backgroundColor: '#E6BDC5' }]}
-          />
-        );
-      case '3':
-        return (
-          <BasicListView
-            style={[styles.page, { backgroundColor: '#9DB1B5' }]}
-          />
-        );
-      case '4':
-        return (
-          <BasicListView
-            style={[styles.page, { backgroundColor: '#EDD8B5' }]}
-          />
-        );
-      case '5':
-        return (
-          <BasicListView
-            style={[styles.page, { backgroundColor: '#9E9694' }]}
-          />
-        );
-      default:
-        return null;
-    }
-  };
+  _renderScene = SceneMap({
+    contacts: Contacts,
+    albums: Albums,
+    article: Article,
+    chat: Chat,
+  });
 
   render() {
     return (
@@ -164,7 +137,7 @@ const styles = StyleSheet.create({
   tabbar: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    backgroundColor: '#f4f4f4',
+    backgroundColor: '#fafafa',
   },
   tab: {
     flex: 1,
@@ -194,9 +167,5 @@ const styles = StyleSheet.create({
     marginTop: 3,
     marginBottom: 1.5,
     backgroundColor: 'transparent',
-  },
-  page: {
-    flex: 1,
-    backgroundColor: '#f9f9f9',
   },
 });

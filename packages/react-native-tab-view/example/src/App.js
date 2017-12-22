@@ -17,7 +17,6 @@ import TopBarTextExample from './TopBarTextExample';
 import TopBarIconExample from './TopBarIconExample';
 import BottomBarIconTextExample from './BottomBarIconTextExample';
 import NoAnimationExample from './NoAnimationExample';
-import ScrollViewsExample from './ScrollViewsExample';
 import CoverflowExample from './CoverflowExample';
 import NativeDriverExample from './NativeDriverExample';
 
@@ -28,7 +27,6 @@ const EXAMPLE_COMPONENTS = [
   TopBarIconExample,
   BottomBarIconTextExample,
   NoAnimationExample,
-  ScrollViewsExample,
   CoverflowExample,
   NativeDriverExample,
 ];
@@ -128,7 +126,7 @@ export default class ExampleList extends React.Component<{}, State> {
     const backgroundColor =
       ExampleComponent && ExampleComponent.backgroundColor
         ? ExampleComponent.backgroundColor
-        : '#222';
+        : '#111';
     const tintColor =
       ExampleComponent && ExampleComponent.tintColor
         ? ExampleComponent.tintColor
@@ -137,12 +135,21 @@ export default class ExampleList extends React.Component<{}, State> {
       ExampleComponent && Number.isFinite(ExampleComponent.appbarElevation)
         ? ExampleComponent.appbarElevation
         : 4;
+    const statusBarStyle =
+      ExampleComponent && ExampleComponent.statusBarStyle
+        ? ExampleComponent.statusBarStyle
+        : 'light-content';
     const borderBottomWidth =
       Platform.OS === 'ios' ? StyleSheet.hairlineWidth : 0;
 
     return (
       <View style={styles.container}>
-        <StatusBar barStyle="light-content" />
+        <StatusBar
+          barStyle={
+            /* $FlowFixMe */
+            Platform.OS === 'ios' ? statusBarStyle : 'light-content'
+          }
+        />
         <Expo.KeepAwake />
         <View
           style={[
@@ -191,24 +198,22 @@ export default class ExampleList extends React.Component<{}, State> {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#eceff1',
   },
   statusbar: {
-    backgroundColor: '#222',
     height: Platform.OS === 'ios' ? 20 : 25,
   },
   appbar: {
     flexDirection: 'row',
     alignItems: 'center',
     height: Platform.OS === 'ios' ? 44 : 56,
-    backgroundColor: '#222',
     borderBottomColor: 'rgba(0, 0, 0, 0.1)',
   },
   title: {
     flex: 1,
     margin: 16,
     textAlign: Platform.OS === 'ios' ? 'center' : 'left',
-    fontSize: Platform.OS === 'ios' ? 20 : 18,
+    fontSize: 18,
     color: '#fff',
   },
   button: {

@@ -5,7 +5,6 @@
     "slug": "react-native-tab-view-demos",
     "sdkVersion": "23.0.0",
     "version": "1.0.0",
-    "orientation": "portrait",
     "primaryColor": "#2196f3",
     "icon": "assets/icon.png",
     "loading": {

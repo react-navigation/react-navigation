@@ -3,35 +3,44 @@
 import * as React from 'react';
 import { Animated, View, Text, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { TabViewAnimated, TabBar } from 'react-native-tab-view';
-import SimplePage from './SimplePage';
+import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
+import Albums from './shared/Albums';
+import Article from './shared/Article';
+import Contacts from './shared/Contacts';
 
 import type { Route, NavigationState } from 'react-native-tab-view/types';
 
 type State = NavigationState<
   Route<{
     key: string,
-    title: string,
     icon: string,
     color: string,
   }>
 >;
 
 export default class BottomBarIconExample extends React.Component<*, State> {
-  static title = 'Bottom bar with indicator';
+  static title = 'Custom indicator';
+  static backgroundColor = '#263238';
   static appbarElevation = 4;
 
   state = {
     index: 0,
     routes: [
-      { key: '1', title: 'First', icon: 'ios-speedometer', color: '#F44336' },
       {
-        key: '2',
-        title: 'Second',
-        icon: 'ios-game-controller-b',
+        key: 'article',
+        icon: 'ios-paper',
+        color: '#F44336',
+      },
+      {
+        key: 'contacts',
+        icon: 'ios-people',
+        color: '#3F51B5',
+      },
+      {
+        key: 'albums',
+        icon: 'ios-albums',
         color: '#4CAF50',
       },
-      { key: '3', title: 'Third', icon: 'ios-basketball', color: '#3F51B5' },
     ],
   };
 
@@ -107,24 +116,21 @@ export default class BottomBarIconExample extends React.Component<*, State> {
     return null;
   };
 
-  _getLabelText = ({ route }) => route.title;
-
   _renderFooter = props => (
     <TabBar
       {...props}
-      getLabelText={this._getLabelText}
       renderIcon={this._renderIcon}
       renderBadge={this._renderBadge}
       renderIndicator={this._renderIndicator}
-      labelStyle={styles.label}
-      tabStyle={styles.tab}
       style={styles.tabbar}
     />
   );
 
-  _renderScene = ({ route }) => (
-    <SimplePage state={this.state} style={{ backgroundColor: route.color }} />
-  );
+  _renderScene = SceneMap({
+    article: Article,
+    contacts: Contacts,
+    albums: Albums,
+  });
 
   render() {
     return (
@@ -141,18 +147,12 @@ export default class BottomBarIconExample extends React.Component<*, State> {
 
 const styles = StyleSheet.create({
   tabbar: {
-    backgroundColor: '#222',
-  },
-  tab: {
-    padding: 0,
+    backgroundColor: '#263238',
+    overflow: 'hidden',
   },
   icon: {
     backgroundColor: 'transparent',
     color: 'white',
-  },
-  label: {
-    fontSize: 12,
-    marginTop: 2,
   },
   container: {
     flex: 1,
