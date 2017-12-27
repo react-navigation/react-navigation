@@ -95,8 +95,7 @@ export default class DrawerView extends React.PureComponent<
       } else if (routes[index].routeName === drawerToggleRoute) {
         if (this.props.navigation.state.index == 0) {
           this.props.navigation.navigate(drawerOpenRoute);
-        }
-        else {
+        } else {
           this.props.navigation.navigate(drawerCloseRoute);
         }
       } else {
