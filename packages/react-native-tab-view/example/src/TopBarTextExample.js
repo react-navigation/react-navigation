@@ -1,6 +1,6 @@
 /* @flow */
 
-import React, { PureComponent } from 'react';
+import * as React from 'react';
 import { StyleSheet, Dimensions } from 'react-native';
 import { TabViewAnimated, TabBar } from 'react-native-tab-view';
 import SimplePage from './SimplePage';
@@ -19,7 +19,7 @@ const initialLayout = {
   width: Dimensions.get('window').width,
 };
 
-export default class TopBarTextExample extends PureComponent<*, State> {
+export default class TopBarTextExample extends React.Component<*, State> {
   static title = 'Scrollable top bar';
   static appbarElevation = 0;
 

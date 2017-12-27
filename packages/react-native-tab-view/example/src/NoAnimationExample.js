@@ -1,6 +1,6 @@
 /* @flow */
 
-import React, { PureComponent } from 'react';
+import * as React from 'react';
 import {
   Animated,
   View,
@@ -23,7 +23,7 @@ type State = NavigationState<
   }>
 >;
 
-export default class TopBarIconExample extends PureComponent<*, State> {
+export default class TopBarIconExample extends React.Component<*, State> {
   static title = 'No animation';
   static backgroundColor = '#f4f4f4';
   static tintColor = '#222';

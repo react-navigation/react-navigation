@@ -1,6 +1,6 @@
 /* @flow */
 
-import React, { PureComponent } from 'react';
+import * as React from 'react';
 import { StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { TabViewAnimated, TabBar } from 'react-native-tab-view';
@@ -15,7 +15,7 @@ type State = NavigationState<
   }>
 >;
 
-export default class TopBarIconExample extends PureComponent<*, State> {
+export default class TopBarIconExample extends React.Component<*, State> {
   static title = 'Icon only top bar';
   static appbarElevation = 0;
 

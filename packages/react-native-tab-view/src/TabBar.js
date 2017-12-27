@@ -44,7 +44,7 @@ type State = {|
   initialOffset: ?{| x: number, y: number |},
 |};
 
-export default class TabBar<T: *> extends React.PureComponent<Props<T>, State> {
+export default class TabBar<T: *> extends React.Component<Props<T>, State> {
   static propTypes = {
     ...SceneRendererPropType,
     scrollEnabled: PropTypes.bool,

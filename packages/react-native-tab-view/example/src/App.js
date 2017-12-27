@@ -1,7 +1,7 @@
 /* @flow */
 
 import Expo from 'expo';
-import React, { PureComponent } from 'react';
+import * as React from 'react';
 import {
   AsyncStorage,
   Platform,
@@ -39,7 +39,7 @@ type State = {
   restoring: boolean,
 };
 
-export default class ExampleList extends PureComponent<{}, State> {
+export default class ExampleList extends React.Component<{}, State> {
   state = {
     title: 'Examples',
     index: -1,
