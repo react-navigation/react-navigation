@@ -163,6 +163,11 @@ class CardStack extends React.Component<Props> {
     }
 
     const renderHeader = header || ((props: *) => <Header {...props} />);
+    const {
+      headerLeftInterpolator,
+      headerTitleInterpolator,
+      headerRightInterpolator,
+    } = this._getTransitionConfig();
 
     // We need to explicitly exclude `mode` since Flow doesn't see
     // mode: headerMode override below and reports prop mismatch
@@ -173,6 +178,9 @@ class CardStack extends React.Component<Props> {
       scene,
       mode: headerMode,
       getScreenDetails: this._getScreenDetails,
+      leftInterpolator: headerLeftInterpolator,
+      titleInterpolator: headerTitleInterpolator,
+      rightInterpolator: headerRightInterpolator,
     });
   }
 
@@ -232,6 +240,8 @@ class CardStack extends React.Component<Props> {
     const { navigation, position, layout, scene, scenes, mode } = this.props;
     const { index } = navigation.state;
     const isVertical = mode === 'modal';
+    const { options } = this._getScreenDetails(scene);
+    const gestureDirectionInverted = options.gestureDirection === 'inverted';
 
     const responder = PanResponder.create({
       onPanResponderTerminate: () => {
@@ -262,7 +272,9 @@ class CardStack extends React.Component<Props> {
         const axisHasBeenMeasured = !!axisLength;
 
         // Measure the distance from the touch to the edge of the screen
-        const screenEdgeDistance = currentDragPosition - currentDragDistance;
+        const screenEdgeDistance = gestureDirectionInverted
+          ? axisLength - (currentDragPosition - currentDragDistance)
+          : currentDragPosition - currentDragDistance;
         // Compare to the gesture distance relavant to card or modal
         const {
           gestureResponseDistance: userGestureResponseDistance = {},
@@ -294,7 +306,7 @@ class CardStack extends React.Component<Props> {
           ? layout.height.__getValue()
           : layout.width.__getValue();
         const currentValue =
-          I18nManager.isRTL && axis === 'dx'
+          (I18nManager.isRTL && axis === 'dx') !== gestureDirectionInverted
             ? startValue + gesture[axis] / axisDistance
             : startValue - gesture[axis] / axisDistance;
         const value = clamp(index - 1, currentValue, index);
@@ -317,12 +329,19 @@ class CardStack extends React.Component<Props> {
         const axisDistance = isVertical
           ? layout.height.__getValue()
           : layout.width.__getValue();
-        const movedDistance = gesture[isVertical ? 'dy' : 'dx'];
-        const gestureVelocity = gesture[isVertical ? 'vy' : 'vx'];
+        const movementDirection = gestureDirectionInverted ? -1 : 1;
+        const movedDistance =
+          movementDirection * gesture[isVertical ? 'dy' : 'dx'];
+        const gestureVelocity =
+          movementDirection * gesture[isVertical ? 'vy' : 'vx'];
         const defaultVelocity = axisDistance / ANIMATION_DURATION;
         const velocity = Math.max(Math.abs(gestureVelocity), defaultVelocity);
-        const resetDuration = movedDistance / velocity;
-        const goBackDuration = (axisDistance - movedDistance) / velocity;
+        const resetDuration = gestureDirectionInverted
+          ? (axisDistance - movedDistance) / velocity
+          : movedDistance / velocity;
+        const goBackDuration = gestureDirectionInverted
+          ? movedDistance / velocity
+          : (axisDistance - movedDistance) / velocity;
 
         // To asyncronously get the current animated value, we need to run stopAnimation:
         position.stopAnimation((value: number) => {
@@ -348,7 +367,6 @@ class CardStack extends React.Component<Props> {
       },
     });
 
-    const { options } = this._getScreenDetails(scene);
     const gesturesEnabled =
       typeof options.gesturesEnabled === 'boolean'
         ? options.gesturesEnabled
