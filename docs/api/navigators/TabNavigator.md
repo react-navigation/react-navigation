@@ -168,6 +168,10 @@ Generic title that can be used as a fallback for `headerTitle` and `tabBarLabel`
 
 True or false to show or hide the tab bar, if not set then defaults to true.
 
+#### `swipeEnabled`
+
+True or false to enable or disable swiping between tabs, if not set then defaults to TabNavigatorConfig option swipeEnabled.
+
 #### `tabBarIcon`
 
 React Element or a function that given `{ focused: boolean, tintColor: string }` returns a React.Node, to display in tab bar.

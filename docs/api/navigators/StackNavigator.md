@@ -158,6 +158,10 @@ Object to override the distance of touch start from the edge of the screen to re
 - `horizontal` - *number* - Distance for horizontal direction. Defaults to 25.
 - `vertical` - *number* - Distance for vertical direction. Defaults to 135.
 
+#### `gestureDirection`
+
+String to override the direction for dismiss gesture. `default` for normal behaviour or `inverted` for right-to-left swipes.
+
 ### Navigator Props
 
 The navigator component created by `StackNavigator(...)` takes the following props:
@@ -222,3 +226,5 @@ const ModalNavigator = StackNavigator(
   }
 );
  ```
+
+Header transitions can also be configured using `headerLeftInterpolator`, `headerTitleInterpolator` and `headerRightInterpolator` fields under `transitionConfig`.
