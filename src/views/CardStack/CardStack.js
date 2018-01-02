@@ -64,7 +64,7 @@ type Props = {
 
 /**
  * The max duration of the card animation in milliseconds after released gesture.
- * The actual duration should be always less then that because the rest distance 
+ * The actual duration should be always less then that because the rest distance
  * is always less then the full distance of the layout.
  */
 const ANIMATION_DURATION = 500;
@@ -402,7 +402,8 @@ class CardStack extends React.Component<Props> {
     SceneComponent: NavigationComponent,
     scene: NavigationScene
   ): React.Node {
-    const { navigation } = this._getScreenDetails(scene);
+    const navigation =
+      this.props.navigation || this._getScreenDetails(scene).navigation;
     const { screenProps } = this.props;
     const headerMode = this._getHeaderMode();
     if (headerMode === 'screen') {
