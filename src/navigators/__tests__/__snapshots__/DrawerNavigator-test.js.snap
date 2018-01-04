@@ -137,6 +137,7 @@ exports[`DrawerNavigator renders successfully 1`] = `
           }
         >
           <View
+            collapsable={undefined}
             onLayout={[Function]}
             style={
               Object {
@@ -182,6 +183,7 @@ exports[`DrawerNavigator renders successfully 1`] = `
                 tvParallaxProperties={undefined}
               >
                 <View
+                  collapsable={undefined}
                   onLayout={[Function]}
                   style={
                     Object {

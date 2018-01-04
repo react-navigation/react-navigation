@@ -324,6 +324,7 @@ export type NavigationStackScreenOptions = NavigationScreenOptions & {
   headerStyle?: ViewStyleProp,
   gesturesEnabled?: boolean,
   gestureResponseDistance?: { vertical?: number, horizontal?: number },
+  gestureDirection?: 'default' | 'inverted',
 };
 
 export type NavigationStackRouterConfig = {

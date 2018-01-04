@@ -124,6 +124,7 @@ exports[`StackNavigator applies correct values when headerRight is present 1`] =
       transitionConfig={undefined}
     >
       <View
+        collapsable={undefined}
         onLayout={[Function]}
         style={
           Object {
@@ -354,6 +355,7 @@ exports[`StackNavigator renders successfully 1`] = `
       transitionConfig={undefined}
     >
       <View
+        collapsable={undefined}
         onLayout={[Function]}
         style={
           Object {
