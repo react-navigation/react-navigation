@@ -134,7 +134,7 @@ exports[`TabBarBottom renders successfully 1`] = `
     bounces={false}
     contentContainerStyle={
       Object {
-        "flexGrow": 1,
+        "flex": 1,
       }
     }
     contentOffset={
@@ -164,9 +164,10 @@ exports[`TabBarBottom renders successfully 1`] = `
     onTouchEnd={[Function]}
     onTouchMove={[Function]}
     onTouchStart={[Function]}
+    overScrollMode="never"
     pagingEnabled={true}
     scrollEnabled={undefined}
-    scrollEventThrottle={16}
+    scrollEventThrottle={1}
     scrollsToTop={false}
     sendMomentumEvents={true}
     showsHorizontalScrollIndicator={false}
@@ -179,7 +180,7 @@ exports[`TabBarBottom renders successfully 1`] = `
           "overflow": "scroll",
         },
         Object {
-          "flexGrow": 1,
+          "flex": 1,
         },
       ]
     }
@@ -193,7 +194,7 @@ exports[`TabBarBottom renders successfully 1`] = `
             "flexDirection": "row",
           },
           Object {
-            "flexGrow": 1,
+            "flex": 1,
           },
         ]
       }
