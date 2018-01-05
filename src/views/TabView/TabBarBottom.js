@@ -13,6 +13,7 @@ import {
 import TabBarIcon from './TabBarIcon';
 import SafeAreaView from '../SafeAreaView';
 import withOrientation from '../withOrientation';
+import type { Layout } from 'react-native-tab-view/src/TabViewTypeDefinitions';
 
 import type {
   NavigationRoute,
@@ -52,11 +53,9 @@ type Props = {
   tabStyle?: ViewStyleProp,
   showIcon?: boolean,
   isLandscape: boolean,
-};
-
-type State = {
-  viewWidth: number,
-  maxTabItemWidth: number,
+  initialLayout?: Layout,
+  layout: Layout,
+  enableHorizontalTabs: boolean,
 };
 
 const majorVersion = parseInt(Platform.Version, 10);
@@ -65,12 +64,7 @@ const canUseHorizontalTabs = majorVersion >= 11 && isIos;
 const isPad =
   Dimensions.get('window').height / Dimensions.get('window').width < 1.6;
 
-class TabBarBottom extends React.PureComponent<Props, State> {
-  state = {
-    viewWidth: 0,
-    maxTabItemWidth: 0,
-  };
-
+class TabBarBottom extends React.PureComponent<Props> {
   // See https://developer.apple.com/library/content/documentation/UserExperience/Conceptual/UIKitUICatalog/UITabBar.html
   static defaultProps = {
     activeTintColor: '#3478f6', // Default active tint color in iOS 10
@@ -80,6 +74,7 @@ class TabBarBottom extends React.PureComponent<Props, State> {
     showLabel: true,
     showIcon: true,
     allowFontScaling: true,
+    enableHorizontalTabs: isIos,
   };
 
   _renderLabel = (scene: TabScene) => {
@@ -171,14 +166,23 @@ class TabBarBottom extends React.PureComponent<Props, State> {
   };
   shouldUseHorizontalTabs() {
     const { routes } = this.props.navigation.state;
-    const { maxTabItemWidth, viewWidth } = this.state;
-    const { isLandscape } = this.props;
+    const {
+      isLandscape,
+      initialLayout,
+      layout,
+      enableHorizontalTabs,
+    } = this.props;
+    const maxTabBarItemWidth = 125;
+    let tabBarWidth;
+    if (layout && layout.width) tabBarWidth = layout.width;
+    else if (initialLayout && initialLayout.width)
+      tabBarWidth = initialLayout.width;
+    else return isPad;
+    if (!enableHorizontalTabs) return false;
     if (isPad) {
-      if (viewWidth === 0 || maxTabItemWidth === 0) return true;
       return (
         canUseHorizontalTabs &&
-        // maxTabItemWidth + 10 ensures that there is a 5pt margin on each side of the widest item
-        routes.length * (maxTabItemWidth + 10) < viewWidth
+        routes.length * maxTabBarItemWidth <= tabBarWidth
       );
     } else {
       return canUseHorizontalTabs && isLandscape;
@@ -213,12 +217,7 @@ class TabBarBottom extends React.PureComponent<Props, State> {
     ];
 
     return (
-      <Animated.View
-        style={animateStyle}
-        onLayout={evt => {
-          this.setState({ viewWidth: evt.nativeEvent.layout.width });
-        }}
-      >
+      <Animated.View style={animateStyle}>
         <SafeAreaView
           style={tabBarStyle}
           forceInset={{ bottom: 'always', top: 'never' }}
@@ -254,12 +253,6 @@ class TabBarBottom extends React.PureComponent<Props, State> {
               >
                 <Animated.View style={[styles.tab, { backgroundColor }]}>
                   <View
-                    onLayout={evt => {
-                      const { maxTabItemWidth } = this.state;
-                      let itemWidth = evt.nativeEvent.layout.width;
-                      if (itemWidth > maxTabItemWidth)
-                        this.setState({ maxTabItemWidth: itemWidth });
-                    }}
                     style={[
                       styles.tab,
                       this.shouldUseHorizontalTabs()
