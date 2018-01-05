@@ -1,6 +1,6 @@
 {
   "name": "react-navigation",
-  "version": "1.0.0-beta.22",
+  "version": "1.0.0-beta.23",
   "description": "React Navigation",
   "main": "src/react-navigation.js",
   "sources": {
@@ -55,7 +55,7 @@
     "path-to-regexp": "^1.7.0",
     "prop-types": "^15.5.10",
     "react-native-drawer-layout-polyfill": "^1.3.2",
-    "react-native-tab-view": "^0.0.70"
+    "react-native-tab-view": "^0.0.74"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
