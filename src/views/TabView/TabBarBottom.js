@@ -186,10 +186,11 @@ class TabBarBottom extends React.PureComponent<Props> {
       return isPad;
     }
 
-    if (isPad) {
-      return routes.length * maxTabBarItemWidth <= tabBarWidth;
-    } else {
+    const isHeightConstrained = layout.height < 500;
+    if (isHeightConstrained) {
       return isLandscape;
+    } else {
+      return routes.length * maxTabBarItemWidth <= tabBarWidth;
     }
   }
 
@@ -206,15 +207,18 @@ class TabBarBottom extends React.PureComponent<Props> {
       animateStyle,
       tabStyle,
       isLandscape,
+      layout,
     } = this.props;
     const { routes } = navigation.state;
     const previousScene = routes[navigation.state.index];
     // Prepend '-1', so there are always at least 2 items in inputRange
     const inputRange = [-1, ...routes.map((x: *, i: number) => i)];
 
+    const isHeightConstrained =
+      layout.height === 0 ? !isPad : layout.height < 500;
     const tabBarStyle = [
       styles.tabBar,
-      this._shouldUseHorizontalTabs() && !isPad
+      this._shouldUseHorizontalTabs() && isHeightConstrained
         ? styles.tabBarCompact
         : styles.tabBarRegular,
       style,
