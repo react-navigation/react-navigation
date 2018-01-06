@@ -53,9 +53,8 @@ type Props = {
   tabStyle?: ViewStyleProp,
   showIcon?: boolean,
   isLandscape: boolean,
-  initialLayout?: Layout,
   layout: Layout,
-  enableHorizontalTabs: boolean,
+  adaptiveTabs: boolean,
 };
 
 const majorVersion = parseInt(Platform.Version, 10);
@@ -74,7 +73,7 @@ class TabBarBottom extends React.PureComponent<Props> {
     showLabel: true,
     showIcon: true,
     allowFontScaling: true,
-    enableHorizontalTabs: isIos,
+    adaptiveTabs: canUseHorizontalTabs,
   };
 
   _renderLabel = (scene: TabScene) => {
@@ -114,7 +113,7 @@ class TabBarBottom extends React.PureComponent<Props> {
           style={[
             styles.label,
             { color },
-            showIcon && this.shouldUseHorizontalTabs()
+            showIcon && this._shouldUseHorizontalTabs()
               ? styles.labelBeside
               : styles.labelBeneath,
             labelStyle,
@@ -154,7 +153,7 @@ class TabBarBottom extends React.PureComponent<Props> {
         inactiveTintColor={inactiveTintColor}
         renderIcon={renderIcon}
         scene={scene}
-        style={showLabel && this.shouldUseHorizontalTabs() ? {} : styles.icon}
+        style={showLabel && this._shouldUseHorizontalTabs() ? {} : styles.icon}
       />
     );
   };
@@ -164,28 +163,33 @@ class TabBarBottom extends React.PureComponent<Props> {
       this.props.getTestIDProps && this.props.getTestIDProps(scene);
     return testIDProps;
   };
-  shouldUseHorizontalTabs() {
+
+  _shouldUseHorizontalTabs() {
     const { routes } = this.props.navigation.state;
-    const {
-      isLandscape,
-      initialLayout,
-      layout,
-      enableHorizontalTabs,
-    } = this.props;
-    const maxTabBarItemWidth = 125;
-    let tabBarWidth;
-    if (layout && layout.width) tabBarWidth = layout.width;
-    else if (initialLayout && initialLayout.width)
-      tabBarWidth = initialLayout.width;
-    else return isPad;
-    if (!enableHorizontalTabs) return false;
+    const { isLandscape, layout, adaptiveTabs, tabStyle } = this.props;
+
+    if (!adaptiveTabs) {
+      return false;
+    }
+
+    let maxTabBarItemWidth = 125;
+    if (tabStyle) {
+      if (tabStyle.width && typeof tabStyle.width === 'number') {
+        maxTabBarItemWidth = tabStyle.width;
+      } else if (tabStyle.maxWidth && typeof tabStyle.maxWidth === 'number') {
+        maxTabBarItemWidth = tabStyle.maxWidth;
+      }
+    }
+
+    let tabBarWidth = layout.width;
+    if (tabBarWidth === 0) {
+      return isPad;
+    }
+
     if (isPad) {
-      return (
-        canUseHorizontalTabs &&
-        routes.length * maxTabBarItemWidth <= tabBarWidth
-      );
+      return routes.length * maxTabBarItemWidth <= tabBarWidth;
     } else {
-      return canUseHorizontalTabs && isLandscape;
+      return isLandscape;
     }
   }
 
@@ -210,7 +214,7 @@ class TabBarBottom extends React.PureComponent<Props> {
 
     const tabBarStyle = [
       styles.tabBar,
-      this.shouldUseHorizontalTabs() && !isPad
+      this._shouldUseHorizontalTabs() && !isPad
         ? styles.tabBarCompact
         : styles.tabBarRegular,
       style,
@@ -255,7 +259,7 @@ class TabBarBottom extends React.PureComponent<Props> {
                   <View
                     style={[
                       styles.tab,
-                      this.shouldUseHorizontalTabs()
+                      this._shouldUseHorizontalTabs()
                         ? styles.tabLandscape
                         : styles.tabPortrait,
                       tabStyle,

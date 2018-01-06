@@ -22,7 +22,6 @@ exports[`TabBarBottom renders successfully 1`] = `
 >
   <View
     collapsable={undefined}
-    onLayout={[Function]}
     style={undefined}
   >
     <View
@@ -67,7 +66,6 @@ exports[`TabBarBottom renders successfully 1`] = `
         testID={undefined}
       >
         <View
-          onLayout={[Function]}
           style={
             Array [
               Object {
