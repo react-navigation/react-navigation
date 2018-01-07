@@ -54,14 +54,15 @@ type Props = {
   showIcon?: boolean,
   isLandscape: boolean,
   layout: Layout,
-  adaptiveTabs: boolean,
+  adaptive: boolean,
 };
 
 const majorVersion = parseInt(Platform.Version, 10);
 const isIos = Platform.OS === 'ios';
-const canUseHorizontalTabs = majorVersion >= 11 && isIos;
-const isPad =
+const isIOS11 = majorVersion >= 11 && isIos;
+const isTablet =
   Dimensions.get('window').height / Dimensions.get('window').width < 1.6;
+const defaultMaxTabBarItemWidth = 125;
 
 class TabBarBottom extends React.PureComponent<Props> {
   // See https://developer.apple.com/library/content/documentation/UserExperience/Conceptual/UIKitUICatalog/UITabBar.html
@@ -73,7 +74,7 @@ class TabBarBottom extends React.PureComponent<Props> {
     showLabel: true,
     showIcon: true,
     allowFontScaling: true,
-    adaptiveTabs: canUseHorizontalTabs,
+    adaptive: isIOS11,
   };
 
   _renderLabel = (scene: TabScene) => {
@@ -164,32 +165,61 @@ class TabBarBottom extends React.PureComponent<Props> {
     return testIDProps;
   };
 
-  _shouldUseHorizontalTabs() {
-    const { routes } = this.props.navigation.state;
-    const { isLandscape, layout, adaptiveTabs, tabStyle } = this.props;
+  _tabItemMaxWidth() {
+    const { tabStyle, layout } = this.props;
+    let maxTabBarItemWidth;
 
-    if (!adaptiveTabs) {
-      return false;
+    const flattenedTabStyle = StyleSheet.flatten(tabStyle);
+
+    if (flattenedTabStyle) {
+      if (typeof flattenedTabStyle.width === 'number') {
+        maxTabBarItemWidth = flattenedTabStyle.width;
+      } else if (
+        typeof flattenedTabStyle.width === 'string' &&
+        flattenedTabStyle.endsWith('%')
+      ) {
+        const width = parseFloat(flattenedTabStyle.width);
+        if (Number.isFinite(width)) {
+          maxTabBarItemWidth = layout.width * (width / 100);
+        }
+      } else if (typeof flattenedTabStyle.maxWidth === 'number') {
+        maxTabBarItemWidth = flattenedTabStyle.maxWidth;
+      } else if (
+        typeof flattenedTabStyle.maxWidth === 'string' &&
+        flattenedTabStyle.endsWith('%')
+      ) {
+        const width = parseFloat(flattenedTabStyle.maxWidth);
+        if (Number.isFinite(width)) {
+          maxTabBarItemWidth = layout.width * (width / 100);
+        }
+      }
     }
 
-    let maxTabBarItemWidth = 125;
-    if (tabStyle) {
-      if (tabStyle.width && typeof tabStyle.width === 'number') {
-        maxTabBarItemWidth = tabStyle.width;
-      } else if (tabStyle.maxWidth && typeof tabStyle.maxWidth === 'number') {
-        maxTabBarItemWidth = tabStyle.maxWidth;
-      }
+    if (!maxTabBarItemWidth) {
+      maxTabBarItemWidth = defaultMaxTabBarItemWidth;
+    }
+
+    return maxTabBarItemWidth;
+  }
+
+  _shouldUseHorizontalTabs() {
+    const { routes } = this.props.navigation.state;
+    const { isLandscape, layout, adaptive, tabStyle } = this.props;
+
+    if (!adaptive) {
+      return false;
     }
 
     let tabBarWidth = layout.width;
     if (tabBarWidth === 0) {
-      return isPad;
+      return isTablet;
     }
 
     const isHeightConstrained = layout.height < 500;
     if (isHeightConstrained) {
       return isLandscape;
     } else {
+      const maxTabBarItemWidth = this._tabItemMaxWidth();
       return routes.length * maxTabBarItemWidth <= tabBarWidth;
     }
   }
@@ -215,7 +245,7 @@ class TabBarBottom extends React.PureComponent<Props> {
     const inputRange = [-1, ...routes.map((x: *, i: number) => i)];
 
     const isHeightConstrained =
-      layout.height === 0 ? !isPad : layout.height < 500;
+      layout.height === 0 ? !isTablet : layout.height < 500;
     const tabBarStyle = [
       styles.tabBar,
       this._shouldUseHorizontalTabs() && isHeightConstrained
