@@ -1,4 +1,6 @@
-# React Navigation [![CircleCI](https://circleci.com/gh/react-community/react-navigation/tree/master.svg?style=shield&circle-token=622fcb1d78413084c2f44699ed2104246a177485)](https://circleci.com/gh/react-community/react-navigation/tree/master) [![npm version](https://badge.fury.io/js/react-navigation.svg)](https://badge.fury.io/js/react-navigation) [![codecov](https://codecov.io/gh/react-community/react-navigation/branch/master/graph/badge.svg)](https://codecov.io/gh/react-community/react-navigation) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://reactnavigation.org/docs/guides/contributors)
+# React Navigation
+
+[![npm version](https://badge.fury.io/js/react-navigation.svg)](https://badge.fury.io/js/react-navigation) [![codecov](https://codecov.io/gh/react-community/react-navigation/branch/master/graph/badge.svg)](https://codecov.io/gh/react-community/react-navigation) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://reactnavigation.org/docs/guides/contributors)
 
 *Learn once, navigate anywhere.*
 
