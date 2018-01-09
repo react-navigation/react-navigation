@@ -85,6 +85,8 @@ export default function createNavigationContainer<S: NavigationState, O: {}>(
       let path = url.split(delimiter)[1];
       if (typeof path === 'undefined') {
         path = url;
+      } else if (path === '') {
+        path = '/';
       }
       return {
         path,
