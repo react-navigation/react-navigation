@@ -33,9 +33,9 @@ export type DrawerViewConfig = {
   drawerLockMode?: 'unlocked' | 'locked-closed' | 'locked-open',
   drawerWidth?: number | (() => number),
   drawerPosition?: 'left' | 'right',
-  drawerOpenRoute: string,
-  drawerCloseRoute: string,
-  drawerToggleRoute: string,
+  drawerOpenRoute?: string,
+  drawerCloseRoute?: string,
+  drawerToggleRoute?: string,
   contentComponent?: React.ComponentType<*>,
   contentOptions?: {},
   style?: ViewStyleProp,
@@ -44,11 +44,21 @@ export type DrawerViewConfig = {
   screenProps?: {},
 };
 
-export type DrawerViewPropsExceptRouter = DrawerViewConfig & {
-  navigation: NavigationScreenProp<NavigationState>,
-};
+export type DrawerViewProps = {
+  drawerLockMode?: 'unlocked' | 'locked-closed' | 'locked-open',
+  drawerWidth: number | (() => number),
+  drawerPosition: 'left' | 'right',
+  drawerOpenRoute: string,
+  drawerCloseRoute: string,
+  drawerToggleRoute: string,
+  contentComponent: React.ComponentType<*>,
+  contentOptions?: {},
+  style?: ViewStyleProp,
+  useNativeAnimations: boolean,
+  drawerBackgroundColor: string,
+  screenProps?: {},
 
-export type DrawerViewProps = DrawerViewPropsExceptRouter & {
+  navigation: NavigationScreenProp<NavigationState>,
   router: NavigationRouter<NavigationState, NavigationDrawerScreenOptions>,
 };
 
