@@ -105,68 +105,81 @@ exports[`TabNavigator renders successfully 1`] = `
             "alignItems": "center",
             "backgroundColor": "rgba(0, 0, 0, 0)",
             "flex": 1,
-            "justifyContent": "flex-end",
           }
         }
         testID={undefined}
       >
         <View
           style={
-            Object {
-              "flexGrow": 1,
-            }
+            Array [
+              Object {
+                "alignItems": "center",
+                "flex": 1,
+              },
+              Object {
+                "flexDirection": "column",
+                "justifyContent": "flex-end",
+              },
+              undefined,
+            ]
           }
         >
           <View
-            collapsable={undefined}
             style={
               Object {
-                "alignItems": "center",
-                "bottom": 0,
-                "justifyContent": "center",
-                "left": 0,
-                "opacity": 1,
-                "position": "absolute",
-                "right": 0,
-                "top": 0,
+                "flexGrow": 1,
               }
             }
-          />
-          <View
+          >
+            <View
+              collapsable={undefined}
+              style={
+                Object {
+                  "alignItems": "center",
+                  "bottom": 0,
+                  "justifyContent": "center",
+                  "left": 0,
+                  "opacity": 1,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                }
+              }
+            />
+            <View
+              collapsable={undefined}
+              style={
+                Object {
+                  "alignItems": "center",
+                  "bottom": 0,
+                  "justifyContent": "center",
+                  "left": 0,
+                  "opacity": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                }
+              }
+            />
+          </View>
+          <Text
+            accessible={true}
+            allowFontScaling={true}
             collapsable={undefined}
+            ellipsizeMode="tail"
             style={
               Object {
-                "alignItems": "center",
-                "bottom": 0,
-                "justifyContent": "center",
-                "left": 0,
-                "opacity": 0,
-                "position": "absolute",
-                "right": 0,
-                "top": 0,
+                "backgroundColor": "transparent",
+                "color": "rgba(52, 120, 246, 1)",
+                "fontSize": 10,
+                "marginBottom": 1.5,
+                "textAlign": "center",
               }
             }
-          />
+          >
+            Welcome anonymous
+          </Text>
         </View>
-        <Text
-          accessible={true}
-          allowFontScaling={true}
-          collapsable={undefined}
-          ellipsizeMode="tail"
-          style={
-            Object {
-              "backgroundColor": "transparent",
-              "color": "rgba(52, 120, 246, 1)",
-              "fontSize": 10,
-              "marginBottom": 1.5,
-              "marginLeft": 0,
-              "marginTop": 0,
-              "textAlign": "center",
-            }
-          }
-        >
-          Welcome anonymous
-        </Text>
       </View>
     </View>
   </View>
