@@ -8,6 +8,7 @@ import {
   Platform,
   ScrollView,
   StyleSheet,
+  StatusBar,
   Text,
   TouchableOpacity,
   View,
@@ -32,6 +33,7 @@ const MyNavScreen = ({ navigation, banner }) => (
         title="Go back"
       />
     </SafeAreaView>
+    <StatusBar barStyle="default" />
   </ScrollView>
 );
 
@@ -75,6 +77,7 @@ const CustomTabView = ({ router, navigation }) => {
           dispatch: navigation.dispatch,
           state: routes[index],
         })}
+        screenProps={{}}
       />
     </SafeAreaView>
   );

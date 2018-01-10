@@ -17,14 +17,14 @@ import type {
   NavigationRoute,
   NavigationNavigateAction,
   NavigationTabRouterConfig,
-  NavigationTabAction,
   NavigationStateRoute,
+  NavigationAction,
 } from '../TypeDefinition';
 
 export default (
   routeConfigs: NavigationRouteConfigMap,
   config: NavigationTabRouterConfig = {}
-): NavigationRouter<NavigationState, NavigationTabAction, *> => {
+): NavigationRouter<NavigationState, *> => {
   // Fail fast on invalid route definitions
   validateRouteConfigMap(routeConfigs);
 
@@ -52,7 +52,7 @@ export default (
   }
   return {
     getStateForAction(
-      action: NavigationTabAction,
+      action: NavigationAction,
       inputState?: ?NavigationState
     ): ?NavigationState {
       // Establish a default state
@@ -61,11 +61,7 @@ export default (
         const routes = order.map((routeName: string) => {
           const tabRouter = tabRouters[routeName];
           if (tabRouter) {
-            const childAction =
-              action.action ||
-              NavigationActions.init({
-                ...(action.params ? { params: action.params } : {}),
-              });
+            const childAction = NavigationActions.init();
             return {
               ...tabRouter.getStateForAction(childAction),
               key: routeName,
@@ -106,7 +102,7 @@ export default (
       const activeTabRouter = tabRouters[order[state.index]];
       if (activeTabRouter) {
         const activeTabState = activeTabRouter.getStateForAction(
-          action.action || action,
+          action,
           activeTabLastState
         );
         if (!activeTabState && inputState) {
@@ -297,7 +293,7 @@ export default (
     getActionForPathAndParams(
       path: string,
       params: ?NavigationParams
-    ): ?NavigationTabAction {
+    ): ?NavigationAction {
       return (
         order
           .map((tabId: string) => {

@@ -49,6 +49,12 @@ const TITLE_OFFSET = Platform.OS === 'ios' ? 70 : 56;
 
 type Props = HeaderProps & { isLandscape: boolean };
 class Header extends React.PureComponent<Props, State> {
+  static defaultProps = {
+    leftInterpolator: HeaderStyleInterpolator.forLeft,
+    titleInterpolator: HeaderStyleInterpolator.forCenter,
+    rightInterpolator: HeaderStyleInterpolator.forRight,
+  };
+
   static get HEIGHT() {
     console.warn(
       'Header.HEIGHT is deprecated and will be removed before react-navigation comes out of beta.'
@@ -98,9 +104,10 @@ class Header extends React.PureComponent<Props, State> {
   };
 
   _renderTitleComponent = (props: SceneProps): ?React.Node => {
+    // $FlowFixMe
     const details = this.props.getScreenDetails(props.scene);
     const headerTitle = details.options.headerTitle;
-    if (headerTitle && typeof headerTitle !== 'string') {
+    if (React.isValidElement(headerTitle)) {
       return headerTitle;
     }
     const titleString = this._getHeaderTitleString(props.scene);
@@ -123,20 +130,28 @@ class Header extends React.PureComponent<Props, State> {
           }
         : undefined;
 
+    const RenderedHeaderTitle =
+      headerTitle && typeof headerTitle !== 'string'
+        ? headerTitle
+        : HeaderTitle;
     return (
-      <HeaderTitle
+      <RenderedHeaderTitle
         onLayout={onLayoutIOS}
         allowFontScaling={allowFontScaling == null ? true : allowFontScaling}
         style={[color ? { color } : null, titleStyle]}
       >
         {titleString}
-      </HeaderTitle>
+      </RenderedHeaderTitle>
     );
   };
 
   _renderLeftComponent = (props: SceneProps): ?React.Node => {
-    const options = this.props.getScreenDetails(props.scene).options;
-    if (typeof options.headerLeft !== 'undefined') {
+    // $FlowFixMe
+    const { options } = this.props.getScreenDetails(props.scene);
+    if (
+      React.isValidElement(options.headerLeft) ||
+      options.headerLeft === null
+    ) {
       return options.headerLeft;
     }
     if (props.scene.index === 0) {
@@ -149,8 +164,9 @@ class Header extends React.PureComponent<Props, State> {
     const width = this.state.widths[props.scene.key]
       ? (this.props.layout.initWidth - this.state.widths[props.scene.key]) / 2
       : undefined;
+    const RenderedLeftComponent = options.headerLeft || HeaderBackButton;
     return (
-      <HeaderBackButton
+      <RenderedLeftComponent
         onPress={this._navigateBack}
         pressColorAndroid={options.headerPressColorAndroid}
         tintColor={options.headerTintColor}
@@ -173,7 +189,7 @@ class Header extends React.PureComponent<Props, State> {
       props,
       'left',
       this._renderLeftComponent,
-      HeaderStyleInterpolator.forLeft
+      this.props.leftInterpolator
     );
   }
 
@@ -200,7 +216,7 @@ class Header extends React.PureComponent<Props, State> {
       { ...props, style },
       'title',
       this._renderTitleComponent,
-      HeaderStyleInterpolator.forCenter
+      this.props.titleInterpolator
     );
   }
 
@@ -209,7 +225,7 @@ class Header extends React.PureComponent<Props, State> {
       props,
       'right',
       this._renderRightComponent,
-      HeaderStyleInterpolator.forRight
+      this.props.rightInterpolator
     );
   }
 

@@ -105,15 +105,15 @@ React Element or a function that given `HeaderProps` returns a React Element, to
 
 #### `headerTitle`
 
-String or React Element used by the header. Defaults to scene `title`
+String, React Element or React Component used by the header. Defaults to scene `title`. When a component is used, it receives `allowFontScaling`, `style` and `children` props. The title string is passed in `children`.
 
 #### `headerTitleAllowFontScaling`
 
-Whether header title font should scale to respect Text Size accessibility settings. Defaults to true
+Whether header title font should scale to respect Text Size accessibility settings. Defaults to true.
 
 #### `headerBackTitle`
 
-Title string used by the back button on iOS, or `null` to disable label. Defaults to the previous scene's `headerTitle`
+Title string used by the back button on iOS, or `null` to disable label. Defaults to the previous scene's `headerTitle`.
 
 #### `headerTruncatedBackTitle`
 
@@ -121,11 +121,11 @@ Title string used by the back button when `headerBackTitle` doesn't fit on the s
 
 #### `headerRight`
 
-React Element to display on the right side of the header
+React Element to display on the right side of the header.
 
 #### `headerLeft`
 
-React Element to display on the left side of the header
+React Element or Component to display on the left side of the header. When a component is used, it receives a number of props when rendered (`onPress`, `title`, `titleStyle` and more - check `Header.js` for the complete list).
 
 #### `headerStyle`
 
@@ -157,6 +157,10 @@ Object to override the distance of touch start from the edge of the screen to re
 
 - `horizontal` - *number* - Distance for horizontal direction. Defaults to 25.
 - `vertical` - *number* - Distance for vertical direction. Defaults to 135.
+
+#### `gestureDirection`
+
+String to override the direction for dismiss gesture. `default` for normal behaviour or `inverted` for right-to-left swipes.
 
 ### Navigator Props
 
@@ -222,3 +226,5 @@ const ModalNavigator = StackNavigator(
   }
 );
  ```
+
+Header transitions can also be configured using `headerLeftInterpolator`, `headerTitleInterpolator` and `headerRightInterpolator` fields under `transitionConfig`.
