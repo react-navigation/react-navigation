@@ -147,7 +147,7 @@ export default (
             ...state,
             index: previousIndex,
             backstack: [
-              ...state.backstack.slice(0, state.backstack.length - 1),
+              ...state.backstack.slice(0, -1),
             ],
           };
         }
