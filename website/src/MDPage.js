@@ -54,14 +54,14 @@ const MDPage = ({ navigation, docPath }) => (
         return <CodeBlock code={literal} />;
       },
       Heading: function HeadingComponent({ level, children }) {
-        let id = React.Children		 +        let id = React.Children.map(children, child => {
-          .map(children, child => {		 +          if (typeof child === 'string') {
-            if (typeof child === 'string') {		 +            return safeString(child);
-              return safeString(child);		 +          } else if (typeof child.props.children === 'string') {
-            } else if (typeof child.props.children === 'string') {		 +            return safeString(child.props.children);
-              return safeString(child.props.children);		 +          }
-            }		 +        }).join('-');
-          })		
+        let id = React.Children
+          .map(children, child => {
+            if (typeof child === 'string') {
+              return safeString(child);
+            } else if (typeof child.props.children === 'string') {
+              return safeString(child.props.children);
+            }
+          })
           .join('-');
         const Header = getHeadingForLevel(level);
         const linkHeader = id ? '' : 'link-header';
