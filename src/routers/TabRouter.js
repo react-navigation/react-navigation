@@ -74,16 +74,14 @@ export default (
             routeName,
           };
         });
+        state = {
+          routes,
+          index: initialRouteIndex,
+        };
         if (shouldBackNavigateToLastActiveTab) {
           state = {
-            routes,
-            index: initialRouteIndex,
+            ...state,
             backstack: [],
-          };
-        } else {
-          state = {
-            routes,
-            index: initialRouteIndex,
           };
         }
         // console.log(`${order.join('-')}: Initial state`, {state});
