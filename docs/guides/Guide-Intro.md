@@ -1,175 +1,23 @@
-# Hello Mobile Navigation
+# Introduction
 
-Let's use React Navigation to build a simple chat application for Android and iOS.
+_Learn once, navigate anywhere._
 
-## Setup and Installation
+React Navigation is born from the React Native community's need for an extensible yet easy-to-use navigation solution based on Javascript.
 
-First, make sure you're [all set up to use React Native](http://facebook.github.io/react-native/docs/getting-started.html). Next, create a new project and add `react-navigation`:
+React Navigation is the result of a collaboration between developers from Facebook, Expo and the React community at large: it replaces and improves upon several navigation libraries in the ecosystem, including Ex-Navigation, React Native's Navigator and NavigationExperimental components.
 
+## Getting Started
 
-```sh
-# Create a new React Native App
-react-native init SimpleApp
-cd SimpleApp
+If you're already familiar with React Native then you'll be able to get moving with React Navigation in minimal time.
 
-# Install the latest version of react-navigation from npm
-npm install --save react-navigation
+1. [Quick Start](/docs/intro/quick-start)
+Quickly get a grasp on the React Navigation API with demonstrations of the StackNavigator, TabNavigator, and DrawerNavigator.
 
-# Run the new app
-react-native run-android # or:
-react-native run-ios
-```
+2. [Simple App](/docs/intro/basic-app)
+Dive into the basics of React Navigation by creating a new React Native project, installing React Navigation, creating your first navigator, and learning how to interact with it.
 
-Verify that you can successfully see the bare sample app run on iOS and/or Android:
+3. [Navigation Playground](https://github.com/react-community/react-navigation/tree/master/examples/NavigationPlayground)
+Curious of the various capabilities of React Navigation? Browse the official example app, which will demonstrate various patterns with React Navigation.
 
-```phone-example
-bare-project
-```
-
-We want to share code on iOS and Android, so lets delete the contents of `index.ios.js` and `index.android.js` and replace it with `import './App';`.
-
-Now lets create the new file for our app implementation, `App.js`.
-
-## Introducing Stack Navigator
-
-For our app, we want to use the `StackNavigator` because we want a conceptual 'stack' navigation, where each new screen is put on the top of the stack and going back removes a screen from the top of the stack. Let's start with just one screen:
-
-```js
-import React from 'react';
-import {
-  AppRegistry,
-  Text,
-} from 'react-native';
-import { StackNavigator } from 'react-navigation';
-
-class HomeScreen extends React.Component {
-  static navigationOptions = {
-    title: 'Welcome',
-  };
-  render() {
-    return <Text>Hello, Navigation!</Text>;
-  }
-}
-
-const SimpleApp = StackNavigator({
-  Home: { screen: HomeScreen },
-});
-
-AppRegistry.registerComponent('SimpleApp', () => SimpleApp);
-```
-
-The `title` of the screen is configurable on the [static `navigationOptions`](/docs/navigators/navigation-options), where many options can be set to configure the presentation of the screen in the navigator.
-
-Now the same screen should appear on both iPhone and Android apps:
-
-```phone-example
-first-screen
-```
-
-## Adding a New Screen
-
-In our `App.js` file, let's add a new screen called `ChatScreen`:
-
-```js
-class ChatScreen extends React.Component {
-  static navigationOptions = {
-    title: 'Chat with Lucy',
-  };
-  render() {
-    return (
-      <View>
-        <Text>Chat with Lucy</Text>
-      </View>
-    );
-  }
-}
-```
-
-We can then add a button to our `HomeScreen` component that links to `ChatScreen` using the `routeName` `Chat`.
-
-```js
-class HomeScreen extends React.Component {
-  static navigationOptions = {
-    title: 'Welcome',
-  };
-  render() {
-    const { navigate } = this.props.navigation;
-    return (
-      <View>
-        <Text>Hello, Chat App!</Text>
-        <Button
-          onPress={() => navigate('Chat')}
-          title="Chat with Lucy"
-        />
-      </View>
-    );
-  }
-}
-```
-
-We're using the navigate function from the [screen navigation prop](/docs/navigators/navigation-prop) to go to `ChatScreen`. But that won't work until we add this to our `StackNavigator` like so:
-
-```js
-const SimpleApp = StackNavigator({
-  Home: { screen: HomeScreen },
-  Chat: { screen: ChatScreen },
-});
-```
-
-Now you can navigate to your new screen, and go back:
-
-```phone-example
-first-navigation
-```
-
-## Passing params
-
-Hardcoding a name into the `ChatScreen` isn't ideal. It'd be more useful if we could pass a name to be rendered instead, so let's do that.
-
-In addition to specifying the target `routeName` in the navigate function, we can pass params that will be put into the new route. First, we'll edit our `HomeScreen` component to pass a `user` param into the route.
-
-```js
-class HomeScreen extends React.Component {
-  static navigationOptions = {
-    title: 'Welcome',
-  };
-  render() {
-    const { navigate } = this.props.navigation;
-    return (
-      <View>
-        <Text>Hello, Chat App!</Text>
-        <Button
-          onPress={() => navigate('Chat', { user: 'Lucy' })}
-          title="Chat with Lucy"
-        />
-      </View>
-    );
-  }
-}
-```
-
-We can then edit our `ChatScreen` component to display the `user` param that was passed in through the route:
-
-```js
-class ChatScreen extends React.Component {
-  // Nav options can be defined as a function of the screen's props:
-  static navigationOptions = ({ navigation }) => ({
-    title: `Chat with ${navigation.state.params.user}`,
-  });
-  render() {
-    // The screen's current route is passed in to `props.navigation.state`:
-    const { params } = this.props.navigation.state;
-    return (
-      <View>
-        <Text>Chat with {params.user}</Text>
-      </View>
-    );
-  }
-}
-```
-
-Now you can see the name when you navigate to the Chat screen. Try changing the `user` param in `HomeScreen` and see what happens!
-
-```phone-example
-first-navigation
-```
+4. [Community Contributions](https://github.com/react-community/react-navigation#community-contributions)
+With the flexibility of React Navigation we won't be able to cover every possible situation, but another developer may have! Browse our list of community contributions to find topics that may answer your questions.

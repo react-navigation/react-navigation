@@ -3,38 +3,27 @@
  */
 
 import React from 'react';
-import {
-  Button,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  Text,
-} from 'react-native';
-import {
-  DrawerNavigator,
-} from 'react-navigation';
+import { Button, Platform, ScrollView, StatusBar } from 'react-native';
+import { DrawerNavigator, SafeAreaView } from 'react-navigation';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import SampleText from './SampleText';
 
 const MyNavScreen = ({ navigation, banner }) => (
-  <ScrollView style={styles.container}>
-    <SampleText>{banner}</SampleText>
-    <Button
-      onPress={() => navigation.navigate('DrawerOpen')}
-      title="Open drawer"
-    />
-    <Button
-      onPress={() => navigation.goBack(null)}
-      title="Go back"
-    />
+  <ScrollView>
+    <SafeAreaView forceInset={{ top: 'always' }}>
+      <SampleText>{banner}</SampleText>
+      <Button
+        onPress={() => navigation.navigate('DrawerOpen')}
+        title="Open drawer"
+      />
+      <Button onPress={() => navigation.goBack(null)} title="Go back" />
+    </SafeAreaView>
+    <StatusBar barStyle="default" />
   </ScrollView>
 );
 
 const InboxScreen = ({ navigation }) => (
-  <MyNavScreen
-    banner={'Inbox Screen'}
-    navigation={navigation}
-  />
+  <MyNavScreen banner={'Inbox Screen'} navigation={navigation} />
 );
 InboxScreen.navigationOptions = {
   drawerLabel: 'Inbox',
@@ -48,42 +37,35 @@ InboxScreen.navigationOptions = {
 };
 
 const DraftsScreen = ({ navigation }) => (
-  <MyNavScreen
-    banner={'Drafts Screen'}
-    navigation={navigation}
-  />
+  <MyNavScreen banner={'Drafts Screen'} navigation={navigation} />
 );
 DraftsScreen.navigationOptions = {
   drawerLabel: 'Drafts',
   drawerIcon: ({ tintColor }) => (
-    <MaterialIcons
-      name="drafts"
-      size={24}
-      style={{ color: tintColor }}
-    />
+    <MaterialIcons name="drafts" size={24} style={{ color: tintColor }} />
   ),
 };
 
-const DrawerExample = DrawerNavigator({
-  Inbox: {
-    path: '/',
-    screen: InboxScreen,
+const DrawerExample = DrawerNavigator(
+  {
+    Inbox: {
+      path: '/',
+      screen: InboxScreen,
+    },
+    Drafts: {
+      path: '/sent',
+      screen: DraftsScreen,
+    },
   },
-  Drafts: {
-    path: '/sent',
-    screen: DraftsScreen,
-  },
-}, {
-  initialRouteName: 'Drafts',
-  contentOptions: {
-    activeTintColor: '#e91e63',
-  },
-});
-
-const styles = StyleSheet.create({
-  container: {
-    marginTop: Platform.OS === 'ios' ? 20 : 0,
-  },
-});
+  {
+    drawerOpenRoute: 'DrawerOpen',
+    drawerCloseRoute: 'DrawerClose',
+    drawerToggleRoute: 'DrawerToggle',
+    initialRouteName: 'Drafts',
+    contentOptions: {
+      activeTintColor: '#e91e63',
+    },
+  }
+);
 
 export default DrawerExample;

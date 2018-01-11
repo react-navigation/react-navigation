@@ -1,9 +1,8 @@
 /* @flow */
-import invariant from 'fbjs/lib/invariant';
 
 import type { NavigationRoute } from '../TypeDefinition';
 
-const deprecatedKeys = ['tabBar', 'header'];
+const deprecatedKeys = ['tabBar'];
 
 /**
  * Make sure screen options returned by the `getScreenOption`
@@ -15,10 +14,11 @@ export default (screenOptions: *, route: NavigationRoute) => {
   const deprecatedKey = keys.find((key: *) => deprecatedKeys.includes(key));
 
   if (typeof screenOptions.title === 'function') {
-    invariant(
-      false,
+    throw new Error(
       [
-        `\`title\` cannot be defined as a function in navigation options for \`${route.routeName}\` screen. \n`,
+        `\`title\` cannot be defined as a function in navigation options for \`${
+          route.routeName
+        }\` screen. \n`,
         'Try replacing the following:',
         '{',
         '    title: ({ state }) => state...',
@@ -28,15 +28,16 @@ export default (screenOptions: *, route: NavigationRoute) => {
         '({ navigation }) => ({',
         '    title: navigation.state...',
         '})',
-      ].join('\n'),
+      ].join('\n')
     );
   }
 
   if (deprecatedKey && typeof screenOptions[deprecatedKey] === 'function') {
-    invariant(
-      false,
+    throw new Error(
       [
-        `\`${deprecatedKey}\` cannot be defined as a function in navigation options for \`${route.routeName}\` screen. \n`,
+        `\`${deprecatedKey}\` cannot be defined as a function in navigation options for \`${
+          route.routeName
+        }\` screen. \n`,
         'Try replacing the following:',
         '{',
         `    ${deprecatedKey}: ({ state }) => ({`,
@@ -48,21 +49,22 @@ export default (screenOptions: *, route: NavigationRoute) => {
         '({ navigation }) => ({',
         `    ${deprecatedKey}Key: navigation.state...`,
         '})',
-      ].join('\n'),
+      ].join('\n')
     );
   }
 
   if (deprecatedKey && typeof screenOptions[deprecatedKey] === 'object') {
-    invariant(
-      false,
+    throw new Error(
       [
-        `Invalid key \`${deprecatedKey}\` defined in navigation options for \`${route.routeName}\` screen.`,
+        `Invalid key \`${deprecatedKey}\` defined in navigation options for \`${
+          route.routeName
+        }\` screen.`,
         '\n',
         'Try replacing the following navigation options:',
         '{',
         `    ${deprecatedKey}: {`,
         ...Object.keys(screenOptions[deprecatedKey]).map(
-          (key: string) => `        ${key}: ...,`,
+          (key: string) => `        ${key}: ...,`
         ),
         '    },',
         '}',
@@ -71,10 +73,10 @@ export default (screenOptions: *, route: NavigationRoute) => {
         '{',
         ...Object.keys(screenOptions[deprecatedKey]).map(
           (key: string) =>
-            `    ${deprecatedKey + key[0].toUpperCase() + key.slice(1)}: ...,`,
+            `    ${deprecatedKey + key[0].toUpperCase() + key.slice(1)}: ...,`
         ),
         '}',
-      ].join('\n'),
+      ].join('\n')
     );
   }
 };

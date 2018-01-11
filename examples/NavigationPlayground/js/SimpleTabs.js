@@ -3,20 +3,13 @@
  */
 
 import React from 'react';
-import {
-  Button,
-  Platform,
-  ScrollView,
-  StyleSheet,
-} from 'react-native';
-import {
-  TabNavigator,
-} from 'react-navigation';
+import { Button, Platform, ScrollView, StatusBar, View } from 'react-native';
+import { SafeAreaView, TabNavigator } from 'react-navigation';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import SampleText from './SampleText';
 
 const MyNavScreen = ({ navigation, banner }) => (
-  <ScrollView style={styles.container}>
+  <SafeAreaView forceInset={{ horizontal: 'always', top: 'always' }}>
     <SampleText>{banner}</SampleText>
     <Button
       onPress={() => navigation.navigate('Home')}
@@ -26,21 +19,20 @@ const MyNavScreen = ({ navigation, banner }) => (
       onPress={() => navigation.navigate('Settings')}
       title="Go to settings tab"
     />
-    <Button
-      onPress={() => navigation.goBack(null)}
-      title="Go back"
-    />
-  </ScrollView>
+    <Button onPress={() => navigation.goBack(null)} title="Go back" />
+    <StatusBar barStyle="default" />
+  </SafeAreaView>
 );
 
 const MyHomeScreen = ({ navigation }) => (
-  <MyNavScreen
-    banner="Home Tab"
-    navigation={navigation}
-  />
+  <MyNavScreen banner="Home Tab" navigation={navigation} />
 );
 
 MyHomeScreen.navigationOptions = {
+  tabBarTestIDProps: {
+    testID: 'TEST_ID_HOME',
+    accessibilityLabel: 'TEST_ID_HOME_ACLBL',
+  },
   tabBarLabel: 'Home',
   tabBarIcon: ({ tintColor, focused }) => (
     <Ionicons
@@ -52,10 +44,7 @@ MyHomeScreen.navigationOptions = {
 };
 
 const MyPeopleScreen = ({ navigation }) => (
-  <MyNavScreen
-    banner="People Tab"
-    navigation={navigation}
-  />
+  <MyNavScreen banner="People Tab" navigation={navigation} />
 );
 
 MyPeopleScreen.navigationOptions = {
@@ -70,10 +59,7 @@ MyPeopleScreen.navigationOptions = {
 };
 
 const MyChatScreen = ({ navigation }) => (
-  <MyNavScreen
-    banner="Chat Tab"
-    navigation={navigation}
-  />
+  <MyNavScreen banner="Chat Tab" navigation={navigation} />
 );
 
 MyChatScreen.navigationOptions = {
@@ -88,10 +74,7 @@ MyChatScreen.navigationOptions = {
 };
 
 const MySettingsScreen = ({ navigation }) => (
-  <MyNavScreen
-    banner="Settings Tab"
-    navigation={navigation}
-  />
+  <MyNavScreen banner="Settings Tab" navigation={navigation} />
 );
 
 MySettingsScreen.navigationOptions = {
@@ -105,33 +88,30 @@ MySettingsScreen.navigationOptions = {
   ),
 };
 
-const SimpleTabs = TabNavigator({
-  Home: {
-    screen: MyHomeScreen,
-    path: '',
+const SimpleTabs = TabNavigator(
+  {
+    Home: {
+      screen: MyHomeScreen,
+      path: '',
+    },
+    People: {
+      screen: MyPeopleScreen,
+      path: 'cart',
+    },
+    Chat: {
+      screen: MyChatScreen,
+      path: 'chat',
+    },
+    Settings: {
+      screen: MySettingsScreen,
+      path: 'settings',
+    },
   },
-  People: {
-    screen: MyPeopleScreen,
-    path: 'cart',
-  },
-  Chat: {
-    screen: MyChatScreen,
-    path: 'chat',
-  },
-  Settings: {
-    screen: MySettingsScreen,
-    path: 'settings',
-  },
-}, {
-  tabBarOptions: {
-    activeTintColor: Platform.OS === 'ios' ? '#e91e63' : '#fff',
-  },
-});
-
-const styles = StyleSheet.create({
-  container: {
-    marginTop: Platform.OS === 'ios' ? 20 : 0,
-  },
-});
+  {
+    tabBarOptions: {
+      activeTintColor: Platform.OS === 'ios' ? '#e91e63' : '#fff',
+    },
+  }
+);
 
 export default SimpleTabs;

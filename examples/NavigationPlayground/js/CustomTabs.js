@@ -8,6 +8,7 @@ import {
   Platform,
   ScrollView,
   StyleSheet,
+  StatusBar,
   Text,
   TouchableOpacity,
   View,
@@ -15,6 +16,7 @@ import {
 import {
   createNavigator,
   createNavigationContainer,
+  SafeAreaView,
   TabRouter,
   addNavigationHelpers,
 } from 'react-navigation';
@@ -22,43 +24,35 @@ import SampleText from './SampleText';
 
 const MyNavScreen = ({ navigation, banner }) => (
   <ScrollView>
-    <SampleText>{banner}</SampleText>
-    <Button
-      onPress={() => {
-        navigation.goBack(null);
-      }}
-      title="Go back"
-    />
+    <SafeAreaView forceInset={{ horizontal: 'always' }}>
+      <SampleText>{banner}</SampleText>
+      <Button
+        onPress={() => {
+          navigation.goBack(null);
+        }}
+        title="Go back"
+      />
+    </SafeAreaView>
+    <StatusBar barStyle="default" />
   </ScrollView>
 );
 
 const MyHomeScreen = ({ navigation }) => (
-  <MyNavScreen
-    banner="Home Screen"
-    navigation={navigation}
-  />
+  <MyNavScreen banner="Home Screen" navigation={navigation} />
 );
 
 const MyNotificationsScreen = ({ navigation }) => (
-  <MyNavScreen
-    banner="Notifications Screen"
-    navigation={navigation}
-  />
+  <MyNavScreen banner="Notifications Screen" navigation={navigation} />
 );
 
 const MySettingsScreen = ({ navigation }) => (
-  <MyNavScreen
-    banner="Settings Screen"
-    navigation={navigation}
-  />
+  <MyNavScreen banner="Settings Screen" navigation={navigation} />
 );
 
-const CustomTabBar = ({
-  navigation,
-}) => {
+const CustomTabBar = ({ navigation }) => {
   const { routes } = navigation.state;
   return (
-    <View style={styles.tabContainer}>
+    <SafeAreaView style={styles.tabContainer}>
       {routes.map(route => (
         <TouchableOpacity
           onPress={() => navigation.navigate(route.routeName)}
@@ -68,53 +62,53 @@ const CustomTabBar = ({
           <Text>{route.routeName}</Text>
         </TouchableOpacity>
       ))}
-    </View>
-  );
-}
-
-const CustomTabView = ({
-  router,
-  navigation,
-}) => {
-  const { routes, index } = navigation.state;
-  const ActiveScreen = router.getComponentForState(navigation.state);
-  return (
-    <View style={styles.container}>
-      <CustomTabBar navigation={navigation} />
-      <ActiveScreen
-        navigation={addNavigationHelpers({
-          ...navigation,
-          state: routes[index],
-        })}
-      />
-    </View>
+    </SafeAreaView>
   );
 };
 
-const CustomTabRouter = TabRouter({
-  Home: {
-    screen: MyHomeScreen,
-    path: '',
-  },
-  Notifications: {
-    screen: MyNotificationsScreen,
-    path: 'notifications',
-  },
-  Settings: {
-    screen: MySettingsScreen,
-    path: 'settings',
-  },
-}, {
-  // Change this to start on a different tab
-  initialRouteName: 'Home',
-});
+const CustomTabView = ({ router, navigation }) => {
+  const { routes, index } = navigation.state;
+  const ActiveScreen = router.getComponentForRouteName(routes[index].routeName);
+  return (
+    <SafeAreaView forceInset={{ top: 'always' }}>
+      <CustomTabBar navigation={navigation} />
+      <ActiveScreen
+        navigation={addNavigationHelpers({
+          dispatch: navigation.dispatch,
+          state: routes[index],
+        })}
+        screenProps={{}}
+      />
+    </SafeAreaView>
+  );
+};
 
-const CustomTabs = createNavigationContainer(createNavigator(CustomTabRouter)(CustomTabView));
+const CustomTabRouter = TabRouter(
+  {
+    Home: {
+      screen: MyHomeScreen,
+      path: '',
+    },
+    Notifications: {
+      screen: MyNotificationsScreen,
+      path: 'notifications',
+    },
+    Settings: {
+      screen: MySettingsScreen,
+      path: 'settings',
+    },
+  },
+  {
+    // Change this to start on a different tab
+    initialRouteName: 'Home',
+  }
+);
+
+const CustomTabs = createNavigationContainer(
+  createNavigator(CustomTabRouter)(CustomTabView)
+);
 
 const styles = StyleSheet.create({
-  container: {
-    marginTop: Platform.OS === 'ios' ? 20 : 0,
-  },
   tabContainer: {
     flexDirection: 'row',
     height: 48,
@@ -127,7 +121,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ddd',
     borderRadius: 4,
-  }
+  },
 });
 
 export default CustomTabs;

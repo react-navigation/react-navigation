@@ -11,10 +11,12 @@ import type {
 test('should get config for screen', () => {
   /* eslint-disable react/no-multi-comp */
 
-  class HomeScreen extends Component {
+  class HomeScreen extends Component<void> {
     static navigationOptions = ({ navigation }: *) => ({
-      title: `Welcome ${navigation.state.params ? navigation.state.params.user : 'anonymous'}`,
-      headerVisible: true,
+      title: `Welcome ${
+        navigation.state.params ? navigation.state.params.user : 'anonymous'
+      }`,
+      gesturesEnabled: true,
     });
 
     render() {
@@ -22,10 +24,10 @@ test('should get config for screen', () => {
     }
   }
 
-  class SettingsScreen extends Component {
+  class SettingsScreen extends Component<void> {
     static navigationOptions = {
       title: 'Settings!!!',
-      headerVisible: false,
+      gesturesEnabled: false,
     };
 
     render() {
@@ -33,10 +35,10 @@ test('should get config for screen', () => {
     }
   }
 
-  class NotificationScreen extends Component {
+  class NotificationScreen extends Component<void> {
     static navigationOptions = ({ navigation }: *) => ({
       title: '42',
-      headerVisible: navigation.state.params
+      gesturesEnabled: navigation.state.params
         ? !navigation.state.params.fullscreen
         : true,
     });
@@ -46,18 +48,18 @@ test('should get config for screen', () => {
     }
   }
 
-  const getScreenOptions: NavigationScreenOptionsGetter<NavigationStackScreenOptions, *> = createConfigGetter(
-    {
-      Home: { screen: HomeScreen },
-      Settings: { screen: SettingsScreen },
-      Notifications: {
-        screen: NotificationScreen,
-        navigationOptions: {
-          title: '10 new notifications',
-        },
+  const getScreenOptions: NavigationScreenOptionsGetter<
+    NavigationStackScreenOptions
+  > = createConfigGetter({
+    Home: { screen: HomeScreen },
+    Settings: { screen: SettingsScreen },
+    Notifications: {
+      screen: NotificationScreen,
+      navigationOptions: {
+        title: '10 new notifications',
       },
     },
-  );
+  });
 
   const routes = [
     { key: 'A', routeName: 'Home' },
@@ -70,50 +72,50 @@ test('should get config for screen', () => {
   expect(
     getScreenOptions(
       addNavigationHelpers({ state: routes[0], dispatch: () => false }),
-      {},
-    ).title,
+      {}
+    ).title
   ).toEqual('Welcome anonymous');
   expect(
     getScreenOptions(
       addNavigationHelpers({ state: routes[1], dispatch: () => false }),
-      {},
-    ).title,
+      {}
+    ).title
   ).toEqual('Welcome jane');
   expect(
     getScreenOptions(
       addNavigationHelpers({ state: routes[0], dispatch: () => false }),
-      {},
-    ).headerVisible,
+      {}
+    ).gesturesEnabled
   ).toEqual(true);
   expect(
     getScreenOptions(
       addNavigationHelpers({ state: routes[2], dispatch: () => false }),
-      {},
-    ).title,
+      {}
+    ).title
   ).toEqual('Settings!!!');
   expect(
     getScreenOptions(
       addNavigationHelpers({ state: routes[2], dispatch: () => false }),
-      {},
-    ).headerVisible,
+      {}
+    ).gesturesEnabled
   ).toEqual(false);
   expect(
     getScreenOptions(
       addNavigationHelpers({ state: routes[3], dispatch: () => false }),
-      {},
-    ).title,
+      {}
+    ).title
   ).toEqual('10 new notifications');
   expect(
     getScreenOptions(
       addNavigationHelpers({ state: routes[3], dispatch: () => false }),
-      {},
-    ).headerVisible,
+      {}
+    ).gesturesEnabled
   ).toEqual(true);
   expect(
     getScreenOptions(
       addNavigationHelpers({ state: routes[4], dispatch: () => false }),
-      {},
-    ).headerVisible,
+      {}
+    ).gesturesEnabled
   ).toEqual(false);
 });
 
@@ -123,7 +125,7 @@ test('should throw if the route does not exist', () => {
   const HomeScreen = () => null;
   HomeScreen.navigationOptions = {
     title: 'Home screen',
-    headerVisible: true,
+    gesturesEnabled: true,
   };
 
   const getScreenOptions = createConfigGetter({
@@ -135,9 +137,10 @@ test('should throw if the route does not exist', () => {
   expect(() =>
     getScreenOptions(
       addNavigationHelpers({ state: routes[0], dispatch: () => false }),
-      {},
-    )).toThrowError(
-    "There is no route defined for key Settings.\nMust be one of: 'Home'",
+      {}
+    )
+  ).toThrowError(
+    "There is no route defined for key Settings.\nMust be one of: 'Home'"
   );
 });
 
@@ -152,6 +155,7 @@ test('should throw if the screen is not defined under the route config', () => {
 
   expect(() =>
     getScreenOptions(
-      addNavigationHelpers({ state: routes[0], dispatch: () => false }),
-    )).toThrowError('Route Home must define a screen or a getScreen.');
+      addNavigationHelpers({ state: routes[0], dispatch: () => false })
+    )
+  ).toThrowError('Route Home must define a screen or a getScreen.');
 });
