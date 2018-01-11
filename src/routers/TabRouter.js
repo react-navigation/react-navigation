@@ -131,7 +131,10 @@ export default (
 
       const isBackEligible =
         action.key == null || action.key === activeTabLastState.key;
-      if (action.type === NavigationActions.BACK && isBackEligible) {
+      if (
+        action.type === NavigationActions.BACK &&
+        isBackEligible
+      ) {
         if (shouldBackNavigateToInitialRoute) {
           activeTabIndex = initialRouteIndex;
         } else if (
