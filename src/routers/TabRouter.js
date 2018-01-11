@@ -81,7 +81,7 @@ export default (
         if (shouldBackNavigateToLastActiveTab) {
           state = {
             ...state,
-            backstack: [],
+            backStack: [],
           };
         }
         // console.log(`${order.join('-')}: Initial state`, {state});
@@ -131,24 +131,19 @@ export default (
 
       const isBackEligible =
         action.key == null || action.key === activeTabLastState.key;
-      if (
-        action.type === NavigationActions.BACK &&
-        isBackEligible
-      ) {
+      if (action.type === NavigationActions.BACK && isBackEligible) {
         if (shouldBackNavigateToInitialRoute) {
           activeTabIndex = initialRouteIndex;
         } else if (
           shouldBackNavigateToLastActiveTab &&
-          state.backstack !== undefined &&
-          state.backstack.length >= 1
+          state.backStack !== undefined &&
+          state.backStack.length >= 1
         ) {
-          const previousIndex = state.backstack[state.backstack.length - 1];
+          const previousIndex = state.backStack[state.backStack.length - 1];
           return {
             ...state,
             index: previousIndex,
-            backstack: [
-              ...state.backstack.slice(0, -1),
-            ],
+            backStack: [...state.backStack.slice(0, -1)],
           };
         }
       }
@@ -221,20 +216,20 @@ export default (
         };
         if (
           shouldBackNavigateToLastActiveTab &&
-          state.backstack !== undefined
+          state.backStack !== undefined
         ) {
-          const oldBackstackIndex = state.backstack.findIndex(
+          const oldBackStackIndex = state.backStack.findIndex(
             (index: number) => activeTabIndex === index
           );
-          let oldBackstack: Array<number> =
-            state.backstack !== undefined ? state.backstack : [];
-          if (oldBackstackIndex > -1 && oldBackstack.length > 0) {
-            oldBackstack = [
-              ...oldBackstack.slice(0, oldBackstackIndex),
-              ...oldBackstack.slice(oldBackstackIndex + 1),
+          let oldBackStack: Array<number> =
+            state.backStack !== undefined ? state.backStack : [];
+          if (oldBackStackIndex > -1 && oldBackStack.length > 0) {
+            oldBackStack = [
+              ...oldBackStack.slice(0, oldBackStackIndex),
+              ...oldBackStack.slice(oldBackStackIndex + 1),
             ];
           }
-          newState.backstack = [...oldBackstack, state.index];
+          newState.backStack = [...oldBackStack, state.index];
         }
         return newState;
       } else if (didNavigate && !inputState) {

@@ -752,7 +752,7 @@ describe('TabRouter', () => {
         { key: 'Bar', routeName: 'Bar' },
         { key: 'Dur', routeName: 'Dur' },
       ],
-      backstack: [0],
+      backStack: [0],
     };
     expect(state5).toEqual(expectedState);
     const state6 = router.getStateForAction(
@@ -766,7 +766,7 @@ describe('TabRouter', () => {
         { key: 'Bar', routeName: 'Bar' },
         { key: 'Dur', routeName: 'Dur' },
       ],
-      backstack: [],
+      backStack: [],
     };
     expect(state6).toEqual(expectedState2);
   });
