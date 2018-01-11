@@ -13,9 +13,9 @@ test('should get config for screen', () => {
 
   class HomeScreen extends Component<void> {
     static navigationOptions = ({ navigation }: *) => ({
-      title: `Welcome ${
-        navigation.state.params ? navigation.state.params.user : 'anonymous'
-      }`,
+      title: `Welcome ${navigation.state.params
+        ? navigation.state.params.user
+        : 'anonymous'}`,
       gesturesEnabled: true,
     });
 

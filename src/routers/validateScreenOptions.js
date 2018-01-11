@@ -16,9 +16,7 @@ export default (screenOptions: *, route: NavigationRoute) => {
   if (typeof screenOptions.title === 'function') {
     throw new Error(
       [
-        `\`title\` cannot be defined as a function in navigation options for \`${
-          route.routeName
-        }\` screen. \n`,
+        `\`title\` cannot be defined as a function in navigation options for \`${route.routeName}\` screen. \n`,
         'Try replacing the following:',
         '{',
         '    title: ({ state }) => state...',
@@ -35,9 +33,7 @@ export default (screenOptions: *, route: NavigationRoute) => {
   if (deprecatedKey && typeof screenOptions[deprecatedKey] === 'function') {
     throw new Error(
       [
-        `\`${deprecatedKey}\` cannot be defined as a function in navigation options for \`${
-          route.routeName
-        }\` screen. \n`,
+        `\`${deprecatedKey}\` cannot be defined as a function in navigation options for \`${route.routeName}\` screen. \n`,
         'Try replacing the following:',
         '{',
         `    ${deprecatedKey}: ({ state }) => ({`,
@@ -56,9 +52,7 @@ export default (screenOptions: *, route: NavigationRoute) => {
   if (deprecatedKey && typeof screenOptions[deprecatedKey] === 'object') {
     throw new Error(
       [
-        `Invalid key \`${deprecatedKey}\` defined in navigation options for \`${
-          route.routeName
-        }\` screen.`,
+        `Invalid key \`${deprecatedKey}\` defined in navigation options for \`${route.routeName}\` screen.`,
         '\n',
         'Try replacing the following navigation options:',
         '{',

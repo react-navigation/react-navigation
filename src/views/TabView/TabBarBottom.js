@@ -287,8 +287,7 @@ class TabBarBottom extends React.PureComponent<Props> {
                 onPress={() =>
                   onPress
                     ? onPress({ previousScene, scene, jumpToIndex })
-                    : jumpToIndex(index)
-                }
+                    : jumpToIndex(index)}
               >
                 <Animated.View style={[styles.tab, { backgroundColor }]}>
                   <View

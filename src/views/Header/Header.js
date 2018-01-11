@@ -298,13 +298,13 @@ class Header extends React.PureComponent<Props, State> {
     let appBar;
 
     if (this.props.mode === 'float') {
-      const scenesProps: Array<SceneProps> = this.props.scenes.map(
-        (scene: NavigationScene) => ({
-          position: this.props.position,
-          progress: this.props.progress,
-          scene,
-        })
-      );
+      const scenesProps: Array<
+        SceneProps
+      > = this.props.scenes.map((scene: NavigationScene) => ({
+        position: this.props.position,
+        progress: this.props.progress,
+        scene,
+      }));
       appBar = scenesProps.map(this._renderHeader, this);
     } else {
       appBar = this._renderHeader({
