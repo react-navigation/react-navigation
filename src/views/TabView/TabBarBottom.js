@@ -8,12 +8,10 @@ import {
   View,
   Platform,
   Keyboard,
-  Dimensions,
 } from 'react-native';
 import TabBarIcon from './TabBarIcon';
 import SafeAreaView from '../SafeAreaView';
 import withOrientation from '../withOrientation';
-import type { Layout } from 'react-native-tab-view/src/TabViewTypeDefinitions';
 
 import type {
   NavigationRoute,
@@ -53,16 +51,11 @@ type Props = {
   tabStyle?: ViewStyleProp,
   showIcon?: boolean,
   isLandscape: boolean,
-  layout: Layout,
-  adaptive: boolean,
 };
 
 const majorVersion = parseInt(Platform.Version, 10);
 const isIos = Platform.OS === 'ios';
-const isIOS11 = majorVersion >= 11 && isIos;
-const isTablet =
-  Dimensions.get('window').height / Dimensions.get('window').width < 1.6;
-const defaultMaxTabBarItemWidth = 125;
+const useHorizontalTabs = majorVersion >= 11 && isIos;
 
 class TabBarBottom extends React.PureComponent<Props> {
   // See https://developer.apple.com/library/content/documentation/UserExperience/Conceptual/UIKitUICatalog/UITabBar.html
@@ -74,7 +67,6 @@ class TabBarBottom extends React.PureComponent<Props> {
     showLabel: true,
     showIcon: true,
     allowFontScaling: true,
-    adaptive: isIOS11,
   };
 
   _renderLabel = (scene: TabScene) => {
@@ -107,18 +99,19 @@ class TabBarBottom extends React.PureComponent<Props> {
 
     const tintColor = scene.focused ? activeTintColor : inactiveTintColor;
     const label = this.props.getLabel({ ...scene, tintColor });
+    let marginLeft = 0;
+    if (isLandscape && showIcon && useHorizontalTabs) {
+      marginLeft = LABEL_LEFT_MARGIN;
+    }
+    let marginTop = 0;
+    if (!isLandscape && showIcon && useHorizontalTabs) {
+      marginTop = LABEL_TOP_MARGIN;
+    }
 
     if (typeof label === 'string') {
       return (
         <Animated.Text
-          style={[
-            styles.label,
-            { color },
-            showIcon && this._shouldUseHorizontalTabs()
-              ? styles.labelBeside
-              : styles.labelBeneath,
-            labelStyle,
-          ]}
+          style={[styles.label, { color, marginLeft, marginTop }, labelStyle]}
           allowFontScaling={allowFontScaling}
         >
           {label}
@@ -154,7 +147,7 @@ class TabBarBottom extends React.PureComponent<Props> {
         inactiveTintColor={inactiveTintColor}
         renderIcon={renderIcon}
         scene={scene}
-        style={showLabel && this._shouldUseHorizontalTabs() ? {} : styles.icon}
+        style={showLabel && useHorizontalTabs ? {} : styles.icon}
       />
     );
   };
@@ -164,65 +157,6 @@ class TabBarBottom extends React.PureComponent<Props> {
       this.props.getTestIDProps && this.props.getTestIDProps(scene);
     return testIDProps;
   };
-
-  _tabItemMaxWidth() {
-    const { tabStyle, layout } = this.props;
-    let maxTabBarItemWidth;
-
-    const flattenedTabStyle = StyleSheet.flatten(tabStyle);
-
-    if (flattenedTabStyle) {
-      if (typeof flattenedTabStyle.width === 'number') {
-        maxTabBarItemWidth = flattenedTabStyle.width;
-      } else if (
-        typeof flattenedTabStyle.width === 'string' &&
-        flattenedTabStyle.endsWith('%')
-      ) {
-        const width = parseFloat(flattenedTabStyle.width);
-        if (Number.isFinite(width)) {
-          maxTabBarItemWidth = layout.width * (width / 100);
-        }
-      } else if (typeof flattenedTabStyle.maxWidth === 'number') {
-        maxTabBarItemWidth = flattenedTabStyle.maxWidth;
-      } else if (
-        typeof flattenedTabStyle.maxWidth === 'string' &&
-        flattenedTabStyle.endsWith('%')
-      ) {
-        const width = parseFloat(flattenedTabStyle.maxWidth);
-        if (Number.isFinite(width)) {
-          maxTabBarItemWidth = layout.width * (width / 100);
-        }
-      }
-    }
-
-    if (!maxTabBarItemWidth) {
-      maxTabBarItemWidth = defaultMaxTabBarItemWidth;
-    }
-
-    return maxTabBarItemWidth;
-  }
-
-  _shouldUseHorizontalTabs() {
-    const { routes } = this.props.navigation.state;
-    const { isLandscape, layout, adaptive, tabStyle } = this.props;
-
-    if (!adaptive) {
-      return false;
-    }
-
-    let tabBarWidth = layout.width;
-    if (tabBarWidth === 0) {
-      return isTablet;
-    }
-
-    const isHeightConstrained = layout.height < 500;
-    if (isHeightConstrained) {
-      return isLandscape;
-    } else {
-      const maxTabBarItemWidth = this._tabItemMaxWidth();
-      return routes.length * maxTabBarItemWidth <= tabBarWidth;
-    }
-  }
 
   render() {
     const {
@@ -237,20 +171,17 @@ class TabBarBottom extends React.PureComponent<Props> {
       animateStyle,
       tabStyle,
       isLandscape,
-      layout,
     } = this.props;
     const { routes } = navigation.state;
     const previousScene = routes[navigation.state.index];
     // Prepend '-1', so there are always at least 2 items in inputRange
     const inputRange = [-1, ...routes.map((x: *, i: number) => i)];
 
-    const isHeightConstrained =
-      layout.height === 0 ? !isTablet : layout.height < 500;
     const tabBarStyle = [
       styles.tabBar,
-      this._shouldUseHorizontalTabs() && isHeightConstrained
-        ? styles.tabBarCompact
-        : styles.tabBarRegular,
+      isLandscape && useHorizontalTabs
+        ? styles.tabBarLandscape
+        : styles.tabBarPortrait,
       style,
     ];
 
@@ -289,19 +220,17 @@ class TabBarBottom extends React.PureComponent<Props> {
                     ? onPress({ previousScene, scene, jumpToIndex })
                     : jumpToIndex(index)}
               >
-                <Animated.View style={[styles.tab, { backgroundColor }]}>
-                  <View
-                    style={[
-                      styles.tab,
-                      this._shouldUseHorizontalTabs()
-                        ? styles.tabLandscape
-                        : styles.tabPortrait,
-                      tabStyle,
-                    ]}
-                  >
-                    {this._renderIcon(scene)}
-                    {this._renderLabel(scene)}
-                  </View>
+                <Animated.View
+                  style={[
+                    styles.tab,
+                    isLandscape && useHorizontalTabs && styles.tabLandscape,
+                    !isLandscape && useHorizontalTabs && styles.tabPortrait,
+                    { backgroundColor },
+                    tabStyle,
+                  ]}
+                >
+                  {this._renderIcon(scene)}
+                  {this._renderLabel(scene)}
                 </Animated.View>
               </TouchableWithoutFeedback>
             );
@@ -312,6 +241,8 @@ class TabBarBottom extends React.PureComponent<Props> {
   }
 }
 
+const LABEL_LEFT_MARGIN = 20;
+const LABEL_TOP_MARGIN = 15;
 const styles = StyleSheet.create({
   tabBar: {
     backgroundColor: '#F7F7F7', // Default background color in iOS 10
@@ -319,15 +250,16 @@ const styles = StyleSheet.create({
     borderTopColor: 'rgba(0, 0, 0, .3)',
     flexDirection: 'row',
   },
-  tabBarCompact: {
+  tabBarLandscape: {
     height: 29,
   },
-  tabBarRegular: {
+  tabBarPortrait: {
     height: 49,
   },
   tab: {
     flex: 1,
     alignItems: isIos ? 'center' : 'stretch',
+    justifyContent: 'flex-end',
   },
   tabPortrait: {
     justifyContent: 'flex-end',
@@ -342,15 +274,9 @@ const styles = StyleSheet.create({
   },
   label: {
     textAlign: 'center',
-    backgroundColor: 'transparent',
-  },
-  labelBeneath: {
     fontSize: 10,
     marginBottom: 1.5,
-  },
-  labelBeside: {
-    fontSize: 13,
-    marginLeft: 20,
+    backgroundColor: 'transparent',
   },
 });
 
