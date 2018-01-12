@@ -215,9 +215,12 @@ class TabBarBottom extends React.PureComponent<Props> {
       return isTablet;
     }
 
-    const isHeightConstrained = layout.height < 500;
-    if (isHeightConstrained) {
-      return isLandscape;
+    const isWidthConstrained = layout.width < 450;
+    const isHeightConstrained = layout.height < 450;
+    if (isWidthConstrained) {
+      return false;
+    } else if (isHeightConstrained) {
+      return true;
     } else {
       const maxTabBarItemWidth = this._tabItemMaxWidth();
       return routes.length * maxTabBarItemWidth <= tabBarWidth;
