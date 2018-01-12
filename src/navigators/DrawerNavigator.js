@@ -63,6 +63,9 @@ const DefaultDrawerConfig = {
     return Math.min(smallerAxisSize - appBarHeight, maxWidth);
   },
   contentComponent: defaultContentComponent,
+  drawerOpenRoute: 'DrawerOpen',
+  drawerCloseRoute: 'DrawerClose',
+  drawerToggleRoute: 'DrawerToggle',
   drawerPosition: 'left',
   drawerBackgroundColor: 'white',
   useNativeAnimations: true,
@@ -70,11 +73,7 @@ const DefaultDrawerConfig = {
 
 const DrawerNavigator = (
   routeConfigs: NavigationRouteConfigMap,
-  config: DrawerNavigatorConfig = {
-    drawerOpenRoute: 'DrawerOpen',
-    drawerCloseRoute: 'DrawerClose',
-    drawerToggleRoute: 'DrawerToggle',
-  }
+  config: DrawerNavigatorConfig = {}
 ) => {
   const mergedConfig = { ...DefaultDrawerConfig, ...config };
   const {
