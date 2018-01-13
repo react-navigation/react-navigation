@@ -145,10 +145,12 @@ class TabView extends React.PureComponent<Props> {
     if (typeof TabBarComponent === 'undefined') {
       return null;
     }
+
     return (
       <TabBarComponent
         {...props}
         {...tabBarOptions}
+        tabBarPosition={this.props.tabBarPosition}
         screenProps={this.props.screenProps}
         navigation={this.props.navigation}
         getLabel={this._getLabel}

@@ -4,6 +4,7 @@ import * as React from 'react';
 import { Animated, StyleSheet } from 'react-native';
 import { TabBar } from 'react-native-tab-view';
 import TabBarIcon from './TabBarIcon';
+import SafeAreaView from '../SafeAreaView';
 
 import type {
   NavigationAction,
@@ -24,6 +25,7 @@ type Props = {
   upperCaseLabel: boolean,
   allowFontScaling: boolean,
   position: Animated.Value,
+  tabBarPosition: string,
   navigation: NavigationScreenProp<NavigationState>,
   jumpToIndex: (index: number) => void,
   getLabel: (scene: TabScene) => ?(React.Node | string),
@@ -53,6 +55,7 @@ export default class TabBarTop extends React.PureComponent<Props> {
   _renderLabel = (scene: TabScene) => {
     const {
       position,
+      tabBarPosition,
       navigation,
       activeTintColor,
       inactiveTintColor,
@@ -81,12 +84,16 @@ export default class TabBarTop extends React.PureComponent<Props> {
     const label = this.props.getLabel({ ...scene, tintColor });
     if (typeof label === 'string') {
       return (
-        <Animated.Text
-          style={[styles.label, { color }, labelStyle]}
-          allowFontScaling={allowFontScaling}
+        <SafeAreaView
+          forceInset={{ top: tabBarPosition === 'top' ? 'always' : 'never' }}
         >
-          {upperCaseLabel ? label.toUpperCase() : label}
-        </Animated.Text>
+          <Animated.Text
+            style={[styles.label, { color }, labelStyle]}
+            allowFontScaling={allowFontScaling}
+          >
+            {upperCaseLabel ? label.toUpperCase() : label}
+          </Animated.Text>
+        </SafeAreaView>
       );
     }
     if (typeof label === 'function') {

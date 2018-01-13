@@ -9,12 +9,25 @@ import type {
 } from '../../TypeDefinition';
 
 import CardStackStyleInterpolator from './CardStackStyleInterpolator';
+import * as ReactNativeFeatures from '../../utils/ReactNativeFeatures';
 
-const IOSTransitionSpec = ({
-  duration: 500,
-  easing: Easing.bezier(0.2833, 0.99, 0.31833, 0.99),
-  timing: Animated.timing,
-}: NavigationTransitionSpec);
+let IOSTransitionSpec;
+if (ReactNativeFeatures.supportsImprovedSpringAnimation()) {
+  // These are the exact values from UINavigationController's animation configuration
+  IOSTransitionSpec = ({
+    timing: Animated.spring,
+    stiffness: 1000,
+    damping: 500,
+    mass: 3,
+  }: NavigationTransitionSpec);
+} else {
+  // This is an approximation of the IOS spring animation using a derived bezier curve
+  IOSTransitionSpec = ({
+    duration: 500,
+    easing: Easing.bezier(0.2833, 0.99, 0.31833, 0.99),
+    timing: Animated.timing,
+  }: NavigationTransitionSpec);
+}
 
 // Standard iOS navigation transition
 const SlideFromRightIOS = ({
