@@ -4,7 +4,6 @@ import * as React from 'react';
 import { Animated, StyleSheet } from 'react-native';
 import { TabBar } from 'react-native-tab-view';
 import TabBarIcon from './TabBarIcon';
-import SafeAreaView from '../SafeAreaView';
 
 import type {
   NavigationAction,
@@ -84,16 +83,12 @@ export default class TabBarTop extends React.PureComponent<Props> {
     const label = this.props.getLabel({ ...scene, tintColor });
     if (typeof label === 'string') {
       return (
-        <SafeAreaView
-          forceInset={{ top: tabBarPosition === 'top' ? 'always' : 'never' }}
+        <Animated.Text
+          style={[styles.label, { color }, labelStyle]}
+          allowFontScaling={allowFontScaling}
         >
-          <Animated.Text
-            style={[styles.label, { color }, labelStyle]}
-            allowFontScaling={allowFontScaling}
-          >
-            {upperCaseLabel ? label.toUpperCase() : label}
-          </Animated.Text>
-        </SafeAreaView>
+          {upperCaseLabel ? label.toUpperCase() : label}
+        </Animated.Text>
       );
     }
     if (typeof label === 'function') {
