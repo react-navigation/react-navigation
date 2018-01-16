@@ -19,7 +19,7 @@ export default function<S: {}>(
 ): NavigationScreenProp<S> {
   return {
     ...navigation,
-    goBack: (key?: ?string): boolean => {
+    goBack: (key?: ?string, params?: ?NavigationParams): boolean => {
       let actualizedKey: ?string = key;
       if (key === undefined && navigation.state.key) {
         invariant(
@@ -29,7 +29,7 @@ export default function<S: {}>(
         actualizedKey = navigation.state.key;
       }
       return navigation.dispatch(
-        NavigationActions.back({ key: actualizedKey })
+        NavigationActions.back({ key: actualizedKey, params })
       );
     },
     navigate: (

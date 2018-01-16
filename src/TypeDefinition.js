@@ -48,11 +48,13 @@ export type DeprecatedNavigationNavigateAction = {|
 export type NavigationBackAction = {|
   type: 'Navigation/BACK',
   key?: ?string,
+  params?: ?NavigationParams,
 |};
 
 export type DeprecatedNavigationBackAction = {|
   type: 'Back',
   key?: ?string,
+  params: ?NavigationParams,
 |};
 
 export type NavigationSetParamsAction = {|
