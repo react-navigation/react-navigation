@@ -84,9 +84,7 @@ export default class TabBarTop extends React.PureComponent<Props> {
     const label = this.props.getLabel({ ...scene, tintColor });
     if (typeof label === 'string') {
       return (
-        <SafeAreaView
-          forceInset={{ top: tabBarPosition === 'top' ? 'always' : 'never' }}
-        >
+        <SafeAreaView>
           <Animated.Text
             style={[styles.label, { color }, labelStyle]}
             allowFontScaling={allowFontScaling}
