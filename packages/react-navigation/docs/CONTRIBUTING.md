@@ -132,8 +132,10 @@ If any errors occur you'll either have to manually fix them or you can attempt t
 ### Run the Example App
 
 ```bash
+git@github.com:react-navigation/examples.git
+cd examples
 yarn install
-cd examples/NavigationPlayground
+cd NavigationPlayground
 yarn install
 yarn start
 ```
@@ -142,9 +144,9 @@ You will be show a QR code to scan in the Expo app. You can get Expo [here](http
 
 All examples:
 
-- [NavigationPlayground](https://github.com/react-community/react-navigation/tree/master/examples/NavigationPlayground)
-- [ReduxExample](https://github.com/react-community/react-navigation/tree/master/examples/ReduxExample)
-- [SafeAreaExample](https://github.com/react-community/react-navigation/tree/master/examples/SafeAreaExample)
+- [NavigationPlayground](https://github.com/react-community/examples/tree/master/NavigationPlayground)
+- [ReduxExample](https://github.com/react-community/examples/tree/master/ReduxExample)
+- [SafeAreaExample](https://github.com/react-community/examples/tree/master/SafeAreaExample)
 
 Commands are the same as above for any of the example apps. If you run into any issues, please try the following to start fresh:
 
