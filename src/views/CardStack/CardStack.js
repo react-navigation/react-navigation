@@ -145,13 +145,13 @@ class CardStack extends React.Component<Props> {
         dispatch: navigation.dispatch,
         state: {
           ...scene.route,
-          index: scene.index
+          index: scene.index,
         },
       });
       screenDetails = {
         state: {
           ...scene.route,
-          index: scene.index
+          index: scene.index,
         },
         navigation: screenNavigation,
         options: router.getScreenOptions(screenNavigation, screenProps),
