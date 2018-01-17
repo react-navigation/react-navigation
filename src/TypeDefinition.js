@@ -146,6 +146,7 @@ export type NavigationState = {
    */
   index: number,
   routes: Array<NavigationRoute>,
+  params?: NavigationParams,
 };
 
 export type NavigationRoute = NavigationLeafRoute | NavigationStateRoute;
