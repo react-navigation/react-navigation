@@ -11,7 +11,6 @@ import {
   StyleSheet,
   View,
   ViewPropTypes,
-  InteractionManager,
 } from 'react-native';
 
 import HeaderTitle from './HeaderTitle';
@@ -101,7 +100,7 @@ class Header extends React.PureComponent<Props, State> {
   }
 
   _navigateBack = () => {
-    InteractionManager.runAfterInteractions(this.props.navigation.goBack);
+    requestAnimationFrame(() => this.props.navigation.goBack(null));
   };
 
   _renderTitleComponent = (props: SceneProps): ?React.Node => {
