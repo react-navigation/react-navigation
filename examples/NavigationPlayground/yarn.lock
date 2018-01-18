@@ -4689,8 +4689,8 @@ react-native@^0.51.0:
     xmldoc "^0.4.0"
     yargs "^9.0.0"
 
-"react-navigation@file:../..":
-  version "1.0.0-beta.22"
+"react-navigation@link:../..":
+  version "1.0.0-beta.27"
   dependencies:
     babel-plugin-transform-define "^1.3.0"
     clamp "^1.0.1"
