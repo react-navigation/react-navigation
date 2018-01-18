@@ -93,6 +93,7 @@ exports[`StackNavigator applies correct values when headerRight is present 1`] =
       mode="float"
       navigation={
         Object {
+          "addListener": [Function],
           "dispatch": [Function],
           "goBack": [Function],
           "navigate": [Function],
@@ -324,6 +325,7 @@ exports[`StackNavigator renders successfully 1`] = `
       mode="float"
       navigation={
         Object {
+          "addListener": [Function],
           "dispatch": [Function],
           "goBack": [Function],
           "navigate": [Function],
