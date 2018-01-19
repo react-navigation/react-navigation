@@ -1037,3 +1037,52 @@ describe('StackRouter', () => {
     });
   });
 });
+
+test('Handles deep navigate completion action', () => {
+  const LeafScreen = () => <div />;
+  const FooScreen = () => <div />;
+  FooScreen.router = StackRouter({
+    Boo: { path: 'boo', screen: LeafScreen },
+    Baz: { path: 'baz/:bazId', screen: LeafScreen },
+  });
+  const router = StackRouter({
+    Foo: {
+      screen: FooScreen,
+    },
+    Bar: {
+      screen: LeafScreen,
+    },
+  });
+
+  const state = router.getStateForAction({ type: NavigationActions.INIT });
+  expect(state && state.index).toEqual(0);
+  expect(state && state.routes[0].routeName).toEqual('Foo');
+  const key = state && state.routes[0].key;
+  const state2 = router.getStateForAction(
+    {
+      type: NavigationActions.NAVIGATE,
+      routeName: 'Baz',
+    },
+    state
+  );
+  expect(state2 && state2.index).toEqual(0);
+  expect(state2 && state2.isNavigating).toEqual(false);
+  /* $FlowFixMe */
+  expect(state2 && state2.routes[0].index).toEqual(1);
+  /* $FlowFixMe */
+  expect(state2 && state2.routes[0].isNavigating).toEqual(true);
+  expect(!!key).toEqual(true);
+  const state3 = router.getStateForAction(
+    {
+      type: NavigationActions.COMPLETE_NAVIGATE,
+      key,
+    },
+    state2
+  );
+  expect(state3 && state3.index).toEqual(0);
+  expect(state3 && state3.isNavigating).toEqual(false);
+  /* $FlowFixMe */
+  expect(state3 && state3.routes[0].index).toEqual(1);
+  /* $FlowFixMe */
+  expect(state3 && state3.routes[0].isNavigating).toEqual(false);
+});

@@ -179,7 +179,10 @@ export default (routeConfigs, stackConfig = {}) => {
         };
       }
 
-      if (action.type === NavigationActions.COMPLETE_NAVIGATE) {
+      if (
+        action.type === NavigationActions.COMPLETE_NAVIGATE &&
+        state.isNavigating
+      ) {
         return {
           ...state,
           isNavigating: false,

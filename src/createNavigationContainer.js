@@ -181,7 +181,7 @@ export default function createNavigationContainer(Component) {
             dispatch: this.dispatch,
             state: nav,
             addListener: (eventName, handler) => {
-              if (eventName !== 'onAction') {
+              if (eventName !== 'action') {
                 return { remove: () => {} };
               }
               this._actionEventSubscribers.add(handler);

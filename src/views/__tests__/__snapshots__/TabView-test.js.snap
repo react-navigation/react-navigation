@@ -219,7 +219,7 @@ exports[`TabBarBottom renders successfully 1`] = `
           <View
             navigation={
               Object {
-                "addListener": undefined,
+                "addListener": [Function],
                 "dispatch": undefined,
                 "goBack": [Function],
                 "navigate": [Function],

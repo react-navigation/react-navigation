@@ -4,6 +4,7 @@ import createNavigator from './createNavigator';
 import CardStackTransitioner from '../views/CardStack/CardStackTransitioner';
 import StackRouter from '../routers/StackRouter';
 import NavigatorTypes from './NavigatorTypes';
+import NavigationActions from '../NavigationActions';
 
 // A stack navigators props are the intersection between
 // the base navigator props (navgiation, screenProps, etc)
@@ -46,7 +47,14 @@ export default (routeConfigMap, stackConfig = {}) => {
       cardStyle={cardStyle}
       transitionConfig={transitionConfig}
       onTransitionStart={onTransitionStart}
-      onTransitionEnd={onTransitionEnd}
+      onTransitionEnd={() => {
+        const { state, dispatch } = props.navigation;
+        dispatch({
+          type: NavigationActions.COMPLETE_NAVIGATE,
+          key: state.key,
+        });
+        onTransitionEnd && onTransitionEnd();
+      }}
     />
   ));
 
