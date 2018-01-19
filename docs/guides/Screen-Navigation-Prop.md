@@ -94,22 +94,23 @@ Optionally provide a key, which specifies the route to go back from. By default,
 
 *Going back from a specific screen*
 
-Consider the following navigation stack history:
-```... 
-navigation.navigate(SCREEN_KEY_A);
-...
-navigation.navigate(SCREEN_KEY_B);
-...
-navigation.navigate(SCREEN_KEY_C);
-...
-navigation.navigate(SCREEN_KEY_D);
+Consider the following navigation state:
+```
+{
+  routes: [
+    { routeName: 'HomeScreen', key: 'A' },
+    { routeName: 'DetailScreen', key: 'B' },
+    { routeName: 'DetailScreen', key: 'C' },
+  ],
+  index: 2
+}
 ```
 
-Now you are on *screen D* and want to go back to *screen A* (popping D, C, and B).
+Now you are on *screen C* and want to go back to the *HomeScreen (A)* (popping C and B).
 Then you need to supply a key to goBack *FROM*:
 
 ```
-navigation.goBack(SCREEN_KEY_B) // will go to screen A FROM screen B
+navigation.goBack("B") // will go to screen A FROM screen B
 ```
 
 If the goal is to go back from the currently active route, call `.goBack(null);`
