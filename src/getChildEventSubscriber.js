@@ -9,4 +9,8 @@ export default function getChildEventSubscriber(
   key: string
 ): EventSubscriber {
   return addListener;
+  // return (eventName, eventHandler) => addListener('onAction', payload => {
+  //   const {state, lastState, action} = payload;
+  //   eventHandler(payload);
+  // });
 }

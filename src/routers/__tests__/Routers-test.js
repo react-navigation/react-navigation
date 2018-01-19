@@ -130,6 +130,7 @@ test('Handles deep action', () => {
   const state1 = TestRouter.getStateForAction({ type: NavigationActions.INIT });
   const expectedState = {
     index: 0,
+    isNavigating: false,
     routes: [
       {
         key: 'Init-id-0-2',
@@ -142,6 +143,7 @@ test('Handles deep action', () => {
     {
       type: NavigationActions.NAVIGATE,
       routeName: 'Foo',
+      immediate: true,
       action: { type: NavigationActions.NAVIGATE, routeName: 'Zoo' },
     },
     state1
@@ -168,6 +170,7 @@ test('Supports lazily-evaluated getScreen', () => {
   const state1 = TestRouter.getStateForAction({ type: NavigationActions.INIT });
   const state2 = TestRouter.getStateForAction({
     type: NavigationActions.NAVIGATE,
+    immediate: true,
     routeName: 'Qux',
   });
   expect(state1.routes[0].key).toEqual('Init-id-0-4');
@@ -175,7 +178,11 @@ test('Supports lazily-evaluated getScreen', () => {
   state1.routes[0].key = state2.routes[0].key;
   expect(state1).toEqual(state2);
   const state3 = TestRouter.getStateForAction(
-    { type: NavigationActions.NAVIGATE, routeName: 'Zap' },
+    {
+      type: NavigationActions.NAVIGATE,
+      immediate: true,
+      routeName: 'Zap',
+    },
     state2
   );
   expect(state2).toEqual(state3);

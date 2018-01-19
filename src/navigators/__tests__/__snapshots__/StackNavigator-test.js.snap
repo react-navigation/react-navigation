@@ -100,6 +100,7 @@ exports[`StackNavigator applies correct values when headerRight is present 1`] =
           "setParams": [Function],
           "state": Object {
             "index": 0,
+            "isNavigating": false,
             "routes": Array [
               Object {
                 "key": "Init-id-0-1",
@@ -332,6 +333,7 @@ exports[`StackNavigator renders successfully 1`] = `
           "setParams": [Function],
           "state": Object {
             "index": 0,
+            "isNavigating": false,
             "routes": Array [
               Object {
                 "key": "Init-id-0-0",

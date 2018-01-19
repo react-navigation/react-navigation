@@ -55,6 +55,7 @@ export default (routeConfigs, config = {}) => {
         state = {
           routes,
           index: initialRouteIndex,
+          isNavigating: false,
         };
         // console.log(`${order.join('-')}: Initial state`, {state});
       }
