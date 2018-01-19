@@ -1,27 +1,32 @@
 /* @flow */
 
-import React, { PureComponent } from 'react';
-import { View, StyleSheet } from 'react-native';
+import * as React from 'react';
+import { View, StyleSheet, Platform } from 'react-native';
 import { TabViewAnimated, TabViewPagerPan } from 'react-native-tab-view';
+import type { Layout } from 'react-native-tab-view/src/TabViewTypeDefinitions';
 import SceneView from '../SceneView';
 import withCachedChildNavigation from '../../withCachedChildNavigation';
+import SafeAreaView from '../SafeAreaView';
 
 import type {
   NavigationScreenProp,
   NavigationRoute,
-  NavigationAction,
   NavigationState,
   NavigationRouter,
   NavigationTabScreenOptions,
 } from '../../TypeDefinition';
 
 export type TabViewConfig = {
-  tabBarComponent?: ReactClass<*>,
+  tabBarComponent?: React.ComponentType<*>,
   tabBarPosition?: 'top' | 'bottom',
   tabBarOptions?: {},
   swipeEnabled?: boolean,
   animationEnabled?: boolean,
-  lazy?: boolean,
+  configureTransition?: (
+    currentTransitionProps: Object,
+    nextTransitionProps: Object
+  ) => Object,
+  initialLayout?: Layout,
 };
 
 export type TabScene = {
@@ -32,27 +37,32 @@ export type TabScene = {
 };
 
 type Props = {
-  tabBarComponent?: ReactClass<*>,
+  tabBarComponent?: React.ComponentType<*>,
   tabBarPosition?: 'top' | 'bottom',
   tabBarOptions?: {},
   swipeEnabled?: boolean,
   animationEnabled?: boolean,
-  lazy?: boolean,
+  configureTransition?: (
+    currentTransitionProps: Object,
+    nextTransitionProps: Object
+  ) => Object,
+  initialLayout: Layout,
 
   screenProps?: {},
-  navigation: NavigationScreenProp<NavigationState, NavigationAction>,
-  router: NavigationRouter<
-    NavigationState,
-    NavigationAction,
-    NavigationTabScreenOptions
-  >,
+  navigation: NavigationScreenProp<NavigationState>,
+  router: NavigationRouter<NavigationState, NavigationTabScreenOptions>,
   childNavigationProps: {
-    [key: string]: NavigationScreenProp<NavigationRoute, NavigationAction>,
+    [key: string]: NavigationScreenProp<NavigationRoute>,
   },
 };
 
-class TabView extends PureComponent<void, Props, void> {
-  props: Props;
+class TabView extends React.PureComponent<Props> {
+  static defaultProps = {
+    // fix for https://github.com/react-native-community/react-native-tab-view/issues/312
+    initialLayout: Platform.select({
+      android: { width: 1, height: 0 },
+    }),
+  };
 
   _handlePageChanged = (index: number) => {
     const { navigation } = this.props;
@@ -95,7 +105,7 @@ class TabView extends PureComponent<void, Props, void> {
     return route.routeName;
   };
 
-  _getOnPress = ({ route }: TabScene) => {
+  _getOnPress = (previousScene: TabScene, { route }: TabScene) => {
     const options = this.props.router.getScreenOptions(
       this.props.childNavigationProps[route.key],
       this.props.screenProps || {}
@@ -135,10 +145,12 @@ class TabView extends PureComponent<void, Props, void> {
     if (typeof TabBarComponent === 'undefined') {
       return null;
     }
+
     return (
       <TabBarComponent
         {...props}
         {...tabBarOptions}
+        tabBarPosition={this.props.tabBarPosition}
         screenProps={this.props.screenProps}
         navigation={this.props.navigation}
         getLabel={this._getLabel}
@@ -158,8 +170,8 @@ class TabView extends PureComponent<void, Props, void> {
       tabBarComponent,
       tabBarPosition,
       animationEnabled,
-      swipeEnabled,
-      lazy,
+      configureTransition,
+      initialLayout,
       screenProps,
     } = this.props;
 
@@ -176,6 +188,11 @@ class TabView extends PureComponent<void, Props, void> {
     const tabBarVisible =
       options.tabBarVisible == null ? true : options.tabBarVisible;
 
+    const swipeEnabled =
+      options.swipeEnabled == null
+        ? this.props.swipeEnabled
+        : options.swipeEnabled;
+
     if (tabBarComponent !== undefined && tabBarVisible) {
       if (tabBarPosition === 'bottom') {
         renderFooter = this._renderTabBar;
@@ -184,13 +201,17 @@ class TabView extends PureComponent<void, Props, void> {
       }
     }
 
-    if (animationEnabled === false && swipeEnabled === false) {
+    if (
+      (animationEnabled === false && swipeEnabled === false) ||
+      typeof configureTransition === 'function'
+    ) {
       renderPager = this._renderPager;
     }
 
     const props = {
-      lazy,
+      initialLayout,
       animationEnabled,
+      configureTransition,
       swipeEnabled,
       renderPager,
       renderHeader,

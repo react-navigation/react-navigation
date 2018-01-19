@@ -1,7 +1,13 @@
 # Redux Integration
 
-To handle your app's navigation state in redux, you can pass your own `navigation` prop to a navigator. Your navigation prop must provide the current state, as well as access to a dispatcher to handle navigation options.
+### Overview For Redux Integration
+1. To handle your app's navigation state in redux, you can pass your own `navigation` prop to a navigator.
 
+2. Once you pass your own navigation prop to the navigator, the default [`navigation`](https://reactnavigation.org/docs/navigators/navigation-prop) prop gets destroyed. You will most probably pass the `navigation` prop's properties that you want to access. Normally  [`state`](https://reactnavigation.org/docs/navigators/navigation-prop#state-The-screen's-current-stateroute) and [`dispatch`](https://reactnavigation.org/docs/navigators/navigation-prop#dispatch-Send-an-action-to-the-router) properties are passed to the navigator. You will learn how to pass those properties further in this guide. Since you have destroyed the default props, if you try to invoke something you have not explicitly passed down, it won't work. So, if you didn't pass `dispatch`  to the navigator and only passes `state` than you can't access `dispatch` further in your Components.
+
+3. The `state` will be fed from the reducer assigned to handle navigation state and the `dispatch` will be redux's default `dispatch`. Thus you will be able to dispatch normal redux actions using `this.props.navigation.dispatch(ACTION)`, reducer will update the navigation state on the basis of dispatched action, the new navigation state will then be passed to the navigator.
+
+### Details Regarding Redux Integration
 With redux, your app's state is defined by a reducer. Each navigation router effectively has a reducer, called `getStateForAction`. The following is a minimal example of how you might use navigators within a redux application:
 
 ```es6
@@ -55,7 +61,7 @@ class Root extends React.Component {
 
 Once you do this, your navigation state is stored within your redux store, at which point you can fire navigation actions using your redux dispatch function.
 
-Keep in mind that when a navigator is given a `navigation` prop, it relinquishes control of its internal state. That means you are now responsible for persisting its state, handling any deep linking, [Handling the Hardware Back Button in Android](#handling-the-hardware-back-button-in-android), etc.
+Keep in mind that when a navigator is given a `navigation` prop, it relinquishes control of its internal state. That means you are now responsible for persisting its state, handling any deep linking, [Handling the Hardware Back Button in Android](#Handling-the-Hardware-Back-Button-in-Android), etc.
 
 Navigation state is automatically passed down from one navigator to another when you nest them. Note that in order for a child navigator to receive the state from a parent navigator, it should be defined as a `screen`.
 

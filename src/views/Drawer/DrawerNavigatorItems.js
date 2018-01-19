@@ -1,14 +1,14 @@
 /* @flow */
 
-import React from 'react';
+import * as React from 'react';
 import { View, Text, Platform, StyleSheet } from 'react-native';
 
+import SafeAreaView from '../SafeAreaView';
 import TouchableItem from '../TouchableItem';
 
 import type {
   NavigationScreenProp,
   NavigationState,
-  NavigationAction,
   NavigationRoute,
   ViewStyleProp,
   TextStyleProp,
@@ -16,19 +16,22 @@ import type {
 import type { DrawerScene, DrawerItem } from './DrawerView.js';
 
 type Props = {
-  navigation: NavigationScreenProp<NavigationState, NavigationAction>,
+  navigation: NavigationScreenProp<NavigationState>,
   items: Array<NavigationRoute>,
-  activeItemKey?: string,
+  activeItemKey?: ?string,
   activeTintColor?: string,
   activeBackgroundColor?: string,
   inactiveTintColor?: string,
   inactiveBackgroundColor?: string,
-  getLabel: (scene: DrawerScene) => ?(React.Element<*> | string),
-  renderIcon: (scene: DrawerScene) => ?React.Element<*>,
+  getLabel: (scene: DrawerScene) => ?(React.Node | string),
+  renderIcon: (scene: DrawerScene) => ?React.Node,
   onItemPress: (info: DrawerItem) => void,
+  itemsContainerForceInset?: Object,
   itemsContainerStyle?: ViewStyleProp,
   itemStyle?: ViewStyleProp,
   labelStyle?: TextStyleProp,
+  iconContainerStyle?: ViewStyleProp,
+  drawerPosition: 'left' | 'right',
 };
 
 /**
@@ -48,6 +51,8 @@ const DrawerNavigatorItems = ({
   itemsContainerStyle,
   itemStyle,
   labelStyle,
+  iconContainerStyle,
+  drawerPosition,
 }: Props) => (
   <View style={[styles.container, itemsContainerStyle]}>
     {items.map((route: NavigationRoute, index: number) => {
@@ -67,18 +72,35 @@ const DrawerNavigatorItems = ({
           }}
           delayPressIn={0}
         >
-          <View style={[styles.item, { backgroundColor }, itemStyle]}>
-            {icon ? (
-              <View style={[styles.icon, focused ? null : styles.inactiveIcon]}>
-                {icon}
-              </View>
-            ) : null}
-            {typeof label === 'string' ? (
-              <Text style={[styles.label, { color }, labelStyle]}>{label}</Text>
-            ) : (
-              label
-            )}
-          </View>
+          <SafeAreaView
+            style={{ backgroundColor }}
+            forceInset={{
+              [drawerPosition]: 'always',
+              [drawerPosition === 'left' ? 'right' : 'left']: 'never',
+              vertical: 'never',
+            }}
+          >
+            <View style={[styles.item, itemStyle]}>
+              {icon ? (
+                <View
+                  style={[
+                    styles.icon,
+                    focused ? null : styles.inactiveIcon,
+                    iconContainerStyle,
+                  ]}
+                >
+                  {icon}
+                </View>
+              ) : null}
+              {typeof label === 'string' ? (
+                <Text style={[styles.label, { color }, labelStyle]}>
+                  {label}
+                </Text>
+              ) : (
+                label
+              )}
+            </View>
+          </SafeAreaView>
         </TouchableItem>
       );
     })}
@@ -95,7 +117,6 @@ DrawerNavigatorItems.defaultProps = {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: Platform.OS === 'ios' ? 20 : 0,
     paddingVertical: 4,
   },
   item: {

@@ -6,10 +6,12 @@ Note that if you want to dispatch react-navigation actions you should use the ac
 
 The following actions are supported:
 * [Navigate](#Navigate) - Navigate to another route
-* [Reset](#Reset) - Replace current state with a new state
+* [Reset](#reset) - Replace current state with a new state
 * [Back](#Back) - Go back to previous state
 * [Set Params](#SetParams) - Set Params for given route
 * [Init](#Init) - Used to initialize first state if state is undefined
+
+The action creator functions define `toString()` to return the action type, which enables easy usage with third-party Redux libraries, including redux-actions and redux-saga.
 
 ### Navigate
 The `Navigate` action will update the current state with the result of a `Navigate` action.

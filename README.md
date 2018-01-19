@@ -1,4 +1,6 @@
-# React Navigation [![CircleCI](https://circleci.com/gh/react-community/react-navigation/tree/master.svg?style=shield&circle-token=622fcb1d78413084c2f44699ed2104246a177485)](https://circleci.com/gh/react-community/react-navigation/tree/master) [![npm version](https://badge.fury.io/js/react-navigation.svg)](https://badge.fury.io/js/react-navigation) [![codecov](https://codecov.io/gh/react-community/react-navigation/branch/master/graph/badge.svg)](https://codecov.io/gh/react-community/react-navigation) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://reactnavigation.org/docs/guides/contributors)
+# React Navigation
+
+[![npm version](https://badge.fury.io/js/react-navigation.svg)](https://badge.fury.io/js/react-navigation) [![codecov](https://codecov.io/gh/react-community/react-navigation/branch/master/graph/badge.svg)](https://codecov.io/gh/react-community/react-navigation) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://reactnavigation.org/docs/guides/contributors)
 
 *Learn once, navigate anywhere.*
 
@@ -12,7 +14,7 @@ React Navigation is the result of a collaboration between developers from Facebo
   * [Basic Tutorials](#basic-tutorials)
   * [Intermediate Concepts](#intermediate-concepts)
   * [Advanced Topics](#advanced-topics)
-  * [Comparisons and Discussion](##comparisons-and-discussion)
+  * [Comparisons and Discussion](#comparisons-and-discussion)
   * [Example Projects](#example-projects)
   * [Libraries](#libraries)
 * [FAQs](#faqs)
@@ -71,6 +73,7 @@ A lot of developers poured their knowledge in blog posts, and other repos - we w
 
 #### Intermediate Concepts
 
+* [Integrating React-Navigation and Redux with authentication flow](https://medium.com/@shubhnik/a-comprehensive-guide-for-integrating-react-navigation-with-redux-including-authentication-flow-cb7b90611adf)
 * [Using React Navigation and Redux in your React Native Application](https://medium.com/modus-create-front-end-development/using-react-navigation-and-redux-in-your-react-native-application-efac33265138)
 * [React-Navigation, complete Redux state management, tab-bar, and multiple navigators](https://medium.com/@parkerdan/react-navigation-with-complete-redux-state-management-tab-bar-and-multiple-navigators-ed30a69d9a4d)
 * [Custom Drawer with React-Navigation in React-Native](http://www.skywardsoftwares.co.in/react-native/custom-drawer-with-react-navigation-in-react-native/)
@@ -135,7 +138,7 @@ Glad you ask! This library is a community effort: it can only be great if we all
 
 1. Providing feedback on the open [PRs](https://github.com/react-community/react-navigation/pulls).
 
-If you feel brave enough you can submit a PR: follow the [Contributors guide](https://reactnavigation.org/docs/guides/contributors) to find out how. If you don't know where to start, check the ones with the label [`Type: Good First Task`](https://github.com/react-community/react-navigation/labels/Type%3A%20Good%20First%20Task) - even [fixing a typo in the documentation](https://github.com/react-community/react-navigation/pull/2727) is a worthy contribution!
+If you feel brave enough you can submit a PR: follow the [Contributors guide](https://reactnavigation.org/docs/guides/contributors) to find out how. If you don't know where to start, check the ones with the label [`good first issue`](https://github.com/react-community/react-navigation/labels/good%20first%20issue) - even [fixing a typo in the documentation](https://github.com/react-community/react-navigation/pull/2727) is a worthy contribution!
 
 #### Is this the only library available for navigation?
 
