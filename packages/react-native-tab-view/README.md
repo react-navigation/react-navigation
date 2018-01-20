@@ -192,6 +192,38 @@ import * as GestureHandler from 'react-native-gesture-handler';
 <TabViewPagerExperimental {...props} GestureHandler={GestureHandler} />
 ```
 
+### `SceneMap`
+
+Helper function which takes an object with the mapping of `route.key` to React components and returns a function to use with `renderScene` prop.
+
+```js
+renderScene = SceneMap({
+  first: FirstRoute,
+  second: SecondRoute,
+});
+```
+
+Each scene receives the following props:
+
+- `route` - the current route rendered by the component
+- `jumpTo` - method to jump to other tabs, it receives `route.key` as it's argument
+
+All the scenes rendered with `SceneMap` are optimized using `React.PureComponent` and don't re-render when parent's props or states change. If you don't want this behaviour, or want to pass additional props to your scene components, use `renderScene` directly instead of using `SceneMap`.
+
+```js
+renderScene = ({ route }) => {
+  switch (route.key) {
+  case 'first':
+    return <FirstRoute />;
+  case 'second':
+    return <SecondRoute />;
+  default:
+    return null;
+  }
+```
+
+If you don't use `SceneMap`, you will need to take care of optimizing the individual scenes.
+
 
 ## Optimization Tips
 
@@ -248,8 +280,6 @@ renderScene = ({ route }) => {
 ```
 
 Where `<HomeComponent />` is a `PureComponent`.
-
-If you are using the `SceneMap` helper, the scenes are already optimized with `PureComponent` and won't re-render if parent's state changes.
 
 ### Avoid one frame delay
 
