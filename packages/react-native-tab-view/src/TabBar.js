@@ -234,7 +234,7 @@ export default class TabBar<T: *> extends React.Component<Props<T>, State> {
 
   _handleTabPress = (scene: Scene<*>) => {
     this._pendingIndex = scene.index;
-    this.props.jumpToIndex(scene.index);
+    this.props.jumpTo(scene.route.key);
     if (this.props.onTabPress) {
       this.props.onTabPress(scene);
     }

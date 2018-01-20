@@ -153,17 +153,18 @@ export default class TabViewAnimated<T: *> extends React.Component<
     position: this.state.position,
     layout: this.state.layout,
     navigationState: this.props.navigationState,
-    jumpToIndex: this._jumpToIndex,
+    jumpTo: this._jumpTo,
     useNativeDriver: this.props.useNativeDriver === true,
   });
 
-  _jumpToIndex = (index: number) => {
+  _jumpTo = (key: string) => {
     if (!this._mounted) {
       // We are no longer mounted, this is a no-op
       return;
     }
 
     const { canJumpToTab, navigationState } = this.props;
+    const index = navigationState.routes.findIndex(route => route.key === key);
 
     if (!canJumpToTab(navigationState.routes[index])) {
       return;

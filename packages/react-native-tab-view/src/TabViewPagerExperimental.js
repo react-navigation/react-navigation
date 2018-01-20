@@ -117,7 +117,8 @@ export default class TabViewPagerExperimental<T: *> extends React.Component<
       }),
     ]).start(({ finished }) => {
       if (finished) {
-        this.props.jumpToIndex(index);
+        const route = this.props.navigationState.routes[index];
+        this.props.jumpTo(route.key);
         this._pendingIndex = null;
       }
     });
