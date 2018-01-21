@@ -80,7 +80,7 @@ this.props.navigation.dispatch(resetAction)
 ### Back
 
 Go back to previous screen and close current screen. `back` action creator takes in one optional parameter:
-- `key` - *string or null* - optional - If set, navigation will go back from the given key. If null, navigation will go back anywhere.
+- `key` - *string or null* - optional - If set, navigation will go back from the given key. If null, navigation will go back from the currently active route.
 
 ```js
 import { NavigationActions } from 'react-navigation'
