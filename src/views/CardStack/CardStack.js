@@ -408,7 +408,7 @@ class CardStack extends React.Component<Props> {
     if (headerMode === 'screen') {
       return (
         <View style={styles.container}>
-          <View style={{ flex: 1 }}>
+          <View style={{ flex: 1 }} pointerEvents='box-none'>
             <SceneView
               screenProps={screenProps}
               navigation={navigation}
