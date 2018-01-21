@@ -34,6 +34,7 @@ export default (
     paths,
     headerMode,
     mode,
+    direction,
     cardStyle,
     transitionConfig,
     onTransitionStart,
@@ -61,6 +62,7 @@ export default (
       {...props}
       headerMode={headerMode}
       mode={mode}
+      direction={direction}
       cardStyle={cardStyle}
       transitionConfig={transitionConfig}
       onTransitionStart={onTransitionStart}

@@ -46,7 +46,8 @@ function forInitial(
  * Standard iOS-style slide in from the right.
  */
 function forHorizontal(
-  props: NavigationSceneRendererProps
+  props: NavigationSceneRendererProps,
+  leftToRight?: boolean
 ): AnimatedViewStyleProp {
   const { layout, position, scene } = props;
 
@@ -67,9 +68,10 @@ function forHorizontal(
   const width = layout.initWidth;
   const translateX = position.interpolate({
     inputRange: ([first, index, last]: Array<number>),
-    outputRange: I18nManager.isRTL
-      ? ([-width, 0, width * 0.3]: Array<number>)
-      : ([width, 0, width * -0.3]: Array<number>),
+    outputRange:
+      I18nManager.isRTL || leftToRight
+        ? ([-width, 0, width * 0.3]: Array<number>)
+        : ([width, 0, width * -0.3]: Array<number>),
   });
   const translateY = 0;
 
@@ -80,10 +82,18 @@ function forHorizontal(
 }
 
 /**
+ * slide in from the left.
+ */
+function leftToRight(props: NavigationSceneRendererProps): Object {
+  return forHorizontal(props, true);
+}
+
+/**
  * Standard iOS-style slide in from the bottom (used for modals).
  */
 function forVertical(
-  props: NavigationSceneRendererProps
+  props: NavigationSceneRendererProps,
+  topToBottom?: boolean
 ): AnimatedViewStyleProp {
   const { layout, position, scene } = props;
 
@@ -112,6 +122,13 @@ function forVertical(
     opacity,
     transform: [{ translateX }, { translateY }],
   };
+}
+
+/**
+ * slide in from the top (used for modals).
+ */
+function topToBottom(props: NavigationSceneRendererProps): Object {
+  return forVertical(props, true);
 }
 
 /**
@@ -184,7 +201,9 @@ function canUseNativeDriver(): boolean {
 
 export default {
   forHorizontal,
+  leftToRight,
   forVertical,
+  topToBottom,
   forFadeFromBottomAndroid,
   forFade,
   canUseNativeDriver,

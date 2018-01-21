@@ -336,6 +336,7 @@ export type NavigationStackRouterConfig = {
 
 export type NavigationStackViewConfig = {
   mode?: 'card' | 'modal',
+  direction?: 'horizontal' | 'leftToRight' | 'topToBottom' | 'fade',
   headerMode?: HeaderMode,
   cardStyle?: ViewStyleProp,
   transitionConfig?: () => TransitionConfig,

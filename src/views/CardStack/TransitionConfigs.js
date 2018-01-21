@@ -38,6 +38,21 @@ const SlideFromRightIOS = ({
   },
 }: TransitionConfig);
 
+// Left To Right transition
+const SlideLeftToRight = ({
+  screenInterpolator: CardStackStyleInterpolator.leftToRight,
+}: TransitionConfig);
+
+// Top To Bottom transition
+const SlideTopToBottom = ({
+  screenInterpolator: CardStackStyleInterpolator.topToBottom,
+}: TransitionConfig);
+
+// face transition
+const forFade = ({
+  screenInterpolator: CardStackStyleInterpolator.forFade,
+}: TransitionConfig);
+
 // Standard iOS navigation transition for modals
 const ModalSlideFromBottomIOS = ({
   transitionSpec: IOSTransitionSpec,
@@ -75,7 +90,9 @@ function defaultTransitionConfig(
   // props for the old screen
   prevTransitionProps: ?NavigationTransitionProps,
   // whether we're animating in/out a modal screen
-  isModal: boolean
+  isModal: boolean,
+  // props for the direction : default is horizontal
+  direction: string
 ): TransitionConfig {
   if (Platform.OS === 'android') {
     // Use the default Android animation no matter if the screen is a modal.
@@ -91,7 +108,15 @@ function defaultTransitionConfig(
   }
   // iOS and other platforms
   if (isModal) {
-    return ModalSlideFromBottomIOS;
+    if (direction === 'horizontal') {
+      return ModalSlideFromBottomIOS;
+    } else if (direction === 'leftToRight') {
+      return SlideLeftToRight;
+    } else if (direction === 'topToBottom') {
+      return SlideTopToBottom;
+    } else if (direction === 'fade') {
+      return forFade;
+    }
   }
   return SlideFromRightIOS;
 }
@@ -100,23 +125,31 @@ function getTransitionConfig(
   transitionConfigurer?: (
     transitionProps: NavigationTransitionProps,
     prevTransitionProps: ?NavigationTransitionProps,
-    isModal: boolean
+    isModal: boolean,
+    direction: string
   ) => TransitionConfig,
   // props for the new screen
   transitionProps: NavigationTransitionProps,
   // props for the old screen
   prevTransitionProps: ?NavigationTransitionProps,
-  isModal: boolean
+  isModal: boolean,
+  direction: string
 ): TransitionConfig {
   const defaultConfig = defaultTransitionConfig(
     transitionProps,
     prevTransitionProps,
-    isModal
+    isModal,
+    direction
   );
   if (transitionConfigurer) {
     return {
       ...defaultConfig,
-      ...transitionConfigurer(transitionProps, prevTransitionProps, isModal),
+      ...transitionConfigurer(
+        transitionProps,
+        prevTransitionProps,
+        isModal,
+        direction
+      ),
     };
   }
   return defaultConfig;

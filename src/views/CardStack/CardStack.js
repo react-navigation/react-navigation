@@ -43,6 +43,7 @@ type Props = {
   headerMode: HeaderMode,
   headerComponent?: React.ComponentType<*>,
   mode: 'card' | 'modal',
+  direction: 'horizontal' | 'leftToRight' | 'topToBottom' | 'fade',
   router: NavigationRouter<NavigationState, NavigationStackScreenOptions>,
   cardStyle?: ViewStyleProp,
   onTransitionStart?: () => void,
@@ -437,7 +438,8 @@ class CardStack extends React.Component<Props> {
       {},
       /* $FlowFixMe */
       {},
-      isModal
+      isModal,
+      this.props.direction
     );
   };
 

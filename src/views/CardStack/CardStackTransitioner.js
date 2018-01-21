@@ -27,6 +27,7 @@ const NativeAnimatedModule =
 type Props = {
   headerMode: HeaderMode,
   mode: 'card' | 'modal',
+  direction: 'horizontal' | 'leftToRight' | 'topToBottom' | 'fade',
   router: NavigationRouter<NavigationState, NavigationStackScreenOptions>,
   cardStyle?: ViewStyleProp,
   onTransitionStart?: () => void,
@@ -42,6 +43,7 @@ class CardStackTransitioner extends React.Component<Props> {
 
   static defaultProps = {
     mode: 'card',
+    direction: 'horizontal',
   };
 
   render() {
@@ -70,7 +72,8 @@ class CardStackTransitioner extends React.Component<Props> {
         this.props.transitionConfig,
         transitionProps,
         prevTransitionProps,
-        isModal
+        isModal,
+        this.props.direction
       ).transitionSpec,
     };
     if (
@@ -89,6 +92,7 @@ class CardStackTransitioner extends React.Component<Props> {
       screenProps,
       headerMode,
       mode,
+      direction,
       router,
       cardStyle,
       transitionConfig,
@@ -98,6 +102,7 @@ class CardStackTransitioner extends React.Component<Props> {
         screenProps={screenProps}
         headerMode={headerMode}
         mode={mode}
+        direction={direction}
         router={router}
         cardStyle={cardStyle}
         transitionConfig={transitionConfig}
