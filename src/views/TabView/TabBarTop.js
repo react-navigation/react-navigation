@@ -6,6 +6,8 @@ import { TabBar } from 'react-native-tab-view';
 import TabBarIcon from './TabBarIcon';
 
 import type {
+  NavigationAction,
+  NavigationRoute,
   NavigationScreenProp,
   NavigationState,
   ViewStyleProp,
@@ -22,13 +24,19 @@ type Props = {
   upperCaseLabel: boolean,
   allowFontScaling: boolean,
   position: Animated.Value,
+  tabBarPosition: string,
   navigation: NavigationScreenProp<NavigationState>,
   jumpToIndex: (index: number) => void,
   getLabel: (scene: TabScene) => ?(React.Node | string),
   getOnPress: (
+    previousScene: NavigationRoute,
     scene: TabScene
-  ) => (scene: TabScene, jumpToIndex: (index: number) => void) => void,
-  renderIcon: (scene: TabScene) => React.Node,
+  ) => ({
+    previousScene: NavigationRoute,
+    scene: TabScene,
+    jumpToIndex: (index: number) => void,
+  }) => void,
+  renderIcon: (scene: TabScene) => React.Element<*>,
   labelStyle?: TextStyleProp,
   iconStyle?: ViewStyleProp,
 };
@@ -46,6 +54,7 @@ export default class TabBarTop extends React.PureComponent<Props> {
   _renderLabel = (scene: TabScene) => {
     const {
       position,
+      tabBarPosition,
       navigation,
       activeTintColor,
       inactiveTintColor,
@@ -116,12 +125,12 @@ export default class TabBarTop extends React.PureComponent<Props> {
   };
 
   _handleOnPress = (scene: TabScene) => {
-    const { getOnPress, jumpToIndex }: Props = this.props;
-
-    const onPress = getOnPress(scene);
+    const { getOnPress, jumpToIndex, navigation }: Props = this.props;
+    const previousScene = navigation.state.routes[navigation.state.index];
+    const onPress = getOnPress(previousScene, scene);
 
     if (onPress) {
-      onPress(scene, jumpToIndex);
+      onPress({ previousScene, scene, jumpToIndex });
     } else {
       jumpToIndex(scene.index);
     }

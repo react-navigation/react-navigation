@@ -7,11 +7,10 @@ import {
   Platform,
   SafeAreaView,
   StyleSheet,
-  View,
+  Animated,
 } from 'react-native';
 import withOrientation from './withOrientation';
 
-const { isIPhoneX_deprecated } = DeviceInfo;
 // See https://mydevice.io/devices/ for device dimensions
 const X_WIDTH = 375;
 const X_HEIGHT = 812;
@@ -24,8 +23,10 @@ const { PlatformConstants = {} } = NativeModules;
 const { minor = 0 } = PlatformConstants.reactNativeVersion || {};
 
 const isIPhoneX = (() => {
+  if (Platform.OS === 'web') return false;
+
   if (minor >= 50) {
-    return isIPhoneX_deprecated;
+    return DeviceInfo.isIPhoneX_deprecated;
   }
 
   return (
@@ -51,7 +52,26 @@ const isIPad = (() => {
   return true;
 })();
 
+let _customStatusBarHeight = null;
 const statusBarHeight = isLandscape => {
+  if (_customStatusBarHeight !== null) {
+    return _customStatusBarHeight;
+  }
+
+  /**
+   * This is a temporary workaround because we don't have a way to detect
+   * if the status bar is translucent or opaque. If opaque, we don't need to
+   * factor in the height here; if translucent (content renders under it) then
+   * we do.
+   */
+  if (Platform.OS === 'android') {
+    if (global.Expo) {
+      return global.Expo.Constants.statusBarHeight;
+    } else {
+      return 0;
+    }
+  }
+
   if (isIPhoneX) {
     return isLandscape ? 0 : 44;
   }
@@ -76,6 +96,10 @@ const doubleFromPercentString = percent => {
 };
 
 class SafeView extends Component {
+  static setStatusBarHeight = height => {
+    _customStatusBarHeight = height;
+  };
+
   state = {
     touchesTop: true,
     touchesBottom: true,
@@ -99,20 +123,16 @@ class SafeView extends Component {
   render() {
     const { forceInset = false, isLandscape, children, style } = this.props;
 
-    if (Platform.OS !== 'ios') {
-      return <View style={style}>{this.props.children}</View>;
-    }
-
     const safeAreaStyle = this._getSafeAreaStyle();
 
     return (
-      <View
+      <Animated.View
         ref={c => (this.view = c)}
         onLayout={this._onLayout}
         style={safeAreaStyle}
       >
         {this.props.children}
-      </View>
+      </Animated.View>
     );
   }
 
@@ -129,7 +149,7 @@ class SafeView extends Component {
     const WIDTH = isLandscape ? X_HEIGHT : X_WIDTH;
     const HEIGHT = isLandscape ? X_WIDTH : X_HEIGHT;
 
-    this.view.measureInWindow((winX, winY, winWidth, winHeight) => {
+    this.view._component.measureInWindow((winX, winY, winWidth, winHeight) => {
       let realY = winY;
       let realX = winX;
 

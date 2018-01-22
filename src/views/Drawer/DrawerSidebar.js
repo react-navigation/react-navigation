@@ -7,6 +7,8 @@ import withCachedChildNavigation from '../../withCachedChildNavigation';
 import NavigationActions from '../../NavigationActions';
 import invariant from '../../utils/invariant';
 
+import SafeAreaView from '../SafeAreaView';
+
 import type {
   NavigationScreenProp,
   NavigationRoute,
@@ -15,17 +17,12 @@ import type {
   NavigationState,
   NavigationStateRoute,
   ViewStyleProp,
-  NavigationTabAction,
 } from '../../TypeDefinition';
 
 import type { DrawerScene, DrawerItem } from './DrawerView';
 
 type Props = {
-  router: NavigationRouter<
-    NavigationState,
-    NavigationTabAction,
-    NavigationDrawerScreenOptions
-  >,
+  router: NavigationRouter<NavigationState, NavigationDrawerScreenOptions>,
   navigation: NavigationScreenProp<NavigationStateRoute>,
   childNavigationProps: {
     [key: string]: NavigationScreenProp<NavigationRoute>,
@@ -34,6 +31,7 @@ type Props = {
   contentOptions?: {},
   screenProps?: {},
   style?: ViewStyleProp,
+  drawerPosition?: 'left' | 'right',
 };
 
 /**
@@ -116,13 +114,14 @@ class DrawerSidebar extends React.PureComponent<Props> {
           navigation={this.props.navigation}
           items={state.routes}
           activeItemKey={
-            state.routes[state.index] && state.routes[state.index].key
+            state.routes[state.index] ? state.routes[state.index].key : null
           }
           screenProps={this.props.screenProps}
           getLabel={this._getLabel}
           renderIcon={this._renderIcon}
           onItemPress={this._onItemPress}
           router={this.props.router}
+          drawerPosition={this.props.drawerPosition}
         />
       </View>
     );

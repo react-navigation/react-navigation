@@ -172,12 +172,17 @@ class Transitioner extends React.Component<Props, State> {
 
     // update scenes and play the transition
     this._isTransitionRunning = true;
-    this.setState(nextState, () => {
-      nextProps.onTransitionStart &&
-        nextProps.onTransitionStart(
+    this.setState(nextState, async () => {
+      if (nextProps.onTransitionStart) {
+        const result = nextProps.onTransitionStart(
           this._transitionProps,
           this._prevTransitionProps
         );
+
+        if (result instanceof Promise) {
+          await result;
+        }
+      }
       Animated.parallel(animations).start(this._onTransitionEnd);
     });
   }
@@ -231,9 +236,18 @@ class Transitioner extends React.Component<Props, State> {
 
     this._transitionProps = buildTransitionProps(this.props, nextState);
 
-    this.setState(nextState, () => {
-      this.props.onTransitionEnd &&
-        this.props.onTransitionEnd(this._transitionProps, prevTransitionProps);
+    this.setState(nextState, async () => {
+      if (this.props.onTransitionEnd) {
+        const result = this.props.onTransitionEnd(
+          this._transitionProps,
+          prevTransitionProps
+        );
+
+        if (result instanceof Promise) {
+          await result;
+        }
+      }
+
       if (this._queuedTransition) {
         this._startTransition(
           this._queuedTransition.nextProps,
