@@ -673,4 +673,101 @@ describe('TabRouter', () => {
       innerState && comparable(innerState)
     );
   });
+
+  test('Handles back navigation with initial route set', () => {
+    const ScreenA = () => <div />;
+    const ScreenB = () => <div />;
+    const ScreenC = () => <div />;
+
+    const router = TabRouter(
+      {
+        Foo: { screen: ScreenA },
+        Bar: { screen: ScreenB },
+        Dur: { screen: ScreenC },
+      },
+      {
+        backBehavior: 'initialRoute',
+      }
+    );
+    const state = router.getStateForAction({ type: NavigationActions.INIT });
+    const state2 = router.getStateForAction(
+      { type: NavigationActions.NAVIGATE, routeName: 'Bar' },
+      state
+    );
+    const state3 = router.getStateForAction(
+      { type: NavigationActions.NAVIGATE, routeName: 'Dur' },
+      state2
+    );
+    const state4 = router.getStateForAction(
+      { type: NavigationActions.BACK },
+      state3
+    );
+    const expectedState = {
+      index: 0,
+      routes: [
+        { key: 'Foo', routeName: 'Foo' },
+        { key: 'Bar', routeName: 'Bar' },
+        { key: 'Dur', routeName: 'Dur' },
+      ],
+    };
+    expect(state4).toEqual(expectedState);
+  });
+
+  test('Handles back navigation with previous route set', () => {
+    const ScreenA = () => <div />;
+    const ScreenB = () => <div />;
+    const ScreenC = () => <div />;
+
+    const router = TabRouter(
+      {
+        Foo: { screen: ScreenA },
+        Bar: { screen: ScreenB },
+        Dur: { screen: ScreenC },
+      },
+      {
+        backBehavior: 'previousRoute',
+      }
+    );
+    const state = router.getStateForAction({ type: NavigationActions.INIT });
+    const state2 = router.getStateForAction(
+      { type: NavigationActions.NAVIGATE, routeName: 'Bar' },
+      state
+    );
+    const state3 = router.getStateForAction(
+      { type: NavigationActions.NAVIGATE, routeName: 'Dur' },
+      state2
+    );
+    const state4 = router.getStateForAction(
+      { type: NavigationActions.NAVIGATE, routeName: 'Bar' },
+      state3
+    );
+    const state5 = router.getStateForAction(
+      { type: NavigationActions.BACK },
+      state4
+    );
+    const expectedState = {
+      index: 2,
+      routes: [
+        { key: 'Foo', routeName: 'Foo' },
+        { key: 'Bar', routeName: 'Bar' },
+        { key: 'Dur', routeName: 'Dur' },
+      ],
+      backStack: [0],
+    };
+    expect(state5).toEqual(expectedState);
+    const state6 = router.getStateForAction(
+      { type: NavigationActions.BACK },
+      state5
+    );
+    const expectedState2 = {
+      index: 0,
+      routes: [
+        { key: 'Foo', routeName: 'Foo' },
+        { key: 'Bar', routeName: 'Bar' },
+        { key: 'Dur', routeName: 'Dur' },
+      ],
+      backStack: [],
+    };
+    expect(state6).toEqual(expectedState2);
+  });
 });

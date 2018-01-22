@@ -146,6 +146,7 @@ export type NavigationState = {
    */
   index: number,
   routes: Array<NavigationRoute>,
+  backStack?: Array<number>,
 };
 
 export type NavigationRoute = NavigationLeafRoute | NavigationStateRoute;
@@ -358,8 +359,8 @@ export type NavigationTabRouterConfig = {
   navigationOptions?: NavigationScreenConfig<*>,
   order?: Array<string>, // todo: type these as the real route names rather than 'string'
 
-  // Does the back button cause the router to switch to the initial tab
-  backBehavior?: 'none' | 'initialRoute', // defaults `initialRoute`
+  // Custom back button behavior
+  backBehavior?: 'none' | 'initialRoute' | 'previousRoute', // defaults `initialRoute`
 };
 
 export type NavigationTabScreenOptions = {|

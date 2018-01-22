@@ -34,6 +34,7 @@ export default (
   const initialRouteIndex = order.indexOf(initialRouteName);
   const backBehavior = config.backBehavior || 'initialRoute';
   const shouldBackNavigateToInitialRoute = backBehavior === 'initialRoute';
+  const shouldBackNavigateToLastActiveTab = backBehavior === 'previousRoute';
   const tabRouters = {};
   order.forEach((routeName: string) => {
     const routeConfig = routeConfigs[routeName];
@@ -77,6 +78,12 @@ export default (
           routes,
           index: initialRouteIndex,
         };
+        if (shouldBackNavigateToLastActiveTab) {
+          state = {
+            ...state,
+            backStack: [],
+          };
+        }
         // console.log(`${order.join('-')}: Initial state`, {state});
       }
 
@@ -121,14 +128,24 @@ export default (
       // Handle tab changing. Do this after letting the current tab try to
       // handle the action, to allow inner tabs to change first
       let activeTabIndex = state.index;
+
       const isBackEligible =
         action.key == null || action.key === activeTabLastState.key;
-      if (
-        action.type === NavigationActions.BACK &&
-        isBackEligible &&
-        shouldBackNavigateToInitialRoute
-      ) {
-        activeTabIndex = initialRouteIndex;
+      if (action.type === NavigationActions.BACK && isBackEligible) {
+        if (shouldBackNavigateToInitialRoute) {
+          activeTabIndex = initialRouteIndex;
+        } else if (
+          shouldBackNavigateToLastActiveTab &&
+          state.backStack !== undefined &&
+          state.backStack.length >= 1
+        ) {
+          const previousIndex = state.backStack[state.backStack.length - 1];
+          return {
+            ...state,
+            index: previousIndex,
+            backStack: [...state.backStack.slice(0, -1)],
+          };
+        }
       }
       let didNavigate = false;
       if (action.type === NavigationActions.NAVIGATE) {
@@ -193,10 +210,28 @@ export default (
         }
       }
       if (activeTabIndex !== state.index) {
-        return {
+        const newState = {
           ...state,
           index: activeTabIndex,
         };
+        if (
+          shouldBackNavigateToLastActiveTab &&
+          state.backStack !== undefined
+        ) {
+          const oldBackStackIndex = state.backStack.findIndex(
+            (index: number) => activeTabIndex === index
+          );
+          let oldBackStack: Array<number> =
+            state.backStack !== undefined ? state.backStack : [];
+          if (oldBackStackIndex > -1 && oldBackStack.length > 0) {
+            oldBackStack = [
+              ...oldBackStack.slice(0, oldBackStackIndex),
+              ...oldBackStack.slice(oldBackStackIndex + 1),
+            ];
+          }
+          newState.backStack = [...oldBackStack, state.index];
+        }
+        return newState;
       } else if (didNavigate && !inputState) {
         return state;
       } else if (didNavigate) {
