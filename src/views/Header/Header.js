@@ -100,7 +100,9 @@ class Header extends React.PureComponent<Props, State> {
   }
 
   _navigateBack = () => {
-    this.props.navigation.goBack(null);
+    requestAnimationFrame(() => {
+      this.props.navigation.goBack();
+    });
   };
 
   _renderTitleComponent = (props: SceneProps): ?React.Node => {
