@@ -48,7 +48,7 @@ const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : 0;
 const TITLE_OFFSET = Platform.OS === 'ios' ? 70 : 56;
 
 type Props = HeaderProps & { isLandscape: boolean };
-class Header extends React.PureComponent<Props, State> {
+export class UnwrappedHeader extends React.PureComponent<Props, State> {
   static defaultProps = {
     leftInterpolator: HeaderStyleInterpolator.forLeft,
     titleInterpolator: HeaderStyleInterpolator.forCenter,
@@ -407,4 +407,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default withOrientation(Header);
+export default withOrientation(UnwrappedHeader);
