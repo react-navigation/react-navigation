@@ -1,19 +1,23 @@
 ## The issue tracker is reserved for bug reports only.
 
-If you have a question or feature request, please try one of the following resources:
+If you have a question, feature request, or an idea for improving the library or its related tools, please try one of the following resources:
 
 - [Read the documentation](https://reactnavigation.org/)
+- [Post an issue to the website repository if you'd like to see a documentation change](http://github.com/react-navigation/website)
 - [Post a feature request to Canny](https://react-navigation.canny.io/feature-requests)
+- [Write a RFC if you have ideas for how to implement a feature request](https://github.com/react-navigation/rfcs)
 - [Get help on Discord chat (#react-navigation on Reactiflux)](https://discord.gg/4xEK3nD) or [on StackOverflow](https://stackoverflow.com/questions/tagged/react-navigation)
 - Search for your issue - it may have already been answered or even fixed in the development branch. However, if you find that an old, closed issue still persists in the latest version, you should open a new issue.
 
 ---
 
 ### Current Behavior
+
 - What code are you running and what is happening?
 - Include a screenshot if it makes sense.
 
 ### Expected Behavior
+
 - What do you expect should be happening?
 - Include a screenshot if it makes sense.
 
