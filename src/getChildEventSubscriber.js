@@ -79,12 +79,13 @@ export default function getChildEventSubscriber(
       const childPayload = { state: newRoute, lastState: lastRoute, action };
 
       const didNavigate =
-        (lastState && lastState.isNavigating) !== (state && state.isNavigating);
+        (lastState && lastState.isTransitioning) !==
+        (state && state.isTransitioning);
 
-      const isNavigating = !!state && state.isNavigating;
-      const wasNavigating = !!lastState && lastState.isNavigating;
-      const didStartNavigating = !wasNavigating && isNavigating;
-      const didFinishNavigating = wasNavigating && !isNavigating;
+      const isTransitioning = !!state && state.isTransitioning;
+      const wasTransitioning = !!lastState && lastState.isTransitioning;
+      const didStartTransitioning = !wasTransitioning && isTransitioning;
+      const didFinishTransitioning = wasTransitioning && !isTransitioning;
 
       if (eventName !== 'action') {
         switch (eventName) {
@@ -105,17 +106,17 @@ export default function getChildEventSubscriber(
         // fire this event to pass navigation events to children subscribers
         emit('action', childPayload);
       }
-      if (isFocused && didStartNavigating && !isSelfFocused) {
+      if (isFocused && didStartTransitioning && !isSelfFocused) {
         emit('willFocus', childPayload);
       }
-      if (isFocused && didFinishNavigating && !isSelfFocused) {
+      if (isFocused && didFinishTransitioning && !isSelfFocused) {
         emit('didFocus', childPayload);
         isSelfFocused = true;
       }
-      if (!isFocused && didStartNavigating && isSelfFocused) {
+      if (!isFocused && didStartTransitioning && isSelfFocused) {
         emit('willBlur', childPayload);
       }
-      if (!isFocused && didFinishNavigating && isSelfFocused) {
+      if (!isFocused && didFinishTransitioning && isSelfFocused) {
         emit('didBlur', childPayload);
         isSelfFocused = false;
       }

@@ -7,7 +7,7 @@ function testTransition(states) {
   const routes = states.map(keys => ({
     index: 0,
     routes: keys.map(key => ({ key, routeName: '' })),
-    isNavigating: false,
+    isTransitioning: false,
   }));
 
   let scenes = [];
@@ -90,13 +90,13 @@ describe('ScenesReducer', () => {
     const state1 = {
       index: 0,
       routes: [{ key: '1', routeName: '' }, { key: '2', routeName: '' }],
-      isNavigating: false,
+      isTransitioning: false,
     };
 
     const state2 = {
       index: 1,
       routes: [{ key: '1', routeName: '' }, { key: '2', routeName: '' }],
-      isNavigating: false,
+      isTransitioning: false,
     };
 
     const scenes1 = ScenesReducer([], state1, null);
@@ -109,13 +109,13 @@ describe('ScenesReducer', () => {
     const state1 = {
       index: 0,
       routes: [{ key: '1', routeName: '' }, { key: '2', routeName: '' }],
-      isNavigating: false,
+      isTransitioning: false,
     };
 
     const state2 = {
       index: 0,
       routes: [{ key: '1', routeName: '' }, { key: '2', routeName: '' }],
-      isNavigating: false,
+      isTransitioning: false,
     };
 
     const scenes1 = ScenesReducer([], state1, null);
@@ -127,13 +127,13 @@ describe('ScenesReducer', () => {
     const state1 = {
       index: 0,
       routes: [{ key: '1', routeName: '' }, { key: '2', routeName: '' }],
-      isNavigating: false,
+      isTransitioning: false,
     };
 
     const state2 = {
       index: 0,
       routes: [{ key: '2', routeName: '' }, { key: '1', routeName: '' }],
-      isNavigating: false,
+      isTransitioning: false,
     };
 
     const scenes1 = ScenesReducer([], state1, null);
@@ -148,7 +148,7 @@ describe('ScenesReducer', () => {
         { key: '1', x: 1, routeName: '' },
         { key: '2', x: 2, routeName: '' },
       ],
-      isNavigating: false,
+      isTransitioning: false,
     };
 
     const state2 = {
@@ -157,7 +157,7 @@ describe('ScenesReducer', () => {
         { key: '1', x: 3, routeName: '' },
         { key: '2', x: 4, routeName: '' },
       ],
-      isNavigating: false,
+      isTransitioning: false,
     };
 
     const scenes1 = ScenesReducer([], state1, null);
@@ -172,7 +172,7 @@ describe('ScenesReducer', () => {
         { key: '1', x: 1, routeName: '' },
         { key: '2', x: 2, routeName: '' },
       ],
-      isNavigating: false,
+      isTransitioning: false,
     };
 
     const state2 = {
@@ -181,7 +181,7 @@ describe('ScenesReducer', () => {
         { key: '1', x: 1, routeName: '' },
         { key: '2', x: 2, routeName: '' },
       ],
-      isNavigating: false,
+      isTransitioning: false,
     };
 
     const scenes1 = ScenesReducer([], state1, null);
