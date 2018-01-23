@@ -124,6 +124,7 @@ test('Handles deep action', () => {
         routeName: 'Bar',
       },
     ],
+    stateName: 'Bar',
   };
   expect(state1).toEqual(expectedState);
   const state2 = TestRouter.getStateForAction(

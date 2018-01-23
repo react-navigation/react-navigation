@@ -326,6 +326,7 @@ describe('StackRouter', () => {
     expect(initState).toEqual({
       index: 0,
       routes: [{ key: 'Init-id-0-0', routeName: 'foo' }],
+      stateName: 'foo',
     });
     const pushedState = TestRouter.getStateForAction(
       NavigationActions.navigate({ routeName: 'qux' }),
@@ -359,12 +360,14 @@ describe('StackRouter', () => {
           routeName: 'Foo',
         },
       ],
+      stateName: 'Foo',
     });
     const state2 = router.getStateForAction(
       {
         type: NavigationActions.NAVIGATE,
         routeName: 'Bar',
         params: { name: 'Zoom' },
+        stateName: 'Bar',
       },
       state
     );
@@ -384,6 +387,7 @@ describe('StackRouter', () => {
           routeName: 'Foo',
         },
       ],
+      stateName: 'Foo',
     });
   });
 
@@ -412,6 +416,7 @@ describe('StackRouter', () => {
           routeName: 'Foo',
         },
       ],
+      stateName: 'Foo',
     });
     const state2 = router.getStateForAction(
       {
@@ -437,6 +442,7 @@ describe('StackRouter', () => {
           routeName: 'Foo',
         },
       ],
+      stateName: 'Foo',
     });
   });
 
@@ -503,6 +509,7 @@ describe('StackRouter', () => {
           routeName: 'Bar',
         },
       ],
+      stateName: 'Bar',
     });
   });
 
@@ -526,6 +533,7 @@ describe('StackRouter', () => {
           params: { foo: 'bar' },
         },
       ],
+      stateName: 'Bar',
     });
   });
 
@@ -730,6 +738,95 @@ describe('StackRouter', () => {
 
     expect(state4 && state4.index).toEqual(0);
     expect(state4 && state4.routes[0].routeName).toEqual('Bar');
+  });
+
+  test('Handles the reset action with stateName', () => {
+    const ChildRouter = StackRouter({
+      baz: {
+        screen: () => <div />,
+      },
+    });
+
+    const ChildNavigator = () => <div />;
+    ChildNavigator.router = ChildRouter;
+
+    const router = StackRouter(
+      {
+        Foo: {
+          screen: ChildNavigator,
+        },
+        Bar: {
+          screen: () => <div />,
+        },
+      },
+      {
+        stateName: 'MainNavigator',
+      },
+    );
+
+    const otherRouter = StackRouter(
+      {
+        Foo: {
+          screen: ChildNavigator,
+        },
+        Bar: {
+          screen: () => <div />,
+        },
+      },
+      {
+        stateName: 'OtherNavigator',
+      },
+    );
+
+    const state = router.getStateForAction({ type: NavigationActions.INIT });
+    const state2 = router.getStateForAction(
+      {
+        type: NavigationActions.NAVIGATE,
+        routeName: 'Foo',
+        action: { type: NavigationActions.NAVIGATE, routeName: 'baz' },
+      },
+      state,
+    );
+    const state3 = router.getStateForAction(
+      {
+        type: NavigationActions.RESET,
+        stateName: 'MainNavigator',
+        actions: [{ type: NavigationActions.NAVIGATE, routeName: 'Bar' }],
+        index: 0,
+      },
+      state2,
+    );
+
+    expect(state3 && state3.index).toEqual(0);
+    expect(state3 && state3.routes[0].routeName).toEqual('Bar');
+
+    const otherState = otherRouter.getStateForAction({
+      type: NavigationActions.INIT,
+    });
+    const otherState2 = otherRouter.getStateForAction(
+      {
+        type: NavigationActions.NAVIGATE,
+        routeName: 'Foo',
+        action: { type: NavigationActions.NAVIGATE, routeName: 'baz' },
+      },
+      otherState,
+    );
+    const otherState3 = otherRouter.getStateForAction(
+      {
+        type: NavigationActions.RESET,
+        stateName: 'MainNavigator',
+        actions: [{ type: NavigationActions.NAVIGATE, routeName: 'Bar' }],
+        index: 0,
+      },
+      otherState2,
+    );
+
+    /* $FlowFixMe */
+    const routeLength = otherState2.routes.length;
+    /* $FlowFixMe */
+    expect(otherState3.index).toEqual(1);
+    /* $FlowFixMe */
+    expect(otherState3.routes[routeLength - 1].routeName).toEqual('Foo');
   });
 
   test('Handles the navigate action with params and nested StackRouter', () => {
