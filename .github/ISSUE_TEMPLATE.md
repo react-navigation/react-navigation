@@ -10,12 +10,18 @@ If you have a question or feature request, please try one of the following resou
 ---
 
 ### Current Behavior
-- _If describing a bug, tell us what happens. Please provide a repository with code and steps to reproduce the bug. **Not providing code that other people can run makes is significantly harder to fix your bug.** Provide a screenshot when possible_
-- _If suggesting a change/improvement, explain the difference from current behavior_
+- What code are you running and what is happening?
+- Include a screenshot if it makes sense.
 
 ### Expected Behavior
-- _If you're describing a bug, tell us what should happen_
-- _If you're suggesting a change/improvement, tell us how it should work_
+- What do you expect should be happening?
+- Include a screenshot if it makes sense.
+
+### How to reproduce
+
+- You must provide a way to reproduce the problem. If you are having an issue with your machine or build tools, the issue belongs on another repoistory as that is outside of the scope of Rect Navigation.
+- Either re-create the bug on [Snack](https://snack.expo.io) or link to a GitHub repository with code that reproduces the bug.
+- Explain how to run the example app and any steps that we need to take to reproduce the issue from the example app.
 
 ### Your Environment
 
