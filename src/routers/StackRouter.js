@@ -272,19 +272,17 @@ export default (routeConfigs, stackConfig = {}) => {
 
       if (action.type === NavigationActions.BACK) {
         const key = action.key;
-        let backRouteIndex = null;
+        let backRouteIndex = state.index;
         if (key) {
           const backRoute = state.routes.find(route => route.key === key);
           backRouteIndex = state.routes.indexOf(backRoute);
-        }
-        if (backRouteIndex == null) {
-          return StateUtils.pop(state);
         }
         if (backRouteIndex > 0) {
           return {
             ...state,
             routes: state.routes.slice(0, backRouteIndex),
             index: backRouteIndex - 1,
+            isNavigating: action.immediate !== true,
           };
         }
       }

@@ -2,7 +2,7 @@ import { Component } from 'react';
 import createConfigGetter from '../createConfigGetter';
 import addNavigationHelpers from '../../addNavigationHelpers';
 
-const dummyEventSubscriber = (name: string, handler: () => void) => ({
+const dummyEventSubscriber = (name: string, handler: (*) => void) => ({
   remove: () => {},
 });
 

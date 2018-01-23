@@ -2,7 +2,12 @@
  * @flow
  */
 
-import type { EventSubscriber } from './TypeDefinition';
+import type {
+  NavigationEventSubscriber,
+  NavigationAction,
+  NavigationState,
+  NavigationEventPayload,
+} from './TypeDefinition';
 
 /*
  * This is used to extract one children's worth of events from a stream of navigation action events
@@ -11,78 +16,121 @@ import type { EventSubscriber } from './TypeDefinition';
  * focus and blur events for this child
  */
 export default function getChildEventSubscriber(
-  addListener: EventSubscriber,
+  addListener: NavigationEventSubscriber,
   key: string
-): EventSubscriber {
-  return (eventName, eventHandler) => {
-    let isFocused = false;
-    let isFocusNavigating = false;
-    return addListener('action', payload => {
-      // $FlowFixMe ack
+): NavigationEventSubscriber {
+  const actionSubscribers = new Set();
+  const willFocusSubscribers = new Set();
+  const didFocusSubscribers = new Set();
+  const willBlurSubscribers = new Set();
+  const didBlurSubscribers = new Set();
+
+  const getChildSubscribers = evtName => {
+    switch (evtName) {
+      case 'action':
+        return actionSubscribers;
+      case 'willFocus':
+        return willFocusSubscribers;
+      case 'didFocus':
+        return didFocusSubscribers;
+      case 'willBlur':
+        return willBlurSubscribers;
+      case 'didBlur':
+        return didBlurSubscribers;
+      default:
+        return null;
+    }
+  };
+
+  const emit = (eventName, payload) => {
+    const subscribers = getChildSubscribers(eventName);
+    subscribers &&
+      subscribers.forEach(subs => {
+        // $FlowFixMe - Payload should probably understand generic state type
+        subs(payload);
+      });
+  };
+
+  let isSelfFocused = false;
+
+  const cleanup = () => {
+    upstreamSubscribers.forEach(subs => subs && subs.remove());
+  };
+
+  const upstreamEvents = [
+    'willFocus',
+    'didFocus',
+    'willBlur',
+    'didBlur',
+    'action',
+  ];
+
+  const upstreamSubscribers = upstreamEvents.map(eventName => {
+    addListener(eventName, (payload: NavigationEventPayload) => {
       const { state, lastState, action } = payload;
+      const lastFocusKey = lastState && lastState.routes[lastState.index].key;
+      const focusKey = state && state.routes[state.index].key;
 
-      // At this point, we know the listener is subscribed to the `eventName` event of the `key`
-      // child route. And an action has just happened on the parent navigation state. The previous
-      // navigation state was `lastState` and after the `action` it is now `state`.
-
-      const wasFocused = isFocused;
-      isFocused = state.routes[state.index].key === key;
+      const isFocused = focusKey === key;
+      const wasFocused = lastFocusKey === key;
       const lastRoute =
         lastState && lastState.routes.find(route => route.key === key);
-      const newRoute = state.routes.find(route => route.key === key);
+      const newRoute = state && state.routes.find(route => route.key === key);
+      const childPayload = { state: newRoute, lastState: lastRoute, action };
 
-      // Fires an event to the handler if the event name is correct
-      const dispatchForEventName = evtName => {
-        if (evtName === eventName) {
-          eventHandler({ state: newRoute, lastState: lastRoute, action });
-        }
-      };
-      const isNavigating = state.isNavigating;
+      const didNavigate =
+        (lastState && lastState.isNavigating) !== (state && state.isNavigating);
+
+      const isNavigating = !!state && state.isNavigating;
       const wasNavigating = !!lastState && lastState.isNavigating;
+      const didStartNavigating = !wasNavigating && isNavigating;
+      const didFinishNavigating = wasNavigating && !isNavigating;
 
-      if (newRoute && lastRoute !== newRoute) {
-        // route has changed. fire this event to pass navigation events to further children event
-        // subscribers
-        dispatchForEventName('action');
+      if (eventName !== 'action') {
+        switch (eventName) {
+          case 'didFocus':
+            isSelfFocused = true;
+            break;
+          case 'didBlur':
+            isSelfFocused = false;
+            break;
+        }
+        emit(eventName, childPayload);
+        return;
       }
 
-      if (wasFocused) {
-        if (isFocused) {
-          // check for completion of focus navigation
-          if (!isNavigating && wasNavigating && isFocusNavigating) {
-            dispatchForEventName('didFocus');
-            isFocusNavigating = false;
-          }
-        } else {
-          // blur now starting
-          dispatchForEventName('willBlur');
+      // now we're exclusively handling the "action" event
 
-          if (isNavigating) {
-            isFocusNavigating = true;
-          } else if (isFocusNavigating) {
-            dispatchForEventName('didBlur');
-          }
-        }
-      } else {
-        // was not focused
-
-        if (isFocused) {
-          // now focusing!
-          dispatchForEventName('willFocus');
-
-          if (isNavigating) {
-            isFocusNavigating = true;
-          } else if (isFocusNavigating) {
-            dispatchForEventName('didFocus');
-          }
-        } else {
-          // check for completion of blur navigation
-          if (!isNavigating && wasNavigating && isFocusNavigating) {
-            dispatchForEventName('didBlur');
-            isFocusNavigating = false;
-          }
-        }
+      if (newRoute) {
+        // fire this event to pass navigation events to children subscribers
+        emit('action', childPayload);
+      }
+      if (isFocused && didStartNavigating && !isSelfFocused) {
+        emit('willFocus', childPayload);
+      }
+      if (isFocused && didFinishNavigating && !isSelfFocused) {
+        emit('didFocus', childPayload);
+        isSelfFocused = true;
+      }
+      if (!isFocused && didStartNavigating && isSelfFocused) {
+        emit('willBlur', childPayload);
+      }
+      if (!isFocused && didFinishNavigating && isSelfFocused) {
+        emit('didBlur', childPayload);
+        isSelfFocused = false;
       }
     });
+  });
+
+  return (eventName, eventHandler) => {
+    const subscribers = getChildSubscribers(eventName);
+    if (!subscribers) {
+      throw new Error(`Invalid event name "${eventName}"`);
+    }
+    subscribers.add(eventHandler);
+    const remove = () => {
+      subscribers.delete(eventHandler);
+    };
+    return { remove };
   };
 }

@@ -1,7 +1,7 @@
 import NavigationActions from '../NavigationActions';
 import addNavigationHelpers from '../addNavigationHelpers';
 
-const dummyEventSubscriber = (name: string, handler: () => void) => ({
+const dummyEventSubscriber = (name: string, handler: (*) => void) => ({
   remove: () => {},
 });
 

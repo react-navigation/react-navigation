@@ -45,16 +45,16 @@ class MyHomeScreen extends React.Component {
     this._s3.remove();
   }
   _onWF = a => {
-    console.log('_onWillFocus HomeScreen', a);
+    console.log('_willFocus HomeScreen', a);
   };
   _onDF = a => {
-    console.log('_onDidFocus HomeScreen', a);
+    console.log('_didFocus HomeScreen', a);
   };
   _onWB = a => {
-    console.log('_onWillBlur HomeScreen', a);
+    console.log('_willBlur HomeScreen', a);
   };
   _onDB = a => {
-    console.log('_onDidBlur HomeScreen', a);
+    console.log('_didBlur HomeScreen', a);
   };
 
   render() {
@@ -80,16 +80,16 @@ class MyPhotosScreen extends React.Component {
     this._s3.remove();
   }
   _onWF = a => {
-    console.log('_onWillFocus PhotosScreen', a);
+    console.log('_willFocus PhotosScreen', a);
   };
   _onDF = a => {
-    console.log('_onDidFocus PhotosScreen', a);
+    console.log('_didFocus PhotosScreen', a);
   };
   _onWB = a => {
-    console.log('_onWillBlur PhotosScreen', a);
+    console.log('_willBlur PhotosScreen', a);
   };
   _onDB = a => {
-    console.log('_onDidBlur PhotosScreen', a);
+    console.log('_didBlur PhotosScreen', a);
   };
 
   render() {

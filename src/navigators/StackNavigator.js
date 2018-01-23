@@ -47,11 +47,10 @@ export default (routeConfigMap, stackConfig = {}) => {
       cardStyle={cardStyle}
       transitionConfig={transitionConfig}
       onTransitionStart={onTransitionStart}
-      onTransitionEnd={() => {
+      onTransitionEnd={(lastTransition, transition) => {
         const { state, dispatch } = props.navigation;
         dispatch({
           type: NavigationActions.COMPLETE_NAVIGATE,
-          key: state.key,
         });
         onTransitionEnd && onTransitionEnd();
       }}

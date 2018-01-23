@@ -376,7 +376,7 @@ describe('StackRouter', () => {
     expect(state2 && state2.routes[1].params).toEqual({ name: 'Zoom' });
     expect(state2 && state2.routes.length).toEqual(2);
     const state3 = router.getStateForAction(
-      { type: NavigationActions.BACK },
+      { type: NavigationActions.BACK, immediate: true },
       state2
     );
     expect(state3).toEqual({
@@ -416,7 +416,6 @@ describe('StackRouter', () => {
     const state3 = router.getStateForAction(
       {
         type: NavigationActions.COMPLETE_NAVIGATE,
-        key: null,
       },
       state2
     );
@@ -465,7 +464,7 @@ describe('StackRouter', () => {
     expect(state2 && state2.routes[1].params).toEqual({ name: 'Zoom' });
     expect(state2 && state2.routes.length).toEqual(2);
     const state3 = router.getStateForAction(
-      { type: NavigationActions.BACK },
+      { type: NavigationActions.BACK, immediate: true },
       state2
     );
     expect(state3).toEqual({
@@ -516,7 +515,11 @@ describe('StackRouter', () => {
     );
     expect(state3).toEqual(state4);
     const state5 = router.getStateForAction(
-      { type: NavigationActions.BACK, key: state3 && state3.routes[1].key },
+      {
+        type: NavigationActions.BACK,
+        key: state3 && state3.routes[1].key,
+        immediate: true,
+      },
       state4
     );
     expect(state5).toEqual(state);
@@ -1075,7 +1078,6 @@ test('Handles deep navigate completion action', () => {
   const state3 = router.getStateForAction(
     {
       type: NavigationActions.COMPLETE_NAVIGATE,
-      key,
     },
     state2
   );
