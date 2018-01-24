@@ -152,10 +152,15 @@ export default function createNavigationContainer(Component) {
       const oldNav = this._nav;
       invariant(oldNav, 'should be set in constructor if stateful');
       const nav = Component.router.getStateForAction(action, oldNav);
-      const dispatchEvents = () => {
+      const dispatchActionEvents = () => {
         this._actionEventSubscribers.forEach(subscriber =>
           // $FlowFixMe - Payload should probably understand generic state type
-          subscriber({ action, state: nav, lastState: oldNav })
+          subscriber({
+            type: 'action',
+            action,
+            state: nav,
+            lastState: oldNav,
+          })
         );
       };
       if (nav && nav !== oldNav) {
@@ -163,11 +168,11 @@ export default function createNavigationContainer(Component) {
         this._nav = nav;
         this.setState({ nav }, () => {
           this._onNavigationStateChange(oldNav, nav, action);
-          dispatchEvents();
+          dispatchActionEvents();
         });
         return true;
       } else {
-        dispatchEvents();
+        dispatchActionEvents();
       }
       return false;
     };

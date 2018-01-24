@@ -58,8 +58,8 @@ const uri = createAction(URI, payload => ({
   uri: payload.uri,
 }));
 
-const completeNavigate = createAction(COMPLETE_NAVIGATE, payload => ({
-  type: COMPLETE_NAVIGATE,
+const completeTransition = createAction(COMPLETE_TRANSITION, payload => ({
+  type: COMPLETE_TRANSITION,
 }));
 
 const mapDeprecatedNavigateAction = action => {
