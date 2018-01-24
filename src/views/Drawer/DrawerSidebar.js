@@ -86,6 +86,12 @@ class DrawerSidebar extends React.PureComponent<Props> {
   };
 
   _onItemPress = ({ route, focused }: DrawerItem) => {
+    const { onItemPress } = this._getScreenOptions(route.key);
+    if (onItemPress) {
+      onItemPress({ route, focused });
+      return;
+    }
+    // use default action handling
     this.props.navigation.navigate('DrawerClose');
     if (!focused) {
       let subAction;
@@ -110,12 +116,12 @@ class DrawerSidebar extends React.PureComponent<Props> {
     return (
       <View style={[styles.container, this.props.style]}>
         <ContentComponent
-          {...this.props.contentOptions}
-          navigation={this.props.navigation}
-          items={state.routes}
           activeItemKey={
             state.routes[state.index] ? state.routes[state.index].key : null
           }
+          items={state.routes}                  
+          {...this.props.contentOptions}
+          navigation={this.props.navigation}
           screenProps={this.props.screenProps}
           getLabel={this._getLabel}
           renderIcon={this._renderIcon}
