@@ -1,6 +1,7 @@
 /* @flow */
 
 import pathToRegexp from 'path-to-regexp';
+import areEqual from 'fbjs/lib/areEqual';
 
 import NavigationActions from '../NavigationActions';
 import createConfigGetter from './createConfigGetter';
@@ -195,6 +196,16 @@ export default (
             routeName: action.routeName,
           };
         }
+
+        const index = state.routes.length - 1;
+        const lastRoute = state.routes[index];
+
+        if (action.routeName === lastRoute.routeName
+          && areEqual(action.params, lastRoute.params)) {
+          route.key = lastRoute.key;
+          return StateUtils.replaceAtIndex(state, index, route);
+        }
+
         return StateUtils.push(state, route);
       }
 
