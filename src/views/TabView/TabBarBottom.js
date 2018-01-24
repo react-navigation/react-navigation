@@ -51,6 +51,7 @@ type Props = {
   tabStyle?: ViewStyleProp,
   showIcon?: boolean,
   isLandscape: boolean,
+  hiddenTabs: Array<number>,
 };
 
 const majorVersion = parseInt(Platform.Version, 10);
@@ -67,6 +68,7 @@ class TabBarBottom extends React.PureComponent<Props> {
     showLabel: true,
     showIcon: true,
     allowFontScaling: true,
+    hiddenTabs: [],
   };
 
   _renderLabel = (scene: TabScene) => {
@@ -171,6 +173,7 @@ class TabBarBottom extends React.PureComponent<Props> {
       animateStyle,
       tabStyle,
       isLandscape,
+      hiddenTabs,
     } = this.props;
     const { routes } = navigation.state;
     const previousScene = routes[navigation.state.index];
@@ -192,6 +195,9 @@ class TabBarBottom extends React.PureComponent<Props> {
           forceInset={{ bottom: 'always', top: 'never' }}
         >
           {routes.map((route: NavigationRoute, index: number) => {
+            if (hiddenTabs.indexOf(index) > -1) {
+              return null;
+            }
             const focused = index === navigation.state.index;
             const scene = { route, index, focused };
             const onPress = getOnPress(previousScene, scene);
