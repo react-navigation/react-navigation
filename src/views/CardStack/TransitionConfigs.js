@@ -9,12 +9,25 @@ import type {
 } from '../../TypeDefinition';
 
 import CardStackStyleInterpolator from './CardStackStyleInterpolator';
+import * as ReactNativeFeatures from '../../utils/ReactNativeFeatures';
 
-const IOSTransitionSpec = ({
-  duration: 500,
-  easing: Easing.bezier(0.2833, 0.99, 0.31833, 0.99),
-  timing: Animated.timing,
-}: NavigationTransitionSpec);
+let IOSTransitionSpec;
+if (ReactNativeFeatures.supportsImprovedSpringAnimation()) {
+  // These are the exact values from UINavigationController's animation configuration
+  IOSTransitionSpec = ({
+    timing: Animated.spring,
+    stiffness: 1000,
+    damping: 500,
+    mass: 3,
+  }: NavigationTransitionSpec);
+} else {
+  // This is an approximation of the IOS spring animation using a derived bezier curve
+  IOSTransitionSpec = ({
+    duration: 500,
+    easing: Easing.bezier(0.2833, 0.99, 0.31833, 0.99),
+    timing: Animated.timing,
+  }: NavigationTransitionSpec);
+}
 
 // Standard iOS navigation transition
 const SlideFromRightIOS = ({
@@ -60,7 +73,7 @@ function defaultTransitionConfig(
   // props for the new screen
   transitionProps: NavigationTransitionProps,
   // props for the old screen
-  prevTransitionProps: NavigationTransitionProps,
+  prevTransitionProps: ?NavigationTransitionProps,
   // whether we're animating in/out a modal screen
   isModal: boolean
 ): TransitionConfig {
@@ -84,11 +97,15 @@ function defaultTransitionConfig(
 }
 
 function getTransitionConfig(
-  transitionConfigurer?: () => TransitionConfig,
+  transitionConfigurer?: (
+    transitionProps: NavigationTransitionProps,
+    prevTransitionProps: ?NavigationTransitionProps,
+    isModal: boolean
+  ) => TransitionConfig,
   // props for the new screen
   transitionProps: NavigationTransitionProps,
   // props for the old screen
-  prevTransitionProps: NavigationTransitionProps,
+  prevTransitionProps: ?NavigationTransitionProps,
   isModal: boolean
 ): TransitionConfig {
   const defaultConfig = defaultTransitionConfig(
@@ -99,7 +116,7 @@ function getTransitionConfig(
   if (transitionConfigurer) {
     return {
       ...defaultConfig,
-      ...transitionConfigurer(),
+      ...transitionConfigurer(transitionProps, prevTransitionProps, isModal),
     };
   }
   return defaultConfig;

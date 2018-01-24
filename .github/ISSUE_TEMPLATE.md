@@ -1,22 +1,37 @@
-<!---
-BEFORE YOU SUBMIT please search open/closed issues since someone might have asked the same thing before!
--->
+## The issue tracker is reserved for bug reports only.
+
+If you have a question, feature request, or an idea for improving the library or its related tools, please try one of the following resources:
+
+- [Read the documentation](https://reactnavigation.org/)
+- [Post an issue to the website repository if you'd like to see a documentation change](http://github.com/react-navigation/website)
+- [Post a feature request to Canny](https://react-navigation.canny.io/feature-requests)
+- [Write a RFC if you have ideas for how to implement a feature request](https://github.com/react-navigation/rfcs)
+- [Get help on Discord chat (#react-navigation on Reactiflux)](https://discord.gg/4xEK3nD) or [on StackOverflow](https://stackoverflow.com/questions/tagged/react-navigation)
+- Search for your issue - it may have already been answered or even fixed in the development branch. However, if you find that an old, closed issue still persists in the latest version, you should open a new issue.
+
+---
 
 ### Current Behavior
-<!--- If describing a bug, tell us what happens instead of the expected behavior.
-      Provide a screenshot when possible and full code sample -->
-<!--- If suggesting a change/improvement, explain the difference from current behavior -->
+
+- What code are you running and what is happening?
+- Include a screenshot if it makes sense.
 
 ### Expected Behavior
-<!--- If you're describing a bug, tell us what should happen -->
-<!--- If you're suggesting a change/improvement, tell us how it should work -->
+
+- What do you expect should be happening?
+- Include a screenshot if it makes sense.
+
+### How to reproduce
+
+- You must provide a way to reproduce the problem. If you are having an issue with your machine or build tools, the issue belongs on another repoistory as that is outside of the scope of Rect Navigation.
+- Either re-create the bug on [Snack](https://snack.expo.io) or link to a GitHub repository with code that reproduces the bug.
+- Explain how to run the example app and any steps that we need to take to reproduce the issue from the example app.
 
 ### Your Environment
-<!--- Include as many relevant details about the environment you experienced the bug in -->
 
 | software         | version
 | ---------------- | -------
-| react-navigation |  
-| react-native     |  
-| node             | 
+| react-navigation |
+| react-native     |
+| node             |
 | npm or yarn      |

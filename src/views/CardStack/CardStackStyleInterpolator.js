@@ -1,8 +1,13 @@
 /* @flow */
 
-import { I18nManager, type AnimatedViewStylePropTypes } from 'react-native';
+import { I18nManager } from 'react-native';
 
-import type { NavigationSceneRendererProps } from '../../TypeDefinition';
+import type {
+  NavigationSceneRendererProps,
+  AnimatedViewStyleProp,
+} from '../../TypeDefinition';
+
+import getSceneIndicesForInterpolationInputRange from '../../utils/getSceneIndicesForInterpolationInputRange';
 
 /**
  * Utility that builds the style for the card in the cards stack.
@@ -24,7 +29,7 @@ import type { NavigationSceneRendererProps } from '../../TypeDefinition';
  */
 function forInitial(
   props: NavigationSceneRendererProps
-): AnimatedViewStylePropTypes {
+): AnimatedViewStyleProp {
   const { navigation, scene } = props;
 
   const focused = navigation.state.index === scene.index;
@@ -42,39 +47,31 @@ function forInitial(
  */
 function forHorizontal(
   props: NavigationSceneRendererProps
-): AnimatedViewStylePropTypes {
+): AnimatedViewStyleProp {
   const { layout, position, scene } = props;
 
   if (!layout.isMeasured) {
     return forInitial(props);
   }
+  const interpolate = getSceneIndicesForInterpolationInputRange(props);
 
+  if (!interpolate) return { opacity: 0 };
+
+  const { first, last } = interpolate;
   const index = scene.index;
-  const inputRange = [index - 1, index, index + 1];
-
-  const width = layout.initWidth;
-  const outputRange = I18nManager.isRTL
-    ? ([-width, 0, width * 0.3]: Array<number>)
-    : ([width, 0, width * -0.3]: Array<number>);
-
-  // Add [index - 1, index - 0.99] to the interpolated opacity for screen transition.
-  // This makes the screen's shadow to disappear smoothly.
   const opacity = position.interpolate({
-    inputRange: ([
-      index - 1,
-      index - 0.99,
-      index,
-      index + 0.99,
-      index + 1,
-    ]: Array<number>),
+    inputRange: [first, first + 0.01, index, last - 0.01, last],
     outputRange: ([0, 1, 1, 0.85, 0]: Array<number>),
   });
 
-  const translateY = 0;
+  const width = layout.initWidth;
   const translateX = position.interpolate({
-    inputRange,
-    outputRange,
+    inputRange: ([first, index, last]: Array<number>),
+    outputRange: I18nManager.isRTL
+      ? ([-width, 0, width * 0.3]: Array<number>)
+      : ([width, 0, width * -0.3]: Array<number>),
   });
+  const translateY = 0;
 
   return {
     opacity,
@@ -87,32 +84,29 @@ function forHorizontal(
  */
 function forVertical(
   props: NavigationSceneRendererProps
-): AnimatedViewStylePropTypes {
+): AnimatedViewStyleProp {
   const { layout, position, scene } = props;
 
   if (!layout.isMeasured) {
     return forInitial(props);
   }
+  const interpolate = getSceneIndicesForInterpolationInputRange(props);
 
+  if (!interpolate) return { opacity: 0 };
+
+  const { first, last } = interpolate;
   const index = scene.index;
-  const height = layout.initHeight;
-
   const opacity = position.interpolate({
-    inputRange: ([
-      index - 1,
-      index - 0.99,
-      index,
-      index + 0.99,
-      index + 1,
-    ]: Array<number>),
+    inputRange: [first, first + 0.01, index, last - 0.01, last],
     outputRange: ([0, 1, 1, 0.85, 0]: Array<number>),
   });
 
-  const translateX = 0;
+  const height = layout.initHeight;
   const translateY = position.interpolate({
-    inputRange: ([index - 1, index, index + 1]: Array<number>),
+    inputRange: ([first, index, last]: Array<number>),
     outputRange: ([height, 0, 0]: Array<number>),
   });
+  const translateX = 0;
 
   return {
     opacity,
@@ -125,30 +119,59 @@ function forVertical(
  */
 function forFadeFromBottomAndroid(
   props: NavigationSceneRendererProps
-): AnimatedViewStylePropTypes {
+): AnimatedViewStyleProp {
   const { layout, position, scene } = props;
 
   if (!layout.isMeasured) {
     return forInitial(props);
   }
+  const interpolate = getSceneIndicesForInterpolationInputRange(props);
 
+  if (!interpolate) return { opacity: 0 };
+
+  const { first, last } = interpolate;
   const index = scene.index;
-  const inputRange = [index - 1, index, index + 0.99, index + 1];
+  const inputRange = ([first, index, last - 0.01, last]: Array<number>);
 
   const opacity = position.interpolate({
     inputRange,
     outputRange: ([0, 1, 1, 0]: Array<number>),
   });
 
-  const translateX = 0;
   const translateY = position.interpolate({
     inputRange,
     outputRange: ([50, 0, 0, 0]: Array<number>),
   });
+  const translateX = 0;
 
   return {
     opacity,
     transform: [{ translateX }, { translateY }],
+  };
+}
+
+/**
+ *  fadeIn and fadeOut
+ */
+function forFade(props: NavigationSceneRendererProps): AnimatedViewStyleProp {
+  const { layout, position, scene } = props;
+
+  if (!layout.isMeasured) {
+    return forInitial(props);
+  }
+  const interpolate = getSceneIndicesForInterpolationInputRange(props);
+
+  if (!interpolate) return { opacity: 0 };
+
+  const { first, last } = interpolate;
+  const index = scene.index;
+  const opacity = position.interpolate({
+    inputRange: ([first, index, last]: Array<number>),
+    outputRange: ([0, 1, 1]: Array<number>),
+  });
+
+  return {
+    opacity,
   };
 }
 
@@ -163,5 +186,6 @@ export default {
   forHorizontal,
   forVertical,
   forFadeFromBottomAndroid,
+  forFade,
   canUseNativeDriver,
 };

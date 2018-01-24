@@ -3,6 +3,7 @@ flow-typed
 flow
 node_modules
 lib*
+build
 
 ## Temporary
 examples
