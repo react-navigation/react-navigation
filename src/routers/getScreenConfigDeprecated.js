@@ -1,5 +1,5 @@
 /*
- * @flow
+ *      
  */
 import invariant from '../utils/invariant';
 

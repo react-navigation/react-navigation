@@ -1,4 +1,4 @@
-/* @flow */
+/*       */
 /* eslint react/display-name:0 */
 
 import React from 'react';
@@ -6,8 +6,6 @@ import TabRouter from '../TabRouter';
 import StackRouter from '../StackRouter';
 
 import NavigationActions from '../../NavigationActions';
-
-import type { NavigationRoute, NavigationState } from '../../TypeDefinition';
 
 const INIT_ACTION = { type: NavigationActions.INIT };
 
@@ -633,17 +631,7 @@ describe('TabRouter', () => {
       routes: [screenApreState],
     };
 
-    type ComparableRoute = {
-      routeName?: string,
-      routes?: Array<ComparableRoute>,
-    };
-
-    type RouteOrState =
-      | NavigationRoute
-      | NavigationState
-      | (NavigationRoute & NavigationState);
-
-    const comparable = (state: RouteOrState): ComparableRoute => {
+    const comparable = state => {
       let result = {};
       if (typeof state.routeName === 'string') {
         result = { ...result, routeName: state.routeName };

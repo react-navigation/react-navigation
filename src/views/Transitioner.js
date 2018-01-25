@@ -1,4 +1,4 @@
-/* @flow */
+/*       */
 
 import * as React from 'react';
 
@@ -8,57 +8,15 @@ import invariant from '../utils/invariant';
 
 import NavigationScenesReducer from './ScenesReducer';
 
-import type {
-  NavigationLayout,
-  NavigationScene,
-  NavigationState,
-  NavigationScreenProp,
-  NavigationTransitionProps,
-  NavigationTransitionSpec,
-} from '../TypeDefinition';
-
-type Props = {
-  configureTransition: (
-    transitionProps: NavigationTransitionProps,
-    prevTransitionProps: ?NavigationTransitionProps
-  ) => NavigationTransitionSpec,
-  navigation: NavigationScreenProp<NavigationState>,
-  onTransitionEnd?: (...args: Array<mixed>) => void,
-  onTransitionStart?: (...args: Array<mixed>) => void,
-  render: (
-    transitionProps: NavigationTransitionProps,
-    prevTransitionProps: ?NavigationTransitionProps
-  ) => React.Node,
-};
-
-type State = {
-  layout: NavigationLayout,
-  position: Animated.Value,
-  progress: Animated.Value,
-  scenes: Array<NavigationScene>,
-};
-
 // Used for all animations unless overriden
-const DefaultTransitionSpec = ({
+const DefaultTransitionSpec = {
   duration: 250,
   easing: Easing.inOut(Easing.ease),
   timing: Animated.timing,
-}: NavigationTransitionSpec);
+};
 
-class Transitioner extends React.Component<Props, State> {
-  _onLayout: (event: any) => void;
-  _onTransitionEnd: () => void;
-  _prevTransitionProps: ?NavigationTransitionProps;
-  _transitionProps: NavigationTransitionProps;
-  _isMounted: boolean;
-  _isTransitionRunning: boolean;
-  _queuedTransition: ?{
-    nextProps: Props,
-    nextScenes: Array<NavigationScene>,
-    indexHasChanged: boolean,
-  };
-
-  constructor(props: Props, context: any) {
+class Transitioner extends React.Component {
+  constructor(props, context) {
     super(props, context);
 
     // The initial layout isn't measured. Measured layout will be only available
@@ -85,20 +43,20 @@ class Transitioner extends React.Component<Props, State> {
     this._queuedTransition = null;
   }
 
-  componentWillMount(): void {
+  componentWillMount() {
     this._onLayout = this._onLayout.bind(this);
     this._onTransitionEnd = this._onTransitionEnd.bind(this);
   }
 
-  componentDidMount(): void {
+  componentDidMount() {
     this._isMounted = true;
   }
 
-  componentWillUnmount(): void {
+  componentWillUnmount() {
     this._isMounted = false;
   }
 
-  componentWillReceiveProps(nextProps: Props): void {
+  componentWillReceiveProps(nextProps) {
     const nextScenes = NavigationScenesReducer(
       this.state.scenes,
       nextProps.navigation.state,
@@ -119,11 +77,7 @@ class Transitioner extends React.Component<Props, State> {
     this._startTransition(nextProps, nextScenes, indexHasChanged);
   }
 
-  _startTransition(
-    nextProps: Props,
-    nextScenes: Array<NavigationScene>,
-    indexHasChanged: boolean
-  ) {
+  _startTransition(nextProps, nextScenes, indexHasChanged) {
     const nextState = {
       ...this.state,
       scenes: nextScenes,
@@ -195,7 +149,7 @@ class Transitioner extends React.Component<Props, State> {
     );
   }
 
-  _onLayout(event: any): void {
+  _onLayout(event) {
     const { height, width } = event.nativeEvent.layout;
     if (
       this.state.layout.initWidth === width &&
@@ -222,7 +176,7 @@ class Transitioner extends React.Component<Props, State> {
     this.setState(nextState);
   }
 
-  _onTransitionEnd(): void {
+  _onTransitionEnd() {
     if (!this._isMounted) {
       return;
     }
@@ -262,10 +216,7 @@ class Transitioner extends React.Component<Props, State> {
   }
 }
 
-function buildTransitionProps(
-  props: Props,
-  state: State
-): NavigationTransitionProps {
+function buildTransitionProps(props, state) {
   const { navigation } = props;
 
   const { layout, position, progress, scenes } = state;
@@ -285,11 +236,11 @@ function buildTransitionProps(
   };
 }
 
-function isSceneNotStale(scene: NavigationScene): boolean {
+function isSceneNotStale(scene) {
   return !scene.isStale;
 }
 
-function isSceneActive(scene: NavigationScene): boolean {
+function isSceneActive(scene) {
   return scene.isActive;
 }
 

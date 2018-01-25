@@ -1,4 +1,4 @@
-/* @flow */
+/*       */
 
 import {
   BackAndroid as DeprecatedBackAndroid,

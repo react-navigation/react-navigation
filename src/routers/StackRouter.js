@@ -1,4 +1,4 @@
-/* @flow */
+/*       */
 
 import pathToRegexp from 'path-to-regexp';
 
@@ -10,28 +10,13 @@ import validateRouteConfigMap from './validateRouteConfigMap';
 import getScreenConfigDeprecated from './getScreenConfigDeprecated';
 import invariant from '../utils/invariant';
 
-import type {
-  NavigationComponent,
-  NavigationNavigateAction,
-  NavigationRouter,
-  NavigationRouteConfigMap,
-  NavigationResetAction,
-  NavigationParams,
-  NavigationState,
-  NavigationStackRouterConfig,
-  NavigationStackScreenOptions,
-  NavigationRoute,
-  NavigationStateRoute,
-  NavigationAction,
-} from '../TypeDefinition';
-
 const uniqueBaseId = `id-${Date.now()}`;
 let uuidCount = 0;
 function _getUuid() {
   return `${uniqueBaseId}-${uuidCount++}`;
 }
 
-function isEmpty(obj: ?Object): boolean {
+function isEmpty(obj) {
   if (!obj) return true;
   for (let key in obj) {
     return false;
@@ -39,10 +24,7 @@ function isEmpty(obj: ?Object): boolean {
   return true;
 }
 
-export default (
-  routeConfigs: NavigationRouteConfigMap,
-  stackConfig: NavigationStackRouterConfig = {}
-): NavigationRouter<NavigationState, NavigationStackScreenOptions> => {
+export default (routeConfigs, stackConfig = {}) => {
   // Fail fast on invalid route definitions
   validateRouteConfigMap(routeConfigs);
 
@@ -50,7 +32,7 @@ export default (
   const routeNames = Object.keys(routeConfigs);
 
   // Loop through routes and find child routers
-  routeNames.forEach((routeName: string) => {
+  routeNames.forEach(routeName => {
     const screen = getScreenForRouteName(routeConfigs, routeName);
     if (screen && screen.router) {
       // If it has a router it's a navigator.
@@ -69,7 +51,7 @@ export default (
   const paths = stackConfig.paths || {};
 
   // Build paths for each route
-  routeNames.forEach((routeName: string) => {
+  routeNames.forEach(routeName => {
     let pathPattern = paths[routeName] || routeConfigs[routeName].path;
     const matchExact = !!pathPattern && !childRouters[routeName];
     if (typeof pathPattern !== 'string') {
@@ -86,7 +68,7 @@ export default (
   });
 
   return {
-    getComponentForState(state: NavigationState): NavigationComponent {
+    getComponentForState(state) {
       const activeChildRoute = state.routes[state.index];
       const { routeName } = activeChildRoute;
       if (childRouters[routeName]) {
@@ -95,14 +77,11 @@ export default (
       return getScreenForRouteName(routeConfigs, routeName);
     },
 
-    getComponentForRouteName(routeName: string): NavigationComponent {
+    getComponentForRouteName(routeName) {
       return getScreenForRouteName(routeConfigs, routeName);
     },
 
-    getStateForAction(
-      action: NavigationAction,
-      state: ?NavigationState
-    ): ?NavigationState {
+    getStateForAction(action, state) {
       // Set up the initial state if needed
       if (!state) {
         let route = {};
@@ -235,9 +214,7 @@ export default (
 
       if (action.type === NavigationActions.SET_PARAMS) {
         const key = action.key;
-        const lastRoute = state.routes.find(
-          (route: NavigationRoute) => route.key === key
-        );
+        const lastRoute = state.routes.find(route => route.key === key);
         if (lastRoute) {
           const params = {
             ...lastRoute.params,
@@ -256,29 +233,27 @@ export default (
       }
 
       if (action.type === NavigationActions.RESET) {
-        const resetAction: NavigationResetAction = action;
+        const resetAction = action;
 
         return {
           ...state,
-          routes: resetAction.actions.map(
-            (childAction: NavigationNavigateAction) => {
-              const router = childRouters[childAction.routeName];
-              if (router) {
-                return {
-                  ...childAction,
-                  ...router.getStateForAction(childAction),
-                  routeName: childAction.routeName,
-                  key: _getUuid(),
-                };
-              }
-              const route = {
+          routes: resetAction.actions.map(childAction => {
+            const router = childRouters[childAction.routeName];
+            if (router) {
+              return {
                 ...childAction,
+                ...router.getStateForAction(childAction),
+                routeName: childAction.routeName,
                 key: _getUuid(),
               };
-              delete route.type;
-              return route;
             }
-          ),
+            const route = {
+              ...childAction,
+              key: _getUuid(),
+            };
+            delete route.type;
+            return route;
+          }),
           index: action.index,
         };
       }
@@ -287,9 +262,7 @@ export default (
         const key = action.key;
         let backRouteIndex = null;
         if (key) {
-          const backRoute = state.routes.find(
-            (route: NavigationRoute) => route.key === key
-          );
+          const backRoute = state.routes.find(route => route.key === key);
           /* $FlowFixMe */
           backRouteIndex = state.routes.indexOf(backRoute);
         }
@@ -307,9 +280,7 @@ export default (
       return state;
     },
 
-    getPathAndParamsForState(
-      state: NavigationState
-    ): { path: string, params?: NavigationParams } {
+    getPathAndParamsForState(state) {
       const route = state.routes[state.index];
       const routeName = route.routeName;
       const screen = getScreenForRouteName(routeConfigs, routeName);
@@ -319,7 +290,7 @@ export default (
       let params = route.params;
       if (screen && screen.router) {
         // $FlowFixMe there's no way type the specific shape of the nav state
-        const stateRoute: NavigationStateRoute = route;
+        const stateRoute = route;
         // If it has a router it's a navigator.
         // If it doesn't have router it's an ordinary React component.
         const child = screen.router.getPathAndParamsForState(stateRoute);
@@ -332,10 +303,7 @@ export default (
       };
     },
 
-    getActionForPathAndParams(
-      pathToResolve: string,
-      inputParams: ?NavigationParams
-    ): ?NavigationAction {
+    getActionForPathAndParams(pathToResolve, inputParams) {
       // If the path is empty (null or empty string)
       // just return the initial route action
       if (!pathToResolve) {
@@ -399,18 +367,16 @@ export default (
       // reduce the matched pieces of the path into the params
       // of the route. `params` is null if there are no params.
       /* $FlowFixMe */
-      const params = pathMatch
-        .slice(1)
-        .reduce((result: *, matchResult: *, i: number) => {
-          const key = pathMatchKeys[i];
-          if (key.asterisk || !key) {
-            return result;
-          }
-          const nextResult = result || {};
-          const paramName = key.name;
-          nextResult[paramName] = matchResult;
-          return nextResult;
-        }, queryParams);
+      const params = pathMatch.slice(1).reduce((result, matchResult, i) => {
+        const key = pathMatchKeys[i];
+        if (key.asterisk || !key) {
+          return result;
+        }
+        const nextResult = result || {};
+        const paramName = key.name;
+        nextResult[paramName] = matchResult;
+        return nextResult;
+      }, queryParams);
 
       return NavigationActions.navigate({
         routeName: matchedRouteName,

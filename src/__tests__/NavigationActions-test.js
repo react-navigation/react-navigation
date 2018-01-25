@@ -1,4 +1,4 @@
-/* @flow */
+/*       */
 
 import NavigationActions from '../NavigationActions';
 

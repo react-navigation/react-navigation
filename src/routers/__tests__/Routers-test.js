@@ -1,4 +1,4 @@
-/* @flow */
+/*       */
 /* eslint react/no-multi-comp:0 */
 
 import * as React from 'react';
@@ -14,27 +14,27 @@ const ROUTERS = {
   StackRouter,
 };
 
-Object.keys(ROUTERS).forEach((routerName: string) => {
+Object.keys(ROUTERS).forEach(routerName => {
   const Router = ROUTERS[routerName];
 
   describe(`General router features - ${routerName}`, () => {
     test('title is configurable using navigationOptions and getScreenOptions', () => {
-      class FooView extends React.Component<void> {
+      class FooView extends React.Component {
         render() {
           return <div />;
         }
       }
-      class BarView extends React.Component<void> {
+      class BarView extends React.Component {
         render() {
           return <div />;
         }
         static navigationOptions = { title: 'BarTitle' };
       }
-      class BazView extends React.Component<void> {
+      class BazView extends React.Component {
         render() {
           return <div />;
         }
-        static navigationOptions = ({ navigation }: *) => ({
+        static navigationOptions = ({ navigation }) => ({
           title: `Baz-${navigation.state.params.id}`,
         });
       }

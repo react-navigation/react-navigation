@@ -1,5 +1,5 @@
 /*
- * @flow
+ *      
  */
 
 import invariant from '../utils/invariant';
@@ -8,20 +8,7 @@ import getScreenForRouteName from './getScreenForRouteName';
 import addNavigationHelpers from '../addNavigationHelpers';
 import validateScreenOptions from './validateScreenOptions';
 
-import type {
-  NavigationScreenProp,
-  NavigationRoute,
-  NavigationStateRoute,
-  NavigationRouteConfigMap,
-  NavigationScreenConfig,
-  NavigationScreenConfigProps,
-} from '../TypeDefinition';
-
-function applyConfig<T: {}>(
-  configurer: ?NavigationScreenConfig<T>,
-  navigationOptions: any,
-  configProps: NavigationScreenConfigProps
-): * {
+function applyConfig(configurer, navigationOptions, configProps) {
   if (typeof configurer === 'function') {
     return {
       ...navigationOptions,
@@ -40,10 +27,10 @@ function applyConfig<T: {}>(
   return navigationOptions;
 }
 
-export default (
-  routeConfigs: NavigationRouteConfigMap,
-  navigatorScreenConfig?: NavigationScreenConfig<*>
-) => (navigation: NavigationScreenProp<NavigationRoute>, screenProps: *) => {
+export default (routeConfigs, navigatorScreenConfig) => (
+  navigation,
+  screenProps
+) => {
   const { state, dispatch } = navigation;
   const route = state;
 
@@ -59,7 +46,7 @@ export default (
   const router = Component.router;
   if (router) {
     // $FlowFixMe
-    const { routes, index } = (route: NavigationStateRoute);
+    const { routes, index } = route;
     if (!route || !routes || index == null) {
       throw new Error(
         `Expect nav state to have routes and index, ${JSON.stringify(route)}`

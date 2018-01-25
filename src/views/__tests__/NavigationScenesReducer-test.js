@@ -1,19 +1,19 @@
-/* @flow */
+/*       */
 
 import ScenesReducer from '../ScenesReducer';
 
 /**
  * Simulate scenes transtion with changes of navigation states.
  */
-function testTransition(states: *) {
-  const routes = states.map((keys: *) => ({
+function testTransition(states) {
+  const routes = states.map(keys => ({
     index: 0,
-    routes: keys.map((key: *) => ({ key, routeName: '' })),
+    routes: keys.map(key => ({ key, routeName: '' })),
   }));
 
   let scenes = [];
   let prevState = null;
-  routes.forEach((nextState: *) => {
+  routes.forEach(nextState => {
     scenes = ScenesReducer(scenes, nextState, prevState);
     prevState = nextState;
   });
@@ -101,7 +101,7 @@ describe('ScenesReducer', () => {
     const scenes1 = ScenesReducer([], state1, null);
     const scenes2 = ScenesReducer(scenes1, state2, state1);
     /* $FlowFixMe: We want tests to fail on undefined */
-    const route = scenes2.find((scene: *) => scene.isActive).route;
+    const route = scenes2.find(scene => scene.isActive).route;
     expect(route).toEqual({ key: '2', routeName: '' });
   });
 

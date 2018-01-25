@@ -1,4 +1,4 @@
-/* @flow */
+/*       */
 
 import * as React from 'react';
 import {
@@ -10,25 +10,9 @@ import {
   StyleSheet,
 } from 'react-native';
 
-import type { LayoutEvent, TextStyleProp } from '../../TypeDefinition';
-
 import TouchableItem from '../TouchableItem';
 
-type Props = {
-  onPress?: () => void,
-  pressColorAndroid?: string,
-  title?: ?string,
-  titleStyle?: ?TextStyleProp,
-  tintColor?: ?string,
-  truncatedTitle?: ?string,
-  width?: ?number,
-};
-
-type State = {
-  initialTextWidth?: number,
-};
-
-class HeaderBackButton extends React.PureComponent<Props, State> {
+class HeaderBackButton extends React.PureComponent {
   static defaultProps = {
     pressColorAndroid: 'rgba(0, 0, 0, .32)',
     tintColor: Platform.select({
@@ -39,7 +23,7 @@ class HeaderBackButton extends React.PureComponent<Props, State> {
 
   state = {};
 
-  _onTextLayout = (e: LayoutEvent) => {
+  _onTextLayout = e => {
     if (this.state.initialTextWidth) {
       return;
     }

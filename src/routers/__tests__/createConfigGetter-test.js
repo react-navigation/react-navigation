@@ -1,18 +1,14 @@
-/* @flow */
+/*       */
 
 import { Component } from 'react';
 import createConfigGetter from '../createConfigGetter';
 import addNavigationHelpers from '../../addNavigationHelpers';
-import type {
-  NavigationScreenOptionsGetter,
-  NavigationStackScreenOptions,
-} from '../../TypeDefinition';
 
 test('should get config for screen', () => {
   /* eslint-disable react/no-multi-comp */
 
-  class HomeScreen extends Component<void> {
-    static navigationOptions = ({ navigation }: *) => ({
+  class HomeScreen extends Component {
+    static navigationOptions = ({ navigation }) => ({
       title: `Welcome ${navigation.state.params
         ? navigation.state.params.user
         : 'anonymous'}`,
@@ -24,7 +20,7 @@ test('should get config for screen', () => {
     }
   }
 
-  class SettingsScreen extends Component<void> {
+  class SettingsScreen extends Component {
     static navigationOptions = {
       title: 'Settings!!!',
       gesturesEnabled: false,
@@ -35,8 +31,8 @@ test('should get config for screen', () => {
     }
   }
 
-  class NotificationScreen extends Component<void> {
-    static navigationOptions = ({ navigation }: *) => ({
+  class NotificationScreen extends Component {
+    static navigationOptions = ({ navigation }) => ({
       title: '42',
       gesturesEnabled: navigation.state.params
         ? !navigation.state.params.fullscreen
@@ -48,9 +44,7 @@ test('should get config for screen', () => {
     }
   }
 
-  const getScreenOptions: NavigationScreenOptionsGetter<
-    NavigationStackScreenOptions
-  > = createConfigGetter({
+  const getScreenOptions = createConfigGetter({
     Home: { screen: HomeScreen },
     Settings: { screen: SettingsScreen },
     Notifications: {

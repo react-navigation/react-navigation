@@ -1,4 +1,4 @@
-/* @flow */
+/*       */
 /* eslint no-shadow:0, react/no-multi-comp:0, react/display-name:0 */
 
 import * as React from 'react';
@@ -37,7 +37,7 @@ AuthNavigator.router = StackRouter({
 
 const BarScreen = () => <div />;
 
-class FooNavigator extends React.Component<void> {
+class FooNavigator extends React.Component {
   static router = StackRouter({
     bar: {
       path: 'b/:barThing',
@@ -137,12 +137,12 @@ describe('StackRouter', () => {
 
   test('Gets the screen for given route', () => {
     const FooScreen = () => <div />;
-    const BarScreen = class extends React.Component<void> {
+    const BarScreen = class extends React.Component {
       render() {
         return <div />;
       }
     };
-    const BazScreen = class extends React.Component<void> {
+    const BazScreen = class extends React.Component {
       render() {
         return <div />;
       }
@@ -166,12 +166,12 @@ describe('StackRouter', () => {
 
   test('Handles getScreen in getComponent', () => {
     const FooScreen = () => <div />;
-    const BarScreen = class extends React.Component<void> {
+    const BarScreen = class extends React.Component {
       render() {
         return <div />;
       }
     };
-    const BazScreen = class extends React.Component<void> {
+    const BazScreen = class extends React.Component {
       render() {
         return <div />;
       }

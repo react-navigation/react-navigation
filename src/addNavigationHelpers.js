@@ -1,26 +1,17 @@
 /**
- * @flow
+ *
  *
  * Helpers for navigation.
  */
 
-import type {
-  NavigationProp,
-  NavigationParams,
-  NavigationScreenProp,
-  NavigationNavigateAction,
-} from './TypeDefinition';
-
 import NavigationActions from './NavigationActions';
 import invariant from './utils/invariant';
 
-export default function<S: {}>(
-  navigation: NavigationProp<S>
-): NavigationScreenProp<S> {
+export default function(navigation) {
   return {
     ...navigation,
-    goBack: (key?: ?string): boolean => {
-      let actualizedKey: ?string = key;
+    goBack: key => {
+      let actualizedKey = key;
       if (key === undefined && navigation.state.key) {
         invariant(
           typeof navigation.state.key === 'string',
@@ -32,11 +23,7 @@ export default function<S: {}>(
         NavigationActions.back({ key: actualizedKey })
       );
     },
-    navigate: (
-      routeName: string,
-      params?: NavigationParams,
-      action?: NavigationNavigateAction
-    ): boolean =>
+    navigate: (routeName, params, action) =>
       navigation.dispatch(
         NavigationActions.navigate({ routeName, params, action })
       ),
@@ -45,7 +32,7 @@ export default function<S: {}>(
      * buttons are based on the route params.
      * This means `setParams` can be used to update nav bar for example.
      */
-    setParams: (params: NavigationParams): boolean => {
+    setParams: params => {
       invariant(
         navigation.state.key && typeof navigation.state.key === 'string',
         'setParams cannot be called by root navigator'

@@ -1,4 +1,4 @@
-/* @flow */
+/*       */
 
 import * as React from 'react';
 import { Dimensions, Platform, ScrollView } from 'react-native';
@@ -13,32 +13,11 @@ import SafeAreaView from '../views/SafeAreaView';
 
 import NavigatorTypes from './NavigatorTypes';
 
-import type { DrawerViewConfig } from '../views/Drawer/DrawerView';
-import type {
-  NavigationState,
-  NavigationRouteConfigMap,
-  NavigationTabRouterConfig,
-  NavigationDrawerScreenOptions,
-  NavigationNavigatorProps,
-} from '../TypeDefinition';
-
-export type DrawerNavigatorConfig = {
-  containerConfig?: void,
-} & NavigationTabRouterConfig &
-  DrawerViewConfig;
-
 // A stack navigators props are the intersection between
 // the base navigator props (navgiation, screenProps, etc)
 // and the view's props
-type DrawerNavigatorProps = NavigationNavigatorProps<
-  NavigationDrawerScreenOptions,
-  NavigationState
-> &
-  React.ElementProps<typeof DrawerView>;
 
-const defaultContentComponent = (
-  props: React.ElementProps<typeof DrawerItems>
-) => (
+const defaultContentComponent = props => (
   <ScrollView alwaysBounceVertical={false}>
     <SafeAreaView forceInset={{ top: 'always', horizontal: 'never' }}>
       <DrawerItems {...props} />
@@ -71,10 +50,7 @@ const DefaultDrawerConfig = {
   useNativeAnimations: true,
 };
 
-const DrawerNavigator = (
-  routeConfigs: NavigationRouteConfigMap,
-  config: DrawerNavigatorConfig = {}
-) => {
+const DrawerNavigator = (routeConfigs, config = {}) => {
   const mergedConfig = { ...DefaultDrawerConfig, ...config };
   const {
     containerConfig,
@@ -101,9 +77,7 @@ const DrawerNavigator = (
           routeConfigs,
           config,
           NavigatorTypes.DRAWER
-        )((props: React.ElementProps<typeof DrawerScreen>) => (
-          <DrawerScreen {...props} />
-        )),
+        )(props => <DrawerScreen {...props} />),
       },
       [drawerOpenRoute]: {
         screen: () => null,
@@ -122,7 +96,7 @@ const DrawerNavigator = (
     routeConfigs,
     config,
     NavigatorTypes.DRAWER
-  )((props: DrawerNavigatorProps) => (
+  )(props => (
     <DrawerView
       {...props}
       drawerBackgroundColor={drawerBackgroundColor}
