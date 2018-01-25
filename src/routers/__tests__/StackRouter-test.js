@@ -437,6 +437,37 @@ describe('StackRouter', () => {
     });
   });
 
+  test('Handle navigation to nested navigator', () => {
+    const state = TestStackRouter.getStateForAction({
+      type: NavigationActions.INIT,
+    });
+    const action = TestStackRouter.getActionForPathAndParams('fo/22/b/hello');
+    /* $FlowFixMe */
+    const state2 = TestStackRouter.getStateForAction(action);
+    expect(state2).toEqual({
+      index: 0,
+      routes: [
+        {
+          index: 0,
+          key: 'Init-id-0-14',
+          routeName: 'foo',
+          params: {
+            fooThing: '22',
+          },
+          routes: [
+            {
+              routeName: 'bar',
+              key: 'Init-id-0-13',
+              params: {
+                barThing: 'hello',
+              },
+            },
+          ],
+        },
+      ],
+    });
+  });
+
   test('Handle goBack identified by key', () => {
     const FooScreen = () => <div />;
     const BarScreen = () => <div />;
@@ -496,7 +527,7 @@ describe('StackRouter', () => {
       index: 0,
       routes: [
         {
-          key: 'Init-id-0-12',
+          key: 'Init-id-0-18',
           routeName: 'Bar',
         },
       ],
@@ -518,7 +549,7 @@ describe('StackRouter', () => {
       index: 0,
       routes: [
         {
-          key: 'Init-id-0-13',
+          key: 'Init-id-0-19',
           routeName: 'Bar',
           params: { foo: 'bar' },
         },
@@ -571,7 +602,7 @@ describe('StackRouter', () => {
       {
         type: NavigationActions.SET_PARAMS,
         params: { name: 'Qux' },
-        key: 'Init-id-0-16',
+        key: state ? state.routes[0].key : '...',
       },
       state
     );
@@ -599,14 +630,14 @@ describe('StackRouter', () => {
       {
         type: NavigationActions.SET_PARAMS,
         params: { name: 'foobar' },
-        key: 'Init-id-0-17',
+        key: 'Init-id-0-23',
       },
       state
     );
     expect(state2 && state2.index).toEqual(0);
     expect(state2 && state2.routes[0].routes[0].routes).toEqual([
       {
-        key: 'Init-id-0-17',
+        key: 'Init-id-0-23',
         routeName: 'Quux',
         params: { name: 'foobar' },
       },
@@ -813,7 +844,6 @@ describe('StackRouter', () => {
     expect(state && state.routes[0]).toEqual(
       expect.objectContaining({
         routeName: 'Bar',
-        type: undefined,
       })
     );
   });

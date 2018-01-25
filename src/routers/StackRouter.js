@@ -86,15 +86,25 @@ export default (routeConfigs, stackConfig = {}) => {
           action.type === NavigationActions.NAVIGATE &&
           childRouters[action.routeName] !== undefined
         ) {
+          const childRouter = childRouters[action.routeName];
+          let childState;
+          if (childRouter !== null) {
+            const childAction =
+              action.action ||
+              NavigationActions.init({ params: action.params });
+            childState = childRouter.getStateForAction(childAction);
+          }
+          const route = {
+            ...childState,
+            routeName: action.routeName,
+            key: `Init-${_getUuid()}`,
+          };
+          if (action.params) {
+            route.params = action.params;
+          }
           return {
             index: 0,
-            routes: [
-              {
-                ...action,
-                type: undefined,
-                key: `Init-${_getUuid()}`,
-              },
-            ],
+            routes: [route],
           };
         }
         if (initialChildRouter) {
