@@ -2,6 +2,8 @@
  * @flow
  */
 
+import type { NavigationScreenProp } from 'react-navigation';
+
 import React from 'react';
 import { Button, Platform, ScrollView, StatusBar, View } from 'react-native';
 import { SafeAreaView, TabNavigator } from 'react-navigation';
@@ -114,8 +116,17 @@ const SimpleTabs = TabNavigator(
   }
 );
 
-class SimpleTabsContainer extends React.Component {
+type SimpleTabsContainerProps = {
+  navigation: NavigationScreenProp<*>,
+};
+
+class SimpleTabsContainer extends React.Component<SimpleTabsContainerProps> {
   static router = SimpleTabs.router;
+  _s0: Object;
+  _s1: Object;
+  _s2: Object;
+  _s3: Object;
+
   componentDidMount() {
     this._s0 = this.props.navigation.addListener('willFocus', this._onWF);
     this._s1 = this.props.navigation.addListener('didFocus', this._onDF);

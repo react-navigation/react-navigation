@@ -1,24 +1,10 @@
-/**
- * @flow
- */
-
-import type {
-  NavigationEventSubscriber,
-  NavigationAction,
-  NavigationState,
-  NavigationEventPayload,
-} from './TypeDefinition';
-
 /*
  * This is used to extract one children's worth of events from a stream of navigation action events
  *
  * Based on the 'action' events that get fired for this navigation state, this utility will fire
  * focus and blur events for this child
  */
-export default function getChildEventSubscriber(
-  addListener: NavigationEventSubscriber,
-  key: string
-): NavigationEventSubscriber {
+export default function getChildEventSubscriber(addListener, key) {
   const actionSubscribers = new Set();
   const willFocusSubscribers = new Set();
   const didFocusSubscribers = new Set();
@@ -66,7 +52,7 @@ export default function getChildEventSubscriber(
   ];
 
   const upstreamSubscribers = upstreamEvents.map(eventName =>
-    addListener(eventName, (payload: NavigationEventPayload) => {
+    addListener(eventName, payload => {
       const { state, lastState, action } = payload;
       const lastFocusKey = lastState && lastState.routes[lastState.index].key;
       const focusKey = state && state.routes[state.index].key;
