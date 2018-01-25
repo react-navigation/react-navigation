@@ -2,7 +2,7 @@
  * @flow
  */
 
-import type { NavigationScreenProp } from 'react-navigation';
+import type { NavigationScreenProp, EventListener } from 'react-navigation';
 
 import React from 'react';
 import { Button, Platform, ScrollView, StatusBar, View } from 'react-native';
@@ -122,10 +122,10 @@ type SimpleTabsContainerProps = {
 
 class SimpleTabsContainer extends React.Component<SimpleTabsContainerProps> {
   static router = SimpleTabs.router;
-  _s0: Object;
-  _s1: Object;
-  _s2: Object;
-  _s3: Object;
+  _s0: EventListener;
+  _s1: EventListener;
+  _s2: EventListener;
+  _s3: EventListener;
 
   componentDidMount() {
     this._s0 = this.props.navigation.addListener('willFocus', this._onWF);

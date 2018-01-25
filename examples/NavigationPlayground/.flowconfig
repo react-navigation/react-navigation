@@ -43,6 +43,8 @@
 ; This package is required by Expo and causes Flow errors
 .*/node_modules/react-native-gesture-handler/.*
 
+.*/node_modules/metro/.*
+
 [include]
 
 [libs]
