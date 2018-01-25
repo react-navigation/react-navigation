@@ -1,6 +1,4 @@
-/*       */
-
-import * as React from 'react';
+import React from 'react';
 import { Dimensions } from 'react-native';
 import DrawerLayout from 'react-native-drawer-layout-polyfill';
 

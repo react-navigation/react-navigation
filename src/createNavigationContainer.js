@@ -1,5 +1,3 @@
-/*       */
-
 import React from 'react';
 import { BackHandler, Linking } from './PlatformHelpers';
 import NavigationActions from './NavigationActions';
@@ -12,10 +10,7 @@ import invariant from './utils/invariant';
  * This allows to use e.g. the StackNavigator and TabNavigator as root-level
  * components.
  */
-export default function createNavigationContainer(
-  // Let the NavigationNavigator props flowwwww
-  Component
-) {
+export default function createNavigationContainer(Component) {
   class NavigationContainer extends React.Component {
     subs = null;
 

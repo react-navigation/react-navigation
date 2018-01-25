@@ -1,5 +1,3 @@
-/*       */
-
 import NavigationActions from '../NavigationActions';
 import addNavigationHelpers from '../addNavigationHelpers';
 

@@ -1,6 +1,4 @@
-/*       */
-
-import * as React from 'react';
+import React from 'react';
 import { NativeModules } from 'react-native';
 
 import CardStack from './CardStack';

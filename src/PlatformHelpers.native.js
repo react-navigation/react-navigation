@@ -1,5 +1,3 @@
-/*       */
-
 import {
   BackAndroid as DeprecatedBackAndroid,
   BackHandler as ModernBackHandler,

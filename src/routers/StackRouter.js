@@ -1,5 +1,3 @@
-/*       */
-
 import pathToRegexp from 'path-to-regexp';
 
 import NavigationActions from '../NavigationActions';

@@ -1,5 +1,3 @@
-/*       */
-
 function getSceneIndicesForInterpolationInputRange(props) {
   const { scene, scenes } = props;
   const index = scene.index;

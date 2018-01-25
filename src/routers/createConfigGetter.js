@@ -1,7 +1,3 @@
-/*
- *      
- */
-
 import invariant from '../utils/invariant';
 
 import getScreenForRouteName from './getScreenForRouteName';

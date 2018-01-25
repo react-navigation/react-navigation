@@ -1,5 +1,3 @@
-/*       */
-
 import invariant from '../utils/invariant';
 
 /**

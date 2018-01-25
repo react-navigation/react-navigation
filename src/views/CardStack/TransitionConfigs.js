@@ -1,7 +1,4 @@
-/*       */
-
 import { Animated, Easing, Platform } from 'react-native';
-
 import CardStackStyleInterpolator from './CardStackStyleInterpolator';
 import * as ReactNativeFeatures from '../../utils/ReactNativeFeatures';
 

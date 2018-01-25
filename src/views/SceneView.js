@@ -1,6 +1,4 @@
-/*       */
-
-import * as React from 'react';
+import React from 'react';
 import propTypes from 'prop-types';
 
 export default class SceneView extends React.PureComponent {

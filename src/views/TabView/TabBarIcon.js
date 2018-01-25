@@ -1,6 +1,4 @@
-/*       */
-
-import * as React from 'react';
+import React from 'react';
 import { Animated, View, StyleSheet } from 'react-native';
 
 export default class TabBarIcon extends React.PureComponent {

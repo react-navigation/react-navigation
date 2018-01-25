@@ -1,9 +1,5 @@
-/*       */
-
-import * as React from 'react';
-
+import React from 'react';
 import invariant from '../../utils/invariant';
-
 import AnimatedValueSubscription from '../AnimatedValueSubscription';
 
 const MIN_POSITION_OFFSET = 0.01;

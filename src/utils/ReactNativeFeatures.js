@@ -1,5 +1,3 @@
-/*       */
-
 import { NativeModules } from 'react-native';
 const { PlatformConstants } = NativeModules;
 

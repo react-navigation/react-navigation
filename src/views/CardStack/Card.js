@@ -1,9 +1,5 @@
-/*       */
-
-import * as React from 'react';
-
+import React from 'react';
 import { Animated, StyleSheet } from 'react-native';
-
 import createPointerEventsContainer from './PointerEventsContainer';
 
 /**

@@ -1,5 +1,3 @@
-/*       */
-
 /**
  * TouchableItem renders a touchable that looks native on both iOS and Android.
  *
@@ -9,7 +7,7 @@
  * On iOS you can pass the props of TouchableOpacity, on Android pass the props
  * of TouchableNativeFeedback.
  */
-import * as React from 'react';
+import React from 'react';
 import {
   Platform,
   TouchableNativeFeedback,

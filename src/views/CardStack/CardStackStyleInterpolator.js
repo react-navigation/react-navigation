@@ -1,7 +1,4 @@
-/*       */
-
 import { I18nManager } from 'react-native';
-
 import getSceneIndicesForInterpolationInputRange from '../../utils/getSceneIndicesForInterpolationInputRange';
 
 /**

@@ -1,9 +1,5 @@
-/*       */
-
-import * as React from 'react';
-
+import React from 'react';
 import { Animated, Easing, StyleSheet, View } from 'react-native';
-
 import invariant from '../utils/invariant';
 
 import NavigationScenesReducer from './ScenesReducer';

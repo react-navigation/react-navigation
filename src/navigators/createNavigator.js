@@ -1,10 +1,4 @@
-/*       */
-
-import * as React from 'react';
-
-// Props we want createNavigator to Inject
-
-// NavigatorCreator type
+import React from 'react';
 
 /**
  * Creates a navigator based on a router and a view that renders the screens.

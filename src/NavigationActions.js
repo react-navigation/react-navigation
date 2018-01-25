@@ -1,7 +1,3 @@
-/**
- *
- */
-
 const BACK = 'Navigation/BACK';
 const INIT = 'Navigation/INIT';
 const NAVIGATE = 'Navigation/NAVIGATE';
@@ -18,6 +14,7 @@ const back = createAction(BACK, (payload = {}) => ({
   type: BACK,
   key: payload.key,
 }));
+
 const init = createAction(INIT, (payload = {}) => {
   const action = {
     type: INIT,
@@ -27,6 +24,7 @@ const init = createAction(INIT, (payload = {}) => {
   }
   return action;
 });
+
 const navigate = createAction(NAVIGATE, payload => {
   const action = {
     type: NAVIGATE,
@@ -40,17 +38,20 @@ const navigate = createAction(NAVIGATE, payload => {
   }
   return action;
 });
+
 const reset = createAction(RESET, payload => ({
   type: RESET,
   index: payload.index,
   key: payload.key,
   actions: payload.actions,
 }));
+
 const setParams = createAction(SET_PARAMS, payload => ({
   type: SET_PARAMS,
   key: payload.key,
   params: payload.params,
 }));
+
 const uri = createAction(URI, payload => ({
   type: URI,
   uri: payload.uri,

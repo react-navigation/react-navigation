@@ -1,6 +1,4 @@
-/*       */
-
-import * as React from 'react';
+import React from 'react';
 
 import SceneView from '../SceneView';
 import withCachedChildNavigation from '../../withCachedChildNavigation';

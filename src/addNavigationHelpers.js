@@ -1,8 +1,4 @@
-/**
- *
- *
- * Helpers for navigation.
- */
+/* Helpers for navigation */
 
 import NavigationActions from './NavigationActions';
 import invariant from './utils/invariant';
