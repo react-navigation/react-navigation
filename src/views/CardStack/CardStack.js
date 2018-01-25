@@ -98,10 +98,16 @@ class CardStack extends React.Component {
     if (!screenDetails || screenDetails.state !== scene.route) {
       const screenNavigation = addNavigationHelpers({
         dispatch: navigation.dispatch,
-        state: scene.route,
+        state: {
+          ...scene.route,
+          index: scene.index,
+        },
       });
       screenDetails = {
-        state: scene.route,
+        state: {
+          ...scene.route,
+          index: scene.index,
+        },
         navigation: screenNavigation,
         options: router.getScreenOptions(screenNavigation, screenProps),
       };
