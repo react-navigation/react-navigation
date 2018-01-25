@@ -357,13 +357,15 @@ if (Platform.OS === 'ios') {
   };
 } else {
   platformContainerStyles = {
-    shadowColor: 'black',
-    shadowOpacity: 0.1,
-    shadowRadius: StyleSheet.hairlineWidth,
-    shadowOffset: {
-      height: StyleSheet.hairlineWidth,
-    },
-    elevation: 4,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: 'rgba(0, 0, 0, .3)',
+    // shadowColor: 'black',
+    // shadowOpacity: 0.1,
+    // shadowRadius: StyleSheet.hairlineWidth,
+    // shadowOffset: {
+    //   height: StyleSheet.hairlineWidth,
+    // },
+    // elevation: 4,
   };
 }
 
