@@ -1,5 +1,3 @@
-/*       */
-
 import ScenesReducer from '../ScenesReducer';
 
 /**

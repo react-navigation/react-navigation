@@ -1,6 +1,4 @@
-/*       */
-
-import * as React from 'react';
+import React from 'react';
 import { Dimensions, Platform, ScrollView } from 'react-native';
 
 import createNavigator from './createNavigator';

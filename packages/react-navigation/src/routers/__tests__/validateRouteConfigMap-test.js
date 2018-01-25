@@ -1,9 +1,6 @@
-/*       */
-
 import React from 'react';
 
 import validateRouteConfigMap from '../validateRouteConfigMap';
-
 import StackRouter from '../StackRouter';
 
 const ListScreen = () => <div />;

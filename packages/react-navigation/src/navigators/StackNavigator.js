@@ -1,6 +1,4 @@
-/*       */
-
-import * as React from 'react';
+import React from 'react';
 import createNavigationContainer from '../createNavigationContainer';
 import createNavigator from './createNavigator';
 import CardStackTransitioner from '../views/CardStack/CardStackTransitioner';
