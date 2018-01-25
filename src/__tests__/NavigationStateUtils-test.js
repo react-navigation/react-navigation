@@ -1,5 +1,3 @@
-/* @flow */
-
 import NavigationStateUtils from '../StateUtils';
 
 const routeName = 'Anything';

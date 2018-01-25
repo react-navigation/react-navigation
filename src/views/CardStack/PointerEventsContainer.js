@@ -1,14 +1,6 @@
-/* @flow */
-
-import * as React from 'react';
-
+import React from 'react';
 import invariant from '../../utils/invariant';
-
 import AnimatedValueSubscription from '../AnimatedValueSubscription';
-
-import type { NavigationSceneRendererProps } from '../../TypeDefinition';
-
-type Props = NavigationSceneRendererProps;
 
 const MIN_POSITION_OFFSET = 0.01;
 
@@ -17,35 +9,27 @@ const MIN_POSITION_OFFSET = 0.01;
  * `pointerEvents` property for a component whenever navigation position
  * changes.
  */
-export default function create(
-  Component: React.ComponentType<*>
-): React.ComponentType<*> {
-  class Container extends React.Component<Props> {
-    _component: any;
-    _onComponentRef: (view: any) => void;
-    _onPositionChange: (data: { value: number }) => void;
-    _pointerEvents: string;
-    _positionListener: ?AnimatedValueSubscription;
-
-    constructor(props: Props, context: any) {
+export default function create(Component) {
+  class Container extends React.Component {
+    constructor(props, context) {
       super(props, context);
       this._pointerEvents = this._computePointerEvents();
     }
 
-    componentWillMount(): void {
+    componentWillMount() {
       this._onPositionChange = this._onPositionChange.bind(this);
       this._onComponentRef = this._onComponentRef.bind(this);
     }
 
-    componentDidMount(): void {
+    componentDidMount() {
       this._bindPosition(this.props);
     }
 
-    componentWillUnmount(): void {
+    componentWillUnmount() {
       this._positionListener && this._positionListener.remove();
     }
 
-    componentWillReceiveProps(nextProps: Props): void {
+    componentWillReceiveProps(nextProps) {
       this._bindPosition(nextProps);
     }
 
@@ -60,7 +44,7 @@ export default function create(
       );
     }
 
-    _onComponentRef(component: any): void {
+    _onComponentRef(component) {
       this._component = component;
       if (component) {
         invariant(
@@ -70,7 +54,7 @@ export default function create(
       }
     }
 
-    _bindPosition(props: NavigationSceneRendererProps): void {
+    _bindPosition(props) {
       this._positionListener && this._positionListener.remove();
       this._positionListener = new AnimatedValueSubscription(
         props.position,
@@ -78,7 +62,7 @@ export default function create(
       );
     }
 
-    _onPositionChange(): void {
+    _onPositionChange() {
       if (this._component) {
         const pointerEvents = this._computePointerEvents();
         if (this._pointerEvents !== pointerEvents) {
@@ -88,7 +72,7 @@ export default function create(
       }
     }
 
-    _computePointerEvents(): string {
+    _computePointerEvents() {
       const { navigation, position, scene } = this.props;
 
       if (scene.isStale || navigation.state.index !== scene.index) {
