@@ -3,7 +3,7 @@ import { View, StyleSheet, Platform } from 'react-native';
 import { TabViewAnimated, TabViewPagerPan } from 'react-native-tab-view';
 import SafeAreaView from 'react-native-safe-area-view';
 
-import SceneView from '../SceneView';
+import ResourceSavingLazySceneView from '../ResourceSavingLazySceneView';
 import withCachedChildNavigation from '../../withCachedChildNavigation';
 
 class TabView extends React.PureComponent {
@@ -26,13 +26,12 @@ class TabView extends React.PureComponent {
       route.routeName
     );
     return (
-      <View style={styles.page}>
-        <SceneView
-          screenProps={screenProps}
-          component={TabComponent}
-          navigation={childNavigation}
-        />
-      </View>
+      <ResourceSavingLazySceneView
+        screenProps={screenProps}
+        component={TabComponent}
+        navigation={this.props.navigation}
+        childNavigation={childNavigation}
+      />
     );
   };
 
@@ -188,10 +187,5 @@ export default withCachedChildNavigation(TabView);
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-
-  page: {
-    flex: 1,
-    overflow: 'hidden',
   },
 });
