@@ -557,13 +557,11 @@ describe('TabRouter', () => {
     const initAction = NavigationActions.mapDeprecatedActionAndWarn({
       type: 'Init',
     });
-    /* $FlowFixMe: these are for deprecated action names */
     const state = router.getStateForAction(initAction);
     const navigateAction = NavigationActions.mapDeprecatedActionAndWarn({
       type: 'Navigate',
       routeName: 'Bar',
     });
-    /* $FlowFixMe: these are for deprecated action names */
     const state2 = router.getStateForAction(navigateAction, state);
     expect(state2).toEqual(null);
     expect(console.warn).toBeCalledWith(

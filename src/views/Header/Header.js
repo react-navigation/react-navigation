@@ -77,7 +77,6 @@ class Header extends React.PureComponent {
   };
 
   _renderTitleComponent = props => {
-    // $FlowFixMe
     const details = this.props.getScreenDetails(props.scene);
     const headerTitle = details.options.headerTitle;
     if (React.isValidElement(headerTitle)) {
@@ -119,7 +118,6 @@ class Header extends React.PureComponent {
   };
 
   _renderLeftComponent = props => {
-    // $FlowFixMe
     const { options } = this.props.getScreenDetails(props.scene);
     if (
       React.isValidElement(options.headerLeft) ||

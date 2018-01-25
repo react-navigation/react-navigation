@@ -61,7 +61,6 @@ export default (routeConfigs, stackConfig = {}) => {
       const wildcardRe = pathToRegexp(`${pathPattern}/*`, keys);
       re = new RegExp(`(?:${re.source})|(?:${wildcardRe.source})`);
     }
-    /* $FlowFixMe */
     paths[routeName] = { re, keys, toPath: pathToRegexp.compile(pathPattern) };
   });
 
@@ -261,7 +260,6 @@ export default (routeConfigs, stackConfig = {}) => {
         let backRouteIndex = null;
         if (key) {
           const backRoute = state.routes.find(route => route.key === key);
-          /* $FlowFixMe */
           backRouteIndex = state.routes.indexOf(backRoute);
         }
         if (backRouteIndex == null) {
@@ -282,12 +280,10 @@ export default (routeConfigs, stackConfig = {}) => {
       const route = state.routes[state.index];
       const routeName = route.routeName;
       const screen = getScreenForRouteName(routeConfigs, routeName);
-      /* $FlowFixMe */
       const subPath = paths[routeName].toPath(route.params);
       let path = subPath;
       let params = route.params;
       if (screen && screen.router) {
-        // $FlowFixMe there's no way type the specific shape of the nav state
         const stateRoute = route;
         // If it has a router it's a navigator.
         // If it doesn't have router it's an ordinary React component.
@@ -320,7 +316,6 @@ export default (routeConfigs, stackConfig = {}) => {
 
       // eslint-disable-next-line no-restricted-syntax
       for (const [routeName, path] of Object.entries(paths)) {
-        /* $FlowFixMe */
         const { re, keys } = path;
         pathMatch = re.exec(pathNameToResolve);
         if (pathMatch && pathMatch.length) {
@@ -343,7 +338,6 @@ export default (routeConfigs, stackConfig = {}) => {
       let nestedQueryString = queryString ? '?' + queryString : '';
       if (childRouters[matchedRouteName]) {
         nestedAction = childRouters[matchedRouteName].getActionForPathAndParams(
-          /* $FlowFixMe */
           pathMatch.slice(pathMatchKeys.length).join('/') + nestedQueryString
         );
       }
@@ -364,7 +358,6 @@ export default (routeConfigs, stackConfig = {}) => {
 
       // reduce the matched pieces of the path into the params
       // of the route. `params` is null if there are no params.
-      /* $FlowFixMe */
       const params = pathMatch.slice(1).reduce((result, matchResult, i) => {
         const key = pathMatchKeys[i];
         if (key.asterisk || !key) {

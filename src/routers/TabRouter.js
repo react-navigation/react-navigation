@@ -179,7 +179,6 @@ export default (routeConfigs, config = {}) => {
 
       // Let other tabs handle it and switch to the first tab that returns a new state
       let index = state.index;
-      /* $FlowFixMe */
       let routes = state.routes;
       order.find((tabId, i) => {
         const tabRouter = tabRouters[tabId];
@@ -245,7 +244,6 @@ export default (routeConfigs, config = {}) => {
       let path = subPath;
       let params = route.params;
       if (screen && screen.router) {
-        // $FlowFixMe there's no way type the specific shape of the nav state
         const stateRoute = route;
         // If it has a router it's a navigator.
         // If it doesn't have router it's an ordinary React component.

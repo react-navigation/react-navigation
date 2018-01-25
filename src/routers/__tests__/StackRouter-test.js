@@ -1,7 +1,7 @@
 /*       */
 /* eslint no-shadow:0, react/no-multi-comp:0, react/display-name:0 */
 
-import * as React from 'react';
+import React from 'react';
 
 import StackRouter from '../StackRouter';
 import TabRouter from '../TabRouter';
@@ -331,11 +331,8 @@ describe('StackRouter', () => {
       NavigationActions.navigate({ routeName: 'qux' }),
       initState
     );
-    // $FlowFixMe
     expect(pushedState.index).toEqual(1);
-    // $FlowFixMe
     expect(pushedState.routes[1].index).toEqual(1);
-    // $FlowFixMe
     expect(pushedState.routes[1].routes[1].routeName).toEqual('qux');
   });
 
@@ -607,7 +604,6 @@ describe('StackRouter', () => {
       state
     );
     expect(state2 && state2.index).toEqual(0);
-    /* $FlowFixMe */
     expect(state2 && state2.routes[0].routes[0].routes).toEqual([
       {
         key: 'Init-id-0-17',
@@ -678,7 +674,6 @@ describe('StackRouter', () => {
 
     expect(state2 && state2.index).toEqual(0);
     expect(state2 && state2.routes[0].routeName).toEqual('Foo');
-    /* $FlowFixMe */
     expect(state2 && state2.routes[0].routes[0].routeName).toEqual('baz');
   });
 
@@ -750,7 +745,6 @@ describe('StackRouter', () => {
       state
     );
     expect(state2 && state2.routes[1].params).toEqual({ foo: '42' });
-    /* $FlowFixMe */
     expect(state2 && state2.routes[1].routes).toEqual([
       expect.objectContaining({
         routeName: 'Baz',
@@ -780,7 +774,6 @@ describe('StackRouter', () => {
       state
     );
     expect(state2 && state2.routes[1].params).toEqual({ foo: '42' });
-    /* $FlowFixMe */
     expect(state2 && state2.routes[1].routes).toEqual([
       {
         key: 'Baz',
@@ -862,9 +855,7 @@ describe('StackRouter', () => {
     };
     const { path, params } = router.getPathAndParamsForState(state);
     expect(path).toEqual('f/123/baz/321');
-    /* $FlowFixMe: params.id has to exist */
     expect(params.id).toEqual('123');
-    /* $FlowFixMe: params.bazId has to exist */
     expect(params.bazId).toEqual('321');
   });
 

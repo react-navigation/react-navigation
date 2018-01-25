@@ -23,7 +23,7 @@ const emptyFunction = () => {};
 
 /**
  * The max duration of the card animation in milliseconds after released gesture.
- * The actual duration should be always less then that because the rest distance 
+ * The actual duration should be always less then that because the rest distance
  * is always less then the full distance of the layout.
  */
 const ANIMATION_DURATION = 500;
@@ -124,8 +124,6 @@ class CardStack extends React.Component {
       headerRightInterpolator,
     } = this._getTransitionConfig();
 
-    // We need to explicitly exclude `mode` since Flow doesn't see
-    // mode: headerMode override below and reports prop mismatch
     const { mode, ...passProps } = this.props;
 
     return renderHeader({
@@ -382,9 +380,7 @@ class CardStack extends React.Component {
 
     return TransitionConfigs.getTransitionConfig(
       this.props.transitionConfig,
-      /* $FlowFixMe */
       {},
-      /* $FlowFixMe */
       {},
       isModal
     );

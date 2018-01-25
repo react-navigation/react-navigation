@@ -1,7 +1,6 @@
-/*       */
 /* eslint react/no-multi-comp:0 */
 
-import * as React from 'react';
+import React from 'react';
 
 import StackRouter from '../StackRouter';
 import TabRouter from '../TabRouter';
@@ -90,11 +89,8 @@ test('Handles no-op actions with tabs within stack router', () => {
     type: NavigationActions.NAVIGATE,
     routeName: 'Qux',
   });
-  /* $FlowFixMe */
   expect(state1.routes[0].key).toEqual('Init-id-0-0');
-  /* $FlowFixMe */
   expect(state2.routes[0].key).toEqual('Init-id-0-1');
-  /* $FlowFixMe */
   state1.routes[0].key = state2.routes[0].key;
   expect(state1).toEqual(state2);
   const state3 = TestRouter.getStateForAction(
@@ -135,7 +131,6 @@ test('Handles deep action', () => {
     state1
   );
   expect(state2 && state2.index).toEqual(1);
-  /* $FlowFixMe */
   expect(state2 && state2.routes[1].index).toEqual(1);
 });
 
@@ -159,11 +154,8 @@ test('Supports lazily-evaluated getScreen', () => {
     type: NavigationActions.NAVIGATE,
     routeName: 'Qux',
   });
-  /* $FlowFixMe */
   expect(state1.routes[0].key).toEqual('Init-id-0-4');
-  /* $FlowFixMe */
   expect(state2.routes[0].key).toEqual('Init-id-0-5');
-  /* $FlowFixMe */
   state1.routes[0].key = state2.routes[0].key;
   expect(state1).toEqual(state2);
   const state3 = TestRouter.getStateForAction(

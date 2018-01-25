@@ -34,7 +34,6 @@ class CardStackTransitioner extends React.Component {
   ) => {
     const isModal = this.props.mode === 'modal';
     // Copy the object so we can assign useNativeDriver below
-    // (avoid Flow error, transitionSpec is of type NavigationTransitionSpec).
     const transitionSpec = {
       ...TransitionConfigs.getTransitionConfig(
         this.props.transitionConfig,

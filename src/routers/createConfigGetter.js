@@ -41,7 +41,6 @@ export default (routeConfigs, navigatorScreenConfig) => (
 
   const router = Component.router;
   if (router) {
-    // $FlowFixMe
     const { routes, index } = route;
     if (!route || !routes || index == null) {
       throw new Error(

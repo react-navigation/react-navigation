@@ -175,7 +175,8 @@ class TabBarBottom extends React.PureComponent {
                 onPress={() =>
                   onPress
                     ? onPress({ previousScene, scene, jumpToIndex })
-                    : jumpToIndex(index)}
+                    : jumpToIndex(index)
+                }
               >
                 <Animated.View
                   style={[

@@ -100,7 +100,6 @@ describe('ScenesReducer', () => {
 
     const scenes1 = ScenesReducer([], state1, null);
     const scenes2 = ScenesReducer(scenes1, state2, state1);
-    /* $FlowFixMe: We want tests to fail on undefined */
     const route = scenes2.find(scene => scene.isActive).route;
     expect(route).toEqual({ key: '2', routeName: '' });
   });
