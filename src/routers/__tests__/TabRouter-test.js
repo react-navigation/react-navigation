@@ -1,4 +1,3 @@
-/*       */
 /* eslint react/display-name:0 */
 
 import React from 'react';

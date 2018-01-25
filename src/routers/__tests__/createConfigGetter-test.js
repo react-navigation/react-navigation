@@ -1,5 +1,3 @@
-/*       */
-
 import { Component } from 'react';
 import createConfigGetter from '../createConfigGetter';
 import addNavigationHelpers from '../../addNavigationHelpers';
