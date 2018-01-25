@@ -7,38 +7,101 @@ import { Button, ScrollView, StatusBar } from 'react-native';
 import { StackNavigator, SafeAreaView } from 'react-navigation';
 import SampleText from './SampleText';
 
-const MyNavScreen = ({ navigation, banner }) => (
-  <SafeAreaView>
-    <SampleText>{banner}</SampleText>
-    <Button
-      onPress={() => navigation.navigate('Profile', { name: 'Jane' })}
-      title="Go to a profile screen"
-    />
-    <Button
-      onPress={() => navigation.navigate('Photos', { name: 'Jane' })}
-      title="Go to a photos screen"
-    />
-    <Button onPress={() => navigation.goBack(null)} title="Go back" />
-    <StatusBar barStyle="default" />
-  </SafeAreaView>
-);
+class MyNavScreen extends React.Component {
+  render() {
+    const { navigation, banner } = this.props;
+    return (
+      <SafeAreaView>
+        <SampleText>{banner}</SampleText>
+        <Button
+          onPress={() => navigation.navigate('Profile', { name: 'Jane' })}
+          title="Go to a profile screen"
+        />
+        <Button
+          onPress={() => navigation.navigate('Photos', { name: 'Jane' })}
+          title="Go to a photos screen"
+        />
+        <Button onPress={() => navigation.goBack(null)} title="Go back" />
+        <StatusBar barStyle="default" />
+      </SafeAreaView>
+    );
+  }
+}
 
-const MyHomeScreen = ({ navigation }) => (
-  <MyNavScreen banner="Home Screen" navigation={navigation} />
-);
-MyHomeScreen.navigationOptions = {
-  title: 'Welcome',
-};
+class MyHomeScreen extends React.Component {
+  static navigationOptions = {
+    title: 'Welcome',
+  };
+  componentDidMount() {
+    this._s0 = this.props.navigation.addListener('willFocus', this._onWF);
+    this._s1 = this.props.navigation.addListener('didFocus', this._onDF);
+    this._s2 = this.props.navigation.addListener('willBlur', this._onWB);
+    this._s3 = this.props.navigation.addListener('didBlur', this._onDB);
+  }
+  componentWillUnmount() {
+    this._s0.remove();
+    this._s1.remove();
+    this._s2.remove();
+    this._s3.remove();
+  }
+  _onWF = a => {
+    console.log('_willFocus HomeScreen', a);
+  };
+  _onDF = a => {
+    console.log('_didFocus HomeScreen', a);
+  };
+  _onWB = a => {
+    console.log('_willBlur HomeScreen', a);
+  };
+  _onDB = a => {
+    console.log('_didBlur HomeScreen', a);
+  };
 
-const MyPhotosScreen = ({ navigation }) => (
-  <MyNavScreen
-    banner={`${navigation.state.params.name}'s Photos`}
-    navigation={navigation}
-  />
-);
-MyPhotosScreen.navigationOptions = {
-  title: 'Photos',
-};
+  render() {
+    const { navigation } = this.props;
+    return <MyNavScreen banner="Home Screen" navigation={navigation} />;
+  }
+}
+
+class MyPhotosScreen extends React.Component {
+  static navigationOptions = {
+    title: 'Photos',
+  };
+  componentDidMount() {
+    this._s0 = this.props.navigation.addListener('willFocus', this._onWF);
+    this._s1 = this.props.navigation.addListener('didFocus', this._onDF);
+    this._s2 = this.props.navigation.addListener('willBlur', this._onWB);
+    this._s3 = this.props.navigation.addListener('didBlur', this._onDB);
+  }
+  componentWillUnmount() {
+    this._s0.remove();
+    this._s1.remove();
+    this._s2.remove();
+    this._s3.remove();
+  }
+  _onWF = a => {
+    console.log('_willFocus PhotosScreen', a);
+  };
+  _onDF = a => {
+    console.log('_didFocus PhotosScreen', a);
+  };
+  _onWB = a => {
+    console.log('_willBlur PhotosScreen', a);
+  };
+  _onDB = a => {
+    console.log('_didBlur PhotosScreen', a);
+  };
+
+  render() {
+    const { navigation } = this.props;
+    return (
+      <MyNavScreen
+        banner={`${navigation.state.params.name}'s Photos`}
+        navigation={navigation}
+      />
+    );
+  }
+}
 
 const MyProfileScreen = ({ navigation }) => (
   <MyNavScreen

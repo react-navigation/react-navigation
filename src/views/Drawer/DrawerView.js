@@ -4,6 +4,7 @@ import DrawerLayout from 'react-native-drawer-layout-polyfill';
 
 import addNavigationHelpers from '../../addNavigationHelpers';
 import DrawerSidebar from './DrawerSidebar';
+import getChildEventSubscriber from '../../getChildEventSubscriber';
 
 /**
  * Component that renders the drawer.
@@ -81,6 +82,10 @@ export default class DrawerView extends React.PureComponent {
     this._screenNavigationProp = addNavigationHelpers({
       dispatch: navigation.dispatch,
       state: navigationState,
+      addListener: getChildEventSubscriber(
+        navigation.addListener,
+        navigationState.key
+      ),
     });
   };
 
@@ -120,13 +125,8 @@ export default class DrawerView extends React.PureComponent {
       this.props.drawerCloseRoute
     );
 
-    const screenNavigation = addNavigationHelpers({
-      state: this._screenNavigationProp.state,
-      dispatch: this._screenNavigationProp.dispatch,
-    });
-
     const config = this.props.router.getScreenOptions(
-      screenNavigation,
+      this._screenNavigationProp,
       this.props.screenProps
     );
 

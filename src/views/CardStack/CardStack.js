@@ -15,6 +15,7 @@ import Card from './Card';
 import Header from '../Header/Header';
 import NavigationActions from '../../NavigationActions';
 import addNavigationHelpers from '../../addNavigationHelpers';
+import getChildEventSubscriber from '../../getChildEventSubscriber';
 import SceneView from '../SceneView';
 
 import TransitionConfigs from './TransitionConfigs';
@@ -99,6 +100,10 @@ class CardStack extends React.Component {
       const screenNavigation = addNavigationHelpers({
         dispatch: navigation.dispatch,
         state: scene.route,
+        addListener: getChildEventSubscriber(
+          navigation.addListener,
+          scene.route.key
+        ),
       });
       screenDetails = {
         state: scene.route,

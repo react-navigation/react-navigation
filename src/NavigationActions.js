@@ -4,6 +4,7 @@ const NAVIGATE = 'Navigation/NAVIGATE';
 const RESET = 'Navigation/RESET';
 const SET_PARAMS = 'Navigation/SET_PARAMS';
 const URI = 'Navigation/URI';
+const COMPLETE_TRANSITION = 'Navigation/COMPLETE_TRANSITION';
 
 const createAction = (type, fn) => {
   fn.toString = () => type;
@@ -55,6 +56,10 @@ const setParams = createAction(SET_PARAMS, payload => ({
 const uri = createAction(URI, payload => ({
   type: URI,
   uri: payload.uri,
+}));
+
+const completeTransition = createAction(COMPLETE_TRANSITION, payload => ({
+  type: COMPLETE_TRANSITION,
 }));
 
 const mapDeprecatedNavigateAction = action => {
@@ -118,6 +123,7 @@ export default {
   RESET,
   SET_PARAMS,
   URI,
+  COMPLETE_TRANSITION,
 
   // Action creators
   back,
@@ -126,6 +132,7 @@ export default {
   reset,
   setParams,
   uri,
+  completeTransition,
 
   // TODO: Remove once old actions are deprecated
   mapDeprecatedActionAndWarn,

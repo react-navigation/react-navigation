@@ -1,6 +1,10 @@
 import NavigationActions from '../NavigationActions';
 import addNavigationHelpers from '../addNavigationHelpers';
 
+const dummyEventSubscriber = (name: string, handler: (*) => void) => ({
+  remove: () => {},
+});
+
 describe('addNavigationHelpers', () => {
   it('handles Back action', () => {
     const mockedDispatch = jest
@@ -10,6 +14,7 @@ describe('addNavigationHelpers', () => {
       addNavigationHelpers({
         state: { key: 'A', routeName: 'Home' },
         dispatch: mockedDispatch,
+        addListener: dummyEventSubscriber,
       }).goBack('A')
     ).toEqual(true);
     expect(mockedDispatch).toBeCalledWith({
@@ -27,6 +32,7 @@ describe('addNavigationHelpers', () => {
       addNavigationHelpers({
         state: { routeName: 'Home' },
         dispatch: mockedDispatch,
+        addListener: dummyEventSubscriber,
       }).goBack()
     ).toEqual(true);
     expect(mockedDispatch).toBeCalledWith({ type: NavigationActions.BACK });
@@ -41,6 +47,7 @@ describe('addNavigationHelpers', () => {
       addNavigationHelpers({
         state: { routeName: 'Home' },
         dispatch: mockedDispatch,
+        addListener: dummyEventSubscriber,
       }).navigate('Profile', { name: 'Matt' })
     ).toEqual(true);
     expect(mockedDispatch).toBeCalledWith({
@@ -59,6 +66,7 @@ describe('addNavigationHelpers', () => {
       addNavigationHelpers({
         state: { key: 'B', routeName: 'Settings' },
         dispatch: mockedDispatch,
+        addListener: dummyEventSubscriber,
       }).setParams({ notificationsEnabled: 'yes' })
     ).toEqual(true);
     expect(mockedDispatch).toBeCalledWith({

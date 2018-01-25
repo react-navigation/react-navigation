@@ -1,5 +1,6 @@
 import React from 'react';
 import addNavigationHelpers from './addNavigationHelpers';
+import getChildEventSubscriber from './getChildEventSubscriber';
 
 /**
  * HOC which caches the child navigation items.
@@ -30,6 +31,10 @@ export default function withCachedChildNavigation(Comp) {
         this._childNavigationProps[route.key] = addNavigationHelpers({
           dispatch: navigation.dispatch,
           state: route,
+          addListener: getChildEventSubscriber(
+            navigation.addListener,
+            route.key
+          ),
         });
       });
     };

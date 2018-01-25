@@ -87,6 +87,7 @@ export default (routeConfigs, stackConfig = {}) => {
           childRouters[action.routeName] !== undefined
         ) {
           return {
+            isTransitioning: false,
             index: 0,
             routes: [
               {
@@ -120,6 +121,7 @@ export default (routeConfigs, stackConfig = {}) => {
         };
         // eslint-disable-next-line no-param-reassign
         state = {
+          isTransitioning: false,
           index: 0,
           routes: [route],
         };
@@ -171,7 +173,20 @@ export default (routeConfigs, stackConfig = {}) => {
             routeName: action.routeName,
           };
         }
-        return StateUtils.push(state, route);
+        return {
+          ...StateUtils.push(state, route),
+          isTransitioning: action.immediate !== true,
+        };
+      }
+
+      if (
+        action.type === NavigationActions.COMPLETE_TRANSITION &&
+        state.isTransitioning
+      ) {
+        return {
+          ...state,
+          isTransitioning: false,
+        };
       }
 
       // Handle navigation to other child routers that are not yet pushed
@@ -257,19 +272,17 @@ export default (routeConfigs, stackConfig = {}) => {
 
       if (action.type === NavigationActions.BACK) {
         const key = action.key;
-        let backRouteIndex = null;
+        let backRouteIndex = state.index;
         if (key) {
           const backRoute = state.routes.find(route => route.key === key);
           backRouteIndex = state.routes.indexOf(backRoute);
-        }
-        if (backRouteIndex == null) {
-          return StateUtils.pop(state);
         }
         if (backRouteIndex > 0) {
           return {
             ...state,
             routes: state.routes.slice(0, backRouteIndex),
             index: backRouteIndex - 1,
+            isTransitioning: action.immediate !== true,
           };
         }
       }
