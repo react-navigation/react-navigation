@@ -3,6 +3,7 @@ import invariant from '../utils/invariant';
 import getScreenForRouteName from './getScreenForRouteName';
 import addNavigationHelpers from '../addNavigationHelpers';
 import validateScreenOptions from './validateScreenOptions';
+import getChildEventSubscriber from '../getChildEventSubscriber';
 
 function applyConfig(configurer, navigationOptions, configProps) {
   if (typeof configurer === 'function') {
@@ -51,6 +52,10 @@ export default (routeConfigs, navigatorScreenConfig) => (
     const childNavigation = addNavigationHelpers({
       state: childRoute,
       dispatch,
+      addListener: getChildEventSubscriber(
+        navigation.addListener,
+        childRoute.key
+      ),
     });
     outputConfig = router.getScreenOptions(childNavigation, screenProps);
   }

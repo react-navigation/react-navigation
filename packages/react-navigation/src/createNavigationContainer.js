@@ -17,6 +17,8 @@ export default function createNavigationContainer(Component) {
     static router = Component.router;
     static navigationOptions = null;
 
+    _actionEventSubscribers = new Set();
+
     constructor(props) {
       super(props);
 
@@ -150,13 +152,27 @@ export default function createNavigationContainer(Component) {
       const oldNav = this._nav;
       invariant(oldNav, 'should be set in constructor if stateful');
       const nav = Component.router.getStateForAction(action, oldNav);
+      const dispatchActionEvents = () => {
+        this._actionEventSubscribers.forEach(subscriber =>
+          // $FlowFixMe - Payload should probably understand generic state type
+          subscriber({
+            type: 'action',
+            action,
+            state: nav,
+            lastState: oldNav,
+          })
+        );
+      };
       if (nav && nav !== oldNav) {
         // Cache updates to state.nav during the tick to ensure that subsequent calls will not discard this change
         this._nav = nav;
-        this.setState({ nav }, () =>
-          this._onNavigationStateChange(oldNav, nav, action)
-        );
+        this.setState({ nav }, () => {
+          this._onNavigationStateChange(oldNav, nav, action);
+          dispatchActionEvents();
+        });
         return true;
+      } else {
+        dispatchActionEvents();
       }
       return false;
     };
@@ -170,6 +186,17 @@ export default function createNavigationContainer(Component) {
           this._navigation = addNavigationHelpers({
             dispatch: this.dispatch,
             state: nav,
+            addListener: (eventName, handler) => {
+              if (eventName !== 'action') {
+                return { remove: () => {} };
+              }
+              this._actionEventSubscribers.add(handler);
+              return {
+                remove: () => {
+                  this._actionEventSubscribers.delete(handler);
+                },
+              };
+            },
           });
         }
         navigation = this._navigation;
