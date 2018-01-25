@@ -1,7 +1,4 @@
-/*
- * @flow
- */
-
+/*       */
 import React from 'react';
 
 import AppFrame from './AppFrame';
@@ -15,19 +12,7 @@ import {
   createNavigator,
 } from 'react-navigation';
 
-import type {
-  NavigationScreenComponent,
-  NavigationScreenProp,
-  NavigationRoute,
-} from 'react-navigation/src/TypeDefinition';
-
-type ScreenOptions = {
-  linkName: string,
-  icon: string,
-  title: string,
-};
-
-const NavView = ({ navigation, router }: { navigation: any, router: any }) => {
+const NavView = ({ navigation, router }) => {
   const { state } = navigation;
   const Component = router.getComponentForState(state);
   return (
@@ -40,20 +25,10 @@ const NavView = ({ navigation, router }: { navigation: any, router: any }) => {
   );
 };
 
-type DocPageConfig = {
-  doc: string,
-  title: string,
-  linkName: string,
-};
-
-const createDocPage = (
-  config: DocPageConfig
-): NavigationScreenComponent<*, *, *> => {
-  const Page = ({
-    navigation,
-  }: {
-    navigation: NavigationScreenProp<NavigationRoute>,
-  }) => <MDPage docPath={config.doc} navigation={navigation} />;
+const createDocPage = config => {
+  const Page = ({ navigation }) => (
+    <MDPage docPath={config.doc} navigation={navigation} />
+  );
   Page.navigationOptions = {
     doc: config.doc,
     title: config.title,
@@ -335,11 +310,7 @@ const DocsPage = createNavigator(
     },
   })
 )(PageWithSidebar);
-DocsPage.navigationOptions = ({
-  navigationOptions,
-}: {
-  navigationOptions: any,
-}) => ({
+DocsPage.navigationOptions = ({ navigationOptions }) => ({
   title: `${navigationOptions.title} | React Navigation`,
 });
 

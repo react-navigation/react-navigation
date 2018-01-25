@@ -83,9 +83,9 @@ class AppFrame extends React.Component {
             <DocSearchBar />
             {hasChildNavigation && (
               <span
-                className={`pt-icon-properties openMenuButton ${isMobileMenuOpen
-                  ? 'active'
-                  : ''}`}
+                className={`pt-icon-properties openMenuButton ${
+                  isMobileMenuOpen ? 'active' : ''
+                }`}
                 onClick={() => {
                   this.setState(s => ({
                     isMobileMenuOpen: !s.isMobileMenuOpen,

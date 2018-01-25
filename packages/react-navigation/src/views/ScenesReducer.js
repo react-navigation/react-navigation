@@ -1,20 +1,12 @@
-/* @flow */
-
 import invariant from '../utils/invariant';
 import shallowEqual from '../utils/shallowEqual';
-
-import type {
-  NavigationRoute,
-  NavigationScene,
-  NavigationState,
-} from '../TypeDefinition';
 
 const SCENE_KEY_PREFIX = 'scene_';
 
 /**
  * Helper function to compare route keys (e.g. "9", "11").
  */
-function compareKey(one: string, two: string): number {
+function compareKey(one, two) {
   const delta = one.length - two.length;
   if (delta > 0) {
     return 1;
@@ -28,7 +20,7 @@ function compareKey(one: string, two: string): number {
 /**
  * Helper function to sort scenes based on their index and view key.
  */
-function compareScenes(one: NavigationScene, two: NavigationScene): number {
+function compareScenes(one, two) {
   if (one.index > two.index) {
     return 1;
   }
@@ -42,10 +34,7 @@ function compareScenes(one: NavigationScene, two: NavigationScene): number {
 /**
  * Whether two routes are the same.
  */
-function areScenesShallowEqual(
-  one: NavigationScene,
-  two: NavigationScene
-): boolean {
+function areScenesShallowEqual(one, two) {
   return (
     one.key === two.key &&
     one.index === two.index &&
@@ -58,10 +47,7 @@ function areScenesShallowEqual(
 /**
  * Whether two routes are the same.
  */
-function areRoutesShallowEqual(
-  one: ?NavigationRoute,
-  two: ?NavigationRoute
-): boolean {
+function areRoutesShallowEqual(one, two) {
   if (!one || !two) {
     return one === two;
   }
@@ -73,21 +59,17 @@ function areRoutesShallowEqual(
   return shallowEqual(one, two);
 }
 
-export default function ScenesReducer(
-  scenes: Array<NavigationScene>,
-  nextState: NavigationState,
-  prevState: ?NavigationState
-): Array<NavigationScene> {
+export default function ScenesReducer(scenes, nextState, prevState) {
   if (prevState === nextState) {
     return scenes;
   }
 
-  const prevScenes: Map<string, NavigationScene> = new Map();
-  const freshScenes: Map<string, NavigationScene> = new Map();
-  const staleScenes: Map<string, NavigationScene> = new Map();
+  const prevScenes = new Map();
+  const freshScenes = new Map();
+  const staleScenes = new Map();
 
   // Populate stale scenes from previous scenes marked as stale.
-  scenes.forEach((scene: *) => {
+  scenes.forEach(scene => {
     const { key } = scene;
     if (scene.isStale) {
       staleScenes.set(key, scene);
@@ -96,7 +78,7 @@ export default function ScenesReducer(
   });
 
   const nextKeys = new Set();
-  nextState.routes.forEach((route: *, index: *) => {
+  nextState.routes.forEach((route, index) => {
     const key = SCENE_KEY_PREFIX + route.key;
     const scene = {
       index,
@@ -122,7 +104,7 @@ export default function ScenesReducer(
 
   if (prevState) {
     // Look at the previous routes and classify any removed scenes as `stale`.
-    prevState.routes.forEach((route: NavigationRoute, index: *) => {
+    prevState.routes.forEach((route, index) => {
       const key = SCENE_KEY_PREFIX + route.key;
       if (freshScenes.has(key)) {
         return;
@@ -139,7 +121,7 @@ export default function ScenesReducer(
 
   const nextScenes = [];
 
-  const mergeScene = (nextScene: *) => {
+  const mergeScene = nextScene => {
     const { key } = nextScene;
     const prevScene = prevScenes.has(key) ? prevScenes.get(key) : null;
     if (prevScene && areScenesShallowEqual(prevScene, nextScene)) {
@@ -157,7 +139,7 @@ export default function ScenesReducer(
   nextScenes.sort(compareScenes);
 
   let activeScenesCount = 0;
-  nextScenes.forEach((scene: *, ii: *) => {
+  nextScenes.forEach((scene, ii) => {
     const isActive = !scene.isStale && scene.index === nextState.index;
     if (isActive !== scene.isActive) {
       nextScenes[ii] = {
@@ -182,7 +164,7 @@ export default function ScenesReducer(
 
   if (
     nextScenes.some(
-      (scene: *, index: *) => !areScenesShallowEqual(scenes[index], scene)
+      (scene, index) => !areScenesShallowEqual(scenes[index], scene)
     )
   ) {
     return nextScenes;

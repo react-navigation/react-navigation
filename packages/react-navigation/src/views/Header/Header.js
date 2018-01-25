@@ -1,8 +1,4 @@
-/* @flow */
-
-'no babel-plugin-flow-react-proptypes';
-
-import * as React from 'react';
+import React from 'react';
 
 import {
   Animated,
@@ -19,36 +15,11 @@ import HeaderStyleInterpolator from './HeaderStyleInterpolator';
 import SafeAreaView from '../SafeAreaView';
 import withOrientation from '../withOrientation';
 
-import type {
-  NavigationScene,
-  NavigationStyleInterpolator,
-  LayoutEvent,
-  HeaderProps,
-} from '../../TypeDefinition';
-
-type SceneProps = {
-  scene: NavigationScene,
-  position: Animated.Value,
-  progress: Animated.Value,
-  style?: ViewPropTypes.style,
-};
-
-type SubViewRenderer<T> = (props: SceneProps) => ?React.Node;
-
-type SubViewName = 'left' | 'title' | 'right';
-
-type State = {
-  widths: {
-    [key: string]: number,
-  },
-};
-
 const APPBAR_HEIGHT = Platform.OS === 'ios' ? 44 : 56;
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : 0;
 const TITLE_OFFSET = Platform.OS === 'ios' ? 70 : 56;
 
-type Props = HeaderProps & { isLandscape: boolean };
-class Header extends React.PureComponent<Props, State> {
+class Header extends React.PureComponent {
   static defaultProps = {
     leftInterpolator: HeaderStyleInterpolator.forLeft,
     titleInterpolator: HeaderStyleInterpolator.forCenter,
@@ -66,7 +37,7 @@ class Header extends React.PureComponent<Props, State> {
     widths: {},
   };
 
-  _getHeaderTitleString(scene: NavigationScene): ?string {
+  _getHeaderTitleString(scene) {
     const sceneOptions = this.props.getScreenDetails(scene).options;
     if (typeof sceneOptions.headerTitle === 'string') {
       return sceneOptions.headerTitle;
@@ -74,11 +45,11 @@ class Header extends React.PureComponent<Props, State> {
     return sceneOptions.title;
   }
 
-  _getLastScene(scene: NavigationScene): ?NavigationScene {
-    return this.props.scenes.find((s: *) => s.index === scene.index - 1);
+  _getLastScene(scene) {
+    return this.props.scenes.find(s => s.index === scene.index - 1);
   }
 
-  _getBackButtonTitleString(scene: NavigationScene): ?string {
+  _getBackButtonTitleString(scene) {
     const lastScene = this._getLastScene(scene);
     if (!lastScene) {
       return null;
@@ -90,7 +61,7 @@ class Header extends React.PureComponent<Props, State> {
     return this._getHeaderTitleString(lastScene);
   }
 
-  _getTruncatedBackButtonTitle(scene: NavigationScene): ?string {
+  _getTruncatedBackButtonTitle(scene) {
     const lastScene = this._getLastScene(scene);
     if (!lastScene) {
       return null;
@@ -105,8 +76,7 @@ class Header extends React.PureComponent<Props, State> {
     });
   };
 
-  _renderTitleComponent = (props: SceneProps): ?React.Node => {
-    // $FlowFixMe
+  _renderTitleComponent = props => {
     const details = this.props.getScreenDetails(props.scene);
     const headerTitle = details.options.headerTitle;
     if (React.isValidElement(headerTitle)) {
@@ -122,7 +92,7 @@ class Header extends React.PureComponent<Props, State> {
     // size of the title.
     const onLayoutIOS =
       Platform.OS === 'ios'
-        ? (e: LayoutEvent) => {
+        ? e => {
             this.setState({
               widths: {
                 ...this.state.widths,
@@ -147,8 +117,7 @@ class Header extends React.PureComponent<Props, State> {
     );
   };
 
-  _renderLeftComponent = (props: SceneProps): ?React.Node => {
-    // $FlowFixMe
+  _renderLeftComponent = props => {
     const { options } = this.props.getScreenDetails(props.scene);
     if (
       React.isValidElement(options.headerLeft) ||
@@ -180,13 +149,13 @@ class Header extends React.PureComponent<Props, State> {
     );
   };
 
-  _renderRightComponent = (props: SceneProps): ?React.Node => {
+  _renderRightComponent = props => {
     const details = this.props.getScreenDetails(props.scene);
     const { headerRight } = details.options;
     return headerRight || null;
   };
 
-  _renderLeft(props: SceneProps): ?React.Node {
+  _renderLeft(props) {
     return this._renderSubView(
       props,
       'left',
@@ -195,7 +164,7 @@ class Header extends React.PureComponent<Props, State> {
     );
   }
 
-  _renderTitle(props: SceneProps, options: *): ?React.Node {
+  _renderTitle(props, options) {
     const style = {};
 
     if (Platform.OS === 'android') {
@@ -222,7 +191,7 @@ class Header extends React.PureComponent<Props, State> {
     );
   }
 
-  _renderRight(props: SceneProps): ?React.Node {
+  _renderRight(props) {
     return this._renderSubView(
       props,
       'right',
@@ -231,12 +200,7 @@ class Header extends React.PureComponent<Props, State> {
     );
   }
 
-  _renderSubView<T>(
-    props: SceneProps,
-    name: SubViewName,
-    renderer: SubViewRenderer<T>,
-    styleInterpolator: NavigationStyleInterpolator
-  ): ?React.Node {
+  _renderSubView(props, name, renderer, styleInterpolator) {
     const { scene } = props;
     const { index, isStale, key } = scene;
 
@@ -276,7 +240,7 @@ class Header extends React.PureComponent<Props, State> {
     );
   }
 
-  _renderHeader(props: SceneProps): React.Node {
+  _renderHeader(props) {
     const left = this._renderLeft(props);
     const right = this._renderRight(props);
     const title = this._renderTitle(props, {
@@ -300,9 +264,7 @@ class Header extends React.PureComponent<Props, State> {
     let appBar;
 
     if (this.props.mode === 'float') {
-      const scenesProps: Array<
-        SceneProps
-      > = this.props.scenes.map((scene: NavigationScene) => ({
+      const scenesProps = this.props.scenes.map(scene => ({
         position: this.props.position,
         progress: this.props.progress,
         scene,
