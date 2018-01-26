@@ -9,8 +9,6 @@ import DrawerView from '../views/Drawer/DrawerView';
 import DrawerItems from '../views/Drawer/DrawerNavigatorItems';
 import SafeAreaView from '../views/SafeAreaView';
 
-import NavigatorTypes from './NavigatorTypes';
-
 // A stack navigators props are the intersection between
 // the base navigator props (navgiation, screenProps, etc)
 // and the view's props
@@ -66,16 +64,12 @@ const DrawerNavigator = (routeConfigs, config = {}) => {
   } = mergedConfig;
 
   const contentRouter = TabRouter(routeConfigs, tabsConfig);
-
   const drawerRouter = TabRouter(
     {
       [drawerCloseRoute]: {
-        screen: createNavigator(
-          contentRouter,
-          routeConfigs,
-          config,
-          NavigatorTypes.DRAWER
-        )(props => <DrawerScreen {...props} />),
+        screen: createNavigator(contentRouter, routeConfigs, config)(props => (
+          <DrawerScreen {...props} />
+        )),
       },
       [drawerOpenRoute]: {
         screen: () => null,
@@ -89,26 +83,23 @@ const DrawerNavigator = (routeConfigs, config = {}) => {
     }
   );
 
-  const navigator = createNavigator(
-    drawerRouter,
-    routeConfigs,
-    config,
-    NavigatorTypes.DRAWER
-  )(props => (
-    <DrawerView
-      {...props}
-      drawerBackgroundColor={drawerBackgroundColor}
-      drawerLockMode={drawerLockMode}
-      useNativeAnimations={useNativeAnimations}
-      drawerWidth={drawerWidth}
-      contentComponent={contentComponent}
-      contentOptions={contentOptions}
-      drawerPosition={drawerPosition}
-      drawerOpenRoute={drawerOpenRoute}
-      drawerCloseRoute={drawerCloseRoute}
-      drawerToggleRoute={drawerToggleRoute}
-    />
-  ));
+  const navigator = createNavigator(drawerRouter, routeConfigs, config)(
+    props => (
+      <DrawerView
+        {...props}
+        drawerBackgroundColor={drawerBackgroundColor}
+        drawerLockMode={drawerLockMode}
+        useNativeAnimations={useNativeAnimations}
+        drawerWidth={drawerWidth}
+        contentComponent={contentComponent}
+        contentOptions={contentOptions}
+        drawerPosition={drawerPosition}
+        drawerOpenRoute={drawerOpenRoute}
+        drawerCloseRoute={drawerCloseRoute}
+        drawerToggleRoute={drawerToggleRoute}
+      />
+    )
+  );
 
   return createNavigationContainer(navigator);
 };

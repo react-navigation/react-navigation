@@ -8,8 +8,6 @@ import TabView from '../views/TabView/TabView';
 import TabBarTop from '../views/TabView/TabBarTop';
 import TabBarBottom from '../views/TabView/TabBarBottom';
 
-import NavigatorTypes from './NavigatorTypes';
-
 // A tab navigators props are the intersection between
 // the base navigator props (navgiation, screenProps, etc)
 // and the view's props
@@ -30,12 +28,7 @@ const TabNavigator = (routeConfigs, config = {}) => {
 
   const router = TabRouter(routeConfigs, tabsConfig);
 
-  const navigator = createNavigator(
-    router,
-    routeConfigs,
-    config,
-    NavigatorTypes.TABS
-  )(props => (
+  const navigator = createNavigator(router, routeConfigs, config)(props => (
     <TabView
       {...props}
       tabBarComponent={tabBarComponent}
