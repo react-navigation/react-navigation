@@ -1,5 +1,3 @@
-/* @flow */
-
 import React from 'react';
 import { Platform } from 'react-native';
 
@@ -12,22 +10,11 @@ import TabBarBottom from '../views/TabView/TabBarBottom';
 
 import NavigatorTypes from './NavigatorTypes';
 
-import type { TabViewConfig } from '../views/TabView/TabView';
+// A tab navigators props are the intersection between
+// the base navigator props (navgiation, screenProps, etc)
+// and the view's props
 
-import type {
-  NavigationRouteConfigMap,
-  NavigationTabRouterConfig,
-} from '../TypeDefinition';
-
-export type TabNavigatorConfig = {
-  containerOptions?: void,
-} & NavigationTabRouterConfig &
-  TabViewConfig;
-
-const TabNavigator = (
-  routeConfigs: NavigationRouteConfigMap,
-  config: TabNavigatorConfig = {}
-) => {
+const TabNavigator = (routeConfigs, config = {}) => {
   // Use the look native to the platform by default
   const mergedConfig = { ...TabNavigator.Presets.Default, ...config };
   const {
@@ -36,7 +23,7 @@ const TabNavigator = (
     tabBarOptions,
     swipeEnabled,
     animationEnabled,
-    lazy,
+    configureTransition,
     initialLayout,
     ...tabsConfig
   } = mergedConfig;
@@ -48,9 +35,7 @@ const TabNavigator = (
     routeConfigs,
     config,
     NavigatorTypes.TABS
-  )((props: *) => (
-    // Flow doesn't realize TabView already has childNavigationProps from
-    // withCachedChildNavigation for some reason. $FlowFixMe
+  )(props => (
     <TabView
       {...props}
       tabBarComponent={tabBarComponent}
@@ -58,7 +43,7 @@ const TabNavigator = (
       tabBarOptions={tabBarOptions}
       swipeEnabled={swipeEnabled}
       animationEnabled={animationEnabled}
-      lazy={lazy}
+      configureTransition={configureTransition}
       initialLayout={initialLayout}
     />
   ));
@@ -72,7 +57,6 @@ const Presets = {
     tabBarPosition: 'bottom',
     swipeEnabled: false,
     animationEnabled: false,
-    lazy: false,
     initialLayout: undefined,
   },
   AndroidTopTabs: {
@@ -80,7 +64,6 @@ const Presets = {
     tabBarPosition: 'top',
     swipeEnabled: true,
     animationEnabled: true,
-    lazy: false,
     initialLayout: undefined,
   },
 };

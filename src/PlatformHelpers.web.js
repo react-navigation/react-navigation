@@ -1,5 +1,3 @@
-/* @flow */
-
 export const Linking = {
   addEventListener: () => {},
   removeEventListener: () => {},

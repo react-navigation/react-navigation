@@ -88,7 +88,7 @@ const RootNavigator = StackNavigator({
 export default RootNavigator;
 ```
 
-Finally, we should be able to navigate from the home screen to the details screen. When you register a component with a navigator that component will then have a `navigation` prop added to it. This `navigation` prop drives how we use move between different screens.
+Finally, we should be able to navigate from the home screen to the details screen. When you register a component with a navigator that component will then have a `navigation` prop added to it. This `navigation` prop drives how we move between different screens.
 
 To move from the home screen to the details screen we'll want to use `navigation.navigate`, like so:
 

@@ -1,48 +1,33 @@
-/**
- * @flow
- */
-
-import type {
-  NavigationAction,
-  PossiblyDeprecatedNavigationAction,
-  DeprecatedNavigationNavigateAction,
-  NavigationInitAction,
-  NavigationNavigateAction,
-  NavigationBackAction,
-  NavigationSetParamsAction,
-  NavigationResetAction,
-  NavigationUriAction,
-  NavigationParams,
-} from './TypeDefinition';
-
 const BACK = 'Navigation/BACK';
 const INIT = 'Navigation/INIT';
 const NAVIGATE = 'Navigation/NAVIGATE';
 const RESET = 'Navigation/RESET';
 const SET_PARAMS = 'Navigation/SET_PARAMS';
 const URI = 'Navigation/URI';
+const COMPLETE_TRANSITION = 'Navigation/COMPLETE_TRANSITION';
 
-const back = (payload: { key?: ?string } = {}): NavigationBackAction => ({
+const createAction = (type, fn) => {
+  fn.toString = () => type;
+  return fn;
+};
+
+const back = createAction(BACK, (payload = {}) => ({
   type: BACK,
   key: payload.key,
-});
-const init = (
-  payload: { params?: NavigationParams } = {}
-): NavigationInitAction => {
-  const action: NavigationInitAction = {
+}));
+
+const init = createAction(INIT, (payload = {}) => {
+  const action = {
     type: INIT,
   };
   if (payload.params) {
     action.params = payload.params;
   }
   return action;
-};
-const navigate = (payload: {
-  routeName: string,
-  params?: ?NavigationParams,
-  action?: ?NavigationNavigateAction,
-}): NavigationNavigateAction => {
-  const action: NavigationNavigateAction = {
+});
+
+const navigate = createAction(NAVIGATE, payload => {
+  const action = {
     type: NAVIGATE,
     routeName: payload.routeName,
   };
@@ -53,35 +38,33 @@ const navigate = (payload: {
     action.action = payload.action;
   }
   return action;
-};
-const reset = (payload: {
-  index: number,
-  key?: ?string,
-  actions: Array<NavigationNavigateAction>,
-}): NavigationResetAction => ({
+});
+
+const reset = createAction(RESET, payload => ({
   type: RESET,
   index: payload.index,
   key: payload.key,
   actions: payload.actions,
-});
-const setParams = (payload: {
-  key: string,
-  params: NavigationParams,
-}): NavigationSetParamsAction => ({
+}));
+
+const setParams = createAction(SET_PARAMS, payload => ({
   type: SET_PARAMS,
   key: payload.key,
   params: payload.params,
-});
-const uri = (payload: { uri: string }): NavigationUriAction => ({
+}));
+
+const uri = createAction(URI, payload => ({
   type: URI,
   uri: payload.uri,
-});
+}));
 
-const mapDeprecatedNavigateAction = (
-  action: NavigationNavigateAction | DeprecatedNavigationNavigateAction
-): NavigationNavigateAction => {
+const completeTransition = createAction(COMPLETE_TRANSITION, payload => ({
+  type: COMPLETE_TRANSITION,
+}));
+
+const mapDeprecatedNavigateAction = action => {
   if (action.type === 'Navigate') {
-    const payload: Object = {
+    const payload = {
       routeName: action.routeName,
       params: action.params,
     };
@@ -93,9 +76,7 @@ const mapDeprecatedNavigateAction = (
   return action;
 };
 
-const mapDeprecatedAction = (
-  action: PossiblyDeprecatedNavigationAction
-): NavigationAction => {
+const mapDeprecatedAction = action => {
   if (action.type === 'Back') {
     return back(action);
   } else if (action.type === 'Init') {
@@ -114,9 +95,7 @@ const mapDeprecatedAction = (
   return action;
 };
 
-const mapDeprecatedActionAndWarn = (
-  action: PossiblyDeprecatedNavigationAction
-): NavigationAction => {
+const mapDeprecatedActionAndWarn = action => {
   const newAction = mapDeprecatedAction(action);
   if (newAction !== action) {
     const oldType = action.type;
@@ -144,6 +123,7 @@ export default {
   RESET,
   SET_PARAMS,
   URI,
+  COMPLETE_TRANSITION,
 
   // Action creators
   back,
@@ -152,6 +132,7 @@ export default {
   reset,
   setParams,
   uri,
+  completeTransition,
 
   // TODO: Remove once old actions are deprecated
   mapDeprecatedActionAndWarn,

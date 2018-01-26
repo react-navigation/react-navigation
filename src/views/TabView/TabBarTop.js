@@ -1,39 +1,9 @@
-/* @flow */
-
-import * as React from 'react';
+import React from 'react';
 import { Animated, StyleSheet } from 'react-native';
 import { TabBar } from 'react-native-tab-view';
 import TabBarIcon from './TabBarIcon';
 
-import type {
-  NavigationScreenProp,
-  NavigationState,
-  ViewStyleProp,
-  TextStyleProp,
-} from '../../TypeDefinition';
-
-import type { TabScene } from './TabView';
-
-type Props = {
-  activeTintColor: string,
-  inactiveTintColor: string,
-  showIcon: boolean,
-  showLabel: boolean,
-  upperCaseLabel: boolean,
-  allowFontScaling: boolean,
-  position: Animated.Value,
-  navigation: NavigationScreenProp<NavigationState>,
-  jumpToIndex: (index: number) => void,
-  getLabel: (scene: TabScene) => ?(React.Node | string),
-  getOnPress: (
-    scene: TabScene
-  ) => (scene: TabScene, jumpToIndex: (index: number) => void) => void,
-  renderIcon: (scene: TabScene) => React.Node,
-  labelStyle?: TextStyleProp,
-  iconStyle?: ViewStyleProp,
-};
-
-export default class TabBarTop extends React.PureComponent<Props> {
+export default class TabBarTop extends React.PureComponent {
   static defaultProps = {
     activeTintColor: '#fff',
     inactiveTintColor: '#fff',
@@ -43,9 +13,10 @@ export default class TabBarTop extends React.PureComponent<Props> {
     allowFontScaling: true,
   };
 
-  _renderLabel = (scene: TabScene) => {
+  _renderLabel = scene => {
     const {
       position,
+      tabBarPosition,
       navigation,
       activeTintColor,
       inactiveTintColor,
@@ -60,14 +31,13 @@ export default class TabBarTop extends React.PureComponent<Props> {
     const { index } = scene;
     const { routes } = navigation.state;
     // Prepend '-1', so there are always at least 2 items in inputRange
-    const inputRange = [-1, ...routes.map((x: *, i: number) => i)];
+    const inputRange = [-1, ...routes.map((x, i) => i)];
     const outputRange = inputRange.map(
-      (inputIndex: number) =>
-        inputIndex === index ? activeTintColor : inactiveTintColor
+      inputIndex => (inputIndex === index ? activeTintColor : inactiveTintColor)
     );
     const color = position.interpolate({
       inputRange,
-      outputRange: (outputRange: Array<string>),
+      outputRange: outputRange,
     });
 
     const tintColor = scene.focused ? activeTintColor : inactiveTintColor;
@@ -89,7 +59,7 @@ export default class TabBarTop extends React.PureComponent<Props> {
     return label;
   };
 
-  _renderIcon = (scene: TabScene) => {
+  _renderIcon = scene => {
     const {
       position,
       navigation,
@@ -115,13 +85,13 @@ export default class TabBarTop extends React.PureComponent<Props> {
     );
   };
 
-  _handleOnPress = (scene: TabScene) => {
-    const { getOnPress, jumpToIndex }: Props = this.props;
-
-    const onPress = getOnPress(scene);
+  _handleOnPress = scene => {
+    const { getOnPress, jumpToIndex, navigation } = this.props;
+    const previousScene = navigation.state.routes[navigation.state.index];
+    const onPress = getOnPress(previousScene, scene);
 
     if (onPress) {
-      onPress(scene, jumpToIndex);
+      onPress({ previousScene, scene, jumpToIndex });
     } else {
       jumpToIndex(scene.index);
     }
@@ -129,7 +99,7 @@ export default class TabBarTop extends React.PureComponent<Props> {
 
   render() {
     // TODO: Define full proptypes
-    const props: any = this.props;
+    const props = this.props;
 
     return (
       <TabBar

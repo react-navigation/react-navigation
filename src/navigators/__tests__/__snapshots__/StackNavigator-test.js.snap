@@ -89,15 +89,18 @@ exports[`StackNavigator applies correct values when headerRight is present 1`] =
           "width": 0,
         }
       }
+      leftInterpolator={[Function]}
       mode="float"
       navigation={
         Object {
+          "addListener": [Function],
           "dispatch": [Function],
           "goBack": [Function],
           "navigate": [Function],
           "setParams": [Function],
           "state": Object {
             "index": 0,
+            "isTransitioning": false,
             "routes": Array [
               Object {
                 "key": "Init-id-0-1",
@@ -107,6 +110,7 @@ exports[`StackNavigator applies correct values when headerRight is present 1`] =
           },
         }
       }
+      rightInterpolator={[Function]}
       router={
         Object {
           "getActionForPathAndParams": [Function],
@@ -118,9 +122,11 @@ exports[`StackNavigator applies correct values when headerRight is present 1`] =
           "getStateForAction": [Function],
         }
       }
+      titleInterpolator={[Function]}
       transitionConfig={undefined}
     >
       <View
+        collapsable={undefined}
         onLayout={[Function]}
         style={
           Object {
@@ -185,7 +191,6 @@ exports[`StackNavigator applies correct values when headerRight is present 1`] =
                 accessible={true}
                 allowFontScaling={true}
                 collapsable={undefined}
-                disabled={false}
                 ellipsizeMode="tail"
                 numberOfLines={1}
                 onLayout={[Function]}
@@ -317,15 +322,18 @@ exports[`StackNavigator renders successfully 1`] = `
           "width": 0,
         }
       }
+      leftInterpolator={[Function]}
       mode="float"
       navigation={
         Object {
+          "addListener": [Function],
           "dispatch": [Function],
           "goBack": [Function],
           "navigate": [Function],
           "setParams": [Function],
           "state": Object {
             "index": 0,
+            "isTransitioning": false,
             "routes": Array [
               Object {
                 "key": "Init-id-0-0",
@@ -335,6 +343,7 @@ exports[`StackNavigator renders successfully 1`] = `
           },
         }
       }
+      rightInterpolator={[Function]}
       router={
         Object {
           "getActionForPathAndParams": [Function],
@@ -346,9 +355,11 @@ exports[`StackNavigator renders successfully 1`] = `
           "getStateForAction": [Function],
         }
       }
+      titleInterpolator={[Function]}
       transitionConfig={undefined}
     >
       <View
+        collapsable={undefined}
         onLayout={[Function]}
         style={
           Object {
@@ -413,7 +424,6 @@ exports[`StackNavigator renders successfully 1`] = `
                 accessible={true}
                 allowFontScaling={true}
                 collapsable={undefined}
-                disabled={false}
                 ellipsizeMode="tail"
                 numberOfLines={1}
                 onLayout={[Function]}

@@ -10,7 +10,7 @@ Demonstrate the code is solid. Example: The exact commands you ran and their out
 
 Make sure you test on both platforms if your change affects both platforms.
 
-The code must pass tests and shouldn't add more Flow errors.
+The code must pass tests.
 
 **Code formatting**
 

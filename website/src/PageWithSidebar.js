@@ -109,9 +109,9 @@ class PageWithSidebar extends Component {
                             return (
                               <Link
                                 to={childRoute.routeName}
-                                className={`pt-menu-item page ${isChildActive
-                                  ? 'active'
-                                  : ''}`}
+                                className={`pt-menu-item page ${
+                                  isChildActive ? 'active' : ''
+                                }`}
                                 key={childI}
                               >
                                 {linkName}

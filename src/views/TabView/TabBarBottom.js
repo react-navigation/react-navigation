@@ -1,6 +1,4 @@
-/* @flow */
-
-import * as React from 'react';
+import React from 'react';
 import {
   Animated,
   TouchableWithoutFeedback,
@@ -13,50 +11,11 @@ import TabBarIcon from './TabBarIcon';
 import SafeAreaView from '../SafeAreaView';
 import withOrientation from '../withOrientation';
 
-import type {
-  NavigationRoute,
-  NavigationState,
-  NavigationScreenProp,
-  ViewStyleProp,
-  TextStyleProp,
-} from '../../TypeDefinition';
-
-import type { TabScene } from './TabView';
-
-type Props = {
-  activeTintColor: string,
-  activeBackgroundColor: string,
-  inactiveTintColor: string,
-  inactiveBackgroundColor: string,
-  showLabel: boolean,
-  showIcon: boolean,
-  allowFontScaling: boolean,
-  position: Animated.Value,
-  navigation: NavigationScreenProp<NavigationState>,
-  jumpToIndex: (index: number) => void,
-  getLabel: (scene: TabScene) => ?(React.Node | string),
-  getOnPress: (
-    scene: TabScene
-  ) => (scene: TabScene, jumpToIndex: (index: number) => void) => void,
-  getTestIDProps: (scene: TabScene) => (scene: TabScene) => any,
-  renderIcon: (scene: TabScene) => React.Node,
-  style?: ViewStyleProp,
-  animateStyle?: ViewStyleProp,
-  labelStyle?: TextStyleProp,
-  tabStyle?: ViewStyleProp,
-  showIcon?: boolean,
-  isLandscape: boolean,
-};
-
-type State = {
-  isVisible: boolean,
-};
-
 const majorVersion = parseInt(Platform.Version, 10);
 const isIos = Platform.OS === 'ios';
 const useHorizontalTabs = majorVersion >= 11 && isIos;
 
-class TabBarBottom extends React.PureComponent<Props, State> {
+class TabBarBottom extends React.PureComponent {
   // See https://developer.apple.com/library/content/documentation/UserExperience/Conceptual/UIKitUICatalog/UITabBar.html
   static defaultProps = {
     activeTintColor: '#3478f6', // Default active tint color in iOS 10
@@ -68,44 +27,7 @@ class TabBarBottom extends React.PureComponent<Props, State> {
     allowFontScaling: true,
   };
 
-  props: Props;
-
-  state: State = {
-    isVisible: true,
-  };
-
-  _keyboardDidShowSub = undefined;
-  _keyboardDidHideSub = undefined;
-
-  componentWillMount() {
-    this._keyboardDidShowSub = Keyboard.addListener(
-      'keyboardDidShow',
-      this._keyboardDidShow
-    );
-    this._keyboardDidHideSub = Keyboard.addListener(
-      'keyboardDidHide',
-      this._keyboardDidHide
-    );
-  }
-
-  componentWillUnmount() {
-    this._keyboardDidShowSub !== undefined && this._keyboardDidShowSub.remove();
-    this._keyboardDidHideSub !== undefined && this._keyboardDidHideSub.remove();
-  }
-
-  _keyboardDidShow = () => {
-    this.setState({
-      isVisible: false,
-    });
-  };
-
-  _keyboardDidHide = () => {
-    this.setState({
-      isVisible: true,
-    });
-  };
-
-  _renderLabel = (scene: TabScene) => {
+  _renderLabel = scene => {
     const {
       position,
       navigation,
@@ -123,14 +45,13 @@ class TabBarBottom extends React.PureComponent<Props, State> {
     const { index } = scene;
     const { routes } = navigation.state;
     // Prepend '-1', so there are always at least 2 items in inputRange
-    const inputRange = [-1, ...routes.map((x: *, i: number) => i)];
+    const inputRange = [-1, ...routes.map((x, i) => i)];
     const outputRange = inputRange.map(
-      (inputIndex: number) =>
-        inputIndex === index ? activeTintColor : inactiveTintColor
+      inputIndex => (inputIndex === index ? activeTintColor : inactiveTintColor)
     );
     const color = position.interpolate({
       inputRange,
-      outputRange: (outputRange: Array<string>),
+      outputRange: outputRange,
     });
 
     const tintColor = scene.focused ? activeTintColor : inactiveTintColor;
@@ -162,7 +83,7 @@ class TabBarBottom extends React.PureComponent<Props, State> {
     return label;
   };
 
-  _renderIcon = (scene: TabScene) => {
+  _renderIcon = scene => {
     const {
       position,
       navigation,
@@ -188,7 +109,7 @@ class TabBarBottom extends React.PureComponent<Props, State> {
     );
   };
 
-  _renderTestIDProps = (scene: TabScene) => {
+  _renderTestIDProps = scene => {
     const testIDProps =
       this.props.getTestIDProps && this.props.getTestIDProps(scene);
     return testIDProps;
@@ -209,8 +130,9 @@ class TabBarBottom extends React.PureComponent<Props, State> {
       isLandscape,
     } = this.props;
     const { routes } = navigation.state;
+    const previousScene = routes[navigation.state.index];
     // Prepend '-1', so there are always at least 2 items in inputRange
-    const inputRange = [-1, ...routes.map((x: *, i: number) => i)];
+    const inputRange = [-1, ...routes.map((x, i) => i)];
 
     const tabBarStyle = [
       styles.tabBar,
@@ -220,25 +142,25 @@ class TabBarBottom extends React.PureComponent<Props, State> {
       style,
     ];
 
-    return this.state.isVisible ? (
+    return (
       <Animated.View style={animateStyle}>
         <SafeAreaView
           style={tabBarStyle}
           forceInset={{ bottom: 'always', top: 'never' }}
         >
-          {routes.map((route: NavigationRoute, index: number) => {
+          {routes.map((route, index) => {
             const focused = index === navigation.state.index;
             const scene = { route, index, focused };
-            const onPress = getOnPress(scene);
+            const onPress = getOnPress(previousScene, scene);
             const outputRange = inputRange.map(
-              (inputIndex: number) =>
+              inputIndex =>
                 inputIndex === index
                   ? activeBackgroundColor
                   : inactiveBackgroundColor
             );
             const backgroundColor = position.interpolate({
               inputRange,
-              outputRange: (outputRange: Array<string>),
+              outputRange: outputRange,
             });
 
             const justifyContent = this.props.showIcon ? 'flex-end' : 'center';
@@ -251,7 +173,10 @@ class TabBarBottom extends React.PureComponent<Props, State> {
                 testID={testID}
                 accessibilityLabel={accessibilityLabel}
                 onPress={() =>
-                  onPress ? onPress(scene, jumpToIndex) : jumpToIndex(index)}
+                  onPress
+                    ? onPress({ previousScene, scene, jumpToIndex })
+                    : jumpToIndex(index)
+                }
               >
                 <Animated.View
                   style={[
@@ -270,7 +195,7 @@ class TabBarBottom extends React.PureComponent<Props, State> {
           })}
         </SafeAreaView>
       </Animated.View>
-    ) : null;
+    );
   }
 }
 

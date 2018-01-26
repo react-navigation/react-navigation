@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { Button, Platform, ScrollView, View } from 'react-native';
+import { Button, Platform, ScrollView, StatusBar, View } from 'react-native';
 import { SafeAreaView, TabNavigator } from 'react-navigation';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import SampleText from './SampleText';
@@ -20,6 +20,7 @@ const MyNavScreen = ({ navigation, banner }) => (
       title="Go to settings tab"
     />
     <Button onPress={() => navigation.goBack(null)} title="Go back" />
+    <StatusBar barStyle="default" />
   </SafeAreaView>
 );
 
@@ -113,4 +114,35 @@ const SimpleTabs = TabNavigator(
   }
 );
 
-export default SimpleTabs;
+class SimpleTabsContainer extends React.Component {
+  static router = SimpleTabs.router;
+  componentDidMount() {
+    this._s0 = this.props.navigation.addListener('willFocus', this._onWF);
+    this._s1 = this.props.navigation.addListener('didFocus', this._onDF);
+    this._s2 = this.props.navigation.addListener('willBlur', this._onWB);
+    this._s3 = this.props.navigation.addListener('didBlur', this._onDB);
+  }
+  componentWillUnmount() {
+    this._s0.remove();
+    this._s1.remove();
+    this._s2.remove();
+    this._s3.remove();
+  }
+  _onWF = a => {
+    console.log('_onWillFocus tabsExample ', a);
+  };
+  _onDF = a => {
+    console.log('_onDidFocus tabsExample ', a);
+  };
+  _onWB = a => {
+    console.log('_onWillBlur tabsExample ', a);
+  };
+  _onDB = a => {
+    console.log('_onDidBlur tabsExample ', a);
+  };
+  render() {
+    return <SimpleTabs navigation={this.props.navigation} />;
+  }
+}
+
+export default SimpleTabsContainer;

@@ -1,48 +1,22 @@
-/* @flow */
-
-import * as React from 'react';
-
-import type {
-  NavigationRouter,
-  NavigationNavigator,
-  NavigationNavigatorProps,
-  NavigationRouteConfigMap,
-  NavigationAction,
-  NavigationState,
-  NavigationScreenProp,
-} from '../TypeDefinition';
-
-import type { NavigatorType } from './NavigatorTypes';
-
-type InjectedProps<S: NavigationState, A: NavigationAction, O: *> = {
-  router: NavigationRouter<S, A, O>,
-};
+import React from 'react';
 
 /**
  * Creates a navigator based on a router and a view that renders the screens.
  */
-export default function createNavigator<
-  S: NavigationState,
-  A: *,
-  NavigatorConfig,
-  O: *
->(
-  router: NavigationRouter<S, A, O>,
-  routeConfigs?: NavigationRouteConfigMap,
-  navigatorConfig?: NavigatorConfig,
-  navigatorType?: NavigatorType
+export default function createNavigator(
+  router,
+  routeConfigs,
+  navigatorConfig,
+  navigatorType
 ) {
-  return (
-    NavigationView: React.ComponentType<
-      InjectedProps<S, A, O> & NavigationNavigatorProps<O, S>
-    >
-  ): NavigationNavigator<S, A, O> => {
-    class Navigator extends React.Component<NavigationNavigatorProps<O, S>> {
+  return NavigationView => {
+    class Navigator extends React.Component {
       static router = router;
 
       static routeConfigs = routeConfigs;
       static navigatorConfig = navigatorConfig;
       static navigatorType = navigatorType;
+      static navigationOptions = null;
 
       render() {
         return <NavigationView {...this.props} router={router} />;

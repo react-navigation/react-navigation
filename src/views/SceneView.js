@@ -1,21 +1,7 @@
-/* @flow */
-
-import * as React from 'react';
+import React from 'react';
 import propTypes from 'prop-types';
 
-import type {
-  NavigationScreenProp,
-  NavigationComponent,
-  NavigationRoute,
-} from '../TypeDefinition';
-
-type Props = {
-  screenProps?: {},
-  navigation: NavigationScreenProp<*>,
-  component: NavigationComponent,
-};
-
-export default class SceneView extends React.PureComponent<Props> {
+export default class SceneView extends React.PureComponent {
   static childContextTypes = {
     navigation: propTypes.object.isRequired,
   };
@@ -28,7 +14,6 @@ export default class SceneView extends React.PureComponent<Props> {
 
   render() {
     const { screenProps, navigation, component: Component } = this.props;
-
     return <Component screenProps={screenProps} navigation={navigation} />;
   }
 }
