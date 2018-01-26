@@ -72,7 +72,7 @@ class Header extends React.PureComponent {
 
   _navigateBack = () => {
     requestAnimationFrame(() => {
-      this.props.navigation.goBack();
+      this.props.navigation.goBack(this.props.scene.route.key);
     });
   };
 
