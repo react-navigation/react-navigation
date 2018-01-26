@@ -10,7 +10,7 @@ class MyHomeScreen extends React.Component {
     tabBarIcon: ({ tintColor }) => (
       <Image
         source={require('./chats-icon.png')}
-        style={[styles.icon, {tintColor: tintColor}]}
+        style={[styles.icon, { tintColor }]}
       />
     ),
   };
@@ -31,7 +31,7 @@ class MyNotificationsScreen extends React.Component {
     tabBarIcon: ({ tintColor }) => (
       <Image
         source={require('./notif-icon.png')}
-        style={[styles.icon, {tintColor: tintColor}]}
+        style={[styles.icon, { tintColor }]}
       />
     ),
   };
