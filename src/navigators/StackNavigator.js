@@ -3,7 +3,6 @@ import createNavigationContainer from '../createNavigationContainer';
 import createNavigator from './createNavigator';
 import CardStackTransitioner from '../views/CardStack/CardStackTransitioner';
 import StackRouter from '../routers/StackRouter';
-import NavigatorTypes from './NavigatorTypes';
 import NavigationActions from '../NavigationActions';
 
 // A stack navigators props are the intersection between
@@ -34,26 +33,23 @@ export default (routeConfigMap, stackConfig = {}) => {
   const router = StackRouter(routeConfigMap, stackRouterConfig);
 
   // Create a navigator with CardStackTransitioner as the view
-  const navigator = createNavigator(
-    router,
-    routeConfigMap,
-    stackConfig,
-    NavigatorTypes.STACK
-  )(props => (
-    <CardStackTransitioner
-      {...props}
-      headerMode={headerMode}
-      mode={mode}
-      cardStyle={cardStyle}
-      transitionConfig={transitionConfig}
-      onTransitionStart={onTransitionStart}
-      onTransitionEnd={(lastTransition, transition) => {
-        const { state, dispatch } = props.navigation;
-        dispatch(NavigationActions.completeTransition());
-        onTransitionEnd && onTransitionEnd();
-      }}
-    />
-  ));
+  const navigator = createNavigator(router, routeConfigMap, stackConfig)(
+    props => (
+      <CardStackTransitioner
+        {...props}
+        headerMode={headerMode}
+        mode={mode}
+        cardStyle={cardStyle}
+        transitionConfig={transitionConfig}
+        onTransitionStart={onTransitionStart}
+        onTransitionEnd={(lastTransition, transition) => {
+          const { state, dispatch } = props.navigation;
+          dispatch(NavigationActions.completeTransition());
+          onTransitionEnd && onTransitionEnd();
+        }}
+      />
+    )
+  );
 
   return createNavigationContainer(navigator);
 };
