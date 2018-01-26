@@ -83,7 +83,7 @@ DrawerNavigator(RouteConfigs, DrawerNavigatorConfig)
 
 ### RouteConfigs
 
-The route configs object is a mapping from route name to a route config, which tells the navigator what to present for that route, see [example](/docs/api/navigators/StackNavigator.md#routeconfigs) from `StackNavigator`.
+The route configs object is a mapping from route name to a route config, which tells the navigator what to present for that route, see [example](/docs/navigators/stack#RouteConfigs) from `StackNavigator`.
 
 
 ### DrawerNavigatorConfig
