@@ -1,5 +1,3 @@
-/* @flow */
-
 /**
  * TouchableItem renders a touchable that looks native on both iOS and Android.
  *
@@ -9,28 +7,17 @@
  * On iOS you can pass the props of TouchableOpacity, on Android pass the props
  * of TouchableNativeFeedback.
  */
-import * as React from 'react';
+import React from 'react';
 import {
   Platform,
   TouchableNativeFeedback,
   TouchableOpacity,
   View,
 } from 'react-native';
-import type { ViewStyleProp } from '../TypeDefinition';
 
 const ANDROID_VERSION_LOLLIPOP = 21;
 
-type Props = {
-  onPress?: () => void,
-  delayPressIn?: number,
-  borderless?: boolean,
-  pressColor?: string,
-  activeOpacity?: number,
-  children?: React.Node,
-  style?: ViewStyleProp,
-};
-
-export default class TouchableItem extends React.Component<Props> {
+export default class TouchableItem extends React.Component {
   static defaultProps = {
     borderless: false,
     pressColor: 'rgba(0, 0, 0, .32)',

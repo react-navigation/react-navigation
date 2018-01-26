@@ -7,10 +7,9 @@
     "privacy": "public",
     "orientation": "portrait",
     "primaryColor": "#cccccc",
-    "icon": "./assets/icons/react-navigation.png",
-    "loading": {
-      "icon": "./assets/icons/react-navigation.png",
-      "hideExponentText": false
+    "icon": "./assets/icons/icon.png",
+    "splash": {
+      "image": "./assets/icons/splash.png"
     },
     "sdkVersion": "24.0.0",
     "entryPoint": "./node_modules/react-native-scripts/build/bin/crna-entry.js",

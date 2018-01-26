@@ -120,11 +120,10 @@ yarn install
 
 ### Code Review Guidelines
 
-Look around. Match the style of the reset of the codebase. This project uses ESLint and Flow to ensure consistency throughout the project. You can check your project by running
+Look around. Match the style of the reset of the codebase. This project uses ESLint to ensure consistency throughout the project. You can check your project by running
 
 ```bash
 yarn run eslint
-yarn run flow-check
 ```
 
 If any errors occur you'll either have to manually fix them or you can attempt to automatically fix them by running `yarn run format`.
@@ -173,11 +172,10 @@ If you've made any changes to the `docs` directory you'll need to run `yarn run 
 
 ### Run Tests and Type-Checking
 
-React Navigation has tests implemented in [Jest](https://facebook.github.io/jest/) and type-checking is managed by [Flow](https://flow.org/). To run either of these, from the React Navigation directory, run either of the following commands (after installing the `node_modules`) to run tests or type-checking.
+React Navigation has tests implemented in [Jest](https://facebook.github.io/jest/). To run either of these, from the React Navigation directory, run either of the following commands (after installing the `node_modules`) to run tests or type-checking.
 
 ```bash
 yarn run jest
-yarn run flow-check
 ```
 
 These commands will be run by our CI and are required to pass before any contributtions are merged.

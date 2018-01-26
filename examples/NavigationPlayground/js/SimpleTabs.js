@@ -114,4 +114,35 @@ const SimpleTabs = TabNavigator(
   }
 );
 
-export default SimpleTabs;
+class SimpleTabsContainer extends React.Component {
+  static router = SimpleTabs.router;
+  componentDidMount() {
+    this._s0 = this.props.navigation.addListener('willFocus', this._onWF);
+    this._s1 = this.props.navigation.addListener('didFocus', this._onDF);
+    this._s2 = this.props.navigation.addListener('willBlur', this._onWB);
+    this._s3 = this.props.navigation.addListener('didBlur', this._onDB);
+  }
+  componentWillUnmount() {
+    this._s0.remove();
+    this._s1.remove();
+    this._s2.remove();
+    this._s3.remove();
+  }
+  _onWF = a => {
+    console.log('_onWillFocus tabsExample ', a);
+  };
+  _onDF = a => {
+    console.log('_onDidFocus tabsExample ', a);
+  };
+  _onWB = a => {
+    console.log('_onWillBlur tabsExample ', a);
+  };
+  _onDB = a => {
+    console.log('_onDidBlur tabsExample ', a);
+  };
+  render() {
+    return <SimpleTabs navigation={this.props.navigation} />;
+  }
+}
+
+export default SimpleTabsContainer;

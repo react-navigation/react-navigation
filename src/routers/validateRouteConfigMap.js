@@ -1,21 +1,17 @@
-/** @flow */
-
 import invariant from '../utils/invariant';
-
-import type { NavigationRouteConfigMap } from '../TypeDefinition';
 
 /**
  * Make sure the config passed e.g. to StackRouter, TabRouter has
  * the correct format, and throw a clear error if it doesn't.
  */
-function validateRouteConfigMap(routeConfigs: NavigationRouteConfigMap) {
+function validateRouteConfigMap(routeConfigs) {
   const routeNames = Object.keys(routeConfigs);
   invariant(
     routeNames.length > 0,
     'Please specify at least one route when configuring a navigator.'
   );
 
-  routeNames.forEach((routeName: string) => {
+  routeNames.forEach(routeName => {
     const routeConfig = routeConfigs[routeName];
 
     if (!routeConfig.screen && !routeConfig.getScreen) {

@@ -1,12 +1,4 @@
-/* @flow */
-
 import { I18nManager } from 'react-native';
-
-import type {
-  NavigationSceneRendererProps,
-  NavigationScene,
-  AnimatedViewStyleProp,
-} from '../../TypeDefinition';
 
 import getSceneIndicesForInterpolationInputRange from '../../utils/getSceneIndicesForInterpolationInputRange';
 
@@ -21,7 +13,7 @@ import getSceneIndicesForInterpolationInputRange from '../../utils/getSceneIndic
  * +-------------+-------------+-------------+
  */
 
-function forLeft(props: NavigationSceneRendererProps): AnimatedViewStyleProp {
+function forLeft(props) {
   const { position, scene, scenes } = props;
   const interpolate = getSceneIndicesForInterpolationInputRange(props);
 
@@ -39,12 +31,12 @@ function forLeft(props: NavigationSceneRendererProps): AnimatedViewStyleProp {
         last - Math.abs(last - index) / 2,
         last,
       ],
-      outputRange: ([0, 0, 1, 0, 0]: Array<number>),
+      outputRange: [0, 0, 1, 0, 0],
     }),
   };
 }
 
-function forCenter(props: NavigationSceneRendererProps): AnimatedViewStyleProp {
+function forCenter(props) {
   const { position, scene } = props;
   const interpolate = getSceneIndicesForInterpolationInputRange(props);
 
@@ -57,22 +49,20 @@ function forCenter(props: NavigationSceneRendererProps): AnimatedViewStyleProp {
   return {
     opacity: position.interpolate({
       inputRange,
-      outputRange: ([0, 1, 0]: Array<number>),
+      outputRange: [0, 1, 0],
     }),
     transform: [
       {
         translateX: position.interpolate({
           inputRange,
-          outputRange: I18nManager.isRTL
-            ? ([-200, 0, 200]: Array<number>)
-            : ([200, 0, -200]: Array<number>),
+          outputRange: I18nManager.isRTL ? [-200, 0, 200] : [200, 0, -200],
         }),
       },
     ],
   };
 }
 
-function forRight(props: NavigationSceneRendererProps): AnimatedViewStyleProp {
+function forRight(props) {
   const { position, scene } = props;
   const interpolate = getSceneIndicesForInterpolationInputRange(props);
 
@@ -83,7 +73,7 @@ function forRight(props: NavigationSceneRendererProps): AnimatedViewStyleProp {
   return {
     opacity: position.interpolate({
       inputRange: [first, index, last],
-      outputRange: ([0, 1, 0]: Array<number>),
+      outputRange: [0, 1, 0],
     }),
   };
 }
