@@ -634,6 +634,69 @@ describe('TabRouter', () => {
     });
   });
 
+  test('Back actions are not propagated to inactive children', () => {
+    const ScreenA = () => <div />;
+    const ScreenB = () => <div />;
+    const ScreenC = () => <div />;
+    const InnerNavigator = () => <div />;
+    InnerNavigator.router = TabRouter({
+      a: { screen: ScreenA },
+      b: { screen: ScreenB },
+    });
+
+    const router = TabRouter(
+      {
+        inner: { screen: InnerNavigator },
+        c: { screen: ScreenC },
+      },
+      {
+        backBehavior: 'none',
+      }
+    );
+
+    const state0 = router.getStateForAction(INIT_ACTION);
+
+    const state1 = router.getStateForAction(
+      { type: NavigationActions.NAVIGATE, routeName: 'b' },
+      state0
+    );
+
+    const state2 = router.getStateForAction(
+      { type: NavigationActions.NAVIGATE, routeName: 'c' },
+      state1
+    );
+
+    const state3 = router.getStateForAction(
+      { type: NavigationActions.BACK },
+      state2
+    );
+
+    expect(state3).toEqual(state2);
+  });
+
+  test('Back behavior initialRoute works', () => {
+    const ScreenA = () => <div />;
+    const ScreenB = () => <div />;
+    const router = TabRouter({
+      a: { screen: ScreenA },
+      b: { screen: ScreenB },
+    });
+
+    const state0 = router.getStateForAction(INIT_ACTION);
+
+    const state1 = router.getStateForAction(
+      { type: NavigationActions.NAVIGATE, routeName: 'b' },
+      state0
+    );
+
+    const state2 = router.getStateForAction(
+      { type: NavigationActions.BACK },
+      state1
+    );
+
+    expect(state2).toEqual(state0);
+  });
+
   test('Inner actions are only unpacked if the current tab matches', () => {
     const PlainScreen = () => <div />;
     const ScreenA = () => <div />;
