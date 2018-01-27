@@ -28,6 +28,15 @@ class MyNavScreen extends React.Component<MyNavScreenProps> {
           onPress={() => navigation.navigate('Photos', { name: 'Jane' })}
           title="Go to a photos screen"
         />
+        <Button
+          onPress={() =>
+            navigation.navigate('Profile', {
+              name: 'Dog',
+              headerBackImage: require('./assets/dog-back.png'),
+            })
+          }
+          title="Custom back button"
+        />
         <Button onPress={() => navigation.goBack(null)} title="Go back" />
         <StatusBar barStyle="default" />
       </SafeAreaView>
@@ -129,9 +138,9 @@ class MyPhotosScreen extends React.Component<MyPhotosScreenProps> {
 
 const MyProfileScreen = ({ navigation }) => (
   <MyNavScreen
-    banner={`${navigation.state.params.mode === 'edit'
-      ? 'Now Editing '
-      : ''}${navigation.state.params.name}'s Profile`}
+    banner={`${navigation.state.params.mode === 'edit' ? 'Now Editing ' : ''}${
+      navigation.state.params.name
+    }'s Profile`}
     navigation={navigation}
   />
 );
@@ -141,6 +150,7 @@ MyProfileScreen.navigationOptions = props => {
   const { state, setParams } = navigation;
   const { params } = state;
   return {
+    headerBackImage: params.headerBackImage,
     headerTitle: `${params.name}'s Profile!`,
     // Render a button on the right side of the header.
     // When pressed switches the screen to edit mode.
@@ -148,7 +158,8 @@ MyProfileScreen.navigationOptions = props => {
       <Button
         title={params.mode === 'edit' ? 'Done' : 'Edit'}
         onPress={() =>
-          setParams({ mode: params.mode === 'edit' ? '' : 'edit' })}
+          setParams({ mode: params.mode === 'edit' ? '' : 'edit' })
+        }
       />
     ),
   };
