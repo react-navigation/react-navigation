@@ -22,15 +22,11 @@ class Card extends React.Component {
 
 const styles = StyleSheet.create({
   main: {
-    backgroundColor: '#E9E9EF',
+    backgroundColor: 'transparent',
     bottom: 0,
     left: 0,
     position: 'absolute',
     right: 0,
-    shadowColor: 'black',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
     top: 0,
   },
 });
