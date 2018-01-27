@@ -1,11 +1,6 @@
-/**
- * @flow
- */
+import React from 'react';
 
-import React, { Component } from 'react';
-
-export default class PhoneGraphic extends Component {
-  props: { sources: { android: string, iphone: string } };
+export default class PhoneGraphic extends React.Component {
   state = { activeExample: this.props.alt ? 'android' : 'iphone' };
   render() {
     const { activeExample } = this.state;

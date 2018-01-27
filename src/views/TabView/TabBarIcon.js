@@ -1,30 +1,7 @@
-/* @flow */
-
-import React, { PureComponent } from 'react';
+import React from 'react';
 import { Animated, View, StyleSheet } from 'react-native';
 
-import type {
-  NavigationAction,
-  NavigationState,
-  NavigationScreenProp,
-  ViewStyleProp,
-} from '../../TypeDefinition';
-
-import type { TabScene } from './TabView';
-
-type Props = {
-  activeTintColor: string,
-  inactiveTintColor: string,
-  scene: TabScene,
-  position: Animated.Value,
-  navigation: NavigationScreenProp<NavigationState, NavigationAction>,
-  renderIcon: (scene: TabScene) => React.Element<*>,
-  style?: ViewStyleProp,
-};
-
-export default class TabBarIcon extends PureComponent<void, Props, void> {
-  props: Props;
-
+export default class TabBarIcon extends React.PureComponent {
   render() {
     const {
       position,
@@ -37,14 +14,14 @@ export default class TabBarIcon extends PureComponent<void, Props, void> {
     const { route, index } = scene;
     const { routes } = navigation.state;
     // Prepend '-1', so there are always at least 2 items in inputRange
-    const inputRange = [-1, ...routes.map((x: *, i: number) => i)];
+    const inputRange = [-1, ...routes.map((x, i) => i)];
     const activeOpacity = position.interpolate({
       inputRange,
-      outputRange: inputRange.map((i: number) => (i === index ? 1 : 0)),
+      outputRange: inputRange.map(i => (i === index ? 1 : 0)),
     });
     const inactiveOpacity = position.interpolate({
       inputRange,
-      outputRange: inputRange.map((i: number) => (i === index ? 0 : 1)),
+      outputRange: inputRange.map(i => (i === index ? 0 : 1)),
     });
     // We render the icon twice at the same position on top of each other:
     // active and inactive one, so we can fade between them.

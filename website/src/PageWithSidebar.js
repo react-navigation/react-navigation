@@ -85,9 +85,7 @@ class PageWithSidebar extends Component {
                           (isActive ? 'active' : '')
                         }
                       >
-                        <h6>
-                          {options.linkName}
-                        </h6>
+                        <h6>{options.linkName}</h6>
                       </LinkableLi>
                       <div>
                         {route.routes &&
@@ -111,9 +109,9 @@ class PageWithSidebar extends Component {
                             return (
                               <Link
                                 to={childRoute.routeName}
-                                className={`pt-menu-item page ${isChildActive
-                                  ? 'active'
-                                  : ''}`}
+                                className={`pt-menu-item page ${
+                                  isChildActive ? 'active' : ''
+                                }`}
                                 key={childI}
                               >
                                 {linkName}
@@ -130,21 +128,21 @@ class PageWithSidebar extends Component {
           <div className="main-section">
             <ActiveScreen navigation={this.props.navigation} />
             <hr />
-            {state.routeName === 'Docs' &&
+            {state.routeName === 'Docs' && (
               <Link
                 href={`https://github.com/react-community/react-navigation/tree/master/docs/${docPath}`}
                 className="editLink"
               >
-                {' '}Edit on GitHub
-              </Link>}
-            {prevAction &&
-              <Link to={prevAction}>
-                Previous: {prevName}
-              </Link>}
-            {nextAction &&
+                {' '}
+                Edit on GitHub
+              </Link>
+            )}
+            {prevAction && <Link to={prevAction}>Previous: {prevName}</Link>}
+            {nextAction && (
               <Link to={nextAction} className="nextLink">
                 Next: {nextName}
-              </Link>}
+              </Link>
+            )}
           </div>
         </div>
       </div>

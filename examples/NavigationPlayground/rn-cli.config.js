@@ -1,43 +1,52 @@
 /**
- * RN CLI Config that allows Exponent to work with this project
- *
- * Extends the base rn-cli.config.js at the root of the project to use a custom transfomer and a
- * special blacklist.
+ * @noflow
  */
 
 const fs = require('fs');
 const path = require('path');
-const blacklist = require('react-native/packager/blacklist');
+const blacklist = require('metro-bundler/src/blacklist');
 
-const CURRENT_EXAMPLE = 'NavigationPlayground';
+module.exports = {
+  getBlacklistRE() {
+    return blacklist([
+      /react\-navigation\/examples\/(?!NavigationPlayground).*/,
+      /react\-navigation\/node_modules\/react-native\/(.*)/,
+      /react\-navigation\/node_modules\/react\/(.*)/
+    ]);
+  },
+  extraNodeModules: getNodeModulesForDirectory(path.resolve('.')),
+};
 
-const examples = getDirectories(path.join(__dirname, '..'));
-
-const getBlacklistForExample = (example) => [
-  ...examples.filter(x => x !== example).map(exampleName => new RegExp(`${path.resolve(__dirname, '..')}/${exampleName}/(.*)`))
-];
-
-const config = {};
-
-config.getBlacklist = () => [
-  new RegExp(
-    `${path.resolve(__dirname, '../..')}/node_modules/react-native/(.*)`
-  ),
-  new RegExp(`${path.resolve(__dirname, '../..')}/node_modules/react/(.*)`),
-  new RegExp(`${path.resolve(__dirname, '../..')}/lib-rn/(.*)`),
-  new RegExp(`${path.resolve(__dirname, '../..')}/lib/(.*)`),
-  ...getBlacklistForExample(CURRENT_EXAMPLE)
-];
-
-config.getBlacklistRE = () => blacklist(config.getBlacklist());
-
-function getRoots() {
-  return [path.join(__dirname)];
+function getNodeModulesForDirectory(rootPath) {
+  const nodeModulePath = path.join(rootPath, 'node_modules');
+  const folders = fs.readdirSync(nodeModulePath);
+  return folders.reduce((modules, folderName) => {
+    const folderPath = path.join(nodeModulePath, folderName);
+    if (folderName.startsWith('@')) {
+      const scopedModuleFolders = fs.readdirSync(folderPath);
+      const scopedModules = scopedModuleFolders.reduce(
+        (scopedModules, scopedFolderName) => {
+          scopedModules[
+            `${folderName}/${scopedFolderName}`
+          ] = maybeResolveSymlink(path.join(folderPath, scopedFolderName));
+          return scopedModules;
+        },
+        {}
+      );
+      return Object.assign({}, modules, scopedModules);
+    }
+    modules[folderName] = maybeResolveSymlink(folderPath);
+    return modules;
+  }, {});
 }
 
-function getDirectories(srcpath) {
-  return fs.readdirSync(srcpath)
-    .filter(file => fs.lstatSync(path.join(srcpath, file)).isDirectory())
+function maybeResolveSymlink(maybeSymlinkPath) {
+  if (fs.lstatSync(maybeSymlinkPath).isSymbolicLink()) {
+    const resolved = path.resolve(
+      path.dirname(maybeSymlinkPath),
+      fs.readlinkSync(maybeSymlinkPath)
+    );
+    return resolved;
+  }
+  return maybeSymlinkPath;
 }
-
-module.exports = config;

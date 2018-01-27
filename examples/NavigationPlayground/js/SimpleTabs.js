@@ -2,14 +2,16 @@
  * @flow
  */
 
+import type { NavigationScreenProp, EventListener } from 'react-navigation';
+
 import React from 'react';
-import { Button, Platform, ScrollView, StyleSheet } from 'react-native';
-import { TabNavigator } from 'react-navigation';
+import { Button, Platform, ScrollView, StatusBar, View } from 'react-native';
+import { SafeAreaView, TabNavigator } from 'react-navigation';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import SampleText from './SampleText';
 
 const MyNavScreen = ({ navigation, banner }) => (
-  <ScrollView style={styles.container}>
+  <SafeAreaView forceInset={{ horizontal: 'always', top: 'always' }}>
     <SampleText>{banner}</SampleText>
     <Button
       onPress={() => navigation.navigate('Home')}
@@ -20,7 +22,8 @@ const MyNavScreen = ({ navigation, banner }) => (
       title="Go to settings tab"
     />
     <Button onPress={() => navigation.goBack(null)} title="Go back" />
-  </ScrollView>
+    <StatusBar barStyle="default" />
+  </SafeAreaView>
 );
 
 const MyHomeScreen = ({ navigation }) => (
@@ -28,6 +31,10 @@ const MyHomeScreen = ({ navigation }) => (
 );
 
 MyHomeScreen.navigationOptions = {
+  tabBarTestIDProps: {
+    testID: 'TEST_ID_HOME',
+    accessibilityLabel: 'TEST_ID_HOME_ACLBL',
+  },
   tabBarLabel: 'Home',
   tabBarIcon: ({ tintColor, focused }) => (
     <Ionicons
@@ -109,10 +116,44 @@ const SimpleTabs = TabNavigator(
   }
 );
 
-const styles = StyleSheet.create({
-  container: {
-    marginTop: Platform.OS === 'ios' ? 20 : 0,
-  },
-});
+type SimpleTabsContainerProps = {
+  navigation: NavigationScreenProp<*>,
+};
 
-export default SimpleTabs;
+class SimpleTabsContainer extends React.Component<SimpleTabsContainerProps> {
+  static router = SimpleTabs.router;
+  _s0: EventListener;
+  _s1: EventListener;
+  _s2: EventListener;
+  _s3: EventListener;
+
+  componentDidMount() {
+    this._s0 = this.props.navigation.addListener('willFocus', this._onWF);
+    this._s1 = this.props.navigation.addListener('didFocus', this._onDF);
+    this._s2 = this.props.navigation.addListener('willBlur', this._onWB);
+    this._s3 = this.props.navigation.addListener('didBlur', this._onDB);
+  }
+  componentWillUnmount() {
+    this._s0.remove();
+    this._s1.remove();
+    this._s2.remove();
+    this._s3.remove();
+  }
+  _onWF = a => {
+    console.log('_onWillFocus tabsExample ', a);
+  };
+  _onDF = a => {
+    console.log('_onDidFocus tabsExample ', a);
+  };
+  _onWB = a => {
+    console.log('_onWillBlur tabsExample ', a);
+  };
+  _onDB = a => {
+    console.log('_onDidBlur tabsExample ', a);
+  };
+  render() {
+    return <SimpleTabs navigation={this.props.navigation} />;
+  }
+}
+
+export default SimpleTabsContainer;

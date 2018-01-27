@@ -1,5 +1,3 @@
-/* @flow */
-
 import React from 'react';
 import {
   I18nManager,
@@ -10,31 +8,9 @@ import {
   StyleSheet,
 } from 'react-native';
 
-import type { LayoutEvent, TextStyleProp } from '../../TypeDefinition';
-
 import TouchableItem from '../TouchableItem';
 
-type Props = {
-  onPress?: () => void,
-  pressColorAndroid?: string,
-  title?: ?string,
-  titleStyle?: ?TextStyleProp,
-  tintColor?: ?string,
-  truncatedTitle?: ?string,
-  width?: ?number,
-};
-
-type DefaultProps = {
-  pressColorAndroid: string,
-  tintColor: ?string,
-  truncatedTitle: ?string,
-};
-
-type State = {
-  initialTextWidth?: number,
-};
-
-class HeaderBackButton extends React.PureComponent<DefaultProps, Props, State> {
+class HeaderBackButton extends React.PureComponent {
   static defaultProps = {
     pressColorAndroid: 'rgba(0, 0, 0, .32)',
     tintColor: Platform.select({
@@ -45,7 +21,7 @@ class HeaderBackButton extends React.PureComponent<DefaultProps, Props, State> {
 
   state = {};
 
-  _onTextLayout = (e: LayoutEvent) => {
+  _onTextLayout = e => {
     if (this.state.initialTextWidth) {
       return;
     }
@@ -97,18 +73,19 @@ class HeaderBackButton extends React.PureComponent<DefaultProps, Props, State> {
             source={asset}
           />
           {Platform.OS === 'ios' &&
-            title &&
-            <Text
-              onLayout={this._onTextLayout}
-              style={[
-                styles.title,
-                !!tintColor && { color: tintColor },
-                titleStyle,
-              ]}
-              numberOfLines={1}
-            >
-              {backButtonTitle}
-            </Text>}
+            typeof backButtonTitle === 'string' && (
+              <Text
+                onLayout={this._onTextLayout}
+                style={[
+                  styles.title,
+                  !!tintColor && { color: tintColor },
+                  titleStyle,
+                ]}
+                numberOfLines={1}
+              >
+                {backButtonTitle}
+              </Text>
+            )}
         </View>
       </TouchableItem>
     );

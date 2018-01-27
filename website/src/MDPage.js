@@ -33,7 +33,7 @@ const getHeadingForLevel = level => {
   }
 };
 
-const MDPage = ({ navigation, docPath }) =>
+const MDPage = ({ navigation, docPath }) => (
   <Markdown
     source={DocsMD[docPath]}
     className="md-section"
@@ -54,15 +54,13 @@ const MDPage = ({ navigation, docPath }) =>
         return <CodeBlock code={literal} />;
       },
       Heading: function HeadingComponent({ level, children }) {
-        let id = React.Children
-          .map(children, child => {
-            if (typeof child === 'string') {
-              return safeString(child);
-            } else if (typeof child.props.children === 'string') {
-              return safeString(child.props.children);
-            }
-          })
-          .join('-');
+        let id = React.Children.map(children, child => {
+          if (typeof child === 'string') {
+            return safeString(child);
+          } else if (typeof child.props.children === 'string') {
+            return safeString(child.props.children);
+          }
+        }).join('-');
         const Header = getHeadingForLevel(level);
         const linkHeader = id ? '' : 'link-header';
         const className = `md-header ${linkHeader}`;
@@ -79,13 +77,10 @@ const MDPage = ({ navigation, docPath }) =>
         if (href.indexOf('PhoneGraphic:') === 0) {
           const graphicName = href.split('PhoneGraphic:')[1];
         }
-        return (
-          <Link href={href}>
-            {children}
-          </Link>
-        );
+        return <Link href={href}>{children}</Link>;
       },
     }}
-  />;
+  />
+);
 
 export default MDPage;

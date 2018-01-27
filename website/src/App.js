@@ -1,7 +1,3 @@
-/*
- * @flow
- */
-
 import React from 'react';
 
 import AppFrame from './AppFrame';
@@ -15,15 +11,7 @@ import {
   createNavigator,
 } from 'react-navigation';
 
-import type { NavigationScreenComponent } from 'react-navigation';
-
-type ScreenOptions = {
-  linkName: string,
-  icon: string,
-  title: string,
-};
-
-const NavView = ({ navigation, router }: { navigation: any, router: any }) => {
+const NavView = ({ navigation, router }) => {
   const { state } = navigation;
   const Component = router.getComponentForState(state);
   return (
@@ -36,20 +24,10 @@ const NavView = ({ navigation, router }: { navigation: any, router: any }) => {
   );
 };
 
-type DocPageConfig = {
-  doc: string,
-  title: string,
-  linkName: string,
-};
-
-const createDocPage = (
-  config: DocPageConfig
-): (() => NavigationScreenComponent<*, ScreenOptions>) => {
-  const Page: NavigationScreenComponent<*, ScreenOptions> = ({
-    navigation,
-  }: {
-    navigation: any,
-  }) => <MDPage docPath={config.doc} navigation={navigation} />;
+const createDocPage = config => {
+  const Page = ({ navigation }) => (
+    <MDPage docPath={config.doc} navigation={navigation} />
+  );
   Page.navigationOptions = {
     doc: config.doc,
     title: config.title,
@@ -63,10 +41,26 @@ const GuideDocs = createNavigator(
     GettingStarted: {
       screen: createDocPage({
         doc: 'guides/Guide-Intro',
+        title: 'Introduction',
+        linkName: 'Introduction',
+      }),
+      path: '',
+    },
+    QuickStart: {
+      screen: createDocPage({
+        doc: 'guides/Guide-Quick-Start',
+        title: 'Quick Start',
+        linkName: 'Quick Start',
+      }),
+      path: 'quick-start',
+    },
+    BasicExample: {
+      screen: createDocPage({
+        doc: 'guides/Guide-Basic-Example',
         title: 'Hello Mobile Navigation',
         linkName: 'Hello Mobile Navigation',
       }),
-      path: '',
+      path: 'basic-app',
     },
     NestedNavigator: {
       screen: createDocPage({
@@ -128,7 +122,7 @@ const GuidesDocs = createNavigator(
     },
     Contributors: {
       screen: createDocPage({
-        doc: 'guides/Contributors',
+        doc: 'CONTRIBUTING',
         title: 'Contributors Guide',
         linkName: 'Contributors',
       }),
@@ -315,11 +309,7 @@ const DocsPage = createNavigator(
     },
   })
 )(PageWithSidebar);
-DocsPage.navigationOptions = ({
-  navigationOptions,
-}: {
-  navigationOptions: any,
-}) => ({
+DocsPage.navigationOptions = ({ navigationOptions }) => ({
   title: `${navigationOptions.title} | React Navigation`,
 });
 
@@ -331,6 +321,14 @@ IntroPost.navigationOptions = {
 
 const BlogHistoryPage = createNavigator(
   TabRouter({
+    RenewedV1: {
+      screen: createDocPage({
+        doc: 'blog/2017-09-Renewed-v1',
+        title: 'A (Renewed) Path to React Navigation V1',
+        linkName: 'A (Renewed) Path to React Navigation V1',
+      }),
+      path: '2017/9/Renewed-v1',
+    },
     RoadToV1: {
       screen: createDocPage({
         doc: 'blog/2017-04-On-the-path-to-v1',
@@ -363,10 +361,11 @@ const BlogPage = createNavigator(
   })
 )(PageWithSidebar);
 
-const NotFoundError = () =>
+const NotFoundError = () => (
   <div className="errorScreen">
     <h1>Page not found</h1>
-  </div>;
+  </div>
+);
 
 const App = createNavigator(
   TabRouter({

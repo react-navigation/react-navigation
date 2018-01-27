@@ -1,4 +1,3 @@
-/* @flow */
 /* eslint react/no-multi-comp:0 */
 
 import React from 'react';
@@ -14,7 +13,11 @@ const ROUTERS = {
   StackRouter,
 };
 
-Object.keys(ROUTERS).forEach((routerName: string) => {
+const dummyEventSubscriber = (name: string, handler: (*) => void) => ({
+  remove: () => {},
+});
+
+Object.keys(ROUTERS).forEach(routerName => {
   const Router = ROUTERS[routerName];
 
   describe(`General router features - ${routerName}`, () => {
@@ -34,7 +37,7 @@ Object.keys(ROUTERS).forEach((routerName: string) => {
         render() {
           return <div />;
         }
-        static navigationOptions = ({ navigation }: *) => ({
+        static navigationOptions = ({ navigation }) => ({
           title: `Baz-${navigation.state.params.id}`,
         });
       }
@@ -50,19 +53,31 @@ Object.keys(ROUTERS).forEach((routerName: string) => {
       ];
       expect(
         router.getScreenOptions(
-          addNavigationHelpers({ state: routes[0], dispatch: () => false }),
+          addNavigationHelpers({
+            state: routes[0],
+            dispatch: () => false,
+            addListener: dummyEventSubscriber,
+          }),
           {}
         ).title
       ).toEqual(undefined);
       expect(
         router.getScreenOptions(
-          addNavigationHelpers({ state: routes[1], dispatch: () => false }),
+          addNavigationHelpers({
+            state: routes[1],
+            dispatch: () => false,
+            addListener: dummyEventSubscriber,
+          }),
           {}
         ).title
       ).toEqual('BarTitle');
       expect(
         router.getScreenOptions(
-          addNavigationHelpers({ state: routes[2], dispatch: () => false }),
+          addNavigationHelpers({
+            state: routes[2],
+            dispatch: () => false,
+            addListener: dummyEventSubscriber,
+          }),
           {}
         ).title
       ).toEqual('Baz-123');
@@ -90,11 +105,8 @@ test('Handles no-op actions with tabs within stack router', () => {
     type: NavigationActions.NAVIGATE,
     routeName: 'Qux',
   });
-  /* $FlowFixMe */
   expect(state1.routes[0].key).toEqual('Init-id-0-0');
-  /* $FlowFixMe */
   expect(state2.routes[0].key).toEqual('Init-id-0-1');
-  /* $FlowFixMe */
   state1.routes[0].key = state2.routes[0].key;
   expect(state1).toEqual(state2);
   const state3 = TestRouter.getStateForAction(
@@ -118,6 +130,7 @@ test('Handles deep action', () => {
   const state1 = TestRouter.getStateForAction({ type: NavigationActions.INIT });
   const expectedState = {
     index: 0,
+    isTransitioning: false,
     routes: [
       {
         key: 'Init-id-0-2',
@@ -130,12 +143,12 @@ test('Handles deep action', () => {
     {
       type: NavigationActions.NAVIGATE,
       routeName: 'Foo',
+      immediate: true,
       action: { type: NavigationActions.NAVIGATE, routeName: 'Zoo' },
     },
     state1
   );
   expect(state2 && state2.index).toEqual(1);
-  /* $FlowFixMe */
   expect(state2 && state2.routes[1].index).toEqual(1);
 });
 
@@ -157,17 +170,19 @@ test('Supports lazily-evaluated getScreen', () => {
   const state1 = TestRouter.getStateForAction({ type: NavigationActions.INIT });
   const state2 = TestRouter.getStateForAction({
     type: NavigationActions.NAVIGATE,
+    immediate: true,
     routeName: 'Qux',
   });
-  /* $FlowFixMe */
   expect(state1.routes[0].key).toEqual('Init-id-0-4');
-  /* $FlowFixMe */
   expect(state2.routes[0].key).toEqual('Init-id-0-5');
-  /* $FlowFixMe */
   state1.routes[0].key = state2.routes[0].key;
   expect(state1).toEqual(state2);
   const state3 = TestRouter.getStateForAction(
-    { type: NavigationActions.NAVIGATE, routeName: 'Zap' },
+    {
+      type: NavigationActions.NAVIGATE,
+      immediate: true,
+      routeName: 'Zap',
+    },
     state2
   );
   expect(state2).toEqual(state3);

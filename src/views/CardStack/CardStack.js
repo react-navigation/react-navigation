@@ -1,6 +1,4 @@
-/* @flow */
-
-import React, { Component } from 'react';
+import React from 'react';
 
 import clamp from 'clamp';
 import {
@@ -17,59 +15,16 @@ import Card from './Card';
 import Header from '../Header/Header';
 import NavigationActions from '../../NavigationActions';
 import addNavigationHelpers from '../../addNavigationHelpers';
+import getChildEventSubscriber from '../../getChildEventSubscriber';
 import SceneView from '../SceneView';
-
-import type {
-  NavigationAction,
-  NavigationLayout,
-  NavigationScreenProp,
-  NavigationScene,
-  NavigationRouter,
-  NavigationState,
-  NavigationScreenDetails,
-  NavigationStackScreenOptions,
-  HeaderMode,
-  ViewStyleProp,
-  TransitionConfig,
-} from '../../TypeDefinition';
 
 import TransitionConfigs from './TransitionConfigs';
 
 const emptyFunction = () => {};
 
-type Props = {
-  screenProps?: {},
-  headerMode: HeaderMode,
-  headerComponent?: ReactClass<*>,
-  mode: 'card' | 'modal',
-  navigation: NavigationScreenProp<NavigationState, NavigationAction>,
-  router: NavigationRouter<
-    NavigationState,
-    NavigationAction,
-    NavigationStackScreenOptions
-  >,
-  cardStyle?: ViewStyleProp,
-  onTransitionStart?: () => void,
-  onTransitionEnd?: () => void,
-  style?: any, // TODO: Remove
-  /**
-   * Optional custom animation when transitioning between screens.
-   */
-  transitionConfig?: () => TransitionConfig,
-
-  // NavigationTransitionProps:
-  layout: NavigationLayout,
-  navigation: NavigationScreenProp<NavigationState, NavigationAction>,
-  position: Animated.Value,
-  progress: Animated.Value,
-  scenes: Array<NavigationScene>,
-  scene: NavigationScene,
-  index: number,
-};
-
 /**
  * The max duration of the card animation in milliseconds after released gesture.
- * The actual duration should be always less then that because the rest distance 
+ * The actual duration should be always less then that because the rest distance
  * is always less then the full distance of the layout.
  */
 const ANIMATION_DURATION = 500;
@@ -92,7 +47,7 @@ const RESPOND_THRESHOLD = 20;
 const GESTURE_RESPONSE_DISTANCE_HORIZONTAL = 25;
 const GESTURE_RESPONSE_DISTANCE_VERTICAL = 135;
 
-const animatedSubscribeValue = (animatedValue: Animated.Value) => {
+const animatedSubscribeValue = animatedValue => {
   if (!animatedValue.__isNative) {
     return;
   }
@@ -101,17 +56,17 @@ const animatedSubscribeValue = (animatedValue: Animated.Value) => {
   }
 };
 
-class CardStack extends Component {
+class CardStack extends React.Component {
   /**
    * Used to identify the starting point of the position when the gesture starts, such that it can
    * be updated according to its relative position. This means that a card can effectively be
    * "caught"- If a gesture starts while a card is animating, the card does not jump into a
    * corresponding location for the touch.
    */
-  _gestureStartValue: number = 0;
+  _gestureStartValue = 0;
 
   // tracks if a touch is currently happening
-  _isResponding: boolean = false;
+  _isResponding = false;
 
   /**
    * immediateIndex is used to represent the expected index that we will be on after a
@@ -120,19 +75,15 @@ class CardStack extends Component {
    * the transition so that gestures can be handled correctly. This is a work-around for
    * cases when the user quickly swipes back several times.
    */
-  _immediateIndex: ?number = null;
+  _immediateIndex = null;
 
-  _screenDetails: {
-    [key: string]: ?NavigationScreenDetails<NavigationStackScreenOptions>,
-  } = {};
+  _screenDetails = {};
 
-  props: Props;
-
-  componentWillReceiveProps(props: Props) {
+  componentWillReceiveProps(props) {
     if (props.screenProps !== this.props.screenProps) {
       this._screenDetails = {};
     }
-    props.scenes.forEach((newScene: *) => {
+    props.scenes.forEach(newScene => {
       if (
         this._screenDetails[newScene.key] &&
         this._screenDetails[newScene.key].state !== newScene.route
@@ -142,13 +93,17 @@ class CardStack extends Component {
     });
   }
 
-  _getScreenDetails = (scene: NavigationScene): NavigationScreenDetails<*> => {
+  _getScreenDetails = scene => {
     const { screenProps, navigation, router } = this.props;
     let screenDetails = this._screenDetails[scene.key];
     if (!screenDetails || screenDetails.state !== scene.route) {
       const screenNavigation = addNavigationHelpers({
-        ...navigation,
+        dispatch: navigation.dispatch,
         state: scene.route,
+        addListener: getChildEventSubscriber(
+          navigation.addListener,
+          scene.route.key
+        ),
       });
       screenDetails = {
         state: scene.route,
@@ -160,20 +115,20 @@ class CardStack extends Component {
     return screenDetails;
   };
 
-  _renderHeader(
-    scene: NavigationScene,
-    headerMode: HeaderMode
-  ): ?React.Element<*> {
+  _renderHeader(scene, headerMode) {
     const { header } = this._getScreenDetails(scene).options;
 
     if (typeof header !== 'undefined' && typeof header !== 'function') {
       return header;
     }
 
-    const renderHeader = header || ((props: *) => <Header {...props} />);
+    const renderHeader = header || (props => <Header {...props} />);
+    const {
+      headerLeftInterpolator,
+      headerTitleInterpolator,
+      headerRightInterpolator,
+    } = this._getTransitionConfig();
 
-    // We need to explicitly exclude `mode` since Flow doesn't see
-    // mode: headerMode override below and reports prop mismatch
     const { mode, ...passProps } = this.props;
 
     return renderHeader({
@@ -181,11 +136,14 @@ class CardStack extends Component {
       scene,
       mode: headerMode,
       getScreenDetails: this._getScreenDetails,
+      leftInterpolator: headerLeftInterpolator,
+      titleInterpolator: headerTitleInterpolator,
+      rightInterpolator: headerRightInterpolator,
     });
   }
 
   // eslint-disable-next-line class-methods-use-this
-  _animatedSubscribe(props: Props) {
+  _animatedSubscribe(props) {
     // Hack to make this work with native driven animations. We add a single listener
     // so the JS value of the following animated values gets updated. We rely on
     // some Animated private APIs and not doing so would require using a bunch of
@@ -198,7 +156,7 @@ class CardStack extends Component {
     animatedSubscribeValue(props.position);
   }
 
-  _reset(resetToIndex: number, duration: number): void {
+  _reset(resetToIndex, duration) {
     Animated.timing(this.props.position, {
       toValue: resetToIndex,
       duration,
@@ -207,7 +165,7 @@ class CardStack extends Component {
     }).start();
   }
 
-  _goBack(backFromIndex: number, duration: number) {
+  _goBack(backFromIndex, duration) {
     const { navigation, position, scenes } = this.props;
     const toValue = Math.max(backFromIndex - 1, 0);
 
@@ -222,7 +180,7 @@ class CardStack extends Component {
       useNativeDriver: position.__isNative,
     }).start(() => {
       this._immediateIndex = null;
-      const backFromScene = scenes.find((s: *) => s.index === toValue + 1);
+      const backFromScene = scenes.find(s => s.index === toValue + 1);
       if (!this._isResponding && backFromScene) {
         navigation.dispatch(
           NavigationActions.back({ key: backFromScene.route.key })
@@ -231,7 +189,7 @@ class CardStack extends Component {
     });
   }
 
-  render(): React.Element<*> {
+  render() {
     let floatingHeader = null;
     const headerMode = this._getHeaderMode();
     if (headerMode === 'float') {
@@ -240,6 +198,8 @@ class CardStack extends Component {
     const { navigation, position, layout, scene, scenes, mode } = this.props;
     const { index } = navigation.state;
     const isVertical = mode === 'modal';
+    const { options } = this._getScreenDetails(scene);
+    const gestureDirectionInverted = options.gestureDirection === 'inverted';
 
     const responder = PanResponder.create({
       onPanResponderTerminate: () => {
@@ -247,15 +207,12 @@ class CardStack extends Component {
         this._reset(index, 0);
       },
       onPanResponderGrant: () => {
-        position.stopAnimation((value: number) => {
+        position.stopAnimation(value => {
           this._isResponding = true;
           this._gestureStartValue = value;
         });
       },
-      onMoveShouldSetPanResponder: (
-        event: { nativeEvent: { pageY: number, pageX: number } },
-        gesture: any
-      ) => {
+      onMoveShouldSetPanResponder: (event, gesture) => {
         if (index !== scene.index) {
           return false;
         }
@@ -270,11 +227,18 @@ class CardStack extends Component {
         const axisHasBeenMeasured = !!axisLength;
 
         // Measure the distance from the touch to the edge of the screen
-        const screenEdgeDistance = currentDragPosition - currentDragDistance;
+        const screenEdgeDistance = gestureDirectionInverted
+          ? axisLength - (currentDragPosition - currentDragDistance)
+          : currentDragPosition - currentDragDistance;
         // Compare to the gesture distance relavant to card or modal
+        const {
+          gestureResponseDistance: userGestureResponseDistance = {},
+        } = this._getScreenDetails(scene).options;
         const gestureResponseDistance = isVertical
-          ? GESTURE_RESPONSE_DISTANCE_VERTICAL
-          : GESTURE_RESPONSE_DISTANCE_HORIZONTAL;
+          ? userGestureResponseDistance.vertical ||
+            GESTURE_RESPONSE_DISTANCE_VERTICAL
+          : userGestureResponseDistance.horizontal ||
+            GESTURE_RESPONSE_DISTANCE_HORIZONTAL;
         // GESTURE_RESPONSE_DISTANCE is about 25 or 30. Or 135 for modals
         if (screenEdgeDistance > gestureResponseDistance) {
           // Reject touches that started in the middle of the screen
@@ -289,7 +253,7 @@ class CardStack extends Component {
           hasDraggedEnough && axisHasBeenMeasured && !isOnFirstCard;
         return shouldSetResponder;
       },
-      onPanResponderMove: (event: any, gesture: any) => {
+      onPanResponderMove: (event, gesture) => {
         // Handle the moving touches for our granted responder
         const startValue = this._gestureStartValue;
         const axis = isVertical ? 'dy' : 'dx';
@@ -297,7 +261,7 @@ class CardStack extends Component {
           ? layout.height.__getValue()
           : layout.width.__getValue();
         const currentValue =
-          I18nManager.isRTL && axis === 'dx'
+          (I18nManager.isRTL && axis === 'dx') !== gestureDirectionInverted
             ? startValue + gesture[axis] / axisDistance
             : startValue - gesture[axis] / axisDistance;
         const value = clamp(index - 1, currentValue, index);
@@ -307,7 +271,7 @@ class CardStack extends Component {
         // Returning false will prevent other views from becoming responder while
         // the navigation view is the responder (mid-gesture)
         false,
-      onPanResponderRelease: (event: any, gesture: any) => {
+      onPanResponderRelease: (event, gesture) => {
         if (!this._isResponding) {
           return;
         }
@@ -320,15 +284,22 @@ class CardStack extends Component {
         const axisDistance = isVertical
           ? layout.height.__getValue()
           : layout.width.__getValue();
-        const movedDistance = gesture[isVertical ? 'dy' : 'dx'];
-        const gestureVelocity = gesture[isVertical ? 'vy' : 'vx'];
+        const movementDirection = gestureDirectionInverted ? -1 : 1;
+        const movedDistance =
+          movementDirection * gesture[isVertical ? 'dy' : 'dx'];
+        const gestureVelocity =
+          movementDirection * gesture[isVertical ? 'vy' : 'vx'];
         const defaultVelocity = axisDistance / ANIMATION_DURATION;
         const velocity = Math.max(Math.abs(gestureVelocity), defaultVelocity);
-        const resetDuration = movedDistance / velocity;
-        const goBackDuration = (axisDistance - movedDistance) / velocity;
+        const resetDuration = gestureDirectionInverted
+          ? (axisDistance - movedDistance) / velocity
+          : movedDistance / velocity;
+        const goBackDuration = gestureDirectionInverted
+          ? movedDistance / velocity
+          : (axisDistance - movedDistance) / velocity;
 
         // To asyncronously get the current animated value, we need to run stopAnimation:
-        position.stopAnimation((value: number) => {
+        position.stopAnimation(value => {
           // If the speed of the gesture release is significant, use that as the indication
           // of intent
           if (gestureVelocity < -0.5) {
@@ -351,7 +322,6 @@ class CardStack extends Component {
       },
     });
 
-    const { options } = this._getScreenDetails(scene);
     const gesturesEnabled =
       typeof options.gesturesEnabled === 'boolean'
         ? options.gesturesEnabled
@@ -366,14 +336,14 @@ class CardStack extends Component {
     return (
       <View {...handlers} style={containerStyle}>
         <View style={styles.scenes}>
-          {scenes.map((s: *) => this._renderCard(s))}
+          {scenes.map(s => this._renderCard(s))}
         </View>
         {floatingHeader}
       </View>
     );
   }
 
-  _getHeaderMode(): HeaderMode {
+  _getHeaderMode() {
     if (this.props.headerMode) {
       return this.props.headerMode;
     }
@@ -383,10 +353,7 @@ class CardStack extends Component {
     return 'float';
   }
 
-  _renderInnerScene(
-    SceneComponent: ReactClass<*>,
-    scene: NavigationScene
-  ): React.Element<any> {
+  _renderInnerScene(SceneComponent, scene) {
     const { navigation } = this._getScreenDetails(scene);
     const { screenProps } = this.props;
     const headerMode = this._getHeaderMode();
@@ -416,7 +383,6 @@ class CardStack extends Component {
   _getTransitionConfig = () => {
     const isModal = this.props.mode === 'modal';
 
-    /* $FlowFixMe */
     return TransitionConfigs.getTransitionConfig(
       this.props.transitionConfig,
       {},
@@ -425,7 +391,7 @@ class CardStack extends Component {
     );
   };
 
-  _renderCard = (scene: NavigationScene): React.Element<*> => {
+  _renderCard = scene => {
     const { screenInterpolator } = this._getTransitionConfig();
     const style =
       screenInterpolator && screenInterpolator({ ...this.props, scene });

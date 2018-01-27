@@ -1,28 +1,11 @@
-/*
- * @flow
- */
-
 import invariant from '../utils/invariant';
 
 import getScreenForRouteName from './getScreenForRouteName';
 import addNavigationHelpers from '../addNavigationHelpers';
 import validateScreenOptions from './validateScreenOptions';
+import getChildEventSubscriber from '../getChildEventSubscriber';
 
-import type {
-  NavigationScreenProp,
-  NavigationAction,
-  NavigationRoute,
-  NavigationStateRoute,
-  NavigationRouteConfigMap,
-  NavigationScreenConfig,
-  NavigationScreenConfigProps,
-} from '../TypeDefinition';
-
-function applyConfig<T: {}>(
-  configurer: ?NavigationScreenConfig<T>,
-  navigationOptions: any,
-  configProps: NavigationScreenConfigProps
-): * {
+function applyConfig(configurer, navigationOptions, configProps) {
   if (typeof configurer === 'function') {
     return {
       ...navigationOptions,
@@ -41,17 +24,12 @@ function applyConfig<T: {}>(
   return navigationOptions;
 }
 
-export default (
-  routeConfigs: NavigationRouteConfigMap,
-  navigatorScreenConfig?: NavigationScreenConfig<*>
-) => (
-  navigation: NavigationScreenProp<NavigationRoute, NavigationAction>,
-  screenProps: *
+export default (routeConfigs, navigatorScreenConfig) => (
+  navigation,
+  screenProps
 ) => {
   const { state, dispatch } = navigation;
   const route = state;
-  // $FlowFixMe
-  const { routes, index } = (route: NavigationStateRoute);
 
   invariant(
     route.routeName && typeof route.routeName === 'string',
@@ -62,20 +40,24 @@ export default (
 
   let outputConfig = {};
 
-  if (Component.router) {
-    invariant(
-      route && routes && index != null,
-      `Expect nav state to have routes and index, ${JSON.stringify(route)}`
-    );
+  const router = Component.router;
+  if (router) {
+    const { routes, index } = route;
+    if (!route || !routes || index == null) {
+      throw new Error(
+        `Expect nav state to have routes and index, ${JSON.stringify(route)}`
+      );
+    }
     const childRoute = routes[index];
     const childNavigation = addNavigationHelpers({
       state: childRoute,
       dispatch,
+      addListener: getChildEventSubscriber(
+        navigation.addListener,
+        childRoute.key
+      ),
     });
-    outputConfig = Component.router.getScreenOptions(
-      childNavigation,
-      screenProps
-    );
+    outputConfig = router.getScreenOptions(childNavigation, screenProps);
   }
 
   const routeConfig = routeConfigs[route.routeName];

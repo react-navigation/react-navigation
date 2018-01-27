@@ -58,15 +58,6 @@ _configureTransition(transitionProps, prevTransitionProps) {
 }
 ```
 
-#### Flow definition
-
-```js
-  configureTransition: (
-    transitionProps: NavigationTransitionProps,
-    prevTransitionProps: ?NavigationTransitionProps,
-  ) => NavigationTransitionSpec,
-```
-
 #### Parameters
 - `transitionProps`: the current [NavigationTransitionProps](https://github.com/react-community/react-navigation/blob/master/src/TypeDefinition.js#L273) created from the current navigation state and props
 - `prevTransitionProps`: the previous [NavigationTransitionProps](https://github.com/react-community/react-navigation/blob/master/src/TypeDefinition.js#L273) created from the previous navigation state and props
@@ -91,16 +82,6 @@ An object with `state` that represents the navigation state, with `routes` and a
 }
 ```
 
-#### Flow definition
-```js
-export type NavigationState = {
-  index: number,
-  routes: Array<NavigationRoute>,
-};
-```
-
-For more information about the `NavigationRoute` type, check out its [flow definition](https://github.com/react-community/react-navigation/blob/master/src/TypeDefinition.js#L32).
-
 ### `render` function
 Invoked from `Transitioner.render()`. This function performs the actual rendering delegated from `Transitioner`. In this function, we can use the information included in the `transitionProps` and `prevTransitionProps` parameters to render scenes, create animations and handle gestures.
 
@@ -108,9 +89,7 @@ There are a few important properties of the `transitionProps` and `prevTransitio
 
 - `scenes: Array<NavigationScene>` - a list of all available scenes
 - `position: NavigationAnimatedValue` - the progressive index of the transitioner's navigation state
-- `progress: NavigationAnimatedValue` - the value that represents the progress of the transition when navigation state changes from one to another. Its numberic value will range from 0 to 1.
-
-For the complete list of properties of `NavigationTransitionProps`, check out its [flow definition](https://github.com/react-community/react-navigation/blob/master/src/TypeDefinition.js#L273).
+- `progress: NavigationAnimatedValue` - the value that represents the progress of the transition when navigation state changes from one to another. Its numeric value will range from 0 to 1.
 
 #### Examples
 
@@ -151,11 +130,6 @@ The above code creates a cross fade animation during transition.
 
 For a comprehensive tutorial on how to create custom transitions, see this [blog post](http://www.reactnativediary.com/2016/12/20/navigation-experimental-custom-transition-1.html).
 
-#### Flow definition
-```js
-render: (transitionProps: NavigationTransitionProps, prevTransitionProps: ?NavigationTransitionProps) => React.Element<*>,
-```
-
 #### Parameters
 - `transitionProps`: the current [NavigationTransitionProps](https://github.com/react-community/react-navigation/blob/master/src/TypeDefinition.js#L273) created from the current state and props
 - `prevTransitionProps`: the previous [NavigationTransitionProps](https://github.com/react-community/react-navigation/blob/master/src/TypeDefinition.js#L273) created from the previous state and props
@@ -166,24 +140,20 @@ render: (transitionProps: NavigationTransitionProps, prevTransitionProps: ?Navig
 ### `onTransitionStart` function
 Invoked when the transition animation is about to start.
 
-#### Flow definition
-```js
-onTransitionStart: (transitionProps: NavigationTransitionProps, prevTransitionProps: ?NavigationTransitionProps) => void,
-```
+If you return a promise from `onTransitionStart`, the transition animation will begin after the promise is resolved.
+
 #### Parameters
 - `transitionProps`: the current [NavigationTransitionProps](https://github.com/react-community/react-navigation/blob/master/src/TypeDefinition.js#L273) created from the current state and props
 - `prevTransitionProps`: the previous [NavigationTransitionProps](https://github.com/react-community/react-navigation/blob/master/src/TypeDefinition.js#L273) created from the previous state and props
 
 #### Returns
-- none.
+- `Promise` to delay the start of the transition animation, or none to begin the transition animation immediately.
 
 ### `onTransitionEnd` function
 Invoked once the transition animation completes.
 
-#### Flow definition
-```js
-onTransitionEnd: () => void
-```
+If you return a promise from `onTransitionEnd`, any queued transition animations will begin after the promise is resolved.
+
 #### Parameters
 - none.
 

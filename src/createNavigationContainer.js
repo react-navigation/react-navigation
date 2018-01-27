@@ -1,34 +1,8 @@
-/* @flow */
-
 import React from 'react';
-import invariant from './utils/invariant';
 import { BackHandler, Linking } from './PlatformHelpers';
 import NavigationActions from './NavigationActions';
 import addNavigationHelpers from './addNavigationHelpers';
-
-import type {
-  NavigationRoute,
-  NavigationAction,
-  NavigationState,
-  NavigationScreenProp,
-  NavigationNavigatorProps,
-  NavigationNavigator,
-} from './TypeDefinition';
-
-type NavigationContainerProps = {
-  uriPrefix?: string | RegExp,
-  onNavigationStateChange?: (
-    NavigationState,
-    NavigationState,
-    NavigationAction
-  ) => void,
-};
-
-type Props<O, S> = NavigationContainerProps & NavigationNavigatorProps<O, S>;
-
-type State = {
-  nav: ?NavigationState,
-};
+import invariant from './utils/invariant';
 
 /**
  * Create an HOC that injects the navigation and manages the navigation state
@@ -36,20 +10,16 @@ type State = {
  * This allows to use e.g. the StackNavigator and TabNavigator as root-level
  * components.
  */
-export default function createNavigationContainer<S: *, O>(
-  Component: NavigationNavigator<*, S, *, O>
-) {
-  class NavigationContainer extends React.Component<void, Props<O, S>, State> {
-    state: State;
-    props: Props<O, S>;
-
-    subs: ?{
-      remove: () => void,
-    } = null;
+export default function createNavigationContainer(Component) {
+  class NavigationContainer extends React.Component {
+    subs = null;
 
     static router = Component.router;
+    static navigationOptions = null;
 
-    constructor(props: Props<O, S>) {
+    _actionEventSubscribers = new Set();
+
+    constructor(props) {
       super(props);
 
       this._validateProps(props);
@@ -61,11 +31,11 @@ export default function createNavigationContainer<S: *, O>(
       };
     }
 
-    _isStateful(): boolean {
+    _isStateful() {
       return !this.props.navigation;
     }
 
-    _validateProps(props: Props<O, S>) {
+    _validateProps(props) {
       if (this._isStateful()) {
         return;
       }
@@ -74,23 +44,26 @@ export default function createNavigationContainer<S: *, O>(
 
       const keys = Object.keys(containerProps);
 
-      invariant(
-        keys.length === 0,
-        'This navigator has both navigation and container props, so it is ' +
-          `unclear if it should own its own state. Remove props: "${keys.join(
-            ', '
-          )}" ` +
-          'if the navigator should get its state from the navigation prop. If the ' +
-          'navigator should maintain its own state, do not pass a navigation prop.'
-      );
+      if (keys.length !== 0) {
+        throw new Error(
+          'This navigator has both navigation and container props, so it is ' +
+            `unclear if it should own its own state. Remove props: "${keys.join(
+              ', '
+            )}" ` +
+            'if the navigator should get its state from the navigation prop. If the ' +
+            'navigator should maintain its own state, do not pass a navigation prop.'
+        );
+      }
     }
 
-    _urlToPathAndParams(url: string) {
+    _urlToPathAndParams(url) {
       const params = {};
       const delimiter = this.props.uriPrefix || '://';
       let path = url.split(delimiter)[1];
       if (typeof path === 'undefined') {
         path = url;
+      } else if (path === '') {
+        path = '/';
       }
       return {
         path,
@@ -98,7 +71,7 @@ export default function createNavigationContainer<S: *, O>(
       };
     }
 
-    _handleOpenURL = (url: string) => {
+    _handleOpenURL = ({ url }) => {
       const parsedUrl = this._urlToPathAndParams(url);
       if (parsedUrl) {
         const { path, params } = parsedUrl;
@@ -109,11 +82,7 @@ export default function createNavigationContainer<S: *, O>(
       }
     };
 
-    _onNavigationStateChange(
-      prevNav: NavigationState,
-      nav: NavigationState,
-      action: NavigationAction
-    ) {
+    _onNavigationStateChange(prevNav, nav, action) {
       if (
         typeof this.props.onNavigationStateChange === 'undefined' &&
         this._isStateful() &&
@@ -142,8 +111,15 @@ export default function createNavigationContainer<S: *, O>(
       }
     }
 
-    componentWillReceiveProps(nextProps: *) {
+    componentWillReceiveProps(nextProps) {
       this._validateProps(nextProps);
+    }
+
+    componentDidUpdate() {
+      // Clear cached _nav every tick
+      if (this._nav === this.state.nav) {
+        this._nav = null;
+      }
     }
 
     componentDidMount() {
@@ -155,13 +131,9 @@ export default function createNavigationContainer<S: *, O>(
         this.dispatch(NavigationActions.back())
       );
 
-      Linking.addEventListener('url', ({ url }: { url: string }) => {
-        this._handleOpenURL(url);
-      });
+      Linking.addEventListener('url', this._handleOpenURL);
 
-      Linking.getInitialURL().then(
-        (url: ?string) => url && this._handleOpenURL(url)
-      );
+      Linking.getInitialURL().then(url => url && this._handleOpenURL({ url }));
     }
 
     componentWillUnmount() {
@@ -169,34 +141,67 @@ export default function createNavigationContainer<S: *, O>(
       this.subs && this.subs.remove();
     }
 
-    dispatch = (action: NavigationAction) => {
-      const { state } = this;
+    // Per-tick temporary storage for state.nav
+
+    dispatch = inputAction => {
+      const action = NavigationActions.mapDeprecatedActionAndWarn(inputAction);
       if (!this._isStateful()) {
         return false;
       }
-      const nav = Component.router.getStateForAction(action, state.nav);
-      if (nav && nav !== state.nav) {
-        this.setState({ nav }, () =>
-          this._onNavigationStateChange(state.nav, nav, action)
+      this._nav = this._nav || this.state.nav;
+      const oldNav = this._nav;
+      invariant(oldNav, 'should be set in constructor if stateful');
+      const nav = Component.router.getStateForAction(action, oldNav);
+      const dispatchActionEvents = () => {
+        this._actionEventSubscribers.forEach(subscriber =>
+          // $FlowFixMe - Payload should probably understand generic state type
+          subscriber({
+            type: 'action',
+            action,
+            state: nav,
+            lastState: oldNav,
+          })
         );
+      };
+      if (nav && nav !== oldNav) {
+        // Cache updates to state.nav during the tick to ensure that subsequent calls will not discard this change
+        this._nav = nav;
+        this.setState({ nav }, () => {
+          this._onNavigationStateChange(oldNav, nav, action);
+          dispatchActionEvents();
+        });
         return true;
+      } else {
+        dispatchActionEvents();
       }
       return false;
     };
 
-    _navigation: ?NavigationScreenProp<NavigationRoute, NavigationAction>;
-
     render() {
       let navigation = this.props.navigation;
       if (this._isStateful()) {
-        if (!this._navigation || this._navigation.state !== this.state.nav) {
+        const nav = this.state.nav;
+        invariant(nav, 'should be set in constructor if stateful');
+        if (!this._navigation || this._navigation.state !== nav) {
           this._navigation = addNavigationHelpers({
             dispatch: this.dispatch,
-            state: this.state.nav,
+            state: nav,
+            addListener: (eventName, handler) => {
+              if (eventName !== 'action') {
+                return { remove: () => {} };
+              }
+              this._actionEventSubscribers.add(handler);
+              return {
+                remove: () => {
+                  this._actionEventSubscribers.delete(handler);
+                },
+              };
+            },
           });
         }
         navigation = this._navigation;
       }
+      invariant(navigation, 'failed to get navigation');
       return <Component {...this.props} navigation={navigation} />;
     }
   }

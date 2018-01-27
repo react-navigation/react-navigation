@@ -3,19 +3,22 @@
  */
 
 import React from 'react';
-import { Button, Platform, ScrollView, StyleSheet } from 'react-native';
-import { DrawerNavigator } from 'react-navigation';
+import { Button, Platform, ScrollView, StatusBar } from 'react-native';
+import { DrawerNavigator, SafeAreaView } from 'react-navigation';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import SampleText from './SampleText';
 
 const MyNavScreen = ({ navigation, banner }) => (
-  <ScrollView style={styles.container}>
-    <SampleText>{banner}</SampleText>
-    <Button
-      onPress={() => navigation.navigate('DrawerOpen')}
-      title="Open drawer"
-    />
-    <Button onPress={() => navigation.goBack(null)} title="Go back" />
+  <ScrollView>
+    <SafeAreaView forceInset={{ top: 'always' }}>
+      <SampleText>{banner}</SampleText>
+      <Button
+        onPress={() => navigation.navigate('DrawerOpen')}
+        title="Open drawer"
+      />
+      <Button onPress={() => navigation.goBack(null)} title="Go back" />
+    </SafeAreaView>
+    <StatusBar barStyle="default" />
   </ScrollView>
 );
 
@@ -55,17 +58,14 @@ const DrawerExample = DrawerNavigator(
     },
   },
   {
+    drawerOpenRoute: 'DrawerOpen',
+    drawerCloseRoute: 'DrawerClose',
+    drawerToggleRoute: 'DrawerToggle',
     initialRouteName: 'Drafts',
     contentOptions: {
       activeTintColor: '#e91e63',
     },
   }
 );
-
-const styles = StyleSheet.create({
-  container: {
-    marginTop: Platform.OS === 'ios' ? 20 : 0,
-  },
-});
 
 export default DrawerExample;
