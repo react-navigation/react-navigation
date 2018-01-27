@@ -23,6 +23,7 @@ import Drawer from './Drawer';
 import MultipleDrawer from './MultipleDrawer';
 import TabsInDrawer from './TabsInDrawer';
 import ModalStack from './ModalStack';
+import ResetNestedNavigators from './ResetNestedNavigators';
 import StacksInTabs from './StacksInTabs';
 import StacksOverTabs from './StacksOverTabs';
 import SimpleStack from './SimpleStack';
@@ -75,6 +76,11 @@ const ExampleRoutes = {
         ? 'Stack navigation with modals'
         : 'Dynamically showing and hiding the header',
     screen: ModalStack,
+  },
+  ResetNestedNavigators: {
+    name: 'Reset nested navigators',
+    description: 'Nested stack navigation in tabs with reset message',
+    screen: ResetNestedNavigators,
   },
   StacksInTabs: {
     name: 'Stacks in Tabs',
