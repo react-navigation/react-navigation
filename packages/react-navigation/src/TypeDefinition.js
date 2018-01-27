@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import type { StyleObj } from 'react-native/Libraries/StyleSheet/StyleSheetTypes';
 
-import { Animated } from 'react-native';
+import { Animated, Image } from 'react-native';
 
 export type ViewStyleProp = StyleObj;
 export type TextStyleProp = StyleObj;
@@ -315,6 +315,7 @@ export type NavigationStackScreenOptions = NavigationScreenOptions & {
   headerTintColor?: string,
   headerLeft?: React.Node | React.ComponentType<any>,
   headerBackTitle?: string,
+  headerBackImage?: Image.propTypes.source,
   headerTruncatedBackTitle?: string,
   headerBackTitleStyle?: TextStyleProp,
   headerPressColorAndroid?: string,

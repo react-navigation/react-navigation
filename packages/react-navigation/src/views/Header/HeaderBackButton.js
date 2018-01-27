@@ -17,6 +17,8 @@ class HeaderBackButton extends React.PureComponent {
       ios: '#037aff',
     }),
     truncatedTitle: 'Back',
+    // eslint-disable-next-line global-require
+    buttonImage: require('../assets/back-icon.png'),
   };
 
   state = {};
@@ -32,6 +34,7 @@ class HeaderBackButton extends React.PureComponent {
 
   render() {
     const {
+      buttonImage,
       onPress,
       pressColorAndroid,
       width,
@@ -47,9 +50,6 @@ class HeaderBackButton extends React.PureComponent {
         : false;
 
     const backButtonTitle = renderTruncated ? truncatedTitle : title;
-
-    // eslint-disable-next-line global-require
-    const asset = require('../assets/back-icon.png');
 
     return (
       <TouchableItem
@@ -70,7 +70,7 @@ class HeaderBackButton extends React.PureComponent {
               !!title && styles.iconWithTitle,
               !!tintColor && { tintColor },
             ]}
-            source={asset}
+            source={buttonImage}
           />
           {Platform.OS === 'ios' &&
             typeof backButtonTitle === 'string' && (

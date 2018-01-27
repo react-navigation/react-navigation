@@ -141,6 +141,7 @@ class Header extends React.PureComponent {
         onPress={this._navigateBack}
         pressColorAndroid={options.headerPressColorAndroid}
         tintColor={options.headerTintColor}
+        buttonImage={options.headerBackImage}
         title={backButtonTitle}
         truncatedTitle={truncatedBackButtonTitle}
         titleStyle={options.headerBackTitleStyle}
