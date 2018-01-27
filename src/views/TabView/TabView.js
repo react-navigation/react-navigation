@@ -64,13 +64,15 @@ class TabView extends React.PureComponent {
     return options.tabBarOnPress;
   };
 
-  _getTestIDProps = ({ route }) => {
+  _getTestIDProps = ({ route, focused }) => {
     const options = this.props.router.getScreenOptions(
       this.props.childNavigationProps[route.key],
       this.props.screenProps || {}
     );
 
-    return options.tabBarTestIDProps;
+    return typeof options.tabBarTestIDProps === 'function'
+      ? options.tabBarTestIDProps({ focused })
+      : options.tabBarTestIDProps;
   };
 
   _renderIcon = ({ focused, route, tintColor }) => {
