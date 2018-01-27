@@ -13,17 +13,51 @@ export const AppNavigator = StackNavigator({
   Profile: { screen: ProfileScreen },
 });
 
-const AppWithNavigationState = ({ dispatch, nav }) => (
-  <AppNavigator navigation={addNavigationHelpers({ dispatch, state: nav })} />
-);
+class AppWithNavigationState extends React.Component {
+  static propTypes = {
+    dispatch: PropTypes.func.isRequired,
+    nav: PropTypes.object.isRequired,
+  };
 
-AppWithNavigationState.propTypes = {
-  dispatch: PropTypes.func.isRequired,
-  nav: PropTypes.object.isRequired,
-};
+  _actionEventSubscribers = new Set();
+
+  _addListener = (eventName, handler) => {
+    eventName === 'action' && this._actionEventSubscribers.add(handler);
+    return {
+      remove: () => {
+        this._actionEventSubscribers.delete(handler);
+      },
+    };
+  };
+
+  componentDidUpdate(lastProps) {
+    const lastState = lastProps.nav;
+    this._actionEventSubscribers.forEach(subscriber => {
+      subscriber({
+        lastState: lastProps.nav,
+        state: this.props.nav,
+        action: this.props.lastAction,
+      });
+    });
+  }
+
+  render() {
+    const { dispatch, nav } = this.props;
+    return (
+      <AppNavigator
+        navigation={addNavigationHelpers({
+          dispatch,
+          state: nav,
+          addListener: this._addListener,
+        })}
+      />
+    );
+  }
+}
 
 const mapStateToProps = state => ({
   nav: state.nav,
+  lastAction: state.lastAction,
 });
 
 export default connect(mapStateToProps)(AppWithNavigationState);
