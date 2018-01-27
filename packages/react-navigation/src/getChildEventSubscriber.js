@@ -32,13 +32,12 @@ export default function getChildEventSubscriber(addListener, key) {
     const subscribers = getChildSubscribers(payload.type);
     subscribers &&
       subscribers.forEach(subs => {
-        // $FlowFixMe - Payload should probably understand generic state type
         subs(payload);
       });
   };
 
-  let isSelfFocused = false;
-
+  let isParentFocused = true;
+  let isChildFocused = false;
   const cleanup = () => {
     upstreamSubscribers.forEach(subs => subs && subs.remove());
   };
@@ -54,74 +53,112 @@ export default function getChildEventSubscriber(addListener, key) {
   const upstreamSubscribers = upstreamEvents.map(eventName =>
     addListener(eventName, payload => {
       const { state, lastState, action } = payload;
-      const lastFocusKey = lastState && lastState.routes[lastState.index].key;
-      const focusKey = state && state.routes[state.index].key;
+      const lastRoutes = lastState && lastState.routes;
+      const routes = state && state.routes;
+      const lastFocusKey =
+        lastState && lastState.routes && lastState.routes[lastState.index].key;
+      const focusKey = routes && routes[state.index].key;
 
       const isFocused = focusKey === key;
       const wasFocused = lastFocusKey === key;
       const lastRoute =
-        lastState && lastState.routes.find(route => route.key === key);
-      const newRoute = state && state.routes.find(route => route.key === key);
+        lastRoutes && lastRoutes.find(route => route.key === key);
+      const newRoute = routes && routes.find(route => route.key === key);
+      const eventContext = payload.context || 'Root';
       const childPayload = {
+        context: `${key}:${action.type}_${eventContext}`,
         state: newRoute,
         lastState: lastRoute,
         action,
         type: eventName,
       };
 
-      const didNavigate =
-        (lastState && lastState.isTransitioning) !==
-        (state && state.isTransitioning);
-
       const isTransitioning = !!state && state.isTransitioning;
       const wasTransitioning = !!lastState && lastState.isTransitioning;
       const didStartTransitioning = !wasTransitioning && isTransitioning;
       const didFinishTransitioning = wasTransitioning && !isTransitioning;
-
+      const wasChildFocused = isChildFocused;
       if (eventName !== 'action') {
         switch (eventName) {
           case 'didFocus':
-            isSelfFocused = true;
+            isParentFocused = true;
             break;
           case 'didBlur':
-            isSelfFocused = false;
+            isParentFocused = false;
             break;
         }
-        emit(childPayload);
+        if (isFocused && eventName === 'willFocus') {
+          emit(childPayload);
+        }
+        if (isFocused && !isTransitioning && eventName === 'didFocus') {
+          emit(childPayload);
+          isChildFocused = true;
+        }
+        if (isFocused && eventName === 'willBlur') {
+          emit(childPayload);
+        }
+        if (isFocused && !isTransitioning && eventName === 'didBlur') {
+          emit(childPayload);
+        }
         return;
       }
 
       // now we're exclusively handling the "action" event
+      if (!isParentFocused) {
+        return;
+      }
 
-      if (newRoute) {
-        // fire this event to pass navigation events to children subscribers
+      if (isChildFocused && newRoute) {
+        // fire this action event to pass navigation events to children subscribers
         emit(childPayload);
       }
-      if (isFocused && didStartTransitioning && !isSelfFocused) {
+      if (isFocused && didStartTransitioning && !isChildFocused) {
         emit({
           ...childPayload,
           type: 'willFocus',
         });
       }
-      if (isFocused && didFinishTransitioning && !isSelfFocused) {
+      if (isFocused && didFinishTransitioning && !isChildFocused) {
         emit({
           ...childPayload,
           type: 'didFocus',
         });
-        isSelfFocused = true;
+        isChildFocused = true;
       }
-      if (!isFocused && didStartTransitioning && isSelfFocused) {
+      if (isFocused && !isChildFocused && !didStartTransitioning) {
+        emit({
+          ...childPayload,
+          type: 'willFocus',
+        });
+        emit({
+          ...childPayload,
+          type: 'didFocus',
+        });
+        isChildFocused = true;
+      }
+      if (!isFocused && didStartTransitioning && isChildFocused) {
         emit({
           ...childPayload,
           type: 'willBlur',
         });
       }
-      if (!isFocused && didFinishTransitioning && isSelfFocused) {
+      if (!isFocused && didFinishTransitioning && isChildFocused) {
         emit({
           ...childPayload,
           type: 'didBlur',
         });
-        isSelfFocused = false;
+        isChildFocused = false;
+      }
+      if (!isFocused && isChildFocused && !didStartTransitioning) {
+        emit({
+          ...childPayload,
+          type: 'willBlur',
+        });
+        emit({
+          ...childPayload,
+          type: 'didBlur',
+        });
+        isChildFocused = false;
       }
     })
   );

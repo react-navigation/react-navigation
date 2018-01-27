@@ -36,6 +36,10 @@ function nav(state = initialNavState, action) {
   return nextState || state;
 }
 
+function lastAction(state = null, action) {
+  return action;
+}
+
 const initialAuthState = { isLoggedIn: false };
 
 function auth(state = initialAuthState, action) {
@@ -50,6 +54,7 @@ function auth(state = initialAuthState, action) {
 }
 
 const AppReducer = combineReducers({
+  lastAction,
   nav,
   auth,
 });

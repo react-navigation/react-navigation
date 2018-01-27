@@ -45,35 +45,69 @@ MyHomeScreen.navigationOptions = {
   ),
 };
 
-const MyPeopleScreen = ({ navigation }) => (
-  <MyNavScreen banner="People Tab" navigation={navigation} />
-);
+class MyPeopleScreen extends React.Component {
+  static navigationOptions = {
+    tabBarLabel: 'People',
+    tabBarIcon: ({ tintColor, focused }) => (
+      <Ionicons
+        name={focused ? 'ios-people' : 'ios-people-outline'}
+        size={26}
+        style={{ color: tintColor }}
+      />
+    ),
+  };
+  componentDidMount() {
+    this._s0 = this.props.navigation.addListener('willFocus', this._onEvent);
+    this._s1 = this.props.navigation.addListener('didFocus', this._onEvent);
+    this._s2 = this.props.navigation.addListener('willBlur', this._onEvent);
+    this._s3 = this.props.navigation.addListener('didBlur', this._onEvent);
+  }
+  componentWillUnmount() {
+    this._s0.remove();
+    this._s1.remove();
+    this._s2.remove();
+    this._s3.remove();
+  }
+  _onEvent = a => {
+    console.log('EVENT ON PEOPLE TAB', a.type, a);
+  };
+  render() {
+    const { navigation } = this.props;
+    return <MyNavScreen banner="People Tab" navigation={navigation} />;
+  }
+}
 
-MyPeopleScreen.navigationOptions = {
-  tabBarLabel: 'People',
-  tabBarIcon: ({ tintColor, focused }) => (
-    <Ionicons
-      name={focused ? 'ios-people' : 'ios-people-outline'}
-      size={26}
-      style={{ color: tintColor }}
-    />
-  ),
-};
-
-const MyChatScreen = ({ navigation }) => (
-  <MyNavScreen banner="Chat Tab" navigation={navigation} />
-);
-
-MyChatScreen.navigationOptions = {
-  tabBarLabel: 'Chat',
-  tabBarIcon: ({ tintColor, focused }) => (
-    <Ionicons
-      name={focused ? 'ios-chatboxes' : 'ios-chatboxes-outline'}
-      size={26}
-      style={{ color: tintColor }}
-    />
-  ),
-};
+class MyChatScreen extends React.Component {
+  static navigationOptions = {
+    tabBarLabel: 'Chat',
+    tabBarIcon: ({ tintColor, focused }) => (
+      <Ionicons
+        name={focused ? 'ios-chatboxes' : 'ios-chatboxes-outline'}
+        size={26}
+        style={{ color: tintColor }}
+      />
+    ),
+  };
+  componentDidMount() {
+    this._s0 = this.props.navigation.addListener('willFocus', this._onEvent);
+    this._s1 = this.props.navigation.addListener('didFocus', this._onEvent);
+    this._s2 = this.props.navigation.addListener('willBlur', this._onEvent);
+    this._s3 = this.props.navigation.addListener('didBlur', this._onEvent);
+  }
+  componentWillUnmount() {
+    this._s0.remove();
+    this._s1.remove();
+    this._s2.remove();
+    this._s3.remove();
+  }
+  _onEvent = a => {
+    console.log('EVENT ON CHAT TAB', a.type, a);
+  };
+  render() {
+    const { navigation } = this.props;
+    return <MyNavScreen banner="Chat Tab" navigation={navigation} />;
+  }
+}
 
 const MySettingsScreen = ({ navigation }) => (
   <MyNavScreen banner="Settings Tab" navigation={navigation} />
@@ -128,10 +162,10 @@ class SimpleTabsContainer extends React.Component<SimpleTabsContainerProps> {
   _s3: EventListener;
 
   componentDidMount() {
-    this._s0 = this.props.navigation.addListener('willFocus', this._onWF);
-    this._s1 = this.props.navigation.addListener('didFocus', this._onDF);
-    this._s2 = this.props.navigation.addListener('willBlur', this._onWB);
-    this._s3 = this.props.navigation.addListener('didBlur', this._onDB);
+    this._s0 = this.props.navigation.addListener('willFocus', this._onAction);
+    this._s1 = this.props.navigation.addListener('didFocus', this._onAction);
+    this._s2 = this.props.navigation.addListener('willBlur', this._onAction);
+    this._s3 = this.props.navigation.addListener('didBlur', this._onAction);
   }
   componentWillUnmount() {
     this._s0.remove();
@@ -139,17 +173,8 @@ class SimpleTabsContainer extends React.Component<SimpleTabsContainerProps> {
     this._s2.remove();
     this._s3.remove();
   }
-  _onWF = a => {
-    console.log('_onWillFocus tabsExample ', a);
-  };
-  _onDF = a => {
-    console.log('_onDidFocus tabsExample ', a);
-  };
-  _onWB = a => {
-    console.log('_onWillBlur tabsExample ', a);
-  };
-  _onDB = a => {
-    console.log('_onDidBlur tabsExample ', a);
+  _onAction = a => {
+    console.log('TABS EVENT', a.type, a);
   };
   render() {
     return <SimpleTabs navigation={this.props.navigation} />;
