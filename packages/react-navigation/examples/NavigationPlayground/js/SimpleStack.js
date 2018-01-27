@@ -2,12 +2,19 @@
  * @flow
  */
 
-import React from 'react';
+import type { NavigationScreenProp, EventListener } from 'react-navigation';
+
+import * as React from 'react';
 import { Button, ScrollView, StatusBar } from 'react-native';
 import { StackNavigator, SafeAreaView } from 'react-navigation';
 import SampleText from './SampleText';
 
-class MyNavScreen extends React.Component {
+type MyNavScreenProps = {
+  navigation: NavigationScreenProp<*>,
+  banner: React.Node,
+};
+
+class MyNavScreen extends React.Component<MyNavScreenProps> {
   render() {
     const { navigation, banner } = this.props;
     return (
@@ -28,10 +35,19 @@ class MyNavScreen extends React.Component {
   }
 }
 
-class MyHomeScreen extends React.Component {
+type MyHomeScreenProps = {
+  navigation: NavigationScreenProp<*>,
+};
+
+class MyHomeScreen extends React.Component<MyHomeScreenProps> {
   static navigationOptions = {
     title: 'Welcome',
   };
+  _s0: EventListener;
+  _s1: EventListener;
+  _s2: EventListener;
+  _s3: EventListener;
+
   componentDidMount() {
     this._s0 = this.props.navigation.addListener('willFocus', this._onWF);
     this._s1 = this.props.navigation.addListener('didFocus', this._onDF);
@@ -63,10 +79,18 @@ class MyHomeScreen extends React.Component {
   }
 }
 
-class MyPhotosScreen extends React.Component {
+type MyPhotosScreenProps = {
+  navigation: NavigationScreenProp<*>,
+};
+class MyPhotosScreen extends React.Component<MyPhotosScreenProps> {
   static navigationOptions = {
     title: 'Photos',
   };
+  _s0: EventListener;
+  _s1: EventListener;
+  _s2: EventListener;
+  _s3: EventListener;
+
   componentDidMount() {
     this._s0 = this.props.navigation.addListener('willFocus', this._onWF);
     this._s1 = this.props.navigation.addListener('didFocus', this._onDF);
