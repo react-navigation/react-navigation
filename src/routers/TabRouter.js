@@ -100,12 +100,12 @@ export default (routeConfigs, config = {}) => {
       let activeTabIndex = state.index;
       const isBackEligible =
         action.key == null || action.key === activeTabLastState.key;
-      if (
-        action.type === NavigationActions.BACK &&
-        isBackEligible &&
-        shouldBackNavigateToInitialRoute
-      ) {
-        activeTabIndex = initialRouteIndex;
+      if (action.type === NavigationActions.BACK) {
+        if (isBackEligible && shouldBackNavigateToInitialRoute) {
+          activeTabIndex = initialRouteIndex;
+        } else {
+          return state;
+        }
       }
       let didNavigate = false;
       if (action.type === NavigationActions.NAVIGATE) {
