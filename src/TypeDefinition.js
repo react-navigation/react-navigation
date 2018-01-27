@@ -2,8 +2,6 @@
 
 import * as React from 'react';
 
-import type { TabScene } from './views/TabView/TabView';
-
 import type { StyleObj } from 'react-native/Libraries/StyleSheet/StyleSheetTypes';
 
 import { Animated } from 'react-native';
@@ -362,6 +360,13 @@ export type NavigationTabRouterConfig = {
   backBehavior?: 'none' | 'initialRoute', // defaults `initialRoute`
 };
 
+type TabScene = {
+  route: NavigationRoute,
+  focused: boolean,
+  index: number,
+  tintColor?: ?string,
+};
+
 export type NavigationTabScreenOptions = {|
   ...$Exact<NavigationScreenOptions>,
   tabBarIcon?:
@@ -407,6 +412,10 @@ export type NavigationProp<S> = {
   dispatch: NavigationDispatch,
 };
 
+export type EventListener = {
+  remove: () => void,
+};
+
 export type NavigationScreenProp<+S> = {
   +state: S,
   dispatch: NavigationDispatch,
@@ -417,6 +426,7 @@ export type NavigationScreenProp<+S> = {
     action?: NavigationNavigateAction
   ) => boolean,
   setParams: (newParams: NavigationParams) => boolean,
+  addListener: (eventName: string, callback: Function) => EventListener,
 };
 
 export type NavigationNavigatorProps<O: {}, S: {}> = {

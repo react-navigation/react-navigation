@@ -2,6 +2,8 @@
  * @flow
  */
 
+import type { NavigationScreenProp, EventListener } from 'react-navigation';
+
 import React from 'react';
 import { Button, Platform, ScrollView, StatusBar, View } from 'react-native';
 import { SafeAreaView, TabNavigator } from 'react-navigation';
@@ -114,4 +116,44 @@ const SimpleTabs = TabNavigator(
   }
 );
 
-export default SimpleTabs;
+type SimpleTabsContainerProps = {
+  navigation: NavigationScreenProp<*>,
+};
+
+class SimpleTabsContainer extends React.Component<SimpleTabsContainerProps> {
+  static router = SimpleTabs.router;
+  _s0: EventListener;
+  _s1: EventListener;
+  _s2: EventListener;
+  _s3: EventListener;
+
+  componentDidMount() {
+    this._s0 = this.props.navigation.addListener('willFocus', this._onWF);
+    this._s1 = this.props.navigation.addListener('didFocus', this._onDF);
+    this._s2 = this.props.navigation.addListener('willBlur', this._onWB);
+    this._s3 = this.props.navigation.addListener('didBlur', this._onDB);
+  }
+  componentWillUnmount() {
+    this._s0.remove();
+    this._s1.remove();
+    this._s2.remove();
+    this._s3.remove();
+  }
+  _onWF = a => {
+    console.log('_onWillFocus tabsExample ', a);
+  };
+  _onDF = a => {
+    console.log('_onDidFocus tabsExample ', a);
+  };
+  _onWB = a => {
+    console.log('_onWillBlur tabsExample ', a);
+  };
+  _onDB = a => {
+    console.log('_onDidBlur tabsExample ', a);
+  };
+  render() {
+    return <SimpleTabs navigation={this.props.navigation} />;
+  }
+}
+
+export default SimpleTabsContainer;
