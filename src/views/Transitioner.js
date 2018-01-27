@@ -124,7 +124,8 @@ class Transitioner extends React.Component {
     // This is important because the stack navigator fires the completion prop when
     // the transition is ended.
     if (!animations.length) {
-      this.setState(nextState, this._onTransitionEnd);
+      this._isTransitionRunning = false;
+      this.setState(nextState);
       return;
     }
 
