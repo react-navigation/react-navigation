@@ -353,6 +353,7 @@ export type StackNavigatorConfig = {
 
 export type NavigationTabRouterConfig = {
   initialRouteName?: string,
+  initialRouteParams?: NavigationParams,
   paths?: NavigationPathsConfig,
   navigationOptions?: NavigationScreenConfig<*>,
   order?: Array<string>, // todo: type these as the real route names rather than 'string'
