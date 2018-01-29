@@ -12,6 +12,7 @@ export default (routeConfigs, config = {}) => {
 
   const order = config.order || Object.keys(routeConfigs);
   const paths = config.paths || {};
+  const initialRouteParams = config.initialRouteParams;
   const initialRouteName = config.initialRouteName || order[0];
   const initialRouteIndex = order.indexOf(initialRouteName);
   const backBehavior = config.backBehavior || 'initialRoute';
@@ -38,6 +39,8 @@ export default (routeConfigs, config = {}) => {
       let state = inputState;
       if (!state) {
         const routes = order.map(routeName => {
+          const params =
+            routeName === initialRouteName ? initialRouteParams : undefined;
           const tabRouter = tabRouters[routeName];
           if (tabRouter) {
             const childAction = NavigationActions.init();
@@ -45,11 +48,13 @@ export default (routeConfigs, config = {}) => {
               ...tabRouter.getStateForAction(childAction),
               key: routeName,
               routeName,
+              params,
             };
           }
           return {
             key: routeName,
             routeName,
+            params,
           };
         });
         state = {
@@ -69,6 +74,9 @@ export default (routeConfigs, config = {}) => {
             params: {
               ...route.params,
               ...params,
+              ...(route.routeName === initialRouteName
+                ? initialRouteParams
+                : null),
             },
           }));
         }
