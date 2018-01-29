@@ -38,6 +38,14 @@ import TransitionConfigs from './TransitionConfigs';
 
 const emptyFunction = () => {};
 
+let _easeInOut;
+function easeInOut() {
+  if (!_easeInOut) {
+    _easeInOut = Easing.inOut(Easing.ease);
+  }
+  return _easeInOut;
+}
+
 type Props = {
   screenProps?: {},
   headerMode: HeaderMode,
@@ -64,7 +72,7 @@ type Props = {
 
 /**
  * The max duration of the card animation in milliseconds after released gesture.
- * The actual duration should be always less then that because the rest distance 
+ * The actual duration should be always less then that because the rest distance
  * is always less then the full distance of the layout.
  */
 const ANIMATION_DURATION = 500;
@@ -202,7 +210,7 @@ class CardStack extends React.Component<Props> {
     Animated.timing(this.props.position, {
       toValue: resetToIndex,
       duration,
-      easing: Easing.linear(),
+      easing: easeInOut(),
       useNativeDriver: this.props.position.__isNative,
     }).start();
   }
@@ -218,7 +226,7 @@ class CardStack extends React.Component<Props> {
     Animated.timing(position, {
       toValue,
       duration,
-      easing: Easing.linear(),
+      easing: easeInOut(),
       useNativeDriver: position.__isNative,
     }).start(() => {
       this._immediateIndex = null;
