@@ -2,7 +2,10 @@
  * @flow
  */
 
-import type { NavigationScreenProp, EventListener } from 'react-navigation';
+import type {
+  NavigationScreenProp,
+  NavigationEventListener,
+} from 'react-navigation';
 
 import React from 'react';
 import { Button, Platform, ScrollView, StatusBar, View } from 'react-native';
@@ -49,10 +52,10 @@ type MyPeopleScreenProps = {
   navigation: NavigationScreenProp<*>,
 };
 class MyPeopleScreen extends React.Component<MyPeopleScreenProps> {
-  _s0: EventListener;
-  _s1: EventListener;
-  _s2: EventListener;
-  _s3: EventListener;
+  _s0: NavigationEventListener;
+  _s1: NavigationEventListener;
+  _s2: NavigationEventListener;
+  _s3: NavigationEventListener;
 
   static navigationOptions = {
     tabBarLabel: 'People',
@@ -89,10 +92,10 @@ type MyChatScreenProps = {
   navigation: NavigationScreenProp<*>,
 };
 class MyChatScreen extends React.Component<MyChatScreenProps> {
-  _s0: EventListener;
-  _s1: EventListener;
-  _s2: EventListener;
-  _s3: EventListener;
+  _s0: NavigationEventListener;
+  _s1: NavigationEventListener;
+  _s2: NavigationEventListener;
+  _s3: NavigationEventListener;
 
   static navigationOptions = {
     tabBarLabel: 'Chat',
@@ -172,10 +175,10 @@ type SimpleTabsContainerProps = {
 
 class SimpleTabsContainer extends React.Component<SimpleTabsContainerProps> {
   static router = SimpleTabs.router;
-  _s0: EventListener;
-  _s1: EventListener;
-  _s2: EventListener;
-  _s3: EventListener;
+  _s0: NavigationEventListener;
+  _s1: NavigationEventListener;
+  _s2: NavigationEventListener;
+  _s3: NavigationEventListener;
 
   componentDidMount() {
     this._s0 = this.props.navigation.addListener('willFocus', this._onAction);
