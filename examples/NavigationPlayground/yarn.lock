@@ -3272,9 +3272,9 @@ jest-environment-node@^22.1.4:
     jest-mock "^22.1.0"
     jest-util "^22.1.4"
 
-jest-expo@25.1.0-beta.0:
-  version "25.1.0-beta.0"
-  resolved "https://registry.yarnpkg.com/jest-expo/-/jest-expo-25.1.0-beta.0.tgz#9853695256c6a1c5c508432dced10e9518ee8bb7"
+jest-expo@^25.1.0:
+  version "25.1.0"
+  resolved "https://registry.yarnpkg.com/jest-expo/-/jest-expo-25.1.0.tgz#7f91d0c93f3dadaa8f45dab065d06bccd0519a8c"
   dependencies:
     babel-jest "^22.1.0"
     jest "^22.1.1"
