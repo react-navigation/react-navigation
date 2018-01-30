@@ -25,7 +25,7 @@ class MyNavigator extends React.Component {
 
 ### `getStateForAction(action, state)`
 
-Defines the navigation state in response to a given action. This function will be run when an action gets passed into `props.navigation.dispatch(`, or when any of the helper functions are called, like `navigation.navigate(`.
+Defines the navigation state in response to a given action. This function will be run when an action gets passed into `props.navigation.dispatch`, or when any of the helper functions are called, like `navigation.navigate`.
 
 Typically this should return a navigation state, with the following form:
 
