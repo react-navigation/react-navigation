@@ -61,8 +61,8 @@
     "lint-staged": "^4.2.1",
     "prettier": "^1.5.3",
     "prettier-eslint": "^6.4.2",
-    "react": "16.0.0",
-    "react-native": "^0.50.3",
+    "react": "16.2.0",
+    "react-native": "^0.52.0",
     "react-native-vector-icons": "^4.2.0",
     "react-test-renderer": "^16.0.0"
   },
