@@ -430,7 +430,7 @@ export type NavigationEventPayload = {
 
 export type NavigationEventCallback = (payload: NavigationEventPayload) => void;
 
-export type NavigationEventListener = {
+export type NavigationEventSubscription = {
   remove: () => void,
 };
 
@@ -447,7 +447,7 @@ export type NavigationScreenProp<+S> = {
   addListener: (
     eventName: string,
     callback: NavigationEventCallback
-  ) => NavigationEventListener,
+  ) => NavigationEventSubscription,
 };
 
 export type NavigationNavigatorProps<O: {}, S: {}> = {

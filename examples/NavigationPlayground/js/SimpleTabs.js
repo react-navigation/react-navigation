@@ -4,7 +4,7 @@
 
 import type {
   NavigationScreenProp,
-  NavigationEventListener,
+  NavigationEventSubscription,
 } from 'react-navigation';
 
 import React from 'react';
@@ -52,10 +52,10 @@ type MyPeopleScreenProps = {
   navigation: NavigationScreenProp<*>,
 };
 class MyPeopleScreen extends React.Component<MyPeopleScreenProps> {
-  _s0: NavigationEventListener;
-  _s1: NavigationEventListener;
-  _s2: NavigationEventListener;
-  _s3: NavigationEventListener;
+  _s0: NavigationEventSubscription;
+  _s1: NavigationEventSubscription;
+  _s2: NavigationEventSubscription;
+  _s3: NavigationEventSubscription;
 
   static navigationOptions = {
     tabBarLabel: 'People',
@@ -92,10 +92,10 @@ type MyChatScreenProps = {
   navigation: NavigationScreenProp<*>,
 };
 class MyChatScreen extends React.Component<MyChatScreenProps> {
-  _s0: NavigationEventListener;
-  _s1: NavigationEventListener;
-  _s2: NavigationEventListener;
-  _s3: NavigationEventListener;
+  _s0: NavigationEventSubscription;
+  _s1: NavigationEventSubscription;
+  _s2: NavigationEventSubscription;
+  _s3: NavigationEventSubscription;
 
   static navigationOptions = {
     tabBarLabel: 'Chat',
@@ -175,10 +175,10 @@ type SimpleTabsContainerProps = {
 
 class SimpleTabsContainer extends React.Component<SimpleTabsContainerProps> {
   static router = SimpleTabs.router;
-  _s0: NavigationEventListener;
-  _s1: NavigationEventListener;
-  _s2: NavigationEventListener;
-  _s3: NavigationEventListener;
+  _s0: NavigationEventSubscription;
+  _s1: NavigationEventSubscription;
+  _s2: NavigationEventSubscription;
+  _s3: NavigationEventSubscription;
 
   componentDidMount() {
     this._s0 = this.props.navigation.addListener('willFocus', this._onAction);

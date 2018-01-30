@@ -4,7 +4,7 @@
 
 import type {
   NavigationScreenProp,
-  NavigationEventListener,
+  NavigationEventSubscription,
 } from 'react-navigation';
 
 import * as React from 'react';
@@ -55,10 +55,10 @@ class MyHomeScreen extends React.Component<MyHomeScreenProps> {
   static navigationOptions = {
     title: 'Welcome',
   };
-  _s0: NavigationEventListener;
-  _s1: NavigationEventListener;
-  _s2: NavigationEventListener;
-  _s3: NavigationEventListener;
+  _s0: NavigationEventSubscription;
+  _s1: NavigationEventSubscription;
+  _s2: NavigationEventSubscription;
+  _s3: NavigationEventSubscription;
 
   componentDidMount() {
     this._s0 = this.props.navigation.addListener('willFocus', this._onWF);
@@ -98,10 +98,10 @@ class MyPhotosScreen extends React.Component<MyPhotosScreenProps> {
   static navigationOptions = {
     title: 'Photos',
   };
-  _s0: NavigationEventListener;
-  _s1: NavigationEventListener;
-  _s2: NavigationEventListener;
-  _s3: NavigationEventListener;
+  _s0: NavigationEventSubscription;
+  _s1: NavigationEventSubscription;
+  _s2: NavigationEventSubscription;
+  _s3: NavigationEventSubscription;
 
   componentDidMount() {
     this._s0 = this.props.navigation.addListener('willFocus', this._onWF);
