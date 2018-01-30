@@ -47,9 +47,6 @@ const APPBAR_HEIGHT = Platform.OS === 'ios' ? 44 : 56;
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : 0;
 const TITLE_OFFSET = Platform.OS === 'ios' ? 70 : 56;
 
-const isTablet =
-  Dimensions.get('window').height / Dimensions.get('window').width < 1.6;
-
 type Props = HeaderProps & { isLandscape: boolean };
 class Header extends React.PureComponent<Props, State> {
   static defaultProps = {
@@ -332,7 +329,7 @@ class Header extends React.PureComponent<Props, State> {
     const { headerStyle } = options;
     const viewHeight =
       typeof rest.layout.height === 'number' ? rest.layout.height : null;
-    const isHeightConstrained = viewHeight ? viewHeight < 500 : !isTablet;
+    const isHeightConstrained = viewHeight ? viewHeight < 500 : !Platform.isPad;
     const appBarHeight =
       Platform.OS === 'ios'
         ? isLandscape && isHeightConstrained ? 32 : 44
