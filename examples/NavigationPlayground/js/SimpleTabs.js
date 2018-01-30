@@ -45,7 +45,15 @@ MyHomeScreen.navigationOptions = {
   ),
 };
 
-class MyPeopleScreen extends React.Component {
+type MyPeopleScreenProps = {
+  navigation: NavigationScreenProp<*>,
+};
+class MyPeopleScreen extends React.Component<MyPeopleScreenProps> {
+  _s0: EventListener;
+  _s1: EventListener;
+  _s2: EventListener;
+  _s3: EventListener;
+
   static navigationOptions = {
     tabBarLabel: 'People',
     tabBarIcon: ({ tintColor, focused }) => (
@@ -77,7 +85,15 @@ class MyPeopleScreen extends React.Component {
   }
 }
 
-class MyChatScreen extends React.Component {
+type MyChatScreenProps = {
+  navigation: NavigationScreenProp<*>,
+};
+class MyChatScreen extends React.Component<MyChatScreenProps> {
+  _s0: EventListener;
+  _s1: EventListener;
+  _s2: EventListener;
+  _s3: EventListener;
+
   static navigationOptions = {
     tabBarLabel: 'Chat',
     tabBarIcon: ({ tintColor, focused }) => (
