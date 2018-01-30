@@ -2,7 +2,10 @@
  * @flow
  */
 
-import type { NavigationScreenProp, EventListener } from 'react-navigation';
+import type {
+  NavigationScreenProp,
+  NavigationEventSubscription,
+} from 'react-navigation';
 
 import * as React from 'react';
 import { Button, ScrollView, StatusBar } from 'react-native';
@@ -52,10 +55,10 @@ class MyHomeScreen extends React.Component<MyHomeScreenProps> {
   static navigationOptions = {
     title: 'Welcome',
   };
-  _s0: EventListener;
-  _s1: EventListener;
-  _s2: EventListener;
-  _s3: EventListener;
+  _s0: NavigationEventSubscription;
+  _s1: NavigationEventSubscription;
+  _s2: NavigationEventSubscription;
+  _s3: NavigationEventSubscription;
 
   componentDidMount() {
     this._s0 = this.props.navigation.addListener('willFocus', this._onWF);
@@ -95,10 +98,10 @@ class MyPhotosScreen extends React.Component<MyPhotosScreenProps> {
   static navigationOptions = {
     title: 'Photos',
   };
-  _s0: EventListener;
-  _s1: EventListener;
-  _s2: EventListener;
-  _s3: EventListener;
+  _s0: NavigationEventSubscription;
+  _s1: NavigationEventSubscription;
+  _s2: NavigationEventSubscription;
+  _s3: NavigationEventSubscription;
 
   componentDidMount() {
     this._s0 = this.props.navigation.addListener('willFocus', this._onWF);

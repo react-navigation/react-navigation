@@ -2,7 +2,10 @@
  * @flow
  */
 
-import type { NavigationScreenProp, EventListener } from 'react-navigation';
+import type {
+  NavigationScreenProp,
+  NavigationEventSubscription,
+} from 'react-navigation';
 
 import React from 'react';
 import { Button, Platform, ScrollView, StatusBar, View } from 'react-native';
@@ -45,7 +48,15 @@ MyHomeScreen.navigationOptions = {
   ),
 };
 
-class MyPeopleScreen extends React.Component {
+type MyPeopleScreenProps = {
+  navigation: NavigationScreenProp<*>,
+};
+class MyPeopleScreen extends React.Component<MyPeopleScreenProps> {
+  _s0: NavigationEventSubscription;
+  _s1: NavigationEventSubscription;
+  _s2: NavigationEventSubscription;
+  _s3: NavigationEventSubscription;
+
   static navigationOptions = {
     tabBarLabel: 'People',
     tabBarIcon: ({ tintColor, focused }) => (
@@ -77,7 +88,15 @@ class MyPeopleScreen extends React.Component {
   }
 }
 
-class MyChatScreen extends React.Component {
+type MyChatScreenProps = {
+  navigation: NavigationScreenProp<*>,
+};
+class MyChatScreen extends React.Component<MyChatScreenProps> {
+  _s0: NavigationEventSubscription;
+  _s1: NavigationEventSubscription;
+  _s2: NavigationEventSubscription;
+  _s3: NavigationEventSubscription;
+
   static navigationOptions = {
     tabBarLabel: 'Chat',
     tabBarIcon: ({ tintColor, focused }) => (
@@ -156,10 +175,10 @@ type SimpleTabsContainerProps = {
 
 class SimpleTabsContainer extends React.Component<SimpleTabsContainerProps> {
   static router = SimpleTabs.router;
-  _s0: EventListener;
-  _s1: EventListener;
-  _s2: EventListener;
-  _s3: EventListener;
+  _s0: NavigationEventSubscription;
+  _s1: NavigationEventSubscription;
+  _s2: NavigationEventSubscription;
+  _s3: NavigationEventSubscription;
 
   componentDidMount() {
     this._s0 = this.props.navigation.addListener('willFocus', this._onAction);
