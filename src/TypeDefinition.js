@@ -414,7 +414,23 @@ export type NavigationProp<S> = {
   dispatch: NavigationDispatch,
 };
 
-export type EventListener = {
+export type EventType =
+  | 'willFocus'
+  | 'didFocus'
+  | 'willBlur'
+  | 'didBlur'
+  | 'action';
+
+export type NavigationEventPayload = {
+  type: EventType,
+  action: NavigationAction,
+  state: NavigationState,
+  lastState: NavigationState,
+};
+
+export type NavigationEventCallback = (payload: NavigationEventPayload) => void;
+
+export type NavigationEventSubscription = {
   remove: () => void,
 };
 
@@ -428,7 +444,10 @@ export type NavigationScreenProp<+S> = {
     action?: NavigationNavigateAction
   ) => boolean,
   setParams: (newParams: NavigationParams) => boolean,
-  addListener: (eventName: string, callback: Function) => EventListener,
+  addListener: (
+    eventName: string,
+    callback: NavigationEventCallback
+  ) => NavigationEventSubscription,
 };
 
 export type NavigationNavigatorProps<O: {}, S: {}> = {
