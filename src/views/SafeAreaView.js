@@ -76,11 +76,7 @@ const statusBarHeight = isLandscape => {
     return isLandscape ? 0 : 44;
   }
 
-  if (isIPad) {
-    return 20;
-  }
-
-  return isLandscape ? 0 : 20;
+  return 20;
 };
 
 const doubleFromPercentString = percent => {
