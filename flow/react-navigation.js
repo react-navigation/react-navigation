@@ -262,10 +262,15 @@ declare module 'react-navigation' {
     Route: NavigationRoute,
     Options: {},
     Props: {}
-  > = React.ComponentType<NavigationNavigatorProps<Options, Route> & Props> & {
-    router?: void,
-    navigationOptions?: NavigationScreenConfig<Options>,
-  };
+  > =
+    & React.ComponentType<NavigationNavigatorProps<Options, Route> & Props>
+    // The reason it can be a string is that React Fiber represents certain
+    // native component types (View, Text, etc.) as strings
+    & (
+        | {}
+        | { navigationOptions: NavigationScreenConfig<Options> }
+        | string
+      );
 
   declare export type NavigationNavigator<
     State: NavigationState,
@@ -276,11 +281,10 @@ declare module 'react-navigation' {
     navigationOptions?: ?NavigationScreenConfig<Options>,
   };
 
-  declare export type NavigationRouteConfig<T: {}> = {
-    ...$Exact<T>,
+  declare export type NavigationRouteConfig = {
     navigationOptions?: NavigationScreenConfig<*>,
     path?: string,
-  };
+  } & NavigationScreenRouteConfig;
 
   declare export type NavigationScreenRouteConfig =
     | {
@@ -295,7 +299,7 @@ declare module 'react-navigation' {
   };
 
   declare export type NavigationRouteConfigMap = {
-    [routeName: string]: NavigationRouteConfig<*>,
+    [routeName: string]: NavigationRouteConfig,
   };
 
   /**
@@ -338,32 +342,32 @@ declare module 'react-navigation' {
     gestureDirection?: 'default' | 'inverted',
   };
 
-  declare export type NavigationStackRouterConfig = {
+  declare export type NavigationStackRouterConfig = {|
     initialRouteName?: string,
     initialRouteParams?: NavigationParams,
     paths?: NavigationPathsConfig,
     navigationOptions?: NavigationScreenConfig<*>,
-  };
+  |};
 
-  declare export type NavigationStackViewConfig = {
+  declare export type NavigationStackViewConfig = {|
     mode?: 'card' | 'modal',
     headerMode?: HeaderMode,
     cardStyle?: ViewStyleProp,
     transitionConfig?: () => TransitionConfig,
     onTransitionStart?: () => void,
     onTransitionEnd?: () => void,
-  };
+  |};
 
-  declare export type StackNavigatorConfig = {
-    ...$Exact<NavigationStackViewConfig>,
-    ...$Exact<NavigationStackRouterConfig>,
-  };
+  declare export type StackNavigatorConfig = {|
+    ...NavigationStackViewConfig,
+    ...NavigationStackRouterConfig,
+  |};
 
   /**
    * Tab Navigator
    */
 
-  declare export type NavigationTabRouterConfig = {
+  declare export type NavigationTabRouterConfig = {|
     initialRouteName?: string,
     initialRouteParams?: NavigationParams,
     paths?: NavigationPathsConfig,
@@ -373,7 +377,7 @@ declare module 'react-navigation' {
 
     // Does the back button cause the router to switch to the initial tab
     backBehavior?: 'none' | 'initialRoute', // defaults `initialRoute`
-  };
+  |};
 
   declare type TabScene = {
     route: NavigationRoute,
@@ -722,7 +726,7 @@ declare module 'react-navigation' {
     stackConfig?: StackNavigatorConfig
   ): NavigationContainer<*, *, *>;
 
-  declare type _TabViewConfig = {
+  declare type _TabViewConfig = {|
     tabBarComponent?: React.ComponentType<*>,
     tabBarPosition?: 'top' | 'bottom',
     tabBarOptions?: {},
@@ -733,17 +737,18 @@ declare module 'react-navigation' {
       nextTransitionProps: Object
     ) => Object,
     initialLayout?: Layout,
-  };
-  declare type _TabNavigatorConfig =
-    & { containerOptions?: void }
-    & NavigationTabRouterConfig
-    & _TabViewConfig;
+  |};
+  declare type _TabNavigatorConfig = {|
+    ...NavigationTabRouterConfig,
+    ..._TabViewConfig,
+    containerOptions?: void,
+  |};
   declare export function TabNavigator(
     routeConfigs: NavigationRouteConfigMap,
     config?: _TabNavigatorConfig
   ): NavigationContainer<*, *, *>;
 
-  declare type _DrawerViewConfig = {
+  declare type _DrawerViewConfig = {|
     drawerLockMode?: 'unlocked' | 'locked-closed' | 'locked-open',
     drawerWidth?: number | (() => number),
     drawerPosition?: 'left' | 'right',
@@ -756,11 +761,12 @@ declare module 'react-navigation' {
     useNativeAnimations?: boolean,
     drawerBackgroundColor?: string,
     screenProps?: {},
-  };
-  declare type _DrawerNavigatorConfig =
-    & { containerConfig?: void }
-    & NavigationTabRouterConfig
-    & _DrawerViewConfig;
+  |};
+  declare type _DrawerNavigatorConfig = $Exact<{
+    ...NavigationTabRouterConfig,
+    ..._DrawerViewConfig,
+    containerConfig?: void,
+  }>;
   declare export function DrawerNavigator(
     routeConfigs: NavigationRouteConfigMap,
     config?: _DrawerNavigatorConfig
