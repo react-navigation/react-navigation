@@ -16,8 +16,8 @@ With Redux, your app's state is defined by a reducer. Each navigation router eff
 import {
   StackNavigator,
   addNavigationHelpers,
-  constructReduxBoundAddListener,
-  constructReactNavigationReduxMiddleware,
+  createReduxBoundAddListener,
+  createReactNavigationReduxMiddleware,
 } from 'react-navigation';
 import {
   createStore,
@@ -43,12 +43,12 @@ const appReducer = combineReducers({
   ...
 });
 
-// Note: constructReactNavigationReduxMiddleware must be run before constructReduxBoundAddListener
-const middleware = constructReactNavigationReduxMiddleware(
+// Note: createReactNavigationReduxMiddleware must be run before createReduxBoundAddListener
+const middleware = createReactNavigationReduxMiddleware(
   "root",
   state => state.nav,
 );
-const addListener = constructReduxBoundAddListener("root");
+const addListener = createReduxBoundAddListener("root");
 
 class App extends React.Component {
   render() {

@@ -90,11 +90,11 @@ module.exports = {
   },
 
   // Redux integration
-  get constructReactNavigationReduxMiddleware() {
+  get createReactNavigationReduxMiddleware() {
     return require('./actionEventDispatch')
-      .constructReactNavigationReduxMiddleware;
+      .createReactNavigationReduxMiddleware;
   },
-  get constructReduxBoundAddListener() {
-    return require('./actionEventDispatch').constructReduxBoundAddListener;
+  get createReduxBoundAddListener() {
+    return require('./actionEventDispatch').createReduxBoundAddListener;
   },
 };

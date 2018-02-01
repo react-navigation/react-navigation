@@ -1065,7 +1065,7 @@ declare module 'react-navigation' {
     Component: React$ComponentType<T & _NavigationInjectedProps>
   ): React$ComponentType<T>;
 
-  declare export function constructReactNavigationReduxMiddleware<S: {}, R: *>(
+  declare export function createReactNavigationReduxMiddleware<S: {}, R: *>(
     key: string,
     navStateSelector: (state: S) => NavigationState,
   ): (store: ReduxStore<S>) => ((action: Object) => R) => (action: Object) => R;
@@ -1074,7 +1074,7 @@ declare module 'react-navigation' {
     eventName: string,
     handler: (payload: NavigationEventPayload) => void,
   ) => void;
-  declare export function constructReduxBoundAddListener(
+  declare export function createReduxBoundAddListener(
     key: string,
   ): _EventHandler;
 }

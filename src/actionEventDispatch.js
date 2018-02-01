@@ -18,7 +18,7 @@ function triggerActionEventSubscribers(
 
 const reduxSubscribers = new Map();
 
-function constructReactNavigationReduxMiddleware(key, navStateSelector) {
+function createReactNavigationReduxMiddleware(key, navStateSelector) {
   reduxSubscribers.set(key, new Set());
   return store => next => action => {
     const oldState = store.getState();
@@ -33,11 +33,11 @@ function constructReactNavigationReduxMiddleware(key, navStateSelector) {
   };
 }
 
-function constructReduxBoundAddListener(key) {
+function createReduxBoundAddListener(key) {
   invariant(
     reduxSubscribers.has(key),
     "Cannot listen for a key that isn't associated with a Redux store. " +
-      'First call `constructReactNavigationReduxMiddleware` so that we know ' +
+      'First call `createReactNavigationReduxMiddleware` so that we know ' +
       'when to trigger your listener.'
   );
   return (eventName, handler) => {
@@ -55,6 +55,6 @@ function constructReduxBoundAddListener(key) {
 
 export {
   triggerActionEventSubscribers,
-  constructReactNavigationReduxMiddleware,
-  constructReduxBoundAddListener,
+  createReactNavigationReduxMiddleware,
+  createReduxBoundAddListener,
 };
