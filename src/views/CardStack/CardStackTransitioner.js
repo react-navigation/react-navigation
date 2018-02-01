@@ -57,15 +57,12 @@ class CardStackTransitioner extends React.Component {
   _getMode() {
     const { navigation, mode, router } = this.props;
     // If there's a route, get its screen options
-    if (
-      navigation.state.routes &&
-      navigation.state.routes[1]
-    ) {
-      screenOptions  = router.getScreenOptions(
+    if (navigation.state.routes && navigation.state.routes[1]) {
+      screenOptions = router.getScreenOptions(
         addNavigationHelpers({
           state: navigation.state.routes[1],
           dispatch: () => null,
-          addListener: () => null
+          addListener: () => null,
         })
       );
       if (screenOptions.mode) return screenOptions.mode;
