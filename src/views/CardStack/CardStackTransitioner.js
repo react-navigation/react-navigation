@@ -33,8 +33,9 @@ class CardStackTransitioner extends React.Component {
     // props for the old screen
     prevTransitionProps
   ) => {
+    console.log('transition config', this._getMode());
     const isModal = this._getMode() === 'modal';
-    
+    console.log('isModal?', isModal, this._getMode());
     // Copy the object so we can assign useNativeDriver below
     const transitionSpec = {
       ...TransitionConfigs.getTransitionConfig(
@@ -59,13 +60,14 @@ class CardStackTransitioner extends React.Component {
     const { navigation, mode, router } = this.props;
     let screenOptions;
     if (
-      this.props.navigation.state.routes &&
-      this.props.navigation.state.routes[1]
+      navigation.state.routes &&
+      navigation.state.routes[1]
     ) {
       screenOptions  = router.getScreenOptions(
         addNavigationHelpers({
-          state: this.props.navigation.state.routes[1],
-          dispatch: this.props.navigation.dispatch,
+          state: navigation.state.routes[1],
+          dispatch: () => null,
+          addListener: () => null
         })
       );
     }

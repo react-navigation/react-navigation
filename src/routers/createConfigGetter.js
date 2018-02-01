@@ -32,10 +32,9 @@ export default (routeConfigs, navigatorScreenConfig) => (
   const route = state;
 
   invariant(
-    route.routeName && typeof route.routeName === 'string',
+    route && route.routeName && typeof route.routeName === 'string',
     'Cannot get config because the route does not have a routeName.'
   );
-
   const Component = getScreenForRouteName(routeConfigs, route.routeName);
 
   let outputConfig = {};

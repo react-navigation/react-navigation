@@ -197,13 +197,9 @@ class CardStack extends React.Component {
     }
     const { navigation, position, layout, scene, scenes, mode } = this.props;
     const { index } = navigation.state;
-<<<<<<< HEAD
     const isVertical = this._isModal();
-=======
-    const isVertical = mode === 'modal';
     const { options } = this._getScreenDetails(scene);
     const gestureDirectionInverted = options.gestureDirection === 'inverted';
->>>>>>> upstream/master
 
     const responder = PanResponder.create({
       onPanResponderTerminate: () => {
