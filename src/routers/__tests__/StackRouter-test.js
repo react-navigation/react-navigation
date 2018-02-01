@@ -768,6 +768,49 @@ describe('StackRouter', () => {
     expect(state2 && state2.routes[1].routeName).toEqual('Bar');
   });
 
+  test('Handles the reset action only with correct key set', () => {
+    const router = StackRouter({
+      Foo: {
+        screen: () => <div />,
+      },
+      Bar: {
+        screen: () => <div />,
+      },
+    });
+    const state1 = router.getStateForAction({ type: NavigationActions.INIT });
+    const resetAction = {
+      type: NavigationActions.RESET,
+      key: 'Bad Key',
+      actions: [
+        {
+          type: NavigationActions.NAVIGATE,
+          routeName: 'Foo',
+          params: { bar: '42' },
+          immediate: true,
+        },
+        {
+          type: NavigationActions.NAVIGATE,
+          routeName: 'Bar',
+          immediate: true,
+        },
+      ],
+      index: 1,
+    };
+    const state2 = router.getStateForAction(resetAction, state1);
+    expect(state2).toEqual(state1);
+    const state3 = router.getStateForAction(
+      {
+        ...resetAction,
+        key: state2.key,
+      },
+      state2
+    );
+    expect(state3 && state3.index).toEqual(1);
+    expect(state3 && state3.routes[0].params).toEqual({ bar: '42' });
+    expect(state3 && state3.routes[0].routeName).toEqual('Foo');
+    expect(state3 && state3.routes[1].routeName).toEqual('Bar');
+  });
+
   test('Handles the reset action with nested Router', () => {
     const ChildRouter = TabRouter({
       baz: {
