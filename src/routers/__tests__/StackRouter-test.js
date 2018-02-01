@@ -4,8 +4,13 @@ import React from 'react';
 
 import StackRouter from '../StackRouter';
 import TabRouter from '../TabRouter';
+import { _TESTING_ONLY_normalize_keys } from '../KeyGenerator';
 
 import NavigationActions from '../../NavigationActions';
+
+beforeEach(() => {
+  _TESTING_ONLY_normalize_keys();
+});
 
 const ListScreen = () => <div />;
 
@@ -349,7 +354,7 @@ describe('StackRouter', () => {
     expect(initState).toEqual({
       index: 0,
       isTransitioning: false,
-      routes: [{ key: 'Init-id-0-0', routeName: 'foo' }],
+      routes: [{ key: 'Init-id-0', routeName: 'foo' }],
     });
     const pushedState = TestRouter.getStateForAction(
       NavigationActions.navigate({ routeName: 'qux' }),
@@ -358,6 +363,46 @@ describe('StackRouter', () => {
     expect(pushedState.index).toEqual(1);
     expect(pushedState.routes[1].index).toEqual(1);
     expect(pushedState.routes[1].routes[1].routeName).toEqual('qux');
+  });
+
+  test('Navigate Pushes duplicate routeName', () => {
+    const TestRouter = StackRouter({
+      foo: { screen: () => <div /> },
+      bar: { screen: () => <div /> },
+    });
+    const initState = TestRouter.getStateForAction(NavigationActions.init());
+    const pushedState = TestRouter.getStateForAction(
+      NavigationActions.navigate({ routeName: 'bar' }),
+      initState
+    );
+    expect(pushedState.index).toEqual(1);
+    expect(pushedState.routes[1].routeName).toEqual('bar');
+    const pushedTwiceState = TestRouter.getStateForAction(
+      NavigationActions.navigate({ routeName: 'bar' }),
+      pushedState
+    );
+    expect(pushedTwiceState.index).toEqual(2);
+    expect(pushedTwiceState.routes[2].routeName).toEqual('bar');
+  });
+
+  test('Navigate with key is idempotent', () => {
+    const TestRouter = StackRouter({
+      foo: { screen: () => <div /> },
+      bar: { screen: () => <div /> },
+    });
+    const initState = TestRouter.getStateForAction(NavigationActions.init());
+    const pushedState = TestRouter.getStateForAction(
+      NavigationActions.navigate({ routeName: 'bar', key: 'a' }),
+      initState
+    );
+    expect(pushedState.index).toEqual(1);
+    expect(pushedState.routes[1].routeName).toEqual('bar');
+    const pushedTwiceState = TestRouter.getStateForAction(
+      NavigationActions.navigate({ routeName: 'bar', key: 'a' }),
+      pushedState
+    );
+    expect(pushedTwiceState.index).toEqual(1);
+    expect(pushedTwiceState.routes[1].routeName).toEqual('bar');
   });
 
   test('Handle basic stack logic for plain components', () => {
@@ -377,7 +422,7 @@ describe('StackRouter', () => {
       isTransitioning: false,
       routes: [
         {
-          key: 'Init-id-0-4',
+          key: 'Init-id-0',
           routeName: 'Foo',
         },
       ],
@@ -404,7 +449,7 @@ describe('StackRouter', () => {
       isTransitioning: false,
       routes: [
         {
-          key: 'Init-id-0-4',
+          key: 'Init-id-0',
           routeName: 'Foo',
         },
       ],
@@ -465,7 +510,7 @@ describe('StackRouter', () => {
       isTransitioning: false,
       routes: [
         {
-          key: 'Init-id-0-8',
+          key: 'Init-id-0',
           routeName: 'Foo',
         },
       ],
@@ -492,7 +537,7 @@ describe('StackRouter', () => {
       isTransitioning: false,
       routes: [
         {
-          key: 'Init-id-0-8',
+          key: 'Init-id-0',
           routeName: 'Foo',
         },
       ],
@@ -565,7 +610,7 @@ describe('StackRouter', () => {
       isTransitioning: false,
       routes: [
         {
-          key: 'Init-id-0-14',
+          key: 'Init-id-0',
           routeName: 'Bar',
         },
       ],
@@ -673,14 +718,14 @@ describe('StackRouter', () => {
       {
         type: NavigationActions.SET_PARAMS,
         params: { name: 'foobar' },
-        key: 'Init-id-0-19',
+        key: 'Init-id-0',
       },
       state
     );
     expect(state2 && state2.index).toEqual(0);
     expect(state2 && state2.routes[0].routes[0].routes).toEqual([
       {
-        key: 'Init-id-0-19',
+        key: 'Init-id-0',
         routeName: 'Quux',
         params: { name: 'foobar' },
       },
