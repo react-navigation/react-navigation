@@ -88,4 +88,13 @@ module.exports = {
   get withNavigation() {
     return require('./views/withNavigation').default;
   },
+
+  // Redux integration
+  get constructReactNavigationReduxMiddleware() {
+    return require('./actionEventDispatch')
+      .constructReactNavigationReduxMiddleware;
+  },
+  get constructReduxBoundAddListener() {
+    return require('./actionEventDispatch').constructReduxBoundAddListener;
+  },
 };

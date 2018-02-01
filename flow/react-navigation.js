@@ -49,6 +49,11 @@ declare module 'react-navigation' {
   // react-native/Libraries/Animated/src/nodes/AnimatedValue.js
   declare type AnimatedValue = Object;
 
+  // This includes the only function we actually need to call on the Redux store
+  declare type ReduxStore<S: {}> = {
+    getState(): S,
+  };
+
   /**
    * Next, all the type declarations
    */
@@ -1059,4 +1064,17 @@ declare module 'react-navigation' {
   declare export function withNavigation<T: {}>(
     Component: React$ComponentType<T & _NavigationInjectedProps>
   ): React$ComponentType<T>;
+
+  declare export function constructReactNavigationReduxMiddleware<S: {}, R: *>(
+    key: string,
+    navStateSelector: (state: S) => NavigationState,
+  ): (store: ReduxStore<S>) => ((action: Object) => R) => (action: Object) => R;
+
+  declare type _EventHandler = (
+    eventName: string,
+    handler: (payload: NavigationEventPayload) => void,
+  ) => void;
+  declare export function constructReduxBoundAddListener(
+    key: string,
+  ): _EventHandler;
 }
