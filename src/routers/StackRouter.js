@@ -295,6 +295,12 @@ export default (routeConfigs, stackConfig = {}) => {
       }
 
       if (action.type === NavigationActions.RESET) {
+        // Only handle reset actions that are unspecified or match this state key
+        if (action.key != null && action.key != state.key) {
+          // Deliberately use != instead of !== so we can match null with
+          // undefined on either the state or the action
+          return state;
+        }
         const resetAction = action;
 
         return {
