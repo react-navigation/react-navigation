@@ -713,6 +713,47 @@ describe('TabRouter', () => {
     expect(state2).toEqual(state0);
   });
 
+  test('pop action works as expected', () => {
+    const TestRouter = StackRouter({
+      foo: { screen: () => <div /> },
+      bar: { screen: () => <div /> },
+    });
+
+    const state = {
+      index: 3,
+      isTransitioning: false,
+      routes: [
+        { key: 'A', routeName: 'foo' },
+        { key: 'B', routeName: 'bar', params: { bazId: '321' } },
+        { key: 'C', routeName: 'foo' },
+        { key: 'D', routeName: 'bar' },
+      ],
+    };
+    const poppedState = TestRouter.getStateForAction(
+      NavigationActions.pop(),
+      state
+    );
+    expect(poppedState.routes.length).toBe(3);
+    expect(poppedState.index).toBe(2);
+    expect(poppedState.isTransitioning).toBe(true);
+
+    const poppedState2 = TestRouter.getStateForAction(
+      NavigationActions.pop({ n: 2, immediate: true }),
+      state
+    );
+    expect(poppedState2.routes.length).toBe(2);
+    expect(poppedState2.index).toBe(1);
+    expect(poppedState2.isTransitioning).toBe(false);
+
+    const poppedState3 = TestRouter.getStateForAction(
+      NavigationActions.pop({ n: 5 }),
+      state
+    );
+    expect(poppedState3.routes.length).toBe(1);
+    expect(poppedState3.index).toBe(0);
+    expect(poppedState3.isTransitioning).toBe(true);
+  });
+
   test('Inner actions are only unpacked if the current tab matches', () => {
     const PlainScreen = () => <div />;
     const ScreenA = () => <div />;
