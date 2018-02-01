@@ -1,6 +1,6 @@
 /* @flow */
 
-import React, { Component } from 'react';
+import * as React from 'react';
 
 import clamp from 'clamp';
 import {
@@ -20,7 +20,6 @@ import addNavigationHelpers from '../../addNavigationHelpers';
 import SceneView from '../SceneView';
 
 import type {
-  NavigationAction,
   NavigationLayout,
   NavigationScreenProp,
   NavigationScene,
@@ -31,6 +30,8 @@ import type {
   HeaderMode,
   ViewStyleProp,
   TransitionConfig,
+  NavigationRoute,
+  NavigationComponent,
 } from '../../TypeDefinition';
 
 import TransitionConfigs from './TransitionConfigs';
@@ -40,18 +41,12 @@ const emptyFunction = () => {};
 type Props = {
   screenProps?: {},
   headerMode: HeaderMode,
-  headerComponent?: ReactClass<*>,
+  headerComponent?: React.ComponentType<*>,
   mode: 'card' | 'modal',
-  navigation: NavigationScreenProp<NavigationState, NavigationAction>,
-  router: NavigationRouter<
-    NavigationState,
-    NavigationAction,
-    NavigationStackScreenOptions
-  >,
+  router: NavigationRouter<NavigationState, NavigationStackScreenOptions>,
   cardStyle?: ViewStyleProp,
   onTransitionStart?: () => void,
   onTransitionEnd?: () => void,
-  style?: any, // TODO: Remove
   /**
    * Optional custom animation when transitioning between screens.
    */
@@ -59,7 +54,7 @@ type Props = {
 
   // NavigationTransitionProps:
   layout: NavigationLayout,
-  navigation: NavigationScreenProp<NavigationState, NavigationAction>,
+  navigation: NavigationScreenProp<NavigationState>,
   position: Animated.Value,
   progress: Animated.Value,
   scenes: Array<NavigationScene>,
@@ -101,7 +96,7 @@ const animatedSubscribeValue = (animatedValue: Animated.Value) => {
   }
 };
 
-class CardStack extends Component {
+class CardStack extends React.Component<Props> {
   /**
    * Used to identify the starting point of the position when the gesture starts, such that it can
    * be updated according to its relative position. This means that a card can effectively be
@@ -126,8 +121,6 @@ class CardStack extends Component {
     [key: string]: ?NavigationScreenDetails<NavigationStackScreenOptions>,
   } = {};
 
-  props: Props;
-
   componentWillReceiveProps(props: Props) {
     if (props.screenProps !== this.props.screenProps) {
       this._screenDetails = {};
@@ -146,8 +139,10 @@ class CardStack extends Component {
     const { screenProps, navigation, router } = this.props;
     let screenDetails = this._screenDetails[scene.key];
     if (!screenDetails || screenDetails.state !== scene.route) {
-      const screenNavigation = addNavigationHelpers({
-        ...navigation,
+      const screenNavigation: NavigationScreenProp<
+        NavigationRoute
+      > = addNavigationHelpers({
+        dispatch: navigation.dispatch,
         state: scene.route,
       });
       screenDetails = {
@@ -160,10 +155,7 @@ class CardStack extends Component {
     return screenDetails;
   };
 
-  _renderHeader(
-    scene: NavigationScene,
-    headerMode: HeaderMode
-  ): ?React.Element<*> {
+  _renderHeader(scene: NavigationScene, headerMode: HeaderMode): ?React.Node {
     const { header } = this._getScreenDetails(scene).options;
 
     if (typeof header !== 'undefined' && typeof header !== 'function') {
@@ -171,6 +163,11 @@ class CardStack extends Component {
     }
 
     const renderHeader = header || ((props: *) => <Header {...props} />);
+    const {
+      headerLeftInterpolator,
+      headerTitleInterpolator,
+      headerRightInterpolator,
+    } = this._getTransitionConfig();
 
     // We need to explicitly exclude `mode` since Flow doesn't see
     // mode: headerMode override below and reports prop mismatch
@@ -181,6 +178,9 @@ class CardStack extends Component {
       scene,
       mode: headerMode,
       getScreenDetails: this._getScreenDetails,
+      leftInterpolator: headerLeftInterpolator,
+      titleInterpolator: headerTitleInterpolator,
+      rightInterpolator: headerRightInterpolator,
     });
   }
 
@@ -231,7 +231,7 @@ class CardStack extends Component {
     });
   }
 
-  render(): React.Element<*> {
+  render(): React.Node {
     let floatingHeader = null;
     const headerMode = this._getHeaderMode();
     if (headerMode === 'float') {
@@ -414,9 +414,9 @@ class CardStack extends Component {
   }
 
   _renderInnerScene(
-    SceneComponent: ReactClass<*>,
+    SceneComponent: NavigationComponent,
     scene: NavigationScene
-  ): React.Element<any> {
+  ): React.Node {
     const { navigation } = this._getScreenDetails(scene);
     const { screenProps } = this.props;
     const headerMode = this._getHeaderMode();
@@ -444,16 +444,19 @@ class CardStack extends Component {
   }
 
   _getTransitionConfig = () => {
-    /* $FlowFixMe */
+    const isModal = this.props.mode === 'modal';
+
     return TransitionConfigs.getTransitionConfig(
       this.props.transitionConfig,
+      /* $FlowFixMe */
       {},
+      /* $FlowFixMe */
       {},
       this._isModal()
     );
   };
 
-  _renderCard = (scene: NavigationScene): React.Element<*> => {
+  _renderCard = (scene: NavigationScene): React.Node => {
     const { screenInterpolator } = this._getTransitionConfig();
     const style =
       screenInterpolator && screenInterpolator({ ...this.props, scene });

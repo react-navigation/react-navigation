@@ -4,6 +4,8 @@
 
 /* eslint global-require: 0 */
 
+/*:: export type * from './TypeDefinition'; */
+
 module.exports = {
   // Core
   get createNavigationContainer() {
@@ -53,6 +55,9 @@ module.exports = {
   },
   get Card() {
     return require('./views/CardStack/Card').default;
+  },
+  get SafeAreaView() {
+    return require('./views/SafeAreaView').default;
   },
 
   // Header

@@ -1,15 +1,17 @@
 /* @flow */
 
-import React, { PureComponent } from 'react';
+import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import withCachedChildNavigation from '../../withCachedChildNavigation';
 import NavigationActions from '../../NavigationActions';
+import invariant from '../../utils/invariant';
+
+import SafeAreaView from '../SafeAreaView';
 
 import type {
   NavigationScreenProp,
   NavigationRoute,
-  NavigationAction,
   NavigationRouter,
   NavigationDrawerScreenOptions,
   NavigationState,
@@ -19,31 +21,32 @@ import type {
 
 import type { DrawerScene, DrawerItem } from './DrawerView';
 
-type Navigation = NavigationScreenProp<NavigationStateRoute, NavigationAction>;
-
 type Props = {
-  router: NavigationRouter<
-    NavigationState,
-    NavigationAction,
-    NavigationDrawerScreenOptions
-  >,
-  navigation: Navigation,
-  childNavigationProps: { [key: string]: Navigation },
-  contentComponent: ReactClass<*>,
+  router: NavigationRouter<NavigationState, NavigationDrawerScreenOptions>,
+  navigation: NavigationScreenProp<NavigationStateRoute>,
+  childNavigationProps: {
+    [key: string]: NavigationScreenProp<NavigationRoute>,
+  },
+  contentComponent: ?React.ComponentType<*>,
   contentOptions?: {},
   screenProps?: {},
   style?: ViewStyleProp,
+  drawerPosition?: 'left' | 'right',
 };
 
 /**
  * Component that renders the sidebar screen of the drawer.
  */
-class DrawerSidebar extends PureComponent<void, Props, void> {
+class DrawerSidebar extends React.PureComponent<Props> {
   props: Props;
 
   _getScreenOptions = (routeKey: string) => {
     const DrawerScreen = this.props.router.getComponentForRouteName(
       'DrawerClose'
+    );
+    invariant(
+      DrawerScreen.router,
+      'NavigationComponent with routeName DrawerClose should be a Navigator'
     );
     const { [routeKey]: childNavigation } = this.props.childNavigationProps;
     return DrawerScreen.router.getScreenOptions(
@@ -99,7 +102,11 @@ class DrawerSidebar extends PureComponent<void, Props, void> {
 
   render() {
     const ContentComponent = this.props.contentComponent;
+    if (!ContentComponent) {
+      return null;
+    }
     const { state } = this.props.navigation;
+    invariant(typeof state.index === 'number', 'should be set');
     return (
       <View style={[styles.container, this.props.style]}>
         <ContentComponent
@@ -107,13 +114,14 @@ class DrawerSidebar extends PureComponent<void, Props, void> {
           navigation={this.props.navigation}
           items={state.routes}
           activeItemKey={
-            state.routes[state.index] && state.routes[state.index].key
+            state.routes[state.index] ? state.routes[state.index].key : null
           }
           screenProps={this.props.screenProps}
           getLabel={this._getLabel}
           renderIcon={this._renderIcon}
           onItemPress={this._onItemPress}
           router={this.props.router}
+          drawerPosition={this.props.drawerPosition}
         />
       </View>
     );

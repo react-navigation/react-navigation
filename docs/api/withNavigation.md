@@ -14,4 +14,12 @@ const MyComponent = ({ to, navigation }) => (
 );
 
 const MyComponentWithNavigation = withNavigation(MyComponent);
+
+
+// or use decorators:
+
+@withNavigation
+export default class MainScreen extends Component {
+  ...
+}
 ```
