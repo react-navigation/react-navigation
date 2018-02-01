@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, View } from 'react-native';
 import renderer from 'react-test-renderer';
 
-import StackNavigator from '../StackNavigator';
+import StackNavigator from '../createStackNavigator';
 
 const styles = StyleSheet.create({
   header: {

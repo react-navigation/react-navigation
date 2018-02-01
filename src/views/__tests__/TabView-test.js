@@ -1,7 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
 import renderer from 'react-test-renderer';
-import TabRouter from '../../routers/TabRouter';
 
 import TabView from '../TabView/TabView';
 import TabBarBottom from '../TabView/TabBarBottom';
@@ -12,21 +11,30 @@ const dummyEventSubscriber = (name, handler) => ({
 
 describe('TabBarBottom', () => {
   it('renders successfully', () => {
+    const route = { key: 's1', routeName: 's1' };
     const navigation = {
       state: {
         index: 0,
-        routes: [{ key: 's1', routeName: 's1' }],
+        routes: [route],
       },
       addListener: dummyEventSubscriber,
     };
-    const router = TabRouter({ s1: { screen: View } });
 
     const rendered = renderer
       .create(
         <TabView
           tabBarComponent={TabBarBottom}
           navigation={navigation}
-          router={router}
+          navigationConfig={{}}
+          descriptors={{
+            s1: {
+              state: route,
+              key: route.key,
+              options: {},
+              navigation: { state: route },
+              getComponent: () => View,
+            },
+          }}
         />
       )
       .toJSON();

@@ -49,57 +49,37 @@ const DefaultDrawerConfig = {
 const DrawerNavigator = (routeConfigs, config = {}) => {
   const mergedConfig = { ...DefaultDrawerConfig, ...config };
   const {
-    containerConfig,
-    drawerWidth,
-    drawerLockMode,
-    contentComponent,
-    contentOptions,
-    drawerPosition,
-    useNativeAnimations,
-    drawerBackgroundColor,
-    drawerOpenRoute,
-    drawerCloseRoute,
-    drawerToggleRoute,
-    ...tabsConfig
+    order,
+    paths,
+    initialRouteName,
+    backBehavior,
+    ...drawerConfig
   } = mergedConfig;
-
+  const tabsConfig = {
+    order,
+    paths,
+    initialRouteName,
+    backBehavior,
+  };
   const contentRouter = TabRouter(routeConfigs, tabsConfig);
   const drawerRouter = TabRouter(
     {
-      [drawerCloseRoute]: {
-        screen: createNavigator(contentRouter, routeConfigs, config)(props => (
-          <DrawerScreen {...props} />
-        )),
+      [drawerConfig.drawerCloseRoute]: {
+        screen: createNavigator(DrawerScreen, contentRouter, config),
       },
-      [drawerOpenRoute]: {
+      [drawerConfig.drawerOpenRoute]: {
         screen: () => null,
       },
-      [drawerToggleRoute]: {
+      [drawerConfig.drawerToggleRoute]: {
         screen: () => null,
       },
     },
     {
-      initialRouteName: drawerCloseRoute,
+      initialRouteName: drawerConfig.drawerCloseRoute,
     }
   );
 
-  const navigator = createNavigator(drawerRouter, routeConfigs, config)(
-    props => (
-      <DrawerView
-        {...props}
-        drawerBackgroundColor={drawerBackgroundColor}
-        drawerLockMode={drawerLockMode}
-        useNativeAnimations={useNativeAnimations}
-        drawerWidth={drawerWidth}
-        contentComponent={contentComponent}
-        contentOptions={contentOptions}
-        drawerPosition={drawerPosition}
-        drawerOpenRoute={drawerOpenRoute}
-        drawerCloseRoute={drawerCloseRoute}
-        drawerToggleRoute={drawerToggleRoute}
-      />
-    )
-  );
+  const navigator = createNavigator(DrawerView, drawerRouter, drawerConfig);
 
   return createNavigationContainer(navigator);
 };
