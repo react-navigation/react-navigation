@@ -441,6 +441,26 @@ describe('StackRouter', () => {
     expect(pushedTwiceState.routes[1].routeName).toEqual('bar');
   });
 
+  test('Push behaves like navigate, except for key', () => {
+    const TestRouter = StackRouter({
+      foo: { screen: () => <div /> },
+      bar: { screen: () => <div /> },
+    });
+    const initState = TestRouter.getStateForAction(NavigationActions.init());
+    const pushedState = TestRouter.getStateForAction(
+      NavigationActions.push({ routeName: 'bar' }),
+      initState
+    );
+    expect(pushedState.index).toEqual(1);
+    expect(pushedState.routes[1].routeName).toEqual('bar');
+    expect(() => {
+      TestRouter.getStateForAction(
+        { type: NavigationActions.PUSH, routeName: 'bar', key: 'a' },
+        pushedState
+      );
+    }).toThrow();
+  });
+
   test('Handle basic stack logic for plain components', () => {
     const FooScreen = () => <div />;
     const BarScreen = () => <div />;

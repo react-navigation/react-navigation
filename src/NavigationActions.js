@@ -3,6 +3,7 @@ const INIT = 'Navigation/INIT';
 const NAVIGATE = 'Navigation/NAVIGATE';
 const POP = 'Navigation/POP';
 const POP_TO_TOP = 'Navigation/POP_TO_TOP';
+const PUSH = 'Navigation/PUSH';
 const RESET = 'Navigation/RESET';
 const SET_PARAMS = 'Navigation/SET_PARAMS';
 const URI = 'Navigation/URI';
@@ -55,6 +56,20 @@ const popToTop = createAction(POP_TO_TOP, payload => ({
   type: POP_TO_TOP,
   immediate: payload && payload.immediate,
 }));
+
+const push = createAction(PUSH, payload => {
+  const action = {
+    type: PUSH,
+    routeName: payload.routeName,
+  };
+  if (payload.params) {
+    action.params = payload.params;
+  }
+  if (payload.action) {
+    action.action = payload.action;
+  }
+  return action;
+});
 
 const reset = createAction(RESET, payload => ({
   type: RESET,
@@ -138,6 +153,7 @@ export default {
   NAVIGATE,
   POP,
   POP_TO_TOP,
+  PUSH,
   RESET,
   SET_PARAMS,
   URI,
@@ -149,6 +165,7 @@ export default {
   navigate,
   pop,
   popToTop,
+  push,
   reset,
   setParams,
   uri,

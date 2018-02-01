@@ -99,6 +99,7 @@ exports[`StackNavigator applies correct values when headerRight is present 1`] =
           "navigate": [Function],
           "pop": [Function],
           "popToTop": [Function],
+          "push": [Function],
           "setParams": [Function],
           "state": Object {
             "index": 0,
@@ -334,6 +335,7 @@ exports[`StackNavigator renders successfully 1`] = `
           "navigate": [Function],
           "pop": [Function],
           "popToTop": [Function],
+          "push": [Function],
           "setParams": [Function],
           "state": Object {
             "index": 0,

@@ -60,5 +60,10 @@ export default function(navigation) {
       const key = navigation.state.key;
       return navigation.dispatch(NavigationActions.setParams({ params, key }));
     },
+
+    push: (routeName, params, action) =>
+      navigation.dispatch(
+        NavigationActions.push({ routeName, params, action })
+      ),
   };
 }
