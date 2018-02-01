@@ -4,6 +4,7 @@ import { NativeModules } from 'react-native';
 import CardStack from './CardStack';
 import CardStackStyleInterpolator from './CardStackStyleInterpolator';
 import Transitioner from '../Transitioner';
+import addNavigationHelpers from '../../addNavigationHelpers';
 import TransitionConfigs from './TransitionConfigs';
 
 const NativeAnimatedModule =
@@ -32,7 +33,7 @@ class CardStackTransitioner extends React.Component {
     // props for the old screen
     prevTransitionProps
   ) => {
-    const isModal = this.props.mode === 'modal';
+    const isModal = this._getMode() === 'modal';
     // Copy the object so we can assign useNativeDriver below
     const transitionSpec = {
       ...TransitionConfigs.getTransitionConfig(
@@ -53,11 +54,26 @@ class CardStackTransitioner extends React.Component {
     return transitionSpec;
   };
 
+  _getMode() {
+    const { navigation, mode, router } = this.props;
+    // If there's a route, get its screen options
+    if (navigation.state.routes && navigation.state.routes[1]) {
+      screenOptions = router.getScreenOptions(
+        addNavigationHelpers({
+          state: navigation.state.routes[1],
+          dispatch: () => null,
+          addListener: () => null,
+        })
+      );
+      if (screenOptions.mode) return screenOptions.mode;
+    }
+    return mode;
+  }
+
   _render = props => {
     const {
       screenProps,
       headerMode,
-      mode,
       router,
       cardStyle,
       transitionConfig,
@@ -66,7 +82,7 @@ class CardStackTransitioner extends React.Component {
       <CardStack
         screenProps={screenProps}
         headerMode={headerMode}
-        mode={mode}
+        mode={this._getMode()}
         router={router}
         cardStyle={cardStyle}
         transitionConfig={transitionConfig}

@@ -51,7 +51,7 @@
     "babel-preset-stage-1": "^6.24.1",
     "codecov": "^2.2.0",
     "eslint": "^4.2.0",
-    "eslint-config-prettier": "^2.3.0",
+    "eslint-config-prettier": "^2.9.0",
     "eslint-plugin-import": "^2.7.0",
     "eslint-plugin-jsx-a11y": "^6.0.2",
     "eslint-plugin-prettier": "^2.1.2",

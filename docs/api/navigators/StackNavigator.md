@@ -151,6 +151,10 @@ Color for material ripple (Android >= 5.0 only)
 
 Whether you can use gestures to dismiss this screen. Defaults to true on iOS, false on Android.
 
+#### `mode`
+
+Defines mode for an individual screen (show a modal in a card stack, or a card stack in a modal). Accepts "modal" or "card".
+
 #### `gestureResponseDistance`
 
 Object to override the distance of touch start from the edge of the screen to recognize gestures. It takes the following properties:

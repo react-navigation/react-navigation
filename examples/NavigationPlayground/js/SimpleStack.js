@@ -40,11 +40,26 @@ class MyNavScreen extends React.Component<MyNavScreenProps> {
           }
           title="Custom back button"
         />
+        <Button
+          onPress={() => navigation.navigate('Modal')}
+          title="Modal 'popup' style screen"
+        />
         <Button onPress={() => navigation.goBack(null)} title="Go back" />
         <StatusBar barStyle="default" />
       </SafeAreaView>
     );
   }
+}
+
+const Modal = ({navigation}) => (
+  <MyNavScreen
+    banner="Modal in Screen Navigator"
+    navigation={navigation}
+  />
+)
+Modal.navigationOptions = {
+  title: 'Modal mode',
+  mode: 'modal'
 }
 
 type MyHomeScreenProps = {
@@ -180,6 +195,9 @@ const SimpleStack = StackNavigator({
     path: 'photos/:name',
     screen: MyPhotosScreen,
   },
+  Modal: {
+    screen: Modal
+  }
 });
 
 export default SimpleStack;

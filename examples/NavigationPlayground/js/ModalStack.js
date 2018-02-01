@@ -20,6 +20,10 @@ const MyNavScreen = ({ navigation, banner }) => (
         title="Go to a profile screen"
       />
       <Button
+        onPress={() => navigation.navigate('Card')}
+        title="Card mode view"
+      />
+      <Button
         onPress={() => navigation.navigate('HeaderTest')}
         title="Go to a header toggle screen"
       />
@@ -28,7 +32,7 @@ const MyNavScreen = ({ navigation, banner }) => (
           title="Toggle Header"
           onPress={() =>
             navigation.setParams({
-              headerVisible:
+              headerVisible: 
                 !navigation.state.params ||
                 !navigation.state.params.headerVisible,
             })}
@@ -39,6 +43,14 @@ const MyNavScreen = ({ navigation, banner }) => (
     <StatusBar barStyle="default" />
   </ScrollView>
 );
+
+const CardScreen = ({navigation}) => (
+  <MyNavScreen banner="Screen with Screen Mode" navigation={navigation} />
+)
+CardScreen.navigationOptions = {
+  title: 'Screen Mode',
+  mode: 'card'
+}
 
 const MyHomeScreen = ({ navigation }) => (
   <MyNavScreen banner="Home Screen" navigation={navigation} />
@@ -55,6 +67,7 @@ const MyProfileScreen = ({ navigation }) => (
 );
 MyProfileScreen.navigationOptions = ({ navigation }) => ({
   title: `${navigation.state.params.name}'s Profile!`,
+  mode: 'modal'
 });
 
 const ProfileNavigator = StackNavigator(
@@ -76,7 +89,7 @@ const ProfileNavigator = StackNavigator(
 );
 
 const MyHeaderTestScreen = ({ navigation }) => (
-  <MyNavScreen banner={`Full screen view`} navigation={navigation} />
+  <MyNavScreen banner="Full screen view" navigation={navigation} />
 );
 MyHeaderTestScreen.navigationOptions = ({ navigation }) => {
   const headerVisible =
@@ -91,6 +104,9 @@ const ModalStack = StackNavigator(
   {
     ProfileNavigator: {
       screen: ProfileNavigator,
+    },
+    Card: {
+      screen: CardScreen,
     },
     HeaderTest: { screen: MyHeaderTestScreen },
   },

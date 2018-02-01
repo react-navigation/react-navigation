@@ -228,6 +228,7 @@ export type NavigationScreenDetails<T> = {
 
 export type NavigationScreenOptions = {
   title?: string,
+  mode?: string,
 };
 
 export type NavigationScreenConfigProps = {
