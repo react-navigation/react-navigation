@@ -37,6 +37,9 @@ const navigate = createAction(NAVIGATE, payload => {
   if (payload.action) {
     action.action = payload.action;
   }
+  if (payload.key) {
+    action.key = payload.key;
+  }
   return action;
 });
 

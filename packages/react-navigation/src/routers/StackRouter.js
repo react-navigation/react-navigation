@@ -7,12 +7,7 @@ import StateUtils from '../StateUtils';
 import validateRouteConfigMap from './validateRouteConfigMap';
 import getScreenConfigDeprecated from './getScreenConfigDeprecated';
 import invariant from '../utils/invariant';
-
-const uniqueBaseId = `id-${Date.now()}`;
-let uuidCount = 0;
-function _getUuid() {
-  return `${uniqueBaseId}-${uuidCount++}`;
-}
+import { generateKey } from './KeyGenerator';
 
 function isEmpty(obj) {
   if (!obj) return true;
@@ -109,9 +104,10 @@ export default (routeConfigs, stackConfig = {}) => {
             index: 0,
             routes: [
               {
-                ...action,
+                routeName: action.routeName,
+                params: action.params,
                 type: undefined,
-                key: `Init-${_getUuid()}`,
+                key: `Init-${generateKey()}`,
               },
             ],
           };
@@ -134,7 +130,7 @@ export default (routeConfigs, stackConfig = {}) => {
         route = {
           ...route,
           routeName: initialRouteName,
-          key: `Init-${_getUuid()}`,
+          key: `Init-${generateKey()}`,
           ...(params ? { params } : {}),
         };
         // eslint-disable-next-line no-param-reassign
@@ -175,19 +171,55 @@ export default (routeConfigs, stackConfig = {}) => {
       ) {
         const childRouter = childRouters[action.routeName];
         let route;
+
+        // The key may be provided for pushing, or to navigate back to the key
+        if (action.key) {
+          const lastRouteIndex = state.routes.findIndex(
+            r => r.key === action.key
+          );
+          if (lastRouteIndex !== -1) {
+            // If index is unchanged and params are not being set, leave state identity intact
+            if (state.index === lastRouteIndex && !action.params) {
+              return state;
+            }
+            const routes = [...state.routes];
+            // Apply params if provided, otherwise leave route identity intact
+            if (action.params) {
+              const route = state.routes.find(r => r.key === action.key);
+              routes[lastRouteIndex] = {
+                ...route,
+                params: {
+                  ...route.params,
+                  ...action.params,
+                },
+              };
+            }
+            // Return state with new index. Change isTransitioning only if index has changed
+            return {
+              ...state,
+              isTransitioning:
+                state.index !== lastRouteIndex
+                  ? action.immediate !== true
+                  : undefined,
+              index: lastRouteIndex,
+              routes,
+            };
+          }
+        }
+        const key = action.key || generateKey();
         if (childRouter) {
           const childAction =
             action.action || NavigationActions.init({ params: action.params });
           route = {
             params: action.params,
             ...childRouter.getStateForAction(childAction),
-            key: _getUuid(),
+            key,
             routeName: action.routeName,
           };
         } else {
           route = {
             params: action.params,
-            key: _getUuid(),
+            key,
             routeName: action.routeName,
           };
         }
@@ -234,7 +266,7 @@ export default (routeConfigs, stackConfig = {}) => {
             if (routeToPush) {
               return StateUtils.push(state, {
                 ...routeToPush,
-                key: _getUuid(),
+                key: generateKey(),
                 routeName: childRouterName,
               });
             }
@@ -274,12 +306,12 @@ export default (routeConfigs, stackConfig = {}) => {
                 ...childAction,
                 ...router.getStateForAction(childAction),
                 routeName: childAction.routeName,
-                key: _getUuid(),
+                key: generateKey(),
               };
             }
             const route = {
               ...childAction,
-              key: _getUuid(),
+              key: generateKey(),
             };
             delete route.type;
             return route;
