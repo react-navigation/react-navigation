@@ -70,6 +70,7 @@ class CardStackTransitioner extends React.Component {
           addListener: () => null
         })
       );
+      console.log(screenOptions);
     }
     return screenOptions && screenOptions.mode ? screenOptions.mode : mode;
   }
