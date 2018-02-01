@@ -1,6 +1,4 @@
-/* @flow */
-
-import * as React from 'react';
+import React from 'react';
 import { NativeModules } from 'react-native';
 
 import CardStack from './CardStack';
@@ -9,38 +7,10 @@ import Transitioner from '../Transitioner';
 import addNavigationHelpers from '../../addNavigationHelpers';
 import TransitionConfigs from './TransitionConfigs';
 
-import type {
-  NavigationSceneRenderer,
-  NavigationScreenProp,
-  NavigationStackScreenOptions,
-  NavigationState,
-  NavigationTransitionProps,
-  NavigationNavigatorProps,
-  NavigationRouter,
-  HeaderMode,
-  ViewStyleProp,
-  TransitionConfig,
-} from '../../TypeDefinition';
-
 const NativeAnimatedModule =
   NativeModules && NativeModules.NativeAnimatedModule;
 
-type Props = {
-  headerMode: HeaderMode,
-  mode: 'card' | 'modal',
-  router: NavigationRouter<NavigationState, NavigationStackScreenOptions>,
-  cardStyle?: ViewStyleProp,
-  onTransitionStart?: () => void,
-  onTransitionEnd?: () => void,
-  /**
-   * Optional custom animation when transitioning between screens.
-   */
-  transitionConfig?: () => TransitionConfig,
-} & NavigationNavigatorProps<NavigationStackScreenOptions, NavigationState>;
-
-class CardStackTransitioner extends React.Component<Props> {
-  _render: NavigationSceneRenderer;
-
+class CardStackTransitioner extends React.Component {
   static defaultProps = {
     mode: 'card',
   };
@@ -59,14 +29,13 @@ class CardStackTransitioner extends React.Component<Props> {
 
   _configureTransition = (
     // props for the new screen
-    transitionProps: NavigationTransitionProps,
+    transitionProps,
     // props for the old screen
-    prevTransitionProps: ?NavigationTransitionProps
+    prevTransitionProps
   ) => {
     const isModal = this._getMode() === 'modal';
     
     // Copy the object so we can assign useNativeDriver below
-    // (avoid Flow error, transitionSpec is of type NavigationTransitionSpec).
     const transitionSpec = {
       ...TransitionConfigs.getTransitionConfig(
         this.props.transitionConfig,
@@ -103,7 +72,7 @@ class CardStackTransitioner extends React.Component<Props> {
     return screenOptions && screenOptions.mode ? screenOptions.mode : mode;
   }
 
-  _render = (props: NavigationTransitionProps): React.Node => {
+  _render = props => {
     const {
       screenProps,
       headerMode,

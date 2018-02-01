@@ -8,7 +8,6 @@
     "babel-core": "6.17.0",
     "babel-jest": "16.0.0",
     "babel-loader": "6.2.5",
-    "babel-plugin-flow-react-proptypes": "grabbou/babel-plugin-flow-react-proptypes#release",
     "babel-preset-react-app": "^1.0.0",
     "case-sensitive-paths-webpack-plugin": "1.1.4",
     "chalk": "1.1.3",

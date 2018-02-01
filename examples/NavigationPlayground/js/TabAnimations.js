@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { Button, ScrollView, Animated } from 'react-native';
+import { Animated, Button, ScrollView, StatusBar } from 'react-native';
 import { StackNavigator, TabNavigator } from 'react-navigation';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -25,6 +25,7 @@ const MyNavScreen = ({ navigation, banner }) => (
       title="Go to settings tab"
     />
     <Button onPress={() => navigation.goBack(null)} title="Go back" />
+    <StatusBar barStyle="default" />
   </ScrollView>
 );
 

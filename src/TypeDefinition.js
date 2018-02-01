@@ -2,11 +2,9 @@
 
 import * as React from 'react';
 
-import type { TabScene } from './views/TabView/TabView';
-
 import type { StyleObj } from 'react-native/Libraries/StyleSheet/StyleSheetTypes';
 
-import { Animated } from 'react-native';
+import { Animated, Image } from 'react-native';
 
 export type ViewStyleProp = StyleObj;
 export type TextStyleProp = StyleObj;
@@ -318,6 +316,7 @@ export type NavigationStackScreenOptions = NavigationScreenOptions & {
   headerTintColor?: string,
   headerLeft?: React.Node | React.ComponentType<any>,
   headerBackTitle?: string,
+  headerBackImage?: Image.propTypes.source,
   headerTruncatedBackTitle?: string,
   headerBackTitleStyle?: TextStyleProp,
   headerPressColorAndroid?: string,
@@ -325,6 +324,7 @@ export type NavigationStackScreenOptions = NavigationScreenOptions & {
   headerStyle?: ViewStyleProp,
   gesturesEnabled?: boolean,
   gestureResponseDistance?: { vertical?: number, horizontal?: number },
+  gestureDirection?: 'default' | 'inverted',
 };
 
 export type NavigationStackRouterConfig = {
@@ -354,12 +354,20 @@ export type StackNavigatorConfig = {
 
 export type NavigationTabRouterConfig = {
   initialRouteName?: string,
+  initialRouteParams?: NavigationParams,
   paths?: NavigationPathsConfig,
   navigationOptions?: NavigationScreenConfig<*>,
   order?: Array<string>, // todo: type these as the real route names rather than 'string'
 
   // Does the back button cause the router to switch to the initial tab
   backBehavior?: 'none' | 'initialRoute', // defaults `initialRoute`
+};
+
+type TabScene = {
+  route: NavigationRoute,
+  focused: boolean,
+  index: number,
+  tintColor?: ?string,
 };
 
 export type NavigationTabScreenOptions = {|
@@ -407,6 +415,26 @@ export type NavigationProp<S> = {
   dispatch: NavigationDispatch,
 };
 
+export type EventType =
+  | 'willFocus'
+  | 'didFocus'
+  | 'willBlur'
+  | 'didBlur'
+  | 'action';
+
+export type NavigationEventPayload = {
+  type: EventType,
+  action: NavigationAction,
+  state: NavigationState,
+  lastState: NavigationState,
+};
+
+export type NavigationEventCallback = (payload: NavigationEventPayload) => void;
+
+export type NavigationEventSubscription = {
+  remove: () => void,
+};
+
 export type NavigationScreenProp<+S> = {
   +state: S,
   dispatch: NavigationDispatch,
@@ -417,6 +445,10 @@ export type NavigationScreenProp<+S> = {
     action?: NavigationNavigateAction
   ) => boolean,
   setParams: (newParams: NavigationParams) => boolean,
+  addListener: (
+    eventName: string,
+    callback: NavigationEventCallback
+  ) => NavigationEventSubscription,
 };
 
 export type NavigationNavigatorProps<O: {}, S: {}> = {

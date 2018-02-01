@@ -1,6 +1,4 @@
-/* @flow */
-
-import * as React from 'react';
+import React from 'react';
 import { Platform } from 'react-native';
 
 import createNavigator from './createNavigator';
@@ -10,36 +8,11 @@ import TabView from '../views/TabView/TabView';
 import TabBarTop from '../views/TabView/TabBarTop';
 import TabBarBottom from '../views/TabView/TabBarBottom';
 
-import NavigatorTypes from './NavigatorTypes';
-
-import type { TabViewConfig } from '../views/TabView/TabView';
-
-import type {
-  NavigationState,
-  NavigationRouteConfigMap,
-  NavigationTabRouterConfig,
-  NavigationTabScreenOptions,
-  NavigationNavigatorProps,
-} from '../TypeDefinition';
-
-export type TabNavigatorConfig = {
-  containerOptions?: void,
-} & NavigationTabRouterConfig &
-  TabViewConfig;
-
 // A tab navigators props are the intersection between
 // the base navigator props (navgiation, screenProps, etc)
 // and the view's props
-type TabNavigatorProps = NavigationNavigatorProps<
-  NavigationTabScreenOptions,
-  NavigationState
-> &
-  React.ElementProps<typeof TabView>;
 
-const TabNavigator = (
-  routeConfigs: NavigationRouteConfigMap,
-  config: TabNavigatorConfig = {}
-) => {
+const TabNavigator = (routeConfigs, config = {}) => {
   // Use the look native to the platform by default
   const mergedConfig = { ...TabNavigator.Presets.Default, ...config };
   const {
@@ -49,19 +22,13 @@ const TabNavigator = (
     swipeEnabled,
     animationEnabled,
     configureTransition,
-    lazy,
     initialLayout,
     ...tabsConfig
   } = mergedConfig;
 
   const router = TabRouter(routeConfigs, tabsConfig);
 
-  const navigator = createNavigator(
-    router,
-    routeConfigs,
-    config,
-    NavigatorTypes.TABS
-  )((props: TabNavigatorProps) => (
+  const navigator = createNavigator(router, routeConfigs, config)(props => (
     <TabView
       {...props}
       tabBarComponent={tabBarComponent}
@@ -70,7 +37,6 @@ const TabNavigator = (
       swipeEnabled={swipeEnabled}
       animationEnabled={animationEnabled}
       configureTransition={configureTransition}
-      lazy={lazy}
       initialLayout={initialLayout}
     />
   ));
@@ -84,7 +50,6 @@ const Presets = {
     tabBarPosition: 'bottom',
     swipeEnabled: false,
     animationEnabled: false,
-    lazy: false,
     initialLayout: undefined,
   },
   AndroidTopTabs: {
@@ -92,7 +57,6 @@ const Presets = {
     tabBarPosition: 'top',
     swipeEnabled: true,
     animationEnabled: true,
-    lazy: false,
     initialLayout: undefined,
   },
 };
