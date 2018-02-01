@@ -101,23 +101,39 @@ export default (routeConfigs, stackConfig = {}) => {
       // Set up the initial state if needed
       if (!state) {
         let route = {};
-        if (
-          behavesLikePushAction(action) &&
-          childRouters[action.routeName] !== undefined
-        ) {
+        const childRouter = childRouters[action.routeName];
+        if (behavesLikePushAction(action) && childRouter !== undefined) {
+          if (childRouter === null) {
+            return {
+              isTransitioning: false,
+              index: 0,
+              routes: [
+                {
+                  ...action,
+                  type: undefined,
+                  key: `Init-${_getUuid()}`,
+                },
+              ],
+            };
+          }
+
+          const childAction =
+            action.action || NavigationActions.init({ params: action.params });
           return {
             key: 'StackRouterRoot',
             isTransitioning: false,
             index: 0,
             routes: [
               {
-                routeName: action.routeName,
                 params: action.params,
-                key: `Init-${generateKey()}`,
+                ...childRouter.getStateForAction(childAction),
+                routeName: action.routeName,
+                key: `Init-${_getUuid()}`,
               },
             ],
           };
         }
+
         if (initialChildRouter) {
           route = initialChildRouter.getStateForAction(
             NavigationActions.navigate({
