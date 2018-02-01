@@ -7,7 +7,8 @@
     "url": "git@github.com:react-navigation/react-navigation.git",
     "type": "git"
   },
-  "author": "Adam Miskiewicz <adam@sk3vy.com>, Eric Vicenti <ericvicenti@gmail.com>",
+  "author":
+    "Adam Miskiewicz <adam@sk3vy.com>, Eric Vicenti <ericvicenti@gmail.com>",
   "license": "BSD-2-Clause",
   "scripts": {
     "start": "npm run ios",
@@ -21,10 +22,7 @@
     "format": "eslint --fix .",
     "precommit": "lint-staged"
   },
-  "files": [
-    "lib",
-    "src"
-  ],
+  "files": ["lib", "src"],
   "peerDependencies": {
     "react": "*",
     "react-native": "*"
@@ -70,25 +68,15 @@
     "notify": true,
     "preset": "react-native",
     "testRegex": "./src/.*\\-test\\.js$",
-    "setupFiles": [
-      "<rootDir>/jest-setup.js"
-    ],
+    "setupFiles": ["<rootDir>/jest-setup.js"],
     "coverageDirectory": "./coverage/",
     "collectCoverage": true,
-    "collectCoverageFrom": [
-      "src/**/*.js"
-    ],
-    "coveragePathIgnorePatterns": [
-      "jest-setup.js"
-    ],
-    "modulePathIgnorePatterns": [
-      "examples"
-    ]
+    "coverageReporters": ["lcov"],
+    "collectCoverageFrom": ["src/**/*.js"],
+    "coveragePathIgnorePatterns": ["jest-setup.js"],
+    "modulePathIgnorePatterns": ["examples"]
   },
   "lint-staged": {
-    "*.js": [
-      "eslint --fix",
-      "git add"
-    ]
+    "*.js": ["eslint --fix", "git add"]
   }
 }
