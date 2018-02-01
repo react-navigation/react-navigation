@@ -53,7 +53,7 @@ class MyNavScreen extends React.Component<MyNavScreenProps> {
 
 const Modal = ({navigation}) => (
   <MyNavScreen
-    banner={`Modal in Screen Navigator`}
+    banner="Modal in Screen Navigator"
     navigation={navigation}
   />
 )

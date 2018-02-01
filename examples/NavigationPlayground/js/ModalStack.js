@@ -14,31 +14,31 @@ const MyNavScreen = ({ navigation, banner }) => (
         top: navigation.state.routeName === 'HeaderTest' ? 'always' : 'never',
       }}
     >
-    <SampleText>{banner}</SampleText>
-    <Button
-      onPress={() => navigation.navigate('Profile', { name: 'Jane' })}
-      title="Go to a profile screen"
-    />
-    <Button
-      onPress={() => navigation.navigate('Card')}
-      title="Card mode view"
-    />
-    <Button
-      onPress={() => navigation.navigate('HeaderTest')}
-      title="Go to a header toggle screen"
-    />
-    {navigation.state.routeName === 'HeaderTest' && (
+      <SampleText>{banner}</SampleText>
       <Button
-        title="Toggle Header"
-        onPress={() =>
-          navigation.setParams({
-            headerVisible: 
-              !navigation.state.params ||
-              !navigation.state.params.headerVisible,
-          })}
+        onPress={() => navigation.navigate('Profile', { name: 'Jane' })}
+        title="Go to a profile screen"
       />
-    )}
-    <Button onPress={() => navigation.goBack(null)} title="Go back" />
+      <Button
+        onPress={() => navigation.navigate('Card')}
+        title="Card mode view"
+      />
+      <Button
+        onPress={() => navigation.navigate('HeaderTest')}
+        title="Go to a header toggle screen"
+      />
+      {navigation.state.routeName === 'HeaderTest' && (
+        <Button
+          title="Toggle Header"
+          onPress={() =>
+            navigation.setParams({
+              headerVisible: 
+                !navigation.state.params ||
+                !navigation.state.params.headerVisible,
+            })}
+        />
+      )}
+      <Button onPress={() => navigation.goBack(null)} title="Go back" />
     </SafeAreaView>
     <StatusBar barStyle="default" />
   </ScrollView>
@@ -89,7 +89,7 @@ const ProfileNavigator = StackNavigator(
 );
 
 const MyHeaderTestScreen = ({ navigation }) => (
-  <MyNavScreen banner={`Full screen view`} navigation={navigation} />
+  <MyNavScreen banner="Full screen view" navigation={navigation} />
 );
 MyHeaderTestScreen.navigationOptions = ({ navigation }) => {
   const headerVisible =
