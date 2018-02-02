@@ -1,17 +1,45 @@
 # Redux Integration
 
 ### Overview For Redux Integration
-1. To handle your app's navigation state in redux, you can pass your own `navigation` prop to a navigator.
+1. To handle your app's navigation state in Redux, you can pass your own `navigation` prop to a navigator.
 
-2. Once you pass your own navigation prop to the navigator, the default [`navigation`](https://reactnavigation.org/docs/navigators/navigation-prop) prop gets destroyed. You will most probably pass the `navigation` prop's properties that you want to access. Normally  [`state`](https://reactnavigation.org/docs/navigators/navigation-prop#state-The-screen's-current-stateroute) and [`dispatch`](https://reactnavigation.org/docs/navigators/navigation-prop#dispatch-Send-an-action-to-the-router) properties are passed to the navigator. You will learn how to pass those properties further in this guide. Since you have destroyed the default props, if you try to invoke something you have not explicitly passed down, it won't work. So, if you didn't pass `dispatch`  to the navigator and only passes `state` than you can't access `dispatch` further in your Components.
+2. Once you pass your own navigation prop to the navigator, the default [`navigation`](https://reactnavigation.org/docs/navigators/navigation-prop) prop gets destroyed. You must construct your own `navigation` prop with [`state`](https://reactnavigation.org/docs/navigators/navigation-prop#state-The-screen's-current-stateroute), [`dispatch`](https://reactnavigation.org/docs/navigators/navigation-prop#dispatch-Send-an-action-to-the-router), and `addListener` properties.
 
-3. The `state` will be fed from the reducer assigned to handle navigation state and the `dispatch` will be redux's default `dispatch`. Thus you will be able to dispatch normal redux actions using `this.props.navigation.dispatch(ACTION)`, reducer will update the navigation state on the basis of dispatched action, the new navigation state will then be passed to the navigator.
+3. The `state` will be fed from the reducer assigned to handle navigation state and the `dispatch` will be Redux's default `dispatch`. Thus you will be able to dispatch normal redux actions using `this.props.navigation.dispatch(ACTION)`, reducer will update the navigation state on the basis of dispatched action, the new navigation state will then be passed to the navigator.
+
+4. A middleware is needed so that any events that mutate the navigation state properly trigger the event listeners.
 
 ### Details Regarding Redux Integration
-With redux, your app's state is defined by a reducer. Each navigation router effectively has a reducer, called `getStateForAction`. The following is a minimal example of how you might use navigators within a redux application:
+First, you need to add the `react-navigation-redux-helpers` package to your project.
+
+  ```bash
+  yarn add react-navigation-redux-helpers
+  ```
+
+  or
+
+  ```bash
+  npm install --save react-navigation-redux-helpers
+  ```
+
+With Redux, your app's state is defined by a reducer. Each navigation router effectively has a reducer, called `getStateForAction`. The following is a minimal example of how you might use navigators within a Redux application:
 
 ```es6
-import { addNavigationHelpers } from 'react-navigation';
+import {
+  StackNavigator,
+  addNavigationHelpers,
+} from 'react-navigation';
+import {
+  createStore,
+  applyMiddleware,
+  combineReducers,
+} from 'redux';
+import {
+  createReduxBoundAddListener,
+  createReactNavigationReduxMiddleware,
+} from 'react-navigation-redux-helpers';
+import { Provider, connect } from 'react-redux';
+import React from 'react';
 
 const AppNavigator = StackNavigator(AppRouteConfigs);
 
@@ -29,12 +57,20 @@ const appReducer = combineReducers({
   ...
 });
 
+// Note: createReactNavigationReduxMiddleware must be run before createReduxBoundAddListener
+const middleware = createReactNavigationReduxMiddleware(
+  "root",
+  state => state.nav,
+);
+const addListener = createReduxBoundAddListener("root");
+
 class App extends React.Component {
   render() {
     return (
       <AppNavigator navigation={addNavigationHelpers({
         dispatch: this.props.dispatch,
         state: this.props.nav,
+        addListener,
       })} />
     );
   }
@@ -46,7 +82,10 @@ const mapStateToProps = (state) => ({
 
 const AppWithNavigationState = connect(mapStateToProps)(App);
 
-const store = createStore(appReducer);
+const store = createStore(
+  appReducer,
+  applyMiddleware(middleware),
+);
 
 class Root extends React.Component {
   render() {
@@ -59,7 +98,7 @@ class Root extends React.Component {
 }
 ```
 
-Once you do this, your navigation state is stored within your redux store, at which point you can fire navigation actions using your redux dispatch function.
+Once you do this, your navigation state is stored within your Redux store, at which point you can fire navigation actions using your Redux dispatch function.
 
 Keep in mind that when a navigator is given a `navigation` prop, it relinquishes control of its internal state. That means you are now responsible for persisting its state, handling any deep linking, [Handling the Hardware Back Button in Android](#Handling-the-Hardware-Back-Button-in-Android), etc.
 
@@ -77,7 +116,7 @@ In this case, once you `connect` `AppNavigator` to Redux as is done in `AppWithN
 
 ## Full example
 
-There's a working example app with redux [here](https://github.com/react-community/react-navigation/tree/master/examples/ReduxExample) if you want to try it out yourself.
+There's a working example app with Redux [here](https://github.com/react-community/react-navigation/tree/master/examples/ReduxExample) if you want to try it out yourself.
 
 ## Mocking tests
 
@@ -129,9 +168,11 @@ class ReduxNavigation extends React.Component {
     const { dispatch, nav } = this.props;
     const navigation = addNavigationHelpers({
       dispatch,
-      state: nav
+      state: nav,
+      addListener,
     });
 
     return <AppNavigation navigation={navigation} />;
   }
 }
+```
