@@ -164,7 +164,19 @@ export default (routeConfigs, stackConfig = {}) => {
         }
       }
 
-      // Handle explicit push navigation action
+      //Handle pop-to-top behavior. Make sure this happens after children have had a chance to handle the action, so that the inner stack pops to top first.
+      if (action.type === NavigationActions.POP_TO_TOP) {
+        if (state.index !== 0) {
+          return {
+            isTransitioning: action.immediate !== true,
+            index: 0,
+            routes: [state.routes[0]],
+          };
+        }
+        return state;
+      }
+
+      // Handle explicit push navigation action. Make sure this happens after children have had a chance to handle the action
       if (
         action.type === NavigationActions.NAVIGATE &&
         childRouters[action.routeName] !== undefined
