@@ -17,6 +17,13 @@ function isEmpty(obj) {
   return true;
 }
 
+function behavesLikePushAction(action) {
+  return (
+    action.type === NavigationActions.NAVIGATE ||
+    action.type === NavigationActions.PUSH
+  );
+}
+
 export default (routeConfigs, stackConfig = {}) => {
   // Fail fast on invalid route definitions
   validateRouteConfigMap(routeConfigs);
@@ -96,7 +103,7 @@ export default (routeConfigs, stackConfig = {}) => {
       if (!state) {
         let route = {};
         if (
-          action.type === NavigationActions.NAVIGATE &&
+          behavesLikePushAction(action) &&
           childRouters[action.routeName] !== undefined
         ) {
           return {
@@ -164,15 +171,31 @@ export default (routeConfigs, stackConfig = {}) => {
         }
       }
 
-      // Handle explicit push navigation action
+      //Handle pop-to-top behavior. Make sure this happens after children have had a chance to handle the action, so that the inner stack pops to top first.
+      if (action.type === NavigationActions.POP_TO_TOP) {
+        if (state.index !== 0) {
+          return {
+            isTransitioning: action.immediate !== true,
+            index: 0,
+            routes: [state.routes[0]],
+          };
+        }
+        return state;
+      }
+
+      // Handle explicit push navigation action. Make sure this happens after children have had a chance to handle the action
       if (
-        action.type === NavigationActions.NAVIGATE &&
+        behavesLikePushAction(action) &&
         childRouters[action.routeName] !== undefined
       ) {
         const childRouter = childRouters[action.routeName];
         let route;
 
-        // The key may be provided for pushing, or to navigate back to the key
+        invariant(
+          action.type !== NavigationActions.PUSH || action.key == null,
+          'StackRouter does not support key on the push action'
+        );
+        // With the navigate action, the key may be provided for pushing, or to navigate back to the key
         if (action.key) {
           const lastRouteIndex = state.routes.findIndex(
             r => r.key === action.key
@@ -240,7 +263,7 @@ export default (routeConfigs, stackConfig = {}) => {
       }
 
       // Handle navigation to other child routers that are not yet pushed
-      if (action.type === NavigationActions.NAVIGATE) {
+      if (behavesLikePushAction(action)) {
         const childRouterNames = Object.keys(childRouters);
         for (let i = 0; i < childRouterNames.length; i++) {
           const childRouterName = childRouterNames[i];
@@ -295,6 +318,12 @@ export default (routeConfigs, stackConfig = {}) => {
       }
 
       if (action.type === NavigationActions.RESET) {
+        // Only handle reset actions that are unspecified or match this state key
+        if (action.key != null && action.key != state.key) {
+          // Deliberately use != instead of !== so we can match null with
+          // undefined on either the state or the action
+          return state;
+        }
         const resetAction = action;
 
         return {
@@ -320,10 +349,17 @@ export default (routeConfigs, stackConfig = {}) => {
         };
       }
 
-      if (action.type === NavigationActions.BACK) {
-        const key = action.key;
+      if (
+        action.type === NavigationActions.BACK ||
+        action.type === NavigationActions.POP
+      ) {
+        const { key, n, immediate } = action;
         let backRouteIndex = state.index;
-        if (key) {
+        if (action.type === NavigationActions.POP && n != null) {
+          // determine the index to go back *from*. In this case, n=1 means to go
+          // back from state.index, as if it were a normal "BACK" action
+          backRouteIndex = Math.max(1, state.index - n + 1);
+        } else if (key) {
           const backRoute = state.routes.find(route => route.key === key);
           backRouteIndex = state.routes.indexOf(backRoute);
         }
@@ -332,7 +368,7 @@ export default (routeConfigs, stackConfig = {}) => {
             ...state,
             routes: state.routes.slice(0, backRouteIndex),
             index: backRouteIndex - 1,
-            isTransitioning: action.immediate !== true,
+            isTransitioning: immediate !== true,
           };
         }
       }
