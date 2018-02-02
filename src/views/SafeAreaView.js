@@ -130,6 +130,7 @@ class SafeView extends Component {
         ref={c => (this.view = c)}
         onLayout={this._onLayout}
         style={safeAreaStyle}
+        pointerEvents={this.props.pointerEvents}
       >
         {this.props.children}
       </Animated.View>
