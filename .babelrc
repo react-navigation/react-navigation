@@ -1,28 +1,3 @@
 {
-  "env": {
-    // For RN example development
-    "development": {
-      "presets": ["react-native"]
-    },
-    // For Jest
-    "test": {
-      "presets": ["react-native"]
-    },
-    // For publishing to NPM for RN
-    "publish-rn": {
-      "presets": ["react-native-syntax"]
-    },
-    // For publishing to NPM for web
-    "publish-web": {
-      "presets": ["es2015", "stage-1", "react"],
-      "plugins": [
-        [
-          "transform-define",
-          {
-            "__DEV__": false
-          }
-        ]
-      ]
-    }
-  }
+  "presets": ["react-native"]
 }
