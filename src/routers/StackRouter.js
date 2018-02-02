@@ -17,6 +17,13 @@ function isEmpty(obj) {
   return true;
 }
 
+function behavesLikePushAction(action) {
+  return (
+    action.type === NavigationActions.NAVIGATE ||
+    action.type === NavigationActions.PUSH
+  );
+}
+
 export default (routeConfigs, stackConfig = {}) => {
   // Fail fast on invalid route definitions
   validateRouteConfigMap(routeConfigs);
@@ -96,7 +103,7 @@ export default (routeConfigs, stackConfig = {}) => {
       if (!state) {
         let route = {};
         if (
-          action.type === NavigationActions.NAVIGATE &&
+          behavesLikePushAction(action) &&
           childRouters[action.routeName] !== undefined
         ) {
           return {
@@ -178,13 +185,17 @@ export default (routeConfigs, stackConfig = {}) => {
 
       // Handle explicit push navigation action. Make sure this happens after children have had a chance to handle the action
       if (
-        action.type === NavigationActions.NAVIGATE &&
+        behavesLikePushAction(action) &&
         childRouters[action.routeName] !== undefined
       ) {
         const childRouter = childRouters[action.routeName];
         let route;
 
-        // The key may be provided for pushing, or to navigate back to the key
+        invariant(
+          action.type !== NavigationActions.PUSH || action.key == null,
+          'StackRouter does not support key on the push action'
+        );
+        // With the navigate action, the key may be provided for pushing, or to navigate back to the key
         if (action.key) {
           const lastRouteIndex = state.routes.findIndex(
             r => r.key === action.key
@@ -252,7 +263,7 @@ export default (routeConfigs, stackConfig = {}) => {
       }
 
       // Handle navigation to other child routers that are not yet pushed
-      if (action.type === NavigationActions.NAVIGATE) {
+      if (behavesLikePushAction(action)) {
         const childRouterNames = Object.keys(childRouters);
         for (let i = 0; i < childRouterNames.length; i++) {
           const childRouterName = childRouterNames[i];
