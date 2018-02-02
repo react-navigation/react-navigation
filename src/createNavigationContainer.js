@@ -3,7 +3,6 @@ import { BackHandler, Linking } from './PlatformHelpers';
 import NavigationActions from './NavigationActions';
 import addNavigationHelpers from './addNavigationHelpers';
 import invariant from './utils/invariant';
-import { triggerActionEventSubscribers } from './actionEventDispatch';
 
 /**
  * Create an HOC that injects the navigation and manages the navigation state
@@ -153,13 +152,17 @@ export default function createNavigationContainer(Component) {
       const oldNav = this._nav;
       invariant(oldNav, 'should be set in constructor if stateful');
       const nav = Component.router.getStateForAction(action, oldNav);
-      const dispatchActionEvents = () =>
-        triggerActionEventSubscribers(
-          this._actionEventSubscribers,
-          action,
-          oldNav,
-          nav
+      const dispatchActionEvents = () => {
+        this._actionEventSubscribers.forEach(subscriber =>
+          // $FlowFixMe - Payload should probably understand generic state type
+          subscriber({
+            type: 'action',
+            action,
+            state: nav,
+            lastState: oldNav,
+          })
         );
+      };
       if (nav && nav !== oldNav) {
         // Cache updates to state.nav during the tick to ensure that subsequent calls will not discard this change
         this._nav = nav;

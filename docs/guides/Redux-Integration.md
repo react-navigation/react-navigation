@@ -10,20 +10,34 @@
 4. A middleware is needed so that any events that mutate the navigation state properly trigger the event listeners.
 
 ### Details Regarding Redux Integration
+First, you need to add the `react-navigation-redux-helpers` package to your project.
+
+  ```bash
+  yarn add react-navigation-redux-helpers
+  ```
+
+  or
+
+  ```bash
+  npm install --save react-navigation-redux-helpers
+  ```
+
 With Redux, your app's state is defined by a reducer. Each navigation router effectively has a reducer, called `getStateForAction`. The following is a minimal example of how you might use navigators within a Redux application:
 
 ```es6
 import {
   StackNavigator,
   addNavigationHelpers,
-  createReduxBoundAddListener,
-  createReactNavigationReduxMiddleware,
 } from 'react-navigation';
 import {
   createStore,
   applyMiddleware,
   combineReducers,
 } from 'redux';
+import {
+  createReduxBoundAddListener,
+  createReactNavigationReduxMiddleware,
+} from 'react-navigation-redux-helpers';
 import { Provider, connect } from 'react-redux';
 import React from 'react';
 

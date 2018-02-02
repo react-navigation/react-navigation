@@ -1,7 +1,7 @@
 import {
   createReactNavigationReduxMiddleware,
   createReduxBoundAddListener,
-} from 'react-navigation';
+} from 'react-navigation-redux-helpers';
 
 const middleware = createReactNavigationReduxMiddleware(
   "root",
