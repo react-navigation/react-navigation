@@ -25,9 +25,10 @@
     "prop-types": "^15.5.10",
     "react": "16.2.0",
     "react-native": "^0.52.0",
+    "react-navigation": "link:../..",
+    "react-navigation-redux-helpers": "^1.0.0",
     "react-redux": "^5.0.6",
-    "redux": "^3.7.2",
-    "react-navigation": "link:../.."
+    "redux": "^3.7.2"
   },
   "devDependencies": {
     "babel-jest": "^21.0.0",
