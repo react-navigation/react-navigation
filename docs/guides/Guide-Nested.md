@@ -41,13 +41,33 @@ simple-tabs
 
 We want these tabs to be visible in the first screen of the app, but new screens in the stack should cover the tabs.
 
-Lets add our tabs navigator as a screen in our top-level `StackNavigator` that we set up in the [previous step](/docs/intro/).
+Lets add our tabs navigator as a screen in our top-level `StackNavigator` that we set up in the [previous step](/docs/intro/basic-app).
 
 ```js
 const SimpleApp = StackNavigator({
   Home: { screen: MainScreenNavigator },
   Chat: { screen: ChatScreen },
 });
+```
+
+Here's the ChatScreen looks like:
+
+```js
+class ChatScreen extends React.Component {
+  // Nav options can be defined as a function of the screen's props:
+  static navigationOptions = ({ navigation }) => ({
+    title: `Chat with ${navigation.state.params.user}`,
+  });
+  render() {
+    // The screen's current route is passed in to `props.navigation.state`:
+    const { params } = this.props.navigation.state;
+    return (
+      <View>
+        <Text>Chat with {params.user}</Text>
+      </View>
+    );
+  }
+}
 ```
 
 Because `MainScreenNavigator` is being used as a screen, we can give it `navigationOptions`:
