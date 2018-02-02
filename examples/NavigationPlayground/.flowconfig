@@ -34,9 +34,6 @@
 ; Ignore react-native-fbads dependency of the expo sdk
 .*/node_modules/react-native-fbads/*
 
-.*/react-navigation/lib-rn/.*
-.*/react-navigation/lib/.*
-
 .*/react-navigation/examples/ReduxExample/.*
 .*/react-navigation/website/.*
 
