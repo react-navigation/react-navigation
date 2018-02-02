@@ -326,10 +326,17 @@ export default (routeConfigs, stackConfig = {}) => {
         };
       }
 
-      if (action.type === NavigationActions.BACK) {
-        const key = action.key;
+      if (
+        action.type === NavigationActions.BACK ||
+        action.type === NavigationActions.POP
+      ) {
+        const { key, n, immediate } = action;
         let backRouteIndex = state.index;
-        if (key) {
+        if (action.type === NavigationActions.POP && n != null) {
+          // determine the index to go back *from*. In this case, n=1 means to go
+          // back from state.index, as if it were a normal "BACK" action
+          backRouteIndex = Math.max(1, state.index - n + 1);
+        } else if (key) {
           const backRoute = state.routes.find(route => route.key === key);
           backRouteIndex = state.routes.indexOf(backRoute);
         }
@@ -338,7 +345,7 @@ export default (routeConfigs, stackConfig = {}) => {
             ...state,
             routes: state.routes.slice(0, backRouteIndex),
             index: backRouteIndex - 1,
-            isTransitioning: action.immediate !== true,
+            isTransitioning: immediate !== true,
           };
         }
       }

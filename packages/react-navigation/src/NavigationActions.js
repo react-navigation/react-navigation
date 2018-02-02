@@ -1,6 +1,7 @@
 const BACK = 'Navigation/BACK';
 const INIT = 'Navigation/INIT';
 const NAVIGATE = 'Navigation/NAVIGATE';
+const POP = 'Navigation/POP';
 const RESET = 'Navigation/RESET';
 const SET_PARAMS = 'Navigation/SET_PARAMS';
 const URI = 'Navigation/URI';
@@ -42,6 +43,12 @@ const navigate = createAction(NAVIGATE, payload => {
   }
   return action;
 });
+
+const pop = createAction(POP, payload => ({
+  type: POP,
+  n: payload && payload.n,
+  immediate: payload && payload.immediate,
+}));
 
 const reset = createAction(RESET, payload => ({
   type: RESET,
@@ -123,6 +130,7 @@ export default {
   BACK,
   INIT,
   NAVIGATE,
+  POP,
   RESET,
   SET_PARAMS,
   URI,
@@ -132,6 +140,7 @@ export default {
   back,
   init,
   navigate,
+  pop,
   reset,
   setParams,
   uri,
