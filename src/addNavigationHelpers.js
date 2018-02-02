@@ -39,6 +39,10 @@ export default function(navigation) {
       );
       return navigation.dispatch(NavigationActions.navigate(navigateTo));
     },
+    pop: (n, params) =>
+      navigation.dispatch(
+        NavigationActions.pop({ n, immediate: params && params.immediate })
+      ),
     /**
      * For updating current route params. For example the nav bar title and
      * buttons are based on the route params.
