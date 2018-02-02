@@ -365,6 +365,42 @@ describe('StackRouter', () => {
     expect(pushedState.routes[1].routes[1].routeName).toEqual('qux');
   });
 
+  test('popToTop works as expected', () => {
+    const TestRouter = StackRouter({
+      foo: { screen: () => <div /> },
+      bar: { screen: () => <div /> },
+    });
+
+    const state = {
+      index: 2,
+      isTransitioning: false,
+      routes: [
+        { key: 'A', routeName: 'foo' },
+        { key: 'B', routeName: 'bar', params: { bazId: '321' } },
+        { key: 'C', routeName: 'foo' },
+      ],
+    };
+    const poppedState = TestRouter.getStateForAction(
+      NavigationActions.popToTop(),
+      state
+    );
+    expect(poppedState.routes.length).toBe(1);
+    expect(poppedState.index).toBe(0);
+    expect(poppedState.isTransitioning).toBe(true);
+    const poppedState2 = TestRouter.getStateForAction(
+      NavigationActions.popToTop(),
+      poppedState
+    );
+    expect(poppedState).toEqual(poppedState2);
+    const poppedImmediatelyState = TestRouter.getStateForAction(
+      NavigationActions.popToTop({ immediate: true }),
+      state
+    );
+    expect(poppedImmediatelyState.routes.length).toBe(1);
+    expect(poppedImmediatelyState.index).toBe(0);
+    expect(poppedImmediatelyState.isTransitioning).toBe(false);
+  });
+
   test('Navigate Pushes duplicate routeName', () => {
     const TestRouter = StackRouter({
       foo: { screen: () => <div /> },
