@@ -45,14 +45,14 @@ const TabNavigator = (routeConfigs, config = {}) => {
 };
 
 const Presets = {
-  iOSBottomTabs: {
+  BottomTabs: {
     tabBarComponent: TabBarBottom,
     tabBarPosition: 'bottom',
     swipeEnabled: false,
     animationEnabled: false,
     initialLayout: undefined,
   },
-  AndroidTopTabs: {
+  TopTabs: {
     tabBarComponent: TabBarTop,
     tabBarPosition: 'top',
     swipeEnabled: true,
@@ -80,10 +80,9 @@ const Presets = {
  *```
  */
 TabNavigator.Presets = {
-  iOSBottomTabs: Presets.iOSBottomTabs,
-  AndroidTopTabs: Presets.AndroidTopTabs,
-  Default:
-    Platform.OS === 'ios' ? Presets.iOSBottomTabs : Presets.AndroidTopTabs,
+  BottomTabs: Presets.BottomTabs,
+  TopTabs: Presets.TopTabs,
+  Default: Presets.BottomTabs,
 };
 
 export default TabNavigator;
