@@ -17,6 +17,7 @@ const createAction = (type, fn) => {
 const back = createAction(BACK, (payload = {}) => ({
   type: BACK,
   key: payload.key,
+  immediate: payload.immediate,
 }));
 
 const init = createAction(INIT, (payload = {}) => {
