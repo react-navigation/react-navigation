@@ -160,7 +160,7 @@ Object to override the distance of touch start from the edge of the screen to re
 
 #### `gestureDirection`
 
-String to override the direction for dismiss gesture. `default` for normal behaviour or `inverted` for right-to-left swipes.
+String to override the direction for dismiss gesture. `default` for normal behaviour or `inverted` for right-to-left swipes, `rotated` for left-to-right swipes on modal.
 
 ### Navigator Props
 
