@@ -14,7 +14,7 @@
     "ios": "cd examples/NavigationPlayground && yarn && yarn ios",
     "android": "cd examples/NavigationPlayground && yarn && yarn android",
     "test": "npm run lint && npm run jest",
-    "build": "babel ./src --out-dir ./dist && cp -r ./src/views/assets dist/views",
+    "build": "babel ./src --out-dir ./dist && cp -r ./src/views/assets dist/views && git add ./dist",
     "codecov": "codecov",
     "jest": "jest",
     "test-update-snapshot": "jest --updateSnapshot",
