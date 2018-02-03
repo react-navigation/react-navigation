@@ -42,7 +42,7 @@ See [the help page](https://reactnavigation.org/en/help.html).
 This library is a community effort: it can only be great if we all help out in one way or another! If you feel like you aren't experienced enough using React Navigation to contribute, you can still make an impact by:
 
 * Responding to one of the open [issues](https://github.com/react-community/react-navigation/issues). Even if you can't resolve or fully answer a question, asking for more information or clarity on an issue is extremely beneficial for someone to come after you to resolve the issue.
-* Creating public example repos of navigation problems you have solved.
+* Creating public example repositories or [Snacks](https://snack.expo.io/) of navigation problems you have solved and sharing the links in [Community Resources](https://github.com/react-navigation/react-navigation/blob/master/COMMUNITY_RESOURCES.md).
 * Answering questions on [Stack Overflow](https://stackoverflow.com/search?q=react-navigation).
 * Answering questions in our [Reactiflux](https://www.reactiflux.com/) channel.
 * Providing feedback on the open [PRs](https://github.com/react-community/react-navigation/pulls).
