@@ -1,0 +1,332 @@
+var _StateUtils = require('../StateUtils');
+var _StateUtils2 = _interopRequireDefault(_StateUtils);
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule ? obj : { default: obj };
+}
+var routeName = 'Anything';
+describe('StateUtils', function() {
+  it('gets route', function() {
+    var state = {
+      index: 0,
+      routes: [{ key: 'a', routeName: routeName }],
+      isTransitioning: false,
+    };
+    expect(_StateUtils2.default.get(state, 'a')).toEqual({
+      key: 'a',
+      routeName: routeName,
+    });
+    expect(_StateUtils2.default.get(state, 'b')).toBe(null);
+  });
+  it('gets route index', function() {
+    var state = {
+      index: 1,
+      routes: [
+        { key: 'a', routeName: routeName },
+        { key: 'b', routeName: routeName },
+      ],
+      isTransitioning: false,
+    };
+    expect(_StateUtils2.default.indexOf(state, 'a')).toBe(0);
+    expect(_StateUtils2.default.indexOf(state, 'b')).toBe(1);
+    expect(_StateUtils2.default.indexOf(state, 'c')).toBe(-1);
+  });
+  it('has a route', function() {
+    var state = {
+      index: 0,
+      routes: [
+        { key: 'a', routeName: routeName },
+        { key: 'b', routeName: routeName },
+      ],
+      isTransitioning: false,
+    };
+    expect(_StateUtils2.default.has(state, 'b')).toBe(true);
+    expect(_StateUtils2.default.has(state, 'c')).toBe(false);
+  });
+  it('pushes a route', function() {
+    var state = {
+      index: 0,
+      routes: [{ key: 'a', routeName: routeName }],
+      isTransitioning: false,
+    };
+    var newState = {
+      index: 1,
+      isTransitioning: false,
+      routes: [
+        { key: 'a', routeName: routeName },
+        { key: 'b', routeName: routeName },
+      ],
+    };
+    expect(
+      _StateUtils2.default.push(state, { key: 'b', routeName: routeName })
+    ).toEqual(newState);
+  });
+  it('does not push duplicated route', function() {
+    var state = {
+      index: 0,
+      routes: [{ key: 'a', routeName: routeName }],
+      isTransitioning: false,
+    };
+    expect(function() {
+      return _StateUtils2.default.push(state, {
+        key: 'a',
+        routeName: routeName,
+      });
+    }).toThrow();
+  });
+  it('pops route', function() {
+    var state = {
+      index: 1,
+      routes: [
+        { key: 'a', routeName: routeName },
+        { key: 'b', routeName: routeName },
+      ],
+      isTransitioning: false,
+    };
+    var newState = {
+      index: 0,
+      routes: [{ key: 'a', routeName: routeName }],
+      isTransitioning: false,
+    };
+    expect(_StateUtils2.default.pop(state)).toEqual(newState);
+  });
+  it('does not pop route if not applicable', function() {
+    var state = {
+      index: 0,
+      routes: [{ key: 'a', routeName: routeName }],
+      isTransitioning: false,
+    };
+    expect(_StateUtils2.default.pop(state)).toBe(state);
+  });
+  it('jumps to new index', function() {
+    var state = {
+      index: 0,
+      routes: [
+        { key: 'a', routeName: routeName },
+        { key: 'b', routeName: routeName },
+      ],
+      isTransitioning: false,
+    };
+    var newState = {
+      index: 1,
+      routes: [
+        { key: 'a', routeName: routeName },
+        { key: 'b', routeName: routeName },
+      ],
+      isTransitioning: false,
+    };
+    expect(_StateUtils2.default.jumpToIndex(state, 0)).toBe(state);
+    expect(_StateUtils2.default.jumpToIndex(state, 1)).toEqual(newState);
+  });
+  it('throws if jumps to invalid index', function() {
+    var state = {
+      index: 0,
+      routes: [
+        { key: 'a', routeName: routeName },
+        { key: 'b', routeName: routeName },
+      ],
+      isTransitioning: false,
+    };
+    expect(function() {
+      return _StateUtils2.default.jumpToIndex(state, 2);
+    }).toThrow();
+  });
+  it('jumps to new key', function() {
+    var state = {
+      index: 0,
+      routes: [
+        { key: 'a', routeName: routeName },
+        { key: 'b', routeName: routeName },
+      ],
+      isTransitioning: false,
+    };
+    var newState = {
+      index: 1,
+      routes: [
+        { key: 'a', routeName: routeName },
+        { key: 'b', routeName: routeName },
+      ],
+      isTransitioning: false,
+    };
+    expect(_StateUtils2.default.jumpTo(state, 'a')).toBe(state);
+    expect(_StateUtils2.default.jumpTo(state, 'b')).toEqual(newState);
+  });
+  it('throws if jumps to invalid key', function() {
+    var state = {
+      index: 0,
+      routes: [
+        { key: 'a', routeName: routeName },
+        { key: 'b', routeName: routeName },
+      ],
+      isTransitioning: false,
+    };
+    expect(function() {
+      return _StateUtils2.default.jumpTo(state, 'c');
+    }).toThrow();
+  });
+  it('move backwards', function() {
+    var state = {
+      index: 1,
+      routes: [
+        { key: 'a', routeName: routeName },
+        { key: 'b', routeName: routeName },
+      ],
+      isTransitioning: false,
+    };
+    var newState = {
+      index: 0,
+      routes: [
+        { key: 'a', routeName: routeName },
+        { key: 'b', routeName: routeName },
+      ],
+      isTransitioning: false,
+    };
+    expect(_StateUtils2.default.back(state)).toEqual(newState);
+    expect(_StateUtils2.default.back(newState)).toBe(newState);
+  });
+  it('move forwards', function() {
+    var state = {
+      index: 0,
+      routes: [
+        { key: 'a', routeName: routeName },
+        { key: 'b', routeName: routeName },
+      ],
+      isTransitioning: false,
+    };
+    var newState = {
+      index: 1,
+      routes: [
+        { key: 'a', routeName: routeName },
+        { key: 'b', routeName: routeName },
+      ],
+      isTransitioning: false,
+    };
+    expect(_StateUtils2.default.forward(state)).toEqual(newState);
+    expect(_StateUtils2.default.forward(newState)).toBe(newState);
+  });
+  it('Replaces by key', function() {
+    var state = {
+      index: 0,
+      routes: [
+        { key: 'a', routeName: routeName },
+        { key: 'b', routeName: routeName },
+      ],
+      isTransitioning: false,
+    };
+    var newState = {
+      index: 1,
+      routes: [
+        { key: 'a', routeName: routeName },
+        { key: 'c', routeName: routeName },
+      ],
+      isTransitioning: false,
+    };
+    expect(
+      _StateUtils2.default.replaceAt(state, 'b', {
+        key: 'c',
+        routeName: routeName,
+      })
+    ).toEqual(newState);
+  });
+  it('Replaces by index', function() {
+    var state = {
+      index: 0,
+      routes: [
+        { key: 'a', routeName: routeName },
+        { key: 'b', routeName: routeName },
+      ],
+      isTransitioning: false,
+    };
+    var newState = {
+      index: 1,
+      routes: [
+        { key: 'a', routeName: routeName },
+        { key: 'c', routeName: routeName },
+      ],
+      isTransitioning: false,
+    };
+    expect(
+      _StateUtils2.default.replaceAtIndex(state, 1, {
+        key: 'c',
+        routeName: routeName,
+      })
+    ).toEqual(newState);
+  });
+  it('Returns the state if index matches the route', function() {
+    var state = {
+      index: 0,
+      routes: [
+        { key: 'a', routeName: routeName },
+        { key: 'b', routeName: routeName },
+      ],
+      isTransitioning: false,
+    };
+    expect(
+      _StateUtils2.default.replaceAtIndex(state, 1, state.routes[1])
+    ).toEqual(state);
+  });
+  it('Resets routes', function() {
+    var state = {
+      index: 0,
+      routes: [
+        { key: 'a', routeName: routeName },
+        { key: 'b', routeName: routeName },
+      ],
+      isTransitioning: false,
+    };
+    var newState = {
+      index: 1,
+      routes: [
+        { key: 'x', routeName: routeName },
+        { key: 'y', routeName: routeName },
+      ],
+      isTransitioning: false,
+    };
+    expect(
+      _StateUtils2.default.reset(state, [
+        { key: 'x', routeName: routeName },
+        { key: 'y', routeName: routeName },
+      ])
+    ).toEqual(newState);
+    expect(function() {
+      _StateUtils2.default.reset(state, []);
+    }).toThrow();
+  });
+  it('Resets routes with index', function() {
+    var state = {
+      index: 0,
+      routes: [
+        { key: 'a', routeName: routeName },
+        { key: 'b', routeName: routeName },
+      ],
+      isTransitioning: false,
+    };
+    var newState = {
+      index: 0,
+      routes: [
+        { key: 'x', routeName: routeName },
+        { key: 'y', routeName: routeName },
+      ],
+      isTransitioning: false,
+    };
+    expect(
+      _StateUtils2.default.reset(
+        state,
+        [
+          { key: 'x', routeName: routeName },
+          { key: 'y', routeName: routeName },
+        ],
+        0
+      )
+    ).toEqual(newState);
+    expect(function() {
+      _StateUtils2.default.reset(
+        state,
+        [
+          { key: 'x', routeName: routeName },
+          { key: 'y', routeName: routeName },
+        ],
+        100
+      );
+    }).toThrow();
+  });
+});

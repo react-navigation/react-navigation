@@ -1,0 +1,97 @@
+var _NavigationActions = require('../NavigationActions');
+var _NavigationActions2 = _interopRequireDefault(_NavigationActions);
+var _addNavigationHelpers = require('../addNavigationHelpers');
+var _addNavigationHelpers2 = _interopRequireDefault(_addNavigationHelpers);
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule ? obj : { default: obj };
+}
+var dummyEventSubscriber = function dummyEventSubscriber(name, handler) {
+  return { remove: function remove() {} };
+};
+describe('addNavigationHelpers', function() {
+  it('handles Back action', function() {
+    var mockedDispatch = jest
+      .fn(function() {
+        return false;
+      })
+      .mockImplementationOnce(function() {
+        return true;
+      });
+    expect(
+      (0, _addNavigationHelpers2.default)({
+        state: { key: 'A', routeName: 'Home' },
+        dispatch: mockedDispatch,
+        addListener: dummyEventSubscriber,
+      }).goBack('A')
+    ).toEqual(true);
+    expect(mockedDispatch).toBeCalledWith({
+      type: _NavigationActions2.default.BACK,
+      key: 'A',
+    });
+    expect(mockedDispatch.mock.calls.length).toBe(1);
+  });
+  it('handles Back action when the key is not defined', function() {
+    var mockedDispatch = jest
+      .fn(function() {
+        return false;
+      })
+      .mockImplementationOnce(function() {
+        return true;
+      });
+    expect(
+      (0, _addNavigationHelpers2.default)({
+        state: { routeName: 'Home' },
+        dispatch: mockedDispatch,
+        addListener: dummyEventSubscriber,
+      }).goBack()
+    ).toEqual(true);
+    expect(mockedDispatch).toBeCalledWith({
+      type: _NavigationActions2.default.BACK,
+    });
+    expect(mockedDispatch.mock.calls.length).toBe(1);
+  });
+  it('handles Navigate action', function() {
+    var mockedDispatch = jest
+      .fn(function() {
+        return false;
+      })
+      .mockImplementationOnce(function() {
+        return true;
+      });
+    expect(
+      (0, _addNavigationHelpers2.default)({
+        state: { routeName: 'Home' },
+        dispatch: mockedDispatch,
+        addListener: dummyEventSubscriber,
+      }).navigate('Profile', { name: 'Matt' })
+    ).toEqual(true);
+    expect(mockedDispatch).toBeCalledWith({
+      type: _NavigationActions2.default.NAVIGATE,
+      params: { name: 'Matt' },
+      routeName: 'Profile',
+    });
+    expect(mockedDispatch.mock.calls.length).toBe(1);
+  });
+  it('handles SetParams action', function() {
+    var mockedDispatch = jest
+      .fn(function() {
+        return false;
+      })
+      .mockImplementationOnce(function() {
+        return true;
+      });
+    expect(
+      (0, _addNavigationHelpers2.default)({
+        state: { key: 'B', routeName: 'Settings' },
+        dispatch: mockedDispatch,
+        addListener: dummyEventSubscriber,
+      }).setParams({ notificationsEnabled: 'yes' })
+    ).toEqual(true);
+    expect(mockedDispatch).toBeCalledWith({
+      type: _NavigationActions2.default.SET_PARAMS,
+      key: 'B',
+      params: { notificationsEnabled: 'yes' },
+    });
+    expect(mockedDispatch.mock.calls.length).toBe(1);
+  });
+});
