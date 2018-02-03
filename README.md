@@ -39,19 +39,21 @@ See [the help page](https://reactnavigation.org/en/help.html).
 
 #### How can I help?
 
-Glad you ask! This library is a community effort: it can only be great if we all help out in one way or another 😄 . If you feel like you aren't experienced enough using react navigation to contribute, you can still make an impact by:
+This library is a community effort: it can only be great if we all help out in one way or another! If you feel like you aren't experienced enough using React Navigation to contribute, you can still make an impact by:
 
 * Responding to one of the open [issues](https://github.com/react-community/react-navigation/issues). Even if you can't resolve or fully answer a question, asking for more information or clarity on an issue is extremely beneficial for someone to come after you to resolve the issue.
 * Creating public example repos of navigation problems you have solved.
-* Answering questions on [Stack Overflow](https://stackoverflow.com/search?q=react-navigation). Alternatively, asking questions on Stack Overflow instead of opening an issue.
+* Answering questions on [Stack Overflow](https://stackoverflow.com/search?q=react-navigation).
 * Answering questions in our [Reactiflux](https://www.reactiflux.com/) channel.
 * Providing feedback on the open [PRs](https://github.com/react-community/react-navigation/pulls).
+* Providing feedback on the open [RFCs](https://github.com/react-community/rfcs/pulls).
+* Improving the [website](https://github.com/react-navigation/react-navigation.github.io).
 
 If you would like to submit a pull request, please follow the [Contributors guide](https://reactnavigation.org/docs/contributing.html) to find out how. If you don't know where to start, check the ones with the label [`good first issue`](https://github.com/react-community/react-navigation/labels/good%20first%20issue) - even [fixing a typo in the documentation](https://github.com/react-community/react-navigation/pull/2727) is a worthy contribution!
 
 #### Is this the only library available for navigation?
 
-No: there are some other libraries - which, depending on your project, can be better or worse suited for your project. Read more in the [alternative libraries](https://reactnavigation.org/docs/alternatives.html) documentation, and read React Navigation's [pitch & anti-pitch](https://reactnavigation.org/docs/pitch.html) to understand the tradeoffs.
+Certainly not! There other libraries - which, depending on your needs, can be better or worse suited for your project. Read more in the [alternative libraries](https://reactnavigation.org/docs/alternatives.html) documentation, and read React Navigation's [pitch & anti-pitch](https://reactnavigation.org/docs/pitch.html) to understand the tradeoffs.
 
 #### Can I use this library for web?
 
