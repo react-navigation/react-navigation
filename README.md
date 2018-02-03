@@ -25,6 +25,7 @@ npm install --save react-navigation
 * If you need to build your own navigator, [there's a section for that](https://reactnavigation.org/docs/custom-navigator-overview.html) too.
 * The [API reference](https://reactnavigation.org/docs/api-reference.html) lists all public APIs.
 * The [Community Resources](https://github.com/react-navigation/react-navigation/blob/master/COMMUNITY_RESOURCES.md) document lists some other resources submitted to us by people who use React Navigation. Feel free to open a pull request to add your resource to the list.
+* You can contribute improvements to the documentation [in the website repository](https://github.com/react-navigation/react-navigation.github.io).
 
 ## Try it out
 
