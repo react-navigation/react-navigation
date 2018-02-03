@@ -1,0 +1,1 @@
+Object.defineProperty(exports,"__esModule",{value:true});exports.Linking=exports.BackHandler=undefined;var _reactNative=require('react-native');var BackHandler=_reactNative.BackHandler||_reactNative.BackAndroid;exports.BackHandler=BackHandler;exports.Linking=_reactNative.Linking;
