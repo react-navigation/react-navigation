@@ -14,15 +14,18 @@
     "ios": "cd examples/NavigationPlayground && yarn && yarn ios",
     "android": "cd examples/NavigationPlayground && yarn && yarn android",
     "test": "npm run lint && npm run jest",
+    "build": "babel ./src --out-dir ./dist && cp -r ./src/views/assets dist/views",
     "codecov": "codecov",
     "jest": "jest",
     "test-update-snapshot": "jest --updateSnapshot",
     "lint": "eslint .",
     "format": "eslint --fix .",
-    "precommit": "lint-staged"
+    "lint-precomit": "lint-staged",
+    "precommit": "npm run lint-precomit && npm run build"
   },
   "files": [
-    "src"
+    "src",
+    "dist"
   ],
   "peerDependencies": {
     "react": "*",
