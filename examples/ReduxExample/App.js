@@ -1,21 +1,21 @@
-/**
- * @flow
- */
-
 import React from 'react';
 import { AppRegistry } from 'react-native';
 import { Provider } from 'react-redux';
-import { createStore } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
 
 import AppReducer from './src/reducers';
 import AppWithNavigationState from './src/navigators/AppNavigator';
+import { middleware } from './src/utils/redux';
+
+const store = createStore(
+  AppReducer,
+  applyMiddleware(middleware),
+);
 
 class ReduxExampleApp extends React.Component {
-  store = createStore(AppReducer);
-
   render() {
     return (
-      <Provider store={this.store}>
+      <Provider store={store}>
         <AppWithNavigationState />
       </Provider>
     );

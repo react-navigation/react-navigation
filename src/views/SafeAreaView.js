@@ -247,10 +247,10 @@ class SafeView extends Component {
       style.width += style.paddingLeft + style.paddingRight;
     }
 
-    style.paddingTop += paddingTop;
-    style.paddingBottom += paddingBottom;
-    style.paddingLeft += paddingLeft;
-    style.paddingRight += paddingRight;
+    style.paddingTop = Math.max(style.paddingTop, paddingTop);
+    style.paddingBottom = Math.max(style.paddingBottom, paddingBottom);
+    style.paddingLeft = Math.max(style.paddingLeft, paddingLeft);
+    style.paddingRight = Math.max(style.paddingRight, paddingRight);
 
     return style;
   };

@@ -29,41 +29,34 @@ import SimpleStack from './SimpleStack';
 import SimpleTabs from './SimpleTabs';
 import TabAnimations from './TabAnimations';
 
-const ExampleRoutes = {
+const ExampleInfo = {
   SimpleStack: {
     name: 'Stack Example',
     description: 'A card stack',
-    screen: SimpleStack,
   },
   SimpleTabs: {
     name: 'Tabs Example',
     description: 'Tabs following platform conventions',
-    screen: SimpleTabs,
   },
   Drawer: {
     name: 'Drawer Example',
     description: 'Android-style drawer navigation',
-    screen: Drawer,
   },
   // MultipleDrawer: {
   //   name: 'Multiple Drawer Example',
   //   description: 'Add any drawer you need',
-  //   screen: MultipleDrawer,
   // },
   TabsInDrawer: {
     name: 'Drawer + Tabs Example',
     description: 'A drawer combined with tabs',
-    screen: TabsInDrawer,
   },
   CustomTabs: {
     name: 'Custom Tabs',
     description: 'Custom tabs with tab router',
-    screen: CustomTabs,
   },
   CustomTransitioner: {
     name: 'Custom Transitioner',
     description: 'Custom transitioner with stack router',
-    screen: CustomTransitioner,
   },
   ModalStack: {
     name:
@@ -74,33 +67,68 @@ const ExampleRoutes = {
       Platform.OS === 'ios'
         ? 'Stack navigation with modals'
         : 'Dynamically showing and hiding the header',
-    screen: ModalStack,
   },
   StacksInTabs: {
     name: 'Stacks in Tabs',
     description: 'Nested stack navigation in tabs',
-    screen: StacksInTabs,
   },
   StacksOverTabs: {
     name: 'Stacks over Tabs',
     description: 'Nested stack navigation that pushes on top of tabs',
-    screen: StacksOverTabs,
   },
   LinkStack: {
     name: 'Link in Stack',
     description: 'Deep linking into a route in stack',
-    screen: SimpleStack,
-    path: 'people/Jordan',
   },
   LinkTabs: {
     name: 'Link to Settings Tab',
     description: 'Deep linking into a route in tab',
-    screen: SimpleTabs,
-    path: 'settings',
   },
   TabAnimations: {
     name: 'Animated Tabs Example',
     description: 'Tab transitions have custom animations',
+  },
+};
+const ExampleRoutes = {
+  SimpleStack: {
+    screen: SimpleStack,
+  },
+  SimpleTabs: {
+    screen: SimpleTabs,
+  },
+  Drawer: {
+    screen: Drawer,
+  },
+  // MultipleDrawer: {
+  //   screen: MultipleDrawer,
+  // },
+  TabsInDrawer: {
+    screen: TabsInDrawer,
+  },
+  CustomTabs: {
+    screen: CustomTabs,
+  },
+  CustomTransitioner: {
+    screen: CustomTransitioner,
+  },
+  ModalStack: {
+    screen: ModalStack,
+  },
+  StacksInTabs: {
+    screen: StacksInTabs,
+  },
+  StacksOverTabs: {
+    screen: StacksOverTabs,
+  },
+  LinkStack: {
+    screen: SimpleStack,
+    path: 'people/Jordan',
+  },
+  LinkTabs: {
+    screen: SimpleTabs,
+    path: 'settings',
+  },
+  TabAnimations: {
     screen: TabAnimations,
   },
 };
@@ -130,10 +158,10 @@ class MainScreen extends React.Component<*> {
               >
                 <View style={styles.item}>
                   <Text style={styles.title}>
-                    {ExampleRoutes[routeName].name}
+                    {ExampleInfo[routeName].name}
                   </Text>
                   <Text style={styles.description}>
-                    {ExampleRoutes[routeName].description}
+                    {ExampleInfo[routeName].description}
                   </Text>
                 </View>
               </SafeAreaView>

@@ -161,6 +161,7 @@ exports[`TabBarBottom renders successfully 1`] = `
     onScrollShouldSetResponder={[Function]}
     onStartShouldSetResponder={[Function]}
     onStartShouldSetResponderCapture={[Function]}
+    onTouchCancel={[Function]}
     onTouchEnd={[Function]}
     onTouchMove={[Function]}
     onTouchStart={[Function]}
@@ -219,9 +220,13 @@ exports[`TabBarBottom renders successfully 1`] = `
           <View
             navigation={
               Object {
+                "addListener": [Function],
                 "dispatch": undefined,
                 "goBack": [Function],
                 "navigate": [Function],
+                "pop": [Function],
+                "popToTop": [Function],
+                "push": [Function],
                 "setParams": [Function],
                 "state": Object {
                   "key": "s1",

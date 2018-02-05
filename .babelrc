@@ -1,35 +1,3 @@
 {
-  "env": {
-    // For RN example development
-    "development": {
-      "presets": ["react-native"],
-      "plugins": [
-        "transform-flow-strip-types"
-      ]
-    },
-    // For Jest
-    "test": {
-      "presets": ["react-native"],
-      "plugins": [
-        "transform-flow-strip-types"
-      ]
-    },
-    // For publishing to NPM for RN
-    "publish-rn": {
-      "presets": ["react-native-syntax"],
-      "plugins": [
-        "transform-flow-strip-types"
-      ]
-    },
-    // For publishing to NPM for web
-    "publish-web": {
-      "presets": ["es2015", "stage-1", "react"],
-      "plugins": [
-        "transform-flow-strip-types",
-        ["transform-define", {
-          "__DEV__": false
-        }]
-      ]
-    }
-  }
+  "presets": ["react-native"]
 }

@@ -1,23 +1,9 @@
-/* @flow */
-
-import * as React from 'react';
-
+import React from 'react';
 import { Text, View, Platform, StyleSheet, Animated } from 'react-native';
-
-type AnimatedTextStyleProp = $PropertyType<
-  $PropertyType<Animated.Text, 'props'>,
-  'style'
->;
-
-type Props = {
-  children: React.Node,
-  selectionColor?: string | number,
-  style?: AnimatedTextStyleProp,
-};
 
 const AnimatedText = Animated.Text;
 
-const HeaderTitle = ({ style, ...rest }: Props) => (
+const HeaderTitle = ({ style, ...rest }) => (
   <AnimatedText
     numberOfLines={1}
     {...rest}

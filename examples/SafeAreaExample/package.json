@@ -2,11 +2,11 @@
   "main": "node_modules/expo/AppEntry.js",
   "private": true,
   "dependencies": {
-    "expo": "^23.0.0",
-    "react": "16.0.0",
-    "react-native": "^0.50.3",
+    "expo": "^25.0.0",
+    "react": "16.2.0",
+    "react-native": "^0.52.0",
     "react-native-platform-touchable": "^1.1.1",
-    "react-navigation": "file:../.."
+    "react-navigation": "link:../.."
   },
   "name": "SafeAreaExample",
   "version": "0.0.0",

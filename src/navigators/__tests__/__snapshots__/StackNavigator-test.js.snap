@@ -93,12 +93,17 @@ exports[`StackNavigator applies correct values when headerRight is present 1`] =
       mode="float"
       navigation={
         Object {
+          "addListener": [Function],
           "dispatch": [Function],
           "goBack": [Function],
           "navigate": [Function],
+          "pop": [Function],
+          "popToTop": [Function],
+          "push": [Function],
           "setParams": [Function],
           "state": Object {
             "index": 0,
+            "isTransitioning": false,
             "routes": Array [
               Object {
                 "key": "Init-id-0-1",
@@ -324,12 +329,17 @@ exports[`StackNavigator renders successfully 1`] = `
       mode="float"
       navigation={
         Object {
+          "addListener": [Function],
           "dispatch": [Function],
           "goBack": [Function],
           "navigate": [Function],
+          "pop": [Function],
+          "popToTop": [Function],
+          "push": [Function],
           "setParams": [Function],
           "state": Object {
             "index": 0,
+            "isTransitioning": false,
             "routes": Array [
               Object {
                 "key": "Init-id-0-0",

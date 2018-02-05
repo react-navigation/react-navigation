@@ -1,33 +1,15 @@
-/* @flow */
-
-import * as React from 'react';
+import React from 'react';
 import createNavigationContainer from '../createNavigationContainer';
 import createNavigator from './createNavigator';
 import CardStackTransitioner from '../views/CardStack/CardStackTransitioner';
 import StackRouter from '../routers/StackRouter';
-import NavigatorTypes from './NavigatorTypes';
-
-import type {
-  NavigationRouteConfigMap,
-  StackNavigatorConfig,
-  NavigationState,
-  NavigationStackScreenOptions,
-  NavigationNavigatorProps,
-} from '../TypeDefinition';
+import NavigationActions from '../NavigationActions';
 
 // A stack navigators props are the intersection between
 // the base navigator props (navgiation, screenProps, etc)
 // and the view's props
-type StackNavigatorProps = NavigationNavigatorProps<
-  NavigationStackScreenOptions,
-  NavigationState
-> &
-  React.ElementProps<typeof CardStackTransitioner>;
 
-export default (
-  routeConfigMap: NavigationRouteConfigMap,
-  stackConfig: StackNavigatorConfig = {}
-) => {
+export default (routeConfigMap, stackConfig = {}) => {
   const {
     initialRouteName,
     initialRouteParams,
@@ -51,22 +33,23 @@ export default (
   const router = StackRouter(routeConfigMap, stackRouterConfig);
 
   // Create a navigator with CardStackTransitioner as the view
-  const navigator = createNavigator(
-    router,
-    routeConfigMap,
-    stackConfig,
-    NavigatorTypes.STACK
-  )((props: StackNavigatorProps) => (
-    <CardStackTransitioner
-      {...props}
-      headerMode={headerMode}
-      mode={mode}
-      cardStyle={cardStyle}
-      transitionConfig={transitionConfig}
-      onTransitionStart={onTransitionStart}
-      onTransitionEnd={onTransitionEnd}
-    />
-  ));
+  const navigator = createNavigator(router, routeConfigMap, stackConfig)(
+    props => (
+      <CardStackTransitioner
+        {...props}
+        headerMode={headerMode}
+        mode={mode}
+        cardStyle={cardStyle}
+        transitionConfig={transitionConfig}
+        onTransitionStart={onTransitionStart}
+        onTransitionEnd={(lastTransition, transition) => {
+          const { state, dispatch } = props.navigation;
+          dispatch(NavigationActions.completeTransition());
+          onTransitionEnd && onTransitionEnd();
+        }}
+      />
+    )
+  );
 
   return createNavigationContainer(navigator);
 };
