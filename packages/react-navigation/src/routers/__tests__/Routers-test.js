@@ -131,6 +131,7 @@ test('Handles deep action', () => {
   const expectedState = {
     index: 0,
     isTransitioning: false,
+    key: 'StackRouterRoot',
     routes: [
       {
         key: 'Init-id-0-2',
