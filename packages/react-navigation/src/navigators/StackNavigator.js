@@ -44,7 +44,7 @@ export default (routeConfigMap, stackConfig = {}) => {
         onTransitionStart={onTransitionStart}
         onTransitionEnd={(lastTransition, transition) => {
           const { state, dispatch } = props.navigation;
-          dispatch(NavigationActions.completeTransition());
+          dispatch(NavigationActions.completeTransition({ key: state.key }));
           onTransitionEnd && onTransitionEnd();
         }}
       />
