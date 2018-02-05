@@ -107,13 +107,13 @@ export default (routeConfigs, stackConfig = {}) => {
           childRouters[action.routeName] !== undefined
         ) {
           return {
+            key: 'StackRouterRoot',
             isTransitioning: false,
             index: 0,
             routes: [
               {
                 routeName: action.routeName,
                 params: action.params,
-                type: undefined,
                 key: `Init-${generateKey()}`,
               },
             ],
@@ -142,6 +142,7 @@ export default (routeConfigs, stackConfig = {}) => {
         };
         // eslint-disable-next-line no-param-reassign
         state = {
+          key: 'StackRouterRoot',
           isTransitioning: false,
           index: 0,
           routes: [route],
@@ -254,6 +255,7 @@ export default (routeConfigs, stackConfig = {}) => {
 
       if (
         action.type === NavigationActions.COMPLETE_TRANSITION &&
+        (action.key == null || action.key === state.key) &&
         state.isTransitioning
       ) {
         return {
