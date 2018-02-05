@@ -5,7 +5,6 @@ import {
   InteractionManager,
   NativeModules,
   Platform,
-  SafeAreaView,
   StyleSheet,
   Animated,
 } from 'react-native';
