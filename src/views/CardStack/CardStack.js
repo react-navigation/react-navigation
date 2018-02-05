@@ -38,13 +38,7 @@ import TransitionConfigs from './TransitionConfigs';
 
 const emptyFunction = () => {};
 
-let _easeInOut;
-function easeInOut() {
-  if (!_easeInOut) {
-    _easeInOut = Easing.inOut(Easing.ease);
-  }
-  return _easeInOut;
-}
+const EaseInOut = Easing.inOut(Easing.ease);
 
 type Props = {
   screenProps?: {},
@@ -210,7 +204,7 @@ class CardStack extends React.Component<Props> {
     Animated.timing(this.props.position, {
       toValue: resetToIndex,
       duration,
-      easing: easeInOut(),
+      easing: EaseInOut,
       useNativeDriver: this.props.position.__isNative,
     }).start();
   }
@@ -226,7 +220,7 @@ class CardStack extends React.Component<Props> {
     Animated.timing(position, {
       toValue,
       duration,
-      easing: easeInOut(),
+      easing: EaseInOut,
       useNativeDriver: position.__isNative,
     }).start(() => {
       this._immediateIndex = null;
