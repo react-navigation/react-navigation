@@ -8,11 +8,11 @@ import {
   View,
   ViewPropTypes,
 } from 'react-native';
+import SafeAreaView from 'react-native-safe-area-view';
 
 import HeaderTitle from './HeaderTitle';
 import HeaderBackButton from './HeaderBackButton';
 import HeaderStyleInterpolator from './HeaderStyleInterpolator';
-import SafeAreaView from '../SafeAreaView';
 import withOrientation from '../withOrientation';
 
 const APPBAR_HEIGHT = Platform.OS === 'ios' ? 44 : 56;

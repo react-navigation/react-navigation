@@ -1,5 +1,6 @@
 import React from 'react';
 import { Dimensions, Platform, ScrollView } from 'react-native';
+import SafeAreaView from 'react-native-safe-area-view';
 
 import createNavigator from './createNavigator';
 import createNavigationContainer from '../createNavigationContainer';
@@ -7,7 +8,6 @@ import TabRouter from '../routers/TabRouter';
 import DrawerScreen from '../views/Drawer/DrawerScreen';
 import DrawerView from '../views/Drawer/DrawerView';
 import DrawerItems from '../views/Drawer/DrawerNavigatorItems';
-import SafeAreaView from '../views/SafeAreaView';
 
 // A stack navigators props are the intersection between
 // the base navigator props (navgiation, screenProps, etc)
