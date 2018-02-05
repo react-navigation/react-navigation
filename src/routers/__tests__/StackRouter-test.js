@@ -354,6 +354,7 @@ describe('StackRouter', () => {
     expect(initState).toEqual({
       index: 0,
       isTransitioning: false,
+      key: 'StackRouterRoot',
       routes: [{ key: 'Init-id-0', routeName: 'foo' }],
     });
     const pushedState = TestRouter.getStateForAction(
@@ -476,6 +477,7 @@ describe('StackRouter', () => {
     expect(state).toEqual({
       index: 0,
       isTransitioning: false,
+      key: 'StackRouterRoot',
       routes: [
         {
           key: 'Init-id-0',
@@ -503,6 +505,7 @@ describe('StackRouter', () => {
     expect(state3).toEqual({
       index: 0,
       isTransitioning: false,
+      key: 'StackRouterRoot',
       routes: [
         {
           key: 'Init-id-0',
@@ -564,6 +567,7 @@ describe('StackRouter', () => {
     expect(state).toEqual({
       index: 0,
       isTransitioning: false,
+      key: 'StackRouterRoot',
       routes: [
         {
           key: 'Init-id-0',
@@ -591,6 +595,7 @@ describe('StackRouter', () => {
     expect(state3).toEqual({
       index: 0,
       isTransitioning: false,
+      key: 'StackRouterRoot',
       routes: [
         {
           key: 'Init-id-0',
@@ -664,6 +669,7 @@ describe('StackRouter', () => {
     expect(state).toEqual({
       index: 0,
       isTransitioning: false,
+      key: 'StackRouterRoot',
       routes: [
         {
           key: 'Init-id-0',
@@ -687,6 +693,7 @@ describe('StackRouter', () => {
     expect(state).toEqual({
       index: 0,
       isTransitioning: false,
+      key: 'StackRouterRoot',
       routes: [
         {
           key: state && state.routes[0].key,
@@ -1061,7 +1068,6 @@ describe('StackRouter', () => {
     expect(state && state.routes[0]).toEqual(
       expect.objectContaining({
         routeName: 'Bar',
-        type: undefined,
       })
     );
   });
