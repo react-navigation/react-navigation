@@ -240,6 +240,7 @@ exports[`TabBarBottom renders successfully 1`] = `
                 "pop": [Function],
                 "popToTop": [Function],
                 "push": [Function],
+                "replace": [Function],
                 "setParams": [Function],
                 "state": Object {
                   "key": "s1",

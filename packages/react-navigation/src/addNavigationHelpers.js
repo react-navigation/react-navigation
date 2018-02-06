@@ -65,5 +65,15 @@ export default function(navigation) {
       navigation.dispatch(
         NavigationActions.push({ routeName, params, action })
       ),
+
+    replace: (routeName, params, action) =>
+      navigation.dispatch(
+        NavigationActions.replace({
+          routeName,
+          params,
+          action,
+          key: navigation.state.key,
+        })
+      ),
   };
 }

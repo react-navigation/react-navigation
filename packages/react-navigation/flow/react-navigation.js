@@ -1,7 +1,6 @@
 // @flow
 
 declare module 'react-navigation' {
-
   /**
    * First, a bunch of things we would love to import but instead must
    * reconstruct (mostly copy-pasted).
@@ -68,6 +67,8 @@ declare module 'react-navigation' {
 
     // The action to run inside the sub-router
     action?: NavigationNavigateAction,
+
+    key?: string,
   |};
 
   declare type DeprecatedNavigationNavigateAction = {|
@@ -130,8 +131,9 @@ declare module 'react-navigation' {
     type: 'Reset',
     index: number,
     key?: ?string,
-    actions:
-      Array<NavigationNavigateAction | DeprecatedNavigationNavigateAction>,
+    actions: Array<
+      NavigationNavigateAction | DeprecatedNavigationNavigateAction
+    >,
   |};
 
   declare export type NavigationUriAction = {|
@@ -144,9 +146,37 @@ declare module 'react-navigation' {
     uri: string,
   |};
 
+  declare export type NavigationReplaceAction = {|
+    +type: 'Navigation/REPLACE',
+    +key: string,
+    +routeName: string,
+    +params?: NavigationParams,
+    +action?: NavigationNavigateAction,
+  |};
+  declare export type NavigationPopAction = {|
+    +type: 'Navigation/POP',
+    +n?: number,
+    +immediate?: boolean,
+  |};
+  declare export type NavigationPopToTopAction = {|
+    +type: 'Navigation/POP_TO_TOP',
+    +immediate?: boolean,
+  |};
+  declare export type NavigationPushAction = {|
+    +type: 'Navigation/PUSH',
+    +routeName: string,
+    +params?: NavigationParams,
+    +action?: NavigationNavigateAction,
+    +key?: string,
+  |};
+
   declare export type NavigationAction =
     | NavigationInitAction
     | NavigationNavigateAction
+    | NavigationReplaceAction
+    | NavigationPopAction
+    | NavigationPopToTopAction
+    | NavigationPushAction
     | NavigationBackAction
     | NavigationSetParamsAction
     | NavigationResetAction;
@@ -209,9 +239,8 @@ declare module 'react-navigation' {
     params?: NavigationParams,
   };
 
-  declare export type NavigationStateRoute =
-    & NavigationLeafRoute
-    & NavigationState;
+  declare export type NavigationStateRoute = NavigationLeafRoute &
+    NavigationState;
 
   /**
    * Router
@@ -291,12 +320,8 @@ declare module 'react-navigation' {
     Route: NavigationRoute,
     Options: {},
     Props: {}
-  > =
-    & React$ComponentType<NavigationNavigatorProps<Options, Route> & Props>
-    & (
-        | {}
-        | { navigationOptions: NavigationScreenConfig<Options> }
-      );
+  > = React$ComponentType<NavigationNavigatorProps<Options, Route> & Props> &
+    ({} | { navigationOptions: NavigationScreenConfig<Options> });
 
   declare export type NavigationNavigator<
     State: NavigationState,
@@ -334,16 +359,18 @@ declare module 'react-navigation' {
 
   declare export type HeaderMode = 'float' | 'screen' | 'none';
 
-  declare export type HeaderProps = $Shape<NavigationSceneRendererProps & {
-    mode: HeaderMode,
-    router: NavigationRouter<NavigationState, NavigationStackScreenOptions>,
-    getScreenDetails: NavigationScene => NavigationScreenDetails<
-      NavigationStackScreenOptions
-    >,
-    leftInterpolator: (props: NavigationSceneRendererProps) => {},
-    titleInterpolator: (props: NavigationSceneRendererProps) => {},
-    rightInterpolator: (props: NavigationSceneRendererProps) => {},
-  }>;
+  declare export type HeaderProps = $Shape<
+    NavigationSceneRendererProps & {
+      mode: HeaderMode,
+      router: NavigationRouter<NavigationState, NavigationStackScreenOptions>,
+      getScreenDetails: NavigationScene => NavigationScreenDetails<
+        NavigationStackScreenOptions
+      >,
+      leftInterpolator: (props: NavigationSceneRendererProps) => {},
+      titleInterpolator: (props: NavigationSceneRendererProps) => {},
+      rightInterpolator: (props: NavigationSceneRendererProps) => {},
+    }
+  >;
 
   /**
    * Stack Navigator
@@ -493,6 +520,18 @@ declare module 'react-navigation' {
       eventName: string,
       callback: NavigationEventCallback
     ) => NavigationEventSubscription,
+    push: (
+      routeName: string,
+      params?: NavigationParams,
+      action?: NavigationNavigateAction
+    ) => boolean,
+    replace: (
+      routeName: string,
+      params?: NavigationParams,
+      action?: NavigationNavigateAction
+    ) => boolean,
+    pop: (n?: number, params?: { immediate?: boolean }) => boolean,
+    popToTop: (params?: { immediate?: boolean }) => boolean,
   };
 
   declare export type NavigationNavigatorProps<O: {}, S: {}> = $Shape<{
@@ -767,7 +806,7 @@ declare module 'react-navigation' {
   >(
     router: NavigationRouter<S, O>,
     routeConfigs?: NavigationRouteConfigMap,
-    navigatorConfig?: NavigatorConfig,
+    navigatorConfig?: NavigatorConfig
   ): _NavigatorCreator<NavigationViewProps, S, O>;
 
   declare export function StackNavigator(

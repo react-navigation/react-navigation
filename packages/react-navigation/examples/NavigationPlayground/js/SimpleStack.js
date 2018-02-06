@@ -32,13 +32,8 @@ class MyNavScreen extends React.Component<MyNavScreenProps> {
           title="Go to a photos screen"
         />
         <Button
-          onPress={() =>
-            navigation.navigate('Profile', {
-              name: 'Dog',
-              headerBackImage: require('./assets/dog-back.png'),
-            })
-          }
-          title="Custom back button"
+          onPress={() => navigation.replace('Profile', { name: 'Lucy' })}
+          title="Replace with profile"
         />
         <Button onPress={() => navigation.goBack(null)} title="Go back" />
         <StatusBar barStyle="default" />
