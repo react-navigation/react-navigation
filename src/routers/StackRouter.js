@@ -171,7 +171,7 @@ export default (routeConfigs, stackConfig = {}) => {
         }
       }
 
-      //Handle pop-to-top behavior. Make sure this happens after children have had a chance to handle the action, so that the inner stack pops to top first.
+      // Handle pop-to-top behavior. Make sure this happens after children have had a chance to handle the action, so that the inner stack pops to top first.
       if (action.type === NavigationActions.POP_TO_TOP) {
         if (state.index !== 0) {
           return {
@@ -181,6 +181,31 @@ export default (routeConfigs, stackConfig = {}) => {
           };
         }
         return state;
+      }
+
+      // Handle replace action
+      if (action.type === NavigationActions.REPLACE) {
+        const routeIndex = state.routes.findIndex(r => r.key === action.key);
+        // Only replace if the key matches one of our routes
+        if (routeIndex !== -1) {
+          const childRouter = childRouters[action.routeName];
+          let childState = {};
+          if (childRouter) {
+            const childAction =
+              action.action ||
+              NavigationActions.init({ params: action.params });
+            childState = childRouter.getStateForAction(childAction);
+          }
+          const routes = [...state.routes];
+          routes[routeIndex] = {
+            params: action.params,
+            // merge the child state in this order to allow params override
+            ...childState,
+            key: action.key,
+            routeName: action.routeName,
+          };
+          return { ...state, routes };
+        }
       }
 
       // Handle explicit push navigation action. Make sure this happens after children have had a chance to handle the action
@@ -235,6 +260,7 @@ export default (routeConfigs, stackConfig = {}) => {
             action.action || NavigationActions.init({ params: action.params });
           route = {
             params: action.params,
+            // merge the child state in this order to allow params override
             ...childRouter.getStateForAction(childAction),
             key,
             routeName: action.routeName,
