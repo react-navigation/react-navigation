@@ -1,7 +1,7 @@
 {
   "name": "react-navigation",
-  "version": "1.0.0-rc.1",
-  "description": "React Navigation",
+  "version": "1.0.0-rc.2",
+  "description": "Routing and navigation for your React Native apps",
   "main": "src/react-navigation.js",
   "repository": {
     "url": "git@github.com:react-navigation/react-navigation.git",
