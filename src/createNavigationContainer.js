@@ -24,9 +24,10 @@ export default function createNavigationContainer(Component) {
 
       this._validateProps(props);
 
+      this._initialAction = NavigationActions.init();
       this.state = {
         nav: this._isStateful()
-          ? Component.router.getStateForAction(NavigationActions.init())
+          ? Component.router.getStateForAction(this._initialAction)
           : null,
       };
     }
@@ -134,6 +135,15 @@ export default function createNavigationContainer(Component) {
       Linking.addEventListener('url', this._handleOpenURL);
 
       Linking.getInitialURL().then(url => url && this._handleOpenURL({ url }));
+
+      this._actionEventSubscribers.forEach(subscriber =>
+        subscriber({
+          type: 'action',
+          action: this._initialAction,
+          state: this.state.nav,
+          lastState: null,
+        })
+      );
     }
 
     componentWillUnmount() {
@@ -154,7 +164,6 @@ export default function createNavigationContainer(Component) {
       const nav = Component.router.getStateForAction(action, oldNav);
       const dispatchActionEvents = () => {
         this._actionEventSubscribers.forEach(subscriber =>
-          // $FlowFixMe - Payload should probably understand generic state type
           subscriber({
             type: 'action',
             action,
