@@ -515,6 +515,28 @@ describe('StackRouter', () => {
     });
   });
 
+  test('Replace action works', () => {
+    const TestRouter = StackRouter({
+      foo: { screen: () => <div /> },
+      bar: { screen: () => <div /> },
+    });
+    const initState = TestRouter.getStateForAction(
+      NavigationActions.navigate({ routeName: 'foo' })
+    );
+    const replacedState = TestRouter.getStateForAction(
+      NavigationActions.replace({
+        routeName: 'bar',
+        params: { meaning: 42 },
+        key: initState.routes[0].key,
+      }),
+      initState
+    );
+    expect(replacedState.index).toEqual(0);
+    expect(replacedState.routes.length).toEqual(1);
+    expect(replacedState.routes[0].routeName).toEqual('bar');
+    expect(replacedState.routes[0].params.meaning).toEqual(42);
+  });
+
   test('Handles push transition logic with completion action', () => {
     const FooScreen = () => <div />;
     const BarScreen = () => <div />;
