@@ -1026,6 +1026,7 @@ declare module 'react-navigation' {
   declare type _TabBarBottomProps = {
     activeTintColor: string,
     activeBackgroundColor: string,
+    adaptive?: boolean,
     inactiveTintColor: string,
     inactiveBackgroundColor: string,
     showLabel: boolean,
