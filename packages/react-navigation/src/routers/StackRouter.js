@@ -81,7 +81,6 @@ export default (routeConfigs, stackConfig = {}) => {
   });
 
   paths = Object.entries(pathsByRouteNames);
-  /* $FlowFixMe */
   paths.sort((a: [string, *], b: [string, *]) => b[1].priority - a[1].priority);
 
   return {
