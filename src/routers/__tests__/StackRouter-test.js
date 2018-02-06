@@ -533,8 +533,21 @@ describe('StackRouter', () => {
     );
     expect(replacedState.index).toEqual(0);
     expect(replacedState.routes.length).toEqual(1);
+    expect(replacedState.routes[0].key).not.toEqual(initState.routes[0].key);
     expect(replacedState.routes[0].routeName).toEqual('bar');
     expect(replacedState.routes[0].params.meaning).toEqual(42);
+    const replacedState2 = TestRouter.getStateForAction(
+      NavigationActions.replace({
+        routeName: 'bar',
+        key: initState.routes[0].key,
+        newKey: 'wow',
+      }),
+      initState
+    );
+    expect(replacedState2.index).toEqual(0);
+    expect(replacedState2.routes.length).toEqual(1);
+    expect(replacedState2.routes[0].key).toEqual('wow');
+    expect(replacedState2.routes[0].routeName).toEqual('bar');
   });
 
   test('Handles push transition logic with completion action', () => {

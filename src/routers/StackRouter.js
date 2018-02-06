@@ -201,7 +201,7 @@ export default (routeConfigs, stackConfig = {}) => {
             params: action.params,
             // merge the child state in this order to allow params override
             ...childState,
-            key: action.key,
+            key: action.newKey || generateKey(),
             routeName: action.routeName,
           };
           return { ...state, routes };
