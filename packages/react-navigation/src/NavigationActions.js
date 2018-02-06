@@ -83,6 +83,7 @@ const reset = createAction(RESET, payload => ({
 const replace = createAction(REPLACE, payload => ({
   type: REPLACE,
   key: payload.key,
+  newKey: payload.newKey,
   params: payload.params,
   action: payload.action,
   routeName: payload.routeName,
