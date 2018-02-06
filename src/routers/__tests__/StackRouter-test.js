@@ -1070,44 +1070,37 @@ describe('StackRouter', () => {
       },
     });
 
-    expect(state && state.index).toEqual(0);
-    expect(state && state.isTransitioning).toEqual(false);
-    /* $FlowFixMe */
-    expect(state && state.routes[0].index).toEqual(0);
-    expect(state && state.routes[0].routeName).toEqual('main');
-    expect(state && state.routes[0].routes[0].index).toEqual(0);
-    expect(state && state.routes[0].routes[0].routeName).toEqual('profile');
-    expect(state && state.routes[0].routes[0].routes[0].routeName).toEqual(
-      'list'
-    );
-    // expect(state).toEqual({
-    //   index: 0,
-    //   isTransitioning: false,
-    //   routes: [
-    //     {
-    //       index: 0,
-    //       key: 'Init-id-0-41',
-    //       params: { code: 'test', foo: 'bar' },
-    //       routeName: 'main',
-    //       routes: [
-    //         {
-    //           index: 0,
-    //           key: 'Init-id-0-40',
-    //           params: { code: 'test', foo: 'bar', id: '4' },
-    //           routeName: 'profile',
-    //           routes: [
-    //             {
-    //               key: 'Init-id-0-39',
-    //               params: { code: 'test', foo: 'bar', id: '10259959195' },
-    //               routeName: 'list',
-    //               type: undefined,
-    //             },
-    //           ],
-    //         },
-    //       ],
-    //     },
-    //   ],
-    // });
+    expect(state).toEqual({
+      index: 0,
+      isTransitioning: false,
+      key: 'StackRouterRoot',
+      routes: [
+        {
+          index: 0,
+          isTransitioning: false,
+          key: 'Init-id-2',
+          params: { code: 'test', foo: 'bar' },
+          routeName: 'main',
+          routes: [
+            {
+              index: 0,
+              isTransitioning: false,
+              key: 'Init-id-1',
+              params: { code: 'test', foo: 'bar', id: '4' },
+              routeName: 'profile',
+              routes: [
+                {
+                  key: 'Init-id-0',
+                  params: { code: 'test', foo: 'bar', id: '10259959195' },
+                  routeName: 'list',
+                  type: undefined,
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    });
 
     const state2 = TestStackRouter.getStateForAction({
       type: NavigationActions.NAVIGATE,
@@ -1135,44 +1128,38 @@ describe('StackRouter', () => {
         },
       },
     });
-    expect(state2 && state2.index).toEqual(0);
-    expect(state2 && state2.isTransitioning).toEqual(false);
-    /* $FlowFixMe */
-    expect(state2 && state2.routes[0].index).toEqual(0);
-    expect(state2 && state2.routes[0].routeName).toEqual('main');
-    expect(state2 && state2.routes[0].routes[0].index).toEqual(0);
-    expect(state2 && state2.routes[0].routes[0].routeName).toEqual('profile');
-    expect(state2 && state2.routes[0].routes[0].routes[0].routeName).toEqual(
-      'list'
-    );
 
-    // expect(state2).toEqual({
-    //   index: 0,
-    //   routes: [
-    //     {
-    //       index: 0,
-    //       key: 'Init-id-0-44',
-    //       params: { code: '', foo: 'bar' },
-    //       routeName: 'main',
-    //       routes: [
-    //         {
-    //           index: 0,
-    //           key: 'Init-id-0-43',
-    //           params: { code: '', foo: 'bar', id: '4' },
-    //           routeName: 'profile',
-    //           routes: [
-    //             {
-    //               key: 'Init-id-0-42',
-    //               params: { code: '', foo: 'bar', id: '10259959195' },
-    //               routeName: 'list',
-    //               type: undefined,
-    //             },
-    //           ],
-    //         },
-    //       ],
-    //     },
-    //   ],
-    // });
+    expect(state2).toEqual({
+      index: 0,
+      isTransitioning: false,
+      key: 'StackRouterRoot',
+      routes: [
+        {
+          index: 0,
+          isTransitioning: false,
+          key: 'Init-id-5',
+          params: { code: '', foo: 'bar' },
+          routeName: 'main',
+          routes: [
+            {
+              index: 0,
+              isTransitioning: false,
+              key: 'Init-id-4',
+              params: { code: '', foo: 'bar', id: '4' },
+              routeName: 'profile',
+              routes: [
+                {
+                  key: 'Init-id-3',
+                  params: { code: '', foo: 'bar', id: '10259959195' },
+                  routeName: 'list',
+                  type: undefined,
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    });
   });
 
   test('Handles the navigate action with params and nested TabRouter', () => {

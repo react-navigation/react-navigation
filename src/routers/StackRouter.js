@@ -24,6 +24,13 @@ function behavesLikePushAction(action) {
   );
 }
 
+// Gives us a single place to generate a unique
+// key if they didn't provide one
+function addKeyToRoute(key, route) {
+  route.key = key || `Init-${generateKey()}`;
+  return route;
+}
+
 export default (routeConfigs, stackConfig = {}) => {
   // Fail fast on invalid route definitions
   validateRouteConfigMap(routeConfigs);
@@ -108,11 +115,11 @@ export default (routeConfigs, stackConfig = {}) => {
               isTransitioning: false,
               index: 0,
               routes: [
-                {
-                  ...action,
+                addKeyToRoute(action.key, {
+                  routeName: action.routeName,
+                  params: action.params,
                   type: undefined,
-                  key: `Init-${_getUuid()}`,
-                },
+                }),
               ],
             };
           }
@@ -124,12 +131,11 @@ export default (routeConfigs, stackConfig = {}) => {
             isTransitioning: false,
             index: 0,
             routes: [
-              {
+              addKeyToRoute(action.key, {
                 params: action.params,
                 ...childRouter.getStateForAction(childAction),
                 routeName: action.routeName,
-                key: `Init-${_getUuid()}`,
-              },
+              }),
             ],
           };
         }
@@ -149,12 +155,11 @@ export default (routeConfigs, stackConfig = {}) => {
           ...(action.params || {}),
           ...(initialRouteParams || {}),
         };
-        route = {
+        route = addKeyToRoute(action.key, {
           ...route,
           routeName: initialRouteName,
-          key: `Init-${generateKey()}`,
           ...(params ? { params } : {}),
-        };
+        });
         // eslint-disable-next-line no-param-reassign
         state = {
           key: 'StackRouterRoot',
@@ -271,23 +276,21 @@ export default (routeConfigs, stackConfig = {}) => {
             };
           }
         }
-        const key = action.key || generateKey();
+
         if (childRouter) {
           const childAction =
             action.action || NavigationActions.init({ params: action.params });
-          route = {
+          route = addKeyToRoute(action.key, {
             params: action.params,
             // merge the child state in this order to allow params override
             ...childRouter.getStateForAction(childAction),
-            key,
             routeName: action.routeName,
-          };
+          });
         } else {
-          route = {
+          route = addKeyToRoute(action.key, {
             params: action.params,
-            key,
             routeName: action.routeName,
-          };
+          });
         }
         return {
           ...StateUtils.push(state, route),
@@ -331,11 +334,11 @@ export default (routeConfigs, stackConfig = {}) => {
               routeToPush = navigatedChildRoute;
             }
             if (routeToPush) {
-              return StateUtils.push(state, {
+              const route = addKeyToRoute(action.key, {
                 ...routeToPush,
-                key: generateKey(),
                 routeName: childRouterName,
               });
+              return StateUtils.push(state, route);
             }
           }
         }
@@ -375,17 +378,15 @@ export default (routeConfigs, stackConfig = {}) => {
           routes: resetAction.actions.map(childAction => {
             const router = childRouters[childAction.routeName];
             if (router) {
-              return {
+              return addKeyToRoute(action.key, {
                 ...childAction,
                 ...router.getStateForAction(childAction),
                 routeName: childAction.routeName,
-                key: generateKey(),
-              };
+              });
             }
-            const route = {
+            const route = addKeyToRoute(action.key, {
               ...childAction,
-              key: generateKey(),
-            };
+            });
             delete route.type;
             return route;
           }),
