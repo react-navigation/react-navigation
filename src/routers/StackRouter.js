@@ -175,6 +175,7 @@ export default (routeConfigs, stackConfig = {}) => {
       if (action.type === NavigationActions.POP_TO_TOP) {
         if (state.index !== 0) {
           return {
+            ...state,
             isTransitioning: action.immediate !== true,
             index: 0,
             routes: [state.routes[0]],
