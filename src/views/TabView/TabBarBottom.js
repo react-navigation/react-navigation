@@ -10,7 +10,6 @@ import {
 import TabBarIcon from './TabBarIcon';
 import SafeAreaView from '../SafeAreaView';
 import withOrientation from '../withOrientation';
-import type { Layout } from 'react-native-tab-view/src/TabViewTypeDefinitions';
 
 const majorVersion = parseInt(Platform.Version, 10);
 const isIos = Platform.OS === 'ios';
