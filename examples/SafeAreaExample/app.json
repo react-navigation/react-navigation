@@ -4,7 +4,7 @@
     "description": "An empty new project",
     "slug": "SafeAreaExample",
     "privacy": "public",
-    "sdkVersion": "22.0.0",
+    "sdkVersion": "25.0.0",
     "version": "1.0.0",
     "primaryColor": "#cccccc",
     "icon": "./assets/icon.png",

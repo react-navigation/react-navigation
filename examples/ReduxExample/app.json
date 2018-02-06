@@ -12,13 +12,10 @@
       "icon": "./assets/icons/react-navigation.png",
       "hideExponentText": false
     },
-    "sdkVersion": "23.0.0",
+    "sdkVersion": "25.0.0",
     "entryPoint": "./node_modules/react-native-scripts/build/bin/crna-entry.js",
     "packagerOpts": {
-      "assetExts": [
-        "ttf",
-        "mp4"
-      ]
+      "assetExts": ["ttf", "mp4"]
     },
     "ios": {
       "supportsTablet": true

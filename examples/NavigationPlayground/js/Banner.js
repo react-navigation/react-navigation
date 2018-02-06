@@ -8,7 +8,7 @@ import { SafeAreaView } from 'react-navigation';
 const Banner = () => (
   <SafeAreaView
     style={styles.bannerContainer}
-    forceInset={{ vertical: 'never' }}
+    forceInset={{ top: 'always' }}
   >
     <View style={styles.banner}>
       <Image source={require('./assets/NavLogo.png')} style={styles.image} />
