@@ -327,13 +327,8 @@ class Header extends React.PureComponent<Props, State> {
 
     const { options } = this.props.getScreenDetails(scene);
     const { headerStyle } = options;
-    const viewHeight =
-      typeof rest.layout.height === 'number' ? rest.layout.height : null;
-    const isHeightConstrained = viewHeight ? viewHeight < 500 : !Platform.isPad;
     const appBarHeight =
-      Platform.OS === 'ios'
-        ? isLandscape && isHeightConstrained ? 32 : 44
-        : 56;
+      Platform.OS === 'ios' ? (isLandscape && !Platform.isPad ? 32 : 44) : 56;
     const containerStyles = [
       styles.container,
       {
