@@ -8,7 +8,6 @@ import {
   View,
   Platform,
   Keyboard,
-  Dimensions,
 } from 'react-native';
 import TabBarIcon from './TabBarIcon';
 import SafeAreaView from '../SafeAreaView';
@@ -60,8 +59,6 @@ type Props = {
 const majorVersion = parseInt(Platform.Version, 10);
 const isIos = Platform.OS === 'ios';
 const isIOS11 = majorVersion >= 11 && isIos;
-const isTablet =
-  Dimensions.get('window').height / Dimensions.get('window').width < 1.6;
 const defaultMaxTabBarItemWidth = 125;
 
 class TabBarBottom extends React.PureComponent<Props> {
@@ -212,15 +209,11 @@ class TabBarBottom extends React.PureComponent<Props> {
 
     let tabBarWidth = layout.width;
     if (tabBarWidth === 0) {
-      return isTablet;
+      return Platform.isPad;
     }
 
-    const isWidthConstrained = layout.width < 450;
-    const isHeightConstrained = layout.height < 450;
-    if (isWidthConstrained) {
-      return false;
-    } else if (isHeightConstrained) {
-      return true;
+    if (!Platform.isPad) {
+      return isLandscape;
     } else {
       const maxTabBarItemWidth = this._tabItemMaxWidth();
       return routes.length * maxTabBarItemWidth <= tabBarWidth;
@@ -240,18 +233,15 @@ class TabBarBottom extends React.PureComponent<Props> {
       animateStyle,
       tabStyle,
       isLandscape,
-      layout,
     } = this.props;
     const { routes } = navigation.state;
     const previousScene = routes[navigation.state.index];
     // Prepend '-1', so there are always at least 2 items in inputRange
     const inputRange = [-1, ...routes.map((x: *, i: number) => i)];
 
-    const isHeightConstrained =
-      layout.height === 0 ? !isTablet : layout.height < 500;
     const tabBarStyle = [
       styles.tabBar,
-      this._shouldUseHorizontalTabs() && isHeightConstrained
+      this._shouldUseHorizontalTabs() && !Platform.isPad
         ? styles.tabBarCompact
         : styles.tabBarRegular,
       style,
