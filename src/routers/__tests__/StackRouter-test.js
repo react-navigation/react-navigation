@@ -1161,9 +1161,7 @@ describe('StackRouter', () => {
       };
       const { path, params } = router.getPathAndParamsForState(state);
       expect(path).toEqual('baz/321');
-      /* $FlowFixMe: params.id has to exist */
       expect(params.id).toEqual('123');
-      /* $FlowFixMe: params.bazId has to exist */
       expect(params.bazId).toEqual('321');
     }
 
@@ -1323,9 +1321,7 @@ test('Handles deep navigate completion action', () => {
   );
   expect(state2 && state2.index).toEqual(0);
   expect(state2 && state2.isTransitioning).toEqual(false);
-  /* $FlowFixMe */
   expect(state2 && state2.routes[0].index).toEqual(1);
-  /* $FlowFixMe */
   expect(state2 && state2.routes[0].isTransitioning).toEqual(true);
   expect(!!key).toEqual(true);
   const state3 = router.getStateForAction(
@@ -1336,8 +1332,6 @@ test('Handles deep navigate completion action', () => {
   );
   expect(state3 && state3.index).toEqual(0);
   expect(state3 && state3.isTransitioning).toEqual(false);
-  /* $FlowFixMe */
   expect(state3 && state3.routes[0].index).toEqual(1);
-  /* $FlowFixMe */
   expect(state3 && state3.routes[0].isTransitioning).toEqual(false);
 });
