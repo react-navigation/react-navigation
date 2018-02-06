@@ -27,9 +27,6 @@ class Header extends React.PureComponent {
   };
 
   static get HEIGHT() {
-    console.warn(
-      'Header.HEIGHT is deprecated and will be removed before react-navigation comes out of beta.'
-    );
     return APPBAR_HEIGHT + STATUSBAR_HEIGHT;
   }
 
