@@ -13,7 +13,8 @@ import withOrientation from '../withOrientation';
 
 const majorVersion = parseInt(Platform.Version, 10);
 const isIos = Platform.OS === 'ios';
-const useHorizontalTabs = majorVersion >= 11 && isIos;
+const isIOS11 = majorVersion >= 11 && isIos;
+const defaultMaxTabBarItemWidth = 125;
 
 class TabBarBottom extends React.PureComponent {
   // See https://developer.apple.com/library/content/documentation/UserExperience/Conceptual/UIKitUICatalog/UITabBar.html
@@ -25,6 +26,7 @@ class TabBarBottom extends React.PureComponent {
     showLabel: true,
     showIcon: true,
     allowFontScaling: true,
+    adaptive: isIOS11,
   };
 
   _renderLabel = scene => {
@@ -56,19 +58,18 @@ class TabBarBottom extends React.PureComponent {
 
     const tintColor = scene.focused ? activeTintColor : inactiveTintColor;
     const label = this.props.getLabel({ ...scene, tintColor });
-    let marginLeft = 0;
-    if (isLandscape && showIcon && useHorizontalTabs) {
-      marginLeft = LABEL_LEFT_MARGIN;
-    }
-    let marginTop = 0;
-    if (!isLandscape && showIcon && useHorizontalTabs) {
-      marginTop = LABEL_TOP_MARGIN;
-    }
 
     if (typeof label === 'string') {
       return (
         <Animated.Text
-          style={[styles.label, { color, marginLeft, marginTop }, labelStyle]}
+          style={[
+            styles.label,
+            { color },
+            showIcon && this._shouldUseHorizontalTabs()
+              ? styles.labelBeside
+              : styles.labelBeneath,
+            labelStyle,
+          ]}
           allowFontScaling={allowFontScaling}
         >
           {label}
@@ -104,7 +105,7 @@ class TabBarBottom extends React.PureComponent {
         inactiveTintColor={inactiveTintColor}
         renderIcon={renderIcon}
         scene={scene}
-        style={showLabel && useHorizontalTabs ? {} : styles.icon}
+        style={showLabel && this._shouldUseHorizontalTabs() ? {} : styles.icon}
       />
     );
   };
@@ -114,6 +115,64 @@ class TabBarBottom extends React.PureComponent {
       this.props.getTestIDProps && this.props.getTestIDProps(scene);
     return testIDProps;
   };
+
+  _tabItemMaxWidth() {
+    const { tabStyle, layout } = this.props;
+    let maxTabBarItemWidth;
+
+    const flattenedTabStyle = StyleSheet.flatten(tabStyle);
+
+    if (flattenedTabStyle) {
+      if (typeof flattenedTabStyle.width === 'number') {
+        maxTabBarItemWidth = flattenedTabStyle.width;
+      } else if (
+        typeof flattenedTabStyle.width === 'string' &&
+        flattenedTabStyle.endsWith('%')
+      ) {
+        const width = parseFloat(flattenedTabStyle.width);
+        if (Number.isFinite(width)) {
+          maxTabBarItemWidth = layout.width * (width / 100);
+        }
+      } else if (typeof flattenedTabStyle.maxWidth === 'number') {
+        maxTabBarItemWidth = flattenedTabStyle.maxWidth;
+      } else if (
+        typeof flattenedTabStyle.maxWidth === 'string' &&
+        flattenedTabStyle.endsWith('%')
+      ) {
+        const width = parseFloat(flattenedTabStyle.maxWidth);
+        if (Number.isFinite(width)) {
+          maxTabBarItemWidth = layout.width * (width / 100);
+        }
+      }
+    }
+
+    if (!maxTabBarItemWidth) {
+      maxTabBarItemWidth = defaultMaxTabBarItemWidth;
+    }
+
+    return maxTabBarItemWidth;
+  }
+
+  _shouldUseHorizontalTabs() {
+    const { routes } = this.props.navigation.state;
+    const { isLandscape, layout, adaptive, tabStyle } = this.props;
+
+    if (!adaptive) {
+      return false;
+    }
+
+    let tabBarWidth = layout.width;
+    if (tabBarWidth === 0) {
+      return Platform.isPad;
+    }
+
+    if (!Platform.isPad) {
+      return isLandscape;
+    } else {
+      const maxTabBarItemWidth = this._tabItemMaxWidth();
+      return routes.length * maxTabBarItemWidth <= tabBarWidth;
+    }
+  }
 
   render() {
     const {
@@ -136,9 +195,9 @@ class TabBarBottom extends React.PureComponent {
 
     const tabBarStyle = [
       styles.tabBar,
-      isLandscape && useHorizontalTabs
-        ? styles.tabBarLandscape
-        : styles.tabBarPortrait,
+      this._shouldUseHorizontalTabs() && !Platform.isPad
+        ? styles.tabBarCompact
+        : styles.tabBarRegular,
       style,
     ];
 
@@ -178,17 +237,19 @@ class TabBarBottom extends React.PureComponent {
                     : jumpToIndex(index)
                 }
               >
-                <Animated.View
-                  style={[
-                    styles.tab,
-                    isLandscape && useHorizontalTabs && styles.tabLandscape,
-                    !isLandscape && useHorizontalTabs && styles.tabPortrait,
-                    { backgroundColor },
-                    tabStyle,
-                  ]}
-                >
-                  {this._renderIcon(scene)}
-                  {this._renderLabel(scene)}
+                <Animated.View style={[styles.tab, { backgroundColor }]}>
+                  <View
+                    style={[
+                      styles.tab,
+                      this._shouldUseHorizontalTabs()
+                        ? styles.tabLandscape
+                        : styles.tabPortrait,
+                      tabStyle,
+                    ]}
+                  >
+                    {this._renderIcon(scene)}
+                    {this._renderLabel(scene)}
+                  </View>
                 </Animated.View>
               </TouchableWithoutFeedback>
             );
@@ -199,8 +260,6 @@ class TabBarBottom extends React.PureComponent {
   }
 }
 
-const LABEL_LEFT_MARGIN = 20;
-const LABEL_TOP_MARGIN = 15;
 const styles = StyleSheet.create({
   tabBar: {
     backgroundColor: '#F7F7F7', // Default background color in iOS 10
@@ -208,16 +267,15 @@ const styles = StyleSheet.create({
     borderTopColor: 'rgba(0, 0, 0, .3)',
     flexDirection: 'row',
   },
-  tabBarLandscape: {
+  tabBarCompact: {
     height: 29,
   },
-  tabBarPortrait: {
+  tabBarRegular: {
     height: 49,
   },
   tab: {
     flex: 1,
     alignItems: isIos ? 'center' : 'stretch',
-    justifyContent: 'flex-end',
   },
   tabPortrait: {
     justifyContent: 'flex-end',
@@ -232,9 +290,15 @@ const styles = StyleSheet.create({
   },
   label: {
     textAlign: 'center',
+    backgroundColor: 'transparent',
+  },
+  labelBeneath: {
     fontSize: 10,
     marginBottom: 1.5,
-    backgroundColor: 'transparent',
+  },
+  labelBeside: {
+    fontSize: 13,
+    marginLeft: 20,
   },
 });
 
