@@ -28,6 +28,7 @@ class MyNavScreen extends React.Component<MyNavScreenProps> {
           title="Go to a profile screen"
         />
         <Button onPress={() => navigation.popToTop()} title="Pop to top" />
+        <Button onPress={() => navigation.pop()} title="Pop" />
         <Button
           onPress={() => navigation.navigate('Photos', { name: 'Jane' })}
           title="Go to a photos screen"

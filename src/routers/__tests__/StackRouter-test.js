@@ -366,6 +366,76 @@ describe('StackRouter', () => {
     expect(pushedState.routes[1].routes[1].routeName).toEqual('qux');
   });
 
+  test('pop does not bubble up', () => {
+    const ChildNavigator = () => <div />;
+    const GrandChildNavigator = () => <div />;
+    GrandChildNavigator.router = StackRouter({
+      Quux: { screen: () => <div /> },
+      Corge: { screen: () => <div /> },
+    });
+    ChildNavigator.router = TabRouter({
+      Baz: { screen: GrandChildNavigator },
+      Qux: { screen: () => <div /> },
+    });
+    const router = StackRouter({
+      Foo: { screen: () => <div /> },
+      Bar: { screen: ChildNavigator },
+    });
+
+    const state = router.getStateForAction({ type: NavigationActions.INIT });
+    const state2 = router.getStateForAction(
+      {
+        type: NavigationActions.NAVIGATE,
+        routeName: 'Bar',
+        key: 'StackRouterRoot',
+      },
+      state
+    );
+    const barKey = state2.routes[1].routes[0].key;
+    const state3 = router.getStateForAction(
+      {
+        type: NavigationActions.POP,
+      },
+      state2
+    );
+    expect(state3 && state3.index).toEqual(1);
+    expect(state3 && state3.routes[1].index).toEqual(0);
+  });
+
+  test('popToTop does not bubble up', () => {
+    const ChildNavigator = () => <div />;
+    const GrandChildNavigator = () => <div />;
+    GrandChildNavigator.router = StackRouter({
+      Quux: { screen: () => <div /> },
+      Corge: { screen: () => <div /> },
+    });
+    ChildNavigator.router = TabRouter({
+      Baz: { screen: GrandChildNavigator },
+      Qux: { screen: () => <div /> },
+    });
+    const router = StackRouter({
+      Foo: { screen: () => <div /> },
+      Bar: { screen: ChildNavigator },
+    });
+    const state = router.getStateForAction({ type: NavigationActions.INIT });
+    const state2 = router.getStateForAction(
+      {
+        type: NavigationActions.NAVIGATE,
+        routeName: 'Bar',
+      },
+      state
+    );
+    const barKey = state2.routes[1].routes[0].key;
+    const state3 = router.getStateForAction(
+      {
+        type: NavigationActions.POP_TO_TOP,
+      },
+      state2
+    );
+    expect(state3 && state3.index).toEqual(1);
+    expect(state3 && state3.routes[1].index).toEqual(0);
+  });
+
   test('popToTop works as expected', () => {
     const TestRouter = StackRouter({
       foo: { screen: () => <div /> },
