@@ -9,13 +9,27 @@ import type {
 
 import * as React from 'react';
 import { Button, ScrollView, StatusBar } from 'react-native';
-import { StackNavigator, SafeAreaView } from 'react-navigation';
+import { StackNavigator, SafeAreaView, withNavigation } from 'react-navigation';
 import SampleText from './SampleText';
 
 type MyNavScreenProps = {
   navigation: NavigationScreenProp<*>,
   banner: React.Node,
 };
+
+class MyBackButton extends React.Component<any, any> {
+  render() {
+    return (
+      <Button onPress={this._navigateBack} title="Custom Back" />
+    );
+  }
+
+  _navigateBack = () => {
+    this.props.navigation.goBack(null);
+  }
+}
+
+const MyBackButtonWithNavigation = withNavigation(MyBackButton);
 
 class MyNavScreen extends React.Component<MyNavScreenProps> {
   render() {
@@ -94,6 +108,7 @@ type MyPhotosScreenProps = {
 class MyPhotosScreen extends React.Component<MyPhotosScreenProps> {
   static navigationOptions = {
     title: 'Photos',
+    headerLeft: <MyBackButtonWithNavigation />
   };
   _s0: NavigationEventSubscription;
   _s1: NavigationEventSubscription;
