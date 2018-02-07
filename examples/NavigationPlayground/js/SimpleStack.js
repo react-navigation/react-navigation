@@ -24,19 +24,19 @@ class MyNavScreen extends React.Component<MyNavScreenProps> {
       <SafeAreaView>
         <SampleText>{banner}</SampleText>
         <Button
-          onPress={() => navigation.navigate('Profile', { name: 'Jane' })}
-          title="Go to a profile screen"
+          onPress={() => navigation.push('Profile', { name: 'Jane' })}
+          title="Push a profile screen"
         />
-        <Button onPress={() => navigation.popToTop()} title="Pop to top" />
-        <Button onPress={() => navigation.pop()} title="Pop" />
         <Button
           onPress={() => navigation.navigate('Photos', { name: 'Jane' })}
-          title="Go to a photos screen"
+          title="Navigate to a photos screen"
         />
         <Button
           onPress={() => navigation.replace('Profile', { name: 'Lucy' })}
           title="Replace with profile"
         />
+        <Button onPress={() => navigation.popToTop()} title="Pop to top" />
+        <Button onPress={() => navigation.pop()} title="Pop" />
         <Button onPress={() => navigation.goBack(null)} title="Go back" />
         <StatusBar barStyle="default" />
       </SafeAreaView>
