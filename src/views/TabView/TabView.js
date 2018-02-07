@@ -7,7 +7,6 @@ import withCachedChildNavigation from '../../withCachedChildNavigation';
 import SafeAreaView from '../SafeAreaView';
 
 class TabView extends React.PureComponent {
-
   static defaultProps = {
     // fix for https://github.com/react-native-community/react-native-tab-view/issues/312
     initialLayout: Platform.select({
@@ -139,6 +138,7 @@ class TabView extends React.PureComponent {
 
   render() {
     const {
+      router,
       tabBarComponent,
       tabBarPosition,
       animationEnabled,
@@ -150,6 +150,12 @@ class TabView extends React.PureComponent {
     let renderHeader;
     let renderFooter;
     let renderPager;
+
+    const { state } = this.props.navigation;
+    const options = router.getScreenOptions(
+      this.props.childNavigationProps[state.routes[state.index].key],
+      screenProps || {}
+    );
 
     const swipeEnabled =
       options.swipeEnabled == null
