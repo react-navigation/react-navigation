@@ -173,7 +173,11 @@ export default (routeConfigs, stackConfig = {}) => {
 
       // Handle pop-to-top behavior. Make sure this happens after children have had a chance to handle the action, so that the inner stack pops to top first.
       if (action.type === NavigationActions.POP_TO_TOP) {
-        if (state.index !== 0) {
+        if (state.index === 0) {
+          return {
+            ...state,
+          };
+        } else {
           return {
             ...state,
             isTransitioning: action.immediate !== true,
@@ -391,12 +395,20 @@ export default (routeConfigs, stackConfig = {}) => {
           const backRoute = state.routes.find(route => route.key === key);
           backRouteIndex = state.routes.indexOf(backRoute);
         }
+
         if (backRouteIndex > 0) {
           return {
             ...state,
             routes: state.routes.slice(0, backRouteIndex),
             index: backRouteIndex - 1,
             isTransitioning: immediate !== true,
+          };
+        } else if (
+          backRouteIndex === 0 &&
+          action.type === NavigationActions.POP
+        ) {
+          return {
+            ...state,
           };
         }
       }
