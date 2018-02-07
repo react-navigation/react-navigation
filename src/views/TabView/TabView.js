@@ -90,12 +90,12 @@ class TabView extends React.PureComponent {
 
   _renderTabBar = props => {
     const {
+      tabBarOptions,
+      tabBarComponent: TabBarComponent,
       animationEnabled,
       navigation,
       router,
       screenProps,
-      tabBarComponent: TabBarComponent,
-      tabBarOptions,
     } = this.props;
     if (typeof TabBarComponent === 'undefined') {
       return null;
