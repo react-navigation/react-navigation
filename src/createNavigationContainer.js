@@ -1,25 +1,8 @@
-/* @flow */
-
 import React from 'react';
 import { BackHandler, Linking } from './PlatformHelpers';
 import NavigationActions from './NavigationActions';
 import addNavigationHelpers from './addNavigationHelpers';
 import invariant from './utils/invariant';
-
-import type {
-  NavigationAction,
-  NavigationState,
-  NavigationScreenProp,
-  NavigationNavigator,
-  PossiblyDeprecatedNavigationAction,
-  NavigationInitAction,
-  NavigationContainerProps,
-  NavigationContainer,
-} from './TypeDefinition';
-
-type State<NavState> = {
-  nav: ?NavState,
-};
 
 /**
  * Create an HOC that injects the navigation and manages the navigation state
@@ -27,38 +10,33 @@ type State<NavState> = {
  * This allows to use e.g. the StackNavigator and TabNavigator as root-level
  * components.
  */
-export default function createNavigationContainer<S: NavigationState, O: {}>(
-  // Let the NavigationNavigator props flowwwww
-  Component: NavigationNavigator<S, O, *>
-): NavigationContainer<S, O, *> {
-  class NavigationContainer extends React.Component<
-    NavigationContainerProps<S, O>,
-    State<S>
-  > {
-    subs: ?{
-      remove: () => void,
-    } = null;
+export default function createNavigationContainer(Component) {
+  class NavigationContainer extends React.Component {
+    subs = null;
 
     static router = Component.router;
     static navigationOptions = null;
 
-    constructor(props: NavigationContainerProps<S, O>) {
+    _actionEventSubscribers = new Set();
+
+    constructor(props) {
       super(props);
 
       this._validateProps(props);
 
+      this._initialAction = NavigationActions.init();
       this.state = {
         nav: this._isStateful()
-          ? Component.router.getStateForAction(NavigationActions.init())
+          ? Component.router.getStateForAction(this._initialAction)
           : null,
       };
     }
 
-    _isStateful(): boolean {
+    _isStateful() {
       return !this.props.navigation;
     }
 
-    _validateProps(props: NavigationContainerProps<S, O>) {
+    _validateProps(props) {
       if (this._isStateful()) {
         return;
       }
@@ -79,7 +57,7 @@ export default function createNavigationContainer<S: NavigationState, O: {}>(
       }
     }
 
-    _urlToPathAndParams(url: string) {
+    _urlToPathAndParams(url) {
       const params = {};
       const delimiter = this.props.uriPrefix || '://';
       let path = url.split(delimiter)[1];
@@ -94,7 +72,7 @@ export default function createNavigationContainer<S: NavigationState, O: {}>(
       };
     }
 
-    _handleOpenURL = ({ url }: { url: string }) => {
+    _handleOpenURL = ({ url }) => {
       const parsedUrl = this._urlToPathAndParams(url);
       if (parsedUrl) {
         const { path, params } = parsedUrl;
@@ -105,11 +83,7 @@ export default function createNavigationContainer<S: NavigationState, O: {}>(
       }
     };
 
-    _onNavigationStateChange(
-      prevNav: NavigationState,
-      nav: NavigationState,
-      action: NavigationAction
-    ) {
+    _onNavigationStateChange(prevNav, nav, action) {
       if (
         typeof this.props.onNavigationStateChange === 'undefined' &&
         this._isStateful() &&
@@ -138,7 +112,7 @@ export default function createNavigationContainer<S: NavigationState, O: {}>(
       }
     }
 
-    componentWillReceiveProps(nextProps: NavigationContainerProps<S, O>) {
+    componentWillReceiveProps(nextProps) {
       this._validateProps(nextProps);
     }
 
@@ -160,8 +134,15 @@ export default function createNavigationContainer<S: NavigationState, O: {}>(
 
       Linking.addEventListener('url', this._handleOpenURL);
 
-      Linking.getInitialURL().then(
-        (url: ?string) => url && this._handleOpenURL({ url })
+      Linking.getInitialURL().then(url => url && this._handleOpenURL({ url }));
+
+      this._actionEventSubscribers.forEach(subscriber =>
+        subscriber({
+          type: 'action',
+          action: this._initialAction,
+          state: this.state.nav,
+          lastState: null,
+        })
       );
     }
 
@@ -171,9 +152,8 @@ export default function createNavigationContainer<S: NavigationState, O: {}>(
     }
 
     // Per-tick temporary storage for state.nav
-    _nav: ?S;
 
-    dispatch = (inputAction: PossiblyDeprecatedNavigationAction) => {
+    dispatch = inputAction => {
       const action = NavigationActions.mapDeprecatedActionAndWarn(inputAction);
       if (!this._isStateful()) {
         return false;
@@ -182,18 +162,29 @@ export default function createNavigationContainer<S: NavigationState, O: {}>(
       const oldNav = this._nav;
       invariant(oldNav, 'should be set in constructor if stateful');
       const nav = Component.router.getStateForAction(action, oldNav);
+      const dispatchActionEvents = () => {
+        this._actionEventSubscribers.forEach(subscriber =>
+          subscriber({
+            type: 'action',
+            action,
+            state: nav,
+            lastState: oldNav,
+          })
+        );
+      };
       if (nav && nav !== oldNav) {
         // Cache updates to state.nav during the tick to ensure that subsequent calls will not discard this change
         this._nav = nav;
-        this.setState({ nav }, () =>
-          this._onNavigationStateChange(oldNav, nav, action)
-        );
+        this.setState({ nav }, () => {
+          this._onNavigationStateChange(oldNav, nav, action);
+          dispatchActionEvents();
+        });
         return true;
+      } else {
+        dispatchActionEvents();
       }
       return false;
     };
-
-    _navigation: ?NavigationScreenProp<NavigationState>;
 
     render() {
       let navigation = this.props.navigation;
@@ -204,6 +195,17 @@ export default function createNavigationContainer<S: NavigationState, O: {}>(
           this._navigation = addNavigationHelpers({
             dispatch: this.dispatch,
             state: nav,
+            addListener: (eventName, handler) => {
+              if (eventName !== 'action') {
+                return { remove: () => {} };
+              }
+              this._actionEventSubscribers.add(handler);
+              return {
+                remove: () => {
+                  this._actionEventSubscribers.delete(handler);
+                },
+              };
+            },
           });
         }
         navigation = this._navigation;

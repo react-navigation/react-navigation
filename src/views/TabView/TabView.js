@@ -1,67 +1,13 @@
-/* @flow */
-
-import * as React from 'react';
+import React from 'react';
 import { View, StyleSheet, Platform } from 'react-native';
 import { TabViewAnimated, TabViewPagerPan } from 'react-native-tab-view';
-import type { Layout } from 'react-native-tab-view/src/TabViewTypeDefinitions';
+
 import SceneView from '../SceneView';
 import withCachedChildNavigation from '../../withCachedChildNavigation';
 import SafeAreaView from '../SafeAreaView';
 
-import type {
-  NavigationScreenProp,
-  NavigationRoute,
-  NavigationState,
-  NavigationRouter,
-  NavigationTabScreenOptions,
-  ViewStyleProp,
-} from '../../TypeDefinition';
+class TabView extends React.PureComponent {
 
-export type TabViewConfig = {
-  tabBarComponent?: React.ComponentType<*>,
-  tabBarPosition?: 'top' | 'bottom',
-  tabBarOptions?: {
-    style?: ViewStyleProp,
-  },
-  swipeEnabled?: boolean,
-  animationEnabled?: boolean,
-  configureTransition?: (
-    currentTransitionProps: Object,
-    nextTransitionProps: Object
-  ) => Object,
-  initialLayout?: Layout,
-};
-
-export type TabScene = {
-  route: NavigationRoute,
-  focused: boolean,
-  index: number,
-  tintColor?: ?string,
-};
-
-type Props = {
-  tabBarComponent?: React.ComponentType<*>,
-  tabBarPosition?: 'top' | 'bottom',
-  tabBarOptions?: {
-    style?: ViewStyleProp,
-  },
-  swipeEnabled?: boolean,
-  animationEnabled?: boolean,
-  configureTransition?: (
-    currentTransitionProps: Object,
-    nextTransitionProps: Object
-  ) => Object,
-  initialLayout: Layout,
-
-  screenProps?: {},
-  navigation: NavigationScreenProp<NavigationState>,
-  router: NavigationRouter<NavigationState, NavigationTabScreenOptions>,
-  childNavigationProps: {
-    [key: string]: NavigationScreenProp<NavigationRoute>,
-  },
-};
-
-class TabView extends React.PureComponent<Props> {
   static defaultProps = {
     // fix for https://github.com/react-native-community/react-native-tab-view/issues/312
     initialLayout: Platform.select({
@@ -69,12 +15,12 @@ class TabView extends React.PureComponent<Props> {
     }),
   };
 
-  _handlePageChanged = (index: number) => {
+  _handlePageChanged = index => {
     const { navigation } = this.props;
     navigation.navigate(navigation.state.routes[index].routeName);
   };
 
-  _renderScene = ({ route }: any) => {
+  _renderScene = ({ route }) => {
     const { screenProps } = this.props;
     const childNavigation = this.props.childNavigationProps[route.key];
     const TabComponent = this.props.router.getComponentForRouteName(
@@ -91,7 +37,7 @@ class TabView extends React.PureComponent<Props> {
     );
   };
 
-  _getLabel = ({ route, tintColor, focused }: TabScene) => {
+  _getLabel = ({ route, tintColor, focused }) => {
     const options = this.props.router.getScreenOptions(
       this.props.childNavigationProps[route.key],
       this.props.screenProps || {}
@@ -110,7 +56,7 @@ class TabView extends React.PureComponent<Props> {
     return route.routeName;
   };
 
-  _getOnPress = (previousScene: TabScene, { route }: TabScene) => {
+  _getOnPress = (previousScene, { route }) => {
     const options = this.props.router.getScreenOptions(
       this.props.childNavigationProps[route.key],
       this.props.screenProps || {}
@@ -119,16 +65,18 @@ class TabView extends React.PureComponent<Props> {
     return options.tabBarOnPress;
   };
 
-  _getTestIDProps = ({ route }: TabScene) => {
+  _getTestIDProps = ({ route, focused }) => {
     const options = this.props.router.getScreenOptions(
       this.props.childNavigationProps[route.key],
       this.props.screenProps || {}
     );
 
-    return options.tabBarTestIDProps;
+    return typeof options.tabBarTestIDProps === 'function'
+      ? options.tabBarTestIDProps({ focused })
+      : options.tabBarTestIDProps;
   };
 
-  _renderIcon = ({ focused, route, tintColor }: TabScene) => {
+  _renderIcon = ({ focused, route, tintColor }) => {
     const options = this.props.router.getScreenOptions(
       this.props.childNavigationProps[route.key],
       this.props.screenProps || {}
@@ -141,7 +89,7 @@ class TabView extends React.PureComponent<Props> {
     return null;
   };
 
-  _renderTabBar = (props: *) => {
+  _renderTabBar = props => {
     const {
       animationEnabled,
       navigation,
@@ -174,6 +122,8 @@ class TabView extends React.PureComponent<Props> {
       <TabBarComponent
         {...props}
         {...tabBarOptions}
+        tabBarPosition={this.props.tabBarPosition}
+        screenProps={this.props.screenProps}
         navigation={this.props.navigation}
         getLabel={this._getLabel}
         getTestIDProps={this._getTestIDProps}
@@ -185,7 +135,7 @@ class TabView extends React.PureComponent<Props> {
     );
   };
 
-  _renderPager = (props: *) => <TabViewPagerPan {...props} />;
+  _renderPager = props => <TabViewPagerPan {...props} />;
 
   render() {
     const {

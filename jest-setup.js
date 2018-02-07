@@ -1,6 +1,6 @@
 /**
  * @flow
- * eslint-env jest 
+ * eslint-env jest
  */
 
 import React from 'react';

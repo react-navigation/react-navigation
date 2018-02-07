@@ -1,6 +1,4 @@
-/* @flow */
-
-import * as React from 'react';
+import React from 'react';
 import {
   Animated,
   TouchableWithoutFeedback,
@@ -8,63 +6,17 @@ import {
   View,
   Platform,
   Keyboard,
-  Dimensions,
 } from 'react-native';
 import TabBarIcon from './TabBarIcon';
 import SafeAreaView from '../SafeAreaView';
 import withOrientation from '../withOrientation';
-import type { Layout } from 'react-native-tab-view/src/TabViewTypeDefinitions';
-
-import type {
-  NavigationRoute,
-  NavigationState,
-  NavigationScreenProp,
-  ViewStyleProp,
-  TextStyleProp,
-} from '../../TypeDefinition';
-
-import type { TabScene } from './TabView';
-
-type Props = {
-  activeTintColor: string,
-  activeBackgroundColor: string,
-  inactiveTintColor: string,
-  inactiveBackgroundColor: string,
-  showLabel: boolean,
-  showIcon: boolean,
-  allowFontScaling: boolean,
-  position: Animated.Value,
-  navigation: NavigationScreenProp<NavigationState>,
-  jumpToIndex: (index: number) => void,
-  getLabel: (scene: TabScene) => ?(React.Node | string),
-  getOnPress: (
-    previousScene: NavigationRoute,
-    scene: TabScene
-  ) => ({
-    previousScene: NavigationRoute,
-    scene: TabScene,
-    jumpToIndex: (index: number) => void,
-  }) => void,
-  getTestIDProps: (scene: TabScene) => (scene: TabScene) => any,
-  renderIcon: (scene: TabScene) => React.Node,
-  style?: ViewStyleProp,
-  animateStyle?: ViewStyleProp,
-  labelStyle?: TextStyleProp,
-  tabStyle?: ViewStyleProp,
-  showIcon?: boolean,
-  isLandscape: boolean,
-  layout: Layout,
-  adaptive: boolean,
-};
 
 const majorVersion = parseInt(Platform.Version, 10);
 const isIos = Platform.OS === 'ios';
 const isIOS11 = majorVersion >= 11 && isIos;
-const isTablet =
-  Dimensions.get('window').height / Dimensions.get('window').width < 1.6;
 const defaultMaxTabBarItemWidth = 125;
 
-class TabBarBottom extends React.PureComponent<Props> {
+class TabBarBottom extends React.PureComponent {
   // See https://developer.apple.com/library/content/documentation/UserExperience/Conceptual/UIKitUICatalog/UITabBar.html
   static defaultProps = {
     activeTintColor: '#3478f6', // Default active tint color in iOS 10
@@ -77,7 +29,7 @@ class TabBarBottom extends React.PureComponent<Props> {
     adaptive: isIOS11,
   };
 
-  _renderLabel = (scene: TabScene) => {
+  _renderLabel = scene => {
     const {
       position,
       navigation,
@@ -95,14 +47,13 @@ class TabBarBottom extends React.PureComponent<Props> {
     const { index } = scene;
     const { routes } = navigation.state;
     // Prepend '-1', so there are always at least 2 items in inputRange
-    const inputRange = [-1, ...routes.map((x: *, i: number) => i)];
+    const inputRange = [-1, ...routes.map((x, i) => i)];
     const outputRange = inputRange.map(
-      (inputIndex: number) =>
-        inputIndex === index ? activeTintColor : inactiveTintColor
+      inputIndex => (inputIndex === index ? activeTintColor : inactiveTintColor)
     );
     const color = position.interpolate({
       inputRange,
-      outputRange: (outputRange: Array<string>),
+      outputRange: outputRange,
     });
 
     const tintColor = scene.focused ? activeTintColor : inactiveTintColor;
@@ -133,7 +84,7 @@ class TabBarBottom extends React.PureComponent<Props> {
     return label;
   };
 
-  _renderIcon = (scene: TabScene) => {
+  _renderIcon = scene => {
     const {
       position,
       navigation,
@@ -159,7 +110,7 @@ class TabBarBottom extends React.PureComponent<Props> {
     );
   };
 
-  _renderTestIDProps = (scene: TabScene) => {
+  _renderTestIDProps = scene => {
     const testIDProps =
       this.props.getTestIDProps && this.props.getTestIDProps(scene);
     return testIDProps;
@@ -212,11 +163,10 @@ class TabBarBottom extends React.PureComponent<Props> {
 
     let tabBarWidth = layout.width;
     if (tabBarWidth === 0) {
-      return isTablet;
+      return Platform.isPad;
     }
 
-    const isHeightConstrained = layout.height < 500;
-    if (isHeightConstrained) {
+    if (!Platform.isPad) {
       return isLandscape;
     } else {
       const maxTabBarItemWidth = this._tabItemMaxWidth();
@@ -237,18 +187,15 @@ class TabBarBottom extends React.PureComponent<Props> {
       animateStyle,
       tabStyle,
       isLandscape,
-      layout,
     } = this.props;
     const { routes } = navigation.state;
     const previousScene = routes[navigation.state.index];
     // Prepend '-1', so there are always at least 2 items in inputRange
-    const inputRange = [-1, ...routes.map((x: *, i: number) => i)];
+    const inputRange = [-1, ...routes.map((x, i) => i)];
 
-    const isHeightConstrained =
-      layout.height === 0 ? !isTablet : layout.height < 500;
     const tabBarStyle = [
       styles.tabBar,
-      this._shouldUseHorizontalTabs() && isHeightConstrained
+      this._shouldUseHorizontalTabs() && !Platform.isPad
         ? styles.tabBarCompact
         : styles.tabBarRegular,
       style,
@@ -260,19 +207,19 @@ class TabBarBottom extends React.PureComponent<Props> {
           style={tabBarStyle}
           forceInset={{ bottom: 'always', top: 'never' }}
         >
-          {routes.map((route: NavigationRoute, index: number) => {
+          {routes.map((route, index) => {
             const focused = index === navigation.state.index;
             const scene = { route, index, focused };
             const onPress = getOnPress(previousScene, scene);
             const outputRange = inputRange.map(
-              (inputIndex: number) =>
+              inputIndex =>
                 inputIndex === index
                   ? activeBackgroundColor
                   : inactiveBackgroundColor
             );
             const backgroundColor = position.interpolate({
               inputRange,
-              outputRange: (outputRange: Array<string>),
+              outputRange: outputRange,
             });
 
             const justifyContent = this.props.showIcon ? 'flex-end' : 'center';
@@ -287,7 +234,8 @@ class TabBarBottom extends React.PureComponent<Props> {
                 onPress={() =>
                   onPress
                     ? onPress({ previousScene, scene, jumpToIndex })
-                    : jumpToIndex(index)}
+                    : jumpToIndex(index)
+                }
               >
                 <Animated.View style={[styles.tab, { backgroundColor }]}>
                   <View
