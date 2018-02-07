@@ -281,6 +281,13 @@ export default (routeConfigs, stackConfig = {}) => {
           ...StateUtils.push(state, route),
           isTransitioning: action.immediate !== true,
         };
+      } else if (
+        action.type === NavigationActions.PUSH &&
+        childRouters[action.routeName] === undefined
+      ) {
+        return {
+          ...state,
+        };
       }
 
       if (
