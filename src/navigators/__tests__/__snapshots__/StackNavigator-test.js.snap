@@ -108,7 +108,7 @@ exports[`StackNavigator applies correct values when headerRight is present 1`] =
             "key": "StackRouterRoot",
             "routes": Array [
               Object {
-                "key": "Init-id-0-1",
+                "key": "id-0-1",
                 "routeName": "Home",
               },
             ],
@@ -347,7 +347,7 @@ exports[`StackNavigator renders successfully 1`] = `
             "key": "StackRouterRoot",
             "routes": Array [
               Object {
-                "key": "Init-id-0-0",
+                "key": "id-0-0",
                 "routeName": "Home",
               },
             ],
