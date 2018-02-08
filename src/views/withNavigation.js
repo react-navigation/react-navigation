@@ -3,16 +3,25 @@ import propTypes from 'prop-types';
 import hoistStatics from 'hoist-non-react-statics';
 
 export default function withNavigation(Component) {
-  const componentWithNavigation = (props, { navigation }) => (
-    <Component {...props} navigation={navigation} />
-  );
+  class ComponentWithNavigation extends React.Component {
+    static displayName = `withNavigation(${Component.displayName ||
+      Component.name})`;
 
-  const displayName = Component.displayName || Component.name;
-  componentWithNavigation.displayName = `withNavigation(${displayName})`;
+    static contextTypes = {
+      navigation: propTypes.object.isRequired,
+    };
 
-  componentWithNavigation.contextTypes = {
-    navigation: propTypes.object.isRequired,
-  };
+    render() {
+      const { navigation } = this.context;
+      return (
+        <Component
+          {...this.props}
+          navigation={navigation}
+          ref={this.props.onRef}
+        />
+      );
+    }
+  }
 
-  return hoistStatics(componentWithNavigation, Component);
+  return hoistStatics(ComponentWithNavigation, Component);
 }
