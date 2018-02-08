@@ -1150,6 +1150,126 @@ describe('StackRouter', () => {
     ]);
   });
 
+  test('Handles the navigate action with params and nested StackRouter as a first action', () => {
+    const state = TestStackRouter.getStateForAction({
+      type: NavigationActions.NAVIGATE,
+      routeName: 'main',
+      params: {
+        code: 'test',
+        foo: 'bar',
+      },
+      action: {
+        type: NavigationActions.NAVIGATE,
+        routeName: 'profile',
+        params: {
+          id: '4',
+          code: 'test',
+          foo: 'bar',
+        },
+        action: {
+          type: NavigationActions.NAVIGATE,
+          routeName: 'list',
+          params: {
+            id: '10259959195',
+            code: 'test',
+            foo: 'bar',
+          },
+        },
+      },
+    });
+
+    expect(state).toEqual({
+      index: 0,
+      isTransitioning: false,
+      key: 'StackRouterRoot',
+      routes: [
+        {
+          index: 0,
+          isTransitioning: false,
+          key: 'Init-id-2',
+          params: { code: 'test', foo: 'bar' },
+          routeName: 'main',
+          routes: [
+            {
+              index: 0,
+              isTransitioning: false,
+              key: 'Init-id-1',
+              params: { code: 'test', foo: 'bar', id: '4' },
+              routeName: 'profile',
+              routes: [
+                {
+                  key: 'Init-id-0',
+                  params: { code: 'test', foo: 'bar', id: '10259959195' },
+                  routeName: 'list',
+                  type: undefined,
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    });
+
+    const state2 = TestStackRouter.getStateForAction({
+      type: NavigationActions.NAVIGATE,
+      routeName: 'main',
+      params: {
+        code: '',
+        foo: 'bar',
+      },
+      action: {
+        type: NavigationActions.NAVIGATE,
+        routeName: 'profile',
+        params: {
+          id: '4',
+          code: '',
+          foo: 'bar',
+        },
+        action: {
+          type: NavigationActions.NAVIGATE,
+          routeName: 'list',
+          params: {
+            id: '10259959195',
+            code: '',
+            foo: 'bar',
+          },
+        },
+      },
+    });
+
+    expect(state2).toEqual({
+      index: 0,
+      isTransitioning: false,
+      key: 'StackRouterRoot',
+      routes: [
+        {
+          index: 0,
+          isTransitioning: false,
+          key: 'Init-id-5',
+          params: { code: '', foo: 'bar' },
+          routeName: 'main',
+          routes: [
+            {
+              index: 0,
+              isTransitioning: false,
+              key: 'Init-id-4',
+              params: { code: '', foo: 'bar', id: '4' },
+              routeName: 'profile',
+              routes: [
+                {
+                  key: 'Init-id-3',
+                  params: { code: '', foo: 'bar', id: '10259959195' },
+                  routeName: 'list',
+                  type: undefined,
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    });
+  });
+
   test('Handles the navigate action with params and nested TabRouter', () => {
     const ChildNavigator = () => <div />;
     ChildNavigator.router = TabRouter({

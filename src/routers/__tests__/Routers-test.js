@@ -7,6 +7,11 @@ import TabRouter from '../TabRouter';
 
 import NavigationActions from '../../NavigationActions';
 import addNavigationHelpers from '../../addNavigationHelpers';
+import { _TESTING_ONLY_normalize_keys } from '../KeyGenerator';
+
+beforeEach(() => {
+  _TESTING_ONLY_normalize_keys();
+});
 
 import { _TESTING_ONLY_normalize_keys } from '../KeyGenerator';
 
