@@ -7,8 +7,9 @@ import {
   Platform,
   Keyboard,
 } from 'react-native';
+import SafeAreaView from 'react-native-safe-area-view';
+
 import TabBarIcon from './TabBarIcon';
-import SafeAreaView from '../SafeAreaView';
 import withOrientation from '../withOrientation';
 
 const majorVersion = parseInt(Platform.Version, 10);
