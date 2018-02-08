@@ -109,7 +109,7 @@ describe('NavigationContainer', () => {
       // First dispatch
       expect(
         navigationContainer.dispatch(
-          NavigationActions.navigate({ routeName: 'bar' })
+          NavigationActions.navigate({ routeName: 'bar', immediate: true })
         )
       ).toEqual(true);
 
@@ -119,7 +119,7 @@ describe('NavigationContainer', () => {
       // Second dispatch
       expect(
         navigationContainer.dispatch(
-          NavigationActions.navigate({ routeName: 'baz' })
+          NavigationActions.navigate({ routeName: 'baz', immediate: true })
         )
       ).toEqual(true);
 
@@ -147,7 +147,7 @@ describe('NavigationContainer', () => {
       // First dispatch
       expect(
         navigationContainer.dispatch(
-          NavigationActions.navigate({ routeName: 'bar' })
+          NavigationActions.navigate({ routeName: 'bar', immediate: true })
         )
       ).toEqual(true);
 
@@ -157,28 +157,28 @@ describe('NavigationContainer', () => {
       // Second dispatch
       expect(
         navigationContainer.dispatch(
-          NavigationActions.navigate({ routeName: 'baz' })
+          NavigationActions.navigate({ routeName: 'baz', immediate: true })
         )
       ).toEqual(true);
 
       // Third dispatch
       expect(
         navigationContainer.dispatch(
-          NavigationActions.navigate({ routeName: 'car' })
+          NavigationActions.navigate({ routeName: 'car', immediate: true })
         )
       ).toEqual(true);
 
       // Fourth dispatch
       expect(
         navigationContainer.dispatch(
-          NavigationActions.navigate({ routeName: 'dog' })
+          NavigationActions.navigate({ routeName: 'dog', immediate: true })
         )
       ).toEqual(true);
 
       // Fifth dispatch
       expect(
         navigationContainer.dispatch(
-          NavigationActions.navigate({ routeName: 'elk' })
+          NavigationActions.navigate({ routeName: 'elk', immediate: true })
         )
       ).toEqual(true);
 
