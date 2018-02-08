@@ -7,7 +7,6 @@ import TabRouter from '../TabRouter';
 
 import NavigationActions from '../../NavigationActions';
 import addNavigationHelpers from '../../addNavigationHelpers';
-
 import { _TESTING_ONLY_normalize_keys } from '../KeyGenerator';
 
 beforeEach(() => {
@@ -19,7 +18,7 @@ const ROUTERS = {
   StackRouter,
 };
 
-const dummyEventSubscriber = (name: string, handler: (*) => void) => ({
+const dummyEventSubscriber = (name, handler) => ({
   remove: () => {},
 });
 
@@ -111,8 +110,8 @@ test('Handles no-op actions with tabs within stack router', () => {
     type: NavigationActions.NAVIGATE,
     routeName: 'Qux',
   });
-  expect(state1.routes[0].key).toEqual('Init-id-0');
-  expect(state2.routes[0].key).toEqual('Init-id-1');
+  expect(state1.routes[0].key).toEqual('id-0');
+  expect(state2.routes[0].key).toEqual('id-1');
   state1.routes[0].key = state2.routes[0].key;
   expect(state1).toEqual(state2);
   const state3 = TestRouter.getStateForAction(
@@ -140,7 +139,7 @@ test('Handles deep action', () => {
     key: 'StackRouterRoot',
     routes: [
       {
-        key: 'Init-id-0',
+        key: 'id-0',
         routeName: 'Bar',
       },
     ],
@@ -180,8 +179,8 @@ test('Supports lazily-evaluated getScreen', () => {
     immediate: true,
     routeName: 'Qux',
   });
-  expect(state1.routes[0].key).toEqual('Init-id-0');
-  expect(state2.routes[0].key).toEqual('Init-id-1');
+  expect(state1.routes[0].key).toEqual('id-0');
+  expect(state2.routes[0].key).toEqual('id-1');
   state1.routes[0].key = state2.routes[0].key;
   expect(state1).toEqual(state2);
   const state3 = TestRouter.getStateForAction(
