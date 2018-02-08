@@ -106,11 +106,7 @@ class TabBarBottom extends React.PureComponent {
         inactiveTintColor={inactiveTintColor}
         renderIcon={renderIcon}
         scene={scene}
-        style={
-          showLabel && this._shouldUseHorizontalTabs()
-            ? {}
-            : [styles.icon, iconStyle]
-        }
+        style={[showLabel && this._shouldUseHorizontalTabs() ? styles.icon : null, iconStyle]}
       />
     );
   };
