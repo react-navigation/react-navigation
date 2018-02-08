@@ -71,6 +71,7 @@ exports[`TabNavigator renders successfully 1`] = `
     <View
       collapsable={undefined}
       onLayout={[Function]}
+      pointerEvents="box-none"
       style={
         Object {
           "backgroundColor": "#F7F7F7",

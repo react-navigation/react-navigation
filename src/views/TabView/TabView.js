@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, StyleSheet, Platform } from 'react-native';
 import { TabViewAnimated, TabViewPagerPan } from 'react-native-tab-view';
+import SafeAreaView from 'react-native-safe-area-view';
 
 import SceneView from '../SceneView';
 import withCachedChildNavigation from '../../withCachedChildNavigation';
-import SafeAreaView from '../SafeAreaView';
 
 class TabView extends React.PureComponent {
   static defaultProps = {
