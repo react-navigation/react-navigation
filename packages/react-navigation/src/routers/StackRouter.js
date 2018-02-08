@@ -148,17 +148,6 @@ export default (routeConfigs, stackConfig = {}) => {
         };
       }
 
-      if (
-        action.type === NavigationActions.COMPLETE_TRANSITION &&
-        (action.key == null || action.key === state.key) &&
-        state.isTransitioning
-      ) {
-        return {
-          ...state,
-          isTransitioning: false,
-        };
-      }
-
       // Check if a child scene wants to handle the action as long as it is not a reset to the root stack
       if (action.type !== NavigationActions.RESET || action.key !== null) {
         const keyIndex = action.key
@@ -229,10 +218,6 @@ export default (routeConfigs, stackConfig = {}) => {
         behavesLikePushAction(action) &&
         childRouters[action.routeName] !== undefined
       ) {
-        if (state.isTransitioning) {
-          return { ...state };
-        }
-
         const childRouter = childRouters[action.routeName];
         let route;
 
@@ -302,6 +287,17 @@ export default (routeConfigs, stackConfig = {}) => {
       ) {
         return {
           ...state,
+        };
+      }
+
+      if (
+        action.type === NavigationActions.COMPLETE_TRANSITION &&
+        (action.key == null || action.key === state.key) &&
+        state.isTransitioning
+      ) {
+        return {
+          ...state,
+          isTransitioning: false,
         };
       }
 
