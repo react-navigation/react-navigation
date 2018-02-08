@@ -493,6 +493,23 @@ describe('StackRouter', () => {
     expect(poppedImmediatelyState.isTransitioning).toBe(false);
   });
 
+  test('Navigate does not happen while transitioning', () => {
+    const TestRouter = StackRouter({
+      foo: { screen: () => <div /> },
+      bar: { screen: () => <div /> },
+    });
+    const initState = {
+      ...TestRouter.getStateForAction(NavigationActions.init()),
+      isTransitioning: true,
+    };
+    const pushedState = TestRouter.getStateForAction(
+      NavigationActions.navigate({ routeName: 'bar' }),
+      initState
+    );
+    expect(pushedState.index).toEqual(0);
+    expect(pushedState.routes.length).toEqual(1);
+  });
+
   test('Navigate Pushes duplicate routeName', () => {
     const TestRouter = StackRouter({
       foo: { screen: () => <div /> },
@@ -500,13 +517,13 @@ describe('StackRouter', () => {
     });
     const initState = TestRouter.getStateForAction(NavigationActions.init());
     const pushedState = TestRouter.getStateForAction(
-      NavigationActions.navigate({ routeName: 'bar' }),
+      NavigationActions.navigate({ routeName: 'bar', immediate: true }),
       initState
     );
     expect(pushedState.index).toEqual(1);
     expect(pushedState.routes[1].routeName).toEqual('bar');
     const pushedTwiceState = TestRouter.getStateForAction(
-      NavigationActions.navigate({ routeName: 'bar' }),
+      NavigationActions.navigate({ routeName: 'bar', immediate: true }),
       pushedState
     );
     expect(pushedTwiceState.index).toEqual(2);
@@ -540,7 +557,7 @@ describe('StackRouter', () => {
     });
     const initState = TestRouter.getStateForAction(NavigationActions.init());
     const pushedState = TestRouter.getStateForAction(
-      NavigationActions.push({ routeName: 'bar' }),
+      NavigationActions.push({ routeName: 'bar', immediate: true }),
       initState
     );
     expect(pushedState.index).toEqual(1);

@@ -45,6 +45,9 @@ const navigate = createAction(NAVIGATE, payload => {
   if (payload.key) {
     action.key = payload.key;
   }
+  if (payload.immediate) {
+    action.immediate = payload.immediate;
+  }
   return action;
 });
 
@@ -69,6 +72,9 @@ const push = createAction(PUSH, payload => {
   }
   if (payload.action) {
     action.action = payload.action;
+  }
+  if (payload.immediate) {
+    action.immediate = payload.immediate;
   }
   return action;
 });
