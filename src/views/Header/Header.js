@@ -262,7 +262,11 @@ class Header extends React.PureComponent {
     let appBar;
 
     if (this.props.mode === 'float') {
-      const scenesProps = this.props.scenes.map(scene => ({
+      const scenesByIndex = {};
+      this.props.scenes.forEach(scene => {
+        scenesByIndex[scene.index] = scene;
+      });
+      const scenesProps = Object.values(scenesByIndex).map(scene => ({
         position: this.props.position,
         progress: this.props.progress,
         scene,
