@@ -8,7 +8,7 @@ import { SafeAreaView, StackNavigator } from 'react-navigation';
 import SampleText from './SampleText';
 
 const MyNavScreen = ({ navigation, banner }) => (
-  <ScrollView contentInsetAdjustmentBehavior="automatic">
+  <ScrollView>
     <SafeAreaView
       forceInset={{
         top: navigation.state.routeName === 'HeaderTest' ? 'always' : 'never',
