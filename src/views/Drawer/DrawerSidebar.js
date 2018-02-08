@@ -1,11 +1,10 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
+import SafeAreaView from 'react-native-safe-area-view';
 
 import withCachedChildNavigation from '../../withCachedChildNavigation';
 import NavigationActions from '../../NavigationActions';
 import invariant from '../../utils/invariant';
-
-import SafeAreaView from '../SafeAreaView';
 
 /**
  * Component that renders the sidebar screen of the drawer.

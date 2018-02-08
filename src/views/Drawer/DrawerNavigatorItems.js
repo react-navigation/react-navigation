@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, Platform, StyleSheet } from 'react-native';
+import SafeAreaView from 'react-native-safe-area-view';
 
-import SafeAreaView from '../SafeAreaView';
 import TouchableItem from '../TouchableItem';
 
 /**

@@ -140,6 +140,7 @@ exports[`DrawerNavigator renders successfully 1`] = `
           <View
             collapsable={undefined}
             onLayout={[Function]}
+            pointerEvents="box-none"
             style={
               Object {
                 "paddingBottom": 0,
@@ -187,6 +188,7 @@ exports[`DrawerNavigator renders successfully 1`] = `
                 <View
                   collapsable={undefined}
                   onLayout={[Function]}
+                  pointerEvents="box-none"
                   style={
                     Object {
                       "backgroundColor": "rgba(0, 0, 0, .04)",
