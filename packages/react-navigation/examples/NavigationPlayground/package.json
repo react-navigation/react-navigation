@@ -17,6 +17,7 @@
     "react-navigation": "link:../.."
   },
   "devDependencies": {
+    "babel-plugin-transform-remove-console": "^6.9.0",
     "babel-jest": "^21.0.0",
     "flow-bin": "^0.61.0",
     "jest": "^21.0.1",
