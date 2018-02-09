@@ -204,7 +204,7 @@ test('grandchildren transitions', () => {
   });
   expect(childWillBlurHandler.mock.calls.length).toBe(1);
   expect(childDidBlurHandler.mock.calls.length).toBe(0);
-  expect(childActionHandler.mock.calls.length).toBe(2);
+  expect(childActionHandler.mock.calls.length).toBe(1);
   emitGrandParentAction({
     type: 'action',
     state: blurred2State,
@@ -213,67 +213,102 @@ test('grandchildren transitions', () => {
   });
   expect(childWillBlurHandler.mock.calls.length).toBe(1);
   expect(childDidBlurHandler.mock.calls.length).toBe(1);
-  expect(childActionHandler.mock.calls.length).toBe(3);
+  expect(childActionHandler.mock.calls.length).toBe(1);
 });
 
-test('pass through focus', () => {
-  const parentSubscriber = jest.fn();
-  const emitParentAction = payload => {
-    parentSubscriber.mock.calls.forEach(subs => {
+test('grandchildren pass through transitions', () => {
+  const grandParentSubscriber = jest.fn();
+  const emitGrandParentAction = payload => {
+    grandParentSubscriber.mock.calls.forEach(subs => {
       if (subs[0] === payload.type) {
         subs[1](payload);
       }
     });
   };
   const subscriptionRemove = () => {};
-  parentSubscriber.mockReturnValueOnce({ remove: subscriptionRemove });
+  grandParentSubscriber.mockReturnValueOnce({ remove: subscriptionRemove });
+  const parentSubscriber = getChildEventSubscriber(
+    grandParentSubscriber,
+    'parent'
+  );
   const childEventSubscriber = getChildEventSubscriber(
     parentSubscriber,
-    'testKey'
+    'key1'
   );
-  const testRoute = {
-    key: 'foo',
-    routeName: 'FooRoute',
-    routes: [{ key: 'key0' }, { key: 'testKey' }],
-    index: 1,
-    isTransitioning: false,
-  };
+  const makeFakeState = (childIndex, childIsTransitioning) => ({
+    index: childIndex,
+    isTransitioning: childIsTransitioning,
+    routes: [
+      { key: 'nothing' },
+      {
+        key: 'parent',
+        index: 1,
+        isTransitioning: false,
+        routes: [{ key: 'key0' }, { key: 'key1' }, { key: 'key2' }],
+      },
+    ].slice(0, childIndex + 1),
+  });
+  const blurredState = makeFakeState(0, false);
+  const transitionState = makeFakeState(1, true);
+  const focusState = makeFakeState(1, false);
+  const transition2State = makeFakeState(0, true);
+  const blurred2State = makeFakeState(0, false);
+
+  const childActionHandler = jest.fn();
   const childWillFocusHandler = jest.fn();
   const childDidFocusHandler = jest.fn();
   const childWillBlurHandler = jest.fn();
   const childDidBlurHandler = jest.fn();
+  childEventSubscriber('action', childActionHandler);
   childEventSubscriber('willFocus', childWillFocusHandler);
   childEventSubscriber('didFocus', childDidFocusHandler);
   childEventSubscriber('willBlur', childWillBlurHandler);
   childEventSubscriber('didBlur', childDidBlurHandler);
-  emitParentAction({
-    type: 'willFocus',
-    state: testRoute,
-    lastState: testRoute,
+  emitGrandParentAction({
+    type: 'action',
+    state: transitionState,
+    lastState: blurredState,
     action: { type: 'FooAction' },
+  });
+  expect(childActionHandler.mock.calls.length).toBe(0);
+  expect(childWillFocusHandler.mock.calls.length).toBe(1);
+  expect(childDidFocusHandler.mock.calls.length).toBe(0);
+  emitGrandParentAction({
+    type: 'action',
+    state: focusState,
+    lastState: transitionState,
+    action: { type: 'FooAction' },
+  });
+  expect(childActionHandler.mock.calls.length).toBe(0);
+  expect(childWillFocusHandler.mock.calls.length).toBe(1);
+  expect(childDidFocusHandler.mock.calls.length).toBe(1);
+  emitGrandParentAction({
+    type: 'action',
+    state: focusState,
+    lastState: focusState,
+    action: { type: 'TestAction' },
   });
   expect(childWillFocusHandler.mock.calls.length).toBe(1);
-  emitParentAction({
-    type: 'didFocus',
-    state: testRoute,
-    lastState: testRoute,
-    action: { type: 'FooAction' },
-  });
   expect(childDidFocusHandler.mock.calls.length).toBe(1);
-  emitParentAction({
-    type: 'willBlur',
-    state: testRoute,
-    lastState: testRoute,
-    action: { type: 'FooAction' },
+  expect(childActionHandler.mock.calls.length).toBe(1);
+  emitGrandParentAction({
+    type: 'action',
+    state: transition2State,
+    lastState: focusState,
+    action: { type: 'CauseWillBlurAction' },
   });
   expect(childWillBlurHandler.mock.calls.length).toBe(1);
-  emitParentAction({
-    type: 'didBlur',
-    state: testRoute,
-    lastState: testRoute,
-    action: { type: 'FooAction' },
+  expect(childDidBlurHandler.mock.calls.length).toBe(0);
+  expect(childActionHandler.mock.calls.length).toBe(1);
+  emitGrandParentAction({
+    type: 'action',
+    state: blurred2State,
+    lastState: transition2State,
+    action: { type: 'CauseDidBlurAction' },
   });
+  expect(childWillBlurHandler.mock.calls.length).toBe(1);
   expect(childDidBlurHandler.mock.calls.length).toBe(1);
+  expect(childActionHandler.mock.calls.length).toBe(1);
 });
 
 test('child focus with transition', () => {

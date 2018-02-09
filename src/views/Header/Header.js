@@ -8,11 +8,11 @@ import {
   View,
   ViewPropTypes,
 } from 'react-native';
+import SafeAreaView from 'react-native-safe-area-view';
 
 import HeaderTitle from './HeaderTitle';
 import HeaderBackButton from './HeaderBackButton';
 import HeaderStyleInterpolator from './HeaderStyleInterpolator';
-import SafeAreaView from '../SafeAreaView';
 import withOrientation from '../withOrientation';
 
 const APPBAR_HEIGHT = Platform.OS === 'ios' ? 44 : 56;
@@ -27,9 +27,6 @@ class Header extends React.PureComponent {
   };
 
   static get HEIGHT() {
-    console.warn(
-      'Header.HEIGHT is deprecated and will be removed before react-navigation comes out of beta.'
-    );
     return APPBAR_HEIGHT + STATUSBAR_HEIGHT;
   }
 
@@ -265,7 +262,11 @@ class Header extends React.PureComponent {
     let appBar;
 
     if (this.props.mode === 'float') {
-      const scenesProps = this.props.scenes.map(scene => ({
+      const scenesByIndex = {};
+      this.props.scenes.forEach(scene => {
+        scenesByIndex[scene.index] = scene;
+      });
+      const scenesProps = Object.values(scenesByIndex).map(scene => ({
         position: this.props.position,
         progress: this.props.progress,
         scene,
@@ -292,7 +293,8 @@ class Header extends React.PureComponent {
 
     const { options } = this.props.getScreenDetails(scene);
     const { headerStyle } = options;
-    const appBarHeight = Platform.OS === 'ios' ? (isLandscape ? 32 : 44) : 56;
+    const appBarHeight =
+      Platform.OS === 'ios' ? (isLandscape && !Platform.isPad ? 32 : 44) : 56;
     const containerStyles = [
       styles.container,
       {

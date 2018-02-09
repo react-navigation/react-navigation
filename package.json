@@ -1,13 +1,14 @@
 {
   "name": "react-navigation",
-  "version": "1.0.0-beta.27",
-  "description": "React Navigation",
+  "version": "1.0.3",
+  "description": "Routing and navigation for your React Native apps",
   "main": "src/react-navigation.js",
   "repository": {
     "url": "git@github.com:react-navigation/react-navigation.git",
     "type": "git"
   },
-  "author": "Adam Miskiewicz <adam@sk3vy.com>, Eric Vicenti <ericvicenti@gmail.com>",
+  "author":
+    "Adam Miskiewicz <adam@sk3vy.com>, Eric Vicenti <ericvicenti@gmail.com>",
   "license": "BSD-2-Clause",
   "scripts": {
     "start": "npm run ios",
@@ -21,21 +22,18 @@
     "format": "eslint --fix .",
     "precommit": "lint-staged"
   },
-  "files": [
-    "lib",
-    "src"
-  ],
+  "files": ["src"],
   "peerDependencies": {
     "react": "*",
     "react-native": "*"
   },
   "dependencies": {
-    "babel-plugin-transform-define": "^1.3.0",
     "clamp": "^1.0.1",
     "hoist-non-react-statics": "^2.2.0",
     "path-to-regexp": "^1.7.0",
     "prop-types": "^15.5.10",
     "react-native-drawer-layout-polyfill": "^1.3.2",
+    "react-native-safe-area-view": "^0.6.0",
     "react-native-tab-view": "^0.0.74"
   },
   "devDependencies": {
@@ -43,12 +41,7 @@
     "babel-core": "^6.25.0",
     "babel-eslint": "^7.2.3",
     "babel-jest": "^20.0.3",
-    "babel-preset-es2015": "^6.24.1",
-    "babel-preset-react": "^6.24.1",
     "babel-preset-react-native": "^2.1.0",
-    "babel-preset-react-native-stage-0": "^1.0.1",
-    "babel-preset-react-native-syntax": "^1.0.0",
-    "babel-preset-stage-1": "^6.24.1",
     "codecov": "^2.2.0",
     "eslint": "^4.2.0",
     "eslint-config-prettier": "^2.3.0",
@@ -61,8 +54,8 @@
     "lint-staged": "^4.2.1",
     "prettier": "^1.5.3",
     "prettier-eslint": "^6.4.2",
-    "react": "16.0.0",
-    "react-native": "^0.50.3",
+    "react": "16.2.0",
+    "react-native": "^0.52.0",
     "react-native-vector-icons": "^4.2.0",
     "react-test-renderer": "^16.0.0"
   },
@@ -70,25 +63,15 @@
     "notify": true,
     "preset": "react-native",
     "testRegex": "./src/.*\\-test\\.js$",
-    "setupFiles": [
-      "<rootDir>/jest-setup.js"
-    ],
+    "setupFiles": ["<rootDir>/jest-setup.js"],
     "coverageDirectory": "./coverage/",
     "collectCoverage": true,
-    "collectCoverageFrom": [
-      "src/**/*.js"
-    ],
-    "coveragePathIgnorePatterns": [
-      "jest-setup.js"
-    ],
-    "modulePathIgnorePatterns": [
-      "examples"
-    ]
+    "coverageReporters": ["lcov"],
+    "collectCoverageFrom": ["src/**/*.js"],
+    "coveragePathIgnorePatterns": ["jest-setup.js"],
+    "modulePathIgnorePatterns": ["examples"]
   },
   "lint-staged": {
-    "*.js": [
-      "eslint --fix",
-      "git add"
-    ]
+    "*.js": ["eslint --fix", "git add"]
   }
 }

@@ -19,6 +19,5 @@ jobs:
           key: v3-react-navigation-{{ .Branch }}-{{ checksum "package.json" }}
           paths:
             - ~/.cache/yarn
-            - ~/react-navigation/website/node_modules
             - ~/react-navigation/examples/NavigationPlayground/node_modules
             - ~/react-navigation/examples/ReduxExample/node_modules

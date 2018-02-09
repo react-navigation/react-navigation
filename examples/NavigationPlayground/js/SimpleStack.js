@@ -2,17 +2,34 @@
  * @flow
  */
 
-import type { NavigationScreenProp, EventListener } from 'react-navigation';
+import type {
+  NavigationScreenProp,
+  NavigationEventSubscription,
+} from 'react-navigation';
 
 import * as React from 'react';
 import { Button, ScrollView, StatusBar } from 'react-native';
-import { StackNavigator, SafeAreaView } from 'react-navigation';
+import { StackNavigator, SafeAreaView, withNavigation } from 'react-navigation';
 import SampleText from './SampleText';
 
 type MyNavScreenProps = {
   navigation: NavigationScreenProp<*>,
   banner: React.Node,
 };
+
+class MyBackButton extends React.Component<any, any> {
+  render() {
+    return (
+      <Button onPress={this._navigateBack} title="Custom Back" />
+    );
+  }
+
+  _navigateBack = () => {
+    this.props.navigation.goBack(null);
+  }
+}
+
+const MyBackButtonWithNavigation = withNavigation(MyBackButton);
 
 class MyNavScreen extends React.Component<MyNavScreenProps> {
   render() {
@@ -21,22 +38,19 @@ class MyNavScreen extends React.Component<MyNavScreenProps> {
       <SafeAreaView>
         <SampleText>{banner}</SampleText>
         <Button
-          onPress={() => navigation.navigate('Profile', { name: 'Jane' })}
-          title="Go to a profile screen"
+          onPress={() => navigation.push('Profile', { name: 'Jane' })}
+          title="Push a profile screen"
         />
         <Button
           onPress={() => navigation.navigate('Photos', { name: 'Jane' })}
-          title="Go to a photos screen"
+          title="Navigate to a photos screen"
         />
         <Button
-          onPress={() =>
-            navigation.navigate('Profile', {
-              name: 'Dog',
-              headerBackImage: require('./assets/dog-back.png'),
-            })
-          }
-          title="Custom back button"
+          onPress={() => navigation.replace('Profile', { name: 'Lucy' })}
+          title="Replace with profile"
         />
+        <Button onPress={() => navigation.popToTop()} title="Pop to top" />
+        <Button onPress={() => navigation.pop()} title="Pop" />
         <Button onPress={() => navigation.goBack(null)} title="Go back" />
         <StatusBar barStyle="default" />
       </SafeAreaView>
@@ -52,10 +66,10 @@ class MyHomeScreen extends React.Component<MyHomeScreenProps> {
   static navigationOptions = {
     title: 'Welcome',
   };
-  _s0: EventListener;
-  _s1: EventListener;
-  _s2: EventListener;
-  _s3: EventListener;
+  _s0: NavigationEventSubscription;
+  _s1: NavigationEventSubscription;
+  _s2: NavigationEventSubscription;
+  _s3: NavigationEventSubscription;
 
   componentDidMount() {
     this._s0 = this.props.navigation.addListener('willFocus', this._onWF);
@@ -94,11 +108,12 @@ type MyPhotosScreenProps = {
 class MyPhotosScreen extends React.Component<MyPhotosScreenProps> {
   static navigationOptions = {
     title: 'Photos',
+    headerLeft: <MyBackButtonWithNavigation />
   };
-  _s0: EventListener;
-  _s1: EventListener;
-  _s2: EventListener;
-  _s3: EventListener;
+  _s0: NavigationEventSubscription;
+  _s1: NavigationEventSubscription;
+  _s2: NavigationEventSubscription;
+  _s3: NavigationEventSubscription;
 
   componentDidMount() {
     this._s0 = this.props.navigation.addListener('willFocus', this._onWF);

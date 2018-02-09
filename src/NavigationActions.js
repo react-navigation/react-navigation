@@ -1,7 +1,11 @@
 const BACK = 'Navigation/BACK';
 const INIT = 'Navigation/INIT';
 const NAVIGATE = 'Navigation/NAVIGATE';
+const POP = 'Navigation/POP';
+const POP_TO_TOP = 'Navigation/POP_TO_TOP';
+const PUSH = 'Navigation/PUSH';
 const RESET = 'Navigation/RESET';
+const REPLACE = 'Navigation/REPLACE';
 const SET_PARAMS = 'Navigation/SET_PARAMS';
 const URI = 'Navigation/URI';
 const COMPLETE_TRANSITION = 'Navigation/COMPLETE_TRANSITION';
@@ -14,6 +18,7 @@ const createAction = (type, fn) => {
 const back = createAction(BACK, (payload = {}) => ({
   type: BACK,
   key: payload.key,
+  immediate: payload.immediate,
 }));
 
 const init = createAction(INIT, (payload = {}) => {
@@ -37,6 +42,34 @@ const navigate = createAction(NAVIGATE, payload => {
   if (payload.action) {
     action.action = payload.action;
   }
+  if (payload.key) {
+    action.key = payload.key;
+  }
+  return action;
+});
+
+const pop = createAction(POP, payload => ({
+  type: POP,
+  n: payload && payload.n,
+  immediate: payload && payload.immediate,
+}));
+
+const popToTop = createAction(POP_TO_TOP, payload => ({
+  type: POP_TO_TOP,
+  immediate: payload && payload.immediate,
+}));
+
+const push = createAction(PUSH, payload => {
+  const action = {
+    type: PUSH,
+    routeName: payload.routeName,
+  };
+  if (payload.params) {
+    action.params = payload.params;
+  }
+  if (payload.action) {
+    action.action = payload.action;
+  }
   return action;
 });
 
@@ -45,6 +78,16 @@ const reset = createAction(RESET, payload => ({
   index: payload.index,
   key: payload.key,
   actions: payload.actions,
+}));
+
+const replace = createAction(REPLACE, payload => ({
+  type: REPLACE,
+  key: payload.key,
+  newKey: payload.newKey,
+  params: payload.params,
+  action: payload.action,
+  routeName: payload.routeName,
+  immediate: payload.immediate,
 }));
 
 const setParams = createAction(SET_PARAMS, payload => ({
@@ -60,6 +103,7 @@ const uri = createAction(URI, payload => ({
 
 const completeTransition = createAction(COMPLETE_TRANSITION, payload => ({
   type: COMPLETE_TRANSITION,
+  key: payload && payload.key,
 }));
 
 const mapDeprecatedNavigateAction = action => {
@@ -120,7 +164,11 @@ export default {
   BACK,
   INIT,
   NAVIGATE,
+  POP,
+  POP_TO_TOP,
+  PUSH,
   RESET,
+  REPLACE,
   SET_PARAMS,
   URI,
   COMPLETE_TRANSITION,
@@ -129,7 +177,11 @@ export default {
   back,
   init,
   navigate,
+  pop,
+  popToTop,
+  push,
   reset,
+  replace,
   setParams,
   uri,
   completeTransition,

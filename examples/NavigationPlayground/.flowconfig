@@ -34,9 +34,6 @@
 ; Ignore react-native-fbads dependency of the expo sdk
 .*/node_modules/react-native-fbads/*
 
-.*/react-navigation/lib-rn/.*
-.*/react-navigation/lib/.*
-
 .*/react-navigation/examples/ReduxExample/.*
 .*/react-navigation/website/.*
 
@@ -51,6 +48,7 @@
 node_modules/react-native/Libraries/react-native/react-native-interface.js
 node_modules/react-native/flow/
 node_modules/react-native/flow-github/
+../../flow/
 
 [options]
 module.system=haste

@@ -19,9 +19,33 @@ export default function(navigation) {
         NavigationActions.back({ key: actualizedKey })
       );
     },
-    navigate: (routeName, params, action) =>
+    navigate: (navigateTo, params, action) => {
+      if (typeof navigateTo === 'string') {
+        return navigation.dispatch(
+          NavigationActions.navigate({ routeName: navigateTo, params, action })
+        );
+      }
+      invariant(
+        typeof navigateTo === 'object',
+        'Must navigateTo an object or a string'
+      );
+      invariant(
+        params == null,
+        'Params must not be provided to .navigate() when specifying an object'
+      );
+      invariant(
+        action == null,
+        'Child action must not be provided to .navigate() when specifying an object'
+      );
+      return navigation.dispatch(NavigationActions.navigate(navigateTo));
+    },
+    pop: (n, params) =>
       navigation.dispatch(
-        NavigationActions.navigate({ routeName, params, action })
+        NavigationActions.pop({ n, immediate: params && params.immediate })
+      ),
+    popToTop: params =>
+      navigation.dispatch(
+        NavigationActions.popToTop({ immediate: params && params.immediate })
       ),
     /**
      * For updating current route params. For example the nav bar title and
@@ -36,5 +60,20 @@ export default function(navigation) {
       const key = navigation.state.key;
       return navigation.dispatch(NavigationActions.setParams({ params, key }));
     },
+
+    push: (routeName, params, action) =>
+      navigation.dispatch(
+        NavigationActions.push({ routeName, params, action })
+      ),
+
+    replace: (routeName, params, action) =>
+      navigation.dispatch(
+        NavigationActions.replace({
+          routeName,
+          params,
+          action,
+          key: navigation.state.key,
+        })
+      ),
   };
 }

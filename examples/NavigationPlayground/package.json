@@ -8,19 +8,20 @@
     "eject": "react-native-scripts eject",
     "android": "react-native-scripts android",
     "ios": "react-native-scripts ios",
-    "test": "node node_modules/jest/bin/jest.js"
+    "test": "node node_modules/jest/bin/jest.js && flow"
   },
   "dependencies": {
-    "expo": "^24.0.2",
-    "react": "16.0.0",
-    "react-native": "^0.51.0",
+    "expo": "^25.0.0",
+    "react": "16.2.0",
+    "react-native": "^0.52.0",
     "react-navigation": "link:../.."
   },
   "devDependencies": {
+    "babel-plugin-transform-remove-console": "^6.9.0",
     "babel-jest": "^21.0.0",
-    "flow-bin": "^0.56.0",
+    "flow-bin": "^0.61.0",
     "jest": "^21.0.1",
-    "jest-expo": "^24.0.0",
+    "jest-expo": "^25.1.0",
     "react-native-scripts": "^1.5.0",
     "react-test-renderer": "16.0.0"
   },

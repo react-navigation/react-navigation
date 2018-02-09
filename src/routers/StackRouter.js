@@ -7,12 +7,7 @@ import StateUtils from '../StateUtils';
 import validateRouteConfigMap from './validateRouteConfigMap';
 import getScreenConfigDeprecated from './getScreenConfigDeprecated';
 import invariant from '../utils/invariant';
-
-const uniqueBaseId = `id-${Date.now()}`;
-let uuidCount = 0;
-function _getUuid() {
-  return `${uniqueBaseId}-${uuidCount++}`;
-}
+import { generateKey } from './KeyGenerator';
 
 function isEmpty(obj) {
   if (!obj) return true;
@@ -20,6 +15,13 @@ function isEmpty(obj) {
     return false;
   }
   return true;
+}
+
+function behavesLikePushAction(action) {
+  return (
+    action.type === NavigationActions.NAVIGATE ||
+    action.type === NavigationActions.PUSH
+  );
 }
 
 export default (routeConfigs, stackConfig = {}) => {
@@ -79,7 +81,6 @@ export default (routeConfigs, stackConfig = {}) => {
   });
 
   paths = Object.entries(pathsByRouteNames);
-  /* $FlowFixMe */
   paths.sort((a: [string, *], b: [string, *]) => b[1].priority - a[1].priority);
 
   return {
@@ -100,22 +101,32 @@ export default (routeConfigs, stackConfig = {}) => {
       // Set up the initial state if needed
       if (!state) {
         let route = {};
-        if (
-          action.type === NavigationActions.NAVIGATE &&
-          childRouters[action.routeName] !== undefined
-        ) {
+        const childRouter = childRouters[action.routeName];
+        // This is a push-like action, and childRouter will be a router or null if we are responsible for this routeName
+        if (behavesLikePushAction(action) && childRouter !== undefined) {
+          let childState = {};
+          // The router is null for normal leaf routes
+          if (childRouter !== null) {
+            const childAction =
+              action.action ||
+              NavigationActions.init({ params: action.params });
+            childState = childRouter.getStateForAction(childAction);
+          }
           return {
+            key: 'StackRouterRoot',
             isTransitioning: false,
             index: 0,
             routes: [
               {
-                ...action,
-                type: undefined,
-                key: `Init-${_getUuid()}`,
+                params: action.params,
+                ...childState,
+                key: action.key || generateKey(),
+                routeName: action.routeName,
               },
             ],
           };
         }
+
         if (initialChildRouter) {
           route = initialChildRouter.getStateForAction(
             NavigationActions.navigate({
@@ -133,12 +144,12 @@ export default (routeConfigs, stackConfig = {}) => {
         };
         route = {
           ...route,
-          routeName: initialRouteName,
-          key: `Init-${_getUuid()}`,
           ...(params ? { params } : {}),
+          routeName: initialRouteName,
+          key: action.key || generateKey(),
         };
-        // eslint-disable-next-line no-param-reassign
         state = {
+          key: 'StackRouterRoot',
           isTransitioning: false,
           index: 0,
           routes: [route],
@@ -168,37 +179,131 @@ export default (routeConfigs, stackConfig = {}) => {
         }
       }
 
-      // Handle explicit push navigation action
+      // Handle pop-to-top behavior. Make sure this happens after children have had a chance to handle the action, so that the inner stack pops to top first.
+      if (action.type === NavigationActions.POP_TO_TOP) {
+        if (state.index === 0) {
+          return {
+            ...state,
+          };
+        } else {
+          return {
+            ...state,
+            isTransitioning: action.immediate !== true,
+            index: 0,
+            routes: [state.routes[0]],
+          };
+        }
+        return state;
+      }
+
+      // Handle replace action
+      if (action.type === NavigationActions.REPLACE) {
+        const routeIndex = state.routes.findIndex(r => r.key === action.key);
+        // Only replace if the key matches one of our routes
+        if (routeIndex !== -1) {
+          const childRouter = childRouters[action.routeName];
+          let childState = {};
+          if (childRouter) {
+            const childAction =
+              action.action ||
+              NavigationActions.init({ params: action.params });
+            childState = childRouter.getStateForAction(childAction);
+          }
+          const routes = [...state.routes];
+          routes[routeIndex] = {
+            params: action.params,
+            // merge the child state in this order to allow params override
+            ...childState,
+            routeName: action.routeName,
+            key: action.newKey || generateKey(),
+          };
+          return { ...state, routes };
+        }
+      }
+
+      // Handle explicit push navigation action. Make sure this happens after children have had a chance to handle the action
       if (
-        action.type === NavigationActions.NAVIGATE &&
+        behavesLikePushAction(action) &&
         childRouters[action.routeName] !== undefined
       ) {
         const childRouter = childRouters[action.routeName];
         let route;
+
+        invariant(
+          action.type !== NavigationActions.PUSH || action.key == null,
+          'StackRouter does not support key on the push action'
+        );
+        // With the navigate action, the key may be provided for pushing, or to navigate back to the key
+        if (action.key) {
+          const lastRouteIndex = state.routes.findIndex(
+            r => r.key === action.key
+          );
+          if (lastRouteIndex !== -1) {
+            // If index is unchanged and params are not being set, leave state identity intact
+            if (state.index === lastRouteIndex && !action.params) {
+              return state;
+            }
+
+            // Remove the now unused routes at the tail of the routes array
+            const routes = state.routes.slice(0, lastRouteIndex + 1);
+
+            // Apply params if provided, otherwise leave route identity intact
+            if (action.params) {
+              const route = state.routes.find(r => r.key === action.key);
+              routes[lastRouteIndex] = {
+                ...route,
+                params: {
+                  ...route.params,
+                  ...action.params,
+                },
+              };
+            }
+            // Return state with new index. Change isTransitioning only if index has changed
+            return {
+              ...state,
+              isTransitioning:
+                state.index !== lastRouteIndex
+                  ? action.immediate !== true
+                  : undefined,
+              index: lastRouteIndex,
+              routes,
+            };
+          }
+        }
+
         if (childRouter) {
           const childAction =
             action.action || NavigationActions.init({ params: action.params });
           route = {
             params: action.params,
+            // merge the child state in this order to allow params override
             ...childRouter.getStateForAction(childAction),
-            key: _getUuid(),
             routeName: action.routeName,
+            key: action.key || generateKey(),
           };
         } else {
           route = {
             params: action.params,
-            key: _getUuid(),
             routeName: action.routeName,
+            key: action.key || generateKey(),
           };
         }
         return {
           ...StateUtils.push(state, route),
           isTransitioning: action.immediate !== true,
         };
+      } else if (
+        action.type === NavigationActions.PUSH &&
+        childRouters[action.routeName] === undefined
+      ) {
+        return {
+          ...state,
+        };
       }
 
       if (
         action.type === NavigationActions.COMPLETE_TRANSITION &&
+        (action.key == null || action.key === state.key) &&
         state.isTransitioning
       ) {
         return {
@@ -208,7 +313,7 @@ export default (routeConfigs, stackConfig = {}) => {
       }
 
       // Handle navigation to other child routers that are not yet pushed
-      if (action.type === NavigationActions.NAVIGATE) {
+      if (behavesLikePushAction(action)) {
         const childRouterNames = Object.keys(childRouters);
         for (let i = 0; i < childRouterNames.length; i++) {
           const childRouterName = childRouterNames[i];
@@ -232,11 +337,12 @@ export default (routeConfigs, stackConfig = {}) => {
               routeToPush = navigatedChildRoute;
             }
             if (routeToPush) {
-              return StateUtils.push(state, {
+              const route = {
                 ...routeToPush,
-                key: _getUuid(),
                 routeName: childRouterName,
-              });
+                key: action.key || generateKey(),
+              };
+              return StateUtils.push(state, route);
             }
           }
         }
@@ -263,44 +369,61 @@ export default (routeConfigs, stackConfig = {}) => {
       }
 
       if (action.type === NavigationActions.RESET) {
+        // Only handle reset actions that are unspecified or match this state key
+        if (action.key != null && action.key != state.key) {
+          // Deliberately use != instead of !== so we can match null with
+          // undefined on either the state or the action
+          return state;
+        }
         const resetAction = action;
 
         return {
           ...state,
           routes: resetAction.actions.map(childAction => {
             const router = childRouters[childAction.routeName];
+            let childState = {};
             if (router) {
-              return {
-                ...childAction,
-                ...router.getStateForAction(childAction),
-                routeName: childAction.routeName,
-                key: _getUuid(),
-              };
+              childState = router.getStateForAction(childAction);
             }
-            const route = {
-              ...childAction,
-              key: _getUuid(),
+            return {
+              params: childAction.params,
+              ...childState,
+              routeName: childAction.routeName,
+              key: childAction.key || generateKey(),
             };
-            delete route.type;
-            return route;
           }),
           index: action.index,
         };
       }
 
-      if (action.type === NavigationActions.BACK) {
-        const key = action.key;
+      if (
+        action.type === NavigationActions.BACK ||
+        action.type === NavigationActions.POP
+      ) {
+        const { key, n, immediate } = action;
         let backRouteIndex = state.index;
-        if (key) {
+        if (action.type === NavigationActions.POP && n != null) {
+          // determine the index to go back *from*. In this case, n=1 means to go
+          // back from state.index, as if it were a normal "BACK" action
+          backRouteIndex = Math.max(1, state.index - n + 1);
+        } else if (key) {
           const backRoute = state.routes.find(route => route.key === key);
           backRouteIndex = state.routes.indexOf(backRoute);
         }
+
         if (backRouteIndex > 0) {
           return {
             ...state,
             routes: state.routes.slice(0, backRouteIndex),
             index: backRouteIndex - 1,
-            isTransitioning: action.immediate !== true,
+            isTransitioning: immediate !== true,
+          };
+        } else if (
+          backRouteIndex === 0 &&
+          action.type === NavigationActions.POP
+        ) {
+          return {
+            ...state,
           };
         }
       }
