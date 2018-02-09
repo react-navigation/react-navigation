@@ -32,5 +32,5 @@ export default function getScreenForRouteName(routeConfigs, routeName) {
     return screen;
   }
 
-  throw new Error(`Route ${routeName} must define a screen or a getScreen.`);
+  return routeConfig;
 }
