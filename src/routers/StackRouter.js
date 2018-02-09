@@ -319,6 +319,7 @@ export default (routeConfigs, stackConfig = {}) => {
           const childRouterName = childRouterNames[i];
           const childRouter = childRouters[childRouterName];
           if (childRouter) {
+            console.warn("Can't find route name '" + action.routeName + "'");
             // For each child router, start with a blank state
             const initChildRoute = childRouter.getStateForAction(
               NavigationActions.init()
