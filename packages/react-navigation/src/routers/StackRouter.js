@@ -243,12 +243,9 @@ export default (routeConfigs, stackConfig = {}) => {
             if (state.index === lastRouteIndex && !action.params) {
               return state;
             }
-            let routes = [...state.routes];
 
-            // If we are navigating backwards in the stack (via key) the other routes
-            if (lastRouteIndex + 1 < routes.length) {
-              routes = routes.slice(0, lastRouteIndex + 1);
-            }
+            // Remove the now unused routes at the tail of the routes array
+            const routes = state.routes.slice(0, lastRouteIndex + 1);
 
             // Apply params if provided, otherwise leave route identity intact
             if (action.params) {
