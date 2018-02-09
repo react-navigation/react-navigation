@@ -142,7 +142,10 @@ const ExampleRoutes = {
   },
 };
 
-class MainScreen extends React.Component<*> {
+type State = {
+  scrollY: Animated.Value,
+};
+class MainScreen extends React.Component<any, State> {
   state = {
     scrollY: new Animated.Value(0),
   };
