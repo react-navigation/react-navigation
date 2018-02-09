@@ -145,7 +145,7 @@ class TabView extends React.PureComponent {
         ? this.props.swipeEnabled
         : options.swipeEnabled;
     
-    if(typeof swipeEnabled === 'function') {
+    if (typeof swipeEnabled === 'function') {
       swipeEnabled = swipeEnabled(state);
     }
 
