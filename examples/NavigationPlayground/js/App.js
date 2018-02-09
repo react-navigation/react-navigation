@@ -25,6 +25,7 @@ import TabsInDrawer from './TabsInDrawer';
 import ModalStack from './ModalStack';
 import StacksInTabs from './StacksInTabs';
 import StacksOverTabs from './StacksOverTabs';
+import StacksWithKeys from './StacksWithKeys';
 import SimpleStack from './SimpleStack';
 import SimpleTabs from './SimpleTabs';
 import TabAnimations from './TabAnimations';
@@ -76,6 +77,10 @@ const ExampleInfo = {
     name: 'Stacks over Tabs',
     description: 'Nested stack navigation that pushes on top of tabs',
   },
+  StacksWithKeys: {
+    name: 'Link in Stack with keys',
+    description: 'Use keys to link between screens',
+  },
   LinkStack: {
     name: 'Link in Stack',
     description: 'Deep linking into a route in stack',
@@ -113,6 +118,9 @@ const ExampleRoutes = {
   },
   ModalStack: {
     screen: ModalStack,
+  },
+  StacksWithKeys: {
+    screen: StacksWithKeys,
   },
   StacksInTabs: {
     screen: StacksInTabs,
