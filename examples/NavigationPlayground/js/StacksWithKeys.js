@@ -17,6 +17,10 @@ class HomeScreen extends React.Component<any, any> {
             })
           }
         />
+        <Button
+          title="Go back to other examples"
+          onPress={() => this.props.navigation.goBack(null)}
+        />
         <StatusBar barStyle="default" />
       </View>
     );
@@ -68,7 +72,7 @@ class SettingsScreen extends React.Component<any, any> {
           onPress={() =>
             this.props.navigation.navigate({
               routeName: 'Profile',
-              key: 'A'
+              key: 'A',
             })
           }
         />
