@@ -553,6 +553,37 @@ describe('StackRouter', () => {
     }).toThrow();
   });
 
+  test('Navigate backwards with key removes leading routes', () => {
+    const TestRouter = StackRouter({
+      foo: { screen: () => <div /> },
+      bar: { screen: () => <div /> },
+    });
+    const initState = TestRouter.getStateForAction(NavigationActions.init());
+    const pushedState = TestRouter.getStateForAction(
+      NavigationActions.navigate({ routeName: 'bar', key: 'a' }),
+      initState
+    );
+    const pushedTwiceState = TestRouter.getStateForAction(
+      NavigationActions.navigate({ routeName: 'bar', key: 'b`' }),
+      pushedState
+    );
+    const pushedThriceState = TestRouter.getStateForAction(
+      NavigationActions.navigate({ routeName: 'foo', key: 'c`' }),
+      pushedTwiceState
+    );
+    expect(pushedThriceState.routes.length).toEqual(4);
+
+    const navigatedBackToFirstRouteState = TestRouter.getStateForAction(
+      NavigationActions.navigate({
+        routeName: 'foo',
+        key: pushedThriceState.routes[0].key,
+      }),
+      pushedThriceState
+    );
+    expect(navigatedBackToFirstRouteState.index).toEqual(0);
+    expect(navigatedBackToFirstRouteState.routes.length).toEqual(1);
+  });
+
   test('Handle basic stack logic for plain components', () => {
     const FooScreen = () => <div />;
     const BarScreen = () => <div />;
