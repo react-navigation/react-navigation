@@ -175,23 +175,3 @@ test('should throw if the route does not exist', () => {
     "There is no route defined for key Settings.\nMust be one of: 'Home'"
   );
 });
-
-test('should throw if the screen is not defined under the route config', () => {
-  /* eslint-disable react/no-multi-comp */
-
-  const getScreenOptions = createConfigGetter({
-    Home: {},
-  });
-
-  const routes = [{ key: 'B', routeName: 'Home' }];
-
-  expect(() =>
-    getScreenOptions(
-      addNavigationHelpers({
-        state: routes[0],
-        dispatch: () => false,
-        addListener: dummyEventSubscriber,
-      })
-    )
-  ).toThrowError('Route Home must define a screen or a getScreen.');
-});

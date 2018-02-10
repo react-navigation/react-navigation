@@ -39,9 +39,7 @@ describe('validateRouteConfigMap', () => {
       Home: {
         screen: ProfileNavigator,
       },
-      Chat: {
-        screen: ListScreen,
-      },
+      Chat: ListScreen,
     };
     validateRouteConfigMap(invalidMap);
   });
