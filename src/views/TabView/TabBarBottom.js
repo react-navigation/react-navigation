@@ -1,57 +1,23 @@
-/* @flow */
-
-import * as React from 'react';
+import React from 'react';
 import {
   Animated,
   TouchableWithoutFeedback,
   StyleSheet,
   View,
   Platform,
+  Keyboard,
 } from 'react-native';
+import SafeAreaView from 'react-native-safe-area-view';
+
 import TabBarIcon from './TabBarIcon';
-import SafeAreaView from '../SafeAreaView';
 import withOrientation from '../withOrientation';
-
-import type {
-  NavigationRoute,
-  NavigationState,
-  NavigationScreenProp,
-  ViewStyleProp,
-  TextStyleProp,
-} from '../../TypeDefinition';
-
-import type { TabScene } from './TabView';
-
-type Props = {
-  activeTintColor: string,
-  activeBackgroundColor: string,
-  inactiveTintColor: string,
-  inactiveBackgroundColor: string,
-  showLabel: boolean,
-  showIcon: boolean,
-  allowFontScaling: boolean,
-  position: Animated.Value,
-  navigation: NavigationScreenProp<NavigationState>,
-  jumpToIndex: (index: number) => void,
-  getLabel: (scene: TabScene) => ?(React.Node | string),
-  getOnPress: (
-    scene: TabScene
-  ) => (scene: TabScene, jumpToIndex: (index: number) => void) => void,
-  getTestIDProps: (scene: TabScene) => (scene: TabScene) => any,
-  renderIcon: (scene: TabScene) => React.Node,
-  style?: ViewStyleProp,
-  backgroundColor?: string,
-  labelStyle?: TextStyleProp,
-  tabStyle?: ViewStyleProp,
-  showIcon?: boolean,
-  isLandscape: boolean,
-};
 
 const majorVersion = parseInt(Platform.Version, 10);
 const isIos = Platform.OS === 'ios';
-const useHorizontalTabs = majorVersion >= 11 && isIos;
+const isIOS11 = majorVersion >= 11 && isIos;
+const defaultMaxTabBarItemWidth = 125;
 
-class TabBarBottom extends React.PureComponent<Props> {
+class TabBarBottom extends React.PureComponent {
   // See https://developer.apple.com/library/content/documentation/UserExperience/Conceptual/UIKitUICatalog/UITabBar.html
   static defaultProps = {
     activeTintColor: '#3478f6', // Default active tint color in iOS 10
@@ -61,11 +27,10 @@ class TabBarBottom extends React.PureComponent<Props> {
     showLabel: true,
     showIcon: true,
     allowFontScaling: true,
+    adaptive: isIOS11,
   };
 
-  props: Props;
-
-  _renderLabel = (scene: TabScene) => {
+  _renderLabel = scene => {
     const {
       position,
       navigation,
@@ -83,31 +48,30 @@ class TabBarBottom extends React.PureComponent<Props> {
     const { index } = scene;
     const { routes } = navigation.state;
     // Prepend '-1', so there are always at least 2 items in inputRange
-    const inputRange = [-1, ...routes.map((x: *, i: number) => i)];
+    const inputRange = [-1, ...routes.map((x, i) => i)];
     const outputRange = inputRange.map(
-      (inputIndex: number) =>
-        inputIndex === index ? activeTintColor : inactiveTintColor
+      inputIndex => (inputIndex === index ? activeTintColor : inactiveTintColor)
     );
     const color = position.interpolate({
       inputRange,
-      outputRange: (outputRange: Array<string>),
+      outputRange: outputRange,
     });
 
     const tintColor = scene.focused ? activeTintColor : inactiveTintColor;
     const label = this.props.getLabel({ ...scene, tintColor });
-    let marginLeft = 0;
-    if (isLandscape && showIcon && useHorizontalTabs) {
-      marginLeft = LABEL_LEFT_MARGIN;
-    }
-    let marginTop = 0;
-    if (!isLandscape && showIcon && useHorizontalTabs) {
-      marginTop = LABEL_TOP_MARGIN;
-    }
 
     if (typeof label === 'string') {
       return (
         <Animated.Text
-          style={[styles.label, { color, marginLeft, marginTop }, labelStyle]}
+          numberOfLines={1}
+          style={[
+            styles.label,
+            { color },
+            showIcon && this._shouldUseHorizontalTabs()
+              ? styles.labelBeside
+              : styles.labelBeneath,
+            labelStyle,
+          ]}
           allowFontScaling={allowFontScaling}
         >
           {label}
@@ -122,7 +86,7 @@ class TabBarBottom extends React.PureComponent<Props> {
     return label;
   };
 
-  _renderIcon = (scene: TabScene) => {
+  _renderIcon = scene => {
     const {
       position,
       navigation,
@@ -143,16 +107,74 @@ class TabBarBottom extends React.PureComponent<Props> {
         inactiveTintColor={inactiveTintColor}
         renderIcon={renderIcon}
         scene={scene}
-        style={showLabel && useHorizontalTabs ? {} : styles.icon}
+        style={showLabel && this._shouldUseHorizontalTabs() ? {} : styles.icon}
       />
     );
   };
 
-  _renderTestIDProps = (scene: TabScene) => {
+  _renderTestIDProps = scene => {
     const testIDProps =
       this.props.getTestIDProps && this.props.getTestIDProps(scene);
     return testIDProps;
   };
+
+  _tabItemMaxWidth() {
+    const { tabStyle, layout } = this.props;
+    let maxTabBarItemWidth;
+
+    const flattenedTabStyle = StyleSheet.flatten(tabStyle);
+
+    if (flattenedTabStyle) {
+      if (typeof flattenedTabStyle.width === 'number') {
+        maxTabBarItemWidth = flattenedTabStyle.width;
+      } else if (
+        typeof flattenedTabStyle.width === 'string' &&
+        flattenedTabStyle.endsWith('%')
+      ) {
+        const width = parseFloat(flattenedTabStyle.width);
+        if (Number.isFinite(width)) {
+          maxTabBarItemWidth = layout.width * (width / 100);
+        }
+      } else if (typeof flattenedTabStyle.maxWidth === 'number') {
+        maxTabBarItemWidth = flattenedTabStyle.maxWidth;
+      } else if (
+        typeof flattenedTabStyle.maxWidth === 'string' &&
+        flattenedTabStyle.endsWith('%')
+      ) {
+        const width = parseFloat(flattenedTabStyle.maxWidth);
+        if (Number.isFinite(width)) {
+          maxTabBarItemWidth = layout.width * (width / 100);
+        }
+      }
+    }
+
+    if (!maxTabBarItemWidth) {
+      maxTabBarItemWidth = defaultMaxTabBarItemWidth;
+    }
+
+    return maxTabBarItemWidth;
+  }
+
+  _shouldUseHorizontalTabs() {
+    const { routes } = this.props.navigation.state;
+    const { isLandscape, layout, adaptive, tabStyle } = this.props;
+
+    if (!adaptive) {
+      return false;
+    }
+
+    let tabBarWidth = layout.width;
+    if (tabBarWidth === 0) {
+      return Platform.isPad;
+    }
+
+    if (!Platform.isPad) {
+      return isLandscape;
+    } else {
+      const maxTabBarItemWidth = this._tabItemMaxWidth();
+      return routes.length * maxTabBarItemWidth <= tabBarWidth;
+    }
+  }
 
   render() {
     const {
@@ -164,41 +186,42 @@ class TabBarBottom extends React.PureComponent<Props> {
       activeBackgroundColor,
       inactiveBackgroundColor,
       style,
+      animateStyle,
       tabStyle,
-      backgroundColor = '#F7F7F7', // Default background color in iOS 10
       isLandscape,
     } = this.props;
     const { routes } = navigation.state;
+    const previousScene = routes[navigation.state.index];
     // Prepend '-1', so there are always at least 2 items in inputRange
-    const inputRange = [-1, ...routes.map((x: *, i: number) => i)];
+    const inputRange = [-1, ...routes.map((x, i) => i)];
 
     const tabBarStyle = [
       styles.tabBar,
-      isLandscape && useHorizontalTabs
-        ? styles.tabBarLandscape
-        : styles.tabBarPortrait,
+      this._shouldUseHorizontalTabs() && !Platform.isPad
+        ? styles.tabBarCompact
+        : styles.tabBarRegular,
       style,
     ];
 
     return (
-      <SafeAreaView
-        style={[styles.tabBarContainer, { backgroundColor }]}
-        forceInset={{ bottom: 'always' }}
-      >
-        <Animated.View style={tabBarStyle}>
-          {routes.map((route: NavigationRoute, index: number) => {
+      <Animated.View style={animateStyle}>
+        <SafeAreaView
+          style={tabBarStyle}
+          forceInset={{ bottom: 'always', top: 'never' }}
+        >
+          {routes.map((route, index) => {
             const focused = index === navigation.state.index;
             const scene = { route, index, focused };
-            const onPress = getOnPress(scene);
+            const onPress = getOnPress(previousScene, scene);
             const outputRange = inputRange.map(
-              (inputIndex: number) =>
+              inputIndex =>
                 inputIndex === index
                   ? activeBackgroundColor
                   : inactiveBackgroundColor
             );
             const backgroundColor = position.interpolate({
               inputRange,
-              outputRange: (outputRange: Array<string>),
+              outputRange: outputRange,
             });
 
             const justifyContent = this.props.showIcon ? 'flex-end' : 'center';
@@ -211,49 +234,50 @@ class TabBarBottom extends React.PureComponent<Props> {
                 testID={testID}
                 accessibilityLabel={accessibilityLabel}
                 onPress={() =>
-                  onPress ? onPress(scene, jumpToIndex) : jumpToIndex(index)}
+                  onPress
+                    ? onPress({ previousScene, scene, jumpToIndex })
+                    : jumpToIndex(index)
+                }
               >
-                <Animated.View
-                  style={[
-                    styles.tab,
-                    isLandscape && useHorizontalTabs && styles.tabLandscape,
-                    !isLandscape && useHorizontalTabs && styles.tabPortrait,
-                    { backgroundColor },
-                    tabStyle,
-                  ]}
-                >
-                  {this._renderIcon(scene)}
-                  {this._renderLabel(scene)}
+                <Animated.View style={[styles.tab, { backgroundColor }]}>
+                  <View
+                    style={[
+                      styles.tab,
+                      this._shouldUseHorizontalTabs()
+                        ? styles.tabLandscape
+                        : styles.tabPortrait,
+                      tabStyle,
+                    ]}
+                  >
+                    {this._renderIcon(scene)}
+                    {this._renderLabel(scene)}
+                  </View>
                 </Animated.View>
               </TouchableWithoutFeedback>
             );
           })}
-        </Animated.View>
-      </SafeAreaView>
+        </SafeAreaView>
+      </Animated.View>
     );
   }
 }
 
-const LABEL_LEFT_MARGIN = 20;
-const LABEL_TOP_MARGIN = 15;
 const styles = StyleSheet.create({
-  tabBarContainer: {
+  tabBar: {
+    backgroundColor: '#F7F7F7', // Default background color in iOS 10
     borderTopWidth: StyleSheet.hairlineWidth,
     borderTopColor: 'rgba(0, 0, 0, .3)',
-  },
-  tabBar: {
     flexDirection: 'row',
   },
-  tabBarLandscape: {
+  tabBarCompact: {
     height: 29,
   },
-  tabBarPortrait: {
+  tabBarRegular: {
     height: 49,
   },
   tab: {
     flex: 1,
     alignItems: isIos ? 'center' : 'stretch',
-    justifyContent: 'flex-end',
   },
   tabPortrait: {
     justifyContent: 'flex-end',
@@ -268,9 +292,15 @@ const styles = StyleSheet.create({
   },
   label: {
     textAlign: 'center',
+    backgroundColor: 'transparent',
+  },
+  labelBeneath: {
     fontSize: 10,
     marginBottom: 1.5,
-    backgroundColor: 'transparent',
+  },
+  labelBeside: {
+    fontSize: 13,
+    marginLeft: 20,
   },
 });
 

@@ -1,27 +1,17 @@
-/* @flow */
-
 import invariant from '../utils/invariant';
-
-import type {
-  NavigationComponent,
-  NavigationRouteConfigMap,
-} from '../TypeDefinition';
 
 /**
  * Simple helper that gets a single screen (React component or navigator)
  * out of the navigator config.
  */
-export default function getScreenForRouteName(
-  routeConfigs: NavigationRouteConfigMap,
-  routeName: string
-): NavigationComponent {
+export default function getScreenForRouteName(routeConfigs, routeName) {
   const routeConfig = routeConfigs[routeName];
 
   if (!routeConfig) {
     throw new Error(
       `There is no route defined for key ${routeName}.\n` +
         `Must be one of: ${Object.keys(routeConfigs)
-          .map((a: string) => `'${a}'`)
+          .map(a => `'${a}'`)
           .join(',')}`
     );
   }
@@ -42,5 +32,5 @@ export default function getScreenForRouteName(
     return screen;
   }
 
-  throw new Error(`Route ${routeName} must define a screen or a getScreen.`);
+  return routeConfig;
 }

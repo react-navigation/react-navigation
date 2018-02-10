@@ -21,33 +21,24 @@ exports[`TabBarBottom renders successfully 1`] = `
   }
 >
   <View
-    onLayout={[Function]}
-    style={
-      Array [
-        Array [
-          Object {
-            "borderTopColor": "rgba(0, 0, 0, .3)",
-            "borderTopWidth": 0.5,
-          },
-          Object {
-            "backgroundColor": "#F7F7F7",
-          },
-        ],
-        Object {
-          "paddingBottom": 0,
-          "paddingLeft": 0,
-          "paddingRight": 0,
-          "paddingTop": 20,
-        },
-      ]
-    }
+    collapsable={undefined}
+    style={undefined}
   >
     <View
       collapsable={undefined}
+      onLayout={[Function]}
+      pointerEvents="box-none"
       style={
         Object {
+          "backgroundColor": "#F7F7F7",
+          "borderTopColor": "rgba(0, 0, 0, .3)",
+          "borderTopWidth": 0.5,
           "flexDirection": "row",
           "height": 49,
+          "paddingBottom": 0,
+          "paddingLeft": 0,
+          "paddingRight": 0,
+          "paddingTop": 0,
         }
       }
     >
@@ -71,69 +62,82 @@ exports[`TabBarBottom renders successfully 1`] = `
             "alignItems": "center",
             "backgroundColor": "rgba(0, 0, 0, 0)",
             "flex": 1,
-            "justifyContent": "flex-end",
           }
         }
         testID={undefined}
       >
         <View
           style={
-            Object {
-              "flexGrow": 1,
-            }
+            Array [
+              Object {
+                "alignItems": "center",
+                "flex": 1,
+              },
+              Object {
+                "flexDirection": "column",
+                "justifyContent": "flex-end",
+              },
+              undefined,
+            ]
           }
         >
           <View
-            collapsable={undefined}
             style={
               Object {
-                "alignItems": "center",
-                "bottom": 0,
-                "justifyContent": "center",
-                "left": 0,
-                "opacity": 1,
-                "position": "absolute",
-                "right": 0,
-                "top": 0,
+                "flexGrow": 1,
               }
             }
-          />
-          <View
+          >
+            <View
+              collapsable={undefined}
+              style={
+                Object {
+                  "alignItems": "center",
+                  "bottom": 0,
+                  "justifyContent": "center",
+                  "left": 0,
+                  "opacity": 1,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                }
+              }
+            />
+            <View
+              collapsable={undefined}
+              style={
+                Object {
+                  "alignItems": "center",
+                  "bottom": 0,
+                  "justifyContent": "center",
+                  "left": 0,
+                  "opacity": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                }
+              }
+            />
+          </View>
+          <Text
+            accessible={true}
+            allowFontScaling={true}
             collapsable={undefined}
+            ellipsizeMode="tail"
+            numberOfLines={1}
             style={
               Object {
-                "alignItems": "center",
-                "bottom": 0,
-                "justifyContent": "center",
-                "left": 0,
-                "opacity": 0,
-                "position": "absolute",
-                "right": 0,
-                "top": 0,
+                "backgroundColor": "transparent",
+                "color": "rgba(52, 120, 246, 1)",
+                "fontSize": 10,
+                "marginBottom": 1.5,
+                "textAlign": "center",
               }
             }
-          />
+          >
+            s1
+          </Text>
         </View>
-        <Text
-          accessible={true}
-          allowFontScaling={true}
-          collapsable={undefined}
-          disabled={false}
-          ellipsizeMode="tail"
-          style={
-            Object {
-              "backgroundColor": "transparent",
-              "color": "rgba(52, 120, 246, 1)",
-              "fontSize": 10,
-              "marginBottom": 1.5,
-              "marginLeft": 0,
-              "marginTop": 0,
-              "textAlign": "center",
-            }
-          }
-        >
-          s1
-        </Text>
       </View>
     </View>
   </View>
@@ -145,7 +149,7 @@ exports[`TabBarBottom renders successfully 1`] = `
     bounces={false}
     contentContainerStyle={
       Object {
-        "flexGrow": 1,
+        "flex": 1,
       }
     }
     contentOffset={
@@ -172,12 +176,14 @@ exports[`TabBarBottom renders successfully 1`] = `
     onScrollShouldSetResponder={[Function]}
     onStartShouldSetResponder={[Function]}
     onStartShouldSetResponderCapture={[Function]}
+    onTouchCancel={[Function]}
     onTouchEnd={[Function]}
     onTouchMove={[Function]}
     onTouchStart={[Function]}
+    overScrollMode="never"
     pagingEnabled={true}
     scrollEnabled={undefined}
-    scrollEventThrottle={16}
+    scrollEventThrottle={1}
     scrollsToTop={false}
     sendMomentumEvents={true}
     showsHorizontalScrollIndicator={false}
@@ -190,7 +196,7 @@ exports[`TabBarBottom renders successfully 1`] = `
           "overflow": "scroll",
         },
         Object {
-          "flexGrow": 1,
+          "flex": 1,
         },
       ]
     }
@@ -204,7 +210,7 @@ exports[`TabBarBottom renders successfully 1`] = `
             "flexDirection": "row",
           },
           Object {
-            "flexGrow": 1,
+            "flex": 1,
           },
         ]
       }
@@ -229,9 +235,14 @@ exports[`TabBarBottom renders successfully 1`] = `
           <View
             navigation={
               Object {
+                "addListener": [Function],
                 "dispatch": undefined,
                 "goBack": [Function],
                 "navigate": [Function],
+                "pop": [Function],
+                "popToTop": [Function],
+                "push": [Function],
+                "replace": [Function],
                 "setParams": [Function],
                 "state": Object {
                   "key": "s1",

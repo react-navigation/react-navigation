@@ -1,41 +1,45 @@
-/* @flow */
-
 import { Animated, Easing, Platform } from 'react-native';
-
-import type {
-  NavigationTransitionProps,
-  NavigationTransitionSpec,
-  TransitionConfig,
-} from '../../TypeDefinition';
-
 import CardStackStyleInterpolator from './CardStackStyleInterpolator';
+import * as ReactNativeFeatures from '../../utils/ReactNativeFeatures';
 
-const IOSTransitionSpec = ({
-  duration: 500,
-  easing: Easing.bezier(0.2833, 0.99, 0.31833, 0.99),
-  timing: Animated.timing,
-}: NavigationTransitionSpec);
+let IOSTransitionSpec;
+if (ReactNativeFeatures.supportsImprovedSpringAnimation()) {
+  // These are the exact values from UINavigationController's animation configuration
+  IOSTransitionSpec = {
+    timing: Animated.spring,
+    stiffness: 1000,
+    damping: 500,
+    mass: 3,
+  };
+} else {
+  // This is an approximation of the IOS spring animation using a derived bezier curve
+  IOSTransitionSpec = {
+    duration: 500,
+    easing: Easing.bezier(0.2833, 0.99, 0.31833, 0.99),
+    timing: Animated.timing,
+  };
+}
 
 // Standard iOS navigation transition
-const SlideFromRightIOS = ({
+const SlideFromRightIOS = {
   transitionSpec: IOSTransitionSpec,
   screenInterpolator: CardStackStyleInterpolator.forHorizontal,
   containerStyle: {
     backgroundColor: '#000',
   },
-}: TransitionConfig);
+};
 
 // Standard iOS navigation transition for modals
-const ModalSlideFromBottomIOS = ({
+const ModalSlideFromBottomIOS = {
   transitionSpec: IOSTransitionSpec,
   screenInterpolator: CardStackStyleInterpolator.forVertical,
   containerStyle: {
     backgroundColor: '#000',
   },
-}: TransitionConfig);
+};
 
 // Standard Android navigation transition when opening an Activity
-const FadeInFromBottomAndroid = ({
+const FadeInFromBottomAndroid = {
   // See http://androidxref.com/7.1.1_r6/xref/frameworks/base/core/res/res/anim/activity_open_enter.xml
   transitionSpec: {
     duration: 350,
@@ -43,10 +47,10 @@ const FadeInFromBottomAndroid = ({
     timing: Animated.timing,
   },
   screenInterpolator: CardStackStyleInterpolator.forFadeFromBottomAndroid,
-}: TransitionConfig);
+};
 
 // Standard Android navigation transition when closing an Activity
-const FadeOutToBottomAndroid = ({
+const FadeOutToBottomAndroid = {
   // See http://androidxref.com/7.1.1_r6/xref/frameworks/base/core/res/res/anim/activity_close_exit.xml
   transitionSpec: {
     duration: 230,
@@ -54,16 +58,16 @@ const FadeOutToBottomAndroid = ({
     timing: Animated.timing,
   },
   screenInterpolator: CardStackStyleInterpolator.forFadeFromBottomAndroid,
-}: TransitionConfig);
+};
 
 function defaultTransitionConfig(
   // props for the new screen
-  transitionProps: NavigationTransitionProps,
+  transitionProps,
   // props for the old screen
-  prevTransitionProps: ?NavigationTransitionProps,
+  prevTransitionProps,
   // whether we're animating in/out a modal screen
-  isModal: boolean
-): TransitionConfig {
+  isModal
+) {
   if (Platform.OS === 'android') {
     // Use the default Android animation no matter if the screen is a modal.
     // Android doesn't have full-screen modals like iOS does, it has dialogs.
@@ -84,17 +88,13 @@ function defaultTransitionConfig(
 }
 
 function getTransitionConfig(
-  transitionConfigurer?: (
-    transitionProps: NavigationTransitionProps,
-    prevTransitionProps: ?NavigationTransitionProps,
-    isModal: boolean
-  ) => TransitionConfig,
+  transitionConfigurer,
   // props for the new screen
-  transitionProps: NavigationTransitionProps,
+  transitionProps,
   // props for the old screen
-  prevTransitionProps: ?NavigationTransitionProps,
-  isModal: boolean
-): TransitionConfig {
+  prevTransitionProps,
+  isModal
+) {
   const defaultConfig = defaultTransitionConfig(
     transitionProps,
     prevTransitionProps,
