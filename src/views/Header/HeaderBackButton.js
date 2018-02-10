@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
       ? {
           height: 21,
           width: 13,
-          marginLeft: 10,
+          marginLeft: 9,
           marginRight: 22,
           marginVertical: 12,
           resizeMode: 'contain',
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
   iconWithTitle:
     Platform.OS === 'ios'
       ? {
-          marginRight: 5,
+          marginRight: 6,
         }
       : {},
 });

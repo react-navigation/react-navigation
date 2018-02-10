@@ -101,23 +101,32 @@ export default (routeConfigs, stackConfig = {}) => {
       // Set up the initial state if needed
       if (!state) {
         let route = {};
-        if (
-          behavesLikePushAction(action) &&
-          childRouters[action.routeName] !== undefined
-        ) {
+        const childRouter = childRouters[action.routeName];
+        // This is a push-like action, and childRouter will be a router or null if we are responsible for this routeName
+        if (behavesLikePushAction(action) && childRouter !== undefined) {
+          let childState = {};
+          // The router is null for normal leaf routes
+          if (childRouter !== null) {
+            const childAction =
+              action.action ||
+              NavigationActions.init({ params: action.params });
+            childState = childRouter.getStateForAction(childAction);
+          }
           return {
             key: 'StackRouterRoot',
             isTransitioning: false,
             index: 0,
             routes: [
               {
-                routeName: action.routeName,
                 params: action.params,
-                key: `Init-${generateKey()}`,
+                ...childState,
+                key: action.key || generateKey(),
+                routeName: action.routeName,
               },
             ],
           };
         }
+
         if (initialChildRouter) {
           route = initialChildRouter.getStateForAction(
             NavigationActions.navigate({
@@ -135,11 +144,10 @@ export default (routeConfigs, stackConfig = {}) => {
         };
         route = {
           ...route,
-          routeName: initialRouteName,
-          key: `Init-${generateKey()}`,
           ...(params ? { params } : {}),
+          routeName: initialRouteName,
+          key: action.key || generateKey(),
         };
-        // eslint-disable-next-line no-param-reassign
         state = {
           key: 'StackRouterRoot',
           isTransitioning: false,
@@ -206,8 +214,8 @@ export default (routeConfigs, stackConfig = {}) => {
             params: action.params,
             // merge the child state in this order to allow params override
             ...childState,
-            key: action.newKey || generateKey(),
             routeName: action.routeName,
+            key: action.newKey || generateKey(),
           };
           return { ...state, routes };
         }
@@ -235,7 +243,10 @@ export default (routeConfigs, stackConfig = {}) => {
             if (state.index === lastRouteIndex && !action.params) {
               return state;
             }
-            const routes = [...state.routes];
+
+            // Remove the now unused routes at the tail of the routes array
+            const routes = state.routes.slice(0, lastRouteIndex + 1);
+
             // Apply params if provided, otherwise leave route identity intact
             if (action.params) {
               const route = state.routes.find(r => r.key === action.key);
@@ -259,7 +270,7 @@ export default (routeConfigs, stackConfig = {}) => {
             };
           }
         }
-        const key = action.key || generateKey();
+
         if (childRouter) {
           const childAction =
             action.action || NavigationActions.init({ params: action.params });
@@ -267,14 +278,14 @@ export default (routeConfigs, stackConfig = {}) => {
             params: action.params,
             // merge the child state in this order to allow params override
             ...childRouter.getStateForAction(childAction),
-            key,
             routeName: action.routeName,
+            key: action.key || generateKey(),
           };
         } else {
           route = {
             params: action.params,
-            key,
             routeName: action.routeName,
+            key: action.key || generateKey(),
           };
         }
         return {
@@ -326,11 +337,12 @@ export default (routeConfigs, stackConfig = {}) => {
               routeToPush = navigatedChildRoute;
             }
             if (routeToPush) {
-              return StateUtils.push(state, {
+              const route = {
                 ...routeToPush,
-                key: generateKey(),
                 routeName: childRouterName,
-              });
+                key: action.key || generateKey(),
+              };
+              return StateUtils.push(state, route);
             }
           }
         }
@@ -369,20 +381,16 @@ export default (routeConfigs, stackConfig = {}) => {
           ...state,
           routes: resetAction.actions.map(childAction => {
             const router = childRouters[childAction.routeName];
+            let childState = {};
             if (router) {
-              return {
-                ...childAction,
-                ...router.getStateForAction(childAction),
-                routeName: childAction.routeName,
-                key: generateKey(),
-              };
+              childState = router.getStateForAction(childAction);
             }
-            const route = {
-              ...childAction,
-              key: generateKey(),
+            return {
+              params: childAction.params,
+              ...childState,
+              routeName: childAction.routeName,
+              key: childAction.key || generateKey(),
             };
-            delete route.type;
-            return route;
           }),
           index: action.index,
         };
@@ -521,7 +529,15 @@ export default (routeConfigs, stackConfig = {}) => {
         }
         const nextResult = result || {};
         const paramName = key.name;
-        nextResult[paramName] = matchResult;
+
+        let decodedMatchResult;
+        try {
+          decodedMatchResult = decodeURIComponent(matchResult);
+        } catch (e) {
+          // ignore `URIError: malformed URI`
+        }
+
+        nextResult[paramName] = decodedMatchResult || matchResult;
         return nextResult;
       }, queryParams);
 

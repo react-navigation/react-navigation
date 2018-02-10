@@ -355,7 +355,7 @@ describe('StackRouter', () => {
       index: 0,
       isTransitioning: false,
       key: 'StackRouterRoot',
-      routes: [{ key: 'Init-id-0', routeName: 'foo' }],
+      routes: [{ key: 'id-0', routeName: 'foo' }],
     });
     const pushedState = TestRouter.getStateForAction(
       NavigationActions.navigate({ routeName: 'qux' }),
@@ -553,6 +553,37 @@ describe('StackRouter', () => {
     }).toThrow();
   });
 
+  test('Navigate backwards with key removes leading routes', () => {
+    const TestRouter = StackRouter({
+      foo: { screen: () => <div /> },
+      bar: { screen: () => <div /> },
+    });
+    const initState = TestRouter.getStateForAction(NavigationActions.init());
+    const pushedState = TestRouter.getStateForAction(
+      NavigationActions.navigate({ routeName: 'bar', key: 'a' }),
+      initState
+    );
+    const pushedTwiceState = TestRouter.getStateForAction(
+      NavigationActions.navigate({ routeName: 'bar', key: 'b`' }),
+      pushedState
+    );
+    const pushedThriceState = TestRouter.getStateForAction(
+      NavigationActions.navigate({ routeName: 'foo', key: 'c`' }),
+      pushedTwiceState
+    );
+    expect(pushedThriceState.routes.length).toEqual(4);
+
+    const navigatedBackToFirstRouteState = TestRouter.getStateForAction(
+      NavigationActions.navigate({
+        routeName: 'foo',
+        key: pushedThriceState.routes[0].key,
+      }),
+      pushedThriceState
+    );
+    expect(navigatedBackToFirstRouteState.index).toEqual(0);
+    expect(navigatedBackToFirstRouteState.routes.length).toEqual(1);
+  });
+
   test('Handle basic stack logic for plain components', () => {
     const FooScreen = () => <div />;
     const BarScreen = () => <div />;
@@ -571,7 +602,7 @@ describe('StackRouter', () => {
       key: 'StackRouterRoot',
       routes: [
         {
-          key: 'Init-id-0',
+          key: 'id-0',
           routeName: 'Foo',
         },
       ],
@@ -599,7 +630,7 @@ describe('StackRouter', () => {
       key: 'StackRouterRoot',
       routes: [
         {
-          key: 'Init-id-0',
+          key: 'id-0',
           routeName: 'Foo',
         },
       ],
@@ -696,7 +727,7 @@ describe('StackRouter', () => {
       key: 'StackRouterRoot',
       routes: [
         {
-          key: 'Init-id-0',
+          key: 'id-0',
           routeName: 'Foo',
         },
       ],
@@ -724,7 +755,7 @@ describe('StackRouter', () => {
       key: 'StackRouterRoot',
       routes: [
         {
-          key: 'Init-id-0',
+          key: 'id-0',
           routeName: 'Foo',
         },
       ],
@@ -798,7 +829,7 @@ describe('StackRouter', () => {
       key: 'StackRouterRoot',
       routes: [
         {
-          key: 'Init-id-0',
+          key: 'id-0',
           routeName: 'Bar',
         },
       ],
@@ -907,14 +938,14 @@ describe('StackRouter', () => {
       {
         type: NavigationActions.SET_PARAMS,
         params: { name: 'foobar' },
-        key: 'Init-id-0',
+        key: 'id-0',
       },
       state
     );
     expect(state2 && state2.index).toEqual(0);
     expect(state2 && state2.routes[0].routes[0].routes).toEqual([
       {
-        key: 'Init-id-0',
+        key: 'id-0',
         routeName: 'Quux',
         params: { name: 'foobar' },
       },
@@ -1131,6 +1162,126 @@ describe('StackRouter', () => {
         params: { foo: '42' },
       }),
     ]);
+  });
+
+  test('Handles the navigate action with params and nested StackRouter as a first action', () => {
+    const state = TestStackRouter.getStateForAction({
+      type: NavigationActions.NAVIGATE,
+      routeName: 'main',
+      params: {
+        code: 'test',
+        foo: 'bar',
+      },
+      action: {
+        type: NavigationActions.NAVIGATE,
+        routeName: 'profile',
+        params: {
+          id: '4',
+          code: 'test',
+          foo: 'bar',
+        },
+        action: {
+          type: NavigationActions.NAVIGATE,
+          routeName: 'list',
+          params: {
+            id: '10259959195',
+            code: 'test',
+            foo: 'bar',
+          },
+        },
+      },
+    });
+
+    expect(state).toEqual({
+      index: 0,
+      isTransitioning: false,
+      key: 'StackRouterRoot',
+      routes: [
+        {
+          index: 0,
+          isTransitioning: false,
+          key: 'id-2',
+          params: { code: 'test', foo: 'bar' },
+          routeName: 'main',
+          routes: [
+            {
+              index: 0,
+              isTransitioning: false,
+              key: 'id-1',
+              params: { code: 'test', foo: 'bar', id: '4' },
+              routeName: 'profile',
+              routes: [
+                {
+                  key: 'id-0',
+                  params: { code: 'test', foo: 'bar', id: '10259959195' },
+                  routeName: 'list',
+                  type: undefined,
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    });
+
+    const state2 = TestStackRouter.getStateForAction({
+      type: NavigationActions.NAVIGATE,
+      routeName: 'main',
+      params: {
+        code: '',
+        foo: 'bar',
+      },
+      action: {
+        type: NavigationActions.NAVIGATE,
+        routeName: 'profile',
+        params: {
+          id: '4',
+          code: '',
+          foo: 'bar',
+        },
+        action: {
+          type: NavigationActions.NAVIGATE,
+          routeName: 'list',
+          params: {
+            id: '10259959195',
+            code: '',
+            foo: 'bar',
+          },
+        },
+      },
+    });
+
+    expect(state2).toEqual({
+      index: 0,
+      isTransitioning: false,
+      key: 'StackRouterRoot',
+      routes: [
+        {
+          index: 0,
+          isTransitioning: false,
+          key: 'id-5',
+          params: { code: '', foo: 'bar' },
+          routeName: 'main',
+          routes: [
+            {
+              index: 0,
+              isTransitioning: false,
+              key: 'id-4',
+              params: { code: '', foo: 'bar', id: '4' },
+              routeName: 'profile',
+              routes: [
+                {
+                  key: 'id-3',
+                  params: { code: '', foo: 'bar', id: '10259959195' },
+                  routeName: 'list',
+                  type: undefined,
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    });
   });
 
   test('Handles the navigate action with params and nested TabRouter', () => {
@@ -1353,6 +1504,28 @@ describe('StackRouter', () => {
         "The action type 'Init' has been renamed to 'Navigation/INIT'"
       )
     );
+  });
+
+  test('URI encoded string get passed to deep link', () => {
+    const uri = 'people/2018%2F02%2F07';
+    const action = TestStackRouter.getActionForPathAndParams(uri);
+    expect(action).toEqual({
+      routeName: 'person',
+      params: {
+        id: '2018/02/07',
+      },
+      type: NavigationActions.NAVIGATE,
+    });
+
+    const malformedUri = 'people/%E0%A4%A';
+    const action2 = TestStackRouter.getActionForPathAndParams(malformedUri);
+    expect(action2).toEqual({
+      routeName: 'person',
+      params: {
+        id: '%E0%A4%A',
+      },
+      type: NavigationActions.NAVIGATE,
+    });
   });
 
   test('Querystring params get passed to nested deep link', () => {

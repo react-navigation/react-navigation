@@ -63,6 +63,7 @@ class TabBarBottom extends React.PureComponent {
     if (typeof label === 'string') {
       return (
         <Animated.Text
+          numberOfLines={1}
           style={[
             styles.label,
             { color },

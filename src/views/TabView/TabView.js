@@ -107,10 +107,7 @@ class TabView extends React.PureComponent {
       screenProps || {}
     );
 
-    const tabBarVisible =
-      options.tabBarVisible === null || options.tabBarVisible === undefined
-        ? true
-        : options.tabBarVisible;
+    const tabBarVisible = options.tabBarVisible !== false;
 
     const tabBarStyles = [
       tabBarVisible ? undefined : styles.hidden,
@@ -157,10 +154,14 @@ class TabView extends React.PureComponent {
       screenProps || {}
     );
 
-    const swipeEnabled =
+    let swipeEnabled =
       options.swipeEnabled == null
         ? this.props.swipeEnabled
         : options.swipeEnabled;
+
+    if (typeof swipeEnabled === 'function') {
+      swipeEnabled = swipeEnabled(state);
+    }
 
     if (tabBarComponent !== undefined) {
       if (tabBarPosition === 'bottom') {
