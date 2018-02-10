@@ -77,6 +77,7 @@ export default (routeConfigs, stackConfig = {}) => {
       const wildcardRe = pathToRegexp(`${pathPattern}/*`, keys);
       re = new RegExp(`(?:${re.source})|(?:${wildcardRe.source})`);
     }
+
     pathsByRouteNames[routeName] = { re, keys, toPath, priority };
   });
 
