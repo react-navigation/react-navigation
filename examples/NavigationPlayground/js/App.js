@@ -96,39 +96,19 @@ const ExampleInfo = {
   },
 };
 const ExampleRoutes = {
-  SimpleStack: {
-    screen: SimpleStack,
-  },
-  SimpleTabs: {
-    screen: SimpleTabs,
-  },
-  Drawer: {
-    screen: Drawer,
-  },
+  SimpleStack: SimpleStack,
+  SimpleTabs: SimpleTabs,
+  Drawer: Drawer,
   // MultipleDrawer: {
   //   screen: MultipleDrawer,
   // },
-  TabsInDrawer: {
-    screen: TabsInDrawer,
-  },
-  CustomTabs: {
-    screen: CustomTabs,
-  },
-  CustomTransitioner: {
-    screen: CustomTransitioner,
-  },
-  ModalStack: {
-    screen: ModalStack,
-  },
-  StacksWithKeys: {
-    screen: StacksWithKeys,
-  },
-  StacksInTabs: {
-    screen: StacksInTabs,
-  },
-  StacksOverTabs: {
-    screen: StacksOverTabs,
-  },
+  TabsInDrawer: TabsInDrawer,
+  CustomTabs: CustomTabs,
+  CustomTransitioner: CustomTransitioner,
+  ModalStack: ModalStack,
+  StacksWithKeys: StacksWithKeys,
+  StacksInTabs: StacksInTabs,
+  StacksOverTabs: StacksOverTabs,
   LinkStack: {
     screen: SimpleStack,
     path: 'people/Jordan',
@@ -137,9 +117,7 @@ const ExampleRoutes = {
     screen: SimpleTabs,
     path: 'settings',
   },
-  TabAnimations: {
-    screen: TabAnimations,
-  },
+  TabAnimations: TabAnimations,
 };
 
 type State = {
@@ -231,11 +209,16 @@ class MainScreen extends React.Component<any, State> {
                 <TouchableOpacity
                   key={routeName}
                   onPress={() => {
-                    const { path, params, screen } = ExampleRoutes[routeName];
-                    const { router } = screen;
-                    const action =
-                      path && router.getActionForPathAndParams(path, params);
-                    navigation.navigate(routeName, {}, action);
+                    let route = ExampleRoutes[routeName];
+                    if (route.screen || route.path || route.params) {
+                      const { path, params, screen } = route;
+                      const { router } = screen;
+                      const action =
+                        path && router.getActionForPathAndParams(path, params);
+                      navigation.navigate(routeName, {}, action);
+                    } else {
+                      navigation.navigate(routeName);
+                    }
                   }}
                 >
                   <View style={styles.itemContainer}>

@@ -332,12 +332,15 @@ declare module 'react-navigation' {
     navigationOptions?: ?NavigationScreenConfig<Options>,
   };
 
-  declare export type NavigationRouteConfig = {
+  declare export type NavigationRouteConfig = 
+  | NavigationComponent
+  | {
     navigationOptions?: NavigationScreenConfig<*>,
     path?: string,
   } & NavigationScreenRouteConfig;
 
   declare export type NavigationScreenRouteConfig =
+    | NavigationComponent
     | {
         screen: NavigationComponent,
       }
