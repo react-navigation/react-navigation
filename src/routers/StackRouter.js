@@ -529,7 +529,15 @@ export default (routeConfigs, stackConfig = {}) => {
         }
         const nextResult = result || {};
         const paramName = key.name;
-        nextResult[paramName] = matchResult;
+
+        let decodedMatchResult;
+        try {
+          decodedMatchResult = decodeURIComponent(matchResult);
+        } catch (e) {
+          // ignore `URIError: malformed URI`
+        }
+
+        nextResult[paramName] = decodedMatchResult || matchResult;
         return nextResult;
       }, queryParams);
 

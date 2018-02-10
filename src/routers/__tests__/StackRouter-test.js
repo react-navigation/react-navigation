@@ -1506,6 +1506,28 @@ describe('StackRouter', () => {
     );
   });
 
+  test('URI encoded string get passed to deep link', () => {
+    const uri = 'people/2018%2F02%2F07';
+    const action = TestStackRouter.getActionForPathAndParams(uri);
+    expect(action).toEqual({
+      routeName: 'person',
+      params: {
+        id: '2018/02/07',
+      },
+      type: NavigationActions.NAVIGATE,
+    });
+
+    const malformedUri = 'people/%E0%A4%A';
+    const action2 = TestStackRouter.getActionForPathAndParams(malformedUri);
+    expect(action2).toEqual({
+      routeName: 'person',
+      params: {
+        id: '%E0%A4%A',
+      },
+      type: NavigationActions.NAVIGATE,
+    });
+  });
+
   test('Querystring params get passed to nested deep link', () => {
     // uri with two non-empty query param values
     const uri = 'main/p/4/list/10259959195?code=test&foo=bar';
