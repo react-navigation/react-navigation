@@ -303,9 +303,7 @@ class Header extends React.PureComponent {
 
     return (
       <Animated.View {...rest}>
-        <SafeAreaView
-          style={containerStyles}
-        >
+        <SafeAreaView style={containerStyles}>
           <View style={styles.appBar}>{appBar}</View>
         </SafeAreaView>
       </Animated.View>
