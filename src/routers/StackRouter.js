@@ -51,6 +51,61 @@ export default (routeConfigs, stackConfig = {}) => {
   const pathsByRouteNames = { ...stackConfig.paths } || {};
   let paths = [];
 
+  function getInitialState(action) {
+    let route = {};
+    const childRouter = childRouters[action.routeName];
+
+    // This is a push-like action, and childRouter will be a router or null if we are responsible for this routeName
+    if (behavesLikePushAction(action) && childRouter !== undefined) {
+      let childState = {};
+      // The router is null for normal leaf routes
+      if (childRouter !== null) {
+        const childAction =
+          action.action || NavigationActions.init({ params: action.params });
+        childState = childRouter.getStateForAction(childAction);
+      }
+      return {
+        key: 'StackRouterRoot',
+        isTransitioning: false,
+        index: 0,
+        routes: [
+          {
+            params: action.params,
+            ...childState,
+            key: action.key || generateKey(),
+            routeName: action.routeName,
+          },
+        ],
+      };
+    }
+
+    if (initialChildRouter) {
+      route = initialChildRouter.getStateForAction(
+        NavigationActions.navigate({
+          routeName: initialRouteName,
+          params: initialRouteParams,
+        })
+      );
+    }
+    const params = (route.params || action.params || initialRouteParams) && {
+      ...(route.params || {}),
+      ...(action.params || {}),
+      ...(initialRouteParams || {}),
+    };
+    route = {
+      ...route,
+      ...(params ? { params } : {}),
+      routeName: initialRouteName,
+      key: action.key || generateKey(),
+    };
+    return {
+      key: 'StackRouterRoot',
+      isTransitioning: false,
+      index: 0,
+      routes: [route],
+    };
+  }
+
   // Build paths for each route
   routeNames.forEach(routeName => {
     let pathPattern =
@@ -100,63 +155,11 @@ export default (routeConfigs, stackConfig = {}) => {
     getStateForAction(action, state) {
       // Set up the initial state if needed
       if (!state) {
-        let route = {};
-        const childRouter = childRouters[action.routeName];
-        // This is a push-like action, and childRouter will be a router or null if we are responsible for this routeName
-        if (behavesLikePushAction(action) && childRouter !== undefined) {
-          let childState = {};
-          // The router is null for normal leaf routes
-          if (childRouter !== null) {
-            const childAction =
-              action.action ||
-              NavigationActions.init({ params: action.params });
-            childState = childRouter.getStateForAction(childAction);
-          }
-          return {
-            key: 'StackRouterRoot',
-            isTransitioning: false,
-            index: 0,
-            routes: [
-              {
-                params: action.params,
-                ...childState,
-                key: action.key || generateKey(),
-                routeName: action.routeName,
-              },
-            ],
-          };
-        }
-
-        if (initialChildRouter) {
-          route = initialChildRouter.getStateForAction(
-            NavigationActions.navigate({
-              routeName: initialRouteName,
-              params: initialRouteParams,
-            })
-          );
-        }
-        const params = (route.params ||
-          action.params ||
-          initialRouteParams) && {
-          ...(route.params || {}),
-          ...(action.params || {}),
-          ...(initialRouteParams || {}),
-        };
-        route = {
-          ...route,
-          ...(params ? { params } : {}),
-          routeName: initialRouteName,
-          key: action.key || generateKey(),
-        };
-        state = {
-          key: 'StackRouterRoot',
-          isTransitioning: false,
-          index: 0,
-          routes: [route],
-        };
+        return getInitialState(action);
       }
 
-      // Check if a child scene wants to handle the action as long as it is not a reset to the root stack
+      // Check if the focused child scene wants to handle the action, as long as
+      // it is not a reset to the root stack
       if (action.type !== NavigationActions.RESET || action.key !== null) {
         const keyIndex = action.key
           ? StateUtils.indexOf(state, action.key)
@@ -179,49 +182,8 @@ export default (routeConfigs, stackConfig = {}) => {
         }
       }
 
-      // Handle pop-to-top behavior. Make sure this happens after children have had a chance to handle the action, so that the inner stack pops to top first.
-      if (action.type === NavigationActions.POP_TO_TOP) {
-        if (state.index === 0) {
-          return {
-            ...state,
-          };
-        } else {
-          return {
-            ...state,
-            isTransitioning: action.immediate !== true,
-            index: 0,
-            routes: [state.routes[0]],
-          };
-        }
-        return state;
-      }
-
-      // Handle replace action
-      if (action.type === NavigationActions.REPLACE) {
-        const routeIndex = state.routes.findIndex(r => r.key === action.key);
-        // Only replace if the key matches one of our routes
-        if (routeIndex !== -1) {
-          const childRouter = childRouters[action.routeName];
-          let childState = {};
-          if (childRouter) {
-            const childAction =
-              action.action ||
-              NavigationActions.init({ params: action.params });
-            childState = childRouter.getStateForAction(childAction);
-          }
-          const routes = [...state.routes];
-          routes[routeIndex] = {
-            params: action.params,
-            // merge the child state in this order to allow params override
-            ...childState,
-            routeName: action.routeName,
-            key: action.newKey || generateKey(),
-          };
-          return { ...state, routes };
-        }
-      }
-
-      // Handle explicit push navigation action. Make sure this happens after children have had a chance to handle the action
+      // Handle explicit push navigation action. This must happen after the
+      // focused child router has had a chance to handle the action.
       if (
         behavesLikePushAction(action) &&
         childRouters[action.routeName] !== undefined
@@ -233,6 +195,7 @@ export default (routeConfigs, stackConfig = {}) => {
           action.type !== NavigationActions.PUSH || action.key == null,
           'StackRouter does not support key on the push action'
         );
+
         // With the navigate action, the key may be provided for pushing, or to navigate back to the key
         if (action.key) {
           const lastRouteIndex = state.routes.findIndex(
@@ -296,19 +259,11 @@ export default (routeConfigs, stackConfig = {}) => {
         action.type === NavigationActions.PUSH &&
         childRouters[action.routeName] === undefined
       ) {
+        // If we've made it this far with a push action, we return the
+        // state with a new identity to prevent the action from bubbling
+        // back up.
         return {
           ...state,
-        };
-      }
-
-      if (
-        action.type === NavigationActions.COMPLETE_TRANSITION &&
-        (action.key == null || action.key === state.key) &&
-        state.isTransitioning
-      ) {
-        return {
-          ...state,
-          isTransitioning: false,
         };
       }
 
@@ -346,6 +301,60 @@ export default (routeConfigs, stackConfig = {}) => {
             }
           }
         }
+      }
+
+      // Handle pop-to-top behavior. Make sure this happens after children have had a chance to handle the action, so that the inner stack pops to top first.
+      if (action.type === NavigationActions.POP_TO_TOP) {
+        if (state.index === 0) {
+          return {
+            ...state,
+          };
+        } else {
+          return {
+            ...state,
+            isTransitioning: action.immediate !== true,
+            index: 0,
+            routes: [state.routes[0]],
+          };
+        }
+        return state;
+      }
+
+      // Handle replace action
+      if (action.type === NavigationActions.REPLACE) {
+        const routeIndex = state.routes.findIndex(r => r.key === action.key);
+        // Only replace if the key matches one of our routes
+        if (routeIndex !== -1) {
+          const childRouter = childRouters[action.routeName];
+          let childState = {};
+          if (childRouter) {
+            const childAction =
+              action.action ||
+              NavigationActions.init({ params: action.params });
+            childState = childRouter.getStateForAction(childAction);
+          }
+          const routes = [...state.routes];
+          routes[routeIndex] = {
+            params: action.params,
+            // merge the child state in this order to allow params override
+            ...childState,
+            routeName: action.routeName,
+            key: action.newKey || generateKey(),
+          };
+          return { ...state, routes };
+        }
+      }
+
+      // Update transitioning state
+      if (
+        action.type === NavigationActions.COMPLETE_TRANSITION &&
+        (action.key == null || action.key === state.key) &&
+        state.isTransitioning
+      ) {
+        return {
+          ...state,
+          isTransitioning: false,
+        };
       }
 
       if (action.type === NavigationActions.SET_PARAMS) {

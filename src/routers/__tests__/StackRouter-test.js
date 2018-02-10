@@ -513,6 +513,39 @@ describe('StackRouter', () => {
     expect(pushedTwiceState.routes[2].routeName).toEqual('bar');
   });
 
+  test('Navigate from top propagates to any arbitary depth of stacks', () => {
+    const GrandChildNavigator = () => <div />;
+    GrandChildNavigator.router = StackRouter({
+      Quux: { screen: () => <div /> },
+      Corge: { screen: () => <div /> },
+    });
+
+    const ChildNavigator = () => <div />;
+    ChildNavigator.router = StackRouter({
+      Baz: { screen: () => <div /> },
+      Woo: { screen: () => <div /> },
+      Qux: { screen: GrandChildNavigator },
+    });
+
+    const Parent = StackRouter({
+      Foo: { screen: () => <div /> },
+      Bar: { screen: ChildNavigator },
+    });
+
+    const state = Parent.getStateForAction({ type: NavigationActions.INIT });
+    const state2 = Parent.getStateForAction(
+      {
+        type: NavigationActions.NAVIGATE,
+        routeName: 'Corge',
+      },
+      state
+    );
+
+    expect(state2.index).toEqual(1);
+    expect(state2.routes[1].index).toEqual(1);
+    expect(state2.routes[1].routes[1].index).toEqual(1);
+  });
+
   test('Navigate with key is idempotent', () => {
     const TestRouter = StackRouter({
       foo: { screen: () => <div /> },
