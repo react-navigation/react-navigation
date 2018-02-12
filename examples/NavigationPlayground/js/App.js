@@ -34,7 +34,7 @@ import TabAnimations from './TabAnimations';
 const ExampleInfo = {
   SimpleStack: {
     name: 'Stack Example',
-    description: 'A card stack',
+    description: 'A card stack!',
   },
   SimpleTabs: {
     name: 'Tabs Example',
@@ -148,6 +148,12 @@ class MainScreen extends React.Component<any, State> {
       extrapolate: 'clamp',
     });
 
+    const underlayOpacity = this.state.scrollY.interpolate({
+      inputRange: [0, 50],
+      outputRange: [0, 1],
+      extrapolate: 'clamp',
+    });
+
     const backgroundScale = this.state.scrollY.interpolate({
       inputRange: [-450, 0],
       outputRange: [3, 1],
@@ -189,7 +195,7 @@ class MainScreen extends React.Component<any, State> {
           >
             <SafeAreaView
               style={styles.bannerContainer}
-              forceInset={{ top: 'always' }}
+              forceInset={{ top: 'always', bottom: 'never' }}
             >
               <View style={styles.banner}>
                 <Image
@@ -203,7 +209,7 @@ class MainScreen extends React.Component<any, State> {
             </SafeAreaView>
           </Animated.View>
 
-          <SafeAreaView forceInset={{ bottom: 'always' }}>
+          <SafeAreaView forceInset={{ bottom: 'always', horizontal: 'never' }}>
             <View style={{ backgroundColor: '#fff' }}>
               {Object.keys(ExampleRoutes).map((routeName: string) => (
                 <TouchableOpacity
@@ -221,7 +227,10 @@ class MainScreen extends React.Component<any, State> {
                     }
                   }}
                 >
-                  <View style={styles.itemContainer}>
+                  <SafeAreaView
+                    style={styles.itemContainer}
+                    forceInset={{ veritcal: 'never', bottom: 'never' }}
+                  >
                     <View style={styles.item}>
                       <Text style={styles.title}>
                         {ExampleInfo[routeName].name}
@@ -230,14 +239,16 @@ class MainScreen extends React.Component<any, State> {
                         {ExampleInfo[routeName].description}
                       </Text>
                     </View>
-                  </View>
+                  </SafeAreaView>
                 </TouchableOpacity>
               ))}
             </View>
           </SafeAreaView>
         </Animated.ScrollView>
         <StatusBar barStyle="light-content" />
-        <View style={styles.statusBarUnderlay} />
+        <Animated.View
+          style={[styles.statusBarUnderlay, { opacity: underlayOpacity }]}
+        />
       </View>
     );
   }
@@ -308,7 +319,6 @@ const styles = StyleSheet.create({
   },
   bannerContainer: {
     // backgroundColor: '#673ab7',
-    paddingTop: 20,
     alignItems: 'center',
   },
   banner: {
