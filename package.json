@@ -72,6 +72,10 @@
     "modulePathIgnorePatterns": ["examples"]
   },
   "lint-staged": {
-    "*.js": ["eslint --fix", "git add"]
+    "*.js": [
+      "eslint --fix",
+      "prettier --write flow/react-navigation.js",
+      "git add"
+    ]
   }
 }
