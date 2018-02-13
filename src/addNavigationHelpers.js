@@ -61,6 +61,12 @@ export default function(navigation) {
       return navigation.dispatch(NavigationActions.setParams({ params, key }));
     },
 
+    getParam: (paramName, defaultValue) => {
+      const param =
+        navigation.state.params && navigation.state.params[paramName];
+      return param || defaultValue;
+    },
+
     push: (routeName, params, action) =>
       navigation.dispatch(
         NavigationActions.push({ routeName, params, action })
