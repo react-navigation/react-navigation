@@ -102,4 +102,17 @@ describe('addNavigationHelpers', () => {
       }).getParam('name', 'Brent')
     ).toEqual('Brent');
   });
+
+  it('handles GetParams action with param value as null', () => {
+    const mockedDispatch = jest
+      .fn(() => false)
+      .mockImplementationOnce(() => true);
+    expect(
+      addNavigationHelpers({
+        state: { key: 'B', routeName: 'Settings', params: { name: null } },
+        dispatch: mockedDispatch,
+        addListener: dummyEventSubscriber,
+      }).getParam('name')
+    ).toEqual(null);
+  });
 });
