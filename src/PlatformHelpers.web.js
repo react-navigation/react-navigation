@@ -1,9 +1,3 @@
-export const Linking = {
-  addEventListener: () => {},
-  removeEventListener: () => {},
-  getInitialURL: () => Promise.reject('Unsupported platform'),
-};
+import { BackHandler } from 'react-native';
 
-export const BackHandler = {
-  addEventListener: () => {},
-};
+export { BackHandler };
