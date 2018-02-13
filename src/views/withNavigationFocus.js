@@ -18,7 +18,7 @@ export default function withNavigationFocus(Component) {
 
     componentDidMount() {
       const navigation = this.getNavigation();
-      this.subs = [
+      this.subscriptions = [
         navigation.addListener('didFocus', () =>
           this.setState({ isFocused: true })
         ),
@@ -29,7 +29,7 @@ export default function withNavigationFocus(Component) {
     }
 
     componentWillUnmount() {
-      this.subs.forEach(sub => sub.remove());
+      this.subscriptions.forEach(sub => sub.remove());
     }
 
     getNavigation = () => {
