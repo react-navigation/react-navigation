@@ -62,11 +62,10 @@ export default function(navigation) {
     },
 
     getParam: (paramName, defaultValue) => {
-      const param =
-        navigation.state.params && navigation.state.params[paramName];
+      const params = navigation.state.params;
 
-      if (param != null) {
-        return param;
+      if (params && paramName in params) {
+        return params[paramName];
       }
 
       return defaultValue;
