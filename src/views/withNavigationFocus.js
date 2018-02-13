@@ -23,7 +23,7 @@ export default function withNavigationFocus(Component) {
         ];
       } else {
         console.warn(
-          'withIsFocused wrapped component did not receive navigation from props, so isFocused prop swill remain false'
+          'withNavigationFocus wrapped component did not receive navigation from props, so isFocused prop will remain false'
         );
       }
     }
