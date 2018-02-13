@@ -1,5 +1,6 @@
 import React from 'react';
-import { BackHandler, Linking } from './PlatformHelpers';
+import { Linking } from 'react-native';
+import { BackHandler } from './PlatformHelpers';
 import NavigationActions from './NavigationActions';
 import addNavigationHelpers from './addNavigationHelpers';
 import invariant from './utils/invariant';
