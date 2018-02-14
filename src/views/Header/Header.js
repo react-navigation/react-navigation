@@ -361,8 +361,6 @@ class Header extends React.PureComponent {
       key: `scene_${props.scene.key}`,
     };
 
-    console.log(props);
-
     const { options } = this.props.getScreenDetails(props.scene);
     if (
       options.headerLeft ||
