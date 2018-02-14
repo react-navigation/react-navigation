@@ -3,8 +3,10 @@ import React from 'react';
 import {
   Animated,
   Dimensions,
+  Image,
   Platform,
   StyleSheet,
+  MaskedViewIOS,
   View,
   ViewPropTypes,
 } from 'react-native';
@@ -12,6 +14,7 @@ import SafeAreaView from 'react-native-safe-area-view';
 
 import HeaderTitle from './HeaderTitle';
 import HeaderBackButton from './HeaderBackButton';
+import ModularHeaderBackButton from './ModularHeaderBackButton';
 import HeaderStyleInterpolator from './HeaderStyleInterpolator';
 import withOrientation from '../withOrientation';
 
@@ -22,6 +25,8 @@ const TITLE_OFFSET = Platform.OS === 'ios' ? 70 : 56;
 class Header extends React.PureComponent {
   static defaultProps = {
     leftInterpolator: HeaderStyleInterpolator.forLeft,
+    leftButtonInterpolator: HeaderStyleInterpolator.forLeftButton,
+    leftLabelInterpolator: HeaderStyleInterpolator.forLeftLabel,
     titleInterpolator: HeaderStyleInterpolator.forCenter,
     rightInterpolator: HeaderStyleInterpolator.forRight,
   };
@@ -114,17 +119,16 @@ class Header extends React.PureComponent {
     );
   };
 
-  _renderLeftComponent = props => {
+  _renderLeftComponent = (props, buttonInterpolator) => {
     const { options } = this.props.getScreenDetails(props.scene);
+
     if (
       React.isValidElement(options.headerLeft) ||
       options.headerLeft === null
     ) {
       return options.headerLeft;
     }
-    if (props.scene.index === 0) {
-      return null;
-    }
+
     const backButtonTitle = this._getBackButtonTitleString(props.scene);
     const truncatedBackButtonTitle = this._getTruncatedBackButtonTitle(
       props.scene
@@ -147,6 +151,36 @@ class Header extends React.PureComponent {
     );
   };
 
+  _renderModularLeftComponent = (
+    props,
+    ButtonContainerComponent,
+    LabelContainerComponent
+  ) => {
+    const { options } = this.props.getScreenDetails(props.scene);
+    const backButtonTitle = this._getBackButtonTitleString(props.scene);
+    const truncatedBackButtonTitle = this._getTruncatedBackButtonTitle(
+      props.scene
+    );
+    const width = this.state.widths[props.scene.key]
+      ? (this.props.layout.initWidth - this.state.widths[props.scene.key]) / 2
+      : undefined;
+
+    return (
+      <ModularHeaderBackButton
+        onPress={this._navigateBack}
+        ButtonContainerComponent={ButtonContainerComponent}
+        LabelContainerComponent={LabelContainerComponent}
+        pressColorAndroid={options.headerPressColorAndroid}
+        tintColor={options.headerTintColor}
+        buttonImage={options.headerBackImage}
+        title={backButtonTitle}
+        truncatedTitle={truncatedBackButtonTitle}
+        titleStyle={options.headerBackTitleStyle}
+        width={width}
+      />
+    );
+  };
+
   _renderRightComponent = props => {
     const details = this.props.getScreenDetails(props.scene);
     const { headerRight } = details.options;
@@ -154,12 +188,35 @@ class Header extends React.PureComponent {
   };
 
   _renderLeft(props) {
-    return this._renderSubView(
-      props,
-      'left',
-      this._renderLeftComponent,
-      this.props.leftInterpolator
-    );
+    const { options } = this.props.getScreenDetails(props.scene);
+
+    if (props.scene.index === 0) {
+      return null;
+    }
+
+    // On Android, or if we have a custom header left, or if we have a custom back image, we
+    // do not use the modular header (which is the one that imitates UINavigationController)
+    if (
+      Platform.OS === 'android' ||
+      options.headerBackImage ||
+      options.headerLeft ||
+      options.headerLeft === null
+    ) {
+      return this._renderSubView(
+        props,
+        'left',
+        this._renderLeftComponent,
+        this.props.leftInterpolator
+      );
+    } else {
+      return this._renderModularSubView(
+        props,
+        'left',
+        this._renderModularLeftComponent,
+        this.props.leftLabelInterpolator,
+        this.props.leftButtonInterpolator
+      );
+    }
   }
 
   _renderTitle(props, options) {
@@ -195,6 +252,59 @@ class Header extends React.PureComponent {
       'right',
       this._renderRightComponent,
       this.props.rightInterpolator
+    );
+  }
+
+  _renderModularSubView(
+    props,
+    name,
+    renderer,
+    labelStyleInterpolator,
+    buttonStyleInterpolator
+  ) {
+    const { scene } = props;
+    const { index, isStale, key } = scene;
+
+    const offset = this.props.navigation.state.index - index;
+
+    if (Math.abs(offset) > 2) {
+      // Scene is far away from the active scene. Hides it to avoid unnecessary
+      // rendering.
+      return null;
+    }
+
+    const ButtonContainer = ({ children }) => (
+      <Animated.View
+        style={[buttonStyleInterpolator({ ...this.props, ...props })]}
+      >
+        {children}
+      </Animated.View>
+    );
+
+    const LabelContainer = ({ children }) => (
+      <Animated.View
+        style={[labelStyleInterpolator({ ...this.props, ...props })]}
+      >
+        {children}
+      </Animated.View>
+    );
+
+    const subView = renderer(props, ButtonContainer, LabelContainer);
+
+    if (subView === null) {
+      return subView;
+    }
+
+    const pointerEvents = offset !== 0 || isStale ? 'none' : 'box-none';
+
+    return (
+      <View
+        key={`${name}_${key}`}
+        pointerEvents={pointerEvents}
+        style={[styles.item, styles[name], props.style]}
+      >
+        {subView}
+      </View>
     );
   }
 
@@ -246,16 +356,43 @@ class Header extends React.PureComponent {
       hasRightComponent: !!right,
     });
 
-    return (
-      <View
-        style={[StyleSheet.absoluteFill, styles.header]}
-        key={`scene_${props.scene.key}`}
-      >
-        {title}
-        {left}
-        {right}
-      </View>
-    );
+    const wrapperProps = {
+      style: [StyleSheet.absoluteFill, styles.header],
+      key: `scene_${props.scene.key}`,
+    };
+
+    console.log(props);
+
+    const { options } = this.props.getScreenDetails(props.scene);
+    if (
+      options.headerLeft ||
+      options.headerBackImage ||
+      Platform.OS === 'android'
+    ) {
+      return (
+        <View {...wrapperProps}>
+          {title}
+          {left}
+          {right}
+        </View>
+      );
+    } else {
+      return (
+        <MaskedViewIOS
+          {...wrapperProps}
+          maskElement={
+            <View style={{ flex: 1, flexDirection: 'row' }}>
+              <Image source={require('../assets/back-icon-mask.png')} />
+              <View style={{ flex: 1, backgroundColor: '#eee' }} />
+            </View>
+          }
+        >
+          {title}
+          {left}
+          {right}
+        </MaskedViewIOS>
+      );
+    }
   }
 
   render() {
@@ -303,13 +440,31 @@ class Header extends React.PureComponent {
       headerStyle,
     ];
 
+    // if (Platform.OS === 'ios') {
+    //   appBar = (
+    //     <MaskedViewIOS
+    //       style={styles.appBar}
+    //       maskElement={
+    //         <View style={{ flex: 1, flexDirection: 'row' }}>
+    //           <Image source={require('../assets/back-icon-mask.png')} />
+    //           <View style={{ flex: 1, backgroundColor: '#eee' }} />
+    //         </View>
+    //       }
+    //     >
+    //       {appBar}
+    //     </MaskedViewIOS>
+    //   );
+    // } else {
+    appBar = <View style={styles.appBar}>{appBar}</View>;
+    // }
+
     return (
       <Animated.View {...rest}>
         <SafeAreaView
           style={containerStyles}
           forceInset={{ top: 'always', bottom: 'never' }}
         >
-          <View style={styles.appBar}>{appBar}</View>
+          {appBar}
         </SafeAreaView>
       </Animated.View>
     );

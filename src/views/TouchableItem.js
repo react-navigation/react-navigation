@@ -21,6 +21,7 @@ export default class TouchableItem extends React.Component {
   static defaultProps = {
     borderless: false,
     pressColor: 'rgba(0, 0, 0, .32)',
+    hitSlop: { top: 20, left: 20, right: 20, bottom: 20 },
   };
 
   render() {

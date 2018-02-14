@@ -1,7 +1,7 @@
 /* @flow */
 
 import React from 'react';
-import { Constants, ScreenOrientation } from 'expo';
+import { Asset, Constants, ScreenOrientation } from 'expo';
 
 ScreenOrientation.allow(ScreenOrientation.Orientation.ALL);
 
@@ -127,6 +127,11 @@ class MainScreen extends React.Component<any, State> {
   state = {
     scrollY: new Animated.Value(0),
   };
+
+  componentWillMount() {
+    Asset.fromModule(require('react-navigation/src/views/assets/back-icon-mask.png')).downloadAsync();
+    Asset.fromModule(require('react-navigation/src/views/assets/back-icon.png')).downloadAsync();
+  }
 
   render() {
     const { navigation } = this.props;
