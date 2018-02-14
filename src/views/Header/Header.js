@@ -27,6 +27,7 @@ class Header extends React.PureComponent {
     leftInterpolator: HeaderStyleInterpolator.forLeft,
     leftButtonInterpolator: HeaderStyleInterpolator.forLeftButton,
     leftLabelInterpolator: HeaderStyleInterpolator.forLeftLabel,
+    titleFromLeftInterpolator: HeaderStyleInterpolator.forCenterFromLeft,
     titleInterpolator: HeaderStyleInterpolator.forCenter,
     rightInterpolator: HeaderStyleInterpolator.forRight,
   };
@@ -194,10 +195,12 @@ class Header extends React.PureComponent {
       return null;
     }
 
+    const { transitionPreset } = this.props;
+
     // On Android, or if we have a custom header left, or if we have a custom back image, we
     // do not use the modular header (which is the one that imitates UINavigationController)
     if (
-      Platform.OS === 'android' ||
+      transitionPreset !== 'standard-ios' ||
       options.headerBackImage ||
       options.headerLeft ||
       options.headerLeft === null
@@ -221,6 +224,7 @@ class Header extends React.PureComponent {
 
   _renderTitle(props, options) {
     const style = {};
+    const { transitionPreset } = this.props;
 
     if (Platform.OS === 'android') {
       if (!options.hasLeftComponent) {
@@ -242,7 +246,9 @@ class Header extends React.PureComponent {
       { ...props, style },
       'title',
       this._renderTitleComponent,
-      this.props.titleInterpolator
+      transitionPreset === 'standard-ios'
+        ? this.props.titleFromLeftInterpolator
+        : this.props.titleInterpolator
     );
   }
 
@@ -438,31 +444,13 @@ class Header extends React.PureComponent {
       headerStyle,
     ];
 
-    // if (Platform.OS === 'ios') {
-    //   appBar = (
-    //     <MaskedViewIOS
-    //       style={styles.appBar}
-    //       maskElement={
-    //         <View style={{ flex: 1, flexDirection: 'row' }}>
-    //           <Image source={require('../assets/back-icon-mask.png')} />
-    //           <View style={{ flex: 1, backgroundColor: '#eee' }} />
-    //         </View>
-    //       }
-    //     >
-    //       {appBar}
-    //     </MaskedViewIOS>
-    //   );
-    // } else {
-    appBar = <View style={styles.appBar}>{appBar}</View>;
-    // }
-
     return (
       <Animated.View {...rest}>
         <SafeAreaView
           style={containerStyles}
           forceInset={{ top: 'always', bottom: 'never' }}
         >
-          {appBar}
+          <View style={styles.appBar}>{appBar}</View>
         </SafeAreaView>
       </Animated.View>
     );
