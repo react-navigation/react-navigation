@@ -1102,4 +1102,7 @@ declare module 'react-navigation' {
   declare export function withNavigation<T: {}>(
     Component: React$ComponentType<T & _NavigationInjectedProps>
   ): React$ComponentType<T>;
+  declare export function withNavigationFocus<T: {}>(
+    Component: React$ComponentType<T & _NavigationInjectedProps>
+  ): React$ComponentType<T>;
 }

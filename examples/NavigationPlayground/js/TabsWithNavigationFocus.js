@@ -18,8 +18,8 @@ const createTabScreen = name => {
         justifyContent: 'center',
       }}
     >
-      <SampleText>Tab {name}</SampleText>
-      <SampleText>IsFocused={isFocused ? 'true' : 'false'}</SampleText>
+      <SampleText>{'Tab=' + name}</SampleText>
+      <SampleText>{'IsFocused=' + isFocused ? 'true' : 'false'}</SampleText>
     </SafeAreaView>
   );
 
