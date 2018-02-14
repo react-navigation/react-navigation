@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
     transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }],
   },
   iconWithTitle: {
-    marginRight: 6,
+    marginRight: 3,
   },
 });
 

@@ -51,14 +51,8 @@ function forLeftLabel(props) {
 
   return {
     opacity: position.interpolate({
-      inputRange: [
-        first,
-        first + Math.abs(index - first) / 2,
-        index,
-        last - Math.abs(last - index) / 1.5,
-        last,
-      ],
-      outputRange: [0, 0, 1, 0, 0],
+      inputRange: [first, first + Math.abs(index - first) / 2, index, last],
+      outputRange: [0, 0, 1, 0],
     }),
     transform: [
       {
