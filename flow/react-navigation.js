@@ -332,12 +332,12 @@ declare module 'react-navigation' {
     navigationOptions?: ?NavigationScreenConfig<Options>,
   };
 
-  declare export type NavigationRouteConfig = 
-  | NavigationComponent
-  | {
-    navigationOptions?: NavigationScreenConfig<*>,
-    path?: string,
-  } & NavigationScreenRouteConfig;
+  declare export type NavigationRouteConfig =
+    | NavigationComponent
+    | ({
+        navigationOptions?: NavigationScreenConfig<*>,
+        path?: string,
+      } & NavigationScreenRouteConfig);
 
   declare export type NavigationScreenRouteConfig =
     | NavigationComponent
@@ -408,6 +408,7 @@ declare module 'react-navigation' {
   declare export type NavigationStackViewConfig = {|
     mode?: 'card' | 'modal',
     headerMode?: HeaderMode,
+    headerTransitionStyle?: 'fade-in-place' | 'uikit',
     cardStyle?: ViewStyleProp,
     transitionConfig?: () => TransitionConfig,
     onTransitionStart?: () => void,
