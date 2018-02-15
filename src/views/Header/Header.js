@@ -126,7 +126,7 @@ class Header extends React.PureComponent {
     );
   };
 
-  _renderLeftComponent = (props, buttonInterpolator) => {
+  _renderLeftComponent = props => {
     const { options } = this.props.getScreenDetails(props.scene);
 
     if (
@@ -390,10 +390,8 @@ class Header extends React.PureComponent {
         </View>
       );
     } else {
-      const MaskedView = MaskedViewIOS;
-      // const MaskedView = DebugMaskedViewIOS;
       return (
-        <MaskedView
+        <MaskedViewIOS
           {...wrapperProps}
           maskElement={
             <View style={styles.iconMaskContainer}>
@@ -408,7 +406,7 @@ class Header extends React.PureComponent {
           {title}
           {left}
           {right}
-        </MaskedView>
+        </MaskedViewIOS>
       );
     }
   }

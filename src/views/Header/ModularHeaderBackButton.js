@@ -40,7 +40,8 @@ class ModularHeaderBackButton extends React.PureComponent {
 
     let backButtonTitle = renderTruncated ? truncatedTitle : title;
 
-    // TODO: obviously fix this
+    // TODO: When we've sorted out measuring in the header, let's revisit this.
+    // This is clearly a bad workaround.
     if (backButtonTitle.length > 8) {
       backButtonTitle = truncatedTitle;
     }
