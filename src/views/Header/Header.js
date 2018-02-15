@@ -206,7 +206,7 @@ class Header extends React.PureComponent {
     // On Android, or if we have a custom header left, or if we have a custom back image, we
     // do not use the modular header (which is the one that imitates UINavigationController)
     if (
-      transitionPreset !== 'standard-ios' ||
+      transitionPreset !== 'uikit' ||
       options.headerBackImage ||
       options.headerLeft ||
       options.headerLeft === null
@@ -252,7 +252,7 @@ class Header extends React.PureComponent {
       { ...props, style },
       'title',
       this._renderTitleComponent,
-      transitionPreset === 'standard-ios'
+      transitionPreset === 'uikit'
         ? this.props.titleFromLeftInterpolator
         : this.props.titleInterpolator
     );
@@ -380,7 +380,7 @@ class Header extends React.PureComponent {
       options.headerLeft ||
       options.headerBackImage ||
       Platform.OS === 'android' ||
-      transitionPreset !== 'standard-ios'
+      transitionPreset !== 'uikit'
     ) {
       return (
         <View {...wrapperProps}>

@@ -193,7 +193,7 @@ const SimpleStack = StackNavigator(
     },
   },
   {
-    headerTransitionPreset: 'standard-ios',
+    headerTransitionPreset: 'uikit',
   }
 );
 

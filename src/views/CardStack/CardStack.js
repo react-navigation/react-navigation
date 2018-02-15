@@ -371,7 +371,7 @@ class CardStack extends React.Component {
       return 'fade-in-place';
     }
 
-    // TODO: validations: 'fade-in-place' or 'standard-ios' are valid
+    // TODO: validations: 'fade-in-place' or 'uikit' are valid
     if (this.props.headerTransitionPreset) {
       return this.props.headerTransitionPreset;
     } else {
