@@ -1,6 +1,11 @@
 import { Dimensions, I18nManager } from 'react-native';
 import getSceneIndicesForInterpolationInputRange from '../../utils/getSceneIndicesForInterpolationInputRange';
 
+const crossFadeInterpolation = (first, index, last) => ({
+  inputRange: [first, index - 0.75, index - 0.5, index, index + 0.5, last],
+  outputRange: [0, 0, 0.2, 1, 0.5, 0],
+});
+
 /**
  * Utility that builds the style for the navigation header.
  *
@@ -22,16 +27,7 @@ function forLeft(props) {
   const index = scene.index;
 
   return {
-    opacity: position.interpolate({
-      inputRange: [
-        first,
-        first + Math.abs(index - first) / 2,
-        index,
-        last - Math.abs(last - index) / 2,
-        last,
-      ],
-      outputRange: [0, 0.5, 1, 0.5, 0],
-    }),
+    opacity: position.interpolate(crossFadeInterpolation(first, index, last)),
   };
 }
 
@@ -45,10 +41,7 @@ function forCenter(props) {
   const index = scene.index;
 
   return {
-    opacity: position.interpolate({
-      inputRange: [first, index - 0.5, index, index + 0.5, last],
-      outputRange: [0, 0, 1, 0, 0],
-    }),
+    opacity: position.interpolate(crossFadeInterpolation(first, index, last)),
   };
 }
 
@@ -61,10 +54,7 @@ function forRight(props) {
   const index = scene.index;
 
   return {
-    opacity: position.interpolate({
-      inputRange: [first, index, last],
-      outputRange: [0, 1, 0],
-    }),
+    opacity: position.interpolate(crossFadeInterpolation(first, index, last)),
   };
 }
 
