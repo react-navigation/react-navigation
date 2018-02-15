@@ -237,6 +237,7 @@ exports[`TabBarBottom renders successfully 1`] = `
               Object {
                 "addListener": [Function],
                 "dispatch": undefined,
+                "getParam": [Function],
                 "goBack": [Function],
                 "navigate": [Function],
                 "pop": [Function],
