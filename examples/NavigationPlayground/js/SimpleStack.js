@@ -191,9 +191,6 @@ const SimpleStack = StackNavigator(
       path: 'photos/:name',
       screen: MyPhotosScreen,
     },
-  },
-  {
-    headerTransitionPreset: 'uikit',
   }
 );
 

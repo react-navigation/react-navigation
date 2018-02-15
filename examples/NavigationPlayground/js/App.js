@@ -28,13 +28,14 @@ import StacksInTabs from './StacksInTabs';
 import StacksOverTabs from './StacksOverTabs';
 import StacksWithKeys from './StacksWithKeys';
 import SimpleStack from './SimpleStack';
+import StackWithHeaderPreset from './StackWithHeaderPreset';
 import SimpleTabs from './SimpleTabs';
 import TabAnimations from './TabAnimations';
 
 const ExampleInfo = {
   SimpleStack: {
     name: 'Stack Example',
-    description: 'A card stack!',
+    description: 'A card stack',
   },
   SimpleTabs: {
     name: 'Tabs Example',
@@ -43,6 +44,10 @@ const ExampleInfo = {
   Drawer: {
     name: 'Drawer Example',
     description: 'Android-style drawer navigation',
+  },
+  StackWithHeaderPreset: {
+    name: 'UIKit-style Header Transitions',
+    description: 'Masked back button and sliding header items. iOS only.',
   },
   // MultipleDrawer: {
   //   name: 'Multiple Drawer Example',
@@ -102,6 +107,7 @@ const ExampleRoutes = {
   // MultipleDrawer: {
   //   screen: MultipleDrawer,
   // },
+  StackWithHeaderPreset: StackWithHeaderPreset,
   TabsInDrawer: TabsInDrawer,
   CustomTabs: CustomTabs,
   CustomTransitioner: CustomTransitioner,
