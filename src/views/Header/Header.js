@@ -22,6 +22,12 @@ const APPBAR_HEIGHT = Platform.OS === 'ios' ? 44 : 56;
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : 0;
 const TITLE_OFFSET = Platform.OS === 'ios' ? 70 : 56;
 
+const getAppBarHeight = isLandscape => {
+  return Platform.OS === 'ios'
+    ? isLandscape && !Platform.isPad ? 32 : 44
+    : 56;
+};
+
 class Header extends React.PureComponent {
   static defaultProps = {
     leftInterpolator: HeaderStyleInterpolator.forLeft,
@@ -367,11 +373,14 @@ class Header extends React.PureComponent {
       key: `scene_${props.scene.key}`,
     };
 
+    const { isLandscape, transitionPreset } = this.props;
     const { options } = this.props.getScreenDetails(props.scene);
+
     if (
       options.headerLeft ||
       options.headerBackImage ||
-      Platform.OS === 'android'
+      Platform.OS === 'android' ||
+      transitionPreset !== 'standard-ios'
     ) {
       return (
         <View {...wrapperProps}>
@@ -381,20 +390,25 @@ class Header extends React.PureComponent {
         </View>
       );
     } else {
+      const MaskedView = MaskedViewIOS;
+      // const MaskedView = DebugMaskedViewIOS;
       return (
-        <MaskedViewIOS
+        <MaskedView
           {...wrapperProps}
           maskElement={
-            <View style={{ flex: 1, flexDirection: 'row' }}>
-              <Image source={require('../assets/back-icon-mask.png')} />
-              <View style={{ flex: 1, backgroundColor: '#eee' }} />
+            <View style={styles.iconMaskContainer}>
+              <Image
+                source={require('../assets/back-icon-mask.png')}
+                style={styles.iconMask}
+              />
+              <View style={styles.iconMaskFillerRect} />
             </View>
           }
         >
           {title}
           {left}
           {right}
-        </MaskedViewIOS>
+        </MaskedView>
       );
     }
   }
@@ -434,8 +448,7 @@ class Header extends React.PureComponent {
 
     const { options } = this.props.getScreenDetails(scene);
     const { headerStyle } = options;
-    const appBarHeight =
-      Platform.OS === 'ios' ? (isLandscape && !Platform.isPad ? 32 : 44) : 56;
+    const appBarHeight = getAppBarHeight(isLandscape);
     const containerStyles = [
       styles.container,
       {
@@ -490,6 +503,25 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'transparent',
+  },
+  iconMaskContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  iconMaskFillerRect: {
+    flex: 1,
+    backgroundColor: '#d8d8d8',
+    marginLeft: -3,
+  },
+  iconMask: {
+    // These are mostly the same as the icon in ModularHeaderBackButton
+    height: 21,
+    width: 12,
+    marginLeft: 9,
+    marginTop: -0.5, // resizes down to 20.5
+    alignSelf: 'center',
+    resizeMode: 'contain',
   },
   title: {
     bottom: 0,
