@@ -408,7 +408,7 @@ declare module 'react-navigation' {
   declare export type NavigationStackViewConfig = {|
     mode?: 'card' | 'modal',
     headerMode?: HeaderMode,
-    headerTransitionStyle?: 'fade-in-place' | 'uikit',
+    headerTransitionPreset?: 'fade-in-place' | 'uikit',
     cardStyle?: ViewStyleProp,
     transitionConfig?: () => TransitionConfig,
     onTransitionStart?: () => void,
