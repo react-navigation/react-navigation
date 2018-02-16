@@ -57,6 +57,7 @@ class CardStackTransitioner extends React.Component {
     const {
       screenProps,
       headerMode,
+      headerTransitionPreset,
       mode,
       router,
       cardStyle,
@@ -66,6 +67,7 @@ class CardStackTransitioner extends React.Component {
       <CardStack
         screenProps={screenProps}
         headerMode={headerMode}
+        headerTransitionPreset={headerTransitionPreset}
         mode={mode}
         router={router}
         cardStyle={cardStyle}

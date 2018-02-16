@@ -1,7 +1,7 @@
 /* @flow */
 
 import React from 'react';
-import { Constants, ScreenOrientation } from 'expo';
+import { Asset, Constants, ScreenOrientation } from 'expo';
 
 ScreenOrientation.allow(ScreenOrientation.Orientation.ALL);
 
@@ -28,13 +28,14 @@ import StacksInTabs from './StacksInTabs';
 import StacksOverTabs from './StacksOverTabs';
 import StacksWithKeys from './StacksWithKeys';
 import SimpleStack from './SimpleStack';
+import StackWithHeaderPreset from './StackWithHeaderPreset';
 import SimpleTabs from './SimpleTabs';
 import TabAnimations from './TabAnimations';
 
 const ExampleInfo = {
   SimpleStack: {
     name: 'Stack Example',
-    description: 'A card stack!',
+    description: 'A card stack',
   },
   SimpleTabs: {
     name: 'Tabs Example',
@@ -43,6 +44,10 @@ const ExampleInfo = {
   Drawer: {
     name: 'Drawer Example',
     description: 'Android-style drawer navigation',
+  },
+  StackWithHeaderPreset: {
+    name: 'UIKit-style Header Transitions',
+    description: 'Masked back button and sliding header items. iOS only.',
   },
   // MultipleDrawer: {
   //   name: 'Multiple Drawer Example',
@@ -102,6 +107,7 @@ const ExampleRoutes = {
   // MultipleDrawer: {
   //   screen: MultipleDrawer,
   // },
+  StackWithHeaderPreset: StackWithHeaderPreset,
   TabsInDrawer: TabsInDrawer,
   CustomTabs: CustomTabs,
   CustomTransitioner: CustomTransitioner,
@@ -127,6 +133,11 @@ class MainScreen extends React.Component<any, State> {
   state = {
     scrollY: new Animated.Value(0),
   };
+
+  componentWillMount() {
+    Asset.fromModule(require('react-navigation/src/views/assets/back-icon-mask.png')).downloadAsync();
+    Asset.fromModule(require('react-navigation/src/views/assets/back-icon.png')).downloadAsync();
+  }
 
   render() {
     const { navigation } = this.props;
