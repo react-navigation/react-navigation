@@ -167,14 +167,7 @@ exports[`DrawerNavigator renders successfully 1`] = `
                 accessible={true}
                 collapsable={undefined}
                 hasTVPreferredFocus={undefined}
-                hitSlop={
-                  Object {
-                    "bottom": 15,
-                    "left": 15,
-                    "right": 15,
-                    "top": 15,
-                  }
-                }
+                hitSlop={undefined}
                 isTVSelectable={true}
                 nativeID={undefined}
                 onLayout={undefined}
