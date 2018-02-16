@@ -111,7 +111,7 @@ function forLeftLabel(props) {
     // noticable to the user
     opacity: position.interpolate({
       inputRange: [first, index - 0.35, index, index + 0.5, last],
-      outputRange: [0, 0, 1, 0, 0],
+      outputRange: [0, 0, 1, 0.5, 0],
     }),
     transform: [
       {
@@ -119,7 +119,7 @@ function forLeftLabel(props) {
           inputRange: [first, index, last],
           outputRange: I18nManager.isRTL
             ? [-offset, 0, offset]
-            : [offset, 0, -offset],
+            : [offset, 0, -offset * 1.5],
         }),
       },
     ],
