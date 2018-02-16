@@ -20,7 +20,7 @@ class HomeScreen extends React.Component<NavScreenProps> {
     const { navigation } = this.props;
 
     return (
-      <SafeAreaView>
+      <SafeAreaView style={{ paddingTop: 30 }}>
         <Button
           onPress={() => navigation.push('Other')}
           title="Push another screen"
@@ -42,7 +42,7 @@ class OtherScreen extends React.Component<NavScreenProps> {
     const { navigation } = this.props;
 
     return (
-      <SafeAreaView>
+      <SafeAreaView style={{ paddingTop: 30 }}>
         <Button
           onPress={() => navigation.push('Other')}
           title="Push another screen"
