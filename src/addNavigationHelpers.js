@@ -22,7 +22,12 @@ export default function(navigation) {
     navigate: (navigateTo, params, action, key) => {
       if (typeof navigateTo === 'string') {
         return navigation.dispatch(
-          NavigationActions.navigate({ routeName: navigateTo, params, action, key })
+          NavigationActions.navigate({
+            routeName: navigateTo,
+            params,
+            action,
+            key,
+          })
         );
       }
       invariant(
