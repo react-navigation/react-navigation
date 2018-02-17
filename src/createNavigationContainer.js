@@ -26,6 +26,17 @@ export default function createNavigationContainer(Component) {
       this._validateProps(props);
 
       this._initialAction = NavigationActions.init();
+
+      if (this._isStateful()) {
+        this.subs = BackHandler.addEventListener('hardwareBackPress', () => {
+          if (!this._isMounted) {
+            this.subs && this.subs.remove();
+          } else {
+            this.dispatch(NavigationActions.back());
+          }
+        });
+      }
+
       this.state = {
         nav: this._isStateful()
           ? Component.router.getStateForAction(this._initialAction)
@@ -125,13 +136,10 @@ export default function createNavigationContainer(Component) {
     }
 
     componentDidMount() {
+      this._isMounted = true;
       if (!this._isStateful()) {
         return;
       }
-
-      this.subs = BackHandler.addEventListener('hardwareBackPress', () =>
-        this.dispatch(NavigationActions.back())
-      );
 
       Linking.addEventListener('url', this._handleOpenURL);
 
@@ -148,6 +156,7 @@ export default function createNavigationContainer(Component) {
     }
 
     componentWillUnmount() {
+      this._isMounted = false;
       Linking.removeEventListener('url', this._handleOpenURL);
       this.subs && this.subs.remove();
     }
