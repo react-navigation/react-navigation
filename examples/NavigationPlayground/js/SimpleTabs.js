@@ -163,6 +163,8 @@ const SimpleTabs = TabNavigator(
     },
   },
   {
+    lazy: true,
+    removeClippedSubviews: true,
     tabBarOptions: {
       activeTintColor: Platform.OS === 'ios' ? '#e91e63' : '#fff',
     },
