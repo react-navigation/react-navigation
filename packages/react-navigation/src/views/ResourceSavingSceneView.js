@@ -14,12 +14,10 @@ export default class ResourceSavingSceneView extends React.PureComponent {
     const focusedIndex = props.navigation.state.index;
     const focusedKey = props.navigation.state.routes[focusedIndex].key;
     const isFocused = key === focusedKey;
-    const isNavigator = !!props.childNavigation.state.routes;
-    const awake = !isNavigator && props.lazy ? isFocused : true;
 
     this.state = {
-      awake: true,
-      visible: true, // isFocused,
+      awake: props.lazy ? isFocused : true,
+      visible: isFocused,
     };
   }
 
@@ -35,7 +33,7 @@ export default class ResourceSavingSceneView extends React.PureComponent {
   }
 
   render() {
-    const { visible, awake } = this.state;
+    const { awake, visible } = this.state;
     const {
       childNavigation,
       navigation,
@@ -54,12 +52,22 @@ export default class ResourceSavingSceneView extends React.PureComponent {
             : !visible && removeClippedSubviews
         }
       >
-        <View style={visible ? styles.innerAttached : styles.innerDetached}>
+        <View
+          style={
+            this._mustAlwaysBeVisible() || visible
+              ? styles.innerAttached
+              : styles.innerDetached
+          }
+        >
           {awake ? <SceneView {...rest} navigation={childNavigation} /> : null}
         </View>
       </View>
     );
   }
+
+  _mustAlwaysBeVisible = () => {
+    return this.props.animationEnabled || this.props.swipeEnabled;
+  };
 
   _onAction = payload => {
     // We do not care about transition complete events, they won't actually change the state
