@@ -517,7 +517,8 @@ declare module 'react-navigation' {
     navigate: (
       routeName: string,
       params?: NavigationParams,
-      action?: NavigationNavigateAction
+      action?: NavigationNavigateAction,
+      key?: string
     ) => boolean,
     setParams: (newParams: NavigationParams) => boolean,
     addListener: (

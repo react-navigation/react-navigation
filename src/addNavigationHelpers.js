@@ -19,10 +19,15 @@ export default function(navigation) {
         NavigationActions.back({ key: actualizedKey })
       );
     },
-    navigate: (navigateTo, params, action) => {
+    navigate: (navigateTo, params, action, key) => {
       if (typeof navigateTo === 'string') {
         return navigation.dispatch(
-          NavigationActions.navigate({ routeName: navigateTo, params, action })
+          NavigationActions.navigate({
+            routeName: navigateTo,
+            params,
+            action,
+            key,
+          })
         );
       }
       invariant(
