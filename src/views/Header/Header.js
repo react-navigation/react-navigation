@@ -136,6 +136,10 @@ class Header extends React.PureComponent {
       return options.headerLeft;
     }
 
+    if (props.scene.index === 0) {
+      return;
+    }
+
     const backButtonTitle = this._getBackButtonTitleString(props.scene);
     const truncatedBackButtonTitle = this._getTruncatedBackButtonTitle(
       props.scene
@@ -196,10 +200,6 @@ class Header extends React.PureComponent {
 
   _renderLeft(props) {
     const { options } = this.props.getScreenDetails(props.scene);
-
-    if (props.scene.index === 0) {
-      return null;
-    }
 
     const { transitionPreset } = this.props;
 
