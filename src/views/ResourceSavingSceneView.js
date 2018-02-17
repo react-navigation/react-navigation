@@ -68,8 +68,6 @@ export default class ResourceSavingSceneView extends React.PureComponent {
       return;
     }
 
-    // console.log(`onAction! ${payload.action.type}`);
-
     const { routes, index } = payload.state;
     const key = this.props.childNavigation.state.key;
 
