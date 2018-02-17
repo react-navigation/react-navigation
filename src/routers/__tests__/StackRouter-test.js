@@ -355,7 +355,7 @@ describe('StackRouter', () => {
       index: 0,
       isTransitioning: false,
       key: 'StackRouterRoot',
-      routes: [{ key: 'id-0', routeName: 'foo' }],
+      routes: [{ key: 'foo', routeName: 'foo' }],
     });
     const pushedState = TestRouter.getStateForAction(
       NavigationActions.navigate({ routeName: 'qux' }),
@@ -636,7 +636,7 @@ describe('StackRouter', () => {
       key: 'StackRouterRoot',
       routes: [
         {
-          key: 'id-0',
+          key: 'Foo',
           routeName: 'Foo',
         },
       ],
@@ -664,7 +664,7 @@ describe('StackRouter', () => {
       key: 'StackRouterRoot',
       routes: [
         {
-          key: 'id-0',
+          key: 'Foo',
           routeName: 'Foo',
         },
       ],
@@ -761,7 +761,7 @@ describe('StackRouter', () => {
       key: 'StackRouterRoot',
       routes: [
         {
-          key: 'id-0',
+          key: 'Foo',
           routeName: 'Foo',
         },
       ],
@@ -789,7 +789,7 @@ describe('StackRouter', () => {
       key: 'StackRouterRoot',
       routes: [
         {
-          key: 'id-0',
+          key: 'Foo',
           routeName: 'Foo',
         },
       ],
@@ -863,7 +863,7 @@ describe('StackRouter', () => {
       key: 'StackRouterRoot',
       routes: [
         {
-          key: 'id-0',
+          key: 'Bar',
           routeName: 'Bar',
         },
       ],
@@ -972,14 +972,14 @@ describe('StackRouter', () => {
       {
         type: NavigationActions.SET_PARAMS,
         params: { name: 'foobar' },
-        key: 'id-0',
+        key: 'Quux',
       },
       state
     );
     expect(state2 && state2.index).toEqual(0);
     expect(state2 && state2.routes[0].routes[0].routes).toEqual([
       {
-        key: 'id-0',
+        key: 'Quux',
         routeName: 'Quux',
         params: { name: 'foobar' },
       },
