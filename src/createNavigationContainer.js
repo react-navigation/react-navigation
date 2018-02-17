@@ -32,7 +32,10 @@ export default function createNavigationContainer(Component) {
           if (!this._isMounted) {
             this.subs && this.subs.remove();
           } else {
-            this.dispatch(NavigationActions.back());
+            // dispatch returns true if the action results in a state change,
+            // and false otherwise. This maps well to what BackHandler expects
+            // from a callback -- true if handled, false if not handled
+            return this.dispatch(NavigationActions.back());
           }
         });
       }
