@@ -305,6 +305,8 @@ export default (routeConfigs, stackConfig = {}) => {
 
       // Handle pop-to-top behavior. Make sure this happens after children have had a chance to handle the action, so that the inner stack pops to top first.
       if (action.type === NavigationActions.POP_TO_TOP) {
+        // If we're already at the top, then we return the state with a new
+        // identity so that the action is handled by this router.
         if (state.index === 0) {
           return {
             ...state,

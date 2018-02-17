@@ -544,6 +544,7 @@ describe('StackRouter', () => {
     expect(state2.index).toEqual(1);
     expect(state2.routes[1].index).toEqual(1);
     expect(state2.routes[1].routes[1].index).toEqual(1);
+    expect(state2.routes[1].routes[1].routes[1].routeName).toEqual('Corge');
   });
 
   test('Navigate with key is idempotent', () => {
