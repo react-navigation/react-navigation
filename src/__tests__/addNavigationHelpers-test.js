@@ -76,4 +76,43 @@ describe('addNavigationHelpers', () => {
     });
     expect(mockedDispatch.mock.calls.length).toBe(1);
   });
+
+  it('handles GetParams action', () => {
+    const mockedDispatch = jest
+      .fn(() => false)
+      .mockImplementationOnce(() => true);
+    expect(
+      addNavigationHelpers({
+        state: { key: 'B', routeName: 'Settings', params: { name: 'Peter' } },
+        dispatch: mockedDispatch,
+        addListener: dummyEventSubscriber,
+      }).getParam('name', 'Brent')
+    ).toEqual('Peter');
+  });
+
+  it('handles GetParams action with default param', () => {
+    const mockedDispatch = jest
+      .fn(() => false)
+      .mockImplementationOnce(() => true);
+    expect(
+      addNavigationHelpers({
+        state: { key: 'B', routeName: 'Settings' },
+        dispatch: mockedDispatch,
+        addListener: dummyEventSubscriber,
+      }).getParam('name', 'Brent')
+    ).toEqual('Brent');
+  });
+
+  it('handles GetParams action with param value as null', () => {
+    const mockedDispatch = jest
+      .fn(() => false)
+      .mockImplementationOnce(() => true);
+    expect(
+      addNavigationHelpers({
+        state: { key: 'B', routeName: 'Settings', params: { name: null } },
+        dispatch: mockedDispatch,
+        addListener: dummyEventSubscriber,
+      }).getParam('name')
+    ).toEqual(null);
+  });
 });

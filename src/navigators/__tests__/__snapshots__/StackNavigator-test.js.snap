@@ -98,6 +98,7 @@ exports[`StackNavigator applies correct values when headerRight is present 1`] =
         Object {
           "addListener": [Function],
           "dispatch": [Function],
+          "getParam": [Function],
           "goBack": [Function],
           "navigate": [Function],
           "pop": [Function],
@@ -337,6 +338,7 @@ exports[`StackNavigator renders successfully 1`] = `
         Object {
           "addListener": [Function],
           "dispatch": [Function],
+          "getParam": [Function],
           "goBack": [Function],
           "navigate": [Function],
           "pop": [Function],
