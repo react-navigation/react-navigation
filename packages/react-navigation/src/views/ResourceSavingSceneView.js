@@ -14,10 +14,12 @@ export default class ResourceSavingSceneView extends React.PureComponent {
     const focusedIndex = props.navigation.state.index;
     const focusedKey = props.navigation.state.routes[focusedIndex].key;
     const isFocused = key === focusedKey;
+    const isNavigator = !!props.childNavigation.state.routes;
+    const awake = !isNavigator && props.lazy ? isFocused : true;
 
     this.state = {
-      awake: props.lazy ? isFocused : true,
-      visible: isFocused,
+      awake: true,
+      visible: true, // isFocused,
     };
   }
 
@@ -53,7 +55,7 @@ export default class ResourceSavingSceneView extends React.PureComponent {
         }
       >
         <View style={visible ? styles.innerAttached : styles.innerDetached}>
-          {awake ? <SceneView {...rest} navigation={navigation} /> : null}
+          {awake ? <SceneView {...rest} navigation={childNavigation} /> : null}
         </View>
       </View>
     );
