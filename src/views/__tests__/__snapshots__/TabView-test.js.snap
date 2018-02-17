@@ -245,14 +245,18 @@ exports[`TabBarBottom renders successfully 1`] = `
               navigation={
                 Object {
                   "addListener": [Function],
+                  "dispatch": undefined,
+                  "getParam": [Function],
+                  "goBack": [Function],
+                  "navigate": [Function],
+                  "pop": [Function],
+                  "popToTop": [Function],
+                  "push": [Function],
+                  "replace": [Function],
+                  "setParams": [Function],
                   "state": Object {
-                    "index": 0,
-                    "routes": Array [
-                      Object {
-                        "key": "s1",
-                        "routeName": "s1",
-                      },
-                    ],
+                    "key": "s1",
+                    "routeName": "s1",
                   },
                 }
               }
