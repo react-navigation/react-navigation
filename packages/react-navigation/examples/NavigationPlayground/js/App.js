@@ -31,6 +31,7 @@ import SimpleStack from './SimpleStack';
 import StackWithHeaderPreset from './StackWithHeaderPreset';
 import SimpleTabs from './SimpleTabs';
 import TabAnimations from './TabAnimations';
+import TabsWithNavigationFocus from './TabsWithNavigationFocus';
 
 const ExampleInfo = {
   SimpleStack: {
@@ -99,7 +100,12 @@ const ExampleInfo = {
     name: 'Animated Tabs Example',
     description: 'Tab transitions have custom animations',
   },
+  TabsWithNavigationFocus: {
+    name: 'Tabs using withNavigationFocus HOC',
+    description: 'Tab views will receive isFocused prop from HOC',
+  },
 };
+
 const ExampleRoutes = {
   SimpleStack: SimpleStack,
   SimpleTabs: SimpleTabs,
@@ -124,6 +130,7 @@ const ExampleRoutes = {
     path: 'settings',
   },
   TabAnimations: TabAnimations,
+  TabsWithNavigationFocus: TabsWithNavigationFocus,
 };
 
 type State = {
