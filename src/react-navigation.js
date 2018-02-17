@@ -88,4 +88,7 @@ module.exports = {
   get withNavigation() {
     return require('./views/withNavigation').default;
   },
+  get withNavigationFocus() {
+    return require('./views/withNavigationFocus').default;
+  },
 };
