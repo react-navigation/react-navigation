@@ -27,10 +27,13 @@ class TabView extends React.PureComponent {
     const TabComponent = this.props.router.getComponentForRouteName(
       route.routeName
     );
+
     return (
       <ResourceSavingSceneView
         lazy={this.props.lazy}
         removeClippedSubViews={this.props.removeClippedSubviews}
+        animationEnabled={this.props.animationEnabled}
+        swipeEnabled={this.props.swipeEnabled}
         screenProps={screenProps}
         component={TabComponent}
         navigation={this.props.navigation}

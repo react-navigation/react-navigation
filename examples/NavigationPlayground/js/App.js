@@ -101,8 +101,8 @@ const ExampleInfo = {
     description: 'Tab transitions have custom animations',
   },
   TabsWithNavigationFocus: {
-    name: 'Tabs using withNavigationFocus HOC',
-    description: 'Tab views will receive isFocused prop from HOC',
+    name: 'withNavigationFocus',
+    description: 'Receive the focus prop to know when a screen is focused',
   },
 };
 
@@ -142,8 +142,12 @@ class MainScreen extends React.Component<any, State> {
   };
 
   componentWillMount() {
-    Asset.fromModule(require('react-navigation/src/views/assets/back-icon-mask.png')).downloadAsync();
-    Asset.fromModule(require('react-navigation/src/views/assets/back-icon.png')).downloadAsync();
+    Asset.fromModule(
+      require('react-navigation/src/views/assets/back-icon-mask.png')
+    ).downloadAsync();
+    Asset.fromModule(
+      require('react-navigation/src/views/assets/back-icon.png')
+    ).downloadAsync();
   }
 
   render() {
