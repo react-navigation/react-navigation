@@ -19,6 +19,8 @@ const TabNavigator = (routeConfigs, config = {}) => {
     tabBarComponent,
     tabBarPosition,
     tabBarOptions,
+    lazy,
+    removeClippedSubviews,
     swipeEnabled,
     animationEnabled,
     configureTransition,
@@ -31,6 +33,8 @@ const TabNavigator = (routeConfigs, config = {}) => {
   const navigator = createNavigator(router, routeConfigs, config)(props => (
     <TabView
       {...props}
+      lazy={lazy}
+      removeClippedSubviews={removeClippedSubviews}
       tabBarComponent={tabBarComponent}
       tabBarPosition={tabBarPosition}
       tabBarOptions={tabBarOptions}

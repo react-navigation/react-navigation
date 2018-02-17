@@ -3,11 +3,13 @@ import { View, StyleSheet, Platform } from 'react-native';
 import { TabViewAnimated, TabViewPagerPan } from 'react-native-tab-view';
 import SafeAreaView from 'react-native-safe-area-view';
 
-import ResourceSavingLazySceneView from '../ResourceSavingLazySceneView';
+import ResourceSavingSceneView from '../ResourceSavingSceneView';
 import withCachedChildNavigation from '../../withCachedChildNavigation';
 
 class TabView extends React.PureComponent {
   static defaultProps = {
+    lazy: true,
+    removedClippedSubviews: true,
     // fix for https://github.com/react-native-community/react-native-tab-view/issues/312
     initialLayout: Platform.select({
       android: { width: 1, height: 0 },
@@ -26,7 +28,9 @@ class TabView extends React.PureComponent {
       route.routeName
     );
     return (
-      <ResourceSavingLazySceneView
+      <ResourceSavingSceneView
+        lazy={this.props.lazy}
+        removeClippedSubViews={this.props.removeClippedSubviews}
         screenProps={screenProps}
         component={TabComponent}
         navigation={this.props.navigation}
