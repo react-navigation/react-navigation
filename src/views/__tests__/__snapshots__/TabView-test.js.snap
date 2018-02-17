@@ -225,6 +225,8 @@ exports[`TabBarBottom renders successfully 1`] = `
         testID={undefined}
       >
         <View
+          collapsable={false}
+          removeClippedSubviews={false}
           style={
             Object {
               "flex": 1,
@@ -233,25 +235,30 @@ exports[`TabBarBottom renders successfully 1`] = `
           }
         >
           <View
-            navigation={
+            style={
               Object {
-                "addListener": [Function],
-                "dispatch": undefined,
-                "goBack": [Function],
-                "navigate": [Function],
-                "pop": [Function],
-                "popToTop": [Function],
-                "push": [Function],
-                "replace": [Function],
-                "setParams": [Function],
-                "state": Object {
-                  "key": "s1",
-                  "routeName": "s1",
-                },
+                "flex": 1,
               }
             }
-            screenProps={undefined}
-          />
+          >
+            <View
+              navigation={
+                Object {
+                  "addListener": [Function],
+                  "state": Object {
+                    "index": 0,
+                    "routes": Array [
+                      Object {
+                        "key": "s1",
+                        "routeName": "s1",
+                      },
+                    ],
+                  },
+                }
+              }
+              screenProps={undefined}
+            />
+          </View>
         </View>
       </View>
     </RCTScrollContentView>
