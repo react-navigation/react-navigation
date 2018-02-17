@@ -197,10 +197,6 @@ class Header extends React.PureComponent {
   _renderLeft(props) {
     const { options } = this.props.getScreenDetails(props.scene);
 
-    if (props.scene.index === 0) {
-      return null;
-    }
-
     const { transitionPreset } = this.props;
 
     // On Android, or if we have a custom header left, or if we have a custom back image, we
