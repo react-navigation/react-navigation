@@ -6,10 +6,10 @@ import {
   Image,
   Platform,
   StyleSheet,
-  MaskedViewIOS,
   View,
   ViewPropTypes,
 } from 'react-native';
+import { MaskedViewIOS } from '../../PlatformHelpers';
 import SafeAreaView from 'react-native-safe-area-view';
 
 import HeaderTitle from './HeaderTitle';
@@ -134,6 +134,10 @@ class Header extends React.PureComponent {
       options.headerLeft === null
     ) {
       return options.headerLeft;
+    }
+
+    if (props.scene.index === 0) {
+      return;
     }
 
     const backButtonTitle = this._getBackButtonTitleString(props.scene);
@@ -375,7 +379,7 @@ class Header extends React.PureComponent {
     if (
       options.headerLeft ||
       options.headerBackImage ||
-      Platform.OS === 'android' ||
+      Platform.OS !== 'ios' ||
       transitionPreset !== 'uikit'
     ) {
       return (
