@@ -155,64 +155,7 @@ export default (routeConfigs, stackConfig = {}) => {
     getStateForAction(action, state) {
       // Set up the initial state if needed
       if (!state) {
-<<<<<<< HEAD
-        let route = {};
-        const childRouter = childRouters[action.routeName];
-        // This is a push-like action, and childRouter will be a router or null if we are responsible for this routeName
-        if (behavesLikePushAction(action) && childRouter !== undefined) {
-          let childState = {};
-          // The router is null for normal leaf routes
-          if (childRouter !== null) {
-            const childAction =
-              action.action ||
-              NavigationActions.init({ params: action.params });
-            childState = childRouter.getStateForAction(childAction);
-          }
-          return {
-            key: 'StackRouterRoot',
-            isTransitioning: false,
-            index: 0,
-            routes: [
-              {
-                params: action.params,
-                ...childState,
-                key: action.key || generateKey(),
-                routeName: action.routeName,
-              },
-            ],
-          };
-        }
-
-        if (initialChildRouter) {
-          route = initialChildRouter.getStateForAction(
-            NavigationActions.navigate({
-              routeName: initialRouteName,
-              params: initialRouteParams,
-            })
-          );
-        }
-        const params = (route.params ||
-          action.params ||
-          initialRouteParams) && {
-          ...(route.params || {}),
-          ...(action.params || {}),
-          ...(initialRouteParams || {}),
-        };
-        route = {
-          ...route,
-          ...(params ? { params } : {}),
-          routeName: initialRouteName,
-          key: action.key || initialRouteName,
-        };
-        state = {
-          key: 'StackRouterRoot',
-          isTransitioning: false,
-          index: 0,
-          routes: [route],
-        };
-=======
         return getInitialState(action);
->>>>>>> 3ca47ec778c81ff0d4fd021a2ed29d5ccd509d05
       }
 
       // Check if the focused child scene wants to handle the action, as long as
