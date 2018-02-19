@@ -15,6 +15,7 @@ export default (routeConfigMap, stackConfig = {}) => {
     initialRouteParams,
     paths,
     headerMode,
+    headerTransitionPreset,
     mode,
     cardStyle,
     transitionConfig,
@@ -38,6 +39,7 @@ export default (routeConfigMap, stackConfig = {}) => {
       <CardStackTransitioner
         {...props}
         headerMode={headerMode}
+        headerTransitionPreset={headerTransitionPreset}
         mode={mode}
         cardStyle={cardStyle}
         transitionConfig={transitionConfig}

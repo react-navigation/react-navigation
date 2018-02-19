@@ -1,7 +1,7 @@
 /* @flow */
 
 import React from 'react';
-import { Constants, ScreenOrientation } from 'expo';
+import { Asset, Constants, ScreenOrientation } from 'expo';
 
 ScreenOrientation.allow(ScreenOrientation.Orientation.ALL);
 
@@ -28,8 +28,10 @@ import StacksInTabs from './StacksInTabs';
 import StacksOverTabs from './StacksOverTabs';
 import StacksWithKeys from './StacksWithKeys';
 import SimpleStack from './SimpleStack';
+import StackWithHeaderPreset from './StackWithHeaderPreset';
 import SimpleTabs from './SimpleTabs';
 import TabAnimations from './TabAnimations';
+import TabsWithNavigationFocus from './TabsWithNavigationFocus';
 
 const ExampleInfo = {
   SimpleStack: {
@@ -43,6 +45,10 @@ const ExampleInfo = {
   Drawer: {
     name: 'Drawer Example',
     description: 'Android-style drawer navigation',
+  },
+  StackWithHeaderPreset: {
+    name: 'UIKit-style Header Transitions',
+    description: 'Masked back button and sliding header items. iOS only.',
   },
   // MultipleDrawer: {
   //   name: 'Multiple Drawer Example',
@@ -94,7 +100,12 @@ const ExampleInfo = {
     name: 'Animated Tabs Example',
     description: 'Tab transitions have custom animations',
   },
+  // TabsWithNavigationFocus: {
+  //   name: 'withNavigationFocus',
+  //   description: 'Receive the focus prop to know when a screen is focused',
+  // },
 };
+
 const ExampleRoutes = {
   SimpleStack: SimpleStack,
   SimpleTabs: SimpleTabs,
@@ -102,6 +113,7 @@ const ExampleRoutes = {
   // MultipleDrawer: {
   //   screen: MultipleDrawer,
   // },
+  StackWithHeaderPreset: StackWithHeaderPreset,
   TabsInDrawer: TabsInDrawer,
   CustomTabs: CustomTabs,
   CustomTransitioner: CustomTransitioner,
@@ -118,6 +130,7 @@ const ExampleRoutes = {
     path: 'settings',
   },
   TabAnimations: TabAnimations,
+  // TabsWithNavigationFocus: TabsWithNavigationFocus,
 };
 
 type State = {
@@ -127,6 +140,15 @@ class MainScreen extends React.Component<any, State> {
   state = {
     scrollY: new Animated.Value(0),
   };
+
+  componentWillMount() {
+    Asset.fromModule(
+      require('react-navigation/src/views/assets/back-icon-mask.png')
+    ).downloadAsync();
+    Asset.fromModule(
+      require('react-navigation/src/views/assets/back-icon.png')
+    ).downloadAsync();
+  }
 
   render() {
     const { navigation } = this.props;
@@ -145,6 +167,12 @@ class MainScreen extends React.Component<any, State> {
     const opacity = this.state.scrollY.interpolate({
       inputRange: [0, 50],
       outputRange: [1, 0],
+      extrapolate: 'clamp',
+    });
+
+    const underlayOpacity = this.state.scrollY.interpolate({
+      inputRange: [0, 50],
+      outputRange: [0, 1],
       extrapolate: 'clamp',
     });
 
@@ -189,7 +217,7 @@ class MainScreen extends React.Component<any, State> {
           >
             <SafeAreaView
               style={styles.bannerContainer}
-              forceInset={{ top: 'always' }}
+              forceInset={{ top: 'always', bottom: 'never' }}
             >
               <View style={styles.banner}>
                 <Image
@@ -203,7 +231,7 @@ class MainScreen extends React.Component<any, State> {
             </SafeAreaView>
           </Animated.View>
 
-          <SafeAreaView forceInset={{ bottom: 'always' }}>
+          <SafeAreaView forceInset={{ bottom: 'always', horizontal: 'never' }}>
             <View style={{ backgroundColor: '#fff' }}>
               {Object.keys(ExampleRoutes).map((routeName: string) => (
                 <TouchableOpacity
@@ -221,7 +249,10 @@ class MainScreen extends React.Component<any, State> {
                     }
                   }}
                 >
-                  <View style={styles.itemContainer}>
+                  <SafeAreaView
+                    style={styles.itemContainer}
+                    forceInset={{ veritcal: 'never', bottom: 'never' }}
+                  >
                     <View style={styles.item}>
                       <Text style={styles.title}>
                         {ExampleInfo[routeName].name}
@@ -230,14 +261,16 @@ class MainScreen extends React.Component<any, State> {
                         {ExampleInfo[routeName].description}
                       </Text>
                     </View>
-                  </View>
+                  </SafeAreaView>
                 </TouchableOpacity>
               ))}
             </View>
           </SafeAreaView>
         </Animated.ScrollView>
         <StatusBar barStyle="light-content" />
-        <View style={styles.statusBarUnderlay} />
+        <Animated.View
+          style={[styles.statusBarUnderlay, { opacity: underlayOpacity }]}
+        />
       </View>
     );
   }
@@ -308,7 +341,6 @@ const styles = StyleSheet.create({
   },
   bannerContainer: {
     // backgroundColor: '#673ab7',
-    paddingTop: 20,
     alignItems: 'center',
   },
   banner: {

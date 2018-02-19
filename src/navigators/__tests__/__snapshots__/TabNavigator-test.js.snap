@@ -55,13 +55,23 @@ exports[`TabNavigator renders successfully 1`] = `
       testID={undefined}
     >
       <View
+        collapsable={false}
+        removeClippedSubviews={false}
         style={
           Object {
             "flex": 1,
             "overflow": "hidden",
           }
         }
-      />
+      >
+        <View
+          style={
+            Object {
+              "flex": 1,
+            }
+          }
+        />
+      </View>
     </View>
   </View>
   <View

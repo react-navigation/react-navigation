@@ -332,12 +332,12 @@ declare module 'react-navigation' {
     navigationOptions?: ?NavigationScreenConfig<Options>,
   };
 
-  declare export type NavigationRouteConfig = 
-  | NavigationComponent
-  | {
-    navigationOptions?: NavigationScreenConfig<*>,
-    path?: string,
-  } & NavigationScreenRouteConfig;
+  declare export type NavigationRouteConfig =
+    | NavigationComponent
+    | ({
+        navigationOptions?: NavigationScreenConfig<*>,
+        path?: string,
+      } & NavigationScreenRouteConfig);
 
   declare export type NavigationScreenRouteConfig =
     | NavigationComponent
@@ -408,6 +408,7 @@ declare module 'react-navigation' {
   declare export type NavigationStackViewConfig = {|
     mode?: 'card' | 'modal',
     headerMode?: HeaderMode,
+    headerTransitionPreset?: 'fade-in-place' | 'uikit',
     cardStyle?: ViewStyleProp,
     transitionConfig?: () => TransitionConfig,
     onTransitionStart?: () => void,
@@ -832,6 +833,8 @@ declare module 'react-navigation' {
   declare type _TabNavigatorConfig = {|
     ...NavigationTabRouterConfig,
     ..._TabViewConfig,
+    lazy?: boolean,
+    removeClippedSubviews?: boolean,
     containerOptions?: void,
   |};
   declare export function TabNavigator(
@@ -1100,6 +1103,9 @@ declare module 'react-navigation' {
     navigation: NavigationScreenProp<NavigationState>,
   };
   declare export function withNavigation<T: {}>(
+    Component: React$ComponentType<T & _NavigationInjectedProps>
+  ): React$ComponentType<T>;
+  declare export function withNavigationFocus<T: {}>(
     Component: React$ComponentType<T & _NavigationInjectedProps>
   ): React$ComponentType<T>;
 }

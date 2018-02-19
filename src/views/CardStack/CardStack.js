@@ -143,6 +143,7 @@ class CardStack extends React.Component {
       ...transitionProps,
       scene,
       mode: headerMode,
+      transitionPreset: this._getHeaderTransitionPreset(),
       getScreenDetails: this._getScreenDetails,
       leftInterpolator: headerLeftInterpolator,
       titleInterpolator: headerTitleInterpolator,
@@ -373,6 +374,21 @@ class CardStack extends React.Component {
       return 'screen';
     }
     return 'float';
+  }
+
+  _getHeaderTransitionPreset() {
+    // On Android or with header mode screen, we always just use in-place,
+    // we ignore the option entirely (at least until we have other presets)
+    if (Platform.OS === 'android' || this._getHeaderMode() === 'screen') {
+      return 'fade-in-place';
+    }
+
+    // TODO: validations: 'fade-in-place' or 'uikit' are valid
+    if (this.props.headerTransitionPreset) {
+      return this.props.headerTransitionPreset;
+    } else {
+      return 'fade-in-place';
+    }
   }
 
   _renderInnerScene(SceneComponent, scene) {

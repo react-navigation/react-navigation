@@ -19,14 +19,12 @@ type MyNavScreenProps = {
 
 class MyBackButton extends React.Component<any, any> {
   render() {
-    return (
-      <Button onPress={this._navigateBack} title="Custom Back" />
-    );
+    return <Button onPress={this._navigateBack} title="Custom Back" />;
   }
 
   _navigateBack = () => {
     this.props.navigation.goBack(null);
-  }
+  };
 }
 
 const MyBackButtonWithNavigation = withNavigation(MyBackButton);
@@ -108,7 +106,7 @@ type MyPhotosScreenProps = {
 class MyPhotosScreen extends React.Component<MyPhotosScreenProps> {
   static navigationOptions = {
     title: 'Photos',
-    headerLeft: <MyBackButtonWithNavigation />
+    headerLeft: <MyBackButtonWithNavigation />,
   };
   _s0: NavigationEventSubscription;
   _s1: NavigationEventSubscription;
@@ -180,18 +178,20 @@ MyProfileScreen.navigationOptions = props => {
   };
 };
 
-const SimpleStack = StackNavigator({
-  Home: {
-    screen: MyHomeScreen,
-  },
-  Profile: {
-    path: 'people/:name',
-    screen: MyProfileScreen,
-  },
-  Photos: {
-    path: 'photos/:name',
-    screen: MyPhotosScreen,
-  },
-});
+const SimpleStack = StackNavigator(
+  {
+    Home: {
+      screen: MyHomeScreen,
+    },
+    Profile: {
+      path: 'people/:name',
+      screen: MyProfileScreen,
+    },
+    Photos: {
+      path: 'photos/:name',
+      screen: MyPhotosScreen,
+    },
+  }
+);
 
 export default SimpleStack;
