@@ -85,7 +85,7 @@ class CardStack extends React.Component {
     if (props.screenProps !== this.props.screenProps) {
       this._screenDetails = {};
     }
-    props.transitionProps.scenes.forEach((newScene: *) => {
+    props.transitionProps.scenes.forEach(newScene => {
       if (
         this._screenDetails[newScene.key] &&
         this._screenDetails[newScene.key].state !== newScene.route
