@@ -85,7 +85,7 @@ class CardStack extends React.Component {
     if (props.screenProps !== this.props.screenProps) {
       this._screenDetails = {};
     }
-    props.scenes.forEach(newScene => {
+    props.transitionProps.scenes.forEach(newScene => {
       if (
         this._screenDetails[newScene.key] &&
         this._screenDetails[newScene.key].state !== newScene.route
@@ -96,7 +96,7 @@ class CardStack extends React.Component {
   }
 
   _getScreenDetails = scene => {
-    const { screenProps, navigation, router } = this.props;
+    const { screenProps, transitionProps: { navigation }, router } = this.props;
     let screenDetails = this._screenDetails[scene.key];
     if (!screenDetails || screenDetails.state !== scene.route) {
       const screenNavigation = addNavigationHelpers({
@@ -131,10 +131,16 @@ class CardStack extends React.Component {
       headerRightInterpolator,
     } = this._getTransitionConfig();
 
-    const { mode, ...passProps } = this.props;
+    const {
+      mode,
+      transitionProps,
+      prevTransitionProps,
+      ...passProps
+    } = this.props;
 
     return renderHeader({
       ...passProps,
+      ...transitionProps,
       scene,
       mode: headerMode,
       transitionPreset: this._getHeaderTransitionPreset(),
@@ -154,22 +160,22 @@ class CardStack extends React.Component {
     // when we'd do that with the current structure we have. `stopAnimation` callback
     // is also broken with native animated values that have no listeners so if we
     // want to remove this we have to fix this too.
-    animatedSubscribeValue(props.layout.width);
-    animatedSubscribeValue(props.layout.height);
-    animatedSubscribeValue(props.position);
+    animatedSubscribeValue(props.transitionProps.layout.width);
+    animatedSubscribeValue(props.transitionProps.layout.height);
+    animatedSubscribeValue(props.transitionProps.position);
   }
 
   _reset(resetToIndex, duration) {
-    Animated.timing(this.props.position, {
+    Animated.timing(this.props.transitionProps.position, {
       toValue: resetToIndex,
       duration,
       easing: EaseInOut,
-      useNativeDriver: this.props.position.__isNative,
+      useNativeDriver: this.props.transitionProps.position.__isNative,
     }).start();
   }
 
   _goBack(backFromIndex, duration) {
-    const { navigation, position, scenes } = this.props;
+    const { navigation, position, scenes } = this.props.transitionProps;
     const toValue = Math.max(backFromIndex - 1, 0);
 
     // set temporary index for gesture handler to respect until the action is
@@ -199,9 +205,15 @@ class CardStack extends React.Component {
     let floatingHeader = null;
     const headerMode = this._getHeaderMode();
     if (headerMode === 'float') {
-      floatingHeader = this._renderHeader(this.props.scene, headerMode);
+      floatingHeader = this._renderHeader(
+        this.props.transitionProps.scene,
+        headerMode
+      );
     }
-    const { navigation, position, layout, scene, scenes, mode } = this.props;
+    const {
+      transitionProps: { navigation, position, layout, scene, scenes },
+      mode,
+    } = this.props;
     const { index } = navigation.state;
     const isVertical = mode === 'modal';
     const { options } = this._getScreenDetails(scene);
@@ -411,8 +423,8 @@ class CardStack extends React.Component {
 
     return TransitionConfigs.getTransitionConfig(
       this.props.transitionConfig,
-      {},
-      {},
+      this.props.transitionProps,
+      this.props.prevTransitionProps,
       isModal
     );
   };
@@ -420,15 +432,19 @@ class CardStack extends React.Component {
   _renderCard = scene => {
     const { screenInterpolator } = this._getTransitionConfig();
     const style =
-      screenInterpolator && screenInterpolator({ ...this.props, scene });
+      screenInterpolator &&
+      screenInterpolator({ ...this.props.transitionProps, scene });
 
     const SceneComponent = this.props.router.getComponentForRouteName(
       scene.route.routeName
     );
 
+    const { transitionProps, ...props } = this.props;
+
     return (
       <Card
-        {...this.props}
+        {...props}
+        {...transitionProps}
         key={`card_${scene.key}`}
         style={[style, this.props.cardStyle]}
         scene={scene}
