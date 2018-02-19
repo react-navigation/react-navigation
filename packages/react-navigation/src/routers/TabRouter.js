@@ -239,7 +239,7 @@ export default (routeConfigs, config = {}) => {
     },
 
     getComponentForState(state) {
-      const routeName = order[state.index];
+      const routeName = state.routes[state.index].routeName;
       invariant(
         routeName,
         `There is no route defined for index ${state.index}. Check that
