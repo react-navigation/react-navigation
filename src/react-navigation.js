@@ -1,7 +1,3 @@
-/*
- * @noflow - get/set properties not yet supported by flow. also `...require(x)` is broken #6560135
- */
-
 /* eslint global-require: 0 */
 
 module.exports = {
@@ -54,6 +50,9 @@ module.exports = {
   get Card() {
     return require('./views/CardStack/Card').default;
   },
+  get SafeAreaView() {
+    return require('react-native-safe-area-view').default;
+  },
 
   // Header
   get Header() {
@@ -88,5 +87,8 @@ module.exports = {
   // HOCs
   get withNavigation() {
     return require('./views/withNavigation').default;
+  },
+  get withNavigationFocus() {
+    return require('./views/withNavigationFocus').default;
   },
 };

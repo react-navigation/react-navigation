@@ -1,82 +1,48 @@
-/* @flow */
-
-import React, { PureComponent } from 'react';
-import { View, StyleSheet } from 'react-native';
+import React from 'react';
+import { View, StyleSheet, Platform } from 'react-native';
 import { TabViewAnimated, TabViewPagerPan } from 'react-native-tab-view';
-import SceneView from '../SceneView';
+import SafeAreaView from 'react-native-safe-area-view';
+
+import ResourceSavingSceneView from '../ResourceSavingSceneView';
 import withCachedChildNavigation from '../../withCachedChildNavigation';
 
-import type {
-  NavigationScreenProp,
-  NavigationRoute,
-  NavigationAction,
-  NavigationState,
-  NavigationRouter,
-  NavigationTabScreenOptions,
-} from '../../TypeDefinition';
+class TabView extends React.PureComponent {
+  static defaultProps = {
+    lazy: true,
+    removedClippedSubviews: true,
+    // fix for https://github.com/react-native-community/react-native-tab-view/issues/312
+    initialLayout: Platform.select({
+      android: { width: 1, height: 0 },
+    }),
+  };
 
-export type TabViewConfig = {
-  tabBarComponent?: ReactClass<*>,
-  tabBarPosition?: 'top' | 'bottom',
-  tabBarOptions?: {},
-  swipeEnabled?: boolean,
-  animationEnabled?: boolean,
-  lazy?: boolean,
-};
-
-export type TabScene = {
-  route: NavigationRoute,
-  focused: boolean,
-  index: number,
-  tintColor?: ?string,
-};
-
-type Props = {
-  tabBarComponent?: ReactClass<*>,
-  tabBarPosition?: 'top' | 'bottom',
-  tabBarOptions?: {},
-  swipeEnabled?: boolean,
-  animationEnabled?: boolean,
-  lazy?: boolean,
-
-  screenProps?: {},
-  navigation: NavigationScreenProp<NavigationState, NavigationAction>,
-  router: NavigationRouter<
-    NavigationState,
-    NavigationAction,
-    NavigationTabScreenOptions
-  >,
-  childNavigationProps: {
-    [key: string]: NavigationScreenProp<NavigationRoute, NavigationAction>,
-  },
-};
-
-class TabView extends PureComponent<void, Props, void> {
-  props: Props;
-
-  _handlePageChanged = (index: number) => {
+  _handlePageChanged = index => {
     const { navigation } = this.props;
     navigation.navigate(navigation.state.routes[index].routeName);
   };
 
-  _renderScene = ({ route }: any) => {
+  _renderScene = ({ route }) => {
     const { screenProps } = this.props;
     const childNavigation = this.props.childNavigationProps[route.key];
     const TabComponent = this.props.router.getComponentForRouteName(
       route.routeName
     );
+
     return (
-      <View style={styles.page}>
-        <SceneView
-          screenProps={screenProps}
-          component={TabComponent}
-          navigation={childNavigation}
-        />
-      </View>
+      <ResourceSavingSceneView
+        lazy={this.props.lazy}
+        removeClippedSubViews={this.props.removeClippedSubviews}
+        animationEnabled={this.props.animationEnabled}
+        swipeEnabled={this.props.swipeEnabled}
+        screenProps={screenProps}
+        component={TabComponent}
+        navigation={this.props.navigation}
+        childNavigation={childNavigation}
+      />
     );
   };
 
-  _getLabel = ({ route, tintColor, focused }: TabScene) => {
+  _getLabel = ({ route, tintColor, focused }) => {
     const options = this.props.router.getScreenOptions(
       this.props.childNavigationProps[route.key],
       this.props.screenProps || {}
@@ -95,7 +61,7 @@ class TabView extends PureComponent<void, Props, void> {
     return route.routeName;
   };
 
-  _getOnPress = ({ route }: TabScene) => {
+  _getOnPress = (previousScene, { route }) => {
     const options = this.props.router.getScreenOptions(
       this.props.childNavigationProps[route.key],
       this.props.screenProps || {}
@@ -104,7 +70,18 @@ class TabView extends PureComponent<void, Props, void> {
     return options.tabBarOnPress;
   };
 
-  _renderIcon = ({ focused, route, tintColor }: TabScene) => {
+  _getTestIDProps = ({ route, focused }) => {
+    const options = this.props.router.getScreenOptions(
+      this.props.childNavigationProps[route.key],
+      this.props.screenProps || {}
+    );
+
+    return typeof options.tabBarTestIDProps === 'function'
+      ? options.tabBarTestIDProps({ focused })
+      : options.tabBarTestIDProps;
+  };
+
+  _renderIcon = ({ focused, route, tintColor }) => {
     const options = this.props.router.getScreenOptions(
       this.props.childNavigationProps[route.key],
       this.props.screenProps || {}
@@ -117,7 +94,7 @@ class TabView extends PureComponent<void, Props, void> {
     return null;
   };
 
-  _renderTabBar = (props: *) => {
+  _renderTabBar = props => {
     const {
       tabBarOptions,
       tabBarComponent: TabBarComponent,
@@ -126,13 +103,16 @@ class TabView extends PureComponent<void, Props, void> {
     if (typeof TabBarComponent === 'undefined') {
       return null;
     }
+
     return (
       <TabBarComponent
         {...props}
         {...tabBarOptions}
+        tabBarPosition={this.props.tabBarPosition}
         screenProps={this.props.screenProps}
         navigation={this.props.navigation}
         getLabel={this._getLabel}
+        getTestIDProps={this._getTestIDProps}
         getOnPress={this._getOnPress}
         renderIcon={this._renderIcon}
         animationEnabled={animationEnabled}
@@ -140,7 +120,7 @@ class TabView extends PureComponent<void, Props, void> {
     );
   };
 
-  _renderPager = (props: *) => <TabViewPagerPan {...props} />;
+  _renderPager = props => <TabViewPagerPan {...props} />;
 
   render() {
     const {
@@ -148,8 +128,8 @@ class TabView extends PureComponent<void, Props, void> {
       tabBarComponent,
       tabBarPosition,
       animationEnabled,
-      swipeEnabled,
-      lazy,
+      configureTransition,
+      initialLayout,
       screenProps,
     } = this.props;
 
@@ -166,6 +146,15 @@ class TabView extends PureComponent<void, Props, void> {
     const tabBarVisible =
       options.tabBarVisible == null ? true : options.tabBarVisible;
 
+    let swipeEnabled =
+      options.swipeEnabled == null
+        ? this.props.swipeEnabled
+        : options.swipeEnabled;
+
+    if (typeof swipeEnabled === 'function') {
+      swipeEnabled = swipeEnabled(state);
+    }
+
     if (tabBarComponent !== undefined && tabBarVisible) {
       if (tabBarPosition === 'bottom') {
         renderFooter = this._renderTabBar;
@@ -174,13 +163,17 @@ class TabView extends PureComponent<void, Props, void> {
       }
     }
 
-    if (animationEnabled === false && swipeEnabled === false) {
+    if (
+      (animationEnabled === false && swipeEnabled === false) ||
+      typeof configureTransition === 'function'
+    ) {
       renderPager = this._renderPager;
     }
 
     const props = {
-      lazy,
+      initialLayout,
       animationEnabled,
+      configureTransition,
       swipeEnabled,
       renderPager,
       renderHeader,
@@ -201,10 +194,5 @@ export default withCachedChildNavigation(TabView);
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-
-  page: {
-    flex: 1,
-    overflow: 'hidden',
   },
 });

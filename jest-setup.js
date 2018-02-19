@@ -1,7 +1,9 @@
 /**
  * @flow
- * eslint-env jest 
+ * eslint-env jest
  */
+
+import React from 'react';
 
 // See https://github.com/facebook/jest/issues/2208
 jest.mock('Linking', () => ({
@@ -22,6 +24,21 @@ jest.mock('ScrollView', () => {
     scrollTo = () => {};
   }
   return ScrollView;
+});
+
+// Mock setState so it waits using setImmediate before actually being called,
+// so we can use jest's mock timers to control it.
+// setState in the test renderer is sync instead of async like react and react-native.
+// This doesn't work with our NavigationContainer tests which test react-navigation's
+// behaviour against the async nature of setState.
+const setState = React.Component.prototype.setState;
+// $FlowExpectedError
+Object.defineProperty(React.Component.prototype, 'setState', {
+  value: function() {
+    setImmediate(() => {
+      setState.apply(this, arguments);
+    });
+  },
 });
 
 // $FlowExpectedError

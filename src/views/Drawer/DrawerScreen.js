@@ -1,38 +1,12 @@
-/* @flow */
-
-import React, { PureComponent } from 'react';
+import React from 'react';
 
 import SceneView from '../SceneView';
 import withCachedChildNavigation from '../../withCachedChildNavigation';
 
-import type {
-  NavigationScreenProp,
-  NavigationState,
-  NavigationRoute,
-  NavigationAction,
-  NavigationRouter,
-  NavigationDrawerScreenOptions,
-} from '../../TypeDefinition';
-
-type Props = {
-  screenProps?: {},
-  router: NavigationRouter<
-    NavigationState,
-    NavigationAction,
-    NavigationDrawerScreenOptions
-  >,
-  navigation: NavigationScreenProp<NavigationState, NavigationAction>,
-  childNavigationProps: {
-    [key: string]: NavigationScreenProp<NavigationRoute, NavigationAction>,
-  },
-};
-
 /**
  * Component that renders the child screen of the drawer.
  */
-class DrawerScreen extends PureComponent<void, Props, void> {
-  props: Props;
-
+class DrawerScreen extends React.PureComponent {
   render() {
     const {
       router,

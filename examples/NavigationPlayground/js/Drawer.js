@@ -3,19 +3,26 @@
  */
 
 import React from 'react';
-import { Button, Platform, ScrollView, StyleSheet } from 'react-native';
-import { DrawerNavigator } from 'react-navigation';
+import { Button, Platform, ScrollView, StatusBar } from 'react-native';
+import { StackNavigator, DrawerNavigator, SafeAreaView } from 'react-navigation';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import SampleText from './SampleText';
 
 const MyNavScreen = ({ navigation, banner }) => (
-  <ScrollView style={styles.container}>
-    <SampleText>{banner}</SampleText>
-    <Button
-      onPress={() => navigation.navigate('DrawerOpen')}
-      title="Open drawer"
-    />
-    <Button onPress={() => navigation.goBack(null)} title="Go back" />
+  <ScrollView>
+    <SafeAreaView forceInset={{ top: 'always' }}>
+      <SampleText>{banner}</SampleText>
+      <Button
+        onPress={() => navigation.navigate('DrawerOpen')}
+        title="Open drawer"
+      />
+      <Button
+        onPress={() => navigation.navigate('Email')}
+        title="Open other screen"
+      />
+      <Button onPress={() => navigation.goBack(null)} title="Go back" />
+    </SafeAreaView>
+    <StatusBar barStyle="default" />
   </ScrollView>
 );
 
@@ -33,6 +40,10 @@ InboxScreen.navigationOptions = {
   ),
 };
 
+const EmailScreen = ({ navigation }) => (
+  <MyNavScreen banner={'Email Screen'} navigation={navigation} />
+);
+
 const DraftsScreen = ({ navigation }) => (
   <MyNavScreen banner={'Drafts Screen'} navigation={navigation} />
 );
@@ -43,29 +54,36 @@ DraftsScreen.navigationOptions = {
   ),
 };
 
+const InboxStack = StackNavigator({
+  Inbox: { screen: InboxScreen },
+  Email: { screen: EmailScreen },
+});
+
+const DraftsStack = StackNavigator({
+  Drafts: { screen: DraftsScreen },
+  Email: { screen: EmailScreen },
+});
+
 const DrawerExample = DrawerNavigator(
   {
     Inbox: {
       path: '/',
-      screen: InboxScreen,
+      screen: InboxStack,
     },
     Drafts: {
       path: '/sent',
-      screen: DraftsScreen,
+      screen: DraftsStack,
     },
   },
   {
+    drawerOpenRoute: 'DrawerOpen',
+    drawerCloseRoute: 'DrawerClose',
+    drawerToggleRoute: 'DrawerToggle',
     initialRouteName: 'Drafts',
     contentOptions: {
       activeTintColor: '#e91e63',
     },
   }
 );
-
-const styles = StyleSheet.create({
-  container: {
-    marginTop: Platform.OS === 'ios' ? 20 : 0,
-  },
-});
 
 export default DrawerExample;
