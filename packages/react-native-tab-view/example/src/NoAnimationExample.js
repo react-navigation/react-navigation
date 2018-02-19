@@ -93,7 +93,7 @@ export default class TopBarIconExample extends React.Component<*, State> {
         return (
           <TouchableWithoutFeedback
             key={route.key}
-            onPress={() => props.jumpToIndex(index)}
+            onPress={() => props.jumpTo(route.key)}
           >
             <Animated.View style={styles.tab}>
               {this._renderIcon(props)({ route, index })}
