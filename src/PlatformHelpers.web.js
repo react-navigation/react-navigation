@@ -1,8 +1,8 @@
 import React from 'react';
-import { BackHandler, Text } from 'react-native';
+import { BackHandler, View } from 'react-native';
 
 const MaskedViewIOS = () => {
-  <Text>MaskedViewIOS not available on Reacht Native Web</Text>;
+  <View>{this.props.children}</View>;
 };
 
 export { BackHandler, MaskedViewIOS };
