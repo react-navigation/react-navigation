@@ -277,6 +277,11 @@ class Header extends React.PureComponent {
     const { scene } = props;
     const { index, isStale, key } = scene;
 
+    // Never render a modular back button on the first screen in a stack.
+    if (index === 0) {
+      return;
+    }
+
     const offset = this.props.navigation.state.index - index;
 
     if (Math.abs(offset) > 2) {
