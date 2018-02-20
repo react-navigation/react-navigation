@@ -190,9 +190,7 @@ class Transitioner extends React.Component {
        * pushing a new route). As a result, components that rely on this prop
        * might enter an unnecessary render cycle.
        */
-      scenes: this.state.scenes.length === scenes.length ?
-        this.state.scenes
-        : scenes,
+      scenes: this.state.scenes.length === scenes.length ? this.state.scenes : scenes,
     };
 
     this._transitionProps = buildTransitionProps(this.props, nextState);
