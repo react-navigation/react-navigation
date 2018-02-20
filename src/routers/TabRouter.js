@@ -30,8 +30,9 @@ export default (routeConfigs, config = {}) => {
     paths[routeName] =
       typeof routeConfig.path === 'string' ? routeConfig.path : routeName;
     tabRouters[routeName] = null;
-    if (routeConfig.screen && routeConfig.screen.router) {
-      tabRouters[routeName] = routeConfig.screen.router;
+    const screen = getScreenForRouteName(routeConfigs, routeName);
+    if (screen.router) {
+      tabRouters[routeName] = screen.router;
     }
   });
   if (initialRouteIndex === -1) {
