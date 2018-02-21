@@ -418,8 +418,9 @@ class Header extends React.PureComponent {
 
   render() {
     let appBar;
+    const { mode, scene, isLandscape } = this.props;
 
-    if (this.props.mode === 'float') {
+    if (mode === 'float') {
       const scenesByIndex = {};
       this.props.scenes.forEach(scene => {
         scenesByIndex[scene.index] = scene;
@@ -438,10 +439,8 @@ class Header extends React.PureComponent {
       });
     }
 
-    const { scene, isLandscape } = this.props;
     const { options } = this.props.getScreenDetails(scene);
     const { headerStyle = {} } = options;
-
     const appBarHeight = getAppBarHeight(isLandscape);
 
     const {
@@ -455,9 +454,7 @@ class Header extends React.PureComponent {
 
     const containerStyles = [
       styles.container,
-      {
-        height: appBarHeight,
-      },
+      { height: appBarHeight },
       safeHeaderStyle,
     ];
 
