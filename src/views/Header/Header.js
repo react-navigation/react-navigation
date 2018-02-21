@@ -373,13 +373,13 @@ class Header extends React.PureComponent {
       hasRightComponent: !!right,
     });
 
-    const wrapperProps = {
-      style: [StyleSheet.absoluteFill, styles.header],
-      key: `scene_${props.scene.key}`,
-    };
-
     const { isLandscape, transitionPreset } = this.props;
     const { options } = this.props.getScreenDetails(props.scene);
+
+    const wrapperProps = {
+      style: styles.header,
+      key: `scene_${props.scene.key}`,
+    };
 
     if (
       options.headerLeft ||
@@ -438,37 +438,36 @@ class Header extends React.PureComponent {
       });
     }
 
-    // eslint-disable-next-line no-unused-vars
-    const {
-      scenes,
-      scene,
-      position,
-      screenProps,
-      progress,
-      isLandscape,
-      ...rest
-    } = this.props;
-
+    const { scene, isLandscape } = this.props;
     const { options } = this.props.getScreenDetails(scene);
-    const { headerStyle } = options;
+    const { headerStyle = {} } = options;
+
     const appBarHeight = getAppBarHeight(isLandscape);
+
+    const {
+      flexDirection,
+      alignItems,
+      justifyContent,
+      ...safeHeaderStyle
+    } = headerStyle;
+
+    // TODO: warn if any unsafe styles are provided
+
     const containerStyles = [
       styles.container,
       {
         height: appBarHeight,
       },
-      headerStyle,
+      safeHeaderStyle,
     ];
 
     return (
-      <Animated.View {...rest}>
-        <SafeAreaView
-          style={containerStyles}
-          forceInset={{ top: 'always', bottom: 'never' }}
-        >
-          <View style={styles.appBar}>{appBar}</View>
-        </SafeAreaView>
-      </Animated.View>
+      <SafeAreaView
+        forceInset={{ top: 'always', bottom: 'never' }}
+        style={containerStyles}
+      >
+        <View style={{ flex: 1 }}>{appBar}</View>
+      </SafeAreaView>
     );
   }
 }
@@ -496,15 +495,11 @@ const styles = StyleSheet.create({
     backgroundColor: Platform.OS === 'ios' ? '#F7F7F7' : '#FFF',
     ...platformContainerStyles,
   },
-  appBar: {
-    flex: 1,
-  },
   header: {
+    ...StyleSheet.absoluteFillObject,
     flexDirection: 'row',
   },
   item: {
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: 'transparent',
   },
   iconMaskContainer: {
@@ -528,23 +523,29 @@ const styles = StyleSheet.create({
   },
   title: {
     bottom: 0,
+    top: 0,
     left: TITLE_OFFSET,
     right: TITLE_OFFSET,
-    top: 0,
     position: 'absolute',
-    alignItems: Platform.OS === 'ios' ? 'center' : 'flex-start',
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: Platform.OS === 'ios' ? 'center' : 'flex-start',
   },
   left: {
     left: 0,
     bottom: 0,
     top: 0,
     position: 'absolute',
+    alignItems: 'center',
+    flexDirection: 'row',
   },
   right: {
     right: 0,
     bottom: 0,
     top: 0,
     position: 'absolute',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 });
 
