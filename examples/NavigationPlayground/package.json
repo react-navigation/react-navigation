@@ -14,11 +14,12 @@
     "expo": "^25.0.0",
     "react": "16.2.0",
     "react-native": "^0.52.0",
+    "react-native-iphone-x-helper": "^1.0.2",
     "react-navigation": "link:../.."
   },
   "devDependencies": {
-    "babel-plugin-transform-remove-console": "^6.9.0",
     "babel-jest": "^21.0.0",
+    "babel-plugin-transform-remove-console": "^6.9.0",
     "flow-bin": "^0.61.0",
     "jest": "^21.0.1",
     "jest-expo": "^25.1.0",

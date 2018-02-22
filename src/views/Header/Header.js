@@ -28,22 +28,6 @@ const getAppBarHeight = isLandscape => {
     : 56;
 };
 
-// NOTE(brent): we will remove this before landing, just useful for testing
-const X_WIDTH = 375;
-const X_HEIGHT = 812;
-const PAD_WIDTH = 768;
-const PAD_HEIGHT = 1024;
-const { height: D_HEIGHT, width: D_WIDTH } = Dimensions.get('window');
-const isIPhoneX = (() => {
-  if (Platform.OS === 'web') return false;
-
-  return (
-    Platform.OS === 'ios' &&
-    ((D_HEIGHT === X_HEIGHT && D_WIDTH === X_WIDTH) ||
-      (D_HEIGHT === X_WIDTH && D_WIDTH === X_HEIGHT))
-  );
-})();
-
 class Header extends React.PureComponent {
   static defaultProps = {
     leftInterpolator: HeaderStyleInterpolator.forLeft,
@@ -56,11 +40,6 @@ class Header extends React.PureComponent {
 
   static get HEIGHT() {
     return APPBAR_HEIGHT + STATUSBAR_HEIGHT;
-  }
-
-  // NOTE(brent): we will remove this before landing, just useful for testing
-  static get HEIGHT_INCLUDING_SAFE_AREA() {
-    return Header.HEIGHT + (isIPhoneX ? 25 : 0);
   }
 
   state = {
@@ -462,18 +441,36 @@ class Header extends React.PureComponent {
 
     const { options } = this.props.getScreenDetails(scene);
     const { headerStyle = {} } = options;
+    const headerStyleObj =
+      typeof headerStyle === 'number'
+        ? StyleSheet.flatten(headerStyle)
+        : headerStyle;
     const appBarHeight = getAppBarHeight(isLandscape);
 
     const {
-      backgroundColor,
-      flexDirection,
       alignItems,
       justifyContent,
+      flex,
+      flexDirection,
+      flexGrow,
+      flexShrink,
+      flexBasis,
+      flexWrap,
       ...safeHeaderStyle
-    } = headerStyle;
+    } = headerStyleObj;
+
+    if (__DEV__) {
+      warnIfHeaderStyleDefined(alignItems, 'alignItems');
+      warnIfHeaderStyleDefined(justifyContent, 'justifyContent');
+      warnIfHeaderStyleDefined(flex, 'flex');
+      warnIfHeaderStyleDefined(flexDirection, 'flexDirection');
+      warnIfHeaderStyleDefined(flexGrow, 'flexGrow');
+      warnIfHeaderStyleDefined(flexShrink, 'flexShrink');
+      warnIfHeaderStyleDefined(flexBasis, 'flexBasis');
+      warnIfHeaderStyleDefined(flexWrap, 'flexWrap');
+    }
 
     // TODO: warn if any unsafe styles are provided
-
     const containerStyles = [
       options.headerTransparent
         ? styles.transparentContainer
@@ -490,6 +487,14 @@ class Header extends React.PureComponent {
         <View style={StyleSheet.absoluteFill}>{options.headerBackground}</View>
         <View style={{ flex: 1 }}>{appBar}</View>
       </SafeAreaView>
+    );
+  }
+}
+
+function warnIfHeaderStyleDefined(value, styleProp) {
+  if (value !== undefined) {
+    console.warn(
+      `${styleProp} was given a value of ${value}, this has no effect on headerStyle.`
     );
   }
 }
