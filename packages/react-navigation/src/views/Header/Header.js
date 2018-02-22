@@ -503,7 +503,7 @@ let platformContainerStyles;
 if (Platform.OS === 'ios') {
   platformContainerStyles = {
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: 'rgba(0, 0, 0, .3)',
+    borderBottomColor: '#A7A7AA',
   };
 } else {
   platformContainerStyles = {
