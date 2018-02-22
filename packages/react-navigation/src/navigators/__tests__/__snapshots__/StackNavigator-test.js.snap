@@ -75,163 +75,108 @@ exports[`StackNavigator applies correct values when headerRight is present 1`] =
       />
     </View>
     <View
-      cardStyle={undefined}
       collapsable={undefined}
-      getScreenDetails={[Function]}
-      headerMode={undefined}
-      headerTransitionPreset={undefined}
-      index={0}
-      layout={
+      onLayout={[Function]}
+      pointerEvents="box-none"
+      style={
         Object {
-          "height": 0,
-          "initHeight": 0,
-          "initWidth": 0,
-          "isMeasured": false,
-          "width": 0,
+          "backgroundColor": "#F7F7F7",
+          "borderBottomColor": "rgba(0, 0, 0, .3)",
+          "borderBottomWidth": 0.5,
+          "height": 64,
+          "paddingBottom": 0,
+          "paddingLeft": 0,
+          "paddingRight": 0,
+          "paddingTop": 20,
         }
       }
-      leftButtonInterpolator={[Function]}
-      leftInterpolator={[Function]}
-      leftLabelInterpolator={[Function]}
-      mode="float"
-      navigation={
-        Object {
-          "addListener": [Function],
-          "dispatch": [Function],
-          "getParam": [Function],
-          "goBack": [Function],
-          "navigate": [Function],
-          "pop": [Function],
-          "popToTop": [Function],
-          "push": [Function],
-          "replace": [Function],
-          "setParams": [Function],
-          "state": Object {
-            "index": 0,
-            "isTransitioning": false,
-            "key": "StackRouterRoot",
-            "routes": Array [
-              Object {
-                "key": "id-0-1",
-                "routeName": "Home",
-              },
-            ],
-          },
-        }
-      }
-      rightInterpolator={[Function]}
-      router={
-        Object {
-          "getActionForPathAndParams": [Function],
-          "getComponentForRouteName": [Function],
-          "getComponentForState": [Function],
-          "getPathAndParamsForState": [Function],
-          "getScreenConfig": [Function],
-          "getScreenOptions": [Function],
-          "getStateForAction": [Function],
-        }
-      }
-      titleFromLeftInterpolator={[Function]}
-      titleInterpolator={[Function]}
-      transitionConfig={undefined}
-      transitionPreset="fade-in-place"
     >
       <View
-        collapsable={undefined}
-        onLayout={[Function]}
-        pointerEvents="box-none"
         style={
           Object {
-            "backgroundColor": "#F7F7F7",
-            "borderBottomColor": "rgba(0, 0, 0, .3)",
-            "borderBottomWidth": 0.5,
-            "height": 64,
-            "paddingBottom": 0,
-            "paddingLeft": 0,
-            "paddingRight": 0,
-            "paddingTop": 20,
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+          }
+        }
+      />
+      <View
+        style={
+          Object {
+            "flex": 1,
           }
         }
       >
         <View
           style={
             Object {
-              "flex": 1,
+              "bottom": 0,
+              "flexDirection": "row",
+              "left": 0,
+              "position": "absolute",
+              "right": 0,
+              "top": 0,
             }
           }
         >
           <View
+            collapsable={undefined}
+            pointerEvents="box-none"
             style={
-              Array [
-                Object {
-                  "bottom": 0,
-                  "left": 0,
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
-                },
-                Object {
-                  "flexDirection": "row",
-                },
-              ]
+              Object {
+                "alignItems": "center",
+                "backgroundColor": "transparent",
+                "bottom": 0,
+                "flexDirection": "row",
+                "justifyContent": "center",
+                "left": 70,
+                "opacity": 1,
+                "position": "absolute",
+                "right": 70,
+                "top": 0,
+              }
             }
           >
-            <View
+            <Text
+              accessibilityTraits="header"
+              accessible={true}
+              allowFontScaling={true}
               collapsable={undefined}
-              pointerEvents="box-none"
+              ellipsizeMode="tail"
+              numberOfLines={1}
+              onLayout={[Function]}
               style={
                 Object {
-                  "alignItems": "center",
-                  "backgroundColor": "transparent",
-                  "bottom": 0,
-                  "justifyContent": "center",
-                  "left": 70,
-                  "opacity": 1,
-                  "position": "absolute",
-                  "right": 70,
-                  "top": 0,
+                  "color": "rgba(0, 0, 0, .9)",
+                  "fontSize": 17,
+                  "fontWeight": "700",
+                  "marginHorizontal": 16,
+                  "textAlign": "center",
                 }
               }
             >
-              <Text
-                accessibilityTraits="header"
-                accessible={true}
-                allowFontScaling={true}
-                collapsable={undefined}
-                ellipsizeMode="tail"
-                numberOfLines={1}
-                onLayout={[Function]}
-                style={
-                  Object {
-                    "color": "rgba(0, 0, 0, .9)",
-                    "fontSize": 17,
-                    "fontWeight": "700",
-                    "marginHorizontal": 16,
-                    "textAlign": "center",
-                  }
-                }
-              >
-                Welcome anonymous
-              </Text>
-            </View>
-            <View
-              collapsable={undefined}
-              pointerEvents="box-none"
-              style={
-                Object {
-                  "alignItems": "center",
-                  "backgroundColor": "transparent",
-                  "bottom": 0,
-                  "justifyContent": "center",
-                  "opacity": 1,
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
-                }
+              Welcome anonymous
+            </Text>
+          </View>
+          <View
+            collapsable={undefined}
+            pointerEvents="box-none"
+            style={
+              Object {
+                "alignItems": "center",
+                "backgroundColor": "transparent",
+                "bottom": 0,
+                "flexDirection": "row",
+                "opacity": 1,
+                "position": "absolute",
+                "right": 0,
+                "top": 0,
               }
-            >
-              <View />
-            </View>
+            }
+          >
+            <View />
           </View>
         </View>
       </View>
@@ -315,145 +260,90 @@ exports[`StackNavigator renders successfully 1`] = `
       />
     </View>
     <View
-      cardStyle={undefined}
       collapsable={undefined}
-      getScreenDetails={[Function]}
-      headerMode={undefined}
-      headerTransitionPreset={undefined}
-      index={0}
-      layout={
+      onLayout={[Function]}
+      pointerEvents="box-none"
+      style={
         Object {
-          "height": 0,
-          "initHeight": 0,
-          "initWidth": 0,
-          "isMeasured": false,
-          "width": 0,
+          "backgroundColor": "#F7F7F7",
+          "borderBottomColor": "rgba(0, 0, 0, .3)",
+          "borderBottomWidth": 0.5,
+          "height": 64,
+          "paddingBottom": 0,
+          "paddingLeft": 0,
+          "paddingRight": 0,
+          "paddingTop": 20,
         }
       }
-      leftButtonInterpolator={[Function]}
-      leftInterpolator={[Function]}
-      leftLabelInterpolator={[Function]}
-      mode="float"
-      navigation={
-        Object {
-          "addListener": [Function],
-          "dispatch": [Function],
-          "getParam": [Function],
-          "goBack": [Function],
-          "navigate": [Function],
-          "pop": [Function],
-          "popToTop": [Function],
-          "push": [Function],
-          "replace": [Function],
-          "setParams": [Function],
-          "state": Object {
-            "index": 0,
-            "isTransitioning": false,
-            "key": "StackRouterRoot",
-            "routes": Array [
-              Object {
-                "key": "id-0-0",
-                "routeName": "Home",
-              },
-            ],
-          },
-        }
-      }
-      rightInterpolator={[Function]}
-      router={
-        Object {
-          "getActionForPathAndParams": [Function],
-          "getComponentForRouteName": [Function],
-          "getComponentForState": [Function],
-          "getPathAndParamsForState": [Function],
-          "getScreenConfig": [Function],
-          "getScreenOptions": [Function],
-          "getStateForAction": [Function],
-        }
-      }
-      titleFromLeftInterpolator={[Function]}
-      titleInterpolator={[Function]}
-      transitionConfig={undefined}
-      transitionPreset="fade-in-place"
     >
       <View
-        collapsable={undefined}
-        onLayout={[Function]}
-        pointerEvents="box-none"
         style={
           Object {
-            "backgroundColor": "#F7F7F7",
-            "borderBottomColor": "rgba(0, 0, 0, .3)",
-            "borderBottomWidth": 0.5,
-            "height": 64,
-            "paddingBottom": 0,
-            "paddingLeft": 0,
-            "paddingRight": 0,
-            "paddingTop": 20,
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+          }
+        }
+      />
+      <View
+        style={
+          Object {
+            "flex": 1,
           }
         }
       >
         <View
           style={
             Object {
-              "flex": 1,
+              "bottom": 0,
+              "flexDirection": "row",
+              "left": 0,
+              "position": "absolute",
+              "right": 0,
+              "top": 0,
             }
           }
         >
           <View
+            collapsable={undefined}
+            pointerEvents="box-none"
             style={
-              Array [
-                Object {
-                  "bottom": 0,
-                  "left": 0,
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
-                },
-                Object {
-                  "flexDirection": "row",
-                },
-              ]
+              Object {
+                "alignItems": "center",
+                "backgroundColor": "transparent",
+                "bottom": 0,
+                "flexDirection": "row",
+                "justifyContent": "center",
+                "left": 0,
+                "opacity": 1,
+                "position": "absolute",
+                "right": 0,
+                "top": 0,
+              }
             }
           >
-            <View
+            <Text
+              accessibilityTraits="header"
+              accessible={true}
+              allowFontScaling={true}
               collapsable={undefined}
-              pointerEvents="box-none"
+              ellipsizeMode="tail"
+              numberOfLines={1}
+              onLayout={[Function]}
               style={
                 Object {
-                  "alignItems": "center",
-                  "backgroundColor": "transparent",
-                  "bottom": 0,
-                  "justifyContent": "center",
-                  "left": 0,
-                  "opacity": 1,
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
+                  "color": "rgba(0, 0, 0, .9)",
+                  "fontSize": 17,
+                  "fontWeight": "700",
+                  "marginHorizontal": 16,
+                  "textAlign": "center",
                 }
               }
             >
-              <Text
-                accessibilityTraits="header"
-                accessible={true}
-                allowFontScaling={true}
-                collapsable={undefined}
-                ellipsizeMode="tail"
-                numberOfLines={1}
-                onLayout={[Function]}
-                style={
-                  Object {
-                    "color": "rgba(0, 0, 0, .9)",
-                    "fontSize": 17,
-                    "fontWeight": "700",
-                    "marginHorizontal": 16,
-                    "textAlign": "center",
-                  }
-                }
-              >
-                Welcome anonymous
-              </Text>
-            </View>
+              Welcome anonymous
+            </Text>
           </View>
         </View>
       </View>
