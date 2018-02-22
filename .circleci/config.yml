@@ -16,7 +16,7 @@ jobs:
       - run: yarn # install root deps
       - run: ./scripts/test.sh # run tests
       - setup_remote_docker
-      - publish:
+      - deploy:
           command: |
             set -x
               VER="17.03.0-ce"
