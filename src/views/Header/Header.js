@@ -373,13 +373,13 @@ class Header extends React.PureComponent {
       hasRightComponent: !!right,
     });
 
-    const wrapperProps = {
-      style: [StyleSheet.absoluteFill, styles.header],
-      key: `scene_${props.scene.key}`,
-    };
-
     const { isLandscape, transitionPreset } = this.props;
     const { options } = this.props.getScreenDetails(props.scene);
+
+    const wrapperProps = {
+      style: styles.header,
+      key: `scene_${props.scene.key}`,
+    };
 
     if (
       options.headerLeft ||
@@ -418,8 +418,9 @@ class Header extends React.PureComponent {
 
   render() {
     let appBar;
+    const { mode, scene, isLandscape } = this.props;
 
-    if (this.props.mode === 'float') {
+    if (mode === 'float') {
       const scenesByIndex = {};
       this.props.scenes.forEach(scene => {
         scenesByIndex[scene.index] = scene;
@@ -438,37 +439,62 @@ class Header extends React.PureComponent {
       });
     }
 
-    // eslint-disable-next-line no-unused-vars
-    const {
-      scenes,
-      scene,
-      position,
-      screenProps,
-      progress,
-      isLandscape,
-      ...rest
-    } = this.props;
-
     const { options } = this.props.getScreenDetails(scene);
-    const { headerStyle } = options;
+    const { headerStyle = {} } = options;
+    const headerStyleObj =
+      typeof headerStyle === 'number'
+        ? StyleSheet.flatten(headerStyle)
+        : headerStyle;
     const appBarHeight = getAppBarHeight(isLandscape);
+
+    const {
+      alignItems,
+      justifyContent,
+      flex,
+      flexDirection,
+      flexGrow,
+      flexShrink,
+      flexBasis,
+      flexWrap,
+      ...safeHeaderStyle
+    } = headerStyleObj;
+
+    if (__DEV__) {
+      warnIfHeaderStyleDefined(alignItems, 'alignItems');
+      warnIfHeaderStyleDefined(justifyContent, 'justifyContent');
+      warnIfHeaderStyleDefined(flex, 'flex');
+      warnIfHeaderStyleDefined(flexDirection, 'flexDirection');
+      warnIfHeaderStyleDefined(flexGrow, 'flexGrow');
+      warnIfHeaderStyleDefined(flexShrink, 'flexShrink');
+      warnIfHeaderStyleDefined(flexBasis, 'flexBasis');
+      warnIfHeaderStyleDefined(flexWrap, 'flexWrap');
+    }
+
+    // TODO: warn if any unsafe styles are provided
     const containerStyles = [
-      styles.container,
-      {
-        height: appBarHeight,
-      },
-      headerStyle,
+      options.headerTransparent
+        ? styles.transparentContainer
+        : styles.container,
+      { height: appBarHeight },
+      safeHeaderStyle,
     ];
 
     return (
-      <Animated.View {...rest}>
-        <SafeAreaView
-          style={containerStyles}
-          forceInset={{ top: 'always', bottom: 'never' }}
-        >
-          <View style={styles.appBar}>{appBar}</View>
-        </SafeAreaView>
-      </Animated.View>
+      <SafeAreaView
+        forceInset={{ top: 'always', bottom: 'never' }}
+        style={containerStyles}
+      >
+        <View style={StyleSheet.absoluteFill}>{options.headerBackground}</View>
+        <View style={{ flex: 1 }}>{appBar}</View>
+      </SafeAreaView>
+    );
+  }
+}
+
+function warnIfHeaderStyleDefined(value, styleProp) {
+  if (value !== undefined) {
+    console.warn(
+      `${styleProp} was given a value of ${value}, this has no effect on headerStyle.`
     );
   }
 }
@@ -496,15 +522,18 @@ const styles = StyleSheet.create({
     backgroundColor: Platform.OS === 'ios' ? '#F7F7F7' : '#FFF',
     ...platformContainerStyles,
   },
-  appBar: {
-    flex: 1,
+  transparentContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    ...platformContainerStyles,
   },
   header: {
+    ...StyleSheet.absoluteFillObject,
     flexDirection: 'row',
   },
   item: {
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: 'transparent',
   },
   iconMaskContainer: {
@@ -528,23 +557,29 @@ const styles = StyleSheet.create({
   },
   title: {
     bottom: 0,
+    top: 0,
     left: TITLE_OFFSET,
     right: TITLE_OFFSET,
-    top: 0,
     position: 'absolute',
-    alignItems: Platform.OS === 'ios' ? 'center' : 'flex-start',
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: Platform.OS === 'ios' ? 'center' : 'flex-start',
   },
   left: {
     left: 0,
     bottom: 0,
     top: 0,
     position: 'absolute',
+    alignItems: 'center',
+    flexDirection: 'row',
   },
   right: {
     right: 0,
     bottom: 0,
     top: 0,
     position: 'absolute',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 });
 
