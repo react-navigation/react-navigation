@@ -28,6 +28,22 @@ const getAppBarHeight = isLandscape => {
     : 56;
 };
 
+// NOTE(brent): we will remove this before landing, just useful for testing
+const X_WIDTH = 375;
+const X_HEIGHT = 812;
+const PAD_WIDTH = 768;
+const PAD_HEIGHT = 1024;
+const { height: D_HEIGHT, width: D_WIDTH } = Dimensions.get('window');
+const isIPhoneX = (() => {
+  if (Platform.OS === 'web') return false;
+
+  return (
+    Platform.OS === 'ios' &&
+    ((D_HEIGHT === X_HEIGHT && D_WIDTH === X_WIDTH) ||
+      (D_HEIGHT === X_WIDTH && D_WIDTH === X_HEIGHT))
+  );
+})();
+
 class Header extends React.PureComponent {
   static defaultProps = {
     leftInterpolator: HeaderStyleInterpolator.forLeft,
@@ -40,6 +56,11 @@ class Header extends React.PureComponent {
 
   static get HEIGHT() {
     return APPBAR_HEIGHT + STATUSBAR_HEIGHT;
+  }
+
+  // NOTE(brent): we will remove this before landing, just useful for testing
+  static get HEIGHT_INCLUDING_SAFE_AREA() {
+    return Header.HEIGHT + (isIPhoneX ? 25 : 0);
   }
 
   state = {
@@ -444,6 +465,7 @@ class Header extends React.PureComponent {
     const appBarHeight = getAppBarHeight(isLandscape);
 
     const {
+      backgroundColor,
       flexDirection,
       alignItems,
       justifyContent,
@@ -453,7 +475,9 @@ class Header extends React.PureComponent {
     // TODO: warn if any unsafe styles are provided
 
     const containerStyles = [
-      styles.container,
+      options.headerTransparent
+        ? styles.transparentContainer
+        : styles.container,
       { height: appBarHeight },
       safeHeaderStyle,
     ];
@@ -463,6 +487,7 @@ class Header extends React.PureComponent {
         forceInset={{ top: 'always', bottom: 'never' }}
         style={containerStyles}
       >
+        <View style={StyleSheet.absoluteFill}>{options.headerBackground}</View>
         <View style={{ flex: 1 }}>{appBar}</View>
       </SafeAreaView>
     );
@@ -490,6 +515,13 @@ if (Platform.OS === 'ios') {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: Platform.OS === 'ios' ? '#F7F7F7' : '#FFF',
+    ...platformContainerStyles,
+  },
+  transparentContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
     ...platformContainerStyles,
   },
   header: {

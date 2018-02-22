@@ -8,8 +8,9 @@ import type {
 } from 'react-navigation';
 
 import * as React from 'react';
-import { Button, ScrollView, StatusBar } from 'react-native';
-import { StackNavigator, SafeAreaView, withNavigation } from 'react-navigation';
+import { BlurView, Constants } from 'expo';
+import { Button, Platform, ScrollView, StatusBar, View } from 'react-native';
+import { Header, StackNavigator, withNavigation } from 'react-navigation';
 import SampleText from './SampleText';
 
 type MyNavScreenProps = {
@@ -31,9 +32,22 @@ const MyBackButtonWithNavigation = withNavigation(MyBackButton);
 
 class MyNavScreen extends React.Component<MyNavScreenProps> {
   render() {
+    const headerInset = Platform.select({
+      ios: {
+        contentInset: { top: Header.HEIGHT_INCLUDING_SAFE_AREA },
+        contentOffset: { y: -Header.HEIGHT_INCLUDING_SAFE_AREA },
+      },
+      android: {
+        contentContainerStyle: {
+          paddingTop:
+            Header.HEIGHT_INCLUDING_SAFE_AREA + Constants.statusBarHeight,
+        },
+      },
+    });
+
     const { navigation, banner } = this.props;
     return (
-      <SafeAreaView>
+      <ScrollView style={{ flex: 1 }} {...headerInset}>
         <SampleText>{banner}</SampleText>
         <Button
           onPress={() => navigation.push('Profile', { name: 'Jane' })}
@@ -51,7 +65,7 @@ class MyNavScreen extends React.Component<MyNavScreenProps> {
         <Button onPress={() => navigation.pop()} title="Pop" />
         <Button onPress={() => navigation.goBack(null)} title="Go back" />
         <StatusBar barStyle="default" />
-      </SafeAreaView>
+      </ScrollView>
     );
   }
 }
@@ -190,6 +204,17 @@ const SimpleStack = StackNavigator(
     Photos: {
       path: 'photos/:name',
       screen: MyPhotosScreen,
+    },
+  },
+  {
+    navigationOptions: {
+      headerTransparent: true,
+      headerBackground: Platform.select({
+        ios: <BlurView style={{ flex: 1 }} intensity={98} />,
+        android: (
+          <View style={{ flex: 1, backgroundColor: 'rgba(255,255,255,0.7)' }} />
+        ),
+      }),
     },
   }
 );
