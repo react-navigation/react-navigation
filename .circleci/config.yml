@@ -24,7 +24,7 @@ jobs:
               tar -xz -C /tmp -f /tmp/docker-$VER.tgz
               mv /tmp/docker/* /usr/bin
             
-            yarn global exp
+            yarn global add exp
             exp login -u "$EXPO_USERNAME" -p "$EXPO_PASSWORD"
             cd examples/NavigationPlayground && yarn && exp publish --release-channel "${CIRCLE_SHA1}"
       - save_cache:
