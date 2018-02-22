@@ -25,7 +25,9 @@ jobs:
               mv /tmp/docker/* /usr/bin
             
             yarn global add exp
+            set +x
             exp login -u "$EXPO_USERNAME" -p "$EXPO_PASSWORD"
+            set -x
             cd examples/NavigationPlayground && yarn && exp publish --release-channel "${CIRCLE_SHA1}"
       - save_cache:
           key: v3-react-navigation-{{ .Branch }}-{{ checksum "package.json" }}
