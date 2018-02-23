@@ -25,9 +25,9 @@ const init = createAction(INIT, (payload = {}) => {
   const action = {
     type: INIT,
   };
-  if (payload.params) {
-    action.params = payload.params;
-  }
+
+  action.params = payload.params || {};
+
   return action;
 });
 
@@ -36,9 +36,9 @@ const navigate = createAction(NAVIGATE, payload => {
     type: NAVIGATE,
     routeName: payload.routeName,
   };
-  if (payload.params) {
-    action.params = payload.params;
-  }
+
+  action.params = payload.params || {};
+
   if (payload.action) {
     action.action = payload.action;
   }
@@ -64,9 +64,9 @@ const push = createAction(PUSH, payload => {
     type: PUSH,
     routeName: payload.routeName,
   };
-  if (payload.params) {
-    action.params = payload.params;
-  }
+
+  action.params = payload.params || {};
+
   if (payload.action) {
     action.action = payload.action;
   }
@@ -84,7 +84,7 @@ const replace = createAction(REPLACE, payload => ({
   type: REPLACE,
   key: payload.key,
   newKey: payload.newKey,
-  params: payload.params,
+  params: payload.params || {},
   action: payload.action,
   routeName: payload.routeName,
   immediate: payload.immediate,
@@ -93,7 +93,7 @@ const replace = createAction(REPLACE, payload => ({
 const setParams = createAction(SET_PARAMS, payload => ({
   type: SET_PARAMS,
   key: payload.key,
-  params: payload.params,
+  params: payload.params || {},
 }));
 
 const uri = createAction(URI, payload => ({
@@ -110,7 +110,7 @@ const mapDeprecatedNavigateAction = action => {
   if (action.type === 'Navigate') {
     const payload = {
       routeName: action.routeName,
-      params: action.params,
+      params: action.params || {},
     };
     if (action.action) {
       payload.action = mapDeprecatedNavigateAction(action.action);
