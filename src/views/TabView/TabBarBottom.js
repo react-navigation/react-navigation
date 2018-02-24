@@ -182,9 +182,14 @@ class TabBarBottom extends React.PureComponent {
     const currentIndex = navigation.state.index;
 
     if (currentIndex === index) {
-      // TODO: determine if we already dispatched popToTop, and if so then emit
-      // some event for route so it can scroll to top if there is a ScrollView
-      navigation.dispatch(NavigationActions.popToTop());
+      let childRoute = navigation.state.routes[index];
+      if (childRoute.hasOwnProperty('index') && childRoute.index > 0) {
+        navigation.dispatch(
+          NavigationActions.popToTop({ key: childRoute.key })
+        );
+      } else {
+        // TODO: do something to scroll to top
+      }
     } else {
       jumpToIndex(index);
     }

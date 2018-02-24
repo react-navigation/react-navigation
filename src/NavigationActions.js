@@ -57,6 +57,7 @@ const pop = createAction(POP, payload => ({
 const popToTop = createAction(POP_TO_TOP, payload => ({
   type: POP_TO_TOP,
   immediate: payload && payload.immediate,
+  key: payload && payload.key,
 }));
 
 const push = createAction(PUSH, payload => {
