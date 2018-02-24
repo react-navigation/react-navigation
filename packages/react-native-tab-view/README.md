@@ -206,7 +206,7 @@ renderScene = SceneMap({
 Each scene receives the following props:
 
 - `route` - the current route rendered by the component
-- `jumpTo` - method to jump to other tabs, it receives `route.key` as it's argument
+- `jumpTo` - method to jump to other tabs, takes a `route.key` as it's argument
 
 All the scenes rendered with `SceneMap` are optimized using `React.PureComponent` and don't re-render when parent's props or states change. If you don't want this behaviour, or want to pass additional props to your scene components, use `renderScene` directly instead of using `SceneMap`.
 

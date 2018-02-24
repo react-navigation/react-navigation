@@ -7,9 +7,9 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "primaryColor": "#2196f3",
-    "icon": "https://s3.amazonaws.com/exp-us-standard/icons/react-native-tab-view-icon.png",
+    "icon": "assets/icon.png",
     "loading": {
-      "icon": "https://s3.amazonaws.com/exp-us-standard/icons/react-native-tab-view-icon.png",
+      "icon": "assets/icon.png",
       "hideExponentText": false
     },
     "packagerOpts": {
