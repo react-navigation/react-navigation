@@ -593,29 +593,6 @@ describe('TabRouter', () => {
     expect(path).toEqual('f/Baz');
   });
 
-  test('Maps old actions (uses "getStateForAction returns null when navigating to same tab" test)', () => {
-    global.console.warn = jest.fn();
-    const router = TabRouter(
-      { Foo: BareLeafRouteConfig, Bar: BareLeafRouteConfig },
-      { initialRouteName: 'Bar' }
-    );
-    const initAction = NavigationActions.mapDeprecatedActionAndWarn({
-      type: 'Init',
-    });
-    const state = router.getStateForAction(initAction);
-    const navigateAction = NavigationActions.mapDeprecatedActionAndWarn({
-      type: 'Navigate',
-      routeName: 'Bar',
-    });
-    const state2 = router.getStateForAction(navigateAction, state);
-    expect(state2).toEqual(null);
-    expect(console.warn).toBeCalledWith(
-      expect.stringContaining(
-        "The action type 'Init' has been renamed to 'Navigation/INIT'"
-      )
-    );
-  });
-
   test('Can navigate to other tab (no router) with params', () => {
     const ScreenA = () => <div />;
     const ScreenB = () => <div />;
