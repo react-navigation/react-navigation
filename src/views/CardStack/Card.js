@@ -22,7 +22,7 @@ class Card extends React.Component {
 
 const styles = StyleSheet.create({
   main: {
-    backgroundColor: '#E9E9EF',
+    backgroundColor: '#EFEFF4',
     bottom: 0,
     left: 0,
     position: 'absolute',

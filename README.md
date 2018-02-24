@@ -57,7 +57,7 @@ Certainly not! There other libraries - which, depending on your needs, can be be
 
 #### Can I use this library for web?
 
-Currently this is [not a priority](https://github.com/react-community/react-navigation/issues/2585#issuecomment-330338793), but the architecture of this library allows for it (and it has worked in the past). If you would like to lead this charge, please reach out with your ideas for how to move forward on the [RFCs repository](https://github.com/react-navigation/rfcs) and we would be happy to discuss.
+Web support was [not a priority for the 1.0 release](https://github.com/react-community/react-navigation/issues/2585#issuecomment-330338793), but the architecture of this library allows for it (and it has worked in the past). If you would like to lead this charge, please reach out with your ideas for how to move forward on the [RFCs repository](https://github.com/react-navigation/rfcs) and we would be happy to discuss.
 
 ## Code of conduct
 
