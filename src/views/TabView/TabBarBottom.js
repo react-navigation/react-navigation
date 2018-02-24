@@ -10,6 +10,7 @@ import {
 import SafeAreaView from 'react-native-safe-area-view';
 
 import TabBarIcon from './TabBarIcon';
+import NavigationActions from '../../NavigationActions';
 import withOrientation from '../withOrientation';
 
 const majorVersion = parseInt(Platform.Version, 10);
@@ -176,6 +177,19 @@ class TabBarBottom extends React.PureComponent {
     }
   }
 
+  _handleTabPress = index => {
+    const { jumpToIndex, navigation } = this.props;
+    const currentIndex = navigation.state.index;
+
+    if (currentIndex === index) {
+      // TODO: determine if we already dispatched popToTop, and if so then emit
+      // some event for route so it can scroll to top if there is a ScrollView
+      navigation.dispatch(NavigationActions.popToTop());
+    } else {
+      jumpToIndex(index);
+    }
+  };
+
   render() {
     const {
       position,
@@ -235,8 +249,13 @@ class TabBarBottom extends React.PureComponent {
                 accessibilityLabel={accessibilityLabel}
                 onPress={() =>
                   onPress
-                    ? onPress({ previousScene, scene, jumpToIndex })
-                    : jumpToIndex(index)
+                    ? onPress({
+                        previousScene,
+                        scene,
+                        jumpToIndex,
+                        defaultHandler: this._handleTabPress,
+                      })
+                    : this._handleTabPress(index)
                 }
               >
                 <Animated.View style={[styles.tab, { backgroundColor }]}>

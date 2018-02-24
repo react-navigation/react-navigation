@@ -91,7 +91,15 @@ export default class TabBarTop extends React.PureComponent {
     const onPress = getOnPress(previousScene, scene);
 
     if (onPress) {
-      onPress({ previousScene, scene, jumpToIndex });
+      // To maintain the same API as `TabbarBottom`, we pass in a `defaultHandler`
+      // even though I don't believe in this case it should be any different
+      // than `jumpToIndex`.
+      onPress({
+        previousScene,
+        scene,
+        jumpToIndex,
+        defaultHandler: jumpToIndex,
+      });
     } else {
       jumpToIndex(scene.index);
     }
