@@ -405,6 +405,7 @@ declare module 'react-navigation' {
     initialRouteParams?: NavigationParams,
     paths?: NavigationPathsConfig,
     navigationOptions?: NavigationScreenConfig<*>,
+    initialRouteKey?: 'initialRouteName' | 'generated',
   |};
 
   declare export type NavigationStackViewConfig = {|

@@ -110,8 +110,8 @@ test('Handles no-op actions with tabs within stack router', () => {
     type: NavigationActions.NAVIGATE,
     routeName: 'Qux',
   });
-  expect(state1.routes[0].key).toEqual('Foo');
-  expect(state2.routes[0].key).toEqual('Foo');
+  expect(state1.routes[0].key).toEqual('id-0');
+  expect(state2.routes[0].key).toEqual('id-1');
   state1.routes[0].key = state2.routes[0].key;
   expect(state1).toEqual(state2);
   const state3 = TestRouter.getStateForAction(
@@ -139,7 +139,7 @@ test('Handles deep action', () => {
     key: 'StackRouterRoot',
     routes: [
       {
-        key: 'Bar',
+        key: 'id-0',
         routeName: 'Bar',
       },
     ],
@@ -179,7 +179,9 @@ test('Supports lazily-evaluated getScreen', () => {
     immediate: true,
     routeName: 'Qux',
   });
-  expect(state1.routes[0].key).toEqual('Foo');
+  expect(state1.routes[0].key).toEqual('id-0');
+  expect(state2.routes[0].key).toEqual('id-1');
+  state1.routes[0].key = state2.routes[0].key;
   expect(state1).toEqual(state2);
   const state3 = TestRouter.getStateForAction(
     {

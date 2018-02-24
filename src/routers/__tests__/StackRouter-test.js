@@ -355,7 +355,7 @@ describe('StackRouter', () => {
       index: 0,
       isTransitioning: false,
       key: 'StackRouterRoot',
-      routes: [{ key: 'foo', routeName: 'foo' }],
+      routes: [{ key: 'id-0', routeName: 'foo' }],
     });
     const pushedState = TestRouter.getStateForAction(
       NavigationActions.navigate({ routeName: 'qux' }),
@@ -547,6 +547,23 @@ describe('StackRouter', () => {
     expect(state2.routes[1].routes[1].routes[1].routeName).toEqual('Corge');
   });
 
+  test('Navigate to initial screen is possible', () => {
+    const TestRouter = StackRouter(
+      {
+        foo: { screen: () => <div /> },
+        bar: { screen: () => <div /> },
+      },
+      { initialRouteKey: 'initialRouteName' }
+    );
+    const initState = TestRouter.getStateForAction(NavigationActions.init());
+    const pushedState = TestRouter.getStateForAction(
+      NavigationActions.navigate({ routeName: 'foo', key: 'foo' }),
+      initState
+    );
+    expect(pushedState.index).toEqual(0);
+    expect(pushedState.routes[0].routeName).toEqual('foo');
+  });
+
   test('Navigate with key is idempotent', () => {
     const TestRouter = StackRouter({
       foo: { screen: () => <div /> },
@@ -636,7 +653,7 @@ describe('StackRouter', () => {
       key: 'StackRouterRoot',
       routes: [
         {
-          key: 'Foo',
+          key: 'id-0',
           routeName: 'Foo',
         },
       ],
@@ -664,7 +681,7 @@ describe('StackRouter', () => {
       key: 'StackRouterRoot',
       routes: [
         {
-          key: 'Foo',
+          key: 'id-0',
           routeName: 'Foo',
         },
       ],
@@ -761,7 +778,7 @@ describe('StackRouter', () => {
       key: 'StackRouterRoot',
       routes: [
         {
-          key: 'Foo',
+          key: 'id-0',
           routeName: 'Foo',
         },
       ],
@@ -789,7 +806,7 @@ describe('StackRouter', () => {
       key: 'StackRouterRoot',
       routes: [
         {
-          key: 'Foo',
+          key: 'id-0',
           routeName: 'Foo',
         },
       ],
@@ -863,7 +880,7 @@ describe('StackRouter', () => {
       key: 'StackRouterRoot',
       routes: [
         {
-          key: 'Bar',
+          key: 'id-0',
           routeName: 'Bar',
         },
       ],
@@ -972,14 +989,14 @@ describe('StackRouter', () => {
       {
         type: NavigationActions.SET_PARAMS,
         params: { name: 'foobar' },
-        key: 'Quux',
+        key: 'id-0',
       },
       state
     );
     expect(state2 && state2.index).toEqual(0);
     expect(state2 && state2.routes[0].routes[0].routes).toEqual([
       {
-        key: 'Quux',
+        key: 'id-0',
         routeName: 'Quux',
         params: { name: 'foobar' },
       },
