@@ -513,6 +513,40 @@ describe('StackRouter', () => {
     expect(pushedTwiceState.routes[2].routeName).toEqual('bar');
   });
 
+  test('Navigate from top propagates to any arbitary depth of stacks', () => {
+    const GrandChildNavigator = () => <div />;
+    GrandChildNavigator.router = StackRouter({
+      Quux: { screen: () => <div /> },
+      Corge: { screen: () => <div /> },
+    });
+
+    const ChildNavigator = () => <div />;
+    ChildNavigator.router = StackRouter({
+      Baz: { screen: () => <div /> },
+      Woo: { screen: () => <div /> },
+      Qux: { screen: GrandChildNavigator },
+    });
+
+    const Parent = StackRouter({
+      Foo: { screen: () => <div /> },
+      Bar: { screen: ChildNavigator },
+    });
+
+    const state = Parent.getStateForAction({ type: NavigationActions.INIT });
+    const state2 = Parent.getStateForAction(
+      {
+        type: NavigationActions.NAVIGATE,
+        routeName: 'Corge',
+      },
+      state
+    );
+
+    expect(state2.index).toEqual(1);
+    expect(state2.routes[1].index).toEqual(1);
+    expect(state2.routes[1].routes[1].index).toEqual(1);
+    expect(state2.routes[1].routes[1].routes[1].routeName).toEqual('Corge');
+  });
+
   test('Navigate with key is idempotent', () => {
     const TestRouter = StackRouter({
       foo: { screen: () => <div /> },
@@ -1470,40 +1504,6 @@ describe('StackRouter', () => {
       expect(path).toEqual('boo/');
       expect(params).toEqual({ id: '123' });
     }
-  });
-
-  test('Maps old actions (uses "Handles the reset action" test)', () => {
-    global.console.warn = jest.fn();
-    const router = StackRouter({
-      Foo: {
-        screen: () => <div />,
-      },
-      Bar: {
-        screen: () => <div />,
-      },
-    });
-    const initAction = NavigationActions.mapDeprecatedActionAndWarn({
-      type: 'Init',
-    });
-    const state = router.getStateForAction(initAction);
-    const resetAction = NavigationActions.mapDeprecatedActionAndWarn({
-      type: 'Reset',
-      actions: [
-        { type: 'Navigate', routeName: 'Foo', params: { bar: '42' } },
-        { type: 'Navigate', routeName: 'Bar' },
-      ],
-      index: 1,
-    });
-    const state2 = router.getStateForAction(resetAction, state);
-    expect(state2 && state2.index).toEqual(1);
-    expect(state2 && state2.routes[0].params).toEqual({ bar: '42' });
-    expect(state2 && state2.routes[0].routeName).toEqual('Foo');
-    expect(state2 && state2.routes[1].routeName).toEqual('Bar');
-    expect(console.warn).toBeCalledWith(
-      expect.stringContaining(
-        "The action type 'Init' has been renamed to 'Navigation/INIT'"
-      )
-    );
   });
 
   test('URI encoded string get passed to deep link', () => {

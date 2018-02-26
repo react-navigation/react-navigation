@@ -53,10 +53,11 @@ class CardStackTransitioner extends React.Component {
     return transitionSpec;
   };
 
-  _render = props => {
+  _render = (props, prevProps) => {
     const {
       screenProps,
       headerMode,
+      headerTransitionPreset,
       mode,
       router,
       cardStyle,
@@ -66,11 +67,13 @@ class CardStackTransitioner extends React.Component {
       <CardStack
         screenProps={screenProps}
         headerMode={headerMode}
+        headerTransitionPreset={headerTransitionPreset}
         mode={mode}
         router={router}
         cardStyle={cardStyle}
         transitionConfig={transitionConfig}
-        {...props}
+        transitionProps={props}
+        prevTransitionProps={prevProps}
       />
     );
   };

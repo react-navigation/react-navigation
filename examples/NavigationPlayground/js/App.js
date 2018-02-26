@@ -1,7 +1,7 @@
 /* @flow */
 
 import React from 'react';
-import { Constants, ScreenOrientation } from 'expo';
+import { Asset, Constants, ScreenOrientation } from 'expo';
 
 ScreenOrientation.allow(ScreenOrientation.Orientation.ALL);
 
@@ -28,13 +28,16 @@ import StacksInTabs from './StacksInTabs';
 import StacksOverTabs from './StacksOverTabs';
 import StacksWithKeys from './StacksWithKeys';
 import SimpleStack from './SimpleStack';
+import StackWithHeaderPreset from './StackWithHeaderPreset';
+import StackWithTranslucentHeader from './StackWithTranslucentHeader';
 import SimpleTabs from './SimpleTabs';
 import TabAnimations from './TabAnimations';
+import TabsWithNavigationFocus from './TabsWithNavigationFocus';
 
 const ExampleInfo = {
   SimpleStack: {
     name: 'Stack Example',
-    description: 'A card stack!',
+    description: 'A card stack',
   },
   SimpleTabs: {
     name: 'Tabs Example',
@@ -43,6 +46,18 @@ const ExampleInfo = {
   Drawer: {
     name: 'Drawer Example',
     description: 'Android-style drawer navigation',
+  },
+  StackWithHeaderPreset: {
+    name: 'UIKit-style Header Transitions',
+    description: 'Masked back button and sliding header items. iOS only.',
+  },
+  StackWithHeaderPreset: {
+    name: 'UIKit-style Header Transitions',
+    description: 'Masked back button and sliding header items. iOS only.',
+  },
+  StackWithTranslucentHeader: {
+    name: 'Translucent Header',
+    description: 'Render arbitrary translucent content in header background.',
   },
   // MultipleDrawer: {
   //   name: 'Multiple Drawer Example',
@@ -94,7 +109,12 @@ const ExampleInfo = {
     name: 'Animated Tabs Example',
     description: 'Tab transitions have custom animations',
   },
+  // TabsWithNavigationFocus: {
+  //   name: 'withNavigationFocus',
+  //   description: 'Receive the focus prop to know when a screen is focused',
+  // },
 };
+
 const ExampleRoutes = {
   SimpleStack: SimpleStack,
   SimpleTabs: SimpleTabs,
@@ -102,6 +122,8 @@ const ExampleRoutes = {
   // MultipleDrawer: {
   //   screen: MultipleDrawer,
   // },
+  StackWithHeaderPreset: StackWithHeaderPreset,
+  StackWithTranslucentHeader: StackWithTranslucentHeader,
   TabsInDrawer: TabsInDrawer,
   CustomTabs: CustomTabs,
   CustomTransitioner: CustomTransitioner,
@@ -118,6 +140,7 @@ const ExampleRoutes = {
     path: 'settings',
   },
   TabAnimations: TabAnimations,
+  // TabsWithNavigationFocus: TabsWithNavigationFocus,
 };
 
 type State = {
@@ -127,6 +150,15 @@ class MainScreen extends React.Component<any, State> {
   state = {
     scrollY: new Animated.Value(0),
   };
+
+  componentWillMount() {
+    Asset.fromModule(
+      require('react-navigation/src/views/assets/back-icon-mask.png')
+    ).downloadAsync();
+    Asset.fromModule(
+      require('react-navigation/src/views/assets/back-icon.png')
+    ).downloadAsync();
+  }
 
   render() {
     const { navigation } = this.props;

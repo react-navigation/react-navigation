@@ -30,8 +30,9 @@ export default (routeConfigs, config = {}) => {
     paths[routeName] =
       typeof routeConfig.path === 'string' ? routeConfig.path : routeName;
     tabRouters[routeName] = null;
-    if (routeConfig.screen && routeConfig.screen.router) {
-      tabRouters[routeName] = routeConfig.screen.router;
+    const screen = getScreenForRouteName(routeConfigs, routeName);
+    if (screen.router) {
+      tabRouters[routeName] = screen.router;
     }
   });
   if (initialRouteIndex === -1) {
@@ -239,7 +240,7 @@ export default (routeConfigs, config = {}) => {
     },
 
     getComponentForState(state) {
-      const routeName = order[state.index];
+      const routeName = state.routes[state.index].routeName;
       invariant(
         routeName,
         `There is no route defined for index ${state.index}. Check that

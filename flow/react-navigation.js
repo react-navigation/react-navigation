@@ -71,22 +71,8 @@ declare module 'react-navigation' {
     key?: string,
   |};
 
-  declare type DeprecatedNavigationNavigateAction = {|
-    type: 'Navigate',
-    routeName: string,
-    params?: NavigationParams,
-
-    // The action to run inside the sub-router
-    action?: NavigationNavigateAction | DeprecatedNavigationNavigateAction,
-  |};
-
   declare export type NavigationBackAction = {|
     type: 'Navigation/BACK',
-    key?: ?string,
-  |};
-
-  declare type DeprecatedNavigationBackAction = {|
-    type: 'Back',
     key?: ?string,
   |};
 
@@ -100,23 +86,8 @@ declare module 'react-navigation' {
     params: NavigationParams,
   |};
 
-  declare type DeprecatedNavigationSetParamsAction = {|
-    type: 'SetParams',
-
-    // The key of the route where the params should be set
-    key: string,
-
-    // The new params to merge into the existing route params
-    params: NavigationParams,
-  |};
-
   declare export type NavigationInitAction = {|
     type: 'Navigation/INIT',
-    params?: NavigationParams,
-  |};
-
-  declare type DeprecatedNavigationInitAction = {|
-    type: 'Init',
     params?: NavigationParams,
   |};
 
@@ -127,22 +98,8 @@ declare module 'react-navigation' {
     actions: Array<NavigationNavigateAction>,
   |};
 
-  declare type DeprecatedNavigationResetAction = {|
-    type: 'Reset',
-    index: number,
-    key?: ?string,
-    actions: Array<
-      NavigationNavigateAction | DeprecatedNavigationNavigateAction
-    >,
-  |};
-
   declare export type NavigationUriAction = {|
     type: 'Navigation/URI',
-    uri: string,
-  |};
-
-  declare type DeprecatedNavigationUriAction = {|
-    type: 'Uri',
     uri: string,
   |};
 
@@ -180,17 +137,6 @@ declare module 'react-navigation' {
     | NavigationBackAction
     | NavigationSetParamsAction
     | NavigationResetAction;
-
-  declare type DeprecatedNavigationAction =
-    | DeprecatedNavigationInitAction
-    | DeprecatedNavigationNavigateAction
-    | DeprecatedNavigationBackAction
-    | DeprecatedNavigationSetParamsAction
-    | DeprecatedNavigationResetAction;
-
-  declare export type PossiblyDeprecatedNavigationAction =
-    | NavigationAction
-    | DeprecatedNavigationAction;
 
   /**
    * NavigationState is a tree of routes for a single navigator, where each
@@ -381,6 +327,7 @@ declare module 'react-navigation' {
 
   declare export type NavigationStackScreenOptions = NavigationScreenOptions & {
     header?: ?(React$Node | (HeaderProps => React$Node)),
+    headerTransparent?: boolean,
     headerTitle?: string | React$Node | React$ElementType,
     headerTitleStyle?: AnimatedTextStyleProp,
     headerTitleAllowFontScaling?: boolean,
@@ -393,6 +340,7 @@ declare module 'react-navigation' {
     headerPressColorAndroid?: string,
     headerRight?: React$Node,
     headerStyle?: ViewStyleProp,
+    headerBackground?: React$Node | React$ElementType,
     gesturesEnabled?: boolean,
     gestureResponseDistance?: { vertical?: number, horizontal?: number },
     gestureDirection?: 'default' | 'inverted',
@@ -408,6 +356,7 @@ declare module 'react-navigation' {
   declare export type NavigationStackViewConfig = {|
     mode?: 'card' | 'modal',
     headerMode?: HeaderMode,
+    headerTransitionPreset?: 'fade-in-place' | 'uikit',
     cardStyle?: ViewStyleProp,
     transitionConfig?: () => TransitionConfig,
     onTransitionStart?: () => void,
@@ -479,7 +428,7 @@ declare module 'react-navigation' {
    */
 
   declare export type NavigationDispatch = (
-    action: PossiblyDeprecatedNavigationAction
+    action: NavigationAction
   ) => boolean;
 
   declare export type NavigationProp<S> = {
@@ -786,9 +735,6 @@ declare module 'react-navigation' {
       (payload: { uri: string }): NavigationUriAction,
       toString: () => string,
     },
-    mapDeprecatedActionAndWarn: (
-      action: PossiblyDeprecatedNavigationAction
-    ) => NavigationAction,
   };
 
   declare type _RouterProp<S: NavigationState, O: {}> = {
@@ -832,6 +778,8 @@ declare module 'react-navigation' {
   declare type _TabNavigatorConfig = {|
     ...NavigationTabRouterConfig,
     ..._TabViewConfig,
+    lazy?: boolean,
+    removeClippedSubviews?: boolean,
     containerOptions?: void,
   |};
   declare export function TabNavigator(
@@ -1100,6 +1048,9 @@ declare module 'react-navigation' {
     navigation: NavigationScreenProp<NavigationState>,
   };
   declare export function withNavigation<T: {}>(
+    Component: React$ComponentType<T & _NavigationInjectedProps>
+  ): React$ComponentType<T>;
+  declare export function withNavigationFocus<T: {}>(
     Component: React$ComponentType<T & _NavigationInjectedProps>
   ): React$ComponentType<T>;
 }

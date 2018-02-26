@@ -1,3 +1,6 @@
-import { BackHandler } from 'react-native';
+import React from 'react';
+import { BackHandler, View } from 'react-native';
 
-export { BackHandler };
+const MaskedViewIOS = () => <View>{this.props.children}</View>;
+
+export { BackHandler, MaskedViewIOS };
