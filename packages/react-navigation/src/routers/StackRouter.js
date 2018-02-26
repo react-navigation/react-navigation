@@ -392,21 +392,28 @@ export default (routeConfigs, stackConfig = {}) => {
           // undefined on either the state or the action
           return state;
         }
-        const resetAction = action;
+        const newStackActions = action.actions;
 
         return {
           ...state,
-          routes: resetAction.actions.map(childAction => {
-            const router = childRouters[childAction.routeName];
+          routes: newStackActions.map(newStackAction => {
+            const router = childRouters[newStackAction.routeName];
+
             let childState = {};
+
             if (router) {
+              const childAction =
+                newStackAction.action ||
+                NavigationActions.init({ params: newStackAction.params });
+
               childState = router.getStateForAction(childAction);
             }
+
             return {
-              params: childAction.params,
+              params: newStackAction.params,
               ...childState,
-              routeName: childAction.routeName,
-              key: childAction.key || generateKey(),
+              routeName: newStackAction.routeName,
+              key: newStackAction.key || generateKey(),
             };
           }),
           index: action.index,
