@@ -85,5 +85,10 @@ export default function(navigation) {
           key: navigation.state.key,
         })
       ),
+    
+    replaceWithAnimation: (routeName, params, action) =>
+      navigation.dispatch(
+        NavigationActions.replaceWithAnimation({ routeName, params, action })
+      ),
   };
 }

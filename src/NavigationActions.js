@@ -6,6 +6,7 @@ const POP_TO_TOP = 'Navigation/POP_TO_TOP';
 const PUSH = 'Navigation/PUSH';
 const RESET = 'Navigation/RESET';
 const REPLACE = 'Navigation/REPLACE';
+const REPLACE_WITH_ANIMATION = 'Navigation/REPLACE_WITH_ANIMATION';
 const SET_PARAMS = 'Navigation/SET_PARAMS';
 const URI = 'Navigation/URI';
 const COMPLETE_TRANSITION = 'Navigation/COMPLETE_TRANSITION';
@@ -91,6 +92,13 @@ const replace = createAction(REPLACE, payload => ({
   immediate: payload.immediate,
 }));
 
+const replaceWithAnimation = createAction(REPLACE_WITH_ANIMATION, payload => ({
+  type: REPLACE_WITH_ANIMATION,
+  params: payload.params,
+  action: payload.action,
+  routeName: payload.routeName
+}));
+
 const setParams = createAction(SET_PARAMS, payload => ({
   type: SET_PARAMS,
   key: payload.key,
@@ -117,6 +125,7 @@ export default {
   PUSH,
   RESET,
   REPLACE,
+  REPLACE_WITH_ANIMATION,
   SET_PARAMS,
   URI,
   COMPLETE_TRANSITION,
@@ -130,6 +139,7 @@ export default {
   push,
   reset,
   replace,
+  replaceWithAnimation,
   setParams,
   uri,
   completeTransition,

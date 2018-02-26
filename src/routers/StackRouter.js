@@ -20,7 +20,8 @@ function isEmpty(obj) {
 function behavesLikePushAction(action) {
   return (
     action.type === NavigationActions.NAVIGATE ||
-    action.type === NavigationActions.PUSH
+    action.type === NavigationActions.PUSH ||
+    action.type === NavigationActions.REPLACE_WITH_ANIMATION
   );
 }
 
@@ -251,9 +252,26 @@ export default (routeConfigs, stackConfig = {}) => {
             key: action.key || generateKey(),
           };
         }
+
+        //Handle replaceWithAnimation action
+        if (action.type === NavigationActions.REPLACE_WITH_ANIMATION) {
+          state.routes = state.routes.map((eachRoute, index) => {
+          // We only mark the current screen as dead.
+            if (index === state.routes.length - 1) {
+              if (eachRoute.params) {
+                eachRoute.params.willBeRemoved = true
+              } else {
+                eachRoute.params = { willBeRemoved: true }
+              }
+            } 
+            return eachRoute 
+          })
+        }
+
         return {
           ...StateUtils.push(state, route),
           isTransitioning: action.immediate !== true,
+          removeAfterTransition: action.type === NavigationActions.REPLACE_WITH_ANIMATION,
         };
       } else if (
         action.type === NavigationActions.PUSH &&
@@ -359,10 +377,30 @@ export default (routeConfigs, stackConfig = {}) => {
         (action.key == null || action.key === state.key) &&
         state.isTransitioning
       ) {
-        return {
-          ...state,
-          isTransitioning: false,
-        };
+
+        if (state.removeAfterTransition === true){
+          let routes = state.routes
+                
+          routes = routes.filter((eachRoute) => {
+            if (eachRoute.params && eachRoute.params.willBeRemoved) {
+              state.index--
+              return false
+            }
+            return true
+          })
+
+          return {
+            ...state,
+            routes: routes,
+            isTransitioning: false,
+            removeAfterTransition: false
+          }
+        }else{
+          return {
+            ...state,
+            isTransitioning: false,
+          };
+        }
       }
 
       if (action.type === NavigationActions.SET_PARAMS) {
