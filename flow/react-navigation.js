@@ -690,7 +690,14 @@ declare module 'react-navigation' {
   };
 
   declare export function addNavigationHelpers<S: {}>(
-    navigation: NavigationProp<S>
+    navigation: {
+      state: S;
+      dispatch: (action: NavigationAction) => any;
+      addListener?: (
+        eventName: string,
+        callback: NavigationEventCallback
+      ) => NavigationEventSubscription;
+    }
   ): NavigationScreenProp<S>;
 
   declare export var NavigationActions: {
