@@ -457,6 +457,35 @@ describe('StackRouter', () => {
     expect(state3 && state3.routes[1].index).toEqual(0);
   });
 
+  test('popToTop targets StackRouter by key if specified', () => {
+    const ChildNavigator = () => <div />;
+    ChildNavigator.router = StackRouter({
+      Baz: { screen: () => <div /> },
+      Qux: { screen: () => <div /> },
+    });
+    const router = StackRouter({
+      Foo: { screen: () => <div /> },
+      Bar: { screen: ChildNavigator },
+    });
+    const state = router.getStateForAction({ type: NavigationActions.INIT });
+    const state2 = router.getStateForAction(
+      {
+        type: NavigationActions.NAVIGATE,
+        routeName: 'Bar',
+      },
+      state
+    );
+    const barKey = state2.routes[1].routes[0].key;
+    const state3 = router.getStateForAction(
+      {
+        type: NavigationActions.POP_TO_TOP,
+        key: state2.key,
+      },
+      state2
+    );
+    expect(state3 && state3.index).toEqual(0);
+  });
+
   test('popToTop works as expected', () => {
     const TestRouter = StackRouter({
       foo: { screen: () => <div /> },
