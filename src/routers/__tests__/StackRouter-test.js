@@ -457,6 +457,35 @@ describe('StackRouter', () => {
     expect(state3 && state3.routes[1].index).toEqual(0);
   });
 
+  test('popToTop targets StackRouter by key if specified', () => {
+    const ChildNavigator = () => <div />;
+    ChildNavigator.router = StackRouter({
+      Baz: { screen: () => <div /> },
+      Qux: { screen: () => <div /> },
+    });
+    const router = StackRouter({
+      Foo: { screen: () => <div /> },
+      Bar: { screen: ChildNavigator },
+    });
+    const state = router.getStateForAction({ type: NavigationActions.INIT });
+    const state2 = router.getStateForAction(
+      {
+        type: NavigationActions.NAVIGATE,
+        routeName: 'Bar',
+      },
+      state
+    );
+    const barKey = state2.routes[1].routes[0].key;
+    const state3 = router.getStateForAction(
+      {
+        type: NavigationActions.POP_TO_TOP,
+        key: state2.key,
+      },
+      state2
+    );
+    expect(state3 && state3.index).toEqual(0);
+  });
+
   test('popToTop works as expected', () => {
     const TestRouter = StackRouter({
       foo: { screen: () => <div /> },
@@ -1504,40 +1533,6 @@ describe('StackRouter', () => {
       expect(path).toEqual('boo/');
       expect(params).toEqual({ id: '123' });
     }
-  });
-
-  test('Maps old actions (uses "Handles the reset action" test)', () => {
-    global.console.warn = jest.fn();
-    const router = StackRouter({
-      Foo: {
-        screen: () => <div />,
-      },
-      Bar: {
-        screen: () => <div />,
-      },
-    });
-    const initAction = NavigationActions.mapDeprecatedActionAndWarn({
-      type: 'Init',
-    });
-    const state = router.getStateForAction(initAction);
-    const resetAction = NavigationActions.mapDeprecatedActionAndWarn({
-      type: 'Reset',
-      actions: [
-        { type: 'Navigate', routeName: 'Foo', params: { bar: '42' } },
-        { type: 'Navigate', routeName: 'Bar' },
-      ],
-      index: 1,
-    });
-    const state2 = router.getStateForAction(resetAction, state);
-    expect(state2 && state2.index).toEqual(1);
-    expect(state2 && state2.routes[0].params).toEqual({ bar: '42' });
-    expect(state2 && state2.routes[0].routeName).toEqual('Foo');
-    expect(state2 && state2.routes[1].routeName).toEqual('Bar');
-    expect(console.warn).toBeCalledWith(
-      expect.stringContaining(
-        "The action type 'Init' has been renamed to 'Navigation/INIT'"
-      )
-    );
   });
 
   test('URI encoded string get passed to deep link', () => {

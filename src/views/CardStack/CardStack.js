@@ -19,6 +19,7 @@ import getChildEventSubscriber from '../../getChildEventSubscriber';
 import SceneView from '../SceneView';
 
 import TransitionConfigs from './TransitionConfigs';
+import * as ReactNativeFeatures from '../../utils/ReactNativeFeatures';
 
 const emptyFunction = () => {};
 
@@ -166,12 +167,25 @@ class CardStack extends React.Component {
   }
 
   _reset(resetToIndex, duration) {
-    Animated.timing(this.props.transitionProps.position, {
-      toValue: resetToIndex,
-      duration,
-      easing: EaseInOut,
-      useNativeDriver: this.props.transitionProps.position.__isNative,
-    }).start();
+    if (
+      Platform.OS === 'ios' &&
+      ReactNativeFeatures.supportsImprovedSpringAnimation()
+    ) {
+      Animated.spring(this.props.transitionProps.position, {
+        toValue: resetToIndex,
+        stiffness: 5000,
+        damping: 600,
+        mass: 3,
+        useNativeDriver: this.props.transitionProps.position.__isNative,
+      }).start();
+    } else {
+      Animated.timing(this.props.transitionProps.position, {
+        toValue: resetToIndex,
+        duration,
+        easing: EaseInOut,
+        useNativeDriver: this.props.transitionProps.position.__isNative,
+      }).start();
+    }
   }
 
   _goBack(backFromIndex, duration) {
@@ -182,12 +196,7 @@ class CardStack extends React.Component {
     // dispatched at the end of the transition.
     this._immediateIndex = toValue;
 
-    Animated.timing(position, {
-      toValue,
-      duration,
-      easing: EaseInOut,
-      useNativeDriver: position.__isNative,
-    }).start(() => {
+    const onCompleteAnimation = () => {
       this._immediateIndex = null;
       const backFromScene = scenes.find(s => s.index === toValue + 1);
       if (!this._isResponding && backFromScene) {
@@ -198,7 +207,27 @@ class CardStack extends React.Component {
           })
         );
       }
-    });
+    };
+
+    if (
+      Platform.OS === 'ios' &&
+      ReactNativeFeatures.supportsImprovedSpringAnimation()
+    ) {
+      Animated.spring(position, {
+        toValue,
+        stiffness: 5000,
+        damping: 600,
+        mass: 3,
+        useNativeDriver: position.__isNative,
+      }).start(onCompleteAnimation);
+    } else {
+      Animated.timing(position, {
+        toValue,
+        duration,
+        easing: EaseInOut,
+        useNativeDriver: position.__isNative,
+      }).start(onCompleteAnimation);
+    }
   }
 
   render() {
