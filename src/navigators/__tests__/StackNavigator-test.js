@@ -1,8 +1,14 @@
 import React, { Component } from 'react';
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import renderer from 'react-test-renderer';
 
 import StackNavigator from '../StackNavigator';
+
+const styles = StyleSheet.create({
+  header: {
+    opacity: 0.5,
+  },
+});
 
 class HomeScreen extends Component {
   static navigationOptions = ({ navigation }) => ({
@@ -10,6 +16,7 @@ class HomeScreen extends Component {
       navigation.state.params ? navigation.state.params.user : 'anonymous'
     }`,
     gesturesEnabled: true,
+    headerStyle: [{ backgroundColor: 'red' }, styles.header],
   });
 
   render() {

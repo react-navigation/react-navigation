@@ -441,10 +441,7 @@ class Header extends React.PureComponent {
 
     const { options } = this.props.getScreenDetails(scene);
     const { headerStyle = {} } = options;
-    const headerStyleObj =
-      typeof headerStyle === 'number'
-        ? StyleSheet.flatten(headerStyle)
-        : headerStyle;
+    const headerStyleObj = StyleSheet.flatten(headerStyle);
     const appBarHeight = getAppBarHeight(isLandscape);
 
     const {
