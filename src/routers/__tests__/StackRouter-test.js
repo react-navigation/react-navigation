@@ -553,7 +553,7 @@ describe('StackRouter', () => {
         foo: { screen: () => <div /> },
         bar: { screen: () => <div /> },
       },
-      { initialRouteKey: 'initialRouteName' }
+      { initialRouteKey: 'foo' }
     );
     const initState = TestRouter.getStateForAction(NavigationActions.init());
     const pushedState = TestRouter.getStateForAction(
