@@ -2,8 +2,8 @@ import { Dimensions, I18nManager } from 'react-native';
 import getSceneIndicesForInterpolationInputRange from '../../utils/getSceneIndicesForInterpolationInputRange';
 
 const crossFadeInterpolation = (first, index, last) => ({
-  inputRange: [first, index - 0.75, index - 0.5, index, index + 0.5, last],
-  outputRange: [0, 0, 0.2, 1, 0.5, 0],
+  inputRange: [first, index - 0.9, index - 0.2, index, last],
+  outputRange: [0, 0, 0.3, 1, 0],
 });
 
 /**
