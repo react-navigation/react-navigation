@@ -705,7 +705,7 @@ declare module 'react-navigation' {
       toString: () => string,
     },
     init: {
-      (payload: { params?: NavigationParams }): NavigationInitAction,
+      (payload?: { params?: NavigationParams }): NavigationInitAction,
       toString: () => string,
     },
     navigate: {
