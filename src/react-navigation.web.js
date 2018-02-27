@@ -17,7 +17,7 @@ module.exports = {
 
   // Navigators
   get createNavigator() {
-    return require('./navigators/createNavigatorDEPRECATED').default;
+    return require('./navigators/createNavigator').default;
   },
 
   // Routers
