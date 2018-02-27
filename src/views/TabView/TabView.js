@@ -99,10 +99,26 @@ class TabView extends React.PureComponent {
       tabBarOptions,
       tabBarComponent: TabBarComponent,
       animationEnabled,
+      navigation,
+      router,
+      screenProps,
     } = this.props;
     if (typeof TabBarComponent === 'undefined') {
       return null;
     }
+
+    const { state } = navigation;
+    const options = router.getScreenOptions(
+      this.props.childNavigationProps[state.routes[state.index].key],
+      screenProps || {}
+    );
+
+    const tabBarVisible = options.tabBarVisible !== false;
+
+    const tabBarStyles = [
+      tabBarVisible ? undefined : styles.hidden,
+      tabBarOptions ? tabBarOptions.style : undefined,
+    ];
 
     return (
       <TabBarComponent
@@ -116,6 +132,7 @@ class TabView extends React.PureComponent {
         getOnPress={this._getOnPress}
         renderIcon={this._renderIcon}
         animationEnabled={animationEnabled}
+        style={tabBarStyles}
       />
     );
   };
@@ -143,9 +160,6 @@ class TabView extends React.PureComponent {
       screenProps || {}
     );
 
-    const tabBarVisible =
-      options.tabBarVisible == null ? true : options.tabBarVisible;
-
     let swipeEnabled =
       options.swipeEnabled == null
         ? this.props.swipeEnabled
@@ -155,7 +169,7 @@ class TabView extends React.PureComponent {
       swipeEnabled = swipeEnabled(state);
     }
 
-    if (tabBarComponent !== undefined && tabBarVisible) {
+    if (tabBarComponent !== undefined) {
       if (tabBarPosition === 'bottom') {
         renderFooter = this._renderTabBar;
       } else {
@@ -194,5 +208,13 @@ export default withCachedChildNavigation(TabView);
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  page: {
+    flex: 1,
+    overflow: 'hidden',
+  },
+
+  hidden: {
+    display: 'none',
   },
 });
