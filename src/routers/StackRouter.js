@@ -259,12 +259,8 @@ export default (routeConfigs, stackConfig = {}) => {
         action.type === NavigationActions.PUSH &&
         childRouters[action.routeName] === undefined
       ) {
-        // If we've made it this far with a push action, we return the
-        // state with a new identity to prevent the action from bubbling
-        // back up.
-        return {
-          ...state,
-        };
+        // Return the state identity to bubble the action up
+        return state;
       }
 
       // Handle navigation to other child routers that are not yet pushed
@@ -313,11 +309,7 @@ export default (routeConfigs, stackConfig = {}) => {
 
         // If we're already at the top, then we return the state with a new
         // identity so that the action is handled by this router.
-        if (state.index === 0) {
-          return {
-            ...state,
-          };
-        } else {
+        if (state.index > 0) {
           return {
             ...state,
             isTransitioning: action.immediate !== true,
@@ -442,15 +434,9 @@ export default (routeConfigs, stackConfig = {}) => {
             index: backRouteIndex - 1,
             isTransitioning: immediate !== true,
           };
-        } else if (
-          backRouteIndex === 0 &&
-          action.type === NavigationActions.POP
-        ) {
-          return {
-            ...state,
-          };
         }
       }
+
       return state;
     },
 
