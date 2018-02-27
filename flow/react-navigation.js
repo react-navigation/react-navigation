@@ -260,7 +260,8 @@ declare module 'react-navigation' {
 
   declare export type NavigationComponent =
     | NavigationScreenComponent<NavigationRoute, *, *>
-    | NavigationContainer<NavigationStateRoute, *, *>;
+    | NavigationContainer<*, *, *>
+    | any;
 
   declare export type NavigationScreenComponent<
     Route: NavigationRoute,
@@ -730,7 +731,7 @@ declare module 'react-navigation' {
     view: NavigationView<O, S>,
     router: NavigationRouter<S, O>,
     navigatorConfig?: NavigatorConfig
-  ): NavigationContainer<NavigationStateRoute, *, *>;
+  ): any;
 
   declare export function StackNavigator(
     routeConfigMap: NavigationRouteConfigMap,
