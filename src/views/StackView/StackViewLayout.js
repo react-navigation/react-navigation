@@ -14,7 +14,6 @@ import {
 import Card from './StackViewCard';
 import Header from '../Header/Header';
 import NavigationActions from '../../NavigationActions';
-import addNavigationHelpers from '../../addNavigationHelpers';
 import SceneView from '../SceneView';
 
 import TransitionConfigs from './StackViewTransitionConfigs';

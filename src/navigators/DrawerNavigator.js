@@ -4,7 +4,7 @@ import SafeAreaView from 'react-native-safe-area-view';
 
 import createNavigator from './createNavigator';
 import createNavigationContainer from '../createNavigationContainer';
-import TabRouter from '../routers/TabRouter';
+import DrawerRouter from '../routers/DrawerRouter';
 import DrawerScreen from '../views/Drawer/DrawerScreen';
 import DrawerView from '../views/Drawer/DrawerView';
 import DrawerItems from '../views/Drawer/DrawerNavigatorItems';
@@ -38,9 +38,6 @@ const DefaultDrawerConfig = {
     return Math.min(smallerAxisSize - appBarHeight, maxWidth);
   },
   contentComponent: defaultContentComponent,
-  drawerOpenRoute: 'DrawerOpen',
-  drawerCloseRoute: 'DrawerClose',
-  drawerToggleRoute: 'DrawerToggle',
   drawerPosition: 'left',
   drawerBackgroundColor: 'white',
   useNativeAnimations: true,
@@ -48,6 +45,7 @@ const DefaultDrawerConfig = {
 
 const DrawerNavigator = (routeConfigs, config = {}) => {
   const mergedConfig = { ...DefaultDrawerConfig, ...config };
+
   const {
     order,
     paths,
@@ -55,29 +53,15 @@ const DrawerNavigator = (routeConfigs, config = {}) => {
     backBehavior,
     ...drawerConfig
   } = mergedConfig;
-  const tabsConfig = {
+
+  const routerConfig = {
     order,
     paths,
     initialRouteName,
     backBehavior,
   };
-  const contentRouter = TabRouter(routeConfigs, tabsConfig);
-  const drawerRouter = TabRouter(
-    {
-      [drawerConfig.drawerCloseRoute]: {
-        screen: createNavigator(DrawerScreen, contentRouter, config),
-      },
-      [drawerConfig.drawerOpenRoute]: {
-        screen: () => null,
-      },
-      [drawerConfig.drawerToggleRoute]: {
-        screen: () => null,
-      },
-    },
-    {
-      initialRouteName: drawerConfig.drawerCloseRoute,
-    }
-  );
+
+  const drawerRouter = DrawerRouter(routeConfigs, routerConfig);
 
   const navigator = createNavigator(DrawerView, drawerRouter, drawerConfig);
 
