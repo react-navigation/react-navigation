@@ -1,7 +1,6 @@
 import invariant from '../utils/invariant';
 
 import getScreenForRouteName from './getScreenForRouteName';
-import addNavigationHelpers from '../addNavigationHelpers';
 import validateScreenOptions from './validateScreenOptions';
 import getChildEventSubscriber from '../getChildEventSubscriber';
 
@@ -38,28 +37,6 @@ export default (routeConfigs, navigatorScreenConfig) => (
 
   const Component = getScreenForRouteName(routeConfigs, route.routeName);
 
-  let outputConfig = {};
-
-  const router = Component.router;
-  if (router) {
-    const { routes, index } = route;
-    if (!route || !routes || index == null) {
-      throw new Error(
-        `Expect nav state to have routes and index, ${JSON.stringify(route)}`
-      );
-    }
-    const childRoute = routes[index];
-    const childNavigation = addNavigationHelpers({
-      state: childRoute,
-      dispatch,
-      addListener: getChildEventSubscriber(
-        navigation.addListener,
-        childRoute.key
-      ),
-    });
-    outputConfig = router.getScreenOptions(childNavigation, screenProps);
-  }
-
   const routeConfig = routeConfigs[route.routeName];
 
   const routeScreenConfig = routeConfig.navigationOptions;
@@ -67,11 +44,7 @@ export default (routeConfigs, navigatorScreenConfig) => (
 
   const configOptions = { navigation, screenProps: screenProps || {} };
 
-  outputConfig = applyConfig(
-    navigatorScreenConfig,
-    outputConfig,
-    configOptions
-  );
+  let outputConfig = applyConfig(navigatorScreenConfig, {}, configOptions);
   outputConfig = applyConfig(
     componentScreenConfig,
     outputConfig,

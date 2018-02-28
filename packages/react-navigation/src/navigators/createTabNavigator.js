@@ -8,42 +8,13 @@ import TabView from '../views/TabView/TabView';
 import TabBarTop from '../views/TabView/TabBarTop';
 import TabBarBottom from '../views/TabView/TabBarBottom';
 
-// A tab navigators props are the intersection between
-// the base navigator props (navgiation, screenProps, etc)
-// and the view's props
-
 const TabNavigator = (routeConfigs, config = {}) => {
   // Use the look native to the platform by default
-  const mergedConfig = { ...TabNavigator.Presets.Default, ...config };
-  const {
-    tabBarComponent,
-    tabBarPosition,
-    tabBarOptions,
-    lazy,
-    removeClippedSubviews,
-    swipeEnabled,
-    animationEnabled,
-    configureTransition,
-    initialLayout,
-    ...tabsConfig
-  } = mergedConfig;
+  const tabsConfig = { ...TabNavigator.Presets.Default, ...config };
 
   const router = TabRouter(routeConfigs, tabsConfig);
 
-  const navigator = createNavigator(router, routeConfigs, config)(props => (
-    <TabView
-      {...props}
-      lazy={lazy}
-      removeClippedSubviews={removeClippedSubviews}
-      tabBarComponent={tabBarComponent}
-      tabBarPosition={tabBarPosition}
-      tabBarOptions={tabBarOptions}
-      swipeEnabled={swipeEnabled}
-      animationEnabled={animationEnabled}
-      configureTransition={configureTransition}
-      initialLayout={initialLayout}
-    />
-  ));
+  const navigator = createNavigator(TabView, router, tabsConfig);
 
   return createNavigationContainer(navigator);
 };
