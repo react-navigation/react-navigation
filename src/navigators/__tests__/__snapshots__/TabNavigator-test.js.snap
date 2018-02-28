@@ -20,110 +20,60 @@ exports[`TabNavigator renders successfully 1`] = `
     ]
   }
 >
-  <RCTScrollView
-    DEPRECATED_sendUpdatedChildFrames={false}
-    alwaysBounceHorizontal={false}
-    alwaysBounceVertical={false}
-    automaticallyAdjustContentInsets={false}
-    bounces={false}
-    contentContainerStyle={
-      Object {
-        "flex": 1,
-      }
-    }
-    contentOffset={
-      Object {
-        "x": 0,
-        "y": 0,
-      }
-    }
-    directionalLockEnabled={true}
-    horizontal={true}
-    keyboardDismissMode="on-drag"
-    keyboardShouldPersistTaps="always"
-    onContentSizeChange={null}
-    onMomentumScrollBegin={[Function]}
-    onMomentumScrollEnd={[Function]}
+  <View
+    collapsable={undefined}
+    onMoveShouldSetResponder={[Function]}
+    onMoveShouldSetResponderCapture={[Function]}
+    onResponderEnd={[Function]}
     onResponderGrant={[Function]}
+    onResponderMove={[Function]}
     onResponderReject={[Function]}
     onResponderRelease={[Function]}
-    onResponderTerminate={undefined}
+    onResponderStart={[Function]}
+    onResponderTerminate={[Function]}
     onResponderTerminationRequest={[Function]}
-    onScroll={[Function]}
-    onScrollBeginDrag={[Function]}
-    onScrollEndDrag={[Function]}
-    onScrollShouldSetResponder={[Function]}
     onStartShouldSetResponder={[Function]}
     onStartShouldSetResponderCapture={[Function]}
-    onTouchCancel={[Function]}
-    onTouchEnd={[Function]}
-    onTouchMove={[Function]}
-    onTouchStart={[Function]}
-    overScrollMode="never"
-    pagingEnabled={true}
-    scrollEnabled={undefined}
-    scrollEventThrottle={1}
-    scrollsToTop={false}
-    sendMomentumEvents={true}
-    showsHorizontalScrollIndicator={false}
     style={
-      Array [
-        Object {
-          "flexDirection": "row",
-          "flexGrow": 1,
-          "flexShrink": 1,
-          "overflow": "scroll",
-        },
-        Object {
-          "flex": 1,
-        },
-      ]
+      Object {
+        "alignItems": "stretch",
+        "flex": 1,
+        "flexDirection": "row",
+      }
     }
   >
-    <RCTScrollContentView
-      collapsable={false}
-      removeClippedSubviews={undefined}
+    <View
       style={
-        Array [
-          Object {
-            "flexDirection": "row",
-          },
-          Object {
-            "flex": 1,
-          },
-        ]
+        Object {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        }
       }
+      testID={undefined}
     >
       <View
+        collapsable={false}
+        removeClippedSubviews={false}
         style={
           Object {
             "flex": 1,
             "overflow": "hidden",
           }
         }
-        testID={undefined}
       >
         <View
-          collapsable={false}
-          removeClippedSubviews={false}
           style={
             Object {
               "flex": 1,
-              "overflow": "hidden",
             }
           }
-        >
-          <View
-            style={
-              Object {
-                "flex": 1,
-              }
-            }
-          />
-        </View>
+        />
       </View>
-    </RCTScrollContentView>
-  </RCTScrollView>
+    </View>
+  </View>
   <View
     collapsable={undefined}
     style={undefined}
