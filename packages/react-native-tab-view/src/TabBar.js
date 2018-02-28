@@ -4,6 +4,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import {
   Animated,
+  NativeModules,
   StyleSheet,
   View,
   ScrollView,
@@ -43,6 +44,8 @@ type State = {|
   scrollAmount: Animated.Value,
   initialOffset: ?{| x: number, y: number |},
 |};
+
+const useNativeDriver = Boolean(NativeModules.NativeAnimatedModule);
 
 export default class TabBar<T: *> extends React.Component<Props<T>, State> {
   static propTypes = {
@@ -379,7 +382,7 @@ export default class TabBar<T: *> extends React.Component<Props<T>, State> {
                   },
                 },
               ],
-              { useNativeDriver: true, listener: this._handleScroll }
+              { useNativeDriver, listener: this._handleScroll }
             )}
             onScrollBeginDrag={this._handleBeginDrag}
             onScrollEndDrag={this._handleEndDrag}
