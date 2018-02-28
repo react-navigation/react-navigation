@@ -26,7 +26,6 @@ type Props<T> = PagerProps<T> & {
 };
 
 type State = {|
-  loaded: Array<number>,
   layout: Layout & { measured: boolean },
   layoutXY: Animated.ValueXY,
   panX: Animated.Value,
@@ -98,7 +97,6 @@ export default class TabViewAnimated<T: *> extends React.Component<
     );
 
     this.state = {
-      loaded: [navigationState.index],
       layout,
       layoutXY,
       panX,
@@ -192,32 +190,30 @@ export default class TabViewAnimated<T: *> extends React.Component<
     const props = this._buildSceneRendererProps();
 
     return (
-      <View
-        onLayout={this._handleLayout}
-        loaded={this.state.loaded}
-        style={[styles.container, this.props.style]}
-      >
+      <View collapsable={false} style={[styles.container, this.props.style]}>
         {renderHeader && renderHeader(props)}
-        {renderPager({
-          ...props,
-          ...rest,
-          panX: this.state.panX,
-          offsetX: this.state.offsetX,
-          children: navigationState.routes.map((route, index) => {
-            const scene = this._renderScene({
-              ...props,
-              route,
-              index,
-              focused: index === navigationState.index,
-            });
+        <View onLayout={this._handleLayout} style={styles.pager}>
+          {renderPager({
+            ...props,
+            ...rest,
+            panX: this.state.panX,
+            offsetX: this.state.offsetX,
+            children: navigationState.routes.map((route, index) => {
+              const scene = this._renderScene({
+                ...props,
+                route,
+                index,
+                focused: index === navigationState.index,
+              });
 
-            if (scene) {
-              return React.cloneElement(scene, { key: route.key });
-            }
+              if (scene) {
+                return React.cloneElement(scene, { key: route.key });
+              }
 
-            return scene;
-          }),
-        })}
+              return scene;
+            }),
+          })}
+        </View>
         {renderFooter && renderFooter(props)}
       </View>
     );
@@ -228,5 +224,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     overflow: 'hidden',
+  },
+  pager: {
+    flex: 1,
   },
 });
