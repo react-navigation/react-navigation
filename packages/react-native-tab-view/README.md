@@ -139,7 +139,6 @@ Cross-platform pager based on the [`PanResponder`](https://facebook.github.io/re
 
 #### Props
 
-- `configureTransition` - optional callback which returns a configuration for the transition
 - `animationEnabled` - whether to enable page change animation
 - `swipeEnabled` - whether to enable swipe gestures
 - `swipeDistanceThreshold` - minimum swipe distance to trigger page switch
