@@ -11,10 +11,7 @@ import SampleText from './SampleText';
 const MyNavScreen = ({ navigation, banner }) => (
   <ScrollView style={styles.container}>
     <SampleText>{banner}</SampleText>
-    <Button
-      onPress={() => navigation.navigate('DrawerOpen')}
-      title="Open drawer"
-    />
+    <Button onPress={() => navigation.openDrawer()} title="Open drawer" />
     <Button onPress={() => navigation.goBack(null)} title="Go back" />
   </ScrollView>
 );
@@ -55,9 +52,6 @@ const DrawerExample = DrawerNavigator(
     },
   },
   {
-    drawerOpenRoute: 'DrawerOpen',
-    drawerCloseRoute: 'DrawerClose',
-    drawerToggleRoute: 'DrawerToggle',
     initialRouteName: 'Drafts',
     contentOptions: {
       activeTintColor: '#e91e63',
@@ -69,10 +63,6 @@ const MainDrawerExample = DrawerNavigator({
   Drafts: {
     screen: DrawerExample,
   },
-}, {
-    drawerOpenRoute: 'DrawerOpen',
-    drawerCloseRoute: 'DrawerClose',
-    drawerToggleRoute: 'DrawerToggle',
 });
 
 const styles = StyleSheet.create({

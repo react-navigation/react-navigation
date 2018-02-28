@@ -4,7 +4,6 @@ import createConfigGetter from './createConfigGetter';
 
 import NavigationActions from '../NavigationActions';
 import validateRouteConfigMap from './validateRouteConfigMap';
-import getScreenConfigDeprecated from './getScreenConfigDeprecated';
 
 function childrenUpdateWithoutSwitchingIndex(actionType) {
   return [
@@ -323,7 +322,5 @@ export default (routeConfigs, config = {}) => {
       routeConfigs,
       config.navigationOptions
     ),
-
-    getScreenConfig: getScreenConfigDeprecated,
   };
 };
