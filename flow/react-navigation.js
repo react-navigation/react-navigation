@@ -260,7 +260,8 @@ declare module 'react-navigation' {
 
   declare export type NavigationComponent =
     | NavigationScreenComponent<NavigationRoute, *, *>
-    | NavigationContainer<NavigationStateRoute, *, *>;
+    | NavigationContainer<*, *, *>
+    | any;
 
   declare export type NavigationScreenComponent<
     Route: NavigationRoute,
@@ -492,29 +493,6 @@ declare module 'react-navigation' {
     navigationOptions?: O,
   }>;
 
-  //declare export type NavigationNavigatorProps<O: {}, S: {}> =
-  //  | {}
-  //  | { navigation: NavigationScreenProp<S> }
-  //  | { screenProps: {} }
-  //  | { navigationOptions: O }
-  //  | {
-  //      navigation: NavigationScreenProp<S>,
-  //      screenProps: {},
-  //    }
-  //  | {
-  //      navigation: NavigationScreenProp<S>,
-  //      navigationOptions: O,
-  //    }
-  //  | {
-  //      screenProps: {},
-  //      navigationOptions: O,
-  //    }
-  //  | {
-  //      navigation: NavigationScreenProp<S>,
-  //      screenProps: {},
-  //      navigationOptions: O,
-  //    };
-
   /**
    * Navigation container
    */
@@ -689,10 +667,6 @@ declare module 'react-navigation' {
     ) => NavigationState,
   };
 
-  declare export function addNavigationHelpers<S: {}>(
-    navigation: NavigationProp<S>
-  ): NavigationScreenProp<S>;
-
   declare export var NavigationActions: {
     BACK: 'Navigation/BACK',
     INIT: 'Navigation/INIT',
@@ -740,23 +714,24 @@ declare module 'react-navigation' {
   declare type _RouterProp<S: NavigationState, O: {}> = {
     router: NavigationRouter<S, O>,
   };
-  declare type _NavigatorCreator<
-    NavigationViewProps: {},
-    S: NavigationState,
-    O: {}
-  > = (
-    NavigationView: React$ComponentType<_RouterProp<S, O> & NavigationViewProps>
-  ) => NavigationNavigator<S, O, NavigationViewProps>;
-  declare export function createNavigator<
-    S: NavigationState,
-    O: {},
-    NavigatorConfig: {},
-    NavigationViewProps: NavigationNavigatorProps<O, S>
-  >(
+
+  declare type NavigationDescriptor = {
+    key: string,
+    state: NavigationLeafRoute | NavigationStateRoute,
+    navigation: NavigationScreenProp<*>,
+    getComponent: () => React$ComponentType<{}>,
+  };
+
+  declare type NavigationView<O, S> = React$ComponentType<{
+    descriptors: { [key: string]: NavigationDescriptor },
+    navigation: NavigationScreenProp<S>,
+  }>;
+
+  declare export function createNavigator<O: *, S: *, NavigatorConfig: *>(
+    view: NavigationView<O, S>,
     router: NavigationRouter<S, O>,
-    routeConfigs?: NavigationRouteConfigMap,
     navigatorConfig?: NavigatorConfig
-  ): _NavigatorCreator<NavigationViewProps, S, O>;
+  ): any;
 
   declare export function StackNavigator(
     routeConfigMap: NavigationRouteConfigMap,
