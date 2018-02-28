@@ -5,7 +5,6 @@ import createConfigGetter from './createConfigGetter';
 import getScreenForRouteName from './getScreenForRouteName';
 import StateUtils from '../StateUtils';
 import validateRouteConfigMap from './validateRouteConfigMap';
-import getScreenConfigDeprecated from './getScreenConfigDeprecated';
 import invariant from '../utils/invariant';
 import { generateKey } from './KeyGenerator';
 
@@ -576,7 +575,5 @@ export default (routeConfigs, stackConfig = {}) => {
       routeConfigs,
       stackConfig.navigationOptions
     ),
-
-    getScreenConfig: getScreenConfigDeprecated,
   };
 };
