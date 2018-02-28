@@ -22,14 +22,20 @@ class TabView extends React.PureComponent {
 
   _renderScene = ({ route }) => {
     const { screenProps, descriptors } = this.props;
+    const {
+      lazy,
+      removeClippedSubviews,
+      animationEnabled,
+      swipeEnabled,
+    } = this.props.navigationConfig;
     const descriptor = descriptors[route.key];
     const TabComponent = descriptor.getComponent();
     return (
       <ResourceSavingSceneView
-        lazy={this.props.lazy}
-        removeClippedSubViews={this.props.removeClippedSubviews}
-        animationEnabled={this.props.animationEnabled}
-        swipeEnabled={this.props.swipeEnabled}
+        lazy={lazy}
+        removeClippedSubViews={removeClippedSubviews}
+        animationEnabled={animationEnabled}
+        swipeEnabled={swipeEnabled}
         screenProps={screenProps}
         component={TabComponent}
         navigation={this.props.navigation}
@@ -140,7 +146,7 @@ class TabView extends React.PureComponent {
 
     let swipeEnabled =
       options.swipeEnabled == null
-        ? this.props.swipeEnabled
+        ? this.props.navigationConfig.swipeEnabled
         : options.swipeEnabled;
 
     if (typeof swipeEnabled === 'function') {
