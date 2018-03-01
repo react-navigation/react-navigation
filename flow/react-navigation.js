@@ -48,6 +48,15 @@ declare module 'react-navigation' {
   // react-native/Libraries/Animated/src/nodes/AnimatedValue.js
   declare type AnimatedValue = Object;
 
+  declare type HeaderForceInset = {
+    horizontal?: string,
+    vertical?: string,
+    left?: string,
+    right?: string,
+    top?: string,
+    bottom?: string,
+  };
+
   /**
    * Next, all the type declarations
    */
@@ -341,6 +350,7 @@ declare module 'react-navigation' {
     headerPressColorAndroid?: string,
     headerRight?: React$Node,
     headerStyle?: ViewStyleProp,
+    headerForceInset?: HeaderForceInset,
     headerBackground?: React$Node | React$ElementType,
     gesturesEnabled?: boolean,
     gestureResponseDistance?: { vertical?: number, horizontal?: number },

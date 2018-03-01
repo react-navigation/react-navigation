@@ -473,11 +473,11 @@ class Header extends React.PureComponent {
       safeHeaderStyle,
     ];
 
+    const { headerForceInset } = options;
+    const forceInset = headerForceInset || { top: 'always', bottom: 'never' };
+
     return (
-      <SafeAreaView
-        forceInset={{ top: 'always', bottom: 'never' }}
-        style={containerStyles}
-      >
+      <SafeAreaView forceInset={forceInset} style={containerStyles}>
         <View style={StyleSheet.absoluteFill}>{options.headerBackground}</View>
         <View style={{ flex: 1 }}>{appBar}</View>
       </SafeAreaView>
