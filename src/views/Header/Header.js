@@ -475,7 +475,6 @@ class Header extends React.PureComponent {
 
     return (
       <SafeAreaView
-        forceInset={{ top: 'always', bottom: 'never' }}
         style={containerStyles}
       >
         <View style={StyleSheet.absoluteFill}>{options.headerBackground}</View>
