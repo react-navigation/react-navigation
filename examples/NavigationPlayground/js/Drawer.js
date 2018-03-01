@@ -4,7 +4,11 @@
 
 import React from 'react';
 import { Button, Platform, ScrollView, StatusBar } from 'react-native';
-import { StackNavigator, DrawerNavigator, SafeAreaView } from 'react-navigation';
+import {
+  StackNavigator,
+  DrawerNavigator,
+  SafeAreaView,
+} from 'react-navigation';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import SampleText from './SampleText';
 
@@ -12,10 +16,7 @@ const MyNavScreen = ({ navigation, banner }) => (
   <ScrollView>
     <SafeAreaView forceInset={{ top: 'always' }}>
       <SampleText>{banner}</SampleText>
-      <Button
-        onPress={() => navigation.navigate('DrawerOpen')}
-        title="Open drawer"
-      />
+      <Button onPress={() => navigation.openDrawer()} title="Open drawer" />
       <Button
         onPress={() => navigation.navigate('Email')}
         title="Open other screen"
@@ -76,9 +77,6 @@ const DrawerExample = DrawerNavigator(
     },
   },
   {
-    drawerOpenRoute: 'DrawerOpen',
-    drawerCloseRoute: 'DrawerClose',
-    drawerToggleRoute: 'DrawerToggle',
     initialRouteName: 'Drafts',
     contentOptions: {
       activeTintColor: '#e91e63',

@@ -18,7 +18,6 @@ import {
   createNavigationContainer,
   SafeAreaView,
   TabRouter,
-  addNavigationHelpers,
 } from 'react-navigation';
 import SampleText from './SampleText';
 
@@ -66,19 +65,14 @@ const CustomTabBar = ({ navigation }) => {
   );
 };
 
-const CustomTabView = ({ router, navigation }) => {
+const CustomTabView = ({ descriptors, navigation }) => {
   const { routes, index } = navigation.state;
-  const ActiveScreen = router.getComponentForRouteName(routes[index].routeName);
+  const descriptor = descriptors[routes[index].key];
+  const ActiveScreen = descriptor.getComponent();
   return (
     <SafeAreaView forceInset={{ top: 'always' }}>
       <CustomTabBar navigation={navigation} />
-      <ActiveScreen
-        navigation={addNavigationHelpers({
-          dispatch: navigation.dispatch,
-          state: routes[index],
-        })}
-        screenProps={{}}
-      />
+      <ActiveScreen navigation={descriptor.navigation} />
     </SafeAreaView>
   );
 };
@@ -105,7 +99,7 @@ const CustomTabRouter = TabRouter(
 );
 
 const CustomTabs = createNavigationContainer(
-  createNavigator(CustomTabRouter)(CustomTabView)
+  createNavigator(CustomTabView, CustomTabRouter, {})
 );
 
 const styles = StyleSheet.create({

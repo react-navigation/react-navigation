@@ -9,6 +9,9 @@ const REPLACE = 'Navigation/REPLACE';
 const SET_PARAMS = 'Navigation/SET_PARAMS';
 const URI = 'Navigation/URI';
 const COMPLETE_TRANSITION = 'Navigation/COMPLETE_TRANSITION';
+const OPEN_DRAWER = 'Navigation/OPEN_DRAWER';
+const CLOSE_DRAWER = 'Navigation/CLOSE_DRAWER';
+const TOGGLE_DRAWER = 'Navigation/TOGGLE_DRAWER';
 
 const createAction = (type, fn) => {
   fn.toString = () => type;
@@ -57,6 +60,7 @@ const pop = createAction(POP, payload => ({
 const popToTop = createAction(POP_TO_TOP, payload => ({
   type: POP_TO_TOP,
   immediate: payload && payload.immediate,
+  key: payload && payload.key,
 }));
 
 const push = createAction(PUSH, payload => {
@@ -106,6 +110,16 @@ const completeTransition = createAction(COMPLETE_TRANSITION, payload => ({
   key: payload && payload.key,
 }));
 
+const openDrawer = createAction(OPEN_DRAWER, payload => ({
+  type: OPEN_DRAWER,
+}));
+const closeDrawer = createAction(CLOSE_DRAWER, payload => ({
+  type: CLOSE_DRAWER,
+}));
+const toggleDrawer = createAction(TOGGLE_DRAWER, payload => ({
+  type: TOGGLE_DRAWER,
+}));
+
 export default {
   // Action constants
   BACK,
@@ -119,6 +133,9 @@ export default {
   SET_PARAMS,
   URI,
   COMPLETE_TRANSITION,
+  OPEN_DRAWER,
+  CLOSE_DRAWER,
+  TOGGLE_DRAWER,
 
   // Action creators
   back,
@@ -132,4 +149,7 @@ export default {
   setParams,
   uri,
   completeTransition,
+  openDrawer,
+  closeDrawer,
+  toggleDrawer,
 };
