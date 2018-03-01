@@ -377,11 +377,9 @@ declare module 'react-navigation' {
     initialRouteParams?: NavigationParams,
     paths?: NavigationPathsConfig,
     navigationOptions?: NavigationScreenConfig<*>,
-    // todo: type these as the real route names rather than 'string'
     order?: Array<string>,
-    // Does the back button cause the router to switch to the initial tab
-    backBehavior?: 'none' | 'initialRoute', // defaults `initialRoute`
-    resetOnBlur?: boolean,
+    backBehavior?: 'none' | 'initialRoute', // defaults to `'none'`
+    resetOnBlur?: boolean, // defaults to `true`
   |};
 
   /**
@@ -389,7 +387,14 @@ declare module 'react-navigation' {
    */
 
   declare export type NavigationTabRouterConfig = {|
-    ...NavigationSwitchRouterConfig,
+    initialRouteName?: string,
+    initialRouteParams?: NavigationParams,
+    paths?: NavigationPathsConfig,
+    navigationOptions?: NavigationScreenConfig<*>,
+    // todo: type these as the real route names rather than 'string'
+    order?: Array<string>,
+    // Does the back button cause the router to switch to the initial tab
+    backBehavior?: 'none' | 'initialRoute', // defaults `initialRoute`
   |};
 
   declare type TabScene = {
