@@ -474,9 +474,7 @@ class Header extends React.PureComponent {
     ];
 
     return (
-      <SafeAreaView
-        style={containerStyles}
-      >
+      <SafeAreaView style={containerStyles}>
         <View style={StyleSheet.absoluteFill}>{options.headerBackground}</View>
         <View style={{ flex: 1 }}>{appBar}</View>
       </SafeAreaView>
