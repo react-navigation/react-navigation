@@ -22,6 +22,9 @@ module.exports = {
   get StackNavigator() {
     return require('./navigators/StackNavigator').default;
   },
+  get SwitchNavigator() {
+    return require('./navigators/SwitchNavigator').default;
+  },
   get TabNavigator() {
     return require('./navigators/TabNavigator').default;
   },
@@ -35,6 +38,9 @@ module.exports = {
   },
   get TabRouter() {
     return require('./routers/TabRouter').default;
+  },
+  get SwitchRouter() {
+    return require('./routers/SwitchRouter').default;
   },
 
   // Views
@@ -82,6 +88,11 @@ module.exports = {
   },
   get TabBarBottom() {
     return require('./views/TabView/TabBarBottom').default;
+  },
+
+  // SwitchView
+  get SwitchView() {
+    return require('./views/SwitchView/SwitchView').default;
   },
 
   // HOCs

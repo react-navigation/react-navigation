@@ -369,6 +369,20 @@ declare module 'react-navigation' {
   |};
 
   /**
+   * Switch Navigator
+   */
+
+  declare export type NavigationSwitchRouterConfig = {|
+    initialRouteName?: string,
+    initialRouteParams?: NavigationParams,
+    paths?: NavigationPathsConfig,
+    navigationOptions?: NavigationScreenConfig<*>,
+    order?: Array<string>,
+    backBehavior?: 'none' | 'initialRoute', // defaults to `'none'`
+    resetOnBlur?: boolean, // defaults to `true`
+  |};
+
+  /**
    * Tab Navigator
    */
 
@@ -379,7 +393,6 @@ declare module 'react-navigation' {
     navigationOptions?: NavigationScreenConfig<*>,
     // todo: type these as the real route names rather than 'string'
     order?: Array<string>,
-
     // Does the back button cause the router to switch to the initial tab
     backBehavior?: 'none' | 'initialRoute', // defaults `initialRoute`
   |};
@@ -785,6 +798,13 @@ declare module 'react-navigation' {
   declare export function TabNavigator(
     routeConfigs: NavigationRouteConfigMap,
     config?: _TabNavigatorConfig
+  ): NavigationContainer<*, *, *>;
+  declare type _SwitchNavigatorConfig = {|
+    ...NavigationSwitchRouterConfig,
+  |};
+  declare export function SwitchNavigator(
+    routeConfigs: NavigationRouteConfigMap,
+    config?: _SwitchNavigatorConfig
   ): NavigationContainer<*, *, *>;
 
   declare type _DrawerViewConfig = {|
