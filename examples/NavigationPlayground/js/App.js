@@ -25,6 +25,7 @@ import MultipleDrawer from './MultipleDrawer';
 import TabsInDrawer from './TabsInDrawer';
 import ModalStack from './ModalStack';
 import StacksInTabs from './StacksInTabs';
+import SwitchWithStacks from './SwitchWithStacks';
 import StacksOverTabs from './StacksOverTabs';
 import StacksWithKeys from './StacksWithKeys';
 import SimpleStack from './SimpleStack';
@@ -38,6 +39,10 @@ const ExampleInfo = {
   SimpleStack: {
     name: 'Stack Example',
     description: 'A card stack',
+  },
+  SwitchWithStacks: {
+    name: 'Switch Example',
+    description: 'A switch with stacks inside',
   },
   SimpleTabs: {
     name: 'Tabs Example',
@@ -116,21 +121,22 @@ const ExampleInfo = {
 };
 
 const ExampleRoutes = {
-  SimpleStack: SimpleStack,
-  SimpleTabs: SimpleTabs,
-  Drawer: Drawer,
+  SimpleStack,
+  SwitchWithStacks,
+  SimpleTabs,
+  Drawer,
   // MultipleDrawer: {
   //   screen: MultipleDrawer,
   // },
-  StackWithHeaderPreset: StackWithHeaderPreset,
-  StackWithTranslucentHeader: StackWithTranslucentHeader,
-  TabsInDrawer: TabsInDrawer,
-  CustomTabs: CustomTabs,
-  CustomTransitioner: CustomTransitioner,
-  ModalStack: ModalStack,
-  StacksWithKeys: StacksWithKeys,
-  StacksInTabs: StacksInTabs,
-  StacksOverTabs: StacksOverTabs,
+  StackWithHeaderPreset,
+  StackWithTranslucentHeader,
+  TabsInDrawer,
+  CustomTabs,
+  CustomTransitioner,
+  ModalStack,
+  StacksWithKeys,
+  StacksInTabs,
+  StacksOverTabs,
   LinkStack: {
     screen: SimpleStack,
     path: 'people/Jordan',
@@ -139,7 +145,7 @@ const ExampleRoutes = {
     screen: SimpleTabs,
     path: 'settings',
   },
-  TabAnimations: TabAnimations,
+  TabAnimations,
   // TabsWithNavigationFocus: TabsWithNavigationFocus,
 };
 
