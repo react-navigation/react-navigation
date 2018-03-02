@@ -13,16 +13,13 @@ function validateRouteConfigMap(routeConfigs) {
 
   routeNames.forEach(routeName => {
     const routeConfig = routeConfigs[routeName];
-
-    const screenComponent = routeConfig.screen
-      ? routeConfig.screen
-      : routeConfig;
+    const screenComponent = getScreenComponent(routeConfig);
 
     if (
-      screenComponent &&
-      typeof screenComponent !== 'function' &&
-      typeof screenComponent !== 'string' &&
-      !routeConfig.getScreen
+      !screenComponent ||
+      (typeof screenComponent !== 'function' &&
+        typeof screenComponent !== 'string' &&
+        !routeConfig.getScreen)
     ) {
       throw new Error(
         `The component for route '${routeName}' must be a ` +
@@ -46,6 +43,14 @@ function validateRouteConfigMap(routeConfigs) {
       );
     }
   });
+}
+
+function getScreenComponent(routeConfig) {
+  if (!routeConfig) {
+    return null;
+  }
+
+  return routeConfig.screen ? routeConfig.screen : routeConfig;
 }
 
 export default validateRouteConfigMap;
