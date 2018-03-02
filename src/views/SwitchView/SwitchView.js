@@ -1,4 +1,5 @@
 import React from 'react';
+import SceneView from '../SceneView';
 import withCachedChildNavigation from '../../withCachedChildNavigation';
 
 class SwitchContainer extends React.Component {
@@ -14,7 +15,11 @@ class SwitchContainer extends React.Component {
     );
 
     return (
-      <ChildComponent navigation={childNavigation} screenProps={screenProps} />
+      <SceneView
+        component={ChildComponent}
+        navigation={childNavigation}
+        screenProps={screenProps}
+      />
     );
   }
 }
