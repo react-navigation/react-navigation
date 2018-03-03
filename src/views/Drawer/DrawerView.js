@@ -17,6 +17,8 @@ export default class DrawerView extends React.PureComponent {
         : this.props.drawerWidth,
   };
 
+  _childEventSubscribers = {};
+
   componentWillMount() {
     this._updateScreenNavigation(this.props.navigation);
 
@@ -25,6 +27,17 @@ export default class DrawerView extends React.PureComponent {
 
   componentWillUnmount() {
     Dimensions.removeEventListener('change', this._updateWidth);
+  }
+
+  componentDidUpdate() {
+    const activeKeys = this.props.navigation.state.routes.map(
+      route => route.key
+    );
+    Object.keys(this._childEventSubscribers).forEach(key => {
+      if (!activeKeys.includes(key)) {
+        delete this._childEventSubscribers[key];
+      }
+    });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -79,13 +92,17 @@ export default class DrawerView extends React.PureComponent {
     ) {
       return;
     }
+
+    if (!this._childEventSubscribers[navigationState.key]) {
+      this._childEventSubscribers[
+        navigationState.key
+      ] = getChildEventSubscriber(navigation.addListener, navigationState.key);
+    }
+
     this._screenNavigationProp = addNavigationHelpers({
       dispatch: navigation.dispatch,
       state: navigationState,
-      addListener: getChildEventSubscriber(
-        navigation.addListener,
-        navigationState.key
-      ),
+      addListener: this._childEventSubscribers[navigationState.key],
     });
   };
 
