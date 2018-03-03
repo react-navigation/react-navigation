@@ -10,12 +10,25 @@ export default function withCachedChildNavigation(Comp) {
   return class extends React.PureComponent {
     static displayName = `withCachedChildNavigation(${displayName})`;
 
+    _childEventSubscribers = {};
+
     componentWillMount() {
       this._updateNavigationProps(this.props.navigation);
     }
 
     componentWillReceiveProps(nextProps) {
       this._updateNavigationProps(nextProps.navigation);
+    }
+
+    componentDidUpdate() {
+      const activeKeys = this.props.navigation.state.routes.map(
+        route => route.key
+      );
+      Object.keys(this._childEventSubscribers).forEach(key => {
+        if (!activeKeys.includes(key)) {
+          delete this._childEventSubscribers[key];
+        }
+      });
     }
 
     _updateNavigationProps = navigation => {
@@ -28,13 +41,18 @@ export default function withCachedChildNavigation(Comp) {
         if (childNavigation && childNavigation.state === route) {
           return;
         }
+
+        if (!this._childEventSubscribers[route.key]) {
+          this._childEventSubscribers[route.key] = getChildEventSubscriber(
+            navigation.addListener,
+            route.key
+          );
+        }
+
         this._childNavigationProps[route.key] = addNavigationHelpers({
           dispatch: navigation.dispatch,
           state: route,
-          addListener: getChildEventSubscriber(
-            navigation.addListener,
-            route.key
-          ),
+          addListener: this._childEventSubscribers[route.key],
         });
       });
     };

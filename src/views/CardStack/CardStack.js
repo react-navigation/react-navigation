@@ -82,6 +82,8 @@ class CardStack extends React.Component {
 
   _screenDetails = {};
 
+  _childEventSubscribers = {};
+
   componentWillReceiveProps(props) {
     if (props.screenProps !== this.props.screenProps) {
       this._screenDetails = {};
@@ -96,17 +98,32 @@ class CardStack extends React.Component {
     });
   }
 
+  componentDidUpdate() {
+    const activeKeys = this.props.transitionProps.navigation.state.routes.map(
+      route => route.key
+    );
+    Object.keys(this._childEventSubscribers).forEach(key => {
+      if (!activeKeys.includes(key)) {
+        delete this._childEventSubscribers[key];
+      }
+    });
+  }
+
   _getScreenDetails = scene => {
     const { screenProps, transitionProps: { navigation }, router } = this.props;
     let screenDetails = this._screenDetails[scene.key];
     if (!screenDetails || screenDetails.state !== scene.route) {
+      if (!this._childEventSubscribers[scene.route.key]) {
+        this._childEventSubscribers[scene.route.key] = getChildEventSubscriber(
+          navigation.addListener,
+          scene.route.key
+        );
+      }
+
       const screenNavigation = addNavigationHelpers({
         dispatch: navigation.dispatch,
         state: scene.route,
-        addListener: getChildEventSubscriber(
-          navigation.addListener,
-          scene.route.key
-        ),
+        addListener: this._childEventSubscribers[scene.route.key],
       });
       screenDetails = {
         state: scene.route,
