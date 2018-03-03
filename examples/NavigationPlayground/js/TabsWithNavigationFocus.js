@@ -9,7 +9,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 
 import SampleText from './SampleText';
 
-class Child extends React.Component {
+class Child extends React.Component<any, any> {
   render() {
     return (
       <Text style={{ color: this.props.isFocused ? 'green' : 'maroon' }}>
@@ -24,7 +24,7 @@ class Child extends React.Component {
 const ChildWithNavigationFocus = withNavigationFocus(Child);
 
 const createTabScreen = (name, icon, focusedIcon, tintColor = '#673ab7') => {
-  class TabScreen extends React.Component {
+  class TabScreen extends React.Component<any, any> {
     static navigationOptions = {
       tabBarLabel: name,
       tabBarIcon: ({ tintColor, focused }) => (
