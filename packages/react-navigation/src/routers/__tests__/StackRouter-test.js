@@ -576,6 +576,23 @@ describe('StackRouter', () => {
     expect(state2.routes[1].routes[1].routes[1].routeName).toEqual('Corge');
   });
 
+  test('Navigate to initial screen is possible', () => {
+    const TestRouter = StackRouter(
+      {
+        foo: { screen: () => <div /> },
+        bar: { screen: () => <div /> },
+      },
+      { initialRouteKey: 'foo' }
+    );
+    const initState = TestRouter.getStateForAction(NavigationActions.init());
+    const pushedState = TestRouter.getStateForAction(
+      NavigationActions.navigate({ routeName: 'foo', key: 'foo' }),
+      initState
+    );
+    expect(pushedState.index).toEqual(0);
+    expect(pushedState.routes[0].routeName).toEqual('foo');
+  });
+
   test('Navigate with key is idempotent', () => {
     const TestRouter = StackRouter({
       foo: { screen: () => <div /> },

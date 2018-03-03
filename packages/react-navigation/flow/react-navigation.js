@@ -362,6 +362,7 @@ declare module 'react-navigation' {
     initialRouteParams?: NavigationParams,
     paths?: NavigationPathsConfig,
     navigationOptions?: NavigationScreenConfig<*>,
+    initialRouteKey?: string,
   |};
 
   declare export type NavigationStackViewConfig = {|
