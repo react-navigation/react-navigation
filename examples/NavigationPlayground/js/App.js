@@ -109,10 +109,10 @@ const ExampleInfo = {
     name: 'Animated Tabs Example',
     description: 'Tab transitions have custom animations',
   },
-  // TabsWithNavigationFocus: {
-  //   name: 'withNavigationFocus',
-  //   description: 'Receive the focus prop to know when a screen is focused',
-  // },
+  TabsWithNavigationFocus: {
+    name: 'withNavigationFocus',
+    description: 'Receive the focus prop to know when a screen is focused',
+  },
 };
 
 const ExampleRoutes = {
@@ -139,8 +139,8 @@ const ExampleRoutes = {
     screen: SimpleTabs,
     path: 'settings',
   },
-  TabAnimations: TabAnimations,
-  // TabsWithNavigationFocus: TabsWithNavigationFocus,
+  TabAnimations,
+  TabsWithNavigationFocus,
 };
 
 type State = {
