@@ -9,6 +9,9 @@ const REPLACE = 'Navigation/REPLACE';
 const SET_PARAMS = 'Navigation/SET_PARAMS';
 const URI = 'Navigation/URI';
 const COMPLETE_TRANSITION = 'Navigation/COMPLETE_TRANSITION';
+const OPEN_DRAWER = 'Navigation/OPEN_DRAWER';
+const CLOSE_DRAWER = 'Navigation/CLOSE_DRAWER';
+const TOGGLE_DRAWER = 'Navigation/TOGGLE_DRAWER';
 
 const createAction = (type, fn) => {
   fn.toString = () => type;
@@ -57,6 +60,7 @@ const pop = createAction(POP, payload => ({
 const popToTop = createAction(POP_TO_TOP, payload => ({
   type: POP_TO_TOP,
   immediate: payload && payload.immediate,
+  key: payload && payload.key,
 }));
 
 const push = createAction(PUSH, payload => {
@@ -106,58 +110,15 @@ const completeTransition = createAction(COMPLETE_TRANSITION, payload => ({
   key: payload && payload.key,
 }));
 
-const mapDeprecatedNavigateAction = action => {
-  if (action.type === 'Navigate') {
-    const payload = {
-      routeName: action.routeName,
-      params: action.params,
-    };
-    if (action.action) {
-      payload.action = mapDeprecatedNavigateAction(action.action);
-    }
-    return navigate(payload);
-  }
-  return action;
-};
-
-const mapDeprecatedAction = action => {
-  if (action.type === 'Back') {
-    return back(action);
-  } else if (action.type === 'Init') {
-    return init(action);
-  } else if (action.type === 'Navigate') {
-    return mapDeprecatedNavigateAction(action);
-  } else if (action.type === 'Reset') {
-    return reset({
-      index: action.index,
-      key: action.key,
-      actions: action.actions.map(mapDeprecatedNavigateAction),
-    });
-  } else if (action.type === 'SetParams') {
-    return setParams(action);
-  }
-  return action;
-};
-
-const mapDeprecatedActionAndWarn = action => {
-  const newAction = mapDeprecatedAction(action);
-  if (newAction !== action) {
-    const oldType = action.type;
-    const newType = newAction.type;
-    console.warn(
-      [
-        `The action type '${oldType}' has been renamed to '${newType}'.`,
-        `'${oldType}' will continue to work while in beta but will be removed`,
-        'in the first major release. Moving forward, you should use the',
-        'action constants and action creators exported by this library in',
-        "the 'actions' object.",
-        'See https://github.com/react-community/react-navigation/pull/120 for',
-        'more details.',
-      ].join(' ')
-    );
-  }
-  return newAction;
-};
+const openDrawer = createAction(OPEN_DRAWER, payload => ({
+  type: OPEN_DRAWER,
+}));
+const closeDrawer = createAction(CLOSE_DRAWER, payload => ({
+  type: CLOSE_DRAWER,
+}));
+const toggleDrawer = createAction(TOGGLE_DRAWER, payload => ({
+  type: TOGGLE_DRAWER,
+}));
 
 export default {
   // Action constants
@@ -172,6 +133,9 @@ export default {
   SET_PARAMS,
   URI,
   COMPLETE_TRANSITION,
+  OPEN_DRAWER,
+  CLOSE_DRAWER,
+  TOGGLE_DRAWER,
 
   // Action creators
   back,
@@ -185,7 +149,7 @@ export default {
   setParams,
   uri,
   completeTransition,
-
-  // TODO: Remove once old actions are deprecated
-  mapDeprecatedActionAndWarn,
+  openDrawer,
+  closeDrawer,
+  toggleDrawer,
 };

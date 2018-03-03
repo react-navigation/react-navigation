@@ -29,6 +29,7 @@ import StacksOverTabs from './StacksOverTabs';
 import StacksWithKeys from './StacksWithKeys';
 import SimpleStack from './SimpleStack';
 import StackWithHeaderPreset from './StackWithHeaderPreset';
+import StackWithTranslucentHeader from './StackWithTranslucentHeader';
 import SimpleTabs from './SimpleTabs';
 import TabAnimations from './TabAnimations';
 import TabsWithNavigationFocus from './TabsWithNavigationFocus';
@@ -49,6 +50,14 @@ const ExampleInfo = {
   StackWithHeaderPreset: {
     name: 'UIKit-style Header Transitions',
     description: 'Masked back button and sliding header items. iOS only.',
+  },
+  StackWithHeaderPreset: {
+    name: 'UIKit-style Header Transitions',
+    description: 'Masked back button and sliding header items. iOS only.',
+  },
+  StackWithTranslucentHeader: {
+    name: 'Translucent Header',
+    description: 'Render arbitrary translucent content in header background.',
   },
   // MultipleDrawer: {
   //   name: 'Multiple Drawer Example',
@@ -114,6 +123,7 @@ const ExampleRoutes = {
   //   screen: MultipleDrawer,
   // },
   StackWithHeaderPreset: StackWithHeaderPreset,
+  StackWithTranslucentHeader: StackWithTranslucentHeader,
   TabsInDrawer: TabsInDrawer,
   CustomTabs: CustomTabs,
   CustomTransitioner: CustomTransitioner,

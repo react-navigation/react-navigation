@@ -9,6 +9,8 @@ If you have a question, feature request, or an idea for improving the library or
 - [Get help on Discord chat (#react-navigation on Reactiflux)](https://discord.gg/4xEK3nD) or [on StackOverflow](https://stackoverflow.com/questions/tagged/react-navigation)
 - Search for your issue - it may have already been answered or even fixed in the development branch. However, if you find that an old, closed issue still persists in the latest version, you should open a new issue.
 
+Bugs with react-navigation must be reproducible *without any external libraries that operate on it*. This means that if you are attempting to use Redux or MobX with it and you think you have found a bug, you must be able to reproduce it without Redux or MobX in this report. Redux related issues belong in [react-navigation-redux-helpers](https://github.com/react-navigation/react-navigation-redux-helpers), and we do not have any first-class integration with MobX at the moment.
+
 ---
 
 ### Current Behavior

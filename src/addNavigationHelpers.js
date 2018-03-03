@@ -85,5 +85,9 @@ export default function(navigation) {
           key: navigation.state.key,
         })
       ),
+
+    openDrawer: () => navigation.dispatch(NavigationActions.openDrawer()),
+    closeDrawer: () => navigation.dispatch(NavigationActions.closeDrawer()),
+    toggleDrawer: () => navigation.dispatch(NavigationActions.toggleDrawer()),
   };
 }

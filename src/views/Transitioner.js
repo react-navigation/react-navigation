@@ -29,7 +29,12 @@ class Transitioner extends React.Component {
       layout,
       position: new Animated.Value(this.props.navigation.state.index),
       progress: new Animated.Value(1),
-      scenes: NavigationScenesReducer([], this.props.navigation.state),
+      scenes: NavigationScenesReducer(
+        [],
+        this.props.navigation.state,
+        null,
+        this.props.descriptors
+      ),
     };
 
     this._prevTransitionProps = null;
@@ -56,7 +61,8 @@ class Transitioner extends React.Component {
     const nextScenes = NavigationScenesReducer(
       this.state.scenes,
       nextProps.navigation.state,
-      this.props.navigation.state
+      this.props.navigation.state,
+      nextProps.descriptors
     );
 
     if (nextScenes === this.state.scenes) {
@@ -179,9 +185,19 @@ class Transitioner extends React.Component {
     const prevTransitionProps = this._prevTransitionProps;
     this._prevTransitionProps = null;
 
+    const scenes = this.state.scenes.filter(isSceneNotStale);
+
     const nextState = {
       ...this.state,
-      scenes: this.state.scenes.filter(isSceneNotStale),
+      /**
+       * Array.prototype.filter creates a new instance of an array
+       * even if there were no elements removed. There are cases when
+       * `this.state.scenes` will have no stale scenes (typically when
+       * pushing a new route). As a result, components that rely on this prop
+       * might enter an unnecessary render cycle.
+       */
+      scenes:
+        this.state.scenes.length === scenes.length ? this.state.scenes : scenes,
     };
 
     this._transitionProps = buildTransitionProps(this.props, nextState);

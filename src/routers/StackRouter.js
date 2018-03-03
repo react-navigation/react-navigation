@@ -5,7 +5,6 @@ import createConfigGetter from './createConfigGetter';
 import getScreenForRouteName from './getScreenForRouteName';
 import StateUtils from '../StateUtils';
 import validateRouteConfigMap from './validateRouteConfigMap';
-import getScreenConfigDeprecated from './getScreenConfigDeprecated';
 import invariant from '../utils/invariant';
 import { generateKey } from './KeyGenerator';
 
@@ -92,11 +91,12 @@ export default (routeConfigs, stackConfig = {}) => {
       ...(action.params || {}),
       ...(initialRouteParams || {}),
     };
+    const { initialRouteKey } = stackConfig;
     route = {
       ...route,
       ...(params ? { params } : {}),
       routeName: initialRouteName,
-      key: action.key || generateKey(),
+      key: action.key || (initialRouteKey || generateKey()),
     };
     return {
       key: 'StackRouterRoot',
@@ -305,6 +305,12 @@ export default (routeConfigs, stackConfig = {}) => {
 
       // Handle pop-to-top behavior. Make sure this happens after children have had a chance to handle the action, so that the inner stack pops to top first.
       if (action.type === NavigationActions.POP_TO_TOP) {
+        // Refuse to handle pop to top if a key is given that doesn't correspond
+        // to this router
+        if (action.key && state.key !== action.key) {
+          return state;
+        }
+
         // If we're already at the top, then we return the state with a new
         // identity so that the action is handled by this router.
         if (state.index === 0) {
@@ -386,21 +392,28 @@ export default (routeConfigs, stackConfig = {}) => {
           // undefined on either the state or the action
           return state;
         }
-        const resetAction = action;
+        const newStackActions = action.actions;
 
         return {
           ...state,
-          routes: resetAction.actions.map(childAction => {
-            const router = childRouters[childAction.routeName];
+          routes: newStackActions.map(newStackAction => {
+            const router = childRouters[newStackAction.routeName];
+
             let childState = {};
+
             if (router) {
+              const childAction =
+                newStackAction.action ||
+                NavigationActions.init({ params: newStackAction.params });
+
               childState = router.getStateForAction(childAction);
             }
+
             return {
-              params: childAction.params,
+              params: newStackAction.params,
               ...childState,
-              routeName: childAction.routeName,
-              key: childAction.key || generateKey(),
+              routeName: newStackAction.routeName,
+              key: newStackAction.key || generateKey(),
             };
           }),
           index: action.index,
@@ -563,7 +576,5 @@ export default (routeConfigs, stackConfig = {}) => {
       routeConfigs,
       stackConfig.navigationOptions
     ),
-
-    getScreenConfig: getScreenConfigDeprecated,
   };
 };

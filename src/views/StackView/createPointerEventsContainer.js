@@ -9,7 +9,7 @@ const MIN_POSITION_OFFSET = 0.01;
  * `pointerEvents` property for a component whenever navigation position
  * changes.
  */
-export default function create(Component) {
+export default function createPointerEventsContainer(Component) {
   class Container extends React.Component {
     constructor(props, context) {
       super(props, context);

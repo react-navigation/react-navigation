@@ -14,7 +14,6 @@ import {
   SafeAreaView,
   StackRouter,
   createNavigationContainer,
-  addNavigationHelpers,
   createNavigator,
 } from 'react-navigation';
 import SampleText from './SampleText';
@@ -45,11 +44,12 @@ const MySettingsScreen = ({ navigation }) => (
 
 class CustomNavigationView extends Component {
   render() {
-    const { navigation, router } = this.props;
+    const { navigation, router, descriptors } = this.props;
 
     return (
       <Transitioner
         configureTransition={this._configureTransition}
+        descriptors={descriptors}
         navigation={navigation}
         render={this._render}
       />
@@ -86,16 +86,10 @@ class CustomNavigationView extends Component {
       transform: [{ scale: animatedValue }],
     };
 
-    // The prop `router` is populated when we call `createNavigator`.
-    const Scene = router.getComponentForRouteName(scene.route.routeName);
+    const Scene = scene.descriptor.getComponent();
     return (
       <Animated.View key={index} style={[styles.view, animation]}>
-        <Scene
-          navigation={addNavigationHelpers({
-            ...navigation,
-            state: routes[index],
-          })}
-        />
+        <Scene navigation={scene.descriptor.navigation} />
       </Animated.View>
     );
   };
@@ -107,7 +101,7 @@ const CustomRouter = StackRouter({
 });
 
 const CustomTransitioner = createNavigationContainer(
-  createNavigator(CustomRouter)(CustomNavigationView)
+  createNavigator(CustomNavigationView, CustomRouter, {})
 );
 
 export default CustomTransitioner;
