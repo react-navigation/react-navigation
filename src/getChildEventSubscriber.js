@@ -4,6 +4,7 @@
  * Based on the 'action' events that get fired for this navigation state, this utility will fire
  * focus and blur events for this child
  */
+
 export default function getChildEventSubscriber(addListener, key) {
   const actionSubscribers = new Set();
   const willFocusSubscribers = new Set();
