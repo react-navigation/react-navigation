@@ -92,11 +92,12 @@ export default (routeConfigs, stackConfig = {}) => {
       ...(action.params || {}),
       ...(initialRouteParams || {}),
     };
+    const { initialRouteKey } = stackConfig;
     route = {
       ...route,
       ...(params ? { params } : {}),
       routeName: initialRouteName,
-      key: action.key || generateKey(),
+      key: action.key || (initialRouteKey || generateKey()),
     };
     return {
       key: 'StackRouterRoot',
