@@ -66,7 +66,9 @@ const DrawerNavigatorItems = ({
                 </View>
               ) : null}
               {typeof label === 'string' ? (
-                <Text style={[styles.label, { color }, labelStyle, extraLabelStyle]}>
+                <Text 
+                  style={[styles.label, { color }, labelStyle, extraLabelStyle]}
+                >
                   {label}
                 </Text>
               ) : (
