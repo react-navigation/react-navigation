@@ -81,6 +81,12 @@ export default class DrawerView extends React.PureComponent {
     }
   };
 
+  _isRouteFocused = route => () => {
+    const { state } = this.props.navigation;
+    const focusedRoute = state.routes[state.index];
+    return route === focusedRoute;
+  };
+
   _updateScreenNavigation = navigation => {
     const { drawerCloseRoute } = this.props;
     const navigationState = navigation.state.routes.find(
@@ -102,6 +108,7 @@ export default class DrawerView extends React.PureComponent {
     this._screenNavigationProp = addNavigationHelpers({
       dispatch: navigation.dispatch,
       state: navigationState,
+      isFocused: this._isRouteFocused.bind(this, navigationState),
       addListener: this._childEventSubscribers[navigationState.key],
     });
   };

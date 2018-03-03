@@ -12,9 +12,13 @@ export default function withNavigationFocus(Component) {
       navigation: propTypes.object.isRequired,
     };
 
-    state = {
-      isFocused: false,
-    };
+    constructor(props, context) {
+      super();
+
+      this.state = {
+        isFocused: this.getNavigation(props, context).isFocused(),
+      };
+    }
 
     componentDidMount() {
       const navigation = this.getNavigation();
@@ -32,8 +36,8 @@ export default function withNavigationFocus(Component) {
       this.subscriptions.forEach(sub => sub.remove());
     }
 
-    getNavigation = () => {
-      const navigation = this.props.navigation || this.context.navigation;
+    getNavigation = (props = this.props, context = this.context) => {
+      const navigation = props.navigation || context.navigation;
       invariant(
         !!navigation,
         'withNavigationFocus can only be used on a view hierarchy of a navigator. The wrapped component is unable to get access to navigation from props or context.'

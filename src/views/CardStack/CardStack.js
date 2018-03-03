@@ -109,6 +109,12 @@ class CardStack extends React.Component {
     });
   }
 
+  _isRouteFocused = route => {
+    const { state } = this.props.navigation;
+    const focusedRoute = state.routes[state.index];
+    return route === focusedRoute;
+  };
+
   _getScreenDetails = scene => {
     const { screenProps, transitionProps: { navigation }, router } = this.props;
     let screenDetails = this._screenDetails[scene.key];
@@ -123,6 +129,7 @@ class CardStack extends React.Component {
       const screenNavigation = addNavigationHelpers({
         dispatch: navigation.dispatch,
         state: scene.route,
+        isFocused: this._isRouteFocused.bind(this, scene.route),
         addListener: this._childEventSubscribers[scene.route.key],
       });
       screenDetails = {
