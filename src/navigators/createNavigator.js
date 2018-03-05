@@ -8,6 +8,24 @@ function createNavigator(NavigatorView, router, navigationConfig) {
     static router = router;
     static navigationOptions = null;
 
+    childEventSubscribers = {};
+
+    // Cleanup subscriptions for routes that no longer exist
+    componentDidUpdate() {
+      const activeKeys = this.props.navigation.state.routes.map(r => r.key);
+      Object.keys(this.childEventSubscribers).forEach(key => {
+        if (!activeKeys.includes(key)) {
+          this.childEventSubscribers[key].removeAll();
+          delete this.childEventSubscribers[key];
+        }
+      });
+    }
+
+    // Remove all subscriptions
+    componentWillUnmount() {
+      Object.values(this.childEventSubscribers).map(s => s.removeAll());
+    }
+
     render() {
       const { navigation, screenProps } = this.props;
       const { dispatch, state, addListener } = navigation;
@@ -18,10 +36,17 @@ function createNavigator(NavigatorView, router, navigationConfig) {
         const getComponent = () =>
           router.getComponentForRouteName(route.routeName);
 
+        if (!this.childEventSubscribers[route.key]) {
+          this.childEventSubscribers[route.key] = getChildEventSubscriber(
+            addListener,
+            route.key
+          );
+        }
+
         const childNavigation = addNavigationHelpers({
           dispatch,
           state: route,
-          addListener: getChildEventSubscriber(addListener, route.key),
+          addListener: this.childEventSubscribers[route.key].addListener,
         });
         const options = router.getScreenOptions(childNavigation, screenProps);
         descriptors[route.key] = {

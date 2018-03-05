@@ -11,10 +11,8 @@ test('child action events only flow when focused', () => {
   };
   const subscriptionRemove = () => {};
   parentSubscriber.mockReturnValueOnce({ remove: subscriptionRemove });
-  const childEventSubscriber = getChildEventSubscriber(
-    parentSubscriber,
-    'key1'
-  );
+  const childEventSubscriber = getChildEventSubscriber(parentSubscriber, 'key1')
+    .addListener;
   const testState = {
     key: 'foo',
     routeName: 'FooRoute',
@@ -66,11 +64,9 @@ test('grandchildren subscription', () => {
   const parentSubscriber = getChildEventSubscriber(
     grandParentSubscriber,
     'parent'
-  );
-  const childEventSubscriber = getChildEventSubscriber(
-    parentSubscriber,
-    'key1'
-  );
+  ).addListener;
+  const childEventSubscriber = getChildEventSubscriber(parentSubscriber, 'key1')
+    .addListener;
   const parentBlurState = {
     key: 'foo',
     routeName: 'FooRoute',
@@ -135,11 +131,9 @@ test('grandchildren transitions', () => {
   const parentSubscriber = getChildEventSubscriber(
     grandParentSubscriber,
     'parent'
-  );
-  const childEventSubscriber = getChildEventSubscriber(
-    parentSubscriber,
-    'key1'
-  );
+  ).addListener;
+  const childEventSubscriber = getChildEventSubscriber(parentSubscriber, 'key1')
+    .addListener;
   const makeFakeState = (childIndex, childIsTransitioning) => ({
     index: 1,
     isTransitioning: false,
@@ -230,11 +224,9 @@ test('grandchildren pass through transitions', () => {
   const parentSubscriber = getChildEventSubscriber(
     grandParentSubscriber,
     'parent'
-  );
-  const childEventSubscriber = getChildEventSubscriber(
-    parentSubscriber,
-    'key1'
-  );
+  ).addListener;
+  const childEventSubscriber = getChildEventSubscriber(parentSubscriber, 'key1')
+    .addListener;
   const makeFakeState = (childIndex, childIsTransitioning) => ({
     index: childIndex,
     isTransitioning: childIsTransitioning,
@@ -322,10 +314,8 @@ test('child focus with transition', () => {
   };
   const subscriptionRemove = () => {};
   parentSubscriber.mockReturnValueOnce({ remove: subscriptionRemove });
-  const childEventSubscriber = getChildEventSubscriber(
-    parentSubscriber,
-    'key1'
-  );
+  const childEventSubscriber = getChildEventSubscriber(parentSubscriber, 'key1')
+    .addListener;
   const randomAction = { type: 'FooAction' };
   const testState = {
     key: 'foo',
@@ -417,10 +407,8 @@ test('child focus with immediate transition', () => {
   };
   const subscriptionRemove = () => {};
   parentSubscriber.mockReturnValueOnce({ remove: subscriptionRemove });
-  const childEventSubscriber = getChildEventSubscriber(
-    parentSubscriber,
-    'key1'
-  );
+  const childEventSubscriber = getChildEventSubscriber(parentSubscriber, 'key1')
+    .addListener;
   const randomAction = { type: 'FooAction' };
   const testState = {
     key: 'foo',
