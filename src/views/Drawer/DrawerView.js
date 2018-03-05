@@ -5,6 +5,7 @@ import DrawerLayout from 'react-native-drawer-layout-polyfill';
 import addNavigationHelpers from '../../addNavigationHelpers';
 import DrawerSidebar from './DrawerSidebar';
 import getChildEventSubscriber from '../../getChildEventSubscriber';
+import NavigationActions from '../../NavigationActions';
 
 /**
  * Component that renders the drawer.
@@ -37,12 +38,12 @@ export default class DrawerView extends React.PureComponent {
 
   _handleDrawerOpen = () => {
     const { navigation } = this.props;
-    navigation.dispatch({ type: 'DrawerOpenAction' });
+    navigation.dispatch({ type: NavigationActions.OPEN_DRAWER });
   };
 
   _handleDrawerClose = () => {
     const { navigation } = this.props;
-    navigation.dispatch({ type: 'DrawerCloseAction' });
+    navigation.dispatch({ type: NavigationActions.CLOSE_DRAWER });
   };
 
   _updateWidth = () => {
