@@ -362,6 +362,7 @@ declare module 'react-navigation' {
     initialRouteParams?: NavigationParams,
     paths?: NavigationPathsConfig,
     navigationOptions?: NavigationScreenConfig<*>,
+    initialRouteKey?: string,
   |};
 
   declare export type NavigationStackViewConfig = {|
@@ -458,7 +459,7 @@ declare module 'react-navigation' {
     type: EventType,
     action: NavigationAction,
     state: NavigationState,
-    lastState: NavigationState,
+    lastState: ?NavigationState,
   };
 
   declare export type NavigationEventCallback = (
@@ -685,7 +686,7 @@ declare module 'react-navigation' {
     SET_PARAMS: 'Navigation/SET_PARAMS',
     URI: 'Navigation/URI',
     back: {
-      (payload: { key?: ?string }): NavigationBackAction,
+      (payload?: { key?: ?string }): NavigationBackAction,
       toString: () => string,
     },
     init: {

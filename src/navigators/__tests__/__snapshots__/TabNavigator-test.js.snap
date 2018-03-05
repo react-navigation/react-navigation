@@ -147,13 +147,12 @@ exports[`TabNavigator renders successfully 1`] = `
               style={
                 Object {
                   "alignItems": "center",
-                  "bottom": 0,
+                  "alignSelf": "center",
+                  "height": "100%",
                   "justifyContent": "center",
-                  "left": 0,
                   "opacity": 1,
                   "position": "absolute",
-                  "right": 0,
-                  "top": 0,
+                  "width": "100%",
                 }
               }
             />
@@ -162,13 +161,12 @@ exports[`TabNavigator renders successfully 1`] = `
               style={
                 Object {
                   "alignItems": "center",
-                  "bottom": 0,
+                  "alignSelf": "center",
+                  "height": "100%",
                   "justifyContent": "center",
-                  "left": 0,
                   "opacity": 0,
                   "position": "absolute",
-                  "right": 0,
-                  "top": 0,
+                  "width": "100%",
                 }
               }
             />
