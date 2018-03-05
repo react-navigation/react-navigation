@@ -53,12 +53,11 @@ const styles = StyleSheet.create({
     // We render the icon twice at the same position on top of each other:
     // active and inactive one, so we can fade between them:
     // Cover the whole iconContainer:
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
     alignItems: 'center',
+    alignSelf: 'center',
+    height: '100%',
     justifyContent: 'center',
+    position: 'absolute',
+    width: '100%',
   },
 });
