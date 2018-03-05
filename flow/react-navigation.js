@@ -459,7 +459,7 @@ declare module 'react-navigation' {
     type: EventType,
     action: NavigationAction,
     state: NavigationState,
-    lastState: NavigationState,
+    lastState: ?NavigationState,
   };
 
   declare export type NavigationEventCallback = (
