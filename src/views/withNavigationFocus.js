@@ -2,6 +2,7 @@ import React from 'react';
 import propTypes from 'prop-types';
 import hoistStatics from 'hoist-non-react-statics';
 import invariant from '../utils/invariant';
+import { NavigationConsumer } from './NavigationContext';
 
 export default function withNavigationFocus(Component) {
   class ComponentWithNavigationFocus extends React.Component {
@@ -21,12 +22,11 @@ export default function withNavigationFocus(Component) {
     }
 
     componentDidMount() {
-      const navigation = this.getNavigation();
       this.subscriptions = [
-        navigation.addListener('didFocus', () =>
+        this.navigation.addListener('didFocus', () =>
           this.setState({ isFocused: true })
         ),
-        navigation.addListener('willBlur', () =>
+        this.navigation.addListener('willBlur', () =>
           this.setState({ isFocused: false })
         ),
       ];
@@ -47,11 +47,18 @@ export default function withNavigationFocus(Component) {
 
     render() {
       return (
-        <Component
-          {...this.props}
-          isFocused={this.state.isFocused}
-          ref={this.props.onRef}
-        />
+        <NavigationConsumer>
+          {navigation => {
+            this.navigation = navigation;
+            return (
+              <Component
+                {...this.props}
+                isFocused={this.state.isFocused}
+                ref={this.props.onRef}
+              />
+            );
+          }}
+        </NavigationConsumer>
       );
     }
   }

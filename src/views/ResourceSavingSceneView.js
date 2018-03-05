@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import withLifecyclePolyfill from 'react-lifecycles-compat';
 
 import SceneView from './SceneView';
+import { NavigationProvider } from './NavigationContext';
 
 const FAR_FAR_AWAY = 3000; // this should be big enough to move the whole view out of its container
 
@@ -52,7 +53,11 @@ class ResourceSavingSceneView extends React.PureComponent {
               : styles.innerDetached
           }
         >
-          {awake ? <SceneView {...rest} navigation={childNavigation} /> : null}
+          {awake ? (
+            <NavigationProvider navigation={childNavigation}>
+              <SceneView {...rest} />
+            </NavigationProvider>
+          ) : null}
         </View>
       </View>
     );

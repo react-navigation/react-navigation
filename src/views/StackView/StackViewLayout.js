@@ -15,6 +15,7 @@ import Card from './StackViewCard';
 import Header from '../Header/Header';
 import NavigationActions from '../../NavigationActions';
 import SceneView from '../SceneView';
+import { NavigationProvider } from '../NavigationContext';
 
 import TransitionConfigs from './StackViewTransitionConfigs';
 import * as ReactNativeFeatures from '../../utils/ReactNativeFeatures';
@@ -194,9 +195,12 @@ class StackViewLayout extends React.Component {
     let floatingHeader = null;
     const headerMode = this._getHeaderMode();
     if (headerMode === 'float') {
-      floatingHeader = this._renderHeader(
-        this.props.transitionProps.scene,
-        headerMode
+      floatingHeader = (
+        <NavigationProvider
+          navigation={this.props.transitionProps.scene.descriptor.navigation}
+        >
+          {this._renderHeader(this.props.transitionProps.scene, headerMode)}
+        </NavigationProvider>
       );
     }
     const {
@@ -392,24 +396,19 @@ class StackViewLayout extends React.Component {
     const headerMode = this._getHeaderMode();
     if (headerMode === 'screen') {
       return (
-        <View style={styles.container}>
-          <View style={styles.scenes}>
-            <SceneView
-              screenProps={screenProps}
-              navigation={navigation}
-              component={SceneComponent}
-            />
+        <NavigationProvider navigation={navigation}>
+          <View style={styles.container}>
+            <View style={styles.scenes}>
+              <SceneView screenProps={screenProps} component={SceneComponent} />
+            </View>
           </View>
-          {this._renderHeader(scene, headerMode)}
-        </View>
+        </NavigationProvider>
       );
     }
     return (
-      <SceneView
-        screenProps={screenProps}
-        navigation={navigation}
-        component={SceneComponent}
-      />
+      <NavigationProvider navigation={navigation}>
+        <SceneView screenProps={screenProps} component={SceneComponent} />
+      </NavigationProvider>
     );
   }
 
