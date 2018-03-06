@@ -2,7 +2,6 @@ import invariant from '../utils/invariant';
 
 import getScreenForRouteName from './getScreenForRouteName';
 import validateScreenOptions from './validateScreenOptions';
-import getChildEventSubscriber from '../getChildEventSubscriber';
 
 function applyConfig(configurer, navigationOptions, configProps) {
   if (typeof configurer === 'function') {

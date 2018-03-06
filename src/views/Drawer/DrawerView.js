@@ -4,8 +4,8 @@ import DrawerLayout from 'react-native-drawer-layout-polyfill';
 
 import addNavigationHelpers from '../../addNavigationHelpers';
 import DrawerSidebar from './DrawerSidebar';
-import getChildEventSubscriber from '../../getChildEventSubscriber';
 import NavigationActions from '../../NavigationActions';
+
 
 /**
  * Component that renders the drawer.
