@@ -6,6 +6,7 @@ import invariant from './utils/invariant';
 export default function(navigation) {
   return {
     ...navigation,
+    // Go back from the given key, default to active key
     goBack: key => {
       let actualizedKey = key;
       if (key === undefined && navigation.state.key) {
@@ -18,6 +19,12 @@ export default function(navigation) {
       return navigation.dispatch(
         NavigationActions.back({ key: actualizedKey })
       );
+    },
+    // Go back from the parent key. If this is a nested stack, the entire
+    // stack will be dismissed.
+    dismiss: () => {
+      let { key } = navigation.getParentState();
+      return navigation.dispatch(NavigationActions.back({ key }));
     },
     navigate: (navigateTo, params, action) => {
       if (typeof navigateTo === 'string') {
