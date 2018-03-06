@@ -925,7 +925,7 @@ declare module 'react-navigation' {
       vertical?: _SafeAreaViewForceInsetValue,
       horizontal?: _SafeAreaViewForceInsetValue,
     },
-    children: React$Node,
+    children?: React$Node,
     style?: AnimatedViewStyleProp,
   };
   declare export var SafeAreaView: React$ComponentType<_SafeAreaViewProps>;
