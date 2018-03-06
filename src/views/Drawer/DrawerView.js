@@ -6,7 +6,6 @@ import addNavigationHelpers from '../../addNavigationHelpers';
 import DrawerSidebar from './DrawerSidebar';
 import NavigationActions from '../../NavigationActions';
 
-
 /**
  * Component that renders the drawer.
  */
