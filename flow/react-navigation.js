@@ -945,6 +945,8 @@ declare module 'react-navigation' {
     itemsContainerStyle?: ViewStyleProp,
     itemStyle?: ViewStyleProp,
     labelStyle?: TextStyleProp,
+    activeLabelStyle?: TextStyleProp,
+    inactiveLabelStyle?: TextStyleProp,
     iconContainerStyle?: ViewStyleProp,
     drawerPosition: 'left' | 'right',
   };
@@ -1025,7 +1027,7 @@ declare module 'react-navigation' {
   declare export var TabBarBottom: React$ComponentType<_TabBarBottomProps>;
 
   declare type _NavigationInjectedProps = {
-    navigation: NavigationScreenProp<NavigationState>,
+    navigation: NavigationScreenProp<NavigationStateRoute>,
   };
   declare export function withNavigation<T: {}>(
     Component: React$ComponentType<T & _NavigationInjectedProps>
