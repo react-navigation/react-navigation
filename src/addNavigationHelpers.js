@@ -2,7 +2,6 @@
 
 import NavigationActions from './NavigationActions';
 import invariant from './utils/invariant';
-
 export default function(navigation) {
   return {
     ...navigation,
@@ -23,8 +22,14 @@ export default function(navigation) {
     // Go back from the parent key. If this is a nested stack, the entire
     // stack will be dismissed.
     dismiss: () => {
-      let { key } = navigation.getParentState();
-      return navigation.dispatch(NavigationActions.back({ key }));
+      let parentState = navigation.getParentState();
+      if (parentState && parentState.key) {
+        return navigation.dispatch(
+          NavigationActions.back({ key: parentState.key })
+        );
+      } else {
+        return false;
+      }
     },
     navigate: (navigateTo, params, action) => {
       if (typeof navigateTo === 'string') {
