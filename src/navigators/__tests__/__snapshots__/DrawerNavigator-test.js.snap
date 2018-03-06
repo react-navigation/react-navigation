@@ -224,6 +224,7 @@ exports[`DrawerNavigator renders successfully 1`] = `
                             "color": "#2196f3",
                           },
                           undefined,
+                          undefined,
                         ]
                       }
                     >
