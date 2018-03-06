@@ -45,7 +45,6 @@ class DrawerSidebar extends React.PureComponent {
   };
 
   _onItemPress = ({ route, focused }) => {
-    this.props.navigation.navigate('DrawerClose');
     if (!focused) {
       let subAction;
       // if the child screen is a StackRouter then always navigate to its first screen (see #1914)
