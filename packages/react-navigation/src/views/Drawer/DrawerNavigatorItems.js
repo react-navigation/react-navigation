@@ -21,6 +21,8 @@ const DrawerNavigatorItems = ({
   itemsContainerStyle,
   itemStyle,
   labelStyle,
+  activeLabelStyle,
+  inactiveLabelStyle,
   iconContainerStyle,
   drawerPosition,
 }) => (
@@ -34,6 +36,7 @@ const DrawerNavigatorItems = ({
       const scene = { route, index, focused, tintColor: color };
       const icon = renderIcon(scene);
       const label = getLabel(scene);
+      const extraLabelStyle = focused ? activeLabelStyle : inactiveLabelStyle;
       return (
         <TouchableItem
           key={route.key}
@@ -63,7 +66,9 @@ const DrawerNavigatorItems = ({
                 </View>
               ) : null}
               {typeof label === 'string' ? (
-                <Text style={[styles.label, { color }, labelStyle]}>
+                <Text
+                  style={[styles.label, { color }, labelStyle, extraLabelStyle]}
+                >
                   {label}
                 </Text>
               ) : (

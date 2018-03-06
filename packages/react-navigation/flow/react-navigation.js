@@ -945,6 +945,8 @@ declare module 'react-navigation' {
     itemsContainerStyle?: ViewStyleProp,
     itemStyle?: ViewStyleProp,
     labelStyle?: TextStyleProp,
+    activeLabelStyle?: TextStyleProp,
+    inactiveLabelStyle?: TextStyleProp,
     iconContainerStyle?: ViewStyleProp,
     drawerPosition: 'left' | 'right',
   };
