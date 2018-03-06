@@ -3,6 +3,7 @@ import propTypes from 'prop-types';
 import hoistStatics from 'hoist-non-react-statics';
 import invariant from '../utils/invariant';
 import { NavigationConsumer } from './NavigationContext';
+import withNavigation from './withNavigation';
 
 export default function withNavigationFocus(Component) {
   class ComponentWithNavigationFocus extends React.Component {
@@ -18,11 +19,11 @@ export default function withNavigationFocus(Component) {
     }
 
     componentDidMount() {
-      const navigation = this.getNavigation();
-
-      this.setState({
-        isFocused: navigation.isFocused(),
-      });
+      const { navigation } = this.props;
+      invariant(
+        !!navigation,
+        'withNavigationFocus can only be used on a view hierarchy of a navigator. The wrapped component is unable to get access to navigation from props or context.'
+      );
 
       this.subscriptions = [
         navigation.addListener('didFocus', () =>
@@ -38,32 +39,17 @@ export default function withNavigationFocus(Component) {
       this.subscriptions.forEach(sub => sub.remove());
     }
 
-    getNavigation = (props = this.props) => {
-      const navigation = props.navigation || this.navigation;
-      invariant(
-        !!navigation,
-        'withNavigationFocus can only be used on a view hierarchy of a navigator. The wrapped component is unable to get access to navigation from props or context.'
-      );
-      return navigation;
-    };
-
     render() {
       return (
-        <NavigationConsumer>
-          {navigation => {
-            this.navigation = navigation;
-            return (
-              <Component
-                {...this.props}
-                isFocused={this.state.isFocused}
-                ref={this.props.onRef}
-              />
-            );
-          }}
-        </NavigationConsumer>
+        <Component
+          {...this.props}
+          navigation={this.props.navigation}
+          isFocused={this.state.isFocused}
+          ref={this.props.onRef}
+        />
       );
     }
   }
 
-  return hoistStatics(ComponentWithNavigationFocus, Component);
+  return hoistStatics(withNavigation(ComponentWithNavigationFocus), Component);
 }

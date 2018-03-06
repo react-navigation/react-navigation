@@ -197,7 +197,7 @@ class StackViewLayout extends React.Component {
     if (headerMode === 'float') {
       floatingHeader = (
         <NavigationProvider
-          navigation={this.props.transitionProps.scene.descriptor.navigation}
+          value={this.props.transitionProps.scene.descriptor.navigation}
         >
           {this._renderHeader(this.props.transitionProps.scene, headerMode)}
         </NavigationProvider>
@@ -396,7 +396,7 @@ class StackViewLayout extends React.Component {
     const headerMode = this._getHeaderMode();
     if (headerMode === 'screen') {
       return (
-        <NavigationProvider navigation={navigation}>
+        <NavigationProvider value={navigation}>
           <View style={styles.container}>
             <View style={styles.scenes}>
               <SceneView screenProps={screenProps} component={SceneComponent} />
@@ -406,7 +406,7 @@ class StackViewLayout extends React.Component {
       );
     }
     return (
-      <NavigationProvider navigation={navigation}>
+      <NavigationProvider value={navigation}>
         <SceneView screenProps={screenProps} component={SceneComponent} />
       </NavigationProvider>
     );

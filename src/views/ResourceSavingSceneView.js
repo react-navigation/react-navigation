@@ -54,7 +54,7 @@ class ResourceSavingSceneView extends React.PureComponent {
           }
         >
           {awake ? (
-            <NavigationProvider navigation={childNavigation}>
+            <NavigationProvider value={childNavigation}>
               <SceneView {...rest} />
             </NavigationProvider>
           ) : null}

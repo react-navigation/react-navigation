@@ -13,7 +13,7 @@ class DrawerScreen extends React.PureComponent {
     const descriptor = descriptors[routes[index].key];
     const Content = descriptor.getComponent();
     return (
-      <NavigationProvider navigation={descriptor.navigation}>
+      <NavigationProvider value={descriptor.navigation}>
         <SceneView screenProps={screenProps} component={Content} />
       </NavigationProvider>
     );
