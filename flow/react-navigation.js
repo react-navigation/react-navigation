@@ -553,7 +553,7 @@ declare module 'react-navigation' {
 
   declare export type NavigationContainerProps<S: {}, O: {}> = $Shape<{
     uriPrefix?: string | RegExp,
-    onNavigationStateChange?: (
+    onNavigationStateChange?: ?(
       NavigationState,
       NavigationState,
       NavigationAction
