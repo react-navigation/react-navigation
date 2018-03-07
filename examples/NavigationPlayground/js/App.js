@@ -44,7 +44,6 @@ const ExampleInfo = {
     name: 'Custom back image',
     description: 'Stack with custom back image',
   },
-
   SimpleTabs: {
     name: 'Tabs Example',
     description: 'Tabs following platform conventions',
