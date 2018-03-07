@@ -35,7 +35,7 @@ class HeaderBackButton extends React.PureComponent {
   _renderBackImage() {
     const { backImage, title, tintColor } = this.props;
 
-    let BackImage = Image;
+    let BackImage;
     let props;
 
     if (React.isValidElement(backImage)) {
@@ -47,6 +47,7 @@ class HeaderBackButton extends React.PureComponent {
         title,
       };
     } else {
+      BackImage = Image;
       props = {
         style: [
           styles.icon,

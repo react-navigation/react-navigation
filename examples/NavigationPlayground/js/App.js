@@ -27,7 +27,7 @@ import ModalStack from './ModalStack';
 import StacksInTabs from './StacksInTabs';
 import StacksOverTabs from './StacksOverTabs';
 import StacksWithKeys from './StacksWithKeys';
-import StackWithCustomBackImage from './StackWithCustomBackImage';
+import StackWithCustomHeaderBackImage from './StackWithCustomHeaderBackImage';
 import SimpleStack from './SimpleStack';
 import StackWithHeaderPreset from './StackWithHeaderPreset';
 import StackWithTranslucentHeader from './StackWithTranslucentHeader';
@@ -40,9 +40,9 @@ const ExampleInfo = {
     name: 'Stack Example',
     description: 'A card stack',
   },
-  StackWithCustomBackImage: {
-    name: 'Custom back image',
-    description: 'Stack with custom back image',
+  StackWithCustomHeaderBackImage: {
+    name: 'Custom header back image',
+    description: 'Stack with custom header back image',
   },
   SimpleTabs: {
     name: 'Tabs Example',
@@ -123,7 +123,7 @@ const ExampleRoutes = {
   // MultipleDrawer: {
   //   screen: MultipleDrawer,
   // },
-  StackWithCustomBackImage: StackWithCustomBackImage,
+  StackWithCustomHeaderBackImage: StackWithCustomHeaderBackImage,
   StackWithHeaderPreset: StackWithHeaderPreset,
   StackWithTranslucentHeader: StackWithTranslucentHeader,
   TabsInDrawer: TabsInDrawer,

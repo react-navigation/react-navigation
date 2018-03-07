@@ -151,7 +151,7 @@ class Header extends React.PureComponent {
         onPress={goBack}
         pressColorAndroid={options.headerPressColorAndroid}
         tintColor={options.headerTintColor}
-        backImage={options.backImage}
+        backImage={options.headerBackImage}
         title={backButtonTitle}
         truncatedTitle={truncatedBackButtonTitle}
         titleStyle={options.headerBackTitleStyle}
@@ -181,7 +181,7 @@ class Header extends React.PureComponent {
         LabelContainerComponent={LabelContainerComponent}
         pressColorAndroid={options.headerPressColorAndroid}
         tintColor={options.headerTintColor}
-        backImage={options.backImage}
+        backImage={options.headerBackImage}
         title={backButtonTitle}
         truncatedTitle={truncatedBackButtonTitle}
         titleStyle={options.headerBackTitleStyle}
@@ -204,7 +204,7 @@ class Header extends React.PureComponent {
     // do not use the modular header (which is the one that imitates UINavigationController)
     if (
       transitionPreset !== 'uikit' ||
-      options.backImage ||
+      options.headerBackImage ||
       options.headerLeft ||
       options.headerLeft === null
     ) {
@@ -380,7 +380,7 @@ class Header extends React.PureComponent {
 
     if (
       options.headerLeft ||
-      options.backImage ||
+      options.headerBackImage ||
       Platform.OS !== 'ios' ||
       transitionPreset !== 'uikit'
     ) {

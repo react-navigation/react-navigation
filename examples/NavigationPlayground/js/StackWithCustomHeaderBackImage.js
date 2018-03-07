@@ -17,13 +17,13 @@ type MyNavScreenProps = {
   banner: React.Node,
 };
 
-class MyCustomBackImage extends React.Component<any, any> {
+class MyCustomHeaderBackImage extends React.Component<any, any> {
   render() {
     const source = require('./assets/back.png');
     return (
       <Image
         source={source}
-        style={[styles.myCustomBackImage, this.props.style]}
+        style={[styles.myCustomHeaderBackImage, this.props.style]}
       />
     );
   }
@@ -151,7 +151,9 @@ type MyProfileScreenProps = {
 class MyProfileScreen extends React.Component<MyProfileScreenProps> {
   static navigationOptions = ({ navigation }) => ({
     title: 'Profile',
-    backImage: <MyCustomBackImage style={styles.myCustomBackImageAlt} />,
+    headerBackImage: (
+      <MyCustomHeaderBackImage style={styles.myCustomHeaderBackImageAlt} />
+    ),
   });
   _s0: NavigationEventSubscription;
   _s1: NavigationEventSubscription;
@@ -195,7 +197,7 @@ class MyProfileScreen extends React.Component<MyProfileScreenProps> {
   }
 }
 
-const SimpleStack = StackNavigator(
+const StackWithCustomHeaderBackImage = StackNavigator(
   {
     Home: {
       screen: MyHomeScreen,
@@ -211,15 +213,15 @@ const SimpleStack = StackNavigator(
   },
   {
     navigationOptions: {
-      backImage: MyCustomBackImage,
+      headerBackImage: MyCustomHeaderBackImage,
     },
   }
 );
 
-export default SimpleStack;
+export default StackWithCustomHeaderBackImage;
 
 const styles = StyleSheet.create({
-  myCustomBackImage: {
+  myCustomHeaderBackImage: {
     height: 14.5,
     width: 24,
     marginLeft: 9,
@@ -227,7 +229,7 @@ const styles = StyleSheet.create({
     marginVertical: 12,
     resizeMode: 'contain',
   },
-  myCustomBackImageAlt: {
+  myCustomHeaderBackImageAlt: {
     tintColor: '#f00',
   },
 });
