@@ -79,6 +79,11 @@ export default class TabViewPagerPan<T: *> extends React.Component<Props<T>> {
     },
   };
 
+  constructor(props: Props<T>) {
+    super(props);
+    this._currentIndex = this.props.navigationState.index;
+  }
+
   componentWillMount() {
     this._panResponder = PanResponder.create({
       onMoveShouldSetPanResponder: this._canMoveScreen,
@@ -93,9 +98,12 @@ export default class TabViewPagerPan<T: *> extends React.Component<Props<T>> {
 
   componentDidUpdate(prevProps: Props<T>) {
     if (prevProps.navigationState.index !== this.props.navigationState.index) {
+      this._currentIndex = this.props.navigationState.index;
       this._transitionTo(this.props.navigationState.index);
     }
   }
+
+  _currentIndex: number;
 
   _isMovingHorizontally = (evt: GestureEvent, gestureState: GestureState) => {
     return (
@@ -109,12 +117,13 @@ export default class TabViewPagerPan<T: *> extends React.Component<Props<T>> {
       return false;
     }
 
-    const { navigationState: { routes, index } } = this.props;
+    const { navigationState: { routes } } = this.props;
 
     return (
       this._isMovingHorizontally(evt, gestureState) &&
-      ((gestureState.dx >= DEAD_ZONE && index >= 0) ||
-        (gestureState.dx <= -DEAD_ZONE && index <= routes.length - 1))
+      ((gestureState.dx >= DEAD_ZONE && this._currentIndex > 0) ||
+        (gestureState.dx <= -DEAD_ZONE &&
+          this._currentIndex < routes.length - 1))
     );
   };
 
@@ -159,7 +168,7 @@ export default class TabViewPagerPan<T: *> extends React.Component<Props<T>> {
     const currentIndex =
       typeof this._pendingIndex === 'number'
         ? this._pendingIndex
-        : navigationState.index;
+        : this._currentIndex;
 
     let nextIndex = currentIndex;
 
@@ -178,6 +187,7 @@ export default class TabViewPagerPan<T: *> extends React.Component<Props<T>> {
           navigationState.routes.length - 1
         )
       );
+      this._currentIndex = nextIndex;
     }
 
     if (
