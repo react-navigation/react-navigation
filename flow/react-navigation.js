@@ -296,7 +296,6 @@ declare module 'react-navigation' {
       } & NavigationScreenRouteConfig);
 
   declare export type NavigationScreenRouteConfig =
-    | NavigationComponent
     | {
         screen: NavigationComponent,
       }
@@ -883,7 +882,9 @@ declare module 'react-navigation' {
   };
   declare export var SafeAreaView: React$ComponentType<_SafeAreaViewProps>;
 
-  declare export var Header: React$ComponentType<HeaderProps>;
+  declare export var Header: React$ComponentType<HeaderProps> & {
+    HEIGHT: number,
+  };
 
   declare type _HeaderTitleProps = {
     children: React$Node,
