@@ -40,6 +40,7 @@ class HeaderBackButton extends React.PureComponent {
       width,
       title,
       titleStyle,
+      imageStyle,
       tintColor,
       truncatedTitle,
     } = this.props;
@@ -69,6 +70,7 @@ class HeaderBackButton extends React.PureComponent {
               styles.icon,
               !!title && styles.iconWithTitle,
               !!tintColor && { tintColor },
+              imageStyle
             ]}
             source={buttonImage}
           />
