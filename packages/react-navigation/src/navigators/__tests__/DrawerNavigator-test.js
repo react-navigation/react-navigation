@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View } from 'react-native';
 import renderer from 'react-test-renderer';
 
-import DrawerNavigator from '../DrawerNavigator';
+import DrawerNavigator from '../createDrawerNavigator';
 
 class HomeScreen extends Component {
   static navigationOptions = ({ navigation }) => ({

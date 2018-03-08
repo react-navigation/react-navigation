@@ -1,16 +1,22 @@
-import invariant from '../utils/invariant';
-import TabRouter from './TabRouter';
-
+import SwitchRouter from './SwitchRouter';
 import NavigationActions from '../NavigationActions';
 
+import invariant from '../utils/invariant';
+import withDefaultValue from '../utils/withDefaultValue';
+
 export default (routeConfigs, config = {}) => {
-  const tabRouter = TabRouter(routeConfigs, config);
+  config = { ...config };
+  config = withDefaultValue(config, 'resetOnBlur', false);
+  config = withDefaultValue(config, 'backBehavior', 'initialRoute');
+
+  const switchRouter = SwitchRouter(routeConfigs, config);
+
   return {
-    ...tabRouter,
+    ...switchRouter,
 
     getStateForAction(action, lastState) {
       const state = lastState || {
-        ...tabRouter.getStateForAction(action, undefined),
+        ...switchRouter.getStateForAction(action, undefined),
         isDrawerOpen: false,
       };
 
@@ -41,11 +47,11 @@ export default (routeConfigs, config = {}) => {
       }
 
       // Fall back on tab router for screen switching logic
-      const tabState = tabRouter.getStateForAction(action, state);
-      if (tabState !== null && tabState !== state) {
+      const childState = switchRouter.getStateForAction(action, state);
+      if (childState !== null && childState !== state) {
         // If the tabs have changed, make sure to close the drawer
         return {
-          ...tabState,
+          ...childState,
           isDrawerOpen: false,
         };
       }
