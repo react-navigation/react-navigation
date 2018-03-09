@@ -4,8 +4,9 @@
 import type { NavigationScreenProp } from 'react-navigation';
 
 import * as React from 'react';
-import { Button, ScrollView, StatusBar } from 'react-native';
+import { ScrollView, StatusBar } from 'react-native';
 import { StackNavigator, SafeAreaView } from 'react-navigation';
+import { Button } from './ButtonWithMargin';
 
 type NavScreenProps = {
   navigation: NavigationScreenProp<*>,

@@ -12,7 +12,6 @@ import { isIphoneX } from 'react-native-iphone-x-helper';
 import * as React from 'react';
 import { BlurView, Constants } from 'expo';
 import {
-  Button,
   Dimensions,
   Platform,
   ScrollView,
@@ -22,6 +21,7 @@ import {
 import { Header, StackNavigator } from 'react-navigation';
 import SampleText from './SampleText';
 import HeaderButtons from 'react-navigation-header-buttons';
+import { Button } from './ButtonWithMargin';
 
 type MyNavScreenProps = {
   navigation: NavigationScreenProp<*>,

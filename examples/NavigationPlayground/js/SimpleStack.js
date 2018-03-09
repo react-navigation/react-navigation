@@ -9,9 +9,10 @@ import type {
 import HeaderButtons from 'react-navigation-header-buttons';
 
 import * as React from 'react';
-import { Button, ScrollView, StatusBar } from 'react-native';
+import { ScrollView, StatusBar } from 'react-native';
 import { StackNavigator, SafeAreaView, withNavigation } from 'react-navigation';
 import SampleText from './SampleText';
+import { Button } from './ButtonWithMargin';
 
 type MyNavScreenProps = {
   navigation: NavigationScreenProp<*>,
