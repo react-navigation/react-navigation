@@ -11,6 +11,7 @@ import NavigationActions from '../NavigationActions';
 
 export default (routeConfigMap, stackConfig = {}) => {
   const {
+    initialRouteKey,
     initialRouteName,
     initialRouteParams,
     paths,
@@ -25,6 +26,7 @@ export default (routeConfigMap, stackConfig = {}) => {
   } = stackConfig;
 
   const stackRouterConfig = {
+    initialRouteKey,
     initialRouteName,
     initialRouteParams,
     paths,
