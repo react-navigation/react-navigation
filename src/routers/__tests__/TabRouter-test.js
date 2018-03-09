@@ -351,7 +351,7 @@ describe('TabRouter', () => {
     });
     const MidNavigator = () => <div />;
     MidNavigator.router = TabRouter({
-      Foo: { screen: ChildNavigator0 },
+      Fee: { screen: ChildNavigator0 },
       Bar: { screen: ChildNavigator1 },
     });
     const router = TabRouter({
@@ -371,8 +371,8 @@ describe('TabRouter', () => {
           routes: [
             {
               index: 0,
-              key: 'Foo',
-              routeName: 'Foo',
+              key: 'Fee',
+              routeName: 'Fee',
               isTransitioning: false,
               routes: [
                 { key: 'Boo', routeName: 'Boo' },
@@ -410,8 +410,8 @@ describe('TabRouter', () => {
           routes: [
             {
               index: 0,
-              key: 'Foo',
-              routeName: 'Foo',
+              key: 'Fee',
+              routeName: 'Fee',
               isTransitioning: false,
               routes: [
                 { key: 'Boo', routeName: 'Boo' },
@@ -444,7 +444,10 @@ describe('TabRouter', () => {
       action: {
         type: NavigationActions.NAVIGATE,
         routeName: 'Bar',
-        action: { type: NavigationActions.NAVIGATE, routeName: 'Zap' },
+        action: {
+          type: NavigationActions.NAVIGATE,
+          routeName: 'Zap',
+        },
       },
     });
     expect(state4).toEqual({
@@ -459,8 +462,8 @@ describe('TabRouter', () => {
           routes: [
             {
               index: 0,
-              key: 'Foo',
-              routeName: 'Foo',
+              key: 'Fee',
+              routeName: 'Fee',
               isTransitioning: false,
               routes: [
                 { key: 'Boo', routeName: 'Boo' },

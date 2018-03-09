@@ -27,7 +27,6 @@ export default (routeConfigs, config = {}) => {
     : true;
   const initialRouteIndex = order.indexOf(initialRouteName);
   const childRouters = {};
-
   order.forEach(routeName => {
     const routeConfig = routeConfigs[routeName];
     paths[routeName] =
@@ -157,9 +156,8 @@ export default (routeConfigs, config = {}) => {
 
       let didNavigate = false;
       if (action.type === NavigationActions.NAVIGATE) {
-        const navigateAction = action;
         didNavigate = !!order.find((childId, i) => {
-          if (childId === navigateAction.routeName) {
+          if (childId === action.routeName) {
             activeChildIndex = i;
             return true;
           }
@@ -174,7 +172,7 @@ export default (routeConfigs, config = {}) => {
             newChildState = childRouter
               ? childRouter.getStateForAction(action.action, childState)
               : null;
-          } else if (!childRouter && action.params) {
+          } else if (!action.action && !childRouter && action.params) {
             newChildState = {
               ...childState,
               params: {
@@ -192,6 +190,12 @@ export default (routeConfigs, config = {}) => {
               routes,
               index: activeChildIndex,
             });
+          } else if (
+            !newChildState &&
+            state.index === activeChildIndex &&
+            prevState
+          ) {
+            return null;
           }
         }
       }
