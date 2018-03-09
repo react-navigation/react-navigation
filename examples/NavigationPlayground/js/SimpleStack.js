@@ -21,7 +21,11 @@ type MyNavScreenProps = {
 
 class MyBackButton extends React.Component<any, any> {
   render() {
-    return <Button onPress={this._navigateBack} title="Custom Back" />;
+    return (
+      <HeaderButtons color="black">
+        <HeaderButtons.Item title="Back" onPress={this._navigateBack} />
+      </HeaderButtons>
+    );
   }
 
   _navigateBack = () => {
