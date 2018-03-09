@@ -6,6 +6,7 @@ import type {
   NavigationScreenProp,
   NavigationEventSubscription,
 } from 'react-navigation';
+import HeaderButtons from 'react-navigation-header-buttons';
 
 import * as React from 'react';
 import { Button, ScrollView, StatusBar } from 'react-native';
@@ -168,12 +169,14 @@ MyProfileScreen.navigationOptions = props => {
     // Render a button on the right side of the header.
     // When pressed switches the screen to edit mode.
     headerRight: (
-      <Button
-        title={params.mode === 'edit' ? 'Done' : 'Edit'}
-        onPress={() =>
-          setParams({ mode: params.mode === 'edit' ? '' : 'edit' })
-        }
-      />
+      <HeaderButtons color="black">
+        <HeaderButtons.Item
+          title={params.mode === 'edit' ? 'Done' : 'Edit'}
+          onPress={() =>
+            setParams({ mode: params.mode === 'edit' ? '' : 'edit' })
+          }
+        />
+      </HeaderButtons>
     ),
   };
 };

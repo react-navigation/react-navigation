@@ -21,6 +21,7 @@ import {
 } from 'react-native';
 import { Header, StackNavigator } from 'react-navigation';
 import SampleText from './SampleText';
+import HeaderButtons from 'react-navigation-header-buttons';
 
 type MyNavScreenProps = {
   navigation: NavigationScreenProp<*>,
@@ -193,12 +194,14 @@ MyProfileScreen.navigationOptions = props => {
     // Render a button on the right side of the header.
     // When pressed switches the screen to edit mode.
     headerRight: (
-      <Button
-        title={params.mode === 'edit' ? 'Done' : 'Edit'}
-        onPress={() =>
-          setParams({ mode: params.mode === 'edit' ? '' : 'edit' })
-        }
-      />
+      <HeaderButtons color="black">
+        <HeaderButtons.Item
+          title={params.mode === 'edit' ? 'Done' : 'Edit'}
+          onPress={() =>
+            setParams({ mode: params.mode === 'edit' ? '' : 'edit' })
+          }
+        />
+      </HeaderButtons>
     ),
   };
 };

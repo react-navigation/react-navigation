@@ -15,7 +15,8 @@
     "react": "16.2.0",
     "react-native": "^0.52.0",
     "react-native-iphone-x-helper": "^1.0.2",
-    "react-navigation": "link:../.."
+    "react-navigation": "link:../..",
+    "react-navigation-header-buttons": "^0.0.4"
   },
   "devDependencies": {
     "babel-jest": "^21.0.0",
