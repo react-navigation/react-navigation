@@ -17,7 +17,7 @@ export default class DrawerView extends React.PureComponent {
         : this.props.navigationConfig.drawerWidth,
   };
 
-  componentWillMount() {
+  componentDidMount() {
     Dimensions.addEventListener('change', this._updateWidth);
   }
 
@@ -25,9 +25,10 @@ export default class DrawerView extends React.PureComponent {
     Dimensions.removeEventListener('change', this._updateWidth);
   }
 
-  componentWillReceiveProps(nextProps) {
-    const { isDrawerOpen } = nextProps.navigation.state;
-    const wasDrawerOpen = this.props.navigation.state.isDrawerOpen;
+  componentDidUpdate(prevProps, prevState) {
+    const { isDrawerOpen } = this.props.navigation.state;
+    const wasDrawerOpen = prevProps.navigation.state.isDrawerOpen;
+
     if (isDrawerOpen && !wasDrawerOpen) {
       this._drawer.openDrawer();
     } else if (wasDrawerOpen && !isDrawerOpen) {
