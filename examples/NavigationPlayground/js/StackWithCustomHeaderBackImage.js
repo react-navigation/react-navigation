@@ -2,10 +2,7 @@
  * @flow
  */
 
-import type {
-  NavigationScreenProp,
-  NavigationEventSubscription,
-} from 'react-navigation';
+import type { NavigationScreenProp } from 'react-navigation';
 
 import * as React from 'react';
 import { Image, Button, StatusBar, StyleSheet } from 'react-native';
@@ -55,35 +52,6 @@ class MyHomeScreen extends React.Component<MyHomeScreenProps> {
     title: 'Welcome',
     headerBackTitle: null,
   };
-  _s0: NavigationEventSubscription;
-  _s1: NavigationEventSubscription;
-  _s2: NavigationEventSubscription;
-  _s3: NavigationEventSubscription;
-
-  componentDidMount() {
-    this._s0 = this.props.navigation.addListener('willFocus', this._onWF);
-    this._s1 = this.props.navigation.addListener('didFocus', this._onDF);
-    this._s2 = this.props.navigation.addListener('willBlur', this._onWB);
-    this._s3 = this.props.navigation.addListener('didBlur', this._onDB);
-  }
-  componentWillUnmount() {
-    this._s0.remove();
-    this._s1.remove();
-    this._s2.remove();
-    this._s3.remove();
-  }
-  _onWF = a => {
-    console.log('_willFocus HomeScreen', a);
-  };
-  _onDF = a => {
-    console.log('_didFocus HomeScreen', a);
-  };
-  _onWB = a => {
-    console.log('_willBlur HomeScreen', a);
-  };
-  _onDB = a => {
-    console.log('_didBlur HomeScreen', a);
-  };
 
   render() {
     const { navigation } = this.props;
@@ -99,35 +67,6 @@ class MyPhotosScreen extends React.Component<MyPhotosScreenProps> {
     title: `${navigation.state.params.name}'s photos`,
     headerBackTitle: null,
   });
-  _s0: NavigationEventSubscription;
-  _s1: NavigationEventSubscription;
-  _s2: NavigationEventSubscription;
-  _s3: NavigationEventSubscription;
-
-  componentDidMount() {
-    this._s0 = this.props.navigation.addListener('willFocus', this._onWF);
-    this._s1 = this.props.navigation.addListener('didFocus', this._onDF);
-    this._s2 = this.props.navigation.addListener('willBlur', this._onWB);
-    this._s3 = this.props.navigation.addListener('didBlur', this._onDB);
-  }
-  componentWillUnmount() {
-    this._s0.remove();
-    this._s1.remove();
-    this._s2.remove();
-    this._s3.remove();
-  }
-  _onWF = a => {
-    console.log('_willFocus PhotosScreen', a);
-  };
-  _onDF = a => {
-    console.log('_didFocus PhotosScreen', a);
-  };
-  _onWB = a => {
-    console.log('_willBlur PhotosScreen', a);
-  };
-  _onDB = a => {
-    console.log('_didBlur PhotosScreen', a);
-  };
 
   render() {
     const { navigation } = this.props;
@@ -155,35 +94,6 @@ class MyProfileScreen extends React.Component<MyProfileScreenProps> {
       <MyCustomHeaderBackImage style={styles.myCustomHeaderBackImageAlt} />
     ),
   });
-  _s0: NavigationEventSubscription;
-  _s1: NavigationEventSubscription;
-  _s2: NavigationEventSubscription;
-  _s3: NavigationEventSubscription;
-
-  componentDidMount() {
-    this._s0 = this.props.navigation.addListener('willFocus', this._onWF);
-    this._s1 = this.props.navigation.addListener('didFocus', this._onDF);
-    this._s2 = this.props.navigation.addListener('willBlur', this._onWB);
-    this._s3 = this.props.navigation.addListener('didBlur', this._onDB);
-  }
-  componentWillUnmount() {
-    this._s0.remove();
-    this._s1.remove();
-    this._s2.remove();
-    this._s3.remove();
-  }
-  _onWF = a => {
-    console.log('_willFocus PhotosScreen', a);
-  };
-  _onDF = a => {
-    console.log('_didFocus PhotosScreen', a);
-  };
-  _onWB = a => {
-    console.log('_willBlur PhotosScreen', a);
-  };
-  _onDB = a => {
-    console.log('_didBlur PhotosScreen', a);
-  };
 
   render() {
     const { navigation } = this.props;
