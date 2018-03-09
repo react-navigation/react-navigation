@@ -8,20 +8,20 @@ import SceneView from './SceneView';
 const FAR_FAR_AWAY = 3000; // this should be big enough to move the whole view out of its container
 
 class ResourceSavingSceneView extends React.PureComponent {
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.isFocused && !prevState.awake) {
+      return { awake: true };
+    } else {
+      return null;
+    }
+  }
+
   constructor(props) {
     super();
 
     this.state = {
       awake: props.lazy ? props.isFocused : true,
     };
-  }
-
-  static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.isFocused && !prevState.awake) {
-      return { awake: true };
-    }
-
-    return null;
   }
 
   render() {
