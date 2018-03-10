@@ -5,7 +5,7 @@
 import React from 'react';
 import { Animated, ScrollView, StatusBar } from 'react-native';
 import { StackNavigator, TabNavigator } from 'react-navigation';
-import { Button } from './ButtonWithMargin';
+import { Button } from './commonComponents/ButtonWithMargin';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import SampleText from './SampleText';

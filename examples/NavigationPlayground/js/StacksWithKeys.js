@@ -1,7 +1,7 @@
 import React from 'react';
 import { StatusBar, Text, View } from 'react-native';
 import { StackNavigator } from 'react-navigation';
-import { Button } from './ButtonWithMargin';
+import { Button } from './commonComponents/ButtonWithMargin';
 
 class HomeScreen extends React.Component<any, any> {
   render() {

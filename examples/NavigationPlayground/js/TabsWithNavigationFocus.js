@@ -6,7 +6,7 @@ import React from 'react';
 import { SafeAreaView, Text } from 'react-native';
 import { TabNavigator, withNavigationFocus } from 'react-navigation';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { Button } from './ButtonWithMargin';
+import { Button } from './commonComponents/ButtonWithMargin';
 
 import SampleText from './SampleText';
 

@@ -6,13 +6,13 @@ import type {
   NavigationScreenProp,
   NavigationEventSubscription,
 } from 'react-navigation';
-import HeaderButtons from 'react-navigation-header-buttons';
 
 import * as React from 'react';
 import { ScrollView, StatusBar } from 'react-native';
 import { StackNavigator, SafeAreaView, withNavigation } from 'react-navigation';
 import SampleText from './SampleText';
-import { Button } from './ButtonWithMargin';
+import { Button } from './commonComponents/ButtonWithMargin';
+import { HeaderButtons } from './commonComponents/HeaderButtons';
 
 type MyNavScreenProps = {
   navigation: NavigationScreenProp<*>,
@@ -22,7 +22,7 @@ type MyNavScreenProps = {
 class MyBackButton extends React.Component<any, any> {
   render() {
     return (
-      <HeaderButtons color="black">
+      <HeaderButtons>
         <HeaderButtons.Item title="Back" onPress={this._navigateBack} />
       </HeaderButtons>
     );
@@ -174,7 +174,7 @@ MyProfileScreen.navigationOptions = props => {
     // Render a button on the right side of the header.
     // When pressed switches the screen to edit mode.
     headerRight: (
-      <HeaderButtons color="black">
+      <HeaderButtons>
         <HeaderButtons.Item
           title={params.mode === 'edit' ? 'Done' : 'Edit'}
           onPress={() =>

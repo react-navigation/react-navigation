@@ -19,7 +19,7 @@ import {
   TabRouter,
 } from 'react-navigation';
 import SampleText from './SampleText';
-import { Button } from './ButtonWithMargin';
+import { Button } from './commonComponents/ButtonWithMargin';
 
 const MyNavScreen = ({ navigation, banner }) => (
   <ScrollView>
