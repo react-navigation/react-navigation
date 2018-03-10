@@ -31,7 +31,7 @@ export default function withCachedChildNavigation(Comp) {
       });
     }
 
-    _isRouteFocused = route => () => {
+    _isRouteFocused = route => {
       const { state } = this.props.navigation;
       const focusedRoute = state.routes[state.index];
       return route === focusedRoute;
