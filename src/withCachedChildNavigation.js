@@ -31,7 +31,7 @@ export default function withCachedChildNavigation(Comp) {
       });
     }
 
-    _isRouteFocused = route => () => {
+    _isRouteFocused = route => {
       const { state } = this.props.navigation;
       const focusedRoute = state.routes[state.index];
       return route === focusedRoute;
@@ -58,7 +58,7 @@ export default function withCachedChildNavigation(Comp) {
         this._childNavigationProps[route.key] = addNavigationHelpers({
           dispatch: navigation.dispatch,
           state: route,
-          isFocused: this._isRouteFocused.bind(this, route),
+          isFocused: () => this._isRouteFocused(route),
           addListener: this._childEventSubscribers[route.key],
         });
       });
