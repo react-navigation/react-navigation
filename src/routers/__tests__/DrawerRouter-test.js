@@ -18,7 +18,7 @@ describe('DrawerRouter', () => {
     const state = router.getStateForAction(INIT_ACTION);
     const expectedState = {
       index: 0,
-      isTransitioning: false,
+      transitioningFromKey: null,
       routes: [
         { key: 'Foo', routeName: 'Foo', params: undefined },
         { key: 'Bar', routeName: 'Bar', params: undefined },
@@ -32,7 +32,7 @@ describe('DrawerRouter', () => {
     );
     const expectedState2 = {
       index: 1,
-      isTransitioning: false,
+      transitioningFromKey: null,
       routes: [
         { key: 'Foo', routeName: 'Foo', params: undefined },
         { key: 'Bar', routeName: 'Bar', params: undefined },

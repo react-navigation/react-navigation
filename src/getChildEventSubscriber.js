@@ -84,7 +84,7 @@ export default function getChildEventSubscriber(addListener, key) {
         action,
         type: eventName,
       };
-      const isTransitioning = !!state && state.isTransitioning;
+      const isTransitioning = !!state && !!state.transitioningFromKey;
 
       const previouslyLastEmittedEvent = lastEmittedEvent;
 

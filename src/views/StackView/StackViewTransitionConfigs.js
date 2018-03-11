@@ -60,21 +60,19 @@ const FadeOutToBottomAndroid = {
   screenInterpolator: StyleInterpolator.forFadeFromBottomAndroid,
 };
 
-function defaultTransitionConfig(
-  transitionProps,
-  prevTransitionProps,
-  isModal
-) {
+function defaultTransitionConfig(transitionProps, isModal) {
   if (Platform.OS === 'android') {
-    // Use the default Android animation no matter if the screen is a modal.
-    // Android doesn't have full-screen modals like iOS does, it has dialogs.
-    if (
-      prevTransitionProps &&
-      transitionProps.index < prevTransitionProps.index
-    ) {
-      // Navigating back to the previous screen
-      return FadeOutToBottomAndroid;
-    }
+    // todo, uncomment and fix, stop using prevTransitionProps
+
+    // // Use the default Android animation no matter if the screen is a modal.
+    // // Android doesn't have full-screen modals like iOS does, it has dialogs.
+    // if (
+    //   prevTransitionProps &&
+    //   transitionProps.index < prevTransitionProps.index
+    // ) {
+    //   // Navigating back to the previous screen
+    //   return FadeOutToBottomAndroid;
+    // }
     return FadeInFromBottomAndroid;
   }
   // iOS and other platforms
@@ -84,21 +82,12 @@ function defaultTransitionConfig(
   return SlideFromRightIOS;
 }
 
-function getTransitionConfig(
-  transitionConfigurer,
-  transitionProps,
-  prevTransitionProps,
-  isModal
-) {
-  const defaultConfig = defaultTransitionConfig(
-    transitionProps,
-    prevTransitionProps,
-    isModal
-  );
+function getTransitionConfig(transitionConfigurer, transitionProps, isModal) {
+  const defaultConfig = defaultTransitionConfig(transitionProps, isModal);
   if (transitionConfigurer) {
     return {
       ...defaultConfig,
-      ...transitionConfigurer(transitionProps, prevTransitionProps, isModal),
+      ...transitionConfigurer(transitionProps, isModal),
     };
   }
   return defaultConfig;

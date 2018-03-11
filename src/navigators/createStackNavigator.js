@@ -1,7 +1,7 @@
 import * as React from 'react';
 import createNavigationContainer from '../createNavigationContainer';
 import createNavigator from './createNavigator';
-import StackView from '../views/StackView/StackView';
+import StackView from '../views/StackView/StackView2';
 import StackRouter from '../routers/StackRouter';
 
 function createStackNavigator(routeConfigMap, stackConfig = {}) {

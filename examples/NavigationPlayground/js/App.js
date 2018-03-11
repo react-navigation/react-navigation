@@ -305,7 +305,8 @@ const AppNavigator = StackNavigator(
   }
 );
 
-export default () => <AppNavigator />;
+// export default () => <AppNavigator />;
+export default SimpleStack;
 
 const styles = StyleSheet.create({
   item: {

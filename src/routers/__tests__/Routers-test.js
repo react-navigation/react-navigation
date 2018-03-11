@@ -135,7 +135,7 @@ test('Handles deep action', () => {
   const state1 = TestRouter.getStateForAction({ type: NavigationActions.INIT });
   const expectedState = {
     index: 0,
-    isTransitioning: false,
+    transitioningFromKey: false,
     key: 'StackRouterRoot',
     routes: [
       {
