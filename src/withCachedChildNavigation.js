@@ -58,7 +58,7 @@ export default function withCachedChildNavigation(Comp) {
         this._childNavigationProps[route.key] = addNavigationHelpers({
           dispatch: navigation.dispatch,
           state: route,
-          isFocused: this._isRouteFocused.bind(this, route),
+          isFocused: () => this._isRouteFocused(route),
           addListener: this._childEventSubscribers[route.key],
         });
       });
