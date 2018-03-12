@@ -53,7 +53,7 @@ function createNavigator(NavigatorView, router, navigationConfig) {
           dispatch,
           state: route,
           addListener: this.childEventSubscribers[route.key].addListener,
-          isFocused: this._isRouteFocused.bind(this, route),
+          isFocused: () => this._isRouteFocused(route),
         });
         const options = router.getScreenOptions(childNavigation, screenProps);
         descriptors[route.key] = {
