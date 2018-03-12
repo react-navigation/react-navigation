@@ -32,6 +32,10 @@ function createNavigator(NavigatorView, router, navigationConfig) {
       return route === focusedRoute;
     };
 
+    _carefullyGetParent = () => {
+      return this.props.navigation;
+    };
+
     render() {
       const { navigation, screenProps } = this.props;
       const { dispatch, state, addListener } = navigation;
@@ -52,9 +56,11 @@ function createNavigator(NavigatorView, router, navigationConfig) {
         const childNavigation = addNavigationHelpers({
           dispatch,
           state: route,
+          carefullyGetParent: this._carefullyGetParent,
           addListener: this.childEventSubscribers[route.key].addListener,
           isFocused: () => this._isRouteFocused(route),
         });
+
         const options = router.getScreenOptions(childNavigation, screenProps);
         descriptors[route.key] = {
           key: route.key,
