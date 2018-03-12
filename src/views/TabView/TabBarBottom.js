@@ -96,6 +96,7 @@ class TabBarBottom extends React.PureComponent {
       renderIcon,
       showIcon,
       showLabel,
+      iconStyle,
     } = this.props;
     if (showIcon === false) {
       return null;
@@ -108,7 +109,10 @@ class TabBarBottom extends React.PureComponent {
         inactiveTintColor={inactiveTintColor}
         renderIcon={renderIcon}
         scene={scene}
-        style={showLabel && this._shouldUseHorizontalTabs() ? {} : styles.icon}
+        style={[
+          showLabel && this._shouldUseHorizontalTabs() ? styles.icon : null,
+          iconStyle,
+        ]}
       />
     );
   };
