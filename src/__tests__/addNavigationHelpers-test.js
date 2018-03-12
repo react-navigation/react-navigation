@@ -16,10 +16,12 @@ describe('addNavigationHelpers', () => {
         state: child,
         dispatch: mockedDispatch,
         addListener: dummyEventSubscriber,
-        getParentState: () => ({
-          key: 'P',
-          routeName: 'Parent',
-          routes: [child],
+        carefullyGetParent: () => ({
+          state: {
+            key: 'P',
+            routeName: 'Parent',
+            routes: [child],
+          },
         }),
       }).dismiss()
     ).toEqual(true);

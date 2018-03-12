@@ -22,10 +22,10 @@ export default function(navigation) {
     // Go back from the parent key. If this is a nested stack, the entire
     // stack will be dismissed.
     dismiss: () => {
-      let parentState = navigation.getParentState();
-      if (parentState && parentState.key) {
+      let parent = navigation.carefullyGetParent();
+      if (parent && parent.state) {
         return navigation.dispatch(
-          NavigationActions.back({ key: parentState.key })
+          NavigationActions.back({ key: parent.state.key })
         );
       } else {
         return false;
