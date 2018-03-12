@@ -479,7 +479,7 @@ class Header extends React.PureComponent {
     return (
       <SafeAreaView forceInset={forceInset} style={containerStyles}>
         <View style={StyleSheet.absoluteFill}>{options.headerBackground}</View>
-        <View style={{ flex: 1 }}>{appBar}</View>
+        <View style={styles.flexOne}>{appBar}</View>
       </SafeAreaView>
     );
   }
@@ -574,6 +574,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  flexOne: {
+    flex: 1,
   },
 });
 
