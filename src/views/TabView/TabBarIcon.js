@@ -23,6 +23,7 @@ export default class TabBarIcon extends React.PureComponent {
       inputRange,
       outputRange: inputRange.map(i => (i === index ? 0 : 1)),
     });
+
     // We render the icon twice at the same position on top of each other:
     // active and inactive one, so we can fade between them.
     return (

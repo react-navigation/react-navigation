@@ -100,6 +100,7 @@ class TabBarBottom extends React.PureComponent {
     if (showIcon === false) {
       return null;
     }
+
     return (
       <TabBarIcon
         position={position}
@@ -108,7 +109,11 @@ class TabBarBottom extends React.PureComponent {
         inactiveTintColor={inactiveTintColor}
         renderIcon={renderIcon}
         scene={scene}
-        style={showLabel && this._shouldUseHorizontalTabs() ? {} : styles.icon}
+        style={
+          showLabel && this._shouldUseHorizontalTabs()
+            ? styles.horizontalIcon
+            : styles.icon
+        }
       />
     );
   };
@@ -286,6 +291,9 @@ class TabBarBottom extends React.PureComponent {
   }
 }
 
+const DEFAULT_HEIGHT = 49;
+const COMPACT_HEIGHT = 29;
+
 const styles = StyleSheet.create({
   tabBar: {
     backgroundColor: '#F7F7F7', // Default background color in iOS 10
@@ -294,10 +302,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   tabBarCompact: {
-    height: 29,
+    height: COMPACT_HEIGHT,
   },
   tabBarRegular: {
-    height: 49,
+    height: DEFAULT_HEIGHT,
   },
   tab: {
     flex: 1,
@@ -313,6 +321,9 @@ const styles = StyleSheet.create({
   },
   icon: {
     flexGrow: 1,
+  },
+  horizontalIcon: {
+    height: Platform.isPad ? DEFAULT_HEIGHT : COMPACT_HEIGHT,
   },
   label: {
     textAlign: 'center',
