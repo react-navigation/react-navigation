@@ -3,9 +3,10 @@
  */
 
 import React from 'react';
-import { Button, SafeAreaView, Text } from 'react-native';
+import { SafeAreaView, Text } from 'react-native';
 import { TabNavigator, withNavigationFocus } from 'react-navigation';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Button } from './commonComponents/ButtonWithMargin';
 
 import SampleText from './SampleText';
 

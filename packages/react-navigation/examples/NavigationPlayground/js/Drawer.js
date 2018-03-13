@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { Button, Platform, ScrollView, StatusBar } from 'react-native';
+import { Platform, ScrollView, StatusBar } from 'react-native';
 import {
   StackNavigator,
   DrawerNavigator,
@@ -11,6 +11,7 @@ import {
 } from 'react-navigation';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import SampleText from './SampleText';
+import { Button } from './commonComponents/ButtonWithMargin';
 
 const MyNavScreen = ({ navigation, banner }) => (
   <ScrollView>
