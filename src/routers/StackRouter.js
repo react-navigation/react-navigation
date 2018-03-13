@@ -196,42 +196,46 @@ export default (routeConfigs, stackConfig = {}) => {
           'StackRouter does not support key on the push action'
         );
 
-        // With the navigate action, the key may be provided for pushing, or to navigate back to the key
-        if (action.key) {
-          const lastRouteIndex = state.routes.findIndex(
-            r => r.key === action.key
-          );
-          if (lastRouteIndex !== -1) {
-            // If index is unchanged and params are not being set, leave state identity intact
-            if (state.index === lastRouteIndex && !action.params) {
-              return state;
-            }
+        // Before pushing a new route we first try to find one in the existing route stack
+        // More information on this: https://github.com/react-navigation/rfcs/blob/master/text/0004-less-pushy-navigate.md
+        const lastRouteIndex = state.routes.findIndex(r => {
+          if (action.key) {
+            return r.key === action.key;
+          } else {
+            return r.routeName === action.routeName;
+          }
+        });
 
-            // Remove the now unused routes at the tail of the routes array
-            const routes = state.routes.slice(0, lastRouteIndex + 1);
+        if (lastRouteIndex !== -1) {
+          // If index is unchanged and params are not being set, leave state identity intact
+          if (state.index === lastRouteIndex && !action.params) {
+            return state;
+          }
 
-            // Apply params if provided, otherwise leave route identity intact
-            if (action.params) {
-              const route = state.routes.find(r => r.key === action.key);
-              routes[lastRouteIndex] = {
-                ...route,
-                params: {
-                  ...route.params,
-                  ...action.params,
-                },
-              };
-            }
-            // Return state with new index. Change isTransitioning only if index has changed
-            return {
-              ...state,
-              isTransitioning:
-                state.index !== lastRouteIndex
-                  ? action.immediate !== true
-                  : undefined,
-              index: lastRouteIndex,
-              routes,
+          // Remove the now unused routes at the tail of the routes array
+          const routes = state.routes.slice(0, lastRouteIndex + 1);
+
+          // Apply params if provided, otherwise leave route identity intact
+          if (action.params) {
+            const route = state.routes[lastRouteIndex];
+            routes[lastRouteIndex] = {
+              ...route,
+              params: {
+                ...route.params,
+                ...action.params,
+              },
             };
           }
+          // Return state with new index. Change isTransitioning only if index has changed
+          return {
+            ...state,
+            isTransitioning:
+              state.index !== lastRouteIndex
+                ? action.immediate !== true
+                : undefined,
+            index: lastRouteIndex,
+            routes,
+          };
         }
 
         if (childRouter) {
@@ -259,12 +263,8 @@ export default (routeConfigs, stackConfig = {}) => {
         action.type === NavigationActions.PUSH &&
         childRouters[action.routeName] === undefined
       ) {
-        // If we've made it this far with a push action, we return the
-        // state with a new identity to prevent the action from bubbling
-        // back up.
-        return {
-          ...state,
-        };
+        // Return the state identity to bubble the action up
+        return state;
       }
 
       // Handle navigation to other child routers that are not yet pushed
@@ -313,11 +313,7 @@ export default (routeConfigs, stackConfig = {}) => {
 
         // If we're already at the top, then we return the state with a new
         // identity so that the action is handled by this router.
-        if (state.index === 0) {
-          return {
-            ...state,
-          };
-        } else {
+        if (state.index > 0) {
           return {
             ...state,
             isTransitioning: action.immediate !== true,
@@ -442,15 +438,9 @@ export default (routeConfigs, stackConfig = {}) => {
             index: backRouteIndex - 1,
             isTransitioning: immediate !== true,
           };
-        } else if (
-          backRouteIndex === 0 &&
-          action.type === NavigationActions.POP
-        ) {
-          return {
-            ...state,
-          };
         }
       }
+
       return state;
     },
 

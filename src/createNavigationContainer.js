@@ -1,9 +1,36 @@
 import React from 'react';
 import { Linking } from 'react-native';
+import withLifecyclePolyfill from 'react-lifecycles-compat';
+
 import { BackHandler } from './PlatformHelpers';
 import NavigationActions from './NavigationActions';
 import addNavigationHelpers from './addNavigationHelpers';
 import invariant from './utils/invariant';
+
+function isStateful(props) {
+  return !props.navigation;
+}
+
+function validateProps(props) {
+  if (isStateful(props)) {
+    return;
+  }
+
+  const { navigation, screenProps, ...containerProps } = props;
+
+  const keys = Object.keys(containerProps);
+
+  if (keys.length !== 0) {
+    throw new Error(
+      'This navigator has both navigation and container props, so it is ' +
+        `unclear if it should own its own state. Remove props: "${keys.join(
+          ', '
+        )}" ` +
+        'if the navigator should get its state from the navigation prop. If the ' +
+        'navigator should maintain its own state, do not pass a navigation prop.'
+    );
+  }
+}
 
 /**
  * Create an HOC that injects the navigation and manages the navigation state
@@ -18,12 +45,17 @@ export default function createNavigationContainer(Component) {
     static router = Component.router;
     static navigationOptions = null;
 
+    static getDerivedStateFromProps(nextProps, prevState) {
+      validateProps(nextProps);
+      return null;
+    }
+
     _actionEventSubscribers = new Set();
 
     constructor(props) {
       super(props);
 
-      this._validateProps(props);
+      validateProps(props);
 
       this._initialAction = NavigationActions.init();
 
@@ -48,28 +80,7 @@ export default function createNavigationContainer(Component) {
     }
 
     _isStateful() {
-      return !this.props.navigation;
-    }
-
-    _validateProps(props) {
-      if (this._isStateful()) {
-        return;
-      }
-
-      const { navigation, screenProps, ...containerProps } = props;
-
-      const keys = Object.keys(containerProps);
-
-      if (keys.length !== 0) {
-        throw new Error(
-          'This navigator has both navigation and container props, so it is ' +
-            `unclear if it should own its own state. Remove props: "${keys.join(
-              ', '
-            )}" ` +
-            'if the navigator should get its state from the navigation prop. If the ' +
-            'navigator should maintain its own state, do not pass a navigation prop.'
-        );
-      }
+      return isStateful(this.props);
     }
 
     _urlToPathAndParams(url) {
@@ -125,10 +136,6 @@ export default function createNavigationContainer(Component) {
       if (typeof this.props.onNavigationStateChange === 'function') {
         this.props.onNavigationStateChange(prevNav, nav, action);
       }
-    }
-
-    componentWillReceiveProps(nextProps) {
-      this._validateProps(nextProps);
     }
 
     componentDidUpdate() {
@@ -227,5 +234,5 @@ export default function createNavigationContainer(Component) {
     }
   }
 
-  return NavigationContainer;
+  return withLifecyclePolyfill(NavigationContainer);
 }

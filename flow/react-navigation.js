@@ -486,6 +486,7 @@ declare module 'react-navigation' {
     +state: S,
     dispatch: NavigationDispatch,
     goBack: (routeKey?: ?string) => boolean,
+    dismiss: () => boolean,
     navigate: (
       routeName: string,
       params?: NavigationParams,

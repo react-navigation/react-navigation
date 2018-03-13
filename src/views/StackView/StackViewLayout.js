@@ -352,7 +352,7 @@ class StackViewLayout extends React.Component {
     return (
       <View {...handlers} style={containerStyle}>
         <View style={styles.scenes}>
-          {scenes.map((s: *) => this._renderCard(s))}
+          {scenes.map(s => this._renderCard(s))}
         </View>
         {floatingHeader}
       </View>
@@ -393,7 +393,7 @@ class StackViewLayout extends React.Component {
     if (headerMode === 'screen') {
       return (
         <View style={styles.container}>
-          <View style={{ flex: 1 }}>
+          <View style={styles.scenes}>
             <SceneView
               screenProps={screenProps}
               navigation={navigation}
