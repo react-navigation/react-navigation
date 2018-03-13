@@ -393,7 +393,7 @@ class StackViewLayout extends React.Component {
     if (headerMode === 'screen') {
       return (
         <View style={styles.container}>
-          <View style={{ flex: 1 }}>
+          <View style={styles.scenes}>
             <SceneView
               screenProps={screenProps}
               navigation={navigation}
