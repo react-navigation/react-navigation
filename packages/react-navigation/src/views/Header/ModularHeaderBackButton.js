@@ -3,12 +3,12 @@ import { I18nManager, Image, Text, View, StyleSheet } from 'react-native';
 
 import TouchableItem from '../TouchableItem';
 
+const defaultBackImage = require('../assets/back-icon.png');
+
 class ModularHeaderBackButton extends React.PureComponent {
   static defaultProps = {
     tintColor: '#037aff',
     truncatedTitle: 'Back',
-    // eslint-disable-next-line global-require
-    buttonImage: require('../assets/back-icon.png'),
   };
 
   state = {};
@@ -22,9 +22,37 @@ class ModularHeaderBackButton extends React.PureComponent {
     });
   };
 
+  _renderBackImage() {
+    const { backImage, title, tintColor } = this.props;
+
+    let BackImage;
+    let props;
+
+    if (React.isValidElement(backImage)) {
+      return backImage;
+    } else if (backImage) {
+      BackImage = backImage;
+      props = {
+        tintColor,
+        title,
+      };
+    } else {
+      BackImage = Image;
+      props = {
+        style: [
+          styles.icon,
+          !!title && styles.iconWithTitle,
+          !!tintColor && { tintColor },
+        ],
+        source: defaultBackImage,
+      };
+    }
+
+    return <BackImage {...props} />;
+  }
+
   render() {
     const {
-      buttonImage,
       onPress,
       width,
       title,
@@ -61,14 +89,7 @@ class ModularHeaderBackButton extends React.PureComponent {
       >
         <View style={styles.container}>
           <ButtonContainerComponent>
-            <Image
-              style={[
-                styles.icon,
-                !!title && styles.iconWithTitle,
-                !!tintColor && { tintColor },
-              ]}
-              source={buttonImage}
-            />
+            {this._renderBackImage()}
           </ButtonContainerComponent>
           {typeof backButtonTitle === 'string' && (
             <LabelContainerComponent>

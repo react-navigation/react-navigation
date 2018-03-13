@@ -27,6 +27,7 @@ import ModalStack from './ModalStack';
 import StacksInTabs from './StacksInTabs';
 import StacksOverTabs from './StacksOverTabs';
 import StacksWithKeys from './StacksWithKeys';
+import StackWithCustomHeaderBackImage from './StackWithCustomHeaderBackImage';
 import SimpleStack from './SimpleStack';
 import StackWithHeaderPreset from './StackWithHeaderPreset';
 import StackWithTranslucentHeader from './StackWithTranslucentHeader';
@@ -39,6 +40,10 @@ const ExampleInfo = {
     name: 'Stack Example',
     description: 'A card stack',
   },
+  StackWithCustomHeaderBackImage: {
+    name: 'Custom header back image',
+    description: 'Stack with custom header back image',
+  },
   SimpleTabs: {
     name: 'Tabs Example',
     description: 'Tabs following platform conventions',
@@ -46,10 +51,6 @@ const ExampleInfo = {
   Drawer: {
     name: 'Drawer Example',
     description: 'Android-style drawer navigation',
-  },
-  StackWithHeaderPreset: {
-    name: 'UIKit-style Header Transitions',
-    description: 'Masked back button and sliding header items. iOS only.',
   },
   StackWithHeaderPreset: {
     name: 'UIKit-style Header Transitions',
@@ -122,6 +123,7 @@ const ExampleRoutes = {
   // MultipleDrawer: {
   //   screen: MultipleDrawer,
   // },
+  StackWithCustomHeaderBackImage: StackWithCustomHeaderBackImage,
   StackWithHeaderPreset: StackWithHeaderPreset,
   StackWithTranslucentHeader: StackWithTranslucentHeader,
   TabsInDrawer: TabsInDrawer,

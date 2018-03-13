@@ -151,7 +151,7 @@ class Header extends React.PureComponent {
         onPress={goBack}
         pressColorAndroid={options.headerPressColorAndroid}
         tintColor={options.headerTintColor}
-        buttonImage={options.headerBackImage}
+        backImage={options.headerBackImage}
         title={backButtonTitle}
         truncatedTitle={truncatedBackButtonTitle}
         titleStyle={options.headerBackTitleStyle}
@@ -181,7 +181,7 @@ class Header extends React.PureComponent {
         LabelContainerComponent={LabelContainerComponent}
         pressColorAndroid={options.headerPressColorAndroid}
         tintColor={options.headerTintColor}
-        buttonImage={options.headerBackImage}
+        backImage={options.headerBackImage}
         title={backButtonTitle}
         truncatedTitle={truncatedBackButtonTitle}
         titleStyle={options.headerBackTitleStyle}
