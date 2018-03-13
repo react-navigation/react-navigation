@@ -159,6 +159,10 @@ export default class TabViewPagerPan<T: *> extends React.Component<Props<T>> {
 
     let { swipeVelocityThreshold = 0.15 } = this.props;
 
+    if (typeof this.props.onSwipeEnd === 'function') {
+      this.props.onSwipeEnd(evt, gestureState);
+    }
+
     if (Platform.OS === 'android') {
       // on Android, velocity is way lower due to timestamp being in nanosecond
       // normalize it to have the same velocity on both iOS and Android
