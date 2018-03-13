@@ -1,4 +1,4 @@
-import { Button as RNButton, StyleSheet, View } from 'react-native';
+import { Button as RNButton, StyleSheet, View, Platform } from 'react-native';
 import React from 'react';
 
 export const Button = props => (
@@ -9,6 +9,10 @@ export const Button = props => (
 
 const styles = StyleSheet.create({
   margin: {
-    margin: 10,
+    ...Platform.select({
+      android: {
+        margin: 10,
+      },
+    }),
   },
 });
