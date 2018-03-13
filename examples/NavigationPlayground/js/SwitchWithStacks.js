@@ -6,12 +6,12 @@ import React from 'react';
 import {
   ActivityIndicator,
   AsyncStorage,
-  Button,
   StatusBar,
   StyleSheet,
   View,
 } from 'react-native';
 import { StackNavigator, SwitchNavigator } from 'react-navigation';
+import { Button } from './commonComponents/ButtonWithMargin';
 
 class SignInScreen extends React.Component<any, any> {
   static navigationOptions = {

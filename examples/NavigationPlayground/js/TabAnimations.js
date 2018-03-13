@@ -3,8 +3,9 @@
  */
 
 import React from 'react';
-import { Animated, Button, ScrollView, StatusBar } from 'react-native';
+import { Animated, ScrollView, StatusBar } from 'react-native';
 import { StackNavigator, TabNavigator } from 'react-navigation';
+import { Button } from './commonComponents/ButtonWithMargin';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import SampleText from './SampleText';
@@ -115,7 +116,7 @@ const TabAnimations = TabNavigator(
   {
     tabBarPosition: 'bottom',
     animationEnabled: true,
-    configureTransition: (currentTransitionProps,nextTransitionProps) => ({
+    configureTransition: (currentTransitionProps, nextTransitionProps) => ({
       timing: Animated.spring,
       tension: 1,
       friction: 35,

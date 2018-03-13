@@ -3,9 +3,10 @@
  */
 
 import React from 'react';
-import { Button, ScrollView, StatusBar, Text } from 'react-native';
+import { ScrollView, StatusBar, Text } from 'react-native';
 import { SafeAreaView, StackNavigator } from 'react-navigation';
 import SampleText from './SampleText';
+import { Button } from './commonComponents/ButtonWithMargin';
 
 const MyNavScreen = ({ navigation, banner }) => (
   <ScrollView>
@@ -31,7 +32,8 @@ const MyNavScreen = ({ navigation, banner }) => (
               headerVisible:
                 !navigation.state.params ||
                 !navigation.state.params.headerVisible,
-            })}
+            })
+          }
         />
       )}
       <Button onPress={() => navigation.goBack(null)} title="Go back" />
