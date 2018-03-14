@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { Animated, ScrollView, StatusBar } from 'react-native';
-import { StackNavigator, TabNavigator } from 'react-navigation';
+import { createStackNavigator, createTabNavigator } from 'react-navigation';
 import { Button } from './commonComponents/ButtonWithMargin';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -49,7 +49,7 @@ const MySettingsScreen = ({ navigation }) => (
   <MyNavScreen banner="Settings Screen" navigation={navigation} />
 );
 
-const MainTab = StackNavigator({
+const MainTab = createStackNavigator({
   Home: {
     screen: MyHomeScreen,
     path: '/',
@@ -66,7 +66,7 @@ const MainTab = StackNavigator({
   },
 });
 
-const SettingsTab = StackNavigator({
+const SettingsTab = createStackNavigator({
   Settings: {
     screen: MySettingsScreen,
     path: '/',
@@ -82,7 +82,7 @@ const SettingsTab = StackNavigator({
   },
 });
 
-const TabAnimations = TabNavigator(
+const TabAnimations = createTabNavigator(
   {
     MainTab: {
       screen: MainTab,

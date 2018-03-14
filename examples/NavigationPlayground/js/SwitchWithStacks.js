@@ -10,7 +10,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import { StackNavigator, SwitchNavigator } from 'react-navigation';
+import { createStackNavigator, createSwitchNavigator } from 'react-navigation';
 import { Button } from './commonComponents/ButtonWithMargin';
 
 class SignInScreen extends React.Component<any, any> {
@@ -111,10 +111,10 @@ const styles = StyleSheet.create({
   },
 });
 
-const AppStack = StackNavigator({ Home: HomeScreen, Other: OtherScreen });
-const AuthStack = StackNavigator({ SignIn: SignInScreen });
+const AppStack = createStackNavigator({ Home: HomeScreen, Other: OtherScreen });
+const AuthStack = createStackNavigator({ SignIn: SignInScreen });
 
-export default SwitchNavigator({
+export default createSwitchNavigator({
   Loading: LoadingScreen,
   App: AppStack,
   Auth: AuthStack,

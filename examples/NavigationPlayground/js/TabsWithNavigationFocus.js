@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { SafeAreaView, Text } from 'react-native';
-import { TabNavigator, withNavigationFocus } from 'react-navigation';
+import { createTabNavigator, withNavigationFocus } from 'react-navigation';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Button } from './commonComponents/ButtonWithMargin';
 
@@ -76,7 +76,7 @@ const createTabScreen = (name, icon, focusedIcon, tintColor = '#673ab7') => {
   return withNavigationFocus(TabScreen);
 };
 
-const TabsWithNavigationFocus = TabNavigator(
+const TabsWithNavigationFocus = createTabNavigator(
   {
     One: {
       screen: createTabScreen('One', 'numeric-1-box-outline', 'numeric-1-box'),
