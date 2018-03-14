@@ -39,6 +39,7 @@ describe('DrawerRouter', () => {
         { key: 'Bar', routeName: 'Bar', params: undefined },
       ],
       isDrawerOpen: false,
+      suppressAnimation: false,
     };
     expect(state2).toEqual(expectedState2);
     expect(router.getComponentForState(expectedState)).toEqual(ScreenA);
