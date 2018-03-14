@@ -19,14 +19,26 @@ module.exports = {
   get createNavigator() {
     return require('./navigators/createNavigator').default;
   },
+  get createStackNavigator() {
+    return require('./navigators/createStackNavigator').default;
+  },
   get StackNavigator() {
     return require('./navigators/createStackNavigator').default;
+  },
+  get createSwitchNavigator() {
+    return require('./navigators/createSwitchNavigator').default;
   },
   get SwitchNavigator() {
     return require('./navigators/createSwitchNavigator').default;
   },
+  get createTabNavigator() {
+    return require('./navigators/createTabNavigator').default;
+  },
   get TabNavigator() {
     return require('./navigators/createTabNavigator').default;
+  },
+  get createDrawerNavigator() {
+    return require('./navigators/createDrawerNavigator').default;
   },
   get DrawerNavigator() {
     return require('./navigators/createDrawerNavigator').default;

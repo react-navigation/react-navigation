@@ -16,7 +16,7 @@ import {
   StatusBar,
   View,
 } from 'react-native';
-import { SafeAreaView, StackNavigator } from 'react-navigation';
+import { SafeAreaView, createStackNavigator } from 'react-navigation';
 
 import CustomTabs from './CustomTabs';
 import CustomTransitioner from './CustomTransitioner';
@@ -288,7 +288,7 @@ class MainScreen extends React.Component<any, State> {
   }
 }
 
-const AppNavigator = StackNavigator(
+const AppNavigator = createStackNavigator(
   {
     ...ExampleRoutes,
     Index: {

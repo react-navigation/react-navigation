@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { Platform, ScrollView, StyleSheet } from 'react-native';
-import { DrawerNavigator } from 'react-navigation';
+import { createDrawerNavigator } from 'react-navigation';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import SampleText from './SampleText';
 import { Button } from './commonComponents/ButtonWithMargin';
@@ -41,7 +41,7 @@ DraftsScreen.navigationOptions = {
   ),
 };
 
-const DrawerExample = DrawerNavigator(
+const DrawerExample = createDrawerNavigator(
   {
     Inbox: {
       path: '/',
@@ -60,7 +60,7 @@ const DrawerExample = DrawerNavigator(
   }
 );
 
-const MainDrawerExample = DrawerNavigator({
+const MainDrawerExample = createDrawerNavigator({
   Drafts: {
     screen: DrawerExample,
   },
