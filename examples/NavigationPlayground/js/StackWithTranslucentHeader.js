@@ -18,7 +18,7 @@ import {
   StatusBar,
   View,
 } from 'react-native';
-import { Header, StackNavigator } from 'react-navigation';
+import { Header, createStackNavigator } from 'react-navigation';
 import SampleText from './SampleText';
 import { Button } from './commonComponents/ButtonWithMargin';
 import { HeaderButtons } from './commonComponents/HeaderButtons';
@@ -206,7 +206,7 @@ MyProfileScreen.navigationOptions = props => {
   };
 };
 
-const StackWithTranslucentHeader = StackNavigator(
+const StackWithTranslucentHeader = createStackNavigator(
   {
     Home: {
       screen: MyHomeScreen,

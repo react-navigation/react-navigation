@@ -9,7 +9,11 @@ import type {
 
 import * as React from 'react';
 import { ScrollView, StatusBar } from 'react-native';
-import { StackNavigator, SafeAreaView, withNavigation } from 'react-navigation';
+import {
+  createStackNavigator,
+  SafeAreaView,
+  withNavigation,
+} from 'react-navigation';
 import SampleText from './SampleText';
 import { Button } from './commonComponents/ButtonWithMargin';
 import { HeaderButtons } from './commonComponents/HeaderButtons';
@@ -187,7 +191,7 @@ MyProfileScreen.navigationOptions = props => {
   };
 };
 
-const SimpleStack = StackNavigator({
+const SimpleStack = createStackNavigator({
   Home: {
     screen: MyHomeScreen,
   },

@@ -6,7 +6,7 @@ import type { NavigationScreenProp } from 'react-navigation';
 
 import * as React from 'react';
 import { Image, Button, StatusBar, StyleSheet } from 'react-native';
-import { StackNavigator, SafeAreaView } from 'react-navigation';
+import { createStackNavigator, SafeAreaView } from 'react-navigation';
 import SampleText from './SampleText';
 
 type MyNavScreenProps = {
@@ -107,7 +107,7 @@ class MyProfileScreen extends React.Component<MyProfileScreenProps> {
   }
 }
 
-const StackWithCustomHeaderBackImage = StackNavigator(
+const StackWithCustomHeaderBackImage = createStackNavigator(
   {
     Home: {
       screen: MyHomeScreen,
