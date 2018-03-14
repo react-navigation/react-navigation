@@ -27,7 +27,7 @@ function createNavigator(NavigatorView, router, navigationConfig) {
     }
 
     _isRouteFocused = route => () => {
-      const { state } = this.props.navigation;
+      const { state } = this.props.transitionProps.navigation;
       const focusedRoute = state.routes[state.index];
       return route === focusedRoute;
     };
