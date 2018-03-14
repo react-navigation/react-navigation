@@ -1,16 +1,14 @@
 import React from 'react';
 import propTypes from 'prop-types';
-import { NavigationConsumer } from './NavigationContext';
+import { NavigationConsumer, NavigationProvider } from './NavigationContext';
 
 export default class SceneView extends React.PureComponent {
   render() {
-    const { screenProps, component: Component } = this.props;
+    const { screenProps, component: Component, navigation } = this.props;
     return (
-      <NavigationConsumer>
-        {navigation => (
-          <Component screenProps={screenProps} navigation={navigation} />
-        )}
-      </NavigationConsumer>
+      <NavigationProvider value={navigation}>
+        <Component screenProps={screenProps} navigation={navigation} />
+      </NavigationProvider>
     );
   }
 }

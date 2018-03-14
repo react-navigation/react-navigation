@@ -10,8 +10,8 @@ export default function withNavigationFocus(Component) {
     static displayName = `withNavigationFocus(${Component.displayName ||
       Component.name})`;
 
-    constructor(props, context) {
-      super();
+    constructor(props) {
+      super(props);
 
       this.state = {
         isFocused: props.navigation ? props.navigation.isFocused() : false,
@@ -43,7 +43,6 @@ export default function withNavigationFocus(Component) {
       return (
         <Component
           {...this.props}
-          navigation={this.props.navigation}
           isFocused={this.state.isFocused}
           ref={this.props.onRef}
         />

@@ -53,11 +53,7 @@ class ResourceSavingSceneView extends React.PureComponent {
               : styles.innerDetached
           }
         >
-          {awake ? (
-            <NavigationProvider value={childNavigation}>
-              <SceneView {...rest} />
-            </NavigationProvider>
-          ) : null}
+          {awake ? <SceneView {...rest} navigation={childNavigation} /> : null}
         </View>
       </View>
     );

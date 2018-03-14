@@ -1,7 +1,6 @@
 import React from 'react';
 
 import SceneView from '../SceneView';
-import { NavigationProvider } from '../NavigationContext';
 
 /**
  * Component that renders the child screen of the drawer.
@@ -13,9 +12,11 @@ class DrawerScreen extends React.PureComponent {
     const descriptor = descriptors[routes[index].key];
     const Content = descriptor.getComponent();
     return (
-      <NavigationProvider value={descriptor.navigation}>
-        <SceneView screenProps={screenProps} component={Content} />
-      </NavigationProvider>
+      <SceneView
+        screenProps={screenProps}
+        component={Content}
+        navigation={descriptor.navigation}
+      />
     );
   }
 }
