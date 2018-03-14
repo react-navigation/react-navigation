@@ -153,7 +153,7 @@ class MainScreen extends React.Component<any, State> {
     scrollY: new Animated.Value(0),
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     Asset.fromModule(
       require('react-navigation/src/views/assets/back-icon-mask.png')
     ).downloadAsync();
