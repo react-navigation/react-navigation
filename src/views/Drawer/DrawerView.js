@@ -108,7 +108,7 @@ export default class DrawerView extends React.PureComponent {
     this._screenNavigationProp = addNavigationHelpers({
       dispatch: navigation.dispatch,
       state: navigationState,
-      isFocused: this._isRouteFocused.bind(this, navigationState),
+      isFocused: () => this._isRouteFocused(navigationState),
       addListener: this._childEventSubscribers[navigationState.key],
     });
   };
