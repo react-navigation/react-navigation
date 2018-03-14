@@ -399,8 +399,8 @@ class StackViewLayout extends React.Component {
           <View style={styles.scenes}>
             <SceneView
               screenProps={screenProps}
-              component={SceneComponent}
               navigation={navigation}
+              component={SceneComponent}
             />
           </View>
         </View>
@@ -409,8 +409,8 @@ class StackViewLayout extends React.Component {
     return (
       <SceneView
         screenProps={screenProps}
-        component={SceneComponent}
         navigation={navigation}
+        component={SceneComponent}
       />
     );
   }
