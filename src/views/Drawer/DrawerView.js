@@ -1,6 +1,6 @@
 import React from 'react';
 import { Dimensions } from 'react-native';
-import DrawerLayout from 'react-native-drawer-layout-polyfill';
+import DrawerLayout from 'react-native-gesture-handler/DrawerLayout';
 
 import DrawerSidebar from './DrawerSidebar';
 import NavigationActions from '../../NavigationActions';
@@ -26,29 +26,25 @@ export default class DrawerView extends React.PureComponent {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { isDrawerOpen } = this.props.navigation.state;
+    const { isDrawerOpen, suppressAnimation } = this.props.navigation.state;
     const wasDrawerOpen = prevProps.navigation.state.isDrawerOpen;
 
-    if (isDrawerOpen && !wasDrawerOpen) {
-      this._drawer.openDrawer();
-    } else if (wasDrawerOpen && !isDrawerOpen) {
-      this._drawer.closeDrawer();
+    if (!suppressAnimation) {
+      if (isDrawerOpen && !wasDrawerOpen) {
+        this._drawer.openDrawer();
+      } else if (wasDrawerOpen && !isDrawerOpen) {
+        this._drawer.closeDrawer();
+      }
     }
   }
 
-  _handleDrawerOpen = () => {
-    const { navigation } = this.props;
-    const { isDrawerOpen } = navigation.state;
-    if (!isDrawerOpen) {
-      navigation.dispatch({ type: DrawerActions.OPEN_DRAWER });
-    }
-  };
-
-  _handleDrawerClose = () => {
-    const { navigation } = this.props;
-    const { isDrawerOpen } = navigation.state;
-    if (isDrawerOpen) {
-      navigation.dispatch({ type: DrawerActions.CLOSE_DRAWER });
+  _handleDrawerStateChanged = (state, opening) => {
+    if (state === 'Settling') {
+      const { navigation } = this.props;
+      navigation.dispatch({
+        type: opening ? DrawerActions.OPEN_DRAWER : DrawerActions.CLOSE_DRAWER,
+        suppressAnimation: true,
+      });
     }
   };
 
@@ -100,8 +96,7 @@ export default class DrawerView extends React.PureComponent {
           this.props.navigationConfig.drawerBackgroundColor
         }
         drawerWidth={this.state.drawerWidth}
-        onDrawerOpen={this._handleDrawerOpen}
-        onDrawerClose={this._handleDrawerClose}
+        onDrawerStateChanged={this._handleDrawerStateChanged}
         useNativeAnimations={this.props.navigationConfig.useNativeAnimations}
         renderNavigationView={this._renderNavigationView}
         drawerPosition={
@@ -109,6 +104,12 @@ export default class DrawerView extends React.PureComponent {
             ? DrawerLayout.positions.Right
             : DrawerLayout.positions.Left
         }
+        /* props specific to react-nativre-gesture-handler/DrawerLayout */
+        drawerType={this.props.navigationConfig.drawerType}
+        edgeWidth={this.props.navigationConfig.edgeWidth}
+        hideStatusBar={this.props.navigationConfig.hideStatusBar}
+        statusBarAnimation={this.props.navigationConfig.statusBarAnimation}
+        overlayColor={this.props.navigationConfig.overlayColor}
       >
         <DrawerScreen
           screenProps={this.props.screenProps}
