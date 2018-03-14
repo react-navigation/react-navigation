@@ -22,7 +22,10 @@ class TabView extends React.PureComponent {
   };
 
   _renderScene = ({ route }) => {
-    const { screenProps } = this.props;
+    const { screenProps, navigation } = this.props;
+    const focusedIndex = navigation.state.index;
+    const focusedKey = navigation.state.routes[focusedIndex].key;
+    const key = route.key;
     const childNavigation = this.props.childNavigationProps[route.key];
     const TabComponent = this.props.router.getComponentForRouteName(
       route.routeName
@@ -31,6 +34,7 @@ class TabView extends React.PureComponent {
     return (
       <ResourceSavingSceneView
         lazy={this.props.lazy}
+        isFocused={focusedKey === key}
         removeClippedSubViews={this.props.removeClippedSubviews}
         animationEnabled={this.props.animationEnabled}
         swipeEnabled={this.props.swipeEnabled}
