@@ -403,6 +403,7 @@ class StackViewLayout extends React.Component {
               component={SceneComponent}
             />
           </View>
+          {this._renderHeader(scene, headerMode)}
         </View>
       );
     }
