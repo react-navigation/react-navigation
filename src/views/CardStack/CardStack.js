@@ -110,7 +110,7 @@ class CardStack extends React.Component {
   }
 
   _isRouteFocused = route => {
-    const { state } = this.props.navigation;
+    const { transitionProps: { navigation: { state } } } = this.props;
     const focusedRoute = state.routes[state.index];
     return route === focusedRoute;
   };
