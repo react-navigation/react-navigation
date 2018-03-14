@@ -29,6 +29,7 @@ jest.mock('ScrollView', () => {
 // tests don't test the native bits, so just substitute the JS-only
 // polyfill for now
 jest.mock('react-native-gesture-handler/DrawerLayout', () => {
+  // $FlowExpectedError
   return require.requireActual('react-native-drawer-layout-polyfill');
 });
 

@@ -104,7 +104,7 @@ export default class DrawerView extends React.PureComponent {
             ? DrawerLayout.positions.Right
             : DrawerLayout.positions.Left
         }
-        /* props specific to react-nativre-gesture-handler/DrawerLayout */
+        /* props specific to react-native-gesture-handler/DrawerLayout */
         drawerType={this.props.navigationConfig.drawerType}
         edgeWidth={this.props.navigationConfig.edgeWidth}
         hideStatusBar={this.props.navigationConfig.hideStatusBar}
