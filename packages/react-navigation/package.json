@@ -82,6 +82,9 @@
     ],
     "modulePathIgnorePatterns": [
       "examples"
+    ],
+    "transformIgnorePatterns": [
+      "node_modules/(?!(jest-)?react-native|react-clone-referenced-element|react-navigation-deprecated-tab-navigator)"
     ]
   },
   "lint-staged": {
