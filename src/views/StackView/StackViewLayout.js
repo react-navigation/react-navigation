@@ -15,6 +15,7 @@ import Card from './StackViewCard';
 import Header from '../Header/Header';
 import NavigationActions from '../../NavigationActions';
 import SceneView from '../SceneView';
+import { NavigationProvider } from '../NavigationContext';
 
 import TransitionConfigs from './StackViewTransitionConfigs';
 import * as ReactNativeFeatures from '../../utils/ReactNativeFeatures';
@@ -194,9 +195,11 @@ class StackViewLayout extends React.Component {
     let floatingHeader = null;
     const headerMode = this._getHeaderMode();
     if (headerMode === 'float') {
-      floatingHeader = this._renderHeader(
-        this.props.transitionProps.scene,
-        headerMode
+      const { scene } = this.props.transitionProps;
+      floatingHeader = (
+        <NavigationProvider value={scene.descriptor.navigation}>
+          {this._renderHeader(scene, headerMode)}
+        </NavigationProvider>
       );
     }
     const {

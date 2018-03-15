@@ -3,6 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import renderer from 'react-test-renderer';
 
 import StackNavigator from '../createStackNavigator';
+import withNavigation from '../../views/withNavigation';
 
 const styles = StyleSheet.create({
   header: {
@@ -50,5 +51,38 @@ describe('StackNavigator', () => {
     const rendered = renderer.create(<MyStackNavigator />).toJSON();
 
     expect(rendered).toMatchSnapshot();
+  });
+
+  it('passes navigation to headerRight when wrapped in withNavigation', () => {
+    const spy = jest.fn();
+
+    class TestComponent extends React.Component {
+      render() {
+        return <View>{this.props.onPress(this.props.navigation)}</View>;
+      }
+    }
+
+    const TestComponentWithNavigation = withNavigation(TestComponent);
+
+    class A extends React.Component {
+      static navigationOptions = {
+        headerRight: <TestComponentWithNavigation onPress={spy} />,
+      };
+
+      render() {
+        return <View />;
+      }
+    }
+
+    const Nav = StackNavigator({ A: { screen: A } });
+
+    renderer.create(<Nav />);
+
+    expect(spy).toBeCalledWith(
+      expect.objectContaining({
+        navigate: expect.any(Function),
+        addListener: expect.any(Function),
+      })
+    );
   });
 });
