@@ -38,13 +38,17 @@ module.exports = {
     return require('./navigators/createSwitchNavigator').default;
   },
   get createTabNavigator() {
-    return require('./navigators/createTabNavigator').default;
+    console.warn(
+      'TabNavigator is deprecated. Please use the react-navigation-tabs package instead: https://github.com/react-navigation/react-navigation-tabs'
+    );
+    return require('react-navigation-deprecated-tab-navigator')
+      .createTabNavigator;
   },
   get TabNavigator() {
     console.warn(
-      'The TabNavigator function name is deprecated, please use createTabNavigator instead'
+      'TabNavigator is deprecated. Please use the react-navigation-tabs package instead: https://github.com/react-navigation/react-navigation-tabs'
     );
-    return require('./navigators/createTabNavigator').default;
+    return require('react-navigation-deprecated-tab-navigator').default;
   },
   get createDrawerNavigator() {
     return require('./navigators/createDrawerNavigator').default;
@@ -80,6 +84,12 @@ module.exports = {
   get SafeAreaView() {
     return require('react-native-safe-area-view').default;
   },
+  get SceneView() {
+    return require('./views/SceneView').default;
+  },
+  get ResourceSavingSceneView() {
+    return require('./views/ResourceSavingSceneView').default;
+  },
 
   // Header
   get Header() {
@@ -102,13 +112,22 @@ module.exports = {
 
   // TabView
   get TabView() {
-    return require('./views/TabView/TabView').default;
+    console.warn(
+      'TabView is deprecated. Please use the react-navigation-tabs package instead: https://github.com/react-navigation/react-navigation-tabs'
+    );
+    return require('react-navigation-deprecated-tab-navigator').TabView;
   },
   get TabBarTop() {
-    return require('./views/TabView/TabBarTop').default;
+    console.warn(
+      'TabBarTop is deprecated. Please use the react-navigation-tabs package instead: https://github.com/react-navigation/react-navigation-tabs'
+    );
+    return require('react-navigation-deprecated-tab-navigator').TabBarTop;
   },
   get TabBarBottom() {
-    return require('./views/TabView/TabBarBottom').default;
+    console.warn(
+      'TabBarBottom is deprecated. Please use the react-navigation-tabs package instead: https://github.com/react-navigation/react-navigation-tabs'
+    );
+    return require('react-navigation-deprecated-tab-navigator').TabBarBottom;
   },
 
   // SwitchView
@@ -122,5 +141,8 @@ module.exports = {
   },
   get withNavigationFocus() {
     return require('./views/withNavigationFocus').default;
+  },
+  get withOrientation() {
+    return require('./views/withOrientation').default;
   },
 };
