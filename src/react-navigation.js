@@ -23,24 +23,36 @@ module.exports = {
     return require('./navigators/createStackNavigator').default;
   },
   get StackNavigator() {
+    console.warn(
+      'The StackNavigator function name is deprecated, please use createStackNavigator instead'
+    );
     return require('./navigators/createStackNavigator').default;
   },
   get createSwitchNavigator() {
     return require('./navigators/createSwitchNavigator').default;
   },
   get SwitchNavigator() {
+    console.warn(
+      'The SwitchNavigator function name is deprecated, please use createSwitchNavigator instead'
+    );
     return require('./navigators/createSwitchNavigator').default;
   },
   get createTabNavigator() {
     return require('./navigators/createTabNavigator').default;
   },
   get TabNavigator() {
+    console.warn(
+      'The TabNavigator function name is deprecated, please use createTabNavigator instead'
+    );
     return require('./navigators/createTabNavigator').default;
   },
   get createDrawerNavigator() {
     return require('./navigators/createDrawerNavigator').default;
   },
   get DrawerNavigator() {
+    console.warn(
+      'The DrawerNavigator function name is deprecated, please use createDrawerNavigator instead'
+    );
     return require('./navigators/createDrawerNavigator').default;
   },
 
