@@ -11,6 +11,10 @@ type ScrollEvent = {
       x: number,
       y: number,
     },
+    contentSize: {
+      height: number,
+      width: number,
+    },
   },
 };
 
@@ -113,7 +117,7 @@ export default class TabViewPagerScroll<T: *> extends React.Component<
   };
 
   _handleScroll = (e: ScrollEvent) => {
-    if (this._isInitial) {
+    if (this._isInitial || e.nativeEvent.contentSize.width === 0) {
       return;
     }
 
