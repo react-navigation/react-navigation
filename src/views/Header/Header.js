@@ -174,9 +174,16 @@ class Header extends React.PureComponent {
       ? (this.props.layout.initWidth - this.state.widths[props.scene.key]) / 2
       : undefined;
 
+    const goBack = () => {
+      // Go back on next tick because button ripple effect needs to happen on Android
+      requestAnimationFrame(() => {
+        this.props.navigation.goBack(props.scene.descriptor.key);
+      });
+    };
+
     return (
       <ModularHeaderBackButton
-        onPress={this._navigateBack}
+        onPress={goBack}
         ButtonContainerComponent={ButtonContainerComponent}
         LabelContainerComponent={LabelContainerComponent}
         pressColorAndroid={options.headerPressColorAndroid}

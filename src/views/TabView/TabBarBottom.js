@@ -101,6 +101,8 @@ class TabBarBottom extends React.PureComponent {
       return null;
     }
 
+    const horizontal = this._shouldUseHorizontalTabs();
+
     return (
       <TabBarIcon
         position={position}
@@ -109,11 +111,10 @@ class TabBarBottom extends React.PureComponent {
         inactiveTintColor={inactiveTintColor}
         renderIcon={renderIcon}
         scene={scene}
-        style={
-          showLabel && this._shouldUseHorizontalTabs()
-            ? styles.horizontalIcon
-            : styles.icon
-        }
+        style={[
+          horizontal && styles.horizontalIcon,
+          showLabel !== false && !horizontal && styles.icon,
+        ]}
       />
     );
   };
