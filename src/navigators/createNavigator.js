@@ -32,7 +32,7 @@ function createNavigator(NavigatorView, router, navigationConfig) {
       return route === focusedRoute;
     };
 
-    _carefullyGetParent = () => {
+    _dangerouslyGetParent = () => {
       return this.props.navigation;
     };
 
@@ -56,7 +56,7 @@ function createNavigator(NavigatorView, router, navigationConfig) {
         const childNavigation = addNavigationHelpers({
           dispatch,
           state: route,
-          carefullyGetParent: this._carefullyGetParent,
+          dangerouslyGetParent: this._dangerouslyGetParent,
           addListener: this.childEventSubscribers[route.key].addListener,
           isFocused: () => this._isRouteFocused(route),
         });
