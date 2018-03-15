@@ -1,6 +1,5 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import SafeAreaView from 'react-native-safe-area-view';
 
 import NavigationActions from '../../NavigationActions';
 import invariant from '../../utils/invariant';
