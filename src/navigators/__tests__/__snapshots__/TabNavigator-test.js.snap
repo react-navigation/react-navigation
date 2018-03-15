@@ -137,9 +137,12 @@ exports[`TabNavigator renders successfully 1`] = `
         >
           <View
             style={
-              Object {
-                "flexGrow": 1,
-              }
+              Array [
+                false,
+                Object {
+                  "flexGrow": 1,
+                },
+              ]
             }
           >
             <View
