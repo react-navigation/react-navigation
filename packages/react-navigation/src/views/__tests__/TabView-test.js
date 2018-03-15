@@ -10,6 +10,8 @@ const dummyEventSubscriber = (name, handler) => ({
 });
 
 describe('TabBarBottom', () => {
+  jest.useFakeTimers();
+
   it('renders successfully', () => {
     const route = { key: 's1', routeName: 's1' };
     const navigation = {
