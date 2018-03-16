@@ -60,7 +60,7 @@ const FadeOutToBottomAndroid = {
   screenInterpolator: StyleInterpolator.forFadeFromBottomAndroid,
 };
 
-function defaultTransitionConfig(
+export function defaultTransitionConfig(
   transitionProps,
   prevTransitionProps,
   isModal
