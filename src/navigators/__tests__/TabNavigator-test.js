@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import { View } from 'react-native';
 import renderer from 'react-test-renderer';
 
-import TabNavigator from '../createTabNavigator';
+const {
+  createTabNavigator,
+} = require('react-navigation-deprecated-tab-navigator');
 
 class HomeScreen extends Component {
   static navigationOptions = ({ navigation }) => ({
@@ -25,7 +27,7 @@ const routeConfig = {
 
 describe('TabNavigator', () => {
   it('renders successfully', () => {
-    const MyTabNavigator = TabNavigator(routeConfig);
+    const MyTabNavigator = createTabNavigator(routeConfig);
     const rendered = renderer.create(<MyTabNavigator />).toJSON();
 
     expect(rendered).toMatchSnapshot();

@@ -16,7 +16,7 @@ describe('addNavigationHelpers', () => {
         state: child,
         dispatch: mockedDispatch,
         addListener: dummyEventSubscriber,
-        carefullyGetParent: () => ({
+        dangerouslyGetParent: () => ({
           state: {
             key: 'P',
             routeName: 'Parent',
