@@ -32,6 +32,7 @@ import SimpleStack from './SimpleStack';
 import StackWithHeaderPreset from './StackWithHeaderPreset';
 import StackWithTranslucentHeader from './StackWithTranslucentHeader';
 import SimpleTabs from './SimpleTabs';
+import CustomTabNavigator from './CustomTabNavigator';
 import TabAnimations from './TabAnimations';
 import TabsWithNavigationFocus from './TabsWithNavigationFocus';
 
@@ -72,9 +73,13 @@ const ExampleInfo = {
     name: 'Drawer + Tabs Example',
     description: 'A drawer combined with tabs',
   },
+  CustomTabNavigator: {
+    name: 'Custom Tab Navigator Example',
+    description: 'Extending the tab navigator',
+  },
   CustomTabs: {
-    name: 'Custom Tabs',
-    description: 'Custom tabs with tab router',
+    name: 'Custom Tabs View',
+    description: 'Custom tabs using TabRouter',
   },
   CustomTransitioner: {
     name: 'Custom Transitioner',
@@ -137,6 +142,7 @@ const ExampleRoutes = {
   StacksWithKeys,
   StacksInTabs,
   StacksOverTabs,
+  CustomTabNavigator,
   LinkStack: {
     screen: SimpleStack,
     path: 'people/Jordan',
