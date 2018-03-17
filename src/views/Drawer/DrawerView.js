@@ -41,10 +41,15 @@ export default class DrawerView extends React.PureComponent {
   _handleDrawerStateChanged = (state, opening) => {
     if (state === 'Settling') {
       const { navigation } = this.props;
-      navigation.dispatch({
-        type: opening ? DrawerActions.OPEN_DRAWER : DrawerActions.CLOSE_DRAWER,
-        suppressAnimation: true,
-      });
+      const { isDrawerOpen } = navigation.state;
+      if (opening !== isDrawerOpen) {
+        navigation.dispatch({
+          type: opening
+            ? DrawerActions.OPEN_DRAWER
+            : DrawerActions.CLOSE_DRAWER,
+          suppressAnimation: true,
+        });
+      }
     }
   };
 
