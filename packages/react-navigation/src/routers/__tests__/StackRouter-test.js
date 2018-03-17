@@ -684,6 +684,26 @@ describe('StackRouter', () => {
     }).toThrow();
   });
 
+  test('Push adds new routes every time', () => {
+    const TestRouter = StackRouter({
+      foo: { screen: () => <div /> },
+      bar: { screen: () => <div /> },
+    });
+    const initState = TestRouter.getStateForAction(NavigationActions.init());
+    const pushedState = TestRouter.getStateForAction(
+      NavigationActions.push({ routeName: 'bar' }),
+      initState
+    );
+    expect(pushedState.index).toEqual(1);
+    expect(pushedState.routes[1].routeName).toEqual('bar');
+    const secondPushedState = TestRouter.getStateForAction(
+      NavigationActions.push({ routeName: 'bar' }),
+      pushedState
+    );
+    expect(secondPushedState.index).toEqual(2);
+    expect(secondPushedState.routes[2].routeName).toEqual('bar');
+  });
+
   test('Navigate backwards with key removes leading routes', () => {
     const TestRouter = StackRouter({
       foo: { screen: () => <div /> },
