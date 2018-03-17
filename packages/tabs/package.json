@@ -1,0 +1,85 @@
+{
+  "name": "react-navigation-tabs",
+  "version": "0.1.0-alpha.0",
+  "description": "Tab Navigation components for React Navigation",
+  "main": "dist/index.js",
+  "files": [
+    "dist/"
+  ],
+  "scripts": {
+    "test": "jest",
+    "flow": "flow",
+    "lint": "eslint .",
+    "build": "babel --no-babelrc --plugins=syntax-jsx,syntax-class-properties,syntax-object-rest-spread,transform-flow-strip-types src --out-dir dist --ignore '**/__tests__/**'",
+    "prepublish": "yarn build"
+  },
+  "keywords": [
+    "react-native-component",
+    "react-component",
+    "react-native",
+    "ios",
+    "android",
+    "tab",
+    "swipe",
+    "scrollable",
+    "coverflow"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/react-navigation/react-navigation-tabs.git"
+  },
+  "author": "Satyajit Sahoo <satyajit.happy@gmail.com> (https://github.com/satya164/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/react-navigation/react-navigation-tabs/issues"
+  },
+  "homepage": "https://github.com/react-navigation/react-navigation-tabs#readme",
+  "dependencies": {
+    "hoist-non-react-statics": "^2.5.0",
+    "prop-types": "^15.6.0",
+    "react-lifecycles-compat": "^1.0.2",
+    "react-native-paper": "^1.2.3",
+    "react-native-safe-area-view": "^0.7.0",
+    "react-native-tab-view": "^0.0.74"
+  },
+  "devDependencies": {
+    "@expo/vector-icons": "^6.2.0",
+    "babel-jest": "^21.2.0",
+    "babel-plugin-syntax-class-properties": "^6.13.0",
+    "babel-plugin-syntax-jsx": "^6.18.0",
+    "babel-plugin-syntax-object-rest-spread": "^6.13.0",
+    "babel-plugin-transform-flow-strip-types": "^6.22.0",
+    "babel-preset-react-native": "^4.0.0",
+    "enzyme": "3.2.0",
+    "enzyme-adapter-react-16": "^1.1.0",
+    "enzyme-to-json": "^3.2.2",
+    "eslint": "^4.12.1",
+    "eslint-config-satya164": "^1.0.1",
+    "eslint-plugin-react-native-globals": "^0.1.0",
+    "flow-bin": "~0.56.0",
+    "jest": "^21.2.1",
+    "prettier": "^1.8.2",
+    "react": "16.0.0",
+    "react-dom": "16.0.0",
+    "react-native": "~0.50.4",
+    "react-navigation": "^2.0.0-alpha.5",
+    "react-test-renderer": "16.2.0"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*",
+    "react-navigation": "*"
+  },
+  "jest": {
+    "preset": "react-native",
+    "setupFiles": [
+      "<rootDir>/__setup__/enzyme.js"
+    ],
+    "modulePathIgnorePatterns": [
+      "<rootDir>/example/node_modules"
+    ],
+    "snapshotSerializers": [
+      "enzyme-to-json/serializer"
+    ]
+  }
+}

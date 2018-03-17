@@ -1,0 +1,63 @@
+version: 2
+
+defaults: &defaults
+  docker:
+    - image: circleci/node:7.10
+  working_directory: ~/project
+
+jobs:
+  install-dependencies:
+    <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/project
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-
+      - restore_cache:
+          keys:
+            - v1-dependencies-example-{{ checksum "example/package.json" }}
+            - v1-dependencies-example-
+      - run: |
+          yarn install
+          yarn install --cwd example
+      - save_cache:
+          key: v1-dependencies-{{ checksum "package.json" }}
+          paths: node_modules
+      - save_cache:
+          key: v1-dependencies-example-{{ checksum "example/package.json" }}
+          paths: example/node_modules
+      - persist_to_workspace:
+          root: .
+          paths: .
+  lint-and-flow:
+      <<: *defaults
+      steps:
+        - attach_workspace:
+            at: ~/project
+        - run: |
+            yarn run lint
+            yarn run flow
+  unit-tests:
+      <<: *defaults
+      steps:
+        - attach_workspace:
+            at: ~/project
+        - run: yarn test -- --coverage
+        - store_artifacts:
+            path: coverage
+            destination: coverage
+
+workflows:
+  version: 2
+  build-and-test:
+    jobs:
+      - install-dependencies
+      - lint-and-flow:
+          requires:
+            - install-dependencies
+      - unit-tests:
+          requires:
+            - install-dependencies

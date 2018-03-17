@@ -1,0 +1,32 @@
+{
+  "name": "tabviewexample",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "react-native-scripts start",
+    "android": "react-native-scripts android",
+    "ios": "react-native-scripts ios"
+  },
+  "dependencies": {
+    "@expo/vector-icons": "^6.2.0",
+    "expo": "~23.0.4",
+    "hoist-non-react-statics": "^2.5.0",
+    "prop-types": "^15.6.0",
+    "react": "16.0.0",
+    "react-native": "0.50.4",
+    "react-native-paper": "^1.2.3",
+    "react-native-safe-area-view": "^0.7.0",
+    "react-native-tab-view": "^0.0.74",
+    "react-navigation": "^2.0.0-alpha.5"
+  },
+  "devDependencies": {
+    "babel-plugin-module-resolver": "^3.0.0",
+    "babel-preset-expo": "^4.0.0",
+    "glob-to-regexp": "^0.3.0",
+    "react-native-scripts": "1.8.1"
+  },
+  "main": "App.js",
+  "resolutions": {
+    "**/hoist-non-react-statics": "2.5.0"
+  }
+}
