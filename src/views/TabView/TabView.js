@@ -9,6 +9,7 @@ import withCachedChildNavigation from '../../withCachedChildNavigation';
 class TabView extends React.PureComponent {
   static defaultProps = {
     lazy: true,
+    lazyPlaceholder: null,
     removedClippedSubviews: true,
     // fix for https://github.com/react-native-community/react-native-tab-view/issues/312
     initialLayout: Platform.select({
@@ -34,6 +35,7 @@ class TabView extends React.PureComponent {
     return (
       <ResourceSavingSceneView
         lazy={this.props.lazy}
+        lazyPlaceholder={this.props.lazyPlaceholder}
         isFocused={focusedKey === key}
         removeClippedSubViews={this.props.removeClippedSubviews}
         animationEnabled={this.props.animationEnabled}

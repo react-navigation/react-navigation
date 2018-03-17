@@ -32,6 +32,7 @@ class ResourceSavingSceneView extends React.PureComponent {
       navigation,
       removeClippedSubviews,
       lazy,
+      lazyPlaceholder,
       ...rest
     } = this.props;
 
@@ -52,7 +53,11 @@ class ResourceSavingSceneView extends React.PureComponent {
               : styles.innerDetached
           }
         >
-          {awake ? <SceneView {...rest} navigation={childNavigation} /> : null}
+          {awake ? (
+            <SceneView {...rest} navigation={childNavigation} />
+          ) : (
+            lazyPlaceholder
+          )}
         </View>
       </View>
     );
