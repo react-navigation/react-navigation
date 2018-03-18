@@ -32,7 +32,6 @@ import SimpleStack from './SimpleStack';
 import StackWithHeaderPreset from './StackWithHeaderPreset';
 import StackWithTranslucentHeader from './StackWithTranslucentHeader';
 import SimpleTabs from './SimpleTabs';
-import TabAnimations from './TabAnimations';
 import TabsWithNavigationFocus from './TabsWithNavigationFocus';
 
 const ExampleInfo = {
@@ -106,10 +105,6 @@ const ExampleInfo = {
     name: 'Link to Settings Tab',
     description: 'Deep linking into a route in tab',
   },
-  TabAnimations: {
-    name: 'Animated Tabs Example',
-    description: 'Tab transitions have custom animations',
-  },
   TabsWithNavigationFocus: {
     name: 'withNavigationFocus',
     description: 'Receive the focus prop to know when a screen is focused',
@@ -141,7 +136,6 @@ const ExampleRoutes = {
     screen: SimpleTabs,
     path: 'settings',
   },
-  TabAnimations,
   TabsWithNavigationFocus,
 };
 

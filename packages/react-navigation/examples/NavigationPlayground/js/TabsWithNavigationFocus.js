@@ -3,8 +3,11 @@
  */
 
 import React from 'react';
-import { SafeAreaView, Text } from 'react-native';
-import { createTabNavigator, withNavigationFocus } from 'react-navigation';
+import { SafeAreaView, StatusBar, Text, View } from 'react-native';
+import {
+  createBottomTabNavigator,
+  withNavigationFocus,
+} from 'react-navigation';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Button } from './commonComponents/ButtonWithMargin';
 
@@ -66,9 +69,10 @@ const createTabScreen = (name, icon, focusedIcon, tintColor = '#673ab7') => {
             />
           )}
           <Button
-            onPress={() => this.props.navigation.goBack(null)}
+            onPress={() => this.props.navigation.dismiss()}
             title="Back to other examples"
           />
+          <StatusBar barStyle="default" />
         </SafeAreaView>
       );
     }
@@ -76,27 +80,16 @@ const createTabScreen = (name, icon, focusedIcon, tintColor = '#673ab7') => {
   return withNavigationFocus(TabScreen);
 };
 
-const TabsWithNavigationFocus = createTabNavigator(
-  {
-    One: {
-      screen: createTabScreen('One', 'numeric-1-box-outline', 'numeric-1-box'),
-    },
-    Two: {
-      screen: createTabScreen('Two', 'numeric-2-box-outline', 'numeric-2-box'),
-    },
-    Three: {
-      screen: createTabScreen(
-        'Three',
-        'numeric-3-box-outline',
-        'numeric-3-box'
-      ),
-    },
+const TabsWithNavigationFocus = createBottomTabNavigator({
+  One: {
+    screen: createTabScreen('One', 'numeric-1-box-outline', 'numeric-1-box'),
   },
-  {
-    tabBarPosition: 'bottom',
-    animationEnabled: true,
-    swipeEnabled: true,
-  }
-);
+  Two: {
+    screen: createTabScreen('Two', 'numeric-2-box-outline', 'numeric-2-box'),
+  },
+  Three: {
+    screen: createTabScreen('Three', 'numeric-3-box-outline', 'numeric-3-box'),
+  },
+});
 
 export default TabsWithNavigationFocus;

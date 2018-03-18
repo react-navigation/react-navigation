@@ -7,7 +7,7 @@ import { ScrollView, StatusBar } from 'react-native';
 import {
   SafeAreaView,
   createStackNavigator,
-  createTabNavigator,
+  createBottomTabNavigator,
 } from 'react-navigation';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -55,7 +55,7 @@ const MySettingsScreen = ({ navigation }) => (
   <MyNavScreen banner="Settings Screen" navigation={navigation} />
 );
 
-const TabNav = createTabNavigator(
+const TabNav = createBottomTabNavigator(
   {
     MainTab: {
       screen: MyHomeScreen,

@@ -7,7 +7,7 @@ import { ScrollView, StatusBar } from 'react-native';
 import {
   SafeAreaView,
   createStackNavigator,
-  createTabNavigator,
+  createBottomTabNavigator,
 } from 'react-navigation';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -89,7 +89,7 @@ const SettingsTab = createStackNavigator({
   },
 });
 
-const StacksInTabs = createTabNavigator(
+const StacksInTabs = createBottomTabNavigator(
   {
     MainTab: {
       screen: MainTab,
@@ -121,9 +121,6 @@ const StacksInTabs = createTabNavigator(
     },
   },
   {
-    tabBarPosition: 'bottom',
-    animationEnabled: false,
-    swipeEnabled: false,
     tabBarOptions: {
       showLabel: false,
     },

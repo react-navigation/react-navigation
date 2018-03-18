@@ -37,19 +37,6 @@ module.exports = {
     );
     return require('./navigators/createSwitchNavigator').default;
   },
-  get createTabNavigator() {
-    console.warn(
-      'TabNavigator is deprecated. Please use the react-navigation-tabs package instead: https://github.com/react-navigation/react-navigation-tabs'
-    );
-    return require('react-navigation-deprecated-tab-navigator')
-      .createTabNavigator;
-  },
-  get TabNavigator() {
-    console.warn(
-      'TabNavigator is deprecated. Please use the react-navigation-tabs package instead: https://github.com/react-navigation/react-navigation-tabs'
-    );
-    return require('react-navigation-deprecated-tab-navigator').default;
-  },
   get createDrawerNavigator() {
     return require('./navigators/createDrawerNavigator').default;
   },
@@ -58,6 +45,28 @@ module.exports = {
       'The DrawerNavigator function name is deprecated, please use createDrawerNavigator instead'
     );
     return require('./navigators/createDrawerNavigator').default;
+  },
+  get createTabNavigator() {
+    console.warn(
+      'TabNavigator is deprecated. Please use the createBottomTabNavigator or createMaterialTopNavigator instead.'
+    );
+    return require('react-navigation-deprecated-tab-navigator')
+      .createTabNavigator;
+  },
+  get TabNavigator() {
+    console.warn(
+      'TabNavigator is deprecated. Please use the createBottomTabNavigator or createMaterialTopNavigator instead.'
+    );
+    return require('react-navigation-deprecated-tab-navigator').default;
+  },
+  get createBottomTabNavigator() {
+    return require('react-navigation-tabs').createBottomTabNavigator;
+  },
+  get createMaterialBottomTabNavigator() {
+    return require('react-navigation-tabs').createMaterialBottomTabNavigator;
+  },
+  get createMaterialTopTabNavigator() {
+    return require('react-navigation-tabs').createMaterialTopTabNavigator;
   },
 
   // Routers
