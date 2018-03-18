@@ -181,6 +181,7 @@ describe('TabRouter', () => {
     const navAction = {
       type: NavigationActions.NAVIGATE,
       routeName: 'Baz',
+      params: { foo: '42' },
       action: {
         type: NavigationActions.NAVIGATE,
         routeName: 'Bar',
