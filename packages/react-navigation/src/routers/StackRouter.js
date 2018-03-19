@@ -209,7 +209,7 @@ export default (routeConfigs, stackConfig = {}) => {
         if (action.type !== NavigationActions.PUSH && lastRouteIndex !== -1) {
           // If index is unchanged and params are not being set, leave state identity intact
           if (state.index === lastRouteIndex && !action.params) {
-            return state;
+            return null;
           }
 
           // Remove the now unused routes at the tail of the routes array
