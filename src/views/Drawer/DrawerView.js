@@ -38,12 +38,18 @@ export default class DrawerView extends React.PureComponent {
 
   _handleDrawerOpen = () => {
     const { navigation } = this.props;
-    navigation.dispatch({ type: NavigationActions.OPEN_DRAWER });
+    const { isDrawerOpen } = navigation.state;
+    if (!isDrawerOpen) {
+      navigation.dispatch({ type: NavigationActions.OPEN_DRAWER });
+    }
   };
 
   _handleDrawerClose = () => {
     const { navigation } = this.props;
-    navigation.dispatch({ type: NavigationActions.CLOSE_DRAWER });
+    const { isDrawerOpen } = navigation.state;
+    if (isDrawerOpen) {
+      navigation.dispatch({ type: NavigationActions.CLOSE_DRAWER });
+    }
   };
 
   _updateWidth = () => {

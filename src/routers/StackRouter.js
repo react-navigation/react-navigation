@@ -206,7 +206,7 @@ export default (routeConfigs, stackConfig = {}) => {
           }
         });
 
-        if (lastRouteIndex !== -1) {
+        if (action.type !== NavigationActions.PUSH && lastRouteIndex !== -1) {
           // If index is unchanged and params are not being set, leave state identity intact
           if (state.index === lastRouteIndex && !action.params) {
             return state;
@@ -471,6 +471,7 @@ export default (routeConfigs, stackConfig = {}) => {
       if (!pathToResolve) {
         return NavigationActions.navigate({
           routeName: initialRouteName,
+          params: inputParams,
         });
       }
 
@@ -541,7 +542,7 @@ export default (routeConfigs, stackConfig = {}) => {
         if (key.asterisk || !key) {
           return result;
         }
-        const nextResult = result || {};
+        const nextResult = result || inputParams || {};
         const paramName = key.name;
 
         let decodedMatchResult;

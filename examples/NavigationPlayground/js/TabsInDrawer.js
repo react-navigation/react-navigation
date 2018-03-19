@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { Platform, ScrollView } from 'react-native';
-import { createTabNavigator, createDrawerNavigator } from 'react-navigation';
+import { createDrawerNavigator } from 'react-navigation';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import SimpleTabs from './SimpleTabs';
 import StacksOverTabs from './StacksOverTabs';
