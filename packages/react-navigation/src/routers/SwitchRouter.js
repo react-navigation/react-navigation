@@ -319,22 +319,31 @@ export default (routeConfigs, config = {}) => {
      * This will return null if there is no action matched
      */
     getActionForPathAndParams(path, params) {
+      if (!path) {
+        return NavigationActions.navigate({
+          routeName: initialRouteName,
+          params,
+        });
+      }
       return (
         order
           .map(childId => {
             const parts = path.split('/');
             const pathToTest = paths[childId];
-            if (parts[0] === pathToTest) {
+            const partsInTestPath = pathToTest.split('/').length;
+            const pathPartsToTest = parts.slice(0, partsInTestPath).join('/');
+            if (pathPartsToTest === pathToTest) {
               const childRouter = childRouters[childId];
               const action = NavigationActions.navigate({
                 routeName: childId,
               });
               if (childRouter && childRouter.getActionForPathAndParams) {
                 action.action = childRouter.getActionForPathAndParams(
-                  parts.slice(1).join('/'),
+                  parts.slice(partsInTestPath).join('/'),
                   params
                 );
-              } else if (params) {
+              }
+              if (params) {
                 action.params = params;
               }
               return action;
