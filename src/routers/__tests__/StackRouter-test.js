@@ -539,8 +539,7 @@ describe('StackRouter', () => {
       NavigationActions.navigate({ routeName: 'bar' }),
       barState
     );
-    expect(navigateOnBarState.index).toEqual(1);
-    expect(navigateOnBarState.routes[1].routeName).toEqual('bar');
+    expect(navigateOnBarState).toEqual(null);
   });
 
   test('Navigate focuses given routeName if already active in stack', () => {
@@ -640,8 +639,7 @@ describe('StackRouter', () => {
       NavigationActions.navigate({ routeName: 'foo', key: 'foo' }),
       initState
     );
-    expect(pushedState.index).toEqual(0);
-    expect(pushedState.routes[0].routeName).toEqual('foo');
+    expect(pushedState).toEqual(null);
   });
 
   test('Navigate with key is idempotent', () => {
@@ -660,8 +658,20 @@ describe('StackRouter', () => {
       NavigationActions.navigate({ routeName: 'bar', key: 'a' }),
       pushedState
     );
-    expect(pushedTwiceState.index).toEqual(1);
-    expect(pushedTwiceState.routes[1].routeName).toEqual('bar');
+    expect(pushedTwiceState).toEqual(null);
+  });
+
+  test('Navigate to current routeName returns null to indicate handled action', () => {
+    const TestRouter = StackRouter({
+      foo: { screen: () => <div /> },
+      bar: { screen: () => <div /> },
+    });
+    const initState = TestRouter.getStateForAction(NavigationActions.init());
+    const navigatedState = TestRouter.getStateForAction(
+      NavigationActions.navigate({ routeName: 'foo' }),
+      initState
+    );
+    expect(navigatedState).toBe(null);
   });
 
   test('Push behaves like navigate, except for key', () => {
