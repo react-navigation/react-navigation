@@ -471,6 +471,7 @@ export default (routeConfigs, stackConfig = {}) => {
       if (!pathToResolve) {
         return NavigationActions.navigate({
           routeName: initialRouteName,
+          params: inputParams,
         });
       }
 
@@ -541,7 +542,7 @@ export default (routeConfigs, stackConfig = {}) => {
         if (key.asterisk || !key) {
           return result;
         }
-        const nextResult = result || {};
+        const nextResult = result || inputParams || {};
         const paramName = key.name;
 
         let decodedMatchResult;
