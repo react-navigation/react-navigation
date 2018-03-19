@@ -4048,9 +4048,9 @@ react-native-maps@0.17.1:
   version "0.17.1"
   resolved "https://registry.yarnpkg.com/react-native-maps/-/react-native-maps-0.17.1.tgz#ab2236341fd984dac8864202ae55331bc262f60c"
 
-react-native-paper@^1.2.3:
-  version "1.2.3"
-  resolved "https://registry.yarnpkg.com/react-native-paper/-/react-native-paper-1.2.3.tgz#5632a08dea8eecc1f4e764e3cea260e5ba0f007a"
+react-native-paper@^1.2.4:
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/react-native-paper/-/react-native-paper-1.2.4.tgz#28ab6e5d83ea264167058618bde312c7c61ece73"
   dependencies:
     color "^2.0.1"
     create-react-context "^0.2.1"

@@ -1,6 +1,6 @@
 {
   "name": "react-navigation-tabs",
-  "version": "0.1.0-alpha.0",
+  "version": "0.1.0-alpha.1",
   "description": "Tab Navigation components for React Navigation",
   "main": "dist/index.js",
   "files": [
@@ -38,7 +38,7 @@
     "hoist-non-react-statics": "^2.5.0",
     "prop-types": "^15.6.0",
     "react-lifecycles-compat": "^1.0.2",
-    "react-native-paper": "^1.2.3",
+    "react-native-paper": "^1.2.4",
     "react-native-safe-area-view": "^0.7.0",
     "react-native-tab-view": "^0.0.74"
   },

@@ -14,7 +14,7 @@
     "prop-types": "^15.6.0",
     "react": "16.0.0",
     "react-native": "0.50.4",
-    "react-native-paper": "^1.2.3",
+    "react-native-paper": "^1.2.4",
     "react-native-safe-area-view": "^0.7.0",
     "react-native-tab-view": "^0.0.74",
     "react-navigation": "^2.0.0-alpha.5"
