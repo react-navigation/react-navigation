@@ -8,7 +8,16 @@ import type {
 } from 'react-navigation';
 
 import React from 'react';
-import { Button, Platform, ScrollView, StatusBar, View } from 'react-native';
+import {
+  Button,
+  Platform,
+  ScrollView,
+  StatusBar,
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
 import { SafeAreaView, TabNavigator } from 'react-navigation';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import SampleText from './SampleText';
@@ -107,28 +116,86 @@ const SimpleTabs = TabNavigator(
   {
     Home: {
       screen: MyHomeScreen,
-      path: '',
     },
     People: {
       screen: MyPeopleScreen,
-      path: 'cart',
     },
     Chat: {
       screen: MyChatScreen,
-      path: 'chat',
     },
     Settings: {
       screen: MySettingsScreen,
-      path: 'settings',
     },
   },
   {
-    lazy: true,
-    removeClippedSubviews: true,
-    tabBarOptions: {
-      activeTintColor: Platform.OS === 'ios' ? '#e91e63' : '#fff',
+    navigationOptions: {
+      tabBarVisible: false,
     },
   }
 );
 
-export default SimpleTabs;
+type SimpleTabsContainerProps = {
+  navigation: NavigationScreenProp<*>,
+};
+
+const TabBarButton = ({ name, navigation }) => {
+  const currentName = navigation.state.routes[navigation.state.index].routeName;
+  return (
+    <TouchableOpacity
+      onPress={() => {
+        navigation.navigate(name);
+      }}
+    >
+      <Text
+        style={{ color: currentName === name ? 'blue' : 'black', fontSize: 32 }}
+      >
+        {name}
+      </Text>
+    </TouchableOpacity>
+  );
+};
+
+class CustomTabBar extends React.Component<*> {
+  render() {
+    return (
+      <View
+        style={{
+          height: 40,
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          borderTopWidth: StyleSheet.hairlineWidth,
+        }}
+      >
+        <TabBarButton navigation={this.props.navigation} name="Home" />
+        <TabBarButton navigation={this.props.navigation} name="People" />
+        <TabBarButton navigation={this.props.navigation} name="Chat" />
+      </View>
+    );
+  }
+}
+
+class SimpleTabsContainer extends React.Component<SimpleTabsContainerProps> {
+  static router = {
+    ...SimpleTabs.router,
+    getStateForAction(action, lastState) {
+      // You can override the behavior navigation actions here, which are dispatched via navigation.dispatch, or via helpers like navigaiton.navigate.
+
+      // In this case we simply use the default behavior:
+      const newState = SimpleTabs.router.getStateForAction(action, lastState);
+
+      console.log('Tab router action:', action, newState);
+      return newState;
+    },
+  };
+
+  render() {
+    return (
+      <View style={{ flex: 1 }}>
+        <SimpleTabs navigation={this.props.navigation} />
+        <CustomTabBar navigation={this.props.navigation} />
+      </View>
+    );
+  }
+}
+
+export default SimpleTabsContainer;
