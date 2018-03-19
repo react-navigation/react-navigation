@@ -33,7 +33,7 @@ class SignInScreen extends React.Component<any, any> {
 
   _signInAsync = async () => {
     await AsyncStorage.setItem('userToken', 'abc');
-    this.props.navigation.navigate('App');
+    this.props.navigation.navigate('Home');
   };
 }
 

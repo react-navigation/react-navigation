@@ -32,12 +32,17 @@ import SimpleStack from './SimpleStack';
 import StackWithHeaderPreset from './StackWithHeaderPreset';
 import StackWithTranslucentHeader from './StackWithTranslucentHeader';
 import SimpleTabs from './SimpleTabs';
+import SwitchWithStacks from './SwitchWithStacks';
 import TabsWithNavigationFocus from './TabsWithNavigationFocus';
 
 const ExampleInfo = {
   SimpleStack: {
     name: 'Stack Example',
     description: 'A card stack',
+  },
+  SwitchWithStacks: {
+    name: 'Switch between routes',
+    description: 'Jump between routes',
   },
   StackWithCustomHeaderBackImage: {
     name: 'Custom header back image',
@@ -112,7 +117,8 @@ const ExampleInfo = {
 };
 
 const ExampleRoutes = {
-  SimpleStack: SimpleStack,
+  SimpleStack,
+  SwitchWithStacks,
   SimpleTabs: SimpleTabs,
   Drawer: Drawer,
   // MultipleDrawer: {
