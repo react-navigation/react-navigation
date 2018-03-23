@@ -5289,9 +5289,9 @@ react-native-maps@0.19.0:
   version "0.19.0"
   resolved "https://registry.yarnpkg.com/react-native-maps/-/react-native-maps-0.19.0.tgz#ce94fad1cf360e335cb4338a68c95f791e869074"
 
-react-native-paper@^1.2.3:
-  version "1.2.3"
-  resolved "https://registry.yarnpkg.com/react-native-paper/-/react-native-paper-1.2.3.tgz#5632a08dea8eecc1f4e764e3cea260e5ba0f007a"
+react-native-paper@^1.2.4:
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/react-native-paper/-/react-native-paper-1.2.4.tgz#28ab6e5d83ea264167058618bde312c7c61ece73"
   dependencies:
     color "^2.0.1"
     create-react-context "^0.2.1"
@@ -5314,7 +5314,7 @@ react-native-safe-module@^1.1.0:
   dependencies:
     dedent "^0.6.0"
 
-react-native-scripts@^1.5.0:
+react-native-scripts@^1.11.1:
   version "1.11.1"
   resolved "https://registry.yarnpkg.com/react-native-scripts/-/react-native-scripts-1.11.1.tgz#a9f0a5c91a85d34acee9ec9012cf614665670b80"
   dependencies:
@@ -5344,6 +5344,12 @@ react-native-scripts@^1.5.0:
 react-native-tab-view@^0.0.74:
   version "0.0.74"
   resolved "https://registry.yarnpkg.com/react-native-tab-view/-/react-native-tab-view-0.0.74.tgz#62c0c882d9232b461ce181d440d683b4f99d1bd8"
+  dependencies:
+    prop-types "^15.6.0"
+
+"react-native-tab-view@github:react-navigation/react-native-tab-view":
+  version "0.0.74"
+  resolved "https://codeload.github.com/react-navigation/react-native-tab-view/tar.gz/36ebd834d78b841fc19778c966465d02fd1213bb"
   dependencies:
     prop-types "^15.6.0"
 
@@ -5414,11 +5420,11 @@ react-native@^0.52.0:
     xmldoc "^0.4.0"
     yargs "^9.0.0"
 
-react-navigation-deprecated-tab-navigator@1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/react-navigation-deprecated-tab-navigator/-/react-navigation-deprecated-tab-navigator-1.0.0.tgz#16d267867defe82a4b90154ab3be4af96157d1dd"
+react-navigation-deprecated-tab-navigator@1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/react-navigation-deprecated-tab-navigator/-/react-navigation-deprecated-tab-navigator-1.0.1.tgz#a869d749d16116630411d6c7761c51484ba90175"
   dependencies:
-    react-native-tab-view "^0.0.74"
+    react-native-tab-view react-navigation/react-native-tab-view
 
 react-navigation-header-buttons@^0.0.4:
   version "0.0.4"
@@ -5426,14 +5432,14 @@ react-navigation-header-buttons@^0.0.4:
   dependencies:
     react-native-platform-touchable "^1.1.1"
 
-react-navigation-tabs@^0.1.0-alpha.0:
-  version "0.1.0-alpha.0"
-  resolved "https://registry.yarnpkg.com/react-navigation-tabs/-/react-navigation-tabs-0.1.0-alpha.0.tgz#48a1ba6fb750594696e8214a71d0a97f07cbee28"
+react-navigation-tabs@^0.1.0-alpha.1:
+  version "0.1.0-alpha.1"
+  resolved "https://registry.yarnpkg.com/react-navigation-tabs/-/react-navigation-tabs-0.1.0-alpha.1.tgz#23188655fe70376afd9de51992294d72f4fcbd20"
   dependencies:
     hoist-non-react-statics "^2.5.0"
     prop-types "^15.6.0"
     react-lifecycles-compat "^1.0.2"
-    react-native-paper "^1.2.3"
+    react-native-paper "^1.2.4"
     react-native-safe-area-view "^0.7.0"
     react-native-tab-view "^0.0.74"
 
