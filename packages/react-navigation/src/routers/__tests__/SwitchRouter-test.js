@@ -78,6 +78,13 @@ describe('SwitchRouter', () => {
     expect(state3.index).toEqual(0);
   });
 
+  test('paths option on SwitchRouter overrides path from route config', () => {
+    const router = getExampleRouter({ paths: { A: 'overridden' } });
+    const action = router.getActionForPathAndParams('overridden', {});
+    expect(action.type).toEqual(NavigationActions.NAVIGATE);
+    expect(action.routeName).toEqual('A');
+  });
+
   test('provides correct action for getActionForPathAndParams', () => {
     const router = getExampleRouter({ backBehavior: 'initialRoute' });
     const action = router.getActionForPathAndParams('A1', { foo: 'bar' });

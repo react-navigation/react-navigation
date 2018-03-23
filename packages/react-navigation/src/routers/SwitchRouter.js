@@ -29,8 +29,10 @@ export default (routeConfigs, config = {}) => {
   const childRouters = {};
   order.forEach(routeName => {
     const routeConfig = routeConfigs[routeName];
-    paths[routeName] =
-      typeof routeConfig.path === 'string' ? routeConfig.path : routeName;
+    if (!paths[routeName]) {
+      paths[routeName] =
+        typeof routeConfig.path === 'string' ? routeConfig.path : routeName;
+    }
     childRouters[routeName] = null;
     const screen = getScreenForRouteName(routeConfigs, routeName);
     if (screen.router) {
