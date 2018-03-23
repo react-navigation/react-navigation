@@ -4864,7 +4864,7 @@ react-native-safe-area-view@^0.7.0:
   dependencies:
     hoist-non-react-statics "^2.3.1"
 
-react-native-tab-view@^0.0.74, "react-native-tab-view@github:react-navigation/react-native-tab-view":
+react-native-tab-view@^0.0.74, react-native-tab-view@react-navigation/react-native-tab-view:
   version "0.0.74"
   resolved "https://codeload.github.com/react-navigation/react-native-tab-view/tar.gz/36ebd834d78b841fc19778c966465d02fd1213bb"
   dependencies:
@@ -4943,9 +4943,9 @@ react-navigation-deprecated-tab-navigator@1.0.1:
   dependencies:
     react-native-tab-view react-navigation/react-native-tab-view
 
-react-navigation-tabs@^0.1.0-alpha.1:
-  version "0.1.0-alpha.1"
-  resolved "https://registry.yarnpkg.com/react-navigation-tabs/-/react-navigation-tabs-0.1.0-alpha.1.tgz#23188655fe70376afd9de51992294d72f4fcbd20"
+react-navigation-tabs@0.1.0-alpha.3:
+  version "0.1.0-alpha.3"
+  resolved "https://registry.yarnpkg.com/react-navigation-tabs/-/react-navigation-tabs-0.1.0-alpha.3.tgz#a68ace954e84206b7c3e6f5793f234d3931d03dc"
   dependencies:
     hoist-non-react-statics "^2.5.0"
     prop-types "^15.6.0"
