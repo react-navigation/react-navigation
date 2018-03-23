@@ -185,46 +185,44 @@ class TabBarBottom extends React.Component<Props> {
     ];
 
     return (
-      <Animated.View style={tabBarStyle}>
-        <SafeAreaView
-          style={styles.container}
-          forceInset={{ bottom: 'always', top: 'never' }}
-        >
-          {routes.map((route, index) => {
-            const focused = index === navigation.state.index;
-            const scene = { route, focused };
+      <SafeAreaView
+        style={tabBarStyle}
+        forceInset={{ bottom: 'always', top: 'never' }}
+      >
+        {routes.map((route, index) => {
+          const focused = index === navigation.state.index;
+          const scene = { route, focused };
 
-            const backgroundColor = focused
-              ? activeBackgroundColor
-              : inactiveBackgroundColor;
+          const backgroundColor = focused
+            ? activeBackgroundColor
+            : inactiveBackgroundColor;
 
-            return (
-              <TouchableWithoutFeedback
-                key={route.key}
-                onPress={() => {
-                  jumpToIndex(index);
-                  onTabPress({ route });
-                }}
+          return (
+            <TouchableWithoutFeedback
+              key={route.key}
+              onPress={() => {
+                jumpToIndex(index);
+                onTabPress({ route });
+              }}
+            >
+              <View
+                style={[
+                  styles.tab,
+                  { backgroundColor },
+                  this._shouldUseHorizontalLabels()
+                    ? styles.tabLandscape
+                    : styles.tabPortrait,
+                  styles.tabPortrait,
+                  tabStyle,
+                ]}
               >
-                <View
-                  style={[
-                    styles.tab,
-                    { backgroundColor },
-                    this._shouldUseHorizontalLabels()
-                      ? styles.tabLandscape
-                      : styles.tabPortrait,
-                    styles.tabPortrait,
-                    tabStyle,
-                  ]}
-                >
-                  {this._renderIcon(scene)}
-                  {this._renderLabel(scene)}
-                </View>
-              </TouchableWithoutFeedback>
-            );
-          })}
-        </SafeAreaView>
-      </Animated.View>
+                {this._renderIcon(scene)}
+                {this._renderLabel(scene)}
+              </View>
+            </TouchableWithoutFeedback>
+          );
+        })}
+      </SafeAreaView>
     );
   }
 }
@@ -237,9 +235,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#F7F7F7', // Default background color in iOS 10
     borderTopWidth: StyleSheet.hairlineWidth,
     borderTopColor: 'rgba(0, 0, 0, .3)',
-  },
-  container: {
-    flex: 1,
     flexDirection: 'row',
   },
   tabBarCompact: {
