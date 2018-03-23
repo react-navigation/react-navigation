@@ -1,11 +1,12 @@
 import React from 'react';
-import withLifecyclePolyfill from 'react-lifecycles-compat';
 import { Linking, AsyncStorage } from 'react-native';
+import withLifecyclePolyfill from 'react-lifecycles-compat';
 
 import { BackHandler } from './PlatformHelpers';
 import NavigationActions from './NavigationActions';
 import addNavigationHelpers from './addNavigationHelpers';
 import invariant from './utils/invariant';
+import docsUrl from './utils/docsUrl';
 
 function isStateful(props) {
   return !props.navigation;
@@ -32,13 +33,14 @@ function validateProps(props) {
   }
 }
 
-// We keep a global flag to catch errors during the state persistence hydrating scenario.
-// The innermost navigator who catches the error will dispatch a new init action.
-let _reactNavigationIsHydratingState = false;
 // Unfortunate to use global state here, but it seems necessesary for the time being. There seems to
 // be some problems with cascading componentDidCatch handlers. Ideally the inner non-stateful navigator
 // catches the error and re-throws it, to be caught by the top-level stateful navigator.
+let statefulContainersCounter = 0;
 
+// We keep a global flag to catch errors during the state persistence hydrating scenario.
+// The innermost navigator who catches the error will dispatch a new init action.
+let _reactNavigationIsHydratingState = false;
 /**
  * Create an HOC that injects the navigation and manages the navigation state
  * in case it's not passed from above.
@@ -186,6 +188,16 @@ export default function createNavigationContainer(Component) {
         return;
       }
 
+      if (__DEV__ && !this.props.detached) {
+        if (statefulContainersCounter > 0) {
+          console.error(
+            `You should only render one navigator explicitly in your app, and other navigators should by rendered by including them in that navigator. Full details at: ${docsUrl(
+              'common-mistakes.html#explicitly-rendering-more-than-one-navigator'
+            )}`
+          );
+        }
+      }
+      statefulContainersCounter++;
       Linking.addEventListener('url', this._handleOpenURL);
 
       const { persistenceKey } = this.props;
@@ -257,6 +269,10 @@ export default function createNavigationContainer(Component) {
       this._isMounted = false;
       Linking.removeEventListener('url', this._handleOpenURL);
       this.subs && this.subs.remove();
+
+      if (this._isStateful()) {
+        statefulContainersCounter--;
+      }
     }
 
     // Per-tick temporary storage for state.nav
