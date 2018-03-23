@@ -179,8 +179,9 @@ class TabBarBottom extends React.Component<Props> {
 
     const tabBarStyle = [
       styles.tabBar,
-      !Platform.isPad ? styles.tabBarCompact : styles.tabBarRegular,
-      styles.tabBarRegular,
+      this._shouldUseHorizontalTabs() && !Platform.isPad
+        ? styles.tabBarCompact
+        : styles.tabBarRegular,
       style,
     ];
 
