@@ -30,7 +30,7 @@ export type TabBarOptions = {
 type Props = TabBarOptions & {
   navigation: any,
   descriptors: any,
-  jumpToIndex: any,
+  jumpTo: any,
   onTabPress: any,
   getLabelText: ({ route: any }) => any,
   renderIcon: any,
@@ -170,7 +170,7 @@ class TabBarBottom extends React.Component<Props> {
       activeBackgroundColor,
       inactiveBackgroundColor,
       onTabPress,
-      jumpToIndex,
+      jumpTo,
       style,
       tabStyle,
     } = this.props;
@@ -202,7 +202,7 @@ class TabBarBottom extends React.Component<Props> {
             <TouchableWithoutFeedback
               key={route.key}
               onPress={() => {
-                jumpToIndex(index);
+                jumpTo(route.key);
                 onTabPress({ route });
               }}
             >

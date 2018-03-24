@@ -70,14 +70,22 @@ class TabNavigationView extends React.PureComponent<Props, State> {
     return (
       <TabBarComponent
         {...tabBarOptions}
+        jumpTo={this._jumpTo}
         navigation={navigation}
-        jumpToIndex={onIndexChange}
         screenProps={screenProps}
         onTabPress={onTabPress}
         getLabelText={getLabelText}
         renderIcon={renderIcon}
       />
     );
+  };
+
+  _jumpTo = (key: string) => {
+    const { navigation, onIndexChange } = this.props;
+
+    const index = navigation.state.routes.findIndex(route => route.key === key);
+
+    onIndexChange(index);
   };
 
   render() {

@@ -29,7 +29,7 @@ type Props = TabBarOptions & {
   }) => React.Node,
   getLabelText: (props: { route: any }) => any,
   useNativeDriver?: boolean,
-  jumpToIndex: (index: number) => any,
+  jumpTo: (key: string) => any,
 };
 
 export default class TabBarTop extends React.PureComponent<Props> {
