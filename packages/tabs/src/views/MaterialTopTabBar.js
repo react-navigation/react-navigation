@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { Animated, StyleSheet } from 'react-native';
 import { TabBar } from 'react-native-tab-view';
-import TabBarIcon from './TabBarIcon';
+import CrossFadeIcon from './CrossFadeIcon';
 
 export type TabBarOptions = {
   activeTintColor?: string,
@@ -116,7 +116,7 @@ export default class TabBarTop extends React.PureComponent<Props> {
     });
 
     return (
-      <TabBarIcon
+      <CrossFadeIcon
         route={route}
         navigation={navigation}
         activeOpacity={activeOpacity}

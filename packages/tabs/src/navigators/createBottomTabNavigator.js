@@ -5,7 +5,7 @@ import { View, StyleSheet } from 'react-native';
 import createTabNavigator, {
   type InjectedProps,
 } from '../utils/createTabNavigator';
-import TabBarBottom, { type TabBarOptions } from '../views/TabBarBottom';
+import BottomTabBar, { type TabBarOptions } from '../views/BottomTabBar';
 
 type Props = InjectedProps & {
   tabBarComponent?: React.ComponentType<*>,
@@ -47,10 +47,9 @@ class TabNavigationView extends React.PureComponent<Props, State> {
 
   _renderTabBar = () => {
     const {
-      tabBarComponent: TabBarComponent = TabBarBottom,
+      tabBarComponent: TabBarComponent = BottomTabBar,
       tabBarOptions,
       navigation,
-      onIndexChange,
       screenProps,
       getLabelText,
       renderIcon,
