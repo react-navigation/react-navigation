@@ -31,6 +31,7 @@ export type SceneRendererProps<T> = {
   offsetX: Animated.Value,
   position: any,
   jumpTo: (key: string) => void,
+  jumpToIndex: (index: number) => void, // Deprecated, use `jumpTo` instead
   useNativeDriver: boolean,
 };
 

@@ -24,6 +24,7 @@ export const SceneRendererPropType = {
   navigationState: NavigationStatePropType.isRequired,
   position: PropTypes.object.isRequired,
   jumpTo: PropTypes.func.isRequired,
+  jumpToIndex: PropTypes.func.isRequired, // Deprecated, use `jumpTo` instead
   useNativeDriver: PropTypes.bool,
 };
 

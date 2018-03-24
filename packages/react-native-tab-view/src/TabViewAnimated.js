@@ -156,8 +156,20 @@ export default class TabViewAnimated<T: *> extends React.Component<
     layout: this.state.layout,
     navigationState: this.props.navigationState,
     jumpTo: this._jumpTo,
+    jumpToIndex: this._jumpToIndex,
     useNativeDriver: this.props.useNativeDriver === true,
   });
+
+  _jumpToIndex = (index: number) => {
+    const { key } = this.props.navigationState.routes[index];
+
+    console.warn(
+      'Method `jumpToIndex` is deprecated. Please upgrade your code to use `jumpTo` instead.',
+      `Change your code from \`jumpToIndex(${index})\` to \`jumpTo('${key}').\``
+    );
+
+    this._jumpTo(key);
+  };
 
   _jumpTo = (key: string) => {
     if (!this._mounted) {

@@ -9,7 +9,12 @@ export default function SceneMap(scenes: { [key: string]: Function }) {
     }
   }
 
-  return ({ route, jumpTo }: *) => (
-    <SceneComponent key={route.key} route={route} jumpTo={jumpTo} />
+  return ({ route, jumpTo, jumpToIndex }: *) => (
+    <SceneComponent
+      key={route.key}
+      route={route}
+      jumpTo={jumpTo}
+      jumpToIndex={jumpToIndex}
+    />
   );
 }
