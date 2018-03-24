@@ -43,7 +43,7 @@
     "react-lifecycles-compat": "^1.0.2",
     "react-native-paper": "^1.2.4",
     "react-native-safe-area-view": "^0.7.0",
-    "react-native-tab-view": "^0.0.74"
+    "react-native-tab-view": "~0.0.75"
   },
   "devDependencies": {
     "@expo/vector-icons": "^6.2.0",
