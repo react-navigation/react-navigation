@@ -6,7 +6,9 @@ import { TabViewAnimated, TabViewPagerPan } from 'react-native-tab-view';
 import createTabNavigator, {
   type InjectedProps,
 } from '../utils/createTabNavigator';
-import TabBarTop, { type TabBarOptions } from '../views/TabBarTop';
+import MaterialTopTabBar, {
+  type TabBarOptions,
+} from '../views/MaterialTopTabBar';
 
 type Props = InjectedProps & {
   animationEnabled?: boolean,
@@ -85,7 +87,7 @@ class TabView extends React.PureComponent<Props> {
       options.tabBarVisible == null ? true : options.tabBarVisible;
 
     const {
-      tabBarComponent: TabBarComponent = TabBarTop,
+      tabBarComponent: TabBarComponent = MaterialTopTabBar,
       tabBarPosition,
       tabBarOptions,
     } = this.props;

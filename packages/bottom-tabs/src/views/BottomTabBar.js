@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import SafeAreaView from 'react-native-safe-area-view';
 
-import TabBarIcon from './TabBarIcon';
+import CrossFadeIcon from './CrossFadeIcon';
 import withDimensions from '../utils/withDimensions';
 
 export type TabBarOptions = {
@@ -119,7 +119,7 @@ class TabBarBottom extends React.Component<Props> {
     const inactiveOpacity = focused ? 0 : 1;
 
     return (
-      <TabBarIcon
+      <CrossFadeIcon
         route={route}
         navigation={navigation}
         activeOpacity={activeOpacity}
