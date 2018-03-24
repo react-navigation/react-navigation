@@ -1,5 +1,6 @@
 import React from 'react';
 
+import NavigationActions from '../NavigationActions';
 import getChildEventSubscriber from '../getChildEventSubscriber';
 import addNavigationHelpers from '../addNavigationHelpers';
 
@@ -36,12 +37,23 @@ function createNavigator(NavigatorView, router, navigationConfig) {
       return this.props.navigation;
     };
 
+    _dangerouslyUpdateRouter = (key, newRouteConfigs) => {
+      if (router.setRoutes) {
+        this.props.navigation.dispatch(
+          NavigationActions.reinit({ key, newRouteConfigs })
+        );
+      } else {
+        console.warn('Router does not support updating routes');
+      }
+    };
+
     render() {
       const { navigation, screenProps } = this.props;
       const { dispatch, state, addListener } = navigation;
       const { routes } = state;
 
       const descriptors = {};
+
       routes.forEach(route => {
         const getComponent = () =>
           router.getComponentForRouteName(route.routeName);
@@ -56,6 +68,8 @@ function createNavigator(NavigatorView, router, navigationConfig) {
         const childNavigation = addNavigationHelpers({
           dispatch,
           state: route,
+          dangerouslyUpdateRouter: config =>
+            this._dangerouslyUpdateRouter(route.key, config),
           dangerouslyGetParent: this._dangerouslyGetParent,
           addListener: this.childEventSubscribers[route.key].addListener,
           isFocused: () => this._isRouteFocused(route),

@@ -4,6 +4,7 @@ import createConfigGetter from './createConfigGetter';
 
 import NavigationActions from '../NavigationActions';
 import validateRouteConfigMap from './validateRouteConfigMap';
+import { generateKey } from './KeyGenerator';
 
 function childrenUpdateWithoutSwitchingIndex(actionType) {
   return [
@@ -12,39 +13,51 @@ function childrenUpdateWithoutSwitchingIndex(actionType) {
   ].includes(actionType);
 }
 
-export default (routeConfigs, config = {}) => {
+export default (initialRouteConfigs, config = {}) => {
   // Fail fast on invalid route definitions
-  validateRouteConfigMap(routeConfigs);
+  let routeConfigs = initialRouteConfigs;
+  let order, paths, initialRouteParams, initialRouteName, backBehavior;
+  let shouldBackNavigateToInitialRoute,
+    resetOnBlur,
+    initialRouteIndex,
+    childRouters;
 
-  const order = config.order || Object.keys(routeConfigs);
-  const paths = config.paths || {};
-  const initialRouteParams = config.initialRouteParams;
-  const initialRouteName = config.initialRouteName || order[0];
-  const backBehavior = config.backBehavior || 'none';
-  const shouldBackNavigateToInitialRoute = backBehavior === 'initialRoute';
-  const resetOnBlur = config.hasOwnProperty('resetOnBlur')
-    ? config.resetOnBlur
-    : true;
-  const initialRouteIndex = order.indexOf(initialRouteName);
-  const childRouters = {};
-  order.forEach(routeName => {
-    const routeConfig = routeConfigs[routeName];
-    if (!paths[routeName]) {
-      paths[routeName] =
-        typeof routeConfig.path === 'string' ? routeConfig.path : routeName;
+  function setRoutes(newRouteConfigs) {
+    validateRouteConfigMap(newRouteConfigs);
+    routeConfigs = newRouteConfigs;
+
+    order = config.order || Object.keys(routeConfigs);
+    paths = config.paths || {};
+    initialRouteParams = config.initialRouteParams;
+    initialRouteName = config.initialRouteName || order[0];
+    backBehavior = config.backBehavior || 'none';
+    shouldBackNavigateToInitialRoute = backBehavior === 'initialRoute';
+    resetOnBlur = config.hasOwnProperty('resetOnBlur')
+      ? config.resetOnBlur
+      : true;
+    initialRouteIndex = order.indexOf(initialRouteName);
+    childRouters = {};
+    order.forEach(routeName => {
+      const routeConfig = routeConfigs[routeName];
+      if (!paths[routeName]) {
+        paths[routeName] =
+          typeof routeConfig.path === 'string' ? routeConfig.path : routeName;
+      }
+      childRouters[routeName] = null;
+      const screen = getScreenForRouteName(routeConfigs, routeName);
+      if (screen.router) {
+        childRouters[routeName] = screen.router;
+      }
+    });
+    if (initialRouteIndex === -1) {
+      throw new Error(
+        `Invalid initialRouteName '${initialRouteName}'.` +
+          `Should be one of ${order.map(n => `"${n}"`).join(', ')}`
+      );
     }
-    childRouters[routeName] = null;
-    const screen = getScreenForRouteName(routeConfigs, routeName);
-    if (screen.router) {
-      childRouters[routeName] = screen.router;
-    }
-  });
-  if (initialRouteIndex === -1) {
-    throw new Error(
-      `Invalid initialRouteName '${initialRouteName}'.` +
-        `Should be one of ${order.map(n => `"${n}"`).join(', ')}`
-    );
   }
+
+  setRoutes(initialRouteConfigs);
 
   function resetChildRoute(routeName) {
     const params =
@@ -66,7 +79,25 @@ export default (routeConfigs, config = {}) => {
     };
   }
 
+  let screenOptionsGetter = createConfigGetter(
+    routeConfigs,
+    config.navigationOptions
+  );
+
+  function getScreenOptions(...args) {
+    return screenOptionsGetter(...args);
+  }
+
   return {
+    // this should probably be like updateRouter or something like that
+    setRoutes(newRouteConfig) {
+      setRoutes(newRouteConfig);
+      screenOptionsGetter = createConfigGetter(
+        newRouteConfig,
+        config.navigationOptions
+      );
+    },
+
     getInitialState() {
       const routes = order.map(resetChildRoute);
       return {
@@ -99,6 +130,17 @@ export default (routeConfigs, config = {}) => {
     },
 
     getStateForAction(action, inputState) {
+      if (
+        action.newRouteConfigs &&
+        (!inputState || action.key === inputState.key)
+      ) {
+        this.setRoutes(action.newRouteConfigs);
+        return {
+          ...inputState,
+          ...this.getInitialState(),
+        };
+      }
+
       let prevState = inputState ? { ...inputState } : inputState;
       let state = inputState || this.getInitialState();
       let activeChildIndex = state.index;
@@ -365,9 +407,6 @@ export default (routeConfigs, config = {}) => {
       );
     },
 
-    getScreenOptions: createConfigGetter(
-      routeConfigs,
-      config.navigationOptions
-    ),
+    getScreenOptions,
   };
 };

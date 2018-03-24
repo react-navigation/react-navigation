@@ -1,5 +1,6 @@
 const BACK = 'Navigation/BACK';
 const INIT = 'Navigation/INIT';
+const REINIT = 'Navigation/REINIT';
 const NAVIGATE = 'Navigation/NAVIGATE';
 const POP = 'Navigation/POP';
 const POP_TO_TOP = 'Navigation/POP_TO_TOP';
@@ -28,6 +29,22 @@ const init = createAction(INIT, (payload = {}) => {
   const action = {
     type: INIT,
   };
+  if (payload.params) {
+    action.params = payload.params;
+  }
+  return action;
+});
+
+const reinit = createAction(REINIT, (payload = {}) => {
+  const action = {
+    type: REINIT,
+  };
+  if (payload.newRouteConfigs) {
+    action.newRouteConfigs = payload.newRouteConfigs;
+  }
+  if (payload.key) {
+    action.key = payload.key;
+  }
   if (payload.params) {
     action.params = payload.params;
   }
@@ -124,6 +141,7 @@ export default {
   // Action constants
   BACK,
   INIT,
+  REINIT,
   NAVIGATE,
   POP,
   POP_TO_TOP,
@@ -140,6 +158,7 @@ export default {
   // Action creators
   back,
   init,
+  reinit,
   navigate,
   pop,
   popToTop,
