@@ -34,7 +34,7 @@ yarn add react-native-tab-view react-native-gesture-handler
 ```
 
 
-## Example
+## Quick Start
 
 ```js
 import * as React from 'react';
@@ -70,7 +70,6 @@ export default class TabViewExample extends React.Component {
   render() {
     return (
       <TabViewAnimated
-        style={styles.container}
         navigationState={this.state}
         renderScene={this._renderScene}
         renderHeader={this._renderHeader}
@@ -87,6 +86,17 @@ const styles = StyleSheet.create({
   },
 });
 ```
+
+
+## Integration with React Navigation
+
+React Navigation integration can be achieved by the [react-navigation-tabs](https://github.com/react-navigation/react-navigation-tabs) package. Note that while it's easier to use, it is not as flexible as using the library directly.
+
+
+## Examples on Snack
+
+- [QUick Start](https://snack.expo.io/@satya164/react-native-tab-view-quick-start)
+- [Custom Tab Bar](https://snack.expo.io/@satya164/custom-tabbar-example)
 
 
 ## API
