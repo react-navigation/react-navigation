@@ -16,6 +16,8 @@ type PageScrollState = 'dragging' | 'settling' | 'idle';
 
 type Props<T> = PagerRendererProps<T> & {
   keyboardDismissMode: 'none' | 'on-drag',
+  onSwipeStart: Function,
+  onSwipeEnd: Function,
 };
 
 export default class TabViewPagerAndroid<T: *> extends React.Component<
@@ -26,6 +28,8 @@ export default class TabViewPagerAndroid<T: *> extends React.Component<
   static defaultProps = {
     canJumpToTab: () => true,
     keyboardDismissMode: 'on-drag',
+    onSwipeStart: () => null,
+    onSwipeEnd: () => null,
   };
 
   constructor(props: Props<T>) {
@@ -90,6 +94,12 @@ export default class TabViewPagerAndroid<T: *> extends React.Component<
 
   _handlePageScrollStateChanged = (e: PageScrollState) => {
     this._isIdle = e === 'idle';
+
+    if (this._isIdle) {
+      this.props.onSwipeEnd();
+    } else if (e === 'dragging') {
+      this.props.onSwipeStart();
+    }
 
     let nextIndex = this._currentIndex;
 

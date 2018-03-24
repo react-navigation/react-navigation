@@ -23,6 +23,8 @@ type Props<T> = PagerProps<T> & {
   renderFooter?: (props: SceneRendererProps<T>) => ?React.Element<any>,
   useNativeDriver?: boolean,
   style?: Style,
+  onSwipeStart?: Function,
+  onSwipeEnd?: Function,
 };
 
 type State = {|
@@ -63,6 +65,8 @@ export default class TabViewAnimated<T: *> extends React.Component<
     renderScene: PropTypes.func.isRequired,
     renderHeader: PropTypes.func,
     renderFooter: PropTypes.func,
+    onSwipeStart: PropTypes.func,
+    onSwipeEnd: PropTypes.func,
   };
 
   static defaultProps = {

@@ -155,6 +155,8 @@ Cross-platform pager based on [`ScrollView`](https://facebook.github.io/react-na
 
 - `animationEnabled` - whether to enable page change animation
 - `swipeEnabled` - whether to enable swipe gestures
+- `onSwipeStart` - optional callback when a swipe gesture starts
+- `onSwipeEnd` - optional callback when a swipe gesture ends
 - `children` - React Element(s) to render
 
 There are some caveats when using this pager on Android, such as poor support for intial index other than `0` and weird animation curves.
@@ -167,6 +169,8 @@ Android only pager based on `ViewPagerAndroid` (default on Android).
 
 - `animationEnabled` - whether to enable page change animation
 - `swipeEnabled` - whether to enable swipe gestures
+- `onSwipeStart` - optional callback when a swipe gesture starts
+- `onSwipeEnd` - optional callback when a swipe gesture ends
 - `keyboardDismissMode` - whether the keyboard gets dismissed in response to a drag in [ViewPagerAndroid](https://facebook.github.io/react-native/docs/viewpagerandroid.html#keyboarddismissmode) (Default: `on-drag`)
 - `children` - React Element(s) to render
 
