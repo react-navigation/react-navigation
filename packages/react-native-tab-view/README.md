@@ -95,7 +95,7 @@ React Navigation integration can be achieved by the [react-navigation-tabs](http
 
 ## Examples on Snack
 
-- [QUick Start](https://snack.expo.io/@satya164/react-native-tab-view-quick-start)
+- [Quick Start](https://snack.expo.io/@satya164/react-native-tab-view-quick-start)
 - [Custom Tab Bar](https://snack.expo.io/@satya164/custom-tabbar-example)
 
 
