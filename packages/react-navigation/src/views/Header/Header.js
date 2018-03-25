@@ -30,6 +30,7 @@ const getAppBarHeight = isLandscape => {
 
 class Header extends React.PureComponent {
   static defaultProps = {
+    layoutInterpolator: HeaderStyleInterpolator.forLayout,
     leftInterpolator: HeaderStyleInterpolator.forLeft,
     leftButtonInterpolator: HeaderStyleInterpolator.forLeftButton,
     leftLabelInterpolator: HeaderStyleInterpolator.forLeftLabel,
@@ -44,6 +45,12 @@ class Header extends React.PureComponent {
 
   state = {
     widths: {},
+  };
+
+  _handleOnLayout = e => {
+    if (typeof this.props.onLayout === 'function') {
+      this.props.onLayout(e.nativeEvent.layout);
+    }
   };
 
   _getHeaderTitleString(scene) {
@@ -370,6 +377,10 @@ class Header extends React.PureComponent {
   }
 
   _renderHeader(props) {
+    const { options } = props.scene.descriptor;
+    if (options.header === null) {
+      return null;
+    }
     const left = this._renderLeft(props);
     const right = this._renderRight(props);
     const title = this._renderTitle(props, {
@@ -378,7 +389,6 @@ class Header extends React.PureComponent {
     });
 
     const { isLandscape, transitionPreset } = this.props;
-    const { options } = props.scene.descriptor;
 
     const wrapperProps = {
       style: styles.header,
@@ -484,10 +494,17 @@ class Header extends React.PureComponent {
     const forceInset = headerForceInset || { top: 'always', bottom: 'never' };
 
     return (
-      <SafeAreaView forceInset={forceInset} style={containerStyles}>
-        <View style={StyleSheet.absoluteFill}>{options.headerBackground}</View>
-        <View style={styles.flexOne}>{appBar}</View>
-      </SafeAreaView>
+      <Animated.View
+        style={this.props.layoutInterpolator(this.props)}
+        onLayout={this._handleOnLayout}
+      >
+        <SafeAreaView forceInset={forceInset} style={containerStyles}>
+          <View style={StyleSheet.absoluteFill}>
+            {options.headerBackground}
+          </View>
+          <View style={styles.flexOne}>{appBar}</View>
+        </SafeAreaView>
+      </Animated.View>
     );
   }
 }
