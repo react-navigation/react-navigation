@@ -33,10 +33,15 @@ function validateProps(props) {
   }
 }
 
-// Unfortunate to use global state here, but it seems necessesary for the time being. There seems to
-// be some problems with cascading componentDidCatch handlers. Ideally the inner non-stateful navigator
-// catches the error and re-throws it, to be caught by the top-level stateful navigator.
-let statefulContainersCounter = 0;
+// Unfortunate to use global state here, but it seems necessesary for the time
+// being. There seems to be some problems with cascading componentDidCatch
+// handlers. Ideally the inner non-stateful navigator catches the error and
+// re-throws it, to be caught by the top-level stateful navigator.
+let _statefulContainerCount = 0;
+
+export function _TESTING_ONLY_reset_container_count() {
+  _statefulContainerCount = 0;
+}
 
 // We keep a global flag to catch errors during the state persistence hydrating scenario.
 // The innermost navigator who catches the error will dispatch a new init action.
@@ -189,7 +194,7 @@ export default function createNavigationContainer(Component) {
       }
 
       if (__DEV__ && !this.props.detached) {
-        if (statefulContainersCounter > 0) {
+        if (_statefulContainerCount > 0) {
           console.error(
             `You should only render one navigator explicitly in your app, and other navigators should by rendered by including them in that navigator. Full details at: ${docsUrl(
               'common-mistakes.html#explicitly-rendering-more-than-one-navigator'
@@ -197,7 +202,7 @@ export default function createNavigationContainer(Component) {
           );
         }
       }
-      statefulContainersCounter++;
+      _statefulContainerCount++;
       Linking.addEventListener('url', this._handleOpenURL);
 
       const { persistenceKey } = this.props;
@@ -271,7 +276,7 @@ export default function createNavigationContainer(Component) {
       this.subs && this.subs.remove();
 
       if (this._isStateful()) {
-        statefulContainersCounter--;
+        _statefulContainerCount--;
       }
     }
 
