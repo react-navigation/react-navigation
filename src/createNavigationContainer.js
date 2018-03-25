@@ -33,12 +33,11 @@ function validateProps(props) {
   }
 }
 
-// Unfortunate to use global state here, but it seems necessesary for the time
-// being. There seems to be some problems with cascading componentDidCatch
-// handlers. Ideally the inner non-stateful navigator catches the error and
-// re-throws it, to be caught by the top-level stateful navigator.
+// Track the number of stateful container instances. Warn if >0 and not using the
+// detached prop to explicitly acknowledge the behavior. We should deprecated implicit
+// stateful navigation containers in a future release and require a provider style pattern
+// instead in order to eliminate confusion entirely.
 let _statefulContainerCount = 0;
-
 export function _TESTING_ONLY_reset_container_count() {
   _statefulContainerCount = 0;
 }
@@ -46,6 +45,10 @@ export function _TESTING_ONLY_reset_container_count() {
 // We keep a global flag to catch errors during the state persistence hydrating scenario.
 // The innermost navigator who catches the error will dispatch a new init action.
 let _reactNavigationIsHydratingState = false;
+// There seems to be some problems with cascading componentDidCatch
+// handlers. Ideally the inner non-stateful navigator catches the error and
+// re-throws it, to be caught by the top-level stateful navigator.
+
 /**
  * Create an HOC that injects the navigation and manages the navigation state
  * in case it's not passed from above.
