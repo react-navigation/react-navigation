@@ -4,6 +4,7 @@ import renderer from 'react-test-renderer';
 
 import StackNavigator from '../createStackNavigator';
 import withNavigation from '../../views/withNavigation';
+import { _TESTING_ONLY_reset_container_count } from '../../createNavigationContainer';
 
 const styles = StyleSheet.create({
   header: {
@@ -32,6 +33,10 @@ const routeConfig = {
 };
 
 describe('StackNavigator', () => {
+  beforeEach(() => {
+    _TESTING_ONLY_reset_container_count();
+  });
+
   it('renders successfully', () => {
     const MyStackNavigator = StackNavigator(routeConfig);
     const rendered = renderer.create(<MyStackNavigator />).toJSON();

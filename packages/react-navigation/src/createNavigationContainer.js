@@ -1,11 +1,12 @@
 import React from 'react';
-import withLifecyclePolyfill from 'react-lifecycles-compat';
 import { Linking, AsyncStorage } from 'react-native';
+import withLifecyclePolyfill from 'react-lifecycles-compat';
 
 import { BackHandler } from './PlatformHelpers';
 import NavigationActions from './NavigationActions';
 import addNavigationHelpers from './addNavigationHelpers';
 import invariant from './utils/invariant';
+import docsUrl from './utils/docsUrl';
 
 function isStateful(props) {
   return !props.navigation;
@@ -32,12 +33,22 @@ function validateProps(props) {
   }
 }
 
+// Track the number of stateful container instances. Warn if >0 and not using the
+// detached prop to explicitly acknowledge the behavior. We should deprecated implicit
+// stateful navigation containers in a future release and require a provider style pattern
+// instead in order to eliminate confusion entirely.
+let _statefulContainerCount = 0;
+export function _TESTING_ONLY_reset_container_count() {
+  _statefulContainerCount = 0;
+}
+
 // We keep a global flag to catch errors during the state persistence hydrating scenario.
 // The innermost navigator who catches the error will dispatch a new init action.
 let _reactNavigationIsHydratingState = false;
-// Unfortunate to use global state here, but it seems necessesary for the time being. There seems to
-// be some problems with cascading componentDidCatch handlers. Ideally the inner non-stateful navigator
-// catches the error and re-throws it, to be caught by the top-level stateful navigator.
+// Unfortunate to use global state here, but it seems necessesary for the time
+// being. There seems to be some problems with cascading componentDidCatch
+// handlers. Ideally the inner non-stateful navigator catches the error and
+// re-throws it, to be caught by the top-level stateful navigator.
 
 /**
  * Create an HOC that injects the navigation and manages the navigation state
@@ -186,6 +197,16 @@ export default function createNavigationContainer(Component) {
         return;
       }
 
+      if (__DEV__ && !this.props.detached) {
+        if (_statefulContainerCount > 0) {
+          console.error(
+            `You should only render one navigator explicitly in your app, and other navigators should by rendered by including them in that navigator. Full details at: ${docsUrl(
+              'common-mistakes.html#explicitly-rendering-more-than-one-navigator'
+            )}`
+          );
+        }
+      }
+      _statefulContainerCount++;
       Linking.addEventListener('url', this._handleOpenURL);
 
       const { persistenceKey } = this.props;
@@ -257,6 +278,10 @@ export default function createNavigationContainer(Component) {
       this._isMounted = false;
       Linking.removeEventListener('url', this._handleOpenURL);
       this.subs && this.subs.remove();
+
+      if (this._isStateful()) {
+        _statefulContainerCount--;
+      }
     }
 
     // Per-tick temporary storage for state.nav
