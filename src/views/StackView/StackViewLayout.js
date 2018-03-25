@@ -83,11 +83,22 @@ class StackViewLayout extends React.Component {
     const { options } = scene.descriptor;
     const { header } = options;
 
-    if (typeof header !== 'undefined' && typeof header !== 'function') {
+    if (header === null && headerMode === 'screen') {
+      return null;
+    }
+
+    // check if it's a react element
+    if (React.isValidElement(header)) {
       return header;
     }
 
-    const renderHeader = header || ((props: *) => <Header {...props} />);
+    // Handle the case where the header option is a function, and provide the default
+    const renderHeader =
+      header ||
+      (props => (
+        <Header onLayout={layout => (this._headerLayout = layout)} {...props} />
+      ));
+
     const {
       headerLeftInterpolator,
       headerTitleInterpolator,
@@ -167,6 +178,7 @@ class StackViewLayout extends React.Component {
             immediate: true,
           })
         );
+        navigation.dispatch(NavigationActions.completeTransition());
       }
     };
 
@@ -433,11 +445,22 @@ class StackViewLayout extends React.Component {
       screenInterpolator &&
       screenInterpolator({ ...this.props.transitionProps, scene });
 
+    // If this screen has "header" set to `null` in it's navigation options, but
+    // it exists in a stack with headerMode float, add a negative margin to
+    // compensate for the hidden header
+    const { options } = scene.descriptor;
+    const hasHeader = options.header !== null;
+    const headerMode = this._getHeaderMode();
+    let marginTop = 0;
+    if (!hasHeader && headerMode === 'float' && this._headerLayout) {
+      marginTop = -this._headerLayout.height;
+    }
+
     return (
       <Card
         {...this.props.transitionProps}
         key={`card_${scene.key}`}
-        style={[style, this.props.cardStyle]}
+        style={[style, { marginTop }, this.props.cardStyle]}
         scene={scene}
       >
         {this._renderInnerScene(scene)}
