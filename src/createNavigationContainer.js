@@ -45,7 +45,8 @@ export function _TESTING_ONLY_reset_container_count() {
 // We keep a global flag to catch errors during the state persistence hydrating scenario.
 // The innermost navigator who catches the error will dispatch a new init action.
 let _reactNavigationIsHydratingState = false;
-// There seems to be some problems with cascading componentDidCatch
+// Unfortunate to use global state here, but it seems necessesary for the time
+// being. There seems to be some problems with cascading componentDidCatch
 // handlers. Ideally the inner non-stateful navigator catches the error and
 // re-throws it, to be caught by the top-level stateful navigator.
 
