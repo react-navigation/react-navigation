@@ -495,7 +495,7 @@ class Header extends React.PureComponent {
 
     return (
       <Animated.View
-        style={[{ ...this.props.layoutInterpolator(this.props) }]}
+        style={this.props.layoutInterpolator(this.props)}
         onLayout={this._handleOnLayout}
       >
         <SafeAreaView forceInset={forceInset} style={containerStyles}>
