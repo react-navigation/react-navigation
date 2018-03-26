@@ -6,6 +6,7 @@ import createTabNavigator, {
   type InjectedProps,
 } from '../utils/createTabNavigator';
 import BottomTabBar, { type TabBarOptions } from '../views/BottomTabBar';
+import ResourceSavingScene from '../views/ResourceSavingScene';
 
 type Props = InjectedProps & {
   tabBarComponent?: React.ComponentType<*>,
@@ -104,16 +105,16 @@ class TabNavigationView extends React.PureComponent<Props, State> {
             const isFocused = navigation.state.index === index;
 
             return (
-              <View
+              <ResourceSavingScene
                 key={route.key}
-                pointerEvents={isFocused ? 'auto' : 'none'}
                 style={[
                   StyleSheet.absoluteFill,
                   { opacity: isFocused ? 1 : 0 },
                 ]}
+                isFocused={isFocused}
               >
                 {renderScene({ route })}
-              </View>
+              </ResourceSavingScene>
             );
           })}
         </View>
