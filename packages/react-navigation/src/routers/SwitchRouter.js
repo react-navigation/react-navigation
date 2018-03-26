@@ -3,12 +3,15 @@ import getScreenForRouteName from './getScreenForRouteName';
 import createConfigGetter from './createConfigGetter';
 
 import NavigationActions from '../NavigationActions';
+import StackActions from './StackActions';
 import validateRouteConfigMap from './validateRouteConfigMap';
+import getNavigationActionCreators from './getNavigationActionCreators';
 
 function childrenUpdateWithoutSwitchingIndex(actionType) {
   return [
     NavigationActions.SET_PARAMS,
-    NavigationActions.COMPLETE_TRANSITION,
+    // Todo: make SwitchRouter not depend on StackActions..
+    StackActions.COMPLETE_TRANSITION,
   ].includes(actionType);
 }
 
@@ -96,6 +99,10 @@ export default (routeConfigs, config = {}) => {
       }
 
       return nextState;
+    },
+
+    getActionCreators(route, stateKey) {
+      return getNavigationActionCreators(route, stateKey);
     },
 
     getStateForAction(action, inputState) {

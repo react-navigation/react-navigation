@@ -4,6 +4,7 @@ import React from 'react';
 import DrawerRouter from '../DrawerRouter';
 
 import NavigationActions from '../../NavigationActions';
+import DrawerActions from '../../routers/DrawerActions';
 
 const INIT_ACTION = { type: NavigationActions.INIT };
 
@@ -54,17 +55,17 @@ describe('DrawerRouter', () => {
     const state = router.getStateForAction(INIT_ACTION);
     expect(state.isDrawerOpen).toEqual(false);
     const state2 = router.getStateForAction(
-      { type: NavigationActions.OPEN_DRAWER },
+      { type: DrawerActions.OPEN_DRAWER },
       state
     );
     expect(state2.isDrawerOpen).toEqual(true);
     const state3 = router.getStateForAction(
-      { type: NavigationActions.CLOSE_DRAWER },
+      { type: DrawerActions.CLOSE_DRAWER },
       state2
     );
     expect(state3.isDrawerOpen).toEqual(false);
     const state4 = router.getStateForAction(
-      { type: NavigationActions.TOGGLE_DRAWER },
+      { type: DrawerActions.TOGGLE_DRAWER },
       state3
     );
     expect(state4.isDrawerOpen).toEqual(true);

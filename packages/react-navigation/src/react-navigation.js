@@ -8,12 +8,6 @@ module.exports = {
   get StateUtils() {
     return require('./StateUtils').default;
   },
-  get addNavigationHelpers() {
-    return require('./addNavigationHelpers').default;
-  },
-  get NavigationActions() {
-    return require('./NavigationActions').default;
-  },
 
   // Navigators
   get createNavigator() {
@@ -67,6 +61,17 @@ module.exports = {
   },
   get createMaterialTopTabNavigator() {
     return require('react-navigation-tabs').createMaterialTopTabNavigator;
+  },
+
+  // Actions
+  get NavigationActions() {
+    return require('./NavigationActions').default;
+  },
+  get StackActions() {
+    return require('./routers/StackActions').default;
+  },
+  get DrawerActions() {
+    return require('./routers/DrawerActions').default;
   },
 
   // Routers

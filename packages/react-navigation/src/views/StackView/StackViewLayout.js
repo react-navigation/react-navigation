@@ -14,6 +14,7 @@ import {
 import Card from './StackViewCard';
 import Header from '../Header/Header';
 import NavigationActions from '../../NavigationActions';
+import StackActions from '../../routers/StackActions';
 import SceneView from '../SceneView';
 import { NavigationProvider } from '../NavigationContext';
 
@@ -178,7 +179,7 @@ class StackViewLayout extends React.Component {
             immediate: true,
           })
         );
-        navigation.dispatch(NavigationActions.completeTransition());
+        navigation.dispatch(StackActions.completeTransition());
       }
     };
 

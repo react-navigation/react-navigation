@@ -6,7 +6,6 @@ import StackRouter from '../StackRouter';
 import TabRouter from '../TabRouter';
 
 import NavigationActions from '../../NavigationActions';
-import addNavigationHelpers from '../../addNavigationHelpers';
 import { _TESTING_ONLY_normalize_keys } from '../KeyGenerator';
 
 beforeEach(() => {
@@ -58,31 +57,31 @@ Object.keys(ROUTERS).forEach(routerName => {
       ];
       expect(
         router.getScreenOptions(
-          addNavigationHelpers({
+          {
             state: routes[0],
             dispatch: () => false,
             addListener: dummyEventSubscriber,
-          }),
+          },
           {}
         ).title
       ).toEqual(undefined);
       expect(
         router.getScreenOptions(
-          addNavigationHelpers({
+          {
             state: routes[1],
             dispatch: () => false,
             addListener: dummyEventSubscriber,
-          }),
+          },
           {}
         ).title
       ).toEqual('BarTitle');
       expect(
         router.getScreenOptions(
-          addNavigationHelpers({
+          {
             state: routes[2],
             dispatch: () => false,
             addListener: dummyEventSubscriber,
-          }),
+          },
           {}
         ).title
       ).toEqual('Baz-123');

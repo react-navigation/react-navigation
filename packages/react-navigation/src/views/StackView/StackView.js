@@ -4,6 +4,7 @@ import { NativeModules } from 'react-native';
 import StackViewLayout from './StackViewLayout';
 import Transitioner from '../Transitioner';
 import NavigationActions from '../../NavigationActions';
+import StackActions from '../../routers/StackActions';
 import TransitionConfigs from './StackViewTransitionConfigs';
 
 const NativeAnimatedModule =
@@ -27,7 +28,7 @@ class StackView extends React.Component {
         onTransitionEnd={(lastTransition, transition) => {
           const { onTransitionEnd, navigation } = this.props;
           navigation.dispatch(
-            NavigationActions.completeTransition({
+            StackActions.completeTransition({
               key: navigation.state.key,
             })
           );
