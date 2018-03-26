@@ -3,10 +3,10 @@
 import React from 'react';
 
 import StackRouter from '../StackRouter';
+import StackActions from '../StackActions';
+import NavigationActions from '../../NavigationActions';
 import TabRouter from '../TabRouter';
 import { _TESTING_ONLY_normalize_keys } from '../KeyGenerator';
-
-import NavigationActions from '../../NavigationActions';
 
 beforeEach(() => {
   _TESTING_ONLY_normalize_keys();
@@ -388,7 +388,7 @@ describe('StackRouter', () => {
     const barKey = state2.routes[1].routes[0].key;
     const state3 = router.getStateForAction(
       {
-        type: NavigationActions.PUSH,
+        type: StackActions.PUSH,
         routeName: 'Bad',
       },
       state2
@@ -420,7 +420,7 @@ describe('StackRouter', () => {
     const barKey = state2.routes[1].routes[0].key;
     const state3 = router.getStateForAction(
       {
-        type: NavigationActions.POP,
+        type: StackActions.POP,
       },
       state2
     );
@@ -448,7 +448,7 @@ describe('StackRouter', () => {
     const barKey = state2.routes[1].routes[0].key;
     const state3 = router.getStateForAction(
       {
-        type: NavigationActions.POP_TO_TOP,
+        type: StackActions.POP_TO_TOP,
       },
       state2
     );
@@ -476,7 +476,7 @@ describe('StackRouter', () => {
     const barKey = state2.routes[1].routes[0].key;
     const state3 = router.getStateForAction(
       {
-        type: NavigationActions.POP_TO_TOP,
+        type: StackActions.POP_TO_TOP,
         key: state2.key,
       },
       state2
@@ -500,19 +500,19 @@ describe('StackRouter', () => {
       ],
     };
     const poppedState = TestRouter.getStateForAction(
-      NavigationActions.popToTop(),
+      StackActions.popToTop(),
       state
     );
     expect(poppedState.routes.length).toBe(1);
     expect(poppedState.index).toBe(0);
     expect(poppedState.isTransitioning).toBe(true);
     const poppedState2 = TestRouter.getStateForAction(
-      NavigationActions.popToTop(),
+      StackActions.popToTop(),
       poppedState
     );
     expect(poppedState).toEqual(poppedState2);
     const poppedImmediatelyState = TestRouter.getStateForAction(
-      NavigationActions.popToTop({ immediate: true }),
+      StackActions.popToTop({ immediate: true }),
       state
     );
     expect(poppedImmediatelyState.routes.length).toBe(1);
@@ -681,14 +681,14 @@ describe('StackRouter', () => {
     });
     const initState = TestRouter.getStateForAction(NavigationActions.init());
     const pushedState = TestRouter.getStateForAction(
-      NavigationActions.push({ routeName: 'bar' }),
+      StackActions.push({ routeName: 'bar' }),
       initState
     );
     expect(pushedState.index).toEqual(1);
     expect(pushedState.routes[1].routeName).toEqual('bar');
     expect(() => {
       TestRouter.getStateForAction(
-        { type: NavigationActions.PUSH, routeName: 'bar', key: 'a' },
+        { type: StackActions.PUSH, routeName: 'bar', key: 'a' },
         pushedState
       );
     }).toThrow();
@@ -701,13 +701,13 @@ describe('StackRouter', () => {
     });
     const initState = TestRouter.getStateForAction(NavigationActions.init());
     const pushedState = TestRouter.getStateForAction(
-      NavigationActions.push({ routeName: 'bar' }),
+      StackActions.push({ routeName: 'bar' }),
       initState
     );
     expect(pushedState.index).toEqual(1);
     expect(pushedState.routes[1].routeName).toEqual('bar');
     const secondPushedState = TestRouter.getStateForAction(
-      NavigationActions.push({ routeName: 'bar' }),
+      StackActions.push({ routeName: 'bar' }),
       pushedState
     );
     expect(secondPushedState.index).toEqual(2);
@@ -807,7 +807,7 @@ describe('StackRouter', () => {
       NavigationActions.navigate({ routeName: 'foo' })
     );
     const replacedState = TestRouter.getStateForAction(
-      NavigationActions.replace({
+      StackActions.replace({
         routeName: 'bar',
         params: { meaning: 42 },
         key: initState.routes[0].key,
@@ -820,7 +820,7 @@ describe('StackRouter', () => {
     expect(replacedState.routes[0].routeName).toEqual('bar');
     expect(replacedState.routes[0].params.meaning).toEqual(42);
     const replacedState2 = TestRouter.getStateForAction(
-      NavigationActions.replace({
+      StackActions.replace({
         routeName: 'bar',
         key: initState.routes[0].key,
         newKey: 'wow',
@@ -857,7 +857,7 @@ describe('StackRouter', () => {
     expect(state2 && state2.isTransitioning).toEqual(true);
     const state3 = router.getStateForAction(
       {
-        type: NavigationActions.COMPLETE_TRANSITION,
+        type: StackActions.COMPLETE_TRANSITION,
       },
       state2
     );
@@ -1125,7 +1125,7 @@ describe('StackRouter', () => {
     const state = router.getStateForAction({ type: NavigationActions.INIT });
     const state2 = router.getStateForAction(
       {
-        type: NavigationActions.RESET,
+        type: StackActions.RESET,
         actions: [
           {
             type: NavigationActions.NAVIGATE,
@@ -1160,7 +1160,7 @@ describe('StackRouter', () => {
     });
     const state1 = router.getStateForAction({ type: NavigationActions.INIT });
     const resetAction = {
-      type: NavigationActions.RESET,
+      type: StackActions.RESET,
       key: 'Bad Key',
       actions: [
         {
@@ -1213,7 +1213,7 @@ describe('StackRouter', () => {
     const state = router.getStateForAction({ type: NavigationActions.INIT });
     const state2 = router.getStateForAction(
       {
-        type: NavigationActions.RESET,
+        type: StackActions.RESET,
         actions: [
           {
             type: NavigationActions.NAVIGATE,
@@ -1265,7 +1265,7 @@ describe('StackRouter', () => {
     );
     const state3 = router.getStateForAction(
       {
-        type: NavigationActions.RESET,
+        type: StackActions.RESET,
         key: 'Init',
         actions: [
           {
@@ -1280,7 +1280,7 @@ describe('StackRouter', () => {
     );
     const state4 = router.getStateForAction(
       {
-        type: NavigationActions.RESET,
+        type: StackActions.RESET,
         key: null,
         actions: [
           {
@@ -1752,7 +1752,7 @@ test('Handles deep navigate completion action', () => {
   expect(!!key).toEqual(true);
   const state3 = router.getStateForAction(
     {
-      type: NavigationActions.COMPLETE_TRANSITION,
+      type: StackActions.COMPLETE_TRANSITION,
     },
     state2
   );
