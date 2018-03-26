@@ -159,4 +159,10 @@ module.exports = {
   get withOrientation() {
     return require('./views/withOrientation').default;
   },
+
+  // Default Settings
+  get defaultStackViewTransitionConfig() {
+    return require('./views/StackView/StackViewTransitionConfigs')
+      .defaultTransitionConfig;
+  },
 };
