@@ -4,6 +4,8 @@ import NavigationActions from '../NavigationActions';
 import invariant from '../utils/invariant';
 import withDefaultValue from '../utils/withDefaultValue';
 
+import DrawerActions from './DrawerActions';
+
 export default (routeConfigs, config = {}) => {
   config = { ...config };
   config = withDefaultValue(config, 'resetOnBlur', false);
@@ -14,6 +16,15 @@ export default (routeConfigs, config = {}) => {
   return {
     ...switchRouter,
 
+    getActionCreators(route, navStateKey) {
+      return {
+        openDrawer: () => ({ type: DrawerActions.OPEN_DRAWER }),
+        closeDrawer: () => ({ type: DrawerActions.CLOSE_DRAWER }),
+        toggleDrawer: () => ({ type: DrawerActions.TOGGLE_DRAWER }),
+        ...switchRouter.getActionCreators(route, navStateKey),
+      };
+    },
+
     getStateForAction(action, lastState) {
       const state = lastState || {
         ...switchRouter.getStateForAction(action, undefined),
@@ -21,25 +32,19 @@ export default (routeConfigs, config = {}) => {
       };
 
       // Handle explicit drawer actions
-      if (
-        state.isDrawerOpen &&
-        action.type === NavigationActions.CLOSE_DRAWER
-      ) {
+      if (state.isDrawerOpen && action.type === DrawerActions.CLOSE_DRAWER) {
         return {
           ...state,
           isDrawerOpen: false,
         };
       }
-      if (
-        !state.isDrawerOpen &&
-        action.type === NavigationActions.OPEN_DRAWER
-      ) {
+      if (!state.isDrawerOpen && action.type === DrawerActions.OPEN_DRAWER) {
         return {
           ...state,
           isDrawerOpen: true,
         };
       }
-      if (action.type === NavigationActions.TOGGLE_DRAWER) {
+      if (action.type === DrawerActions.TOGGLE_DRAWER) {
         return {
           ...state,
           isDrawerOpen: !state.isDrawerOpen,

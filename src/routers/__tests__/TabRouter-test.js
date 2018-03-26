@@ -4,6 +4,7 @@ import React from 'react';
 import TabRouter from '../TabRouter';
 import StackRouter from '../StackRouter';
 
+import StackActions from '../../routers/StackActions';
 import NavigationActions from '../../NavigationActions';
 
 const INIT_ACTION = { type: NavigationActions.INIT };
@@ -710,16 +711,13 @@ describe('TabRouter', () => {
         { key: 'D', routeName: 'bar' },
       ],
     };
-    const poppedState = TestRouter.getStateForAction(
-      NavigationActions.pop(),
-      state
-    );
+    const poppedState = TestRouter.getStateForAction(StackActions.pop(), state);
     expect(poppedState.routes.length).toBe(3);
     expect(poppedState.index).toBe(2);
     expect(poppedState.isTransitioning).toBe(true);
 
     const poppedState2 = TestRouter.getStateForAction(
-      NavigationActions.pop({ n: 2, immediate: true }),
+      StackActions.pop({ n: 2, immediate: true }),
       state
     );
     expect(poppedState2.routes.length).toBe(2);
@@ -727,7 +725,7 @@ describe('TabRouter', () => {
     expect(poppedState2.isTransitioning).toBe(false);
 
     const poppedState3 = TestRouter.getStateForAction(
-      NavigationActions.pop({ n: 5 }),
+      StackActions.pop({ n: 5 }),
       state
     );
     expect(poppedState3.routes.length).toBe(1);

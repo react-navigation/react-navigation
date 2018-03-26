@@ -4,7 +4,6 @@ import withLifecyclePolyfill from 'react-lifecycles-compat';
 
 import { BackHandler } from './PlatformHelpers';
 import NavigationActions from './NavigationActions';
-import addNavigationHelpers from './addNavigationHelpers';
 import invariant from './utils/invariant';
 import docsUrl from './utils/docsUrl';
 
@@ -327,7 +326,7 @@ export default function createNavigationContainer(Component) {
           return this._renderLoading();
         }
         if (!this._navigation || this._navigation.state !== nav) {
-          this._navigation = addNavigationHelpers({
+          this._navigation = {
             dispatch: this.dispatch,
             state: nav,
             addListener: (eventName, handler) => {
@@ -341,7 +340,7 @@ export default function createNavigationContainer(Component) {
                 },
               };
             },
-          });
+          };
         }
         navigation = this._navigation;
       }
