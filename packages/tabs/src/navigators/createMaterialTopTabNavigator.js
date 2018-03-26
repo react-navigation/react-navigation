@@ -9,6 +9,7 @@ import createTabNavigator, {
 import MaterialTopTabBar, {
   type TabBarOptions,
 } from '../views/MaterialTopTabBar';
+import ResourceSavingScene from '../views/ResourceSavingScene';
 
 type Props = InjectedProps & {
   animationEnabled?: boolean,
@@ -112,11 +113,26 @@ class TabView extends React.PureComponent<Props> {
 
   _renderPanPager = props => <TabViewPagerPan {...props} />;
 
+  _renderScene = ({ route, focused }) => {
+    const { renderScene, animationEnabled, swipeEnabled } = this.props;
+
+    if (animationEnabled === false && swipeEnabled === false) {
+      return (
+        <ResourceSavingScene isFocused={focused}>
+          {renderScene({ route })}
+        </ResourceSavingScene>
+      );
+    }
+
+    return renderScene({ route });
+  };
+
   render() {
     const {
       navigation,
       tabBarPosition,
       animationEnabled,
+      // eslint-disable-next-line no-unused-vars
       renderScene,
       ...rest
     } = this.props;
@@ -156,13 +172,13 @@ class TabView extends React.PureComponent<Props> {
         navigationState={navigation.state}
         animationEnabled={animationEnabled}
         swipeEnabled={swipeEnabled}
-        renderScene={
-          /* $FlowFixMe */
-          renderScene
-        }
         renderPager={renderPager}
         renderHeader={renderHeader}
         renderFooter={renderFooter}
+        renderScene={
+          /* $FlowFixMe */
+          this._renderScene
+        }
       />
     );
   }
