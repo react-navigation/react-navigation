@@ -71,7 +71,7 @@
   "peerDependencies": {
     "react": "*",
     "react-native": "*",
-    "react-navigation": "*"
+    "react-navigation": "^2.0.0-alpha.5"
   },
   "jest": {
     "preset": "react-native",
