@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "files": [
     "dist/",
-    "createBottomTabNavigator.js.js",
+    "createBottomTabNavigator.js",
     "createMaterialBottomTabNavigator.js",
     "createMaterialTopTabNavigator.js"
   ],
