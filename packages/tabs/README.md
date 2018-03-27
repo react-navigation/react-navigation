@@ -1,5 +1,9 @@
 # React Navigation Tabs
 
+[![Build Status][build-badge]][build]
+[![Version][version-badge]][package]
+[![MIT License][license-badge]][license]
+
 Tab navigators for React Navigation.
 
 ## Installation
@@ -33,12 +37,6 @@ export default createMaterialBottomTabNavigator({
   activeTintColor: '#F44336',
 });
 ```
-
-[![Build Status][build-badge]][build]
-[![Version][version-badge]][package]
-[![MIT License][license-badge]][license]
-
-Tab navigators for React Navigation.
 
 <!-- badges -->
 [build-badge]: https://img.shields.io/circleci/project/github/react-navigation/react-navigation-tabs/master.svg?style=flat-square
