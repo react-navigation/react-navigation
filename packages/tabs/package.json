@@ -47,6 +47,7 @@
   },
   "devDependencies": {
     "@expo/vector-icons": "^6.2.0",
+    "babel-cli": "^6.26.0",
     "babel-jest": "^21.2.0",
     "babel-plugin-syntax-class-properties": "^6.13.0",
     "babel-plugin-syntax-jsx": "^6.18.0",
