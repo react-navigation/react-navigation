@@ -42,9 +42,6 @@ type GestureState = {
 type Props<T> = PagerRendererProps<T> & {
   swipeDistanceThreshold?: number,
   swipeVelocityThreshold?: number,
-  onSwipeStart?: () => mixed,
-  onSwipeEnd?: () => mixed,
-  onAnimationEnd?: () => mixed,
 };
 
 const DEAD_ZONE = 12;

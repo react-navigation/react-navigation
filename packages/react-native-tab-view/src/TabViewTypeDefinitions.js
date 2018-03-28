@@ -57,6 +57,7 @@ export type PagerCommonProps<T> = {
 };
 
 export type PagerExtraProps = {
+  keyboardDismissMode?: 'none' | 'on-drag',
   swipeDistanceThreshold?: number,
   swipeVelocityThreshold?: number,
 };
