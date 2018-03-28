@@ -16,8 +16,9 @@ type PageScrollState = 'dragging' | 'settling' | 'idle';
 
 type Props<T> = PagerRendererProps<T> & {
   keyboardDismissMode: 'none' | 'on-drag',
-  onSwipeStart: Function,
-  onSwipeEnd: Function,
+  onSwipeStart: () => mixed,
+  onSwipeEnd: () => mixed,
+  onAnimationEnd: () => mixed,
 };
 
 export default class TabViewPagerAndroid<T: *> extends React.Component<
@@ -28,8 +29,6 @@ export default class TabViewPagerAndroid<T: *> extends React.Component<
   static defaultProps = {
     canJumpToTab: () => true,
     keyboardDismissMode: 'on-drag',
-    onSwipeStart: () => null,
-    onSwipeEnd: () => null,
   };
 
   constructor(props: Props<T>) {
@@ -39,10 +38,12 @@ export default class TabViewPagerAndroid<T: *> extends React.Component<
 
   componentDidUpdate(prevProps: Props<T>) {
     if (
-      this.props.layout !== prevProps.layout ||
-      this.props.navigationState.routes.length !==
-        prevProps.navigationState.routes.length ||
-      this.props.navigationState.index !== prevProps.navigationState.index
+      prevProps.navigationState.routes !== this.props.navigationState.routes ||
+      prevProps.layout.width !== this.props.layout.width
+    ) {
+      this._handlePageChange(this.props.navigationState.index, false);
+    } else if (
+      prevProps.navigationState.index !== this.props.navigationState.index
     ) {
       this._handlePageChange(this.props.navigationState.index);
     }
@@ -72,9 +73,9 @@ export default class TabViewPagerAndroid<T: *> extends React.Component<
     }
   };
 
-  _handlePageChange = (index: number) => {
+  _handlePageChange = (index: number, animated?: boolean) => {
     if (this._isIdle && this._currentIndex !== index) {
-      this._setPage(index);
+      this._setPage(index, animated);
       this._currentIndex = index;
     }
   };
@@ -95,12 +96,6 @@ export default class TabViewPagerAndroid<T: *> extends React.Component<
   _handlePageScrollStateChanged = (e: PageScrollState) => {
     this._isIdle = e === 'idle';
 
-    if (this._isIdle) {
-      this.props.onSwipeEnd();
-    } else if (e === 'dragging') {
-      this.props.onSwipeStart();
-    }
-
     let nextIndex = this._currentIndex;
 
     const nextRoute = this.props.navigationState.routes[nextIndex];
@@ -110,6 +105,18 @@ export default class TabViewPagerAndroid<T: *> extends React.Component<
     } else {
       this._setPage(this.props.navigationState.index);
       this._currentIndex = this.props.navigationState.index;
+    }
+
+    switch (e) {
+      case 'dragging':
+        this.props.onSwipeStart && this.props.onSwipeStart();
+        break;
+      case 'settling':
+        this.props.onSwipeEnd && this.props.onSwipeEnd();
+        break;
+      case 'idle':
+        this.props.onAnimationEnd && this.props.onAnimationEnd();
+        break;
     }
   };
 

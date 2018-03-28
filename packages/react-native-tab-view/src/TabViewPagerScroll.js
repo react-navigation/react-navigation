@@ -23,8 +23,9 @@ type State = {|
 |};
 
 type Props<T> = PagerRendererProps<T> & {
-  onSwipeStart: Function,
-  onSwipeEnd: Function,
+  onSwipeStart: () => mixed,
+  onSwipeEnd: () => mixed,
+  onAnimationEnd: () => mixed,
 };
 
 export default class TabViewPagerScroll<T: *> extends React.Component<
@@ -35,8 +36,6 @@ export default class TabViewPagerScroll<T: *> extends React.Component<
 
   static defaultProps = {
     canJumpToTab: () => true,
-    onSwipeStart: () => null,
-    onSwipeEnd: () => null,
   };
 
   constructor(props: Props<T>) {
@@ -57,14 +56,17 @@ export default class TabViewPagerScroll<T: *> extends React.Component<
   }
 
   componentDidUpdate(prevProps: Props<T>) {
+    const amount = this.props.navigationState.index * this.props.layout.width;
+
     if (
-      prevProps.layout.width !== this.props.layout.width ||
-      prevProps.navigationState !== this.props.navigationState
+      prevProps.navigationState.routes !== this.props.navigationState.routes ||
+      prevProps.layout.width !== this.props.layout.width
     ) {
-      this._scrollTo(
-        this.props.navigationState.index * this.props.layout.width,
-        prevProps.layout.width === this.props.layout.width
-      );
+      this._scrollTo(amount, false);
+    } else if (
+      prevProps.navigationState.index !== this.props.navigationState.index
+    ) {
+      this._scrollTo(amount);
     }
   }
 
@@ -87,7 +89,7 @@ export default class TabViewPagerScroll<T: *> extends React.Component<
     }, 50);
   };
 
-  _scrollTo = (x: number, animated) => {
+  _scrollTo = (x: number, animated = true) => {
     if (this._isIdle && this._scrollView) {
       this._scrollView.scrollTo({
         x,
@@ -97,8 +99,6 @@ export default class TabViewPagerScroll<T: *> extends React.Component<
   };
 
   _handleMomentumScrollEnd = (e: ScrollEvent) => {
-    this.props.onSwipeEnd();
-
     let nextIndex = Math.round(
       e.nativeEvent.contentOffset.x / this.props.layout.width
     );
@@ -107,6 +107,7 @@ export default class TabViewPagerScroll<T: *> extends React.Component<
 
     if (this.props.canJumpToTab(nextRoute)) {
       this.props.jumpTo(nextRoute.key);
+      this.props.onAnimationEnd && this.props.onAnimationEnd();
     } else {
       global.requestAnimationFrame(() => {
         this._scrollTo(
@@ -136,7 +137,13 @@ export default class TabViewPagerScroll<T: *> extends React.Component<
   };
 
   render() {
-    const { children, layout, navigationState, onSwipeStart } = this.props;
+    const {
+      children,
+      layout,
+      navigationState,
+      onSwipeStart,
+      onSwipeEnd,
+    } = this.props;
 
     return (
       <ScrollView
@@ -155,6 +162,7 @@ export default class TabViewPagerScroll<T: *> extends React.Component<
         scrollEventThrottle={1}
         onScroll={this._handleScroll}
         onScrollBeginDrag={onSwipeStart}
+        onScrollEndDrag={onSwipeEnd}
         onMomentumScrollEnd={this._handleMomentumScrollEnd}
         contentOffset={this.state.initialOffset}
         style={styles.container}
