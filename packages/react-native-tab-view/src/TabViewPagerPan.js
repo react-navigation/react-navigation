@@ -10,10 +10,7 @@ import {
   Platform,
 } from 'react-native';
 import { PagerRendererPropType } from './TabViewPropTypes';
-import type {
-  PagerRendererProps,
-  TransitionConfigurator,
-} from './TabViewTypeDefinitions';
+import type { PagerRendererProps } from './TabViewTypeDefinitions';
 
 type GestureEvent = {
   nativeEvent: {
@@ -43,7 +40,6 @@ type GestureState = {
 };
 
 type Props<T> = PagerRendererProps<T> & {
-  configureTransition?: TransitionConfigurator,
   swipeDistanceThreshold?: number,
   swipeVelocityThreshold?: number,
   onSwipeStart?: () => mixed,
@@ -62,16 +58,12 @@ const DefaultTransitionSpec = {
 export default class TabViewPagerPan<T: *> extends React.Component<Props<T>> {
   static propTypes = {
     ...PagerRendererPropType,
-    configureTransition: PropTypes.func.isRequired,
     swipeDistanceThreshold: PropTypes.number,
     swipeVelocityThreshold: PropTypes.number,
-    onSwipeStart: PropTypes.func,
-    onSwipeEnd: PropTypes.func,
   };
 
   static defaultProps = {
     canJumpToTab: () => true,
-    configureTransition: () => DefaultTransitionSpec,
     initialLayout: {
       height: 0,
       width: 0,

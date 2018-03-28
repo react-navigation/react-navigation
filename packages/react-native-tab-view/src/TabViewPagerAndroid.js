@@ -16,9 +16,6 @@ type PageScrollState = 'dragging' | 'settling' | 'idle';
 
 type Props<T> = PagerRendererProps<T> & {
   keyboardDismissMode: 'none' | 'on-drag',
-  onSwipeStart: () => mixed,
-  onSwipeEnd: () => mixed,
-  onAnimationEnd: () => mixed,
 };
 
 export default class TabViewPagerAndroid<T: *> extends React.Component<

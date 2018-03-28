@@ -9,9 +9,6 @@ import type { PagerRendererProps } from './TabViewTypeDefinitions';
 type Props<T> = PagerRendererProps<T> & {
   swipeDistanceThreshold?: number,
   swipeVelocityThreshold?: number,
-  onSwipeStart: () => mixed,
-  onSwipeEnd: () => mixed,
-  onAnimationEnd: () => mixed,
   GestureHandler: any,
 };
 

@@ -33,7 +33,7 @@ type Props<T> = SceneRendererProps<T> & {
   renderIcon?: (scene: Scene<T>) => ?React.Element<any>,
   renderBadge?: (scene: Scene<T>) => ?React.Element<any>,
   renderIndicator?: (props: IndicatorProps<T>) => ?React.Element<any>,
-  onTabPress?: (scene: Scene<T>) => void,
+  onTabPress?: (scene: Scene<T>) => mixed,
   tabStyle?: Style,
   indicatorStyle?: Style,
   labelStyle?: Style,

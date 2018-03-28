@@ -10,7 +10,8 @@
   "scripts": {
     "test": "jest",
     "flow": "flow",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "precommit": "yarn lint && yarn flow && yarn test"
   },
   "keywords": [
     "react-native-component",
@@ -47,6 +48,7 @@
     "eslint-config-satya164": "^1.0.1",
     "eslint-plugin-react-native-globals": "^0.1.0",
     "flow-bin": "~0.56.0",
+    "husky": "^0.14.3",
     "jest": "^21.2.1",
     "prettier": "^1.8.2",
     "react": "16.0.0",

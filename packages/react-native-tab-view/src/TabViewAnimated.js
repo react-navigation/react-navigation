@@ -9,23 +9,25 @@ import type {
   SceneRendererProps,
   NavigationState,
   Layout,
-  PagerProps,
+  PagerCommonProps,
+  PagerExtraProps,
   Style,
 } from './TabViewTypeDefinitions';
 
-type Props<T> = PagerProps<T> & {
-  navigationState: NavigationState<T>,
-  onIndexChange: (index: number) => void,
-  initialLayout?: Layout,
-  renderPager: (props: *) => React.Element<any>,
-  renderScene: (props: SceneRendererProps<T> & Scene<T>) => ?React.Element<any>,
-  renderHeader?: (props: SceneRendererProps<T>) => ?React.Element<any>,
-  renderFooter?: (props: SceneRendererProps<T>) => ?React.Element<any>,
-  useNativeDriver?: boolean,
-  style?: Style,
-  onSwipeStart?: Function,
-  onSwipeEnd?: Function,
-};
+type Props<T> = PagerCommonProps<T> &
+  PagerExtraProps & {
+    navigationState: NavigationState<T>,
+    onIndexChange: (index: number) => mixed,
+    initialLayout?: Layout,
+    renderPager: (props: *) => React.Element<any>,
+    renderScene: (
+      props: SceneRendererProps<T> & Scene<T>
+    ) => ?React.Element<any>,
+    renderHeader?: (props: SceneRendererProps<T>) => ?React.Element<any>,
+    renderFooter?: (props: SceneRendererProps<T>) => ?React.Element<any>,
+    useNativeDriver?: boolean,
+    style?: Style,
+  };
 
 type State = {|
   layout: Layout & { measured: boolean },
@@ -65,8 +67,6 @@ export default class TabViewAnimated<T: *> extends React.Component<
     renderScene: PropTypes.func.isRequired,
     renderHeader: PropTypes.func,
     renderFooter: PropTypes.func,
-    onSwipeStart: PropTypes.func,
-    onSwipeEnd: PropTypes.func,
   };
 
   static defaultProps = {

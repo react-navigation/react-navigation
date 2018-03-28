@@ -22,11 +22,7 @@ type State = {|
   initialOffset: {| x: number, y: number |},
 |};
 
-type Props<T> = PagerRendererProps<T> & {
-  onSwipeStart: () => mixed,
-  onSwipeEnd: () => mixed,
-  onAnimationEnd: () => mixed,
-};
+type Props<T> = PagerRendererProps<T>;
 
 export default class TabViewPagerScroll<T: *> extends React.Component<
   Props<T>,

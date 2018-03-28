@@ -30,44 +30,33 @@ export type SceneRendererProps<T> = {
   panX: Animated.Value,
   offsetX: Animated.Value,
   position: any,
-  jumpTo: (key: string) => void,
-  jumpToIndex: (index: number) => void, // Deprecated, use `jumpTo` instead
+  jumpTo: (key: string) => mixed,
+  jumpToIndex: (index: number) => mixed, // Deprecated, use `jumpTo` instead
   useNativeDriver: boolean,
 };
 
-export type PagerRendererProps<T> = {
+export type PagerRendererProps<T> = PagerCommonProps<T> & {
   layout: Layout & {
     measured: boolean,
   },
   navigationState: NavigationState<T>,
   panX: Animated.Value,
   offsetX: Animated.Value,
-  canJumpToTab: (route: T) => boolean,
-  jumpTo: (key: string) => void,
+  jumpTo: (key: string) => mixed,
   useNativeDriver: boolean,
-  animationEnabled?: boolean,
-  swipeEnabled?: boolean,
   children: Node,
 };
 
-export type TransitionProps = {
-  progress: number,
-};
-
-export type TransitionSpec = {
-  timing: Function,
-};
-
-export type TransitionConfigurator = (
-  currentTransitionProps: TransitionProps,
-  nextTransitionProps: TransitionProps
-) => TransitionSpec;
-
-export type PagerProps<T> = {
+export type PagerCommonProps<T> = {
   canJumpToTab: (route: T) => boolean,
-  configureTransition?: TransitionConfigurator,
   animationEnabled?: boolean,
   swipeEnabled?: boolean,
+  onSwipeStart?: () => mixed,
+  onSwipeEnd?: () => mixed,
+  onAnimationEnd?: () => mixed,
+};
+
+export type PagerExtraProps = {
   swipeDistanceThreshold?: number,
   swipeVelocityThreshold?: number,
 };
