@@ -547,21 +547,6 @@ export default (routeConfigs, stackConfig = {}) => {
         return null;
       }
 
-      // Determine nested actions:
-      // If our matched route for this router is a child router,
-      // get the action for the path AFTER the matched path for this
-      // router
-      let nestedAction;
-      let nestedQueryString = queryString ? '?' + queryString : '';
-      if (childRouters[matchedRouteName]) {
-        nestedAction = childRouters[matchedRouteName].getActionForPathAndParams(
-          pathMatch.slice(pathMatchKeys.length).join('/') + nestedQueryString
-        );
-        if (!nestedAction) {
-          return null;
-        }
-      }
-
       // reduce the items of the query string. any query params may
       // be overridden by path params
       const queryParams = !isEmpty(inputParams)
@@ -596,6 +581,22 @@ export default (routeConfigs, stackConfig = {}) => {
         nextResult[paramName] = decodedMatchResult || matchResult;
         return nextResult;
       }, queryParams);
+
+      // Determine nested actions:
+      // If our matched route for this router is a child router,
+      // get the action for the path AFTER the matched path for this
+      // router
+      let nestedAction;
+      let nestedQueryString = queryString ? '?' + queryString : '';
+      if (childRouters[matchedRouteName]) {
+        nestedAction = childRouters[matchedRouteName].getActionForPathAndParams(
+          pathMatch.slice(pathMatchKeys.length).join('/') + nestedQueryString,
+          params
+        );
+        if (!nestedAction) {
+          return null;
+        }
+      }
 
       return NavigationActions.navigate({
         routeName: matchedRouteName,
