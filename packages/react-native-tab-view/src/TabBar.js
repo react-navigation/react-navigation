@@ -106,22 +106,24 @@ export default class TabBar<T: *> extends React.Component<Props<T>, State> {
   componentDidUpdate(prevProps: Props<T>) {
     const prevTabWidth = this._getTabWidth(prevProps);
     const currentTabWidth = this._getTabWidth(this.props);
+    const pendingIndex =
+      typeof this._pendingIndex === 'number'
+        ? this._pendingIndex
+        : this.props.navigationState.index;
+
+    this._pendingIndex = null;
 
     if (prevTabWidth !== currentTabWidth && currentTabWidth) {
       this.state.visibility.setValue(1);
     }
 
     if (
-      (prevProps.navigationState !== this.props.navigationState ||
-        prevProps.layout !== this.props.layout ||
-        prevTabWidth !== currentTabWidth) &&
-      this.props.navigationState.index !== this._pendingIndex
+      prevProps.navigationState.routes !== this.props.navigationState.routes ||
+      prevProps.layout.width !== this.props.layout.width
     ) {
-      this._resetScroll(
-        this.props.navigationState.index,
-        Boolean(prevProps.layout.width)
-      );
-      this._pendingIndex = null;
+      this._resetScroll(this.props.navigationState.index, false);
+    } else if (prevProps.navigationState.index !== pendingIndex) {
+      this._resetScroll(this.props.navigationState.index);
     }
   }
 
