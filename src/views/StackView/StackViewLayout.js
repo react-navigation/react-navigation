@@ -436,9 +436,18 @@ class StackViewLayout extends React.Component {
   }
 
   _getTransitionConfig = () => {
-    const {transitionConfig, transitionProps, prevTransitionProps, mode} = this.props;
-    this.gestureDirection = transitionProps.scene.descriptor.options.gestureDirection;
-    const isVertical  = mode === 'modal' || this.gestureDirection === 'down' || this.gestureDirection === 'up';
+    const {
+      transitionConfig,
+      transitionProps,
+      prevTransitionProps,
+      mode,
+    } = this.props;
+    this.gestureDirection =
+      transitionProps.scene.descriptor.options.gestureDirection;
+    const isVertical =
+      mode === 'modal' ||
+      this.gestureDirection === 'down' ||
+      this.gestureDirection === 'up';
 
     return TransitionConfigs.getTransitionConfig(
       transitionConfig,

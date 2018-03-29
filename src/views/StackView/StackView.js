@@ -40,13 +40,18 @@ class StackView extends React.Component {
 
   _configureTransition = (transitionProps, prevTransitionProps) => {
     this.gestureDirection = this.gestureDirection || null;
-    this.gestureDirection = transitionProps.index === prevTransitionProps.index ? this.gestureDirection : transitionProps.scene.descriptor.options.gestureDirection;
+    this.gestureDirection =
+      transitionProps.index === prevTransitionProps.index
+        ? this.gestureDirection
+        : transitionProps.scene.descriptor.options.gestureDirection;
     return {
       ...TransitionConfigs.getTransitionConfig(
         this.props.navigationConfig.transitionConfig,
         transitionProps,
         prevTransitionProps,
-        this.props.navigationConfig.mode === 'modal' || this.gestureDirection === 'down' || this.gestureDirection === 'up'
+        this.props.navigationConfig.mode === 'modal' ||
+          this.gestureDirection === 'down' ||
+          this.gestureDirection === 'up'
       ).transitionSpec,
       useNativeDriver: !!NativeAnimatedModule,
     };
