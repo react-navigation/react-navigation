@@ -77,6 +77,10 @@ export default (routeConfigs, config = {}) => {
     },
 
     getNextState(prevState, possibleNextState) {
+      if (!prevState) {
+        return possibleNextState;
+      }
+
       let nextState;
       if (prevState.index !== possibleNextState.index && resetOnBlur) {
         const prevRouteName = prevState.routes[prevState.index].routeName;
