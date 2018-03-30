@@ -2,7 +2,7 @@
  * @flow
  */
 
-import type {
+import type, {
   NavigationScreenProp,
   NavigationEventSubscription,
 } from 'react-navigation';
