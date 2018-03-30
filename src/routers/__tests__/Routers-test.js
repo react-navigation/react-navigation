@@ -89,108 +89,177 @@ Object.keys(ROUTERS).forEach(routerName => {
   });
 });
 
-test('Handles no-op actions with tabs within stack router', () => {
+// Creates a StackRouter with a nested TabRouter
+const createTestRouters = stackRouterConfig => {
   const BarView = () => <div />;
   const FooTabNavigator = () => <div />;
-  FooTabNavigator.router = TabRouter({
+  const TestTabRouter = TabRouter({
     Zap: { screen: BarView },
     Zoo: { screen: BarView },
   });
-  const TestRouter = StackRouter({
-    Foo: {
-      screen: FooTabNavigator,
-    },
-    Bar: {
-      screen: BarView,
-    },
-  });
-  const state1 = TestRouter.getStateForAction({ type: NavigationActions.INIT });
-  const state2 = TestRouter.getStateForAction({
-    type: NavigationActions.NAVIGATE,
-    routeName: 'Qux',
-  });
-  expect(state1.routes[0].key).toEqual('id-0');
-  expect(state2.routes[0].key).toEqual('id-1');
-  state1.routes[0].key = state2.routes[0].key;
-  expect(state1).toEqual(state2);
-  const state3 = TestRouter.getStateForAction(
-    { type: NavigationActions.NAVIGATE, routeName: 'Zap' },
-    state2
-  );
-  expect(state2).toEqual(state3);
-});
-
-test('Handles deep action', () => {
-  const BarView = () => <div />;
-  const FooTabNavigator = () => <div />;
-  FooTabNavigator.router = TabRouter({
-    Zap: { screen: BarView },
-    Zoo: { screen: BarView },
-  });
-  const TestRouter = StackRouter({
-    Bar: { screen: BarView },
-    Foo: { screen: FooTabNavigator },
-  });
-  const state1 = TestRouter.getStateForAction({ type: NavigationActions.INIT });
-  const expectedState = {
-    index: 0,
-    isTransitioning: false,
-    key: 'StackRouterRoot',
-    routes: [
-      {
-        key: 'id-0',
-        routeName: 'Bar',
-      },
-    ],
-  };
-  expect(state1).toEqual(expectedState);
-  const state2 = TestRouter.getStateForAction(
+  FooTabNavigator.router = TestTabRouter;
+  const TestStackRouter = StackRouter(
     {
-      type: NavigationActions.NAVIGATE,
-      routeName: 'Foo',
-      immediate: true,
-      action: { type: NavigationActions.NAVIGATE, routeName: 'Zoo' },
+      Foo: {
+        screen: FooTabNavigator,
+      },
+      Bar: {
+        screen: BarView,
+      },
     },
-    state1
+    {
+      ...stackRouterConfig,
+    }
   );
-  expect(state2 && state2.index).toEqual(1);
-  expect(state2 && state2.routes[1].index).toEqual(1);
+  return {
+    TestStackRouter,
+    TestTabRouter,
+  };
+};
+
+describe('StackRouter with nested TabRouter: Handling of no-op actions', () => {
+  const NAV_NO_MATCH = {
+    type: NavigationActions.NAVIGATE,
+    routeName: 'Qux', // 'Qux' doesn't exist in route tree
+  };
+  const NAV_TO_ZAP = {
+    type: NavigationActions.NAVIGATE,
+    routeName: 'Zap',
+  };
+
+  test('Child TabRouter handles forwarded no-op actions', () => {
+    const { TestTabRouter } = createTestRouters();
+
+    const tabState1 = TestTabRouter.getStateForAction({
+      type: NavigationActions.INIT,
+    });
+    const tabState2 = TestTabRouter.getStateForAction(NAV_NO_MATCH);
+    expect(tabState1).toEqual(tabState2);
+
+    const tabState3 = TestTabRouter.getStateForAction(NAV_TO_ZAP);
+    expect(tabState2).toEqual(tabState3);
+  });
+
+  test('Parent StackRouter handles no-op actions', () => {
+    const { TestStackRouter } = createTestRouters();
+    const stackState1 = TestStackRouter.getStateForAction({
+      type: NavigationActions.INIT,
+    });
+    expect(stackState1.routes[0].key).toEqual('id-0');
+
+    const stackState2 = TestStackRouter.getStateForAction(NAV_NO_MATCH);
+    expect(stackState2.routes[0].key).toEqual('id-1');
+
+    stackState1.routes[0].key = stackState2.routes[0].key;
+    expect(stackState1).toEqual(stackState2);
+
+    const stackState3 = TestStackRouter.getStateForAction(
+      NAV_TO_ZAP,
+      stackState2
+    );
+    expect(stackState2).toEqual(stackState3);
+  });
 });
 
-test('Supports lazily-evaluated getScreen', () => {
-  const BarView = () => <div />;
-  const FooTabNavigator = () => <div />;
-  FooTabNavigator.router = TabRouter({
-    Zap: { screen: BarView },
-    Zoo: { screen: BarView },
+describe('StackRouter with nested TabRouter: Handling of deep actions', () => {
+  const NAV_TO_ZOO = {
+    type: NavigationActions.NAVIGATE,
+    routeName: 'Zoo',
+  };
+
+  test('Child TabRouter handles the nested action', () => {
+    const { TestTabRouter } = createTestRouters({ initialRouteName: 'Bar' });
+    const tabState = TestTabRouter.getStateForAction(NAV_TO_ZOO);
+    expect(tabState && tabState.index).toEqual(1);
   });
-  const TestRouter = StackRouter({
-    Foo: {
-      screen: FooTabNavigator,
-    },
-    Bar: {
-      getScreen: () => BarView,
-    },
+
+  test('Parent StackRouter handles deep actions', () => {
+    const { TestStackRouter } = createTestRouters({ initialRouteName: 'Bar' });
+    const stackState1 = TestStackRouter.getStateForAction({
+      type: NavigationActions.INIT,
+    });
+    const expectedState = {
+      index: 0,
+      isTransitioning: false,
+      key: 'StackRouterRoot',
+      routes: [
+        {
+          key: 'id-0',
+          routeName: 'Bar',
+        },
+      ],
+    };
+    expect(stackState1).toEqual(expectedState);
+
+    const stackState2 = TestStackRouter.getStateForAction(
+      {
+        type: NavigationActions.NAVIGATE,
+        routeName: 'Foo',
+        immediate: true,
+        action: NAV_TO_ZOO,
+      },
+      stackState1
+    );
+    expect(stackState2 && stackState2.index).toEqual(1);
+    expect(stackState2 && stackState2.routes[1].index).toEqual(1);
   });
-  const state1 = TestRouter.getStateForAction({ type: NavigationActions.INIT });
-  const state2 = TestRouter.getStateForAction({
+});
+
+describe('StackRouter with nested TabRouter: Handling of lazily-evaluated getScreen', () => {
+  const NAV_NO_MATCH = {
     type: NavigationActions.NAVIGATE,
     immediate: true,
     routeName: 'Qux',
+  };
+  const NAV_TO_ZAP = {
+    type: NavigationActions.NAVIGATE,
+    immediate: true,
+    routeName: 'Zap',
+  };
+  test('Child TabRouter handles forwarded nav actions', () => {
+    const { TestTabRouter } = createTestRouters();
+    const tabState1 = TestTabRouter.getStateForAction({
+      type: NavigationActions.INIT,
+    });
+    const tabState2 = TestTabRouter.getStateForAction(NAV_NO_MATCH);
+    expect(tabState1).toEqual(tabState2);
+    const tabState3 = TestTabRouter.getStateForAction(NAV_TO_ZAP);
+    expect(tabState2).toEqual(tabState3);
   });
-  expect(state1.routes[0].key).toEqual('id-0');
-  expect(state2.routes[0].key).toEqual('id-1');
-  state1.routes[0].key = state2.routes[0].key;
-  expect(state1).toEqual(state2);
-  const state3 = TestRouter.getStateForAction(
-    {
+
+  test('Parent StackRouter supports lazily-evaluated getScreen', () => {
+    const BarView = () => <div />;
+    const FooTabNavigator = () => <div />;
+    FooTabNavigator.router = TabRouter({
+      Zap: { screen: BarView },
+      Zoo: { screen: BarView },
+    });
+    const TestStackRouter = StackRouter({
+      Foo: {
+        screen: FooTabNavigator,
+      },
+      Bar: {
+        getScreen: () => BarView,
+      },
+    });
+    const stackState1 = TestStackRouter.getStateForAction({
+      type: NavigationActions.INIT,
+    });
+    const stackState2 = TestStackRouter.getStateForAction({
       type: NavigationActions.NAVIGATE,
       immediate: true,
-      routeName: 'Zap',
-    },
-    state2
-  );
-  expect(state2).toEqual(state3);
+      routeName: 'Qux',
+    });
+    expect(stackState1.routes[0].key).toEqual('id-0');
+    expect(stackState2.routes[0].key).toEqual('id-1');
+    stackState1.routes[0].key = stackState2.routes[0].key;
+    expect(stackState1).toEqual(stackState2);
+    const stackState3 = TestStackRouter.getStateForAction(
+      NAV_TO_ZAP,
+      stackState2
+    );
+    expect(stackState2).toEqual(stackState3);
+  });
 });
 
 test('Does not switch tab index when TabRouter child handles COMPLETE_NAVIGATION or SET_PARAMS', () => {
