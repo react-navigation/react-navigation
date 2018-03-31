@@ -4,7 +4,12 @@
 
 import React from 'react';
 import { Button, SafeAreaView, Text } from 'react-native';
-import { TabNavigator, withNavigationFocus } from 'react-navigation';
+import {
+  TabNavigator,
+  TabBarTop,
+  StackNavigator,
+  withNavigationFocus,
+} from 'react-navigation';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import SampleText from './SampleText';
@@ -92,10 +97,35 @@ const TabsWithNavigationFocus = TabNavigator(
     },
   },
   {
-    tabBarPosition: 'bottom',
+    tabBarComponent: TabBarTop,
+    tabBarPosition: 'top',
     animationEnabled: true,
     swipeEnabled: true,
   }
 );
 
-export default TabsWithNavigationFocus;
+const Stack = StackNavigator(
+  {
+    TabsWithNavigationFocus,
+  },
+  {
+    navigationOptions: {
+      headerTitle: 'Navigation focus example',
+      headerLeft: null,
+      headerTitleStyle: {
+        flex: 1,
+        textAlign: 'left',
+        left: 0,
+        right: 0,
+      },
+      headerTintColor: '#fff',
+      headerStyle: {
+        backgroundColor: '#2196f3',
+        borderBottomWidth: 0,
+        elevation: 0,
+      },
+    },
+  }
+);
+
+export default Stack;
