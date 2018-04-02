@@ -591,8 +591,10 @@ export default (routeConfigs, stackConfig = {}) => {
       let nestedAction;
       let nestedQueryString = queryString ? '?' + queryString : '';
       if (childRouters[matchedRouteName]) {
-        let passedParams = (matchedRouteConfig.passParams || [])
-          .reduce((o, param) => o[param] = params[param], {})
+        let passedParams = (matchedRouteConfig.passParams || []).reduce(
+          (o, param) => (o[param] = params[param]),
+          {}
+        )
         nestedAction = childRouters[matchedRouteName].getActionForPathAndParams(
           pathMatch.slice(pathMatchKeys.length).join('/') + nestedQueryString,
           passedParams

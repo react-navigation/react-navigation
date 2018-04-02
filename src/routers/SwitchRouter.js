@@ -348,8 +348,10 @@ export default (routeConfigs, config = {}) => {
               });
               if (childRouter && childRouter.getActionForPathAndParams) {
                 let childRouteConfig = childRouteConfig[childId];
-                let passedParams = (childRouteConfig.passParams || [])
-                  .reduce((o, param) => o[param] = params[param], {})
+                let passedParams = (childRouteConfig.passParams || []).reduce(
+                  (o, param) => (o[param] = params[param]),
+                  {}
+                )
                 action.action = childRouter.getActionForPathAndParams(
                   parts.slice(partsInTestPath).join('/'),
                   passedParams
