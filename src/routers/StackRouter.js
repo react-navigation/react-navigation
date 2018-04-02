@@ -547,6 +547,8 @@ export default (routeConfigs, stackConfig = {}) => {
         return null;
       }
 
+      let matchedRouteConfig = routeConfigs[matchedRouteName];
+
       // reduce the items of the query string. any query params may
       // be overridden by path params
       const queryParams = !isEmpty(inputParams)
@@ -589,9 +591,11 @@ export default (routeConfigs, stackConfig = {}) => {
       let nestedAction;
       let nestedQueryString = queryString ? '?' + queryString : '';
       if (childRouters[matchedRouteName]) {
+        let passedParams = (matchedRouteConfig.passParams || [])
+          .reduce((o, param) => o[param] = params[param], {})
         nestedAction = childRouters[matchedRouteName].getActionForPathAndParams(
           pathMatch.slice(pathMatchKeys.length).join('/') + nestedQueryString,
-          params
+          passedParams
         );
         if (!nestedAction) {
           return null;
