@@ -31,6 +31,7 @@
 .*/example/\.buckd/
 
 .*/node_modules/react-native-gesture-handler
+.*/node_modules/react-native-safe-area-view
 
 [include]
 
@@ -46,6 +47,11 @@ module.system=haste
 experimental.strict_type_args=true
 
 munge_underscores=true
+
+module.file_ext=.js
+module.file_ext=.native.js
+module.file_ext=.android.js
+module.file_ext=.ios.js
 
 module.name_mapper='^expo$' -> 'emptyObject'
 module.name_mapper='^react-native-gesture-handler$' -> 'emptyObject'

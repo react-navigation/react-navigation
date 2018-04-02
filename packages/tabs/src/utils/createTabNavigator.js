@@ -124,7 +124,7 @@ export default function createTabNavigator(TabView: React.ComponentType<*>) {
     }
   }
 
-  return (routes, config = {}) => {
+  return (routes: *, config: * = {}) => {
     const router = TabRouter(routes, config);
     const navigator = createNavigator(NavigationView, router, config);
 
