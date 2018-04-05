@@ -59,5 +59,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     height: '100%',
     width: '100%',
+    // Workaround for react-native >= 0.54 layout bug
+    minWidth: 25,
   },
 });
