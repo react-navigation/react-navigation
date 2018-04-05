@@ -69,7 +69,7 @@ const createTabScreen = (name, icon, focusedIcon, tintColor = '#673ab7') => {
             />
           )}
           <Button
-            onPress={() => this.props.navigation.dismiss()}
+            onPress={() => this.props.navigation.pop()}
             title="Back to other examples"
           />
           <StatusBar barStyle="default" />
