@@ -44,11 +44,6 @@ class Transitioner extends React.Component {
     this._queuedTransition = null;
   }
 
-  componentWillMount() {
-    this._onLayout = this._onLayout.bind(this);
-    this._onTransitionEnd = this._onTransitionEnd.bind(this);
-  }
-
   componentDidMount() {
     this._isMounted = true;
   }
@@ -58,12 +53,15 @@ class Transitioner extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const nextScenes = NavigationScenesReducer(
+    let nextScenes = NavigationScenesReducer(
       this.state.scenes,
       nextProps.navigation.state,
       this.props.navigation.state,
       nextProps.descriptors
     );
+    if (!nextProps.navigation.state.isTransitioning) {
+      nextScenes = filterStale(nextScenes);
+    }
 
     if (nextScenes === this.state.scenes) {
       return;
@@ -151,7 +149,7 @@ class Transitioner extends React.Component {
     );
   }
 
-  _onLayout(event) {
+  _onLayout = event => {
     const { height, width } = event.nativeEvent.layout;
     if (
       this.state.layout.initWidth === width &&
@@ -176,28 +174,20 @@ class Transitioner extends React.Component {
 
     this._transitionProps = buildTransitionProps(this.props, nextState);
     this.setState(nextState);
-  }
+  };
 
-  _onTransitionEnd() {
+  _onTransitionEnd = () => {
     if (!this._isMounted) {
       return;
     }
     const prevTransitionProps = this._prevTransitionProps;
     this._prevTransitionProps = null;
 
-    const scenes = this.state.scenes.filter(isSceneNotStale);
+    const scenes = filterStale(this.state.scenes);
 
     const nextState = {
       ...this.state,
-      /**
-       * Array.prototype.filter creates a new instance of an array
-       * even if there were no elements removed. There are cases when
-       * `this.state.scenes` will have no stale scenes (typically when
-       * pushing a new route). As a result, components that rely on this prop
-       * might enter an unnecessary render cycle.
-       */
-      scenes:
-        this.state.scenes.length === scenes.length ? this.state.scenes : scenes,
+      scenes,
     };
 
     this._transitionProps = buildTransitionProps(this.props, nextState);
@@ -225,7 +215,7 @@ class Transitioner extends React.Component {
         this._isTransitionRunning = false;
       }
     });
-  }
+  };
 }
 
 function buildTransitionProps(props, state) {
@@ -250,6 +240,14 @@ function buildTransitionProps(props, state) {
 
 function isSceneNotStale(scene) {
   return !scene.isStale;
+}
+
+function filterStale(scenes) {
+  const filtered = scenes.filter(isSceneNotStale);
+  if (filtered.length === scenes.length) {
+    return scenes;
+  }
+  return filtered;
 }
 
 function isSceneActive(scene) {
