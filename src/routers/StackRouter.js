@@ -158,38 +158,56 @@ export default (routeConfigs, stackConfig = {}) => {
       return {
         ...getNavigationActionCreators(route, navStateKey),
         ...(getActionCreators ? getActionCreators(route, navStateKey) : {}),
-        pop: (n, params) => ({
-          type: StackActions.POP,
-          n,
-          ...params,
-        }),
-        popToTop: params => ({
-          type: StackActions.POP_TO_TOP,
-          ...params,
-        }),
-        push: (routeName, params, action) => ({
-          type: StackActions.PUSH,
-          routeName,
-          params,
-          action,
-        }),
-        replace: (routeName, params, action) => ({
-          type: StackActions.REPLACE,
-          routeName,
-          params,
-          action,
-          key: route.key,
-        }),
-        reset: (actions, index) => ({
-          type: StackActions.RESET,
-          actions,
-          index: index == null ? actions.length - 1 : index,
-          key: navStateKey,
-        }),
-        dismiss: () => ({
-          type: NavigationActions.BACK,
-          key: navStateKey,
-        }),
+        pop: (n, params) =>
+          StackActions.pop({
+            n,
+            ...params,
+          }),
+        popToTop: params => StackActions.popToTop(params),
+        push: (routeName, params, action) =>
+          StackActions.push({
+            routeName,
+            params,
+            action,
+          }),
+        replace: (replaceWith, params, action, newKey) => {
+          if (typeof replaceWith === 'string') {
+            return StackActions.replace({
+              routeName: replaceWith,
+              params,
+              action,
+              key: route.key,
+              newKey,
+            });
+          }
+          invariant(
+            typeof replaceWith === 'object',
+            'Must replaceWith an object or a string'
+          );
+          invariant(
+            params == null,
+            'Params must not be provided to .replace() when specifying an object'
+          );
+          invariant(
+            action == null,
+            'Child action must not be provided to .replace() when specifying an object'
+          );
+          invariant(
+            newKey == null,
+            'Child action must not be provided to .replace() when specifying an object'
+          );
+          return StackActions.replace(replaceWith);
+        },
+        reset: (actions, index) =>
+          StackActions.reset({
+            actions,
+            index: index == null ? actions.length - 1 : index,
+            key: navStateKey,
+          }),
+        dismiss: () =>
+          NavigationActions.back({
+            key: navStateKey,
+          }),
       };
     },
 
