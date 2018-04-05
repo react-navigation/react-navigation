@@ -211,11 +211,13 @@ export default function createNavigationContainer(Component) {
       const { persistenceKey } = this.props;
       const startupStateJSON =
         persistenceKey && (await AsyncStorage.getItem(persistenceKey));
-      let startupState = null;
-      try {
-        startupState = startupStateJSON && JSON.parse(startupStateJSON);
-        _reactNavigationIsHydratingState = true;
-      } catch (e) {}
+      let startupState = this.state.nav;
+      if (startupStateJSON) {
+        try {
+          startupState = JSON.parse(startupStateJSON);
+          _reactNavigationIsHydratingState = true;
+        } catch (e) {}
+      }
 
       let action = this._initialAction;
       if (!startupState) {
@@ -241,6 +243,9 @@ export default function createNavigationContainer(Component) {
             startupState
           );
         }
+      }
+      if (startupState === this.state.nav) {
+        return;
       }
       this.setState({ nav: startupState }, () => {
         _reactNavigationIsHydratingState = false;
