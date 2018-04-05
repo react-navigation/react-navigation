@@ -69,6 +69,7 @@ function createNavigator(NavigatorView, router, navigationConfig) {
           actions: actionCreators,
           dispatch,
           state: route,
+          isFocused: () => this._isRouteFocused(route),
           dangerouslyGetParent: this._dangerouslyGetParent,
           addListener: this.childEventSubscribers[route.key].addListener,
           getParam: (paramName, defaultValue) => {
