@@ -371,7 +371,7 @@ declare module 'react-navigation' {
     cardStyle?: ViewStyleProp,
     transitionConfig?: (
       transitionProps: NavigationTransitionProps,
-      prevTransitionProps?: NavigationTransitionProps,
+      prevTransitionProps: NavigationTransitionProps,
       isModal: boolean
     ) => TransitionConfig,
     onTransitionStart?: () => void,
@@ -492,12 +492,13 @@ declare module 'react-navigation' {
     goBack: (routeKey?: ?string) => boolean,
     dismiss: () => boolean,
     navigate: (
-      routeName: string | {
-        routeName: string,
-        params?: NavigationParams,
-        action?: NavigationNavigateAction,
-        key?: string
-      },
+      routeName: | string
+      | {
+          routeName: string,
+          params?: NavigationParams,
+          action?: NavigationNavigateAction,
+          key?: string,
+        },
       params?: NavigationParams,
       action?: NavigationNavigateAction
     ) => boolean,
@@ -891,7 +892,7 @@ declare module 'react-navigation' {
      */
     transitionConfig?: (
       transitionProps: NavigationTransitionProps,
-      prevTransitionProps?: NavigationTransitionProps,
+      prevTransitionProps: NavigationTransitionProps,
       isModal: boolean
     ) => TransitionConfig,
   } & NavigationNavigatorProps<NavigationStackScreenOptions, NavigationState>;
@@ -913,7 +914,7 @@ declare module 'react-navigation' {
      */
     transitionConfig?: (
       transitionProps: NavigationTransitionProps,
-      prevTransitionProps?: NavigationTransitionProps,
+      prevTransitionProps: NavigationTransitionProps,
       isModal: boolean
     ) => TransitionConfig,
     // NavigationTransitionProps:
