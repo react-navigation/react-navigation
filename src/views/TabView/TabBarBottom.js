@@ -325,7 +325,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   iconWithLabel: {
-    flexGrow: 1,
+    flex: 1,
   },
   iconWithExplicitHeight: {
     height: Platform.isPad ? DEFAULT_HEIGHT : COMPACT_HEIGHT,
