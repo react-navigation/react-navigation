@@ -25,6 +25,20 @@ describe('SwitchRouter', () => {
     expect(state3.routes[0].routes.length).toEqual(1);
   });
 
+  test('sets the next state even if no previous state is provided', () => {
+    const router = getExampleRouter();
+    const initialState = router.getStateForAction({
+      type: NavigationActions.INIT,
+    });
+    const nextState = router.getStateForAction({
+      type: NavigationActions.NAVIGATE,
+      routeName: 'A2',
+    });
+
+    expect(nextState.routes[0].index).toEqual(1);
+    expect(nextState.routes[0].routes.length).toEqual(2);
+  });
+
   test('does not reset the route on unfocus if resetOnBlur is false', () => {
     const router = getExampleRouter({ resetOnBlur: false });
     const state = router.getStateForAction({ type: NavigationActions.INIT });
