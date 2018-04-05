@@ -129,7 +129,6 @@ class TabBarBottom extends React.Component<Props> {
         renderIcon={renderIcon}
         style={[
           styles.iconWithExplicitHeight,
-          styles.iconWithLabel,
           showLabel === false && !horizontal && styles.iconWithoutLabel,
           showLabel !== false && !horizontal && styles.iconWithLabel,
         ]}
@@ -213,7 +212,6 @@ class TabBarBottom extends React.Component<Props> {
                   this._shouldUseHorizontalLabels()
                     ? styles.tabLandscape
                     : styles.tabPortrait,
-                  styles.tabPortrait,
                   tabStyle,
                 ]}
               >
