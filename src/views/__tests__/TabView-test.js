@@ -2,14 +2,18 @@ import React from 'react';
 import { View } from 'react-native';
 import renderer from 'react-test-renderer';
 
-import TabView from '../TabView/TabView';
-import TabBarBottom from '../TabView/TabBarBottom';
+const {
+  TabView,
+  TabBarBottom,
+} = require('react-navigation-deprecated-tab-navigator');
 
 const dummyEventSubscriber = (name, handler) => ({
   remove: () => {},
 });
 
 describe('TabBarBottom', () => {
+  jest.useFakeTimers();
+
   it('renders successfully', () => {
     const route = { key: 's1', routeName: 's1' };
     const navigation = {

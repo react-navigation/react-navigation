@@ -16,7 +16,7 @@ import {
   StatusBar,
   View,
 } from 'react-native';
-import { SafeAreaView, StackNavigator } from 'react-navigation';
+import { SafeAreaView, createStackNavigator } from 'react-navigation';
 
 import CustomTabs from './CustomTabs';
 import CustomTransitioner from './CustomTransitioner';
@@ -27,17 +27,26 @@ import ModalStack from './ModalStack';
 import StacksInTabs from './StacksInTabs';
 import StacksOverTabs from './StacksOverTabs';
 import StacksWithKeys from './StacksWithKeys';
+import StackWithCustomHeaderBackImage from './StackWithCustomHeaderBackImage';
 import SimpleStack from './SimpleStack';
 import StackWithHeaderPreset from './StackWithHeaderPreset';
 import StackWithTranslucentHeader from './StackWithTranslucentHeader';
 import SimpleTabs from './SimpleTabs';
-import TabAnimations from './TabAnimations';
+import SwitchWithStacks from './SwitchWithStacks';
 import TabsWithNavigationFocus from './TabsWithNavigationFocus';
 
 const ExampleInfo = {
   SimpleStack: {
     name: 'Stack Example',
     description: 'A card stack',
+  },
+  SwitchWithStacks: {
+    name: 'Switch between routes',
+    description: 'Jump between routes',
+  },
+  StackWithCustomHeaderBackImage: {
+    name: 'Custom header back image',
+    description: 'Stack with custom header back image',
   },
   SimpleTabs: {
     name: 'Tabs Example',
@@ -46,10 +55,6 @@ const ExampleInfo = {
   Drawer: {
     name: 'Drawer Example',
     description: 'Android-style drawer navigation',
-  },
-  StackWithHeaderPreset: {
-    name: 'UIKit-style Header Transitions',
-    description: 'Masked back button and sliding header items. iOS only.',
   },
   StackWithHeaderPreset: {
     name: 'UIKit-style Header Transitions',
@@ -105,10 +110,6 @@ const ExampleInfo = {
     name: 'Link to Settings Tab',
     description: 'Deep linking into a route in tab',
   },
-  TabAnimations: {
-    name: 'Animated Tabs Example',
-    description: 'Tab transitions have custom animations',
-  },
   TabsWithNavigationFocus: {
     name: 'withNavigationFocus',
     description: 'Receive the focus prop to know when a screen is focused',
@@ -116,12 +117,14 @@ const ExampleInfo = {
 };
 
 const ExampleRoutes = {
-  SimpleStack: SimpleStack,
+  SimpleStack,
+  SwitchWithStacks,
   SimpleTabs: SimpleTabs,
   Drawer: Drawer,
   // MultipleDrawer: {
   //   screen: MultipleDrawer,
   // },
+  StackWithCustomHeaderBackImage: StackWithCustomHeaderBackImage,
   StackWithHeaderPreset: StackWithHeaderPreset,
   StackWithTranslucentHeader: StackWithTranslucentHeader,
   TabsInDrawer: TabsInDrawer,
@@ -139,7 +142,6 @@ const ExampleRoutes = {
     screen: SimpleTabs,
     path: 'settings',
   },
-  TabAnimations,
   TabsWithNavigationFocus,
 };
 
@@ -286,7 +288,7 @@ class MainScreen extends React.Component<any, State> {
   }
 }
 
-const AppNavigator = StackNavigator(
+const AppNavigator = createStackNavigator(
   {
     ...ExampleRoutes,
     Index: {
@@ -305,7 +307,7 @@ const AppNavigator = StackNavigator(
   }
 );
 
-export default () => <AppNavigator />;
+export default () => <AppNavigator persistenceKey="NavState" />;
 
 const styles = StyleSheet.create({
   item: {

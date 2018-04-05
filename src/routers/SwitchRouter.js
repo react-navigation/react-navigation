@@ -3,12 +3,15 @@ import getScreenForRouteName from './getScreenForRouteName';
 import createConfigGetter from './createConfigGetter';
 
 import NavigationActions from '../NavigationActions';
+import StackActions from './StackActions';
 import validateRouteConfigMap from './validateRouteConfigMap';
+import getNavigationActionCreators from './getNavigationActionCreators';
 
 function childrenUpdateWithoutSwitchingIndex(actionType) {
   return [
     NavigationActions.SET_PARAMS,
-    NavigationActions.COMPLETE_TRANSITION,
+    // Todo: make SwitchRouter not depend on StackActions..
+    StackActions.COMPLETE_TRANSITION,
   ].includes(actionType);
 }
 
@@ -27,11 +30,12 @@ export default (routeConfigs, config = {}) => {
     : true;
   const initialRouteIndex = order.indexOf(initialRouteName);
   const childRouters = {};
-
   order.forEach(routeName => {
     const routeConfig = routeConfigs[routeName];
-    paths[routeName] =
-      typeof routeConfig.path === 'string' ? routeConfig.path : routeName;
+    if (!paths[routeName]) {
+      paths[routeName] =
+        typeof routeConfig.path === 'string' ? routeConfig.path : routeName;
+    }
     childRouters[routeName] = null;
     const screen = getScreenForRouteName(routeConfigs, routeName);
     if (screen.router) {
@@ -97,6 +101,10 @@ export default (routeConfigs, config = {}) => {
       return nextState;
     },
 
+    getActionCreators(route, stateKey) {
+      return getNavigationActionCreators(route, stateKey);
+    },
+
     getStateForAction(action, inputState) {
       let prevState = inputState ? { ...inputState } : inputState;
       let state = inputState || this.getInitialState();
@@ -157,9 +165,8 @@ export default (routeConfigs, config = {}) => {
 
       let didNavigate = false;
       if (action.type === NavigationActions.NAVIGATE) {
-        const navigateAction = action;
         didNavigate = !!order.find((childId, i) => {
-          if (childId === navigateAction.routeName) {
+          if (childId === action.routeName) {
             activeChildIndex = i;
             return true;
           }
@@ -174,7 +181,7 @@ export default (routeConfigs, config = {}) => {
             newChildState = childRouter
               ? childRouter.getStateForAction(action.action, childState)
               : null;
-          } else if (!childRouter && action.params) {
+          } else if (!action.action && !childRouter && action.params) {
             newChildState = {
               ...childState,
               params: {
@@ -192,6 +199,12 @@ export default (routeConfigs, config = {}) => {
               routes,
               index: activeChildIndex,
             });
+          } else if (
+            !newChildState &&
+            state.index === activeChildIndex &&
+            prevState
+          ) {
+            return null;
           }
         }
       }
@@ -315,22 +328,31 @@ export default (routeConfigs, config = {}) => {
      * This will return null if there is no action matched
      */
     getActionForPathAndParams(path, params) {
+      if (!path) {
+        return NavigationActions.navigate({
+          routeName: initialRouteName,
+          params,
+        });
+      }
       return (
         order
           .map(childId => {
             const parts = path.split('/');
             const pathToTest = paths[childId];
-            if (parts[0] === pathToTest) {
+            const partsInTestPath = pathToTest.split('/').length;
+            const pathPartsToTest = parts.slice(0, partsInTestPath).join('/');
+            if (pathPartsToTest === pathToTest) {
               const childRouter = childRouters[childId];
               const action = NavigationActions.navigate({
                 routeName: childId,
               });
               if (childRouter && childRouter.getActionForPathAndParams) {
                 action.action = childRouter.getActionForPathAndParams(
-                  parts.slice(1).join('/'),
+                  parts.slice(partsInTestPath).join('/'),
                   params
                 );
-              } else if (params) {
+              }
+              if (params) {
                 action.params = params;
               }
               return action;

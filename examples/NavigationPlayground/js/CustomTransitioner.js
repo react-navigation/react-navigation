@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import {
   Animated,
-  Button,
   Easing,
   Image,
   Platform,
@@ -17,6 +16,7 @@ import {
   createNavigator,
 } from 'react-navigation';
 import SampleText from './SampleText';
+import { Button } from './commonComponents/ButtonWithMargin';
 
 const MyNavScreen = ({ navigation, banner }) => (
   <SafeAreaView forceInset={{ top: 'always' }}>

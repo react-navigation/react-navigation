@@ -2,9 +2,9 @@ import React from 'react';
 import { Dimensions } from 'react-native';
 import DrawerLayout from 'react-native-drawer-layout-polyfill';
 
-import addNavigationHelpers from '../../addNavigationHelpers';
 import DrawerSidebar from './DrawerSidebar';
 import NavigationActions from '../../NavigationActions';
+import DrawerActions from '../../routers/DrawerActions';
 
 /**
  * Component that renders the drawer.
@@ -17,7 +17,7 @@ export default class DrawerView extends React.PureComponent {
         : this.props.navigationConfig.drawerWidth,
   };
 
-  componentWillMount() {
+  componentDidMount() {
     Dimensions.addEventListener('change', this._updateWidth);
   }
 
@@ -25,9 +25,10 @@ export default class DrawerView extends React.PureComponent {
     Dimensions.removeEventListener('change', this._updateWidth);
   }
 
-  componentWillReceiveProps(nextProps) {
-    const { isDrawerOpen } = nextProps.navigation.state;
-    const wasDrawerOpen = this.props.navigation.state.isDrawerOpen;
+  componentDidUpdate(prevProps, prevState) {
+    const { isDrawerOpen } = this.props.navigation.state;
+    const wasDrawerOpen = prevProps.navigation.state.isDrawerOpen;
+
     if (isDrawerOpen && !wasDrawerOpen) {
       this._drawer.openDrawer();
     } else if (wasDrawerOpen && !isDrawerOpen) {
@@ -37,12 +38,18 @@ export default class DrawerView extends React.PureComponent {
 
   _handleDrawerOpen = () => {
     const { navigation } = this.props;
-    navigation.dispatch({ type: NavigationActions.OPEN_DRAWER });
+    const { isDrawerOpen } = navigation.state;
+    if (!isDrawerOpen) {
+      navigation.dispatch({ type: DrawerActions.OPEN_DRAWER });
+    }
   };
 
   _handleDrawerClose = () => {
     const { navigation } = this.props;
-    navigation.dispatch({ type: NavigationActions.CLOSE_DRAWER });
+    const { isDrawerOpen } = navigation.state;
+    if (isDrawerOpen) {
+      navigation.dispatch({ type: DrawerActions.CLOSE_DRAWER });
+    }
   };
 
   _updateWidth = () => {

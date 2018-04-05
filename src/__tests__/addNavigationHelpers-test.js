@@ -6,6 +6,32 @@ const dummyEventSubscriber = (name: string, handler: (*) => void) => ({
 });
 
 describe('addNavigationHelpers', () => {
+  it('handles dismiss action', () => {
+    const mockedDispatch = jest
+      .fn(() => false)
+      .mockImplementationOnce(() => true);
+    const child = { key: 'A', routeName: 'Home' };
+    expect(
+      addNavigationHelpers({
+        state: child,
+        dispatch: mockedDispatch,
+        addListener: dummyEventSubscriber,
+        dangerouslyGetParent: () => ({
+          state: {
+            key: 'P',
+            routeName: 'Parent',
+            routes: [child],
+          },
+        }),
+      }).dismiss()
+    ).toEqual(true);
+    expect(mockedDispatch).toBeCalledWith({
+      type: NavigationActions.BACK,
+      key: 'P',
+    });
+    expect(mockedDispatch.mock.calls.length).toBe(1);
+  });
+
   it('handles Back action', () => {
     const mockedDispatch = jest
       .fn(() => false)

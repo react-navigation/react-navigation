@@ -6,6 +6,7 @@ import StackRouter from '../routers/StackRouter';
 
 function createStackNavigator(routeConfigMap, stackConfig = {}) {
   const {
+    initialRouteKey,
     initialRouteName,
     initialRouteParams,
     paths,
@@ -13,6 +14,7 @@ function createStackNavigator(routeConfigMap, stackConfig = {}) {
   } = stackConfig;
 
   const stackRouterConfig = {
+    initialRouteKey,
     initialRouteName,
     initialRouteParams,
     paths,

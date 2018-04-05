@@ -2,10 +2,10 @@
 
 import NavigationActions from './NavigationActions';
 import invariant from './utils/invariant';
-
 export default function(navigation) {
   return {
     ...navigation,
+    // Go back from the given key, default to active key
     goBack: key => {
       let actualizedKey = key;
       if (key === undefined && navigation.state.key) {
@@ -18,6 +18,18 @@ export default function(navigation) {
       return navigation.dispatch(
         NavigationActions.back({ key: actualizedKey })
       );
+    },
+    // Go back from the parent key. If this is a nested stack, the entire
+    // stack will be dismissed.
+    dismiss: () => {
+      let parent = navigation.dangerouslyGetParent();
+      if (parent && parent.state) {
+        return navigation.dispatch(
+          NavigationActions.back({ key: parent.state.key })
+        );
+      } else {
+        return false;
+      }
     },
     navigate: (navigateTo, params, action) => {
       if (typeof navigateTo === 'string') {

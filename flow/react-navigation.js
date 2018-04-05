@@ -343,7 +343,7 @@ declare module 'react-navigation' {
     headerTintColor?: string,
     headerLeft?: React$Node | React$ElementType,
     headerBackTitle?: string,
-    headerBackImage?: ImageSource,
+    headerBackImage?: React$Node | React$ElementType,
     headerTruncatedBackTitle?: string,
     headerBackTitleStyle?: TextStyleProp,
     headerPressColorAndroid?: string,
@@ -490,8 +490,14 @@ declare module 'react-navigation' {
     +state: S,
     dispatch: NavigationDispatch,
     goBack: (routeKey?: ?string) => boolean,
+    dismiss: () => boolean,
     navigate: (
-      routeName: string,
+      routeName: string | {
+        routeName: string,
+        params?: NavigationParams,
+        action?: NavigationNavigateAction,
+        key?: string
+      },
       params?: NavigationParams,
       action?: NavigationNavigateAction
     ) => boolean,
@@ -541,6 +547,8 @@ declare module 'react-navigation' {
       NavigationAction
     ) => void,
     navigation?: NavigationScreenProp<S>,
+    persistenceKey?: ?string,
+    renderLoadingExperimental?: React$ComponentType<{}>,
     screenProps?: *,
     navigationOptions?: O,
   }>;
@@ -764,6 +772,10 @@ declare module 'react-navigation' {
     routeConfigMap: NavigationRouteConfigMap,
     stackConfig?: StackNavigatorConfig
   ): NavigationContainer<*, *, *>;
+  declare export function createStackNavigator(
+    routeConfigMap: NavigationRouteConfigMap,
+    stackConfig?: StackNavigatorConfig
+  ): NavigationContainer<*, *, *>;
 
   declare type _TabViewConfig = {|
     tabBarComponent?: React$ElementType,
@@ -788,10 +800,31 @@ declare module 'react-navigation' {
     routeConfigs: NavigationRouteConfigMap,
     config?: _TabNavigatorConfig
   ): NavigationContainer<*, *, *>;
+  declare export function createTabNavigator(
+    routeConfigs: NavigationRouteConfigMap,
+    config?: _TabNavigatorConfig
+  ): NavigationContainer<*, *, *>;
+  /* TODO: fix the config for each of these tab navigator types */
+  declare export function createBottomTabNavigator(
+    routeConfigs: NavigationRouteConfigMap,
+    config?: _TabNavigatorConfig
+  ): NavigationContainer<*, *, *>;
+  declare export function createMaterialBottomTabNavigator(
+    routeConfigs: NavigationRouteConfigMap,
+    config?: _TabNavigatorConfig
+  ): NavigationContainer<*, *, *>;
+  declare export function createMaterialTopTabNavigator(
+    routeConfigs: NavigationRouteConfigMap,
+    config?: _TabNavigatorConfig
+  ): NavigationContainer<*, *, *>;
   declare type _SwitchNavigatorConfig = {|
     ...NavigationSwitchRouterConfig,
   |};
   declare export function SwitchNavigator(
+    routeConfigs: NavigationRouteConfigMap,
+    config?: _SwitchNavigatorConfig
+  ): NavigationContainer<*, *, *>;
+  declare export function createSwitchNavigator(
     routeConfigs: NavigationRouteConfigMap,
     config?: _SwitchNavigatorConfig
   ): NavigationContainer<*, *, *>;
@@ -813,6 +846,10 @@ declare module 'react-navigation' {
     containerConfig?: void,
   }>;
   declare export function DrawerNavigator(
+    routeConfigs: NavigationRouteConfigMap,
+    config?: _DrawerNavigatorConfig
+  ): NavigationContainer<*, *, *>;
+  declare export function createDrawerNavigator(
     routeConfigs: NavigationRouteConfigMap,
     config?: _DrawerNavigatorConfig
   ): NavigationContainer<*, *, *>;

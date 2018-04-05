@@ -3,10 +3,11 @@
  */
 
 import React from 'react';
-import { Button, Platform, ScrollView, StyleSheet } from 'react-native';
-import { DrawerNavigator } from 'react-navigation';
+import { Platform, ScrollView, StyleSheet } from 'react-native';
+import { createDrawerNavigator } from 'react-navigation';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import SampleText from './SampleText';
+import { Button } from './commonComponents/ButtonWithMargin';
 
 const MyNavScreen = ({ navigation, banner }) => (
   <ScrollView style={styles.container}>
@@ -40,7 +41,7 @@ DraftsScreen.navigationOptions = {
   ),
 };
 
-const DrawerExample = DrawerNavigator(
+const DrawerExample = createDrawerNavigator(
   {
     Inbox: {
       path: '/',
@@ -59,7 +60,7 @@ const DrawerExample = DrawerNavigator(
   }
 );
 
-const MainDrawerExample = DrawerNavigator({
+const MainDrawerExample = createDrawerNavigator({
   Drafts: {
     screen: DrawerExample,
   },

@@ -4,7 +4,6 @@
 
 import React from 'react';
 import {
-  Button,
   Platform,
   ScrollView,
   StyleSheet,
@@ -20,6 +19,7 @@ import {
   TabRouter,
 } from 'react-navigation';
 import SampleText from './SampleText';
+import { Button } from './commonComponents/ButtonWithMargin';
 
 const MyNavScreen = ({ navigation, banner }) => (
   <ScrollView>

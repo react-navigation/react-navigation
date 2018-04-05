@@ -8,9 +8,15 @@ import type {
 } from 'react-navigation';
 
 import * as React from 'react';
-import { Button, ScrollView, StatusBar } from 'react-native';
-import { StackNavigator, SafeAreaView, withNavigation } from 'react-navigation';
+import { ScrollView, StatusBar } from 'react-native';
+import {
+  createStackNavigator,
+  SafeAreaView,
+  withNavigation,
+} from 'react-navigation';
 import SampleText from './SampleText';
+import { Button } from './commonComponents/ButtonWithMargin';
+import { HeaderButtons } from './commonComponents/HeaderButtons';
 
 type MyNavScreenProps = {
   navigation: NavigationScreenProp<*>,
@@ -19,7 +25,11 @@ type MyNavScreenProps = {
 
 class MyBackButton extends React.Component<any, any> {
   render() {
-    return <Button onPress={this._navigateBack} title="Custom Back" />;
+    return (
+      <HeaderButtons>
+        <HeaderButtons.Item title="Back" onPress={this._navigateBack} />
+      </HeaderButtons>
+    );
   }
 
   _navigateBack = () => {
@@ -49,7 +59,8 @@ class MyNavScreen extends React.Component<MyNavScreenProps> {
         />
         <Button onPress={() => navigation.popToTop()} title="Pop to top" />
         <Button onPress={() => navigation.pop()} title="Pop" />
-        <Button onPress={() => navigation.goBack(null)} title="Go back" />
+        <Button onPress={() => navigation.goBack()} title="Go back" />
+        <Button onPress={() => navigation.dismiss()} title="Dismiss" />
         <StatusBar barStyle="default" />
       </SafeAreaView>
     );
@@ -168,17 +179,19 @@ MyProfileScreen.navigationOptions = props => {
     // Render a button on the right side of the header.
     // When pressed switches the screen to edit mode.
     headerRight: (
-      <Button
-        title={params.mode === 'edit' ? 'Done' : 'Edit'}
-        onPress={() =>
-          setParams({ mode: params.mode === 'edit' ? '' : 'edit' })
-        }
-      />
+      <HeaderButtons>
+        <HeaderButtons.Item
+          title={params.mode === 'edit' ? 'Done' : 'Edit'}
+          onPress={() =>
+            setParams({ mode: params.mode === 'edit' ? '' : 'edit' })
+          }
+        />
+      </HeaderButtons>
     ),
   };
 };
 
-const SimpleStack = StackNavigator({
+const SimpleStack = createStackNavigator({
   Home: {
     screen: MyHomeScreen,
   },

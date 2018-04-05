@@ -4,6 +4,7 @@ import React from 'react';
 import TabRouter from '../TabRouter';
 import StackRouter from '../StackRouter';
 
+import StackActions from '../../routers/StackActions';
 import NavigationActions from '../../NavigationActions';
 
 const INIT_ACTION = { type: NavigationActions.INIT };
@@ -181,6 +182,7 @@ describe('TabRouter', () => {
     const navAction = {
       type: NavigationActions.NAVIGATE,
       routeName: 'Baz',
+      params: { foo: '42' },
       action: {
         type: NavigationActions.NAVIGATE,
         routeName: 'Bar',
@@ -351,7 +353,7 @@ describe('TabRouter', () => {
     });
     const MidNavigator = () => <div />;
     MidNavigator.router = TabRouter({
-      Foo: { screen: ChildNavigator0 },
+      Fee: { screen: ChildNavigator0 },
       Bar: { screen: ChildNavigator1 },
     });
     const router = TabRouter({
@@ -371,8 +373,8 @@ describe('TabRouter', () => {
           routes: [
             {
               index: 0,
-              key: 'Foo',
-              routeName: 'Foo',
+              key: 'Fee',
+              routeName: 'Fee',
               isTransitioning: false,
               routes: [
                 { key: 'Boo', routeName: 'Boo' },
@@ -410,8 +412,8 @@ describe('TabRouter', () => {
           routes: [
             {
               index: 0,
-              key: 'Foo',
-              routeName: 'Foo',
+              key: 'Fee',
+              routeName: 'Fee',
               isTransitioning: false,
               routes: [
                 { key: 'Boo', routeName: 'Boo' },
@@ -444,7 +446,10 @@ describe('TabRouter', () => {
       action: {
         type: NavigationActions.NAVIGATE,
         routeName: 'Bar',
-        action: { type: NavigationActions.NAVIGATE, routeName: 'Zap' },
+        action: {
+          type: NavigationActions.NAVIGATE,
+          routeName: 'Zap',
+        },
       },
     });
     expect(state4).toEqual({
@@ -459,8 +464,8 @@ describe('TabRouter', () => {
           routes: [
             {
               index: 0,
-              key: 'Foo',
-              routeName: 'Foo',
+              key: 'Fee',
+              routeName: 'Fee',
               isTransitioning: false,
               routes: [
                 { key: 'Boo', routeName: 'Boo' },
@@ -706,16 +711,13 @@ describe('TabRouter', () => {
         { key: 'D', routeName: 'bar' },
       ],
     };
-    const poppedState = TestRouter.getStateForAction(
-      NavigationActions.pop(),
-      state
-    );
+    const poppedState = TestRouter.getStateForAction(StackActions.pop(), state);
     expect(poppedState.routes.length).toBe(3);
     expect(poppedState.index).toBe(2);
     expect(poppedState.isTransitioning).toBe(true);
 
     const poppedState2 = TestRouter.getStateForAction(
-      NavigationActions.pop({ n: 2, immediate: true }),
+      StackActions.pop({ n: 2, immediate: true }),
       state
     );
     expect(poppedState2.routes.length).toBe(2);
@@ -723,7 +725,7 @@ describe('TabRouter', () => {
     expect(poppedState2.isTransitioning).toBe(false);
 
     const poppedState3 = TestRouter.getStateForAction(
-      NavigationActions.pop({ n: 5 }),
+      StackActions.pop({ n: 5 }),
       state
     );
     expect(poppedState3.routes.length).toBe(1);

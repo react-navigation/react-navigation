@@ -16,25 +16,14 @@ export default function createPointerEventsContainer(Component) {
       this._pointerEvents = this._computePointerEvents();
     }
 
-    componentWillMount() {
-      this._onPositionChange = this._onPositionChange.bind(this);
-      this._onComponentRef = this._onComponentRef.bind(this);
-    }
-
-    componentDidMount() {
-      this._bindPosition(this.props);
-    }
-
     componentWillUnmount() {
       this._positionListener && this._positionListener.remove();
     }
 
-    componentWillReceiveProps(nextProps) {
-      this._bindPosition(nextProps);
-    }
-
     render() {
+      this._bindPosition();
       this._pointerEvents = this._computePointerEvents();
+
       return (
         <Component
           {...this.props}
@@ -44,7 +33,7 @@ export default function createPointerEventsContainer(Component) {
       );
     }
 
-    _onComponentRef(component) {
+    _onComponentRef = component => {
       this._component = component;
       if (component) {
         invariant(
@@ -52,17 +41,17 @@ export default function createPointerEventsContainer(Component) {
           'component must implement method `setNativeProps`'
         );
       }
-    }
+    };
 
-    _bindPosition(props) {
+    _bindPosition() {
       this._positionListener && this._positionListener.remove();
       this._positionListener = new AnimatedValueSubscription(
-        props.position,
+        this.props.position,
         this._onPositionChange
       );
     }
 
-    _onPositionChange() {
+    _onPositionChange = () => {
       if (this._component) {
         const pointerEvents = this._computePointerEvents();
         if (this._pointerEvents !== pointerEvents) {
@@ -70,7 +59,7 @@ export default function createPointerEventsContainer(Component) {
           this._component.setNativeProps({ pointerEvents });
         }
       }
-    }
+    };
 
     _computePointerEvents() {
       const { navigation, position, scene } = this.props;

@@ -3,14 +3,15 @@
  */
 
 import React from 'react';
-import { Button, Platform, ScrollView, StatusBar } from 'react-native';
+import { Platform, ScrollView, StatusBar } from 'react-native';
 import {
-  StackNavigator,
-  DrawerNavigator,
+  createStackNavigator,
+  createDrawerNavigator,
   SafeAreaView,
 } from 'react-navigation';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import SampleText from './SampleText';
+import { Button } from './commonComponents/ButtonWithMargin';
 
 const MyNavScreen = ({ navigation, banner }) => (
   <ScrollView>
@@ -55,17 +56,17 @@ DraftsScreen.navigationOptions = {
   ),
 };
 
-const InboxStack = StackNavigator({
+const InboxStack = createStackNavigator({
   Inbox: { screen: InboxScreen },
   Email: { screen: EmailScreen },
 });
 
-const DraftsStack = StackNavigator({
+const DraftsStack = createStackNavigator({
   Drafts: { screen: DraftsScreen },
   Email: { screen: EmailScreen },
 });
 
-const DrawerExample = DrawerNavigator(
+const DrawerExample = createDrawerNavigator(
   {
     Inbox: {
       path: '/',

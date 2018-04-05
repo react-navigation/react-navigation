@@ -1,40 +1,33 @@
 import React from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
 import PropTypes from 'prop-types';
+import withLifecyclePolyfill from 'react-lifecycles-compat';
 
 import SceneView from './SceneView';
 
 const FAR_FAR_AWAY = 3000; // this should be big enough to move the whole view out of its container
 
-export default class ResourceSavingSceneView extends React.PureComponent {
+class ResourceSavingSceneView extends React.PureComponent {
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.isFocused && !prevState.awake) {
+      return { awake: true };
+    } else {
+      return null;
+    }
+  }
+
   constructor(props) {
     super();
 
-    const key = props.childNavigation.state.key;
-    const focusedIndex = props.navigation.state.index;
-    const focusedKey = props.navigation.state.routes[focusedIndex].key;
-    const isFocused = key === focusedKey;
-
     this.state = {
-      awake: props.lazy ? isFocused : true,
-      visible: isFocused,
+      awake: props.lazy ? props.isFocused : true,
     };
   }
 
-  componentWillMount() {
-    this._actionListener = this.props.navigation.addListener(
-      'action',
-      this._onAction
-    );
-  }
-
-  componentWillUnmount() {
-    this._actionListener.remove();
-  }
-
   render() {
-    const { awake, visible } = this.state;
+    const { awake } = this.state;
     const {
+      isFocused,
       childNavigation,
       navigation,
       removeClippedSubviews,
@@ -49,12 +42,12 @@ export default class ResourceSavingSceneView extends React.PureComponent {
         removeClippedSubviews={
           Platform.OS === 'android'
             ? removeClippedSubviews
-            : !visible && removeClippedSubviews
+            : !isFocused && removeClippedSubviews
         }
       >
         <View
           style={
-            this._mustAlwaysBeVisible() || visible
+            this._mustAlwaysBeVisible() || isFocused
               ? styles.innerAttached
               : styles.innerDetached
           }
@@ -67,33 +60,6 @@ export default class ResourceSavingSceneView extends React.PureComponent {
 
   _mustAlwaysBeVisible = () => {
     return this.props.animationEnabled || this.props.swipeEnabled;
-  };
-
-  _onAction = payload => {
-    // We do not care about transition complete events, they won't actually change the state
-    if (
-      payload.action.type == 'Navigation/COMPLETE_TRANSITION' ||
-      !payload.state
-    ) {
-      return;
-    }
-
-    const { routes, index } = payload.state;
-    const key = this.props.childNavigation.state.key;
-
-    if (routes[index].key === key) {
-      if (!this.state.visible) {
-        let nextState = { visible: true };
-        if (!this.state.awake) {
-          nextState.awake = true;
-        }
-        this.setState(nextState);
-      }
-    } else {
-      if (this.state.visible) {
-        this.setState({ visible: false });
-      }
-    }
   };
 }
 
@@ -110,3 +76,5 @@ const styles = StyleSheet.create({
     top: FAR_FAR_AWAY,
   },
 });
+
+export default withLifecyclePolyfill(ResourceSavingSceneView);

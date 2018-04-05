@@ -1,7 +1,6 @@
 import React from 'react';
 
 import getChildEventSubscriber from '../getChildEventSubscriber';
-import addNavigationHelpers from '../addNavigationHelpers';
 
 function createNavigator(NavigatorView, router, navigationConfig) {
   class Navigator extends React.Component {
@@ -32,6 +31,10 @@ function createNavigator(NavigatorView, router, navigationConfig) {
       return route === focusedRoute;
     };
 
+    _dangerouslyGetParent = () => {
+      return this.props.navigation;
+    };
+
     render() {
       const { navigation, screenProps } = this.props;
       const { dispatch, state, addListener } = navigation;
@@ -49,12 +52,37 @@ function createNavigator(NavigatorView, router, navigationConfig) {
           );
         }
 
-        const childNavigation = addNavigationHelpers({
+        const actionCreators = {
+          ...navigation.actions,
+          ...router.getActionCreators(route, state.key),
+        };
+        const actionHelpers = {};
+        Object.keys(actionCreators).forEach(actionName => {
+          actionHelpers[actionName] = (...args) => {
+            const actionCreator = actionCreators[actionName];
+            const action = actionCreator(...args);
+            dispatch(action);
+          };
+        });
+        const childNavigation = {
+          ...actionHelpers,
+          actions: actionCreators,
           dispatch,
           state: route,
+          isFocused: () => this._isRouteFocused(route),
+          dangerouslyGetParent: this._dangerouslyGetParent,
           addListener: this.childEventSubscribers[route.key].addListener,
-          isFocused: this._isRouteFocused.bind(this, route),
-        });
+          getParam: (paramName, defaultValue) => {
+            const params = route.params;
+
+            if (params && paramName in params) {
+              return params[paramName];
+            }
+
+            return defaultValue;
+          },
+        };
+
         const options = router.getScreenOptions(childNavigation, screenProps);
         descriptors[route.key] = {
           key: route.key,
