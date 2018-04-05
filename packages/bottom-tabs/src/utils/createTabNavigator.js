@@ -3,7 +3,7 @@
 import * as React from 'react';
 import {
   TabRouter,
-  NavigationActions,
+  StackActions,
   createNavigator,
   createNavigationContainer,
 } from 'react-navigation';
@@ -85,7 +85,7 @@ export default function createTabNavigator(TabView: React.ComponentType<*>) {
 
         if (isFocused) {
           if (route.hasOwnProperty('index') && route.index > 0) {
-            navigation.dispatch(NavigationActions.popToTop({ key: route.key }));
+            navigation.dispatch(StackActions.popToTop({ key: route.key }));
           } else {
             // TODO: do something to scroll to top
           }
