@@ -25,6 +25,8 @@ function behavesLikePushAction(action) {
   );
 }
 
+const defaultActionCreators = (route, navStateKey) => ({});
+
 export default (routeConfigs, stackConfig = {}) => {
   // Fail fast on invalid route definitions
   validateRouteConfigMap(routeConfigs);
@@ -44,7 +46,9 @@ export default (routeConfigs, stackConfig = {}) => {
     }
   });
 
-  const { initialRouteParams, getActionCreators } = stackConfig;
+  const { initialRouteParams } = stackConfig;
+  const getCustomActionCreators =
+    config.getCustomActionCreators || defaultActionCreators;
 
   const initialRouteName = stackConfig.initialRouteName || routeNames[0];
 
@@ -157,7 +161,7 @@ export default (routeConfigs, stackConfig = {}) => {
     getActionCreators(route, navStateKey) {
       return {
         ...getNavigationActionCreators(route, navStateKey),
-        ...(getActionCreators ? getActionCreators(route, navStateKey) : {}),
+        ...getCustomActionCreators(route, navStateKey),
         pop: (n, params) =>
           StackActions.pop({
             n,
