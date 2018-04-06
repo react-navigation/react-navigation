@@ -67,23 +67,6 @@ export default class TabViewPagerPan<T: *> extends React.Component<Props<T>> {
     },
   };
 
-  constructor(props: Props<T>) {
-    super(props);
-    this._currentIndex = this.props.navigationState.index;
-  }
-
-  componentWillMount() {
-    this._panResponder = PanResponder.create({
-      onMoveShouldSetPanResponder: this._canMoveScreen,
-      onMoveShouldSetPanResponderCapture: this._canMoveScreen,
-      onPanResponderGrant: this._startGesture,
-      onPanResponderMove: this._respondToGesture,
-      onPanResponderTerminate: this._finishGesture,
-      onPanResponderRelease: this._finishGesture,
-      onPanResponderTerminationRequest: () => true,
-    });
-  }
-
   componentDidUpdate(prevProps: Props<T>) {
     this._currentIndex = this.props.navigationState.index;
 
@@ -99,7 +82,8 @@ export default class TabViewPagerPan<T: *> extends React.Component<Props<T>> {
     }
   }
 
-  _currentIndex: number;
+  _currentIndex = this.props.navigationState.index;
+  _pendingIndex: ?number;
 
   _isMovingHorizontally = (evt: GestureEvent, gestureState: GestureState) => {
     return (
@@ -228,8 +212,15 @@ export default class TabViewPagerPan<T: *> extends React.Component<Props<T>> {
     this._pendingIndex = index;
   };
 
-  _panResponder: any;
-  _pendingIndex: ?number;
+  _panResponder = PanResponder.create({
+    onMoveShouldSetPanResponder: this._canMoveScreen,
+    onMoveShouldSetPanResponderCapture: this._canMoveScreen,
+    onPanResponderGrant: this._startGesture,
+    onPanResponderMove: this._respondToGesture,
+    onPanResponderTerminate: this._finishGesture,
+    onPanResponderRelease: this._finishGesture,
+    onPanResponderTerminationRequest: () => true,
+  });
 
   render() {
     const { panX, offsetX, navigationState, layout, children } = this.props;

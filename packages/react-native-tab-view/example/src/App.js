@@ -44,7 +44,7 @@ export default class ExampleList extends React.Component<{}, State> {
     restoring: false,
   };
 
-  componentWillMount() {
+  componentDidMount() {
     if (process.env.NODE_ENV !== 'production') {
       this._restoreNavigationState();
     }
