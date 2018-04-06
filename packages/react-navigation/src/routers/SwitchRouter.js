@@ -7,6 +7,8 @@ import StackActions from './StackActions';
 import validateRouteConfigMap from './validateRouteConfigMap';
 import getNavigationActionCreators from './getNavigationActionCreators';
 
+const defaultActionCreators = (route, navStateKey) => ({});
+
 function childrenUpdateWithoutSwitchingIndex(actionType) {
   return [
     NavigationActions.SET_PARAMS,
@@ -21,6 +23,9 @@ export default (routeConfigs, config = {}) => {
 
   const order = config.order || Object.keys(routeConfigs);
   const paths = config.paths || {};
+  const getCustomActionCreators =
+    config.getCustomActionCreators || defaultActionCreators;
+
   const initialRouteParams = config.initialRouteParams;
   const initialRouteName = config.initialRouteName || order[0];
   const backBehavior = config.backBehavior || 'none';
@@ -102,7 +107,10 @@ export default (routeConfigs, config = {}) => {
     },
 
     getActionCreators(route, stateKey) {
-      return getNavigationActionCreators(route, stateKey);
+      return {
+        ...getNavigationActionCreators(route, stateKey),
+        ...getCustomActionCreators(route, navStateKey),
+      };
     },
 
     getStateForAction(action, inputState) {
