@@ -38,7 +38,8 @@ export default (routeConfigs, navigatorScreenConfig) => (
 
   const routeConfig = routeConfigs[route.routeName];
 
-  const routeScreenConfig = routeConfig.navigationOptions;
+  const routeScreenConfig =
+    routeConfig === Component ? null : routeConfig.navigationOptions;
   const componentScreenConfig = Component.navigationOptions;
 
   const configOptions = { navigation, screenProps: screenProps || {} };
