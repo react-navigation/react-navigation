@@ -48,7 +48,7 @@ export default (routeConfigs, stackConfig = {}) => {
 
   const { initialRouteParams } = stackConfig;
   const getCustomActionCreators =
-    config.getCustomActionCreators || defaultActionCreators;
+    stackConfig.getCustomActionCreators || defaultActionCreators;
 
   const initialRouteName = stackConfig.initialRouteName || routeNames[0];
 
