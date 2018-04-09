@@ -47,12 +47,6 @@ class Header extends React.PureComponent {
     widths: {},
   };
 
-  _handleOnLayout = e => {
-    if (typeof this.props.onLayout === 'function') {
-      this.props.onLayout(e.nativeEvent.layout);
-    }
-  };
-
   _getHeaderTitleString(scene) {
     const options = scene.descriptor.options;
     if (typeof options.headerTitle === 'string') {
@@ -494,10 +488,7 @@ class Header extends React.PureComponent {
     const forceInset = headerForceInset || { top: 'always', bottom: 'never' };
 
     return (
-      <Animated.View
-        style={this.props.layoutInterpolator(this.props)}
-        onLayout={this._handleOnLayout}
-      >
+      <Animated.View style={this.props.layoutInterpolator(this.props)}>
         <SafeAreaView forceInset={forceInset} style={containerStyles}>
           <View style={StyleSheet.absoluteFill}>
             {options.headerBackground}

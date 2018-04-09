@@ -47,7 +47,10 @@ function isGoingBack(scenes) {
 }
 
 function forLayout(props) {
-  const { layout, position, scene, scenes } = props;
+  const { layout, position, scene, scenes, mode } = props;
+  if (mode !== 'float') {
+    return {};
+  }
   const isBack = isGoingBack(scenes);
 
   const interpolate = getSceneIndicesForInterpolationInputRange(props);

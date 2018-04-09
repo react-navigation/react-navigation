@@ -94,11 +94,7 @@ class StackViewLayout extends React.Component {
     }
 
     // Handle the case where the header option is a function, and provide the default
-    const renderHeader =
-      header ||
-      (props => (
-        <Header onLayout={layout => (this._headerLayout = layout)} {...props} />
-      ));
+    const renderHeader = header || (props => <Header {...props} />);
 
     const {
       headerLeftInterpolator,
@@ -453,8 +449,8 @@ class StackViewLayout extends React.Component {
     const hasHeader = options.header !== null;
     const headerMode = this._getHeaderMode();
     let marginTop = 0;
-    if (!hasHeader && headerMode === 'float' && this._headerLayout) {
-      marginTop = -this._headerLayout.height;
+    if (!hasHeader && headerMode === 'float') {
+      marginTop = -Header.HEIGHT;
     }
 
     return (

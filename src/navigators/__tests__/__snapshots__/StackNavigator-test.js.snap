@@ -77,7 +77,6 @@ exports[`StackNavigator applies correct values when headerRight is present 1`] =
     </View>
     <View
       collapsable={undefined}
-      onLayout={[Function]}
       style={
         Object {
           "transform": Array [
@@ -278,7 +277,6 @@ exports[`StackNavigator renders successfully 1`] = `
     </View>
     <View
       collapsable={undefined}
-      onLayout={[Function]}
       style={
         Object {
           "transform": Array [
