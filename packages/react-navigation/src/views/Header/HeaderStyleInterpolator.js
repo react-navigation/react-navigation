@@ -58,8 +58,19 @@ function forLayout(props) {
 
   const { first, last } = interpolate;
   const index = scene.index;
-
   const width = layout.initWidth;
+
+  // Make sure the header stays hidden when transitioning between 2 screens
+  // with no header.
+  if (
+    (isBack && !hasHeader(scenes[index]) && !hasHeader(scenes[last])) ||
+    (!isBack && !hasHeader(scenes[first]) && !hasHeader(scenes[index]))
+  ) {
+    return {
+      transform: [{ translateX: width }],
+    };
+  }
+
   const rtlMult = I18nManager.isRTL ? -1 : 1;
   const translateX = position.interpolate({
     inputRange: [first, index, last],
