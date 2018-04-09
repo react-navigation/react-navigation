@@ -47,7 +47,10 @@ function isGoingBack(scenes) {
 }
 
 function forLayout(props) {
-  const { layout, position, scene, scenes } = props;
+  const { layout, position, scene, scenes, mode } = props;
+  if (mode !== 'float') {
+    return {};
+  }
   const isBack = isGoingBack(scenes);
 
   const interpolate = getSceneIndicesForInterpolationInputRange(props);
@@ -163,11 +166,11 @@ function forLeftButton(props) {
   };
 }
 
-/* 
+/*
  * NOTE: this offset calculation is an approximation that gives us
  * decent results in many cases, but it is ultimately a poor substitute
  * for text measurement. See the comment on title for more information.
- * 
+ *
  * - 70 is the width of the left button area.
  * - 25 is the width of the left button icon (to account for label offset)
  */
@@ -234,14 +237,14 @@ function forLeftLabel(props) {
   };
 }
 
-/* 
+/*
  * NOTE: this offset calculation is a an approximation that gives us
  * decent results in many cases, but it is ultimately a poor substitute
  * for text measurement. We want the back button label to transition
  * smoothly into the title text and to do this we need to understand
  * where the title is positioned within the title container (since it is
  * centered).
- * 
+ *
  * - 70 is the width of the left button area.
  * - 25 is the width of the left button icon (to account for label offset)
  */
