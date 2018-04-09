@@ -4849,9 +4849,9 @@ react-native-drawer-layout@1.3.2:
   dependencies:
     react-native-dismiss-keyboard "1.0.0"
 
-react-native-paper@^1.2.4:
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/react-native-paper/-/react-native-paper-1.2.4.tgz#28ab6e5d83ea264167058618bde312c7c61ece73"
+react-native-paper@^1.2.5:
+  version "1.2.5"
+  resolved "https://registry.yarnpkg.com/react-native-paper/-/react-native-paper-1.2.5.tgz#3a4480ca967aae4b3e65a987116973dd012d1fa8"
   dependencies:
     color "^2.0.1"
     create-react-context "^0.2.1"
@@ -4864,9 +4864,15 @@ react-native-safe-area-view@^0.7.0:
   dependencies:
     hoist-non-react-statics "^2.3.1"
 
-react-native-tab-view@^0.0.74, react-native-tab-view@react-navigation/react-native-tab-view:
+react-native-tab-view@react-navigation/react-native-tab-view:
   version "0.0.74"
   resolved "https://codeload.github.com/react-navigation/react-native-tab-view/tar.gz/36ebd834d78b841fc19778c966465d02fd1213bb"
+  dependencies:
+    prop-types "^15.6.0"
+
+react-native-tab-view@~0.0.77:
+  version "0.0.77"
+  resolved "https://registry.yarnpkg.com/react-native-tab-view/-/react-native-tab-view-0.0.77.tgz#11ceb8e7c23100d07e628dc151b57797524d00d4"
   dependencies:
     prop-types "^15.6.0"
 
@@ -4943,16 +4949,16 @@ react-navigation-deprecated-tab-navigator@1.0.1:
   dependencies:
     react-native-tab-view react-navigation/react-native-tab-view
 
-react-navigation-tabs@0.1.0-alpha.3:
-  version "0.1.0-alpha.3"
-  resolved "https://registry.yarnpkg.com/react-navigation-tabs/-/react-navigation-tabs-0.1.0-alpha.3.tgz#a68ace954e84206b7c3e6f5793f234d3931d03dc"
+react-navigation-tabs@0.1.0-alpha.6:
+  version "0.1.0-alpha.6"
+  resolved "https://registry.yarnpkg.com/react-navigation-tabs/-/react-navigation-tabs-0.1.0-alpha.6.tgz#2d10b41f8406e4be7b48f53df60c8f78fdd0c8fb"
   dependencies:
     hoist-non-react-statics "^2.5.0"
     prop-types "^15.6.0"
     react-lifecycles-compat "^1.0.2"
-    react-native-paper "^1.2.4"
+    react-native-paper "^1.2.5"
     react-native-safe-area-view "^0.7.0"
-    react-native-tab-view "^0.0.74"
+    react-native-tab-view "~0.0.77"
 
 react-proxy@^1.1.7:
   version "1.1.8"

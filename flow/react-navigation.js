@@ -488,12 +488,13 @@ declare module 'react-navigation' {
     goBack: (routeKey?: ?string) => boolean,
     dismiss: () => boolean,
     navigate: (
-      routeName: string | {
-        routeName: string,
-        params?: NavigationParams,
-        action?: NavigationNavigateAction,
-        key?: string
-      },
+      routeName: | string
+      | {
+          routeName: string,
+          params?: NavigationParams,
+          action?: NavigationNavigateAction,
+          key?: string,
+        },
       params?: NavigationParams,
       action?: NavigationNavigateAction
     ) => boolean,
@@ -514,6 +515,7 @@ declare module 'react-navigation' {
     ) => boolean,
     pop: (n?: number, params?: { immediate?: boolean }) => boolean,
     popToTop: (params?: { immediate?: boolean }) => boolean,
+    isFocused: () => boolean,
   };
 
   declare export type NavigationNavigatorProps<O: {}, S: {}> = $Shape<{
