@@ -137,7 +137,7 @@ class TabBarBottom extends React.PureComponent {
         maxTabBarItemWidth = flattenedTabStyle.width;
       } else if (
         typeof flattenedTabStyle.width === 'string' &&
-        flattenedTabStyle.endsWith('%')
+        flattenedTabStyle.width.endsWith('%')
       ) {
         const width = parseFloat(flattenedTabStyle.width);
         if (Number.isFinite(width)) {
@@ -147,7 +147,7 @@ class TabBarBottom extends React.PureComponent {
         maxTabBarItemWidth = flattenedTabStyle.maxWidth;
       } else if (
         typeof flattenedTabStyle.maxWidth === 'string' &&
-        flattenedTabStyle.endsWith('%')
+        flattenedTabStyle.width.endsWith('%')
       ) {
         const width = parseFloat(flattenedTabStyle.maxWidth);
         if (Number.isFinite(width)) {
