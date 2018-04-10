@@ -96,9 +96,9 @@ class StackViewLayout extends React.Component {
     // Handle the case where the header option is a function or class, and provide the default
     const renderHeader = CustomHeader
       ? CustomHeader.prototype.render
-        ? (props => <CustomHeader {...props} />)
+        ? props => <CustomHeader {...props} />
         : CustomHeader
-      : (props => <Header {...props} />);
+      : props => <Header {...props} />;
 
     const {
       headerLeftInterpolator,
