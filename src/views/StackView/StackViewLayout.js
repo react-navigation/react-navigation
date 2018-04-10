@@ -93,8 +93,12 @@ class StackViewLayout extends React.Component {
       return header;
     }
 
-    // Handle the case where the header option is a function, and provide the default
-    const renderHeader = header || (props => <Header {...props} />);
+    // Handle the case where the header option is a function or class, and provide the default
+    const renderHeader = header
+      ? header.prototype.render
+        ? (props => <header {...props} />)
+        : header
+      : (props => <Header {...props} />);
 
     const {
       headerLeftInterpolator,
