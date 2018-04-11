@@ -60,6 +60,9 @@ class StackView extends React.Component {
     return (
       <StackViewLayout
         {...navigationConfig}
+        onGestureBegin={this.props.onGestureBegin}
+        onGestureCanceled={this.props.onGestureCanceled}
+        onGestureEnd={this.props.onGestureEnd}
         screenProps={screenProps}
         descriptors={this.props.descriptors}
         transitionProps={transitionProps}
