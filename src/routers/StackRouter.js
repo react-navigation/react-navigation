@@ -523,11 +523,14 @@ export default (routeConfigs, stackConfig = {}) => {
       let nestedAction;
       let nestedQueryString = queryString ? '?' + queryString : '';
       if (childRouters[matchedRouteName]) {
-        nestedAction = childRouters[matchedRouteName].getActionForPathAndParams(
-          pathMatch.slice(pathMatchKeys.length).join('/') + nestedQueryString
-        );
-        if (!nestedAction) {
-          return null;
+        const remainedPath = pathMatch.slice(pathMatchKeys.length).join('/');
+        if (remainedPath.length > 0) {
+          nestedAction = childRouters[matchedRouteName].getActionForPathAndParams(
+            remainedPath + nestedQueryString
+          );
+          if (!nestedAction) {
+            return null;
+          }
         }
       }
 
