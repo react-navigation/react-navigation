@@ -133,11 +133,7 @@ export default class DrawerView extends React.PureComponent {
   };
 
   _renderNavigationView = () => {
-    const {
-      drawerOpenRoute,
-      drawerCloseRoute,
-      drawerToggleRoute,
-    } = this.props;
+    const { drawerOpenRoute, drawerCloseRoute, drawerToggleRoute } = this.props;
 
     return (
       <DrawerSidebar
@@ -153,7 +149,7 @@ export default class DrawerView extends React.PureComponent {
         drawerToggleRoute={drawerToggleRoute}
       />
     );
-  }
+  };
 
   render() {
     const DrawerScreen = this.props.router.getComponentForRouteName(
