@@ -40,8 +40,12 @@ const createTabScreen = (name, icon, focusedIcon, tintColor = '#673ab7') => {
       ),
     };
 
-    state = { showChild: false };
-
+    state = { showChild: false, lastFocusedStateChangeTime: null };
+    componentWillReceiveProps(nextProps) {
+      if (nextProps.isFocused !== this.props.isFocused) {
+        this.setState({lastFocusedStateChangeTime: new Date()})
+      }
+    }
     render() {
       const { isFocused } = this.props;
 
@@ -60,6 +64,7 @@ const createTabScreen = (name, icon, focusedIcon, tintColor = '#673ab7') => {
           <Text style={{ marginBottom: 20 }}>
             {'props.isFocused: ' + (isFocused ? ' true' : 'false')}
           </Text>
+          <Text>last focused/unfocus: {this.state.lastFocusedStateChangeTime ? this.state.lastFocusedStateChangeTime.toLocaleTimeString() : 'never happened'} </Text>
           {this.state.showChild ? (
             <ChildWithNavigationFocus />
           ) : (
