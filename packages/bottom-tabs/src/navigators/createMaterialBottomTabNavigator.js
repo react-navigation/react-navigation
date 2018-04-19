@@ -1,7 +1,7 @@
 /* @flow */
 
 import * as React from 'react';
-import BottomNavigation from 'react-native-paper/src/components/BottomNavigation';
+import { BottomNavigation } from 'react-native-paper';
 import createTabNavigator, {
   type InjectedProps,
 } from '../utils/createTabNavigator';
