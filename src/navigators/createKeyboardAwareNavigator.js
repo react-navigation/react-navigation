@@ -19,27 +19,31 @@ export default Navigator =>
     }
 
     _handleGestureBegin = () => {
-      this._previouslyFocusedTextInput =
-        TextInput.State.currentlyFocusedField();
+      this._previouslyFocusedTextInput = TextInput.State.currentlyFocusedField();
       if (this._previouslyFocusedTextInput) {
         TextInput.State.blurTextInput(this._previouslyFocusedTextInput);
       }
+      this.props.onGestureBegin && this.props.onGestureBegin();
     };
 
     _handleGestureCanceled = () => {
       if (this._previouslyFocusedTextInput) {
         TextInput.State.focusTextInput(this._previouslyFocusedTextInput);
       }
+      this.props.onGestureFinish && this.props.onGestureFinish();
     };
 
     _handleGestureFinish = () => {
       this._previouslyFocusedTextInput = null;
+      this.props.onGestureCanceled && this.props.onGestureCanceled();
     };
 
-    _handleTransitionStart = () => {
+    _handleTransitionStart = (transitionProps, prevTransitionProps) => {
       const currentField = TextInput.State.currentlyFocusedField();
       if (currentField) {
         TextInput.State.blurTextInput(currentField);
       }
+      this.props.onTransitionStart &&
+        this.props.onTransitionStart(transitionProps, prevTransitionProps);
     };
   };
