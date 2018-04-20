@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TextInput, InteractionManager } from 'react-native';
+import { StatusBar, View, TextInput, InteractionManager } from 'react-native';
 import { createStackNavigator, withNavigationFocus } from 'react-navigation';
 import { Button } from './commonComponents/ButtonWithMargin';
 
@@ -17,6 +17,7 @@ class ScreenOne extends React.Component {
           title="Push screen with focused text input"
         />
         <Button onPress={() => navigation.goBack(null)} title="Go Home" />
+        <StatusBar barStyle="default" />
       </View>
     );
   }
