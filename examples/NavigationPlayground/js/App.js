@@ -34,6 +34,7 @@ import StackWithTranslucentHeader from './StackWithTranslucentHeader';
 import SimpleTabs from './SimpleTabs';
 import SwitchWithStacks from './SwitchWithStacks';
 import TabsWithNavigationFocus from './TabsWithNavigationFocus';
+import KeyboardHandlingExample from './KeyboardHandlingExample';
 
 const ExampleInfo = {
   SimpleStack: {
@@ -114,6 +115,11 @@ const ExampleInfo = {
     name: 'withNavigationFocus',
     description: 'Receive the focus prop to know when a screen is focused',
   },
+  KeyboardHandlingExample: {
+    name: 'Keyboard Handling Example',
+    description:
+      'Demo automatic handling of keyboard showing/hiding inside StackNavigator',
+  },
 };
 
 const ExampleRoutes = {
@@ -143,6 +149,7 @@ const ExampleRoutes = {
     path: 'settings',
   },
   TabsWithNavigationFocus,
+  KeyboardHandlingExample,
 };
 
 type State = {
