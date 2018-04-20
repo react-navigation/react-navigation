@@ -9,6 +9,7 @@ import {
   View,
   I18nManager,
   Easing,
+  Dimensions,
 } from 'react-native';
 
 import Card from './StackViewCard';
@@ -16,12 +17,20 @@ import Header from '../Header/Header';
 import NavigationActions from '../../NavigationActions';
 import StackActions from '../../routers/StackActions';
 import SceneView from '../SceneView';
+import withOrientation from '../withOrientation';
 import { NavigationProvider } from '../NavigationContext';
 
 import TransitionConfigs from './StackViewTransitionConfigs';
 import * as ReactNativeFeatures from '../../utils/ReactNativeFeatures';
 
 const emptyFunction = () => {};
+
+const { width: WINDOW_WIDTH, height: WINDOW_HEIGHT } = Dimensions.get('window');
+const IS_IPHONE_X =
+  Platform.OS === 'ios' &&
+  !Platform.isPad &&
+  !Platform.isTVOS &&
+  (WINDOW_HEIGHT === 812 || WINDOW_WIDTH === 812);
 
 const EaseInOut = Easing.inOut(Easing.ease);
 
@@ -450,7 +459,19 @@ class StackViewLayout extends React.Component {
     const headerMode = this._getHeaderMode();
     let marginTop = 0;
     if (!hasHeader && headerMode === 'float') {
-      marginTop = -Header.HEIGHT;
+      const { isLandscape } = this.props;
+      let headerHeight;
+      if (Platform.OS === 'android') {
+        // TODO: Need to handle translucent status bar.
+        headerHeight = 56;
+      } else if (isLandscape && !Platform.isPad) {
+        headerHeight = 52;
+      } else if (IS_IPHONE_X) {
+        headerHeight = 88;
+      } else {
+        headerHeight = 64;
+      }
+      marginTop = -headerHeight;
     }
 
     return (
@@ -480,4 +501,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default StackViewLayout;
+export default withOrientation(StackViewLayout);
