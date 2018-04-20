@@ -6,6 +6,7 @@ import {
   StackActions,
   createNavigator,
   createNavigationContainer,
+  NavigationActions,
 } from 'react-navigation';
 import SceneView from 'react-navigation/src/views/SceneView';
 
@@ -95,7 +96,9 @@ export default function createTabNavigator(TabView: React.ComponentType<*>) {
 
     _handleIndexChange = index => {
       const { navigation } = this.props;
-      navigation.navigate(navigation.state.routes[index].routeName);
+      navigation.dispatch(NavigationActions.navigate({
+        routeName: navigation.state.routes[index].routeName,
+      }));
     };
 
     render() {
