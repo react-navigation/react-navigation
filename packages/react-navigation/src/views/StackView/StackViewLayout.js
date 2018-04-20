@@ -241,12 +241,14 @@ class StackViewLayout extends React.Component {
           onPanResponderTerminate: () => {
             this._isResponding = false;
             this._reset(index, 0);
+            this.props.onGestureCanceled && this.props.onGestureCanceled();
           },
           onPanResponderGrant: () => {
             position.stopAnimation((value: number) => {
               this._isResponding = true;
               this._gestureStartValue = value;
             });
+            this.props.onGestureBegin && this.props.onGestureBegin();
           },
           onMoveShouldSetPanResponder: (event, gesture) => {
             if (index !== scene.index) {
@@ -345,10 +347,12 @@ class StackViewLayout extends React.Component {
               // If the speed of the gesture release is significant, use that as the indication
               // of intent
               if (gestureVelocity < -0.5) {
+                this.props.onGestureCanceled && this.props.onGestureCanceled();
                 this._reset(immediateIndex, resetDuration);
                 return;
               }
               if (gestureVelocity > 0.5) {
+                this.props.onGestureFinish && this.props.onGestureFinish();
                 this._goBack(immediateIndex, goBackDuration);
                 return;
               }
@@ -356,8 +360,10 @@ class StackViewLayout extends React.Component {
               // Then filter based on the distance the screen was moved. Over a third of the way swiped,
               // and the back will happen.
               if (value <= index - POSITION_THRESHOLD) {
+                this.props.onGestureFinish && this.props.onGestureFinish();
                 this._goBack(immediateIndex, goBackDuration);
               } else {
+                this.props.onGestureCanceled && this.props.onGestureCanceled();
                 this._reset(immediateIndex, resetDuration);
               }
             });

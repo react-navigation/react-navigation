@@ -95,6 +95,7 @@ function createNavigator(NavigatorView, router, navigationConfig) {
 
       return (
         <NavigatorView
+          {...this.props}
           screenProps={screenProps}
           navigation={navigation}
           navigationConfig={navigationConfig}
