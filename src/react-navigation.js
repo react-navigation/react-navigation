@@ -51,7 +51,7 @@ module.exports = {
     console.warn(
       'TabNavigator is deprecated. Please use the createBottomTabNavigator or createMaterialTopNavigator instead.'
     );
-    return require('react-navigation-deprecated-tab-navigator').default;
+    return require('react-navigation-deprecated-tab-navigator').createTabNavigator;
   },
   get createBottomTabNavigator() {
     return require('react-navigation-tabs').createBottomTabNavigator;
