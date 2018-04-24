@@ -12,9 +12,9 @@ import TouchableItem from '../TouchableItem';
 
 class HeaderBackButton extends React.PureComponent {
   static defaultProps = {
-    pressColorAndroid: 'rgba(0, 0, 0, .32)',
     tintColor: Platform.select({
       ios: '#037aff',
+      android: '#000000',
     }),
     truncatedTitle: 'Back',
     // eslint-disable-next-line global-require
@@ -50,8 +50,11 @@ class HeaderBackButton extends React.PureComponent {
         : false;
 
     const backButtonTitle = renderTruncated ? truncatedTitle : title;
+    const pressColor = pressColorAndroid
+      ? pressColorAndroid
+      : `rgba(${tintColor}, .32)`;
 
-    return (
+    const BackButton = (
       <TouchableItem
         accessibilityComponentType="button"
         accessibilityLabel={backButtonTitle}
@@ -59,7 +62,7 @@ class HeaderBackButton extends React.PureComponent {
         testID="header-back"
         delayPressIn={0}
         onPress={onPress}
-        pressColor={pressColorAndroid}
+        pressColor={pressColor}
         style={styles.container}
         borderless
       >
@@ -89,10 +92,23 @@ class HeaderBackButton extends React.PureComponent {
         </View>
       </TouchableItem>
     );
+    if (Platform.OS === 'android') {
+      return <View style={styles.containerAndroid}>{BackButton}</View>;
+    }
+    return BackButton;
   }
 }
 
 const styles = StyleSheet.create({
+  containerAndroid: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    marginLeft: 5,
+    overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   container: {
     alignItems: 'center',
     flexDirection: 'row',
@@ -116,7 +132,7 @@ const styles = StyleSheet.create({
       : {
           height: 24,
           width: 24,
-          margin: 8,
+          margin: 2,
           resizeMode: 'contain',
           transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }],
         },
