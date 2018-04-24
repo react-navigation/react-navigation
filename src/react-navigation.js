@@ -42,14 +42,14 @@ module.exports = {
   },
   get createTabNavigator() {
     console.warn(
-      'TabNavigator is deprecated. Please use the createBottomTabNavigator or createMaterialTopNavigator instead.'
+      'createTabNavigator is deprecated. Please use the createBottomTabNavigator or createMaterialTopTabNavigator instead.'
     );
     return require('react-navigation-deprecated-tab-navigator')
       .createTabNavigator;
   },
   get TabNavigator() {
     console.warn(
-      'TabNavigator is deprecated. Please use the createBottomTabNavigator or createMaterialTopNavigator instead.'
+      'TabNavigator is deprecated. Please use the createBottomTabNavigator or createMaterialTopTabNavigator instead.'
     );
     return require('react-navigation-deprecated-tab-navigator')
       .createTabNavigator;
