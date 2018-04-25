@@ -120,11 +120,12 @@ const StateUtils = {
    * stack is at and updates the routes array accordingly.
    */
   replaceAndPrune(state, key, route) {
-    let replaced = StateUtils.replaceAt(state, key, route);
+    const index = StateUtils.indexOf(state, key);
+    const replaced = StateUtils.replaceAtIndex(state, index, route);
 
     return {
       ...replaced,
-      routes: replaced.routes.slice(0, replaced.index + 1),
+      routes: replaced.routes.slice(0, index + 1),
     };
   },
 

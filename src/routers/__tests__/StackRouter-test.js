@@ -721,10 +721,12 @@ describe('StackRouter', () => {
     });
 
     const state = router.getStateForAction({ type: NavigationActions.INIT });
+
     const first = router.getStateForAction(
       NavigationActions.navigate({ routeName: 'First2' }),
       state
     );
+
     const second = router.getStateForAction(
       NavigationActions.navigate({ routeName: 'Second2' }),
       first
