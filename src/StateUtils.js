@@ -126,6 +126,7 @@ const StateUtils = {
     return {
       ...replaced,
       routes: replaced.routes.slice(0, index + 1),
+      index,
     };
   },
 
