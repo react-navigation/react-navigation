@@ -130,7 +130,6 @@ const ExampleInfo = {
 const ExampleRoutes = {
   SimpleStack,
   SwitchWithStacks,
-  InactiveStack,
   SimpleTabs: SimpleTabs,
   Drawer: Drawer,
   // MultipleDrawer: {
@@ -156,6 +155,7 @@ const ExampleRoutes = {
   },
   TabsWithNavigationFocus,
   KeyboardHandlingExample,
+  InactiveStack,
 };
 
 type State = {
@@ -320,7 +320,7 @@ const AppNavigator = createStackNavigator(
   }
 );
 
-export default () => <AppNavigator />;
+export default () => <AppNavigator persistenceKey="NavState" />;
 
 const styles = StyleSheet.create({
   item: {

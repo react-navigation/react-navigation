@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Text, View, StyleSheet } from 'react-native';
+import { Button, Text, StatusBar, View, StyleSheet } from 'react-native';
 import {
   SafeAreaView,
   createStackNavigator,
@@ -8,15 +8,12 @@ import {
 } from 'react-navigation';
 
 const runSubRoutes = navigation => {
-  // expected: `navigation.dispatch(toFirst2)` navigates back to existing `First.First2`
-  // actual: duplicate `First.First2` is pushed
   navigation.dispatch(NavigationActions.navigate({ routeName: 'First2' }));
   navigation.dispatch(NavigationActions.navigate({ routeName: 'Second2' }));
   navigation.dispatch(NavigationActions.navigate({ routeName: 'First2' }));
 };
 
 const runSubRoutesWithIntermediate = navigation => {
-  // works with explicit intermediate step to `First` navigator
   navigation.dispatch(toFirst1);
   navigation.dispatch(toSecond2);
   navigation.dispatch(toFirst);
@@ -24,8 +21,6 @@ const runSubRoutesWithIntermediate = navigation => {
 };
 
 const runSubAction = navigation => {
-  // expected: `navigation.dispatch(toFirstChild1)` navigates to 'First1'.
-  // actual: navigates to 'First2'. Seems to find 'First' but not run `action`
   navigation.dispatch(toFirst2);
   navigation.dispatch(toSecond2);
   navigation.dispatch(toFirstChild1);
@@ -64,6 +59,7 @@ const DummyScreen = ({ routeName, navigation, style }) => {
           onPress={() => runSubAction(navigation)}
         />
       </View>
+      <StatusBar barStyle="default" />
     </SafeAreaView>
   );
 };
