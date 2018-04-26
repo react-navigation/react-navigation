@@ -48,7 +48,8 @@ const ExampleInfo = {
   },
   InactiveStack: {
     name: 'Navigate idempotently to stacks in inactive routes',
-    description: 'Weird description I know',
+    description:
+      'An inactive route in a stack should be given the opportunity to handle actions',
   },
   StackWithCustomHeaderBackImage: {
     name: 'Custom header back image',
@@ -155,7 +156,8 @@ const ExampleRoutes = {
   },
   TabsWithNavigationFocus,
   KeyboardHandlingExample,
-  InactiveStack,
+  // This is commented out because it's rarely useful
+  // InactiveStack,
 };
 
 type State = {

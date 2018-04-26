@@ -251,7 +251,9 @@ export default (routeConfigs, stackConfig = {}) => {
           }
         }
       } else if (action.type === NavigationActions.NAVIGATE) {
-        for (let childRoute of [...state.routes].reverse()) {
+        // Traverse routes from the top of the stack to the bottom, so the
+        // active route has the first opportunity, then the one before it, etc.
+        for (let childRoute of state.routes.slice().reverse()) {
           let childRouter = childRouters[childRoute.routeName];
           let debug = action.params && action.params.debug;
 
