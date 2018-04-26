@@ -126,7 +126,6 @@ const StateUtils = {
     return {
       ...replaced,
       routes: replaced.routes.slice(0, index + 1),
-      index,
     };
   },
 
@@ -153,7 +152,7 @@ const StateUtils = {
       route.key
     );
 
-    if (state.routes[index] === route) {
+    if (state.routes[index] === route && index === state.index) {
       return state;
     }
 
