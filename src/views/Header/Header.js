@@ -24,7 +24,9 @@ const TITLE_OFFSET = Platform.OS === 'ios' ? 70 : 56;
 
 const getAppBarHeight = isLandscape => {
   return Platform.OS === 'ios'
-    ? isLandscape && !Platform.isPad ? 32 : 44
+    ? isLandscape && !Platform.isPad
+      ? 32
+      : 44
     : 56;
 };
 

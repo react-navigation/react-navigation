@@ -67,7 +67,7 @@
   "jest": {
     "notify": true,
     "preset": "react-native",
-    "testRegex": "./src/.*\\-test\\.js$",
+    "testRegex": "/__tests__/[^/]+-test\\.js$",
     "setupFiles": [
       "<rootDir>/jest-setup.js"
     ],
@@ -82,8 +82,11 @@
     "coveragePathIgnorePatterns": [
       "jest-setup.js"
     ],
+    "moduleNameMapper": {
+      "\\.png$": "<rootDir>/assetsTransformer.js"
+    },
     "modulePathIgnorePatterns": [
-      "examples"
+      "<rootDir>/examples/"
     ],
     "transformIgnorePatterns": [
       "node_modules/(?!(jest-)?react-native|react-clone-referenced-element|react-navigation-deprecated-tab-navigator)"
