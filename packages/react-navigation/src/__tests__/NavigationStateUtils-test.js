@@ -202,7 +202,7 @@ describe('StateUtils', () => {
     ).toEqual(newState);
   });
 
-  it('Returns the state if index matches the route', () => {
+  it('Returns the state with updated index if route is unchanged but index changes', () => {
     const state = {
       index: 0,
       routes: [{ key: 'a', routeName }, { key: 'b', routeName }],
@@ -210,7 +210,7 @@ describe('StateUtils', () => {
     };
     expect(
       NavigationStateUtils.replaceAtIndex(state, 1, state.routes[1])
-    ).toEqual(state);
+    ).toEqual({ ...state, index: 1 });
   });
 
   // Reset

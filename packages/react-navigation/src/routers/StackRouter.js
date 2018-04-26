@@ -27,6 +27,10 @@ function behavesLikePushAction(action) {
 
 const defaultActionCreators = (route, navStateKey) => ({});
 
+function isResetToRootStack(action) {
+  return action.type === StackActions.RESET && action.key === null;
+}
+
 export default (routeConfigs, stackConfig = {}) => {
   // Fail fast on invalid route definitions
   validateRouteConfigMap(routeConfigs);
@@ -223,7 +227,10 @@ export default (routeConfigs, stackConfig = {}) => {
 
       // Check if the focused child scene wants to handle the action, as long as
       // it is not a reset to the root stack
-      if (action.type !== StackActions.RESET || action.key !== null) {
+      if (
+        !isResetToRootStack(action) &&
+        action.type !== NavigationActions.NAVIGATE
+      ) {
         const keyIndex = action.key
           ? StateUtils.indexOf(state, action.key)
           : -1;
@@ -241,6 +248,28 @@ export default (routeConfigs, stackConfig = {}) => {
           }
           if (route && route !== childRoute) {
             return StateUtils.replaceAt(state, childRoute.key, route);
+          }
+        }
+      } else if (action.type === NavigationActions.NAVIGATE) {
+        // Traverse routes from the top of the stack to the bottom, so the
+        // active route has the first opportunity, then the one before it, etc.
+        for (let childRoute of state.routes.slice().reverse()) {
+          let childRouter = childRouters[childRoute.routeName];
+          let debug = action.params && action.params.debug;
+
+          if (childRouter) {
+            const nextRouteState = childRouter.getStateForAction(
+              action,
+              childRoute
+            );
+
+            if (nextRouteState === null || nextRouteState !== childRoute) {
+              return StateUtils.replaceAndPrune(
+                state,
+                nextRouteState ? nextRouteState.key : childRoute.key,
+                nextRouteState ? nextRouteState : childRoute
+              );
+            }
           }
         }
       }
