@@ -369,7 +369,11 @@ declare module 'react-navigation' {
     headerMode?: HeaderMode,
     headerTransitionPreset?: 'fade-in-place' | 'uikit',
     cardStyle?: ViewStyleProp,
-    transitionConfig?: () => TransitionConfig,
+    transitionConfig?: (
+      transitionProps: NavigationTransitionProps,
+      prevTransitionProps: NavigationTransitionProps,
+      isModal: boolean
+    ) => TransitionConfig,
     onTransitionStart?: () => void,
     onTransitionEnd?: () => void,
   |};
@@ -887,7 +891,11 @@ declare module 'react-navigation' {
     /**
      * Optional custom animation when transitioning between screens.
      */
-    transitionConfig?: () => TransitionConfig,
+    transitionConfig?: (
+      transitionProps: NavigationTransitionProps,
+      prevTransitionProps: NavigationTransitionProps,
+      isModal: boolean
+    ) => TransitionConfig,
   } & NavigationNavigatorProps<NavigationStackScreenOptions, NavigationState>;
   declare export var CardStackTransitioner: React$ComponentType<
     _CardStackTransitionerProps
@@ -905,7 +913,11 @@ declare module 'react-navigation' {
     /**
      * Optional custom animation when transitioning between screens.
      */
-    transitionConfig?: () => TransitionConfig,
+    transitionConfig?: (
+      transitionProps: NavigationTransitionProps,
+      prevTransitionProps: NavigationTransitionProps,
+      isModal: boolean
+    ) => TransitionConfig,
     // NavigationTransitionProps:
     layout: NavigationLayout,
     navigation: NavigationScreenProp<NavigationState>,
