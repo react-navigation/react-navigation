@@ -1,0 +1,40 @@
+{
+  "compilerOptions": {
+    "module": "es2015",
+    "target": "es2015",
+    "lib": ["dom", "es2015", "es2016"],
+    "sourceMap": false,
+    "moduleResolution": "node",
+    "rootDir": "src",
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "noUnusedLocals": true,
+    "declaration": true,
+    "pretty": true,
+    "jsx": "react-native",
+    "noEmitHelpers": true,
+    "importHelpers": true,
+    "strict": true
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx"
+  ],
+  "exclude": [
+    "src/**/*.d.ts",
+    "src/**/*.d.tsx",
+    "node_modules"
+  ],
+  "typeAcquisition": {
+    "enable": true,
+    "include": [
+      "prop-types",
+      "react",
+      "react-native"
+    ]
+  }
+}

@@ -13,13 +13,21 @@
     "start": "npm run ios",
     "ios": "cd examples/NavigationPlayground && yarn && yarn ios",
     "android": "cd examples/NavigationPlayground && yarn && yarn android",
-    "test": "npm run lint && npm run jest",
+    "pretest": "npm run lint && npm run build",
+    "test": "npm run jest",
     "codecov": "codecov",
     "jest": "jest",
     "test-update-snapshot": "jest --updateSnapshot",
-    "lint": "eslint .",
+    "lint": "npm run lint:es && npm run lint:ts",
+    "lint:es": "eslint .",
+    "lint:ts": "tslint --project tsconfig.test.json",
     "format": "eslint --fix .",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "prettier:js": "prettier --write flow/react-navigation.js",
+    "prettier:ts": "prettier --parser typescript --write src/**/*.ts",
+    "build": "tsc",
+    "build:watch": "tsc -p tsconfig.test.json --watch",
+    "watch": "npm test -- --watch"
   },
   "files": [
     "src"
@@ -41,6 +49,7 @@
     "react-navigation-tabs": "0.1.0-alpha.8"
   },
   "devDependencies": {
+    "@types/jest": "^22.2.3",
     "babel-cli": "^6.24.1",
     "babel-core": "^6.25.0",
     "babel-eslint": "^7.2.3",
@@ -62,12 +71,15 @@
     "react": "16.2.0",
     "react-native": "^0.52.0",
     "react-native-vector-icons": "^4.2.0",
-    "react-test-renderer": "^16.0.0"
+    "react-test-renderer": "^16.0.0",
+    "ts-jest": "^22.4.4",
+    "tslint": "^5.9.1",
+    "typescript": "^2.8.3"
   },
   "jest": {
     "notify": true,
     "preset": "react-native",
-    "testRegex": "/__tests__/[^/]+-test\\.js$",
+    "testRegex": "/__tests__/[^/]+-test\\.[jt]sx?$",
     "setupFiles": [
       "<rootDir>/jest-setup.js"
     ],
@@ -88,14 +100,21 @@
     "modulePathIgnorePatterns": [
       "<rootDir>/examples/"
     ],
+    "transform": {
+      "^.+\\.tsx?$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    },
     "transformIgnorePatterns": [
       "node_modules/(?!(jest-)?react-native|react-clone-referenced-element|react-navigation-deprecated-tab-navigator)"
     ]
   },
   "lint-staged": {
+    "*.ts": [
+      "npm run prettier:ts",
+      "git add"
+    ],
     "*.js": [
-      "eslint --fix",
-      "prettier --write flow/react-navigation.js",
+      "npm run format",
+      "npm run prettier:js",
       "git add"
     ]
   }

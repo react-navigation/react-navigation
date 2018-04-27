@@ -1,2 +1,5 @@
 examples
 __tests__
+
+*.ts
+!*.d.ts
