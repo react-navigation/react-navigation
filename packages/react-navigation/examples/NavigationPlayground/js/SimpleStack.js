@@ -4,6 +4,8 @@
 
 import type {
   NavigationScreenProp,
+  NavigationState,
+  NavigationStateRoute,
   NavigationEventSubscription,
 } from 'react-navigation';
 
@@ -19,11 +21,15 @@ import { Button } from './commonComponents/ButtonWithMargin';
 import { HeaderButtons } from './commonComponents/HeaderButtons';
 
 type MyNavScreenProps = {
-  navigation: NavigationScreenProp<*>,
+  navigation: NavigationScreenProp<NavigationState>,
   banner: React.Node,
 };
 
-class MyBackButton extends React.Component<any, any> {
+type BackButtonProps = {
+  navigation: NavigationScreenProp<NavigationStateRoute>,
+};
+
+class MyBackButton extends React.Component<BackButtonProps, any> {
   render() {
     return (
       <HeaderButtons>
@@ -68,7 +74,7 @@ class MyNavScreen extends React.Component<MyNavScreenProps> {
 }
 
 type MyHomeScreenProps = {
-  navigation: NavigationScreenProp<*>,
+  navigation: NavigationScreenProp<NavigationState>,
 };
 
 class MyHomeScreen extends React.Component<MyHomeScreenProps> {
@@ -112,7 +118,7 @@ class MyHomeScreen extends React.Component<MyHomeScreenProps> {
 }
 
 type MyPhotosScreenProps = {
-  navigation: NavigationScreenProp<*>,
+  navigation: NavigationScreenProp<NavigationState>,
 };
 class MyPhotosScreen extends React.Component<MyPhotosScreenProps> {
   static navigationOptions = {
@@ -153,7 +159,7 @@ class MyPhotosScreen extends React.Component<MyPhotosScreenProps> {
     const { navigation } = this.props;
     return (
       <MyNavScreen
-        banner={`${navigation.state.params.name}'s Photos`}
+        banner={`${navigation.getParam('name')}'s Photos`}
         navigation={navigation}
       />
     );
@@ -162,9 +168,9 @@ class MyPhotosScreen extends React.Component<MyPhotosScreenProps> {
 
 const MyProfileScreen = ({ navigation }) => (
   <MyNavScreen
-    banner={`${navigation.state.params.mode === 'edit' ? 'Now Editing ' : ''}${
-      navigation.state.params.name
-    }'s Profile`}
+    banner={`${
+      navigation.getParam('mode') === 'edit' ? 'Now Editing ' : ''
+    }${navigation.getParam('name')}'s Profile`}
     navigation={navigation}
   />
 );
