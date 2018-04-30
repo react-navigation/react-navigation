@@ -140,6 +140,46 @@ describe('TabRouter', () => {
     expect(state2 && state2.routes[0].params).toEqual({ name: 'Qux' });
   });
 
+  test('Handles the SetParams action for inactive routes', () => {
+    const router = TabRouter(
+      {
+        Foo: {
+          screen: () => <div />,
+        },
+        Bar: {
+          screen: () => <div />,
+        },
+      },
+      {
+        initialRouteName: 'Bar',
+      }
+    );
+    const initialState = {
+      index: 1,
+      routes: [
+        {
+          key: 'RouteA',
+          routeName: 'Foo',
+          params: { name: 'InitialParam', other: 'Unchanged' },
+        },
+        { key: 'RouteB', routeName: 'Bar', params: {} },
+      ],
+    };
+    const state = router.getStateForAction(
+      {
+        type: NavigationActions.SET_PARAMS,
+        params: { name: 'NewParam' },
+        key: 'RouteA',
+      },
+      initialState
+    );
+    expect(state.index).toEqual(1);
+    expect(state.routes[0].params).toEqual({
+      name: 'NewParam',
+      other: 'Unchanged',
+    });
+  });
+
   test('getStateForAction returns null when navigating to same tab', () => {
     const router = TabRouter(
       { Foo: BareLeafRouteConfig, Bar: BareLeafRouteConfig },
