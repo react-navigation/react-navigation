@@ -11,9 +11,9 @@
     "test": "flow"
   },
   "dependencies": {
-    "expo": "^25.0.0",
-    "react": "16.2.0",
-    "react-native": "^0.52.0",
+    "expo": "^26.0.0",
+    "react": "16.3.0-alpha.1",
+    "react-native": "^0.54.0",
     "react-native-iphone-x-helper": "^1.0.2",
     "react-navigation": "link:../..",
     "react-navigation-header-buttons": "^0.0.4"
@@ -23,9 +23,9 @@
     "babel-plugin-transform-remove-console": "^6.9.0",
     "flow-bin": "^0.61.0",
     "jest": "^22.1.3",
-    "jest-expo": "^25.1.0",
-    "react-native-scripts": "^1.11.1",
-    "react-test-renderer": "16.0.0"
+    "jest-expo": "^26.0.0",
+    "react-native-scripts": "^1.5.0",
+    "react-test-renderer": "16.3.0-alpha.1"
   },
   "jest": {
     "preset": "jest-expo",

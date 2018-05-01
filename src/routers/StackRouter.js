@@ -25,6 +25,12 @@ function behavesLikePushAction(action) {
   );
 }
 
+const defaultActionCreators = (route, navStateKey) => ({});
+
+function isResetToRootStack(action) {
+  return action.type === StackActions.RESET && action.key === null;
+}
+
 export default (routeConfigs, stackConfig = {}) => {
   // Fail fast on invalid route definitions
   validateRouteConfigMap(routeConfigs);
@@ -44,7 +50,9 @@ export default (routeConfigs, stackConfig = {}) => {
     }
   });
 
-  const { initialRouteParams, getActionCreators } = stackConfig;
+  const { initialRouteParams } = stackConfig;
+  const getCustomActionCreators =
+    stackConfig.getCustomActionCreators || defaultActionCreators;
 
   const initialRouteName = stackConfig.initialRouteName || routeNames[0];
 
@@ -157,39 +165,57 @@ export default (routeConfigs, stackConfig = {}) => {
     getActionCreators(route, navStateKey) {
       return {
         ...getNavigationActionCreators(route, navStateKey),
-        ...(getActionCreators ? getActionCreators(route, navStateKey) : {}),
-        pop: (n, params) => ({
-          type: StackActions.POP,
-          n,
-          ...params,
-        }),
-        popToTop: params => ({
-          type: StackActions.POP_TO_TOP,
-          ...params,
-        }),
-        push: (routeName, params, action) => ({
-          type: StackActions.PUSH,
-          routeName,
-          params,
-          action,
-        }),
-        replace: (routeName, params, action) => ({
-          type: StackActions.REPLACE,
-          routeName,
-          params,
-          action,
-          key: route.key,
-        }),
-        reset: (actions, index) => ({
-          type: StackActions.RESET,
-          actions,
-          index: index == null ? actions.length - 1 : index,
-          key: navStateKey,
-        }),
-        dismiss: () => ({
-          type: NavigationActions.BACK,
-          key: navStateKey,
-        }),
+        ...getCustomActionCreators(route, navStateKey),
+        pop: (n, params) =>
+          StackActions.pop({
+            n,
+            ...params,
+          }),
+        popToTop: params => StackActions.popToTop(params),
+        push: (routeName, params, action) =>
+          StackActions.push({
+            routeName,
+            params,
+            action,
+          }),
+        replace: (replaceWith, params, action, newKey) => {
+          if (typeof replaceWith === 'string') {
+            return StackActions.replace({
+              routeName: replaceWith,
+              params,
+              action,
+              key: route.key,
+              newKey,
+            });
+          }
+          invariant(
+            typeof replaceWith === 'object',
+            'Must replaceWith an object or a string'
+          );
+          invariant(
+            params == null,
+            'Params must not be provided to .replace() when specifying an object'
+          );
+          invariant(
+            action == null,
+            'Child action must not be provided to .replace() when specifying an object'
+          );
+          invariant(
+            newKey == null,
+            'Child action must not be provided to .replace() when specifying an object'
+          );
+          return StackActions.replace(replaceWith);
+        },
+        reset: (actions, index) =>
+          StackActions.reset({
+            actions,
+            index: index == null ? actions.length - 1 : index,
+            key: navStateKey,
+          }),
+        dismiss: () =>
+          NavigationActions.back({
+            key: navStateKey,
+          }),
       };
     },
 
@@ -201,7 +227,10 @@ export default (routeConfigs, stackConfig = {}) => {
 
       // Check if the focused child scene wants to handle the action, as long as
       // it is not a reset to the root stack
-      if (action.type !== StackActions.RESET || action.key !== null) {
+      if (
+        !isResetToRootStack(action) &&
+        action.type !== NavigationActions.NAVIGATE
+      ) {
         const keyIndex = action.key
           ? StateUtils.indexOf(state, action.key)
           : -1;
@@ -219,6 +248,28 @@ export default (routeConfigs, stackConfig = {}) => {
           }
           if (route && route !== childRoute) {
             return StateUtils.replaceAt(state, childRoute.key, route);
+          }
+        }
+      } else if (action.type === NavigationActions.NAVIGATE) {
+        // Traverse routes from the top of the stack to the bottom, so the
+        // active route has the first opportunity, then the one before it, etc.
+        for (let childRoute of state.routes.slice().reverse()) {
+          let childRouter = childRouters[childRoute.routeName];
+          let debug = action.params && action.params.debug;
+
+          if (childRouter) {
+            const nextRouteState = childRouter.getStateForAction(
+              action,
+              childRoute
+            );
+
+            if (nextRouteState === null || nextRouteState !== childRoute) {
+              return StateUtils.replaceAndPrune(
+                state,
+                nextRouteState ? nextRouteState.key : childRoute.key,
+                nextRouteState ? nextRouteState : childRoute
+              );
+            }
           }
         }
       }

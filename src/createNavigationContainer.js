@@ -208,24 +208,33 @@ export default function createNavigationContainer(Component) {
       _statefulContainerCount++;
       Linking.addEventListener('url', this._handleOpenURL);
 
+      // Pull out anything that can impact state
       const { persistenceKey } = this.props;
       const startupStateJSON =
         persistenceKey && (await AsyncStorage.getItem(persistenceKey));
-      let startupState = null;
-      try {
-        startupState = startupStateJSON && JSON.parse(startupStateJSON);
-        _reactNavigationIsHydratingState = true;
-      } catch (e) {}
+      const url = await Linking.getInitialURL();
+      const parsedUrl = url && this._urlToPathAndParams(url);
 
+      // Initialize state. This must be done *after* any async code
+      // so we don't end up with a different value for this.state.nav
+      // due to changes while async function was resolving
       let action = this._initialAction;
+      let startupState = this.state.nav;
       if (!startupState) {
         !!process.env.REACT_NAV_LOGGING &&
           console.log('Init new Navigation State');
         startupState = Component.router.getStateForAction(action);
       }
 
-      const url = await Linking.getInitialURL();
-      const parsedUrl = url && this._urlToPathAndParams(url);
+      // Pull persisted state from AsyncStorage
+      if (startupStateJSON) {
+        try {
+          startupState = JSON.parse(startupStateJSON);
+          _reactNavigationIsHydratingState = true;
+        } catch (e) {}
+      }
+
+      // Pull state out of URL
       if (parsedUrl) {
         const { path, params } = parsedUrl;
         const urlAction = Component.router.getActionForPathAndParams(
@@ -242,6 +251,11 @@ export default function createNavigationContainer(Component) {
           );
         }
       }
+
+      if (startupState === this.state.nav) {
+        return;
+      }
+
       this.setState({ nav: startupState }, () => {
         _reactNavigationIsHydratingState = false;
         this._actionEventSubscribers.forEach(subscriber =>

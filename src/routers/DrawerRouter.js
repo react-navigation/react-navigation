@@ -18,9 +18,9 @@ export default (routeConfigs, config = {}) => {
 
     getActionCreators(route, navStateKey) {
       return {
-        openDrawer: () => ({ type: DrawerActions.OPEN_DRAWER }),
-        closeDrawer: () => ({ type: DrawerActions.CLOSE_DRAWER }),
-        toggleDrawer: () => ({ type: DrawerActions.TOGGLE_DRAWER }),
+        openDrawer: () => DrawerActions.openDrawer({ key: navStateKey }),
+        closeDrawer: () => DrawerActions.closeDrawer({ key: navStateKey }),
+        toggleDrawer: () => DrawerActions.toggleDrawer({ key: navStateKey }),
         ...switchRouter.getActionCreators(route, navStateKey),
       };
     },
@@ -31,20 +31,31 @@ export default (routeConfigs, config = {}) => {
         isDrawerOpen: false,
       };
 
-      // Handle explicit drawer actions
-      if (state.isDrawerOpen && action.type === DrawerActions.CLOSE_DRAWER) {
+      const isRouterTargeted = action.key == null || action.key === state.key;
+
+      if (
+        isRouterTargeted &&
+        action.type === DrawerActions.CLOSE_DRAWER &&
+        state.isDrawerOpen
+      ) {
         return {
           ...state,
           isDrawerOpen: false,
         };
       }
-      if (!state.isDrawerOpen && action.type === DrawerActions.OPEN_DRAWER) {
+
+      if (
+        isRouterTargeted &&
+        action.type === DrawerActions.OPEN_DRAWER &&
+        !state.isDrawerOpen
+      ) {
         return {
           ...state,
           isDrawerOpen: true,
         };
       }
-      if (action.type === DrawerActions.TOGGLE_DRAWER) {
+
+      if (isRouterTargeted && action.type === DrawerActions.TOGGLE_DRAWER) {
         return {
           ...state,
           isDrawerOpen: !state.isDrawerOpen,

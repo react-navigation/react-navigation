@@ -5,7 +5,6 @@ import React from 'react';
 import StackRouter from '../StackRouter';
 import StackActions from '../StackActions';
 import NavigationActions from '../../NavigationActions';
-import TabRouter from '../TabRouter';
 import { _TESTING_ONLY_normalize_keys } from '../KeyGenerator';
 
 beforeEach(() => {
@@ -484,6 +483,44 @@ describe('StackRouter', () => {
     expect(state3 && state3.index).toEqual(0);
   });
 
+  test('pop action works as expected', () => {
+    const TestRouter = StackRouter({
+      foo: { screen: () => <div /> },
+      bar: { screen: () => <div /> },
+    });
+
+    const state = {
+      index: 3,
+      isTransitioning: false,
+      routes: [
+        { key: 'A', routeName: 'foo' },
+        { key: 'B', routeName: 'bar', params: { bazId: '321' } },
+        { key: 'C', routeName: 'foo' },
+        { key: 'D', routeName: 'bar' },
+      ],
+    };
+    const poppedState = TestRouter.getStateForAction(StackActions.pop(), state);
+    expect(poppedState.routes.length).toBe(3);
+    expect(poppedState.index).toBe(2);
+    expect(poppedState.isTransitioning).toBe(true);
+
+    const poppedState2 = TestRouter.getStateForAction(
+      StackActions.pop({ n: 2, immediate: true }),
+      state
+    );
+    expect(poppedState2.routes.length).toBe(2);
+    expect(poppedState2.index).toBe(1);
+    expect(poppedState2.isTransitioning).toBe(false);
+
+    const poppedState3 = TestRouter.getStateForAction(
+      StackActions.pop({ n: 5 }),
+      state
+    );
+    expect(poppedState3.routes.length).toBe(1);
+    expect(poppedState3.index).toBe(0);
+    expect(poppedState3.isTransitioning).toBe(true);
+  });
+
   test('popToTop works as expected', () => {
     const TestRouter = StackRouter({
       foo: { screen: () => <div /> },
@@ -642,23 +679,74 @@ describe('StackRouter', () => {
     expect(pushedState).toEqual(null);
   });
 
-  test('Navigate with key is idempotent', () => {
+  test('Navigate with key and without it is idempotent', () => {
     const TestRouter = StackRouter({
       foo: { screen: () => <div /> },
       bar: { screen: () => <div /> },
     });
     const initState = TestRouter.getStateForAction(NavigationActions.init());
-    const pushedState = TestRouter.getStateForAction(
-      NavigationActions.navigate({ routeName: 'bar', key: 'a' }),
-      initState
+    for (key of ['a', null]) {
+      const pushedState = TestRouter.getStateForAction(
+        NavigationActions.navigate({ routeName: 'bar', key: 'a' }),
+        initState
+      );
+      expect(pushedState.index).toEqual(1);
+      expect(pushedState.routes[1].routeName).toEqual('bar');
+      const pushedTwiceState = TestRouter.getStateForAction(
+        NavigationActions.navigate({ routeName: 'bar', key: 'a' }),
+        pushedState
+      );
+      expect(pushedTwiceState).toEqual(null);
+    }
+  });
+
+  // https://github.com/react-navigation/react-navigation/issues/4063
+  test('Navigate on inactive stackrouter is idempotent', () => {
+    const FirstChildNavigator = () => <div />;
+    FirstChildNavigator.router = StackRouter({
+      First1: () => <div />,
+      First2: () => <div />,
+    });
+
+    const SecondChildNavigator = () => <div />;
+    SecondChildNavigator.router = StackRouter({
+      Second1: () => <div />,
+      Second2: () => <div />,
+    });
+
+    const router = StackRouter({
+      Leaf: () => <div />,
+      First: FirstChildNavigator,
+      Second: SecondChildNavigator,
+    });
+
+    const state = router.getStateForAction({ type: NavigationActions.INIT });
+
+    const first = router.getStateForAction(
+      NavigationActions.navigate({ routeName: 'First2' }),
+      state
     );
-    expect(pushedState.index).toEqual(1);
-    expect(pushedState.routes[1].routeName).toEqual('bar');
-    const pushedTwiceState = TestRouter.getStateForAction(
-      NavigationActions.navigate({ routeName: 'bar', key: 'a' }),
-      pushedState
+
+    const second = router.getStateForAction(
+      NavigationActions.navigate({ routeName: 'Second2' }),
+      first
     );
-    expect(pushedTwiceState).toEqual(null);
+
+    const firstAgain = router.getStateForAction(
+      NavigationActions.navigate({
+        routeName: 'First2',
+        params: { debug: true },
+      }),
+      second
+    );
+
+    expect(first.routes.length).toEqual(2);
+    expect(first.index).toEqual(1);
+    expect(second.routes.length).toEqual(3);
+    expect(second.index).toEqual(2);
+
+    expect(firstAgain.index).toEqual(1);
+    expect(firstAgain.routes.length).toEqual(2);
   });
 
   test('Navigate to current routeName returns null to indicate handled action', () => {
@@ -1079,15 +1167,51 @@ describe('StackRouter', () => {
     expect(state2 && state2.routes[0].params).toEqual({ name: 'Qux' });
   });
 
+  test('Handles the SetParams action for inactive routes', () => {
+    const router = StackRouter(
+      {
+        Foo: {
+          screen: () => <div />,
+        },
+        Bar: {
+          screen: () => <div />,
+        },
+      },
+      {
+        initialRouteName: 'Bar',
+        initialRouteParams: { name: 'Zoo' },
+      }
+    );
+    const initialState = {
+      index: 1,
+      routes: [
+        {
+          key: 'RouteA',
+          routeName: 'Foo',
+          params: { name: 'InitialParam', other: 'Unchanged' },
+        },
+        { key: 'RouteB', routeName: 'Bar', params: {} },
+      ],
+    };
+    const state = router.getStateForAction(
+      {
+        type: NavigationActions.SET_PARAMS,
+        params: { name: 'NewParam' },
+        key: 'RouteA',
+      },
+      initialState
+    );
+    expect(state.index).toEqual(1);
+    expect(state.routes[0].params).toEqual({
+      name: 'NewParam',
+      other: 'Unchanged',
+    });
+  });
+
   test('Handles the setParams action with nested routers', () => {
     const ChildNavigator = () => <div />;
-    const GrandChildNavigator = () => <div />;
-    GrandChildNavigator.router = StackRouter({
-      Quux: { screen: () => <div /> },
-      Corge: { screen: () => <div /> },
-    });
-    ChildNavigator.router = TabRouter({
-      Baz: { screen: GrandChildNavigator },
+    ChildNavigator.router = StackRouter({
+      Baz: { screen: () => <div /> },
       Qux: { screen: () => <div /> },
     });
     const router = StackRouter({
@@ -1104,10 +1228,10 @@ describe('StackRouter', () => {
       state
     );
     expect(state2 && state2.index).toEqual(0);
-    expect(state2 && state2.routes[0].routes[0].routes).toEqual([
+    expect(state2 && state2.routes[0].routes).toEqual([
       {
         key: 'id-0',
-        routeName: 'Quux',
+        routeName: 'Baz',
         params: { name: 'foobar' },
       },
     ]);
@@ -1193,7 +1317,7 @@ describe('StackRouter', () => {
   });
 
   test('Handles the reset action with nested Router', () => {
-    const ChildRouter = TabRouter({
+    const ChildRouter = StackRouter({
       baz: {
         screen: () => <div />,
       },
@@ -1214,6 +1338,7 @@ describe('StackRouter', () => {
     const state2 = router.getStateForAction(
       {
         type: StackActions.RESET,
+        key: null,
         actions: [
           {
             type: NavigationActions.NAVIGATE,
@@ -1443,42 +1568,6 @@ describe('StackRouter', () => {
         },
       ],
     });
-  });
-
-  test('Handles the navigate action with params and nested TabRouter', () => {
-    const ChildNavigator = () => <div />;
-    ChildNavigator.router = TabRouter({
-      Baz: { screen: () => <div /> },
-      Boo: { screen: () => <div /> },
-    });
-
-    const router = StackRouter({
-      Foo: { screen: () => <div /> },
-      Bar: { screen: ChildNavigator },
-    });
-    const state = router.getStateForAction({ type: NavigationActions.INIT });
-    const state2 = router.getStateForAction(
-      {
-        type: NavigationActions.NAVIGATE,
-        immediate: true,
-        routeName: 'Bar',
-        params: { foo: '42' },
-      },
-      state
-    );
-    expect(state2 && state2.routes[1].params).toEqual({ foo: '42' });
-    expect(state2 && state2.routes[1].routes).toEqual([
-      {
-        key: 'Baz',
-        routeName: 'Baz',
-        params: { foo: '42' },
-      },
-      {
-        key: 'Boo',
-        routeName: 'Boo',
-        params: { foo: '42' },
-      },
-    ]);
   });
 
   test('Handles empty URIs', () => {

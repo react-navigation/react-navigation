@@ -25,7 +25,7 @@ function createNavigator(NavigatorView, router, navigationConfig) {
       Object.values(this.childEventSubscribers).map(s => s.removeAll());
     }
 
-    _isRouteFocused = route => () => {
+    _isRouteFocused = route => {
       const { state } = this.props.navigation;
       const focusedRoute = state.routes[state.index];
       return route === focusedRoute;
@@ -69,6 +69,7 @@ function createNavigator(NavigatorView, router, navigationConfig) {
           actions: actionCreators,
           dispatch,
           state: route,
+          isFocused: () => this._isRouteFocused(route),
           dangerouslyGetParent: this._dangerouslyGetParent,
           addListener: this.childEventSubscribers[route.key].addListener,
           getParam: (paramName, defaultValue) => {
@@ -94,6 +95,7 @@ function createNavigator(NavigatorView, router, navigationConfig) {
 
       return (
         <NavigatorView
+          {...this.props}
           screenProps={screenProps}
           navigation={navigation}
           navigationConfig={navigationConfig}

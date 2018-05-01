@@ -70,4 +70,24 @@ describe('DrawerRouter', () => {
     );
     expect(state4.isDrawerOpen).toEqual(true);
   });
+
+  test('Drawer opens closes with key targeted', () => {
+    const ScreenA = () => <div />;
+    const ScreenB = () => <div />;
+    const router = DrawerRouter({
+      Foo: { screen: ScreenA },
+      Bar: { screen: ScreenB },
+    });
+    const state = router.getStateForAction(INIT_ACTION);
+    const state2 = router.getStateForAction(
+      { type: DrawerActions.OPEN_DRAWER, key: 'wrong' },
+      state
+    );
+    expect(state2.isDrawerOpen).toEqual(false);
+    const state3 = router.getStateForAction(
+      { type: DrawerActions.OPEN_DRAWER, key: state.key },
+      state2
+    );
+    expect(state3.isDrawerOpen).toEqual(true);
+  });
 });
