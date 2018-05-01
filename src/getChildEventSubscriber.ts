@@ -4,12 +4,18 @@
  * Based on the 'action' events that get fired for this navigation state, this utility will fire
  * focus and blur events for this child
  */
-export default function getChildEventSubscriber(addListener, key) {
-  const actionSubscribers = new Set();
-  const willFocusSubscribers = new Set();
-  const didFocusSubscribers = new Set();
-  const willBlurSubscribers = new Set();
-  const didBlurSubscribers = new Set();
+export default function getChildEventSubscriber(
+  addListener: (
+    eventName: string,
+    eventHandler: EventHandler
+  ) => { remove: () => void },
+  key: string
+) {
+  const actionSubscribers = new Set<EventHandler>();
+  const willFocusSubscribers = new Set<EventHandler>();
+  const didFocusSubscribers = new Set<EventHandler>();
+  const willBlurSubscribers = new Set<EventHandler>();
+  const didBlurSubscribers = new Set<EventHandler>();
 
   const removeAll = () => {
     [
@@ -23,7 +29,7 @@ export default function getChildEventSubscriber(addListener, key) {
     upstreamSubscribers.forEach(subs => subs && subs.remove());
   };
 
-  const getChildSubscribers = evtName => {
+  const getChildSubscribers = (evtName: string) => {
     switch (evtName) {
       case 'action':
         return actionSubscribers;
@@ -40,13 +46,14 @@ export default function getChildEventSubscriber(addListener, key) {
     }
   };
 
-  const emit = (type, payload) => {
+  const emit = (type: string, payload: IPayload) => {
     const payloadWithType = { ...payload, type };
     const subscribers = getChildSubscribers(type);
-    subscribers &&
+    if (subscribers) {
       subscribers.forEach(subs => {
         subs(payloadWithType);
       });
+    }
   };
 
   // lastEmittedEvent keeps track of focus state for one route. First we assume
@@ -63,21 +70,19 @@ export default function getChildEventSubscriber(addListener, key) {
     'action',
   ];
 
-  const upstreamSubscribers = upstreamEvents.map(eventName =>
+  const upstreamSubscribers = upstreamEvents.map((eventName: string) =>
     addListener(eventName, payload => {
       const { state, lastState, action } = payload;
       const lastRoutes = lastState && lastState.routes;
       const routes = state && state.routes;
 
-      const lastFocusKey =
-        lastState && lastState.routes && lastState.routes[lastState.index].key;
       const focusKey = routes && routes[state.index].key;
 
       const isChildFocused = focusKey === key;
       const lastRoute =
         lastRoutes && lastRoutes.find(route => route.key === key);
       const newRoute = routes && routes.find(route => route.key === key);
-      const childPayload = {
+      const childPayload: IPayload = {
         context: `${key}:${action.type}_${payload.context || 'Root'}`,
         state: newRoute,
         lastState: lastRoute,
@@ -143,7 +148,7 @@ export default function getChildEventSubscriber(addListener, key) {
 
   return {
     removeAll,
-    addListener(eventName, eventHandler) {
+    addListener(eventName: string, eventHandler: EventHandler) {
       const subscribers = getChildSubscribers(eventName);
       if (!subscribers) {
         throw new Error(`Invalid event name "${eventName}"`);
@@ -155,4 +160,22 @@ export default function getChildEventSubscriber(addListener, key) {
       return { remove };
     },
   };
+}
+
+export type EventHandler = (payload: IPayload) => void;
+
+export interface IPayload {
+  action: { type: string };
+  context?: string;
+  lastState: IRoute;
+  state: IRoute;
+  type: string;
+}
+
+export interface IRoute {
+  index: number;
+  isTransitioning: boolean;
+  key?: string;
+  routeName?: string;
+  routes: any[];
 }

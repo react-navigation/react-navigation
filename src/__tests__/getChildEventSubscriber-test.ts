@@ -1,14 +1,16 @@
-import getChildEventSubscriber from '../getChildEventSubscriber';
+import 'jest';
+import getChildEventSubscriber, { IPayload } from '../getChildEventSubscriber';
 
 test('child action events only flow when focused', () => {
   const parentSubscriber = jest.fn();
-  const emitParentAction = payload => {
+  const emitParentAction = (payload: IPayload) => {
     parentSubscriber.mock.calls.forEach(subs => {
       if (subs[0] === payload.type) {
         subs[1](payload);
       }
     });
   };
+  // tslint:disable-next-line:no-empty
   const subscriptionRemove = () => {};
   parentSubscriber.mockReturnValueOnce({ remove: subscriptionRemove });
   const childEventSubscriber = getChildEventSubscriber(parentSubscriber, 'key1')
@@ -52,13 +54,14 @@ test('child action events only flow when focused', () => {
 
 test('grandchildren subscription', () => {
   const grandParentSubscriber = jest.fn();
-  const emitGrandParentAction = payload => {
+  const emitGrandParentAction = (payload: IPayload) => {
     grandParentSubscriber.mock.calls.forEach(subs => {
       if (subs[0] === payload.type) {
         subs[1](payload);
       }
     });
   };
+  // tslint:disable-next-line:no-empty
   const subscriptionRemove = () => {};
   grandParentSubscriber.mockReturnValueOnce({ remove: subscriptionRemove });
   const parentSubscriber = getChildEventSubscriber(
@@ -119,13 +122,14 @@ test('grandchildren subscription', () => {
 
 test('grandchildren transitions', () => {
   const grandParentSubscriber = jest.fn();
-  const emitGrandParentAction = payload => {
+  const emitGrandParentAction = (payload: IPayload) => {
     grandParentSubscriber.mock.calls.forEach(subs => {
       if (subs[0] === payload.type) {
         subs[1](payload);
       }
     });
   };
+  // tslint:disable-next-line:no-empty
   const subscriptionRemove = () => {};
   grandParentSubscriber.mockReturnValueOnce({ remove: subscriptionRemove });
   const parentSubscriber = getChildEventSubscriber(
@@ -134,7 +138,10 @@ test('grandchildren transitions', () => {
   ).addListener;
   const childEventSubscriber = getChildEventSubscriber(parentSubscriber, 'key1')
     .addListener;
-  const makeFakeState = (childIndex, childIsTransitioning) => ({
+  const makeFakeState = (
+    childIndex: number,
+    childIsTransitioning: boolean
+  ) => ({
     index: 1,
     isTransitioning: false,
     routes: [
@@ -212,13 +219,14 @@ test('grandchildren transitions', () => {
 
 test('grandchildren pass through transitions', () => {
   const grandParentSubscriber = jest.fn();
-  const emitGrandParentAction = payload => {
+  const emitGrandParentAction = (payload: IPayload) => {
     grandParentSubscriber.mock.calls.forEach(subs => {
       if (subs[0] === payload.type) {
         subs[1](payload);
       }
     });
   };
+  // tslint:disable-next-line:no-empty
   const subscriptionRemove = () => {};
   grandParentSubscriber.mockReturnValueOnce({ remove: subscriptionRemove });
   const parentSubscriber = getChildEventSubscriber(
@@ -227,7 +235,10 @@ test('grandchildren pass through transitions', () => {
   ).addListener;
   const childEventSubscriber = getChildEventSubscriber(parentSubscriber, 'key1')
     .addListener;
-  const makeFakeState = (childIndex, childIsTransitioning) => ({
+  const makeFakeState = (
+    childIndex: number,
+    childIsTransitioning: boolean
+  ) => ({
     index: childIndex,
     isTransitioning: childIsTransitioning,
     routes: [
@@ -305,13 +316,14 @@ test('grandchildren pass through transitions', () => {
 
 test('child focus with transition', () => {
   const parentSubscriber = jest.fn();
-  const emitParentAction = payload => {
+  const emitParentAction = (payload: IPayload) => {
     parentSubscriber.mock.calls.forEach(subs => {
       if (subs[0] === payload.type) {
         subs[1](payload);
       }
     });
   };
+  // tslint:disable-next-line:no-empty
   const subscriptionRemove = () => {};
   parentSubscriber.mockReturnValueOnce({ remove: subscriptionRemove });
   const childEventSubscriber = getChildEventSubscriber(parentSubscriber, 'key1')
@@ -398,13 +410,14 @@ test('child focus with transition', () => {
 
 test('child focus with immediate transition', () => {
   const parentSubscriber = jest.fn();
-  const emitParentAction = payload => {
+  const emitParentAction = (payload: IPayload) => {
     parentSubscriber.mock.calls.forEach(subs => {
       if (subs[0] === payload.type) {
         subs[1](payload);
       }
     });
   };
+  // tslint:disable-next-line:no-empty
   const subscriptionRemove = () => {};
   parentSubscriber.mockReturnValueOnce({ remove: subscriptionRemove });
   const childEventSubscriber = getChildEventSubscriber(parentSubscriber, 'key1')
