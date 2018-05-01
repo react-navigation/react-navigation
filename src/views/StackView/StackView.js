@@ -37,8 +37,8 @@ class StackView extends React.Component {
               })
             );
           }
-          navigationConfig.onTransitionEnd && 
-            navigationConfig.onTransitionEnd(transition, lastTransition);
+      
+          navigationConfig.onTransitionEnd && navigationConfig.onTransitionEnd(transition, lastTransition);
         }}
       />
     );
