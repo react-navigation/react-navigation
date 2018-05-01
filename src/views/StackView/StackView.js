@@ -3,7 +3,6 @@ import { NativeModules } from 'react-native';
 
 import StackViewLayout from './StackViewLayout';
 import Transitioner from '../Transitioner';
-import NavigationActions from '../../NavigationActions';
 import StackActions from '../../routers/StackActions';
 import TransitionConfigs from './StackViewTransitionConfigs';
 
@@ -37,8 +36,8 @@ class StackView extends React.Component {
               })
             );
           }
-      
-          navigationConfig.onTransitionEnd && navigationConfig.onTransitionEnd(transition, lastTransition);
+          navigationConfig.onTransitionEnd &&
+            navigationConfig.onTransitionEnd(transition, lastTransition);
         }}
       />
     );
