@@ -6,3 +6,7 @@ build
 
 ## Temporary
 examples
+
+# TypeScript-generated JavaScript files
+src/getChildEventSubscriber.js
+src/__tests__/getChildEventSubscriber-test.js
