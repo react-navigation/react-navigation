@@ -5,8 +5,8 @@ import Transitioner from '../Transitioner';
 
 describe('Transitioner', () => {
   it('should not trigger onTransitionStart and onTransitionEnd when route params are changed', () => {
-    const onTransitionStartCallBack = jest.fn();
-    const onTransitionEndCallBack = jest.fn();
+    const onTransitionStartCallback = jest.fn();
+    const onTransitionEndCallback = jest.fn();
 
     const transitionerProps = {
       configureTransition: (transitionProps, prevTransitionProps) => ({}),
@@ -24,8 +24,8 @@ describe('Transitioner', () => {
         navigate: () => false,
       },
       render: () => <div />,
-      onTransitionStart: onTransitionStartCallBack,
-      onTransitionEnd: onTransitionEndCallBack,
+      onTransitionStart: onTransitionStartCallback,
+      onTransitionEnd: onTransitionEndCallback,
     };
 
     const nextTransitionerProps = {
@@ -43,7 +43,7 @@ describe('Transitioner', () => {
     };
     const component = renderer.create(<Transitioner {...transitionerProps} />);
     component.update(<Transitioner {...nextTransitionerProps} />);
-    expect(onTransitionStartCallBack).not.toBeCalled();
-    expect(onTransitionEndCallBack).not.toBeCalled();
+    expect(onTransitionStartCallback).not.toBeCalled();
+    expect(onTransitionEndCallback).not.toBeCalled();
   });
 });
