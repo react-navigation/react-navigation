@@ -74,8 +74,6 @@ export default function createNavigationContainer(Component) {
 
       validateProps(props);
 
-      this._initialAction = NavigationActions.init();
-
       if (this._isStateful()) {
         this.subs = BackHandler.addEventListener('hardwareBackPress', () => {
           if (!this._isMounted) {
@@ -90,10 +88,7 @@ export default function createNavigationContainer(Component) {
       }
 
       this.state = {
-        nav:
-          this._isStateful() && !props.persistenceKey
-            ? Component.router.getStateForAction(this._initialAction)
-            : null,
+        nav: null,
       };
     }
 
@@ -218,7 +213,7 @@ export default function createNavigationContainer(Component) {
       // Initialize state. This must be done *after* any async code
       // so we don't end up with a different value for this.state.nav
       // due to changes while async function was resolving
-      let action = this._initialAction;
+      let action = NavigationActions.init();
       let startupState = this.state.nav;
       if (!startupState) {
         !!process.env.REACT_NAV_LOGGING &&
