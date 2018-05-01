@@ -4,11 +4,11 @@ import * as React from 'react';
 import {
   TabRouter,
   StackActions,
+  SceneView,
   createNavigator,
   createNavigationContainer,
   NavigationActions,
 } from 'react-navigation';
-import SceneView from 'react-navigation/src/views/SceneView';
 
 export type InjectedProps = {
   getLabelText: (props: { route: any }) => any,
