@@ -6,3 +6,7 @@ build
 
 ## Temporary
 examples
+
+# TypeScript-generated JavaScript files
+src/NavigationActions.js
+src/__tests__/NavigationActions-test.js

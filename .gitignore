@@ -22,3 +22,5 @@ coverage
 # TypeScript-generated files
 *.d.ts
 !src/react-navigation.d.ts
+src/NavigationActions.js
+src/__tests__/NavigationActions-test.js
