@@ -21,7 +21,7 @@ const StateUtils = {
    * routes of the navigation state, or -1 if it is not present.
    */
   indexOf(state, key) {
-    return state.routes.map(route => route.key).indexOf(key);
+    return state.routes.findIndex(route => route.key === key);
   },
 
   /**
