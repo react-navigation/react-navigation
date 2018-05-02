@@ -17,7 +17,11 @@ type MyNavScreenProps = {
   banner: React.Node,
 };
 
-class MyBackButton extends React.Component<any, any> {
+type MyBackButtonProps = {
+  navigation: NavigationScreenProp<*>,
+};
+
+class MyBackButton extends React.Component<MyBackButtonProps, any> {
   render() {
     return <Button onPress={this._navigateBack} title="Custom Back" />;
   }
@@ -142,7 +146,7 @@ class MyPhotosScreen extends React.Component<MyPhotosScreenProps> {
     const { navigation } = this.props;
     return (
       <MyNavScreen
-        banner={`${navigation.state.params.name}'s Photos`}
+        banner={`${navigation.getParam('name')}'s Photos`}
         navigation={navigation}
       />
     );
@@ -151,9 +155,9 @@ class MyPhotosScreen extends React.Component<MyPhotosScreenProps> {
 
 const MyProfileScreen = ({ navigation }) => (
   <MyNavScreen
-    banner={`${navigation.state.params.mode === 'edit' ? 'Now Editing ' : ''}${
-      navigation.state.params.name
-    }'s Profile`}
+    banner={`${
+      navigation.getParam('mode') === 'edit' ? 'Now Editing ' : ''
+    }${navigation.getParam('name')}'s Profile`}
     navigation={navigation}
   />
 );
