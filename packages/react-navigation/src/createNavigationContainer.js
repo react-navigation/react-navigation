@@ -252,12 +252,7 @@ export default function createNavigationContainer(Component) {
         }
       }
 
-      if (startupState === this.state.nav) {
-        return;
-      }
-
-      this.setState({ nav: startupState }, () => {
-        _reactNavigationIsHydratingState = false;
+      const dispatchActions = () =>
         this._actionEventSubscribers.forEach(subscriber =>
           subscriber({
             type: 'action',
@@ -266,6 +261,15 @@ export default function createNavigationContainer(Component) {
             lastState: null,
           })
         );
+
+      if (startupState === this.state.nav) {
+        dispatchActions();
+        return;
+      }
+
+      this.setState({ nav: startupState }, () => {
+        _reactNavigationIsHydratingState = false;
+        dispatchActions();
       });
     }
 
