@@ -4,6 +4,7 @@ import React from 'react';
 
 import StackRouter from '../StackRouter';
 import TabRouter from '../TabRouter';
+import SwitchRouter from '../SwitchRouter';
 
 import NavigationActions from '../../NavigationActions';
 import { _TESTING_ONLY_normalize_keys } from '../KeyGenerator';
@@ -87,6 +88,75 @@ Object.keys(ROUTERS).forEach(routerName => {
       ).toEqual('Baz-123');
     });
   });
+});
+
+test('Nested navigate behavior test', () => {
+  const Leaf = () => <div />;
+
+  const First = () => <div />;
+  First.router = StackRouter({
+    First1: Leaf,
+    First2: Leaf,
+  });
+
+  const Second = () => <div />;
+  Second.router = StackRouter({
+    Second1: Leaf,
+    Second2: Leaf,
+  });
+
+  const Main = () => <div />;
+  Main.router = StackRouter({
+    First,
+    Second,
+  });
+  const TestRouter = SwitchRouter({
+    Login: Leaf,
+    Main,
+  });
+
+  const state1 = TestRouter.getStateForAction({ type: NavigationActions.INIT });
+
+  const state2 = TestRouter.getStateForAction(
+    { type: NavigationActions.NAVIGATE, routeName: 'First' },
+    state1
+  );
+  expect(state2.index).toEqual(1);
+  expect(state2.routes[1].index).toEqual(0);
+  expect(state2.routes[1].routes[0].index).toEqual(0);
+
+  const state3 = TestRouter.getStateForAction(
+    { type: NavigationActions.NAVIGATE, routeName: 'Second2' },
+    state2
+  );
+  expect(state3.index).toEqual(1);
+  expect(state3.routes[1].index).toEqual(1); // second
+  expect(state3.routes[1].routes[1].index).toEqual(1); //second.second2
+
+  const state4 = TestRouter.getStateForAction(
+    {
+      type: NavigationActions.NAVIGATE,
+      routeName: 'First',
+      action: { type: NavigationActions.NAVIGATE, routeName: 'First2' },
+    },
+    state3,
+    true
+  );
+  expect(state4.index).toEqual(1); // main
+  expect(state4.routes[1].index).toEqual(0); // first
+  expect(state4.routes[1].routes[0].index).toEqual(1); // first2
+
+  const state5 = TestRouter.getStateForAction(
+    {
+      type: NavigationActions.NAVIGATE,
+      routeName: 'First',
+      action: { type: NavigationActions.NAVIGATE, routeName: 'First1' },
+    },
+    state3 // second.second2 is active on state3
+  );
+  expect(state5.index).toEqual(1); // main
+  expect(state5.routes[1].index).toEqual(0); // first
+  expect(state5.routes[1].routes[0].index).toEqual(0); // first.first1
 });
 
 test('Handles no-op actions with tabs within stack router', () => {

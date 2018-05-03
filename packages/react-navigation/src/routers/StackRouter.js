@@ -257,9 +257,13 @@ export default (routeConfigs, stackConfig = {}) => {
           let childRouter = childRouters[childRoute.routeName];
           let debug = action.params && action.params.debug;
 
+          let childAction =
+            action.routeName === childRoute.routeName && action.action
+              ? action.action
+              : action;
           if (childRouter) {
             const nextRouteState = childRouter.getStateForAction(
-              action,
+              childAction,
               childRoute
             );
 
