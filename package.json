@@ -1,6 +1,6 @@
 {
   "name": "react-navigation",
-  "version": "2.0.0-rc.3",
+  "version": "2.0.0-rc.7",
   "description": "Routing and navigation for your React Native apps",
   "main": "src/react-navigation.js",
   "repository": {
@@ -37,8 +37,8 @@
     "react-lifecycles-compat": "^1.0.2",
     "react-native-drawer-layout-polyfill": "^1.3.2",
     "react-native-safe-area-view": "^0.7.0",
-    "react-navigation-deprecated-tab-navigator": "1.0.1",
-    "react-navigation-tabs": "0.1.0-alpha.6"
+    "react-navigation-deprecated-tab-navigator": "1.1.0",
+    "react-navigation-tabs": "0.1.0-alpha.8"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
@@ -48,17 +48,17 @@
     "babel-preset-react-native": "^2.1.0",
     "codecov": "^2.2.0",
     "eslint": "^4.2.0",
-    "eslint-config-prettier": "^2.3.0",
+    "eslint-config-prettier": "^2.9.0",
     "eslint-plugin-import": "^2.7.0",
     "eslint-plugin-jsx-a11y": "^6.0.2",
-    "eslint-plugin-prettier": "^2.1.2",
+    "eslint-plugin-prettier": "^2.6.0",
     "eslint-plugin-react": "^7.1.0",
     "husky": "^0.14.3",
     "jest": "^22.1.3",
     "jest-expo": "^25.1.0",
     "lint-staged": "^4.2.1",
-    "prettier": "^1.5.3",
-    "prettier-eslint": "^6.4.2",
+    "prettier": "^1.12.1",
+    "prettier-eslint": "^8.8.1",
     "react": "16.2.0",
     "react-native": "^0.52.0",
     "react-native-vector-icons": "^4.2.0",
@@ -67,7 +67,7 @@
   "jest": {
     "notify": true,
     "preset": "react-native",
-    "testRegex": "./src/.*\\-test\\.js$",
+    "testRegex": "/__tests__/[^/]+-test\\.js$",
     "setupFiles": [
       "<rootDir>/jest-setup.js"
     ],
@@ -82,8 +82,11 @@
     "coveragePathIgnorePatterns": [
       "jest-setup.js"
     ],
+    "moduleNameMapper": {
+      "\\.png$": "<rootDir>/assetsTransformer.js"
+    },
     "modulePathIgnorePatterns": [
-      "examples"
+      "<rootDir>/examples/"
     ],
     "transformIgnorePatterns": [
       "node_modules/(?!(jest-)?react-native|react-clone-referenced-element|react-navigation-deprecated-tab-navigator)"

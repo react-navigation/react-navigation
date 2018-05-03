@@ -27,6 +27,7 @@ import ModalStack from './ModalStack';
 import StacksInTabs from './StacksInTabs';
 import StacksOverTabs from './StacksOverTabs';
 import StacksWithKeys from './StacksWithKeys';
+import InactiveStack from './InactiveStack';
 import StackWithCustomHeaderBackImage from './StackWithCustomHeaderBackImage';
 import SimpleStack from './SimpleStack';
 import StackWithHeaderPreset from './StackWithHeaderPreset';
@@ -44,6 +45,11 @@ const ExampleInfo = {
   SwitchWithStacks: {
     name: 'Switch between routes',
     description: 'Jump between routes',
+  },
+  InactiveStack: {
+    name: 'Navigate idempotently to stacks in inactive routes',
+    description:
+      'An inactive route in a stack should be given the opportunity to handle actions',
   },
   StackWithCustomHeaderBackImage: {
     name: 'Custom header back image',
@@ -150,6 +156,8 @@ const ExampleRoutes = {
   },
   TabsWithNavigationFocus,
   KeyboardHandlingExample,
+  // This is commented out because it's rarely useful
+  // InactiveStack,
 };
 
 type State = {

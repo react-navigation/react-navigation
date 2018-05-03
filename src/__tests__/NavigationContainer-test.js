@@ -1,5 +1,4 @@
 import React from 'react';
-import 'react-native';
 import { StyleSheet, View } from 'react-native';
 
 import renderer from 'react-test-renderer';
