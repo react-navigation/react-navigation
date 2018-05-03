@@ -7,8 +7,7 @@
     "url": "git@github.com:react-navigation/react-navigation.git",
     "type": "git"
   },
-  "author":
-    "Adam Miskiewicz <adam@sk3vy.com>, Eric Vicenti <ericvicenti@gmail.com>",
+  "author": "Adam Miskiewicz <adam@sk3vy.com>, Eric Vicenti <ericvicenti@gmail.com>",
   "license": "BSD-2-Clause",
   "scripts": {
     "start": "npm run ios",
@@ -22,7 +21,9 @@
     "format": "eslint --fix .",
     "precommit": "lint-staged"
   },
-  "files": ["src"],
+  "files": [
+    "src"
+  ],
   "peerDependencies": {
     "react": "*",
     "react-native": "*"
@@ -32,7 +33,7 @@
     "hoist-non-react-statics": "^2.2.0",
     "path-to-regexp": "^1.7.0",
     "prop-types": "^15.5.10",
-    "react-lifecycles-compat": "^1.0.2",
+    "react-lifecycles-compat": "^3.0.2",
     "react-native-drawer-layout-polyfill": "^1.3.2",
     "react-native-safe-area-view": "^0.7.0",
     "react-native-tab-view": "github:react-navigation/react-native-tab-view"
@@ -64,13 +65,23 @@
     "notify": true,
     "preset": "react-native",
     "testRegex": "./src/.*\\-test\\.js$",
-    "setupFiles": ["<rootDir>/jest-setup.js"],
+    "setupFiles": [
+      "<rootDir>/jest-setup.js"
+    ],
     "coverageDirectory": "./coverage/",
     "collectCoverage": true,
-    "coverageReporters": ["lcov"],
-    "collectCoverageFrom": ["src/**/*.js"],
-    "coveragePathIgnorePatterns": ["jest-setup.js"],
-    "modulePathIgnorePatterns": ["examples"]
+    "coverageReporters": [
+      "lcov"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.js"
+    ],
+    "coveragePathIgnorePatterns": [
+      "jest-setup.js"
+    ],
+    "modulePathIgnorePatterns": [
+      "examples"
+    ]
   },
   "lint-staged": {
     "*.js": [
