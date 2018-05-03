@@ -183,12 +183,9 @@ describe('SwitchRouter', () => {
     expect(activeState4.routes[activeState4.index].routeName).toEqual('Bar');
   });
 
+  // https://github.com/react-navigation/react-navigation.github.io/issues/117#issuecomment-385597628
   test('order of handling navigate action is correct for nested stackrouters', () => {
-    // router = switch({ Nested: switch({ Foo, Bar }), Other: switch({ Foo }), Bar })
-    // if we are focused on Other and navigate to Bar, what should happen?
-
     const Screen = () => <div />;
-
     const MainStack = () => <div />;
     const LoginStack = () => <div />;
     MainStack.router = StackRouter({ Home: Screen, Profile: Screen });
