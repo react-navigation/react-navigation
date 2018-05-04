@@ -4972,9 +4972,9 @@ react-navigation-deprecated-tab-navigator@1.1.0:
   dependencies:
     react-native-tab-view "^0.0.74"
 
-react-navigation-tabs@0.2.0-rc.0:
-  version "0.2.0-rc.0"
-  resolved "https://registry.yarnpkg.com/react-navigation-tabs/-/react-navigation-tabs-0.2.0-rc.0.tgz#671e8c9914b915796879329752f7240147494038"
+react-navigation-tabs@0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/react-navigation-tabs/-/react-navigation-tabs-0.2.0.tgz#d25be64e01a728c893a93cfeee6b176ab74d67de"
   dependencies:
     hoist-non-react-statics "^2.5.0"
     prop-types "^15.6.0"
