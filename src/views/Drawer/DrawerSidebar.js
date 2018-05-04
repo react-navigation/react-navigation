@@ -57,7 +57,12 @@ class DrawerSidebar extends React.PureComponent {
           ],
         });
       }
-      this.props.navigation.navigate(route.routeName, undefined, subAction);
+      this.props.navigation.dispatch(
+        NavigationActions.navigate({
+          routeName: route.routeName,
+          action: subAction,
+        })
+      );
     }
   };
 
