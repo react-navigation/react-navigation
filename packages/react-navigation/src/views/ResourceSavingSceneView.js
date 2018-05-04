@@ -1,7 +1,7 @@
 import React from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
 import PropTypes from 'prop-types';
-import withLifecyclePolyfill from 'react-lifecycles-compat';
+import { polyfill } from 'react-lifecycles-compat';
 
 import SceneView from './SceneView';
 
@@ -77,4 +77,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default withLifecyclePolyfill(ResourceSavingSceneView);
+export default polyfill(ResourceSavingSceneView);
