@@ -57,9 +57,6 @@ module.exports = {
   get createBottomTabNavigator() {
     return require('react-navigation-tabs').createBottomTabNavigator;
   },
-  get createMaterialBottomTabNavigator() {
-    return require('react-navigation-tabs').createMaterialBottomTabNavigator;
-  },
   get createMaterialTopTabNavigator() {
     return require('react-navigation-tabs').createMaterialTopTabNavigator;
   },
