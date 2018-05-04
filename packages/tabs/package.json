@@ -1,6 +1,6 @@
 {
   "name": "react-navigation-tabs",
-  "version": "0.1.0-alpha.8",
+  "version": "0.2.0",
   "description": "Tab Navigation components for React Navigation",
   "main": "dist/index.js",
   "files": [
@@ -13,7 +13,7 @@
     "test": "jest",
     "flow": "flow",
     "lint": "eslint .",
-    "build": "babel --no-babelrc --plugins=syntax-jsx,syntax-class-properties,syntax-object-rest-spread,transform-flow-strip-types,react-native-paper/babel src --out-dir dist --ignore '**/__tests__/**'",
+    "build": "babel --no-babelrc --plugins=syntax-jsx,syntax-class-properties,syntax-object-rest-spread,transform-flow-strip-types src --out-dir dist --ignore '**/__tests__/**'",
     "prepublish": "yarn build"
   },
   "keywords": [
@@ -41,7 +41,6 @@
     "hoist-non-react-statics": "^2.5.0",
     "prop-types": "^15.6.0",
     "react-lifecycles-compat": "^1.0.2",
-    "react-native-paper": "^1.4.0",
     "react-native-safe-area-view": "^0.7.0",
     "react-native-tab-view": "~0.0.77"
   },

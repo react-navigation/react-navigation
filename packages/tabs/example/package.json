@@ -17,7 +17,7 @@
     "react-native-paper": "^1.2.4",
     "react-native-safe-area-view": "^0.7.0",
     "react-native-tab-view": "^0.0.74",
-    "react-navigation": "^2.0.0-alpha.5"
+    "react-navigation": "^2.0.0-rc.8"
   },
   "devDependencies": {
     "babel-plugin-module-resolver": "^3.0.0",

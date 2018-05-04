@@ -8,24 +8,34 @@ Tab navigators for React Navigation.
 
 ## Installation
 
-Open a Terminal in your project's folder and run,
-
-```sh
-yarn add react-navigation-tabs react-navigation
-```
+With react-navigation@^2.0.0, no installation is required.
 
 ## Usage
 
-The package exports 3 different navigators:
+The package exports two different navigators:
 
 - `createBottomTabNavigator`: iOS like bottom tabs.
-- `createMaterialBottomTabNavigator`: Material design themed animated bottom tabs, from [react-native-paper](https://callstack.github.io/react-native-paper/bottom-navigation.html).
 - `createMaterialTopTabNavigator`: Material design themed top tabs with swipe gesture, from [react-native-tab-view](https://github.com/react-native-community/react-native-tab-view).
 
 You can import individual navigators and use them:
 
 ```js
-import createMaterialBottomTabNavigator from 'react-navigation-tabs/createMaterialBottomTabNavigator';
+import { createBottomTabNavigator } from 'react-navigation';
+
+export default createBottomTabNavigator({
+  Album: { screen: Album },
+  Library: { screen: Library },
+  History: { screen: History },
+  Cart: { screen: Cart },
+});
+```
+
+You can install another package, `react-navigation-material-bottom-tabs`, to use a third type of tab navigator:
+
+- `createMaterialBottomTabNavigator`: Material design themed animated bottom tabs, from [react-native-paper](https://callstack.github.io/react-native-paper/bottom-navigation.html).
+
+```js
+import createMaterialBottomTabNavigator from 'react-navigation-material-bottom-tabs/createMaterialBottomTabNavigator';
 
 export default createMaterialBottomTabNavigator({
   Album: { screen: Album },
