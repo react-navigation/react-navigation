@@ -1,0 +1,11 @@
+{
+  "extends": '../.eslintrc',
+
+  "settings": {
+    "import/core-modules": [ "expo", "react-navigation-tabs", "react-navigation-tabs/types" ]
+  },
+
+  "rules": {
+    "react/prop-types": "off",
+  }
+}

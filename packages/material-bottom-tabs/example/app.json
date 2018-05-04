@@ -1,0 +1,22 @@
+{
+  "expo": {
+    "name": "React Navigation Tabs Example",
+    "description": "Demonstrates the various capabilities of react-navigation-tabs: https://github.com/react-navigation/react-navigation-tabs",
+    "slug": "react-navigation-tabs-demos",
+    "sdkVersion": "27.0.0",
+    "version": "1.0.0",
+    "primaryColor": "#2196f3",
+    "icon": "assets/icon.png",
+    "loading": {
+      "icon": "assets/icon.png",
+      "hideExponentText": false
+    },
+    "packagerOpts": {
+      "assetExts": [
+        "ttf"
+      ],
+      "config": "./rn-cli.config.js",
+      "projectRoots": ""
+    }
+  }
+}
