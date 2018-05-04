@@ -7,6 +7,7 @@ import {
   Platform,
   StyleSheet,
   View,
+  I18nManager,
   ViewPropTypes,
 } from 'react-native';
 import { MaskedViewIOS } from '../../PlatformHelpers';
@@ -565,6 +566,7 @@ const styles = StyleSheet.create({
     marginTop: -0.5, // resizes down to 20.5
     alignSelf: 'center',
     resizeMode: 'contain',
+    transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }],
   },
   title: {
     bottom: 0,

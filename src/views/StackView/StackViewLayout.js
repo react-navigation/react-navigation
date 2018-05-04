@@ -306,7 +306,7 @@ class StackViewLayout extends React.Component {
               ? layout.height.__getValue()
               : layout.width.__getValue();
             const currentValue =
-              gestureDirectionInverted && axis === 'dx'
+              axis === 'dx' && gestureDirectionInverted
                 ? startValue + gesture[axis] / axisDistance
                 : startValue - gesture[axis] / axisDistance;
             const value = clamp(index - 1, currentValue, index);
