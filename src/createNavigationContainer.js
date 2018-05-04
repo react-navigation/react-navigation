@@ -1,6 +1,6 @@
 import React from 'react';
 import { Linking, AsyncStorage } from 'react-native';
-import withLifecyclePolyfill from 'react-lifecycles-compat';
+import { polyfill } from 'react-lifecycles-compat';
 
 import { BackHandler } from './PlatformHelpers';
 import NavigationActions from './NavigationActions';
@@ -367,5 +367,5 @@ export default function createNavigationContainer(Component) {
     }
   }
 
-  return withLifecyclePolyfill(NavigationContainer);
+  return polyfill(NavigationContainer);
 }
