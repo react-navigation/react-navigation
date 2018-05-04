@@ -63,7 +63,7 @@ const FadeOutToBottomAndroid = {
 function defaultTransitionConfig(
   transitionProps,
   prevTransitionProps,
-  isModal
+  isVertical
 ) {
   if (Platform.OS === 'android') {
     // Use the default Android animation no matter if the screen is a modal.
@@ -78,7 +78,7 @@ function defaultTransitionConfig(
     return FadeInFromBottomAndroid;
   }
   // iOS and other platforms
-  if (isModal) {
+  if (isVertical) {
     return ModalSlideFromBottomIOS;
   }
   return SlideFromRightIOS;
@@ -88,17 +88,17 @@ function getTransitionConfig(
   transitionConfigurer,
   transitionProps,
   prevTransitionProps,
-  isModal
+  isVertical
 ) {
   const defaultConfig = defaultTransitionConfig(
     transitionProps,
     prevTransitionProps,
-    isModal
+    isVertical
   );
   if (transitionConfigurer) {
     return {
       ...defaultConfig,
-      ...transitionConfigurer(transitionProps, prevTransitionProps, isModal),
+      ...transitionConfigurer(transitionProps, prevTransitionProps, isVertical),
     };
   }
   return defaultConfig;
