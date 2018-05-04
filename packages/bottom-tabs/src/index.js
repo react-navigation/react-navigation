@@ -11,17 +11,21 @@ module.exports = {
   get createMaterialTopTabNavigator() {
     return require('./navigators/createMaterialTopTabNavigator').default;
   },
-  get createMaterialBottomTabNavigator() {
-    return require('./navigators/createMaterialBottomTabNavigator').default;
-  },
 
   /**
    * Views
    */
+  get BottomTabBar() {
+    return require('./views/BottomTabBar').default;
+  },
   get MaterialTopTabBar() {
     return require('./views/MaterialTopTabBar').default;
   },
-  get BottomTabBar() {
-    return require('./views/BottomTabBar').default;
+
+  /**
+   * Utils
+   */
+  get createTabNavigator() {
+    return require('./utils/createTabNavigator').default;
   },
 };
