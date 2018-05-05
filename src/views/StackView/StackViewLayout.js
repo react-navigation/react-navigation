@@ -225,10 +225,16 @@ class StackViewLayout extends React.Component {
       mode,
     } = this.props;
     const { index } = navigation.state;
-    const isVertical = mode === 'modal';
     const { options } = scene.descriptor;
+    const isVertical =
+      mode === 'modal' ||
+      options.gestureDirection === 'up' ||
+      options.gestureDirection === 'down';
 
-    const gestureDirectionInverted = options.gestureDirection === 'inverted';
+    const gestureDirectionInverted =
+      options.gestureDirection === 'inverted' ||
+      options.gestureDirection === 'left' ||
+      options.gestureDirection === 'up';
 
     const gesturesEnabled =
       typeof options.gesturesEnabled === 'boolean'
