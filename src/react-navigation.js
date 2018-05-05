@@ -11,6 +11,9 @@ module.exports = {
   get addNavigationHelpers() {
     return require('./addNavigationHelpers').default;
   },
+  get NavigationActions() {
+    return require('./NavigationActions').default;
+  },
 
   // Navigators
   get createNavigator() {
