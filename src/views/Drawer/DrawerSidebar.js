@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import NavigationActions from '../../NavigationActions';
+import StackActions from '../../routers/StackActions';
 import invariant from '../../utils/invariant';
 
 /**
@@ -46,9 +47,10 @@ class DrawerSidebar extends React.PureComponent {
   _onItemPress = ({ route, focused }) => {
     if (!focused) {
       let subAction;
+      // TODO (v3): Revisit and repeal this behavior:
       // if the child screen is a StackRouter then always navigate to its first screen (see #1914)
-      if (route.index !== undefined && route.index !== 0) {
-        subAction = NavigationActions.reset({
+      if (route.index != null && route.index !== 0) {
+        subAction = StackActions.reset({
           index: 0,
           actions: [
             NavigationActions.navigate({
