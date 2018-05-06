@@ -33,44 +33,52 @@ export default (routeConfigs, config = {}) => {
 
       const isRouterTargeted = action.key == null || action.key === state.key;
 
-      if (
-        isRouterTargeted &&
-        action.type === DrawerActions.CLOSE_DRAWER &&
-        state.isDrawerOpen
-      ) {
-        return {
-          ...state,
-          isDrawerOpen: false,
-        };
+      if (isRouterTargeted) {
+        // Only handle actions that are meant for this drawer, as specified by action.key.
+
+        if (action.type === DrawerActions.CLOSE_DRAWER && state.isDrawerOpen) {
+          return {
+            ...state,
+            isDrawerOpen: false,
+          };
+        }
+
+        if (action.type === DrawerActions.OPEN_DRAWER && !state.isDrawerOpen) {
+          return {
+            ...state,
+            isDrawerOpen: true,
+          };
+        }
+
+        if (action.type === DrawerActions.TOGGLE_DRAWER) {
+          return {
+            ...state,
+            isDrawerOpen: !state.isDrawerOpen,
+          };
+        }
       }
 
-      if (
-        isRouterTargeted &&
-        action.type === DrawerActions.OPEN_DRAWER &&
-        !state.isDrawerOpen
-      ) {
-        return {
-          ...state,
-          isDrawerOpen: true,
-        };
+      // Fall back on switch router for screen switching logic, and handling of child routers
+      const switchedState = switchRouter.getStateForAction(action, state);
+
+      if (switchedState === null) {
+        // The switch router or a child router is attempting to swallow this action. We return null to allow this.
+        return null;
       }
 
-      if (isRouterTargeted && action.type === DrawerActions.TOGGLE_DRAWER) {
-        return {
-          ...state,
-          isDrawerOpen: !state.isDrawerOpen,
-        };
+      if (switchedState !== state) {
+        if (switchedState.index !== state.index) {
+          // If the tabs have changed, make sure to close the drawer
+          return {
+            ...switchedState,
+            isDrawerOpen: false,
+          };
+        }
+        // Return the state new state, as returned by the switch router.
+        // The index hasn't changed, so this most likely means that a child router has returned a new state
+        return switchedState;
       }
 
-      // Fall back on tab router for screen switching logic
-      const childState = switchRouter.getStateForAction(action, state);
-      if (childState !== null && childState !== state) {
-        // If the tabs have changed, make sure to close the drawer
-        return {
-          ...childState,
-          isDrawerOpen: false,
-        };
-      }
       return state;
     },
   };

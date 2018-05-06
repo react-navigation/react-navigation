@@ -91,3 +91,49 @@ describe('DrawerRouter', () => {
     expect(state3.isDrawerOpen).toEqual(true);
   });
 });
+
+test('Nested routers bubble up blocked actions', () => {
+  const ScreenA = () => <div />;
+  ScreenA.router = {
+    getStateForAction(action, lastState) {
+      if (action.type === 'CHILD_ACTION') return null;
+      return lastState;
+    },
+  };
+  const ScreenB = () => <div />;
+  const router = DrawerRouter({
+    Foo: { screen: ScreenA },
+    Bar: { screen: ScreenB },
+  });
+  const state = router.getStateForAction(INIT_ACTION);
+
+  const state2 = router.getStateForAction({ type: 'CHILD_ACTION' }, state);
+  expect(state2).toEqual(null);
+});
+
+test('Drawer stays open when child routers return new state', () => {
+  const ScreenA = () => <div />;
+  ScreenA.router = {
+    getStateForAction(action, lastState = { changed: false }) {
+      if (action.type === 'CHILD_ACTION')
+        return { ...lastState, changed: true };
+      return lastState;
+    },
+  };
+  const router = DrawerRouter({
+    Foo: { screen: ScreenA },
+  });
+
+  const state = router.getStateForAction(INIT_ACTION);
+  expect(state.isDrawerOpen).toEqual(false);
+
+  const state2 = router.getStateForAction(
+    { type: DrawerActions.OPEN_DRAWER, key: state.key },
+    state
+  );
+  expect(state2.isDrawerOpen).toEqual(true);
+
+  const state3 = router.getStateForAction({ type: 'CHILD_ACTION' }, state2);
+  expect(state3.isDrawerOpen).toEqual(true);
+  expect(state3.routes[0].changed).toEqual(true);
+});
