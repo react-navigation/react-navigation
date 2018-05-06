@@ -1,6 +1,6 @@
 {
   "name": "react-navigation",
-  "version": "2.0.0-rc.10",
+  "version": "2.0.0-rc.11",
   "description": "Routing and navigation for your React Native apps",
   "main": "src/react-navigation.js",
   "repository": {
