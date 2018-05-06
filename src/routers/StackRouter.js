@@ -327,7 +327,7 @@ export default (routeConfigs, stackConfig = {}) => {
             isTransitioning:
               state.index !== lastRouteIndex
                 ? action.immediate !== true
-                : undefined,
+                : state.isTransitioning,
             index: lastRouteIndex,
             routes,
           };
