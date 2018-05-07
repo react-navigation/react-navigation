@@ -232,6 +232,19 @@ class Header extends React.PureComponent {
     const style = {};
     const { transitionPreset } = this.props;
 
+    const details = this.props.getScreenDetails(props.scene);
+    const { titleOffset } = details.options;
+
+    if (titleOffset) {
+      if (typeof titleOffset === 'number') {
+        style.left = titleOffset;
+        style.right = titleOffset;
+      } else if (typeof titleOffset === 'object') {
+        style.left = titleOffset.left;
+        style.right = titleOffset.right;
+      }
+    }
+
     if (Platform.OS === 'android') {
       if (!options.hasLeftComponent) {
         style.left = 0;
