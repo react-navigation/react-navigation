@@ -18,3 +18,6 @@ yarn-error.log
 
 # Jest
 coverage
+
+# Build files
+dist
