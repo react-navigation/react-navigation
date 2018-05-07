@@ -14,7 +14,7 @@
     "start": "npm run ios",
     "ios": "cd examples/NavigationPlayground && yarn && yarn ios",
     "android": "cd examples/NavigationPlayground && yarn && yarn android",
-    "test": "npm run lint && npm run jest && npm run build",
+    "test": "npm run lint && npm run build && npm run jest",
     "codecov": "codecov",
     "jest": "jest",
     "test-update-snapshot": "jest --updateSnapshot",
