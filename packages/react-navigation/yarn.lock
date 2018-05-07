@@ -4966,9 +4966,9 @@ react-native@^0.52.0:
     xmldoc "^0.4.0"
     yargs "^9.0.0"
 
-react-navigation-deprecated-tab-navigator@1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/react-navigation-deprecated-tab-navigator/-/react-navigation-deprecated-tab-navigator-1.1.0.tgz#58945c1c4c7c21b54954e814e8721e98423df75d"
+react-navigation-deprecated-tab-navigator@1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/react-navigation-deprecated-tab-navigator/-/react-navigation-deprecated-tab-navigator-1.2.0.tgz#e0d969c196dcd3a4a440770a7bd97fa058eb4aaf"
   dependencies:
     react-native-tab-view "^0.0.74"
 
