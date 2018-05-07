@@ -89,7 +89,7 @@ exports[`TabBarBottom renders successfully 1`] = `
                 },
                 false,
                 Object {
-                  "flexGrow": 1,
+                  "flex": 1,
                 },
               ]
             }
@@ -102,6 +102,7 @@ exports[`TabBarBottom renders successfully 1`] = `
                   "alignSelf": "center",
                   "height": "100%",
                   "justifyContent": "center",
+                  "minWidth": 30,
                   "opacity": 1,
                   "position": "absolute",
                   "width": "100%",
@@ -116,6 +117,7 @@ exports[`TabBarBottom renders successfully 1`] = `
                   "alignSelf": "center",
                   "height": "100%",
                   "justifyContent": "center",
+                  "minWidth": 30,
                   "opacity": 0,
                   "position": "absolute",
                   "width": "100%",

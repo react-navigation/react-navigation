@@ -491,6 +491,7 @@ declare module 'react-navigation' {
       action?: NavigationNavigateAction
     ) => boolean,
     setParams: (newParams: NavigationParams) => boolean,
+    getParam: (paramName: string, fallback?: any) => any,
     addListener: (
       eventName: string,
       callback: NavigationEventCallback
@@ -1078,13 +1079,17 @@ declare module 'react-navigation' {
   };
   declare export var TabBarBottom: React$ComponentType<_TabBarBottomProps>;
 
-  declare type _NavigationInjectedProps = {
-    navigation: NavigationScreenProp<NavigationStateRoute>,
-  };
-  declare export function withNavigation<T: {}>(
-    Component: React$ComponentType<T & _NavigationInjectedProps>
-  ): React$ComponentType<T>;
-  declare export function withNavigationFocus<T: {}>(
-    Component: React$ComponentType<T & _NavigationInjectedProps>
-  ): React$ComponentType<T>;
+  declare export function withNavigation<Props: {}>(
+    Component: React$ComponentType<Props>
+  ): React$ComponentType<
+    $Diff<
+      Props,
+      {
+        navigation: NavigationScreenProp<NavigationStateRoute> | void,
+      }
+    >
+  >;
+  declare export function withNavigationFocus<Props: {}>(
+    Component: React$ComponentType<Props>
+  ): React$ComponentType<$Diff<Props, { isFocused: boolean | void }>>;
 }
