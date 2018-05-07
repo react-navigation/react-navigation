@@ -108,7 +108,7 @@ export default (routeConfigs, config = {}) => {
 
     getActionCreators(route, stateKey) {
       return {
-        ...getNavigationActionCreators(route, stateKey),
+        ...getNavigationActionCreators(route),
         ...getCustomActionCreators(route, stateKey),
       };
     },
