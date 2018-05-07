@@ -240,8 +240,13 @@ class Header extends React.PureComponent {
         style.left = titleOffset;
         style.right = titleOffset;
       } else if (typeof titleOffset === 'object') {
-        style.left = titleOffset.left;
-        style.right = titleOffset.right;
+        if (typeof titleOffset.left === 'number') {
+          style.left = titleOffset.left;
+        }
+
+        if (typeof titleOffset.right === 'number') {
+          style.left = titleOffset.right;
+        }
       }
     }
 
