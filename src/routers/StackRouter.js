@@ -164,7 +164,7 @@ export default (routeConfigs, stackConfig = {}) => {
 
     getActionCreators(route, navStateKey) {
       return {
-        ...getNavigationActionCreators(route, navStateKey),
+        ...getNavigationActionCreators(route),
         ...getCustomActionCreators(route, navStateKey),
         pop: (n, params) =>
           StackActions.pop({

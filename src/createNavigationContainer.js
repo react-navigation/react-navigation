@@ -5,6 +5,7 @@ import { polyfill } from 'react-lifecycles-compat';
 import { BackHandler } from './PlatformHelpers';
 import NavigationActions from './NavigationActions';
 import invariant from './utils/invariant';
+import getNavigationActionCreators from './routers/getNavigationActionCreators';
 import docsUrl from './utils/docsUrl';
 
 function isStateful(props) {
@@ -359,6 +360,11 @@ export default function createNavigationContainer(Component) {
               };
             },
           };
+          const actionCreators = getNavigationActionCreators(nav);
+          Object.keys(actionCreators).forEach(actionName => {
+            this._navigation[actionName] = (...args) =>
+              this.dispatch(actionCreators[actionName](...args));
+          });
         }
         navigation = this._navigation;
       }
