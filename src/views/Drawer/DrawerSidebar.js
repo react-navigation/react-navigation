@@ -24,7 +24,7 @@ class DrawerSidebar extends React.PureComponent {
       if (React.isValidElement(drawerLabel)) {
         return drawerLabel;
       }
-      return React.createElement(drawerLabel, { tintColor, focused })
+      return React.createElement(drawerLabel, { tintColor, focused });
     }
 
     if (typeof title === 'string') {
@@ -40,7 +40,7 @@ class DrawerSidebar extends React.PureComponent {
       if (React.isValidElement(drawerIcon)) {
         return drawerIcon;
       }
-      return React.createElement(drawerIcon, { tintColor, focused })
+      return React.createElement(drawerIcon, { tintColor, focused });
     }
     return null;
   };
