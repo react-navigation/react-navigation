@@ -707,6 +707,7 @@ declare module 'react-navigation' {
     INIT: 'Navigation/INIT',
     NAVIGATE: 'Navigation/NAVIGATE',
     RESET: 'Navigation/RESET',
+    REPLACE = 'Navigation/REPLACE',
     SET_PARAMS: 'Navigation/SET_PARAMS',
     URI: 'Navigation/URI',
     back: {
@@ -731,6 +732,17 @@ declare module 'react-navigation' {
         key?: ?string,
         actions: Array<NavigationNavigateAction>,
       }): NavigationResetAction,
+      toString: () => string,
+    },
+    replace: {
+      (payload: {
+        routeName: string,
+        key: string,
+        newKey?: ?string,
+        params?: ?NavigationParams,
+        action?: ?NavigationNavigateAction,
+        immediate?: ?boolean,
+      }): NavigationReplaceAction,
       toString: () => string,
     },
     setParams: {
