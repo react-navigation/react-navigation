@@ -1,7 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { StackNavigator } from 'react-navigation';
+import {
+  StackNavigator,
+  addNavigationHelpers,
+} from 'react-navigation';
 
 import LoginScreen from '../components/LoginScreen';
 import MainScreen from '../components/MainScreen';
@@ -24,11 +27,11 @@ class AppWithNavigationState extends React.Component {
     const { dispatch, nav } = this.props;
     return (
       <AppNavigator
-        navigation={{
+        navigation={addNavigationHelpers({
           dispatch,
           state: nav,
           addListener,
-        }}
+        })}
       />
     );
   }
