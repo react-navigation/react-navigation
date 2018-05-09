@@ -209,6 +209,197 @@ class StackViewLayout extends React.Component {
     }
   }
 
+  componentWillMount(){
+    this._panResponder = PanResponder.create({
+      onPanResponderTerminate: () => {
+        this._isResponding = false;
+        this._reset(index, 0);
+        this.props.onGestureCanceled && this.props.onGestureCanceled();
+      },
+      onPanResponderGrant: () => {
+        const {
+          transitionProps: { navigation, position, scene },
+        } = this.props;
+        const { index } = navigation.state;
+
+        if (index !== scene.index) {
+          return false;
+        }
+
+        position.stopAnimation((value: number) => {
+          this._isResponding = true;
+          this._gestureStartValue = value;
+        });
+        this.props.onGestureBegin && this.props.onGestureBegin();
+      },
+      onMoveShouldSetPanResponder: (event, gesture) => {
+
+        const {
+          transitionProps: { navigation, position, layout, scene, scenes },
+          mode,
+        } = this.props;
+        const { index } = navigation.state;
+        const isVertical = mode === 'modal';
+        const { options } = scene.descriptor;
+        const gestureDirection = options.gestureDirection;
+
+        const gestureDirectionInverted =
+          typeof gestureDirection === 'string'
+            ? gestureDirection === 'inverted'
+            : I18nManager.isRTL;
+
+        if (index !== scene.index) {
+          return false;
+        }
+
+        const immediateIndex =
+          this._immediateIndex == null ? index : this._immediateIndex;
+        const currentDragDistance = gesture[isVertical ? 'dy' : 'dx'];
+        const currentDragPosition =
+          event.nativeEvent[isVertical ? 'pageY' : 'pageX'];
+        const axisLength = isVertical
+          ? layout.height.__getValue()
+          : layout.width.__getValue();
+        const axisHasBeenMeasured = !!axisLength;
+
+        // Measure the distance from the touch to the edge of the screen
+        const screenEdgeDistance = gestureDirectionInverted
+          ? axisLength - (currentDragPosition - currentDragDistance)
+          : currentDragPosition - currentDragDistance;
+        // Compare to the gesture distance relavant to card or modal
+
+
+        const {
+          gestureResponseDistance: userGestureResponseDistance = {},
+        } = options;
+        const gestureResponseDistance = isVertical
+          ? userGestureResponseDistance.vertical ||
+          GESTURE_RESPONSE_DISTANCE_VERTICAL
+          : userGestureResponseDistance.horizontal ||
+          GESTURE_RESPONSE_DISTANCE_HORIZONTAL;
+        // GESTURE_RESPONSE_DISTANCE is about 25 or 30. Or 135 for modals
+        if (screenEdgeDistance > gestureResponseDistance) {
+          // Reject touches that started in the middle of the screen
+          return false;
+        }
+
+        const hasDraggedEnough =
+          Math.abs(currentDragDistance) > RESPOND_THRESHOLD;
+
+        const isOnFirstCard = immediateIndex === 0;
+        const shouldSetResponder =
+          hasDraggedEnough && axisHasBeenMeasured && !isOnFirstCard;
+        return shouldSetResponder;
+      },
+      onPanResponderMove: (event, gesture) => {
+
+        const {
+          transitionProps: { navigation, position, layout, scene },
+          mode,
+        } = this.props;
+        const { index } = navigation.state;
+        const isVertical = mode === 'modal';
+        const { options } = scene.descriptor;
+        const gestureDirection = options.gestureDirection;
+
+        const gestureDirectionInverted =
+          typeof gestureDirection === 'string'
+            ? gestureDirection === 'inverted'
+            : I18nManager.isRTL;
+
+
+        // Handle the moving touches for our granted responder
+        const startValue = this._gestureStartValue;
+        const axis = isVertical ? 'dy' : 'dx';
+        const axisDistance = isVertical
+          ? layout.height.__getValue()
+          : layout.width.__getValue();
+        const currentValue =
+          axis === 'dx' && gestureDirectionInverted
+            ? startValue + gesture[axis] / axisDistance
+            : startValue - gesture[axis] / axisDistance;
+        const value = clamp(index - 1, currentValue, index);
+        position.setValue(value);
+      },
+      onPanResponderTerminationRequest: () =>
+        // Returning false will prevent other views from becoming responder while
+        // the navigation view is the responder (mid-gesture)
+        false,
+      onPanResponderRelease: (event, gesture) => {
+        const {
+          transitionProps: { navigation, position, layout, scene },
+          mode,
+        } = this.props;
+        const { index } = navigation.state;
+        const isVertical = mode === 'modal';
+        const { options } = scene.descriptor;
+        const gestureDirection = options.gestureDirection;
+
+        const gestureDirectionInverted =
+          typeof gestureDirection === 'string'
+            ? gestureDirection === 'inverted'
+            : I18nManager.isRTL;
+
+
+        if (!this._isResponding) {
+          return;
+        }
+        this._isResponding = false;
+
+        const immediateIndex =
+          this._immediateIndex == null ? index : this._immediateIndex;
+
+        // Calculate animate duration according to gesture speed and moved distance
+        const axisDistance = isVertical
+          ? layout.height.__getValue()
+          : layout.width.__getValue();
+        const movementDirection = gestureDirectionInverted ? -1 : 1;
+        const movedDistance =
+          movementDirection * gesture[isVertical ? 'dy' : 'dx'];
+        const gestureVelocity =
+          movementDirection * gesture[isVertical ? 'vy' : 'vx'];
+        const defaultVelocity = axisDistance / ANIMATION_DURATION;
+        const velocity = Math.max(
+          Math.abs(gestureVelocity),
+          defaultVelocity
+        );
+        const resetDuration = gestureDirectionInverted
+          ? (axisDistance - movedDistance) / velocity
+          : movedDistance / velocity;
+        const goBackDuration = gestureDirectionInverted
+          ? movedDistance / velocity
+          : (axisDistance - movedDistance) / velocity;
+
+        // To asyncronously get the current animated value, we need to run stopAnimation:
+        position.stopAnimation(value => {
+          // If the speed of the gesture release is significant, use that as the indication
+          // of intent
+          if (gestureVelocity < -0.5) {
+            this.props.onGestureCanceled && this.props.onGestureCanceled();
+            this._reset(immediateIndex, resetDuration);
+            return;
+          }
+          if (gestureVelocity > 0.5) {
+            this.props.onGestureFinish && this.props.onGestureFinish();
+            this._goBack(immediateIndex, goBackDuration);
+            return;
+          }
+
+          // Then filter based on the distance the screen was moved. Over a third of the way swiped,
+          // and the back will happen.
+          if (value <= index - POSITION_THRESHOLD) {
+            this.props.onGestureFinish && this.props.onGestureFinish();
+            this._goBack(immediateIndex, goBackDuration);
+          } else {
+            this.props.onGestureCanceled && this.props.onGestureCanceled();
+            this._reset(immediateIndex, resetDuration);
+          }
+        });
+      },
+    });
+
+  }
+
   render() {
     let floatingHeader = null;
     const headerMode = this._getHeaderMode();
@@ -241,138 +432,7 @@ class StackViewLayout extends React.Component {
 
     const responder = !gesturesEnabled
       ? null
-      : PanResponder.create({
-          onPanResponderTerminate: () => {
-            this._isResponding = false;
-            this._reset(index, 0);
-            this.props.onGestureCanceled && this.props.onGestureCanceled();
-          },
-          onPanResponderGrant: () => {
-            position.stopAnimation((value: number) => {
-              this._isResponding = true;
-              this._gestureStartValue = value;
-            });
-            this.props.onGestureBegin && this.props.onGestureBegin();
-          },
-          onMoveShouldSetPanResponder: (event, gesture) => {
-            if (index !== scene.index) {
-              return false;
-            }
-            const immediateIndex =
-              this._immediateIndex == null ? index : this._immediateIndex;
-            const currentDragDistance = gesture[isVertical ? 'dy' : 'dx'];
-            const currentDragPosition =
-              event.nativeEvent[isVertical ? 'pageY' : 'pageX'];
-            const axisLength = isVertical
-              ? layout.height.__getValue()
-              : layout.width.__getValue();
-            const axisHasBeenMeasured = !!axisLength;
-
-            // Measure the distance from the touch to the edge of the screen
-            const screenEdgeDistance = gestureDirectionInverted
-              ? axisLength - (currentDragPosition - currentDragDistance)
-              : currentDragPosition - currentDragDistance;
-            // Compare to the gesture distance relavant to card or modal
-
-            const { options } = scene.descriptor;
-
-            const {
-              gestureResponseDistance: userGestureResponseDistance = {},
-            } = options;
-            const gestureResponseDistance = isVertical
-              ? userGestureResponseDistance.vertical ||
-                GESTURE_RESPONSE_DISTANCE_VERTICAL
-              : userGestureResponseDistance.horizontal ||
-                GESTURE_RESPONSE_DISTANCE_HORIZONTAL;
-            // GESTURE_RESPONSE_DISTANCE is about 25 or 30. Or 135 for modals
-            if (screenEdgeDistance > gestureResponseDistance) {
-              // Reject touches that started in the middle of the screen
-              return false;
-            }
-
-            const hasDraggedEnough =
-              Math.abs(currentDragDistance) > RESPOND_THRESHOLD;
-
-            const isOnFirstCard = immediateIndex === 0;
-            const shouldSetResponder =
-              hasDraggedEnough && axisHasBeenMeasured && !isOnFirstCard;
-            return shouldSetResponder;
-          },
-          onPanResponderMove: (event, gesture) => {
-            // Handle the moving touches for our granted responder
-            const startValue = this._gestureStartValue;
-            const axis = isVertical ? 'dy' : 'dx';
-            const axisDistance = isVertical
-              ? layout.height.__getValue()
-              : layout.width.__getValue();
-            const currentValue =
-              axis === 'dx' && gestureDirectionInverted
-                ? startValue + gesture[axis] / axisDistance
-                : startValue - gesture[axis] / axisDistance;
-            const value = clamp(index - 1, currentValue, index);
-            position.setValue(value);
-          },
-          onPanResponderTerminationRequest: () =>
-            // Returning false will prevent other views from becoming responder while
-            // the navigation view is the responder (mid-gesture)
-            false,
-          onPanResponderRelease: (event, gesture) => {
-            if (!this._isResponding) {
-              return;
-            }
-            this._isResponding = false;
-
-            const immediateIndex =
-              this._immediateIndex == null ? index : this._immediateIndex;
-
-            // Calculate animate duration according to gesture speed and moved distance
-            const axisDistance = isVertical
-              ? layout.height.__getValue()
-              : layout.width.__getValue();
-            const movementDirection = gestureDirectionInverted ? -1 : 1;
-            const movedDistance =
-              movementDirection * gesture[isVertical ? 'dy' : 'dx'];
-            const gestureVelocity =
-              movementDirection * gesture[isVertical ? 'vy' : 'vx'];
-            const defaultVelocity = axisDistance / ANIMATION_DURATION;
-            const velocity = Math.max(
-              Math.abs(gestureVelocity),
-              defaultVelocity
-            );
-            const resetDuration = gestureDirectionInverted
-              ? (axisDistance - movedDistance) / velocity
-              : movedDistance / velocity;
-            const goBackDuration = gestureDirectionInverted
-              ? movedDistance / velocity
-              : (axisDistance - movedDistance) / velocity;
-
-            // To asyncronously get the current animated value, we need to run stopAnimation:
-            position.stopAnimation(value => {
-              // If the speed of the gesture release is significant, use that as the indication
-              // of intent
-              if (gestureVelocity < -0.5) {
-                this.props.onGestureCanceled && this.props.onGestureCanceled();
-                this._reset(immediateIndex, resetDuration);
-                return;
-              }
-              if (gestureVelocity > 0.5) {
-                this.props.onGestureFinish && this.props.onGestureFinish();
-                this._goBack(immediateIndex, goBackDuration);
-                return;
-              }
-
-              // Then filter based on the distance the screen was moved. Over a third of the way swiped,
-              // and the back will happen.
-              if (value <= index - POSITION_THRESHOLD) {
-                this.props.onGestureFinish && this.props.onGestureFinish();
-                this._goBack(immediateIndex, goBackDuration);
-              } else {
-                this.props.onGestureCanceled && this.props.onGestureCanceled();
-                this._reset(immediateIndex, resetDuration);
-              }
-            });
-          },
-        });
+      : this._panResponder;
 
     const handlers = gesturesEnabled ? responder.panHandlers : {};
     const containerStyle = [
