@@ -185,9 +185,9 @@ export default function createNavigationContainer(Component) {
     }
 
     componentDidUpdate() {
-      // Clear cached _nav every tick
-      if (this._nav === this.state.nav) {
-        this._nav = null;
+      // Clear cached _navState every tick
+      if (this._navState === this.state.nav) {
+        this._navState = null;
       }
     }
 
@@ -308,32 +308,47 @@ export default function createNavigationContainer(Component) {
       if (this.props.navigation) {
         return this.props.navigation.dispatch(action);
       }
-      this._nav = this._nav || this.state.nav;
-      const oldNav = this._nav;
-      invariant(oldNav, 'should be set in constructor if stateful');
-      const nav = Component.router.getStateForAction(action, oldNav);
+
+      // navState will have the most up-to-date value, because setState sometimes behaves asyncronously
+      this._navState = this._navState || this.state.nav;
+      const lastNavState = this._navState;
+      invariant(lastNavState, 'should be set in constructor if stateful');
+      const reducedState = Component.router.getStateForAction(
+        action,
+        lastNavState
+      );
+      const navState = reducedState === null ? lastNavState : reducedState;
+
       const dispatchActionEvents = () => {
         this._actionEventSubscribers.forEach(subscriber =>
           subscriber({
             type: 'action',
             action,
-            state: nav,
-            lastState: oldNav,
+            state: navState,
+            lastState: lastNavState,
           })
         );
       };
-      if (nav && nav !== oldNav) {
+
+      if (reducedState === null) {
+        // The router will return null when action has been handled and the state hasn't changed.
+        // dispatch returns true when something has been handled.
+        dispatchActionEvents();
+        return true;
+      }
+
+      if (navState !== lastNavState) {
         // Cache updates to state.nav during the tick to ensure that subsequent calls will not discard this change
-        this._nav = nav;
-        this.setState({ nav }, () => {
-          this._onNavigationStateChange(oldNav, nav, action);
+        this._navState = navState;
+        this.setState({ nav: navState }, () => {
+          this._onNavigationStateChange(lastNavState, navState, action);
           dispatchActionEvents();
-          this._persistNavigationState(nav);
+          this._persistNavigationState(navState);
         });
         return true;
-      } else {
-        dispatchActionEvents();
       }
+
+      dispatchActionEvents();
       return false;
     };
 
