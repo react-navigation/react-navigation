@@ -66,7 +66,9 @@ export default function(navigation) {
      */
     setParams: params => {
       invariant(
-        navigation.state.key && typeof navigation.state.key === 'string',
+        navigation.state.key &&
+          (typeof navigation.state.key === 'string' ||
+            typeof navigation.state.key === 'number'),
         'setParams cannot be called by root navigator'
       );
       const key = navigation.state.key;
