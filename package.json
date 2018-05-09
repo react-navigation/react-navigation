@@ -21,8 +21,8 @@
     "lint": "eslint .",
     "format": "eslint --fix .",
     "precommit": "lint-staged",
-    "build": "babel src --out-dir dist",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "build": "babel src --out-dir dist"
   },
   "files": [
     "src",
@@ -90,7 +90,8 @@
       "\\.png$": "<rootDir>/assetsTransformer.js"
     },
     "modulePathIgnorePatterns": [
-      "<rootDir>/examples/"
+      "<rootDir>/examples/",
+      "<rootDir>/dist/"
     ],
     "transformIgnorePatterns": [
       "node_modules/(?!(jest-)?react-native|react-clone-referenced-element|react-navigation-deprecated-tab-navigator)"
