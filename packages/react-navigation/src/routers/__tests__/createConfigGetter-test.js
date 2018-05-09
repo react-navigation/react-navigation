@@ -1,6 +1,5 @@
 import { Component } from 'react';
 import createConfigGetter from '../createConfigGetter';
-import addNavigationHelpers from '../../addNavigationHelpers';
 
 const dummyEventSubscriber = (name: string, handler: (*) => void) => ({
   remove: () => {},
@@ -67,81 +66,81 @@ test('should get config for screen', () => {
 
   expect(
     getScreenOptions(
-      addNavigationHelpers({
+      {
         state: routes[0],
         dispatch: () => false,
         addListener: dummyEventSubscriber,
-      }),
+      },
       {}
     ).title
   ).toEqual('Welcome anonymous');
   expect(
     getScreenOptions(
-      addNavigationHelpers({
+      {
         state: routes[1],
         dispatch: () => false,
         addListener: dummyEventSubscriber,
-      }),
+      },
       {}
     ).title
   ).toEqual('Welcome jane');
   expect(
     getScreenOptions(
-      addNavigationHelpers({
+      {
         state: routes[0],
         dispatch: () => false,
         addListener: dummyEventSubscriber,
-      }),
+      },
       {}
     ).gesturesEnabled
   ).toEqual(true);
   expect(
     getScreenOptions(
-      addNavigationHelpers({
+      {
         state: routes[2],
         dispatch: () => false,
         addListener: dummyEventSubscriber,
-      }),
+      },
       {}
     ).title
   ).toEqual('Settings!!!');
   expect(
     getScreenOptions(
-      addNavigationHelpers({
+      {
         state: routes[2],
         dispatch: () => false,
         addListener: dummyEventSubscriber,
-      }),
+      },
       {}
     ).gesturesEnabled
   ).toEqual(false);
   expect(
     getScreenOptions(
-      addNavigationHelpers({
+      {
         state: routes[3],
         dispatch: () => false,
         addListener: dummyEventSubscriber,
-      }),
+      },
       {}
     ).title
   ).toEqual('10 new notifications');
   expect(
     getScreenOptions(
-      addNavigationHelpers({
+      {
         state: routes[3],
         dispatch: () => false,
         addListener: dummyEventSubscriber,
-      }),
+      },
       {}
     ).gesturesEnabled
   ).toEqual(true);
   expect(
     getScreenOptions(
-      addNavigationHelpers({
+      {
         state: routes[4],
         dispatch: () => false,
         addListener: dummyEventSubscriber,
-      }),
+      },
       {}
     ).gesturesEnabled
   ).toEqual(false);
@@ -164,11 +163,11 @@ test('should throw if the route does not exist', () => {
 
   expect(() =>
     getScreenOptions(
-      addNavigationHelpers({
+      {
         state: routes[0],
         dispatch: () => false,
         addListener: dummyEventSubscriber,
-      }),
+      },
       {}
     )
   ).toThrowError(
