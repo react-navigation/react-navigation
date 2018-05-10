@@ -147,6 +147,11 @@ module.exports = {
     return require('./views/SwitchView/SwitchView').default;
   },
 
+  // NavigationEvents
+  get NavigationEvents() {
+    return require('./views/NavigationEvents').default;
+  },
+
   // HOCs
   get withNavigation() {
     return require('./views/withNavigation').default;
