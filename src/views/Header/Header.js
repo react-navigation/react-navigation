@@ -240,8 +240,7 @@ class Header extends React.PureComponent {
     const style = {};
     const { transitionPreset } = this.props;
 
-    const details = this.props.getScreenDetails(props.scene);
-    const { titleOffset } = details.options;
+    const { options: { titleOffset } } = props.scene.descriptor;
 
     if (titleOffset) {
       if (typeof titleOffset === 'number') {
