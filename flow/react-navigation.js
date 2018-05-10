@@ -488,13 +488,14 @@ declare module 'react-navigation' {
     goBack: (routeKey?: ?string) => boolean,
     dismiss: () => boolean,
     navigate: (
-      routeName: | string
-      | {
-          routeName: string,
-          params?: NavigationParams,
-          action?: NavigationNavigateAction,
-          key?: string,
-        },
+      routeName:
+        | string
+        | {
+            routeName: string,
+            params?: NavigationParams,
+            action?: NavigationNavigateAction,
+            key?: string,
+          },
       params?: NavigationParams,
       action?: NavigationNavigateAction
     ) => boolean,
@@ -524,6 +525,21 @@ declare module 'react-navigation' {
     screenProps?: {},
     navigationOptions?: O,
   }>;
+
+  /**
+   * NavigationEvents component
+   */
+
+  declare type _NavigationEventsProps = {
+    navigation?: NavigationScreenProp<NavigationState>,
+    onWillFocus?: NavigationEventCallback,
+    onDidFocus?: NavigationEventCallback,
+    onWillBlur?: NavigationEventCallback,
+    onDidBlur?: NavigationEventCallback,
+  };
+  declare export var NavigationEvents: React$ComponentType<
+    _NavigationEventsProps
+  >;
 
   /**
    * Navigation container
