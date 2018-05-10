@@ -39,10 +39,16 @@ export default Navigator =>
     };
 
     _handleTransitionStart = (transitionProps, prevTransitionProps) => {
-      const currentField = TextInput.State.currentlyFocusedField();
-      if (currentField) {
-        TextInput.State.blurTextInput(currentField);
+      // TODO: We should not even have received the transition start event
+      // in the case where the index did not change, I believe. We
+      // should revisit this after 2.0 release.
+      if (transitionProps.index !== prevTransitionProps.index) {
+        const currentField = TextInput.State.currentlyFocusedField();
+        if (currentField) {
+          TextInput.State.blurTextInput(currentField);
+        }
       }
+
       this.props.onTransitionStart &&
         this.props.onTransitionStart(transitionProps, prevTransitionProps);
     };
