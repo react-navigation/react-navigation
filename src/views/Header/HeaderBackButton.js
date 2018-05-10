@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Animated,
   I18nManager,
   Image,
   Text,
@@ -47,7 +48,7 @@ class HeaderBackButton extends React.PureComponent {
         title,
       };
     } else {
-      BackImage = Image;
+      BackImage = Animated.Image;
       props = {
         style: [
           styles.icon,
