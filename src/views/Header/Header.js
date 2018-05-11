@@ -254,22 +254,22 @@ class Header extends React.PureComponent {
           style.right = titleOffset.right;
         }
       }
-    }
-
-    if (Platform.OS === 'android') {
-      if (!options.hasLeftComponent) {
+    } else {
+      if (Platform.OS === 'android') {
+        if (!options.hasLeftComponent) {
+          style.left = 0;
+        }
+        if (!options.hasRightComponent) {
+          style.right = 0;
+        }
+      } else if (
+        Platform.OS === 'ios' &&
+        !options.hasLeftComponent &&
+        !options.hasRightComponent
+      ) {
         style.left = 0;
-      }
-      if (!options.hasRightComponent) {
         style.right = 0;
       }
-    } else if (
-      Platform.OS === 'ios' &&
-      !options.hasLeftComponent &&
-      !options.hasRightComponent
-    ) {
-      style.left = 0;
-      style.right = 0;
     }
 
     return this._renderSubView(
