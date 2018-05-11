@@ -239,7 +239,6 @@ class Header extends React.PureComponent {
   _renderTitle(props, options) {
     const style = {};
     const { transitionPreset } = this.props;
-
     const { options: { titleOffset } } = props.scene.descriptor;
 
     if (titleOffset) {
@@ -252,7 +251,7 @@ class Header extends React.PureComponent {
         }
 
         if (typeof titleOffset.right === 'number') {
-          style.left = titleOffset.right;
+          style.right = titleOffset.right;
         }
       }
     }
