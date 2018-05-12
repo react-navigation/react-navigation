@@ -45,6 +45,43 @@ describe('DrawerRouter', () => {
     expect(router.getComponentForState(expectedState2)).toEqual(ScreenB);
   });
 
+  test('Handles initial route navigation', () => {
+    const FooScreen = () => <div />;
+    const BarScreen = () => <div />;
+    const router = DrawerRouter(
+      {
+        Foo: {
+          screen: FooScreen,
+        },
+        Bar: {
+          screen: BarScreen,
+        },
+      },
+      { initialRouteName: 'Bar' }
+    );
+    const state = router.getStateForAction({
+      type: NavigationActions.NAVIGATE,
+      routeName: 'Foo',
+    });
+    expect(state).toEqual({
+      index: 0,
+      isDrawerOpen: false,
+      isTransitioning: false,
+      routes: [
+        {
+          key: 'Foo',
+          params: undefined,
+          routeName: 'Foo',
+        },
+        {
+          key: 'Bar',
+          params: undefined,
+          routeName: 'Bar',
+        },
+      ],
+    });
+  });
+
   test('Drawer opens closes and toggles', () => {
     const ScreenA = () => <div />;
     const ScreenB = () => <div />;
