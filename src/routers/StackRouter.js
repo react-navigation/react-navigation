@@ -662,5 +662,7 @@ export default (routeConfigs, stackConfig = {}) => {
       routeConfigs,
       stackConfig.navigationOptions
     ),
+
+    childRouters,
   };
 };

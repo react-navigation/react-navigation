@@ -8,6 +8,9 @@ module.exports = {
   get StateUtils() {
     return require('./StateUtils').default;
   },
+  get passActiveRouteOption() {
+    return require('./routers/passActiveRouteOption').default;
+  },
 
   // Navigators
   get createNavigator() {

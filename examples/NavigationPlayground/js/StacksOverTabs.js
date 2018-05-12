@@ -8,6 +8,7 @@ import {
   SafeAreaView,
   createStackNavigator,
   createBottomTabNavigator,
+  passActiveRouteOption,
 } from 'react-navigation';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -61,7 +62,7 @@ const TabNav = createBottomTabNavigator(
       screen: MyHomeScreen,
       path: '/',
       navigationOptions: {
-        title: 'Welcome',
+        headerTitle: 'Welcome',
         tabBarLabel: 'Home',
         tabBarIcon: ({ tintColor, focused }) => (
           <Ionicons
@@ -75,8 +76,14 @@ const TabNav = createBottomTabNavigator(
     SettingsTab: {
       screen: MySettingsScreen,
       path: '/settings',
-      navigationOptions: {
-        title: 'Settings',
+      navigationOptions: ({ navigation }) => ({
+        headerTitle: 'Settings',
+        headerRight: (
+          <Button
+            title="Help"
+            onPress={() => navigation.navigate('NotifSettings')}
+          />
+        ),
         tabBarIcon: ({ tintColor, focused }) => (
           <Ionicons
             name={focused ? 'ios-settings' : 'ios-settings-outline'}
@@ -84,7 +91,7 @@ const TabNav = createBottomTabNavigator(
             style={{ color: tintColor }}
           />
         ),
-      },
+      }),
     },
   },
   {
@@ -93,6 +100,13 @@ const TabNav = createBottomTabNavigator(
     swipeEnabled: false,
   }
 );
+
+TabNav.navigationOptions = ({ navigation }) => {
+  return {
+    headerTitle: passActiveRouteOption(navigation, 'headerTitle'),
+    headerRight: passActiveRouteOption(navigation, 'headerRight'),
+  };
+};
 
 const StacksOverTabs = createStackNavigator({
   Root: {
@@ -107,9 +121,9 @@ const StacksOverTabs = createStackNavigator({
   Profile: {
     screen: MyProfileScreen,
     path: '/people/:name',
-    navigationOptions: ({ navigation }) => {
-      title: `${navigation.state.params.name}'s Profile!`;
-    },
+    navigationOptions: ({ navigation }) => ({
+      title: `${navigation.state.params.name}'s Profile!`,
+    }),
   },
 });
 

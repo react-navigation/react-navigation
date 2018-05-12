@@ -60,6 +60,7 @@ Object.keys(ROUTERS).forEach(routerName => {
         router.getScreenOptions(
           {
             state: routes[0],
+            getScreenProps: () => ({}),
             dispatch: () => false,
             addListener: dummyEventSubscriber,
           },
@@ -70,6 +71,7 @@ Object.keys(ROUTERS).forEach(routerName => {
         router.getScreenOptions(
           {
             state: routes[1],
+            getScreenProps: () => ({}),
             dispatch: () => false,
             addListener: dummyEventSubscriber,
           },
@@ -80,6 +82,7 @@ Object.keys(ROUTERS).forEach(routerName => {
         router.getScreenOptions(
           {
             state: routes[2],
+            getScreenProps: () => ({}),
             dispatch: () => false,
             addListener: dummyEventSubscriber,
           },

@@ -384,5 +384,7 @@ export default (routeConfigs, config = {}) => {
       routeConfigs,
       config.navigationOptions
     ),
+
+    childRouters,
   };
 };
