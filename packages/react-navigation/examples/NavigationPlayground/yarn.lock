@@ -5737,9 +5737,9 @@ react-native@^0.54.0:
     xmldoc "^0.4.0"
     yargs "^9.0.0"
 
-react-navigation-deprecated-tab-navigator@1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/react-navigation-deprecated-tab-navigator/-/react-navigation-deprecated-tab-navigator-1.1.0.tgz#58945c1c4c7c21b54954e814e8721e98423df75d"
+react-navigation-deprecated-tab-navigator@1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/react-navigation-deprecated-tab-navigator/-/react-navigation-deprecated-tab-navigator-1.2.0.tgz#e0d969c196dcd3a4a440770a7bd97fa058eb4aaf"
   dependencies:
     react-native-tab-view "^0.0.74"
 
@@ -5757,6 +5757,16 @@ react-navigation-material-bottom-tabs@0.1.3:
     prop-types "^15.6.0"
     react-native-paper "=1.4.0"
     react-navigation-tabs "0.2.0-rc.0"
+
+react-navigation-tabs@0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/react-navigation-tabs/-/react-navigation-tabs-0.2.0.tgz#d25be64e01a728c893a93cfeee6b176ab74d67de"
+  dependencies:
+    hoist-non-react-statics "^2.5.0"
+    prop-types "^15.6.0"
+    react-lifecycles-compat "^1.0.2"
+    react-native-safe-area-view "^0.7.0"
+    react-native-tab-view "~0.0.77"
 
 react-navigation-tabs@0.2.0-rc.0:
   version "0.2.0-rc.0"
