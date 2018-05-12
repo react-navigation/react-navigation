@@ -90,12 +90,7 @@ export default function createNavigationContainer(Component) {
         });
       }
 
-      this.state = {
-        nav:
-          this._isStateful() && !props.persistenceKey
-            ? Component.router.getStateForAction(this._initialAction)
-            : null,
-      };
+      this.state = { nav: null };
     }
 
     _renderLoading() {
@@ -219,21 +214,8 @@ export default function createNavigationContainer(Component) {
       // Initialize state. This must be done *after* any async code
       // so we don't end up with a different value for this.state.nav
       // due to changes while async function was resolving
-      let action = this._initialAction;
+      let action = null;
       let startupState = this.state.nav;
-      if (!startupState) {
-        !!process.env.REACT_NAV_LOGGING &&
-          console.log('Init new Navigation State');
-        startupState = Component.router.getStateForAction(action);
-      }
-
-      // Pull persisted state from AsyncStorage
-      if (startupStateJSON) {
-        try {
-          startupState = JSON.parse(startupStateJSON);
-          _reactNavigationIsHydratingState = true;
-        } catch (e) {}
-      }
 
       // Pull state out of URL
       if (parsedUrl) {
@@ -246,11 +228,26 @@ export default function createNavigationContainer(Component) {
           !!process.env.REACT_NAV_LOGGING &&
             console.log('Applying Navigation Action for Initial URL:', url);
           action = urlAction;
-          startupState = Component.router.getStateForAction(
-            urlAction,
-            startupState
-          );
+          // This is an **initial** URL, hence the null state as parameter
+          startupState = Component.router.getStateForAction(urlAction, null);
         }
+      }
+
+      // Pull persisted state from AsyncStorage
+      if (!startupState && startupStateJSON) {
+        action = this._initialAction;
+        try {
+          startupState = JSON.parse(startupStateJSON);
+          _reactNavigationIsHydratingState = true;
+        } catch (e) {}
+      }
+
+      // Initialize state if there was no valid initial URL nor valid persisted state
+      if (!startupState) {
+        !!process.env.REACT_NAV_LOGGING &&
+          console.log('Init new Navigation State');
+        action = this._initialAction;
+        startupState = Component.router.getStateForAction(action);
       }
 
       const dispatchActions = () =>
