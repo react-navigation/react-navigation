@@ -26,10 +26,14 @@ export default (routeConfigs, config = {}) => {
     },
 
     getStateForAction(action, lastState) {
-      const state = lastState || {
-        ...switchRouter.getStateForAction(action, undefined),
-        isDrawerOpen: false,
-      };
+      if (!lastState) {
+        return {
+          ...switchRouter.getStateForAction(action, undefined),
+          isDrawerOpen: false,
+        };
+      }
+
+      const state = lastState;
 
       const isRouterTargeted = action.key == null || action.key === state.key;
 
