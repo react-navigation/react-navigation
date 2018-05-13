@@ -206,6 +206,7 @@ class StackViewLayout extends React.Component {
   _panResponder = PanResponder.create({
     onPanResponderTerminate: () => {
       this._isResponding = false;
+      const { index } = this.props.navigation.state;
       this._reset(index, 0);
       this.props.onGestureCanceled && this.props.onGestureCanceled();
     },
