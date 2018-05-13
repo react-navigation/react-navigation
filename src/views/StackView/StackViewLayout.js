@@ -219,7 +219,7 @@ class StackViewLayout extends React.Component {
         return false;
       }
 
-      position.stopAnimation((value: number) => {
+      position.stopAnimation(value => {
         this._isResponding = true;
         this._gestureStartValue = value;
       });
