@@ -32,14 +32,7 @@ const InboxScreen = ({ navigation }) => (
   <MyNavScreen banner={'Inbox Screen'} navigation={navigation} />
 );
 InboxScreen.navigationOptions = {
-  drawerLabel: 'Inbox',
-  drawerIcon: ({ tintColor }) => (
-    <MaterialIcons
-      name="move-to-inbox"
-      size={24}
-      style={{ color: tintColor }}
-    />
-  ),
+  headerTitle: 'Inbox',
 };
 
 const EmailScreen = ({ navigation }) => (
@@ -50,10 +43,7 @@ const DraftsScreen = ({ navigation }) => (
   <MyNavScreen banner={'Drafts Screen'} navigation={navigation} />
 );
 DraftsScreen.navigationOptions = {
-  drawerLabel: 'Drafts',
-  drawerIcon: ({ tintColor }) => (
-    <MaterialIcons name="drafts" size={24} style={{ color: tintColor }} />
-  ),
+  headerTitle: 'Drafts',
 };
 
 const InboxStack = createStackNavigator({
@@ -61,10 +51,28 @@ const InboxStack = createStackNavigator({
   Email: { screen: EmailScreen },
 });
 
+InboxStack.navigationOptions = {
+  drawerLabel: 'Inbox',
+  drawerIcon: ({ tintColor }) => (
+    <MaterialIcons
+      name="move-to-inbox"
+      size={24}
+      style={{ color: tintColor }}
+    />
+  ),
+};
+
 const DraftsStack = createStackNavigator({
   Drafts: { screen: DraftsScreen },
   Email: { screen: EmailScreen },
 });
+
+DraftsStack.navigationOptions = {
+  drawerLabel: 'Drafts',
+  drawerIcon: ({ tintColor }) => (
+    <MaterialIcons name="drafts" size={24} style={{ color: tintColor }} />
+  ),
+};
 
 const DrawerExample = createDrawerNavigator(
   {

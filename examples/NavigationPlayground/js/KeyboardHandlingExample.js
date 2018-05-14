@@ -24,9 +24,9 @@ class ScreenOne extends React.Component {
 }
 
 class ScreenTwo extends React.Component {
-  static navigationOptions = {
-    title: 'Screen w/ Input',
-  };
+  static navigationOptions = ({ navigation }) => ({
+    title: navigation.getParam('inputValue', 'Screen w/ Input'),
+  });
 
   componentDidMount() {
     InteractionManager.runAfterInteractions(() => {
@@ -41,6 +41,7 @@ class ScreenTwo extends React.Component {
         <View style={{ alignSelf: 'center', paddingVertical: 20 }}>
           <TextInput
             ref={c => (this._textInput = c)}
+            onChangeText={inputValue => navigation.setParams({ inputValue })}
             style={{
               backgroundColor: 'white',
               height: 24,

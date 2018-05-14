@@ -164,7 +164,7 @@ export default (routeConfigs, stackConfig = {}) => {
 
     getActionCreators(route, navStateKey) {
       return {
-        ...getNavigationActionCreators(route, navStateKey),
+        ...getNavigationActionCreators(route),
         ...getCustomActionCreators(route, navStateKey),
         pop: (n, params) =>
           StackActions.pop({
@@ -255,11 +255,14 @@ export default (routeConfigs, stackConfig = {}) => {
         // active route has the first opportunity, then the one before it, etc.
         for (let childRoute of state.routes.slice().reverse()) {
           let childRouter = childRouters[childRoute.routeName];
-          let debug = action.params && action.params.debug;
+          let childAction =
+            action.routeName === childRoute.routeName && action.action
+              ? action.action
+              : action;
 
           if (childRouter) {
             const nextRouteState = childRouter.getStateForAction(
-              action,
+              childAction,
               childRoute
             );
 
@@ -324,7 +327,7 @@ export default (routeConfigs, stackConfig = {}) => {
             isTransitioning:
               state.index !== lastRouteIndex
                 ? action.immediate !== true
-                : undefined,
+                : state.isTransitioning,
             index: lastRouteIndex,
             routes,
           };

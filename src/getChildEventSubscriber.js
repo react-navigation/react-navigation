@@ -138,11 +138,14 @@ export default function getChildEventSubscriber(addListener, key) {
           emit((lastEmittedEvent = 'didBlur'), childPayload);
         }
       }
+
+      if (lastEmittedEvent === 'didBlur' && !newRoute) {
+        removeAll();
+      }
     })
   );
 
   return {
-    removeAll,
     addListener(eventName, eventHandler) {
       const subscribers = getChildSubscribers(eventName);
       if (!subscribers) {

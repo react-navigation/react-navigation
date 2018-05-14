@@ -14,15 +14,14 @@ function createNavigator(NavigatorView, router, navigationConfig) {
       const activeKeys = this.props.navigation.state.routes.map(r => r.key);
       Object.keys(this.childEventSubscribers).forEach(key => {
         if (!activeKeys.includes(key)) {
-          this.childEventSubscribers[key].removeAll();
           delete this.childEventSubscribers[key];
         }
       });
     }
 
-    // Remove all subscriptions
+    // Remove all subscription references
     componentWillUnmount() {
-      Object.values(this.childEventSubscribers).map(s => s.removeAll());
+      this.childEventSubscribers = {};
     }
 
     _isRouteFocused = route => {
