@@ -275,14 +275,20 @@ declare module 'react-navigation' {
     Route: NavigationRoute,
     Options: {},
     Props: {}
-  > = React$ComponentType<NavigationNavigatorProps<Options, Route> & Props> &
+  > = React$ComponentType<{
+    ...Props,
+    ...NavigationNavigatorProps<Options, Route>,
+  }> &
     ({} | { navigationOptions: NavigationScreenConfig<Options> });
 
   declare export type NavigationNavigator<
     State: NavigationState,
     Options: {},
     Props: {}
-  > = React$ComponentType<NavigationNavigatorProps<Options, State> & Props> & {
+  > = React$ComponentType<{
+    ...Props,
+    ...NavigationNavigatorProps<Options, State>,
+  }> & {
     router: NavigationRouter<State, Options>,
     navigationOptions?: ?NavigationScreenConfig<Options>,
   };
@@ -487,13 +493,14 @@ declare module 'react-navigation' {
     goBack: (routeKey?: ?string) => boolean,
     dismiss: () => boolean,
     navigate: (
-      routeName: | string
-      | {
-          routeName: string,
-          params?: NavigationParams,
-          action?: NavigationNavigateAction,
-          key?: string,
-        },
+      routeName:
+        | string
+        | {
+            routeName: string,
+            params?: NavigationParams,
+            action?: NavigationNavigateAction,
+            key?: string,
+          },
       params?: NavigationParams,
       action?: NavigationNavigateAction
     ) => boolean,
@@ -532,7 +539,10 @@ declare module 'react-navigation' {
     State: NavigationState,
     Options: {},
     Props: {}
-  > = React$ComponentType<NavigationContainerProps<State, Options> & Props> & {
+  > = React$ComponentType<{
+    ...Props,
+    ...NavigationContainerProps<State, Options>,
+  }> & {
     router: NavigationRouter<State, Options>,
     navigationOptions?: ?NavigationScreenConfig<Options>,
   };
@@ -764,7 +774,7 @@ declare module 'react-navigation' {
     view: NavigationView<O, S>,
     router: NavigationRouter<S, O>,
     navigatorConfig?: NavigatorConfig
-  ): any;
+  ): NavigationNavigator<S, O, *>;
 
   declare export function StackNavigator(
     routeConfigMap: NavigationRouteConfigMap,
