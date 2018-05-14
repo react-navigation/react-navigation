@@ -269,8 +269,7 @@ declare module 'react-navigation' {
 
   declare export type NavigationComponent =
     | NavigationScreenComponent<NavigationRoute, *, *>
-    | NavigationContainer<*, *, *>
-    | any;
+    | NavigationContainer<*, *, *>;
 
   declare export type NavigationScreenComponent<
     Route: NavigationRoute,
@@ -488,14 +487,13 @@ declare module 'react-navigation' {
     goBack: (routeKey?: ?string) => boolean,
     dismiss: () => boolean,
     navigate: (
-      routeName:
-        | string
-        | {
-            routeName: string,
-            params?: NavigationParams,
-            action?: NavigationNavigateAction,
-            key?: string,
-          },
+      routeName: | string
+      | {
+          routeName: string,
+          params?: NavigationParams,
+          action?: NavigationNavigateAction,
+          key?: string,
+        },
       params?: NavigationParams,
       action?: NavigationNavigateAction
     ) => boolean,
