@@ -24,9 +24,12 @@ class StackView extends React.Component {
         configureTransition={this._configureTransition}
         navigation={this.props.navigation}
         descriptors={this.props.descriptors}
-        onTransitionStart={this.props.onTransitionStart}
+        onTransitionStart={this.props.navigationConfig.onTransitionStart}
         onTransitionEnd={(transition, lastTransition) => {
-          const { onTransitionEnd, navigation } = this.props;
+          const {
+            navigationConfig: { onTransitionEnd },
+            navigation,
+          } = this.props;
           if (transition.navigation.state.isTransitioning) {
             navigation.dispatch(
               StackActions.completeTransition({
