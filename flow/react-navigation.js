@@ -487,6 +487,7 @@ declare module 'react-navigation' {
   };
 
   declare export type NavigationScreenProp<+S> = {
+    ..._DefaultActionCreators,
     +state: S,
     dispatch: NavigationDispatch,
     addListener: (
@@ -759,6 +760,26 @@ declare module 'react-navigation' {
       toString: () => string,
     },
   };
+
+  declare type _DefaultActionCreators = {|
+    goBack: (routeKey?: ?string) => boolean,
+    navigate: (
+      routeName:
+        | string
+        | {
+            routeName: string,
+            params?: NavigationParams,
+            action?: NavigationNavigateAction,
+            key?: string,
+          },
+      params?: NavigationParams,
+      action?: NavigationNavigateAction
+    ) => boolean,
+    setParams: (newParams: NavigationParams) => boolean,
+  |};
+  declare export function getNavigationActionCreators(
+    route: NavigationRoute
+  ): _DefaultActionCreators;
 
   declare type _RouterProp<S: NavigationState, O: {}> = {
     router: NavigationRouter<S, O>,

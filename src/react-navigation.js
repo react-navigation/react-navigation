@@ -71,6 +71,9 @@ module.exports = {
   get DrawerActions() {
     return require('./routers/DrawerActions').default;
   },
+  get getNavigationActionCreators() {
+    return require('./routers/getNavigationActionCreators').default;
+  },
 
   // Routers
   get StackRouter() {
