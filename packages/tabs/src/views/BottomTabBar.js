@@ -201,8 +201,8 @@ class TabBarBottom extends React.Component<Props> {
             <TouchableWithoutFeedback
               key={route.key}
               onPress={() => {
-                jumpTo(route.key);
                 onTabPress({ route });
+                jumpTo(route.key);
               }}
             >
               <View
