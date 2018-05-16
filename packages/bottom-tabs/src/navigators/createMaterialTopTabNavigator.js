@@ -45,14 +45,6 @@ class TabView extends React.PureComponent<Props> {
     return route.routeName;
   };
 
-  _getOnPress = (previousScene, { route }) => {
-    const { descriptors } = this.props;
-    const descriptor = descriptors[route.key];
-    const options = descriptor.options;
-
-    return options.tabBarOnPress;
-  };
-
   _getTestIDProps = ({ route, focused }) => {
     const { descriptors } = this.props;
     const descriptor = descriptors[route.key];
@@ -107,6 +99,7 @@ class TabView extends React.PureComponent<Props> {
         getLabelText={this.props.getLabelText}
         getTestIDProps={this._getTestIDProps}
         renderIcon={this._renderIcon}
+        onTabPress={this.props.onTabPress}
       />
     );
   };
