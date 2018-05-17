@@ -487,7 +487,10 @@ declare module 'react-navigation' {
   };
 
   declare export type NavigationScreenProp<+S> = {
-    ...$ObjMap<_DefaultActionCreators, () => (...args: *) => boolean>,
+    ...$ObjMap<
+      _DefaultActionCreators,
+      <Args>((...args: Args) => *) => (...args: Args) => boolean
+    >,
     +state: S,
     dispatch: NavigationDispatch,
     addListener: (
