@@ -1,10 +1,11 @@
 import React from 'react';
-import { Linking, AsyncStorage } from 'react-native';
-import withLifecyclePolyfill from 'react-lifecycles-compat';
+import { AsyncStorage, Linking, Platform } from 'react-native';
+import { polyfill } from 'react-lifecycles-compat';
 
 import { BackHandler } from './PlatformHelpers';
 import NavigationActions from './NavigationActions';
 import invariant from './utils/invariant';
+import getNavigationActionCreators from './routers/getNavigationActionCreators';
 import docsUrl from './utils/docsUrl';
 
 function isStateful(props) {
@@ -184,9 +185,9 @@ export default function createNavigationContainer(Component) {
     }
 
     componentDidUpdate() {
-      // Clear cached _nav every tick
-      if (this._nav === this.state.nav) {
-        this._nav = null;
+      // Clear cached _navState every tick
+      if (this._navState === this.state.nav) {
+        this._navState = null;
       }
     }
 
@@ -198,11 +199,15 @@ export default function createNavigationContainer(Component) {
 
       if (__DEV__ && !this.props.detached) {
         if (_statefulContainerCount > 0) {
-          console.error(
-            `You should only render one navigator explicitly in your app, and other navigators should by rendered by including them in that navigator. Full details at: ${docsUrl(
-              'common-mistakes.html#explicitly-rendering-more-than-one-navigator'
-            )}`
-          );
+          // Temporarily only show this on iOS due to this issue:
+          // https://github.com/react-navigation/react-navigation/issues/4196#issuecomment-390827829
+          if (Platform.OS === 'ios') {
+            console.warn(
+              `You should only render one navigator explicitly in your app, and other navigators should by rendered by including them in that navigator. Full details at: ${docsUrl(
+                'common-mistakes.html#explicitly-rendering-more-than-one-navigator'
+              )}`
+            );
+          }
         }
       }
       _statefulContainerCount++;
@@ -252,12 +257,7 @@ export default function createNavigationContainer(Component) {
         }
       }
 
-      if (startupState === this.state.nav) {
-        return;
-      }
-
-      this.setState({ nav: startupState }, () => {
-        _reactNavigationIsHydratingState = false;
+      const dispatchActions = () =>
         this._actionEventSubscribers.forEach(subscriber =>
           subscriber({
             type: 'action',
@@ -266,6 +266,15 @@ export default function createNavigationContainer(Component) {
             lastState: null,
           })
         );
+
+      if (startupState === this.state.nav) {
+        dispatchActions();
+        return;
+      }
+
+      this.setState({ nav: startupState }, () => {
+        _reactNavigationIsHydratingState = false;
+        dispatchActions();
       });
     }
 
@@ -303,32 +312,47 @@ export default function createNavigationContainer(Component) {
       if (this.props.navigation) {
         return this.props.navigation.dispatch(action);
       }
-      this._nav = this._nav || this.state.nav;
-      const oldNav = this._nav;
-      invariant(oldNav, 'should be set in constructor if stateful');
-      const nav = Component.router.getStateForAction(action, oldNav);
+
+      // navState will have the most up-to-date value, because setState sometimes behaves asyncronously
+      this._navState = this._navState || this.state.nav;
+      const lastNavState = this._navState;
+      invariant(lastNavState, 'should be set in constructor if stateful');
+      const reducedState = Component.router.getStateForAction(
+        action,
+        lastNavState
+      );
+      const navState = reducedState === null ? lastNavState : reducedState;
+
       const dispatchActionEvents = () => {
         this._actionEventSubscribers.forEach(subscriber =>
           subscriber({
             type: 'action',
             action,
-            state: nav,
-            lastState: oldNav,
+            state: navState,
+            lastState: lastNavState,
           })
         );
       };
-      if (nav && nav !== oldNav) {
+
+      if (reducedState === null) {
+        // The router will return null when action has been handled and the state hasn't changed.
+        // dispatch returns true when something has been handled.
+        dispatchActionEvents();
+        return true;
+      }
+
+      if (navState !== lastNavState) {
         // Cache updates to state.nav during the tick to ensure that subsequent calls will not discard this change
-        this._nav = nav;
-        this.setState({ nav }, () => {
-          this._onNavigationStateChange(oldNav, nav, action);
+        this._navState = navState;
+        this.setState({ nav: navState }, () => {
+          this._onNavigationStateChange(lastNavState, navState, action);
           dispatchActionEvents();
-          this._persistNavigationState(nav);
+          this._persistNavigationState(navState);
         });
         return true;
-      } else {
-        dispatchActionEvents();
       }
+
+      dispatchActionEvents();
       return false;
     };
 
@@ -355,6 +379,11 @@ export default function createNavigationContainer(Component) {
               };
             },
           };
+          const actionCreators = getNavigationActionCreators(nav);
+          Object.keys(actionCreators).forEach(actionName => {
+            this._navigation[actionName] = (...args) =>
+              this.dispatch(actionCreators[actionName](...args));
+          });
         }
         navigation = this._navigation;
       }
@@ -363,5 +392,5 @@ export default function createNavigationContainer(Component) {
     }
   }
 
-  return withLifecyclePolyfill(NavigationContainer);
+  return polyfill(NavigationContainer);
 }
