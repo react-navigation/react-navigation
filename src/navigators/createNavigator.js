@@ -1,4 +1,5 @@
 import React from 'react';
+import { KeyboardAvoidingView } from 'react-native';
 
 import getChildEventSubscriber from '../getChildEventSubscriber';
 
@@ -92,7 +93,9 @@ function createNavigator(NavigatorView, router, navigationConfig) {
         };
       });
 
-      return (
+      const { enableKeyboardAvoiding } = navigationConfig;
+
+      let navigatorView = (
         <NavigatorView
           {...this.props}
           screenProps={screenProps}
@@ -101,6 +104,16 @@ function createNavigator(NavigatorView, router, navigationConfig) {
           descriptors={descriptors}
         />
       );
+
+      if (enableKeyboardAvoiding) {
+        return (
+          <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+            {navigatorView}
+          </KeyboardAvoidingView>
+        );
+      } else {
+        return navigatorView;
+      }
     }
   }
   return Navigator;
