@@ -269,21 +269,26 @@ declare module 'react-navigation' {
 
   declare export type NavigationComponent =
     | NavigationScreenComponent<NavigationRoute, *, *>
-    | NavigationContainer<*, *, *>
-    | any;
+    | NavigationContainer<*, *, *>;
 
   declare export type NavigationScreenComponent<
     Route: NavigationRoute,
     Options: {},
     Props: {}
-  > = React$ComponentType<NavigationNavigatorProps<Options, Route> & Props> &
+  > = React$ComponentType<{
+    ...Props,
+    ...NavigationNavigatorProps<Options, Route>,
+  }> &
     ({} | { navigationOptions: NavigationScreenConfig<Options> });
 
   declare export type NavigationNavigator<
     State: NavigationState,
     Options: {},
     Props: {}
-  > = React$ComponentType<NavigationNavigatorProps<Options, State> & Props> & {
+  > = React$ComponentType<{
+    ...Props,
+    ...NavigationNavigatorProps<Options, State>,
+  }> & {
     router: NavigationRouter<State, Options>,
     navigationOptions?: ?NavigationScreenConfig<Options>,
   };
@@ -426,10 +431,9 @@ declare module 'react-navigation' {
       | ((options: { tintColor: ?string, focused: boolean }) => ?React$Node),
     tabBarVisible?: boolean,
     tabBarTestIDProps?: { testID?: string, accessibilityLabel?: string },
-    tabBarOnPress?: (
-      scene: TabScene,
-      jumpToIndex: (index: number) => void
-    ) => void,
+    tabBarOnPress?: ({
+      navigation: NavigationScreenProp<NavigationRoute>,
+    }) => void,
   |};
 
   /**
@@ -541,7 +545,10 @@ declare module 'react-navigation' {
     State: NavigationState,
     Options: {},
     Props: {}
-  > = React$ComponentType<NavigationContainerProps<State, Options> & Props> & {
+  > = React$ComponentType<{
+    ...Props,
+    ...NavigationContainerProps<State, Options>,
+  }> & {
     router: NavigationRouter<State, Options>,
     navigationOptions?: ?NavigationScreenConfig<Options>,
   };
@@ -773,7 +780,7 @@ declare module 'react-navigation' {
     view: NavigationView<O, S>,
     router: NavigationRouter<S, O>,
     navigatorConfig?: NavigatorConfig
-  ): any;
+  ): NavigationNavigator<S, O, *>;
 
   declare export function StackNavigator(
     routeConfigMap: NavigationRouteConfigMap,
