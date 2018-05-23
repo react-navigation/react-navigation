@@ -489,8 +489,14 @@ declare module 'react-navigation' {
   declare export type NavigationScreenProp<+S> = {
     +state: S,
     dispatch: NavigationDispatch,
+    addListener: (
+      eventName: string,
+      callback: NavigationEventCallback
+    ) => NavigationEventSubscription,
+    getParam: (paramName: string, fallback?: any) => any,
+    isFocused: () => boolean,
+    // Shared action creators that exist for all routers
     goBack: (routeKey?: ?string) => boolean,
-    dismiss: () => boolean,
     navigate: (
       routeName:
         | string
@@ -504,24 +510,25 @@ declare module 'react-navigation' {
       action?: NavigationNavigateAction
     ) => boolean,
     setParams: (newParams: NavigationParams) => boolean,
-    getParam: (paramName: string, fallback?: any) => any,
-    addListener: (
-      eventName: string,
-      callback: NavigationEventCallback
-    ) => NavigationEventSubscription,
-    push: (
+    // StackRouter action creators
+    pop?: (n?: number, params?: { immediate?: boolean }) => boolean,
+    popToTop?: (params?: { immediate?: boolean }) => boolean,
+    push?: (
       routeName: string,
       params?: NavigationParams,
       action?: NavigationNavigateAction
     ) => boolean,
-    replace: (
+    replace?: (
       routeName: string,
       params?: NavigationParams,
       action?: NavigationNavigateAction
     ) => boolean,
-    pop: (n?: number, params?: { immediate?: boolean }) => boolean,
-    popToTop: (params?: { immediate?: boolean }) => boolean,
-    isFocused: () => boolean,
+    reset?: (actions: NavigationAction[], index: number) => boolean,
+    dismiss?: () => boolean,
+    // DrawerRouter action creators
+    openDrawer?: () => boolean,
+    closeDrawer?: () => boolean,
+    toggleDrawer?: () => boolean,
   };
 
   declare export type NavigationNavigatorProps<O: {}, S: {}> = $Shape<{

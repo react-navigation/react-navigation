@@ -19,6 +19,8 @@ import {
   View,
 } from 'react-native';
 import { Header, createStackNavigator } from 'react-navigation';
+import invariant from 'invariant';
+
 import SampleText from './SampleText';
 import { Button } from './commonComponents/ButtonWithMargin';
 import { HeaderButtons } from './commonComponents/HeaderButtons';
@@ -31,11 +33,16 @@ type MyNavScreenProps = {
 class MyNavScreen extends React.Component<MyNavScreenProps> {
   render() {
     const { navigation, banner } = this.props;
+    const { push, replace, popToTop, pop } = navigation;
+    invariant(
+      push && replace && popToTop && pop,
+      'missing action creators for StackNavigator'
+    );
     return (
       <ScrollView style={{ flex: 1 }} {...this.getHeaderInset()}>
         <SampleText>{banner}</SampleText>
         <Button
-          onPress={() => navigation.push('Profile', { name: 'Jane' })}
+          onPress={() => push('Profile', { name: 'Jane' })}
           title="Push a profile screen"
         />
         <Button
@@ -43,11 +50,11 @@ class MyNavScreen extends React.Component<MyNavScreenProps> {
           title="Navigate to a photos screen"
         />
         <Button
-          onPress={() => navigation.replace('Profile', { name: 'Lucy' })}
+          onPress={() => replace('Profile', { name: 'Lucy' })}
           title="Replace with profile"
         />
-        <Button onPress={() => navigation.popToTop()} title="Pop to top" />
-        <Button onPress={() => navigation.pop()} title="Pop" />
+        <Button onPress={() => popToTop()} title="Pop to top" />
+        <Button onPress={() => pop()} title="Pop" />
         <Button onPress={() => navigation.goBack(null)} title="Go back" />
         <StatusBar barStyle="default" />
       </ScrollView>
