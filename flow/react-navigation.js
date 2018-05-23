@@ -499,21 +499,6 @@ declare module 'react-navigation' {
     ) => NavigationEventSubscription,
     getParam: (paramName: string, fallback?: any) => any,
     isFocused: () => boolean,
-    // Shared action creators that exist for all routers
-    goBack: (routeKey?: ?string) => boolean,
-    navigate: (
-      routeName:
-        | string
-        | {
-            routeName: string,
-            params?: NavigationParams,
-            action?: NavigationNavigateAction,
-            key?: string,
-          },
-      params?: NavigationParams,
-      action?: NavigationNavigateAction
-    ) => boolean,
-    setParams: (newParams: NavigationParams) => boolean,
     // StackRouter action creators
     pop?: (n?: number, params?: { immediate?: boolean }) => boolean,
     popToTop?: (params?: { immediate?: boolean }) => boolean,
