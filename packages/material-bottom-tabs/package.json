@@ -4,8 +4,7 @@
   "description": "Material Bottom Tab Navigation component for React Navigation",
   "main": "dist/index.js",
   "files": [
-    "dist/",
-    "createMaterialBottomTabNavigator.js"
+    "dist/"
   ],
   "scripts": {
     "test": "jest",
@@ -36,7 +35,7 @@
   "dependencies": {
     "hoist-non-react-statics": "^2.5.0",
     "prop-types": "^15.6.0",
-    "react-native-paper": "=1.4.0",
+    "react-native-paper": "^1.8.0",
     "react-navigation-tabs": "0.2.0-rc.0"
   },
   "devDependencies": {
