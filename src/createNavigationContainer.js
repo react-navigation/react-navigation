@@ -345,7 +345,7 @@ export default function createNavigationContainer(Component) {
         // Cache updates to state.nav during the tick to ensure that subsequent calls will not discard this change
         this._navState = navState;
 
-        if(this._isMounted) {
+        if (this._isMounted) {
           this.setState({ nav: navState }, () => {
             this._onNavigationStateChange(lastNavState, navState, action);
             dispatchActionEvents();
