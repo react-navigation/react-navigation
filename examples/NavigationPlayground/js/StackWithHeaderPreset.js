@@ -6,6 +6,8 @@ import type { NavigationScreenProp } from 'react-navigation';
 import * as React from 'react';
 import { ScrollView, StatusBar } from 'react-native';
 import { createStackNavigator, SafeAreaView } from 'react-navigation';
+import invariant from 'invariant';
+
 import { Button } from './commonComponents/ButtonWithMargin';
 
 type NavScreenProps = {
@@ -19,15 +21,14 @@ class HomeScreen extends React.Component<NavScreenProps> {
 
   render() {
     const { navigation } = this.props;
+    const { push } = navigation;
+    invariant(push, 'missing `push` action creator for StackNavigator');
 
     return (
       <SafeAreaView style={{ paddingTop: 30 }}>
+        <Button onPress={() => push('Other')} title="Push another screen" />
         <Button
-          onPress={() => navigation.push('Other')}
-          title="Push another screen"
-        />
-        <Button
-          onPress={() => navigation.push('ScreenWithNoHeader')}
+          onPress={() => push('ScreenWithNoHeader')}
           title="Push screen with no header"
         />
         <Button onPress={() => navigation.goBack(null)} title="Go Home" />
@@ -44,18 +45,20 @@ class OtherScreen extends React.Component<NavScreenProps> {
 
   render() {
     const { navigation } = this.props;
+    const { push, pop } = navigation;
+    invariant(push && pop, 'missing action creators for StackNavigator');
 
     return (
       <SafeAreaView style={{ paddingTop: 30 }}>
         <Button
-          onPress={() => navigation.push('ScreenWithLongTitle')}
+          onPress={() => push('ScreenWithLongTitle')}
           title="Push another screen"
         />
         <Button
-          onPress={() => navigation.push('ScreenWithNoHeader')}
+          onPress={() => push('ScreenWithNoHeader')}
           title="Push screen with no header"
         />
-        <Button onPress={() => navigation.pop()} title="Pop" />
+        <Button onPress={() => pop()} title="Pop" />
         <Button onPress={() => navigation.goBack(null)} title="Go back" />
         <StatusBar barStyle="default" />
       </SafeAreaView>
@@ -70,10 +73,12 @@ class ScreenWithLongTitle extends React.Component<NavScreenProps> {
 
   render() {
     const { navigation } = this.props;
+    const { pop } = navigation;
+    invariant(pop, 'missing `pop` action creator for StackNavigator');
 
     return (
       <SafeAreaView style={{ paddingTop: 30 }}>
-        <Button onPress={() => navigation.pop()} title="Pop" />
+        <Button onPress={() => pop()} title="Pop" />
         <Button onPress={() => navigation.goBack(null)} title="Go back" />
         <StatusBar barStyle="default" />
       </SafeAreaView>
@@ -89,14 +94,13 @@ class ScreenWithNoHeader extends React.Component<NavScreenProps> {
 
   render() {
     const { navigation } = this.props;
+    const { push, pop } = navigation;
+    invariant(push && pop, 'missing action creators for StackNavigator');
 
     return (
       <SafeAreaView style={{ paddingTop: 30 }}>
-        <Button
-          onPress={() => navigation.push('Other')}
-          title="Push another screen"
-        />
-        <Button onPress={() => navigation.pop()} title="Pop" />
+        <Button onPress={() => push('Other')} title="Push another screen" />
+        <Button onPress={() => pop()} title="Pop" />
         <Button onPress={() => navigation.goBack(null)} title="Go back" />
         <StatusBar barStyle="default" />
       </SafeAreaView>
