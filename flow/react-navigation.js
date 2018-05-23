@@ -431,10 +431,9 @@ declare module 'react-navigation' {
       | ((options: { tintColor: ?string, focused: boolean }) => ?React$Node),
     tabBarVisible?: boolean,
     tabBarTestIDProps?: { testID?: string, accessibilityLabel?: string },
-    tabBarOnPress?: (
-      scene: TabScene,
-      jumpToIndex: (index: number) => void
-    ) => void,
+    tabBarOnPress?: ({
+      navigation: NavigationScreenProp<NavigationRoute>,
+    }) => void,
   |};
 
   /**
