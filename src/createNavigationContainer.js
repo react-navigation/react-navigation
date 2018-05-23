@@ -344,11 +344,15 @@ export default function createNavigationContainer(Component) {
       if (navState !== lastNavState) {
         // Cache updates to state.nav during the tick to ensure that subsequent calls will not discard this change
         this._navState = navState;
-        this.setState({ nav: navState }, () => {
-          this._onNavigationStateChange(lastNavState, navState, action);
-          dispatchActionEvents();
-          this._persistNavigationState(navState);
-        });
+
+        if(this._isMounted) {
+          this.setState({ nav: navState }, () => {
+            this._onNavigationStateChange(lastNavState, navState, action);
+            dispatchActionEvents();
+            this._persistNavigationState(navState);
+          });
+        }
+
         return true;
       }
 
