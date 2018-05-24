@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
-import renderer from 'react-test-renderer';
+import TestRenderer from 'react-test-renderer';
+import flushPromises from '../../utils/flushPromises';
 
 const {
   createTabNavigator,
@@ -26,10 +27,10 @@ const routeConfig = {
 };
 
 describe('TabNavigator', () => {
-  it('renders successfully', () => {
+  it('renders successfully', async () => {
     const MyTabNavigator = createTabNavigator(routeConfig);
-    const rendered = renderer.create(<MyTabNavigator />).toJSON();
-
-    expect(rendered).toMatchSnapshot();
+    const testRenderer = TestRenderer.create(<MyTabNavigator />);
+    await flushPromises();
+    expect(testRenderer.toJSON()).toMatchSnapshot();
   });
 });
