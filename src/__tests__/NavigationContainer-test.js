@@ -66,6 +66,22 @@ describe('NavigationContainer', () => {
     });
   });
 
+  describe('renderLoading', () => {
+    it('renders loading when set', async () => {
+      const renderLoadingExperimental = () => <renderLoading />;
+      const testRenderer = TestRenderer.create(
+        <NavigationContainer
+          renderLoadingExperimental={renderLoadingExperimental}
+        />
+      );
+      expect(testRenderer.toJSON()).toMatchSnapshot();
+    });
+    it('renders null when not set', async () => {
+      const testRenderer = TestRenderer.create(<NavigationContainer />);
+      expect(testRenderer.toJSON()).toMatchSnapshot();
+    });
+  });
+
   describe('dispatch', () => {
     it('returns true when given a valid action', async () => {
       const testRenderer = TestRenderer.create(<NavigationContainer />);
