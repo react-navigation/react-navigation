@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
+import { polyfill } from 'react-lifecycles-compat';
 import createTabNavigator, {
   type InjectedProps,
 } from '../utils/createTabNavigator';
@@ -18,23 +19,20 @@ type State = {
 };
 
 class TabNavigationView extends React.PureComponent<Props, State> {
+  static getDerivedStateFromProps(nextProps, prevState) {
+    const { index } = nextProps.navigation.state;
+
+    return {
+      // Set the current tab to be loaded if it was not loaded before
+      loaded: prevState.loaded.includes(index)
+        ? prevState.loaded
+        : [...prevState.loaded, index],
+    };
+  }
+
   state = {
     loaded: [this.props.navigation.state.index],
   };
-
-  componentWillReceiveProps(nextProps) {
-    if (
-      nextProps.navigation.state.index !== this.props.navigation.state.index
-    ) {
-      const { index } = nextProps.navigation.state;
-
-      this.setState(state => ({
-        loaded: state.loaded.includes(index)
-          ? state.loaded
-          : [...state.loaded, index],
-      }));
-    }
-  }
 
   _getLabel = ({ route, focused, tintColor }) => {
     const label = this.props.getLabelText({ route });
@@ -123,6 +121,8 @@ class TabNavigationView extends React.PureComponent<Props, State> {
     );
   }
 }
+
+polyfill(TabNavigationView);
 
 const styles = StyleSheet.create({
   container: {

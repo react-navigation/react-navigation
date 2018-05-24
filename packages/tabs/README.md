@@ -35,7 +35,7 @@ You can install another package, `react-navigation-material-bottom-tabs`, to use
 - `createMaterialBottomTabNavigator`: Material design themed animated bottom tabs, from [react-native-paper](https://callstack.github.io/react-native-paper/bottom-navigation.html).
 
 ```js
-import createMaterialBottomTabNavigator from 'react-navigation-material-bottom-tabs/createMaterialBottomTabNavigator';
+import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
 
 export default createMaterialBottomTabNavigator({
   Album: { screen: Album },
