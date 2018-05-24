@@ -16,11 +16,6 @@ module.exports = {
     return [...dependencies, ...peerDependencies];
   },
   getBlacklistRE() {
-    return blacklist([
-      glob(`${path.resolve(__dirname, '..')}/node_modules/*`),
-      glob(`${__dirname}/node_modules/*/{${dependencies.join(',')}}`, {
-        extended: true,
-      }),
-    ]);
+    return blacklist([glob(`${path.resolve(__dirname, '..')}/node_modules/*`)]);
   },
 };

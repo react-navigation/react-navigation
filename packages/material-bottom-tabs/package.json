@@ -35,8 +35,8 @@
   "dependencies": {
     "hoist-non-react-statics": "^2.5.0",
     "prop-types": "^15.6.0",
-    "react-native-paper": "^1.8.0",
-    "react-navigation-tabs": "0.2.0-rc.0"
+    "react-native-paper": "2.0.0-alpha.0",
+    "react-navigation-tabs": "^0.2.0"
   },
   "devDependencies": {
     "@expo/vector-icons": "^6.2.0",
@@ -59,8 +59,8 @@
     "react": "16.0.0",
     "react-dom": "16.0.0",
     "react-native": "~0.50.4",
-    "react-navigation": "^2.0.0-rc.7",
-    "react-test-renderer": "16.2.0"
+    "react-navigation": "^2.0.1",
+    "react-test-renderer": "16.0.0"
   },
   "peerDependencies": {
     "react": "*",

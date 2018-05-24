@@ -6,6 +6,7 @@ import { createTabNavigator, type InjectedProps } from 'react-navigation-tabs';
 
 type Props = InjectedProps & {
   activeTintColor?: string,
+  inactiveTintColor?: string,
 };
 
 class BottomNavigationView extends React.Component<Props> {
@@ -19,17 +20,15 @@ class BottomNavigationView extends React.Component<Props> {
 
   render() {
     // eslint-disable-next-line no-unused-vars
-    const { activeTintColor, navigation, descriptors, ...rest } = this.props;
+    const { activeTintColor, inactiveTintColor, navigation, descriptors, ...rest } = this.props;
 
     return (
       <BottomNavigation
         {...rest}
         navigationState={navigation.state}
         getColor={this._getColor}
-        theme={
-          /* $FlowFixMe */
-          activeTintColor ? { colors: { primary: activeTintColor } } : null
-        }
+        activeTintColor={activeTintColor}
+        inactiveTintColor={inactiveTintColor}
       />
     );
   }
