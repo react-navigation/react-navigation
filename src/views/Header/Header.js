@@ -247,6 +247,9 @@ class Header extends React.PureComponent {
       if (!options.hasRightComponent) {
         style.right = 0;
       }
+      if (options.headerTitleCentered) {
+        style.justifyContent = 'center';
+      }
     } else if (
       Platform.OS === 'ios' &&
       !options.hasLeftComponent &&
@@ -383,6 +386,7 @@ class Header extends React.PureComponent {
     const title = this._renderTitle(props, {
       hasLeftComponent: !!left,
       hasRightComponent: !!right,
+      headerTitleCentered: options.headerTitleCentered,
     });
 
     const { isLandscape, transitionPreset } = this.props;
