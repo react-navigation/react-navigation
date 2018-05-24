@@ -10,6 +10,7 @@ import BottomTabBar, { type TabBarOptions } from '../views/BottomTabBar';
 import ResourceSavingScene from '../views/ResourceSavingScene';
 
 type Props = InjectedProps & {
+  lazy?: boolean,
   tabBarComponent?: React.ComponentType<*>,
   tabBarOptions?: TabBarOptions,
 };
@@ -19,6 +20,10 @@ type State = {
 };
 
 class TabNavigationView extends React.PureComponent<Props, State> {
+  static defaultProps = {
+    lazy: true,
+  };
+
   static getDerivedStateFromProps(nextProps, prevState) {
     const { index } = nextProps.navigation.state;
 
@@ -87,7 +92,7 @@ class TabNavigationView extends React.PureComponent<Props, State> {
   };
 
   render() {
-    const { navigation, renderScene } = this.props;
+    const { navigation, renderScene, lazy } = this.props;
     const { routes } = navigation.state;
     const { loaded } = this.state;
 
@@ -95,7 +100,7 @@ class TabNavigationView extends React.PureComponent<Props, State> {
       <View style={styles.container}>
         <View style={styles.pages}>
           {routes.map((route, index) => {
-            if (!loaded.includes(index)) {
+            if (lazy && !loaded.includes(index)) {
               // Don't render a screen if we've never navigated to it
               return null;
             }
