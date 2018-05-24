@@ -1,12 +1,11 @@
 {
   "name": "react-navigation-tabs",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Tab Navigation components for React Navigation",
   "main": "dist/index.js",
   "files": [
     "dist/",
     "createBottomTabNavigator.js",
-    "createMaterialBottomTabNavigator.js",
     "createMaterialTopTabNavigator.js"
   ],
   "scripts": {
@@ -71,7 +70,7 @@
   "peerDependencies": {
     "react": "*",
     "react-native": "*",
-    "react-navigation": "^2.0.0-alpha.5"
+    "react-navigation": "^2.0.0"
   },
   "jest": {
     "preset": "react-native",
