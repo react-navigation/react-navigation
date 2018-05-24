@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Linking, StyleSheet, View } from 'react-native';
 
 import TestRenderer from 'react-test-renderer';
 
@@ -63,6 +63,25 @@ describe('NavigationContainer', () => {
       expect(navigationContainer.state.nav.routes[0]).toMatchObject({
         routeName: 'foo',
       });
+    });
+    it('should be preloaded with the state corresponding to the URL', async () => {
+      const standardGetInitialURL = Linking.getInitialURL;
+      Linking.getInitialURL = () => Promise.resolve('host://elk');
+      const testRenderer = TestRenderer.create(<NavigationContainer />);
+      const navigationContainer = testRenderer.getInstance();
+
+      // the state only actually gets set asynchronously on componentDidMount
+      // wait for the state to be set
+      await flushPromises();
+
+      expect(navigationContainer.state.nav).toMatchObject({ index: 0 });
+      expect(navigationContainer.state.nav.routes).toBeInstanceOf(Array);
+      expect(navigationContainer.state.nav.routes.length).toBe(1);
+      expect(navigationContainer.state.nav.routes[0]).toMatchObject({
+        routeName: 'elk',
+      });
+
+      Linking.getInitialURL = standardGetInitialURL;
     });
   });
 
