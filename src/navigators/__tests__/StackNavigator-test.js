@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { StyleSheet, View } from 'react-native';
-import renderer from 'react-test-renderer';
+import TestRenderer from 'react-test-renderer';
 
 import StackNavigator from '../createStackNavigator';
 import withNavigation from '../../views/withNavigation';
 import { _TESTING_ONLY_reset_container_count } from '../../createNavigationContainer';
+import flushPromises from '../../utils/flushPromises';
 
 const styles = StyleSheet.create({
   header: {
@@ -37,14 +38,20 @@ describe('StackNavigator', () => {
     _TESTING_ONLY_reset_container_count();
   });
 
-  it('renders successfully', () => {
+  it('renders successfully', async () => {
     const MyStackNavigator = StackNavigator(routeConfig);
-    const rendered = renderer.create(<MyStackNavigator />).toJSON();
+    const testRenderer = TestRenderer.create(<MyStackNavigator />);
 
-    expect(rendered).toMatchSnapshot();
+    // the state only actually gets set asynchronously on componentDidMount
+    // thus on the first render the component returns null (or the result of renderLoadingExperimental)
+    expect(testRenderer.toJSON()).toEqual(null);
+    // wait for the state to be set
+    await flushPromises();
+
+    expect(testRenderer.toJSON()).toMatchSnapshot();
   });
 
-  it('applies correct values when headerRight is present', () => {
+  it('applies correct values when headerRight is present', async () => {
     const MyStackNavigator = StackNavigator({
       Home: {
         screen: HomeScreen,
@@ -53,12 +60,18 @@ describe('StackNavigator', () => {
         },
       },
     });
-    const rendered = renderer.create(<MyStackNavigator />).toJSON();
+    const testRenderer = TestRenderer.create(<MyStackNavigator />);
 
-    expect(rendered).toMatchSnapshot();
+    // the state only actually gets set asynchronously on componentDidMount
+    // thus on the first render the component returns null (or the result of renderLoadingExperimental)
+    expect(testRenderer.toJSON()).toEqual(null);
+    // wait for the state to be set
+    await flushPromises();
+
+    expect(testRenderer.toJSON()).toMatchSnapshot();
   });
 
-  it('passes navigation to headerRight when wrapped in withNavigation', () => {
+  it('passes navigation to headerRight when wrapped in withNavigation', async () => {
     const spy = jest.fn();
 
     class TestComponent extends React.Component {
@@ -81,7 +94,11 @@ describe('StackNavigator', () => {
 
     const Nav = StackNavigator({ A: { screen: A } });
 
-    renderer.create(<Nav />);
+    TestRenderer.create(<Nav />);
+
+    // the state only actually gets set asynchronously on componentDidMount
+    // wait for the state to be set
+    await flushPromises();
 
     expect(spy).toBeCalledWith(
       expect.objectContaining({
