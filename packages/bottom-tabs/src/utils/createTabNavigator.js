@@ -70,29 +70,46 @@ export default function createTabNavigator(TabView: React.ComponentType<*>) {
       return route.routeName;
     };
 
-    _handleOnTabPress = ({ route }) => {
+    _handleTabPress = ({ route }) => {
+      this._isTabPress = true;
+
       const { descriptors } = this.props;
       const descriptor = descriptors[route.key];
       const { navigation, options } = descriptor;
-      const focused = navigation.isFocused();
+
+      const defaultHandler = () => {
+        if (navigation.isFocused()) {
+          if (route.hasOwnProperty('index') && route.index > 0) {
+            // If current tab has a nested navigator, pop to top
+            navigation.dispatch(StackActions.popToTop({ key: route.key }));
+          } else {
+            // TODO: do something to scroll to top
+          }
+        } else {
+          this._jumpTo(route.routeName);
+        }
+      };
 
       if (options.tabBarOnPress) {
-        options.tabBarOnPress({ navigation });
-      } else if (focused && route.hasOwnProperty('index') && route.index > 0) {
-        navigation.dispatch(StackActions.popToTop({ key: route.key }));
-      } else if (focused) {
-        // TODO: do something to scroll to top
+        options.tabBarOnPress({ navigation, defaultHandler });
+      } else {
+        defaultHandler();
       }
     };
 
     _handleIndexChange = index => {
-      const { navigation } = this.props;
-      navigation.dispatch(
-        NavigationActions.navigate({
-          routeName: navigation.state.routes[index].routeName,
-        })
-      );
+      if (this._isTabPress) {
+        this._isTabPress = false;
+        return;
+      }
+
+      this._jumpTo(this.props.navigation.state.routes[index].routeName);
     };
+
+    _jumpTo = routeName =>
+      this.props.navigation.dispatch(NavigationActions.navigate({ routeName }));
+
+    _isTabPress: boolean = false;
 
     render() {
       const { descriptors, navigation, screenProps } = this.props;
@@ -111,7 +128,7 @@ export default function createTabNavigator(TabView: React.ComponentType<*>) {
           renderIcon={this._renderIcon}
           renderScene={this._renderScene}
           onIndexChange={this._handleIndexChange}
-          onTabPress={this._handleOnTabPress}
+          onTabPress={this._handleTabPress}
           navigation={navigation}
           descriptors={descriptors}
           screenProps={screenProps}
