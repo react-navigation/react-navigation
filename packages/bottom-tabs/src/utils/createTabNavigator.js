@@ -87,9 +87,11 @@ export default function createTabNavigator(TabView: React.ComponentType<*>) {
 
     _handleIndexChange = index => {
       const { navigation } = this.props;
-      navigation.dispatch(NavigationActions.navigate({
-        routeName: navigation.state.routes[index].routeName,
-      }));
+      navigation.dispatch(
+        NavigationActions.navigate({
+          routeName: navigation.state.routes[index].routeName,
+        })
+      );
     };
 
     render() {
