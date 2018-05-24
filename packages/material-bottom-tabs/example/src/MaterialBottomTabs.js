@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { View, Text } from 'react-native';
-import { createMaterialBottomTabNavigator } from 'react-navigation-tabs';
+import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
 import { MaterialIcons } from '@expo/vector-icons';
 
 const tabBarIcon = name => ({ tintColor }) => (
@@ -80,7 +80,7 @@ export default createMaterialBottomTabNavigator(
     Cart,
   },
   {
-    shifting: false,
-    activeTintColor: '#F44336',
+    shifting: true,
+    activeTintColor: '#fff',
   }
 );

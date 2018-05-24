@@ -36,7 +36,7 @@
     "hoist-non-react-statics": "^2.5.0",
     "prop-types": "^15.6.0",
     "react-native-paper": "2.0.0-alpha.0",
-    "react-navigation-tabs": "^0.2.0"
+    "react-navigation-tabs": "^0.3.0"
   },
   "devDependencies": {
     "@expo/vector-icons": "^6.2.0",

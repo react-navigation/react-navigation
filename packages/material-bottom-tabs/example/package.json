@@ -16,7 +16,7 @@
     "react-native": "~0.55.0",
     "react-native-paper": "2.0.0-alpha.0",
     "react-navigation": "^2.0.1",
-    "react-navigation-tabs": "^0.2.0"
+    "react-navigation-tabs": "^0.3.0"
   },
   "devDependencies": {
     "babel-plugin-module-resolver": "^3.0.0",

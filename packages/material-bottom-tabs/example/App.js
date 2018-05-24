@@ -5,6 +5,10 @@ import { createStackNavigator } from 'react-navigation';
 import MaterialBottomTabs from './src/MaterialBottomTabs';
 
 class Home extends React.Component {
+  static navigationOptions = {
+    title: 'Examples'
+  };
+
   render() {
     return (
       <View>

@@ -5,7 +5,7 @@
   "plugins": [
     ["module-resolver", {
       "alias": {
-        "react-navigation-tabs": "../src"
+        "react-navigation-material-bottom-tabs": "../src"
       }
     }]
   ]
