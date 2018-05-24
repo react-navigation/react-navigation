@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
 import TestRenderer from 'react-test-renderer';
+
 import flushPromises from '../../utils/flushPromises';
 
 const {
