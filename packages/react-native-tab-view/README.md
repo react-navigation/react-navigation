@@ -203,7 +203,7 @@ Cross-platform pager component based on [`react-native-gesture-handler`](https:/
 - `useNativeDriver` - whether to use native animations
 - `children` - React Element(s) to render
 
-This pager is still experimental as the underlying library is still in alpha. To use this pager, you'll need to [link the `react-native-gesture-handler` library](https://github.com/kmagiera/react-native-gesture-handler#installation), and pass it as a prop to the pager:
+This pager is still experimental. To use this pager, you'll need to [link the `react-native-gesture-handler` library](https://github.com/kmagiera/react-native-gesture-handler#installation), and pass it as a prop to the pager:
 
 ```js
 import * as GestureHandler from 'react-native-gesture-handler';

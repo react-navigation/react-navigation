@@ -4849,6 +4849,14 @@ react-native-gesture-handler@1.0.0-alpha.41:
     invariant "^2.2.2"
     prop-types "^15.5.10"
 
+react-native-gesture-handler@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-1.0.1.tgz#e76236befe5d35b827a610ce6af427c58c8d2b82"
+  dependencies:
+    hoist-non-react-statics "^2.3.1"
+    invariant "^2.2.2"
+    prop-types "^15.5.10"
+
 react-native-maps@0.21.0:
   version "0.21.0"
   resolved "https://registry.yarnpkg.com/react-native-maps/-/react-native-maps-0.21.0.tgz#005f58e93d7623ad59667e8002101970ddf235c2"

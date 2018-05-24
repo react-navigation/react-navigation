@@ -13,7 +13,8 @@
     "expo": "~27.0.2",
     "prop-types": "15.6.1",
     "react": "16.3.1",
-    "react-native": "~0.55.4"
+    "react-native": "~0.55.4",
+    "react-native-gesture-handler": "^1.0.1"
   },
   "devDependencies": {
     "babel-plugin-module-resolver": "^3.1.1",

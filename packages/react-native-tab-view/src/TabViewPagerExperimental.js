@@ -29,10 +29,6 @@ export default class TabViewPagerExperimental<T: *> extends React.Component<
   };
 
   static defaultProps = {
-    GestureHandler:
-      global.__expo && global.__expo.DangerZone
-        ? global.__expo.DangerZone.GestureHandler
-        : undefined,
     canJumpToTab: () => true,
   };
 

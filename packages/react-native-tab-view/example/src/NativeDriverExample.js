@@ -8,6 +8,7 @@ import {
   TabViewPagerExperimental,
   SceneMap,
 } from 'react-native-tab-view';
+import * as GestureHandler from 'react-native-gesture-handler';
 import Albums from './shared/Albums';
 import Article from './shared/Article';
 import Chat from './shared/Chat';
@@ -55,7 +56,9 @@ export default class NativeDriverExample extends React.Component<*, State> {
     chat: Chat,
   });
 
-  _renderPager = props => <TabViewPagerExperimental {...props} />;
+  _renderPager = props => (
+    <TabViewPagerExperimental GestureHandler={GestureHandler} {...props} />
+  );
 
   render() {
     return (
