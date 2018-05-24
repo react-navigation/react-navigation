@@ -13,11 +13,11 @@ import {
 } from 'react-native';
 import TouchableItem from './TouchableItem';
 import { SceneRendererPropType } from './TabViewPropTypes';
+import type { Scene, SceneRendererProps } from './TabViewTypeDefinitions';
 import type {
-  Scene,
-  SceneRendererProps,
-  Style,
-} from './TabViewTypeDefinitions';
+  ViewStyleProp,
+  TextStyleProp,
+} from 'react-native/Libraries/StyleSheet/StyleSheet';
 
 type IndicatorProps<T> = SceneRendererProps<T> & {
   width: number,
@@ -34,10 +34,10 @@ type Props<T> = SceneRendererProps<T> & {
   renderBadge?: (scene: Scene<T>) => ?React.Element<any>,
   renderIndicator?: (props: IndicatorProps<T>) => ?React.Element<any>,
   onTabPress?: (scene: Scene<T>) => mixed,
-  tabStyle?: Style,
-  indicatorStyle?: Style,
-  labelStyle?: Style,
-  style?: Style,
+  tabStyle?: ViewStyleProp,
+  indicatorStyle?: ViewStyleProp,
+  labelStyle?: TextStyleProp,
+  style?: ViewStyleProp,
 };
 
 type State = {|
@@ -65,7 +65,7 @@ export default class TabBar<T: *> extends React.Component<Props<T>, State> {
   };
 
   static defaultProps = {
-    getLabelText: ({ route }) =>
+    getLabelText: ({ route }: Scene<T>) =>
       typeof route.title === 'string' ? route.title.toUpperCase() : route.title,
   };
 
@@ -504,7 +504,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scroll: {
-    overflow: Platform.OS === 'web' ? 'auto' : 'scroll',
+    overflow: Platform.OS === 'web' ? ('auto': any) : 'scroll',
   },
   tabBar: {
     backgroundColor: '#2196f3',

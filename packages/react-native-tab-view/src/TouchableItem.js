@@ -8,18 +8,18 @@ import {
   Platform,
   View,
 } from 'react-native';
-import type { Style } from './TabViewTypeDefinitions';
+import type { ViewStyleProp } from 'react-native/Libraries/StyleSheet/StyleSheet';
 
 const LOLLIPOP = 21;
 
 type Props = {
-  onPress: Function,
+  onPress: () => mixed,
   delayPressIn?: number,
   borderless?: boolean,
   pressColor?: string,
   pressOpacity?: number,
   children?: React.Node,
-  style?: Style,
+  style?: ViewStyleProp,
 };
 
 export default class TouchableItem extends React.Component<Props> {
@@ -36,10 +36,6 @@ export default class TouchableItem extends React.Component<Props> {
     pressColor: 'rgba(255, 255, 255, .4)',
   };
 
-  _handlePress = () => {
-    global.requestAnimationFrame(this.props.onPress);
-  };
-
   render() {
     const { style, pressOpacity, pressColor, borderless, ...rest } = this.props;
 
@@ -47,7 +43,6 @@ export default class TouchableItem extends React.Component<Props> {
       return (
         <TouchableNativeFeedback
           {...rest}
-          onPress={this._handlePress}
           background={TouchableNativeFeedback.Ripple(pressColor, borderless)}
         >
           <View style={style}>{React.Children.only(this.props.children)}</View>
@@ -55,12 +50,7 @@ export default class TouchableItem extends React.Component<Props> {
       );
     } else {
       return (
-        <TouchableOpacity
-          {...rest}
-          onPress={this._handlePress}
-          style={style}
-          activeOpacity={pressOpacity}
-        >
+        <TouchableOpacity {...rest} style={style} activeOpacity={pressOpacity}>
           {this.props.children}
         </TouchableOpacity>
       );

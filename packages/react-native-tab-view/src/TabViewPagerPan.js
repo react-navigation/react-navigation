@@ -98,7 +98,9 @@ export default class TabViewPagerPan<T: *> extends React.Component<Props<T>> {
       return false;
     }
 
-    const { navigationState: { routes } } = this.props;
+    const {
+      navigationState: { routes },
+    } = this.props;
 
     return (
       this._isMovingHorizontally(evt, gestureState) &&
@@ -114,7 +116,9 @@ export default class TabViewPagerPan<T: *> extends React.Component<Props<T>> {
   };
 
   _respondToGesture = (evt: GestureEvent, gestureState: GestureState) => {
-    const { navigationState: { routes, index } } = this.props;
+    const {
+      navigationState: { routes, index },
+    } = this.props;
 
     if (
       // swiping left
@@ -257,7 +261,9 @@ export default class TabViewPagerPan<T: *> extends React.Component<Props<T>> {
             style={
               width
                 ? { width }
-                : i === navigationState.index ? StyleSheet.absoluteFill : null
+                : i === navigationState.index
+                  ? StyleSheet.absoluteFill
+                  : null
             }
           >
             {i === navigationState.index || width ? child : null}

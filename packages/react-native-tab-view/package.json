@@ -35,26 +35,26 @@
   },
   "homepage": "https://github.com/react-native-community/react-native-tab-view#readme",
   "dependencies": {
-    "prop-types": "^15.6.0"
+    "prop-types": "^15.6.1"
   },
   "devDependencies": {
-    "@expo/vector-icons": "^6.2.0",
-    "babel-jest": "^21.2.0",
+    "@expo/vector-icons": "^6.3.1",
+    "babel-jest": "^22.4.4",
     "babel-preset-react-native": "^4.0.0",
-    "enzyme": "3.2.0",
-    "enzyme-adapter-react-16": "^1.1.0",
-    "enzyme-to-json": "^3.2.2",
-    "eslint": "^4.12.1",
-    "eslint-config-satya164": "^1.0.1",
-    "eslint-plugin-react-native-globals": "^0.1.0",
-    "flow-bin": "~0.56.0",
+    "enzyme": "3.3.0",
+    "enzyme-adapter-react-16": "^1.1.1",
+    "enzyme-to-json": "^3.3.4",
+    "eslint": "^4.19.1",
+    "eslint-config-satya164": "^1.0.2",
+    "eslint-plugin-react-native-globals": "^0.1.2",
+    "flow-bin": "~0.67.1",
     "husky": "^0.14.3",
-    "jest": "^21.2.1",
-    "prettier": "^1.8.2",
-    "react": "16.0.0",
-    "react-dom": "16.0.0",
-    "react-native": "~0.50.4",
-    "react-test-renderer": "16.2.0"
+    "jest": "^22.4.4",
+    "prettier": "^1.12.1",
+    "react": "16.3.1",
+    "react-dom": "16.3.1",
+    "react-native": "~0.55.4",
+    "react-test-renderer": "16.3.1"
   },
   "peerDependencies": {
     "react": "*",

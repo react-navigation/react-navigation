@@ -17,7 +17,7 @@ const MESSAGES = [
   'make me a sandwich',
 ];
 
-export default class Albums extends React.Component<{}> {
+export default class Albums extends React.Component<*> {
   render() {
     return (
       <View style={styles.container}>

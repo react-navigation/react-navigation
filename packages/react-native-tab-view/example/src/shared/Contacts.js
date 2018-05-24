@@ -56,7 +56,7 @@ const CONTACTS = [
   { name: 'Vincent Sandoval', number: 2606111495 },
 ];
 
-export default class Contacts extends React.Component<{}> {
+export default class Contacts extends React.Component<*> {
   _renderItem = ({ item }) => (
     <View style={styles.item}>
       <View style={styles.avatar}>

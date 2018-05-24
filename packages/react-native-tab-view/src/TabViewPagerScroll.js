@@ -172,7 +172,9 @@ export default class TabViewPagerScroll<T: *> extends React.Component<
             style={
               layout.width
                 ? { width: layout.width, overflow: 'hidden' }
-                : i === navigationState.index ? styles.page : null
+                : i === navigationState.index
+                  ? styles.page
+                  : null
             }
           >
             {i === navigationState.index || layout.width ? child : null}

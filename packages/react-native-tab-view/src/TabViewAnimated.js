@@ -11,8 +11,8 @@ import type {
   Layout,
   PagerCommonProps,
   PagerExtraProps,
-  Style,
 } from './TabViewTypeDefinitions';
+import type { ViewStyleProp } from 'react-native/Libraries/StyleSheet/StyleSheet';
 
 type Props<T> = PagerCommonProps<T> &
   PagerExtraProps & {
@@ -26,7 +26,7 @@ type Props<T> = PagerCommonProps<T> &
     renderHeader?: (props: SceneRendererProps<T>) => ?React.Element<any>,
     renderFooter?: (props: SceneRendererProps<T>) => ?React.Element<any>,
     useNativeDriver?: boolean,
-    style?: Style,
+    style?: ViewStyleProp,
   };
 
 type State = {|
@@ -71,7 +71,7 @@ export default class TabViewAnimated<T: *> extends React.Component<
 
   static defaultProps = {
     canJumpToTab: () => true,
-    renderPager: props => <TabViewPager {...props} />,
+    renderPager: (props: *) => <TabViewPager {...props} />,
     initialLayout: {
       height: 0,
       width: 0,

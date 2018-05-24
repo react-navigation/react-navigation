@@ -15,7 +15,7 @@ const COVERS = [
   require('../../assets/album-art-8.jpg'),
 ];
 
-export default class Albums extends React.Component<{}> {
+export default class Albums extends React.Component<*> {
   render() {
     return (
       <ScrollView

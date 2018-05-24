@@ -188,7 +188,9 @@ export default class TabViewPagerExperimental<T: *> extends React.Component<
               style={
                 width
                   ? { width }
-                  : i === navigationState.index ? StyleSheet.absoluteFill : null
+                  : i === navigationState.index
+                    ? StyleSheet.absoluteFill
+                    : null
               }
             >
               {i === navigationState.index || width ? child : null}
