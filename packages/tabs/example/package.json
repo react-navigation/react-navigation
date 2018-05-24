@@ -15,7 +15,6 @@
     "react": "16.0.0",
     "react-native": "0.50.4",
     "react-lifecycles-compat": "^3.0.4",
-    "react-native-paper": "^1.2.4",
     "react-native-safe-area-view": "^0.7.0",
     "react-native-tab-view": "^0.0.78",
     "react-navigation": "^2.0.0-rc.8"

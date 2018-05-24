@@ -1,4 +1,4 @@
-// flow-typed signature: 34e35e1c3ec93a558c7ad918514fdc72
+// flow-typed signature: 8bc9640c25074cfb90ea11bd2b720915
 // flow-typed version: <<STUB>>/react-navigation_v^2.0.0-alpha.5/flow_v0.56.0
 
 /**
@@ -78,6 +78,10 @@ declare module 'react-navigation/src/navigators/createDrawerNavigator' {
   declare module.exports: any;
 }
 
+declare module 'react-navigation/src/navigators/createKeyboardAwareNavigator' {
+  declare module.exports: any;
+}
+
 declare module 'react-navigation/src/navigators/createNavigator' {
   declare module.exports: any;
 }
@@ -87,10 +91,6 @@ declare module 'react-navigation/src/navigators/createStackNavigator' {
 }
 
 declare module 'react-navigation/src/navigators/createSwitchNavigator' {
-  declare module.exports: any;
-}
-
-declare module 'react-navigation/src/navigators/createTabNavigator' {
   declare module.exports: any;
 }
 
@@ -142,7 +142,15 @@ declare module 'react-navigation/src/routers/createConfigGetter' {
   declare module.exports: any;
 }
 
+declare module 'react-navigation/src/routers/DrawerActions' {
+  declare module.exports: any;
+}
+
 declare module 'react-navigation/src/routers/DrawerRouter' {
+  declare module.exports: any;
+}
+
+declare module 'react-navigation/src/routers/getNavigationActionCreators' {
   declare module.exports: any;
 }
 
@@ -151,6 +159,10 @@ declare module 'react-navigation/src/routers/getScreenForRouteName' {
 }
 
 declare module 'react-navigation/src/routers/KeyGenerator' {
+  declare module.exports: any;
+}
+
+declare module 'react-navigation/src/routers/StackActions' {
   declare module.exports: any;
 }
 
@@ -175,6 +187,10 @@ declare module 'react-navigation/src/routers/validateScreenOptions' {
 }
 
 declare module 'react-navigation/src/StateUtils' {
+  declare module.exports: any;
+}
+
+declare module 'react-navigation/src/utils/docsUrl' {
   declare module.exports: any;
 }
 
@@ -203,6 +219,10 @@ declare module 'react-navigation/src/views/__tests__/NavigationScenesReducer-tes
 }
 
 declare module 'react-navigation/src/views/__tests__/TabView-test' {
+  declare module.exports: any;
+}
+
+declare module 'react-navigation/src/views/__tests__/Transitioner-test' {
   declare module.exports: any;
 }
 
@@ -294,22 +314,6 @@ declare module 'react-navigation/src/views/SwitchView/SwitchView' {
   declare module.exports: any;
 }
 
-declare module 'react-navigation/src/views/TabView/TabBarBottom' {
-  declare module.exports: any;
-}
-
-declare module 'react-navigation/src/views/TabView/TabBarIcon' {
-  declare module.exports: any;
-}
-
-declare module 'react-navigation/src/views/TabView/TabBarTop' {
-  declare module.exports: any;
-}
-
-declare module 'react-navigation/src/views/TabView/TabView' {
-  declare module.exports: any;
-}
-
 declare module 'react-navigation/src/views/TouchableItem' {
   declare module.exports: any;
 }
@@ -373,6 +377,9 @@ declare module 'react-navigation/src/navigators/__tests__/TabNavigator-test.js' 
 declare module 'react-navigation/src/navigators/createDrawerNavigator.js' {
   declare module.exports: $Exports<'react-navigation/src/navigators/createDrawerNavigator'>;
 }
+declare module 'react-navigation/src/navigators/createKeyboardAwareNavigator.js' {
+  declare module.exports: $Exports<'react-navigation/src/navigators/createKeyboardAwareNavigator'>;
+}
 declare module 'react-navigation/src/navigators/createNavigator.js' {
   declare module.exports: $Exports<'react-navigation/src/navigators/createNavigator'>;
 }
@@ -381,9 +388,6 @@ declare module 'react-navigation/src/navigators/createStackNavigator.js' {
 }
 declare module 'react-navigation/src/navigators/createSwitchNavigator.js' {
   declare module.exports: $Exports<'react-navigation/src/navigators/createSwitchNavigator'>;
-}
-declare module 'react-navigation/src/navigators/createTabNavigator.js' {
-  declare module.exports: $Exports<'react-navigation/src/navigators/createTabNavigator'>;
 }
 declare module 'react-navigation/src/PlatformHelpers.native.js' {
   declare module.exports: $Exports<'react-navigation/src/PlatformHelpers.native'>;
@@ -421,14 +425,23 @@ declare module 'react-navigation/src/routers/__tests__/validateRouteConfigMap-te
 declare module 'react-navigation/src/routers/createConfigGetter.js' {
   declare module.exports: $Exports<'react-navigation/src/routers/createConfigGetter'>;
 }
+declare module 'react-navigation/src/routers/DrawerActions.js' {
+  declare module.exports: $Exports<'react-navigation/src/routers/DrawerActions'>;
+}
 declare module 'react-navigation/src/routers/DrawerRouter.js' {
   declare module.exports: $Exports<'react-navigation/src/routers/DrawerRouter'>;
+}
+declare module 'react-navigation/src/routers/getNavigationActionCreators.js' {
+  declare module.exports: $Exports<'react-navigation/src/routers/getNavigationActionCreators'>;
 }
 declare module 'react-navigation/src/routers/getScreenForRouteName.js' {
   declare module.exports: $Exports<'react-navigation/src/routers/getScreenForRouteName'>;
 }
 declare module 'react-navigation/src/routers/KeyGenerator.js' {
   declare module.exports: $Exports<'react-navigation/src/routers/KeyGenerator'>;
+}
+declare module 'react-navigation/src/routers/StackActions.js' {
+  declare module.exports: $Exports<'react-navigation/src/routers/StackActions'>;
 }
 declare module 'react-navigation/src/routers/StackRouter.js' {
   declare module.exports: $Exports<'react-navigation/src/routers/StackRouter'>;
@@ -447,6 +460,9 @@ declare module 'react-navigation/src/routers/validateScreenOptions.js' {
 }
 declare module 'react-navigation/src/StateUtils.js' {
   declare module.exports: $Exports<'react-navigation/src/StateUtils'>;
+}
+declare module 'react-navigation/src/utils/docsUrl.js' {
+  declare module.exports: $Exports<'react-navigation/src/utils/docsUrl'>;
 }
 declare module 'react-navigation/src/utils/getSceneIndicesForInterpolationInputRange.js' {
   declare module.exports: $Exports<'react-navigation/src/utils/getSceneIndicesForInterpolationInputRange'>;
@@ -468,6 +484,9 @@ declare module 'react-navigation/src/views/__tests__/NavigationScenesReducer-tes
 }
 declare module 'react-navigation/src/views/__tests__/TabView-test.js' {
   declare module.exports: $Exports<'react-navigation/src/views/__tests__/TabView-test'>;
+}
+declare module 'react-navigation/src/views/__tests__/Transitioner-test.js' {
+  declare module.exports: $Exports<'react-navigation/src/views/__tests__/Transitioner-test'>;
 }
 declare module 'react-navigation/src/views/__tests__/withOrientation-test.js' {
   declare module.exports: $Exports<'react-navigation/src/views/__tests__/withOrientation-test'>;
@@ -534,18 +553,6 @@ declare module 'react-navigation/src/views/StackView/StackViewTransitionConfigs.
 }
 declare module 'react-navigation/src/views/SwitchView/SwitchView.js' {
   declare module.exports: $Exports<'react-navigation/src/views/SwitchView/SwitchView'>;
-}
-declare module 'react-navigation/src/views/TabView/TabBarBottom.js' {
-  declare module.exports: $Exports<'react-navigation/src/views/TabView/TabBarBottom'>;
-}
-declare module 'react-navigation/src/views/TabView/TabBarIcon.js' {
-  declare module.exports: $Exports<'react-navigation/src/views/TabView/TabBarIcon'>;
-}
-declare module 'react-navigation/src/views/TabView/TabBarTop.js' {
-  declare module.exports: $Exports<'react-navigation/src/views/TabView/TabBarTop'>;
-}
-declare module 'react-navigation/src/views/TabView/TabView.js' {
-  declare module.exports: $Exports<'react-navigation/src/views/TabView/TabView'>;
 }
 declare module 'react-navigation/src/views/TouchableItem.js' {
   declare module.exports: $Exports<'react-navigation/src/views/TouchableItem'>;
