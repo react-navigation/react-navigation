@@ -1,11 +1,12 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import renderer from 'react-test-renderer';
+import TestRenderer from 'react-test-renderer';
 
 import NavigationActions from '../NavigationActions';
 import createStackNavigator from '../navigators/createStackNavigator';
 import { _TESTING_ONLY_reset_container_count } from '../createNavigationContainer';
+import flushPromises from '../utils/flushPromises';
 
 describe('NavigationContainer', () => {
   jest.useFakeTimers();
@@ -46,10 +47,16 @@ describe('NavigationContainer', () => {
   );
 
   describe('state.nav', () => {
-    it("should be preloaded with the router's initial state", () => {
-      const navigationContainer = renderer
-        .create(<NavigationContainer />)
-        .getInstance();
+    it("should be preloaded with the router's initial state", async () => {
+      const testRenderer = TestRenderer.create(<NavigationContainer />);
+      const navigationContainer = testRenderer.getInstance();
+
+      // the state only actually gets set asynchronously on componentDidMount
+      // thus on the first render the component returns null (or the result of renderLoadingExperimental)
+      expect(testRenderer.toJSON()).toEqual(null);
+      // wait for the state to be set
+      await flushPromises();
+
       expect(navigationContainer.state.nav).toMatchObject({ index: 0 });
       expect(navigationContainer.state.nav.routes).toBeInstanceOf(Array);
       expect(navigationContainer.state.nav.routes.length).toBe(1);
@@ -60,10 +67,14 @@ describe('NavigationContainer', () => {
   });
 
   describe('dispatch', () => {
-    it('returns true when given a valid action', () => {
-      const navigationContainer = renderer
-        .create(<NavigationContainer />)
-        .getInstance();
+    it('returns true when given a valid action', async () => {
+      const testRenderer = TestRenderer.create(<NavigationContainer />);
+      const navigationContainer = testRenderer.getInstance();
+
+      // the state only actually gets set asynchronously on componentDidMount
+      // wait for the state to be set
+      await flushPromises();
+
       jest.runOnlyPendingTimers();
       expect(
         navigationContainer.dispatch(
@@ -72,20 +83,27 @@ describe('NavigationContainer', () => {
       ).toEqual(true);
     });
 
-    it('returns false when given an invalid action', () => {
-      const navigationContainer = renderer
-        .create(<NavigationContainer />)
-        .getInstance();
+    it('returns false when given an invalid action', async () => {
+      const testRenderer = TestRenderer.create(<NavigationContainer />);
+      const navigationContainer = testRenderer.getInstance();
+
+      // the state only actually gets set asynchronously on componentDidMount
+      // wait for the state to be set
+      await flushPromises();
+
       jest.runOnlyPendingTimers();
       expect(navigationContainer.dispatch(NavigationActions.back())).toEqual(
         false
       );
     });
 
-    it('updates state.nav with an action by the next tick', () => {
-      const navigationContainer = renderer
-        .create(<NavigationContainer />)
-        .getInstance();
+    it('updates state.nav with an action by the next tick', async () => {
+      const testRenderer = TestRenderer.create(<NavigationContainer />);
+      const navigationContainer = testRenderer.getInstance();
+
+      // the state only actually gets set asynchronously on componentDidMount
+      // wait for the state to be set
+      await flushPromises();
 
       expect(
         navigationContainer.dispatch(
@@ -102,10 +120,14 @@ describe('NavigationContainer', () => {
       });
     });
 
-    it('does not discard actions when called twice in one tick', () => {
-      const navigationContainer = renderer
-        .create(<NavigationContainer />)
-        .getInstance();
+    it('does not discard actions when called twice in one tick', async () => {
+      const testRenderer = TestRenderer.create(<NavigationContainer />);
+      const navigationContainer = testRenderer.getInstance();
+
+      // the state only actually gets set asynchronously on componentDidMount
+      // wait for the state to be set
+      await flushPromises();
+
       const initialState = JSON.parse(
         JSON.stringify(navigationContainer.state.nav)
       );
@@ -140,10 +162,14 @@ describe('NavigationContainer', () => {
       });
     });
 
-    it('does not discard actions when called more than 2 times in one tick', () => {
-      const navigationContainer = renderer
-        .create(<NavigationContainer />)
-        .getInstance();
+    it('does not discard actions when called more than 2 times in one tick', async () => {
+      const testRenderer = TestRenderer.create(<NavigationContainer />);
+      const navigationContainer = testRenderer.getInstance();
+
+      // the state only actually gets set asynchronously on componentDidMount
+      // wait for the state to be set
+      await flushPromises();
+
       const initialState = JSON.parse(
         JSON.stringify(navigationContainer.state.nav)
       );
@@ -225,7 +251,7 @@ describe('NavigationContainer', () => {
 
       let spy = spyConsole();
 
-      it('warns when you render more than one navigator explicitly', () => {
+      it('warns when you render more than one navigator explicitly', async () => {
         class BlankScreen extends React.Component {
           render() {
             return <View />;
@@ -250,7 +276,12 @@ describe('NavigationContainer', () => {
           Root: RootScreen,
         });
 
-        renderer.create(<RootStack />).toJSON();
+        TestRenderer.create(<RootStack />);
+
+        // the state only actually gets set asynchronously on componentDidMount
+        // wait for the state to be set
+        await flushPromises();
+
         expect(spy).toMatchSnapshot();
       });
     });
