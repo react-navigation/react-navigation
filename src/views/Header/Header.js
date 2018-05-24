@@ -514,17 +514,17 @@ function warnIfHeaderStyleDefined(value, styleProp) {
 let platformContainerStyles;
 if (Platform.OS === 'ios') {
   platformContainerStyles = {
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: '#A7A7AA',
-  };
-} else {
-  platformContainerStyles = {
     shadowColor: 'black',
     shadowOpacity: 0.1,
     shadowRadius: StyleSheet.hairlineWidth,
     shadowOffset: {
       height: StyleSheet.hairlineWidth,
     },
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: '#A7A7AA',
+  };
+} else {
+  platformContainerStyles = {
     elevation: 4,
   };
 }
