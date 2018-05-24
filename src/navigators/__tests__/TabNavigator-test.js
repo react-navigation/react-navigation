@@ -30,7 +30,13 @@ describe('TabNavigator', () => {
   it('renders successfully', async () => {
     const MyTabNavigator = createTabNavigator(routeConfig);
     const testRenderer = TestRenderer.create(<MyTabNavigator />);
+
+    // the state only actually gets set asynchronously on componentDidMount
+    // thus on the first render the component returns null (or the result of renderLoadingExperimental)
+    expect(testRenderer.toJSON()).toEqual(null);
+    // wait for the state to be set
     await flushPromises();
+
     expect(testRenderer.toJSON()).toMatchSnapshot();
   });
 });
