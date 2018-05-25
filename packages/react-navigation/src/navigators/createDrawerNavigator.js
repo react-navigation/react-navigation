@@ -5,7 +5,6 @@ import SafeAreaView from 'react-native-safe-area-view';
 import createNavigator from './createNavigator';
 import createNavigationContainer from '../createNavigationContainer';
 import DrawerRouter from '../routers/DrawerRouter';
-import DrawerScreen from '../views/Drawer/DrawerScreen';
 import DrawerView from '../views/Drawer/DrawerView';
 import DrawerItems from '../views/Drawer/DrawerNavigatorItems';
 
