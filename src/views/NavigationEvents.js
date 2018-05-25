@@ -11,10 +11,6 @@ const EventNameToPropName = {
 const EventNames = Object.keys(EventNameToPropName);
 
 class NavigationEvents extends React.Component {
-  constructor() {
-    super();
-  }
-
   componentDidMount() {
     this.subscriptions = {};
     EventNames.forEach(this.addListener);
