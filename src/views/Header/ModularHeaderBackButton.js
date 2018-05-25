@@ -1,5 +1,12 @@
 import React from 'react';
-import { I18nManager, Image, Text, View, StyleSheet } from 'react-native';
+import {
+  Animated,
+  I18nManager,
+  Image,
+  Text,
+  View,
+  StyleSheet,
+} from 'react-native';
 
 import TouchableItem from '../TouchableItem';
 
@@ -37,7 +44,7 @@ class ModularHeaderBackButton extends React.PureComponent {
         title,
       };
     } else {
-      BackImage = Image;
+      BackImage = Animated.Image;
       props = {
         style: [
           styles.icon,
