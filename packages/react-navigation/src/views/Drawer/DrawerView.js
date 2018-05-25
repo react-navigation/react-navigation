@@ -93,6 +93,7 @@ export default class DrawerView extends React.PureComponent {
           this._drawer = c;
         }}
         drawerLockMode={
+          drawerLockMode ||
           (this.props.screenProps && this.props.screenProps.drawerLockMode) ||
           this.props.navigationConfig.drawerLockMode
         }
