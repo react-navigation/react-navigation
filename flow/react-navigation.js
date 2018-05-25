@@ -776,6 +776,12 @@ declare module 'react-navigation' {
     navigation: NavigationScreenProp<S>,
   }>;
 
+  declare export function passActiveRouteOption<OptionType: *>(
+    navigation: NavigationScreenProp<*>,
+    optionName: string,
+    defaultValue: OptionType
+  ): OptionType;
+
   declare export function createNavigator<O: *, S: *, NavigatorConfig: *>(
     view: NavigationView<O, S>,
     router: NavigationRouter<S, O>,

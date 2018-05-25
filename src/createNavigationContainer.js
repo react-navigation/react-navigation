@@ -6,6 +6,7 @@ import { BackHandler } from './PlatformHelpers';
 import NavigationActions from './NavigationActions';
 import invariant from './utils/invariant';
 import getNavigationActionCreators from './routers/getNavigationActionCreators';
+import createChildNavigationGetter from './createChildNavigationGetter';
 import docsUrl from './utils/docsUrl';
 
 function isStateful(props) {
@@ -358,36 +359,54 @@ export default function createNavigationContainer(Component) {
       return false;
     };
 
+    _addNavigationListener = (eventName, handler) => {
+      if (eventName !== 'action') {
+        return { remove: () => {} };
+      }
+      this._actionEventSubscribers.add(handler);
+      return {
+        remove: () => {
+          this._actionEventSubscribers.delete(handler);
+        },
+      };
+    };
+
+    _getNavigation() {
+      if (this._navigation && this._navigation.state === this.state.nav) {
+        return this._navigation;
+      }
+
+      this._navigation = {
+        state: this.state.nav,
+        dispatch: this.dispatch,
+        getScreenProps: () => this.props.screenProps,
+        getChildNavigation: childKey =>
+          createChildNavigationGetter(this._navigation, childKey),
+        router: Component.router,
+        addListener: this._addNavigationListener,
+        dangerouslyGetParent: () => null,
+      };
+
+      const actionCreators = getNavigationActionCreators(
+        this._navigation.state
+      );
+
+      Object.keys(actionCreators).forEach(actionName => {
+        this._navigation[actionName] = (...args) =>
+          this._navigation.dispatch(actionCreators[actionName](...args));
+      });
+
+      return this._navigation;
+    }
+
     render() {
       let navigation = this.props.navigation;
+      const { screenProps } = this.props;
       if (this._isStateful()) {
-        const nav = this.state.nav;
-        if (!nav) {
+        if (!this.state.nav) {
           return this._renderLoading();
         }
-        if (!this._navigation || this._navigation.state !== nav) {
-          this._navigation = {
-            dispatch: this.dispatch,
-            state: nav,
-            addListener: (eventName, handler) => {
-              if (eventName !== 'action') {
-                return { remove: () => {} };
-              }
-              this._actionEventSubscribers.add(handler);
-              return {
-                remove: () => {
-                  this._actionEventSubscribers.delete(handler);
-                },
-              };
-            },
-          };
-          const actionCreators = getNavigationActionCreators(nav);
-          Object.keys(actionCreators).forEach(actionName => {
-            this._navigation[actionName] = (...args) =>
-              this.dispatch(actionCreators[actionName](...args));
-          });
-        }
-        navigation = this._navigation;
+        navigation = this._getNavigation();
       }
       invariant(navigation, 'failed to get navigation');
       return <Component {...this.props} navigation={navigation} />;

@@ -68,6 +68,7 @@ test('should get config for screen', () => {
     getScreenOptions(
       {
         state: routes[0],
+        getScreenProps: () => ({}),
         dispatch: () => false,
         addListener: dummyEventSubscriber,
       },
@@ -78,6 +79,7 @@ test('should get config for screen', () => {
     getScreenOptions(
       {
         state: routes[1],
+        getScreenProps: () => ({}),
         dispatch: () => false,
         addListener: dummyEventSubscriber,
       },
@@ -88,6 +90,7 @@ test('should get config for screen', () => {
     getScreenOptions(
       {
         state: routes[0],
+        getScreenProps: () => ({}),
         dispatch: () => false,
         addListener: dummyEventSubscriber,
       },
@@ -98,6 +101,7 @@ test('should get config for screen', () => {
     getScreenOptions(
       {
         state: routes[2],
+        getScreenProps: () => ({}),
         dispatch: () => false,
         addListener: dummyEventSubscriber,
       },
@@ -108,6 +112,7 @@ test('should get config for screen', () => {
     getScreenOptions(
       {
         state: routes[2],
+        getScreenProps: () => ({}),
         dispatch: () => false,
         addListener: dummyEventSubscriber,
       },
@@ -118,6 +123,7 @@ test('should get config for screen', () => {
     getScreenOptions(
       {
         state: routes[3],
+        getScreenProps: () => ({}),
         dispatch: () => false,
         addListener: dummyEventSubscriber,
       },
@@ -128,6 +134,7 @@ test('should get config for screen', () => {
     getScreenOptions(
       {
         state: routes[3],
+        getScreenProps: () => ({}),
         dispatch: () => false,
         addListener: dummyEventSubscriber,
       },
@@ -138,6 +145,7 @@ test('should get config for screen', () => {
     getScreenOptions(
       {
         state: routes[4],
+        getScreenProps: () => ({}),
         dispatch: () => false,
         addListener: dummyEventSubscriber,
       },
@@ -165,6 +173,7 @@ test('should throw if the route does not exist', () => {
     getScreenOptions(
       {
         state: routes[0],
+        getScreenProps: () => ({}),
         dispatch: () => false,
         addListener: dummyEventSubscriber,
       },

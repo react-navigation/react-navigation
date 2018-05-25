@@ -8,37 +8,40 @@ module.exports = {
   get StateUtils() {
     return require('./StateUtils').default;
   },
+  get passActiveRouteOption() {
+    return require('./routers/passActiveRouteOption').default;
+  },
 
   // Navigators
   get createNavigator() {
     return require('./navigators/createNavigator').default;
   },
   get createStackNavigator() {
-    return require('./navigators/createStackNavigator').default;
+    return require('./navigators/createContainedStackNavigator').default;
   },
   get StackNavigator() {
     console.warn(
       'The StackNavigator function name is deprecated, please use createStackNavigator instead'
     );
-    return require('./navigators/createStackNavigator').default;
+    return require('./navigators/createContainedStackNavigator').default;
   },
   get createSwitchNavigator() {
-    return require('./navigators/createSwitchNavigator').default;
+    return require('./navigators/createContainedSwitchNavigator').default;
   },
   get SwitchNavigator() {
     console.warn(
       'The SwitchNavigator function name is deprecated, please use createSwitchNavigator instead'
     );
-    return require('./navigators/createSwitchNavigator').default;
+    return require('./navigators/createContainedSwitchNavigator').default;
   },
   get createDrawerNavigator() {
-    return require('./navigators/createDrawerNavigator').default;
+    return require('./navigators/createContainedDrawerNavigator').default;
   },
   get DrawerNavigator() {
     console.warn(
       'The DrawerNavigator function name is deprecated, please use createDrawerNavigator instead'
     );
-    return require('./navigators/createDrawerNavigator').default;
+    return require('./navigators/createContainedDrawerNavigator').default;
   },
   get createTabNavigator() {
     console.warn(
