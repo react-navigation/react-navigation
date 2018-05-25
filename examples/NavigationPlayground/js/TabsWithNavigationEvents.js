@@ -29,7 +29,7 @@ const Event = ({ event }) => (
 );
 
 const createTabScreen = (name, icon, focusedIcon) => {
-  class TabScreen extends React.Component {
+  class TabScreen extends React.Component<any, any> {
     static navigationOptions = {
       tabBarLabel: name,
       tabBarIcon: ({ tintColor, focused }) => (
