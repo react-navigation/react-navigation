@@ -208,7 +208,7 @@ describe('NavigationContainer', () => {
       let spy = {};
 
       beforeEach(() => {
-        spy.console = jest.spyOn(console, 'error').mockImplementation(() => {});
+        spy.console = jest.spyOn(console, 'warn').mockImplementation(() => {});
       });
 
       afterEach(() => {
