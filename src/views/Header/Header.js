@@ -211,6 +211,11 @@ class Header extends React.PureComponent {
 
     const { transitionPreset } = this.props;
 
+    const style = props.style;
+    if (options.headerLeftContainerStyle) {
+      style = [style, headerLeftContainerStyle];
+    }
+
     // On Android, or if we have a custom header left, or if we have a custom back image, we
     // do not use the modular header (which is the one that imitates UINavigationController)
     if (
@@ -220,14 +225,14 @@ class Header extends React.PureComponent {
       options.headerLeft === null
     ) {
       return this._renderSubView(
-        props,
+        { ...props, style },
         'left',
         this._renderLeftComponent,
         this.props.leftInterpolator
       );
     } else {
       return this._renderModularSubView(
-        props,
+        { ...props, style },
         'left',
         this._renderModularLeftComponent,
         this.props.leftLabelInterpolator,
@@ -247,9 +252,6 @@ class Header extends React.PureComponent {
       if (!options.hasRightComponent) {
         style.right = 0;
       }
-      if (options.headerTitleCentered) {
-        style.justifyContent = 'center';
-      }
     } else if (
       Platform.OS === 'ios' &&
       !options.hasLeftComponent &&
@@ -257,6 +259,9 @@ class Header extends React.PureComponent {
     ) {
       style.left = 0;
       style.right = 0;
+    }
+    if (options.headerTitleContainerStyle) {
+      style = [style, headerTitleContainerStyle];
     }
 
     return this._renderSubView(
@@ -270,8 +275,15 @@ class Header extends React.PureComponent {
   }
 
   _renderRight(props) {
+    const { options } = props.scene.descriptor;
+
+    const style = props.style;
+    if (options.headerRightContainerStyle) {
+      style = [style, headerRightContainerStyle];
+    }
+
     return this._renderSubView(
-      props,
+      { ...props, style },
       'right',
       this._renderRightComponent,
       this.props.rightInterpolator
@@ -386,7 +398,7 @@ class Header extends React.PureComponent {
     const title = this._renderTitle(props, {
       hasLeftComponent: !!left,
       hasRightComponent: !!right,
-      headerTitleCentered: options.headerTitleCentered,
+      headerTitleContainerStyle: options.headerTitleContainerStyle,
     });
 
     const { isLandscape, transitionPreset } = this.props;
