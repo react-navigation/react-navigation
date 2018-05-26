@@ -487,6 +487,10 @@ declare module 'react-navigation' {
   };
 
   declare export type NavigationScreenProp<+S> = {
+    ...$ObjMap<
+      _DefaultActionCreators,
+      <Args>((...args: Args) => *) => (...args: Args) => boolean
+    >,
     +state: S,
     dispatch: NavigationDispatch,
     addListener: (
@@ -495,21 +499,6 @@ declare module 'react-navigation' {
     ) => NavigationEventSubscription,
     getParam: (paramName: string, fallback?: any) => any,
     isFocused: () => boolean,
-    // Shared action creators that exist for all routers
-    goBack: (routeKey?: ?string) => boolean,
-    navigate: (
-      routeName:
-        | string
-        | {
-            routeName: string,
-            params?: NavigationParams,
-            action?: NavigationNavigateAction,
-            key?: string,
-          },
-      params?: NavigationParams,
-      action?: NavigationNavigateAction
-    ) => boolean,
-    setParams: (newParams: NavigationParams) => boolean,
     // StackRouter action creators
     pop?: (n?: number, params?: { immediate?: boolean }) => boolean,
     popToTop?: (params?: { immediate?: boolean }) => boolean,
@@ -759,6 +748,26 @@ declare module 'react-navigation' {
       toString: () => string,
     },
   };
+
+  declare type _DefaultActionCreators = {|
+    goBack: (routeKey?: ?string) => NavigationBackAction,
+    navigate: (
+      routeName:
+        | string
+        | {
+            routeName: string,
+            params?: NavigationParams,
+            action?: NavigationNavigateAction,
+            key?: string,
+          },
+      params?: NavigationParams,
+      action?: NavigationNavigateAction
+    ) => NavigationNavigateAction,
+    setParams: (newParams: NavigationParams) => NavigationSetParamsAction,
+  |};
+  declare export function getNavigationActionCreators(
+    route: NavigationRoute | NavigationState
+  ): _DefaultActionCreators;
 
   declare type _RouterProp<S: NavigationState, O: {}> = {
     router: NavigationRouter<S, O>,
