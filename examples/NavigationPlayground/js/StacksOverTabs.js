@@ -4,6 +4,7 @@
 
 import React from 'react';
 import { ScrollView, StatusBar } from 'react-native';
+import getNavigationOptionsFrom from 'react-navigation-options-from';
 import {
   SafeAreaView,
   createStackNavigator,
@@ -55,22 +56,6 @@ const MySettingsScreen = ({ navigation }) => (
   <MyNavScreen banner="Settings Screen" navigation={navigation} />
 );
 
-const getNavigationOptionsFrom = children => props => {
-  const { index, routes } = props.navigation.state;
-  const { routeName } = routes[index];
-  const route = children[routeName];
-
-  const navigationOptions =
-    (route && route.navigationOptions) ||
-    (route && route.screen && route.screen.navigationOptions);
-
-  if (typeof navigationOptions === 'function') {
-    return navigationOptions(props);
-  }
-
-  return navigationOptions;
-};
-
 const tabs = {
   MainTab: {
     screen: MyHomeScreen,
@@ -109,11 +94,10 @@ const TabNav = createBottomTabNavigator(tabs, {
   swipeEnabled: false,
 });
 
-TabNav.navigationOptions = getNavigationOptionsFrom(tabs);
-
 const StacksOverTabs = createStackNavigator({
   Root: {
     screen: TabNav,
+    navigationOptions: getNavigationOptionsFrom(tabs),
   },
   NotifSettings: {
     screen: MyNotificationsSettingsScreen,
