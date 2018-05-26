@@ -55,44 +55,61 @@ const MySettingsScreen = ({ navigation }) => (
   <MyNavScreen banner="Settings Screen" navigation={navigation} />
 );
 
-const TabNav = createBottomTabNavigator(
-  {
-    MainTab: {
-      screen: MyHomeScreen,
-      path: '/',
-      navigationOptions: {
-        title: 'Welcome',
-        tabBarLabel: 'Home',
-        tabBarIcon: ({ tintColor, focused }) => (
-          <Ionicons
-            name={focused ? 'ios-home' : 'ios-home-outline'}
-            size={26}
-            style={{ color: tintColor }}
-          />
-        ),
-      },
-    },
-    SettingsTab: {
-      screen: MySettingsScreen,
-      path: '/settings',
-      navigationOptions: {
-        title: 'Settings',
-        tabBarIcon: ({ tintColor, focused }) => (
-          <Ionicons
-            name={focused ? 'ios-settings' : 'ios-settings-outline'}
-            size={26}
-            style={{ color: tintColor }}
-          />
-        ),
-      },
+const getNavigationOptionsFrom = children => props => {
+  const { index, routes } = props.navigation.state;
+  const { routeName } = routes[index];
+  const route = children[routeName];
+
+  const navigationOptions =
+    (route && route.navigationOptions) ||
+    (route && route.screen && route.screen.navigationOptions);
+
+  if (typeof navigationOptions === 'function') {
+    return navigationOptions(props);
+  }
+
+  return navigationOptions;
+};
+
+const tabs = {
+  MainTab: {
+    screen: MyHomeScreen,
+    path: '/',
+    navigationOptions: {
+      title: 'Welcome',
+      tabBarLabel: 'Home',
+      tabBarIcon: ({ tintColor, focused }) => (
+        <Ionicons
+          name={focused ? 'ios-home' : 'ios-home-outline'}
+          size={26}
+          style={{ color: tintColor }}
+        />
+      ),
     },
   },
-  {
-    tabBarPosition: 'bottom',
-    animationEnabled: false,
-    swipeEnabled: false,
-  }
-);
+  SettingsTab: {
+    screen: MySettingsScreen,
+    path: '/settings',
+    navigationOptions: {
+      title: 'Settings',
+      tabBarIcon: ({ tintColor, focused }) => (
+        <Ionicons
+          name={focused ? 'ios-settings' : 'ios-settings-outline'}
+          size={26}
+          style={{ color: tintColor }}
+        />
+      ),
+    },
+  },
+};
+
+const TabNav = createBottomTabNavigator(tabs, {
+  tabBarPosition: 'bottom',
+  animationEnabled: false,
+  swipeEnabled: false,
+});
+
+TabNav.navigationOptions = getNavigationOptionsFrom(tabs);
 
 TabNav.navigationOptions = ({ navigation }) => {
   let { routeName } = navigation.state.routes[navigation.state.index];
