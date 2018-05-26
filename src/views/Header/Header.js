@@ -211,7 +211,7 @@ class Header extends React.PureComponent {
 
     const { transitionPreset } = this.props;
 
-    const style = props.style;
+    let { style } = props;
     if (options.headerLeftContainerStyle) {
       style = [style, headerLeftContainerStyle];
     }
@@ -242,7 +242,7 @@ class Header extends React.PureComponent {
   }
 
   _renderTitle(props, options) {
-    const style = {};
+    let style = {};
     const { transitionPreset } = this.props;
 
     if (Platform.OS === 'android') {
@@ -277,7 +277,7 @@ class Header extends React.PureComponent {
   _renderRight(props) {
     const { options } = props.scene.descriptor;
 
-    const style = props.style;
+    let { style } = props;
     if (options.headerRightContainerStyle) {
       style = [style, headerRightContainerStyle];
     }
