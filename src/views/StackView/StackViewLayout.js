@@ -90,6 +90,7 @@ class StackViewLayout extends React.Component {
   _immediateIndex = null;
 
   state = {
+    // Used when card's header is null and mode is float to make switch animation work correctly
     floatingHeaderHeight: 0,
   };
 
