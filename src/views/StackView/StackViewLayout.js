@@ -89,6 +89,10 @@ class StackViewLayout extends React.Component {
    */
   _immediateIndex = null;
 
+  state = {
+    floatingHeaderHeight: 0,
+  };
+
   _renderHeader(scene, headerMode) {
     const { options } = scene.descriptor;
     const { header } = options;
@@ -389,6 +393,10 @@ class StackViewLayout extends React.Component {
     },
   });
 
+  _onFloatingHeaderLayout = e => {
+    this.setState({ floatingHeaderHeight: e.nativeEvent.layout.height });
+  };
+
   render() {
     let floatingHeader = null;
     const headerMode = this._getHeaderMode();
@@ -396,7 +404,12 @@ class StackViewLayout extends React.Component {
       const { scene } = this.props.transitionProps;
       floatingHeader = (
         <NavigationProvider value={scene.descriptor.navigation}>
-          {this._renderHeader(scene, headerMode)}
+          <View
+            pointerEvents="box-none"
+            onLayout={this._onFloatingHeaderLayout}
+          >
+            {this._renderHeader(scene, headerMode)}
+          </View>
         </NavigationProvider>
       );
     }
@@ -516,21 +529,7 @@ class StackViewLayout extends React.Component {
     const headerMode = this._getHeaderMode();
     let marginTop = 0;
     if (!hasHeader && headerMode === 'float') {
-      const { isLandscape } = this.props;
-      let headerHeight;
-      if (Platform.OS === 'ios') {
-        if (isLandscape && !Platform.isPad) {
-          headerHeight = 52;
-        } else if (IS_IPHONE_X) {
-          headerHeight = 88;
-        } else {
-          headerHeight = 64;
-        }
-      } else {
-        headerHeight = 56;
-        // TODO (Android only): Need to handle translucent status bar.
-      }
-      marginTop = -headerHeight;
+      marginTop = -this.state.floatingHeaderHeight;
     }
 
     return (
