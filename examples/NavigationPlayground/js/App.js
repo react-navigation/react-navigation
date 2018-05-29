@@ -27,6 +27,7 @@ import ModalStack from './ModalStack';
 import StacksInTabs from './StacksInTabs';
 import StacksOverTabs from './StacksOverTabs';
 import StacksWithKeys from './StacksWithKeys';
+import InactiveStack from './InactiveStack';
 import StackWithCustomHeaderBackImage from './StackWithCustomHeaderBackImage';
 import SimpleStack from './SimpleStack';
 import StackWithHeaderPreset from './StackWithHeaderPreset';
@@ -34,6 +35,7 @@ import StackWithTranslucentHeader from './StackWithTranslucentHeader';
 import SimpleTabs from './SimpleTabs';
 import SwitchWithStacks from './SwitchWithStacks';
 import TabsWithNavigationFocus from './TabsWithNavigationFocus';
+import KeyboardHandlingExample from './KeyboardHandlingExample';
 
 const ExampleInfo = {
   SimpleStack: {
@@ -43,6 +45,11 @@ const ExampleInfo = {
   SwitchWithStacks: {
     name: 'Switch between routes',
     description: 'Jump between routes',
+  },
+  InactiveStack: {
+    name: 'Navigate idempotently to stacks in inactive routes',
+    description:
+      'An inactive route in a stack should be given the opportunity to handle actions',
   },
   StackWithCustomHeaderBackImage: {
     name: 'Custom header back image',
@@ -114,6 +121,11 @@ const ExampleInfo = {
     name: 'withNavigationFocus',
     description: 'Receive the focus prop to know when a screen is focused',
   },
+  KeyboardHandlingExample: {
+    name: 'Keyboard Handling Example',
+    description:
+      'Demo automatic handling of keyboard showing/hiding inside StackNavigator',
+  },
 };
 
 const ExampleRoutes = {
@@ -143,6 +155,9 @@ const ExampleRoutes = {
     path: 'settings',
   },
   TabsWithNavigationFocus,
+  KeyboardHandlingExample,
+  // This is commented out because it's rarely useful
+  // InactiveStack,
 };
 
 type State = {
@@ -153,7 +168,7 @@ class MainScreen extends React.Component<any, State> {
     scrollY: new Animated.Value(0),
   };
 
-  componentWillMount() {
+  componentDidMount() {
     Asset.fromModule(
       require('react-navigation/src/views/assets/back-icon-mask.png')
     ).downloadAsync();
@@ -307,7 +322,7 @@ const AppNavigator = createStackNavigator(
   }
 );
 
-export default () => <AppNavigator persistenceKey="NavState" />;
+export default AppNavigator;
 
 const styles = StyleSheet.create({
   item: {

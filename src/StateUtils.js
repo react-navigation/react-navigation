@@ -21,7 +21,7 @@ const StateUtils = {
    * routes of the navigation state, or -1 if it is not present.
    */
   indexOf(state, key) {
-    return state.routes.map(route => route.key).indexOf(key);
+    return state.routes.findIndex(route => route.key === key);
   },
 
   /**
@@ -116,8 +116,23 @@ const StateUtils = {
 
   /**
    * Replace a route by a key.
-   * Note that this moves the index to the positon to where the new route in the
-   * stack is at.
+   * Note that this moves the index to the position to where the new route in the
+   * stack is at and updates the routes array accordingly.
+   */
+  replaceAndPrune(state, key, route) {
+    const index = StateUtils.indexOf(state, key);
+    const replaced = StateUtils.replaceAtIndex(state, index, route);
+
+    return {
+      ...replaced,
+      routes: replaced.routes.slice(0, index + 1),
+    };
+  },
+
+  /**
+   * Replace a route by a key.
+   * Note that this moves the index to the position to where the new route in the
+   * stack is at. Does not prune the routes.
    */
   replaceAt(state, key, route) {
     const index = StateUtils.indexOf(state, key);
@@ -137,7 +152,7 @@ const StateUtils = {
       route.key
     );
 
-    if (state.routes[index] === route) {
+    if (state.routes[index] === route && index === state.index) {
       return state;
     }
 
@@ -153,7 +168,7 @@ const StateUtils = {
 
   /**
    * Resets all routes.
-   * Note that this moves the index to the positon to where the last route in the
+   * Note that this moves the index to the position to where the last route in the
    * stack is at if the param `index` isn't provided.
    */
   reset(state, routes, index) {

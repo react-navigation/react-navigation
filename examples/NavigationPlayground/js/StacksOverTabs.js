@@ -94,6 +94,19 @@ const TabNav = createBottomTabNavigator(
   }
 );
 
+TabNav.navigationOptions = ({ navigation }) => {
+  let { routeName } = navigation.state.routes[navigation.state.index];
+  let title;
+  if (routeName === 'SettingsTab') {
+    title = 'Settings';
+  } else if (routeName === 'MainTab') {
+    title = 'Home';
+  }
+  return {
+    title,
+  };
+};
+
 const StacksOverTabs = createStackNavigator({
   Root: {
     screen: TabNav,
@@ -107,9 +120,9 @@ const StacksOverTabs = createStackNavigator({
   Profile: {
     screen: MyProfileScreen,
     path: '/people/:name',
-    navigationOptions: ({ navigation }) => {
-      title: `${navigation.state.params.name}'s Profile!`;
-    },
+    navigationOptions: ({ navigation }) => ({
+      title: `${navigation.state.params.name}'s Profile!`,
+    }),
   },
 });
 

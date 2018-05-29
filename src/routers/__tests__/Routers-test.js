@@ -1,12 +1,12 @@
-/* eslint react/no-multi-comp:0 */
+/* eslint react/no-multi-comp:0, react/display-name:0 */
 
 import React from 'react';
 
 import StackRouter from '../StackRouter';
 import TabRouter from '../TabRouter';
+import SwitchRouter from '../SwitchRouter';
 
 import NavigationActions from '../../NavigationActions';
-import addNavigationHelpers from '../../addNavigationHelpers';
 import { _TESTING_ONLY_normalize_keys } from '../KeyGenerator';
 
 beforeEach(() => {
@@ -58,36 +58,105 @@ Object.keys(ROUTERS).forEach(routerName => {
       ];
       expect(
         router.getScreenOptions(
-          addNavigationHelpers({
+          {
             state: routes[0],
             dispatch: () => false,
             addListener: dummyEventSubscriber,
-          }),
+          },
           {}
         ).title
       ).toEqual(undefined);
       expect(
         router.getScreenOptions(
-          addNavigationHelpers({
+          {
             state: routes[1],
             dispatch: () => false,
             addListener: dummyEventSubscriber,
-          }),
+          },
           {}
         ).title
       ).toEqual('BarTitle');
       expect(
         router.getScreenOptions(
-          addNavigationHelpers({
+          {
             state: routes[2],
             dispatch: () => false,
             addListener: dummyEventSubscriber,
-          }),
+          },
           {}
         ).title
       ).toEqual('Baz-123');
     });
   });
+});
+
+test('Nested navigate behavior test', () => {
+  const Leaf = () => <div />;
+
+  const First = () => <div />;
+  First.router = StackRouter({
+    First1: Leaf,
+    First2: Leaf,
+  });
+
+  const Second = () => <div />;
+  Second.router = StackRouter({
+    Second1: Leaf,
+    Second2: Leaf,
+  });
+
+  const Main = () => <div />;
+  Main.router = StackRouter({
+    First,
+    Second,
+  });
+  const TestRouter = SwitchRouter({
+    Login: Leaf,
+    Main,
+  });
+
+  const state1 = TestRouter.getStateForAction({ type: NavigationActions.INIT });
+
+  const state2 = TestRouter.getStateForAction(
+    { type: NavigationActions.NAVIGATE, routeName: 'First' },
+    state1
+  );
+  expect(state2.index).toEqual(1);
+  expect(state2.routes[1].index).toEqual(0);
+  expect(state2.routes[1].routes[0].index).toEqual(0);
+
+  const state3 = TestRouter.getStateForAction(
+    { type: NavigationActions.NAVIGATE, routeName: 'Second2' },
+    state2
+  );
+  expect(state3.index).toEqual(1);
+  expect(state3.routes[1].index).toEqual(1); // second
+  expect(state3.routes[1].routes[1].index).toEqual(1); //second.second2
+
+  const state4 = TestRouter.getStateForAction(
+    {
+      type: NavigationActions.NAVIGATE,
+      routeName: 'First',
+      action: { type: NavigationActions.NAVIGATE, routeName: 'First2' },
+    },
+    state3,
+    true
+  );
+  expect(state4.index).toEqual(1); // main
+  expect(state4.routes[1].index).toEqual(0); // first
+  expect(state4.routes[1].routes[0].index).toEqual(1); // first2
+
+  const state5 = TestRouter.getStateForAction(
+    {
+      type: NavigationActions.NAVIGATE,
+      routeName: 'First',
+      action: { type: NavigationActions.NAVIGATE, routeName: 'First1' },
+    },
+    state3 // second.second2 is active on state3
+  );
+  expect(state5.index).toEqual(1); // main
+  expect(state5.routes[1].index).toEqual(0); // first
+  expect(state5.routes[1].routes[0].index).toEqual(0); // first.first1
 });
 
 test('Handles no-op actions with tabs within stack router', () => {
@@ -156,6 +225,70 @@ test('Handles deep action', () => {
   );
   expect(state2 && state2.index).toEqual(1);
   expect(state2 && state2.routes[1].index).toEqual(1);
+});
+
+test('Handles the navigate action with params', () => {
+  const FooTabNavigator = () => <div />;
+  FooTabNavigator.router = TabRouter({
+    Baz: { screen: () => <div /> },
+    Boo: { screen: () => <div /> },
+  });
+
+  const TestRouter = StackRouter({
+    Foo: { screen: () => <div /> },
+    Bar: { screen: FooTabNavigator },
+  });
+  const state = TestRouter.getStateForAction({ type: NavigationActions.INIT });
+  const state2 = TestRouter.getStateForAction(
+    {
+      type: NavigationActions.NAVIGATE,
+      immediate: true,
+      routeName: 'Bar',
+      params: { foo: '42' },
+    },
+    state
+  );
+  expect(state2 && state2.routes[1].params).toEqual({ foo: '42' });
+  expect(state2 && state2.routes[1].routes).toEqual([
+    {
+      key: 'Baz',
+      routeName: 'Baz',
+      params: { foo: '42' },
+    },
+    {
+      key: 'Boo',
+      routeName: 'Boo',
+      params: { foo: '42' },
+    },
+  ]);
+});
+
+test('Handles the setParams action', () => {
+  const FooTabNavigator = () => <div />;
+  FooTabNavigator.router = TabRouter({
+    Baz: { screen: () => <div /> },
+  });
+  const TestRouter = StackRouter({
+    Foo: { screen: FooTabNavigator },
+    Bar: { screen: () => <div /> },
+  });
+  const state = TestRouter.getStateForAction({ type: NavigationActions.INIT });
+  const state2 = TestRouter.getStateForAction(
+    {
+      type: NavigationActions.SET_PARAMS,
+      params: { name: 'foobar' },
+      key: 'Baz',
+    },
+    state
+  );
+  expect(state2 && state2.index).toEqual(0);
+  expect(state2 && state2.routes[0].routes).toEqual([
+    {
+      key: 'Baz',
+      routeName: 'Baz',
+      params: { name: 'foobar' },
+    },
+  ]);
 });
 
 test('Supports lazily-evaluated getScreen', () => {
@@ -249,4 +382,63 @@ test('Does not switch tab index when TabRouter child handles COMPLETE_NAVIGATION
 
   expect(stateAfterCompleteTransition.index).toEqual(1);
   expect(stateAfterSetParams.index).toEqual(1);
+});
+
+test('Inner actions are only unpacked if the current tab matches', () => {
+  const PlainScreen = () => <div />;
+  const ScreenA = () => <div />;
+  const ScreenB = () => <div />;
+  ScreenB.router = StackRouter({
+    Baz: { screen: PlainScreen },
+    Zoo: { screen: PlainScreen },
+  });
+  ScreenA.router = StackRouter({
+    Bar: { screen: PlainScreen },
+    Boo: { screen: ScreenB },
+  });
+  const TestRouter = TabRouter({
+    Foo: { screen: ScreenA },
+  });
+  const screenApreState = {
+    index: 0,
+    key: 'Init',
+    isTransitioning: false,
+    routeName: 'Foo',
+    routes: [{ key: 'Init', routeName: 'Bar' }],
+  };
+  const preState = {
+    index: 0,
+    isTransitioning: false,
+    routes: [screenApreState],
+  };
+
+  const comparable = state => {
+    let result = {};
+    if (typeof state.routeName === 'string') {
+      result = { ...result, routeName: state.routeName };
+    }
+    if (state.routes instanceof Array) {
+      result = {
+        ...result,
+        routes: state.routes.map(comparable),
+      };
+    }
+    return result;
+  };
+
+  const action = NavigationActions.navigate({
+    routeName: 'Boo',
+    action: NavigationActions.navigate({ routeName: 'Zoo' }),
+  });
+
+  const expectedState = ScreenA.router.getStateForAction(
+    action,
+    screenApreState
+  );
+  const state = TestRouter.getStateForAction(action, preState);
+  const innerState = state ? state.routes[0] : state;
+
+  expect(expectedState && comparable(expectedState)).toEqual(
+    innerState && comparable(innerState)
+  );
 });

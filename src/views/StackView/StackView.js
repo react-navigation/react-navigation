@@ -4,6 +4,7 @@ import { NativeModules } from 'react-native';
 import StackViewLayout from './StackViewLayout';
 import Transitioner from '../Transitioner';
 import NavigationActions from '../../NavigationActions';
+import StackActions from '../../routers/StackActions';
 import TransitionConfigs from './StackViewTransitionConfigs';
 
 const NativeAnimatedModule =
@@ -24,14 +25,16 @@ class StackView extends React.Component {
         navigation={this.props.navigation}
         descriptors={this.props.descriptors}
         onTransitionStart={this.props.onTransitionStart}
-        onTransitionEnd={(lastTransition, transition) => {
+        onTransitionEnd={(transition, lastTransition) => {
           const { onTransitionEnd, navigation } = this.props;
-          navigation.dispatch(
-            NavigationActions.completeTransition({
-              key: navigation.state.key,
-            })
-          );
-          onTransitionEnd && onTransitionEnd(lastTransition, transition);
+          if (transition.navigation.state.isTransitioning) {
+            navigation.dispatch(
+              StackActions.completeTransition({
+                key: navigation.state.key,
+              })
+            );
+          }
+          onTransitionEnd && onTransitionEnd(transition, lastTransition);
         }}
       />
     );
@@ -54,6 +57,9 @@ class StackView extends React.Component {
     return (
       <StackViewLayout
         {...navigationConfig}
+        onGestureBegin={this.props.onGestureBegin}
+        onGestureCanceled={this.props.onGestureCanceled}
+        onGestureEnd={this.props.onGestureEnd}
         screenProps={screenProps}
         descriptors={this.props.descriptors}
         transitionProps={transitionProps}

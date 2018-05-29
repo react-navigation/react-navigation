@@ -1,12 +1,14 @@
 import pathToRegexp from 'path-to-regexp';
 
 import NavigationActions from '../NavigationActions';
+import StackActions from './StackActions';
 import createConfigGetter from './createConfigGetter';
 import getScreenForRouteName from './getScreenForRouteName';
 import StateUtils from '../StateUtils';
 import validateRouteConfigMap from './validateRouteConfigMap';
 import invariant from '../utils/invariant';
 import { generateKey } from './KeyGenerator';
+import getNavigationActionCreators from './getNavigationActionCreators';
 
 function isEmpty(obj) {
   if (!obj) return true;
@@ -19,8 +21,14 @@ function isEmpty(obj) {
 function behavesLikePushAction(action) {
   return (
     action.type === NavigationActions.NAVIGATE ||
-    action.type === NavigationActions.PUSH
+    action.type === StackActions.PUSH
   );
+}
+
+const defaultActionCreators = (route, navStateKey) => ({});
+
+function isResetToRootStack(action) {
+  return action.type === StackActions.RESET && action.key === null;
 }
 
 export default (routeConfigs, stackConfig = {}) => {
@@ -43,6 +51,8 @@ export default (routeConfigs, stackConfig = {}) => {
   });
 
   const { initialRouteParams } = stackConfig;
+  const getCustomActionCreators =
+    stackConfig.getCustomActionCreators || defaultActionCreators;
 
   const initialRouteName = stackConfig.initialRouteName || routeNames[0];
 
@@ -136,7 +146,7 @@ export default (routeConfigs, stackConfig = {}) => {
   });
 
   paths = Object.entries(pathsByRouteNames);
-  paths.sort((a: [string, *], b: [string, *]) => b[1].priority - a[1].priority);
+  paths.sort((a, b) => b[1].priority - a[1].priority);
 
   return {
     getComponentForState(state) {
@@ -152,6 +162,63 @@ export default (routeConfigs, stackConfig = {}) => {
       return getScreenForRouteName(routeConfigs, routeName);
     },
 
+    getActionCreators(route, navStateKey) {
+      return {
+        ...getNavigationActionCreators(route),
+        ...getCustomActionCreators(route, navStateKey),
+        pop: (n, params) =>
+          StackActions.pop({
+            n,
+            ...params,
+          }),
+        popToTop: params => StackActions.popToTop(params),
+        push: (routeName, params, action) =>
+          StackActions.push({
+            routeName,
+            params,
+            action,
+          }),
+        replace: (replaceWith, params, action, newKey) => {
+          if (typeof replaceWith === 'string') {
+            return StackActions.replace({
+              routeName: replaceWith,
+              params,
+              action,
+              key: route.key,
+              newKey,
+            });
+          }
+          invariant(
+            typeof replaceWith === 'object',
+            'Must replaceWith an object or a string'
+          );
+          invariant(
+            params == null,
+            'Params must not be provided to .replace() when specifying an object'
+          );
+          invariant(
+            action == null,
+            'Child action must not be provided to .replace() when specifying an object'
+          );
+          invariant(
+            newKey == null,
+            'Child action must not be provided to .replace() when specifying an object'
+          );
+          return StackActions.replace(replaceWith);
+        },
+        reset: (actions, index) =>
+          StackActions.reset({
+            actions,
+            index: index == null ? actions.length - 1 : index,
+            key: navStateKey,
+          }),
+        dismiss: () =>
+          NavigationActions.back({
+            key: navStateKey,
+          }),
+      };
+    },
+
     getStateForAction(action, state) {
       // Set up the initial state if needed
       if (!state) {
@@ -160,7 +227,10 @@ export default (routeConfigs, stackConfig = {}) => {
 
       // Check if the focused child scene wants to handle the action, as long as
       // it is not a reset to the root stack
-      if (action.type !== NavigationActions.RESET || action.key !== null) {
+      if (
+        !isResetToRootStack(action) &&
+        action.type !== NavigationActions.NAVIGATE
+      ) {
         const keyIndex = action.key
           ? StateUtils.indexOf(state, action.key)
           : -1;
@@ -180,6 +250,31 @@ export default (routeConfigs, stackConfig = {}) => {
             return StateUtils.replaceAt(state, childRoute.key, route);
           }
         }
+      } else if (action.type === NavigationActions.NAVIGATE) {
+        // Traverse routes from the top of the stack to the bottom, so the
+        // active route has the first opportunity, then the one before it, etc.
+        for (let childRoute of state.routes.slice().reverse()) {
+          let childRouter = childRouters[childRoute.routeName];
+          let childAction =
+            action.routeName === childRoute.routeName && action.action
+              ? action.action
+              : action;
+
+          if (childRouter) {
+            const nextRouteState = childRouter.getStateForAction(
+              childAction,
+              childRoute
+            );
+
+            if (nextRouteState === null || nextRouteState !== childRoute) {
+              return StateUtils.replaceAndPrune(
+                state,
+                nextRouteState ? nextRouteState.key : childRoute.key,
+                nextRouteState ? nextRouteState : childRoute
+              );
+            }
+          }
+        }
       }
 
       // Handle explicit push navigation action. This must happen after the
@@ -192,7 +287,7 @@ export default (routeConfigs, stackConfig = {}) => {
         let route;
 
         invariant(
-          action.type !== NavigationActions.PUSH || action.key == null,
+          action.type !== StackActions.PUSH || action.key == null,
           'StackRouter does not support key on the push action'
         );
 
@@ -206,7 +301,7 @@ export default (routeConfigs, stackConfig = {}) => {
           }
         });
 
-        if (action.type !== NavigationActions.PUSH && lastRouteIndex !== -1) {
+        if (action.type !== StackActions.PUSH && lastRouteIndex !== -1) {
           // If index is unchanged and params are not being set, leave state identity intact
           if (state.index === lastRouteIndex && !action.params) {
             return null;
@@ -232,7 +327,7 @@ export default (routeConfigs, stackConfig = {}) => {
             isTransitioning:
               state.index !== lastRouteIndex
                 ? action.immediate !== true
-                : undefined,
+                : state.isTransitioning,
             index: lastRouteIndex,
             routes,
           };
@@ -260,7 +355,7 @@ export default (routeConfigs, stackConfig = {}) => {
           isTransitioning: action.immediate !== true,
         };
       } else if (
-        action.type === NavigationActions.PUSH &&
+        action.type === StackActions.PUSH &&
         childRouters[action.routeName] === undefined
       ) {
         // Return the state identity to bubble the action up
@@ -304,7 +399,7 @@ export default (routeConfigs, stackConfig = {}) => {
       }
 
       // Handle pop-to-top behavior. Make sure this happens after children have had a chance to handle the action, so that the inner stack pops to top first.
-      if (action.type === NavigationActions.POP_TO_TOP) {
+      if (action.type === StackActions.POP_TO_TOP) {
         // Refuse to handle pop to top if a key is given that doesn't correspond
         // to this router
         if (action.key && state.key !== action.key) {
@@ -325,7 +420,7 @@ export default (routeConfigs, stackConfig = {}) => {
       }
 
       // Handle replace action
-      if (action.type === NavigationActions.REPLACE) {
+      if (action.type === StackActions.REPLACE) {
         const routeIndex = state.routes.findIndex(r => r.key === action.key);
         // Only replace if the key matches one of our routes
         if (routeIndex !== -1) {
@@ -351,7 +446,7 @@ export default (routeConfigs, stackConfig = {}) => {
 
       // Update transitioning state
       if (
-        action.type === NavigationActions.COMPLETE_TRANSITION &&
+        action.type === StackActions.COMPLETE_TRANSITION &&
         (action.key == null || action.key === state.key) &&
         state.isTransitioning
       ) {
@@ -381,7 +476,7 @@ export default (routeConfigs, stackConfig = {}) => {
         }
       }
 
-      if (action.type === NavigationActions.RESET) {
+      if (action.type === StackActions.RESET) {
         // Only handle reset actions that are unspecified or match this state key
         if (action.key != null && action.key != state.key) {
           // Deliberately use != instead of !== so we can match null with
@@ -418,11 +513,11 @@ export default (routeConfigs, stackConfig = {}) => {
 
       if (
         action.type === NavigationActions.BACK ||
-        action.type === NavigationActions.POP
+        action.type === StackActions.POP
       ) {
         const { key, n, immediate } = action;
         let backRouteIndex = state.index;
-        if (action.type === NavigationActions.POP && n != null) {
+        if (action.type === StackActions.POP && n != null) {
           // determine the index to go back *from*. In this case, n=1 means to go
           // back from state.index, as if it were a normal "BACK" action
           backRouteIndex = Math.max(1, state.index - n + 1);

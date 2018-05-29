@@ -8,12 +8,6 @@ module.exports = {
   get StateUtils() {
     return require('./StateUtils').default;
   },
-  get addNavigationHelpers() {
-    return require('./addNavigationHelpers').default;
-  },
-  get NavigationActions() {
-    return require('./NavigationActions').default;
-  },
 
   // Navigators
   get createNavigator() {
@@ -48,25 +42,37 @@ module.exports = {
   },
   get createTabNavigator() {
     console.warn(
-      'TabNavigator is deprecated. Please use the createBottomTabNavigator or createMaterialTopNavigator instead.'
+      'createTabNavigator is deprecated. Please use the createBottomTabNavigator or createMaterialTopTabNavigator instead.'
     );
     return require('react-navigation-deprecated-tab-navigator')
       .createTabNavigator;
   },
   get TabNavigator() {
     console.warn(
-      'TabNavigator is deprecated. Please use the createBottomTabNavigator or createMaterialTopNavigator instead.'
+      'TabNavigator is deprecated. Please use the createBottomTabNavigator or createMaterialTopTabNavigator instead.'
     );
-    return require('react-navigation-deprecated-tab-navigator').default;
+    return require('react-navigation-deprecated-tab-navigator')
+      .createTabNavigator;
   },
   get createBottomTabNavigator() {
     return require('react-navigation-tabs').createBottomTabNavigator;
   },
-  get createMaterialBottomTabNavigator() {
-    return require('react-navigation-tabs').createMaterialBottomTabNavigator;
-  },
   get createMaterialTopTabNavigator() {
     return require('react-navigation-tabs').createMaterialTopTabNavigator;
+  },
+
+  // Actions
+  get NavigationActions() {
+    return require('./NavigationActions').default;
+  },
+  get StackActions() {
+    return require('./routers/StackActions').default;
+  },
+  get DrawerActions() {
+    return require('./routers/DrawerActions').default;
+  },
+  get getNavigationActionCreators() {
+    return require('./routers/getNavigationActionCreators').default;
   },
 
   // Routers
@@ -75,6 +81,9 @@ module.exports = {
   },
   get TabRouter() {
     return require('./routers/TabRouter').default;
+  },
+  get DrawerRouter() {
+    return require('./routers/DrawerRouter').default;
   },
   get SwitchRouter() {
     return require('./routers/SwitchRouter').default;
@@ -117,6 +126,9 @@ module.exports = {
   },
   get DrawerItems() {
     return require('./views/Drawer/DrawerNavigatorItems').default;
+  },
+  get DrawerSidebar() {
+    return require('./views/Drawer/DrawerSidebar').default;
   },
 
   // TabView

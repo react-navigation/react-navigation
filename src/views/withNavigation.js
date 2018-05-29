@@ -10,12 +10,14 @@ export default function withNavigation(Component) {
       Component.name})`;
 
     render() {
+      const navigationProp = this.props.navigation;
       return (
         <NavigationConsumer>
-          {navigation => {
+          {navigationContext => {
+            const navigation = navigationProp || navigationContext;
             invariant(
               !!navigation,
-              'withNavigationFocus can only be used on a view hierarchy of a navigator. The wrapped component is unable to get access to navigation from props or context.'
+              'withNavigation can only be used on a view hierarchy of a navigator. The wrapped component is unable to get access to navigation from props or context.'
             );
             return (
               <Component

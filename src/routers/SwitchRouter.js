@@ -3,12 +3,17 @@ import getScreenForRouteName from './getScreenForRouteName';
 import createConfigGetter from './createConfigGetter';
 
 import NavigationActions from '../NavigationActions';
+import StackActions from './StackActions';
 import validateRouteConfigMap from './validateRouteConfigMap';
+import getNavigationActionCreators from './getNavigationActionCreators';
+
+const defaultActionCreators = (route, navStateKey) => ({});
 
 function childrenUpdateWithoutSwitchingIndex(actionType) {
   return [
     NavigationActions.SET_PARAMS,
-    NavigationActions.COMPLETE_TRANSITION,
+    // Todo: make SwitchRouter not depend on StackActions..
+    StackActions.COMPLETE_TRANSITION,
   ].includes(actionType);
 }
 
@@ -18,6 +23,9 @@ export default (routeConfigs, config = {}) => {
 
   const order = config.order || Object.keys(routeConfigs);
   const paths = config.paths || {};
+  const getCustomActionCreators =
+    config.getCustomActionCreators || defaultActionCreators;
+
   const initialRouteParams = config.initialRouteParams;
   const initialRouteName = config.initialRouteName || order[0];
   const backBehavior = config.backBehavior || 'none';
@@ -96,6 +104,13 @@ export default (routeConfigs, config = {}) => {
       }
 
       return nextState;
+    },
+
+    getActionCreators(route, stateKey) {
+      return {
+        ...getNavigationActionCreators(route),
+        ...getCustomActionCreators(route, stateKey),
+      };
     },
 
     getStateForAction(action, inputState) {

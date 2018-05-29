@@ -1,46 +1,50 @@
 import React from 'react';
-import 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import renderer from 'react-test-renderer';
 
 import NavigationActions from '../NavigationActions';
-import StackNavigator from '../navigators/createStackNavigator';
-
-const FooScreen = () => <div />;
-const BarScreen = () => <div />;
-const BazScreen = () => <div />;
-const CarScreen = () => <div />;
-const DogScreen = () => <div />;
-const ElkScreen = () => <div />;
-const NavigationContainer = StackNavigator(
-  {
-    foo: {
-      screen: FooScreen,
-    },
-    bar: {
-      screen: BarScreen,
-    },
-    baz: {
-      screen: BazScreen,
-    },
-    car: {
-      screen: CarScreen,
-    },
-    dog: {
-      screen: DogScreen,
-    },
-    elk: {
-      screen: ElkScreen,
-    },
-  },
-  {
-    initialRouteName: 'foo',
-  }
-);
-
-jest.useFakeTimers();
+import createStackNavigator from '../navigators/createStackNavigator';
+import { _TESTING_ONLY_reset_container_count } from '../createNavigationContainer';
 
 describe('NavigationContainer', () => {
+  jest.useFakeTimers();
+  beforeEach(() => {
+    _TESTING_ONLY_reset_container_count();
+  });
+
+  const FooScreen = () => <div />;
+  const BarScreen = () => <div />;
+  const BazScreen = () => <div />;
+  const CarScreen = () => <div />;
+  const DogScreen = () => <div />;
+  const ElkScreen = () => <div />;
+  const NavigationContainer = createStackNavigator(
+    {
+      foo: {
+        screen: FooScreen,
+      },
+      bar: {
+        screen: BarScreen,
+      },
+      baz: {
+        screen: BazScreen,
+      },
+      car: {
+        screen: CarScreen,
+      },
+      dog: {
+        screen: DogScreen,
+      },
+      elk: {
+        screen: ElkScreen,
+      },
+    },
+    {
+      initialRouteName: 'foo',
+    }
+  );
+
   describe('state.nav', () => {
     it("should be preloaded with the router's initial state", () => {
       const navigationContainer = renderer
@@ -195,6 +199,59 @@ describe('NavigationContainer', () => {
           { routeName: 'dog' },
           { routeName: 'elk' },
         ],
+      });
+    });
+  });
+
+  describe('warnings', () => {
+    function spyConsole() {
+      let spy = {};
+
+      beforeEach(() => {
+        spy.console = jest.spyOn(console, 'warn').mockImplementation(() => {});
+      });
+
+      afterEach(() => {
+        spy.console.mockRestore();
+      });
+
+      return spy;
+    }
+
+    describe('detached navigators', () => {
+      beforeEach(() => {
+        _TESTING_ONLY_reset_container_count();
+      });
+
+      let spy = spyConsole();
+
+      it('warns when you render more than one navigator explicitly', () => {
+        class BlankScreen extends React.Component {
+          render() {
+            return <View />;
+          }
+        }
+
+        class RootScreen extends React.Component {
+          render() {
+            return (
+              <View>
+                <ChildNavigator />
+              </View>
+            );
+          }
+        }
+
+        const ChildNavigator = createStackNavigator({
+          Child: BlankScreen,
+        });
+
+        const RootStack = createStackNavigator({
+          Root: RootScreen,
+        });
+
+        renderer.create(<RootStack />).toJSON();
+        expect(spy).toMatchSnapshot();
       });
     });
   });

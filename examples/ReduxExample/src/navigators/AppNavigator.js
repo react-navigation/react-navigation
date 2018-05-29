@@ -1,12 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { addNavigationHelpers, StackNavigator } from 'react-navigation';
+import { StackNavigator } from 'react-navigation';
+import { initializeListeners } from 'react-navigation-redux-helpers';
 
 import LoginScreen from '../components/LoginScreen';
 import MainScreen from '../components/MainScreen';
 import ProfileScreen from '../components/ProfileScreen';
-import { addListener } from '../utils/redux';
+import { navigationPropConstructor } from '../utils/redux';
 
 export const AppNavigator = StackNavigator({
   Login: { screen: LoginScreen },
@@ -20,17 +21,14 @@ class AppWithNavigationState extends React.Component {
     nav: PropTypes.object.isRequired,
   };
 
+  componentDidMount() {
+    initializeListeners('root', this.props.nav);
+  }
+
   render() {
     const { dispatch, nav } = this.props;
-    return (
-      <AppNavigator
-        navigation={addNavigationHelpers({
-          dispatch,
-          state: nav,
-          addListener,
-        })}
-      />
-    );
+    const navigation = navigationPropConstructor(dispatch, nav);
+    return <AppNavigator navigation={navigation} />;
   }
 }
 

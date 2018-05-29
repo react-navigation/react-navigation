@@ -4,6 +4,8 @@
 
 import type {
   NavigationScreenProp,
+  NavigationState,
+  NavigationStateRoute,
   NavigationEventSubscription,
 } from 'react-navigation';
 
@@ -14,16 +16,22 @@ import {
   SafeAreaView,
   withNavigation,
 } from 'react-navigation';
+import invariant from 'invariant';
+
 import SampleText from './SampleText';
 import { Button } from './commonComponents/ButtonWithMargin';
 import { HeaderButtons } from './commonComponents/HeaderButtons';
 
 type MyNavScreenProps = {
-  navigation: NavigationScreenProp<*>,
+  navigation: NavigationScreenProp<NavigationState>,
   banner: React.Node,
 };
 
-class MyBackButton extends React.Component<any, any> {
+type BackButtonProps = {
+  navigation: NavigationScreenProp<NavigationStateRoute>,
+};
+
+class MyBackButton extends React.Component<BackButtonProps, any> {
   render() {
     return (
       <HeaderButtons>
@@ -42,11 +50,16 @@ const MyBackButtonWithNavigation = withNavigation(MyBackButton);
 class MyNavScreen extends React.Component<MyNavScreenProps> {
   render() {
     const { navigation, banner } = this.props;
+    const { push, replace, popToTop, pop, dismiss } = navigation;
+    invariant(
+      push && replace && popToTop && pop && dismiss,
+      'missing action creators for StackNavigator'
+    );
     return (
       <SafeAreaView>
         <SampleText>{banner}</SampleText>
         <Button
-          onPress={() => navigation.push('Profile', { name: 'Jane' })}
+          onPress={() => push('Profile', { name: 'Jane' })}
           title="Push a profile screen"
         />
         <Button
@@ -54,13 +67,13 @@ class MyNavScreen extends React.Component<MyNavScreenProps> {
           title="Navigate to a photos screen"
         />
         <Button
-          onPress={() => navigation.replace('Profile', { name: 'Lucy' })}
+          onPress={() => replace('Profile', { name: 'Lucy' })}
           title="Replace with profile"
         />
-        <Button onPress={() => navigation.popToTop()} title="Pop to top" />
-        <Button onPress={() => navigation.pop()} title="Pop" />
+        <Button onPress={() => popToTop()} title="Pop to top" />
+        <Button onPress={() => pop()} title="Pop" />
         <Button onPress={() => navigation.goBack()} title="Go back" />
-        <Button onPress={() => navigation.dismiss()} title="Dismiss" />
+        <Button onPress={() => dismiss()} title="Dismiss" />
         <StatusBar barStyle="default" />
       </SafeAreaView>
     );
@@ -68,7 +81,7 @@ class MyNavScreen extends React.Component<MyNavScreenProps> {
 }
 
 type MyHomeScreenProps = {
-  navigation: NavigationScreenProp<*>,
+  navigation: NavigationScreenProp<NavigationState>,
 };
 
 class MyHomeScreen extends React.Component<MyHomeScreenProps> {
@@ -112,7 +125,7 @@ class MyHomeScreen extends React.Component<MyHomeScreenProps> {
 }
 
 type MyPhotosScreenProps = {
-  navigation: NavigationScreenProp<*>,
+  navigation: NavigationScreenProp<NavigationState>,
 };
 class MyPhotosScreen extends React.Component<MyPhotosScreenProps> {
   static navigationOptions = {
@@ -153,7 +166,7 @@ class MyPhotosScreen extends React.Component<MyPhotosScreenProps> {
     const { navigation } = this.props;
     return (
       <MyNavScreen
-        banner={`${navigation.state.params.name}'s Photos`}
+        banner={`${navigation.getParam('name')}'s Photos`}
         navigation={navigation}
       />
     );
@@ -162,9 +175,9 @@ class MyPhotosScreen extends React.Component<MyPhotosScreenProps> {
 
 const MyProfileScreen = ({ navigation }) => (
   <MyNavScreen
-    banner={`${navigation.state.params.mode === 'edit' ? 'Now Editing ' : ''}${
-      navigation.state.params.name
-    }'s Profile`}
+    banner={`${
+      navigation.getParam('mode') === 'edit' ? 'Now Editing ' : ''
+    }${navigation.getParam('name')}'s Profile`}
     navigation={navigation}
   />
 );

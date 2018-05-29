@@ -1,7 +1,6 @@
 import React from 'react';
 
 import getChildEventSubscriber from '../getChildEventSubscriber';
-import addNavigationHelpers from '../addNavigationHelpers';
 
 function createNavigator(NavigatorView, router, navigationConfig) {
   class Navigator extends React.Component {
@@ -15,18 +14,17 @@ function createNavigator(NavigatorView, router, navigationConfig) {
       const activeKeys = this.props.navigation.state.routes.map(r => r.key);
       Object.keys(this.childEventSubscribers).forEach(key => {
         if (!activeKeys.includes(key)) {
-          this.childEventSubscribers[key].removeAll();
           delete this.childEventSubscribers[key];
         }
       });
     }
 
-    // Remove all subscriptions
+    // Remove all subscription references
     componentWillUnmount() {
-      Object.values(this.childEventSubscribers).map(s => s.removeAll());
+      this.childEventSubscribers = {};
     }
 
-    _isRouteFocused = route => () => {
+    _isRouteFocused = route => {
       const { state } = this.props.navigation;
       const focusedRoute = state.routes[state.index];
       return route === focusedRoute;
@@ -58,13 +56,36 @@ function createNavigator(NavigatorView, router, navigationConfig) {
           );
         }
 
-        const childNavigation = addNavigationHelpers({
+        const actionCreators = {
+          ...navigation.actions,
+          ...router.getActionCreators(route, state.key),
+        };
+        const actionHelpers = {};
+        Object.keys(actionCreators).forEach(actionName => {
+          actionHelpers[actionName] = (...args) => {
+            const actionCreator = actionCreators[actionName];
+            const action = actionCreator(...args);
+            dispatch(action);
+          };
+        });
+        const childNavigation = {
+          ...actionHelpers,
+          actions: actionCreators,
           dispatch,
           state: route,
+          isFocused: () => this._isRouteFocused(route),
           dangerouslyGetParent: this._dangerouslyGetParent,
           addListener: this.childEventSubscribers[route.key].addListener,
-          isFocused: () => this._isRouteFocused(route),
-        });
+          getParam: (paramName, defaultValue) => {
+            const params = route.params;
+
+            if (params && paramName in params) {
+              return params[paramName];
+            }
+
+            return defaultValue;
+          },
+        };
 
         const options = router.getScreenOptions(childNavigation, screenProps);
         descriptors[route.key] = {
@@ -78,6 +99,7 @@ function createNavigator(NavigatorView, router, navigationConfig) {
 
       return (
         <NavigatorView
+          {...this.props}
           screenProps={screenProps}
           navigation={navigation}
           navigationConfig={navigationConfig}
