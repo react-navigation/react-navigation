@@ -2,12 +2,7 @@
 
 exports[`TabNavigator renders successfully 1`] = `
 <View
-  loaded={
-    Array [
-      0,
-    ]
-  }
-  onLayout={[Function]}
+  collapsable={false}
   style={
     Array [
       Object {
@@ -21,56 +16,65 @@ exports[`TabNavigator renders successfully 1`] = `
   }
 >
   <View
-    collapsable={undefined}
-    onMoveShouldSetResponder={[Function]}
-    onMoveShouldSetResponderCapture={[Function]}
-    onResponderEnd={[Function]}
-    onResponderGrant={[Function]}
-    onResponderMove={[Function]}
-    onResponderReject={[Function]}
-    onResponderRelease={[Function]}
-    onResponderStart={[Function]}
-    onResponderTerminate={[Function]}
-    onResponderTerminationRequest={[Function]}
-    onStartShouldSetResponder={[Function]}
-    onStartShouldSetResponderCapture={[Function]}
+    onLayout={[Function]}
     style={
       Object {
-        "alignItems": "stretch",
         "flex": 1,
-        "flexDirection": "row",
       }
     }
   >
     <View
+      collapsable={undefined}
+      onMoveShouldSetResponder={[Function]}
+      onMoveShouldSetResponderCapture={[Function]}
+      onResponderEnd={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderReject={[Function]}
+      onResponderRelease={[Function]}
+      onResponderStart={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      onStartShouldSetResponderCapture={[Function]}
       style={
         Object {
-          "bottom": 0,
-          "left": 0,
-          "position": "absolute",
-          "right": 0,
-          "top": 0,
+          "alignItems": "stretch",
+          "flex": 1,
+          "flexDirection": "row",
         }
       }
-      testID={undefined}
     >
       <View
-        collapsable={false}
-        removeClippedSubviews={false}
         style={
           Object {
-            "flex": 1,
-            "overflow": "hidden",
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
           }
         }
+        testID={undefined}
       >
         <View
+          collapsable={false}
+          removeClippedSubviews={false}
           style={
             Object {
               "flex": 1,
+              "overflow": "hidden",
             }
           }
-        />
+        >
+          <View
+            style={
+              Object {
+                "flex": 1,
+              }
+            }
+          />
+        </View>
       </View>
     </View>
   </View>
