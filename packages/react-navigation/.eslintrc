@@ -38,6 +38,7 @@
 
     "react/sort-comp": "off",
     "react/prefer-stateless-function": "off",
+    "react/no-deprecated": "off",
 
     "react/forbid-prop-types": "warn",
     "react/prop-types": "off",
