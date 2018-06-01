@@ -2,6 +2,7 @@
 
 export { default as TabView } from './TabView';
 export { default as TabBar } from './TabBar';
+export { default as PagerDefault } from './PagerDefault';
 export { default as PagerPan } from './PagerPan';
 export { default as PagerScroll } from './PagerScroll';
 export { default as PagerAndroid } from './PagerAndroid';

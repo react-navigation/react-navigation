@@ -2,8 +2,9 @@
 
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { Animated, Platform, View, StyleSheet } from 'react-native';
+import { Animated, View, StyleSheet } from 'react-native';
 import TabBar from './TabBar';
+import PagerDefault from './PagerDefault';
 import { NavigationStatePropType } from './PropTypes';
 import type {
   Scene,
@@ -38,20 +39,6 @@ type State = {|
   position: any,
 |};
 
-let Pager;
-
-switch (Platform.OS) {
-  case 'android':
-    Pager = require('./PagerAndroid').default;
-    break;
-  case 'ios':
-    Pager = require('./PagerScroll').default;
-    break;
-  default:
-    Pager = require('./PagerPan').default;
-    break;
-}
-
 export default class TabView<T: *> extends React.Component<Props<T>, State> {
   static propTypes = {
     navigationState: NavigationStatePropType.isRequired,
@@ -70,7 +57,7 @@ export default class TabView<T: *> extends React.Component<Props<T>, State> {
   static defaultProps = {
     canJumpToTab: () => true,
     renderHeader: (props: *) => <TabBar {...props} />,
-    renderPager: (props: *) => <Pager {...props} />,
+    renderPager: (props: *) => <PagerDefault {...props} />,
     getTestID: ({ route }: Scene<*>) =>
       typeof route.testID === 'string' ? route.testID : undefined,
     initialLayout: {
