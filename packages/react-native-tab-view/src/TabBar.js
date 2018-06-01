@@ -12,8 +12,8 @@ import {
   I18nManager,
 } from 'react-native';
 import TouchableItem from './TouchableItem';
-import { SceneRendererPropType } from './TabViewPropTypes';
-import type { Scene, SceneRendererProps } from './TabViewTypeDefinitions';
+import { SceneRendererPropType } from './PropTypes';
+import type { Scene, SceneRendererProps } from './TypeDefinitions';
 import type {
   ViewStyleProp,
   TextStyleProp,

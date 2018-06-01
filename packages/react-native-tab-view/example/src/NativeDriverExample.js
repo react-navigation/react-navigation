@@ -3,17 +3,17 @@
 import * as React from 'react';
 import { StyleSheet, Dimensions } from 'react-native';
 import {
-  TabViewAnimated,
+  TabView,
   TabBar,
-  TabViewPagerExperimental,
+  PagerExperimental,
   SceneMap,
+  type Route,
+  type NavigationState,
 } from 'react-native-tab-view';
 import * as GestureHandler from 'react-native-gesture-handler';
 import Albums from './shared/Albums';
 import Article from './shared/Article';
 import Chat from './shared/Chat';
-
-import type { Route, NavigationState } from 'react-native-tab-view/types';
 
 type State = NavigationState<
   Route<{
@@ -57,12 +57,12 @@ export default class NativeDriverExample extends React.Component<*, State> {
   });
 
   _renderPager = props => (
-    <TabViewPagerExperimental GestureHandler={GestureHandler} {...props} />
+    <PagerExperimental GestureHandler={GestureHandler} {...props} />
   );
 
   render() {
     return (
-      <TabViewAnimated
+      <TabView
         style={[styles.container, this.props.style]}
         navigationState={this.state}
         renderScene={this._renderScene}

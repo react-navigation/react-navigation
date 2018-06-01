@@ -2,7 +2,7 @@
   "extends": '../.eslintrc',
 
   "settings": {
-    "import/core-modules": [ "expo", "react-native-tab-view", "react-native-tab-view/types" ]
+    "import/core-modules": [ "expo", "react-native-tab-view" ]
   },
 
   "rules": {

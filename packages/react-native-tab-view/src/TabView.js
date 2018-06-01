@@ -3,7 +3,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { Animated, Platform, View, StyleSheet } from 'react-native';
-import { NavigationStatePropType } from './TabViewPropTypes';
+import { NavigationStatePropType } from './PropTypes';
 import type {
   Scene,
   SceneRendererProps,
@@ -11,7 +11,7 @@ import type {
   Layout,
   PagerCommonProps,
   PagerExtraProps,
-} from './TabViewTypeDefinitions';
+} from './TypeDefinitions';
 import type { ViewStyleProp } from 'react-native/Libraries/StyleSheet/StyleSheet';
 
 type Props<T> = PagerCommonProps<T> &
@@ -37,24 +37,21 @@ type State = {|
   position: any,
 |};
 
-let TabViewPager;
+let Pager;
 
 switch (Platform.OS) {
   case 'android':
-    TabViewPager = require('./TabViewPagerAndroid').default;
+    Pager = require('./PagerAndroid').default;
     break;
   case 'ios':
-    TabViewPager = require('./TabViewPagerScroll').default;
+    Pager = require('./PagerScroll').default;
     break;
   default:
-    TabViewPager = require('./TabViewPagerPan').default;
+    Pager = require('./PagerPan').default;
     break;
 }
 
-export default class TabViewAnimated<T: *> extends React.Component<
-  Props<T>,
-  State
-> {
+export default class TabView<T: *> extends React.Component<Props<T>, State> {
   static propTypes = {
     navigationState: NavigationStatePropType.isRequired,
     onIndexChange: PropTypes.func.isRequired,
@@ -71,7 +68,7 @@ export default class TabViewAnimated<T: *> extends React.Component<
 
   static defaultProps = {
     canJumpToTab: () => true,
-    renderPager: (props: *) => <TabViewPager {...props} />,
+    renderPager: (props: *) => <Pager {...props} />,
     getTestID: ({ route }: Scene<*>) =>
       typeof route.testID === 'string' ? route.testID : undefined,
     initialLayout: {

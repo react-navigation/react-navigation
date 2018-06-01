@@ -39,7 +39,7 @@ yarn add react-native-tab-view react-native-gesture-handler
 ```js
 import * as React from 'react';
 import { View, StyleSheet, Dimensions } from 'react-native';
-import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
+import { TabView, TabBar, SceneMap } from 'react-native-tab-view';
 
 const initialLayout = {
   height: 0,
@@ -69,7 +69,7 @@ export default class TabViewExample extends React.Component {
 
   render() {
     return (
-      <TabViewAnimated
+      <TabView
         navigationState={this.state}
         renderScene={this._renderScene}
         renderHeader={this._renderHeader}
@@ -101,11 +101,11 @@ React Navigation integration can be achieved by the [react-navigation-tabs](http
 
 ## API
 
-The package exposes a `TabViewAnimated` component which manages the state and animated values, and renders components such as the headers, footers and the pager. Pager components render the routes as pages, as well as handle the gestures and transitions. Various pager components are implemented in the library to provide the best experience according to the platform. The pager best suited to the platform is automatically used by default.
+The package exposes a `TabView` component which manages the state and animated values, and renders components such as the headers, footers and the pager. Pager components render the routes as pages, as well as handle the gestures and transitions. Various pager components are implemented in the library to provide the best experience according to the platform. The pager best suited to the platform is automatically used by default.
 
-Check the [type definitions](src/TabViewTypeDefinitions.js) for details on shape of different props.
+Check the [type definitions](src/TypeDefinitions.js) for details on shape of different props.
 
-### `<TabViewAnimated />`
+### `<TabView />`
 
 Container component responsible for managing tab transitions.
 
@@ -147,7 +147,7 @@ Material design themed tab bar. Can be used as both top and bottom tab bar.
 - `labelStyle` - style object for the tab item label
 - `style` - style object for the tab bar
 
-### `<TabViewPagerPan />`
+### `<PagerPan />`
 
 Cross-platform pager based on the [`PanResponder`](https://facebook.github.io/react-native/docs/panresponder.html).
 
@@ -163,7 +163,7 @@ Cross-platform pager based on the [`PanResponder`](https://facebook.github.io/re
 - `getTestID` - optional callback which receives the current scene and returns a test id for the tab
 - `children` - React Element(s) to render
 
-### `<TabViewPagerScroll />`
+### `<PagerScroll />`
 
 Cross-platform pager based on [`ScrollView`](https://facebook.github.io/react-native/docs/scrollview.html) (default on iOS).
 
@@ -179,7 +179,7 @@ Cross-platform pager based on [`ScrollView`](https://facebook.github.io/react-na
 
 There are some caveats when using this pager on Android, such as poor support for intial index other than `0` and weird animation curves.
 
-### `<TabViewPagerAndroid />`
+### `<PagerAndroid />`
 
 Android only pager based on `ViewPagerAndroid` (default on Android).
 
@@ -194,7 +194,7 @@ Android only pager based on `ViewPagerAndroid` (default on Android).
 - `getTestID` - optional callback which receives the current scene and returns a test id for the tab
 - `children` - React Element(s) to render
 
-### `<TabViewPagerExperimental />`
+### `<PagerExperimental />`
 
 Cross-platform pager component based on [`react-native-gesture-handler`](https://github.com/kmagiera/react-native-gesture-handler).
 
@@ -217,7 +217,7 @@ import * as GestureHandler from 'react-native-gesture-handler';
 
 ...
 
-<TabViewPagerExperimental {...props} GestureHandler={GestureHandler} />
+<PagerExperimental {...props} GestureHandler={GestureHandler} />
 ```
 
 ### `SceneMap`
@@ -257,10 +257,10 @@ If you don't use `SceneMap`, you will need to take care of optimizing the indivi
 
 ### Use native driver
 
-Using native animations and gestures can greatly improve the performance. To use native animations and gestures, you will need to use `TabViewPagerExperimental` as your pager and pass `useNativeDriver` in `TabViewAnimated`.
+Using native animations and gestures can greatly improve the performance. To use native animations and gestures, you will need to use `PagerExperimental` as your pager and pass `useNativeDriver` in `TabView`.
 
 ```js
-<TabViewAnimated
+<TabView
   navigationState={this.state}
   renderPager={this._renderPager}
   renderScene={this._renderScene}
@@ -313,7 +313,7 @@ Where `<HomeComponent />` is a `PureComponent`.
 
 We need to measure the width of the container and hence need to wait before rendering some elements on the screen. If you know the initial width upfront, you can pass it in and we won't need to wait for measuring it. Most of the time, it's just the window width.
 
-For example, pass the following `initialLayout` to `TabViewAnimated`:
+For example, pass the following `initialLayout` to `TabView`:
 
 ```js
 const initialLayout = {

@@ -2,8 +2,8 @@
 
 import * as React from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
-import { PagerRendererPropType } from './TabViewPropTypes';
-import type { PagerRendererProps } from './TabViewTypeDefinitions';
+import { PagerRendererPropType } from './PropTypes';
+import type { PagerRendererProps } from './TypeDefinitions';
 
 type ScrollEvent = {
   nativeEvent: {
@@ -24,7 +24,7 @@ type State = {|
 
 type Props<T> = PagerRendererProps<T>;
 
-export default class TabViewPagerScroll<T: *> extends React.Component<
+export default class PagerScroll<T: *> extends React.Component<
   Props<T>,
   State
 > {

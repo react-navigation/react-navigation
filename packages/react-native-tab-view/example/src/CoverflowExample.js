@@ -9,9 +9,12 @@ import {
   Dimensions,
   StyleSheet,
 } from 'react-native';
-import { TabViewAnimated, TabViewPagerPan } from 'react-native-tab-view';
-
-import type { Route, NavigationState } from 'react-native-tab-view/types';
+import {
+  TabView,
+  PagerPan,
+  type Route,
+  type NavigationState,
+} from 'react-native-tab-view';
 
 type State = NavigationState<
   Route<{
@@ -104,11 +107,11 @@ export default class CoverflowExample extends React.Component<*, State> {
     </Animated.View>
   );
 
-  _renderPager = props => <TabViewPagerPan {...props} />;
+  _renderPager = props => <PagerPan {...props} />;
 
   render() {
     return (
-      <TabViewAnimated
+      <TabView
         style={[styles.container, this.props.style]}
         navigationState={this.state}
         renderPager={this._renderPager}

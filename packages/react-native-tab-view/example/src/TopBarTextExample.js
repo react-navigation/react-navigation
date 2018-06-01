@@ -2,13 +2,17 @@
 
 import * as React from 'react';
 import { StyleSheet, Dimensions } from 'react-native';
-import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
+import {
+  TabView,
+  TabBar,
+  SceneMap,
+  type Route,
+  type NavigationState,
+} from 'react-native-tab-view';
 import Article from './shared/Article';
 import Albums from './shared/Albums';
 import Chat from './shared/Chat';
 import Contacts from './shared/Contacts';
-
-import type { Route, NavigationState } from 'react-native-tab-view/types';
 
 type State = NavigationState<
   Route<{
@@ -62,7 +66,7 @@ export default class TopBarTextExample extends React.Component<*, State> {
 
   render() {
     return (
-      <TabViewAnimated
+      <TabView
         style={[styles.container, this.props.style]}
         navigationState={this.state}
         renderScene={this._renderScene}

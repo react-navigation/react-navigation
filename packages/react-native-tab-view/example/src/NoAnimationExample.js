@@ -7,14 +7,17 @@ import {
   TouchableWithoutFeedback,
   StyleSheet,
 } from 'react-native';
-import { TabViewAnimated, SceneMap } from 'react-native-tab-view';
+import {
+  TabView,
+  SceneMap,
+  type Route,
+  type NavigationState,
+} from 'react-native-tab-view';
 import { Ionicons } from '@expo/vector-icons';
 import Albums from './shared/Albums';
 import Article from './shared/Article';
 import Chat from './shared/Chat';
 import Contacts from './shared/Contacts';
-
-import type { Route, NavigationState } from 'react-native-tab-view/types';
 
 const AnimatedIcon = Animated.createAnimatedComponent(Ionicons);
 
@@ -117,7 +120,7 @@ export default class TopBarIconExample extends React.Component<*, State> {
 
   render() {
     return (
-      <TabViewAnimated
+      <TabView
         style={[styles.container, this.props.style]}
         navigationState={this.state}
         renderScene={this._renderScene}
