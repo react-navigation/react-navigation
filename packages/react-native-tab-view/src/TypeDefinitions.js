@@ -28,7 +28,6 @@ export type SceneRendererProps<T> = {
   offsetX: Animated.Value,
   position: any,
   jumpTo: (key: string) => mixed,
-  jumpToIndex: (index: number) => mixed, // Deprecated, use `jumpTo` instead
   getTestID: (scene: Scene<T>) => ?string,
   useNativeDriver: boolean,
 };

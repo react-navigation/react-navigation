@@ -14,12 +14,7 @@ export default function SceneMap<T: *>(scenes: {
     }
   }
 
-  return ({ route, jumpTo, jumpToIndex }: *) => (
-    <SceneComponent
-      key={route.key}
-      route={route}
-      jumpTo={jumpTo}
-      jumpToIndex={jumpToIndex}
-    />
+  return ({ route, jumpTo }: *) => (
+    <SceneComponent key={route.key} route={route} jumpTo={jumpTo} />
   );
 }
