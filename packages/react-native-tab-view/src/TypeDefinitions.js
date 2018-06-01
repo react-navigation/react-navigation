@@ -59,3 +59,8 @@ export type PagerExtraProps = {
   swipeDistanceThreshold?: number,
   swipeVelocityThreshold?: number,
 };
+
+export type SceneComponentProps<T> = React.ComponentType<{
+  route: T,
+  jumpTo: (key: string) => mixed,
+}>;

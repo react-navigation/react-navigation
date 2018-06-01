@@ -1,6 +1,7 @@
 /* @flow */
 
 import * as React from 'react';
+import type { SceneComponentProps } from './TypeDefinitions';
 
 class SceneComponent extends React.PureComponent<*> {
   render() {
@@ -10,10 +11,7 @@ class SceneComponent extends React.PureComponent<*> {
 }
 
 export default function SceneMap<T: *>(scenes: {
-  [key: string]: React.ComponentType<{
-    route: T,
-    jumpTo: (key: string) => mixed,
-  }>,
+  [key: string]: SceneComponentProps<T>,
 }) {
   return ({ route, jumpTo }: *) => (
     <SceneComponent
