@@ -98,6 +98,8 @@ export default class CoverflowExample extends React.Component<*, State> {
       index,
     });
 
+  _renderTabBar = () => null;
+
   _renderScene = props => (
     <Animated.View style={[styles.page, this._buildCoverFlowStyle(props)]}>
       <View style={styles.album}>
@@ -114,6 +116,7 @@ export default class CoverflowExample extends React.Component<*, State> {
       <TabView
         style={[styles.container, this.props.style]}
         navigationState={this.state}
+        renderTabBar={this._renderTabBar}
         renderPager={this._renderPager}
         renderScene={this._renderScene}
         onIndexChange={this._handleIndexChange}

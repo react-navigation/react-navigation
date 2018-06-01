@@ -93,7 +93,7 @@ export default class TopBarIconExample extends React.Component<*, State> {
     );
   };
 
-  _renderFooter = props => (
+  _renderTabBar = props => (
     <View style={styles.tabbar}>
       {props.navigationState.routes.map((route, index) => {
         return (
@@ -124,7 +124,8 @@ export default class TopBarIconExample extends React.Component<*, State> {
         style={[styles.container, this.props.style]}
         navigationState={this.state}
         renderScene={this._renderScene}
-        renderFooter={this._renderFooter}
+        renderTabBar={this._renderTabBar}
+        tabBarPosition="bottom"
         onIndexChange={this._handleIndexChange}
         animationEnabled={false}
         swipeEnabled={false}

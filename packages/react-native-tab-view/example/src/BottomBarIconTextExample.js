@@ -120,7 +120,7 @@ export default class BottomBarIconExample extends React.Component<*, State> {
     return null;
   };
 
-  _renderFooter = props => (
+  _renderTabBar = props => (
     <TabBar
       {...props}
       renderIcon={this._renderIcon}
@@ -142,7 +142,8 @@ export default class BottomBarIconExample extends React.Component<*, State> {
         style={this.props.style}
         navigationState={this.state}
         renderScene={this._renderScene}
-        renderFooter={this._renderFooter}
+        renderTabBar={this._renderTabBar}
+        tabBarPosition="bottom"
         onIndexChange={this._handleIndexChange}
       />
     );

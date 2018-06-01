@@ -46,7 +46,7 @@ export default class TopBarTextExample extends React.Component<*, State> {
       index,
     });
 
-  _renderHeader = props => (
+  _renderTabBar = props => (
     <TabBar
       {...props}
       scrollEnabled
@@ -70,7 +70,7 @@ export default class TopBarTextExample extends React.Component<*, State> {
         style={[styles.container, this.props.style]}
         navigationState={this.state}
         renderScene={this._renderScene}
-        renderHeader={this._renderHeader}
+        renderTabBar={this._renderTabBar}
         onIndexChange={this._handleIndexChange}
         initialLayout={initialLayout}
       />

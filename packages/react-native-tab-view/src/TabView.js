@@ -21,12 +21,10 @@ type Props<T> = PagerCommonProps<T> &
     navigationState: NavigationState<T>,
     onIndexChange: (index: number) => mixed,
     initialLayout?: Layout,
-    renderPager: (props: *) => React.Element<any>,
-    renderScene: (
-      props: SceneRendererProps<T> & Scene<T>
-    ) => ?React.Element<any>,
-    renderHeader?: (props: SceneRendererProps<T>) => ?React.Element<any>,
-    renderFooter?: (props: SceneRendererProps<T>) => ?React.Element<any>,
+    renderPager: (props: *) => React.Node,
+    renderScene: (props: SceneRendererProps<T> & Scene<T>) => React.Node,
+    renderTabBar: (props: SceneRendererProps<T>) => React.Node,
+    tabBarPosition: 'top' | 'bottom',
     useNativeDriver?: boolean,
     style?: ViewStyleProp,
   };
@@ -50,13 +48,14 @@ export default class TabView<T: *> extends React.Component<Props<T>, State> {
     canJumpToTab: PropTypes.func.isRequired,
     renderPager: PropTypes.func.isRequired,
     renderScene: PropTypes.func.isRequired,
-    renderHeader: PropTypes.func,
-    renderFooter: PropTypes.func,
+    renderTabBar: PropTypes.func,
+    tabBarPosition: PropTypes.oneOf(['top', 'bottom']),
   };
 
   static defaultProps = {
     canJumpToTab: () => true,
-    renderHeader: (props: *) => <TabBar {...props} />,
+    tabBarPosition: 'top',
+    renderTabBar: (props: *) => <TabBar {...props} />,
     renderPager: (props: *) => <PagerDefault {...props} />,
     getTestID: ({ route }: Scene<*>) =>
       typeof route.testID === 'string' ? route.testID : undefined,
@@ -175,8 +174,8 @@ export default class TabView<T: *> extends React.Component<Props<T>, State> {
       renderScene,
       /* eslint-enable no-unused-vars */
       renderPager,
-      renderHeader,
-      renderFooter,
+      renderTabBar,
+      tabBarPosition,
       ...rest
     } = this.props;
 
@@ -184,7 +183,7 @@ export default class TabView<T: *> extends React.Component<Props<T>, State> {
 
     return (
       <View collapsable={false} style={[styles.container, this.props.style]}>
-        {renderHeader && renderHeader(props)}
+        {tabBarPosition === 'top' && renderTabBar(props)}
         <View onLayout={this._handleLayout} style={styles.pager}>
           {renderPager({
             ...props,
@@ -197,7 +196,8 @@ export default class TabView<T: *> extends React.Component<Props<T>, State> {
                 route,
               });
 
-              if (scene) {
+              if (React.isValidElement(scene)) {
+                /* $FlowFixMe: https://github.com/facebook/flow/issues/4775 */
                 return React.cloneElement(scene, { key: route.key });
               }
 
@@ -205,7 +205,7 @@ export default class TabView<T: *> extends React.Component<Props<T>, State> {
             }),
           })}
         </View>
-        {renderFooter && renderFooter(props)}
+        {tabBarPosition === 'bottom' && renderTabBar(props)}
       </View>
     );
   }

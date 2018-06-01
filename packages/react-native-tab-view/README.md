@@ -115,8 +115,8 @@ Container component responsible for managing tab transitions.
 - `onIndexChange` - callback for when the current tab index changes, should do the `setState`
 - `canJumpToTab` - optional callback which accepts a route, and returns a boolean indicating whether jumping to the tab is allowed
 - `initialLayout` - optional object containing the initial `height` and `width`, can be passed to prevent the one frame delay in rendering
-- `renderHeader` - optional callback which returns a react element to use as top tab bar
-- `renderFooter` - optional callback which returns a react element to use as bottom tab bar
+- `tabBarPosition` - position of the tab bar, `'top'` or `'bottom'`
+- `renderTabBar` - optional callback which returns a react element to use as tab bar
 - `renderPager` - optional callback which returns a react element to handle swipe gesture and animation
 - `renderScene` - callback which returns a react element to use as a scene
 
@@ -264,7 +264,7 @@ Using native animations and gestures can greatly improve the performance. To use
   navigationState={this.state}
   renderPager={this._renderPager}
   renderScene={this._renderScene}
-  renderHeader={this._renderHeader}
+  renderTabBar={this._renderTabBar}
   onIndexChange={this._handleIndexChange}
   useNativeDriver
 />

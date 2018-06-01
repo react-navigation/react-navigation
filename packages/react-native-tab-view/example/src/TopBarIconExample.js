@@ -44,7 +44,7 @@ export default class TopBarIconExample extends React.Component<*, State> {
     <Ionicons name={route.icon} size={24} color="white" />
   );
 
-  _renderHeader = props => {
+  _renderTabBar = props => {
     return (
       <TabBar
         {...props}
@@ -67,7 +67,7 @@ export default class TopBarIconExample extends React.Component<*, State> {
         style={[styles.container, this.props.style]}
         navigationState={this.state}
         renderScene={this._renderScene}
-        renderHeader={this._renderHeader}
+        renderTabBar={this._renderTabBar}
         onIndexChange={this._handleIndexChange}
       />
     );

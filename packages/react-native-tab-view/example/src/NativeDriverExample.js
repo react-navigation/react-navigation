@@ -46,7 +46,7 @@ export default class NativeDriverExample extends React.Component<*, State> {
       index,
     });
 
-  _renderHeader = props => (
+  _renderTabBar = props => (
     <TabBar {...props} style={styles.tabbar} labelStyle={styles.label} />
   );
 
@@ -66,7 +66,7 @@ export default class NativeDriverExample extends React.Component<*, State> {
         style={[styles.container, this.props.style]}
         navigationState={this.state}
         renderScene={this._renderScene}
-        renderHeader={this._renderHeader}
+        renderTabBar={this._renderTabBar}
         renderPager={this._renderPager}
         onIndexChange={this._handleIndexChange}
         initialLayout={initialLayout}
