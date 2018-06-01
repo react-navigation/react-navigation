@@ -72,6 +72,8 @@ export default class TabViewAnimated<T: *> extends React.Component<
   static defaultProps = {
     canJumpToTab: () => true,
     renderPager: (props: *) => <TabViewPager {...props} />,
+    getTestID: ({ route }: Scene<*>) =>
+      typeof route.testID === 'string' ? route.testID : undefined,
     initialLayout: {
       height: 0,
       width: 0,
@@ -158,6 +160,7 @@ export default class TabViewAnimated<T: *> extends React.Component<
     jumpTo: this._jumpTo,
     jumpToIndex: this._jumpToIndex,
     useNativeDriver: this.props.useNativeDriver === true,
+    getTestID: this.props.getTestID,
   });
 
   _jumpToIndex = (index: number) => {
@@ -214,12 +217,10 @@ export default class TabViewAnimated<T: *> extends React.Component<
             ...rest,
             panX: this.state.panX,
             offsetX: this.state.offsetX,
-            children: navigationState.routes.map((route, index) => {
+            children: navigationState.routes.map(route => {
               const scene = this._renderScene({
                 ...props,
                 route,
-                index,
-                focused: index === navigationState.index,
               });
 
               if (scene) {

@@ -97,7 +97,7 @@ export default class TabViewPagerAndroid<T: *> extends React.Component<
 
     const nextRoute = this.props.navigationState.routes[nextIndex];
 
-    if (this.props.canJumpToTab(nextRoute)) {
+    if (this.props.canJumpToTab({ route: nextRoute })) {
       this.props.jumpTo(nextRoute.key);
     } else {
       this._setPage(this.props.navigationState.index);
@@ -134,7 +134,7 @@ export default class TabViewPagerAndroid<T: *> extends React.Component<
     const content = React.Children.map(children, (child, i) => (
       <View
         key={navigationState.routes[i].key}
-        testID={navigationState.routes[i].testID}
+        testID={this.props.getTestID({ route: navigationState.routes[i] })}
         style={styles.page}
       >
         {child}

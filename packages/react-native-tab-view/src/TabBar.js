@@ -29,6 +29,9 @@ type Props<T> = SceneRendererProps<T> & {
   pressColor?: string,
   pressOpacity?: number,
   getLabelText: (scene: Scene<T>) => ?string,
+  getAccessible: (scene: Scene<T>) => ?boolean,
+  getAccessibilityLabel: (scene: Scene<T>) => ?string,
+  getTestID: (scene: Scene<T>) => ?string,
   renderLabel?: (scene: Scene<T>) => ?React.Element<any>,
   renderIcon?: (scene: Scene<T>) => ?React.Element<any>,
   renderBadge?: (scene: Scene<T>) => ?React.Element<any>,
@@ -56,6 +59,9 @@ export default class TabBar<T: *> extends React.Component<Props<T>, State> {
     pressColor: TouchableItem.propTypes.pressColor,
     pressOpacity: TouchableItem.propTypes.pressOpacity,
     getLabelText: PropTypes.func,
+    getAccessible: PropTypes.func,
+    getAccessibilityLabel: PropTypes.func,
+    getTestID: PropTypes.func,
     renderIcon: PropTypes.func,
     renderLabel: PropTypes.func,
     renderIndicator: PropTypes.func,
@@ -67,6 +73,10 @@ export default class TabBar<T: *> extends React.Component<Props<T>, State> {
   static defaultProps = {
     getLabelText: ({ route }: Scene<T>) =>
       typeof route.title === 'string' ? route.title.toUpperCase() : route.title,
+    getAccessible: ({ route }: Scene<T>) =>
+      typeof route.accessible !== 'undefined' ? route.accessible : true,
+    getAccessibilityLabel: ({ route }: Scene<T>) => route.accessibilityLabel,
+    getTestID: ({ route }: Scene<T>) => route.testID,
   };
 
   constructor(props: Props<T>) {
@@ -238,20 +248,20 @@ export default class TabBar<T: *> extends React.Component<Props<T>, State> {
     }
 
     if (props.scrollEnabled) {
-      return layout.width / 5 * 2;
+      return (layout.width / 5) * 2;
     }
 
     return layout.width / navigationState.routes.length;
   };
 
-  _handleTabPress = (scene: Scene<*>) => {
-    this._pendingIndex = scene.index;
+  _handleTabPress = ({ route }: Scene<*>) => {
+    this._pendingIndex = this.props.navigationState.routes.indexOf(route);
 
     if (this.props.onTabPress) {
-      this.props.onTabPress(scene);
+      this.props.onTabPress({ route });
     }
 
-    this.props.jumpTo(scene.route.key);
+    this.props.jumpTo(route.key);
   };
 
   _normalizeScrollValue = (props, value) => {
@@ -338,7 +348,7 @@ export default class TabBar<T: *> extends React.Component<Props<T>, State> {
 
   render() {
     const { position, navigationState, scrollEnabled, bounces } = this.props;
-    const { routes, index } = navigationState;
+    const { routes } = navigationState;
     const tabWidth = this._getTabWidth(this.props);
     const tabBarWidth = tabWidth * routes.length;
 
@@ -396,7 +406,6 @@ export default class TabBar<T: *> extends React.Component<Props<T>, State> {
             ref={this._setRef}
           >
             {routes.map((route, i) => {
-              const focused = index === i;
               const outputRange = inputRange.map(
                 inputIndex => (inputIndex === i ? 1 : 0.7)
               );
@@ -407,17 +416,12 @@ export default class TabBar<T: *> extends React.Component<Props<T>, State> {
                   outputRange,
                 })
               );
-              const scene = {
-                route,
-                focused,
-                index: i,
-              };
-              const label = this._renderLabel(scene);
+              const label = this._renderLabel({ route });
               const icon = this.props.renderIcon
-                ? this.props.renderIcon(scene)
+                ? this.props.renderIcon({ route })
                 : null;
               const badge = this.props.renderBadge
-                ? this.props.renderBadge(scene)
+                ? this.props.renderBadge({ route })
                 : null;
 
               const tabStyle = {};
@@ -449,21 +453,27 @@ export default class TabBar<T: *> extends React.Component<Props<T>, State> {
                 tabContainerStyle.flex = 1;
               }
 
-              const accessibilityLabel =
-                route.accessibilityLabel || route.title;
+              let accessibilityLabel = this.props.getAccessibilityLabel({
+                route,
+              });
+
+              accessibilityLabel =
+                typeof accessibilityLabel !== 'undefined'
+                  ? accessibilityLabel
+                  : this.props.getLabelText({ route });
 
               return (
                 <TouchableItem
                   borderless
                   key={route.key}
-                  testID={route.testID}
-                  accessible={route.accessible}
+                  testID={this.props.getTestID({ route })}
+                  accessible={this.props.getAccessible({ route })}
                   accessibilityLabel={accessibilityLabel}
                   accessibilityTraits="button"
                   pressColor={this.props.pressColor}
                   pressOpacity={this.props.pressOpacity}
                   delayPressIn={0}
-                  onPress={() => this._handleTabPress(scene)}
+                  onPress={() => this._handleTabPress({ route })}
                   style={tabContainerStyle}
                 >
                   <View pointerEvents="none" style={styles.container}>

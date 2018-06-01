@@ -51,7 +51,7 @@ export default class CoverflowExample extends React.Component<*, State> {
     const currentIndex = routes.indexOf(route);
     const inputRange = routes.map((x, i) => i);
     const translateOutputRange = inputRange.map(i => {
-      return width / 2 * (currentIndex - i) * -1;
+      return (width / 2) * (currentIndex - i) * -1;
     });
     const scaleOutputRange = inputRange.map(i => {
       if (currentIndex === i) {

@@ -177,7 +177,9 @@ export default class TabViewPagerPan<T: *> extends React.Component<Props<T>> {
 
     if (
       !isFinite(nextIndex) ||
-      !this.props.canJumpToTab(this.props.navigationState.routes[nextIndex])
+      !this.props.canJumpToTab({
+        route: this.props.navigationState.routes[nextIndex],
+      })
     ) {
       nextIndex = currentIndex;
     }
@@ -257,7 +259,7 @@ export default class TabViewPagerPan<T: *> extends React.Component<Props<T>> {
         {React.Children.map(children, (child, i) => (
           <View
             key={navigationState.routes[i].key}
-            testID={navigationState.routes[i].testID}
+            testID={this.props.getTestID({ route: navigationState.routes[i] })}
             style={
               width
                 ? { width }

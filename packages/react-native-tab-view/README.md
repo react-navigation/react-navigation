@@ -129,6 +129,9 @@ Material design themed tab bar. Can be used as both top and bottom tab bar.
 #### Props
 
 - `getLabelText` - optional callback which receives the current scene and returns the tab label
+- `getAccessible` - optional callback which receives the current scene and returns a boolean indicating whether a tab is accessible
+- `getAccessibilityLabel` - optional callback which receives the current scene and returns an accessibility label for the tab
+- `getTestID` - optional callback which receives the current scene and returns a test id for the tab
 - `renderIcon` - optional callback which receives the current scene and returns a React Element to be used as a icon
 - `renderLabel` - optional callback which receives the current scene and returns a React Element to be used as a label
 - `renderIndicator` - optional callback which receives the current scene and returns a React Element to be used as a tab indicator
@@ -157,6 +160,7 @@ Cross-platform pager based on the [`PanResponder`](https://facebook.github.io/re
 - `onSwipeStart` - optional callback when a swipe gesture starts
 - `onSwipeEnd` - optional callback when a swipe gesture ends
 - `onAnimationEnd` - optional callback when the transition animation ends
+- `getTestID` - optional callback which receives the current scene and returns a test id for the tab
 - `children` - React Element(s) to render
 
 ### `<TabViewPagerScroll />`
@@ -170,6 +174,7 @@ Cross-platform pager based on [`ScrollView`](https://facebook.github.io/react-na
 - `onSwipeStart` - optional callback when a swipe gesture starts
 - `onSwipeEnd` - optional callback when a swipe gesture ends
 - `onAnimationEnd` - optional callback when the transition animation ends
+- `getTestID` - optional callback which receives the current scene and returns a test id for the tab
 - `children` - React Element(s) to render
 
 There are some caveats when using this pager on Android, such as poor support for intial index other than `0` and weird animation curves.
@@ -186,6 +191,7 @@ Android only pager based on `ViewPagerAndroid` (default on Android).
 - `onSwipeEnd` - optional callback when a swipe gesture ends
 - `onAnimationEnd` - optional callback when the transition animation ends
 - `keyboardDismissMode` - whether the keyboard gets dismissed in response to a drag in [ViewPagerAndroid](https://facebook.github.io/react-native/docs/viewpagerandroid.html#keyboarddismissmode) (Default: `on-drag`)
+- `getTestID` - optional callback which receives the current scene and returns a test id for the tab
 - `children` - React Element(s) to render
 
 ### `<TabViewPagerExperimental />`
@@ -201,6 +207,7 @@ Cross-platform pager component based on [`react-native-gesture-handler`](https:/
 - `onSwipeEnd` - optional callback when a swipe gesture ends
 - `onAnimationEnd` - optional callback when the transition animation ends
 - `useNativeDriver` - whether to use native animations
+- `getTestID` - optional callback which receives the current scene and returns a test id for the tab
 - `children` - React Element(s) to render
 
 This pager is still experimental. To use this pager, you'll need to [link the `react-native-gesture-handler` library](https://github.com/kmagiera/react-native-gesture-handler#installation), and pass it as a prop to the pager:

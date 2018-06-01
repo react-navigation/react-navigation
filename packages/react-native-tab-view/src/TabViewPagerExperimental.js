@@ -181,7 +181,9 @@ export default class TabViewPagerExperimental<T: *> extends React.Component<
           {React.Children.map(children, (child, i) => (
             <View
               key={navigationState.routes[i].key}
-              testID={navigationState.routes[i].testID}
+              testID={this.props.getTestID({
+                route: navigationState.routes[i],
+              })}
               style={
                 width
                   ? { width }

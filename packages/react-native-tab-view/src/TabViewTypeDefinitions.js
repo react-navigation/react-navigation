@@ -12,8 +12,6 @@ export type NavigationState<T> = {
 
 export type Scene<T> = {
   route: T,
-  focused: boolean,
-  index: number,
 };
 
 export type Layout = {
@@ -31,6 +29,7 @@ export type SceneRendererProps<T> = {
   position: any,
   jumpTo: (key: string) => mixed,
   jumpToIndex: (index: number) => mixed, // Deprecated, use `jumpTo` instead
+  getTestID: (scene: Scene<T>) => ?string,
   useNativeDriver: boolean,
 };
 
@@ -47,12 +46,13 @@ export type PagerRendererProps<T> = PagerCommonProps<T> & {
 };
 
 export type PagerCommonProps<T> = {
-  canJumpToTab: (route: T) => boolean,
   animationEnabled?: boolean,
   swipeEnabled?: boolean,
   onSwipeStart?: () => mixed,
   onSwipeEnd?: () => mixed,
   onAnimationEnd?: () => mixed,
+  canJumpToTab: (scene: Scene<T>) => boolean,
+  getTestID: (scene: Scene<T>) => ?string,
 };
 
 export type PagerExtraProps = {
