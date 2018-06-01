@@ -7,18 +7,18 @@
     "prettier/react"
   ],
   "parser": "babel-eslint",
-  "plugins": [
-    "react",
-    "prettier"
-  ],
+  "plugins": ["react", "prettier"],
   "env": {
     "jasmine": true
   },
   "rules": {
-    "prettier/prettier": ["error", {
-      "trailingComma": "es5",
-      "singleQuote": true
-    }],
+    "prettier/prettier": [
+      "error",
+      {
+        "trailingComma": "es5",
+        "singleQuote": true
+      }
+    ],
 
     "no-underscore-dangle": "off",
     "no-use-before-define": "off",
@@ -27,14 +27,12 @@
     "no-plusplus": "off",
     "no-class-assign": "off",
     "no-duplicate-imports": "off",
-
+    "react/no-deprecated": "off",
     "import/extensions": "off",
     "import/no-extraneous-dependencies": "off",
     "import/no-unresolved": "off",
 
-    "react/jsx-filename-extension": [
-      "off", { "extensions": [".js", ".jsx"] }
-    ],
+    "react/jsx-filename-extension": ["off", { "extensions": [".js", ".jsx"] }],
 
     "react/sort-comp": "off",
     "react/prefer-stateless-function": "off",

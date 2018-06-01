@@ -90,6 +90,24 @@ class Transitioner extends React.Component {
     this._prevTransitionProps = this._transitionProps;
     this._transitionProps = buildTransitionProps(nextProps, nextState);
 
+    const toValue = nextProps.navigation.state.index;
+
+    if (!this._transitionProps.navigation.state.isTransitioning) {
+      this.setState(nextState, async () => {
+        const result = nextProps.onTransitionStart(
+          this._transitionProps,
+          this._prevTransitionProps
+        );
+        if (result instanceof Promise) {
+          await result;
+        }
+        progress.setValue(1);
+        position.setValue(toValue);
+        this._onTransitionEnd();
+      });
+      return;
+    }
+
     // get the transition spec.
     const transitionUserSpec = nextProps.configureTransition
       ? nextProps.configureTransition(
@@ -106,7 +124,6 @@ class Transitioner extends React.Component {
     const { timing } = transitionSpec;
     delete transitionSpec.timing;
 
-    const toValue = nextProps.navigation.state.index;
     const positionHasChanged = position.__getValue() !== toValue;
 
     // if swiped back, indexHasChanged == true && positionHasChanged == false
