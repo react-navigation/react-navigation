@@ -3,6 +3,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { Animated, Platform, View, StyleSheet } from 'react-native';
+import TabBar from './TabBar';
 import { NavigationStatePropType } from './PropTypes';
 import type {
   Scene,
@@ -68,6 +69,7 @@ export default class TabView<T: *> extends React.Component<Props<T>, State> {
 
   static defaultProps = {
     canJumpToTab: () => true,
+    renderHeader: (props: *) => <TabBar {...props} />,
     renderPager: (props: *) => <Pager {...props} />,
     getTestID: ({ route }: Scene<*>) =>
       typeof route.testID === 'string' ? route.testID : undefined,

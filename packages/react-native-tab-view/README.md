@@ -60,8 +60,6 @@ export default class TabViewExample extends React.Component {
 
   _handleIndexChange = index => this.setState({ index });
 
-  _renderHeader = props => <TabBar {...props} />;
-
   _renderScene = SceneMap({
     first: FirstRoute,
     second: SecondRoute,
@@ -75,7 +73,6 @@ export default class TabViewExample extends React.Component {
           first: FirstRoute,
           second: SecondRoute,
         })}
-        renderHeader={this._renderHeader}
         onIndexChange={this._handleIndexChange}
         initialLayout={initialLayout}
       />
