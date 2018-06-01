@@ -71,7 +71,10 @@ export default class TabViewExample extends React.Component {
     return (
       <TabView
         navigationState={this.state}
-        renderScene={this._renderScene}
+        renderScene={SceneMap({
+          first: FirstRoute,
+          second: SecondRoute,
+        })}
         renderHeader={this._renderHeader}
         onIndexChange={this._handleIndexChange}
         initialLayout={initialLayout}
