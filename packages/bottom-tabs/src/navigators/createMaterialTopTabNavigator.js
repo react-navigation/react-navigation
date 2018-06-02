@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { Platform } from 'react-native';
-import { TabViewAnimated, TabViewPagerPan } from 'react-native-tab-view';
+import { TabView, PagerPan } from 'react-native-tab-view';
 import createTabNavigator, {
   type InjectedProps,
 } from '../utils/createTabNavigator';
@@ -19,7 +19,7 @@ type Props = InjectedProps & {
   tabBarOptions?: TabBarOptions,
 };
 
-class TabView extends React.PureComponent<Props> {
+class MaterialTabView extends React.PureComponent<Props> {
   static defaultProps = {
     // fix for https://github.com/react-native-community/react-native-tab-view/issues/312
     initialLayout: Platform.select({
@@ -104,14 +104,21 @@ class TabView extends React.PureComponent<Props> {
     );
   };
 
-  _renderPanPager = props => <TabViewPagerPan {...props} />;
+  _renderPanPager = props => <PagerPan {...props} />;
 
-  _renderScene = ({ route, focused }) => {
-    const { renderScene, animationEnabled, swipeEnabled } = this.props;
+  _renderScene = ({ route }) => {
+    const {
+      renderScene,
+      animationEnabled,
+      swipeEnabled,
+      descriptors,
+    } = this.props;
 
     if (animationEnabled === false && swipeEnabled === false) {
+      const { navigation } = descriptors[route.key];
+
       return (
-        <ResourceSavingScene isFocused={focused}>
+        <ResourceSavingScene isFocused={navigation.isFocused()}>
           {renderScene({ route })}
         </ResourceSavingScene>
       );
@@ -123,15 +130,12 @@ class TabView extends React.PureComponent<Props> {
   render() {
     const {
       navigation,
-      tabBarPosition,
       animationEnabled,
       // eslint-disable-next-line no-unused-vars
       renderScene,
       ...rest
     } = this.props;
 
-    let renderHeader;
-    let renderFooter;
     let renderPager;
 
     const { state } = this.props.navigation;
@@ -149,25 +153,18 @@ class TabView extends React.PureComponent<Props> {
       swipeEnabled = swipeEnabled(state);
     }
 
-    if (tabBarPosition === 'bottom') {
-      renderFooter = this._renderTabBar;
-    } else {
-      renderHeader = this._renderTabBar;
-    }
-
     if (animationEnabled === false && swipeEnabled === false) {
       renderPager = this._renderPanPager;
     }
 
     return (
-      <TabViewAnimated
+      <TabView
         {...rest}
         navigationState={navigation.state}
         animationEnabled={animationEnabled}
         swipeEnabled={swipeEnabled}
         renderPager={renderPager}
-        renderHeader={renderHeader}
-        renderFooter={renderFooter}
+        renderTabBar={this._renderTabBar}
         renderScene={
           /* $FlowFixMe */
           this._renderScene
@@ -177,4 +174,4 @@ class TabView extends React.PureComponent<Props> {
   }
 }
 
-export default createTabNavigator(TabView);
+export default createTabNavigator(MaterialTabView);
