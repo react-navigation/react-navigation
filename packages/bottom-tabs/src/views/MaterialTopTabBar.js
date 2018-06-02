@@ -42,7 +42,7 @@ export default class TabBarTop extends React.PureComponent<Props> {
     allowFontScaling: true,
   };
 
-  _renderLabel = ({ route, index, focused }) => {
+  _renderLabel = ({ route }) => {
     const {
       position,
       navigation,
@@ -59,6 +59,9 @@ export default class TabBarTop extends React.PureComponent<Props> {
     }
 
     const { routes } = navigation.state;
+    const index = routes.indexOf(route);
+    const focused = index === navigation.state.index;
+
     // Prepend '-1', so there are always at least 2 items in inputRange
     const inputRange = [-1, ...routes.map((x, i) => i)];
     const outputRange = inputRange.map(
@@ -89,7 +92,7 @@ export default class TabBarTop extends React.PureComponent<Props> {
     return label;
   };
 
-  _renderIcon = ({ route, index }) => {
+  _renderIcon = ({ route }) => {
     const {
       position,
       navigation,
@@ -103,6 +106,8 @@ export default class TabBarTop extends React.PureComponent<Props> {
     if (showIcon === false) {
       return null;
     }
+
+    const index = navigation.state.routes.indexOf(route);
 
     // Prepend '-1', so there are always at least 2 items in inputRange
     const inputRange = [-1, ...navigation.state.routes.map((x, i) => i)];
