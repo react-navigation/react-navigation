@@ -53,8 +53,6 @@ export default class TabViewExample extends React.Component {
     ],
   };
 
-  _handleIndexChange = index => this.setState({ index });
-
   render() {
     return (
       <TabView
@@ -63,7 +61,7 @@ export default class TabViewExample extends React.Component {
           first: FirstRoute,
           second: SecondRoute,
         })}
-        onIndexChange={this._handleIndexChange}
+        onIndexChange={index => this.setState({ index })}
         initialLayout={{ width: Dimensions.get('window').width }}
       />
     );
@@ -337,7 +335,7 @@ For example, do the following to render only 2 routes on each side:
 ```js
 renderScene = ({ route }) => {
   if (Math.abs(this.state.index - this.state.routes.indexOf(route)) > 2) {
-    return null;
+    return <View />;
   }
 
   return <MySceneComponent route={route} />;
