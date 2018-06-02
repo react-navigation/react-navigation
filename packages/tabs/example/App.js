@@ -27,9 +27,18 @@ class Home extends React.Component {
 }
 
 const App = createStackNavigator({
-  Home,
-  BottomTabs,
-  MaterialTopTabs,
+  Home: {
+    screen: Home,
+    navigationOptions: { title: 'Examples' },
+  },
+  BottomTabs: {
+    screen: BottomTabs,
+    navigationOptions: { title: 'Bottom tabs' },
+  },
+  MaterialTopTabs: {
+    screen: MaterialTopTabs,
+    navigationOptions: { title: 'Material top tabs' },
+  },
 });
 
 const styles = {

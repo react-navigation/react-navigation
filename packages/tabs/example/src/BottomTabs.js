@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { View, Text } from 'react-native';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { MaterialIcons } from '@expo/vector-icons';
+import PhotoGrid from './shared/PhotoGrid';
 
 const tabBarIcon = name => ({ tintColor }) => (
   <MaterialIcons name={name} color={tintColor} size={24} />
@@ -13,11 +13,7 @@ class Album extends React.Component {
   };
 
   render() {
-    return (
-      <View>
-        <Text>Album</Text>
-      </View>
-    );
+    return <PhotoGrid id="album" />;
   }
 }
 
@@ -27,11 +23,7 @@ class Library extends React.Component {
   };
 
   render() {
-    return (
-      <View>
-        <Text>Library</Text>
-      </View>
-    );
+    return <PhotoGrid id="library" />;
   }
 }
 
@@ -41,11 +33,7 @@ class History extends React.Component {
   };
 
   render() {
-    return (
-      <View>
-        <Text>History</Text>
-      </View>
-    );
+    return <PhotoGrid id="history" />;
   }
 }
 
@@ -55,11 +43,7 @@ class Cart extends React.Component {
   };
 
   render() {
-    return (
-      <View>
-        <Text>Cart</Text>
-      </View>
-    );
+    return <PhotoGrid id="cart" />;
   }
 }
 
