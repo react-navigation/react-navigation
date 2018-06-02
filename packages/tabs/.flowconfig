@@ -5,8 +5,8 @@
 ; Ignore templates for 'react-native init'
 .*/local-cli/templates/.*
 
-; Ignore the website subdir
-<PROJECT_ROOT>/website/.*
+; Ignore the Dangerfile
+<PROJECT_ROOT>/bots/dangerfile.js
 
 ; Ignore "BUCK" generated dirs
 <PROJECT_ROOT>/\.buckd/
@@ -18,25 +18,39 @@
 ; For RN Apps installed via npm, "Libraries" folder is inside
 ; "node_modules/react-native" but in the source repo it is in the root
 .*/Libraries/react-native/React.js
-.*/Libraries/react-native/ReactNative.js
+
+; Ignore polyfills
+.*/Libraries/polyfills/.*
+
+; Ignore metro
+.*/node_modules/metro/.*
 
 ; Ignore duplicate modules under example/
-.*/example/node_modules/fbjs
-.*/example/node_modules/fbemitter
-.*/example/node_modules/react
-.*/example/node_modules/react-native
-.*/example/node_modules/expo
-.*/example/node_modules/xdl
-.*/example/node_modules/reqwest
+.*/example/node_modules/fbjs/.*
+.*/example/node_modules/fbemitter/.*
+.*/example/node_modules/react/.*
+.*/example/node_modules/react-native/.*
 .*/example/\.buckd/
 
-.*/node_modules/react-native-gesture-handler
-.*/node_modules/react-native-safe-area-view
+; Ignore duplicate modules under docs/
+.*/docs/node_modules/fbjs/.*
+.*/docs/node_modules/react/.*
+
+; Ignore some modules we don't need to parse
+.*/node_modules/prettier/.*
+.*/node_modules/eslint.*
+.*/node_modules/reqwest/tests/fixtures/.*
+
+[untyped]
+.*/node_modules/expo/.*
+.*/node_modules/xdl/.*
+.*/node_modules/react-native-gesture-handler/.*
 
 [include]
 
 [libs]
 node_modules/react-native/Libraries/react-native/react-native-interface.js
+node_modules/react-native/flow-github
 node_modules/react-native/flow
 
 [options]
@@ -44,14 +58,7 @@ emoji=true
 
 module.system=haste
 
-experimental.strict_type_args=true
-
 munge_underscores=true
-
-module.file_ext=.js
-module.file_ext=.native.js
-module.file_ext=.android.js
-module.file_ext=.ios.js
 
 module.name_mapper='^expo$' -> 'emptyObject'
 module.name_mapper='^react-native-gesture-handler$' -> 'emptyObject'
@@ -62,14 +69,11 @@ suppress_type=$FlowIssue
 suppress_type=$FlowFixMe
 suppress_type=$FlowFixMeProps
 suppress_type=$FlowFixMeState
-suppress_type=$FixMe
 
-suppress_comment=\\(.\\|\n\\)*\\$FlowFixMe\\($\\|[^(]\\|(\\(>=0\\.\\(5[0-6]\\|[1-4][0-9]\\|[0-9]\\).[0-9]\\)? *\\(site=[a-z,_]*[react_native_oss|react_native_fb][a-z,_]*\\)?)\\)
-suppress_comment=\\(.\\|\n\\)*\\$FlowIssue\\((\\(>=0\\.\\(5[0-6]\\|[1-4][0-9]\\|[0-9]\\).[0-9]\\)? *\\(site=[a-z,_]*[react_native_oss|react_native_fb][a-z,_]*\\)?)\\)?:? #[0-9]+
+suppress_comment=\\(.\\|\n\\)*\\$FlowFixMe\\($\\|[^(]\\|(\\(<VERSION>\\)? *\\(site=[a-z,_]*[react_native_oss|react_native_fb][a-z,_]*\\)?)\\)
+suppress_comment=\\(.\\|\n\\)*\\$FlowIssue\\((\\(<VERSION>\\)? *\\(site=[a-z,_]*[react_native_oss|react_native_fb][a-z,_]*\\)?)\\)?:? #[0-9]+
 suppress_comment=\\(.\\|\n\\)*\\$FlowFixedInNextDeploy
 suppress_comment=\\(.\\|\n\\)*\\$FlowExpectedError
 
-unsafe.enable_getters_and_setters=true
-
 [version]
-^0.56.0
+^0.67.1
