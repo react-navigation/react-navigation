@@ -858,6 +858,11 @@ declare module 'react-navigation' {
     useNativeAnimations?: boolean,
     drawerBackgroundColor?: string,
     screenProps?: {},
+    drawerType?: string,
+    edgeWidth?: number,
+    hideStatusBar?: boolean,
+    statusBarAnimation?: string,
+    overlayColor?: string,
   |};
   declare type _DrawerNavigatorConfig = $Exact<{
     ...NavigationTabRouterConfig,
@@ -998,6 +1003,11 @@ declare module 'react-navigation' {
     screenProps?: {},
     navigation: NavigationScreenProp<NavigationState>,
     router: NavigationRouter<NavigationState, NavigationDrawerScreenOptions>,
+    drawerType: string,
+    edgeWidth?: number,
+    hideStatusBar: boolean,
+    statusBarAnimation: string,
+    overlayColor: string,
   };
   declare export var DrawerView: React$ComponentType<_DrawerViewProps>;
 

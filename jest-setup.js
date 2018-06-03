@@ -26,6 +26,13 @@ jest.mock('ScrollView', () => {
   return ScrollView;
 });
 
+// tests don't test the native bits, so just substitute the JS-only
+// polyfill for now
+jest.mock('react-native-gesture-handler/DrawerLayout', () => {
+  // $FlowExpectedError
+  return require.requireActual('react-native-drawer-layout-polyfill');
+});
+
 // Mock setState so it waits using setImmediate before actually being called,
 // so we can use jest's mock timers to control it.
 // setState in the test renderer is sync instead of async like react and react-native.

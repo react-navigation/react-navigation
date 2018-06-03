@@ -43,6 +43,7 @@ export default (routeConfigs, config = {}) => {
           return {
             ...state,
             isDrawerOpen: false,
+            suppressAnimation: action.suppressAnimation,
           };
         }
 
@@ -50,6 +51,7 @@ export default (routeConfigs, config = {}) => {
           return {
             ...state,
             isDrawerOpen: true,
+            suppressAnimation: action.suppressAnimation,
           };
         }
 
@@ -57,6 +59,7 @@ export default (routeConfigs, config = {}) => {
           return {
             ...state,
             isDrawerOpen: !state.isDrawerOpen,
+            suppressAnimation: action.suppressAnimation,
           };
         }
       }
@@ -75,6 +78,7 @@ export default (routeConfigs, config = {}) => {
           return {
             ...switchedState,
             isDrawerOpen: false,
+            suppressAnimation: false,
           };
         }
         // Return the state new state, as returned by the switch router.

@@ -21,6 +21,7 @@ import { SafeAreaView, createStackNavigator } from 'react-navigation';
 import CustomTabs from './CustomTabs';
 import CustomTransitioner from './CustomTransitioner';
 import Drawer from './Drawer';
+import StyledDrawer from './StyledDrawer';
 import MultipleDrawer from './MultipleDrawer';
 import TabsInDrawer from './TabsInDrawer';
 import ModalStack from './ModalStack';
@@ -62,6 +63,10 @@ const ExampleInfo = {
   Drawer: {
     name: 'Drawer Example',
     description: 'Android-style drawer navigation',
+  },
+  StyledDrawer: {
+    name: 'Styled Drawer Example',
+    description: 'Drawer navigation using extra styling',
   },
   StackWithHeaderPreset: {
     name: 'UIKit-style Header Transitions',
@@ -133,6 +138,7 @@ const ExampleRoutes = {
   SwitchWithStacks,
   SimpleTabs: SimpleTabs,
   Drawer: Drawer,
+  StyledDrawer: StyledDrawer,
   // MultipleDrawer: {
   //   screen: MultipleDrawer,
   // },
