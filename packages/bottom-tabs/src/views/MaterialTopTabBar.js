@@ -28,6 +28,8 @@ type Props = TabBarOptions & {
     tintColor: string,
   }) => React.Node,
   getLabelText: (props: { route: any }) => any,
+  getAccessibilityLabel: (props: { route: any }) => string,
+  getTestID: (props: { route: any }) => string,
   useNativeDriver?: boolean,
   jumpTo: (key: string) => any,
 };

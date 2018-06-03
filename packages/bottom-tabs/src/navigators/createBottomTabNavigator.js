@@ -56,6 +56,8 @@ class TabNavigationView extends React.PureComponent<Props, State> {
       navigation,
       screenProps,
       getLabelText,
+      getAccessibilityLabel,
+      getTestID,
       renderIcon,
       onTabPress,
     } = this.props;
@@ -78,6 +80,8 @@ class TabNavigationView extends React.PureComponent<Props, State> {
         screenProps={screenProps}
         onTabPress={onTabPress}
         getLabelText={getLabelText}
+        getAccessibilityLabel={getAccessibilityLabel}
+        getTestID={getTestID}
         renderIcon={renderIcon}
       />
     );
