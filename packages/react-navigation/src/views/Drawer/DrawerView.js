@@ -10,6 +10,8 @@ import DrawerActions from '../../routers/DrawerActions';
  * Component that renders the drawer.
  */
 export default class DrawerView extends React.PureComponent {
+  _drawerState = 'closed';
+
   state = {
     drawerWidth:
       typeof this.props.navigationConfig.drawerWidth === 'function'
@@ -29,9 +31,11 @@ export default class DrawerView extends React.PureComponent {
     const { isDrawerOpen } = this.props.navigation.state;
     const wasDrawerOpen = prevProps.navigation.state.isDrawerOpen;
 
-    if (isDrawerOpen && !wasDrawerOpen) {
+    if (isDrawerOpen && !wasDrawerOpen && this._drawerState === 'closed') {
+      this._drawerState = 'opening';
       this._drawer.openDrawer();
-    } else if (wasDrawerOpen && !isDrawerOpen) {
+    } else if (wasDrawerOpen && !isDrawerOpen && this._drawerState === 'open') {
+      this._drawerState = 'closing';
       this._drawer.closeDrawer();
     }
   }
@@ -39,17 +43,19 @@ export default class DrawerView extends React.PureComponent {
   _handleDrawerOpen = () => {
     const { navigation } = this.props;
     const { isDrawerOpen } = navigation.state;
-    if (!isDrawerOpen) {
+    if (!isDrawerOpen && this._drawerState === 'closed') {
       navigation.dispatch({ type: DrawerActions.OPEN_DRAWER });
     }
+    this._drawerState = 'open';
   };
 
   _handleDrawerClose = () => {
     const { navigation } = this.props;
     const { isDrawerOpen } = navigation.state;
-    if (isDrawerOpen) {
+    if (isDrawerOpen && this._drawerState === 'open') {
       navigation.dispatch({ type: DrawerActions.CLOSE_DRAWER });
     }
+    this._drawerState = 'closed';
   };
 
   _updateWidth = () => {
