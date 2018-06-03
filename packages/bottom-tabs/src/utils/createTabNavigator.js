@@ -12,6 +12,8 @@ import {
 
 export type InjectedProps = {
   getLabelText: (props: { route: any }) => any,
+  getAccessibilityLabel: (props: { route: any }) => string,
+  getTestID: (props: { route: any }) => string,
   renderIcon: (props: {
     route: any,
     focused: boolean,
@@ -70,6 +72,30 @@ export default function createTabNavigator(TabView: React.ComponentType<*>) {
       return route.routeName;
     };
 
+    _getAccessibilityLabel = ({ route }) => {
+      const { descriptors } = this.props;
+      const descriptor = descriptors[route.key];
+      const options = descriptor.options;
+
+      if (typeof options.tabBarAccessibility !== 'undefined') {
+        return options.tabBarAccessibilityLabel;
+      }
+
+      const label = this._getLabelText({ route });
+
+      if (typeof label === 'string') {
+        return label;
+      }
+    };
+
+    _getTestID = ({ route }) => {
+      const { descriptors } = this.props;
+      const descriptor = descriptors[route.key];
+      const options = descriptor.options;
+
+      return options.tabBarTestID;
+    };
+
     _handleTabPress = ({ route }) => {
       this._isTabPress = true;
 
@@ -125,6 +151,8 @@ export default function createTabNavigator(TabView: React.ComponentType<*>) {
         <TabView
           {...options}
           getLabelText={this._getLabelText}
+          getAccessibilityLabel={this._getAccessibilityLabel}
+          getTestID={this._getTestID}
           renderIcon={this._renderIcon}
           renderScene={this._renderScene}
           onIndexChange={this._handleIndexChange}
