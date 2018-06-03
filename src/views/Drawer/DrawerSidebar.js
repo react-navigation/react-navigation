@@ -22,9 +22,10 @@ class DrawerSidebar extends React.PureComponent {
   _getLabel = ({ focused, tintColor, route }) => {
     const { drawerLabel, title } = this._getScreenOptions(route.key);
     if (drawerLabel) {
-      return typeof drawerLabel === 'function'
-        ? drawerLabel({ tintColor, focused })
-        : drawerLabel;
+      if (React.isValidElement(drawerLabel)) {
+        return drawerLabel;
+      }
+      return React.createElement(drawerLabel, { tintColor, focused });
     }
 
     if (typeof title === 'string') {
@@ -37,9 +38,10 @@ class DrawerSidebar extends React.PureComponent {
   _renderIcon = ({ focused, tintColor, route }) => {
     const { drawerIcon } = this._getScreenOptions(route.key);
     if (drawerIcon) {
-      return typeof drawerIcon === 'function'
-        ? drawerIcon({ tintColor, focused })
-        : drawerIcon;
+      if (React.isValidElement(drawerIcon)) {
+        return drawerIcon;
+      }
+      return React.createElement(drawerIcon, { tintColor, focused });
     }
     return null;
   };

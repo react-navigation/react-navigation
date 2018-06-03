@@ -340,7 +340,7 @@ declare module 'react-navigation' {
    */
 
   declare export type NavigationStackScreenOptions = NavigationScreenOptions & {
-    header?: ?(React$Node | (HeaderProps => React$Node)),
+    header?: ?(React$Node | React$ComponentType<HeaderProps>),
     headerTransparent?: boolean,
     headerTitle?: string | React$Node | React$ElementType,
     headerTitleStyle?: AnimatedTextStyleProp,
@@ -444,10 +444,10 @@ declare module 'react-navigation' {
     ...$Exact<NavigationScreenOptions>,
     drawerIcon?:
       | React$Node
-      | ((options: { tintColor: ?string, focused: boolean }) => ?React$Node),
+      | React$ComponentType<{ tintColor: ?string, focused: boolean }>,
     drawerLabel?:
       | React$Node
-      | ((options: { tintColor: ?string, focused: boolean }) => ?React$Node),
+      | React$ComponentType<{ tintColor: ?string, focused: boolean }>,
     drawerLockMode?: 'unlocked' | 'locked-closed' | 'locked-open',
   |};
 

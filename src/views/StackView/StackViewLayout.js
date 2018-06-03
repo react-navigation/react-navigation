@@ -91,19 +91,23 @@ class StackViewLayout extends React.Component {
 
   _renderHeader(scene, headerMode) {
     const { options } = scene.descriptor;
-    const { header } = options;
+    const { header: CustomHeader } = options;
 
-    if (header === null && headerMode === 'screen') {
+    if (CustomHeader === null && headerMode === 'screen') {
       return null;
     }
 
     // check if it's a react element
-    if (React.isValidElement(header)) {
-      return header;
+    if (React.isValidElement(CustomHeader)) {
+      return CustomHeader;
     }
 
-    // Handle the case where the header option is a function, and provide the default
-    const renderHeader = header || (props => <Header {...props} />);
+    // Handle the case where the header option is a function or class, and provide the default
+    const renderHeader = CustomHeader
+      ? CustomHeader.prototype.render
+        ? props => <CustomHeader {...props} />
+        : CustomHeader
+      : props => <Header {...props} />;
 
     const {
       headerLeftInterpolator,
