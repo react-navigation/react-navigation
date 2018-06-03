@@ -12,6 +12,7 @@
     "test": "jest",
     "flow": "flow",
     "lint": "eslint .",
+    "precommit": "yarn lint && yarn flow && yarn test",
     "build": "babel --no-babelrc --plugins=syntax-jsx,syntax-class-properties,syntax-object-rest-spread,transform-flow-strip-types src --out-dir dist --ignore '**/__tests__/**'",
     "prepublish": "yarn build"
   },
@@ -59,6 +60,7 @@
     "eslint-config-satya164": "^1.0.1",
     "eslint-plugin-react-native-globals": "^0.1.0",
     "flow-bin": "~0.67.0",
+    "husky": "^0.14.3",
     "jest": "^21.2.1",
     "prettier": "^1.8.2",
     "react": "16.3.1",
