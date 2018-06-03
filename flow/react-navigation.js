@@ -722,7 +722,7 @@ declare module 'react-navigation' {
     INIT: 'Navigation/INIT',
     NAVIGATE: 'Navigation/NAVIGATE',
     RESET: 'Navigation/RESET',
-    REPLACE = 'Navigation/REPLACE',
+    REPLACE: 'Navigation/REPLACE',
     SET_PARAMS: 'Navigation/SET_PARAMS',
     URI: 'Navigation/URI',
     back: {
