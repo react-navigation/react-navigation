@@ -13,6 +13,7 @@ function createStackNavigator(routeConfigMap, stackConfig = {}) {
     paths,
     navigationOptions,
     disableKeyboardHandling,
+    getCustomActionCreators,
   } = stackConfig;
 
   const stackRouterConfig = {
@@ -21,6 +22,7 @@ function createStackNavigator(routeConfigMap, stackConfig = {}) {
     initialRouteParams,
     paths,
     navigationOptions,
+    getCustomActionCreators,
   };
 
   const router = StackRouter(routeConfigMap, stackRouterConfig);
