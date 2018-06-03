@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { View, Text } from 'react-native';
 import { createMaterialTopTabNavigator } from 'react-navigation-tabs';
 import PhotoGrid from './shared/PhotoGrid';
 

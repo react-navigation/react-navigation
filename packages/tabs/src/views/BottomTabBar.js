@@ -33,6 +33,8 @@ type Props = TabBarOptions & {
   jumpTo: any,
   onTabPress: any,
   getLabelText: ({ route: any }) => any,
+  getAccessibilityLabel: (props: { route: any }) => string,
+  getTestID: (props: { route: any }) => string,
   renderIcon: any,
   dimensions: { width: number, height: number },
   isLandscape: boolean,
@@ -192,6 +194,10 @@ class TabBarBottom extends React.Component<Props> {
         {routes.map((route, index) => {
           const focused = index === navigation.state.index;
           const scene = { route, focused };
+          const accessibilityLabel = this.props.getAccessibilityLabel({
+            route,
+          });
+          const testID = this.props.getTestID({ route });
 
           const backgroundColor = focused
             ? activeBackgroundColor
@@ -204,6 +210,8 @@ class TabBarBottom extends React.Component<Props> {
                 onTabPress({ route });
                 jumpTo(route.key);
               }}
+              testID={testID}
+              accessibilityLabel={accessibilityLabel}
             >
               <View
                 style={[
