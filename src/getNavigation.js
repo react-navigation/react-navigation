@@ -21,7 +21,6 @@ export default function getNavigation(
       getChildNavigation(navigation, childKey, getCurrentNavigation),
     isFocused: childKey => {
       const { routes, index } = getCurrentNavigation().state;
-      console.log('Top level isFocused!', childKey, index, routes[index].key);
       if (childKey == null || routes[index].key === childKey) {
         return true;
       }
