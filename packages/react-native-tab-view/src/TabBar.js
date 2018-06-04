@@ -343,9 +343,6 @@ export default class TabBar<T: *> extends React.Component<Props<T>, State> {
     this._isManualScroll = false;
   };
 
-  _setRef = (el: ?Animated.ScrollView) =>
-    (this._scrollView = el && el._component);
-
   render() {
     const { position, navigationState, scrollEnabled, bounces } = this.props;
     const { routes } = navigationState;
@@ -403,7 +400,7 @@ export default class TabBar<T: *> extends React.Component<Props<T>, State> {
             onMomentumScrollBegin={this._handleMomentumScrollBegin}
             onMomentumScrollEnd={this._handleMomentumScrollEnd}
             contentOffset={this.state.initialOffset}
-            ref={this._setRef}
+            ref={el => (this._scrollView = el && el._component)}
           >
             {routes.map((route, i) => {
               const outputRange = inputRange.map(
@@ -470,6 +467,7 @@ export default class TabBar<T: *> extends React.Component<Props<T>, State> {
                   accessible={this.props.getAccessible({ route })}
                   accessibilityLabel={accessibilityLabel}
                   accessibilityTraits="button"
+                  accessibilityComponentType="button"
                   pressColor={this.props.pressColor}
                   pressOpacity={this.props.pressOpacity}
                   delayPressIn={0}

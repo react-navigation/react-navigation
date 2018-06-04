@@ -144,7 +144,6 @@ export default class TabView<T: *> extends React.Component<Props<T>, State> {
     navigationState: this.props.navigationState,
     jumpTo: this._jumpTo,
     useNativeDriver: this.props.useNativeDriver === true,
-    getTestID: this.props.getTestID,
   });
 
   _jumpTo = (key: string) => {

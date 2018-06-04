@@ -120,8 +120,6 @@ export default class PagerAndroid<T: *> extends React.Component<Props<T>> {
     this._currentIndex = index;
   };
 
-  _setRef = (el: ?ViewPagerAndroid) => (this._viewPager = el);
-
   render() {
     const {
       children,
@@ -129,15 +127,22 @@ export default class PagerAndroid<T: *> extends React.Component<Props<T>> {
       swipeEnabled,
       keyboardDismissMode,
     } = this.props;
-    const content = React.Children.map(children, (child, i) => (
-      <View
-        key={navigationState.routes[i].key}
-        testID={this.props.getTestID({ route: navigationState.routes[i] })}
-        style={styles.page}
-      >
-        {child}
-      </View>
-    ));
+    const content = React.Children.map(children, (child, i) => {
+      const route = navigationState.routes[i];
+      const focused = i === navigationState.index;
+
+      return (
+        <View
+          key={route.key}
+          testID={this.props.getTestID({ route })}
+          accessibilityElementsHidden={!focused}
+          importantForAccessibility={focused ? 'auto' : 'no-hide-descendants'}
+          style={styles.page}
+        >
+          {child}
+        </View>
+      );
+    });
 
     if (I18nManager.isRTL) {
       content.reverse();
@@ -155,7 +160,7 @@ export default class PagerAndroid<T: *> extends React.Component<Props<T>> {
         onPageScrollStateChanged={this._handlePageScrollStateChanged}
         onPageSelected={this._handlePageSelected}
         style={styles.container}
-        ref={this._setRef}
+        ref={el => (this._viewPager = el)}
       >
         {content}
       </ViewPagerAndroid>

@@ -256,21 +256,22 @@ export default class PagerPan<T: *> extends React.Component<Props<T>> {
         ]}
         {...this._panResponder.panHandlers}
       >
-        {React.Children.map(children, (child, i) => (
-          <View
-            key={navigationState.routes[i].key}
-            testID={this.props.getTestID({ route: navigationState.routes[i] })}
-            style={
-              width
-                ? { width }
-                : i === navigationState.index
-                  ? StyleSheet.absoluteFill
-                  : null
-            }
-          >
-            {i === navigationState.index || width ? child : null}
-          </View>
-        ))}
+        {React.Children.map(children, (child, i) => {
+          const route = navigationState.routes[i];
+          const focused = i === navigationState.index;
+
+          return (
+            <View
+              key={route.key}
+              testID={this.props.getTestID({ route })}
+              style={
+                width ? { width } : focused ? StyleSheet.absoluteFill : null
+              }
+            >
+              {focused || width ? child : null}
+            </View>
+          );
+        })}
       </Animated.View>
     );
   }

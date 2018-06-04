@@ -165,21 +165,30 @@ export default class PagerScroll<T: *> extends React.Component<
         contentContainerStyle={layout.width ? null : styles.container}
         ref={el => (this._scrollView = el)}
       >
-        {React.Children.map(children, (child, i) => (
-          <View
-            key={navigationState.routes[i].key}
-            testID={this.props.getTestID({ route: navigationState.routes[i] })}
-            style={
-              layout.width
-                ? { width: layout.width, overflow: 'hidden' }
-                : i === navigationState.index
-                  ? styles.page
-                  : null
-            }
-          >
-            {i === navigationState.index || layout.width ? child : null}
-          </View>
-        ))}
+        {React.Children.map(children, (child, i) => {
+          const route = navigationState.routes[i];
+          const focused = i === navigationState.index;
+
+          return (
+            <View
+              key={route.key}
+              testID={this.props.getTestID({ route })}
+              accessibilityElementsHidden={!focused}
+              importantForAccessibility={
+                focused ? 'auto' : 'no-hide-descendants'
+              }
+              style={
+                layout.width
+                  ? { width: layout.width, overflow: 'hidden' }
+                  : focused
+                    ? styles.page
+                    : null
+              }
+            >
+              {focused || layout.width ? child : null}
+            </View>
+          );
+        })}
       </ScrollView>
     );
   }
