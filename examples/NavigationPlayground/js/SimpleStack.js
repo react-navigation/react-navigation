@@ -15,6 +15,8 @@ import {
   createStackNavigator,
   SafeAreaView,
   withNavigation,
+  NavigationActions,
+  StackActions,
 } from 'react-navigation';
 import invariant from 'invariant';
 
@@ -61,6 +63,22 @@ class MyNavScreen extends React.Component<MyNavScreenProps> {
         <Button
           onPress={() => push('Profile', { name: 'Jane' })}
           title="Push a profile screen"
+        />
+        <Button
+          onPress={() =>
+            navigation.dispatch(
+              StackActions.reset({
+                index: 0,
+                actions: [
+                  NavigationActions.navigate({
+                    routeName: 'Photos',
+                    params: { name: 'Jane' },
+                  }),
+                ],
+              })
+            )
+          }
+          title="Reset photos"
         />
         <Button
           onPress={() => navigation.navigate('Photos', { name: 'Jane' })}
