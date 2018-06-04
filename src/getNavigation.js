@@ -9,7 +9,10 @@ export default function getNavigation(
   getScreenProps,
   getCurrentNavigation
 ) {
+  const actions = router.getActionCreators(state, null);
+
   const navigation = {
+    actions,
     router,
     state,
     dispatch,
@@ -38,7 +41,10 @@ export default function getNavigation(
     dangerouslyGetParent: () => null,
   };
 
-  const actionCreators = getNavigationActionCreators(navigation.state);
+  const actionCreators = {
+    ...getNavigationActionCreators(navigation.state),
+    ...actions,
+  };
 
   Object.keys(actionCreators).forEach(actionName => {
     navigation[actionName] = (...args) =>

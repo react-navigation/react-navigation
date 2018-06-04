@@ -53,10 +53,6 @@ function getChildNavigation(navigation, childKey, getCurrentParentNavigation) {
     childKey
   );
 
-  function getCurrentNavigation() {
-    return getCurrentParentNavigation().getChildNavigation(childKey);
-  }
-
   children[childKey] = {
     ...actionHelpers,
 
@@ -66,10 +62,8 @@ function getChildNavigation(navigation, childKey, getCurrentParentNavigation) {
     getParam: createParamGetter(route),
 
     getChildNavigation: grandChildKey =>
-      getChildNavigation(
-        children[childKey],
-        grandChildKey,
-        getCurrentNavigation
+      getChildNavigation(children[childKey], grandChildKey, () =>
+        getCurrentParentNavigation().getChildNavigation(childKey)
       ),
 
     isFocused: childKey => {
