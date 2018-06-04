@@ -1450,6 +1450,34 @@ describe('StackRouter', () => {
     ]);
   });
 
+  test('Navigate action to previous nested StackRouter causes isTransitioning start', () => {
+    const ChildNavigator = () => <div />;
+    ChildNavigator.router = StackRouter({
+      Baz: { screen: () => <div /> },
+    });
+    const router = StackRouter({
+      Bar: { screen: ChildNavigator },
+      Foo: { screen: () => <div /> },
+    });
+    const state = router.getStateForAction(
+      {
+        type: NavigationActions.NAVIGATE,
+        immediate: true,
+        routeName: 'Foo',
+      },
+      router.getStateForAction({ type: NavigationActions.INIT })
+    );
+    const state2 = router.getStateForAction(
+      {
+        type: NavigationActions.NAVIGATE,
+        routeName: 'Baz',
+      },
+      state
+    );
+    expect(state2.index).toEqual(0);
+    expect(state2.isTransitioning).toEqual(true);
+  });
+
   test('Handles the navigate action with params and nested StackRouter as a first action', () => {
     const state = TestStackRouter.getStateForAction({
       type: NavigationActions.NAVIGATE,

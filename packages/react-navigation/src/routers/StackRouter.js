@@ -267,11 +267,18 @@ export default (routeConfigs, stackConfig = {}) => {
             );
 
             if (nextRouteState === null || nextRouteState !== childRoute) {
-              return StateUtils.replaceAndPrune(
+              const newState = StateUtils.replaceAndPrune(
                 state,
                 nextRouteState ? nextRouteState.key : childRoute.key,
                 nextRouteState ? nextRouteState : childRoute
               );
+              return {
+                ...newState,
+                isTransitioning:
+                  state.index !== newState.index
+                    ? action.immediate !== true
+                    : state.isTransitioning,
+              };
             }
           }
         }
