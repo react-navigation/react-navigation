@@ -6,6 +6,13 @@ import withDefaultValue from '../utils/withDefaultValue';
 
 import DrawerActions from './DrawerActions';
 
+const getActiveRouteKey = route => {
+  if (route.routes && route.routes[route.index]) {
+    return getActiveRouteKey(route.routes[route.index]);
+  }
+  return route.key;
+};
+
 export default (routeConfigs, config = {}) => {
   config = { ...config };
   config = withDefaultValue(config, 'resetOnBlur', false);
@@ -25,11 +32,14 @@ export default (routeConfigs, config = {}) => {
       };
     },
 
-    getStateForAction(action, lastState) {
-      const state = lastState || {
-        ...switchRouter.getStateForAction(action, undefined),
-        isDrawerOpen: false,
-      };
+    getStateForAction(action, state) {
+      // Set up the initial state if needed
+      if (!state) {
+        return {
+          ...switchRouter.getStateForAction(action, undefined),
+          isDrawerOpen: false,
+        };
+      }
 
       const isRouterTargeted = action.key == null || action.key === state.key;
 
@@ -66,16 +76,19 @@ export default (routeConfigs, config = {}) => {
         return null;
       }
 
+      // Has the switch router changed the state?
       if (switchedState !== state) {
-        if (switchedState.index !== state.index) {
-          // If the tabs have changed, make sure to close the drawer
+        if (getActiveRouteKey(switchedState) !== getActiveRouteKey(state)) {
+          // If any navigation has happened, make sure to close the drawer
           return {
             ...switchedState,
             isDrawerOpen: false,
           };
         }
-        // Return the state new state, as returned by the switch router.
-        // The index hasn't changed, so this most likely means that a child router has returned a new state
+
+        // At this point, return the state as defined by the switch router.
+        // The active route key hasn't changed, so this most likely means that a child router has returned
+        // a new state like a param change, but the same key is still active and the drawer will remain open
         return switchedState;
       }
 

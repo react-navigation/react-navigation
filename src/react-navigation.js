@@ -71,6 +71,9 @@ module.exports = {
   get DrawerActions() {
     return require('./routers/DrawerActions').default;
   },
+  get getNavigationActionCreators() {
+    return require('./routers/getNavigationActionCreators').default;
+  },
 
   // Routers
   get StackRouter() {
@@ -78,6 +81,9 @@ module.exports = {
   },
   get TabRouter() {
     return require('./routers/TabRouter').default;
+  },
+  get DrawerRouter() {
+    return require('./routers/DrawerRouter').default;
   },
   get SwitchRouter() {
     return require('./routers/SwitchRouter').default;
@@ -120,6 +126,9 @@ module.exports = {
   },
   get DrawerItems() {
     return require('./views/Drawer/DrawerNavigatorItems').default;
+  },
+  get DrawerSidebar() {
+    return require('./views/Drawer/DrawerSidebar').default;
   },
 
   // TabView

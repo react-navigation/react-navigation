@@ -211,6 +211,8 @@ class StackViewLayout extends React.Component {
 
   _panResponder = PanResponder.create({
     onPanResponderTerminate: () => {
+      const { navigation } = this.props.transitionProps;
+      const { index } = navigation.state;
       this._isResponding = false;
       this._reset(index, 0);
       this.props.onGestureCanceled && this.props.onGestureCanceled();
@@ -518,15 +520,17 @@ class StackViewLayout extends React.Component {
     if (!hasHeader && headerMode === 'float') {
       const { isLandscape } = this.props;
       let headerHeight;
-      if (Platform.OS === 'android') {
-        // TODO: Need to handle translucent status bar.
-        headerHeight = 56;
-      } else if (isLandscape && !Platform.isPad) {
-        headerHeight = 52;
-      } else if (IS_IPHONE_X) {
-        headerHeight = 88;
+      if (Platform.OS === 'ios') {
+        if (isLandscape && !Platform.isPad) {
+          headerHeight = 52;
+        } else if (IS_IPHONE_X) {
+          headerHeight = 88;
+        } else {
+          headerHeight = 64;
+        }
       } else {
-        headerHeight = 64;
+        headerHeight = 56;
+        // TODO (Android only): Need to handle translucent status bar.
       }
       marginTop = -headerHeight;
     }
