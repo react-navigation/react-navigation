@@ -32,8 +32,9 @@ type Props = TabBarOptions & {
   descriptors: any,
   jumpTo: any,
   onTabPress: any,
-  getLabelText: ({ route: any }) => any,
   getAccessibilityLabel: (props: { route: any }) => string,
+  getButtonComponent: ({ route: any }) => any,
+  getLabelText: ({ route: any }) => any,
   getTestID: (props: { route: any }) => string,
   renderIcon: any,
   dimensions: { width: number, height: number },
@@ -45,6 +46,22 @@ const isIos = Platform.OS === 'ios';
 const isIOS11 = majorVersion >= 11 && isIos;
 
 const DEFAULT_MAX_TAB_ITEM_WIDTH = 125;
+
+class TouchableWithoutFeedbackWrapper extends React.Component<*> {
+  render() {
+    const { onPress, testID, accessibilityLabel, ...props } = this.props;
+
+    return (
+      <TouchableWithoutFeedback
+        onPress={onPress}
+        testID={testID}
+        accessibilityLabel={accessibilityLabel}
+      >
+        <View {...props} />
+      </TouchableWithoutFeedback>
+    );
+  }
+}
 
 class TabBarBottom extends React.Component<Props> {
   static defaultProps = {
@@ -171,7 +188,6 @@ class TabBarBottom extends React.Component<Props> {
       activeBackgroundColor,
       inactiveBackgroundColor,
       onTabPress,
-      jumpTo,
       style,
       tabStyle,
     } = this.props;
@@ -203,30 +219,30 @@ class TabBarBottom extends React.Component<Props> {
             ? activeBackgroundColor
             : inactiveBackgroundColor;
 
+          const ButtonComponent =
+            this.props.getButtonComponent({ route }) ||
+            TouchableWithoutFeedbackWrapper;
+
           return (
-            <TouchableWithoutFeedback
+            <ButtonComponent
               key={route.key}
-              onPress={() => {
-                onTabPress({ route });
-                jumpTo(route.key);
-              }}
+              onPress={() => onTabPress({ route })}
               testID={testID}
               accessibilityLabel={accessibilityLabel}
+              style={[
+                styles.tab,
+                { backgroundColor },
+                this._shouldUseHorizontalLabels()
+                  ? styles.tabLandscape
+                  : styles.tabPortrait,
+                tabStyle,
+              ]}
             >
-              <View
-                style={[
-                  styles.tab,
-                  { backgroundColor },
-                  this._shouldUseHorizontalLabels()
-                    ? styles.tabLandscape
-                    : styles.tabPortrait,
-                  tabStyle,
-                ]}
-              >
+              <View style={{ flex: 1 }}>
                 {this._renderIcon(scene)}
                 {this._renderLabel(scene)}
               </View>
-            </TouchableWithoutFeedback>
+            </ButtonComponent>
           );
         })}
       </SafeAreaView>

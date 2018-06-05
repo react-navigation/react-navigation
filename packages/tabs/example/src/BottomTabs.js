@@ -2,6 +2,7 @@ import * as React from 'react';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { MaterialIcons } from '@expo/vector-icons';
 import PhotoGrid from './shared/PhotoGrid';
+import TouchableBounce from 'react-native/Libraries/Components/Touchable/TouchableBounce';
 
 const tabBarIcon = name => ({ tintColor }) => (
   <MaterialIcons name={name} color={tintColor} size={24} />
@@ -10,6 +11,7 @@ const tabBarIcon = name => ({ tintColor }) => (
 class Album extends React.Component {
   static navigationOptions = {
     tabBarIcon: tabBarIcon('photo-album'),
+    tabBarButtonComponent: TouchableBounce,
   };
 
   render() {
@@ -20,6 +22,7 @@ class Album extends React.Component {
 class Library extends React.Component {
   static navigationOptions = {
     tabBarIcon: tabBarIcon('photo-library'),
+    tabBarButtonComponent: TouchableBounce,
   };
 
   render() {
@@ -30,6 +33,7 @@ class Library extends React.Component {
 class History extends React.Component {
   static navigationOptions = {
     tabBarIcon: tabBarIcon('history'),
+    tabBarButtonComponent: TouchableBounce,
   };
 
   render() {
@@ -40,6 +44,7 @@ class History extends React.Component {
 class Cart extends React.Component {
   static navigationOptions = {
     tabBarIcon: tabBarIcon('shopping-cart'),
+    tabBarButtonComponent: TouchableBounce,
   };
 
   render() {
