@@ -1,5 +1,6 @@
 /* @flow */
 
+import * as React from 'react';
 import { Animated } from 'react-native';
 import type { Node } from 'react';
 
