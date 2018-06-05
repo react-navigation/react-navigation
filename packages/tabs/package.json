@@ -14,7 +14,7 @@
     "lint": "eslint .",
     "precommit": "yarn lint && yarn flow && yarn test",
     "build": "babel --no-babelrc --plugins=syntax-jsx,syntax-class-properties,syntax-object-rest-spread,transform-flow-strip-types src --out-dir dist --ignore '**/__tests__/**'",
-    "prepublish": "yarn build"
+    "prepare": "yarn build"
   },
   "keywords": [
     "react-native-component",
