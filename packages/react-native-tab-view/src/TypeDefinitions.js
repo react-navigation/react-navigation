@@ -1,6 +1,5 @@
 /* @flow */
 
-import * as React from 'react';
 import { Animated } from 'react-native';
 import type { Node } from 'react';
 
@@ -59,8 +58,3 @@ export type PagerExtraProps = {
   swipeDistanceThreshold?: number,
   swipeVelocityThreshold?: number,
 };
-
-export type SceneComponentProps<T> = React.ComponentType<{
-  route: T,
-  jumpTo: (key: string) => mixed,
-}>;
