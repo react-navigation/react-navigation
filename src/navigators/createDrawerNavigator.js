@@ -50,6 +50,7 @@ const DrawerNavigator = (routeConfigs, config = {}) => {
     paths,
     initialRouteName,
     backBehavior,
+    getCustomActionCreators,
     ...drawerConfig
   } = mergedConfig;
 
@@ -58,6 +59,7 @@ const DrawerNavigator = (routeConfigs, config = {}) => {
     paths,
     initialRouteName,
     backBehavior,
+    getCustomActionCreators,
   };
 
   const drawerRouter = DrawerRouter(routeConfigs, routerConfig);
