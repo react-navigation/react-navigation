@@ -59,7 +59,7 @@ const DrawerNavigator = (routeConfigs, config = {}) => {
     paths,
     initialRouteName,
     backBehavior,
-    getCustomActionCreators
+    getCustomActionCreators,
   };
 
   const drawerRouter = DrawerRouter(routeConfigs, routerConfig);
