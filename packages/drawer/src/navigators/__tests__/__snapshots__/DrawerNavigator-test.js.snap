@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`createDrawerNavigator renders successfully 1`] = `
+<RCTView
+  drawerBackgroundColor="white"
+  drawerLockMode={undefined}
+  drawerPosition="left"
+  drawerWidth={320}
+  onDrawerClose={[Function]}
+  onDrawerOpen={[Function]}
+  renderNavigationView={[Function]}
+  useNativeAnimations={true}
+>
+  <View
+    style={
+      Object {
+        "flex": 1,
+      }
+    }
+  />
+</RCTView>
+`;
