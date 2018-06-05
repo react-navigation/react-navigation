@@ -283,6 +283,10 @@ declare module 'react-navigation' {
     | NavigationScreenComponent<NavigationRoute, *, *>
     | NavigationContainer<*, *, *>;
 
+  declare interface withOptionalNavigationOptions<Options> {
+    navigationOptions?: NavigationScreenConfig<Options>,
+  }
+
   declare export type NavigationScreenComponent<
     Route: NavigationRoute,
     Options: {},
@@ -290,8 +294,11 @@ declare module 'react-navigation' {
   > = React$ComponentType<{
     ...Props,
     ...NavigationNavigatorProps<Options, Route>,
-  }> &
-    ({} | { navigationOptions: NavigationScreenConfig<Options> });
+  }> & withOptionalNavigationOptions<Options>;
+
+  declare interface withRouter<State, Options> {
+    router: NavigationRouter<State, Options>,
+  }
 
   declare export type NavigationNavigator<
     State: NavigationState,
@@ -300,10 +307,7 @@ declare module 'react-navigation' {
   > = React$ComponentType<{
     ...Props,
     ...NavigationNavigatorProps<Options, State>,
-  }> & {
-    router: NavigationRouter<State, Options>,
-    navigationOptions?: ?NavigationScreenConfig<Options>,
-  };
+  }> & withRouter<State, Options> & withOptionalNavigationOptions<Options>;
 
   declare export type NavigationRouteConfig =
     | NavigationComponent
@@ -549,10 +553,7 @@ declare module 'react-navigation' {
   > = React$ComponentType<{
     ...Props,
     ...NavigationContainerProps<State, Options>,
-  }> & {
-    router: NavigationRouter<State, Options>,
-    navigationOptions?: ?NavigationScreenConfig<Options>,
-  };
+  }> & withRouter<State, Options> & withOptionalNavigationOptions<Options>;
 
   declare export type NavigationContainerProps<S: {}, O: {}> = $Shape<{
     uriPrefix?: string | RegExp,
