@@ -10,8 +10,9 @@
     "test": "jest",
     "flow": "flow",
     "lint": "eslint .",
+    "precommit": "yarn lint && yarn flow && yarn test",
     "build": "babel --no-babelrc --plugins=syntax-jsx,syntax-class-properties,syntax-object-rest-spread,transform-flow-strip-types,react-native-paper/babel src --out-dir dist --ignore '**/__tests__/**'",
-    "prepublish": "yarn build"
+    "prepare": "yarn build"
   },
   "keywords": [
     "react-native-component",
@@ -35,8 +36,8 @@
   "dependencies": {
     "hoist-non-react-statics": "^2.5.0",
     "prop-types": "^15.6.0",
-    "react-native-paper": "2.0.0-alpha.1",
-    "react-navigation-tabs": "^0.3.0"
+    "react-native-paper": "2.0.0-alpha.4",
+    "react-navigation-tabs": "^0.4.0"
   },
   "devDependencies": {
     "@expo/vector-icons": "^6.2.0",
@@ -53,14 +54,15 @@
     "eslint": "^4.12.1",
     "eslint-config-satya164": "^1.0.1",
     "eslint-plugin-react-native-globals": "^0.1.0",
-    "flow-bin": "~0.56.0",
+    "flow-bin": "~0.67.0",
+    "husky": "^0.14.3",
     "jest": "^21.2.1",
     "prettier": "^1.8.2",
-    "react": "16.0.0",
-    "react-dom": "16.0.0",
-    "react-native": "~0.50.4",
-    "react-navigation": "^2.0.1",
-    "react-test-renderer": "16.0.0"
+    "react": "16.3.1",
+    "react-dom": "16.3.1",
+    "react-native": "~0.55.4",
+    "react-navigation": "^2.1.0",
+    "react-test-renderer": "16.2.0"
   },
   "peerDependencies": {
     "react": "*",

@@ -19,8 +19,14 @@ class BottomNavigationView extends React.Component<Props> {
   };
 
   render() {
-    // eslint-disable-next-line no-unused-vars
-    const { activeTintColor, inactiveTintColor, navigation, descriptors, ...rest } = this.props;
+    const {
+      activeTintColor,
+      inactiveTintColor,
+      navigation,
+      // eslint-disable-next-line no-unused-vars
+      descriptors,
+      ...rest
+    } = this.props;
 
     return (
       <BottomNavigation
