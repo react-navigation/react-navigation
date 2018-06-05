@@ -459,6 +459,8 @@ export default class TabBar<T: *> extends React.Component<Props<T>, State> {
                   ? accessibilityLabel
                   : this.props.getLabelText({ route });
 
+              const isFocused = i === navigationState.index;
+
               return (
                 <TouchableItem
                   borderless
@@ -466,7 +468,9 @@ export default class TabBar<T: *> extends React.Component<Props<T>, State> {
                   testID={this.props.getTestID({ route })}
                   accessible={this.props.getAccessible({ route })}
                   accessibilityLabel={accessibilityLabel}
-                  accessibilityTraits="button"
+                  accessibilityTraits={
+                    isFocused ? ['button', 'selected'] : 'button'
+                  }
                   accessibilityComponentType="button"
                   pressColor={this.props.pressColor}
                   pressOpacity={this.props.pressOpacity}
