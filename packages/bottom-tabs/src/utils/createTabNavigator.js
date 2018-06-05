@@ -77,7 +77,7 @@ export default function createTabNavigator(TabView: React.ComponentType<*>) {
       const descriptor = descriptors[route.key];
       const options = descriptor.options;
 
-      if (typeof options.tabBarAccessibility !== 'undefined') {
+      if (typeof options.tabBarAccessibilityLabel !== 'undefined') {
         return options.tabBarAccessibilityLabel;
       }
 
