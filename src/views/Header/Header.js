@@ -213,7 +213,7 @@ class Header extends React.PureComponent {
 
     let { style } = props;
     if (options.headerLeftContainerStyle) {
-      style = [style, headerLeftContainerStyle];
+      style = [style, options.headerLeftContainerStyle];
     }
 
     // On Android, or if we have a custom header left, or if we have a custom back image, we
@@ -261,7 +261,7 @@ class Header extends React.PureComponent {
       style.right = 0;
     }
     if (options.headerTitleContainerStyle) {
-      style = [style, headerTitleContainerStyle];
+      style = [style, options.headerTitleContainerStyle];
     }
 
     return this._renderSubView(
@@ -279,7 +279,7 @@ class Header extends React.PureComponent {
 
     let { style } = props;
     if (options.headerRightContainerStyle) {
-      style = [style, headerRightContainerStyle];
+      style = [style, options.headerRightContainerStyle];
     }
 
     return this._renderSubView(
