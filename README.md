@@ -55,4 +55,4 @@ This library has adopted a Code of Conduct that we expect project participants t
 
 ## License
 
-React-navigation is licensed under the [BSD 2-clause "Simplified" License](https://github.com/react-community/react-navigation/blob/master/LICENSE).
+React Navigation is licensed under the [BSD 2-clause "Simplified" License](https://github.com/react-community/react-navigation/blob/master/LICENSE).
