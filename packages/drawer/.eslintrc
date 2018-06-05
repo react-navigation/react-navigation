@@ -1,0 +1,10 @@
+{
+  "extends": "eslint-config-satya164",
+
+  "plugins": ["react-native-globals"],
+
+  "env": {
+    "es6": true,
+    "react-native-globals/all": true,
+  }
+}

@@ -1,0 +1,52 @@
+import * as React from 'react';
+import Expo from 'expo';
+import { FlatList } from 'react-native';
+import { createStackNavigator } from 'react-navigation';
+import { ListSection, Divider } from 'react-native-paper';
+import SimpleDrawer from './src/SimpleDrawer';
+
+const data = [
+  { component: SimpleDrawer, title: 'Simple', routeName: 'SimpleDrawer' },
+];
+
+class Home extends React.Component {
+  static navigationOptions = {
+    title: 'Examples',
+  };
+
+  _renderItem = ({ item }) => (
+    <ListSection.Item
+      title={item.title}
+      onPress={() => this.props.navigation.navigate(item.routeName)}
+    />
+  );
+
+  _keyExtractor = item => item.routeName;
+
+  render() {
+    return (
+      <FlatList
+        ItemSeparatorComponent={Divider}
+        renderItem={this._renderItem}
+        keyExtractor={this._keyExtractor}
+        data={data}
+      />
+    );
+  }
+}
+
+const App = createStackNavigator({
+  Home,
+  ...data.reduce((acc, it) => {
+    acc[it.routeName] = {
+      screen: it.component,
+      navigationOptions: {
+        title: it.title,
+      },
+    };
+
+    return acc;
+  }, {}),
+});
+
+Expo.registerRootComponent(App);

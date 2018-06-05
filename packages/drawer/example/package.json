@@ -1,0 +1,31 @@
+{
+  "name": "drawerexample",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "react-native-scripts start",
+    "android": "react-native-scripts android",
+    "ios": "react-native-scripts ios"
+  },
+  "dependencies": {
+    "expo": "~27.0.0",
+    "hoist-non-react-statics": "^2.5.0",
+    "prop-types": "^15.6.0",
+    "react": "16.3.1",
+    "react-native": "~0.55.0",
+    "react-navigation": "^2.0.1",
+    "react-native-paper": "2.0.0-alpha.4"
+  },
+  "devDependencies": {
+    "babel-plugin-module-resolver": "^3.0.0",
+    "babel-preset-expo": "^4.0.0",
+    "glob-to-regexp": "^0.3.0",
+    "react-native-scripts": "1.8.1"
+  },
+  "main": "App.js",
+  "resolutions": {
+    "**/prop-types": "15.6.0",
+    "**/react-lifecycles-compat": "3.0.4",
+    "**/hoist-non-react-statics": "2.5.0"
+  }
+}
