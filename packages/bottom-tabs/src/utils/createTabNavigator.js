@@ -14,6 +14,7 @@ export type InjectedProps = {
   getLabelText: (props: { route: any }) => any,
   getAccessibilityLabel: (props: { route: any }) => string,
   getTestID: (props: { route: any }) => string,
+  getButtonComponent: (props: { route: any }) => ?React.Component<*>,
   renderIcon: (props: {
     route: any,
     focused: boolean,
@@ -51,6 +52,18 @@ export default function createTabNavigator(TabView: React.ComponentType<*>) {
         return typeof options.tabBarIcon === 'function'
           ? options.tabBarIcon({ focused, tintColor })
           : options.tabBarIcon;
+      }
+
+      return null;
+    };
+
+    _getButtonComponent = ({ route }) => {
+      const { descriptors } = this.props;
+      const descriptor = descriptors[route.key];
+      const options = descriptor.options;
+
+      if (options.tabBarButtonComponent) {
+        return options.tabBarButtonComponent;
       }
 
       return null;
@@ -151,6 +164,7 @@ export default function createTabNavigator(TabView: React.ComponentType<*>) {
         <TabView
           {...options}
           getLabelText={this._getLabelText}
+          getButtonComponent={this._getButtonComponent}
           getAccessibilityLabel={this._getAccessibilityLabel}
           getTestID={this._getTestID}
           renderIcon={this._renderIcon}
