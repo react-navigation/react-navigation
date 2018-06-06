@@ -238,10 +238,8 @@ class TabBarBottom extends React.Component<Props> {
                 tabStyle,
               ]}
             >
-              <View style={{ flex: 1 }}>
-                {this._renderIcon(scene)}
-                {this._renderLabel(scene)}
-              </View>
+              {this._renderIcon(scene)}
+              {this._renderLabel(scene)}
             </ButtonComponent>
           );
         })}
