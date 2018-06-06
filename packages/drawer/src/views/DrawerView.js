@@ -24,10 +24,10 @@ export default class DrawerView extends React.PureComponent {
     const { isDrawerOpen } = this.props.navigation.state;
     const wasDrawerOpen = prevProps.navigation.state.isDrawerOpen;
 
-    if (isDrawerOpen && !wasDrawerOpen && this._drawerState === 'closed') {
+    if (this._shouldOpen(isDrawerOpen, wasDrawerOpen)) {
       this._drawerState = 'opening';
       this._drawer.openDrawer();
-    } else if (wasDrawerOpen && !isDrawerOpen && this._drawerState === 'open') {
+    } else if (this._shouldClose(isDrawerOpen, wasDrawerOpen)) {
       this._drawerState = 'closing';
       this._drawer.closeDrawer();
     }
@@ -38,6 +38,22 @@ export default class DrawerView extends React.PureComponent {
   }
 
   _drawerState = 'closed';
+
+  _shouldOpen = (isDrawerOpen, wasDrawerOpen) => {
+    return (
+      isDrawerOpen &&
+      !wasDrawerOpen &&
+      (this._drawerState === 'closed' || this._drawerState === 'closing')
+    );
+  };
+
+  _shouldClose = (isDrawerOpen, wasDrawerOpen) => {
+    return (
+      wasDrawerOpen &&
+      !isDrawerOpen &&
+      (this._drawerState === 'open' || this._drawerState === 'opening')
+    );
+  };
 
   _handleDrawerOpen = () => {
     const { navigation } = this.props;
