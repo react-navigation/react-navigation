@@ -5,10 +5,8 @@ import React from 'react';
 import StackRouter from '../StackRouter';
 import TabRouter from '../TabRouter';
 import SwitchRouter from '../SwitchRouter';
-import DrawerRouter from '../DrawerRouter';
 
 import NavigationActions from '../../NavigationActions';
-import DrawerActions from '../DrawerActions';
 import { _TESTING_ONLY_normalize_keys } from '../KeyGenerator';
 
 beforeEach(() => {
@@ -18,7 +16,6 @@ beforeEach(() => {
 const ROUTERS = {
   TabRouter,
   StackRouter,
-  DrawerRouter,
   SwitchRouter,
 };
 
@@ -470,54 +467,4 @@ test('Inner actions are only unpacked if the current tab matches', () => {
   expect(expectedState && comparable(expectedState)).toEqual(
     innerState && comparable(innerState)
   );
-});
-
-test('DrawerRouter will close drawer on child navigaton, not on child param changes', () => {
-  class FooView extends React.Component {
-    render() {
-      return <div />;
-    }
-  }
-  const BarRouter = SwitchRouter({
-    Qux: FooView,
-    Quo: FooView,
-  });
-  class BarView extends React.Component {
-    static router = BarRouter;
-    render() {
-      return <div />;
-    }
-  }
-  const router = DrawerRouter({
-    Bar: BarView,
-    Foo: FooView,
-  });
-
-  const emptyState = router.getStateForAction(NavigationActions.init());
-  const initState = router.getStateForAction(
-    DrawerActions.openDrawer(),
-    emptyState
-  );
-  expect(initState.isDrawerOpen).toBe(true);
-
-  const state0 = router.getStateForAction(
-    NavigationActions.navigate({ routeName: 'Quo' }),
-    initState
-  );
-  expect(state0.isDrawerOpen).toBe(false);
-
-  const initSwitchState = initState.routes[initState.index];
-  const initQuxState = initSwitchState.routes[initSwitchState.index];
-
-  const state1 = router.getStateForAction(
-    NavigationActions.setParams({
-      key: initQuxState.key,
-      params: { foo: 'bar' },
-    }),
-    initState
-  );
-  expect(state1.isDrawerOpen).toBe(true);
-  const state1switchState = state1.routes[state1.index];
-  const state1quxState = state1switchState.routes[state1switchState.index];
-  expect(state1quxState.params.foo).toEqual('bar');
 });
