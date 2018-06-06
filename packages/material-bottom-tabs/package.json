@@ -25,14 +25,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/react-navigation/react-navigation-material-bottom-tab-navigator.git"
+    "url": "git+https://github.com/react-navigation/react-navigation-material-bottom-tabs.git"
   },
   "author": "Satyajit Sahoo <satyajit.happy@gmail.com> (https://github.com/satya164/)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/react-navigation/react-navigation-material-bottom-tab-navigator/issues"
+    "url": "https://github.com/react-navigation/react-navigation-material-bottom-tabs/issues"
   },
-  "homepage": "https://github.com/react-navigation/react-navigation-material-bottom-tab-navigator#readme",
+  "homepage": "https://github.com/react-navigation/react-navigation-material-bottom-tabs#readme",
   "dependencies": {
     "hoist-non-react-statics": "^2.5.0",
     "prop-types": "^15.6.0",
