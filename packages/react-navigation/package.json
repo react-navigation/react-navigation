@@ -37,7 +37,7 @@
     "react-lifecycles-compat": "^3",
     "react-native-safe-area-view": "^0.8.0",
     "react-navigation-deprecated-tab-navigator": "1.3.0",
-    "react-navigation-drawer": "0.2.0",
+    "react-navigation-drawer": "0.2.1",
     "react-navigation-tabs": "0.5.1"
   },
   "devDependencies": {
