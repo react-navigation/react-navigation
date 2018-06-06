@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import createNavigationContainer from '../createNavigationContainer';
 import createKeyboardAwareNavigator from './createKeyboardAwareNavigator';
 import createNavigator from './createNavigator';
