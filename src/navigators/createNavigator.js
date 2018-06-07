@@ -8,10 +8,15 @@ function createNavigator(NavigatorView, router, navigationConfig) {
     static router = router;
     static navigationOptions = null;
 
-    state = {
-      descriptors: {},
-      childEventSubscribers: {},
-    };
+    constructor(props) {
+      super(props);
+
+      this.state = {
+        descriptors: {},
+        childEventSubscribers: {},
+        screenProps: props.screenProps,
+      };
+    }
 
     static getDerivedStateFromProps(nextProps, prevState) {
       const { navigation, screenProps } = nextProps;
@@ -21,7 +26,11 @@ function createNavigator(NavigatorView, router, navigationConfig) {
       const descriptors = { ...prevState.descriptors };
       const childEventSubscribers = { ...prevState.childEventSubscribers };
       routes.forEach(route => {
-        if (!descriptors[route.key] || descriptors[route.key].state !== route) {
+        if (
+          !descriptors[route.key] ||
+          descriptors[route.key].state !== route ||
+          screenProps !== prevState.screenProps
+        ) {
           const getComponent = () =>
             router.getComponentForRouteName(route.routeName);
 
@@ -75,6 +84,7 @@ function createNavigator(NavigatorView, router, navigationConfig) {
       return {
         descriptors,
         childEventSubscribers,
+        screenProps,
       };
     }
 
