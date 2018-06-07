@@ -41,6 +41,10 @@ const DefaultDrawerConfig = {
   drawerPosition: 'left',
   drawerBackgroundColor: 'white',
   useNativeAnimations: true,
+  drawerType: 'front',
+  hideStatusBar: false,
+  statusBarAnimation: 'slide',
+  overlayColor: 'black',
 };
 
 const DrawerNavigator = (routeConfigs, config = {}) => {
