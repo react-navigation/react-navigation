@@ -41,7 +41,7 @@ function createNavigator(NavigatorView, router, navigationConfig) {
             actionHelpers[actionName] = (...args) => {
               const actionCreator = actionCreators[actionName];
               const action = actionCreator(...args);
-              dispatch(action);
+              return dispatch(action);
             };
           });
           const childNavigation = {
