@@ -4,9 +4,11 @@ import { FlatList } from 'react-native';
 import { createSwitchNavigator, createStackNavigator } from 'react-navigation';
 import { ListSection, Divider } from 'react-native-paper';
 import SimpleDrawer from './src/SimpleDrawer';
+import StyledDrawer from './src/StyledDrawer';
 
 const data = [
   { component: SimpleDrawer, title: 'Simple', routeName: 'SimpleDrawer' },
+  { component: StyledDrawer, title: 'Styled', routeName: 'StyledDrawer' },
 ];
 
 class Home extends React.Component {

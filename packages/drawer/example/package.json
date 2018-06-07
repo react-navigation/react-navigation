@@ -13,8 +13,8 @@
     "prop-types": "^15.6.0",
     "react": "16.3.1",
     "react-native": "~0.55.0",
-    "react-navigation": "^2.0.1",
-    "react-native-paper": "2.0.0-alpha.4"
+    "react-native-paper": "2.0.0-alpha.4",
+    "react-navigation": "^2.0.1"
   },
   "devDependencies": {
     "babel-plugin-module-resolver": "^3.0.0",

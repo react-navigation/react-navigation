@@ -5,10 +5,15 @@ exports[`createDrawerNavigator renders successfully 1`] = `
   drawerBackgroundColor="white"
   drawerLockMode={undefined}
   drawerPosition="left"
+  drawerType="front"
   drawerWidth={320}
+  edgeWidth={undefined}
+  hideStatusBar={false}
   onDrawerClose={[Function]}
   onDrawerOpen={[Function]}
+  overlayColor="black"
   renderNavigationView={[Function]}
+  statusBarAnimation="slide"
   useNativeAnimations={true}
 >
   <View
