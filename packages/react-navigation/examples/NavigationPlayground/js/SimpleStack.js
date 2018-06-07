@@ -90,7 +90,16 @@ class MyNavScreen extends React.Component<MyNavScreenProps> {
         />
         <Button onPress={() => popToTop()} title="Pop to top" />
         <Button onPress={() => pop()} title="Pop" />
-        <Button onPress={() => navigation.goBack()} title="Go back" />
+        <Button
+          onPress={() => {
+            if (navigation.goBack()) {
+              console.log('goBack handled');
+            } else {
+              console.log('goBack unhandled');
+            }
+          }}
+          title="Go back"
+        />
         <Button onPress={() => dismiss()} title="Dismiss" />
         <StatusBar barStyle="default" />
       </SafeAreaView>
