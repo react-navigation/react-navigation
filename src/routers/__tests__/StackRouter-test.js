@@ -426,12 +426,47 @@ describe('StackRouter', () => {
     expect(state3 && state3.index).toEqual(0);
   });
 
+  test('Handle navigation to nested navigator', () => {
+    const state = TestStackRouter.getStateForAction({
+      type: NavigationActions.INIT,
+    });
+    const action = TestStackRouter.getActionForPathAndParams('fo/22/b/hello');
+    /* $FlowFixMe */
+    const state2 = TestStackRouter.getStateForAction(action);
+    expect(state2).toEqual({
+      index: 0,
+      isTransitioning: false,
+      key: 'StackRouterRoot',
+      routes: [
+        {
+          index: 0,
+          key: 'id-4',
+          isTransitioning: false,
+          routeName: 'foo',
+          params: {
+            fooThing: '22',
+          },
+          routes: [
+            {
+              routeName: 'bar',
+              key: 'id-3',
+              params: {
+                barThing: 'hello',
+              },
+            },
+          ],
+        },
+      ],
+    });
+  });
+
   test('popToTop bubbles up', () => {
     const ChildNavigator = () => <div />;
     ChildNavigator.router = StackRouter({
       Baz: { screen: () => <div /> },
       Qux: { screen: () => <div /> },
     });
+
     const router = StackRouter({
       Foo: { screen: () => <div /> },
       Bar: { screen: ChildNavigator },
