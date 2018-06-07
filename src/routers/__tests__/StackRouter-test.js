@@ -426,12 +426,6 @@ describe('StackRouter', () => {
     expect(state3 && state3.index).toEqual(0);
   });
 
-  test('popToTop bubbles up', () => {
-    const ChildNavigator = () => <div />;
-    ChildNavigator.router = StackRouter({
-      Baz: { screen: () => <div /> },
-      Qux: { screen: () => <div /> },
-    });
   test('Handle navigation to nested navigator', () => {
     const state = TestStackRouter.getStateForAction({
       type: NavigationActions.INIT,
@@ -441,10 +435,13 @@ describe('StackRouter', () => {
     const state2 = TestStackRouter.getStateForAction(action);
     expect(state2).toEqual({
       index: 0,
+      isTransitioning: false,
+      key: 'StackRouterRoot',
       routes: [
         {
           index: 0,
-          key: 'Init-id-0-14',
+          key: 'id-4',
+          isTransitioning: false,
           routeName: 'foo',
           params: {
             fooThing: '22',
@@ -452,7 +449,7 @@ describe('StackRouter', () => {
           routes: [
             {
               routeName: 'bar',
-              key: 'Init-id-0-13',
+              key: 'id-3',
               params: {
                 barThing: 'hello',
               },
@@ -463,9 +460,13 @@ describe('StackRouter', () => {
     });
   });
 
-  test('Handle goBack identified by key', () => {
-    const FooScreen = () => <div />;
-    const BarScreen = () => <div />;
+  test('popToTop bubbles up', () => {
+    const ChildNavigator = () => <div />;
+    ChildNavigator.router = StackRouter({
+      Baz: { screen: () => <div /> },
+      Qux: { screen: () => <div /> },
+    });
+
     const router = StackRouter({
       Foo: { screen: () => <div /> },
       Bar: { screen: ChildNavigator },
