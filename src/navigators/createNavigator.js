@@ -22,9 +22,15 @@ function createNavigator(NavigatorView, router, navigationConfig) {
       const { navigation, screenProps } = nextProps;
       const { dispatch, state, addListener } = navigation;
       const { routes } = state;
+      if (typeof routes === 'undefined') {
+        throw new TypeError(
+          'No "routes" found in navigation state. Did you try to pass the navigation prop of a React component to a Navigator child? See https://reactnavigation.org/docs/en/custom-navigators.html#navigator-navigation-prop'
+        );
+      }
 
       const descriptors = { ...prevState.descriptors };
       const childEventSubscribers = { ...prevState.childEventSubscribers };
+
       routes.forEach(route => {
         if (
           !descriptors[route.key] ||
