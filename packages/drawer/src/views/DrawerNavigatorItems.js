@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
-import TouchableItem from 'react-navigation/src/views/TouchableItem';
+import TouchableItem from './TouchableItem';
 
 /**
  * Component that renders the navigation list in the drawer.
