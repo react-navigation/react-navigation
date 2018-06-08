@@ -32,7 +32,7 @@ function getChildNavigation(navigation, childKey, getCurrentParentNavigation) {
     actionHelpers[actionName] = (...args) => {
       const actionCreator = actionCreators[actionName];
       const action = actionCreator(...args);
-      navigation.dispatch(action);
+      return navigation.dispatch(action);
     };
   });
 
