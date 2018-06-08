@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 
 import clamp from 'clamp';
 import {
@@ -216,6 +216,8 @@ class StackViewLayout extends React.Component {
 
   _panResponder = PanResponder.create({
     onPanResponderTerminate: () => {
+      const { navigation } = this.props.transitionProps;
+      const { index } = navigation.state;
       this._isResponding = false;
       this._reset(index, 0);
       this.props.onGestureCanceled && this.props.onGestureCanceled();

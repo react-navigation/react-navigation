@@ -1,4 +1,5 @@
 import React from 'react';
+import { polyfill } from 'react-lifecycles-compat';
 
 import getChildEventSubscriber from '../getChildEventSubscriber';
 
@@ -7,21 +8,100 @@ function createNavigator(NavigatorView, router, navigationConfig) {
     static router = router;
     static navigationOptions = null;
 
-    childEventSubscribers = {};
+    constructor(props) {
+      super(props);
+
+      this.state = {
+        descriptors: {},
+        childEventSubscribers: {},
+        screenProps: props.screenProps,
+      };
+    }
+
+    static getDerivedStateFromProps(nextProps, prevState) {
+      const { navigation, screenProps } = nextProps;
+      const { dispatch, state, addListener } = navigation;
+      const { routes } = state;
+
+      const descriptors = { ...prevState.descriptors };
+      const childEventSubscribers = { ...prevState.childEventSubscribers };
+      routes.forEach(route => {
+        if (
+          !descriptors[route.key] ||
+          descriptors[route.key].state !== route ||
+          screenProps !== prevState.screenProps
+        ) {
+          const getComponent = () =>
+            router.getComponentForRouteName(route.routeName);
+
+          if (!childEventSubscribers[route.key]) {
+            childEventSubscribers[route.key] = getChildEventSubscriber(
+              addListener,
+              route.key
+            );
+          }
+
+          const actionCreators = {
+            ...navigation.actions,
+            ...router.getActionCreators(route, state.key),
+          };
+          const actionHelpers = {};
+          Object.keys(actionCreators).forEach(actionName => {
+            actionHelpers[actionName] = (...args) => {
+              const actionCreator = actionCreators[actionName];
+              const action = actionCreator(...args);
+              return dispatch(action);
+            };
+          });
+          const childNavigation = {
+            ...actionHelpers,
+            actions: actionCreators,
+            dispatch,
+            state: route,
+            addListener: childEventSubscribers[route.key].addListener,
+            getParam: (paramName, defaultValue) => {
+              const params = route.params;
+
+              if (params && paramName in params) {
+                return params[paramName];
+              }
+
+              return defaultValue;
+            },
+          };
+
+          const options = router.getScreenOptions(childNavigation, screenProps);
+          descriptors[route.key] = {
+            key: route.key,
+            getComponent,
+            options,
+            state: route,
+            navigation: childNavigation,
+          };
+        }
+      });
+
+      return {
+        descriptors,
+        childEventSubscribers,
+        screenProps,
+      };
+    }
 
     // Cleanup subscriptions for routes that no longer exist
     componentDidUpdate() {
       const activeKeys = this.props.navigation.state.routes.map(r => r.key);
-      Object.keys(this.childEventSubscribers).forEach(key => {
+      let childEventSubscribers = { ...this.state.childEventSubscribers };
+      Object.keys(childEventSubscribers).forEach(key => {
         if (!activeKeys.includes(key)) {
-          delete this.childEventSubscribers[key];
+          delete childEventSubscribers[key];
         }
       });
-    }
-
-    // Remove all subscription references
-    componentWillUnmount() {
-      this.childEventSubscribers = {};
+      if (
+        childEventSubscribers.length !== this.state.childEventSubscribers.length
+      ) {
+        this.setState({ childEventSubscribers });
+      }
     }
 
     _isRouteFocused = route => {
@@ -35,75 +115,33 @@ function createNavigator(NavigatorView, router, navigationConfig) {
     };
 
     render() {
-      const { navigation, screenProps } = this.props;
-      const { dispatch, state, addListener } = navigation;
-      const { routes } = state;
-
-      const descriptors = {};
-      routes.forEach(route => {
-        const getComponent = () =>
-          router.getComponentForRouteName(route.routeName);
-
-        if (!this.childEventSubscribers[route.key]) {
-          this.childEventSubscribers[route.key] = getChildEventSubscriber(
-            addListener,
-            route.key
-          );
-        }
-
-        const actionCreators = {
-          ...navigation.actions,
-          ...router.getActionCreators(route, state.key),
-        };
-        const actionHelpers = {};
-        Object.keys(actionCreators).forEach(actionName => {
-          actionHelpers[actionName] = (...args) => {
-            const actionCreator = actionCreators[actionName];
-            const action = actionCreator(...args);
-            dispatch(action);
-          };
-        });
-        const childNavigation = {
-          ...actionHelpers,
-          actions: actionCreators,
-          dispatch,
-          state: route,
-          isFocused: () => this._isRouteFocused(route),
-          dangerouslyGetParent: this._dangerouslyGetParent,
-          addListener: this.childEventSubscribers[route.key].addListener,
-          getParam: (paramName, defaultValue) => {
-            const params = route.params;
-
-            if (params && paramName in params) {
-              return params[paramName];
-            }
-
-            return defaultValue;
-          },
-        };
-
-        const options = router.getScreenOptions(childNavigation, screenProps);
-        descriptors[route.key] = {
-          key: route.key,
-          getComponent,
-          options,
-          state: route,
-          navigation: childNavigation,
-        };
+      // Mutation in render 😩
+      // The problem:
+      // - We don't want to re-render each screen every time the parent navigator changes
+      // - But we need to be able to access the parent navigator from callbacks
+      // - These functions should only be used within callbacks, but they are passed in props,
+      //   which is what makes this awkward. What's a good way to pass in stuff that we don't
+      //   want people to depend on in render?
+      let descriptors = { ...this.state.descriptors };
+      Object.values(descriptors).forEach(descriptor => {
+        descriptor.navigation.isFocused = () =>
+          this._isRouteFocused(descriptor.state);
+        descriptor.navigation.dangerouslyGetParent = this._dangerouslyGetParent;
       });
 
       return (
         <NavigatorView
           {...this.props}
-          screenProps={screenProps}
-          navigation={navigation}
+          screenProps={this.props.screenProps}
+          navigation={this.props.navigation}
           navigationConfig={navigationConfig}
           descriptors={descriptors}
         />
       );
     }
   }
-  return Navigator;
+
+  return polyfill(Navigator);
 }
 
 export default createNavigator;
