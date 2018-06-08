@@ -26,6 +26,9 @@ function getChildNavigation(navigation, childKey, getCurrentParentNavigation) {
   const actionCreators = {
     ...navigation.actions,
     ...navigation.router.getActionCreators(route, navigation.state.key),
+    ...(childRouter
+      ? childRouter.getActionCreators(route.routes[route.index], route.key)
+      : {}),
   };
   const actionHelpers = {};
   Object.keys(actionCreators).forEach(actionName => {
