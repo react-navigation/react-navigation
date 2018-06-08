@@ -51,6 +51,7 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
             "backgroundColor": "#E9E9EF",
             "bottom": 0,
             "left": 0,
+            "marginTop": 0,
             "opacity": 1,
             "position": "absolute",
             "right": 0,
@@ -123,6 +124,7 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
                     "backgroundColor": "#E9E9EF",
                     "bottom": 0,
                     "left": 0,
+                    "marginTop": 0,
                     "opacity": 1,
                     "position": "absolute",
                     "right": 0,
@@ -148,36 +150,30 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
             </View>
             <View
               collapsable={undefined}
-              onLayout={[Function]}
-              pointerEvents="box-none"
               style={
                 Object {
-                  "backgroundColor": "#F7F7F7",
-                  "borderBottomColor": "#A7A7AA",
-                  "borderBottomWidth": 0.5,
-                  "height": 64,
-                  "paddingBottom": 0,
-                  "paddingLeft": 0,
-                  "paddingRight": 0,
-                  "paddingTop": 20,
+                  "transform": Array [
+                    Object {
+                      "translateX": 0,
+                    },
+                  ],
                 }
               }
             >
               <View
+                collapsable={undefined}
+                onLayout={[Function]}
+                pointerEvents="box-none"
                 style={
                   Object {
-                    "bottom": 0,
-                    "left": 0,
-                    "position": "absolute",
-                    "right": 0,
-                    "top": 0,
-                  }
-                }
-              />
-              <View
-                style={
-                  Object {
-                    "flex": 1,
+                    "backgroundColor": "#F7F7F7",
+                    "borderBottomColor": "#A7A7AA",
+                    "borderBottomWidth": 0.5,
+                    "height": 64,
+                    "paddingBottom": 0,
+                    "paddingLeft": 0,
+                    "paddingRight": 0,
+                    "paddingTop": 20,
                   }
                 }
               >
@@ -185,50 +181,69 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
                   style={
                     Object {
                       "bottom": 0,
-                      "flexDirection": "row",
                       "left": 0,
                       "position": "absolute",
                       "right": 0,
                       "top": 0,
                     }
                   }
+                />
+                <View
+                  style={
+                    Object {
+                      "flex": 1,
+                    }
+                  }
                 >
                   <View
-                    collapsable={undefined}
-                    pointerEvents="box-none"
                     style={
                       Object {
-                        "alignItems": "center",
-                        "backgroundColor": "transparent",
                         "bottom": 0,
                         "flexDirection": "row",
-                        "justifyContent": "center",
                         "left": 0,
-                        "opacity": 1,
                         "position": "absolute",
                         "right": 0,
                         "top": 0,
                       }
                     }
                   >
-                    <Text
-                      accessibilityTraits="header"
-                      accessible={true}
-                      allowFontScaling={true}
+                    <View
                       collapsable={undefined}
-                      ellipsizeMode="tail"
-                      numberOfLines={1}
-                      onLayout={[Function]}
+                      pointerEvents="box-none"
                       style={
                         Object {
-                          "color": "rgba(0, 0, 0, .9)",
-                          "fontSize": 17,
-                          "fontWeight": "700",
-                          "marginHorizontal": 16,
-                          "textAlign": "center",
+                          "alignItems": "center",
+                          "backgroundColor": "transparent",
+                          "bottom": 0,
+                          "flexDirection": "row",
+                          "justifyContent": "center",
+                          "left": 0,
+                          "opacity": 1,
+                          "position": "absolute",
+                          "right": 0,
+                          "top": 0,
                         }
                       }
-                    />
+                    >
+                      <Text
+                        accessibilityTraits="header"
+                        accessible={true}
+                        allowFontScaling={true}
+                        collapsable={undefined}
+                        ellipsizeMode="tail"
+                        numberOfLines={1}
+                        onLayout={[Function]}
+                        style={
+                          Object {
+                            "color": "rgba(0, 0, 0, .9)",
+                            "fontSize": 17,
+                            "fontWeight": "700",
+                            "marginHorizontal": 16,
+                            "textAlign": "center",
+                          }
+                        }
+                      />
+                    </View>
                   </View>
                 </View>
               </View>
@@ -239,36 +254,30 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
     </View>
     <View
       collapsable={undefined}
-      onLayout={[Function]}
-      pointerEvents="box-none"
       style={
         Object {
-          "backgroundColor": "#F7F7F7",
-          "borderBottomColor": "#A7A7AA",
-          "borderBottomWidth": 0.5,
-          "height": 64,
-          "paddingBottom": 0,
-          "paddingLeft": 0,
-          "paddingRight": 0,
-          "paddingTop": 20,
+          "transform": Array [
+            Object {
+              "translateX": 0,
+            },
+          ],
         }
       }
     >
       <View
+        collapsable={undefined}
+        onLayout={[Function]}
+        pointerEvents="box-none"
         style={
           Object {
-            "bottom": 0,
-            "left": 0,
-            "position": "absolute",
-            "right": 0,
-            "top": 0,
-          }
-        }
-      />
-      <View
-        style={
-          Object {
-            "flex": 1,
+            "backgroundColor": "#F7F7F7",
+            "borderBottomColor": "#A7A7AA",
+            "borderBottomWidth": 0.5,
+            "height": 64,
+            "paddingBottom": 0,
+            "paddingLeft": 0,
+            "paddingRight": 0,
+            "paddingTop": 20,
           }
         }
       >
@@ -276,50 +285,69 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
           style={
             Object {
               "bottom": 0,
-              "flexDirection": "row",
               "left": 0,
               "position": "absolute",
               "right": 0,
               "top": 0,
             }
           }
+        />
+        <View
+          style={
+            Object {
+              "flex": 1,
+            }
+          }
         >
           <View
-            collapsable={undefined}
-            pointerEvents="box-none"
             style={
               Object {
-                "alignItems": "center",
-                "backgroundColor": "transparent",
                 "bottom": 0,
                 "flexDirection": "row",
-                "justifyContent": "center",
                 "left": 0,
-                "opacity": 1,
                 "position": "absolute",
                 "right": 0,
                 "top": 0,
               }
             }
           >
-            <Text
-              accessibilityTraits="header"
-              accessible={true}
-              allowFontScaling={true}
+            <View
               collapsable={undefined}
-              ellipsizeMode="tail"
-              numberOfLines={1}
-              onLayout={[Function]}
+              pointerEvents="box-none"
               style={
                 Object {
-                  "color": "rgba(0, 0, 0, .9)",
-                  "fontSize": 17,
-                  "fontWeight": "700",
-                  "marginHorizontal": 16,
-                  "textAlign": "center",
+                  "alignItems": "center",
+                  "backgroundColor": "transparent",
+                  "bottom": 0,
+                  "flexDirection": "row",
+                  "justifyContent": "center",
+                  "left": 0,
+                  "opacity": 1,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
                 }
               }
-            />
+            >
+              <Text
+                accessibilityTraits="header"
+                accessible={true}
+                allowFontScaling={true}
+                collapsable={undefined}
+                ellipsizeMode="tail"
+                numberOfLines={1}
+                onLayout={[Function]}
+                style={
+                  Object {
+                    "color": "rgba(0, 0, 0, .9)",
+                    "fontSize": 17,
+                    "fontWeight": "700",
+                    "marginHorizontal": 16,
+                    "textAlign": "center",
+                  }
+                }
+              />
+            </View>
           </View>
         </View>
       </View>
@@ -328,4 +356,4 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
 </View>
 `;
 
-exports[`Nested navigators throw when trying to pass navigation prop 1`] = `"No \\"routes\\" found in navigation state. Did you try to pass the navigation prop of a React component to a Navigator child? See https://github.com/react-navigation/react-navigation/issues/3598#issuecomment-375622188"`;
+exports[`Nested navigators throw when trying to pass navigation prop 1`] = `"No \\"routes\\" found in navigation state. Did you try to pass the navigation prop of a React component to a Navigator child? See https://reactnavigation.org/docs/en/custom-navigators.html#navigator-navigation-prop"`;
