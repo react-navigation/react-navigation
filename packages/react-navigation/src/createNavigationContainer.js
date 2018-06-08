@@ -4,8 +4,8 @@ import { polyfill } from 'react-lifecycles-compat';
 
 import { BackHandler } from './PlatformHelpers';
 import NavigationActions from './NavigationActions';
+import getNavigation from './getNavigation';
 import invariant from './utils/invariant';
-import getNavigationActionCreators from './routers/getNavigationActionCreators';
 import docsUrl from './utils/docsUrl';
 
 function isStateful(props) {
@@ -358,34 +358,24 @@ export default function createNavigationContainer(Component) {
       return false;
     };
 
+    _getScreenProps = () => this.props.screenProps;
+
     render() {
       let navigation = this.props.navigation;
       if (this._isStateful()) {
-        const nav = this.state.nav;
-        if (!nav) {
+        const navState = this.state.nav;
+        if (!navState) {
           return this._renderLoading();
         }
-        if (!this._navigation || this._navigation.state !== nav) {
-          this._navigation = {
-            dispatch: this.dispatch,
-            state: nav,
-            addListener: (eventName, handler) => {
-              if (eventName !== 'action') {
-                return { remove: () => {} };
-              }
-              this._actionEventSubscribers.add(handler);
-              return {
-                remove: () => {
-                  this._actionEventSubscribers.delete(handler);
-                },
-              };
-            },
-          };
-          const actionCreators = getNavigationActionCreators(nav);
-          Object.keys(actionCreators).forEach(actionName => {
-            this._navigation[actionName] = (...args) =>
-              this.dispatch(actionCreators[actionName](...args));
-          });
+        if (!this._navigation || this._navigation.state !== navState) {
+          this._navigation = getNavigation(
+            Component.router,
+            navState,
+            this.dispatch,
+            this._actionEventSubscribers,
+            this._getScreenProps,
+            () => this._navigation
+          );
         }
         navigation = this._navigation;
       }

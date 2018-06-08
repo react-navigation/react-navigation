@@ -149,6 +149,8 @@ export default (routeConfigs, stackConfig = {}) => {
   paths.sort((a, b) => b[1].priority - a[1].priority);
 
   return {
+    childRouters,
+
     getComponentForState(state) {
       const activeChildRoute = state.routes[state.index];
       const { routeName } = activeChildRoute;

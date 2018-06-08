@@ -75,6 +75,8 @@ export default (routeConfigs, config = {}) => {
   }
 
   return {
+    childRouters,
+
     getInitialState() {
       const routes = order.map(resetChildRoute);
       return {
