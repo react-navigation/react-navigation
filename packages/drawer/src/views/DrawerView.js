@@ -1,6 +1,7 @@
 import React from 'react';
 import { Dimensions } from 'react-native';
 import DrawerLayout from 'react-native-drawer-layout-polyfill';
+import { SceneView } from 'react-navigation';
 
 import DrawerSidebar from './DrawerSidebar';
 import DrawerActions from '../routers/DrawerActions';
@@ -104,8 +105,6 @@ export default class DrawerView extends React.PureComponent {
     const activeKey = state.routes[state.index].key;
     const descriptor = this.props.descriptors[activeKey];
 
-    const DrawerScreen = descriptor.getComponent();
-
     const { drawerLockMode } = descriptor.options;
 
     return (
@@ -132,9 +131,10 @@ export default class DrawerView extends React.PureComponent {
             : DrawerLayout.positions.Left
         }
       >
-        <DrawerScreen
-          screenProps={this.props.screenProps}
+        <SceneView
           navigation={descriptor.navigation}
+          screenProps={this.props.screenProps}
+          component={descriptor.getComponent()}
         />
       </DrawerLayout>
     );
