@@ -1,7 +1,14 @@
 import { SwitchRouter } from 'react-navigation';
-import withDefaultValue from 'react-navigation/src/utils/withDefaultValue';
-
 import DrawerActions from './DrawerActions';
+
+function withDefaultValue(obj, key, defaultValue) {
+  if (obj.hasOwnProperty(key)) {
+    return obj;
+  }
+
+  obj[key] = defaultValue;
+  return obj;
+}
 
 const getActiveRouteKey = route => {
   if (route.routes && route.routes[route.index]) {

@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { NavigationActions, StackActions } from 'react-navigation';
-import invariant from 'react-navigation/src/utils/invariant';
+import invariant from '../utils/invariant';
 
 /**
  * Component that renders the sidebar screen of the drawer.
