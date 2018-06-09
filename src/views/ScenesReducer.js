@@ -65,6 +65,17 @@ export default function ScenesReducer(
   prevState,
   descriptors
 ) {
+  // Always update the descriptors
+  // This is a workaround for https://github.com/react-navigation/react-navigation/issues/4271
+  // It will be resolved in a better way when we re-write Transitioner
+  scenes.forEach(scene => {
+    const { route } = scene;
+    if (descriptors[route.key]) {
+      scene.descriptor = descriptors[route.key];
+    }
+  });
+
+  // Bail out early if we didn't update the state
   if (prevState === nextState) {
     return scenes;
   }

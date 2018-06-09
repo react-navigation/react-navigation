@@ -63,6 +63,12 @@ class Transitioner extends React.Component {
       nextScenes = filterStale(nextScenes);
     }
 
+    // Update nextScenes when we change screenProps
+    // This is a workaround for https://github.com/react-navigation/react-navigation/issues/4271
+    if (nextProps.screenProps !== this.props.screenProps) {
+      this.setState({ nextScenes });
+    }
+
     if (nextScenes === this.state.scenes) {
       return;
     }
