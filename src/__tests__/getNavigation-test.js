@@ -77,7 +77,12 @@ test('getNavigation get child navigation with router', () => {
   const initState = {
     index: 0,
     routes: [
-      { key: 'a', routeName: 'RouteA' },
+      {
+        key: 'a',
+        routeName: 'RouteA',
+        routes: [{ key: 'c', routeName: 'RouteC' }],
+        index: 0,
+      },
       { key: 'b', routeName: 'RouteB' },
     ],
   };

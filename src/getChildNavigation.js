@@ -1,5 +1,6 @@
 import getChildEventSubscriber from './getChildEventSubscriber';
 import getChildRouter from './getChildRouter';
+import invariant from './utils/invariant';
 
 const createParamGetter = route => (paramName, defaultValue) => {
   const params = route.params;
@@ -15,19 +16,29 @@ function getChildNavigation(navigation, childKey, getCurrentParentNavigation) {
   const children =
     navigation._childrenNavigation || (navigation._childrenNavigation = {});
 
-  const route = navigation.state.routes.find(r => r.key === childKey);
+  const childRoute = navigation.state.routes.find(r => r.key === childKey);
 
-  if (children[childKey] && children[childKey].state === route) {
+  if (children[childKey] && children[childKey].state === childRoute) {
     return children[childKey];
   }
 
-  const childRouter = getChildRouter(navigation.router, route.routeName);
+  const childRouter = getChildRouter(navigation.router, childRoute.routeName);
+
+  // If the route has children, we'll use this to pass in to the action creators
+  // for the childRouter so that any action that depends on the active route will
+  // behave as expected. We don't explicitly require that routers implement routes
+  // and index properties, but if we did then we would put an invariant here to
+  // ensure that a focusedGrandChildRoute exists if childRouter is defined.
+  const focusedGrandChildRoute =
+    childRoute.routes && typeof childRoute.index === 'number'
+      ? childRoute.routes[childRoute.index]
+      : null;
 
   const actionCreators = {
     ...navigation.actions,
-    ...navigation.router.getActionCreators(route, navigation.state.key),
+    ...navigation.router.getActionCreators(childRoute, navigation.state.key),
     ...(childRouter
-      ? childRouter.getActionCreators(route.routes[route.index], route.key)
+      ? childRouter.getActionCreators(focusedGrandChildRoute, childRoute.key)
       : {}),
   };
   const actionHelpers = {};
@@ -43,10 +54,10 @@ function getChildNavigation(navigation, childKey, getCurrentParentNavigation) {
     children[childKey] = {
       ...children[childKey],
       ...actionHelpers,
-      state: route,
+      state: childRoute,
       router: childRouter,
       actions: actionCreators,
-      getParam: createParamGetter(route),
+      getParam: createParamGetter(childRoute),
     };
     return children[childKey];
   }
@@ -59,10 +70,10 @@ function getChildNavigation(navigation, childKey, getCurrentParentNavigation) {
   children[childKey] = {
     ...actionHelpers,
 
-    state: route,
+    state: childRoute,
     router: childRouter,
     actions: actionCreators,
-    getParam: createParamGetter(route),
+    getParam: createParamGetter(childRoute),
 
     getChildNavigation: grandChildKey =>
       getChildNavigation(children[childKey], grandChildKey, () =>
