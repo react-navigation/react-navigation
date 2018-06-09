@@ -22,6 +22,7 @@ class StackView extends React.Component {
       <Transitioner
         render={this._render}
         configureTransition={this._configureTransition}
+        screenProps={this.props.screenProps}
         navigation={this.props.navigation}
         descriptors={this.props.descriptors}
         onTransitionStart={this.props.onTransitionStart}
