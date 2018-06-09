@@ -70,7 +70,7 @@ export default function ScenesReducer(
   // It will be resolved in a better way when we re-write Transitioner
   scenes.forEach(scene => {
     const { route } = scene;
-    if (descriptors[route.key]) {
+    if (descriptors && descriptors[route.key]) {
       scene.descriptor = descriptors[route.key];
     }
   });
