@@ -123,16 +123,20 @@ class StackViewLayout extends React.Component {
       ...passProps
     } = this.props;
 
-    return renderHeader({
-      ...passProps,
-      ...transitionProps,
-      scene,
-      mode: headerMode,
-      transitionPreset: this._getHeaderTransitionPreset(),
-      leftInterpolator: headerLeftInterpolator,
-      titleInterpolator: headerTitleInterpolator,
-      rightInterpolator: headerRightInterpolator,
-    });
+    return (
+      <NavigationProvider value={scene.descriptor.navigation}>
+        {renderHeader({
+          ...passProps,
+          ...transitionProps,
+          scene,
+          mode: headerMode,
+          transitionPreset: this._getHeaderTransitionPreset(),
+          leftInterpolator: headerLeftInterpolator,
+          titleInterpolator: headerTitleInterpolator,
+          rightInterpolator: headerRightInterpolator,
+        })}
+      </NavigationProvider>
+    );
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -406,14 +410,9 @@ class StackViewLayout extends React.Component {
     if (headerMode === 'float') {
       const { scene } = this.props.transitionProps;
       floatingHeader = (
-        <NavigationProvider value={scene.descriptor.navigation}>
-          <View
-            pointerEvents="box-none"
-            onLayout={this._onFloatingHeaderLayout}
-          >
-            {this._renderHeader(scene, headerMode)}
-          </View>
-        </NavigationProvider>
+        <View pointerEvents="box-none" onLayout={this._onFloatingHeaderLayout}>
+          {this._renderHeader(scene, headerMode)}
+        </View>
       );
     }
     const {
