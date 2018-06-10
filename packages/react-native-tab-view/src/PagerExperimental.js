@@ -32,7 +32,8 @@ export default class PagerExperimental<T: *> extends React.Component<Props<T>> {
 
   componentDidUpdate(prevProps: Props<T>) {
     if (
-      prevProps.navigationState.routes !== this.props.navigationState.routes ||
+      prevProps.navigationState.routes.length !==
+        this.props.navigationState.routes.length ||
       prevProps.layout.width !== this.props.layout.width
     ) {
       this._transitionTo(this.props.navigationState.index, undefined, false);

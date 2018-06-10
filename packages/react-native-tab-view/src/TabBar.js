@@ -128,7 +128,8 @@ export default class TabBar<T: *> extends React.Component<Props<T>, State> {
     }
 
     if (
-      prevProps.navigationState.routes !== this.props.navigationState.routes ||
+      prevProps.navigationState.routes.length !==
+        this.props.navigationState.routes.length ||
       prevProps.layout.width !== this.props.layout.width
     ) {
       this._resetScroll(this.props.navigationState.index, false);

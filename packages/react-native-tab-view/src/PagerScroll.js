@@ -55,7 +55,8 @@ export default class PagerScroll<T: *> extends React.Component<
     const amount = this.props.navigationState.index * this.props.layout.width;
 
     if (
-      prevProps.navigationState.routes !== this.props.navigationState.routes ||
+      prevProps.navigationState.routes.length !==
+        this.props.navigationState.routes.length ||
       prevProps.layout.width !== this.props.layout.width
     ) {
       this._scrollTo(amount, false);

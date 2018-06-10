@@ -72,7 +72,8 @@ export default class PagerPan<T: *> extends React.Component<Props<T>> {
     this._currentIndex = this.props.navigationState.index;
 
     if (
-      prevProps.navigationState.routes !== this.props.navigationState.routes ||
+      prevProps.navigationState.routes.length !==
+        this.props.navigationState.routes.length ||
       prevProps.layout.width !== this.props.layout.width
     ) {
       this._transitionTo(this.props.navigationState.index, false);
