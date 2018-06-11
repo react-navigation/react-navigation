@@ -20,18 +20,10 @@
  * will remain to ensure logic does not differ in production.
  */
 
-var validateFormat = function(format) {};
-
-if (__DEV__) {
-  validateFormat = function(format) {
-    if (format === undefined) {
-      throw new Error('invariant requires an error message argument');
-    }
-  };
-}
-
-function invariant(condition, format, a, b, c, d, e, f) {
-  validateFormat(format);
+export default function invariant(condition, format, a, b, c, d, e, f) {
+  if (format === undefined) {
+    throw new Error('invariant requires an error message argument');
+  }
 
   if (!condition) {
     var error;
@@ -42,11 +34,7 @@ function invariant(condition, format, a, b, c, d, e, f) {
     } else {
       var args = [a, b, c, d, e, f];
       var argIndex = 0;
-      error = new Error(
-        format.replace(/%s/g, function() {
-          return args[argIndex++];
-        })
-      );
+      error = new Error(format.replace(/%s/g, () => args[argIndex++]));
       error.name = 'Invariant Violation';
     }
 
@@ -54,5 +42,3 @@ function invariant(condition, format, a, b, c, d, e, f) {
     throw error;
   }
 }
-
-module.exports = invariant;
