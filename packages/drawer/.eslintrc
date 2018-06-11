@@ -6,5 +6,9 @@
   "env": {
     "es6": true,
     "react-native-globals/all": true,
+  },
+
+  "rules": {
+    "import/no-unresolved": "off",
   }
 }
