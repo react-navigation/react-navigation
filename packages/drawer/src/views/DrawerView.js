@@ -3,8 +3,9 @@ import { Dimensions } from 'react-native';
 import { SceneView } from 'react-navigation';
 import { DrawerLayout } from 'react-native-gesture-handler';
 
-import DrawerSidebar from './DrawerSidebar';
 import DrawerActions from '../routers/DrawerActions';
+import DrawerLayout from './DrawerLayout';
+import DrawerSidebar from './DrawerSidebar';
 
 /**
  * Component that renders the drawer.
