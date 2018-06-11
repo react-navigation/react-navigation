@@ -1,5 +1,7 @@
 # React Navigation Drawer
 
+[![CircleCI badge](https://circleci.com/gh/react-navigation/react-navigation-drawer/tree/master.svg?style=shield)]
+
 Drawer navigator for use on iOS and Android.
 
 ## Installation
