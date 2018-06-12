@@ -31,7 +31,6 @@ class AppWithNavigationState extends React.Component {
       dispatch,
       nav,
       AppNavigator.router,
-      () => this.props.screenProps,
       () => this._navigation
     );
     return <AppNavigator navigation={this._navigation} />;
