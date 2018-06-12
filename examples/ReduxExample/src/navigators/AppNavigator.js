@@ -27,8 +27,13 @@ class AppWithNavigationState extends React.Component {
 
   render() {
     const { dispatch, nav } = this.props;
-    const navigation = navigationPropConstructor(dispatch, nav);
-    return <AppNavigator navigation={navigation} />;
+    this._navigation = navigationPropConstructor(
+      dispatch,
+      nav,
+      AppNavigator.router,
+      () => this._navigation
+    );
+    return <AppNavigator navigation={this._navigation} />;
   }
 }
 
