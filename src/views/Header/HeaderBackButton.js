@@ -65,6 +65,7 @@ class HeaderBackButton extends React.PureComponent {
     const {
       onPress,
       pressColorAndroid,
+      layoutPreset,
       width,
       title,
       titleStyle,
@@ -94,6 +95,7 @@ class HeaderBackButton extends React.PureComponent {
         <View style={styles.container}>
           {this._renderBackImage()}
           {Platform.OS === 'ios' &&
+            layoutPreset === 'center' &&
             typeof backButtonTitle === 'string' && (
               <Text
                 onLayout={this._onTextLayout}

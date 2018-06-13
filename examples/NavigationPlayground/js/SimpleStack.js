@@ -231,18 +231,23 @@ MyProfileScreen.navigationOptions = props => {
   };
 };
 
-const SimpleStack = createStackNavigator({
-  Home: {
-    screen: MyHomeScreen,
+const SimpleStack = createStackNavigator(
+  {
+    Home: {
+      screen: MyHomeScreen,
+    },
+    Profile: {
+      path: 'people/:name',
+      screen: MyProfileScreen,
+    },
+    Photos: {
+      path: 'photos/:name',
+      screen: MyPhotosScreen,
+    },
   },
-  Profile: {
-    path: 'people/:name',
-    screen: MyProfileScreen,
-  },
-  Photos: {
-    path: 'photos/:name',
-    screen: MyPhotosScreen,
-  },
-});
+  {
+    headerLayoutPreset: 'left',
+  }
+);
 
 export default SimpleStack;

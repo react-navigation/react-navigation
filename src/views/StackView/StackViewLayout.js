@@ -35,6 +35,12 @@ const IS_IPHONE_X =
 const EaseInOut = Easing.inOut(Easing.ease);
 
 /**
+ * Enumerate possible values for validation
+ */
+const HEADER_LAYOUT_PRESET_VALUES = ['center', 'left'];
+const HEADER_TRANSITION_PRESET_VALUES = ['uikit', 'fade-in-place'];
+
+/**
  * The max duration of the card animation in milliseconds after released gesture.
  * The actual duration should be always less then that because the rest distance
  * is always less then the full distance of the layout.
@@ -159,6 +165,7 @@ class StackViewLayout extends React.Component {
           scene,
           mode: headerMode,
           transitionPreset: this._getHeaderTransitionPreset(),
+          layoutPreset: this._getHeaderLayoutPreset(),
           leftInterpolator: headerLeftInterpolator,
           titleInterpolator: headerTitleInterpolator,
           rightInterpolator: headerRightInterpolator,
@@ -477,6 +484,29 @@ class StackViewLayout extends React.Component {
     return 'float';
   }
 
+  _getHeaderLayoutPreset() {
+    const { headerLayoutPreset } = this.props;
+    if (headerLayoutPreset) {
+      if (HEADER_LAYOUT_PRESET_VALUES.includes(headerLayoutPreset)) {
+        return headerLayoutPreset;
+      }
+
+      if (__DEV__) {
+        console.error(
+          `Invalid configuration applied for headerLayoutPreset - expected one of ${HEADER_LAYOUT_PRESET_VALUES.join(
+            ', '
+          )} but received ${JSON.stringify(headerLayoutPreset)}`
+        );
+      }
+    }
+
+    if (Platform.OS === 'android') {
+      return 'left';
+    } else {
+      return 'center';
+    }
+  }
+
   _getHeaderTransitionPreset() {
     // On Android or with header mode screen, we always just use in-place,
     // we ignore the option entirely (at least until we have other presets)
@@ -484,12 +514,22 @@ class StackViewLayout extends React.Component {
       return 'fade-in-place';
     }
 
-    // TODO: validations: 'fade-in-place' or 'uikit' are valid
-    if (this.props.headerTransitionPreset) {
-      return this.props.headerTransitionPreset;
-    } else {
-      return 'fade-in-place';
+    const { headerTransitionPreset } = this.props;
+    if (headerTransitionPreset) {
+      if (HEADER_TRANSITION_PRESET_VALUES.includes(headerTransitionPreset)) {
+        return headerTransitionPreset;
+      }
+
+      if (__DEV__) {
+        console.error(
+          `Invalid configuration applied for headerTransitionPreset - expected one of ${HEADER_TRANSITION_PRESET_VALUES.join(
+            ', '
+          )} but received ${JSON.stringify(headerTransitionPreset)}`
+        );
+      }
     }
+
+    return 'fade-in-place';
   }
 
   _renderInnerScene(scene) {

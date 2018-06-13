@@ -92,6 +92,7 @@ class Header extends React.PureComponent {
   }
 
   _renderTitleComponent = props => {
+    const { layoutPreset } = this.props;
     const { options } = props.scene.descriptor;
     const headerTitle = options.headerTitle;
     if (React.isValidElement(headerTitle)) {
@@ -103,10 +104,10 @@ class Header extends React.PureComponent {
     const color = options.headerTintColor;
     const allowFontScaling = options.headerTitleAllowFontScaling;
 
-    // On iOS, width of left/right components depends on the calculated
-    // size of the title.
-    const onLayoutIOS =
-      Platform.OS === 'ios'
+    // When title is centered, the width of left/right components depends on the
+    // calculated size of the title.
+    const onLayout =
+      layoutPreset === 'center'
         ? e => {
             this.setState({
               widths: {
@@ -117,18 +118,24 @@ class Header extends React.PureComponent {
           }
         : undefined;
 
-    const RenderedHeaderTitle =
+    const HeaderTitleComponent =
       headerTitle && typeof headerTitle !== 'string'
         ? headerTitle
         : HeaderTitle;
     return (
-      <RenderedHeaderTitle
-        onLayout={onLayoutIOS}
+      <HeaderTitleComponent
+        onLayout={onLayout}
         allowFontScaling={allowFontScaling == null ? true : allowFontScaling}
-        style={[color ? { color } : null, titleStyle]}
+        style={[
+          color ? { color } : null,
+          layoutPreset === 'center'
+            ? { textAlign: 'center' }
+            : { textAlign: 'left' },
+          titleStyle,
+        ]}
       >
         {titleString}
-      </RenderedHeaderTitle>
+      </HeaderTitleComponent>
     );
   };
 
@@ -251,10 +258,12 @@ class Header extends React.PureComponent {
   }
 
   _renderTitle(props, options) {
-    let style = {};
-    const { transitionPreset } = this.props;
+    const { layoutPreset, transitionPreset } = this.props;
+    let style = {
+      justifyContent: layoutPreset === 'center' ? 'center' : 'flex-start',
+    };
 
-    if (Platform.OS === 'android') {
+    if (layoutPreset === 'left') {
       if (!options.hasLeftComponent) {
         style.left = 0;
       }
@@ -262,7 +271,7 @@ class Header extends React.PureComponent {
         style.right = 0;
       }
     } else if (
-      Platform.OS === 'ios' &&
+      layoutPreset === 'center' &&
       !options.hasLeftComponent &&
       !options.hasRightComponent
     ) {
@@ -641,7 +650,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     alignItems: 'center',
     flexDirection: 'row',
-    justifyContent: Platform.OS === 'ios' ? 'center' : 'flex-start',
   },
   left: {
     left: 0,
