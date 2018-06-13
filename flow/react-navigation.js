@@ -284,7 +284,7 @@ declare module 'react-navigation' {
     | NavigationContainer<*, *, *>;
 
   declare interface withOptionalNavigationOptions<Options> {
-    navigationOptions?: NavigationScreenConfig<Options>,
+    navigationOptions?: NavigationScreenConfig<Options>;
   }
 
   declare export type NavigationScreenComponent<
@@ -294,10 +294,11 @@ declare module 'react-navigation' {
   > = React$ComponentType<{
     ...Props,
     ...NavigationNavigatorProps<Options, Route>,
-  }> & withOptionalNavigationOptions<Options>;
+  }> &
+    withOptionalNavigationOptions<Options>;
 
   declare interface withRouter<State, Options> {
-    router: NavigationRouter<State, Options>,
+    router: NavigationRouter<State, Options>;
   }
 
   declare export type NavigationNavigator<
@@ -307,7 +308,9 @@ declare module 'react-navigation' {
   > = React$ComponentType<{
     ...Props,
     ...NavigationNavigatorProps<Options, State>,
-  }> & withRouter<State, Options> & withOptionalNavigationOptions<Options>;
+  }> &
+    withRouter<State, Options> &
+    withOptionalNavigationOptions<Options>;
 
   declare export type NavigationRouteConfig =
     | NavigationComponent
@@ -449,6 +452,7 @@ declare module 'react-navigation' {
     tabBarTestIDProps?: { testID?: string, accessibilityLabel?: string },
     tabBarOnPress?: ({
       navigation: NavigationScreenProp<NavigationRoute>,
+      defaultHandler: () => void,
     }) => void,
   |};
 
@@ -553,7 +557,9 @@ declare module 'react-navigation' {
   > = React$ComponentType<{
     ...Props,
     ...NavigationContainerProps<State, Options>,
-  }> & withRouter<State, Options> & withOptionalNavigationOptions<Options>;
+  }> &
+    withRouter<State, Options> &
+    withOptionalNavigationOptions<Options>;
 
   declare export type NavigationContainerProps<S: {}, O: {}> = $Shape<{
     uriPrefix?: string | RegExp,
@@ -1162,4 +1168,13 @@ declare module 'react-navigation' {
   declare export function withNavigationFocus<Props: {}>(
     Component: React$ComponentType<Props>
   ): React$ComponentType<$Diff<Props, { isFocused: boolean | void }>>;
+
+  declare export function getNavigation<State: NavigationState, Options: {}>(
+    router: NavigationRouter<State, Options>,
+    state: State,
+    dispatch: NavigationDispatch,
+    actionSubscribers: Set<NavigationEventCallback>,
+    getScreenProps: () => {},
+    getCurrentNavigation: () => NavigationScreenProp<State>
+  ): NavigationScreenProp<State>;
 }
