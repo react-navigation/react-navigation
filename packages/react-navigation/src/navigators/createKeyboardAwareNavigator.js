@@ -30,12 +30,12 @@ export default Navigator =>
       if (this._previouslyFocusedTextInput) {
         TextInput.State.focusTextInput(this._previouslyFocusedTextInput);
       }
-      this.props.onGestureFinish && this.props.onGestureFinish();
+      this.props.onGestureCanceled && this.props.onGestureCanceled();
     };
 
     _handleGestureFinish = () => {
       this._previouslyFocusedTextInput = null;
-      this.props.onGestureCanceled && this.props.onGestureCanceled();
+      this.props.onGestureFinish && this.props.onGestureFinish();
     };
 
     _handleTransitionStart = (transitionProps, prevTransitionProps) => {
