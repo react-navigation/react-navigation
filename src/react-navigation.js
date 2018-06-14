@@ -74,9 +74,6 @@ module.exports = {
   get DrawerActions() {
     return require('react-navigation-drawer').DrawerActions;
   },
-  get getNavigationActionCreators() {
-    return require('./routers/getNavigationActionCreators').default;
-  },
 
   // Routers
   get StackRouter() {
