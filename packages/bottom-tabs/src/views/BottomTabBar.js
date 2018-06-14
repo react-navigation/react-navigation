@@ -39,6 +39,7 @@ type Props = TabBarOptions & {
   renderIcon: any,
   dimensions: { width: number, height: number },
   isLandscape: boolean,
+  safeAreaInset: { top: string, right: string, bottom: string, left: string },
 };
 
 const majorVersion = parseInt(Platform.Version, 10);
@@ -188,6 +189,7 @@ class TabBarBottom extends React.Component<Props> {
       activeBackgroundColor,
       inactiveBackgroundColor,
       onTabPress,
+      safeAreaInset,
       style,
       tabStyle,
     } = this.props;
@@ -205,7 +207,7 @@ class TabBarBottom extends React.Component<Props> {
     return (
       <SafeAreaView
         style={tabBarStyle}
-        forceInset={{ bottom: 'always', top: 'never' }}
+        forceInset={safeAreaInset || { bottom: 'always', top: 'never' }}
       >
         {routes.map((route, index) => {
           const focused = index === navigation.state.index;
