@@ -149,49 +149,35 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
               />
             </View>
             <View
-              collapsable={undefined}
-              style={
-                Object {
-                  "transform": Array [
-                    Object {
-                      "translateX": 0,
-                    },
-                  ],
-                }
-              }
+              onLayout={[Function]}
+              pointerEvents="box-none"
             >
               <View
                 collapsable={undefined}
-                onLayout={[Function]}
-                pointerEvents="box-none"
                 style={
                   Object {
-                    "backgroundColor": "#F7F7F7",
-                    "borderBottomColor": "#A7A7AA",
-                    "borderBottomWidth": 0.5,
-                    "height": 64,
-                    "paddingBottom": 0,
-                    "paddingLeft": 0,
-                    "paddingRight": 0,
-                    "paddingTop": 20,
+                    "transform": Array [
+                      Object {
+                        "translateX": 0,
+                      },
+                    ],
                   }
                 }
               >
                 <View
+                  collapsable={undefined}
+                  onLayout={[Function]}
+                  pointerEvents="box-none"
                   style={
                     Object {
-                      "bottom": 0,
-                      "left": 0,
-                      "position": "absolute",
-                      "right": 0,
-                      "top": 0,
-                    }
-                  }
-                />
-                <View
-                  style={
-                    Object {
-                      "flex": 1,
+                      "backgroundColor": "#F7F7F7",
+                      "borderBottomColor": "#A7A7AA",
+                      "borderBottomWidth": 0.5,
+                      "height": 64,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "paddingRight": 0,
+                      "paddingTop": 20,
                     }
                   }
                 >
@@ -199,50 +185,69 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
                     style={
                       Object {
                         "bottom": 0,
-                        "flexDirection": "row",
                         "left": 0,
                         "position": "absolute",
                         "right": 0,
                         "top": 0,
                       }
                     }
+                  />
+                  <View
+                    style={
+                      Object {
+                        "flex": 1,
+                      }
+                    }
                   >
                     <View
-                      collapsable={undefined}
-                      pointerEvents="box-none"
                       style={
                         Object {
-                          "alignItems": "center",
-                          "backgroundColor": "transparent",
                           "bottom": 0,
                           "flexDirection": "row",
-                          "justifyContent": "center",
                           "left": 0,
-                          "opacity": 1,
                           "position": "absolute",
                           "right": 0,
                           "top": 0,
                         }
                       }
                     >
-                      <Text
-                        accessibilityTraits="header"
-                        accessible={true}
-                        allowFontScaling={true}
+                      <View
                         collapsable={undefined}
-                        ellipsizeMode="tail"
-                        numberOfLines={1}
-                        onLayout={[Function]}
+                        pointerEvents="box-none"
                         style={
                           Object {
-                            "color": "rgba(0, 0, 0, .9)",
-                            "fontSize": 17,
-                            "fontWeight": "700",
-                            "marginHorizontal": 16,
-                            "textAlign": "center",
+                            "alignItems": "center",
+                            "backgroundColor": "transparent",
+                            "bottom": 0,
+                            "flexDirection": "row",
+                            "justifyContent": "center",
+                            "left": 0,
+                            "opacity": 1,
+                            "position": "absolute",
+                            "right": 0,
+                            "top": 0,
                           }
                         }
-                      />
+                      >
+                        <Text
+                          accessibilityTraits="header"
+                          accessible={true}
+                          allowFontScaling={true}
+                          collapsable={undefined}
+                          ellipsizeMode="tail"
+                          numberOfLines={1}
+                          onLayout={[Function]}
+                          style={
+                            Object {
+                              "color": "rgba(0, 0, 0, .9)",
+                              "fontSize": 17,
+                              "fontWeight": "700",
+                              "marginHorizontal": 16,
+                              "textAlign": "center",
+                            }
+                          }
+                        />
+                      </View>
                     </View>
                   </View>
                 </View>
@@ -253,49 +258,35 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
       </View>
     </View>
     <View
-      collapsable={undefined}
-      style={
-        Object {
-          "transform": Array [
-            Object {
-              "translateX": 0,
-            },
-          ],
-        }
-      }
+      onLayout={[Function]}
+      pointerEvents="box-none"
     >
       <View
         collapsable={undefined}
-        onLayout={[Function]}
-        pointerEvents="box-none"
         style={
           Object {
-            "backgroundColor": "#F7F7F7",
-            "borderBottomColor": "#A7A7AA",
-            "borderBottomWidth": 0.5,
-            "height": 64,
-            "paddingBottom": 0,
-            "paddingLeft": 0,
-            "paddingRight": 0,
-            "paddingTop": 20,
+            "transform": Array [
+              Object {
+                "translateX": 0,
+              },
+            ],
           }
         }
       >
         <View
+          collapsable={undefined}
+          onLayout={[Function]}
+          pointerEvents="box-none"
           style={
             Object {
-              "bottom": 0,
-              "left": 0,
-              "position": "absolute",
-              "right": 0,
-              "top": 0,
-            }
-          }
-        />
-        <View
-          style={
-            Object {
-              "flex": 1,
+              "backgroundColor": "#F7F7F7",
+              "borderBottomColor": "#A7A7AA",
+              "borderBottomWidth": 0.5,
+              "height": 64,
+              "paddingBottom": 0,
+              "paddingLeft": 0,
+              "paddingRight": 0,
+              "paddingTop": 20,
             }
           }
         >
@@ -303,50 +294,69 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
             style={
               Object {
                 "bottom": 0,
-                "flexDirection": "row",
                 "left": 0,
                 "position": "absolute",
                 "right": 0,
                 "top": 0,
               }
             }
+          />
+          <View
+            style={
+              Object {
+                "flex": 1,
+              }
+            }
           >
             <View
-              collapsable={undefined}
-              pointerEvents="box-none"
               style={
                 Object {
-                  "alignItems": "center",
-                  "backgroundColor": "transparent",
                   "bottom": 0,
                   "flexDirection": "row",
-                  "justifyContent": "center",
                   "left": 0,
-                  "opacity": 1,
                   "position": "absolute",
                   "right": 0,
                   "top": 0,
                 }
               }
             >
-              <Text
-                accessibilityTraits="header"
-                accessible={true}
-                allowFontScaling={true}
+              <View
                 collapsable={undefined}
-                ellipsizeMode="tail"
-                numberOfLines={1}
-                onLayout={[Function]}
+                pointerEvents="box-none"
                 style={
                   Object {
-                    "color": "rgba(0, 0, 0, .9)",
-                    "fontSize": 17,
-                    "fontWeight": "700",
-                    "marginHorizontal": 16,
-                    "textAlign": "center",
+                    "alignItems": "center",
+                    "backgroundColor": "transparent",
+                    "bottom": 0,
+                    "flexDirection": "row",
+                    "justifyContent": "center",
+                    "left": 0,
+                    "opacity": 1,
+                    "position": "absolute",
+                    "right": 0,
+                    "top": 0,
                   }
                 }
-              />
+              >
+                <Text
+                  accessibilityTraits="header"
+                  accessible={true}
+                  allowFontScaling={true}
+                  collapsable={undefined}
+                  ellipsizeMode="tail"
+                  numberOfLines={1}
+                  onLayout={[Function]}
+                  style={
+                    Object {
+                      "color": "rgba(0, 0, 0, .9)",
+                      "fontSize": 17,
+                      "fontWeight": "700",
+                      "marginHorizontal": 16,
+                      "textAlign": "center",
+                    }
+                  }
+                />
+              </View>
             </View>
           </View>
         </View>
