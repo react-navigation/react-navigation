@@ -27,24 +27,6 @@ class MaterialTabView extends React.PureComponent<Props> {
     }),
   };
 
-  _getLabel = ({ route, tintColor, focused }) => {
-    const { descriptors } = this.props;
-    const descriptor = descriptors[route.key];
-    const options = descriptor.options;
-
-    if (options.tabBarLabel) {
-      return typeof options.tabBarLabel === 'function'
-        ? options.tabBarLabel({ tintColor, focused })
-        : options.tabBarLabel;
-    }
-
-    if (typeof options.title === 'string') {
-      return options.title;
-    }
-
-    return route.routeName;
-  };
-
   _renderIcon = ({ focused, route, tintColor }) => {
     const { descriptors } = this.props;
     const descriptor = descriptors[route.key];

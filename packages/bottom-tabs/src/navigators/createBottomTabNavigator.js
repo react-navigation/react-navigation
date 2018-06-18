@@ -39,16 +39,6 @@ class TabNavigationView extends React.PureComponent<Props, State> {
     loaded: [this.props.navigation.state.index],
   };
 
-  _getLabel = ({ route, focused, tintColor }) => {
-    const label = this.props.getLabelText({ route });
-
-    if (typeof label === 'function') {
-      return label({ focused, tintColor });
-    }
-
-    return label;
-  };
-
   _renderTabBar = () => {
     const {
       tabBarComponent: TabBarComponent = BottomTabBar,
