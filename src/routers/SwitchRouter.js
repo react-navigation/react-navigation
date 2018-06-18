@@ -56,7 +56,7 @@ export default (routeConfigs, config = {}) => {
 
   function resetChildRoute(routeName) {
     const params =
-      routeName === initialRouteName ? initialRouteParams : undefined;
+      routeName === initialRouteName ? initialRouteParams : routeConfigs.params ? routeConfigs.params : undefined;
     const childRouter = childRouters[routeName];
     if (childRouter) {
       const childAction = NavigationActions.init();
