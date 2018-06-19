@@ -286,7 +286,7 @@ export default function createNavigationContainer(Component) {
         );
         this.dispatch(NavigationActions.init());
       } else {
-        throw new Error(e);
+        throw e;
       }
     }
 
