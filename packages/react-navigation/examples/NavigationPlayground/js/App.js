@@ -107,7 +107,7 @@ const ExampleInfo = {
     description: 'Nested stack navigation that pushes on top of tabs',
   },
   StacksOverTopTabs: {
-    name: 'Stacks over Top Tabs with non-standard header height',
+    name: 'Stacks with non-standard header height',
     description: 'Tab navigator in stack with custom header heights',
   },
   StacksWithKeys: {
