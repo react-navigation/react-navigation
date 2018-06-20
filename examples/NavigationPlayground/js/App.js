@@ -142,7 +142,12 @@ const ExampleRoutes = {
   //   screen: MultipleDrawer,
   // },
   StackWithCustomHeaderBackImage: StackWithCustomHeaderBackImage,
-  StackWithHeaderPreset: StackWithHeaderPreset,
+  ...Platform.select({
+    ios: {
+      StackWithHeaderPreset: StackWithHeaderPreset,
+    },
+    android: {},
+  }),
   StackWithTranslucentHeader: StackWithTranslucentHeader,
   TabsInDrawer: TabsInDrawer,
   CustomTabs: CustomTabs,
