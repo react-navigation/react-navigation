@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Expo from 'expo';
 import { FlatList } from 'react-native';
-import { createStackNavigator } from 'react-navigation';
+import { createSwitchNavigator, createStackNavigator } from 'react-navigation';
 import { ListSection, Divider } from 'react-native-paper';
 import SimpleDrawer from './src/SimpleDrawer';
 
@@ -35,8 +35,8 @@ class Home extends React.Component {
   }
 }
 
-const App = createStackNavigator({
-  Home,
+const App = createSwitchNavigator({
+  Home: createStackNavigator({ Home }),
   ...data.reduce((acc, it) => {
     acc[it.routeName] = {
       screen: it.component,

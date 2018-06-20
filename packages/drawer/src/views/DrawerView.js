@@ -22,13 +22,17 @@ export default class DrawerView extends React.PureComponent {
   }
 
   componentDidUpdate(prevProps) {
-    const { isDrawerOpen } = this.props.navigation.state;
+    const { isDrawerOpen, key } = this.props.navigation.state;
+    const prevKey = prevProps.navigation.state.key;
     const wasDrawerOpen = prevProps.navigation.state.isDrawerOpen;
+    const shouldOpen = this._shouldOpen(isDrawerOpen, wasDrawerOpen);
+    const shouldClose =
+      this._shouldClose(isDrawerOpen, wasDrawerOpen) || key !== prevKey;
 
-    if (this._shouldOpen(isDrawerOpen, wasDrawerOpen)) {
+    if (shouldOpen) {
       this._drawerState = 'opening';
       this._drawer.openDrawer();
-    } else if (this._shouldClose(isDrawerOpen, wasDrawerOpen)) {
+    } else if (shouldClose) {
       this._drawerState = 'closing';
       this._drawer.closeDrawer();
     }

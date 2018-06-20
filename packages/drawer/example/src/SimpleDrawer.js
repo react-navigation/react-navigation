@@ -16,6 +16,10 @@ const MyNavScreen = ({ navigation, banner }) => (
         title="Open other screen"
       />
       <Button onPress={() => navigation.goBack(null)} title="Go back" />
+      <Button
+        onPress={() => navigation.navigate('Home')}
+        title="Go back to list"
+      />
     </SafeAreaView>
     <StatusBar barStyle="default" />
   </ScrollView>

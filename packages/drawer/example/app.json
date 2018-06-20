@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "React Navigation Material Bottom Tabs Example",
+    "name": "React Navigation Drawer Example",
     "description": "Demonstrates the various capabilities of react-navigation-drawer",
     "slug": "react-navigation-drawer-demo",
     "sdkVersion": "27.0.0",
