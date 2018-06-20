@@ -401,7 +401,10 @@ export default (routeConfigs, stackConfig = {}) => {
                 routeName: childRouterName,
                 key: action.key || generateKey(),
               };
-              return StateUtils.push(state, route);
+              return {
+                ...StateUtils.push(state, route),
+                isTransitioning: action.immediate !== true,
+              };
             }
           }
         }
