@@ -2,7 +2,7 @@ import { SwitchRouter } from 'react-navigation';
 import DrawerActions from './DrawerActions';
 
 function withDefaultValue(obj, key, defaultValue) {
-  if (obj.hasOwnProperty(key)) {
+  if (obj.hasOwnProperty(key) && typeof obj[key] !== 'undefined') {
     return obj;
   }
 
