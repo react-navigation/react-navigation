@@ -17,7 +17,7 @@ import { Button } from './commonComponents/ButtonWithMargin';
 
 const HEADER_HEIGHT = 64;
 
-const MyNavScreen = ({ navigation, banner }) => (
+const MyNavScreen = ({ navigation, banner, statusBarStyle }) => (
   <ScrollView>
     <SafeAreaView forceInset={{ horizontal: 'always' }}>
       <SampleText>{banner}</SampleText>
@@ -35,12 +35,16 @@ const MyNavScreen = ({ navigation, banner }) => (
       />
       <Button onPress={() => navigation.goBack(null)} title="Go back" />
     </SafeAreaView>
-    <StatusBar barStyle="default" />
+    <StatusBar barStyle={statusBarStyle || 'default'} />
   </ScrollView>
 );
 
 const MyHomeScreen = ({ navigation }) => (
-  <MyNavScreen banner="Home Screen" navigation={navigation} />
+  <MyNavScreen
+    banner="Home Screen"
+    navigation={navigation}
+    statusBarStyle="light-content"
+  />
 );
 
 const MyProfileScreen = ({ navigation }) => (
@@ -55,7 +59,11 @@ const MyNotificationsSettingsScreen = ({ navigation }) => (
 );
 
 const MySettingsScreen = ({ navigation }) => (
-  <MyNavScreen banner="Settings Screen" navigation={navigation} />
+  <MyNavScreen
+    banner="Settings Screen"
+    navigation={navigation}
+    statusBarStyle="light-content"
+  />
 );
 
 const styles = StyleSheet.create({
@@ -69,8 +77,13 @@ const styles = StyleSheet.create({
 
 function MaterialTopTabBarWithStatusBar(props) {
   return (
-    <View style={{ paddingTop: Constants.statusBarHeight }}>
-      <MaterialTopTabBar {...props} />
+    <View
+      style={{
+        paddingTop: Constants.statusBarHeight,
+        backgroundColor: '#2196f3',
+      }}
+    >
+      <MaterialTopTabBar {...props} jumpToIndex={() => {}} />
     </View>
   );
 }
@@ -104,7 +117,6 @@ const StackNavigator = createStackNavigator(
       screen: TabNavigator,
       navigationOptions: {
         header: null,
-        headerMode: 'none',
       },
     },
     NotifSettings: {
