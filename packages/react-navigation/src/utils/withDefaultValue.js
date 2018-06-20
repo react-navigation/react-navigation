@@ -1,5 +1,5 @@
 export default (obj, key, defaultValue) => {
-  if (obj.hasOwnProperty(key)) {
+  if (obj.hasOwnProperty(key) && typeof obj[key] !== 'undefined') {
     return obj;
   }
 
