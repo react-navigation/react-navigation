@@ -692,6 +692,7 @@ describe('StackRouter', () => {
       state
     );
 
+    expect(state2.isTransitioning).toEqual(true);
     expect(state2.index).toEqual(1);
     expect(state2.routes[1].index).toEqual(1);
     expect(state2.routes[1].routes[1].index).toEqual(1);
