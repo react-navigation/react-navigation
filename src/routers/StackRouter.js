@@ -1,5 +1,3 @@
-import pathToRegexp from 'path-to-regexp';
-
 import NavigationActions from '../NavigationActions';
 import StackActions from './StackActions';
 import createConfigGetter from './createConfigGetter';
@@ -8,14 +6,7 @@ import StateUtils from '../StateUtils';
 import validateRouteConfigMap from './validateRouteConfigMap';
 import invariant from '../utils/invariant';
 import { generateKey } from './KeyGenerator';
-
-function isEmpty(obj) {
-  if (!obj) return true;
-  for (let key in obj) {
-    return false;
-  }
-  return true;
-}
+import { createPathParser } from './pathUtils';
 
 function behavesLikePushAction(action) {
   return (
@@ -56,8 +47,6 @@ export default (routeConfigs, stackConfig = {}) => {
   const initialRouteName = stackConfig.initialRouteName || routeNames[0];
 
   const initialChildRouter = childRouters[initialRouteName];
-  const pathsByRouteNames = { ...stackConfig.paths } || {};
-  let paths = [];
 
   function getInitialState(action) {
     let route = {};
@@ -115,37 +104,16 @@ export default (routeConfigs, stackConfig = {}) => {
     };
   }
 
-  // Build paths for each route
-  routeNames.forEach(routeName => {
-    let pathPattern =
-      pathsByRouteNames[routeName] || routeConfigs[routeName].path;
-    let matchExact = !!pathPattern && !childRouters[routeName];
-    if (pathPattern === undefined) {
-      pathPattern = routeName;
-    }
-    const keys = [];
-    let re, toPath, priority;
-    if (typeof pathPattern === 'string') {
-      // pathPattern may be either a string or a regexp object according to path-to-regexp docs.
-      re = pathToRegexp(pathPattern, keys);
-      toPath = pathToRegexp.compile(pathPattern);
-      priority = 0;
-    } else {
-      // for wildcard match
-      re = pathToRegexp('*', keys);
-      toPath = () => '';
-      matchExact = true;
-      priority = -1;
-    }
-    if (!matchExact) {
-      const wildcardRe = pathToRegexp(`${pathPattern}/*`, keys);
-      re = new RegExp(`(?:${re.source})|(?:${wildcardRe.source})`);
-    }
-    pathsByRouteNames[routeName] = { re, keys, toPath, priority };
-  });
-
-  paths = Object.entries(pathsByRouteNames);
-  paths.sort((a, b) => b[1].priority - a[1].priority);
+  const {
+    getPathAndParamsForRoute,
+    getActionForPathAndParams,
+  } = createPathParser(
+    childRouters,
+    routeConfigs,
+    stackConfig.paths,
+    initialRouteName,
+    initialRouteParams
+  );
 
   return {
     childRouters,
@@ -551,121 +519,11 @@ export default (routeConfigs, stackConfig = {}) => {
 
     getPathAndParamsForState(state) {
       const route = state.routes[state.index];
-      const routeName = route.routeName;
-      const screen = getScreenForRouteName(routeConfigs, routeName);
-      const subPath = pathsByRouteNames[routeName].toPath(route.params);
-      let path = subPath;
-      let params = route.params;
-      if (screen && screen.router) {
-        const stateRoute = route;
-        // If it has a router it's a navigator.
-        // If it doesn't have router it's an ordinary React component.
-        const child = screen.router.getPathAndParamsForState(stateRoute);
-        path = subPath ? `${subPath}/${child.path}` : child.path;
-        params = child.params ? { ...params, ...child.params } : params;
-      }
-      return {
-        path,
-        params,
-      };
+      return getPathAndParamsForRoute(route);
     },
 
-    getActionForPathAndParams(pathToResolve, inputParams) {
-      // If the path is empty (null or empty string)
-      // just return the initial route action
-      if (!pathToResolve) {
-        return NavigationActions.navigate({
-          routeName: initialRouteName,
-          params: inputParams,
-        });
-      }
-
-      const [pathNameToResolve, queryString] = pathToResolve.split('?');
-
-      // Attempt to match `pathNameToResolve` with a route in this router's
-      // routeConfigs
-      let matchedRouteName;
-      let pathMatch;
-      let pathMatchKeys;
-
-      // eslint-disable-next-line no-restricted-syntax
-      for (const [routeName, path] of paths) {
-        const { re, keys } = path;
-        pathMatch = re.exec(pathNameToResolve);
-        if (pathMatch && pathMatch.length) {
-          pathMatchKeys = keys;
-          matchedRouteName = routeName;
-          break;
-        }
-      }
-
-      // We didn't match -- return null
-      if (!matchedRouteName) {
-        // If the path is empty (null or empty string)
-        // just return the initial route action
-        if (!pathToResolve) {
-          return NavigationActions.navigate({
-            routeName: initialRouteName,
-          });
-        }
-        return null;
-      }
-
-      // Determine nested actions:
-      // If our matched route for this router is a child router,
-      // get the action for the path AFTER the matched path for this
-      // router
-      let nestedAction;
-      let nestedQueryString = queryString ? '?' + queryString : '';
-      if (childRouters[matchedRouteName]) {
-        nestedAction = childRouters[matchedRouteName].getActionForPathAndParams(
-          pathMatch.slice(pathMatchKeys.length).join('/') + nestedQueryString
-        );
-        if (!nestedAction) {
-          return null;
-        }
-      }
-
-      // reduce the items of the query string. any query params may
-      // be overridden by path params
-      const queryParams = !isEmpty(inputParams)
-        ? inputParams
-        : (queryString || '').split('&').reduce((result, item) => {
-            if (item !== '') {
-              const nextResult = result || {};
-              const [key, value] = item.split('=');
-              nextResult[key] = value;
-              return nextResult;
-            }
-            return result;
-          }, null);
-
-      // reduce the matched pieces of the path into the params
-      // of the route. `params` is null if there are no params.
-      const params = pathMatch.slice(1).reduce((result, matchResult, i) => {
-        const key = pathMatchKeys[i];
-        if (key.asterisk || !key) {
-          return result;
-        }
-        const nextResult = result || inputParams || {};
-        const paramName = key.name;
-
-        let decodedMatchResult;
-        try {
-          decodedMatchResult = decodeURIComponent(matchResult);
-        } catch (e) {
-          // ignore `URIError: malformed URI`
-        }
-
-        nextResult[paramName] = decodedMatchResult || matchResult;
-        return nextResult;
-      }, queryParams);
-
-      return NavigationActions.navigate({
-        routeName: matchedRouteName,
-        ...(params ? { params } : {}),
-        ...(nestedAction ? { action: nestedAction } : {}),
-      });
+    getActionForPathAndParams(path, params) {
+      return getActionForPathAndParams(path, params);
     },
 
     getScreenOptions: createConfigGetter(
