@@ -107,7 +107,7 @@ const ExampleInfo = {
     description: 'Nested stack navigation that pushes on top of tabs',
   },
   StacksOverTopTabs: {
-    name: 'Stacks over Top Tabs with non-standard header height',
+    name: 'Stacks with non-standard header height',
     description: 'Tab navigator in stack with custom header heights',
   },
   StacksWithKeys: {
@@ -142,7 +142,12 @@ const ExampleRoutes = {
   //   screen: MultipleDrawer,
   // },
   StackWithCustomHeaderBackImage: StackWithCustomHeaderBackImage,
-  StackWithHeaderPreset: StackWithHeaderPreset,
+  ...Platform.select({
+    ios: {
+      StackWithHeaderPreset: StackWithHeaderPreset,
+    },
+    android: {},
+  }),
   StackWithTranslucentHeader: StackWithTranslucentHeader,
   TabsInDrawer: TabsInDrawer,
   CustomTabs: CustomTabs,
