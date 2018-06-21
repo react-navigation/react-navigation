@@ -21,10 +21,7 @@ module.exports = {
   get StackActions() {
     return require('./routers/StackActions').default;
   },
-  get DrawerActions() {
-    return require('./routers/DrawerActions').default;
-  },
-
+  
   // Routers
   get StackRouter() {
     return require('./routers/StackRouter').default;
