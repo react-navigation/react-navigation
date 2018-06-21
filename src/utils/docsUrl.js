@@ -1,3 +1,3 @@
 export default function docsUrl(path) {
-  return `https://v2.reactnavigation.org/docs/${path}`;
+  return `https://reactnavigation.org/docs/${path}`;
 }

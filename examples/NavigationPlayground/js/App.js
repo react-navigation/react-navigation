@@ -26,6 +26,7 @@ import TabsInDrawer from './TabsInDrawer';
 import ModalStack from './ModalStack';
 import StacksInTabs from './StacksInTabs';
 import StacksOverTabs from './StacksOverTabs';
+import StacksOverTopTabs from './StacksOverTopTabs';
 import StacksWithKeys from './StacksWithKeys';
 import InactiveStack from './InactiveStack';
 import StackWithCustomHeaderBackImage from './StackWithCustomHeaderBackImage';
@@ -105,6 +106,10 @@ const ExampleInfo = {
     name: 'Stacks over Tabs',
     description: 'Nested stack navigation that pushes on top of tabs',
   },
+  StacksOverTopTabs: {
+    name: 'Stacks with non-standard header height',
+    description: 'Tab navigator in stack with custom header heights',
+  },
   StacksWithKeys: {
     name: 'Link in Stack with keys',
     description: 'Use keys to link between screens',
@@ -137,7 +142,12 @@ const ExampleRoutes = {
   //   screen: MultipleDrawer,
   // },
   StackWithCustomHeaderBackImage: StackWithCustomHeaderBackImage,
-  StackWithHeaderPreset: StackWithHeaderPreset,
+  ...Platform.select({
+    ios: {
+      StackWithHeaderPreset: StackWithHeaderPreset,
+    },
+    android: {},
+  }),
   StackWithTranslucentHeader: StackWithTranslucentHeader,
   TabsInDrawer: TabsInDrawer,
   CustomTabs: CustomTabs,
@@ -146,6 +156,7 @@ const ExampleRoutes = {
   StacksWithKeys: StacksWithKeys,
   StacksInTabs: StacksInTabs,
   StacksOverTabs: StacksOverTabs,
+  StacksOverTopTabs: StacksOverTopTabs,
   LinkStack: {
     screen: SimpleStack,
     path: 'people/Jordan',

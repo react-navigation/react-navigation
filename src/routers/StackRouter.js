@@ -149,6 +149,8 @@ export default (routeConfigs, stackConfig = {}) => {
   paths.sort((a, b) => b[1].priority - a[1].priority);
 
   return {
+    childRouters,
+
     getComponentForState(state) {
       const activeChildRoute = state.routes[state.index];
       const { routeName } = activeChildRoute;
@@ -399,7 +401,10 @@ export default (routeConfigs, stackConfig = {}) => {
                 routeName: childRouterName,
                 key: action.key || generateKey(),
               };
-              return StateUtils.push(state, route);
+              return {
+                ...StateUtils.push(state, route),
+                isTransitioning: action.immediate !== true,
+              };
             }
           }
         }
