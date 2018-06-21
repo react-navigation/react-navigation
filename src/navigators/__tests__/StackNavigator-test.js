@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, View } from 'react-native';
 import renderer from 'react-test-renderer';
 
-import StackNavigator from '../createStackNavigator';
+import StackNavigator from '../createContainedStackNavigator';
 import withNavigation from '../../views/withNavigation';
 import { _TESTING_ONLY_reset_container_count } from '../../createNavigationContainer';
 

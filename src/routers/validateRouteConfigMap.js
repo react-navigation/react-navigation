@@ -21,20 +21,19 @@ function validateRouteConfigMap(routeConfigs) {
         typeof screenComponent !== 'string' &&
         !routeConfig.getScreen)
     ) {
-      throw new Error(`The component for route '${routeName}' must be a
-React component. For example:
+      throw new Error(`The component for route '${routeName}' must be a React component. For example:
 
 import MyScreen from './MyScreen';
 ...
 ${routeName}: MyScreen,
+}
 
 You can also use a navigator:
 
 import MyNavigator from './MyNavigator';
 ...
 ${routeName}: MyNavigator,
-
-`);
+}`);
     }
 
     if (routeConfig.screen && routeConfig.getScreen) {
