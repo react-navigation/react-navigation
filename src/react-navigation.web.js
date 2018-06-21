@@ -14,7 +14,7 @@ module.exports = {
     return require('./navigators/createNavigator').default;
   },
   get createSwitchNavigator() {
-    return require("./navigators/createSwitchNavigator").default
+    return require("./navigators/createSwitchNavigator").default;
   },
 
   // Actions
