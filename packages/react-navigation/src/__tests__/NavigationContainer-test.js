@@ -5,7 +5,9 @@ import renderer from 'react-test-renderer';
 
 import NavigationActions from '../NavigationActions';
 import createStackNavigator from '../navigators/createStackNavigator';
-import { _TESTING_ONLY_reset_container_count } from '../createNavigationContainer';
+import createNavigationContainer, {
+  _TESTING_ONLY_reset_container_count,
+} from '../createNavigationContainer';
 
 describe('NavigationContainer', () => {
   jest.useFakeTimers();
@@ -19,7 +21,7 @@ describe('NavigationContainer', () => {
   const CarScreen = () => <div />;
   const DogScreen = () => <div />;
   const ElkScreen = () => <div />;
-  const NavigationContainer = createStackNavigator(
+  const Stack = createStackNavigator(
     {
       foo: {
         screen: FooScreen,
@@ -44,6 +46,7 @@ describe('NavigationContainer', () => {
       initialRouteName: 'foo',
     }
   );
+  const NavigationContainer = createNavigationContainer(Stack);
 
   describe('state.nav', () => {
     it("should be preloaded with the router's initial state", () => {
@@ -225,7 +228,7 @@ describe('NavigationContainer', () => {
 
       let spy = spyConsole();
 
-      it('warns when you render more than one navigator explicitly', () => {
+      it('warns when you render more than one container explicitly', () => {
         class BlankScreen extends React.Component {
           render() {
             return <View />;
@@ -242,13 +245,17 @@ describe('NavigationContainer', () => {
           }
         }
 
-        const ChildNavigator = createStackNavigator({
-          Child: BlankScreen,
-        });
+        const ChildNavigator = createNavigationContainer(
+          createStackNavigator({
+            Child: BlankScreen,
+          })
+        );
 
-        const RootStack = createStackNavigator({
-          Root: RootScreen,
-        });
+        const RootStack = createNavigationContainer(
+          createStackNavigator({
+            Root: RootScreen,
+          })
+        );
 
         renderer.create(<RootStack />).toJSON();
         expect(spy).toMatchSnapshot();

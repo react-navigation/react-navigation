@@ -1,5 +1,3 @@
-import React from 'react';
-import createNavigationContainer from '../createNavigationContainer';
 import createKeyboardAwareNavigator from './createKeyboardAwareNavigator';
 import createNavigator from './createNavigator';
 import StackView from '../views/StackView/StackView';
@@ -33,8 +31,7 @@ function createStackNavigator(routeConfigMap, stackConfig = {}) {
     Navigator = createKeyboardAwareNavigator(Navigator);
   }
 
-  // HOC to provide the navigation prop for the top-level navigator (when the prop is missing)
-  return createNavigationContainer(Navigator);
+  return Navigator;
 }
 
 export default createStackNavigator;

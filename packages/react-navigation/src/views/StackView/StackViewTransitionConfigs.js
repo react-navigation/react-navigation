@@ -1,9 +1,9 @@
 import { Animated, Easing, Platform } from 'react-native';
 import StyleInterpolator from './StackViewStyleInterpolator';
-import * as ReactNativeFeatures from '../../utils/ReactNativeFeatures';
+import { supportsImprovedSpringAnimation } from '../../utils/ReactNativeFeatures';
 
 let IOSTransitionSpec;
-if (ReactNativeFeatures.supportsImprovedSpringAnimation()) {
+if (supportsImprovedSpringAnimation()) {
   // These are the exact values from UINavigationController's animation configuration
   IOSTransitionSpec = {
     timing: Animated.spring,

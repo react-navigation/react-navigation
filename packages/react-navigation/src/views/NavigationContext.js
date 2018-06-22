@@ -1,5 +1,4 @@
 import React from 'react';
-import propTypes from 'prop-types';
 import createReactContext from 'create-react-context';
 
 const NavigationContext = createReactContext();
