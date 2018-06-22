@@ -17,22 +17,22 @@ module.exports = {
     return require('./navigators/createNavigator').default;
   },
   get createStackNavigator() {
-    return require('./navigators/createStackNavigator').default;
+    return require('./navigators/createContainedStackNavigator').default;
   },
   get StackNavigator() {
     console.warn(
       'The StackNavigator function name is deprecated, please use createStackNavigator instead'
     );
-    return require('./navigators/createStackNavigator').default;
+    return require('./navigators/createContainedStackNavigator').default;
   },
   get createSwitchNavigator() {
-    return require('./navigators/createSwitchNavigator').default;
+    return require('./navigators/createContainedSwitchNavigator').default;
   },
   get SwitchNavigator() {
     console.warn(
       'The SwitchNavigator function name is deprecated, please use createSwitchNavigator instead'
     );
-    return require('./navigators/createSwitchNavigator').default;
+    return require('./navigators/createContainedSwitchNavigator').default;
   },
   get createDrawerNavigator() {
     return require('react-navigation-drawer').createDrawerNavigator;
