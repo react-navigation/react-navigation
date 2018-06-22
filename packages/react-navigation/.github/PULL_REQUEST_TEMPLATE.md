@@ -18,4 +18,4 @@ Look around. Match the style of the rest of the codebase. Run `yarn format` befo
 
 ## Changelog
 
-Add an entry under the "Unreleased" heading in [CHANEGLOG.md](https://github.com/react-navigation/react-navigation/blob/master/CHANGELOG.md) which explains your change.
+Add an entry under the "Unreleased" heading in [CHANGELOG.md](https://github.com/react-navigation/react-navigation/blob/master/CHANGELOG.md#unreleased) which explains your change.
