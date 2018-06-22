@@ -42,6 +42,9 @@ export default (routeConfigs, config = {}) => {
         return {
           ...switchRouter.getStateForAction(action, undefined),
           isDrawerOpen: false,
+          openId: 0,
+          closeId: 0,
+          toggleId: 0,
         };
       }
 
@@ -50,24 +53,40 @@ export default (routeConfigs, config = {}) => {
       if (isRouterTargeted) {
         // Only handle actions that are meant for this drawer, as specified by action.key.
 
-        if (action.type === DrawerActions.CLOSE_DRAWER && state.isDrawerOpen) {
+        if (action.type === DrawerActions.DRAWER_CLOSED) {
+          console.log('closed');
           return {
             ...state,
             isDrawerOpen: false,
           };
         }
 
-        if (action.type === DrawerActions.OPEN_DRAWER && !state.isDrawerOpen) {
+        if (action.type === DrawerActions.DRAWER_OPENED) {
+          console.log('opened');
           return {
             ...state,
             isDrawerOpen: true,
           };
         }
 
+        if (action.type === DrawerActions.CLOSE_DRAWER) {
+          return {
+            ...state,
+            closeId: state.closeId + 1,
+          };
+        }
+
+        if (action.type === DrawerActions.OPEN_DRAWER) {
+          return {
+            ...state,
+            openId: state.openId + 1,
+          };
+        }
+
         if (action.type === DrawerActions.TOGGLE_DRAWER) {
           return {
             ...state,
-            isDrawerOpen: !state.isDrawerOpen,
+            toggleId: state.toggleId + 1,
           };
         }
       }
@@ -86,7 +105,7 @@ export default (routeConfigs, config = {}) => {
           // If any navigation has happened, make sure to close the drawer
           return {
             ...switchedState,
-            isDrawerOpen: false,
+            closeId: state.closeId + 1,
           };
         }
 

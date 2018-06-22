@@ -1,16 +1,29 @@
 import React from 'react';
-import { Button, ScrollView, StatusBar, Text } from 'react-native';
+import { Button, ScrollView, StatusBar, Text, View } from 'react-native';
 import { createStackNavigator, SafeAreaView } from 'react-navigation';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { createDrawerNavigator } from 'react-navigation-drawer';
+import { KeepAwake } from 'expo';
 
 const SampleText = ({ children }) => <Text>{children}</Text>;
 
 const MyNavScreen = ({ navigation, banner }) => (
   <ScrollView>
     <SafeAreaView forceInset={{ top: 'always' }}>
-      <SampleText>{banner}</SampleText>
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <SampleText>{banner}</SampleText>
+      </View>
       <Button onPress={() => navigation.openDrawer()} title="Open drawer" />
+      <Button onPress={() => navigation.toggleDrawer()} title="Toggle drawer" />
+      <Button
+        onPress={() => {
+          navigation.openDrawer();
+          setTimeout(() => {
+            navigation.closeDrawer();
+          }, 500);
+        }}
+        title="Open then close drawer shortly after"
+      />
       <Button
         onPress={() => navigation.navigate('Email')}
         title="Open other screen"
@@ -22,6 +35,7 @@ const MyNavScreen = ({ navigation, banner }) => (
       />
     </SafeAreaView>
     <StatusBar barStyle="default" />
+    <KeepAwake />
   </ScrollView>
 );
 
@@ -84,6 +98,7 @@ const DrawerExample = createDrawerNavigator(
   },
   {
     initialRouteName: 'Drafts',
+    drawerWidth: 210,
     contentOptions: {
       activeTintColor: '#e91e63',
     },
