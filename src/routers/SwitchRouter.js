@@ -74,39 +74,39 @@ export default (routeConfigs, config = {}) => {
     };
   }
 
+  function getNextState(prevState, possibleNextState) {
+    if (!prevState) {
+      return possibleNextState;
+    }
+
+    let nextState;
+    if (prevState.index !== possibleNextState.index && resetOnBlur) {
+      const prevRouteName = prevState.routes[prevState.index].routeName;
+      const nextRoutes = [...possibleNextState.routes];
+      nextRoutes[prevState.index] = resetChildRoute(prevRouteName);
+
+      return {
+        ...possibleNextState,
+        routes: nextRoutes,
+      };
+    } else {
+      nextState = possibleNextState;
+    }
+
+    return nextState;
+  }
+
+  function getInitialState() {
+    const routes = order.map(resetChildRoute);
+    return {
+      routes,
+      index: initialRouteIndex,
+      isTransitioning: false,
+    };
+  }
+
   return {
     childRouters,
-
-    getInitialState() {
-      const routes = order.map(resetChildRoute);
-      return {
-        routes,
-        index: initialRouteIndex,
-        isTransitioning: false,
-      };
-    },
-
-    getNextState(prevState, possibleNextState) {
-      if (!prevState) {
-        return possibleNextState;
-      }
-
-      let nextState;
-      if (prevState.index !== possibleNextState.index && resetOnBlur) {
-        const prevRouteName = prevState.routes[prevState.index].routeName;
-        const nextRoutes = [...possibleNextState.routes];
-        nextRoutes[prevState.index] = resetChildRoute(prevRouteName);
-
-        return {
-          ...possibleNextState,
-          routes: nextRoutes,
-        };
-      } else {
-        nextState = possibleNextState;
-      }
-
-      return nextState;
-    },
 
     getActionCreators(route, stateKey) {
       return {
@@ -117,7 +117,7 @@ export default (routeConfigs, config = {}) => {
 
     getStateForAction(action, inputState) {
       let prevState = inputState ? { ...inputState } : inputState;
-      let state = inputState || this.getInitialState();
+      let state = inputState || getInitialState();
       let activeChildIndex = state.index;
 
       if (action.type === NavigationActions.INIT) {
@@ -154,7 +154,7 @@ export default (routeConfigs, config = {}) => {
         if (activeChildState && activeChildState !== activeChildLastState) {
           const routes = [...state.routes];
           routes[state.index] = activeChildState;
-          return this.getNextState(prevState, {
+          return getNextState(prevState, {
             ...state,
             routes,
           });
@@ -204,7 +204,7 @@ export default (routeConfigs, config = {}) => {
           if (newChildState && newChildState !== childState) {
             const routes = [...state.routes];
             routes[activeChildIndex] = newChildState;
-            return this.getNextState(prevState, {
+            return getNextState(prevState, {
               ...state,
               routes,
               index: activeChildIndex,
@@ -232,7 +232,7 @@ export default (routeConfigs, config = {}) => {
             ...lastRoute,
             params,
           };
-          return this.getNextState(prevState, {
+          return getNextState(prevState, {
             ...state,
             routes,
           });
@@ -240,7 +240,7 @@ export default (routeConfigs, config = {}) => {
       }
 
       if (activeChildIndex !== state.index) {
-        return this.getNextState(prevState, {
+        return getNextState(prevState, {
           ...state,
           index: activeChildIndex,
         });
@@ -284,7 +284,7 @@ export default (routeConfigs, config = {}) => {
       }
 
       if (index !== state.index || routes !== state.routes) {
-        return this.getNextState(prevState, {
+        return getNextState(prevState, {
           ...state,
           index,
           routes,
