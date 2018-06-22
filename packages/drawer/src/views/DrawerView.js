@@ -22,19 +22,28 @@ export default class DrawerView extends React.PureComponent {
   }
 
   componentDidUpdate(prevProps) {
-    const { isDrawerOpen, key } = this.props.navigation.state;
-    const prevKey = prevProps.navigation.state.key;
-    const wasDrawerOpen = prevProps.navigation.state.isDrawerOpen;
-    const shouldOpen = this._shouldOpen(isDrawerOpen, wasDrawerOpen);
-    const shouldClose =
-      this._shouldClose(isDrawerOpen, wasDrawerOpen) || key !== prevKey;
+    const {
+      openId,
+      closeId,
+      toggleId,
+      drawerIsOpen,
+    } = this.props.navigation.state;
+    const {
+      openId: prevOpenId,
+      closeId: prevCloseId,
+      toggleId: prevToggleId,
+    } = prevProps.navigation.state;
 
-    if (shouldOpen) {
-      this._drawerState = 'opening';
+    if (openId !== prevOpenId) {
       this._drawer.openDrawer();
-    } else if (shouldClose) {
-      this._drawerState = 'closing';
+    } else if (closeId !== prevCloseId) {
       this._drawer.closeDrawer();
+    } else if (toggleId !== prevToggleId) {
+      if (drawerIsOpen) {
+        this._drawer.closeDrawer();
+      } else {
+        this._drawer.openDrawer();
+      }
     }
   }
 
@@ -42,40 +51,18 @@ export default class DrawerView extends React.PureComponent {
     Dimensions.removeEventListener('change', this._updateWidth);
   }
 
-  _drawerState = 'closed';
-
-  _shouldOpen = (isDrawerOpen, wasDrawerOpen) => {
-    return (
-      isDrawerOpen &&
-      !wasDrawerOpen &&
-      (this._drawerState === 'closed' || this._drawerState === 'closing')
-    );
-  };
-
-  _shouldClose = (isDrawerOpen, wasDrawerOpen) => {
-    return (
-      wasDrawerOpen &&
-      !isDrawerOpen &&
-      (this._drawerState === 'open' || this._drawerState === 'opening')
-    );
-  };
-
   _handleDrawerOpen = () => {
-    const { navigation } = this.props;
-    const { isDrawerOpen } = navigation.state;
-    if (!isDrawerOpen && this._drawerState === 'closed') {
-      navigation.dispatch({ type: DrawerActions.OPEN_DRAWER });
-    }
-    this._drawerState = 'open';
+    this.props.navigation.dispatch({
+      type: DrawerActions.DRAWER_OPENED,
+      key: this.props.navigation.state.key,
+    });
   };
 
   _handleDrawerClose = () => {
-    const { navigation } = this.props;
-    const { isDrawerOpen } = navigation.state;
-    if (isDrawerOpen && this._drawerState === 'open') {
-      navigation.dispatch({ type: DrawerActions.CLOSE_DRAWER });
-    }
-    this._drawerState = 'closed';
+    this.props.navigation.dispatch({
+      type: DrawerActions.DRAWER_CLOSED,
+      key: this.props.navigation.state.key,
+    });
   };
 
   _updateWidth = () => {
