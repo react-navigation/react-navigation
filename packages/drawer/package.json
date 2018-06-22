@@ -1,6 +1,6 @@
 {
   "name": "react-navigation-drawer",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "description": "Drawer navigator component for React Navigation",
   "main": "dist/index.js",
   "files": [
@@ -9,6 +9,7 @@
   "scripts": {
     "test": "jest",
     "lint": "eslint .",
+    "format": "eslint . --fix",
     "precommit": "yarn lint && yarn test",
     "build": "babel --no-babelrc --plugins=syntax-jsx,syntax-class-properties,syntax-object-rest-spread,transform-flow-strip-types src --out-dir dist --ignore '**/__tests__/**'",
     "prepare": "yarn build"
