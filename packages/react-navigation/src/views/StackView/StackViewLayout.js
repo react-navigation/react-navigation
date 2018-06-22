@@ -119,7 +119,7 @@ class StackViewLayout extends React.Component {
     const {
       mode,
       transitionProps,
-      prevTransitionProps,
+      lastTransitionProps,
       ...passProps
     } = this.props;
 
@@ -401,6 +401,7 @@ class StackViewLayout extends React.Component {
   render() {
     let floatingHeader = null;
     const headerMode = this._getHeaderMode();
+
     if (headerMode === 'float') {
       const { scene } = this.props.transitionProps;
       floatingHeader = (
@@ -498,13 +499,14 @@ class StackViewLayout extends React.Component {
     return TransitionConfigs.getTransitionConfig(
       this.props.transitionConfig,
       this.props.transitionProps,
-      this.props.prevTransitionProps,
+      this.props.lastTransitionProps,
       isModal
     );
   };
 
   _renderCard = scene => {
     const { screenInterpolator } = this._getTransitionConfig();
+
     const style =
       screenInterpolator &&
       screenInterpolator({ ...this.props.transitionProps, scene });
