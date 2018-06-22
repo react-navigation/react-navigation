@@ -54,7 +54,6 @@ export default (routeConfigs, config = {}) => {
         // Only handle actions that are meant for this drawer, as specified by action.key.
 
         if (action.type === DrawerActions.DRAWER_CLOSED) {
-          console.log('closed');
           return {
             ...state,
             isDrawerOpen: false,
@@ -62,7 +61,6 @@ export default (routeConfigs, config = {}) => {
         }
 
         if (action.type === DrawerActions.DRAWER_OPENED) {
-          console.log('opened');
           return {
             ...state,
             isDrawerOpen: true,
