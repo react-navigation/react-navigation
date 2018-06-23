@@ -1,6 +1,6 @@
 {
   "name": "react-navigation-drawer",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Drawer navigator component for React Navigation",
   "main": "dist/index.js",
   "files": [

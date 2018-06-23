@@ -26,7 +26,7 @@ export default class DrawerView extends React.PureComponent {
       openId,
       closeId,
       toggleId,
-      drawerIsOpen,
+      isDrawerOpen,
     } = this.props.navigation.state;
     const {
       openId: prevOpenId,
@@ -39,7 +39,7 @@ export default class DrawerView extends React.PureComponent {
     } else if (closeId !== prevCloseId) {
       this._drawer.closeDrawer();
     } else if (toggleId !== prevToggleId) {
-      if (drawerIsOpen) {
+      if (isDrawerOpen) {
         this._drawer.closeDrawer();
       } else {
         this._drawer.openDrawer();
