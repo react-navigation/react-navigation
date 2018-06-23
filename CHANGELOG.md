@@ -24,6 +24,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Improved examples
 
 [Unreleased]: https://github.com/react-navigation/react-navigation/compare/2.5.1...HEAD
-[2.5.0]: https://github.com/react-navigation/react-navigation/compare/2.5.0...2.5.1
+[2.5.1]: https://github.com/react-navigation/react-navigation/compare/2.5.0...2.5.1
 [2.5.0]: https://github.com/react-navigation/react-navigation/compare/2.4.1...2.5.0
 [2.4.1]: https://github.com/react-navigation/react-navigation/compare/2.4.0...2.4.1
