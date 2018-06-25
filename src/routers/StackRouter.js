@@ -8,7 +8,6 @@ import StateUtils from '../StateUtils';
 import validateRouteConfigMap from './validateRouteConfigMap';
 import invariant from '../utils/invariant';
 import { generateKey } from './KeyGenerator';
-import getNavigationActionCreators from './getNavigationActionCreators';
 
 function isEmpty(obj) {
   if (!obj) return true;
@@ -166,7 +165,6 @@ export default (routeConfigs, stackConfig = {}) => {
 
     getActionCreators(route, navStateKey) {
       return {
-        ...getNavigationActionCreators(route),
         ...getCustomActionCreators(route, navStateKey),
         pop: (n, params) =>
           StackActions.pop({
