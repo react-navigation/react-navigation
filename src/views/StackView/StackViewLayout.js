@@ -68,6 +68,20 @@ const animatedSubscribeValue = animatedValue => {
   }
 };
 
+const getDefaultHeaderHeight = isLandscape => {
+  if (Platform.OS === 'ios') {
+    if (isLandscape && !Platform.isPad) {
+      return 32;
+    } else if (IS_IPHONE_X) {
+      return 88;
+    } else {
+      return 64;
+    }
+  } else {
+    return 56;
+  }
+};
+
 class StackViewLayout extends React.Component {
   /**
    * Used to identify the starting point of the position when the gesture starts, such that it can
@@ -89,10 +103,18 @@ class StackViewLayout extends React.Component {
    */
   _immediateIndex = null;
 
-  state = {
-    // Used when card's header is null and mode is float to make switch animation work correctly
-    floatingHeaderHeight: 0,
-  };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      // Used when card's header is null and mode is float to make transition
+      // between screens with headers and those without headers smooth.
+      // This is not a great heuristic here. We don't know synchronously
+      // on mount what the header height is so we have just used the most
+      // common cases here.
+      floatingHeaderHeight: getDefaultHeaderHeight(props.isLandscape),
+    };
+  }
 
   _renderHeader(scene, headerMode) {
     const { options } = scene.descriptor;
