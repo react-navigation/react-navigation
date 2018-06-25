@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [2.5.3] - [2018-06-23](https://github.com/react-navigation/react-navigation/releases/tag/2.5.3)
+### Fixed
+- `setParams` applies to the navigation object it is called on even if that is the navigation object for a navigation view (more details in https://github.com/react-navigation/react-navigation/issues/4497)
+
 ## [2.5.2] - [2018-06-23](https://github.com/react-navigation/react-navigation/releases/tag/2.5.2)
 ### Fixed
 - Update react-navigation-drawer to fix regression in toggleDrawer
@@ -27,7 +31,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Improved examples
 
-[Unreleased]: https://github.com/react-navigation/react-navigation/compare/2.5.2...HEAD
+[Unreleased]: https://github.com/react-navigation/react-navigation/compare/2.5.3...HEAD
+[2.5.3]: https://github.com/react-navigation/react-navigation/compare/2.5.2...2.5.3
 [2.5.2]: https://github.com/react-navigation/react-navigation/compare/2.5.1...2.5.2
 [2.5.1]: https://github.com/react-navigation/react-navigation/compare/2.5.0...2.5.1
 [2.5.0]: https://github.com/react-navigation/react-navigation/compare/2.4.1...2.5.0
