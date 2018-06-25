@@ -1,5 +1,6 @@
 import getChildEventSubscriber from './getChildEventSubscriber';
 import getChildRouter from './getChildRouter';
+import getNavigationActionCreators from './routers/getNavigationActionCreators';
 import invariant from './utils/invariant';
 
 const createParamGetter = route => (paramName, defaultValue) => {
@@ -40,7 +41,9 @@ function getChildNavigation(navigation, childKey, getCurrentParentNavigation) {
     ...(childRouter
       ? childRouter.getActionCreators(focusedGrandChildRoute, childRoute.key)
       : {}),
+    ...getNavigationActionCreators(childRoute),
   };
+
   const actionHelpers = {};
   Object.keys(actionCreators).forEach(actionName => {
     actionHelpers[actionName] = (...args) => {
