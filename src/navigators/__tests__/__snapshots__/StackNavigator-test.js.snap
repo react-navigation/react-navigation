@@ -83,6 +83,7 @@ exports[`StackNavigator applies correct values when headerRight is present 1`] =
         collapsable={undefined}
         style={
           Object {
+            "backgroundColor": "#F7F7F7",
             "transform": Array [
               Object {
                 "translateX": 0,
@@ -288,6 +289,7 @@ exports[`StackNavigator renders successfully 1`] = `
         collapsable={undefined}
         style={
           Object {
+            "backgroundColor": "#F7F7F7",
             "transform": Array [
               Object {
                 "translateX": 0,
