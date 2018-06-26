@@ -58,7 +58,15 @@ function forLayout(props) {
 
   const { first, last } = interpolate;
   const index = scene.index;
-  const width = layout.initWidth;
+
+  // We really shouldn't render the scene at all until we know the width of the
+  // stack. That said, in every case that I have ever seen, this has just been
+  // the full width of the window. This won't continue to be true if we support
+  // layouts like iPad master-detail. For now, in order to solve
+  // https://github.com/react-navigation/react-navigation/issues/4264, I have
+  // opted for the heuristic that we will use the window width until we have
+  // measured (and they will usually be the same).
+  const width = layout.initWidth || Dimensions.get('window').width;
 
   // Make sure the header stays hidden when transitioning between 2 screens
   // with no header.
