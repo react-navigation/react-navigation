@@ -156,6 +156,7 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
                 collapsable={undefined}
                 style={
                   Object {
+                    "backgroundColor": "#F7F7F7",
                     "transform": Array [
                       Object {
                         "translateX": 0,
@@ -265,6 +266,7 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
         collapsable={undefined}
         style={
           Object {
+            "backgroundColor": "#F7F7F7",
             "transform": Array [
               Object {
                 "translateX": 0,

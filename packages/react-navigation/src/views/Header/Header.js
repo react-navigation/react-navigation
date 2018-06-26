@@ -491,7 +491,12 @@ class Header extends React.PureComponent {
     const forceInset = headerForceInset || { top: 'always', bottom: 'never' };
 
     return (
-      <Animated.View style={this.props.layoutInterpolator(this.props)}>
+      <Animated.View
+        style={[
+          this.props.layoutInterpolator(this.props),
+          { backgroundColor: DEFAULT_BACKGROUND_COLOR },
+        ]}
+      >
         <SafeAreaView forceInset={forceInset} style={containerStyles}>
           <View style={StyleSheet.absoluteFill}>
             {options.headerBackground}
@@ -529,9 +534,11 @@ if (Platform.OS === 'ios') {
   };
 }
 
+const DEFAULT_BACKGROUND_COLOR = Platform.OS === 'ios' ? '#F7F7F7' : '#FFF';
+
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: Platform.OS === 'ios' ? '#F7F7F7' : '#FFF',
+    backgroundColor: DEFAULT_BACKGROUND_COLOR,
     ...platformContainerStyles,
   },
   transparentContainer: {
