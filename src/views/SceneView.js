@@ -1,5 +1,4 @@
 import React from 'react';
-import propTypes from 'prop-types';
 import { NavigationProvider } from './NavigationContext';
 
 export default class SceneView extends React.PureComponent {

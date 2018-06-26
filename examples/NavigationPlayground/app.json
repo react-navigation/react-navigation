@@ -13,14 +13,15 @@
     },
     "sdkVersion": "27.0.0",
     "entryPoint": "./node_modules/react-native-scripts/build/bin/crna-entry.js",
-    "packagerOpts": {
-      "assetExts": [
-        "ttf",
-        "mp4"
-      ]
-    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
+      "bundleIdentifier": "com.reactnavigation.example",
       "supportsTablet": true
+    },
+    "android": {
+      "package": "com.reactnavigation.example"
     }
   }
 }

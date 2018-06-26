@@ -21,7 +21,7 @@ import withOrientation from '../withOrientation';
 import { NavigationProvider } from '../NavigationContext';
 
 import TransitionConfigs from './StackViewTransitionConfigs';
-import * as ReactNativeFeatures from '../../utils/ReactNativeFeatures';
+import { supportsImprovedSpringAnimation } from '../../utils/ReactNativeFeatures';
 
 const emptyFunction = () => {};
 
@@ -119,7 +119,7 @@ class StackViewLayout extends React.Component {
     const {
       mode,
       transitionProps,
-      prevTransitionProps,
+      lastTransitionProps,
       ...passProps
     } = this.props;
 
@@ -154,10 +154,7 @@ class StackViewLayout extends React.Component {
   }
 
   _reset(resetToIndex, duration) {
-    if (
-      Platform.OS === 'ios' &&
-      ReactNativeFeatures.supportsImprovedSpringAnimation()
-    ) {
+    if (Platform.OS === 'ios' && supportsImprovedSpringAnimation()) {
       Animated.spring(this.props.transitionProps.position, {
         toValue: resetToIndex,
         stiffness: 5000,
@@ -197,10 +194,7 @@ class StackViewLayout extends React.Component {
       }
     };
 
-    if (
-      Platform.OS === 'ios' &&
-      ReactNativeFeatures.supportsImprovedSpringAnimation()
-    ) {
+    if (Platform.OS === 'ios' && supportsImprovedSpringAnimation()) {
       Animated.spring(position, {
         toValue,
         stiffness: 5000,
@@ -236,7 +230,7 @@ class StackViewLayout extends React.Component {
         return false;
       }
 
-      position.stopAnimation((value: number) => {
+      position.stopAnimation(value => {
         this._isResponding = true;
         this._gestureStartValue = value;
       });
@@ -244,7 +238,7 @@ class StackViewLayout extends React.Component {
     },
     onMoveShouldSetPanResponder: (event, gesture) => {
       const {
-        transitionProps: { navigation, position, layout, scene, scenes },
+        transitionProps: { navigation, layout, scene },
         mode,
       } = this.props;
       const { index } = navigation.state;
@@ -407,6 +401,7 @@ class StackViewLayout extends React.Component {
   render() {
     let floatingHeader = null;
     const headerMode = this._getHeaderMode();
+
     if (headerMode === 'float') {
       const { scene } = this.props.transitionProps;
       floatingHeader = (
@@ -416,18 +411,10 @@ class StackViewLayout extends React.Component {
       );
     }
     const {
-      transitionProps: { navigation, position, layout, scene, scenes },
+      transitionProps: { scene, scenes },
       mode,
     } = this.props;
-    const { index } = navigation.state;
-    const isVertical = mode === 'modal';
     const { options } = scene.descriptor;
-    const gestureDirection = options.gestureDirection;
-
-    const gestureDirectionInverted =
-      typeof gestureDirection === 'string'
-        ? gestureDirection === 'inverted'
-        : I18nManager.isRTL;
 
     const gesturesEnabled =
       typeof options.gesturesEnabled === 'boolean'
@@ -512,13 +499,14 @@ class StackViewLayout extends React.Component {
     return TransitionConfigs.getTransitionConfig(
       this.props.transitionConfig,
       this.props.transitionProps,
-      this.props.prevTransitionProps,
+      this.props.lastTransitionProps,
       isModal
     );
   };
 
   _renderCard = scene => {
     const { screenInterpolator } = this._getTransitionConfig();
+
     const style =
       screenInterpolator &&
       screenInterpolator({ ...this.props.transitionProps, scene });

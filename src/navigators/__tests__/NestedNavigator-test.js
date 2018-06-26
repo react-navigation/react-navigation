@@ -1,6 +1,6 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
-import StackNavigator from '../createStackNavigator';
+import StackNavigator from '../createContainedStackNavigator';
 
 const SubNavigator = StackNavigator({
   Home: {

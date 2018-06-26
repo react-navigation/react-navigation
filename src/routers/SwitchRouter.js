@@ -5,7 +5,6 @@ import createConfigGetter from './createConfigGetter';
 import NavigationActions from '../NavigationActions';
 import StackActions from './StackActions';
 import validateRouteConfigMap from './validateRouteConfigMap';
-import getNavigationActionCreators from './getNavigationActionCreators';
 
 const defaultActionCreators = (route, navStateKey) => ({});
 
@@ -109,10 +108,7 @@ export default (routeConfigs, config = {}) => {
     childRouters,
 
     getActionCreators(route, stateKey) {
-      return {
-        ...getNavigationActionCreators(route),
-        ...getCustomActionCreators(route, stateKey),
-      };
+      return getCustomActionCreators(route, stateKey);
     },
 
     getStateForAction(action, inputState) {
