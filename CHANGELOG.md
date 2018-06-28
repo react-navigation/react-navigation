@@ -6,10 +6,15 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-- Delegate to child routers for more than just the top screen in the stack.
+
+## [2.5.5] - [2018-06-27](https://github.com/react-navigation/react-navigation/releases/tag/2.5.5)
+### Added
 - Throw error in development mode when header navigation option is set to a string - a common mistake that would otherwise result in a cryptic error message.
-- Update react-navigation-drawer to 0.4.3 to fix `initialRouteParams` option
 - Throw error in development mode when title is not a string.
+
+### Fixed
+- Delegate to child routers for more than just the top screen in the stack.
+- Update react-navigation-drawer to 0.4.3 to fix `initialRouteParams` option
 
 ## [2.5.4] - [2018-06-27](https://github.com/react-navigation/react-navigation/releases/tag/2.5.4)
 ### Fixed
@@ -40,7 +45,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Improved examples
 
-[Unreleased]: https://github.com/react-navigation/react-navigation/compare/2.5.4...HEAD
+[Unreleased]: https://github.com/react-navigation/react-navigation/compare/2.5.5...HEAD
+[2.5.5]: https://github.com/react-navigation/react-navigation/compare/2.5.4...2.5.5
 [2.5.4]: https://github.com/react-navigation/react-navigation/compare/2.5.3...2.5.4
 [2.5.3]: https://github.com/react-navigation/react-navigation/compare/2.5.2...2.5.3
 [2.5.2]: https://github.com/react-navigation/react-navigation/compare/2.5.1...2.5.2
