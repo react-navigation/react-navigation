@@ -133,10 +133,15 @@ const StateUtils = {
    * Replace a route by a key.
    * Note that this moves the index to the position to where the new route in the
    * stack is at. Does not prune the routes.
+   * If preserveIndex is true then replacing the route does not cause the index
+   * to change to the index of that route.
    */
-  replaceAt(state, key, route) {
+  replaceAt(state, key, route, preserveIndex = false) {
     const index = StateUtils.indexOf(state, key);
-    return StateUtils.replaceAtIndex(state, index, route);
+    const nextIndex = preserveIndex ? state.index : index;
+    let nextState = StateUtils.replaceAtIndex(state, index, route);
+    nextState.index = nextIndex;
+    return nextState;
   },
 
   /**

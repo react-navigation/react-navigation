@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- Delegate to child routers for more than just the top screen in the stack.
 - Throw error in development mode when header navigation option is set to a string - a common mistake that would otherwise result in a cryptic error message.
 - Update react-navigation-drawer to 0.4.3 to fix `initialRouteParams` option
 - Throw error in development mode when title is not a string.
