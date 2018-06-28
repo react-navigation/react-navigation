@@ -50,6 +50,7 @@ const DrawerNavigator = (routeConfigs, config = {}) => {
     order,
     paths,
     initialRouteName,
+    initialRouteParams,
     backBehavior,
     getCustomActionCreators,
     ...drawerConfig
@@ -59,6 +60,7 @@ const DrawerNavigator = (routeConfigs, config = {}) => {
     order,
     paths,
     initialRouteName,
+    initialRouteParams,
     backBehavior,
     getCustomActionCreators,
   };
