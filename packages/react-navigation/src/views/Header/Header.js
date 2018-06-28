@@ -55,6 +55,15 @@ class Header extends React.PureComponent {
     if (typeof options.headerTitle === 'string') {
       return options.headerTitle;
     }
+
+    if (options.title && typeof options.title !== 'string' && __DEV__) {
+      throw new Error(
+        `Invalid title for route "${
+          scene.route.routeName
+        }" - title must be string or null, instead it was of type ${typeof options.title}`
+      );
+    }
+
     return options.title;
   }
 
