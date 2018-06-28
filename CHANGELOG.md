@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- Throw error in development mode when header navigation option is set to a string - a common mistake that would otherwise result in a cryptic error message.
 
 ## [2.5.4] - [2018-06-27](https://github.com/react-navigation/react-navigation/releases/tag/2.5.4)
 ### Fixed
