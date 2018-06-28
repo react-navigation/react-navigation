@@ -8,10 +8,16 @@ module.exports = {
   get StateUtils() {
     return require('./StateUtils').default;
   },
+  get getNavigation() {
+    return require('./getNavigation').default;
+  },
 
   // Navigators
   get createNavigator() {
     return require('./navigators/createNavigator').default;
+  },
+  get createSwitchNavigator() {
+    return require('./navigators/createSwitchNavigator').default;
   },
 
   // Actions

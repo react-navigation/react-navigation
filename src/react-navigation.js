@@ -8,37 +8,40 @@ module.exports = {
   get StateUtils() {
     return require('./StateUtils').default;
   },
+  get getNavigation() {
+    return require('./getNavigation').default;
+  },
 
   // Navigators
   get createNavigator() {
     return require('./navigators/createNavigator').default;
   },
   get createStackNavigator() {
-    return require('./navigators/createStackNavigator').default;
+    return require('./navigators/createContainedStackNavigator').default;
   },
   get StackNavigator() {
     console.warn(
       'The StackNavigator function name is deprecated, please use createStackNavigator instead'
     );
-    return require('./navigators/createStackNavigator').default;
+    return require('./navigators/createContainedStackNavigator').default;
   },
   get createSwitchNavigator() {
-    return require('./navigators/createSwitchNavigator').default;
+    return require('./navigators/createContainedSwitchNavigator').default;
   },
   get SwitchNavigator() {
     console.warn(
       'The SwitchNavigator function name is deprecated, please use createSwitchNavigator instead'
     );
-    return require('./navigators/createSwitchNavigator').default;
+    return require('./navigators/createContainedSwitchNavigator').default;
   },
   get createDrawerNavigator() {
-    return require('./navigators/createDrawerNavigator').default;
+    return require('react-navigation-drawer').createDrawerNavigator;
   },
   get DrawerNavigator() {
     console.warn(
       'The DrawerNavigator function name is deprecated, please use createDrawerNavigator instead'
     );
-    return require('./navigators/createDrawerNavigator').default;
+    return require('react-navigation-drawer').createDrawerNavigator;
   },
   get createTabNavigator() {
     console.warn(
@@ -69,7 +72,7 @@ module.exports = {
     return require('./routers/StackActions').default;
   },
   get DrawerActions() {
-    return require('./routers/DrawerActions').default;
+    return require('react-navigation-drawer').DrawerActions;
   },
 
   // Routers
@@ -78,6 +81,9 @@ module.exports = {
   },
   get TabRouter() {
     return require('./routers/TabRouter').default;
+  },
+  get DrawerRouter() {
+    return require('react-navigation-drawer').DrawerRouter;
   },
   get SwitchRouter() {
     return require('./routers/SwitchRouter').default;
@@ -116,10 +122,13 @@ module.exports = {
 
   // DrawerView
   get DrawerView() {
-    return require('./views/Drawer/DrawerView').default;
+    return require('react-navigation-drawer').DrawerView;
   },
   get DrawerItems() {
-    return require('./views/Drawer/DrawerNavigatorItems').default;
+    return require('react-navigation-drawer').DrawerNavigatorItems;
+  },
+  get DrawerSidebar() {
+    return require('react-navigation-drawer').DrawerSidebar;
   },
 
   // TabView

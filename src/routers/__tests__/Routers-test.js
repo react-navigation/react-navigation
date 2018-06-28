@@ -16,6 +16,7 @@ beforeEach(() => {
 const ROUTERS = {
   TabRouter,
   StackRouter,
+  SwitchRouter,
 };
 
 const dummyEventSubscriber = (name, handler) => ({
@@ -26,7 +27,7 @@ Object.keys(ROUTERS).forEach(routerName => {
   const Router = ROUTERS[routerName];
 
   describe(`General router features - ${routerName}`, () => {
-    test('title is configurable using navigationOptions and getScreenOptions', () => {
+    test(`title is configurable using navigationOptions and getScreenOptions - ${routerName}`, () => {
       class FooView extends React.Component {
         render() {
           return <div />;
@@ -86,6 +87,31 @@ Object.keys(ROUTERS).forEach(routerName => {
           {}
         ).title
       ).toEqual('Baz-123');
+    });
+
+    test(`set params works in ${routerName}`, () => {
+      class FooView extends React.Component {
+        render() {
+          return <div />;
+        }
+      }
+      const router = Router({
+        Foo: { screen: FooView },
+        Bar: { screen: FooView },
+      });
+
+      const initState = router.getStateForAction(NavigationActions.init());
+      const initRoute = initState.routes[initState.index];
+      expect(initRoute.params).toEqual(undefined);
+
+      const state0 = router.getStateForAction(
+        NavigationActions.setParams({
+          params: { foo: 42 },
+          key: initRoute.key,
+        }),
+        initState
+      );
+      expect(state0.routes[state0.index].params.foo).toEqual(42);
     });
   });
 });

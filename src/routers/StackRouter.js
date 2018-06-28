@@ -8,7 +8,6 @@ import StateUtils from '../StateUtils';
 import validateRouteConfigMap from './validateRouteConfigMap';
 import invariant from '../utils/invariant';
 import { generateKey } from './KeyGenerator';
-import getNavigationActionCreators from './getNavigationActionCreators';
 
 function isEmpty(obj) {
   if (!obj) return true;
@@ -149,6 +148,8 @@ export default (routeConfigs, stackConfig = {}) => {
   paths.sort((a, b) => b[1].priority - a[1].priority);
 
   return {
+    childRouters,
+
     getComponentForState(state) {
       const activeChildRoute = state.routes[state.index];
       const { routeName } = activeChildRoute;
@@ -164,7 +165,6 @@ export default (routeConfigs, stackConfig = {}) => {
 
     getActionCreators(route, navStateKey) {
       return {
-        ...getNavigationActionCreators(route),
         ...getCustomActionCreators(route, navStateKey),
         pop: (n, params) =>
           StackActions.pop({
@@ -225,8 +225,6 @@ export default (routeConfigs, stackConfig = {}) => {
         return getInitialState(action);
       }
 
-      // Check if the focused child scene wants to handle the action, as long as
-      // it is not a reset to the root stack
       if (
         !isResetToRootStack(action) &&
         action.type !== NavigationActions.NAVIGATE
@@ -234,20 +232,30 @@ export default (routeConfigs, stackConfig = {}) => {
         const keyIndex = action.key
           ? StateUtils.indexOf(state, action.key)
           : -1;
-        const childIndex = keyIndex >= 0 ? keyIndex : state.index;
-        const childRoute = state.routes[childIndex];
-        invariant(
-          childRoute,
-          `StateUtils erroneously thought index ${childIndex} exists`
-        );
-        const childRouter = childRouters[childRoute.routeName];
-        if (childRouter) {
-          const route = childRouter.getStateForAction(action, childRoute);
-          if (route === null) {
-            return state;
+
+        // Traverse routes from the top of the stack to the bottom, so the
+        // active route has the first opportunity, then the one before it, etc.
+        for (let childRoute of state.routes.slice().reverse()) {
+          // If a key is provided and in routes state then let's use that
+          // knowledge to skip extra getStateForAction calls on other child
+          // routers
+          if (keyIndex >= 0 && childRoute.key !== action.key) {
+            continue;
           }
-          if (route && route !== childRoute) {
-            return StateUtils.replaceAt(state, childRoute.key, route);
+          let childRouter = childRouters[childRoute.routeName];
+          if (childRouter) {
+            const route = childRouter.getStateForAction(action, childRoute);
+
+            if (route === null) {
+              return state;
+            } else if (route && route !== childRoute) {
+              return StateUtils.replaceAt(
+                state,
+                childRoute.key,
+                route,
+                action.type === NavigationActions.SET_PARAMS
+              );
+            }
           }
         }
       } else if (action.type === NavigationActions.NAVIGATE) {
@@ -267,11 +275,18 @@ export default (routeConfigs, stackConfig = {}) => {
             );
 
             if (nextRouteState === null || nextRouteState !== childRoute) {
-              return StateUtils.replaceAndPrune(
+              const newState = StateUtils.replaceAndPrune(
                 state,
                 nextRouteState ? nextRouteState.key : childRoute.key,
                 nextRouteState ? nextRouteState : childRoute
               );
+              return {
+                ...newState,
+                isTransitioning:
+                  state.index !== newState.index
+                    ? action.immediate !== true
+                    : state.isTransitioning,
+              };
             }
           }
         }
@@ -392,7 +407,10 @@ export default (routeConfigs, stackConfig = {}) => {
                 routeName: childRouterName,
                 key: action.key || generateKey(),
               };
-              return StateUtils.push(state, route);
+              return {
+                ...StateUtils.push(state, route),
+                isTransitioning: action.immediate !== true,
+              };
             }
           }
         }
