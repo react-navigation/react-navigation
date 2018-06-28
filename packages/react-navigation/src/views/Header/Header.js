@@ -9,8 +9,8 @@ import {
   View,
   I18nManager,
   ViewPropTypes,
+  MaskedViewIOS,
 } from 'react-native';
-import { MaskedViewIOS } from '../../PlatformHelpers';
 import SafeAreaView from 'react-native-safe-area-view';
 
 import HeaderTitle from './HeaderTitle';

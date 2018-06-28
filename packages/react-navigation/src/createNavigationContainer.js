@@ -1,8 +1,7 @@
 import React from 'react';
-import { AsyncStorage, Linking, Platform } from 'react-native';
+import { AsyncStorage, Linking, Platform, BackHandler } from 'react-native';
 import { polyfill } from 'react-lifecycles-compat';
 
-import { BackHandler } from './PlatformHelpers';
 import NavigationActions from './NavigationActions';
 import getNavigation from './getNavigation';
 import invariant from './utils/invariant';
