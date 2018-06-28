@@ -1,4 +1,5 @@
 import React from 'react';
+import { polyfill } from 'react-lifecycles-compat';
 
 import getChildEventSubscriber from '../getChildEventSubscriber';
 
@@ -7,81 +8,37 @@ function createNavigator(NavigatorView, router, navigationConfig) {
     static router = router;
     static navigationOptions = null;
 
-    childEventSubscribers = {};
-
-    // Cleanup subscriptions for routes that no longer exist
-    componentDidUpdate() {
-      const activeKeys = this.props.navigation.state.routes.map(r => r.key);
-      Object.keys(this.childEventSubscribers).forEach(key => {
-        if (!activeKeys.includes(key)) {
-          delete this.childEventSubscribers[key];
-        }
-      });
-    }
-
-    // Remove all subscription references
-    componentWillUnmount() {
-      this.childEventSubscribers = {};
-    }
-
-    _isRouteFocused = route => {
-      const { state } = this.props.navigation;
-      const focusedRoute = state.routes[state.index];
-      return route === focusedRoute;
+    state = {
+      descriptors: {},
+      screenProps: this.props.screenProps,
     };
 
-    _dangerouslyGetParent = () => {
-      return this.props.navigation;
-    };
-
-    render() {
-      const { navigation, screenProps } = this.props;
+    static getDerivedStateFromProps(nextProps, prevState) {
+      const prevDescriptors = prevState.descriptors;
+      const { navigation, screenProps } = nextProps;
       const { dispatch, state, addListener } = navigation;
       const { routes } = state;
+      if (typeof routes === 'undefined') {
+        throw new TypeError(
+          'No "routes" found in navigation state. Did you try to pass the navigation prop of a React component to a Navigator child? See https://reactnavigation.org/docs/en/custom-navigators.html#navigator-navigation-prop'
+        );
+      }
 
-      const descriptors = {};
+      const descriptors = { ...prevState.descriptors };
+
       routes.forEach(route => {
+        if (
+          prevDescriptors &&
+          prevDescriptors[route.key] &&
+          route === prevDescriptors[route.key].state &&
+          screenProps === prevState.screenProps
+        ) {
+          descriptors[route.key] = prevDescriptors[route.key];
+          return;
+        }
         const getComponent = () =>
           router.getComponentForRouteName(route.routeName);
-
-        if (!this.childEventSubscribers[route.key]) {
-          this.childEventSubscribers[route.key] = getChildEventSubscriber(
-            addListener,
-            route.key
-          );
-        }
-
-        const actionCreators = {
-          ...navigation.actions,
-          ...router.getActionCreators(route, state.key),
-        };
-        const actionHelpers = {};
-        Object.keys(actionCreators).forEach(actionName => {
-          actionHelpers[actionName] = (...args) => {
-            const actionCreator = actionCreators[actionName];
-            const action = actionCreator(...args);
-            dispatch(action);
-          };
-        });
-        const childNavigation = {
-          ...actionHelpers,
-          actions: actionCreators,
-          dispatch,
-          state: route,
-          isFocused: () => this._isRouteFocused(route),
-          dangerouslyGetParent: this._dangerouslyGetParent,
-          addListener: this.childEventSubscribers[route.key].addListener,
-          getParam: (paramName, defaultValue) => {
-            const params = route.params;
-
-            if (params && paramName in params) {
-              return params[paramName];
-            }
-
-            return defaultValue;
-          },
-        };
-
+        const childNavigation = navigation.getChildNavigation(route.key);
         const options = router.getScreenOptions(childNavigation, screenProps);
         descriptors[route.key] = {
           key: route.key,
@@ -92,18 +49,23 @@ function createNavigator(NavigatorView, router, navigationConfig) {
         };
       });
 
+      return { descriptors, screenProps };
+    }
+
+    render() {
       return (
         <NavigatorView
           {...this.props}
-          screenProps={screenProps}
-          navigation={navigation}
+          screenProps={this.state.screenProps}
+          navigation={this.props.navigation}
           navigationConfig={navigationConfig}
-          descriptors={descriptors}
+          descriptors={this.state.descriptors}
         />
       );
     }
   }
-  return Navigator;
+
+  return polyfill(Navigator);
 }
 
 export default createNavigator;
