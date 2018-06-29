@@ -558,6 +558,21 @@ declare module 'react-navigation' {
   }>;
 
   /**
+   * NavigationEvents component
+   */
+
+  declare type _NavigationEventsProps = {
+    navigation?: NavigationScreenProp<NavigationState>,
+    onWillFocus?: NavigationEventCallback,
+    onDidFocus?: NavigationEventCallback,
+    onWillBlur?: NavigationEventCallback,
+    onDidBlur?: NavigationEventCallback,
+  };
+  declare export var NavigationEvents: React$ComponentType<
+    _NavigationEventsProps
+  >;
+
+  /**
    * Navigation container
    */
 

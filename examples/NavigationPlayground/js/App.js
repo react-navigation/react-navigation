@@ -36,6 +36,7 @@ import StackWithTranslucentHeader from './StackWithTranslucentHeader';
 import SimpleTabs from './SimpleTabs';
 import SwitchWithStacks from './SwitchWithStacks';
 import TabsWithNavigationFocus from './TabsWithNavigationFocus';
+import TabsWithNavigationEvents from './TabsWithNavigationEvents';
 import KeyboardHandlingExample from './KeyboardHandlingExample';
 
 const ExampleInfo = {
@@ -126,6 +127,11 @@ const ExampleInfo = {
     name: 'withNavigationFocus',
     description: 'Receive the focus prop to know when a screen is focused',
   },
+  TabsWithNavigationEvents: {
+    name: 'NavigationEvents',
+    description:
+      'Declarative NavigationEvents component to subscribe to navigation events',
+  },
   KeyboardHandlingExample: {
     name: 'Keyboard Handling Example',
     description:
@@ -166,6 +172,7 @@ const ExampleRoutes = {
     path: 'settings',
   },
   TabsWithNavigationFocus,
+  TabsWithNavigationEvents,
   KeyboardHandlingExample,
   // This is commented out because it's rarely useful
   // InactiveStack,
