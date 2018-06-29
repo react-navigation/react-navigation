@@ -1,12 +1,12 @@
 import React from 'react';
-import { AsyncStorage, Linking, Platform } from 'react-native';
+import { AsyncStorage, Linking, Platform, BackHandler } from 'react-native';
 import { polyfill } from 'react-lifecycles-compat';
 
-import { BackHandler } from './PlatformHelpers';
 import NavigationActions from './NavigationActions';
 import getNavigation from './getNavigation';
 import invariant from './utils/invariant';
 import docsUrl from './utils/docsUrl';
+import { urlToPathAndParams } from './routers/pathUtils';
 
 function isStateful(props) {
   return !props.navigation;
@@ -129,23 +129,8 @@ export default function createNavigationContainer(Component) {
       }
     }
 
-    _urlToPathAndParams(url) {
-      const params = {};
-      const delimiter = this.props.uriPrefix || '://';
-      let path = url.split(delimiter)[1];
-      if (typeof path === 'undefined') {
-        path = url;
-      } else if (path === '') {
-        path = '/';
-      }
-      return {
-        path,
-        params,
-      };
-    }
-
     _handleOpenURL = ({ url }) => {
-      const parsedUrl = this._urlToPathAndParams(url);
+      const parsedUrl = urlToPathAndParams(url, this.props.uriPrefix);
       if (parsedUrl) {
         const { path, params } = parsedUrl;
         const action = Component.router.getActionForPathAndParams(path, params);
@@ -214,11 +199,11 @@ export default function createNavigationContainer(Component) {
       Linking.addEventListener('url', this._handleOpenURL);
 
       // Pull out anything that can impact state
-      const { persistenceKey } = this.props;
+      const { persistenceKey, uriPrefix } = this.props;
       const startupStateJSON =
         persistenceKey && (await AsyncStorage.getItem(persistenceKey));
       const url = await Linking.getInitialURL();
-      const parsedUrl = url && this._urlToPathAndParams(url);
+      const parsedUrl = url && urlToPathAndParams(url, uriPrefix);
 
       // Initialize state. This must be done *after* any async code
       // so we don't end up with a different value for this.state.nav
