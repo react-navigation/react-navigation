@@ -47,13 +47,7 @@ export default (routeConfigs, config = {}) => {
   const {
     getPathAndParamsForRoute,
     getActionForPathAndParams,
-  } = createPathParser(
-    childRouters,
-    routeConfigs,
-    config.paths,
-    initialRouteName,
-    initialRouteParams
-  );
+  } = createPathParser(childRouters, routeConfigs, config.paths);
 
   if (initialRouteIndex === -1) {
     throw new Error(
