@@ -407,7 +407,15 @@ export default (routeConfigs, stackConfig = {}) => {
 
       // Handle replace action
       if (action.type === StackActions.REPLACE) {
-        const routeIndex = state.routes.findIndex(r => r.key === action.key);
+        let routeIndex;
+
+        // If the key param is undefined, set the index to the last route in the stack,
+        if (action.key === undefined) {
+          routeIndex = state.routes.length - 1;
+        } else {
+          routeIndex = state.routes.findIndex(r => r.key === action.key);
+        }
+
         // Only replace if the key matches one of our routes
         if (routeIndex !== -1) {
           const childRouter = childRouters[action.routeName];
