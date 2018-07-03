@@ -19,6 +19,10 @@ function getChildNavigation(navigation, childKey, getCurrentParentNavigation) {
 
   const childRoute = navigation.state.routes.find(r => r.key === childKey);
 
+  if (!childRoute) {
+    return null;
+  }
+
   if (children[childKey] && children[childKey].state === childRoute) {
     return children[childKey];
   }
@@ -79,12 +83,16 @@ function getChildNavigation(navigation, childKey, getCurrentParentNavigation) {
     getParam: createParamGetter(childRoute),
 
     getChildNavigation: grandChildKey =>
-      getChildNavigation(children[childKey], grandChildKey, () =>
-        getCurrentParentNavigation().getChildNavigation(childKey)
-      ),
+      getChildNavigation(children[childKey], grandChildKey, () => {
+        const nav = getCurrentParentNavigation();
+        return nav && nav.getChildNavigation(childKey);
+      }),
 
     isFocused: () => {
       const currentNavigation = getCurrentParentNavigation();
+      if (!currentNavigation) {
+        return false;
+      }
       const { routes, index } = currentNavigation.state;
       if (!currentNavigation.isFocused()) {
         return false;
