@@ -750,6 +750,14 @@ declare module 'react-navigation' {
     ) => NavigationState,
   };
 
+  declare export var NavigationUtils: {
+    getKeyForNextRoute: (routeName?: string) => string,
+    getKeyForRoute: (routeName?: string) => string,
+    getCurrentRoute: (navigationState?: Object) => string,
+    getCurrentRouteKey: (navigationState?: Object) => string,
+    getState: () => Object,
+  };
+
   declare export var NavigationActions: {
     BACK: 'Navigation/BACK',
     INIT: 'Navigation/INIT',
@@ -1173,6 +1181,11 @@ declare module 'react-navigation' {
   >;
   declare export function withNavigationFocus<Props: {}>(
     Component: React$ComponentType<Props>
+  ): React$ComponentType<$Diff<Props, { isFocused: boolean | void }>>;
+
+  declare export function withNavigationDebounce<Props: {}>(
+    Component: React$ComponentType<Props>,
+    wait?: number
   ): React$ComponentType<$Diff<Props, { isFocused: boolean | void }>>;
 
   declare export function getNavigation<State: NavigationState, Options: {}>(
