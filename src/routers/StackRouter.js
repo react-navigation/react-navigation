@@ -409,7 +409,7 @@ export default (routeConfigs, stackConfig = {}) => {
       if (action.type === StackActions.REPLACE) {
         let routeIndex;
 
-        // If the key param is undefined, set the index to the last route in the stack,
+        // If the key param is undefined, set the index to the last route in the stack
         if (action.key === undefined) {
           routeIndex = state.routes.length - 1;
         } else {
