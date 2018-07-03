@@ -161,6 +161,11 @@ module.exports = {
     return require('./views/NavigationEvents').default;
   },
 
+  // NavigationUtils
+  get NavigationUtils() {
+    return require('./NavigationUtils').default;
+  },
+
   // HOCs
   get withNavigation() {
     return require('./views/withNavigation').default;
@@ -171,4 +176,7 @@ module.exports = {
   get withOrientation() {
     return require('./views/withOrientation').default;
   },
+  get withNavigationDebounce() {
+    return require('./views/withNavigationDebounce').default;
+  }
 };
