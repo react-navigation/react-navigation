@@ -751,15 +751,10 @@ declare module 'react-navigation' {
   };
 
   declare export var NavigationUtils: {
-    setNavigatorReference: (navigator?: {
-      dispatch?: Function,
-      state?: { nav?: Object },
-    }),
     getKeyForNextRoute: (routeName?: string) => string,
     getKeyForRoute: (routeName?: string) => string,
     getCurrentRoute: (navigationState?: Object) => string,
     getCurrentRouteKey: (navigationState?: Object) => string,
-    dispatch: (action?: { type?: string }),
     getState: () => Object,
   };
 
@@ -1190,7 +1185,7 @@ declare module 'react-navigation' {
 
   declare export function withNavigationDebounce<Props: {}>(
     Component: React$ComponentType<Props>,
-    wait?: number,
+    wait?: number
   ): React$ComponentType<$Diff<Props, { isFocused: boolean | void }>>;
 
   declare export function getNavigation<State: NavigationState, Options: {}>(
