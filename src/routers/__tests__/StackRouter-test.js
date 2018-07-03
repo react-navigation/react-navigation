@@ -1028,17 +1028,17 @@ describe('StackRouter', () => {
       state5
     );
 
+    const originalCurrentScreen = state5.routes[1].routes[1].routes[2];
+    const replacedCurrentScreen = replacedState.routes[1].routes[1].routes[2];
+
     expect(replacedState.routes[1].routes[1].index).toEqual(2);
     expect(replacedState.routes[1].routes[1].routes.length).toEqual(3);
-    expect(replacedState.routes[1].routes[1].routes[2].key).not.toEqual(
-      state5.routes[1].routes[1].routes[2].key
+    expect(replacedCurrentScreen.key).not.toEqual(originalCurrentScreen.key);
+    expect(replacedCurrentScreen.routeName).not.toEqual(
+      originalCurrentScreen.routeName
     );
-    expect(replacedState.routes[1].routes[1].routes[2].routeName).toEqual(
-      'Woo'
-    );
-    expect(replacedState.routes[1].routes[1].routes[2].params.meaning).toEqual(
-      42
-    );
+    expect(replacedCurrentScreen.routeName).toEqual('Woo');
+    expect(replacedCurrentScreen.params.meaning).toEqual(42);
   });
 
   test('Handles push transition logic with completion action', () => {
