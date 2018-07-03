@@ -32,7 +32,7 @@ export default function withNavigationFocus(Component, wait = 200) {
       }
       this.lastCalled = Date.now();
       this.props.navigation.goBack(...args);
-    }
+    };
 
     pop = (...args) => {
       if (Date.now() - this.lastCalled <= wait) {
@@ -40,7 +40,7 @@ export default function withNavigationFocus(Component, wait = 200) {
       }
       this.lastCalled = Date.now();
       this.props.navigation.goBack(...args);
-    }
+    };
 
     navigate = (...args) => {
       if (Date.now() - this.lastCalled <= wait) {
@@ -48,7 +48,7 @@ export default function withNavigationFocus(Component, wait = 200) {
       }
       this.lastCalled = Date.now();
       this.props.navigation.goBack(...args);
-    }
+    };
 
     push = (...args) => {
       if (Date.now() - this.lastCalled <= wait) {
@@ -56,7 +56,7 @@ export default function withNavigationFocus(Component, wait = 200) {
       }
       this.lastCalled = Date.now();
       this.props.navigation.goBack(...args);
-    }
+    };
 
     render() {
       return (

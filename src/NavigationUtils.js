@@ -1,8 +1,11 @@
 const errorMessage = {
-  IMPROPER_NAVIGATION_STATE: 'Improper navigation state set as reference to Navigation Utility.',
+  IMPROPER_NAVIGATION_STATE:
+    'Improper navigation state set as reference to Navigation Utility.',
   UNDEFINED_PARAMETERS: 'Error in passing parameters.',
-  NO_EXISTING_ROUTE: 'There is no route existing in the stack with the route name',
-  NO_EXISTING_NEXT_ROUTE: 'There is no route existing in the stack next to the route with the route name',
+  NO_EXISTING_ROUTE:
+    'There is no route existing in the stack with the route name',
+  NO_EXISTING_NEXT_ROUTE:
+    'There is no route existing in the stack next to the route with the route name',
   IMPROPER_ACTION: 'Actions must be plain objects',
 };
 
@@ -30,7 +33,7 @@ const searchForNextInState = (navigationState, routeName) => {
     const { length } = navigationState.routes;
     for (let i = 0; i < length; i += 1) {
       const found = searchForNextInState(navigationState.routes[i], routeName);
-      if ((i + 1) < length && found) {
+      if (i + 1 < length && found) {
         keysList.push(navigationState.routes[i + 1].key);
       } else if (found) {
         return true;
@@ -40,7 +43,7 @@ const searchForNextInState = (navigationState, routeName) => {
   return false;
 };
 
-const getKeyForNextRoute = (routeName) => {
+const getKeyForNextRoute = routeName => {
   validate(routeName, errorMessage.UNDEFINED_PARAMETERS);
   if (routeName) {
     keysList = [];
@@ -70,7 +73,7 @@ const searchInState = (navigationState, routeName) => {
   }
 };
 
-const getKeyForRoute = (routeName) => {
+const getKeyForRoute = routeName => {
   validate(routeName, errorMessage.UNDEFINED_PARAMETERS);
   if (routeName) {
     keysList = [];
@@ -110,7 +113,7 @@ const getCurrentRouteKey = (navigationState = Navigator.state.nav) => {
   return '';
 };
 
-const dispatch = (action) => {
+const dispatch = action => {
   if (typeof action === 'object') {
     Navigator.dispatch(action);
   } else if (debug) {

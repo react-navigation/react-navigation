@@ -178,5 +178,5 @@ module.exports = {
   },
   get withNavigationDebounce() {
     return require('./views/withNavigationDebounce').default;
-  }
+  },
 };
