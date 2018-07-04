@@ -193,37 +193,27 @@ export default (routeConfigs, stackConfig = {}) => {
         return getInitialState(action);
       }
 
+      const activeChildRoute = state.routes[state.index];
+
       if (
         !isResetToRootStack(action) &&
         action.type !== NavigationActions.NAVIGATE
       ) {
-        const keyIndex = action.key
-          ? StateUtils.indexOf(state, action.key)
-          : -1;
-
-        // Traverse routes from the top of the stack to the bottom, so the
-        // active route has the first opportunity, then the one before it, etc.
-        for (let childRoute of state.routes.slice().reverse()) {
-          // If a key is provided and in routes state then let's use that
-          // knowledge to skip extra getStateForAction calls on other child
-          // routers
-          if (keyIndex >= 0 && childRoute.key !== action.key) {
-            continue;
-          }
-          let childRouter = childRouters[childRoute.routeName];
-          if (childRouter) {
-            const route = childRouter.getStateForAction(action, childRoute);
-
-            if (route === null) {
-              return state;
-            } else if (route && route !== childRoute) {
-              return StateUtils.replaceAt(
-                state,
-                childRoute.key,
-                route,
-                action.type === NavigationActions.SET_PARAMS
-              );
-            }
+        // Let the active child router handle the action
+        const activeChildRouter = childRouters[activeChildRoute.routeName];
+        if (activeChildRouter) {
+          const route = activeChildRouter.getStateForAction(
+            action,
+            activeChildRoute
+          );
+          if (route !== null && route !== activeChildRoute) {
+            return StateUtils.replaceAt(
+              state,
+              activeChildRoute.key,
+              route,
+              // the following tells replaceAt to NOT change the index to this route for the setParam action, because people don't expect param-setting actions to switch the active route
+              action.type === NavigationActions.SET_PARAMS
+            );
           }
         }
       } else if (action.type === NavigationActions.NAVIGATE) {
@@ -519,6 +509,42 @@ export default (routeConfigs, stackConfig = {}) => {
             index: backRouteIndex - 1,
             isTransitioning: immediate !== true,
           };
+        }
+      }
+
+      // By this point in the router's state handling logic, we have handled the behavior of the active route, and handled any stack actions.
+      // If we haven't returned by now, we should allow non-active child routers to handle this action, and switch to that index if the child state (route) does change..
+
+      const keyIndex = action.key ? StateUtils.indexOf(state, action.key) : -1;
+
+      // Traverse routes from the top of the stack to the bottom, so the
+      // active route has the first opportunity, then the one before it, etc.
+      for (let childRoute of state.routes.slice().reverse()) {
+        if (childRoute.key === activeChildRoute.key) {
+          // skip over the active child because we let it attempt to handle the action earlier
+          continue;
+        }
+        // If a key is provided and in routes state then let's use that
+        // knowledge to skip extra getStateForAction calls on other child
+        // routers
+        if (keyIndex >= 0 && childRoute.key !== action.key) {
+          continue;
+        }
+        let childRouter = childRouters[childRoute.routeName];
+        if (childRouter) {
+          const route = childRouter.getStateForAction(action, childRoute);
+
+          if (route === null) {
+            return state;
+          } else if (route && route !== childRoute) {
+            return StateUtils.replaceAt(
+              state,
+              childRoute.key,
+              route,
+              // the following tells replaceAt to NOT change the index to this route for the setParam action, because people don't expect param-setting actions to switch the active route
+              action.type === NavigationActions.SET_PARAMS
+            );
+          }
         }
       }
 
