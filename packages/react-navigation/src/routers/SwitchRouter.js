@@ -196,7 +196,7 @@ export default (routeConfigs, config = {}) => {
             newChildState = childRouter
               ? childRouter.getStateForAction(action.action, childState)
               : null;
-          } else if (!action.action && !childRouter && action.params) {
+          } else if (!action.action && action.params) {
             newChildState = {
               ...childState,
               params: {
