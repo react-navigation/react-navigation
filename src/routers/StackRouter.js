@@ -410,7 +410,7 @@ export default (routeConfigs, stackConfig = {}) => {
         let routeIndex;
 
         // If the key param is undefined, set the index to the last route in the stack
-        if (action.key === undefined) {
+        if (action.key === undefined && state.routes.length) {
           routeIndex = state.routes.length - 1;
         } else {
           routeIndex = state.routes.findIndex(r => r.key === action.key);
