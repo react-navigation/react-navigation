@@ -500,12 +500,7 @@ class Header extends React.PureComponent {
     const forceInset = headerForceInset || { top: 'always', bottom: 'never' };
 
     return (
-      <Animated.View
-        style={[
-          this.props.layoutInterpolator(this.props),
-          { backgroundColor: DEFAULT_BACKGROUND_COLOR },
-        ]}
-      >
+      <Animated.View style={[this.props.layoutInterpolator(this.props)]}>
         <SafeAreaView forceInset={forceInset} style={containerStyles}>
           <View style={StyleSheet.absoluteFill}>
             {options.headerBackground}

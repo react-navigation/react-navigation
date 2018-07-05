@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## Fixed
+- [Android] Fixing missing Header when give headerStyle a position absolute & Fixing missing header shadow.
+
 ## [2.6.0] - [2018-07-04](https://github.com/react-navigation/react-navigation/releases/tag/2.6.0)
 ### Added
 - [NavigationEvents](https://github.com/react-navigation/react-navigation/pull/4188) component as a declarative interface for subscribing to navigation focus events.
