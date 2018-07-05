@@ -473,6 +473,18 @@ class Header extends React.PureComponent {
       flexShrink,
       flexBasis,
       flexWrap,
+      position,
+      padding,
+      paddingHorizontal,
+      paddingVertical,
+      paddingTop,
+      paddingRight,
+      paddingBottom,
+      paddingLeft,
+      top,
+      right,
+      bottom,
+      left,
       ...safeHeaderStyle
     } = headerStyleObj;
 
@@ -485,6 +497,18 @@ class Header extends React.PureComponent {
       warnIfHeaderStyleDefined(flexShrink, 'flexShrink');
       warnIfHeaderStyleDefined(flexBasis, 'flexBasis');
       warnIfHeaderStyleDefined(flexWrap, 'flexWrap');
+      warnIfHeaderStyleDefined(padding, 'padding');
+      warnIfHeaderStyleDefined(position, 'position');
+      warnIfHeaderStyleDefined(paddingVertical, 'paddingVertical');
+      warnIfHeaderStyleDefined(paddingHorizontal, 'paddingHorizontal');
+      warnIfHeaderStyleDefined(paddingTop, 'paddingTop');
+      warnIfHeaderStyleDefined(paddingRight, 'paddingRight');
+      warnIfHeaderStyleDefined(paddingBottom, 'paddingBottom');
+      warnIfHeaderStyleDefined(paddingLeft, 'paddingLeft');
+      warnIfHeaderStyleDefined(top, 'top');
+      warnIfHeaderStyleDefined(right, 'right');
+      warnIfHeaderStyleDefined(bottom, 'bottom');
+      warnIfHeaderStyleDefined(left, 'left');
     }
 
     // TODO: warn if any unsafe styles are provided
@@ -520,7 +544,11 @@ class Header extends React.PureComponent {
 }
 
 function warnIfHeaderStyleDefined(value, styleProp) {
-  if (value !== undefined) {
+  if (styleProp === 'position' && value === 'absolute') {
+    console.warn(
+      "position: 'absolute' is not supported on headerStyle. If you would like to render content under the header, use the headerTransparent navigationOption."
+    );
+  } else if (value !== undefined) {
     console.warn(
       `${styleProp} was given a value of ${value}, this has no effect on headerStyle.`
     );
