@@ -586,6 +586,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     ...platformContainerStyles,
+    elevation: 0,
   },
   header: {
     ...StyleSheet.absoluteFillObject,
