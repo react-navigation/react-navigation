@@ -40,23 +40,25 @@ class HeaderBackButton extends React.PureComponent {
 
     if (React.isValidElement(backImage)) {
       return backImage;
-    } else if (typeof(backImage)==='function') {
+    } else if (typeof backImage === 'function') {
       BackImage = backImage;
       props = {
         tintColor,
         title,
       };
     } else {
-      let sourceImage = undefined, sourceFunc = undefined, moreProps = undefined;
-      if (backImage && (typeof(backImage) === 'object') && backImage.source) {
+      let sourceImage = undefined,
+        sourceFunc = undefined,
+        moreProps = undefined;
+      if (backImage && typeof backImage === 'object' && backImage.source) {
         if (React.isValidElement(backImage.source)) {
           return backImage.source;
-        } else if (typeof(backImage.source) === 'function') {
+        } else if (typeof backImage.source === 'function') {
           sourceFunc = backImage.source;
           moreProps = { tintColor, title };
         } else
           sourceImage = backImage.source
-      };
+      }
       BackImage = sourceFunc || Image;
       props = {
         style: [
@@ -66,7 +68,7 @@ class HeaderBackButton extends React.PureComponent {
           !sourceFunc && !!tintColor && { tintColor },
         ],
         source: sourceImage || defaultBackImage,
-        ...moreProps
+        ...moreProps,
       };
     }
 

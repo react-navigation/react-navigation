@@ -40,22 +40,23 @@ class HeaderRightButton extends React.PureComponent {
 
     if (React.isValidElement(rightImage)) {
       return rightImage;
-    } else if (typeof(rightImage)==='function') {
+    } else if (typeof rightImage ==='function') {
       RightImage = rightImage;
       props = {
         tintColor,
         title,
       };
     } else {
-      let sourceImage = undefined, sourceFunc = undefined, moreProps = undefined
-      if (rightImage && (typeof(rightImage) === 'object') && rightImage.source) {
+      let sourceImage = undefined,
+        sourceFunc = undefined,
+        moreProps = undefined
+      if (rightImage && (typeof rightImage === 'object') && rightImage.source) {
         if (React.isValidElement(rightImage.source)) {
           return rightImage.source;
-        } else if (typeof(rightImage.source) === 'function') {
-          sourceFunc = rightImage.source
-          moreProps = { tintColor, title }
-        } else
-          sourceImage = rightImage.source
+        } else if (typeof rightImage.source === 'function') {
+          sourceFunc = rightImage.source;
+          moreProps = { tintColor, title };
+        } else sourceImage = rightImage.source
       }
       RightImage = sourceFunc || Image;
       props = {
@@ -66,7 +67,7 @@ class HeaderRightButton extends React.PureComponent {
           !sourceFunc && !!tintColor && { tintColor },
         ],
         source: sourceImage || defaultRightImage,
-        ...moreProps
+        ...moreProps,
       };
     }
 

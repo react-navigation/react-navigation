@@ -153,17 +153,23 @@ class Header extends React.PureComponent {
     const width = this.state.widths[props.scene.key]
       ? (this.props.layout.initWidth - this.state.widths[props.scene.key]) / 2
       : undefined;
-    const isComponent = options.headerLeft && (typeof(options.headerLeft) === 'function');
-    const isObject = options.headerLeft && (typeof(options.headerLeft) === 'object');
-    const RenderedLeftComponent = (isComponent && options.headerLeft) || HeaderBackButton;
+    const isComponent = options.headerLeft && typeof options.headerLeft === 'function';
+    const isObject = options.headerLeft && typeof options.headerLeft === 'object';
+    const RenderedLeftComponent =
+      (isComponent && options.headerLeft) || HeaderBackButton;
     const goBack = () => {
       // Go back on next tick because button ripple effect needs to happen on Android
       requestAnimationFrame(() => {
         props.scene.descriptor.navigation.goBack(props.scene.descriptor.key);
       });
     };
-    const onPress = (isObject && options.headerLeft.onPress) || options.headerLeftOnPress || goBack;
-    const backImage = (isObject && options.headerLeft.source && options.headerLeft) || options.headerBackImage;
+    const onPress =
+      (isObject && options.headerLeft.onPress) ||
+      options.headerLeftOnPress ||
+      goBack;
+    const backImage =
+      (isObject && options.headerLeft.source && options.headerLeft) ||
+      options.headerBackImage;
     return (
       <RenderedLeftComponent
         onPress={onPress}
@@ -216,21 +222,34 @@ class Header extends React.PureComponent {
   };
 
   _renderRightComponent = props => {
-    const { options, options:{ headerRight }} = props.scene.descriptor;
-    if (!headerRight)
-      return null
+    const {
+      options,
+      options:{ headerRight }
+    } = props.scene.descriptor;
+    if (!headerRight) return null
     else if (React.isValidElement(headerRight))
       return headerRight;
     const isComponent = (typeof(headerRight) === 'function');
     const isObject = (typeof(headerRight) === 'object');
-    const RenderedRightComponent = (isComponent && headerRight) || HeaderRightButton;
-    const rightButtonTitle = isObject && headerRight.title || options.headerRightTitle;
-    const truncatedRightButtonTitle = isObject && headerRight.truncatedTitle || options.headerTruncatedRightTitle;
+    const RenderedRightComponent =
+      (isComponent && headerRight) ||
+      HeaderRightButton;
+    const rightButtonTitle =
+      (isObject && headerRight.title) ||
+      options.headerRightTitle;
+    const truncatedRightButtonTitle =
+      (isObject && headerRight.truncatedTitle) ||
+      options.headerTruncatedRightTitle;
     const width = this.state.widths[props.scene.key]
       ? (this.props.layout.initWidth - this.state.widths[props.scene.key]) / 2
       : undefined;
-    const onPress = (isObject && headerRight.onPress) || options.headerRightOnPress || (() => {});
-    const rightImage = (isObject && headerRight.source && headerRight) || options.headerRightImage;
+    const onPress =
+      (isObject && headerRight.onPress) ||
+      options.headerRightOnPress ||
+      (() => {});
+    const rightImage =
+      (isObject && headerRight.source && headerRight) ||
+      options.headerRightImage;
     return (
       <RenderedRightComponent
         onPress={onPress}
