@@ -49,7 +49,9 @@ class HeaderBackButton extends React.PureComponent {
     } else {
       let sourceImage = undefined, sourceFunc = undefined, moreProps = undefined;
       if (backImage && (typeof(backImage) === 'object') && backImage.source) {
-        if (typeof(backImage.source) === 'function') {
+        if (React.isValidElement(backImage.source)) {
+          return backImage.source;
+        } else if (typeof(backImage.source) === 'function') {
           sourceFunc = backImage.source;
           moreProps = { tintColor, title };
         } else

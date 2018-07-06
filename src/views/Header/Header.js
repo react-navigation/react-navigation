@@ -162,7 +162,7 @@ class Header extends React.PureComponent {
         props.scene.descriptor.navigation.goBack(props.scene.descriptor.key);
       });
     };
-    const onPress = (isObject && options.headerLeft.onPress) || goBack;
+    const onPress = (isObject && options.headerLeft.onPress) || options.headerLeftOnPress || goBack;
     const backImage = (isObject && options.headerLeft.source && options.headerLeft) || options.headerBackImage;
     return (
       <RenderedLeftComponent
@@ -320,7 +320,7 @@ class Header extends React.PureComponent {
     if (options.headerRightContainerStyle) {
       style = [style, options.headerRightContainerStyle];
     }
-    
+
     return this._renderSubView(
       { ...props, style },
       'right',

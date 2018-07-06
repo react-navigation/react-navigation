@@ -49,7 +49,9 @@ class HeaderRightButton extends React.PureComponent {
     } else {
       let sourceImage = undefined, sourceFunc = undefined, moreProps = undefined
       if (rightImage && (typeof(rightImage) === 'object') && rightImage.source) {
-        if (typeof(rightImage.source) === 'function') {
+        if (React.isValidElement(rightImage.source)) {
+          return rightImage.source;
+        } else if (typeof(rightImage.source) === 'function') {
           sourceFunc = rightImage.source
           moreProps = { tintColor, title }
         } else
