@@ -476,11 +476,11 @@ class Header extends React.PureComponent {
       position,
       padding,
       paddingHorizontal,
-      paddingVertical,
-      paddingTop,
       paddingRight,
-      paddingBottom,
       paddingLeft,
+      // paddingVertical,
+      // paddingTop,
+      // paddingBottom,
       top,
       right,
       bottom,
@@ -499,12 +499,12 @@ class Header extends React.PureComponent {
       warnIfHeaderStyleDefined(flexWrap, 'flexWrap');
       warnIfHeaderStyleDefined(padding, 'padding');
       warnIfHeaderStyleDefined(position, 'position');
-      warnIfHeaderStyleDefined(paddingVertical, 'paddingVertical');
       warnIfHeaderStyleDefined(paddingHorizontal, 'paddingHorizontal');
-      warnIfHeaderStyleDefined(paddingTop, 'paddingTop');
       warnIfHeaderStyleDefined(paddingRight, 'paddingRight');
-      warnIfHeaderStyleDefined(paddingBottom, 'paddingBottom');
       warnIfHeaderStyleDefined(paddingLeft, 'paddingLeft');
+      // warnIfHeaderStyleDefined(paddingVertical, 'paddingVertical');
+      // warnIfHeaderStyleDefined(paddingTop, 'paddingTop');
+      // warnIfHeaderStyleDefined(paddingBottom, 'paddingBottom');
       warnIfHeaderStyleDefined(top, 'top');
       warnIfHeaderStyleDefined(right, 'right');
       warnIfHeaderStyleDefined(bottom, 'bottom');
