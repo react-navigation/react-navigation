@@ -153,8 +153,10 @@ class Header extends React.PureComponent {
     const width = this.state.widths[props.scene.key]
       ? (this.props.layout.initWidth - this.state.widths[props.scene.key]) / 2
       : undefined;
-    const isComponent = options.headerLeft && typeof options.headerLeft === 'function';
-    const isObject = options.headerLeft && typeof options.headerLeft === 'object';
+    const isComponent =
+      options.headerLeft && typeof options.headerLeft === 'function';
+    const isObject =
+      options.headerLeft && typeof options.headerLeft === 'object';
     const RenderedLeftComponent =
       (isComponent && options.headerLeft) || HeaderBackButton;
     const goBack = () => {
@@ -224,19 +226,16 @@ class Header extends React.PureComponent {
   _renderRightComponent = props => {
     const {
       options,
-      options:{ headerRight }
+      options: { headerRight },
     } = props.scene.descriptor;
-    if (!headerRight) return null
-    else if (React.isValidElement(headerRight))
-      return headerRight;
-    const isComponent = (typeof(headerRight) === 'function');
-    const isObject = (typeof(headerRight) === 'object');
+    if (!headerRight) return null;
+    else if (React.isValidElement(headerRight)) return headerRight;
+    const isComponent = (typeof headerRight === 'function');
+    const isObject = (typeof headerRight === 'object');
     const RenderedRightComponent =
-      (isComponent && headerRight) ||
-      HeaderRightButton;
+      (isComponent && headerRight) || HeaderRightButton;
     const rightButtonTitle =
-      (isObject && headerRight.title) ||
-      options.headerRightTitle;
+      (isObject && headerRight.title) || options.headerRightTitle;
     const truncatedRightButtonTitle =
       (isObject && headerRight.truncatedTitle) ||
       options.headerTruncatedRightTitle;
@@ -261,7 +260,7 @@ class Header extends React.PureComponent {
         titleStyle={options.headerRightTitleStyle}
         width={width}
       />
-    )
+    );
   };
 
   _renderLeft(props) {
