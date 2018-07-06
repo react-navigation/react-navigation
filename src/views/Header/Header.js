@@ -15,6 +15,7 @@ import SafeAreaView from 'react-native-safe-area-view';
 
 import HeaderTitle from './HeaderTitle';
 import HeaderBackButton from './HeaderBackButton';
+import HeaderRightButton from './HeaderRightButton';
 import ModularHeaderBackButton from './ModularHeaderBackButton';
 import HeaderStyleInterpolator from './HeaderStyleInterpolator';
 import withOrientation from '../withOrientation';
@@ -152,19 +153,23 @@ class Header extends React.PureComponent {
     const width = this.state.widths[props.scene.key]
       ? (this.props.layout.initWidth - this.state.widths[props.scene.key]) / 2
       : undefined;
-    const RenderedLeftComponent = options.headerLeft || HeaderBackButton;
+    const isComponent = options.headerLeft && (typeof(options.headerLeft) === 'function');
+    const isObject = options.headerLeft && (typeof(options.headerLeft) === 'object');
+    const RenderedLeftComponent = (isComponent && options.headerLeft) || HeaderBackButton;
     const goBack = () => {
       // Go back on next tick because button ripple effect needs to happen on Android
       requestAnimationFrame(() => {
         props.scene.descriptor.navigation.goBack(props.scene.descriptor.key);
       });
     };
+    const onPress = (isObject && options.headerLeft.onPress) || goBack;
+    const backImage = (isObject && options.headerLeft.source && options.headerLeft) || options.headerBackImage;
     return (
       <RenderedLeftComponent
-        onPress={goBack}
+        onPress={onPress}
         pressColorAndroid={options.headerPressColorAndroid}
         tintColor={options.headerTintColor}
-        backImage={options.headerBackImage}
+        backImage={backImage}
         title={backButtonTitle}
         truncatedTitle={truncatedBackButtonTitle}
         titleStyle={options.headerBackTitleStyle}
@@ -211,8 +216,33 @@ class Header extends React.PureComponent {
   };
 
   _renderRightComponent = props => {
-    const { headerRight } = props.scene.descriptor.options;
-    return headerRight || null;
+    const { options, options:{ headerRight }} = props.scene.descriptor;
+    if (!headerRight)
+      return null
+    else if (React.isValidElement(headerRight))
+      return headerRight;
+    const isComponent = (typeof(headerRight) === 'function');
+    const isObject = (typeof(headerRight) === 'object');
+    const RenderedRightComponent = (isComponent && headerRight) || HeaderRightButton;
+    const rightButtonTitle = isObject && headerRight.title || options.headerRightTitle;
+    const truncatedRightButtonTitle = isObject && headerRight.truncatedTitle || options.headerTruncatedRightTitle;
+    const width = this.state.widths[props.scene.key]
+      ? (this.props.layout.initWidth - this.state.widths[props.scene.key]) / 2
+      : undefined;
+    const onPress = (isObject && headerRight.onPress) || options.headerRightOnPress || (() => {});
+    const rightImage = (isObject && headerRight.source && headerRight) || options.headerRightImage;
+    return (
+      <RenderedRightComponent
+        onPress={onPress}
+        pressColorAndroid={options.headerPressColorAndroid}
+        tintColor={options.headerTintColor}
+        rightImage={rightImage}
+        title={rightButtonTitle}
+        truncatedTitle={truncatedRightButtonTitle}
+        titleStyle={options.headerRightTitleStyle}
+        width={width}
+      />
+    )
   };
 
   _renderLeft(props) {
@@ -290,7 +320,7 @@ class Header extends React.PureComponent {
     if (options.headerRightContainerStyle) {
       style = [style, options.headerRightContainerStyle];
     }
-
+    
     return this._renderSubView(
       { ...props, style },
       'right',

@@ -10,15 +10,15 @@ import {
 
 import TouchableItem from '../TouchableItem';
 
-const defaultBackImage = require('../assets/back-icon.png');
+const defaultRightImage = require('../assets/more-icon.png');
 
-class HeaderBackButton extends React.PureComponent {
+class HeaderRightButton extends React.PureComponent {
   static defaultProps = {
     pressColorAndroid: 'rgba(0, 0, 0, .32)',
     tintColor: Platform.select({
       ios: '#037aff',
     }),
-    truncatedTitle: 'Back',
+    truncatedTitle: 'more',
   };
 
   state = {};
@@ -32,30 +32,30 @@ class HeaderBackButton extends React.PureComponent {
     });
   };
 
-  _renderBackImage() {
-    const { backImage, title, tintColor } = this.props;
+  _renderRightImage() {
+    const { rightImage, title, tintColor } = this.props;
 
-    let BackImage;
+    let RightImage;
     let props;
 
-    if (React.isValidElement(backImage)) {
-      return backImage;
-    } else if (typeof(backImage)==='function') {
-      BackImage = backImage;
+    if (React.isValidElement(rightImage)) {
+      return rightImage;
+    } else if (typeof(rightImage)==='function') {
+      RightImage = rightImage;
       props = {
         tintColor,
         title,
       };
     } else {
-      let sourceImage = undefined, sourceFunc = undefined, moreProps = undefined;
-      if (backImage && (typeof(backImage) === 'object') && backImage.source) {
-        if (typeof(backImage.source) === 'function') {
-          sourceFunc = backImage.source;
-          moreProps = { tintColor, title };
+      let sourceImage = undefined, sourceFunc = undefined, moreProps = undefined
+      if (rightImage && (typeof(rightImage) === 'object') && rightImage.source) {
+        if (typeof(rightImage.source) === 'function') {
+          sourceFunc = rightImage.source
+          moreProps = { tintColor, title }
         } else
-          sourceImage = backImage.source
-      };
-      BackImage = sourceFunc || Image;
+          sourceImage = rightImage.source
+      }
+      RightImage = sourceFunc || Image;
       props = {
         style: [
           styles.icon,
@@ -63,12 +63,12 @@ class HeaderBackButton extends React.PureComponent {
           !!title && styles.iconWithTitle,
           !sourceFunc && !!tintColor && { tintColor },
         ],
-        source: sourceImage || defaultBackImage,
+        source: sourceImage || defaultRightImage,
         ...moreProps
       };
     }
 
-    return <BackImage {...props} />;
+    return <RightImage {...props} />;
   }
 
   render() {
@@ -87,14 +87,14 @@ class HeaderBackButton extends React.PureComponent {
         ? this.state.initialTextWidth > width
         : false;
 
-    const backButtonTitle = renderTruncated ? truncatedTitle : title;
+    const rightButtonTitle = renderTruncated ? truncatedTitle : title;
 
     return (
       <TouchableItem
         accessibilityComponentType="button"
-        accessibilityLabel={backButtonTitle}
+        accessibilityLabel={rightButtonTitle}
         accessibilityTraits="button"
-        testID="header-back"
+        testID="header-right"
         delayPressIn={0}
         onPress={onPress}
         pressColor={pressColorAndroid}
@@ -102,9 +102,8 @@ class HeaderBackButton extends React.PureComponent {
         borderless
       >
         <View style={styles.container}>
-          {this._renderBackImage()}
           {Platform.OS === 'ios' &&
-            typeof backButtonTitle === 'string' && (
+            typeof rightButtonTitle === 'string' && (
               <Text
                 onLayout={this._onTextLayout}
                 style={[
@@ -114,9 +113,10 @@ class HeaderBackButton extends React.PureComponent {
                 ]}
                 numberOfLines={1}
               >
-                {backButtonTitle}
+                {rightButtonTitle}
               </Text>
             )}
+          {this._renderRightImage()}
         </View>
       </TouchableItem>
     );
@@ -131,15 +131,15 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 17,
-    paddingRight: 10,
+    paddingLeft: 10,
   },
   icon:
     Platform.OS === 'ios'
       ? {
           height: 21,
           width: 13,
-          marginLeft: 9,
-          marginRight: 22,
+          marginLeft: 22,
+          marginRight: 9,
           marginVertical: 12,
           transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }],
         }
@@ -155,9 +155,9 @@ const styles = StyleSheet.create({
   iconWithTitle:
     Platform.OS === 'ios'
       ? {
-          marginRight: 6,
+          marginLeft: 6,
         }
       : {},
 });
 
-export default HeaderBackButton;
+export default HeaderRightButton;
