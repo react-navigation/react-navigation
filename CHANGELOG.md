@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-## [2.6.1] - [2018-07-05)(https://github.com/react-navigation/react-navigation/releases/tag/2.6.1)
+## [2.6.1] - [2018-07-05](https://github.com/react-navigation/react-navigation/releases/tag/2.6.1)
 ### Added
 - Warn for more invalid headerStyle properties (padding, top/right/bottom/left, position).
 
