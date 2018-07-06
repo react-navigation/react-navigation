@@ -9,6 +9,26 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - StackNavigator.replace method no longer requires a key param. If the key is left undefined, the last screen in the stack will be replaced.
 
+## [2.6.1] - [2018-07-05)(https://github.com/react-navigation/react-navigation/releases/tag/2.6.1)
+### Added
+- Warn for more invalid headerStyle properties (padding, top/right/bottom/left, position).
+
+### Fixed
+- Fixed missing header shadow on Android.
+
+## [2.6.0] - [2018-07-04](https://github.com/react-navigation/react-navigation/releases/tag/2.6.0)
+### Added
+- [NavigationEvents](https://github.com/react-navigation/react-navigation/pull/4188) component as a declarative interface for subscribing to navigation focus events.
+
+### Fixed
+- Fix stack router child router delegation priority (https://github.com/react-navigation/react-navigation/commit/e8c1833053e37d28f0ce505ff323565abf23b6a2)
+- Avoid crash when calling isFocused on old route (https://github.com/react-navigation/react-navigation/commit/0921889f7a3acfc6d6bcc4909d209eeeee985ba7)
+- Stack router no longer attempts to parse query params within path handling
+- Switch router now has exact same param treatment for URLs as stack router does
+
+### Changed
+- Internally we no longer need to special case PlatformHelpers by platform as react-native-web handles the APIs we mocked out with it now.
+
 ## [2.5.5] - [2018-06-27](https://github.com/react-navigation/react-navigation/releases/tag/2.5.5)
 ### Added
 - Throw error in development mode when header navigation option is set to a string - a common mistake that would otherwise result in a cryptic error message.
@@ -47,7 +67,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Improved examples
 
-[Unreleased]: https://github.com/react-navigation/react-navigation/compare/2.5.5...HEAD
+[Unreleased]: https://github.com/react-navigation/react-navigation/compare/2.6.1...HEAD
+[2.6.1]: https://github.com/react-navigation/react-navigation/compare/2.6.0...2.6.1
+[2.6.0]: https://github.com/react-navigation/react-navigation/compare/2.5.5...2.6.0
 [2.5.5]: https://github.com/react-navigation/react-navigation/compare/2.5.4...2.5.5
 [2.5.4]: https://github.com/react-navigation/react-navigation/compare/2.5.3...2.5.4
 [2.5.3]: https://github.com/react-navigation/react-navigation/compare/2.5.2...2.5.3

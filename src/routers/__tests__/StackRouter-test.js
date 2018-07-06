@@ -1073,6 +1073,43 @@ describe('StackRouter', () => {
     expect(state3 && state3.isTransitioning).toEqual(false);
   });
 
+  test('Back action parent is prioritized over inactive child routers', () => {
+    const Bar = () => <div />;
+    Bar.router = StackRouter({
+      baz: { screen: () => <div /> },
+      qux: { screen: () => <div /> },
+    });
+    const TestRouter = StackRouter({
+      foo: { screen: () => <div /> },
+      bar: { screen: Bar },
+      boo: { screen: () => <div /> },
+    });
+    const state = {
+      key: 'top',
+      index: 3,
+      routes: [
+        { routeName: 'foo', key: 'f' },
+        {
+          routeName: 'bar',
+          key: 'b',
+          index: 1,
+          routes: [
+            { routeName: 'baz', key: 'bz' },
+            { routeName: 'qux', key: 'bx' },
+          ],
+        },
+        { routeName: 'foo', key: 'f1' },
+        { routeName: 'boo', key: 'z' },
+      ],
+    };
+    const testState = TestRouter.getStateForAction(
+      { type: NavigationActions.BACK },
+      state
+    );
+    expect(testState.index).toBe(2);
+    expect(testState.routes[1].index).toBe(1);
+  });
+
   test('Handle basic stack logic for components with router', () => {
     const FooScreen = () => <div />;
     const BarScreen = () => <div />;
