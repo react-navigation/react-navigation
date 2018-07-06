@@ -230,8 +230,8 @@ class Header extends React.PureComponent {
     } = props.scene.descriptor;
     if (!headerRight) return null;
     else if (React.isValidElement(headerRight)) return headerRight;
-    const isComponent = (typeof headerRight === 'function');
-    const isObject = (typeof headerRight === 'object');
+    const isComponent = typeof headerRight === 'function';
+    const isObject = typeof headerRight === 'object';
     const RenderedRightComponent =
       (isComponent && headerRight) || HeaderRightButton;
     const rightButtonTitle =
