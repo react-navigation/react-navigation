@@ -53,7 +53,7 @@ export const createPathParser = (
     if (typeof pathPattern === 'string') {
       // pathPattern may be either a string or a regexp object according to path-to-regexp docs.
       re = pathToRegexp(pathPattern, keys);
-      toPath = pathToRegexp.compile(pathPattern);
+      toPath = re.compile(pathPattern);
       priority = 0;
     } else if (pathPattern === null) {
       // for wildcard match
