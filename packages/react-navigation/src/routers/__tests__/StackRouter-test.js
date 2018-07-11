@@ -970,6 +970,77 @@ describe('StackRouter', () => {
     expect(replacedState2.routes[0].routeName).toEqual('bar');
   });
 
+  test('Replace action returns most recent route if no key is provided', () => {
+    const GrandChildNavigator = () => <div />;
+    GrandChildNavigator.router = StackRouter({
+      Quux: { screen: () => <div /> },
+      Corge: { screen: () => <div /> },
+      Grault: { screen: () => <div /> },
+    });
+
+    const ChildNavigator = () => <div />;
+    ChildNavigator.router = StackRouter({
+      Baz: { screen: () => <div /> },
+      Woo: { screen: () => <div /> },
+      Qux: { screen: GrandChildNavigator },
+    });
+
+    const router = StackRouter({
+      Foo: { screen: () => <div /> },
+      Bar: { screen: ChildNavigator },
+    });
+
+    const state = router.getStateForAction({ type: NavigationActions.INIT });
+    const state2 = router.getStateForAction(
+      {
+        type: NavigationActions.NAVIGATE,
+        routeName: 'Bar',
+      },
+      state
+    );
+    const state3 = router.getStateForAction(
+      {
+        type: NavigationActions.NAVIGATE,
+        routeName: 'Qux',
+      },
+      state2
+    );
+    const state4 = router.getStateForAction(
+      {
+        type: NavigationActions.NAVIGATE,
+        routeName: 'Corge',
+      },
+      state3
+    );
+    const state5 = router.getStateForAction(
+      {
+        type: NavigationActions.NAVIGATE,
+        routeName: 'Grault',
+      },
+      state4
+    );
+
+    const replacedState = router.getStateForAction(
+      StackActions.replace({
+        routeName: 'Woo',
+        params: { meaning: 42 },
+      }),
+      state5
+    );
+
+    const originalCurrentScreen = state5.routes[1].routes[1].routes[2];
+    const replacedCurrentScreen = replacedState.routes[1].routes[1].routes[2];
+
+    expect(replacedState.routes[1].routes[1].index).toEqual(2);
+    expect(replacedState.routes[1].routes[1].routes.length).toEqual(3);
+    expect(replacedCurrentScreen.key).not.toEqual(originalCurrentScreen.key);
+    expect(replacedCurrentScreen.routeName).not.toEqual(
+      originalCurrentScreen.routeName
+    );
+    expect(replacedCurrentScreen.routeName).toEqual('Woo');
+    expect(replacedCurrentScreen.params.meaning).toEqual(42);
+  });
+
   test('Handles push transition logic with completion action', () => {
     const FooScreen = () => <div />;
     const BarScreen = () => <div />;
