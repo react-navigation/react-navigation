@@ -9,7 +9,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - StackNavigator.replace method no longer requires a key param. If the key is left undefined, the last screen in the stack will be replaced.
 
-## [2.6.1] - [2018-07-05)(https://github.com/react-navigation/react-navigation/releases/tag/2.6.1)
+## [2.6.2] - [2018-07-06](https://github.com/react-navigation/react-navigation/releases/tag/2.6.2)
+### Changed
+- Relax vertical padding warnings on header.
+
+## [2.6.1] - [2018-07-05](https://github.com/react-navigation/react-navigation/releases/tag/2.6.1)
 ### Added
 - Warn for more invalid headerStyle properties (padding, top/right/bottom/left, position).
 
@@ -67,7 +71,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Improved examples
 
-[Unreleased]: https://github.com/react-navigation/react-navigation/compare/2.6.1...HEAD
+[Unreleased]: https://github.com/react-navigation/react-navigation/compare/2.6.2...HEAD
+[2.6.2]: https://github.com/react-navigation/react-navigation/compare/2.6.1...2.6.2
 [2.6.1]: https://github.com/react-navigation/react-navigation/compare/2.6.0...2.6.1
 [2.6.0]: https://github.com/react-navigation/react-navigation/compare/2.5.5...2.6.0
 [2.5.5]: https://github.com/react-navigation/react-navigation/compare/2.5.4...2.5.5
