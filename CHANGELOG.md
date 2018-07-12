@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - StackNavigator.replace method no longer requires a key param. If the key is left undefined, the last screen in the stack will be replaced.
 
+### Fixed
+- Remove header left component only when the headerLeft option is not specified (#4608).
+
 ## [2.6.2] - [2018-07-06](https://github.com/react-navigation/react-navigation/releases/tag/2.6.2)
 ### Changed
 - Relax vertical padding warnings on header.
