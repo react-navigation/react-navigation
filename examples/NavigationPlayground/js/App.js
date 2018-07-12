@@ -16,6 +16,9 @@ import {
   StatusBar,
   View,
 } from 'react-native';
+
+import Reactotron from 'reactotron-react-native';
+
 import { SafeAreaView, createStackNavigator } from 'react-navigation';
 
 import CustomTabs from './CustomTabs';
@@ -38,6 +41,11 @@ import SwitchWithStacks from './SwitchWithStacks';
 import TabsWithNavigationFocus from './TabsWithNavigationFocus';
 import TabsWithNavigationEvents from './TabsWithNavigationEvents';
 import KeyboardHandlingExample from './KeyboardHandlingExample';
+
+Reactotron.configure()
+  .useReactNative()
+  .connect();
+console.tron = Reactotron;
 
 const ExampleInfo = {
   SimpleStack: {
@@ -340,7 +348,9 @@ const AppNavigator = createStackNavigator(
   }
 );
 
-export default AppNavigator;
+const App = () => <AppNavigator persistenceKey="yes" />;
+
+export default App;
 
 const styles = StyleSheet.create({
   item: {

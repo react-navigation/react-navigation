@@ -265,6 +265,16 @@ export default function createNavigationContainer(Component) {
         return;
       }
 
+      console.tron &&
+        console.tron.display({
+          name: 'Navigation',
+          preview: 'Initial State',
+          value: {
+            initialState: startupState,
+            initialAction: this._initialAction,
+          },
+        });
+
       this.setState({ nav: startupState }, () => {
         _reactNavigationIsHydratingState = false;
         dispatchActions();
