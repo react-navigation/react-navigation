@@ -205,8 +205,9 @@ export default function createNavigationContainer(Component) {
       // Pull out anything that can impact state
       const { persistenceKey, uriPrefix, enableURLHandling } = this.props;
       let parsedUrl = null;
+      let startupStateJSON = null;
       if (enableURLHandling !== false) {
-        const startupStateJSON =
+        startupStateJSON =
           persistenceKey && (await AsyncStorage.getItem(persistenceKey));
         const url = await Linking.getInitialURL();
         parsedUrl = url && urlToPathAndParams(url, uriPrefix);
