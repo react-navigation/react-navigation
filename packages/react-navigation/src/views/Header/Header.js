@@ -141,7 +141,7 @@ class Header extends React.PureComponent {
       return options.headerLeft;
     }
 
-    if (props.scene.index === 0) {
+    if (!options.headerLeft && props.scene.index === 0) {
       return;
     }
 
