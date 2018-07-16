@@ -2,7 +2,7 @@ import React from 'react';
 import createNavigationContainer from '../createNavigationContainer';
 import createNavigator from './createNavigator';
 import CardStackTransitioner from '../views/CardStack/CardStackTransitioner';
-import StackRouter from '../routers/StackRouter';
+import stackRouter from '../routers/StackRouter';
 import NavigationActions from '../NavigationActions';
 
 // A stack navigators props are the intersection between
@@ -33,7 +33,7 @@ export default (routeConfigMap, stackConfig = {}) => {
     navigationOptions,
   };
 
-  const router = StackRouter(routeConfigMap, stackRouterConfig);
+  const router = stackRouter(routeConfigMap, stackRouterConfig);
 
   // Create a navigator with CardStackTransitioner as the view
   const navigator = createNavigator(router, routeConfigMap, stackConfig)(

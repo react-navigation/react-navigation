@@ -3,7 +3,7 @@ import { Platform } from 'react-native';
 
 import createNavigator from './createNavigator';
 import createNavigationContainer from '../createNavigationContainer';
-import TabRouter from '../routers/TabRouter';
+import tabRouter from '../routers/TabRouter';
 import TabView from '../views/TabView/TabView';
 import TabBarTop from '../views/TabView/TabBarTop';
 import TabBarBottom from '../views/TabView/TabBarBottom';
@@ -28,7 +28,7 @@ const TabNavigator = (routeConfigs, config = {}) => {
     ...tabsConfig
   } = mergedConfig;
 
-  const router = TabRouter(routeConfigs, tabsConfig);
+  const router = tabRouter(routeConfigs, tabsConfig);
 
   const navigator = createNavigator(router, routeConfigs, config)(props => (
     <TabView
