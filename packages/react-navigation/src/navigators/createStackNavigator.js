@@ -28,7 +28,7 @@ function createStackNavigator(routeConfigMap, stackConfig = {}) {
   // Create a navigator with StackView as the view
   let Navigator = createNavigator(StackView, router, stackConfig);
   if (!disableKeyboardHandling) {
-    Navigator = createKeyboardAwareNavigator(Navigator);
+    Navigator = createKeyboardAwareNavigator(Navigator, stackConfig);
   }
 
   return Navigator;

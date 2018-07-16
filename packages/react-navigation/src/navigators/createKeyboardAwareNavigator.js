@@ -1,7 +1,7 @@
 import React from 'react';
 import { TextInput } from 'react-native';
 
-export default Navigator =>
+export default (Navigator, navigatorConfig) =>
   class KeyboardAwareNavigator extends React.Component {
     static router = Navigator.router;
     _previouslyFocusedTextInput = null;
@@ -49,7 +49,9 @@ export default Navigator =>
         }
       }
 
-      this.props.onTransitionStart &&
-        this.props.onTransitionStart(transitionProps, prevTransitionProps);
+      const onTransitionStart =
+        this.props.onTransitionStart || navigatorConfig.onTransitionStart;
+      onTransitionStart &&
+        onTransitionStart(transitionProps, prevTransitionProps);
     };
   };
