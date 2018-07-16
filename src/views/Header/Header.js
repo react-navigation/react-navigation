@@ -586,6 +586,8 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     ...platformContainerStyles,
+    borderBottomWidth: 0,
+    borderBottomColor: 'transparent',
     elevation: 0,
   },
   header: {
