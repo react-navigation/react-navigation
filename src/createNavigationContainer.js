@@ -130,7 +130,11 @@ export default function createNavigationContainer(Component) {
     }
 
     _handleOpenURL = ({ url }) => {
-      const parsedUrl = urlToPathAndParams(url, this.props.uriPrefix);
+      const { enableURLHandling, uriPrefix } = this.props;
+      if (enableURLHandling === false) {
+        return;
+      }
+      const parsedUrl = urlToPathAndParams(url, uriPrefix);
       if (parsedUrl) {
         const { path, params } = parsedUrl;
         const action = Component.router.getActionForPathAndParams(path, params);
@@ -199,11 +203,15 @@ export default function createNavigationContainer(Component) {
       Linking.addEventListener('url', this._handleOpenURL);
 
       // Pull out anything that can impact state
-      const { persistenceKey, uriPrefix } = this.props;
-      const startupStateJSON =
-        persistenceKey && (await AsyncStorage.getItem(persistenceKey));
-      const url = await Linking.getInitialURL();
-      const parsedUrl = url && urlToPathAndParams(url, uriPrefix);
+      const { persistenceKey, uriPrefix, enableURLHandling } = this.props;
+      let parsedUrl = null;
+      let startupStateJSON = null;
+      if (enableURLHandling !== false) {
+        startupStateJSON =
+          persistenceKey && (await AsyncStorage.getItem(persistenceKey));
+        const url = await Linking.getInitialURL();
+        parsedUrl = url && urlToPathAndParams(url, uriPrefix);
+      }
 
       // Initialize state. This must be done *after* any async code
       // so we don't end up with a different value for this.state.nav
