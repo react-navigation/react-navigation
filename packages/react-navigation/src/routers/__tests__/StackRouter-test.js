@@ -319,7 +319,7 @@ describe('StackRouter', () => {
   });
 
   test('Correctly returns action chain for partially matched path', () => {
-    const uri = 'auth/login/2';
+    const uri = 'auth/login';
     const action = TestStackRouter.getActionForPathAndParams(uri);
     expect(action).toEqual({
       type: NavigationActions.NAVIGATE,
@@ -1206,8 +1206,7 @@ describe('StackRouter', () => {
     };
     const { path, params } = router.getPathAndParamsForState(state);
     expect(path).toEqual('f/123/baz/321');
-    expect(params.id).toEqual('123');
-    expect(params.bazId).toEqual('321');
+    expect(params).toEqual({});
   });
 
   test('Handle goBack identified by key', () => {
