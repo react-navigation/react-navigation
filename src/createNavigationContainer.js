@@ -3,6 +3,7 @@ import { AsyncStorage, Linking, Platform, BackHandler } from 'react-native';
 import { polyfill } from 'react-lifecycles-compat';
 
 import NavigationActions from './NavigationActions';
+import StackActions from './routers/StackActions';
 import getNavigation from './getNavigation';
 import invariant from './utils/invariant';
 import docsUrl from './utils/docsUrl';
@@ -131,6 +132,7 @@ export default function createNavigationContainer(Component) {
 
     _handleOpenURL = ({ url }) => {
       const { enableURLHandling, uriPrefix } = this.props;
+      const { nav } = this.state;
       if (enableURLHandling === false) {
         return;
       }
@@ -138,7 +140,11 @@ export default function createNavigationContainer(Component) {
       if (parsedUrl) {
         const { path, params } = parsedUrl;
         const action = Component.router.getActionForPathAndParams(path, params);
+        const currentRoute = Component.router.getPathAndParamsForState(nav);
         if (action) {
+          if (currentRoute.path !== path) {
+            action.type = StackActions.PUSH;
+          }
           this.dispatch(action);
         }
       }
