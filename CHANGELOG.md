@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+- DeepLinking should trigger Push action instead of Navigate action when routes are the same but paths are differents (ex: message/1 => message/2).
+
 ## [2.7.0] - [2018-07-17](https://github.com/react-navigation/react-navigation/releases/tag/2.7.0)
 ### Added
 - The enableURLHandling prop on the top level navigator component allows you to disable deep linking handling. Currently it is always enabled. To disable it, `<RootNavigator enableURLHandling={false} />`

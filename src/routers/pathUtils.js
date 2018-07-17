@@ -113,10 +113,16 @@ export const createPathParser = (
 
   paths = Object.entries(pathsByRouteNames);
 
-  const getActionForPathAndParams = (pathToResolve = '', inputParams = {}) => {
+  const getActionForPathAndParams = (
+    pathToResolve = '',
+    inputParams = {},
+    payload = {}
+  ) => {
     // Attempt to match `pathToResolve` with a route in this router's routeConfigs, deferring to child routers
 
     let matchedAction = null;
+    let key = null;
+    const fullPath = payload.fullPath ? payload.fullPath : pathToResolve;
 
     // eslint-disable-next-line no-restricted-syntax
     for (const [routeName, path] of paths) {
@@ -137,9 +143,14 @@ export const createPathParser = (
           );
         }
 
+        if (!childAction) {
+          key = fullPath;
+        }
+
         return NavigationActions.navigate({
           routeName,
           params: getParamsFromPath(inputParams, exactMatch, exactReKeys),
+          ...(key ? { key } : {}),
           action: childAction,
         });
       }
