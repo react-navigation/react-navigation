@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Fixed
+- DeepLinking should trigger Push action instead of Navigate action when routes are the same but paths are differents (ex: message/1 => message/2).
+
 ### Changed
 - StackNavigator.replace method no longer requires a key param. If the key is left undefined, the last screen in the stack will be replaced.
 
