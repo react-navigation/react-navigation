@@ -213,15 +213,15 @@ class Header extends React.PureComponent {
   _renderRightComponent = props => {
     const { options } = props.scene.descriptor;
     const headerRight = options.headerRight;
-    if (headerRight) {
-      return (
-        <headerRight
-          pressColorAndroid={options.headerPressColorAndroid}
-          tintColor={options.headerTintColor}
-        />
-      );
+    if (React.isValidElement(headerRight) || headerRight === null) {
+      return headerRight;
     }
-    return null;
+    return (
+      <headerRight
+        pressColorAndroid={options.headerPressColorAndroid}
+        tintColor={options.headerTintColor}
+      />
+    );
   };
 
   _renderLeft(props) {
