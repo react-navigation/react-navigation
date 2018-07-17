@@ -216,6 +216,7 @@ class Header extends React.PureComponent {
     if (React.isValidElement(headerRight) || headerRight === null) {
       return headerRight;
     }
+    if (!headerRight) return null;
     return (
       <headerRight
         pressColorAndroid={options.headerPressColorAndroid}
