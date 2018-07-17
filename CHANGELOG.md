@@ -6,12 +6,20 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [2.7.0] - [2018-07-17](https://github.com/react-navigation/react-navigation/releases/tag/2.7.0)
+### Added
+- The enableURLHandling prop on the top level navigator component allows you to disable deep linking handling. Currently it is always enabled. To disable it, `<RootNavigator enableURLHandling={false} />`
+
 ### Changed
 - StackNavigator.replace method no longer requires a key param. If the key is left undefined, the last screen in the stack will be replaced.
 
 ### Fixed
 - Support headerLeft component for the first screen in a stack (#4608).
 - Removed bottomBorder when `headerTransparent` is set to true.
+- Improve empty path and param handling in deep linking (#4671). This fixes issues with deep linking and fully tests the differences between path: '' and path: null. Empty string matches empty paths, and null path will let the child router handle paths at the same level. Also it makes sure that params are not duplicated between path and query when they are serialized with getPathAndParamsForState.
+- Fix onTransitionStart not being invoked when provided in navigator config.(#4100)
+- Rare case when users navigated back and forth quickly with exactly the right timing would cause a crash due to a scene being queued to transition, then clobbered, then attempted to render as a stale scene but without a descriptor. ([commit](https://github.com/react-navigation/react-navigation/commit/cab4d71a5e09188df3f4a294c98779eecb860a78))
 
 ## [2.6.2] - [2018-07-06](https://github.com/react-navigation/react-navigation/releases/tag/2.6.2)
 ### Changed
@@ -75,7 +83,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Improved examples
 
-[Unreleased]: https://github.com/react-navigation/react-navigation/compare/2.6.2...HEAD
+[Unreleased]: https://github.com/react-navigation/react-navigation/compare/2.7.0...HEAD
+[2.7.0]: https://github.com/react-navigation/react-navigation/compare/2.6.2...2.7.0
 [2.6.2]: https://github.com/react-navigation/react-navigation/compare/2.6.1...2.6.2
 [2.6.1]: https://github.com/react-navigation/react-navigation/compare/2.6.0...2.6.1
 [2.6.0]: https://github.com/react-navigation/react-navigation/compare/2.5.5...2.6.0
