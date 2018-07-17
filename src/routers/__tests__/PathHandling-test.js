@@ -301,7 +301,6 @@ const performRouterTest = createTestRouter => {
     expect(action0.action.routeName).toBe('Baz');
 
     const action1 = router.getActionForPathAndParams('Foo', {});
-    console.log('action1', action1);
     expect(action1.routeName).toBe('B');
     expect(action1.action.routeName).toBe('Foo');
 
@@ -311,6 +310,33 @@ const performRouterTest = createTestRouter => {
 
     const action3 = router.getActionForPathAndParams('unknown', {});
     expect(action3).toBe(null);
+  });
+
+  test('Empty path acts as wildcard for nested router', () => {
+    const ScreenA = () => <div />;
+    const Foo = () => <div />;
+    const ScreenC = () => <div />;
+    ScreenC.router = createTestRouter({
+      Boo: ScreenA,
+      Bar: ScreenA,
+    });
+    Foo.router = createTestRouter({
+      Quo: ScreenA,
+      Qux: {
+        screen: ScreenC,
+        path: '',
+      },
+    });
+    const router = createTestRouter({
+      Bar: {
+        screen: ScreenA,
+      },
+      Foo,
+    });
+    const action0 = router.getActionForPathAndParams('Foo/Bar', {});
+    expect(action0.routeName).toBe('Foo');
+    expect(action0.action.routeName).toBe('Qux');
+    expect(action0.action.action.routeName).toBe('Bar');
   });
 
   test('Gets deep path with pure wildcard match', () => {
