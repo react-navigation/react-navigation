@@ -1,9 +1,17 @@
 import ScenesReducer from '../ScenesReducer';
 
+const MOCK_DESCRIPTOR = {};
+
 /**
  * Simulate scenes transtion with changes of navigation states.
  */
 function testTransition(states) {
+  let descriptors = states
+    .reduce((acc, state) => acc.concat(state), [])
+    .reduce((acc, key) => {
+      acc[key] = MOCK_DESCRIPTOR;
+      return acc;
+    }, {});
   const routes = states.map(keys => ({
     index: 0,
     routes: keys.map(key => ({ key, routeName: '' })),
@@ -13,7 +21,7 @@ function testTransition(states) {
   let scenes = [];
   let prevState = null;
   routes.forEach(nextState => {
-    scenes = ScenesReducer(scenes, nextState, prevState);
+    scenes = ScenesReducer(scenes, nextState, prevState, descriptors);
     prevState = nextState;
   });
 
@@ -29,6 +37,7 @@ describe('ScenesReducer', () => {
         index: 0,
         isActive: true,
         isStale: false,
+        descriptor: MOCK_DESCRIPTOR,
         key: 'scene_1',
         route: {
           key: '1',
@@ -39,6 +48,7 @@ describe('ScenesReducer', () => {
         index: 1,
         isActive: false,
         isStale: false,
+        descriptor: MOCK_DESCRIPTOR,
         key: 'scene_2',
         route: {
           key: '2',
@@ -57,6 +67,7 @@ describe('ScenesReducer', () => {
         index: 0,
         isActive: true,
         isStale: false,
+        descriptor: MOCK_DESCRIPTOR,
         key: 'scene_1',
         route: {
           key: '1',
@@ -67,6 +78,7 @@ describe('ScenesReducer', () => {
         index: 1,
         isActive: false,
         isStale: false,
+        descriptor: MOCK_DESCRIPTOR,
         key: 'scene_2',
         route: {
           key: '2',
@@ -77,6 +89,7 @@ describe('ScenesReducer', () => {
         index: 2,
         isActive: false,
         isStale: false,
+        descriptor: MOCK_DESCRIPTOR,
         key: 'scene_3',
         route: {
           key: '3',
@@ -136,8 +149,10 @@ describe('ScenesReducer', () => {
       isTransitioning: false,
     };
 
-    const scenes1 = ScenesReducer([], state1, null);
-    const scenes2 = ScenesReducer(scenes1, state2, state1);
+    const descriptors = { 1: jest.mock(), 2: jest.mock() };
+
+    const scenes1 = ScenesReducer([], state1, null, descriptors);
+    const scenes2 = ScenesReducer(scenes1, state2, state1, descriptors);
     expect(scenes1).not.toBe(scenes2);
   });
 
@@ -160,8 +175,10 @@ describe('ScenesReducer', () => {
       isTransitioning: false,
     };
 
-    const scenes1 = ScenesReducer([], state1, null);
-    const scenes2 = ScenesReducer(scenes1, state2, state1);
+    const descriptors = { 1: MOCK_DESCRIPTOR, 2: MOCK_DESCRIPTOR };
+
+    const scenes1 = ScenesReducer([], state1, null, descriptors);
+    const scenes2 = ScenesReducer(scenes1, state2, state1, descriptors);
     expect(scenes1).not.toBe(scenes2);
   });
 
@@ -184,8 +201,9 @@ describe('ScenesReducer', () => {
       isTransitioning: false,
     };
 
-    const scenes1 = ScenesReducer([], state1, null);
-    const scenes2 = ScenesReducer(scenes1, state2, state1);
+    const descriptors = { 1: MOCK_DESCRIPTOR, 2: MOCK_DESCRIPTOR };
+    const scenes1 = ScenesReducer([], state1, null, descriptors);
+    const scenes2 = ScenesReducer(scenes1, state2, state1, descriptors);
     expect(scenes1).not.toBe(scenes2);
   });
 
@@ -198,6 +216,7 @@ describe('ScenesReducer', () => {
         index: 0,
         isActive: true,
         isStale: false,
+        descriptor: MOCK_DESCRIPTOR,
         key: 'scene_1',
         route: {
           key: '1',
@@ -208,6 +227,7 @@ describe('ScenesReducer', () => {
         index: 1,
         isActive: false,
         isStale: false,
+        descriptor: MOCK_DESCRIPTOR,
         key: 'scene_2',
         route: {
           key: '2',
@@ -218,6 +238,7 @@ describe('ScenesReducer', () => {
         index: 2,
         isActive: false,
         isStale: true,
+        descriptor: MOCK_DESCRIPTOR,
         key: 'scene_3',
         route: {
           key: '3',
@@ -235,6 +256,7 @@ describe('ScenesReducer', () => {
         index: 0,
         isActive: false,
         isStale: true,
+        descriptor: MOCK_DESCRIPTOR,
         key: 'scene_1',
         route: {
           key: '1',
@@ -245,6 +267,7 @@ describe('ScenesReducer', () => {
         index: 0,
         isActive: true,
         isStale: false,
+        descriptor: MOCK_DESCRIPTOR,
         key: 'scene_3',
         route: {
           key: '3',
@@ -255,6 +278,7 @@ describe('ScenesReducer', () => {
         index: 1,
         isActive: false,
         isStale: true,
+        descriptor: MOCK_DESCRIPTOR,
         key: 'scene_2',
         route: {
           key: '2',
@@ -272,6 +296,7 @@ describe('ScenesReducer', () => {
         index: 0,
         isActive: false,
         isStale: true,
+        descriptor: MOCK_DESCRIPTOR,
         key: 'scene_1',
         route: {
           key: '1',
@@ -282,6 +307,7 @@ describe('ScenesReducer', () => {
         index: 0,
         isActive: true,
         isStale: false,
+        descriptor: MOCK_DESCRIPTOR,
         key: 'scene_2',
         route: {
           key: '2',
@@ -292,6 +318,7 @@ describe('ScenesReducer', () => {
         index: 0,
         isActive: false,
         isStale: true,
+        descriptor: MOCK_DESCRIPTOR,
         key: 'scene_3',
         route: {
           key: '3',

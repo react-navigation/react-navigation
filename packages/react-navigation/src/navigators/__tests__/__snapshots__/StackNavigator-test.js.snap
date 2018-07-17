@@ -4,11 +4,9 @@ exports[`StackNavigator applies correct values when headerRight is present 1`] =
 <View
   onLayout={[Function]}
   style={
-    Array [
-      Object {
-        "flex": 1,
-      },
-    ]
+    Object {
+      "flex": 1,
+    }
   }
 >
   <View
@@ -210,11 +208,9 @@ exports[`StackNavigator renders successfully 1`] = `
 <View
   onLayout={[Function]}
   style={
-    Array [
-      Object {
-        "flex": 1,
-      },
-    ]
+    Object {
+      "flex": 1,
+    }
   }
 >
   <View
