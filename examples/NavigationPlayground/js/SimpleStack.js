@@ -10,7 +10,7 @@ import type {
 } from 'react-navigation';
 
 import * as React from 'react';
-import { ScrollView, StatusBar } from 'react-native';
+import { Platform, ScrollView, StatusBar } from 'react-native';
 import {
   createStackNavigator,
   SafeAreaView,
@@ -23,6 +23,8 @@ import invariant from 'invariant';
 import SampleText from './SampleText';
 import { Button } from './commonComponents/ButtonWithMargin';
 import { HeaderButtons } from './commonComponents/HeaderButtons';
+
+const DEBUG = false;
 
 type MyNavScreenProps = {
   navigation: NavigationScreenProp<NavigationState>,
@@ -133,16 +135,16 @@ class MyHomeScreen extends React.Component<MyHomeScreenProps> {
     this._s3.remove();
   }
   _onWF = a => {
-    console.log('_willFocus HomeScreen', a);
+    DEBUG && console.log('_willFocus HomeScreen', a);
   };
   _onDF = a => {
-    console.log('_didFocus HomeScreen', a);
+    DEBUG && console.log('_didFocus HomeScreen', a);
   };
   _onWB = a => {
-    console.log('_willBlur HomeScreen', a);
+    DEBUG && console.log('_willBlur HomeScreen', a);
   };
   _onDB = a => {
-    console.log('_didBlur HomeScreen', a);
+    DEBUG && console.log('_didBlur HomeScreen', a);
   };
 
   render() {
@@ -246,7 +248,7 @@ const SimpleStack = createStackNavigator(
     },
   },
   {
-    headerLayoutPreset: 'left',
+    headerLayoutPreset: Platform.OS === 'ios' ? 'left' : 'center',
   }
 );
 

@@ -90,7 +90,6 @@ class HeaderBackButton extends React.PureComponent {
         onPress={onPress}
         pressColor={pressColorAndroid}
         style={styles.container}
-        borderless
       >
         <View style={styles.container}>
           {this._renderBackImage()}
