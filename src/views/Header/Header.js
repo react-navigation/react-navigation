@@ -220,6 +220,11 @@ class Header extends React.PureComponent {
 
     const { transitionPreset } = this.props;
 
+    let { style } = props;
+    if (options.headerLeftContainerStyle) {
+      style = [style, options.headerLeftContainerStyle];
+    }
+
     // On Android, or if we have a custom header left, or if we have a custom back image, we
     // do not use the modular header (which is the one that imitates UINavigationController)
     if (
@@ -229,14 +234,14 @@ class Header extends React.PureComponent {
       options.headerLeft === null
     ) {
       return this._renderSubView(
-        props,
+        { ...props, style },
         'left',
         this._renderLeftComponent,
         this.props.leftInterpolator
       );
     } else {
       return this._renderModularSubView(
-        props,
+        { ...props, style },
         'left',
         this._renderModularLeftComponent,
         this.props.leftLabelInterpolator,
@@ -246,7 +251,7 @@ class Header extends React.PureComponent {
   }
 
   _renderTitle(props, options) {
-    const style = {};
+    let style = {};
     const { transitionPreset } = this.props;
 
     if (Platform.OS === 'android') {
@@ -264,6 +269,9 @@ class Header extends React.PureComponent {
       style.left = 0;
       style.right = 0;
     }
+    if (options.headerTitleContainerStyle) {
+      style = [style, options.headerTitleContainerStyle];
+    }
 
     return this._renderSubView(
       { ...props, style },
@@ -276,8 +284,15 @@ class Header extends React.PureComponent {
   }
 
   _renderRight(props) {
+    const { options } = props.scene.descriptor;
+
+    let { style } = props;
+    if (options.headerRightContainerStyle) {
+      style = [style, options.headerRightContainerStyle];
+    }
+
     return this._renderSubView(
-      props,
+      { ...props, style },
       'right',
       this._renderRightComponent,
       this.props.rightInterpolator
@@ -392,6 +407,7 @@ class Header extends React.PureComponent {
     const title = this._renderTitle(props, {
       hasLeftComponent: !!left,
       hasRightComponent: !!right,
+      headerTitleContainerStyle: options.headerTitleContainerStyle,
     });
 
     const { isLandscape, transitionPreset } = this.props;
