@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 - Support headerLeft component for the first screen in a stack (#4608).
 
+### Fixed
+- Error when building with haul: ref to pathToRegexp.compile(#4658).
+
 ## [2.6.2] - [2018-07-06](https://github.com/react-navigation/react-navigation/releases/tag/2.6.2)
 ### Changed
 - Relax vertical padding warnings on header.
