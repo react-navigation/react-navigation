@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [2.8.0] - [2018-07-19](https://github.com/react-navigation/react-navigation/releases/tag/2.8.0)
+### Added
+- `headerLeftContainerStyle`, `headerTitleContainerStyle`, and `headerRightContainerStyle` are exposed on `navigationOptions`. These properties allow you to customize the style of the container of `headerLeft`, `headerTitle` and `headerRight` components.
+
+### Fixed
+- Fixed memory leaks in `createNavigator`: [closure scope leak](https://github.com/react-navigation/react-navigation/commit/1a765562905e93bbae0262dd20c2688221c999e8), and [clean up old descriptors](https://github.com/react-navigation/react-navigation/commit/93642e16e7ff029586b68ee732ec790504ee4862).
+
 ## [2.7.0] - [2018-07-17](https://github.com/react-navigation/react-navigation/releases/tag/2.7.0)
 ### Added
 - The enableURLHandling prop on the top level navigator component allows you to disable deep linking handling. Currently it is always enabled. To disable it, `<RootNavigator enableURLHandling={false} />`
@@ -83,7 +90,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Improved examples
 
-[Unreleased]: https://github.com/react-navigation/react-navigation/compare/2.7.0...HEAD
+[Unreleased]: https://github.com/react-navigation/react-navigation/compare/2.8.0...HEAD
+[2.8.0]: https://github.com/react-navigation/react-navigation/compare/2.7.0...2.8.0
 [2.7.0]: https://github.com/react-navigation/react-navigation/compare/2.6.2...2.7.0
 [2.6.2]: https://github.com/react-navigation/react-navigation/compare/2.6.1...2.6.2
 [2.6.1]: https://github.com/react-navigation/react-navigation/compare/2.6.0...2.6.1
