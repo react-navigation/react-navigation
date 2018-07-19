@@ -62,10 +62,38 @@ class HeaderBackButton extends React.PureComponent {
   }
 
   render() {
+    const { onPress, pressColorAndroid, layoutPreset, title } = this.props;
+
+    let button = (
+      <TouchableItem
+        accessibilityComponentType="button"
+        accessibilityLabel={title}
+        accessibilityTraits="button"
+        testID="header-back"
+        delayPressIn={0}
+        onPress={onPress}
+        pressColor={pressColorAndroid}
+        style={styles.container}
+        borderless
+      >
+        <View style={styles.container}>
+          {this._renderBackImage()}
+          {this._maybeRenderTitle()}
+        </View>
+      </TouchableItem>
+    );
+
+    if (Platform.OS === 'android') {
+      return <View style={styles.androidButtonWrapper}>{button}</View>;
+    } else {
+      return button;
+    }
+  }
+
+  _maybeRenderTitle() {
     const {
-      onPress,
-      pressColorAndroid,
       layoutPreset,
+      backTitleVisible,
       width,
       title,
       titleStyle,
@@ -80,41 +108,35 @@ class HeaderBackButton extends React.PureComponent {
 
     const backButtonTitle = renderTruncated ? truncatedTitle : title;
 
+    // If the left preset is used and we aren't on Android, then we
+    // default to disabling the label
+    const titleDefaultsToDisabled =
+      layoutPreset === 'left' ||
+      Platform.OS === 'android' ||
+      typeof backButtonTitle !== 'string';
+
+    // If the title is explicitly enabled then we respect that
+    if (titleDefaultsToDisabled && !backTitleVisible) {
+      return null;
+    }
+
     return (
-      <TouchableItem
-        accessibilityComponentType="button"
-        accessibilityLabel={backButtonTitle}
-        accessibilityTraits="button"
-        testID="header-back"
-        delayPressIn={0}
-        onPress={onPress}
-        pressColor={pressColorAndroid}
-        style={styles.container}
+      <Text
+        onLayout={this._onTextLayout}
+        style={[styles.title, !!tintColor && { color: tintColor }, titleStyle]}
+        numberOfLines={1}
       >
-        <View style={styles.container}>
-          {this._renderBackImage()}
-          {Platform.OS === 'ios' &&
-            layoutPreset === 'center' &&
-            typeof backButtonTitle === 'string' && (
-              <Text
-                onLayout={this._onTextLayout}
-                style={[
-                  styles.title,
-                  !!tintColor && { color: tintColor },
-                  titleStyle,
-                ]}
-                numberOfLines={1}
-              >
-                {backButtonTitle}
-              </Text>
-            )}
-        </View>
-      </TouchableItem>
+        {backButtonTitle}
+      </Text>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  androidButtonWrapper: {
+    margin: 13,
+    backgroundColor: 'transparent',
+  },
   container: {
     alignItems: 'center',
     flexDirection: 'row',
@@ -138,7 +160,7 @@ const styles = StyleSheet.create({
       : {
           height: 24,
           width: 24,
-          margin: 16,
+          margin: 3,
           resizeMode: 'contain',
           transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }],
         },

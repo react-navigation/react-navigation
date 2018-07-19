@@ -26,8 +26,16 @@ const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : 0;
 const TITLE_OFFSET_CENTER_ALIGN = Platform.OS === 'ios' ? 70 : 56;
 const TITLE_OFFSET_LEFT_ALIGN = Platform.OS === 'ios' ? 20 : 56;
 
-const getTitleOffsets = (layoutPreset, hasLeftComponent, hasRightComponent) => {
+const getTitleOffsets = (
+  layoutPreset,
+  forceBackTitle,
+  hasLeftComponent,
+  hasRightComponent
+) => {
   if (layoutPreset === 'left') {
+    // Maybe at some point we should do something different if the back title is
+    // explicitly enabled, for now people can control it manually
+
     let style = {
       left: TITLE_OFFSET_LEFT_ALIGN,
       right: TITLE_OFFSET_LEFT_ALIGN,
@@ -206,7 +214,9 @@ class Header extends React.PureComponent {
         backImage={options.headerBackImage}
         title={backButtonTitle}
         truncatedTitle={truncatedBackButtonTitle}
+        backTitleVisible={this.props.backTitleVisible}
         titleStyle={options.headerBackTitleStyle}
+        layoutPreset={this.props.layoutPreset}
         width={width}
       />
     );

@@ -166,6 +166,7 @@ class StackViewLayout extends React.Component {
           mode: headerMode,
           transitionPreset: this._getHeaderTransitionPreset(),
           layoutPreset: this._getHeaderLayoutPreset(),
+          backTitleVisible: this._getheaderBackTitleVisible(),
           leftInterpolator: headerLeftInterpolator,
           titleInterpolator: headerTitleInterpolator,
           rightInterpolator: headerRightInterpolator,
@@ -487,6 +488,17 @@ class StackViewLayout extends React.Component {
   _getHeaderLayoutPreset() {
     const { headerLayoutPreset } = this.props;
     if (headerLayoutPreset) {
+      if (__DEV__) {
+        if (
+          this._getHeaderTransitionPreset() === 'uitkit' &&
+          headerLayoutPreset === 'left' &&
+          Platform.OS === 'ios'
+        ) {
+          console.warn(
+            `headerTransitionPreset with the value 'ui-kit' is incompatible with headerLayoutPreset 'left'`
+          );
+        }
+      }
       if (HEADER_LAYOUT_PRESET_VALUES.includes(headerLayoutPreset)) {
         return headerLayoutPreset;
       }
@@ -530,6 +542,12 @@ class StackViewLayout extends React.Component {
     }
 
     return 'fade-in-place';
+  }
+
+  _getheaderBackTitleVisible() {
+    const { headerBackTitleVisible } = this.props;
+
+    return headerBackTitleVisible;
   }
 
   _renderInnerScene(scene) {
