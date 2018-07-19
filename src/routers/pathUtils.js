@@ -106,8 +106,7 @@ export const createPathParser = (
       extendedPathRe,
       extendedPathReKeys,
       isWildcard,
-      toPath:
-        pathPattern === null ? () => '' : compile(pathPattern),
+      toPath: pathPattern === null ? () => '' : compile(pathPattern),
     };
   });
 
