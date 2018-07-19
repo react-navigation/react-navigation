@@ -20,8 +20,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Improve empty path and param handling in deep linking (#4671). This fixes issues with deep linking and fully tests the differences between path: '' and path: null. Empty string matches empty paths, and null path will let the child router handle paths at the same level. Also it makes sure that params are not duplicated between path and query when they are serialized with getPathAndParamsForState.
 - Fix onTransitionStart not being invoked when provided in navigator config.(#4100)
 - Rare case when users navigated back and forth quickly with exactly the right timing would cause a crash due to a scene being queued to transition, then clobbered, then attempted to render as a stale scene but without a descriptor. ([commit](https://github.com/react-navigation/react-navigation/commit/cab4d71a5e09188df3f4a294c98779eecb860a78))
-
-### Fixed
 - Error when building with haul: ref to pathToRegexp.compile(#4658).
 
 ## [2.6.2] - [2018-07-06](https://github.com/react-navigation/react-navigation/releases/tag/2.6.2)
