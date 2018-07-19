@@ -253,21 +253,37 @@ class Header extends React.PureComponent {
   _renderTitle(props, options) {
     let style = {};
     const { transitionPreset } = this.props;
+    const { options: { titleOffset } } = props.scene.descriptor;
 
-    if (Platform.OS === 'android') {
-      if (!options.hasLeftComponent) {
-        style.left = 0;
+    if (titleOffset) {
+      if (typeof titleOffset === 'number') {
+        style.left = titleOffset;
+        style.right = titleOffset;
+      } else if (typeof titleOffset === 'object') {
+        if (typeof titleOffset.left === 'number') {
+          style.left = titleOffset.left;
+        }
+
+        if (typeof titleOffset.right === 'number') {
+          style.right = titleOffset.right;
+        }
       }
-      if (!options.hasRightComponent) {
+    } else {
+      if (Platform.OS === 'android') {
+        if (!options.hasLeftComponent) {
+          style.left = 0;
+        }
+        if (!options.hasRightComponent) {
+          style.right = 0;
+        }
+      } else if (
+        Platform.OS === 'ios' &&
+        !options.hasLeftComponent &&
+        !options.hasRightComponent
+      ) {
+        style.left = 0;
         style.right = 0;
       }
-    } else if (
-      Platform.OS === 'ios' &&
-      !options.hasLeftComponent &&
-      !options.hasRightComponent
-    ) {
-      style.left = 0;
-      style.right = 0;
     }
     if (options.headerTitleContainerStyle) {
       style = [style, options.headerTitleContainerStyle];
