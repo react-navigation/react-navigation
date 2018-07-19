@@ -24,7 +24,7 @@ function createNavigator(NavigatorView, router, navigationConfig) {
         );
       }
 
-      const descriptors = { ...prevState.descriptors };
+      const descriptors = {};
 
       routes.forEach(route => {
         if (
