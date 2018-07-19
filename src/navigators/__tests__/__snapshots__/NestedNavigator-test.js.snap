@@ -4,11 +4,9 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
 <View
   onLayout={[Function]}
   style={
-    Array [
-      Object {
-        "flex": 1,
-      },
-    ]
+    Object {
+      "flex": 1,
+    }
   }
 >
   <View
@@ -77,11 +75,9 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
         <View
           onLayout={[Function]}
           style={
-            Array [
-              Object {
-                "flex": 1,
-              },
-            ]
+            Object {
+              "flex": 1,
+            }
           }
         >
           <View

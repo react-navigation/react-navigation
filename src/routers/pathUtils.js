@@ -1,5 +1,7 @@
 import pathToRegexp, { compile } from 'path-to-regexp';
 import NavigationActions from '../NavigationActions';
+import invariant from '../utils/invariant';
+
 const queryString = require('query-string');
 
 function isEmpty(obj) {
@@ -10,6 +12,37 @@ function isEmpty(obj) {
   return true;
 }
 
+const getParamsFromPath = (inputParams, pathMatch, pathMatchKeys) => {
+  const params = pathMatch.slice(1).reduce(
+    // iterate over matched path params
+    (paramsOut, matchResult, i) => {
+      const key = pathMatchKeys[i];
+      if (!key || key.asterisk) {
+        return paramsOut;
+      }
+      const paramName = key.name;
+
+      let decodedMatchResult;
+      try {
+        decodedMatchResult = decodeURIComponent(matchResult);
+      } catch (e) {
+        // ignore `URIError: malformed URI`
+      }
+
+      paramsOut[paramName] = decodedMatchResult || matchResult;
+      return paramsOut;
+    },
+    {
+      // start with the input(query string) params, which will get overridden by path params
+      ...inputParams,
+    }
+  );
+  return params;
+};
+const getRestOfPath = (pathMatch, pathMatchKeys) => {
+  const rest = pathMatch[pathMatchKeys.findIndex(k => k.asterisk) + 1];
+  return rest;
+};
 export const urlToPathAndParams = (url, uriPrefix) => {
   const searchMatch = url.match(/^(.*)\?(.*)$/);
   const params = searchMatch ? queryString.parse(searchMatch[2]) : {};
@@ -34,138 +67,145 @@ export const urlToPathAndParams = (url, uriPrefix) => {
 export const createPathParser = (
   childRouters,
   routeConfigs,
-  pathConfigs = {},
-  initialRouteName,
-  initialRouteParams
+  pathConfigs = {}
 ) => {
   const pathsByRouteNames = {};
   let paths = [];
 
-  // Build paths for each route
+  // Build pathsByRouteNames, which includes a regex to match paths for each route. Keep in mind, the regex will pass for the route and all child routes. The code that uses pathsByRouteNames will need to also verify that the child router produces an action, in the case of isPathMatchable false (a null path).
   Object.keys(childRouters).forEach(routeName => {
     let pathPattern = pathConfigs[routeName] || routeConfigs[routeName].path;
-    let matchExact = !!pathPattern && !childRouters[routeName];
+
     if (pathPattern === undefined) {
+      // If the user hasn't specified a path at all, then we assume the routeName is an appropriate path
       pathPattern = routeName;
     }
-    const keys = [];
-    let re, toPath, priority;
-    if (typeof pathPattern === 'string') {
-      // pathPattern may be either a string or a regexp object according to path-to-regexp docs.
-      re = pathToRegexp(pathPattern, keys);
-      toPath = compile(pathPattern);
-      priority = 0;
-    } else if (pathPattern === null) {
-      // for wildcard match
-      re = pathToRegexp('*', keys);
-      toPath = () => '';
-      matchExact = true;
-      priority = -1;
-    }
-    if (!matchExact) {
-      const wildcardRe = pathToRegexp(`${pathPattern}/*`, keys);
-      re = new RegExp(`(?:${re.source})|(?:${wildcardRe.source})`);
-    }
-    pathsByRouteNames[routeName] = { re, keys, toPath, priority, pathPattern };
+
+    invariant(
+      pathPattern === null || typeof pathPattern === 'string',
+      `Route path for ${routeName} must be specified as a string, or null.`
+    );
+
+    // the path may be specified as null, which is similar to empty string because it allows child routers to handle the action, but it will not match empty paths
+    const isPathMatchable = pathPattern !== null;
+    // pathPattern is a string with inline params, such as people/:id/*foo
+    const exactReKeys = [];
+    const exactRe = isPathMatchable
+      ? pathToRegexp(pathPattern, exactReKeys)
+      : null;
+    const extendedPathReKeys = [];
+    const isWildcard = pathPattern === '' || !isPathMatchable;
+    const extendedPathRe = pathToRegexp(
+      isWildcard ? '*' : `${pathPattern}/*`,
+      extendedPathReKeys
+    );
+
+    pathsByRouteNames[routeName] = {
+      exactRe,
+      exactReKeys,
+      extendedPathRe,
+      extendedPathReKeys,
+      isWildcard,
+      toPath:
+        pathPattern === null ? () => '' : compile(pathPattern),
+    };
   });
 
   paths = Object.entries(pathsByRouteNames);
-  paths.sort((a, b) => b[1].priority - a[1].priority);
 
-  const getActionForPathAndParams = (pathToResolve, inputParams = {}) => {
-    // If the path is empty (null or empty string)
-    // just return the initial route action
-    if (!pathToResolve) {
-      return NavigationActions.navigate({
-        routeName: initialRouteName,
-        params: { ...inputParams, ...initialRouteParams },
-      });
-    }
+  const getActionForPathAndParams = (pathToResolve = '', inputParams = {}) => {
+    // Attempt to match `pathToResolve` with a route in this router's routeConfigs, deferring to child routers
 
-    // Attempt to match `pathToResolve` with a route in this router's
-    // routeConfigs
-    let matchedRouteName;
-    let pathMatch;
-    let pathMatchKeys;
+    let matchedAction = null;
 
     // eslint-disable-next-line no-restricted-syntax
     for (const [routeName, path] of paths) {
-      const { re, keys } = path;
-      pathMatch = re.exec(pathToResolve);
-      if (pathMatch && pathMatch.length) {
-        pathMatchKeys = keys;
-        matchedRouteName = routeName;
-        break;
-      }
-    }
+      const { exactRe, exactReKeys, extendedPathRe, extendedPathReKeys } = path;
+      const childRouter = childRouters[routeName];
 
-    // We didn't match -- return null to signify no action available
-    if (!matchedRouteName) {
-      return null;
-    }
+      const exactMatch = exactRe && exactRe.exec(pathToResolve);
 
-    // Determine nested actions:
-    // If our matched route for this router is a child router,
-    // get the action for the path AFTER the matched path for this
-    // router
-    let nestedAction;
-    if (childRouters[matchedRouteName]) {
-      nestedAction = childRouters[matchedRouteName].getActionForPathAndParams(
-        pathMatch.slice(pathMatchKeys.length).join('/'),
-        inputParams
-      );
-      if (!nestedAction) {
-        return null;
-      }
-    }
-
-    const params = pathMatch.slice(1).reduce(
-      // iterate over matched path params
-      (paramsOut, matchResult, i) => {
-        const key = pathMatchKeys[i];
-        if (!key || key.asterisk) {
-          return paramsOut;
-        }
-        const paramName = key.name;
-
-        let decodedMatchResult;
-        try {
-          decodedMatchResult = decodeURIComponent(matchResult);
-        } catch (e) {
-          // ignore `URIError: malformed URI`
+      if (exactMatch && exactMatch.length) {
+        const extendedMatch =
+          extendedPathRe && extendedPathRe.exec(pathToResolve);
+        let childAction = null;
+        if (extendedMatch && childRouter) {
+          const restOfPath = getRestOfPath(extendedMatch, extendedPathReKeys);
+          childAction = childRouter.getActionForPathAndParams(
+            restOfPath,
+            inputParams
+          );
         }
 
-        paramsOut[paramName] = decodedMatchResult || matchResult;
-        return paramsOut;
-      },
-      {
-        // start with the input(query string) params, which will get overridden by path params
-        ...inputParams,
+        return NavigationActions.navigate({
+          routeName,
+          params: getParamsFromPath(inputParams, exactMatch, exactReKeys),
+          action: childAction,
+        });
       }
-    );
+    }
 
-    return NavigationActions.navigate({
-      routeName: matchedRouteName,
-      ...(params ? { params } : {}),
-      ...(nestedAction ? { action: nestedAction } : {}),
-    });
+    // eslint-disable-next-line no-restricted-syntax
+    for (const [routeName, path] of paths) {
+      const { extendedPathRe, extendedPathReKeys } = path;
+      const childRouter = childRouters[routeName];
+
+      const extendedMatch =
+        extendedPathRe && extendedPathRe.exec(pathToResolve);
+
+      if (extendedMatch && extendedMatch.length) {
+        const restOfPath = getRestOfPath(extendedMatch, extendedPathReKeys);
+        let childAction = null;
+        if (childRouter) {
+          childAction = childRouter.getActionForPathAndParams(
+            restOfPath,
+            inputParams
+          );
+        }
+        if (!childAction) {
+          continue;
+        }
+        return NavigationActions.navigate({
+          routeName,
+          params: getParamsFromPath(
+            inputParams,
+            extendedMatch,
+            extendedPathReKeys
+          ),
+          action: childAction,
+        });
+      }
+    }
+
+    return null;
   };
   const getPathAndParamsForRoute = route => {
     const { routeName, params } = route;
     const childRouter = childRouters[routeName];
-    const subPath = pathsByRouteNames[routeName].toPath(params);
+    const { toPath, exactReKeys } = pathsByRouteNames[routeName];
+    const subPath = toPath(params);
+    const nonPathParams = {};
+    if (params) {
+      Object.keys(params)
+        .filter(paramName => !exactReKeys.find(k => k.name === paramName))
+        .forEach(paramName => {
+          nonPathParams[paramName] = params[paramName];
+        });
+    }
     if (childRouter) {
       // If it has a router it's a navigator.
       // If it doesn't have router it's an ordinary React component.
       const child = childRouter.getPathAndParamsForState(route);
       return {
         path: subPath ? `${subPath}/${child.path}` : child.path,
-        params: child.params ? { ...params, ...child.params } : params,
+        params: child.params
+          ? { ...nonPathParams, ...child.params }
+          : nonPathParams,
       };
     }
     return {
       path: subPath,
-      params,
+      params: nonPathParams,
     };
   };
   return { getActionForPathAndParams, getPathAndParamsForRoute };

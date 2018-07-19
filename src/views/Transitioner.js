@@ -166,7 +166,7 @@ class Transitioner extends React.Component {
 
   render() {
     return (
-      <View onLayout={this._onLayout} style={[styles.main]}>
+      <View onLayout={this._onLayout} style={styles.main}>
         {this.props.render(this._transitionProps, this._prevTransitionProps)}
       </View>
     );

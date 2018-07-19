@@ -16,6 +16,7 @@ import {
   Platform,
   ScrollView,
   StatusBar,
+  StyleSheet,
   View,
 } from 'react-native';
 import { Header, createStackNavigator } from 'react-navigation';
@@ -231,6 +232,10 @@ const StackWithTranslucentHeader = createStackNavigator(
     headerTransitionPreset: 'uikit',
     navigationOptions: {
       headerTransparent: true,
+      headerStyle: {
+        borderBottomWidth: StyleSheet.hairlineWidth,
+        borderBottomColor: '#A7A7AA',
+      },
       headerBackground: Platform.select({
         ios: <BlurView style={{ flex: 1 }} intensity={98} />,
         android: (
