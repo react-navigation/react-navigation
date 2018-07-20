@@ -580,8 +580,11 @@ class Header extends React.PureComponent {
       <Animated.View
         style={[
           this.props.layoutInterpolator(this.props),
-          Platform.OS === 'ios'
-            ? { backgroundColor: DEFAULT_BACKGROUND_COLOR }
+          Platform.OS === 'ios' && !options.headerTransparent
+            ? {
+                backgroundColor:
+                  safeHeaderStyle.backgroundColor || DEFAULT_BACKGROUND_COLOR,
+              }
             : null,
         ]}
       >
