@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- `headerLayoutPreset: 'center' | 'left'` to provide an easy solution for [questions like this](https://github.com/react-navigation/react-navigation/issues/4615).
+- `headerBackTitleEnabled` - this configuration option for stack navigator allows you to force back button titles to either be rendered or not (if you disagree with defaults for your platform and layout preset).
+
+### Fixed
+- Android back button ripple is now appropriately sized (fixes [#3955](https://github.com/react-navigation/react-navigation/issues/3955)).
+
 
 ## [2.8.0] - [2018-07-19](https://github.com/react-navigation/react-navigation/releases/tag/2.8.0)
 ### Added

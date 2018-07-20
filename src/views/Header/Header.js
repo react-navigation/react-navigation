@@ -21,7 +21,47 @@ import withOrientation from '../withOrientation';
 
 const APPBAR_HEIGHT = Platform.OS === 'ios' ? 44 : 56;
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : 0;
-const TITLE_OFFSET = Platform.OS === 'ios' ? 70 : 56;
+
+// These can be adjusted by using headerTitleContainerStyle on navigationOptions
+const TITLE_OFFSET_CENTER_ALIGN = Platform.OS === 'ios' ? 70 : 56;
+const TITLE_OFFSET_LEFT_ALIGN = Platform.OS === 'ios' ? 20 : 56;
+
+const getTitleOffsets = (
+  layoutPreset,
+  forceBackTitle,
+  hasLeftComponent,
+  hasRightComponent
+) => {
+  if (layoutPreset === 'left') {
+    // Maybe at some point we should do something different if the back title is
+    // explicitly enabled, for now people can control it manually
+
+    let style = {
+      left: TITLE_OFFSET_LEFT_ALIGN,
+      right: TITLE_OFFSET_LEFT_ALIGN,
+    };
+
+    if (!hasLeftComponent) {
+      style.left = 0;
+    }
+    if (!hasRightComponent) {
+      style.right = 0;
+    }
+
+    return style;
+  } else if (layoutPreset === 'center') {
+    let style = {
+      left: TITLE_OFFSET_CENTER_ALIGN,
+      right: TITLE_OFFSET_CENTER_ALIGN,
+    };
+    if (!hasLeftComponent && !hasRightComponent) {
+      style.left = 0;
+      style.right = 0;
+    }
+
+    return style;
+  }
+};
 
 const getAppBarHeight = isLandscape => {
   return Platform.OS === 'ios'
@@ -92,6 +132,7 @@ class Header extends React.PureComponent {
   }
 
   _renderTitleComponent = props => {
+    const { layoutPreset } = this.props;
     const { options } = props.scene.descriptor;
     const headerTitle = options.headerTitle;
     if (React.isValidElement(headerTitle)) {
@@ -103,10 +144,10 @@ class Header extends React.PureComponent {
     const color = options.headerTintColor;
     const allowFontScaling = options.headerTitleAllowFontScaling;
 
-    // On iOS, width of left/right components depends on the calculated
-    // size of the title.
-    const onLayoutIOS =
-      Platform.OS === 'ios'
+    // When title is centered, the width of left/right components depends on the
+    // calculated size of the title.
+    const onLayout =
+      layoutPreset === 'center'
         ? e => {
             this.setState({
               widths: {
@@ -117,18 +158,24 @@ class Header extends React.PureComponent {
           }
         : undefined;
 
-    const RenderedHeaderTitle =
+    const HeaderTitleComponent =
       headerTitle && typeof headerTitle !== 'string'
         ? headerTitle
         : HeaderTitle;
     return (
-      <RenderedHeaderTitle
-        onLayout={onLayoutIOS}
+      <HeaderTitleComponent
+        onLayout={onLayout}
         allowFontScaling={allowFontScaling == null ? true : allowFontScaling}
-        style={[color ? { color } : null, titleStyle]}
+        style={[
+          color ? { color } : null,
+          layoutPreset === 'center'
+            ? { textAlign: 'center' }
+            : { textAlign: 'left' },
+          titleStyle,
+        ]}
       >
         {titleString}
-      </RenderedHeaderTitle>
+      </HeaderTitleComponent>
     );
   };
 
@@ -167,7 +214,9 @@ class Header extends React.PureComponent {
         backImage={options.headerBackImage}
         title={backButtonTitle}
         truncatedTitle={truncatedBackButtonTitle}
+        backTitleVisible={this.props.backTitleVisible}
         titleStyle={options.headerBackTitleStyle}
+        layoutPreset={this.props.layoutPreset}
         width={width}
       />
     );
@@ -251,27 +300,16 @@ class Header extends React.PureComponent {
   }
 
   _renderTitle(props, options) {
-    let style = {};
-    const { transitionPreset } = this.props;
-
-    if (Platform.OS === 'android') {
-      if (!options.hasLeftComponent) {
-        style.left = 0;
-      }
-      if (!options.hasRightComponent) {
-        style.right = 0;
-      }
-    } else if (
-      Platform.OS === 'ios' &&
-      !options.hasLeftComponent &&
-      !options.hasRightComponent
-    ) {
-      style.left = 0;
-      style.right = 0;
-    }
-    if (options.headerTitleContainerStyle) {
-      style = [style, options.headerTitleContainerStyle];
-    }
+    const { layoutPreset, transitionPreset } = this.props;
+    let style = [
+      { justifyContent: layoutPreset === 'center' ? 'center' : 'flex-start' },
+      getTitleOffsets(
+        layoutPreset,
+        options.hasLeftComponent,
+        options.hasRightComponent
+      ),
+      options.headerTitleContainerStyle,
+    ];
 
     return this._renderSubView(
       { ...props, style },
@@ -386,7 +424,6 @@ class Header extends React.PureComponent {
           styles[name],
           props.style,
           styleInterpolator({
-            // todo: determine if we really need to splat all this.props
             ...this.props,
             ...props,
           }),
@@ -636,12 +673,9 @@ const styles = StyleSheet.create({
   title: {
     bottom: 0,
     top: 0,
-    left: TITLE_OFFSET,
-    right: TITLE_OFFSET,
     position: 'absolute',
     alignItems: 'center',
     flexDirection: 'row',
-    justifyContent: Platform.OS === 'ios' ? 'center' : 'flex-start',
   },
   left: {
     left: 0,
