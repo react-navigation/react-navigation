@@ -501,6 +501,7 @@ class Header extends React.PureComponent {
       right,
       bottom,
       left,
+      backgroundColor,
       ...safeHeaderStyle
     } = headerStyleObj;
 
@@ -543,12 +544,26 @@ class Header extends React.PureComponent {
       <Animated.View
         style={[
           this.props.layoutInterpolator(this.props),
-          Platform.OS === 'ios'
-            ? { backgroundColor: DEFAULT_BACKGROUND_COLOR }
-            : null,
+          {
+            backgroundColor:
+              Platform.OS === 'ios'
+                ? backgroundColor || DEFAULT_BACKGROUND_COLOR
+                : 'transparent',
+          },
         ]}
       >
-        <SafeAreaView forceInset={forceInset} style={containerStyles}>
+        <SafeAreaView
+          forceInset={forceInset}
+          style={[
+            ...containerStyles,
+            {
+              backgroundColor:
+                Platform.OS === 'ios'
+                  ? 'transparent'
+                  : backgroundColor || DEFAULT_BACKGROUND_COLOR,
+            },
+          ]}
+        >
           <View style={StyleSheet.absoluteFill}>
             {options.headerBackground}
           </View>
@@ -592,10 +607,7 @@ if (Platform.OS === 'ios') {
 const DEFAULT_BACKGROUND_COLOR = Platform.OS === 'ios' ? '#F7F7F7' : '#FFF';
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: DEFAULT_BACKGROUND_COLOR,
-    ...platformContainerStyles,
-  },
+  container: platformContainerStyles,
   transparentContainer: {
     position: 'absolute',
     top: 0,
