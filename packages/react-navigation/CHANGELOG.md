@@ -6,12 +6,15 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [2.9.0] - [2018-07-20](https://github.com/react-navigation/react-navigation/releases/tag/2.9.0)
 ### Added
 - `headerLayoutPreset: 'center' | 'left'` to provide an easy solution for [questions like this](https://github.com/react-navigation/react-navigation/issues/4615).
 - `headerBackTitleEnabled` - this configuration option for stack navigator allows you to force back button titles to either be rendered or not (if you disagree with defaults for your platform and layout preset).
 
 ### Fixed
 - Android back button ripple is now appropriately sized (fixes [#3955](https://github.com/react-navigation/react-navigation/issues/3955)).
+- Respect header background color on container (fixes edge case where user depended on displaying content that was rendered behind the navigator, this particular behavior should not be depended on and may break in the future, but this change is still useful regardless).
 
 
 ## [2.8.0] - [2018-07-19](https://github.com/react-navigation/react-navigation/releases/tag/2.8.0)
@@ -97,7 +100,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Improved examples
 
-[Unreleased]: https://github.com/react-navigation/react-navigation/compare/2.8.0...HEAD
+[Unreleased]: https://github.com/react-navigation/react-navigation/compare/2.9.0...HEAD
+[2.9.0]: https://github.com/react-navigation/react-navigation/compare/2.8.0...2.9.0
 [2.8.0]: https://github.com/react-navigation/react-navigation/compare/2.7.0...2.8.0
 [2.7.0]: https://github.com/react-navigation/react-navigation/compare/2.6.2...2.7.0
 [2.6.2]: https://github.com/react-navigation/react-navigation/compare/2.6.1...2.6.2
