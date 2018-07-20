@@ -544,7 +544,7 @@ class Header extends React.PureComponent {
       <Animated.View
         style={[
           this.props.layoutInterpolator(this.props),
-          { backgroundColor: backgroundColor || DEFAULT_BACKGROUND_COLOR }
+          { backgroundColor: backgroundColor || DEFAULT_BACKGROUND_COLOR },
         ]}
       >
         <SafeAreaView forceInset={forceInset} style={containerStyles}>
