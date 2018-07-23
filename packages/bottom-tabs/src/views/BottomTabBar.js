@@ -74,6 +74,7 @@ class TabBarBottom extends React.Component<Props> {
     showIcon: true,
     allowFontScaling: true,
     adaptive: isIOS11,
+    safeAreaInset: { bottom: 'always', top: 'never' },
   };
 
   _renderLabel = ({ route, focused }) => {
@@ -207,7 +208,7 @@ class TabBarBottom extends React.Component<Props> {
     return (
       <SafeAreaView
         style={tabBarStyle}
-        forceInset={safeAreaInset || { bottom: 'always', top: 'never' }}
+        forceInset={safeAreaInset}
       >
         {routes.map((route, index) => {
           const focused = index === navigation.state.index;
