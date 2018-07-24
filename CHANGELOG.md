@@ -7,10 +7,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+- Take into account correctly the presence of `headerLeft` component when computing title offsets (#4754).
+
 ## [2.9.0] - [2018-07-20](https://github.com/react-navigation/react-navigation/releases/tag/2.9.0)
 ### Added
 - `headerLayoutPreset: 'center' | 'left'` to provide an easy solution for [questions like this](https://github.com/react-navigation/react-navigation/issues/4615).
-- `headerBackTitleEnabled` - this configuration option for stack navigator allows you to force back button titles to either be rendered or not (if you disagree with defaults for your platform and layout preset).
+- `headerBackTitleVisible` - this configuration option for stack navigator allows you to force back button titles to either be rendered or not (if you disagree with defaults for your platform and layout preset).
 
 ### Fixed
 - Android back button ripple is now appropriately sized (fixes [#3955](https://github.com/react-navigation/react-navigation/issues/3955)).
