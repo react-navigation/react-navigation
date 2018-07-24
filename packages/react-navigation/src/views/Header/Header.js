@@ -305,6 +305,7 @@ class Header extends React.PureComponent {
       { justifyContent: layoutPreset === 'center' ? 'center' : 'flex-start' },
       getTitleOffsets(
         layoutPreset,
+        false,
         options.hasLeftComponent,
         options.hasRightComponent
       ),
