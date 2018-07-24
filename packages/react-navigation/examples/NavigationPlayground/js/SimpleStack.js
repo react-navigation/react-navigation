@@ -179,16 +179,16 @@ class MyPhotosScreen extends React.Component<MyPhotosScreenProps> {
     this._s3.remove();
   }
   _onWF = a => {
-    console.log('_willFocus PhotosScreen', a);
+    DEBUG && console.log('_willFocus PhotosScreen', a);
   };
   _onDF = a => {
-    console.log('_didFocus PhotosScreen', a);
+    DEBUG && console.log('_didFocus PhotosScreen', a);
   };
   _onWB = a => {
-    console.log('_willBlur PhotosScreen', a);
+    DEBUG && console.log('_willBlur PhotosScreen', a);
   };
   _onDB = a => {
-    console.log('_didBlur PhotosScreen', a);
+    DEBUG && console.log('_didBlur PhotosScreen', a);
   };
 
   render() {
