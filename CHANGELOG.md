@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+- Typo in Header transition preset check.
+
 ## [2.9.0] - [2018-07-20](https://github.com/react-navigation/react-navigation/releases/tag/2.9.0)
 ### Added
 - `headerLayoutPreset: 'center' | 'left'` to provide an easy solution for [questions like this](https://github.com/react-navigation/react-navigation/issues/4615).
