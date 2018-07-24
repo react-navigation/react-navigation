@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [2.9.1] - [2018-07-24](https://github.com/react-navigation/react-navigation/releases/tag/2.9.1)
+### Fixed
+- Incorrect parameters passed to title offset calculation led to bug in header layout when no right component (https://github.com/react-navigation/react-navigation/issues/4754)
+
 ## [2.9.0] - [2018-07-20](https://github.com/react-navigation/react-navigation/releases/tag/2.9.0)
 ### Added
 - `headerLayoutPreset: 'center' | 'left'` to provide an easy solution for [questions like this](https://github.com/react-navigation/react-navigation/issues/4615).
@@ -100,7 +104,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Improved examples
 
-[Unreleased]: https://github.com/react-navigation/react-navigation/compare/2.9.0...HEAD
+[Unreleased]: https://github.com/react-navigation/react-navigation/compare/2.9.1...HEAD
+[2.9.1]: https://github.com/react-navigation/react-navigation/compare/2.9.0...2.9.1
 [2.9.0]: https://github.com/react-navigation/react-navigation/compare/2.8.0...2.9.0
 [2.8.0]: https://github.com/react-navigation/react-navigation/compare/2.7.0...2.8.0
 [2.7.0]: https://github.com/react-navigation/react-navigation/compare/2.6.2...2.7.0
