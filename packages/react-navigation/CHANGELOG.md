@@ -6,11 +6,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-### Fixed
-- Error when building with haul: ref to pathToRegexp.compile(#4658).
 
+## [2.9.2] - [2018-07-25](https://github.com/react-navigation/react-navigation/releases/tag/2.9.2)
 ### Added
 - Export `StackViewTransitionConfigs` to allow you to extend default config in custom transition configs. [#4761](https://github.com/react-navigation/react-navigation/pull/4761)
+
+### Fixed
+- Error when building with haul: ref to pathToRegexp.compile(#4658).
+- Error when building with haul: ref to pathToRegexp.compile. [#4658](https://github.com/react-navigation/react-navigation/pull/4658).
 
 ## [2.9.1] - [2018-07-24](https://github.com/react-navigation/react-navigation/releases/tag/2.9.1)
 ### Fixed
@@ -112,7 +115,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Improved examples
 
-[Unreleased]: https://github.com/react-navigation/react-navigation/compare/2.9.1...HEAD
+[Unreleased]: https://github.com/react-navigation/react-navigation/compare/2.9.2...HEAD
+[2.9.2]: https://github.com/react-navigation/react-navigation/compare/2.9.1...2.9.2
 [2.9.1]: https://github.com/react-navigation/react-navigation/compare/2.9.0...2.9.1
 [2.9.0]: https://github.com/react-navigation/react-navigation/compare/2.8.0...2.9.0
 [2.8.0]: https://github.com/react-navigation/react-navigation/compare/2.7.0...2.8.0
