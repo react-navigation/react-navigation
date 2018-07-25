@@ -490,7 +490,7 @@ class StackViewLayout extends React.Component {
     if (headerLayoutPreset) {
       if (__DEV__) {
         if (
-          this._getHeaderTransitionPreset() === 'uitkit' &&
+          this._getHeaderTransitionPreset() === 'uikit' &&
           headerLayoutPreset === 'left' &&
           Platform.OS === 'ios'
         ) {

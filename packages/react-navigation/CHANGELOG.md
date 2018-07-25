@@ -13,6 +13,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 - Incorrect parameters passed to title offset calculation led to bug in header layout when no right component (https://github.com/react-navigation/react-navigation/issues/4754)
 
+### Fixed
+- Typo in Header transition preset check.
+
 ## [2.9.0] - [2018-07-20](https://github.com/react-navigation/react-navigation/releases/tag/2.9.0)
 ### Added
 - `headerLayoutPreset: 'center' | 'left'` to provide an easy solution for [questions like this](https://github.com/react-navigation/react-navigation/issues/4615).
