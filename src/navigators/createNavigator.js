@@ -24,7 +24,7 @@ function createNavigator(NavigatorView, router, navigationConfig) {
         );
       }
 
-      const descriptors = { ...prevState.descriptors };
+      const descriptors = {};
 
       routes.forEach(route => {
         if (
@@ -36,8 +36,10 @@ function createNavigator(NavigatorView, router, navigationConfig) {
           descriptors[route.key] = prevDescriptors[route.key];
           return;
         }
-        const getComponent = () =>
-          router.getComponentForRouteName(route.routeName);
+        const getComponent = router.getComponentForRouteName.bind(
+          null,
+          route.routeName
+        );
         const childNavigation = navigation.getChildNavigation(route.key);
         const options = router.getScreenOptions(childNavigation, screenProps);
         descriptors[route.key] = {

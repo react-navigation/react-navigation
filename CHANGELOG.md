@@ -9,6 +9,27 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 - Error when building with haul: ref to pathToRegexp.compile(#4658).
 
+## [2.9.1] - [2018-07-24](https://github.com/react-navigation/react-navigation/releases/tag/2.9.1)
+### Fixed
+- Incorrect parameters passed to title offset calculation led to bug in header layout when no right component (https://github.com/react-navigation/react-navigation/issues/4754)
+
+## [2.9.0] - [2018-07-20](https://github.com/react-navigation/react-navigation/releases/tag/2.9.0)
+### Added
+- `headerLayoutPreset: 'center' | 'left'` to provide an easy solution for [questions like this](https://github.com/react-navigation/react-navigation/issues/4615).
+- `headerBackTitleEnabled` - this configuration option for stack navigator allows you to force back button titles to either be rendered or not (if you disagree with defaults for your platform and layout preset).
+
+### Fixed
+- Android back button ripple is now appropriately sized (fixes [#3955](https://github.com/react-navigation/react-navigation/issues/3955)).
+- Respect header background color on container (fixes edge case where user depended on displaying content that was rendered behind the navigator, this particular behavior should not be depended on and may break in the future, but this change is still useful regardless).
+
+
+## [2.8.0] - [2018-07-19](https://github.com/react-navigation/react-navigation/releases/tag/2.8.0)
+### Added
+- `headerLeftContainerStyle`, `headerTitleContainerStyle`, and `headerRightContainerStyle` are exposed on `navigationOptions`. These properties allow you to customize the style of the container of `headerLeft`, `headerTitle` and `headerRight` components.
+
+### Fixed
+- Fixed memory leaks in `createNavigator`: [closure scope leak](https://github.com/react-navigation/react-navigation/commit/1a765562905e93bbae0262dd20c2688221c999e8), and [clean up old descriptors](https://github.com/react-navigation/react-navigation/commit/93642e16e7ff029586b68ee732ec790504ee4862).
+
 ## [2.7.0] - [2018-07-17](https://github.com/react-navigation/react-navigation/releases/tag/2.7.0)
 ### Added
 - The enableURLHandling prop on the top level navigator component allows you to disable deep linking handling. Currently it is always enabled. To disable it, `<RootNavigator enableURLHandling={false} />`
@@ -85,7 +106,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Improved examples
 
-[Unreleased]: https://github.com/react-navigation/react-navigation/compare/2.7.0...HEAD
+[Unreleased]: https://github.com/react-navigation/react-navigation/compare/2.9.1...HEAD
+[2.9.1]: https://github.com/react-navigation/react-navigation/compare/2.9.0...2.9.1
+[2.9.0]: https://github.com/react-navigation/react-navigation/compare/2.8.0...2.9.0
+[2.8.0]: https://github.com/react-navigation/react-navigation/compare/2.7.0...2.8.0
 [2.7.0]: https://github.com/react-navigation/react-navigation/compare/2.6.2...2.7.0
 [2.6.2]: https://github.com/react-navigation/react-navigation/compare/2.6.1...2.6.2
 [2.6.1]: https://github.com/react-navigation/react-navigation/compare/2.6.0...2.6.1

@@ -11,8 +11,7 @@
     "splash": {
       "image": "./assets/icons/splash.png"
     },
-    "sdkVersion": "27.0.0",
-    "entryPoint": "./node_modules/react-native-scripts/build/bin/crna-entry.js",
+    "sdkVersion": "28.0.0",
     "assetBundlePatterns": [
       "**/*"
     ],
