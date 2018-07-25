@@ -107,4 +107,8 @@ function getTransitionConfig(
 export default {
   defaultTransitionConfig,
   getTransitionConfig,
+  SlideFromRightIOS,
+  ModalSlideFromBottomIOS,
+  FadeInFromBottomAndroid,
+  FadeOutToBottomAndroid,
 };
