@@ -1,4 +1,4 @@
-import pathToRegexp from 'path-to-regexp';
+import pathToRegexp, { compile } from 'path-to-regexp';
 import NavigationActions from '../NavigationActions';
 import invariant from '../utils/invariant';
 
@@ -106,8 +106,7 @@ export const createPathParser = (
       extendedPathRe,
       extendedPathReKeys,
       isWildcard,
-      toPath:
-        pathPattern === null ? () => '' : pathToRegexp.compile(pathPattern),
+      toPath: pathPattern === null ? () => '' : compile(pathPattern),
     };
   });
 
