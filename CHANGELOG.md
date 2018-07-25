@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Fixed
+- Error when building with haul: ref to pathToRegexp.compile(#4658).
 
 ## [2.9.1] - [2018-07-24](https://github.com/react-navigation/react-navigation/releases/tag/2.9.1)
 ### Fixed
