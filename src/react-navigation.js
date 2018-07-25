@@ -99,6 +99,9 @@ module.exports = {
   get StackViewCard() {
     return require('./views/StackView/StackViewCard').default;
   },
+  get StackViewTransitionConfigs() {
+    return require('./views/StackView/StackViewTransitionConfigs').default;
+  },
   get SafeAreaView() {
     return require('react-native-safe-area-view').default;
   },
