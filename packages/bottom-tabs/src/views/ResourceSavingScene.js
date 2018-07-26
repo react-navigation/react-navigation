@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
 
 type Props = {
-  isFocused: boolean,
+  isVisible: boolean,
   children: React.Node,
   style?: any,
 };
@@ -13,7 +13,7 @@ const FAR_FAR_AWAY = 3000; // this should be big enough to move the whole view o
 
 export default class ResourceSavingScene extends React.Component<Props> {
   render() {
-    const { isFocused, children, style, ...rest } = this.props;
+    const { isVisible, children, style, ...rest } = this.props;
 
     return (
       <View
@@ -22,12 +22,12 @@ export default class ResourceSavingScene extends React.Component<Props> {
         removeClippedSubviews={
           // On iOS, set removeClippedSubviews to true only when not focused
           // This is an workaround for a bug where the clipped view never re-appears
-          Platform.OS === 'ios' ? !isFocused : true
+          Platform.OS === 'ios' ? !isVisible : true
         }
-        pointerEvents={isFocused ? 'auto' : 'none'}
+        pointerEvents={isVisible ? 'auto' : 'none'}
         {...rest}
       >
-        <View style={isFocused ? styles.attached : styles.detached}>
+        <View style={isVisible ? styles.attached : styles.detached}>
           {children}
         </View>
       </View>

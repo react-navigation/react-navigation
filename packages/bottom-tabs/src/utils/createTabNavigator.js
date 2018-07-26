@@ -29,7 +29,7 @@ export type InjectedProps = {
 };
 
 export default function createTabNavigator(TabView: React.ComponentType<*>) {
-  class NavigationView extends React.Component<*> {
+  class NavigationView extends React.Component<*, State> {
     _renderScene = ({ route }) => {
       const { screenProps, descriptors } = this.props;
       const descriptor = descriptors[route.key];
@@ -143,6 +143,14 @@ export default function createTabNavigator(TabView: React.ComponentType<*>) {
       }
 
       this._jumpTo(this.props.navigation.state.routes[index].routeName);
+    };
+
+    _handleSwipeStart = () => {
+      this.setState({ isSwiping: true });
+    };
+
+    _handleSwipeEnd = () => {
+      this.setState({ isSwiping: false });
     };
 
     _jumpTo = routeName =>
