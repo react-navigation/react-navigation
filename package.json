@@ -1,6 +1,6 @@
 {
   "name": "react-navigation",
-  "version": "2.9.2",
+  "version": "2.9.3",
   "description": "Routing and navigation for your React Native apps",
   "main": "src/react-navigation.js",
   "repository": {
@@ -22,7 +22,8 @@
     "precommit": "lint-staged"
   },
   "files": [
-    "src"
+    "src",
+    "NavigationTestUtils.js"
   ],
   "peerDependencies": {
     "react": "*",

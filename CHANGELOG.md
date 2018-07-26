@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [2.9.3] - [2018-07-26](https://github.com/react-navigation/react-navigation/releases/tag/2.9.3)
+### Added
+- Add `NavigationTestUtils` which can be imported by path to be used with jest snapshot testing.
+
 ## [2.9.2] - [2018-07-25](https://github.com/react-navigation/react-navigation/releases/tag/2.9.2)
 ### Added
 - Export `StackViewTransitionConfigs` to allow you to extend default config in custom transition configs. [#4761](https://github.com/react-navigation/react-navigation/pull/4761)
@@ -115,7 +119,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Improved examples
 
-[Unreleased]: https://github.com/react-navigation/react-navigation/compare/2.9.2...HEAD
+[Unreleased]: https://github.com/react-navigation/react-navigation/compare/2.9.3...HEAD
+[2.9.3]: https://github.com/react-navigation/react-navigation/compare/2.9.2...2.9.3
 [2.9.2]: https://github.com/react-navigation/react-navigation/compare/2.9.1...2.9.2
 [2.9.1]: https://github.com/react-navigation/react-navigation/compare/2.9.0...2.9.1
 [2.9.0]: https://github.com/react-navigation/react-navigation/compare/2.8.0...2.9.0
