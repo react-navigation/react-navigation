@@ -325,6 +325,31 @@ function forCenterFromLeft(props) {
   };
 }
 
+const BACKGROUND_OFFSET = Dimensions.get('window').width;
+function forBackground(props) {
+  const { position, scene, scenes } = props;
+  const interpolate = getSceneIndicesForInterpolationInputRange(props);
+
+  if (!interpolate) return { opacity: 0 };
+
+  const { first, last } = interpolate;
+  const index = scene.index;
+  const offset = BACKGROUND_OFFSET;
+
+  const outputRange = [offset, 0, -offset];
+
+  return {
+    transform: [
+      {
+        translateX: position.interpolate({
+          inputRange: [first, index, last],
+          outputRange: I18nManager.isRTL ? outputRange.reverse() : outputRange,
+        }),
+      },
+    ],
+  };
+}
+
 export default {
   forLayout,
   forLeft,
@@ -333,4 +358,5 @@ export default {
   forCenterFromLeft,
   forCenter,
   forRight,
+  forBackground,
 };
