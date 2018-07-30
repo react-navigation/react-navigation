@@ -547,6 +547,24 @@ const performRouterTest = createTestRouter => {
     expect(action.type).toEqual(NavigationActions.NAVIGATE);
     expect(action.routeName).toEqual('baz');
   });
+
+  test('paths option set as null on router overrides path from route config', () => {
+    const router = createTestRouter(
+      {
+        main: {
+          screen: MainNavigator,
+        },
+        baz: {
+          path: 'bazPath',
+          screen: FooNavigator,
+        },
+      },
+      { paths: { baz: null } }
+    );
+    const action = router.getActionForPathAndParams('b/noBaz', {});
+    expect(action.type).toEqual(NavigationActions.NAVIGATE);
+    expect(action.routeName).toEqual('baz');
+  });
 };
 
 describe('Path handling for stack router', () => {
