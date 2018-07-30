@@ -494,6 +494,7 @@ class Header extends React.PureComponent {
   _renderBackground(props) {
     const {
       index,
+      key,
       descriptor: { options },
     } = props.scene;
 
@@ -511,6 +512,7 @@ class Header extends React.PureComponent {
 
     return (
       <Animated.View
+        key={`background_${key}`}
         style={[
           StyleSheet.absoluteFill,
           this.props.backgroundInterpolator({
