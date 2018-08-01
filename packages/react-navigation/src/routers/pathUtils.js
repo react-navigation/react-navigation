@@ -74,7 +74,14 @@ export const createPathParser = (
 
   // Build pathsByRouteNames, which includes a regex to match paths for each route. Keep in mind, the regex will pass for the route and all child routes. The code that uses pathsByRouteNames will need to also verify that the child router produces an action, in the case of isPathMatchable false (a null path).
   Object.keys(childRouters).forEach(routeName => {
-    let pathPattern = pathConfigs[routeName] || routeConfigs[routeName].path;
+    let pathPattern;
+
+    // First check for paths on the router, then check the route config
+    if (pathConfigs[routeName] !== undefined) {
+      pathPattern = pathConfigs[routeName];
+    } else {
+      pathPattern = routeConfigs[routeName].path;
+    }
 
     if (pathPattern === undefined) {
       // If the user hasn't specified a path at all, then we assume the routeName is an appropriate path
