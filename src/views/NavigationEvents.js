@@ -50,7 +50,7 @@ class NavigationEvents extends React.Component {
   };
 
   render() {
-    return null;
+    return this.props.children || null;
   }
 }
 

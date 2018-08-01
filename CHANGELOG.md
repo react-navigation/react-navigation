@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Updated `NavigationEvents` to support children.
 
 ## [2.9.3] - [2018-07-26](https://github.com/react-navigation/react-navigation/releases/tag/2.9.3)
 ### Added
