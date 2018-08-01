@@ -45,24 +45,8 @@ class DrawerSidebar extends React.PureComponent {
 
   _onItemPress = ({ route, focused }) => {
     if (!focused) {
-      let subAction;
-      // TODO (v3): Revisit and repeal this behavior:
-      // if the child screen is a StackRouter then always navigate to its first screen (see #1914)
-      if (route.index != null && route.index !== 0) {
-        subAction = StackActions.reset({
-          index: 0,
-          actions: [
-            NavigationActions.navigate({
-              routeName: route.routes[0].routeName,
-            }),
-          ],
-        });
-      }
       this.props.navigation.dispatch(
-        NavigationActions.navigate({
-          routeName: route.routeName,
-          action: subAction,
-        })
+        NavigationActions.navigate({ routeName: route.routeName })
       );
     }
   };
