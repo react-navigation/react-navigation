@@ -1,4 +1,4 @@
-import { SwitchRouter } from 'react-navigation';
+import { SwitchRouter, NavigationActions } from 'react-navigation';
 import DrawerActions from './DrawerActions';
 
 function withDefaultValue(obj, key, defaultValue) {
@@ -68,6 +68,13 @@ export default (routeConfigs, config = {}) => {
         }
 
         if (action.type === DrawerActions.CLOSE_DRAWER) {
+          return {
+            ...state,
+            closeId: state.closeId + 1,
+          };
+        }
+
+        if (action.type === NavigationActions.BACK && state.isDrawerOpen) {
           return {
             ...state,
             closeId: state.closeId + 1,

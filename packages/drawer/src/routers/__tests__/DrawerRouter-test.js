@@ -3,7 +3,7 @@
 import React from 'react';
 import DrawerRouter from '../DrawerRouter';
 
-import { NavigationActions, SwitchRouter } from 'react-navigation';
+import { NavigationActions, SwitchRouter, StackRouter } from 'react-navigation';
 import DrawerActions from '../../routers/DrawerActions';
 
 const INIT_ACTION = { type: NavigationActions.INIT };
@@ -226,4 +226,40 @@ test('DrawerRouter will close drawer on child navigaton, not on child param chan
   const state1quxState = state1switchState.routes[state1switchState.index];
   expect(state1.closeId).toBe(0); // don't fire close
   expect(state1quxState.params.foo).toEqual('bar');
+});
+
+test('goBack closes drawer when inside of stack', () => {
+  const ScreenA = () => <div />;
+  const DrawerScreen = () => <div />;
+  DrawerScreen.router = DrawerRouter({
+    Foo: { screen: ScreenA },
+    Bar: { screen: ScreenA },
+  });
+  const router = StackRouter({
+    Baz: { screen: ScreenA },
+    Drawer: { screen: DrawerScreen },
+  });
+  const state0 = router.getStateForAction(INIT_ACTION);
+  expect(state0.index).toEqual(0);
+  const state1 = router.getStateForAction(
+    NavigationActions.navigate({ routeName: 'Foo' }),
+    state0
+  );
+  expect(state1.index).toEqual(1);
+  const state2 = router.getStateForAction(DrawerActions.openDrawer(), state1);
+  const state3 = router.getStateForAction(
+    { type: DrawerActions.DRAWER_OPENED },
+    state2
+  );
+  expect(state3.index).toEqual(1);
+  expect(state3.routes[1].isDrawerOpen).toEqual(true);
+  expect(state3.routes[1].closeId).toEqual(0);
+  const state4 = router.getStateForAction(NavigationActions.back(), state3);
+  expect(state4.index).toEqual(1);
+  expect(state4.routes[1].closeId).toEqual(1);
+  const state5 = router.getStateForAction(
+    { type: DrawerActions.DRAWER_CLOSED },
+    state4
+  );
+  expect(state5.routes[1].isDrawerOpen).toEqual(false);
 });
