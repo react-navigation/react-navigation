@@ -206,10 +206,7 @@ class TabBarBottom extends React.Component<Props> {
     ];
 
     return (
-      <SafeAreaView
-        style={tabBarStyle}
-        forceInset={safeAreaInset}
-      >
+      <SafeAreaView style={tabBarStyle} forceInset={safeAreaInset}>
         {routes.map((route, index) => {
           const focused = index === navigation.state.index;
           const scene = { route, focused };
