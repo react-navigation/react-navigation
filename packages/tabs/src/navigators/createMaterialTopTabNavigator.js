@@ -29,7 +29,7 @@ type State = {
   transitioningFromIndex: ?number,
 };
 
-class MaterialTabView extends React.PureComponent<Props> {
+class MaterialTabView extends React.PureComponent<Props, State> {
   static defaultProps = {
     // fix for https://github.com/react-native-community/react-native-tab-view/issues/312
     initialLayout: Platform.select({
@@ -116,7 +116,7 @@ class MaterialTabView extends React.PureComponent<Props> {
   _renderPanPager = props => <PagerPan {...props} />;
 
   _handleAnimationEnd = () => {
-    const { lazy } = this.props;
+    const { lazy } = this.props;
 
     if (lazy) {
       this.setState({
@@ -181,12 +181,7 @@ class MaterialTabView extends React.PureComponent<Props> {
   };
 
   _renderScene = ({ route }) => {
-    const {
-      renderScene,
-      descriptors,
-      lazy,
-      optimizationsEnabled,
-    } = this.props;
+    const { renderScene, descriptors, lazy, optimizationsEnabled } = this.props;
 
     if (lazy) {
       const { loaded } = this.state;
@@ -194,7 +189,10 @@ class MaterialTabView extends React.PureComponent<Props> {
       const index = routes.findIndex(({ key }) => key === route.key);
       const { navigation } = descriptors[route.key];
 
-      const mustBeVisible = this._mustBeVisible({ index, focused: navigation.isFocused()});
+      const mustBeVisible = this._mustBeVisible({
+        index,
+        focused: navigation.isFocused(),
+      });
 
       if (!loaded.includes(index) && !mustBeVisible) {
         return <View />;

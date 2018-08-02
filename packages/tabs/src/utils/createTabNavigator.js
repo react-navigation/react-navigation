@@ -29,7 +29,7 @@ export type InjectedProps = {
 };
 
 export default function createTabNavigator(TabView: React.ComponentType<*>) {
-  class NavigationView extends React.Component<*, State> {
+  class NavigationView extends React.Component<*, *> {
     _renderScene = ({ route }) => {
       const { screenProps, descriptors } = this.props;
       const descriptor = descriptors[route.key];
