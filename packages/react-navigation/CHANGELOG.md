@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [2.10.0] - [2018-08-02](https://github.com/react-navigation/react-navigation/releases/tag/2.10.0)
+### Added
+- `lazy` and `optimizationsEnabled` options to `createMaterialTopTabNavigator` (react-navigation-tabs@0.6.0)
+
+### Fixed
+- Android back button in stack with drawer closes drawer properly if open (react-navigation-drawer@0.5.0)
+- Fixes bug where `null` doesn't work in routerOptions `paths` object for deeplinking ([#4791](https://github.com/react-navigation/react-navigation/pull/4791))
+
 ## [2.9.3] - [2018-07-26](https://github.com/react-navigation/react-navigation/releases/tag/2.9.3)
 ### Added
 - Add `NavigationTestUtils` which can be imported by path to be used with jest snapshot testing.
@@ -119,7 +127,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Improved examples
 
-[Unreleased]: https://github.com/react-navigation/react-navigation/compare/2.9.3...HEAD
+[Unreleased]: https://github.com/react-navigation/react-navigation/compare/2.10.0...HEAD
+[2.10.0]: https://github.com/react-navigation/react-navigation/compare/2.9.3...2.10.0
 [2.9.3]: https://github.com/react-navigation/react-navigation/compare/2.9.2...2.9.3
 [2.9.2]: https://github.com/react-navigation/react-navigation/compare/2.9.1...2.9.2
 [2.9.1]: https://github.com/react-navigation/react-navigation/compare/2.9.0...2.9.1
