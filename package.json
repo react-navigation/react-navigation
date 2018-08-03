@@ -1,0 +1,71 @@
+{
+  "name": "react-native-screens",
+  "version": "1.0.0-alpha.1",
+  "description": "First incomplete navigation solution for your react-native app.",
+  "scripts": {
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "test": "npm run format && npm run lint && npm run test:unit",
+    "test:unit": "jest",
+    "format": "prettier --write --list-different './src/**/*.js'",
+    "lint": "eslint --fix './src/**/*.js'",
+    "precommit": "lint-staged"
+  },
+  "main": "src/screens.js",
+  "files": [
+    "src/",
+    "android/src/main/AndroidManifest.xml",
+    "android/src/main/java/",
+    "android/build.gradle",
+    "ios/",
+    "README.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kmagiera/react-native-screens.git"
+  },
+  "author": {
+    "email": "krzys.magiera@gmail.com",
+    "name": "Krzysztof Magiera"
+  },
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "bugs": {
+    "url": "https://github.com/kmagiera/react-native-screens/issues"
+  },
+  "homepage": "https://github.com/kmagiera/react-native-screens#readme",
+  "dependencies": {},
+  "peerDependencies": {
+    "react": "16.0.0-alpha.6",
+    "react-native": "^0.44.1"
+  },
+  "devDependencies": {
+    "babel-eslint": "^8.2.3",
+    "babel-jest": "23.0.1",
+    "babel-preset-react-native": "4.0.0",
+    "eslint": "^4.19.1",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-config-standard": "^11.0.0",
+    "eslint-plugin-import": "^2.12.0",
+    "eslint-plugin-jest": "^21.17.0",
+    "eslint-plugin-node": "^6.0.1",
+    "eslint-plugin-promise": "^3.8.0",
+    "eslint-plugin-react": "^7.9.1",
+    "eslint-plugin-react-native": "^3.2.1",
+    "eslint-plugin-standard": "^3.1.0",
+    "husky": "^0.14.3",
+    "jest": "23.1.0",
+    "jest-react-native": "18.0.0",
+    "lint-staged": "^7.1.3",
+    "prettier": "^1.13.4",
+    "react": "^16.0.0-alpha.12",
+    "react-dom": "^16.0.0-beta.5",
+    "react-native": "^0.56.0",
+    "react-test-renderer": "^16.0.0-alpha.12"
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier --write",
+      "git add"
+    ]
+  }
+}
