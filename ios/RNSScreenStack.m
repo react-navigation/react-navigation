@@ -149,14 +149,7 @@
   if (_transitioning == transitioning) {
     return;
   }
-  if (transitioning == 0) {
-    // finish transition
-    [_interactor finishInteractiveTransition];
-    _interactor = nil;
-  } else {
-    [self markUpdated];
-    _transitioningStateChanged = YES;
-  }
+  _transitioningStateChanged = YES;
   _transitioning = transitioning;
 }
 
@@ -200,16 +193,24 @@
     [controllers addObject:screen.controller];
   }
   if (_transitioningStateChanged) {
-    [_interactor cancelInteractiveTransition];
-    _interactor = [UIPercentDrivenInteractiveTransition new];
-    if (_transitioning < 0) {
-      [_controller setViewControllers:controllers animated:NO];
-      [_controller popViewControllerAnimated:YES];
+    if (_transitioning == 0) {
+      // finish or cancel transitioning
+      if (_controller.viewControllers.lastObject == controllers.lastObject) {
+        [_interactor finishInteractiveTransition];
+      } else {
+        [_interactor cancelInteractiveTransition];
+      }
     } else {
-      UIViewController *lastController = [controllers lastObject];
-      [controllers removeLastObject];
-      [_controller setViewControllers:controllers animated:NO];
-      [_controller pushViewController:lastController animated:YES];
+      _interactor = [UIPercentDrivenInteractiveTransition new];
+      if (_transitioning < 0) {
+        [_controller setViewControllers:controllers animated:NO];
+        [_controller popViewControllerAnimated:YES];
+      } else {
+        UIViewController *lastController = [controllers lastObject];
+        [controllers removeLastObject];
+        [_controller setViewControllers:controllers animated:NO];
+        [_controller pushViewController:lastController animated:YES];
+      }
     }
     _transitioningStateChanged = NO;
   } else {
