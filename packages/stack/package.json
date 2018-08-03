@@ -1,6 +1,6 @@
 {
   "name": "react-navigation-stack",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Stack navigator component for React Navigation",
   "main": "dist/index.js",
   "files": [
