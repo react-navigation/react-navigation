@@ -168,7 +168,7 @@ exports[`StackNavigator applies correct values when headerRight is present 1`] =
                     Object {
                       "color": "rgba(0, 0, 0, .9)",
                       "fontSize": 17,
-                      "fontWeight": "700",
+                      "fontWeight": "600",
                       "marginHorizontal": 16,
                       "textAlign": "center",
                     }
@@ -372,7 +372,7 @@ exports[`StackNavigator renders successfully 1`] = `
                     Object {
                       "color": "rgba(0, 0, 0, .9)",
                       "fontSize": 17,
-                      "fontWeight": "700",
+                      "fontWeight": "600",
                       "marginHorizontal": 16,
                       "textAlign": "center",
                     }
