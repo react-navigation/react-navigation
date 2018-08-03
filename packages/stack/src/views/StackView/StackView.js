@@ -1,9 +1,9 @@
 import React from 'react';
 import { NativeModules } from 'react-native';
 
+import { StackActions } from 'react-navigation';
 import StackViewLayout from './StackViewLayout';
 import Transitioner from '../Transitioner';
-import StackActions from '../../routers/StackActions';
 import TransitionConfigs from './StackViewTransitionConfigs';
 
 const NativeAnimatedModule =

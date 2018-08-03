@@ -11,11 +11,16 @@ import {
   Easing,
   Dimensions,
 } from 'react-native';
-import { SceneView, NavigationActions, withOrientation, NavigationProvider } from 'react-navigation';
+import {
+  SceneView,
+  StackActions,
+  NavigationActions,
+  withOrientation,
+  NavigationProvider,
+} from 'react-navigation';
 
 import Card from './StackViewCard';
 import Header from '../Header/Header';
-import StackActions from '../../routers/StackActions';
 
 import TransitionConfigs from './StackViewTransitionConfigs';
 import { supportsImprovedSpringAnimation } from '../../utils/ReactNativeFeatures';

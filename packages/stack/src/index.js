@@ -14,16 +14,6 @@ module.exports = {
   },
 
   /**
-   * Router
-   */
-  get StackRouter() {
-    return require('./routers/StackRouter').default;
-  },
-  get StackActions() {
-    return require('./routers/StackActions').default;
-  },
-
-  /**
    * Views
    */
   get Header() {

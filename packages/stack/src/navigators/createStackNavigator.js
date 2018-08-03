@@ -1,6 +1,9 @@
-import { createKeyboardAwareNavigator, createNavigator } from 'react-navigation';
+import {
+  StackRouter,
+  createKeyboardAwareNavigator,
+  createNavigator,
+} from 'react-navigation';
 import StackView from '../views/StackView/StackView';
-import StackRouter from '../routers/StackRouter';
 
 function createStackNavigator(routeConfigMap, stackConfig = {}) {
   const {
