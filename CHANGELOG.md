@@ -57,6 +57,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 - StackNavigator.replace method no longer requires a key param. If the key is left undefined, the last screen in the stack will be replaced.
+- Pass `tintColor` prop to custom `headerRight` component giving in navigationOptions.
 
 ### Fixed
 - Support headerLeft component for the first screen in a stack (#4608).
