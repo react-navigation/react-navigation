@@ -6,7 +6,7 @@ import SwitchRouter from '../SwitchRouter';
 import StackRouter from '../StackRouter';
 import StackActions from '../StackActions';
 import NavigationActions from '../../NavigationActions';
-import { urlToPathAndParams } from '../pathUtils';
+import { urlToPathAndParams } from '../PathUtils';
 import { _TESTING_ONLY_normalize_keys } from '../KeyGenerator';
 
 beforeEach(() => {
