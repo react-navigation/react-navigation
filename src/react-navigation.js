@@ -88,6 +88,18 @@ module.exports = {
   get SwitchRouter() {
     return require('./routers/SwitchRouter').default;
   },
+  get createConfigGetter() {
+    return require('./routers/createConfigGetter').default;
+  },
+  get getScreenForRouteName() {
+    return require('./routers/getScreenForRouteName').default;
+  },
+  get validateRouteConfigMap() {
+    return require('./routers/validateRouteConfigMap').default;
+  },
+  get PathUtils() {
+    return require('./routers/PathUtils').default;
+  },
 
   // Views
   get Transitioner() {

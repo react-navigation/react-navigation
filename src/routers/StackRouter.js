@@ -6,7 +6,7 @@ import StateUtils from '../StateUtils';
 import validateRouteConfigMap from './validateRouteConfigMap';
 import invariant from '../utils/invariant';
 import { generateKey } from './KeyGenerator';
-import { createPathParser } from './pathUtils';
+import { createPathParser } from './PathUtils';
 
 function behavesLikePushAction(action) {
   return (
