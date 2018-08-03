@@ -1,7 +1,7 @@
 {
   "name": "react-navigation-stack",
-  "version": "0.5.0",
-  "description": "Drawer navigator component for React Navigation",
+  "version": "0.1.0",
+  "description": "Stack navigator component for React Navigation",
   "main": "dist/index.js",
   "files": [
     "dist/"
@@ -20,8 +20,7 @@
     "react-native",
     "ios",
     "android",
-    "drawer",
-    "material"
+    "stack"
   ],
   "repository": {
     "type": "git",
