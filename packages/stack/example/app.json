@@ -1,0 +1,17 @@
+{
+  "expo": {
+    "name": "React Navigation Stack Example",
+    "description": "Demonstrates the various capabilities of react-navigation-stack",
+    "slug": "react-navigation-stack-demo",
+    "sdkVersion": "29.0.0",
+    "version": "1.0.0",
+    "primaryColor": "#2196f3",
+    "packagerOpts": {
+      "assetExts": [
+        "ttf"
+      ],
+      "config": "./rn-cli.config.js",
+      "projectRoots": ""
+    }
+  }
+}
