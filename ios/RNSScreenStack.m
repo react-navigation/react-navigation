@@ -151,6 +151,7 @@
   }
   _transitioningStateChanged = YES;
   _transitioning = transitioning;
+  [self markUpdated];
 }
 
 - (void)insertReactSubview:(RNSScreenView *)subview atIndex:(NSInteger)atIndex
@@ -195,11 +196,12 @@
   if (_transitioningStateChanged) {
     if (_transitioning == 0) {
       // finish or cancel transitioning
-      if (_controller.viewControllers.lastObject == controllers.lastObject) {
+      if ([_controller.viewControllers indexOfObject:controllers.lastObject] != NSNotFound) {
         [_interactor finishInteractiveTransition];
       } else {
         [_interactor cancelInteractiveTransition];
       }
+      _interactor = nil;
     } else {
       _interactor = [UIPercentDrivenInteractiveTransition new];
       if (_transitioning < 0) {
