@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [2.11.1] - [2018-08-02](https://github.com/react-navigation/react-navigation/releases/tag/2.11.1)
+### Changed
+- Fix some exports related to the 2.11.0 changes to move stack navigator out of core
+
 ## [2.11.0] - [2018-08-02](https://github.com/react-navigation/react-navigation/releases/tag/2.11.0)
 ### Added
 - Export some modules that are useful for moving stack navigator outside of core
@@ -131,7 +135,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Improved examples
 
-[Unreleased]: https://github.com/react-navigation/react-navigation/compare/2.11.0...HEAD
+[Unreleased]: https://github.com/react-navigation/react-navigation/compare/2.11.1...HEAD
+[2.11.1]: https://github.com/react-navigation/react-navigation/compare/2.11.0...2.11.1
 [2.11.0]: https://github.com/react-navigation/react-navigation/compare/2.10.0...2.11.0
 [2.10.0]: https://github.com/react-navigation/react-navigation/compare/2.9.3...2.10.0
 [2.9.3]: https://github.com/react-navigation/react-navigation/compare/2.9.2...2.9.3
