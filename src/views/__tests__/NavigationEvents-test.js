@@ -83,6 +83,15 @@ const NavigationEventsTestComp = ({
 };
 
 describe('NavigationEvents', () => {
+  it('Should wrap children', () => {
+    const children = <View />;
+    const { navigation } = createNavigationAndHelpers();
+    const component = renderer.create(
+      <NavigationEvents navigation={navigation}>{children}</NavigationEvents>
+    );
+    expect(component.toJSON().type).toBe('View');
+  });
+
   it('add all listeners with navigation prop', () => {
     const {
       navigation,
