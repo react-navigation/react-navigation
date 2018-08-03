@@ -4283,9 +4283,9 @@ react-navigation-tabs@0.6.0:
     react-native-safe-area-view "^0.7.0"
     react-native-tab-view "^1.0.0"
 
-react-navigation@^2.10.0:
+"react-navigation@github:kmagiera/react-navigation#react-native-screens":
   version "2.10.0"
-  resolved "https://registry.yarnpkg.com/react-navigation/-/react-navigation-2.10.0.tgz#b525821261bedb3b4d3ee91564cad32fca2bd684"
+  resolved "https://codeload.github.com/kmagiera/react-navigation/tar.gz/48c255f49c62ab01a11345d74694e410b8bc7d54"
   dependencies:
     clamp "^1.0.1"
     create-react-context "^0.2.1"
