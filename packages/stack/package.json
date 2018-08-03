@@ -11,7 +11,7 @@
     "lint": "eslint .",
     "format": "eslint . --fix",
     "precommit": "yarn lint && yarn test",
-    "build": "babel --no-babelrc --plugins=syntax-jsx,syntax-class-properties,syntax-object-rest-spread,transform-flow-strip-types src --out-dir dist --ignore '**/__tests__/**'",
+    "build": "babel --no-babelrc --plugins=syntax-jsx,syntax-class-properties,syntax-object-rest-spread,transform-flow-strip-types src --copy-files --out-dir dist --ignore '**/__tests__/**'",
     "prepare": "yarn build"
   },
   "keywords": [
