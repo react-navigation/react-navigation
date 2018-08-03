@@ -16,6 +16,15 @@ module.exports = {
   get createNavigator() {
     return require('./navigators/createNavigator').default;
   },
+  get createKeyboardAwareNavigator() {
+    return require('./navigators/createKeyboardAwareNavigator').default;
+  },
+  get NavigationProvider() {
+    return require('./views/NavigationContext').default.NavigationProvider;
+  },
+  get NavigationConsumer() {
+    return require('./views/NavigationContext').default.NavigationConsumer;
+  },
   get createStackNavigator() {
     return require('./navigators/createContainedStackNavigator').default;
   },
