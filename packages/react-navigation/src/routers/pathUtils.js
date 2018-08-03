@@ -216,3 +216,8 @@ export const createPathParser = (
   };
   return { getActionForPathAndParams, getPathAndParamsForRoute };
 };
+
+export default {
+  getParamsFromPath,
+  createPathParser,
+};
