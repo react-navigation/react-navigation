@@ -1,4 +1,4 @@
-import { urlToPathAndParams } from '../PathUtils';
+import { urlToPathAndParams } from '../pathUtils';
 
 test('urlToPathAndParams empty', () => {
   const { path, params } = urlToPathAndParams('foo://');

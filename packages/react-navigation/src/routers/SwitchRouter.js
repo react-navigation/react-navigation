@@ -5,7 +5,7 @@ import createConfigGetter from './createConfigGetter';
 import NavigationActions from '../NavigationActions';
 import StackActions from './StackActions';
 import validateRouteConfigMap from './validateRouteConfigMap';
-import { createPathParser } from './PathUtils';
+import { createPathParser } from './pathUtils';
 
 const defaultActionCreators = (route, navStateKey) => ({});
 

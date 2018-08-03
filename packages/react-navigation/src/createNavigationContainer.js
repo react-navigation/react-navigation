@@ -6,7 +6,7 @@ import NavigationActions from './NavigationActions';
 import getNavigation from './getNavigation';
 import invariant from './utils/invariant';
 import docsUrl from './utils/docsUrl';
-import { urlToPathAndParams } from './routers/PathUtils';
+import { urlToPathAndParams } from './routers/pathUtils';
 
 function isStateful(props) {
   return !props.navigation;
