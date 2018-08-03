@@ -1,196 +1,94 @@
-import React, { Component } from 'react';
+import React from 'react';
 import {
-  StyleSheet,
-  Button,
+  Text,
   View,
-  TextInput,
-  Animated,
-  Easing,
+  FlatList,
+  StyleSheet,
+  TouchableHighlight,
 } from 'react-native';
-import { Screen, ScreenContainer, ScreenStack } from 'react-native-screens';
+import { createStackNavigator, createSwitchNavigator } from 'react-navigation';
 
-const COLORS = ['azure', 'pink', 'cyan'];
+import Stack from './stack';
+import Container from './container';
+import Navigation from './navigation';
 
-export class Stack extends Component {
-  constructor(props) {
-    super(props);
+const SCREENS = {
+  Stack: { screen: Stack, title: 'ScreenStack example' },
+  Container: { screen: Container, title: 'ScreenContainer example' },
+  Navigation: { screen: Navigation, title: 'React Navigation example' },
+};
 
-    const progress = new Animated.Value(0);
-    const slideIn = progress.interpolate({
-      inputRange: [0, 1],
-      outputRange: [320, 0],
-    });
-    const slideOut = progress.interpolate({
-      inputRange: [0, 1],
-      outputRange: [0, 320],
-    });
-    const backSlideIn = progress.interpolate({
-      inputRange: [0, 1],
-      outputRange: [-50, 0],
-    });
-    const backSlideOut = progress.interpolate({
-      inputRange: [0, 1],
-      outputRange: [0, -50],
-    });
-
-    this.state = {
-      stack: ['azure'],
-      transitioning: 0,
-      progress,
-      slideIn,
-      slideOut,
-      backSlideIn,
-      backSlideOut,
-    };
-  }
-  push(key) {
-    this.setState({ stack: [...this.state.stack, key], transitioning: 1 });
-    this.state.progress.setValue(0);
-    Animated.timing(this.state.progress, {
-      duration: 5000,
-      easing: Easing.out(Easing.quad),
-      toValue: 1,
-      useNativeDriver: true,
-    }).start(() => {
-      this.setState({ transitioning: 0 });
-    });
-  }
-  pop() {
-    this.setState({ transitioning: -1 });
-    this.state.progress.setValue(0);
-    Animated.timing(this.state.progress, {
-      duration: 5000,
-      easing: Easing.out(Easing.quad),
-      toValue: 1,
-      useNativeDriver: true,
-    }).start(() => {
-      this.setState({
-        transitioning: 0,
-        stack: this.state.stack.slice(0, -1),
-      });
-    });
-  }
-  renderScreen = (key, index) => {
-    let style = StyleSheet.absoluteFill;
-    const { stack, transitioning } = this.state;
-    if (index === stack.length - 1) {
-      if (transitioning > 0) {
-        style = {
-          ...StyleSheet.absoluteFillObject,
-          transform: [{ translateX: this.state.slideIn }],
-        };
-      } else if (transitioning < 0) {
-        style = {
-          ...StyleSheet.absoluteFillObject,
-          transform: [{ translateX: this.state.slideOut }],
-        };
-      }
-    } else if (index === stack.length - 2) {
-      if (transitioning > 0) {
-        style = {
-          ...StyleSheet.absoluteFillObject,
-          transform: [{ translateX: this.state.backSlideOut }],
-        };
-      } else if (transitioning < 0) {
-        style = {
-          ...StyleSheet.absoluteFillObject,
-          transform: [{ translateX: this.state.backSlideIn }],
-        };
-      }
-    }
-    const active =
-      index === stack.length - 1 ||
-      (transitioning !== 0 && index === stack.length - 2);
-    return (
-      <Screen style={style} key={key} active={active}>
-        {this.props.renderScreen(key)}
-      </Screen>
-    );
+class MainScreen extends React.Component {
+  static navigationOptions = {
+    title: '📱 React Native Screens Examples',
   };
   render() {
-    const screens = this.state.stack.map(this.renderScreen);
+    const data = Object.keys(SCREENS).map(key => ({ key }));
     return (
-      <ScreenStack
-        transitioning={this.state.transitioning}
-        progress={this.state.progress}
-        style={styles.container}>
-        {screens}
-      </ScreenStack>
-    );
-    // return (
-    //   <ScreenContainer style={styles.container}>{screens}</ScreenContainer>
-    // );
-  }
-}
-
-// class Inner extends Component {
-//   state = { size: 20, display: 'flex' };
-//   componentDidMount() {
-//     setInterval(() => {
-//       this.setState({ size: Math.random() * 10 + 10 });
-//     }, 1500);
-//     setTimeout(() => this.setState({ display: 'none' }), 2000);
-//   }
-//   render() {
-//     return (
-//       <View collapsable={false} style={{ display: this.state.display }}>
-//         <LifecycleAwareView
-//           style={{
-//             width: this.state.size,
-//             height: this.state.size,
-//             backgroundColor: 'red',
-//           }}
-//         />
-//       </View>
-//     );
-//   }
-// }
-
-class App extends Component {
-  renderScreen = key => {
-    const index = COLORS.indexOf(key);
-    const color = key;
-    const pop = index > 0 ? () => this.stack.pop() : null;
-    const push = index < 2 ? () => this.stack.push(COLORS[index + 1]) : null;
-    return (
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: color,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
-        {pop && <Button title="Pop" onPress={pop} />}
-        {push && <Button title="Push" onPress={push} />}
-        <TextInput placeholder="Hello" style={styles.textInput} />
-      </View>
-    );
-  };
-  render() {
-    return (
-      <Stack
-        ref={stack => (this.stack = stack)}
-        renderScreen={this.renderScreen}
+      <FlatList
+        style={styles.list}
+        data={data}
+        ItemSeparatorComponent={ItemSeparator}
+        renderItem={props => (
+          <MainScreenItem
+            {...props}
+            onPressItem={({ key }) => this.props.navigation.navigate(key)}
+          />
+        )}
       />
     );
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+const ItemSeparator = () => <View style={styles.separator} />;
+
+class MainScreenItem extends React.Component {
+  _onPress = () => this.props.onPressItem(this.props.item);
+  render() {
+    const { key } = this.props.item;
+    return (
+      <TouchableHighlight onPress={this._onPress}>
+        <View style={styles.button}>
+          <Text style={styles.buttonText}>{SCREENS[key].title || key}</Text>
+        </View>
+      </TouchableHighlight>
+    );
+  }
+}
+
+const MainScreenNav = createStackNavigator({
+  MainScreen: { screen: MainScreen },
+});
+
+const ExampleApp = createSwitchNavigator(
+  {
+    Main: { screen: MainScreenNav },
+    ...SCREENS,
   },
-  textInput: {
-    backgroundColor: 'white',
-    borderWidth: 1,
+  {
+    initialRouteName: 'Main',
+  }
+);
+
+const styles = StyleSheet.create({
+  list: {
+    backgroundColor: '#EFEFF4',
+  },
+  separator: {
+    height: 1,
+    backgroundColor: '#DBDBE0',
+  },
+  buttonText: {
+    backgroundColor: 'transparent',
+  },
+  button: {
+    flex: 1,
+    height: 60,
     padding: 10,
-    marginHorizontal: 20,
-    alignSelf: 'stretch',
-    borderColor: 'black',
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#fff',
   },
 });
 
-export default App;
+export default ExampleApp;
