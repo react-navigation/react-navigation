@@ -106,8 +106,8 @@ module.exports = {
   get validateRouteConfigMap() {
     return require('./routers/validateRouteConfigMap').default;
   },
-  get PathUtils() {
-    return require('./routers/PathUtils').default;
+  get pathUtils() {
+    return require('./routers/pathUtils').default;
   },
 
   // Views
