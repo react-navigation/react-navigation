@@ -4,7 +4,9 @@ import { StyleSheet, View } from 'react-native';
 import renderer from 'react-test-renderer';
 
 import NavigationActions from '../NavigationActions';
-import createStackNavigator from '../navigators/createStackNavigator';
+
+// TODO: we should create a dummy navigator here
+import { createStackNavigator } from 'react-navigation-stack';
 import createNavigationContainer, {
   _TESTING_ONLY_reset_container_count,
 } from '../createNavigationContainer';
