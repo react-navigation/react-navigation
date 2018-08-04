@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Changed
+- Move stack specific view code to react-navigation-stack
+
 ## [2.11.2] - [2018-08-03](https://github.com/react-navigation/react-navigation/releases/tag/2.11.2)
 ### Changed
 - Revert rename of pathUtils

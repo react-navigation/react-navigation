@@ -4848,6 +4848,10 @@ react-navigation-drawer@0.5.0:
   dependencies:
     react-native-drawer-layout-polyfill "^1.3.2"
 
+react-navigation-stack@0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/react-navigation-stack/-/react-navigation-stack-0.1.2.tgz#cde9448347b4b08fc27e4147e81a5878347c56fb"
+
 react-navigation-tabs@0.6.0:
   version "0.6.0"
   resolved "https://registry.yarnpkg.com/react-navigation-tabs/-/react-navigation-tabs-0.6.0.tgz#2f526194f4360e56c2702e736887449acc2080dc"
