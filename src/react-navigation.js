@@ -26,13 +26,13 @@ module.exports = {
     return require('./views/NavigationContext').default.NavigationConsumer;
   },
   get createStackNavigator() {
-    return require('./navigators/createContainedStackNavigator').default;
+    return require('react-navigation-stack').createStackNavigator;
   },
   get StackNavigator() {
     console.warn(
       'The StackNavigator function name is deprecated, please use createStackNavigator instead'
     );
-    return require('./navigators/createContainedStackNavigator').default;
+    return require('react-navigation-stack').createStackNavigator;
   },
   get createSwitchNavigator() {
     return require('./navigators/createContainedSwitchNavigator').default;
@@ -112,16 +112,16 @@ module.exports = {
 
   // Views
   get Transitioner() {
-    return require('./views/Transitioner').default;
+    return require('react-navigation-stack').Transitioner;
   },
   get StackView() {
-    return require('./views/StackView/StackView').default;
+    return require('react-navigation-stack').StackView;
   },
   get StackViewCard() {
-    return require('./views/StackView/StackViewCard').default;
+    return require('react-navigation-stack').StackViewCard;
   },
   get StackViewTransitionConfigs() {
-    return require('./views/StackView/StackViewTransitionConfigs').default;
+    return require('react-navigation-stack').StackViewTransitionConfigs;
   },
   get SafeAreaView() {
     return require('react-native-safe-area-view').default;
@@ -135,13 +135,13 @@ module.exports = {
 
   // Header
   get Header() {
-    return require('./views/Header/Header').default;
+    return require('react-navigation-stack').Header;
   },
   get HeaderTitle() {
-    return require('./views/Header/HeaderTitle').default;
+    return require('react-navigation-stack').HeaderTitle;
   },
   get HeaderBackButton() {
-    return require('./views/Header/HeaderBackButton').default;
+    return require('react-navigation-stack').HeaderBackButton;
   },
 
   // DrawerView
