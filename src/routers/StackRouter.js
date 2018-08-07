@@ -107,7 +107,7 @@ export default (routeConfigs, stackConfig = {}) => {
   const {
     getPathAndParamsForRoute,
     getActionForPathAndParams,
-  } = createPathParser(childRouters, routeConfigs, stackConfig.paths);
+  } = createPathParser(childRouters, routeConfigs, stackConfig);
 
   return {
     childRouters,
