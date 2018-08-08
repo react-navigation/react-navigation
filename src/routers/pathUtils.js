@@ -67,7 +67,7 @@ export const urlToPathAndParams = (url, uriPrefix) => {
 export const createPathParser = (
   childRouters,
   routeConfigs,
-  { paths: pathConfigs = {}, routeNameAsPathDisabled }
+  { paths: pathConfigs = {}, disableRouteNamePaths }
 ) => {
   const pathsByRouteNames = {};
   let paths = [];
@@ -84,8 +84,8 @@ export const createPathParser = (
     }
 
     if (pathPattern === undefined) {
-      // If the user hasn't specified a path at all nor routeNameAsPathDisabled, then we assume the routeName is an appropriate path
-      pathPattern = routeNameAsPathDisabled ? null : routeName;
+      // If the user hasn't specified a path at all nor disableRouteNamePaths, then we assume the routeName is an appropriate path
+      pathPattern = disableRouteNamePaths ? null : routeName;
     }
 
     invariant(

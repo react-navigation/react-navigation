@@ -609,10 +609,10 @@ const performRouteNameAsPathDisabledTest = createTestRouter => {
     {
       A: NestedNavigator,
     },
-    { routeNameAsPathDisabled: true }
+    { disableRouteNamePaths: true }
   );
 
-  test('routeNameAsPathDisabled option on router prevent the default path to be the routeName', () => {
+  test('disableRouteNamePaths option on router prevent the default path to be the routeName', () => {
     const action = router.getActionForPathAndParams('baz', {});
 
     expect(action.routeName).toBe('A');
@@ -620,14 +620,14 @@ const performRouteNameAsPathDisabledTest = createTestRouter => {
   });
 };
 
-describe('Stack router handles routeNameAsPathDisabled', () => {
+describe('Stack router handles disableRouteNamePaths', () => {
   performRouteNameAsPathDisabledTest(StackRouter);
 });
 
-describe('Switch router handles routeNameAsPathDisabled', () => {
+describe('Switch router handles disableRouteNamePaths', () => {
   performRouteNameAsPathDisabledTest(SwitchRouter);
 });
 
-describe('Tab router handles routeNameAsPathDisabled', () => {
+describe('Tab router handles disableRouteNamePaths', () => {
   performRouteNameAsPathDisabledTest(TabRouter);
 });
