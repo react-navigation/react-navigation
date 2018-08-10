@@ -143,6 +143,14 @@ declare module 'react-navigation' {
     +type: 'Navigation/TOGGLE_DRAWER',
     +key?: string,
   |};
+  declare export type NavigationDrawerOpenedAction = {|
+    +type: 'Navigation/DRAWER_OPENED',
+    +key?: string,
+  |};
+  declare export type NavigationDrawerClosedAction = {|
+    +type: 'Navigation/DRAWER_CLOSED',
+    +key?: string,
+  |};
 
   declare export type NavigationAction =
     | NavigationBackAction
@@ -157,7 +165,9 @@ declare module 'react-navigation' {
     | NavigationCompleteTransitionAction
     | NavigationOpenDrawerAction
     | NavigationCloseDrawerAction
-    | NavigationToggleDrawerAction;
+    | NavigationToggleDrawerAction
+    | NavigationDrawerOpenedAction
+    | NavigationDrawerClosedAction;
 
   /**
    * NavigationState is a tree of routes for a single navigator, where each
@@ -394,6 +404,8 @@ declare module 'react-navigation' {
     mode?: 'card' | 'modal',
     headerMode?: HeaderMode,
     headerTransitionPreset?: 'fade-in-place' | 'uikit',
+    headerLayoutPreset?: 'left' | 'center',
+    headerBackTitleVisible?: boolean,
     cardStyle?: ViewStyleProp,
     transitionConfig?: () => TransitionConfig,
     onTransitionStart?: () => void,
