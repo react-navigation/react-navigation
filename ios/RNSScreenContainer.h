@@ -3,15 +3,10 @@
 @protocol RNSScreenContainerDelegate
 
 - (void)markChildUpdated;
-- (void)didUpdateChildren;
 
 @end
 
 @interface RNSScreenContainerView : UIView <RNSScreenContainerDelegate>
-
-- (void)markChildUpdated;
-- (void)didUpdateChildren;
-
 @end
 
 @interface RNSScreenContainerManager : RCTViewManager

@@ -20,18 +20,15 @@
 
 - (void)setActive:(BOOL)active
 {
-  _active = active;
-  [_reactSuperview markChildUpdated];
+  if (active != _active) {
+    _active = active;
+    [_reactSuperview markChildUpdated];
+  }
 }
 
 - (UIView *)reactSuperview
 {
   return _reactSuperview;
-}
-
-- (void)didSetProps:(NSArray<NSString *> *)changedProps
-{
-  [_reactSuperview didUpdateChildren];
 }
 
 - (void)invalidate

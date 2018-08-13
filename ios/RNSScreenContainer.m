@@ -1,6 +1,9 @@
 #import "RNSScreenContainer.h"
 #import "RNSScreen.h"
 
+#import <React/RCTUIManager.h>
+#import <React/RCTUIManagerUtils.h>
+
 @interface RNSScreenContainerView ()
 
 @property (nonatomic, retain) UIViewController *controller;
@@ -27,24 +30,29 @@
 
 - (void)markChildUpdated
 {
-  _needUpdate = YES;
-}
-
-- (void)didUpdateChildren
-{
-  [self updateContainerIfNeeded];
+  // We want 'updateContainer' to be executed on main thread after all enqueued operations in
+  // uimanager are complete. In order to achieve that we enqueue call on UIManagerQueue from which
+  // we enqueue call on the main queue. This seems to be working ok in all the cases I've tried but
+  // there is a chance it is not the correct way to do that.
+  if (!_needUpdate) {
+    _needUpdate = YES;
+    RCTExecuteOnUIManagerQueue(^{
+      RCTExecuteOnMainQueue(^{
+        _needUpdate = NO;
+        [self updateContainer];
+      });
+    });
+  }
 }
 
 - (void)insertReactSubview:(RNSScreenView *)subview atIndex:(NSInteger)atIndex
 {
-  _needUpdate = YES;
   subview.reactSuperview = self;
   [_reactSubviews insertObject:subview atIndex:atIndex];
 }
 
 - (void)removeReactSubview:(RNSScreenView *)subview
 {
-  _needUpdate = YES;
   subview.reactSuperview = nil;
   [_reactSubviews removeObject:subview];
 }
@@ -70,13 +78,8 @@
   [_activeScreens addObject:screen];
 }
 
-- (void)updateContainerIfNeeded
+- (void)updateContainer
 {
-  if (!_needUpdate) {
-    return;
-  }
-  _needUpdate = NO;
-
   // remove screens that are no longer active
   NSMutableSet *orphaned = [NSMutableSet setWithSet:_activeScreens];
   for (RNSScreenView *screen in _reactSubviews) {
@@ -103,7 +106,7 @@
 
 - (void)didUpdateReactSubviews
 {
-  [self updateContainerIfNeeded];
+  [self markChildUpdated];
 }
 
 - (void)layoutSubviews
