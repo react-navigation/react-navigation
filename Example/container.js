@@ -15,7 +15,7 @@ export class LazyTabs extends Component {
     this.setState({ active: key, screens });
   }
   renderScreen = (key, index) => {
-    const active = key === this.state.active;
+    const active = key === this.state.active ? 1 : 0;
     return (
       <Screen style={StyleSheet.absoluteFill} key={key} active={active}>
         {this.props.renderScreen(key)}

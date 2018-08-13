@@ -102,7 +102,7 @@ export class Stack extends Component {
       index === stack.length - 1 ||
       (transitioning !== 0 && index === stack.length - 2);
     return (
-      <Screen style={style} key={key} active={active}>
+      <Screen style={style} key={key} active={active ? 1 : 0}>
         {this.props.renderScreen(key)}
       </Screen>
     );

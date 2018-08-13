@@ -20,8 +20,8 @@ public class ScreenViewManager extends ViewGroupManager<Screen> {
     return new Screen(reactContext);
   }
 
-  @ReactProp(name = "active", defaultBoolean = false)
-  public void setActive(Screen view, boolean active) {
-    view.setActive(active);
+  @ReactProp(name = "active", defaultInt = 0)
+  public void setActive(Screen view, int active) {
+    view.setActive(active != 0);
   }
 }
