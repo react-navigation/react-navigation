@@ -77,10 +77,14 @@ export default (routeConfigs, stackConfig = {}) => {
     }
 
     if (initialChildRouter) {
+      const params = (action.params || initialRouteParams) && {
+        ...(action.params || {}),
+        ...(initialRouteParams || {}),
+      };
       route = initialChildRouter.getStateForAction(
         NavigationActions.navigate({
           routeName: initialRouteName,
-          params: initialRouteParams,
+          ...(params ? { params } : {})
         })
       );
     }
