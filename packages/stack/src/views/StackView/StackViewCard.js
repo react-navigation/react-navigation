@@ -1,21 +1,36 @@
 import React from 'react';
-import { Animated, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
+import { Screen } from './screens';
 import createPointerEventsContainer from './createPointerEventsContainer';
+
+const EPS = 1e-5;
 
 /**
  * Component that renders the scene as card for the <StackView />.
  */
 class Card extends React.Component {
   render() {
-    const { children, pointerEvents, style } = this.props;
+    const {
+      children,
+      pointerEvents,
+      style,
+      position,
+      scene: { index },
+    } = this.props;
+    const active = position.interpolate({
+      inputRange: [index, index + 1 - EPS, index + 1],
+      outputRange: [1, 1, 0],
+      extrapolate: 'clamp',
+    });
     return (
-      <Animated.View
+      <Screen
         pointerEvents={pointerEvents}
         ref={this.props.onComponentRef}
         style={[styles.main, style]}
+        active={active}
       >
         {children}
-      </Animated.View>
+      </Screen>
     );
   }
 }

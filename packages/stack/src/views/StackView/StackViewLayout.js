@@ -21,6 +21,7 @@ import {
 
 import Card from './StackViewCard';
 import Header from '../Header/Header';
+import { ScreenContainer } from './screens';
 
 import TransitionConfigs from './StackViewTransitionConfigs';
 import { supportsImprovedSpringAnimation } from '../../utils/ReactNativeFeatures';
@@ -469,9 +470,9 @@ class StackViewLayout extends React.Component {
 
     return (
       <View {...handlers} style={containerStyle}>
-        <View style={styles.scenes}>
+        <ScreenContainer style={styles.scenes}>
           {scenes.map(s => this._renderCard(s))}
-        </View>
+        </ScreenContainer>
         {floatingHeader}
       </View>
     );
