@@ -238,7 +238,7 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
                             Object {
                               "color": "rgba(0, 0, 0, .9)",
                               "fontSize": 17,
-                              "fontWeight": "700",
+                              "fontWeight": "600",
                               "marginHorizontal": 16,
                               "textAlign": "center",
                             }
@@ -348,7 +348,7 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
                     Object {
                       "color": "rgba(0, 0, 0, .9)",
                       "fontSize": 17,
-                      "fontWeight": "700",
+                      "fontWeight": "600",
                       "marginHorizontal": 16,
                       "textAlign": "center",
                     }
