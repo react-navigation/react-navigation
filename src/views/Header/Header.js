@@ -217,8 +217,9 @@ class Header extends React.PureComponent {
       return headerRight;
     }
     if (!headerRight) return null;
+    const RenderedRightComponent = headerRight;
     return (
-      <headerRight
+      <RenderedRightComponent
         pressColorAndroid={options.headerPressColorAndroid}
         tintColor={options.headerTintColor}
       />
