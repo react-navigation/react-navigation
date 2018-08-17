@@ -72,7 +72,7 @@
 
 - (void)attachScreen:(RNSScreenView *)screen
 {
-  [screen.controller willMoveToParentViewController:_controller];
+  [_controller addChildViewController:screen.controller];
   [_controller.view addSubview:screen.controller.view];
   [screen.controller didMoveToParentViewController:_controller];
   [_activeScreens addObject:screen];
@@ -80,27 +80,38 @@
 
 - (void)updateContainer
 {
+  BOOL activeScreenChanged = NO;
   // remove screens that are no longer active
   NSMutableSet *orphaned = [NSMutableSet setWithSet:_activeScreens];
   for (RNSScreenView *screen in _reactSubviews) {
     if (!screen.active && [_activeScreens containsObject:screen]) {
+      activeScreenChanged = YES;
       [self detachScreen:screen];
     }
     [orphaned removeObject:screen];
   }
   for (RNSScreenView *screen in orphaned) {
+    activeScreenChanged = YES;
     [self detachScreen:screen];
   }
 
   // add new screens in order they are placed in subviews array
   for (RNSScreenView *screen in _reactSubviews) {
     if (screen.active && ![_activeScreens containsObject:screen]) {
+      activeScreenChanged = YES;
       [self attachScreen:screen];
     } else if (screen.active) {
       // if the view was already there we move it to "front" so that it is in the right
       // order accoring to the subviews array
       [_controller.view bringSubviewToFront:screen.controller.view];
     }
+  }
+
+  if (activeScreenChanged) {
+    // if user has reachability enabled (one hand use) and the window is slided down the below
+    // method will force it to slide back up as it is expected to happen with UINavController when
+    // we push or pop views.
+    [_controller dismissViewControllerAnimated:NO completion:nil];
   }
 }
 
