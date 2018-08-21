@@ -8,6 +8,3 @@
 
 @interface RNSScreenContainerView : UIView <RNSScreenContainerDelegate>
 @end
-
-@interface RNSScreenContainerManager : RCTViewManager
-@end

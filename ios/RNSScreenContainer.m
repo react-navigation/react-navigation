@@ -2,7 +2,14 @@
 #import "RNSScreen.h"
 
 #import <React/RCTUIManager.h>
+#import <React/RCTUIManagerObserverCoordinator.h>
 #import <React/RCTUIManagerUtils.h>
+
+@interface RNSScreenContainerManager : RCTViewManager <RCTUIManagerObserver>
+
+- (void)markUpdated:(RNSScreenContainerView *)screen;
+
+@end
 
 @interface RNSScreenContainerView ()
 
@@ -10,19 +17,23 @@
 @property (nonatomic, retain) NSMutableSet<RNSScreenView *> *activeScreens;
 @property (nonatomic, retain) NSMutableArray<RNSScreenView *> *reactSubviews;
 
+- (void)updateConatiner;
+
 @end
 
 @implementation RNSScreenContainerView {
   BOOL _needUpdate;
+  __weak RNSScreenContainerManager *_manager;
 }
 
-- (instancetype)init
+- (instancetype)initWithManager:(RNSScreenContainerManager *)manager
 {
   if (self = [super init]) {
     _activeScreens = [NSMutableSet new];
     _reactSubviews = [NSMutableArray new];
     _controller = [[UIViewController alloc] init];
     _needUpdate = NO;
+    _manager = manager;
     [self addSubview:_controller.view];
   }
   return self;
@@ -36,12 +47,7 @@
   // there is a chance it is not the correct way to do that.
   if (!_needUpdate) {
     _needUpdate = YES;
-    RCTExecuteOnUIManagerQueue(^{
-      RCTExecuteOnMainQueue(^{
-        _needUpdate = NO;
-        [self updateContainer];
-      });
-    });
+    [_manager markUpdated:self];
   }
 }
 
@@ -80,6 +86,7 @@
 
 - (void)updateContainer
 {
+  _needUpdate = NO;
   BOOL activeScreenChanged = NO;
   // remove screens that are no longer active
   NSMutableSet *orphaned = [NSMutableSet setWithSet:_activeScreens];
@@ -130,13 +137,62 @@
 @end
 
 
-@implementation RNSScreenContainerManager
+@implementation RNSScreenContainerManager {
+  NSMutableArray<RNSScreenContainerView *> *_markedContainers;
+}
 
 RCT_EXPORT_MODULE()
 
 - (UIView *)view
 {
-  return [[RNSScreenContainerView alloc] init];
+  if (!_markedContainers) {
+    _markedContainers = [NSMutableArray new];
+  }
+  return [[RNSScreenContainerView alloc] initWithManager:self];
+}
+
+- (void)markUpdated:(RNSScreenContainerView *)screen
+{
+  RCTAssertMainQueue();
+  @synchronized(self) {
+    // we need to synchronize write operations so that in didPerformMounting we can reliably
+    // tell if _markedCOntainers is empty or not
+    [_markedContainers addObject:screen];
+  }
+}
+
+#pragma mark - RCTUIManagerObserver
+
+- (void)setBridge:(RCTBridge *)bridge
+{
+  [super setBridge:bridge];
+  [self.bridge.uiManager.observerCoordinator addObserver:self];
+}
+
+- (void)invalidate
+{
+  [self.bridge.uiManager.observerCoordinator removeObserver:self];
+}
+
+- (void)uiManagerDidPerformMounting:(__unused RCTUIManager *)manager
+{
+  @synchronized(self) {
+    if ([_markedContainers count] == 0) {
+      // we return early if there are no updated containers. This check needs to be
+      // synchronized as UIThread can modify _markedContainers array
+      return;
+    }
+  }
+  RCTExecuteOnMainQueue(^{
+    for (RNSScreenContainerView *screen in _markedContainers) {
+      [screen updateContainer];
+    }
+    @synchronized(self) {
+      // we only synchronize write operations and not reading in UIThread as UIThread
+      // is the only thread that changes _markedContainers
+      [_markedContainers removeAllObjects];
+    }
+  });
 }
 
 @end
