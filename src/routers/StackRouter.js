@@ -558,8 +558,8 @@ export default (routeConfigs, stackConfig = {}) => {
       return getPathAndParamsForRoute(route);
     },
 
-    getActionForPathAndParams(path, params) {
-      return getActionForPathAndParams(path, params);
+    getActionForPathAndParams(path, params, payload) {
+      return getActionForPathAndParams(path, params, payload);
     },
 
     getScreenOptions: createConfigGetter(

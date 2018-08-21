@@ -65,6 +65,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 - Fixed memory leaks in `createNavigator`: [closure scope leak](https://github.com/react-navigation/react-navigation/commit/1a765562905e93bbae0262dd20c2688221c999e8), and [clean up old descriptors](https://github.com/react-navigation/react-navigation/commit/93642e16e7ff029586b68ee732ec790504ee4862).
 
+### Fixed
+- DeepLinking should trigger Push action instead of Navigate action when routes are the same but paths are differents (ex: message/1 => message/2).
+
 ## [2.7.0] - [2018-07-17](https://github.com/react-navigation/react-navigation/releases/tag/2.7.0)
 ### Added
 - The enableURLHandling prop on the top level navigator component allows you to disable deep linking handling. Currently it is always enabled. To disable it, `<RootNavigator enableURLHandling={false} />`
