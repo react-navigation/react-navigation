@@ -80,6 +80,7 @@ class Header extends React.PureComponent {
     titleFromLeftInterpolator: HeaderStyleInterpolator.forCenterFromLeft,
     titleInterpolator: HeaderStyleInterpolator.forCenter,
     rightInterpolator: HeaderStyleInterpolator.forRight,
+    backgroundInterpolator: HeaderStyleInterpolator.forBackground,
   };
 
   static get HEIGHT() {
@@ -338,6 +339,29 @@ class Header extends React.PureComponent {
     );
   }
 
+  _renderBackground(props) {
+    const {
+      index,
+      key,
+      descriptor: { options },
+    } = props.scene;
+
+     const offset = this.props.navigation.state.index - index;
+
+     if (Math.abs(offset) > 2) {
+      // Scene is far away from the active scene. Hides it to avoid unnecessary
+      // rendering.
+      return null;
+    }
+
+    return this._renderSubView(
+      { ...props, style: StyleSheet.absoluteFill },
+      'background',
+      () => options.headerBackground,
+      this.props.backgroundInterpolator
+    );
+  }
+
   _renderModularSubView(
     props,
     name,
@@ -492,6 +516,7 @@ class Header extends React.PureComponent {
 
   render() {
     let appBar;
+    let background;
     const { mode, scene, isLandscape } = this.props;
 
     if (mode === 'float') {
@@ -505,12 +530,16 @@ class Header extends React.PureComponent {
         scene,
       }));
       appBar = scenesProps.map(this._renderHeader, this);
+      background = scenesProps.map(this._renderBackground, this);
     } else {
-      appBar = this._renderHeader({
+      const headerProps = {
         position: new Animated.Value(this.props.scene.index),
         progress: new Animated.Value(0),
         scene: this.props.scene,
-      });
+      };
+
+      appBar = this._renderHeader(headerProps);
+      background = this._renderBackground(headerProps);
     }
 
     const { options } = scene.descriptor;
@@ -590,9 +619,7 @@ class Header extends React.PureComponent {
         ]}
       >
         <SafeAreaView forceInset={forceInset} style={containerStyles}>
-          <View style={StyleSheet.absoluteFill}>
-            {options.headerBackground}
-          </View>
+          {background}
           <View style={styles.flexOne}>{appBar}</View>
         </SafeAreaView>
       </Animated.View>
