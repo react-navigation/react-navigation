@@ -41,6 +41,7 @@ repositories {
 
 dependencies {
     compile 'com.facebook.react:react-native:+'
+    compile 'com.android.support:appcompat-v7:26.+'
 }
 
 def configureReactNativePom(def pom) {

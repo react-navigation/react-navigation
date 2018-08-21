@@ -26,6 +26,7 @@ public class ScreenContainer extends ViewGroup {
 
   private @Nullable FragmentTransaction mCurrentTransaction;
   private boolean mNeedUpdate;
+  private boolean mIsAttached;
 
   private ChoreographerCompat.FrameCallback mFrameCallback = new ChoreographerCompat.FrameCallback() {
     @Override
@@ -95,7 +96,7 @@ public class ScreenContainer extends ViewGroup {
 
   private void tryCommitTransaction() {
     if (mCurrentTransaction != null) {
-      mCurrentTransaction.commitNow();
+      mCurrentTransaction.commit();
       mCurrentTransaction = null;
     }
   }
@@ -121,8 +122,21 @@ public class ScreenContainer extends ViewGroup {
     return screen.isActive();
   }
 
+  @Override
+  protected void onAttachedToWindow() {
+    super.onAttachedToWindow();
+    mIsAttached = true;
+    updateIfNeeded();
+  }
+
+  @Override
+  protected void onDetachedFromWindow() {
+    super.onDetachedFromWindow();
+    mIsAttached = false;
+  }
+
   private void updateIfNeeded() {
-    if (!mNeedUpdate || mFragmentManager.isDestroyed()) {
+    if (!mNeedUpdate || mFragmentManager.isDestroyed() || !mIsAttached) {
       return;
     }
     mNeedUpdate = false;

@@ -15,11 +15,11 @@ public class LifecycleAwareView extends ReactViewGroup implements LifecycleObser
 
   @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
   public void onResume() {
-    Log.e("CAT", "VIEW RESUME");
+    Log.e("CAT", "VIEW RESUME " + this);
   }
 
   @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
   public void onPause() {
-    Log.e("CAT", "VIEW PAUSE");
+    Log.e("CAT", "VIEW PAUSE " + this);
   }
 }

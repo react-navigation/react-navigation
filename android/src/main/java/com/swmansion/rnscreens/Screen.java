@@ -60,6 +60,9 @@ public class Screen extends ViewGroup {
   }
 
   public void setActive(boolean active) {
+    if (active == mActive) {
+      return;
+    }
     mActive = active;
     if (mContainer != null) {
       mContainer.notifyChildUpdate();
