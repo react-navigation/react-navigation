@@ -11,6 +11,7 @@ const DefaultTransitionSpec = {
   timing: Animated.timing,
 };
 
+// eslint-disable-next-line react/no-deprecated
 class Transitioner extends React.Component {
   constructor(props, context) {
     super(props, context);

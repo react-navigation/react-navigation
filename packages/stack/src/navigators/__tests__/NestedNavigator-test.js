@@ -16,7 +16,6 @@ const NavNestedDirect = StackNavigator({
 
 const NavNestedIndirect = StackNavigator({
   Sub: {
-    // eslint-disable-next-line react/display-name
     screen: props => <SubNavigator {...props} />,
   },
 });

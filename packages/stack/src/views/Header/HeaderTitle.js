@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, Platform, StyleSheet, Animated } from 'react-native';
+import { Platform, StyleSheet, Animated } from 'react-native';
 
 const AnimatedText = Animated.Text;
 

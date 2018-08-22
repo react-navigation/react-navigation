@@ -10,7 +10,7 @@ import {
 
 import TouchableItem from '../TouchableItem';
 
-const defaultBackImage = require('../assets/back-icon.png');
+import defaultBackImage from '../assets/back-icon.png';
 
 class HeaderBackButton extends React.PureComponent {
   static defaultProps = {
@@ -61,35 +61,6 @@ class HeaderBackButton extends React.PureComponent {
     return <BackImage {...props} />;
   }
 
-  render() {
-    const { onPress, pressColorAndroid, layoutPreset, title } = this.props;
-
-    let button = (
-      <TouchableItem
-        accessibilityComponentType="button"
-        accessibilityLabel={title}
-        accessibilityTraits="button"
-        testID="header-back"
-        delayPressIn={0}
-        onPress={onPress}
-        pressColor={pressColorAndroid}
-        style={styles.container}
-        borderless
-      >
-        <View style={styles.container}>
-          {this._renderBackImage()}
-          {this._maybeRenderTitle()}
-        </View>
-      </TouchableItem>
-    );
-
-    if (Platform.OS === 'android') {
-      return <View style={styles.androidButtonWrapper}>{button}</View>;
-    } else {
-      return button;
-    }
-  }
-
   _maybeRenderTitle() {
     const {
       layoutPreset,
@@ -129,6 +100,35 @@ class HeaderBackButton extends React.PureComponent {
         {backButtonTitle}
       </Text>
     );
+  }
+
+  render() {
+    const { onPress, pressColorAndroid, title } = this.props;
+
+    let button = (
+      <TouchableItem
+        accessibilityComponentType="button"
+        accessibilityLabel={title}
+        accessibilityTraits="button"
+        testID="header-back"
+        delayPressIn={0}
+        onPress={onPress}
+        pressColor={pressColorAndroid}
+        style={styles.container}
+        borderless
+      >
+        <View style={styles.container}>
+          {this._renderBackImage()}
+          {this._maybeRenderTitle()}
+        </View>
+      </TouchableItem>
+    );
+
+    if (Platform.OS === 'android') {
+      return <View style={styles.androidButtonWrapper}>{button}</View>;
+    } else {
+      return button;
+    }
   }
 }
 

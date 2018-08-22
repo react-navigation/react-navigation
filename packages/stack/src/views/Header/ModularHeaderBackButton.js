@@ -3,7 +3,7 @@ import { I18nManager, Image, Text, View, StyleSheet } from 'react-native';
 
 import TouchableItem from '../TouchableItem';
 
-const defaultBackImage = require('../assets/back-icon.png');
+import defaultBackImage from '../assets/back-icon.png';
 
 class ModularHeaderBackButton extends React.PureComponent {
   static defaultProps = {

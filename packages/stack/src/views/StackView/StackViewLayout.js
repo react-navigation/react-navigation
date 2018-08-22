@@ -153,12 +153,7 @@ class StackViewLayout extends React.Component {
       headerRightInterpolator,
     } = this._getTransitionConfig();
 
-    const {
-      mode,
-      transitionProps,
-      lastTransitionProps,
-      ...passProps
-    } = this.props;
+    const { transitionProps, ...passProps } = this.props;
 
     return (
       <NavigationProvider value={scene.descriptor.navigation}>
@@ -178,7 +173,6 @@ class StackViewLayout extends React.Component {
     );
   }
 
-  // eslint-disable-next-line class-methods-use-this
   _animatedSubscribe(props) {
     // Hack to make this work with native driven animations. We add a single listener
     // so the JS value of the following animated values gets updated. We rely on
@@ -451,7 +445,6 @@ class StackViewLayout extends React.Component {
     }
     const {
       transitionProps: { scene, scenes },
-      mode,
     } = this.props;
     const { options } = scene.descriptor;
 
@@ -554,7 +547,7 @@ class StackViewLayout extends React.Component {
   }
 
   _renderInnerScene(scene) {
-    const { options, navigation, getComponent } = scene.descriptor;
+    const { navigation, getComponent } = scene.descriptor;
     const SceneComponent = getComponent();
 
     const { screenProps } = this.props;

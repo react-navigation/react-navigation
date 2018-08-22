@@ -2,13 +2,11 @@ import React from 'react';
 
 import {
   Animated,
-  Dimensions,
   Image,
   Platform,
   StyleSheet,
   View,
   I18nManager,
-  ViewPropTypes,
   MaskedViewIOS,
 } from 'react-native';
 
@@ -72,6 +70,10 @@ const getAppBarHeight = isLandscape => {
 };
 
 class Header extends React.PureComponent {
+  static get HEIGHT() {
+    return APPBAR_HEIGHT + STATUSBAR_HEIGHT;
+  }
+
   static defaultProps = {
     layoutInterpolator: HeaderStyleInterpolator.forLayout,
     leftInterpolator: HeaderStyleInterpolator.forLeft,
@@ -82,10 +84,6 @@ class Header extends React.PureComponent {
     rightInterpolator: HeaderStyleInterpolator.forRight,
     backgroundInterpolator: HeaderStyleInterpolator.forBackground,
   };
-
-  static get HEIGHT() {
-    return APPBAR_HEIGHT + STATUSBAR_HEIGHT;
-  }
 
   state = {
     widths: {},
@@ -342,13 +340,12 @@ class Header extends React.PureComponent {
   _renderBackground(props) {
     const {
       index,
-      key,
       descriptor: { options },
     } = props.scene;
 
-     const offset = this.props.navigation.state.index - index;
+    const offset = this.props.navigation.state.index - index;
 
-     if (Math.abs(offset) > 2) {
+    if (Math.abs(offset) > 2) {
       // Scene is far away from the active scene. Hides it to avoid unnecessary
       // rendering.
       return null;
@@ -472,7 +469,7 @@ class Header extends React.PureComponent {
       headerTitleContainerStyle: options.headerTitleContainerStyle,
     });
 
-    const { isLandscape, transitionPreset } = this.props;
+    const { transitionPreset } = this.props;
 
     const wrapperProps = {
       style: styles.header,
@@ -701,6 +698,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }],
   },
+  // eslint-disable-next-line react-native/no-unused-styles
   title: {
     bottom: 0,
     top: 0,
@@ -708,6 +706,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
   },
+  // eslint-disable-next-line react-native/no-unused-styles
   left: {
     left: 0,
     bottom: 0,
@@ -716,6 +715,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
   },
+  // eslint-disable-next-line react-native/no-unused-styles
   right: {
     right: 0,
     bottom: 0,

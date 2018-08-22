@@ -276,7 +276,6 @@ function forCenterFromLeft(props) {
 
   const { first, last } = interpolate;
   const index = scene.index;
-  const inputRange = [first, index - 0.5, index, index + 0.5, last];
   const offset = TITLE_OFFSET_IOS;
 
   return {
@@ -327,14 +326,14 @@ function forCenterFromLeft(props) {
 
 const BACKGROUND_OFFSET = Dimensions.get('window').width;
 function forBackground(props) {
-  const { position, scene, scenes } = props;
+  const { position, scene } = props;
   const interpolate = getSceneIndicesForInterpolationInputRange(props);
-   if (!interpolate) return { opacity: 0 };
-   const { first, last } = interpolate;
+  if (!interpolate) return { opacity: 0 };
+  const { first, last } = interpolate;
   const index = scene.index;
   const offset = BACKGROUND_OFFSET;
-   const outputRange = [offset, 0, -offset];
-   return {
+  const outputRange = [offset, 0, -offset];
+  return {
     transform: [
       {
         translateX: position.interpolate({

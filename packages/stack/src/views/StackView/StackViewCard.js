@@ -63,6 +63,4 @@ const styles = StyleSheet.create({
   },
 });
 
-Card = createPointerEventsContainer(Card);
-
-export default Card;
+export default createPointerEventsContainer(Card);
