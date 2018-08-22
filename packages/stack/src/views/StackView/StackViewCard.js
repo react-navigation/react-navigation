@@ -1,9 +1,24 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import { Screen } from './screens';
 import createPointerEventsContainer from './createPointerEventsContainer';
 
 const EPS = 1e-5;
+
+function getAccessibilityProps(isActive) {
+  if (Platform.OS === 'ios') {
+    return {
+      accessibilityElementsHidden: !isActive,
+      accessible: isActive,
+    };
+  } else if (Platform.OS === 'android') {
+    return {
+      importantForAccessibility: isActive ? 'yes' : 'no-hide-descendants',
+    };
+  } else {
+    return null;
+  }
+}
 
 /**
  * Component that renders the scene as card for the <StackView />.
@@ -15,19 +30,21 @@ class Card extends React.Component {
       pointerEvents,
       style,
       position,
-      scene: { index },
+      scene: { index, isActive },
     } = this.props;
     const active = position.interpolate({
       inputRange: [index, index + 1 - EPS, index + 1],
       outputRange: [1, 1, 0],
       extrapolate: 'clamp',
     });
+
     return (
       <Screen
         pointerEvents={pointerEvents}
         ref={this.props.onComponentRef}
         style={[styles.main, style]}
         active={active}
+        {...getAccessibilityProps(isActive)}
       >
         {children}
       </Screen>
