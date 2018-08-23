@@ -324,8 +324,14 @@ function forCenterFromLeft(props) {
   };
 }
 
+// Default to no transition
+function forBackground() {
+  return null;
+}
+
+// Translate the background with the card
 const BACKGROUND_OFFSET = Dimensions.get('window').width;
-function forBackground(props) {
+function forBackgroundWithTranslation(props) {
   const { position, scene } = props;
   const interpolate = getSceneIndicesForInterpolationInputRange(props);
   if (!interpolate) return { opacity: 0 };
@@ -354,4 +360,5 @@ export default {
   forCenter,
   forRight,
   forBackground,
+  forBackgroundWithTranslation,
 };

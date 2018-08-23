@@ -151,6 +151,7 @@ class StackViewLayout extends React.Component {
       headerLeftInterpolator,
       headerTitleInterpolator,
       headerRightInterpolator,
+      headerBackgroundInterpolator,
     } = this._getTransitionConfig();
 
     const { transitionProps, ...passProps } = this.props;
@@ -168,6 +169,7 @@ class StackViewLayout extends React.Component {
           leftInterpolator: headerLeftInterpolator,
           titleInterpolator: headerTitleInterpolator,
           rightInterpolator: headerRightInterpolator,
+          backgroundInterpolator: headerBackgroundInterpolator,
         })}
       </NavigationProvider>
     );
