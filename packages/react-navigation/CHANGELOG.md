@@ -6,8 +6,15 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [2.12.0] - [2018-08-22](https://github.com/react-navigation/react-navigation/releases/tag/2.12.0)
+
 ### Changed
 - Move stack specific view code to react-navigation-stack
+- Add accessibility props for inactive screens in stack (https://github.com/react-navigation/react-navigation-stack/commit/4e04428e26df9076413b57b3346a7ce357de1a77)
+- Updated header title to match iOS 11/12 style correctly (https://github.com/react-navigation/react-navigation-stack/pull/1)
+- Add support for animating the header background on screen transitions and add interpolator to animate it along with the rest of the screen, but this is still opt-in behavior (https://github.com/react-navigation/react-navigation-stack/pull/3)
+- Updated react-native-safe-area-view to 0.2.0
 
 ## [2.11.2] - [2018-08-03](https://github.com/react-navigation/react-navigation/releases/tag/2.11.2)
 ### Changed
@@ -141,7 +148,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Improved examples
 
-[Unreleased]: https://github.com/react-navigation/react-navigation/compare/2.11.2...HEAD
+[Unreleased]: https://github.com/react-navigation/react-navigation/compare/2.12.0...HEAD
+[2.12.0]: https://github.com/react-navigation/react-navigation/compare/2.11.1...2.11.2
 [2.11.2]: https://github.com/react-navigation/react-navigation/compare/2.11.1...2.11.2
 [2.11.1]: https://github.com/react-navigation/react-navigation/compare/2.11.0...2.11.1
 [2.11.0]: https://github.com/react-navigation/react-navigation/compare/2.10.0...2.11.0
