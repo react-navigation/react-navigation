@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [2.12.1] - [2018-08-23](https://github.com/react-navigation/react-navigation/releases/tag/2.12.1)
+
+### Fixed
+- Fix crash on react-native@>=0.56 described in https://github.com/react-navigation/react-navigation/issues/4886
+
 ## [2.12.0] - [2018-08-22](https://github.com/react-navigation/react-navigation/releases/tag/2.12.0)
 
 ### Changed
@@ -148,8 +153,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Improved examples
 
-[Unreleased]: https://github.com/react-navigation/react-navigation/compare/2.12.0...HEAD
-[2.12.0]: https://github.com/react-navigation/react-navigation/compare/2.11.1...2.11.2
+[Unreleased]: https://github.com/react-navigation/react-navigation/compare/2.12.1...HEAD
+[2.12.1]: https://github.com/react-navigation/react-navigation/compare/2.12.0...2.12.1
+[2.12.0]: https://github.com/react-navigation/react-navigation/compare/2.11.2...2.12.0
 [2.11.2]: https://github.com/react-navigation/react-navigation/compare/2.11.1...2.11.2
 [2.11.1]: https://github.com/react-navigation/react-navigation/compare/2.11.0...2.11.1
 [2.11.0]: https://github.com/react-navigation/react-navigation/compare/2.10.0...2.11.0
