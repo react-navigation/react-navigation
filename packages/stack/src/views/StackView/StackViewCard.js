@@ -3,6 +3,7 @@ import { StyleSheet, Platform } from 'react-native';
 import { Screen } from './screens';
 import createPointerEventsContainer from './createPointerEventsContainer';
 
+/* eslint-disable no-unused-vars */
 const EPS = 1e-5;
 
 function getAccessibilityProps(isActive) {
@@ -29,21 +30,28 @@ class Card extends React.Component {
       children,
       pointerEvents,
       style,
-      position,
-      scene: { index, isActive },
+      // position,
+      scene: { /* index, */ isActive },
     } = this.props;
-    const active = position.interpolate({
-      inputRange: [index, index + 1 - EPS, index + 1],
-      outputRange: [1, 1, 0],
-      extrapolate: 'clamp',
-    });
+
+    // If we use react-native <= 0.55, we can't call position.__makeNative()
+    // before binding this value to the view. If we use >= 0.56, then we have
+    // to call position.__makeNative(). Unclear to me what is happening here
+    // so temporarily commented this out.
+    //
+    // const active = position.interpolate({
+    //   inputRange: [index, index + 1 - EPS, index + 1],
+    //   outputRange: [1, 1, 0],
+    //   extrapolate: 'clamp',
+    // });
 
     return (
       <Screen
         pointerEvents={pointerEvents}
         ref={this.props.onComponentRef}
         style={[styles.main, style]}
-        active={active}
+        // active={active}
+        active={isActive ? 1 : 0}
         {...getAccessibilityProps(isActive)}
       >
         {children}

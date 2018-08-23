@@ -1,17 +1,8 @@
 import React from 'react';
-import {
-  Animated,
-  NativeModules,
-  Easing,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { Animated, Easing, StyleSheet, View } from 'react-native';
 import invariant from '../utils/invariant';
 
 import NavigationScenesReducer from './ScenesReducer';
-
-const NativeAnimatedModule =
-  NativeModules && NativeModules.NativeAnimatedModule;
 
 // Used for all animations unless overriden
 const DefaultTransitionSpec = {
@@ -46,10 +37,6 @@ class Transitioner extends React.Component {
         this.props.descriptors
       ),
     };
-
-    if (NativeAnimatedModule) {
-      this.state.position.__makeNative();
-    }
 
     this._prevTransitionProps = null;
     this._transitionProps = buildTransitionProps(props, this.state);
