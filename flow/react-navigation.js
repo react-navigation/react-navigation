@@ -825,6 +825,8 @@ declare module 'react-navigation' {
     OPEN_DRAWER: 'Navigation/OPEN_DRAWER',
     CLOSE_DRAWER: 'Navigation/CLOSE_DRAWER',
     TOGGLE_DRAWER: 'Navigation/TOGGLE_DRAWER',
+    DRAWER_OPENED: 'Navigation/DRAWER_OPENED',
+    DRAWER_CLOSED: 'Navigation/DRAWER_CLOSED',
 
     openDrawer: (payload: {
       key?: string,
