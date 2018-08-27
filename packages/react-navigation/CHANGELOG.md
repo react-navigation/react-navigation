@@ -50,7 +50,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Export `StackViewTransitionConfigs` to allow you to extend default config in custom transition configs. [#4761](https://github.com/react-navigation/react-navigation/pull/4761)
 
 ### Fixed
-- Error when building with haul: ref to pathToRegexp.compile(#4658).
 - Error when building with haul: ref to pathToRegexp.compile. [#4658](https://github.com/react-navigation/react-navigation/pull/4658).
 
 ## [2.9.1] - [2018-07-24](https://github.com/react-navigation/react-navigation/releases/tag/2.9.1)
