@@ -37,6 +37,7 @@ type Props<T> = SceneRendererProps<T> & {
   renderBadge?: (scene: Scene<T>) => React.Node,
   renderIndicator?: (props: IndicatorProps<T>) => React.Node,
   onTabPress?: (scene: Scene<T>) => mixed,
+  onTabLongPress?: (scene: Scene<T>) => mixed,
   tabStyle?: ViewStyleProp,
   indicatorStyle?: ViewStyleProp,
   labelStyle?: TextStyleProp,
@@ -66,6 +67,7 @@ export default class TabBar<T: *> extends React.Component<Props<T>, State> {
     renderLabel: PropTypes.func,
     renderIndicator: PropTypes.func,
     onTabPress: PropTypes.func,
+    onTabLongPress: PropTypes.func,
     labelStyle: PropTypes.any,
     style: PropTypes.any,
   };
@@ -263,6 +265,12 @@ export default class TabBar<T: *> extends React.Component<Props<T>, State> {
     }
 
     this.props.jumpTo(route.key);
+  };
+
+  _handleTabLongPress = ({ route }: Scene<*>) => {
+    if (this.props.onTabLongPress) {
+      this.props.onTabLongPress({ route });
+    }
   };
 
   _normalizeScrollValue = (props, value) => {
@@ -477,6 +485,7 @@ export default class TabBar<T: *> extends React.Component<Props<T>, State> {
                   pressOpacity={this.props.pressOpacity}
                   delayPressIn={0}
                   onPress={() => this._handleTabPress({ route })}
+                  onLongPress={() => this._handleTabLongPress({ route })}
                   style={tabContainerStyle}
                 >
                   <View pointerEvents="none" style={styles.container}>

@@ -140,6 +140,7 @@ renderTabBar={props =>
 - `renderIndicator`: callback which returns a custom React Element to be used as a tab indicator.
 - `renderBadge`: callback which returns a custom React Element to be used as a badge.
 - `onTabPress`: callback invoked on tab press, useful for things like scroll to top.
+- `onTabLongPress`: callback invoked on tab long-press, for example to show a drawer with more options.
 - `pressColor`: color for material ripple (Android >= 5.0 only).
 - `pressOpacity`: opacity for pressed tab (iOS and Android < 5.0 only).
 - `scrollEnabled`: whether to enable scrollable tabs.
