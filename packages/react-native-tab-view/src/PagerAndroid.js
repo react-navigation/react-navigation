@@ -78,9 +78,7 @@ export default class PagerAndroid<T: *> extends React.Component<Props<T>> {
 
   _handlePageScroll = (e: PageScrollEvent) => {
     this.props.offsetX.setValue(
-      e.nativeEvent.position *
-        this.props.layout.width *
-        (I18nManager.isRTL ? 1 : -1)
+      this._getPageIndex(e.nativeEvent.position) * this.props.layout.width * -1
     );
     this.props.panX.setValue(
       e.nativeEvent.offset *
@@ -122,13 +120,12 @@ export default class PagerAndroid<T: *> extends React.Component<Props<T>> {
   };
 
   render() {
-    const {
-      children,
-      navigationState,
-      swipeEnabled,
-      keyboardDismissMode,
-    } = this.props;
-    const content = React.Children.map(children, (child, i) => {
+    const { navigationState, swipeEnabled, keyboardDismissMode } = this.props;
+    const children = I18nManager.isRTL
+      ? React.Children.toArray(this.props.children).reverse()
+      : React.Children.toArray(this.props.children);
+
+    const content = children.map((child, i) => {
       const route = navigationState.routes[i];
       const focused = i === navigationState.index;
 
@@ -144,10 +141,6 @@ export default class PagerAndroid<T: *> extends React.Component<Props<T>> {
         </View>
       );
     });
-
-    if (I18nManager.isRTL) {
-      content.reverse();
-    }
 
     const initialPage = this._getPageIndex(navigationState.index);
 
