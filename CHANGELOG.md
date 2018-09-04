@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+- Pinned `create-react-context` dependency to `0.2.2` (https://github.com/react-navigation/react-navigation/issues/4934)
+
+
 ## [2.12.1] - [2018-08-23](https://github.com/react-navigation/react-navigation/releases/tag/2.12.1)
 
 ### Fixed
@@ -19,7 +23,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add accessibility props for inactive screens in stack (https://github.com/react-navigation/react-navigation-stack/commit/4e04428e26df9076413b57b3346a7ce357de1a77)
 - Updated header title to match iOS 11/12 style correctly (https://github.com/react-navigation/react-navigation-stack/pull/1)
 - Add support for animating the header background on screen transitions and add interpolator to animate it along with the rest of the screen, but this is still opt-in behavior (https://github.com/react-navigation/react-navigation-stack/pull/3)
-- Updated react-native-safe-area-view to 0.2.0
+- Updated react-native-safe-area-view to 0.9.0
 
 ## [2.11.2] - [2018-08-03](https://github.com/react-navigation/react-navigation/releases/tag/2.11.2)
 ### Changed
@@ -50,7 +54,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Export `StackViewTransitionConfigs` to allow you to extend default config in custom transition configs. [#4761](https://github.com/react-navigation/react-navigation/pull/4761)
 
 ### Fixed
-- Error when building with haul: ref to pathToRegexp.compile(#4658).
 - Error when building with haul: ref to pathToRegexp.compile. [#4658](https://github.com/react-navigation/react-navigation/pull/4658).
 
 ## [2.9.1] - [2018-07-24](https://github.com/react-navigation/react-navigation/releases/tag/2.9.1)
