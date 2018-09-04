@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "clamp": "^1.0.1",
-    "create-react-context": "^0.2.1",
+    "create-react-context": "0.2.2",
     "hoist-non-react-statics": "^2.2.0",
     "path-to-regexp": "^1.7.0",
     "query-string": "^6.1.0",

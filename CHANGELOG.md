@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+- Pinned `create-react-context` dependency to `0.2.2` (https://github.com/react-navigation/react-navigation/issues/4934)
+
+
 ## [2.12.1] - [2018-08-23](https://github.com/react-navigation/react-navigation/releases/tag/2.12.1)
 
 ### Fixed
