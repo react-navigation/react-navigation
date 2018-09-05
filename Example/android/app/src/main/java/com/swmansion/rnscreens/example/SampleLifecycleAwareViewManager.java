@@ -21,7 +21,6 @@ public class SampleLifecycleAwareViewManager extends ViewGroupManager<LifecycleA
 
   @Override
   protected LifecycleAwareView createViewInstance(ThemedReactContext reactContext) {
-    Log.e("CAT", "CREATE!!!");
     LifecycleAwareView view = new LifecycleAwareView(reactContext);
     mLifecycleHelper.register(view);
     return view;
