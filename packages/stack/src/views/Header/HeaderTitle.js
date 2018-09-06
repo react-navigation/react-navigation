@@ -9,6 +9,7 @@ const HeaderTitle = ({ style, ...rest }) => (
     {...rest}
     style={[styles.title, style]}
     accessibilityTraits="header"
+    accessible={false}
   />
 );
 
