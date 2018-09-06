@@ -19,6 +19,7 @@ export type InjectedProps = {
     route: any,
     focused: boolean,
     tintColor: string,
+    horizontal: boolean,
   }) => React.Node,
   renderScene: (props: { route: any }) => ?React.Node,
   onIndexChange: (index: number) => any,
@@ -43,14 +44,19 @@ export default function createTabNavigator(TabView: React.ComponentType<*>) {
       );
     };
 
-    _renderIcon = ({ route, focused = true, tintColor }) => {
+    _renderIcon = ({
+      route,
+      focused = true,
+      tintColor,
+      horizontal = false,
+    }) => {
       const { descriptors } = this.props;
       const descriptor = descriptors[route.key];
       const options = descriptor.options;
 
       if (options.tabBarIcon) {
         return typeof options.tabBarIcon === 'function'
-          ? options.tabBarIcon({ focused, tintColor })
+          ? options.tabBarIcon({ focused, tintColor, horizontal })
           : options.tabBarIcon;
       }
 

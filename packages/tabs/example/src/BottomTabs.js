@@ -4,8 +4,8 @@ import { MaterialIcons } from '@expo/vector-icons';
 import PhotoGrid from './shared/PhotoGrid';
 import TouchableBounce from 'react-native/Libraries/Components/Touchable/TouchableBounce';
 
-const tabBarIcon = name => ({ tintColor }) => (
-  <MaterialIcons name={name} color={tintColor} size={24} />
+const tabBarIcon = name => ({ tintColor, horizontal }) => (
+  <MaterialIcons name={name} color={tintColor} size={horizontal ? 17 : 24} />
 );
 
 class Album extends React.Component {
