@@ -9,7 +9,6 @@ function getAccessibilityProps(isActive) {
   if (Platform.OS === 'ios') {
     return {
       accessibilityElementsHidden: !isActive,
-      accessible: isActive,
     };
   } else if (Platform.OS === 'android') {
     return {
