@@ -654,7 +654,7 @@ if (Platform.OS === 'ios') {
   };
 }
 
-const DEFAULT_BACKGROUND_COLOR = Platform.OS === 'ios' ? '#F7F7F7' : '#FFF';
+const DEFAULT_BACKGROUND_COLOR = '#FFF';
 
 const styles = StyleSheet.create({
   container: {

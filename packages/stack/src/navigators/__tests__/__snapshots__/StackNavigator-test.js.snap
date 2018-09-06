@@ -43,7 +43,6 @@ exports[`StackNavigator applies correct values when headerRight is present 1`] =
     >
       <View
         accessibilityElementsHidden={false}
-        accessible={true}
         collapsable={undefined}
         pointerEvents="auto"
         style={
@@ -149,7 +148,7 @@ exports[`StackNavigator applies correct values when headerRight is present 1`] =
               >
                 <Text
                   accessibilityTraits="header"
-                  accessible={true}
+                  accessible={false}
                   allowFontScaling={true}
                   collapsable={undefined}
                   ellipsizeMode="tail"
@@ -238,7 +237,6 @@ exports[`StackNavigator renders successfully 1`] = `
     >
       <View
         accessibilityElementsHidden={false}
-        accessible={true}
         collapsable={undefined}
         pointerEvents="auto"
         style={
@@ -344,7 +342,7 @@ exports[`StackNavigator renders successfully 1`] = `
               >
                 <Text
                   accessibilityTraits="header"
-                  accessible={true}
+                  accessible={false}
                   allowFontScaling={true}
                   collapsable={undefined}
                   ellipsizeMode="tail"

@@ -43,7 +43,6 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
     >
       <View
         accessibilityElementsHidden={false}
-        accessible={true}
         collapsable={undefined}
         pointerEvents="auto"
         style={
@@ -116,7 +115,6 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
             >
               <View
                 accessibilityElementsHidden={false}
-                accessible={true}
                 collapsable={undefined}
                 pointerEvents="auto"
                 style={
@@ -156,7 +154,7 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
                 collapsable={undefined}
                 style={
                   Object {
-                    "backgroundColor": "#F7F7F7",
+                    "backgroundColor": "#FFF",
                     "transform": Array [
                       Object {
                         "translateX": 0,
@@ -171,7 +169,7 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
                   pointerEvents="box-none"
                   style={
                     Object {
-                      "backgroundColor": "#F7F7F7",
+                      "backgroundColor": "#FFF",
                       "borderBottomColor": "#A7A7AA",
                       "borderBottomWidth": 0.5,
                       "height": 64,
@@ -221,7 +219,7 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
                       >
                         <Text
                           accessibilityTraits="header"
-                          accessible={true}
+                          accessible={false}
                           allowFontScaling={true}
                           collapsable={undefined}
                           ellipsizeMode="tail"
@@ -255,7 +253,7 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
         collapsable={undefined}
         style={
           Object {
-            "backgroundColor": "#F7F7F7",
+            "backgroundColor": "#FFF",
             "transform": Array [
               Object {
                 "translateX": 0,
@@ -270,7 +268,7 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
           pointerEvents="box-none"
           style={
             Object {
-              "backgroundColor": "#F7F7F7",
+              "backgroundColor": "#FFF",
               "borderBottomColor": "#A7A7AA",
               "borderBottomWidth": 0.5,
               "height": 64,
@@ -320,7 +318,7 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
               >
                 <Text
                   accessibilityTraits="header"
-                  accessible={true}
+                  accessible={false}
                   allowFontScaling={true}
                   collapsable={undefined}
                   ellipsizeMode="tail"
