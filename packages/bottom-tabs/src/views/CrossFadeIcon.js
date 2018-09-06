@@ -5,6 +5,7 @@ import { Animated, View, StyleSheet } from 'react-native';
 
 type Props = {
   route: any,
+  horizontal?: boolean,
   activeOpacity: any,
   inactiveOpacity: any,
   activeTintColor: any,
@@ -22,6 +23,7 @@ export default class TabBarIcon extends React.Component<Props> {
       activeTintColor,
       inactiveTintColor,
       renderIcon,
+      horizontal,
       style,
     } = this.props;
 
@@ -33,6 +35,7 @@ export default class TabBarIcon extends React.Component<Props> {
           {renderIcon({
             route,
             focused: true,
+            horizontal,
             tintColor: activeTintColor,
           })}
         </Animated.View>
@@ -40,6 +43,7 @@ export default class TabBarIcon extends React.Component<Props> {
           {renderIcon({
             route,
             focused: false,
+            horizontal,
             tintColor: inactiveTintColor,
           })}
         </Animated.View>

@@ -104,7 +104,6 @@ class TabBarBottom extends React.Component<Props> {
             showIcon && this._shouldUseHorizontalLabels()
               ? styles.labelBeside
               : styles.labelBeneath,
-            styles.labelBeneath,
             labelStyle,
           ]}
           allowFontScaling={allowFontScaling}
@@ -142,6 +141,7 @@ class TabBarBottom extends React.Component<Props> {
     return (
       <CrossFadeIcon
         route={route}
+        horizontal={horizontal}
         navigation={navigation}
         activeOpacity={activeOpacity}
         inactiveOpacity={inactiveOpacity}
@@ -253,7 +253,7 @@ const COMPACT_HEIGHT = 29;
 
 const styles = StyleSheet.create({
   tabBar: {
-    backgroundColor: '#F7F7F7', // Default background color in iOS 10
+    backgroundColor: '#fff',
     borderTopWidth: StyleSheet.hairlineWidth,
     borderTopColor: 'rgba(0, 0, 0, .3)',
     flexDirection: 'row',
@@ -290,12 +290,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   labelBeneath: {
-    fontSize: 10,
+    fontSize: 11,
     marginBottom: 1.5,
   },
   labelBeside: {
-    fontSize: 13,
-    marginLeft: 20,
+    fontSize: 12,
+    marginLeft: 15,
   },
 });
 
