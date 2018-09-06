@@ -40,10 +40,10 @@ MyHomeScreen.navigationOptions = {
     accessibilityLabel: 'TEST_ID_HOME_ACLBL',
   },
   tabBarLabel: 'Home',
-  tabBarIcon: ({ tintColor, focused }) => (
+  tabBarIcon: ({ tintColor, focused, horizontal }) => (
     <Ionicons
       name={focused ? 'ios-home' : 'ios-home-outline'}
-      size={26}
+      size={horizontal ? 20 : 26}
       style={{ color: tintColor }}
     />
   ),
@@ -60,10 +60,10 @@ class MyPeopleScreen extends React.Component<MyPeopleScreenProps> {
 
   static navigationOptions = {
     tabBarLabel: 'People',
-    tabBarIcon: ({ tintColor, focused }) => (
+    tabBarIcon: ({ tintColor, focused, horizontal }) => (
       <Ionicons
         name={focused ? 'ios-people' : 'ios-people-outline'}
-        size={26}
+        size={horizontal ? 20 : 26}
         style={{ color: tintColor }}
       />
     ),
@@ -100,10 +100,10 @@ class MyChatScreen extends React.Component<MyChatScreenProps> {
 
   static navigationOptions = {
     tabBarLabel: 'Chat',
-    tabBarIcon: ({ tintColor, focused }) => (
+    tabBarIcon: ({ tintColor, focused, horizontal }) => (
       <Ionicons
         name={focused ? 'ios-chatboxes' : 'ios-chatboxes-outline'}
-        size={26}
+        size={horizontal ? 20 : 26}
         style={{ color: tintColor }}
       />
     ),
@@ -135,10 +135,10 @@ const MySettingsScreen = ({ navigation }) => (
 
 MySettingsScreen.navigationOptions = {
   tabBarLabel: 'Settings',
-  tabBarIcon: ({ tintColor, focused }) => (
+  tabBarIcon: ({ tintColor, focused, horizontal }) => (
     <Ionicons
       name={focused ? 'ios-settings' : 'ios-settings-outline'}
-      size={26}
+      size={horizontal ? 20 : 26}
       style={{ color: tintColor }}
     />
   ),
