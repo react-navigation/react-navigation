@@ -2,7 +2,7 @@ import * as React from 'react';
 import Expo from 'expo';
 import { FlatList } from 'react-native';
 import { createStackNavigator } from 'react-navigation';
-import { ListSection, Divider } from 'react-native-paper';
+import { List, Divider } from 'react-native-paper';
 import SimpleTabs from './src/SimpleTabs';
 import ShiftingTabs from './src/ShiftingTabs';
 import IconTabs from './src/IconTabs';
@@ -19,7 +19,7 @@ class Home extends React.Component {
   };
 
   _renderItem = ({ item }) => (
-    <ListSection.Item
+    <List.Item
       title={item.title}
       onPress={() => this.props.navigation.navigate(item.routeName)}
     />

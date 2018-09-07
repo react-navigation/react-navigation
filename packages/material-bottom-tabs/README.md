@@ -7,7 +7,7 @@ Bottom Navigation component following [Material design guidelines](https://mater
 Open a Terminal in your project's folder and run,
 
 ```sh
-yarn add react-navigation-material-bottom-tabs
+yarn add react-navigation-material-bottom-tabs react-native-paper
 ```
 
 If you're on a vanilla React Native project, you also need to install and link [react-native-vector-icons](https://github.com/oblador/react-native-vector-icons).
@@ -39,7 +39,7 @@ export default createMaterialBottomTabNavigator({
   Cart: { screen: Cart },
 }, {
   initialRouteName: 'Album',
-  activeTintColor: '#F44336',
+  activeColor: '#F44336',
 });
 ```
 

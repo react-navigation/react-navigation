@@ -53,8 +53,8 @@ export default createMaterialBottomTabNavigator(
   },
   {
     shifting: false,
-    activeTintColor: '#6200ee',
-    inactiveTintColor: '#828792',
+    activeColor: '#6200ee',
+    inactiveColor: '#828792',
     barStyle: {
       backgroundColor: '#f8f7f9',
       borderTopWidth: StyleSheet.hairlineWidth,
