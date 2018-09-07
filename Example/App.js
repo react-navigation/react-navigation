@@ -9,12 +9,12 @@ import {
 import { createStackNavigator, createSwitchNavigator } from 'react-navigation';
 
 import Stack from './stack';
-import Container from './container';
+import Tabs from './tabs';
 import Navigation from './navigation';
 
 const SCREENS = {
-  Stack: { screen: Stack, title: 'ScreenStack example' },
-  Container: { screen: Container, title: 'ScreenContainer example' },
+  Stack: { screen: Stack, title: 'Stack example' },
+  Tabs: { screen: Tabs, title: 'Tabs example' },
   Navigation: { screen: Navigation, title: 'React Navigation example' },
 };
 

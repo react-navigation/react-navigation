@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		448078F52114595900280661 /* RNSScreenContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = 448078F12114595900280661 /* RNSScreenContainer.m */; };
-		448078F62114595900280661 /* RNSScreenStack.m in Sources */ = {isa = PBXBuildFile; fileRef = 448078F32114595900280661 /* RNSScreenStack.m */; };
 		448078F72114595900280661 /* RNSScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = 448078F42114595900280661 /* RNSScreen.m */; };
 /* End PBXBuildFile section */
 
@@ -29,8 +28,6 @@
 		448078EF2114595900280661 /* RNSScreen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNSScreen.h; sourceTree = "<group>"; };
 		448078F02114595900280661 /* RNSScreenContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNSScreenContainer.h; sourceTree = "<group>"; };
 		448078F12114595900280661 /* RNSScreenContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNSScreenContainer.m; sourceTree = "<group>"; };
-		448078F22114595900280661 /* RNSScreenStack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNSScreenStack.h; sourceTree = "<group>"; };
-		448078F32114595900280661 /* RNSScreenStack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNSScreenStack.m; sourceTree = "<group>"; };
 		448078F42114595900280661 /* RNSScreen.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNSScreen.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -60,8 +57,6 @@
 				448078F42114595900280661 /* RNSScreen.m */,
 				448078F02114595900280661 /* RNSScreenContainer.h */,
 				448078F12114595900280661 /* RNSScreenContainer.m */,
-				448078F22114595900280661 /* RNSScreenStack.h */,
-				448078F32114595900280661 /* RNSScreenStack.m */,
 				134814211AA4EA7D00B7C361 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -123,7 +118,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				448078F72114595900280661 /* RNSScreen.m in Sources */,
-				448078F62114595900280661 /* RNSScreenStack.m in Sources */,
 				448078F52114595900280661 /* RNSScreenContainer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

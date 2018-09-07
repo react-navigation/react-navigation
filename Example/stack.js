@@ -7,7 +7,7 @@ import {
   Animated,
   Easing,
 } from 'react-native';
-import { Screen, ScreenStack } from 'react-native-screens';
+import { Screen, ScreenContainer } from 'react-native-screens';
 
 const COLORS = ['azure', 'pink', 'cyan'];
 
@@ -110,16 +110,8 @@ export class Stack extends Component {
   render() {
     const screens = this.state.stack.map(this.renderScreen);
     return (
-      <ScreenStack
-        transitioning={this.state.transitioning}
-        progress={this.state.progress}
-        style={styles.container}>
-        {screens}
-      </ScreenStack>
+      <ScreenContainer style={styles.container}>{screens}</ScreenContainer>
     );
-    // return (
-    //   <ScreenContainer style={styles.container}>{screens}</ScreenContainer>
-    // );
   }
 }
 

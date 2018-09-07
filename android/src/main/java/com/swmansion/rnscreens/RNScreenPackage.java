@@ -19,7 +19,6 @@ public class RNScreenPackage implements ReactPackage {
   public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
     return Arrays.<ViewManager>asList(
             new ScreenContainerViewManager(),
-            new ScreenStackViewManager(),
             new ScreenViewManager()
     );
   }
