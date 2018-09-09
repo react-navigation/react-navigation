@@ -153,11 +153,14 @@ export default class PagerExperimental<T: *> extends React.Component<Props<T>> {
     const { width } = layout;
     const { routes } = navigationState;
     const maxTranslate = width * (routes.length - 1);
-    const translateX = Animated.add(panX, offsetX).interpolate({
-      inputRange: [-maxTranslate, 0],
-      outputRange: [-maxTranslate, 0],
-      extrapolate: 'clamp',
-    });
+    const translateX =
+      routes.length > 1
+        ? Animated.add(panX, offsetX).interpolate({
+            inputRange: [-maxTranslate, 0],
+            outputRange: [-maxTranslate, 0],
+            extrapolate: 'clamp',
+          })
+        : 0;
 
     return (
       <GestureHandler.PanGestureHandler
