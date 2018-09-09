@@ -409,7 +409,7 @@ export default class TabBar<T: *> extends React.Component<Props<T>, State> {
             onMomentumScrollBegin={this._handleMomentumScrollBegin}
             onMomentumScrollEnd={this._handleMomentumScrollEnd}
             contentOffset={this.state.initialOffset}
-            ref={el => (this._scrollView = el && el._component)}
+            ref={el => (this._scrollView = el && el.getNode())}
           >
             {routes.map((route, i) => {
               const outputRange = inputRange.map(
