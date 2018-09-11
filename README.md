@@ -21,7 +21,7 @@ react-native link react-native-screens
  > If you are not familiar with the concept of linking libraries [read on here](https://facebook.github.io/react-native/docs/linking-libraries-ios).
 
 3. Enable screens support before any of your navigation screen renders. Add the following code to your main application file (e.g. App.js):
-```
+```js
 import { useScreens } from 'react-native-screens';
 
 useScreens();
