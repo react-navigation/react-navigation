@@ -20,7 +20,17 @@ react-native link react-native-screens
 
  > If you are not familiar with the concept of linking libraries [read on here](https://facebook.github.io/react-native/docs/linking-libraries-ios).
 
-3. You are all set 🎉 – when native modules are properly linked react-navigation will automatically use them instead of relying on plain React Native Views.
+3. Enable screens support before any of your navigation screen renders. Add the following code to your main application file (e.g. App.js):
+```
+import { useScreens } from 'react-native-screens';
+
+useScreens();
+```
+
+Note that the above code need to execute before first render of a navigation screen. You can check Example's app [App.js](https://github.com/kmagiera/react-native-screens/blob/master/Example/App.js#L16) file as a reference.
+
+
+4. You are all set 🎉 – when screens are enabled in your application code react-navigation will automatically use them instead of relying on plain React Native Views.
 
 ## Guide for navigation library authors
 
