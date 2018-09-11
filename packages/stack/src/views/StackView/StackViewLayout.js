@@ -493,7 +493,7 @@ class StackViewLayout extends React.Component {
           Platform.OS === 'ios'
         ) {
           console.warn(
-            `headerTransitionPreset with the value 'ui-kit' is incompatible with headerLayoutPreset 'left'`
+            `headerTransitionPreset with the value 'uikit' is incompatible with headerLayoutPreset 'left'`
           );
         }
       }
