@@ -18,10 +18,10 @@ import {
   withOrientation,
   NavigationProvider,
 } from 'react-navigation';
+import { ScreenContainer } from 'react-native-screens';
 
 import Card from './StackViewCard';
 import Header from '../Header/Header';
-import { ScreenContainer } from './screens';
 
 import TransitionConfigs from './StackViewTransitionConfigs';
 import { supportsImprovedSpringAnimation } from '../../utils/ReactNativeFeatures';

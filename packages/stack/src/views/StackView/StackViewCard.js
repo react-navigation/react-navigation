@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Platform } from 'react-native';
-import { Screen } from './screens';
+import { Screen } from 'react-native-screens';
 import createPointerEventsContainer from './createPointerEventsContainer';
 
 const EPS = 1e-5;
