@@ -17,6 +17,7 @@
     "android/src/main/java/",
     "android/build.gradle",
     "ios/",
+    "RNScreens.podspec",
     "README.md"
   ],
   "repository": {
