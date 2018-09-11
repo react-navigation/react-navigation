@@ -42,7 +42,7 @@ export class Screen extends React.Component {
       // https://github.com/react-navigation/react-navigation/issues/4886
 
       /* eslint-disable no-unused-vars */
-      const { active, ...props } = this.props;
+      const { active, onComponentRef, ...props } = this.props;
 
       return <Animated.View {...props} ref={this.setRef} />;
     } else {
