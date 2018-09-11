@@ -7,10 +7,13 @@ import {
   TouchableHighlight,
 } from 'react-native';
 import { createStackNavigator, createSwitchNavigator } from 'react-navigation';
+import { useScreens } from 'react-native-screens';
 
 import Stack from './stack';
 import Tabs from './tabs';
 import Navigation from './navigation';
+
+useScreens();
 
 const SCREENS = {
   Stack: { screen: Stack, title: 'Stack example' },

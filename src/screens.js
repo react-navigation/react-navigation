@@ -7,49 +7,50 @@ import {
   StyleSheet,
 } from 'react-native';
 
-class ScreenComponent extends React.Component {
-  render() {
-    // Filter out active prop in this case because it is unused and
-    // can cause problems depending on react-native version:
-    // https://github.com/react-navigation/react-navigation/issues/4886
+let USE_SCREENS = false;
 
-    /* eslint-disable no-unused-vars */
-    const { active, onComponentRef, ...props } = this.props;
-
-    return <Animated.View {...props} ref={onComponentRef} />;
+export function useScreens(shouldUseScreens = true) {
+  USE_SCREENS = shouldUseScreens;
+  if (USE_SCREENS && !UIManager['RNSScreen']) {
+    console.error(
+      `Screen native module hasn't bee linked. Please check README for more details`
+    );
   }
 }
 
-let ScreenContainer = View;
-let Screen = ScreenComponent;
+const NativeScreen = Animated.createAnimatedComponent(
+  requireNativeComponent('RNSScreen', null)
+);
 
-// If RNSScreen native component is available, instead of using plain RN Views
-// for ScreenContainer and Screen components, we can use native component
-// provided by react-native-screens lib. Note that we don't specify
-// react-native-screens as a dependency, but instead we check whether the library
-// is linked natively (we only `require` the lib if native components are installed)
-if (UIManager['RNSScreen']) {
-  // native screen components are available
+const NativeScreenContainer = requireNativeComponent(
+  'RNSScreenContainer',
+  null
+);
 
-  const NativeScreen = Animated.createAnimatedComponent(
-    requireNativeComponent('RNSScreen', null)
-  );
+export class Screen extends React.Component {
+  setNativeProps(props) {
+    this._ref.setNativeProps(props);
+  }
+  setRef = ref => {
+    this._ref = ref;
+    this.props.onComponentRef && this.props.onComponentRef(ref);
+  };
+  render() {
+    if (!USE_SCREENS) {
+      // Filter out active prop in this case because it is unused and
+      // can cause problems depending on react-native version:
+      // https://github.com/react-navigation/react-navigation/issues/4886
 
-  const NativeScreenContainer = requireNativeComponent(
-    'RNSScreenContainer',
-    null
-  );
+      /* eslint-disable no-unused-vars */
+      const { active, ...props } = this.props;
 
-  class WrappedNativeScreen extends React.Component {
-    setNativeProps(props) {
-      this._ref.setNativeProps(props);
-    }
-    render() {
+      return <Animated.View {...props} ref={this.setRef} />;
+    } else {
       const { style, children, ...rest } = this.props;
       return (
         <NativeScreen
           {...rest}
-          ref={ref => (this._ref = ref)}
+          ref={this.setRef}
           style={StyleSheet.absoluteFill}>
           {/*
             We need to wrap children in additional Animated.View because
@@ -63,9 +64,14 @@ if (UIManager['RNSScreen']) {
       );
     }
   }
-
-  Screen = WrappedNativeScreen;
-  ScreenContainer = NativeScreenContainer;
 }
 
-export { ScreenContainer, Screen };
+export class ScreenContainer extends React.Component {
+  render() {
+    if (!USE_SCREENS) {
+      return <View {...this.props} />;
+    } else {
+      return <NativeScreenContainer {...this.props} />;
+    }
+  }
+}
