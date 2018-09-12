@@ -36,8 +36,8 @@
   "homepage": "https://github.com/kmagiera/react-native-screens#readme",
   "dependencies": {},
   "peerDependencies": {
-    "react": "16.0.0-alpha.6",
-    "react-native": "^0.44.1"
+    "react": "*",
+    "react-native": "*"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.3",
