@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+- Updated react-native-safe-area-view to 0.10.0 to solve circular dependency issue (fixes #4973)
 
 ## [2.13.0] - [2018-09-06](https://github.com/react-navigation/react-navigation/releases/tag/2.13.0)
 
