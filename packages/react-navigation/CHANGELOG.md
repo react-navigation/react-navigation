@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [2.14.0] - [2018-09-12](https://github.com/react-navigation/react-navigation/releases/tag/2.14.0)
+
+### Added
+
+- Updated react-navigation-stack to add experimental support for react-navigation-screens. See https://github.com/kmagiera/react-native-screens for information about how to enable it.
+
+### Changed
+
 - Updated react-native-safe-area-view to 0.10.0 to solve circular dependency issue (fixes https://github.com/react-navigation/react-navigation/issues/4973)
 
 ## [2.13.0] - [2018-09-06](https://github.com/react-navigation/react-navigation/releases/tag/2.13.0)
@@ -172,7 +180,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Improved examples
 
-[Unreleased]: https://github.com/react-navigation/react-navigation/compare/2.13.0...HEAD
+[Unreleased]: https://github.com/react-navigation/react-navigation/compare/2.14.0...HEAD
+[2.14.0]: https://github.com/react-navigation/react-navigation/compare/2.13.1...2.14.0
 [2.13.0]: https://github.com/react-navigation/react-navigation/compare/2.12.1...2.13.0
 [2.12.1]: https://github.com/react-navigation/react-navigation/compare/2.12.0...2.12.1
 [2.12.0]: https://github.com/react-navigation/react-navigation/compare/2.11.2...2.12.0
