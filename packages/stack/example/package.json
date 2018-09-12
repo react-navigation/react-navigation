@@ -14,8 +14,9 @@
     "prop-types": "^15.6.0",
     "react": "16.3.1",
     "react-native": "~0.55.4",
-    "react-navigation": "^2.11.1",
-    "react-native-paper": "2.0.0-alpha.4"
+    "react-native-paper": "2.0.0-alpha.4",
+    "react-native-screens": "^1.0.0-alpha.9",
+    "react-navigation": "^2.11.1"
   },
   "devDependencies": {
     "babel-plugin-module-resolver": "^3.0.0",

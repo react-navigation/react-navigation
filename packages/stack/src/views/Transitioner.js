@@ -11,7 +11,6 @@ const DefaultTransitionSpec = {
   timing: Animated.timing,
 };
 
-// eslint-disable-next-line react/no-deprecated
 class Transitioner extends React.Component {
   constructor(props, context) {
     super(props, context);
@@ -53,6 +52,7 @@ class Transitioner extends React.Component {
     this._isMounted = false;
   }
 
+  // eslint-disable-next-line react/no-deprecated
   componentWillReceiveProps(nextProps) {
     let nextScenes = NavigationScenesReducer(
       this.state.scenes,
