@@ -9,7 +9,7 @@ Read usage guide depending on if you are [using Expo](#usage-in-expo-with-react-
 
 ## Usage with [react-navigation](https://github.com/react-navigation/react-navigation) (without Expo)
 
-Screens support is built into [stack navigator](https://reactnavigation.org/docs/en/stack-navigator.html) starting from version [2.14.0][https://github.com/react-navigation/react-navigation/releases/tag/2.14.0) of [react-navigation](https://github.com/react-navigation/react-navigation). We plan on adding it to other navigators in near future.
+Screens support is built into [stack navigator](https://reactnavigation.org/docs/en/stack-navigator.html) starting from version [2.14.0](https://github.com/react-navigation/react-navigation/releases/tag/2.14.0) of [react-navigation](https://github.com/react-navigation/react-navigation). We plan on adding it to other navigators in near future.
 
 To enable stack navigator to use screens instead of plain RN Views for rendering stack cards follow the steps below:
 
