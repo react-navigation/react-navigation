@@ -13,7 +13,7 @@ export function useScreens(shouldUseScreens = true) {
   USE_SCREENS = shouldUseScreens;
   if (USE_SCREENS && !UIManager['RNSScreen']) {
     console.error(
-      `Screen native module hasn't bee linked. Please check README for more details`
+      `Screen native module hasn't been linked. Please check the react-native-screens README for more details`
     );
   }
 }
