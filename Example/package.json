@@ -8,16 +8,16 @@
     "postinstall": "rm -rf node_modules/react-native-screens/{.git,node_modules,Example}"
   },
   "dependencies": {
-    "react": "16.4.1",
-    "react-native": "0.56.0",
+    "react": "16.5.1",
+    "react-native": "0.57.0",
     "react-native-screens": "file:..",
-    "react-navigation": "github:kmagiera/react-navigation#react-native-screens"
+    "react-navigation": "^2.14.0"
   },
   "devDependencies": {
-    "babel-jest": "23.4.2",
-    "babel-preset-react-native": "^5",
-    "jest": "23.4.2",
-    "react-test-renderer": "16.4.1"
+    "babel-jest": "23.6.0",
+    "jest": "23.6.0",
+    "metro-react-native-babel-preset": "0.45.2",
+    "react-test-renderer": "16.5.1"
   },
   "jest": {
     "preset": "react-native"
