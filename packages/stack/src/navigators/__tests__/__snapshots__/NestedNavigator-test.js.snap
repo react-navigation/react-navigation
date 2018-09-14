@@ -50,8 +50,8 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
             "backgroundColor": "#E9E9EF",
             "bottom": 0,
             "left": 0,
-            "marginTop": 0,
             "opacity": 1,
+            "paddingTop": 64,
             "position": "absolute",
             "right": 0,
             "shadowColor": "black",
@@ -122,8 +122,8 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
                     "backgroundColor": "#E9E9EF",
                     "bottom": 0,
                     "left": 0,
-                    "marginTop": 0,
                     "opacity": 1,
+                    "paddingTop": 64,
                     "position": "absolute",
                     "right": 0,
                     "shadowColor": "black",
@@ -149,6 +149,14 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
             <View
               onLayout={[Function]}
               pointerEvents="box-none"
+              style={
+                Object {
+                  "left": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                }
+              }
             >
               <View
                 collapsable={undefined}
@@ -248,6 +256,14 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
     <View
       onLayout={[Function]}
       pointerEvents="box-none"
+      style={
+        Object {
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        }
+      }
     >
       <View
         collapsable={undefined}
