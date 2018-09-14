@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [2.14.2] - [2018-09-14](https://github.com/react-navigation/react-navigation/releases/tag/2.14.2)
+
+### Changed
+
+- Updated react-navigation-stack to 0.5.1 to clamp interpolated values in animations.
+
 ## [2.14.1] - [2018-09-14](https://github.com/react-navigation/react-navigation/releases/tag/2.14.1)
 
 ### Changed
