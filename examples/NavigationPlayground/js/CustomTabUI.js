@@ -1,20 +1,10 @@
-/**
- * @flow
- */
-
-import type {
-  NavigationScreenProp,
-  NavigationEventSubscription,
-} from 'react-navigation';
-
 import React from 'react';
 import {
-  Platform,
-  ScrollView,
-  StatusBar,
   LayoutAnimation,
   View,
   StyleSheet,
+  StatusBar,
+  Text,
 } from 'react-native';
 import {
   SafeAreaView,
@@ -22,7 +12,6 @@ import {
   createNavigationContainer,
 } from 'react-navigation';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import SampleText from './SampleText';
 import { Button } from './commonComponents/ButtonWithMargin';
 
 class MyHomeScreen extends React.Component {
@@ -40,7 +29,7 @@ class MyHomeScreen extends React.Component {
     const { navigation } = this.props;
     return (
       <SafeAreaView forceInset={{ horizontal: 'always', top: 'always' }}>
-        <SampleText>Home Screen</SampleText>
+        <Text>Home Screen</Text>
         <Button
           onPress={() => navigation.navigate('Home')}
           title="Go to home tab"
@@ -56,7 +45,7 @@ class ReccomendedScreen extends React.Component {
     tabBarLabel: 'Reccomended',
     tabBarIcon: ({ tintColor, focused, horizontal }) => (
       <Ionicons
-        name={focused ? 'ios-home' : 'ios-home-outline'}
+        name={focused ? 'ios-people' : 'ios-people-outline'}
         size={horizontal ? 20 : 26}
         style={{ color: tintColor }}
       />
@@ -66,7 +55,7 @@ class ReccomendedScreen extends React.Component {
     const { navigation } = this.props;
     return (
       <SafeAreaView forceInset={{ horizontal: 'always', top: 'always' }}>
-        <SampleText>Reccomended Screen</SampleText>
+        <Text>Reccomended Screen</Text>
         <Button
           onPress={() => navigation.navigate('Home')}
           title="Go to home tab"
@@ -82,7 +71,7 @@ class FeaturedScreen extends React.Component {
     tabBarLabel: 'Featured',
     tabBarIcon: ({ tintColor, focused, horizontal }) => (
       <Ionicons
-        name={focused ? 'ios-home' : 'ios-home-outline'}
+        name={focused ? 'ios-star' : 'ios-star-outline'}
         size={horizontal ? 20 : 26}
         style={{ color: tintColor }}
       />
@@ -92,7 +81,7 @@ class FeaturedScreen extends React.Component {
     const { navigation } = this.props;
     return (
       <SafeAreaView forceInset={{ horizontal: 'always', top: 'always' }}>
-        <SampleText>Featured Screen</SampleText>
+        <Text>Featured Screen</Text>
         <Button
           onPress={() => navigation.navigate('Home')}
           title="Go to home tab"
@@ -109,7 +98,7 @@ const SimpleTabs = createMaterialTopTabNavigator({
   Featured: FeaturedScreen,
 });
 
-class CustomTabNavigator extends React.Component {
+class TabNavigator extends React.Component {
   static router = SimpleTabs.router;
   componentWillUpdate() {
     LayoutAnimation.easeInEaseOut();
@@ -128,15 +117,17 @@ class CustomTabNavigator extends React.Component {
     }
     return (
       <View style={{ flex: 1 }}>
-        <SimpleTabs navigation={navigation} />
+        <StatusBar barStyle="default" />
+        <SafeAreaView
+          style={{ flex: 1 }}
+          forceInset={{ horizontal: 'always', top: 'always' }}
+        >
+          <SimpleTabs navigation={navigation} />
+        </SafeAreaView>
         {bottom}
       </View>
     );
   }
 }
 
-const NavigatorWithState = createNavigationContainer(CustomTabNavigator);
-
-const App = () => <NavigatorWithState />;
-
-export default App;
+export default TabNavigator;
