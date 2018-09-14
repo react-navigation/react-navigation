@@ -50,6 +50,7 @@ function forHorizontal(props) {
   const opacity = position.interpolate({
     inputRange: [first, first + 0.01, index, last - 0.01, last],
     outputRange: [0, 1, 1, 0.85, 0],
+    extrapolate: 'clamp',
   });
 
   const width = layout.initWidth;
@@ -58,6 +59,7 @@ function forHorizontal(props) {
     outputRange: I18nManager.isRTL
       ? [-width, 0, width * 0.3]
       : [width, 0, width * -0.3],
+    extrapolate: 'clamp',
   });
   const translateY = 0;
 
@@ -85,12 +87,14 @@ function forVertical(props) {
   const opacity = position.interpolate({
     inputRange: [first, first + 0.01, index, last - 0.01, last],
     outputRange: [0, 1, 1, 0.85, 0],
+    extrapolate: 'clamp',
   });
 
   const height = layout.initHeight;
   const translateY = position.interpolate({
     inputRange: [first, index, last],
     outputRange: [height, 0, 0],
+    extrapolate: 'clamp',
   });
   const translateX = 0;
 
@@ -120,11 +124,13 @@ function forFadeFromBottomAndroid(props) {
   const opacity = position.interpolate({
     inputRange,
     outputRange: [0, 1, 1, 0],
+    extrapolate: 'clamp',
   });
 
   const translateY = position.interpolate({
     inputRange,
     outputRange: [50, 0, 0, 0],
+    extrapolate: 'clamp',
   });
   const translateX = 0;
 
@@ -152,6 +158,7 @@ function forFade(props) {
   const opacity = position.interpolate({
     inputRange: [first, index, last],
     outputRange: [0, 1, 1],
+    extrapolate: 'clamp',
   });
 
   return {
