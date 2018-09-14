@@ -1,6 +1,6 @@
 # react-native-screens
 
-This project aims to expose native navigation container components to React Native. It is not designed to be used as a standalone library but rather as a depenedncy of a [full-featured navigation library](https://github.com/react-navigation/react-navigation).
+This project aims to expose native navigation container components to React Native. It is not designed to be used as a standalone library but rather as a dependency of a [full-featured navigation library](https://github.com/react-navigation/react-navigation).
 
 ## How can I take advantage of that?
 
