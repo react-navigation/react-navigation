@@ -2,7 +2,29 @@
 
 This project aims to expose native navigation container components to React Native. It is not designed to be used as a standalone library but rather as a depenedncy of a [full-featured navigation library](https://github.com/react-navigation/react-navigation).
 
-## Usage with [react-navigation](https://github.com/react-navigation/react-navigation)
+## How can I take advantage of that
+
+Screens are already integrated with the React Native's most popular navigation library [react-navigation](https://github.com/react-navigation/react-navigation) and [Expo](https://expo.io)
+
+## Usage in Expo with [react-navigation](https://github.com/react-navigation/react-navigation)
+
+Screens support is built into Expo [SDK 30](https://blog.expo.io/expo-sdk-30-0-0-is-now-available-e64d8b1db2a7) and react-navigation starting from [2.14.0](https://github.com/react-navigation/react-navigation/releases/tag/2.14.0). Make sure your app use these versions before you start.
+
+1. Add screens library as dependency to your project – you can skip this step when using snack as the dependency will be imported when you import it in one of the JS files
+```
+yarn add react-native-screens
+```
+
+2. Open your App.js file and add the following snippet somewhere near the top of the file (e.g. right after import statements):
+```
+import { useScreens } from 'react-native-screens';
+
+useScreens();
+```
+
+3. That's all 🎉 – enojy faster navigation in your Expo app. Keep in mind screens are in pretty early phase so please report if you discover some issues.
+
+## Usage with [react-navigation](https://github.com/react-navigation/react-navigation) (without Expo)
 
 Screens support is built into [stack navigator](https://reactnavigation.org/docs/en/stack-navigator.html) starting from version [2.14.0][https://github.com/react-navigation/react-navigation/releases/tag/2.14.0) of [react-navigation](https://github.com/react-navigation/react-navigation). We plan on adding it to other navigators in near future.
 
