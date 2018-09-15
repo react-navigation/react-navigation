@@ -1,14 +1,19 @@
 import * as React from 'react';
-import Expo from 'expo';
 import { FlatList } from 'react-native';
 import { createSwitchNavigator, createStackNavigator } from 'react-navigation';
-import { ListSection, Divider } from 'react-native-paper';
+import { List, Divider } from 'react-native-paper';
 import SimpleDrawer from './src/SimpleDrawer';
 import StyledDrawer from './src/StyledDrawer';
+import GestureInteraction from './src/GestureInteraction';
 
 const data = [
   { component: SimpleDrawer, title: 'Simple', routeName: 'SimpleDrawer' },
   { component: StyledDrawer, title: 'Styled', routeName: 'StyledDrawer' },
+  {
+    component: GestureInteraction,
+    title: 'Gesture Interaction',
+    routeName: 'GestureInteraction',
+  },
 ];
 
 class Home extends React.Component {
@@ -17,8 +22,9 @@ class Home extends React.Component {
   };
 
   _renderItem = ({ item }) => (
-    <ListSection.Item
+    <List.Item
       title={item.title}
+      style={{ backgroundColor: '#fff' }}
       onPress={() => this.props.navigation.navigate(item.routeName)}
     />
   );
@@ -37,7 +43,7 @@ class Home extends React.Component {
   }
 }
 
-const App = createSwitchNavigator({
+export default createSwitchNavigator({
   Home: createStackNavigator({ Home }),
   ...data.reduce((acc, it) => {
     acc[it.routeName] = {
@@ -50,5 +56,3 @@ const App = createSwitchNavigator({
     return acc;
   }, {}),
 });
-
-Expo.registerRootComponent(App);
