@@ -125,6 +125,7 @@ export default class DrawerView extends React.PureComponent {
         edgeWidth={this.props.navigationConfig.edgeWidth}
         hideStatusBar={this.props.navigationConfig.hideStatusBar}
         statusBarAnimation={this.props.navigationConfig.statusBarAnimation}
+        minSwipeDistance={this.props.navigationConfig.minSwipeDistance}
         overlayColor={this.props.navigationConfig.overlayColor}
       >
         <SceneView
