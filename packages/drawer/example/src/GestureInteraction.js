@@ -72,7 +72,8 @@ const DrawerExample = createDrawerNavigator(
     Web: WebViewScreen,
   },
   {
-    edgeWidth: 150,
+    edgeWidth: 100,
+    minSwipeDistance: 1,
     contentOptions: {
       activeTintColor: '#e91e63',
     },

@@ -9,6 +9,7 @@ exports[`createDrawerNavigator renders successfully 1`] = `
   drawerWidth={320}
   edgeWidth={undefined}
   hideStatusBar={false}
+  minSwipeDistance={undefined}
   onDrawerClose={[Function]}
   onDrawerOpen={[Function]}
   overlayColor="black"
