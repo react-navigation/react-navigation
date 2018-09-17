@@ -18,6 +18,10 @@ export function useScreens(shouldUseScreens = true) {
   }
 }
 
+export function screensEnabled() {
+  return USE_SCREENS;
+}
+
 const NativeScreen = Animated.createAnimatedComponent(
   requireNativeComponent('RNSScreen', null)
 );
