@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
+import { Screen, screensEnabled } from 'react-native-screens';
 
 type Props = {
   isVisible: boolean,
@@ -13,6 +14,10 @@ const FAR_FAR_AWAY = 3000; // this should be big enough to move the whole view o
 
 export default class ResourceSavingScene extends React.Component<Props> {
   render() {
+    if (screensEnabled()) {
+      const { isVisible, ...rest } = this.props;
+      return <Screen active={isVisible ? 1 : 0} {...rest} />;
+    }
     const { isVisible, children, style, ...rest } = this.props;
 
     return (

@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
+import { ScreenContainer } from 'react-native-screens';
 import { polyfill } from 'react-lifecycles-compat';
 import createTabNavigator, {
   type InjectedProps,
@@ -94,7 +95,7 @@ class TabNavigationView extends React.PureComponent<Props, State> {
 
     return (
       <View style={styles.container}>
-        <View style={styles.pages}>
+        <ScreenContainer style={styles.pages}>
           {routes.map((route, index) => {
             if (lazy && !loaded.includes(index)) {
               // Don't render a screen if we've never navigated to it
@@ -116,7 +117,7 @@ class TabNavigationView extends React.PureComponent<Props, State> {
               </ResourceSavingScene>
             );
           })}
-        </View>
+        </ScreenContainer>
         {this._renderTabBar()}
       </View>
     );
