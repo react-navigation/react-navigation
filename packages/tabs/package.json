@@ -72,7 +72,7 @@
     "react": "*",
     "react-native": "*",
     "react-navigation": "^2.0.0",
-    "react-native-screens": "^1.0.0-alpha.11"
+    "react-native-screens": "^1.0.0 || ^1.0.0-alpha"
   },
   "jest": {
     "preset": "react-native",
