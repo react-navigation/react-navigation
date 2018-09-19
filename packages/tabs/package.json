@@ -1,6 +1,6 @@
 {
   "name": "react-navigation-tabs",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "Tab Navigation components for React Navigation",
   "main": "dist/index.js",
   "files": [
@@ -41,7 +41,6 @@
     "hoist-non-react-statics": "^2.5.0",
     "prop-types": "^15.6.1",
     "react-lifecycles-compat": "^3.0.4",
-    "react-native-screens": "^1.0.0-alpha.11",
     "react-native-tab-view": "^1.0.0"
   },
   "devDependencies": {
@@ -72,7 +71,8 @@
   "peerDependencies": {
     "react": "*",
     "react-native": "*",
-    "react-navigation": "^2.0.0"
+    "react-navigation": "^2.0.0",
+    "react-native-screens": "^1.0.0-alpha.11"
   },
   "jest": {
     "preset": "react-native",
