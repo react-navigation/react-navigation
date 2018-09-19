@@ -7,11 +7,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-## [2.15.0] - [2018-09-14](https://github.com/react-navigation/react-navigation/releases/tag/2.15.0)
+## [2.16.0] - [2018-09-19](https://github.com/react-navigation/react-navigation/releases/tag/2.16.0)
 
 ### Changed
 
-- Updated react-navigation-safe-area-view to 0.11.0 to support iPhoneXS Max and iPhoneXR
+- Updated react-navigation-stack to 0.6.0 to make react-native-screens a peerDependency.
+- Updated react-navigation-tabs to 0.8.2 to make react-native-screens a peerDependency and add support for it in bottom tab navigator.
+- Make react-native-screens a direct dependency of react-navigation.
+
+## [2.15.0] - [2018-09-19](https://github.com/react-navigation/react-navigation/releases/tag/2.15.0)
+
+### Changed
+
+- Updated react-navigation-safe-area-view to 0.11.0 to support iPhoneXS Max and iPhoneXR.
 
 ## [2.14.2] - [2018-09-14](https://github.com/react-navigation/react-navigation/releases/tag/2.14.2)
 
