@@ -528,6 +528,7 @@ declare module 'react-navigation' {
       callback: NavigationEventCallback
     ) => NavigationEventSubscription,
     getParam: (paramName: string, fallback?: any) => any,
+    dangerouslyGetParent: () => NavigationScreenProp<*>,
     isFocused: () => boolean,
     // Shared action creators that exist for all routers
     goBack: (routeKey?: ?string) => boolean,
