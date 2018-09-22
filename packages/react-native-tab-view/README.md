@@ -245,13 +245,14 @@ All the scenes rendered with `SceneMap` are optimized using `React.PureComponent
 ```js
 renderScene = ({ route }) => {
   switch (route.key) {
-  case 'first':
-    return <FirstRoute />;
-  case 'second':
-    return <SecondRoute />;
-  default:
-    return null;
+    case 'first':
+      return <FirstRoute />;
+    case 'second':
+      return <SecondRoute />;
+    default:
+      return null;
   }
+}
 ```
 
 If you don't use `SceneMap`, you will need to take care of optimizing the individual scenes.
