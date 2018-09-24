@@ -39,7 +39,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-- Updated react-navigation-stack to add experimental support for react-navigation-screens. See https://github.com/kmagiera/react-native-screens for information about how to enable it.
+- Updated react-navigation-stack to add experimental support for react-native-screens. See https://github.com/kmagiera/react-native-screens for information about how to enable it.
 
 ### Changed
 
