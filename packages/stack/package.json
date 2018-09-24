@@ -32,6 +32,9 @@
     "url": "https://github.com/react-navigation/react-navigation-stack/issues"
   },
   "homepage": "https://github.com/react-navigation/react-navigation-stack#readme",
+  "dependencies": {
+    "clamp": "^1.0.1"
+  },
   "devDependencies": {
     "@expo/vector-icons": "^6.2.0",
     "babel-cli": "^6.26.0",
