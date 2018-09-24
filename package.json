@@ -21,6 +21,7 @@
     "format": "eslint --fix .",
     "precommit": "lint-staged"
   },
+<<<<<<< Updated upstream
   "files": [
     "src",
     "NavigationTestUtils.js"
@@ -101,5 +102,9 @@
       "prettier --write flow/react-navigation.js",
       "git add"
     ]
+=======
+  "dependencies": {
+    "generator-npm-init": "^1.5.0"
+>>>>>>> Stashed changes
   }
 }
