@@ -32,9 +32,7 @@
     "url": "https://github.com/react-navigation/react-navigation-stack/issues"
   },
   "homepage": "https://github.com/react-navigation/react-navigation-stack#readme",
-  "dependencies": {
-    "clamp": "^1.0.1"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@expo/vector-icons": "^6.2.0",
     "babel-cli": "^6.26.0",
@@ -59,8 +57,8 @@
   "peerDependencies": {
     "react": "*",
     "react-native": "*",
-    "react-navigation": ">=2.0 || ^2.0.0-beta",
-    "react-native-screens": "^1.0.0 || ^1.0.0-alpha"
+    "react-native-screens": "^1.0.0 || ^1.0.0-alpha",
+    "react-navigation": ">=2.0 || ^2.0.0-beta"
   },
   "jest": {
     "preset": "react-native",

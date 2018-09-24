@@ -1,6 +1,6 @@
 import React from 'react';
 
-import clamp from 'clamp';
+import clamp from '../../utils/clamp';
 import {
   Animated,
   StyleSheet,

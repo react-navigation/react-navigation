@@ -27,6 +27,7 @@ exports[`StackNavigator applies correct values when headerRight is present 1`] =
         Object {
           "flex": 1,
           "flexDirection": "column-reverse",
+          "overflow": "hidden",
         },
         Object {
           "backgroundColor": "#000",
@@ -229,6 +230,7 @@ exports[`StackNavigator renders successfully 1`] = `
         Object {
           "flex": 1,
           "flexDirection": "column-reverse",
+          "overflow": "hidden",
         },
         Object {
           "backgroundColor": "#000",
