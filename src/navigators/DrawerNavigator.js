@@ -4,7 +4,7 @@ import SafeAreaView from 'react-native-safe-area-view';
 
 import createNavigator from './createNavigator';
 import createNavigationContainer from '../createNavigationContainer';
-import TabRouter from '../routers/TabRouter';
+import tabRouter from '../routers/TabRouter';
 import DrawerScreen from '../views/Drawer/DrawerScreen';
 import DrawerView from '../views/Drawer/DrawerView';
 import DrawerItems from '../views/Drawer/DrawerNavigatorItems';
@@ -63,8 +63,8 @@ const DrawerNavigator = (routeConfigs, config = {}) => {
     ...tabsConfig
   } = mergedConfig;
 
-  const contentRouter = TabRouter(routeConfigs, tabsConfig);
-  const drawerRouter = TabRouter(
+  const contentRouter = tabRouter(routeConfigs, tabsConfig);
+  const drawerRouter = tabRouter(
     {
       [drawerCloseRoute]: {
         screen: createNavigator(contentRouter, routeConfigs, config)(props => (
