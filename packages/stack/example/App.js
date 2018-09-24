@@ -6,6 +6,7 @@ import { createStackNavigator } from 'react-navigation-stack';
 import { ListSection, Divider } from 'react-native-paper';
 
 import SimpleStack from './src/SimpleStack';
+import TransparentStack from './src/TransparentStack';
 
 // Comment the following two lines to stop using react-native-screens
 import { useScreens } from 'react-native-screens';
@@ -13,6 +14,11 @@ useScreens();
 
 const data = [
   { component: SimpleStack, title: 'Simple', routeName: 'SimpleStack' },
+  {
+    component: TransparentStack,
+    title: 'Transparent',
+    routeName: 'TransparentStack',
+  },
 ];
 
 class Home extends React.Component {

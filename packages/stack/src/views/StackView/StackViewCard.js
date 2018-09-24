@@ -29,22 +29,24 @@ class Card extends React.Component {
       pointerEvents,
       style,
       position,
+      transparent,
       scene: { index, isActive },
     } = this.props;
 
-    const active = isActive
-      ? 1
-      : position.interpolate({
-          inputRange: [index, index + 1 - EPS, index + 1],
-          outputRange: [1, 1, 0],
-          extrapolate: 'clamp',
-        });
+    const active =
+      transparent || isActive
+        ? 1
+        : position.interpolate({
+            inputRange: [index, index + 1 - EPS, index + 1],
+            outputRange: [1, 1, 0],
+            extrapolate: 'clamp',
+          });
 
     return (
       <Screen
         pointerEvents={pointerEvents}
         onComponentRef={this.props.onComponentRef}
-        style={[styles.main, style]}
+        style={[transparent ? styles.transparent : styles.main, style]}
         active={active}
         {...getAccessibilityProps(isActive)}
       >
@@ -62,6 +64,10 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.2,
     shadowRadius: 5,
+  },
+  transparent: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'transparent',
   },
 });
 

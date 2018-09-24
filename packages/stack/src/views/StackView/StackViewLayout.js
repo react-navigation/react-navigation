@@ -618,6 +618,7 @@ class StackViewLayout extends React.Component {
       <Card
         {...this.props.transitionProps}
         key={`card_${scene.key}`}
+        transparent={this.props.transparentCard}
         style={[style, { paddingTop }, this.props.cardStyle]}
         scene={scene}
       >
