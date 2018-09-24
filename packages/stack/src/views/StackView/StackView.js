@@ -45,6 +45,17 @@ class StackView extends React.Component {
     );
   }
 
+  componentDidMount() {
+    const { navigation } = this.props;
+    if (navigation.state.isTransitioning) {
+      navigation.dispatch(
+        StackActions.completeTransition({
+          key: navigation.state.key,
+        })
+      );
+    }
+  }
+
   _configureTransition = (transitionProps, prevTransitionProps) => {
     return {
       ...TransitionConfigs.getTransitionConfig(
