@@ -11,6 +11,7 @@
     "precommit": "lint-staged"
   },
   "main": "src/screens.js",
+  "types": "src/screens.d.ts",
   "files": [
     "src/",
     "android/src/main/AndroidManifest.xml",
