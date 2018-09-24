@@ -630,6 +630,7 @@ const styles = StyleSheet.create({
     // That said, we'd have use `flexDirection: 'column-reverse'` to move
     // Header above the scenes.
     flexDirection: 'column-reverse',
+    overflow: 'hidden',
   },
   scenes: {
     flex: 1,
