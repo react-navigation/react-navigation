@@ -34,7 +34,20 @@ useScreens();
 
 Note that the above code need to execute before first render of a navigation screen. You can check Example's app [App.js](https://github.com/kmagiera/react-native-screens/blob/master/Example/App.js#L16) file as a reference.
 
-4. Make sure that the version of [react-navigation](https://github.com/react-navigation/react-navigation) you are using is 2.14.0 or higher
+4. On Android change your main activity class to extend [`ReactFragmentActivity`](https://github.com/facebook/react-native/blob/0.57-stable/ReactAndroid/src/main/java/com/facebook/react/ReactFragmentActivity.java). The file you'll have to change is likely called `MainActivity.java` unless you customized it after creating your project:
+```diff
+-import com.facebook.react.ReactActivity;
++import com.facebook.react.ReactFragmentActivity;
+ import com.facebook.react.ReactActivityDelegate;
+
+-public class MainActivity extends ReactActivity {
++public class MainActivity extends ReactFragmentActivity {
+
+     @Override
+     protected String getMainComponentName() {
+```
+
+5. Make sure that the version of [react-navigation](https://github.com/react-navigation/react-navigation) you are using is 2.14.0 or higher
 
 5. You are all set 🎉 – when screens are enabled in your application code react-navigation will automatically use them instead of relying on plain React Native Views.
 
