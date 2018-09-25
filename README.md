@@ -56,6 +56,15 @@ useScreens();
 
 3. That's all 🎉 – enojy faster navigation in your Expo app. Keep in mind screens are in pretty early phase so please report if you discover some issues.
 
+## Interop with [react-native-navigation](https://github.com/wix/react-native-navigation)
+
+React-native-navigation library already uses native containers for rendering navigation scenes so wrapping these scenes with `<ScreenContainer>` or `<Screen>` component does not provide any benefits. Yet if you would like to build a component that uses screens primitives under the hood (for example a view pager component) it is safe to use `<ScreenContainer>` and `<Screen>` components for that as these work out of the box when rendered on react-native-navigation scenes.
+
+## Interop with other libraries
+
+This library should work out of the box with all existing react-native libraries. If you expirience problems with interoperability please [report an issue](https://github.com/kmagiera/react-native-screens/issues).
+
+
 ## Guide for navigation library authors
 
 If you are building navigation library you may want to use react-native-screens to have a control which parts of the react component tree are attached to the native view hierarchy.
