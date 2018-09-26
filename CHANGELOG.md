@@ -7,7 +7,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-- added `dangerouslyGetParent()` to flow typings
+## [2.17.0] - [2018-09-25](https://github.com/react-navigation/react-navigation/releases/tag/2.17.0)
+
+### Changed
+
+- Add `dangerouslyGetParent()` to flow typings
+- Update react-navigation-stack to 0.7.0
+  - Add transparentCard option to fix cards with a transparent bg when using rn-screens
+  - Add window dimensions for iPhone XS Max and iPhone XR
+  - Vendor clamp
+  - Add overflow hidden to stack container
+  - Completion on mount: StackView is responsible for calling the navigation completion action when `state.isTransitioning` is set. This fix handles that case when the stack is first mounting.
 
 ## [2.16.0] - [2018-09-19](https://github.com/react-navigation/react-navigation/releases/tag/2.16.0)
 
@@ -208,7 +218,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Improved examples
 
-[Unreleased]: https://github.com/react-navigation/react-navigation/compare/2.15.0...HEAD
+[Unreleased]: https://github.com/react-navigation/react-navigation/compare/2.17.0...HEAD
+[2.17.0]: https://github.com/react-navigation/react-navigation/compare/2.16.0...2.17.0
+[2.16.0]: https://github.com/react-navigation/react-navigation/compare/2.15.0...2.16.0
 [2.15.0]: https://github.com/react-navigation/react-navigation/compare/2.14.2...2.15.0
 [2.14.2]: https://github.com/react-navigation/react-navigation/compare/2.14.1...2.14.2
 [2.14.1]: https://github.com/react-navigation/react-navigation/compare/2.14.0...2.14.1
