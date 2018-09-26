@@ -24,7 +24,6 @@ class Home extends React.Component {
   _renderItem = ({ item }) => (
     <List.Item
       title={item.title}
-      style={{ backgroundColor: '#fff' }}
       onPress={() => this.props.navigation.navigate(item.routeName)}
     />
   );
@@ -37,6 +36,7 @@ class Home extends React.Component {
         ItemSeparatorComponent={Divider}
         renderItem={this._renderItem}
         keyExtractor={this._keyExtractor}
+        style={{ backgroundColor: '#fff' }}
         data={data}
       />
     );

@@ -33,17 +33,24 @@ export default class DrawerView extends React.PureComponent {
       toggleId: prevToggleId,
     } = prevProps.navigation.state;
 
-    if (openId !== prevOpenId) {
-      this._drawer.openDrawer();
-    } else if (closeId !== prevCloseId) {
-      this._drawer.closeDrawer();
-    } else if (toggleId !== prevToggleId) {
-      if (isDrawerOpen) {
-        this._drawer.closeDrawer();
-      } else {
+    let prevIds = [prevOpenId, prevCloseId, prevToggleId];
+    let changedIds = [openId, closeId, toggleId]
+      .filter(id => !prevIds.includes(id))
+      .sort((a, b) => a > b);
+
+    changedIds.forEach(id => {
+      if (id === openId) {
         this._drawer.openDrawer();
+      } else if (id === closeId) {
+        this._drawer.closeDrawer();
+      } else if (id === toggleId) {
+        if (isDrawerOpen) {
+          this._drawer.closeDrawer();
+        } else {
+          this._drawer.openDrawer();
+        }
       }
-    }
+    });
   }
 
   componentWillUnmount() {

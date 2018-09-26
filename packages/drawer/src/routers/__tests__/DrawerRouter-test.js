@@ -26,8 +26,8 @@ describe('DrawerRouter', () => {
       ],
       isDrawerOpen: false,
       openId: 0,
-      closeId: 0,
-      toggleId: 0,
+      closeId: 1,
+      toggleId: 2,
     };
     expect(state).toEqual(expectedState);
     const state2 = router.getStateForAction(
@@ -43,8 +43,8 @@ describe('DrawerRouter', () => {
       ],
       isDrawerOpen: false,
       openId: 0,
-      closeId: 1,
-      toggleId: 0,
+      closeId: 3,
+      toggleId: 2,
     };
     expect(state2).toEqual(expectedState2);
     expect(router.getComponentForState(expectedState)).toEqual(ScreenA);
@@ -74,8 +74,8 @@ describe('DrawerRouter', () => {
       isDrawerOpen: false,
       isTransitioning: false,
       openId: 0,
-      closeId: 0,
-      toggleId: 0,
+      closeId: 1,
+      toggleId: 2,
       routes: [
         {
           key: 'Foo',
@@ -99,22 +99,22 @@ describe('DrawerRouter', () => {
       Bar: { screen: ScreenB },
     });
     const state = router.getStateForAction(INIT_ACTION);
-    expect(state.toggleId).toEqual(0);
+    expect(state.toggleId).toEqual(2);
     const state2 = router.getStateForAction(
       { type: DrawerActions.OPEN_DRAWER },
       state
     );
-    expect(state2.openId).toEqual(1);
+    expect(state2.openId).toEqual(3);
     const state3 = router.getStateForAction(
       { type: DrawerActions.CLOSE_DRAWER },
       state2
     );
-    expect(state3.closeId).toEqual(1);
+    expect(state3.closeId).toEqual(4);
     const state4 = router.getStateForAction(
       { type: DrawerActions.TOGGLE_DRAWER },
       state3
     );
-    expect(state4.toggleId).toEqual(1);
+    expect(state4.toggleId).toEqual(5);
   });
 
   test('Drawer opens closes with key targeted', () => {
@@ -134,7 +134,7 @@ describe('DrawerRouter', () => {
       { type: DrawerActions.OPEN_DRAWER, key: state.key },
       state2
     );
-    expect(state3.openId).toEqual(1);
+    expect(state3.openId).toEqual(3);
   });
 });
 
@@ -171,10 +171,10 @@ test('Drawer does not fire close when child routers return new state', () => {
   });
 
   const state = router.getStateForAction(INIT_ACTION);
-  expect(state.closeId).toEqual(0);
+  expect(state.closeId).toEqual(1);
 
-  const state2 = router.getStateForAction({ type: 'CHILD_ACTION' }, state2);
-  expect(state2.closeId).toEqual(0);
+  const state2 = router.getStateForAction({ type: 'CHILD_ACTION' }, state);
+  expect(state2.closeId).toEqual(1);
   expect(state2.routes[0].changed).toEqual(true);
 });
 
@@ -204,13 +204,13 @@ test('DrawerRouter will close drawer on child navigaton, not on child param chan
     DrawerActions.openDrawer(),
     emptyState
   );
-  expect(initState.openId).toBe(1);
+  expect(initState.openId).toBe(3);
 
   const state0 = router.getStateForAction(
     NavigationActions.navigate({ routeName: 'Quo' }),
     initState
   );
-  expect(state0.closeId).toBe(1);
+  expect(state0.closeId).toBe(4);
 
   const initSwitchState = initState.routes[initState.index];
   const initQuxState = initSwitchState.routes[initSwitchState.index];
@@ -224,7 +224,7 @@ test('DrawerRouter will close drawer on child navigaton, not on child param chan
   );
   const state1switchState = state1.routes[state1.index];
   const state1quxState = state1switchState.routes[state1switchState.index];
-  expect(state1.closeId).toBe(0); // don't fire close
+  expect(state1.closeId).toBe(1); // don't fire close
   expect(state1quxState.params.foo).toEqual('bar');
 });
 
@@ -253,10 +253,9 @@ test('goBack closes drawer when inside of stack', () => {
   );
   expect(state3.index).toEqual(1);
   expect(state3.routes[1].isDrawerOpen).toEqual(true);
-  expect(state3.routes[1].closeId).toEqual(0);
+  expect(state3.routes[1].closeId).toEqual(1); // changed
   const state4 = router.getStateForAction(NavigationActions.back(), state3);
-  expect(state4.index).toEqual(1);
-  expect(state4.routes[1].closeId).toEqual(1);
+  expect(state4.routes[1].closeId).toEqual(4);
   const state5 = router.getStateForAction(
     { type: DrawerActions.DRAWER_CLOSED },
     state4

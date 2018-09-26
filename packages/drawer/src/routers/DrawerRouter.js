@@ -24,6 +24,12 @@ export default (routeConfigs, config = {}) => {
 
   const switchRouter = SwitchRouter(routeConfigs, config);
 
+  let __id = -1;
+  const genId = () => {
+    __id++;
+    return __id;
+  };
+
   return {
     ...switchRouter,
 
@@ -42,9 +48,9 @@ export default (routeConfigs, config = {}) => {
         return {
           ...switchRouter.getStateForAction(action, undefined),
           isDrawerOpen: false,
-          openId: 0,
-          closeId: 0,
-          toggleId: 0,
+          openId: genId(),
+          closeId: genId(),
+          toggleId: genId(),
         };
       }
 
@@ -70,28 +76,28 @@ export default (routeConfigs, config = {}) => {
         if (action.type === DrawerActions.CLOSE_DRAWER) {
           return {
             ...state,
-            closeId: state.closeId + 1,
+            closeId: genId(),
           };
         }
 
         if (action.type === NavigationActions.BACK && state.isDrawerOpen) {
           return {
             ...state,
-            closeId: state.closeId + 1,
+            closeId: genId(),
           };
         }
 
         if (action.type === DrawerActions.OPEN_DRAWER) {
           return {
             ...state,
-            openId: state.openId + 1,
+            openId: genId(),
           };
         }
 
         if (action.type === DrawerActions.TOGGLE_DRAWER) {
           return {
             ...state,
-            toggleId: state.toggleId + 1,
+            toggleId: genId(),
           };
         }
       }
@@ -110,7 +116,7 @@ export default (routeConfigs, config = {}) => {
           // If any navigation has happened, make sure to close the drawer
           return {
             ...switchedState,
-            closeId: state.closeId + 1,
+            closeId: genId(),
           };
         }
 

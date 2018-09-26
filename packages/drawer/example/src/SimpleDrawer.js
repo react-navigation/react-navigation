@@ -18,9 +18,23 @@ const MyNavScreen = ({ navigation, banner }) => (
       <Button
         onPress={() => {
           navigation.openDrawer();
+          navigation.closeDrawer();
+        }}
+        title="Open and immediately close"
+      />
+      <Button
+        onPress={() => {
+          navigation.closeDrawer();
+          navigation.openDrawer();
+        }}
+        title="Close and immediately open"
+      />
+      <Button
+        onPress={() => {
+          navigation.openDrawer();
           setTimeout(() => {
             navigation.closeDrawer();
-          }, 500);
+          }, 150);
         }}
         title="Open then close drawer shortly after"
       />
