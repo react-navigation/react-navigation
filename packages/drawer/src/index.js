@@ -30,4 +30,8 @@ module.exports = {
   get DrawerView() {
     return require('./views/DrawerView').default;
   },
+
+  get DrawerGestureContext() {
+    return require('./utils/DrawerGestureContext').default;
+  },
 };
