@@ -37,6 +37,7 @@ Note that the above code need to execute before first render of a navigation scr
 4. On Android change your main activity class to extend [`ReactFragmentActivity`](https://github.com/facebook/react-native/blob/0.57-stable/ReactAndroid/src/main/java/com/facebook/react/ReactFragmentActivity.java). The file you'll have to change is likely called `MainActivity.java` unless you customized it after creating your project:
 ```diff
 -import com.facebook.react.ReactActivity;
++import android.os.Bundle;
 +import com.facebook.react.ReactFragmentActivity;
  import com.facebook.react.ReactActivityDelegate;
 
