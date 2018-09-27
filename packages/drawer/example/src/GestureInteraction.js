@@ -2,7 +2,10 @@ import React from 'react';
 import { Button, WebView, View } from 'react-native';
 import { MapView } from 'expo';
 import { withNavigation } from 'react-navigation';
-import { createDrawerNavigator } from 'react-navigation-drawer';
+import {
+  createDrawerNavigator,
+  DrawerGestureContext,
+} from 'react-navigation-drawer';
 import { NativeViewGestureHandler } from 'react-native-gesture-handler';
 
 @withNavigation
@@ -41,9 +44,13 @@ class ContainerWithButtons extends React.Component {
 
 const MapScreen = () => (
   <ContainerWithButtons>
-    <NativeViewGestureHandler>
-      <MapView style={{ flex: 1 }} />
-    </NativeViewGestureHandler>
+    <DrawerGestureContext>
+      {ref => (
+        <NativeViewGestureHandler waitFor={ref}>
+          <MapView style={{ flex: 1 }} />
+        </NativeViewGestureHandler>
+      )}
+    </DrawerGestureContext>
   </ContainerWithButtons>
 );
 
@@ -53,12 +60,16 @@ MapScreen.navigationOptions = {
 
 const WebViewScreen = () => (
   <ContainerWithButtons>
-    <NativeViewGestureHandler>
-      <WebView
-        style={{ flex: 1 }}
-        source={{ uri: 'https://news.google.com' }}
-      />
-    </NativeViewGestureHandler>
+    <DrawerGestureContext>
+      {ref => (
+        <NativeViewGestureHandler waitFor={ref}>
+          <WebView
+            style={{ flex: 1 }}
+            source={{ uri: 'https://news.google.com' }}
+          />
+        </NativeViewGestureHandler>
+      )}
+    </DrawerGestureContext>
   </ContainerWithButtons>
 );
 
@@ -72,8 +83,8 @@ const DrawerExample = createDrawerNavigator(
     Web: WebViewScreen,
   },
   {
-    edgeWidth: 100,
-    minSwipeDistance: 1,
+    edgeWidth: 70,
+    minSwipeDistance: 3,
     contentOptions: {
       activeTintColor: '#e91e63',
     },

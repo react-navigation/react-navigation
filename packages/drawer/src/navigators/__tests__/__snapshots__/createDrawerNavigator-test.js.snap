@@ -8,6 +8,11 @@ exports[`createDrawerNavigator renders successfully 1`] = `
   drawerType="front"
   drawerWidth={320}
   edgeWidth={undefined}
+  gestureRef={
+    Object {
+      "current": null,
+    }
+  }
   hideStatusBar={false}
   minSwipeDistance={undefined}
   onDrawerClose={[Function]}
