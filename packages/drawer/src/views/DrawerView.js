@@ -4,6 +4,7 @@ import { SceneView } from 'react-navigation';
 import DrawerActions from '../routers/DrawerActions';
 import DrawerLayout from './DrawerLayout';
 import DrawerSidebar from './DrawerSidebar';
+import DrawerGestureContext from '../utils/DrawerGestureContext';
 
 /**
  * Component that renders the drawer.
@@ -57,6 +58,8 @@ export default class DrawerView extends React.PureComponent {
     Dimensions.removeEventListener('change', this._updateWidth);
   }
 
+  drawerGestureRef = React.createRef();
+
   _handleDrawerOpen = () => {
     this.props.navigation.dispatch({
       type: DrawerActions.DRAWER_OPENED,
@@ -84,16 +87,18 @@ export default class DrawerView extends React.PureComponent {
 
   _renderNavigationView = () => {
     return (
-      <DrawerSidebar
-        screenProps={this.props.screenProps}
-        navigation={this.props.navigation}
-        descriptors={this.props.descriptors}
-        contentComponent={this.props.navigationConfig.contentComponent}
-        contentOptions={this.props.navigationConfig.contentOptions}
-        drawerPosition={this.props.navigationConfig.drawerPosition}
-        style={this.props.navigationConfig.style}
-        {...this.props.navigationConfig}
-      />
+      <DrawerGestureContext.Provider value={this.drawerGestureRef}>
+        <DrawerSidebar
+          screenProps={this.props.screenProps}
+          navigation={this.props.navigation}
+          descriptors={this.props.descriptors}
+          contentComponent={this.props.navigationConfig.contentComponent}
+          contentOptions={this.props.navigationConfig.contentOptions}
+          drawerPosition={this.props.navigationConfig.drawerPosition}
+          style={this.props.navigationConfig.style}
+          {...this.props.navigationConfig}
+        />
+      </DrawerGestureContext.Provider>
     );
   };
 
@@ -109,6 +114,7 @@ export default class DrawerView extends React.PureComponent {
         ref={c => {
           this._drawer = c;
         }}
+        gestureRef={this.drawerGestureRef}
         drawerLockMode={
           drawerLockMode ||
           (this.props.screenProps && this.props.screenProps.drawerLockMode) ||
@@ -135,11 +141,13 @@ export default class DrawerView extends React.PureComponent {
         minSwipeDistance={this.props.navigationConfig.minSwipeDistance}
         overlayColor={this.props.navigationConfig.overlayColor}
       >
-        <SceneView
-          navigation={descriptor.navigation}
-          screenProps={this.props.screenProps}
-          component={descriptor.getComponent()}
-        />
+        <DrawerGestureContext.Provider value={this.drawerGestureRef}>
+          <SceneView
+            navigation={descriptor.navigation}
+            screenProps={this.props.screenProps}
+            component={descriptor.getComponent()}
+          />
+        </DrawerGestureContext.Provider>
       </DrawerLayout>
     );
   }
