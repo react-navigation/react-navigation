@@ -42,6 +42,11 @@ Note that the above code need to execute before first render of a navigation scr
 
 -public class MainActivity extends ReactActivity {
 +public class MainActivity extends ReactFragmentActivity {
++
++    @Override
++    protected void onCreate(Bundle savedInstanceState) {
++        super.onCreate(null);
++    }
 
      @Override
      protected String getMainComponentName() {
