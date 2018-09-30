@@ -492,7 +492,7 @@ describe('StackRouter', () => {
       },
       state
     );
-    const barKey = state2.routes[1].routes[0].key;
+
     const state3 = router.getStateForAction(
       {
         type: StackActions.POP_TO_TOP,
@@ -520,7 +520,7 @@ describe('StackRouter', () => {
       },
       state
     );
-    const barKey = state2.routes[1].routes[0].key;
+
     const state3 = router.getStateForAction(
       {
         type: StackActions.POP_TO_TOP,
