@@ -1,5 +1,4 @@
 import React from 'react';
-import { View } from 'react-native';
 import renderer from 'react-test-renderer';
 import NavigationEvents from '../NavigationEvents';
 import { NavigationProvider } from '../NavigationContext';

@@ -26,7 +26,7 @@ export default (routeConfigs, navigatorScreenConfig) => (
   navigation,
   screenProps
 ) => {
-  const { state, dispatch } = navigation;
+  const { state } = navigation;
   const route = state;
 
   invariant(

@@ -1,6 +1,5 @@
 import React from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
-import PropTypes from 'prop-types';
 import { polyfill } from 'react-lifecycles-compat';
 
 import SceneView from './SceneView';
