@@ -4,8 +4,12 @@
   "description": "Stack navigator component for React Navigation",
   "main": "dist/index.js",
   "files": [
-    "dist/"
-  ],
+    "dist/",
+    "src/",
+    "LICENSE.md",
+    "README.md"
+   ],
+  "react-native": "src/index.js",
   "scripts": {
     "test": "jest",
     "lint": "eslint .",
