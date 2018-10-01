@@ -6,8 +6,86 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [2.17.0] - [2018-09-25](https://github.com/react-navigation/react-navigation/releases/tag/2.17.0)
+
+### Changed
+
+- Add `dangerouslyGetParent()` to flow typings
+- Update react-navigation-stack to 0.7.0
+  - Add transparentCard option to fix cards with a transparent bg when using rn-screens
+  - Add window dimensions for iPhone XS Max and iPhone XR
+  - Vendor clamp
+  - Add overflow hidden to stack container
+  - Completion on mount: StackView is responsible for calling the navigation completion action when `state.isTransitioning` is set. This fix handles that case when the stack is first mounting.
+
+## [2.16.0] - [2018-09-19](https://github.com/react-navigation/react-navigation/releases/tag/2.16.0)
+
+### Changed
+
+- Updated react-navigation-stack to 0.6.0 to make react-native-screens a peerDependency.
+- Updated react-navigation-tabs to 0.8.2 to make react-native-screens a peerDependency and add support for it in bottom tab navigator.
+- Make react-native-screens a direct dependency of react-navigation.
+
+## [2.15.0] - [2018-09-19](https://github.com/react-navigation/react-navigation/releases/tag/2.15.0)
+
+### Changed
+
+- Updated react-navigation-safe-area-view to 0.11.0 to support iPhoneXS Max and iPhoneXR.
+
+## [2.14.2] - [2018-09-14](https://github.com/react-navigation/react-navigation/releases/tag/2.14.2)
+
+### Changed
+
+- Updated react-navigation-stack to 0.5.1 to clamp interpolated values in animations.
+
+## [2.14.1] - [2018-09-14](https://github.com/react-navigation/react-navigation/releases/tag/2.14.1)
+
+### Changed
+
+- Updated react-navigation-stack to 0.5.0 to solve black screen on back and unpressable header area with hidden header when using react-native-screens.
+
+## [2.14.0] - [2018-09-12](https://github.com/react-navigation/react-navigation/releases/tag/2.14.0)
+
+### Added
+
+- Updated react-navigation-stack to add experimental support for react-native-screens. See https://github.com/kmagiera/react-native-screens for information about how to enable it.
+
+### Changed
+
+- Updated react-native-safe-area-view to 0.10.0 to solve circular dependency issue (fixes https://github.com/react-navigation/react-navigation/issues/4973)
+
+## [2.13.0] - [2018-09-06](https://github.com/react-navigation/react-navigation/releases/tag/2.13.0)
+
+### Added
+
+- When `tabBarIcon` is a function it is now provided with a `horizontal` option that indicates whether horizontal tabs are being rendered (label to the right of the icon) or not.
+- Add some missing flow types ([1](https://github.com/react-navigation/react-navigation/pull/4836), [2](https://github.com/react-navigation/react-navigation/pull/4917)).
+
+### Changed
+
+- Updated react-navigation-stack to 0.3.0.
+- Updated react-navigation-tabs to 0.7.0.
+- Pinned `create-react-context` dependency to `0.2.2` (https://github.com/react-navigation/react-navigation/issues/4934)
+
+### Fixed
+
+- Fixes tab label font sizes in landscape and portrait.
+- Default tab bar background color and header background color are white on iOS.
+
+## [2.12.1] - [2018-08-23](https://github.com/react-navigation/react-navigation/releases/tag/2.12.1)
+
+### Fixed
+- Fix crash on react-native@>=0.56 described in https://github.com/react-navigation/react-navigation/issues/4886
+
+## [2.12.0] - [2018-08-22](https://github.com/react-navigation/react-navigation/releases/tag/2.12.0)
+
 ### Changed
 - Move stack specific view code to react-navigation-stack
+- Add accessibility props for inactive screens in stack (https://github.com/react-navigation/react-navigation-stack/commit/4e04428e26df9076413b57b3346a7ce357de1a77)
+- Updated header title to match iOS 11/12 style correctly (https://github.com/react-navigation/react-navigation-stack/pull/1)
+- Add support for animating the header background on screen transitions and add interpolator to animate it along with the rest of the screen, but this is still opt-in behavior (https://github.com/react-navigation/react-navigation-stack/pull/3)
+- Updated react-native-safe-area-view to 0.9.0
 
 ## [2.11.2] - [2018-08-03](https://github.com/react-navigation/react-navigation/releases/tag/2.11.2)
 ### Changed
@@ -38,7 +116,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Export `StackViewTransitionConfigs` to allow you to extend default config in custom transition configs. [#4761](https://github.com/react-navigation/react-navigation/pull/4761)
 
 ### Fixed
-- Error when building with haul: ref to pathToRegexp.compile(#4658).
 - Error when building with haul: ref to pathToRegexp.compile. [#4658](https://github.com/react-navigation/react-navigation/pull/4658).
 
 ## [2.9.1] - [2018-07-24](https://github.com/react-navigation/react-navigation/releases/tag/2.9.1)
@@ -141,7 +218,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Improved examples
 
-[Unreleased]: https://github.com/react-navigation/react-navigation/compare/2.11.2...HEAD
+[Unreleased]: https://github.com/react-navigation/react-navigation/compare/2.17.0...HEAD
+[2.17.0]: https://github.com/react-navigation/react-navigation/compare/2.16.0...2.17.0
+[2.16.0]: https://github.com/react-navigation/react-navigation/compare/2.15.0...2.16.0
+[2.15.0]: https://github.com/react-navigation/react-navigation/compare/2.14.2...2.15.0
+[2.14.2]: https://github.com/react-navigation/react-navigation/compare/2.14.1...2.14.2
+[2.14.1]: https://github.com/react-navigation/react-navigation/compare/2.14.0...2.14.1
+[2.14.0]: https://github.com/react-navigation/react-navigation/compare/2.13.1...2.14.0
+[2.13.0]: https://github.com/react-navigation/react-navigation/compare/2.12.1...2.13.0
+[2.12.1]: https://github.com/react-navigation/react-navigation/compare/2.12.0...2.12.1
+[2.12.0]: https://github.com/react-navigation/react-navigation/compare/2.11.2...2.12.0
 [2.11.2]: https://github.com/react-navigation/react-navigation/compare/2.11.1...2.11.2
 [2.11.1]: https://github.com/react-navigation/react-navigation/compare/2.11.0...2.11.1
 [2.11.0]: https://github.com/react-navigation/react-navigation/compare/2.10.0...2.11.0

@@ -19,7 +19,11 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import { Header, createStackNavigator } from 'react-navigation';
+import {
+  Header,
+  HeaderStyleInterpolator,
+  createStackNavigator,
+} from 'react-navigation';
 import invariant from 'invariant';
 
 import SampleText from './SampleText';
@@ -230,6 +234,14 @@ const StackWithTranslucentHeader = createStackNavigator(
   },
   {
     headerTransitionPreset: 'uikit',
+
+    // You can leave this out if you don't want the card shadow to
+    // be visible through the header
+    transitionConfig: () => ({
+      headerBackgroundInterpolator:
+        HeaderStyleInterpolator.forBackgroundWithTranslation,
+    }),
+
     navigationOptions: {
       headerTransparent: true,
       headerStyle: {

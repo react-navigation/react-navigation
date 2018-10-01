@@ -1,4 +1,3 @@
-import React from 'react';
 import createNavigator from '../navigators/createNavigator';
 import SwitchRouter from '../routers/SwitchRouter';
 import SwitchView from '../views/SwitchView/SwitchView';

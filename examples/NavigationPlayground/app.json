@@ -11,7 +11,7 @@
     "splash": {
       "image": "./assets/icons/splash.png"
     },
-    "sdkVersion": "28.0.0",
+    "sdkVersion": "30.0.0",
     "assetBundlePatterns": [
       "**/*"
     ],

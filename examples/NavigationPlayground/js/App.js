@@ -34,6 +34,7 @@ import SimpleStack from './SimpleStack';
 import StackWithHeaderPreset from './StackWithHeaderPreset';
 import StackWithTranslucentHeader from './StackWithTranslucentHeader';
 import SimpleTabs from './SimpleTabs';
+import CustomTabUI from './CustomTabUI';
 import SwitchWithStacks from './SwitchWithStacks';
 import TabsWithNavigationFocus from './TabsWithNavigationFocus';
 import TabsWithNavigationEvents from './TabsWithNavigationEvents';
@@ -137,6 +138,10 @@ const ExampleInfo = {
     description:
       'Demo automatic handling of keyboard showing/hiding inside StackNavigator',
   },
+  CustomTabUI: {
+    name: 'Custom Tabs UI',
+    description: 'Render additional views around a Tab navigator',
+  },
 };
 
 const ExampleRoutes = {
@@ -161,6 +166,7 @@ const ExampleRoutes = {
   ModalStack: ModalStack,
   StacksWithKeys: StacksWithKeys,
   StacksInTabs: StacksInTabs,
+  CustomTabUI: CustomTabUI,
   StacksOverTabs: StacksOverTabs,
   StacksOverTopTabs: StacksOverTopTabs,
   LinkStack: {

@@ -143,6 +143,9 @@ module.exports = {
   get HeaderBackButton() {
     return require('react-navigation-stack').HeaderBackButton;
   },
+  get HeaderStyleInterpolator() {
+    return require('react-navigation-stack').HeaderStyleInterpolator;
+  },
 
   // DrawerView
   get DrawerView() {
