@@ -17,7 +17,7 @@
 @property (nonatomic, retain) NSMutableSet<RNSScreenView *> *activeScreens;
 @property (nonatomic, retain) NSMutableArray<RNSScreenView *> *reactSubviews;
 
-- (void)updateConatiner;
+- (void)updateContainer;
 
 @end
 
