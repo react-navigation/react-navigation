@@ -4,6 +4,8 @@ import React from 'react';
 
 import SwitchRouter from '../SwitchRouter';
 import StackRouter from '../StackRouter';
+import TabRouter from '../TabRouter';
+import StackActions from '../StackActions';
 import NavigationActions from '../../NavigationActions';
 import { _TESTING_ONLY_normalize_keys } from '../KeyGenerator';
 
@@ -581,4 +583,40 @@ test('Handles nested switch routers', () => {
   expect(action.routeName).toEqual('Docs');
   expect(action.action.type).toEqual(NavigationActions.NAVIGATE);
   expect(action.action.routeName).toEqual('B');
+});
+
+const performRouteNameAsPathDisabledTest = createTestRouter => {
+  const BScreen = () => <div />;
+  const NestedNavigator = () => <div />;
+  NestedNavigator.router = createTestRouter({
+    B: {
+      screen: BScreen,
+      path: 'baz',
+    },
+  });
+  const router = createTestRouter(
+    {
+      A: NestedNavigator,
+    },
+    { disableRouteNamePaths: true }
+  );
+
+  test('disableRouteNamePaths option on router prevent the default path to be the routeName', () => {
+    const action = router.getActionForPathAndParams('baz', {});
+
+    expect(action.routeName).toBe('A');
+    expect(action.action.routeName).toBe('B');
+  });
+};
+
+describe('Stack router handles disableRouteNamePaths', () => {
+  performRouteNameAsPathDisabledTest(StackRouter);
+});
+
+describe('Switch router handles disableRouteNamePaths', () => {
+  performRouteNameAsPathDisabledTest(SwitchRouter);
+});
+
+describe('Tab router handles disableRouteNamePaths', () => {
+  performRouteNameAsPathDisabledTest(TabRouter);
 });
