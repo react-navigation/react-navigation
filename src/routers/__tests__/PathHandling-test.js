@@ -558,7 +558,7 @@ const performRouterTest = createTestRouter => {
 };
 
 describe('Path handling for stack router', () => {
-    performRouterTest(StackRouter);
+  performRouterTest(StackRouter);
 });
 describe('Path handling for switch router', () => {
   performRouterTest(SwitchRouter);
