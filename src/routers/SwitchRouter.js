@@ -5,7 +5,7 @@ import createConfigGetter from './createConfigGetter';
 import NavigationActions from '../NavigationActions';
 import StackActions from './StackActions';
 import validateRouteConfigMap from './validateRouteConfigMap';
-import getNavigationActionCreators from './getNavigationActionCreators';
+import { createPathParser } from './pathUtils';
 
 const defaultActionCreators = (route, navStateKey) => ({});
 
@@ -22,7 +22,7 @@ export default (routeConfigs, config = {}) => {
   validateRouteConfigMap(routeConfigs);
 
   const order = config.order || Object.keys(routeConfigs);
-  const paths = config.paths || {};
+
   const getCustomActionCreators =
     config.getCustomActionCreators || defaultActionCreators;
 
@@ -37,16 +37,18 @@ export default (routeConfigs, config = {}) => {
   const childRouters = {};
   order.forEach(routeName => {
     const routeConfig = routeConfigs[routeName];
-    if (!paths[routeName]) {
-      paths[routeName] =
-        typeof routeConfig.path === 'string' ? routeConfig.path : routeName;
-    }
     childRouters[routeName] = null;
     const screen = getScreenForRouteName(routeConfigs, routeName);
     if (screen.router) {
       childRouters[routeName] = screen.router;
     }
   });
+
+  const {
+    getPathAndParamsForRoute,
+    getActionForPathAndParams,
+  } = createPathParser(childRouters, routeConfigs, config);
+
   if (initialRouteIndex === -1) {
     throw new Error(
       `Invalid initialRouteName '${initialRouteName}'.` +
@@ -109,10 +111,7 @@ export default (routeConfigs, config = {}) => {
     childRouters,
 
     getActionCreators(route, stateKey) {
-      return {
-        ...getNavigationActionCreators(route),
-        ...getCustomActionCreators(route, stateKey),
-      };
+      return getCustomActionCreators(route, stateKey);
     },
 
     getStateForAction(action, inputState) {
@@ -191,7 +190,7 @@ export default (routeConfigs, config = {}) => {
             newChildState = childRouter
               ? childRouter.getStateForAction(action.action, childState)
               : null;
-          } else if (!action.action && !childRouter && action.params) {
+          } else if (!action.action && action.params) {
             newChildState = {
               ...childState,
               params: {
@@ -313,73 +312,11 @@ export default (routeConfigs, config = {}) => {
 
     getPathAndParamsForState(state) {
       const route = state.routes[state.index];
-      const routeName = order[state.index];
-      const subPath = paths[routeName];
-      const screen = getScreenForRouteName(routeConfigs, routeName);
-      let path = subPath;
-      let params = route.params;
-      if (screen && screen.router) {
-        const stateRoute = route;
-        // If it has a router it's a navigator.
-        // If it doesn't have router it's an ordinary React component.
-        const child = screen.router.getPathAndParamsForState(stateRoute);
-        path = subPath ? `${subPath}/${child.path}` : child.path;
-        params = child.params ? { ...params, ...child.params } : params;
-      }
-      return {
-        path,
-        params,
-      };
+      return getPathAndParamsForRoute(route);
     },
 
-    /**
-     * Gets an optional action, based on a relative path and query params.
-     *
-     * This will return null if there is no action matched
-     */
     getActionForPathAndParams(path, params) {
-      if (!path) {
-        return NavigationActions.navigate({
-          routeName: initialRouteName,
-          params,
-        });
-      }
-      return (
-        order
-          .map(childId => {
-            const parts = path.split('/');
-            const pathToTest = paths[childId];
-            const partsInTestPath = pathToTest.split('/').length;
-            const pathPartsToTest = parts.slice(0, partsInTestPath).join('/');
-            if (pathPartsToTest === pathToTest) {
-              const childRouter = childRouters[childId];
-              const action = NavigationActions.navigate({
-                routeName: childId,
-              });
-              if (childRouter && childRouter.getActionForPathAndParams) {
-                action.action = childRouter.getActionForPathAndParams(
-                  parts.slice(partsInTestPath).join('/'),
-                  params
-                );
-              }
-              if (params) {
-                action.params = params;
-              }
-              return action;
-            }
-            return null;
-          })
-          .find(action => !!action) ||
-        order
-          .map(childId => {
-            const childRouter = childRouters[childId];
-            return (
-              childRouter && childRouter.getActionForPathAndParams(path, params)
-            );
-          })
-          .find(action => !!action) ||
-        null
-      );
+      return getActionForPathAndParams(path, params);
     },
 
     getScreenOptions: createConfigGetter(

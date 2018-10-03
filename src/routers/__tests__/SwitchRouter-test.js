@@ -78,56 +78,6 @@ describe('SwitchRouter', () => {
     expect(state3.index).toEqual(0);
   });
 
-  test('paths option on SwitchRouter overrides path from route config', () => {
-    const router = getExampleRouter({ paths: { A: 'overridden' } });
-    const action = router.getActionForPathAndParams('overridden', {});
-    expect(action.type).toEqual(NavigationActions.NAVIGATE);
-    expect(action.routeName).toEqual('A');
-  });
-
-  test('provides correct action for getActionForPathAndParams', () => {
-    const router = getExampleRouter({ backBehavior: 'initialRoute' });
-    const action = router.getActionForPathAndParams('A1', { foo: 'bar' });
-    expect(action.type).toEqual(NavigationActions.NAVIGATE);
-    expect(action.routeName).toEqual('A1');
-
-    const action1 = router.getActionForPathAndParams('', {});
-    expect(action1.type).toEqual(NavigationActions.NAVIGATE);
-    expect(action1.routeName).toEqual('A');
-
-    const action2 = router.getActionForPathAndParams(null, {});
-    expect(action2.type).toEqual(NavigationActions.NAVIGATE);
-    expect(action2.routeName).toEqual('A');
-
-    const action3 = router.getActionForPathAndParams('great/path', {
-      foo: 'baz',
-    });
-    expect(action3).toEqual({
-      type: NavigationActions.NAVIGATE,
-      routeName: 'B',
-      params: { foo: 'baz' },
-      action: {
-        type: NavigationActions.NAVIGATE,
-        routeName: 'B1',
-        params: { foo: 'baz' },
-      },
-    });
-
-    const action4 = router.getActionForPathAndParams('great/path/B2', {
-      foo: 'baz',
-    });
-    expect(action4).toEqual({
-      type: NavigationActions.NAVIGATE,
-      routeName: 'B',
-      params: { foo: 'baz' },
-      action: {
-        type: NavigationActions.NAVIGATE,
-        routeName: 'B2',
-        params: { foo: 'baz' },
-      },
-    });
-  });
-
   test('order of handling navigate action is correct for nested switchrouters', () => {
     // router = switch({ Nested: switch({ Foo, Bar }), Other: switch({ Foo }), Bar })
     // if we are focused on Other and navigate to Bar, what should happen?

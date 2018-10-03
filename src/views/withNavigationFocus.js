@@ -1,5 +1,4 @@
 import React from 'react';
-import propTypes from 'prop-types';
 import hoistStatics from 'hoist-non-react-statics';
 import invariant from '../utils/invariant';
 import withNavigation from './withNavigation';

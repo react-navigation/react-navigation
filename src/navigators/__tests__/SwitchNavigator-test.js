@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { View } from 'react-native';
 import renderer from 'react-test-renderer';
 
-import SwitchNavigator from '../createSwitchNavigator';
+import SwitchNavigator from '../createContainedSwitchNavigator';
 
 const A = () => <View />;
 const B = () => <View />;

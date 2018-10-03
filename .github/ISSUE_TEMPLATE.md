@@ -25,7 +25,7 @@ Bugs with react-navigation must be reproducible *without any external libraries 
 
 ### How to reproduce
 
-- You must provide a way to reproduce the problem. If you are having an issue with your machine or build tools, the issue belongs on another repoistory as that is outside of the scope of Rect Navigation.
+- You must provide a way to reproduce the problem. If you are having an issue with your machine or build tools, the issue belongs on another repository as that is outside of the scope of React Navigation.
 - Either re-create the bug on [Snack](https://snack.expo.io) or link to a GitHub repository with code that reproduces the bug.
 - Explain how to run the example app and any steps that we need to take to reproduce the issue from the example app.
 

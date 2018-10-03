@@ -16,23 +16,32 @@ module.exports = {
   get createNavigator() {
     return require('./navigators/createNavigator').default;
   },
+  get createKeyboardAwareNavigator() {
+    return require('./navigators/createKeyboardAwareNavigator').default;
+  },
+  get NavigationProvider() {
+    return require('./views/NavigationContext').default.NavigationProvider;
+  },
+  get NavigationConsumer() {
+    return require('./views/NavigationContext').default.NavigationConsumer;
+  },
   get createStackNavigator() {
-    return require('./navigators/createStackNavigator').default;
+    return require('react-navigation-stack').createStackNavigator;
   },
   get StackNavigator() {
     console.warn(
       'The StackNavigator function name is deprecated, please use createStackNavigator instead'
     );
-    return require('./navigators/createStackNavigator').default;
+    return require('react-navigation-stack').createStackNavigator;
   },
   get createSwitchNavigator() {
-    return require('./navigators/createSwitchNavigator').default;
+    return require('./navigators/createContainedSwitchNavigator').default;
   },
   get SwitchNavigator() {
     console.warn(
       'The SwitchNavigator function name is deprecated, please use createSwitchNavigator instead'
     );
-    return require('./navigators/createSwitchNavigator').default;
+    return require('./navigators/createContainedSwitchNavigator').default;
   },
   get createDrawerNavigator() {
     return require('react-navigation-drawer').createDrawerNavigator;
@@ -88,16 +97,31 @@ module.exports = {
   get SwitchRouter() {
     return require('./routers/SwitchRouter').default;
   },
+  get createConfigGetter() {
+    return require('./routers/createConfigGetter').default;
+  },
+  get getScreenForRouteName() {
+    return require('./routers/getScreenForRouteName').default;
+  },
+  get validateRouteConfigMap() {
+    return require('./routers/validateRouteConfigMap').default;
+  },
+  get pathUtils() {
+    return require('./routers/pathUtils').default;
+  },
 
   // Views
   get Transitioner() {
-    return require('./views/Transitioner').default;
+    return require('react-navigation-stack').Transitioner;
   },
   get StackView() {
-    return require('./views/StackView/StackView').default;
+    return require('react-navigation-stack').StackView;
   },
   get StackViewCard() {
-    return require('./views/StackView/StackViewCard').default;
+    return require('react-navigation-stack').StackViewCard;
+  },
+  get StackViewTransitionConfigs() {
+    return require('react-navigation-stack').StackViewTransitionConfigs;
   },
   get SafeAreaView() {
     return require('react-native-safe-area-view').default;
@@ -111,13 +135,16 @@ module.exports = {
 
   // Header
   get Header() {
-    return require('./views/Header/Header').default;
+    return require('react-navigation-stack').Header;
   },
   get HeaderTitle() {
-    return require('./views/Header/HeaderTitle').default;
+    return require('react-navigation-stack').HeaderTitle;
   },
   get HeaderBackButton() {
-    return require('./views/Header/HeaderBackButton').default;
+    return require('react-navigation-stack').HeaderBackButton;
+  },
+  get HeaderStyleInterpolator() {
+    return require('react-navigation-stack').HeaderStyleInterpolator;
   },
 
   // DrawerView
@@ -154,6 +181,11 @@ module.exports = {
   // SwitchView
   get SwitchView() {
     return require('./views/SwitchView/SwitchView').default;
+  },
+
+  // NavigationEvents
+  get NavigationEvents() {
+    return require('./views/NavigationEvents').default;
   },
 
   // HOCs

@@ -1,8 +1,6 @@
 import React from 'react';
 import { polyfill } from 'react-lifecycles-compat';
 
-import getChildEventSubscriber from '../getChildEventSubscriber';
-
 function createNavigator(NavigatorView, router, navigationConfig) {
   class Navigator extends React.Component {
     static router = router;
@@ -16,7 +14,7 @@ function createNavigator(NavigatorView, router, navigationConfig) {
     static getDerivedStateFromProps(nextProps, prevState) {
       const prevDescriptors = prevState.descriptors;
       const { navigation, screenProps } = nextProps;
-      const { dispatch, state, addListener } = navigation;
+      const { state } = navigation;
       const { routes } = state;
       if (typeof routes === 'undefined') {
         throw new TypeError(
@@ -24,7 +22,7 @@ function createNavigator(NavigatorView, router, navigationConfig) {
         );
       }
 
-      const descriptors = { ...prevState.descriptors };
+      const descriptors = {};
 
       routes.forEach(route => {
         if (
@@ -36,8 +34,10 @@ function createNavigator(NavigatorView, router, navigationConfig) {
           descriptors[route.key] = prevDescriptors[route.key];
           return;
         }
-        const getComponent = () =>
-          router.getComponentForRouteName(route.routeName);
+        const getComponent = router.getComponentForRouteName.bind(
+          null,
+          route.routeName
+        );
         const childNavigation = navigation.getChildNavigation(route.key);
         const options = router.getScreenOptions(childNavigation, screenProps);
         descriptors[route.key] = {

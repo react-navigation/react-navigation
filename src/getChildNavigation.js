@@ -1,5 +1,6 @@
 import getChildEventSubscriber from './getChildEventSubscriber';
 import getChildRouter from './getChildRouter';
+import getNavigationActionCreators from './routers/getNavigationActionCreators';
 import invariant from './utils/invariant';
 
 const createParamGetter = route => (paramName, defaultValue) => {
@@ -17,6 +18,10 @@ function getChildNavigation(navigation, childKey, getCurrentParentNavigation) {
     navigation._childrenNavigation || (navigation._childrenNavigation = {});
 
   const childRoute = navigation.state.routes.find(r => r.key === childKey);
+
+  if (!childRoute) {
+    return null;
+  }
 
   if (children[childKey] && children[childKey].state === childRoute) {
     return children[childKey];
@@ -40,7 +45,9 @@ function getChildNavigation(navigation, childKey, getCurrentParentNavigation) {
     ...(childRouter
       ? childRouter.getActionCreators(focusedGrandChildRoute, childRoute.key)
       : {}),
+    ...getNavigationActionCreators(childRoute),
   };
+
   const actionHelpers = {};
   Object.keys(actionCreators).forEach(actionName => {
     actionHelpers[actionName] = (...args) => {
@@ -76,12 +83,16 @@ function getChildNavigation(navigation, childKey, getCurrentParentNavigation) {
     getParam: createParamGetter(childRoute),
 
     getChildNavigation: grandChildKey =>
-      getChildNavigation(children[childKey], grandChildKey, () =>
-        getCurrentParentNavigation().getChildNavigation(childKey)
-      ),
+      getChildNavigation(children[childKey], grandChildKey, () => {
+        const nav = getCurrentParentNavigation();
+        return nav && nav.getChildNavigation(childKey);
+      }),
 
     isFocused: () => {
       const currentNavigation = getCurrentParentNavigation();
+      if (!currentNavigation) {
+        return false;
+      }
       const { routes, index } = currentNavigation.state;
       if (!currentNavigation.isFocused()) {
         return false;

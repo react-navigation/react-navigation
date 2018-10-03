@@ -3,7 +3,6 @@
 import React from 'react';
 import TabRouter from '../TabRouter';
 
-import StackActions from '../../routers/StackActions';
 import NavigationActions from '../../NavigationActions';
 
 const INIT_ACTION = { type: NavigationActions.INIT };
@@ -528,7 +527,7 @@ describe('TabRouter', () => {
     });
   });
 
-  test('Handles path configuration', () => {
+  test.only('Handles path configuration', () => {
     const ScreenA = () => <div />;
     const ScreenB = () => <div />;
     const router = TabRouter({
@@ -537,14 +536,17 @@ describe('TabRouter', () => {
         screen: ScreenA,
       },
       Bar: {
-        path: 'b',
+        path: 'b/:great',
         screen: ScreenB,
       },
     });
     const params = { foo: '42' };
     const action = router.getActionForPathAndParams('b/anything', params);
     const expectedAction = {
-      params,
+      params: {
+        foo: '42',
+        great: 'anything',
+      },
       routeName: 'Bar',
       type: NavigationActions.NAVIGATE,
     };
@@ -565,15 +567,21 @@ describe('TabRouter', () => {
       index: 1,
       isTransitioning: false,
       routes: [
-        { key: 'Foo', routeName: 'Foo' },
-        { key: 'Bar', routeName: 'Bar', params },
+        { key: 'Foo', routeName: 'Foo', params: undefined },
+        {
+          key: 'Bar',
+          routeName: 'Bar',
+          params: { foo: '42', great: 'anything' },
+        },
       ],
     };
     expect(state2).toEqual(expectedState2);
     expect(router.getComponentForState(expectedState)).toEqual(ScreenA);
     expect(router.getComponentForState(expectedState2)).toEqual(ScreenB);
     expect(router.getPathAndParamsForState(expectedState).path).toEqual('f');
-    expect(router.getPathAndParamsForState(expectedState2).path).toEqual('b');
+    expect(router.getPathAndParamsForState(expectedState2).path).toEqual(
+      'b/anything'
+    );
   });
 
   test('Handles default configuration', () => {

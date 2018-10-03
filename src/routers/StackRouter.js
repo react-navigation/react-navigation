@@ -1,5 +1,3 @@
-import pathToRegexp from 'path-to-regexp';
-
 import NavigationActions from '../NavigationActions';
 import StackActions from './StackActions';
 import createConfigGetter from './createConfigGetter';
@@ -8,15 +6,7 @@ import StateUtils from '../StateUtils';
 import validateRouteConfigMap from './validateRouteConfigMap';
 import invariant from '../utils/invariant';
 import { generateKey } from './KeyGenerator';
-import getNavigationActionCreators from './getNavigationActionCreators';
-
-function isEmpty(obj) {
-  if (!obj) return true;
-  for (let key in obj) {
-    return false;
-  }
-  return true;
-}
+import { createPathParser } from './pathUtils';
 
 function behavesLikePushAction(action) {
   return (
@@ -57,8 +47,6 @@ export default (routeConfigs, stackConfig = {}) => {
   const initialRouteName = stackConfig.initialRouteName || routeNames[0];
 
   const initialChildRouter = childRouters[initialRouteName];
-  const pathsByRouteNames = { ...stackConfig.paths } || {};
-  let paths = [];
 
   function getInitialState(action) {
     let route = {};
@@ -116,37 +104,10 @@ export default (routeConfigs, stackConfig = {}) => {
     };
   }
 
-  // Build paths for each route
-  routeNames.forEach(routeName => {
-    let pathPattern =
-      pathsByRouteNames[routeName] || routeConfigs[routeName].path;
-    let matchExact = !!pathPattern && !childRouters[routeName];
-    if (pathPattern === undefined) {
-      pathPattern = routeName;
-    }
-    const keys = [];
-    let re, toPath, priority;
-    if (typeof pathPattern === 'string') {
-      // pathPattern may be either a string or a regexp object according to path-to-regexp docs.
-      re = pathToRegexp(pathPattern, keys);
-      toPath = pathToRegexp.compile(pathPattern);
-      priority = 0;
-    } else {
-      // for wildcard match
-      re = pathToRegexp('*', keys);
-      toPath = () => '';
-      matchExact = true;
-      priority = -1;
-    }
-    if (!matchExact) {
-      const wildcardRe = pathToRegexp(`${pathPattern}/*`, keys);
-      re = new RegExp(`(?:${re.source})|(?:${wildcardRe.source})`);
-    }
-    pathsByRouteNames[routeName] = { re, keys, toPath, priority };
-  });
-
-  paths = Object.entries(pathsByRouteNames);
-  paths.sort((a, b) => b[1].priority - a[1].priority);
+  const {
+    getPathAndParamsForRoute,
+    getActionForPathAndParams,
+  } = createPathParser(childRouters, routeConfigs, stackConfig);
 
   return {
     childRouters,
@@ -166,7 +127,6 @@ export default (routeConfigs, stackConfig = {}) => {
 
     getActionCreators(route, navStateKey) {
       return {
-        ...getNavigationActionCreators(route),
         ...getCustomActionCreators(route, navStateKey),
         pop: (n, params) =>
           StackActions.pop({
@@ -227,29 +187,27 @@ export default (routeConfigs, stackConfig = {}) => {
         return getInitialState(action);
       }
 
-      // Check if the focused child scene wants to handle the action, as long as
-      // it is not a reset to the root stack
+      const activeChildRoute = state.routes[state.index];
+
       if (
         !isResetToRootStack(action) &&
         action.type !== NavigationActions.NAVIGATE
       ) {
-        const keyIndex = action.key
-          ? StateUtils.indexOf(state, action.key)
-          : -1;
-        const childIndex = keyIndex >= 0 ? keyIndex : state.index;
-        const childRoute = state.routes[childIndex];
-        invariant(
-          childRoute,
-          `StateUtils erroneously thought index ${childIndex} exists`
-        );
-        const childRouter = childRouters[childRoute.routeName];
-        if (childRouter) {
-          const route = childRouter.getStateForAction(action, childRoute);
-          if (route === null) {
-            return state;
-          }
-          if (route && route !== childRoute) {
-            return StateUtils.replaceAt(state, childRoute.key, route);
+        // Let the active child router handle the action
+        const activeChildRouter = childRouters[activeChildRoute.routeName];
+        if (activeChildRouter) {
+          const route = activeChildRouter.getStateForAction(
+            action,
+            activeChildRoute
+          );
+          if (route !== null && route !== activeChildRoute) {
+            return StateUtils.replaceAt(
+              state,
+              activeChildRoute.key,
+              route,
+              // the following tells replaceAt to NOT change the index to this route for the setParam action, because people don't expect param-setting actions to switch the active route
+              action.type === NavigationActions.SET_PARAMS
+            );
           }
         }
       } else if (action.type === NavigationActions.NAVIGATE) {
@@ -433,7 +391,15 @@ export default (routeConfigs, stackConfig = {}) => {
 
       // Handle replace action
       if (action.type === StackActions.REPLACE) {
-        const routeIndex = state.routes.findIndex(r => r.key === action.key);
+        let routeIndex;
+
+        // If the key param is undefined, set the index to the last route in the stack
+        if (action.key === undefined && state.routes.length) {
+          routeIndex = state.routes.length - 1;
+        } else {
+          routeIndex = state.routes.findIndex(r => r.key === action.key);
+        }
+
         // Only replace if the key matches one of our routes
         if (routeIndex !== -1) {
           const childRouter = childRouters[action.routeName];
@@ -548,126 +514,52 @@ export default (routeConfigs, stackConfig = {}) => {
         }
       }
 
+      // By this point in the router's state handling logic, we have handled the behavior of the active route, and handled any stack actions.
+      // If we haven't returned by now, we should allow non-active child routers to handle this action, and switch to that index if the child state (route) does change..
+
+      const keyIndex = action.key ? StateUtils.indexOf(state, action.key) : -1;
+
+      // Traverse routes from the top of the stack to the bottom, so the
+      // active route has the first opportunity, then the one before it, etc.
+      for (let childRoute of state.routes.slice().reverse()) {
+        if (childRoute.key === activeChildRoute.key) {
+          // skip over the active child because we let it attempt to handle the action earlier
+          continue;
+        }
+        // If a key is provided and in routes state then let's use that
+        // knowledge to skip extra getStateForAction calls on other child
+        // routers
+        if (keyIndex >= 0 && childRoute.key !== action.key) {
+          continue;
+        }
+        let childRouter = childRouters[childRoute.routeName];
+        if (childRouter) {
+          const route = childRouter.getStateForAction(action, childRoute);
+
+          if (route === null) {
+            return state;
+          } else if (route && route !== childRoute) {
+            return StateUtils.replaceAt(
+              state,
+              childRoute.key,
+              route,
+              // the following tells replaceAt to NOT change the index to this route for the setParam action, because people don't expect param-setting actions to switch the active route
+              action.type === NavigationActions.SET_PARAMS
+            );
+          }
+        }
+      }
+
       return state;
     },
 
     getPathAndParamsForState(state) {
       const route = state.routes[state.index];
-      const routeName = route.routeName;
-      const screen = getScreenForRouteName(routeConfigs, routeName);
-      const subPath = pathsByRouteNames[routeName].toPath(route.params);
-      let path = subPath;
-      let params = route.params;
-      if (screen && screen.router) {
-        const stateRoute = route;
-        // If it has a router it's a navigator.
-        // If it doesn't have router it's an ordinary React component.
-        const child = screen.router.getPathAndParamsForState(stateRoute);
-        path = subPath ? `${subPath}/${child.path}` : child.path;
-        params = child.params ? { ...params, ...child.params } : params;
-      }
-      return {
-        path,
-        params,
-      };
+      return getPathAndParamsForRoute(route);
     },
 
-    getActionForPathAndParams(pathToResolve, inputParams) {
-      // If the path is empty (null or empty string)
-      // just return the initial route action
-      if (!pathToResolve) {
-        return NavigationActions.navigate({
-          routeName: initialRouteName,
-          params: inputParams,
-        });
-      }
-
-      const [pathNameToResolve, queryString] = pathToResolve.split('?');
-
-      // Attempt to match `pathNameToResolve` with a route in this router's
-      // routeConfigs
-      let matchedRouteName;
-      let pathMatch;
-      let pathMatchKeys;
-
-      // eslint-disable-next-line no-restricted-syntax
-      for (const [routeName, path] of paths) {
-        const { re, keys } = path;
-        pathMatch = re.exec(pathNameToResolve);
-        if (pathMatch && pathMatch.length) {
-          pathMatchKeys = keys;
-          matchedRouteName = routeName;
-          break;
-        }
-      }
-
-      // We didn't match -- return null
-      if (!matchedRouteName) {
-        // If the path is empty (null or empty string)
-        // just return the initial route action
-        if (!pathToResolve) {
-          return NavigationActions.navigate({
-            routeName: initialRouteName,
-          });
-        }
-        return null;
-      }
-
-      // Determine nested actions:
-      // If our matched route for this router is a child router,
-      // get the action for the path AFTER the matched path for this
-      // router
-      let nestedAction;
-      let nestedQueryString = queryString ? '?' + queryString : '';
-      if (childRouters[matchedRouteName]) {
-        nestedAction = childRouters[matchedRouteName].getActionForPathAndParams(
-          pathMatch.slice(pathMatchKeys.length).join('/') + nestedQueryString
-        );
-        if (!nestedAction) {
-          return null;
-        }
-      }
-
-      // reduce the items of the query string. any query params may
-      // be overridden by path params
-      const queryParams = !isEmpty(inputParams)
-        ? inputParams
-        : (queryString || '').split('&').reduce((result, item) => {
-            if (item !== '') {
-              const nextResult = result || {};
-              const [key, value] = item.split('=');
-              nextResult[key] = value;
-              return nextResult;
-            }
-            return result;
-          }, null);
-
-      // reduce the matched pieces of the path into the params
-      // of the route. `params` is null if there are no params.
-      const params = pathMatch.slice(1).reduce((result, matchResult, i) => {
-        const key = pathMatchKeys[i];
-        if (key.asterisk || !key) {
-          return result;
-        }
-        const nextResult = result || inputParams || {};
-        const paramName = key.name;
-
-        let decodedMatchResult;
-        try {
-          decodedMatchResult = decodeURIComponent(matchResult);
-        } catch (e) {
-          // ignore `URIError: malformed URI`
-        }
-
-        nextResult[paramName] = decodedMatchResult || matchResult;
-        return nextResult;
-      }, queryParams);
-
-      return NavigationActions.navigate({
-        routeName: matchedRouteName,
-        ...(params ? { params } : {}),
-        ...(nestedAction ? { action: nestedAction } : {}),
-      });
+    getActionForPathAndParams(path, params) {
+      return getActionForPathAndParams(path, params);
     },
 
     getScreenOptions: createConfigGetter(
