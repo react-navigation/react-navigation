@@ -73,7 +73,7 @@ import { useScreens } from 'react-native-screens';
 useScreens();
 ```
 
-3. That's all 🎉 – enojy faster navigation in your Expo app. Keep in mind screens are in pretty early phase so please report if you discover some issues.
+3. That's all 🎉 – enjoy faster navigation in your Expo app. Keep in mind screens are in pretty early phase so please report if you discover some issues.
 
 ## Interop with [react-native-navigation](https://github.com/wix/react-native-navigation)
 
