@@ -9,9 +9,16 @@ import {
 
 let USE_SCREENS = false;
 
+// UIManager[`${moduleName}`] is deprecated in RN 0.58 and `getViewManagerConfig` is added.
+// We can remove this when we drop support for RN < 0.58.
+const getViewManagerConfigCompat = name =>
+  typeof UIManager.getViewManagerConfig !== 'undefined'
+    ? UIManager.getViewManagerConfig(name)
+    : UIManager[name];
+
 export function useScreens(shouldUseScreens = true) {
   USE_SCREENS = shouldUseScreens;
-  if (USE_SCREENS && !UIManager['RNSScreen']) {
+  if (USE_SCREENS && !getViewManagerConfigCompat('RNSScreen')) {
     console.error(
       `Screen native module hasn't been linked. Please check the react-native-screens README for more details`
     );
