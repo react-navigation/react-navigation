@@ -101,12 +101,14 @@ class Transitioner extends React.Component {
 
     if (!this._transitionProps.navigation.state.isTransitioning) {
       this.setState(nextState, async () => {
-        const result = nextProps.onTransitionStart(
-          this._transitionProps,
-          this._prevTransitionProps
-        );
-        if (result instanceof Promise) {
-          await result;
+        if (nextProps.onTransitionStart) {
+          const result = nextProps.onTransitionStart(
+            this._transitionProps,
+            this._prevTransitionProps
+          );
+          if (result instanceof Promise) {
+            await result;
+          }
         }
         progress.setValue(1);
         position.setValue(toValue);
