@@ -5,9 +5,11 @@
   "main": "dist/index.js",
   "files": [
     "dist/",
+    "src/",
     "createBottomTabNavigator.js",
     "createMaterialTopTabNavigator.js"
   ],
+  "react-native": "src/index.js",
   "scripts": {
     "test": "jest",
     "flow": "flow",
