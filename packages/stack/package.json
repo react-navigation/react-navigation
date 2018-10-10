@@ -1,6 +1,6 @@
 {
   "name": "react-navigation-stack",
-  "version": "0.6.0",
+  "version": "1.0.0-alpha.13",
   "description": "Stack navigator component for React Navigation",
   "main": "dist/index.js",
   "files": [
@@ -14,7 +14,6 @@
     "test": "jest",
     "lint": "eslint .",
     "format": "eslint . --fix",
-    "precommit": "yarn lint && yarn test",
     "build": "babel --no-babelrc --plugins=syntax-jsx,syntax-class-properties,syntax-object-rest-spread,transform-flow-strip-types src --copy-files --out-dir dist --ignore '**/__tests__/**'",
     "prepare": "yarn build"
   },
@@ -62,6 +61,8 @@
     "react": "*",
     "react-native": "*",
     "react-native-screens": "^1.0.0 || ^1.0.0-alpha",
+    "react-native-gesture-handler": "^1.0.0",
+    "react-native-reanimated": "^1.0.0 || ^1.0.0-alpha",
     "react-navigation": ">=2.0 || ^2.0.0-beta"
   },
   "jest": {

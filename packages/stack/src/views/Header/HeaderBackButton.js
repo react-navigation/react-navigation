@@ -33,7 +33,8 @@ class HeaderBackButton extends React.PureComponent {
   };
 
   _renderBackImage() {
-    const { backImage, title, tintColor } = this.props;
+    const { backImage, backTitleVisible, tintColor } = this.props;
+    let title = this._getTitleText();
 
     let BackImage;
     let props;
@@ -51,7 +52,7 @@ class HeaderBackButton extends React.PureComponent {
       props = {
         style: [
           styles.icon,
-          !!title && styles.iconWithTitle,
+          !!backTitleVisible && styles.iconWithTitle,
           !!tintColor && { tintColor },
         ],
         source: defaultBackImage,
@@ -61,33 +62,33 @@ class HeaderBackButton extends React.PureComponent {
     return <BackImage {...props} />;
   }
 
+  _getTitleText = () => {
+    const { width, title, truncatedTitle } = this.props;
+
+    let { initialTextWidth } = this.state;
+
+    if (title === null) {
+      return null;
+    } else if (!title) {
+      return truncatedTitle;
+    } else if (initialTextWidth && width && initialTextWidth > width) {
+      return truncatedTitle;
+    } else {
+      return title;
+    }
+  };
+
   _maybeRenderTitle() {
     const {
-      layoutPreset,
       backTitleVisible,
-      width,
-      title,
       titleStyle,
       tintColor,
       truncatedTitle,
     } = this.props;
 
-    const renderTruncated =
-      this.state.initialTextWidth && width
-        ? this.state.initialTextWidth > width
-        : false;
+    let backTitleText = this._getTitleText();
 
-    const backButtonTitle = renderTruncated ? truncatedTitle : title;
-
-    // If the left preset is used and we aren't on Android, then we
-    // default to disabling the label
-    const titleDefaultsToDisabled =
-      layoutPreset === 'left' ||
-      Platform.OS === 'android' ||
-      typeof backButtonTitle !== 'string';
-
-    // If the title is explicitly enabled then we respect that
-    if (titleDefaultsToDisabled && !backTitleVisible) {
+    if (!backTitleVisible || backTitleText === null) {
       return null;
     }
 
@@ -98,7 +99,7 @@ class HeaderBackButton extends React.PureComponent {
         style={[styles.title, !!tintColor && { color: tintColor }, titleStyle]}
         numberOfLines={1}
       >
-        {backButtonTitle}
+        {this._getTitleText()}
       </Text>
     );
   }

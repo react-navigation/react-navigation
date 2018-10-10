@@ -23,6 +23,8 @@ export default function createPointerEventsContainer(Component) {
       this._bindPosition();
       this._pointerEvents = this._computePointerEvents();
 
+      const { navigation, scene } = this.props;
+
       return (
         <Component
           {...this.props}
@@ -45,12 +47,17 @@ export default function createPointerEventsContainer(Component) {
     _bindPosition() {
       this._positionListener && this._positionListener.remove();
       this._positionListener = new AnimatedValueSubscription(
-        this.props.position,
+        this.props.realPosition,
         this._onPositionChange
       );
     }
 
-    _onPositionChange = () => {
+    _onPositionChange = ({ value }) => {
+      // This should log each frame when releasing the gesture or when pressing
+      // the back button! If not, something has gone wrong with the animated
+      // value subscription
+      // console.log(value);
+
       if (this._component) {
         const pointerEvents = this._computePointerEvents();
         if (this._pointerEvents !== pointerEvents) {
@@ -61,14 +68,14 @@ export default function createPointerEventsContainer(Component) {
     };
 
     _computePointerEvents() {
-      const { navigation, position, scene } = this.props;
+      const { navigation, realPosition, scene } = this.props;
 
       if (scene.isStale || navigation.state.index !== scene.index) {
         // The scene isn't focused.
         return scene.index > navigation.state.index ? 'box-only' : 'none';
       }
 
-      const offset = position.__getAnimatedValue() - navigation.state.index;
+      const offset = realPosition.__getAnimatedValue() - navigation.state.index;
       if (Math.abs(offset) > MIN_POSITION_OFFSET) {
         // The positon is still away from scene's index.
         // Scene's children should not receive touches until the position

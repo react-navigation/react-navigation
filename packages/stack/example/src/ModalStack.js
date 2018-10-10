@@ -5,14 +5,7 @@ import { createStackNavigator } from 'react-navigation-stack';
 class ListScreen extends React.Component {
   render() {
     return (
-      <View
-        style={{
-          flex: 1,
-          alignItems: 'center',
-          justifyContent: 'center',
-          backgroundColor: '#fff',
-        }}
-      >
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <Text>List Screen</Text>
         <Text>A list may go here</Text>
         <Button
@@ -31,14 +24,7 @@ class ListScreen extends React.Component {
 class DetailsScreen extends React.Component {
   render() {
     return (
-      <View
-        style={{
-          flex: 1,
-          alignItems: 'center',
-          justifyContent: 'center',
-          backgroundColor: '#fff',
-        }}
-      >
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <Text>Details Screen</Text>
         <Button
           title="Go to Details... again"
@@ -68,5 +54,6 @@ export default createStackNavigator(
   },
   {
     initialRouteName: 'List',
+    mode: 'modal',
   }
 );

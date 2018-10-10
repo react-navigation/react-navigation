@@ -25,10 +25,20 @@ class Transitioner extends React.Component {
       width: new Animated.Value(0),
     };
 
+    const position = new Animated.Value(this.props.navigation.state.index);
+    this._positionListener = position.addListener(({ value }) => {
+      // This should work until we detach position from a view! so we have to be
+      // careful to not ever detach it, thus the gymnastics in _getPosition in
+      // StackViewLayout
+      // This should log each frame when releasing the gesture or when pressing
+      // the back button! If not, something has gone wrong with the animated
+      // value subscription
+      // console.log(value);
+    });
+
     this.state = {
       layout,
-      position: new Animated.Value(this.props.navigation.state.index),
-      progress: new Animated.Value(1),
+      position,
       scenes: NavigationScenesReducer(
         [],
         this.props.navigation.state,
@@ -50,6 +60,7 @@ class Transitioner extends React.Component {
 
   componentWillUnmount() {
     this._isMounted = false;
+    this._positionListener && this._positionListener.remove();
   }
 
   // eslint-disable-next-line react/no-deprecated
@@ -90,14 +101,11 @@ class Transitioner extends React.Component {
       scenes: nextScenes,
     };
 
-    const { position, progress } = nextState;
-
-    progress.setValue(0);
+    const { position } = nextState;
+    const toValue = nextProps.navigation.state.index;
 
     this._prevTransitionProps = this._transitionProps;
     this._transitionProps = buildTransitionProps(nextProps, nextState);
-
-    const toValue = nextProps.navigation.state.index;
 
     if (!this._transitionProps.navigation.state.isTransitioning) {
       this.setState(nextState, async () => {
@@ -110,12 +118,26 @@ class Transitioner extends React.Component {
             await result;
           }
         }
-        progress.setValue(1);
         position.setValue(toValue);
         this._onTransitionEnd();
       });
       return;
     }
+
+    // update scenes and play the transition
+    this._isTransitionRunning = true;
+    this.setState(nextState, async () => {
+      if (nextProps.onTransitionStart) {
+        const result = nextProps.onTransitionStart(
+          this._transitionProps,
+          this._prevTransitionProps
+        );
+
+        if (result instanceof Promise) {
+          await result;
+        }
+      }
+    });
 
     // get the transition spec.
     const transitionUserSpec = nextProps.configureTransition
@@ -133,38 +155,14 @@ class Transitioner extends React.Component {
     const { timing } = transitionSpec;
     delete transitionSpec.timing;
 
-    const positionHasChanged = position.__getValue() !== toValue;
-
     // if swiped back, indexHasChanged == true && positionHasChanged == false
-    const animations =
-      indexHasChanged && positionHasChanged
-        ? [
-            timing(progress, {
-              ...transitionSpec,
-              toValue: 1,
-            }),
-            timing(position, {
-              ...transitionSpec,
-              toValue: nextProps.navigation.state.index,
-            }),
-          ]
-        : [];
-
-    // update scenes and play the transition
-    this._isTransitionRunning = true;
-    this.setState(nextState, async () => {
-      if (nextProps.onTransitionStart) {
-        const result = nextProps.onTransitionStart(
-          this._transitionProps,
-          this._prevTransitionProps
-        );
-
-        if (result instanceof Promise) {
-          await result;
-        }
-      }
-      Animated.parallel(animations).start(this._onTransitionEnd);
-    });
+    const positionHasChanged = position.__getValue() !== toValue;
+    if (indexHasChanged && positionHasChanged) {
+      timing(position, {
+        ...transitionSpec,
+        toValue: nextProps.navigation.state.index,
+      }).start(this._onTransitionEnd);
+    }
   }
 
   render() {
@@ -247,7 +245,7 @@ class Transitioner extends React.Component {
 function buildTransitionProps(props, state) {
   const { navigation } = props;
 
-  const { layout, position, progress, scenes } = state;
+  const { layout, position, scenes } = state;
 
   const scene = scenes.find(isSceneActive);
 
@@ -257,7 +255,6 @@ function buildTransitionProps(props, state) {
     layout,
     navigation,
     position,
-    progress,
     scenes,
     scene,
     index: scene.index,
