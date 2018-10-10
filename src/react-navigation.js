@@ -106,6 +106,11 @@ module.exports = {
   get validateRouteConfigMap() {
     return require('./routers/validateRouteConfigMap').default;
   },
+
+  // Utils
+  get getActiveChildNavigationOptions() {
+    return require('./utils/getActiveChildNavigationOptions').default;
+  },
   get pathUtils() {
     return require('./routers/pathUtils').default;
   },

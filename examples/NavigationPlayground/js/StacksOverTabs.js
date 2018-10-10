@@ -8,6 +8,7 @@ import {
   SafeAreaView,
   createStackNavigator,
   createBottomTabNavigator,
+  getActiveChildNavigationOptions,
 } from 'react-navigation';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -94,16 +95,10 @@ const TabNav = createBottomTabNavigator(
   }
 );
 
-TabNav.navigationOptions = ({ navigation }) => {
-  let { routeName } = navigation.state.routes[navigation.state.index];
-  let title;
-  if (routeName === 'SettingsTab') {
-    title = 'Settings';
-  } else if (routeName === 'MainTab') {
-    title = 'Home';
-  }
+TabNav.navigationOptions = ({ navigation, screenProps }) => {
+  const childOptions = getActiveChildNavigationOptions(navigation, screenProps);
   return {
-    title,
+    title: childOptions.title,
   };
 };
 
