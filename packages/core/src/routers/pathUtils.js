@@ -43,7 +43,8 @@ const getRestOfPath = (pathMatch, pathMatchKeys) => {
   const rest = pathMatch[pathMatchKeys.findIndex(k => k.asterisk) + 1];
   return rest;
 };
-export const urlToPathAndParams = (url, uriPrefix) => {
+
+const urlToPathAndParams = (url, uriPrefix) => {
   const searchMatch = url.match(/^(.*)\?(.*)$/);
   const params = searchMatch ? queryString.parse(searchMatch[2]) : {};
   const urlWithoutSearch = searchMatch ? searchMatch[1] : url;
@@ -64,7 +65,7 @@ export const urlToPathAndParams = (url, uriPrefix) => {
   };
 };
 
-export const createPathParser = (
+const createPathParser = (
   childRouters,
   routeConfigs,
   { paths: pathConfigs = {}, disableRouteNamePaths }
@@ -220,4 +221,5 @@ export const createPathParser = (
 export default {
   getParamsFromPath,
   createPathParser,
+  urlToPathAndParams,
 };
