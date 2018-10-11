@@ -6,30 +6,11 @@ import {
 import StackView from '../views/StackView/StackView';
 
 function createStackNavigator(routeConfigMap, stackConfig = {}) {
-  const {
-    initialRouteKey,
-    initialRouteName,
-    initialRouteParams,
-    paths,
-    navigationOptions,
-    disableKeyboardHandling,
-    getCustomActionCreators,
-  } = stackConfig;
-
-  const stackRouterConfig = {
-    initialRouteKey,
-    initialRouteName,
-    initialRouteParams,
-    paths,
-    navigationOptions,
-    getCustomActionCreators,
-  };
-
-  const router = StackRouter(routeConfigMap, stackRouterConfig);
+  const router = StackRouter(routeConfigMap, stackConfig);
 
   // Create a navigator with StackView as the view
   let Navigator = createNavigator(StackView, router, stackConfig);
-  if (!disableKeyboardHandling) {
+  if (!stackConfig.disableKeyboardHandling) {
     Navigator = createKeyboardAwareNavigator(Navigator, stackConfig);
   }
 
