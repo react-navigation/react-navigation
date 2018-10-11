@@ -5,11 +5,20 @@ import renderer from 'react-test-renderer';
 
 import NavigationActions from '../NavigationActions';
 
-// TODO: we should create a dummy navigator here
-import { createStackNavigator } from 'react-navigation-stack';
 import createNavigationContainer, {
   _TESTING_ONLY_reset_container_count,
 } from '../createNavigationContainer';
+
+import createNavigator from '../navigators/createNavigator';
+import StackRouter from '../routers/StackRouter';
+import SwitchView from '../views/SwitchView/SwitchView';
+
+function createStackNavigator(routeConfigMap, stackConfig = {}) {
+  const router = StackRouter(routeConfigMap, stackConfig);
+  return createNavigationContainer(
+    createNavigator(SwitchView, router, stackConfig)
+  );
+}
 
 describe('NavigationContainer', () => {
   jest.useFakeTimers();
