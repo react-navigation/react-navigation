@@ -12,9 +12,6 @@ module.exports = {
   get createNavigator() {
     return require('./navigators/createNavigator').default;
   },
-  get createKeyboardAwareNavigator() {
-    return require('./navigators/createKeyboardAwareNavigator').default;
-  },
   get NavigationProvider() {
     return require('./views/NavigationContext').default.NavigationProvider;
   },

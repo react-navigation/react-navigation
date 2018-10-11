@@ -39,8 +39,10 @@
   },
   "homepage": "https://github.com/react-navigation/react-navigation-core#readme",
   "dependencies": {
+    "create-react-context": "^0.2.3",
     "hoist-non-react-statics": "^3.0.1",
-    "path-to-regexp": "^2.4.0"
+    "path-to-regexp": "^2.4.0",
+    "query-string": "^6.2.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
