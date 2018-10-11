@@ -1,0 +1,15 @@
+{
+  "increment": "conventional:angular",
+  "changelogCommand": "conventional-changelog -p angular | tail -n +3",
+  "safeBump": false,
+  "src": {
+    "commitMessage": "chore: release %s",
+    "tagName": "v%s"
+  },
+  "npm": {
+    "publish": true
+  },
+  "github": {
+    "release": true
+  }
+}

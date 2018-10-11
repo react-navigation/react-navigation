@@ -15,7 +15,8 @@
     "lint": "eslint .",
     "format": "eslint . --fix",
     "build": "babel --no-babelrc --plugins=syntax-jsx,syntax-class-properties,syntax-object-rest-spread,transform-flow-strip-types src --copy-files --out-dir dist --ignore '**/__tests__/**'",
-    "prepare": "yarn build"
+    "prepare": "yarn build",
+    "release": "release-it"
   },
   "keywords": [
     "react-native",
@@ -47,6 +48,7 @@
     "babel-plugin-syntax-object-rest-spread": "^6.13.0",
     "babel-plugin-transform-flow-strip-types": "^6.22.0",
     "babel-preset-react-native": "^4.0.0",
+    "conventional-changelog-cli": "^2.0.5",
     "eslint": "^4.12.1",
     "eslint-config-satya164": "^1.0.1",
     "eslint-plugin-react-native-globals": "^0.1.0",
@@ -57,7 +59,8 @@
     "react-dom": "16.3.1",
     "react-native": "~0.55.4",
     "react-navigation": "^2.11.2",
-    "react-test-renderer": "16.3.1"
+    "react-test-renderer": "16.3.1",
+    "release-it": "^7.6.1"
   },
   "peerDependencies": {
     "react": "*",
