@@ -1,5 +1,7 @@
 package com.swmansion.rnscreens.example;
 
+import android.os.Bundle;
+
 import com.facebook.react.ReactFragmentActivity;
 
 public class MainActivity extends ReactFragmentActivity {
@@ -11,5 +13,10 @@ public class MainActivity extends ReactFragmentActivity {
     @Override
     protected String getMainComponentName() {
         return "ScreensExample";
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(null);
     }
 }
