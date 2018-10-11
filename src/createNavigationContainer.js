@@ -133,6 +133,13 @@ export default function createNavigationContainer(Component) {
       }
     }
 
+    _getNestedAction = action => {
+      if (!action.action) {
+        return action;
+      }
+      return this._getNestedAction(action.action);
+    };
+
     _handleOpenURL = ({ url }) => {
       const { enableURLHandling, uriPrefix } = this.props;
       if (enableURLHandling === false) {
@@ -143,7 +150,7 @@ export default function createNavigationContainer(Component) {
         const { path, params } = parsedUrl;
         const action = Component.router.getActionForPathAndParams(path, params);
         if (action) {
-          this.dispatch(action);
+          this.dispatch(this._getNestedAction(action));
         }
       }
     };

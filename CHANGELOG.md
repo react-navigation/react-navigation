@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+- Updated `_handleOpenUrl` to get deeply nested actions
+
 ## [2.17.0] - [2018-09-25](https://github.com/react-navigation/react-navigation/releases/tag/2.17.0)
 
 ### Changed
