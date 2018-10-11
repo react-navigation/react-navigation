@@ -2,11 +2,15 @@ import React from 'react';
 import { AsyncStorage, Linking, Platform, BackHandler } from 'react-native';
 import { polyfill } from 'react-lifecycles-compat';
 
-import NavigationActions from './NavigationActions';
-import getNavigation from './getNavigation';
+import {
+  NavigationActions,
+  pathUtils,
+  getNavigation,
+} from '@react-navigation/core';
 import invariant from './utils/invariant';
 import docsUrl from './utils/docsUrl';
-import { urlToPathAndParams } from './routers/pathUtils';
+
+const { urlToPathAndParams } = pathUtils;
 
 function isStateful(props) {
   return !props.navigation;

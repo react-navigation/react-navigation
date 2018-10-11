@@ -30,11 +30,7 @@
     "react-native": "*"
   },
   "dependencies": {
-    "clamp": "^1.0.1",
-    "create-react-context": "0.2.2",
-    "hoist-non-react-statics": "^2.2.0",
-    "path-to-regexp": "^1.7.0",
-    "query-string": "^6.1.0",
+    "@react-navigation/core": "^3.0.0-alpha.2",
     "react-lifecycles-compat": "^3",
     "react-native-gesture-handler": "^1.0.0",
     "react-native-safe-area-view": "0.11.0",
@@ -93,7 +89,7 @@
       "<rootDir>/examples/"
     ],
     "transformIgnorePatterns": [
-      "node_modules/(?!(jest-)?react-native|react-clone-referenced-element|react-navigation-deprecated-tab-navigator|react-navigation-stack)"
+      "node_modules/(?!(jest-)?react-native|react-clone-referenced-element|react-navigation-deprecated-tab-navigator|react-navigation-stack|@react-navigation/core)"
     ]
   },
   "lint-staged": {
