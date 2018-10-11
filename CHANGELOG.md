@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [2.18.0] - [2018-10-11](https://github.com/react-navigation/react-navigation/releases/tag/2.18.0)
+
+### Added
+
+- Introduce getActiveChildNavigationOptions (#5080)
+
+### Changed
+
+- Updated react-navigation-tabs to 0.8.4 to fix issue with Snack
+- Flow changes:
+  - Update StackViewConfig to match recent changes (#5067)
+  - Mark key in StackActions.replace as optional (#5073)
+- Remove drawer actions from react-navigation-web
+- Add disableRouteNamePaths option to router configs (#4824)
+
 ## [2.17.0] - [2018-09-25](https://github.com/react-navigation/react-navigation/releases/tag/2.17.0)
 
 ### Changed
@@ -218,7 +233,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Improved examples
 
-[Unreleased]: https://github.com/react-navigation/react-navigation/compare/2.17.0...HEAD
+[Unreleased]: https://github.com/react-navigation/react-navigation/compare/2.18.0...HEAD
+[2.18.0]: https://github.com/react-navigation/react-navigation/compare/2.17.0...2.18.0
 [2.17.0]: https://github.com/react-navigation/react-navigation/compare/2.16.0...2.17.0
 [2.16.0]: https://github.com/react-navigation/react-navigation/compare/2.15.0...2.16.0
 [2.15.0]: https://github.com/react-navigation/react-navigation/compare/2.14.2...2.15.0
