@@ -1,0 +1,90 @@
+{
+  "name": "@react-navigation/core",
+  "version": "3.0.0-alpha.1",
+  "description": "Core utilities for the react-navigation framework",
+  "main": "dist/index.js",
+  "files": [
+    "dist/",
+    "src/",
+    "LICENSE.md",
+    "README.md"
+  ],
+  "react-native": "src/index.js",
+  "scripts": {
+    "test": "jest",
+    "lint": "eslint .",
+    "format": "eslint . --fix",
+    "build": "babel --no-babelrc --plugins=syntax-jsx,syntax-class-properties,syntax-object-rest-spread,transform-flow-strip-types src --copy-files --out-dir dist --ignore '**/__tests__/**'",
+    "prepare": "yarn build",
+    "release": "release-it"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "keywords": [
+    "react-navigation",
+    "routing",
+    "ios",
+    "android",
+    "stack"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/react-navigation/react-navigation-core.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/react-navigation/react-navigation-core/issues"
+  },
+  "homepage": "https://github.com/react-navigation/react-navigation-core#readme",
+  "dependencies": {
+    "hoist-non-react-statics": "^3.0.1",
+    "path-to-regexp": "^2.4.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-jest": "^22.4.1",
+    "babel-plugin-syntax-class-properties": "^6.13.0",
+    "babel-plugin-syntax-jsx": "^6.18.0",
+    "babel-plugin-syntax-object-rest-spread": "^6.13.0",
+    "babel-plugin-transform-flow-strip-types": "^6.22.0",
+    "babel-preset-react-native": "^4.0.0",
+    "conventional-changelog-cli": "^2.0.5",
+    "eslint": "^4.12.1",
+    "eslint-config-satya164": "^1.0.1",
+    "eslint-plugin-react-native-globals": "^0.1.0",
+    "husky": "^0.14.3",
+    "jest": "^22.1.3",
+    "jest-expo": "^30.0.0",
+    "prettier": "^1.8.2",
+    "react": "16.3.1",
+    "react-dom": "16.3.1",
+    "react-native": "^0.57.2",
+    "react-test-renderer": "16.3.1",
+    "release-it": "^7.6.1"
+  },
+  "peerDependencies": {
+    "react": "*"
+  },
+  "jest": {
+    "preset": "react-native",
+    "testRegex": "/__tests__/[^/]+-test\\.js$",
+    "setupFiles": [
+      "<rootDir>/jest-setup.js"
+    ],
+    "coveragePathIgnorePatterns": [
+      "jest-setup.js"
+    ],
+    "modulePathIgnorePatterns": [
+      "<rootDir>/example/"
+    ],
+    "transformIgnorePatterns": [
+      "node_modules/(?!(jest-)?react-native|react-clone-referenced-element|react-navigation-deprecated-tab-navigator|react-navigation)"
+    ]
+  },
+  "prettier": {
+    "trailingComma": "es5",
+    "singleQuote": true
+  }
+}

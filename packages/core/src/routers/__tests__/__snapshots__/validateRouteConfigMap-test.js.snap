@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`validateRouteConfigMap Fails if both screen and getScreen are defined 1`] = `"Route 'Home' should declare a screen or a getScreen, not both."`;
+
+exports[`validateRouteConfigMap Fails on bad object 1`] = `
+"The component for route 'Home' must be a React component. For example:
+
+import MyScreen from './MyScreen';
+...
+Home: MyScreen,
+}
+
+You can also use a navigator:
+
+import MyNavigator from './MyNavigator';
+...
+Home: MyNavigator,
+}"
+`;
+
+exports[`validateRouteConfigMap Fails on empty bare screen 1`] = `
+"The component for route 'Home' must be a React component. For example:
+
+import MyScreen from './MyScreen';
+...
+Home: MyScreen,
+}
+
+You can also use a navigator:
+
+import MyNavigator from './MyNavigator';
+...
+Home: MyNavigator,
+}"
+`;
+
+exports[`validateRouteConfigMap Fails on empty config 1`] = `"Please specify at least one route when configuring a navigator."`;
