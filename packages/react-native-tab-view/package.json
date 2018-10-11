@@ -10,7 +10,11 @@
     "test": "jest",
     "flow": "flow",
     "lint": "eslint .",
-    "precommit": "yarn lint && yarn flow && yarn test"
+    "precommit": "yarn lint && yarn flow && yarn test",
+    "release": "release-it"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
   },
   "keywords": [
     "react-native-component",
@@ -40,6 +44,7 @@
     "@expo/vector-icons": "^6.3.1",
     "babel-jest": "^22.4.4",
     "babel-preset-react-native": "^4.0.0",
+    "conventional-changelog-cli": "^2.0.5",
     "enzyme": "3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
     "enzyme-to-json": "^3.3.4",
@@ -53,7 +58,8 @@
     "react": "16.3.1",
     "react-dom": "16.3.1",
     "react-native": "~0.55.4",
-    "react-test-renderer": "16.3.1"
+    "react-test-renderer": "16.3.1",
+    "release-it": "^7.6.1"
   },
   "peerDependencies": {
     "react": "*",
