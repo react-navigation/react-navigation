@@ -6,24 +6,24 @@ module.exports = {
     return require('./createNavigationContainer').default;
   },
   get StateUtils() {
-    return require('./StateUtils').default;
+    return require('@react-navigation/core').StateUtils;
   },
   get getNavigation() {
-    return require('./getNavigation').default;
+    return require('@react-navigation/core').getNavigation;
   },
 
   // Navigators
   get createNavigator() {
-    return require('./navigators/createNavigator').default;
+    return require('@react-navigation/core').createNavigator;
   },
   get createKeyboardAwareNavigator() {
     return require('./navigators/createKeyboardAwareNavigator').default;
   },
   get NavigationProvider() {
-    return require('./views/NavigationContext').default.NavigationProvider;
+    return require('@react-navigation/core').NavigationProvider;
   },
   get NavigationConsumer() {
-    return require('./views/NavigationContext').default.NavigationConsumer;
+    return require('@react-navigation/core').NavigationConsumer;
   },
   get createStackNavigator() {
     return require('react-navigation-stack').createStackNavigator;
@@ -75,10 +75,10 @@ module.exports = {
 
   // Actions
   get NavigationActions() {
-    return require('./NavigationActions').default;
+    return require('@react-navigation/core').NavigationActions;
   },
   get StackActions() {
-    return require('./routers/StackActions').default;
+    return require('@react-navigation/core').StackActions;
   },
   get DrawerActions() {
     return require('react-navigation-drawer').DrawerActions;
@@ -86,33 +86,33 @@ module.exports = {
 
   // Routers
   get StackRouter() {
-    return require('./routers/StackRouter').default;
+    return require('@react-navigation/core').StackRouter;
   },
   get TabRouter() {
-    return require('./routers/TabRouter').default;
+    return require('@react-navigation/core').TabRouter;
   },
   get DrawerRouter() {
     return require('react-navigation-drawer').DrawerRouter;
   },
   get SwitchRouter() {
-    return require('./routers/SwitchRouter').default;
+    return require('@react-navigation/core').SwitchRouter;
   },
   get createConfigGetter() {
-    return require('./routers/createConfigGetter').default;
+    return require('@react-navigation/core').StackAcreateConfigGetterctions;
   },
   get getScreenForRouteName() {
-    return require('./routers/getScreenForRouteName').default;
+    return require('@react-navigation/core').getScreenForRouteName;
   },
   get validateRouteConfigMap() {
-    return require('./routers/validateRouteConfigMap').default;
+    return require('@react-navigation/core').validateRouteConfigMap;
   },
 
   // Utils
   get getActiveChildNavigationOptions() {
-    return require('./utils/getActiveChildNavigationOptions').default;
+    return require('@react-navigation/core').getActiveChildNavigationOptions;
   },
   get pathUtils() {
-    return require('./routers/pathUtils').default;
+    return require('@react-navigation/core').pathUtils;
   },
 
   // Views
@@ -132,7 +132,7 @@ module.exports = {
     return require('react-native-safe-area-view').default;
   },
   get SceneView() {
-    return require('./views/SceneView').default;
+    return require('@react-navigation/core').SceneView;
   },
   get ResourceSavingSceneView() {
     return require('./views/ResourceSavingSceneView').default;
@@ -185,20 +185,20 @@ module.exports = {
 
   // SwitchView
   get SwitchView() {
-    return require('./views/SwitchView/SwitchView').default;
+    return require('@react-navigation/core').SwitchView;
   },
 
   // NavigationEvents
   get NavigationEvents() {
-    return require('./views/NavigationEvents').default;
+    return require('@react-navigation/core').NavigationEvents;
   },
 
   // HOCs
   get withNavigation() {
-    return require('./views/withNavigation').default;
+    return require('@react-navigation/core').withNavigation;
   },
   get withNavigationFocus() {
-    return require('./views/withNavigationFocus').default;
+    return require('@react-navigation/core').withNavigationFocus;
   },
   get withOrientation() {
     return require('./views/withOrientation').default;

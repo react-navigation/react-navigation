@@ -3,15 +3,16 @@ import { View } from 'react-native';
 
 import renderer from 'react-test-renderer';
 
-import NavigationActions from '../NavigationActions';
-
 import createNavigationContainer, {
   _TESTING_ONLY_reset_container_count,
 } from '../createNavigationContainer';
 
-import createNavigator from '../navigators/createNavigator';
-import StackRouter from '../routers/StackRouter';
-import SwitchView from '../views/SwitchView/SwitchView';
+import {
+  NavigationActions,
+  createNavigator,
+  StackRouter,
+  SwitchView,
+} from '@react-navigation/core';
 
 function createStackNavigator(routeConfigMap, stackConfig = {}) {
   const router = StackRouter(routeConfigMap, stackConfig);

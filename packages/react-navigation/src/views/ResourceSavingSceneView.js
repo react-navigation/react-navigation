@@ -2,7 +2,7 @@ import React from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
 import { polyfill } from 'react-lifecycles-compat';
 
-import SceneView from './SceneView';
+import { SceneView } from '@react-navigation/core';
 
 const FAR_FAR_AWAY = 3000; // this should be big enough to move the whole view out of its container
 
