@@ -69,7 +69,7 @@ function forHorizontal(props) {
   // TODO: disable overlay by default, add flag to enable
   let overlayOpacity = position.interpolate({
     inputRange: [index, last - 0.5, last, last + EPS],
-    outputRange: [0, 0.05, 0.05, 0],
+    outputRange: [0, 0.07, 0.07, 0],
     extrapolate: 'clamp',
   });
 
