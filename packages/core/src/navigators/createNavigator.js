@@ -1,5 +1,6 @@
 import React from 'react';
 import { polyfill } from 'react-lifecycles-compat';
+import invariant from '../utils/invariant';
 
 function createNavigator(NavigatorView, router, navigationConfig) {
   class Navigator extends React.Component {
@@ -14,6 +15,7 @@ function createNavigator(NavigatorView, router, navigationConfig) {
     static getDerivedStateFromProps(nextProps, prevState) {
       const prevDescriptors = prevState.descriptors;
       const { navigation, screenProps } = nextProps;
+      invariant(navigation != null, 'Navigation containers!');
       const { state } = navigation;
       const { routes } = state;
       if (typeof routes === 'undefined') {
