@@ -4,7 +4,7 @@ import { polyfill } from 'react-lifecycles-compat';
 function createNavigator(NavigatorView, router, navigationConfig) {
   class Navigator extends React.Component {
     static router = router;
-    static navigationOptions = null;
+    static navigationOptions = navigationConfig.navigationOptions;
 
     state = {
       descriptors: {},

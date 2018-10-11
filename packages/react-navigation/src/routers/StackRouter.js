@@ -564,7 +564,7 @@ export default (routeConfigs, stackConfig = {}) => {
 
     getScreenOptions: createConfigGetter(
       routeConfigs,
-      stackConfig.navigationOptions
+      stackConfig.defaultNavigationOptions
     ),
   };
 };

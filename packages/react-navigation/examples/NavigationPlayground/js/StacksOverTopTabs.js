@@ -133,7 +133,7 @@ const StackNavigator = createStackNavigator(
     },
   },
   {
-    navigationOptions: {
+    defaultNavigationOptions: {
       headerStyle: styles.stackHeader,
     },
   }

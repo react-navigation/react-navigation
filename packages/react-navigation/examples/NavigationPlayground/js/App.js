@@ -346,7 +346,11 @@ const AppNavigator = createStackNavigator(
   }
 );
 
-export default AppNavigator;
+export default class App extends React.Component {
+  render() {
+    return <AppNavigator /* persistenceKey="if-you-want-it" */ />;
+  }
+}
 
 const styles = StyleSheet.create({
   item: {
