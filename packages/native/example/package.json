@@ -1,0 +1,34 @@
+{
+  "name": "native-example",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "postinstall": "rm -rf node_modules/expo-react-native-adapter/node_modules/react && rm -rf node_modules/expo-gl/node_modules/react"
+  },
+  "dependencies": {
+    "@react-navigation/core": "^3.0.0-alpha.4",
+    "expo": "~30.0.0",
+    "hoist-non-react-statics": "^2.5.0",
+    "prop-types": "^15.6.0",
+    "react": "16.3.1",
+    "react-native": "~0.55.4",
+    "react-native-paper": "2.0.0-alpha.4",
+    "react-native-screens": "^1.0.0-alpha.9",
+    "react-navigation": "^2.11.1"
+  },
+  "devDependencies": {
+    "babel-plugin-module-resolver": "^3.0.0",
+    "babel-preset-expo": "^4.0.0",
+    "glob-to-regexp": "^0.3.0"
+  },
+  "main": "App.js",
+  "resolutions": {
+    "**/react": "16.3.1",
+    "**/prop-types": "15.6.0",
+    "**/react-lifecycles-compat": "3.0.4",
+    "**/hoist-non-react-statics": "2.5.0"
+  }
+}

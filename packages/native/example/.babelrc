@@ -1,0 +1,13 @@
+{
+  "presets": ["expo"],
+  "plugins": [
+    [
+      "module-resolver",
+      {
+        "alias": {
+          "@react-navigation/native": "../src"
+        }
+      }
+    ]
+  ]
+}
