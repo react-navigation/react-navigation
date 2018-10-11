@@ -242,7 +242,7 @@ const StackWithTranslucentHeader = createStackNavigator(
         HeaderStyleInterpolator.forBackgroundWithTranslation,
     }),
 
-    navigationOptions: {
+    defaultNavigationOptions: {
       headerTransparent: true,
       headerStyle: {
         borderBottomWidth: StyleSheet.hairlineWidth,
