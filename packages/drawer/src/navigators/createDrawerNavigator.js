@@ -49,30 +49,8 @@ const DefaultDrawerConfig = {
 
 const DrawerNavigator = (routeConfigs, config = {}) => {
   const mergedConfig = { ...DefaultDrawerConfig, ...config };
-
-  const {
-    order,
-    paths,
-    initialRouteName,
-    initialRouteParams,
-    backBehavior,
-    getCustomActionCreators,
-    ...drawerConfig
-  } = mergedConfig;
-
-  const routerConfig = {
-    order,
-    paths,
-    initialRouteName,
-    initialRouteParams,
-    backBehavior,
-    getCustomActionCreators,
-  };
-
-  const drawerRouter = DrawerRouter(routeConfigs, routerConfig);
-
-  const navigator = createNavigator(DrawerView, drawerRouter, drawerConfig);
-
+  const drawerRouter = DrawerRouter(routeConfigs, mergedConfig);
+  const navigator = createNavigator(DrawerView, drawerRouter, mergedConfig);
   return createNavigationContainer(navigator);
 };
 
