@@ -57,7 +57,7 @@ module.exports = {
     return require('./utils/getActiveChildNavigationOptions').default;
   },
   get pathUtils() {
-    return require('./routers/pathUtils').default;
+    return require('./routers/pathUtils');
   },
 
   get SceneView() {

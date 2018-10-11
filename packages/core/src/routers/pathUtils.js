@@ -12,7 +12,7 @@ function isEmpty(obj) {
   return true;
 }
 
-const getParamsFromPath = (inputParams, pathMatch, pathMatchKeys) => {
+export const getParamsFromPath = (inputParams, pathMatch, pathMatchKeys) => {
   const params = pathMatch.slice(1).reduce(
     // iterate over matched path params
     (paramsOut, matchResult, i) => {
@@ -44,7 +44,7 @@ const getRestOfPath = (pathMatch, pathMatchKeys) => {
   return rest;
 };
 
-const urlToPathAndParams = (url, uriPrefix) => {
+export const urlToPathAndParams = (url, uriPrefix) => {
   const searchMatch = url.match(/^(.*)\?(.*)$/);
   const params = searchMatch ? queryString.parse(searchMatch[2]) : {};
   const urlWithoutSearch = searchMatch ? searchMatch[1] : url;
@@ -65,7 +65,7 @@ const urlToPathAndParams = (url, uriPrefix) => {
   };
 };
 
-const createPathParser = (
+export const createPathParser = (
   childRouters,
   routeConfigs,
   { paths: pathConfigs = {}, disableRouteNamePaths }
@@ -216,10 +216,4 @@ const createPathParser = (
     };
   };
   return { getActionForPathAndParams, getPathAndParamsForRoute };
-};
-
-export default {
-  getParamsFromPath,
-  createPathParser,
-  urlToPathAndParams,
 };
