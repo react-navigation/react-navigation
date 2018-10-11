@@ -543,8 +543,10 @@ export default (routeConfigs, stackConfig = {}) => {
               state,
               childRoute.key,
               route,
-              // the following tells replaceAt to NOT change the index to this route for the setParam action, because people don't expect param-setting actions to switch the active route
-              action.type === NavigationActions.SET_PARAMS
+              // the following tells replaceAt to NOT change the index to this route for the setParam action or complete transition action,
+              // because people don't expect these actions to switch the active route
+              action.type === NavigationActions.SET_PARAMS ||
+                action.type === StackActions.COMPLETE_TRANSITION
             );
           }
         }
