@@ -397,7 +397,6 @@ describe('StackRouter', () => {
       },
       state
     );
-    const barKey = state2.routes[1].routes[0].key;
     const state3 = router.getStateForAction(
       {
         type: StackActions.PUSH,
@@ -429,7 +428,6 @@ describe('StackRouter', () => {
       },
       state
     );
-    const barKey = state2.routes[1].routes[0].key;
     const state3 = router.getStateForAction(
       {
         type: StackActions.POP,
@@ -440,9 +438,6 @@ describe('StackRouter', () => {
   });
 
   test('Handle navigation to nested navigator', () => {
-    const state = TestStackRouter.getStateForAction({
-      type: NavigationActions.INIT,
-    });
     const action = TestStackRouter.getActionForPathAndParams('fo/22/b/hello');
     /* $FlowFixMe */
     const state2 = TestStackRouter.getStateForAction(action);
@@ -734,19 +729,17 @@ describe('StackRouter', () => {
       bar: { screen: () => <div /> },
     });
     const initState = TestRouter.getStateForAction(NavigationActions.init());
-    for (key of ['a', null]) {
-      const pushedState = TestRouter.getStateForAction(
-        NavigationActions.navigate({ routeName: 'bar', key: 'a' }),
-        initState
-      );
-      expect(pushedState.index).toEqual(1);
-      expect(pushedState.routes[1].routeName).toEqual('bar');
-      const pushedTwiceState = TestRouter.getStateForAction(
-        NavigationActions.navigate({ routeName: 'bar', key: 'a' }),
-        pushedState
-      );
-      expect(pushedTwiceState).toEqual(null);
-    }
+    const pushedState = TestRouter.getStateForAction(
+      NavigationActions.navigate({ routeName: 'bar', key: 'a' }),
+      initState
+    );
+    expect(pushedState.index).toEqual(1);
+    expect(pushedState.routes[1].routeName).toEqual('bar');
+    const pushedTwiceState = TestRouter.getStateForAction(
+      NavigationActions.navigate({ routeName: 'bar', key: 'a' }),
+      pushedState
+    );
+    expect(pushedTwiceState).toEqual(null);
   });
 
   // https://github.com/react-navigation/react-navigation/issues/4063
@@ -1905,7 +1898,7 @@ describe('StackRouter', () => {
     expect(activeState5.routes[activeState5.index].routeName).toEqual('Bar');
   });
 
-  test('order of handling navigate action is correct for nested stackrouters', () => {
+  test('order of handling navigate action is correct for nested stackrouters 2', () => {
     const Screen = () => <div />;
     const NestedStack = () => <div />;
     const OtherNestedStack = () => <div />;

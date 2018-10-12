@@ -1,7 +1,6 @@
 import getChildEventSubscriber from './getChildEventSubscriber';
 import getChildRouter from './getChildRouter';
 import getNavigationActionCreators from './routers/getNavigationActionCreators';
-import invariant from './utils/invariant';
 
 const createParamGetter = route => (paramName, defaultValue) => {
   const params = route.params;

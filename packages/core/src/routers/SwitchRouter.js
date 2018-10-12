@@ -7,7 +7,7 @@ import StackActions from './StackActions';
 import validateRouteConfigMap from './validateRouteConfigMap';
 import { createPathParser } from './pathUtils';
 
-const defaultActionCreators = (route, navStateKey) => ({});
+const defaultActionCreators = () => ({});
 
 function childrenUpdateWithoutSwitchingIndex(actionType) {
   return [
@@ -36,7 +36,6 @@ export default (routeConfigs, config = {}) => {
   const initialRouteIndex = order.indexOf(initialRouteName);
   const childRouters = {};
   order.forEach(routeName => {
-    const routeConfig = routeConfigs[routeName];
     childRouters[routeName] = null;
     const screen = getScreenForRouteName(routeConfigs, routeName);
     if (screen.router) {

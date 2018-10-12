@@ -69,8 +69,8 @@ export default function getChildEventSubscriber(addListener, key) {
       const lastRoutes = lastState && lastState.routes;
       const routes = state && state.routes;
 
-      const lastFocusKey =
-        lastState && lastState.routes && lastState.routes[lastState.index].key;
+      // const lastFocusKey =
+      //   lastState && lastState.routes && lastState.routes[lastState.index].key;
       const focusKey = routes && routes[state.index].key;
 
       const isChildFocused = focusKey === key;

@@ -15,7 +15,7 @@ function behavesLikePushAction(action) {
   );
 }
 
-const defaultActionCreators = (route, navStateKey) => ({});
+const defaultActionCreators = () => ({});
 
 function isResetToRootStack(action) {
   return action.type === StackActions.RESET && action.key === null;

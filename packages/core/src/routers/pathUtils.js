@@ -1,16 +1,10 @@
+/* eslint-disable import/no-commonjs */
+
 import pathToRegexp, { compile } from 'path-to-regexp';
 import NavigationActions from '../NavigationActions';
 import invariant from '../utils/invariant';
 
 const queryString = require('query-string');
-
-function isEmpty(obj) {
-  if (!obj) return true;
-  for (let key in obj) {
-    return false;
-  }
-  return true;
-}
 
 export const getParamsFromPath = (inputParams, pathMatch, pathMatchKeys) => {
   const params = pathMatch.slice(1).reduce(
@@ -123,9 +117,6 @@ export const createPathParser = (
   const getActionForPathAndParams = (pathToResolve = '', inputParams = {}) => {
     // Attempt to match `pathToResolve` with a route in this router's routeConfigs, deferring to child routers
 
-    let matchedAction = null;
-
-    // eslint-disable-next-line no-restricted-syntax
     for (const [routeName, path] of paths) {
       const { exactRe, exactReKeys, extendedPathRe, extendedPathReKeys } = path;
       const childRouter = childRouters[routeName];
@@ -152,7 +143,6 @@ export const createPathParser = (
       }
     }
 
-    // eslint-disable-next-line no-restricted-syntax
     for (const [routeName, path] of paths) {
       const { extendedPathRe, extendedPathReKeys } = path;
       const childRouter = childRouters[routeName];

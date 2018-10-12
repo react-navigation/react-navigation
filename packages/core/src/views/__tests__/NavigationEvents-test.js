@@ -3,7 +3,7 @@ import renderer from 'react-test-renderer';
 import NavigationEvents from '../NavigationEvents';
 import { NavigationProvider } from '../NavigationContext';
 
-const createListener = () => payload => {};
+const createListener = () => () => {};
 
 // An easy way to create the 4 listeners prop
 const createEventListenersProp = () => ({
@@ -101,6 +101,7 @@ describe('NavigationEvents', () => {
     checkAddListenerCalledWith('willFocus', eventListenerProps.onWillFocus);
     checkAddListenerCalledWith('didBlur', eventListenerProps.onDidBlur);
     checkAddListenerCalledWith('didFocus', eventListenerProps.onDidFocus);
+    component.unmount();
   });
 
   it('add all listeners with navigation context', () => {
@@ -122,6 +123,7 @@ describe('NavigationEvents', () => {
     checkAddListenerCalledWith('willFocus', eventListenerProps.onWillFocus);
     checkAddListenerCalledWith('didBlur', eventListenerProps.onDidBlur);
     checkAddListenerCalledWith('didFocus', eventListenerProps.onDidFocus);
+    component.unmount();
   });
 
   it('remove all listeners on unmount', () => {
@@ -159,6 +161,7 @@ describe('NavigationEvents', () => {
     );
     checkAddListenerCalled(1);
     checkAddListenerCalledWith('didFocus', listener);
+    component.unmount();
   });
 
   it('do not attempt to add/remove stable listeners on update', () => {

@@ -1,3 +1,5 @@
+/* eslint-disable import/no-commonjs */
+
 /**
  * Use invariant() to assert state which your program assumes to be true.
  *
@@ -9,7 +11,7 @@
  * will remain to ensure logic does not differ in production.
  */
 
-var validateFormat = function(format) {};
+var validateFormat = function() {};
 
 if (__DEV__) {
   validateFormat = function(format) {

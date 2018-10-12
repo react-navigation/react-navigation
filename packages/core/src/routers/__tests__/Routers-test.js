@@ -19,7 +19,7 @@ const ROUTERS = {
   SwitchRouter,
 };
 
-const dummyEventSubscriber = (name, handler) => ({
+const dummyEventSubscriber = () => ({
   remove: () => {},
 });
 

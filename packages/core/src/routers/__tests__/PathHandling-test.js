@@ -5,7 +5,6 @@ import React from 'react';
 import SwitchRouter from '../SwitchRouter';
 import StackRouter from '../StackRouter';
 import TabRouter from '../TabRouter';
-import StackActions from '../StackActions';
 import NavigationActions from '../../NavigationActions';
 import { _TESTING_ONLY_normalize_keys } from '../KeyGenerator';
 

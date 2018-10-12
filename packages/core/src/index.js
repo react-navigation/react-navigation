@@ -1,4 +1,4 @@
-/* eslint global-require: 0 */
+/* eslint-disable import/no-commonjs */
 
 module.exports = {
   get StateUtils() {

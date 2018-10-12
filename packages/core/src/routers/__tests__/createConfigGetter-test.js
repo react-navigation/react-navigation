@@ -1,13 +1,11 @@
 import { Component } from 'react';
 import createConfigGetter from '../createConfigGetter';
 
-const dummyEventSubscriber = (name: string, handler: (*) => void) => ({
+const dummyEventSubscriber = () => ({
   remove: () => {},
 });
 
 test('should get config for screen', () => {
-  /* eslint-disable react/no-multi-comp */
-
   class HomeScreen extends Component {
     static navigationOptions = ({ navigation }) => ({
       title: `Welcome ${
@@ -147,8 +145,6 @@ test('should get config for screen', () => {
 });
 
 test('should throw if the route does not exist', () => {
-  /* eslint-disable react/no-multi-comp */
-
   const HomeScreen = () => null;
   HomeScreen.navigationOptions = {
     title: 'Home screen',

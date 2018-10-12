@@ -527,7 +527,7 @@ describe('TabRouter', () => {
     });
   });
 
-  test.only('Handles path configuration', () => {
+  test('Handles path configuration', () => {
     const ScreenA = () => <div />;
     const ScreenB = () => <div />;
     const router = TabRouter({
