@@ -194,10 +194,10 @@ class MainScreen extends React.Component<any, State> {
 
   componentDidMount() {
     Asset.fromModule(
-      require('react-navigation/src/views/assets/back-icon-mask.png')
+      require('react-navigation-stack/src/views/assets/back-icon-mask.png')
     ).downloadAsync();
     Asset.fromModule(
-      require('react-navigation/src/views/assets/back-icon.png')
+      require('react-navigation-stack/src/views/assets/back-icon.png')
     ).downloadAsync();
   }
 
