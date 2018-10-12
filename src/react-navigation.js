@@ -21,6 +21,10 @@ module.exports = {
     return require('@react-navigation/native').withOrientation;
   },
 
+  get SafeAreaView() {
+    return require('@react-navigation/native').SafeAreaView;
+  },
+
   // Core
   get createNavigator() {
     return require('@react-navigation/core').createNavigator;
@@ -127,9 +131,6 @@ module.exports = {
   },
   get StackViewTransitionConfigs() {
     return require('react-navigation-stack').StackViewTransitionConfigs;
-  },
-  get SafeAreaView() {
-    return require('react-native-safe-area-view').default;
   },
 
   // Header
