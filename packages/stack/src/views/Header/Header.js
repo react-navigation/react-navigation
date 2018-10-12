@@ -247,6 +247,7 @@ class Header extends React.PureComponent {
         onPress={goBack}
         ButtonContainerComponent={ButtonContainerComponent}
         LabelContainerComponent={LabelContainerComponent}
+        backTitleVisible={this.props.backTitleVisible}
         pressColorAndroid={options.headerPressColorAndroid}
         tintColor={options.headerTintColor}
         backImage={options.headerBackImage}
@@ -684,13 +685,13 @@ const styles = StyleSheet.create({
   iconMaskFillerRect: {
     flex: 1,
     backgroundColor: '#d8d8d8',
-    marginLeft: -3,
+    marginLeft: -5,
   },
   iconMask: {
     // These are mostly the same as the icon in ModularHeaderBackButton
     height: 21,
     width: 12,
-    marginLeft: 9,
+    marginLeft: 8.5,
     marginTop: -0.5, // resizes down to 20.5
     alignSelf: 'center',
     resizeMode: 'contain',

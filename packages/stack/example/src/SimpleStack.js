@@ -3,6 +3,10 @@ import { Button, View, Text } from 'react-native';
 import { createStackNavigator } from 'react-navigation-stack';
 
 class ListScreen extends React.Component {
+  static navigationOptions = {
+    title: 'List',
+  };
+
   render() {
     return (
       <View
@@ -29,6 +33,10 @@ class ListScreen extends React.Component {
 }
 
 class DetailsScreen extends React.Component {
+  static navigationOptions = {
+    title: 'Details',
+  };
+
   render() {
     return (
       <View
@@ -72,5 +80,6 @@ export default createStackNavigator(
     // these are the defaults
     cardShadowEnabled: true,
     cardOverlayEnabled: false,
+    // headerTransitionPreset: 'uikit',
   }
 );
