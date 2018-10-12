@@ -30,8 +30,8 @@
     "react-native": "*"
   },
   "dependencies": {
-    "@react-navigation/core": "^3.0.0-alpha.2",
-    "@react-navigation/native": "^3.0.0-alpha.2",
+    "@react-navigation/core": "^3.0.0-alpha.4",
+    "@react-navigation/native": "^3.0.0-alpha.3",
     "react-lifecycles-compat": "^3",
     "react-native-gesture-handler": "^1.0.0",
     "react-native-safe-area-view": "0.11.0",
