@@ -15,4 +15,8 @@ module.exports = {
   get withOrientation() {
     return require('./withOrientation').default;
   },
+
+  get SafeAreaView() {
+    return require('react-native-safe-area-view').default;
+  },
 };

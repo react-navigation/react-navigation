@@ -6924,7 +6924,7 @@ react-native-gesture-handler@^1.0.8:
     invariant "^2.2.2"
     prop-types "^15.5.10"
 
-react-native-safe-area-view@0.11.0:
+react-native-safe-area-view@0.11.0, react-native-safe-area-view@^0.11.0:
   version "0.11.0"
   resolved "https://registry.yarnpkg.com/react-native-safe-area-view/-/react-native-safe-area-view-0.11.0.tgz#4f3dda43c2bace37965e7c6aef5fc83d4f19d174"
   integrity sha512-N3nElaahu1Me2ltnfc9acpgt1znm6pi8DSadKy79kvdzKwvVIzw0IXueA/Hjr51eCW1BsfNw7D1SgBT9U6qEkA==

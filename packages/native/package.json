@@ -42,6 +42,7 @@
     "hoist-non-react-statics": "^3.0.1",
     "react-lifecycles-compat": "^3.0.4",
     "react-native-gesture-handler": "^1.0.8",
+    "react-native-safe-area-view": "^0.11.0",
     "react-native-screens": "^1.0.0-alpha.14"
   },
   "devDependencies": {
