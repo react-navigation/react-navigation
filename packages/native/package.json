@@ -18,6 +18,9 @@
     "prepare": "yarn build",
     "release": "release-it"
   },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
   "keywords": [
     "react-native",
     "react-navigation",
