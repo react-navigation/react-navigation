@@ -1,7 +1,7 @@
 import React from 'react';
 import Expo from 'expo';
 import { FlatList, I18nManager } from 'react-native';
-import { createSwitchNavigator } from 'react-navigation';
+import { createSwitchNavigator } from '@react-navigation/core';
 import { createStackNavigator } from 'react-navigation-stack';
 import { ListSection, Divider } from 'react-native-paper';
 
