@@ -68,5 +68,9 @@ export default createStackNavigator(
   },
   {
     initialRouteName: 'List',
+
+    // these are the defaults
+    cardShadowEnabled: true,
+    cardOverlayEnabled: false,
   }
 );

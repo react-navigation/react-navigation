@@ -243,7 +243,7 @@ class Transitioner extends React.Component {
 }
 
 function buildTransitionProps(props, state) {
-  const { navigation } = props;
+  const { navigation, options } = props;
 
   const { layout, position, scenes } = state;
 
@@ -257,6 +257,7 @@ function buildTransitionProps(props, state) {
     position,
     scenes,
     scene,
+    options,
     index: scene.index,
   };
 }

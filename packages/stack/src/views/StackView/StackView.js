@@ -1,5 +1,5 @@
 import React from 'react';
-import { NativeModules } from 'react-native';
+import { Platform, NativeModules } from 'react-native';
 
 import { StackActions } from 'react-navigation';
 import StackViewLayout from './StackViewLayout';
@@ -9,13 +9,16 @@ import TransitionConfigs from './StackViewTransitionConfigs';
 const NativeAnimatedModule =
   NativeModules && NativeModules.NativeAnimatedModule;
 
-class StackView extends React.Component {
-  static defaultProps = {
-    navigationConfig: {
-      mode: 'card',
-    },
-  };
+// NOTE(brentvatne): this was previously in defaultProps, but that is deceiving
+// because the entire object will be clobbered by navigationConfig that is
+// passed in.
+const DefaultNavigationConfig = {
+  mode: 'card',
+  cardShadowEnabled: true,
+  cardcardOverlayEnabled: false,
+};
 
+class StackView extends React.Component {
   render() {
     return (
       <Transitioner
@@ -68,11 +71,27 @@ class StackView extends React.Component {
     };
   };
 
+  _getShadowEnabled = () => {
+    const { navigationConfig } = this.props;
+    return navigationConfig && navigationConfig.hasOwnProperty('cardShadowEnabled')
+      ? navigationConfig.cardShadowEnabled
+      : DefaultNavigationConfig.cardShadowEnabled;
+  };
+
+  _getCardOverlayEnabled = () => {
+    const { navigationConfig } = this.props;
+    return navigationConfig && navigationConfig.hasOwnProperty('cardOverlayEnabled')
+      ? navigationConfig.cardOverlayEnabled
+      : DefaultNavigationConfig.cardOverlayEnabled;
+  };
+
   _render = (transitionProps, lastTransitionProps) => {
     const { screenProps, navigationConfig } = this.props;
     return (
       <StackViewLayout
         {...navigationConfig}
+        shadowEnabled={this._getShadowEnabled()}
+        cardOverlayEnabled={this._getCardOverlayEnabled()}
         onGestureBegin={this.props.onGestureBegin}
         onGestureCanceled={this.props.onGestureCanceled}
         onGestureEnd={this.props.onGestureEnd}

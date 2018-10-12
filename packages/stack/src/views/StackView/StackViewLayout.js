@@ -714,6 +714,8 @@ class StackViewLayout extends React.Component {
       screenInterpolator &&
       screenInterpolator({
         ...this.props.transitionProps,
+        shadowEnabled: this.props.shadowEnabled,
+        cardOverlayEnabled: this.props.cardOverlayEnabled,
         position: this._getPosition(),
         scene,
       });
