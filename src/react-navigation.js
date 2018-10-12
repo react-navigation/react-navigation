@@ -3,8 +3,9 @@
 module.exports = {
   // Core
   get createNavigationContainer() {
-    return require('./createNavigationContainer').default;
+    return require('@react-navigation/native').createNavigationContainer;
   },
+
   get StateUtils() {
     return require('@react-navigation/core').StateUtils;
   },
@@ -17,7 +18,7 @@ module.exports = {
     return require('@react-navigation/core').createNavigator;
   },
   get createKeyboardAwareNavigator() {
-    return require('./navigators/createKeyboardAwareNavigator').default;
+    return require('@react-navigation/native').createKeyboardAwareNavigator;
   },
   get NavigationProvider() {
     return require('@react-navigation/core').NavigationProvider;
@@ -135,7 +136,7 @@ module.exports = {
     return require('@react-navigation/core').SceneView;
   },
   get ResourceSavingSceneView() {
-    return require('./views/ResourceSavingSceneView').default;
+    return require('@react-navigation/native').ResourceSavingSceneView;
   },
 
   // Header
@@ -201,6 +202,6 @@ module.exports = {
     return require('@react-navigation/core').withNavigationFocus;
   },
   get withOrientation() {
-    return require('./views/withOrientation').default;
+    return require('@react-navigation/native').withOrientation;
   },
 };
