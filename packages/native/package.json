@@ -40,7 +40,9 @@
   "dependencies": {
     "@react-navigation/core": "^3.0.0-alpha.4",
     "hoist-non-react-statics": "^3.0.1",
-    "react-lifecycles-compat": "^3.0.4"
+    "react-lifecycles-compat": "^3.0.4",
+    "react-native-gesture-handler": "^1.0.8",
+    "react-native-screens": "^1.0.0-alpha.14"
   },
   "devDependencies": {
     "@expo/vector-icons": "^6.2.0",
