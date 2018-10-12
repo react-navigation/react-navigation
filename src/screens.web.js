@@ -13,3 +13,7 @@ export function screensEnabled() {
 export const Screen = Animated.View;
 
 export const ScreenContainer = View;
+
+export const NativeScreen = View;
+
+export const NativeScreenContainer = View;

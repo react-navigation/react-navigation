@@ -7,7 +7,7 @@ declare module 'react-native-screens' {
 
   export function useScreens(shouldUseScreens?: boolean): void;
   export function screensEnabled(): boolean;
-  
+
   export interface ScreenProps extends ViewProps {
     active?: boolean;
     onComponentRef?: (view: any) => void;
@@ -16,4 +16,7 @@ declare module 'react-native-screens' {
 
   export type ScreenContainerProps = ViewProps;
   export const ScreenContainer: ComponentClass<ScreenContainerProps>;
+
+  export const NativeScreen: ComponentClass<ScreenProps>;
+  export const NativeScreenContainer: ComponentClass<ScreenContainerProps>;
 }

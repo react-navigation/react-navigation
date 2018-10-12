@@ -29,11 +29,11 @@ export function screensEnabled() {
   return USE_SCREENS;
 }
 
-const NativeScreen = Animated.createAnimatedComponent(
-  requireNativeComponent('RNSScreen', null)
-);
+export const NativeScreen = requireNativeComponent('RNSScreen', null);
 
-const NativeScreenContainer = requireNativeComponent(
+const AnimatedNativeScreen = Animated.createAnimatedComponent(NativeScreen);
+
+export const NativeScreenContainer = requireNativeComponent(
   'RNSScreenContainer',
   null
 );
@@ -59,7 +59,7 @@ export class Screen extends React.Component {
     } else {
       const { style, children, ...rest } = this.props;
       return (
-        <NativeScreen
+        <AnimatedNativeScreen
           {...rest}
           ref={this.setRef}
           style={StyleSheet.absoluteFill}>
@@ -71,7 +71,7 @@ export class Screen extends React.Component {
             and avoid wrapping with `Animated.View`.
           */}
           <Animated.View style={style}>{children}</Animated.View>
-        </NativeScreen>
+        </AnimatedNativeScreen>
       );
     }
   }
