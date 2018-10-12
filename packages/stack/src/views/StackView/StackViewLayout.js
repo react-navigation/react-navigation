@@ -174,9 +174,12 @@ class StackViewLayout extends React.Component {
     if (Platform.OS === 'ios' && supportsImprovedSpringAnimation()) {
       Animated.spring(this.props.transitionProps.position, {
         toValue: resetToIndex,
-        stiffness: 5000,
-        damping: 600,
+        stiffness: 6000,
+        damping: 100,
         mass: 3,
+        overshootClamping: true,
+        restDisplacementThreshold: 0.01,
+        restSpeedThreshold: 0.01,
         useNativeDriver: USE_NATIVE_DRIVER,
       }).start();
     } else {
@@ -215,8 +218,11 @@ class StackViewLayout extends React.Component {
       Animated.spring(position, {
         toValue,
         stiffness: 7000,
-        damping: 600,
+        damping: 300,
         mass: 3,
+        overshootClamping: true,
+        restDisplacementThreshold: 0.01,
+        restSpeedThreshold: 0.01,
         useNativeDriver: USE_NATIVE_DRIVER,
       }).start(onCompleteAnimation);
     } else {
