@@ -18,16 +18,6 @@
     esutils "^2.0.2"
     js-tokens "^4.0.0"
 
-"@react-navigation/core@^3.0.0-alpha.2":
-  version "3.0.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/@react-navigation/core/-/core-3.0.0-alpha.2.tgz#a47de58078ae1178cf37aeaac2512d78a0907451"
-  integrity sha512-8tkJhxFJCrAujPZNPsfnkj16E2L8KTZNH89Z9hF+zNIebYGfWphLBzx/xbdNk8nC9SFstBppj1k/KJE6ilaSmA==
-  dependencies:
-    create-react-context "^0.2.3"
-    hoist-non-react-statics "^3.0.1"
-    path-to-regexp "^2.4.0"
-    query-string "^6.2.0"
-
 "@react-navigation/core@^3.0.0-alpha.4":
   version "3.0.0-alpha.4"
   resolved "https://registry.yarnpkg.com/@react-navigation/core/-/core-3.0.0-alpha.4.tgz#0167a8352e867ebd09e444aac42b315f569fb81d"
@@ -38,10 +28,10 @@
     path-to-regexp "^2.4.0"
     query-string "^6.2.0"
 
-"@react-navigation/native@^3.0.0-alpha.2":
-  version "3.0.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/@react-navigation/native/-/native-3.0.0-alpha.2.tgz#c483a54ddb82768c0c2c6923a8007ac9c924b92d"
-  integrity sha512-6bPR+g15gJQo5bER4oJ4lxTs0hk0rZOnrgMwI+MflAqlRwqUBseRHiBr5tvfssrkTu3Q2GqZ0eSucc6WQDBU/A==
+"@react-navigation/native@^3.0.0-alpha.3":
+  version "3.0.0-alpha.3"
+  resolved "https://registry.yarnpkg.com/@react-navigation/native/-/native-3.0.0-alpha.3.tgz#7fd8d26b158040f456b4fd67a2b098e88f1fe7c9"
+  integrity sha512-Vk1HhBxYFYHMdYVpdJXVZrH2LkjJ/Sv7XRbuOvRY40HdLkiGc+xLk5KattJKV0CgydP5Kh7rq8lZSN/HR4IwBQ==
   dependencies:
     "@react-navigation/core" "^3.0.0-alpha.4"
     hoist-non-react-statics "^3.0.1"
