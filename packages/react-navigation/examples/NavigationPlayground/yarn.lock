@@ -515,6 +515,25 @@
     path-to-regexp "^2.4.0"
     query-string "^6.2.0"
 
+"@react-navigation/core@^3.0.0-alpha.4":
+  version "3.0.0-alpha.4"
+  resolved "https://registry.yarnpkg.com/@react-navigation/core/-/core-3.0.0-alpha.4.tgz#0167a8352e867ebd09e444aac42b315f569fb81d"
+  integrity sha512-kj9PzNadCjPYU1NGzNrg6eb3KDTNECUzWL38Ef7yHwhNG6U62AbedLD8VtuSZHGAEFXnI68hhnuoIe+9f6aJ8w==
+  dependencies:
+    create-react-context "^0.2.3"
+    hoist-non-react-statics "^3.0.1"
+    path-to-regexp "^2.4.0"
+    query-string "^6.2.0"
+
+"@react-navigation/native@^3.0.0-alpha.2":
+  version "3.0.0-alpha.2"
+  resolved "https://registry.yarnpkg.com/@react-navigation/native/-/native-3.0.0-alpha.2.tgz#c483a54ddb82768c0c2c6923a8007ac9c924b92d"
+  integrity sha512-6bPR+g15gJQo5bER4oJ4lxTs0hk0rZOnrgMwI+MflAqlRwqUBseRHiBr5tvfssrkTu3Q2GqZ0eSucc6WQDBU/A==
+  dependencies:
+    "@react-navigation/core" "^3.0.0-alpha.4"
+    hoist-non-react-statics "^3.0.1"
+    react-lifecycles-compat "^3.0.4"
+
 abab@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/abab/-/abab-2.0.0.tgz#aba0ab4c5eee2d4c79d3487d85450fb2376ebb0f"

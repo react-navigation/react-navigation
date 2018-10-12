@@ -1,4 +1,4 @@
-import createNavigationContainer from '../createNavigationContainer';
+import { createNavigationContainer } from '@react-navigation/native';
 import { createSwitchNavigator } from '@react-navigation/core';
 
 const SwitchNavigator = (routeConfigs, config = {}) => {
