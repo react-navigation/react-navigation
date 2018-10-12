@@ -1,7 +1,7 @@
 import React from 'react';
 import { Platform, NativeModules } from 'react-native';
 
-import { StackActions } from 'react-navigation';
+import { StackActions } from '@react-navigation/core';
 import StackViewLayout from './StackViewLayout';
 import Transitioner from '../Transitioner';
 import TransitionConfigs from './StackViewTransitionConfigs';
@@ -73,14 +73,16 @@ class StackView extends React.Component {
 
   _getShadowEnabled = () => {
     const { navigationConfig } = this.props;
-    return navigationConfig && navigationConfig.hasOwnProperty('cardShadowEnabled')
+    return navigationConfig &&
+      navigationConfig.hasOwnProperty('cardShadowEnabled')
       ? navigationConfig.cardShadowEnabled
       : DefaultNavigationConfig.cardShadowEnabled;
   };
 
   _getCardOverlayEnabled = () => {
     const { navigationConfig } = this.props;
-    return navigationConfig && navigationConfig.hasOwnProperty('cardOverlayEnabled')
+    return navigationConfig &&
+      navigationConfig.hasOwnProperty('cardOverlayEnabled')
       ? navigationConfig.cardOverlayEnabled
       : DefaultNavigationConfig.cardOverlayEnabled;
   };

@@ -60,7 +60,7 @@ class Transitioner extends React.Component {
 
   componentWillUnmount() {
     this._isMounted = false;
-    this._positionListener && this._positionListener.remove();
+    this._positionListener && this.state.position.removeListener(this._positionListener);
   }
 
   // eslint-disable-next-line react/no-deprecated

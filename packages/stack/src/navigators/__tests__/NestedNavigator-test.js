@@ -1,6 +1,7 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
-import StackNavigator from '../createContainedStackNavigator';
+import { createAppContainer } from '@react-navigation/native';
+import StackNavigator from '../createStackNavigator';
 
 const SubNavigator = StackNavigator({
   Home: {
@@ -26,13 +27,15 @@ SubNavigator.prototype.componentDidCatch = null;
 
 describe('Nested navigators', () => {
   it('renders succesfully as direct child', () => {
-    const rendered = renderer.create(<NavNestedDirect />).toJSON();
+    const NavApp = createAppContainer(NavNestedDirect);
+    const rendered = renderer.create(<NavApp />).toJSON();
     expect(rendered).toMatchSnapshot();
   });
 
   it('throw when trying to pass navigation prop', () => {
     const tryRender = () => {
-      renderer.create(<NavNestedIndirect />);
+      const NavApp = createAppContainer(NavNestedIndirect);
+      renderer.create(<NavApp />);
     };
     expect(tryRender).toThrowErrorMatchingSnapshot();
   });

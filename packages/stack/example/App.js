@@ -24,23 +24,34 @@ const data = [
   { component: SimpleStack, title: 'Simple', routeName: 'SimpleStack' },
   { component: ImageStack, title: 'Image', routeName: 'ImageStack' },
   { component: ModalStack, title: 'Modal', routeName: 'ModalStack' },
-  { component: LifecycleInteraction, title: 'Lifecycle', routeName: 'LifecycleStack' },
+  {
+    component: LifecycleInteraction,
+    title: 'Lifecycle',
+    routeName: 'LifecycleStack',
+  },
   {
     component: TransparentStack,
     title: 'Transparent',
     routeName: 'TransparentStack',
   },
-  { component: GestureInteraction, title: 'Gesture Interaction', routeName: 'GestureInteraction' },
+  {
+    component: GestureInteraction,
+    title: 'Gesture Interaction',
+    routeName: 'GestureInteraction',
+  },
 ];
 
-Expo.Asset.loadAsync(require('react-navigation/src/views/assets/back-icon.png'));
-Expo.Asset.loadAsync(require('react-navigation/src/views/assets/back-icon-mask.png'));
+Expo.Asset.loadAsync(
+  require('react-navigation/src/views/assets/back-icon.png')
+);
+Expo.Asset.loadAsync(
+  require('react-navigation/src/views/assets/back-icon-mask.png')
+);
 
 class Home extends React.Component {
   static navigationOptions = {
     title: 'Examples',
   };
-
 
   _renderItem = ({ item }) => (
     <ListSection.Item

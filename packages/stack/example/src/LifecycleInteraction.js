@@ -1,7 +1,14 @@
 import React from 'react';
-import { ActivityIndicator, Button, Text, View, StyleSheet } from 'react-native';
+import {
+  ActivityIndicator,
+  Button,
+  Text,
+  View,
+  StyleSheet,
+} from 'react-native';
 import { BarCodeScanner } from 'expo';
-import { createStackNavigator, withNavigationFocus } from 'react-navigation';
+import { withNavigationFocus } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
 
 const IndexScreen = ({ navigation }) => (
   <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
@@ -31,7 +38,9 @@ class BarCodeScreen extends React.Component {
     return (
       <View style={{ flex: 1 }}>
         <BarCodeScanner
-          onBarCodeScanned={this.props.isFocused ? this.handleBarCodeScanned : null}
+          onBarCodeScanned={
+            this.props.isFocused ? this.handleBarCodeScanned : null
+          }
           style={StyleSheet.absoluteFill}
         />
       </View>

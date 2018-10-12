@@ -5,11 +5,6 @@ module.exports = {
    * Navigators
    */
   get createStackNavigator() {
-    return require('./navigators/createContainedStackNavigator').default;
-  },
-  // note(brentvatne): in the future this will be default export, when we require
-  // people to add their own provider at root in 3.0
-  get createUncontainedStackNavigator() {
     return require('./navigators/createStackNavigator').default;
   },
 
@@ -54,5 +49,5 @@ module.exports = {
   },
   get StackGestureContext() {
     return require('./utils/StackGestureContext').default;
-  }
+  },
 };

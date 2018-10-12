@@ -1,10 +1,16 @@
 import React, { Component } from 'react';
 import { StyleSheet, View } from 'react-native';
 import renderer from 'react-test-renderer';
+import { withNavigation } from '@react-navigation/core';
 
-import StackNavigator from '../createContainedStackNavigator';
-import { withNavigation } from 'react-navigation';
-import NavigationTestUtils from 'react-navigation/NavigationTestUtils';
+import createStackNavigator from '../createStackNavigator';
+
+import createAppContainer, {
+  _TESTING_ONLY_reset_container_count,
+} from '@react-navigation/native/src/createAppContainer';
+const NavigationTestUtils = {
+  resetInternalState: _TESTING_ONLY_reset_container_count,
+};
 
 const styles = StyleSheet.create({
   header: {
@@ -38,14 +44,15 @@ describe('StackNavigator', () => {
   });
 
   it('renders successfully', () => {
-    const MyStackNavigator = StackNavigator(routeConfig);
-    const rendered = renderer.create(<MyStackNavigator />).toJSON();
+    const MyStackNavigator = createStackNavigator(routeConfig);
+    const App = createAppContainer(MyStackNavigator);
+    const rendered = renderer.create(<App />).toJSON();
 
     expect(rendered).toMatchSnapshot();
   });
 
   it('applies correct values when headerRight is present', () => {
-    const MyStackNavigator = StackNavigator({
+    const MyStackNavigator = createStackNavigator({
       Home: {
         screen: HomeScreen,
         navigationOptions: {
@@ -53,7 +60,8 @@ describe('StackNavigator', () => {
         },
       },
     });
-    const rendered = renderer.create(<MyStackNavigator />).toJSON();
+    const App = createAppContainer(MyStackNavigator);
+    const rendered = renderer.create(<App />).toJSON();
 
     expect(rendered).toMatchSnapshot();
   });
@@ -79,9 +87,10 @@ describe('StackNavigator', () => {
       }
     }
 
-    const Nav = StackNavigator({ A: { screen: A } });
+    const Nav = createStackNavigator({ A: { screen: A } });
+    const App = createAppContainer(Nav);
 
-    renderer.create(<Nav />);
+    renderer.create(<App />);
 
     expect(spy).toBeCalledWith(
       expect.objectContaining({

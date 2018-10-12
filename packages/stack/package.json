@@ -1,6 +1,6 @@
 {
   "name": "react-navigation-stack",
-  "version": "1.0.0-alpha.14",
+  "version": "1.0.0-alpha.15",
   "description": "Stack navigator component for React Navigation",
   "main": "dist/index.js",
   "files": [
@@ -8,7 +8,7 @@
     "src/",
     "LICENSE.md",
     "README.md"
-   ],
+  ],
   "react-native": "src/index.js",
   "scripts": {
     "test": "jest",
@@ -35,7 +35,10 @@
     "url": "https://github.com/react-navigation/react-navigation-stack/issues"
   },
   "homepage": "https://github.com/react-navigation/react-navigation-stack#readme",
-  "dependencies": {},
+  "dependencies": {
+    "@react-navigation/core": "^3.0.0-alpha.4",
+    "@react-navigation/native": "^3.0.0-alpha.5"
+  },
   "devDependencies": {
     "@expo/vector-icons": "^6.2.0",
     "babel-cli": "^6.26.0",
@@ -54,16 +57,15 @@
     "react": "16.3.1",
     "react-dom": "16.3.1",
     "react-native": "~0.55.4",
-    "react-navigation": "^2.11.2",
+    "react-native-gesture-handler": "^1.0.8",
     "react-test-renderer": "16.3.1"
   },
   "peerDependencies": {
     "react": "*",
     "react-native": "*",
-    "react-native-screens": "^1.0.0 || ^1.0.0-alpha",
     "react-native-gesture-handler": "^1.0.0",
     "react-native-reanimated": "^1.0.0 || ^1.0.0-alpha",
-    "react-navigation": ">=2.0 || ^2.0.0-beta"
+    "react-native-screens": "^1.0.0 || ^1.0.0-alpha"
   },
   "jest": {
     "preset": "react-native",
@@ -78,7 +80,7 @@
       "<rootDir>/example/"
     ],
     "transformIgnorePatterns": [
-      "node_modules/(?!(jest-)?react-native|react-clone-referenced-element|react-navigation-deprecated-tab-navigator|react-navigation)"
+      "node_modules/(?!(jest-)?react-native|react-clone-referenced-element|react-navigation-deprecated-tab-navigator|@react-navigation/core|@react-navigation/native)"
     ]
   },
   "prettier": {

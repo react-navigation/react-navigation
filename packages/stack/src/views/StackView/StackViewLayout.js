@@ -14,9 +14,9 @@ import {
   SceneView,
   StackActions,
   NavigationActions,
-  withOrientation,
   NavigationProvider,
-} from 'react-navigation';
+} from '@react-navigation/core';
+import { withOrientation } from '@react-navigation/native';
 import { ScreenContainer } from 'react-native-screens';
 import { PanGestureHandler, State } from 'react-native-gesture-handler';
 
@@ -644,7 +644,9 @@ class StackViewLayout extends React.Component {
 
     // Even when we align to center on Android, people should need to opt-in to
     // showing the back title
-    const enabledByDefault = !(layoutPreset === 'left' || Platform.OS === 'android');
+    const enabledByDefault = !(
+      layoutPreset === 'left' || Platform.OS === 'android'
+    );
 
     return typeof headerBackTitleVisible === 'boolean'
       ? headerBackTitleVisible

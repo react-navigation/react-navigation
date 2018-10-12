@@ -10,7 +10,7 @@ import {
   MaskedViewIOS,
 } from 'react-native';
 
-import { SafeAreaView, withOrientation } from 'react-navigation';
+import { withOrientation, SafeAreaView } from '@react-navigation/native';
 
 import HeaderTitle from './HeaderTitle';
 import HeaderBackButton from './HeaderBackButton';

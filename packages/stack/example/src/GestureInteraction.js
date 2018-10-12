@@ -8,8 +8,11 @@ import {
   StyleSheet,
 } from 'react-native';
 import { MapView } from 'expo';
-import { createStackNavigator, withNavigationFocus } from 'react-navigation';
-import { StackGestureContext } from 'react-navigation-stack';
+import { withNavigationFocus } from 'react-navigation';
+import {
+  createStackNavigator,
+  StackGestureContext,
+} from 'react-navigation-stack';
 import {
   PanGestureHandler,
   NativeViewGestureHandler,
