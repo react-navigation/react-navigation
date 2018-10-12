@@ -1,8 +1,8 @@
-/* eslint global-require: 0 */
+/* eslint disable import/no-commonjs */
 
 module.exports = {
-  get createNavigationContainer() {
-    return require('./createNavigationContainer').default;
+  get createAppContainer() {
+    return require('./createAppContainer').default;
   },
   get createKeyboardAwareNavigator() {
     return require('./createKeyboardAwareNavigator').default;
