@@ -5,18 +5,13 @@ import {
   InteractionManager,
   WebView,
   View,
-  StyleSheet,
 } from 'react-native';
 import { MapView } from 'expo';
-import { withNavigationFocus } from 'react-navigation';
 import {
   createStackNavigator,
   StackGestureContext,
 } from 'react-navigation-stack';
-import {
-  PanGestureHandler,
-  NativeViewGestureHandler,
-} from 'react-native-gesture-handler';
+import { NativeViewGestureHandler } from 'react-native-gesture-handler';
 
 const IndexScreen = ({ navigation }) => (
   <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>

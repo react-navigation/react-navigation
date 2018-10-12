@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dimensions, Button, Image, View, Text } from 'react-native';
+import { Dimensions, Button, Image, View } from 'react-native';
 import { createStackNavigator } from 'react-navigation-stack';
 import { FlatList, BorderlessButton } from 'react-native-gesture-handler';
 

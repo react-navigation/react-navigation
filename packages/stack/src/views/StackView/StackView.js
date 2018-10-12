@@ -1,5 +1,5 @@
 import React from 'react';
-import { Platform, NativeModules } from 'react-native';
+import { NativeModules } from 'react-native';
 
 import { StackActions } from '@react-navigation/core';
 import StackViewLayout from './StackViewLayout';

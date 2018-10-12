@@ -79,13 +79,7 @@ class HeaderBackButton extends React.PureComponent {
   };
 
   _maybeRenderTitle() {
-    const {
-      backTitleVisible,
-      titleStyle,
-      tintColor,
-      truncatedTitle,
-    } = this.props;
-
+    const { backTitleVisible, titleStyle, tintColor } = this.props;
     let backTitleText = this._getTitleText();
 
     if (!backTitleVisible || backTitleText === null) {

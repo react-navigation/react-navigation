@@ -1,9 +1,7 @@
 import React from 'react';
-
 import {
   Animated,
   StyleSheet,
-  PanResponder,
   Platform,
   View,
   I18nManager,
@@ -26,8 +24,6 @@ import TransitionConfigs from './StackViewTransitionConfigs';
 import StackGestureContext from '../../utils/StackGestureContext';
 import clamp from '../../utils/clamp';
 import { supportsImprovedSpringAnimation } from '../../utils/ReactNativeFeatures';
-
-const emptyFunction = () => {};
 
 const IPHONE_XS_HEIGHT = 812; // iPhone X and XS
 const IPHONE_XR_HEIGHT = 896; // iPhone XR and XS Max
@@ -62,11 +58,6 @@ const ANIMATION_DURATION = 500;
  * trigger a back action
  */
 const POSITION_THRESHOLD = 1 / 2;
-
-/**
- * The threshold (in pixels) to start the gesture action.
- */
-const RESPOND_THRESHOLD = 20;
 
 /**
  * The distance of touch start from the edge of the screen where the gesture will be recognized
@@ -390,8 +381,6 @@ class StackViewLayout extends React.Component {
 
     // TODO: remove this __getValue!
     let distance = layout.height.__getValue();
-
-    let translationY = nativeEvent.translationY;
     let value = index - nativeEvent.translationY / distance;
     return clamp(index - 1, value, index);
   };
@@ -412,7 +401,7 @@ class StackViewLayout extends React.Component {
     }
   };
 
-  _handleActivateGestureHorizontal = nativeEvent => {
+  _handleActivateGestureHorizontal = () => {
     let { index } = this.props.transitionProps.navigation.state;
 
     if (this._isMotionInverted()) {
@@ -449,7 +438,7 @@ class StackViewLayout extends React.Component {
     }
   };
 
-  _handleActivateGestureVertical = nativeEvent => {
+  _handleActivateGestureVertical = () => {
     let { index } = this.props.transitionProps.navigation.state;
 
     this.setState({
@@ -472,8 +461,7 @@ class StackViewLayout extends React.Component {
 
   _handleReleaseHorizontal = nativeEvent => {
     const {
-      transitionProps: { navigation, position, layout, scene },
-      mode,
+      transitionProps: { navigation, position, layout },
     } = this.props;
     const { index } = navigation.state;
     const immediateIndex =
@@ -525,8 +513,7 @@ class StackViewLayout extends React.Component {
 
   _handleReleaseVertical = nativeEvent => {
     const {
-      transitionProps: { navigation, position, layout, scene },
-      mode,
+      transitionProps: { navigation, position, layout },
     } = this.props;
     const { index } = navigation.state;
     const immediateIndex =

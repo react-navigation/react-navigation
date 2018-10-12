@@ -26,7 +26,7 @@ class Transitioner extends React.Component {
     };
 
     const position = new Animated.Value(this.props.navigation.state.index);
-    this._positionListener = position.addListener(({ value }) => {
+    this._positionListener = position.addListener((/* { value } */) => {
       // This should work until we detach position from a view! so we have to be
       // careful to not ever detach it, thus the gymnastics in _getPosition in
       // StackViewLayout
@@ -60,7 +60,8 @@ class Transitioner extends React.Component {
 
   componentWillUnmount() {
     this._isMounted = false;
-    this._positionListener && this.state.position.removeListener(this._positionListener);
+    this._positionListener &&
+      this.state.position.removeListener(this._positionListener);
   }
 
   // eslint-disable-next-line react/no-deprecated

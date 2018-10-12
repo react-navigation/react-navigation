@@ -12,12 +12,12 @@ import ModalStack from './src/ModalStack';
 import LifecycleInteraction from './src/LifecycleInteraction';
 import GestureInteraction from './src/GestureInteraction';
 
-// Uncomment the following line to force RTL. Requires closing and re-opening
-// your app after you first load it with this option enabled.
-// I18nManager.forceRTL(true);
-
 // Comment the following two lines to stop using react-native-screens
 import { useScreens } from 'react-native-screens';
+
+// Uncomment the following line to force RTL. Requires closing and re-opening
+// your app after you first load it with this option enabled.
+I18nManager.forceRTL(false);
 useScreens();
 
 const data = [

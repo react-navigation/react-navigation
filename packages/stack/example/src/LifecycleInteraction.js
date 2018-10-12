@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  ActivityIndicator,
-  Button,
-  Text,
-  View,
-  StyleSheet,
-} from 'react-native';
+import { Button, Text, View, StyleSheet } from 'react-native';
 import { BarCodeScanner } from 'expo';
 import { withNavigationFocus } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
