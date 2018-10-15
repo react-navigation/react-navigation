@@ -8,7 +8,7 @@ import {
   View,
   Platform,
 } from 'react-native';
-import { SafeAreaView } from 'react-navigation';
+import { SafeAreaView } from '@react-navigation/native';
 
 import CrossFadeIcon from './CrossFadeIcon';
 import withDimensions from '../utils/withDimensions';
