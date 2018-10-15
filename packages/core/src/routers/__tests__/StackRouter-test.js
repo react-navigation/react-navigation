@@ -448,7 +448,7 @@ describe('StackRouter', () => {
       routes: [
         {
           index: 0,
-          key: 'id-4',
+          key: 'id-1',
           isTransitioning: false,
           routeName: 'foo',
           params: {
@@ -457,7 +457,7 @@ describe('StackRouter', () => {
           routes: [
             {
               routeName: 'bar',
-              key: 'id-3',
+              key: 'id-0',
               params: {
                 barThing: 'hello',
               },
