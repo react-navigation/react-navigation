@@ -6,9 +6,10 @@ import {
   StackActions,
   SceneView,
   createNavigator,
-  createNavigationContainer,
   NavigationActions,
-} from 'react-navigation';
+} from '@react-navigation/core';
+
+import { createNavigationContainer } from '@react-navigation/native';
 
 export type InjectedProps = {
   getLabelText: (props: { route: any }) => any,
