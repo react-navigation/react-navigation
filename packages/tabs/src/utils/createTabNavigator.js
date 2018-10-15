@@ -9,7 +9,7 @@ import {
   NavigationActions,
 } from '@react-navigation/core';
 
-import { createNavigationContainer } from '@react-navigation/native';
+import { createAppContainer } from '@react-navigation/native';
 
 export type InjectedProps = {
   getLabelText: (props: { route: any }) => any,
@@ -198,6 +198,6 @@ export default function createTabNavigator(TabView: React.ComponentType<*>) {
     const router = TabRouter(routes, config);
     const navigator = createNavigator(NavigationView, router, config);
 
-    return createNavigationContainer(navigator);
+    return createAppContainer(navigator);
   };
 }

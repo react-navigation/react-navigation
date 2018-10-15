@@ -3,13 +3,15 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "react-native-scripts start",
-    "android": "react-native-scripts android",
-    "ios": "react-native-scripts ios"
+    "start": "expo start",
+    "android": "expo android",
+    "ios": "expo ios"
   },
   "dependencies": {
     "@expo/vector-icons": "^6.2.0",
-    "expo": "^27.0.2",
+    "@react-navigation/core": "^3.0.0-alpha.4",
+    "@react-navigation/native": "^3.0.0-alpha.5",
+    "expo": "30",
     "hoist-non-react-statics": "^2.5.0",
     "prop-types": "^15.6.1",
     "react": "16.3.1",
@@ -17,13 +19,12 @@
     "react-native": "~0.55.4",
     "react-native-safe-area-view": "^0.7.0",
     "react-native-tab-view": "^1.0.0",
-    "react-navigation": "^2.1.0"
+    "react-navigation": "^3.0.0-alpha.4"
   },
   "devDependencies": {
     "babel-plugin-module-resolver": "^3.0.0",
     "babel-preset-expo": "^4.0.0",
-    "glob-to-regexp": "^0.3.0",
-    "react-native-scripts": "1.8.1"
+    "glob-to-regexp": "^0.3.0"
   },
   "main": "App.js",
   "resolutions": {
