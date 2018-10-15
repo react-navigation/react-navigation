@@ -2,8 +2,11 @@
 
 import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { ScreenContainer } from 'react-native-screens';
 import { polyfill } from 'react-lifecycles-compat';
+
+// eslint-disable-next-line import/no-unresolved
+import { ScreenContainer } from 'react-native-screens';
+
 import createTabNavigator, {
   type InjectedProps,
 } from '../utils/createTabNavigator';
