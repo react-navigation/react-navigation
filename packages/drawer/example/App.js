@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { FlatList } from 'react-native';
-import { createSwitchNavigator, createStackNavigator } from 'react-navigation';
+import { createSwitchNavigator } from '@react-navigation/core';
+import { createAppContainer } from '@react-navigation/native';
+import { createStackNavigator } from 'react-navigation-stack';
 import { List, Divider } from 'react-native-paper';
 import SimpleDrawer from './src/SimpleDrawer';
 import StyledDrawer from './src/StyledDrawer';
@@ -43,7 +45,7 @@ class Home extends React.Component {
   }
 }
 
-export default createSwitchNavigator({
+const MainNavigator = createSwitchNavigator({
   Home: createStackNavigator({ Home }),
   ...data.reduce((acc, it) => {
     acc[it.routeName] = {
@@ -56,3 +58,5 @@ export default createSwitchNavigator({
     return acc;
   }, {}),
 });
+
+export default createAppContainer(MainNavigator);

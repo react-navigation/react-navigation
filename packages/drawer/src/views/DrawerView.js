@@ -1,6 +1,6 @@
 import React from 'react';
 import { Dimensions } from 'react-native';
-import { SceneView } from 'react-navigation';
+import { SceneView } from '@react-navigation/core';
 import DrawerActions from '../routers/DrawerActions';
 import DrawerLayout from './DrawerLayout';
 import DrawerSidebar from './DrawerSidebar';

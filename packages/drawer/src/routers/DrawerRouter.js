@@ -1,4 +1,4 @@
-import { SwitchRouter, NavigationActions } from 'react-navigation';
+import { SwitchRouter, NavigationActions } from '@react-navigation/core';
 import DrawerActions from './DrawerActions';
 
 function withDefaultValue(obj, key, defaultValue) {

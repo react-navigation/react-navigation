@@ -33,7 +33,10 @@
     "url": "https://github.com/react-navigation/react-navigation-drawer/issues"
   },
   "homepage": "https://github.com/react-navigation/react-navigation-drawer#readme",
-  "dependencies": {},
+  "dependencies": {
+    "@react-navigation/core": "^3.0.0-alpha.4",
+    "@react-navigation/native": "^3.0.0-alpha.5"
+  },
   "devDependencies": {
     "@expo/vector-icons": "^6.2.0",
     "babel-cli": "^6.26.0",
@@ -53,14 +56,12 @@
     "react-dom": "16.3.1",
     "react-native": "~0.55.4",
     "react-native-gesture-handler": "^1.0.4",
-    "react-navigation": "^2.1.0",
     "react-test-renderer": "16.3.1"
   },
   "peerDependencies": {
     "react": "*",
     "react-native": "*",
-    "react-native-gesture-handler": "^1.0.0-alpha.41 || >=1.0.0",
-    "react-navigation": ">=2.0 || ^2.0.0-beta"
+    "react-native-gesture-handler": "^1.0.0-alpha.41 || >=1.0.0"
   },
   "jest": {
     "preset": "react-native",
@@ -75,7 +76,7 @@
       "<rootDir>/example/"
     ],
     "transformIgnorePatterns": [
-      "node_modules/(?!(jest-)?react-native|react-clone-referenced-element|react-navigation-deprecated-tab-navigator|react-navigation)"
+      "node_modules/(?!(jest-)?react-native|react-clone-referenced-element|react-navigation-deprecated-tab-navigator|@react-navigation/core|@react-navigation/native)"
     ]
   }
 }

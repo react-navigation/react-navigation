@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button, ScrollView, StatusBar, Text } from 'react-native';
-import { createStackNavigator, SafeAreaView } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
+import { SafeAreaView } from '@react-navigation/native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { createDrawerNavigator } from 'react-navigation-drawer';
 

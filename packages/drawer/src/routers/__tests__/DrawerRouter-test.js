@@ -3,7 +3,11 @@
 import React from 'react';
 import DrawerRouter from '../DrawerRouter';
 
-import { NavigationActions, SwitchRouter, StackRouter } from 'react-navigation';
+import {
+  NavigationActions,
+  SwitchRouter,
+  StackRouter,
+} from '@react-navigation/core';
 import DrawerActions from '../../routers/DrawerActions';
 
 const INIT_ACTION = { type: NavigationActions.INIT };
