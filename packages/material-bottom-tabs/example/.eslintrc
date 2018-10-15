@@ -7,5 +7,6 @@
 
   "rules": {
     "react/prop-types": "off",
+    "eslint-comments/no-unused-disable": "off",
   }
 }
