@@ -1,6 +1,6 @@
 {
   "name": "react-navigation-material-bottom-tabs",
-  "version": "0.4.0",
+  "version": "1.0.0-alpha.0",
   "description": "Material Bottom Tab Navigation component for React Navigation",
   "main": "dist/index.js",
   "files": [
@@ -36,7 +36,9 @@
   "dependencies": {
     "hoist-non-react-statics": "^2.5.0",
     "prop-types": "^15.6.0",
-    "react-navigation-tabs": "^0.4.0"
+    "react-navigation-tabs": "^1.0.0-alpha",
+    "@react-navigation/core": "^3.0.0-alpha.4",
+    "@react-navigation/native": "^3.0.0-alpha.5"
   },
   "devDependencies": {
     "@expo/vector-icons": "^6.2.0",

@@ -3,7 +3,7 @@
     "name": "React Navigation Material Bottom Tabs Example",
     "description": "Demonstrates the various capabilities of react-navigation-material-bottom-tabs",
     "slug": "react-navigation-material-bottom-tabs-demo",
-    "sdkVersion": "27.0.0",
+    "sdkVersion": "30.0.0",
     "version": "1.0.0",
     "primaryColor": "#2196f3",
     "packagerOpts": {

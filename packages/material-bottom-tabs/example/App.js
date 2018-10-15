@@ -1,11 +1,18 @@
 import * as React from 'react';
 import Expo from 'expo';
 import { FlatList } from 'react-native';
-import { createStackNavigator } from 'react-navigation';
+import { createAppContainer, createStackNavigator } from 'react-navigation';
 import { List, Divider } from 'react-native-paper';
+
+// Unclear why this isn't getitng picked up :O
+// eslint-disable-next-line import/named
+import { Assets as StackAssets } from 'react-navigation-stack';
+
 import SimpleTabs from './src/SimpleTabs';
 import ShiftingTabs from './src/ShiftingTabs';
 import IconTabs from './src/IconTabs';
+
+Expo.Asset.loadAsync(StackAssets);
 
 const data = [
   { component: ShiftingTabs, title: 'Shifting', routeName: 'ShiftingTabs' },
@@ -30,6 +37,7 @@ class Home extends React.Component {
   render() {
     return (
       <FlatList
+        style={{ backgroundColor: '#fff' }}
         ItemSeparatorComponent={Divider}
         renderItem={this._renderItem}
         keyExtractor={this._keyExtractor}
@@ -39,7 +47,7 @@ class Home extends React.Component {
   }
 }
 
-const App = createStackNavigator({
+const MainStack = createStackNavigator({
   Home,
   ...data.reduce((acc, it) => {
     acc[it.routeName] = {
@@ -53,4 +61,5 @@ const App = createStackNavigator({
   }, {}),
 });
 
+const App = createAppContainer(MainStack);
 Expo.registerRootComponent(App);
