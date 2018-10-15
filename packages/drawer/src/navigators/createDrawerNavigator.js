@@ -1,10 +1,7 @@
 import React from 'react';
 import { Dimensions, Platform, ScrollView } from 'react-native';
-import {
-  createNavigator,
-  createNavigationContainer,
-  SafeAreaView,
-} from 'react-navigation';
+import { createNavigator } from '@react-navigation/core';
+import { SafeAreaView } from '@react-navigation/native';
 import DrawerRouter from '../routers/DrawerRouter';
 import DrawerView from '../views/DrawerView';
 import DrawerItems from '../views/DrawerNavigatorItems';
@@ -51,7 +48,7 @@ const DrawerNavigator = (routeConfigs, config = {}) => {
   const mergedConfig = { ...DefaultDrawerConfig, ...config };
   const drawerRouter = DrawerRouter(routeConfigs, mergedConfig);
   const navigator = createNavigator(DrawerView, drawerRouter, mergedConfig);
-  return createNavigationContainer(navigator);
+  return navigator;
 };
 
 export default DrawerNavigator;

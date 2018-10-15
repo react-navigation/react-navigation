@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-navigation';
+import { SafeAreaView } from '@react-navigation/native';
 import TouchableItem from './TouchableItem';
 
 /**
