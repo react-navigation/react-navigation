@@ -17,6 +17,8 @@ import {
   View,
 } from 'react-native';
 import { SafeAreaView, createStackNavigator } from 'react-navigation';
+import { createAppContainer } from '@react-navigation/native';
+import { Assets as StackAssets } from 'react-navigation-stack';
 
 import CustomTabs from './CustomTabs';
 import CustomTransitioner from './CustomTransitioner';
@@ -193,12 +195,7 @@ class MainScreen extends React.Component<any, State> {
   };
 
   componentDidMount() {
-    Asset.fromModule(
-      require('react-navigation-stack/src/views/assets/back-icon-mask.png')
-    ).downloadAsync();
-    Asset.fromModule(
-      require('react-navigation-stack/src/views/assets/back-icon.png')
-    ).downloadAsync();
+    Asset.loadAsync(StackAssets);
   }
 
   render() {
@@ -327,23 +324,25 @@ class MainScreen extends React.Component<any, State> {
   }
 }
 
-const AppNavigator = createStackNavigator(
-  {
-    ...ExampleRoutes,
-    Index: {
-      screen: MainScreen,
+const AppNavigator = createAppContainer(
+  createStackNavigator(
+    {
+      ...ExampleRoutes,
+      Index: {
+        screen: MainScreen,
+      },
     },
-  },
-  {
-    initialRouteName: 'Index',
-    headerMode: 'none',
+    {
+      initialRouteName: 'Index',
+      headerMode: 'none',
 
-    /*
+      /*
    * Use modal on iOS because the card mode comes from the right,
    * which conflicts with the drawer example gesture
    */
-    mode: Platform.OS === 'ios' ? 'modal' : 'card',
-  }
+      mode: Platform.OS === 'ios' ? 'modal' : 'card',
+    }
+  )
 );
 
 export default class App extends React.Component {

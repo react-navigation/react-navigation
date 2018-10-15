@@ -12,9 +12,9 @@ import {
   Transitioner,
   SafeAreaView,
   StackRouter,
-  createNavigationContainer,
   createNavigator,
 } from 'react-navigation';
+import { createAppContainer } from '@react-navigation/native';
 import SampleText from './SampleText';
 import { Button } from './commonComponents/ButtonWithMargin';
 
@@ -100,7 +100,7 @@ const CustomRouter = StackRouter({
   Settings: { screen: MySettingsScreen },
 });
 
-const CustomTransitioner = createNavigationContainer(
+const CustomTransitioner = createAppContainer(
   createNavigator(CustomNavigationView, CustomRouter, {})
 );
 
