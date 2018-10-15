@@ -42,7 +42,8 @@
     "create-react-context": "^0.2.3",
     "hoist-non-react-statics": "^3.0.1",
     "path-to-regexp": "^1.7.0",
-    "query-string": "^6.2.0"
+    "query-string": "^6.2.0",
+    "react-lifecycles-compat": "^3.0.4"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
