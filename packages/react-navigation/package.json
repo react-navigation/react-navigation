@@ -19,7 +19,11 @@
     "test-update-snapshot": "jest --updateSnapshot",
     "lint": "eslint .",
     "format": "eslint --fix .",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "release": "release-it"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
   },
   "files": [
     "src",
@@ -43,6 +47,7 @@
     "babel-jest": "^22.4.1",
     "babel-preset-react-native": "^2.1.0",
     "codecov": "^2.2.0",
+    "conventional-changelog-cli": "^2.0.5",
     "eslint": "^4.2.0",
     "eslint-config-prettier": "^2.9.0",
     "eslint-plugin-import": "^2.7.0",
@@ -58,7 +63,8 @@
     "react": "16.2.0",
     "react-native": "^0.52.0",
     "react-native-vector-icons": "^4.2.0",
-    "react-test-renderer": "^16.0.0"
+    "react-test-renderer": "^16.0.0",
+    "release-it": "^7.6.1"
   },
   "jest": {
     "notify": true,
