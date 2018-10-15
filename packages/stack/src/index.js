@@ -1,4 +1,5 @@
 /* eslint-disable import/no-commonjs */
+import { Platform } from 'react-native';
 
 module.exports = {
   /**
@@ -11,6 +12,15 @@ module.exports = {
   /**
    * Views
    */
+  get Assets() {
+    return Platform.select({
+      ios: [
+        require('./views/assets/back-icon.png'),
+        require('./views/assets/back-icon-mask.png'),
+      ],
+      android: [require('./views/assets/back-icon.png')],
+    });
+  },
   get Header() {
     return require('./views/Header/Header').default;
   },

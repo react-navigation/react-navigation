@@ -1,8 +1,11 @@
 import React from 'react';
 import Expo from 'expo';
 import { FlatList, I18nManager } from 'react-native';
-import { createSwitchNavigator } from '@react-navigation/core';
-import { createStackNavigator } from 'react-navigation-stack';
+import { createSwitchNavigator } from 'react-navigation';
+import {
+  Assets as StackAssets,
+  createStackNavigator,
+} from 'react-navigation-stack';
 import { ListSection, Divider } from 'react-native-paper';
 
 import SimpleStack from './src/SimpleStack';
@@ -41,12 +44,8 @@ const data = [
   },
 ];
 
-Expo.Asset.loadAsync(
-  require('react-navigation/src/views/assets/back-icon.png')
-);
-Expo.Asset.loadAsync(
-  require('react-navigation/src/views/assets/back-icon-mask.png')
-);
+// Cache images
+Expo.Asset.loadAsync(StackAssets);
 
 class Home extends React.Component {
   static navigationOptions = {
