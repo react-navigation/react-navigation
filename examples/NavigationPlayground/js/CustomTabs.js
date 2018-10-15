@@ -12,12 +12,8 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {
-  createNavigator,
-  createNavigationContainer,
-  SafeAreaView,
-  TabRouter,
-} from 'react-navigation';
+import { createNavigator, SafeAreaView, TabRouter } from 'react-navigation';
+import { createAppContainer } from '@react-navigation/native';
 import SampleText from './SampleText';
 import { Button } from './commonComponents/ButtonWithMargin';
 
@@ -98,7 +94,7 @@ const CustomTabRouter = TabRouter(
   }
 );
 
-const CustomTabs = createNavigationContainer(
+const CustomTabs = createAppContainer(
   createNavigator(CustomTabView, CustomTabRouter, {})
 );
 
