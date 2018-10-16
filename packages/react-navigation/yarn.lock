@@ -54,15 +54,16 @@
     node-fetch "^2.1.1"
     url-template "^2.0.8"
 
-"@react-navigation/core@^3.0.0-alpha.4":
-  version "3.0.0-alpha.4"
-  resolved "https://registry.yarnpkg.com/@react-navigation/core/-/core-3.0.0-alpha.4.tgz#0167a8352e867ebd09e444aac42b315f569fb81d"
-  integrity sha512-kj9PzNadCjPYU1NGzNrg6eb3KDTNECUzWL38Ef7yHwhNG6U62AbedLD8VtuSZHGAEFXnI68hhnuoIe+9f6aJ8w==
+"@react-navigation/core@3.0.0-alpha.6", "@react-navigation/core@^3.0.0-alpha.4":
+  version "3.0.0-alpha.6"
+  resolved "https://registry.yarnpkg.com/@react-navigation/core/-/core-3.0.0-alpha.6.tgz#9224bad5519d895936f97cd22363fe887e47d73e"
+  integrity sha512-TrdSsJTOD9CvuohhNe3TMH8xVwCcFINyX+dp8ZVUOP9sl+vJMdx7gIJwGc6k4OeNiX4gDJ69yCvFiwz/kGsp0Q==
   dependencies:
     create-react-context "^0.2.3"
     hoist-non-react-statics "^3.0.1"
-    path-to-regexp "^2.4.0"
+    path-to-regexp "^1.7.0"
     query-string "^6.2.0"
+    react-lifecycles-compat "^3.0.4"
 
 "@react-navigation/native@^3.0.0-alpha.5":
   version "3.0.0-alpha.5"
@@ -6260,10 +6261,12 @@ path-parse@^1.0.5:
   resolved "https://registry.yarnpkg.com/path-parse/-/path-parse-1.0.6.tgz#d62dbb5679405d72c4737ec58600e9ddcf06d24c"
   integrity sha512-GSmOT2EbHrINBf9SR7CDELwlJ8AENk3Qn7OikK4nFYAu3Ote2+JYNVvkpAEQm3/TLNEJFD/xZJjzyxg3KBWOzw==
 
-path-to-regexp@^2.4.0:
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/path-to-regexp/-/path-to-regexp-2.4.0.tgz#35ce7f333d5616f1c1e1bfe266c3aba2e5b2e704"
-  integrity sha512-G6zHoVqC6GGTQkZwF4lkuEyMbVOjoBKAEybQUypI1WTkqinCOrq2x6U2+phkJ1XsEMTy4LjtwPI7HW+NVrRR2w==
+path-to-regexp@^1.7.0:
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/path-to-regexp/-/path-to-regexp-1.7.0.tgz#59fde0f435badacba103a84e9d3bc64e96b9937d"
+  integrity sha1-Wf3g9DW62suhA6hOnTvGTpa5k30=
+  dependencies:
+    isarray "0.0.1"
 
 path-type@^1.0.0:
   version "1.1.0"
@@ -6725,10 +6728,10 @@ react-navigation-drawer@1.0.0-alpha.4:
     "@react-navigation/core" "^3.0.0-alpha.4"
     "@react-navigation/native" "^3.0.0-alpha.5"
 
-react-navigation-stack@1.0.0-alpha.17:
-  version "1.0.0-alpha.17"
-  resolved "https://registry.yarnpkg.com/react-navigation-stack/-/react-navigation-stack-1.0.0-alpha.17.tgz#d06a5bd97087e8427f7ba8effdad0f65fbc3bdc0"
-  integrity sha512-aQ1nE69U9bTl4Nb2AvWQJ2kyYL1F3e+V7PYvU/pxPVhJe2Tk7G9UO4adc4/kFJCFpKE2952s0de6TbAJXcEayw==
+react-navigation-stack@1.0.0-alpha.18:
+  version "1.0.0-alpha.18"
+  resolved "https://registry.yarnpkg.com/react-navigation-stack/-/react-navigation-stack-1.0.0-alpha.18.tgz#671d992b891ce42b5746a3a5c964d70e816f482e"
+  integrity sha512-9KVWydg0FIyKwMApQhQzIZ84leP5LYAT//7XfKjLYPjj1p1vgJRq1Qtu1jpAYHkVE2dr3SDKJBCQ30of193wLg==
   dependencies:
     "@react-navigation/core" "^3.0.0-alpha.4"
     "@react-navigation/native" "^3.0.0-alpha.5"
