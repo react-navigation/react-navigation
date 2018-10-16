@@ -29,6 +29,7 @@ describe('DrawerRouter', () => {
         { key: 'Bar', routeName: 'Bar', params: undefined },
       ],
       isDrawerOpen: false,
+      isDrawerIdle: true,
       openId: 0,
       closeId: 1,
       toggleId: 2,
@@ -46,6 +47,7 @@ describe('DrawerRouter', () => {
         { key: 'Bar', routeName: 'Bar', params: undefined },
       ],
       isDrawerOpen: false,
+      isDrawerIdle: true,
       openId: 0,
       closeId: 3,
       toggleId: 2,
@@ -76,6 +78,7 @@ describe('DrawerRouter', () => {
     expect(state).toEqual({
       index: 0,
       isDrawerOpen: false,
+      isDrawerIdle: true,
       isTransitioning: false,
       openId: 0,
       closeId: 1,

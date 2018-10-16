@@ -17,6 +17,7 @@ exports[`createDrawerNavigator renders successfully 1`] = `
   minSwipeDistance={undefined}
   onDrawerClose={[Function]}
   onDrawerOpen={[Function]}
+  onDrawerStateChanged={[Function]}
   overlayColor="black"
   renderNavigationView={[Function]}
   statusBarAnimation="slide"

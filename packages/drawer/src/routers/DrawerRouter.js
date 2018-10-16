@@ -48,6 +48,7 @@ export default (routeConfigs, config = {}) => {
         return {
           ...switchRouter.getStateForAction(action, undefined),
           isDrawerOpen: false,
+          isDrawerIdle: true,
           openId: genId(),
           closeId: genId(),
           toggleId: genId(),
@@ -63,6 +64,7 @@ export default (routeConfigs, config = {}) => {
           return {
             ...state,
             isDrawerOpen: false,
+            isDrawerIdle: true,
           };
         }
 
@@ -70,6 +72,7 @@ export default (routeConfigs, config = {}) => {
           return {
             ...state,
             isDrawerOpen: true,
+            isDrawerIdle: true,
           };
         }
 
@@ -80,7 +83,24 @@ export default (routeConfigs, config = {}) => {
           };
         }
 
-        if (action.type === NavigationActions.BACK && state.isDrawerOpen) {
+        if (action.type === DrawerActions.MARK_DRAWER_ACTIVE) {
+          return {
+            ...state,
+            isDrawerIdle: false,
+          };
+        }
+
+        if (action.type === DrawerActions.MARK_DRAWER_IDLE) {
+          return {
+            ...state,
+            isDrawerIdle: true,
+          };
+        }
+
+        if (
+          action.type === NavigationActions.BACK &&
+          (state.isDrawerOpen || !state.isDrawerIdle)
+        ) {
           return {
             ...state,
             closeId: genId(),
