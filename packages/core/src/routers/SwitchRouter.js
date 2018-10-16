@@ -320,7 +320,7 @@ export default (routeConfigs, config = {}) => {
 
     getScreenOptions: createConfigGetter(
       routeConfigs,
-      config.navigationOptions
+      config.defaultNavigationOptions
     ),
   };
 };
