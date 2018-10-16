@@ -34,7 +34,7 @@ const StateUtils = {
 
   /**
    * Pushes a new route into the navigation state.
-   * Note that this moves the index to the positon to where the last route in the
+   * Note that this moves the index to the position to where the last route in the
    * stack is at.
    */
   push(state, route) {
@@ -56,7 +56,7 @@ const StateUtils = {
 
   /**
    * Pops out a route from the navigation state.
-   * Note that this moves the index to the positon to where the last route in the
+   * Note that this moves the index to the position to where the last route in the
    * stack is at.
    */
   pop(state) {
@@ -146,7 +146,7 @@ const StateUtils = {
 
   /**
    * Replace a route by a index.
-   * Note that this moves the index to the positon to where the new route in the
+   * Note that this moves the index to the position to where the new route in the
    * stack is at.
    */
   replaceAtIndex(state, index, route) {
