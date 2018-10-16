@@ -60,6 +60,24 @@ export default class DrawerView extends React.PureComponent {
 
   drawerGestureRef = React.createRef();
 
+  _handleDrawerStateChange = newState => {
+    if (newState === 'Idle') {
+      if (!this.props.navigation.state.isDrawerIdle) {
+        this.props.navigation.dispatch({
+          type: DrawerActions.MARK_DRAWER_IDLE,
+          key: this.props.navigation.state.key,
+        });
+      }
+    } else {
+      if (this.props.navigation.state.isDrawerIdle) {
+        this.props.navigation.dispatch({
+          type: DrawerActions.MARK_DRAWER_ACTIVE,
+          key: this.props.navigation.state.key,
+        });
+      }
+    }
+  };
+
   _handleDrawerOpen = () => {
     this.props.navigation.dispatch({
       type: DrawerActions.DRAWER_OPENED,
@@ -126,6 +144,7 @@ export default class DrawerView extends React.PureComponent {
         drawerWidth={this.state.drawerWidth}
         onDrawerOpen={this._handleDrawerOpen}
         onDrawerClose={this._handleDrawerClose}
+        onDrawerStateChanged={this._handleDrawerStateChange}
         useNativeAnimations={this.props.navigationConfig.useNativeAnimations}
         renderNavigationView={this._renderNavigationView}
         drawerPosition={
