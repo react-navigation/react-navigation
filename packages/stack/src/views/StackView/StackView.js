@@ -15,7 +15,7 @@ const NativeAnimatedModule =
 const DefaultNavigationConfig = {
   mode: 'card',
   cardShadowEnabled: true,
-  cardcardOverlayEnabled: false,
+  cardOverlayEnabled: false,
 };
 
 class StackView extends React.Component {
