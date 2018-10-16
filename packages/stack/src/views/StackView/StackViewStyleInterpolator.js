@@ -124,24 +124,60 @@ function forFadeFromBottomAndroid(props) {
 
   const { first, last } = interpolate;
   const index = scene.index;
-  const inputRange = [first, index, last - 0.01, last];
+  const inputRange = [first, index, last];
 
   const opacity = position.interpolate({
-    inputRange,
-    outputRange: [0, 1, 1, 0],
+    inputRange: [first, first + 0.5, first + 0.9, index, last],
+    outputRange: [0, 0.25, 0.7, 1, 0],
     extrapolate: 'clamp',
   });
 
+  const height = layout.initHeight;
+  const maxTranslation = height * 0.08;
   const translateY = position.interpolate({
-    inputRange,
-    outputRange: [50, 0, 0, 0],
+    inputRange: [first, index, last],
+    outputRange: [maxTranslation, 0, 0],
     extrapolate: 'clamp',
   });
-  const translateX = 0;
 
   return {
     opacity,
-    transform: [{ translateX }, { translateY }],
+    transform: [{ translateY }],
+  };
+}
+
+function forFadeToBottomAndroid(props) {
+  const { layout, position, scene } = props;
+
+  if (!layout.isMeasured) {
+    return forInitial(props);
+  }
+  const interpolate = getSceneIndicesForInterpolationInputRange(props);
+
+  if (!interpolate) return { opacity: 0 };
+
+  const { first, last } = interpolate;
+  const index = scene.index;
+  const inputRange = [first, index, last];
+
+  const opacity = position.interpolate({
+    inputRange: [first, index, last],
+    outputRange: [0, 1, 0],
+    extrapolate: 'clamp',
+  });
+
+  const height = layout.initHeight;
+  const maxTranslation = height * 0.08;
+
+  const translateY = position.interpolate({
+    inputRange: [first, index, last],
+    outputRange: [maxTranslation, 0, 0],
+    extrapolate: 'clamp',
+  });
+
+  return {
+    opacity,
+    transform: [{ translateY }],
   };
 }
 
@@ -175,5 +211,6 @@ export default {
   forHorizontal,
   forVertical,
   forFadeFromBottomAndroid,
+  forFadeToBottomAndroid,
   forFade,
 };

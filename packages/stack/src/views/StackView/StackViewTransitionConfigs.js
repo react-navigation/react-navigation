@@ -56,11 +56,11 @@ const FadeInFromBottomAndroid = {
 const FadeOutToBottomAndroid = {
   // See http://androidxref.com/7.1.1_r6/xref/frameworks/base/core/res/res/anim/activity_close_exit.xml
   transitionSpec: {
-    duration: 230,
-    easing: Easing.in(Easing.poly(4)), // accelerate
+    duration: 150,
+    easing: Easing.in(Easing.linear), // accelerate
     timing: Animated.timing,
   },
-  screenInterpolator: StyleInterpolator.forFadeFromBottomAndroid,
+  screenInterpolator: StyleInterpolator.forFadeToBottomAndroid,
 };
 
 function defaultTransitionConfig(

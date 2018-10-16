@@ -80,6 +80,7 @@ export default createStackNavigator(
     // these are the defaults
     cardShadowEnabled: true,
     cardOverlayEnabled: false,
+
     // headerTransitionPreset: 'uikit',
   }
 );
