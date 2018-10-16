@@ -565,6 +565,17 @@
     pouchdb-collections "^1.0.1"
     tiny-queue "^0.2.1"
 
+"@react-navigation/core@3.0.0-alpha.7":
+  version "3.0.0-alpha.7"
+  resolved "https://registry.yarnpkg.com/@react-navigation/core/-/core-3.0.0-alpha.7.tgz#10116867febd74a371a7cc393c3dd6071e25ceae"
+  integrity sha512-aUbUAUgNpOppxj59E++S39gBiRCLlttzmwxeZoIJJ57q3IQ2vXNjXiAl66xJeRTIGT5GsEn0nOJO4YeSd5FOfQ==
+  dependencies:
+    create-react-context "^0.2.3"
+    hoist-non-react-statics "^3.0.1"
+    path-to-regexp "^1.7.0"
+    query-string "^6.2.0"
+    react-lifecycles-compat "^3.0.4"
+
 "@react-navigation/core@^3.0.0-alpha.4":
   version "3.0.0-alpha.4"
   resolved "https://registry.yarnpkg.com/@react-navigation/core/-/core-3.0.0-alpha.4.tgz#0167a8352e867ebd09e444aac42b315f569fb81d"
@@ -5524,6 +5535,13 @@ path-to-regexp@0.1.7:
   version "0.1.7"
   resolved "https://registry.yarnpkg.com/path-to-regexp/-/path-to-regexp-0.1.7.tgz#df604178005f522f15eb4490e7247a1bfaa67f8c"
   integrity sha1-32BBeABfUi8V60SQ5yR6G/qmf4w=
+
+path-to-regexp@^1.7.0:
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/path-to-regexp/-/path-to-regexp-1.7.0.tgz#59fde0f435badacba103a84e9d3bc64e96b9937d"
+  integrity sha1-Wf3g9DW62suhA6hOnTvGTpa5k30=
+  dependencies:
+    isarray "0.0.1"
 
 path-to-regexp@^2.4.0:
   version "2.4.0"

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { FlatList } from 'react-native';
-import { createSwitchNavigator } from '@react-navigation/core';
 import { createAppContainer } from '@react-navigation/native';
 import { createStackNavigator } from 'react-navigation-stack';
 import { List, Divider } from 'react-native-paper';
@@ -45,18 +44,27 @@ class Home extends React.Component {
   }
 }
 
-const MainNavigator = createSwitchNavigator({
-  Home: createStackNavigator({ Home }),
-  ...data.reduce((acc, it) => {
-    acc[it.routeName] = {
-      screen: it.component,
-      navigationOptions: {
-        title: it.title,
-      },
-    };
+const MainNavigator = createStackNavigator(
+  {
+    Home: createStackNavigator({ Home }),
+    ...data.reduce((acc, it) => {
+      acc[it.routeName] = {
+        screen: it.component,
+        navigationOptions: {
+          title: it.title,
+        },
+      };
 
-    return acc;
-  }, {}),
-});
+      return acc;
+    }, {}),
+  },
+  {
+    headerMode: 'none',
+    mode: 'modal',
+    defaultNavigationOptions: {
+      gesturesEnabled: false,
+    },
+  }
+);
 
 export default createAppContainer(MainNavigator);

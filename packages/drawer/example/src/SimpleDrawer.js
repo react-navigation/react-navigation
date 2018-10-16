@@ -43,9 +43,15 @@ const MyNavScreen = ({ navigation, banner }) => (
         onPress={() => navigation.navigate('Email')}
         title="Open other screen"
       />
-      <Button onPress={() => navigation.goBack(null)} title="Go back" />
+      <Button onPress={() => navigation.goBack()} title="Go back" />
       <Button
-        onPress={() => navigation.navigate('Home')}
+        onPress={() => {
+          if (navigation.goBack(null)) {
+            // cool
+          } else {
+            alert('goBack(null) not handled');
+          }
+        }}
         title="Go back to list"
       />
     </SafeAreaView>
