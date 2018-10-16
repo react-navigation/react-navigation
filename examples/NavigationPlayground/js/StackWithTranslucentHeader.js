@@ -234,14 +234,12 @@ const StackWithTranslucentHeader = createStackNavigator(
   },
   {
     headerTransitionPreset: 'uikit',
-
     // You can leave this out if you don't want the card shadow to
     // be visible through the header
     transitionConfig: () => ({
       headerBackgroundInterpolator:
         HeaderStyleInterpolator.forBackgroundWithTranslation,
     }),
-
     defaultNavigationOptions: {
       headerTransparent: true,
       headerStyle: {

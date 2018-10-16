@@ -11,11 +11,14 @@ import {
   Platform,
   ScrollView,
   StyleSheet,
-  TouchableOpacity,
   Text,
   StatusBar,
   View,
 } from 'react-native';
+import {
+  RectButton,
+  NativeViewGestureHandler,
+} from 'react-native-gesture-handler';
 import { SafeAreaView, createStackNavigator } from 'react-navigation';
 import { createAppContainer } from '@react-navigation/native';
 import { Assets as StackAssets } from 'react-navigation-stack';
@@ -237,84 +240,91 @@ class MainScreen extends React.Component<any, State> {
 
     return (
       <View style={{ flex: 1 }}>
-        <Animated.ScrollView
-          style={{ flex: 1 }}
-          scrollEventThrottle={1}
-          onScroll={Animated.event(
-            [
-              {
-                nativeEvent: { contentOffset: { y: this.state.scrollY } },
-              },
-            ],
-            { useNativeDriver: true }
-          )}
-        >
-          <Animated.View
-            style={[
-              styles.backgroundUnderlay,
-              {
-                transform: [
-                  { scale: backgroundScale },
-                  { translateY: backgroundTranslateY },
-                ],
-              },
-            ]}
-          />
-          <Animated.View
-            style={{ opacity, transform: [{ scale }, { translateY }] }}
+        <NativeViewGestureHandler>
+          <Animated.ScrollView
+            style={{ flex: 1 }}
+            scrollEventThrottle={1}
+            onScroll={Animated.event(
+              [
+                {
+                  nativeEvent: { contentOffset: { y: this.state.scrollY } },
+                },
+              ],
+              { useNativeDriver: true }
+            )}
           >
-            <SafeAreaView
-              style={styles.bannerContainer}
-              forceInset={{ top: 'always', bottom: 'never' }}
+            <Animated.View
+              style={[
+                styles.backgroundUnderlay,
+                {
+                  transform: [
+                    { scale: backgroundScale },
+                    { translateY: backgroundTranslateY },
+                  ],
+                },
+              ]}
+            />
+            <Animated.View
+              style={{ opacity, transform: [{ scale }, { translateY }] }}
             >
-              <View style={styles.banner}>
-                <Image
-                  source={require('./assets/NavLogo.png')}
-                  style={styles.bannerImage}
-                />
-                <Text style={styles.bannerTitle}>
-                  React Navigation Examples
-                </Text>
+              <SafeAreaView
+                style={styles.bannerContainer}
+                forceInset={{ top: 'always', bottom: 'never' }}
+              >
+                <View style={styles.banner}>
+                  <Image
+                    source={require('./assets/NavLogo.png')}
+                    style={styles.bannerImage}
+                  />
+                  <Text style={styles.bannerTitle}>
+                    React Navigation Examples
+                  </Text>
+                </View>
+              </SafeAreaView>
+            </Animated.View>
+
+            <SafeAreaView
+              forceInset={{ bottom: 'always', horizontal: 'never' }}
+            >
+              <View style={{ backgroundColor: '#fff' }}>
+                {Object.keys(ExampleRoutes).map((routeName: string) => (
+                  <RectButton
+                    key={routeName}
+                    underlayColor="#ccc"
+                    activeOpacity={0.3}
+                    onPress={() => {
+                      let route = ExampleRoutes[routeName];
+                      if (route.screen || route.path || route.params) {
+                        const { path, params, screen } = route;
+                        const { router } = screen;
+                        const action =
+                          path &&
+                          router.getActionForPathAndParams(path, params);
+                        navigation.navigate(routeName, {}, action);
+                      } else {
+                        navigation.navigate(routeName);
+                      }
+                    }}
+                  >
+                    <SafeAreaView
+                      style={styles.itemContainer}
+                      forceInset={{ veritcal: 'never', bottom: 'never' }}
+                    >
+                      <View style={styles.item}>
+                        <Text style={styles.title}>
+                          {ExampleInfo[routeName].name}
+                        </Text>
+                        <Text style={styles.description}>
+                          {ExampleInfo[routeName].description}
+                        </Text>
+                      </View>
+                    </SafeAreaView>
+                  </RectButton>
+                ))}
               </View>
             </SafeAreaView>
-          </Animated.View>
-
-          <SafeAreaView forceInset={{ bottom: 'always', horizontal: 'never' }}>
-            <View style={{ backgroundColor: '#fff' }}>
-              {Object.keys(ExampleRoutes).map((routeName: string) => (
-                <TouchableOpacity
-                  key={routeName}
-                  onPress={() => {
-                    let route = ExampleRoutes[routeName];
-                    if (route.screen || route.path || route.params) {
-                      const { path, params, screen } = route;
-                      const { router } = screen;
-                      const action =
-                        path && router.getActionForPathAndParams(path, params);
-                      navigation.navigate(routeName, {}, action);
-                    } else {
-                      navigation.navigate(routeName);
-                    }
-                  }}
-                >
-                  <SafeAreaView
-                    style={styles.itemContainer}
-                    forceInset={{ veritcal: 'never', bottom: 'never' }}
-                  >
-                    <View style={styles.item}>
-                      <Text style={styles.title}>
-                        {ExampleInfo[routeName].name}
-                      </Text>
-                      <Text style={styles.description}>
-                        {ExampleInfo[routeName].description}
-                      </Text>
-                    </View>
-                  </SafeAreaView>
-                </TouchableOpacity>
-              ))}
-            </View>
-          </SafeAreaView>
-        </Animated.ScrollView>
+          </Animated.ScrollView>
+        </NativeViewGestureHandler>
         <StatusBar barStyle="light-content" />
         <Animated.View
           style={[styles.statusBarUnderlay, { opacity: underlayOpacity }]}
@@ -357,7 +367,6 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   itemContainer: {
-    backgroundColor: '#fff',
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: '#ddd',
   },
