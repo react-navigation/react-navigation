@@ -37,7 +37,7 @@
     "@react-navigation/core": "3.0.0-alpha.6",
     "@react-navigation/native": "^3.0.0-alpha.5",
     "react-navigation-drawer": "1.0.0-alpha.5",
-    "react-navigation-stack": "1.0.0-alpha.19",
+    "react-navigation-stack": "1.0.0-alpha.21",
     "react-navigation-tabs": "1.0.0-alpha.3"
   },
   "devDependencies": {

@@ -6723,10 +6723,10 @@ react-navigation-drawer@1.0.0-alpha.5:
   resolved "https://registry.yarnpkg.com/react-navigation-drawer/-/react-navigation-drawer-1.0.0-alpha.5.tgz#1ef75b5e9c7ae9c3011427a493bcc2714ea2c072"
   integrity sha512-AD1AyqGpUb4coUw3KpJ7i/2RfTiE5RJfTDHVeBkpqc2wsXJ4PaWYGoxfvfWP910hJy8txYTnWWUinWmiD7aBgA==
 
-react-navigation-stack@1.0.0-alpha.19:
-  version "1.0.0-alpha.19"
-  resolved "https://registry.yarnpkg.com/react-navigation-stack/-/react-navigation-stack-1.0.0-alpha.19.tgz#e22a8bf5de7928b2b6e346b2819bfac2652b8f80"
-  integrity sha512-F0qPLIOepbuJkS+w6v1jXcYXUOxJDYRwFn7smPJMIMnAblvpbata8MO4gZimxCgqSiN4FfATybq19G7WL/v0Ng==
+react-navigation-stack@1.0.0-alpha.21:
+  version "1.0.0-alpha.21"
+  resolved "https://registry.yarnpkg.com/react-navigation-stack/-/react-navigation-stack-1.0.0-alpha.21.tgz#d3680d0db241a9d74fc57368d525d0b67c51188a"
+  integrity sha512-tuFBuA/sB06Fp4MO9kQfTBPWvKBuHDcXi7lz18kUYMzQIELQ+tfvYbDb9awMcM8u9SEFRM4Fo+/iVfpR/gBtFg==
 
 react-navigation-tabs@1.0.0-alpha.3:
   version "1.0.0-alpha.3"
