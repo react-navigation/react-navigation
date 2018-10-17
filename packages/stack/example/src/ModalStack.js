@@ -22,6 +22,11 @@ class ListScreen extends React.Component {
 }
 
 class DetailsScreen extends React.Component {
+  static navigationOptions = {
+    // Uncomment below to test inverted modal gesture
+    // gestureDirection: 'inverted',
+  };
+
   render() {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
