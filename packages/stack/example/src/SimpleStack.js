@@ -3,7 +3,7 @@ import { Dimensions, Button, View, Text } from 'react-native';
 import { withNavigation } from '@react-navigation/core';
 import { createStackNavigator } from 'react-navigation-stack';
 
-const Buttons = withNavigation((props) => (
+const Buttons = withNavigation(props => (
   <React.Fragment>
     <Button
       title="Go to Details"
@@ -49,7 +49,7 @@ class DetailsScreen extends React.Component {
     title: 'Details',
     gestureResponseDistance: {
       horizontal: Dimensions.get('window').width,
-    }
+    },
   };
 
   render() {

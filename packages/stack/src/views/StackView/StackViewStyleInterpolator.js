@@ -124,8 +124,6 @@ function forFadeFromBottomAndroid(props) {
 
   const { first, last } = interpolate;
   const index = scene.index;
-  const inputRange = [first, index, last];
-
   const opacity = position.interpolate({
     inputRange: [first, first + 0.5, first + 0.9, index, last],
     outputRange: [0, 0.25, 0.7, 1, 0],
@@ -161,7 +159,7 @@ function forFadeToBottomAndroid(props) {
   const inputRange = [first, index, last];
 
   const opacity = position.interpolate({
-    inputRange: [first, index, last],
+    inputRange,
     outputRange: [0, 1, 0],
     extrapolate: 'clamp',
   });
@@ -170,7 +168,7 @@ function forFadeToBottomAndroid(props) {
   const maxTranslation = height * 0.08;
 
   const translateY = position.interpolate({
-    inputRange: [first, index, last],
+    inputRange,
     outputRange: [maxTranslation, 0, 0],
     extrapolate: 'clamp',
   });

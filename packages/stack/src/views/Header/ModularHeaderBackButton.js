@@ -95,15 +95,7 @@ class ModularHeaderBackButton extends React.PureComponent {
   }
 
   render() {
-    const {
-      onPress,
-      width,
-      title,
-      titleStyle,
-      tintColor,
-      truncatedTitle,
-    } = this.props;
-
+    const { onPress, title } = this.props;
     const { ButtonContainerComponent } = this.props;
 
     return (
