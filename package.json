@@ -36,9 +36,9 @@
   "dependencies": {
     "@react-navigation/core": "3.0.0-alpha.6",
     "@react-navigation/native": "^3.0.0-alpha.5",
-    "react-navigation-drawer": "1.0.0-alpha.4",
-    "react-navigation-stack": "1.0.0-alpha.18",
-    "react-navigation-tabs": "1.0.0-alpha.2"
+    "react-navigation-drawer": "1.0.0-alpha.5",
+    "react-navigation-stack": "1.0.0-alpha.19",
+    "react-navigation-tabs": "1.0.0-alpha.3"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",

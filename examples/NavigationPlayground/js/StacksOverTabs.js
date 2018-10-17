@@ -17,7 +17,7 @@ import { Button } from './commonComponents/ButtonWithMargin';
 
 const MyNavScreen = ({ navigation, banner }) => (
   <ScrollView>
-    <SafeAreaView forceInset={{ horizontal: 'always' }}>
+    <SafeAreaView forceInset={{ horizontal: 'always', vertical: 'never' }}>
       <SampleText>{banner}</SampleText>
       <Button
         onPress={() => navigation.navigate('Profile', { name: 'Jordan' })}
