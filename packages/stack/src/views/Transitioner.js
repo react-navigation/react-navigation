@@ -1,6 +1,7 @@
 import React from 'react';
 import { Animated, Easing, StyleSheet, View } from 'react-native';
 import invariant from '../utils/invariant';
+import shallowEqual from '../utils/shallowEqual';
 
 import NavigationScenesReducer from './ScenesReducer';
 
@@ -83,6 +84,15 @@ class Transitioner extends React.Component {
     }
 
     if (nextScenes === this.state.scenes) {
+      return;
+    }
+
+    if (
+      isRouteShallowEqual(
+        this.props.navigation.state,
+        nextProps.navigation.state
+      )
+    ) {
       return;
     }
 
@@ -277,6 +287,14 @@ function filterStale(scenes) {
 
 function isSceneActive(scene) {
   return scene.isActive;
+}
+
+function isRouteShallowEqual(a, b) {
+  let routeA = { ...a };
+  delete routeA.routes;
+  let routeB = { ...b };
+  delete routeB.routes;
+  return shallowEqual(routeA, routeB);
 }
 
 const styles = StyleSheet.create({
