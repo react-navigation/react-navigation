@@ -4,4 +4,4 @@
 
 ## Docs
 
-Documentation can be found on the [React Navigation website](https://reactnavigation.org/docs/).
+Documentation can be found on the [React Navigation website](https://reactnavigation.org/docs/en/getting-started.html).
