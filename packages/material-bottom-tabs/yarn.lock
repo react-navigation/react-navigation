@@ -590,17 +590,18 @@
     lodash "^4.17.4"
     react-native-vector-icons "4.5.0"
 
-"@react-navigation/core@^3.0.0-alpha.4":
-  version "3.0.0-alpha.4"
-  resolved "https://registry.yarnpkg.com/@react-navigation/core/-/core-3.0.0-alpha.4.tgz#0167a8352e867ebd09e444aac42b315f569fb81d"
-  integrity sha512-kj9PzNadCjPYU1NGzNrg6eb3KDTNECUzWL38Ef7yHwhNG6U62AbedLD8VtuSZHGAEFXnI68hhnuoIe+9f6aJ8w==
+"@react-navigation/core@^3.0.0-alpha", "@react-navigation/core@^3.0.0-alpha.4":
+  version "3.0.0-alpha.7"
+  resolved "https://registry.yarnpkg.com/@react-navigation/core/-/core-3.0.0-alpha.7.tgz#10116867febd74a371a7cc393c3dd6071e25ceae"
+  integrity sha512-aUbUAUgNpOppxj59E++S39gBiRCLlttzmwxeZoIJJ57q3IQ2vXNjXiAl66xJeRTIGT5GsEn0nOJO4YeSd5FOfQ==
   dependencies:
     create-react-context "^0.2.3"
     hoist-non-react-statics "^3.0.1"
-    path-to-regexp "^2.4.0"
+    path-to-regexp "^1.7.0"
     query-string "^6.2.0"
+    react-lifecycles-compat "^3.0.4"
 
-"@react-navigation/native@^3.0.0-alpha.5":
+"@react-navigation/native@^3.0.0-alpha":
   version "3.0.0-alpha.5"
   resolved "https://registry.yarnpkg.com/@react-navigation/native/-/native-3.0.0-alpha.5.tgz#479e8ab87a6305182a77c877eda30065a785eb21"
   integrity sha512-UwQ2k63wZocCGVd+GqmzKhzvG4FpP8Riu5L+PdIsZOz2E0q4tqj0X/GulWkV0W5chB/oWsyXBi4+JmL92PFloQ==
@@ -613,9 +614,9 @@
     react-native-screens "^1.0.0-alpha.14"
 
 "@types/node@*":
-  version "10.11.7"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.11.7.tgz#0e75ca9357d646ca754016ca1d68a127ad7e7300"
-  integrity sha512-yOxFfkN9xUFLyvWaeYj90mlqTJ41CsQzWKS3gXdOMOyPVacUsymejKxJ4/pMW7exouubuEeZLJawGgcNGYlTeg==
+  version "10.12.0"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.12.0.tgz#ea6dcbddbc5b584c83f06c60e82736d8fbb0c235"
+  integrity sha512-3TUHC3jsBAB7qVRGxT6lWyYo2v96BMmD2PTcl47H25Lu7UXtFH/2qqmKiVrnel6Ne//0TFYf6uvNX+HW2FRkLQ==
 
 abab@^1.0.3:
   version "1.0.4"
@@ -2771,9 +2772,9 @@ eslint-plugin-import@^2.12.0:
     resolve "^1.6.0"
 
 eslint-plugin-jest@^21.15.2:
-  version "21.25.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-jest/-/eslint-plugin-jest-21.25.0.tgz#b798c6616a2ad444ea25636d877ca3d3bc881348"
-  integrity sha512-x1B7986tOhSR6TDmW7oA7zf8bpturx5NXhv4ZY0U6HLh2BLk3Z5rRsfZxrcWT8Caq30k/NHji2K3IPC1pPa/QQ==
+  version "21.25.1"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-jest/-/eslint-plugin-jest-21.25.1.tgz#166c6b9d33bd7bc5b8ece62cff878ba207600bb6"
+  integrity sha512-mmphmAD/WihjFGq1IUHLSZWQPcd8U9w/SeFCHf3p0V3Q3MBxmj1ZKnh41hID44guIACLuwos/LhVWIr4phN4yg==
 
 eslint-plugin-json@^1.2.0:
   version "1.2.1"
@@ -5667,11 +5668,6 @@ path-to-regexp@^1.7.0:
   dependencies:
     isarray "0.0.1"
 
-path-to-regexp@^2.4.0:
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/path-to-regexp/-/path-to-regexp-2.4.0.tgz#35ce7f333d5616f1c1e1bfe266c3aba2e5b2e704"
-  integrity sha512-G6zHoVqC6GGTQkZwF4lkuEyMbVOjoBKAEybQUypI1WTkqinCOrq2x6U2+phkJ1XsEMTy4LjtwPI7HW+NVrRR2w==
-
 path-type@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/path-type/-/path-type-1.1.0.tgz#59c44f7ee491da704da415da5a4070ba4f8fe441"
@@ -6162,12 +6158,10 @@ react-navigation-tabs@0.8.4:
     react-native-tab-view "^1.0.0"
 
 react-navigation-tabs@^1.0.0-alpha:
-  version "1.0.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/react-navigation-tabs/-/react-navigation-tabs-1.0.0-alpha.2.tgz#f4dbc7223a66430942ba097e8e0586b24d430374"
-  integrity sha512-kcEWBuCAUkkPuqKD18/ixG5nzRUhjDan2YhsuWhC77FfqAUlDWnTYiQ7itf/la8RN6V42boKU8eUJCm1siKPLg==
+  version "1.0.0-alpha.3"
+  resolved "https://registry.yarnpkg.com/react-navigation-tabs/-/react-navigation-tabs-1.0.0-alpha.3.tgz#dae59e0a448cfa8e194fe3776b1659e117f3a39b"
+  integrity sha512-V1iMy4QFhiWuBaaUMgWOuuBe0xl+/LXwiSwl4ejRDGRiPP7JLiqxFfgIo77X0Ce9YN2FOqq4A8GB7d4ssJtQIw==
   dependencies:
-    "@react-navigation/core" "^3.0.0-alpha.4"
-    "@react-navigation/native" "^3.0.0-alpha.5"
     hoist-non-react-statics "^2.5.0"
     prop-types "^15.6.1"
     react-lifecycles-compat "^3.0.4"
