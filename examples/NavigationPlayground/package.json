@@ -11,7 +11,6 @@
     "postinstall": "rm -rf node_modules/react-native-screens && rm -rf node_modules/react-native-gesture-handler"
   },
   "dependencies": {
-    "@react-navigation/core": "3.0.0-alpha.6",
     "expo": "^30.0.0",
     "invariant": "^2.2.4",
     "react": "16.3.1",
