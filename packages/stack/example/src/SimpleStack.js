@@ -1,6 +1,25 @@
 import React from 'react';
 import { Button, View, Text } from 'react-native';
+import { withNavigation } from '@react-navigation/core';
 import { createStackNavigator } from 'react-navigation-stack';
+
+const Buttons = withNavigation((props) => (
+  <React.Fragment>
+    <Button
+      title="Go to Details"
+      onPress={() => props.navigation.navigate('Details')}
+    />
+    <Button
+      title="Go to Headerless"
+      onPress={() => props.navigation.navigate('Headerless')}
+    />
+    <Button title="Go back" onPress={() => props.navigation.goBack()} />
+    <Button
+      title="Go back to all examples"
+      onPress={() => props.navigation.navigate('Home')}
+    />
+  </React.Fragment>
+));
 
 class ListScreen extends React.Component {
   static navigationOptions = {
@@ -19,14 +38,7 @@ class ListScreen extends React.Component {
       >
         <Text>List Screen</Text>
         <Text>A list may go here</Text>
-        <Button
-          title="Go to Details"
-          onPress={() => this.props.navigation.navigate('Details')}
-        />
-        <Button
-          title="Go back to all examples"
-          onPress={() => this.props.navigation.navigate('Home')}
-        />
+        <Buttons />
       </View>
     );
   }
@@ -48,22 +60,29 @@ class DetailsScreen extends React.Component {
         }}
       >
         <Text>Details Screen</Text>
-        <Button
-          title="Go to Details... again"
-          onPress={() => this.props.navigation.push('Details')}
-        />
-        <Button
-          title="Go to List"
-          onPress={() => this.props.navigation.navigate('List')}
-        />
-        <Button
-          title="Go back"
-          onPress={() => this.props.navigation.goBack()}
-        />
-        <Button
-          title="Go back to all examples"
-          onPress={() => this.props.navigation.navigate('Home')}
-        />
+        <Buttons />
+      </View>
+    );
+  }
+}
+
+class HeaderlessScreen extends React.Component {
+  static navigationOptions = {
+    header: null,
+  };
+
+  render() {
+    return (
+      <View
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: '#fff',
+        }}
+      >
+        <Text>Headerless Screen</Text>
+        <Buttons />
       </View>
     );
   }
@@ -73,6 +92,7 @@ export default createStackNavigator(
   {
     List: ListScreen,
     Details: DetailsScreen,
+    Headerless: HeaderlessScreen,
   },
   {
     initialRouteName: 'List',

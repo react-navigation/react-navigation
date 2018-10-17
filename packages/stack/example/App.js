@@ -1,7 +1,7 @@
 import React from 'react';
 import Expo from 'expo';
 import { FlatList, I18nManager } from 'react-native';
-import { createSwitchNavigator } from 'react-navigation';
+import { createAppContainer } from '@react-navigation/native';
 import {
   Assets as StackAssets,
   createStackNavigator,
@@ -74,18 +74,28 @@ class Home extends React.Component {
   }
 }
 
-const App = createSwitchNavigator({
-  Home: createStackNavigator({ Home }),
-  ...data.reduce((acc, it) => {
-    acc[it.routeName] = {
-      screen: it.component,
-      navigationOptions: {
-        title: it.title,
-      },
-    };
+const Root = createStackNavigator(
+  {
+    Home: createStackNavigator({ Home }),
+    ...data.reduce((acc, it) => {
+      acc[it.routeName] = {
+        screen: it.component,
+        navigationOptions: {
+          title: it.title,
+        },
+      };
 
-    return acc;
-  }, {}),
-});
+      return acc;
+    }, {}),
+  },
+  {
+    mode: 'modal',
+    headerMode: 'none',
+    defaultNavigationOptions: {
+      gesturesEnabled: false,
+    },
+  }
+);
 
+const App = createAppContainer(Root);
 Expo.registerRootComponent(App);

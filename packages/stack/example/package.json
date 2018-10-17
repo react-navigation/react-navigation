@@ -9,8 +9,8 @@
     "postinstall": "rm -rf node_modules/expo-react-native-adapter/node_modules/react && rm -rf node_modules/expo-gl/node_modules/react"
   },
   "dependencies": {
-    "@react-navigation/core": "^3.0.0-alpha.4",
-    "@react-navigation/native": "^3.0.0-alpha.5",
+    "@react-navigation/core": "^3.0.0-alpha",
+    "@react-navigation/native": "^3.0.0-alpha",
     "expo": "~30.0.0",
     "hoist-non-react-statics": "^2.5.0",
     "prop-types": "^15.6.0",

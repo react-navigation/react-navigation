@@ -6,7 +6,7 @@ const blacklist = require('metro/src/blacklist');
 const pak = require('../package.json');
 const pak2 = require('./package.json');
 
-const dependencies = Object.keys(pak.dependencies);
+const dependencies = Object.keys(pak.dependencies || {});
 const localDependencies = Object.keys(pak2.dependencies);
 const peerDependencies = Object.keys(pak.peerDependencies);
 
