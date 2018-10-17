@@ -1,4 +1,4 @@
-import getChildEventSubscriber from './getChildEventSubscriber.ts';
+import getChildEventSubscriber from './getChildEventSubscriber';
 import getChildRouter from './getChildRouter';
 import getNavigationActionCreators from './routers/getNavigationActionCreators';
 

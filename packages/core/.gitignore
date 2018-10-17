@@ -51,7 +51,3 @@ android/keystores/debug.keystore
 
 # Build
 dist/
-
-# TypeScript-generated files
-*.d.ts
-!src/react-navigation.d.ts

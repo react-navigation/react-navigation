@@ -1,4 +1,4 @@
-import getChildEventSubscriber from '../getChildEventSubscriber.ts';
+import getChildEventSubscriber from '../getChildEventSubscriber';
 
 test('child action events only flow when focused', () => {
   const parentSubscriber = jest.fn();
