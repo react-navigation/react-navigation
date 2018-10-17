@@ -19,8 +19,11 @@ import {
   RectButton,
   NativeViewGestureHandler,
 } from 'react-native-gesture-handler';
-import { SafeAreaView, createStackNavigator } from 'react-navigation';
-import { createAppContainer } from '@react-navigation/native';
+import {
+  createAppContainer,
+  SafeAreaView,
+  createStackNavigator,
+} from 'react-navigation';
 import { Assets as StackAssets } from 'react-navigation-stack';
 
 import CustomTabs from './CustomTabs';
@@ -347,9 +350,9 @@ const AppNavigator = createAppContainer(
       headerMode: 'none',
 
       /*
-   * Use modal on iOS because the card mode comes from the right,
-   * which conflicts with the drawer example gesture
-   */
+     * Use modal on iOS because the card mode comes from the right,
+     * which conflicts with the drawer example gesture
+     */
       mode: Platform.OS === 'ios' ? 'modal' : 'card',
     }
   )
