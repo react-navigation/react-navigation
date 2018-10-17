@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, View, Text } from 'react-native';
+import { Dimensions, Button, View, Text } from 'react-native';
 import { withNavigation } from '@react-navigation/core';
 import { createStackNavigator } from 'react-navigation-stack';
 
@@ -47,6 +47,9 @@ class ListScreen extends React.Component {
 class DetailsScreen extends React.Component {
   static navigationOptions = {
     title: 'Details',
+    gestureResponseDistance: {
+      horizontal: Dimensions.get('window').width,
+    }
   };
 
   render() {

@@ -303,8 +303,24 @@ class StackViewLayout extends React.Component {
     );
   }
 
+  _getGestureResponseDistance = () => {
+    const { scene } = this.props.transitionProps;
+    const { options } = scene.descriptor;
+    const {
+      gestureResponseDistance: userGestureResponseDistance = {},
+    } = options;
+
+    // Doesn't make sense for a response distance of 0, so this works fine
+    return this._isModal()
+      ? userGestureResponseDistance.vertical ||
+          GESTURE_RESPONSE_DISTANCE_VERTICAL
+      : userGestureResponseDistance.horizontal ||
+          GESTURE_RESPONSE_DISTANCE_HORIZONTAL;
+  };
+
   _gestureActivationCriteria = () => {
     let { layout } = this.props.transitionProps;
+    let gestureResponseDistance = this._getGestureResponseDistance();
 
     if (this._isMotionVertical()) {
       let height = layout.height.__getValue();
@@ -312,11 +328,11 @@ class StackViewLayout extends React.Component {
       return {
         maxDeltaX: 15,
         minOffsetY: 5,
-        hitSlop: { bottom: -height + GESTURE_RESPONSE_DISTANCE_VERTICAL },
+        hitSlop: { bottom: -height + gestureResponseDistance },
       };
     } else {
       let width = layout.width.__getValue();
-      let hitSlop = -width + GESTURE_RESPONSE_DISTANCE_HORIZONTAL;
+      let hitSlop = -width + gestureResponseDistance;
 
       return {
         minOffsetX: this._isMotionInverted() ? -5 : 5,
@@ -339,6 +355,10 @@ class StackViewLayout extends React.Component {
   };
 
   _isMotionVertical = () => {
+    return this._isModal();
+  };
+
+  _isModal = () => {
     return this.props.mode === 'modal';
   };
 
@@ -676,8 +696,6 @@ class StackViewLayout extends React.Component {
   }
 
   _getTransitionConfig = () => {
-    const isModal = this.props.mode === 'modal';
-
     return TransitionConfigs.getTransitionConfig(
       this.props.transitionConfig,
       {
@@ -685,7 +703,7 @@ class StackViewLayout extends React.Component {
         position: this._getPosition(),
       },
       this.props.lastTransitionProps,
-      isModal
+      this._isModal()
     );
   };
 
