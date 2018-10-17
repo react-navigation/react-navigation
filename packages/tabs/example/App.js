@@ -2,6 +2,7 @@ import * as React from 'react';
 import Expo from 'expo';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { createStackNavigator } from 'react-navigation';
+import { createAppContainer } from '@react-navigation/native';
 import BottomTabs from './src/BottomTabs';
 import MaterialTopTabs from './src/MaterialTopTabs';
 
@@ -26,7 +27,7 @@ class Home extends React.Component {
   }
 }
 
-const App = createStackNavigator({
+const List = createStackNavigator({
   Home: {
     screen: Home,
     navigationOptions: { title: 'Examples' },
@@ -40,6 +41,8 @@ const App = createStackNavigator({
     navigationOptions: { title: 'Material top tabs' },
   },
 });
+
+const App = createAppContainer(List);
 
 const styles = {
   item: {
