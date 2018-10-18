@@ -530,11 +530,11 @@ declare module 'react-navigation' {
     getParam: <ParamName>(
       paramName: ParamName,
       fallback?: $ElementType<$PropertyType<{|
-        ...{| params: {| [ParamName]: any |} |},
+        ...{| params: {| [ParamName]: void |} |},
         ...$Exact<S>,
       |}, 'params'>, ParamName>,
     ) => $ElementType<$PropertyType<{|
-      ...{| params: {| [ParamName]: any |} |},
+      ...{| params: {| [ParamName]: void |} |},
       ...$Exact<S>,
     |}, 'params'>, ParamName>,
     dangerouslyGetParent: () => NavigationScreenProp<*>,
