@@ -533,7 +533,16 @@ declare module 'react-navigation' {
       eventName: string,
       callback: NavigationEventCallback
     ) => NavigationEventSubscription,
-    getParam: (paramName: string, fallback?: any) => any,
+    getParam: <ParamName>(
+      paramName: ParamName,
+      fallback?: $ElementType<$PropertyType<{|
+        ...{| params: {| [ParamName]: void |} |},
+        ...$Exact<S>,
+      |}, 'params'>, ParamName>,
+    ) => $ElementType<$PropertyType<{|
+      ...{| params: {| [ParamName]: void |} |},
+      ...$Exact<S>,
+    |}, 'params'>, ParamName>,
     dangerouslyGetParent: () => NavigationScreenProp<*>,
     isFocused: () => boolean,
     // Shared action creators that exist for all routers
