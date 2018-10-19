@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+- Update `getParam` flow typings to check `key` and `fallback` arguments, as well as return the correct type automatically.
+
 ## [2.17.0] - [2018-09-25](https://github.com/react-navigation/react-navigation/releases/tag/2.17.0)
 
 ### Changed
