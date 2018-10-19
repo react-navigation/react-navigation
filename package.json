@@ -1,6 +1,6 @@
 {
   "name": "react-navigation",
-  "version": "2.17.0",
+  "version": "3.0.0-alpha.7",
   "description": "Routing and navigation for your React Native apps",
   "main": "src/react-navigation.js",
   "repository": {
@@ -19,7 +19,11 @@
     "test-update-snapshot": "jest --updateSnapshot",
     "lint": "eslint .",
     "format": "eslint --fix .",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "release": "release-it"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
   },
   "files": [
     "src",
@@ -30,18 +34,11 @@
     "react-native": "*"
   },
   "dependencies": {
-    "clamp": "^1.0.1",
-    "create-react-context": "0.2.2",
-    "hoist-non-react-statics": "^2.2.0",
-    "path-to-regexp": "^1.7.0",
-    "query-string": "^6.1.0",
-    "react-lifecycles-compat": "^3",
-    "react-native-safe-area-view": "0.11.0",
-    "react-native-screens": "^1.0.0-alpha.11",
-    "react-navigation-deprecated-tab-navigator": "1.3.0",
-    "react-navigation-drawer": "0.5.0",
-    "react-navigation-stack": "0.7.0",
-    "react-navigation-tabs": "0.8.2"
+    "@react-navigation/core": "3.0.0-alpha.6",
+    "@react-navigation/native": "^3.0.0-alpha.5",
+    "react-navigation-drawer": "1.0.0-alpha.5",
+    "react-navigation-stack": "1.0.0-alpha.22",
+    "react-navigation-tabs": "1.0.0-alpha.3"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
@@ -50,6 +47,7 @@
     "babel-jest": "^22.4.1",
     "babel-preset-react-native": "^2.1.0",
     "codecov": "^2.2.0",
+    "conventional-changelog-cli": "^2.0.5",
     "eslint": "^4.2.0",
     "eslint-config-prettier": "^2.9.0",
     "eslint-plugin-import": "^2.7.0",
@@ -65,7 +63,8 @@
     "react": "16.2.0",
     "react-native": "^0.52.0",
     "react-native-vector-icons": "^4.2.0",
-    "react-test-renderer": "^16.0.0"
+    "react-test-renderer": "^16.0.0",
+    "release-it": "^7.6.1"
   },
   "jest": {
     "notify": true,
@@ -92,7 +91,7 @@
       "<rootDir>/examples/"
     ],
     "transformIgnorePatterns": [
-      "node_modules/(?!(jest-)?react-native|react-clone-referenced-element|react-navigation-deprecated-tab-navigator|react-navigation-stack)"
+      "node_modules/(?!(jest-)?react-native|react-clone-referenced-element|react-navigation-deprecated-tab-navigator|react-navigation-stack|@react-navigation/core|@react-navigation/native)"
     ]
   },
   "lint-staged": {

@@ -6,11 +6,7 @@ import {
   StatusBar,
   Text,
 } from 'react-native';
-import {
-  SafeAreaView,
-  createMaterialTopTabNavigator,
-  createNavigationContainer,
-} from 'react-navigation';
+import { SafeAreaView, createMaterialTopTabNavigator } from 'react-navigation';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Button } from './commonComponents/ButtonWithMargin';
 

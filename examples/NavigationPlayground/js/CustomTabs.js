@@ -9,15 +9,11 @@ import {
   StyleSheet,
   StatusBar,
   Text,
-  TouchableOpacity,
   View,
 } from 'react-native';
-import {
-  createNavigator,
-  createNavigationContainer,
-  SafeAreaView,
-  TabRouter,
-} from 'react-navigation';
+import { BorderlessButton } from 'react-native-gesture-handler';
+import { createNavigator, SafeAreaView, TabRouter } from 'react-navigation';
+import { createAppContainer } from '@react-navigation/native';
 import SampleText from './SampleText';
 import { Button } from './commonComponents/ButtonWithMargin';
 
@@ -53,13 +49,13 @@ const CustomTabBar = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.tabContainer}>
       {routes.map(route => (
-        <TouchableOpacity
+        <BorderlessButton
           onPress={() => navigation.navigate(route.routeName)}
           style={styles.tab}
           key={route.routeName}
         >
           <Text>{route.routeName}</Text>
-        </TouchableOpacity>
+        </BorderlessButton>
       ))}
     </SafeAreaView>
   );
@@ -98,7 +94,7 @@ const CustomTabRouter = TabRouter(
   }
 );
 
-const CustomTabs = createNavigationContainer(
+const CustomTabs = createAppContainer(
   createNavigator(CustomTabView, CustomTabRouter, {})
 );
 

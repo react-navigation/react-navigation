@@ -60,7 +60,7 @@ class MyNavScreen extends React.Component<MyNavScreenProps> {
       'missing action creators for StackNavigator'
     );
     return (
-      <SafeAreaView>
+      <SafeAreaView forceInset={{ top: 'never' }}>
         <SampleText>{banner}</SampleText>
         <Button
           onPress={() => push('Profile', { name: 'Jane' })}

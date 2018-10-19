@@ -70,7 +70,7 @@ const ProfileNavigator = createStackNavigator(
     },
   },
   {
-    navigationOptions: {
+    defaultNavigationOptions: {
       headerLeft: null,
     },
     mode: 'modal',
@@ -97,7 +97,7 @@ const ModalStack = createStackNavigator(
     HeaderTest: { screen: MyHeaderTestScreen },
   },
   {
-    navigationOptions: {
+    defaultNavigationOptions: {
       header: null,
     },
     mode: 'modal',

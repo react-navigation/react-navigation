@@ -1,9 +1,10 @@
-import { Button as RNButton, StyleSheet, View, Platform } from 'react-native';
+import { StyleSheet, View, Platform } from 'react-native';
+import BaseButton from './Button';
 import React from 'react';
 
 export const Button = props => (
   <View style={styles.margin}>
-    <RNButton {...props} />
+    <BaseButton {...props} />
   </View>
 );
 

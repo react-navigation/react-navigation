@@ -22,7 +22,7 @@ const MyNavScreen = ({ navigation, banner }) => (
         onPress={() => navigation.navigate('Email')}
         title="Open other screen"
       />
-      <Button onPress={() => navigation.goBack(null)} title="Go back" />
+      <Button onPress={() => navigation.navigate('Index')} title="Go back" />
     </SafeAreaView>
     <StatusBar barStyle="default" />
   </ScrollView>
@@ -46,33 +46,39 @@ DraftsScreen.navigationOptions = {
   headerTitle: 'Drafts',
 };
 
-const InboxStack = createStackNavigator({
-  Inbox: { screen: InboxScreen },
-  Email: { screen: EmailScreen },
-});
+const InboxStack = createStackNavigator(
+  {
+    Inbox: { screen: InboxScreen },
+    Email: { screen: EmailScreen },
+  },
+  {
+    navigationOptions: {
+      drawerLabel: 'Inbox',
+      drawerIcon: ({ tintColor }) => (
+        <MaterialIcons
+          name="move-to-inbox"
+          size={24}
+          style={{ color: tintColor }}
+        />
+      ),
+    },
+  }
+);
 
-InboxStack.navigationOptions = {
-  drawerLabel: 'Inbox',
-  drawerIcon: ({ tintColor }) => (
-    <MaterialIcons
-      name="move-to-inbox"
-      size={24}
-      style={{ color: tintColor }}
-    />
-  ),
-};
-
-const DraftsStack = createStackNavigator({
-  Drafts: { screen: DraftsScreen },
-  Email: { screen: EmailScreen },
-});
-
-DraftsStack.navigationOptions = {
-  drawerLabel: 'Drafts',
-  drawerIcon: ({ tintColor }) => (
-    <MaterialIcons name="drafts" size={24} style={{ color: tintColor }} />
-  ),
-};
+const DraftsStack = createStackNavigator(
+  {
+    Drafts: { screen: DraftsScreen },
+    Email: { screen: EmailScreen },
+  },
+  {
+    navigationOptions: {
+      drawerLabel: 'Drafts',
+      drawerIcon: ({ tintColor }) => (
+        <MaterialIcons name="drafts" size={24} style={{ color: tintColor }} />
+      ),
+    },
+  }
+);
 
 const DrawerExample = createDrawerNavigator(
   {
@@ -85,6 +91,7 @@ const DrawerExample = createDrawerNavigator(
       screen: DraftsStack,
     },
   },
+
   {
     initialRouteName: 'Drafts',
     contentOptions: {

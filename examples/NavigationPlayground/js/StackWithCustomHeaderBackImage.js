@@ -122,7 +122,7 @@ const StackWithCustomHeaderBackImage = createStackNavigator(
     },
   },
   {
-    navigationOptions: {
+    defaultNavigationOptions: {
       headerBackImage: MyCustomHeaderBackImage,
     },
   }
