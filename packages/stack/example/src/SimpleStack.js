@@ -63,10 +63,17 @@ class DetailsScreen extends React.Component {
         }}
       >
         <Text>Details Screen</Text>
+        <Button title="Go back in 2s" onPress={this._goBackInTwoSeconds} />
         <Buttons />
       </View>
     );
   }
+
+  _goBackInTwoSeconds = () => {
+    setTimeout(() => {
+      this.props.navigation.goBack();
+    }, 2000);
+  };
 }
 
 class HeaderlessScreen extends React.Component {

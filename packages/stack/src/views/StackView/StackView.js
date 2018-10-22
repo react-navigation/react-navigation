@@ -1,13 +1,11 @@
 import React from 'react';
-import { NativeModules } from 'react-native';
 
 import { StackActions } from '@react-navigation/core';
 import StackViewLayout from './StackViewLayout';
 import Transitioner from '../Transitioner';
 import TransitionConfigs from './StackViewTransitionConfigs';
 
-const NativeAnimatedModule =
-  NativeModules && NativeModules.NativeAnimatedModule;
+const USE_NATIVE_DRIVER = true;
 
 // NOTE(brentvatne): this was previously in defaultProps, but that is deceiving
 // because the entire object will be clobbered by navigationConfig that is
@@ -67,7 +65,7 @@ class StackView extends React.Component {
         prevTransitionProps,
         this.props.navigationConfig.mode === 'modal'
       ).transitionSpec,
-      useNativeDriver: !!NativeAnimatedModule,
+      useNativeDriver: USE_NATIVE_DRIVER,
     };
   };
 

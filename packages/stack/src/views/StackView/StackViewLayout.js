@@ -90,9 +90,6 @@ class StackViewLayout extends React.Component {
    */
   _gestureStartValue = 0;
 
-  // tracks if a touch is currently happening
-  _isResponding = false;
-
   /**
    * immediateIndex is used to represent the expected index that we will be on after a
    * transition. To achieve a smooth animation when swiping back, the action to go back
@@ -203,7 +200,7 @@ class StackViewLayout extends React.Component {
     const onCompleteAnimation = () => {
       this._immediateIndex = null;
       const backFromScene = scenes.find(s => s.index === toValue + 1);
-      if (!this._isResponding && backFromScene) {
+      if (backFromScene) {
         navigation.dispatch(
           NavigationActions.back({
             key: backFromScene.route.key,
@@ -310,6 +307,14 @@ class StackViewLayout extends React.Component {
     }
   }
 
+  componentDidUpdate(prevProps) {
+    const { state: prevState } = prevProps.transitionProps.navigation;
+    const { state } = this.props.transitionProps.navigation;
+    if (prevState.index !== state.index) {
+      this._maybeCancelGesture();
+    }
+  }
+
   _getGestureResponseDistance = () => {
     const { scene } = this.props.transitionProps;
     const { options } = scene.descriptor;
@@ -392,7 +397,7 @@ class StackViewLayout extends React.Component {
     this.props.transitionProps.position.setValue(Math.max(0, value));
   };
 
-  _computeHorizontalGestureValue = nativeEvent => {
+  _computeHorizontalGestureValue = ({ translationX }) => {
     let {
       transitionProps: { navigation, layout },
     } = this.props;
@@ -402,15 +407,13 @@ class StackViewLayout extends React.Component {
     // TODO: remove this __getValue!
     let distance = layout.width.__getValue();
 
-    let translationX = this._isMotionInverted()
-      ? -1 * nativeEvent.translationX
-      : nativeEvent.translationX;
+    let x = this._isMotionInverted() ? -1 * translationX : translationX;
 
-    let value = index - translationX / distance;
+    let value = index - x / distance;
     return clamp(index - 1, value, index);
   };
 
-  _computeVerticalGestureValue = nativeEvent => {
+  _computeVerticalGestureValue = ({ translationY }) => {
     let {
       transitionProps: { navigation, layout },
     } = this.props;
@@ -420,15 +423,19 @@ class StackViewLayout extends React.Component {
     // TODO: remove this __getValue!
     let distance = layout.height.__getValue();
 
-    let translationY = this._isMotionInverted()
-      ? -1 * nativeEvent.translationY
-      : nativeEvent.translationY;
-    let value = index - translationY / distance;
+    let y = this._isMotionInverted() ? -1 * translationY : translationY;
+    let value = index - y / distance;
     return clamp(index - 1, value, index);
   };
 
   _handlePanGestureStateChange = ({ nativeEvent }) => {
     if (nativeEvent.oldState === State.ACTIVE) {
+      // Gesture was cancelled! For example, some navigation state update
+      // arrived while the gesture was active that cancelled it out
+      if (!this.state.gesturePosition) {
+        return;
+      }
+
       if (this._isMotionVertical()) {
         this._handleReleaseVertical(nativeEvent);
       } else {
@@ -440,6 +447,16 @@ class StackViewLayout extends React.Component {
       } else {
         this._handleActivateGestureHorizontal(nativeEvent);
       }
+    }
+  };
+
+  // note: this will not animated so nicely because the position is unaware
+  // of the gesturePosition, so if we are in the middle of swiping the screen away
+  // and back is programatically fired then we will reset to the initial position
+  // and animate from there
+  _maybeCancelGesture = () => {
+    if (this.state.gesturePosition) {
+      this.setState({ gesturePosition: null });
     }
   };
 
