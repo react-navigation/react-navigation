@@ -103,13 +103,22 @@ class Transitioner extends React.Component {
       scenes: nextScenes,
     };
 
+    // grab the position animated value
     const { position } = nextState;
+
+    // determine where we are meant to transition to
     const toValue = nextProps.navigation.state.index;
 
+    // compute transitionProps
     this._prevTransitionProps = this._transitionProps;
     this._transitionProps = buildTransitionProps(nextProps, nextState);
+    let { isTransitioning } = this._transitionProps.navigation.state;
 
-    if (!this._transitionProps.navigation.state.isTransitioning) {
+    // if the state isn't transitioning that is meant to signal that we should
+    // transition immediately to the new index. if the index hasn't changed, do
+    // the same thing here. it's not clear to me why we ever start a transition
+    // when the index hasn't changed, this requires further investigation.
+    if (!isTransitioning || !indexHasChanged) {
       this.setState(nextState, async () => {
         if (nextProps.onTransitionStart) {
           const result = nextProps.onTransitionStart(
@@ -117,53 +126,57 @@ class Transitioner extends React.Component {
             this._prevTransitionProps
           );
           if (result instanceof Promise) {
+            // why do we bother awaiting the result here?
             await result;
           }
         }
-        position.setValue(toValue);
+        // jump immediately to the new value
+        indexHasChanged && position.setValue(toValue);
+        // end the transition
         this._onTransitionEnd();
       });
-      return;
-    }
+    } else if (isTransitioning) {
+      this._isTransitionRunning = true;
+      this.setState(nextState, async () => {
+        if (nextProps.onTransitionStart) {
+          const result = nextProps.onTransitionStart(
+            this._transitionProps,
+            this._prevTransitionProps
+          );
 
-    // update scenes and play the transition
-    this._isTransitionRunning = true;
-    this.setState(nextState, async () => {
-      if (nextProps.onTransitionStart) {
-        const result = nextProps.onTransitionStart(
-          this._transitionProps,
-          this._prevTransitionProps
-        );
-
-        if (result instanceof Promise) {
-          await result;
+          // why do we bother awaiting the result here?
+          if (result instanceof Promise) {
+            await result;
+          }
         }
+      });
+
+      // get the transition spec.
+      const transitionUserSpec = nextProps.configureTransition
+        ? nextProps.configureTransition(
+            this._transitionProps,
+            this._prevTransitionProps
+          )
+        : null;
+
+      const transitionSpec = {
+        ...DefaultTransitionSpec,
+        ...transitionUserSpec,
+      };
+
+      const { timing } = transitionSpec;
+      delete transitionSpec.timing;
+
+      // if swiped back, indexHasChanged == true && positionHasChanged == false
+      const positionHasChanged = position.__getValue() !== toValue;
+      if (indexHasChanged && positionHasChanged) {
+        timing(position, {
+          ...transitionSpec,
+          toValue: nextProps.navigation.state.index,
+        }).start(this._onTransitionEnd);
+      } else {
+        this._onTransitionEnd();
       }
-    });
-
-    // get the transition spec.
-    const transitionUserSpec = nextProps.configureTransition
-      ? nextProps.configureTransition(
-          this._transitionProps,
-          this._prevTransitionProps
-        )
-      : null;
-
-    const transitionSpec = {
-      ...DefaultTransitionSpec,
-      ...transitionUserSpec,
-    };
-
-    const { timing } = transitionSpec;
-    delete transitionSpec.timing;
-
-    // if swiped back, indexHasChanged == true && positionHasChanged == false
-    const positionHasChanged = position.__getValue() !== toValue;
-    if (indexHasChanged && positionHasChanged) {
-      timing(position, {
-        ...transitionSpec,
-        toValue: nextProps.navigation.state.index,
-      }).start(this._onTransitionEnd);
     }
   }
 
