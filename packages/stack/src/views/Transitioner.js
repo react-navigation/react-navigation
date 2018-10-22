@@ -87,15 +87,6 @@ class Transitioner extends React.Component {
       return;
     }
 
-    if (
-      isRouteShallowEqual(
-        this.props.navigation.state,
-        nextProps.navigation.state
-      )
-    ) {
-      return;
-    }
-
     const indexHasChanged =
       nextProps.navigation.state.index !== this.props.navigation.state.index;
     if (this._isTransitionRunning) {
