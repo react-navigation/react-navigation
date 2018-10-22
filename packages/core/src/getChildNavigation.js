@@ -1,6 +1,7 @@
 import getChildEventSubscriber from './getChildEventSubscriber';
 import getChildRouter from './getChildRouter';
 import getNavigationActionCreators from './routers/getNavigationActionCreators';
+import getChildrenNavigationCache from './getChildrenNavigationCache';
 
 const createParamGetter = route => (paramName, defaultValue) => {
   const params = route.params;
@@ -13,9 +14,7 @@ const createParamGetter = route => (paramName, defaultValue) => {
 };
 
 function getChildNavigation(navigation, childKey, getCurrentParentNavigation) {
-  const children =
-    navigation._childrenNavigation || (navigation._childrenNavigation = {});
-
+  const children = getChildrenNavigationCache(navigation);
   const childRoute = navigation.state.routes.find(r => r.key === childKey);
 
   if (!childRoute) {
@@ -66,47 +65,48 @@ function getChildNavigation(navigation, childKey, getCurrentParentNavigation) {
       getParam: createParamGetter(childRoute),
     };
     return children[childKey];
+  } else {
+    const childSubscriber = getChildEventSubscriber(
+      navigation.addListener,
+      childKey
+    );
+
+    children[childKey] = {
+      ...actionHelpers,
+
+      state: childRoute,
+      router: childRouter,
+      actions: actionCreators,
+      getParam: createParamGetter(childRoute),
+
+      getChildNavigation: grandChildKey =>
+        getChildNavigation(children[childKey], grandChildKey, () => {
+          const nav = getCurrentParentNavigation();
+          return nav && nav.getChildNavigation(childKey);
+        }),
+
+      isFocused: () => {
+        const currentNavigation = getCurrentParentNavigation();
+        if (!currentNavigation) {
+          return false;
+        }
+        const { routes, index } = currentNavigation.state;
+        if (!currentNavigation.isFocused()) {
+          return false;
+        }
+        if (routes[index].key === childKey) {
+          return true;
+        }
+        return false;
+      },
+      dispatch: navigation.dispatch,
+      getScreenProps: navigation.getScreenProps,
+      dangerouslyGetParent: getCurrentParentNavigation,
+      addListener: childSubscriber.addListener,
+      emit: childSubscriber.emit,
+    };
+    return children[childKey];
   }
-
-  const childSubscriber = getChildEventSubscriber(
-    navigation.addListener,
-    childKey
-  );
-
-  children[childKey] = {
-    ...actionHelpers,
-
-    state: childRoute,
-    router: childRouter,
-    actions: actionCreators,
-    getParam: createParamGetter(childRoute),
-
-    getChildNavigation: grandChildKey =>
-      getChildNavigation(children[childKey], grandChildKey, () => {
-        const nav = getCurrentParentNavigation();
-        return nav && nav.getChildNavigation(childKey);
-      }),
-
-    isFocused: () => {
-      const currentNavigation = getCurrentParentNavigation();
-      if (!currentNavigation) {
-        return false;
-      }
-      const { routes, index } = currentNavigation.state;
-      if (!currentNavigation.isFocused()) {
-        return false;
-      }
-      if (routes[index].key === childKey) {
-        return true;
-      }
-      return false;
-    },
-    dispatch: navigation.dispatch,
-    getScreenProps: navigation.getScreenProps,
-    dangerouslyGetParent: getCurrentParentNavigation,
-    addListener: childSubscriber.addListener,
-  };
-  return children[childKey];
 }
 
 export default getChildNavigation;

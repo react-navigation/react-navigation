@@ -10,6 +10,7 @@ export default function getChildEventSubscriber(addListener, key) {
   const didFocusSubscribers = new Set();
   const willBlurSubscribers = new Set();
   const didBlurSubscribers = new Set();
+  const refocusSubscribers = new Set();
 
   const removeAll = () => {
     [
@@ -18,6 +19,7 @@ export default function getChildEventSubscriber(addListener, key) {
       didFocusSubscribers,
       willBlurSubscribers,
       didBlurSubscribers,
+      refocusSubscribers,
     ].forEach(set => set.clear());
 
     upstreamSubscribers.forEach(subs => subs && subs.remove());
@@ -35,6 +37,8 @@ export default function getChildEventSubscriber(addListener, key) {
         return willBlurSubscribers;
       case 'didBlur':
         return didBlurSubscribers;
+      case 'refocus':
+        return refocusSubscribers;
       default:
         return null;
     }
@@ -60,11 +64,17 @@ export default function getChildEventSubscriber(addListener, key) {
     'didFocus',
     'willBlur',
     'didBlur',
+    'refocus',
     'action',
   ];
 
   const upstreamSubscribers = upstreamEvents.map(eventName =>
     addListener(eventName, payload => {
+      if (eventName === 'refocus') {
+        emit(eventName, payload);
+        return;
+      }
+
       const { state, lastState, action } = payload;
       const lastRoutes = lastState && lastState.routes;
       const routes = state && state.routes;
@@ -157,5 +167,12 @@ export default function getChildEventSubscriber(addListener, key) {
       };
       return { remove };
     },
+    emit(eventName, payload) {
+      if (eventName !== 'refocus') {
+        console.error(`navigation.emit only supports the 'refocus' event currently.`);
+        return;
+      }
+      emit(eventName, payload);
+    }
   };
 }
