@@ -311,7 +311,7 @@ class MainScreen extends React.Component<any, State> {
                   >
                     <SafeAreaView
                       style={styles.itemContainer}
-                      forceInset={{ veritcal: 'never', bottom: 'never' }}
+                      forceInset={{ vertical: 'never', bottom: 'never' }}
                     >
                       <View style={styles.item}>
                         <Text style={styles.title}>
