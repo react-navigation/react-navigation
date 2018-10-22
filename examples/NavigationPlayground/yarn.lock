@@ -5662,10 +5662,10 @@ react-navigation-material-bottom-tabs@1.0.0-alpha.1:
     prop-types "^15.6.0"
     react-navigation-tabs "^1.0.0-alpha"
 
-react-navigation-stack@1.0.0-alpha.22:
-  version "1.0.0-alpha.22"
-  resolved "https://registry.yarnpkg.com/react-navigation-stack/-/react-navigation-stack-1.0.0-alpha.22.tgz#f40d50855c7532c1633ec7e88a5dfefefe65d9f9"
-  integrity sha512-Bqc4LVr+kX8bYPms2Fhwgr6KUQSXesWzR7JdX/bemZKeXsDLRI+/ZBv+HEYhyzcnJktx4KgZHadfz4jy6Q6B1Q==
+react-navigation-stack@1.0.0-alpha.23:
+  version "1.0.0-alpha.23"
+  resolved "https://registry.yarnpkg.com/react-navigation-stack/-/react-navigation-stack-1.0.0-alpha.23.tgz#515e940b5e1f864a73a80be43cafae767f9ed3f5"
+  integrity sha512-EhM9SIlWYeCC1f1Ju53AUVfTyY6HLJwuGMVcb/VeVT513fPgOijD4HlmOcAngkKNVMNOfhPuFgvngg9TM4vYOA==
 
 react-navigation-tabs@1.0.0-alpha.3, react-navigation-tabs@^1.0.0-alpha:
   version "1.0.0-alpha.3"
