@@ -1,6 +1,6 @@
 {
   "name": "@react-navigation/native",
-  "version": "3.0.0-alpha.5",
+  "version": "3.0.0-alpha.6",
   "description": "React Native support for React Navigation",
   "main": "dist/index.js",
   "files": [
@@ -37,16 +37,9 @@
     "url": "https://github.com/react-navigation/react-navigation-native/issues"
   },
   "homepage": "https://github.com/react-navigation/react-navigation-native#readme",
-  "dependencies": {
-    "@react-navigation/core": "^3.0.0-alpha.4",
-    "hoist-non-react-statics": "^3.0.1",
-    "react-lifecycles-compat": "^3.0.4",
-    "react-native-gesture-handler": "^1.0.8",
-    "react-native-safe-area-view": "^0.11.0",
-    "react-native-screens": "^1.0.0-alpha.14"
-  },
   "devDependencies": {
     "@expo/vector-icons": "^6.2.0",
+    "@react-navigation/core": "^3.0.0-alpha",
     "babel-cli": "^6.26.0",
     "babel-jest": "^22.4.1",
     "babel-plugin-syntax-class-properties": "^6.13.0",
@@ -69,12 +62,12 @@
     "release-it": "^7.6.1"
   },
   "peerDependencies": {
+    "@react-navigation/core": "^3.0.0-alpha",
     "react": "*",
     "react-native": "*",
     "react-native-gesture-handler": "^1.0.0",
     "react-native-reanimated": "^1.0.0 || ^1.0.0-alpha",
-    "react-native-screens": "^1.0.0 || ^1.0.0-alpha",
-    "react-navigation": ">=2.0 || ^2.0.0-beta"
+    "react-native-screens": "^1.0.0 || ^1.0.0-alpha"
   },
   "jest": {
     "preset": "react-native",
