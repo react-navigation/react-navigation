@@ -14,15 +14,26 @@ module.exports = {
   get createKeyboardAwareNavigator() {
     return require('@react-navigation/native').createKeyboardAwareNavigator;
   },
+  get createNavigationAwareScrollable() {
+    return require('@react-navigation/native').createNavigationAwareScrollable;
+  },
+  get ScrollView() {
+    return require('@react-navigation/native').ScrollView;
+  },
+  get FlatList() {
+    return require('@react-navigation/native').FlatList;
+  },
+  get SectionList() {
+    return require('@react-navigation/native').SectionList;
+  },
   get ResourceSavingSceneView() {
     return require('@react-navigation/native').ResourceSavingSceneView;
   },
-  get withOrientation() {
-    return require('@react-navigation/native').withOrientation;
-  },
-
   get SafeAreaView() {
     return require('@react-navigation/native').SafeAreaView;
+  },
+  get withOrientation() {
+    return require('@react-navigation/native').withOrientation;
   },
 
   // Core

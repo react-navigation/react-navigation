@@ -10,7 +10,9 @@
     "test": "flow"
   },
   "dependencies": {
+    "@react-navigation/native": "^3.0.0-alpha.8",
     "expo": "^30.0.0",
+    "hoist-non-react-statics": "^3.0.1",
     "invariant": "^2.2.4",
     "react": "16.3.1",
     "react-native": "^0.55.0",
