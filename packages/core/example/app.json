@@ -1,0 +1,17 @@
+{
+  "expo": {
+    "name": "React Navigation Core Example",
+    "description": "Useful for experimenting with core and native together",
+    "slug": "react-navigation-core-demo",
+    "sdkVersion": "30.0.0",
+    "version": "1.0.0",
+    "primaryColor": "#2196f3",
+    "packagerOpts": {
+      "assetExts": [
+        "ttf"
+      ],
+      "config": "./rn-cli.config.js",
+      "projectRoots": ""
+    }
+  }
+}
