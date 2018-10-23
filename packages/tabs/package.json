@@ -47,6 +47,8 @@
   },
   "devDependencies": {
     "@expo/vector-icons": "^6.2.0",
+    "@react-navigation/core": "^3.0.0-alpha.11",
+    "@react-navigation/native": "^3.0.0-alpha.6",
     "babel-cli": "^6.26.0",
     "babel-jest": "^21.2.0",
     "babel-plugin-syntax-class-properties": "^6.13.0",
@@ -67,9 +69,7 @@
     "react": "16.3.1",
     "react-dom": "16.3.1",
     "react-native": "~0.55.4",
-    "react-test-renderer": "16.2.0",
-    "@react-navigation/core": "^3.0.0-alpha",
-    "@react-navigation/native": "^3.0.0-alpha"
+    "react-test-renderer": "16.2.0"
   },
   "peerDependencies": {
     "react": "*",
