@@ -39,7 +39,7 @@ export default function getNavigation(
       };
     },
     dangerouslyGetParent: () => null,
-    _childrenNavigation: getChildrenNavigationCache(getCurrentNavigation())
+    _childrenNavigation: getChildrenNavigationCache(getCurrentNavigation()),
   };
 
   const actionCreators = {

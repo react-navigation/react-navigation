@@ -1284,7 +1284,7 @@ describe('StackRouter', () => {
           screen: FooScreen,
         },
       },
-      { initialRouteName: 'Bar', initialRouteParams: { foo: 'bar' } }
+      { initialRouteName: 'Foo', initialRouteParams: { foo: 'bar' } }
     );
     const state = router.getStateForAction({ type: NavigationActions.INIT });
     expect(state).toEqual({
@@ -1294,8 +1294,34 @@ describe('StackRouter', () => {
       routes: [
         {
           key: state && state.routes[0].key,
-          routeName: 'Bar',
+          routeName: 'Foo',
           params: { foo: 'bar' },
+        },
+      ],
+    });
+  });
+
+  test('params in route config are merged with initialRouteParams', () => {
+    const FooScreen = () => <div />;
+    const router = StackRouter(
+      {
+        Foo: {
+          screen: FooScreen,
+          params: { foo: 'not-bar', meaning: 42 },
+        },
+      },
+      { initialRouteName: 'Foo', initialRouteParams: { foo: 'bar' } }
+    );
+    const state = router.getStateForAction({ type: NavigationActions.INIT });
+    expect(state).toEqual({
+      index: 0,
+      isTransitioning: false,
+      key: 'StackRouterRoot',
+      routes: [
+        {
+          key: state && state.routes[0].key,
+          routeName: 'Foo',
+          params: { foo: 'bar', meaning: 42 },
         },
       ],
     });

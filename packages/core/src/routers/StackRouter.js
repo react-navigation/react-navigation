@@ -84,7 +84,11 @@ export default (routeConfigs, stackConfig = {}) => {
         })
       );
     }
-    const params = (route.params || action.params || initialRouteParams) && {
+    const params = (routeConfigs[initialRouteName].params ||
+      route.params ||
+      action.params ||
+      initialRouteParams) && {
+      ...(routeConfigs[initialRouteName].params || {}),
       ...(route.params || {}),
       ...(action.params || {}),
       ...(initialRouteParams || {}),
@@ -102,6 +106,15 @@ export default (routeConfigs, stackConfig = {}) => {
       index: 0,
       routes: [route],
     };
+  }
+
+  function getParamsForRouteAndAction(routeName, action) {
+    let routeConfig = routeConfigs[routeName];
+    if (routeConfig && routeConfig.params) {
+      return { ...routeConfig.params, ...action.params };
+    } else {
+      return action.params;
+    }
   }
 
   const {
@@ -244,11 +257,11 @@ export default (routeConfigs, stackConfig = {}) => {
         }
       }
 
-      // Handle explicit push navigation action. This must happen after the
-      // focused child router has had a chance to handle the action.
+      // Handle push and navigate actions. This must happen after the focused
+      // child router has had a chance to handle the action.
       if (
         behavesLikePushAction(action) &&
-        childRouters[action.routeName] !== undefined
+        childRouters[action.routeName] !== undefined // undefined means it's not a childRouter or a screen
       ) {
         const childRouter = childRouters[action.routeName];
         let route;
@@ -268,6 +281,7 @@ export default (routeConfigs, stackConfig = {}) => {
           }
         });
 
+        // An instance of this route exists already and we're dealing with a navigate action
         if (action.type !== StackActions.PUSH && lastRouteIndex !== -1) {
           // If index is unchanged and params are not being set, leave state identity intact
           if (state.index === lastRouteIndex && !action.params) {
@@ -301,18 +315,25 @@ export default (routeConfigs, stackConfig = {}) => {
         }
 
         if (childRouter) {
+          // Delegate to the child router with the given action, or init it
           const childAction =
-            action.action || NavigationActions.init({ params: action.params });
+            action.action ||
+            NavigationActions.init({
+              params: getParamsForRouteAndAction(action.routeName, action),
+            });
           route = {
-            params: action.params,
-            // merge the child state in this order to allow params override
+            params: getParamsForRouteAndAction(action.routeName, action),
+            // note(brentvatne): does it make sense to wipe out the params
+            // here? or even to add params at all? need more info about what
+            // this solves
             ...childRouter.getStateForAction(childAction),
             routeName: action.routeName,
             key: action.key || generateKey(),
           };
         } else {
+          // Create the route from scratch
           route = {
-            params: action.params,
+            params: getParamsForRouteAndAction(action.routeName, action),
             routeName: action.routeName,
             key: action.key || generateKey(),
           };
@@ -407,12 +428,14 @@ export default (routeConfigs, stackConfig = {}) => {
           if (childRouter) {
             const childAction =
               action.action ||
-              NavigationActions.init({ params: action.params });
+              NavigationActions.init({
+                params: getParamsForRouteAndAction(action.routeName, action),
+              });
             childState = childRouter.getStateForAction(childAction);
           }
           const routes = [...state.routes];
           routes[routeIndex] = {
-            params: action.params,
+            params: getParamsForRouteAndAction(action.routeName, action),
             // merge the child state in this order to allow params override
             ...childState,
             routeName: action.routeName,
@@ -473,13 +496,21 @@ export default (routeConfigs, stackConfig = {}) => {
             if (router) {
               const childAction =
                 newStackAction.action ||
-                NavigationActions.init({ params: newStackAction.params });
+                NavigationActions.init({
+                  params: getParamsForRouteAndAction(
+                    newStackAction.routeName,
+                    newStackAction
+                  ),
+                });
 
               childState = router.getStateForAction(childAction);
             }
 
             return {
-              params: newStackAction.params,
+              params: getParamsForRouteAndAction(
+                newStackAction.routeName,
+                newStackAction
+              ),
               ...childState,
               routeName: newStackAction.routeName,
               key: newStackAction.key || generateKey(),

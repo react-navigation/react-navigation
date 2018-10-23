@@ -2,7 +2,7 @@
   "extends": "../.eslintrc",
 
   "settings": {
-    "import/core-modules": [ "expo", "@react-navigation/core" ]
+    "import/core-modules": [ "expo", "@react-navigation/core", "react-navigation-stack" ]
   },
 
   "rules": {

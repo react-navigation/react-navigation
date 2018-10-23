@@ -43,6 +43,15 @@ export default (routeConfigs, config = {}) => {
     }
   });
 
+  function getParamsForRoute(routeName, params) {
+    let routeConfig = routeConfigs[routeName];
+    if (routeConfig && routeConfig.params) {
+      return { ...routeConfig.params, ...params };
+    } else {
+      return params;
+    }
+  }
+
   const {
     getPathAndParamsForRoute,
     getActionForPathAndParams,
@@ -56,8 +65,12 @@ export default (routeConfigs, config = {}) => {
   }
 
   function resetChildRoute(routeName) {
-    const params =
+    let initialParams =
       routeName === initialRouteName ? initialRouteParams : undefined;
+    // note(brentvatne): merging initialRouteParams *on top* of default params
+    // on the route seems incorrect but it's consistent with existing behavior
+    // in stackrouter
+    let params = getParamsForRoute(routeName, initialParams);
     const childRouter = childRouters[routeName];
     if (childRouter) {
       const childAction = NavigationActions.init();

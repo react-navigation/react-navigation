@@ -169,10 +169,12 @@ export default function getChildEventSubscriber(addListener, key) {
     },
     emit(eventName, payload) {
       if (eventName !== 'refocus') {
-        console.error(`navigation.emit only supports the 'refocus' event currently.`);
+        console.error(
+          `navigation.emit only supports the 'refocus' event currently.`
+        );
         return;
       }
       emit(eventName, payload);
-    }
+    },
   };
 }
