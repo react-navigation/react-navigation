@@ -90,6 +90,7 @@
     "singleQuote": true
   },
   "dependencies": {
+    "hoist-non-react-statics": "^3.0.1",
     "react-native-safe-area-view": "^0.11.0"
   }
 }
