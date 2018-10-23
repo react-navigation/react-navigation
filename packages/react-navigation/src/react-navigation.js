@@ -168,4 +168,12 @@ module.exports = {
   get DrawerSidebar() {
     return require('react-navigation-drawer').DrawerSidebar;
   },
+
+  // Tabs
+  get BottomTabBar() {
+    return require('react-navigation-tabs').BottomTabBar;
+  },
+  get MaterialTopTabBar() {
+    return require('react-navigation-tabs').MaterialTopTabBar;
+  },
 };
