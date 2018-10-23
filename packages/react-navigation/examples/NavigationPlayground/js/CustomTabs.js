@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import { BorderlessButton } from 'react-native-gesture-handler';
 import { createNavigator, SafeAreaView, TabRouter } from 'react-navigation';
-import { createAppContainer } from '@react-navigation/native';
+import { createAppContainer } from 'react-navigation';
 import SampleText from './SampleText';
 import { Button } from './commonComponents/ButtonWithMargin';
 

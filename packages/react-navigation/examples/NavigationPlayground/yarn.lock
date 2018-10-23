@@ -516,39 +516,22 @@
     pouchdb-collections "^1.0.1"
     tiny-queue "^0.2.1"
 
-"@react-navigation/core@3.0.0-alpha.6":
+"@react-navigation/core@^3.0.0-alpha.12":
+  version "3.0.0-alpha.12"
+  resolved "https://registry.yarnpkg.com/@react-navigation/core/-/core-3.0.0-alpha.12.tgz#273f7be2bfe564f9ab28afd0955d21b72de9fadf"
+  integrity sha512-tUg57TuEtGpVmcyqTGbMYtHfE2VXgo6hB2XT/T/hYXXydQbgkPwu9VeavEzGTTc1QThxerYwJNAsog/EI0Za6Q==
+  dependencies:
+    create-react-context "^0.2.3"
+    hoist-non-react-statics "^3.0.1"
+    path-to-regexp "^1.7.0"
+    query-string "^6.2.0"
+    react-is "^16.5.2"
+    react-lifecycles-compat "^3.0.4"
+
+"@react-navigation/native@^3.0.0-alpha.6":
   version "3.0.0-alpha.6"
-  resolved "https://registry.yarnpkg.com/@react-navigation/core/-/core-3.0.0-alpha.6.tgz#9224bad5519d895936f97cd22363fe887e47d73e"
-  integrity sha512-TrdSsJTOD9CvuohhNe3TMH8xVwCcFINyX+dp8ZVUOP9sl+vJMdx7gIJwGc6k4OeNiX4gDJ69yCvFiwz/kGsp0Q==
-  dependencies:
-    create-react-context "^0.2.3"
-    hoist-non-react-statics "^3.0.1"
-    path-to-regexp "^1.7.0"
-    query-string "^6.2.0"
-    react-lifecycles-compat "^3.0.4"
-
-"@react-navigation/core@^3.0.0-alpha.4":
-  version "3.0.0-alpha.7"
-  resolved "https://registry.yarnpkg.com/@react-navigation/core/-/core-3.0.0-alpha.7.tgz#10116867febd74a371a7cc393c3dd6071e25ceae"
-  integrity sha512-aUbUAUgNpOppxj59E++S39gBiRCLlttzmwxeZoIJJ57q3IQ2vXNjXiAl66xJeRTIGT5GsEn0nOJO4YeSd5FOfQ==
-  dependencies:
-    create-react-context "^0.2.3"
-    hoist-non-react-statics "^3.0.1"
-    path-to-regexp "^1.7.0"
-    query-string "^6.2.0"
-    react-lifecycles-compat "^3.0.4"
-
-"@react-navigation/native@^3.0.0-alpha.5":
-  version "3.0.0-alpha.5"
-  resolved "https://registry.yarnpkg.com/@react-navigation/native/-/native-3.0.0-alpha.5.tgz#479e8ab87a6305182a77c877eda30065a785eb21"
-  integrity sha512-UwQ2k63wZocCGVd+GqmzKhzvG4FpP8Riu5L+PdIsZOz2E0q4tqj0X/GulWkV0W5chB/oWsyXBi4+JmL92PFloQ==
-  dependencies:
-    "@react-navigation/core" "^3.0.0-alpha.4"
-    hoist-non-react-statics "^3.0.1"
-    react-lifecycles-compat "^3.0.4"
-    react-native-gesture-handler "^1.0.8"
-    react-native-safe-area-view "^0.11.0"
-    react-native-screens "^1.0.0-alpha.14"
+  resolved "https://registry.yarnpkg.com/@react-navigation/native/-/native-3.0.0-alpha.6.tgz#c1275164080a3b4819e0ed684524072abbf31dde"
+  integrity sha512-ehc5wGGCFPLDyvhViU6dWge28NxnXHQbOwaNkmn+tlDYwLbdpXHkZq+TollJO52EcLi/jDPgrQYWDl2yrvCo9A==
 
 abab@^2.0.0:
   version "2.0.0"
@@ -5489,15 +5472,6 @@ react-native-gesture-handler@1.0.6:
     invariant "^2.2.2"
     prop-types "^15.5.10"
 
-react-native-gesture-handler@^1.0.8:
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-1.0.8.tgz#c2799741bf6443bb542892b0a36201a6d9ded209"
-  integrity sha512-Lc6PV5nKXgZdDeky96yi6gAM1UJHaYwzZbZyph0YuSv/L6vTtN+KPGsKyIENoOyxLJ/i43MSNn7fR+Xbv0w/xA==
-  dependencies:
-    hoist-non-react-statics "^2.3.1"
-    invariant "^2.2.2"
-    prop-types "^15.5.10"
-
 react-native-iphone-x-helper@^1.0.2:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/react-native-iphone-x-helper/-/react-native-iphone-x-helper-1.2.0.tgz#9f8a376eb00bc712115abff4420318a0063fa796"
@@ -5546,7 +5520,7 @@ react-native-safe-module@^1.1.0:
   dependencies:
     dedent "^0.6.0"
 
-react-native-screens@^1.0.0-alpha.14, react-native-screens@^1.0.0-alpha.5:
+react-native-screens@^1.0.0-alpha.5:
   version "1.0.0-alpha.15"
   resolved "https://registry.yarnpkg.com/react-native-screens/-/react-native-screens-1.0.0-alpha.15.tgz#5b5a0041310b46f12048fda1908d52e7290ec18f"
   integrity sha512-S2OM/ieD+Krk+0/Z2Vz2rTUWYud5hJgCRZqXRtqEfMgEcGI4FBopXp7mwXCGbA2PFLjZwZSwLlsZ6RX30WnjRw==
@@ -5653,24 +5627,24 @@ react-navigation-header-buttons@^0.0.4:
   dependencies:
     react-native-platform-touchable "^1.1.1"
 
-react-navigation-material-bottom-tabs@1.0.0-alpha.1:
-  version "1.0.0-alpha.1"
-  resolved "https://registry.yarnpkg.com/react-navigation-material-bottom-tabs/-/react-navigation-material-bottom-tabs-1.0.0-alpha.1.tgz#c91a563f5478c1bc9aa5b3d1369d1ae02ebe9783"
-  integrity sha512-GWGAs1AACLkDy7FTKhFvPEP9JDohyVa7xGjumz83YwoO9cDqC85500x//CXI2YiYc9gyb5YdAHAkA7qmzrwDAQ==
+react-navigation-material-bottom-tabs@1.0.0-alpha.2:
+  version "1.0.0-alpha.2"
+  resolved "https://registry.yarnpkg.com/react-navigation-material-bottom-tabs/-/react-navigation-material-bottom-tabs-1.0.0-alpha.2.tgz#1d12992d9182871574420813f12d1c79dc769df1"
+  integrity sha512-UZlYJrbJbWCZmbg3+O+aN0Bkyev+gRp72LZSx7VyCWVUT9w4sAaS01dG5Iqp3Z8ns9W8qOvt01QOQNVRtBflYA==
   dependencies:
     hoist-non-react-statics "^2.5.0"
     prop-types "^15.6.0"
-    react-navigation-tabs "^1.0.0-alpha"
+    react-navigation-tabs "1.0.0-alpha.4"
 
 react-navigation-stack@1.0.0-alpha.23:
   version "1.0.0-alpha.23"
   resolved "https://registry.yarnpkg.com/react-navigation-stack/-/react-navigation-stack-1.0.0-alpha.23.tgz#515e940b5e1f864a73a80be43cafae767f9ed3f5"
   integrity sha512-EhM9SIlWYeCC1f1Ju53AUVfTyY6HLJwuGMVcb/VeVT513fPgOijD4HlmOcAngkKNVMNOfhPuFgvngg9TM4vYOA==
 
-react-navigation-tabs@1.0.0-alpha.3, react-navigation-tabs@^1.0.0-alpha:
-  version "1.0.0-alpha.3"
-  resolved "https://registry.yarnpkg.com/react-navigation-tabs/-/react-navigation-tabs-1.0.0-alpha.3.tgz#dae59e0a448cfa8e194fe3776b1659e117f3a39b"
-  integrity sha512-V1iMy4QFhiWuBaaUMgWOuuBe0xl+/LXwiSwl4ejRDGRiPP7JLiqxFfgIo77X0Ce9YN2FOqq4A8GB7d4ssJtQIw==
+react-navigation-tabs@1.0.0-alpha.4:
+  version "1.0.0-alpha.4"
+  resolved "https://registry.yarnpkg.com/react-navigation-tabs/-/react-navigation-tabs-1.0.0-alpha.4.tgz#321c8cc19d14268d343a830689c741bb94c6ba80"
+  integrity sha512-ng8sCJmcQj1ciWaj0eJudQvYng/oL24konNPNudSrMyVKAfKr4+HcRPLY/rol+efLJ8UGjXGv2qdRNkBNeaLew==
   dependencies:
     hoist-non-react-statics "^2.5.0"
     prop-types "^15.6.1"

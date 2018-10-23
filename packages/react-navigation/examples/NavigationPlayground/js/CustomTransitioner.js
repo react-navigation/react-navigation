@@ -9,12 +9,12 @@ import {
   View,
 } from 'react-native';
 import {
+  createAppContainer,
   Transitioner,
   SafeAreaView,
   StackRouter,
   createNavigator,
 } from 'react-navigation';
-import { createAppContainer } from '@react-navigation/native';
 import SampleText from './SampleText';
 import { Button } from './commonComponents/ButtonWithMargin';
 
