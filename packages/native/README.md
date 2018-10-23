@@ -6,4 +6,4 @@ React Native support for React Navigation
 
 ## Docs
 
-Documentation can be found on the [React Navigation website](https://reactnavigation.org/docs/).
+Documentation can be found on the [React Navigation website](https://reactnavigation.org/docs/getting-started.html).
