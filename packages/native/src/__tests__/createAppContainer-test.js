@@ -3,9 +3,9 @@ import { View } from 'react-native';
 
 import renderer from 'react-test-renderer';
 
-import createNavigationContainer, {
+import createAppContainer, {
   _TESTING_ONLY_reset_container_count,
-} from '../createNavigationContainer';
+} from '../createAppContainer';
 
 import {
   NavigationActions,
@@ -16,7 +16,7 @@ import {
 
 function createStackNavigator(routeConfigMap, stackConfig = {}) {
   const router = StackRouter(routeConfigMap, stackConfig);
-  return createNavigationContainer(
+  return createAppContainer(
     createNavigator(SwitchView, router, stackConfig)
   );
 }
@@ -58,7 +58,7 @@ describe('NavigationContainer', () => {
       initialRouteName: 'foo',
     }
   );
-  const NavigationContainer = createNavigationContainer(Stack);
+  const NavigationContainer = createAppContainer(Stack);
 
   describe('state.nav', () => {
     it("should be preloaded with the router's initial state", () => {
@@ -257,13 +257,13 @@ describe('NavigationContainer', () => {
           }
         }
 
-        const ChildNavigator = createNavigationContainer(
+        const ChildNavigator = createAppContainer(
           createStackNavigator({
             Child: BlankScreen,
           })
         );
 
-        const RootStack = createNavigationContainer(
+        const RootStack = createAppContainer(
           createStackNavigator({
             Root: RootScreen,
           })
