@@ -1,6 +1,7 @@
 import getChildEventSubscriber from './getChildEventSubscriber';
 import getChildRouter from './getChildRouter';
 import getNavigationActionCreators from './routers/getNavigationActionCreators';
+import getChildrenNavigationCache from './getChildrenNavigationCache';
 import invariant from './utils/invariant';
 
 const createParamGetter = route => (paramName, defaultValue) => {
@@ -14,8 +15,7 @@ const createParamGetter = route => (paramName, defaultValue) => {
 };
 
 function getChildNavigation(navigation, childKey, getCurrentParentNavigation) {
-  const children =
-    navigation._childrenNavigation || (navigation._childrenNavigation = {});
+  const children = getChildrenNavigationCache(navigation);
 
   const childRoute = navigation.state.routes.find(r => r.key === childKey);
 
