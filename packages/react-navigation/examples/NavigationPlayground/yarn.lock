@@ -516,10 +516,10 @@
     pouchdb-collections "^1.0.1"
     tiny-queue "^0.2.1"
 
-"@react-navigation/core@^3.0.0-alpha.12":
-  version "3.0.0-alpha.12"
-  resolved "https://registry.yarnpkg.com/@react-navigation/core/-/core-3.0.0-alpha.12.tgz#273f7be2bfe564f9ab28afd0955d21b72de9fadf"
-  integrity sha512-tUg57TuEtGpVmcyqTGbMYtHfE2VXgo6hB2XT/T/hYXXydQbgkPwu9VeavEzGTTc1QThxerYwJNAsog/EI0Za6Q==
+"@react-navigation/core@^3.0.0-alpha.13":
+  version "3.0.0-alpha.13"
+  resolved "https://registry.yarnpkg.com/@react-navigation/core/-/core-3.0.0-alpha.13.tgz#7c0458e1054ebd24b3e4925b127e825503483d9d"
+  integrity sha512-3GDiItUJXHJUst60iW1t2J7BVtF+ZTCgwWvpqBHNT0OG0Dm8B1nLUjRLdofv/BvyXIvuGX//A3qpN8jRhSbnhQ==
   dependencies:
     create-react-context "^0.2.3"
     hoist-non-react-statics "^3.0.1"
