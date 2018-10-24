@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [2.18.1] - [2018-10-23](https://github.com/react-navigation/react-navigation/releases/tag/2.18.1)
+
+### Fixed
+
+- Backport fix for child navigation object caching
+
 ## [2.18.0] - [2018-10-11](https://github.com/react-navigation/react-navigation/releases/tag/2.18.0)
 
 ### Added
@@ -233,7 +239,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Improved examples
 
-[Unreleased]: https://github.com/react-navigation/react-navigation/compare/2.18.0...HEAD
+[Unreleased]: https://github.com/react-navigation/react-navigation/compare/2.18.1...HEAD
+[2.18.1]: https://github.com/react-navigation/react-navigation/compare/2.18.0...2.18.1
 [2.18.0]: https://github.com/react-navigation/react-navigation/compare/2.17.0...2.18.0
 [2.17.0]: https://github.com/react-navigation/react-navigation/compare/2.16.0...2.17.0
 [2.16.0]: https://github.com/react-navigation/react-navigation/compare/2.15.0...2.16.0
