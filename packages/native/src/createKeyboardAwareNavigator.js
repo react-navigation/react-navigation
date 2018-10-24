@@ -4,6 +4,7 @@ import { TextInput } from 'react-native';
 export default (Navigator, navigatorConfig) =>
   class KeyboardAwareNavigator extends React.Component {
     static router = Navigator.router;
+    static navigationOptions = Navigator.navigationOptions;
     _previouslyFocusedTextInput = null;
 
     render() {
