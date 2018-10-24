@@ -23,7 +23,9 @@ Praesent lobortis elit sit amet mauris pulvinar, viverra condimentum massa pelle
 
 class MyNavScreen extends React.Component {
   render() {
-    const { banner, navigation } = this.props;
+    const { navigation } = this.props;
+    const banner = navigation.getParam('banner');
+
     return (
       <ScrollView style={{ flex: 1 }}>
         <SafeAreaView forceInset={{ horizontal: 'always' }}>
@@ -55,10 +57,6 @@ class MyNavScreen extends React.Component {
   }
 }
 
-const MyHomeScreen = ({ navigation }) => (
-  <MyNavScreen banner="Home Screen" navigation={navigation} />
-);
-
 const MyProfileScreen = ({ navigation }) => (
   <MyNavScreen
     banner={`${navigation.state.params.name}s Profile`}
@@ -66,18 +64,11 @@ const MyProfileScreen = ({ navigation }) => (
   />
 );
 
-const MyNotificationsSettingsScreen = ({ navigation }) => (
-  <MyNavScreen banner="Notifications Screen" navigation={navigation} />
-);
-
-const MySettingsScreen = ({ navigation }) => (
-  <MyNavScreen banner="Settings Screen" navigation={navigation} />
-);
-
 const MainTab = createStackNavigator({
   Home: {
-    screen: MyHomeScreen,
+    screen: MyNavScreen,
     path: '/',
+    params: { banner: 'Home Screen' },
     navigationOptions: {
       title: 'Welcome',
     },
@@ -93,14 +84,16 @@ const MainTab = createStackNavigator({
 
 const SettingsTab = createStackNavigator({
   Settings: {
-    screen: MySettingsScreen,
+    screen: MyNavScreen,
     path: '/',
+    params: { banner: 'Settings Screen' },
     navigationOptions: () => ({
       title: 'Settings',
     }),
   },
   NotifSettings: {
-    screen: MyNotificationsSettingsScreen,
+    screen: MyNavScreen,
+    params: { banner: 'Notifications Screen' },
     navigationOptions: {
       title: 'Notifications',
     },
