@@ -155,7 +155,7 @@ Please refer to [SampleLifecycleAwareViewManager.java](https://github.com/kmagie
 
 ## License
 
-Gesture handler library is licensed under [The MIT License](LICENSE).
+React native screens library is licensed under [The MIT License](LICENSE).
 
 ## Credits
 
