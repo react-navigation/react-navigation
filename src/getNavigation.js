@@ -1,6 +1,5 @@
 import getNavigationActionCreators from './routers/getNavigationActionCreators';
 import getChildNavigation from './getChildNavigation';
-import getChildrenNavigationCache from './getChildrenNavigationCache';
 
 export default function getNavigation(
   router,
@@ -39,7 +38,6 @@ export default function getNavigation(
       };
     },
     dangerouslyGetParent: () => null,
-    _childrenNavigation: getChildrenNavigationCache(getCurrentNavigation()),
   };
 
   const actionCreators = {
