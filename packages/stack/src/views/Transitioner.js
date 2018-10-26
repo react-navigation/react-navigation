@@ -11,6 +11,8 @@ const DefaultTransitionSpec = {
   timing: Animated.timing,
 };
 
+const DEBUG = false;
+
 class Transitioner extends React.Component {
   constructor(props, context) {
     super(props, context);
@@ -72,6 +74,16 @@ class Transitioner extends React.Component {
       this.props.navigation.state,
       nextProps.descriptors
     );
+
+    // We are adding one or more scene! We can't handle a case where the number
+    // of scenes increases and one or more of the new scenes is not in the
+    // current navigation state, so we filter anything that's not in the
+    // navigation state right now out and assume it has been transitioned out
+    // properly beforehand.
+    if (nextScenes.length > this.state.scenes.length) {
+      nextScenes = filterNotInState(nextScenes, nextProps.navigation.state);
+    }
+
     if (!nextProps.navigation.state.isTransitioning) {
       nextScenes = filterStale(nextScenes);
     }
@@ -84,6 +96,10 @@ class Transitioner extends React.Component {
 
     if (nextScenes === this.state.scenes) {
       return;
+    }
+
+    if (__DEV__ && DEBUG) {
+      console.log({ nextScenes: nextScenes.map(s => s.descriptor.key )})
     }
 
     const indexHasChanged =
@@ -180,6 +196,12 @@ class Transitioner extends React.Component {
   }
 
   render() {
+    if (__DEV__ && DEBUG) {
+      let key = this.props.navigation.state.key;
+      let routeName = this.props.navigation.state.routeName;
+      console.log({ [key]: this.state.scenes.map(d => d.key), route: routeName });
+    }
+
     return (
       <View onLayout={this._onLayout} style={styles.main}>
         {this.props.render(this._transitionProps, this._prevTransitionProps)}
@@ -282,6 +304,24 @@ function isSceneNotStale(scene) {
 
 function filterStale(scenes) {
   const filtered = scenes.filter(isSceneNotStale);
+  if (filtered.length === scenes.length) {
+    return scenes;
+  }
+  return filtered;
+}
+
+function filterNotInState(scenes, state) {
+  let activeKeys = state.routes.map(r => r.key);
+  let filtered = scenes.filter(scene => activeKeys.includes(scene.descriptor.key));
+
+  if (__DEV__ && DEBUG) {
+    console.log({
+      activeKeys,
+      filtered: filtered.map(s => s.descriptor.key),
+      scenes: scenes.map(s => s.descriptor.key),
+    });
+  }
+
   if (filtered.length === scenes.length) {
     return scenes;
   }
