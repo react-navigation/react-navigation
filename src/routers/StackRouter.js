@@ -109,7 +109,7 @@ export default (routeConfigs, stackConfig = {}) => {
     getActionForPathAndParams,
   } = createPathParser(childRouters, routeConfigs, stackConfig);
 
-  return {
+  const router = {
     childRouters,
 
     getComponentForState(state) {
@@ -184,7 +184,11 @@ export default (routeConfigs, stackConfig = {}) => {
     getStateForAction(action, state) {
       // Set up the initial state if needed
       if (!state) {
-        return getInitialState(action);
+        const initialState = getInitialState(action);
+        if (action.type === StackActions.RESET) {
+          return router.getStateForAction(action, initialState);
+        }
+        return initialState;
       }
 
       const activeChildRoute = state.routes[state.index];
@@ -569,4 +573,6 @@ export default (routeConfigs, stackConfig = {}) => {
       stackConfig.navigationOptions
     ),
   };
+
+  return router;
 };

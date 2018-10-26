@@ -1471,6 +1471,38 @@ describe('StackRouter', () => {
     expect(state2 && state2.routes[1].routeName).toEqual('Bar');
   });
 
+  test('Handles the reset action without initial state', () => {
+    const router = StackRouter({
+      Foo: {
+        screen: () => <div />,
+      },
+      Bar: {
+        screen: () => <div />,
+      },
+    });
+    const state = router.getStateForAction({
+      type: StackActions.RESET,
+      actions: [
+        {
+          type: NavigationActions.NAVIGATE,
+          routeName: 'Foo',
+          params: { bar: '42' },
+          immediate: true,
+        },
+        {
+          type: NavigationActions.NAVIGATE,
+          routeName: 'Bar',
+          immediate: true,
+        },
+      ],
+      index: 1,
+    });
+    expect(state && state.index).toEqual(1);
+    expect(state && state.routes[0].params).toEqual({ bar: '42' });
+    expect(state && state.routes[0].routeName).toEqual('Foo');
+    expect(state && state.routes[1].routeName).toEqual('Bar');
+  });
+
   test('Handles the reset action only with correct key set', () => {
     const router = StackRouter({
       Foo: {
