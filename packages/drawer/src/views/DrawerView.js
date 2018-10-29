@@ -1,16 +1,36 @@
 import React from 'react';
-import { Dimensions } from 'react-native';
+import { Dimensions, StyleSheet } from 'react-native';
 import { SceneView } from '@react-navigation/core';
+// eslint-disable-next-line import/no-unresolved
+import { ScreenContainer } from 'react-native-screens';
+
 import DrawerActions from '../routers/DrawerActions';
 import DrawerLayout from './DrawerLayout';
 import DrawerSidebar from './DrawerSidebar';
 import DrawerGestureContext from '../utils/DrawerGestureContext';
+import ResourceSavingScene from '../views/ResourceSavingScene';
 
 /**
  * Component that renders the drawer.
  */
 export default class DrawerView extends React.PureComponent {
+  static defaultProps = {
+    lazy: true,
+  };
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    const { index } = nextProps.navigation.state;
+
+    return {
+      // Set the current tab to be loaded if it was not loaded before
+      loaded: prevState.loaded.includes(index)
+        ? prevState.loaded
+        : [...prevState.loaded, index],
+    };
+  }
+
   state = {
+    loaded: [this.props.navigation.state.index],
     drawerWidth:
       typeof this.props.navigationConfig.drawerWidth === 'function'
         ? this.props.navigationConfig.drawerWidth()
@@ -121,11 +141,12 @@ export default class DrawerView extends React.PureComponent {
   };
 
   render() {
-    const { state } = this.props.navigation;
-    const activeKey = state.routes[state.index].key;
-    const descriptor = this.props.descriptors[activeKey];
-
-    const { drawerLockMode } = descriptor.options;
+    const { lazy, navigation } = this.props;
+    const { loaded } = this.state;
+    const { state } = navigation;
+    const { routes } = state;
+    const activeKey = routes[state.index].key;
+    const { drawerLockMode } = this.props.descriptors[activeKey].options;
 
     return (
       <DrawerLayout
@@ -162,13 +183,42 @@ export default class DrawerView extends React.PureComponent {
         overlayColor={this.props.navigationConfig.overlayColor}
       >
         <DrawerGestureContext.Provider value={this.drawerGestureRef}>
-          <SceneView
-            navigation={descriptor.navigation}
-            screenProps={this.props.screenProps}
-            component={descriptor.getComponent()}
-          />
+          <ScreenContainer style={styles.pages}>
+            {routes.map((route, index) => {
+              if (lazy && !loaded.includes(index)) {
+                // Don't render a screen if we've never navigated to it
+                return null;
+              }
+
+              const isFocused = navigation.state.index === index;
+              const descriptor = this.props.descriptors[route.key];
+
+              return (
+                <ResourceSavingScene
+                  key={route.key}
+                  style={[
+                    StyleSheet.absoluteFill,
+                    { opacity: isFocused ? 1 : 0 },
+                  ]}
+                  isVisible={isFocused}
+                >
+                  <SceneView
+                    navigation={descriptor.navigation}
+                    screenProps={this.props.screenProps}
+                    component={descriptor.getComponent()}
+                  />
+                </ResourceSavingScene>
+              );
+            })}
+          </ScreenContainer>
         </DrawerGestureContext.Provider>
       </DrawerLayout>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  pages: {
+    flex: 1,
+  },
+});
