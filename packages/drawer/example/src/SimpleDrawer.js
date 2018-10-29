@@ -1,5 +1,13 @@
 import React from 'react';
-import { Button, ScrollView, StatusBar, Text, View } from 'react-native';
+import {
+  Button,
+  TextInput,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import { createStackNavigator } from 'react-navigation-stack';
 import { SafeAreaView } from '@react-navigation/native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -14,6 +22,18 @@ const MyNavScreen = ({ navigation, banner }) => (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <SampleText>{banner}</SampleText>
       </View>
+      <TextInput
+        style={{
+          flex: 1,
+          height: 35,
+          marginHorizontal: 10,
+          marginVertical: 10,
+          borderWidth: StyleSheet.hairlineWidth,
+          borderColor: '#eee',
+          textAlign: 'center',
+        }}
+        placeholder="Focus this TextInput then drag the drawer!"
+      />
       <Button onPress={() => navigation.openDrawer()} title="Open drawer" />
       <Button onPress={() => navigation.toggleDrawer()} title="Toggle drawer" />
       <Button
@@ -114,14 +134,13 @@ const DrawerExample = createDrawerNavigator(
   {
     initialRouteName: 'Drafts',
     drawerWidth: 210,
+    navigationOptions: {
+      header: null,
+    },
     contentOptions: {
       activeTintColor: '#e91e63',
     },
   }
 );
-
-DrawerExample.navigationOptions = {
-  header: null,
-};
 
 export default DrawerExample;
