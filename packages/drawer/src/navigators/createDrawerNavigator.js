@@ -36,6 +36,7 @@ const DefaultDrawerConfig = {
   },
   contentComponent: defaultContentComponent,
   drawerPosition: 'left',
+  keyboardDismissMode: 'on-drag',
   drawerBackgroundColor: 'white',
   useNativeAnimations: true,
   drawerType: 'front',
