@@ -17,10 +17,12 @@ export const getParamsFromPath = (inputParams, pathMatch, pathMatchKeys) => {
       const paramName = key.name;
 
       let decodedMatchResult;
-      try {
-        decodedMatchResult = decodeURIComponent(matchResult);
-      } catch (e) {
-        // ignore `URIError: malformed URI`
+      if (matchResult) {
+        try {
+          decodedMatchResult = decodeURIComponent(matchResult);
+        } catch (e) {
+          // ignore `URIError: malformed URI`
+        }
       }
 
       paramsOut[paramName] = decodedMatchResult || matchResult;
