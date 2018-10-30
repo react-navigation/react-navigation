@@ -46,6 +46,9 @@ module.exports = {
   get getNavigation() {
     return require('@react-navigation/core').getNavigation;
   },
+  get NavigationContext() {
+    return require('@react-navigation/core').NavigationContext;
+  },
   get NavigationProvider() {
     return require('@react-navigation/core').NavigationProvider;
   },

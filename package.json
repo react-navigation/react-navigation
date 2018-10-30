@@ -34,10 +34,10 @@
     "react-native": "*"
   },
   "dependencies": {
-    "@react-navigation/core": "^3.0.0-alpha.13",
+    "@react-navigation/core": "^3.0.0-alpha.15",
     "@react-navigation/native": "^3.0.0-alpha.9",
     "react-navigation-drawer": "1.0.0-alpha.5",
-    "react-navigation-stack": "1.0.0-alpha.24",
+    "react-navigation-stack": "1.0.0-alpha.25",
     "react-navigation-tabs": "1.0.0-alpha.4"
   },
   "devDependencies": {
