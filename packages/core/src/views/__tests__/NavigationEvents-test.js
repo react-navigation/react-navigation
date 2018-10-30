@@ -1,7 +1,7 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
 import NavigationEvents from '../NavigationEvents';
-import { NavigationProvider } from '../NavigationContext';
+import NavigationContext from '../NavigationContext';
 
 const createListener = () => () => {};
 
@@ -72,9 +72,9 @@ const NavigationEventsTestComp = ({
 }) => {
   if (withContext) {
     return (
-      <NavigationProvider value={navigation}>
+      <NavigationContext.Provider value={navigation}>
         <NavigationEvents {...props} />
-      </NavigationProvider>
+      </NavigationContext.Provider>
     );
   } else {
     return <NavigationEvents navigation={navigation} {...props} />;

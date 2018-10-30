@@ -1,7 +1,7 @@
 import React from 'react';
 import hoistStatics from 'hoist-non-react-statics';
 import invariant from '../utils/invariant';
-import { NavigationConsumer } from './NavigationContext';
+import NavigationContext from './NavigationContext';
 
 export default function withNavigation(Component) {
   class ComponentWithNavigation extends React.Component {
@@ -11,7 +11,7 @@ export default function withNavigation(Component) {
     render() {
       const navigationProp = this.props.navigation;
       return (
-        <NavigationConsumer>
+        <NavigationContext.Consumer>
           {navigationContext => {
             const navigation = navigationProp || navigationContext;
             invariant(
@@ -26,7 +26,7 @@ export default function withNavigation(Component) {
               />
             );
           }}
-        </NavigationConsumer>
+        </NavigationContext.Consumer>
       );
     }
   }

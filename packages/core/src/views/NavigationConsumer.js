@@ -1,3 +1,5 @@
-import { NavigationConsumer } from './NavigationContext';
+import NavigationContext from './NavigationContext';
 
-export default NavigationConsumer;
+const { Consumer } = NavigationContext;
+
+export default Consumer;

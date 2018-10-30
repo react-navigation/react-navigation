@@ -1,3 +1,5 @@
-import { NavigationProvider } from './NavigationContext';
+import NavigationContext from './NavigationContext';
 
-export default NavigationProvider;
+const { Provider } = NavigationContext;
+
+export default Provider;
