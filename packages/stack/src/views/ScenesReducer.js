@@ -134,7 +134,7 @@ export default function ScenesReducer(
     let prevRoutes = prevState.routes;
     if (prevRoutes.length > prevState.index + 1) {
       console.warn(
-        'Stack provided invalid state, index should always be the top route'
+        'StackRouter provided invalid state, index should always be the top route'
       );
       prevRoutes = prevRoutes.slice(0, prevState.index + 1);
     }

@@ -13,6 +13,10 @@ function Menu({ navigation }) {
 }
 
 class Fake extends React.Component {
+  static navigationOptions = ({ navigation }) => ({
+    title: navigation.getParam('title'),
+  });
+
   render() {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
@@ -37,6 +41,7 @@ const Drawer = createDrawerNavigator(
   },
   {
     contentComponent: props => <Menu {...props} />,
+    navigationOptions: { title: 'Example' }
   }
 );
 
