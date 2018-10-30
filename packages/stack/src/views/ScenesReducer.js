@@ -94,7 +94,15 @@ export default function ScenesReducer(
   });
 
   const nextKeys = new Set();
-  nextState.routes.forEach((route, index) => {
+  let nextRoutes = nextState.routes;
+  if (nextRoutes.length > nextState.index + 1) {
+    console.warn(
+      'StackRouter provided invalid state, index should always be the top route'
+    );
+    nextRoutes = nextState.routes.slice(0, nextState.index + 1);
+  }
+
+  nextRoutes.forEach((route, index) => {
     const key = SCENE_KEY_PREFIX + route.key;
 
     let descriptor = descriptors && descriptors[route.key];
@@ -123,8 +131,15 @@ export default function ScenesReducer(
   });
 
   if (prevState) {
+    let prevRoutes = prevState.routes;
+    if (prevRoutes.length > prevState.index + 1) {
+      console.warn(
+        'Stack provided invalid state, index should always be the top route'
+      );
+      prevRoutes = prevRoutes.slice(0, prevState.index + 1);
+    }
     // Look at the previous routes and classify any removed scenes as `stale`.
-    prevState.routes.forEach((route, index) => {
+    prevRoutes.forEach((route, index) => {
       const key = SCENE_KEY_PREFIX + route.key;
       if (freshScenes.has(key)) {
         return;

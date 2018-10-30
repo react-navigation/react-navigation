@@ -11,8 +11,6 @@ const DefaultTransitionSpec = {
   timing: Animated.timing,
 };
 
-const DEBUG = false;
-
 class Transitioner extends React.Component {
   constructor(props, context) {
     super(props, context);
@@ -69,19 +67,14 @@ class Transitioner extends React.Component {
 
   // eslint-disable-next-line react/no-deprecated
   componentWillReceiveProps(nextProps) {
-    if (this._isTransitionRunning && !this._queuedTransition) {
-      this._queuedTransition = { prevProps: this.props };
+    if (this._isTransitionRunning) {
+      if (!this._queuedTransition) {
+        this._queuedTransition = { prevProps: this.props };
+      }
       return;
     }
 
-    let nextScenes = this._computeScenes(this.props, nextProps);
-
-    const indexHasChanged =
-      nextProps.navigation.state.index !== this.props.navigation.state.index;
-
-    if (nextScenes) {
-      this._startTransition(nextProps, nextScenes, indexHasChanged);
-    }
+    this._startTransition(this.props, nextProps);
   }
 
   _computeScenes = (props, nextProps) => {
@@ -106,25 +99,26 @@ class Transitioner extends React.Component {
       return;
     }
 
-    if (__DEV__ && DEBUG) {
-      console.log({ nextScenes: nextScenes.map(s => s.descriptor.key) });
-    }
-
     return nextScenes;
   };
 
-  _startTransition(nextProps, nextScenes, indexHasChanged) {
+  _startTransition(props, nextProps) {
+    const indexHasChanged =
+      props.navigation.state.index !== nextProps.navigation.state.index;
+    let nextScenes = this._computeScenes(props, nextProps);
+
+    if (!nextScenes) {
+      // prevTransitionProps are the same as transitionProps in this case
+      // because nothing changed
+      this._prevTransitionProps = this._transitionProps;
+      this._onTransitionEnd();
+      return;
+    }
+
     const nextState = {
       ...this.state,
       scenes: nextScenes,
     };
-
-    if (__DEV__ && DEBUG) {
-      console.log({
-        startTransition: true,
-        nextScenes: nextScenes.map(s => s.descriptor.key),
-      });
-    }
 
     // grab the position animated value
     const { position } = nextState;
@@ -135,7 +129,6 @@ class Transitioner extends React.Component {
     // compute transitionProps
     this._prevTransitionProps = this._transitionProps;
     this._transitionProps = buildTransitionProps(nextProps, nextState);
-
     let { isTransitioning } = this._transitionProps.navigation.state;
 
     // if the state isn't transitioning that is meant to signal that we should
@@ -205,17 +198,6 @@ class Transitioner extends React.Component {
   }
 
   render() {
-    if (__DEV__ && DEBUG) {
-      let key = this.props.navigation.state.key;
-      let routeName = this.props.navigation.state.routeName;
-
-      console.log({
-        render: true,
-        [key]: this.state.scenes.map(d => d.key),
-        route: routeName,
-      });
-    }
-
     return (
       <View onLayout={this._onLayout} style={styles.main}>
         {this.props.render(this._transitionProps, this._prevTransitionProps)}
@@ -264,10 +246,6 @@ class Transitioner extends React.Component {
       scenes,
     };
 
-    if (__DEV__ && DEBUG) {
-      console.log({ onTransitionEnd: true, scenes: scenes.map(s => s.key) });
-    }
-
     this._transitionProps = buildTransitionProps(this.props, nextState);
 
     this.setState(nextState, async () => {
@@ -283,20 +261,9 @@ class Transitioner extends React.Component {
       }
 
       if (this._queuedTransition) {
-        const indexHasChanged =
-          this.props.navigation.state.index !==
-          this._queuedTransition.prevProps.navigation.state.index;
-        let nextScenes = this._computeScenes(
-          this._queuedTransition.prevProps,
-          this.props
-        );
-
-        if (nextScenes) {
-          this._startTransition(this.props, nextScenes, indexHasChanged);
-        } else {
-          this._isTransitionRunning = false;
-        }
+        let { prevProps } = this._queuedTransition;
         this._queuedTransition = null;
+        this._startTransition(prevProps, this.props);
       } else {
         this._isTransitionRunning = false;
       }

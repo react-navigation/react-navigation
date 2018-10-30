@@ -15,6 +15,7 @@ import ModalStack from './src/ModalStack';
 import LifecycleInteraction from './src/LifecycleInteraction';
 import GestureInteraction from './src/GestureInteraction';
 import SwitchWithStacks from './src/SwitchWithStacks';
+import StackWithDrawer from './src/StackWithDrawer';
 
 // Comment the following two lines to stop using react-native-screens
 import { useScreens } from 'react-native-screens';
@@ -47,6 +48,11 @@ const data = [
     component: SwitchWithStacks,
     title: 'Switch with Stacks',
     routeName: 'SwitchWithStacks',
+  },
+  {
+    component: StackWithDrawer,
+    title: 'Stack with drawer inside',
+    routeName: 'StackWithDrawer',
   },
 ];
 
