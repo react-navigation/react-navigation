@@ -5,7 +5,7 @@ import getScreenForRouteName from './getScreenForRouteName';
 import StateUtils from '../StateUtils';
 import validateRouteConfigMap from './validateRouteConfigMap';
 import invariant from '../utils/invariant';
-import { generateKey } from './KeyGenerator.ts';
+import { generateKey } from './KeyGenerator';
 import { createPathParser } from './pathUtils';
 
 function behavesLikePushAction(action) {

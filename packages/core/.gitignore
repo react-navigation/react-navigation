@@ -7,6 +7,7 @@
 
 # VSCode
 .vscode/
+tsconfig.json
 jsconfig.json
 
 # Xcode
@@ -50,6 +51,3 @@ android/keystores/debug.keystore
 
 # Build
 dist/
-
-# Code coverage files
-coverage/

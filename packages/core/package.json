@@ -11,13 +11,10 @@
   ],
   "react-native": "src/index.js",
   "scripts": {
-    "pretest": "yarn lint && yarn build",
     "test": "jest",
     "lint": "eslint .",
     "format": "eslint . --fix",
-    "babel": "babel --no-babelrc --plugins=transform-es2015-block-scoping,transform-es2015-modules-commonjs,transform-react-jsx,transform-class-properties,transform-object-rest-spread,transform-flow-strip-types src --copy-files --out-dir dist --ignore '**/__tests__/**'",
-    "tsc": "tsc",
-    "build": "yarn babel && yarn tsc",
+    "build": "babel --no-babelrc --plugins=transform-es2015-block-scoping,transform-es2015-modules-commonjs,transform-react-jsx,transform-class-properties,transform-object-rest-spread,transform-flow-strip-types src --copy-files --out-dir dist --ignore '**/__tests__/**'",
     "prepare": "yarn build",
     "release": "release-it"
   },
@@ -62,7 +59,7 @@
     "eslint": "^4.12.1",
     "eslint-config-satya164": "^1.0.1",
     "eslint-plugin-react-native-globals": "^0.1.0",
-    "husky": "^1.1.2",
+    "husky": "^0.14.3",
     "jest": "^22.1.3",
     "jest-expo": "^30.0.0",
     "prettier": "^1.8.2",
@@ -70,41 +67,26 @@
     "react-dom": "16.3.1",
     "react-native": "^0.55.4",
     "react-test-renderer": "16.3.1",
-    "release-it": "^7.6.1",
-    "ts-jest": "^23.10.4",
-    "typescript": "^3.1.3"
+    "release-it": "^7.6.1"
   },
   "peerDependencies": {
     "react": "*"
   },
   "jest": {
     "preset": "react-native",
-    "testRegex": "/__tests__/[^/]+-test\\.(js|tsx?)$",
+    "testRegex": "/__tests__/[^/]+-test\\.js$",
     "setupFiles": [
       "<rootDir>/jest-setup.js"
     ],
     "coveragePathIgnorePatterns": [
       "jest-setup.js"
     ],
-    "transformIgnorePatterns": [
-      "node_modules/(?!(jest-)?react-native|react-clone-referenced-element)"
-    ],
-    "transform": {
-      "^.+\\.tsx?$": "ts-jest"
-    },
     "modulePathIgnorePatterns": [
       "<rootDir>/example/"
     ],
-    "globals": {
-      "ts-jest": {
-        "tsConfig": "./tsconfig.test.json",
-        "diagnostics": {
-          "ignoreCodes": [
-            151001
-          ]
-        }
-      }
-    }
+    "transformIgnorePatterns": [
+      "node_modules/(?!(jest-)?react-native|react-clone-referenced-element)"
+    ]
   },
   "prettier": {
     "trailingComma": "es5",
