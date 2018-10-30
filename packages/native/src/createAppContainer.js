@@ -6,6 +6,7 @@ import {
   NavigationActions,
   pathUtils,
   getNavigation,
+  NavigationProvider,
 } from '@react-navigation/core';
 import invariant from './utils/invariant';
 import docsUrl from './utils/docsUrl';
@@ -377,7 +378,11 @@ export default function createNavigationContainer(Component) {
         navigation = this._navigation;
       }
       invariant(navigation, 'failed to get navigation');
-      return <Component {...this.props} navigation={navigation} />;
+      return (
+        <NavigationProvider value={navigation}>
+          <Component {...this.props} navigation={navigation} />
+        </NavigationProvider>
+      );
     }
   }
 
