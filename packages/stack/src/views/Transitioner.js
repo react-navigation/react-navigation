@@ -99,7 +99,7 @@ class Transitioner extends React.Component {
     }
 
     if (__DEV__ && DEBUG) {
-      console.log({ nextScenes: nextScenes.map(s => s.descriptor.key )})
+      console.log({ nextScenes: nextScenes.map(s => s.descriptor.key) });
     }
 
     const indexHasChanged =
@@ -199,7 +199,10 @@ class Transitioner extends React.Component {
     if (__DEV__ && DEBUG) {
       let key = this.props.navigation.state.key;
       let routeName = this.props.navigation.state.routeName;
-      console.log({ [key]: this.state.scenes.map(d => d.key), route: routeName });
+      console.log({
+        [key]: this.state.scenes.map(d => d.key),
+        route: routeName,
+      });
     }
 
     return (
@@ -312,7 +315,9 @@ function filterStale(scenes) {
 
 function filterNotInState(scenes, state) {
   let activeKeys = state.routes.map(r => r.key);
-  let filtered = scenes.filter(scene => activeKeys.includes(scene.descriptor.key));
+  let filtered = scenes.filter(scene =>
+    activeKeys.includes(scene.descriptor.key)
+  );
 
   if (__DEV__ && DEBUG) {
     console.log({
