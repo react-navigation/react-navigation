@@ -458,3 +458,86 @@ test('child focus with immediate transition', () => {
   expect(childWillBlurHandler.mock.calls.length).toBe(1);
   expect(childDidBlurHandler.mock.calls.length).toBe(1);
 });
+
+const setupEventTest = (subscriptionKey, initialLastFocusEvent) => {
+  const parentSubscriber = jest.fn();
+  const emitEvent = payload => {
+    parentSubscriber.mock.calls.forEach(subs => {
+      if (subs[0] === payload.type) {
+        subs[1](payload);
+      }
+    });
+  };
+  const subscriptionRemove = () => {};
+  parentSubscriber.mockReturnValueOnce({ remove: subscriptionRemove });
+  const evtProvider = getChildEventSubscriber(
+    parentSubscriber,
+    subscriptionKey,
+    initialLastFocusEvent
+  );
+  const handlers = {};
+  evtProvider.addListener('action', (handlers.action = jest.fn()));
+  evtProvider.addListener('willFocus', (handlers.willFocus = jest.fn()));
+  evtProvider.addListener('didFocus', (handlers.didFocus = jest.fn()));
+  evtProvider.addListener('willBlur', (handlers.willBlur = jest.fn()));
+  evtProvider.addListener('didBlur', (handlers.didBlur = jest.fn()));
+  return { emitEvent, handlers, evtProvider };
+};
+
+test('immediate back with uncompleted transition will focus first screen again', () => {
+  const { handlers, emitEvent } = setupEventTest('key0', 'didFocus');
+  emitEvent({
+    type: 'action',
+    state: {
+      index: 1,
+      routes: [{ key: 'key0' }, { key: 'key1' }],
+      isTransitioning: true,
+    },
+    lastState: {
+      index: 0,
+      routes: [{ key: 'key0' }],
+      isTransitioning: false,
+    },
+    action: { type: 'Any action, does not matter here' },
+  });
+  expect(handlers.willFocus.mock.calls.length).toBe(0);
+  expect(handlers.didFocus.mock.calls.length).toBe(0);
+  expect(handlers.willBlur.mock.calls.length).toBe(1);
+  expect(handlers.didBlur.mock.calls.length).toBe(0);
+  emitEvent({
+    type: 'action',
+    state: {
+      index: 0,
+      routes: [{ key: 'key0' }],
+      isTransitioning: true,
+    },
+    lastState: {
+      index: 1,
+      routes: [{ key: 'key0' }, { key: 'key1' }],
+      isTransitioning: true,
+    },
+    action: { type: 'Any action, does not matter here' },
+  });
+  expect(handlers.willFocus.mock.calls.length).toBe(1);
+  expect(handlers.didFocus.mock.calls.length).toBe(0);
+  expect(handlers.willBlur.mock.calls.length).toBe(1);
+  expect(handlers.didBlur.mock.calls.length).toBe(0);
+  emitEvent({
+    type: 'action',
+    state: {
+      index: 0,
+      routes: [{ key: 'key0' }],
+      isTransitioning: false,
+    },
+    lastState: {
+      index: 0,
+      routes: [{ key: 'key0' }],
+      isTransitioning: true,
+    },
+    action: { type: 'Any action, does not matter here' },
+  });
+  expect(handlers.willFocus.mock.calls.length).toBe(1);
+  expect(handlers.didFocus.mock.calls.length).toBe(1);
+  expect(handlers.willBlur.mock.calls.length).toBe(1);
+  expect(handlers.didBlur.mock.calls.length).toBe(0);
+});

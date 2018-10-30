@@ -11,6 +11,7 @@ import { ListSection, Divider } from 'react-native-paper';
 
 import SimpleStack from './src/SimpleStack';
 import SimpleTabs from './src/SimpleTabs';
+import EventsStack from './src/EventsStack';
 
 // Comment/uncomment the following two lines to toggle react-native-screens
 // import { useScreens } from 'react-native-screens';
@@ -23,6 +24,7 @@ I18nManager.forceRTL(false);
 const data = [
   { component: SimpleStack, title: 'Simple Stack', routeName: 'SimpleStack' },
   { component: SimpleTabs, title: 'Simple Tabs', routeName: 'SimpleTabs' },
+  { component: EventsStack, title: 'Events', routeName: 'EventsStack' },
 ];
 
 // Cache images

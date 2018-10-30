@@ -4,7 +4,11 @@
  * Based on the 'action' events that get fired for this navigation state, this utility will fire
  * focus and blur events for this child
  */
-export default function getChildEventSubscriber(addListener, key) {
+export default function getChildEventSubscriber(
+  addListener,
+  key,
+  initialLastFocusEvent = 'didBlur'
+) {
   const actionSubscribers = new Set();
   const willFocusSubscribers = new Set();
   const didFocusSubscribers = new Set();
@@ -53,11 +57,11 @@ export default function getChildEventSubscriber(addListener, key) {
       });
   };
 
-  // lastEmittedEvent keeps track of focus state for one route. First we assume
+  // lastFocusEvent keeps track of focus state for one route. First we assume
   // we are blurred. If we are focused on initialization, the first 'action'
   // event will cause onFocus+willFocus events because we had previously been
   // considered blurred
-  let lastEmittedEvent = 'didBlur';
+  let lastFocusEvent = initialLastFocusEvent;
 
   const upstreamEvents = [
     'willFocus',
@@ -96,60 +100,72 @@ export default function getChildEventSubscriber(addListener, key) {
       };
       const isTransitioning = !!state && state.isTransitioning;
 
-      const previouslyLastEmittedEvent = lastEmittedEvent;
+      const previouslylastFocusEvent = lastFocusEvent;
 
-      if (lastEmittedEvent === 'didBlur') {
+      if (lastFocusEvent === 'didBlur') {
         // The child is currently blurred. Look for willFocus conditions
         if (eventName === 'willFocus' && isChildFocused) {
-          emit((lastEmittedEvent = 'willFocus'), childPayload);
+          emit((lastFocusEvent = 'willFocus'), childPayload);
         } else if (eventName === 'action' && isChildFocused) {
-          emit((lastEmittedEvent = 'willFocus'), childPayload);
+          emit((lastFocusEvent = 'willFocus'), childPayload);
         }
       }
-      if (lastEmittedEvent === 'willFocus') {
+      if (lastFocusEvent === 'willFocus') {
         // We are currently mid-focus. Look for didFocus conditions.
         // If state.isTransitioning is false, this child event happens immediately after willFocus
         if (eventName === 'didFocus' && isChildFocused && !isTransitioning) {
-          emit((lastEmittedEvent = 'didFocus'), childPayload);
+          emit((lastFocusEvent = 'didFocus'), childPayload);
         } else if (
           eventName === 'action' &&
           isChildFocused &&
           !isTransitioning
         ) {
-          emit((lastEmittedEvent = 'didFocus'), childPayload);
+          emit((lastFocusEvent = 'didFocus'), childPayload);
         }
       }
 
-      if (lastEmittedEvent === 'didFocus') {
+      if (lastFocusEvent === 'didFocus') {
         // The child is currently focused. Look for blurring events
         if (!isChildFocused) {
           // The child is no longer focused within this navigation state
-          emit((lastEmittedEvent = 'willBlur'), childPayload);
+          emit((lastFocusEvent = 'willBlur'), childPayload);
         } else if (eventName === 'willBlur') {
           // The parent is getting a willBlur event
-          emit((lastEmittedEvent = 'willBlur'), childPayload);
+          emit((lastFocusEvent = 'willBlur'), childPayload);
         } else if (
           eventName === 'action' &&
-          previouslyLastEmittedEvent === 'didFocus'
+          previouslylastFocusEvent === 'didFocus'
         ) {
           // While focused, pass action events to children for grandchildren focus
           emit('action', childPayload);
         }
       }
 
-      if (lastEmittedEvent === 'willBlur') {
+      if (lastFocusEvent === 'willBlur') {
         // The child is mid-blur. Wait for transition to end
         if (eventName === 'action' && !isChildFocused && !isTransitioning) {
           // The child is done blurring because transitioning is over, or isTransitioning
           // never began and didBlur fires immediately after willBlur
-          emit((lastEmittedEvent = 'didBlur'), childPayload);
+          emit((lastFocusEvent = 'didBlur'), childPayload);
         } else if (eventName === 'didBlur') {
           // Pass through the parent didBlur event if it happens
-          emit((lastEmittedEvent = 'didBlur'), childPayload);
+          emit((lastFocusEvent = 'didBlur'), childPayload);
+        } else if (
+          eventName === 'action' &&
+          isChildFocused &&
+          !isTransitioning
+        ) {
+          emit((lastFocusEvent = 'didFocus'), childPayload);
+        } else if (
+          eventName === 'action' &&
+          isChildFocused &&
+          isTransitioning
+        ) {
+          emit((lastFocusEvent = 'willFocus'), childPayload);
         }
       }
 
-      if (lastEmittedEvent === 'didBlur' && !newRoute) {
+      if (lastFocusEvent === 'didBlur' && !newRoute) {
         removeAll();
       }
     })
