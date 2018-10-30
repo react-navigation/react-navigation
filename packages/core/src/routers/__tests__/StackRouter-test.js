@@ -907,10 +907,10 @@ describe('StackRouter', () => {
       },
       state
     );
-    expect(state2 && state2.index).toEqual(1);
-    expect(state2 && state2.routes[1].routeName).toEqual('Bar');
-    expect(state2 && state2.routes[1].params).toEqual({ name: 'Zoom' });
-    expect(state2 && state2.routes.length).toEqual(2);
+    expect(state2.index).toEqual(1);
+    expect(state2.routes[1].routeName).toEqual('Bar');
+    expect(state2.routes[1].params).toEqual({ name: 'Zoom' });
+    expect(state2.routes.length).toEqual(2);
     const state3 = router.getStateForAction(
       { type: NavigationActions.BACK, immediate: true },
       state2
@@ -1059,11 +1059,67 @@ describe('StackRouter', () => {
     const state3 = router.getStateForAction(
       {
         type: StackActions.COMPLETE_TRANSITION,
+        toChildKey: state2.routes[1].key,
       },
       state2
     );
     expect(state3 && state3.index).toEqual(1);
     expect(state3 && state3.isTransitioning).toEqual(false);
+  });
+
+  test('Completion action does not work with incorrect key', () => {
+    const FooScreen = () => <div />;
+    const router = StackRouter({
+      Foo: {
+        screen: FooScreen,
+      },
+      Bar: {
+        screen: FooScreen,
+      },
+    });
+    const state = {
+      key: 'StackKey',
+      index: 1,
+      isTransitioning: true,
+      routes: [{ key: 'a', routeName: 'Foo' }, { key: 'b', routeName: 'Foo' }],
+    };
+    const outputState = router.getStateForAction(
+      {
+        type: StackActions.COMPLETE_TRANSITION,
+        toChildKey: state.routes[state.index].key,
+        key: 'not StackKey',
+      },
+      state
+    );
+    expect(outputState.isTransitioning).toEqual(true);
+  });
+
+  test('Completion action does not work with incorrect toChildKey', () => {
+    const FooScreen = () => <div />;
+    const router = StackRouter({
+      Foo: {
+        screen: FooScreen,
+      },
+      Bar: {
+        screen: FooScreen,
+      },
+    });
+    const state = {
+      key: 'StackKey',
+      index: 1,
+      isTransitioning: true,
+      routes: [{ key: 'a', routeName: 'Foo' }, { key: 'b', routeName: 'Foo' }],
+    };
+    const outputState = router.getStateForAction(
+      {
+        type: StackActions.COMPLETE_TRANSITION,
+        // for this action to toggle isTransitioning, toChildKey should be state.routes[state.index].key,
+        toChildKey: 'incorrect',
+        key: 'StackKey',
+      },
+      state
+    );
+    expect(outputState.isTransitioning).toEqual(true);
   });
 
   test('Back action parent is prioritized over inactive child routers', () => {
@@ -1842,14 +1898,15 @@ describe('StackRouter', () => {
       },
       state
     );
-    expect(state2 && state2.index).toEqual(0);
-    expect(state2 && state2.isTransitioning).toEqual(false);
-    expect(state2 && state2.routes[0].index).toEqual(1);
-    expect(state2 && state2.routes[0].isTransitioning).toEqual(true);
+    expect(state2.index).toEqual(0);
+    expect(state2.isTransitioning).toEqual(false);
+    expect(state2.routes[0].index).toEqual(1);
+    expect(state2.routes[0].isTransitioning).toEqual(true);
     expect(!!key).toEqual(true);
     const state3 = router.getStateForAction(
       {
         type: StackActions.COMPLETE_TRANSITION,
+        toChildKey: state2.routes[0].routes[1].key,
       },
       state2
     );

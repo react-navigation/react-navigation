@@ -226,6 +226,7 @@ export default (routeConfigs, stackConfig = {}) => {
       } else if (action.type === NavigationActions.NAVIGATE) {
         // Traverse routes from the top of the stack to the bottom, so the
         // active route has the first opportunity, then the one before it, etc.
+
         for (let childRoute of state.routes.slice().reverse()) {
           let childRouter = childRouters[childRoute.routeName];
           let childAction =
@@ -449,6 +450,7 @@ export default (routeConfigs, stackConfig = {}) => {
       if (
         action.type === StackActions.COMPLETE_TRANSITION &&
         (action.key == null || action.key === state.key) &&
+        action.toChildKey === state.routes[state.index].key &&
         state.isTransitioning
       ) {
         return {
