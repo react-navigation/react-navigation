@@ -190,10 +190,12 @@ export default class PagerPan<T: *> extends React.Component<Props<T>> {
 
   _transitionTo = (index: number, animated: boolean = true) => {
     const offset = -index * this.props.layout.width;
+    const route = this.props.navigationState.routes[index];
 
     if (this.props.animationEnabled === false || animated === false) {
       this.props.panX.setValue(0);
       this.props.offsetX.setValue(offset);
+      this.props.jumpTo(route.key);
       return;
     }
 
@@ -210,7 +212,6 @@ export default class PagerPan<T: *> extends React.Component<Props<T>> {
       }),
     ]).start(({ finished }) => {
       if (finished) {
-        const route = this.props.navigationState.routes[index];
         this.props.jumpTo(route.key);
         this.props.onAnimationEnd && this.props.onAnimationEnd();
         this._pendingIndex = null;
