@@ -48,6 +48,8 @@ import TabsWithNavigationFocus from './TabsWithNavigationFocus';
 import TabsWithNavigationEvents from './TabsWithNavigationEvents';
 import KeyboardHandlingExample from './KeyboardHandlingExample';
 
+process.env.REACT_NAV_LOGGING = true;
+
 const ExampleInfo = {
   SimpleStack: {
     name: 'Stack Example',
