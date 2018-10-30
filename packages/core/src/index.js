@@ -12,6 +12,9 @@ module.exports = {
   get createNavigator() {
     return require('./navigators/createNavigator').default;
   },
+  get NavigationContext() {
+    return require('./views/NavigationContext').default;
+  },
   get NavigationProvider() {
     return require('./views/NavigationContext').default.NavigationProvider;
   },
