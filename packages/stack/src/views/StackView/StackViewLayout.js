@@ -268,43 +268,36 @@ class StackViewLayout extends React.Component {
       this._getTransitionConfig().containerStyle,
     ];
 
-    let content = (
-      <Animated.View style={containerStyle}>
-        <StackGestureContext.Provider value={this.panGestureRef}>
-          <ScreenContainer style={styles.scenes}>
-            {scenes.map(s => this._renderCard(s))}
-          </ScreenContainer>
-          {floatingHeader}
-        </StackGestureContext.Provider>
-      </Animated.View>
-    );
-    if (Platform.OS === 'ios') {
-      return (
-        <PanGestureHandler
-          {...this._gestureActivationCriteria()}
-          ref={this.panGestureRef}
-          onGestureEvent={Animated.event(
-            [
-              {
-                nativeEvent: {
-                  translationX: this.gestureX,
-                  translationY: this.gestureY,
-                },
-              },
-            ],
+    return (
+      <PanGestureHandler
+        {...this._gestureActivationCriteria()}
+        ref={this.panGestureRef}
+        onGestureEvent={Animated.event(
+          [
             {
-              useNativeDriver: USE_NATIVE_DRIVER,
-            }
-          )}
-          onHandlerStateChange={this._handlePanGestureStateChange}
-          enabled={index > 0 && gesturesEnabled}
-        >
-          {content}
-        </PanGestureHandler>
-      );
-    } else {
-      return content;
-    }
+              nativeEvent: {
+                translationX: this.gestureX,
+                translationY: this.gestureY,
+              },
+            },
+          ],
+          {
+            useNativeDriver: USE_NATIVE_DRIVER,
+          }
+        )}
+        onHandlerStateChange={this._handlePanGestureStateChange}
+        enabled={index > 0 && gesturesEnabled}
+      >
+        <Animated.View style={containerStyle}>
+          <StackGestureContext.Provider value={this.panGestureRef}>
+            <ScreenContainer style={styles.scenes}>
+              {scenes.map(s => this._renderCard(s))}
+            </ScreenContainer>
+            {floatingHeader}
+          </StackGestureContext.Provider>
+        </Animated.View>
+      </PanGestureHandler>
+    );
   }
 
   componentDidUpdate(prevProps) {
