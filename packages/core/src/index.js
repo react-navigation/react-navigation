@@ -16,10 +16,10 @@ module.exports = {
     return require('./views/NavigationContext').default;
   },
   get NavigationProvider() {
-    return require('./views/NavigationContext').default.NavigationProvider;
+    return require('./views/NavigationContext').default.Provider;
   },
   get NavigationConsumer() {
-    return require('./views/NavigationContext').default.NavigationConsumer;
+    return require('./views/NavigationContext').default.Consumer;
   },
 
   get createSwitchNavigator() {
