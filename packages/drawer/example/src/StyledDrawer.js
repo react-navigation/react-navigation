@@ -1,6 +1,9 @@
 import React from 'react';
 import { Button, ScrollView, StatusBar, Text } from 'react-native';
+
+// eslint-disable-next-line import/named
 import { createStackNavigator } from 'react-navigation-stack';
+
 import { SafeAreaView } from '@react-navigation/native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { createDrawerNavigator } from 'react-navigation-drawer';

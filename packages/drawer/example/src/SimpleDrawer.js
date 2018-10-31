@@ -8,6 +8,8 @@ import {
   Text,
   View,
 } from 'react-native';
+
+// eslint-disable-next-line import/named
 import { createStackNavigator } from 'react-navigation-stack';
 import { SafeAreaView } from '@react-navigation/native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
