@@ -1,5 +1,4 @@
 import ScenesReducer from '../ScenesReducer';
-
 const MOCK_DESCRIPTOR = {};
 
 /**
@@ -13,7 +12,7 @@ function testTransition(states) {
       return acc;
     }, {});
   const routes = states.map(keys => ({
-    index: 0,
+    index: keys.length - 1,
     routes: keys.map(key => ({ key, routeName: '' })),
     isTransitioning: false,
   }));
@@ -35,7 +34,7 @@ describe('ScenesReducer', () => {
     expect(scenes).toEqual([
       {
         index: 0,
-        isActive: true,
+        isActive: false,
         isStale: false,
         descriptor: MOCK_DESCRIPTOR,
         key: 'scene_1',
@@ -46,7 +45,7 @@ describe('ScenesReducer', () => {
       },
       {
         index: 1,
-        isActive: false,
+        isActive: true,
         isStale: false,
         descriptor: MOCK_DESCRIPTOR,
         key: 'scene_2',
@@ -65,7 +64,7 @@ describe('ScenesReducer', () => {
     expect(scenes).toEqual([
       {
         index: 0,
-        isActive: true,
+        isActive: false,
         isStale: false,
         descriptor: MOCK_DESCRIPTOR,
         key: 'scene_1',
@@ -87,7 +86,7 @@ describe('ScenesReducer', () => {
       },
       {
         index: 2,
-        isActive: false,
+        isActive: true,
         isStale: false,
         descriptor: MOCK_DESCRIPTOR,
         key: 'scene_3',
@@ -102,7 +101,7 @@ describe('ScenesReducer', () => {
   it('gets active scene when index changes', () => {
     const state1 = {
       index: 0,
-      routes: [{ key: '1', routeName: '' }, { key: '2', routeName: '' }],
+      routes: [{ key: '1', routeName: '' }],
       isTransitioning: false,
     };
 
@@ -120,13 +119,13 @@ describe('ScenesReducer', () => {
 
   it('gets same scenes', () => {
     const state1 = {
-      index: 0,
+      index: 1,
       routes: [{ key: '1', routeName: '' }, { key: '2', routeName: '' }],
       isTransitioning: false,
     };
 
     const state2 = {
-      index: 0,
+      index: 1,
       routes: [{ key: '1', routeName: '' }, { key: '2', routeName: '' }],
       isTransitioning: false,
     };
@@ -138,13 +137,13 @@ describe('ScenesReducer', () => {
 
   it('gets different scenes when keys are different', () => {
     const state1 = {
-      index: 0,
+      index: 1,
       routes: [{ key: '1', routeName: '' }, { key: '2', routeName: '' }],
       isTransitioning: false,
     };
 
     const state2 = {
-      index: 0,
+      index: 1,
       routes: [{ key: '2', routeName: '' }, { key: '1', routeName: '' }],
       isTransitioning: false,
     };
@@ -158,7 +157,7 @@ describe('ScenesReducer', () => {
 
   it('gets different scenes when routes are different', () => {
     const state1 = {
-      index: 0,
+      index: 1,
       routes: [
         { key: '1', x: 1, routeName: '' },
         { key: '2', x: 2, routeName: '' },
@@ -167,7 +166,7 @@ describe('ScenesReducer', () => {
     };
 
     const state2 = {
-      index: 0,
+      index: 1,
       routes: [
         { key: '1', x: 3, routeName: '' },
         { key: '2', x: 4, routeName: '' },
@@ -182,9 +181,12 @@ describe('ScenesReducer', () => {
     expect(scenes1).not.toBe(scenes2);
   });
 
+  // NOTE(brentvatne): this currently throws a warning about invalid StackRouter state,
+  // which is correct because you can't have a state like state2 where the index is
+  // anything except the last route in the array of routes.
   it('gets different scenes when state index changes', () => {
     const state1 = {
-      index: 0,
+      index: 1,
       routes: [
         { key: '1', x: 1, routeName: '' },
         { key: '2', x: 2, routeName: '' },
@@ -193,7 +195,7 @@ describe('ScenesReducer', () => {
     };
 
     const state2 = {
-      index: 1,
+      index: 0,
       routes: [
         { key: '1', x: 1, routeName: '' },
         { key: '2', x: 2, routeName: '' },
@@ -214,7 +216,7 @@ describe('ScenesReducer', () => {
     expect(scenes).toEqual([
       {
         index: 0,
-        isActive: true,
+        isActive: false,
         isStale: false,
         descriptor: MOCK_DESCRIPTOR,
         key: 'scene_1',
@@ -225,7 +227,7 @@ describe('ScenesReducer', () => {
       },
       {
         index: 1,
-        isActive: false,
+        isActive: true,
         isStale: false,
         descriptor: MOCK_DESCRIPTOR,
         key: 'scene_2',
