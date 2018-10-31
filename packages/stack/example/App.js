@@ -1,7 +1,11 @@
 import React from 'react';
 import Expo from 'expo';
 import { FlatList, I18nManager } from 'react-native';
-import { createAppContainer } from '@react-navigation/native';
+import {
+  createAppContainer,
+  SafeAreaView,
+  ScrollView,
+} from '@react-navigation/native';
 import {
   Assets as StackAssets,
   createStackNavigator,
@@ -99,9 +103,21 @@ class Home extends React.Component {
         ItemSeparatorComponent={Divider}
         renderItem={this._renderItem}
         keyExtractor={this._keyExtractor}
+        renderScrollComponent={props => <SafeAreaScrollView {...props} />}
         data={data}
         style={{ backgroundColor: '#fff' }}
       />
+    );
+  }
+}
+
+class SafeAreaScrollView extends React.Component {
+  render() {
+    let { children, ...scrollViewProps } = this.props;
+    return (
+      <ScrollView {...scrollViewProps}>
+        <SafeAreaView forceInset={{ top: 'never' }}>{children}</SafeAreaView>
+      </ScrollView>
     );
   }
 }
