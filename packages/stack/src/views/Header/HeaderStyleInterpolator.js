@@ -324,10 +324,21 @@ function forCenterFromLeft(props) {
   };
 }
 
-// Default to no transition
-function forBackground() {
-  return null;
+// Fade in background of header while transitioning
+function forBackgroundWithFade(props) {
+  const { position, scene } = props;
+  const sceneRange = getSceneIndicesForInterpolationInputRange(props);
+  if (!sceneRange) return { opacity: 0 };
+  return {
+    opacity: position.interpolate({
+      inputRange: [sceneRange.first, scene.index, sceneRange.last],
+      outputRange: [0, 1, 1],
+    }),
+  };
 }
+
+// Default to fade transition
+const forBackground = forBackgroundWithFade;
 
 // Translate the background with the card
 const BACKGROUND_OFFSET = Dimensions.get('window').width;
@@ -360,5 +371,6 @@ export default {
   forCenter,
   forRight,
   forBackground,
+  forBackgroundWithFade,
   forBackgroundWithTranslation,
 };
