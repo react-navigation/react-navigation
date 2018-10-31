@@ -247,7 +247,7 @@ class MainScreen extends React.Component<any, State> {
       <View style={{ flex: 1 }}>
         <NativeViewGestureHandler>
           <Animated.ScrollView
-            style={{ flex: 1 }}
+            style={{ flex: 1, backgroundColor: '#eee' }}
             scrollEventThrottle={1}
             onScroll={Animated.event(
               [
@@ -289,7 +289,8 @@ class MainScreen extends React.Component<any, State> {
             </Animated.View>
 
             <SafeAreaView
-              forceInset={{ bottom: 'always', horizontal: 'never' }}
+              forceInset={{ top: 'never', bottom: 'always' }}
+              style={{ backgroundColor: '#eee' }}
             >
               <View style={{ backgroundColor: '#fff' }}>
                 {Object.keys(ExampleRoutes).map((routeName: string) => (
@@ -311,19 +312,14 @@ class MainScreen extends React.Component<any, State> {
                       }
                     }}
                   >
-                    <SafeAreaView
-                      style={styles.itemContainer}
-                      forceInset={{ vertical: 'never', bottom: 'never' }}
-                    >
-                      <View style={styles.item}>
-                        <Text style={styles.title}>
-                          {ExampleInfo[routeName].name}
-                        </Text>
-                        <Text style={styles.description}>
-                          {ExampleInfo[routeName].description}
-                        </Text>
-                      </View>
-                    </SafeAreaView>
+                    <View style={styles.item}>
+                      <Text style={styles.title}>
+                        {ExampleInfo[routeName].name}
+                      </Text>
+                      <Text style={styles.description}>
+                        {ExampleInfo[routeName].description}
+                      </Text>
+                    </View>
                   </RectButton>
                 ))}
               </View>
@@ -370,8 +366,6 @@ const styles = StyleSheet.create({
   item: {
     paddingHorizontal: 16,
     paddingVertical: 12,
-  },
-  itemContainer: {
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: '#ddd',
   },
