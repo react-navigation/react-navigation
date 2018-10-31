@@ -5,12 +5,21 @@ import { createAppContainer } from '@react-navigation/native';
 // eslint-disable-next-line import/named
 import { createStackNavigator } from 'react-navigation-stack';
 import { List, Divider } from 'react-native-paper';
-import SimpleDrawer from './src/SimpleDrawer';
+import { SimpleDrawer, SimpleDrawerUnmountInactive } from './src/SimpleDrawer';
 import StyledDrawer from './src/StyledDrawer';
 import GestureInteraction from './src/GestureInteraction';
 
 const data = [
-  { component: SimpleDrawer, title: 'Simple', routeName: 'SimpleDrawer' },
+  {
+    component: SimpleDrawer,
+    title: 'Simple - persistent routes like tabs',
+    routeName: 'SimpleDrawer',
+  },
+  {
+    component: SimpleDrawerUnmountInactive,
+    title: 'Simple - unmount inactive routes',
+    routeName: 'SimpleDrawerUnmountInactive',
+  },
   { component: StyledDrawer, title: 'Styled', routeName: 'StyledDrawer' },
   {
     component: GestureInteraction,

@@ -122,27 +122,35 @@ DraftsStack.navigationOptions = {
   ),
 };
 
-const DrawerExample = createDrawerNavigator(
-  {
-    Inbox: {
-      path: '/',
-      screen: InboxStack,
+function createDrawerExample(options = {}) {
+  let DrawerExample = createDrawerNavigator(
+    {
+      Inbox: {
+        path: '/',
+        screen: InboxStack,
+      },
+      Drafts: {
+        path: '/sent',
+        screen: DraftsStack,
+      },
     },
-    Drafts: {
-      path: '/sent',
-      screen: DraftsStack,
-    },
-  },
-  {
-    initialRouteName: 'Drafts',
-    drawerWidth: 210,
-    navigationOptions: {
-      header: null,
-    },
-    contentOptions: {
-      activeTintColor: '#e91e63',
-    },
-  }
-);
+    {
+      initialRouteName: 'Drafts',
+      drawerWidth: 210,
+      navigationOptions: {
+        header: null,
+      },
+      contentOptions: {
+        activeTintColor: '#e91e63',
+      },
+      ...options,
+    }
+  );
 
-export default DrawerExample;
+  return DrawerExample;
+}
+
+export const SimpleDrawer = createDrawerExample();
+export const SimpleDrawerUnmountInactive = createDrawerExample({
+  unmountInactiveRoutes: true,
+});

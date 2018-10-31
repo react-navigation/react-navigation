@@ -2,6 +2,7 @@
 
 exports[`createDrawerNavigator renders successfully 1`] = `
 <RCTView
+  contentContainerStyle={undefined}
   drawerBackgroundColor="white"
   drawerLockMode={undefined}
   drawerPosition="left"

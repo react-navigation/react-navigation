@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { NavigationActions, StackActions } from '@react-navigation/core';
+import { NavigationActions } from '@react-navigation/core';
 import invariant from '../utils/invariant';
 
 /**

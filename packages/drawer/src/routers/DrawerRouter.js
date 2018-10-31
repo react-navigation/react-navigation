@@ -19,7 +19,11 @@ const getActiveRouteKey = route => {
 
 export default (routeConfigs, config = {}) => {
   config = { ...config };
-  config = withDefaultValue(config, 'resetOnBlur', false);
+  config = withDefaultValue(
+    config,
+    'resetOnBlur',
+    config.unmountInactiveRoutes ? true : !!config.resetOnBlur
+  );
   config = withDefaultValue(config, 'backBehavior', 'initialRoute');
 
   const switchRouter = SwitchRouter(routeConfigs, config);
