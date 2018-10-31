@@ -15,6 +15,8 @@ import {
   View,
 } from 'react-native';
 
+import BorderlessButton from './BorderlessButton';
+
 const ANDROID_VERSION_LOLLIPOP = 21;
 
 export default class TouchableItem extends React.Component {
@@ -46,13 +48,27 @@ export default class TouchableItem extends React.Component {
             this.props.borderless
           )}
         >
-          <View style={style}>{React.Children.only(this.props.children)}</View>
+          <View style={[style, { backgroundColor: '#fff' }]}>
+            {React.Children.only(this.props.children)}
+          </View>
         </TouchableNativeFeedback>
       );
+    } else if (Platform.OS === 'ios') {
+      return (
+        <BorderlessButton
+          hitSlop={{ top: 10, bottom: 10, right: 10, left: 10 }}
+          disallowInterruption
+          {...this.props}
+        >
+          {this.props.children}
+        </BorderlessButton>
+      );
+    } else {
+      return (
+        <TouchableOpacity {...this.props}>
+          {this.props.children}
+        </TouchableOpacity>
+      );
     }
-
-    return (
-      <TouchableOpacity {...this.props}>{this.props.children}</TouchableOpacity>
-    );
   }
 }
