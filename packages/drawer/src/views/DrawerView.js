@@ -139,12 +139,59 @@ export default class DrawerView extends React.PureComponent {
     );
   };
 
+  _renderContent = () => {
+    let { lazy, navigation } = this.props;
+    let { loaded } = this.state;
+    let { routes } = navigation.state;
+
+    if (this.props.navigationConfig.unmountInactiveRoutes) {
+      let activeKey = navigation.state.routes[navigation.state.index].key;
+      let descriptor = this.props.descriptors[activeKey];
+
+      return (
+        <SceneView
+          navigation={descriptor.navigation}
+          screenProps={this.props.screenProps}
+          component={descriptor.getComponent()}
+        />
+      );
+    } else {
+      return (
+        <ScreenContainer style={styles.pages}>
+          {routes.map((route, index) => {
+            if (lazy && !loaded.includes(index)) {
+              // Don't render a screen if we've never navigated to it
+              return null;
+            }
+
+            let isFocused = navigation.state.index === index;
+            let descriptor = this.props.descriptors[route.key];
+
+            return (
+              <ResourceSavingScene
+                key={route.key}
+                style={[
+                  StyleSheet.absoluteFill,
+                  { opacity: isFocused ? 1 : 0 },
+                ]}
+                isVisible={isFocused}
+              >
+                <SceneView
+                  navigation={descriptor.navigation}
+                  screenProps={this.props.screenProps}
+                  component={descriptor.getComponent()}
+                />
+              </ResourceSavingScene>
+            );
+          })}
+        </ScreenContainer>
+      );
+    }
+  };
+
   render() {
-    const { lazy, navigation } = this.props;
-    const { loaded } = this.state;
-    const { state } = navigation;
-    const { routes } = state;
-    const activeKey = routes[state.index].key;
+    const { navigation } = this.props;
+    const activeKey = navigation.state.routes[navigation.state.index].key;
     const { drawerLockMode } = this.props.descriptors[activeKey].options;
 
     return (
@@ -180,37 +227,12 @@ export default class DrawerView extends React.PureComponent {
         statusBarAnimation={this.props.navigationConfig.statusBarAnimation}
         minSwipeDistance={this.props.navigationConfig.minSwipeDistance}
         overlayColor={this.props.navigationConfig.overlayColor}
-        contentContainerStyle={this.props.navigationConfig.contentContainerStyle}
+        contentContainerStyle={
+          this.props.navigationConfig.contentContainerStyle
+        }
       >
         <DrawerGestureContext.Provider value={this.drawerGestureRef}>
-          <ScreenContainer style={styles.pages}>
-            {routes.map((route, index) => {
-              if (lazy && !loaded.includes(index)) {
-                // Don't render a screen if we've never navigated to it
-                return null;
-              }
-
-              const isFocused = navigation.state.index === index;
-              const descriptor = this.props.descriptors[route.key];
-
-              return (
-                <ResourceSavingScene
-                  key={route.key}
-                  style={[
-                    StyleSheet.absoluteFill,
-                    { opacity: isFocused ? 1 : 0 },
-                  ]}
-                  isVisible={isFocused}
-                >
-                  <SceneView
-                    navigation={descriptor.navigation}
-                    screenProps={this.props.screenProps}
-                    component={descriptor.getComponent()}
-                  />
-                </ResourceSavingScene>
-              );
-            })}
-          </ScreenContainer>
+          {this._renderContent()}
         </DrawerGestureContext.Provider>
       </DrawerLayout>
     );
