@@ -56,6 +56,7 @@ class TouchableWithoutFeedbackWrapper extends React.Component<*> {
       <TouchableWithoutFeedback
         onPress={onPress}
         testID={testID}
+        hitSlop={{ left: 15, right: 15, top: 5, bottom: 5 }}
         accessibilityLabel={accessibilityLabel}
       >
         <View {...props} />
