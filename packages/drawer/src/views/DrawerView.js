@@ -1,7 +1,6 @@
 import React from 'react';
 import { Dimensions, StyleSheet } from 'react-native';
 import { SceneView } from '@react-navigation/core';
-// eslint-disable-next-line import/no-unresolved
 import { ScreenContainer } from 'react-native-screens';
 
 import DrawerActions from '../routers/DrawerActions';
