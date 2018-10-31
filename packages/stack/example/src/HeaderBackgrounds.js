@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
-import {
-  createStackNavigator,
-  HeaderStyleInterpolator,
-} from 'react-navigation-stack';
+import { createStackNavigator } from 'react-navigation-stack';
 
 function createHeaderBackgroundExample(options = {}) {
   return createStackNavigator(
@@ -94,15 +91,10 @@ function createHeaderBackgroundExample(options = {}) {
 }
 export const HeaderBackgroundDefault = createHeaderBackgroundExample();
 export const HeaderBackgroundTranslate = createHeaderBackgroundExample({
-  transitionConfig: () => ({
-    headerBackgroundInterpolator:
-      HeaderStyleInterpolator.forBackgroundWithTranslation,
-  }),
+  headerBackgroundTransitionPreset: 'translate',
 });
 export const HeaderBackgroundFade = createHeaderBackgroundExample({
-  transitionConfig: () => ({
-    headerBackgroundInterpolator: HeaderStyleInterpolator.forBackgroundWithFade,
-  }),
+  headerBackgroundTransitionPreset: 'fade',
 });
 
 const styles = StyleSheet.create({

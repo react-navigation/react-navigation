@@ -21,6 +21,7 @@ import { PanGestureHandler, State } from 'react-native-gesture-handler';
 import Card from './StackViewCard';
 import Header from '../Header/Header';
 import TransitionConfigs from './StackViewTransitionConfigs';
+import HeaderStyleInterpolator from '../Header/HeaderStyleInterpolator';
 import StackGestureContext from '../../utils/StackGestureContext';
 import clamp from '../../utils/clamp';
 import { supportsImprovedSpringAnimation } from '../../utils/ReactNativeFeatures';
@@ -43,7 +44,12 @@ const EaseInOut = Easing.inOut(Easing.ease);
  * Enumerate possible values for validation
  */
 const HEADER_LAYOUT_PRESET_VALUES = ['center', 'left'];
-const HEADER_TRANSITION_PRESET_VALUES = ['uikit', 'fade-in-place'];
+const HEADER_TRANSITION_PRESET_VALUES = ['fade-in-place', 'uikit'];
+const HEADER_BACKGROUND_TRANSITION_PRESET_VALUES = [
+  'toggle',
+  'fade',
+  'translate',
+];
 
 /**
  * The max duration of the card animation in milliseconds after released gesture.
@@ -138,12 +144,17 @@ class StackViewLayout extends React.Component {
     // Handle the case where the header option is a function, and provide the default
     const renderHeader = header || (props => <Header {...props} />);
 
-    const {
+    let {
       headerLeftInterpolator,
       headerTitleInterpolator,
       headerRightInterpolator,
       headerBackgroundInterpolator,
     } = this._getTransitionConfig();
+
+    let backgroundTransitionPresetInterpolator = this._getHeaderBackgroundTransitionPreset();
+    if (backgroundTransitionPresetInterpolator) {
+      headerBackgroundInterpolator = backgroundTransitionPresetInterpolator;
+    }
 
     const { transitionProps, ...passProps } = this.props;
 
@@ -638,6 +649,35 @@ class StackViewLayout extends React.Component {
       return 'screen';
     }
     return 'float';
+  }
+
+  _getHeaderBackgroundTransitionPreset() {
+    const { headerBackgroundTransitionPreset } = this.props;
+    if (headerBackgroundTransitionPreset) {
+      if (
+        HEADER_BACKGROUND_TRANSITION_PRESET_VALUES.includes(
+          headerBackgroundTransitionPreset
+        )
+      ) {
+        if (headerBackgroundTransitionPreset === 'fade') {
+          return HeaderStyleInterpolator.forBackgroundWithFade;
+        } else if (headerBackgroundTransitionPreset === 'translate') {
+          return HeaderStyleInterpolator.forBackgroundWithTranslation;
+        } else if (headerBackgroundTransitionPreset === 'toggle') {
+          return HeaderStyleInterpolator.forBackgroundWithInactiveHidden;
+        }
+      } else {
+        if (__DEV__) {
+          console.error(
+            `Invalid configuration applied for headerBackgroundTransitionPreset - expected one of ${HEADER_BACKGROUND_TRANSITION_PRESET.join(
+              ', '
+            )} but received ${JSON.stringify(headerBackgroundTransitionPreset)}`
+          );
+        }
+      }
+    }
+
+    return null;
   }
 
   _getHeaderLayoutPreset() {
