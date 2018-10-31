@@ -16,6 +16,11 @@ import LifecycleInteraction from './src/LifecycleInteraction';
 import GestureInteraction from './src/GestureInteraction';
 import SwitchWithStacks from './src/SwitchWithStacks';
 import StackWithDrawer from './src/StackWithDrawer';
+import {
+  HeaderBackgroundDefault,
+  HeaderBackgroundTranslate,
+  HeaderBackgroundFade,
+} from './src/HeaderBackgrounds';
 
 // Comment the following two lines to stop using react-native-screens
 import { useScreens } from 'react-native-screens';
@@ -53,6 +58,21 @@ const data = [
     component: StackWithDrawer,
     title: 'Stack with drawer inside',
     routeName: 'StackWithDrawer',
+  },
+  {
+    component: HeaderBackgroundDefault,
+    title: 'Header background (default transition)',
+    routeName: 'HeaderBackgroundDefault',
+  },
+  {
+    component: HeaderBackgroundFade,
+    title: 'Header background (fade transition)',
+    routeName: 'HeaderBackgroundFade',
+  },
+  {
+    component: HeaderBackgroundTranslate,
+    title: 'Header background (translate transition)',
+    routeName: 'HeaderBackgroundTranslate',
   },
 ];
 
@@ -103,9 +123,6 @@ const Root = createStackNavigator(
   {
     mode: 'modal',
     headerMode: 'none',
-    defaultNavigationOptions: {
-      gesturesEnabled: false,
-    },
   }
 );
 

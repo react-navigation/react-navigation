@@ -1,6 +1,8 @@
 import { Dimensions, I18nManager } from 'react-native';
 import getSceneIndicesForInterpolationInputRange from '../../utils/getSceneIndicesForInterpolationInputRange';
 
+const EPS = 1e-5;
+
 function hasHeader(scene) {
   if (!scene) {
     return true;
@@ -28,6 +30,7 @@ const crossFadeInterpolation = (scenes, first, index, last) => ({
     hasHeader(scenes[last]) ? 0 : 1,
     0,
   ],
+  extrapolate: 'clamp',
 });
 
 /**
@@ -87,6 +90,7 @@ function forLayout(props) {
       rtlMult * (hasHeader(scenes[index]) ? 0 : isBack ? width : -width),
       rtlMult * (hasHeader(scenes[last]) ? 0 : -width),
     ],
+    extrapolate: 'clamp',
   });
 
   return {
@@ -181,6 +185,7 @@ function forLeftButton(props) {
     opacity: position.interpolate({
       inputRange,
       outputRange,
+      extrapolate: 'clamp',
     }),
   };
 }
@@ -230,6 +235,7 @@ function forLeftLabel(props) {
         hasHeader(scenes[last]) ? 0 : 1,
         0,
       ],
+      extrapolate: 'clamp',
     }),
     transform: [
       {
@@ -250,6 +256,7 @@ function forLeftLabel(props) {
                 hasHeader(scenes[last]) ? -offset * 1.5 : 0,
                 -offset * 1.5,
               ],
+          extrapolate: 'clamp',
         }),
       },
     ],
@@ -298,6 +305,7 @@ function forCenterFromLeft(props) {
         hasHeader(scenes[last]) ? 0 : 1,
         0,
       ],
+      extrapolate: 'clamp',
     }),
     transform: [
       {
@@ -318,6 +326,7 @@ function forCenterFromLeft(props) {
                 hasHeader(scenes[last]) ? -offset : 0,
                 -offset,
               ],
+          extrapolate: 'clamp',
         }),
       },
     ],
@@ -332,13 +341,19 @@ function forBackgroundWithFade(props) {
   return {
     opacity: position.interpolate({
       inputRange: [sceneRange.first, scene.index, sceneRange.last],
-      outputRange: [0, 1, 1],
+      outputRange: [0, 1, 0],
+      extrapolate: 'clamp',
     }),
   };
 }
 
-// Default to fade transition
-const forBackground = forBackgroundWithFade;
+const VISIBLE = { opacity: 1 };
+const HIDDEN = { opacity: 0 };
+
+// Toggle visibility of header without fading
+function forBackgroundWithInactiveHidden({ navigation, scene }) {
+  return navigation.state.index === scene.index ? VISIBLE : HIDDEN;
+}
 
 // Translate the background with the card
 const BACKGROUND_OFFSET = Dimensions.get('window').width;
@@ -356,11 +371,15 @@ function forBackgroundWithTranslation(props) {
         translateX: position.interpolate({
           inputRange: [first, index, last],
           outputRange: I18nManager.isRTL ? outputRange.reverse() : outputRange,
+          extrapolate: 'clamp',
         }),
       },
     ],
   };
 }
+
+// Default to fade transition
+const forBackground = forBackgroundWithInactiveHidden;
 
 export default {
   forLayout,
@@ -371,6 +390,7 @@ export default {
   forCenter,
   forRight,
   forBackground,
+  forBackgroundWithInactiveHidden,
   forBackgroundWithFade,
   forBackgroundWithTranslation,
 };
