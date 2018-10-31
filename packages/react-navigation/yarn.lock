@@ -46,10 +46,10 @@
     universal-user-agent "^2.0.0"
     url-template "^2.0.8"
 
-"@react-navigation/core@3.0.0-alpha.15":
-  version "3.0.0-alpha.15"
-  resolved "https://registry.yarnpkg.com/@react-navigation/core/-/core-3.0.0-alpha.15.tgz#86be3b4591e4421d889e9946490cec387ab322f0"
-  integrity sha512-tSWQIPYWrWdvNpfZ3FF3YP74P2sDxUqxt7Y0EC5ET6Xin/QTPbp6Dja9TSir7ki1obWW+bp5jWvd2gMYHyJ7IQ==
+"@react-navigation/core@3.0.0-alpha.18":
+  version "3.0.0-alpha.18"
+  resolved "https://registry.yarnpkg.com/@react-navigation/core/-/core-3.0.0-alpha.18.tgz#3791ce85f914c7912004e50c4fa040cc616b16b0"
+  integrity sha512-y2RhKSu6gQYGxxjhOU5dD7trCUxO2i5QQpGOeKvjE5wWdzYCUzCd88t5tDtFk9Z7oHEGIBUiKcy2nAA0HqMdzA==
   dependencies:
     create-react-context "^0.2.3"
     hoist-non-react-statics "^3.0.1"
@@ -6700,10 +6700,10 @@ react-navigation-drawer@1.0.0-alpha.5:
   resolved "https://registry.yarnpkg.com/react-navigation-drawer/-/react-navigation-drawer-1.0.0-alpha.5.tgz#1ef75b5e9c7ae9c3011427a493bcc2714ea2c072"
   integrity sha512-AD1AyqGpUb4coUw3KpJ7i/2RfTiE5RJfTDHVeBkpqc2wsXJ4PaWYGoxfvfWP910hJy8txYTnWWUinWmiD7aBgA==
 
-react-navigation-stack@1.0.0-alpha.27:
-  version "1.0.0-alpha.27"
-  resolved "https://registry.yarnpkg.com/react-navigation-stack/-/react-navigation-stack-1.0.0-alpha.27.tgz#348d222deb1bc0a2437848108626955dc94c8bfa"
-  integrity sha512-Ckg4yutFYsq5zbLYalqquo9svB8bPxSr3OBVuvPk0rqQPhl6N3wNxBiP/GxLQoRoON8fWrGOEwzGsRlrWtnFDw==
+react-navigation-stack@1.0.0-alpha.29:
+  version "1.0.0-alpha.29"
+  resolved "https://registry.yarnpkg.com/react-navigation-stack/-/react-navigation-stack-1.0.0-alpha.29.tgz#710623a4375408458c4564292096af4d16aa2456"
+  integrity sha512-ZOG6RojaDybNkxjwcsvzWSuOjEpZqAxN3FSspIQJSYpcAMWGGwCDYNg+ZYF5pBWAQmYwJ/6eNOP/X4VN3P/uBA==
 
 react-navigation-tabs@1.0.0-alpha.4:
   version "1.0.0-alpha.4"
