@@ -126,6 +126,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: 'transparent',
     marginBottom: 1,
+    overflow: 'visible',
   },
   title: {
     fontSize: 17,
