@@ -31,6 +31,7 @@ export default class BorderlessButton extends React.Component {
         restDisplacementThreshold: 0.01,
         restSpeedThreshold: 0.01,
         toValue: active ? this.props.activeOpacity : 1,
+        useNativeDriver: true,
       }).start();
     }
 
