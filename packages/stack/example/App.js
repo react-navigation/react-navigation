@@ -20,6 +20,7 @@ import LifecycleInteraction from './src/LifecycleInteraction';
 import GestureInteraction from './src/GestureInteraction';
 import SwitchWithStacks from './src/SwitchWithStacks';
 import StackWithDrawer from './src/StackWithDrawer';
+import HeaderPreset from './src/HeaderPreset';
 import {
   HeaderBackgroundDefault,
   HeaderBackgroundTranslate,
@@ -36,6 +37,7 @@ useScreens();
 
 const data = [
   { component: SimpleStack, title: 'Simple', routeName: 'SimpleStack' },
+  { component: HeaderPreset, title: 'UIKit Preset', routeName: 'UIKit' },
   { component: ImageStack, title: 'Image', routeName: 'ImageStack' },
   { component: ModalStack, title: 'Modal', routeName: 'ModalStack' },
   {
