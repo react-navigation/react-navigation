@@ -6695,10 +6695,10 @@ react-native@^0.52.0:
     xmldoc "^0.4.0"
     yargs "^9.0.0"
 
-react-navigation-drawer@1.0.0-alpha.6:
-  version "1.0.0-alpha.6"
-  resolved "https://registry.yarnpkg.com/react-navigation-drawer/-/react-navigation-drawer-1.0.0-alpha.6.tgz#80b659361092dafbeea43ff6974fd5a2aecd9f2c"
-  integrity sha512-X0kRVfp7RQn3uBianux9FBIQHMEgmKRaKnLxzDYECIlCrgHaUfDAjAc9IAO0S3pviO6jPKq8H8BR2fwoWUCvWA==
+react-navigation-drawer@1.0.0-alpha.7:
+  version "1.0.0-alpha.7"
+  resolved "https://registry.yarnpkg.com/react-navigation-drawer/-/react-navigation-drawer-1.0.0-alpha.7.tgz#2e8fb56985da6a8fdcf0980cf8cda8d71b69dbf7"
+  integrity sha512-s5VWEKP3T/gXnxbR5ndFYZPdkdNIEHDrPy+fzj4B4LQDVZ1K3qsYETfAg0EHGzVVk1CD9ljcvGGGFmA182MNYA==
   dependencies:
     react-native-tab-view "^1.2.0"
 
