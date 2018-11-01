@@ -58,13 +58,14 @@
     react-is "^16.5.2"
     react-lifecycles-compat "^3.0.4"
 
-"@react-navigation/native@3.0.0-alpha.9":
-  version "3.0.0-alpha.9"
-  resolved "https://registry.yarnpkg.com/@react-navigation/native/-/native-3.0.0-alpha.9.tgz#2e34be133ba9a8b40eb1795e0f1841dc261e2a85"
-  integrity sha512-GPvoOydf9z6QHUU6A68pRU7g3J0wOkmsb/xWOLrJXBpZ+9GvnsSJk0L/9jaoYlX1pBrU22CTa9fGAIbtAKSV1w==
+"@react-navigation/native@3.0.0-alpha.12":
+  version "3.0.0-alpha.12"
+  resolved "https://registry.yarnpkg.com/@react-navigation/native/-/native-3.0.0-alpha.12.tgz#7126cf095f23a75e28eab7c02cb67b87ad658a35"
+  integrity sha512-N3QanN1gRLrwHGk7yzmGYPOVL1OYiYN6jVlOjJYBA1DC/VJIq8vPBX7QzDLl/1+ch9WyOgm6lo/VsvCD0K44pw==
   dependencies:
     hoist-non-react-statics "^3.0.1"
     react-native-safe-area-view "^0.11.0"
+    react-native-screens "^1 || ^1.0.0-alpha"
 
 "@sindresorhus/is@^0.7.0":
   version "0.7.0"
@@ -6618,6 +6619,11 @@ react-native-safe-area-view@^0.11.0:
   integrity sha512-N3nElaahu1Me2ltnfc9acpgt1znm6pi8DSadKy79kvdzKwvVIzw0IXueA/Hjr51eCW1BsfNw7D1SgBT9U6qEkA==
   dependencies:
     hoist-non-react-statics "^2.3.1"
+
+"react-native-screens@^1 || ^1.0.0-alpha":
+  version "1.0.0-alpha.15"
+  resolved "https://registry.yarnpkg.com/react-native-screens/-/react-native-screens-1.0.0-alpha.15.tgz#5b5a0041310b46f12048fda1908d52e7290ec18f"
+  integrity sha512-S2OM/ieD+Krk+0/Z2Vz2rTUWYud5hJgCRZqXRtqEfMgEcGI4FBopXp7mwXCGbA2PFLjZwZSwLlsZ6RX30WnjRw==
 
 react-native-tab-view@^1.0.0, react-native-tab-view@^1.2.0:
   version "1.2.0"

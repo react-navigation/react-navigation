@@ -4,13 +4,13 @@
   "private": true,
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
+    "postinstall": "rm -rf node_modules/react-native-screens",
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "test": "flow"
   },
   "dependencies": {
-    "@react-navigation/native": "^3.0.0-alpha.9",
     "expo": "^30.0.0",
     "hoist-non-react-statics": "^3.0.1",
     "invariant": "^2.2.4",
