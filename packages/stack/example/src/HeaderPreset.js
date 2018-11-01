@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button, ScrollView, StatusBar } from 'react-native';
+import { Button, StatusBar } from 'react-native';
 import { SafeAreaView } from '@react-navigation/native';
 import { createStackNavigator } from 'react-navigation-stack';
 

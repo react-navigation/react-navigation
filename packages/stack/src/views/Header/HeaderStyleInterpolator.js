@@ -1,8 +1,6 @@
 import { Dimensions, I18nManager } from 'react-native';
 import getSceneIndicesForInterpolationInputRange from '../../utils/getSceneIndicesForInterpolationInputRange';
 
-const EPS = 1e-5;
-
 function hasHeader(scene) {
   if (!scene) {
     return true;

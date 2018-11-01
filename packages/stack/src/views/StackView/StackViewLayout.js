@@ -43,13 +43,9 @@ const EaseInOut = Easing.inOut(Easing.ease);
 /**
  * Enumerate possible values for validation
  */
-const HEADER_LAYOUT_PRESET_VALUES = ['center', 'left'];
-const HEADER_TRANSITION_PRESET_VALUES = ['fade-in-place', 'uikit'];
-const HEADER_BACKGROUND_TRANSITION_PRESET_VALUES = [
-  'toggle',
-  'fade',
-  'translate',
-];
+const HEADER_LAYOUT_PRESET = ['center', 'left'];
+const HEADER_TRANSITION_PRESET = ['fade-in-place', 'uikit'];
+const HEADER_BACKGROUND_TRANSITION_PRESET = ['toggle', 'fade', 'translate'];
 
 /**
  * The max duration of the card animation in milliseconds after released gesture.
@@ -655,7 +651,7 @@ class StackViewLayout extends React.Component {
     const { headerBackgroundTransitionPreset } = this.props;
     if (headerBackgroundTransitionPreset) {
       if (
-        HEADER_BACKGROUND_TRANSITION_PRESET_VALUES.includes(
+        HEADER_BACKGROUND_TRANSITION_PRESET.includes(
           headerBackgroundTransitionPreset
         )
       ) {
@@ -694,13 +690,13 @@ class StackViewLayout extends React.Component {
           );
         }
       }
-      if (HEADER_LAYOUT_PRESET_VALUES.includes(headerLayoutPreset)) {
+      if (HEADER_LAYOUT_PRESET.includes(headerLayoutPreset)) {
         return headerLayoutPreset;
       }
 
       if (__DEV__) {
         console.error(
-          `Invalid configuration applied for headerLayoutPreset - expected one of ${HEADER_LAYOUT_PRESET_VALUES.join(
+          `Invalid configuration applied for headerLayoutPreset - expected one of ${HEADER_LAYOUT_PRESET.join(
             ', '
           )} but received ${JSON.stringify(headerLayoutPreset)}`
         );
@@ -723,13 +719,13 @@ class StackViewLayout extends React.Component {
 
     const { headerTransitionPreset } = this.props;
     if (headerTransitionPreset) {
-      if (HEADER_TRANSITION_PRESET_VALUES.includes(headerTransitionPreset)) {
+      if (HEADER_TRANSITION_PRESET.includes(headerTransitionPreset)) {
         return headerTransitionPreset;
       }
 
       if (__DEV__) {
         console.error(
-          `Invalid configuration applied for headerTransitionPreset - expected one of ${HEADER_TRANSITION_PRESET_VALUES.join(
+          `Invalid configuration applied for headerTransitionPreset - expected one of ${HEADER_TRANSITION_PRESET.join(
             ', '
           )} but received ${JSON.stringify(headerTransitionPreset)}`
         );
