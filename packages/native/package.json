@@ -1,6 +1,6 @@
 {
   "name": "@react-navigation/native",
-  "version": "3.0.0-alpha.8",
+  "version": "3.0.0-alpha.10",
   "description": "React Native support for React Navigation",
   "main": "dist/index.js",
   "files": [
@@ -64,10 +64,7 @@
   "peerDependencies": {
     "@react-navigation/core": "^3.0.0-alpha",
     "react": "*",
-    "react-native": "*",
-    "react-native-gesture-handler": "^1.0.0",
-    "react-native-reanimated": "^1.0.0 || ^1.0.0-alpha",
-    "react-native-screens": "^1.0.0 || ^1.0.0-alpha"
+    "react-native": "*"
   },
   "jest": {
     "preset": "react-native",
@@ -91,6 +88,8 @@
   },
   "dependencies": {
     "hoist-non-react-statics": "^3.0.1",
-    "react-native-safe-area-view": "^0.11.0"
+    "react-native-safe-area-view": "^0.11.0",
+    "react-native-gesture-handler": "^1.0.0",
+    "react-native-screens": "^1.0.0 || ^1.0.0-alpha"
   }
 }
