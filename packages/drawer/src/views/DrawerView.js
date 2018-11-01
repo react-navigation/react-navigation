@@ -79,7 +79,7 @@ export default class DrawerView extends React.PureComponent {
 
   drawerGestureRef = React.createRef();
 
-  _handleDrawerStateChange = newState => {
+  _handleDrawerStateChange = (newState, willShow) => {
     if (newState === 'Idle') {
       if (!this.props.navigation.state.isDrawerIdle) {
         this.props.navigation.dispatch({
@@ -87,6 +87,12 @@ export default class DrawerView extends React.PureComponent {
           key: this.props.navigation.state.key,
         });
       }
+    } else if (newState === 'Settling') {
+      this.props.navigation.dispatch({
+        type: DrawerActions.MARK_DRAWER_SETTLING,
+        key: this.props.navigation.state.key,
+        willShow,
+      });
     } else {
       if (this.props.navigation.state.isDrawerIdle) {
         this.props.navigation.dispatch({
