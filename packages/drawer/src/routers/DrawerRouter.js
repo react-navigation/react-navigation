@@ -53,6 +53,7 @@ export default (routeConfigs, config = {}) => {
           ...switchRouter.getStateForAction(action, undefined),
           isDrawerOpen: false,
           isDrawerIdle: true,
+          drawerMovementDirection: null,
           openId: genId(),
           closeId: genId(),
           toggleId: genId(),
@@ -69,6 +70,7 @@ export default (routeConfigs, config = {}) => {
             ...state,
             isDrawerOpen: false,
             isDrawerIdle: true,
+            drawerMovementDirection: null,
           };
         }
 
@@ -77,6 +79,7 @@ export default (routeConfigs, config = {}) => {
             ...state,
             isDrawerOpen: true,
             isDrawerIdle: true,
+            drawerMovementDirection: null,
           };
         }
 
@@ -87,10 +90,19 @@ export default (routeConfigs, config = {}) => {
           };
         }
 
+        if (action.type === DrawerActions.MARK_DRAWER_SETTLING) {
+          return {
+            ...state,
+            isDrawerIdle: false,
+            drawerMovementDirection: action.willShow ? 'opening' : 'closing',
+          };
+        }
+
         if (action.type === DrawerActions.MARK_DRAWER_ACTIVE) {
           return {
             ...state,
             isDrawerIdle: false,
+            drawerMovementDirection: null,
           };
         }
 
@@ -98,12 +110,14 @@ export default (routeConfigs, config = {}) => {
           return {
             ...state,
             isDrawerIdle: true,
+            drawerMovementDirection: null,
           };
         }
 
         if (
           action.type === NavigationActions.BACK &&
-          (state.isDrawerOpen || !state.isDrawerIdle)
+          (state.isDrawerOpen || !state.isDrawerIdle) &&
+          state.drawerMovementDirection !== 'closing'
         ) {
           return {
             ...state,
@@ -136,8 +150,11 @@ export default (routeConfigs, config = {}) => {
 
       // Has the switch router changed the state?
       if (switchedState !== state) {
-        if (getActiveRouteKey(switchedState) !== getActiveRouteKey(state)) {
-          // If any navigation has happened, make sure to close the drawer
+        // If any navigation has happened, and the drawer is maybe open, make sure to close it
+        if (
+          getActiveRouteKey(switchedState) !== getActiveRouteKey(state) &&
+          (state.isDrawerOpen || state.drawerMovementDirection !== 'closing')
+        ) {
           return {
             ...switchedState,
             closeId: genId(),

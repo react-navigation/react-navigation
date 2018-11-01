@@ -4,6 +4,7 @@ const TOGGLE_DRAWER = 'Navigation/TOGGLE_DRAWER';
 const DRAWER_OPENED = 'Navigation/DRAWER_OPENED';
 const DRAWER_CLOSED = 'Navigation/DRAWER_CLOSED';
 const MARK_DRAWER_ACTIVE = 'Navigation/MARK_DRAWER_ACTIVE';
+const MARK_DRAWER_SETTLING = 'Navigation/MARK_DRAWER_SETTLING';
 const MARK_DRAWER_IDLE = 'Navigation/MARK_DRAWER_IDLE';
 
 const openDrawer = payload => ({
@@ -26,6 +27,11 @@ const markDrawerIdle = payload => ({
   ...payload,
 });
 
+const markDrawerSettling = payload => ({
+  type: MARK_DRAWER_SETTLING,
+  ...payload,
+});
+
 const toggleDrawer = payload => ({
   type: TOGGLE_DRAWER,
   ...payload,
@@ -39,10 +45,12 @@ export default {
   DRAWER_CLOSED,
   MARK_DRAWER_ACTIVE,
   MARK_DRAWER_IDLE,
+  MARK_DRAWER_SETTLING,
 
   openDrawer,
   closeDrawer,
   toggleDrawer,
   markDrawerIdle,
   markDrawerActive,
+  markDrawerSettling,
 };
