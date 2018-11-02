@@ -217,6 +217,7 @@ class Header extends React.PureComponent {
         titleStyle={options.headerBackTitleStyle}
         layoutPreset={this.props.layoutPreset}
         width={width}
+        scene={props.scene}
       />
     );
   };
