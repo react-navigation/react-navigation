@@ -59,7 +59,7 @@ class HeaderBackButton extends React.PureComponent {
       };
     }
 
-    return <BackImage {...props} />;
+    return <BackImage {...props} fadeDuration={0} />;
   }
 
   _getTitleText = () => {
@@ -146,6 +146,7 @@ const styles = StyleSheet.create({
   icon:
     Platform.OS === 'ios'
       ? {
+          backgroundColor: 'transparent',
           height: 21,
           width: 13,
           marginLeft: 9,
@@ -159,6 +160,7 @@ const styles = StyleSheet.create({
           width: 24,
           margin: 3,
           resizeMode: 'contain',
+          backgroundColor: 'transparent',
           transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }],
         },
   iconWithTitle:
