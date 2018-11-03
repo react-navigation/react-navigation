@@ -268,6 +268,10 @@ export default function createNavigationContainer(Component) {
       this.setState({ nav: startupState }, () => {
         _reactNavigationIsHydratingState = false;
         dispatchActions();
+
+        if (typeof this.props.onPersistedStateLoaded === 'function') {
+          this.props.onPersistedStateLoaded(startupState);
+        }
       });
     }
 
