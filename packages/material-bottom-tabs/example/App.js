@@ -1,7 +1,10 @@
 import * as React from 'react';
 import Expo from 'expo';
-import { FlatList } from 'react-native';
-import { createAppContainer, createStackNavigator } from 'react-navigation';
+import {
+  FlatList,
+  createAppContainer,
+  createStackNavigator,
+} from 'react-navigation';
 import { List, Divider } from 'react-native-paper';
 
 // Unclear why this isn't getitng picked up :O

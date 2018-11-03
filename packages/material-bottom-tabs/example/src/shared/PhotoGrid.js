@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { View, Image, ScrollView, Dimensions, StyleSheet } from 'react-native';
+import { View, Image, Dimensions, StyleSheet } from 'react-native';
+import { ScrollView } from 'react-navigation';
 
 export default function PhotoGrid({ id }) {
   const PHOTOS = Array.from({ length: 24 }).map(
