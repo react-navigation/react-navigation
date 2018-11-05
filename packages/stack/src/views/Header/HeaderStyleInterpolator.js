@@ -172,9 +172,9 @@ function forLeftButton(props) {
   const outputRange = [
     0,
     hasHeader(scenes[first]) ? 0 : 1,
-    hasHeader(scenes[first]) ? 0.1 : 1,
+    hasHeader(scenes[first]) ? 0.3 : 1,
     hasHeader(scenes[index]) ? 1 : 0,
-    hasHeader(scenes[last]) ? 0.1 : 1,
+    hasHeader(scenes[last]) ? 0.3 : 1,
     hasHeader(scenes[last]) ? 0 : 1,
     0,
   ];

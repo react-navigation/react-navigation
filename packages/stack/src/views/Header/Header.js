@@ -684,10 +684,10 @@ const styles = StyleSheet.create({
   },
   iconMask: {
     // These are mostly the same as the icon in ModularHeaderBackButton
-    height: 21,
-    width: 12,
+    height: 23,
+    width: 14.5,
     marginLeft: 8.5,
-    marginTop: -0.5, // resizes down to 20.5
+    marginTop: -2.5,
     alignSelf: 'center',
     resizeMode: 'contain',
     transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }],
