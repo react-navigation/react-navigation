@@ -19,13 +19,15 @@ react-native link react-native-vector-icons
 
 If you don't want to install vector icons, you can use [babel-plugin-optional-require](https://github.com/satya164/babel-plugin-optional-require) to opt-out.
 
-If you use CRNA or Expo, you don't need to install vector icons. But you will need to make sure that your `.babelrc` includes `babel-preset-expo`:
+If you use Expo, you don't need to install vector icons. But you will need to make sure that your `.babelrc` includes `babel-preset-expo`:
 
 ```json
 {
   "presets": ["expo"]
 }
 ```
+
+If you don't use React Native Paper app, you should also add `react-native-paper/babel` to your `.babelrc` to avoid importing the whole library. See the [Getting Started guide](https://callstack.github.io/react-native-paper/getting-started.html) for more information.
 
 ## Usage
 
