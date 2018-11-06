@@ -533,7 +533,7 @@ declare module 'react-navigation' {
       eventName: string,
       callback: NavigationEventCallback
     ) => NavigationEventSubscription,
-    getParam: <ParamName>(
+    getParam: <ParamName: string>(
       paramName: ParamName,
       fallback?: $ElementType<
         $PropertyType<
