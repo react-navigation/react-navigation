@@ -21,7 +21,7 @@ jobs:
             - v1-dependencies-example-{{ checksum "example/package.json" }}
             - v1-dependencies-example-
       - run: |
-          yarn install
+          yarn install --ignore-engines
           yarn install --cwd example
       - save_cache:
           key: v1-dependencies-{{ checksum "package.json" }}
@@ -38,8 +38,8 @@ jobs:
         - attach_workspace:
             at: ~/project
         - run: |
-            yarn run lint
-            yarn run flow
+            yarn lint
+            yarn flow
   unit-tests:
       <<: *defaults
       steps:
