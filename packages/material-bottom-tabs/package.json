@@ -4,15 +4,23 @@
   "description": "Material Bottom Tab Navigation component for React Navigation",
   "main": "dist/index.js",
   "files": [
-    "dist/"
+    "dist/",
+    "src/",
+    "LICENSE.md",
+    "README.md"
   ],
+  "react-native": "src/index.js",
   "scripts": {
     "test": "jest",
     "flow": "flow",
     "lint": "eslint .",
     "precommit": "yarn lint && yarn flow && yarn test",
-    "build": "babel --no-babelrc --plugins=syntax-jsx,syntax-class-properties,syntax-object-rest-spread,transform-flow-strip-types src --out-dir dist --ignore '**/__tests__/**'",
-    "prepare": "yarn build"
+    "build": "babel --no-babelrc --plugins=transform-es2015-block-scoping,transform-react-jsx,transform-class-properties,transform-object-rest-spread,transform-flow-strip-types src --out-dir dist --ignore '**/__tests__/**'",
+    "prepare": "yarn build",
+    "release": "release-it"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
   },
   "keywords": [
     "react-native-component",
@@ -44,11 +52,13 @@
     "@react-navigation/native": "^3.0.0-alpha",
     "babel-cli": "^6.26.0",
     "babel-jest": "^21.2.0",
-    "babel-plugin-syntax-class-properties": "^6.13.0",
-    "babel-plugin-syntax-jsx": "^6.18.0",
-    "babel-plugin-syntax-object-rest-spread": "^6.13.0",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-es2015-block-scoping": "^6.26.0",
     "babel-plugin-transform-flow-strip-types": "^6.22.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-plugin-transform-react-jsx": "^6.24.1",
     "babel-preset-react-native": "^4.0.0",
+    "conventional-changelog-cli": "^2.0.11",
     "enzyme": "3.2.0",
     "enzyme-adapter-react-16": "^1.1.0",
     "enzyme-to-json": "^3.2.2",
@@ -64,7 +74,8 @@
     "react-native": "~0.55.4",
     "react-native-paper": "^2.2.2",
     "react-navigation": "^2.1.0",
-    "react-test-renderer": "16.2.0"
+    "react-test-renderer": "16.2.0",
+    "release-it": "^7.6.2"
   },
   "peerDependencies": {
     "react": "*",
