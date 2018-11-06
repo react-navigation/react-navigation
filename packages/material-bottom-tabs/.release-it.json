@@ -1,5 +1,4 @@
 {
-  "non-interactive": true,
   "increment": "conventional:angular",
   "changelogCommand": "conventional-changelog -p angular | tail -n +3",
   "safeBump": false,
