@@ -516,10 +516,10 @@
     pouchdb-collections "^1.0.1"
     tiny-queue "^0.2.1"
 
-"@react-navigation/core@3.0.0-alpha.18":
-  version "3.0.0-alpha.18"
-  resolved "https://registry.yarnpkg.com/@react-navigation/core/-/core-3.0.0-alpha.18.tgz#3791ce85f914c7912004e50c4fa040cc616b16b0"
-  integrity sha512-y2RhKSu6gQYGxxjhOU5dD7trCUxO2i5QQpGOeKvjE5wWdzYCUzCd88t5tDtFk9Z7oHEGIBUiKcy2nAA0HqMdzA==
+"@react-navigation/core@3.0.0-alpha.19":
+  version "3.0.0-alpha.19"
+  resolved "https://registry.yarnpkg.com/@react-navigation/core/-/core-3.0.0-alpha.19.tgz#262f3eb17d4171aaa9229695693d6d877b156bbe"
+  integrity sha512-INlFaXWOIzQqQV2EESr3wn+qYSSEy90iWBthQFiQ/bNofuSJ8fKqhftYGCI7u2ZKjXbKXc7qF5WfhgyDx9LNjQ==
   dependencies:
     create-react-context "^0.2.3"
     hoist-non-react-statics "^3.0.1"
@@ -5647,10 +5647,10 @@ react-navigation-material-bottom-tabs@1.0.0-alpha.2:
     prop-types "^15.6.0"
     react-navigation-tabs "1.0.0-alpha.4"
 
-react-navigation-stack@1.0.0-alpha.30:
-  version "1.0.0-alpha.30"
-  resolved "https://registry.yarnpkg.com/react-navigation-stack/-/react-navigation-stack-1.0.0-alpha.30.tgz#40543b4f36ca9e27589a28f1d3d7d95ebc94776a"
-  integrity sha512-zC7hy4YxVK4KPQvIjHHPKHICHRPp2E6rdGiXqOTBRA8gcNrutva5J+xvCwGTVJflRihRKLc2U+hrkmMlMJCyIw==
+react-navigation-stack@1.0.0-alpha.33:
+  version "1.0.0-alpha.33"
+  resolved "https://registry.yarnpkg.com/react-navigation-stack/-/react-navigation-stack-1.0.0-alpha.33.tgz#118cd2a8d1d869f24bae44ed5c09e5a55a1b2d60"
+  integrity sha512-kX9qL64CtK3yBGRABlZXFAD3+aVGBTiqfw/QYA1i0UJURRb9lZ0do9I3gUJ5cjFOPVqqztCbk38GOxarIygJsw==
 
 react-navigation-tabs@1.0.0-alpha.4:
   version "1.0.0-alpha.4"
