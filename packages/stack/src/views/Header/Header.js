@@ -601,7 +601,11 @@ class Header extends React.PureComponent {
     ];
 
     const { headerForceInset } = options;
-    const forceInset = headerForceInset || { top: 'always', bottom: 'never' };
+    const forceInset = headerForceInset || {
+      top: 'always',
+      bottom: 'never',
+      horizontal: 'always',
+    };
 
     return (
       <Animated.View
