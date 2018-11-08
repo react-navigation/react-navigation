@@ -6739,10 +6739,10 @@ react-navigation-drawer@1.0.0-alpha.7:
   dependencies:
     react-native-tab-view "^1.2.0"
 
-react-navigation-stack@1.0.0-alpha.32:
-  version "1.0.0-alpha.32"
-  resolved "https://registry.yarnpkg.com/react-navigation-stack/-/react-navigation-stack-1.0.0-alpha.32.tgz#3a0a8f881cc498c6d35739ac5c4b8eb8e1262ff7"
-  integrity sha512-tfBZtvn1pWAnkkXVqdyiVHnTSEd8xHsyZCuPHl3UDxL+gmVxHh+jjmQM1N/PbEeObfrpuKnYySb4xRIS3uoOUg==
+react-navigation-stack@1.0.0-alpha.34:
+  version "1.0.0-alpha.34"
+  resolved "https://registry.yarnpkg.com/react-navigation-stack/-/react-navigation-stack-1.0.0-alpha.34.tgz#f071a3edd8259e37f4dedba436e905a932b4d99e"
+  integrity sha512-wC1cMhIo2Y8J3rAS+Ps6bfm6zyinaOrQy7P8H232TrHLNiw3xUnXXU081lHimC2Hs7Fn4LJ2jP4xMcspQK1nqA==
 
 react-navigation-tabs@1.0.0-alpha.5:
   version "1.0.0-alpha.5"
