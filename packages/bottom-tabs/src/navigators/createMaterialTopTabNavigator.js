@@ -109,6 +109,7 @@ class MaterialTabView extends React.PureComponent<Props, State> {
         getTestID={this.props.getTestID}
         renderIcon={this._renderIcon}
         onTabPress={this.props.onTabPress}
+        onTabLongPress={this.props.onTabLongPress}
       />
     );
   };

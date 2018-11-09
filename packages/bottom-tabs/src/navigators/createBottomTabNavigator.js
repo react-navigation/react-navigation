@@ -55,6 +55,7 @@ class TabNavigationView extends React.PureComponent<Props, State> {
       getTestID,
       renderIcon,
       onTabPress,
+      onTabLongPress,
     } = this.props;
 
     const { descriptors } = this.props;
@@ -74,6 +75,7 @@ class TabNavigationView extends React.PureComponent<Props, State> {
         navigation={navigation}
         screenProps={screenProps}
         onTabPress={onTabPress}
+        onTabLongPress={onTabLongPress}
         getLabelText={getLabelText}
         getButtonComponent={getButtonComponent}
         getAccessibilityLabel={getAccessibilityLabel}
