@@ -32,6 +32,7 @@ type Props = TabBarOptions & {
   descriptors: any,
   jumpTo: any,
   onTabPress: any,
+  onTabLongPress: any,
   getAccessibilityLabel: (props: { route: any }) => string,
   getButtonComponent: ({ route: any }) => any,
   getLabelText: ({ route: any }) => any,
@@ -50,11 +51,18 @@ const DEFAULT_MAX_TAB_ITEM_WIDTH = 125;
 
 class TouchableWithoutFeedbackWrapper extends React.Component<*> {
   render() {
-    const { onPress, testID, accessibilityLabel, ...props } = this.props;
+    const {
+      onPress,
+      onLongPress,
+      testID,
+      accessibilityLabel,
+      ...props
+    } = this.props;
 
     return (
       <TouchableWithoutFeedback
         onPress={onPress}
+        onLongPress={onLongPress}
         testID={testID}
         hitSlop={{ left: 15, right: 15, top: 5, bottom: 5 }}
         accessibilityLabel={accessibilityLabel}
@@ -191,6 +199,7 @@ class TabBarBottom extends React.Component<Props> {
       activeBackgroundColor,
       inactiveBackgroundColor,
       onTabPress,
+      onTabLongPress,
       safeAreaInset,
       style,
       tabStyle,
@@ -228,6 +237,7 @@ class TabBarBottom extends React.Component<Props> {
             <ButtonComponent
               key={route.key}
               onPress={() => onTabPress({ route })}
+              onLongPress={() => onTabLongPress({ route })}
               testID={testID}
               accessibilityLabel={accessibilityLabel}
               style={[
