@@ -3,241 +3,169 @@ import renderer from 'react-test-renderer';
 import NavigationEvents from '../NavigationEvents';
 import NavigationContext from '../NavigationContext';
 
-const createListener = () => () => {};
+const createPropListener = () => jest.fn();
 
 // An easy way to create the 4 listeners prop
 const createEventListenersProp = () => ({
-  onWillFocus: createListener(),
-  onDidFocus: createListener(),
-  onWillBlur: createListener(),
-  onDidBlur: createListener(),
+  onWillFocus: createPropListener(),
+  onDidFocus: createPropListener(),
+  onWillBlur: createPropListener(),
+  onDidBlur: createPropListener(),
 });
 
-const createNavigationAndHelpers = () => {
-  // A little API to spy on subscription remove calls that are performed during the tests
-  const removeCallsAPI = (() => {
-    let removeCalls = [];
+const createTestNavigationAndHelpers = () => {
+  const NavigationListenersAPI = (() => {
+    let listeners = {
+      willFocus: [],
+      didFocus: [],
+      willBlur: [],
+      didBlur: [],
+    };
     return {
-      reset: () => {
-        removeCalls = [];
+      add: (eventName, handler) => {
+        listeners[eventName].push(handler);
       },
-      add: (name, handler) => {
-        removeCalls.push({ name, handler });
+      remove: (eventName, handler) => {
+        listeners[eventName] = listeners[eventName].filter(h => h !== handler);
       },
-      checkRemoveCalled: count => {
-        expect(removeCalls.length).toBe(count);
+      get: eventName => {
+        return listeners[eventName];
       },
-      checkRemoveCalledWith: (name, handler) => {
-        expect(removeCalls).toContainEqual({ name, handler });
+      call: eventName => {
+        listeners[eventName].forEach(listener => listener());
       },
     };
   })();
 
   const navigation = {
-    addListener: jest.fn((name, handler) => {
+    addListener: jest.fn((eventName, handler) => {
+      NavigationListenersAPI.add(eventName, handler);
       return {
-        remove: () => removeCallsAPI.add(name, handler),
+        remove: () => NavigationListenersAPI.remove(eventName, handler),
       };
     }),
   };
 
-  const checkAddListenerCalled = count => {
-    expect(navigation.addListener).toHaveBeenCalledTimes(count);
-  };
-  const checkAddListenerCalledWith = (eventName, handler) => {
-    expect(navigation.addListener).toHaveBeenCalledWith(eventName, handler);
-  };
-  const checkRemoveCalled = count => {
-    removeCallsAPI.checkRemoveCalled(count);
-  };
-  const checkRemoveCalledWith = (eventName, handler) => {
-    removeCallsAPI.checkRemoveCalledWith(eventName, handler);
-  };
-
   return {
     navigation,
-    removeCallsAPI,
-    checkAddListenerCalled,
-    checkAddListenerCalledWith,
-    checkRemoveCalled,
-    checkRemoveCalledWith,
+    NavigationListenersAPI,
   };
-};
-
-// We test 2 distinct ways to provide the navigation to the NavigationEvents (prop/context)
-const NavigationEventsTestComp = ({
-  withContext = true,
-  navigation,
-  ...props
-}) => {
-  if (withContext) {
-    return (
-      <NavigationContext.Provider value={navigation}>
-        <NavigationEvents {...props} />
-      </NavigationContext.Provider>
-    );
-  } else {
-    return <NavigationEvents navigation={navigation} {...props} />;
-  }
 };
 
 describe('NavigationEvents', () => {
-  it('add all listeners with navigation prop', () => {
+  it('add all listeners on mount and remove them on unmount, even without any event prop provided (see #5058)', () => {
     const {
       navigation,
-      checkAddListenerCalled,
-      checkAddListenerCalledWith,
-    } = createNavigationAndHelpers();
-    const eventListenerProps = createEventListenersProp();
+      NavigationListenersAPI,
+    } = createTestNavigationAndHelpers();
+
     const component = renderer.create(
-      <NavigationEventsTestComp
-        withContext={false}
-        navigation={navigation}
-        {...eventListenerProps}
-      />
+      <NavigationEvents navigation={navigation} />
     );
-    checkAddListenerCalled(4);
-    checkAddListenerCalledWith('willBlur', eventListenerProps.onWillBlur);
-    checkAddListenerCalledWith('willFocus', eventListenerProps.onWillFocus);
-    checkAddListenerCalledWith('didBlur', eventListenerProps.onDidBlur);
-    checkAddListenerCalledWith('didFocus', eventListenerProps.onDidFocus);
+    expect(NavigationListenersAPI.get('willFocus').length).toBe(1);
+    expect(NavigationListenersAPI.get('didFocus').length).toBe(1);
+    expect(NavigationListenersAPI.get('willBlur').length).toBe(1);
+    expect(NavigationListenersAPI.get('didBlur').length).toBe(1);
+
     component.unmount();
+    expect(NavigationListenersAPI.get('willFocus').length).toBe(0);
+    expect(NavigationListenersAPI.get('didFocus').length).toBe(0);
+    expect(NavigationListenersAPI.get('willBlur').length).toBe(0);
+    expect(NavigationListenersAPI.get('didBlur').length).toBe(0);
   });
 
-  it('add all listeners with navigation context', () => {
+  it('support context-provided navigation', () => {
     const {
       navigation,
-      checkAddListenerCalled,
-      checkAddListenerCalledWith,
-    } = createNavigationAndHelpers();
-    const eventListenerProps = createEventListenersProp();
+      NavigationListenersAPI,
+    } = createTestNavigationAndHelpers();
     const component = renderer.create(
-      <NavigationEventsTestComp
-        withContext
-        navigation={navigation}
-        {...eventListenerProps}
-      />
+      <NavigationContext.Provider value={navigation}>
+        <NavigationEvents />
+      </NavigationContext.Provider>
     );
-    checkAddListenerCalled(4);
-    checkAddListenerCalledWith('willBlur', eventListenerProps.onWillBlur);
-    checkAddListenerCalledWith('willFocus', eventListenerProps.onWillFocus);
-    checkAddListenerCalledWith('didBlur', eventListenerProps.onDidBlur);
-    checkAddListenerCalledWith('didFocus', eventListenerProps.onDidFocus);
+
+    expect(NavigationListenersAPI.get('willFocus').length).toBe(1);
+    expect(NavigationListenersAPI.get('didFocus').length).toBe(1);
+    expect(NavigationListenersAPI.get('willBlur').length).toBe(1);
+    expect(NavigationListenersAPI.get('didBlur').length).toBe(1);
+
     component.unmount();
+    expect(NavigationListenersAPI.get('willFocus').length).toBe(0);
+    expect(NavigationListenersAPI.get('didFocus').length).toBe(0);
+    expect(NavigationListenersAPI.get('willBlur').length).toBe(0);
+    expect(NavigationListenersAPI.get('didBlur').length).toBe(0);
   });
 
-  it('remove all listeners on unmount', () => {
+  it('wire props listeners to navigation listeners', () => {
     const {
       navigation,
-      checkRemoveCalled,
-      checkRemoveCalledWith,
-    } = createNavigationAndHelpers();
+      NavigationListenersAPI,
+    } = createTestNavigationAndHelpers();
+
     const eventListenerProps = createEventListenersProp();
-
-    const component = renderer.create(
-      <NavigationEventsTestComp
-        navigation={navigation}
-        {...eventListenerProps}
-      />
+    renderer.create(
+      <NavigationEvents navigation={navigation} {...eventListenerProps} />
     );
-    checkRemoveCalled(0);
-    component.unmount();
-    checkRemoveCalled(4);
-    checkRemoveCalledWith('willBlur', eventListenerProps.onWillBlur);
-    checkRemoveCalledWith('willFocus', eventListenerProps.onWillFocus);
-    checkRemoveCalledWith('didBlur', eventListenerProps.onDidBlur);
-    checkRemoveCalledWith('didFocus', eventListenerProps.onDidFocus);
+
+    const checkPropListenerIsCalled = (eventName, propName) => {
+      expect(eventListenerProps[propName]).toHaveBeenCalledTimes(0);
+      NavigationListenersAPI.call(eventName);
+      expect(eventListenerProps[propName]).toHaveBeenCalledTimes(1);
+    };
+
+    checkPropListenerIsCalled('willFocus', 'onWillFocus');
+    checkPropListenerIsCalled('didFocus', 'onDidFocus');
+    checkPropListenerIsCalled('willBlur', 'onWillBlur');
+    checkPropListenerIsCalled('didBlur', 'onDidBlur');
   });
 
-  it('add a single listener', () => {
+  it('wire latest props listener to navigation listeners on updates (support closure/arrow functions update)', () => {
     const {
       navigation,
-      checkAddListenerCalled,
-      checkAddListenerCalledWith,
-    } = createNavigationAndHelpers();
-    const listener = createListener();
-    const component = renderer.create(
-      <NavigationEventsTestComp navigation={navigation} onDidFocus={listener} />
-    );
-    checkAddListenerCalled(1);
-    checkAddListenerCalledWith('didFocus', listener);
-    component.unmount();
-  });
-
-  it('do not attempt to add/remove stable listeners on update', () => {
-    const {
-      navigation,
-      checkAddListenerCalled,
-      checkAddListenerCalledWith,
-    } = createNavigationAndHelpers();
-    const eventListenerProps = createEventListenersProp();
-    const component = renderer.create(
-      <NavigationEventsTestComp
-        navigation={navigation}
-        {...eventListenerProps}
-      />
-    );
-    component.update(
-      <NavigationEventsTestComp
-        navigation={navigation}
-        {...eventListenerProps}
-      />
-    );
-    component.update(
-      <NavigationEventsTestComp
-        navigation={navigation}
-        {...eventListenerProps}
-      />
-    );
-    checkAddListenerCalled(4);
-    checkAddListenerCalledWith('willBlur', eventListenerProps.onWillBlur);
-    checkAddListenerCalledWith('willFocus', eventListenerProps.onWillFocus);
-    checkAddListenerCalledWith('didBlur', eventListenerProps.onDidBlur);
-    checkAddListenerCalledWith('didFocus', eventListenerProps.onDidFocus);
-  });
-
-  it('add, remove and replace (remove+add) listeners on complex updates', () => {
-    const {
-      navigation,
-      checkAddListenerCalled,
-      checkAddListenerCalledWith,
-      checkRemoveCalled,
-      checkRemoveCalledWith,
-    } = createNavigationAndHelpers();
-    const eventListenerProps = createEventListenersProp();
+      NavigationListenersAPI,
+    } = createTestNavigationAndHelpers();
 
     const component = renderer.create(
-      <NavigationEventsTestComp
+      <NavigationEvents
         navigation={navigation}
-        {...eventListenerProps}
+        {...createEventListenersProp()}
       />
     );
-
-    checkAddListenerCalled(4);
-    checkAddListenerCalledWith('willBlur', eventListenerProps.onWillBlur);
-    checkAddListenerCalledWith('willFocus', eventListenerProps.onWillFocus);
-    checkAddListenerCalledWith('didBlur', eventListenerProps.onDidBlur);
-    checkAddListenerCalledWith('didFocus', eventListenerProps.onDidFocus);
-    checkRemoveCalled(0);
-
-    const onWillFocus2 = createListener();
-    const onDidFocus2 = createListener();
 
     component.update(
-      <NavigationEventsTestComp
+      <NavigationEvents
         navigation={navigation}
-        onWillBlur={eventListenerProps.onWillBlur}
-        onDidBlur={undefined}
-        onWillFocus={onWillFocus2}
-        onDidFocus={onDidFocus2}
+        onWillBlur={() => {
+          throw new Error('should not be called');
+        }}
+        onDidFocus={() => {
+          throw new Error('should not be called');
+        }}
       />
     );
-    checkAddListenerCalled(6);
-    checkAddListenerCalledWith('willFocus', onWillFocus2);
-    checkAddListenerCalledWith('didFocus', onDidFocus2);
-    checkRemoveCalled(3);
-    checkRemoveCalledWith('didBlur', eventListenerProps.onDidBlur);
-    checkRemoveCalledWith('willFocus', eventListenerProps.onWillFocus);
-    checkRemoveCalledWith('didFocus', eventListenerProps.onDidFocus);
+
+    component.update(
+      <NavigationEvents
+        navigation={navigation}
+        {...createEventListenersProp()}
+      />
+    );
+
+    const latestEventListenerProps = createEventListenersProp();
+    component.update(
+      <NavigationEvents navigation={navigation} {...latestEventListenerProps} />
+    );
+
+    const checkLatestPropListenerCalled = (eventName, propName) => {
+      expect(latestEventListenerProps[propName]).toHaveBeenCalledTimes(0);
+      NavigationListenersAPI.call(eventName);
+      expect(latestEventListenerProps[propName]).toHaveBeenCalledTimes(1);
+    };
+
+    checkLatestPropListenerCalled('willFocus', 'onWillFocus');
+    checkLatestPropListenerCalled('didFocus', 'onDidFocus');
+    checkLatestPropListenerCalled('willBlur', 'onWillBlur');
+    checkLatestPropListenerCalled('didBlur', 'onDidBlur');
   });
 });

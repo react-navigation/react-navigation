@@ -11,43 +11,30 @@ const EventNameToPropName = {
 const EventNames = Object.keys(EventNameToPropName);
 
 class NavigationEvents extends React.Component {
+  getPropListener = eventName => this.props[EventNameToPropName[eventName]];
+
   componentDidMount() {
     this.subscriptions = {};
-    EventNames.forEach(this.addListener);
-  }
 
-  componentDidUpdate(prevProps) {
+    // We register all navigation listeners on mount to ensure listener stability across re-render
+    // A former implementation was replacing (removing/adding) listeners on all update (if prop provided)
+    // but there were issues (see https://github.com/react-navigation/react-navigation/issues/5058)
     EventNames.forEach(eventName => {
-      const listenerHasChanged =
-        this.props[EventNameToPropName[eventName]] !==
-        prevProps[EventNameToPropName[eventName]];
-      if (listenerHasChanged) {
-        this.removeListener(eventName);
-        this.addListener(eventName);
-      }
+      this.subscriptions[eventName] = this.props.navigation.addListener(
+        eventName,
+        (...args) => {
+          const propListener = this.getPropListener(eventName);
+          return propListener && propListener(...args);
+        }
+      );
     });
   }
 
   componentWillUnmount() {
-    EventNames.forEach(this.removeListener);
-  }
-
-  addListener = eventName => {
-    const listener = this.props[EventNameToPropName[eventName]];
-    if (listener) {
-      this.subscriptions[eventName] = this.props.navigation.addListener(
-        eventName,
-        listener
-      );
-    }
-  };
-
-  removeListener = eventName => {
-    if (this.subscriptions[eventName]) {
+    EventNames.forEach(eventName => {
       this.subscriptions[eventName].remove();
-      this.subscriptions[eventName] = undefined;
-    }
-  };
+    });
+  }
 
   render() {
     return null;
