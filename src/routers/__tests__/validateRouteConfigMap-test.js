@@ -12,6 +12,10 @@ ProfileNavigator.router = StackRouter({
   },
 });
 
+const ScreenWithForwardRef = React.forwardRef((props, ref) => (
+  <div ref={ref} />
+));
+
 describe('validateRouteConfigMap', () => {
   test('Fails on empty bare screen', () => {
     const invalidMap = {
@@ -54,6 +58,12 @@ describe('validateRouteConfigMap', () => {
         screen: ProfileNavigator,
       },
       Chat: ListScreen,
+    };
+    validateRouteConfigMap(validMap);
+  });
+  test('Succeeds on React.forwardRef', () => {
+    const validMap = {
+      Chat: ScreenWithForwardRef,
     };
     validateRouteConfigMap(validMap);
   });
