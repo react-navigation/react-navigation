@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+- Support React.forwardRef on createStackNavigator
+
 ## [2.18.2] - [2018-10-26](https://github.com/react-navigation/react-navigation/releases/tag/2.18.2)
 
 ### Fixed
