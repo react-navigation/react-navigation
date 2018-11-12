@@ -38,6 +38,8 @@ const DrawerNavigatorItems = ({
       return (
         <TouchableItem
           key={route.key}
+          accessible
+          accessibilityLabel={label}
           onPress={() => {
             onItemPress({ route, focused });
           }}
