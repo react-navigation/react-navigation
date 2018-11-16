@@ -75,14 +75,16 @@ const styles = StyleSheet.create({
 });
 ```
 
+[Try this example on Snack](https://snack.expo.io/@satya164/react-native-tab-view-quick-start)
+
+## More examples on Snack
+
+- [Custom Tab Bar](https://snack.expo.io/@satya164/react-native-tab-view-custom-tabbar)
+- [Lazy Load](https://snack.expo.io/@satya164/react-native-tab-view-lazy-load)
+
 ## Integration with React Navigation
 
 React Navigation integration can be achieved by the [react-navigation-tabs](https://github.com/react-navigation/react-navigation-tabs) package. Note that while it's easier to use, it is not as flexible as using the library directly.
-
-## Examples on Snack
-
-- [Quick Start](https://snack.expo.io/@satya164/react-native-tab-view-quick-start)
-- [Custom Tab Bar](https://snack.expo.io/@satya164/custom-tabbar-example)
 
 ## API reference
 
@@ -263,6 +265,21 @@ renderScene = ({ route }) => {
 
 If you don't use `SceneMap`, you will need to take care of optimizing the individual scenes.
 
+_IMPORTANT:_ **Do not** pass inline functions to `SceneMap`, for example, don't do the following:
+
+```js
+SceneMap({
+  first: () => <FirstRoute foo={this.props.foo} />,
+  second: SecondRoute,
+});
+```
+
+Always define your components elsewhere in the top level of the file. If you pass inline functions, it'll re-create the component every render, which will cause the entire route to unmount and remount every change. It's very bad for performance and will also cause any local state to be lost.
+
+## Known Issues
+
+- `TabView` cannot be nested inside another `TabView` or a horizontal `ScrollView` on Android. This is a limitation of the platform and we cannot fix it in the library.
+
 ## Optimization Tips
 
 ### Use native driver
@@ -284,7 +301,7 @@ _NOTE:_ Native animations are supported only for properties such as `opacity` an
 
 ### Avoid unnecessary re-renders
 
-The `renderScene` function is called every time the index changes. If your `renderScene` function is expensive, it's good idea move each route to a separate component if they don't depend on the index, and apply `shouldComponentUpdate` to prevent unnecessary re-renders.
+The `renderScene` function is called every time the index changes. If your `renderScene` function is expensive, it's good idea move each route to a separate component if they don't depend on the index, and apply `shouldComponentUpdate` in your route components to prevent unnecessary re-renders.
 
 For example, instead of:
 
@@ -317,7 +334,20 @@ renderScene = ({ route }) => {
 };
 ```
 
-Where `<HomeComponent />` is a `PureComponent`.
+Where `<HomeComponent />` is a `PureComponent`:
+
+```js
+export default class HomeComponent extends React.PureComponent {
+  render() {
+    return (
+      <View style={styles.page}>
+        <Avatar />
+        <NewsFeed />
+      </View>
+    )
+  }
+}
+```
 
 ### Avoid one frame delay
 
@@ -349,6 +379,10 @@ renderScene = ({ route }) => {
   return <MySceneComponent route={route} />;
 };
 ```
+
+### Avoid rendering TabView inside ScrollView
+
+Nesting the `TabView` inside a vertical `ScrollView` will disable the optimizations in the `FlatList` components rendered inside the `TabView`. So avoid doing it if possible.
 
 ## Contributing
 
