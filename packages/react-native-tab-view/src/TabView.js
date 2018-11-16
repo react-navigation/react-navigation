@@ -116,13 +116,6 @@ export default class TabView<T: *> extends React.Component<Props<T>, State> {
     return this.props.renderScene(props);
   };
 
-  _shouldRenderScene = (index: number) => {
-    return (
-      !this.state.delayRenderOfNonFocusedTabs ||
-      this.props.navigationState.index === index
-    );
-  };
-
   _handleLayout = (e: any) => {
     const { height, width } = e.nativeEvent.layout;
 
