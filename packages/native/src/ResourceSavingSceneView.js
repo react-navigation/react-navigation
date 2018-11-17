@@ -28,9 +28,7 @@ class ResourceSavingSceneView extends React.PureComponent {
     const {
       isFocused,
       childNavigation,
-      navigation,
       removeClippedSubviews,
-      lazy,
       ...rest
     } = this.props;
 

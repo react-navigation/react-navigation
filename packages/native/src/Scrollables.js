@@ -21,6 +21,7 @@ const WrappedSectionList = React.forwardRef((props, ref) => (
   />
 ));
 
+// eslint-disable-next-line import/no-commonjs
 module.exports = {
   ScrollView: WrappedScrollView,
   FlatList: WrappedFlatList,

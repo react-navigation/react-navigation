@@ -1,4 +1,4 @@
-/* eslint disable import/no-commonjs */
+/* eslint-disable import/no-commonjs */
 
 module.exports = {
   get createAppContainer() {

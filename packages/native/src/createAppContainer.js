@@ -21,7 +21,7 @@ function validateProps(props) {
   if (isStateful(props)) {
     return;
   }
-
+  // eslint-disable-next-line no-unused-vars
   const { navigation, screenProps, ...containerProps } = props;
 
   const keys = Object.keys(containerProps);
@@ -68,7 +68,7 @@ export default function createNavigationContainer(Component) {
     static router = Component.router;
     static navigationOptions = null;
 
-    static getDerivedStateFromProps(nextProps, prevState) {
+    static getDerivedStateFromProps(nextProps) {
       validateProps(nextProps);
       return null;
     }
@@ -118,6 +118,7 @@ export default function createNavigationContainer(Component) {
         return;
       }
 
+      // eslint-disable-next-line no-unused-vars
       const { navigation, screenProps, ...containerProps } = props;
 
       const keys = Object.keys(containerProps);
@@ -155,7 +156,6 @@ export default function createNavigationContainer(Component) {
         this._isStateful() &&
         !!process.env.REACT_NAV_LOGGING
       ) {
-        /* eslint-disable no-console */
         if (console.group) {
           console.group('Navigation Dispatch: ');
           console.log('Action: ', action);
@@ -169,7 +169,6 @@ export default function createNavigationContainer(Component) {
             lastState: prevNav,
           });
         }
-        /* eslint-enable no-console */
         return;
       }
 
@@ -234,7 +233,9 @@ export default function createNavigationContainer(Component) {
         try {
           startupState = JSON.parse(startupStateJSON);
           _reactNavigationIsHydratingState = true;
-        } catch (e) {}
+        } catch (e) {
+          /* do nothing */
+        }
       }
 
       // Pull state out of URL
@@ -246,7 +247,10 @@ export default function createNavigationContainer(Component) {
         );
         if (urlAction) {
           !!process.env.REACT_NAV_LOGGING &&
-            console.log('Applying Navigation Action for Initial URL:', url);
+            console.log(
+              'Applying Navigation Action for Initial URL:',
+              parsedUrl
+            );
           action = urlAction;
           startupState = Component.router.getStateForAction(
             urlAction,
@@ -270,13 +274,14 @@ export default function createNavigationContainer(Component) {
         return;
       }
 
+      // eslint-disable-next-line react/no-did-mount-set-state
       this.setState({ nav: startupState }, () => {
         _reactNavigationIsHydratingState = false;
         dispatchActions();
       });
     }
 
-    componentDidCatch(e, errorInfo) {
+    componentDidCatch(e) {
       if (_reactNavigationIsHydratingState) {
         _reactNavigationIsHydratingState = false;
         console.warn(

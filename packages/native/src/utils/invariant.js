@@ -9,7 +9,7 @@
  * will remain to ensure logic does not differ in production.
  */
 
-var validateFormat = function(format) {};
+var validateFormat = function() {};
 
 if (__DEV__) {
   validateFormat = function(format) {
@@ -44,4 +44,5 @@ function invariant(condition, format, a, b, c, d, e, f) {
   }
 }
 
+// eslint-disable-next-line import/no-commonjs
 module.exports = invariant;

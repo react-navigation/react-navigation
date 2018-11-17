@@ -16,9 +16,7 @@ import {
 
 function createStackNavigator(routeConfigMap, stackConfig = {}) {
   const router = StackRouter(routeConfigMap, stackConfig);
-  return createAppContainer(
-    createNavigator(SwitchView, router, stackConfig)
-  );
+  return createAppContainer(createNavigator(SwitchView, router, stackConfig));
 }
 
 describe('NavigationContainer', () => {
