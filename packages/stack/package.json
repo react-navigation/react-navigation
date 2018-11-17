@@ -1,6 +1,6 @@
 {
   "name": "react-navigation-stack",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Stack navigator component for React Navigation",
   "main": "dist/index.js",
   "files": [
@@ -41,8 +41,8 @@
   "homepage": "https://github.com/react-navigation/react-navigation-stack#readme",
   "devDependencies": {
     "@expo/vector-icons": "^6.2.0",
-    "@react-navigation/core": "^3.0.0-alpha",
-    "@react-navigation/native": "^3.0.0-alpha",
+    "@react-navigation/core": "^3.0.0",
+    "@react-navigation/native": "^3.0.0",
     "babel-cli": "^6.26.0",
     "babel-jest": "^22.4.1",
     "babel-plugin-syntax-class-properties": "^6.13.0",
@@ -66,12 +66,11 @@
     "release-it": "^7.6.1"
   },
   "peerDependencies": {
-    "@react-navigation/core": "^3.0.0-alpha",
-    "@react-navigation/native": "^3.0.0-alpha",
+    "@react-navigation/core": "^3.0.0",
+    "@react-navigation/native": "^3.0.0",
     "react": "*",
     "react-native": "*",
     "react-native-gesture-handler": "^1.0.0",
-    "react-native-reanimated": "^1.0.0 || ^1.0.0-alpha",
     "react-native-screens": "^1.0.0 || ^1.0.0-alpha"
   },
   "jest": {
