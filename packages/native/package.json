@@ -1,6 +1,6 @@
 {
   "name": "@react-navigation/native",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "React Native support for React Navigation",
   "main": "dist/index.js",
   "files": [
@@ -62,7 +62,7 @@
     "release-it": "^7.6.1"
   },
   "peerDependencies": {
-    "@react-navigation/core": "^3.0.0-alpha",
+    "@react-navigation/core": "^3.0.0",
     "react": "*",
     "react-native": "*"
   },
