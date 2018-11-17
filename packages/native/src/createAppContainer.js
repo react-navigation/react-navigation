@@ -197,7 +197,7 @@ export default function createNavigationContainer(Component) {
           // https://github.com/react-navigation/react-navigation/issues/4196#issuecomment-390827829
           if (Platform.OS === 'ios') {
             console.warn(
-              `You should only render one navigator explicitly in your app, and other navigators should by rendered by including them in that navigator. Full details at: ${docsUrl(
+              `You should only render one navigator explicitly in your app, and other navigators should be rendered by including them in that navigator. Full details at: ${docsUrl(
                 'common-mistakes.html#explicitly-rendering-more-than-one-navigator'
               )}`
             );
