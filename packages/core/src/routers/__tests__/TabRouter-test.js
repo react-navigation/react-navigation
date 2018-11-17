@@ -215,8 +215,7 @@ describe('TabRouter', () => {
       Baz: { screen: ChildTabNavigator },
       Boo: BareLeafRouteConfig,
     });
-    const params = { foo: '42' };
-    const action = router.getActionForPathAndParams('Baz/Bar', params);
+    const action = router.getActionForPathAndParams('Baz/Bar', { foo: '42' });
     const navAction = {
       type: NavigationActions.NAVIGATE,
       routeName: 'Baz',
@@ -242,6 +241,7 @@ describe('TabRouter', () => {
           isTransitioning: false,
           key: 'Baz',
           routeName: 'Baz',
+          params: { foo: '42' },
           routes: [
             {
               key: 'Foo',
@@ -250,7 +250,9 @@ describe('TabRouter', () => {
             {
               key: 'Bar',
               routeName: 'Bar',
-              params,
+              params: {
+                foo: '42',
+              },
             },
           ],
         },

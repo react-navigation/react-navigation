@@ -78,6 +78,40 @@ describe('SwitchRouter', () => {
     expect(state3.index).toEqual(0);
   });
 
+  test('handles nested actions', () => {
+    const router = getExampleRouter();
+    const state = router.getStateForAction({ type: NavigationActions.INIT });
+    const state2 = router.getStateForAction(
+      {
+        type: NavigationActions.NAVIGATE,
+        routeName: 'B',
+        action: { type: NavigationActions.NAVIGATE, routeName: 'B2' },
+      },
+      state
+    );
+    const subState = state2.routes[state2.index];
+    const activeGrandChildRoute = subState.routes[subState.index];
+    expect(activeGrandChildRoute.routeName).toEqual('B2');
+  });
+
+  test('handles nested actions and params simultaneously', () => {
+    const router = getExampleRouter();
+    const state = router.getStateForAction({ type: NavigationActions.INIT });
+    const state2 = router.getStateForAction(
+      {
+        type: NavigationActions.NAVIGATE,
+        routeName: 'B',
+        params: { foo: 'bar' },
+        action: { type: NavigationActions.NAVIGATE, routeName: 'B2' },
+      },
+      state
+    );
+    const subState = state2.routes[state2.index];
+    const activeGrandChildRoute = subState.routes[subState.index];
+    expect(subState.params.foo).toEqual('bar');
+    expect(activeGrandChildRoute.routeName).toEqual('B2');
+  });
+
   test('order of handling navigate action is correct for nested switchrouters', () => {
     // router = switch({ Nested: switch({ Foo, Bar }), Other: switch({ Foo }), Bar })
     // if we are focused on Other and navigate to Bar, what should happen?

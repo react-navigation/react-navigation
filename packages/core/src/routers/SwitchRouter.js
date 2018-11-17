@@ -196,32 +196,39 @@ export default (routeConfigs, config = {}) => {
         if (didNavigate) {
           const childState = state.routes[activeChildIndex];
           const childRouter = childRouters[action.routeName];
-          let newChildState;
+          let newChildState = childState;
 
-          if (action.action) {
-            newChildState = childRouter
-              ? childRouter.getStateForAction(action.action, childState)
-              : null;
-          } else if (!action.action && action.params) {
+          if (action.action && childRouter) {
+            const childStateUpdate = childRouter.getStateForAction(
+              action.action,
+              childState
+            );
+            if (childStateUpdate) {
+              newChildState = childStateUpdate;
+            }
+          }
+
+          if (action.params) {
             newChildState = {
-              ...childState,
+              ...newChildState,
               params: {
-                ...(childState.params || {}),
+                ...(newChildState.params || {}),
                 ...action.params,
               },
             };
           }
 
-          if (newChildState && newChildState !== childState) {
+          if (newChildState !== childState) {
             const routes = [...state.routes];
             routes[activeChildIndex] = newChildState;
-            return getNextState(prevState, {
+            const nextState = {
               ...state,
               routes,
               index: activeChildIndex,
-            });
+            };
+            return getNextState(prevState, nextState);
           } else if (
-            !newChildState &&
+            newChildState === childState &&
             state.index === activeChildIndex &&
             prevState
           ) {
