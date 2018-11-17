@@ -75,9 +75,9 @@ class TouchableWithoutFeedbackWrapper extends React.Component<*> {
 
 class TabBarBottom extends React.Component<Props> {
   static defaultProps = {
-    activeTintColor: '#3478f6', // Default active tint color in iOS 10
+    activeTintColor: '#007AFF',
     activeBackgroundColor: 'transparent',
-    inactiveTintColor: '#929292', // Default inactive tint color in iOS 10
+    inactiveTintColor: '#8E8E93',
     inactiveBackgroundColor: 'transparent',
     showLabel: true,
     showIcon: true,
