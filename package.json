@@ -3,6 +3,7 @@
   "version": "3.3.2",
   "description": "Routing and navigation for your React Native apps",
   "main": "src/react-navigation.js",
+  "types": "typescript/react-navigation.d.ts",
   "repository": {
     "url": "git@github.com:react-navigation/react-navigation.git",
     "type": "git"
@@ -41,6 +42,7 @@
     "react-navigation-tabs": "1.0.2"
   },
   "devDependencies": {
+    "@types/react-native": "~0.57.38",
     "babel-cli": "^6.24.1",
     "babel-core": "^6.25.0",
     "babel-eslint": "^7.2.3",
