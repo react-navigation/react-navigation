@@ -4,7 +4,6 @@ import { Screen } from 'react-native-screens';
 import createPointerEventsContainer from './createPointerEventsContainer';
 
 const EPS = 1e-5;
-
 function getAccessibilityProps(isActive) {
   if (Platform.OS === 'ios') {
     return {
@@ -49,11 +48,14 @@ class Card extends React.Component {
       ...containerAnimatedStyle
     } = animatedStyle;
 
+    let flattenedStyle = StyleSheet.flatten(style) || {};
+    let { backgroundColor, ...screenStyle } = flattenedStyle;
+
     return (
       <Screen
         pointerEvents={pointerEvents}
         onComponentRef={this.props.onComponentRef}
-        style={[StyleSheet.absoluteFill, containerAnimatedStyle, style]}
+        style={[StyleSheet.absoluteFill, containerAnimatedStyle, screenStyle]}
         active={active}
       >
         {shadowOpacity ? (
@@ -64,7 +66,12 @@ class Card extends React.Component {
         ) : null}
         <Animated.View
           {...getAccessibilityProps(isActive)}
-          style={[transparent ? styles.transparent : styles.card]}
+          style={[
+            transparent ? styles.transparent : styles.card,
+            backgroundColor && backgroundColor !== 'transparent'
+              ? { backgroundColor }
+              : null,
+          ]}
         >
           {children}
         </Animated.View>
