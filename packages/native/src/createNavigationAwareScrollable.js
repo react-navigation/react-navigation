@@ -20,6 +20,38 @@ export default function createNavigationAwareScrollable(Component: any) {
           }
         }
       });
+    } 
+
+    setNativeProps = (...args) => {
+      return this.getNode().setNativeProps(...args);
+    }
+
+    getScrollResponder = (...args) => {
+      return this.getNode().getScrollResponder(...args);
+    }
+
+    getScrollableNode = (...args) => {
+      return this.getNode().getScrollableNode(...args);
+    }
+
+    getInnerViewNode = (...args) => {
+      return this.getNode().getInnerViewNode(...args);
+    }
+
+    scrollTo = (...args) => {
+      return this.getNode().scrollTo(...args);
+    }
+
+    scrollToEnd = (...args) => {
+      return this.getNode().scrollToEnd(...args);
+    }
+
+    scrollWithoutAnimationTo = (...args) => {
+      return this.getNode().scrollWithoutAnimationTo(...args);
+    }
+
+    flashScrollIndicators = (...args) => {
+      return this.getNode().flashScrollIndicators(...args);
     }
 
     getNode() {
@@ -59,3 +91,4 @@ export default function createNavigationAwareScrollable(Component: any) {
     Component
   );
 }
+
