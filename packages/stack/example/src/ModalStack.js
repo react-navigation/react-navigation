@@ -3,6 +3,10 @@ import { Button, View, Text } from 'react-native';
 import { createStackNavigator } from 'react-navigation-stack';
 
 class ListScreen extends React.Component {
+  static navigationOptions = {
+    title: 'My Modal',
+  };
+
   render() {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
