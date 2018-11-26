@@ -35,6 +35,7 @@
     "hoist-non-react-statics": "^2.2.0",
     "path-to-regexp": "^1.7.0",
     "query-string": "^6.1.0",
+    "react-is": "^16.5.2",
     "react-lifecycles-compat": "^3",
     "react-native-safe-area-view": "0.11.0",
     "react-native-screens": "^1.0.0-alpha.11",
@@ -62,7 +63,7 @@
     "lint-staged": "^4.2.1",
     "prettier": "^1.12.1",
     "prettier-eslint": "^8.8.1",
-    "react": "16.2.0",
+    "react": "16.5.2",
     "react-native": "^0.52.0",
     "react-native-vector-icons": "^4.2.0",
     "react-test-renderer": "^16.0.0"

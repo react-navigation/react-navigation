@@ -1,3 +1,4 @@
+import { isValidElementType } from 'react-is';
 import invariant from '../utils/invariant';
 
 /**
@@ -23,7 +24,7 @@ export default function getScreenForRouteName(routeConfigs, routeName) {
   if (typeof routeConfig.getScreen === 'function') {
     const screen = routeConfig.getScreen();
     invariant(
-      typeof screen === 'function',
+      isValidElementType(screen),
       `The getScreen defined for route '${routeName} didn't return a valid ` +
         'screen or navigator.\n\n' +
         'Please pass it like this:\n' +
