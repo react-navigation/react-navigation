@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+
+## [2.18.3] - [2018-11-26](https://github.com/react-navigation/react-navigation/releases/tag/2.18.3)
+
+### Fixed
+
 - Support React.forwardRef on createStackNavigator
 
 ## [2.18.2] - [2018-10-26](https://github.com/react-navigation/react-navigation/releases/tag/2.18.2)
@@ -247,7 +252,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Improved examples
 
-[Unreleased]: https://github.com/react-navigation/react-navigation/compare/2.18.2...HEAD
+[Unreleased]: https://github.com/react-navigation/react-navigation/compare/2.18.3...HEAD
+[2.18.3]: https://github.com/react-navigation/react-navigation/compare/2.18.2...2.18.3
 [2.18.2]: https://github.com/react-navigation/react-navigation/compare/2.18.1...2.18.2
 [2.18.1]: https://github.com/react-navigation/react-navigation/compare/2.18.0...2.18.1
 [2.18.0]: https://github.com/react-navigation/react-navigation/compare/2.17.0...2.18.0
