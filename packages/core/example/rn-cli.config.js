@@ -20,4 +20,7 @@ module.exports = {
   getBlacklistRE() {
     return blacklist([glob(`${path.resolve(__dirname, '..')}/node_modules/*`)]);
   },
+  getSourceExts() {
+    return ['ts', 'tsx'];
+  },
 };

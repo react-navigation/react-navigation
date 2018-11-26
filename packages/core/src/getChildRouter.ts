@@ -1,4 +1,4 @@
-export default function getChildRouter(router, routeName) {
+export default function getChildRouter(router: any, routeName: string) {
   if (router.childRouters && router.childRouters[routeName]) {
     return router.childRouters[routeName];
   }

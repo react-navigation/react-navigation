@@ -61,6 +61,7 @@ export default (routeConfigs, stackConfig = {}) => {
           action.action || NavigationActions.init({ params: action.params });
         childState = childRouter.getStateForAction(childAction);
       }
+
       return {
         key: 'StackRouterRoot',
         isTransitioning: false,

@@ -7,7 +7,7 @@ import {
   Assets as StackAssets,
   createStackNavigator,
 } from 'react-navigation-stack';
-import { ListSection, Divider } from 'react-native-paper';
+import { List, Divider } from 'react-native-paper';
 
 import SimpleStack from './src/SimpleStack';
 import SimpleTabs from './src/SimpleTabs';
@@ -36,7 +36,7 @@ class Home extends React.Component {
   };
 
   _renderItem = ({ item }) => (
-    <ListSection.Item
+    <List.Item
       title={item.title}
       onPress={() => this.props.navigation.navigate(item.routeName)}
     />
