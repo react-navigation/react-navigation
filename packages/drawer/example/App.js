@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { FlatList } from 'react-native';
+// eslint-disable-next-line no-unused-vars
+import { FlatList, I18nManager } from 'react-native';
 import { createAppContainer } from '@react-navigation/native';
 
 // eslint-disable-next-line import/named
@@ -8,6 +9,9 @@ import { List, Divider } from 'react-native-paper';
 import { SimpleDrawer, SimpleDrawerUnmountInactive } from './src/SimpleDrawer';
 import StyledDrawer from './src/StyledDrawer';
 import GestureInteraction from './src/GestureInteraction';
+import RTLDrawer from './src/RTLDrawer';
+
+// I18nManager.forceRTL(false);
 
 const data = [
   {
@@ -25,6 +29,11 @@ const data = [
     component: GestureInteraction,
     title: 'Gesture Interaction',
     routeName: 'GestureInteraction',
+  },
+  {
+    component: RTLDrawer,
+    title: 'Right drawer to test RTL',
+    routeName: 'RTLDrawer',
   },
 ];
 
