@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.0.2] - [2018-11-27](https://github.com/react-navigation/react-navigation/releases/tag/3.0.2)
+
+## Fixes
+
+- Fix `drawerLockMode` on drawer navigator
+- Fix RTL support in drawer navigator
 
 ## [3.0.1] - [2018-11-26](https://github.com/react-navigation/react-navigation/releases/tag/3.0.1)
 
@@ -24,6 +30,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - [2.x](https://github.com/react-navigation/react-navigation/blob/2.x/CHANGELOG.md)
 
-[Unreleased]: https://github.com/react-navigation/react-navigation/compare/3.0.1...HEAD
+[Unreleased]: https://github.com/react-navigation/react-navigation/compare/3.0.2...HEAD
+[3.0.2]: https://github.com/react-navigation/react-navigation/compare/3.0.1...3.0.2
 [3.0.1]: https://github.com/react-navigation/react-navigation/compare/3.0.0...3.0.1
 [3.0.0]: https://github.com/react-navigation/react-navigation/compare/2.x...3.0.0
