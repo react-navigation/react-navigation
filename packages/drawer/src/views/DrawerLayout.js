@@ -1,7 +1,5 @@
 /* eslint-disable */
 
-// @flow
-
 // #########################################################
 //    This is vendored from react-native-gesture-handler!
 // #########################################################
@@ -17,7 +15,6 @@
 import React, { Component } from 'react';
 import { Animated, StyleSheet, View, Keyboard, StatusBar, I18nManager } from 'react-native';
 import invariant from '../utils/invariant';
-import { AnimatedEvent } from 'react-native/Libraries/Animated/src/AnimatedEvent';
 
 import {
   PanGestureHandler,
@@ -52,9 +49,11 @@ export type PropType = {
   overlayColor: string,
   contentContainerStyle?: any,
 
+  // Added in this fork, needs to be upstreamed
+  drawerLockMode?: 'unlocked' | 'locked-closed' | 'locked-open',
+
   // Properties not yet supported
   // onDrawerSlide?: Function
-  // drawerLockMode?: 'unlocked' | 'locked-closed' | 'locked-open',
 };
 
 export type StateType = {
@@ -82,6 +81,7 @@ export default class DrawerLayout extends Component<PropType, StateType> {
     edgeWidth: 20,
     minSwipeDistance: 3,
     overlayColor: 'black',
+    drawerLockMode: 'unlocked',
   };
 
   static positions = {
@@ -89,7 +89,7 @@ export default class DrawerLayout extends Component<PropType, StateType> {
     Right: 'right',
   };
   _openValue: ?Animated.Interpolation;
-  _onGestureEvent: ?AnimatedEvent;
+  _onGestureEvent: any;
 
   constructor(props: PropType, context: any) {
     super(props, context);
@@ -227,7 +227,11 @@ export default class DrawerLayout extends Component<PropType, StateType> {
   };
 
   _onTapHandlerStateChange = ({ nativeEvent }) => {
-    if (this.state.drawerShown && nativeEvent.oldState === State.ACTIVE) {
+    if (
+      this.state.drawerShown &&
+      nativeEvent.oldState === State.ACTIVE &&
+      this.props.drawerLockMode !== 'locked-open'
+    ) {
       this.closeDrawer();
     }
   };
@@ -407,8 +411,7 @@ export default class DrawerLayout extends Component<PropType, StateType> {
               : styles.containerInFront,
             containerStyles,
             contentContainerStyle,
-          ]}
-        >
+          ]}>
           {typeof this.props.children === 'function'
             ? this.props.children(this._openValue)
             : this.props.children}
@@ -417,8 +420,7 @@ export default class DrawerLayout extends Component<PropType, StateType> {
         <Animated.View
           pointerEvents="box-none"
           accessibilityViewIsModal={drawerShown}
-          style={[styles.drawerContainer, drawerStyles]}
-        >
+          style={[styles.drawerContainer, drawerStyles]}>
           <View style={[styles.drawer, dynamicDrawerStyles]}>
             {this.props.renderNavigationView(this._openValue)}
           </View>
@@ -433,6 +435,7 @@ export default class DrawerLayout extends Component<PropType, StateType> {
     const {
       drawerPosition,
       drawerType,
+      drawerLockMode,
       edgeWidth,
       minSwipeDistance,
     } = this.props;
@@ -457,9 +460,11 @@ export default class DrawerLayout extends Component<PropType, StateType> {
         minOffsetX={gestureOrientation * minSwipeDistance}
         maxDeltaY={15}
         onGestureEvent={this._onGestureEvent}
+        enabled={
+          drawerLockMode !== 'locked-closed' && drawerLockMode !== 'locked-open'
+        }
         onHandlerStateChange={this._openingHandlerStateChange}
-        ref={this.props.gestureRef}
-      >
+        ref={this.props.gestureRef}>
         {this._renderDrawer()}
       </PanGestureHandler>
     );
