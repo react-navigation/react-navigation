@@ -13,7 +13,7 @@
 // that could be found when using the drawer component
 
 import React, { Component } from 'react';
-import { Animated, StyleSheet, View, Keyboard, StatusBar } from 'react-native';
+import { Animated, StyleSheet, View, Keyboard, StatusBar, I18nManager } from 'react-native';
 import invariant from '../utils/invariant';
 
 import {
@@ -399,7 +399,7 @@ export default class DrawerLayout extends Component<PropType, StateType> {
     }
     const drawerStyles = {
       transform: [{ translateX: drawerTranslateX }],
-      flexDirection: fromLeft ? 'row' : 'row-reverse',
+      flexDirection: (I18nManager.isRTL ? !fromLeft : fromLeft) ? 'row' : 'row-reverse'
     };
 
     return (
