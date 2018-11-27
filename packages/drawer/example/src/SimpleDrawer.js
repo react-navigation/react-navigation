@@ -70,6 +70,34 @@ const MyNavScreen = ({ navigation, banner }) => (
         onPress={() => navigation.navigate('Home')}
         title="Go back to list"
       />
+      {
+        {
+          'locked-open': (
+            <Button
+              onPress={() =>
+                navigation.setParams({ drawerLockMode: 'locked-closed' })
+              }
+              title="Set locked-closed"
+            />
+          ),
+          'locked-closed': (
+            <Button
+              onPress={() =>
+                navigation.setParams({ drawerLockMode: 'unlocked' })
+              }
+              title="Set unlocked"
+            />
+          ),
+          unlocked: (
+            <Button
+              onPress={() =>
+                navigation.setParams({ drawerLockMode: 'locked-open' })
+              }
+              title="Set locked-open"
+            />
+          ),
+        }[navigation.getParam('drawerLockMode', 'unlocked')]
+      }
     </SafeAreaView>
     <StatusBar barStyle="default" />
     <KeepAwake />
@@ -94,33 +122,45 @@ DraftsScreen.navigationOptions = {
   headerTitle: 'Drafts',
 };
 
-const InboxStack = createStackNavigator({
-  Inbox: { screen: InboxScreen },
-  Email: { screen: EmailScreen },
-});
+const InboxStack = createStackNavigator(
+  {
+    Inbox: { screen: InboxScreen },
+    Email: { screen: EmailScreen },
+  },
+  {
+    navigationOptions: ({ navigation }) => ({
+      drawerLabel: 'Inbox',
+      drawerLockMode: (
+        navigation.state.routes[navigation.state.index].params || {}
+      ).drawerLockMode,
+      drawerIcon: ({ tintColor }) => (
+        <MaterialIcons
+          name="move-to-inbox"
+          size={24}
+          style={{ color: tintColor }}
+        />
+      ),
+    }),
+  }
+);
 
-InboxStack.navigationOptions = {
-  drawerLabel: 'Inbox',
-  drawerIcon: ({ tintColor }) => (
-    <MaterialIcons
-      name="move-to-inbox"
-      size={24}
-      style={{ color: tintColor }}
-    />
-  ),
-};
-
-const DraftsStack = createStackNavigator({
-  Drafts: { screen: DraftsScreen },
-  Email: { screen: EmailScreen },
-});
-
-DraftsStack.navigationOptions = {
-  drawerLabel: 'Drafts',
-  drawerIcon: ({ tintColor }) => (
-    <MaterialIcons name="drafts" size={24} style={{ color: tintColor }} />
-  ),
-};
+const DraftsStack = createStackNavigator(
+  {
+    Drafts: { screen: DraftsScreen },
+    Email: { screen: EmailScreen },
+  },
+  {
+    navigationOptions: ({ navigation }) => ({
+      drawerLabel: 'Drafts',
+      drawerLockMode: (
+        navigation.state.routes[navigation.state.index].params || {}
+      ).drawerLockMode,
+      drawerIcon: ({ tintColor }) => (
+        <MaterialIcons name="drafts" size={24} style={{ color: tintColor }} />
+      ),
+    }),
+  }
+);
 
 function createDrawerExample(options = {}) {
   let DrawerExample = createDrawerNavigator(
