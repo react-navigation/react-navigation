@@ -4,7 +4,7 @@
   "private": true,
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
-    "postinstall": "rm -rf node_modules/react-native-screens",
+    "postinstall": "rm -rf node_modules/react-native-screens && rm -rf node_modules/react-native-gesture-handler",
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
