@@ -984,6 +984,9 @@ export function TabNavigator(
   routeConfigMap: NavigationRouteConfigMap,
   drawConfig?: TabNavigatorConfig
 ): NavigationContainer;
+export function createAppContainer(
+  routeConfigMap: NavigationRouteConfigMap,
+): NavigationContainer;
 
 export function createTabNavigator(
   routeConfigMap: NavigationRouteConfigMap,
