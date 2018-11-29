@@ -40,6 +40,12 @@ import {
   StyleProp,
 } from 'react-native';
 
+import { Context } from 'create-react-context';
+
+// The current created React Context
+export type NavigationContext = Context<null>;
+
+
 // @todo when we split types into common, native and web,
 // we can properly change Animated.Value to its real value
 export type AnimatedValue = any;
