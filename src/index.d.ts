@@ -560,6 +560,12 @@ export interface NavigationBottomTabScreenOptions
       defaultHandler: () => void;
     }
   ) => void;
+    tabBarOnLongPress?: (
+    options: {
+        navigation: NavigationScreenProp<NavigationRoute>;
+        defaultHandler: () => void;
+    }
+  ) => void;
 }
 
 export type DrawerLockMode = 'unlocked' | 'locked-closed' | 'locked-open';
