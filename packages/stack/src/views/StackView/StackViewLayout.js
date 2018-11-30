@@ -342,8 +342,8 @@ class StackViewLayout extends React.Component {
         maxDeltaX: 15,
         minOffsetY: isMotionInverted ? -5 : 5,
         hitSlop: isMotionInverted
-          ? { top: -height + GESTURE_RESPONSE_DISTANCE_VERTICAL }
-          : { bottom: -height + GESTURE_RESPONSE_DISTANCE_VERTICAL },
+          ? { top: -height + gestureResponseDistance }
+          : { bottom: -height + gestureResponseDistance },
       };
     } else {
       let width = layout.width.__getValue();
