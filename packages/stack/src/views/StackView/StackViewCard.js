@@ -24,7 +24,6 @@ function getAccessibilityProps(isActive) {
 class Card extends React.Component {
   render() {
     const {
-      animatedStyle,
       children,
       pointerEvents,
       style,
@@ -41,6 +40,9 @@ class Card extends React.Component {
             outputRange: [1, 1, 0],
             extrapolate: 'clamp',
           });
+
+    // animatedStyle can be `false` if there is no screen interpolator
+    const animatedStyle = this.props.animatedStyle || {};
 
     const {
       shadowOpacity,
