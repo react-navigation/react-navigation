@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.0.3] - [2018-11-30](https://github.com/react-navigation/react-navigation/releases/tag/3.0.3)
+
+## Fixes
+
+- Fix bug where if you navigate immediately when the navigator is first mounted the stack could get in an invalid state.
+- Transparent stack card factors in header height now, even though you probably won't want to use this.
+- Fix bug where shadow was still rendered on transparent stack
+- Fix gestureResponseDistance custom values being ignored for modal stack
+
 ## [3.0.2] - [2018-11-27](https://github.com/react-navigation/react-navigation/releases/tag/3.0.2)
 
 ## Fixes
@@ -20,7 +29,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - fix NavigationTestUtils.js deprecated file import.
 - Update `getParam` flow typings to check `key` and `fallback` arguments, as well as return the correct type automatically.
-- Fix regression in backgroundColor on cardStyle for stack navigator
+- Fix regression in backgroundColor on cardStyle for stack navigator.
 
 ## [3.0.0] - [2018-11-17](https://github.com/react-navigation/react-navigation/releases/tag/3.0.0)
 
