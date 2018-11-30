@@ -39,12 +39,12 @@ import {
   ViewStyle,
   StyleProp,
 } from 'react-native';
-
 import { Context } from 'create-react-context';
 
-// The current created React Context
-export type NavigationContext = Context<null>;
-
+/**
+ * Current Navigation context
+ */
+ export type NavigationContext = Context<any>;
 
 // @todo when we split types into common, native and web,
 // we can properly change Animated.Value to its real value
@@ -655,7 +655,7 @@ export interface NavigationScreenProp<S, P = NavigationParams> {
   getParam<T extends keyof P>(param: T): P[T];
   setParams: (newParams: Partial<P>) => boolean;
   addListener: (
-    eventName: 'willBlur' | 'willFocus' | 'didFocus' | 'didBlur',
+    eventName: EventType,
     callback: NavigationEventCallback
   ) => NavigationEventSubscription;
   push: (
