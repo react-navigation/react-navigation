@@ -33,7 +33,6 @@ import { useScreens } from 'react-native-screens';
 // Uncomment the following line to force RTL. Requires closing and re-opening
 // your app after you first load it with this option enabled.
 I18nManager.forceRTL(false);
-useScreens();
 
 const data = [
   { component: SimpleStack, title: 'Simple', routeName: 'SimpleStack' },
@@ -146,3 +145,8 @@ const Root = createStackNavigator(
 
 const App = createAppContainer(Root);
 Expo.registerRootComponent(App);
+useScreens();
+
+// Uncomment this to test immediate transitions
+// import ImmediateTransition from './src/ImmediateTransition';
+// Expo.registerRootComponent(ImmediateTransition);
