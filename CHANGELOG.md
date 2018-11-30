@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.0.4] - [2018-11-30](https://github.com/react-navigation/react-navigation/releases/tag/3.0.4)
+
+## Changed
+
+- Lock dependencies to exact versions
+
+## Fixes
+
+- Fix crash when screenInterpolator is null (https://github.com/react-navigation/react-navigation-stack/issues/64)
+- Fix renderPager override (https://github.com/react-navigation/react-navigation-tabs/pull/70)
+
+## Added
+
+- Accessibility labels on drawer items (https://github.com/react-navigation/react-navigation-drawer/pull/30)
+
+
 ## [3.0.3] - [2018-11-30](https://github.com/react-navigation/react-navigation/releases/tag/3.0.3)
 
 ## Fixes
@@ -39,7 +55,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - [2.x](https://github.com/react-navigation/react-navigation/blob/2.x/CHANGELOG.md)
 
-[Unreleased]: https://github.com/react-navigation/react-navigation/compare/3.0.2...HEAD
+[Unreleased]: https://github.com/react-navigation/react-navigation/compare/3.0.4...HEAD
+[3.0.4]: https://github.com/react-navigation/react-navigation/compare/3.0.3...3.0.4
+[3.0.3]: https://github.com/react-navigation/react-navigation/compare/3.0.2...3.0.3
 [3.0.2]: https://github.com/react-navigation/react-navigation/compare/3.0.1...3.0.2
 [3.0.1]: https://github.com/react-navigation/react-navigation/compare/3.0.0...3.0.1
 [3.0.0]: https://github.com/react-navigation/react-navigation/compare/2.x...3.0.0

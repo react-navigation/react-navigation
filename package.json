@@ -34,11 +34,11 @@
     "react-native": "*"
   },
   "dependencies": {
-    "@react-navigation/core": "^3.0.0",
-    "@react-navigation/native": "^3.0.1",
-    "react-navigation-drawer": "^1.0.3",
-    "react-navigation-stack": "1.0.3",
-    "react-navigation-tabs": "^1.0.0"
+    "@react-navigation/core": "3.0.0",
+    "@react-navigation/native": "3.0.2",
+    "react-navigation-drawer": "1.0.4",
+    "react-navigation-stack": "1.0.4",
+    "react-navigation-tabs": "1.0.1"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
