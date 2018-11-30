@@ -58,7 +58,7 @@ class Card extends React.Component {
         style={[StyleSheet.absoluteFill, containerAnimatedStyle, screenStyle]}
         active={active}
       >
-        {shadowOpacity ? (
+        {!transparent && shadowOpacity ? (
           <Animated.View
             style={[styles.shadow, { shadowOpacity }]}
             pointerEvents="none"
