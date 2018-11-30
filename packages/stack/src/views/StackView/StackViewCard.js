@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
   },
   transparent: {
-    ...StyleSheet.absoluteFillObject,
+    flex: 1,
     backgroundColor: 'transparent',
   },
 });
