@@ -3,6 +3,7 @@
   "version": "3.0.0",
   "description": "Routing and navigation for your React Native apps",
   "main": "src/react-navigation.js",
+  "types": "src/index.d.ts",
   "repository": {
     "url": "git@github.com:react-navigation/react-navigation.git",
     "type": "git"
