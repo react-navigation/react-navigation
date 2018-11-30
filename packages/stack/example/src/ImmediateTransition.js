@@ -1,14 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createAppContainer } from '@react-navigation/native';
-
-import {
-  Platform,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
 
 class ScreenOne extends React.Component {
   componentDidMount() {
