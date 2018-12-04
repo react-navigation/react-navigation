@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.0.5] - [2018-12-03](https://github.com/react-navigation/react-navigation/releases/tag/3.0.5)
+
+## Fixes
+
+- Fix crash in rare case where onNavigationStateChange on container leads to setState and container has screenProps (https://github.com/react-navigation/react-navigation/issues/5301)
+- Expose underlaying ScrollView methods to NavigationAwareScrollable (https://github.com/react-navigation/react-navigation-native/pull/8)
+
 ## [3.0.4] - [2018-11-30](https://github.com/react-navigation/react-navigation/releases/tag/3.0.4)
 
 ## Changed
@@ -55,7 +62,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - [2.x](https://github.com/react-navigation/react-navigation/blob/2.x/CHANGELOG.md)
 
-[Unreleased]: https://github.com/react-navigation/react-navigation/compare/3.0.4...HEAD
+[Unreleased]: https://github.com/react-navigation/react-navigation/compare/3.0.5...HEAD
+[3.0.5]: https://github.com/react-navigation/react-navigation/compare/3.0.4...3.0.5
 [3.0.4]: https://github.com/react-navigation/react-navigation/compare/3.0.3...3.0.4
 [3.0.3]: https://github.com/react-navigation/react-navigation/compare/3.0.2...3.0.3
 [3.0.2]: https://github.com/react-navigation/react-navigation/compare/3.0.1...3.0.2
