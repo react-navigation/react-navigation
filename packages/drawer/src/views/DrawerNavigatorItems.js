@@ -34,12 +34,13 @@ const DrawerNavigatorItems = ({
       const scene = { route, index, focused, tintColor: color };
       const icon = renderIcon(scene);
       const label = getLabel(scene);
+      const accessibilityLabel = typeof label === 'string' ? label : undefined;
       const extraLabelStyle = focused ? activeLabelStyle : inactiveLabelStyle;
       return (
         <TouchableItem
           key={route.key}
           accessible
-          accessibilityLabel={label}
+          accessibilityLabel={accessibilityLabel}
           onPress={() => {
             onItemPress({ route, focused });
           }}
