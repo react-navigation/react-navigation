@@ -38,6 +38,10 @@ import {
   ViewProps,
   ViewStyle,
   StyleProp,
+  FlatListProps,
+  ScrollViewProps,
+  ScrollResponderMixin,
+  Constructor
 } from 'react-native';
 import { Context } from 'create-react-context';
 
@@ -49,6 +53,90 @@ import { Context } from 'create-react-context';
 // @todo when we split types into common, native and web,
 // we can properly change Animated.Value to its real value
 export type AnimatedValue = any;
+
+export class FlatList<ItemT> extends React.Component<FlatListProps<ItemT> & NavigationInjectedProps> {
+  /**
+   * Exports some data, e.g. for perf investigations or analytics.
+   */
+  getMetrics: () => {
+      contentLength: number;
+      totalRows: number;
+      renderedRows: number;
+      visibleRows: number;
+  };
+
+  /**
+   * Scrolls to the end of the content. May be janky without `getItemLayout` prop.
+   */
+  scrollToEnd: (params?: { animated?: boolean }) => void;
+
+  /**
+   * Scrolls to the item at the specified index such that it is positioned in the viewable area
+   * such that viewPosition 0 places it at the top, 1 at the bottom, and 0.5 centered in the middle.
+   * Cannot scroll to locations outside the render window without specifying the getItemLayout prop.
+   */
+  scrollToIndex: (params: { animated?: boolean; index: number; viewOffset?: number; viewPosition?: number }) => void;
+
+  /**
+   * Requires linear scan through data - use `scrollToIndex` instead if possible.
+   * May be janky without `getItemLayout` prop.
+   */
+  scrollToItem: (params: { animated?: boolean; item: ItemT; viewPosition?: number }) => void;
+
+  /**
+   * Scroll to a specific content pixel offset, like a normal `ScrollView`.
+   */
+  scrollToOffset: (params: { animated?: boolean; offset: number }) => void;
+
+  /**
+   * Tells the list an interaction has occured, which should trigger viewability calculations,
+   * e.g. if waitForInteractions is true and the user has not scrolled. This is typically called
+   * by taps on items or by navigation actions.
+   */
+  recordInteraction: () => void;
+}
+
+declare class ScrollViewComponent extends React.Component<ScrollViewProps & NavigationInjectedProps> {}
+declare const ScrollViewBase: Constructor<ScrollResponderMixin> & typeof ScrollViewComponent;
+export class ScrollView extends ScrollViewBase {
+    /**
+     * Scrolls to a given x, y offset, either immediately or with a smooth animation.
+     * Syntax:
+     *
+     * scrollTo(options: {x: number = 0; y: number = 0; animated: boolean = true})
+     *
+     * Note: The weird argument signature is due to the fact that, for historical reasons,
+     * the function also accepts separate arguments as as alternative to the options object.
+     * This is deprecated due to ambiguity (y before x), and SHOULD NOT BE USED.
+     */
+    scrollTo(y?: number | { x?: number; y?: number; animated?: boolean }, x?: number, animated?: boolean): void;
+
+    /**
+     * A helper function that scrolls to the end of the scrollview;
+     * If this is a vertical ScrollView, it scrolls to the bottom.
+     * If this is a horizontal ScrollView scrolls to the right.
+     *
+     * The options object has an animated prop, that enables the scrolling animation or not.
+     * The animated prop defaults to true
+     */
+    scrollToEnd(options?: { animated: boolean }): void;
+
+    /**
+     * Returns a reference to the underlying scroll responder, which supports
+     * operations like `scrollTo`. All ScrollView-like components should
+     * implement this method so that they can be composed while providing access
+     * to the underlying scroll responder's methods.
+     */
+    getScrollResponder(): JSX.Element;
+
+    getScrollableNode(): any;
+
+    // Undocumented
+    getInnerViewNode(): any;
+
+    // Deprecated, do not use.
+    scrollWithoutAnimationTo?: (y: number, x: number) => void;
+}
 
 export type HeaderMode = 'float' | 'screen' | 'none';
 
@@ -1331,3 +1419,19 @@ export interface SafeAreaViewProps extends ViewProps {
 }
 
 export const SafeAreaView: React.ComponentClass<SafeAreaViewProps>;
+
+export interface HeaderStyleInterPolator {
+  forLayout: any;
+  forLeft: any;
+  forLeftButton: any;
+  forLeftLabel: any;
+  forCenterFromLeft: any;
+  forCenter: any;
+  forRight: any;
+  forBackground: any;
+  forBackgroundWithInactiveHidden: any;
+  forBackgroundWithFade: any;
+  forBackgroundWithTranslation: any;
+}
+
+export const getActiveChildNavigationOptions: any;

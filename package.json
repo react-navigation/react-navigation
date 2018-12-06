@@ -42,6 +42,8 @@
     "react-navigation-tabs": "^1.0.0"
   },
   "devDependencies": {
+    "@types/react": "16.7.13",
+    "@types/react-native": "0.57.17",
     "babel-cli": "^6.24.1",
     "babel-core": "^6.25.0",
     "babel-eslint": "^7.2.3",
