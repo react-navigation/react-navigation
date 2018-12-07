@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.0.6] - [2018-12-06](https://github.com/react-navigation/react-navigation/releases/tag/3.0.6)
+
+## Fixes
+
+- Fix drawer accessibility label when drawer label is not a string
+
+
 ## [3.0.5] - [2018-12-03](https://github.com/react-navigation/react-navigation/releases/tag/3.0.5)
 
 ## Fixes
@@ -62,7 +69,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - [2.x](https://github.com/react-navigation/react-navigation/blob/2.x/CHANGELOG.md)
 
-[Unreleased]: https://github.com/react-navigation/react-navigation/compare/3.0.5...HEAD
+[Unreleased]: https://github.com/react-navigation/react-navigation/compare/3.0.6...HEAD
+[3.0.6]: https://github.com/react-navigation/react-navigation/compare/3.0.5...3.0.6
 [3.0.5]: https://github.com/react-navigation/react-navigation/compare/3.0.4...3.0.5
 [3.0.4]: https://github.com/react-navigation/react-navigation/compare/3.0.3...3.0.4
 [3.0.3]: https://github.com/react-navigation/react-navigation/compare/3.0.2...3.0.3
