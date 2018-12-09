@@ -29,24 +29,7 @@ class StackView extends React.Component {
           this.props.onTransitionStart ||
           this.props.navigationConfig.onTransitionStart
         }
-        onTransitionEnd={(transition, lastTransition) => {
-          const { navigationConfig, navigation } = this.props;
-          const onTransitionEnd =
-            this.props.onTransitionEnd || navigationConfig.onTransitionEnd;
-          const transitionDestKey = transition.scene.route.key;
-          const isCurrentKey =
-            navigation.state.routes[navigation.state.index].key ===
-            transitionDestKey;
-          if (transition.navigation.state.isTransitioning && isCurrentKey) {
-            navigation.dispatch(
-              StackActions.completeTransition({
-                key: navigation.state.key,
-                toChildKey: transitionDestKey,
-              })
-            );
-          }
-          onTransitionEnd && onTransitionEnd(transition, lastTransition);
-        }}
+        onTransitionEnd={this._onTransitionEnd}
       />
     );
   }
@@ -106,6 +89,26 @@ class StackView extends React.Component {
         lastTransitionProps={lastTransitionProps}
       />
     );
+  };
+
+  _onTransitionEnd = (transition, lastTransition) => {
+    const {
+      navigationConfig,
+      navigation,
+      onTransitionEnd = navigationConfig.onTransitionEnd,
+    } = this.props;
+    const transitionDestKey = transition.scene.route.key;
+    const isCurrentKey =
+      navigation.state.routes[navigation.state.index].key === transitionDestKey;
+    if (transition.navigation.state.isTransitioning && isCurrentKey) {
+      navigation.dispatch(
+        StackActions.completeTransition({
+          key: navigation.state.key,
+          toChildKey: transitionDestKey,
+        })
+      );
+    }
+    onTransitionEnd && onTransitionEnd(transition, lastTransition);
   };
 }
 
