@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.0.7] - [2018-12-08](https://github.com/react-navigation/react-navigation/releases/tag/3.0.7)
+
+## Changed
+
+- Optimize stack gesture to avoid a setState and reduce unnecessary Animated node creation (https://github.com/react-navigation/react-navigation-stack/pull/70)
+
 ## [3.0.6] - [2018-12-06](https://github.com/react-navigation/react-navigation/releases/tag/3.0.6)
 
 ## Fixes
@@ -69,7 +75,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - [2.x](https://github.com/react-navigation/react-navigation/blob/2.x/CHANGELOG.md)
 
-[Unreleased]: https://github.com/react-navigation/react-navigation/compare/3.0.6...HEAD
+[Unreleased]: https://github.com/react-navigation/react-navigation/compare/3.0.7...HEAD
+[3.0.7]: https://github.com/react-navigation/react-navigation/compare/3.0.6...3.0.7
 [3.0.6]: https://github.com/react-navigation/react-navigation/compare/3.0.5...3.0.6
 [3.0.5]: https://github.com/react-navigation/react-navigation/compare/3.0.4...3.0.5
 [3.0.4]: https://github.com/react-navigation/react-navigation/compare/3.0.3...3.0.4
