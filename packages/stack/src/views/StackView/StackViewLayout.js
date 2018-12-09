@@ -446,10 +446,20 @@ class StackViewLayout extends React.Component {
         this._handleReleaseHorizontal(nativeEvent);
       }
     } else if (nativeEvent.state === State.ACTIVE) {
-      // HACK if current is in animation don't start gesture
-      if (!this.props.transitionProps.position._animation) {
-        this.positionSwitch.setValue(0);
-      }
+      // Switch to using gesture position
+      this.positionSwitch.setValue(0);
+
+      // By enabling the gesture switch and ignoring the position here we
+      // end up with a quick jump to the initial value and then back to the
+      // gesture. While this isn't ideal, it's preferred over preventing new
+      // gestures during the animation (all gestures should be interruptible)
+      // and we will properly fix it (interruptible and from the correct position)
+      // when we integrate reanimated. If you prefer to prevent gestures during
+      // transitions, then fork this library, comment the positionSwitch value set above,
+      // and uncomment the following two lines.
+      // if (!this.props.transitionProps.position._animation) {
+      //   this.positionSwitch.setValue(0);
+      // }
     }
   };
 
