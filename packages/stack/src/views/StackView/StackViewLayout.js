@@ -302,7 +302,7 @@ class StackViewLayout extends React.Component {
         ref={this.panGestureRef}
         onGestureEvent={this.gestureEvent}
         onHandlerStateChange={this._handlePanGestureStateChange}
-        enabled={index > 0 && this._isGesturesEnabled()}
+        enabled={index > 0 && this._isGestureEnabled()}
       >
         <Animated.View
           style={[styles.container, this._transitionConfig.containerStyle]}
@@ -368,7 +368,7 @@ class StackViewLayout extends React.Component {
     }
   }
 
-  _isGesturesEnabled() {
+  _isGestureEnabled() {
     const gesturesEnabled = this.props.transitionProps.scene.descriptor.options
       .gesturesEnabled;
     return typeof gesturesEnabled === 'boolean'
@@ -462,7 +462,7 @@ class StackViewLayout extends React.Component {
   }
 
   _prepareGesture() {
-    if (!this._isGesturesEnabled()) {
+    if (!this._isGestureEnabled()) {
       if (this.positionSwitch.__getValue() !== 1) {
         this.positionSwitch.setValue(1);
       }
