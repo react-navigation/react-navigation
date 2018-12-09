@@ -470,6 +470,14 @@ class StackViewLayout extends React.Component {
       return;
     }
 
+    // We can't run the gesture if width or height layout is unavailable
+    if (
+      this.props.transitionProps.layout.width.__getValue() === 0 ||
+      this.props.transitionProps.layout.height.__getValue() === 0
+    ) {
+      return;
+    }
+
     if (this._isMotionVertical()) {
       this._prepareGestureVertical();
     } else {
