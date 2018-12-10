@@ -2,7 +2,7 @@ version: 2
 
 defaults: &defaults
   docker:
-    - image: circleci/node:7.10
+    - image: circleci/node:8
   working_directory: ~/project
 
 jobs:
@@ -33,21 +33,21 @@ jobs:
           root: .
           paths: .
   lint:
-      <<: *defaults
-      steps:
-        - attach_workspace:
-            at: ~/project
-        - run: |
-            yarn run lint
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/project
+      - run: |
+          yarn run lint
   unit-tests:
-      <<: *defaults
-      steps:
-        - attach_workspace:
-            at: ~/project
-        - run: yarn test -- --coverage
-        - store_artifacts:
-            path: coverage
-            destination: coverage
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/project
+      - run: yarn test -- --coverage
+      - store_artifacts:
+          path: coverage
+          destination: coverage
 
 workflows:
   version: 2
