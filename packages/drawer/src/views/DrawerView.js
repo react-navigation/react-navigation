@@ -238,6 +238,7 @@ export default class DrawerView extends React.PureComponent {
         statusBarAnimation={this.props.navigationConfig.statusBarAnimation}
         minSwipeDistance={this.props.navigationConfig.minSwipeDistance}
         overlayColor={this.props.navigationConfig.overlayColor}
+        drawerContainerStyle={this.props.navigationConfig.drawerContainerStyle}
         contentContainerStyle={
           this.props.navigationConfig.contentContainerStyle
         }
