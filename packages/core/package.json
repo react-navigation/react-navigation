@@ -1,6 +1,6 @@
 {
   "name": "@react-navigation/core",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "Core utilities for the react-navigation framework",
   "main": "dist/index.js",
   "react-native": "dist/index.js",
@@ -41,7 +41,7 @@
   },
   "homepage": "https://github.com/react-navigation/react-navigation-core#readme",
   "dependencies": {
-    "create-react-context": "^0.2.3",
+    "create-react-context": "0.2.2",
     "hoist-non-react-statics": "^3.0.1",
     "path-to-regexp": "^1.7.0",
     "query-string": "^6.2.0",
