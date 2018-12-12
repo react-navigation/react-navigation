@@ -8,6 +8,12 @@ Object {
         "You should only render one navigator explicitly in your app, and other navigators should be rendered by including them in that navigator. Full details at: https://reactnavigation.org/docs/common-mistakes.html#explicitly-rendering-more-than-one-navigator",
       ],
     ],
+    "results": Array [
+      Object {
+        "isThrow": false,
+        "value": undefined,
+      },
+    ],
   },
 }
 `;
