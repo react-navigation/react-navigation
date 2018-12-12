@@ -22,7 +22,6 @@ exports[`StackNavigator applies correct values when headerRight is present 1`] =
     onHandlerStateChange={[Function]}
   >
     <View
-      collapsable={undefined}
       style={
         Object {
           "backgroundColor": "#eee",
@@ -40,7 +39,6 @@ exports[`StackNavigator applies correct values when headerRight is present 1`] =
         }
       >
         <View
-          collapsable={undefined}
           pointerEvents="auto"
           style={
             Object {
@@ -64,7 +62,6 @@ exports[`StackNavigator applies correct values when headerRight is present 1`] =
         >
           <View
             accessibilityElementsHidden={false}
-            collapsable={undefined}
             style={
               Object {
                 "backgroundColor": "#fff",
@@ -87,7 +84,6 @@ exports[`StackNavigator applies correct values when headerRight is present 1`] =
         }
       >
         <View
-          collapsable={undefined}
           style={
             Object {
               "backgroundColor": "red",
@@ -100,7 +96,6 @@ exports[`StackNavigator applies correct values when headerRight is present 1`] =
           }
         >
           <View
-            collapsable={undefined}
             onLayout={[Function]}
             pointerEvents="box-none"
             style={
@@ -137,7 +132,6 @@ exports[`StackNavigator applies correct values when headerRight is present 1`] =
                 }
               >
                 <View
-                  collapsable={undefined}
                   pointerEvents="box-none"
                   style={
                     Object {
@@ -158,8 +152,6 @@ exports[`StackNavigator applies correct values when headerRight is present 1`] =
                     accessibilityTraits="header"
                     accessible={false}
                     allowFontScaling={true}
-                    collapsable={undefined}
-                    ellipsizeMode="tail"
                     numberOfLines={1}
                     onLayout={[Function]}
                     style={
@@ -176,7 +168,6 @@ exports[`StackNavigator applies correct values when headerRight is present 1`] =
                   </Text>
                 </View>
                 <View
-                  collapsable={undefined}
                   pointerEvents="box-none"
                   style={
                     Object {
@@ -225,7 +216,6 @@ exports[`StackNavigator renders successfully 1`] = `
     onHandlerStateChange={[Function]}
   >
     <View
-      collapsable={undefined}
       style={
         Object {
           "backgroundColor": "#eee",
@@ -243,7 +233,6 @@ exports[`StackNavigator renders successfully 1`] = `
         }
       >
         <View
-          collapsable={undefined}
           pointerEvents="auto"
           style={
             Object {
@@ -267,7 +256,6 @@ exports[`StackNavigator renders successfully 1`] = `
         >
           <View
             accessibilityElementsHidden={false}
-            collapsable={undefined}
             style={
               Object {
                 "backgroundColor": "#fff",
@@ -290,7 +278,6 @@ exports[`StackNavigator renders successfully 1`] = `
         }
       >
         <View
-          collapsable={undefined}
           style={
             Object {
               "backgroundColor": "red",
@@ -303,7 +290,6 @@ exports[`StackNavigator renders successfully 1`] = `
           }
         >
           <View
-            collapsable={undefined}
             onLayout={[Function]}
             pointerEvents="box-none"
             style={
@@ -340,7 +326,6 @@ exports[`StackNavigator renders successfully 1`] = `
                 }
               >
                 <View
-                  collapsable={undefined}
                   pointerEvents="box-none"
                   style={
                     Object {
@@ -361,8 +346,6 @@ exports[`StackNavigator renders successfully 1`] = `
                     accessibilityTraits="header"
                     accessible={false}
                     allowFontScaling={true}
-                    collapsable={undefined}
-                    ellipsizeMode="tail"
                     numberOfLines={1}
                     onLayout={[Function]}
                     style={

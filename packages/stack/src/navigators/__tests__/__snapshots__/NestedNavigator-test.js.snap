@@ -22,7 +22,6 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
     onHandlerStateChange={[Function]}
   >
     <View
-      collapsable={undefined}
       style={
         Object {
           "backgroundColor": "#eee",
@@ -40,7 +39,6 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
         }
       >
         <View
-          collapsable={undefined}
           pointerEvents="auto"
           style={
             Object {
@@ -64,7 +62,6 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
         >
           <View
             accessibilityElementsHidden={false}
-            collapsable={undefined}
             style={
               Object {
                 "backgroundColor": "#fff",
@@ -93,7 +90,6 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
                 onHandlerStateChange={[Function]}
               >
                 <View
-                  collapsable={undefined}
                   style={
                     Object {
                       "backgroundColor": "#eee",
@@ -111,7 +107,6 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
                     }
                   >
                     <View
-                      collapsable={undefined}
                       pointerEvents="auto"
                       style={
                         Object {
@@ -135,7 +130,6 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
                     >
                       <View
                         accessibilityElementsHidden={false}
-                        collapsable={undefined}
                         style={
                           Object {
                             "backgroundColor": "#fff",
@@ -158,7 +152,6 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
                     }
                   >
                     <View
-                      collapsable={undefined}
                       style={
                         Object {
                           "backgroundColor": "#FFF",
@@ -171,7 +164,6 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
                       }
                     >
                       <View
-                        collapsable={undefined}
                         onLayout={[Function]}
                         pointerEvents="box-none"
                         style={
@@ -207,7 +199,6 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
                             }
                           >
                             <View
-                              collapsable={undefined}
                               pointerEvents="box-none"
                               style={
                                 Object {
@@ -228,8 +219,6 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
                                 accessibilityTraits="header"
                                 accessible={false}
                                 allowFontScaling={true}
-                                collapsable={undefined}
-                                ellipsizeMode="tail"
                                 numberOfLines={1}
                                 onLayout={[Function]}
                                 style={
@@ -267,7 +256,6 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
         }
       >
         <View
-          collapsable={undefined}
           style={
             Object {
               "backgroundColor": "#FFF",
@@ -280,7 +268,6 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
           }
         >
           <View
-            collapsable={undefined}
             onLayout={[Function]}
             pointerEvents="box-none"
             style={
@@ -316,7 +303,6 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
                 }
               >
                 <View
-                  collapsable={undefined}
                   pointerEvents="box-none"
                   style={
                     Object {
@@ -337,8 +323,6 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
                     accessibilityTraits="header"
                     accessible={false}
                     allowFontScaling={true}
-                    collapsable={undefined}
-                    ellipsizeMode="tail"
                     numberOfLines={1}
                     onLayout={[Function]}
                     style={
