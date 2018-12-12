@@ -58,7 +58,7 @@
     "react-dom": "16.3.1",
     "react-native": "^0.57.7",
     "react-navigation": "^2.11.2",
-    "react-test-renderer": "16.6.0-alpha.8af6728",
+    "react-test-renderer": "16.6.3",
     "release-it": "^7.6.1"
   },
   "peerDependencies": {
