@@ -6,7 +6,11 @@ import {
   StyleSheet,
   TouchableHighlight,
 } from 'react-native';
-import { createStackNavigator, createSwitchNavigator } from 'react-navigation';
+import {
+  createStackNavigator,
+  createSwitchNavigator,
+  createAppContainer,
+} from 'react-navigation';
 import { useScreens } from 'react-native-screens';
 
 import Stack from './stack';
@@ -94,4 +98,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ExampleApp;
+export default createAppContainer(ExampleApp);

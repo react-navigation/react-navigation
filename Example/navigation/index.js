@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import {
   StyleSheet,
   Button,
@@ -8,7 +8,7 @@ import {
   Image,
   requireNativeComponent,
 } from 'react-native';
-import { createStackNavigator } from 'react-navigation';
+import { createStackNavigator, createAppContainer } from 'react-navigation';
 // import { createStackNavigator } from './react-navigation/react-navigation';
 
 export const LifecycleAwareView = requireNativeComponent(
@@ -106,12 +106,6 @@ const App = createStackNavigator(
 );
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
   textInput: {
     backgroundColor: 'white',
     borderWidth: 1,
@@ -122,4 +116,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;
+export default createAppContainer(App);

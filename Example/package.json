@@ -10,8 +10,9 @@
   "dependencies": {
     "react": "16.5.1",
     "react-native": "0.57.0",
+    "react-native-gesture-handler": "^1.0.10",
     "react-native-screens": "file:..",
-    "react-navigation": "^2.14.0"
+    "react-navigation": "^3.0.8"
   },
   "devDependencies": {
     "@babel/core": "^7.1.2",
