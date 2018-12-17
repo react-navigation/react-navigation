@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+- Update flow definition for `withNavigation` and `withNavigationFocus` to support `defaultProps`
+
 ## [3.0.8] - [2018-12-08](https://github.com/react-navigation/react-navigation/releases/tag/3.0.8)
 
 ## Changed
