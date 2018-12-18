@@ -112,10 +112,7 @@ class TabNavigationView extends React.PureComponent<Props, State> {
             return (
               <ResourceSavingScene
                 key={route.key}
-                style={[
-                  StyleSheet.absoluteFill,
-                  { opacity: isFocused ? 1 : 0 },
-                ]}
+                style={StyleSheet.absoluteFill}
                 isVisible={isFocused}
               >
                 {renderScene({ route })}
