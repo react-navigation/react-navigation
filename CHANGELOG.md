@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.0.9] - [2018-12-19](https://github.com/react-navigation/react-navigation/releases/tag/3.0.9)
+
+## Fixed
+
+- Intermittent flicker when changing tabs while using react-native-screens fixed by not changing opacity (https://github.com/react-navigation/react-navigation-tabs/pull/80)
+- Prevent fading the previous screen on push/pop on Android (https://github.com/react-navigation/react-navigation-stack/pull/73)
+
 ## [3.0.8] - [2018-12-08](https://github.com/react-navigation/react-navigation/releases/tag/3.0.8)
 
 ## Changed
@@ -81,7 +88,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - [2.x](https://github.com/react-navigation/react-navigation/blob/2.x/CHANGELOG.md)
 
-[Unreleased]: https://github.com/react-navigation/react-navigation/compare/3.0.8...HEAD
+[Unreleased]: https://github.com/react-navigation/react-navigation/compare/3.0.9...HEAD
+[3.0.9]: https://github.com/react-navigation/react-navigation/compare/3.0.8...3.0.9
 [3.0.8]: https://github.com/react-navigation/react-navigation/compare/3.0.7...3.0.8
 [3.0.7]: https://github.com/react-navigation/react-navigation/compare/3.0.6...3.0.7
 [3.0.6]: https://github.com/react-navigation/react-navigation/compare/3.0.5...3.0.6
