@@ -38,105 +38,11 @@ import {
   ViewProps,
   ViewStyle,
   StyleProp,
-  FlatListProps,
-  ScrollViewProps,
-  ScrollResponderMixin,
-  Constructor
 } from 'react-native';
-import { Context } from 'create-react-context';
-
-/**
- * Current Navigation context
- */
- export type NavigationContext = Context<any>;
 
 // @todo when we split types into common, native and web,
 // we can properly change Animated.Value to its real value
 export type AnimatedValue = any;
-
-export class FlatList<ItemT> extends React.Component<FlatListProps<ItemT> & NavigationInjectedProps> {
-  /**
-   * Exports some data, e.g. for perf investigations or analytics.
-   */
-  getMetrics: () => {
-      contentLength: number;
-      totalRows: number;
-      renderedRows: number;
-      visibleRows: number;
-  };
-
-  /**
-   * Scrolls to the end of the content. May be janky without `getItemLayout` prop.
-   */
-  scrollToEnd: (params?: { animated?: boolean }) => void;
-
-  /**
-   * Scrolls to the item at the specified index such that it is positioned in the viewable area
-   * such that viewPosition 0 places it at the top, 1 at the bottom, and 0.5 centered in the middle.
-   * Cannot scroll to locations outside the render window without specifying the getItemLayout prop.
-   */
-  scrollToIndex: (params: { animated?: boolean; index: number; viewOffset?: number; viewPosition?: number }) => void;
-
-  /**
-   * Requires linear scan through data - use `scrollToIndex` instead if possible.
-   * May be janky without `getItemLayout` prop.
-   */
-  scrollToItem: (params: { animated?: boolean; item: ItemT; viewPosition?: number }) => void;
-
-  /**
-   * Scroll to a specific content pixel offset, like a normal `ScrollView`.
-   */
-  scrollToOffset: (params: { animated?: boolean; offset: number }) => void;
-
-  /**
-   * Tells the list an interaction has occured, which should trigger viewability calculations,
-   * e.g. if waitForInteractions is true and the user has not scrolled. This is typically called
-   * by taps on items or by navigation actions.
-   */
-  recordInteraction: () => void;
-}
-
-declare class ScrollViewComponent extends React.Component<ScrollViewProps & NavigationInjectedProps> {}
-declare const ScrollViewBase: Constructor<ScrollResponderMixin> & typeof ScrollViewComponent;
-export class ScrollView extends ScrollViewBase {
-    /**
-     * Scrolls to a given x, y offset, either immediately or with a smooth animation.
-     * Syntax:
-     *
-     * scrollTo(options: {x: number = 0; y: number = 0; animated: boolean = true})
-     *
-     * Note: The weird argument signature is due to the fact that, for historical reasons,
-     * the function also accepts separate arguments as as alternative to the options object.
-     * This is deprecated due to ambiguity (y before x), and SHOULD NOT BE USED.
-     */
-    scrollTo(y?: number | { x?: number; y?: number; animated?: boolean }, x?: number, animated?: boolean): void;
-
-    /**
-     * A helper function that scrolls to the end of the scrollview;
-     * If this is a vertical ScrollView, it scrolls to the bottom.
-     * If this is a horizontal ScrollView scrolls to the right.
-     *
-     * The options object has an animated prop, that enables the scrolling animation or not.
-     * The animated prop defaults to true
-     */
-    scrollToEnd(options?: { animated: boolean }): void;
-
-    /**
-     * Returns a reference to the underlying scroll responder, which supports
-     * operations like `scrollTo`. All ScrollView-like components should
-     * implement this method so that they can be composed while providing access
-     * to the underlying scroll responder's methods.
-     */
-    getScrollResponder(): JSX.Element;
-
-    getScrollableNode(): any;
-
-    // Undocumented
-    getInnerViewNode(): any;
-
-    // Deprecated, do not use.
-    scrollWithoutAnimationTo?: (y: number, x: number) => void;
-}
 
 export type HeaderMode = 'float' | 'screen' | 'none';
 
@@ -180,6 +86,9 @@ export interface NavigationState {
    */
   index: number;
   routes: NavigationRoute[];
+  isTransitioning: boolean;
+  key: string;
+  params: NavigationParams;
 }
 
 export interface DrawerNavigationState extends NavigationState {
@@ -215,6 +124,14 @@ export interface NavigationLeafRoute<Params = NavigationParams> {
    * e.g. `{ car_id: 123 }` in a route that displays a car.
    */
   params?: Params;
+  /**
+   * Array containing the navigator's routes
+   */
+  routes: NavigationRoute[];
+  /**
+   * Flag that indicates the transition state of the route
+   */
+  isTransitioning: boolean;
 }
 
 export type NavigationStateRoute<
@@ -366,28 +283,28 @@ export interface NavigationInitAction extends NavigationInitActionPayload {
 }
 
 export interface NavigationReplaceActionPayload {
-    key?: string;
-    newKey?: string;
-    routeName: string;
-    params?: NavigationParams;
-    action?: NavigationNavigateAction;
+  key?: string;
+  newKey?: string;
+  routeName: string;
+  params?: NavigationParams;
+  action?: NavigationNavigateAction;
 }
 
 export interface NavigationReplaceAction {
-    type: 'Navigation/REPLACE';
-    key: string;
-    routeName: string;
-    params?: NavigationParams;
-    action?: NavigationNavigateAction;
+  type: 'Navigation/REPLACE';
+  key: string;
+  routeName: string;
+  params?: NavigationParams;
+  action?: NavigationNavigateAction;
 }
 
 export interface NavigationCompleteTransitionActionPayload {
-    key?: string;
+  key?: string;
 }
 
 export interface NavigationCompleteTransitionAction {
-    type: 'Navigation/COMPLETE_TRANSITION';
-    key: string;
+  type: 'Navigation/COMPLETE_TRANSITION';
+  key: string;
 }
 
 export interface NavigationResetActionPayload {
@@ -429,33 +346,33 @@ export interface NavigationPopToTopAction
 }
 
 export interface NavigationPushActionPayload {
-    routeName: string;
-    params?: NavigationParams;
-    action?: NavigationNavigateAction;
-    key?: string;
+  routeName: string;
+  params?: NavigationParams;
+  action?: NavigationNavigateAction;
+  key?: string;
 }
 
 export interface NavigationPushAction {
-    type: 'Navigation/PUSH';
-    routeName: string;
-    params?: NavigationParams;
-    action?: NavigationNavigateAction;
-    key?: string;
+  type: 'Navigation/PUSH';
+  routeName: string;
+  params?: NavigationParams;
+  action?: NavigationNavigateAction;
+  key?: string;
 }
 
 export interface NavigationOpenDrawerAction {
-    key?: string;
-    type: 'Navigation/OPEN_DRAWER';
+  key?: string;
+  type: 'Navigation/OPEN_DRAWER';
 }
 
 export interface NavigationCloseDrawerAction {
-    key?: string;
-    type: 'Navigation/CLOSE_DRAWER';
+  key?: string;
+  type: 'Navigation/CLOSE_DRAWER';
 }
 
 export interface NavigationToggleDrawerAction {
-    key?: string;
-    type: 'Navigation/TOGGLE_DRAWER';
+  key?: string;
+  type: 'Navigation/TOGGLE_DRAWER';
 }
 
 export interface NavigationStackViewConfig {
@@ -464,9 +381,10 @@ export interface NavigationStackViewConfig {
   headerBackTitleVisible?: boolean;
   headerTransitionPreset?: 'fade-in-place' | 'uikit';
   headerLayoutPreset?: 'left' | 'center';
-  cardStyle?: StyleProp<ViewStyle>;
   cardShadowEnabled?: boolean;
   cardOverlayEnabled?: boolean;
+  cardStyle?: StyleProp<ViewStyle>;
+  transparentCard?: boolean;
   transitionConfig?: (
     transitionProps: NavigationTransitionProps,
     prevTransitionProps: NavigationTransitionProps,
@@ -490,7 +408,6 @@ export interface NavigationSwitchRouterConfig {
   initialRouteName?: string;
   initialRouteParams?: NavigationParams;
   paths?: NavigationPathsConfig;
-  navigationOptions?: NavigationScreenConfig<NavigationScreenOptions>;
   defaultNavigationOptions?: NavigationScreenConfig<NavigationScreenOptions>;
   order?: string[];
   backBehavior?: 'none' | 'initialRoute'; // defaults to `'none'`
@@ -521,7 +438,7 @@ export interface NavigationStackScreenOptions {
   headerStyle?: StyleProp<ViewStyle>;
   headerForceInset?: HeaderForceInset;
   headerBackground?: React.ReactNode | React.ReactType;
-  headerBackgroundTransitionPreset?: 'toggle' | 'fade' | 'translate';
+  headerBackgroundTransitionPreset?: 'toggle' | 'fade' | 'translate';                          
   gesturesEnabled?: boolean;
   gestureResponseDistance?: { vertical?: number; horizontal?: number };
   gestureDirection?: 'default' | 'inverted';
@@ -570,7 +487,6 @@ export type NavigationRouteConfig =
   | ({
     navigationOptions?: NavigationScreenConfig<any>;
     path?: string;
-    params?: NavigationParams;
   } & NavigationScreenRouteConfig);
 
 export type NavigationScreenRouteConfig =
@@ -598,11 +514,11 @@ interface NavigationTabRouterConfigBase {
 }
 export interface NavigationTabRouterConfig extends NavigationTabRouterConfigBase {
   defaultNavigationOptions?: NavigationScreenConfig<NavigationScreenOptions>;
-  navigationOptions?: NavigationScreenConfig<NavigationScreenOptions>;
+  navigationOptions?: NavigationTabRouterConfigBase;
 }
 export interface NavigationBottomTabRouterConfig extends NavigationTabRouterConfigBase {
   defaultNavigationOptions?: NavigationScreenConfig<NavigationBottomTabScreenOptions>;
-  navigationOptions?: NavigationScreenConfig<NavigationScreenOptions>;
+  navigationOptions?: NavigationTabRouterConfigBase;
 }
 export interface TabScene {
   route: NavigationRoute;
@@ -637,14 +553,13 @@ export interface NavigationTabScreenOptions
       jumpToIndex: (index: number) => void;
     }
   ) => void;
-  tabBarOnLongPress?: (
-    options: {
-      previousScene: TabScene;
-      scene: TabScene;
+  tabBarOnLongPress?: (		
+    options: {		
+      previousScene: TabScene;		
+      scene: TabScene;		
       jumpToIndex: (index: number) => void;
-    }
-  ) => void;
-
+    }		
+  ) => void;                            
 }
 export interface NavigationBottomTabScreenOptions
   extends NavigationTabScreenOptionsBase {
@@ -652,12 +567,12 @@ export interface NavigationBottomTabScreenOptions
     options: {
       navigation: NavigationScreenProp<NavigationRoute>;
       defaultHandler: () => void;
-    }
-  ) => void;
-    tabBarOnLongPress?: (
-    options: {
-        navigation: NavigationScreenProp<NavigationRoute>;
-        defaultHandler: () => void;
+    }		
+  ) => void;		
+  tabBarOnLongPress?: (		
+    options: {		
+      navigation: NavigationScreenProp<NavigationRoute>;		
+      defaultHandler: () => void;
     }
   ) => void;
 }
@@ -749,7 +664,7 @@ export interface NavigationScreenProp<S, P = NavigationParams> {
   getParam<T extends keyof P>(param: T): P[T];
   setParams: (newParams: Partial<P>) => boolean;
   addListener: (
-    eventName: EventType,
+    eventName: 'willBlur' | 'willFocus' | 'didFocus' | 'didBlur',
     callback: NavigationEventCallback
   ) => NavigationEventSubscription;
   push: (
@@ -765,9 +680,12 @@ export interface NavigationScreenProp<S, P = NavigationParams> {
   pop: (n?: number, params?: { immediate?: boolean }) => boolean;
   popToTop: (params?: { immediate?: boolean }) => boolean;
   isFocused: () => boolean;
+  router?: NavigationRouter;
+  dangerouslyGetParent: () => NavigationScreenProp<S> | undefined;
 }
 
 export interface NavigationNavigatorProps<O = {}, S = {}> {
+  detached?: boolean;
   navigation?: NavigationProp<S>;
   screenProps?: { [key: string]: any };
   navigationOptions?: O;
@@ -838,6 +756,9 @@ export interface NavigationTransitionSpec {
   easing?: (t: number) => number;
   // A timing function such as `Animated.timing`.
   timing?: (value: AnimatedValue, config: any) => any;
+  friction?: number;
+  tension?: number;
+  useNativeDriver?: boolean;
 }
 
 /**
@@ -984,7 +905,37 @@ export function createSwitchNavigator(
 ): NavigationContainer;
 
 // DrawerItems
-export const DrawerItems: React.ReactType;
+export const DrawerItems: React.ComponentType<DrawerItemsProps>;
+
+export interface DrawerItemsProps {
+  navigation: NavigationScreenProp<DrawerNavigationState>;
+  items: NavigationRoute[];
+  activeItemKey?: string;
+  activeTintColor?: string;
+  activeBackgroundColor?: string;
+  inactiveTintColor?: string;
+  inactiveBackgroundColor?: string;
+  getLabel: (scene: DrawerScene) => React.ReactNode | string;
+  renderIcon: (scene: DrawerScene) => React.ReactNode;
+  onItemPress: (info: DrawerItem) => void;
+  itemsContainerStyle?: StyleProp<ViewStyle>;
+  itemStyle?: StyleProp<ViewStyle>;
+  labelStyle?: StyleProp<TextStyle>;
+  activeLabelStyle?: StyleProp<TextStyle>;
+  inactiveLabelStyle?: StyleProp<TextStyle>;
+  iconContainerStyle?: StyleProp<ViewStyle>;
+  drawerPosition: 'left' | 'right';
+}
+export interface DrawerScene {
+  route: NavigationRoute;
+  focused: boolean;
+  index: number;
+  tintColor?: string;
+}
+export interface DrawerItem {
+  route: NavigationRoute;
+  focused: boolean;
+}
 
 /**
  * Drawer Navigator
@@ -993,30 +944,21 @@ export interface DrawerViewConfig {
   drawerBackgroundColor?: string;
   drawerWidth?: number;
   drawerPosition?: 'left' | 'right';
-  contentComponent?: React.ReactType;
+  contentComponent?: React.ComponentType<DrawerItemsProps>;
   contentOptions?: any;
   style?: StyleProp<ViewStyle>;
-  unmountInactiveRoutes?: boolean;
-  drawerType?: 'front' | 'back' | 'side';
 }
 export interface DrawerNavigatorConfig
   extends NavigationTabRouterConfig,
   DrawerViewConfig {
   containerConfig?: any;
   contentOptions?: {
-    items?: string[];
-    activeItemKey?: string;
     activeTintColor?: string;
     activeBackgroundColor?: string;
     inactiveTintColor?: string;
     inactiveBackgroundColor?: string;
-    onItemPress?: (route: string) => any;
-    itemsContainerStyle?: StyleProp<ViewStyle>;
-    itemStyle?: StyleProp<ViewStyle>;
+    style?: StyleProp<ViewStyle>;
     labelStyle?: StyleProp<TextStyle>;
-    activeLabelStyle?: StyleProp<TextStyle>;
-    inactiveLabelStyle?: StyleProp<TextStyle>;
-    iconContainerStyle?: StyleProp<ViewStyle>;
   };
   drawerLockMode?: DrawerLockMode;
 }
@@ -1083,9 +1025,6 @@ export interface BottomTabNavigatorConfig
 export function TabNavigator(
   routeConfigMap: NavigationRouteConfigMap,
   drawConfig?: TabNavigatorConfig
-): NavigationContainer;
-export function createAppContainer(
-  routeConfigMap: NavigationRouteConfigMap,
 ): NavigationContainer;
 
 export function createTabNavigator(
@@ -1188,41 +1127,41 @@ export namespace NavigationActions {
  * DrawerActions
  */
 export namespace DrawerActions {
-    const OPEN_DRAWER: 'Navigation/OPEN_DRAWER';
-    const CLOSE_DRAWER: 'Navigation/CLOSE_DRAWER';
-    const TOGGLE_DRAWER: 'Navigation/TOGGLE_DRAWER';
+  const OPEN_DRAWER: 'Navigation/OPEN_DRAWER';
+  const CLOSE_DRAWER: 'Navigation/CLOSE_DRAWER';
+  const TOGGLE_DRAWER: 'Navigation/TOGGLE_DRAWER';
 
-    function openDrawer(): NavigationOpenDrawerAction;
-    function closeDrawer(): NavigationCloseDrawerAction;
-    function toggleDrawer(): NavigationToggleDrawerAction;
+  function openDrawer(): NavigationOpenDrawerAction;
+  function closeDrawer(): NavigationCloseDrawerAction;
+  function toggleDrawer(): NavigationToggleDrawerAction;
 }
 
 /**
  * StackActions
  */
 export namespace StackActions {
-    const POP: 'Navigation/POP';
-    const POP_TO_TOP: 'Navigation/POP_TO_TOP';
-    const PUSH: 'Navigation/PUSH';
-    const RESET: 'Navigation/RESET';
-    const REPLACE: 'Navigation/REPLACE';
-    const COMPLETE_TRANSITION: 'Navigation/COMPLETE_TRANSITION';
+  const POP: 'Navigation/POP';
+  const POP_TO_TOP: 'Navigation/POP_TO_TOP';
+  const PUSH: 'Navigation/PUSH';
+  const RESET: 'Navigation/RESET';
+  const REPLACE: 'Navigation/REPLACE';
+  const COMPLETE_TRANSITION: 'Navigation/COMPLETE_TRANSITION';
 
-    function pop(options: NavigationPopActionPayload): NavigationPopAction;
-    function popToTop(
-        options: NavigationPopToTopActionPayload
-    ): NavigationPopToTopAction;
+  function pop(options: NavigationPopActionPayload): NavigationPopAction;
+  function popToTop(
+    options: NavigationPopToTopActionPayload
+  ): NavigationPopToTopAction;
 
-    function push(options: NavigationPushActionPayload): NavigationPushAction;
-    function reset(options: NavigationResetActionPayload): NavigationResetAction;
+  function push(options: NavigationPushActionPayload): NavigationPushAction;
+  function reset(options: NavigationResetActionPayload): NavigationResetAction;
 
-    function replace(
-        options: NavigationReplaceActionPayload
-    ): NavigationReplaceAction;
+  function replace(
+    options: NavigationReplaceActionPayload
+  ): NavigationReplaceAction;
 
-    function completeTransition(
-        payload: NavigationCompleteTransitionActionPayload
-    ): NavigationCompleteTransitionAction;
+  function completeTransition(
+    payload: NavigationCompleteTransitionActionPayload
+  ): NavigationCompleteTransitionAction;
 }
 
 /**
@@ -1247,6 +1186,7 @@ export interface TransitionerProps {
     transitionProps: NavigationTransitionProps,
     prevTransitionProps?: NavigationTransitionProps
   ) => any;
+  descriptors?: { [key: string]: NavigationDescriptor };
   style?: StyleProp<ViewStyle>;
 }
 
@@ -1297,6 +1237,8 @@ export interface NavigationDescriptor<Params = NavigationParams> {
 
 export type NavigationView<O, S> = React.ComponentType<{
   descriptors: { [key: string]: NavigationDescriptor };
+  navigationConfig: O;
+  screenProps?: { [key: string]: any };
 } & NavigationInjectedProps>;
 
 export function createNavigator<S, Options>(
@@ -1317,6 +1259,16 @@ export function createNavigator<S, Options>(
 export function createNavigationContainer(
   Component: NavigationNavigator<any, any, any>
 ): NavigationContainer;
+
+/**
+ * Create an app container to wrap the root navigator
+ *
+ * @see https://github.com/react-navigation/react-navigation-native/blob/098e2e52b349d37357109d5aee545fa74699d3d4/src/createAppContainer.js#L64
+ */
+export function createAppContainer(
+  Component: NavigationNavigator<any, any, any>
+): NavigationContainer;
+
 /**
  * END MANUAL DEFINITIONS OUTSIDE OF TYPEDEFINITION.JS
  */
@@ -1367,21 +1319,21 @@ export type Omit<T, K extends keyof any> = Pick<T, Exclude<keyof T, K>>;
 export type InferProps<T extends React.ComponentType<any>> = T extends React.ComponentType<infer P> ? P : never;
 
 export interface NavigationInjectedProps<P = NavigationParams> {
-  navigation: NavigationScreenProp<NavigationState, P>;
+  navigation: NavigationScreenProp<NavigationRoute<P>, P>;
 }
 
 // If the wrapped component is a class, we can get a ref to it
-export function withNavigation<T extends React.ComponentClass<NavigationInjectedProps>>(
-  Component: T,
-): React.ComponentType<Omit<InferProps<T>, keyof NavigationInjectedProps> & { onRef?: React.Ref<InstanceType<T>> }>;
+export function withNavigation<P extends NavigationInjectedProps, T extends React.ComponentClass<P>>(
+  Component: T & React.ComponentClass<P>,
+): React.ComponentType<Omit<P, keyof NavigationInjectedProps> & { onRef?: React.Ref<InstanceType<T>> }>;
 
-export function withNavigation<T extends React.ComponentType<NavigationInjectedProps>>(
-  Component: T,
-): React.ComponentType<Omit<InferProps<T>, keyof NavigationInjectedProps>>;
+export function withNavigation<P extends NavigationInjectedProps>(
+  Component: React.ComponentType<P>,
+): React.ComponentType<Omit<P, keyof NavigationInjectedProps>>;
 
 // For backwards compatibility
 export function withNavigation<T = {}, P = NavigationParams>(
-  Component: React.ComponentType<T | (T & NavigationInjectedProps<P>)>,
+  Component: React.ComponentType<T & NavigationInjectedProps<P>>,
 ): React.ComponentType<T & { onRef?: React.Ref<React.Component<T & NavigationInjectedProps<P>>> }>;
 
 export interface NavigationFocusInjectedProps<P = NavigationParams> extends NavigationInjectedProps<P> {
@@ -1389,13 +1341,13 @@ export interface NavigationFocusInjectedProps<P = NavigationParams> extends Navi
 }
 
 // If the wrapped component is a class, we can get a ref to it
-export function withNavigationFocus<T extends React.ComponentClass<NavigationFocusInjectedProps>>(
-  Component: T,
-): React.ComponentType<Omit<InferProps<T>, keyof NavigationFocusInjectedProps> & { onRef?: React.Ref<InstanceType<T>> }>;
+export function withNavigationFocus<P extends NavigationFocusInjectedProps, T extends React.ComponentClass<P>>(
+  Component: T & React.ComponentClass<P>,
+): React.ComponentType<Omit<P, keyof NavigationFocusInjectedProps> & { onRef?: React.Ref<InstanceType<T>> }>;
 
-export function withNavigationFocus<T extends React.ComponentType<NavigationFocusInjectedProps>>(
-  Component: T,
-): React.ComponentType<Omit<InferProps<T>, keyof NavigationFocusInjectedProps>>;
+export function withNavigationFocus<P extends NavigationFocusInjectedProps>(
+  Component: React.ComponentType<P>,
+): React.ComponentType<Omit<P, keyof NavigationFocusInjectedProps>>;
 
 // For backwards compatibility
 export function withNavigationFocus<T = {}, P = NavigationParams>(
@@ -1419,19 +1371,3 @@ export interface SafeAreaViewProps extends ViewProps {
 }
 
 export const SafeAreaView: React.ComponentClass<SafeAreaViewProps>;
-
-export interface HeaderStyleInterPolator {
-  forLayout: any;
-  forLeft: any;
-  forLeftButton: any;
-  forLeftLabel: any;
-  forCenterFromLeft: any;
-  forCenter: any;
-  forRight: any;
-  forBackground: any;
-  forBackgroundWithInactiveHidden: any;
-  forBackgroundWithFade: any;
-  forBackgroundWithTranslation: any;
-}
-
-export const getActiveChildNavigationOptions: any;
