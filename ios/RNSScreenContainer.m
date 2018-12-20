@@ -86,34 +86,46 @@
 - (void)updateContainer
 {
   _needUpdate = NO;
-  BOOL activeScreenChanged = NO;
+  BOOL activeScreenRemoved = NO;
   // remove screens that are no longer active
   NSMutableSet *orphaned = [NSMutableSet setWithSet:_activeScreens];
   for (RNSScreenView *screen in _reactSubviews) {
     if (!screen.active && [_activeScreens containsObject:screen]) {
-      activeScreenChanged = YES;
+      activeScreenRemoved = YES;
       [self detachScreen:screen];
     }
     [orphaned removeObject:screen];
   }
   for (RNSScreenView *screen in orphaned) {
-    activeScreenChanged = YES;
+    activeScreenRemoved = YES;
     [self detachScreen:screen];
+  }
+
+  // detect if new screen is going to be activated
+  BOOL activeScreenAdded = NO;
+  for (RNSScreenView *screen in _reactSubviews) {
+    if (screen.active && ![_activeScreens containsObject:screen]) {
+      activeScreenAdded = YES;
+    }
   }
 
   // add new screens in order they are placed in subviews array
   for (RNSScreenView *screen in _reactSubviews) {
     if (screen.active && ![_activeScreens containsObject:screen]) {
-      activeScreenChanged = YES;
+      [_activeScreens addObject:screen];
       [self attachScreen:screen];
-    } else if (screen.active) {
-      // if the view was already there we move it to "front" so that it is in the right
-      // order accoring to the subviews array
-      [_controller.view bringSubviewToFront:screen.controller.view];
+    } else if (screen.active && activeScreenAdded) {
+      // if we are adding new active screen, we perform remounting of all already marked as active
+      // this is done to mimick the effect UINavigationController has when willMoveToWindow:nil is
+      // triggered before the animation starts
+      if (activeScreenAdded) {
+        [self detachScreen:screen];
+        [self attachScreen:screen];
+      }
     }
   }
 
-  if (activeScreenChanged && _controller.presentedViewController == nil) {
+  if ((activeScreenRemoved || activeScreenAdded) && _controller.presentedViewController == nil) {
     // if user has reachability enabled (one hand use) and the window is slided down the below
     // method will force it to slide back up as it is expected to happen with UINavController when
     // we push or pop views.
