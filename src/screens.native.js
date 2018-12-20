@@ -6,6 +6,7 @@ import {
   UIManager,
   StyleSheet,
 } from 'react-native';
+import { version } from 'react-native/Libraries/Core/ReactNativeVersion';
 
 let USE_SCREENS = false;
 
@@ -56,20 +57,19 @@ export class Screen extends React.Component {
       const { active, onComponentRef, ...props } = this.props;
 
       return <Animated.View {...props} ref={this.setRef} />;
+    } else if (version.minor >= 57) {
+      return <AnimatedNativeScreen {...this.props} />;
     } else {
+      // On RN version below 0.57 we need to wrap screen's children with an
+      // additional View because of a bug fixed in react-native/pull/20658 which
+      // was preventing a view from having both styles and some other props being
+      // "animated" (using Animated native driver)
       const { style, children, ...rest } = this.props;
       return (
         <AnimatedNativeScreen
           {...rest}
           ref={this.setRef}
           style={StyleSheet.absoluteFill}>
-          {/*
-            We need to wrap children in additional Animated.View because
-            of a bug in native driver preventing from both `active` and `styles`
-            props begin animated in `NativeScreen` component. Once
-            react-native/pull/20658 is merged we can export native screen directly
-            and avoid wrapping with `Animated.View`.
-          */}
           <Animated.View style={style}>{children}</Animated.View>
         </AnimatedNativeScreen>
       );

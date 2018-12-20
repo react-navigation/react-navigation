@@ -2,6 +2,7 @@ package com.swmansion.rnscreens;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -36,6 +37,7 @@ public class Screen extends ViewGroup {
   private final Fragment mFragment;
   private @Nullable ScreenContainer mContainer;
   private boolean mActive;
+  private boolean mTransitioning;
 
   public Screen(Context context) {
     super(context);
@@ -45,6 +47,33 @@ public class Screen extends ViewGroup {
   @Override
   protected void onLayout(boolean b, int i, int i1, int i2, int i3) {
     // no-op
+  }
+
+  /**
+   * While transitioning this property allows to optimize rendering behavior on Android and provide
+   * a correct blending options for the animated screen. It is turned on automatically by the container
+   * when transitioning is detected and turned off immediately after
+   */
+  public void setTransitioning(boolean transitioning) {
+    if (mTransitioning == transitioning) {
+      return;
+    }
+    mTransitioning = transitioning;
+    super.setLayerType(transitioning ? View.LAYER_TYPE_HARDWARE : View.LAYER_TYPE_NONE, null);
+  }
+
+  @Override
+  public boolean hasOverlappingRendering() {
+    return mTransitioning;
+  }
+
+  @Override
+  public void setLayerType(int layerType, @Nullable Paint paint) {
+    // ignore – layer type is controlled by `transitioning` prop
+  }
+
+  public void setNeedsOffscreenAlphaCompositing(boolean needsOffscreenAlphaCompositing) {
+    // ignore - offscreen alpha is controlled by `transitioning` prop
   }
 
   protected void setContainer(@Nullable ScreenContainer mContainer) {
