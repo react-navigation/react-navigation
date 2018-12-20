@@ -31,6 +31,12 @@
   }
 }
 
+- (void)setPointerEvents:(RCTPointerEvents)pointerEvents
+{
+  // pointer events settings are managed by the parent screen container, we ignore any attempt
+  // of setting that via React props
+}
+
 - (UIView *)reactSuperview
 {
   return _reactSuperview;
