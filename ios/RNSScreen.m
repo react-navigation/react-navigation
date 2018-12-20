@@ -4,10 +4,15 @@
 @interface RNSScreen : UIViewController
 
 - (instancetype)initWithView:(UIView *)view;
+- (void)notifyFinishTransitioning;
 
 @end
 
-@implementation RNSScreenView
+@implementation RNSScreenView {
+  RNSScreen *_controller;
+}
+
+@synthesize controller = _controller;
 
 - (instancetype)init
 {
@@ -37,10 +42,16 @@
   _controller = nil;
 }
 
+- (void)notifyFinishTransitioning
+{
+  [_controller notifyFinishTransitioning];
+}
+
 @end
 
 @implementation RNSScreen {
   __weak UIView *_view;
+  __weak id _previousFirstResponder;
 }
 
 - (instancetype)initWithView:(UIView *)view
@@ -49,6 +60,36 @@
     _view = view;
   }
   return self;
+}
+
+- (id)findFirstResponder:(UIView*)parent
+{
+  if (parent.isFirstResponder) {
+    return parent;
+  }
+  for (UIView *subView in parent.subviews) {
+    id responder = [self findFirstResponder:subView];
+    if (responder != nil) {
+      return responder;
+    }
+  }
+  return nil;
+}
+
+- (void)willMoveToParentViewController:(UIViewController *)parent
+{
+  if (parent == nil) {
+    id responder = [self findFirstResponder:self.view];
+    if (responder != nil) {
+      _previousFirstResponder = responder;
+    }
+  }
+}
+
+- (void)notifyFinishTransitioning
+{
+  [_previousFirstResponder becomeFirstResponder];
+  _previousFirstResponder = nil;
 }
 
 - (void)loadView
