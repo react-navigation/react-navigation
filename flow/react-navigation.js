@@ -1208,19 +1208,19 @@ declare module 'react-navigation' {
   };
   declare export var TabBarBottom: React$ComponentType<_TabBarBottomProps>;
 
-  declare export function withNavigation<Props: {}>(
-    Component: React$ComponentType<Props>
+  declare export function withNavigation<Props: {}, ComponentType: React$ComponentType<Props>>(
+    Component: ComponentType
   ): React$ComponentType<
     $Diff<
-      Props,
+      React$ElementConfig<ComponentType>,
       {
         navigation: NavigationScreenProp<NavigationStateRoute> | void,
       }
     >
   >;
-  declare export function withNavigationFocus<Props: {}>(
-    Component: React$ComponentType<Props>
-  ): React$ComponentType<$Diff<Props, { isFocused: boolean | void }>>;
+  declare export function withNavigationFocus<Props: {}, ComponentType: React$ComponentType<Props>>(
+    Component: ComponentType
+  ): React$ComponentType<$Diff<React$ElementConfig<ComponentType>, { isFocused: boolean | void }>>;
 
   declare export function getNavigation<State: NavigationState, Options: {}>(
     router: NavigationRouter<State, Options>,
