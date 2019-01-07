@@ -1,6 +1,6 @@
 {
   "name": "react-native-screens",
-  "version": "1.0.0-alpha.20",
+  "version": "1.0.0-alpha.21",
   "description": "First incomplete navigation solution for your react-native app.",
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
