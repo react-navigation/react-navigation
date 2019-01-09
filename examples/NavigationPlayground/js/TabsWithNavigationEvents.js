@@ -105,15 +105,15 @@ const createTabScreen = (name, icon, focusedIcon) => {
 const TabsWithNavigationEvents = createMaterialBottomTabNavigator(
   {
     One: {
-      screen: createTabScreen('One', 'numeric-1-box-outline', 'numeric-1-box'),
+      screen: createTabScreen('One', 'numeric-1-box', 'numeric-1-box'),
     },
     Two: {
-      screen: createTabScreen('Two', 'numeric-2-box-outline', 'numeric-2-box'),
+      screen: createTabScreen('Two', 'numeric-2-box', 'numeric-2-box'),
     },
     Three: {
       screen: createTabScreen(
         'Three',
-        'numeric-3-box-outline',
+        'numeric-3-box',
         'numeric-3-box'
       ),
     },
