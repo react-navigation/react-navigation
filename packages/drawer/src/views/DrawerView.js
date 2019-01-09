@@ -1,10 +1,10 @@
 import React from 'react';
 import { Dimensions, StyleSheet } from 'react-native';
 import { SceneView } from '@react-navigation/core';
+import DrawerLayout from 'react-native-gesture-handler/DrawerLayout';
 import { ScreenContainer } from 'react-native-screens';
 
 import DrawerActions from '../routers/DrawerActions';
-import DrawerLayout from './DrawerLayout';
 import DrawerSidebar from './DrawerSidebar';
 import DrawerGestureContext from '../utils/DrawerGestureContext';
 import ResourceSavingScene from '../views/ResourceSavingScene';
@@ -195,6 +195,10 @@ export default class DrawerView extends React.PureComponent {
     }
   };
 
+  _setDrawerGestureRef = ref => {
+    this.drawerGestureRef.current = ref;
+  };
+
   render() {
     const { navigation } = this.props;
     const activeKey = navigation.state.routes[navigation.state.index].key;
@@ -205,7 +209,7 @@ export default class DrawerView extends React.PureComponent {
         ref={c => {
           this._drawer = c;
         }}
-        gestureRef={this.drawerGestureRef}
+        onGestureRef={this._setDrawerGestureRef}
         drawerLockMode={
           drawerLockMode ||
           (this.props.screenProps && this.props.screenProps.drawerLockMode) ||
