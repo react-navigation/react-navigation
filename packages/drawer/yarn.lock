@@ -579,25 +579,27 @@
     lodash "^4.17.4"
     react-native-vector-icons "4.5.0"
 
-"@react-navigation/core@^3.0.0-alpha":
-  version "3.0.0-alpha.13"
-  resolved "https://registry.yarnpkg.com/@react-navigation/core/-/core-3.0.0-alpha.13.tgz#7c0458e1054ebd24b3e4925b127e825503483d9d"
-  integrity sha512-3GDiItUJXHJUst60iW1t2J7BVtF+ZTCgwWvpqBHNT0OG0Dm8B1nLUjRLdofv/BvyXIvuGX//A3qpN8jRhSbnhQ==
+"@react-navigation/core@^3.0.0":
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/@react-navigation/core/-/core-3.0.2.tgz#8631801533a27d034a3b8421dfd0510a9f27dcf3"
+  integrity sha512-E0ETZJUuJRHvjtb0f0U416NcDxt9T5HvRLxXu5K4DNxtmjpOfkT9Sh+Q309/zrCwSkHY85ZpGKvewZTSGI7Q1Q==
   dependencies:
-    create-react-context "^0.2.3"
+    create-react-context "0.2.2"
     hoist-non-react-statics "^3.0.1"
     path-to-regexp "^1.7.0"
     query-string "^6.2.0"
     react-is "^16.5.2"
     react-lifecycles-compat "^3.0.4"
 
-"@react-navigation/native@^3.0.0-alpha":
-  version "3.0.0-alpha.9"
-  resolved "https://registry.yarnpkg.com/@react-navigation/native/-/native-3.0.0-alpha.9.tgz#2e34be133ba9a8b40eb1795e0f1841dc261e2a85"
-  integrity sha512-GPvoOydf9z6QHUU6A68pRU7g3J0wOkmsb/xWOLrJXBpZ+9GvnsSJk0L/9jaoYlX1pBrU22CTa9fGAIbtAKSV1w==
+"@react-navigation/native@^3.0.0":
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/@react-navigation/native/-/native-3.1.0.tgz#e69db5501c8c3850bc60323119278b8d71bedaad"
+  integrity sha512-yXBG8i1hAHagdpMJ+2swSLgGBliIHeb2BIg6SwFzoy58oMbJ/Nw6Dz6+ul63PY5rn4Gzav6nROPYF3LYaLMcYw==
   dependencies:
     hoist-non-react-statics "^3.0.1"
+    react-native-gesture-handler "^1.0.12"
     react-native-safe-area-view "^0.11.0"
+    react-native-screens "^1.0.0 || ^1.0.0-alpha"
 
 abab@^2.0.0:
   version "2.0.0"
@@ -2171,10 +2173,10 @@ create-react-class@^15.6.3:
     loose-envify "^1.3.1"
     object-assign "^4.1.1"
 
-create-react-context@^0.2.3:
-  version "0.2.3"
-  resolved "https://registry.yarnpkg.com/create-react-context/-/create-react-context-0.2.3.tgz#9ec140a6914a22ef04b8b09b7771de89567cb6f3"
-  integrity sha512-CQBmD0+QGgTaxDL3OX1IDXYqjkp2It4RIbcb99jS6AEg27Ga+a9G3JtK6SIu0HBwPLZlmwt9F7UwWA4Bn92Rag==
+create-react-context@0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/create-react-context/-/create-react-context-0.2.2.tgz#9836542f9aaa22868cd7d4a6f82667df38019dca"
+  integrity sha512-KkpaLARMhsTsgp0d2NA/R94F/eDLbhXERdIq3LvX2biCAXcDvHYoOqHfWCHf1+OLj+HKBotLG3KqaOOf+C1C+A==
   dependencies:
     fbjs "^0.8.0"
     gud "^1.0.0"
@@ -5672,6 +5674,15 @@ react-lifecycles-compat@^3.0.4:
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
 
+react-native-gesture-handler@^1.0.12:
+  version "1.0.12"
+  resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-1.0.12.tgz#99a22f90212df299245357dbd3a9a01c788f310b"
+  integrity sha512-Qp5FjRmqUFeCevSu2IYQG1Xw+YXZ9YOzqze/ZxaIvWzYAoKsRchlgHhNoxvCqElp/befrnVFIjAEQyUxcmBKJw==
+  dependencies:
+    hoist-non-react-statics "^2.3.1"
+    invariant "^2.2.2"
+    prop-types "^15.5.10"
+
 react-native-gesture-handler@^1.0.4:
   version "1.0.8"
   resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-1.0.8.tgz#c2799741bf6443bb542892b0a36201a6d9ded209"
@@ -5687,6 +5698,11 @@ react-native-safe-area-view@^0.11.0:
   integrity sha512-N3nElaahu1Me2ltnfc9acpgt1znm6pi8DSadKy79kvdzKwvVIzw0IXueA/Hjr51eCW1BsfNw7D1SgBT9U6qEkA==
   dependencies:
     hoist-non-react-statics "^2.3.1"
+
+"react-native-screens@^1.0.0 || ^1.0.0-alpha":
+  version "1.0.0-alpha.19"
+  resolved "https://registry.yarnpkg.com/react-native-screens/-/react-native-screens-1.0.0-alpha.19.tgz#ecf3c9023e169b7013266d40b9c5599f37667f6d"
+  integrity sha512-+a7GdwzLWYWYVUJMg+XuyBoRFGD8GdGyBfebuTNBY+xwUZpTXCaK/GlLGL6EE3h0iBHZu83do7zViEailWRNyA==
 
 react-native-screens@^1.0.0-alpha.15:
   version "1.0.0-alpha.15"

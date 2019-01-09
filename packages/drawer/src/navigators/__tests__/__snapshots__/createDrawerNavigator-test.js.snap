@@ -9,17 +9,13 @@ exports[`createDrawerNavigator renders successfully 1`] = `
   drawerType="front"
   drawerWidth={320}
   edgeWidth={undefined}
-  gestureRef={
-    Object {
-      "current": null,
-    }
-  }
   hideStatusBar={false}
   keyboardDismissMode="on-drag"
   minSwipeDistance={undefined}
   onDrawerClose={[Function]}
   onDrawerOpen={[Function]}
   onDrawerStateChanged={[Function]}
+  onGestureRef={[Function]}
   overlayColor="black"
   renderNavigationView={[Function]}
   statusBarAnimation="slide"

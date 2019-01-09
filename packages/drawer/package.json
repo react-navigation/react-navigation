@@ -1,6 +1,6 @@
 {
   "name": "react-navigation-drawer",
-  "version": "1.0.5",
+  "version": "1.1.0",
   "description": "Drawer navigator component for React Navigation",
   "main": "dist/index.js",
   "files": [
@@ -59,10 +59,10 @@
   },
   "peerDependencies": {
     "@react-navigation/core": "^3.0.0",
-    "@react-navigation/native": "^3.0.0",
+    "@react-navigation/native": "^3.1.1",
     "react": "*",
     "react-native": "*",
-    "react-native-gesture-handler": "^1.0.0",
+    "react-native-gesture-handler": "^1.0.12",
     "react-native-screens": "^1.0.0 || ^1.0.0-alpha"
   },
   "jest": {

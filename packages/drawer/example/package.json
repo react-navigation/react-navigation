@@ -8,24 +8,24 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "eject": "expo eject",
-    "test": "node ./node_modules/jest/bin/jest.js --watchAll"
+    "test": "node ./node_modules/jest/bin/jest.js --watchAll",
+    "postinstall": "rm -rf node_modules/react-navigation-drawer/{.git,node_modules,example}"
   },
   "dependencies": {
-    "react": "16.3.1",
-    "react-native": "~0.55.0",
+    "react": "16.5.0",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
     "react-native-paper": "^2.2.0",
     "react-navigation-stack": "^1.0.0",
+    "react-navigation-drawer": "../",
     "@react-navigation/core": "^3.0.0",
-    "@react-navigation/native": "^3.0.0",
-    "expo": "~30.0.0",
+    "@react-navigation/native": "^3.1.1",
+    "expo": "32.0.0",
     "hoist-non-react-statics": "^2.5.0",
     "prop-types": "^15.6.0"
   },
   "devDependencies": {
     "babel-plugin-module-resolver": "^3.0.0",
-    "babel-preset-expo": "^4.0.0",
-    "glob-to-regexp": "^0.3.0",
-    "react-native-scripts": "1.8.1"
+    "glob-to-regexp": "^0.3.0"
   },
   "resolutions": {
     "**/prop-types": "15.6.0",

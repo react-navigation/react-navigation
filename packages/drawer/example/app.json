@@ -3,15 +3,8 @@
     "name": "React Navigation Drawer Example",
     "description": "Demonstrates the various capabilities of react-navigation-drawer",
     "slug": "react-navigation-drawer-demo",
-    "sdkVersion": "30.0.0",
+    "sdkVersion": "32.0.0",
     "version": "1.0.0",
-    "primaryColor": "#2196f3",
-    "packagerOpts": {
-      "assetExts": [
-        "ttf"
-      ],
-      "config": "./rn-cli.config.js",
-      "projectRoots": ""
-    }
+    "primaryColor": "#2196f3"
   }
 }
