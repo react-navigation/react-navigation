@@ -15,7 +15,7 @@ class MyHomeScreen extends React.Component {
     tabBarLabel: 'Home',
     tabBarIcon: ({ tintColor, focused, horizontal }) => (
       <Ionicons
-        name={focused ? 'ios-home' : 'ios-home-outline'}
+        name={focused ? 'ios-home' : 'ios-home'}
         size={horizontal ? 20 : 26}
         style={{ color: tintColor }}
       />
@@ -41,7 +41,7 @@ class ReccomendedScreen extends React.Component {
     tabBarLabel: 'Reccomended',
     tabBarIcon: ({ tintColor, focused, horizontal }) => (
       <Ionicons
-        name={focused ? 'ios-people' : 'ios-people-outline'}
+        name={focused ? 'ios-people' : 'ios-people'}
         size={horizontal ? 20 : 26}
         style={{ color: tintColor }}
       />
@@ -67,7 +67,7 @@ class FeaturedScreen extends React.Component {
     tabBarLabel: 'Featured',
     tabBarIcon: ({ tintColor, focused, horizontal }) => (
       <Ionicons
-        name={focused ? 'ios-star' : 'ios-star-outline'}
+        name={focused ? 'ios-star' : 'ios-star'}
         size={horizontal ? 20 : 26}
         style={{ color: tintColor }}
       />

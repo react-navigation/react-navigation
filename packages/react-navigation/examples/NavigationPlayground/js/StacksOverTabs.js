@@ -66,7 +66,7 @@ const TabNav = createBottomTabNavigator(
         tabBarLabel: 'Home',
         tabBarIcon: ({ tintColor, focused }) => (
           <Ionicons
-            name={focused ? 'ios-home' : 'ios-home-outline'}
+            name={focused ? 'ios-home' : 'ios-home'}
             size={26}
             style={{ color: tintColor }}
           />
@@ -80,7 +80,7 @@ const TabNav = createBottomTabNavigator(
         title: 'Settings',
         tabBarIcon: ({ tintColor, focused }) => (
           <Ionicons
-            name={focused ? 'ios-settings' : 'ios-settings-outline'}
+            name={focused ? 'ios-settings' : 'ios-settings'}
             size={26}
             style={{ color: tintColor }}
           />
