@@ -126,6 +126,7 @@ export default class TabView<T: *> extends React.Component<Props<T>, State> {
       return;
     }
 
+    this.state.panX.setValue(0);
     this.state.offsetX.setValue(-this.props.navigationState.index * width);
     this.state.layoutXY.setValue({
       // This is hacky, but we need to make sure that the value is never 0
