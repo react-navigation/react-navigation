@@ -1,5 +1,5 @@
 import React from 'react';
-import Expo from 'expo';
+import { Asset } from 'expo';
 import { FlatList, I18nManager } from 'react-native';
 import {
   createAppContainer,
@@ -10,8 +10,9 @@ import {
   Assets as StackAssets,
   createStackNavigator,
 } from 'react-navigation-stack';
-import { ListSection, Divider } from 'react-native-paper';
+import { List, Divider } from 'react-native-paper';
 
+import FullScreen from './src/FullScreen';
 import SimpleStack from './src/SimpleStack';
 import ImageStack from './src/ImageStack';
 import TransparentStack from './src/TransparentStack';
@@ -39,6 +40,7 @@ const data = [
   { component: HeaderPreset, title: 'UIKit Preset', routeName: 'UIKit' },
   { component: ImageStack, title: 'Image', routeName: 'ImageStack' },
   { component: ModalStack, title: 'Modal', routeName: 'ModalStack' },
+  { component: FullScreen, title: 'Full Screen', routeName: 'FullScreen' },
   {
     component: LifecycleInteraction,
     title: 'Lifecycle',
@@ -82,7 +84,7 @@ const data = [
 ];
 
 // Cache images
-Expo.Asset.loadAsync(StackAssets);
+Asset.loadAsync(StackAssets);
 
 class Home extends React.Component {
   static navigationOptions = {
@@ -90,7 +92,7 @@ class Home extends React.Component {
   };
 
   _renderItem = ({ item }) => (
-    <ListSection.Item
+    <List.Item
       title={item.title}
       onPress={() => this.props.navigation.navigate(item.routeName)}
     />
@@ -143,9 +145,8 @@ const Root = createStackNavigator(
   }
 );
 
-const App = createAppContainer(Root);
-Expo.registerRootComponent(App);
 useScreens();
+export default createAppContainer(Root);
 
 // Uncomment this to test immediate transitions
 // import ImmediateTransition from './src/ImmediateTransition';

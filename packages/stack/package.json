@@ -15,6 +15,7 @@
     "lint": "eslint .",
     "format": "eslint . --fix",
     "build": "babel --no-babelrc --plugins=syntax-jsx,syntax-class-properties,syntax-object-rest-spread,transform-flow-strip-types src --copy-files --out-dir dist --ignore '**/__tests__/**'",
+    "dev": "yarn build --watch --out-dir example/node_modules/react-navigation-stack/dist",
     "prepare": "yarn build",
     "release": "release-it"
   },
