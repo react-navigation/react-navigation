@@ -660,12 +660,7 @@ const styles = StyleSheet.create({
     ...platformContainerStyles,
   },
   transparentContainer: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
     ...platformContainerStyles,
-    borderBottomWidth: 0,
     borderBottomColor: 'transparent',
     elevation: 0,
   },
