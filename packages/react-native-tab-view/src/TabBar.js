@@ -481,6 +481,8 @@ export default class TabBar<T: *> extends React.Component<Props<T>, State> {
                     isFocused ? ['button', 'selected'] : 'button'
                   }
                   accessibilityComponentType="button"
+                  accessibilityRole="button"
+                  accessibilityStates={isFocused ? ['selected'] : []}
                   pressColor={this.props.pressColor}
                   pressOpacity={this.props.pressOpacity}
                   delayPressIn={0}
