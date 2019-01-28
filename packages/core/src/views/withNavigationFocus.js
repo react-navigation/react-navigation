@@ -1,6 +1,5 @@
 import React from 'react';
 import hoistStatics from 'hoist-non-react-statics';
-import invariant from '../utils/invariant';
 import withNavigation from './withNavigation';
 
 export default function withNavigationFocus(Component) {
@@ -18,11 +17,6 @@ export default function withNavigationFocus(Component) {
 
     componentDidMount() {
       const { navigation } = this.props;
-      invariant(
-        !!navigation,
-        'withNavigationFocus can only be used on a view hierarchy of a navigator. The wrapped component is unable to get access to navigation from props or context.'
-      );
-
       this.subscriptions = [
         navigation.addListener('didFocus', () =>
           this.setState({ isFocused: true })
@@ -48,5 +42,8 @@ export default function withNavigationFocus(Component) {
     }
   }
 
-  return hoistStatics(withNavigation(ComponentWithNavigationFocus), Component);
+  return hoistStatics(
+    withNavigation(ComponentWithNavigationFocus, { forwardRef: false }),
+    Component
+  );
 }
