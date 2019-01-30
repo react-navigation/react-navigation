@@ -1,27 +1,17 @@
 /* @flow */
 
 import * as React from 'react';
-import PropTypes from 'prop-types';
-import {
-  Animated,
-  NativeModules,
-  StyleSheet,
-  View,
-  ScrollView,
-  Platform,
-  I18nManager,
-} from 'react-native';
-import TouchableItem from './TouchableItem';
-import { SceneRendererPropType } from './PropTypes';
-import type { Scene, SceneRendererProps } from './TypeDefinitions';
+import { StyleSheet, View, ScrollView, Platform } from 'react-native';
+import Animated from 'react-native-reanimated';
+import TabBarItem from './TabBarItem';
+import TabBarIndicator, {
+  type Props as IndicatorProps,
+} from './TabBarIndicator';
 import type {
   ViewStyleProp,
   TextStyleProp,
 } from 'react-native/Libraries/StyleSheet/StyleSheet';
-
-type IndicatorProps<T> = SceneRendererProps<T> & {
-  width: number,
-};
+import type { Scene, SceneRendererProps } from './types';
 
 type Props<T> = SceneRendererProps<T> & {
   scrollEnabled?: boolean,
@@ -35,7 +25,7 @@ type Props<T> = SceneRendererProps<T> & {
   renderLabel?: (scene: Scene<T>) => React.Node,
   renderIcon?: (scene: Scene<T>) => React.Node,
   renderBadge?: (scene: Scene<T>) => React.Node,
-  renderIndicator?: (props: IndicatorProps<T>) => React.Node,
+  renderIndicator: (props: IndicatorProps<T>) => React.Node,
   onTabPress?: (scene: Scene<T>) => mixed,
   onTabLongPress?: (scene: Scene<T>) => mixed,
   tabStyle?: ViewStyleProp,
@@ -45,33 +35,11 @@ type Props<T> = SceneRendererProps<T> & {
 };
 
 type State = {|
-  visibility: Animated.Value,
   scrollAmount: Animated.Value,
   initialOffset: ?{| x: number, y: number |},
 |};
 
-const useNativeDriver = Boolean(NativeModules.NativeAnimatedModule);
-
 export default class TabBar<T: *> extends React.Component<Props<T>, State> {
-  static propTypes = {
-    ...SceneRendererPropType,
-    scrollEnabled: PropTypes.bool,
-    bounces: PropTypes.bool,
-    pressColor: TouchableItem.propTypes.pressColor,
-    pressOpacity: TouchableItem.propTypes.pressOpacity,
-    getLabelText: PropTypes.func,
-    getAccessible: PropTypes.func,
-    getAccessibilityLabel: PropTypes.func,
-    getTestID: PropTypes.func,
-    renderIcon: PropTypes.func,
-    renderLabel: PropTypes.func,
-    renderIndicator: PropTypes.func,
-    onTabPress: PropTypes.func,
-    onTabLongPress: PropTypes.func,
-    labelStyle: PropTypes.any,
-    style: PropTypes.any,
-  };
-
   static defaultProps = {
     getLabelText: ({ route }: Scene<T>) =>
       typeof route.title === 'string' ? route.title.toUpperCase() : route.title,
@@ -79,19 +47,13 @@ export default class TabBar<T: *> extends React.Component<Props<T>, State> {
       typeof route.accessible !== 'undefined' ? route.accessible : true,
     getAccessibilityLabel: ({ route }: Scene<T>) => route.accessibilityLabel,
     getTestID: ({ route }: Scene<T>) => route.testID,
+    renderIndicator: (props: IndicatorProps<T>) => (
+      <TabBarIndicator {...props} />
+    ),
   };
 
   constructor(props: Props<T>) {
     super(props);
-
-    let initialVisibility = 1;
-
-    if (this.props.scrollEnabled) {
-      const tabWidth = this._getTabWidth(this.props);
-      if (!tabWidth) {
-        initialVisibility = 0;
-      }
-    }
 
     const initialOffset =
       this.props.scrollEnabled && this.props.layout.width
@@ -105,132 +67,37 @@ export default class TabBar<T: *> extends React.Component<Props<T>, State> {
         : undefined;
 
     this.state = {
-      visibility: new Animated.Value(initialVisibility),
       scrollAmount: new Animated.Value(0),
       initialOffset,
     };
   }
 
   componentDidMount() {
-    this.props.scrollEnabled && this._startTrackingPosition();
+    this.props.addListener(this._adjustScroll);
   }
 
   componentDidUpdate(prevProps: Props<T>) {
-    const prevTabWidth = this._getTabWidth(prevProps);
-    const currentTabWidth = this._getTabWidth(this.props);
-    const pendingIndex =
-      typeof this._pendingIndex === 'number'
-        ? this._pendingIndex
-        : this.props.navigationState.index;
-
-    this._pendingIndex = null;
-
-    if (prevTabWidth !== currentTabWidth && currentTabWidth) {
-      this.state.visibility.setValue(1);
-    }
-
     if (
       prevProps.navigationState.routes.length !==
         this.props.navigationState.routes.length ||
       prevProps.layout.width !== this.props.layout.width
     ) {
       this._resetScroll(this.props.navigationState.index, false);
-    } else if (prevProps.navigationState.index !== pendingIndex) {
+    } else if (
+      prevProps.navigationState.index !== this.props.navigationState.index
+    ) {
       this._resetScroll(this.props.navigationState.index);
     }
   }
 
   componentWillUnmount() {
-    this._stopTrackingPosition();
+    this.props.removeListener(this._adjustScroll);
   }
 
   _scrollView: ?ScrollView;
-  _isIntial: boolean = true;
   _isManualScroll: boolean = false;
   _isMomentumScroll: boolean = false;
-  _pendingIndex: ?number;
-  _scrollResetCallback: any;
-  _lastPanX: ?number;
-  _lastOffsetX: ?number;
-  _panXListener: string;
-  _offsetXListener: string;
-
-  _startTrackingPosition = () => {
-    this._offsetXListener = this.props.offsetX.addListener(({ value }) => {
-      this._lastOffsetX = value;
-      this._handlePosition();
-    });
-    this._panXListener = this.props.panX.addListener(({ value }) => {
-      this._lastPanX = value;
-      this._handlePosition();
-    });
-  };
-
-  _stopTrackingPosition = () => {
-    this.props.offsetX.removeListener(this._offsetXListener);
-    this.props.panX.removeListener(this._panXListener);
-  };
-
-  _handlePosition = () => {
-    const { navigationState, layout } = this.props;
-
-    if (layout.width === 0) {
-      // Don't do anything if we don't have layout yet
-      return;
-    }
-
-    const panX = typeof this._lastPanX === 'number' ? this._lastPanX : 0;
-    const offsetX =
-      typeof this._lastOffsetX === 'number'
-        ? this._lastOffsetX
-        : -navigationState.index * layout.width;
-
-    const value = (panX + offsetX) / -(layout.width || 0.001);
-
-    this._adjustScroll(value);
-  };
-
-  _renderLabel = (scene: Scene<*>) => {
-    if (typeof this.props.renderLabel !== 'undefined') {
-      return this.props.renderLabel(scene);
-    }
-    const label = this.props.getLabelText(scene);
-    if (typeof label !== 'string') {
-      return null;
-    }
-    return (
-      <Animated.Text style={[styles.tabLabel, this.props.labelStyle]}>
-        {label}
-      </Animated.Text>
-    );
-  };
-
-  _renderIndicator = (props: IndicatorProps<T>) => {
-    if (typeof this.props.renderIndicator !== 'undefined') {
-      return this.props.renderIndicator(props);
-    }
-    const { width, position, navigationState } = props;
-    const translateX = Animated.multiply(
-      Animated.multiply(
-        position.interpolate({
-          inputRange: [0, navigationState.routes.length - 1],
-          outputRange: [0, navigationState.routes.length - 1],
-          extrapolate: 'clamp',
-        }),
-        width
-      ),
-      I18nManager.isRTL ? -1 : 1
-    );
-    return (
-      <Animated.View
-        style={[
-          styles.indicator,
-          { width, transform: [{ translateX }] },
-          this.props.indicatorStyle,
-        ]}
-      />
-    );
-  };
+  _scrollResetCallback: AnimationFrameID;
 
   _getTabWidth = props => {
     const { layout, navigationState, tabStyle } = props;
@@ -257,9 +124,7 @@ export default class TabBar<T: *> extends React.Component<Props<T>, State> {
     return layout.width / navigationState.routes.length;
   };
 
-  _handleTabPress = ({ route }: Scene<*>) => {
-    this._pendingIndex = this.props.navigationState.routes.indexOf(route);
-
+  _handleTabPress = ({ route }: Scene<T>) => {
     if (this.props.onTabPress) {
       this.props.onTabPress({ route });
     }
@@ -267,7 +132,7 @@ export default class TabBar<T: *> extends React.Component<Props<T>, State> {
     this.props.jumpTo(route.key);
   };
 
-  _handleTabLongPress = ({ route }: Scene<*>) => {
+  _handleTabLongPress = ({ route }: Scene<T>) => {
     if (this.props.onTabLongPress) {
       this.props.onTabLongPress({ route });
     }
@@ -296,24 +161,24 @@ export default class TabBar<T: *> extends React.Component<Props<T>, State> {
 
   _adjustScroll = (value: number) => {
     if (this.props.scrollEnabled) {
-      global.cancelAnimationFrame(this._scrollResetCallback);
+      cancelAnimationFrame(this._scrollResetCallback);
+
       this._scrollView &&
         this._scrollView.scrollTo({
           x: this._normalizeScrollValue(
             this.props,
             this._getScrollAmount(this.props, value)
           ),
-          animated: !this._isIntial, // Disable animation for the initial render
+          animated: false,
         });
-
-      this._isIntial = false;
     }
   };
 
   _resetScroll = (value: number, animated = true) => {
     if (this.props.scrollEnabled) {
-      global.cancelAnimationFrame(this._scrollResetCallback);
-      this._scrollResetCallback = global.requestAnimationFrame(() => {
+      cancelAnimationFrame(this._scrollResetCallback);
+
+      this._scrollResetCallback = requestAnimationFrame(() => {
         this._scrollView &&
           this._scrollView.scrollTo({
             x: this._getScrollAmount(this.props, value),
@@ -333,7 +198,7 @@ export default class TabBar<T: *> extends React.Component<Props<T>, State> {
     // onScrollEndDrag fires when user lifts his finger
     // onMomentumScrollBegin fires after touch end
     // run the logic in next frame so we get onMomentumScrollBegin first
-    global.requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
       if (this._isMomentumScroll) {
         return;
       }
@@ -353,17 +218,36 @@ export default class TabBar<T: *> extends React.Component<Props<T>, State> {
   };
 
   render() {
-    const { position, navigationState, scrollEnabled, bounces } = this.props;
+    const {
+      position,
+      layout,
+      navigationState,
+      jumpTo,
+      addListener,
+      removeListener,
+      scrollEnabled,
+      bounces,
+      getAccessibilityLabel,
+      getAccessible,
+      getLabelText,
+      getTestID,
+      renderBadge,
+      renderIcon,
+      renderLabel,
+      pressColor,
+      pressOpacity,
+      tabStyle,
+      labelStyle,
+      indicatorStyle,
+      style,
+    } = this.props;
     const { routes } = navigationState;
     const tabWidth = this._getTabWidth(this.props);
     const tabBarWidth = tabWidth * routes.length;
-
-    // Prepend '-1', so there are always at least 2 items in inputRange
-    const inputRange = [-1, ...routes.map((x, i) => i)];
     const translateX = Animated.multiply(this.state.scrollAmount, -1);
 
     return (
-      <Animated.View style={[styles.tabBar, this.props.style]}>
+      <Animated.View style={[styles.tabBar, style]}>
         <Animated.View
           pointerEvents="none"
           style={[
@@ -373,9 +257,15 @@ export default class TabBar<T: *> extends React.Component<Props<T>, State> {
               : null,
           ]}
         >
-          {this._renderIndicator({
-            ...this.props,
+          {this.props.renderIndicator({
+            position,
+            layout,
+            navigationState,
+            jumpTo,
+            addListener,
+            removeListener,
             width: tabWidth,
+            style: indicatorStyle,
           })}
         </Animated.View>
         <View style={styles.scroll}>
@@ -393,7 +283,7 @@ export default class TabBar<T: *> extends React.Component<Props<T>, State> {
               styles.tabContent,
               scrollEnabled ? null : styles.container,
             ]}
-            scrollEventThrottle={1}
+            scrollEventThrottle={16}
             onScroll={Animated.event(
               [
                 {
@@ -402,7 +292,7 @@ export default class TabBar<T: *> extends React.Component<Props<T>, State> {
                   },
                 },
               ],
-              { useNativeDriver }
+              { useNativeDriver: true }
             )}
             onScrollBeginDrag={this._handleBeginDrag}
             onScrollEndDrag={this._handleEndDrag}
@@ -411,111 +301,29 @@ export default class TabBar<T: *> extends React.Component<Props<T>, State> {
             contentOffset={this.state.initialOffset}
             ref={el => (this._scrollView = el && el.getNode())}
           >
-            {routes.map((route, i) => {
-              const outputRange = inputRange.map(
-                inputIndex => (inputIndex === i ? 1 : 0.7)
-              );
-              const opacity = Animated.multiply(
-                this.state.visibility,
-                position.interpolate({
-                  inputRange,
-                  outputRange,
-                })
-              );
-              const label = this._renderLabel({ route });
-              const icon = this.props.renderIcon
-                ? this.props.renderIcon({ route })
-                : null;
-              const badge = this.props.renderBadge
-                ? this.props.renderBadge({ route })
-                : null;
-
-              const tabStyle = {};
-
-              tabStyle.opacity = opacity;
-
-              if (icon) {
-                if (label) {
-                  tabStyle.paddingTop = 8;
-                } else {
-                  tabStyle.padding = 12;
-                }
-              }
-
-              const passedTabStyle = StyleSheet.flatten(this.props.tabStyle);
-              const isWidthSet =
-                (passedTabStyle &&
-                  typeof passedTabStyle.width !== 'undefined') ||
-                scrollEnabled === true;
-              const tabContainerStyle = {};
-
-              if (isWidthSet) {
-                tabStyle.width = tabWidth;
-              }
-
-              if (passedTabStyle && typeof passedTabStyle.flex === 'number') {
-                tabContainerStyle.flex = passedTabStyle.flex;
-              } else if (!isWidthSet) {
-                tabContainerStyle.flex = 1;
-              }
-
-              let accessibilityLabel = this.props.getAccessibilityLabel({
-                route,
-              });
-
-              accessibilityLabel =
-                typeof accessibilityLabel !== 'undefined'
-                  ? accessibilityLabel
-                  : this.props.getLabelText({ route });
-
-              const isFocused = i === navigationState.index;
-
-              return (
-                <TouchableItem
-                  borderless
-                  key={route.key}
-                  testID={this.props.getTestID({ route })}
-                  accessible={this.props.getAccessible({ route })}
-                  accessibilityLabel={accessibilityLabel}
-                  accessibilityTraits={
-                    isFocused ? ['button', 'selected'] : 'button'
-                  }
-                  accessibilityComponentType="button"
-                  accessibilityRole="button"
-                  accessibilityStates={isFocused ? ['selected'] : []}
-                  pressColor={this.props.pressColor}
-                  pressOpacity={this.props.pressOpacity}
-                  delayPressIn={0}
-                  onPress={() => this._handleTabPress({ route })}
-                  onLongPress={() => this._handleTabLongPress({ route })}
-                  style={tabContainerStyle}
-                >
-                  <View pointerEvents="none" style={styles.container}>
-                    <Animated.View
-                      style={[
-                        styles.tabItem,
-                        tabStyle,
-                        passedTabStyle,
-                        styles.container,
-                      ]}
-                    >
-                      {icon}
-                      {label}
-                    </Animated.View>
-                    {badge ? (
-                      <Animated.View
-                        style={[
-                          styles.badge,
-                          { opacity: this.state.visibility },
-                        ]}
-                      >
-                        {badge}
-                      </Animated.View>
-                    ) : null}
-                  </View>
-                </TouchableItem>
-              );
-            })}
+            {routes.map(route => (
+              <TabBarItem
+                key={route.key}
+                position={position}
+                scene={{ route }}
+                tabWidth={tabWidth}
+                navigationState={navigationState}
+                scrollEnabled={scrollEnabled}
+                getAccessibilityLabel={getAccessibilityLabel}
+                getAccessible={getAccessible}
+                getLabelText={getLabelText}
+                getTestID={getTestID}
+                renderBadge={renderBadge}
+                renderIcon={renderIcon}
+                renderLabel={renderLabel}
+                tabStyle={tabStyle}
+                labelStyle={labelStyle}
+                pressColor={pressColor}
+                pressOpacity={pressOpacity}
+                onTabPress={this._handleTabPress}
+                onTabLongPress={this._handleTabLongPress}
+              />
+            ))}
           </Animated.ScrollView>
         </View>
       </Animated.View>
@@ -546,35 +354,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'nowrap',
   },
-  tabLabel: {
-    backgroundColor: 'transparent',
-    color: 'white',
-    margin: 8,
-  },
-  tabItem: {
-    flex: 1,
-    padding: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  badge: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-  },
   indicatorContainer: {
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
-  },
-  indicator: {
-    backgroundColor: '#ffeb3b',
-    position: 'absolute',
-    left: 0,
-    bottom: 0,
-    right: 0,
-    height: 2,
   },
 });

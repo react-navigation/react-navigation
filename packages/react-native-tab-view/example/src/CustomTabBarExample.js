@@ -1,36 +1,23 @@
 /* @flow */
 
 import * as React from 'react';
-import {
-  Animated,
-  View,
-  TouchableWithoutFeedback,
-  StyleSheet,
-} from 'react-native';
-import {
-  TabView,
-  SceneMap,
-  type Route,
-  type NavigationState,
-} from 'react-native-tab-view';
+import { View, Text, TouchableWithoutFeedback, StyleSheet } from 'react-native';
+import { TabView, SceneMap, type NavigationState } from 'react-native-tab-view';
+import Animated from 'react-native-reanimated';
 import { Ionicons } from '@expo/vector-icons';
 import Albums from './shared/Albums';
 import Article from './shared/Article';
 import Chat from './shared/Chat';
 import Contacts from './shared/Contacts';
 
-const AnimatedIcon = Animated.createAnimatedComponent(Ionicons);
+type State = NavigationState<{
+  key: string,
+  title: string,
+  icon: string,
+}>;
 
-type State = NavigationState<
-  Route<{
-    key: string,
-    title: string,
-    icon: string,
-  }>
->;
-
-export default class TopBarIconExample extends React.Component<*, State> {
-  static title = 'No animation';
+export default class CustomTabBarExample extends React.Component<*, State> {
+  static title = 'Custom tab bar';
   static backgroundColor = '#fafafa';
   static tintColor = '#263238';
   static appbarElevation = 4;
@@ -51,44 +38,38 @@ export default class TopBarIconExample extends React.Component<*, State> {
       index,
     });
 
-  _renderLabel = ({ position, navigationState }) => ({ route, index }) => {
+  _renderItem = ({ navigationState, position }) => ({ route, index }) => {
     const inputRange = navigationState.routes.map((x, i) => i);
-    const outputRange = inputRange.map(
-      inputIndex => (inputIndex === index ? '#2196f3' : '#939393')
-    );
-    const color = position.interpolate({
-      inputRange,
-      outputRange,
-    });
-    return (
-      <Animated.Text style={[styles.label, { color }]}>
-        {route.title}
-      </Animated.Text>
-    );
-  };
 
-  _renderIcon = ({ navigationState, position }) => ({ route, index }) => {
-    const inputRange = navigationState.routes.map((x, i) => i);
-    const filledOpacity = position.interpolate({
+    const activeOpacity = Animated.interpolate(position, {
       inputRange,
       outputRange: inputRange.map(i => (i === index ? 1 : 0)),
     });
-    const outlineOpacity = position.interpolate({
+    const inactiveOpacity = Animated.interpolate(position, {
       inputRange,
       outputRange: inputRange.map(i => (i === index ? 0 : 1)),
     });
+
     return (
-      <View style={styles.iconContainer}>
-        <AnimatedIcon
-          name={route.icon}
-          size={26}
-          style={[styles.icon, { opacity: filledOpacity }]}
-        />
-        <AnimatedIcon
-          name={route.icon + '-outline'}
-          size={26}
-          style={[styles.icon, styles.outline, { opacity: outlineOpacity }]}
-        />
+      <View style={styles.tab}>
+        <Animated.View style={[styles.item, { opacity: inactiveOpacity }]}>
+          <Ionicons
+            name={route.icon}
+            size={26}
+            style={[styles.icon, styles.inactive]}
+          />
+          <Text style={[styles.label, styles.inactive]}>{route.title}</Text>
+        </Animated.View>
+        <Animated.View
+          style={[styles.item, styles.activeItem, { opacity: activeOpacity }]}
+        >
+          <Ionicons
+            name={route.icon}
+            size={26}
+            style={[styles.icon, styles.active]}
+          />
+          <Text style={[styles.label, styles.active]}>{route.title}</Text>
+        </Animated.View>
       </View>
     );
   };
@@ -101,10 +82,7 @@ export default class TopBarIconExample extends React.Component<*, State> {
             key={route.key}
             onPress={() => props.jumpTo(route.key)}
           >
-            <Animated.View style={styles.tab}>
-              {this._renderIcon(props)({ route, index })}
-              {this._renderLabel(props)({ route, index })}
-            </Animated.View>
+            {this._renderItem(props)({ route, index })}
           </TouchableWithoutFeedback>
         );
       })}
@@ -121,23 +99,18 @@ export default class TopBarIconExample extends React.Component<*, State> {
   render() {
     return (
       <TabView
-        style={[styles.container, this.props.style]}
+        style={this.props.style}
         navigationState={this.state}
         renderScene={this._renderScene}
         renderTabBar={this._renderTabBar}
         tabBarPosition="bottom"
         onIndexChange={this._handleIndexChange}
-        animationEnabled={false}
-        swipeEnabled={false}
       />
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   tabbar: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -148,23 +121,28 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderTopWidth: StyleSheet.hairlineWidth,
     borderTopColor: 'rgba(0, 0, 0, .2)',
+  },
+  item: {
+    alignItems: 'center',
+    justifyContent: 'center',
     paddingTop: 4.5,
   },
-  iconContainer: {
-    height: 26,
-    width: 26,
-  },
-  icon: {
+  activeItem: {
     position: 'absolute',
-    textAlign: 'center',
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
+  },
+  active: {
     color: '#0084ff',
   },
-  outline: {
+  inactive: {
     color: '#939393',
+  },
+  icon: {
+    height: 26,
+    width: 26,
   },
   label: {
     fontSize: 10,

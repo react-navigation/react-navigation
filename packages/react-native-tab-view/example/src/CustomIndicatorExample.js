@@ -1,28 +1,26 @@
 /* @flow */
 
 import * as React from 'react';
-import { Animated, View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import {
   TabView,
   TabBar,
   SceneMap,
-  type Route,
   type NavigationState,
 } from 'react-native-tab-view';
+import Animated from 'react-native-reanimated';
 import Albums from './shared/Albums';
 import Article from './shared/Article';
 import Contacts from './shared/Contacts';
 
-type State = NavigationState<
-  Route<{
-    key: string,
-    icon: string,
-    color: string,
-  }>
->;
+type State = NavigationState<{
+  key: string,
+  icon: string,
+  color: [number, number, number],
+}>;
 
-export default class BottomBarIconExample extends React.Component<*, State> {
+export default class CustomIndicatorExample extends React.Component<*, State> {
   static title = 'Custom indicator';
   static backgroundColor = '#263238';
   static appbarElevation = 4;
@@ -33,17 +31,17 @@ export default class BottomBarIconExample extends React.Component<*, State> {
       {
         key: 'article',
         icon: 'ios-paper',
-        color: '#F44336',
+        color: [244, 67, 54],
       },
       {
         key: 'contacts',
         icon: 'ios-people',
-        color: '#3F51B5',
+        color: [0, 132, 255],
       },
       {
         key: 'albums',
         icon: 'ios-albums',
-        color: '#4CAF50',
+        color: [76, 175, 80],
       },
     ],
   };
@@ -54,7 +52,7 @@ export default class BottomBarIconExample extends React.Component<*, State> {
     });
 
   _renderIndicator = props => {
-    const { width, position } = props;
+    const { width, position, navigationState } = props;
     const inputRange = [
       0,
       0.48,
@@ -69,36 +67,45 @@ export default class BottomBarIconExample extends React.Component<*, State> {
       2,
     ];
 
-    const scale = position.interpolate({
+    const scale = Animated.interpolate(position, {
       inputRange,
       outputRange: inputRange.map(x => (Math.trunc(x) === x ? 2 : 0.1)),
     });
-    const opacity = position.interpolate({
+
+    const opacity = Animated.interpolate(position, {
       inputRange,
       outputRange: inputRange.map(x => {
         const d = x - Math.trunc(x);
         return d === 0.49 || d === 0.51 ? 0 : 1;
       }),
     });
-    const translateX = position.interpolate({
+
+    const translateX = Animated.interpolate(position, {
       inputRange: inputRange,
       outputRange: inputRange.map(x => Math.round(x) * width),
     });
-    const backgroundColor = position.interpolate({
+
+    const backgroundColor = Animated.interpolate(position, {
       inputRange,
-      outputRange: inputRange.map(
-        x => props.navigationState.routes[Math.round(x)].color
+      outputRange: inputRange.map(x =>
+        Animated.color(...navigationState.routes[Math.round(x)].color)
       ),
     });
 
     return (
       <Animated.View
-        style={[styles.container, { width, transform: [{ translateX }] }]}
+        style={[
+          styles.container,
+          {
+            width: `${100 / navigationState.routes.length}%`,
+            transform: [{ translateX }],
+          },
+        ]}
       >
         <Animated.View
           style={[
             styles.indicator,
-            { backgroundColor, opacity, transform: [{ scale }] },
+            { opacity, backgroundColor, transform: [{ scale }] },
           ]}
         />
       </Animated.View>
@@ -110,7 +117,7 @@ export default class BottomBarIconExample extends React.Component<*, State> {
   );
 
   _renderBadge = ({ route }) => {
-    if (route.key === '2') {
+    if (route.key === 'albums') {
       return (
         <View style={styles.badge}>
           <Text style={styles.count}>42</Text>
@@ -163,13 +170,11 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    opacity: 0.8,
   },
   indicator: {
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor: '#0084ff',
     margin: 6,
   },
   badge: {
@@ -181,7 +186,6 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
-    elevation: 4,
   },
   count: {
     color: '#fff',

@@ -2,11 +2,11 @@
   "name": "tabviewexample",
   "version": "0.0.1",
   "private": true,
-  "main": "App.js",
+  "main": "src/App.js",
   "scripts": {
-    "start": "react-native-scripts start",
-    "android": "react-native-scripts android",
-    "ios": "react-native-scripts ios"
+    "start": "expo start",
+    "android": "expo android",
+    "ios": "expo ios"
   },
   "dependencies": {
     "@expo/vector-icons": "^9.0.0",
@@ -21,7 +21,6 @@
     "glob-to-regexp": "^0.4.0"
   },
   "resolutions": {
-    "**/prop-types": "15.6.1",
-    "**/react": "16.3.1"
+    "**/react": "16.5.0"
   }
 }

@@ -38,9 +38,6 @@
     "url": "https://github.com/react-native-community/react-native-tab-view/issues"
   },
   "homepage": "https://github.com/react-native-community/react-native-tab-view#readme",
-  "dependencies": {
-    "prop-types": "^15.6.1"
-  },
   "devDependencies": {
     "@commitlint/config-conventional": "^7.5.0",
     "@expo/vector-icons": "^9.0.0",
@@ -68,7 +65,9 @@
   },
   "peerDependencies": {
     "react": "*",
-    "react-native": "*"
+    "react-native": "*",
+    "react-native-gesture-handler": "*",
+    "react-native-reanimated": "*"
   },
   "husky": {
     "hooks": {

@@ -1,7 +1,6 @@
 /* @flow */
 
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import {
   TouchableNativeFeedback,
   TouchableOpacity,
@@ -23,15 +22,6 @@ type Props = {
 };
 
 export default class TouchableItem extends React.Component<Props> {
-  static propTypes = {
-    onPress: PropTypes.func.isRequired,
-    delayPressIn: PropTypes.number,
-    borderless: PropTypes.bool,
-    pressColor: PropTypes.string,
-    pressOpacity: PropTypes.number,
-    children: PropTypes.node.isRequired,
-  };
-
   static defaultProps = {
     pressColor: 'rgba(255, 255, 255, .4)',
   };

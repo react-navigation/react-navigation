@@ -2,11 +2,11 @@
 
 import * as React from 'react';
 import {
-  ScrollView,
   View,
   Image,
   Text,
   TextInput,
+  ScrollView,
   StyleSheet,
 } from 'react-native';
 

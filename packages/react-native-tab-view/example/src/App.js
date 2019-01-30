@@ -1,6 +1,6 @@
 /* @flow */
 
-import Expo from 'expo';
+import { registerRootComponent, Asset, KeepAwake } from 'expo';
 import * as React from 'react';
 import {
   AsyncStorage,
@@ -11,24 +11,25 @@ import {
   Text,
   TouchableOpacity,
   View,
+  YellowBox,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import TopBarTextExample from './TopBarTextExample';
-import TopBarIconExample from './TopBarIconExample';
-import BottomBarIconTextExample from './BottomBarIconTextExample';
-import NoAnimationExample from './NoAnimationExample';
+import ScrollableTabBarExample from './ScrollableTabBarExample';
+import TabBarIconExample from './TabBarIconExample';
+import CustomIndicatorExample from './CustomIndicatorExample';
+import CustomTabBarExample from './CustomTabBarExample';
 import CoverflowExample from './CoverflowExample';
-import NativeDriverExample from './NativeDriverExample';
+
+YellowBox.ignoreWarnings(['bind():']);
 
 const PERSISTENCE_KEY = 'index_persistence';
 
 const EXAMPLE_COMPONENTS = [
-  TopBarTextExample,
-  TopBarIconExample,
-  BottomBarIconTextExample,
-  NoAnimationExample,
+  ScrollableTabBarExample,
+  TabBarIconExample,
+  CustomIndicatorExample,
+  CustomTabBarExample,
   CoverflowExample,
-  NativeDriverExample,
 ];
 
 type State = {
@@ -58,7 +59,7 @@ export default class ExampleList extends React.Component<{}, State> {
       require('../assets/album-art-6.jpg'),
       require('../assets/album-art-7.jpg'),
       require('../assets/album-art-8.jpg'),
-    ].map(image => Expo.Asset.fromModule(image).downloadAsync());
+    ].map(image => Asset.fromModule(image).downloadAsync());
   }
 
   _persistNavigationState = async (currentIndex: number) => {
@@ -150,7 +151,7 @@ export default class ExampleList extends React.Component<{}, State> {
             Platform.OS === 'ios' ? statusBarStyle : 'light-content'
           }
         />
-        <Expo.KeepAwake />
+        <KeepAwake />
         <View
           style={[
             styles.statusbar,
@@ -206,7 +207,7 @@ const styles = StyleSheet.create({
   appbar: {
     flexDirection: 'row',
     alignItems: 'center',
-    height: Platform.OS === 'ios' ? 44 : 56,
+    height: 56,
     borderBottomColor: 'rgba(0, 0, 0, 0.1)',
   },
   title: {
@@ -220,7 +221,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     width: 56,
-    padding: Platform.OS === 'ios' ? 12 : 16,
+    padding: 16,
   },
   touchable: {
     padding: 16,
@@ -234,4 +235,4 @@ const styles = StyleSheet.create({
   },
 });
 
-Expo.registerRootComponent(ExampleList);
+registerRootComponent(ExampleList);

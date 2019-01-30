@@ -6,8 +6,6 @@
 
 A cross-platform Tab View component for React Native.
 
-This is a JavaScript-only implementation of swipeable tab views. It's super customizable, allowing you to do things like coverflow.
-
 - [Run the example app to see it in action](https://expo.io/@satya164/react-native-tab-view-demos).
 - Checkout the [example/](https://github.com/react-native-community/react-native-tab-view/tree/master/example) folder for source code.
 
@@ -26,9 +24,13 @@ This is a JavaScript-only implementation of swipeable tab views. It's super cust
 
 ## Installation
 
+Open a Terminal in the project root and run:
+
 ```sh
 yarn add react-native-tab-view
 ```
+
+You also need to install and link [react-native-gesture-handler](https://github.com/kmagiera/react-native-gesture-handler) and [react-native-reanimated](https://github.com/kmagiera/react-native-reanimated). Follow the instructions on the linked repos to configure them. This step is unnecessary if you use Expo.
 
 ## Quick Start
 
@@ -88,13 +90,11 @@ React Navigation integration can be achieved by the [react-navigation-tabs](http
 
 ## API reference
 
-The package exports a `TabView` component which is the one you'd use to render the tab view, a `TabBar` component which is the default tab bar implementation, as well as several pager components for more fine-grained control.
+The package exports a `TabView` component which is the one you'd use to render the tab view, and a `TabBar` component which is the default tab bar implementation.
 
-In a trivial app, you'd mostly only use `TabView` and `TabBar`.
+### `TabView`
 
-### `<TabView />`
-
-Container component responsible for rendering and managing tabs.
+Container component responsible for rendering and managing tabs. Follows material design styles by default.
 
 #### Example
 
@@ -111,18 +111,149 @@ Container component responsible for rendering and managing tabs.
 
 #### Props
 
-- `navigationState` (required): the current navigation state, should contain a `routes` array containing the list of tabs, and an `index` property representing the current tab.
-- `onIndexChange` (required): callback for when the current tab index changes, should update the navigation state.
-- `renderScene` (required): callback which returns a React Element to use as the scene for a tab.
-- `renderTabBar`: callback which returns a custom React Element to use as the tab bar.
-- `renderPager`: callback which returns a custom React Element to handle swipe gesture and animation.
-- `canJumpToTab`: callback which returns a boolean indicating whether jumping to the tab is allowed.
-- `initialLayout`: object containing the initial `height` and `width`, can be passed to prevent the one frame delay in rendering.
-- `tabBarPosition`: position of the tab bar, `'top'` or `'bottom'`. Defaults to `'top'`.
+##### `navigationState` (`required`)
 
-Any other props are passed to the underlying pager.
+State for the tab view. The state should contain the following properties:
 
-### `<TabBar />`
+- `index`: a number representing the index of the active route in the `routes` array
+- `routes`: an array containing a list of route objects used for rendering the tabs
+
+Each route object should contain the following properties:
+
+- `key`: a unique key to identify the route (required)
+- `title`: title for the route to display in the tab bar
+- `icon`: icon for the route to display in the tab bar
+- `accessibilityLabel`: accessibility label for the tab button
+- `testID`: test id for the tab button
+
+Example:
+
+```js
+{
+  index: 1,
+  routes: [
+    { key: 'music', title: 'Music' },
+    { key: 'albums', title: 'Albums' },
+    { key: 'recents', title: 'Recents' },
+    { key: 'purchased', title: 'Purchased' },
+  ]
+}
+```
+
+`TabView` is a controlled component, which means the `index` needs to be updated via the `onIndexChange` callback.
+
+##### `onIndexChange` (`required`)
+
+Callback which is called on tab change, receives the index of the new tab as argument.
+The navigation state needs to be updated when it's called, otherwise the change is dropped.
+
+##### `renderScene` (`required`)
+
+Callback which returns a react element to render as the page for the tab. Receives an object containing the route as the argument:
+
+```js
+renderScene = ({ route, jumpTo }) => {
+  switch (route.key) {
+    case 'music':
+      return <MusicRoute jumpTo={jumpTo} />;
+    case 'albums':
+      return <AlbumsRoute jumpTo={jumpTo} />;
+  }
+}
+```
+
+You need to make sure that your individual routes implement a `shouldComponentUpdate` to improve the performance. To make it easier to specify the components, you can use the `SceneMap` helper.
+
+`SceneMap` takes an object with the mapping of `route.key` to React components and returns a function to use with `renderScene` prop.
+
+```js
+import { SceneMap } from 'react-native-tab-view';
+
+...
+
+renderScene = SceneMap({
+  music: MusicRoute,
+  albums: AlbumsRoute,
+});
+```
+
+Specifying the components this way is easier and takes care of implementing a `shouldComponentUpdate` method.
+
+Each scene receives the following props:
+
+- `route`: the current route rendered by the component
+- `jumpTo`: method to jump to other tabs, takes a `route.key` as it's argument
+
+The `jumpTo` method can be used to navigate to other tabs programmatically:
+
+```js
+this.props.jumpTo('albums')
+```
+
+All the scenes rendered with `SceneMap` are optimized using `React.PureComponent` and don't re-render when parent's props or states change. If you need more control over how your scenes update (e.g. - triggering a re-render even if the `navigationState` didn't change), use `renderScene` directly instead of using `SceneMap`.
+
+_IMPORTANT:_ **Do not** pass inline functions to `SceneMap`, for example, don't do the following:
+
+```js
+SceneMap({
+  first: () => <FirstRoute foo={this.props.foo} />,
+  second: SecondRoute,
+});
+```
+
+Always define your components elsewhere in the top level of the file. If you pass inline functions, it'll re-create the component every render, which will cause the entire route to unmount and remount every change. It's very bad for performance and will also cause any local state to be lost.
+
+##### `renderTabBar`
+
+Callback which returns a custom React Element to use as the tab bar:
+
+```js
+import { TabBar } from 'react-native-tab-view';
+
+...
+
+renderTabBar = props => <TabBar {...props} />;
+```
+
+If this is not specified, the default tab bar is rendered. You pass this props to customize the default tab bar, provide your own tab bar, or disable the tab bar completely.
+
+```js
+renderTabBar = () => null;
+```
+
+##### `tabBarPosition`
+
+Position of the tab bar in the tab view. Possible values are `'top'` and `'bottom'`. Defaults to `'top'`.
+
+##### `swipeEnabled`
+
+Boolean indicating whether to enable swipe gestures. Swipe gestures are enabled by default. Passing `false` will disable swipe gestures, but the user can still switch tabs by pressing the tab bar.
+
+##### `swipeDistanceThreshold`
+
+Minimum swipe distance which triggers a tab switch. By default, this is automatically determined based on the screen width.
+
+##### `swipeVelocityThreshold`
+
+Minimum swipe velocity which triggers a tab switch. Defaults to `1200`.
+
+##### `initialLayout`
+
+Object containing the initial height and width of the screens. Passing this will improve the initial rendering performance. For most apps, this is a good default:
+
+```js
+{ width: Dimensions.get('window').width }}
+```
+
+##### `sceneContainerStyle`
+
+Style to apply to the view wrapping each screen. You can pass this to override some default styles such as overflow clipping:
+
+##### `style`
+
+Style to apply to the tab view container.
+
+### `TabBar`
 
 Material design themed tab bar. To pass props to the tab bar, you'd need to use the `renderTabBar` prop of `TabView` to render the `TabBar` and pass additional props.
 
@@ -139,165 +270,98 @@ renderTabBar={props =>
 
 #### Props
 
-- `getLabelText`: callback which returns the label text to use for a tab. Defaults to uppercased route title.
-- `getAccessible`: callback which returns a boolean to indicate whether to mark a tab as `accessible`. Defaults to `true`.
-- `getAccessibilityLabel`: callback which returns an accessibility label for the tab. Defaults to route title.
-- `getTestID`: callback which returns a test id for the tab.
-- `renderIcon`: callback which returns a custom React Element to be used as a icon.
-- `renderLabel`: callback which returns a custom React Element to be used as a label.
-- `renderIndicator`: callback which returns a custom React Element to be used as a tab indicator.
-- `renderBadge`: callback which returns a custom React Element to be used as a badge.
-- `onTabPress`: callback invoked on tab press, useful for things like scroll to top.
-- `onTabLongPress`: callback invoked on tab long-press, for example to show a drawer with more options.
-- `pressColor`: color for material ripple (Android >= 5.0 only).
-- `pressOpacity`: opacity for pressed tab (iOS and Android < 5.0 only).
-- `scrollEnabled`: whether to enable scrollable tabs.
-- `bounces`: whether the tab bar bounces when scrolling.
-- `useNativeDriver`: whether to use native animations.
-- `tabStyle`: style object for the individual tabs in the tab bar.
-- `indicatorStyle`: style object for the active indicator.
-- `labelStyle`: style object for the tab item label.
-- `style`: style object for the tab bar.
+##### `getLabelText`
 
-### `<PagerPan />`
-
-Cross-platform pager based on the [`PanResponder`](https://facebook.github.io/react-native/docs/panresponder.html).
-
-#### Props
-
-- `animationEnabled`: whether to enable page change animation.
-- `swipeEnabled`: whether to enable swipe gestures.
-- `swipeDistanceThreshold`: minimum swipe distance to trigger page switch.
-- `swipeVelocityThreshold`: minimum swipe velocity to trigger page switch.
-- `onSwipeStart`: optional callback when a swipe gesture starts.
-- `onSwipeEnd`: optional callback when a swipe gesture ends.
-- `onAnimationEnd`: optional callback when the transition animation ends.
-- `getTestID`: optional callback which receives the current scene and returns a test id for the tab.
-- `children`: React Element(s) to render.
-
-### `<PagerScroll />`
-
-Cross-platform pager based on [`ScrollView`](https://facebook.github.io/react-native/docs/scrollview.html) (default on iOS).
-
-#### Props
-
-- `animationEnabled`: whether to enable page change animation.
-- `swipeEnabled`: whether to enable swipe gestures.
-- `onSwipeStart`: optional callback when a swipe gesture starts.
-- `onSwipeEnd`: optional callback when a swipe gesture ends.
-- `onAnimationEnd`: optional callback when the transition animation ends.
-- `getTestID`: optional callback which receives the current scene and returns a test id for the tab.
-- `children`: React Element(s) to render.
-
-There are some caveats when using this pager on Android, such as poor support for intial index other than `0` and weird animation curves.
-
-### `<PagerAndroid />`
-
-Android only pager based on `ViewPagerAndroid` (default on Android).
-
-#### Props
-
-- `animationEnabled`: whether to enable page change animation.
-- `swipeEnabled`: whether to enable swipe gestures.
-- `onSwipeStart`: optional callback when a swipe gesture starts.
-- `onSwipeEnd`: optional callback when a swipe gesture ends.
-- `onAnimationEnd`: optional callback when the transition animation ends.
-- `keyboardDismissMode`: whether the keyboard gets dismissed in response to a drag in [ViewPagerAndroid](https://facebook.github.io/react-native/docs/viewpagerandroid.html#keyboarddismissmode) (Default: `on-drag`).
-- `getTestID`: optional callback which receives the current scene and returns a test id for the tab.
-- `children`: React Element(s) to render.
-
-### `<PagerExperimental />`
-
-Cross-platform pager component based on [`react-native-gesture-handler`](https://github.com/kmagiera/react-native-gesture-handler).
-
-#### Props
-
-- `GestureHandler`: the gesture handler module to use.
-- `animationEnabled`: whether to enable page change animation.
-- `swipeEnabled`: whether to enable swipe gestures.
-- `onSwipeStart`: optional callback when a swipe gesture starts.
-- `onSwipeEnd`: optional callback when a swipe gesture ends.
-- `onAnimationEnd`: optional callback when the transition animation ends.
-- `useNativeDriver`: whether to use native animations.
-- `getTestID`: optional callback which receives the current scene and returns a test id for the tab.
-- `children`: React Element(s) to render.
-
-This pager is still experimental. To use this pager, you'll need to [link the `react-native-gesture-handler` library](https://github.com/kmagiera/react-native-gesture-handler#installation), and pass it as a prop to the pager:
+Function which takes the current scene and returns the label text for the tab. Uses `route.title` by default.
 
 ```js
-import * as GestureHandler from 'react-native-gesture-handler';
-
-...
-
-<PagerExperimental {...props} GestureHandler={GestureHandler} />
+getLabelText={({ route }) => route.title}
 ```
 
-### `SceneMap`
+##### `getAccessible`
 
-Helper function which takes an object with the mapping of `route.key` to React components and returns a function to use with `renderScene` prop.
+Function which takes the current scene returns a boolean to indicate whether to mark a tab as `accessible`. Defaults to `true`.
+
+##### `getAccessibilityLabel`
+
+Function which takes the current scene and returns a accessibility label for the tab button. Uses `route.accessibilityLabel` by default if specified, otherwise uses the route title.
 
 ```js
-renderScene = SceneMap({
-  first: FirstRoute,
-  second: SecondRoute,
-});
+getAccessibilityLabel={({ route }) => route.accessibilityLabel}
 ```
 
-Each scene receives the following props:
+##### `testID`
 
-- `route`: the current route rendered by the component
-- `jumpTo`: method to jump to other tabs, takes a `route.key` as it's argument
-
-All the scenes rendered with `SceneMap` are optimized using `React.PureComponent` and don't re-render when parent's props or states change. If you don't want this behaviour, or want to pass additional props to your scene components, use `renderScene` directly instead of using `SceneMap`.
+Function which takes the current scene and returns a test id for the tab button to locate this tab button in tests. Uses `route.testID` by default.
 
 ```js
-renderScene = ({ route }) => {
-  switch (route.key) {
-    case 'first':
-      return <FirstRoute />;
-    case 'second':
-      return <SecondRoute />;
-    default:
-      return null;
-  }
-}
+getTestID={({ route }) => route.testID}
 ```
 
-If you don't use `SceneMap`, you will need to take care of optimizing the individual scenes.
+getAccessibilityLabel: (props: { route: T }) => string;
+Get accessibility label for the tab button. This is read by the screen reader when the user taps the tab.
+ Uses `route.accessibilityLabel` by default if specified, otherwise uses the route title.
 
-_IMPORTANT:_ **Do not** pass inline functions to `SceneMap`, for example, don't do the following:
+getTestID: (props: { route: T }) => string | undefined;
+Get the id to locate this tab button in tests, uses `route.testID` by default.
 
-```js
-SceneMap({
-  first: () => <FirstRoute foo={this.props.foo} />,
-  second: SecondRoute,
-});
-```
+##### `renderIcon`
 
-Always define your components elsewhere in the top level of the file. If you pass inline functions, it'll re-create the component every render, which will cause the entire route to unmount and remount every change. It's very bad for performance and will also cause any local state to be lost.
+Function which takes the current scene and returns a custom React Element to be used as a icon.
 
-## Known Issues
+##### `renderLabel`
 
-- `TabView` cannot be nested inside another `TabView` or a horizontal `ScrollView` on Android. This is a limitation of the platform and we cannot fix it in the library.
+Function which takes the current scene and returns a custom React Element to be used as a label.
+
+##### `renderIndicator`
+
+Function which takes the current scene and returns a custom React Element to be used as a tab indicator.
+
+##### `renderBadge`
+
+Function which takes the current scene and returns a custom React Element to be used as a badge.
+
+##### `onTabPress`
+
+Function to execute on tab press. It receives the scene for the pressed tab, useful for things like scroll to top.
+
+##### `onTabLongPress`
+
+Function to execute on tab long press, use for things like showing a menu with more options
+
+##### `pressColor`
+
+Color for material ripple (Android >= 5.0 only).
+
+##### `pressOpacity`
+
+Opacity for pressed tab (iOS and Android < 5.0 only).
+
+##### `scrollEnabled`
+
+Boolean indicating whether to enable scrollable tabs.
+
+##### `bounces`
+
+Boolean indicating whether the tab bar bounces when scrolling.
+
+##### `tabStyle`
+
+Style to apply to the individual tabs in the tab bar.
+
+##### `indicatorStyle`
+
+Style to apply to the active indicator.
+
+##### `labelStyle`
+
+Style to apply to the tab item label.
+
+##### `style`
+
+Style to apply to the tab bar container.
 
 ## Optimization Tips
-
-### Use native driver
-
-Using native animations and gestures can greatly improve the performance. To use native animations and gestures, you will need to use `PagerExperimental` as your pager and pass `useNativeDriver` in `TabView`.
-
-```js
-<TabView
-  navigationState={this.state}
-  renderPager={this._renderPager}
-  renderScene={this._renderScene}
-  renderTabBar={this._renderTabBar}
-  onIndexChange={this._handleIndexChange}
-  useNativeDriver
-/>
-```
-
-_NOTE:_ Native animations are supported only for properties such as `opacity` and `translation`. If you are using a custom tab bar or indicator, you need to make sure that you animate only these style properties.
 
 ### Avoid unnecessary re-renders
 
@@ -388,10 +452,9 @@ Nesting the `TabView` inside a vertical `ScrollView` will disable the optimizati
 
 While developing, you can run the [example app](/example/README.md) to test your changes.
 
-Make sure the tests still pass, and your code passes Flow and ESLint. Run the following to verify:
+Make sure your code passes Flow and ESLint. Run the following to verify:
 
 ```sh
-yarn test
 yarn flow
 yarn lint
 ```

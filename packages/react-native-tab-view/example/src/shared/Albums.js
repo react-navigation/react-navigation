@@ -2,7 +2,7 @@
 /* eslint-disable import/no-commonjs */
 
 import * as React from 'react';
-import { ScrollView, Image, Dimensions, StyleSheet } from 'react-native';
+import { Image, Dimensions, ScrollView, StyleSheet } from 'react-native';
 
 const COVERS = [
   require('../../assets/album-art-1.jpg'),

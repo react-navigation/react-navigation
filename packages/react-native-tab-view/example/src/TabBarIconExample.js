@@ -7,22 +7,19 @@ import {
   TabView,
   TabBar,
   SceneMap,
-  type Route,
   type NavigationState,
 } from 'react-native-tab-view';
 import Article from './shared/Article';
 import Chat from './shared/Chat';
 import Contacts from './shared/Contacts';
 
-type State = NavigationState<
-  Route<{
-    key: string,
-    icon: string,
-  }>
->;
+type State = NavigationState<{
+  key: string,
+  icon: string,
+}>;
 
-export default class TopBarIconExample extends React.Component<*, State> {
-  static title = 'Icon only top bar';
+export default class TabBarIconExample extends React.Component<*, State> {
+  static title = 'Top tab bar with icons';
   static backgroundColor = '#e91e63';
   static appbarElevation = 0;
 
@@ -64,7 +61,7 @@ export default class TopBarIconExample extends React.Component<*, State> {
   render() {
     return (
       <TabView
-        style={[styles.container, this.props.style]}
+        style={this.props.style}
         navigationState={this.state}
         renderScene={this._renderScene}
         renderTabBar={this._renderTabBar}
@@ -75,9 +72,6 @@ export default class TopBarIconExample extends React.Component<*, State> {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   tabbar: {
     backgroundColor: '#e91e63',
   },

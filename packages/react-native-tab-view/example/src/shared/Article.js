@@ -1,7 +1,7 @@
 /* @flow */
 
 import * as React from 'react';
-import { ScrollView, View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, Image, ScrollView, StyleSheet } from 'react-native';
 
 export default class Article extends React.Component<*> {
   render() {

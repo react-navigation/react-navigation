@@ -1,122 +1,79 @@
 /* @flow */
 
 import * as React from 'react';
-import PropTypes from 'prop-types';
-import { Animated, View, StyleSheet } from 'react-native';
-import TabBar from './TabBar';
-import PagerDefault from './PagerDefault';
-import { NavigationStatePropType } from './PropTypes';
-import type {
-  Scene,
-  SceneRendererProps,
-  NavigationState,
-  Layout,
-  PagerCommonProps,
-  PagerExtraProps,
-} from './TypeDefinitions';
+import { StyleSheet, View } from 'react-native';
 import type { ViewStyleProp } from 'react-native/Libraries/StyleSheet/StyleSheet';
+import type { LayoutEvent } from 'react-native/Libraries/Types/CoreEventTypes';
 
-type Props<T> = PagerCommonProps<T> &
-  PagerExtraProps & {
-    navigationState: NavigationState<T>,
-    onIndexChange: (index: number) => mixed,
-    initialLayout?: Layout,
-    renderPager: (props: *) => React.Node,
-    renderScene: (props: SceneRendererProps<T> & Scene<T>) => React.Node,
-    renderTabBar: (props: SceneRendererProps<T>) => React.Node,
-    tabBarPosition: 'top' | 'bottom',
-    useNativeDriver?: boolean,
-    style?: ViewStyleProp,
-  };
+import TabBar from './TabBar';
+import Pager from './Pager';
+import type {
+  Layout,
+  NavigationState,
+  Route,
+  SceneRendererProps,
+} from './types';
 
-type State = {|
-  layout: Layout & { measured: boolean },
-  layoutXY: Animated.ValueXY,
-  panX: Animated.Value,
-  offsetX: Animated.Value,
-  position: any,
+type Props<T: Route> = {
+  onIndexChange: (index: number) => mixed,
+  navigationState: NavigationState<T>,
+  renderScene: (
+    props: SceneRendererProps<T> & {
+      route: T,
+    }
+  ) => React.Node,
+  renderTabBar: (props: SceneRendererProps<T>) => React.Node,
+  tabBarPosition: 'top' | 'bottom',
+  initialLayout?: { width?: number, height?: number },
+  swipeEnabled: boolean,
+  swipeDistanceThreshold?: number,
+  swipeVelocityThreshold?: number,
+  sceneContainerStyle?: ViewStyleProp,
+  style?: ViewStyleProp,
+};
+
+type State = {
+  layout: Layout,
   renderUnfocusedScenes: boolean,
-|};
+};
 
-export default class TabView<T: *> extends React.Component<Props<T>, State> {
-  static propTypes = {
-    navigationState: NavigationStatePropType.isRequired,
-    onIndexChange: PropTypes.func.isRequired,
-    initialLayout: PropTypes.shape({
-      height: PropTypes.number.isRequired,
-      width: PropTypes.number.isRequired,
-    }),
-    canJumpToTab: PropTypes.func.isRequired,
-    renderPager: PropTypes.func.isRequired,
-    renderScene: PropTypes.func.isRequired,
-    renderTabBar: PropTypes.func,
-    tabBarPosition: PropTypes.oneOf(['top', 'bottom']),
-  };
-
+export default class TabView<T: Route> extends React.Component<
+  Props<T>,
+  State
+> {
   static defaultProps = {
-    canJumpToTab: () => true,
     tabBarPosition: 'top',
-    renderTabBar: (props: *) => <TabBar {...props} />,
-    renderPager: (props: *) => <PagerDefault {...props} />,
-    getTestID: ({ route }: Scene<*>) =>
-      typeof route.testID === 'string' ? route.testID : undefined,
-    initialLayout: {
-      height: 0,
-      width: 0,
-    },
-    useNativeDriver: false,
+    renderTabBar: (props: SceneRendererProps<T>) => <TabBar {...props} />,
+    getLabelText: ({ route }: { route: Route }) => route.title,
+    getAccessibilityLabel: ({ route }: { route: Route }) =>
+      typeof route.accessibilityLabel === 'string'
+        ? route.accessibilityLabel
+        : route.title,
+    getTestID: ({ route }: { route: Route }) => route.testID,
+    swipeEnabled: true,
   };
 
-  constructor(props: Props<T>) {
-    super(props);
-
-    const { navigationState } = this.props;
-    const layout = {
-      ...this.props.initialLayout,
-      measured: false,
-    };
-
-    const panX = new Animated.Value(0);
-    const offsetX = new Animated.Value(-navigationState.index * layout.width);
-    const layoutXY = new Animated.ValueXY({
-      // This is hacky, but we need to make sure that the value is never 0
-      x: layout.width || 0.001,
-      y: layout.height || 0.001,
-    });
-    const position = Animated.multiply(
-      Animated.divide(Animated.add(panX, offsetX), layoutXY.x),
-      -1
-    );
-
-    this.state = {
-      layout,
-      layoutXY,
-      panX,
-      offsetX,
-      position,
-      renderUnfocusedScenes: false,
-    };
-  }
+  state = {
+    layout: { width: 0, height: 0, ...this.props.initialLayout },
+    renderUnfocusedScenes: false,
+  };
 
   componentDidMount() {
-    this._mounted = true;
-
     // Delay rendering of unfocused scenes for improved startup
     setTimeout(() => this.setState({ renderUnfocusedScenes: true }), 0);
   }
 
-  componentWillUnmount() {
-    this._mounted = false;
-  }
+  _jumpTo = (key: string) => {
+    const index = this.props.navigationState.routes.findIndex(
+      route => route.key === key
+    );
 
-  _mounted: boolean = false;
-  _nextIndex: ?number;
-
-  _renderScene = (props: SceneRendererProps<T> & Scene<T>) => {
-    return this.props.renderScene(props);
+    if (index !== this.props.navigationState.index) {
+      this.props.onIndexChange(index);
+    }
   };
 
-  _handleLayout = (e: any) => {
+  _handleLayout = (e: LayoutEvent) => {
     const { height, width } = e.nativeEvent.layout;
 
     if (
@@ -126,110 +83,104 @@ export default class TabView<T: *> extends React.Component<Props<T>, State> {
       return;
     }
 
-    this.state.panX.setValue(0);
-    this.state.offsetX.setValue(-this.props.navigationState.index * width);
-    this.state.layoutXY.setValue({
-      // This is hacky, but we need to make sure that the value is never 0
-      x: width || 0.001,
-      y: height || 0.001,
-    });
     this.setState({
       layout: {
-        measured: true,
         height,
         width,
       },
     });
   };
 
-  _buildSceneRendererProps = (): SceneRendererProps<*> => ({
-    panX: this.state.panX,
-    offsetX: this.state.offsetX,
-    position: this.state.position,
-    layout: this.state.layout,
-    navigationState: this.props.navigationState,
-    jumpTo: this._jumpTo,
-    useNativeDriver: this.props.useNativeDriver === true,
-  });
-
-  _jumpTo = (key: string) => {
-    if (!this._mounted) {
-      // We are no longer mounted, this is a no-op
-      return;
-    }
-
-    const { canJumpToTab, navigationState } = this.props;
-    const index = navigationState.routes.findIndex(route => route.key === key);
-
-    if (!canJumpToTab(navigationState.routes[index])) {
-      return;
-    }
-
-    if (index !== navigationState.index) {
-      this.props.onIndexChange(index);
-    }
-  };
-
   render() {
     const {
-      /* eslint-disable no-unused-vars */
       navigationState,
-      onIndexChange,
-      initialLayout,
-      renderScene,
-      /* eslint-enable no-unused-vars */
-      renderPager,
-      renderTabBar,
+      swipeEnabled,
+      swipeDistanceThreshold,
+      swipeVelocityThreshold,
       tabBarPosition,
-      ...rest
+      sceneContainerStyle,
+      style,
     } = this.props;
-
-    const props = this._buildSceneRendererProps();
+    const { layout } = this.state;
 
     return (
-      <View collapsable={false} style={[styles.container, this.props.style]}>
-        {tabBarPosition === 'top' && renderTabBar(props)}
-        <View onLayout={this._handleLayout} style={styles.pager}>
-          {renderPager({
-            ...props,
-            ...rest,
-            panX: this.state.panX,
-            offsetX: this.state.offsetX,
-            children: navigationState.routes.map((route, index) => {
-              const isFocused = this.props.navigationState.index === index;
+      <View onLayout={this._handleLayout} style={[styles.pager, style]}>
+        <Pager
+          navigationState={navigationState}
+          layout={layout}
+          swipeEnabled={swipeEnabled}
+          swipeDistanceThreshold={swipeDistanceThreshold}
+          swipeVelocityThreshold={swipeVelocityThreshold}
+          jumpTo={this._jumpTo}
+        >
+          {({ position, render, addListener, removeListener }) => {
+            const sceneRendererProps = {
+              position,
+              layout,
+              navigationState,
+              jumpTo: this._jumpTo,
+              addListener,
+              removeListener,
+            };
 
-              let scene;
+            return (
+              <React.Fragment>
+                {tabBarPosition === 'top' &&
+                  this.props.renderTabBar(sceneRendererProps)}
+                {render(
+                  navigationState.routes.map((route, i) => {
+                    const isFocused = i === navigationState.index;
 
-              if (isFocused || this.state.renderUnfocusedScenes) {
-                scene = this._renderScene({
-                  ...props,
-                  route,
-                });
-              } else {
-                scene = <View />;
-              }
-
-              if (React.isValidElement(scene)) {
-                /* $FlowFixMe: https://github.com/facebook/flow/issues/4775 */
-                scene = React.cloneElement(scene, { key: route.key });
-              }
-
-              return scene;
-            }),
-          })}
-        </View>
-        {tabBarPosition === 'bottom' && renderTabBar(props)}
+                    return (
+                      <View
+                        key={route.key}
+                        accessibilityElementsHidden={!isFocused}
+                        importantForAccessibility={
+                          isFocused ? 'auto' : 'no-hide-descendants'
+                        }
+                        style={[
+                          styles.route,
+                          // If we don't have the layout yet, make the focused screen fill the container
+                          // This avoids delay before we are able to render pages side by side
+                          layout.width
+                            ? { width: layout.width }
+                            : isFocused
+                            ? StyleSheet.absoluteFill
+                            : null,
+                          sceneContainerStyle,
+                        ]}
+                      >
+                        {// Don't render unfocused tabs if layout isn't available
+                        // Or it's the initial render
+                        isFocused ||
+                        (this.state.renderUnfocusedScenes && layout.width)
+                          ? this.props.renderScene({
+                              route,
+                              ...sceneRendererProps,
+                            })
+                          : null}
+                      </View>
+                    );
+                  })
+                )}
+                {tabBarPosition === 'bottom' &&
+                  this.props.renderTabBar(sceneRendererProps)}
+              </React.Fragment>
+            );
+          }}
+        </Pager>
       </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
+  pager: {
     flex: 1,
     overflow: 'hidden',
   },
-  pager: {
+  route: {
     flex: 1,
+    overflow: 'hidden',
   },
 });
