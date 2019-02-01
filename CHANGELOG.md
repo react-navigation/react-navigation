@@ -7,7 +7,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.1.2] - [2018-02-01](https://github.com/react-navigation/react-navigation/releases/tag/3.1.2)
+
+## Fixed
+
 - Update flow definition for `withNavigation` and `withNavigationFocus` to support `defaultProps`
+- Prevent onRef callback be called twice on withNavigationFocus components (https://github.com/react-navigation/react-navigation-core/pull/30)
+- Bump react-navigation-drawer version to improve performance - if you use Expo, you will need expo@^32.0.3 to update!
 
 ## [3.0.9] - [2018-12-19](https://github.com/react-navigation/react-navigation/releases/tag/3.0.9)
 
@@ -90,7 +96,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - [2.x](https://github.com/react-navigation/react-navigation/blob/2.x/CHANGELOG.md)
 
-[Unreleased]: https://github.com/react-navigation/react-navigation/compare/3.0.9...HEAD
+[Unreleased]: https://github.com/react-navigation/react-navigation/compare/3.1.2...HEAD
+[3.1.2]: https://github.com/react-navigation/react-navigation/compare/3.0.9...3.1.2
 [3.0.9]: https://github.com/react-navigation/react-navigation/compare/3.0.8...3.0.9
 [3.0.8]: https://github.com/react-navigation/react-navigation/compare/3.0.7...3.0.8
 [3.0.7]: https://github.com/react-navigation/react-navigation/compare/3.0.6...3.0.7

@@ -6,17 +6,7 @@ React Navigation is born from the React Native community's need for an extensibl
 
 ## Installation
 
-Since the library is a JS-based solution, to install the latest version of react-navigation you only need to run:
-
-```bash
-yarn add react-navigation
-```
-
-or
-
-```bash
-npm install --save react-navigation
-```
+See: https://reactnavigation.org/docs/en/getting-started.html
 
 ## Documentation
 
