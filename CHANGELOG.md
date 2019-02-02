@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-## [3.1.2] - [2018-02-01](https://github.com/react-navigation/react-navigation/releases/tag/3.1.2)
+## [3.1.2] - [2019-02-01](https://github.com/react-navigation/react-navigation/releases/tag/3.1.2)
 
 ## Fixed
 
