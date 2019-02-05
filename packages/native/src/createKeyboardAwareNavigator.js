@@ -13,7 +13,7 @@ export default (Navigator, navigatorConfig) =>
           {...this.props}
           onGestureBegin={this._handleGestureBegin}
           onGestureCanceled={this._handleGestureCanceled}
-          onGestureFinish={this._handleGestureFinish}
+          onGestureEnd={this._handleGestureEnd}
           onTransitionStart={this._handleTransitionStart}
         />
       );
@@ -34,7 +34,7 @@ export default (Navigator, navigatorConfig) =>
       this.props.onGestureCanceled && this.props.onGestureCanceled();
     };
 
-    _handleGestureFinish = () => {
+    _handleGestureEnd = () => {
       this._previouslyFocusedTextInput = null;
       this.props.onGestureFinish && this.props.onGestureFinish();
     };
