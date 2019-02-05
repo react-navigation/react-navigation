@@ -593,7 +593,7 @@ class StackViewLayout extends React.Component {
       return;
     }
     if (gestureVelocity > 50) {
-      this.props.onGestureFinish && this.props.onGestureFinish();
+      this.props.onGestureEnd && this.props.onGestureEnd();
       this._goBack(immediateIndex, goBackDuration);
       return;
     }
@@ -601,7 +601,7 @@ class StackViewLayout extends React.Component {
     // Then filter based on the distance the screen was moved. Over a third of the way swiped,
     // and the back will happen.
     if (value <= index - POSITION_THRESHOLD) {
-      this.props.onGestureFinish && this.props.onGestureFinish();
+      this.props.onGestureEnd && this.props.onGestureEnd();
       this._goBack(immediateIndex, goBackDuration);
     } else {
       this.props.onGestureCanceled && this.props.onGestureCanceled();
@@ -644,7 +644,7 @@ class StackViewLayout extends React.Component {
       return;
     }
     if (gestureVelocity > 50) {
-      this.props.onGestureFinish && this.props.onGestureFinish();
+      this.props.onGestureEnd && this.props.onGestureEnd();
       this._goBack(immediateIndex, goBackDuration);
       return;
     }
@@ -652,7 +652,7 @@ class StackViewLayout extends React.Component {
     // Then filter based on the distance the screen was moved. Over a third of the way swiped,
     // and the back will happen.
     if (value <= index - POSITION_THRESHOLD) {
-      this.props.onGestureFinish && this.props.onGestureFinish();
+      this.props.onGestureEnd && this.props.onGestureEnd();
       this._goBack(immediateIndex, goBackDuration);
     } else {
       this.props.onGestureCanceled && this.props.onGestureCanceled();
