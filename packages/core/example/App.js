@@ -1,5 +1,5 @@
 import React from 'react';
-import Expo from 'expo';
+import { Asset, registerRootComponent } from 'expo';
 import { FlatList, I18nManager } from 'react-native';
 import { createAppContainer } from '@react-navigation/native';
 
@@ -28,7 +28,7 @@ const data = [
 ];
 
 // Cache images
-Expo.Asset.loadAsync(StackAssets);
+Asset.loadAsync(StackAssets);
 
 class Home extends React.Component {
   static navigationOptions = {
@@ -82,4 +82,4 @@ const Root = createStackNavigator(
 
 const App = createAppContainer(Root);
 export default App;
-Expo.registerRootComponent(App);
+registerRootComponent(App);

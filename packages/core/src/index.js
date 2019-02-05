@@ -1,5 +1,7 @@
 /* eslint-disable import/no-commonjs */
 
+console.log('lol');
+
 module.exports = {
   get StateUtils() {
     return require('./StateUtils').default;

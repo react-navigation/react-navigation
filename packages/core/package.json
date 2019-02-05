@@ -17,7 +17,8 @@
     "format": "eslint . --fix",
     "babel": "babel --no-babelrc --plugins=transform-es2015-block-scoping,transform-es2015-modules-commonjs,transform-react-jsx,transform-class-properties,transform-object-rest-spread,transform-flow-strip-types src --copy-files --out-dir dist --ignore '**/__tests__/**','*.ts'",
     "tsc": "tsc",
-    "build": "yarn babel && yarn tsc",
+    "build": "yarn babel --out-dir dist && yarn tsc",
+    "dev": "yarn babel --watch src --out-dir example/node_modules/@react-navigation/core/dist",
     "prepare": "yarn build",
     "release": "release-it"
   },
