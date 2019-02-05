@@ -446,6 +446,8 @@ class StackViewLayout extends React.Component {
         this._handleReleaseHorizontal(nativeEvent);
       }
     } else if (nativeEvent.state === State.ACTIVE) {
+      this.props.onGestureBegin && this.props.onGestureBegin();
+
       // Switch to using gesture position
       this.positionSwitch.setValue(0);
 
