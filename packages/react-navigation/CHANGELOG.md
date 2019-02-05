@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.1.3] - [2019-02-04](https://github.com/react-navigation/react-navigation/releases/tag/3.1.3)
+
+## Fixed
+
+- Stack navigator properly dismisses and restores keyboard when gesture starts and is cancelled
+- Transparent header measurement fix (https://github.com/react-navigation/react-navigation-stack/pull/71)
+
 ## [3.1.2] - [2019-02-01](https://github.com/react-navigation/react-navigation/releases/tag/3.1.2)
 
 ## Fixed
@@ -96,7 +103,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - [2.x](https://github.com/react-navigation/react-navigation/blob/2.x/CHANGELOG.md)
 
-[Unreleased]: https://github.com/react-navigation/react-navigation/compare/3.1.2...HEAD
+[Unreleased]: https://github.com/react-navigation/react-navigation/compare/3.1.3...HEAD
+[3.1.3]: https://github.com/react-navigation/react-navigation/compare/3.1.2...3.1.3
 [3.1.2]: https://github.com/react-navigation/react-navigation/compare/3.0.9...3.1.2
 [3.0.9]: https://github.com/react-navigation/react-navigation/compare/3.0.8...3.0.9
 [3.0.8]: https://github.com/react-navigation/react-navigation/compare/3.0.7...3.0.8
