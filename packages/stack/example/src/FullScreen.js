@@ -8,9 +8,7 @@ class Screen extends React.Component {
   };
 
   render() {
-    return (
-      <View style={{ flex: 1, backgroundColor: 'red' }} />
-    )
+    return <View style={{ flex: 1, backgroundColor: 'red' }} />;
   }
 }
 
