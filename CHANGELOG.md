@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.1.5] - [2019-02-06](https://github.com/react-navigation/react-navigation/releases/tag/3.1.5)
+
+## Fixed
+
+- Revert "Transparent header measurement fix (https://github.com/react-navigation/react-navigation-stack/pull/71)"
+
 ## [3.1.4] - [2019-02-05](https://github.com/react-navigation/react-navigation/releases/tag/3.1.4)
 
 ## Fixed
@@ -109,7 +115,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - [2.x](https://github.com/react-navigation/react-navigation/blob/2.x/CHANGELOG.md)
 
-[Unreleased]: https://github.com/react-navigation/react-navigation/compare/3.1.4...HEAD
+[Unreleased]: https://github.com/react-navigation/react-navigation/compare/3.1.5...HEAD
+[3.1.5]: https://github.com/react-navigation/react-navigation/compare/3.1.4...3.1.5
 [3.1.4]: https://github.com/react-navigation/react-navigation/compare/3.1.3...3.1.4
 [3.1.3]: https://github.com/react-navigation/react-navigation/compare/3.1.2...3.1.3
 [3.1.2]: https://github.com/react-navigation/react-navigation/compare/3.0.9...3.1.2

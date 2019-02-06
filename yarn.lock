@@ -1570,11 +1570,6 @@ buffer-from@^1.0.0:
   resolved "https://registry.yarnpkg.com/buffer-from/-/buffer-from-1.1.1.tgz#32713bc028f75c02fdb710d7c7bcec1f2c6070ef"
   integrity sha512-MQcXEUbCKtEo7bhqEs6560Hyd4XaovZlO/k9V3hjVUF/zwW7KBVdSK4gIt/bzwS9MbR5qob+F5jusZsb0YQK2A==
 
-builtin-modules@^1.0.0:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/builtin-modules/-/builtin-modules-1.1.1.tgz#270f076c5a72c02f5b65a47df94c5fe3a278892f"
-  integrity sha1-Jw8HbFpywC9bZaR9+Uxf46J4iS8=
-
 bump-file@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/bump-file/-/bump-file-1.0.0.tgz#892880ef8af84c8df8d94cc2829ef18811503247"
@@ -4166,13 +4161,6 @@ is-buffer@^1.1.5:
   resolved "https://registry.yarnpkg.com/is-buffer/-/is-buffer-1.1.6.tgz#efaa2ea9daa0d7ab2ea13a97b2b8ad51fefbe8be"
   integrity sha512-NcdALwpXkTm5Zvvbk7owOUSvVvBKDgKP5/ewfXEznmQFfs4ZRmanOeKBTjRVjka3QFoN6XJ+9F3USqfHqTaU5w==
 
-is-builtin-module@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/is-builtin-module/-/is-builtin-module-1.0.0.tgz#540572d34f7ac3119f8f76c30cbc1b1e037affbe"
-  integrity sha1-VAVy0096wxGfj3bDDLwbHgN6/74=
-  dependencies:
-    builtin-modules "^1.0.0"
-
 is-callable@^1.1.4:
   version "1.1.4"
   resolved "https://registry.yarnpkg.com/is-callable/-/is-callable-1.1.4.tgz#1e1adf219e1eeb684d691f9d6a05ff0d30a24d75"
@@ -5923,12 +5911,12 @@ nopt@^4.0.1:
     osenv "^0.1.4"
 
 normalize-package-data@^2.3.0, normalize-package-data@^2.3.2, normalize-package-data@^2.3.4, normalize-package-data@^2.3.5:
-  version "2.4.2"
-  resolved "https://registry.yarnpkg.com/normalize-package-data/-/normalize-package-data-2.4.2.tgz#6b2abd85774e51f7936f1395e45acb905dc849b2"
-  integrity sha512-YcMnjqeoUckXTPKZSAsPjUPLxH85XotbpqK3w4RyCwdFQSU5FxxBys8buehkSfg0j9fKvV1hn7O0+8reEgkAiw==
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/normalize-package-data/-/normalize-package-data-2.5.0.tgz#e66db1838b200c1dfc233225d12cb36520e234a8"
+  integrity sha512-/5CMN3T0R4XTj4DcGaexo+roZSdSFW/0AOOTROrjxzCG1wrWXEsGbRKevjlIL+ZDE4sZlJr5ED4YW0yqmkK+eA==
   dependencies:
     hosted-git-info "^2.1.4"
-    is-builtin-module "^1.0.0"
+    resolve "^1.10.0"
     semver "2 || 3 || 4 || 5"
     validate-npm-package-license "^3.0.1"
 
@@ -5959,9 +5947,9 @@ npm-bundled@^1.0.1:
   integrity sha512-8/JCaftHwbd//k6y2rEWp6k1wxVfpFzB6t1p825+cUb7Ym2XQfhwIC5KwhrvzZRJu+LtDE585zVaS32+CGtf0g==
 
 npm-packlist@^1.1.6:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/npm-packlist/-/npm-packlist-1.2.0.tgz#55a60e793e272f00862c7089274439a4cc31fc7f"
-  integrity sha512-7Mni4Z8Xkx0/oegoqlcao/JpPCPEMtUvsmB0q7mgvlMinykJLSRTYuFqoQLYgGY8biuxIeiHO+QNJKbCfljewQ==
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/npm-packlist/-/npm-packlist-1.3.0.tgz#7f01e8e44408341379ca98cfd756e7b29bd2626c"
+  integrity sha512-qPBc6CnxEzpOcc4bjoIBJbYdy0D/LFFPUdxvfwor4/w3vxeE0h6TiOVurCEPpQ6trjN77u/ShyfeJGsbAfB3dA==
   dependencies:
     ignore-walk "^3.0.1"
     npm-bundled "^1.0.1"
@@ -6717,10 +6705,10 @@ react-devtools-core@3.0.0:
     shell-quote "^1.6.1"
     ws "^2.0.3"
 
-react-is@^16.5.2, react-is@^16.7.0:
-  version "16.7.0"
-  resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.7.0.tgz#c1bd21c64f1f1364c6f70695ec02d69392f41bfa"
-  integrity sha512-Z0VRQdF4NPDoI0tsXVMLkJLiwEBa+RP66g0xDHxgxysxSoCUccSten4RTF/UFvZF1dZvZ9Zu1sx+MDXwcOR34g==
+react-is@^16.5.2, react-is@^16.7.0, react-is@^16.8.0:
+  version "16.8.0"
+  resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.8.0.tgz#518db476214f3fb0716af9f82dfd420225ae970f"
+  integrity sha512-LOy+3La39aduxaPfuj+lCXC5RQ8ukjVPAAsFJ3yQ+DIOLf4eR9OMKeWKF0IzjRyE95xMj5QELwiXGgfQsIJguA==
 
 react-lifecycles-compat@^3.0.4:
   version "3.0.4"
@@ -6831,10 +6819,10 @@ react-navigation-drawer@1.1.0:
   dependencies:
     react-native-tab-view "^1.2.0"
 
-react-navigation-stack@1.0.8:
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/react-navigation-stack/-/react-navigation-stack-1.0.8.tgz#b3c0a131d90f5615e7f14e7f31a86cd1838ab42e"
-  integrity sha512-tJR4LGtubczU9FjEkHHhCwfcsQcn3QMIY+3B7A/7h8jB9C//0/7HNyqlWZCq32IRmp4I1VxnHMVo9d5Bmd+ZMA==
+react-navigation-stack@1.0.9:
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/react-navigation-stack/-/react-navigation-stack-1.0.9.tgz#cbdcc224f709202ea62b3f2a2d84561cd199493a"
+  integrity sha512-N1h0Kkz8WmSHbBbPHEpVh+ss/1NwWoWk6v2L68kxbpTcEH986t5mz0abp4KHY8pb0nHGbY0jkn5IYiOJBfN0tQ==
 
 react-navigation-tabs@1.0.2:
   version "1.0.2"
@@ -6864,14 +6852,14 @@ react-test-renderer@16.2.0:
     prop-types "^15.6.0"
 
 react-test-renderer@^16.0.0:
-  version "16.7.0"
-  resolved "https://registry.yarnpkg.com/react-test-renderer/-/react-test-renderer-16.7.0.tgz#1ca96c2b450ab47c36ba92cd8c03fcefc52ea01c"
-  integrity sha512-tFbhSjknSQ6+ttzmuGdv+SjQfmvGcq3PFKyPItohwhhOBmRoTf1We3Mlt3rJtIn85mjPXOkKV+TaKK4irvk9Yg==
+  version "16.8.0"
+  resolved "https://registry.yarnpkg.com/react-test-renderer/-/react-test-renderer-16.8.0.tgz#a7a635ac0622e79f349e4f42663a7f313d648518"
+  integrity sha512-BJzNYsI9rXMRJOpWh3vNRE+m8+PtObDQn+6yYe+gl3t3hWrlfN4XPOD46RUsBN+XT172JW/rRBe2nkeK5vkY1g==
   dependencies:
     object-assign "^4.1.1"
     prop-types "^15.6.2"
-    react-is "^16.7.0"
-    scheduler "^0.12.0"
+    react-is "^16.8.0"
+    scheduler "^0.13.0"
 
 react-timer-mixin@^0.13.2:
   version "0.13.4"
@@ -7267,7 +7255,7 @@ resolve@1.1.7:
   resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.1.7.tgz#203114d82ad2c5ed9e8e0411b3932875e889e97b"
   integrity sha1-IDEU2CrSxe2ejgQRs5ModeiJ6Xs=
 
-resolve@^1.1.6, resolve@^1.5.0, resolve@^1.9.0:
+resolve@^1.1.6, resolve@^1.10.0, resolve@^1.5.0, resolve@^1.9.0:
   version "1.10.0"
   resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.10.0.tgz#3bdaaeaf45cc07f375656dfd2e54ed0810b101ba"
   integrity sha512-3sUr9aq5OfSg2S9pNtPA9hL1FVEAjvfOC4leW0SNf/mpnaakz2a9femSd6LqAww2RaFctwyf1lCqnTHuF1rxDg==
@@ -7418,10 +7406,10 @@ sax@~1.1.1:
   resolved "https://registry.yarnpkg.com/sax/-/sax-1.1.6.tgz#5d616be8a5e607d54e114afae55b7eaf2fcc3240"
   integrity sha1-XWFr6KXmB9VOEUr65Vt+ry/MMkA=
 
-scheduler@^0.12.0:
-  version "0.12.0"
-  resolved "https://registry.yarnpkg.com/scheduler/-/scheduler-0.12.0.tgz#8ab17699939c0aedc5a196a657743c496538647b"
-  integrity sha512-t7MBR28Akcp4Jm+QoR63XgAi9YgCUmgvDHqf5otgAj4QvdoBE4ImCX0ffehefePPG+aitiYHp0g/mW6s4Tp+dw==
+scheduler@^0.13.0:
+  version "0.13.0"
+  resolved "https://registry.yarnpkg.com/scheduler/-/scheduler-0.13.0.tgz#e701f62e1b3e78d2bbb264046d4e7260f12184dd"
+  integrity sha512-w7aJnV30jc7OsiZQNPVmBc+HooZuvQZIZIShKutC3tnMFMkcwVN9CZRRSSNw03OnSCKmEkK8usmwcw6dqBaLzw==
   dependencies:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
