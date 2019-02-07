@@ -104,6 +104,7 @@ class HeaderBackButton extends React.PureComponent {
     let button = (
       <TouchableItem
         accessible
+        accessibilityRole="button"
         accessibilityComponentType="button"
         accessibilityLabel={title ? `${title}, back` : 'Go back'}
         accessibilityTraits="button"
