@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.2.0] - [2019-02-08](https://github.com/react-navigation/react-navigation/releases/tag/3.2.0)
+
+## Added
+
+- Add support for `backBehavior: history'` and `backBehavior: 'order'` to any navigator based on SwitchRouter (eg: tab navigators). (https://github.com/react-navigation/react-navigation-core/pull/31)
+
 ## [3.1.5] - [2019-02-06](https://github.com/react-navigation/react-navigation/releases/tag/3.1.5)
 
 ## Fixed
@@ -115,7 +121,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - [2.x](https://github.com/react-navigation/react-navigation/blob/2.x/CHANGELOG.md)
 
-[Unreleased]: https://github.com/react-navigation/react-navigation/compare/3.1.5...HEAD
+[Unreleased]: https://github.com/react-navigation/react-navigation/compare/3.2.0...HEAD
+[3.2.0]: https://github.com/react-navigation/react-navigation/compare/3.1.5...3.2.0
 [3.1.5]: https://github.com/react-navigation/react-navigation/compare/3.1.4...3.1.5
 [3.1.4]: https://github.com/react-navigation/react-navigation/compare/3.1.3...3.1.4
 [3.1.3]: https://github.com/react-navigation/react-navigation/compare/3.1.2...3.1.3

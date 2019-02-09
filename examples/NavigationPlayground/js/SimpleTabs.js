@@ -196,6 +196,7 @@ const SimpleTabs = createBottomTabNavigator(
     },
   },
   {
+    backBehavior: 'history',
     tabBarOptions: {
       activeTintColor: '#e91e63',
     },
