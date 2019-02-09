@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.2.1] - [2019-02-09](https://github.com/react-navigation/react-navigation/releases/tag/3.2.1)
+
+## Fixed
+
+- Remove accidental console.log
+
 ## [3.2.0] - [2019-02-08](https://github.com/react-navigation/react-navigation/releases/tag/3.2.0)
 
 ## Added
@@ -121,7 +127,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - [2.x](https://github.com/react-navigation/react-navigation/blob/2.x/CHANGELOG.md)
 
-[Unreleased]: https://github.com/react-navigation/react-navigation/compare/3.2.0...HEAD
+[Unreleased]: https://github.com/react-navigation/react-navigation/compare/3.2.1...HEAD
+[3.2.1]: https://github.com/react-navigation/react-navigation/compare/3.2.0...3.2.1
 [3.2.0]: https://github.com/react-navigation/react-navigation/compare/3.1.5...3.2.0
 [3.1.5]: https://github.com/react-navigation/react-navigation/compare/3.1.4...3.1.5
 [3.1.4]: https://github.com/react-navigation/react-navigation/compare/3.1.3...3.1.4
