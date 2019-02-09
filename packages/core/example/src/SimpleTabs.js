@@ -34,8 +34,17 @@ export default createBottomTabNavigator(
       screen: Screen,
       params: { title: 'Second One', icon: 'aperture' },
     },
+    C: {
+      screen: Screen,
+      params: { title: 'Third One', icon: 'award' },
+    },
+    D: {
+      screen: Screen,
+      params: { title: 'Fourth One', icon: 'bell' },
+    },
   },
   {
+    backBehavior: 'history',
     tabBarOptions: {
       activeTintColor: '#000',
       inactiveTintColor: '#eee',
