@@ -29,11 +29,18 @@ export default (routeConfigs, config = {}) => {
   const initialRouteParams = config.initialRouteParams;
   const initialRouteName = config.initialRouteName || order[0];
   const backBehavior = config.backBehavior || 'none';
-  const shouldBackNavigateToInitialRoute = backBehavior === 'initialRoute';
   const resetOnBlur = config.hasOwnProperty('resetOnBlur')
     ? config.resetOnBlur
     : true;
+
   const initialRouteIndex = order.indexOf(initialRouteName);
+  if (initialRouteIndex === -1) {
+    throw new Error(
+      `Invalid initialRouteName '${initialRouteName}'.` +
+        `Should be one of ${order.map(n => `"${n}"`).join(', ')}`
+    );
+  }
+
   const childRouters = {};
   order.forEach(routeName => {
     childRouters[routeName] = null;
@@ -56,13 +63,6 @@ export default (routeConfigs, config = {}) => {
     getPathAndParamsForRoute,
     getActionForPathAndParams,
   } = createPathParser(childRouters, routeConfigs, config);
-
-  if (initialRouteIndex === -1) {
-    throw new Error(
-      `Invalid initialRouteName '${initialRouteName}'.` +
-        `Should be one of ${order.map(n => `"${n}"`).join(', ')}`
-    );
-  }
 
   function resetChildRoute(routeName) {
     let initialParams =
@@ -88,35 +88,56 @@ export default (routeConfigs, config = {}) => {
     };
   }
 
-  function getNextState(prevState, possibleNextState) {
-    if (!prevState) {
-      return possibleNextState;
+  function getNextState(action, prevState, possibleNextState) {
+    function updateNextStateHistory(nextState) {
+      if (backBehavior !== 'history') {
+        return nextState;
+      }
+      let nextRouteKeyHistory = prevState.routeKeyHistory;
+      if (action.type === NavigationActions.NAVIGATE) {
+        nextRouteKeyHistory = [...prevState.routeKeyHistory]; // copy
+        const keyToAdd = nextState.routes[nextState.index].key;
+        nextRouteKeyHistory = nextRouteKeyHistory.filter(k => k !== keyToAdd); // dedup
+        nextRouteKeyHistory.push(keyToAdd);
+      } else if (action.type === NavigationActions.BACK) {
+        nextRouteKeyHistory = [...prevState.routeKeyHistory]; // copy
+        nextRouteKeyHistory.pop();
+      }
+      return {
+        ...nextState,
+        routeKeyHistory: nextRouteKeyHistory,
+      };
     }
 
-    let nextState;
-    if (prevState.index !== possibleNextState.index && resetOnBlur) {
+    let nextState = possibleNextState;
+    if (
+      prevState &&
+      prevState.index !== possibleNextState.index &&
+      resetOnBlur
+    ) {
       const prevRouteName = prevState.routes[prevState.index].routeName;
       const nextRoutes = [...possibleNextState.routes];
       nextRoutes[prevState.index] = resetChildRoute(prevRouteName);
-
-      return {
+      nextState = {
         ...possibleNextState,
         routes: nextRoutes,
       };
-    } else {
-      nextState = possibleNextState;
     }
-
-    return nextState;
+    return updateNextStateHistory(nextState);
   }
 
   function getInitialState() {
     const routes = order.map(resetChildRoute);
-    return {
+    const initialState = {
       routes,
       index: initialRouteIndex,
       isTransitioning: false,
     };
+    if (backBehavior === 'history') {
+      const initialKey = routes[initialRouteIndex].key;
+      initialState['routeKeyHistory'] = [initialKey];
+    }
+    return initialState;
   }
 
   return {
@@ -165,7 +186,7 @@ export default (routeConfigs, config = {}) => {
         if (activeChildState && activeChildState !== activeChildLastState) {
           const routes = [...state.routes];
           routes[state.index] = activeChildState;
-          return getNextState(prevState, {
+          return getNextState(action, prevState, {
             ...state,
             routes,
           });
@@ -177,8 +198,21 @@ export default (routeConfigs, config = {}) => {
       const isBackEligible =
         action.key == null || action.key === activeChildLastState.key;
       if (action.type === NavigationActions.BACK) {
-        if (isBackEligible && shouldBackNavigateToInitialRoute) {
+        if (isBackEligible && backBehavior === 'initialRoute') {
           activeChildIndex = initialRouteIndex;
+        } else if (isBackEligible && backBehavior === 'order') {
+          activeChildIndex = Math.max(0, activeChildIndex - 1);
+        }
+        // The history contains current route, so we can only go back
+        // if there is more than one item in the history
+        else if (
+          isBackEligible &&
+          backBehavior === 'history' &&
+          state.routeKeyHistory.length > 1
+        ) {
+          const routeKey =
+            state.routeKeyHistory[state.routeKeyHistory.length - 2];
+          activeChildIndex = order.indexOf(routeKey);
         } else {
           return state;
         }
@@ -226,7 +260,7 @@ export default (routeConfigs, config = {}) => {
               routes,
               index: activeChildIndex,
             };
-            return getNextState(prevState, nextState);
+            return getNextState(action, prevState, nextState);
           } else if (
             newChildState === childState &&
             state.index === activeChildIndex &&
@@ -250,7 +284,7 @@ export default (routeConfigs, config = {}) => {
             ...lastRoute,
             params,
           };
-          return getNextState(prevState, {
+          return getNextState(action, prevState, {
             ...state,
             routes,
           });
@@ -258,7 +292,7 @@ export default (routeConfigs, config = {}) => {
       }
 
       if (activeChildIndex !== state.index) {
-        return getNextState(prevState, {
+        return getNextState(action, prevState, {
           ...state,
           index: activeChildIndex,
         });
@@ -302,7 +336,7 @@ export default (routeConfigs, config = {}) => {
       }
 
       if (index !== state.index || routes !== state.routes) {
-        return getNextState(prevState, {
+        return getNextState(action, prevState, {
           ...state,
           index,
           routes,
