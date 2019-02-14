@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.2.3] - [2019-02-09](https://github.com/react-navigation/react-navigation/releases/tag/3.2.3)
+
+## Fixed
+
+- `await` the result of `onTransitionStart` before starting the transition (https://github.com/react-navigation/react-navigation-stack/pull/79)
+
+## [3.2.2]
+
+- Oops, I skipped it. Nothing here.
+
 ## [3.2.1] - [2019-02-09](https://github.com/react-navigation/react-navigation/releases/tag/3.2.1)
 
 ## Fixed
@@ -127,7 +137,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - [2.x](https://github.com/react-navigation/react-navigation/blob/2.x/CHANGELOG.md)
 
-[Unreleased]: https://github.com/react-navigation/react-navigation/compare/3.2.1...HEAD
+[Unreleased]: https://github.com/react-navigation/react-navigation/compare/3.2.3...HEAD
+[3.2.3]: https://github.com/react-navigation/react-navigation/compare/3.2.1...3.2.3
 [3.2.1]: https://github.com/react-navigation/react-navigation/compare/3.2.0...3.2.1
 [3.2.0]: https://github.com/react-navigation/react-navigation/compare/3.1.5...3.2.0
 [3.1.5]: https://github.com/react-navigation/react-navigation/compare/3.1.4...3.1.5
