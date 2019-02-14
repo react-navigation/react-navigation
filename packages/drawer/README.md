@@ -28,6 +28,13 @@ export default createDrawerNavigator({
 });
 ```
 
+## Development workflow
+
+- Clone this repository
+- Run `yarn` in the root directory and in the `example` directory
+- Run `yarn dev` in the root directory
+- Run `yarn start` in the `example` directory
+
 ## Docs
 
 Documentation can be found on the [React Navigation website](https://reactnavigation.org/docs/en/drawer-navigator.html).
