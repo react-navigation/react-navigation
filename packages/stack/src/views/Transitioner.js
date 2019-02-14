@@ -169,44 +169,44 @@ class Transitioner extends React.Component {
             this._prevTransitionProps
           );
 
-          // why do we bother awaiting the result here?
+          // Wait for the onTransitionStart to resolve if needed.
           if (result instanceof Promise) {
             await result;
           }
         }
-      });
 
-      // get the transition spec.
-      const transitionUserSpec = nextProps.configureTransition
-        ? nextProps.configureTransition(
+        // get the transition spec.
+        const transitionUserSpec = nextProps.configureTransition
+          ? nextProps.configureTransition(
             this._transitionProps,
             this._prevTransitionProps
           )
-        : null;
+          : null;
 
-      const transitionSpec = {
-        ...DefaultTransitionSpec,
-        ...transitionUserSpec,
-      };
+        const transitionSpec = {
+          ...DefaultTransitionSpec,
+          ...transitionUserSpec,
+        };
 
-      const { timing } = transitionSpec;
-      delete transitionSpec.timing;
+        const { timing } = transitionSpec;
+        delete transitionSpec.timing;
 
-      // if swiped back, indexHasChanged == true && positionHasChanged == false
-      const positionHasChanged = position.__getValue() !== toValue;
-      if (indexHasChanged && positionHasChanged) {
-        timing(position, {
-          ...transitionSpec,
-          toValue: nextProps.navigation.state.index,
-        }).start(() => {
-          // In case the animation is immediately interrupted for some reason,
-          // we move this to the next frame so that onTransitionStart can fire
-          // first (https://github.com/react-navigation/react-navigation/issues/5247)
-          requestAnimationFrame(this._onTransitionEnd);
-        });
-      } else {
-        this._onTransitionEnd();
-      }
+        // if swiped back, indexHasChanged == true && positionHasChanged == false
+        const positionHasChanged = position.__getValue() !== toValue;
+        if (indexHasChanged && positionHasChanged) {
+          timing(position, {
+            ...transitionSpec,
+            toValue: nextProps.navigation.state.index,
+          }).start(() => {
+            // In case the animation is immediately interrupted for some reason,
+            // we move this to the next frame so that onTransitionStart can fire
+            // first (https://github.com/react-navigation/react-navigation/issues/5247)
+            requestAnimationFrame(this._onTransitionEnd);
+          });
+        } else {
+          this._onTransitionEnd();
+        }
+      });
     }
   }
 
