@@ -45,6 +45,7 @@ export default class CoverflowExample extends React.Component<*, State> {
 
   state = {
     index: 2,
+    /* $FlowFixMe */
     routes: Object.keys(ALBUMS).map(key => ({ key })),
   };
 

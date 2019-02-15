@@ -9,18 +9,16 @@
     "ios": "react-native-scripts ios"
   },
   "dependencies": {
-    "@expo/vector-icons": "^6.3.1",
-    "expo": "~27.0.2",
-    "prop-types": "15.6.1",
-    "react": "16.3.1",
-    "react-native": "~0.55.4",
-    "react-native-gesture-handler": "^1.0.1"
+    "@expo/vector-icons": "^9.0.0",
+    "expo": "^32.0.5",
+    "react": "16.5.0",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz"
   },
   "devDependencies": {
-    "babel-plugin-module-resolver": "^3.1.1",
-    "babel-preset-expo": "^4.0.0",
-    "glob-to-regexp": "^0.4.0",
-    "react-native-scripts": "1.13.1"
+    "babel-plugin-module-resolver": "^3.2.0",
+    "babel-preset-expo": "^5.0.0",
+    "expo-cli": "^2.10.1",
+    "glob-to-regexp": "^0.4.0"
   },
   "resolutions": {
     "**/prop-types": "15.6.1",

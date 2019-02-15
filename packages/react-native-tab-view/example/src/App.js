@@ -128,7 +128,7 @@ export default class ExampleList extends React.Component<{}, State> {
         ? ExampleComponent.backgroundColor
         : '#111';
     const tintColor =
-      ExampleComponent && ExampleComponent.tintColor
+      ExampleComponent && typeof ExampleComponent.tintColor === 'string'
         ? ExampleComponent.tintColor
         : 'white';
     const appbarElevation =
@@ -136,7 +136,7 @@ export default class ExampleList extends React.Component<{}, State> {
         ? ExampleComponent.appbarElevation
         : 4;
     const statusBarStyle =
-      ExampleComponent && ExampleComponent.statusBarStyle
+      ExampleComponent && typeof ExampleComponent.statusBarStyle === 'string'
         ? ExampleComponent.statusBarStyle
         : 'light-content';
     const borderBottomWidth =
