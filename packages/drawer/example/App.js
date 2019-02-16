@@ -7,6 +7,7 @@ import { createAppContainer } from '@react-navigation/native';
 import { createStackNavigator } from 'react-navigation-stack';
 import { List, Divider } from 'react-native-paper';
 import { SimpleDrawer, SimpleDrawerUnmountInactive } from './src/SimpleDrawer';
+import { ParallaxDrawer } from './src/ParallaxDrawer';
 import StyledDrawer from './src/StyledDrawer';
 import GestureInteraction from './src/GestureInteraction';
 import RTLDrawer from './src/RTLDrawer';
@@ -34,6 +35,11 @@ const data = [
     component: RTLDrawer,
     title: 'Right drawer to test RTL',
     routeName: 'RTLDrawer',
+  },
+  {
+    component: ParallaxDrawer,
+    title: 'Basic Parallax Drawer',
+    routeName: 'ParallaxDrawer',
   },
 ];
 
