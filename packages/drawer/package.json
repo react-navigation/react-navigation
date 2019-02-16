@@ -12,6 +12,7 @@
     "format": "eslint . --fix",
     "precommit": "yarn lint && yarn test",
     "build": "babel --no-babelrc --plugins=syntax-jsx,syntax-class-properties,syntax-object-rest-spread,transform-flow-strip-types src --out-dir dist --ignore '**/__tests__/**'",
+    "dev": "yarn build --watch --out-dir example/node_modules/react-navigation-drawer/dist",
     "prepare": "yarn build"
   },
   "keywords": [
