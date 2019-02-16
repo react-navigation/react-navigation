@@ -66,6 +66,7 @@ class DrawerSidebar extends React.PureComponent {
           {...this.props.contentOptions}
           navigation={this.props.navigation}
           descriptors={this.props.descriptors}
+          drawerOpenProgress={this.props.drawerOpenProgress}
           items={state.routes}
           activeItemKey={
             state.routes[state.index] ? state.routes[state.index].key : null
