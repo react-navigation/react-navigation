@@ -44,18 +44,68 @@ declare module 'react-navigation' {
   };
   declare type ImageSource = ImageURISource | number | Array<ImageURISource>;
 
-  // This one is too large to copy. Actual definition is in
-  // react-native/Libraries/Animated/src/nodes/AnimatedValue.js
-  declare type AnimatedValue = Object;
-
-  declare type HeaderForceInset = {
-    horizontal?: string,
-    vertical?: string,
-    left?: string,
-    right?: string,
-    top?: string,
-    bottom?: string,
+  // This is copied from
+  // react-native/Libraries/Animated/src/nodes/AnimatedInterpolation.js
+  declare type ExtrapolateType = 'extend' | 'identity' | 'clamp';
+  declare type InterpolationConfigType = {
+    inputRange: Array<number>,
+    outputRange: Array<number> | Array<string>,
+    easing?: (input: number) => number,
+    extrapolate?: ExtrapolateType,
+    extrapolateLeft?: ExtrapolateType,
+    extrapolateRight?: ExtrapolateType,
   };
+  declare class AnimatedInterpolation {
+    interpolate(config: InterpolationConfigType): AnimatedInterpolation;
+  }
+
+  // This is copied from
+  // react-native/Libraries/Animated/src/animations/Animation.js
+  declare type EndResult = { finished: boolean };
+  declare type EndCallback = (result: EndResult) => void;
+  declare class Animation {
+    start(
+      fromValue: number,
+      onUpdate: (value: number) => void,
+      onEnd: ?EndCallback,
+      previousAnimation: ?Animation,
+      animatedValue: AnimatedValue
+    ): void;
+    stop(): void;
+  }
+
+  // This is vaguely copied from
+  // react-native/Libraries/Animated/src/nodes/AnimatedTracking.js
+  declare class AnimatedTracking {
+    constructor(
+      value: AnimatedValue,
+      parent: any,
+      animationClass: any,
+      animationConfig: Object,
+      callback?: ?EndCallback
+    ): void;
+    update(): void;
+  }
+
+  // This is vaguely copied from
+  // react-native/Libraries/Animated/src/nodes/AnimatedValue.js
+  declare type ValueListenerCallback = (state: { value: number }) => void;
+  declare class AnimatedValue {
+    constructor(value: number): void;
+    setValue(value: number): void;
+    setOffset(offset: number): void;
+    flattenOffset(): void;
+    extractOffset(): void;
+    addListener(callback: ValueListenerCallback): string;
+    removeListener(id: string): void;
+    removeAllListeners(): void;
+    stopAnimation(callback?: ?(value: number) => void): void;
+    resetAnimation(callback?: ?(value: number) => void): void;
+    interpolate(config: InterpolationConfigType): AnimatedInterpolation;
+    animate(animation: Animation, callback: ?EndCallback): void;
+    stopTracking(): void;
+    track(tracking: AnimatedTracking): void;
+  }
 
   /**
    * Next, all the type declarations
@@ -385,7 +435,7 @@ declare module 'react-navigation' {
     headerPressColorAndroid?: string,
     headerRight?: React$Node,
     headerStyle?: ViewStyleProp,
-    headerForceInset?: HeaderForceInset,
+    headerForceInset?: _SafeAreaViewInsets,
     headerBackground?: React$Node | React$ElementType,
     gesturesEnabled?: boolean,
     gestureResponseDistance?: { vertical?: number, horizontal?: number },
@@ -892,10 +942,6 @@ declare module 'react-navigation' {
     navigatorConfig?: NavigatorConfig
   ): NavigationNavigator<S, O, *>;
 
-  declare export function StackNavigator(
-    routeConfigMap: NavigationRouteConfigMap,
-    stackConfig?: StackNavigatorConfig
-  ): NavigationNavigator<*, *, *>;
   declare export function createStackNavigator(
     routeConfigMap: NavigationRouteConfigMap,
     stackConfig?: StackNavigatorConfig
@@ -920,14 +966,6 @@ declare module 'react-navigation' {
     removeClippedSubviews?: boolean,
     containerOptions?: void,
   |};
-  declare export function TabNavigator(
-    routeConfigs: NavigationRouteConfigMap,
-    config?: _TabNavigatorConfig
-  ): NavigationNavigator<*, *, *>;
-  declare export function createTabNavigator(
-    routeConfigs: NavigationRouteConfigMap,
-    config?: _TabNavigatorConfig
-  ): NavigationNavigator<*, *, *>;
   /* TODO: fix the config for each of these tab navigator types */
   declare export function createBottomTabNavigator(
     routeConfigs: NavigationRouteConfigMap,
@@ -940,10 +978,6 @@ declare module 'react-navigation' {
   declare type _SwitchNavigatorConfig = {|
     ...NavigationSwitchRouterConfig,
   |};
-  declare export function SwitchNavigator(
-    routeConfigs: NavigationRouteConfigMap,
-    config?: _SwitchNavigatorConfig
-  ): NavigationNavigator<*, *, *>;
   declare export function createSwitchNavigator(
     routeConfigs: NavigationRouteConfigMap,
     config?: _SwitchNavigatorConfig
@@ -965,10 +999,6 @@ declare module 'react-navigation' {
     ..._DrawerViewConfig,
     containerConfig?: void,
   }>;
-  declare export function DrawerNavigator(
-    routeConfigs: NavigationRouteConfigMap,
-    config?: _DrawerNavigatorConfig
-  ): NavigationNavigator<*, *, *>;
   declare export function createDrawerNavigator(
     routeConfigs: NavigationRouteConfigMap,
     config?: _DrawerNavigatorConfig
@@ -1049,15 +1079,16 @@ declare module 'react-navigation' {
   declare export var Card: React$ComponentType<_CardProps>;
 
   declare type _SafeAreaViewForceInsetValue = 'always' | 'never' | number;
+  declare type _SafeAreaViewInsets = $Shape<{
+    top: _SafeAreaViewForceInsetValue,
+    bottom: _SafeAreaViewForceInsetValue,
+    left: _SafeAreaViewForceInsetValue,
+    right: _SafeAreaViewForceInsetValue,
+    vertical: _SafeAreaViewForceInsetValue,
+    horizontal: _SafeAreaViewForceInsetValue,
+  }>;
   declare type _SafeAreaViewProps = {
-    forceInset?: {
-      top?: _SafeAreaViewForceInsetValue,
-      bottom?: _SafeAreaViewForceInsetValue,
-      left?: _SafeAreaViewForceInsetValue,
-      right?: _SafeAreaViewForceInsetValue,
-      vertical?: _SafeAreaViewForceInsetValue,
-      horizontal?: _SafeAreaViewForceInsetValue,
-    },
+    forceInset?: _SafeAreaViewInsets,
     children?: React$Node,
     style?: AnimatedViewStyleProp,
   };
@@ -1208,7 +1239,10 @@ declare module 'react-navigation' {
   };
   declare export var TabBarBottom: React$ComponentType<_TabBarBottomProps>;
 
-  declare export function withNavigation<Props: {}, ComponentType: React$ComponentType<Props>>(
+  declare export function withNavigation<
+    Props: {},
+    ComponentType: React$ComponentType<Props>
+  >(
     Component: ComponentType
   ): React$ComponentType<
     $Diff<
@@ -1218,9 +1252,14 @@ declare module 'react-navigation' {
       }
     >
   >;
-  declare export function withNavigationFocus<Props: {}, ComponentType: React$ComponentType<Props>>(
+  declare export function withNavigationFocus<
+    Props: {},
+    ComponentType: React$ComponentType<Props>
+  >(
     Component: ComponentType
-  ): React$ComponentType<$Diff<React$ElementConfig<ComponentType>, { isFocused: boolean | void }>>;
+  ): React$ComponentType<
+    $Diff<React$ElementConfig<ComponentType>, { isFocused: boolean | void }>
+  >;
 
   declare export function getNavigation<State: NavigationState, Options: {}>(
     router: NavigationRouter<State, Options>,
