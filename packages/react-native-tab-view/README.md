@@ -37,7 +37,7 @@ You also need to install and link [react-native-gesture-handler](https://github.
 ```js
 import * as React from 'react';
 import { View, StyleSheet, Dimensions } from 'react-native';
-import { TabView, TabBar, SceneMap } from 'react-native-tab-view';
+import { TabView, SceneMap } from 'react-native-tab-view';
 
 const FirstRoute = () => (
   <View style={[styles.scene, { backgroundColor: '#ff4081' }]} />
