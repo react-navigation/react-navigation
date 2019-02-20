@@ -12,17 +12,27 @@ import Animated from 'react-native-reanimated';
 
 type Props<T> = {
   position: Animated.Node,
-  scene: Scene<T>,
+  route: T,
   navigationState: NavigationState<T>,
   scrollEnabled?: boolean,
+  activeColor?: string,
+  inactiveColor?: string,
   pressColor?: string,
   pressOpacity?: number,
   getLabelText: (scene: Scene<T>) => ?string,
   getAccessible: (scene: Scene<T>) => ?boolean,
   getAccessibilityLabel: (scene: Scene<T>) => ?string,
   getTestID: (scene: Scene<T>) => ?string,
-  renderLabel?: (scene: Scene<T>) => React.Node,
-  renderIcon?: (scene: Scene<T>) => React.Node,
+  renderLabel?: (scene: {
+    route: T,
+    focused: boolean,
+    color: string,
+  }) => React.Node,
+  renderIcon?: (scene: {
+    route: T,
+    focused: boolean,
+    color: string,
+  }) => React.Node,
   renderBadge?: (scene: Scene<T>) => React.Node,
   onTabPress: (scene: Scene<T>) => void,
   onTabLongPress: (scene: Scene<T>) => void,
@@ -31,8 +41,11 @@ type Props<T> = {
   labelStyle?: TextStyleProp,
 };
 
+const DEFAULT_ACTIVE_COLOR = 'rgba(255, 255, 255, 1)';
+const DEFAULT_INACTIVE_COLOR = 'rgba(255, 255, 255, 0.7)';
+
 export default function TabBarItem<T: Route>({
-  scene,
+  route,
   position,
   navigationState,
   scrollEnabled,
@@ -43,6 +56,8 @@ export default function TabBarItem<T: Route>({
   getTestID,
   getAccessibilityLabel,
   getAccessible,
+  activeColor = DEFAULT_ACTIVE_COLOR,
+  inactiveColor = DEFAULT_INACTIVE_COLOR,
   pressColor,
   pressOpacity,
   labelStyle,
@@ -51,63 +66,106 @@ export default function TabBarItem<T: Route>({
   onTabPress,
   onTabLongPress,
 }: Props<T>) {
-  const activeOpacity = 1;
-  const inactiveOpacity = 0.7;
-
-  const tabIndex = navigationState.routes.indexOf(scene.route);
+  const tabIndex = navigationState.routes.indexOf(route);
   const isFocused = navigationState.index === tabIndex;
 
   // Prepend '-1', so there are always at least 2 items in inputRange
   const inputRange = [-1, ...navigationState.routes.map((x, i) => i)];
-  const opacity = Animated.interpolate(position, {
+
+  const activeOpacity = Animated.interpolate(position, {
     inputRange,
-    outputRange: inputRange.map(inputIndex =>
-      inputIndex === tabIndex ? activeOpacity : inactiveOpacity
-    ),
+    outputRange: inputRange.map(i => (i === tabIndex ? 1 : 0)),
   });
 
-  const icon = renderIcon ? renderIcon(scene) : null;
-  const badge = renderBadge ? renderBadge(scene) : null;
+  const inactiveOpacity = Animated.interpolate(position, {
+    inputRange,
+    outputRange: inputRange.map(i => (i === tabIndex ? 0 : 1)),
+  });
 
-  let label;
+  let icon = null;
+  let label = null;
 
-  if (typeof renderLabel !== 'undefined') {
-    label = renderLabel(scene);
-  } else {
-    const labelText = getLabelText(scene);
+  if (renderIcon) {
+    const activeIcon = renderIcon({ route, focused: true, color: activeColor });
+    const inactiveIcon = renderIcon({
+      route,
+      focused: false,
+      color: inactiveColor,
+    });
 
-    if (typeof labelText !== 'string') {
-      label = null;
-    } else {
-      label = (
-        <Animated.Text style={[styles.tabLabel, labelStyle]}>
-          {labelText}
-        </Animated.Text>
+    if (inactiveIcon != null && activeIcon != null) {
+      icon = (
+        <View style={styles.icon}>
+          <Animated.View style={{ opacity: inactiveOpacity }}>
+            {inactiveIcon}
+          </Animated.View>
+          <Animated.View
+            style={[StyleSheet.absoluteFill, { opacity: activeOpacity }]}
+          >
+            {activeIcon}
+          </Animated.View>
+        </View>
       );
     }
   }
 
-  const computedTabStyle = {};
+  renderLabel =
+    renderLabel !== undefined
+      ? renderLabel
+      : ({ route, color }) => {
+          const labelText = getLabelText({ route });
 
-  computedTabStyle.opacity = opacity;
+          if (typeof labelText === 'string') {
+            return (
+              <Animated.Text
+                style={[
+                  styles.label,
+                  icon && { marginTop: 0 },
+                  { color },
+                  labelStyle,
+                ]}
+              >
+                {labelText}
+              </Animated.Text>
+            );
+          }
 
-  if (icon != null) {
-    if (label != null) {
-      computedTabStyle.paddingTop = 8;
-    } else {
-      computedTabStyle.padding = 12;
-    }
+          return labelText;
+        };
+
+  if (renderLabel) {
+    const activeLabel = renderLabel({
+      route,
+      focused: true,
+      color: activeColor,
+    });
+    const inactiveLabel = renderLabel({
+      route,
+      focused: false,
+      color: inactiveColor,
+    });
+
+    label = (
+      <View>
+        <Animated.View style={{ opacity: inactiveOpacity }}>
+          {inactiveLabel}
+        </Animated.View>
+        <Animated.View
+          style={[StyleSheet.absoluteFill, { opacity: activeOpacity }]}
+        >
+          {activeLabel}
+        </Animated.View>
+      </View>
+    );
   }
 
   const passedTabStyle = StyleSheet.flatten(tabStyle);
   const isWidthSet =
     (passedTabStyle && typeof passedTabStyle.width !== 'undefined') ||
     scrollEnabled === true;
-  const tabContainerStyle = {};
 
-  if (isWidthSet) {
-    computedTabStyle.width = tabWidth;
-  }
+  const tabContainerStyle = {};
+  const itemStyle = isWidthSet ? { width: tabWidth } : null;
 
   if (passedTabStyle && typeof passedTabStyle.flex === 'number') {
     tabContainerStyle.flex = passedTabStyle.flex;
@@ -115,12 +173,16 @@ export default function TabBarItem<T: Route>({
     tabContainerStyle.flex = 1;
   }
 
+  const scene = { route };
+
   let accessibilityLabel = getAccessibilityLabel(scene);
 
   accessibilityLabel =
     typeof accessibilityLabel !== 'undefined'
       ? accessibilityLabel
       : getLabelText(scene);
+
+  const badge = renderBadge ? renderBadge(scene) : null;
 
   return (
     <TouchableItem
@@ -139,40 +201,29 @@ export default function TabBarItem<T: Route>({
       onLongPress={() => onTabLongPress(scene)}
       style={tabContainerStyle}
     >
-      <View pointerEvents="none" style={styles.container}>
-        <Animated.View
-          style={[
-            styles.tabItem,
-            computedTabStyle,
-            passedTabStyle,
-            styles.container,
-          ]}
-        >
-          {icon}
-          {label}
-        </Animated.View>
-        {badge != null ? (
-          <Animated.View style={styles.badge}>{badge}</Animated.View>
-        ) : null}
+      <View pointerEvents="none" style={[styles.item, itemStyle]}>
+        {icon}
+        {label}
+        {badge != null ? <View style={styles.badge}>{badge}</View> : null}
       </View>
     </TouchableItem>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  tabLabel: {
+  label: {
+    margin: 4,
     backgroundColor: 'transparent',
-    color: 'white',
-    margin: 8,
   },
-  tabItem: {
+  icon: {
+    margin: 2,
+  },
+  item: {
     flex: 1,
-    padding: 8,
     alignItems: 'center',
     justifyContent: 'center',
+    padding: 10,
+    minHeight: 48,
   },
   badge: {
     position: 'absolute',

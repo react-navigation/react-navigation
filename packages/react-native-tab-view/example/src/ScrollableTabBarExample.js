@@ -80,7 +80,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffeb3b',
   },
   label: {
-    color: '#fff',
     fontWeight: '400',
   },
 });

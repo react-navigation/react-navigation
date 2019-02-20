@@ -27,7 +27,7 @@ A cross-platform Tab View component for React Native.
 Open a Terminal in the project root and run:
 
 ```sh
-yarn add react-native-tab-view
+yarn add react-native-tab-view@alpha
 ```
 
 You also need to install and link [react-native-gesture-handler](https://github.com/kmagiera/react-native-gesture-handler) and [react-native-reanimated](https://github.com/kmagiera/react-native-reanimated). Follow the instructions on the linked repos to configure them. This step is unnecessary if you use Expo.
@@ -272,7 +272,7 @@ renderTabBar={props =>
 
 ##### `getLabelText`
 
-Function which takes the current scene and returns the label text for the tab. Uses `route.title` by default.
+Function which takes an object with the current route and returns the label text for the tab. Uses `route.title` by default.
 
 ```js
 getLabelText={({ route }) => route.title}
@@ -280,11 +280,11 @@ getLabelText={({ route }) => route.title}
 
 ##### `getAccessible`
 
-Function which takes the current scene returns a boolean to indicate whether to mark a tab as `accessible`. Defaults to `true`.
+Function which takes an object with the current route and returns a boolean to indicate whether to mark a tab as `accessible`. Defaults to `true`.
 
 ##### `getAccessibilityLabel`
 
-Function which takes the current scene and returns a accessibility label for the tab button. Uses `route.accessibilityLabel` by default if specified, otherwise uses the route title.
+Function which takes an object with the current route and returns a accessibility label for the tab button. Uses `route.accessibilityLabel` by default if specified, otherwise uses the route title.
 
 ```js
 getAccessibilityLabel={({ route }) => route.accessibilityLabel}
@@ -292,7 +292,7 @@ getAccessibilityLabel={({ route }) => route.accessibilityLabel}
 
 ##### `testID`
 
-Function which takes the current scene and returns a test id for the tab button to locate this tab button in tests. Uses `route.testID` by default.
+Function which takes an object with the current route and returns a test id for the tab button to locate this tab button in tests. Uses `route.testID` by default.
 
 ```js
 getTestID={({ route }) => route.testID}
@@ -307,19 +307,36 @@ Get the id to locate this tab button in tests, uses `route.testID` by default.
 
 ##### `renderIcon`
 
-Function which takes the current scene and returns a custom React Element to be used as a icon.
+Function which takes an object with the current route, focused status and color and returns a custom React Element to be used as a icon.
+
+```js
+renderIcon={({ route, focused, color }) => (
+  <Icon
+    name={focused ? 'abums' : 'albums-outlined'}
+    color={color}
+  />
+)}
+```
 
 ##### `renderLabel`
 
-Function which takes the current scene and returns a custom React Element to be used as a label.
+Function which takes an object with the current route, focused status and color and returns a custom React Element to be used as a label.
+
+```js
+renderLabel={({ route, focused, color }) => (
+  <Text style={{ color, margin: 8 }}>
+      {route.title}
+  </Text>
+)}
+```
 
 ##### `renderIndicator`
 
-Function which takes the current scene and returns a custom React Element to be used as a tab indicator.
+Function which takes an object with the current route and returns a custom React Element to be used as a tab indicator.
 
 ##### `renderBadge`
 
-Function which takes the current scene and returns a custom React Element to be used as a badge.
+Function which takes an object with the current route and returns a custom React Element to be used as a badge.
 
 ##### `onTabPress`
 
@@ -328,6 +345,14 @@ Function to execute on tab press. It receives the scene for the pressed tab, use
 ##### `onTabLongPress`
 
 Function to execute on tab long press, use for things like showing a menu with more options
+
+##### `activeColor`
+
+Custom color for icon and label in the active tab.
+
+##### `inactiveColor`
+
+Custom color for icon and label in the inactive tab.
 
 ##### `pressColor`
 

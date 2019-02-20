@@ -1,7 +1,7 @@
 /* @flow */
 
 import * as React from 'react';
-import { StyleSheet, View, ScrollView, Platform } from 'react-native';
+import { StyleSheet, View, ScrollView } from 'react-native';
 import Animated from 'react-native-reanimated';
 import TabBarItem from './TabBarItem';
 import TabBarIndicator, {
@@ -16,14 +16,24 @@ import type { Scene, SceneRendererProps } from './types';
 type Props<T> = SceneRendererProps<T> & {
   scrollEnabled?: boolean,
   bounces?: boolean,
+  activeColor?: string,
+  inactiveColor?: string,
   pressColor?: string,
   pressOpacity?: number,
   getLabelText: (scene: Scene<T>) => ?string,
   getAccessible: (scene: Scene<T>) => ?boolean,
   getAccessibilityLabel: (scene: Scene<T>) => ?string,
   getTestID: (scene: Scene<T>) => ?string,
-  renderLabel?: (scene: Scene<T>) => React.Node,
-  renderIcon?: (scene: Scene<T>) => React.Node,
+  renderLabel?: (scene: {
+    route: T,
+    focused: boolean,
+    color: string,
+  }) => React.Node,
+  renderIcon?: (scene: {
+    route: T,
+    focused: boolean,
+    color: string,
+  }) => React.Node,
   renderBadge?: (scene: Scene<T>) => React.Node,
   renderIndicator: (props: IndicatorProps<T>) => React.Node,
   onTabPress?: (scene: Scene<T>) => mixed,
@@ -234,6 +244,8 @@ export default class TabBar<T: *> extends React.Component<Props<T>, State> {
       renderBadge,
       renderIcon,
       renderLabel,
+      activeColor,
+      inactiveColor,
       pressColor,
       pressOpacity,
       tabStyle,
@@ -305,7 +317,7 @@ export default class TabBar<T: *> extends React.Component<Props<T>, State> {
               <TabBarItem
                 key={route.key}
                 position={position}
-                scene={{ route }}
+                route={route}
                 tabWidth={tabWidth}
                 navigationState={navigationState}
                 scrollEnabled={scrollEnabled}
@@ -318,6 +330,8 @@ export default class TabBar<T: *> extends React.Component<Props<T>, State> {
                 renderLabel={renderLabel}
                 tabStyle={tabStyle}
                 labelStyle={labelStyle}
+                activeColor={activeColor}
+                inactiveColor={inactiveColor}
                 pressColor={pressColor}
                 pressOpacity={pressOpacity}
                 onTabPress={this._handleTabPress}
@@ -336,19 +350,18 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scroll: {
-    overflow: Platform.OS === 'web' ? ('auto': any) : 'scroll',
+    overflow: 'scroll',
   },
   tabBar: {
     backgroundColor: '#2196f3',
     elevation: 4,
-    shadowColor: 'black',
-    shadowOpacity: 0.1,
-    shadowRadius: StyleSheet.hairlineWidth,
-    shadowOffset: {
-      height: StyleSheet.hairlineWidth,
-    },
-    // We don't need zIndex on Android, disable it since it's buggy
-    zIndex: Platform.OS === 'android' ? 0 : 1,
+    // shadowColor: 'black',
+    // shadowOpacity: 0.1,
+    // shadowRadius: StyleSheet.hairlineWidth,
+    // shadowOffset: {
+    //   height: StyleSheet.hairlineWidth,
+    // },
+    zIndex: 1,
   },
   tabContent: {
     flexDirection: 'row',

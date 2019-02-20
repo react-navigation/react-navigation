@@ -37,8 +37,8 @@ export default class TabBarIconExample extends React.Component<*, State> {
       index,
     });
 
-  _renderIcon = ({ route }) => (
-    <Ionicons name={route.icon} size={24} color="white" />
+  _renderIcon = ({ route, color }) => (
+    <Ionicons name={route.icon} size={24} color={color} />
   );
 
   _renderTabBar = props => {
