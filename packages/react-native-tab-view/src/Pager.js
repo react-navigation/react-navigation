@@ -267,21 +267,16 @@ export default class Pager<T: Route> extends React.Component<Props<T>> {
       this._currentIndex = value;
     }),
     cond(this._isListening, call([this._position], this._handlePositionChange)),
-    cond(
-      this._isSwipeGesture,
-      NOOP,
-      onChange(
-        // Index changed from outside
-        this._nextIndex,
-        cond(neq(this._nextIndex, UNSET), [
-          // Stop any running animations
-          cond(clockRunning(this._clock), stopClock(this._clock)),
-          // Update the index to trigger the transition
-          set(this._index, this._nextIndex),
-          // Unset next index
-          set(this._nextIndex, UNSET),
-        ])
-      )
+    onChange(
+      this._nextIndex,
+      cond(neq(this._nextIndex, UNSET), [
+        // Stop any running animations
+        cond(clockRunning(this._clock), stopClock(this._clock)),
+        // Update the index to trigger the transition
+        set(this._index, this._nextIndex),
+        // Unset next index
+        set(this._nextIndex, UNSET),
+      ])
     ),
     cond(
       eq(this._gestureState, State.ACTIVE),

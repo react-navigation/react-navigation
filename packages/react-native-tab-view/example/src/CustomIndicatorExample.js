@@ -10,9 +10,9 @@ import {
   type NavigationState,
 } from 'react-native-tab-view';
 import Animated from 'react-native-reanimated';
-import Albums from './shared/Albums';
-import Article from './shared/Article';
-import Contacts from './shared/Contacts';
+import Albums from './Shared/Albums';
+import Article from './Shared/Article';
+import Contacts from './Shared/Contacts';
 
 type State = NavigationState<{
   key: string,

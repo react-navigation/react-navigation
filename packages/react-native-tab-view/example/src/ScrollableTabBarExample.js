@@ -8,10 +8,10 @@ import {
   SceneMap,
   type NavigationState,
 } from 'react-native-tab-view';
-import Article from './shared/Article';
-import Albums from './shared/Albums';
-import Chat from './shared/Chat';
-import Contacts from './shared/Contacts';
+import Article from './Shared/Article';
+import Albums from './Shared/Albums';
+import Chat from './Shared/Chat';
+import Contacts from './Shared/Contacts';
 
 type State = NavigationState<{
   key: string,

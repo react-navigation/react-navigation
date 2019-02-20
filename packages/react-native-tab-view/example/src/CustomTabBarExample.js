@@ -5,10 +5,10 @@ import { View, Text, TouchableWithoutFeedback, StyleSheet } from 'react-native';
 import { TabView, SceneMap, type NavigationState } from 'react-native-tab-view';
 import Animated from 'react-native-reanimated';
 import { Ionicons } from '@expo/vector-icons';
-import Albums from './shared/Albums';
-import Article from './shared/Article';
-import Chat from './shared/Chat';
-import Contacts from './shared/Contacts';
+import Albums from './Shared/Albums';
+import Article from './Shared/Article';
+import Chat from './Shared/Chat';
+import Contacts from './Shared/Contacts';
 
 type State = NavigationState<{
   key: string,

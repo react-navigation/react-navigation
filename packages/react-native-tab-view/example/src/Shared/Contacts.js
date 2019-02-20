@@ -57,18 +57,30 @@ const CONTACTS = [
   { name: 'Vincent Sandoval', number: 2606111495 },
 ];
 
+class ContactItem extends React.PureComponent<{
+  item: { name: string, number: number },
+}> {
+  render() {
+    const { item } = this.props;
+
+    return (
+      <View style={styles.item}>
+        <View style={styles.avatar}>
+          <Text style={styles.letter}>
+            {item.name.slice(0, 1).toUpperCase()}
+          </Text>
+        </View>
+        <View style={styles.details}>
+          <Text style={styles.name}>{item.name}</Text>
+          <Text style={styles.number}>{item.number}</Text>
+        </View>
+      </View>
+    );
+  }
+}
+
 export default class Contacts extends React.Component<*> {
-  _renderItem = ({ item }) => (
-    <View style={styles.item}>
-      <View style={styles.avatar}>
-        <Text style={styles.letter}>{item.name.slice(0, 1).toUpperCase()}</Text>
-      </View>
-      <View style={styles.details}>
-        <Text style={styles.name}>{item.name}</Text>
-        <Text style={styles.number}>{item.number}</Text>
-      </View>
-    </View>
-  );
+  _renderItem = ({ item }) => <ContactItem item={item} />;
 
   _ItemSeparator = () => <View style={styles.separator} />;
 
