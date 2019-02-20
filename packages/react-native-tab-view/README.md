@@ -30,7 +30,17 @@ Open a Terminal in the project root and run:
 yarn add react-native-tab-view@alpha
 ```
 
-You also need to install and link [react-native-gesture-handler](https://github.com/kmagiera/react-native-gesture-handler) and [react-native-reanimated](https://github.com/kmagiera/react-native-reanimated). Follow the instructions on the linked repos to configure them. This step is unnecessary if you use Expo.
+If you are using Expo, you are done. Otherwise, continue to the next step.
+
+Install and link [`react-native-gesture-handler`](https://github.com/kmagiera/react-native-gesture-handler) and [`react-native-reanimated`](https://github.com/kmagiera/react-native-reanimated). To install and link them, run:
+
+```sh
+yarn add react-native-reanimated react-native-gesture-handler
+react-native link react-native-reanimated
+react-native link react-native-gesture-handler
+```
+
+_IMPORTANT:_ There are additional steps required for `react-native-gesture-handler` on Android after running `react-native link react-native-gesture-handler`. Check the [this guide](https://kmagiera.github.io/react-native-gesture-handler/docs/getting-started.html) to complete the installation.
 
 ## Quick Start
 
@@ -159,7 +169,7 @@ renderScene = ({ route, jumpTo }) => {
     case 'albums':
       return <AlbumsRoute jumpTo={jumpTo} />;
   }
-}
+};
 ```
 
 You need to make sure that your individual routes implement a `shouldComponentUpdate` to improve the performance. To make it easier to specify the components, you can use the `SceneMap` helper.
@@ -187,7 +197,7 @@ Each scene receives the following props:
 The `jumpTo` method can be used to navigate to other tabs programmatically:
 
 ```js
-this.props.jumpTo('albums')
+this.props.jumpTo('albums');
 ```
 
 All the scenes rendered with `SceneMap` are optimized using `React.PureComponent` and don't re-render when parent's props or states change. If you need more control over how your scenes update (e.g. - triggering a re-render even if the `navigationState` didn't change), use `renderScene` directly instead of using `SceneMap`.
@@ -300,7 +310,7 @@ getTestID={({ route }) => route.testID}
 
 getAccessibilityLabel: (props: { route: T }) => string;
 Get accessibility label for the tab button. This is read by the screen reader when the user taps the tab.
- Uses `route.accessibilityLabel` by default if specified, otherwise uses the route title.
+Uses `route.accessibilityLabel` by default if specified, otherwise uses the route title.
 
 getTestID: (props: { route: T }) => string | undefined;
 Get the id to locate this tab button in tests, uses `route.testID` by default.
@@ -325,7 +335,7 @@ Function which takes an object with the current route, focused status and color 
 ```js
 renderLabel={({ route, focused, color }) => (
   <Text style={{ color, margin: 8 }}>
-      {route.title}
+    {route.title}
   </Text>
 )}
 ```
@@ -433,7 +443,7 @@ export default class HomeComponent extends React.PureComponent {
         <Avatar />
         <NewsFeed />
       </View>
-    )
+    );
   }
 }
 ```
