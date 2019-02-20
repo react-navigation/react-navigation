@@ -10,7 +10,7 @@ import {
 import { List, Divider } from 'react-native-paper';
 
 import SimpleStack from './src/SimpleStack';
-import SimpleTabs from './src/SimpleTabs';
+import SimpleTabs, { createSimpleTabs } from './src/SimpleTabs';
 import EventsStack from './src/EventsStack';
 
 // Comment/uncomment the following two lines to toggle react-native-screens
@@ -26,6 +26,17 @@ const data = [
   { component: SimpleTabs, title: 'Simple Tabs', routeName: 'SimpleTabs' },
   { component: EventsStack, title: 'Events', routeName: 'EventsStack' },
 ];
+
+['initialRoute', 'none', 'order', 'history'].forEach(backBehavior => {
+  data.push({
+    component: createSimpleTabs({
+      backBehavior: backBehavior,
+      initialRouteName: 'C', // more easy to test initialRoute behavior
+    }),
+    title: `Tabs backBehavior=${backBehavior}`,
+    routeName: `Tabs backBehavior=${backBehavior}`,
+  });
+});
 
 // Cache images
 Asset.loadAsync(StackAssets);
