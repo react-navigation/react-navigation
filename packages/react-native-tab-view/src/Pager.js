@@ -25,6 +25,7 @@ const {
   max,
   min,
   multiply,
+  neq,
   or,
   round,
   set,
@@ -39,13 +40,15 @@ const TRUE = 1;
 const FALSE = 0;
 const NOOP = 0;
 
+const UNSET = -1;
+
 const SWIPE_DISTANCE_MINIMUM = 20;
 const SWIPE_DISTANCE_MULTIPLIER = 1 / 1.75;
 
 const SPRING_CONFIG = {
   damping: 30,
   mass: 1,
-  stiffness: 100,
+  stiffness: 200,
   overshootClamping: true,
   restSpeedThreshold: 0.001,
   restDisplacementThreshold: 0.001,
@@ -60,7 +63,7 @@ type Props<T: Route> = {
   swipeEnabled: boolean,
   swipeDistanceThreshold?: number,
   swipeVelocityThreshold: number,
-  jumpTo: (key: string) => mixed,
+  jumpToIndex: (index: number) => mixed,
   navigationState: NavigationState<T>,
   layout: Layout,
   children: (props: {
@@ -68,6 +71,7 @@ type Props<T: Route> = {
     render: (children: React.Node) => React.Node,
     addListener: (listener: Listener) => void,
     removeListener: (listener: Listener) => void,
+    jumpToIndex: (index: number) => void,
   }) => React.Node,
 };
 
@@ -79,16 +83,9 @@ export default class Pager<T: Route> extends React.Component<Props<T>> {
   componentDidUpdate(prevProps: Props<T>) {
     const { index } = this.props.navigationState;
 
-    if (
-      index !== prevProps.navigationState.index &&
-      index !== this._pendingIndex
-    ) {
-      // If the index changed, we need to trigger a tab switch
-      this._isSwipeGesture.setValue(FALSE);
-      this._nextIndex.setValue(index);
+    if (index !== this._currentIndex) {
+      this._jumpToIndex(index);
     }
-
-    this._pendingIndex = undefined;
 
     // Update our mappings of animated nodes when props change
     if (
@@ -131,7 +128,7 @@ export default class Pager<T: Route> extends React.Component<Props<T>> {
   // Current state of the gesture
   _velocityX = new Value(0);
   _gestureX = new Value(0);
-  _gestureState = new Value(-1);
+  _gestureState = new Value(State.UNDETERMINED);
   _offsetX = new Value(0);
 
   // Current position of the page (translateX value)
@@ -144,7 +141,7 @@ export default class Pager<T: Route> extends React.Component<Props<T>> {
   _index = new Value(this.props.navigationState.index);
 
   // Next index of the tabs, updated for navigation from outside (tab press, state update)
-  _nextIndex = new Value(this.props.navigationState.index);
+  _nextIndex = new Value(UNSET);
 
   // Whether the user is currently dragging the screen
   _isSwiping = new Value(FALSE);
@@ -162,16 +159,27 @@ export default class Pager<T: Route> extends React.Component<Props<T>> {
   _swipeDistanceThreshold = new Value(this.props.swipeDistanceThreshold || 180);
   _swipeVelocityThreshold = new Value(this.props.swipeVelocityThreshold);
 
-  // Pending index change caused by the pager's animation end
+  // Whether we need to add a listener for position change
+  // To avoid unnecessary traffic through the bridge, don't add listeners unless needed
+  _isListening = new Value(FALSE);
+
+  // The current index change caused by the pager's animation end
   // We store this to skip triggering another transition after state update
   // Otherwise there can be weird glitches when tabs switch quickly
-  _pendingIndex: ?number = undefined;
+  _currentIndex = this.props.navigationState.index;
 
   // Listeners for the animated value
   _positionListeners: Listener[] = [];
 
+  _jumpToIndex = (index: number) => {
+    // If the index changed, we need to trigger a tab switch
+    this._isSwipeGesture.setValue(FALSE);
+    this._nextIndex.setValue(index);
+  };
+
   _addListener = (listener: Listener) => {
     this._positionListeners.push(listener);
+    this._isListening.setValue(TRUE);
   };
 
   _removeListener = (listener: Listener) => {
@@ -179,6 +187,10 @@ export default class Pager<T: Route> extends React.Component<Props<T>> {
 
     if (index > -1) {
       this._positionListeners.splice(index, 1);
+    }
+
+    if (this._positionListeners.length === 0) {
+      this._isListening.setValue(FALSE);
     }
   };
 
@@ -230,18 +242,11 @@ export default class Pager<T: Route> extends React.Component<Props<T>> {
         // Reset gesture and velocity from previous gesture
         set(this._gestureX, 0),
         set(this._velocityX, 0),
-        // Sync the next index value with index
-        // This makes sure state updates aren't missed
-        set(this._nextIndex, this._index),
         // When spring animation finishes, stop the clock
         stopClock(this._clock),
         call([this._index], ([value]) => {
-          this._pendingIndex = value;
-
           // If the index changed, and previous spring was finished, update state
-          const route = this.props.navigationState.routes[Math.round(value)];
-
-          this.props.jumpTo(route.key);
+          this.props.jumpToIndex(value);
         }),
       ]),
     ]);
@@ -258,16 +263,25 @@ export default class Pager<T: Route> extends React.Component<Props<T>> {
   ]);
 
   _translateX = block([
-    call([this._position], this._handlePositionChange),
-    onChange(
-      // Index changed from outside
-      this._nextIndex,
-      cond(or(eq(this._nextIndex, this._index), this._isSwipeGesture), NOOP, [
-        // Stop any running animations
-        stopClock(this._clock),
-        // Update the index to trigger the transition
-        set(this._index, this._nextIndex),
-      ])
+    call([this._index], ([value]) => {
+      this._currentIndex = value;
+    }),
+    cond(this._isListening, call([this._position], this._handlePositionChange)),
+    cond(
+      this._isSwipeGesture,
+      NOOP,
+      onChange(
+        // Index changed from outside
+        this._nextIndex,
+        cond(neq(this._nextIndex, UNSET), [
+          // Stop any running animations
+          cond(clockRunning(this._clock), stopClock(this._clock)),
+          // Update the index to trigger the transition
+          set(this._index, this._nextIndex),
+          // Unset next index
+          set(this._nextIndex, UNSET),
+        ])
+      )
     ),
     cond(
       eq(this._gestureState, State.ACTIVE),
@@ -350,6 +364,7 @@ export default class Pager<T: Route> extends React.Component<Props<T>> {
       position,
       addListener: this._addListener,
       removeListener: this._removeListener,
+      jumpToIndex: this._jumpToIndex,
       render: children => (
         <PanGestureHandler
           enabled={layout.width !== 0 && swipeEnabled}

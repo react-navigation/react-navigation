@@ -63,11 +63,7 @@ export default class TabView<T: Route> extends React.Component<
     setTimeout(() => this.setState({ renderUnfocusedScenes: true }), 0);
   }
 
-  _jumpTo = (key: string) => {
-    const index = this.props.navigationState.routes.findIndex(
-      route => route.key === key
-    );
-
+  _jumpToIndex = (index: number) => {
     if (index !== this.props.navigationState.index) {
       this.props.onIndexChange(index);
     }
@@ -111,14 +107,29 @@ export default class TabView<T: Route> extends React.Component<
           swipeEnabled={swipeEnabled}
           swipeDistanceThreshold={swipeDistanceThreshold}
           swipeVelocityThreshold={swipeVelocityThreshold}
-          jumpTo={this._jumpTo}
+          jumpToIndex={this._jumpToIndex}
         >
-          {({ position, render, addListener, removeListener }) => {
+          {({ position, render, addListener, removeListener, jumpToIndex }) => {
+            const jumpTo = (key: string) => {
+              const index = navigationState.routes.findIndex(
+                route => route.key === key
+              );
+
+              // A tab switch might occur when we're in the middle of a transition
+              // In that case, the index might be same as before
+              // So we conditionally make the pager to update the position
+              if (navigationState.index === index) {
+                jumpToIndex(index);
+              } else {
+                this._jumpToIndex(index);
+              }
+            };
+
             const sceneRendererProps = {
               position,
               layout,
               navigationState,
-              jumpTo: this._jumpTo,
+              jumpTo,
               addListener,
               removeListener,
             };
