@@ -214,6 +214,7 @@ class Header extends React.PureComponent {
         title={backButtonTitle}
         truncatedTitle={truncatedBackButtonTitle}
         backTitleVisible={this.props.backTitleVisible}
+        allowFontScaling={options.headerBackAllowFontScaling}
         titleStyle={options.headerBackTitleStyle}
         layoutPreset={this.props.layoutPreset}
         width={width}

@@ -79,7 +79,7 @@ class HeaderBackButton extends React.PureComponent {
   };
 
   _maybeRenderTitle() {
-    const { backTitleVisible, titleStyle, tintColor } = this.props;
+    const { allowFontScaling, backTitleVisible, titleStyle, tintColor } = this.props;
     let backTitleText = this._getTitleText();
 
     if (!backTitleVisible || backTitleText === null) {
@@ -92,6 +92,7 @@ class HeaderBackButton extends React.PureComponent {
         onLayout={this._onTextLayout}
         style={[styles.title, !!tintColor && { color: tintColor }, titleStyle]}
         numberOfLines={1}
+        allowFontScaling={!!allowFontScaling}
       >
         {this._getTitleText()}
       </Text>
