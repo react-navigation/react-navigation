@@ -31,9 +31,9 @@ export default class CoverflowExample extends React.Component<*, State> {
     routes: Object.keys(ALBUMS).map(key => ({ key })),
   };
 
-  _buildCoverFlowStyle = ({ layout, position, route, navigationState }) => {
+  _buildCoverFlowStyle = ({ layout, position, route }) => {
     const { width } = layout;
-    const { routes } = navigationState;
+    const { routes } = this.state;
     const currentIndex = routes.indexOf(route);
     const inputRange = routes.map((x, i) => i);
     const translateOutputRange = inputRange.map(i => {

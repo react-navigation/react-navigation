@@ -11,9 +11,16 @@ import type {
   ViewStyleProp,
   TextStyleProp,
 } from 'react-native/Libraries/StyleSheet/StyleSheet';
-import type { Scene, SceneRendererProps } from './types';
+import type {
+  Route,
+  Scene,
+  SceneRendererProps,
+  NavigationState,
+} from './types';
 
-type Props<T> = SceneRendererProps<T> & {
+export type Props<T> = {|
+  ...SceneRendererProps,
+  navigationState: NavigationState<T>,
   scrollEnabled?: boolean,
   bounces?: boolean,
   activeColor?: string,
@@ -25,12 +32,12 @@ type Props<T> = SceneRendererProps<T> & {
   getAccessibilityLabel: (scene: Scene<T>) => ?string,
   getTestID: (scene: Scene<T>) => ?string,
   renderLabel?: (scene: {
-    route: T,
+    ...Scene<T>,
     focused: boolean,
     color: string,
   }) => React.Node,
   renderIcon?: (scene: {
-    route: T,
+    ...Scene<T>,
     focused: boolean,
     color: string,
   }) => React.Node,
@@ -42,20 +49,25 @@ type Props<T> = SceneRendererProps<T> & {
   indicatorStyle?: ViewStyleProp,
   labelStyle?: TextStyleProp,
   style?: ViewStyleProp,
-};
+|};
 
 type State = {|
   scrollAmount: Animated.Value,
   initialOffset: ?{| x: number, y: number |},
 |};
 
-export default class TabBar<T: *> extends React.Component<Props<T>, State> {
+export default class TabBar<T: Route> extends React.Component<Props<T>, State> {
   static defaultProps = {
     getLabelText: ({ route }: Scene<T>) =>
       typeof route.title === 'string' ? route.title.toUpperCase() : route.title,
     getAccessible: ({ route }: Scene<T>) =>
       typeof route.accessible !== 'undefined' ? route.accessible : true,
-    getAccessibilityLabel: ({ route }: Scene<T>) => route.accessibilityLabel,
+    getAccessibilityLabel: ({ route }: Scene<T>) =>
+      typeof route.accessibilityLabel === 'string'
+        ? route.accessibilityLabel
+        : typeof route.title === 'string'
+        ? route.title
+        : undefined,
     getTestID: ({ route }: Scene<T>) => route.testID,
     renderIndicator: (props: IndicatorProps<T>) => (
       <TabBarIndicator {...props} />
@@ -134,17 +146,9 @@ export default class TabBar<T: *> extends React.Component<Props<T>, State> {
     return layout.width / navigationState.routes.length;
   };
 
-  _handleTabPress = ({ route }: Scene<T>) => {
-    if (this.props.onTabPress) {
-      this.props.onTabPress({ route });
-    }
-
-    this.props.jumpTo(route.key);
-  };
-
-  _handleTabLongPress = ({ route }: Scene<T>) => {
+  _handleTabLongPress = (scene: Scene<T>) => {
     if (this.props.onTabLongPress) {
-      this.props.onTabLongPress({ route });
+      this.props.onTabLongPress(scene);
     }
   };
 
@@ -248,6 +252,8 @@ export default class TabBar<T: *> extends React.Component<Props<T>, State> {
       inactiveColor,
       pressColor,
       pressOpacity,
+      onTabPress,
+      onTabLongPress,
       tabStyle,
       labelStyle,
       indicatorStyle,
@@ -313,7 +319,7 @@ export default class TabBar<T: *> extends React.Component<Props<T>, State> {
             contentOffset={this.state.initialOffset}
             ref={el => (this._scrollView = el && el.getNode())}
           >
-            {routes.map(route => (
+            {routes.map((route: T) => (
               <TabBarItem
                 key={route.key}
                 position={position}
@@ -328,14 +334,17 @@ export default class TabBar<T: *> extends React.Component<Props<T>, State> {
                 renderBadge={renderBadge}
                 renderIcon={renderIcon}
                 renderLabel={renderLabel}
-                tabStyle={tabStyle}
-                labelStyle={labelStyle}
                 activeColor={activeColor}
                 inactiveColor={inactiveColor}
                 pressColor={pressColor}
                 pressOpacity={pressOpacity}
-                onTabPress={this._handleTabPress}
-                onTabLongPress={this._handleTabLongPress}
+                onPress={() => {
+                  onTabPress && onTabPress({ route });
+                  this.props.jumpTo(route.key);
+                }}
+                onLongPress={() => onTabLongPress && onTabLongPress({ route })}
+                labelStyle={labelStyle}
+                style={tabStyle}
               />
             ))}
           </Animated.ScrollView>
@@ -355,12 +364,12 @@ const styles = StyleSheet.create({
   tabBar: {
     backgroundColor: '#2196f3',
     elevation: 4,
-    // shadowColor: 'black',
-    // shadowOpacity: 0.1,
-    // shadowRadius: StyleSheet.hairlineWidth,
-    // shadowOffset: {
-    //   height: StyleSheet.hairlineWidth,
-    // },
+    shadowColor: 'black',
+    shadowOpacity: 0.1,
+    shadowRadius: StyleSheet.hairlineWidth,
+    shadowOffset: {
+      height: StyleSheet.hairlineWidth,
+    },
     zIndex: 1,
   },
   tabContent: {

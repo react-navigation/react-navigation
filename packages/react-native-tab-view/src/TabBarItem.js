@@ -10,7 +10,7 @@ import type {
 } from 'react-native/Libraries/StyleSheet/StyleSheet';
 import Animated from 'react-native-reanimated';
 
-type Props<T> = {
+type Props<T> = {|
   position: Animated.Node,
   route: T,
   navigationState: NavigationState<T>,
@@ -23,23 +23,23 @@ type Props<T> = {
   getAccessible: (scene: Scene<T>) => ?boolean,
   getAccessibilityLabel: (scene: Scene<T>) => ?string,
   getTestID: (scene: Scene<T>) => ?string,
-  renderLabel?: (scene: {
+  renderLabel?: (scene: {|
     route: T,
     focused: boolean,
     color: string,
-  }) => React.Node,
-  renderIcon?: (scene: {
+  |}) => React.Node,
+  renderIcon?: (scene: {|
     route: T,
     focused: boolean,
     color: string,
-  }) => React.Node,
+  |}) => React.Node,
   renderBadge?: (scene: Scene<T>) => React.Node,
-  onTabPress: (scene: Scene<T>) => void,
-  onTabLongPress: (scene: Scene<T>) => void,
+  onPress: () => mixed,
+  onLongPress: () => mixed,
   tabWidth: number,
-  tabStyle: ViewStyleProp,
   labelStyle?: TextStyleProp,
-};
+  style: ViewStyleProp,
+|};
 
 const DEFAULT_ACTIVE_COLOR = 'rgba(255, 255, 255, 1)';
 const DEFAULT_INACTIVE_COLOR = 'rgba(255, 255, 255, 0.7)';
@@ -61,10 +61,10 @@ export default function TabBarItem<T: Route>({
   pressColor,
   pressOpacity,
   labelStyle,
-  tabStyle,
+  style,
   tabWidth,
-  onTabPress,
-  onTabLongPress,
+  onPress,
+  onLongPress,
 }: Props<T>) {
   const tabIndex = navigationState.routes.indexOf(route);
   const isFocused = navigationState.index === tabIndex;
@@ -159,16 +159,16 @@ export default function TabBarItem<T: Route>({
     );
   }
 
-  const passedTabStyle = StyleSheet.flatten(tabStyle);
+  const tabStyle = StyleSheet.flatten(style);
   const isWidthSet =
-    (passedTabStyle && typeof passedTabStyle.width !== 'undefined') ||
+    (tabStyle && typeof tabStyle.width !== 'undefined') ||
     scrollEnabled === true;
 
   const tabContainerStyle = {};
   const itemStyle = isWidthSet ? { width: tabWidth } : null;
 
-  if (passedTabStyle && typeof passedTabStyle.flex === 'number') {
-    tabContainerStyle.flex = passedTabStyle.flex;
+  if (tabStyle && typeof tabStyle.flex === 'number') {
+    tabContainerStyle.flex = tabStyle.flex;
   } else if (!isWidthSet) {
     tabContainerStyle.flex = 1;
   }
@@ -197,8 +197,8 @@ export default function TabBarItem<T: Route>({
       pressColor={pressColor}
       pressOpacity={pressOpacity}
       delayPressIn={0}
-      onPress={() => onTabPress(scene)}
-      onLongPress={() => onTabLongPress(scene)}
+      onPress={onPress}
+      onLongPress={onLongPress}
       style={tabContainerStyle}
     >
       <View pointerEvents="none" style={[styles.item, itemStyle]}>

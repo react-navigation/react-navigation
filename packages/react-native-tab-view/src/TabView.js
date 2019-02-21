@@ -5,7 +5,7 @@ import { StyleSheet, View } from 'react-native';
 import type { ViewStyleProp } from 'react-native/Libraries/StyleSheet/StyleSheet';
 import type { LayoutEvent } from 'react-native/Libraries/Types/CoreEventTypes';
 
-import TabBar from './TabBar';
+import TabBar, { type Props as TabBarProps } from './TabBar';
 import Pager from './Pager';
 import type {
   Layout,
@@ -14,15 +14,17 @@ import type {
   SceneRendererProps,
 } from './types';
 
-type Props<T: Route> = {
+type Props<T: Route> = {|
   onIndexChange: (index: number) => mixed,
   navigationState: NavigationState<T>,
-  renderScene: (
-    props: SceneRendererProps<T> & {
-      route: T,
-    }
-  ) => React.Node,
-  renderTabBar: (props: SceneRendererProps<T>) => React.Node,
+  renderScene: (props: {|
+    ...SceneRendererProps,
+    route: T,
+  |}) => React.Node,
+  renderTabBar: (props: {|
+    ...SceneRendererProps,
+    navigationState: NavigationState<T>,
+  |}) => React.Node,
   tabBarPosition: 'top' | 'bottom',
   initialLayout?: { width?: number, height?: number },
   swipeEnabled: boolean,
@@ -30,12 +32,12 @@ type Props<T: Route> = {
   swipeVelocityThreshold?: number,
   sceneContainerStyle?: ViewStyleProp,
   style?: ViewStyleProp,
-};
+|};
 
-type State = {
+type State = {|
   layout: Layout,
   renderUnfocusedScenes: boolean,
-};
+|};
 
 export default class TabView<T: Route> extends React.Component<
   Props<T>,
@@ -43,13 +45,7 @@ export default class TabView<T: Route> extends React.Component<
 > {
   static defaultProps = {
     tabBarPosition: 'top',
-    renderTabBar: (props: SceneRendererProps<T>) => <TabBar {...props} />,
-    getLabelText: ({ route }: { route: Route }) => route.title,
-    getAccessibilityLabel: ({ route }: { route: Route }) =>
-      typeof route.accessibilityLabel === 'string'
-        ? route.accessibilityLabel
-        : route.title,
-    getTestID: ({ route }: { route: Route }) => route.testID,
+    renderTabBar: (props: TabBarProps<T>) => <TabBar {...props} />,
     swipeEnabled: true,
   };
 
@@ -107,7 +103,7 @@ export default class TabView<T: Route> extends React.Component<
           swipeEnabled={swipeEnabled}
           swipeDistanceThreshold={swipeDistanceThreshold}
           swipeVelocityThreshold={swipeVelocityThreshold}
-          jumpToIndex={this._jumpToIndex}
+          onIndexChange={this._jumpToIndex}
         >
           {({ position, render, addListener, removeListener, jumpToIndex }) => {
             const jumpTo = (key: string) => {
@@ -128,7 +124,6 @@ export default class TabView<T: Route> extends React.Component<
             const sceneRendererProps = {
               position,
               layout,
-              navigationState,
               jumpTo,
               addListener,
               removeListener,
@@ -137,7 +132,10 @@ export default class TabView<T: Route> extends React.Component<
             return (
               <React.Fragment>
                 {tabBarPosition === 'top' &&
-                  this.props.renderTabBar(sceneRendererProps)}
+                  this.props.renderTabBar({
+                    ...sceneRendererProps,
+                    navigationState,
+                  })}
                 {render(
                   navigationState.routes.map((route, i) => {
                     const isFocused = i === navigationState.index;
@@ -166,8 +164,8 @@ export default class TabView<T: Route> extends React.Component<
                         isFocused ||
                         (this.state.renderUnfocusedScenes && layout.width)
                           ? this.props.renderScene({
-                              route,
                               ...sceneRendererProps,
+                              route,
                             })
                           : null}
                       </View>
@@ -175,7 +173,10 @@ export default class TabView<T: Route> extends React.Component<
                   })
                 )}
                 {tabBarPosition === 'bottom' &&
-                  this.props.renderTabBar(sceneRendererProps)}
+                  this.props.renderTabBar({
+                    ...sceneRendererProps,
+                    navigationState,
+                  })}
               </React.Fragment>
             );
           }}
