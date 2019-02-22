@@ -76,9 +76,9 @@ type Props<T: Route> = {|
     // The parent component takes care of rendering
     render: (children: React.Node) => React.Node,
     // Add a listener to listen for position updates
-    addListener: (listener: Listener) => void,
+    addListener: (type: 'position', listener: Listener) => void,
     // Remove a position listener
-    removeListener: (listener: Listener) => void,
+    removeListener: (type: 'position', listener: Listener) => void,
     // Immediately switch to a tab regardless of the navigation state
     jumpToIndex: (index: number) => void,
   |}) => React.Node,
@@ -190,12 +190,20 @@ export default class Pager<T: Route> extends React.Component<Props<T>> {
     this._nextIndex.setValue(index);
   };
 
-  _addListener = (listener: Listener) => {
+  _addListener = (type: string, listener: Listener) => {
+    if (type !== 'position') {
+      return;
+    }
+
     this._positionListeners.push(listener);
     this._isListening.setValue(TRUE);
   };
 
-  _removeListener = (listener: Listener) => {
+  _removeListener = (type: string, listener: Listener) => {
+    if (type !== 'position') {
+      return;
+    }
+
     const index = this._positionListeners.indexOf(listener);
 
     if (index > -1) {

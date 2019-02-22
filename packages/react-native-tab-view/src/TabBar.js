@@ -95,7 +95,7 @@ export default class TabBar<T: Route> extends React.Component<Props<T>, State> {
   }
 
   componentDidMount() {
-    this.props.addListener(this._adjustScroll);
+    this.props.addListener('position', this._adjustScroll);
   }
 
   componentDidUpdate(prevProps: Props<T>) {
@@ -113,7 +113,7 @@ export default class TabBar<T: Route> extends React.Component<Props<T>, State> {
   }
 
   componentWillUnmount() {
-    this.props.removeListener(this._adjustScroll);
+    this.props.removeListener('position', this._adjustScroll);
   }
 
   _scrollView: ?ScrollView;

@@ -30,6 +30,6 @@ export type SceneRendererProps = {|
   layout: Layout,
   position: Animated.Node<number>,
   jumpTo: (key: string) => void,
-  addListener: (listener: Listener) => void,
-  removeListener: (listener: Listener) => void,
+  addListener: (type: 'position', listener: Listener) => void,
+  removeListener: (type: 'position', listener: Listener) => void,
 |};
