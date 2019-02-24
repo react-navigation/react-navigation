@@ -382,7 +382,7 @@ Boolean indicating whether the tab bar bounces when scrolling.
 
 ##### `tabStyle`
 
-Style to apply to the individual tabs in the tab bar.
+Style to apply to the individual tab items in the tab bar.
 
 ##### `indicatorStyle`
 

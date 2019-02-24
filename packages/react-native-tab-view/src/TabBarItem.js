@@ -201,7 +201,7 @@ export default function TabBarItem<T: Route>({
       onLongPress={onLongPress}
       style={tabContainerStyle}
     >
-      <View pointerEvents="none" style={[styles.item, itemStyle]}>
+      <View pointerEvents="none" style={[styles.item, itemStyle, tabStyle]}>
         {icon}
         {label}
         {badge != null ? <View style={styles.badge}>{badge}</View> : null}
