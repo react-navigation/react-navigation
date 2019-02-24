@@ -392,6 +392,10 @@ Style to apply to the active indicator.
 
 Style to apply to the tab item label.
 
+##### `contentContainerStyle`
+
+Style to apply to the inner container for tabs.
+
 ##### `style`
 
 Style to apply to the tab bar container.
