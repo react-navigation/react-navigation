@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.3.1] - [2019-02-25](https://github.com/react-navigation/react-navigation/releases/tag/3.3.1)
+
+## Fixed
+
+- SafeAreaView bottom inset on iPhone XR and XS fixed. (https://github.com/react-navigation/react-navigation/issues/5625)
+
 ## [3.3.0] - [2019-02-16](https://github.com/react-navigation/react-navigation/releases/tag/3.3.0)
 
 ## Added
@@ -143,7 +149,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - [2.x](https://github.com/react-navigation/react-navigation/blob/2.x/CHANGELOG.md)
 
-[Unreleased]: https://github.com/react-navigation/react-navigation/compare/3.3.0...HEAD
+[Unreleased]: https://github.com/react-navigation/react-navigation/compare/3.3.1...HEAD
+[3.3.1]: https://github.com/react-navigation/react-navigation/compare/3.3.0...3.3.1
 [3.3.0]: https://github.com/react-navigation/react-navigation/compare/3.2.3...3.3.0
 [3.2.3]: https://github.com/react-navigation/react-navigation/compare/3.2.1...3.2.3
 [3.2.1]: https://github.com/react-navigation/react-navigation/compare/3.2.0...3.2.1
