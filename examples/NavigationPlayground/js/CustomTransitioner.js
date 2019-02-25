@@ -1,13 +1,5 @@
-import React, { Component, PropTypes } from 'react';
-import {
-  Animated,
-  Easing,
-  Image,
-  Platform,
-  StatusBar,
-  StyleSheet,
-  View,
-} from 'react-native';
+import React, { Component } from 'react';
+import { Animated, Easing, StatusBar, StyleSheet, View } from 'react-native';
 import {
   createAppContainer,
   Transitioner,
@@ -21,13 +13,12 @@ import { Button } from './commonComponents/ButtonWithMargin';
 const MyNavScreen = ({ navigation, banner }) => (
   <SafeAreaView forceInset={{ top: 'always' }}>
     <SampleText>{banner}</SampleText>
-    {navigation.state &&
-      navigation.state.routeName !== 'Settings' && (
-        <Button
-          onPress={() => navigation.navigate('Settings')}
-          title="Go to a settings screen"
-        />
-      )}
+    {navigation.state && navigation.state.routeName !== 'Settings' && (
+      <Button
+        onPress={() => navigation.navigate('Settings')}
+        title="Go to a settings screen"
+      />
+    )}
 
     <Button onPress={() => navigation.goBack(null)} title="Go back" />
     <StatusBar barStyle="default" />
@@ -71,8 +62,6 @@ class CustomNavigationView extends Component {
   };
 
   _renderScene = (transitionProps, scene) => {
-    const { navigation, router } = this.props;
-    const { routes } = navigation.state;
     const { position } = transitionProps;
     const { index } = scene;
 
