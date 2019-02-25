@@ -11,7 +11,7 @@ Read usage guide depending on if you are [using Expo](#usage-in-expo-with-react-
 
 Screens support is built into [react-navigation](https://github.com/react-navigation/react-navigation) starting from version [2.14.0](https://github.com/react-navigation/react-navigation/releases/tag/2.14.0) for all the different navigator types (stack, tab, drawer, etc). We plan on adding it to other navigators in near future.
 
-To enable react-navigationto use screens instead of plain RN Views for rendering screen views, follow the steps below:
+To configure react-navigation to use screens instead of plain RN Views for rendering screen views, follow the steps below:
 
 1. Add this library as a depedency to your project:
 ```
