@@ -1,7 +1,8 @@
 /* @flow */
 
 import React from 'react';
-import { Animated, View, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
+import Animated from 'react-native-reanimated';
 
 type Props = {
   route: any,
