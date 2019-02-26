@@ -92,7 +92,12 @@ export default class Pager<T: Route> extends React.Component<Props<T>> {
   componentDidUpdate(prevProps: Props<T>) {
     const { index } = this.props.navigationState;
 
-    if (index !== this._currentIndexValue) {
+    if (
+      index !== prevProps.navigationState.index &&
+      index !== this._currentIndexValue
+    ) {
+      // Index has changed in state and it's different from the index being tracked
+      // Check for index in state to avoid unintended transition if component updates during swipe
       this._jumpToIndex(index);
     }
 
