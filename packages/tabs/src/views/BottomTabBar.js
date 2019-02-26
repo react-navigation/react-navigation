@@ -2,13 +2,13 @@
 
 import React from 'react';
 import {
-  Animated,
   TouchableWithoutFeedback,
   StyleSheet,
   View,
   Platform,
 } from 'react-native';
 import { SafeAreaView } from '@react-navigation/native';
+import Animated from 'react-native-reanimated';
 
 import CrossFadeIcon from './CrossFadeIcon';
 import withDimensions from '../utils/withDimensions';

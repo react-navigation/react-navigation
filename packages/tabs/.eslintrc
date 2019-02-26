@@ -12,9 +12,5 @@
   "env": {
     "es6": true,
     "react-native-globals/all": true,
-  },
-
-  "rules": {
-    "flowtype/no-dupe-keys": "off"
   }
 }

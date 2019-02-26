@@ -9,16 +9,15 @@ import {
   NavigationActions,
 } from '@react-navigation/core';
 
-export type InjectedProps = {
+export type InjectedProps = {|
   getLabelText: (props: { route: any }) => any,
   getAccessibilityLabel: (props: { route: any }) => string,
   getTestID: (props: { route: any }) => string,
-  getButtonComponent: (props: { route: any }) => ?React.Component<*>,
   renderIcon: (props: {
     route: any,
     focused: boolean,
     tintColor: string,
-    horizontal: boolean,
+    horizontal?: boolean,
   }) => React.Node,
   renderScene: (props: { route: any }) => ?React.Node,
   onIndexChange: (index: number) => any,
@@ -27,7 +26,7 @@ export type InjectedProps = {
   navigation: any,
   descriptors: any,
   screenProps?: any,
-};
+|};
 
 export default function createTabNavigator(TabView: React.ComponentType<*>) {
   class NavigationView extends React.Component<*, *> {
@@ -44,12 +43,7 @@ export default function createTabNavigator(TabView: React.ComponentType<*>) {
       );
     };
 
-    _renderIcon = ({
-      route,
-      focused = true,
-      tintColor,
-      horizontal = false,
-    }) => {
+    _renderIcon = ({ route, focused, tintColor, horizontal = false }) => {
       const { descriptors } = this.props;
       const descriptor = descriptors[route.key];
       const options = descriptor.options;
@@ -58,18 +52,6 @@ export default function createTabNavigator(TabView: React.ComponentType<*>) {
         return typeof options.tabBarIcon === 'function'
           ? options.tabBarIcon({ focused, tintColor, horizontal })
           : options.tabBarIcon;
-      }
-
-      return null;
-    };
-
-    _getButtonComponent = ({ route }) => {
-      const { descriptors } = this.props;
-      const descriptor = descriptors[route.key];
-      const options = descriptor.options;
-
-      if (options.tabBarButtonComponent) {
-        return options.tabBarButtonComponent;
       }
 
       return null;
@@ -197,7 +179,6 @@ export default function createTabNavigator(TabView: React.ComponentType<*>) {
         <TabView
           {...options}
           getLabelText={this._getLabelText}
-          getButtonComponent={this._getButtonComponent}
           getAccessibilityLabel={this._getAccessibilityLabel}
           getTestID={this._getTestID}
           renderIcon={this._renderIcon}

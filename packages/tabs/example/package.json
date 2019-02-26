@@ -17,7 +17,7 @@
     "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
     "react-native-safe-area-view": "^0.13.1",
     "react-native-screens": "^1.0.0-alpha.22",
-    "react-native-tab-view": "^1.2.0",
+    "react-native-tab-view": "^2.0.1",
     "react-navigation": "^3.3.2"
   },
   "devDependencies": {
@@ -27,7 +27,6 @@
   },
   "resolutions": {
     "**/hoist-non-react-statics": "2.5.0",
-    "**/react-native-tab-view": "1.2.0",
-    "**/prop-types": "15.6.1"
+    "**/react-native-tab-view": "2.0.1"
   }
 }
