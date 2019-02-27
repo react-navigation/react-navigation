@@ -36,9 +36,9 @@ class MyHomeScreen extends React.Component {
   }
 }
 
-class ReccomendedScreen extends React.Component {
+class RecommendedScreen extends React.Component {
   static navigationOptions = {
-    tabBarLabel: 'Reccomended',
+    tabBarLabel: 'Recommended',
     tabBarIcon: ({ tintColor, focused, horizontal }) => (
       <Ionicons
         name={focused ? 'ios-people' : 'ios-people'}
@@ -51,7 +51,7 @@ class ReccomendedScreen extends React.Component {
     const { navigation } = this.props;
     return (
       <SafeAreaView forceInset={{ horizontal: 'always', top: 'always' }}>
-        <Text>Reccomended Screen</Text>
+        <Text>Recommended Screen</Text>
         <Button
           onPress={() => navigation.navigate('Home')}
           title="Go to home tab"
@@ -90,7 +90,7 @@ class FeaturedScreen extends React.Component {
 
 const SimpleTabs = createMaterialTopTabNavigator({
   Home: MyHomeScreen,
-  Reccomended: ReccomendedScreen,
+  Recommended: RecommendedScreen,
   Featured: FeaturedScreen,
 });
 
