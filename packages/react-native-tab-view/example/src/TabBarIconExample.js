@@ -61,6 +61,7 @@ export default class TabBarIconExample extends React.Component<*, State> {
   render() {
     return (
       <TabView
+        lazy
         style={this.props.style}
         navigationState={this.state}
         renderScene={this._renderScene}

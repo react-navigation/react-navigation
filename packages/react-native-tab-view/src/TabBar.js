@@ -96,7 +96,9 @@ export default class TabBar<T: Route> extends React.Component<Props<T>, State> {
   }
 
   componentDidMount() {
-    this.props.addListener('position', this._adjustScroll);
+    if (this.props.scrollEnabled) {
+      this.props.addListener('position', this._adjustScroll);
+    }
   }
 
   componentDidUpdate(prevProps: Props<T>) {
@@ -110,6 +112,14 @@ export default class TabBar<T: Route> extends React.Component<Props<T>, State> {
       prevProps.navigationState.index !== this.props.navigationState.index
     ) {
       this._resetScroll(this.props.navigationState.index);
+    }
+
+    if (prevProps.scrollEnabled !== this.props.scrollEnabled) {
+      if (this.props.scrollEnabled) {
+        this.props.addListener('position', this._adjustScroll);
+      } else {
+        this.props.removeListener('position', this._adjustScroll);
+      }
     }
   }
 

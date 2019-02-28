@@ -40,7 +40,7 @@ react-native link react-native-reanimated
 react-native link react-native-gesture-handler
 ```
 
-_IMPORTANT:_ There are additional steps required for `react-native-gesture-handler` on Android after running `react-native link react-native-gesture-handler`. Check the [this guide](https://kmagiera.github.io/react-native-gesture-handler/docs/getting-started.html) to complete the installation.
+**IMPORTANT:** There are additional steps required for `react-native-gesture-handler` on Android after running `react-native link react-native-gesture-handler`. Check the [this guide](https://kmagiera.github.io/react-native-gesture-handler/docs/getting-started.html) to complete the installation.
 
 ## Quick Start
 
@@ -106,7 +106,7 @@ The package exports a `TabView` component which is the one you'd use to render t
 
 Container component responsible for rendering and managing tabs. Follows material design styles by default.
 
-#### Example
+Basic usage look like this:
 
 ```js
 <TabView
@@ -202,7 +202,7 @@ this.props.jumpTo('albums');
 
 All the scenes rendered with `SceneMap` are optimized using `React.PureComponent` and don't re-render when parent's props or states change. If you need more control over how your scenes update (e.g. - triggering a re-render even if the `navigationState` didn't change), use `renderScene` directly instead of using `SceneMap`.
 
-_IMPORTANT:_ **Do not** pass inline functions to `SceneMap`, for example, don't do the following:
+**IMPORTANT:** **Do not** pass inline functions to `SceneMap`, for example, don't do the following:
 
 ```js
 SceneMap({
@@ -235,6 +235,20 @@ renderTabBar = () => null;
 
 Position of the tab bar in the tab view. Possible values are `'top'` and `'bottom'`. Defaults to `'top'`.
 
+##### `lazy`
+
+Boolean indicating whether to lazily render the scenes. By default all scenes are rendered to provide a smoother swipe experience. But you might want to defer the rendering of unfocused scenes until the user sees them. To enable lazy rendering, set `lazy` to `true`.
+
+When you enable `lazy`, the unfocused screens will usually take some time to render when they come into focus. You can use the `renderLazyPlaceholder` prop to customize what the user sees during this short period.
+
+##### `renderLazyPlaceholder`
+
+Callback which returns a custom React Element to render for routes that haven't been rendered yet. Receives an object containing the route as the argument. The `lazy` prop also needs to be enabled.
+
+This view is usually only shown for a split second. Keep it lightweight.
+
+By default, this renders `null`.
+
 ##### `swipeEnabled`
 
 Boolean indicating whether to enable swipe gestures. Swipe gestures are enabled by default. Passing `false` will disable swipe gestures, but the user can still switch tabs by pressing the tab bar.
@@ -265,15 +279,16 @@ Style to apply to the tab view container.
 
 ### `TabBar`
 
-Material design themed tab bar. To pass props to the tab bar, you'd need to use the `renderTabBar` prop of `TabView` to render the `TabBar` and pass additional props.
+Material design themed tab bar. To customize the tab bar, you'd need to use the `renderTabBar` prop of `TabView` to render the `TabBar` and pass additional props.
 
-#### Example
+For example, to customize the indicator color and the tab bar background color, you can pass `indicatorStyle` and `style` props to the `TabBar` respectively:
 
 ```js
 renderTabBar={props =>
   <TabBar
     {...props}
-    indicatorStyle={{ backgroundColor: 'pink' }}
+    indicatorStyle={{ backgroundColor: 'white' }}
+    style={{ backgroundColor: 'pink' }}
   />
 }
 ```

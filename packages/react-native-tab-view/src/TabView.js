@@ -7,6 +7,7 @@ import type { LayoutEvent } from 'react-native/Libraries/Types/CoreEventTypes';
 
 import TabBar, { type Props as TabBarProps } from './TabBar';
 import Pager from './Pager';
+import SceneView from './SceneView';
 import type {
   Layout,
   NavigationState,
@@ -21,12 +22,14 @@ type Props<T: Route> = {|
     ...SceneRendererProps,
     route: T,
   |}) => React.Node,
+  renderLazyPlaceholder: (props: {| route: T |}) => React.Node,
   renderTabBar: (props: {|
     ...SceneRendererProps,
     navigationState: NavigationState<T>,
   |}) => React.Node,
   tabBarPosition: 'top' | 'bottom',
   initialLayout?: { width?: number, height?: number },
+  lazy: boolean,
   swipeEnabled: boolean,
   swipeDistanceThreshold?: number,
   swipeVelocityThreshold?: number,
@@ -36,7 +39,6 @@ type Props<T: Route> = {|
 
 type State = {|
   layout: Layout,
-  renderUnfocusedScenes: boolean,
 |};
 
 export default class TabView<T: Route> extends React.Component<
@@ -46,18 +48,14 @@ export default class TabView<T: Route> extends React.Component<
   static defaultProps = {
     tabBarPosition: 'top',
     renderTabBar: (props: TabBarProps<T>) => <TabBar {...props} />,
+    renderLazyPlaceholder: () => null,
     swipeEnabled: true,
+    lazy: false,
   };
 
   state = {
     layout: { width: 0, height: 0, ...this.props.initialLayout },
-    renderUnfocusedScenes: false,
   };
-
-  componentDidMount() {
-    // Delay rendering of unfocused scenes for improved startup
-    setTimeout(() => this.setState({ renderUnfocusedScenes: true }), 0);
-  }
 
   _jumpToIndex = (index: number) => {
     if (index !== this.props.navigationState.index) {
@@ -86,10 +84,14 @@ export default class TabView<T: Route> extends React.Component<
   render() {
     const {
       navigationState,
+      lazy,
       swipeEnabled,
       swipeDistanceThreshold,
       swipeVelocityThreshold,
       tabBarPosition,
+      renderTabBar,
+      renderScene,
+      renderLazyPlaceholder,
       sceneContainerStyle,
       style,
     } = this.props;
@@ -132,48 +134,35 @@ export default class TabView<T: Route> extends React.Component<
             return (
               <React.Fragment>
                 {tabBarPosition === 'top' &&
-                  this.props.renderTabBar({
+                  renderTabBar({
                     ...sceneRendererProps,
                     navigationState,
                   })}
                 {render(
                   navigationState.routes.map((route, i) => {
-                    const isFocused = i === navigationState.index;
-
                     return (
-                      <View
+                      <SceneView
+                        {...sceneRendererProps}
                         key={route.key}
-                        accessibilityElementsHidden={!isFocused}
-                        importantForAccessibility={
-                          isFocused ? 'auto' : 'no-hide-descendants'
-                        }
-                        style={[
-                          styles.route,
-                          // If we don't have the layout yet, make the focused screen fill the container
-                          // This avoids delay before we are able to render pages side by side
-                          layout.width
-                            ? { width: layout.width }
-                            : isFocused
-                            ? StyleSheet.absoluteFill
-                            : null,
-                          sceneContainerStyle,
-                        ]}
+                        index={i}
+                        lazy={lazy}
+                        navigationState={navigationState}
+                        style={sceneContainerStyle}
                       >
-                        {// Don't render unfocused tabs if layout isn't available
-                        // Or it's the initial render
-                        isFocused ||
-                        (this.state.renderUnfocusedScenes && layout.width)
-                          ? this.props.renderScene({
-                              ...sceneRendererProps,
-                              route,
-                            })
-                          : null}
-                      </View>
+                        {({ loading }) =>
+                          loading
+                            ? renderLazyPlaceholder({ route })
+                            : renderScene({
+                                ...sceneRendererProps,
+                                route,
+                              })
+                        }
+                      </SceneView>
                     );
                   })
                 )}
                 {tabBarPosition === 'bottom' &&
-                  this.props.renderTabBar({
+                  renderTabBar({
                     ...sceneRendererProps,
                     navigationState,
                   })}
@@ -188,10 +177,6 @@ export default class TabView<T: Route> extends React.Component<
 
 const styles = StyleSheet.create({
   pager: {
-    flex: 1,
-    overflow: 'hidden',
-  },
-  route: {
     flex: 1,
     overflow: 'hidden',
   },
