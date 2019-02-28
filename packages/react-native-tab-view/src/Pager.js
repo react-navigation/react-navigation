@@ -79,8 +79,9 @@ type Props<T: Route> = {|
     addListener: (type: 'position', listener: Listener) => void,
     // Remove a position listener
     removeListener: (type: 'position', listener: Listener) => void,
-    // Immediately switch to a tab regardless of the navigation state
-    jumpToIndex: (index: number) => void,
+    // Callback to call when switching the tab
+    // The tab switch animation is performed even if the index in state is unchanged
+    jumpTo: (key: string) => void,
   |}) => React.Node,
 |};
 
@@ -193,6 +194,21 @@ export default class Pager<T: Route> extends React.Component<Props<T>> {
     // If the index changed, we need to trigger a tab switch
     this._isSwipeGesture.setValue(FALSE);
     this._nextIndex.setValue(index);
+  };
+
+  _jumpTo = (key: string) => {
+    const { navigationState } = this.props;
+
+    const index = navigationState.routes.findIndex(route => route.key === key);
+
+    // A tab switch might occur when we're in the middle of a transition
+    // In that case, the index might be same as before
+    // So we conditionally make the pager to update the position
+    if (navigationState.index === index) {
+      this._jumpToIndex(index);
+    } else {
+      this.props.onIndexChange(index);
+    }
   };
 
   _addListener = (type: string, listener: Listener) => {
@@ -400,7 +416,7 @@ export default class Pager<T: Route> extends React.Component<Props<T>> {
       position,
       addListener: this._addListener,
       removeListener: this._removeListener,
-      jumpToIndex: this._jumpToIndex,
+      jumpTo: this._jumpTo,
       render: children => (
         <PanGestureHandler
           enabled={layout.width !== 0 && swipeEnabled}

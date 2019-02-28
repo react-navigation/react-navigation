@@ -107,22 +107,9 @@ export default class TabView<T: Route> extends React.Component<
           swipeVelocityThreshold={swipeVelocityThreshold}
           onIndexChange={this._jumpToIndex}
         >
-          {({ position, render, addListener, removeListener, jumpToIndex }) => {
-            const jumpTo = (key: string) => {
-              const index = navigationState.routes.findIndex(
-                route => route.key === key
-              );
-
-              // A tab switch might occur when we're in the middle of a transition
-              // In that case, the index might be same as before
-              // So we conditionally make the pager to update the position
-              if (navigationState.index === index) {
-                jumpToIndex(index);
-              } else {
-                this._jumpToIndex(index);
-              }
-            };
-
+          {({ position, render, addListener, removeListener, jumpTo }) => {
+            // All of the props here must not change between re-renders
+            // This is crucial to optimizing the routes with PureComponent
             const sceneRendererProps = {
               position,
               layout,
