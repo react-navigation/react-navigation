@@ -13,12 +13,12 @@ import type {
   NavigationState,
   Route,
   SceneRendererProps,
+  PagerCommonProps,
 } from './types';
 
 type Props<T: Route> = {|
+  ...PagerCommonProps,
   onIndexChange: (index: number) => mixed,
-  onSwipeStart?: () => mixed,
-  onSwipeEnd?: () => mixed,
   navigationState: NavigationState<T>,
   renderScene: (props: {|
     ...SceneRendererProps,
@@ -32,9 +32,6 @@ type Props<T: Route> = {|
   tabBarPosition: 'top' | 'bottom',
   initialLayout?: { width?: number, height?: number },
   lazy: boolean,
-  swipeEnabled: boolean,
-  swipeDistanceThreshold?: number,
-  swipeVelocityThreshold?: number,
   sceneContainerStyle?: ViewStyleProp,
   style?: ViewStyleProp,
 |};
@@ -51,6 +48,7 @@ export default class TabView<T: Route> extends React.Component<
     tabBarPosition: 'top',
     renderTabBar: (props: TabBarProps<T>) => <TabBar {...props} />,
     renderLazyPlaceholder: () => null,
+    keyboardDismissMode: 'on-drag',
     swipeEnabled: true,
     lazy: false,
   };
@@ -89,6 +87,7 @@ export default class TabView<T: Route> extends React.Component<
       onSwipeEnd,
       navigationState,
       lazy,
+      keyboardDismissMode,
       swipeEnabled,
       swipeDistanceThreshold,
       swipeVelocityThreshold,
@@ -106,6 +105,7 @@ export default class TabView<T: Route> extends React.Component<
         <Pager
           navigationState={navigationState}
           layout={layout}
+          keyboardDismissMode={keyboardDismissMode}
           swipeEnabled={swipeEnabled}
           swipeDistanceThreshold={swipeDistanceThreshold}
           swipeVelocityThreshold={swipeVelocityThreshold}

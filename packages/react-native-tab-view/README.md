@@ -249,6 +249,13 @@ This view is usually only shown for a split second. Keep it lightweight.
 
 By default, this renders `null`.
 
+#### `keyboardDismissMode`
+
+String indicating whether the keyboard gets dismissed in response to a drag gesture. Possible values are:
+
+- `'on-drag'` (default): the keyboard is dismissed when a drag begins.
+- `'none'`: drags do not dismiss the keyboard.
+
 ##### `swipeEnabled`
 
 Boolean indicating whether to enable swipe gestures. Swipe gestures are enabled by default. Passing `false` will disable swipe gestures, but the user can still switch tabs by pressing the tab bar.

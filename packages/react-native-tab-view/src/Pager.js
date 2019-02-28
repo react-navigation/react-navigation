@@ -1,11 +1,17 @@
 /* @flow */
 
 import * as React from 'react';
-import { StyleSheet, Platform } from 'react-native';
+import { StyleSheet, Platform, Keyboard } from 'react-native';
 import { PanGestureHandler, State } from 'react-native-gesture-handler';
 import Animated, { Easing } from 'react-native-reanimated';
 
-import type { Layout, NavigationState, Route, Listener } from './types';
+import type {
+  Layout,
+  NavigationState,
+  Route,
+  Listener,
+  PagerCommonProps,
+} from './types';
 
 const {
   Clock,
@@ -62,12 +68,8 @@ const TIMING_CONFIG = {
 };
 
 type Props<T: Route> = {|
-  swipeEnabled: boolean,
-  swipeDistanceThreshold?: number,
-  swipeVelocityThreshold: number,
+  ...PagerCommonProps,
   onIndexChange: (index: number) => mixed,
-  onSwipeStart?: () => mixed,
-  onSwipeEnd?: () => mixed,
   navigationState: NavigationState<T>,
   layout: Layout,
   children: (props: {|
@@ -328,10 +330,14 @@ export default class Pager<T: Route> extends React.Component<Props<T>> {
       // Without `onChange`, this will fire even if the value didn't change
       // We don't want to call the listeners if the value didn't change
       call([this._isSwiping], ([value]) => {
-        const { onSwipeStart, onSwipeEnd } = this.props;
+        const { keyboardDismissMode, onSwipeStart, onSwipeEnd } = this.props;
 
         if (value === TRUE) {
           onSwipeStart && onSwipeStart();
+
+          if (keyboardDismissMode === 'on-drag') {
+            Keyboard.dismiss();
+          }
         } else {
           onSwipeEnd && onSwipeEnd();
         }

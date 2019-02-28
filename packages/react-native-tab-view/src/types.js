@@ -33,3 +33,12 @@ export type SceneRendererProps = {|
   addListener: (type: 'position', listener: Listener) => void,
   removeListener: (type: 'position', listener: Listener) => void,
 |};
+
+export type PagerCommonProps = {|
+  keyboardDismissMode: 'none' | 'on-drag',
+  swipeEnabled: boolean,
+  swipeDistanceThreshold?: number,
+  swipeVelocityThreshold?: number,
+  onSwipeStart?: () => mixed,
+  onSwipeEnd?: () => mixed,
+|};
