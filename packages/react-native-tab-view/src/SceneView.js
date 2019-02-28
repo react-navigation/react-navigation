@@ -36,20 +36,23 @@ export default class SceneView<T: Route> extends React.Component<
   };
 
   componentDidMount() {
-    if (this.state.loading && !this.props.lazy) {
-      // If lazy mode is not enabled, render the scene with a delay if not rendered
+    if (this.props.lazy) {
+      // If lazy mode is enabled, listen to position updates
+      this.props.addListener('position', this._handlePosition);
+    } else if (this.state.loading) {
+      // If lazy mode is not enabled, render the scene with a delay if not loaded already
       // This improves the initial startup time as the scene is no longer blocking
       setTimeout(() => this.setState({ loading: false }), 0);
     }
-
-    if (this.props.lazy) {
-      this.props.addListener('position', this._handlePosition);
-    }
   }
 
-  componentDidUpdate(prevProps: Props<T>) {
-    if (prevProps.lazy !== this.props.lazy) {
-      if (this.props.lazy) {
+  componentDidUpdate(prevProps: Props<T>, prevState: State) {
+    if (
+      this.props.lazy !== prevProps.lazy ||
+      this.state.loading !== prevState.loading
+    ) {
+      // We only need the listener if the tab hasn't loaded yet and lazy is enabled
+      if (this.props.lazy && this.state.loading) {
         this.props.addListener('position', this._handlePosition);
       } else {
         this.props.removeListener('position', this._handlePosition);
@@ -64,12 +67,17 @@ export default class SceneView<T: Route> extends React.Component<
   _handlePosition = value => {
     const { navigationState, index } = this.props;
 
+    // Try to calculate the next screen to load from position value
+    // By default, get the nearest smallest integer which is index of the route we're navigating to
     let next = Math.ceil(value);
 
+    // If the value calculated is the current index, we're probably navigating away
+    // Get the nearest largest integer which is the index of the route we're navigating to
     if (next === navigationState.index) {
       next = Math.floor(value);
     }
 
+    // If it's the current route, we need to load it
     if (next === index && this.state.loading) {
       this.setState({ loading: false });
     }
