@@ -27,7 +27,7 @@ A cross-platform Tab View component for React Native.
 Open a Terminal in the project root and run:
 
 ```sh
-yarn add react-native-tab-view@alpha
+yarn add react-native-tab-view
 ```
 
 If you are using Expo, you are done. Otherwise, continue to the next step.
