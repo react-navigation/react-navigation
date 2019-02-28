@@ -17,6 +17,8 @@ import type {
 
 type Props<T: Route> = {|
   onIndexChange: (index: number) => mixed,
+  onSwipeStart?: () => mixed,
+  onSwipeEnd?: () => mixed,
   navigationState: NavigationState<T>,
   renderScene: (props: {|
     ...SceneRendererProps,
@@ -83,6 +85,8 @@ export default class TabView<T: Route> extends React.Component<
 
   render() {
     const {
+      onSwipeStart,
+      onSwipeEnd,
       navigationState,
       lazy,
       swipeEnabled,
@@ -105,6 +109,8 @@ export default class TabView<T: Route> extends React.Component<
           swipeEnabled={swipeEnabled}
           swipeDistanceThreshold={swipeDistanceThreshold}
           swipeVelocityThreshold={swipeVelocityThreshold}
+          onSwipeStart={onSwipeStart}
+          onSwipeEnd={onSwipeEnd}
           onIndexChange={this._jumpToIndex}
         >
           {({ position, render, addListener, removeListener, jumpTo }) => {

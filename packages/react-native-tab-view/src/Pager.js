@@ -66,6 +66,8 @@ type Props<T: Route> = {|
   swipeDistanceThreshold?: number,
   swipeVelocityThreshold: number,
   onIndexChange: (index: number) => mixed,
+  onSwipeStart?: () => mixed,
+  onSwipeEnd?: () => mixed,
   navigationState: NavigationState<T>,
   layout: Layout,
   children: (props: {|
@@ -310,7 +312,31 @@ export default class Pager<T: Route> extends React.Component<Props<T>> {
     call([this._index], ([value]) => {
       this._currentIndexValue = value;
     }),
-    cond(this._isListening, call([this._position], this._handlePositionChange)),
+    // Conditionally listen for changes in the position value
+    // The position value can changes a lot in short time
+    // So we only add a listener when necessary to avoid extra overhead
+    cond(
+      this._isListening,
+      onChange(
+        this._position,
+        call([this._position], this._handlePositionChange)
+      )
+    ),
+    onChange(
+      this._isSwiping,
+      // Listen to updates for this value only when it changes
+      // Without `onChange`, this will fire even if the value didn't change
+      // We don't want to call the listeners if the value didn't change
+      call([this._isSwiping], ([value]) => {
+        const { onSwipeStart, onSwipeEnd } = this.props;
+
+        if (value === TRUE) {
+          onSwipeStart && onSwipeStart();
+        } else {
+          onSwipeEnd && onSwipeEnd();
+        }
+      })
+    ),
     onChange(
       this._nextIndex,
       cond(neq(this._nextIndex, UNSET), [
