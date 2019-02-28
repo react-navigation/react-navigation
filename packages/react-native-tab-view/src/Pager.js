@@ -1,7 +1,7 @@
 /* @flow */
 
 import * as React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import { PanGestureHandler, State } from 'react-native-gesture-handler';
 import Animated, { Easing } from 'react-native-reanimated';
 
@@ -452,6 +452,11 @@ export default class Pager<T: Route> extends React.Component<Props<T>> {
           failOffsetY={[-SWIPE_DISTANCE_MINIMUM, SWIPE_DISTANCE_MINIMUM]}
         >
           <Animated.View
+            removeClippedSubviews={
+              // Clip unfocused views to improve meory usage
+              // Don't enable this on iOS where this is buggy and views don't re-appear
+              Platform.OS !== 'ios'
+            }
             style={[
               styles.container,
               layout.width
