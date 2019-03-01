@@ -217,7 +217,6 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
                             >
                               <Text
                                 accessibilityTraits="header"
-                                accessible={false}
                                 allowFontScaling={true}
                                 numberOfLines={1}
                                 onLayout={[Function]}
@@ -321,7 +320,6 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
                 >
                   <Text
                     accessibilityTraits="header"
-                    accessible={false}
                     allowFontScaling={true}
                     numberOfLines={1}
                     onLayout={[Function]}

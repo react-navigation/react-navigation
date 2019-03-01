@@ -65,7 +65,6 @@ class Transitioner extends React.Component {
       this.state.position.removeListener(this._positionListener);
   }
 
-  // eslint-disable-next-line react/no-deprecated
   componentWillReceiveProps(nextProps) {
     if (this._isTransitionRunning) {
       if (!this._queuedTransition) {
@@ -178,9 +177,9 @@ class Transitioner extends React.Component {
         // get the transition spec.
         const transitionUserSpec = nextProps.configureTransition
           ? nextProps.configureTransition(
-            this._transitionProps,
-            this._prevTransitionProps
-          )
+              this._transitionProps,
+              this._prevTransitionProps
+            )
           : null;
 
         const transitionSpec = {

@@ -150,7 +150,6 @@ exports[`StackNavigator applies correct values when headerRight is present 1`] =
                 >
                   <Text
                     accessibilityTraits="header"
-                    accessible={false}
                     allowFontScaling={true}
                     numberOfLines={1}
                     onLayout={[Function]}
@@ -344,7 +343,6 @@ exports[`StackNavigator renders successfully 1`] = `
                 >
                   <Text
                     accessibilityTraits="header"
-                    accessible={false}
                     allowFontScaling={true}
                     numberOfLines={1}
                     onLayout={[Function]}
