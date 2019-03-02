@@ -1,0 +1,16 @@
+{
+  "increment": "conventional:angular",
+  "scripts": {
+    "changelog": "conventional-changelog -p angular | tail -n +3"
+  },
+  "git": {
+    "commitMessage": "chore: release %s",
+    "tagName": "v%s"
+  },
+  "npm": {
+    "publish": true
+  },
+  "github": {
+    "release": true
+  }
+}
