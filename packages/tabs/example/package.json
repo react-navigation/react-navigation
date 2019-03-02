@@ -7,30 +7,27 @@
     "android": "expo android",
     "ios": "expo ios"
   },
+  "main": "App.js",
   "dependencies": {
-    "@expo/vector-icons": "^6.2.0",
-    "@react-navigation/core": "^3.0.0-alpha.11",
-    "@react-navigation/native": "^3.0.0-alpha.6",
-    "expo": "30",
-    "hoist-non-react-statics": "^2.5.0",
-    "prop-types": "^15.6.1",
-    "react": "16.3.1",
-    "react-lifecycles-compat": "^3.0.4",
-    "react-native": "~0.55.4",
-    "react-native-safe-area-view": "^0.7.0",
-    "react-native-tab-view": "^1.0.0",
-    "react-navigation": "^3.0.0-alpha.4"
+    "@expo/vector-icons": "^9.0.0",
+    "@react-navigation/core": "^3.1.1",
+    "@react-navigation/native": "^3.1.5",
+    "expo": "32.0.6",
+    "react": "16.5.0",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
+    "react-native-safe-area-view": "^0.13.1",
+    "react-native-screens": "^1.0.0-alpha.22",
+    "react-native-tab-view": "^1.2.0",
+    "react-navigation": "^3.3.2"
   },
   "devDependencies": {
-    "babel-plugin-module-resolver": "^3.0.0",
-    "babel-preset-expo": "^4.0.0",
-    "glob-to-regexp": "^0.3.0"
+    "babel-plugin-module-resolver": "^3.2.0",
+    "babel-preset-expo": "^5.0.0",
+    "glob-to-regexp": "^0.4.0"
   },
-  "main": "App.js",
   "resolutions": {
     "**/hoist-non-react-statics": "2.5.0",
-    "**/prop-types": "15.6.1",
-    "**/react-lifecycles-compat": "3.0.4",
-    "**/react-native-tab-view": "1.0.0"
+    "**/react-native-tab-view": "1.2.0",
+    "**/prop-types": "15.6.1"
   }
 }

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Expo from 'expo';
+import { registerRootComponent } from 'expo';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { createStackNavigator } from 'react-navigation';
 import { createAppContainer } from '@react-navigation/native';
@@ -53,4 +53,4 @@ const styles = {
   },
 };
 
-Expo.registerRootComponent(App);
+registerRootComponent(App);
