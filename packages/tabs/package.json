@@ -5,9 +5,7 @@
   "main": "dist/index.js",
   "files": [
     "dist/",
-    "src/",
-    "createBottomTabNavigator.js",
-    "createMaterialTopTabNavigator.js"
+    "src/"
   ],
   "react-native": "src/index.js",
   "scripts": {
@@ -47,8 +45,8 @@
   },
   "devDependencies": {
     "@expo/vector-icons": "^6.2.0",
-    "@react-navigation/core": "^3.0.0",
-    "@react-navigation/native": "^3.0.",
+    "@react-navigation/core": "^3.1.1",
+    "@react-navigation/native": "^3.1.5",
     "babel-cli": "^6.26.0",
     "babel-jest": "^21.2.0",
     "babel-plugin-syntax-class-properties": "^6.13.0",

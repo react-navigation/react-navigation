@@ -38,8 +38,8 @@ jobs:
         - attach_workspace:
             at: ~/project
         - run: |
-            yarn run lint
-            yarn run flow
+            yarn lint
+            yarn flow check
   unit-tests:
       <<: *defaults
       steps:

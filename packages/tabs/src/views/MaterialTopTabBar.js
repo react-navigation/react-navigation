@@ -66,8 +66,8 @@ export default class TabBarTop extends React.PureComponent<Props> {
 
     // Prepend '-1', so there are always at least 2 items in inputRange
     const inputRange = [-1, ...routes.map((x, i) => i)];
-    const outputRange = inputRange.map(
-      inputIndex => (inputIndex === index ? activeTintColor : inactiveTintColor)
+    const outputRange = inputRange.map(inputIndex =>
+      inputIndex === index ? activeTintColor : inactiveTintColor
     );
     const color = position.interpolate({
       inputRange,
