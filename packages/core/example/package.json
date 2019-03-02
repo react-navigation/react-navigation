@@ -24,10 +24,9 @@
     "react-navigation-tabs": "^1.0.2"
   },
   "resolutions": {
-    "**/react": "16.3.1",
-    "**/prop-types": "15.6.0",
-    "**/react-lifecycles-compat": "3.0.4",
-    "**/hoist-non-react-statics": "2.5.0"
+    "**/react": "16.6.3",
+    "**/prop-types": "15.6.2",
+    "**/hoist-non-react-statics": "2.5.5"
   },
   "devDependencies": {
     "babel-preset-expo": "^5.0.0"

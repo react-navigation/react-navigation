@@ -1,5 +1,4 @@
 import React from 'react';
-import { polyfill } from 'react-lifecycles-compat';
 import invariant from '../utils/invariant';
 
 function createNavigator(NavigatorView, router, navigationConfig) {
@@ -70,7 +69,7 @@ function createNavigator(NavigatorView, router, navigationConfig) {
     }
   }
 
-  return polyfill(Navigator);
+  return Navigator;
 }
 
 export default createNavigator;
