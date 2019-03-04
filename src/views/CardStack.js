@@ -337,14 +337,30 @@ class CardStack extends Component {
             return;
           }
           if (gestureVelocity > 0.5) {
-            this._goBack(immediateIndex, goBackDuration);
+            if (this.props.onActionBeforeSwipeBack) {
+              this.props.onActionBeforeSwipeBack(() => {
+                this._goBack(immediateIndex, goBackDuration)
+              }, () => {
+                this._reset(immediateIndex, goBackDuration)
+              });
+            } else {
+              this._goBack(immediateIndex, goBackDuration);
+            }
             return;
           }
 
           // Then filter based on the distance the screen was moved. Over a third of the way swiped,
           // and the back will happen.
           if (value <= index - POSITION_THRESHOLD) {
-            this._goBack(immediateIndex, goBackDuration);
+            if (this.props.onActionBeforeSwipeBack) {
+              this.props.onActionBeforeSwipeBack(() => {
+                this._goBack(immediateIndex, goBackDuration)
+              }, () => {
+                this._reset(immediateIndex, goBackDuration)
+              });
+            } else {
+              this._goBack(immediateIndex, goBackDuration);
+            }
           } else {
             this._reset(immediateIndex, resetDuration);
           }

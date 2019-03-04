@@ -220,6 +220,7 @@ export type NavigationStackViewConfig = {
   transitionConfig?: () => TransitionConfig,
   onTransitionStart?: () => void,
   onTransitionEnd?: () => void,
+  onActionBeforeSwipeBack?: (accept, decline) => void,
 };
 
 export type NavigationStackScreenOptions = NavigationScreenOptions & {

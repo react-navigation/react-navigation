@@ -33,6 +33,7 @@ export default (
     onTransitionStart,
     onTransitionEnd,
     navigationOptions,
+    onActionBeforeSwipeBack
   } = stackConfig;
   const stackRouterConfig = {
     initialRouteName,
@@ -57,6 +58,7 @@ export default (
       transitionConfig={transitionConfig}
       onTransitionStart={onTransitionStart}
       onTransitionEnd={onTransitionEnd}
+      onActionBeforeSwipeBack={onActionBeforeSwipeBack}
     />
   ));
 
