@@ -231,6 +231,13 @@ class CardStack extends Component {
     });
   }
 
+  _getCustomSwipeBackBehavior(index, duration) {
+    return this.props.onActionBeforeSwipeBack(
+      () => this._goBack(index, duration),
+      () => this._reset(index, duration)
+    );
+  }
+
   render(): React.Element<*> {
     let floatingHeader = null;
     const headerMode = this._getHeaderMode();
@@ -338,11 +345,7 @@ class CardStack extends Component {
           }
           if (gestureVelocity > 0.5) {
             if (this.props.onActionBeforeSwipeBack) {
-              this.props.onActionBeforeSwipeBack(() => {
-                this._goBack(immediateIndex, goBackDuration)
-              }, () => {
-                this._reset(immediateIndex, goBackDuration)
-              });
+              this._getCustomSwipeBackBehavior(immediateIndex, goBackDuration);
             } else {
               this._goBack(immediateIndex, goBackDuration);
             }
@@ -353,11 +356,7 @@ class CardStack extends Component {
           // and the back will happen.
           if (value <= index - POSITION_THRESHOLD) {
             if (this.props.onActionBeforeSwipeBack) {
-              this.props.onActionBeforeSwipeBack(() => {
-                this._goBack(immediateIndex, goBackDuration)
-              }, () => {
-                this._reset(immediateIndex, goBackDuration)
-              });
+              this._getCustomSwipeBackBehavior(immediateIndex, goBackDuration);
             } else {
               this._goBack(immediateIndex, goBackDuration);
             }
