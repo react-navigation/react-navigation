@@ -12,7 +12,8 @@
     "lint": "eslint .",
     "precommit": "yarn lint && yarn flow && yarn test",
     "bootstrap": "yarn && yarn --cwd example",
-    "example": "yarn --cwd example"
+    "example": "yarn --cwd example",
+    "release": "yarn release-it"
   },
   "keywords": [
     "react-native-component",
