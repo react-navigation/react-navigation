@@ -8,7 +8,23 @@ Tab navigators for React Navigation.
 
 ## Installation
 
-With react-navigation@^2.0.0, no installation is required.
+Open a Terminal in the project root and run:
+
+```sh
+yarn add react-nvigation-tabs
+```
+
+If you are using Expo, you are done. Otherwise, continue to the next step.
+
+Install and link [`react-native-gesture-handler`](https://github.com/kmagiera/react-native-gesture-handler) and [`react-native-reanimated`](https://github.com/kmagiera/react-native-reanimated). To install and link them, run:
+
+```sh
+yarn add react-native-reanimated react-native-gesture-handler
+react-native link react-native-reanimated
+react-native link react-native-gesture-handler
+```
+
+**IMPORTANT:** There are additional steps required for `react-native-gesture-handler` on Android after running `react-native link react-native-gesture-handler`. Check the [this guide](https://kmagiera.github.io/react-native-gesture-handler/docs/getting-started.html) to complete the installation.
 
 ## Usage
 
