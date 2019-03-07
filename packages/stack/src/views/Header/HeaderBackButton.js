@@ -128,10 +128,10 @@ class HeaderBackButton extends React.PureComponent {
       </TouchableItem>
     );
 
-    if (Platform.OS === 'android') {
-      return <View style={styles.androidButtonWrapper}>{button}</View>;
-    } else {
+    if (Platform.OS === 'ios') {
       return button;
+    } else {
+      return <View style={styles.androidButtonWrapper}>{button}</View>;
     }
   }
 }

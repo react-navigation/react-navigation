@@ -18,7 +18,7 @@ module.exports = {
         require('./views/assets/back-icon.png'),
         require('./views/assets/back-icon-mask.png'),
       ],
-      android: [require('./views/assets/back-icon.png')],
+      default: [require('./views/assets/back-icon.png')],
     });
   },
   get Header() {

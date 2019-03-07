@@ -664,7 +664,7 @@ class StackViewLayout extends React.Component {
     if (this.props.headerMode) {
       return this.props.headerMode;
     }
-    if (Platform.OS === 'android' || this.props.mode === 'modal') {
+    if (Platform.OS !== 'ios' || this.props.mode === 'modal') {
       return 'screen';
     }
     return 'float';
@@ -724,7 +724,7 @@ class StackViewLayout extends React.Component {
       }
     }
 
-    if (Platform.OS === 'android') {
+    if (Platform.OS !== 'ios') {
       return 'left';
     } else {
       return 'center';
@@ -734,7 +734,7 @@ class StackViewLayout extends React.Component {
   _getHeaderTransitionPreset() {
     // On Android or with header mode screen, we always just use in-place,
     // we ignore the option entirely (at least until we have other presets)
-    if (Platform.OS === 'android' || this._getHeaderMode() === 'screen') {
+    if (Platform.OS !== 'ios' || this._getHeaderMode() === 'screen') {
       return 'fade-in-place';
     }
 
@@ -763,7 +763,7 @@ class StackViewLayout extends React.Component {
     // Even when we align to center on Android, people should need to opt-in to
     // showing the back title
     const enabledByDefault = !(
-      layoutPreset === 'left' || Platform.OS === 'android'
+      layoutPreset === 'left' || Platform.OS !== 'ios'
     );
 
     return typeof headerBackTitleVisible === 'boolean'

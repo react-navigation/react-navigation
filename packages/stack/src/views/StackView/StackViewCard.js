@@ -14,7 +14,7 @@ function getAccessibilityProps(isActive) {
       importantForAccessibility: isActive ? 'yes' : 'no-hide-descendants',
     };
   } else {
-    return null;
+    return {};
   }
 }
 

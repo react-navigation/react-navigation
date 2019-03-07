@@ -68,7 +68,7 @@ function defaultTransitionConfig(
   prevTransitionProps,
   isModal
 ) {
-  if (Platform.OS === 'android') {
+  if (Platform.OS !== 'ios') {
     // Use the default Android animation no matter if the screen is a modal.
     // Android doesn't have full-screen modals like iOS does, it has dialogs.
     if (

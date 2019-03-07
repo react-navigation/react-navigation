@@ -641,17 +641,16 @@ function warnIfHeaderStyleDefined(value, styleProp) {
   }
 }
 
-let platformContainerStyles;
-if (Platform.OS === 'ios') {
-  platformContainerStyles = {
+const platformContainerStyles = Platform.select({
+  android: {
+    elevation: 4,
+  },
+  ios: {
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: '#A7A7AA',
-  };
-} else {
-  platformContainerStyles = {
-    elevation: 4,
-  };
-}
+  },
+  default: {},
+});
 
 const DEFAULT_BACKGROUND_COLOR = '#FFF';
 
