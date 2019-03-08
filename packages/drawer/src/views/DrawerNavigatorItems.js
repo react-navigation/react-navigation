@@ -47,35 +47,33 @@ const DrawerNavigatorItems = ({
           delayPressIn={0}
         >
           <SafeAreaView
-            style={{ backgroundColor }}
+            style={[{ backgroundColor }, styles.item, itemStyle]}
             forceInset={{
               [drawerPosition]: 'always',
               [drawerPosition === 'left' ? 'right' : 'left']: 'never',
               vertical: 'never',
             }}
           >
-            <View style={[styles.item, itemStyle]}>
-              {icon ? (
-                <View
-                  style={[
-                    styles.icon,
-                    focused ? null : styles.inactiveIcon,
-                    iconContainerStyle,
-                  ]}
-                >
-                  {icon}
-                </View>
-              ) : null}
-              {typeof label === 'string' ? (
-                <Text
-                  style={[styles.label, { color }, labelStyle, extraLabelStyle]}
-                >
-                  {label}
-                </Text>
-              ) : (
-                label
-              )}
-            </View>
+            {icon ? (
+              <View
+                style={[
+                  styles.icon,
+                  focused ? null : styles.inactiveIcon,
+                  iconContainerStyle,
+                ]}
+              >
+                {icon}
+              </View>
+            ) : null}
+            {typeof label === 'string' ? (
+              <Text
+                style={[styles.label, { color }, labelStyle, extraLabelStyle]}
+              >
+                {label}
+              </Text>
+            ) : (
+              label
+            )}
           </SafeAreaView>
         </TouchableItem>
       );
