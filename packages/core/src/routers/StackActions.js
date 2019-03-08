@@ -22,6 +22,7 @@ const push = payload => ({
 
 const reset = payload => ({
   type: RESET,
+  key: null,
   ...payload,
 });
 
