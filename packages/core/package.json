@@ -4,6 +4,8 @@
   "description": "Core utilities for the react-navigation framework",
   "main": "dist/index.js",
   "react-native": "dist/index.js",
+  "module": "dist/index.js",
+  "sideEffects": false,
   "files": [
     "dist/",
     "src/",
