@@ -15,9 +15,9 @@
     "test": "jest",
     "lint": "eslint .",
     "format": "eslint . --fix",
-    "babel": "babel --no-babelrc --plugins=@babel/transform-block-scoping,@babel/transform-modules-commonjs,@babel/transform-react-jsx,@babel/proposal-class-properties,@babel/proposal-object-rest-spread,@babel/transform-flow-strip-types src --copy-files --out-dir dist --ignore '**/__tests__/**','*.ts'",
+    "babel": "babel --extensions '.js,.ts,.tsx' --no-babelrc --config-file=./babel.config.publish.js src --ignore '**/__tests__/**'  --copy-files --source-maps --delete-dir-on-start",
     "tsc": "tsc",
-    "build": "yarn babel --out-dir dist && yarn tsc",
+    "build": "yarn babel --out-dir dist && del 'dist/**/__tests__' && yarn tsc --emitDeclarationOnly",
     "dev": "yarn babel --watch src --out-dir example/node_modules/@react-navigation/core/dist",
     "prepare": "yarn build",
     "release": "release-it"
@@ -55,19 +55,21 @@
     "@babel/plugin-proposal-object-rest-spread": "7.3.4",
     "@babel/plugin-transform-block-scoping": "7.3.4",
     "@babel/plugin-transform-modules-commonjs": "7.2.0",
-    "@babel/plugin-transform-flow-strip-types": "7.3.4",
-    "@babel/plugin-transform-react-jsx": "7.3.0",
+    "@babel/preset-flow": "^7.0.0",
+    "@babel/preset-react": "^7.0.0",
+    "@babel/preset-typescript": "^7.3.3",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "^10.0.1",
     "babel-jest": "^24.1.0",
-    "metro-react-native-babel-preset": "^0.49.2",
     "conventional-changelog-cli": "^2.0.5",
+    "del-cli": "^1.1.0",
     "eslint": "^4.12.1",
     "eslint-config-satya164": "^1.0.1",
     "eslint-plugin-react-native-globals": "^0.1.0",
     "husky": "^1.1.2",
     "jest": "^24.1.0",
     "jest-expo": "^32.0.0",
+    "metro-react-native-babel-preset": "^0.49.2",
     "prettier": "^1.13.6",
     "react": "16.6.3",
     "react-dom": "16.6.3",
@@ -95,7 +97,10 @@
     "transform": {
       "^.+\\.tsx?$": "ts-jest"
     },
-    "moduleFileExtensions": ["ts","js"],
+    "moduleFileExtensions": [
+      "ts",
+      "js"
+    ],
     "modulePathIgnorePatterns": [
       "<rootDir>/example/"
     ],

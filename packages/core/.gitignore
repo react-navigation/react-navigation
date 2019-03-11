@@ -50,6 +50,7 @@ android/keystores/debug.keystore
 
 # Build
 dist/
+types/
 
 # Code coverage files
 coverage/
