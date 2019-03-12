@@ -98,13 +98,19 @@ export default class Pager<T: Route> extends React.Component<Props<T>> {
     const { index } = this.props.navigationState;
 
     if (
-      index !== prevProps.navigationState.index &&
-      index !== this._currentIndexValue
-    ) {
-      // Index has changed in state and it's different from the index being tracked
       // Check for index in state to avoid unintended transition if component updates during swipe
+      (index !== prevProps.navigationState.index &&
+        index !== this._currentIndexValue) ||
+      // Check if the user updated the index correctly after an update
+      (typeof this._pendingIndexValue === 'number' &&
+        index !== this._pendingIndexValue)
+    ) {
+      // Index in user's state is different from the index being tracked
       this._jumpToIndex(index);
     }
+
+    // Reset the pending index
+    this._pendingIndexValue = undefined;
 
     // Update our mappings of animated nodes when props change
     if (
@@ -190,6 +196,11 @@ export default class Pager<T: Route> extends React.Component<Props<T>> {
   // The state will change at various points, we should only respond when we are out of sync
   // This will ensure smoother animation and avoid weird glitches
   _currentIndexValue = this.props.navigationState.index;
+
+  // The pending index value as result of state update caused by swipe gesture
+  // We need to set it when state changes from inside this component
+  // It also needs to be reset right after componentDidUpdate fires
+  _pendingIndexValue: ?number = undefined;
 
   // Listeners for the animated value
   _positionListeners: Listener[] = [];
@@ -295,6 +306,16 @@ export default class Pager<T: Route> extends React.Component<Props<T>> {
         call([this._index], ([value]) => {
           // If the index changed, and previous animation has finished, update state
           this.props.onIndexChange(value);
+
+          // Without this check, the pager can go to an infinite update <-> animate loop for sync updates
+          if (value !== this.props.navigationState.index) {
+            this._pendingIndexValue = value;
+
+            // Force componentDidUpdate to fire, whether user does a setState or not
+            // This allows us to detect when the user drops the update and revert back
+            // It's necessary to make sure that the state stays in sync
+            this.forceUpdate();
+          }
         }),
       ]),
     ]);

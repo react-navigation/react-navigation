@@ -249,7 +249,7 @@ This view is usually only shown for a split second. Keep it lightweight.
 
 By default, this renders `null`.
 
-#### `keyboardDismissMode`
+##### `keyboardDismissMode`
 
 String indicating whether the keyboard gets dismissed in response to a drag gesture. Possible values are:
 
