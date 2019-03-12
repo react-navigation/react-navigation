@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
       default: {
         fontSize: 20,
         fontWeight: '500',
-      }
+      },
     }),
     color: 'rgba(0, 0, 0, .9)',
     marginHorizontal: 16,

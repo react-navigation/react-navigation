@@ -3,6 +3,8 @@
   "version": "1.0.10",
   "description": "Stack navigator component for React Navigation",
   "main": "dist/index.js",
+  "module": "src/index.web.js",
+  "sideEffects": false,
   "files": [
     "dist/",
     "src/",
