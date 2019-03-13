@@ -3,11 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "postinstall": "rm -rf node_modules/react-native-screens",
-    "start expo": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "test flow": "flow",
+    "postinstall": "rm -rf node_modules/react-navigation/node_modules/react-native && rm -rf node_modules/react-navigation/node_modules/@types && rm -rf node_modules/react-navigation/node_modules/examples && rm -rf node_modules/react-navigation/node_modules/react-native-gesture-handler && rm -rf node_modules/react-navigation/node_modules/react",
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "test": "jest",
     "tsc": "tsc"
@@ -16,7 +12,7 @@
     "react": "16.6.1",
     "react-native": "0.57.7",
     "react-native-blur": "^3.2.2",
-    "react-native-gesture-handler": "kmagiera/react-native-gesture-handler#885858d",
+    "react-native-gesture-handler": "^1.1.0",
     "react-native-iphone-x-helper": "^1.2.0",
     "react-native-vector-icons": "^6.1.0",
     "react-navigation": "file:../..",
@@ -60,5 +56,8 @@
     "setupFiles": [
       "./tests/setup.js"
     ]
+  },
+  "resolutions": {
+    "react-native-gesture-handler": "^1.1.0"
   }
 }
