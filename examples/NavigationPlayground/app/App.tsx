@@ -27,7 +27,7 @@ import SimpleTabs from './SimpleTabs';
 import StacksInTabs from './StacksInTabs';
 import StacksOverTabs from './StacksOverTabs';
 import StacksOverTopTabs from './StacksOverTopTabs';
-import StacksWithKeys from './StacksWithKeys';
+import StacksAndKeys from './StacksAndKeys';
 import StackWithCustomHeaderBackImage from './StackWithCustomHeaderBackImage';
 import StackWithHeaderPreset from './StackWithHeaderPreset';
 import StackWithTranslucentHeader from './StackWithTranslucentHeader';
@@ -111,7 +111,7 @@ const ExampleInfo: any = {
     description: 'Tab navigator in stack with custom header heights',
     name: 'Stacks with non-standard header height',
   },
-  StacksWithKeys: {
+  StacksAndKeys: {
     description: 'Use keys to link between screens',
     name: 'Link in Stack with keys',
   },
@@ -148,7 +148,7 @@ const ExampleRoutes: any = {
   SimpleTabs,
   StackWithCustomHeaderBackImage,
   StackWithTranslucentHeader,
-  StacksWithKeys,
+  StacksAndKeys,
   StacksOverTabs,
   SwitchWithStacks,
   StacksOverTopTabs,
