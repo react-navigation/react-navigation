@@ -32,6 +32,7 @@ type Props<T: Route> = {|
   tabBarPosition: 'top' | 'bottom',
   initialLayout?: { width?: number, height?: number },
   lazy: boolean,
+  removeClippedSubviews?: boolean,
   sceneContainerStyle?: ViewStyleProp,
   style?: ViewStyleProp,
 |};
@@ -51,6 +52,7 @@ export default class TabView<T: Route> extends React.Component<
     keyboardDismissMode: 'on-drag',
     swipeEnabled: true,
     lazy: false,
+    removeClippedSubviews: false,
   };
 
   state = {
@@ -87,6 +89,7 @@ export default class TabView<T: Route> extends React.Component<
       onSwipeEnd,
       navigationState,
       lazy,
+      removeClippedSubviews,
       keyboardDismissMode,
       swipeEnabled,
       swipeDistanceThreshold,
@@ -112,6 +115,7 @@ export default class TabView<T: Route> extends React.Component<
           onSwipeStart={onSwipeStart}
           onSwipeEnd={onSwipeEnd}
           onIndexChange={this._jumpToIndex}
+          removeClippedSubviews={removeClippedSubviews}
         >
           {({ position, render, addListener, removeListener, jumpTo }) => {
             // All of the props here must not change between re-renders

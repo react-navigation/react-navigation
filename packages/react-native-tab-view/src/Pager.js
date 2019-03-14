@@ -1,7 +1,7 @@
 /* @flow */
 
 import * as React from 'react';
-import { StyleSheet, Platform, Keyboard } from 'react-native';
+import { StyleSheet, Keyboard } from 'react-native';
 import { PanGestureHandler, State } from 'react-native-gesture-handler';
 import Animated, { Easing } from 'react-native-reanimated';
 
@@ -72,6 +72,9 @@ type Props<T: Route> = {|
   onIndexChange: (index: number) => mixed,
   navigationState: NavigationState<T>,
   layout: Layout,
+  // Clip unfocused views to improve memory usage
+  // Don't enable this on iOS where this is buggy and views don't re-appear
+  removeClippedSubviews?: boolean,
   children: (props: {|
     // Animated value which represents the state of current index
     // It can include fractional digits as it represents the intermediate value
@@ -444,7 +447,13 @@ export default class Pager<T: Route> extends React.Component<Props<T>> {
   ]);
 
   render() {
-    const { layout, navigationState, swipeEnabled, children } = this.props;
+    const {
+      layout,
+      navigationState,
+      swipeEnabled,
+      children,
+      removeClippedSubviews,
+    } = this.props;
 
     // Make sure that the translation doesn't exceed the bounds to prevent overscrolling
     const translateX = min(
@@ -479,11 +488,7 @@ export default class Pager<T: Route> extends React.Component<Props<T>> {
           failOffsetY={[-SWIPE_DISTANCE_MINIMUM, SWIPE_DISTANCE_MINIMUM]}
         >
           <Animated.View
-            removeClippedSubviews={
-              // Clip unfocused views to improve meory usage
-              // Don't enable this on iOS where this is buggy and views don't re-appear
-              Platform.OS !== 'ios'
-            }
+            removeClippedSubviews={removeClippedSubviews}
             style={[
               styles.container,
               layout.width

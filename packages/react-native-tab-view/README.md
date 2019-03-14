@@ -249,6 +249,13 @@ This view is usually only shown for a split second. Keep it lightweight.
 
 By default, this renders `null`.
 
+
+##### `removeClippedSubviews`
+
+Boolean indicating whether to remove invisible views (such as unfocused screens) from the native view hierarchy to improve memory usage. Defaults to `false`.
+
+**Note**: Don't enable this on iOS where this is buggy and views don't re-appear.
+
 ##### `keyboardDismissMode`
 
 String indicating whether the keyboard gets dismissed in response to a drag gesture. Possible values are:
