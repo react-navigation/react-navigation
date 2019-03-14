@@ -407,9 +407,7 @@ declare module 'react-navigation' {
     NavigationSceneRendererProps & {
       mode: HeaderMode,
       router: NavigationRouter<NavigationState, NavigationStackScreenOptions>,
-      getScreenDetails: NavigationScene => NavigationScreenDetails<
-        NavigationStackScreenOptions
-      >,
+      getScreenDetails: NavigationScene => NavigationScreenDetails<NavigationStackScreenOptions>,
       leftInterpolator: (props: NavigationSceneRendererProps) => {},
       titleInterpolator: (props: NavigationSceneRendererProps) => {},
       rightInterpolator: (props: NavigationSceneRendererProps) => {},
@@ -660,9 +658,7 @@ declare module 'react-navigation' {
     onWillBlur?: NavigationEventCallback,
     onDidBlur?: NavigationEventCallback,
   };
-  declare export var NavigationEvents: React$ComponentType<
-    _NavigationEventsProps
-  >;
+  declare export var NavigationEvents: React$ComponentType<_NavigationEventsProps>;
 
   /**
    * Navigation container
@@ -1041,9 +1037,7 @@ declare module 'react-navigation' {
      */
     transitionConfig?: () => TransitionConfig,
   } & NavigationNavigatorProps<NavigationStackScreenOptions, NavigationState>;
-  declare export var CardStackTransitioner: React$ComponentType<
-    _CardStackTransitionerProps
-  >;
+  declare export var CardStackTransitioner: React$ComponentType<_CardStackTransitionerProps>;
 
   declare type _CardStackProps = {
     screenProps?: {},
@@ -1114,9 +1108,7 @@ declare module 'react-navigation' {
     truncatedTitle?: ?string,
     width?: ?number,
   };
-  declare export var HeaderBackButton: React$ComponentType<
-    _HeaderBackButtonProps
-  >;
+  declare export var HeaderBackButton: React$ComponentType<_HeaderBackButtonProps>;
 
   declare type _DrawerViewProps = {
     drawerLockMode?: 'unlocked' | 'locked-closed' | 'locked-open',
