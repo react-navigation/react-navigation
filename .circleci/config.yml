@@ -34,7 +34,6 @@ jobs:
           paths:
             - ~/.cache/yarn
             - ~/react-navigation/examples/NavigationPlayground/node_modules
-            - ~/react-navigation/examples/ReduxExample/node_modules
 # notify:
 #  webhooks:
 #    - url: https://react-navigation-ci.now.sh
