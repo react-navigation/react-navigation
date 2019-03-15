@@ -164,7 +164,7 @@ class Header extends React.PureComponent {
     return (
       <HeaderTitleComponent
         onLayout={onLayout}
-        allowFontScaling={allowFontScaling == null ? true : allowFontScaling}
+        allowFontScaling={!!allowFontScaling}
         style={[
           color ? { color } : null,
           layoutPreset === 'center'
