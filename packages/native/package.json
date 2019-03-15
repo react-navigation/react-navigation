@@ -55,7 +55,7 @@
     "jest": "^23.6.0",
     "prettier": "^1.8.2",
     "react": "16.6.3",
-    "react-dom": "16.3.1",
+    "react-dom": "16.3.2",
     "react-native": "^0.57.7",
     "react-navigation": "^2.11.2",
     "react-test-renderer": "16.6.3",
@@ -88,7 +88,7 @@
   },
   "dependencies": {
     "hoist-non-react-statics": "^3.0.1",
-    "react-native-gesture-handler": "~1.0.14",
+    "react-native-gesture-handler": "~1.1.0",
     "react-native-safe-area-view": "^0.13.0",
     "react-native-screens": "^1.0.0 || ^1.0.0-alpha"
   }
