@@ -1,5 +1,6 @@
-import createReactContext from 'create-react-context';
+import React from 'react';
 
-const NavigationContext = createReactContext(undefined);
+// TODO: change this to null on next major semver bump
+const NavigationContext = React.createContext(undefined);
 
 export default NavigationContext;

@@ -19,7 +19,7 @@
     "format": "eslint . --fix",
     "babel": "babel --extensions '.js,.ts,.tsx' --no-babelrc --config-file=./babel.config.publish.js src --ignore '**/__tests__/**'  --copy-files --source-maps --delete-dir-on-start",
     "tsc": "tsc",
-    "build": "yarn babel --out-dir dist && del 'dist/**/__tests__' && yarn tsc --emitDeclarationOnly",
+    "build": "yarn babel --out-dir dist && del-cli 'dist/**/__tests__' && yarn tsc --emitDeclarationOnly",
     "dev": "yarn babel --watch src --out-dir example/node_modules/@react-navigation/core/dist",
     "prepare": "yarn build",
     "release": "release-it"
@@ -44,7 +44,6 @@
   },
   "homepage": "https://github.com/react-navigation/react-navigation-core#readme",
   "dependencies": {
-    "create-react-context": "0.2.2",
     "hoist-non-react-statics": "^2.5.5",
     "path-to-regexp": "^1.7.0",
     "query-string": "^6.2.0",
