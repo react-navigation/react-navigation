@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## Changed
+
+- Updated react-native-gesture-handler to ~3.1.0
+
 ## [3.4.0] - [2019-03-15](https://github.com/react-navigation/react-navigation/releases/tag/3.4.0)
 
 ## Added
