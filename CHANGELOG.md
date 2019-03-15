@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.4.0] - [2019-03-15](https://github.com/react-navigation/react-navigation/releases/tag/3.4.0)
+
+## Added
+
+- TypeScript type definition now included in the project.
+- Better support for react-native-web in core and stack.
+
+## Fixed
+
+- Default key to null in stack reset action (https://github.com/react-navigation/react-navigation-core/commit/59238160d86284a3353d53af10688fcf3f36004f)
+- Fix header back button label and title label scaling. Defaults to false. (https://github.com/react-navigation/react-navigation-stack/commit/c1f1dff465e9eebe274a08e274cf10570045fa23)
+
+## Changed
+
+- Remove react-lifecycles-compat from @react-navigation/core
+- NavigationPlayground uses TypeScript
+
 ## [3.3.2] - [2019-02-25](https://github.com/react-navigation/react-navigation/releases/tag/3.3.2)
 
 ## Fixed
@@ -155,7 +172,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - [2.x](https://github.com/react-navigation/react-navigation/blob/2.x/CHANGELOG.md)
 
-[Unreleased]: https://github.com/react-navigation/react-navigation/compare/3.3.2...HEAD
+[Unreleased]: https://github.com/react-navigation/react-navigation/compare/3.4.0...HEAD
+[3.4.0]: https://github.com/react-navigation/react-navigation/compare/3.3.2...3.4.0
 [3.3.2]: https://github.com/react-navigation/react-navigation/compare/3.3.1...3.3.2
 [3.3.1]: https://github.com/react-navigation/react-navigation/compare/3.3.0...3.3.1
 [3.3.0]: https://github.com/react-navigation/react-navigation/compare/3.2.3...3.3.0
