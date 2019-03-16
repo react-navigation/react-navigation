@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Changed
 
 - Updated react-native-gesture-handler to ~3.1.0
+
+## [3.4.1] - [2019-03-16](https://github.com/react-navigation/react-navigation/releases/tag/3.4.1)
+
+## Fixed
+
 - Fix missing TypeScript definitions file in release package
 
 ## [3.4.0] - [2019-03-15](https://github.com/react-navigation/react-navigation/releases/tag/3.4.0)
@@ -177,7 +182,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - [2.x](https://github.com/react-navigation/react-navigation/blob/2.x/CHANGELOG.md)
 
-[Unreleased]: https://github.com/react-navigation/react-navigation/compare/3.4.0...HEAD
+[Unreleased]: https://github.com/react-navigation/react-navigation/compare/3.4.1...HEAD
+[3.4.1]: https://github.com/react-navigation/react-navigation/compare/3.4.0...3.4.1
 [3.4.0]: https://github.com/react-navigation/react-navigation/compare/3.3.2...3.4.0
 [3.3.2]: https://github.com/react-navigation/react-navigation/compare/3.3.1...3.3.2
 [3.3.1]: https://github.com/react-navigation/react-navigation/compare/3.3.0...3.3.1
