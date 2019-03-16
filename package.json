@@ -28,7 +28,8 @@
   },
   "files": [
     "src",
-    "NavigationTestUtils.js"
+    "NavigationTestUtils.js",
+    "typescript"
   ],
   "peerDependencies": {
     "react": "*",
