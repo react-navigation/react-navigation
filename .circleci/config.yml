@@ -33,7 +33,7 @@ jobs:
           key: v3-react-navigation-{{ .Branch }}-{{ checksum "package.json" }}
           paths:
             - ~/.cache/yarn
-            - ~/react-navigation/examples/NavigationPlayground/node_modules
+            # - ~/react-navigation/examples/NavigationPlayground/node_modules
 # notify:
 #  webhooks:
 #    - url: https://react-navigation-ci.now.sh
