@@ -33,6 +33,8 @@
 
 declare module 'react-navigation' {
   import * as React from 'react';
+  import { PanGestureHandler } from 'react-native-gesture-handler';
+
   import {
     Animated,
     TextStyle,
@@ -1331,7 +1333,7 @@ declare module 'react-navigation' {
   export interface HeaderBackButtonProps {
     onPress?: () => void;
     pressColorAndroid?: string;
-    title?: string;
+    title?: string | null;
     titleStyle?: StyleProp<TextStyle>;
     tintColor?: string;
     truncatedTitle?: string;
@@ -1351,6 +1353,18 @@ declare module 'react-navigation' {
   export type InferProps<
     T extends React.ComponentType<any>
   > = T extends React.ComponentType<infer P> ? P : never;
+
+  export interface NavigationOrientationInjectedProps {
+    isLandscape: boolean;
+  }
+
+  export function withOrientation<P extends NavigationOrientationInjectedProps>(
+    Component: React.ComponentType<P>
+  ): React.ComponentType<Omit<P, keyof NavigationOrientationInjectedProps>>;
+
+  export interface NavigationInjectedProps<P = NavigationParams> {
+    navigation: NavigationScreenProp<NavigationRoute<P>, P>;
+  }
 
   export interface NavigationInjectedProps<P = NavigationParams> {
     navigation: NavigationScreenProp<NavigationRoute<P>, P>;
@@ -1428,4 +1442,6 @@ declare module 'react-navigation' {
   export const SafeAreaView: React.ComponentClass<SafeAreaViewProps>;
 
   export const NavigationContext: React.Context<NavigationScreenProp<NavigationRoute>>;
+  export const StackGestureContext: React.Context<React.Ref<PanGestureHandler>>;
+  export const DrawerGestureContext: React.Context<React.Ref<PanGestureHandler>>;
 }
