@@ -1102,7 +1102,7 @@ declare module 'react-navigation' {
     iconStyle?: ViewStyle;
   }
 
-  export interface TabBarBottomProps {
+  export interface BottomTabBarProps {
     activeTintColor: string;
     activeBackgroundColor: string;
     adaptive?: boolean;
@@ -1132,7 +1132,7 @@ declare module 'react-navigation' {
   }
 
   export const TabBarTop: React.ComponentType<TabBarTopProps>;
-  export const TabBarBottom: React.ComponentType<TabBarBottomProps>;
+  export const BottomTabBar: React.ComponentType<BottomTabBarProps>;
 
   /**
    * NavigationActions
