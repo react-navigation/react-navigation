@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.5.1] - [2019-03-19](https://github.com/react-navigation/react-navigation/releases/tag/3.5.1)
+
+## Added
+
+- Export StackGestureContext and DrawerGestureContext
+- Add missing type for withOrientation
+
+## Fixed
+
+- Fix header HeaderBackButton title TypeScript type
+
+
 ## [3.5.0] - [2019-03-19](https://github.com/react-navigation/react-navigation/releases/tag/3.5.0)
 
 ## Fixed
@@ -189,7 +201,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - [2.x](https://github.com/react-navigation/react-navigation/blob/2.x/CHANGELOG.md)
 
-[Unreleased]: https://github.com/react-navigation/react-navigation/compare/3.5.0...HEAD
+[Unreleased]: https://github.com/react-navigation/react-navigation/compare/3.5.1...HEAD
+[3.5.0]: https://github.com/react-navigation/react-navigation/compare/3.5.0...3.5.1
 [3.5.0]: https://github.com/react-navigation/react-navigation/compare/3.4.1...3.5.0
 [3.4.1]: https://github.com/react-navigation/react-navigation/compare/3.4.0...3.4.1
 [3.4.0]: https://github.com/react-navigation/react-navigation/compare/3.3.2...3.4.0
