@@ -64,7 +64,8 @@
   "peerDependencies": {
     "@react-navigation/core": "^3.0.0",
     "react": "*",
-    "react-native": "*"
+    "react-native": "*",
+    "react-native-gesture-handler": "*"
   },
   "jest": {
     "preset": "react-native",
@@ -88,7 +89,6 @@
   },
   "dependencies": {
     "hoist-non-react-statics": "^3.0.1",
-    "react-native-gesture-handler": "~1.1.0",
     "react-native-safe-area-view": "^0.13.0",
     "react-native-screens": "^1.0.0 || ^1.0.0-alpha"
   }
