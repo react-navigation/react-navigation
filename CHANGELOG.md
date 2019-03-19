@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+- fixed types for `BottomTabBar`
+
 ## Changed
 
 - Updated react-native-gesture-handler to ~3.1.0
