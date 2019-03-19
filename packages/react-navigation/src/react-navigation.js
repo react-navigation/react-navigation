@@ -121,6 +121,15 @@ module.exports = {
     return require('react-navigation-drawer').createDrawerNavigator;
   },
 
+  // Gesture contexts
+
+  get StackGestureContext() {
+    return require('react-navigation-stack').StackGestureContext;
+  },
+  get DrawerGestureContext() {
+    return require('react-navigation-drawer').DrawerGestureContext;
+  },
+
   // Routers and Actions
 
   get DrawerRouter() {
