@@ -560,23 +560,28 @@ declare module 'react-navigation' {
     index: number;
     tintColor?: string;
   }
+
+  export interface TabBarIconProps {
+    tintColor: string | null;
+    focused: boolean;
+    horizontal: boolean;
+  }
+
+  export interface TabBarLabelProps {
+    tintColor: string | null;
+    focused: boolean;
+  }
+
   // tslint:disable-next-line:strict-export-declare-modifiers
   interface NavigationTabScreenOptionsBase {
     title?: string;
     tabBarIcon?:
       | React.ReactElement<any>
-      | ((options: {
-          tintColor: string | null;
-          focused: boolean;
-          horizontal: boolean;
-        }) => React.ReactElement<any> | null);
+      | ((options: TabBarIconProps) => React.ReactElement<any> | null);
     tabBarLabel?:
       | string
       | React.ReactElement<any>
-      | ((options: {
-          tintColor: string | null;
-          focused: boolean;
-        }) => React.ReactElement<any> | string | null);
+      | ((options: TabBarLabelProps) => React.ReactElement<any> | string | null);
     tabBarVisible?: boolean;
     tabBarTestIDProps?: { testID?: string; accessibilityLabel?: string };
   }
