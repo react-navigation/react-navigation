@@ -613,21 +613,25 @@ declare module 'react-navigation' {
 
   export type DrawerLockMode = 'unlocked' | 'locked-closed' | 'locked-open';
 
+  export interface DrawerIconProps {
+    tintColor: string | null;
+    focused: boolean;
+  }
+
+  export interface DrawerLabelProps {
+    tintColor: string | null;
+    focused: boolean;
+  }
+
   export interface NavigationDrawerScreenOptions {
     title?: string;
     drawerIcon?:
       | React.ReactElement<any>
-      | ((options: {
-          tintColor: string | null;
-          focused: boolean;
-        }) => React.ReactElement<any> | null);
+      | ((options: DrawerIconProps) => React.ReactElement<any> | null);
     drawerLabel?:
       | string
       | React.ReactElement<any>
-      | ((options: {
-          tintColor: string | null;
-          focused: boolean;
-        }) => React.ReactElement<any> | null);
+      | ((options: DrawerLabelProps) => React.ReactElement<any> | null);
     drawerLockMode?: DrawerLockMode;
   }
 

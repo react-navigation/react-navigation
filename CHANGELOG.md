@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-- Export TabBarIconProps and TabBarLabelProps
+- Export TabBarIconProps, TabBarLabelProps, DrawerIconProps and DrawerLabelProps.
 
 ## [3.5.1] - [2019-03-19](https://github.com/react-navigation/react-navigation/releases/tag/3.5.1)
 
