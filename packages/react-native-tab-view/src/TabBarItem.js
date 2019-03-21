@@ -120,6 +120,7 @@ export default function TabBarItem<T: Route>({
               <Animated.Text
                 style={[
                   styles.label,
+                  // eslint-disable-next-line react-native/no-inline-styles
                   icon && { marginTop: 0 },
                   { color },
                   labelStyle,

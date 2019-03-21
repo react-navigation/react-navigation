@@ -9,18 +9,17 @@
     "ios": "expo ios"
   },
   "dependencies": {
-    "@expo/vector-icons": "^9.0.0",
+    "@expo/vector-icons": "^10.0.1",
     "expo": "^32.0.5",
     "react": "16.5.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz"
   },
   "devDependencies": {
     "babel-plugin-module-resolver": "^3.2.0",
-    "babel-preset-expo": "^5.0.0",
-    "expo-cli": "^2.10.1",
-    "glob-to-regexp": "^0.4.0"
+    "babel-preset-expo": "^5.1.1",
+    "expo-cli": "^2.13.0"
   },
   "resolutions": {
-    "**/react": "16.5.0"
+    "@babel/runtime": "7.3.1"
   }
 }

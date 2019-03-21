@@ -9,8 +9,6 @@ import {
 } from 'react-native';
 import type { ViewStyleProp } from 'react-native/Libraries/StyleSheet/StyleSheet';
 
-const LOLLIPOP = 21;
-
 type Props = {
   onPress: () => mixed,
   delayPressIn?: number,
@@ -20,6 +18,8 @@ type Props = {
   children?: React.Node,
   style?: ViewStyleProp,
 };
+
+const LOLLIPOP = 21;
 
 export default class TouchableItem extends React.Component<Props> {
   static defaultProps = {

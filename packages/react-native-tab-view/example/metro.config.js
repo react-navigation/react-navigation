@@ -1,9 +1,9 @@
-/* eslint-disable import/no-commonjs */
+/* eslint-disable import/no-commonjs, import/no-extraneous-dependencies */
 
 const path = require('path');
 const blacklist = require('metro-config/src/defaults/blacklist');
-const pak = require('../package.json');
 const escape = require('escape-string-regexp');
+const pak = require('../package.json');
 
 const peerDependencies = Object.keys(pak.peerDependencies);
 
@@ -15,11 +15,6 @@ module.exports = {
     blacklistRE: blacklist([
       new RegExp(
         `^${escape(path.resolve(__dirname, '..', 'node_modules'))}\\/.*$`
-      ),
-      new RegExp(
-        `^${escape(
-          path.resolve(__dirname, '..', 'docs', 'node_modules')
-        )}\\/.*$`
       ),
     ]),
 

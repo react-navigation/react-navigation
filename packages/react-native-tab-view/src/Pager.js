@@ -13,6 +13,31 @@ import type {
   PagerCommonProps,
 } from './types';
 
+type Props<T: Route> = {|
+  ...PagerCommonProps,
+  onIndexChange: (index: number) => mixed,
+  navigationState: NavigationState<T>,
+  layout: Layout,
+  // Clip unfocused views to improve memory usage
+  // Don't enable this on iOS where this is buggy and views don't re-appear
+  removeClippedSubviews?: boolean,
+  children: (props: {|
+    // Animated value which represents the state of current index
+    // It can include fractional digits as it represents the intermediate value
+    position: Animated.Node<number>,
+    // Function to actually render the content of the pager
+    // The parent component takes care of rendering
+    render: (children: React.Node) => React.Node,
+    // Add a listener to listen for position updates
+    addListener: (type: 'position', listener: Listener) => void,
+    // Remove a position listener
+    removeListener: (type: 'position', listener: Listener) => void,
+    // Callback to call when switching the tab
+    // The tab switch animation is performed even if the index in state is unchanged
+    jumpTo: (key: string) => void,
+  |}) => React.Node,
+|};
+
 const {
   Clock,
   Value,
@@ -66,31 +91,6 @@ const TIMING_CONFIG = {
   duration: 250,
   easing: Easing.out(Easing.cubic),
 };
-
-type Props<T: Route> = {|
-  ...PagerCommonProps,
-  onIndexChange: (index: number) => mixed,
-  navigationState: NavigationState<T>,
-  layout: Layout,
-  // Clip unfocused views to improve memory usage
-  // Don't enable this on iOS where this is buggy and views don't re-appear
-  removeClippedSubviews?: boolean,
-  children: (props: {|
-    // Animated value which represents the state of current index
-    // It can include fractional digits as it represents the intermediate value
-    position: Animated.Node<number>,
-    // Function to actually render the content of the pager
-    // The parent component takes care of rendering
-    render: (children: React.Node) => React.Node,
-    // Add a listener to listen for position updates
-    addListener: (type: 'position', listener: Listener) => void,
-    // Remove a position listener
-    removeListener: (type: 'position', listener: Listener) => void,
-    // Callback to call when switching the tab
-    // The tab switch animation is performed even if the index in state is unchanged
-    jumpTo: (key: string) => void,
-  |}) => React.Node,
-|};
 
 export default class Pager<T: Route> extends React.Component<Props<T>> {
   static defaultProps = {

@@ -34,11 +34,12 @@ export default class Profile extends React.Component<*> {
           classical literature, discovered the undoubtable source.
         </Text>
         <Text style={styles.paragraph}>
-          Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus
-          Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written
-          in 45 BC. This book is a treatise on the theory of ethics, very
-          popular during the Renaissance. The first line of Lorem Ipsum, "Lorem
-          ipsum dolor sit amet..", comes from a line in section 1.10.32.
+          Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of &quot;de
+          Finibus Bonorum et Malorum&quot; (The Extremes of Good and Evil) by
+          Cicero, written in 45 BC. This book is a treatise on the theory of
+          ethics, very popular during the Renaissance. The first line of Lorem
+          Ipsum, &quot;Lorem ipsum dolor sit amet..&quot;, comes from a line in
+          section 1.10.32.
         </Text>
       </ScrollView>
     );

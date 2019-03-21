@@ -20,6 +20,12 @@ import CustomIndicatorExample from './CustomIndicatorExample';
 import CustomTabBarExample from './CustomTabBarExample';
 import CoverflowExample from './CoverflowExample';
 
+type State = {
+  title: string,
+  index: number,
+  restoring: boolean,
+};
+
 YellowBox.ignoreWarnings(['bind():']);
 
 const PERSISTENCE_KEY = 'index_persistence';
@@ -31,12 +37,6 @@ const EXAMPLE_COMPONENTS = [
   CustomTabBarExample,
   CoverflowExample,
 ];
-
-type State = {
-  title: string,
-  index: number,
-  restoring: boolean,
-};
 
 export default class ExampleList extends React.Component<{}, State> {
   state = {
