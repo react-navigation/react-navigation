@@ -5,6 +5,7 @@ import {
   StatusBar,
   StyleSheet,
   View,
+  Platform,
 } from 'react-native';
 import { createStackNavigator, createSwitchNavigator } from 'react-navigation';
 import { Button } from './commonComponents/ButtonWithMargin';
@@ -53,7 +54,7 @@ class HomeScreen extends React.Component<any, any> {
   };
 
   signOutAsync = async () => {
-    await AsyncStorage.clear();
+    Platform.OS === 'ios' ? await AsyncStorage.getAllKeys().then(AsyncStorage.multiRemove) : await AsyncStorage.clear()
     this.props.navigation.navigate('Auth');
   };
 }
@@ -73,7 +74,7 @@ class OtherScreen extends React.Component<any, any> {
   }
 
   signOutAsync = async () => {
-    await AsyncStorage.clear();
+    Platform.OS === 'ios' ? await AsyncStorage.getAllKeys().then(AsyncStorage.multiRemove) : await AsyncStorage.clear()
     this.props.navigation.navigate('Auth');
   };
 }
