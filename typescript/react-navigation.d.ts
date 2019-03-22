@@ -66,10 +66,14 @@ declare module 'react-navigation' {
 
   export const HeaderStyleInterpolator: HeaderStyleInterpolatorStatic;
 
+  export type ScreenProps = {
+    [key: string]: any;
+  }
+
   // @todo - any..
   export function getActiveChildNavigationOptions<S>(
     navigation: NavigationProp<S>,
-    screenProps?: object
+    screenProps?: ScreenProps
   ): NavigationParams;
 
   // @todo when we split types into common, native and web,
@@ -172,7 +176,7 @@ declare module 'react-navigation' {
 
   export type NavigationScreenOptionsGetter<Options> = (
     navigation: NavigationScreenProp<NavigationRoute<any>>,
-    screenProps?: { [key: string]: any }
+    screenProps?: ScreenProps
   ) => Options;
 
   export interface NavigationRouter<State = NavigationState, Options = {}> {
@@ -233,7 +237,7 @@ declare module 'react-navigation' {
 
   export interface NavigationScreenConfigProps {
     navigation: NavigationScreenProp<NavigationRoute>;
-    screenProps: { [key: string]: any };
+    screenProps: ScreenProps;
   }
 
   export type NavigationScreenConfig<Options> =
@@ -732,7 +736,7 @@ declare module 'react-navigation' {
   export interface NavigationNavigatorProps<O = {}, S = {}> {
     detached?: boolean;
     navigation?: NavigationProp<S>;
-    screenProps?: { [key: string]: any };
+    screenProps?: ScreenProps;
     navigationOptions?: O;
   }
 
@@ -787,7 +791,7 @@ declare module 'react-navigation' {
     scene: NavigationScene;
     index: number;
 
-    screenProps?: { [key: string]: any };
+    screenProps?: ScreenProps;
   }
 
   // The scene renderer props are nearly identical to the props used for rendering
@@ -885,7 +889,7 @@ declare module 'react-navigation' {
     navigation?: NavigationScreenProp<S>;
     persistenceKey?: string | null;
     renderLoadingExperimental?: React.ComponentType;
-    screenProps?: any;
+    screenProps?: ScreenProps;
     navigationOptions?: O;
     style?: StyleProp<ViewStyle>;
   }
@@ -907,7 +911,7 @@ declare module 'react-navigation' {
     ): NavigationContainerComponent;
 
     router: NavigationRouter<any, any>;
-    screenProps: { [key: string]: any };
+    screenProps: ScreenProps;
     navigationOptions: any;
     state: { nav: NavigationState | null };
   }
@@ -1280,7 +1284,7 @@ declare module 'react-navigation' {
     {
       descriptors: { [key: string]: NavigationDescriptor };
       navigationConfig: O;
-      screenProps?: { [key: string]: any };
+      screenProps?: ScreenProps;
     } & NavigationInjectedProps
   >;
 
@@ -1325,7 +1329,7 @@ declare module 'react-navigation' {
     Options = any
   > {
     navigation: NavigationScreenProp<NavigationRoute<Params>, Params>;
-    screenProps?: { [key: string]: any };
+    screenProps?: ScreenProps;
     navigationOptions?: NavigationScreenConfig<Options>;
   }
 
