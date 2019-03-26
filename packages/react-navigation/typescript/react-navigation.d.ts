@@ -1054,20 +1054,25 @@ declare module 'react-navigation' {
     lazy?: boolean;
   }
 
+  export interface InitialLayout {
+    height: number;
+    width: number;
+  }
+
   // From navigators/TabNavigator.js
   export interface TabNavigatorConfig
     extends NavigationTabRouterConfig,
       TabViewConfig {
     lazy?: boolean;
     removeClippedSubviews?: boolean;
-    initialLayout?: { height: number; width: number };
+    initialLayout?: InitialLayout;
   }
   export interface BottomTabNavigatorConfig
     extends NavigationBottomTabRouterConfig,
       TabViewConfig {
     lazy?: boolean;
     removeClippedSubviews?: boolean;
-    initialLayout?: { height: number; width: number };
+    initialLayout?: InitialLayout;
   }
 
   // From navigators/TabNavigator.js
