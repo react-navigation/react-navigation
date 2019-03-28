@@ -77,7 +77,7 @@ public class Screen extends ViewGroup implements ReactPointerEventsView {
 
   @Override
   public void setLayerType(int layerType, @Nullable Paint paint) {
-    // ignore – layer type is controlled by `transitioning` prop
+    // ignore - layer type is controlled by `transitioning` prop
   }
 
   public void setNeedsOffscreenAlphaCompositing(boolean needsOffscreenAlphaCompositing) {
