@@ -36,7 +36,7 @@ The package exports two different navigators:
 You can import individual navigators and use them:
 
 ```js
-import { createBottomTabNavigator } from 'react-navigation';
+import { createBottomTabNavigator } from 'react-navigation-tabs';
 
 export default createBottomTabNavigator({
   Album: { screen: Album },

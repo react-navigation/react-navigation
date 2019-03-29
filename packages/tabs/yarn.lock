@@ -6872,10 +6872,10 @@ react-native-tab-view@^1.0.0, react-native-tab-view@^1.2.0:
   dependencies:
     prop-types "^15.6.1"
 
-react-native-tab-view@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/react-native-tab-view/-/react-native-tab-view-2.0.1.tgz#67ad94be00d751f35367838bb7b089361e58af5d"
-  integrity sha512-kA8CHrcJk7TJA1S55FUL2sN9zjnKzEBg0FpK8MnZnvuuopUQOiLgLauX/rJeQMWg3uBIpGdMajNkRxGwvJkgyA==
+react-native-tab-view@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/react-native-tab-view/-/react-native-tab-view-2.0.3.tgz#0160e2d94e69c722fcefa8649ffe13fec9177a0d"
+  integrity sha512-/rv+ESxtLFIWucIlq5VhDcZsCxThovE5FWpYngTNxLQgWzI/lem48h6FiYIMU+R6/fXOHmzSIuJtuCxNX+62fw==
 
 react-native-vector-icons@4.5.0:
   version "4.5.0"
