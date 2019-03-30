@@ -39,13 +39,13 @@ export default class BorderlessButton extends React.Component {
   };
 
   render() {
-    const { children, style, ...rest } = this.props;
+    const { children, style, enabled, ...rest } = this.props;
 
     return (
       <AnimatedBaseButton
         {...rest}
         onActiveStateChange={this._onActiveStateChange}
-        style={[style, Platform.OS === 'ios' && { opacity: this._opacity }]}
+        style={[style, Platform.OS === 'ios' && enabled && { opacity: this._opacity }]}
       >
         {children}
       </AnimatedBaseButton>

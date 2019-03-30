@@ -105,10 +105,11 @@ class HeaderBackButton extends React.PureComponent {
   }
 
   render() {
-    const { onPress, pressColorAndroid, title } = this.props;
+    const { onPress, pressColorAndroid, title, disabled } = this.props;
 
     let button = (
       <TouchableItem
+        disabled={disabled}
         accessible
         accessibilityRole="button"
         accessibilityComponentType="button"
@@ -116,9 +117,9 @@ class HeaderBackButton extends React.PureComponent {
         accessibilityTraits="button"
         testID="header-back"
         delayPressIn={0}
-        onPress={onPress}
+        onPress={disabled ? undefined : onPress}
         pressColor={pressColorAndroid}
-        style={styles.container}
+        style={[styles.container, disabled && styles.disabled]}
         borderless
       >
         <View style={styles.container}>
@@ -137,6 +138,9 @@ class HeaderBackButton extends React.PureComponent {
 }
 
 const styles = StyleSheet.create({
+  disabled: {
+    opacity: 0.5,
+  },
   androidButtonWrapper: {
     margin: 13,
     backgroundColor: 'transparent',
