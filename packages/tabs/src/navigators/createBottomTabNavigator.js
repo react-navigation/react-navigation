@@ -13,6 +13,8 @@ import BottomTabBar, { type TabBarOptions } from '../views/BottomTabBar';
 import ResourceSavingScene from '../views/ResourceSavingScene';
 
 type Props = InjectedProps & {
+  getAccessibilityRole: (props: { route: any }) => string,
+  getAccessibilityStates: (props: { route: any }) => Array<string>,
   lazy?: boolean,
   tabBarComponent?: React.ComponentType<*>,
   tabBarOptions?: TabBarOptions,
@@ -62,6 +64,8 @@ class TabNavigationView extends React.PureComponent<Props, State> {
       screenProps,
       getLabelText,
       getAccessibilityLabel,
+      getAccessibilityRole,
+      getAccessibilityStates,
       getTestID,
       renderIcon,
       onTabPress,
@@ -89,6 +93,8 @@ class TabNavigationView extends React.PureComponent<Props, State> {
         getLabelText={getLabelText}
         getButtonComponent={this._getButtonComponent}
         getAccessibilityLabel={getAccessibilityLabel}
+        getAccessibilityRole={getAccessibilityRole}
+        getAccessibilityStates={getAccessibilityStates}
         getTestID={getTestID}
         renderIcon={renderIcon}
       />
