@@ -34,6 +34,8 @@ type Props = TabBarOptions & {
   onTabPress: any,
   onTabLongPress: any,
   getAccessibilityLabel: (props: { route: any }) => string,
+  getAccessibilityRole: (props: { route: any }) => string,
+  getAccessibilityStates: (props: { route: any }) => Array<string>,
   getButtonComponent: ({ route: any }) => any,
   getLabelText: ({ route: any }) => any,
   getTestID: (props: { route: any }) => string,
@@ -56,6 +58,8 @@ class TouchableWithoutFeedbackWrapper extends React.Component<*> {
       onLongPress,
       testID,
       accessibilityLabel,
+      accessibilityRole,
+      accessibilityStates,
       ...props
     } = this.props;
 
@@ -66,6 +70,8 @@ class TouchableWithoutFeedbackWrapper extends React.Component<*> {
         testID={testID}
         hitSlop={{ left: 15, right: 15, top: 0, bottom: 5 }}
         accessibilityLabel={accessibilityLabel}
+        accessibilityRole={accessibilityRole}
+        accessibilityStates={accessibilityStates}
       >
         <View {...props} />
       </TouchableWithoutFeedback>
@@ -220,9 +226,24 @@ class TabBarBottom extends React.Component<Props> {
         {routes.map((route, index) => {
           const focused = index === navigation.state.index;
           const scene = { route, focused };
+
           const accessibilityLabel = this.props.getAccessibilityLabel({
             route,
           });
+
+          const accessibilityRole =
+            this.props.getAccessibilityRole({
+              route,
+            }) || 'button';
+
+          let accessibilityStates = this.props.getAccessibilityStates({
+            route,
+          });
+
+          if (!accessibilityStates) {
+            accessibilityStates = focused ? ['selected'] : [];
+          }
+
           const testID = this.props.getTestID({ route });
 
           const backgroundColor = focused
@@ -240,6 +261,8 @@ class TabBarBottom extends React.Component<Props> {
               onLongPress={() => onTabLongPress({ route })}
               testID={testID}
               accessibilityLabel={accessibilityLabel}
+              accessibilityRole={accessibilityRole}
+              accessibilityStates={accessibilityStates}
               style={[
                 styles.tab,
                 { backgroundColor },
