@@ -847,6 +847,7 @@ declare module 'react-navigation' {
     ModalSlideFromBottomIOS: TransitionConfig;
     FadeInFromBottomAndroid: TransitionConfig;
     FadeOutToBottomAndroid: TransitionConfig;
+    NoAnimation: TransitionConfig;
   }
 
   export const StackViewTransitionConfigs: StackViewTransitionConfigsType;
@@ -1356,6 +1357,7 @@ declare module 'react-navigation' {
     tintColor?: string;
     truncatedTitle?: string;
     width?: number;
+    disabled?: boolean;
   }
 
   export const HeaderBackButton: React.ComponentClass<HeaderBackButtonProps>;
