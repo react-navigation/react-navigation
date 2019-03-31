@@ -7,7 +7,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.6.0] - [2019-03-31](https://github.com/react-navigation/react-navigation/releases/tag/3.6.0)
+
+## Added
+
 - Export TabBarIconProps, TabBarLabelProps, DrawerIconProps, DrawerLabelProps, ScreenProps and InitialLayout.
+- Add `disabled` prop to HeaderBackButton
+- Add `StackViewTransitionConfigs.NoAnimation`
+- Add `drawerContainerStyle` to navigator config for drawer navigator
 
 ## [3.5.1] - [2019-03-19](https://github.com/react-navigation/react-navigation/releases/tag/3.5.1)
 
@@ -203,8 +210,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - [2.x](https://github.com/react-navigation/react-navigation/blob/2.x/CHANGELOG.md)
 
-[Unreleased]: https://github.com/react-navigation/react-navigation/compare/3.5.1...HEAD
-[3.5.0]: https://github.com/react-navigation/react-navigation/compare/3.5.0...3.5.1
+[Unreleased]: https://github.com/react-navigation/react-navigation/compare/3.6.0...HEAD
+[3.6.0]: https://github.com/react-navigation/react-navigation/compare/3.5.1...3.6.0
+[3.5.1]: https://github.com/react-navigation/react-navigation/compare/3.5.0...3.5.1
 [3.5.0]: https://github.com/react-navigation/react-navigation/compare/3.4.1...3.5.0
 [3.4.1]: https://github.com/react-navigation/react-navigation/compare/3.4.0...3.4.1
 [3.4.0]: https://github.com/react-navigation/react-navigation/compare/3.3.2...3.4.0
