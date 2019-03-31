@@ -205,10 +205,15 @@ function forFade(props) {
   };
 }
 
+function forNoAnimation(props) {
+  return {};
+}
+
 export default {
   forHorizontal,
   forVertical,
   forFadeFromBottomAndroid,
   forFadeToBottomAndroid,
   forFade,
+  forNoAnimation,
 };

@@ -63,6 +63,17 @@ const FadeOutToBottomAndroid = {
   screenInterpolator: StyleInterpolator.forFadeToBottomAndroid,
 };
 
+const NoAnimation = {
+  transitionSpec: {
+    duration: 0,
+    timing: Animated.timing,
+  },
+  screenInterpolator: StyleInterpolator.forNoAnimation,
+  containerStyle: {
+    backgroundColor: '#eee',
+  },
+};
+
 function defaultTransitionConfig(
   transitionProps,
   prevTransitionProps,
@@ -114,4 +125,5 @@ export default {
   ModalSlideFromBottomIOS,
   FadeInFromBottomAndroid,
   FadeOutToBottomAndroid,
+  NoAnimation,
 };
