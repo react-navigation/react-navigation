@@ -14,6 +14,12 @@ import { SafeAreaView } from '@react-navigation/native';
 import CrossFadeIcon from './CrossFadeIcon';
 import withDimensions from '../utils/withDimensions';
 
+type Orientation = 'horizontal' | 'vertical';
+type Position = 'beside-icon' | 'below-icon';
+type LabelPosition =
+  | Position
+  | ((options: { deviceOrientation: Orientation }) => Position);
+
 export type TabBarOptions = {
   keyboardHidesTabBar: boolean,
   activeTintColor?: string,
@@ -25,6 +31,7 @@ export type TabBarOptions = {
   showIcon: boolean,
   labelStyle: any,
   tabStyle: any,
+  labelPosition?: LabelPosition,
   adaptive?: boolean,
   style: any,
 };
@@ -174,6 +181,7 @@ class TabBarBottom extends React.Component<Props, State> {
     }
 
     const label = this.props.getLabelText({ route });
+    const horizontal = this._shouldUseHorizontalLabels();
     const tintColor = focused ? activeTintColor : inactiveTintColor;
 
     if (typeof label === 'string') {
@@ -183,9 +191,7 @@ class TabBarBottom extends React.Component<Props, State> {
           style={[
             styles.label,
             { color: tintColor },
-            showIcon && this._shouldUseHorizontalLabels()
-              ? styles.labelBeside
-              : styles.labelBeneath,
+            showIcon && horizontal ? styles.labelBeside : styles.labelBeneath,
             labelStyle,
           ]}
           allowFontScaling={allowFontScaling}
@@ -196,7 +202,12 @@ class TabBarBottom extends React.Component<Props, State> {
     }
 
     if (typeof label === 'function') {
-      return label({ route, focused, tintColor });
+      return label({
+        route,
+        focused,
+        tintColor,
+        orientation: horizontal ? 'horizontal' : 'vertical',
+      });
     }
 
     return label;
@@ -241,7 +252,28 @@ class TabBarBottom extends React.Component<Props, State> {
 
   _shouldUseHorizontalLabels = () => {
     const { routes } = this.props.navigation.state;
-    const { isLandscape, dimensions, adaptive, tabStyle } = this.props;
+    const {
+      isLandscape,
+      dimensions,
+      adaptive,
+      tabStyle,
+      labelPosition,
+    } = this.props;
+
+    if (labelPosition) {
+      let position;
+      if (typeof labelPosition === 'string') {
+        position = labelPosition;
+      } else {
+        position = labelPosition({
+          deviceOrientation: isLandscape ? 'horizontal' : 'vertical',
+        });
+      }
+
+      if (position) {
+        return position === 'beside-icon';
+      }
+    }
 
     if (!adaptive) {
       return false;
