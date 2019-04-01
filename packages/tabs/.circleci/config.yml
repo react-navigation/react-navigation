@@ -40,15 +40,6 @@ jobs:
         - run: |
             yarn lint
             yarn flow check
-  unit-tests:
-      <<: *defaults
-      steps:
-        - attach_workspace:
-            at: ~/project
-        - run: yarn test -- --coverage
-        - store_artifacts:
-            path: coverage
-            destination: coverage
 
 workflows:
   version: 2
@@ -56,8 +47,5 @@ workflows:
     jobs:
       - install-dependencies
       - lint-and-flow:
-          requires:
-            - install-dependencies
-      - unit-tests:
           requires:
             - install-dependencies
