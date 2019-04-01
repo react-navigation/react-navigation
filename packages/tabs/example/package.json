@@ -9,24 +9,25 @@
   },
   "main": "App.js",
   "dependencies": {
-    "@expo/vector-icons": "^9.0.0",
-    "@react-navigation/core": "^3.1.1",
-    "@react-navigation/native": "^3.1.5",
+    "@expo/vector-icons": "^10.0.1",
+    "@react-navigation/core": "^3.2.0",
+    "@react-navigation/native": "^3.3.0",
     "expo": "32.0.6",
     "react": "16.5.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
     "react-native-safe-area-view": "^0.13.1",
     "react-native-screens": "^1.0.0-alpha.22",
-    "react-native-tab-view": "^2.0.1",
-    "react-navigation": "^3.3.2"
+    "react-native-tab-view": "^2.0.3",
+    "react-navigation": "^3.6.0"
   },
   "devDependencies": {
     "babel-plugin-module-resolver": "^3.2.0",
-    "babel-preset-expo": "^5.0.0",
+    "babel-preset-expo": "^5.1.1",
     "glob-to-regexp": "^0.4.0"
   },
   "resolutions": {
+    "**/@expo/vector-icons": "10.0.1",
     "**/hoist-non-react-statics": "2.5.0",
-    "**/react-native-tab-view": "2.0.1"
+    "**/react-native-tab-view": "2.0.3"
   }
 }
