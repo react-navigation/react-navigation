@@ -31,13 +31,11 @@ export type TabBarOptions = {
 
 type Props = TabBarOptions & {
   navigation: any,
-  descriptors: any,
-  jumpTo: any,
   onTabPress: any,
   onTabLongPress: any,
   getAccessibilityLabel: (props: { route: any }) => string,
   getAccessibilityRole: (props: { route: any }) => string,
-  getAccessibilityStates: (props: { route: any }) => Array<string>,
+  getAccessibilityStates: (props: { route: any }) => string[],
   getButtonComponent: ({ route: any }) => any,
   getLabelText: ({ route: any }) => any,
   getTestID: (props: { route: any }) => string,
@@ -296,7 +294,8 @@ class TabBarBottom extends React.Component<Props, State> {
         style={[
           styles.container,
           keyboardHidesTabBar
-            ? {
+            ? // eslint-disable-next-line react-native/no-inline-styles
+              {
                 // When the keyboard is shown, slide down the tab bar
                 transform: [
                   {
@@ -324,6 +323,20 @@ class TabBarBottom extends React.Component<Props, State> {
             const accessibilityLabel = this.props.getAccessibilityLabel({
               route,
             });
+
+            const accessibilityRole =
+              this.props.getAccessibilityRole({
+                route,
+              }) || 'button';
+
+            let accessibilityStates = this.props.getAccessibilityStates({
+              route,
+            });
+
+            if (!accessibilityStates) {
+              accessibilityStates = focused ? ['selected'] : [];
+            }
+
             const testID = this.props.getTestID({ route });
 
             const backgroundColor = focused
@@ -341,6 +354,8 @@ class TabBarBottom extends React.Component<Props, State> {
                 onLongPress={() => onTabLongPress({ route })}
                 testID={testID}
                 accessibilityLabel={accessibilityLabel}
+                accessibilityRole={accessibilityRole}
+                accessibilityStates={accessibilityStates}
                 style={[
                   styles.tab,
                   { backgroundColor },

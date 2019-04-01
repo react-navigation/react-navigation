@@ -14,7 +14,7 @@ import ResourceSavingScene from '../views/ResourceSavingScene';
 
 type Props = InjectedProps & {
   getAccessibilityRole: (props: { route: any }) => string,
-  getAccessibilityStates: (props: { route: any }) => Array<string>,
+  getAccessibilityStates: (props: { route: any }) => string[],
   lazy?: boolean,
   tabBarComponent?: React.ComponentType<*>,
   tabBarOptions?: TabBarOptions,
