@@ -33,7 +33,7 @@ See our [Contributing Guide](CONTRIBUTING.md)!
 
 #### Is this the only library available for navigation?
 
-Certainly not! There other libraries - which, depending on your needs, can be better or worse suited for your project. Read more in the [alternative libraries](https://reactnavigation.org/docs/alternatives.html) documentation, and read React Navigation's [pitch & anti-pitch](https://reactnavigation.org/docs/pitch.html) to understand the tradeoffs.
+Certainly not! There are other libraries - which, depending on your needs, can be better or worse suited for your project. Read more in the [alternative libraries](https://reactnavigation.org/docs/alternatives.html) documentation, and read React Navigation's [pitch & anti-pitch](https://reactnavigation.org/docs/pitch.html) to understand the tradeoffs.
 
 #### Can I use this library for web?
 
