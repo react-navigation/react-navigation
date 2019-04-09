@@ -205,7 +205,7 @@ function forFade(props) {
   };
 }
 
-function forNoAnimation(props) {
+function forNoAnimation() {
   return {};
 }
 
