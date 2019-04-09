@@ -12,9 +12,11 @@ const DEFAULT_TRANSITION = (
 class SwitchView extends React.Component {
   containerRef = React.createRef();
 
-  componentDidUpdate() {
-    this.containerRef.current &&
-      this.containerRef.current.animateNextTransition();
+  componentDidUpdate(prevProps) {
+    if (this.props.navigation.state.index !== prevProps.navigation.state.index) {
+      this.containerRef.current &&
+        this.containerRef.current.animateNextTransition();
+    }
   }
 
   render() {
