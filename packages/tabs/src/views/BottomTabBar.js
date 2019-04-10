@@ -356,18 +356,13 @@ class TabBarBottom extends React.Component<Props, State> {
               route,
             });
 
-            const accessibilityRole =
-              this.props.getAccessibilityRole({
-                route,
-              }) || 'button';
-
-            let accessibilityStates = this.props.getAccessibilityStates({
+            const accessibilityRole = this.props.getAccessibilityRole({
               route,
             });
 
-            if (!accessibilityStates) {
-              accessibilityStates = focused ? ['selected'] : [];
-            }
+            const accessibilityStates = this.props.getAccessibilityStates(
+              scene
+            );
 
             const testID = this.props.getTestID({ route });
 
