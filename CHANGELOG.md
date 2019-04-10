@@ -9,6 +9,21 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Add missing type for `enableURLHandling`
 
+## [3.7.1] - [2019-04-10](https://github.com/react-navigation/react-navigation/releases/tag/3.7.1)
+
+## Fixes
+
+- Update Flow types (#5800 and #5801)
+- More open `navigationOptions` types for bottom tab navigator config (#5796)
+- Fix hit slop for bottom tab bar (react-navigation-tabs#110)
+
+## Added
+
+- Add accessibility role and state to bottom bar (react-navigation-tabs#90)
+- Hide tab bar when keyboard is shown (react-navigation-tabs#112)
+- Specify default values for getAccessibilityX on tabs (react-navigation-tabs##116)
+- Add a isFirstRouteInParent method to navigation object (react-navigation-core#51)
+
 ## [3.6.1] - [2019-04-02](https://github.com/react-navigation/react-navigation/releases/tag/3.6.1)
 
 ## Fixed
@@ -217,7 +232,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - [2.x](https://github.com/react-navigation/react-navigation/blob/2.x/CHANGELOG.md)
 
-[Unreleased]: https://github.com/react-navigation/react-navigation/compare/3.6.1...HEAD
+[Unreleased]: https://github.com/react-navigation/react-navigation/compare/3.7.1...HEAD
+[3.7.1]: https://github.com/react-navigation/react-navigation/compare/3.6.1...3.7.1
 [3.6.1]: https://github.com/react-navigation/react-navigation/compare/3.6.0...3.6.1
 [3.6.0]: https://github.com/react-navigation/react-navigation/compare/3.5.1...3.6.0
 [3.5.1]: https://github.com/react-navigation/react-navigation/compare/3.5.0...3.5.1
