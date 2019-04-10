@@ -60,13 +60,8 @@ function getChildNavigation(navigation, childKey, getCurrentParentNavigation) {
   const parentNavigation = getCurrentParentNavigation();
 
   if (parentNavigation) {
-    isFirstRouteInParent = parentNavigation.routeKeyHistory
-      ? // For navigators such as switch/tab navigators, history is separate from routes
-        parentNavigation.routeKeyHistory.length
-        ? parentNavigation.routeKeyHistory.indexOf(childKey) === 0
-        : true
-      : // For stack navigator, list of routes is the same as the history
-        parentNavigation.state.routes.indexOf(childRoute) === 0;
+    isFirstRouteInParent =
+      parentNavigation.state.routes.indexOf(childRoute) === 0;
   }
 
   if (
