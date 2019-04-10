@@ -549,7 +549,7 @@ declare module 'react-navigation' {
   export interface NavigationTabRouterConfig
     extends NavigationTabRouterConfigBase {
     defaultNavigationOptions?: NavigationScreenConfig<NavigationScreenOptions>;
-    navigationOptions?: NavigationScreenConfig<NavigationScreenOptions>;
+    navigationOptions?: NavigationScreenConfig<any>;
   }
   export interface NavigationBottomTabRouterConfig
     extends NavigationTabRouterConfigBase {
@@ -557,7 +557,7 @@ declare module 'react-navigation' {
       NavigationBottomTabScreenOptions
     >;
     navigationOptions?: NavigationScreenConfig<
-      NavigationBottomTabScreenOptions
+      any
     >;
   }
   export interface TabScene {
