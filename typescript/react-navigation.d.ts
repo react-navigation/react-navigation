@@ -882,6 +882,12 @@ declare module 'react-navigation' {
 
   export interface NavigationContainerProps<S = {}, O = {}> {
     uriPrefix?: string | RegExp;
+    /**
+     * Controls whether the navigation container handles URLs opened via 'Linking'
+     * @see https://facebook.github.io/react-native/docs/linking
+     * @see https://reactnavigation.org/docs/en/deep-linking.html
+     */
+    enableURLHandling?: boolean; // defaults to true
     onNavigationStateChange?: (
       prevNavigationState: NavigationState,
       nextNavigationState: NavigationState,
