@@ -6,9 +6,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-- Improved Type Definition For Navigator navigationOptions. 
 
-## [3.7.0] - [2019-04-10](https://github.com/react-navigation/react-navigation/releases/tag/3.7.0)
+## [3.7.1] - [2019-04-10](https://github.com/react-navigation/react-navigation/releases/tag/3.7.1)
 
 ## Fixes
 
@@ -231,8 +230,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - [2.x](https://github.com/react-navigation/react-navigation/blob/2.x/CHANGELOG.md)
 
-[Unreleased]: https://github.com/react-navigation/react-navigation/compare/3.7.0...HEAD
-[3.7.0]: https://github.com/react-navigation/react-navigation/compare/3.6.1...3.7.0
+[Unreleased]: https://github.com/react-navigation/react-navigation/compare/3.7.1...HEAD
+[3.7.1]: https://github.com/react-navigation/react-navigation/compare/3.6.1...3.7.1
 [3.6.1]: https://github.com/react-navigation/react-navigation/compare/3.6.0...3.6.1
 [3.6.0]: https://github.com/react-navigation/react-navigation/compare/3.5.1...3.6.0
 [3.5.1]: https://github.com/react-navigation/react-navigation/compare/3.5.0...3.5.1
