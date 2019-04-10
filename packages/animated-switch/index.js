@@ -13,9 +13,13 @@ class SwitchView extends React.Component {
   containerRef = React.createRef();
 
   componentDidUpdate(prevProps) {
-    if (this.props.navigation.state.index !== prevProps.navigation.state.index) {
-      this.containerRef.current &&
-        this.containerRef.current.animateNextTransition();
+    const { state: prevState } = prevProps.navigation;
+    const prevActiveKey = prevState.routes[prevState.index].key;
+    const { state } = this.props.navigation;
+    const activeKey = state.routes[state.index].key;
+
+    if (activeKey !== prevActiveKey && this.containerRef.current) {
+      this.containerRef.current.animateNextTransition();
     }
   }
 
