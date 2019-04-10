@@ -55,7 +55,24 @@ function getChildNavigation(navigation, childKey, getCurrentParentNavigation) {
     };
   });
 
-  if (children[childKey]) {
+  let isFirstRouteInParent = true;
+
+  const parentNavigation = getCurrentParentNavigation();
+
+  if (parentNavigation) {
+    isFirstRouteInParent = parentNavigation.routeKeyHistory
+      ? // For navigators such as switch/tab navigators, history is separate from routes
+        parentNavigation.routeKeyHistory.length
+        ? parentNavigation.routeKeyHistory.indexOf(childKey) === 0
+        : true
+      : // For stack navigator, list of routes is the same as the history
+        parentNavigation.state.routes.indexOf(childRoute) === 0;
+  }
+
+  if (
+    children[childKey] &&
+    children[childKey].isFirstRouteInParent() === isFirstRouteInParent
+  ) {
     children[childKey] = {
       ...children[childKey],
       ...actionHelpers,
@@ -99,6 +116,7 @@ function getChildNavigation(navigation, childKey, getCurrentParentNavigation) {
         }
         return false;
       },
+      isFirstRouteInParent: () => isFirstRouteInParent,
       dispatch: navigation.dispatch,
       getScreenProps: navigation.getScreenProps,
       dangerouslyGetParent: getCurrentParentNavigation,

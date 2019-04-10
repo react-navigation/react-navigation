@@ -39,6 +39,7 @@ export default function getNavigation(
       };
     },
     dangerouslyGetParent: () => null,
+    isFirstRouteInParent: () => true,
     _childrenNavigation: getChildrenNavigationCache(getCurrentNavigation()),
   };
 

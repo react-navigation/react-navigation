@@ -59,6 +59,8 @@
     "@babel/preset-flow": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
     "@babel/preset-typescript": "^7.3.3",
+    "@react-navigation/core": "^3.2.1",
+    "@react-navigation/native": "^3.3.0",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "^10.0.1",
     "babel-jest": "^24.1.0",
@@ -74,7 +76,9 @@
     "prettier": "^1.13.6",
     "react": "16.6.3",
     "react-dom": "16.6.3",
+    "react-lifecycles-compat": "^3.0.4",
     "react-native": "^0.58.6",
+    "react-native-testing-library": "^1.6.2",
     "react-test-renderer": "16.6.3",
     "release-it": "^7.6.1",
     "ts-jest": "^24.0.0",
@@ -93,7 +97,7 @@
       "jest-setup.js"
     ],
     "transformIgnorePatterns": [
-      "node_modules/(?!(jest-)?react-native|react-clone-referenced-element)"
+      "node_modules/(?!(jest-)?react-native|react-clone-referenced-element|@react-navigation)"
     ],
     "transform": {
       "^.+\\.tsx?$": "ts-jest"
