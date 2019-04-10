@@ -27,6 +27,8 @@ type State = {
 class TabNavigationView extends React.PureComponent<Props, State> {
   static defaultProps = {
     lazy: true,
+    getAccessibilityRole: () => 'button',
+    getAccessibilityStates: ({ focused }) => (focused ? ['selected'] : []),
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {
