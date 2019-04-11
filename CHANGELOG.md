@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+- Add missing type for `enableURLHandling`
+
 ## [3.7.1] - [2019-04-10](https://github.com/react-navigation/react-navigation/releases/tag/3.7.1)
 
 ## Fixes
