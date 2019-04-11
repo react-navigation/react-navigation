@@ -301,7 +301,8 @@ export default class Pager<T: Route> extends React.Component<Props<T>> {
         )
       ),
       cond(state.finished, [
-        // Reset gesture and velocity from previous gesture
+        // Reset values
+        set(this._isSwipeGesture, FALSE),
         set(this._gestureX, 0),
         set(this._velocityX, 0),
         // When the animation finishes, stop the clock
