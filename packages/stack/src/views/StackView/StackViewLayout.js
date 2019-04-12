@@ -78,8 +78,10 @@ const getDefaultHeaderHeight = isLandscape => {
     } else {
       return 64;
     }
-  } else {
+  } else if (Platform.OS === 'android') {
     return 56;
+  } else {
+    return 64;
   }
 };
 
