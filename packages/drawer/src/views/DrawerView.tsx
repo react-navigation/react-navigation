@@ -1,23 +1,68 @@
-import React from 'react';
-import { Dimensions, StyleSheet } from 'react-native';
+import * as React from 'react';
+import { Dimensions, StyleSheet, ViewStyle, Animated } from 'react-native';
 import { SceneView } from '@react-navigation/core';
 import DrawerLayout from 'react-native-gesture-handler/DrawerLayout';
 import { ScreenContainer } from 'react-native-screens';
 
-import DrawerActions from '../routers/DrawerActions';
-import DrawerSidebar from './DrawerSidebar';
+import * as DrawerActions from '../routers/DrawerActions';
+import DrawerSidebar, { ContentComponentProps } from './DrawerSidebar';
 import DrawerGestureContext from '../utils/DrawerGestureContext';
 import ResourceSavingScene from '../views/ResourceSavingScene';
+import { Navigation } from '../types';
+
+type DrawerOptions = {
+  drawerBackgroundColor?: string;
+  overlayColor?: string;
+  minSwipeDistance?: number;
+  drawerPosition: 'left' | 'right';
+  drawerLockMode?: 'unlocked' | 'locked-closed' | 'locked-open';
+  keyboardDismissMode?: 'on-drag' | 'none';
+  drawerType: 'front' | 'back' | 'slide';
+  drawerWidth: number | (() => number);
+  statusBarAnimation: 'slide' | 'none' | 'fade';
+  useNativeAnimations?: boolean;
+  onDrawerClose?: () => void;
+  onDrawerOpen?: () => void;
+  onDrawerStateChanged?: () => void;
+  drawerContainerStyle?: ViewStyle;
+  contentContainerStyle?: ViewStyle;
+  edgeWidth: number;
+  hideStatusBar?: boolean;
+  style?: ViewStyle;
+};
+
+type Props = {
+  lazy: boolean;
+  navigation: Navigation;
+  descriptors: {
+    [key: string]: {
+      navigation: {};
+      getComponent: () => React.ComponentType<{}>;
+      options: DrawerOptions;
+    };
+  };
+  navigationConfig: DrawerOptions & {
+    contentComponent?: React.ComponentType<ContentComponentProps>;
+    unmountInactiveRoutes?: boolean;
+    contentOptions?: object;
+  };
+  screenProps: unknown;
+};
+
+type State = {
+  loaded: number[];
+  drawerWidth: number;
+};
 
 /**
  * Component that renders the drawer.
  */
-export default class DrawerView extends React.PureComponent {
+export default class DrawerView extends React.PureComponent<Props, State> {
   static defaultProps = {
     lazy: true,
   };
 
-  static getDerivedStateFromProps(nextProps, prevState) {
+  static getDerivedStateFromProps(nextProps: Props, prevState: State) {
     const { index } = nextProps.navigation.state;
 
     return {
@@ -28,7 +73,7 @@ export default class DrawerView extends React.PureComponent {
     };
   }
 
-  state = {
+  state: State = {
     loaded: [this.props.navigation.state.index],
     drawerWidth:
       typeof this.props.navigationConfig.drawerWidth === 'function'
@@ -40,7 +85,7 @@ export default class DrawerView extends React.PureComponent {
     Dimensions.addEventListener('change', this._updateWidth);
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: Props) {
     const {
       openId,
       closeId,
@@ -56,6 +101,7 @@ export default class DrawerView extends React.PureComponent {
     let prevIds = [prevOpenId, prevCloseId, prevToggleId];
     let changedIds = [openId, closeId, toggleId]
       .filter(id => !prevIds.includes(id))
+      // @ts-ignore
       .sort((a, b) => a > b);
 
     changedIds.forEach(id => {
@@ -77,9 +123,11 @@ export default class DrawerView extends React.PureComponent {
     Dimensions.removeEventListener('change', this._updateWidth);
   }
 
+  _drawer: typeof DrawerLayout;
+
   drawerGestureRef = React.createRef();
 
-  _handleDrawerStateChange = (newState, willShow) => {
+  _handleDrawerStateChange = (newState: string, willShow: boolean) => {
     if (newState === 'Idle') {
       if (!this.props.navigation.state.isDrawerIdle) {
         this.props.navigation.dispatch({
@@ -128,7 +176,9 @@ export default class DrawerView extends React.PureComponent {
     }
   };
 
-  _renderNavigationView = drawerOpenProgress => {
+  _renderNavigationView = (
+    drawerOpenProgress: Animated.AnimatedInterpolation
+  ) => {
     return (
       <DrawerGestureContext.Provider value={this.drawerGestureRef}>
         <DrawerSidebar
@@ -196,24 +246,28 @@ export default class DrawerView extends React.PureComponent {
     }
   };
 
-  _setDrawerGestureRef = ref => {
+  _setDrawerGestureRef = (ref: any) => {
+    // @ts-ignore
     this.drawerGestureRef.current = ref;
   };
 
   render() {
-    const { navigation } = this.props;
+    const { navigation, screenProps } = this.props;
     const activeKey = navigation.state.routes[navigation.state.index].key;
     const { drawerLockMode } = this.props.descriptors[activeKey].options;
 
     return (
       <DrawerLayout
-        ref={c => {
+        ref={(c: any) => {
           this._drawer = c;
         }}
         onGestureRef={this._setDrawerGestureRef}
         drawerLockMode={
           drawerLockMode ||
-          (this.props.screenProps && this.props.screenProps.drawerLockMode) ||
+          (typeof screenProps === 'object' &&
+            screenProps != null &&
+            // @ts-ignore
+            screenProps.drawerLockMode) ||
           this.props.navigationConfig.drawerLockMode
         }
         drawerBackgroundColor={

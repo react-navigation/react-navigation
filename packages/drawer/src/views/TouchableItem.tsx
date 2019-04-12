@@ -7,17 +7,23 @@
  * On iOS you can pass the props of TouchableOpacity, on Android pass the props
  * of TouchableNativeFeedback.
  */
-import React from 'react';
+import * as React from 'react';
 import {
   Platform,
   TouchableNativeFeedback,
   TouchableOpacity,
   View,
+  TouchableWithoutFeedback,
 } from 'react-native';
 
 const ANDROID_VERSION_LOLLIPOP = 21;
 
-export default class TouchableItem extends React.Component {
+type Props = React.ComponentProps<typeof TouchableWithoutFeedback> & {
+  pressColor: string;
+  borderless: boolean;
+};
+
+export default class TouchableItem extends React.Component<Props> {
   static defaultProps = {
     borderless: false,
     pressColor: 'rgba(0, 0, 0, .32)',
