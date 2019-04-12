@@ -657,10 +657,10 @@
     query-string "^6.2.0"
     react-is "^16.6.3"
 
-"@react-navigation/native@~3.3.0":
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/@react-navigation/native/-/native-3.3.0.tgz#def7a94ef17581a404a3de2a3200f986e999dac1"
-  integrity sha512-w/+2B0qX441BpNkYb5QoPY8+Q4Q18adGTahVpc6o8Juj6odAxyIJ2RozXk7dCpN/w0dz4B+5ggqMKHVniE6K7w==
+"@react-navigation/native@~3.4.0":
+  version "3.4.0"
+  resolved "https://registry.yarnpkg.com/@react-navigation/native/-/native-3.4.0.tgz#04e2a07133efa72411da9340d37bf362aef5b444"
+  integrity sha512-wxZ3h/PqB3iVrf6uWkMghq9WDjAx6LE5HOSNZ4pdWT1YA6moBd7Ul8qv/qQCISEO0dNlESOekr8uevhsawmeSA==
   dependencies:
     hoist-non-react-statics "^3.0.1"
     react-native-safe-area-view "^0.13.0"
@@ -736,9 +736,9 @@ accepts@~1.3.3, accepts@~1.3.5:
     negotiator "0.6.1"
 
 acorn-globals@^4.1.0:
-  version "4.3.0"
-  resolved "https://registry.yarnpkg.com/acorn-globals/-/acorn-globals-4.3.0.tgz#e3b6f8da3c1552a95ae627571f7dd6923bb54103"
-  integrity sha512-hMtHj3s5RnuhvHPowpBYvJVj3rAar82JiDQHvGs1zO0l10ocX/xEdBShNHTJaboucJUsScghp74pH3s7EnHHQw==
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/acorn-globals/-/acorn-globals-4.3.1.tgz#deb149c59276657ebd40ba2ba849ddd529763ccf"
+  integrity sha512-gJSiKY8dBIjV/0jagZIFBdVMtfQyA5QHCvAT48H2q8REQoW8Fs5AOjqBql1LgSXgrMWdevcE+8cdZ33NtVbIBA==
   dependencies:
     acorn "^6.0.1"
     acorn-walk "^6.0.1"
@@ -4747,9 +4747,9 @@ pascalcase@^0.1.1:
   integrity sha1-s2PlXoAGym/iF4TS2yK9FdeRfxQ=
 
 patch-package@^6.0.5:
-  version "6.1.1"
-  resolved "https://registry.yarnpkg.com/patch-package/-/patch-package-6.1.1.tgz#b4d5fb5393c08bfb0b45d7c9e3f93a6de4c9ebc2"
-  integrity sha512-o8DILvFF1MMATcaFbNxRYbCtrgEVwF3m/1umLEQQ1zpW2T+WfmVDn4jVep5GZYpjbThqKivpdLJiKLNUUV9erg==
+  version "6.1.2"
+  resolved "https://registry.yarnpkg.com/patch-package/-/patch-package-6.1.2.tgz#9ed0b3defb5c34ecbef3f334ddfb13e01b3d3ff6"
+  integrity sha512-5GnzR8lEyeleeariG+hGabUnD2b1yL7AIGFjlLo95zMGRWhZCel58IpeKD46wwPb7i+uNhUI8unV56ogk8Bgqg==
   dependencies:
     "@yarnpkg/lockfile" "^1.1.0"
     chalk "^2.4.2"
@@ -5204,10 +5204,10 @@ react-navigation-header-buttons@^2.1.1:
   dependencies:
     react-native-platform-touchable "^1.1.1"
 
-react-navigation-stack@1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/react-navigation-stack/-/react-navigation-stack-1.2.0.tgz#d1d76d28df75e55302c67b078479f95bd4559d2f"
-  integrity sha512-QVnFhCFZoY7wwYIHhmWDwd1JoUX8C858oX4FKwqmJetrkeQU7Oh32z0kBip+fs49v3pZfjPnNJwekeAidFsRlg==
+react-navigation-stack@1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/react-navigation-stack/-/react-navigation-stack-1.3.0.tgz#34bbddb068c094c9ab843e36059b9fd92b728250"
+  integrity sha512-ouyD1GkRksJSGuvAuqrJnlJnZ5g2g/+/WB/MTa8BzjSBvyOgruD5TrmEkpViCOMr1R17C8D4Htln90H4D+NV3Q==
 
 react-navigation-tabs@1.1.2:
   version "1.1.2"
@@ -5220,12 +5220,12 @@ react-navigation-tabs@1.1.2:
     react-native-tab-view "^1.3.4"
 
 "react-navigation@file:../..":
-  version "3.7.0"
+  version "3.8.0"
   dependencies:
     "@react-navigation/core" "~3.3.0"
-    "@react-navigation/native" "~3.3.0"
+    "@react-navigation/native" "~3.4.0"
     react-navigation-drawer "1.2.1"
-    react-navigation-stack "1.2.0"
+    react-navigation-stack "1.3.0"
     react-navigation-tabs "1.1.2"
 
 react-proxy@^1.1.7:
