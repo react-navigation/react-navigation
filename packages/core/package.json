@@ -76,7 +76,6 @@
     "prettier": "^1.13.6",
     "react": "16.6.3",
     "react-dom": "16.6.3",
-    "react-lifecycles-compat": "^3.0.4",
     "react-native": "^0.58.6",
     "react-native-testing-library": "^1.6.2",
     "react-test-renderer": "16.6.3",
