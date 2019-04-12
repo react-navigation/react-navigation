@@ -1,6 +1,5 @@
 import React from 'react';
 import { AsyncStorage, Linking, Platform, BackHandler } from 'react-native';
-import { polyfill } from 'react-lifecycles-compat';
 
 import {
   NavigationActions,
@@ -391,5 +390,5 @@ export default function createNavigationContainer(Component) {
     }
   }
 
-  return polyfill(NavigationContainer);
+  return NavigationContainer;
 }
