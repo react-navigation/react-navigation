@@ -9,6 +9,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Add missing type for `enableURLHandling`
 
+## [3.8.0] - [2019-04-12](https://github.com/react-navigation/react-navigation/releases/tag/3.8.0)
+
+## Fixes
+
+- `onRefresh` on exported lists `FlatList` and `SectionList` works as expected now (no need to add `refreshControl` prop explicitly)
+- On Android, the exported `ScrollView` is now same as the React Native ScrollView (but with scroll-to-top behavior added), whereas on iOS we still use react-native-gesture-handler ScrollView. We can change Android back to react-native-gesture-handler ScrollView when https://github.com/kmagiera/react-native-gesture-handler/issues/560 is resolved.
+- Look for `scrollResponderScrollTo` function in our ScrollView, in react-native 0.59 the interface appears to have changed for FlatList such that this is needed. (react-navigation-native#20)
+
+## Changed
+
+- Stack header style improvements for web (react-navigation-stack#104)
+
 ## [3.7.1] - [2019-04-10](https://github.com/react-navigation/react-navigation/releases/tag/3.7.1)
 
 ## Fixes
@@ -232,7 +244,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - [2.x](https://github.com/react-navigation/react-navigation/blob/2.x/CHANGELOG.md)
 
-[Unreleased]: https://github.com/react-navigation/react-navigation/compare/3.7.1...HEAD
+[Unreleased]: https://github.com/react-navigation/react-navigation/compare/3.8.0...HEAD
+[3.8.0]: https://github.com/react-navigation/react-navigation/compare/3.7.1...3.8.0
 [3.7.1]: https://github.com/react-navigation/react-navigation/compare/3.6.1...3.7.1
 [3.6.1]: https://github.com/react-navigation/react-navigation/compare/3.6.0...3.6.1
 [3.6.0]: https://github.com/react-navigation/react-navigation/compare/3.5.1...3.6.0
