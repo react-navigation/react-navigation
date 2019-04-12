@@ -20,6 +20,8 @@ export default function createNavigationAwareScrollable(Component: any) {
                 scrollableNode.scrollToTop();
               } else if (scrollableNode.scrollTo != null) {
                 scrollableNode.scrollTo({ y: 0 });
+              } else if (scrollableNode.scrollResponderScrollTo != null) {
+                scrollableNode.scrollResponderScrollTo({ y: 0 });
               }
             }
           }
