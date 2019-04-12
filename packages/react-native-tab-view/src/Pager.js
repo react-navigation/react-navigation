@@ -1,7 +1,7 @@
 /* @flow */
 
 import * as React from 'react';
-import { StyleSheet, Keyboard } from 'react-native';
+import { StyleSheet, Keyboard, I18nManager } from 'react-native';
 import { PanGestureHandler, State } from 'react-native-gesture-handler';
 import Animated, { Easing } from 'react-native-reanimated';
 
@@ -58,6 +58,7 @@ const {
   multiply,
   neq,
   or,
+  not,
   round,
   set,
   spring,
@@ -162,7 +163,7 @@ export default class Pager<T: Route> extends React.Component<Props<T>> {
 
   // Current position of the page (translateX value)
   _position = new Value(
-    // Intial value is based on the index and page width
+    // Initial value is based on the index and page width
     this.props.navigationState.index * this.props.layout.width * DIRECTION_RIGHT
   );
 
@@ -188,6 +189,14 @@ export default class Pager<T: Route> extends React.Component<Props<T>> {
   // Threshold values to determine when to trigger a swipe gesture
   _swipeDistanceThreshold = new Value(this.props.swipeDistanceThreshold || 180);
   _swipeVelocityThreshold = new Value(this.props.swipeVelocityThreshold);
+
+  // The reason for using this value instead of simply passing `this._velocity`
+  // into a spring animation is that we need to reverse it if we're using RTL mode.
+  // Also, it's not possible to pass multiplied value there, because
+  // value passed to STATE of spring (the first argument) has to be Animated.Value
+  // and it's not allowed to pass other nodes there. The result of multiplying is not an
+  // Animated.Value. So this value is being updated on each start of spring animation.
+  _initialVelocityForSpring = new Value(0);
 
   // Whether we need to add a listener for position change
   // To avoid unnecessary traffic through the bridge, don't add listeners unless needed
@@ -288,11 +297,22 @@ export default class Pager<T: Route> extends React.Component<Props<T>> {
       cond(
         this._isSwipeGesture,
         // Animate the values with a spring for swipe
-        spring(
-          this._clock,
-          { ...state, velocity: this._velocityX },
-          { ...SPRING_CONFIG, toValue }
-        ),
+        [
+          cond(
+            not(clockRunning(this._clock)),
+            I18nManager.isRTL
+              ? set(
+                  this._initialVelocityForSpring,
+                  multiply(-1, this._velocityX)
+                )
+              : set(this._initialVelocityForSpring, this._velocityX)
+          ),
+          spring(
+            this._clock,
+            { ...state, velocity: this._initialVelocityForSpring },
+            { ...SPRING_CONFIG, toValue }
+          ),
+        ],
         // Otherwise use a timing animation for faster switching
         timing(
           this._clock,
@@ -389,7 +409,12 @@ export default class Pager<T: Route> extends React.Component<Props<T>> {
           set(this._offsetX, this._position),
         ]),
         // Update position with previous offset + gesture distance
-        set(this._position, add(this._offsetX, this._gestureX)),
+        set(
+          this._position,
+          I18nManager.isRTL
+            ? sub(this._offsetX, this._gestureX)
+            : add(this._offsetX, this._gestureX)
+        ),
         // Stop animations while we're dragging
         stopClock(this._clock),
       ],
@@ -423,14 +448,14 @@ export default class Pager<T: Route> extends React.Component<Props<T>> {
                       // If gesture value exceeded the threshold, calculate direction from distance travelled
                       cond(
                         greaterThan(this._gestureX, 0),
-                        DIRECTION_LEFT,
-                        DIRECTION_RIGHT
+                        I18nManager.isRTL ? DIRECTION_RIGHT : DIRECTION_LEFT,
+                        I18nManager.isRTL ? DIRECTION_LEFT : DIRECTION_RIGHT
                       ),
                       // Otherwise calculate direction from the gesture velocity
                       cond(
                         greaterThan(this._velocityX, 0),
-                        DIRECTION_LEFT,
-                        DIRECTION_RIGHT
+                        I18nManager.isRTL ? DIRECTION_RIGHT : DIRECTION_LEFT,
+                        I18nManager.isRTL ? DIRECTION_LEFT : DIRECTION_RIGHT
                       )
                     )
                   )
@@ -495,7 +520,13 @@ export default class Pager<T: Route> extends React.Component<Props<T>> {
               layout.width
                 ? {
                     width: layout.width * navigationState.routes.length,
-                    transform: [{ translateX }],
+                    transform: [
+                      {
+                        translateX: I18nManager.isRTL
+                          ? multiply(translateX, -1)
+                          : translateX,
+                      },
+                    ],
                   }
                 : null,
             ]}
