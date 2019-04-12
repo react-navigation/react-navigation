@@ -2,32 +2,33 @@
   "name": "native-example",
   "version": "0.0.1",
   "private": true,
+  "main": "App.js",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "postinstall": "rm -rf node_modules/expo-react-native-adapter/node_modules/react && rm -rf node_modules/expo-gl/node_modules/react && rm -rf node_modules/@react-navigation/native"
+    "postinstall": "rm -rf node_modules/@react-navigation/native/{.git,node_modules,example}"
   },
   "dependencies": {
-    "expo": "~30.0.0",
+    "@react-navigation/native": "../",
+    "@react-navigation/core": "^3.1.0",
+    "expo": "~32.0.0",
     "hoist-non-react-statics": "^2.5.0",
     "prop-types": "^15.6.0",
-    "react": "16.3.1",
-    "react-lifecycles-compat": "^3.0.4",
-    "react-native": "~0.55.4",
-    "react-native-paper": "^2.2.0",
-    "react-navigation": "^3.0.0"
+    "query-string": "^6.2.0",
+    "react": "16.5.0",
+    "react-is": "^16.5.2",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
+    "react-native-paper": "^2.2.8",
+    "react-navigation-stack": "^1.0.7",
+    "react-navigation-tabs": "^1.0.2"
+  },
+  "resolutions": {
+    "**/react": "16.5.0",
+    "**/prop-types": "15.6.2",
+    "**/hoist-non-react-statics": "3.1.0"
   },
   "devDependencies": {
-    "babel-plugin-module-resolver": "^3.0.0",
-    "babel-preset-expo": "^4.0.0",
-    "glob-to-regexp": "^0.3.0"
-  },
-  "main": "App.js",
-  "resolutions": {
-    "**/react": "16.3.1",
-    "**/prop-types": "15.6.0",
-    "**/react-lifecycles-compat": "3.0.4",
-    "**/hoist-non-react-statics": "2.5.0"
+    "babel-preset-expo": "^5.0.0"
   }
 }
