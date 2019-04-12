@@ -7,7 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-- Add missing type for `enableURLHandling`
+## [3.8.1] - [2019-04-12](https://github.com/react-navigation/react-navigation/releases/tag/3.8.1)
+
+## Changed
+
+- Add missing type for `enableURLHandling` to TypeScript definition (#5803)
+- Update Flow types (#5806)
 
 ## [3.8.0] - [2019-04-12](https://github.com/react-navigation/react-navigation/releases/tag/3.8.0)
 
@@ -244,7 +249,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - [2.x](https://github.com/react-navigation/react-navigation/blob/2.x/CHANGELOG.md)
 
-[Unreleased]: https://github.com/react-navigation/react-navigation/compare/3.8.0...HEAD
+[Unreleased]: https://github.com/react-navigation/react-navigation/compare/3.8.1...HEAD
+[3.8.1]: https://github.com/react-navigation/react-navigation/compare/3.8.0...3.8.1
 [3.8.0]: https://github.com/react-navigation/react-navigation/compare/3.7.1...3.8.0
 [3.7.1]: https://github.com/react-navigation/react-navigation/compare/3.6.1...3.7.1
 [3.6.1]: https://github.com/react-navigation/react-navigation/compare/3.6.0...3.6.1
