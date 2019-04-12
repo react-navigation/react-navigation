@@ -1,23 +1,55 @@
 import { SwitchRouter, NavigationActions } from '@react-navigation/core';
-import DrawerActions from './DrawerActions';
+import * as DrawerActions from './DrawerActions';
 
-function withDefaultValue(obj, key, defaultValue) {
+type Route = {
+  key: string;
+  index?: number;
+  routes?: Route[];
+};
+
+type Action = {
+  key: null;
+  type: string;
+  willShow: any;
+};
+
+type State = Route & {
+  isDrawerOpen?: any;
+  isDrawerIdle?: any;
+  drawerMovementDirection?: any;
+};
+
+function withDefaultValue(obj: object, key: string, defaultValue: any): any {
+  // @ts-ignore
   if (obj.hasOwnProperty(key) && typeof obj[key] !== 'undefined') {
     return obj;
   }
 
+  // @ts-ignore
   obj[key] = defaultValue;
   return obj;
 }
 
-const getActiveRouteKey = route => {
-  if (route.routes && route.routes[route.index]) {
+const getActiveRouteKey = (route: Route): string => {
+  if (
+    route.routes &&
+    typeof route.index === 'number' &&
+    route.routes[route.index]
+  ) {
     return getActiveRouteKey(route.routes[route.index]);
   }
+
   return route.key;
 };
 
-export default (routeConfigs, config = {}) => {
+export default (
+  routeConfigs: object,
+  config: {
+    unmountInactiveRoutes?: boolean;
+    resetOnBlur?: boolean;
+    initialRouteName?: string;
+  } = {}
+) => {
   config = { ...config };
   config = withDefaultValue(
     config,
@@ -37,7 +69,7 @@ export default (routeConfigs, config = {}) => {
   return {
     ...switchRouter,
 
-    getActionCreators(route, navStateKey) {
+    getActionCreators(route: Route, navStateKey: string) {
       return {
         openDrawer: () => DrawerActions.openDrawer({ key: navStateKey }),
         closeDrawer: () => DrawerActions.closeDrawer({ key: navStateKey }),
@@ -46,7 +78,7 @@ export default (routeConfigs, config = {}) => {
       };
     },
 
-    getStateForAction(action, state) {
+    getStateForAction(action: Action, state: State) {
       // Set up the initial state if needed
       if (!state) {
         return {

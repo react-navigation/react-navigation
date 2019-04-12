@@ -5,6 +5,10 @@
     "slug": "react-navigation-drawer-demo",
     "sdkVersion": "32.0.0",
     "version": "1.0.0",
-    "primaryColor": "#2196f3"
+    "primaryColor": "#2196f3",
+    "packagerOpts": {
+      "config": "./metro.config.js",
+      "projectRoots": ""
+    }
   }
 }

@@ -1,6 +1,6 @@
 /* eslint react/display-name:0 */
 
-import React from 'react';
+import * as React from 'react';
 import DrawerRouter from '../DrawerRouter';
 
 import {
@@ -8,12 +8,12 @@ import {
   SwitchRouter,
   StackRouter,
 } from '@react-navigation/core';
-import DrawerActions from '../../routers/DrawerActions';
+import * as DrawerActions from '../../routers/DrawerActions';
 
 const INIT_ACTION = { type: NavigationActions.INIT };
 
 describe('DrawerRouter', () => {
-  test('Handles basic drawer logic and fires close on switch', () => {
+  it('Handles basic drawer logic and fires close on switch', () => {
     const ScreenA = () => <div />;
     const ScreenB = () => <div />;
     const router = DrawerRouter({
@@ -59,7 +59,7 @@ describe('DrawerRouter', () => {
     expect(router.getComponentForState(expectedState2)).toEqual(ScreenB);
   });
 
-  test('Handles initial route navigation', () => {
+  it('Handles initial route navigation', () => {
     const FooScreen = () => <div />;
     const BarScreen = () => <div />;
     const router = DrawerRouter(
@@ -101,7 +101,7 @@ describe('DrawerRouter', () => {
     });
   });
 
-  test('Drawer opens closes and toggles', () => {
+  it('Drawer opens closes and toggles', () => {
     const ScreenA = () => <div />;
     const ScreenB = () => <div />;
     const router = DrawerRouter({
@@ -127,7 +127,7 @@ describe('DrawerRouter', () => {
     expect(state4.toggleId).toEqual(5);
   });
 
-  test('Drawer opens closes with key targeted', () => {
+  it('Drawer opens closes with key targeted', () => {
     const ScreenA = () => <div />;
     const ScreenB = () => <div />;
     const router = DrawerRouter({
@@ -148,10 +148,10 @@ describe('DrawerRouter', () => {
   });
 });
 
-test('Nested routers bubble up blocked actions', () => {
+it('Nested routers bubble up blocked actions', () => {
   const ScreenA = () => <div />;
   ScreenA.router = {
-    getStateForAction(action, lastState) {
+    getStateForAction(action: { type: string }, lastState: any) {
       if (action.type === 'CHILD_ACTION') return null;
       return lastState;
     },
@@ -167,10 +167,13 @@ test('Nested routers bubble up blocked actions', () => {
   expect(state2).toEqual(null);
 });
 
-test('Drawer does not fire close when child routers return new state', () => {
+it('Drawer does not fire close when child routers return new state', () => {
   const ScreenA = () => <div />;
   ScreenA.router = {
-    getStateForAction(action, lastState = { changed: false }) {
+    getStateForAction(
+      action: { type: string },
+      lastState = { changed: false }
+    ) {
       if (action.type === 'CHILD_ACTION')
         return { ...lastState, changed: true };
       return lastState;
@@ -188,7 +191,7 @@ test('Drawer does not fire close when child routers return new state', () => {
   expect(state2.routes[0].changed).toEqual(true);
 });
 
-test('DrawerRouter will close drawer on child navigaton, not on child param changes', () => {
+it('DrawerRouter will close drawer on child navigaton, not on child param changes', () => {
   class FooView extends React.Component {
     render() {
       return <div />;
@@ -238,7 +241,7 @@ test('DrawerRouter will close drawer on child navigaton, not on child param chan
   expect(state1quxState.params.foo).toEqual('bar');
 });
 
-test('goBack closes drawer when inside of stack', () => {
+it('goBack closes drawer when inside of stack', () => {
   const ScreenA = () => <div />;
   const DrawerScreen = () => <div />;
   DrawerScreen.router = DrawerRouter({

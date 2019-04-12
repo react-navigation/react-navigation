@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import {
   Animated,
   Button,
@@ -108,18 +108,18 @@ const MyNavScreen = ({ navigation, banner }) => (
 );
 
 const InboxScreen = ({ navigation }) => (
-  <MyNavScreen banner={'Inbox Screen'} navigation={navigation} />
+  <MyNavScreen banner="Inbox Screen" navigation={navigation} />
 );
 InboxScreen.navigationOptions = {
   headerTitle: 'Inbox',
 };
 
 const EmailScreen = ({ navigation }) => (
-  <MyNavScreen banner={'Email Screen'} navigation={navigation} />
+  <MyNavScreen banner="Email Screen" navigation={navigation} />
 );
 
 const DraftsScreen = ({ navigation }) => (
-  <MyNavScreen banner={'Drafts Screen'} navigation={navigation} />
+  <MyNavScreen banner="Drafts Screen" navigation={navigation} />
 );
 DraftsScreen.navigationOptions = {
   headerTitle: 'Drafts',
@@ -177,8 +177,8 @@ const DrawerContents = ({ drawerOpenProgress, navigation }) => {
     <Animated.View style={{ transform: [{ translateX }] }}>
       <ScrollView>
         <SafeAreaView forceInset={{ top: 'always' }}>
-          <DrawerItem navigation={navigation} item={'Drafts'} />
-          <DrawerItem navigation={navigation} item={'Email'} />
+          <DrawerItem navigation={navigation} item="Drafts" />
+          <DrawerItem navigation={navigation} item="Email" />
         </SafeAreaView>
       </ScrollView>
     </Animated.View>

@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import {
   Button,
   TextInput,
@@ -105,18 +105,18 @@ const MyNavScreen = ({ navigation, banner }) => (
 );
 
 const InboxScreen = ({ navigation }) => (
-  <MyNavScreen banner={'Inbox Screen'} navigation={navigation} />
+  <MyNavScreen banner="Inbox Screen" navigation={navigation} />
 );
 InboxScreen.navigationOptions = {
   headerTitle: 'Inbox',
 };
 
 const EmailScreen = ({ navigation }) => (
-  <MyNavScreen banner={'Email Screen'} navigation={navigation} />
+  <MyNavScreen banner="Email Screen" navigation={navigation} />
 );
 
 const DraftsScreen = ({ navigation }) => (
-  <MyNavScreen banner={'Drafts Screen'} navigation={navigation} />
+  <MyNavScreen banner="Drafts Screen" navigation={navigation} />
 );
 DraftsScreen.navigationOptions = {
   headerTitle: 'Drafts',

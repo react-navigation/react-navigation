@@ -2,18 +2,20 @@
   "name": "react-navigation-drawer",
   "version": "1.2.1",
   "description": "Drawer navigator component for React Navigation",
-  "main": "dist/index.js",
+  "main": "lib/commonjs/index.js",
+  "react-native": "src/index.tsx",
+  "module": "lib/module/index.js",
+  "types": "lib/typescript/src/index.d.ts",
   "files": [
-    "dist/"
+    "src",
+    "lib"
   ],
   "scripts": {
     "test": "jest",
-    "lint": "eslint .",
-    "format": "eslint . --fix",
-    "precommit": "yarn lint && yarn test",
-    "build": "babel --no-babelrc --plugins=syntax-jsx,syntax-class-properties,syntax-object-rest-spread,transform-flow-strip-types src --out-dir dist --ignore '**/__tests__/**'",
-    "dev": "yarn build --watch --out-dir example/node_modules/react-navigation-drawer/dist",
-    "prepare": "yarn build"
+    "lint": "eslint --ext .js,.ts,.tsx .",
+    "typescript": "tsc --noEmit",
+    "bootstrap": "yarn && yarn --cwd example",
+    "prepare": "bob build"
   },
   "keywords": [
     "react-native-component",
@@ -35,28 +37,31 @@
   },
   "homepage": "https://github.com/react-navigation/react-navigation-drawer#readme",
   "devDependencies": {
-    "@expo/vector-icons": "^6.2.0",
-    "@react-navigation/core": "^3.0.0",
-    "@react-navigation/native": "^3.0.0",
-    "babel-cli": "^6.26.0",
-    "babel-jest": "^22.4.1",
-    "babel-plugin-syntax-class-properties": "^6.13.0",
-    "babel-plugin-syntax-jsx": "^6.18.0",
-    "babel-plugin-syntax-object-rest-spread": "^6.13.0",
-    "babel-plugin-transform-flow-strip-types": "^6.22.0",
-    "babel-preset-react-native": "^4.0.0",
-    "eslint": "^4.12.1",
-    "eslint-config-satya164": "^1.0.1",
+    "@babel/core": "^7.4.3",
+    "@expo/vector-icons": "^10.0.1",
+    "@react-native-community/bob": "^0.3.3",
+    "@react-navigation/core": "^3.3.0",
+    "@react-navigation/native": "^3.3.0",
+    "@types/jest": "^24.0.11",
+    "@types/react": "^16.8.13",
+    "@types/react-native": "^0.57.43",
+    "@types/react-test-renderer": "^16.8.1",
+    "babel-jest": "^24.7.1",
+    "escape-string-regexp": "^1.0.5",
+    "eslint": "^5.16.0",
+    "eslint-config-satya164": "^2.4.1",
     "eslint-plugin-react-native-globals": "^0.1.0",
-    "husky": "^0.14.3",
-    "jest": "^22.1.3",
-    "prettier": "^1.8.2",
+    "husky": "^1.3.1",
+    "jest": "^24.7.1",
+    "prettier": "^1.16.4",
     "react": "16.5.0",
     "react-dom": "16.5.0",
-    "react-native": "~0.55.4",
-    "react-native-gesture-handler": "^1.0.4",
-    "react-native-screens": "^1.0.0-alpha.15",
-    "react-test-renderer": "16.3.1"
+    "react-lifecycles-compat": "^3.0.4",
+    "react-native": "~0.57.1",
+    "react-native-gesture-handler": "^1.1.0",
+    "react-native-screens": "^1.0.0-alpha.22",
+    "react-test-renderer": "16.8.6",
+    "typescript": "^3.4.3"
   },
   "peerDependencies": {
     "@react-navigation/core": "^3.0.0",
@@ -68,7 +73,6 @@
   },
   "jest": {
     "preset": "react-native",
-    "testRegex": "/__tests__/[^/]+-test\\.js$",
     "setupFiles": [
       "<rootDir>/jest-setup.js"
     ],
@@ -80,9 +84,28 @@
     ],
     "transformIgnorePatterns": [
       "node_modules/(?!(jest-)?react-native|react-clone-referenced-element|react-navigation-deprecated-tab-navigator|@react-navigation/core|@react-navigation/native)"
-    ]
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/lib/"
+    ],
+    "testRegex": "/__tests__/.*\\.(test|spec)\\.(js|tsx?)$",
+    "testEnvironment": "node",
+    "transform": {
+      "^.+\\.(js|ts|tsx)$": "babel-jest"
+    }
   },
-  "dependencies": {
-    "react-native-tab-view": "^1.2.0"
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn lint && yarn typescript && yarn test"
+    }
+  },
+  "@react-native-community/bob": {
+    "source": "src",
+    "output": "lib",
+    "targets": [
+      "commonjs",
+      "module"
+    ]
   }
 }

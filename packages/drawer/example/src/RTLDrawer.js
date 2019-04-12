@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import * as React from 'react';
 import {
   Text,
   View,
@@ -11,7 +11,7 @@ import {
 import { createStackNavigator } from 'react-navigation-stack';
 import { createDrawerNavigator } from 'react-navigation-drawer';
 
-class RightDrawer extends Component {
+class RightDrawer extends React.Component {
   state = {
     categories: [{ i: 'c1', n: 'name1' }, { i: 'c2', n: 'name2' }],
   };

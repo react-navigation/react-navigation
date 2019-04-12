@@ -2,10 +2,6 @@
   "extends": '../.eslintrc',
 
   "settings": {
-    "import/core-modules": [ "expo", "react-navigation-drawer" ]
-  },
-
-  "rules": {
-    "react/prop-types": "off",
+    "import/core-modules": [ "react-navigation-drawer", "react-native-gesture-handler", "react-native-vector-icons" ]
   }
 }

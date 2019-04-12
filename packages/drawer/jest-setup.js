@@ -1,18 +1,16 @@
-/**
- * eslint-env jest
- */
-
-// No setup
-
-import React from 'react';
+/* eslint-env jest */
 
 jest.mock('react-native-gesture-handler/DrawerLayout', () => {
+  const React = require('react');
   const View = require.requireActual('View');
-  class DrawerLayout extends View {
-    static positions = {
-      Left: 'left',
-      Right: 'right',
-    };
-  }
+  const DrawerLayout = React.forwardRef((props, ref) => (
+    <View {...props} ref={ref} />
+  ));
+
+  DrawerLayout.positions = {
+    Left: 'left',
+    Right: 'right',
+  };
+
   return DrawerLayout;
 });

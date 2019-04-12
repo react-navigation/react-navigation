@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { Button, WebView, View } from 'react-native';
 import { MapView } from 'expo';
 import { withNavigation } from '@react-navigation/core';
