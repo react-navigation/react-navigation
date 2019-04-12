@@ -1,16 +1,16 @@
-import React from 'react';
+import * as React from 'react';
 import { Dimensions, Platform, ScrollView } from 'react-native';
 import { createNavigator } from '@react-navigation/core';
 import { SafeAreaView } from '@react-navigation/native';
 import DrawerRouter from '../routers/DrawerRouter';
 import DrawerView from '../views/DrawerView';
-import DrawerItems from '../views/DrawerNavigatorItems';
+import DrawerItems, { Props } from '../views/DrawerNavigatorItems';
 
 // A stack navigators props are the intersection between
 // the base navigator props (navgiation, screenProps, etc)
 // and the view's props
 
-const defaultContentComponent = props => (
+const defaultContentComponent = (props: Props) => (
   <ScrollView alwaysBounceVertical={false}>
     <SafeAreaView forceInset={{ top: 'always', horizontal: 'never' }}>
       <DrawerItems {...props} />
@@ -45,7 +45,7 @@ const DefaultDrawerConfig = {
   overlayColor: 'black',
 };
 
-const DrawerNavigator = (routeConfigs, config = {}) => {
+const DrawerNavigator = (routeConfigs: object, config: any = {}) => {
   const mergedConfig = { ...DefaultDrawerConfig, ...config };
   const drawerRouter = DrawerRouter(routeConfigs, mergedConfig);
   const navigator = createNavigator(DrawerView, drawerRouter, mergedConfig);

@@ -20,7 +20,11 @@
  * will remain to ensure logic does not differ in production.
  */
 
-export default function invariant(condition, format, a, b, c, d, e, f) {
+export default function invariant(
+  condition: any,
+  format: string,
+  ...args: any[]
+) {
   if (format === undefined) {
     throw new Error('invariant requires an error message argument');
   }
@@ -32,12 +36,12 @@ export default function invariant(condition, format, a, b, c, d, e, f) {
         'Minified exception occurred; use the non-minified dev environment for the full error message and additional helpful warnings.'
       );
     } else {
-      var args = [a, b, c, d, e, f];
       var argIndex = 0;
       error = new Error(format.replace(/%s/g, () => args[argIndex++]));
       error.name = 'Invariant Violation';
     }
 
+    // @ts-ignore
     error.framesToPop = 1; // we don't care about invariant's own frame
     throw error;
   }
