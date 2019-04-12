@@ -48,7 +48,9 @@ class LoremScreen extends React.Component {
           onRefresh={this._onRefresh}
           refreshing={this.state.refreshing}
           renderItem={({ item }) => (
-            <Text style={{ marginVertical: 7 }}>{item.value}</Text>
+            <Text style={{ marginVertical: 7, marginHorizontal: 10 }}>
+              {item.value}
+            </Text>
           )}
           data={DATA}
           ref={view => {
@@ -66,14 +68,16 @@ class LoremScreen extends React.Component {
           onRefresh={this._onRefresh}
           refreshing={this.state.refreshing}
           renderItem={({ item }) => (
-            <Text style={{ marginVertical: 7 }}>{item.value}</Text>
+            <Text style={{ marginVertical: 7, marginHorizontal: 10 }}>
+              {item.value}
+            </Text>
           )}
           renderSectionHeader={({ section: { title } }) => (
             <View
               style={{
                 backgroundColor: '#fff',
                 paddingVertical: 8,
-                paddingHorizontal: 5,
+                paddingHorizontal: 10,
                 borderBottomWidth: 1,
                 borderBottomColor: '#eee',
               }}

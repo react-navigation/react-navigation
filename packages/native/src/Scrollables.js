@@ -1,10 +1,18 @@
 import React from 'react';
-import { FlatList, SectionList, RefreshControl } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
+import { ScrollView, Platform, FlatList, SectionList, RefreshControl } from 'react-native';
+import { ScrollView as GHScrollView } from 'react-native-gesture-handler';
 import createNavigationAwareScrollable from './createNavigationAwareScrollable';
 import invariant from './utils/invariant';
 
-const WrappedScrollView = createNavigationAwareScrollable(ScrollView);
+let WrappedScrollView;
+if (Platform.OS === 'android') {
+  // @todo: use GHScrollView again when
+  // https://github.com/kmagiera/react-native-gesture-handler/issues/560 has
+  // been fixed.
+  WrappedScrollView = createNavigationAwareScrollable(ScrollView);
+} else {
+  WrappedScrollView = createNavigationAwareScrollable(GHScrollView);
+}
 
 function propsMaybeWithRefreshControl(props) {
   const onRefresh = props.onRefresh;
