@@ -1088,11 +1088,6 @@ declare module 'react-navigation' {
     drawConfig?: TabNavigatorConfig
   ): NavigationContainer;
 
-  export function createTabNavigator(
-    routeConfigMap: NavigationRouteConfigMap,
-    drawConfig?: TabNavigatorConfig
-  ): NavigationContainer;
-
   export function createBottomTabNavigator(
     routeConfigMap: NavigationRouteConfigMap,
     drawConfig?: BottomTabNavigatorConfig

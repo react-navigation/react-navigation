@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## Fixes
+
+- Remove `createTabNavigator` from type definitions.
+
 ## [3.8.1] - [2019-04-12](https://github.com/react-navigation/react-navigation/releases/tag/3.8.1)
 
 ## Changed
