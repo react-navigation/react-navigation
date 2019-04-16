@@ -93,14 +93,14 @@ export default (routeConfigs, config = {}) => {
       if (backBehavior !== 'history') {
         return nextState;
       }
-      let nextRouteKeyHistory = prevState.routeKeyHistory;
+      let nextRouteKeyHistory = prevState ? prevState.routeKeyHistory : [];
       if (action.type === NavigationActions.NAVIGATE) {
-        nextRouteKeyHistory = [...prevState.routeKeyHistory]; // copy
+        nextRouteKeyHistory = [...nextRouteKeyHistory]; // copy
         const keyToAdd = nextState.routes[nextState.index].key;
         nextRouteKeyHistory = nextRouteKeyHistory.filter(k => k !== keyToAdd); // dedup
         nextRouteKeyHistory.push(keyToAdd);
       } else if (action.type === NavigationActions.BACK) {
-        nextRouteKeyHistory = [...prevState.routeKeyHistory]; // copy
+        nextRouteKeyHistory = [...nextRouteKeyHistory]; // copy
         nextRouteKeyHistory.pop();
       }
       return {
