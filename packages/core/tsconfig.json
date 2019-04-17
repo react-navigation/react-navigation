@@ -25,6 +25,6 @@
   },
   "typeAcquisition": {
     "enable": true,
-    "include": ["prop-types", "react", "react-native"]
+    "include": ["react", "react-native"]
   }
 }

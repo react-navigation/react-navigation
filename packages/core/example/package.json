@@ -10,25 +10,23 @@
     "postinstall": "rm -rf node_modules/@react-navigation/core/{.git,node_modules,example}"
   },
   "dependencies": {
-    "@react-navigation/core": "../",
-    "@react-navigation/native": "^3.1.4",
+    "@react-navigation/native": "^3.4.1",
     "expo": "~32.0.0",
-    "hoist-non-react-statics": "^2.5.0",
-    "prop-types": "^15.6.0",
-    "query-string": "^6.2.0",
+    "hoist-non-react-statics": "^3.3.0",
+    "prop-types": "^15.7.2",
+    "query-string": "^6.4.2",
     "react": "16.5.0",
-    "react-is": "^16.5.2",
+    "react-is": "^16.8.6",
     "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
-    "react-native-paper": "^2.2.8",
-    "react-navigation-stack": "^1.0.7",
+    "react-native-paper": "^2.15.2",
+    "react-navigation-stack": "^1.3.0",
     "react-navigation-tabs": "^1.0.2"
   },
-  "resolutions": {
-    "**/react": "16.6.3",
-    "**/prop-types": "15.6.2",
-    "**/hoist-non-react-statics": "2.5.5"
-  },
   "devDependencies": {
-    "babel-preset-expo": "^5.0.0"
+    "babel-preset-expo": "^5.1.1"
+  },
+  "resolutions": {
+    "**/react": "16.5.0",
+    "**/hoist-non-react-statics": "3.3.0"
   }
 }
