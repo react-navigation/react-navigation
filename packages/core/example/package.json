@@ -13,6 +13,7 @@
     "@react-navigation/native": "^3.4.1",
     "expo": "~32.0.0",
     "hoist-non-react-statics": "^3.3.0",
+    "path-to-regexp": "^3.0.0",
     "prop-types": "^15.7.2",
     "query-string": "^6.4.2",
     "react": "16.5.0",
