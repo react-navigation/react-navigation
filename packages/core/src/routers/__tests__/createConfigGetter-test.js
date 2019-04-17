@@ -5,7 +5,7 @@ const dummyEventSubscriber = () => ({
   remove: () => {},
 });
 
-test('should get config for screen', () => {
+it('should get config for screen', () => {
   class HomeScreen extends Component {
     static navigationOptions = ({ navigation }) => ({
       title: `Welcome ${
@@ -144,7 +144,7 @@ test('should get config for screen', () => {
   ).toEqual(false);
 });
 
-test('should throw if the route does not exist', () => {
+it('should throw if the route does not exist', () => {
   const HomeScreen = () => null;
   HomeScreen.navigationOptions = {
     title: 'Home screen',

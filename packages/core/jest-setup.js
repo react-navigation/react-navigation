@@ -3,5 +3,3 @@
  */
 
 // No setup
-
-import React from 'react';

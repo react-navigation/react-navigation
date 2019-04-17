@@ -77,7 +77,7 @@ const performRouterTest = createTestRouter => {
     },
   });
 
-  test('Handles empty URIs with empty action', () => {
+  it('Handles empty URIs with empty action', () => {
     const router = createTestRouter(
       {
         Foo: {
@@ -100,7 +100,7 @@ const performRouterTest = createTestRouter => {
     );
   });
 
-  test('Handles paths with several params', () => {
+  it('Handles paths with several params', () => {
     const router = createTestRouter({
       Person: {
         path: 'people/:person',
@@ -150,7 +150,7 @@ const performRouterTest = createTestRouter => {
     });
   });
 
-  test('Handles empty path configuration', () => {
+  it('Handles empty path configuration', () => {
     const router = createTestRouter({
       Foo: {
         screen: () => <div />,
@@ -168,7 +168,7 @@ const performRouterTest = createTestRouter => {
     });
   });
 
-  test('Handles wildcard path configuration', () => {
+  it('Handles wildcard path configuration', () => {
     const router = createTestRouter({
       Foo: {
         screen: () => <div />,
@@ -195,7 +195,7 @@ const performRouterTest = createTestRouter => {
     });
   });
 
-  test('Null path behavior', () => {
+  it('Null path behavior', () => {
     const ScreenA = () => <div />;
     const router = createTestRouter({
       Bar: {
@@ -219,7 +219,7 @@ const performRouterTest = createTestRouter => {
     expect(state1.routes[state1.index].routeName).toBe('Baz');
   });
 
-  test('Multiple null path sub routers path behavior', () => {
+  it('Multiple null path sub routers path behavior', () => {
     const ScreenA = () => <div />;
     const ScreenB = () => <div />;
     ScreenB.router = createTestRouter({
@@ -266,7 +266,7 @@ const performRouterTest = createTestRouter => {
     expect(action3.action.params.id).toBe('asdf');
   });
 
-  test('Null and empty string path sub routers behavior', () => {
+  it('Null and empty string path sub routers behavior', () => {
     const ScreenA = () => <div />;
     const ScreenB = () => <div />;
     ScreenB.router = createTestRouter({
@@ -311,7 +311,7 @@ const performRouterTest = createTestRouter => {
     expect(action3).toBe(null);
   });
 
-  test('Empty path acts as wildcard for nested router', () => {
+  it('Empty path acts as wildcard for nested router', () => {
     const ScreenA = () => <div />;
     const Foo = () => <div />;
     const ScreenC = () => <div />;
@@ -338,7 +338,7 @@ const performRouterTest = createTestRouter => {
     expect(action0.action.action.routeName).toBe('Bar');
   });
 
-  test('Gets deep path with pure wildcard match', () => {
+  it('Gets deep path with pure wildcard match', () => {
     const ScreenA = () => <div />;
     const ScreenB = () => <div />;
     const ScreenC = () => <div />;
@@ -418,7 +418,7 @@ const performRouterTest = createTestRouter => {
     }
   });
 
-  test('URI encoded string get passed to deep link', () => {
+  it('URI encoded string get passed to deep link', () => {
     const uri = 'people/2018%2F02%2F07';
     const action = testRouter.getActionForPathAndParams(uri);
     expect(action).toEqual({
@@ -440,7 +440,7 @@ const performRouterTest = createTestRouter => {
     });
   });
 
-  test('URI encoded path param gets parsed and correctly printed', () => {
+  it('URI encoded path param gets parsed and correctly printed', () => {
     const action = testRouter.getActionForPathAndParams('people/Henry%20L');
     expect(action).toEqual({
       routeName: 'person',
@@ -455,7 +455,7 @@ const performRouterTest = createTestRouter => {
     expect(out.params).toEqual({});
   });
 
-  test('Querystring params get passed to nested deep link', () => {
+  it('Querystring params get passed to nested deep link', () => {
     const action = testRouter.getActionForPathAndParams(
       'main/p/4/list/10259959195',
       { code: 'test', foo: 'bar' }
@@ -519,7 +519,7 @@ const performRouterTest = createTestRouter => {
     });
   });
 
-  test('paths option on router overrides path from route config', () => {
+  it('paths option on router overrides path from route config', () => {
     const router = createTestRouter(
       {
         main: {
@@ -537,7 +537,7 @@ const performRouterTest = createTestRouter => {
     expect(action.routeName).toEqual('baz');
   });
 
-  test('paths option set as null on router overrides path from route config', () => {
+  it('paths option set as null on router overrides path from route config', () => {
     const router = createTestRouter(
       {
         main: {
@@ -563,7 +563,7 @@ describe('Path handling for switch router', () => {
   performRouterTest(SwitchRouter);
 });
 
-test('Handles nested switch routers', () => {
+it('Handles nested switch routers', () => {
   const AScreen = () => <div />;
   const DocsNavigator = () => <div />;
   DocsNavigator.router = SwitchRouter({
@@ -600,7 +600,7 @@ const performRouteNameAsPathDisabledTest = createTestRouter => {
     { disableRouteNamePaths: true }
   );
 
-  test('disableRouteNamePaths option on router prevent the default path to be the routeName', () => {
+  it('disableRouteNamePaths option on router prevent the default path to be the routeName', () => {
     const action = router.getActionForPathAndParams('baz', {});
 
     expect(action.routeName).toBe('A');

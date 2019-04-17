@@ -1,6 +1,6 @@
 import getChildEventSubscriber from '../getChildEventSubscriber';
 
-test('child action events only flow when focused', () => {
+it('child action events only flow when focused', () => {
   const parentSubscriber = jest.fn();
   const emitParentAction = payload => {
     parentSubscriber.mock.calls.forEach(subs => {
@@ -50,7 +50,7 @@ test('child action events only flow when focused', () => {
   expect(childDidFocusHandler.mock.calls.length).toBe(1);
 });
 
-test('grandchildren subscription', () => {
+it('grandchildren subscription', () => {
   const grandParentSubscriber = jest.fn();
   const emitGrandParentAction = payload => {
     grandParentSubscriber.mock.calls.forEach(subs => {
@@ -117,7 +117,7 @@ test('grandchildren subscription', () => {
   expect(childDidFocusHandler.mock.calls.length).toBe(1);
 });
 
-test('grandchildren transitions', () => {
+it('grandchildren transitions', () => {
   const grandParentSubscriber = jest.fn();
   const emitGrandParentAction = payload => {
     grandParentSubscriber.mock.calls.forEach(subs => {
@@ -210,7 +210,7 @@ test('grandchildren transitions', () => {
   expect(childActionHandler.mock.calls.length).toBe(1);
 });
 
-test('grandchildren pass through transitions', () => {
+it('grandchildren pass through transitions', () => {
   const grandParentSubscriber = jest.fn();
   const emitGrandParentAction = payload => {
     grandParentSubscriber.mock.calls.forEach(subs => {
@@ -303,7 +303,7 @@ test('grandchildren pass through transitions', () => {
   expect(childActionHandler.mock.calls.length).toBe(1);
 });
 
-test('child focus with transition', () => {
+it('child focus with transition', () => {
   const parentSubscriber = jest.fn();
   const emitParentAction = payload => {
     parentSubscriber.mock.calls.forEach(subs => {
@@ -396,7 +396,7 @@ test('child focus with transition', () => {
   expect(childDidBlurHandler.mock.calls.length).toBe(1);
 });
 
-test('child focus with immediate transition', () => {
+it('child focus with immediate transition', () => {
   const parentSubscriber = jest.fn();
   const emitParentAction = payload => {
     parentSubscriber.mock.calls.forEach(subs => {
@@ -484,7 +484,7 @@ const setupEventTest = (subscriptionKey, initialLastFocusEvent) => {
   return { emitEvent, handlers, evtProvider };
 };
 
-test('immediate back with uncompleted transition will focus first screen again', () => {
+it('immediate back with uncompleted transition will focus first screen again', () => {
   const { handlers, emitEvent } = setupEventTest('key0', 'didFocus');
   emitEvent({
     type: 'action',

@@ -76,7 +76,7 @@ const TestStackRouter = StackRouter({
 });
 
 describe('StackRouter', () => {
-  test('Gets the active screen for a given state', () => {
+  it('Gets the active screen for a given state', () => {
     const FooScreen = () => <div />;
     const BarScreen = () => <div />;
     const router = StackRouter({
@@ -111,7 +111,7 @@ describe('StackRouter', () => {
     ).toBe(BarScreen);
   });
 
-  test('Handles getScreen in getComponentForState', () => {
+  it('Handles getScreen in getComponentForState', () => {
     const FooScreen = () => <div />;
     const BarScreen = () => <div />;
     const router = StackRouter({
@@ -146,7 +146,7 @@ describe('StackRouter', () => {
     ).toBe(BarScreen);
   });
 
-  test('Gets the screen for given route', () => {
+  it('Gets the screen for given route', () => {
     const FooScreen = () => <div />;
     const BarScreen = class extends React.Component {
       render() {
@@ -175,7 +175,7 @@ describe('StackRouter', () => {
     expect(router.getComponentForRouteName('baz')).toBe(BazScreen);
   });
 
-  test('Handles getScreen in getComponent', () => {
+  it('Handles getScreen in getComponent', () => {
     const FooScreen = () => <div />;
     const BarScreen = class extends React.Component {
       render() {
@@ -204,7 +204,7 @@ describe('StackRouter', () => {
     expect(router.getComponentForRouteName('baz')).toBe(BazScreen);
   });
 
-  test('Parses simple paths', () => {
+  it('Parses simple paths', () => {
     expect(AuthNavigator.router.getActionForPathAndParams('login')).toEqual({
       type: NavigationActions.NAVIGATE,
       routeName: 'login',
@@ -212,7 +212,7 @@ describe('StackRouter', () => {
     });
   });
 
-  test('Parses paths with a param', () => {
+  it('Parses paths with a param', () => {
     expect(TestStackRouter.getActionForPathAndParams('people/foo')).toEqual({
       type: NavigationActions.NAVIGATE,
       routeName: 'person',
@@ -222,7 +222,7 @@ describe('StackRouter', () => {
     });
   });
 
-  test('Parses paths with a query', () => {
+  it('Parses paths with a query', () => {
     expect(
       TestStackRouter.getActionForPathAndParams('people/foo', {
         code: 'test',
@@ -239,7 +239,7 @@ describe('StackRouter', () => {
     });
   });
 
-  test('Parses paths with an empty query value', () => {
+  it('Parses paths with an empty query value', () => {
     expect(
       TestStackRouter.getActionForPathAndParams('people/foo', {
         code: '',
@@ -256,7 +256,7 @@ describe('StackRouter', () => {
     });
   });
 
-  test('Correctly parses a path without arguments into an action chain', () => {
+  it('Correctly parses a path without arguments into an action chain', () => {
     const uri = 'auth/login';
     const action = TestStackRouter.getActionForPathAndParams(uri);
     expect(action).toEqual({
@@ -271,7 +271,7 @@ describe('StackRouter', () => {
     });
   });
 
-  test('Correctly parses a path with arguments into an action chain', () => {
+  it('Correctly parses a path with arguments into an action chain', () => {
     const uri = 'main/p/4/list/10259959195';
     const action = TestStackRouter.getActionForPathAndParams(uri);
     expect(action).toEqual({
@@ -295,7 +295,7 @@ describe('StackRouter', () => {
     });
   });
 
-  test('Correctly parses a path to the router connected to another router through a pure wildcard route into an action chain', () => {
+  it('Correctly parses a path to the router connected to another router through a pure wildcard route into an action chain', () => {
     const uri = 'b/123';
     const action = TestStackRouter.getActionForPathAndParams(uri);
     expect(action).toEqual({
@@ -312,13 +312,13 @@ describe('StackRouter', () => {
     });
   });
 
-  test('Correctly returns null action for non-existent path', () => {
+  it('Correctly returns null action for non-existent path', () => {
     const uri = 'asdf/1234';
     const action = TestStackRouter.getActionForPathAndParams(uri);
     expect(action).toEqual(null);
   });
 
-  test('Correctly returns action chain for partially matched path', () => {
+  it('Correctly returns action chain for partially matched path', () => {
     const uri = 'auth/login';
     const action = TestStackRouter.getActionForPathAndParams(uri);
     expect(action).toEqual({
@@ -333,7 +333,7 @@ describe('StackRouter', () => {
     });
   });
 
-  test('Correctly returns action for path with multiple parameters', () => {
+  it('Correctly returns action for path with multiple parameters', () => {
     const path = 'fo/22/b/hello';
     const action = TestStackRouter.getActionForPathAndParams(path);
     expect(action).toEqual({
@@ -352,7 +352,7 @@ describe('StackRouter', () => {
     });
   });
 
-  test('Pushes other navigators when navigating to an unopened route name', () => {
+  it('Pushes other navigators when navigating to an unopened route name', () => {
     const Bar = () => <div />;
     Bar.router = StackRouter({
       baz: { screen: () => <div /> },
@@ -378,7 +378,7 @@ describe('StackRouter', () => {
     expect(pushedState.routes[1].routes[1].routeName).toEqual('qux');
   });
 
-  test('push bubbles up', () => {
+  it('push bubbles up', () => {
     const ChildNavigator = () => <div />;
     ChildNavigator.router = StackRouter({
       Baz: { screen: () => <div /> },
@@ -408,7 +408,7 @@ describe('StackRouter', () => {
     expect(state3 && state3.routes.length).toEqual(3);
   });
 
-  test('pop bubbles up', () => {
+  it('pop bubbles up', () => {
     const ChildNavigator = () => <div />;
     ChildNavigator.router = StackRouter({
       Baz: { screen: () => <div /> },
@@ -437,7 +437,7 @@ describe('StackRouter', () => {
     expect(state3 && state3.index).toEqual(0);
   });
 
-  test('Handle navigation to nested navigator', () => {
+  it('Handle navigation to nested navigator', () => {
     const action = TestStackRouter.getActionForPathAndParams('fo/22/b/hello');
     /* $FlowFixMe */
     const state2 = TestStackRouter.getStateForAction(action);
@@ -468,7 +468,7 @@ describe('StackRouter', () => {
     });
   });
 
-  test('popToTop bubbles up', () => {
+  it('popToTop bubbles up', () => {
     const ChildNavigator = () => <div />;
     ChildNavigator.router = StackRouter({
       Baz: { screen: () => <div /> },
@@ -497,7 +497,7 @@ describe('StackRouter', () => {
     expect(state3 && state3.index).toEqual(0);
   });
 
-  test('popToTop targets StackRouter by key if specified', () => {
+  it('popToTop targets StackRouter by key if specified', () => {
     const ChildNavigator = () => <div />;
     ChildNavigator.router = StackRouter({
       Baz: { screen: () => <div /> },
@@ -526,7 +526,7 @@ describe('StackRouter', () => {
     expect(state3 && state3.index).toEqual(0);
   });
 
-  test('pop action works as expected', () => {
+  it('pop action works as expected', () => {
     const TestRouter = StackRouter({
       foo: { screen: () => <div /> },
       bar: { screen: () => <div /> },
@@ -564,7 +564,7 @@ describe('StackRouter', () => {
     expect(poppedState3.isTransitioning).toBe(true);
   });
 
-  test('popToTop works as expected', () => {
+  it('popToTop works as expected', () => {
     const TestRouter = StackRouter({
       foo: { screen: () => <div /> },
       bar: { screen: () => <div /> },
@@ -600,7 +600,7 @@ describe('StackRouter', () => {
     expect(poppedImmediatelyState.isTransitioning).toBe(false);
   });
 
-  test('Navigate does not push duplicate routeName', () => {
+  it('Navigate does not push duplicate routeName', () => {
     const TestRouter = StackRouter(
       {
         foo: { screen: () => <div /> },
@@ -622,7 +622,7 @@ describe('StackRouter', () => {
     expect(navigateOnBarState).toEqual(null);
   });
 
-  test('Navigate focuses given routeName if already active in stack', () => {
+  it('Navigate focuses given routeName if already active in stack', () => {
     const TestRouter = StackRouter(
       {
         foo: { screen: () => <div /> },
@@ -652,7 +652,7 @@ describe('StackRouter', () => {
     expect(fooState.routes[0].routeName).toEqual('foo');
   });
 
-  test('Navigate pushes duplicate routeName if unique key is provided', () => {
+  it('Navigate pushes duplicate routeName if unique key is provided', () => {
     const TestRouter = StackRouter({
       foo: { screen: () => <div /> },
       bar: { screen: () => <div /> },
@@ -672,7 +672,7 @@ describe('StackRouter', () => {
     expect(pushedTwiceState.routes[2].routeName).toEqual('bar');
   });
 
-  test('Navigate from top propagates to any arbitary depth of stacks', () => {
+  it('Navigate from top propagates to any arbitary depth of stacks', () => {
     const GrandChildNavigator = () => <div />;
     GrandChildNavigator.router = StackRouter({
       Quux: { screen: () => <div /> },
@@ -707,7 +707,7 @@ describe('StackRouter', () => {
     expect(state2.routes[1].routes[1].routes[1].routeName).toEqual('Corge');
   });
 
-  test('Navigate to initial screen is possible', () => {
+  it('Navigate to initial screen is possible', () => {
     const TestRouter = StackRouter(
       {
         foo: { screen: () => <div /> },
@@ -723,7 +723,7 @@ describe('StackRouter', () => {
     expect(pushedState).toEqual(null);
   });
 
-  test('Navigate with key and without it is idempotent', () => {
+  it('Navigate with key and without it is idempotent', () => {
     const TestRouter = StackRouter({
       foo: { screen: () => <div /> },
       bar: { screen: () => <div /> },
@@ -743,7 +743,7 @@ describe('StackRouter', () => {
   });
 
   // https://github.com/react-navigation/react-navigation/issues/4063
-  test('Navigate on inactive stackrouter is idempotent', () => {
+  it('Navigate on inactive stackrouter is idempotent', () => {
     const FirstChildNavigator = () => <div />;
     FirstChildNavigator.router = StackRouter({
       First1: () => <div />,
@@ -791,7 +791,7 @@ describe('StackRouter', () => {
     expect(firstAgain.routes.length).toEqual(2);
   });
 
-  test('Navigate to current routeName returns null to indicate handled action', () => {
+  it('Navigate to current routeName returns null to indicate handled action', () => {
     const TestRouter = StackRouter({
       foo: { screen: () => <div /> },
       bar: { screen: () => <div /> },
@@ -804,7 +804,7 @@ describe('StackRouter', () => {
     expect(navigatedState).toBe(null);
   });
 
-  test('Push behaves like navigate, except for key', () => {
+  it('Push behaves like navigate, except for key', () => {
     const TestRouter = StackRouter({
       foo: { screen: () => <div /> },
       bar: { screen: () => <div /> },
@@ -821,10 +821,10 @@ describe('StackRouter', () => {
         { type: StackActions.PUSH, routeName: 'bar', key: 'a' },
         pushedState
       );
-    }).toThrow();
+    }).toThrow('StackRouter does not support key on the push action');
   });
 
-  test('Push adds new routes every time', () => {
+  it('Push adds new routes every time', () => {
     const TestRouter = StackRouter({
       foo: { screen: () => <div /> },
       bar: { screen: () => <div /> },
@@ -844,7 +844,7 @@ describe('StackRouter', () => {
     expect(secondPushedState.routes[2].routeName).toEqual('bar');
   });
 
-  test('Navigate backwards with key removes leading routes', () => {
+  it('Navigate backwards with key removes leading routes', () => {
     const TestRouter = StackRouter({
       foo: { screen: () => <div /> },
       bar: { screen: () => <div /> },
@@ -875,7 +875,7 @@ describe('StackRouter', () => {
     expect(navigatedBackToFirstRouteState.routes.length).toEqual(1);
   });
 
-  test('Handle basic stack logic for plain components', () => {
+  it('Handle basic stack logic for plain components', () => {
     const FooScreen = () => <div />;
     const BarScreen = () => <div />;
     const router = StackRouter({
@@ -928,7 +928,7 @@ describe('StackRouter', () => {
     });
   });
 
-  test('Replace action works', () => {
+  it('Replace action works', () => {
     const TestRouter = StackRouter({
       foo: { screen: () => <div /> },
       bar: { screen: () => <div /> },
@@ -963,7 +963,7 @@ describe('StackRouter', () => {
     expect(replacedState2.routes[0].routeName).toEqual('bar');
   });
 
-  test('Replace action returns most recent route if no key is provided', () => {
+  it('Replace action returns most recent route if no key is provided', () => {
     const GrandChildNavigator = () => <div />;
     GrandChildNavigator.router = StackRouter({
       Quux: { screen: () => <div /> },
@@ -1034,7 +1034,7 @@ describe('StackRouter', () => {
     expect(replacedCurrentScreen.params.meaning).toEqual(42);
   });
 
-  test('Handles push transition logic with completion action', () => {
+  it('Handles push transition logic with completion action', () => {
     const FooScreen = () => <div />;
     const BarScreen = () => <div />;
     const router = StackRouter({
@@ -1067,7 +1067,7 @@ describe('StackRouter', () => {
     expect(state3 && state3.isTransitioning).toEqual(false);
   });
 
-  test('Completion action does not work with incorrect key', () => {
+  it('Completion action does not work with incorrect key', () => {
     const FooScreen = () => <div />;
     const router = StackRouter({
       Foo: {
@@ -1094,7 +1094,7 @@ describe('StackRouter', () => {
     expect(outputState.isTransitioning).toEqual(true);
   });
 
-  test('Completion action does not work with incorrect toChildKey', () => {
+  it('Completion action does not work with incorrect toChildKey', () => {
     const FooScreen = () => <div />;
     const router = StackRouter({
       Foo: {
@@ -1122,7 +1122,7 @@ describe('StackRouter', () => {
     expect(outputState.isTransitioning).toEqual(true);
   });
 
-  test('Back action parent is prioritized over inactive child routers', () => {
+  it('Back action parent is prioritized over inactive child routers', () => {
     const Bar = () => <div />;
     Bar.router = StackRouter({
       baz: { screen: () => <div /> },
@@ -1159,7 +1159,7 @@ describe('StackRouter', () => {
     expect(testState.routes[1].index).toBe(1);
   });
 
-  test('Handle basic stack logic for components with router', () => {
+  it('Handle basic stack logic for components with router', () => {
     const FooScreen = () => <div />;
     const BarScreen = () => <div />;
     BarScreen.router = StackRouter({
@@ -1217,7 +1217,7 @@ describe('StackRouter', () => {
     });
   });
 
-  test('Gets deep path (stack behavior)', () => {
+  it('Gets deep path (stack behavior)', () => {
     const ScreenA = () => <div />;
     const ScreenB = () => <div />;
     ScreenA.router = StackRouter({
@@ -1258,7 +1258,7 @@ describe('StackRouter', () => {
     expect(params).toEqual({});
   });
 
-  test('Handle goBack identified by key', () => {
+  it('Handle goBack identified by key', () => {
     const FooScreen = () => <div />;
     const BarScreen = () => <div />;
     const router = StackRouter({
@@ -1304,7 +1304,7 @@ describe('StackRouter', () => {
     expect(state5).toEqual(state);
   });
 
-  test('Handle initial route navigation', () => {
+  it('Handle initial route navigation', () => {
     const FooScreen = () => <div />;
     const BarScreen = () => <div />;
     const router = StackRouter(
@@ -1332,7 +1332,7 @@ describe('StackRouter', () => {
     });
   });
 
-  test('Initial route params appear in nav state', () => {
+  it('Initial route params appear in nav state', () => {
     const FooScreen = () => <div />;
     const router = StackRouter(
       {
@@ -1357,7 +1357,7 @@ describe('StackRouter', () => {
     });
   });
 
-  test('params in route config are merged with initialRouteParams', () => {
+  it('params in route config are merged with initialRouteParams', () => {
     const FooScreen = () => <div />;
     const router = StackRouter(
       {
@@ -1383,7 +1383,7 @@ describe('StackRouter', () => {
     });
   });
 
-  test('Action params appear in nav state', () => {
+  it('Action params appear in nav state', () => {
     const FooScreen = () => <div />;
     const BarScreen = () => <div />;
     const router = StackRouter({
@@ -1409,7 +1409,7 @@ describe('StackRouter', () => {
     expect(state2 && state2.routes[1].params).toEqual({ bar: '42' });
   });
 
-  test('Handles the SetParams action', () => {
+  it('Handles the SetParams action', () => {
     const router = StackRouter(
       {
         Foo: {
@@ -1440,7 +1440,7 @@ describe('StackRouter', () => {
     expect(state2 && state2.routes[0].params).toEqual({ name: 'Qux' });
   });
 
-  test('Handles the SetParams action for inactive routes', () => {
+  it('Handles the SetParams action for inactive routes', () => {
     const router = StackRouter(
       {
         Foo: {
@@ -1481,7 +1481,7 @@ describe('StackRouter', () => {
     });
   });
 
-  test('Handles the setParams action with nested routers', () => {
+  it('Handles the setParams action with nested routers', () => {
     const ChildNavigator = () => <div />;
     ChildNavigator.router = StackRouter({
       Baz: { screen: () => <div /> },
@@ -1510,7 +1510,7 @@ describe('StackRouter', () => {
     ]);
   });
 
-  test('Handles the reset action', () => {
+  it('Handles the reset action', () => {
     const router = StackRouter({
       Foo: {
         screen: () => <div />,
@@ -1546,7 +1546,7 @@ describe('StackRouter', () => {
     expect(state2 && state2.routes[1].routeName).toEqual('Bar');
   });
 
-  test('Handles the reset action only with correct key set', () => {
+  it('Handles the reset action only with correct key set', () => {
     const router = StackRouter({
       Foo: {
         screen: () => <div />,
@@ -1589,7 +1589,7 @@ describe('StackRouter', () => {
     expect(state3 && state3.routes[1].routeName).toEqual('Bar');
   });
 
-  test('Handles the reset action with nested Router', () => {
+  it('Handles the reset action with nested Router', () => {
     const ChildRouter = StackRouter({
       baz: {
         screen: () => <div />,
@@ -1629,7 +1629,7 @@ describe('StackRouter', () => {
     expect(state2 && state2.routes[0].routes[0].routeName).toEqual('baz');
   });
 
-  test('Handles the reset action with a key', () => {
+  it('Handles the reset action with a key', () => {
     const ChildRouter = StackRouter({
       baz: {
         screen: () => <div />,
@@ -1696,7 +1696,7 @@ describe('StackRouter', () => {
     expect(state4 && state4.routes[0].routeName).toEqual('Bar');
   });
 
-  test('Handles the navigate action with params and nested StackRouter', () => {
+  it('Handles the navigate action with params and nested StackRouter', () => {
     const ChildNavigator = () => <div />;
     ChildNavigator.router = StackRouter({ Baz: { screen: () => <div /> } });
 
@@ -1723,7 +1723,7 @@ describe('StackRouter', () => {
     ]);
   });
 
-  test('Navigate action to previous nested StackRouter causes isTransitioning start', () => {
+  it('Navigate action to previous nested StackRouter causes isTransitioning start', () => {
     const ChildNavigator = () => <div />;
     ChildNavigator.router = StackRouter({
       Baz: { screen: () => <div /> },
@@ -1751,7 +1751,7 @@ describe('StackRouter', () => {
     expect(state2.isTransitioning).toEqual(true);
   });
 
-  test('Handles the navigate action with params and nested StackRouter as a first action', () => {
+  it('Handles the navigate action with params and nested StackRouter as a first action', () => {
     const state = TestStackRouter.getStateForAction({
       type: NavigationActions.NAVIGATE,
       routeName: 'main',
@@ -1871,7 +1871,7 @@ describe('StackRouter', () => {
     });
   });
 
-  test('Handles deep navigate completion action', () => {
+  it('Handles deep navigate completion action', () => {
     const LeafScreen = () => <div />;
     const FooScreen = () => <div />;
     FooScreen.router = StackRouter({
@@ -1916,7 +1916,7 @@ describe('StackRouter', () => {
     expect(state3 && state3.routes[0].isTransitioning).toEqual(false);
   });
 
-  test('order of handling navigate action is correct for nested stackrouters', () => {
+  it('order of handling navigate action is correct for nested stackrouters', () => {
     const Screen = () => <div />;
     const NestedStack = () => <div />;
     let nestedRouter = StackRouter({
@@ -1981,7 +1981,7 @@ describe('StackRouter', () => {
     expect(activeState5.routes[activeState5.index].routeName).toEqual('Bar');
   });
 
-  test('order of handling navigate action is correct for nested stackrouters 2', () => {
+  it('order of handling navigate action is correct for nested stackrouters 2', () => {
     const Screen = () => <div />;
     const NestedStack = () => <div />;
     const OtherNestedStack = () => <div />;

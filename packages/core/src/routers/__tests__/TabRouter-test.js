@@ -12,7 +12,7 @@ const BareLeafRouteConfig = {
 };
 
 describe('TabRouter', () => {
-  test('Handles basic tab logic', () => {
+  it('Handles basic tab logic', () => {
     const ScreenA = () => <div />;
     const ScreenB = () => <div />;
     const router = TabRouter({
@@ -51,7 +51,7 @@ describe('TabRouter', () => {
     expect(state3).toEqual(null);
   });
 
-  test('Handles getScreen', () => {
+  it('Handles getScreen', () => {
     const ScreenA = () => <div />;
     const ScreenB = () => <div />;
     const router = TabRouter({
@@ -90,7 +90,7 @@ describe('TabRouter', () => {
     expect(state3).toEqual(null);
   });
 
-  test('Can set the initial tab', () => {
+  it('Can set the initial tab', () => {
     const router = TabRouter(
       { Foo: BareLeafRouteConfig, Bar: BareLeafRouteConfig },
       { initialRouteName: 'Bar' }
@@ -106,7 +106,7 @@ describe('TabRouter', () => {
     });
   });
 
-  test('Can set the initial params', () => {
+  it('Can set the initial params', () => {
     const router = TabRouter(
       { Foo: BareLeafRouteConfig, Bar: BareLeafRouteConfig },
       { initialRouteName: 'Bar', initialRouteParams: { name: 'Qux' } }
@@ -122,7 +122,7 @@ describe('TabRouter', () => {
     });
   });
 
-  test('Handles the SetParams action', () => {
+  it('Handles the SetParams action', () => {
     const router = TabRouter({
       Foo: {
         screen: () => <div />,
@@ -139,7 +139,7 @@ describe('TabRouter', () => {
     expect(state2 && state2.routes[0].params).toEqual({ name: 'Qux' });
   });
 
-  test('Handles the SetParams action for inactive routes', () => {
+  it('Handles the SetParams action for inactive routes', () => {
     const router = TabRouter(
       {
         Foo: {
@@ -179,7 +179,7 @@ describe('TabRouter', () => {
     });
   });
 
-  test('getStateForAction returns null when navigating to same tab', () => {
+  it('getStateForAction returns null when navigating to same tab', () => {
     const router = TabRouter(
       { Foo: BareLeafRouteConfig, Bar: BareLeafRouteConfig },
       { initialRouteName: 'Bar' }
@@ -192,7 +192,7 @@ describe('TabRouter', () => {
     expect(state2).toEqual(null);
   });
 
-  test('getStateForAction returns initial navigate', () => {
+  it('getStateForAction returns initial navigate', () => {
     const router = TabRouter({
       Foo: BareLeafRouteConfig,
       Bar: BareLeafRouteConfig,
@@ -204,7 +204,7 @@ describe('TabRouter', () => {
     expect(state && state.index).toEqual(0);
   });
 
-  test('Handles nested tabs and nested actions', () => {
+  it('Handles nested tabs and nested actions', () => {
     const ChildTabNavigator = () => <div />;
     ChildTabNavigator.router = TabRouter({
       Foo: BareLeafRouteConfig,
@@ -264,7 +264,7 @@ describe('TabRouter', () => {
     });
   });
 
-  test('Handles passing params to nested tabs', () => {
+  it('Handles passing params to nested tabs', () => {
     const ChildTabNavigator = () => <div />;
     ChildTabNavigator.router = TabRouter({
       Boo: BareLeafRouteConfig,
@@ -318,7 +318,7 @@ describe('TabRouter', () => {
     });
   });
 
-  test('Handles initial deep linking into nested tabs', () => {
+  it('Handles initial deep linking into nested tabs', () => {
     const ChildTabNavigator = () => <div />;
     ChildTabNavigator.router = TabRouter({
       Foo: BareLeafRouteConfig,
@@ -380,7 +380,7 @@ describe('TabRouter', () => {
     expect(state3).toEqual(null);
   });
 
-  test('Handles linking across of deeply nested tabs', () => {
+  it('Handles linking across of deeply nested tabs', () => {
     const ChildNavigator0 = () => <div />;
     ChildNavigator0.router = TabRouter({
       Boo: BareLeafRouteConfig,
@@ -529,7 +529,7 @@ describe('TabRouter', () => {
     });
   });
 
-  test('Handles path configuration', () => {
+  it('Handles path configuration', () => {
     const ScreenA = () => <div />;
     const ScreenB = () => <div />;
     const router = TabRouter({
@@ -586,7 +586,7 @@ describe('TabRouter', () => {
     );
   });
 
-  test('Handles default configuration', () => {
+  it('Handles default configuration', () => {
     const ScreenA = () => <div />;
     const ScreenB = () => <div />;
     const router = TabRouter({
@@ -609,7 +609,7 @@ describe('TabRouter', () => {
     });
   });
 
-  test('Gets deep path', () => {
+  it('Gets deep path', () => {
     const ScreenA = () => <div />;
     const ScreenB = () => <div />;
     ScreenA.router = TabRouter({
@@ -647,7 +647,7 @@ describe('TabRouter', () => {
     expect(path).toEqual('f/Baz');
   });
 
-  test('Can navigate to other tab (no router) with params', () => {
+  it('Can navigate to other tab (no router) with params', () => {
     const ScreenA = () => <div />;
     const ScreenB = () => <div />;
 
@@ -681,7 +681,7 @@ describe('TabRouter', () => {
     });
   });
 
-  test('Back actions are not propagated to inactive children', () => {
+  it('Back actions are not propagated to inactive children', () => {
     const ScreenA = () => <div />;
     const ScreenB = () => <div />;
     const ScreenC = () => <div />;
@@ -721,7 +721,7 @@ describe('TabRouter', () => {
     expect(state3).toEqual(state2);
   });
 
-  test('Back behavior initialRoute works', () => {
+  it('Back behavior initialRoute works', () => {
     const ScreenA = () => <div />;
     const ScreenB = () => <div />;
     const router = TabRouter({
@@ -744,7 +744,7 @@ describe('TabRouter', () => {
     expect(state2).toEqual(state0);
   });
 
-  test('Inner actions are only unpacked if the current tab matches', () => {
+  it('Inner actions are only unpacked if the current tab matches', () => {
     const PlainScreen = () => <div />;
     const ScreenA = () => <div />;
     const ScreenB = () => <div />;

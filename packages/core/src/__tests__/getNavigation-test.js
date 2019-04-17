@@ -1,6 +1,6 @@
 import getNavigation from '../getNavigation';
 
-test('getNavigation provides default action helpers', () => {
+it('getNavigation provides default action helpers', () => {
   const router = {
     getActionCreators: () => ({}),
     getStateForAction(action, lastState = {}) {
@@ -26,7 +26,7 @@ test('getNavigation provides default action helpers', () => {
   expect(dispatch.mock.calls[0][0].routeName).toBe('GreatRoute');
 });
 
-test('getNavigation provides router action helpers', () => {
+it('getNavigation provides router action helpers', () => {
   const router = {
     getActionCreators: () => ({
       foo: bar => ({ type: 'FooBarAction', bar }),
@@ -54,7 +54,7 @@ test('getNavigation provides router action helpers', () => {
   expect(dispatch.mock.calls[0][0].bar).toBe('Great');
 });
 
-test('getNavigation get child navigation with router', () => {
+it('getNavigation get child navigation with router', () => {
   const actionSubscribers = new Set();
   let navigation = null;
 

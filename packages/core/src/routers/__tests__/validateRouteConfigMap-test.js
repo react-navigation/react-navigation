@@ -13,7 +13,7 @@ ProfileNavigator.router = StackRouter({
 });
 
 describe('validateRouteConfigMap', () => {
-  test('Fails on empty bare screen', () => {
+  it('Fails on empty bare screen', () => {
     const invalidMap = {
       Home: undefined,
     };
@@ -21,13 +21,13 @@ describe('validateRouteConfigMap', () => {
       validateRouteConfigMap(invalidMap)
     ).toThrowErrorMatchingSnapshot();
   });
-  test('Fails on empty config', () => {
+  it('Fails on empty config', () => {
     const invalidMap = {};
     expect(() =>
       validateRouteConfigMap(invalidMap)
     ).toThrowErrorMatchingSnapshot();
   });
-  test('Fails on bad object', () => {
+  it('Fails on bad object', () => {
     const invalidMap = {
       Home: {
         foo: 'bar',
@@ -37,7 +37,7 @@ describe('validateRouteConfigMap', () => {
       validateRouteConfigMap(invalidMap)
     ).toThrowErrorMatchingSnapshot();
   });
-  test('Fails if both screen and getScreen are defined', () => {
+  it('Fails if both screen and getScreen are defined', () => {
     const invalidMap = {
       Home: {
         screen: ListScreen,
@@ -48,7 +48,7 @@ describe('validateRouteConfigMap', () => {
       validateRouteConfigMap(invalidMap)
     ).toThrowErrorMatchingSnapshot();
   });
-  test('Succeeds on a valid config', () => {
+  it('Succeeds on a valid config', () => {
     const validMap = {
       Home: {
         screen: ProfileNavigator,

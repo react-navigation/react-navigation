@@ -63,7 +63,7 @@ describe('StateUtils', () => {
     };
     expect(() =>
       NavigationStateUtils.push(state, { key: 'a', routeName })
-    ).toThrow();
+    ).toThrow('should not push route with duplicated key a');
   });
 
   // Pop
@@ -112,7 +112,9 @@ describe('StateUtils', () => {
       routes: [{ key: 'a', routeName }, { key: 'b', routeName }],
       isTransitioning: false,
     };
-    expect(() => NavigationStateUtils.jumpToIndex(state, 2)).toThrow();
+    expect(() => NavigationStateUtils.jumpToIndex(state, 2)).toThrow(
+      'invalid index 2 to jump to'
+    );
   });
 
   it('jumps to new key', () => {
@@ -136,7 +138,9 @@ describe('StateUtils', () => {
       routes: [{ key: 'a', routeName }, { key: 'b', routeName }],
       isTransitioning: false,
     };
-    expect(() => NavigationStateUtils.jumpTo(state, 'c')).toThrow();
+    expect(() => NavigationStateUtils.jumpTo(state, 'c')).toThrow(
+      'invalid index -1 to jump to'
+    );
   });
 
   it('move backwards', () => {
@@ -234,7 +238,7 @@ describe('StateUtils', () => {
 
     expect(() => {
       NavigationStateUtils.reset(state, []);
-    }).toThrow();
+    }).toThrow('invalid routes to replace');
   });
 
   it('Resets routes with index', () => {
@@ -262,6 +266,6 @@ describe('StateUtils', () => {
         [{ key: 'x', routeName }, { key: 'y', routeName }],
         100
       );
-    }).toThrow();
+    }).toThrow('invalid index 100 to reset');
   });
 });
