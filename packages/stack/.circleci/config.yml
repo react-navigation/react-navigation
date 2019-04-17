@@ -21,8 +21,8 @@ jobs:
             - v1-dependencies-example-{{ checksum "example/package.json" }}
             - v1-dependencies-example-
       - run: |
-          yarn install
-          yarn install --cwd example
+          yarn install --frozen-lockfile
+          yarn install --frozen-lockfile --cwd example
       - save_cache:
           key: v1-dependencies-{{ checksum "package.json" }}
           paths: node_modules
@@ -44,10 +44,16 @@ jobs:
       steps:
         - attach_workspace:
             at: ~/project
-        - run: yarn test -- --coverage
+        - run: yarn test --coverage
         - store_artifacts:
             path: coverage
             destination: coverage
+  build:
+      <<: *defaults
+      steps:
+        - attach_workspace:
+            at: ~/project
+        - run: yarn prepare
 
 workflows:
   version: 2
@@ -58,5 +64,8 @@ workflows:
           requires:
             - install-dependencies
       - unit-tests:
+          requires:
+            - install-dependencies
+      - build:
           requires:
             - install-dependencies

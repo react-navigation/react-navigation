@@ -169,12 +169,14 @@ class Header extends React.PureComponent {
     const onLayout =
       layoutPreset === 'center'
         ? e => {
-            this.setState({
+            const { width } = e.nativeEvent.layout;
+
+            this.setState(state => ({
               widths: {
-                ...this.state.widths,
-                [props.scene.key]: e.nativeEvent.layout.width,
+                ...state.widths,
+                [props.scene.key]: width,
               },
-            });
+            }));
           }
         : undefined;
 
@@ -189,8 +191,10 @@ class Header extends React.PureComponent {
         style={[
           color ? { color } : null,
           layoutPreset === 'center'
-            ? { textAlign: 'center' }
-            : { textAlign: 'left' },
+            ? // eslint-disable-next-line react-native/no-inline-styles
+              { textAlign: 'center' }
+            : // eslint-disable-next-line react-native/no-inline-styles
+              { textAlign: 'left' },
           titleStyle,
         ]}
       >

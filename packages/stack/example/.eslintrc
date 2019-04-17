@@ -1,11 +1,17 @@
 {
-  "extends": "../.eslintrc",
+  'extends': '../.eslintrc',
 
-  "settings": {
-    "import/core-modules": [ "expo", "react-navigation-stack" ]
-  },
+  'settings':
+    {
+      'import/core-modules':
+        [
+          'react-navigation-stack',
+          'react-native-gesture-handler',
+          'react-native-vector-icons',
+        ],
+    },
 
   "rules": {
-    "react/prop-types": "off"
+    "react-native/no-inline-styles": "off"
   }
 }

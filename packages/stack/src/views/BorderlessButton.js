@@ -1,16 +1,10 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Animated, Platform } from 'react-native';
 import { BaseButton } from 'react-native-gesture-handler';
 
 const AnimatedBaseButton = Animated.createAnimatedComponent(BaseButton);
 
 export default class BorderlessButton extends React.Component {
-  static propTypes = {
-    ...BaseButton.propTypes,
-    borderless: PropTypes.bool,
-  };
-
   static defaultProps = {
     activeOpacity: 0.3,
     borderless: true,

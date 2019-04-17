@@ -1,63 +1,41 @@
-/* eslint-disable import/no-commonjs */
 import { Platform } from 'react-native';
 
-module.exports = {
-  /**
-   * Navigators
-   */
-  get createStackNavigator() {
-    return require('./navigators/createStackNavigator').default;
-  },
+/**
+ * Navigators
+ */
+export {
+  default as createStackNavigator,
+} from './navigators/createStackNavigator';
 
-  /**
-   * Views
-   */
-  get Assets() {
-    return Platform.select({
-      ios: [
-        require('./views/assets/back-icon.png'),
-        require('./views/assets/back-icon-mask.png'),
-      ],
-      default: [require('./views/assets/back-icon.png')],
-    });
-  },
-  get Header() {
-    return require('./views/Header/Header').default;
-  },
-  get HeaderBackButton() {
-    return require('./views/Header/HeaderBackButton').default;
-  },
-  get HeaderTitle() {
-    return require('./views/Header/HeaderTitle').default;
-  },
-  get HeaderStyleInterpolator() {
-    return require('./views/Header/HeaderStyleInterpolator').default;
-  },
-  get StackView() {
-    return require('./views/StackView/StackView').default;
-  },
-  get StackViewCard() {
-    return require('./views/StackView/StackViewCard').default;
-  },
-  get StackViewLayout() {
-    return require('./views/StackView/StackViewLayout').default;
-  },
-  get StackViewStyleInterpolator() {
-    return require('./views/StackView/StackViewStyleInterpolator').default;
-  },
-  get StackViewTransitionConfigs() {
-    return require('./views/StackView/StackViewTransitionConfigs').default;
-  },
-  get createPointerEventsContainer() {
-    return require('./views/StackView/createPointerEventsContainer').default;
-  },
-  get Transitioner() {
-    return require('./views/Transitioner').default;
-  },
-  get ScenesReducer() {
-    return require('./views/ScenesReducer').default;
-  },
-  get StackGestureContext() {
-    return require('./utils/StackGestureContext').default;
-  },
-};
+export const Assets = Platform.select({
+  ios: [
+    require('./views/assets/back-icon.png'),
+    require('./views/assets/back-icon-mask.png'),
+  ],
+  default: [require('./views/assets/back-icon.png')],
+});
+
+/**
+ * Views
+ */
+export { default as Header } from './views/Header/Header';
+export { default as HeaderBackButton } from './views/Header/HeaderBackButton';
+export { default as HeaderTitle } from './views/Header/HeaderTitle';
+export {
+  default as HeaderStyleInterpolator,
+} from './views/Header/HeaderStyleInterpolator';
+export { default as StackView } from './views/StackView/StackView';
+export { default as StackViewCard } from './views/StackView/StackViewCard';
+export { default as StackViewLayout } from './views/StackView/StackViewLayout';
+export {
+  default as StackViewStyleInterpolator,
+} from './views/StackView/StackViewStyleInterpolator';
+export {
+  default as StackViewTransitionConfigs,
+} from './views/StackView/StackViewTransitionConfigs';
+export {
+  default as createPointerEventsContainer,
+} from './views/StackView/createPointerEventsContainer';
+export { default as Transitioner } from './views/Transitioner';
+export { default as ScenesReducer } from './views/ScenesReducer';
+export { default as StackGestureContext } from './utils/StackGestureContext';

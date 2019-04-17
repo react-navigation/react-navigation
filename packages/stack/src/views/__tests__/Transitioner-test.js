@@ -5,7 +5,7 @@ import Transitioner from '../Transitioner';
 
 describe('Transitioner', () => {
   // TODO: why does this fail here but not when it was part of react-navigation repo?
-  xit('should not trigger onTransitionStart and onTransitionEnd when route params are changed', () => {
+  it.skip('should not trigger onTransitionStart and onTransitionEnd when route params are changed', () => {
     const onTransitionStartCallback = jest.fn();
     const onTransitionEndCallback = jest.fn();
 

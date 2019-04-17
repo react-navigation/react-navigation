@@ -6,24 +6,20 @@
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
-    "ios": "expo start --ios",
-    "postinstall": "rm -rf node_modules/react-navigation-stack/{.git,node_modules,example}"
+    "ios": "expo start --ios"
   },
   "dependencies": {
+    "@react-navigation/core": "^3.3.1",
+    "@react-navigation/native": "^3.4.1",
+    "expo": "32.0.6",
+    "hoist-non-react-statics": "^3.3.0",
     "react": "16.5.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
-    "react-native-paper": "^2.2.0",
-    "react-navigation-stack": "../",
-    "react-navigation-drawer": "^1.1.0",
-    "react-navigation-tabs": "*",
-    "@react-navigation/core": "^3.0.0",
-    "@react-navigation/native": "^3.1.1",
-    "expo": "32.0.0",
-    "hoist-non-react-statics": "^2.5.0",
-    "prop-types": "^15.6.0"
+    "react-native-paper": "^2.15.2",
+    "react-navigation-drawer": "^1.2.1",
+    "react-navigation-tabs": "*"
   },
   "devDependencies": {
-    "babel-plugin-module-resolver": "^3.0.0",
-    "glob-to-regexp": "^0.3.0"
+    "babel-plugin-module-resolver": "^3.2.0"
   }
 }

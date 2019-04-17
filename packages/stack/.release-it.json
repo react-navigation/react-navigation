@@ -1,8 +1,9 @@
 {
   "increment": "conventional:angular",
-  "changelogCommand": "conventional-changelog -p angular | tail -n +3",
-  "safeBump": false,
-  "src": {
+  "scripts": {
+    "changelog": "conventional-changelog -p angular | tail -n +3"
+  },
+  "git": {
     "commitMessage": "chore: release %s",
     "tagName": "v%s"
   },
