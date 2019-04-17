@@ -47,13 +47,13 @@ class StackView extends React.Component {
 
   _configureTransition = (transitionProps, prevTransitionProps) => {
     return {
+      useNativeDriver: USE_NATIVE_DRIVER,
       ...TransitionConfigs.getTransitionConfig(
         this.props.navigationConfig.transitionConfig,
         transitionProps,
         prevTransitionProps,
         this.props.navigationConfig.mode === 'modal'
       ).transitionSpec,
-      useNativeDriver: USE_NATIVE_DRIVER,
     };
   };
 
