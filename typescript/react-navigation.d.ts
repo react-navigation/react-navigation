@@ -1016,7 +1016,11 @@ declare module 'react-navigation' {
       style?: StyleProp<ViewStyle>;
       labelStyle?: StyleProp<TextStyle>;
     };
+    drawerType?: 'front' | 'back' | 'slide';
     drawerLockMode?: DrawerLockMode;
+    edgeWidth?: number;
+    hideStatusBar?: boolean;
+    overlayColor?: string;
   }
 
   export function DrawerNavigator(
