@@ -11,7 +11,7 @@ Tab navigators for React Navigation.
 Open a Terminal in the project root and run:
 
 ```sh
-yarn add react-navigation-tabs@alpha
+yarn add react-navigation-tabs
 ```
 
 If you are using Expo, you are done. Otherwise, continue to the next step.
