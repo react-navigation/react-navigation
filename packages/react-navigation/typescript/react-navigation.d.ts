@@ -1391,10 +1391,6 @@ declare module 'react-navigation' {
     navigation: NavigationScreenProp<NavigationRoute<P>, P>;
   }
 
-  export interface NavigationInjectedProps<P = NavigationParams> {
-    navigation: NavigationScreenProp<NavigationRoute<P>, P>;
-  }
-
   // If the wrapped component is a class, we can get a ref to it
   export function withNavigation<
     P extends NavigationInjectedProps,
