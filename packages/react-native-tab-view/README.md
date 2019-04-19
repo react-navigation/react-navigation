@@ -283,6 +283,22 @@ Callback which is called when the swipe gesture starts, i.e. the user touches th
 
 Callback which is called when the swipe gesture ends, i.e. the user lifts their finger from the screen after the swipe gesture.
 
+##### `timingConfig`
+
+Configuration object for the timing animation which occurs when tapping on tabs. Supported properties are:
+
+- `duration` (`number`)
+
+##### `springConfig`
+
+Configuration object for the spring animation which occurs after swiping. Supported properties are:
+
+- `damping` (`number`)
+- `mass` (`number`)
+- `stiffness` (`number`)
+- `restSpeedThreshold` (`number`)
+- `restDisplacementThreshold` (`number`)
+
 ##### `initialLayout`
 
 Object containing the initial height and width of the screens. Passing this will improve the initial rendering performance. For most apps, this is a good default:
