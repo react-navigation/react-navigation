@@ -35,7 +35,9 @@
     "url": "https://github.com/kmagiera/react-native-screens/issues"
   },
   "homepage": "https://github.com/kmagiera/react-native-screens#readme",
-  "dependencies": {},
+  "dependencies": {
+    "debounce": "^1.2.0"
+  },
   "peerDependencies": {
     "react": "*",
     "react-native": "*"
