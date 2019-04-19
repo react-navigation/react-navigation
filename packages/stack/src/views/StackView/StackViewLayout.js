@@ -853,9 +853,12 @@ class StackViewLayout extends React.Component {
     const { options } = scene.descriptor;
     const hasHeader = options.header !== null;
     const headerMode = this._getHeaderMode();
-    let paddingTopStyle;
+    let floatingContainerStyle = StyleSheet.absoluteFill;
     if (hasHeader && headerMode === 'float' && !options.headerTransparent) {
-      paddingTopStyle = { paddingTop: this.state.floatingHeaderHeight };
+      floatingContainerStyle = {
+        ...Platform.select({ web: {}, default: StyleSheet.absoluteFillObject }),
+        paddingTop: this.state.floatingHeaderHeight,
+      };
     }
 
     return (
@@ -866,7 +869,7 @@ class StackViewLayout extends React.Component {
         realPosition={transitionProps.position}
         animatedStyle={style}
         transparent={transparentCard}
-        style={[paddingTopStyle, cardStyle]}
+        style={[floatingContainerStyle, cardStyle]}
         scene={scene}
       >
         {this._renderInnerScene(scene)}
@@ -889,7 +892,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   floatingHeader: {
-    position: 'absolute',
+    position: Platform.select({ default: 'absolute', web: 'fixed' }),
     left: 0,
     top: 0,
     right: 0,

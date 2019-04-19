@@ -57,7 +57,7 @@ class Card extends React.Component {
       <Screen
         pointerEvents={pointerEvents}
         onComponentRef={this.props.onComponentRef}
-        style={[StyleSheet.absoluteFill, containerAnimatedStyle, screenStyle]}
+        style={[containerAnimatedStyle, screenStyle]}
         active={active}
       >
         {!transparent && shadowOpacity ? (
