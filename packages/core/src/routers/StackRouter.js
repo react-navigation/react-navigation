@@ -1,5 +1,5 @@
-import NavigationActions from '../NavigationActions';
-import StackActions from './StackActions';
+import * as NavigationActions from '../NavigationActions';
+import * as StackActions from './StackActions';
 import createConfigGetter from './createConfigGetter';
 import getScreenForRouteName from './getScreenForRouteName';
 import StateUtils from '../StateUtils';
@@ -577,11 +577,9 @@ export default (routeConfigs, stackConfig = {}) => {
               state,
               childRoute.key,
               route,
-              // the following tells replaceAt to NOT change the index to this route for the setParam action or complete transition action,
-              // because people don't expect these actions to switch the active route
-              action.type === NavigationActions.SET_PARAMS ||
-                action.type === StackActions.COMPLETE_TRANSITION ||
-                action.type.includes('DRAWER')
+              // People don't expect these actions to switch the active route
+              // TODO: We should switch to action.preserveFocus: true for drawer in future
+              action.preserveFocus || action.type.includes('DRAWER')
             );
           }
         }

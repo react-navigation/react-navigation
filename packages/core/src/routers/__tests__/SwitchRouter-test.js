@@ -3,7 +3,8 @@
 import React from 'react';
 import SwitchRouter from '../SwitchRouter';
 import StackRouter from '../StackRouter';
-import NavigationActions from '../../NavigationActions';
+import * as SwitchActions from '../SwitchActions';
+import * as NavigationActions from '../../NavigationActions';
 
 describe('SwitchRouter', () => {
   it('resets the route when unfocusing a tab by default', () => {
@@ -48,7 +49,7 @@ describe('SwitchRouter', () => {
     const router = getExampleRouter();
     const state = router.getStateForAction({ type: NavigationActions.INIT });
     const state2 = router.getStateForAction(
-      { type: NavigationActions.NAVIGATE, routeName: 'B' },
+      { type: SwitchActions.JUMP_TO, routeName: 'B' },
       state
     );
     expect(state2.index).toEqual(1);
@@ -68,7 +69,7 @@ describe('SwitchRouter', () => {
     expect(state.routeKeyHistory).toBeUndefined();
 
     const state2 = router.getStateForAction(
-      { type: NavigationActions.NAVIGATE, routeName: 'B' },
+      { type: SwitchActions.JUMP_TO, routeName: 'B' },
       state
     );
     expect(state2.index).toEqual(1);
@@ -87,7 +88,7 @@ describe('SwitchRouter', () => {
 
     expect(
       routerHelper.applyAction({
-        type: NavigationActions.NAVIGATE,
+        type: SwitchActions.JUMP_TO,
         routeName: 'C',
       })
     ).toMatchObject({ index: 2 });
@@ -263,7 +264,7 @@ describe('SwitchRouter', () => {
 
     const state2 = router.getStateForAction(
       {
-        type: NavigationActions.NAVIGATE,
+        type: SwitchActions.JUMP_TO,
         routeName: 'Home',
       },
       state

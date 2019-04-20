@@ -2,20 +2,12 @@ import invariant from '../utils/invariant';
 import getScreenForRouteName from './getScreenForRouteName';
 import createConfigGetter from './createConfigGetter';
 
-import NavigationActions from '../NavigationActions';
-import StackActions from './StackActions';
+import * as NavigationActions from '../NavigationActions';
+import * as SwitchActions from './SwitchActions';
 import validateRouteConfigMap from './validateRouteConfigMap';
 import { createPathParser } from './pathUtils';
 
 const defaultActionCreators = () => ({});
-
-function childrenUpdateWithoutSwitchingIndex(actionType) {
-  return [
-    NavigationActions.SET_PARAMS,
-    // Todo: make SwitchRouter not depend on StackActions..
-    StackActions.COMPLETE_TRANSITION,
-  ].includes(actionType);
-}
 
 export default (routeConfigs, config = {}) => {
   // Fail fast on invalid route definitions
@@ -170,6 +162,43 @@ export default (routeConfigs, config = {}) => {
             },
           }));
         }
+      }
+
+      if (
+        action.type === SwitchActions.JUMP_TO &&
+        (action.key == null || action.key === state.key)
+      ) {
+        const { params } = action;
+        const index = state.routes.findIndex(
+          route => route.routeName === action.routeName
+        );
+
+        if (index === -1) {
+          throw new Error(
+            `There is no route named '${
+              action.routeName
+            }' in the navigator with the key '${action.key}'.\n` +
+              `Must be one of: ${state.routes
+                .map(route => `'${route.routeName}'`)
+                .join(',')}`
+          );
+        }
+
+        return getNextState(action, prevState, {
+          ...state,
+          routes: state.routes.map((route, i) =>
+            i === index
+              ? {
+                  ...route,
+                  params: {
+                    ...route.params,
+                    ...params,
+                  },
+                }
+              : route
+          ),
+          index,
+        });
       }
 
       // Let the current child handle it
@@ -329,9 +358,7 @@ export default (routeConfigs, config = {}) => {
 
       // Nested routers can be updated after switching children with actions such as SET_PARAMS
       // and COMPLETE_TRANSITION.
-      // NOTE: This may be problematic with custom routers because we whitelist the actions
-      // that can be handled by child routers without automatically changing index.
-      if (childrenUpdateWithoutSwitchingIndex(action.type)) {
+      if (action.preserveFocus) {
         index = state.index;
       }
 

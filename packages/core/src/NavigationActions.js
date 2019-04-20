@@ -1,15 +1,17 @@
-const BACK = 'Navigation/BACK';
-const INIT = 'Navigation/INIT';
-const NAVIGATE = 'Navigation/NAVIGATE';
-const SET_PARAMS = 'Navigation/SET_PARAMS';
+// Action constants
+export const BACK = 'Navigation/BACK';
+export const INIT = 'Navigation/INIT';
+export const NAVIGATE = 'Navigation/NAVIGATE';
+export const SET_PARAMS = 'Navigation/SET_PARAMS';
 
-const back = (payload = {}) => ({
+// Action creators
+export const back = (payload = {}) => ({
   type: BACK,
   key: payload.key,
   immediate: payload.immediate,
 });
 
-const init = (payload = {}) => {
+export const init = (payload = {}) => {
   const action = {
     type: INIT,
   };
@@ -19,7 +21,7 @@ const init = (payload = {}) => {
   return action;
 };
 
-const navigate = payload => {
+export const navigate = payload => {
   const action = {
     type: NAVIGATE,
     routeName: payload.routeName,
@@ -36,22 +38,9 @@ const navigate = payload => {
   return action;
 };
 
-const setParams = payload => ({
+export const setParams = payload => ({
   type: SET_PARAMS,
   key: payload.key,
   params: payload.params,
+  preserveFocus: true,
 });
-
-export default {
-  // Action constants
-  BACK,
-  INIT,
-  NAVIGATE,
-  SET_PARAMS,
-
-  // Action creators
-  back,
-  init,
-  navigate,
-  setParams,
-};

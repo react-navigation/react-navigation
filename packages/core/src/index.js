@@ -28,10 +28,13 @@ module.exports = {
 
   // Actions
   get NavigationActions() {
-    return require('./NavigationActions').default;
+    return require('./NavigationActions');
   },
   get StackActions() {
-    return require('./routers/StackActions').default;
+    return require('./routers/StackActions');
+  },
+  get SwitchActions() {
+    return require('./routers/SwitchActions');
   },
 
   // Routers

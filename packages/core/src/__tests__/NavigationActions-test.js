@@ -1,4 +1,4 @@
-import NavigationActions from '../NavigationActions';
+import * as NavigationActions from '../NavigationActions';
 
 describe('generic navigation actions', () => {
   const params = { foo: 'bar' };
@@ -51,6 +51,7 @@ describe('generic navigation actions', () => {
     ).toEqual({
       type: NavigationActions.SET_PARAMS,
       key: 'test',
+      preserveFocus: true,
       params,
     });
   });

@@ -6,7 +6,8 @@ import StackRouter from '../StackRouter';
 import TabRouter from '../TabRouter';
 import SwitchRouter from '../SwitchRouter';
 
-import NavigationActions from '../../NavigationActions';
+import * as NavigationActions from '../../NavigationActions';
+import * as StackActions from '../StackActions';
 import { _TESTING_ONLY_normalize_keys } from '../KeyGenerator.ts';
 
 beforeEach(() => {
@@ -392,7 +393,8 @@ it('Does not switch tab index when TabRouter child handles COMPLETE_NAVIGATION o
 
   const stateAfterCompleteTransition = TestRouter.getStateForAction(
     {
-      type: NavigationActions.COMPLETE_TRANSITION,
+      type: StackActions.COMPLETE_TRANSITION,
+      preserveFocus: true,
       key: state2.routes[0].key,
     },
     state3
@@ -400,6 +402,7 @@ it('Does not switch tab index when TabRouter child handles COMPLETE_NAVIGATION o
   const stateAfterSetParams = TestRouter.getStateForAction(
     {
       type: NavigationActions.SET_PARAMS,
+      preserveFocus: true,
       key: state1.routes[0].routes[0].key,
       params: { key: 'value' },
     },

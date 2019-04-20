@@ -1,4 +1,4 @@
-import NavigationActions from '../NavigationActions';
+import * as NavigationActions from '../NavigationActions';
 import invariant from '../utils/invariant';
 
 const getNavigationActionCreators = route => {

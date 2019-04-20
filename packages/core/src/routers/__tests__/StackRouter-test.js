@@ -3,8 +3,8 @@
 import React from 'react';
 
 import StackRouter from '../StackRouter';
-import StackActions from '../StackActions';
-import NavigationActions from '../../NavigationActions';
+import * as StackActions from '../StackActions';
+import * as NavigationActions from '../../NavigationActions';
 import { _TESTING_ONLY_normalize_keys } from '../KeyGenerator.ts';
 
 beforeEach(() => {
