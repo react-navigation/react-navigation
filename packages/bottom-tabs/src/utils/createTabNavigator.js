@@ -6,7 +6,7 @@ import {
   StackActions,
   SceneView,
   createNavigator,
-  NavigationActions,
+  SwitchActions,
 } from '@react-navigation/core';
 
 export type InjectedProps = {|
@@ -160,8 +160,17 @@ export default function createTabNavigator(TabView: React.ComponentType<*>) {
       this.setState({ isSwiping: false });
     };
 
-    _jumpTo = routeName =>
-      this.props.navigation.dispatch(NavigationActions.navigate({ routeName }));
+    _jumpTo = routeName => {
+      const { navigation } = this.props;
+
+      navigation.dispatch(
+        SwitchActions.jumpTo({
+          routeName,
+          key: navigation.state.key,
+          preserveFocus: true,
+        })
+      );
+    };
 
     _isTabPress: boolean = false;
 
