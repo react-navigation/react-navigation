@@ -38,7 +38,7 @@
   "dependencies": {
     "hoist-non-react-statics": "^3.3.0",
     "react-lifecycles-compat": "^3.0.4",
-    "react-native-tab-view": "^2.0.3"
+    "react-native-tab-view": "^2.2.0"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^7.5.0",
@@ -65,7 +65,7 @@
     "release-it": "^10.3.1"
   },
   "peerDependencies": {
-    "@react-navigation/core": "^3.0.0",
+    "@react-navigation/core": "^3.4.0",
     "@react-navigation/native": "^3.0.0",
     "react": "*",
     "react-native": "*",
