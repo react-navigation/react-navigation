@@ -32,14 +32,17 @@ class Card extends React.Component {
       scene: { index, isActive },
     } = this.props;
 
-    const active =
-      transparent || isActive
-        ? 1
-        : position.interpolate({
-            inputRange: [index, index + 1 - EPS, index + 1],
-            outputRange: [1, 1, 0],
-            extrapolate: 'clamp',
-          });
+    const active = Platform.select({
+      web: isActive,
+      default:
+        transparent || isActive
+          ? 1
+          : position.interpolate({
+              inputRange: [index, index + 1 - EPS, index + 1],
+              outputRange: [1, 1, 0],
+              extrapolate: 'clamp',
+            }),
+    });
 
     // animatedStyle can be `false` if there is no screen interpolator
     const animatedStyle = this.props.animatedStyle || {};
