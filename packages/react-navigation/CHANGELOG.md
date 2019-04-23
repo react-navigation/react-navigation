@@ -7,10 +7,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.9.0] - [2019-04-23](https://github.com/react-navigation/react-navigation/releases/tag/3.9.0)
+
 ## Fixes
 
 - Remove `createTabNavigator` from type definitions
 - Add missing types for `DrawerNavigatorConfig`
+- Use `preserveFocus` action param rather than matching on specific action types to determine if index needs to be updated if child router changes (https://github.com/react-navigation/react-navigation-core/pull/56)
 
 ## [3.8.1] - [2019-04-12](https://github.com/react-navigation/react-navigation/releases/tag/3.8.1)
 
@@ -254,7 +257,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - [2.x](https://github.com/react-navigation/react-navigation/blob/2.x/CHANGELOG.md)
 
-[Unreleased]: https://github.com/react-navigation/react-navigation/compare/3.8.1...HEAD
+[Unreleased]: https://github.com/react-navigation/react-navigation/compare/3.9.0...HEAD
+[3.9.0]: https://github.com/react-navigation/react-navigation/compare/3.8.1...3.9.0
 [3.8.1]: https://github.com/react-navigation/react-navigation/compare/3.8.0...3.8.1
 [3.8.0]: https://github.com/react-navigation/react-navigation/compare/3.7.1...3.8.0
 [3.7.1]: https://github.com/react-navigation/react-navigation/compare/3.6.1...3.7.1
