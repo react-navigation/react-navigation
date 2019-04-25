@@ -3,7 +3,7 @@
   "version": "3.4.0",
   "description": "Core utilities for the react-navigation framework",
   "main": "lib/commonjs/index.js",
-  "react-native": "src/index.js",
+  "react-native": "lib/module/index.js",
   "module": "lib/module/index.js",
   "sideEffects": false,
   "files": [
@@ -16,7 +16,8 @@
     "typescript": "tsc --noEmit",
     "example": "yarn --cwd example",
     "bootstrap": "yarn && yarn example",
-    "prepare": "bob build"
+    "prepare": "bob build",
+    "release": "release-it"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
