@@ -3,7 +3,7 @@
   "version": "1.2.1",
   "description": "Drawer navigator component for React Navigation",
   "main": "lib/commonjs/index.js",
-  "react-native": "src/index.tsx",
+  "react-native": "lib/module/index.js",
   "module": "lib/module/index.js",
   "types": "lib/typescript/src/index.d.ts",
   "files": [
