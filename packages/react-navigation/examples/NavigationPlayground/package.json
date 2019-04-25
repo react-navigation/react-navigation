@@ -6,7 +6,8 @@
     "postinstall": "patch-package && rm -rf node_modules/react-navigation/node_modules/react-native && rm -rf node_modules/react-navigation/node_modules/@types && rm -rf node_modules/react-navigation/node_modules/examples && rm -rf node_modules/react-navigation/node_modules/react-native-gesture-handler && rm -rf node_modules/react-navigation/node_modules/react",
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "test": "jest && tsc",
-    "tsc": "tsc"
+    "tsc": "tsc",
+    "release": "release-it"
   },
   "dependencies": {
     "patch-package": "^6.0.5",
