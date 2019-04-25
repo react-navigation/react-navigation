@@ -31,6 +31,10 @@ function isPropTruthy(prop) {
 }
 
 export class Screen extends React.Component {
+  static defaultProps = {
+    active: true,
+  };
+
   listenerId = null;
 
   constructor(props) {
@@ -80,7 +84,7 @@ export class Screen extends React.Component {
 
   _updateDisplay = isActive => {
     if (isActive === undefined) {
-      isActive = isPropTruthy(this.props.isActive);
+      isActive = isPropTruthy(this.props.active);
     }
     const display = isActive ? 'flex' : 'none';
     this.setNativeProps({ style: { display } });
