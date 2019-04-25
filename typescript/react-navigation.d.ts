@@ -250,8 +250,7 @@ declare module 'react-navigation' {
 
   export type NavigationComponent =
     | NavigationScreenComponent<NavigationParams, any, any>
-    | NavigationNavigator<any, any, any>
-    | any;
+    | NavigationNavigator<any, any, any>;
 
   export type NavigationScreenComponent<
     Params = NavigationParams,
