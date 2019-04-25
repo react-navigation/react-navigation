@@ -1,6 +1,6 @@
 {
   "name": "react-navigation",
-  "version": "3.9.0",
+  "version": "3.9.1",
   "description": "Routing and navigation for your React Native apps",
   "main": "src/react-navigation.js",
   "types": "typescript/react-navigation.d.ts",
