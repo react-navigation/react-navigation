@@ -1,10 +1,11 @@
-import React from 'react';
+import * as React from 'react';
 import { Platform, StyleSheet, Animated } from 'react-native';
 
-const AnimatedText = Animated.Text;
-
-const HeaderTitle = ({ style, ...rest }) => (
-  <AnimatedText
+const HeaderTitle = ({
+  style,
+  ...rest
+}: React.ComponentProps<typeof Animated.Text>) => (
+  <Animated.Text
     numberOfLines={1}
     {...rest}
     style={[styles.title, style]}

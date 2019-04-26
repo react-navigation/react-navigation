@@ -1,23 +1,24 @@
-import React from 'react';
+import * as React from 'react';
 import { Animated, Platform } from 'react-native';
 import { BaseButton } from 'react-native-gesture-handler';
 
 const AnimatedBaseButton = Animated.createAnimatedComponent(BaseButton);
 
-export default class BorderlessButton extends React.Component {
+type Props = React.ComponentProps<typeof BaseButton> & {
+  activeOpacity: number;
+};
+
+export default class BorderlessButton extends React.Component<Props> {
   static defaultProps = {
     activeOpacity: 0.3,
     borderless: true,
   };
 
-  constructor(props) {
-    super(props);
-    this._opacity = new Animated.Value(1);
-  }
+  private opacity = new Animated.Value(1);
 
-  _onActiveStateChange = active => {
+  private handleActiveStateChange = (active: boolean) => {
     if (Platform.OS !== 'android') {
-      Animated.spring(this._opacity, {
+      Animated.spring(this.opacity, {
         stiffness: 1000,
         damping: 500,
         mass: 3,
@@ -38,10 +39,10 @@ export default class BorderlessButton extends React.Component {
     return (
       <AnimatedBaseButton
         {...rest}
-        onActiveStateChange={this._onActiveStateChange}
+        onActiveStateChange={this.handleActiveStateChange}
         style={[
           style,
-          Platform.OS === 'ios' && enabled && { opacity: this._opacity },
+          Platform.OS === 'ios' && enabled && { opacity: this.opacity },
         ]}
       >
         {children}

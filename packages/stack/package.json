@@ -4,7 +4,8 @@
   "description": "Stack navigator component for React Navigation",
   "main": "lib/commonjs/index.js",
   "module": "lib/module/index.js",
-  "react-native": "src/index.js",
+  "react-native": "lib/module/index.js",
+  "typescript": "lib/typescript/index.d.ts",
   "sideEffects": false,
   "files": [
     "src",
@@ -12,8 +13,8 @@
   ],
   "scripts": {
     "test": "jest",
-    "lint": "eslint .",
-    "format": "eslint . --fix",
+    "lint": "eslint --ext .js,.ts,.tsx .",
+    "typescript": "tsc --noEmit",
     "prepare": "bob build",
     "release": "release-it",
     "example": "yarn --cwd example",
@@ -41,18 +42,21 @@
   },
   "homepage": "https://github.com/react-navigation/react-navigation-stack#readme",
   "devDependencies": {
-    "@babel/core": "^7.4.3",
+    "@babel/core": "^7.4.4",
     "@commitlint/config-conventional": "^7.5.0",
     "@expo/vector-icons": "^10.0.1",
-    "@react-native-community/bob": "^0.3.4",
-    "@react-navigation/core": "^3.3.1",
+    "@react-native-community/bob": "^0.4.1",
+    "@react-navigation/core": "^3.4.1",
     "@react-navigation/native": "^3.4.1",
+    "@release-it/conventional-changelog": "^1.0.0",
+    "@types/jest": "^24.0.12",
+    "@types/react": "^16.8.14",
+    "@types/react-native": "^0.57.51",
     "commitlint": "^7.5.2",
-    "conventional-changelog-cli": "^2.0.12",
     "eslint": "^5.16.0",
     "eslint-config-satya164": "^2.4.1",
     "eslint-plugin-react-native-globals": "^0.1.0",
-    "husky": "^1.3.1",
+    "husky": "^2.2.0",
     "jest": "^24.7.1",
     "prettier": "^1.17.0",
     "react": "16.5.0",
@@ -61,8 +65,9 @@
     "react-native-gesture-handler": "^1.1.0",
     "react-native-screens": "^1.0.0-alpha.22",
     "react-test-renderer": "16.5.0",
-    "release-it": "^10.4.2",
-    "scheduler": "^0.14.0"
+    "release-it": "^11.0.0",
+    "scheduler": "^0.14.0",
+    "typescript": "^3.4.5"
   },
   "peerDependencies": {
     "@react-navigation/core": "^3.0.0",
@@ -74,7 +79,7 @@
   },
   "jest": {
     "preset": "react-native",
-    "testRegex": "/__tests__/[^/]+-test\\.js$",
+    "testEnvironment": "node",
     "setupFiles": [
       "<rootDir>/jest-setup.js"
     ],
@@ -87,7 +92,11 @@
     ],
     "transformIgnorePatterns": [
       "node_modules/(?!(jest-)?react-native|react-clone-referenced-element|react-navigation-deprecated-tab-navigator|@react-navigation/core|@react-navigation/native)"
-    ]
+    ],
+    "testRegex": "/__tests__/.*\\.(test|spec)\\.(js|tsx?)$",
+    "transform": {
+      "^.+\\.(js|ts|tsx)$": "babel-jest"
+    }
   },
   "prettier": {
     "trailingComma": "es5",
@@ -104,7 +113,8 @@
     "output": "lib",
     "targets": [
       "commonjs",
-      "module"
+      "module",
+      "typescript"
     ]
   }
 }

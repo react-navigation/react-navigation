@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { Button, Text, View } from 'react-native';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createDrawerNavigator } from 'react-navigation-drawer';

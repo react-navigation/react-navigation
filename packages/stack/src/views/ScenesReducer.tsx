@@ -1,12 +1,12 @@
-import invariant from '../utils/invariant';
 import shallowEqual from '../utils/shallowEqual';
+import { Scene, Route, NavigationState, SceneDescriptor } from '../types';
 
 const SCENE_KEY_PREFIX = 'scene_';
 
 /**
  * Helper function to compare route keys (e.g. "9", "11").
  */
-function compareKey(one, two) {
+function compareKey(one: string, two: string) {
   const delta = one.length - two.length;
   if (delta > 0) {
     return 1;
@@ -20,7 +20,7 @@ function compareKey(one, two) {
 /**
  * Helper function to sort scenes based on their index and view key.
  */
-function compareScenes(one, two) {
+function compareScenes(one: Scene, two: Scene) {
   if (one.index > two.index) {
     return 1;
   }
@@ -34,7 +34,7 @@ function compareScenes(one, two) {
 /**
  * Whether two routes are the same.
  */
-function areScenesShallowEqual(one, two) {
+function areScenesShallowEqual(one: Scene, two: Scene) {
   return (
     one.key === two.key &&
     one.index === two.index &&
@@ -47,7 +47,7 @@ function areScenesShallowEqual(one, two) {
 /**
  * Whether two routes are the same.
  */
-function areRoutesShallowEqual(one, two) {
+function areRoutesShallowEqual(one: Route, two: Route) {
   if (!one || !two) {
     return one === two;
   }
@@ -60,10 +60,10 @@ function areRoutesShallowEqual(one, two) {
 }
 
 export default function ScenesReducer(
-  scenes,
-  nextState,
-  prevState,
-  descriptors
+  scenes: Scene[],
+  nextState: NavigationState,
+  prevState: NavigationState | null,
+  descriptors: { [key: string]: SceneDescriptor }
 ) {
   // Always update the descriptors
   // This is a workaround for https://github.com/react-navigation/react-navigation/issues/4271
@@ -107,7 +107,7 @@ export default function ScenesReducer(
 
     let descriptor = descriptors && descriptors[route.key];
 
-    const scene = {
+    const scene: Scene = {
       index,
       isActive: false,
       isStale: false,
@@ -115,11 +115,14 @@ export default function ScenesReducer(
       route,
       descriptor,
     };
-    invariant(
-      !nextKeys.has(key),
-      `navigation.state.routes[${index}].key "${key}" conflicts with ` +
-        'another route!'
-    );
+
+    if (nextKeys.has(key)) {
+      throw new Error(
+        `navigation.state.routes[${index}].key "${key}" conflicts with ` +
+          'another route!'
+      );
+    }
+
     nextKeys.add(key);
 
     if (staleScenes.has(key)) {
@@ -168,9 +171,9 @@ export default function ScenesReducer(
     });
   }
 
-  const nextScenes = [];
+  const nextScenes: Scene[] = [];
 
-  const mergeScene = nextScene => {
+  const mergeScene = (nextScene: Scene) => {
     const { key } = nextScene;
     const prevScene = prevScenes.has(key) ? prevScenes.get(key) : null;
     if (prevScene && areScenesShallowEqual(prevScene, nextScene)) {
@@ -201,11 +204,11 @@ export default function ScenesReducer(
     }
   });
 
-  invariant(
-    activeScenesCount === 1,
-    'there should always be only one scene active, not %s.',
-    activeScenesCount
-  );
+  if (activeScenesCount !== 1) {
+    throw new Error(
+      `There should always be only one scene active, not ${activeScenesCount}.`
+    );
+  }
 
   if (nextScenes.length !== scenes.length) {
     return nextScenes;

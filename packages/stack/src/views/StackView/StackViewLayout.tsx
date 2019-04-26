@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import {
   Animated,
   StyleSheet,
@@ -7,6 +7,9 @@ import {
   I18nManager,
   Easing,
   Dimensions,
+  StyleProp,
+  ViewStyle,
+  LayoutChangeEvent,
 } from 'react-native';
 import {
   SceneView,
@@ -16,7 +19,13 @@ import {
 } from '@react-navigation/core';
 import { withOrientation } from '@react-navigation/native';
 import { ScreenContainer } from 'react-native-screens';
-import { PanGestureHandler, State } from 'react-native-gesture-handler';
+import {
+  PanGestureHandler,
+  State as GestureState,
+  PanGestureHandlerGestureEvent,
+  GestureHandlerGestureEventNativeEvent,
+  PanGestureHandlerEventExtra,
+} from 'react-native-gesture-handler';
 
 import Card from './StackViewCard';
 import Header from '../Header/Header';
@@ -25,13 +34,52 @@ import HeaderStyleInterpolator from '../Header/HeaderStyleInterpolator';
 import StackGestureContext from '../../utils/StackGestureContext';
 import clamp from '../../utils/clamp';
 import { supportsImprovedSpringAnimation } from '../../utils/ReactNativeFeatures';
+import {
+  Scene,
+  HeaderMode,
+  TransitionProps,
+  TransitionConfig,
+  HeaderTransitionConfig,
+  HeaderProps,
+} from '../../types';
+
+type Props = {
+  mode: 'modal' | 'card';
+  headerMode: 'screen' | 'float';
+  headerLayoutPreset: 'left' | 'center';
+  headerTransitionPreset: 'fade-in-place' | 'uikit';
+  headerBackgroundTransitionPreset: 'fade' | 'translate' | 'toggle';
+  headerBackTitleVisible?: boolean;
+  isLandscape: boolean;
+  shadowEnabled?: boolean;
+  cardOverlayEnabled?: boolean;
+  transparentCard?: boolean;
+  cardStyle?: StyleProp<ViewStyle>;
+  transitionProps: TransitionProps;
+  lastTransitionProps?: TransitionProps;
+  transitionConfig: (
+    transitionProps: TransitionProps,
+    prevTransitionProps?: TransitionProps,
+    isModal?: boolean
+  ) => HeaderTransitionConfig;
+  onGestureBegin?: () => void;
+  onGestureEnd?: () => void;
+  onGestureCanceled?: () => void;
+  screenProps: unknown;
+};
+
+type State = {
+  floatingHeaderHeight: number;
+};
 
 const IPHONE_XS_HEIGHT = 812; // iPhone X and XS
 const IPHONE_XR_HEIGHT = 896; // iPhone XR and XS Max
 const { width: WINDOW_WIDTH, height: WINDOW_HEIGHT } = Dimensions.get('window');
 const IS_IPHONE_X =
   Platform.OS === 'ios' &&
+  // @ts-ignore
   !Platform.isPad &&
+  // @ts-ignore
   !Platform.isTVOS &&
   (WINDOW_HEIGHT === IPHONE_XS_HEIGHT ||
     WINDOW_WIDTH === IPHONE_XS_HEIGHT ||
@@ -69,8 +117,9 @@ const GESTURE_RESPONSE_DISTANCE_VERTICAL = 135;
 
 const USE_NATIVE_DRIVER = true;
 
-const getDefaultHeaderHeight = isLandscape => {
+const getDefaultHeaderHeight = (isLandscape: boolean) => {
   if (Platform.OS === 'ios') {
+    // @ts-ignore
     if (isLandscape && !Platform.isPad) {
       return 32;
     } else if (IS_IPHONE_X) {
@@ -85,7 +134,18 @@ const getDefaultHeaderHeight = isLandscape => {
   }
 };
 
-class StackViewLayout extends React.Component {
+class StackViewLayout extends React.Component<Props, State> {
+  private panGestureRef: React.RefObject<PanGestureHandler>;
+  private gestureX: Animated.Value;
+  private gestureY: Animated.Value;
+  private positionSwitch: Animated.Value;
+  private gestureSwitch: Animated.AnimatedInterpolation;
+  private gestureEvent: (...args: any[]) => void;
+  private gesturePosition: Animated.AnimatedInterpolation | undefined;
+
+  // @ts-ignore
+  private position: Animated.Value;
+
   /**
    * immediateIndex is used to represent the expected index that we will be on after a
    * transition. To achieve a smooth animation when swiping back, the action to go back
@@ -93,9 +153,13 @@ class StackViewLayout extends React.Component {
    * the transition so that gestures can be handled correctly. This is a work-around for
    * cases when the user quickly swipes back several times.
    */
-  _immediateIndex = null;
+  private immediateIndex: number | null = null;
+  private transitionConfig:
+    | HeaderTransitionConfig & TransitionConfig
+    | undefined;
+  private prevProps: Props | undefined;
 
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
     this.panGestureRef = React.createRef();
     this.gestureX = new Animated.Value(0);
@@ -133,7 +197,7 @@ class StackViewLayout extends React.Component {
     };
   }
 
-  _renderHeader(scene, headerMode) {
+  private renderHeader(scene: Scene, headerMode: HeaderMode) {
     const { options } = scene.descriptor;
     const { header } = options;
 
@@ -153,16 +217,18 @@ class StackViewLayout extends React.Component {
     }
 
     // Handle the case where the header option is a function, and provide the default
-    const renderHeader = header || (props => <Header {...props} />);
+    const renderHeader =
+      // @ts-ignore TS warns about missing props, but they are in default props
+      header || ((props: HeaderProps) => <Header {...props} />);
 
     let {
       headerLeftInterpolator,
       headerTitleInterpolator,
       headerRightInterpolator,
       headerBackgroundInterpolator,
-    } = this._transitionConfig;
+    } = this.transitionConfig as HeaderTransitionConfig;
 
-    const backgroundTransitionPresetInterpolator = this._getHeaderBackgroundTransitionPreset();
+    const backgroundTransitionPresetInterpolator = this.getHeaderBackgroundTransitionPreset();
     if (backgroundTransitionPresetInterpolator) {
       headerBackgroundInterpolator = backgroundTransitionPresetInterpolator;
     }
@@ -177,9 +243,9 @@ class StackViewLayout extends React.Component {
           position: this.position,
           scene,
           mode: headerMode,
-          transitionPreset: this._getHeaderTransitionPreset(),
-          layoutPreset: this._getHeaderLayoutPreset(),
-          backTitleVisible: this._getHeaderBackTitleVisible(),
+          transitionPreset: this.getHeaderTransitionPreset(),
+          layoutPreset: this.getHeaderLayoutPreset(),
+          backTitleVisible: this.getHeaderBackTitleVisible(),
           leftInterpolator: headerLeftInterpolator,
           titleInterpolator: headerTitleInterpolator,
           rightInterpolator: headerRightInterpolator,
@@ -189,8 +255,9 @@ class StackViewLayout extends React.Component {
     );
   }
 
-  _reset(resetToIndex, duration) {
+  private reset(resetToIndex: number, duration: number) {
     if (Platform.OS === 'ios' && supportsImprovedSpringAnimation()) {
+      // @ts-ignore
       Animated.spring(this.props.transitionProps.position, {
         toValue: resetToIndex,
         stiffness: 6000,
@@ -202,6 +269,7 @@ class StackViewLayout extends React.Component {
         useNativeDriver: USE_NATIVE_DRIVER,
       }).start();
     } else {
+      // @ts-ignore
       Animated.timing(this.props.transitionProps.position, {
         toValue: resetToIndex,
         duration,
@@ -211,16 +279,16 @@ class StackViewLayout extends React.Component {
     }
   }
 
-  _goBack(backFromIndex, duration) {
+  private goBack(backFromIndex: number, duration: number) {
     const { navigation, position, scenes } = this.props.transitionProps;
     const toValue = Math.max(backFromIndex - 1, 0);
 
     // set temporary index for gesture handler to respect until the action is
     // dispatched at the end of the transition.
-    this._immediateIndex = toValue;
+    this.immediateIndex = toValue;
 
     const onCompleteAnimation = () => {
-      this._immediateIndex = null;
+      this.immediateIndex = null;
       const backFromScene = scenes.find(s => s.index === toValue + 1);
       if (backFromScene) {
         navigation.dispatch(
@@ -234,6 +302,7 @@ class StackViewLayout extends React.Component {
     };
 
     if (Platform.OS === 'ios' && supportsImprovedSpringAnimation()) {
+      // @ts-ignore
       Animated.spring(position, {
         toValue,
         stiffness: 7000,
@@ -245,6 +314,7 @@ class StackViewLayout extends React.Component {
         useNativeDriver: USE_NATIVE_DRIVER,
       }).start(onCompleteAnimation);
     } else {
+      // @ts-ignore
       Animated.timing(position, {
         toValue,
         duration,
@@ -254,26 +324,26 @@ class StackViewLayout extends React.Component {
     }
   }
 
-  _onFloatingHeaderLayout = e => {
+  private handleFloatingHeaderLayout = (e: LayoutChangeEvent) => {
     const { height } = e.nativeEvent.layout;
     if (height !== this.state.floatingHeaderHeight) {
       this.setState({ floatingHeaderHeight: height });
     }
   };
 
-  _prepareAnimated() {
-    if (this.props === this._prevProps) {
+  private prepareAnimated() {
+    if (this.props === this.prevProps) {
       return;
     }
-    this._prevProps = this.props;
+    this.prevProps = this.props;
 
-    this._prepareGesture();
-    this._preparePosition();
-    this._prepareTransitionConfig();
+    this.prepareGesture();
+    this.preparePosition();
+    this.prepareTransitionConfig();
   }
 
   render() {
-    this._prepareAnimated();
+    this.prepareAnimated();
 
     const { transitionProps } = this.props;
     const {
@@ -283,7 +353,7 @@ class StackViewLayout extends React.Component {
       scenes,
     } = transitionProps;
 
-    const headerMode = this._getHeaderMode();
+    const headerMode = this.getHeaderMode();
     let floatingHeader = null;
     if (headerMode === 'float') {
       const { scene } = transitionProps;
@@ -291,27 +361,27 @@ class StackViewLayout extends React.Component {
         <View
           style={styles.floatingHeader}
           pointerEvents="box-none"
-          onLayout={this._onFloatingHeaderLayout}
+          onLayout={this.handleFloatingHeaderLayout}
         >
-          {this._renderHeader(scene, headerMode)}
+          {this.renderHeader(scene, headerMode)}
         </View>
       );
     }
 
     return (
       <PanGestureHandler
-        {...this._gestureActivationCriteria()}
+        {...this.gestureActivationCriteria()}
         ref={this.panGestureRef}
         onGestureEvent={this.gestureEvent}
-        onHandlerStateChange={this._handlePanGestureStateChange}
-        enabled={index > 0 && this._isGestureEnabled()}
+        onHandlerStateChange={this.handlePanGestureStateChange}
+        enabled={index > 0 && this.isGestureEnabled()}
       >
         <Animated.View
-          style={[styles.container, this._transitionConfig.containerStyle]}
+          style={[styles.container, this.transitionConfig!.containerStyle]}
         >
           <StackGestureContext.Provider value={this.panGestureRef}>
             <ScreenContainer style={styles.scenes}>
-              {scenes.map(this._renderCard)}
+              {scenes.map(this.renderCard)}
             </ScreenContainer>
             {floatingHeader}
           </StackGestureContext.Provider>
@@ -320,36 +390,40 @@ class StackViewLayout extends React.Component {
     );
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: Props) {
     const { state: prevState } = prevProps.transitionProps.navigation;
     const { state } = this.props.transitionProps.navigation;
     if (prevState.index !== state.index) {
-      this._maybeCancelGesture();
+      this.maybeCancelGesture();
     }
   }
 
-  _getGestureResponseDistance() {
+  private getGestureResponseDistance() {
     const { scene } = this.props.transitionProps;
     const { options } = scene.descriptor;
     const {
-      gestureResponseDistance: userGestureResponseDistance = {},
+      gestureResponseDistance: userGestureResponseDistance = {} as {
+        vertical?: number;
+        horizontal?: number;
+      },
     } = options;
 
     // Doesn't make sense for a response distance of 0, so this works fine
-    return this._isModal()
+    return this.isModal()
       ? userGestureResponseDistance.vertical ||
           GESTURE_RESPONSE_DISTANCE_VERTICAL
       : userGestureResponseDistance.horizontal ||
           GESTURE_RESPONSE_DISTANCE_HORIZONTAL;
   }
 
-  _gestureActivationCriteria() {
+  private gestureActivationCriteria() {
     const { layout } = this.props.transitionProps;
-    const gestureResponseDistance = this._getGestureResponseDistance();
-    const isMotionInverted = this._isMotionInverted();
+    const gestureResponseDistance = this.getGestureResponseDistance();
+    const isMotionInverted = this.isMotionInverted();
 
-    if (this._isMotionVertical()) {
-      const height = layout.height.__getValue();
+    if (this.isMotionVertical()) {
+      // @ts-ignore
+      const height: number = layout.height.__getValue();
 
       return {
         maxDeltaX: 15,
@@ -359,7 +433,8 @@ class StackViewLayout extends React.Component {
           : { bottom: -height + gestureResponseDistance },
       };
     } else {
-      const width = layout.width.__getValue();
+      // @ts-ignore
+      const width: number = layout.width.__getValue();
       const hitSlop = -width + gestureResponseDistance;
 
       return {
@@ -370,7 +445,7 @@ class StackViewLayout extends React.Component {
     }
   }
 
-  _isGestureEnabled() {
+  private isGestureEnabled() {
     const gesturesEnabled = this.props.transitionProps.scene.descriptor.options
       .gesturesEnabled;
     return typeof gesturesEnabled === 'boolean'
@@ -378,23 +453,23 @@ class StackViewLayout extends React.Component {
       : Platform.OS === 'ios';
   }
 
-  _isMotionVertical() {
-    return this._isModal();
+  private isMotionVertical() {
+    return this.isModal();
   }
 
-  _isModal() {
+  private isModal() {
     return this.props.mode === 'modal';
   }
 
   // This only currently applies to the horizontal gesture!
-  _isMotionInverted() {
+  private isMotionInverted() {
     const {
       transitionProps: { scene },
     } = this.props;
     const { options } = scene.descriptor;
     const { gestureDirection } = options;
 
-    if (this._isModal()) {
+    if (this.isModal()) {
       return gestureDirection === 'inverted';
     } else {
       return typeof gestureDirection === 'string'
@@ -403,7 +478,11 @@ class StackViewLayout extends React.Component {
     }
   }
 
-  _computeHorizontalGestureValue({ translationX }) {
+  private computeHorizontalGestureValue({
+    translationX,
+  }: {
+    translationX: number;
+  }) {
     const {
       transitionProps: { navigation, layout },
     } = this.props;
@@ -411,15 +490,20 @@ class StackViewLayout extends React.Component {
     const { index } = navigation.state;
 
     // TODO: remove this __getValue!
-    const distance = layout.width.__getValue();
+    // @ts-ignore
+    const distance: number = layout.width.__getValue();
 
-    const x = this._isMotionInverted() ? -1 * translationX : translationX;
+    const x = this.isMotionInverted() ? -1 * translationX : translationX;
 
     const value = index - x / distance;
     return clamp(index - 1, value, index);
   }
 
-  _computeVerticalGestureValue({ translationY }) {
+  private computeVerticalGestureValue({
+    translationY,
+  }: {
+    translationY: number;
+  }) {
     const {
       transitionProps: { navigation, layout },
     } = this.props;
@@ -427,27 +511,32 @@ class StackViewLayout extends React.Component {
     const { index } = navigation.state;
 
     // TODO: remove this __getValue!
-    const distance = layout.height.__getValue();
+    // @ts-ignore
+    const distance: number = layout.height.__getValue();
 
-    const y = this._isMotionInverted() ? -1 * translationY : translationY;
+    const y = this.isMotionInverted() ? -1 * translationY : translationY;
     const value = index - y / distance;
     return clamp(index - 1, value, index);
   }
 
-  _handlePanGestureStateChange = ({ nativeEvent }) => {
-    if (nativeEvent.oldState === State.ACTIVE) {
+  private handlePanGestureStateChange = ({
+    nativeEvent,
+  }: PanGestureHandlerGestureEvent) => {
+    // @ts-ignore
+    if (nativeEvent.oldState === GestureState.ACTIVE) {
       // Gesture was cancelled! For example, some navigation state update
       // arrived while the gesture was active that cancelled it out
+      // @ts-ignore
       if (this.positionSwitch.__getValue() === 1) {
         return;
       }
 
-      if (this._isMotionVertical()) {
-        this._handleReleaseVertical(nativeEvent);
+      if (this.isMotionVertical()) {
+        this.handleReleaseVertical(nativeEvent);
       } else {
-        this._handleReleaseHorizontal(nativeEvent);
+        this.handleReleaseHorizontal(nativeEvent);
       }
-    } else if (nativeEvent.state === State.ACTIVE) {
+    } else if (nativeEvent.state === GestureState.ACTIVE) {
       this.props.onGestureBegin && this.props.onGestureBegin();
 
       // Switch to using gesture position
@@ -471,12 +560,13 @@ class StackViewLayout extends React.Component {
   // of the gesturePosition, so if we are in the middle of swiping the screen away
   // and back is programatically fired then we will reset to the initial position
   // and animate from there
-  _maybeCancelGesture() {
+  private maybeCancelGesture() {
     this.positionSwitch.setValue(1);
   }
 
-  _prepareGesture() {
-    if (!this._isGestureEnabled()) {
+  private prepareGesture() {
+    if (!this.isGestureEnabled()) {
+      // @ts-ignore
       if (this.positionSwitch.__getValue() !== 1) {
         this.positionSwitch.setValue(1);
       }
@@ -486,23 +576,25 @@ class StackViewLayout extends React.Component {
 
     // We can't run the gesture if width or height layout is unavailable
     if (
+      // @ts-ignore
       this.props.transitionProps.layout.width.__getValue() === 0 ||
+      // @ts-ignore
       this.props.transitionProps.layout.height.__getValue() === 0
     ) {
       return;
     }
 
-    if (this._isMotionVertical()) {
-      this._prepareGestureVertical();
+    if (this.isMotionVertical()) {
+      this.prepareGestureVertical();
     } else {
-      this._prepareGestureHorizontal();
+      this.prepareGestureHorizontal();
     }
   }
 
-  _prepareGestureHorizontal() {
+  private prepareGestureHorizontal() {
     const { index } = this.props.transitionProps.navigation.state;
 
-    if (this._isMotionInverted()) {
+    if (this.isMotionInverted()) {
       this.gesturePosition = Animated.add(
         index,
         Animated.divide(this.gestureX, this.props.transitionProps.layout.width)
@@ -529,10 +621,10 @@ class StackViewLayout extends React.Component {
     }
   }
 
-  _prepareGestureVertical() {
+  private prepareGestureVertical() {
     const { index } = this.props.transitionProps.navigation.state;
 
-    if (this._isMotionInverted()) {
+    if (this.isMotionInverted()) {
       this.gesturePosition = Animated.add(
         index,
         Animated.divide(this.gestureY, this.props.transitionProps.layout.height)
@@ -559,31 +651,35 @@ class StackViewLayout extends React.Component {
     }
   }
 
-  _handleReleaseHorizontal(nativeEvent) {
+  private handleReleaseHorizontal(
+    nativeEvent: GestureHandlerGestureEventNativeEvent &
+      PanGestureHandlerEventExtra
+  ) {
     const {
       transitionProps: { navigation, position, layout },
     } = this.props;
     const { index } = navigation.state;
     const immediateIndex =
-      this._immediateIndex == null ? index : this._immediateIndex;
+      this.immediateIndex == null ? index : this.immediateIndex;
 
     // Calculate animate duration according to gesture speed and moved distance
+    // @ts-ignore
     const distance = layout.width.__getValue();
-    const movementDirection = this._isMotionInverted() ? -1 : 1;
+    const movementDirection = this.isMotionInverted() ? -1 : 1;
     const movedDistance = movementDirection * nativeEvent.translationX;
     const gestureVelocity = movementDirection * nativeEvent.velocityX;
     const defaultVelocity = distance / ANIMATION_DURATION;
     const velocity = Math.max(Math.abs(gestureVelocity), defaultVelocity);
-    const resetDuration = this._isMotionInverted()
+    const resetDuration = this.isMotionInverted()
       ? (distance - movedDistance) / velocity
       : movedDistance / velocity;
-    const goBackDuration = this._isMotionInverted()
+    const goBackDuration = this.isMotionInverted()
       ? movedDistance / velocity
       : (distance - movedDistance) / velocity;
 
     // Get the current position value and reset to using the statically driven
     // (rather than gesture driven) position.
-    const value = this._computeHorizontalGestureValue(nativeEvent);
+    const value = this.computeHorizontalGestureValue(nativeEvent);
     position.setValue(value);
     this.positionSwitch.setValue(1);
 
@@ -591,12 +687,12 @@ class StackViewLayout extends React.Component {
     // of intent
     if (gestureVelocity < -50) {
       this.props.onGestureCanceled && this.props.onGestureCanceled();
-      this._reset(immediateIndex, resetDuration);
+      this.reset(immediateIndex, resetDuration);
       return;
     }
     if (gestureVelocity > 50) {
       this.props.onGestureEnd && this.props.onGestureEnd();
-      this._goBack(immediateIndex, goBackDuration);
+      this.goBack(immediateIndex, goBackDuration);
       return;
     }
 
@@ -604,24 +700,28 @@ class StackViewLayout extends React.Component {
     // and the back will happen.
     if (value <= index - POSITION_THRESHOLD) {
       this.props.onGestureEnd && this.props.onGestureEnd();
-      this._goBack(immediateIndex, goBackDuration);
+      this.goBack(immediateIndex, goBackDuration);
     } else {
       this.props.onGestureCanceled && this.props.onGestureCanceled();
-      this._reset(immediateIndex, resetDuration);
+      this.reset(immediateIndex, resetDuration);
     }
   }
 
-  _handleReleaseVertical(nativeEvent) {
+  private handleReleaseVertical(
+    nativeEvent: GestureHandlerGestureEventNativeEvent &
+      PanGestureHandlerEventExtra
+  ) {
     const {
       transitionProps: { navigation, position, layout },
     } = this.props;
     const { index } = navigation.state;
     const immediateIndex =
-      this._immediateIndex == null ? index : this._immediateIndex;
+      this.immediateIndex == null ? index : this.immediateIndex;
 
     // Calculate animate duration according to gesture speed and moved distance
+    // @ts-ignore
     const distance = layout.height.__getValue();
-    const isMotionInverted = this._isMotionInverted();
+    const isMotionInverted = this.isMotionInverted();
     const movementDirection = isMotionInverted ? -1 : 1;
     const movedDistance = movementDirection * nativeEvent.translationY;
     const gestureVelocity = movementDirection * nativeEvent.velocityY;
@@ -634,7 +734,7 @@ class StackViewLayout extends React.Component {
       ? movedDistance / velocity
       : (distance - movedDistance) / velocity;
 
-    const value = this._computeVerticalGestureValue(nativeEvent);
+    const value = this.computeVerticalGestureValue(nativeEvent);
     position.setValue(value);
     this.positionSwitch.setValue(1);
 
@@ -642,12 +742,12 @@ class StackViewLayout extends React.Component {
     // of intent
     if (gestureVelocity < -50) {
       this.props.onGestureCanceled && this.props.onGestureCanceled();
-      this._reset(immediateIndex, resetDuration);
+      this.reset(immediateIndex, resetDuration);
       return;
     }
     if (gestureVelocity > 50) {
       this.props.onGestureEnd && this.props.onGestureEnd();
-      this._goBack(immediateIndex, goBackDuration);
+      this.goBack(immediateIndex, goBackDuration);
       return;
     }
 
@@ -655,14 +755,14 @@ class StackViewLayout extends React.Component {
     // and the back will happen.
     if (value <= index - POSITION_THRESHOLD) {
       this.props.onGestureEnd && this.props.onGestureEnd();
-      this._goBack(immediateIndex, goBackDuration);
+      this.goBack(immediateIndex, goBackDuration);
     } else {
       this.props.onGestureCanceled && this.props.onGestureCanceled();
-      this._reset(immediateIndex, resetDuration);
+      this.reset(immediateIndex, resetDuration);
     }
   }
 
-  _getHeaderMode() {
+  private getHeaderMode() {
     if (this.props.headerMode) {
       return this.props.headerMode;
     }
@@ -674,7 +774,7 @@ class StackViewLayout extends React.Component {
     return 'float';
   }
 
-  _getHeaderBackgroundTransitionPreset() {
+  private getHeaderBackgroundTransitionPreset() {
     const { headerBackgroundTransitionPreset } = this.props;
     if (headerBackgroundTransitionPreset) {
       if (
@@ -701,12 +801,12 @@ class StackViewLayout extends React.Component {
     return null;
   }
 
-  _getHeaderLayoutPreset() {
+  private getHeaderLayoutPreset() {
     const { headerLayoutPreset } = this.props;
     if (headerLayoutPreset) {
       if (__DEV__) {
         if (
-          this._getHeaderTransitionPreset() === 'uikit' &&
+          this.getHeaderTransitionPreset() === 'uikit' &&
           headerLayoutPreset === 'left' &&
           Platform.OS === 'ios'
         ) {
@@ -735,10 +835,10 @@ class StackViewLayout extends React.Component {
     }
   }
 
-  _getHeaderTransitionPreset() {
+  private getHeaderTransitionPreset() {
     // On Android or with header mode screen, we always just use in-place,
     // we ignore the option entirely (at least until we have other presets)
-    if (Platform.OS !== 'ios' || this._getHeaderMode() === 'screen') {
+    if (Platform.OS !== 'ios' || this.getHeaderMode() === 'screen') {
       return 'fade-in-place';
     }
 
@@ -760,9 +860,9 @@ class StackViewLayout extends React.Component {
     return 'fade-in-place';
   }
 
-  _getHeaderBackTitleVisible() {
+  private getHeaderBackTitleVisible() {
     const { headerBackTitleVisible } = this.props;
-    const layoutPreset = this._getHeaderLayoutPreset();
+    const layoutPreset = this.getHeaderLayoutPreset();
 
     // Even when we align to center on Android, people should need to opt-in to
     // showing the back title
@@ -775,12 +875,12 @@ class StackViewLayout extends React.Component {
       : enabledByDefault;
   }
 
-  _renderInnerScene(scene) {
+  private renderInnerScene(scene: Scene) {
     const { navigation, getComponent } = scene.descriptor;
     const SceneComponent = getComponent();
 
     const { screenProps } = this.props;
-    const headerMode = this._getHeaderMode();
+    const headerMode = this.getHeaderMode();
     if (headerMode === 'screen') {
       return (
         <View style={styles.container}>
@@ -791,7 +891,7 @@ class StackViewLayout extends React.Component {
               component={SceneComponent}
             />
           </View>
-          {this._renderHeader(scene, headerMode)}
+          {this.renderHeader(scene, headerMode)}
         </View>
       );
     }
@@ -804,20 +904,22 @@ class StackViewLayout extends React.Component {
     );
   }
 
-  _prepareTransitionConfig() {
-    this._transitionConfig = TransitionConfigs.getTransitionConfig(
+  private prepareTransitionConfig() {
+    this.transitionConfig = TransitionConfigs.getTransitionConfig(
       this.props.transitionConfig,
       {
         ...this.props.transitionProps,
         position: this.position,
       },
       this.props.lastTransitionProps,
-      this._isModal()
+      this.isModal()
     );
   }
 
-  _preparePosition() {
+  private preparePosition() {
     if (this.gesturePosition) {
+      // FIXME: this doesn't seem right, there is setValue called in some places
+      // @ts-ignore
       this.position = Animated.add(
         Animated.multiply(
           this.props.transitionProps.position,
@@ -830,7 +932,7 @@ class StackViewLayout extends React.Component {
     }
   }
 
-  _renderCard = scene => {
+  private renderCard = (scene: Scene) => {
     const {
       transitionProps,
       shadowEnabled,
@@ -839,7 +941,7 @@ class StackViewLayout extends React.Component {
       cardStyle,
     } = this.props;
 
-    const { screenInterpolator } = this._transitionConfig;
+    const { screenInterpolator } = this.transitionConfig as TransitionConfig;
     const style =
       screenInterpolator &&
       screenInterpolator({
@@ -854,8 +956,10 @@ class StackViewLayout extends React.Component {
     // padding on the scene.
     const { options } = scene.descriptor;
     const hasHeader = options.header !== null;
-    const headerMode = this._getHeaderMode();
-    let floatingContainerStyle = StyleSheet.absoluteFill;
+    const headerMode = this.getHeaderMode();
+
+    let floatingContainerStyle: ViewStyle = StyleSheet.absoluteFill as ViewStyle;
+
     if (hasHeader && headerMode === 'float' && !options.headerTransparent) {
       floatingContainerStyle = {
         ...Platform.select({ web: {}, default: StyleSheet.absoluteFillObject }),
@@ -874,7 +978,7 @@ class StackViewLayout extends React.Component {
         style={[floatingContainerStyle, cardStyle]}
         scene={scene}
       >
-        {this._renderInnerScene(scene)}
+        {this.renderInnerScene(scene)}
       </Card>
     );
   };
@@ -894,6 +998,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   floatingHeader: {
+    // @ts-ignore
     position: Platform.select({ default: 'absolute', web: 'fixed' }),
     left: 0,
     top: 0,

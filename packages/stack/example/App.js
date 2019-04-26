@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { Asset } from 'expo';
 import { FlatList, I18nManager } from 'react-native';
 import {

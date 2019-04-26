@@ -1,5 +1,5 @@
 /* eslint react/display-name:0 */
-import React from 'react';
+import * as React from 'react';
 import renderer from 'react-test-renderer';
 import Transitioner from '../Transitioner';
 

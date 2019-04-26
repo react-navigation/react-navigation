@@ -1,4 +1,5 @@
 import { NativeModules } from 'react-native';
+
 const { PlatformConstants } = NativeModules;
 
 export const supportsImprovedSpringAnimation = () => {

@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { Button, Text, View, StyleSheet } from 'react-native';
 import { BarCodeScanner } from 'expo';
 import { withNavigationFocus } from '@react-navigation/core';

@@ -1,19 +1,36 @@
-import React from 'react';
-import { I18nManager, Image, Text, View, StyleSheet } from 'react-native';
+import * as React from 'react';
+import {
+  I18nManager,
+  Image,
+  Text,
+  View,
+  StyleSheet,
+  LayoutChangeEvent,
+} from 'react-native';
 
 import TouchableItem from '../TouchableItem';
 
 import defaultBackImage from '../assets/back-icon.png';
+import { HeaderBackbuttonProps } from '../../types';
 
-class ModularHeaderBackButton extends React.PureComponent {
+type Props = HeaderBackbuttonProps & {
+  LabelContainerComponent: React.ComponentType;
+  ButtonContainerComponent: React.ComponentType;
+};
+
+type State = {
+  initialTextWidth?: number;
+};
+
+class ModularHeaderBackButton extends React.PureComponent<Props, State> {
   static defaultProps = {
     tintColor: '#037aff',
     truncatedTitle: 'Back',
   };
 
-  state = {};
+  state: State = {};
 
-  _onTextLayout = e => {
+  private onTextLayout = (e: LayoutChangeEvent) => {
     if (this.state.initialTextWidth) {
       return;
     }
@@ -22,35 +39,30 @@ class ModularHeaderBackButton extends React.PureComponent {
     });
   };
 
-  _renderBackImage() {
+  private renderBackImage() {
     const { backImage, backTitleVisible, tintColor } = this.props;
-
-    let BackImage;
-    let props;
 
     if (React.isValidElement(backImage)) {
       return backImage;
     } else if (backImage) {
-      BackImage = backImage;
-      props = {
-        tintColor,
-      };
-    } else {
-      BackImage = Image;
-      props = {
-        style: [
-          styles.icon,
-          !!backTitleVisible && styles.iconWithTitle,
-          !!tintColor && { tintColor },
-        ],
-        source: defaultBackImage,
-      };
-    }
+      const BackImage = backImage;
 
-    return <BackImage {...props} />;
+      return <BackImage tintColor={tintColor} />;
+    } else {
+      return (
+        <Image
+          style={[
+            styles.icon,
+            !!backTitleVisible && styles.iconWithTitle,
+            !!tintColor && { tintColor },
+          ]}
+          source={defaultBackImage}
+        />
+      );
+    }
   }
 
-  _getTitleText = () => {
+  private getTitleText = () => {
     const { width, title, truncatedTitle } = this.props;
 
     let { initialTextWidth } = this.state;
@@ -66,9 +78,9 @@ class ModularHeaderBackButton extends React.PureComponent {
     }
   };
 
-  _maybeRenderTitle() {
+  private maybeRenderTitle() {
     const { backTitleVisible, titleStyle, tintColor } = this.props;
-    let backTitleText = this._getTitleText();
+    let backTitleText = this.getTitleText();
 
     if (!backTitleVisible || backTitleText === null) {
       return null;
@@ -80,7 +92,7 @@ class ModularHeaderBackButton extends React.PureComponent {
       <LabelContainerComponent>
         <Text
           accessible={false}
-          onLayout={this._onTextLayout}
+          onLayout={this.onTextLayout}
           style={[
             styles.title,
             !!tintColor && { color: tintColor },
@@ -88,7 +100,7 @@ class ModularHeaderBackButton extends React.PureComponent {
           ]}
           numberOfLines={1}
         >
-          {this._getTitleText()}
+          {this.getTitleText()}
         </Text>
       </LabelContainerComponent>
     );
@@ -111,9 +123,9 @@ class ModularHeaderBackButton extends React.PureComponent {
       >
         <View style={styles.container}>
           <ButtonContainerComponent>
-            {this._renderBackImage()}
+            {this.renderBackImage()}
           </ButtonContainerComponent>
-          {this._maybeRenderTitle()}
+          {this.maybeRenderTitle()}
         </View>
       </TouchableItem>
     );

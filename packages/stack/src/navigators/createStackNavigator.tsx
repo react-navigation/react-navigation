@@ -2,8 +2,23 @@ import { StackRouter, createNavigator } from '@react-navigation/core';
 import { createKeyboardAwareNavigator } from '@react-navigation/native';
 import { Platform } from 'react-native';
 import StackView from '../views/StackView/StackView';
+import { NavigationStackOptions, NavigationProp, Screen } from '../types';
 
-function createStackNavigator(routeConfigMap, stackConfig = {}) {
+function createStackNavigator(
+  routeConfigMap: {
+    [key: string]:
+      | Screen
+      | ({ screen: Screen } | { getScreen(): Screen }) & {
+          path?: string;
+          navigationOptions?:
+            | NavigationStackOptions
+            | ((options: {
+                navigation: NavigationProp;
+              }) => NavigationStackOptions);
+        };
+  },
+  stackConfig: NavigationStackOptions = {}
+) {
   const router = StackRouter(routeConfigMap, stackConfig);
 
   // Create a navigator with StackView as the view

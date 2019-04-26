@@ -4,7 +4,7 @@ const hasOwnProperty = Object.prototype.hasOwnProperty;
  * inlined Object.is polyfill to avoid requiring consumers ship their own
  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is
  */
-function is(x, y) {
+function is(x: any, y: any) {
   // SameValue algorithm
   if (x === y) {
     // Steps 1-5, 7-10
@@ -22,7 +22,7 @@ function is(x, y) {
  * when any key has values which are not strictly equal between the arguments.
  * Returns true when the values of all keys are strictly equal.
  */
-function shallowEqual(objA, objB) {
+function shallowEqual(objA: any, objB: any) {
   if (is(objA, objB)) {
     return true;
   }

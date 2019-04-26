@@ -1,10 +1,29 @@
-import React from 'react';
-import { Animated, StyleSheet, Platform } from 'react-native';
+import * as React from 'react';
+import {
+  Animated,
+  StyleSheet,
+  Platform,
+  StyleProp,
+  ViewStyle,
+} from 'react-native';
 import { Screen } from 'react-native-screens';
-import createPointerEventsContainer from './createPointerEventsContainer';
+import createPointerEventsContainer, {
+  InputProps,
+  InjectedProps,
+} from './createPointerEventsContainer';
+
+type Props = InputProps &
+  InjectedProps & {
+    style: StyleProp<ViewStyle>;
+    animatedStyle: any;
+    position: Animated.AnimatedInterpolation;
+    transparent?: boolean;
+    children: React.ReactNode;
+  };
 
 const EPS = 1e-5;
-function getAccessibilityProps(isActive) {
+
+function getAccessibilityProps(isActive: boolean) {
   if (Platform.OS === 'ios') {
     return {
       accessibilityElementsHidden: !isActive,
@@ -21,7 +40,7 @@ function getAccessibilityProps(isActive) {
 /**
  * Component that renders the scene as card for the <StackView />.
  */
-class Card extends React.Component {
+class Card extends React.Component<Props> {
   render() {
     const {
       children,
@@ -32,8 +51,9 @@ class Card extends React.Component {
       scene: { index, isActive },
     } = this.props;
 
-    const active = Platform.select({
+    const active: Animated.Value | number | boolean = Platform.select({
       web: isActive,
+      // @ts-ignore
       default:
         transparent || isActive
           ? 1
@@ -61,6 +81,7 @@ class Card extends React.Component {
         pointerEvents={pointerEvents}
         onComponentRef={this.props.onComponentRef}
         style={[containerAnimatedStyle, screenStyle]}
+        // @ts-ignore
         active={active}
       >
         {!transparent && shadowOpacity ? (

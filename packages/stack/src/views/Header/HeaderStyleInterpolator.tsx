@@ -1,7 +1,8 @@
 import { Dimensions, I18nManager } from 'react-native';
 import getSceneIndicesForInterpolationInputRange from '../../utils/getSceneIndicesForInterpolationInputRange';
+import { Scene, SceneInterpolatorProps } from '../../types';
 
-function hasHeader(scene) {
+function hasHeader(scene: Scene) {
   if (!scene) {
     return true;
   }
@@ -9,7 +10,12 @@ function hasHeader(scene) {
   return descriptor.options.header !== null;
 }
 
-const crossFadeInterpolation = (scenes, first, index, last) => ({
+const crossFadeInterpolation = (
+  scenes: Scene[],
+  first: number,
+  index: number,
+  last: number
+): { inputRange: number[]; outputRange: number[]; extrapolate: 'clamp' } => ({
   inputRange: [
     first,
     first + 0.001,
@@ -42,12 +48,12 @@ const crossFadeInterpolation = (scenes, first, index, last) => ({
  * +-------------+-------------+-------------+
  */
 
-function isGoingBack(scenes) {
+function isGoingBack(scenes: Scene[]) {
   const lastSceneIndexInScenes = scenes.length - 1;
   return !scenes[lastSceneIndexInScenes].isActive;
 }
 
-function forLayout(props) {
+function forLayout(props: SceneInterpolatorProps) {
   const { layout, position, scene, scenes, mode } = props;
   if (mode !== 'float') {
     return {};
@@ -96,7 +102,7 @@ function forLayout(props) {
   };
 }
 
-function forLeft(props) {
+function forLeft(props: SceneInterpolatorProps) {
   const { position, scene, scenes } = props;
   const interpolate = getSceneIndicesForInterpolationInputRange(props);
 
@@ -112,7 +118,7 @@ function forLeft(props) {
   };
 }
 
-function forCenter(props) {
+function forCenter(props: SceneInterpolatorProps) {
   const { position, scene, scenes } = props;
   const interpolate = getSceneIndicesForInterpolationInputRange(props);
 
@@ -128,7 +134,7 @@ function forCenter(props) {
   };
 }
 
-function forRight(props) {
+function forRight(props: SceneInterpolatorProps) {
   const { position, scene, scenes } = props;
   const interpolate = getSceneIndicesForInterpolationInputRange(props);
 
@@ -147,7 +153,7 @@ function forRight(props) {
  * iOS UINavigationController style interpolators
  */
 
-function forLeftButton(props) {
+function forLeftButton(props: SceneInterpolatorProps) {
   const { position, scene, scenes } = props;
   const interpolate = getSceneIndicesForInterpolationInputRange(props);
 
@@ -197,7 +203,8 @@ function forLeftButton(props) {
  * - 25 is the width of the left button icon (to account for label offset)
  */
 const LEFT_LABEL_OFFSET = Dimensions.get('window').width / 2 - 70 - 25;
-function forLeftLabel(props) {
+
+function forLeftLabel(props: SceneInterpolatorProps) {
   const { position, scene, scenes } = props;
   const interpolate = getSceneIndicesForInterpolationInputRange(props);
 
@@ -273,7 +280,8 @@ function forLeftLabel(props) {
  * - 25 is the width of the left button icon (to account for label offset)
  */
 const TITLE_OFFSET_IOS = Dimensions.get('window').width / 2 - 70 + 25;
-function forCenterFromLeft(props) {
+
+function forCenterFromLeft(props: SceneInterpolatorProps) {
   const { position, scene, scenes } = props;
   const interpolate = getSceneIndicesForInterpolationInputRange(props);
 
@@ -332,7 +340,7 @@ function forCenterFromLeft(props) {
 }
 
 // Fade in background of header while transitioning
-function forBackgroundWithFade(props) {
+function forBackgroundWithFade(props: SceneInterpolatorProps) {
   const { position, scene } = props;
   const sceneRange = getSceneIndicesForInterpolationInputRange(props);
   if (!sceneRange) return { opacity: 0 };
@@ -349,13 +357,17 @@ const VISIBLE = { opacity: 1 };
 const HIDDEN = { opacity: 0 };
 
 // Toggle visibility of header without fading
-function forBackgroundWithInactiveHidden({ navigation, scene }) {
+function forBackgroundWithInactiveHidden({
+  navigation,
+  scene,
+}: SceneInterpolatorProps) {
   return navigation.state.index === scene.index ? VISIBLE : HIDDEN;
 }
 
 // Translate the background with the card
 const BACKGROUND_OFFSET = Dimensions.get('window').width;
-function forBackgroundWithTranslation(props) {
+
+function forBackgroundWithTranslation(props: SceneInterpolatorProps) {
   const { position, scene } = props;
   const interpolate = getSceneIndicesForInterpolationInputRange(props);
   if (!interpolate) return { opacity: 0 };

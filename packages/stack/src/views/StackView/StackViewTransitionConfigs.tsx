@@ -1,6 +1,7 @@
 import { Animated, Easing, Platform } from 'react-native';
 import StyleInterpolator from './StackViewStyleInterpolator';
 import { supportsImprovedSpringAnimation } from '../../utils/ReactNativeFeatures';
+import { TransitionProps, TransitionConfig } from '../../types';
 
 let IOSTransitionSpec;
 if (supportsImprovedSpringAnimation()) {
@@ -75,10 +76,10 @@ const NoAnimation = {
 };
 
 function defaultTransitionConfig(
-  transitionProps,
-  prevTransitionProps,
-  isModal
-) {
+  transitionProps: TransitionProps,
+  prevTransitionProps?: TransitionProps,
+  isModal?: boolean
+): TransitionConfig {
   if (Platform.OS !== 'ios') {
     // Use the default Android animation no matter if the screen is a modal.
     // Android doesn't have full-screen modals like iOS does, it has dialogs.
@@ -98,12 +99,18 @@ function defaultTransitionConfig(
   return SlideFromRightIOS;
 }
 
-function getTransitionConfig(
-  transitionConfigurer,
-  transitionProps,
-  prevTransitionProps,
-  isModal
-) {
+function getTransitionConfig<T = {}>(
+  transitionConfigurer:
+    | undefined
+    | ((
+        transitionProps: TransitionProps,
+        prevTransitionProps?: TransitionProps,
+        isModal?: boolean
+      ) => T),
+  transitionProps: TransitionProps,
+  prevTransitionProps?: TransitionProps,
+  isModal?: boolean
+): TransitionConfig & T {
   const defaultConfig = defaultTransitionConfig(
     transitionProps,
     prevTransitionProps,
@@ -115,7 +122,8 @@ function getTransitionConfig(
       ...transitionConfigurer(transitionProps, prevTransitionProps, isModal),
     };
   }
-  return defaultConfig;
+
+  return defaultConfig as any;
 }
 
 export default {

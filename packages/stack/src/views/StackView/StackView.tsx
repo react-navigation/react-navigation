@@ -1,9 +1,27 @@
-import React from 'react';
+import * as React from 'react';
 
 import { StackActions } from '@react-navigation/core';
 import StackViewLayout from './StackViewLayout';
 import Transitioner from '../Transitioner';
 import TransitionConfigs from './StackViewTransitionConfigs';
+import {
+  NavigationProp,
+  SceneDescriptor,
+  NavigationConfig,
+  TransitionProps,
+  Scene,
+} from '../../types';
+
+type Props = {
+  screenProps: unknown;
+  navigation: NavigationProp;
+  descriptors: { [key: string]: SceneDescriptor };
+  navigationConfig: NavigationConfig;
+  onTransitionStart?: () => void;
+  onGestureBegin?: () => void;
+  onGestureCanceled?: () => void;
+  onGestureEnd?: () => void;
+};
 
 const USE_NATIVE_DRIVER = true;
 
@@ -16,12 +34,12 @@ const DefaultNavigationConfig = {
   cardOverlayEnabled: false,
 };
 
-class StackView extends React.Component {
+class StackView extends React.Component<Props> {
   render() {
     return (
       <Transitioner
-        render={this._render}
-        configureTransition={this._configureTransition}
+        render={this.renderStackviewLayout}
+        configureTransition={this.configureTransition}
         screenProps={this.props.screenProps}
         navigation={this.props.navigation}
         descriptors={this.props.descriptors}
@@ -29,7 +47,7 @@ class StackView extends React.Component {
           this.props.onTransitionStart ||
           this.props.navigationConfig.onTransitionStart
         }
-        onTransitionEnd={this._onTransitionEnd}
+        onTransitionEnd={this.handleTransitionEnd}
       />
     );
   }
@@ -45,7 +63,10 @@ class StackView extends React.Component {
     }
   }
 
-  _configureTransition = (transitionProps, prevTransitionProps) => {
+  private configureTransition = (
+    transitionProps: TransitionProps,
+    prevTransitionProps?: TransitionProps
+  ) => {
     return {
       useNativeDriver: USE_NATIVE_DRIVER,
       ...TransitionConfigs.getTransitionConfig(
@@ -57,7 +78,7 @@ class StackView extends React.Component {
     };
   };
 
-  _getShadowEnabled = () => {
+  private getShadowEnabled = () => {
     const { navigationConfig } = this.props;
     return navigationConfig &&
       navigationConfig.hasOwnProperty('cardShadowEnabled')
@@ -65,7 +86,7 @@ class StackView extends React.Component {
       : DefaultNavigationConfig.cardShadowEnabled;
   };
 
-  _getCardOverlayEnabled = () => {
+  private getCardOverlayEnabled = () => {
     const { navigationConfig } = this.props;
     return navigationConfig &&
       navigationConfig.hasOwnProperty('cardOverlayEnabled')
@@ -73,28 +94,34 @@ class StackView extends React.Component {
       : DefaultNavigationConfig.cardOverlayEnabled;
   };
 
-  _render = (transitionProps, lastTransitionProps) => {
+  private renderStackviewLayout = (
+    transitionProps: TransitionProps,
+    lastTransitionProps?: TransitionProps
+  ) => {
     const { screenProps, navigationConfig } = this.props;
     return (
       <StackViewLayout
         {...navigationConfig}
-        shadowEnabled={this._getShadowEnabled()}
-        cardOverlayEnabled={this._getCardOverlayEnabled()}
+        shadowEnabled={this.getShadowEnabled()}
+        cardOverlayEnabled={this.getCardOverlayEnabled()}
         onGestureBegin={this.props.onGestureBegin}
         onGestureCanceled={this.props.onGestureCanceled}
         onGestureEnd={this.props.onGestureEnd}
         screenProps={screenProps}
-        descriptors={this.props.descriptors}
         transitionProps={transitionProps}
         lastTransitionProps={lastTransitionProps}
       />
     );
   };
 
-  _onTransitionEnd = (transition, lastTransition) => {
+  private handleTransitionEnd = (
+    transition: { scene: Scene; navigation: NavigationProp },
+    lastTransition?: { scene: Scene; navigation: NavigationProp }
+  ) => {
     const {
       navigationConfig,
       navigation,
+      // @ts-ignore
       onTransitionEnd = navigationConfig.onTransitionEnd,
     } = this.props;
     const transitionDestKey = transition.scene.route.key;

@@ -1,5 +1,6 @@
 import { I18nManager } from 'react-native';
 import getSceneIndicesForInterpolationInputRange from '../../utils/getSceneIndicesForInterpolationInputRange';
+import { SceneInterpolatorProps } from '../../types';
 
 const EPS = 1e-5;
 
@@ -21,7 +22,7 @@ const EPS = 1e-5;
 /**
  * Render the initial style when the initial layout isn't measured yet.
  */
-function forInitial(props) {
+function forInitial(props: SceneInterpolatorProps) {
   const { navigation, scene } = props;
 
   const focused = navigation.state.index === scene.index;
@@ -37,7 +38,7 @@ function forInitial(props) {
 /**
  * Standard iOS-style slide in from the right.
  */
-function forHorizontal(props) {
+function forHorizontal(props: SceneInterpolatorProps) {
   const { layout, position, scene } = props;
 
   if (!layout.isMeasured) {
@@ -85,7 +86,7 @@ function forHorizontal(props) {
 /**
  * Standard iOS-style slide in from the bottom (used for modals).
  */
-function forVertical(props) {
+function forVertical(props: SceneInterpolatorProps) {
   const { layout, position, scene } = props;
 
   if (!layout.isMeasured) {
@@ -112,7 +113,7 @@ function forVertical(props) {
 /**
  * Standard Android-style fade in from the bottom.
  */
-function forFadeFromBottomAndroid(props) {
+function forFadeFromBottomAndroid(props: SceneInterpolatorProps) {
   const { layout, position, scene } = props;
 
   if (!layout.isMeasured) {
@@ -144,7 +145,7 @@ function forFadeFromBottomAndroid(props) {
   };
 }
 
-function forFadeToBottomAndroid(props) {
+function forFadeToBottomAndroid(props: SceneInterpolatorProps) {
   const { layout, position, scene } = props;
 
   if (!layout.isMeasured) {
@@ -182,7 +183,7 @@ function forFadeToBottomAndroid(props) {
 /**
  *  fadeIn and fadeOut
  */
-function forFade(props) {
+function forFade(props: SceneInterpolatorProps) {
   const { layout, position, scene } = props;
 
   if (!layout.isMeasured) {

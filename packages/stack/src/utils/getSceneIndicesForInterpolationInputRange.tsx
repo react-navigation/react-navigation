@@ -1,4 +1,11 @@
-function getSceneIndicesForInterpolationInputRange(props) {
+import { Scene } from '../types';
+
+type Props = {
+  scene: Scene;
+  scenes: Scene[];
+};
+
+function getSceneIndicesForInterpolationInputRange(props: Props) {
   const { scene, scenes } = props;
   const index = scene.index;
   const lastSceneIndexInScenes = scenes.length - 1;
