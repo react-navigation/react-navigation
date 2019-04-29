@@ -1102,7 +1102,7 @@ declare module 'react-navigation' {
     drawConfig?: TabNavigatorConfig
   ): NavigationContainer;
 
-  export interface TabBarTopProps {
+  export interface MaterialTopTabBarProps {
     activeTintColor: string;
     inactiveTintColor: string;
     indicatorStyle: StyleProp<ViewStyle>;
@@ -1157,7 +1157,7 @@ declare module 'react-navigation' {
     showIcon?: boolean;
   }
 
-  export const TabBarTop: React.ComponentType<TabBarTopProps>;
+  export const MaterialTopTabBar: React.ComponentType<MaterialTopTabBarProps>;
   export const BottomTabBar: React.ComponentType<BottomTabBarProps>;
 
   /**
