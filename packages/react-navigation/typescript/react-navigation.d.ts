@@ -472,6 +472,8 @@ declare module 'react-navigation' {
     headerPressColorAndroid?: string;
     headerRight?: React.ReactElement<any> | null;
     headerStyle?: StyleProp<ViewStyle>;
+    headerLeftContainerStyle?: StyleProp<ViewStyle>;
+    headerRightContainerStyle?: StyleProp<ViewStyle>;
     headerForceInset?: HeaderForceInset;
     headerBackground?: React.ReactNode | React.ReactType;
     headerBackgroundTransitionPreset?: 'toggle' | 'fade' | 'translate';
