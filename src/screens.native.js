@@ -58,7 +58,7 @@ export class Screen extends React.Component {
 
       return <Animated.View {...props} ref={this.setRef} />;
     } else if (version.minor >= 57) {
-      return <AnimatedNativeScreen {...this.props} />;
+      return <AnimatedNativeScreen {...this.props} ref={this.setRef} />;
     } else {
       // On RN version below 0.57 we need to wrap screen's children with an
       // additional View because of a bug fixed in react-native/pull/20658 which
