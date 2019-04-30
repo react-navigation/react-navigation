@@ -213,6 +213,21 @@ SceneMap({
 
 Always define your components elsewhere in the top level of the file. If you pass inline functions, it'll re-create the component every render, which will cause the entire route to unmount and remount every change. It's very bad for performance and will also cause any local state to be lost.
 
+If you need to pass additional props, use a custom `renderScene` function:
+
+```js
+renderScene = ({ route }) => {
+  switch (route.key) {
+    case 'first':
+      return <FirstRoute foo={this.props.foo} />;
+    case 'second':
+      return <SecondRoute />;
+    default:
+      return null;
+  }
+};
+```
+
 ##### `renderTabBar`
 
 Callback which returns a custom React Element to use as the tab bar:
@@ -539,6 +554,14 @@ renderScene = ({ route }) => {
 ### Avoid rendering TabView inside ScrollView
 
 Nesting the `TabView` inside a vertical `ScrollView` will disable the optimizations in the `FlatList` components rendered inside the `TabView`. So avoid doing it if possible.
+
+### Use `lazy` and `lazyPlaceholder` props to render routes as needed
+
+The `lazy` option is disabled by default to provide a smoother tab switching experience, but you can enable it and provide a `lazyPlaceholder` component for a better lazy loading experience. Enabling `lazy` can improve initial load performance by rendering routes only when they come into view.   Refer the [prop reference](#lazy) for more details.
+
+### Use `removeClippedSubviews` to improve memory usage
+
+On Android, enabling `removeClippedSubviews` can improve memory usage. This option can also affect rendering performance negatively, so it is disabled by default. So make sure to test it when enabling it. Refer the [prop reference](#removeclippedsubviews) for more details.
 
 ## Contributing
 
