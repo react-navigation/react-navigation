@@ -1,15 +1,15 @@
+import * as DrawerAcions from './routers/DrawerActions';
+
 /**
  * Navigators
  */
-/**
- * Router
- */
-import * as DrawerAcions from './routers/DrawerActions';
-
 export {
   default as createDrawerNavigator,
 } from './navigators/createDrawerNavigator';
 
+/**
+ * Router
+ */
 export { DrawerAcions };
 export { default as DrawerRouter } from './routers/DrawerRouter';
 
