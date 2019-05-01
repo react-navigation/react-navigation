@@ -1085,6 +1085,7 @@ declare module 'react-navigation' {
       TabViewConfig {
     lazy?: boolean;
     removeClippedSubviews?: boolean;
+    resetOnBlur?: boolean;
     initialLayout?: InitialLayout;
   }
 
