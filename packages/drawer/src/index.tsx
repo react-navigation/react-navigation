@@ -1,4 +1,4 @@
-import * as DrawerAcions from './routers/DrawerActions';
+import * as DrawerActions from './routers/DrawerActions';
 
 /**
  * Navigators
@@ -10,7 +10,7 @@ export {
 /**
  * Router
  */
-export { DrawerAcions };
+export { DrawerActions };
 export { default as DrawerRouter } from './routers/DrawerRouter';
 
 /**
