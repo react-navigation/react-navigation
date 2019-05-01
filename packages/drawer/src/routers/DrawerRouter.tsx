@@ -15,8 +15,6 @@ type Action = {
 
 type State = Route & {
   isDrawerOpen?: any;
-  isDrawerIdle?: any;
-  drawerMovementDirection?: any;
 };
 
 function withDefaultValue(obj: object, key: string, defaultValue: any): any {
@@ -60,12 +58,6 @@ export default (
 
   const switchRouter = SwitchRouter(routeConfigs, config);
 
-  let __id = -1;
-  const genId = () => {
-    __id++;
-    return __id;
-  };
-
   return {
     ...switchRouter,
 
@@ -84,11 +76,6 @@ export default (
         return {
           ...switchRouter.getStateForAction(action, undefined),
           isDrawerOpen: false,
-          isDrawerIdle: true,
-          drawerMovementDirection: null,
-          openId: genId(),
-          closeId: genId(),
-          toggleId: genId(),
         };
       }
 
@@ -96,78 +83,27 @@ export default (
 
       if (isRouterTargeted) {
         // Only handle actions that are meant for this drawer, as specified by action.key.
-
-        if (action.type === DrawerActions.DRAWER_CLOSED) {
-          return {
-            ...state,
-            isDrawerOpen: false,
-            isDrawerIdle: true,
-            drawerMovementDirection: null,
-          };
-        }
-
-        if (action.type === DrawerActions.DRAWER_OPENED) {
-          return {
-            ...state,
-            isDrawerOpen: true,
-            isDrawerIdle: true,
-            drawerMovementDirection: null,
-          };
-        }
-
-        if (action.type === DrawerActions.CLOSE_DRAWER) {
-          return {
-            ...state,
-            closeId: genId(),
-          };
-        }
-
-        if (action.type === DrawerActions.MARK_DRAWER_SETTLING) {
-          return {
-            ...state,
-            isDrawerIdle: false,
-            drawerMovementDirection: action.willShow ? 'opening' : 'closing',
-          };
-        }
-
-        if (action.type === DrawerActions.MARK_DRAWER_ACTIVE) {
-          return {
-            ...state,
-            isDrawerIdle: false,
-            drawerMovementDirection: null,
-          };
-        }
-
-        if (action.type === DrawerActions.MARK_DRAWER_IDLE) {
-          return {
-            ...state,
-            isDrawerIdle: true,
-            drawerMovementDirection: null,
-          };
-        }
-
         if (
-          action.type === NavigationActions.BACK &&
-          (state.isDrawerOpen || !state.isDrawerIdle) &&
-          state.drawerMovementDirection !== 'closing'
+          action.type === DrawerActions.CLOSE_DRAWER ||
+          (action.type === NavigationActions.BACK && state.isDrawerOpen)
         ) {
           return {
             ...state,
-            closeId: genId(),
+            isDrawerOpen: false,
           };
         }
 
         if (action.type === DrawerActions.OPEN_DRAWER) {
           return {
             ...state,
-            openId: genId(),
+            isDrawerOpen: true,
           };
         }
 
         if (action.type === DrawerActions.TOGGLE_DRAWER) {
           return {
             ...state,
-            toggleId: genId(),
+            isDrawerOpen: !state.isDrawerOpen,
           };
         }
       }
@@ -185,11 +121,11 @@ export default (
         // If any navigation has happened, and the drawer is maybe open, make sure to close it
         if (
           getActiveRouteKey(switchedState) !== getActiveRouteKey(state) &&
-          (state.isDrawerOpen || state.drawerMovementDirection !== 'closing')
+          state.isDrawerOpen
         ) {
           return {
             ...switchedState,
-            closeId: genId(),
+            isDrawerOpen: false,
           };
         }
 

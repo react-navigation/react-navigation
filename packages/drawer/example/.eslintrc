@@ -1,7 +1,14 @@
 {
-  "extends": '../.eslintrc',
+  'extends': '../.eslintrc',
 
-  "settings": {
-    "import/core-modules": [ "react-navigation-drawer", "react-native-gesture-handler", "react-native-vector-icons" ]
-  }
+  'settings':
+    {
+      'import/core-modules':
+        [
+          'react-navigation-drawer',
+          'react-native-gesture-handler',
+          'react-native-reanimated',
+          'react-native-vector-icons',
+        ],
+    },
 }

@@ -10,8 +10,8 @@
     "eject": "expo eject"
   },
   "dependencies": {
-    "@react-navigation/core": "^3.3.0",
-    "@react-navigation/native": "^3.3.0",
+    "@react-navigation/core": "^3.4.0",
+    "@react-navigation/native": "^3.4.1",
     "expo": "32.0.6",
     "hoist-non-react-statics": "^3.3.0",
     "react": "16.5.0",

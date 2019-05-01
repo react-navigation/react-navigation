@@ -12,143 +12,136 @@ import * as DrawerActions from '../../routers/DrawerActions';
 
 const INIT_ACTION = { type: NavigationActions.INIT };
 
-describe('DrawerRouter', () => {
-  it('Handles basic drawer logic and fires close on switch', () => {
-    const ScreenA = () => <div />;
-    const ScreenB = () => <div />;
-    const router = DrawerRouter({
-      Foo: { screen: ScreenA },
-      Bar: { screen: ScreenB },
-    });
-    const state = router.getStateForAction(INIT_ACTION);
-    const expectedState = {
-      index: 0,
-      isTransitioning: false,
-      routes: [
-        { key: 'Foo', routeName: 'Foo', params: undefined },
-        { key: 'Bar', routeName: 'Bar', params: undefined },
-      ],
-      isDrawerOpen: false,
-      isDrawerIdle: true,
-      drawerMovementDirection: null,
-      openId: 0,
-      closeId: 1,
-      toggleId: 2,
-    };
-    expect(state).toEqual(expectedState);
-    const state2 = router.getStateForAction(
-      { type: NavigationActions.NAVIGATE, routeName: 'Bar' },
-      state
-    );
-    const expectedState2 = {
-      index: 1,
-      isTransitioning: false,
-      routes: [
-        { key: 'Foo', routeName: 'Foo', params: undefined },
-        { key: 'Bar', routeName: 'Bar', params: undefined },
-      ],
-      isDrawerOpen: false,
-      isDrawerIdle: true,
-      drawerMovementDirection: null,
-      openId: 0,
-      closeId: 3,
-      toggleId: 2,
-    };
-    expect(state2).toEqual(expectedState2);
-    expect(router.getComponentForState(expectedState)).toEqual(ScreenA);
-    expect(router.getComponentForState(expectedState2)).toEqual(ScreenB);
+it('handles basic drawer logic and fires close on switch', () => {
+  const ScreenA = () => <div />;
+  const ScreenB = () => <div />;
+  const router = DrawerRouter({
+    Foo: { screen: ScreenA },
+    Bar: { screen: ScreenB },
   });
+  const state = router.getStateForAction(INIT_ACTION);
+  const expectedState = {
+    index: 0,
+    isTransitioning: false,
+    routes: [
+      { key: 'Foo', routeName: 'Foo', params: undefined },
+      { key: 'Bar', routeName: 'Bar', params: undefined },
+    ],
+    isDrawerOpen: false,
+  };
+  expect(state).toEqual(expectedState);
+  const state2 = router.getStateForAction(
+    { type: NavigationActions.NAVIGATE, routeName: 'Bar' },
+    state
+  );
+  const expectedState2 = {
+    index: 1,
+    isTransitioning: false,
+    routes: [
+      { key: 'Foo', routeName: 'Foo', params: undefined },
+      { key: 'Bar', routeName: 'Bar', params: undefined },
+    ],
+    isDrawerOpen: false,
+  };
+  expect(state2).toEqual(expectedState2);
+  expect(router.getComponentForState(expectedState)).toEqual(ScreenA);
+  expect(router.getComponentForState(expectedState2)).toEqual(ScreenB);
+});
 
-  it('Handles initial route navigation', () => {
-    const FooScreen = () => <div />;
-    const BarScreen = () => <div />;
-    const router = DrawerRouter(
-      {
-        Foo: {
-          screen: FooScreen,
-        },
-        Bar: {
-          screen: BarScreen,
-        },
+it('handles initial route navigation', () => {
+  const FooScreen = () => <div />;
+  const BarScreen = () => <div />;
+  const router = DrawerRouter(
+    {
+      Foo: {
+        screen: FooScreen,
       },
-      { initialRouteName: 'Bar' }
-    );
-    const state = router.getStateForAction({
-      type: NavigationActions.NAVIGATE,
-      routeName: 'Foo',
-    });
-    expect(state).toEqual({
-      index: 0,
-      isDrawerOpen: false,
-      isDrawerIdle: true,
-      drawerMovementDirection: null,
-      isTransitioning: false,
-      openId: 0,
-      closeId: 1,
-      toggleId: 2,
-      routes: [
-        {
-          key: 'Foo',
-          params: undefined,
-          routeName: 'Foo',
-        },
-        {
-          key: 'Bar',
-          params: undefined,
-          routeName: 'Bar',
-        },
-      ],
-    });
+      Bar: {
+        screen: BarScreen,
+      },
+    },
+    { initialRouteName: 'Bar' }
+  );
+  const state = router.getStateForAction({
+    type: NavigationActions.NAVIGATE,
+    routeName: 'Foo',
   });
-
-  it('Drawer opens closes and toggles', () => {
-    const ScreenA = () => <div />;
-    const ScreenB = () => <div />;
-    const router = DrawerRouter({
-      Foo: { screen: ScreenA },
-      Bar: { screen: ScreenB },
-    });
-    const state = router.getStateForAction(INIT_ACTION);
-    expect(state.toggleId).toEqual(2);
-    const state2 = router.getStateForAction(
-      { type: DrawerActions.OPEN_DRAWER },
-      state
-    );
-    expect(state2.openId).toEqual(3);
-    const state3 = router.getStateForAction(
-      { type: DrawerActions.CLOSE_DRAWER },
-      state2
-    );
-    expect(state3.closeId).toEqual(4);
-    const state4 = router.getStateForAction(
-      { type: DrawerActions.TOGGLE_DRAWER },
-      state3
-    );
-    expect(state4.toggleId).toEqual(5);
-  });
-
-  it('Drawer opens closes with key targeted', () => {
-    const ScreenA = () => <div />;
-    const ScreenB = () => <div />;
-    const router = DrawerRouter({
-      Foo: { screen: ScreenA },
-      Bar: { screen: ScreenB },
-    });
-    const state = router.getStateForAction(INIT_ACTION);
-    const state2 = router.getStateForAction(
-      { type: DrawerActions.OPEN_DRAWER, key: 'wrong' },
-      state
-    );
-    expect(state2.openId).toEqual(0);
-    const state3 = router.getStateForAction(
-      { type: DrawerActions.OPEN_DRAWER, key: state.key },
-      state2
-    );
-    expect(state3.openId).toEqual(3);
+  expect(state).toEqual({
+    index: 0,
+    isDrawerOpen: false,
+    isTransitioning: false,
+    routes: [
+      {
+        key: 'Foo',
+        params: undefined,
+        routeName: 'Foo',
+      },
+      {
+        key: 'Bar',
+        params: undefined,
+        routeName: 'Bar',
+      },
+    ],
   });
 });
 
-it('Nested routers bubble up blocked actions', () => {
+it('drawer opens, closes and toggles', () => {
+  const ScreenA = () => <div />;
+  const ScreenB = () => <div />;
+  const router = DrawerRouter({
+    Foo: { screen: ScreenA },
+    Bar: { screen: ScreenB },
+  });
+  const state = router.getStateForAction(INIT_ACTION);
+
+  expect(state.isDrawerOpen).toEqual(false);
+
+  const state2 = router.getStateForAction(
+    { type: DrawerActions.OPEN_DRAWER },
+    state
+  );
+
+  expect(state2.isDrawerOpen).toEqual(true);
+
+  const state3 = router.getStateForAction(
+    { type: DrawerActions.CLOSE_DRAWER },
+    state2
+  );
+
+  expect(state3.isDrawerOpen).toEqual(false);
+
+  const state4 = router.getStateForAction(
+    { type: DrawerActions.TOGGLE_DRAWER },
+    state3
+  );
+
+  expect(state4.isDrawerOpen).toEqual(true);
+});
+
+it('drawer opens, closes with key targeted', () => {
+  const ScreenA = () => <div />;
+  const ScreenB = () => <div />;
+  const router = DrawerRouter({
+    Foo: { screen: ScreenA },
+    Bar: { screen: ScreenB },
+  });
+  const state = router.getStateForAction(INIT_ACTION);
+  const state2 = router.getStateForAction(
+    { type: DrawerActions.OPEN_DRAWER, key: 'wrong' },
+    state
+  );
+
+  expect(state2.isDrawerOpen).toEqual(false);
+
+  const state3 = router.getStateForAction(
+    { type: DrawerActions.OPEN_DRAWER, key: state.key },
+    state2
+  );
+
+  expect(state3.isDrawerOpen).toEqual(true);
+});
+
+it('nested routers bubble up blocked actions', () => {
   const ScreenA = () => <div />;
   ScreenA.router = {
     getStateForAction(action: { type: string }, lastState: any) {
@@ -167,7 +160,7 @@ it('Nested routers bubble up blocked actions', () => {
   expect(state2).toEqual(null);
 });
 
-it('Drawer does not fire close when child routers return new state', () => {
+it('drawer does not fire close when child routers return new state', () => {
   const ScreenA = () => <div />;
   ScreenA.router = {
     getStateForAction(
@@ -184,14 +177,14 @@ it('Drawer does not fire close when child routers return new state', () => {
   });
 
   const state = router.getStateForAction(INIT_ACTION);
-  expect(state.closeId).toEqual(1);
+  expect(state.isDrawerOpen).toEqual(false);
 
   const state2 = router.getStateForAction({ type: 'CHILD_ACTION' }, state);
-  expect(state2.closeId).toEqual(1);
+  expect(state2.isDrawerOpen).toEqual(false);
   expect(state2.routes[0].changed).toEqual(true);
 });
 
-it('DrawerRouter will close drawer on child navigaton, not on child param changes', () => {
+it('drawerRouter will close drawer on child navigaton, not on child param changes', () => {
   class FooView extends React.Component {
     render() {
       return <div />;
@@ -217,13 +210,13 @@ it('DrawerRouter will close drawer on child navigaton, not on child param change
     DrawerActions.openDrawer(),
     emptyState
   );
-  expect(initState.openId).toBe(3);
+  expect(initState.isDrawerOpen).toBe(true);
 
   const state0 = router.getStateForAction(
     NavigationActions.navigate({ routeName: 'Quo' }),
     initState
   );
-  expect(state0.closeId).toBe(4);
+  expect(state0.isDrawerOpen).toBe(false);
 
   const initSwitchState = initState.routes[initState.index];
   const initQuxState = initSwitchState.routes[initSwitchState.index];
@@ -237,7 +230,7 @@ it('DrawerRouter will close drawer on child navigaton, not on child param change
   );
   const state1switchState = state1.routes[state1.index];
   const state1quxState = state1switchState.routes[state1switchState.index];
-  expect(state1.closeId).toBe(1); // don't fire close
+  expect(state1.isDrawerOpen).toBe(true); // don't fire close
   expect(state1quxState.params.foo).toEqual('bar');
 });
 
@@ -266,12 +259,6 @@ it('goBack closes drawer when inside of stack', () => {
   );
   expect(state3.index).toEqual(1);
   expect(state3.routes[1].isDrawerOpen).toEqual(true);
-  expect(state3.routes[1].closeId).toEqual(1); // changed
   const state4 = router.getStateForAction(NavigationActions.back(), state3);
-  expect(state4.routes[1].closeId).toEqual(4);
-  const state5 = router.getStateForAction(
-    { type: DrawerActions.DRAWER_CLOSED },
-    state4
-  );
-  expect(state5.routes[1].isDrawerOpen).toEqual(false);
+  expect(state4.routes[1].isDrawerOpen).toEqual(false);
 });

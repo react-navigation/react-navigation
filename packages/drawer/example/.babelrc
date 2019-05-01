@@ -1,5 +1,12 @@
 {
   "presets": [
     "expo"
+  ],
+  "plugins": [
+    ["module-resolver", {
+      "alias": {
+        "react-navigation-drawer": "../src/index"
+      }
+    }]
   ]
 }

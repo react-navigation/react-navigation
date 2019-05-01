@@ -17,10 +17,6 @@ export type Navigation = {
     key: string;
     index: number;
     routes: Route[];
-    openId: string;
-    closeId: string;
-    toggleId: string;
-    isDrawerIdle: boolean;
     isDrawerOpen: boolean;
   };
   openDrawer: () => void;

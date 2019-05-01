@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Dimensions, Platform, ScrollView } from 'react-native';
+import { Dimensions, Platform, ScrollView, I18nManager } from 'react-native';
 import { createNavigator } from '@react-navigation/core';
 import { SafeAreaView } from '@react-navigation/native';
 import DrawerRouter from '../routers/DrawerRouter';
@@ -35,14 +35,12 @@ const DefaultDrawerConfig = {
     return Math.min(smallerAxisSize - appBarHeight, maxWidth);
   },
   contentComponent: defaultContentComponent,
-  drawerPosition: 'left',
+  drawerPosition: I18nManager.isRTL ? 'right' : 'left',
   keyboardDismissMode: 'on-drag',
   drawerBackgroundColor: 'white',
-  useNativeAnimations: true,
   drawerType: 'front',
   hideStatusBar: false,
   statusBarAnimation: 'slide',
-  overlayColor: 'black',
 };
 
 const DrawerNavigator = (routeConfigs: object, config: any = {}) => {

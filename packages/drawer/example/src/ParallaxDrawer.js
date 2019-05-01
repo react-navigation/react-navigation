@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {
-  Animated,
   Button,
   Dimensions,
   TextInput,
@@ -17,6 +16,7 @@ import { createStackNavigator } from 'react-navigation-stack';
 import { SafeAreaView } from '@react-navigation/native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { createDrawerNavigator } from 'react-navigation-drawer';
+import Animated from 'react-native-reanimated';
 import { KeepAwake } from 'expo';
 
 const SampleText = ({ children }) => <Text>{children}</Text>;
@@ -168,9 +168,9 @@ const DraftsStack = createStackNavigator(
 const DrawerContents = ({ drawerOpenProgress, navigation }) => {
   // `contentComponent` is passed an Animated.Value called drawerOpenProgress
   // that can be used to do interesting things like a simple parallax drawe
-  const translateX = drawerOpenProgress.interpolate({
+  const translateX = Animated.interpolate(drawerOpenProgress, {
     inputRange: [0, 1],
-    outputRange: [-50, 0],
+    outputRange: [-100, 0],
   });
 
   return (
@@ -210,7 +210,6 @@ function createDrawerExample(options = {}) {
     {
       overlayColor: 'rgba(0,0,0,0)',
       drawerType: 'back',
-      useNativeAnimations: true,
       contentContainerStyle: {
         shadowColor: '#000000',
         shadowOpacity: 0.4,

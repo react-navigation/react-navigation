@@ -88,7 +88,7 @@ const DrawerExample = createDrawerNavigator(
       activeTintColor: '#e91e63',
     },
     drawerType: 'back',
-    overlayColor: '#00000000',
+    overlayColor: 'rgba(233, 30, 99, 0.5)',
     hideStatusBar: true,
   }
 );

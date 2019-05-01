@@ -848,20 +848,20 @@
     pouchdb-collections "^1.0.1"
     tiny-queue "^0.2.1"
 
-"@react-navigation/core@^3.3.0":
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/@react-navigation/core/-/core-3.3.0.tgz#a8fa76e1c2a0da588da3d94ec9ea0956b7df753e"
-  integrity sha512-jCtvNnJu6CBctIvaGzL82xedWG0IQv+URwZfKQSkoUgiFViSsUhoDWHgnoRXAlWvR8Js7au3hrC/Cwshwhi9/w==
+"@react-navigation/core@^3.4.0":
+  version "3.4.0"
+  resolved "https://registry.yarnpkg.com/@react-navigation/core/-/core-3.4.0.tgz#776845f9d4f8b2b9cb99c5d2d4433ebcef290d92"
+  integrity sha512-YAnx9mK6P/zYkvn4YxZL6thaNdouSmD7FUaftFrOAbE7y7cCfH8hmk7BOLoOet6Sh2+UnrpkWX7Kg54cT2Jw+g==
   dependencies:
-    hoist-non-react-statics "^2.5.5"
+    hoist-non-react-statics "^3.3.0"
     path-to-regexp "^1.7.0"
-    query-string "^6.2.0"
-    react-is "^16.6.3"
+    query-string "^6.4.2"
+    react-is "^16.8.6"
 
-"@react-navigation/native@^3.3.0":
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/@react-navigation/native/-/native-3.3.0.tgz#def7a94ef17581a404a3de2a3200f986e999dac1"
-  integrity sha512-w/+2B0qX441BpNkYb5QoPY8+Q4Q18adGTahVpc6o8Juj6odAxyIJ2RozXk7dCpN/w0dz4B+5ggqMKHVniE6K7w==
+"@react-navigation/native@^3.4.1":
+  version "3.4.1"
+  resolved "https://registry.yarnpkg.com/@react-navigation/native/-/native-3.4.1.tgz#e1fbf334ac834a9f10dd7d9c3af3e36939486089"
+  integrity sha512-pMAPQfvwC4DvhQfsrXKAf+FiU+A5XAh216v17rEePSFcbeOEt7cvewmWxCxydN/vFjJChFiPV+xnjJyJBdPLOg==
   dependencies:
     hoist-non-react-statics "^3.0.1"
     react-native-safe-area-view "^0.13.0"
@@ -3157,7 +3157,7 @@ has-values@^1.0.0:
     is-number "^3.0.0"
     kind-of "^4.0.0"
 
-hoist-non-react-statics@2.5.0, hoist-non-react-statics@^2.3.1, hoist-non-react-statics@^2.5.0, hoist-non-react-statics@^2.5.5, hoist-non-react-statics@^3.0.1, hoist-non-react-statics@^3.1.0:
+hoist-non-react-statics@2.5.0, hoist-non-react-statics@^2.3.1, hoist-non-react-statics@^2.5.0, hoist-non-react-statics@^3.0.1, hoist-non-react-statics@^3.1.0:
   version "2.5.0"
   resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-2.5.0.tgz#d2ca2dfc19c5a91c5a6615ce8e564ef0347e2a40"
   integrity sha512-6Bl6XsDT1ntE0lHbIhr4Kp2PGcleGZ66qu5Jqk8lc0Xc/IeG6gVLmwUGs/K0Us+L8VWoKgj0uWdPMataOsm31w==
@@ -4831,7 +4831,7 @@ qs@^6.5.0:
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.7.0.tgz#41dc1a015e3d581f1621776be31afb2876a9b1bc"
   integrity sha512-VCdBRNFTX1fyE7Nb6FYoURo/SPe62QCaAyzJvUjwRaIsc+NePBEniHlvxFmmX56+HZphIGtV0XeCirBtpDrTyQ==
 
-query-string@^6.2.0:
+query-string@^6.4.2:
   version "6.4.2"
   resolved "https://registry.yarnpkg.com/query-string/-/query-string-6.4.2.tgz#8be1dbd105306aebf86022144f575a29d516b713"
   integrity sha512-DfJqAen17LfLA3rQ+H5S4uXphrF+ANU1lT2ijds4V/Tj4gZxA3gx5/tg1bz7kYCmwna7LyJNCYqO7jNRzo3aLw==
@@ -4882,7 +4882,7 @@ react-devtools-core@3.3.4:
     shell-quote "^1.6.1"
     ws "^3.3.1"
 
-react-is@^16.6.3, react-is@^16.7.0:
+react-is@^16.7.0, react-is@^16.8.6:
   version "16.8.6"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.8.6.tgz#5bbc1e2d29141c9fbdfed456343fe2bc430a6a16"
   integrity sha512-aUk3bHfZ2bRSVFFbbeVS4i+lNPZr3/WM5jT2J5omUVV1zzcs1nAaf3l51ctA5FFvCRbhrH0bdAsRRQddFJZPtA==
@@ -4906,7 +4906,7 @@ react-native-gesture-handler@~1.0.14:
     invariant "^2.2.2"
     prop-types "^15.5.10"
 
-"react-native-maps@github:expo/react-native-maps#v0.22.1-exp.0":
+react-native-maps@expo/react-native-maps#v0.22.1-exp.0:
   version "0.22.1"
   resolved "https://codeload.github.com/expo/react-native-maps/tar.gz/e6f98ff7272e5d0a7fe974a41f28593af2d77bb2"
 

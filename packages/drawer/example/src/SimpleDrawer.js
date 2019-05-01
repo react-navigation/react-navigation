@@ -176,7 +176,7 @@ function createDrawerExample(options = {}) {
     },
     {
       initialRouteName: 'Drafts',
-      drawerWidth: 210,
+      drawerWidth: '60%',
       navigationOptions: {
         header: null,
       },

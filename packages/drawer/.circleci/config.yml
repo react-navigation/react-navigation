@@ -55,6 +55,12 @@ jobs:
         - store_artifacts:
             path: coverage
             destination: coverage
+  build:
+      <<: *defaults
+      steps:
+        - attach_workspace:
+            at: ~/project
+        - run: yarn prepare
 
 workflows:
   version: 2
@@ -68,5 +74,8 @@ workflows:
           requires:
             - install-dependencies
       - unit-tests:
+          requires:
+            - install-dependencies
+      - build:
           requires:
             - install-dependencies
