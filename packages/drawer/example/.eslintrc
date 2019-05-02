@@ -8,7 +8,7 @@
           'react-navigation-drawer',
           'react-native-gesture-handler',
           'react-native-reanimated',
-          'react-native-vector-icons',
+          'react-native-vector-icons/MaterialIcons',
         ],
     },
 }
