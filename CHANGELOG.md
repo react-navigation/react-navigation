@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Fixes
 
 - Update typescript - `TabBarTop` is now `MaterialTopTabBar`
+- Update typescript - Remove `SwitchNavigator`, `TabNavigator` and `StackNavigator`. Added exports for `SceneView` and `SwitchRouter`
 
 ## [3.9.0] - [2019-04-23](https://github.com/react-navigation/react-navigation/releases/tag/3.9.0)
 
