@@ -440,6 +440,8 @@ declare module 'react-navigation' {
    * Switch Navigator
    */
 
+  export interface SwitchRouter extends NavigationRouter {}
+
   export interface NavigationSwitchRouterConfig {
     initialRouteName?: string;
     initialRouteParams?: NavigationParams;
@@ -931,12 +933,6 @@ declare module 'react-navigation' {
     containerOptions?: any;
   }
 
-  // Return createNavigationContainer
-  export function StackNavigator(
-    routeConfigMap: NavigationRouteConfigMap,
-    stackConfig?: StackNavigatorConfig
-  ): NavigationContainer;
-
   export function createStackNavigator(
     routeConfigMap: NavigationRouteConfigMap,
     stackConfig?: StackNavigatorConfig
@@ -951,11 +947,6 @@ declare module 'react-navigation' {
 
   // Return createNavigationContainer
   export type _SwitchNavigatorConfig = NavigationSwitchRouterConfig;
-
-  export function SwitchNavigator(
-    routeConfigMap: NavigationRouteConfigMap,
-    switchConfig?: SwitchNavigatorConfig
-  ): NavigationContainer;
 
   export function createSwitchNavigator(
     routeConfigMap: NavigationRouteConfigMap,
@@ -1087,12 +1078,6 @@ declare module 'react-navigation' {
     removeClippedSubviews?: boolean;
     initialLayout?: InitialLayout;
   }
-
-  // From navigators/TabNavigator.js
-  export function TabNavigator(
-    routeConfigMap: NavigationRouteConfigMap,
-    drawConfig?: TabNavigatorConfig
-  ): NavigationContainer;
 
   export function createBottomTabNavigator(
     routeConfigMap: NavigationRouteConfigMap,
@@ -1467,4 +1452,16 @@ declare module 'react-navigation' {
   export const NavigationContext: React.Context<NavigationScreenProp<NavigationRoute>>;
   export const StackGestureContext: React.Context<React.Ref<PanGestureHandler>>;
   export const DrawerGestureContext: React.Context<React.Ref<PanGestureHandler>>;
+  
+  /**
+   * SceneView
+   */
+
+  export interface SceneViewProps {
+    component: React.ComponentType;
+    screenProps: ScreenProps;
+    navigation: NavigationScreenProp;
+  }
+
+  export class SceneView extends React.Component {}
 }
