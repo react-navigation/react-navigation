@@ -3,7 +3,6 @@ import { StyleSheet, View, Animated, ViewStyle } from 'react-native';
 import { NavigationActions } from '@react-navigation/core';
 
 import { Props as DrawerNavigatorItemsProps } from './DrawerNavigatorItems';
-import invariant from '../utils/invariant';
 import { Navigation, Scene, Route } from '../types';
 
 export type ContentComponentProps = DrawerNavigatorItemsProps & {
@@ -28,17 +27,20 @@ type Props = {
  * Component that renders the sidebar screen of the drawer.
  */
 class DrawerSidebar extends React.PureComponent<Props> {
-  _getScreenOptions = (routeKey: string) => {
+  private getScreenOptions = (routeKey: string) => {
     const descriptor = this.props.descriptors[routeKey];
-    invariant(
-      descriptor.options,
-      'Cannot access screen descriptor options from drawer sidebar'
-    );
+
+    if (!descriptor.options) {
+      throw new Error(
+        'Cannot access screen descriptor options from drawer sidebar'
+      );
+    }
+
     return descriptor.options;
   };
 
-  _getLabel = ({ focused, tintColor, route }: Scene) => {
-    const { drawerLabel, title } = this._getScreenOptions(route.key);
+  private getLabel = ({ focused, tintColor, route }: Scene) => {
+    const { drawerLabel, title } = this.getScreenOptions(route.key);
     if (drawerLabel) {
       return typeof drawerLabel === 'function'
         ? drawerLabel({ tintColor, focused })
@@ -52,8 +54,8 @@ class DrawerSidebar extends React.PureComponent<Props> {
     return route.routeName;
   };
 
-  _renderIcon = ({ focused, tintColor, route }: Scene) => {
-    const { drawerIcon } = this._getScreenOptions(route.key);
+  private renderIcon = ({ focused, tintColor, route }: Scene) => {
+    const { drawerIcon } = this.getScreenOptions(route.key);
     if (drawerIcon) {
       return typeof drawerIcon === 'function'
         ? drawerIcon({ tintColor, focused })
@@ -62,7 +64,13 @@ class DrawerSidebar extends React.PureComponent<Props> {
     return null;
   };
 
-  _onItemPress = ({ route, focused }: { route: Route; focused: boolean }) => {
+  private handleItemPress = ({
+    route,
+    focused,
+  }: {
+    route: Route;
+    focused: boolean;
+  }) => {
     if (focused) {
       this.props.navigation.closeDrawer();
     } else {
@@ -81,7 +89,11 @@ class DrawerSidebar extends React.PureComponent<Props> {
 
     const { state } = this.props.navigation;
 
-    invariant(typeof state.index === 'number', 'should be set');
+    if (typeof state.index !== 'number') {
+      throw new Error(
+        'The index of the route should be state in the navigation state'
+      );
+    }
 
     return (
       <View style={[styles.container, this.props.style]}>
@@ -95,9 +107,9 @@ class DrawerSidebar extends React.PureComponent<Props> {
             state.routes[state.index] ? state.routes[state.index].key : null
           }
           screenProps={this.props.screenProps}
-          getLabel={this._getLabel}
-          renderIcon={this._renderIcon}
-          onItemPress={this._onItemPress}
+          getLabel={this.getLabel}
+          renderIcon={this.renderIcon}
+          onItemPress={this.handleItemPress}
           drawerPosition={this.props.drawerPosition}
         />
       </View>
