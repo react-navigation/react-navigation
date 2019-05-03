@@ -547,13 +547,14 @@ declare module 'react-navigation' {
     paths?: NavigationPathsConfig;
     order?: string[]; // todo: type these as the real route names rather than 'string'
     backBehavior?: 'none' | 'initialRoute' | 'history' | 'order'; // defaults to 'initialRoute'
+    resetOnBlur?: boolean;
   }
   export interface NavigationTabRouterConfig
     extends NavigationTabRouterConfigBase {
     defaultNavigationOptions?: NavigationScreenConfig<NavigationScreenOptions>;
     navigationOptions?: NavigationScreenConfig<any>;
   }
-  export interface NavigationBottomTabRouterConfig
+  export interface NavigationNRouterConfig
     extends NavigationTabRouterConfigBase {
     defaultNavigationOptions?: NavigationScreenConfig<
       NavigationBottomTabScreenOptions
@@ -1085,7 +1086,6 @@ declare module 'react-navigation' {
       TabViewConfig {
     lazy?: boolean;
     removeClippedSubviews?: boolean;
-    resetOnBlur?: boolean;
     initialLayout?: InitialLayout;
   }
 
