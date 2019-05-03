@@ -554,7 +554,7 @@ declare module 'react-navigation' {
     defaultNavigationOptions?: NavigationScreenConfig<NavigationScreenOptions>;
     navigationOptions?: NavigationScreenConfig<any>;
   }
-  export interface NavigationNRouterConfig
+  export interface NavigationBottomTabRouterConfig
     extends NavigationTabRouterConfigBase {
     defaultNavigationOptions?: NavigationScreenConfig<
       NavigationBottomTabScreenOptions
