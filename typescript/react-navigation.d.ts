@@ -1101,7 +1101,7 @@ declare module 'react-navigation' {
     tabBarPosition: string;
     navigation: NavigationScreenProp<NavigationState>;
     jumpToIndex: (index: number) => void;
-    getLabel: (scene: TabScene) => React.ReactNode | string;
+    getLabelText: (scene: TabScene) => React.ReactNode | string;
     getOnPress: (
       previousScene: NavigationRoute,
       scene: TabScene
@@ -1126,7 +1126,7 @@ declare module 'react-navigation' {
     position: AnimatedValue;
     navigation: NavigationScreenProp<NavigationState>;
     jumpToIndex: (index: number) => void;
-    getLabel: (scene: TabScene) => React.ReactNode | string;
+    getLabelText: (scene: TabScene) => React.ReactNode | string;
     getOnPress: (
       previousScene: NavigationRoute,
       scene: TabScene
