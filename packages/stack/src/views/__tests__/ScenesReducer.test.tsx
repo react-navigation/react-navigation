@@ -1,25 +1,31 @@
 import ScenesReducer from '../ScenesReducer';
-const MOCK_DESCRIPTOR = {};
+import { Scene, NavigationState, SceneDescriptor } from '../../types';
+
+const MOCK_DESCRIPTOR: SceneDescriptor = {} as any;
 
 /**
  * Simulate scenes transtion with changes of navigation states.
  */
-function testTransition(states) {
+function testTransition(states: string[][]) {
   let descriptors = states
-    .reduce((acc, state) => acc.concat(state), [])
-    .reduce((acc, key) => {
-      acc[key] = MOCK_DESCRIPTOR;
-      return acc;
-    }, {});
-  const routes = states.map(keys => ({
+    .reduce((acc, state) => acc.concat(state), [] as string[])
+    .reduce(
+      (acc, key) => {
+        acc[key] = MOCK_DESCRIPTOR;
+        return acc;
+      },
+      {} as { [key: string]: SceneDescriptor }
+    );
+  const routes = states.map((keys, i) => ({
+    key: String(i),
     index: keys.length - 1,
     routes: keys.map(key => ({ key, routeName: '' })),
     isTransitioning: false,
   }));
 
-  let scenes = [];
-  let prevState = null;
-  routes.forEach(nextState => {
+  let scenes: Scene[] = [];
+  let prevState: NavigationState | null = null;
+  routes.forEach((nextState: NavigationState) => {
     scenes = ScenesReducer(scenes, nextState, prevState, descriptors);
     prevState = nextState;
   });
@@ -100,55 +106,61 @@ describe('ScenesReducer', () => {
 
   it('gets active scene when index changes', () => {
     const state1 = {
+      key: '0',
       index: 0,
       routes: [{ key: '1', routeName: '' }],
       isTransitioning: false,
     };
 
     const state2 = {
+      key: '0',
       index: 1,
       routes: [{ key: '1', routeName: '' }, { key: '2', routeName: '' }],
       isTransitioning: false,
     };
 
-    const scenes1 = ScenesReducer([], state1, null);
-    const scenes2 = ScenesReducer(scenes1, state2, state1);
-    const route = scenes2.find(scene => scene.isActive).route;
+    const scenes1 = ScenesReducer([], state1, null, {});
+    const scenes2 = ScenesReducer(scenes1, state2, state1, {});
+    const route = scenes2.find(scene => scene.isActive)!.route;
     expect(route).toEqual({ key: '2', routeName: '' });
   });
 
   it('gets same scenes', () => {
     const state1 = {
+      key: '0',
       index: 1,
       routes: [{ key: '1', routeName: '' }, { key: '2', routeName: '' }],
       isTransitioning: false,
     };
 
     const state2 = {
+      key: '0',
       index: 1,
       routes: [{ key: '1', routeName: '' }, { key: '2', routeName: '' }],
       isTransitioning: false,
     };
 
-    const scenes1 = ScenesReducer([], state1, null);
-    const scenes2 = ScenesReducer(scenes1, state2, state1);
+    const scenes1 = ScenesReducer([], state1, null, {});
+    const scenes2 = ScenesReducer(scenes1, state2, state1, {});
     expect(scenes1).toBe(scenes2);
   });
 
   it('gets different scenes when keys are different', () => {
     const state1 = {
+      key: '0',
       index: 1,
       routes: [{ key: '1', routeName: '' }, { key: '2', routeName: '' }],
       isTransitioning: false,
     };
 
     const state2 = {
+      key: '0',
       index: 1,
       routes: [{ key: '2', routeName: '' }, { key: '1', routeName: '' }],
       isTransitioning: false,
     };
 
-    const descriptors = { 1: jest.mock(), 2: jest.mock() };
+    const descriptors = { 1: {}, 2: {} } as any;
 
     const scenes1 = ScenesReducer([], state1, null, descriptors);
     const scenes2 = ScenesReducer(scenes1, state2, state1, descriptors);
@@ -157,6 +169,7 @@ describe('ScenesReducer', () => {
 
   it('gets different scenes when routes are different', () => {
     const state1 = {
+      key: '0',
       index: 1,
       routes: [
         { key: '1', x: 1, routeName: '' },
@@ -166,6 +179,7 @@ describe('ScenesReducer', () => {
     };
 
     const state2 = {
+      key: '0',
       index: 1,
       routes: [
         { key: '1', x: 3, routeName: '' },
@@ -186,6 +200,7 @@ describe('ScenesReducer', () => {
   // anything except the last route in the array of routes.
   it('gets different scenes when state index changes', () => {
     const state1 = {
+      key: '0',
       index: 1,
       routes: [
         { key: '1', x: 1, routeName: '' },
@@ -195,6 +210,7 @@ describe('ScenesReducer', () => {
     };
 
     const state2 = {
+      key: '0',
       index: 0,
       routes: [
         { key: '1', x: 1, routeName: '' },

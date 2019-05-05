@@ -2,6 +2,10 @@ declare module '@react-navigation/native' {
   import { ComponentType } from 'react';
   import { StyleProp, ViewStyle, ViewProps } from 'react-native';
 
+  export function createAppContainer<Props>(
+    Comp: React.ComponentType<Props>
+  ): React.ComponentType<Props>;
+
   export function withOrientation<Props extends { isLandscape: boolean }>(
     Comp: React.ComponentType<Props>
   ): React.ComponentType<Pick<Props, Exclude<keyof Props, 'isLandscape'>>>;

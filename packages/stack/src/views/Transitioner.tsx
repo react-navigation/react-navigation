@@ -37,7 +37,7 @@ type Props = {
   ) => void | Promise<any>;
   navigation: NavigationProp;
   descriptors: { [key: string]: SceneDescriptor };
-  screenProps: unknown;
+  screenProps?: unknown;
 };
 
 type State = {

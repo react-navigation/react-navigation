@@ -26,6 +26,7 @@ export type NavigationState = {
   index: number;
   routes: Route[];
   isTransitioning?: boolean;
+  params?: { [key: string]: unknown };
 };
 
 export type NavigationProp<RouteName = string, Params = object> = {
@@ -82,7 +83,7 @@ export type HeaderTransitionConfig = {
 
 export type NavigationStackOptions = {
   title?: string;
-  header?: (props: HeaderProps) => React.ReactNode | null;
+  header?: (props: HeaderProps) => React.ReactNode;
   headerTitle?: string;
   headerTitleStyle?: StyleProp<TextStyle>;
   headerTitleContainerStyle?: StyleProp<ViewStyle>;
@@ -92,11 +93,11 @@ export type NavigationStackOptions = {
   headerBackTitle?: string;
   headerBackTitleStyle?: StyleProp<TextStyle>;
   headerTruncatedBackTitle?: string;
-  headerLeft?: React.ComponentType<HeaderBackbuttonProps>;
+  headerLeft?: React.FunctionComponent<HeaderBackbuttonProps>;
   headerLeftContainerStyle?: StyleProp<ViewStyle>;
-  headerRight?: React.ComponentType<{}>;
+  headerRight?: (() => React.ReactNode) | React.ReactNode;
   headerRightContainerStyle?: StyleProp<ViewStyle>;
-  headerBackImage?: React.ComponentType<{
+  headerBackImage?: React.FunctionComponent<{
     tintColor: string;
     title?: string | null;
   }>;

@@ -27,5 +27,9 @@ declare module '@react-navigation/core' {
     stackConfig: object
   ): React.ComponentType;
 
+  export function withNavigation<Props extends { navigation: object }>(
+    Comp: React.ComponentType<Props>
+  ): React.ComponentType<Pick<Props, Exclude<keyof Props, 'navigation'>>>;
+
   export function StackRouter(routeConfigMap: object, stackConfig: object);
 }

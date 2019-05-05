@@ -7,7 +7,10 @@ import createStackNavigator from '../createStackNavigator';
 
 import createAppContainer, {
   _TESTING_ONLY_reset_container_count,
+  // @ts-ignore
 } from '@react-navigation/native/src/createAppContainer';
+import { NavigationProp } from '../../types';
+
 const NavigationTestUtils = {
   resetInternalState: _TESTING_ONLY_reset_container_count,
 };
@@ -19,7 +22,11 @@ const styles = StyleSheet.create({
 });
 
 class HomeScreen extends Component {
-  static navigationOptions = ({ navigation }) => ({
+  static navigationOptions = ({
+    navigation,
+  }: {
+    navigation: NavigationProp;
+  }) => ({
     title: `Welcome ${
       navigation.state.params ? navigation.state.params.user : 'anonymous'
     }`,
@@ -69,7 +76,10 @@ describe('StackNavigator', () => {
   it('passes navigation to headerRight when wrapped in withNavigation', () => {
     const spy = jest.fn();
 
-    class TestComponent extends React.Component {
+    class TestComponent extends React.Component<{
+      onPress: (navigation: NavigationProp) => undefined;
+      navigation: NavigationProp;
+    }> {
       render() {
         return <View>{this.props.onPress(this.props.navigation)}</View>;
       }

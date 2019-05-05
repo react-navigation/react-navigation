@@ -13,6 +13,7 @@ describe('Transitioner', () => {
       configureTransition: () => ({}),
       navigation: {
         state: {
+          key: '0',
           index: 0,
           routes: [
             { key: '1', routeName: 'Foo' },
@@ -23,6 +24,10 @@ describe('Transitioner', () => {
         dispatch: () => false,
         setParams: () => false,
         navigate: () => false,
+        isFocused: () => false,
+        dangerouslyGetParent: () => undefined,
+        getParam: jest.fn(),
+        addListener: jest.fn(),
       },
       render: () => <div />,
       onTransitionStart: onTransitionStartCallback,
@@ -34,6 +39,7 @@ describe('Transitioner', () => {
       navigation: {
         ...transitionerProps.navigation,
         state: {
+          key: '0',
           index: 0,
           routes: [
             { key: '1', routeName: 'Foo', params: { name: 'Zoom' } },
@@ -42,8 +48,12 @@ describe('Transitioner', () => {
         },
       },
     };
-    const component = renderer.create(<Transitioner {...transitionerProps} />);
-    component.update(<Transitioner {...nextTransitionerProps} />);
+    const component = renderer.create(
+      <Transitioner descriptors={{}} {...transitionerProps} />
+    );
+    component.update(
+      <Transitioner descriptors={{}} {...nextTransitionerProps} />
+    );
     expect(onTransitionStartCallback).not.toBeCalled();
     expect(onTransitionEndCallback).not.toBeCalled();
   });

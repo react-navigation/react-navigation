@@ -65,7 +65,7 @@ type Props = {
   onGestureBegin?: () => void;
   onGestureEnd?: () => void;
   onGestureCanceled?: () => void;
-  screenProps: unknown;
+  screenProps?: unknown;
 };
 
 type State = {

@@ -13,7 +13,6 @@ import {
 } from '../../types';
 
 type Props = {
-  screenProps: unknown;
   navigation: NavigationProp;
   descriptors: { [key: string]: SceneDescriptor };
   navigationConfig: NavigationConfig;
@@ -21,6 +20,7 @@ type Props = {
   onGestureBegin?: () => void;
   onGestureCanceled?: () => void;
   onGestureEnd?: () => void;
+  screenProps?: unknown;
 };
 
 const USE_NATIVE_DRIVER = true;
