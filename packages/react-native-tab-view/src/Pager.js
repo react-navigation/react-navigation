@@ -55,6 +55,7 @@ const {
   greaterThan,
   max,
   min,
+  modulo,
   multiply,
   neq,
   or,
@@ -92,6 +93,8 @@ const TIMING_CONFIG = {
   duration: 250,
   easing: Easing.out(Easing.cubic),
 };
+
+const THROTTLE_FACTOR = 16;
 
 export default class Pager<T: Route> extends React.Component<Props<T>> {
   static defaultProps = {
@@ -202,6 +205,8 @@ export default class Pager<T: Route> extends React.Component<Props<T>> {
   _gestureX = new Value(0);
   _gestureState = new Value(State.UNDETERMINED);
   _offsetX = new Value(0);
+
+  _throttler = new Animated.Value(0);
 
   // Current position of the page (translateX value)
   _position = new Value(
@@ -406,20 +411,6 @@ export default class Pager<T: Route> extends React.Component<Props<T>> {
         set(this._velocityX, 0),
         // When the animation finishes, stop the clock
         stopClock(this._clock),
-        call([this._index], ([value]) => {
-          // If the index changed, and previous animation has finished, update state
-          this.props.onIndexChange(value);
-
-          // Without this check, the pager can go to an infinite update <-> animate loop for sync updates
-          if (value !== this.props.navigationState.index) {
-            this._pendingIndexValue = value;
-
-            // Force componentDidUpdate to fire, whether user does a setState or not
-            // This allows us to detect when the user drops the update and revert back
-            // It's necessary to make sure that the state stays in sync
-            this.forceUpdate();
-          }
-        }),
       ]),
     ]);
   };
@@ -435,18 +426,37 @@ export default class Pager<T: Route> extends React.Component<Props<T>> {
   ]);
 
   _translateX = block([
-    call([this._index], ([value]) => {
-      this._currentIndexValue = value;
-    }),
+    onChange(
+      this._index,
+      call([this._index], ([value]) => {
+        this._currentIndexValue = value;
+
+        // Without this check, the pager can go to an infinite update <-> animate loop for sync updates
+        if (value !== this.props.navigationState.index) {
+          // If the index changed, and previous animation has finished, update state
+          this.props.onIndexChange(value);
+
+          this._pendingIndexValue = value;
+
+          // Force componentDidUpdate to fire, whether user does a setState or not
+          // This allows us to detect when the user drops the update and revert back
+          // It's necessary to make sure that the state stays in sync
+          this.forceUpdate();
+        }
+      })
+    ),
     // Conditionally listen for changes in the position value
     // The position value can changes a lot in short time
     // So we only add a listener when necessary to avoid extra overhead
     cond(
       this._isListening,
-      onChange(
-        this._position,
-        call([this._position], this._handlePositionChange)
-      )
+      onChange(this._position, [
+        cond(
+          eq(this._throttler, 0),
+          call([this._position], this._handlePositionChange)
+        ),
+        set(this._throttler, modulo(add(this._throttler, 1), THROTTLE_FACTOR)),
+      ])
     ),
     onChange(
       this._isSwiping,

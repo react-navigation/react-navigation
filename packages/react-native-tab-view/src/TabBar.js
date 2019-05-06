@@ -95,12 +95,6 @@ export default class TabBar<T: Route> extends React.Component<Props<T>, State> {
     };
   }
 
-  componentDidMount() {
-    if (this.props.scrollEnabled) {
-      this.props.addListener('position', this._adjustScroll);
-    }
-  }
-
   componentDidUpdate(prevProps: Props<T>) {
     if (
       prevProps.navigationState.routes.length !==
@@ -113,18 +107,6 @@ export default class TabBar<T: Route> extends React.Component<Props<T>, State> {
     ) {
       this._resetScroll(this.props.navigationState.index);
     }
-
-    if (prevProps.scrollEnabled !== this.props.scrollEnabled) {
-      if (this.props.scrollEnabled) {
-        this.props.addListener('position', this._adjustScroll);
-      } else {
-        this.props.removeListener('position', this._adjustScroll);
-      }
-    }
-  }
-
-  componentWillUnmount() {
-    this.props.removeListener('position', this._adjustScroll);
   }
 
   _scrollView: ?ScrollView;
@@ -182,21 +164,6 @@ export default class TabBar<T: Route> extends React.Component<Props<T>, State> {
     const scrollAmount = centerDistance - layout.width / 2;
 
     return this._normalizeScrollValue(props, scrollAmount);
-  };
-
-  _adjustScroll = (value: number) => {
-    if (this.props.scrollEnabled) {
-      cancelAnimationFrame(this._scrollResetCallback);
-
-      this._scrollView &&
-        this._scrollView.scrollTo({
-          x: this._normalizeScrollValue(
-            this.props,
-            this._getScrollAmount(this.props, value)
-          ),
-          animated: false,
-        });
-    }
   };
 
   _resetScroll = (value: number, animated = true) => {
