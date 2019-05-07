@@ -77,7 +77,12 @@ export default class ExampleList extends React.Component<{}, State> {
 
     try {
       const savedIndex = JSON.parse(savedIndexString);
-      if (typeof savedIndex === 'number' && !isNaN(savedIndex)) {
+
+      if (
+        Number.isFinite(savedIndex) &&
+        savedIndex > 0 &&
+        savedIndex < EXAMPLE_COMPONENTS.length
+      ) {
         this.setState({
           index: savedIndex,
         });
