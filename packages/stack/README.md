@@ -1,6 +1,6 @@
 # React Navigation Stack
 
-[![CircleCI badge](https://circleci.com/gh/react-navigation/react-navigation-stack/tree/master.svg?style=shield)](https://circleci.com/gh/react-navigation/react-navigation-stack/tree/master)
+[![CircleCI badge](https://circleci.com/gh/react-navigation/stack/tree/master.svg?style=shield)](https://circleci.com/gh/react-navigation/stack/tree/master)
 
 Stack navigator for use on iOS and Android.
 
