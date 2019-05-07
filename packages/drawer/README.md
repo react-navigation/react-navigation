@@ -1,6 +1,6 @@
 # React Navigation Drawer
 
-[![npm version](https://badge.fury.io/js/react-navigation-drawer.svg)](https://badge.fury.io/js/react-navigation-drawer) [![CircleCI badge](https://circleci.com/gh/react-navigation/react-navigation-drawer/tree/master.svg?style=shield)](https://circleci.com/gh/react-navigation/react-navigation-drawer/tree/master) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://reactnavigation.org/docs/contributing.html)
+[![npm version](https://badge.fury.io/js/drawer.svg)](https://badge.fury.io/js/drawer) [![CircleCI badge](https://circleci.com/gh/react-navigation/drawer/tree/master.svg?style=shield)](https://circleci.com/gh/react-navigation/drawer/tree/master) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://reactnavigation.org/docs/contributing.html)
 
 Drawer navigator for use on iOS and Android.
 
