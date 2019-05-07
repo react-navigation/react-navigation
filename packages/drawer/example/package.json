@@ -25,7 +25,7 @@
   "resolutions": {
     "**/prop-types": "15.6.0",
     "**/react-lifecycles-compat": "3.0.4",
-    "**/hoist-non-react-statics": "2.5.0",
+    "**/hoist-non-react-statics": "3.3.0",
     "**/react-native-screens": "1.0.0-alpha.22"
   }
 }
