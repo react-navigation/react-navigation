@@ -83,22 +83,22 @@ const SWIPE_DISTANCE_MINIMUM = 20;
 const SWIPE_DISTANCE_MULTIPLIER = 1 / 1.75;
 
 const SPRING_CONFIG = {
-  damping: 30,
-  mass: 1,
-  stiffness: 200,
+  stiffness: 1000,
+  damping: 500,
+  mass: 3,
   overshootClamping: true,
-  restSpeedThreshold: 0.001,
-  restDisplacementThreshold: 0.001,
+  restDisplacementThreshold: 0.01,
+  restSpeedThreshold: 0.01,
 };
 
 const TIMING_CONFIG = {
-  duration: 250,
+  duration: 200,
   easing: Easing.out(Easing.cubic),
 };
 
 export default class Pager<T: Route> extends React.Component<Props<T>> {
   static defaultProps = {
-    swipeVelocityThreshold: 1200,
+    swipeVelocityThreshold: 800,
   };
 
   componentDidUpdate(prevProps: Props<T>) {
