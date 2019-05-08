@@ -13,15 +13,14 @@ export type Props<T> = {|
   style?: ViewStyleProp,
 |};
 
+const { max, min, multiply } = Animated;
+
 export default function TabBarIndicator<T: Route>(props: Props<T>) {
   const { width, position, navigationState, style } = props;
   const { routes } = navigationState;
-  const translateX = Animated.multiply(
-    Animated.interpolate(position, {
-      inputRange: [0, routes.length - 1],
-      outputRange: [0, routes.length - 1],
-      extrapolate: 'clamp',
-    }),
+
+  const translateX = multiply(
+    max(min(position, routes.length - 1), 0),
     width * (I18nManager.isRTL ? -1 : 1)
   );
 

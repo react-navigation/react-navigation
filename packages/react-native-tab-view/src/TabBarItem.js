@@ -69,18 +69,27 @@ export default function TabBarItem<T: Route>({
   const tabIndex = navigationState.routes.indexOf(route);
   const isFocused = navigationState.index === tabIndex;
 
-  // Prepend '-1', so there are always at least 2 items in inputRange
-  const inputRange = [-1, ...navigationState.routes.map((x, i) => i)];
+  let activeOpacity;
+  let inactiveOpacity;
 
-  const activeOpacity = Animated.interpolate(position, {
-    inputRange,
-    outputRange: inputRange.map(i => (i === tabIndex ? 1 : 0)),
-  });
+  if (navigationState.routes.length > 1) {
+    const inputRange = navigationState.routes.map((x, i) => i);
 
-  const inactiveOpacity = Animated.interpolate(position, {
-    inputRange,
-    outputRange: inputRange.map(i => (i === tabIndex ? 0 : 1)),
-  });
+    activeOpacity = Animated.interpolate(position, {
+      inputRange,
+      outputRange: inputRange.map(i => (i === tabIndex ? 1 : 0)),
+    });
+
+    inactiveOpacity = Animated.interpolate(position, {
+      inputRange,
+      outputRange: inputRange.map(i => (i === tabIndex ? 0 : 1)),
+    });
+  } else {
+    // When there's only one tab, we can't use interpolate
+    // Coz inputRange can't have only one item
+    activeOpacity = 1;
+    inactiveOpacity = 0;
+  }
 
   let icon = null;
   let label = null;
