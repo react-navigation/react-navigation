@@ -547,6 +547,7 @@ declare module 'react-navigation' {
     paths?: NavigationPathsConfig;
     order?: string[]; // todo: type these as the real route names rather than 'string'
     backBehavior?: 'none' | 'initialRoute' | 'history' | 'order'; // defaults to 'initialRoute'
+    resetOnBlur?: boolean;
   }
   export interface NavigationTabRouterConfig
     extends NavigationTabRouterConfigBase {
