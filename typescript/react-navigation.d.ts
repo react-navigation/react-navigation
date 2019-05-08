@@ -1084,6 +1084,7 @@ declare module 'react-navigation' {
     extends NavigationBottomTabRouterConfig,
       TabViewConfig {
     lazy?: boolean;
+    resetOnBlur?: boolean;
     removeClippedSubviews?: boolean;
     initialLayout?: InitialLayout;
   }
