@@ -30,8 +30,11 @@ export type SceneRendererProps = {|
   layout: Layout,
   position: Animated.Node<number>,
   jumpTo: (key: string) => void,
-  addListener: (type: 'position', listener: Listener) => void,
-  removeListener: (type: 'position', listener: Listener) => void,
+|};
+
+export type EventEmitterProps = {|
+  addListener: (type: 'enter', listener: Listener) => void,
+  removeListener: (type: 'enter', listener: Listener) => void,
 |};
 
 export type PagerCommonProps = {|

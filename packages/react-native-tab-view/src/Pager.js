@@ -11,6 +11,7 @@ import type {
   Route,
   Listener,
   PagerCommonProps,
+  EventEmitterProps,
 } from './types';
 
 type Props<T: Route> = {|
@@ -22,16 +23,14 @@ type Props<T: Route> = {|
   // Don't enable this on iOS where this is buggy and views don't re-appear
   removeClippedSubviews?: boolean,
   children: (props: {|
+    // Listeners for a when we enter a new screen
+    ...EventEmitterProps,
     // Animated value which represents the state of current index
     // It can include fractional digits as it represents the intermediate value
     position: Animated.Node<number>,
     // Function to actually render the content of the pager
     // The parent component takes care of rendering
     render: (children: React.Node) => React.Node,
-    // Add a listener to listen for position updates
-    addListener: (type: 'position', listener: Listener) => void,
-    // Remove a position listener
-    removeListener: (type: 'position', listener: Listener) => void,
     // Callback to call when switching the tab
     // The tab switch animation is performed even if the index in state is unchanged
     jumpTo: (key: string) => void,
@@ -47,15 +46,17 @@ const {
   and,
   block,
   call,
+  ceil,
   clockRunning,
   cond,
   divide,
   eq,
   event,
+  floor,
   greaterThan,
+  lessThan,
   max,
   min,
-  modulo,
   multiply,
   neq,
   or,
@@ -94,8 +95,6 @@ const TIMING_CONFIG = {
   easing: Easing.out(Easing.cubic),
 };
 
-const THROTTLE_FACTOR = 16;
-
 export default class Pager<T: Route> extends React.Component<Props<T>> {
   static defaultProps = {
     swipeVelocityThreshold: 1200,
@@ -128,7 +127,7 @@ export default class Pager<T: Route> extends React.Component<Props<T>> {
     }
 
     if (prevProps.layout.width !== this.props.layout.width) {
-      this._position.setValue(-index * this.props.layout.width);
+      this._progress.setValue(-index * this.props.layout.width);
       this._layoutWidth.setValue(this.props.layout.width);
     }
 
@@ -206,10 +205,8 @@ export default class Pager<T: Route> extends React.Component<Props<T>> {
   _gestureState = new Value(State.UNDETERMINED);
   _offsetX = new Value(0);
 
-  _throttler = new Animated.Value(0);
-
-  // Current position of the page (translateX value)
-  _position = new Value(
+  // Current progress of the page (translateX value)
+  _progress = new Value(
     // Initial value is based on the index and page width
     this.props.navigationState.index * this.props.layout.width * DIRECTION_RIGHT
   );
@@ -219,6 +216,9 @@ export default class Pager<T: Route> extends React.Component<Props<T>> {
 
   // Next index of the tabs, updated for navigation from outside (tab press, state update)
   _nextIndex = new Value(UNSET);
+
+  // Scene that was last entered
+  _lastEnteredIndex = new Value(this.props.navigationState.index);
 
   // Whether the user is currently dragging the screen
   _isSwiping = new Value(FALSE);
@@ -236,6 +236,15 @@ export default class Pager<T: Route> extends React.Component<Props<T>> {
   // Threshold values to determine when to trigger a swipe gesture
   _swipeDistanceThreshold = new Value(this.props.swipeDistanceThreshold || 180);
   _swipeVelocityThreshold = new Value(this.props.swipeVelocityThreshold);
+
+  // The position value represent the position of the pager on a scale of 0 - routes.length-1
+  // It is calculated based on the translate value and layout width
+  // If we don't have the layout yet, we should return the current index
+  _position = cond(
+    this._layoutWidth,
+    divide(multiply(this._progress, -1), this._layoutWidth),
+    this._index
+  );
 
   // Animation configuration
   _springConfig = {
@@ -282,10 +291,6 @@ export default class Pager<T: Route> extends React.Component<Props<T>> {
   // Animated.Value. So this value is being updated on each start of spring animation.
   _initialVelocityForSpring = new Value(0);
 
-  // Whether we need to add a listener for position change
-  // To avoid unnecessary traffic through the bridge, don't add listeners unless needed
-  _isListening = new Value(FALSE);
-
   // The current index change caused by the pager's animation
   // The pager is used as a controlled component
   // We need to keep track of the index to determine when to trigger animation
@@ -298,8 +303,8 @@ export default class Pager<T: Route> extends React.Component<Props<T>> {
   // It also needs to be reset right after componentDidUpdate fires
   _pendingIndexValue: ?number = undefined;
 
-  // Listeners for the animated value
-  _positionListeners: Listener[] = [];
+  // Listeners for the entered screen
+  _enterListeners: Listener[] = [];
 
   _jumpToIndex = (index: number) => {
     // If the index changed, we need to trigger a tab switch
@@ -322,39 +327,35 @@ export default class Pager<T: Route> extends React.Component<Props<T>> {
     }
   };
 
-  _addListener = (type: string, listener: Listener) => {
-    if (type !== 'position') {
-      return;
-    }
-
-    this._positionListeners.push(listener);
-    this._isListening.setValue(TRUE);
-  };
-
-  _removeListener = (type: string, listener: Listener) => {
-    if (type !== 'position') {
-      return;
-    }
-
-    const index = this._positionListeners.indexOf(listener);
-
-    if (index > -1) {
-      this._positionListeners.splice(index, 1);
-    }
-
-    if (this._positionListeners.length === 0) {
-      this._isListening.setValue(FALSE);
+  _addListener = (type: 'enter', listener: Listener) => {
+    switch (type) {
+      case 'enter':
+        this._enterListeners.push(listener);
+        break;
     }
   };
 
-  _handlePositionChange = ([translateX]: [number]) => {
-    // The position value is calculated based on the translate value
-    // If we don't have the layout yet, we should return the current index
-    const value = this.props.layout.width
-      ? Math.abs(translateX / this.props.layout.width)
-      : this.props.navigationState.index;
+  _removeListener = (type: 'enter', listener: Listener) => {
+    switch (type) {
+      case 'enter': {
+        const index = this._enterListeners.indexOf(listener);
 
-    this._positionListeners.forEach(listener => listener(value));
+        if (index > -1) {
+          this._enterListeners.splice(index, 1);
+        }
+
+        break;
+      }
+    }
+  };
+
+  _handleEnteredIndexChange = ([value]: [number]) => {
+    const index = Math.max(
+      0,
+      Math.min(value, this.props.navigationState.routes.length - 1)
+    );
+
+    this._enterListeners.forEach(listener => listener(index));
   };
 
   _transitionTo = (index: Animated.Node<number>) => {
@@ -362,7 +363,7 @@ export default class Pager<T: Route> extends React.Component<Props<T>> {
     const frameTime = new Value(0);
 
     const state = {
-      position: this._position,
+      position: this._progress,
       time: new Value(0),
       finished: new Value(FALSE),
     };
@@ -445,18 +446,24 @@ export default class Pager<T: Route> extends React.Component<Props<T>> {
         }
       })
     ),
-    // Conditionally listen for changes in the position value
-    // The position value can changes a lot in short time
-    // So we only add a listener when necessary to avoid extra overhead
-    cond(
-      this._isListening,
-      onChange(this._position, [
-        cond(
-          eq(this._throttler, 0),
-          call([this._position], this._handlePositionChange)
-        ),
-        set(this._throttler, modulo(add(this._throttler, 1), THROTTLE_FACTOR)),
-      ])
+    onChange(
+      this._position,
+      // Listen to updates in the position to detect when we enter a screen
+      // This is useful for things such as lazy loading when index change will fire too late
+      cond(
+        I18nManager.isRTL
+          ? lessThan(this._gestureX, 0)
+          : greaterThan(this._gestureX, 0),
+        // Based on the direction of the gesture, determine if we're entering the previous or next screen
+        cond(neq(floor(this._position), this._lastEnteredIndex), [
+          set(this._lastEnteredIndex, floor(this._position)),
+          call([floor(this._position)], this._handleEnteredIndexChange),
+        ]),
+        cond(neq(ceil(this._position), this._lastEnteredIndex), [
+          set(this._lastEnteredIndex, ceil(this._position)),
+          call([ceil(this._position)], this._handleEnteredIndexChange),
+        ])
+      )
     ),
     onChange(
       this._isSwiping,
@@ -494,12 +501,12 @@ export default class Pager<T: Route> extends React.Component<Props<T>> {
           // We weren't dragging before, set it to true
           set(this._isSwiping, TRUE),
           set(this._isSwipeGesture, TRUE),
-          // Also update the drag offset to the last position
-          set(this._offsetX, this._position),
+          // Also update the drag offset to the last progress
+          set(this._offsetX, this._progress),
         ]),
-        // Update position with previous offset + gesture distance
+        // Update progress with previous offset + gesture distance
         set(
-          this._position,
+          this._progress,
           I18nManager.isRTL
             ? sub(this._offsetX, this._gestureX)
             : add(this._offsetX, this._gestureX)
@@ -558,7 +565,7 @@ export default class Pager<T: Route> extends React.Component<Props<T>> {
         ),
       ]
     ),
-    this._position,
+    this._progress,
   ]);
 
   render() {
@@ -583,14 +590,8 @@ export default class Pager<T: Route> extends React.Component<Props<T>> {
       0
     );
 
-    const position = cond(
-      this._layoutWidth,
-      divide(abs(translateX), this._layoutWidth),
-      this._index
-    );
-
     return children({
-      position,
+      position: this._position,
       addListener: this._addListener,
       removeListener: this._removeListener,
       jumpTo: this._jumpTo,

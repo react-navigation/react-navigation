@@ -130,8 +130,6 @@ export default class TabView<T: Route> extends React.Component<
               position,
               layout,
               jumpTo,
-              addListener,
-              removeListener,
             };
 
             return (
@@ -146,6 +144,8 @@ export default class TabView<T: Route> extends React.Component<
                     return (
                       <SceneView
                         {...sceneRendererProps}
+                        addListener={addListener}
+                        removeListener={removeListener}
                         key={route.key}
                         index={i}
                         lazy={lazy}

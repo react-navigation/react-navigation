@@ -215,8 +215,6 @@ export default class TabBar<T: Route> extends React.Component<Props<T>, State> {
       layout,
       navigationState,
       jumpTo,
-      addListener,
-      removeListener,
       scrollEnabled,
       bounces,
       getAccessibilityLabel,
@@ -259,8 +257,6 @@ export default class TabBar<T: Route> extends React.Component<Props<T>, State> {
             layout,
             navigationState,
             jumpTo,
-            addListener,
-            removeListener,
             width: tabWidth,
             style: indicatorStyle,
           })}

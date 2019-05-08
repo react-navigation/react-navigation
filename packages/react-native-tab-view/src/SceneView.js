@@ -3,10 +3,16 @@
 import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
 import type { ViewStyleProp } from 'react-native/Libraries/StyleSheet/StyleSheet';
-import type { SceneRendererProps, NavigationState, Route } from './types';
+import type {
+  SceneRendererProps,
+  EventEmitterProps,
+  NavigationState,
+  Route,
+} from './types';
 
 type Props<T: Route> = {|
   ...SceneRendererProps,
+  ...EventEmitterProps,
   navigationState: NavigationState<T>,
   lazy: boolean,
   index: number,
@@ -37,8 +43,8 @@ export default class SceneView<T: Route> extends React.Component<
 
   componentDidMount() {
     if (this.props.lazy) {
-      // If lazy mode is enabled, listen to position updates
-      this.props.addListener('position', this._handlePosition);
+      // If lazy mode is enabled, listen to when we enter screens
+      this.props.addListener('enter', this._handleEnter);
     } else if (this.state.loading) {
       // If lazy mode is not enabled, render the scene with a delay if not loaded already
       // This improves the initial startup time as the scene is no longer blocking
@@ -53,32 +59,22 @@ export default class SceneView<T: Route> extends React.Component<
     ) {
       // We only need the listener if the tab hasn't loaded yet and lazy is enabled
       if (this.props.lazy && this.state.loading) {
-        this.props.addListener('position', this._handlePosition);
+        this.props.addListener('enter', this._handleEnter);
       } else {
-        this.props.removeListener('position', this._handlePosition);
+        this.props.removeListener('enter', this._handleEnter);
       }
     }
   }
 
   componentWillUnmount() {
-    this.props.removeListener('position', this._handlePosition);
+    this.props.removeListener('enter', this._handleEnter);
   }
 
-  _handlePosition = value => {
-    const { navigationState, index } = this.props;
+  _handleEnter = value => {
+    const { index } = this.props;
 
-    // Try to calculate the next screen to load from position value
-    // By default, get the nearest smallest integer which is index of the route we're navigating to
-    let next = Math.ceil(value);
-
-    // If the value calculated is the current index, we're probably navigating away
-    // Get the nearest largest integer which is the index of the route we're navigating to
-    if (next === navigationState.index) {
-      next = Math.floor(value);
-    }
-
-    // If it's the current route, we need to load it
-    if (next === index && this.state.loading) {
+    // If we're entering the current route, we need to load it
+    if (value === index && this.state.loading) {
       this.setState({ loading: false });
     }
   };

@@ -17,15 +17,12 @@ export default function TabBarIndicator<T: Route>(props: Props<T>) {
   const { width, position, navigationState, style } = props;
   const { routes } = navigationState;
   const translateX = Animated.multiply(
-    Animated.multiply(
-      Animated.interpolate(position, {
-        inputRange: [0, routes.length - 1],
-        outputRange: [0, routes.length - 1],
-        extrapolate: 'clamp',
-      }),
-      width
-    ),
-    I18nManager.isRTL ? -1 : 1
+    Animated.interpolate(position, {
+      inputRange: [0, routes.length - 1],
+      outputRange: [0, routes.length - 1],
+      extrapolate: 'clamp',
+    }),
+    width * (I18nManager.isRTL ? -1 : 1)
   );
 
   return (
