@@ -16,7 +16,8 @@
     "typescript": "tsc --noEmit",
     "example": "yarn --cwd example",
     "bootstrap": "yarn && yarn example",
-    "prepare": "bob build"
+    "prepare": "bob build",
+    "release": "release-it"
   },
   "keywords": [
     "react-native-component",
@@ -44,6 +45,7 @@
     "@react-native-community/bob": "^0.3.4",
     "@react-navigation/core": "^3.4.0",
     "@react-navigation/native": "^3.4.1",
+    "@release-it/conventional-changelog": "^1.0.0",
     "@types/jest": "^24.0.11",
     "@types/react": "^16.8.13",
     "@types/react-native": "^0.57.49",
@@ -66,6 +68,7 @@
     "react-native-screens": "^1.0.0-alpha.22",
     "react-native-testing-library": "^1.7.0",
     "react-test-renderer": "16.8.6",
+    "release-it": "^12.0.1",
     "typescript": "^3.4.5"
   },
   "peerDependencies": {
