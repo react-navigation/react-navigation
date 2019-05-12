@@ -251,6 +251,7 @@ export default class DrawerView extends React.PureComponent<Props> {
       position: this.position,
       time: new Value(0),
       finished: new Value(FALSE),
+      velocity: new Value(0),
     };
 
     return block([
@@ -261,14 +262,11 @@ export default class DrawerView extends React.PureComponent<Props> {
         set(frameTime, 0),
         set(state.time, 0),
         set(state.finished, FALSE),
+        set(state.velocity, this.velocityX),
         set(this.isOpen, isOpen),
         startClock(this.clock),
       ]),
-      spring(
-        this.clock,
-        { ...state, velocity: this.velocityX },
-        { ...SPRING_CONFIG, toValue }
-      ),
+      spring(this.clock, state, { ...SPRING_CONFIG, toValue }),
       cond(state.finished, [
         // Reset gesture and velocity from previous gesture
         set(this.touchX, 0),
