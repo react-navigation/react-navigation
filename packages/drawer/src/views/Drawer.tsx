@@ -329,6 +329,7 @@ export default class DrawerView extends React.PureComponent<Props> {
         cond(clockRunning(this.clock), stopClock(this.clock)),
         // Update the open value to trigger the transition
         set(this.isOpen, this.nextIsOpen),
+        set(this.gestureX, 0),
         set(this.nextIsOpen, UNSET),
       ])
     ),
