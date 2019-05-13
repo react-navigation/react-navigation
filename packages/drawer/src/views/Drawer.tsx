@@ -12,7 +12,6 @@ import {
   PanGestureHandler,
   TapGestureHandler,
   State,
-  TapGestureHandlerStateChangeEvent,
 } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
 
@@ -110,10 +109,15 @@ export default class DrawerView extends React.PureComponent<Props> {
       open,
       drawerPosition,
       drawerType,
+      locked,
       swipeDistanceThreshold,
       swipeVelocityThreshold,
       hideStatusBar,
     } = this.props;
+
+    if (prevProps.locked !== locked) {
+      this.isLocked.setValue(locked ? TRUE : FALSE);
+    }
 
     if (
       // If we're not in the middle of a transition, sync the drawer's open state
@@ -161,6 +165,7 @@ export default class DrawerView extends React.PureComponent<Props> {
   private isDrawerTypeFront = new Value<Binary>(
     this.props.drawerType === 'front' ? TRUE : FALSE
   );
+  private isLocked = new Value(this.props.locked ? TRUE : FALSE);
 
   private isOpen = new Value<Binary>(this.props.open ? TRUE : FALSE);
   private nextIsOpen = new Value<Binary | -1>(UNSET);
@@ -267,6 +272,7 @@ export default class DrawerView extends React.PureComponent<Props> {
         set(state.velocity, this.velocityX),
         set(this.isOpen, isOpen),
         startClock(this.clock),
+        set(this.manuallyTriggerSpring, FALSE),
       ]),
       spring(this.clock, state, { ...SPRING_CONFIG, toValue }),
       cond(state.finished, [
@@ -349,7 +355,6 @@ export default class DrawerView extends React.PureComponent<Props> {
     cond(
       eq(this.gestureState, State.ACTIVE),
       [
-        set(this.manuallyTriggerSpring, FALSE),
         cond(this.isSwiping, NOOP, [
           // We weren't dragging before, set it to true
           set(this.isSwiping, TRUE),
@@ -425,13 +430,17 @@ export default class DrawerView extends React.PureComponent<Props> {
     },
   ]);
 
-  private handleTapStateChange = ({
-    nativeEvent,
-  }: TapGestureHandlerStateChangeEvent) => {
-    if (nativeEvent.oldState === State.ACTIVE && !this.props.locked) {
-      this.manuallyTriggerSpring.setValue(TRUE);
-    }
-  };
+  private handleTapStateChange = event([
+    {
+      nativeEvent: {
+        oldState: (s: Animated.Value<number>) =>
+          cond(
+            and(eq(s, State.ACTIVE), eq(this.isLocked, FALSE)),
+            set(this.manuallyTriggerSpring, TRUE)
+          ),
+      },
+    },
+  ]);
 
   private handleContainerLayout = (e: LayoutChangeEvent) =>
     this.containerWidth.setValue(e.nativeEvent.layout.width);
