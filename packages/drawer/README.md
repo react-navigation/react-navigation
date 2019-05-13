@@ -9,7 +9,7 @@ Drawer navigator for use on iOS and Android.
 Open a Terminal in your project's folder and run,
 
 ```sh
-yarn add react-navigation-drawer
+yarn add react-navigation-drawer@alpha
 ```
 
 ## Usage
