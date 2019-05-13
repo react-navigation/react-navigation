@@ -28,6 +28,7 @@ Object.assign(NativeModules, {
 jest.mock('react-native-reanimated', () => ({
   __esModule: true,
   default: {
+    Code: () => null,
     View: require('react-native').Animated.View,
     Text: require('react-native').Animated.Text,
     Clock: jest.fn(),

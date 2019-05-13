@@ -243,7 +243,7 @@ export default class DrawerView extends React.PureComponent<Props> {
 
   private isStatusBarHidden: boolean = false;
 
-  private isSpringManuallyTriggered = new Value<Binary>(FALSE);
+  private manuallyTriggerSpring = new Value<Binary>(FALSE);
 
   private transitionTo = (isOpen: number | Animated.Node<number>) => {
     const toValue = new Value(0);
@@ -349,7 +349,7 @@ export default class DrawerView extends React.PureComponent<Props> {
     cond(
       eq(this.gestureState, State.ACTIVE),
       [
-        set(this.isSpringManuallyTriggered, FALSE),
+        set(this.manuallyTriggerSpring, FALSE),
         cond(this.isSwiping, NOOP, [
           // We weren't dragging before, set it to true
           set(this.isSwiping, TRUE),
@@ -369,7 +369,7 @@ export default class DrawerView extends React.PureComponent<Props> {
         set(this.touchX, 0),
         this.transitionTo(
           cond(
-            this.isSpringManuallyTriggered,
+            this.manuallyTriggerSpring,
             this.isOpen,
             cond(
               or(
@@ -429,7 +429,7 @@ export default class DrawerView extends React.PureComponent<Props> {
     nativeEvent,
   }: TapGestureHandlerStateChangeEvent) => {
     if (nativeEvent.oldState === State.ACTIVE && !this.props.locked) {
-      this.toggleDrawer(false);
+      this.manuallyTriggerSpring.setValue(TRUE);
     }
   };
 
@@ -447,12 +447,13 @@ export default class DrawerView extends React.PureComponent<Props> {
   };
 
   private toggleDrawer = (open: boolean) => {
-    this.nextIsOpen.setValue(open ? TRUE : FALSE);
-    this.isSpringManuallyTriggered.setValue(TRUE);
+    if (this.currentOpenValue !== open) {
+      this.nextIsOpen.setValue(open ? TRUE : FALSE);
 
-    // This value will also be set shortly after as changing this.nextIsOpen changes this.isOpen
-    // However, there's a race condition on Android, so we need to set a bit earlier
-    this.currentOpenValue = open;
+      // This value will also be set shortly after as changing this.nextIsOpen changes this.isOpen
+      // However, there's a race condition on Android, so we need to set a bit earlier
+      this.currentOpenValue = open;
+    }
   };
 
   private toggleStatusBar = (hidden: boolean) => {
@@ -546,6 +547,16 @@ export default class DrawerView extends React.PureComponent<Props> {
               />
             </TapGestureHandler>
           </Animated.View>
+          <Animated.Code
+            exec={block([
+              onChange(this.manuallyTriggerSpring, [
+                cond(eq(this.manuallyTriggerSpring, TRUE), [
+                  set(this.nextIsOpen, FALSE),
+                  call([], () => (this.currentOpenValue = false)),
+                ]),
+              ]),
+            ])}
+          />
           <Animated.View
             accessibilityViewIsModal={open}
             removeClippedSubviews={Platform.OS !== 'ios'}
