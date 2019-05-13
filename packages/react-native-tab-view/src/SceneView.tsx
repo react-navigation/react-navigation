@@ -11,6 +11,7 @@ type Props<T extends Route> = SceneRendererProps &
   EventEmitterProps & {
     navigationState: NavigationState<T>;
     lazy: boolean;
+    lazyPreloadDistance: number;
     index: number;
     children: (props: { loading: boolean }) => React.ReactNode;
     style?: StyleProp<ViewStyle>;
@@ -25,7 +26,11 @@ export default class SceneView<T extends Route> extends React.Component<
   State
 > {
   static getDerivedStateFromProps(props: Props<Route>, state: State) {
-    if (state.loading && props.navigationState.index === props.index) {
+    if (
+      state.loading &&
+      Math.abs(props.navigationState.index - props.index) <=
+        props.lazyPreloadDistance
+    ) {
       // Always render the route when it becomes focused
       return { loading: false };
     }
@@ -34,7 +39,9 @@ export default class SceneView<T extends Route> extends React.Component<
   }
 
   state = {
-    loading: this.props.navigationState.index !== this.props.index,
+    loading:
+      Math.abs(this.props.navigationState.index - this.props.index) >
+      this.props.lazyPreloadDistance,
   };
 
   componentDidMount() {

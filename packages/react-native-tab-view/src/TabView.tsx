@@ -37,6 +37,7 @@ type Props<T extends Route> = PagerCommonProps & {
   tabBarPosition: 'top' | 'bottom';
   initialLayout?: { width?: number; height?: number };
   lazy: boolean;
+  lazyPreloadDistance: number;
   removeClippedSubviews?: boolean;
   sceneContainerStyle?: StyleProp<ViewStyle>;
   style?: StyleProp<ViewStyle>;
@@ -60,6 +61,7 @@ export default class TabView<T extends Route> extends React.Component<
     keyboardDismissMode: 'on-drag',
     swipeEnabled: true,
     lazy: false,
+    lazyPreloadDistance: 0,
     removeClippedSubviews: false,
     springConfig: {},
     timingConfig: {},
@@ -101,6 +103,7 @@ export default class TabView<T extends Route> extends React.Component<
       onSwipeEnd,
       navigationState,
       lazy,
+      lazyPreloadDistance,
       removeClippedSubviews,
       keyboardDismissMode,
       swipeEnabled,
@@ -166,6 +169,7 @@ export default class TabView<T extends Route> extends React.Component<
                         key={route.key}
                         index={i}
                         lazy={lazy}
+                        lazyPreloadDistance={lazyPreloadDistance}
                         navigationState={navigationState}
                         style={sceneContainerStyle}
                       >
