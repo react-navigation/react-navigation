@@ -1,12 +1,12 @@
 /* @flow */
 
-export default function memoize<Result, Deps: any[]>(
+export default function memoize<Result, Deps: $ReadOnlyArray<any>>(
   callback: (...deps: Deps) => Result
 ) {
   let previous: ?Deps;
   let result: ?Result;
 
-  return (...dependencies: Deps) => {
+  return (...dependencies: Deps): Result => {
     let hasChanged = false;
 
     if (previous) {
@@ -30,6 +30,7 @@ export default function memoize<Result, Deps: any[]>(
       result = callback(...dependencies);
     }
 
+    /* $FlowFixMe: we initialize result if it's undefined above */
     return result;
   };
 }
