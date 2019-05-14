@@ -4,6 +4,8 @@ import * as React from 'react';
 import { StyleSheet, I18nManager } from 'react-native';
 import Animated from 'react-native-reanimated';
 import type { ViewStyleProp } from 'react-native/Libraries/StyleSheet/StyleSheet';
+
+import memoize from './memoize';
 import type { Route, SceneRendererProps, NavigationState } from './types';
 
 export type Props<T> = {|
@@ -15,29 +17,38 @@ export type Props<T> = {|
 
 const { max, min, multiply } = Animated;
 
-export default function TabBarIndicator<T: Route>(props: Props<T>) {
-  const { width, position, navigationState, style } = props;
-  const { routes } = navigationState;
-
-  const translateX = multiply(
-    max(min(position, routes.length - 1), 0),
-    width * (I18nManager.isRTL ? -1 : 1)
+export default class TabBarIndicator<T: Route> extends React.Component<
+  Props<T>
+> {
+  _getTranslateX = memoize(
+    (position: Animated.Node<number>, routes: Route[], width: number) =>
+      multiply(
+        max(min(position, routes.length - 1), 0),
+        width * (I18nManager.isRTL ? -1 : 1)
+      )
   );
 
-  return (
-    <Animated.View
-      style={[
-        styles.indicator,
-        { width: `${100 / routes.length}%` },
-        // If layout is not available, use `left` property for positioning the indicator
-        // This avoids rendering delay until we are able to calculate translateX
-        width
-          ? { transform: [{ translateX }] }
-          : { left: `${(100 / routes.length) * navigationState.index}%` },
-        style,
-      ]}
-    />
-  );
+  render() {
+    const { width, position, navigationState, style } = this.props;
+    const { routes } = navigationState;
+
+    const translateX = this._getTranslateX(position, routes, width);
+
+    return (
+      <Animated.View
+        style={[
+          styles.indicator,
+          { width: `${100 / routes.length}%` },
+          // If layout is not available, use `left` property for positioning the indicator
+          // This avoids rendering delay until we are able to calculate translateX
+          width
+            ? { transform: [{ translateX }] }
+            : { left: `${(100 / routes.length) * navigationState.index}%` },
+          style,
+        ]}
+      />
+    );
+  }
 }
 
 const styles = StyleSheet.create({

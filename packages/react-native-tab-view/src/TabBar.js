@@ -11,6 +11,8 @@ import type {
   ViewStyleProp,
   TextStyleProp,
 } from 'react-native/Libraries/StyleSheet/StyleSheet';
+
+import memoize from './memoize';
 import type {
   Route,
   Scene,
@@ -53,7 +55,6 @@ export type Props<T> = {|
 |};
 
 type State = {|
-  scrollAmount: Animated.Value,
   initialOffset: ?{| x: number, y: number |},
 |};
 
@@ -90,7 +91,6 @@ export default class TabBar<T: Route> extends React.Component<Props<T>, State> {
         : undefined;
 
     this.state = {
-      scrollAmount: new Animated.Value(0),
       initialOffset,
     };
   }
@@ -108,6 +108,8 @@ export default class TabBar<T: Route> extends React.Component<Props<T>, State> {
       this._resetScroll(this.props.navigationState.index);
     }
   }
+
+  _scrollAmount = new Animated.Value(0);
 
   _scrollView: ?ScrollView;
   _isManualScroll: boolean = false;
@@ -209,6 +211,10 @@ export default class TabBar<T: Route> extends React.Component<Props<T>, State> {
     this._isManualScroll = false;
   };
 
+  _getTranslateX = memoize((scrollAmount: Animated.Node<number>) =>
+    Animated.multiply(scrollAmount, -1)
+  );
+
   render() {
     const {
       position,
@@ -239,7 +245,7 @@ export default class TabBar<T: Route> extends React.Component<Props<T>, State> {
     const { routes } = navigationState;
     const tabWidth = this._getTabWidth(this.props);
     const tabBarWidth = tabWidth * routes.length;
-    const translateX = Animated.multiply(this.state.scrollAmount, -1);
+    const translateX = this._getTranslateX(this._scrollAmount);
 
     return (
       <Animated.View style={[styles.tabBar, style]}>
@@ -282,7 +288,7 @@ export default class TabBar<T: Route> extends React.Component<Props<T>, State> {
               [
                 {
                   nativeEvent: {
-                    contentOffset: { x: this.state.scrollAmount },
+                    contentOffset: { x: this._scrollAmount },
                   },
                 },
               ],

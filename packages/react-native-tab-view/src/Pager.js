@@ -4,6 +4,7 @@ import * as React from 'react';
 import { StyleSheet, Keyboard, I18nManager } from 'react-native';
 import { PanGestureHandler, State } from 'react-native-gesture-handler';
 import Animated, { Easing } from 'react-native-reanimated';
+import memoize from './memoize';
 
 import type {
   Layout,
@@ -568,6 +569,25 @@ export default class Pager<T: Route> extends React.Component<Props<T>> {
     this._progress,
   ]);
 
+  _getTranslateX = memoize(
+    (
+      layoutWidth: number,
+      routesLength: number,
+      translateX: Animated.Node<number>
+    ) =>
+      multiply(
+        // Make sure that the translation doesn't exceed the bounds to prevent overscrolling
+        min(
+          max(
+            multiply(layoutWidth, sub(routesLength, 1), DIRECTION_RIGHT),
+            translateX
+          ),
+          0
+        ),
+        I18nManager.isRTL ? -1 : 1
+      )
+  );
+
   render() {
     const {
       layout,
@@ -577,17 +597,10 @@ export default class Pager<T: Route> extends React.Component<Props<T>> {
       removeClippedSubviews,
     } = this.props;
 
-    // Make sure that the translation doesn't exceed the bounds to prevent overscrolling
-    const translateX = min(
-      max(
-        multiply(
-          this._layoutWidth,
-          sub(this._routesLength, 1),
-          DIRECTION_RIGHT
-        ),
-        this._translateX
-      ),
-      0
+    const translateX = this._getTranslateX(
+      this._layoutWidth,
+      this._routesLength,
+      this._translateX
     );
 
     return children({
@@ -610,13 +623,7 @@ export default class Pager<T: Route> extends React.Component<Props<T>> {
               layout.width
                 ? {
                     width: layout.width * navigationState.routes.length,
-                    transform: [
-                      {
-                        translateX: I18nManager.isRTL
-                          ? multiply(translateX, -1)
-                          : translateX,
-                      },
-                    ],
+                    transform: [{ translateX }],
                   }
                 : null,
             ]}

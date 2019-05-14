@@ -9,6 +9,7 @@ import type {
   TextStyleProp,
 } from 'react-native/Libraries/StyleSheet/StyleSheet';
 import Animated from 'react-native-reanimated';
+import memoize from './memoize';
 
 type Props<T> = {|
   position: Animated.Node,
@@ -44,180 +45,205 @@ type Props<T> = {|
 const DEFAULT_ACTIVE_COLOR = 'rgba(255, 255, 255, 1)';
 const DEFAULT_INACTIVE_COLOR = 'rgba(255, 255, 255, 0.7)';
 
-export default function TabBarItem<T: Route>({
-  route,
-  position,
-  navigationState,
-  scrollEnabled,
-  renderLabel,
-  renderIcon,
-  renderBadge,
-  getLabelText,
-  getTestID,
-  getAccessibilityLabel,
-  getAccessible,
-  activeColor = DEFAULT_ACTIVE_COLOR,
-  inactiveColor = DEFAULT_INACTIVE_COLOR,
-  pressColor,
-  pressOpacity,
-  labelStyle,
-  style,
-  tabWidth,
-  onPress,
-  onLongPress,
-}: Props<T>) {
-  const tabIndex = navigationState.routes.indexOf(route);
-  const isFocused = navigationState.index === tabIndex;
+export default class TabBarItem<T: Route> extends React.Component<Props<T>> {
+  _getActiveOpacity = memoize(
+    (position: Animated.Node<number>, routes: Route[], tabIndex: number) => {
+      if (routes.length > 1) {
+        const inputRange = routes.map((x, i) => i);
 
-  let activeOpacity;
-  let inactiveOpacity;
+        return Animated.interpolate(position, {
+          inputRange,
+          outputRange: inputRange.map(i => (i === tabIndex ? 1 : 0)),
+        });
+      } else {
+        return 1;
+      }
+    }
+  );
 
-  if (navigationState.routes.length > 1) {
-    const inputRange = navigationState.routes.map((x, i) => i);
+  _getInactiveOpacity = memoize((position, routes, tabIndex) => {
+    if (routes.length > 1) {
+      const inputRange = routes.map((x, i) => i);
 
-    activeOpacity = Animated.interpolate(position, {
-      inputRange,
-      outputRange: inputRange.map(i => (i === tabIndex ? 1 : 0)),
-    });
+      return Animated.interpolate(position, {
+        inputRange,
+        outputRange: inputRange.map(i => (i === tabIndex ? 0 : 1)),
+      });
+    } else {
+      return 0;
+    }
+  });
 
-    inactiveOpacity = Animated.interpolate(position, {
-      inputRange,
-      outputRange: inputRange.map(i => (i === tabIndex ? 0 : 1)),
-    });
-  } else {
-    // When there's only one tab, we can't use interpolate
-    // Coz inputRange can't have only one item
-    activeOpacity = 1;
-    inactiveOpacity = 0;
-  }
-
-  let icon = null;
-  let label = null;
-
-  if (renderIcon) {
-    const activeIcon = renderIcon({ route, focused: true, color: activeColor });
-    const inactiveIcon = renderIcon({
+  render() {
+    const {
       route,
-      focused: false,
-      color: inactiveColor,
-    });
+      position,
+      navigationState,
+      scrollEnabled,
+      renderLabel: renderLabelPassed,
+      renderIcon,
+      renderBadge,
+      getLabelText,
+      getTestID,
+      getAccessibilityLabel,
+      getAccessible,
+      activeColor = DEFAULT_ACTIVE_COLOR,
+      inactiveColor = DEFAULT_INACTIVE_COLOR,
+      pressColor,
+      pressOpacity,
+      labelStyle,
+      style,
+      tabWidth,
+      onPress,
+      onLongPress,
+    } = this.props;
 
-    if (inactiveIcon != null && activeIcon != null) {
-      icon = (
-        <View style={styles.icon}>
+    const tabIndex = navigationState.routes.indexOf(route);
+    const isFocused = navigationState.index === tabIndex;
+
+    const activeOpacity = this._getActiveOpacity(
+      position,
+      navigationState.routes,
+      tabIndex
+    );
+    const inactiveOpacity = this._getInactiveOpacity(
+      position,
+      navigationState.routes,
+      tabIndex
+    );
+
+    let icon = null;
+    let label = null;
+
+    if (renderIcon) {
+      const activeIcon = renderIcon({
+        route,
+        focused: true,
+        color: activeColor,
+      });
+      const inactiveIcon = renderIcon({
+        route,
+        focused: false,
+        color: inactiveColor,
+      });
+
+      if (inactiveIcon != null && activeIcon != null) {
+        icon = (
+          <View style={styles.icon}>
+            <Animated.View style={{ opacity: inactiveOpacity }}>
+              {inactiveIcon}
+            </Animated.View>
+            <Animated.View
+              style={[StyleSheet.absoluteFill, { opacity: activeOpacity }]}
+            >
+              {activeIcon}
+            </Animated.View>
+          </View>
+        );
+      }
+    }
+
+    const renderLabel =
+      renderLabelPassed !== undefined
+        ? renderLabelPassed
+        : ({ route, color }) => {
+            const labelText = getLabelText({ route });
+
+            if (typeof labelText === 'string') {
+              return (
+                <Animated.Text
+                  style={[
+                    styles.label,
+                    // eslint-disable-next-line react-native/no-inline-styles
+                    icon && { marginTop: 0 },
+                    { color },
+                    labelStyle,
+                  ]}
+                >
+                  {labelText}
+                </Animated.Text>
+              );
+            }
+
+            return labelText;
+          };
+
+    if (renderLabel) {
+      const activeLabel = renderLabel({
+        route,
+        focused: true,
+        color: activeColor,
+      });
+      const inactiveLabel = renderLabel({
+        route,
+        focused: false,
+        color: inactiveColor,
+      });
+
+      label = (
+        <View>
           <Animated.View style={{ opacity: inactiveOpacity }}>
-            {inactiveIcon}
+            {inactiveLabel}
           </Animated.View>
           <Animated.View
             style={[StyleSheet.absoluteFill, { opacity: activeOpacity }]}
           >
-            {activeIcon}
+            {activeLabel}
           </Animated.View>
         </View>
       );
     }
-  }
 
-  renderLabel =
-    renderLabel !== undefined
-      ? renderLabel
-      : ({ route, color }) => {
-          const labelText = getLabelText({ route });
+    const tabStyle = StyleSheet.flatten(style);
+    const isWidthSet =
+      (tabStyle && typeof tabStyle.width !== 'undefined') ||
+      scrollEnabled === true;
 
-          if (typeof labelText === 'string') {
-            return (
-              <Animated.Text
-                style={[
-                  styles.label,
-                  // eslint-disable-next-line react-native/no-inline-styles
-                  icon && { marginTop: 0 },
-                  { color },
-                  labelStyle,
-                ]}
-              >
-                {labelText}
-              </Animated.Text>
-            );
-          }
+    const tabContainerStyle = {};
+    const itemStyle = isWidthSet ? { width: tabWidth } : null;
 
-          return labelText;
-        };
+    if (tabStyle && typeof tabStyle.flex === 'number') {
+      tabContainerStyle.flex = tabStyle.flex;
+    } else if (!isWidthSet) {
+      tabContainerStyle.flex = 1;
+    }
 
-  if (renderLabel) {
-    const activeLabel = renderLabel({
-      route,
-      focused: true,
-      color: activeColor,
-    });
-    const inactiveLabel = renderLabel({
-      route,
-      focused: false,
-      color: inactiveColor,
-    });
+    const scene = { route };
 
-    label = (
-      <View>
-        <Animated.View style={{ opacity: inactiveOpacity }}>
-          {inactiveLabel}
-        </Animated.View>
-        <Animated.View
-          style={[StyleSheet.absoluteFill, { opacity: activeOpacity }]}
-        >
-          {activeLabel}
-        </Animated.View>
-      </View>
+    let accessibilityLabel = getAccessibilityLabel(scene);
+
+    accessibilityLabel =
+      typeof accessibilityLabel !== 'undefined'
+        ? accessibilityLabel
+        : getLabelText(scene);
+
+    const badge = renderBadge ? renderBadge(scene) : null;
+
+    return (
+      <TouchableItem
+        borderless
+        testID={getTestID(scene)}
+        accessible={getAccessible(scene)}
+        accessibilityLabel={accessibilityLabel}
+        accessibilityTraits={isFocused ? ['button', 'selected'] : 'button'}
+        accessibilityComponentType="button"
+        accessibilityRole="button"
+        accessibilityStates={isFocused ? ['selected'] : []}
+        pressColor={pressColor}
+        pressOpacity={pressOpacity}
+        delayPressIn={0}
+        onPress={onPress}
+        onLongPress={onLongPress}
+        style={tabContainerStyle}
+      >
+        <View pointerEvents="none" style={[styles.item, itemStyle, tabStyle]}>
+          {icon}
+          {label}
+          {badge != null ? <View style={styles.badge}>{badge}</View> : null}
+        </View>
+      </TouchableItem>
     );
   }
-
-  const tabStyle = StyleSheet.flatten(style);
-  const isWidthSet =
-    (tabStyle && typeof tabStyle.width !== 'undefined') ||
-    scrollEnabled === true;
-
-  const tabContainerStyle = {};
-  const itemStyle = isWidthSet ? { width: tabWidth } : null;
-
-  if (tabStyle && typeof tabStyle.flex === 'number') {
-    tabContainerStyle.flex = tabStyle.flex;
-  } else if (!isWidthSet) {
-    tabContainerStyle.flex = 1;
-  }
-
-  const scene = { route };
-
-  let accessibilityLabel = getAccessibilityLabel(scene);
-
-  accessibilityLabel =
-    typeof accessibilityLabel !== 'undefined'
-      ? accessibilityLabel
-      : getLabelText(scene);
-
-  const badge = renderBadge ? renderBadge(scene) : null;
-
-  return (
-    <TouchableItem
-      borderless
-      testID={getTestID(scene)}
-      accessible={getAccessible(scene)}
-      accessibilityLabel={accessibilityLabel}
-      accessibilityTraits={isFocused ? ['button', 'selected'] : 'button'}
-      accessibilityComponentType="button"
-      accessibilityRole="button"
-      accessibilityStates={isFocused ? ['selected'] : []}
-      pressColor={pressColor}
-      pressOpacity={pressOpacity}
-      delayPressIn={0}
-      onPress={onPress}
-      onLongPress={onLongPress}
-      style={tabContainerStyle}
-    >
-      <View pointerEvents="none" style={[styles.item, itemStyle, tabStyle]}>
-        {icon}
-        {label}
-        {badge != null ? <View style={styles.badge}>{badge}</View> : null}
-      </View>
-    </TouchableItem>
-  );
 }
 
 const styles = StyleSheet.create({
