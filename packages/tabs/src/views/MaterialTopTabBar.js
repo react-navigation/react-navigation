@@ -19,8 +19,6 @@ type Layout = {|
   height: number,
 |};
 
-type Listener = (value: number) => mixed;
-
 export type TabBarOptions = {|
   activeTintColor?: string,
   allowFontScaling?: boolean,
@@ -45,8 +43,6 @@ type Props = {|
   layout: Layout,
   position: Animated.Node<number>,
   jumpTo: (key: string) => void,
-  addListener: (type: 'position', listener: Listener) => void,
-  removeListener: (type: 'position', listener: Listener) => void,
   getLabelText: (scene: { route: Route }) => ?string,
   getAccessible?: (scene: { route: Route }) => ?boolean,
   getAccessibilityLabel: (scene: { route: Route }) => ?string,

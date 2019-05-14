@@ -38,7 +38,7 @@
   "dependencies": {
     "hoist-non-react-statics": "^3.3.0",
     "react-lifecycles-compat": "^3.0.4",
-    "react-native-tab-view": "^2.2.0"
+    "react-native-tab-view": "^2.3.0"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^7.5.0",
