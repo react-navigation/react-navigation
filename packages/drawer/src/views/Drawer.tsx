@@ -59,12 +59,12 @@ const SWIPE_DISTANCE_THRESHOLD_DEFAULT = 60;
 const SWIPE_DISTANCE_MINIMUM = 5;
 
 const SPRING_CONFIG = {
-  damping: 30,
-  mass: 0.5,
-  stiffness: 150,
+  stiffness: 1000,
+  damping: 500,
+  mass: 3,
   overshootClamping: true,
-  restSpeedThreshold: 0.001,
-  restDisplacementThreshold: 0.001,
+  restDisplacementThreshold: 0.01,
+  restSpeedThreshold: 0.01,
 };
 
 type Binary = 0 | 1;
