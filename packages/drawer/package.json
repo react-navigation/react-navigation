@@ -30,14 +30,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/react-navigation/react-navigation-drawer.git"
+    "url": "git+https://github.com/react-navigation/drawer.git"
   },
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/react-navigation/react-navigation-drawer/issues"
+    "url": "https://github.com/react-navigation/drawer/issues"
   },
-  "homepage": "https://github.com/react-navigation/react-navigation-drawer#readme",
+  "homepage": "https://github.com/react-navigation/drawer#readme",
   "devDependencies": {
     "@babel/core": "^7.4.3",
     "@commitlint/config-conventional": "^7.5.0",
