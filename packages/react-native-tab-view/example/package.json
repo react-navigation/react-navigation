@@ -2,7 +2,7 @@
   "name": "tabviewexample",
   "version": "0.0.1",
   "private": true,
-  "main": "src/App.js",
+  "main": "index.js",
   "scripts": {
     "start": "expo start",
     "android": "expo android",

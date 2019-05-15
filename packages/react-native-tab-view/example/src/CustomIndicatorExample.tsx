@@ -1,5 +1,3 @@
-/* @flow */
-
 import * as React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -7,25 +5,28 @@ import {
   TabView,
   TabBar,
   SceneMap,
-  type NavigationState,
+  NavigationState,
+  SceneRendererProps,
 } from 'react-native-tab-view';
 import Animated from 'react-native-reanimated';
 import Albums from './Shared/Albums';
 import Article from './Shared/Article';
 import Contacts from './Shared/Contacts';
 
-type State = NavigationState<{
-  key: string,
-  icon: string,
-  color: [number, number, number],
-}>;
+type Route = {
+  key: string;
+  icon: string;
+  color: [number, number, number];
+};
 
-export default class CustomIndicatorExample extends React.Component<*, State> {
+type State = NavigationState<Route>;
+
+export default class CustomIndicatorExample extends React.Component<{}, State> {
   static title = 'Custom indicator';
   static backgroundColor = '#263238';
   static appbarElevation = 4;
 
-  state = {
+  state: State = {
     index: 0,
     routes: [
       {
@@ -46,12 +47,14 @@ export default class CustomIndicatorExample extends React.Component<*, State> {
     ],
   };
 
-  _handleIndexChange = index =>
+  private handleIndexChange = (index: number) =>
     this.setState({
       index,
     });
 
-  _renderIndicator = props => {
+  private renderIndicator = (
+    props: SceneRendererProps & { navigationState: State; width: number }
+  ) => {
     const { width, position, navigationState } = props;
     const inputRange = [
       0,
@@ -98,25 +101,25 @@ export default class CustomIndicatorExample extends React.Component<*, State> {
           styles.container,
           {
             width: `${100 / navigationState.routes.length}%`,
-            transform: [{ translateX }],
+            transform: [{ translateX }] as any,
           },
         ]}
       >
         <Animated.View
           style={[
             styles.indicator,
-            { opacity, backgroundColor, transform: [{ scale }] },
+            { opacity, backgroundColor, transform: [{ scale }] } as any,
           ]}
         />
       </Animated.View>
     );
   };
 
-  _renderIcon = ({ route }) => (
+  private renderIcon = ({ route }: { route: Route }) => (
     <Ionicons name={route.icon} size={24} style={styles.icon} />
   );
 
-  _renderBadge = ({ route }) => {
+  private renderBadge = ({ route }: { route: Route }) => {
     if (route.key === 'albums') {
       return (
         <View style={styles.badge}>
@@ -127,17 +130,19 @@ export default class CustomIndicatorExample extends React.Component<*, State> {
     return null;
   };
 
-  _renderTabBar = props => (
+  private renderTabBar = (
+    props: SceneRendererProps & { navigationState: State }
+  ) => (
     <TabBar
       {...props}
-      renderIcon={this._renderIcon}
-      renderBadge={this._renderBadge}
-      renderIndicator={this._renderIndicator}
+      renderIcon={this.renderIcon}
+      renderBadge={this.renderBadge}
+      renderIndicator={this.renderIndicator}
       style={styles.tabbar}
     />
   );
 
-  _renderScene = SceneMap({
+  private renderScene = SceneMap({
     article: Article,
     contacts: Contacts,
     albums: Albums,
@@ -146,12 +151,11 @@ export default class CustomIndicatorExample extends React.Component<*, State> {
   render() {
     return (
       <TabView
-        style={this.props.style}
         navigationState={this.state}
-        renderScene={this._renderScene}
-        renderTabBar={this._renderTabBar}
+        renderScene={this.renderScene}
+        renderTabBar={this.renderTabBar}
         tabBarPosition="bottom"
-        onIndexChange={this._handleIndexChange}
+        onIndexChange={this.handleIndexChange}
       />
     );
   }

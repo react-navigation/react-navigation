@@ -1,8 +1,11 @@
-/* @flow */
-
 import * as React from 'react';
 import { View, Text, TouchableWithoutFeedback, StyleSheet } from 'react-native';
-import { TabView, SceneMap, type NavigationState } from 'react-native-tab-view';
+import {
+  TabView,
+  SceneMap,
+  NavigationState,
+  SceneRendererProps,
+} from 'react-native-tab-view';
 import Animated from 'react-native-reanimated';
 import { Ionicons } from '@expo/vector-icons';
 import Albums from './Shared/Albums';
@@ -10,18 +13,20 @@ import Article from './Shared/Article';
 import Chat from './Shared/Chat';
 import Contacts from './Shared/Contacts';
 
-type State = NavigationState<{
-  key: string,
-  title: string,
-  icon: string,
-}>;
+type Route = {
+  key: string;
+  title: string;
+  icon: string;
+};
 
-export default class CustomTabBarExample extends React.Component<*, State> {
+type State = NavigationState<Route>;
+
+export default class CustomTabBarExample extends React.Component<{}, State> {
   static title = 'Custom tab bar';
   static backgroundColor = '#fafafa';
   static tintColor = '#263238';
   static appbarElevation = 4;
-  static statusBarStyle = 'dark-content';
+  static statusBarStyle = 'dark-content' as 'dark-content';
 
   state = {
     index: 0,
@@ -33,21 +38,27 @@ export default class CustomTabBarExample extends React.Component<*, State> {
     ],
   };
 
-  _handleIndexChange = index =>
+  private handleIndexChange = (index: number) =>
     this.setState({
       index,
     });
 
-  _renderItem = ({ navigationState, position }) => ({ route, index }) => {
-    const inputRange = navigationState.routes.map((x, i) => i);
+  private renderItem = ({
+    navigationState,
+    position,
+  }: {
+    navigationState: State;
+    position: Animated.Node<number>;
+  }) => ({ route, index }: { route: Route; index: number }) => {
+    const inputRange = navigationState.routes.map((_, i) => i);
 
     const activeOpacity = Animated.interpolate(position, {
       inputRange,
-      outputRange: inputRange.map(i => (i === index ? 1 : 0)),
+      outputRange: inputRange.map((i: number) => (i === index ? 1 : 0)),
     });
     const inactiveOpacity = Animated.interpolate(position, {
       inputRange,
-      outputRange: inputRange.map(i => (i === index ? 0 : 1)),
+      outputRange: inputRange.map((i: number) => (i === index ? 0 : 1)),
     });
 
     return (
@@ -74,22 +85,24 @@ export default class CustomTabBarExample extends React.Component<*, State> {
     );
   };
 
-  _renderTabBar = props => (
+  private renderTabBar = (
+    props: SceneRendererProps & { navigationState: State }
+  ) => (
     <View style={styles.tabbar}>
-      {props.navigationState.routes.map((route, index) => {
+      {props.navigationState.routes.map((route: Route, index: number) => {
         return (
           <TouchableWithoutFeedback
             key={route.key}
             onPress={() => props.jumpTo(route.key)}
           >
-            {this._renderItem(props)({ route, index })}
+            {this.renderItem(props)({ route, index })}
           </TouchableWithoutFeedback>
         );
       })}
     </View>
   );
 
-  _renderScene = SceneMap({
+  private renderScene = SceneMap({
     contacts: Contacts,
     albums: Albums,
     article: Article,
@@ -99,12 +112,11 @@ export default class CustomTabBarExample extends React.Component<*, State> {
   render() {
     return (
       <TabView
-        style={this.props.style}
         navigationState={this.state}
-        renderScene={this._renderScene}
-        renderTabBar={this._renderTabBar}
+        renderScene={this.renderScene}
+        renderTabBar={this.renderTabBar}
         tabBarPosition="bottom"
-        onIndexChange={this._handleIndexChange}
+        onIndexChange={this.handleIndexChange}
       />
     );
   }

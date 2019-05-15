@@ -1,55 +1,57 @@
-/* @flow */
-
 import * as React from 'react';
-import { StyleSheet, View } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  StyleProp,
+  TextStyle,
+  ViewStyle,
+} from 'react-native';
 import TouchableItem from './TouchableItem';
-import type { Scene, Route, NavigationState } from './types';
-import type {
-  ViewStyleProp,
-  TextStyleProp,
-} from 'react-native/Libraries/StyleSheet/StyleSheet';
+import { Scene, Route, NavigationState } from './types';
 import Animated from 'react-native-reanimated';
 import memoize from './memoize';
 
-type Props<T> = {|
-  position: Animated.Node,
-  route: T,
-  navigationState: NavigationState<T>,
-  scrollEnabled?: boolean,
-  activeColor?: string,
-  inactiveColor?: string,
-  pressColor?: string,
-  pressOpacity?: number,
-  getLabelText: (scene: Scene<T>) => ?string,
-  getAccessible: (scene: Scene<T>) => ?boolean,
-  getAccessibilityLabel: (scene: Scene<T>) => ?string,
-  getTestID: (scene: Scene<T>) => ?string,
-  renderLabel?: (scene: {|
-    route: T,
-    focused: boolean,
-    color: string,
-  |}) => React.Node,
-  renderIcon?: (scene: {|
-    route: T,
-    focused: boolean,
-    color: string,
-  |}) => React.Node,
-  renderBadge?: (scene: Scene<T>) => React.Node,
-  onPress: () => mixed,
-  onLongPress: () => mixed,
-  tabWidth: number,
-  labelStyle?: TextStyleProp,
-  style: ViewStyleProp,
-|};
+type Props<T extends Route> = {
+  position: Animated.Node<number>;
+  route: T;
+  navigationState: NavigationState<T>;
+  scrollEnabled?: boolean;
+  activeColor?: string;
+  inactiveColor?: string;
+  pressColor?: string;
+  pressOpacity?: number;
+  getLabelText: (scene: Scene<T>) => string | undefined;
+  getAccessible: (scene: Scene<T>) => boolean | undefined;
+  getAccessibilityLabel: (scene: Scene<T>) => string | undefined;
+  getTestID: (scene: Scene<T>) => string | undefined;
+  renderLabel?: (scene: {
+    route: T;
+    focused: boolean;
+    color: string;
+  }) => React.ReactNode;
+  renderIcon?: (scene: {
+    route: T;
+    focused: boolean;
+    color: string;
+  }) => React.ReactNode;
+  renderBadge?: (scene: Scene<T>) => React.ReactNode;
+  onPress: () => void;
+  onLongPress: () => void;
+  tabWidth: number;
+  labelStyle?: StyleProp<TextStyle>;
+  style: StyleProp<ViewStyle>;
+};
 
 const DEFAULT_ACTIVE_COLOR = 'rgba(255, 255, 255, 1)';
 const DEFAULT_INACTIVE_COLOR = 'rgba(255, 255, 255, 0.7)';
 
-export default class TabBarItem<T: Route> extends React.Component<Props<T>> {
-  _getActiveOpacity = memoize(
+export default class TabBarItem<T extends Route> extends React.Component<
+  Props<T>
+> {
+  private getActiveOpacity = memoize(
     (position: Animated.Node<number>, routes: Route[], tabIndex: number) => {
       if (routes.length > 1) {
-        const inputRange = routes.map((x, i) => i);
+        const inputRange = routes.map((_, i) => i);
 
         return Animated.interpolate(position, {
           inputRange,
@@ -61,13 +63,13 @@ export default class TabBarItem<T: Route> extends React.Component<Props<T>> {
     }
   );
 
-  _getInactiveOpacity = memoize((position, routes, tabIndex) => {
+  private getInactiveOpacity = memoize((position, routes, tabIndex) => {
     if (routes.length > 1) {
-      const inputRange = routes.map((x, i) => i);
+      const inputRange = routes.map((_: Route, i: number) => i);
 
       return Animated.interpolate(position, {
         inputRange,
-        outputRange: inputRange.map(i => (i === tabIndex ? 0 : 1)),
+        outputRange: inputRange.map((i: number) => (i === tabIndex ? 0 : 1)),
       });
     } else {
       return 0;
@@ -101,19 +103,19 @@ export default class TabBarItem<T: Route> extends React.Component<Props<T>> {
     const tabIndex = navigationState.routes.indexOf(route);
     const isFocused = navigationState.index === tabIndex;
 
-    const activeOpacity = this._getActiveOpacity(
+    const activeOpacity = this.getActiveOpacity(
       position,
       navigationState.routes,
       tabIndex
     );
-    const inactiveOpacity = this._getInactiveOpacity(
+    const inactiveOpacity = this.getInactiveOpacity(
       position,
       navigationState.routes,
       tabIndex
     );
 
-    let icon = null;
-    let label = null;
+    let icon: React.ReactNode | null = null;
+    let label: React.ReactNode | null = null;
 
     if (renderIcon) {
       const activeIcon = renderIcon({
@@ -146,7 +148,7 @@ export default class TabBarItem<T: Route> extends React.Component<Props<T>> {
     const renderLabel =
       renderLabelPassed !== undefined
         ? renderLabelPassed
-        : ({ route, color }) => {
+        : ({ route, color }: { route: T; color: string }) => {
             const labelText = getLabelText({ route });
 
             if (typeof labelText === 'string') {
@@ -155,7 +157,7 @@ export default class TabBarItem<T: Route> extends React.Component<Props<T>> {
                   style={[
                     styles.label,
                     // eslint-disable-next-line react-native/no-inline-styles
-                    icon && { marginTop: 0 },
+                    icon ? { marginTop: 0 } : null,
                     { color },
                     labelStyle,
                   ]}
@@ -199,7 +201,7 @@ export default class TabBarItem<T: Route> extends React.Component<Props<T>> {
       (tabStyle && typeof tabStyle.width !== 'undefined') ||
       scrollEnabled === true;
 
-    const tabContainerStyle = {};
+    const tabContainerStyle: ViewStyle = {};
     const itemStyle = isWidthSet ? { width: tabWidth } : null;
 
     if (tabStyle && typeof tabStyle.flex === 'number') {

@@ -1,14 +1,16 @@
-/* @flow */
-
 import * as React from 'react';
-import { StyleSheet, View } from 'react-native';
-import type { ViewStyleProp } from 'react-native/Libraries/StyleSheet/StyleSheet';
-import type { LayoutEvent } from 'react-native/Libraries/Types/CoreEventTypes';
+import {
+  StyleSheet,
+  View,
+  StyleProp,
+  ViewStyle,
+  LayoutChangeEvent,
+} from 'react-native';
 
-import TabBar, { type Props as TabBarProps } from './TabBar';
+import TabBar, { Props as TabBarProps } from './TabBar';
 import Pager from './Pager';
 import SceneView from './SceneView';
-import type {
+import {
   Layout,
   NavigationState,
   Route,
@@ -16,38 +18,41 @@ import type {
   PagerCommonProps,
 } from './types';
 
-type Props<T: Route> = {|
-  ...PagerCommonProps,
-  onIndexChange: (index: number) => mixed,
-  navigationState: NavigationState<T>,
-  renderScene: (props: {|
-    ...SceneRendererProps,
-    route: T,
-  |}) => React.Node,
-  renderLazyPlaceholder: (props: {| route: T |}) => React.Node,
-  renderTabBar: (props: {|
-    ...SceneRendererProps,
-    navigationState: NavigationState<T>,
-  |}) => React.Node,
-  tabBarPosition: 'top' | 'bottom',
-  initialLayout?: { width?: number, height?: number },
-  lazy: boolean,
-  removeClippedSubviews?: boolean,
-  sceneContainerStyle?: ViewStyleProp,
-  style?: ViewStyleProp,
-|};
+type Props<T extends Route> = PagerCommonProps & {
+  onIndexChange: (index: number) => void;
+  navigationState: NavigationState<T>;
+  renderScene: (
+    props: SceneRendererProps & {
+      route: T;
+    }
+  ) => React.ReactNode;
+  renderLazyPlaceholder: (props: { route: T }) => React.ReactNode;
+  renderTabBar: (
+    props: SceneRendererProps & {
+      navigationState: NavigationState<T>;
+    }
+  ) => React.ReactNode;
+  tabBarPosition: 'top' | 'bottom';
+  initialLayout?: { width?: number; height?: number };
+  lazy: boolean;
+  removeClippedSubviews?: boolean;
+  sceneContainerStyle?: StyleProp<ViewStyle>;
+  style?: StyleProp<ViewStyle>;
+};
 
-type State = {|
-  layout: Layout,
-|};
+type State = {
+  layout: Layout;
+};
 
-export default class TabView<T: Route> extends React.Component<
+export default class TabView<T extends Route> extends React.Component<
   Props<T>,
   State
 > {
   static defaultProps = {
     tabBarPosition: 'top',
-    renderTabBar: (props: TabBarProps<T>) => <TabBar {...props} />,
+    renderTabBar: <P extends Route>(props: TabBarProps<P>) => (
+      <TabBar {...props} />
+    ),
     renderLazyPlaceholder: () => null,
     keyboardDismissMode: 'on-drag',
     swipeEnabled: true,
@@ -61,13 +66,13 @@ export default class TabView<T: Route> extends React.Component<
     layout: { width: 0, height: 0, ...this.props.initialLayout },
   };
 
-  _jumpToIndex = (index: number) => {
+  private jumpToIndex = (index: number) => {
     if (index !== this.props.navigationState.index) {
       this.props.onIndexChange(index);
     }
   };
 
-  _handleLayout = (e: LayoutEvent) => {
+  private handleLayout = (e: LayoutChangeEvent) => {
     const { height, width } = e.nativeEvent.layout;
 
     if (
@@ -108,7 +113,7 @@ export default class TabView<T: Route> extends React.Component<
     const { layout } = this.state;
 
     return (
-      <View onLayout={this._handleLayout} style={[styles.pager, style]}>
+      <View onLayout={this.handleLayout} style={[styles.pager, style]}>
         <Pager
           navigationState={navigationState}
           layout={layout}
@@ -120,7 +125,7 @@ export default class TabView<T: Route> extends React.Component<
           springConfig={springConfig}
           onSwipeStart={onSwipeStart}
           onSwipeEnd={onSwipeEnd}
-          onIndexChange={this._jumpToIndex}
+          onIndexChange={this.jumpToIndex}
           removeClippedSubviews={removeClippedSubviews}
         >
           {({ position, render, addListener, removeListener, jumpTo }) => {

@@ -1,15 +1,25 @@
-/* @flow */
-
 import * as React from 'react';
-import { View, Image, Text, StyleSheet } from 'react-native';
-import { TabView, type NavigationState } from 'react-native-tab-view';
+import {
+  View,
+  Image,
+  Text,
+  StyleSheet,
+  ImageRequireSource,
+} from 'react-native';
+import {
+  TabView,
+  NavigationState,
+  SceneRendererProps,
+} from 'react-native-tab-view';
 import Animated from 'react-native-reanimated';
 
-type State = NavigationState<{
-  key: string,
-}>;
+type Route = {
+  key: string;
+};
 
-const ALBUMS = {
+type State = NavigationState<Route>;
+
+const ALBUMS: { [key: string]: ImageRequireSource } = {
   'Abbey Road': require('../assets/album-art-1.jpg'),
   'Bat Out of Hell': require('../assets/album-art-2.jpg'),
   Homogenic: require('../assets/album-art-3.jpg'),
@@ -20,22 +30,25 @@ const ALBUMS = {
   'Lost Horizons': require('../assets/album-art-8.jpg'),
 };
 
-export default class CoverflowExample extends React.Component<*, State> {
+export default class CoverflowExample extends React.Component<{}, State> {
   static title = 'Coverflow';
   static backgroundColor = '#000';
   static appbarElevation = 0;
 
   state = {
     index: 2,
-    /* $FlowFixMe */
     routes: Object.keys(ALBUMS).map(key => ({ key })),
   };
 
-  _buildCoverFlowStyle = ({ layout, position, route }) => {
+  private buildCoverFlowStyle = ({
+    layout,
+    position,
+    route,
+  }: SceneRendererProps & { route: Route }) => {
     const { width } = layout;
     const { routes } = this.state;
     const currentIndex = routes.indexOf(route);
-    const inputRange = routes.map((x, i) => i);
+    const inputRange = routes.map((_, i) => i);
     const translateOutputRange = inputRange.map(i => {
       return (width / 2) * (currentIndex - i) * -1;
     });
@@ -57,17 +70,17 @@ export default class CoverflowExample extends React.Component<*, State> {
     const translateX = Animated.interpolate(position, {
       inputRange,
       outputRange: translateOutputRange,
-      extrapolate: 'clamp',
+      extrapolate: Animated.Extrapolate.CLAMP,
     });
     const scale = Animated.interpolate(position, {
       inputRange,
       outputRange: scaleOutputRange,
-      extrapolate: 'clamp',
+      extrapolate: Animated.Extrapolate.CLAMP,
     });
     const opacity = Animated.interpolate(position, {
       inputRange,
       outputRange: opacityOutputRange,
-      extrapolate: 'clamp',
+      extrapolate: Animated.Extrapolate.CLAMP,
     });
 
     return {
@@ -76,15 +89,17 @@ export default class CoverflowExample extends React.Component<*, State> {
     };
   };
 
-  _handleIndexChange = index =>
+  private handleIndexChange = (index: number) =>
     this.setState({
       index,
     });
 
-  _renderTabBar = () => null;
+  private renderTabBar = () => null;
 
-  _renderScene = props => (
-    <Animated.View style={[styles.page, this._buildCoverFlowStyle(props)]}>
+  private renderScene = (props: SceneRendererProps & { route: Route }) => (
+    <Animated.View
+      style={[styles.page, this.buildCoverFlowStyle(props) as any]}
+    >
       <View style={styles.album}>
         <Image source={ALBUMS[props.route.key]} style={styles.cover} />
       </View>
@@ -95,12 +110,12 @@ export default class CoverflowExample extends React.Component<*, State> {
   render() {
     return (
       <TabView
-        style={[styles.container, this.props.style]}
+        style={styles.container}
         sceneContainerStyle={styles.scene}
         navigationState={this.state}
-        renderTabBar={this._renderTabBar}
-        renderScene={this._renderScene}
-        onIndexChange={this._handleIndexChange}
+        renderTabBar={this.renderTabBar}
+        renderScene={this.renderScene}
+        onIndexChange={this.handleIndexChange}
       />
     );
   }
@@ -128,6 +143,7 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     shadowOffset: {
       height: 8,
+      width: 0,
     },
   },
   cover: {

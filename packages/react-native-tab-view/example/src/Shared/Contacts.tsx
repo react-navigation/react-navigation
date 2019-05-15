@@ -1,10 +1,10 @@
-/* @flow */
-
 import * as React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 
-const CONTACTS = [
+type Item = { name: string; number: number };
+
+const CONTACTS: Item[] = [
   { name: 'Marissa Castillo', number: 7766398169 },
   { name: 'Denzel Curry', number: 9394378449 },
   { name: 'Miles Ferguson', number: 8966872888 },
@@ -58,7 +58,7 @@ const CONTACTS = [
 ];
 
 class ContactItem extends React.PureComponent<{
-  item: { name: string, number: number },
+  item: { name: string; number: number };
 }> {
   render() {
     const { item } = this.props;
@@ -79,18 +79,20 @@ class ContactItem extends React.PureComponent<{
   }
 }
 
-export default class Contacts extends React.Component<*> {
-  _renderItem = ({ item }) => <ContactItem item={item} />;
+export default class Contacts extends React.Component {
+  private renderItem = ({ item }: { item: Item }) => (
+    <ContactItem item={item} />
+  );
 
-  _ItemSeparator = () => <View style={styles.separator} />;
+  private ItemSeparator = () => <View style={styles.separator} />;
 
   render() {
     return (
       <FlatList
         data={CONTACTS}
-        keyExtractor={(item, i) => String(i)}
-        renderItem={this._renderItem}
-        ItemSeparatorComponent={this._ItemSeparator}
+        keyExtractor={(_, i) => String(i)}
+        renderItem={this.renderItem}
+        ItemSeparatorComponent={this.ItemSeparator}
       />
     );
   }

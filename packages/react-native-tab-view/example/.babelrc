@@ -5,7 +5,7 @@
   "plugins": [
     ["module-resolver", {
       "alias": {
-        "react-native-tab-view": "../src/index.js"
+        "react-native-tab-view": "../src/index"
       }
     }]
   ]

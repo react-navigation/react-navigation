@@ -16,7 +16,7 @@ A cross-platform Tab View component for React Native.
 - Supports both top and bottom tab bars
 - Follows Material Design spec
 - Highly customizable
-- Fully typed with [Flow](https://flow.org/)
+- Fully typed with [TypeScript](https://typescriptlang.org)
 
 ## Demo
 
@@ -567,10 +567,10 @@ On Android, enabling `removeClippedSubviews` can improve memory usage. This opti
 
 While developing, you can run the [example app](/example/README.md) to test your changes.
 
-Make sure your code passes Flow and ESLint. Run the following to verify:
+Make sure your code passes TypeScript and ESLint. Run the following to verify:
 
 ```sh
-yarn flow
+yarn typescript
 yarn lint
 ```
 

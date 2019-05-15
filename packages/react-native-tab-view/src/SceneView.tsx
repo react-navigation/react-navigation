@@ -1,34 +1,30 @@
-/* @flow */
-
 import * as React from 'react';
-import { View, StyleSheet } from 'react-native';
-import type { ViewStyleProp } from 'react-native/Libraries/StyleSheet/StyleSheet';
-import type {
+import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
+import {
   SceneRendererProps,
   EventEmitterProps,
   NavigationState,
   Route,
 } from './types';
 
-type Props<T: Route> = {|
-  ...SceneRendererProps,
-  ...EventEmitterProps,
-  navigationState: NavigationState<T>,
-  lazy: boolean,
-  index: number,
-  children: (props: { loading: boolean }) => React.Node,
-  style?: ViewStyleProp,
-|};
+type Props<T extends Route> = SceneRendererProps &
+  EventEmitterProps & {
+    navigationState: NavigationState<T>;
+    lazy: boolean;
+    index: number;
+    children: (props: { loading: boolean }) => React.ReactNode;
+    style?: StyleProp<ViewStyle>;
+  };
 
 type State = {
-  loading: boolean,
+  loading: boolean;
 };
 
-export default class SceneView<T: Route> extends React.Component<
+export default class SceneView<T extends Route> extends React.Component<
   Props<T>,
   State
 > {
-  static getDerivedStateFromProps(props: Props<T>, state: State) {
+  static getDerivedStateFromProps(props: Props<Route>, state: State) {
     if (state.loading && props.navigationState.index === props.index) {
       // Always render the route when it becomes focused
       return { loading: false };
@@ -44,7 +40,7 @@ export default class SceneView<T: Route> extends React.Component<
   componentDidMount() {
     if (this.props.lazy) {
       // If lazy mode is enabled, listen to when we enter screens
-      this.props.addListener('enter', this._handleEnter);
+      this.props.addListener('enter', this.handleEnter);
     } else if (this.state.loading) {
       // If lazy mode is not enabled, render the scene with a delay if not loaded already
       // This improves the initial startup time as the scene is no longer blocking
@@ -59,18 +55,18 @@ export default class SceneView<T: Route> extends React.Component<
     ) {
       // We only need the listener if the tab hasn't loaded yet and lazy is enabled
       if (this.props.lazy && this.state.loading) {
-        this.props.addListener('enter', this._handleEnter);
+        this.props.addListener('enter', this.handleEnter);
       } else {
-        this.props.removeListener('enter', this._handleEnter);
+        this.props.removeListener('enter', this.handleEnter);
       }
     }
   }
 
   componentWillUnmount() {
-    this.props.removeListener('enter', this._handleEnter);
+    this.props.removeListener('enter', this.handleEnter);
   }
 
-  _handleEnter = value => {
+  private handleEnter = (value: number) => {
     const { index } = this.props;
 
     // If we're entering the current route, we need to load it

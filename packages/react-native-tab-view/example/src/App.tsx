@@ -1,5 +1,3 @@
-/* @flow */
-
 import { registerRootComponent, Asset, KeepAwake } from 'expo';
 import * as React from 'react';
 import {
@@ -21,16 +19,24 @@ import CustomTabBarExample from './CustomTabBarExample';
 import CoverflowExample from './CoverflowExample';
 
 type State = {
-  title: string,
-  index: number,
-  restoring: boolean,
+  title: string;
+  index: number;
+  restoring: boolean;
+};
+
+type ExampleComponentType = React.ComponentType<{}> & {
+  title: string;
+  tintColor?: string;
+  backgroundColor?: string;
+  statusBarStyle?: 'light-content' | 'dark-content';
+  appbarElevation?: number;
 };
 
 YellowBox.ignoreWarnings(['bind():']);
 
 const PERSISTENCE_KEY = 'index_persistence';
 
-const EXAMPLE_COMPONENTS = [
+const EXAMPLE_COMPONENTS: ExampleComponentType[] = [
   ScrollableTabBarExample,
   TabBarIconExample,
   CustomIndicatorExample,
@@ -47,7 +53,7 @@ export default class ExampleList extends React.Component<{}, State> {
 
   componentDidMount() {
     if (process.env.NODE_ENV !== 'production') {
-      this._restoreNavigationState();
+      this.restoreNavigationState();
     }
 
     [
@@ -62,13 +68,13 @@ export default class ExampleList extends React.Component<{}, State> {
     ].map(image => Asset.fromModule(image).downloadAsync());
   }
 
-  _persistNavigationState = async (currentIndex: number) => {
+  private persistNavigationState = async (currentIndex: number) => {
     if (process.env.NODE_ENV !== 'production') {
       await AsyncStorage.setItem(PERSISTENCE_KEY, JSON.stringify(currentIndex));
     }
   };
 
-  _restoreNavigationState = async () => {
+  private restoreNavigationState = async () => {
     this.setState({
       restoring: true,
     });
@@ -76,7 +82,7 @@ export default class ExampleList extends React.Component<{}, State> {
     const savedIndexString = await AsyncStorage.getItem(PERSISTENCE_KEY);
 
     try {
-      const savedIndex = JSON.parse(savedIndexString);
+      const savedIndex = JSON.parse(savedIndexString || '');
 
       if (
         Number.isFinite(savedIndex) &&
@@ -96,30 +102,28 @@ export default class ExampleList extends React.Component<{}, State> {
     });
   };
 
-  _handleNavigate = index => {
+  private handleNavigate = (index: number) => {
     this.setState({
       index,
     });
-    this._persistNavigationState(index);
+    this.persistNavigationState(index);
   };
 
-  _handleNavigateBack = () => {
-    this._handleNavigate(-1);
+  private handleNavigateBack = () => {
+    this.handleNavigate(-1);
   };
 
-  _renderItem = (component, i) => {
-    return (
-      <TouchableOpacity
-        key={i}
-        style={styles.touchable}
-        onPress={() => this._handleNavigate(i)}
-      >
-        <Text style={styles.item}>
-          {i + 1}. {component.title}
-        </Text>
-      </TouchableOpacity>
-    );
-  };
+  private renderItem = (component: ExampleComponentType, i: number) => (
+    <TouchableOpacity
+      key={i}
+      style={styles.touchable}
+      onPress={() => this.handleNavigate(i)}
+    >
+      <Text style={styles.item}>
+        {i + 1}. {component.title}
+      </Text>
+    </TouchableOpacity>
+  );
 
   render() {
     if (this.state.restoring) {
@@ -138,7 +142,7 @@ export default class ExampleList extends React.Component<{}, State> {
         ? ExampleComponent.tintColor
         : 'white';
     const appbarElevation =
-      ExampleComponent && Number.isFinite(ExampleComponent.appbarElevation)
+      ExampleComponent && typeof ExampleComponent.appbarElevation === 'number'
         ? ExampleComponent.appbarElevation
         : 4;
     const statusBarStyle =
@@ -151,10 +155,7 @@ export default class ExampleList extends React.Component<{}, State> {
     return (
       <View style={styles.container}>
         <StatusBar
-          barStyle={
-            /* $FlowFixMe */
-            Platform.OS === 'ios' ? statusBarStyle : 'light-content'
-          }
+          barStyle={Platform.OS === 'ios' ? statusBarStyle : 'light-content'}
         />
         <KeepAwake />
         <View
@@ -175,7 +176,7 @@ export default class ExampleList extends React.Component<{}, State> {
           {index > -1 ? (
             <TouchableOpacity
               style={styles.button}
-              onPress={this._handleNavigateBack}
+              onPress={this.handleNavigateBack}
             >
               <Ionicons
                 name={
@@ -192,7 +193,7 @@ export default class ExampleList extends React.Component<{}, State> {
           {index > -1 ? <View style={styles.button} /> : null}
         </View>
         {index === -1 ? (
-          <ScrollView>{EXAMPLE_COMPONENTS.map(this._renderItem)}</ScrollView>
+          <ScrollView>{EXAMPLE_COMPONENTS.map(this.renderItem)}</ScrollView>
         ) : ExampleComponent ? (
           <ExampleComponent />
         ) : null}

@@ -1,10 +1,8 @@
-/* @flow */
-
-export default function memoize<Result, Deps: $ReadOnlyArray<any>>(
+export default function memoize<Result, Deps extends ReadonlyArray<any>>(
   callback: (...deps: Deps) => Result
 ) {
-  let previous: ?Deps;
-  let result: ?Result;
+  let previous: Deps | undefined;
+  let result: Result | undefined;
 
   return (...dependencies: Deps): Result => {
     let hasChanged = false;
@@ -30,7 +28,6 @@ export default function memoize<Result, Deps: $ReadOnlyArray<any>>(
       result = callback(...dependencies);
     }
 
-    /* $FlowFixMe: we initialize result if it's undefined above */
     return result;
   };
 }

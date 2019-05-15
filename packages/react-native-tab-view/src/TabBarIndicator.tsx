@@ -1,26 +1,22 @@
-/* @flow */
-
 import * as React from 'react';
-import { StyleSheet, I18nManager } from 'react-native';
+import { StyleSheet, I18nManager, StyleProp, ViewStyle } from 'react-native';
 import Animated from 'react-native-reanimated';
-import type { ViewStyleProp } from 'react-native/Libraries/StyleSheet/StyleSheet';
 
 import memoize from './memoize';
-import type { Route, SceneRendererProps, NavigationState } from './types';
+import { Route, SceneRendererProps, NavigationState } from './types';
 
-export type Props<T> = {|
-  ...SceneRendererProps,
-  navigationState: NavigationState<T>,
-  width: number,
-  style?: ViewStyleProp,
-|};
+export type Props<T extends Route> = SceneRendererProps & {
+  navigationState: NavigationState<T>;
+  width: number;
+  style?: StyleProp<ViewStyle>;
+};
 
 const { max, min, multiply } = Animated;
 
-export default class TabBarIndicator<T: Route> extends React.Component<
+export default class TabBarIndicator<T extends Route> extends React.Component<
   Props<T>
 > {
-  _getTranslateX = memoize(
+  private getTranslateX = memoize(
     (position: Animated.Node<number>, routes: Route[], width: number) =>
       multiply(
         max(min(position, routes.length - 1), 0),
@@ -32,7 +28,7 @@ export default class TabBarIndicator<T: Route> extends React.Component<
     const { width, position, navigationState, style } = this.props;
     const { routes } = navigationState;
 
-    const translateX = this._getTranslateX(position, routes, width);
+    const translateX = this.getTranslateX(position, routes, width);
 
     return (
       <Animated.View
@@ -42,7 +38,7 @@ export default class TabBarIndicator<T: Route> extends React.Component<
           // If layout is not available, use `left` property for positioning the indicator
           // This avoids rendering delay until we are able to calculate translateX
           width
-            ? { transform: [{ translateX }] }
+            ? { transform: [{ translateX }] as any }
             : { left: `${(100 / routes.length) * navigationState.index}%` },
           style,
         ]}
