@@ -489,6 +489,7 @@ export default class Pager<T extends Route> extends React.Component<Props<T>> {
       cond(neq(this.nextIndex, UNSET), [
         // Stop any running animations
         cond(clockRunning(this.clock), stopClock(this.clock)),
+        set(this.gestureX, 0),
         // Update the index to trigger the transition
         set(this.index, this.nextIndex),
         set(this.nextIndex, UNSET),
