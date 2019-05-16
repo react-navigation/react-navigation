@@ -68,7 +68,7 @@ declare module 'react-navigation' {
 
   export type ScreenProps = {
     [key: string]: any;
-  }
+  };
 
   // @todo - any..
   export function getActiveChildNavigationOptions<S>(
@@ -590,7 +590,9 @@ declare module 'react-navigation' {
     tabBarLabel?:
       | string
       | React.ReactElement<any>
-      | ((options: TabBarLabelProps) => React.ReactElement<any> | string | null);
+      | ((
+          options: TabBarLabelProps
+        ) => React.ReactElement<any> | string | null);
     tabBarVisible?: boolean;
     tabBarTestIDProps?: { testID?: string; accessibilityLabel?: string };
   }
@@ -669,7 +671,9 @@ declare module 'react-navigation' {
     lastState: NavigationState | null | undefined;
   }
 
-  export type NavigationEventCallback = (payload: NavigationEventPayload) => void;
+  export type NavigationEventCallback = (
+    payload: NavigationEventPayload
+  ) => void;
 
   export interface NavigationEventSubscription {
     remove: () => void;
@@ -899,7 +903,15 @@ declare module 'react-navigation' {
       action: NavigationAction
     ) => void | null | undefined;
     navigation?: NavigationScreenProp<S>;
+    /*
+     * This prop is no longer supported. Use `loadNavigationState` and
+     * `persistNavigationState` instead.
+     */
     persistenceKey?: string | null;
+
+    loadNavigationState?: () => Promise<any>;
+    persistNavigationState?: (state: NavigationState) => Promise<any>;
+
     renderLoadingExperimental?: React.ComponentType;
     screenProps?: ScreenProps;
     navigationOptions?: O;
@@ -1144,10 +1156,10 @@ declare module 'react-navigation' {
     tabStyle?: ViewStyle;
     showIcon?: boolean;
     safeAreaInset?: {
-      top?: SafeAreaViewForceInsetValue,
-      bottom?: SafeAreaViewForceInsetValue,
-      left?: SafeAreaViewForceInsetValue,
-      right?: SafeAreaViewForceInsetValue
+      top?: SafeAreaViewForceInsetValue;
+      bottom?: SafeAreaViewForceInsetValue;
+      left?: SafeAreaViewForceInsetValue;
+      right?: SafeAreaViewForceInsetValue;
     };
   }
 
@@ -1203,7 +1215,9 @@ declare module 'react-navigation' {
     ): NavigationPopToTopAction;
 
     function push(options: NavigationPushActionPayload): NavigationPushAction;
-    function reset(options: NavigationResetActionPayload): NavigationResetAction;
+    function reset(
+      options: NavigationResetActionPayload
+    ): NavigationResetAction;
 
     function replace(
       options: NavigationReplaceActionPayload
@@ -1456,10 +1470,14 @@ declare module 'react-navigation' {
 
   export const SafeAreaView: React.ComponentClass<SafeAreaViewProps>;
 
-  export const NavigationContext: React.Context<NavigationScreenProp<NavigationRoute>>;
+  export const NavigationContext: React.Context<
+    NavigationScreenProp<NavigationRoute>
+  >;
   export const StackGestureContext: React.Context<React.Ref<PanGestureHandler>>;
-  export const DrawerGestureContext: React.Context<React.Ref<PanGestureHandler>>;
-  
+  export const DrawerGestureContext: React.Context<
+    React.Ref<PanGestureHandler>
+  >;
+
   /**
    * SceneView
    */
