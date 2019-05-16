@@ -91,7 +91,7 @@
   },
   "dependencies": {
     "hoist-non-react-statics": "^3.0.1",
-    "react-native-safe-area-view": "^0.13.0",
+    "react-native-safe-area-view": "^0.14.1",
     "react-native-screens": "^1.0.0 || ^1.0.0-alpha"
   }
 }
