@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## Fixes
+
+- Update Flow types - Add `cardShadowEnabled` and `cardOverlayEnabled` to NavigationStackViewConfig
+
 ## [3.10.0] - [2019-05-16](https://github.com/react-navigation/react-navigation/releases/tag/3.10.0)
 
 ## Removed
