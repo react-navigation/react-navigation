@@ -1,5 +1,3 @@
-/* @flow */
-
 import React from 'react';
 import {
   Animated,
@@ -8,11 +6,18 @@ import {
   View,
   Keyboard,
   Platform,
+  StyleProp,
+  TextStyle,
+  ViewStyle,
+  LayoutChangeEvent,
+  AccessibilityRole,
+  AccessibilityState,
 } from 'react-native';
-import { SafeAreaView } from '@react-navigation/native';
+import SafeAreaView from 'react-native-safe-area-view';
 
 import CrossFadeIcon from './CrossFadeIcon';
 import withDimensions from '../utils/withDimensions';
+import { Route, NavigationProp } from '../types';
 
 type Orientation = 'horizontal' | 'vertical';
 type Position = 'beside-icon' | 'below-icon';
@@ -21,50 +26,70 @@ type LabelPosition =
   | ((options: { deviceOrientation: Orientation }) => Position);
 
 export type TabBarOptions = {
-  keyboardHidesTabBar: boolean,
-  activeTintColor?: string,
-  inactiveTintColor?: string,
-  activeBackgroundColor?: string,
-  inactiveBackgroundColor?: string,
-  allowFontScaling: boolean,
-  showLabel: boolean,
-  showIcon: boolean,
-  labelStyle: any,
-  tabStyle: any,
-  labelPosition?: LabelPosition,
-  adaptive?: boolean,
-  style: any,
+  keyboardHidesTabBar: boolean;
+  activeTintColor?: string;
+  inactiveTintColor?: string;
+  activeBackgroundColor?: string;
+  inactiveBackgroundColor?: string;
+  allowFontScaling: boolean;
+  showLabel: boolean;
+  showIcon: boolean;
+  labelStyle: StyleProp<TextStyle>;
+  tabStyle: StyleProp<ViewStyle>;
+  labelPosition?: LabelPosition;
+  adaptive?: boolean;
+  style: StyleProp<ViewStyle>;
 };
 
 type Props = TabBarOptions & {
-  navigation: any,
-  onTabPress: any,
-  onTabLongPress: any,
-  getAccessibilityLabel: (props: { route: any }) => string,
-  getAccessibilityRole: (props: { route: any }) => string,
-  getAccessibilityStates: (props: { route: any }) => string[],
-  getButtonComponent: ({ route: any }) => any,
-  getLabelText: ({ route: any }) => any,
-  getTestID: (props: { route: any }) => string,
-  renderIcon: any,
-  dimensions: { width: number, height: number },
-  isLandscape: boolean,
-  safeAreaInset: { top: string, right: string, bottom: string, left: string },
+  navigation: NavigationProp;
+  onTabPress: (props: { route: Route }) => void;
+  onTabLongPress: (props: { route: Route }) => void;
+  getAccessibilityLabel: (props: { route: Route }) => string | undefined;
+  getAccessibilityRole: (props: {
+    route: Route;
+  }) => AccessibilityRole | undefined;
+  getAccessibilityStates: (props: { route: Route }) => AccessibilityState[];
+  getButtonComponent: (props: {
+    route: Route;
+  }) => React.ComponentType<any> | undefined;
+  getLabelText: (props: {
+    route: Route;
+  }) =>
+    | ((scene: {
+        focused: boolean;
+        tintColor?: string;
+        orientation: 'horizontal' | 'vertical';
+      }) => React.ReactNode)
+    | string
+    | undefined;
+  getTestID: (props: { route: Route }) => string;
+  renderIcon: (props: {
+    route: Route;
+    focused: boolean;
+    tintColor?: string;
+    horizontal?: boolean;
+  }) => React.ReactNode;
+  dimensions: { width: number; height: number };
+  isLandscape: boolean;
+  safeAreaInset: React.ComponentProps<typeof SafeAreaView>['forceInset'];
 };
 
 type State = {
-  layout: { height: number, width: number },
-  keyboard: boolean,
-  visible: Animated.Value,
+  layout: { height: number; width: number };
+  keyboard: boolean;
+  visible: Animated.Value;
 };
 
-const majorVersion = parseInt(Platform.Version, 10);
+const majorVersion = parseInt(Platform.Version as string, 10);
 const isIos = Platform.OS === 'ios';
 const isIOS11 = majorVersion >= 11 && isIos;
 
 const DEFAULT_MAX_TAB_ITEM_WIDTH = 125;
 
-class TouchableWithoutFeedbackWrapper extends React.Component<*> {
+class TouchableWithoutFeedbackWrapper extends React.Component<
+  React.ComponentProps<typeof TouchableWithoutFeedback>
+> {
   render() {
     const {
       onPress,
@@ -103,7 +128,9 @@ class TabBarBottom extends React.Component<Props, State> {
     showIcon: true,
     allowFontScaling: true,
     adaptive: isIOS11,
-    safeAreaInset: { bottom: 'always', top: 'never' },
+    safeAreaInset: { bottom: 'always', top: 'never' } as React.ComponentProps<
+      typeof SafeAreaView
+    >['forceInset'],
   };
 
   state = {
@@ -150,7 +177,7 @@ class TabBarBottom extends React.Component<Props, State> {
       this.setState({ keyboard: false });
     });
 
-  _handleLayout = e => {
+  _handleLayout = (e: LayoutChangeEvent) => {
     const { layout } = this.state;
     const { height, width } = e.nativeEvent.layout;
 
@@ -166,7 +193,7 @@ class TabBarBottom extends React.Component<Props, State> {
     });
   };
 
-  _renderLabel = ({ route, focused }) => {
+  _renderLabel = ({ route, focused }: { route: Route; focused: boolean }) => {
     const {
       activeTintColor,
       inactiveTintColor,
@@ -203,7 +230,6 @@ class TabBarBottom extends React.Component<Props, State> {
 
     if (typeof label === 'function') {
       return label({
-        route,
         focused,
         tintColor,
         orientation: horizontal ? 'horizontal' : 'vertical',
@@ -213,9 +239,8 @@ class TabBarBottom extends React.Component<Props, State> {
     return label;
   };
 
-  _renderIcon = ({ route, focused }) => {
+  _renderIcon = ({ route, focused }: { route: Route; focused: boolean }) => {
     const {
-      navigation,
       activeTintColor,
       inactiveTintColor,
       renderIcon,
@@ -235,7 +260,6 @@ class TabBarBottom extends React.Component<Props, State> {
       <CrossFadeIcon
         route={route}
         horizontal={horizontal}
-        navigation={navigation}
         activeOpacity={activeOpacity}
         inactiveOpacity={inactiveOpacity}
         activeTintColor={activeTintColor}
@@ -279,6 +303,7 @@ class TabBarBottom extends React.Component<Props, State> {
       return false;
     }
 
+    // @ts-ignore
     if (Platform.isPad) {
       let maxTabItemWidth = DEFAULT_MAX_TAB_ITEM_WIDTH;
 
@@ -315,6 +340,7 @@ class TabBarBottom extends React.Component<Props, State> {
 
     const tabBarStyle = [
       styles.tabBar,
+      // @ts-ignore
       this._shouldUseHorizontalLabels() && !Platform.isPad
         ? styles.tabBarCompact
         : styles.tabBarRegular,
@@ -444,6 +470,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   iconWithExplicitHeight: {
+    // @ts-ignore
     height: Platform.isPad ? DEFAULT_HEIGHT : COMPACT_HEIGHT,
   },
   label: {
