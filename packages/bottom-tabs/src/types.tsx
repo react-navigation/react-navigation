@@ -38,6 +38,7 @@ export type NavigationProp<RouteName = string, Params = object> = {
 
 export type NavigationTabOptions = {
   title?: string;
+  tabBarVisible?: boolean;
   tabBarLabel?: React.ReactNode;
   tabBarIcon?:
     | React.ReactNode
@@ -56,6 +57,7 @@ export type NavigationTabOptions = {
     defaultHandler: () => void;
   }) => void;
   tabBarAccessibilityLabel?: string;
+  tabBarButtonComponent?: React.ComponentType<any>;
 };
 
 export type SceneDescriptor = {
