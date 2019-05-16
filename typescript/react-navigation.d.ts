@@ -1158,6 +1158,12 @@ declare module 'react-navigation' {
     labelStyle?: TextStyle;
     tabStyle?: ViewStyle;
     showIcon?: boolean;
+    safeAreaInset?: {
+      top?: SafeAreaViewForceInsetValue,
+      bottom?: SafeAreaViewForceInsetValue,
+      left?: SafeAreaViewForceInsetValue,
+      right?: SafeAreaViewForceInsetValue
+    };
   }
 
   export const MaterialTopTabBar: React.ComponentType<MaterialTopTabBarProps>;
