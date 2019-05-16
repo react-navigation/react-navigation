@@ -81,7 +81,11 @@ export default function createNavigationContainer(Component) {
 
       this._initialAction = NavigationActions.init();
 
-      if (this._isStateful()) {
+      if (
+        this._isStateful() &&
+        BackHandler &&
+        typeof BackHandler.addEventListener === 'function'
+      ) {
         this.subs = BackHandler.addEventListener('hardwareBackPress', () => {
           if (!this._isMounted) {
             this.subs && this.subs.remove();
