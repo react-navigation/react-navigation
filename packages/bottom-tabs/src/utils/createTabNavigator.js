@@ -116,6 +116,10 @@ export default function createTabNavigator(TabView: React.ComponentType<*>) {
     _handleTabPress = ({ route }) => {
       this._isTabPress = true;
 
+      // After tab press, handleIndexChange will be called synchronously
+      // So we reset it in promise callback
+      Promise.resolve().then(() => (this._isTabPress = false));
+
       const { descriptors } = this.props;
       const descriptor = descriptors[route.key];
       const { navigation, options } = descriptor;
@@ -150,14 +154,6 @@ export default function createTabNavigator(TabView: React.ComponentType<*>) {
       }
 
       this._jumpTo(this.props.navigation.state.routes[index].routeName);
-    };
-
-    _handleSwipeStart = () => {
-      this.setState({ isSwiping: true });
-    };
-
-    _handleSwipeEnd = () => {
-      this.setState({ isSwiping: false });
     };
 
     _jumpTo = routeName => {
