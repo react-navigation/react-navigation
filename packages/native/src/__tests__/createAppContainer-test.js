@@ -272,4 +272,132 @@ describe('NavigationContainer', () => {
       });
     });
   });
+
+  // https://github.com/facebook/jest/issues/2157#issuecomment-279171856
+  const flushPromises = () => new Promise(resolve => setImmediate(resolve));
+
+  describe('state persistence', () => {
+    async function createPersistenceEnabledContainer(
+      loadNavigationState,
+      persistNavigationState = jest.fn()
+    ) {
+      const navContainer = renderer
+        .create(
+          <NavigationContainer
+            persistNavigationState={persistNavigationState}
+            loadNavigationState={loadNavigationState}
+          />
+        )
+        .getInstance();
+
+      // wait for loadNavigationState() to resolve
+      await flushPromises();
+      return navContainer;
+    }
+
+    it('loadNavigationState is called upon mount and persistNavigationState is called on a nav state change', async () => {
+      const persistNavigationState = jest.fn();
+      const loadNavigationState = jest.fn().mockResolvedValue({
+        index: 1,
+        routes: [{ routeName: 'foo' }, { routeName: 'bar' }],
+      });
+
+      const navigationContainer = await createPersistenceEnabledContainer(
+        loadNavigationState,
+        persistNavigationState
+      );
+      expect(loadNavigationState).toHaveBeenCalled();
+
+      // wait for setState done
+      jest.runOnlyPendingTimers();
+
+      navigationContainer.dispatch(
+        NavigationActions.navigate({ routeName: 'foo' })
+      );
+      jest.runOnlyPendingTimers();
+      expect(persistNavigationState).toHaveBeenCalledWith({
+        index: 0,
+        isTransitioning: true,
+        routes: [{ routeName: 'foo' }],
+      });
+    });
+
+    it('when persistNavigationState rejects, a console warning is shown', async () => {
+      const consoleSpy = jest.spyOn(console, 'warn');
+      const persistNavigationState = jest
+        .fn()
+        .mockRejectedValue(new Error('serialization failed'));
+      const loadNavigationState = jest.fn().mockResolvedValue(null);
+
+      const navigationContainer = await createPersistenceEnabledContainer(
+        loadNavigationState,
+        persistNavigationState
+      );
+
+      // wait for setState done
+      jest.runOnlyPendingTimers();
+
+      navigationContainer.dispatch(
+        NavigationActions.navigate({ routeName: 'baz' })
+      );
+      jest.runOnlyPendingTimers();
+      await flushPromises();
+
+      expect(consoleSpy).toHaveBeenCalledWith(expect.any(String));
+    });
+
+    it('when loadNavigationState rejects, navigator ignores the rejection and starts from the initial state', async () => {
+      const loadNavigationState = jest
+        .fn()
+        .mockRejectedValue(new Error('deserialization failed'));
+
+      const navigationContainer = await createPersistenceEnabledContainer(
+        loadNavigationState
+      );
+
+      expect(loadNavigationState).toHaveBeenCalled();
+
+      // wait for setState done
+      jest.runOnlyPendingTimers();
+
+      expect(navigationContainer.state.nav).toMatchObject({
+        index: 0,
+        isTransitioning: false,
+        key: 'StackRouterRoot',
+        routes: [{ routeName: 'foo' }],
+      });
+    });
+
+    // this test is skipped because the componentDidCatch recovery logic does not work as intended
+    it.skip('when loadNavigationState resolves with an invalid nav state object, navigator starts from the initial state', async () => {
+      const loadNavigationState = jest.fn().mockResolvedValue({
+        index: 20,
+        routes: [{ routeName: 'foo' }, { routeName: 'bar' }],
+      });
+
+      const navigationContainer = await createPersistenceEnabledContainer(
+        loadNavigationState
+      );
+
+      expect(loadNavigationState).toHaveBeenCalled();
+
+      // wait for setState done
+      jest.runOnlyPendingTimers();
+
+      expect(navigationContainer.state.nav).toMatchObject({
+        index: 0,
+        isTransitioning: false,
+        key: 'StackRouterRoot',
+        routes: [{ routeName: 'foo' }],
+      });
+    });
+
+    it('throws when persistNavigationState and loadNavigationState do not pass validation', () => {
+      expect(() =>
+        renderer.create(
+          <NavigationContainer persistNavigationState={jest.fn()} />
+        )
+      ).toThrow();
+    });
+  });
 });

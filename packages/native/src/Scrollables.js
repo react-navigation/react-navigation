@@ -1,5 +1,11 @@
 import React from 'react';
-import { ScrollView, Platform, FlatList, SectionList, RefreshControl } from 'react-native';
+import {
+  ScrollView,
+  Platform,
+  FlatList,
+  SectionList,
+  RefreshControl,
+} from 'react-native';
 import { ScrollView as GHScrollView } from 'react-native-gesture-handler';
 import createNavigationAwareScrollable from './createNavigationAwareScrollable';
 import invariant from './utils/invariant';
