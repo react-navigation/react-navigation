@@ -7,14 +7,26 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-- Update typescript with headerLeftContainerStyle and headerRightContainerStyle
-- Update typescript - Add `safeAreaInset` to `BottomTabBarProps`
+## [3.10.0] - [2019-05-16](https://github.com/react-navigation/react-navigation/releases/tag/3.10.0)
+
+## Removed
+
+- `persistenceKey` no longer automatically saves and restores navigation state using AsyncStorage. Typically this would be a breaking change that would require a major version bump, but because this has always been marked as experimental in the documentation and it is unlikely to impact production apps, we are rolling it in a minor release. `persistenceKey` has been replaced with `persistNavigationState` and `loadNavigationState`. See the diff in docs: https://github.com/react-navigation/react-navigation.github.io/pull/425/files?short_path=b668b1a#diff-b668b1a4201e40b1378036dc012100fe
+
+## Changed
+
+- Removed animations from stack on web
+- Ensure that headerMode is float by default on web
 
 ## Fixes
 
+- Prevent transitionConfig's useNativeDriver value being overwritten. (https://github.com/react-navigation/stack/commit/8b2af7d94209d4658abd8d799bc78744a1004b4e)
+- Update typescript with headerLeftContainerStyle and headerRightContainerStyle
+- Update typescript - Add `safeAreaInset` to `BottomTabBarProps`
 - Update typescript - `TabBarTop` is now `MaterialTopTabBar`
 - Update typescript - Remove `SwitchNavigator`, `TabNavigator` and `StackNavigator`. Added exports for `SceneView` and `SwitchRouter`
 - Update typescript - `getLabel` is now `getLabelText` in BottomTabProps and TopTabProps
+- Silence deprecated lifecycle warning in Stack Transitioner
 
 ## [3.9.0] - [2019-04-23](https://github.com/react-navigation/react-navigation/releases/tag/3.9.0)
 
@@ -266,7 +278,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - [2.x](https://github.com/react-navigation/react-navigation/blob/2.x/CHANGELOG.md)
 
-[Unreleased]: https://github.com/react-navigation/react-navigation/compare/3.9.0...HEAD
+[Unreleased]: https://github.com/react-navigation/react-navigation/compare/3.10.0...HEAD
+[3.10.0]: https://github.com/react-navigation/react-navigation/compare/3.10.0...3.9.0
 [3.9.0]: https://github.com/react-navigation/react-navigation/compare/3.8.1...3.9.0
 [3.8.1]: https://github.com/react-navigation/react-navigation/compare/3.8.0...3.8.1
 [3.8.0]: https://github.com/react-navigation/react-navigation/compare/3.7.1...3.8.0
