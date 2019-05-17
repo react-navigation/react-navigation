@@ -451,6 +451,8 @@ declare module 'react-navigation' {
     headerLayoutPreset?: 'left' | 'center',
     headerBackTitleVisible?: boolean,
     cardStyle?: ViewStyleProp,
+    cardShadowEnabled?: boolean,
+    cardOverlayEnabled?: boolean,
     transitionConfig?: (
       transitionProps: NavigationTransitionProps,
       prevTransitionProps: ?NavigationTransitionProps,
