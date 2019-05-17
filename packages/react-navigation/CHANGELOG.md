@@ -5,11 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [3.10.1]
 
 ## Fixes
 
 - Update Flow types - Add `cardShadowEnabled` and `cardOverlayEnabled` to NavigationStackViewConfig
+- Upgrade react-navigation-tabs [#5914](https://github.com/react-navigation/react-navigation/issues/5914)
 
 ## [3.10.0] - [2019-05-16](https://github.com/react-navigation/react-navigation/releases/tag/3.10.0)
 
