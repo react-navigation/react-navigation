@@ -396,6 +396,20 @@ declare module 'react-navigation' {
     key?: string;
   }
 
+  export interface NavigationJumpToActionPayload {
+    routeName: string;
+    key: string;
+    params?: NavigationParams;
+  }
+
+  export interface NavigationJumpToAction {
+    type: 'Navigation/JUMP_TO';
+    preserveFocus: boolean;
+    routeName: string;
+    key: string;
+    params?: NavigationParams;
+  }
+
   export interface NavigationOpenDrawerAction {
     key?: string;
     type: 'Navigation/OPEN_DRAWER';
@@ -1226,6 +1240,15 @@ declare module 'react-navigation' {
     function completeTransition(
       payload: NavigationCompleteTransitionActionPayload
     ): NavigationCompleteTransitionAction;
+  }
+
+  /**
+   * SwitchActions
+   */
+  export namespace SwitchActions {
+    const JUMP_TO: 'Navigation/JUMP_TO';
+
+    function jumpTo(options: NavigationJumpToActionPayload): NavigationJumpToAction;
   }
 
   /**
