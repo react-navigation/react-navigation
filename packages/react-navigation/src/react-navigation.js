@@ -70,6 +70,9 @@ module.exports = {
   get SwitchRouter() {
     return require('@react-navigation/core').SwitchRouter;
   },
+  get SwitchActions() {
+    return require('@react-navigation/core').SwitchActions;
+  },
   get createConfigGetter() {
     return require('@react-navigation/core').StackAcreateConfigGetterctions;
   },
