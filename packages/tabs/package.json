@@ -27,14 +27,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/react-navigation/react-navigation-tabs.git"
+    "url": "git+https://github.com/react-navigation/tabs.git"
   },
   "author": "Satyajit Sahoo <satyajit.happy@gmail.com> (https://github.com/satya164/)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/react-navigation/react-navigation-tabs/issues"
+    "url": "https://github.com/react-navigation/tabs/issues"
   },
-  "homepage": "https://github.com/react-navigation/react-navigation-tabs#readme",
+  "homepage": "https://github.com/react-navigation/tabs#readme",
   "dependencies": {
     "hoist-non-react-statics": "^3.3.0",
     "react-lifecycles-compat": "^3.0.4",

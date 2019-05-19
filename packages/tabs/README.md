@@ -46,7 +46,7 @@ export default createBottomTabNavigator({
 });
 ```
 
-You can install another package, `react-navigation-material-bottom-tabs`, to use a third type of tab navigator:
+You can install another package, [`react-navigation-material-bottom-tabs`](https://github.com/react-navigation/material-bottom-tabs), to use a third type of tab navigator:
 
 - `createMaterialBottomTabNavigator`: Material design themed animated bottom tabs, from [react-native-paper](https://callstack.github.io/react-native-paper/bottom-navigation.html).
 
@@ -65,8 +65,8 @@ export default createMaterialBottomTabNavigator({
 ```
 
 <!-- badges -->
-[build-badge]: https://img.shields.io/circleci/project/github/react-navigation/react-navigation-tabs/master.svg?style=flat-square
-[build]: https://circleci.com/gh/react-navigation/react-navigation-tabs
+[build-badge]: https://img.shields.io/circleci/project/github/react-navigation/tabs/master.svg?style=flat-square
+[build]: https://circleci.com/gh/react-navigation/tabs
 [version-badge]: https://img.shields.io/npm/v/react-navigation-tabs.svg?style=flat-square
 [package]: https://www.npmjs.com/package/react-navigation-tabs
 [license-badge]: https://img.shields.io/npm/l/react-navigation-tabs.svg?style=flat-square
