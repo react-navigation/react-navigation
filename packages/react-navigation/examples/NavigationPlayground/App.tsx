@@ -17,22 +17,21 @@ import {
   createStackNavigator,
   SafeAreaView,
 } from 'react-navigation';
-import CustomTabs from './CustomTabs';
-import CustomTabUI from './CustomTabUI';
-// import CustomTransitioner from './CustomTransitioner';
-import Drawer from './Drawer';
-import ModalStack from './ModalStack';
-import SimpleStack from './SimpleStack';
-import SimpleTabs from './SimpleTabs';
-import StacksInTabs from './StacksInTabs';
-import StacksOverTabs from './StacksOverTabs';
-import StacksOverTopTabs from './StacksOverTopTabs';
-import StacksAndKeys from './StacksAndKeys';
-import StackWithCustomHeaderBackImage from './StackWithCustomHeaderBackImage';
-import StackWithHeaderPreset from './StackWithHeaderPreset';
-import StackWithTranslucentHeader from './StackWithTranslucentHeader';
-import SwitchWithStacks from './SwitchWithStacks';
-import TabsInDrawer from './TabsInDrawer';
+import CustomTabs from './src/CustomTabs';
+import CustomTabUI from './src/CustomTabUI';
+import Drawer from './src/Drawer';
+import ModalStack from './src/ModalStack';
+import SimpleStack from './src/SimpleStack';
+import SimpleTabs from './src/SimpleTabs';
+import StacksInTabs from './src/StacksInTabs';
+import StacksOverTabs from './src/StacksOverTabs';
+import StacksOverTopTabs from './src/StacksOverTopTabs';
+import StacksAndKeys from './src/StacksAndKeys';
+import StackWithCustomHeaderBackImage from './src/StackWithCustomHeaderBackImage';
+import StackWithHeaderPreset from './src/StackWithHeaderPreset';
+import StackWithTranslucentHeader from './src/StackWithTranslucentHeader';
+import SwitchWithStacks from './src/SwitchWithStacks';
+import TabsInDrawer from './src/TabsInDrawer';
 
 const ExampleInfo: any = {
   CustomTabUI: {
@@ -141,7 +140,6 @@ const ExampleInfo: any = {
 const ExampleRoutes: any = {
   CustomTabUI,
   CustomTabs,
-  // CustomTransitioner,
   Drawer,
   ModalStack,
   SimpleStack,
@@ -251,7 +249,7 @@ class MainScreen extends React.Component<any, State> {
               >
                 <View style={styles.banner}>
                   <Image
-                    source={require('./assets/NavLogo.png')}
+                    source={require('./src/assets/NavLogo.png')}
                     style={styles.bannerImage}
                   />
                   <Text style={styles.bannerTitle}>
