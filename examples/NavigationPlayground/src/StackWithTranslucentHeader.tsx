@@ -228,12 +228,12 @@ const StackWithTranslucentHeader = createStackNavigator(
   },
   {
     defaultNavigationOptions: {
-      headerBackground: Platform.select({
-        android: (
-          <View style={{ flex: 1, backgroundColor: 'rgba(255,255,255,0.7)' }} />
-        ),
-        ios: <BlurView style={{ flex: 1 }} blurType="light" />,
-      }),
+      headerBackground:
+      Platform.OS === 'ios' ? (
+        <BlurView style={{ flex: 1 }} blurType="light" />
+      ) : (
+        <View style={{ flex: 1, backgroundColor: 'rgba(255,255,255,0.7)' }} />
+      ),
       headerStyle: {
         borderBottomColor: '#A7A7AA',
         borderBottomWidth: StyleSheet.hairlineWidth,
