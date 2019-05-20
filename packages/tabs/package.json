@@ -1,6 +1,6 @@
 {
   "name": "react-navigation-tabs",
-  "version": "2.1.2",
+  "version": "2.1.3",
   "description": "Tab Navigation components for React Navigation",
   "main": "src/index.js",
   "files": [
