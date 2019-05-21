@@ -30,7 +30,9 @@ export default (routeConfigs, stackConfig = {}) => {
 
   // Loop through routes and find child routers
   routeNames.forEach(routeName => {
-    const screen = getScreenForRouteName(routeConfigs, routeName);
+    const routeConfig = routeConfigs[routeName];
+    const screen =
+      routeConfig && routeConfig.screen ? routeConfig.screen : routeConfig;
     if (screen && screen.router) {
       // If it has a router it's a navigator.
       childRouters[routeName] = screen.router;
