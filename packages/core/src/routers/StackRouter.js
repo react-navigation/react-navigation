@@ -30,6 +30,9 @@ export default (routeConfigs, stackConfig = {}) => {
 
   // Loop through routes and find child routers
   routeNames.forEach(routeName => {
+    // We're not using `getScreenForRouteName` here to preserve the lazy loading
+    // behaviour of routes. This means that routes with child routers must be
+    // defined using a component directly or with an object with a screen prop.
     const routeConfig = routeConfigs[routeName];
     const screen =
       routeConfig && routeConfig.screen ? routeConfig.screen : routeConfig;
