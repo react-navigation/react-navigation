@@ -6,13 +6,19 @@ import {
   StyleProp,
   ViewStyle,
   TextStyle,
+  LayoutChangeEvent,
 } from 'react-native';
 import Animated from 'react-native-reanimated';
 import TabBarItem from './TabBarItem';
 import TabBarIndicator, { Props as IndicatorProps } from './TabBarIndicator';
-
 import memoize from './memoize';
-import { Route, Scene, SceneRendererProps, NavigationState } from './types';
+import {
+  Route,
+  Scene,
+  SceneRendererProps,
+  NavigationState,
+  Layout,
+} from './types';
 
 export type Props<T extends Route> = SceneRendererProps & {
   navigationState: NavigationState<T>;
@@ -50,7 +56,7 @@ export type Props<T extends Route> = SceneRendererProps & {
 };
 
 type State = {
-  initialOffset: { x: number; y: number } | undefined;
+  layout: Layout;
 };
 
 export default class TabBar<T extends Route> extends React.Component<
@@ -74,34 +80,16 @@ export default class TabBar<T extends Route> extends React.Component<
     ),
   };
 
-  constructor(props: Props<T>) {
-    super(props);
+  state = {
+    layout: { width: 0, height: 0 },
+  };
 
-    const initialOffset =
-      this.props.scrollEnabled && this.props.layout.width
-        ? {
-            x: this.getScrollAmount(
-              this.props,
-              this.props.navigationState.index
-            ),
-            y: 0,
-          }
-        : undefined;
-
-    this.state = {
-      initialOffset,
-    };
-  }
-
-  componentDidUpdate(prevProps: Props<T>) {
+  componentDidUpdate(prevProps: Props<T>, prevState: State) {
     if (
       prevProps.navigationState.routes.length !==
         this.props.navigationState.routes.length ||
-      prevProps.layout.width !== this.props.layout.width
-    ) {
-      this.resetScroll(this.props.navigationState.index, false);
-    } else if (
-      prevProps.navigationState.index !== this.props.navigationState.index
+      prevProps.navigationState.index !== this.props.navigationState.index ||
+      prevState.layout.width !== this.state.layout.width
     ) {
       this.resetScroll(this.props.navigationState.index);
     }
@@ -111,10 +99,10 @@ export default class TabBar<T extends Route> extends React.Component<
 
   private scrollView: ScrollView | undefined;
   private isMomentumScroll: boolean = false;
-  private scrollResetCallback: number | undefined;
 
-  private getTabWidth = (props: Props<T>) => {
-    const { layout, navigationState, tabStyle } = props;
+  private getTabWidth = (props: Props<T>, state: State) => {
+    const { layout } = state;
+    const { navigationState, tabStyle } = props;
     const flattened: ViewStyle = StyleSheet.flatten(tabStyle);
 
     if (flattened) {
@@ -138,9 +126,14 @@ export default class TabBar<T extends Route> extends React.Component<
     return layout.width / navigationState.routes.length;
   };
 
-  private normalizeScrollValue = (props: Props<T>, value: number) => {
-    const { layout, navigationState } = props;
-    const tabWidth = this.getTabWidth(props);
+  private normalizeScrollValue = (
+    props: Props<T>,
+    state: State,
+    value: number
+  ) => {
+    const { layout } = state;
+    const { navigationState } = props;
+    const tabWidth = this.getTabWidth(props, state);
     const tabBarWidth = Math.max(
       tabWidth * navigationState.routes.length,
       layout.width
@@ -150,27 +143,22 @@ export default class TabBar<T extends Route> extends React.Component<
     return Math.max(Math.min(value, maxDistance), 0);
   };
 
-  private getScrollAmount = (props: Props<T>, i: number) => {
-    const { layout } = props;
-    const tabWidth = this.getTabWidth(props);
+  private getScrollAmount = (props: Props<T>, state: State, i: number) => {
+    const { layout } = state;
+    const tabWidth = this.getTabWidth(props, state);
     const centerDistance = tabWidth * (i + 1 / 2);
     const scrollAmount = centerDistance - layout.width / 2;
 
-    return this.normalizeScrollValue(props, scrollAmount);
+    return this.normalizeScrollValue(props, state, scrollAmount);
   };
 
-  private resetScroll = (value: number, animated = true) => {
+  private resetScroll = (value: number) => {
     if (this.props.scrollEnabled) {
-      this.scrollResetCallback &&
-        cancelAnimationFrame(this.scrollResetCallback);
-
-      this.scrollResetCallback = requestAnimationFrame(() => {
-        this.scrollView &&
-          this.scrollView.scrollTo({
-            x: this.getScrollAmount(this.props, value),
-            animated,
-          });
-      });
+      this.scrollView &&
+        this.scrollView.scrollTo({
+          x: this.getScrollAmount(this.props, this.state, value),
+          animated: true,
+        });
     }
   };
 
@@ -200,6 +188,24 @@ export default class TabBar<T extends Route> extends React.Component<
     this.isMomentumScroll = false;
   };
 
+  private handleLayout = (e: LayoutChangeEvent) => {
+    const { height, width } = e.nativeEvent.layout;
+
+    if (
+      this.state.layout.width === width &&
+      this.state.layout.height === height
+    ) {
+      return;
+    }
+
+    this.setState({
+      layout: {
+        height,
+        width,
+      },
+    });
+  };
+
   private getTranslateX = memoize((scrollAmount: Animated.Node<number>) =>
     Animated.multiply(scrollAmount, -1)
   );
@@ -207,7 +213,6 @@ export default class TabBar<T extends Route> extends React.Component<
   render() {
     const {
       position,
-      layout,
       navigationState,
       jumpTo,
       scrollEnabled,
@@ -231,13 +236,17 @@ export default class TabBar<T extends Route> extends React.Component<
       contentContainerStyle,
       style,
     } = this.props;
+    const { layout } = this.state;
     const { routes } = navigationState;
-    const tabWidth = this.getTabWidth(this.props);
+    const tabWidth = this.getTabWidth(this.props, this.state);
     const tabBarWidth = tabWidth * routes.length;
     const translateX = this.getTranslateX(this.scrollAmount);
 
     return (
-      <Animated.View style={[styles.tabBar, style]}>
+      <Animated.View
+        onLayout={this.handleLayout}
+        style={[styles.tabBar, style]}
+      >
         <Animated.View
           pointerEvents="none"
           style={[
@@ -287,7 +296,6 @@ export default class TabBar<T extends Route> extends React.Component<
             onScrollEndDrag={this.handleEndDrag}
             onMomentumScrollBegin={this.handleMomentumScrollBegin}
             onMomentumScrollEnd={this.handleMomentumScrollEnd}
-            contentOffset={this.state.initialOffset}
             ref={el => {
               // @ts-ignore
               this.scrollView = el && el.getNode();
