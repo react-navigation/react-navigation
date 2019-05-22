@@ -6,7 +6,7 @@ import {
   ViewStyle,
   LayoutChangeEvent,
 } from 'react-native';
-
+import Animated from 'react-native-reanimated';
 import TabBar, { Props as TabBarProps } from './TabBar';
 import Pager from './Pager';
 import SceneView from './SceneView';
@@ -19,6 +19,7 @@ import {
 } from './types';
 
 type Props<T extends Route> = PagerCommonProps & {
+  position?: Animated.Value<number>;
   onIndexChange: (index: number) => void;
   navigationState: NavigationState<T>;
   renderScene: (
@@ -92,6 +93,7 @@ export default class TabView<T extends Route> extends React.Component<
 
   render() {
     const {
+      position: positionListener,
       onSwipeStart,
       onSwipeEnd,
       navigationState,
@@ -139,6 +141,11 @@ export default class TabView<T extends Route> extends React.Component<
 
             return (
               <React.Fragment>
+                {positionListener ? (
+                  <Animated.Code
+                    exec={Animated.set(positionListener, position)}
+                  />
+                ) : null}
                 {tabBarPosition === 'top' &&
                   renderTabBar({
                     ...sceneRendererProps,

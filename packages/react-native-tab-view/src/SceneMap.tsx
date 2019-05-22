@@ -12,12 +12,13 @@ class SceneComponent<
 export default function SceneMap<T extends any>(scenes: {
   [key: string]: React.ComponentType<T>;
 }) {
-  return ({ route, jumpTo }: T) => (
+  return ({ route, jumpTo, position }: T) => (
     <SceneComponent
       key={route.key}
       component={scenes[route.key]}
       route={route}
       jumpTo={jumpTo}
+      position={position}
     />
   );
 }

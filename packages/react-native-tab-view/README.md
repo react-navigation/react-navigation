@@ -193,6 +193,7 @@ Each scene receives the following props:
 
 - `route`: the current route rendered by the component
 - `jumpTo`: method to jump to other tabs, takes a `route.key` as it's argument
+- `position`: animated node which represents the current position
 
 The `jumpTo` method can be used to navigate to other tabs programmatically:
 
@@ -320,6 +321,23 @@ Object containing the initial height and width of the screens. Passing this will
 
 ```js
 { width: Dimensions.get('window').width }}
+```
+
+##### `position`
+
+Animated value to listen to the position updates. The passed position value will be kept in sync with the current position of the tabs. It's useful for accessing the animated value outside the tab view.
+
+```js
+position = new Animated.Value(0);
+
+render() {
+  return (
+    <TabView
+      position={this.position}
+      ...
+    />
+  );
+}
 ```
 
 ##### `sceneContainerStyle`
