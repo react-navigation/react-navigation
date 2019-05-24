@@ -41,6 +41,9 @@
     "url": "https://github.com/react-navigation/react-navigation-stack/issues"
   },
   "homepage": "https://github.com/react-navigation/react-navigation-stack#readme",
+  "dependencies": {
+    "react-native-safe-area-view": "^0.14.4"
+  },
   "devDependencies": {
     "@babel/core": "^7.4.4",
     "@commitlint/config-conventional": "^7.5.0",
@@ -63,7 +66,8 @@
     "react": "16.5.0",
     "react-dom": "16.5.0",
     "react-native": "~0.57.7",
-    "react-native-gesture-handler": "^1.1.0",
+    "react-native-gesture-handler": "^1.2.1",
+    "react-native-reanimated": "^1.0.1",
     "react-native-screens": "^1.0.0-alpha.22",
     "react-test-renderer": "16.5.0",
     "release-it": "^11.0.0",
@@ -76,6 +80,7 @@
     "react": "*",
     "react-native": "*",
     "react-native-gesture-handler": "^1.0.0",
+    "react-native-reanimated": "^1.0.0",
     "react-native-screens": "^1.0.0 || ^1.0.0-alpha"
   },
   "jest": {

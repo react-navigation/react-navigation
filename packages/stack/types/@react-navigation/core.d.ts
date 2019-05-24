@@ -2,7 +2,15 @@ declare module '@react-navigation/core' {
   import * as React from 'react';
 
   export const StackActions: {
-    completeTransition<T extends { key?: string } | undefined>(
+    completeTransition<
+      T extends { key?: string; toChildKey?: string } | undefined
+    >(
+      options?: T
+    ): { type: string } & T;
+    push<T extends { key?: string; immediate?: boolean } | undefined>(
+      options?: T
+    ): { type: string } & T;
+    pop<T extends { key?: string; immediate?: boolean } | undefined>(
       options?: T
     ): { type: string } & T;
   };

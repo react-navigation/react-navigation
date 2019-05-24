@@ -1,7 +1,10 @@
 import * as React from 'react';
 import { Button, StatusBar } from 'react-native';
 import { SafeAreaView } from '@react-navigation/native';
-import { createStackNavigator } from 'react-navigation-stack';
+import {
+  createStackNavigator,
+  TransitionPresets,
+} from 'react-navigation-stack';
 
 class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -100,9 +103,7 @@ const StackWithHeaderPreset = createStackNavigator(
     ScreenWithNoHeader: ScreenWithNoHeader,
     ScreenWithLongTitle: ScreenWithLongTitle,
   },
-  {
-    headerTransitionPreset: 'uikit',
-  }
+  TransitionPresets.SlideFromRightIOS
 );
 
 export default StackWithHeaderPreset;

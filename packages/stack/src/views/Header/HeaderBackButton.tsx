@@ -2,180 +2,208 @@ import * as React from 'react';
 import {
   I18nManager,
   Image,
-  Text,
   View,
   Platform,
   StyleSheet,
   LayoutChangeEvent,
+  MaskedViewIOS,
 } from 'react-native';
-
+import Animated from 'react-native-reanimated';
 import TouchableItem from '../TouchableItem';
+import { HeaderBackButtonProps } from '../../types';
 
-import defaultBackImage from '../assets/back-icon.png';
-import BackButtonWeb from './BackButtonWeb';
-import { HeaderBackbuttonProps } from '../../types';
-
-type State = {
-  initialTextWidth?: number;
+type Props = HeaderBackButtonProps & {
+  tintColor: string;
 };
 
-class HeaderBackButton extends React.PureComponent<
-  HeaderBackbuttonProps,
-  State
-> {
+type State = {
+  initialLabelWidth?: number;
+};
+
+class HeaderBackButton extends React.Component<Props, State> {
   static defaultProps = {
     pressColorAndroid: 'rgba(0, 0, 0, .32)',
     tintColor: Platform.select({
       ios: '#037aff',
       web: '#5f6368',
     }),
-    truncatedTitle: 'Back',
-    backImage: Platform.select({
-      web: BackButtonWeb,
-    }),
+    labelVisible: Platform.OS === 'ios',
+    truncatedLabel: 'Back',
   };
 
   state: State = {};
 
-  private handleTextLayout = (e: LayoutChangeEvent) => {
-    if (this.state.initialTextWidth) {
+  private handleLabelLayout = (e: LayoutChangeEvent) => {
+    const { onLabelLayout } = this.props;
+
+    onLabelLayout && onLabelLayout(e);
+
+    if (this.state.initialLabelWidth) {
       return;
     }
+
     this.setState({
-      initialTextWidth: e.nativeEvent.layout.x + e.nativeEvent.layout.width,
+      initialLabelWidth: e.nativeEvent.layout.x + e.nativeEvent.layout.width,
     });
   };
 
   private renderBackImage() {
-    const { backImage, backTitleVisible, tintColor } = this.props;
+    const { backImage, labelVisible, tintColor } = this.props;
 
-    let title = this.getTitleText();
+    let label = this.getLabelText();
 
-    if (React.isValidElement(backImage)) {
-      return backImage;
-    } else if (backImage) {
-      const BackImage = backImage;
-
-      return <BackImage tintColor={tintColor} title={title} />;
+    if (backImage) {
+      return backImage({ tintColor, label });
     } else {
       return (
         <Image
           style={[
             styles.icon,
-            !!backTitleVisible && styles.iconWithTitle,
+            !!labelVisible && styles.iconWithTitle,
             !!tintColor && { tintColor },
           ]}
-          source={defaultBackImage}
+          source={require('../assets/back-icon.png')}
           fadeDuration={0}
         />
       );
     }
   }
 
-  private getTitleText = () => {
-    const { width, title, truncatedTitle } = this.props;
+  private getLabelText = () => {
+    const { titleLayout, screenLayout, label, truncatedLabel } = this.props;
 
-    let { initialTextWidth } = this.state;
+    let { initialLabelWidth: initialLabelWidth } = this.state;
 
-    if (title === null) {
-      return null;
-    } else if (!title) {
-      return truncatedTitle;
-    } else if (initialTextWidth && width && initialTextWidth > width) {
-      return truncatedTitle;
+    if (!label) {
+      return truncatedLabel;
+    } else if (
+      initialLabelWidth &&
+      titleLayout &&
+      screenLayout &&
+      (screenLayout.width - titleLayout.width) / 2 < initialLabelWidth + 26
+    ) {
+      return truncatedLabel;
     } else {
-      return title;
+      return label;
     }
   };
 
   private maybeRenderTitle() {
     const {
       allowFontScaling,
-      backTitleVisible,
-      titleStyle,
+      labelVisible,
+      backImage,
+      labelStyle,
       tintColor,
+      screenLayout,
     } = this.props;
-    let backTitleText = this.getTitleText();
 
-    if (!backTitleVisible || backTitleText === null) {
+    let leftLabelText = this.getLabelText();
+
+    if (!labelVisible || leftLabelText === undefined) {
       return null;
     }
 
-    return (
-      <Text
+    const title = (
+      <Animated.Text
         accessible={false}
-        onLayout={this.handleTextLayout}
-        style={[styles.title, !!tintColor && { color: tintColor }, titleStyle]}
+        onLayout={this.handleLabelLayout}
+        style={[
+          styles.title,
+          screenLayout ? { marginRight: screenLayout.width / 2 } : null,
+          tintColor ? { color: tintColor } : null,
+          labelStyle,
+        ]}
         numberOfLines={1}
         allowFontScaling={!!allowFontScaling}
       >
-        {this.getTitleText()}
-      </Text>
+        {this.getLabelText()}
+      </Animated.Text>
+    );
+
+    if (backImage) {
+      return title;
+    }
+
+    return (
+      <MaskedViewIOS
+        maskElement={
+          <View style={styles.iconMaskContainer}>
+            <Image
+              source={require('../assets/back-icon-mask.png')}
+              style={styles.iconMask}
+            />
+            <View style={styles.iconMaskFillerRect} />
+          </View>
+        }
+      >
+        {title}
+      </MaskedViewIOS>
     );
   }
 
-  render() {
-    const { onPress, pressColorAndroid, title, disabled } = this.props;
+  private handlePress = () =>
+    this.props.onPress && requestAnimationFrame(this.props.onPress);
 
-    let button = (
+  render() {
+    const { pressColorAndroid, label, disabled } = this.props;
+
+    return (
       <TouchableItem
         disabled={disabled}
         accessible
         accessibilityRole="button"
         accessibilityComponentType="button"
-        accessibilityLabel={title ? `${title}, back` : 'Go back'}
+        accessibilityLabel={
+          label && label !== 'Back' ? `${label}, back` : 'Go back'
+        }
         accessibilityTraits="button"
         testID="header-back"
         delayPressIn={0}
-        onPress={disabled ? undefined : onPress}
+        onPress={disabled ? undefined : this.handlePress}
         pressColor={pressColorAndroid}
         style={[styles.container, disabled && styles.disabled]}
+        hitSlop={Platform.select({
+          ios: undefined,
+          default: { top: 8, right: 8, bottom: 8, left: 8 },
+        })}
         borderless
       >
-        <View style={styles.container}>
+        <React.Fragment>
           {this.renderBackImage()}
           {this.maybeRenderTitle()}
-        </View>
+        </React.Fragment>
       </TouchableItem>
     );
-
-    if (Platform.OS === 'ios') {
-      return button;
-    } else {
-      return <View style={styles.androidButtonWrapper}>{button}</View>;
-    }
   }
 }
 
 const styles = StyleSheet.create({
-  disabled: {
-    opacity: 0.5,
-  },
-  androidButtonWrapper: {
-    margin: 13,
-    backgroundColor: 'transparent',
-    ...Platform.select({
-      web: {
-        marginLeft: 21,
-      },
-      default: {},
-    }),
-  },
   container: {
     alignItems: 'center',
     flexDirection: 'row',
-    backgroundColor: 'transparent',
+    ...Platform.select({
+      ios: null,
+      default: {
+        marginVertical: 3,
+        marginHorizontal: 11,
+      },
+    }),
+  },
+  disabled: {
+    opacity: 0.5,
   },
   title: {
     fontSize: 17,
-    paddingRight: 10,
+    // Title and back title are a bit different width due to title being bold
+    // Adjusting the letterSpacing makes them coincide better
+    letterSpacing: 0.35,
   },
   icon: Platform.select({
     ios: {
-      backgroundColor: 'transparent',
       height: 21,
       width: 13,
-      marginLeft: 9,
+      marginLeft: 8,
       marginRight: 22,
       marginVertical: 12,
       resizeMode: 'contain',
@@ -186,7 +214,6 @@ const styles = StyleSheet.create({
       width: 24,
       margin: 3,
       resizeMode: 'contain',
-      backgroundColor: 'transparent',
       transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }],
     },
   }),
@@ -196,6 +223,24 @@ const styles = StyleSheet.create({
           marginRight: 6,
         }
       : {},
+  iconMaskContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  iconMaskFillerRect: {
+    flex: 1,
+    backgroundColor: '#000',
+  },
+  iconMask: {
+    height: 21,
+    width: 13,
+    marginLeft: -14.5,
+    marginVertical: 12,
+    alignSelf: 'center',
+    resizeMode: 'contain',
+    transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }],
+  },
 });
 
 export default HeaderBackButton;

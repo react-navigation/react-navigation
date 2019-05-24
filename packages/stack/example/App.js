@@ -36,8 +36,8 @@ import { useScreens } from 'react-native-screens';
 I18nManager.forceRTL(false);
 
 const data = [
-  { component: SimpleStack, title: 'Simple', routeName: 'SimpleStack' },
   { component: HeaderPreset, title: 'UIKit Preset', routeName: 'UIKit' },
+  { component: SimpleStack, title: 'Wipe Preset', routeName: 'SimpleStack' },
   { component: ImageStack, title: 'Image', routeName: 'ImageStack' },
   { component: ModalStack, title: 'Modal', routeName: 'ModalStack' },
   { component: FullScreen, title: 'Full Screen', routeName: 'FullScreen' },
@@ -75,11 +75,6 @@ const data = [
     component: HeaderBackgroundFade,
     title: 'Header background (fade transition)',
     routeName: 'HeaderBackgroundFade',
-  },
-  {
-    component: HeaderBackgroundTranslate,
-    title: 'Header background (translate transition)',
-    routeName: 'HeaderBackgroundTranslate',
   },
 ];
 

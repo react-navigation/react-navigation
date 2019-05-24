@@ -7,7 +7,7 @@ class ListScreen extends React.Component {
   static navigationOptions = ({ navigation }) => ({
     title: 'Image list',
     headerBackTitle: 'Back',
-    headerLeft: (
+    headerLeft: () => (
       <Button title="Back" onPress={() => navigation.navigate('Home')} />
     ),
   });

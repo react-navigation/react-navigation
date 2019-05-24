@@ -1,7 +1,7 @@
 import { StackRouter, createNavigator } from '@react-navigation/core';
 import { createKeyboardAwareNavigator } from '@react-navigation/native';
 import { Platform } from 'react-native';
-import StackView from '../views/StackView/StackView';
+import StackView from '../views/Stack/StackView';
 import { NavigationStackOptions, NavigationProp, Screen } from '../types';
 
 function createStackNavigator(

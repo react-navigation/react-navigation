@@ -1,6 +1,11 @@
 import * as React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
-import { createStackNavigator } from 'react-navigation-stack';
+import Animated from 'react-native-reanimated';
+import {
+  createStackNavigator,
+  TransitionPresets,
+  HeaderStyleInterpolators,
+} from 'react-navigation-stack';
 
 function createHeaderBackgroundExample(options = {}) {
   return createStackNavigator(
@@ -19,7 +24,7 @@ function createHeaderBackgroundExample(options = {}) {
         navigationOptions: {
           headerTitle: 'Login Screen',
           headerTintColor: '#fff',
-          headerBackground: (
+          headerBackground: () => (
             <View style={{ flex: 1, backgroundColor: '#FF0066' }} />
           ),
         },
@@ -38,7 +43,7 @@ function createHeaderBackgroundExample(options = {}) {
         navigationOptions: {
           headerTitle: 'Games Screen',
           headerTintColor: '#fff',
-          headerBackground: (
+          headerBackground: () => (
             <View style={{ flex: 1, backgroundColor: '#3388FF' }} />
           ),
         },
@@ -90,11 +95,11 @@ function createHeaderBackgroundExample(options = {}) {
   );
 }
 export const HeaderBackgroundDefault = createHeaderBackgroundExample();
-export const HeaderBackgroundTranslate = createHeaderBackgroundExample({
-  headerBackgroundTransitionPreset: 'translate',
-});
+
 export const HeaderBackgroundFade = createHeaderBackgroundExample({
-  headerBackgroundTransitionPreset: 'fade',
+  ...TransitionPresets.SlideFromRightIOS,
+  headerStyleInterpolator: HeaderStyleInterpolators.forFade,
+  headerMode: 'float',
 });
 
 const styles = StyleSheet.create({

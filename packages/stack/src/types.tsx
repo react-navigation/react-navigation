@@ -1,18 +1,14 @@
-import { Animated, StyleProp, TextStyle, ViewStyle } from 'react-native';
-import { SafeAreaView } from '@react-navigation/native';
+import {
+  StyleProp,
+  TextStyle,
+  ViewStyle,
+  LayoutChangeEvent,
+} from 'react-native';
+import Animated from 'react-native-reanimated';
 
 export type Route = {
   key: string;
   routeName: string;
-};
-
-export type Scene = {
-  key: string;
-  index: number;
-  isStale: boolean;
-  isActive: boolean;
-  route: Route;
-  descriptor: SceneDescriptor;
 };
 
 export type NavigationEventName =
@@ -25,7 +21,10 @@ export type NavigationState = {
   key: string;
   index: number;
   routes: Route[];
-  isTransitioning?: boolean;
+  transitions: {
+    pushing: string[];
+    popping: string[];
+  };
   params?: { [key: string]: unknown };
 };
 
@@ -45,92 +44,67 @@ export type NavigationProp<RouteName = string, Params = object> = {
   dangerouslyGetParent(): NavigationProp | undefined;
 };
 
-export type HeaderMode = 'float' | 'screen';
+export type Layout = { width: number; height: number };
 
-export type HeaderLayoutPreset = 'left' | 'center';
+export type GestureDirection = 'horizontal' | 'vertical';
 
-export type HeaderTransitionPreset = 'fade-in-place' | 'uikit';
+export type HeaderMode = 'float' | 'screen' | 'none';
 
-export type HeaderBackgroundTransitionPreset = 'translate' | 'fade';
-
-export type HeaderProps = {
-  mode: HeaderMode;
-  position: Animated.Value;
-  navigation: NavigationProp;
-  layout: TransitionerLayout;
-  scene: Scene;
-  scenes: Scene[];
-  layoutPreset: HeaderLayoutPreset;
-  transitionPreset?: HeaderTransitionPreset;
-  backTitleVisible?: boolean;
-  leftInterpolator: (props: SceneInterpolatorProps) => any;
-  titleInterpolator: (props: SceneInterpolatorProps) => any;
-  rightInterpolator: (props: SceneInterpolatorProps) => any;
-  backgroundInterpolator: (props: SceneInterpolatorProps) => any;
-  isLandscape: boolean;
+export type HeaderScene<T> = {
+  route: T;
+  descriptor: SceneDescriptor;
+  progress: {
+    current: Animated.Node<number>;
+    next?: Animated.Node<number>;
+    previous?: Animated.Node<number>;
+  };
 };
 
-export type HeaderTransitionConfig = {
-  headerLeftInterpolator: SceneInterpolator;
-  headerLeftLabelInterpolator: SceneInterpolator;
-  headerLeftButtonInterpolator: SceneInterpolator;
-  headerTitleFromLeftInterpolator: SceneInterpolator;
-  headerTitleInterpolator: SceneInterpolator;
-  headerRightInterpolator: SceneInterpolator;
-  headerBackgroundInterpolator: SceneInterpolator;
-  headerLayoutInterpolator: SceneInterpolator;
-};
-
-export type NavigationStackOptions = {
-  title?: string;
-  header?: (props: HeaderProps) => React.ReactNode;
+export type HeaderOptions = {
   headerTitle?: string;
   headerTitleStyle?: StyleProp<TextStyle>;
-  headerTitleContainerStyle?: StyleProp<ViewStyle>;
   headerTintColor?: string;
   headerTitleAllowFontScaling?: boolean;
   headerBackAllowFontScaling?: boolean;
   headerBackTitle?: string;
   headerBackTitleStyle?: StyleProp<TextStyle>;
   headerTruncatedBackTitle?: string;
-  headerLeft?: React.FunctionComponent<HeaderBackbuttonProps>;
+  headerLeft?: (props: HeaderBackButtonProps) => React.ReactNode;
   headerLeftContainerStyle?: StyleProp<ViewStyle>;
-  headerRight?: (() => React.ReactNode) | React.ReactNode;
+  headerRight?: () => React.ReactNode;
   headerRightContainerStyle?: StyleProp<ViewStyle>;
-  headerBackImage?: React.FunctionComponent<{
-    tintColor: string;
-    title?: string | null;
-  }>;
+  headerBackImage?: HeaderBackButtonProps['backImage'];
   headerPressColorAndroid?: string;
-  headerBackground?: string;
-  headerTransparent?: boolean;
+  headerBackground?: () => React.ReactNode;
   headerStyle?: StyleProp<ViewStyle>;
-  headerForceInset?: React.ComponentProps<typeof SafeAreaView>['forceInset'];
+  headerStatusBarHeight?: number;
+};
+
+export type HeaderProps = {
+  mode: 'float' | 'screen';
+  layout: Layout;
+  scene: HeaderScene<Route>;
+  previous?: HeaderScene<Route>;
+  navigation: NavigationProp;
+  styleInterpolator: HeaderStyleInterpolator;
+};
+
+export type NavigationStackOptions = HeaderOptions & {
+  title?: string;
+  header?: null | ((props: HeaderProps) => React.ReactNode);
   gesturesEnabled?: boolean;
-  gestureDirection?: 'inverted' | 'normal';
   gestureResponseDistance?: {
-    vertical: number;
-    horizontal: number;
+    vertical?: number;
+    horizontal?: number;
   };
   disableKeyboardHandling?: boolean;
 };
 
-export type NavigationConfig = {
+export type NavigationConfig = TransitionPreset & {
   mode: 'card' | 'modal';
   headerMode: HeaderMode;
-  headerLayoutPreset: HeaderLayoutPreset;
-  headerTransitionPreset: HeaderTransitionPreset;
-  headerBackgroundTransitionPreset: HeaderBackgroundTransitionPreset;
   headerBackTitleVisible?: boolean;
-  cardShadowEnabled?: boolean;
-  cardOverlayEnabled?: boolean;
-  onTransitionStart?: () => void;
-  onTransitionEnd?: () => void;
-  transitionConfig: (
-    transitionProps: TransitionProps,
-    prevTransitionProps?: TransitionProps,
-    isModal?: boolean
-  ) => HeaderTransitionConfig;
+  transparentCard?: boolean;
 };
 
 export type SceneDescriptor = {
@@ -140,62 +114,97 @@ export type SceneDescriptor = {
   getComponent(): React.ComponentType;
 };
 
-export type HeaderBackbuttonProps = {
+export type HeaderBackButtonProps = {
   disabled?: boolean;
-  onPress: () => void;
+  onPress?: () => void;
   pressColorAndroid?: string;
-  tintColor: string;
-  backImage?: NavigationStackOptions['headerBackImage'];
-  title?: string | null;
-  truncatedTitle?: string | null;
-  backTitleVisible?: boolean;
+  backImage?: (props: { tintColor: string; label?: string }) => React.ReactNode;
+  tintColor?: string;
+  label?: string;
+  truncatedLabel?: string;
+  labelVisible?: boolean;
+  labelStyle?: React.ComponentProps<typeof Animated.Text>['style'];
   allowFontScaling?: boolean;
-  titleStyle?: StyleProp<TextStyle>;
-  layoutPreset: HeaderLayoutPreset;
-  width?: number;
-  scene: Scene;
-};
-
-export type SceneInterpolatorProps = {
-  mode?: HeaderMode;
-  layout: TransitionerLayout;
-  scene: Scene;
-  scenes: Scene[];
-  position: Animated.AnimatedInterpolation;
-  navigation: NavigationProp;
-  shadowEnabled?: boolean;
-  cardOverlayEnabled?: boolean;
-};
-
-export type SceneInterpolator = (props: SceneInterpolatorProps) => any;
-
-export type TransitionerLayout = {
-  height: Animated.Value;
-  width: Animated.Value;
-  initHeight: number;
-  initWidth: number;
-  isMeasured: boolean;
-};
-
-export type TransitionProps = {
-  layout: TransitionerLayout;
-  navigation: NavigationProp;
-  position: Animated.Value;
-  scenes: Scene[];
-  scene: Scene;
-  index: number;
-};
-
-export type TransitionConfig = {
-  transitionSpec: {
-    timing: Function;
-  };
-  screenInterpolator: SceneInterpolator;
-  containerStyle?: StyleProp<ViewStyle>;
+  onLabelLayout?: (e: LayoutChangeEvent) => void;
+  screenLayout?: Layout;
+  titleLayout?: Layout;
 };
 
 export type Screen = React.ComponentType<any> & {
   navigationOptions?: NavigationStackOptions & {
     [key: string]: any;
   };
+};
+
+export type SpringConfig = {
+  damping: number;
+  mass: number;
+  stiffness: number;
+  restSpeedThreshold: number;
+  restDisplacementThreshold: number;
+  overshootClamping: boolean;
+};
+
+export type TimingConfig = {
+  duration: number;
+  easing: Animated.EasingFunction;
+};
+
+export type TransitionSpec =
+  | { timing: 'spring'; config: SpringConfig }
+  | { timing: 'timing'; config: TimingConfig };
+
+export type CardInterpolationProps = {
+  progress: {
+    current: Animated.Node<number>;
+    next?: Animated.Node<number>;
+  };
+  closing: Animated.Node<0 | 1>;
+  layouts: {
+    screen: Layout;
+  };
+};
+
+export type CardInterpolatedStyle = {
+  containerStyle?: any;
+  cardStyle?: any;
+  overlayStyle?: any;
+};
+
+export type CardStyleInterpolator = (
+  props: CardInterpolationProps
+) => CardInterpolatedStyle;
+
+export type HeaderInterpolationProps = {
+  progress: {
+    current: Animated.Node<number>;
+    next?: Animated.Node<number>;
+  };
+  layouts: {
+    screen: Layout;
+    title?: Layout;
+    leftLabel?: Layout;
+  };
+};
+
+export type HeaderInterpolatedStyle = {
+  leftLabelStyle?: any;
+  leftButtonStyle?: any;
+  rightButtonStyle?: any;
+  titleStyle?: any;
+  backgroundStyle?: any;
+};
+
+export type HeaderStyleInterpolator = (
+  props: HeaderInterpolationProps
+) => HeaderInterpolatedStyle;
+
+export type TransitionPreset = {
+  direction: GestureDirection;
+  transitionSpec: {
+    open: TransitionSpec;
+    close: TransitionSpec;
+  };
+  cardStyleInterpolator: CardStyleInterpolator;
+  headerStyleInterpolator: HeaderStyleInterpolator;
 };
