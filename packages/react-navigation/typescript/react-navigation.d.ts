@@ -749,6 +749,7 @@ declare module 'react-navigation' {
       params?: NavigationParams,
       action?: NavigationNavigateAction
     ) => boolean;
+    reset: (actions: NavigationAction[], index: number) => boolean;
     pop: (n?: number, params?: { immediate?: boolean }) => boolean;
     popToTop: (params?: { immediate?: boolean }) => boolean;
     isFocused: () => boolean;
