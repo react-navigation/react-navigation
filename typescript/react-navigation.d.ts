@@ -1226,7 +1226,7 @@ declare module 'react-navigation' {
 
     function pop(options: NavigationPopActionPayload): NavigationPopAction;
     function popToTop(
-      options: NavigationPopToTopActionPayload
+      options?: NavigationPopToTopActionPayload
     ): NavigationPopToTopAction;
 
     function push(options: NavigationPushActionPayload): NavigationPushAction;
