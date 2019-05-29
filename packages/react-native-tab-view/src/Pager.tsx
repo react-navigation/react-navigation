@@ -35,6 +35,7 @@ type Props<T extends Route> = PagerCommonProps & {
       jumpTo: (key: string) => void;
     }
   ) => React.ReactNode;
+  gestureHandlerProps: React.ComponentProps<typeof PanGestureHandler>;
 };
 
 const {
@@ -595,6 +596,7 @@ export default class Pager<T extends Route> extends React.Component<Props<T>> {
       swipeEnabled,
       children,
       removeClippedSubviews,
+      gestureHandlerProps,
     } = this.props;
 
     const translateX = this.getTranslateX(
@@ -615,6 +617,7 @@ export default class Pager<T extends Route> extends React.Component<Props<T>> {
           onHandlerStateChange={this.handleGestureEvent}
           activeOffsetX={[-SWIPE_DISTANCE_MINIMUM, SWIPE_DISTANCE_MINIMUM]}
           failOffsetY={[-SWIPE_DISTANCE_MINIMUM, SWIPE_DISTANCE_MINIMUM]}
+          {...gestureHandlerProps}
         >
           <Animated.View
             removeClippedSubviews={removeClippedSubviews}

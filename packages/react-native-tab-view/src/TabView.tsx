@@ -6,6 +6,7 @@ import {
   ViewStyle,
   LayoutChangeEvent,
 } from 'react-native';
+import { PanGestureHandler } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
 import TabBar, { Props as TabBarProps } from './TabBar';
 import Pager from './Pager';
@@ -39,6 +40,7 @@ type Props<T extends Route> = PagerCommonProps & {
   removeClippedSubviews?: boolean;
   sceneContainerStyle?: StyleProp<ViewStyle>;
   style?: StyleProp<ViewStyle>;
+  gestureHandlerProps: React.ComponentProps<typeof PanGestureHandler>;
 };
 
 type State = {
@@ -61,6 +63,7 @@ export default class TabView<T extends Route> extends React.Component<
     removeClippedSubviews: false,
     springConfig: {},
     timingConfig: {},
+    gestureHandlerProps: {},
   };
 
   state = {
@@ -111,6 +114,7 @@ export default class TabView<T extends Route> extends React.Component<
       renderLazyPlaceholder,
       sceneContainerStyle,
       style,
+      gestureHandlerProps,
     } = this.props;
     const { layout } = this.state;
 
@@ -129,6 +133,7 @@ export default class TabView<T extends Route> extends React.Component<
           onSwipeEnd={onSwipeEnd}
           onIndexChange={this.jumpToIndex}
           removeClippedSubviews={removeClippedSubviews}
+          gestureHandlerProps={gestureHandlerProps}
         >
           {({ position, render, addListener, removeListener, jumpTo }) => {
             // All of the props here must not change between re-renders

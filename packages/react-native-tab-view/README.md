@@ -348,6 +348,17 @@ Style to apply to the view wrapping each screen. You can pass this to override s
 
 Style to apply to the tab view container.
 
+##### `gestureHandlerProps`
+
+An object with props to be passed to undelying [`PanGestureHandler`](https://kmagiera.github.io/react-native-gesture-handler/docs/handler-pan.html#properties). For example:
+
+```js
+pagerProps={{
+  maxPointers: 1,
+  waitFor: [someRef]
+}}
+```
+
 ### `TabBar`
 
 Material design themed tab bar. To customize the tab bar, you'd need to use the `renderTabBar` prop of `TabView` to render the `TabBar` and pass additional props.
