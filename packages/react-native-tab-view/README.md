@@ -354,10 +354,10 @@ Style to apply to the tab view container.
 
 ##### `gestureHandlerProps`
 
-An object with props to be passed to undelying [`PanGestureHandler`](https://kmagiera.github.io/react-native-gesture-handler/docs/handler-pan.html#properties). For example:
+An object with props to be passed to underlying [`PanGestureHandler`](https://kmagiera.github.io/react-native-gesture-handler/docs/handler-pan.html#properties). For example:
 
 ```js
-pagerProps={{
+gestureHandlerProps={{
   maxPointers: 1,
   waitFor: [someRef]
 }}
