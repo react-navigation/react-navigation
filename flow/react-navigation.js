@@ -883,6 +883,7 @@ declare module 'react-navigation' {
       immediate?: boolean,
     }) => NavigationPopAction,
     popToTop: (payload?: {
+      key?: string,
       immediate?: boolean,
     }) => NavigationPopToTopAction,
     push: (payload: {
