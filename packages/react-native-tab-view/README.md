@@ -52,6 +52,7 @@ import { TabView, SceneMap } from 'react-native-tab-view';
 const FirstRoute = () => (
   <View style={[styles.scene, { backgroundColor: '#ff4081' }]} />
 );
+
 const SecondRoute = () => (
   <View style={[styles.scene, { backgroundColor: '#673ab7' }]} />
 );
@@ -259,7 +260,7 @@ When you enable `lazy`, the unfocused screens will usually take some time to ren
 
 ##### `lazyPreloadDistance`
 
-When `lazy` is enabled this number can be used to specify the pre-load distance. This value defaults to `0` which means lazy pages are loaded when they become active.
+When `lazy` is enabled, you can specify how many adjacent routes should be preloaded with this prop. This value defaults to `0` which means lazy pages are loaded as they come into the viewport.
 
 ##### `renderLazyPlaceholder`
 
@@ -268,7 +269,6 @@ Callback which returns a custom React Element to render for routes that haven't 
 This view is usually only shown for a split second. Keep it lightweight.
 
 By default, this renders `null`.
-
 
 ##### `removeClippedSubviews`
 
@@ -505,7 +505,7 @@ Style to apply to the tab bar container.
 
 ### Avoid unnecessary re-renders
 
-The `renderScene` function is called every time the index changes. If your `renderScene` function is expensive, it's good idea move each route to a separate component if they don't depend on the index, and apply `shouldComponentUpdate` in your route components to prevent unnecessary re-renders.
+The `renderScene` function is called every time the index changes. If your `renderScene` function is expensive, it's good idea move each route to a separate component if they don't depend on the index, and use `shouldComponentUpdate` or `React.memo` in your route components to prevent unnecessary re-renders.
 
 For example, instead of:
 
@@ -538,7 +538,7 @@ renderScene = ({ route }) => {
 };
 ```
 
-Where `<HomeComponent />` is a `PureComponent`:
+Where `<HomeComponent />` is a `PureComponent` if you're using class components:
 
 ```js
 export default class HomeComponent extends React.PureComponent {
@@ -551,6 +551,21 @@ export default class HomeComponent extends React.PureComponent {
     );
   }
 }
+```
+
+Or, wrapped in `React.memo` if you're using function components:
+
+```js
+function HomeComponent() {
+  return (
+    <View style={styles.page}>
+      <Avatar />
+      <NewsFeed />
+    </View>
+  );
+}
+
+export default React.memo(HomeComponent);
 ```
 
 ### Avoid one frame delay
@@ -588,9 +603,9 @@ renderScene = ({ route }) => {
 
 Nesting the `TabView` inside a vertical `ScrollView` will disable the optimizations in the `FlatList` components rendered inside the `TabView`. So avoid doing it if possible.
 
-### Use `lazy` and `lazyPlaceholder` props to render routes as needed
+### Use `lazy` and `renderLazyPlaceholder` props to render routes as needed
 
-The `lazy` option is disabled by default to provide a smoother tab switching experience, but you can enable it and provide a `lazyPlaceholder` component for a better lazy loading experience. Enabling `lazy` can improve initial load performance by rendering routes only when they come into view.   Refer the [prop reference](#lazy) for more details.
+The `lazy` option is disabled by default to provide a smoother tab switching experience, but you can enable it and provide a placeholder component for a better lazy loading experience. Enabling `lazy` can improve initial load performance by rendering routes only when they come into view. Refer the [prop reference](#lazy) for more details.
 
 ### Use `removeClippedSubviews` to improve memory usage
 
