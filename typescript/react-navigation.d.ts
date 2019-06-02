@@ -536,10 +536,10 @@ declare module 'react-navigation' {
     | NavigationTabAction
     | NavigationDrawerAction;
 
-  export type NavigationRouteConfig =
+  export type NavigationRouteConfig<Options> =
     | NavigationComponent
     | ({
-        navigationOptions?: NavigationScreenConfig<any>;
+        navigationOptions?: NavigationScreenConfig<Options>;
         path?: string;
       } & NavigationScreenRouteConfig);
 
@@ -660,8 +660,8 @@ declare module 'react-navigation' {
     drawerLockMode?: DrawerLockMode;
   }
 
-  export interface NavigationRouteConfigMap {
-    [routeName: string]: NavigationRouteConfig;
+  export interface NavigationRouteConfigMap<Options> {
+    [routeName: string]: NavigationRouteConfig<Options>;
   }
 
   export type NavigationDispatch = (action: NavigationAction) => boolean;
@@ -962,7 +962,7 @@ declare module 'react-navigation' {
   }
 
   export function createStackNavigator(
-    routeConfigMap: NavigationRouteConfigMap,
+    routeConfigMap: NavigationRouteConfigMap<NavigationStackScreenOptions>,
     stackConfig?: StackNavigatorConfig
   ): NavigationContainer;
 
@@ -977,7 +977,7 @@ declare module 'react-navigation' {
   export type _SwitchNavigatorConfig = NavigationSwitchRouterConfig;
 
   export function createSwitchNavigator(
-    routeConfigMap: NavigationRouteConfigMap,
+    routeConfigMap: NavigationRouteConfigMap<NavigationScreenOptions>,
     switchConfig?: SwitchNavigatorConfig
   ): NavigationContainer;
 
@@ -1045,12 +1045,12 @@ declare module 'react-navigation' {
   }
 
   export function DrawerNavigator(
-    routeConfigMap: NavigationRouteConfigMap,
+    routeConfigMap: NavigationRouteConfigMap<NavigationDrawerScreenOptions>,
     drawerConfig?: DrawerNavigatorConfig
   ): NavigationContainer;
 
   export function createDrawerNavigator(
-    routeConfigMap: NavigationRouteConfigMap,
+    routeConfigMap: NavigationRouteConfigMap<NavigationDrawerScreenOptions>,
     drawerConfig?: DrawerNavigatorConfig
   ): NavigationContainer;
 
@@ -1108,12 +1108,12 @@ declare module 'react-navigation' {
   }
 
   export function createBottomTabNavigator(
-    routeConfigMap: NavigationRouteConfigMap,
+    routeConfigMap: NavigationRouteConfigMap<NavigationBottomTabScreenOptions>,
     drawConfig?: BottomTabNavigatorConfig
   ): NavigationContainer;
 
   export function createMaterialTopTabNavigator(
-    routeConfigMap: NavigationRouteConfigMap,
+    routeConfigMap: NavigationRouteConfigMap<NavigationTabScreenOptions>,
     drawConfig?: TabNavigatorConfig
   ): NavigationContainer;
 
@@ -1296,7 +1296,7 @@ declare module 'react-navigation' {
    * @desc from react-navigation/src/routers/TabRouter.js
    */
   export function TabRouter(
-    routeConfigs: NavigationRouteConfigMap,
+    routeConfigs: NavigationRouteConfigMap<NavigationTabScreenOptions>,
     config: NavigationTabRouterConfig
   ): NavigationRouter<any, any>;
 
@@ -1306,7 +1306,7 @@ declare module 'react-navigation' {
    * @desc from react-navigation/src/routers/StackRouter.js
    */
   export function StackRouter(
-    routeConfigs: NavigationRouteConfigMap,
+    routeConfigs: NavigationRouteConfigMap<NavigationStackScreenOptions>,
     config: NavigationTabRouterConfig
   ): NavigationRouter<any, any>;
 
