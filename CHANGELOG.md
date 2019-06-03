@@ -289,6 +289,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - [2.x](https://github.com/react-navigation/react-navigation/blob/2.x/CHANGELOG.md)
 
+[Unreleased]: Fixed NavigationStackScreenOptions types by adding headerTitleContainerStyle
 [Unreleased]: https://github.com/react-navigation/react-navigation/compare/3.10.0...HEAD
 [3.10.0]: https://github.com/react-navigation/react-navigation/compare/3.10.0...3.9.0
 [3.9.0]: https://github.com/react-navigation/react-navigation/compare/3.8.1...3.9.0
