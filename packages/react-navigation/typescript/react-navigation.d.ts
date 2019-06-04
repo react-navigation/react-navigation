@@ -244,7 +244,7 @@ declare module 'react-navigation' {
     | Options
     | ((
         navigationOptionsContainer: NavigationScreenConfigProps & {
-          navigationOptions: NavigationScreenProp<NavigationRoute>;
+          navigationOptions: NavigationScreenConfig<Options>;
         }
       ) => Options);
 
