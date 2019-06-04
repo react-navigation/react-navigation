@@ -476,6 +476,7 @@ declare module 'react-navigation' {
     headerTitle?: string | React.ReactElement<any>;
     headerTitleStyle?: StyleProp<TextStyle>;
     headerTitleAllowFontScaling?: boolean;
+    headerTitleContainerStyle?: StyleProp<TextStyle>;
     headerTintColor?: string;
     headerLeft?:
       | React.ReactElement<any>
