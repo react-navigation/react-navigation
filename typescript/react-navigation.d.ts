@@ -244,7 +244,7 @@ declare module 'react-navigation' {
     | Options
     | ((
         navigationOptionsContainer: NavigationScreenConfigProps & {
-          navigationOptions: NavigationScreenProp<NavigationRoute>;
+          navigationOptions: NavigationScreenConfig<Options>;
         }
       ) => Options);
 
@@ -476,6 +476,7 @@ declare module 'react-navigation' {
     headerTitle?: string | React.ReactElement<any>;
     headerTitleStyle?: StyleProp<TextStyle>;
     headerTitleAllowFontScaling?: boolean;
+    headerTitleContainerStyle?: StyleProp<TextStyle>;
     headerTintColor?: string;
     headerLeft?:
       | React.ReactElement<any>
@@ -1226,7 +1227,7 @@ declare module 'react-navigation' {
 
     function pop(options: NavigationPopActionPayload): NavigationPopAction;
     function popToTop(
-      options: NavigationPopToTopActionPayload
+      options?: NavigationPopToTopActionPayload
     ): NavigationPopToTopAction;
 
     function push(options: NavigationPushActionPayload): NavigationPushAction;

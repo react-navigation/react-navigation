@@ -8,17 +8,21 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Unreleased
 
 ## Changed
+
 - `navigationOptions` in `NavigationRouteConfigMap` now has proper intellisense for each Navigator type.
+
 ```javascript
-const tabNavigator = createBottomTabNavigator(
-    {
-        Home: {
-            screen: HomeScreen,
-            navigationOptions: {} // this navigationOptions props will have proper intellisense for NavigationBottomTabScreenOptions
-        }
-    }
-);
+const tabNavigator = createBottomTabNavigator({
+  Home: {
+    screen: HomeScreen,
+    navigationOptions: {}, // this navigationOptions props will have proper intellisense for NavigationBottomTabScreenOptions
+  },
+});
 ```
+
+## Fixes
+
+- Fix `navigationOptions` type from `NavigationScreenProp<NavigationRoute>` to `NavigationScreenConfig<Options>`.
 
 ## [3.11.0]
 
@@ -248,7 +252,6 @@ const tabNavigator = createBottomTabNavigator(
 
 - Fix drawer accessibility label when drawer label is not a string
 
-
 ## [3.0.5] - [2018-12-03](https://github.com/react-navigation/react-navigation/releases/tag/3.0.5)
 
 ## Fixes
@@ -270,7 +273,6 @@ const tabNavigator = createBottomTabNavigator(
 ## Added
 
 - Accessibility labels on drawer items (https://github.com/react-navigation/react-navigation-drawer/pull/30)
-
 
 ## [3.0.3] - [2018-11-30](https://github.com/react-navigation/react-navigation/releases/tag/3.0.3)
 
@@ -304,6 +306,7 @@ const tabNavigator = createBottomTabNavigator(
 
 - [2.x](https://github.com/react-navigation/react-navigation/blob/2.x/CHANGELOG.md)
 
+[Unreleased]: Fixed NavigationStackScreenOptions types by adding headerTitleContainerStyle
 [Unreleased]: https://github.com/react-navigation/react-navigation/compare/3.10.0...HEAD
 [3.10.0]: https://github.com/react-navigation/react-navigation/compare/3.10.0...3.9.0
 [3.9.0]: https://github.com/react-navigation/react-navigation/compare/3.8.1...3.9.0
