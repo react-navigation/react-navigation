@@ -24,7 +24,6 @@ import StackWithDrawer from './src/StackWithDrawer';
 import HeaderPreset from './src/HeaderPreset';
 import {
   HeaderBackgroundDefault,
-  HeaderBackgroundTranslate,
   HeaderBackgroundFade,
 } from './src/HeaderBackgrounds';
 

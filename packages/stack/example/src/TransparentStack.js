@@ -3,8 +3,6 @@ import { Button, View, Text } from 'react-native';
 import { createStackNavigator } from 'react-navigation-stack';
 import Animated from 'react-native-reanimated';
 
-const { interpolate, multiply, cond } = Animated;
-
 class ListScreen extends React.Component {
   render() {
     return (
@@ -81,15 +79,11 @@ export default createStackNavigator(
     navigationOptions: {
       gesturesEnabled: false,
     },
-    cardStyleInterpolator: ({ progress: { current }, closing }) => {
-      const opacity = cond(
-        closing,
-        current,
-        interpolate(current, {
-          inputRange: [0, 0.5, 0.9, 1],
-          outputRange: [0, 0.25, 0.7, 1],
-        })
-      );
+    cardStyleInterpolator: ({ progress: { current } }) => {
+      const opacity = Animated.interpolate(current, {
+        inputRange: [0, 0.5, 0.9, 1],
+        outputRange: [0, 0.25, 0.7, 1],
+      });
 
       return {
         cardStyle: {
