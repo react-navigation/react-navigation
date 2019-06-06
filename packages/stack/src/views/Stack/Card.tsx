@@ -68,6 +68,7 @@ const {
   lessThan,
   max,
   min,
+  multiply,
   neq,
   onChange,
   or,
@@ -167,7 +168,10 @@ export default class Card extends React.Component<Props> {
         // But since we have 0-1 scale, we need to adjust the velocity
         set(
           this.transitionVelocity,
-          cond(this.distance, divide(this.velocity, this.distance), 0)
+          multiply(
+            cond(this.distance, divide(this.velocity, this.distance), 0),
+            -1
+          )
         ),
         set(this.frameTime, 0),
         set(this.transitionState.time, 0),
