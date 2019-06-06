@@ -21,7 +21,7 @@ export function forHorizontalIOS({
       })
     : 0;
 
-  const opacity = interpolate(current, {
+  const overlayOpacity = interpolate(current, {
     inputRange: [0, 1],
     outputRange: [0, 0.07],
   });
@@ -33,16 +33,15 @@ export function forHorizontalIOS({
 
   return {
     cardStyle: {
-      backgroundColor: '#eee',
       transform: [
         // Translation for the animation of the current card
         { translateX: translateFocused },
         // Translation for the animation of the card on top of this
         { translateX: translateUnfocused },
       ],
-      shadowOpacity,
     },
-    overlayStyle: { opacity },
+    overlayStyle: { opacity: overlayOpacity },
+    shadowStyle: { shadowOpacity },
   };
 }
 
@@ -60,7 +59,6 @@ export function forVerticalIOS({
 
   return {
     cardStyle: {
-      backgroundColor: '#eee',
       transform: [
         // Translation for the animation of the current card
         { translateY },

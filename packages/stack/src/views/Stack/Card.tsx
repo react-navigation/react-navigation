@@ -23,6 +23,8 @@ type Props = ViewProps & {
   onGestureCanceled?: () => void;
   onGestureEnd?: () => void;
   children: React.ReactNode;
+  overlayEnabled: boolean;
+  shadowEnabled: boolean;
   gesturesEnabled: boolean;
   gestureResponseDistance?: {
     vertical?: number;
@@ -85,6 +87,8 @@ const {
 
 export default class Card extends React.Component<Props> {
   static defaultProps = {
+    overlayEnabled: true,
+    shadowEnabled: true,
     gesturesEnabled: true,
   };
 
@@ -414,6 +418,8 @@ export default class Card extends React.Component<Props> {
       current,
       next,
       direction,
+      overlayEnabled,
+      shadowEnabled,
       gesturesEnabled,
       children,
       styleInterpolator,
@@ -424,6 +430,7 @@ export default class Card extends React.Component<Props> {
       containerStyle,
       cardStyle,
       overlayStyle,
+      shadowStyle,
     } = this.getInterpolatedStyle(styleInterpolator, current, next, layout);
 
     const handleGestureEvent =
@@ -435,7 +442,7 @@ export default class Card extends React.Component<Props> {
       <StackGestureContext.Provider value={this.gestureRef}>
         <View pointerEvents="box-none" {...rest}>
           <Animated.Code exec={this.exec} />
-          {overlayStyle ? (
+          {overlayEnabled && overlayStyle ? (
             <Animated.View
               pointerEvents="none"
               style={[styles.overlay, overlayStyle]}
@@ -452,14 +459,21 @@ export default class Card extends React.Component<Props> {
               onHandlerStateChange={handleGestureEvent}
               {...this.gestureActivationCriteria()}
             >
-              <Animated.View
-                style={[
-                  styles.card,
-                  cardStyle,
-                  transparent ? styles.transparent : null,
-                ]}
-              >
-                {children}
+              <Animated.View style={[StyleSheet.absoluteFill, cardStyle]}>
+                {shadowEnabled && !transparent ? (
+                  <Animated.View
+                    style={[styles.shadow, shadowStyle]}
+                    pointerEvents="none"
+                  />
+                ) : null}
+                <View
+                  style={[
+                    StyleSheet.absoluteFill,
+                    transparent ? styles.transparent : styles.opaque,
+                  ]}
+                >
+                  {children}
+                </View>
               </Animated.View>
             </PanGestureHandler>
           </Animated.View>
@@ -474,20 +488,26 @@ const styles = StyleSheet.create({
     flex: 1,
     overflow: 'hidden',
   },
-  card: {
-    ...StyleSheet.absoluteFillObject,
-    shadowOffset: { width: -1, height: 1 },
-    shadowRadius: 5,
-    shadowColor: '#000',
-    backgroundColor: 'white',
-    elevation: 2,
-  },
   overlay: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: '#000',
   },
+  shadow: {
+    top: 0,
+    left: 0,
+    bottom: 0,
+    width: 3,
+    position: 'absolute',
+    backgroundColor: '#fff',
+    shadowOffset: { width: -1, height: 1 },
+    shadowRadius: 5,
+    shadowColor: '#000',
+    shadowOpacity: 1,
+  },
   transparent: {
     backgroundColor: 'transparent',
-    shadowOpacity: 0,
+  },
+  opaque: {
+    backgroundColor: '#eee',
   },
 });

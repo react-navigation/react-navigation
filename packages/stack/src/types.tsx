@@ -105,6 +105,8 @@ export type NavigationConfig = TransitionPreset & {
   mode: 'card' | 'modal';
   headerMode: HeaderMode;
   headerBackTitleVisible?: boolean;
+  cardShadowEnabled?: boolean;
+  cardOverlayEnabled?: boolean;
   transparentCard?: boolean;
 };
 
@@ -170,6 +172,7 @@ export type CardInterpolatedStyle = {
   containerStyle?: any;
   cardStyle?: any;
   overlayStyle?: any;
+  shadowStyle?: any;
 };
 
 export type CardStyleInterpolator = (
