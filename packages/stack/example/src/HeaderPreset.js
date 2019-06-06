@@ -4,6 +4,7 @@ import { SafeAreaView } from '@react-navigation/native';
 import {
   createStackNavigator,
   TransitionPresets,
+  HeaderStyleInterpolators,
 } from 'react-navigation-stack';
 
 class HomeScreen extends React.Component {
@@ -103,7 +104,10 @@ const StackWithHeaderPreset = createStackNavigator(
     ScreenWithNoHeader: ScreenWithNoHeader,
     ScreenWithLongTitle: ScreenWithLongTitle,
   },
-  TransitionPresets.SlideFromRightIOS
+  {
+    ...TransitionPresets.SlideFromRightIOS,
+    headerStyleInterpolator: HeaderStyleInterpolators.forUIKit,
+  }
 );
 
 export default StackWithHeaderPreset;

@@ -14,6 +14,7 @@ import { List, Divider } from 'react-native-paper';
 
 import FullScreen from './src/FullScreen';
 import SimpleStack from './src/SimpleStack';
+import WipeStack from './src/WipeStack';
 import ImageStack from './src/ImageStack';
 import TransparentStack from './src/TransparentStack';
 import ModalStack from './src/ModalStack';
@@ -35,8 +36,9 @@ import { useScreens } from 'react-native-screens';
 I18nManager.forceRTL(false);
 
 const data = [
+  { component: SimpleStack, title: 'Simple', routeName: 'SimpleStack' },
   { component: HeaderPreset, title: 'UIKit Preset', routeName: 'UIKit' },
-  { component: SimpleStack, title: 'Wipe Preset', routeName: 'SimpleStack' },
+  { component: WipeStack, title: 'Wipe Preset', routeName: 'Wipe' },
   { component: ImageStack, title: 'Image', routeName: 'ImageStack' },
   { component: ModalStack, title: 'Modal', routeName: 'ModalStack' },
   { component: FullScreen, title: 'Full Screen', routeName: 'FullScreen' },
@@ -67,7 +69,7 @@ const data = [
   },
   {
     component: HeaderBackgroundDefault,
-    title: 'Header background (default transition)',
+    title: 'Header background (UIKit transition)',
     routeName: 'HeaderBackgroundDefault',
   },
   {

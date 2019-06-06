@@ -42,7 +42,7 @@
   },
   "homepage": "https://github.com/react-navigation/react-navigation-stack#readme",
   "dependencies": {
-    "react-native-safe-area-view": "^0.14.4"
+    "react-native-safe-area-view": "^0.14.5"
   },
   "devDependencies": {
     "@babel/core": "^7.4.4",
