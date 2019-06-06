@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Asset } from 'expo';
+import { Asset } from 'expo-asset';
 import { FlatList, I18nManager } from 'react-native';
 import {
   createAppContainer,

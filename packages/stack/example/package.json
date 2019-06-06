@@ -9,12 +9,14 @@
     "ios": "expo start --ios"
   },
   "dependencies": {
-    "@react-navigation/core": "^3.3.1",
+    "@react-navigation/core": "3.4.1",
     "@react-navigation/native": "^3.4.1",
-    "expo": "32.0.6",
+    "expo": "^33.0.0",
+    "expo-asset": "^5.0.1",
+    "expo-constants": "~5.0.1",
     "hoist-non-react-statics": "^3.3.0",
-    "react": "16.5.0",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
+    "react": "16.8.3",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-33.0.0.tar.gz",
     "react-native-paper": "^2.15.2",
     "react-navigation-drawer": "^1.2.1",
     "react-navigation-tabs": "*"
