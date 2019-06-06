@@ -23,7 +23,6 @@ type Props = ViewProps & {
   onGestureCanceled?: () => void;
   onGestureEnd?: () => void;
   children: React.ReactNode;
-  animateIn: boolean;
   gesturesEnabled: boolean;
   gestureResponseDistance?: {
     vertical?: number;
@@ -58,54 +57,46 @@ const GESTURE_RESPONSE_DISTANCE_HORIZONTAL = 50;
 const GESTURE_RESPONSE_DISTANCE_VERTICAL = 135;
 
 const {
-  cond,
-  eq,
-  neq,
-  set,
+  abs,
   and,
-  or,
+  block,
+  call,
+  cond,
+  divide,
+  eq,
   greaterThan,
   lessThan,
-  abs,
-  add,
   max,
-  block,
-  stopClock,
-  startClock,
-  clockRunning,
+  min,
+  neq,
   onChange,
-  Value,
-  Clock,
-  call,
+  or,
+  set,
   spring,
+  sub,
   timing,
-  interpolate,
+  startClock,
+  stopClock,
+  clockRunning,
+  Clock,
+  Value,
 } = Animated;
 
 export default class Card extends React.Component<Props> {
   static defaultProps = {
-    animateIn: true,
     gesturesEnabled: true,
   };
 
   componentDidUpdate(prevProps: Props) {
-    const { layout, direction, closing, animateIn } = this.props;
+    const { layout, direction, closing } = this.props;
     const { width, height } = layout;
 
-    if (
-      width !== prevProps.layout.width ||
-      height !== prevProps.layout.height
-    ) {
+    if (width !== prevProps.layout.width) {
       this.layout.width.setValue(width);
-      this.layout.height.setValue(height);
+    }
 
-      this.position.setValue(
-        animateIn
-          ? direction === 'vertical'
-            ? layout.height
-            : layout.width
-          : 0
-      );
+    if (height !== prevProps.layout.height) {
+      this.layout.height.setValue(height);
     }
 
     if (direction !== prevProps.direction) {
@@ -143,14 +134,6 @@ export default class Card extends React.Component<Props> {
     this.layout.width
   );
 
-  private position = new Value(
-    this.props.animateIn
-      ? this.props.direction === 'vertical'
-        ? this.props.layout.height
-        : this.props.layout.width
-      : 0
-  );
-
   private gesture = new Value(0);
   private offset = new Value(0);
   private velocity = new Value(0);
@@ -164,8 +147,10 @@ export default class Card extends React.Component<Props> {
   private toValue = new Value(0);
   private frameTime = new Value(0);
 
+  private transitionVelocity = new Value(0);
+
   private transitionState = {
-    position: this.position,
+    position: this.props.current,
     time: new Value(0),
     finished: new Value(FALSE),
   };
@@ -173,13 +158,17 @@ export default class Card extends React.Component<Props> {
   private runTransition = (isVisible: Binary | Animated.Node<number>) => {
     const { open: openingSpec, close: closingSpec } = this.props.transitionSpec;
 
-    const toValue = cond(isVisible, 0, this.distance);
-
-    return cond(eq(this.position, toValue), NOOP, [
+    return cond(eq(this.props.current, isVisible), NOOP, [
       cond(clockRunning(this.clock), NOOP, [
         // Animation wasn't running before
         // Set the initial values and start the clock
-        set(this.toValue, toValue),
+        set(this.toValue, isVisible),
+        // The velocity value is ideal for translating the whole screen
+        // But since we have 0-1 scale, we need to adjust the velocity
+        set(
+          this.transitionVelocity,
+          cond(this.distance, divide(this.velocity, this.distance), 0)
+        ),
         set(this.frameTime, 0),
         set(this.transitionState.time, 0),
         set(this.transitionState.finished, FALSE),
@@ -192,11 +181,11 @@ export default class Card extends React.Component<Props> {
         }),
       ]),
       cond(
-        eq(toValue, 0),
+        eq(isVisible, 1),
         openingSpec.timing === 'spring'
           ? spring(
               this.clock,
-              { ...this.transitionState, velocity: this.velocity },
+              { ...this.transitionState, velocity: this.transitionVelocity },
               { ...openingSpec.config, toValue: this.toValue }
             )
           : timing(
@@ -207,7 +196,7 @@ export default class Card extends React.Component<Props> {
         closingSpec.timing === 'spring'
           ? spring(
               this.clock,
-              { ...this.transitionState, velocity: this.velocity },
+              { ...this.transitionState, velocity: this.transitionVelocity },
               { ...closingSpec.config, toValue: this.toValue }
             )
           : timing(
@@ -237,7 +226,7 @@ export default class Card extends React.Component<Props> {
     ]);
   };
 
-  private translate = block([
+  private exec = block([
     onChange(
       this.isClosing,
       cond(this.isClosing, set(this.nextIsVisible, FALSE))
@@ -276,18 +265,6 @@ export default class Card extends React.Component<Props> {
         }
       )
     ),
-    // Synchronize the translation with the animated value representing the progress
-    set(
-      this.props.current,
-      cond(
-        or(eq(this.layout.width, 0), eq(this.layout.height, 0)),
-        this.isVisible,
-        interpolate(this.position, {
-          inputRange: [0, this.distance],
-          outputRange: [1, 0],
-        })
-      )
-    ),
     cond(
       eq(this.gestureState, GestureState.ACTIVE),
       [
@@ -297,10 +274,22 @@ export default class Card extends React.Component<Props> {
           set(this.isSwiping, TRUE),
           set(this.isSwipeGesture, TRUE),
           // Also update the drag offset to the last position
-          set(this.offset, this.position),
+          set(this.offset, this.props.current),
         ]),
         // Update position with next offset + gesture distance
-        set(this.position, max(add(this.offset, this.gesture), 0)),
+        set(
+          this.props.current,
+          min(
+            max(
+              sub(
+                this.offset,
+                cond(this.distance, divide(this.gesture, this.distance), 1)
+              ),
+              0
+            ),
+            1
+          )
+        ),
         // Stop animations while we're dragging
         stopClock(this.clock),
       ],
@@ -342,7 +331,6 @@ export default class Card extends React.Component<Props> {
         ),
       ]
     ),
-    this.position,
   ]);
 
   private handleGestureEventHorizontal = Animated.event([
@@ -442,7 +430,7 @@ export default class Card extends React.Component<Props> {
     return (
       <StackGestureContext.Provider value={this.gestureRef}>
         <View pointerEvents="box-none" {...rest}>
-          <Animated.Code exec={this.translate} />
+          <Animated.Code exec={this.exec} />
           {overlayStyle ? (
             <Animated.View
               pointerEvents="none"

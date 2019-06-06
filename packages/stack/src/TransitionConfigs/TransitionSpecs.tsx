@@ -1,6 +1,7 @@
 import { Easing } from 'react-native-reanimated';
 import { TransitionSpec } from '../types';
 
+// These are the exact values from UINavigationController's animation configuration
 export const TransitionIOSSpec: TransitionSpec = {
   timing: 'spring',
   config: {

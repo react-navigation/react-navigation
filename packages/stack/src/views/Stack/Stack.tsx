@@ -160,7 +160,6 @@ export default class Stack extends React.Component<Props, State> {
       descriptors,
       navigation,
       routes,
-      openingRoutes,
       closingRoutes,
       onOpenRoute,
       onCloseRoute,
@@ -206,7 +205,6 @@ export default class Stack extends React.Component<Props, State> {
                 closing={closingRoutes.includes(route.key)}
                 onOpen={() => onOpenRoute({ route })}
                 onClose={() => onCloseRoute({ route })}
-                animateIn={openingRoutes.includes(route.key)}
                 gesturesEnabled={getGesturesEnabled({ route })}
                 onTransitionStart={({ closing }) => {
                   onTransitionStart &&
