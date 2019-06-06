@@ -6,7 +6,8 @@
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
-    "ios": "expo start --ios"
+    "ios": "expo start --ios",
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "@react-navigation/core": "3.4.1",
@@ -15,6 +16,8 @@
     "expo-asset": "^5.0.1",
     "expo-constants": "~5.0.1",
     "hoist-non-react-statics": "^3.3.0",
+    "patch-package": "^6.1.2",
+    "postinstall-postinstall": "^2.0.0",
     "react": "16.8.3",
     "react-native": "https://github.com/expo/react-native/archive/sdk-33.0.0.tar.gz",
     "react-native-paper": "^2.15.2",
@@ -23,5 +26,8 @@
   },
   "devDependencies": {
     "babel-plugin-module-resolver": "^3.2.0"
+  },
+  "resolutions": {
+    "react-native-safe-area-view": "0.14.5"
   }
 }
