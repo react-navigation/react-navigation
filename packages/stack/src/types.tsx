@@ -63,13 +63,13 @@ export type HeaderScene<T> = {
 export type HeaderOptions = {
   headerTitle?: string;
   headerTitleStyle?: StyleProp<TextStyle>;
+  headerTitleContainerStyle?: StyleProp<ViewStyle>;
   headerTintColor?: string;
   headerTitleAllowFontScaling?: boolean;
   headerBackAllowFontScaling?: boolean;
   headerBackTitle?: string;
   headerBackTitleStyle?: StyleProp<TextStyle>;
   headerTruncatedBackTitle?: string;
-  headerTitleContainerStyle?: StyleProp<ViewStyle>;
   headerLeft?: (props: HeaderBackButtonProps) => React.ReactNode;
   headerLeftContainerStyle?: StyleProp<ViewStyle>;
   headerRight?: () => React.ReactNode;
@@ -117,7 +117,7 @@ export type SceneDescriptor = {
 
 export type HeaderBackButtonProps = {
   disabled?: boolean;
-  onPress?: () => void;
+  onPress: () => void;
   pressColorAndroid?: string;
   backImage?: (props: { tintColor: string }) => React.ReactNode;
   tintColor?: string;
