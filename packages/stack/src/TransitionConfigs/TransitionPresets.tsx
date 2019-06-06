@@ -4,7 +4,7 @@ import {
   forWipeFromBottomAndroid,
   forFadeFromBottomAndroid,
 } from './CardStyleInterpolators';
-import { forUIKit, forNoAnimation } from './HeaderStyleInterpolators';
+import { forNoAnimation, forFade } from './HeaderStyleInterpolators';
 import {
   TransitionIOSSpec,
   WipeFromBottomAndroidSpec,
@@ -24,7 +24,7 @@ export const SlideFromRightIOS: TransitionPreset = {
     close: TransitionIOSSpec,
   },
   cardStyleInterpolator: forHorizontalIOS,
-  headerStyleInterpolator: forUIKit,
+  headerStyleInterpolator: forFade,
 };
 
 // Standard iOS navigation transition for modals
