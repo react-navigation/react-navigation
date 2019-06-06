@@ -137,6 +137,7 @@ export default class HeaderSegment extends React.Component<Props, State> {
       headerBackTitleStyle: customLeftLabelStyle,
       headerLeftContainerStyle: leftContainerStyle,
       headerRightContainerStyle: rightContainerStyle,
+      headerTitleContainerStyle: titleContainerStyle,
       styleInterpolator,
     } = this.props;
 
@@ -196,21 +197,25 @@ export default class HeaderSegment extends React.Component<Props, State> {
             </Animated.View>
           ) : null}
           {currentTitle ? (
-            <HeaderTitle
-              allowFontScaling={titleAllowFontScaling}
-              onLayout={this.handleTitleLayout}
+            <Animated.View
               style={[
-                styles.title,
                 Platform.select({
                   ios: null,
                   default: { left: onGoBack ? 72 : 16 },
                 }),
+                styles.title,
                 titleStyle,
-                customTitleStyle,
+                titleContainerStyle,
               ]}
             >
-              {currentTitle}
-            </HeaderTitle>
+              <HeaderTitle
+                onLayout={this.handleTitleLayout}
+                allowFontScaling={titleAllowFontScaling}
+                style={customTitleStyle}
+              >
+                {currentTitle}
+              </HeaderTitle>
+            </Animated.View>
           ) : null}
           {right ? (
             <Animated.View

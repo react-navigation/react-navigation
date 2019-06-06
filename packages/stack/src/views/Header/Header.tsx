@@ -18,14 +18,14 @@ export default class Header extends React.PureComponent<HeaderProps> {
 
     let leftLabel;
 
+    // The label for the left back button shows the title of the previous screen
+    // If a custom label is specified, we use it, otherwise use previous screen's title
     if (options.headerBackTitle !== undefined) {
       leftLabel = options.headerBackTitle;
-    } else {
-      if (previous) {
-        const opts = previous.descriptor.options;
-        leftLabel =
-          opts.headerTitle !== undefined ? opts.headerTitle : opts.title;
-      }
+    } else if (previous) {
+      const opts = previous.descriptor.options;
+      leftLabel =
+        opts.headerTitle !== undefined ? opts.headerTitle : opts.title;
     }
 
     return (

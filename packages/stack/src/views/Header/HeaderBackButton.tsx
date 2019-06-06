@@ -42,6 +42,9 @@ class HeaderBackButton extends React.Component<Props, State> {
       return;
     }
 
+    // This measurement is used to determine if we should truncate the label when it doesn't fit
+    // Only measure it once because `onLayout` will fire again when we render truncated label
+    // and we want the measurement of not-truncated label
     this.setState({
       initialLabelWidth: e.nativeEvent.layout.x + e.nativeEvent.layout.width,
     });
@@ -50,17 +53,15 @@ class HeaderBackButton extends React.Component<Props, State> {
   private renderBackImage() {
     const { backImage, labelVisible, tintColor } = this.props;
 
-    let label = this.getLabelText();
-
     if (backImage) {
-      return backImage({ tintColor, label });
+      return backImage({ tintColor });
     } else {
       return (
         <Image
           style={[
             styles.icon,
-            !!labelVisible && styles.iconWithTitle,
-            !!tintColor && { tintColor },
+            Boolean(labelVisible) && styles.iconWithLabel,
+            Boolean(tintColor) && { tintColor },
           ]}
           source={require('../assets/back-icon.png')}
           fadeDuration={0}
@@ -72,7 +73,7 @@ class HeaderBackButton extends React.Component<Props, State> {
   private getLabelText = () => {
     const { titleLayout, screenLayout, label, truncatedLabel } = this.props;
 
-    let { initialLabelWidth: initialLabelWidth } = this.state;
+    let { initialLabelWidth } = this.state;
 
     if (!label) {
       return truncatedLabel;
@@ -88,7 +89,7 @@ class HeaderBackButton extends React.Component<Props, State> {
     }
   };
 
-  private maybeRenderTitle() {
+  private renderLabel() {
     const {
       allowFontScaling,
       labelVisible,
@@ -104,12 +105,12 @@ class HeaderBackButton extends React.Component<Props, State> {
       return null;
     }
 
-    const title = (
+    const label = (
       <Animated.Text
         accessible={false}
         onLayout={this.handleLabelLayout}
         style={[
-          styles.title,
+          styles.label,
           screenLayout ? { marginRight: screenLayout.width / 2 } : null,
           tintColor ? { color: tintColor } : null,
           labelStyle,
@@ -122,7 +123,9 @@ class HeaderBackButton extends React.Component<Props, State> {
     );
 
     if (backImage) {
-      return title;
+      // When a custom backimage is specified, we can't mask the label
+      // Otherwise there might be weird effect due to our mask not being the same as the image
+      return label;
     }
 
     return (
@@ -137,7 +140,7 @@ class HeaderBackButton extends React.Component<Props, State> {
           </View>
         }
       >
-        {title}
+        {label}
       </MaskedViewIOS>
     );
   }
@@ -171,7 +174,7 @@ class HeaderBackButton extends React.Component<Props, State> {
       >
         <React.Fragment>
           {this.renderBackImage()}
-          {this.maybeRenderTitle()}
+          {this.renderLabel()}
         </React.Fragment>
       </TouchableItem>
     );
@@ -193,9 +196,9 @@ const styles = StyleSheet.create({
   disabled: {
     opacity: 0.5,
   },
-  title: {
+  label: {
     fontSize: 17,
-    // Title and back title are a bit different width due to title being bold
+    // Title and back label are a bit different width due to title being bold
     // Adjusting the letterSpacing makes them coincide better
     letterSpacing: 0.35,
   },
@@ -217,7 +220,7 @@ const styles = StyleSheet.create({
       transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }],
     },
   }),
-  iconWithTitle:
+  iconWithLabel:
     Platform.OS === 'ios'
       ? {
           marginRight: 6,
