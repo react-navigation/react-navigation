@@ -1,9 +1,7 @@
 import * as React from 'react';
 import { View, StyleSheet, Platform, ViewProps } from 'react-native';
 
-type Props = ViewProps;
-
-export default function HeaderBackground({ style, ...rest }: Props) {
+export default function HeaderBackground({ style, ...rest }: ViewProps) {
   return <View style={[styles.container, style]} {...rest} />;
 }
 

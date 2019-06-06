@@ -69,6 +69,7 @@ export type HeaderOptions = {
   headerBackTitle?: string;
   headerBackTitleStyle?: StyleProp<TextStyle>;
   headerTruncatedBackTitle?: string;
+  headerTitleContainerStyle?: StyleProp<ViewStyle>;
   headerLeft?: (props: HeaderBackButtonProps) => React.ReactNode;
   headerLeftContainerStyle?: StyleProp<ViewStyle>;
   headerRight?: () => React.ReactNode;
@@ -118,7 +119,7 @@ export type HeaderBackButtonProps = {
   disabled?: boolean;
   onPress?: () => void;
   pressColorAndroid?: string;
-  backImage?: (props: { tintColor: string; label?: string }) => React.ReactNode;
+  backImage?: (props: { tintColor: string }) => React.ReactNode;
   tintColor?: string;
   label?: string;
   truncatedLabel?: string;

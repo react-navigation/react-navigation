@@ -94,9 +94,9 @@ class StackView extends React.Component<Props, State> {
     const { routes } = this.props.navigation.state;
 
     const isFirst = routes[0].key === route.key;
-    const isLast = routes[routes.length - 1].key === route.key;
 
-    if (isFirst || !isLast) {
+    if (isFirst) {
+      // The user shouldn't be able to close the first screen
       return false;
     }
 
@@ -109,29 +109,26 @@ class StackView extends React.Component<Props, State> {
 
   private renderScene = ({ route }: { route: Route }) => {
     const descriptor = this.state.descriptors[route.key];
-
-    if (!descriptor) {
-      return null;
-    }
-
     const { navigation, getComponent } = descriptor;
     const SceneComponent = getComponent();
 
-    const { screenProps } = this.props;
-
     return (
       <SceneView
-        screenProps={screenProps}
+        screenProps={this.props.screenProps}
         navigation={navigation}
         component={SceneComponent}
       />
     );
   };
 
-  private handleGoBack = ({ route }: { route: Route }) =>
+  private handleGoBack = ({ route }: { route: Route }) => {
+    // This event will trigger when a gesture ends
+    // We need to perform the transition before popping the route completely
     this.props.navigation.dispatch(StackActions.pop({ key: route.key }));
+  };
 
   private handleTransitionComplete = ({ route }: { route: Route }) => {
+    // When transition completes, we need to remove the item from the pushing/popping arrays
     this.props.navigation.dispatch(
       StackActions.completeTransition({ toChildKey: route.key })
     );
@@ -142,6 +139,9 @@ class StackView extends React.Component<Props, State> {
   };
 
   private handleCloseRoute = ({ route }: { route: Route }) => {
+    // This event will trigger when the transition for closing the route ends
+    // In this case, we need to clean up any state tracking the route and pop it immediately
+
     // @ts-ignore
     this.setState(state => ({
       routes: state.routes.filter(r => r.key !== route.key),
