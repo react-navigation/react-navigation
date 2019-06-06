@@ -7,7 +7,7 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "postinstall": "patch-package"
+    "postinstall": "patch-package --patch-dir ../patches"
   },
   "dependencies": {
     "@react-navigation/core": "3.4.1",
@@ -25,7 +25,9 @@
     "react-navigation-tabs": "*"
   },
   "devDependencies": {
-    "babel-plugin-module-resolver": "^3.2.0"
+    "babel-plugin-module-resolver": "^3.2.0",
+    "patch-package": "^6.1.2",
+    "postinstall-postinstall": "^2.0.0"
   },
   "resolutions": {
     "react-native-safe-area-view": "0.14.5"

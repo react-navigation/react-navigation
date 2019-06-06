@@ -193,11 +193,7 @@ Array [
               "top": 0,
             },
             Object {
-              "transform": Array [
-                Object {
-                  "translateX": undefined,
-                },
-              ],
+              "opacity": undefined,
             },
           ]
         }
@@ -245,11 +241,6 @@ Array [
               Object {},
               Object {
                 "opacity": undefined,
-                "transform": Array [
-                  Object {
-                    "translateX": undefined,
-                  },
-                ],
               },
               undefined,
             ]
@@ -490,11 +481,7 @@ Array [
               "top": 0,
             },
             Object {
-              "transform": Array [
-                Object {
-                  "translateX": undefined,
-                },
-              ],
+              "opacity": undefined,
             },
           ]
         }
@@ -542,11 +529,6 @@ Array [
               Object {},
               Object {
                 "opacity": undefined,
-                "transform": Array [
-                  Object {
-                    "translateX": undefined,
-                  },
-                ],
               },
               undefined,
             ]

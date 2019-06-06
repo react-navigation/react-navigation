@@ -322,11 +322,7 @@ Array [
                         "top": 0,
                       },
                       Object {
-                        "transform": Array [
-                          Object {
-                            "translateX": undefined,
-                          },
-                        ],
+                        "opacity": undefined,
                       },
                     ]
                   }
@@ -418,11 +414,7 @@ Array [
               "top": 0,
             },
             Object {
-              "transform": Array [
-                Object {
-                  "translateX": undefined,
-                },
-              ],
+              "opacity": undefined,
             },
           ]
         }

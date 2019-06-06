@@ -18,7 +18,8 @@
     "prepare": "bob build",
     "release": "release-it",
     "example": "yarn --cwd example",
-    "bootstrap": "yarn && yarn example"
+    "bootstrap": "yarn && yarn example",
+    "postinstall": "patch-package"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
@@ -62,6 +63,8 @@
     "eslint-plugin-react-native-globals": "^0.1.0",
     "husky": "^2.2.0",
     "jest": "^24.7.1",
+    "patch-package": "^6.1.2",
+    "postinstall-postinstall": "^2.0.0",
     "prettier": "^1.17.0",
     "react": "16.8.3",
     "react-dom": "16.8.3",

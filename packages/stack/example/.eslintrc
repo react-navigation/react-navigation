@@ -5,6 +5,7 @@
     {
       'import/core-modules':
         [
+          'expo-asset',
           'react-navigation-stack',
           'react-native-gesture-handler',
           'react-native-reanimated',
