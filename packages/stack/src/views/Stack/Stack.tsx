@@ -35,6 +35,8 @@ type Props = {
   transparentCard?: boolean;
   headerMode: HeaderMode;
   direction: GestureDirection;
+  cardOverlayEnabled?: boolean;
+  cardShadowEnabled?: boolean;
   onTransitionStart?: (
     curr: { index: number },
     prev: { index: number }
@@ -159,6 +161,8 @@ export default class Stack extends React.Component<Props, State> {
     const {
       descriptors,
       navigation,
+      cardOverlayEnabled,
+      cardShadowEnabled,
       routes,
       closingRoutes,
       onOpenRoute,
@@ -205,6 +209,8 @@ export default class Stack extends React.Component<Props, State> {
                 closing={closingRoutes.includes(route.key)}
                 onOpen={() => onOpenRoute({ route })}
                 onClose={() => onCloseRoute({ route })}
+                overlayEnabled={cardOverlayEnabled}
+                shadowEnabled={cardShadowEnabled}
                 gesturesEnabled={getGesturesEnabled({ route })}
                 onTransitionStart={({ closing }) => {
                   onTransitionStart &&
@@ -244,6 +250,7 @@ export default class Stack extends React.Component<Props, State> {
                     scenes={[scenes[index - 1], scenes[index]]}
                     navigation={navigation}
                     styleInterpolator={headerStyleInterpolator}
+                    style={styles.header}
                   />
                 ) : null}
                 {renderScene({ route })}
@@ -259,7 +266,7 @@ export default class Stack extends React.Component<Props, State> {
             navigation={navigation}
             onLayout={this.handleFloatingHeaderLayout}
             styleInterpolator={headerStyleInterpolator}
-            style={styles.header}
+            style={[styles.header, styles.floating]}
           />
         ) : null}
       </React.Fragment>
@@ -273,6 +280,10 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   header: {
+    // This is needed to show elevation shadow
+    zIndex: 1,
+  },
+  floating: {
     position: 'absolute',
     top: 0,
     left: 0,
