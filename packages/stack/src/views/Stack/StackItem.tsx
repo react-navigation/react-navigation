@@ -78,6 +78,7 @@ export default class StackItem extends React.PureComponent<Props> {
 
   render() {
     const {
+      index,
       layout,
       active,
       focused,
@@ -110,6 +111,7 @@ export default class StackItem extends React.PureComponent<Props> {
 
     return (
       <Card
+        index={index}
         active={active}
         transparent={cardTransparent}
         direction={direction}
