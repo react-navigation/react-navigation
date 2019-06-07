@@ -344,7 +344,7 @@ Array [
                 style={
                   Array [
                     Object {
-                      "zIndex": 1,
+                      "zIndex": 0,
                     },
                     Object {
                       "left": 0,
@@ -428,7 +428,36 @@ Array [
                         },
                       ]
                     }
-                  />
+                  >
+                    <View
+                      style={
+                        Array [
+                          null,
+                          Object {},
+                          Object {
+                            "opacity": undefined,
+                          },
+                          undefined,
+                        ]
+                      }
+                    >
+                      <Text
+                        onLayout={[Function]}
+                        style={
+                          Array [
+                            Object {
+                              "color": "rgba(0, 0, 0, .9)",
+                              "fontSize": 17,
+                              "fontWeight": "600",
+                            },
+                            undefined,
+                          ]
+                        }
+                      >
+                        Home
+                      </Text>
+                    </View>
+                  </View>
                 </View>
               </View>
             </View>
@@ -442,7 +471,7 @@ Array [
     style={
       Array [
         Object {
-          "zIndex": 1,
+          "zIndex": 0,
         },
         Object {
           "left": 0,
@@ -526,7 +555,36 @@ Array [
             },
           ]
         }
-      />
+      >
+        <View
+          style={
+            Array [
+              null,
+              Object {},
+              Object {
+                "opacity": undefined,
+              },
+              undefined,
+            ]
+          }
+        >
+          <Text
+            onLayout={[Function]}
+            style={
+              Array [
+                Object {
+                  "color": "rgba(0, 0, 0, .9)",
+                  "fontSize": 17,
+                  "fontWeight": "600",
+                },
+                undefined,
+              ]
+            }
+          >
+            Sub
+          </Text>
+        </View>
+      </View>
     </View>
   </View>,
 ]

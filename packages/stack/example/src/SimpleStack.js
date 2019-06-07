@@ -10,6 +10,10 @@ const Buttons = withNavigation(props => (
       onPress={() => props.navigation.navigate('Details')}
     />
     <Button
+      title="Replace with List"
+      onPress={() => props.navigation.replace('List')}
+    />
+    <Button
       title="Go and then go to details quick"
       onPress={() => {
         props.navigation.pop();

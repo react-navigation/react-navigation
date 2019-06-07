@@ -178,7 +178,7 @@ Array [
     style={
       Array [
         Object {
-          "zIndex": 1,
+          "zIndex": 0,
         },
         Object {
           "left": 0,
@@ -502,7 +502,7 @@ Array [
     style={
       Array [
         Object {
-          "zIndex": 1,
+          "zIndex": 0,
         },
         Object {
           "left": 0,
