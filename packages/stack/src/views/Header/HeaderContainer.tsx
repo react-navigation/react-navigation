@@ -21,6 +21,7 @@ type Props = {
   layout: Layout;
   scenes: HeaderScene<Route>[];
   navigation: NavigationProp;
+  getPreviousRoute: (props: { route: Route }) => Route | undefined;
   onLayout?: (e: LayoutChangeEvent) => void;
   styleInterpolator: HeaderStyleInterpolator;
   style?: StyleProp<ViewStyle>;
@@ -31,6 +32,7 @@ export default function HeaderContainer({
   scenes,
   layout,
   navigation,
+  getPreviousRoute,
   onLayout,
   styleInterpolator,
   style,
@@ -46,12 +48,26 @@ export default function HeaderContainer({
 
         const { options } = scene.descriptor;
         const isFocused = focusedRoute.key === scene.route.key;
+        const previousRoute = getPreviousRoute({ route: scene.route });
+
+        let previous;
+
+        if (previousRoute) {
+          // The previous scene will be shortly before the current scene in the array
+          // So loop back from current index to avoid looping over the full array
+          for (let j = i - 1; j >= 0; j--) {
+            if (self[j].route.key === previousRoute.key) {
+              previous = self[j];
+              break;
+            }
+          }
+        }
 
         const props = {
           mode,
           layout,
           scene,
-          previous: self[i - 1],
+          previous,
           navigation: scene.descriptor.navigation,
           styleInterpolator,
         };

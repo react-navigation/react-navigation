@@ -1,5 +1,11 @@
 import * as React from 'react';
-import { View, StyleSheet, LayoutChangeEvent, Dimensions } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  LayoutChangeEvent,
+  Dimensions,
+  Platform,
+} from 'react-native';
 import Animated from 'react-native-reanimated';
 import { getDefaultHeaderHeight } from '../Header/HeaderSegment';
 import HeaderContainer from '../Header/HeaderContainer';
@@ -30,6 +36,7 @@ type Props = {
   onGoBack: (props: { route: Route }) => void;
   onOpenRoute: (props: { route: Route }) => void;
   onCloseRoute: (props: { route: Route }) => void;
+  getPreviousRoute: (props: { route: Route }) => Route | undefined;
   getGesturesEnabled: (props: { route: Route }) => boolean;
   renderScene: (props: { route: Route }) => React.ReactNode;
   transparentCard?: boolean;
@@ -73,7 +80,12 @@ export default class Stack extends React.Component<Props, State> {
       (acc, curr) => {
         acc[curr.key] =
           state.progress[curr.key] ||
-          new Animated.Value(props.openingRoutes.includes(curr.key) ? 0 : 1);
+          new Animated.Value(
+            props.openingRoutes.includes(curr.key) &&
+            props.descriptors[curr.key].options.animationEnabled !== false
+              ? 0
+              : 1
+          );
 
         return acc;
       },
@@ -168,6 +180,7 @@ export default class Stack extends React.Component<Props, State> {
       onOpenRoute,
       onCloseRoute,
       onGoBack,
+      getPreviousRoute,
       getGesturesEnabled,
       renderScene,
       transparentCard,
@@ -212,7 +225,7 @@ export default class Stack extends React.Component<Props, State> {
                 onClose={() => onCloseRoute({ route })}
                 overlayEnabled={cardOverlayEnabled}
                 shadowEnabled={cardShadowEnabled}
-                gesturesEnabled={getGesturesEnabled({ route })}
+                gesturesEnabled={index !== 0 && getGesturesEnabled({ route })}
                 onTransitionStart={({ closing }) => {
                   onTransitionStart &&
                     onTransitionStart(
@@ -250,6 +263,7 @@ export default class Stack extends React.Component<Props, State> {
                     layout={layout}
                     scenes={[scenes[index - 1], scenes[index]]}
                     navigation={navigation}
+                    getPreviousRoute={getPreviousRoute}
                     styleInterpolator={headerStyleInterpolator}
                     style={styles.header}
                   />
@@ -265,6 +279,7 @@ export default class Stack extends React.Component<Props, State> {
             layout={layout}
             scenes={scenes}
             navigation={navigation}
+            getPreviousRoute={getPreviousRoute}
             onLayout={this.handleFloatingHeaderLayout}
             styleInterpolator={headerStyleInterpolator}
             style={[styles.header, styles.floating]}
@@ -282,7 +297,7 @@ const styles = StyleSheet.create({
   },
   header: {
     // This is needed to show elevation shadow
-    zIndex: 1,
+    zIndex: Platform.OS === 'android' ? 1 : 0,
   },
   floating: {
     position: 'absolute',

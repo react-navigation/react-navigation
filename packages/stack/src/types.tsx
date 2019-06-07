@@ -41,6 +41,7 @@ export type NavigationProp<RouteName = string, Params = object> = {
   setParams(params: Params): void;
   getParam(): Params;
   dispatch(action: { type: string }): void;
+  isFirstRouteInParent(): boolean;
   dangerouslyGetParent(): NavigationProp | undefined;
 };
 
@@ -93,6 +94,7 @@ export type HeaderProps = {
 export type NavigationStackOptions = HeaderOptions & {
   title?: string;
   header?: null | ((props: HeaderProps) => React.ReactNode);
+  animationEnabled?: boolean;
   gesturesEnabled?: boolean;
   gestureResponseDistance?: {
     vertical?: number;
