@@ -1,8 +1,9 @@
 import { I18nManager } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { CardInterpolationProps, CardInterpolatedStyle } from '../types';
+import { getStatusBarHeight } from 'react-native-safe-area-view';
 
-const { cond, multiply, interpolate } = Animated;
+const { cond, add, multiply, interpolate } = Animated;
 
 /**
  * Standard iOS-style slide in from the right.
@@ -68,6 +69,58 @@ export function forVerticalIOS({
         { translateY },
       ],
     },
+  };
+}
+
+/**
+ * Standard iOS-style modal animation in iOS 13.
+ */
+export function forModalPresentationIOS({
+  index,
+  progress: { current, next },
+  layouts: { screen },
+}: CardInterpolationProps): CardInterpolatedStyle {
+  const topOffset = 10;
+  const statusBarHeight = getStatusBarHeight(screen.width > screen.height);
+  const aspectRatio = screen.height / screen.width;
+
+  const progress = add(current, next ? next : 0);
+
+  const translateY = interpolate(progress, {
+    inputRange: [0, 1, 2],
+    outputRange: [
+      screen.height,
+      index === 0 ? 0 : topOffset,
+      (index === 0 ? statusBarHeight : 0) - topOffset * aspectRatio,
+    ],
+  });
+
+  const overlayOpacity = interpolate(progress, {
+    inputRange: [0, 1, 2],
+    outputRange: [0, 0.3, 1],
+  });
+
+  const scale = interpolate(progress, {
+    inputRange: [0, 1, 2],
+    outputRange: [1, 1, screen.width ? 1 - (topOffset * 2) / screen.width : 1],
+  });
+
+  const borderRadius =
+    index === 0
+      ? interpolate(progress, {
+          inputRange: [0, 1, 2],
+          outputRange: [0, 0, 10],
+        })
+      : 10;
+
+  return {
+    cardStyle: {
+      borderTopLeftRadius: borderRadius,
+      borderTopRightRadius: borderRadius,
+      marginTop: index === 0 ? 0 : statusBarHeight,
+      transform: [{ translateY }, { scale }],
+    },
+    overlayStyle: { opacity: overlayOpacity },
   };
 }
 

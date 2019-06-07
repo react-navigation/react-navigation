@@ -100,11 +100,8 @@ Array [
               style={
                 Array [
                   Object {
-                    "bottom": 0,
-                    "left": 0,
-                    "position": "absolute",
-                    "right": 0,
-                    "top": 0,
+                    "flex": 1,
+                    "overflow": "hidden",
                   },
                   Object {
                     "transform": Array [
@@ -256,11 +253,8 @@ Array [
                             style={
                               Array [
                                 Object {
-                                  "bottom": 0,
-                                  "left": 0,
-                                  "position": "absolute",
-                                  "right": 0,
-                                  "top": 0,
+                                  "flex": 1,
+                                  "overflow": "hidden",
                                 },
                                 Object {
                                   "transform": Array [

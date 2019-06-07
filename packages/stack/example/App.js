@@ -18,6 +18,7 @@ import WipeStack from './src/WipeStack';
 import ImageStack from './src/ImageStack';
 import TransparentStack from './src/TransparentStack';
 import ModalStack from './src/ModalStack';
+import ModalPresentation from './src/ModalPresentation';
 import LifecycleInteraction from './src/LifecycleInteraction';
 import GestureInteraction from './src/GestureInteraction';
 import SwitchWithStacks from './src/SwitchWithStacks';
@@ -43,6 +44,11 @@ const data = [
   { component: WipeStack, title: 'Wipe Preset', routeName: 'Wipe' },
   { component: ImageStack, title: 'Image', routeName: 'ImageStack' },
   { component: ModalStack, title: 'Modal', routeName: 'ModalStack' },
+  {
+    component: ModalPresentation,
+    title: 'Modal (iOS style)',
+    routeName: 'ModalPresentation',
+  },
   { component: FullScreen, title: 'Full Screen', routeName: 'FullScreen' },
   {
     component: LifecycleInteraction,
