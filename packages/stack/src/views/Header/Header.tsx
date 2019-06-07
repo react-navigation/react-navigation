@@ -14,7 +14,11 @@ export default class Header extends React.PureComponent<HeaderProps> {
     } = this.props;
     const { options } = scene.descriptor;
     const title =
-      options.headerTitle !== undefined ? options.headerTitle : options.title;
+      options.headerTitle !== undefined
+        ? options.headerTitle
+        : options.title !== undefined
+        ? options.title
+        : scene.route.routeName;
 
     let leftLabel;
 
@@ -23,9 +27,14 @@ export default class Header extends React.PureComponent<HeaderProps> {
     if (options.headerBackTitle !== undefined) {
       leftLabel = options.headerBackTitle;
     } else if (previous) {
-      const opts = previous.descriptor.options;
+      const o = previous.descriptor.options;
+
       leftLabel =
-        opts.headerTitle !== undefined ? opts.headerTitle : opts.title;
+        o.headerTitle !== undefined
+          ? o.headerTitle
+          : o.title !== undefined
+          ? o.title
+          : previous.route.routeName;
     }
 
     return (
@@ -36,7 +45,6 @@ export default class Header extends React.PureComponent<HeaderProps> {
         title={title}
         leftLabel={leftLabel}
         onGoBack={
-          // TODO: use isFirstRouteInParent
           previous
             ? () =>
                 navigation.dispatch(StackActions.pop({ key: scene.route.key }))
