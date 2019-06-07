@@ -3,6 +3,7 @@ import {
   forVerticalIOS,
   forWipeFromBottomAndroid,
   forFadeFromBottomAndroid,
+  forModalPresentationIOS,
 } from './CardStyleInterpolators';
 import { forNoAnimation, forFade } from './HeaderStyleInterpolators';
 import {
@@ -35,6 +36,17 @@ export const ModalSlideFromBottomIOS: TransitionPreset = {
     close: TransitionIOSSpec,
   },
   cardStyleInterpolator: forVerticalIOS,
+  headerStyleInterpolator: forNoAnimation,
+};
+
+// Standard iOS modal presentation style (introduced in iOS 13)
+export const ModalPresentationIOS: TransitionPreset = {
+  direction: 'vertical',
+  transitionSpec: {
+    open: TransitionIOSSpec,
+    close: TransitionIOSSpec,
+  },
+  cardStyleInterpolator: forModalPresentationIOS,
   headerStyleInterpolator: forNoAnimation,
 };
 

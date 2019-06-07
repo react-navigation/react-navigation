@@ -19,6 +19,7 @@ import StackGestureContext from '../../utils/StackGestureContext';
 import PointerEventsView from './PointerEventsView';
 
 type Props = ViewProps & {
+  index: number;
   active: boolean;
   closing?: boolean;
   transparent?: boolean;
@@ -404,11 +405,13 @@ export default class Card extends React.Component<Props> {
   private getInterpolatedStyle = memoize(
     (
       styleInterpolator: CardStyleInterpolator,
+      index: number,
       current: Animated.Node<number>,
       next: Animated.Node<number> | undefined,
       layout: Layout
     ) =>
       styleInterpolator({
+        index,
         progress: {
           current,
           next,
@@ -460,6 +463,7 @@ export default class Card extends React.Component<Props> {
 
   render() {
     const {
+      index,
       active,
       transparent,
       layout,
@@ -481,7 +485,13 @@ export default class Card extends React.Component<Props> {
       cardStyle,
       overlayStyle,
       shadowStyle,
-    } = this.getInterpolatedStyle(styleInterpolator, current, next, layout);
+    } = this.getInterpolatedStyle(
+      styleInterpolator,
+      index,
+      current,
+      next,
+      layout
+    );
 
     const handleGestureEvent =
       direction === 'vertical'
@@ -509,7 +519,7 @@ export default class Card extends React.Component<Props> {
               onHandlerStateChange={handleGestureEvent}
               {...this.gestureActivationCriteria()}
             >
-              <Animated.View style={[StyleSheet.absoluteFill, cardStyle]}>
+              <Animated.View style={[styles.container, cardStyle]}>
                 {shadowEnabled && !transparent ? (
                   <Animated.View
                     style={[styles.shadow, shadowStyle]}
