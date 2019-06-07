@@ -60,7 +60,7 @@ export default function HeaderContainer({
           <View
             key={scene.route.key}
             onLayout={onLayout}
-            pointerEvents={isFocused ? 'box-none' : 'none'}
+            pointerEvents="box-none"
             accessibilityElementsHidden={!isFocused}
             importantForAccessibility={
               isFocused ? 'auto' : 'no-hide-descendants'

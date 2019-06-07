@@ -8,8 +8,10 @@ import {
 import { TransitionSpec, CardStyleInterpolator, Layout } from '../../types';
 import memoize from '../../utils/memoize';
 import StackGestureContext from '../../utils/StackGestureContext';
+import PointerEventsView from './PointerEventsView';
 
 type Props = ViewProps & {
+  active: boolean;
   closing?: boolean;
   transparent?: boolean;
   next?: Animated.Node<number>;
@@ -413,6 +415,7 @@ export default class Card extends React.Component<Props> {
 
   render() {
     const {
+      active,
       transparent,
       layout,
       current,
@@ -466,14 +469,16 @@ export default class Card extends React.Component<Props> {
                     pointerEvents="none"
                   />
                 ) : null}
-                <View
+                <PointerEventsView
+                  active={active}
+                  progress={this.props.current}
                   style={[
                     StyleSheet.absoluteFill,
                     transparent ? styles.transparent : styles.opaque,
                   ]}
                 >
                   {children}
-                </View>
+                </PointerEventsView>
               </Animated.View>
             </PanGestureHandler>
           </Animated.View>
