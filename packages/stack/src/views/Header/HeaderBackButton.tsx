@@ -50,7 +50,20 @@ class HeaderBackButton extends React.Component<Props, State> {
     });
   };
 
-  private renderBackImage() {
+  private shouldTruncateLabel = () => {
+    const { titleLayout, screenLayout, label } = this.props;
+    const { initialLabelWidth } = this.state;
+
+    return (
+      !label ||
+      (initialLabelWidth &&
+        titleLayout &&
+        screenLayout &&
+        (screenLayout.width - titleLayout.width) / 2 < initialLabelWidth + 26)
+    );
+  };
+
+  private renderBackImage = () => {
     const { backImage, labelVisible, tintColor } = this.props;
 
     if (backImage) {
@@ -68,29 +81,12 @@ class HeaderBackButton extends React.Component<Props, State> {
         />
       );
     }
-  }
-
-  private getLabelText = () => {
-    const { titleLayout, screenLayout, label, truncatedLabel } = this.props;
-
-    let { initialLabelWidth } = this.state;
-
-    if (!label) {
-      return truncatedLabel;
-    } else if (
-      initialLabelWidth &&
-      titleLayout &&
-      screenLayout &&
-      (screenLayout.width - titleLayout.width) / 2 < initialLabelWidth + 26
-    ) {
-      return truncatedLabel;
-    } else {
-      return label;
-    }
   };
 
   private renderLabel() {
     const {
+      label,
+      truncatedLabel,
       allowFontScaling,
       labelVisible,
       backImage,
@@ -99,33 +95,32 @@ class HeaderBackButton extends React.Component<Props, State> {
       screenLayout,
     } = this.props;
 
-    let leftLabelText = this.getLabelText();
+    const leftLabelText = this.shouldTruncateLabel() ? truncatedLabel : label;
 
     if (!labelVisible || leftLabelText === undefined) {
       return null;
     }
 
-    const label = (
+    const labelElement = (
       <Animated.Text
         accessible={false}
         onLayout={this.handleLabelLayout}
         style={[
           styles.label,
-          screenLayout ? { marginRight: screenLayout.width / 2 } : null,
           tintColor ? { color: tintColor } : null,
           labelStyle,
         ]}
         numberOfLines={1}
         allowFontScaling={!!allowFontScaling}
       >
-        {this.getLabelText()}
+        {leftLabelText}
       </Animated.Text>
     );
 
-    if (backImage) {
+    if (backImage || Platform.OS !== 'ios') {
       // When a custom backimage is specified, we can't mask the label
       // Otherwise there might be weird effect due to our mask not being the same as the image
-      return label;
+      return labelElement;
     }
 
     return (
@@ -140,7 +135,17 @@ class HeaderBackButton extends React.Component<Props, State> {
           </View>
         }
       >
-        {label}
+        <View
+          style={
+            screenLayout
+              ? // We make the button extend till the middle of the screen
+                // Otherwise it appears to cut off when translating
+                [styles.labelWrapper, { minWidth: screenLayout.width / 2 - 27 }]
+              : null
+          }
+        >
+          {labelElement}
+        </View>
       </MaskedViewIOS>
     );
   }
@@ -201,6 +206,12 @@ const styles = StyleSheet.create({
     // Title and back label are a bit different width due to title being bold
     // Adjusting the letterSpacing makes them coincide better
     letterSpacing: 0.35,
+  },
+  labelWrapper: {
+    // These styles will make sure that the label doesn't fill the available space
+    // Otherwise it messes with the measurement of the label
+    flexDirection: 'row',
+    alignItems: 'flex-start',
   },
   icon: Platform.select({
     ios: {
