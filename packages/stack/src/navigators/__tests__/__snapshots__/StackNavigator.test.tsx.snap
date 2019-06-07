@@ -108,23 +108,13 @@ Array [
             style={
               Array [
                 Object {
-                  "backgroundColor": "white",
                   "bottom": 0,
-                  "elevation": 2,
                   "left": 0,
                   "position": "absolute",
                   "right": 0,
-                  "shadowColor": "#000",
-                  "shadowOffset": Object {
-                    "height": 1,
-                    "width": -1,
-                  },
-                  "shadowRadius": 5,
                   "top": 0,
                 },
                 Object {
-                  "backgroundColor": "#eee",
-                  "shadowOpacity": undefined,
                   "transform": Array [
                     Object {
                       "translateX": undefined,
@@ -134,10 +124,51 @@ Array [
                     },
                   ],
                 },
-                null,
               ]
             }
-          />
+          >
+            <View
+              pointerEvents="none"
+              style={
+                Array [
+                  Object {
+                    "backgroundColor": "#fff",
+                    "bottom": 0,
+                    "left": 0,
+                    "position": "absolute",
+                    "shadowColor": "#000",
+                    "shadowOffset": Object {
+                      "height": 1,
+                      "width": -1,
+                    },
+                    "shadowOpacity": 1,
+                    "shadowRadius": 5,
+                    "top": 0,
+                    "width": 3,
+                  },
+                  Object {
+                    "shadowOpacity": undefined,
+                  },
+                ]
+              }
+            />
+            <View
+              style={
+                Array [
+                  Object {
+                    "bottom": 0,
+                    "left": 0,
+                    "position": "absolute",
+                    "right": 0,
+                    "top": 0,
+                  },
+                  Object {
+                    "backgroundColor": "#eee",
+                  },
+                ]
+              }
+            />
+          </View>
         </PanGestureHandler>
       </View>
     </View>
@@ -145,12 +176,17 @@ Array [
   <View
     pointerEvents="box-none"
     style={
-      Object {
-        "left": 0,
-        "position": "absolute",
-        "right": 0,
-        "top": 0,
-      }
+      Array [
+        Object {
+          "zIndex": 1,
+        },
+        Object {
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+      ]
     }
   >
     <View
@@ -396,23 +432,13 @@ Array [
             style={
               Array [
                 Object {
-                  "backgroundColor": "white",
                   "bottom": 0,
-                  "elevation": 2,
                   "left": 0,
                   "position": "absolute",
                   "right": 0,
-                  "shadowColor": "#000",
-                  "shadowOffset": Object {
-                    "height": 1,
-                    "width": -1,
-                  },
-                  "shadowRadius": 5,
                   "top": 0,
                 },
                 Object {
-                  "backgroundColor": "#eee",
-                  "shadowOpacity": undefined,
                   "transform": Array [
                     Object {
                       "translateX": undefined,
@@ -422,10 +448,51 @@ Array [
                     },
                   ],
                 },
-                null,
               ]
             }
-          />
+          >
+            <View
+              pointerEvents="none"
+              style={
+                Array [
+                  Object {
+                    "backgroundColor": "#fff",
+                    "bottom": 0,
+                    "left": 0,
+                    "position": "absolute",
+                    "shadowColor": "#000",
+                    "shadowOffset": Object {
+                      "height": 1,
+                      "width": -1,
+                    },
+                    "shadowOpacity": 1,
+                    "shadowRadius": 5,
+                    "top": 0,
+                    "width": 3,
+                  },
+                  Object {
+                    "shadowOpacity": undefined,
+                  },
+                ]
+              }
+            />
+            <View
+              style={
+                Array [
+                  Object {
+                    "bottom": 0,
+                    "left": 0,
+                    "position": "absolute",
+                    "right": 0,
+                    "top": 0,
+                  },
+                  Object {
+                    "backgroundColor": "#eee",
+                  },
+                ]
+              }
+            />
+          </View>
         </PanGestureHandler>
       </View>
     </View>
@@ -433,12 +500,17 @@ Array [
   <View
     pointerEvents="box-none"
     style={
-      Object {
-        "left": 0,
-        "position": "absolute",
-        "right": 0,
-        "top": 0,
-      }
+      Array [
+        Object {
+          "zIndex": 1,
+        },
+        Object {
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+      ]
     }
   >
     <View

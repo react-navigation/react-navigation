@@ -192,7 +192,7 @@ export default class Stack extends React.Component<Props, State> {
           onLayout={this.handleLayout}
           pointerEvents={layout.height && layout.width ? 'box-none' : 'none'}
         >
-          {routes.map((route, index) => {
+          {routes.map((route, index, self) => {
             const focused = focusedRoute.key === route.key;
             const current = progress[route.key];
             const descriptor = descriptors[route.key];
@@ -201,6 +201,7 @@ export default class Stack extends React.Component<Props, State> {
             return (
               <Card
                 key={route.key}
+                active={index === self.length - 1}
                 transparent={transparentCard}
                 direction={direction}
                 layout={layout}
