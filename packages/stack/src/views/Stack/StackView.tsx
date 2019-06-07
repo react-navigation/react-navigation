@@ -40,7 +40,7 @@ class StackView extends React.Component<Props, State> {
     const { navigation } = props;
     const { transitions } = navigation.state;
 
-    let { routes } = navigation.state;
+    let routes = navigation.state.routes.slice(0, navigation.state.index + 1);
 
     if (transitions.pushing.length) {
       // If there are multiple routes being pushed/popped, we'll encounter glitches
