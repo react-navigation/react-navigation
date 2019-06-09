@@ -14,10 +14,10 @@ export type NavigationAction = {
 };
 
 export type Router<Action extends NavigationAction = NavigationAction> = {
-  getInitialState(
-    routeNames: string[],
-    options: { initialRouteName?: string }
-  ): NavigationState;
+  initial(options: {
+    routeNames: string[];
+    initialRouteName?: string;
+  }): NavigationState;
   reduce(state: NavigationState, action: Action): NavigationState;
   actions: { [key: string]: (...args: any) => Action };
 };

@@ -8,15 +8,16 @@ import {
   NavigationState,
 } from './types';
 import Screen, { Props as ScreenProps } from './Screen';
+import SceneView from './SceneView';
 
 type Options = {
   initialRouteName?: string;
   children: React.ReactElement[];
 };
 
-const NavigationPropContext = React.createContext<NavigationProp | undefined>(
-  undefined
-);
+export const NavigationPropContext = React.createContext<
+  NavigationProp | undefined
+>(undefined);
 
 export default function useNavigationBuilder(router: Router, options: Options) {
   const screens = React.Children.map(options.children, child => {
@@ -35,10 +36,9 @@ export default function useNavigationBuilder(router: Router, options: Options) {
     {} as { [key: string]: ScreenProps }
   );
 
-  const routeNames = Object.keys(screens);
-
   const {
-    state = router.getInitialState(routeNames, {
+    state = router.initial({
+      routeNames: Object.keys(screens),
       initialRouteName: options.initialRouteName,
     }),
     setState,
@@ -69,34 +69,19 @@ export default function useNavigationBuilder(router: Router, options: Options) {
   const descriptors = state.routes.reduce(
     (acc, route) => {
       const screen = screens[route.name];
-      const nav = {
-        ...navigation,
-        state: route,
-      };
 
       acc[route.key] = {
-        render: () => (
-          <NavigationStateContext.Provider
-            value={{
-              state: route.state,
-              setState: child =>
-                setState({
-                  ...state,
-                  routes: state.routes.map(r =>
-                    r === route ? { ...route, state: child } : r
-                  ),
-                }),
-            }}
-          >
-            <NavigationPropContext.Provider value={nav}>
-              {'component' in screen && screen.component !== undefined ? (
-                <screen.component navigation={nav} />
-              ) : 'children' in screen && screen.children !== undefined ? (
-                screen.children({ navigation: nav })
-              ) : null}
-            </NavigationPropContext.Provider>
-          </NavigationStateContext.Provider>
-        ),
+        render() {
+          return (
+            <SceneView
+              navigation={navigation}
+              route={route}
+              screen={screen}
+              state={state}
+              setState={setState}
+            />
+          );
+        },
         options: screen.options || {},
       };
       return acc;

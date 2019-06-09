@@ -24,10 +24,13 @@ type Action =
 export type StackNavigationProp = NavigationProp<typeof StackRouter>;
 
 const StackRouter = {
-  getInitialState(
-    routeNames: string[],
-    { initialRouteName = routeNames[0] }: { initialRouteName?: string }
-  ) {
+  initial({
+    routeNames,
+    initialRouteName = routeNames[0],
+  }: {
+    routeNames: string[];
+    initialRouteName?: string;
+  }) {
     const index = routeNames.indexOf(initialRouteName);
 
     return {
@@ -88,10 +91,16 @@ export default function StackNavigator(props: Props) {
           key={route.key}
           style={{
             position: 'absolute',
-            top: i * 10,
+            margin: 20,
+            left: i * 20,
+            top: i * 20,
             padding: 10,
+            height: 480,
+            width: 320,
             backgroundColor: 'white',
-            border: '1px solid black',
+            borderRadius: 3,
+            boxShadow:
+              '0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)',
           }}
         >
           {descriptors[route.key].render()}

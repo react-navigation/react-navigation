@@ -20,18 +20,18 @@ Hook which can access the navigation state from the context. Along with the stat
 
 ### Router
 
-An object that provides various actions to modify state as well as helpers.
+An object that provides a reducer to update the state as well as some action creators.
 
 ### Navigator
 
-Navigators bundle a `NavigationChild`, a `router` and a view which takes the navigation state and decides how to render it.
+Navigators bundle a `router` and a view which takes the navigation state and decides how to render it.
 
 A simple navigator could look like this:
 
 ```js
 function StackNavigator({ initialRouteName, children, ...rest }) {
   // The `navigation` object contains the navigation state and some helpers (e.g. push, pop)
-  // The `descriptors` object contains `navigation` objects for children routes and helper for rendering a screen
+  // The `descriptors` object contains the screen options and a helper for rendering a screen
   const { navigation, descriptors } = useNavigationBuilder(StackRouter, {
     initialRouteName,
     children,
@@ -44,12 +44,12 @@ function StackNavigator({ initialRouteName, children, ...rest }) {
 }
 ```
 
-The navigator can render a screen by calling `descriptors[route.key].render()`. Internally, the descriptor wraps the screen in a `NavigationProvider` to support nested state:
+The navigator can render a screen by calling `descriptors[route.key].render()`. Internally, the descriptor wraps the screen in a `NavigationStateContext.Provider` to support nested state:
 
 ```js
-<NavigationProvider state={route}>
+<NavigationStateContext.Provider state={route.state}>
   <MyComponent />
-</NavigationProvider>
+</NavigationStateContext.Provider>
 ```
 
 ## Basic usage

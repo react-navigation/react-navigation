@@ -22,10 +22,13 @@ type Action = {
 export type TabNavigationProp = NavigationProp<typeof TabRouter>;
 
 const TabRouter = {
-  getInitialState(
-    routeNames: string[],
-    { initialRouteName = routeNames[0] }: { initialRouteName?: string }
-  ) {
+  initial({
+    routeNames,
+    initialRouteName = routeNames[0],
+  }: {
+    routeNames: string[];
+    initialRouteName?: string;
+  }) {
     const index = routeNames.indexOf(initialRouteName);
 
     return {
@@ -64,14 +67,15 @@ export default function TabNavigator(props: Props) {
   const { navigation, descriptors } = useNavigationBuilder(TabRouter, props);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'row' }}>
+    <div style={{ display: 'flex', flexDirection: 'row', height: '100%' }}>
       {navigation.state.routes.map((route, i, self) => (
         <div
           key={route.key}
           style={{
             width: `${100 / self.length}%`,
+            padding: 10,
+            borderRadius: 3,
             backgroundColor: i === navigation.state.index ? 'tomato' : 'white',
-            border: '1px solid black',
           }}
         >
           {descriptors[route.key].render()}
