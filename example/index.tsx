@@ -7,7 +7,7 @@ import TabNavigator, { TabNavigationProp } from './TabNavigator';
 
 const First = ({ navigation }: { navigation: StackNavigationProp }) => (
   <div>
-    <h1>First route</h1>
+    <h1>First</h1>
     <button type="button" onClick={() => navigation.push('second')}>
       Push second
     </button>
@@ -22,7 +22,7 @@ const First = ({ navigation }: { navigation: StackNavigationProp }) => (
 
 const Second = ({ navigation }: { navigation: StackNavigationProp }) => (
   <div>
-    <h1>Second route</h1>
+    <h1>Second</h1>
     <button type="button" onClick={() => navigation.push('first')}>
       Push first
     </button>
@@ -38,7 +38,7 @@ const Fourth = ({
   navigation: TabNavigationProp & StackNavigationProp;
 }) => (
   <div>
-    <h1>Fourth route</h1>
+    <h1>Fourth</h1>
     <button type="button" onClick={() => navigation.jumpTo('fifth')}>
       Jump to fifth
     </button>
@@ -57,7 +57,7 @@ const Fifth = ({
   navigation: TabNavigationProp & StackNavigationProp;
 }) => (
   <div>
-    <h1>Fifth route</h1>
+    <h1>Fifth</h1>
     <button type="button" onClick={() => navigation.jumpTo('fourth')}>
       Jump to fourth
     </button>
