@@ -33,7 +33,8 @@
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
-    "core-js": "^3.1.3"
+    "core-js": "^3.1.3",
+    "shortid": "^2.2.14"
   },
   "devDependencies": {
     "@babel/cli": "^7.4.4",
@@ -45,6 +46,7 @@
     "@types/jest": "^24.0.13",
     "@types/react": "^16.8.19",
     "@types/react-dom": "^16.8.4",
+    "@types/shortid": "^0.0.29",
     "codecov": "^3.5.0",
     "commitlint": "^8.0.0",
     "del-cli": "^2.0.0",

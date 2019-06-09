@@ -14,10 +14,6 @@ An exploration of a component-first API for React Navigation for building more d
 
 Component which wraps the whole app. It stores the state for the whole navigation tree.
 
-### `NavigationProvider`
-
-Component which will hold the navigation state. It's usually rendered at the root by the user. Navigators also need to use this internally to support nested navigation states.
-
 ### `useNavigationBuilder`
 
 Hook which can access the navigation state from the context. Along with the state, it also provides some helpers to modify the navigation state provided by the router. All state changes are notified to the parent `NavigationContainer`.
