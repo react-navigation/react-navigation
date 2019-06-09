@@ -1,0 +1,56 @@
+version: 2
+
+defaults: &defaults
+  docker:
+    - image: circleci/node:10
+  working_directory: ~/project
+
+jobs:
+  install-dependencies:
+    <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/project
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-
+      - run: yarn install
+      - save_cache:
+          key: v1-dependencies-{{ checksum "package.json" }}
+          paths: node_modules
+      - persist_to_workspace:
+          root: .
+          paths: .
+  lint-and-typecheck:
+      <<: *defaults
+      steps:
+        - attach_workspace:
+            at: ~/project
+        - run: |
+            yarn lint
+            yarn typescript
+  unit-test:
+      <<: *defaults
+      steps:
+        - attach_workspace:
+            at: ~/project
+        - run: |
+            yarn test --coverage
+            cat ./coverage/lcov.info | ./node_modules/.bin/codecov
+        - store_artifacts:
+            path: coverage
+            destination: coverage
+
+workflows:
+  version: 2
+  build-and-test:
+    jobs:
+      - install-dependencies
+      - lint-and-typecheck:
+          requires:
+            - install-dependencies
+      - unit-test:
+          requires:
+            - install-dependencies

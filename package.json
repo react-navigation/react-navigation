@@ -1,0 +1,70 @@
+{
+  "name": "typescript-template",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Template repository for TypeScript projects with Babel",
+  "keywords": [],
+  "types": "types/index.d.ts",
+  "main": "lib/index.js",
+  "files": [
+    "lib/",
+    "types/",
+    "index.d.ts"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/satya164/typescript-template.git"
+  },
+  "author": "Satyajit Sahoo <satyajit.happy@gmail.com> (https://github.com/satya164/)",
+  "scripts": {
+    "lint": "eslint .",
+    "typescript": "tsc --noEmit",
+    "test": "jest",
+    "prebuild": "del lib/ types/",
+    "babel": "babel src --out-dir lib --ignore '**/__tests__/**' --source-maps",
+    "declarations": "tsc --declaration --emitDeclarationOnly --outDir types",
+    "build": "yarn babel && yarn declarations",
+    "prepare": "yarn build",
+    "release": "release-it"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "dependencies": {
+    "core-js": "^3.1.3"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.5",
+    "@babel/preset-env": "^7.4.5",
+    "@babel/preset-typescript": "^7.3.3",
+    "@commitlint/config-conventional": "^8.0.0",
+    "@release-it/conventional-changelog": "^1.1.0",
+    "@types/jest": "^24.0.13",
+    "codecov": "^3.5.0",
+    "commitlint": "^8.0.0",
+    "del-cli": "^2.0.0",
+    "eslint": "^5.16.0",
+    "eslint-config-satya164": "^2.4.1",
+    "husky": "^2.4.0",
+    "jest": "^24.8.0",
+    "prettier": "^1.18.2",
+    "release-it": "^12.3.0",
+    "typescript": "^3.5.1"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+      "pre-commit": "yarn lint && yarn typescript && yarn test"
+    }
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "modulePathIgnorePatterns": [
+      "<rootDir>/types/",
+      "<rootDir>/lib/"
+    ],
+    "testRegex": "/__tests__/.*\\.(test|spec)\\.(js|tsx?)$"
+  }
+}

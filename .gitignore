@@ -1,0 +1,9 @@
+.DS_Store
+.cache
+.vscode
+
+/coverage/
+/types/
+/lib/
+/dist/
+/node_modules/
