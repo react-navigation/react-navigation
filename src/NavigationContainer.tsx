@@ -26,6 +26,8 @@ export default function NavigationContainer({ initialState, children }: Props) {
     initialState
   );
 
+  console.log(state);
+
   const value = React.useMemo(() => ({ state, setState }), [state, setState]);
 
   return (

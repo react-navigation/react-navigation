@@ -11,14 +11,12 @@ import Screen, { Props as ScreenProps } from './Screen';
 
 type Options = {
   initialRouteName?: string;
+  navigation?: NavigationProp;
   children: React.ReactElement[];
 };
 
-export default function useNavigationBuilder(
-  router: Router,
-  { initialRouteName, children }: Options
-) {
-  const screens = React.Children.map(children, child => {
+export default function useNavigationBuilder(router: Router, options: Options) {
+  const screens = React.Children.map(options.children, child => {
     if (child.type !== Screen) {
       throw new Error(
         "A navigator can only contain 'Screen' components as its direct children"
@@ -37,7 +35,9 @@ export default function useNavigationBuilder(
   const routeNames = Object.keys(screens);
 
   const {
-    state = router.getInitialState(routeNames, { initialRouteName }),
+    state = router.getInitialState(routeNames, {
+      initialRouteName: options.initialRouteName,
+    }),
     setState,
   } = React.useContext(NavigationContext);
 
@@ -48,8 +48,7 @@ export default function useNavigationBuilder(
       setState(router.reduce(state, action));
 
     return {
-      state,
-      dispatch,
+      ...options.navigation,
       ...Object.keys(router.actions).reduce(
         (acc, name) => {
           acc[name] = (...args: any) => dispatch(router.actions[name](...args));
@@ -57,8 +56,10 @@ export default function useNavigationBuilder(
         },
         {} as { [key: string]: () => void }
       ),
+      state,
+      dispatch,
     };
-  }, [state, router, setState]);
+  }, [options.navigation, router, state, setState]);
 
   const descriptors = state.routes.reduce(
     (acc, route) => {
@@ -77,7 +78,9 @@ export default function useNavigationBuilder(
                 setState({
                   ...state,
                   // @ts-ignore
-                  routes: state.routes.map(r => (r === route ? s : r)),
+                  routes: state.routes.map(r =>
+                    r === route ? { ...route, ...s } : r
+                  ),
                 }),
             }}
           >
