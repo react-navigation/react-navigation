@@ -49,7 +49,7 @@ const StackRouter = {
             ...state.routes,
             {
               name: action.payload.name,
-              key: `${name}-${shortid()}`,
+              key: `${action.payload.name}-${shortid()}`,
             },
           ],
         };
@@ -94,7 +94,7 @@ export default function StackNavigator(props: Props) {
             border: '1px solid black',
           }}
         >
-          {descriptors[route.name].render()}
+          {descriptors[route.key].render()}
         </div>
       ))}
     </div>

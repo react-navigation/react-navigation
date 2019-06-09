@@ -69,17 +69,16 @@ export default function useNavigationBuilder(router: Router, options: Options) {
         state: route,
       };
 
-      acc[route.name] = {
+      acc[route.key] = {
         render: () => (
           <NavigationContext.Provider
             value={{
-              state: 'routes' in route && 'index' in route ? route : undefined,
-              setState: s =>
+              state: route.state,
+              setState: child =>
                 setState({
                   ...state,
-                  // @ts-ignore
                   routes: state.routes.map(r =>
-                    r === route ? { ...route, ...s } : r
+                    r === route ? { ...route, state: child } : r
                   ),
                 }),
             }}
