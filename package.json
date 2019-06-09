@@ -1,8 +1,8 @@
 {
-  "name": "typescript-template",
+  "name": "navigation-ex",
   "private": true,
   "version": "0.0.0",
-  "description": "Template repository for TypeScript projects with Babel",
+  "description": "Rethinking navigation",
   "keywords": [],
   "types": "types/index.d.ts",
   "main": "lib/index.js",
@@ -14,7 +14,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/satya164/typescript-template.git"
+    "url": "git+https://github.com/satya164/navigation-ex.git"
   },
   "author": "Satyajit Sahoo <satyajit.happy@gmail.com> (https://github.com/satya164/)",
   "scripts": {
@@ -25,6 +25,7 @@
     "babel": "babel src --out-dir lib --ignore '**/__tests__/**' --source-maps",
     "declarations": "tsc --declaration --emitDeclarationOnly --outDir types",
     "build": "yarn babel && yarn declarations",
+    "example": "parcel example/index.html",
     "prepare": "yarn build",
     "release": "release-it"
   },
@@ -42,6 +43,8 @@
     "@commitlint/config-conventional": "^8.0.0",
     "@release-it/conventional-changelog": "^1.1.0",
     "@types/jest": "^24.0.13",
+    "@types/react": "^16.8.19",
+    "@types/react-dom": "^16.8.4",
     "codecov": "^3.5.0",
     "commitlint": "^8.0.0",
     "del-cli": "^2.0.0",
@@ -49,7 +52,10 @@
     "eslint-config-satya164": "^2.4.1",
     "husky": "^2.4.0",
     "jest": "^24.8.0",
+    "parcel": "^1.12.3",
     "prettier": "^1.18.2",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
     "release-it": "^12.3.0",
     "typescript": "^3.5.1"
   },
