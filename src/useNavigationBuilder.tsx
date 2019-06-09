@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { NavigationContext } from './NavigationContainer';
+import { NavigationStateContext } from './NavigationContainer';
 import {
   Router,
   NavigationAction,
@@ -11,9 +11,12 @@ import Screen, { Props as ScreenProps } from './Screen';
 
 type Options = {
   initialRouteName?: string;
-  navigation?: NavigationProp;
   children: React.ReactElement[];
 };
+
+const NavigationPropContext = React.createContext<NavigationProp | undefined>(
+  undefined
+);
 
 export default function useNavigationBuilder(router: Router, options: Options) {
   const screens = React.Children.map(options.children, child => {
@@ -39,7 +42,9 @@ export default function useNavigationBuilder(router: Router, options: Options) {
       initialRouteName: options.initialRouteName,
     }),
     setState,
-  } = React.useContext(NavigationContext);
+  } = React.useContext(NavigationStateContext);
+
+  const parentNavigation = React.useContext(NavigationPropContext);
 
   const navigation = React.useMemo((): NavigationProp & {
     state: NavigationState;
@@ -48,7 +53,7 @@ export default function useNavigationBuilder(router: Router, options: Options) {
       setState(router.reduce(state, action));
 
     return {
-      ...options.navigation,
+      ...parentNavigation,
       ...Object.keys(router.actions).reduce(
         (acc, name) => {
           acc[name] = (...args: any) => dispatch(router.actions[name](...args));
@@ -59,7 +64,7 @@ export default function useNavigationBuilder(router: Router, options: Options) {
       state,
       dispatch,
     };
-  }, [options.navigation, router, state, setState]);
+  }, [router, state, setState, parentNavigation]);
 
   const descriptors = state.routes.reduce(
     (acc, route) => {
@@ -71,7 +76,7 @@ export default function useNavigationBuilder(router: Router, options: Options) {
 
       acc[route.key] = {
         render: () => (
-          <NavigationContext.Provider
+          <NavigationStateContext.Provider
             value={{
               state: route.state,
               setState: child =>
@@ -83,12 +88,14 @@ export default function useNavigationBuilder(router: Router, options: Options) {
                 }),
             }}
           >
-            {'component' in screen && screen.component !== undefined ? (
-              <screen.component navigation={nav} />
-            ) : 'children' in screen && screen.children !== undefined ? (
-              screen.children({ navigation: nav })
-            ) : null}
-          </NavigationContext.Provider>
+            <NavigationPropContext.Provider value={nav}>
+              {'component' in screen && screen.component !== undefined ? (
+                <screen.component navigation={nav} />
+              ) : 'children' in screen && screen.children !== undefined ? (
+                screen.children({ navigation: nav })
+              ) : null}
+            </NavigationPropContext.Provider>
+          </NavigationStateContext.Provider>
         ),
         options: screen.options || {},
       };

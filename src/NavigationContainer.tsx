@@ -9,7 +9,7 @@ type Props = {
 const MISSING_CONTEXT_ERROR =
   "We couldn't find a navigation context. Have you wrapped your app with 'NavigationContainer'?";
 
-export const NavigationContext = React.createContext<{
+export const NavigationStateContext = React.createContext<{
   state?: NavigationState;
   setState: (state: NavigationState) => void;
 }>({
@@ -28,8 +28,8 @@ export default function NavigationContainer({ initialState, children }: Props) {
   const value = React.useMemo(() => ({ state, setState }), [state, setState]);
 
   return (
-    <NavigationContext.Provider value={value}>
+    <NavigationStateContext.Provider value={value}>
       {children}
-    </NavigationContext.Provider>
+    </NavigationStateContext.Provider>
   );
 }
