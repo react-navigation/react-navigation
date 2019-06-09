@@ -93,7 +93,7 @@ function App() {
         <Screen name="second" component={Second} />
         <Screen name="third">
           {props => (
-            <TabNavigator {...props}>
+            <TabNavigator {...props} initialRouteName="fifth">
               <Screen name="fourth" component={Fourth} />
               <Screen name="fifth" component={Fifth} />
             </TabNavigator>

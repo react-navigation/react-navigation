@@ -74,7 +74,7 @@ export default function TabNavigator(props: Props) {
             border: '1px solid black',
           }}
         >
-          {descriptors[route.name].render()}
+          {descriptors[route.key].render()}
         </div>
       ))}
     </div>

@@ -1,6 +1,6 @@
 export type NavigationState = {
   index: number;
-  routes: Array<Route | Route & NavigationState>;
+  routes: Array<Route & { state?: NavigationState }>;
 };
 
 export type Route = {
