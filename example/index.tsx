@@ -1,3 +1,4 @@
+import shortid from 'shortid';
 import * as React from 'react';
 import { render } from 'react-dom';
 import { NavigationContainer, Screen } from '../src';
@@ -27,9 +28,24 @@ const Second = ({ navigation }: { navigation: StackNavigationProp }) => (
   </div>
 );
 
+const routes =
+  location.pathname !== '/'
+    ? location.pathname
+        .slice(1)
+        .split('/')
+        .map(name => ({ name, key: `${name}-${shortid()}` }))
+    : [];
+
+const initialState = routes.length
+  ? {
+      index: routes.length - 1,
+      routes,
+    }
+  : undefined;
+
 function App() {
   return (
-    <NavigationContainer>
+    <NavigationContainer initialState={initialState}>
       <StackNavigator>
         <Screen name="first" component={First} />
         <Screen name="second" component={Second} />
