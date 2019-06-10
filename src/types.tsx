@@ -1,5 +1,10 @@
+import * as BaseActions from './BaseActions';
+
+export type CommonAction = BaseActions.Action;
+
 export type NavigationState = {
   index: number;
+  names: string[];
   routes: Array<Route & { state?: NavigationState }>;
 };
 
@@ -18,7 +23,10 @@ export type Router<Action extends NavigationAction = NavigationAction> = {
     routeNames: string[];
     initialRouteName?: string;
   }): NavigationState;
-  reduce(state: NavigationState, action: Action): NavigationState;
+  reduce(
+    state: NavigationState,
+    action: Action | CommonAction
+  ): NavigationState | null;
   actions: { [key: string]: (...args: any) => Action };
 };
 
@@ -27,8 +35,15 @@ export type NavigationHelpers<
 > = {
   dispatch: (action: NavigationAction) => void;
 } & {
-  [key in keyof T['actions']]: (...args: Parameters<T['actions'][key]>) => void;
-};
+  [key in keyof typeof BaseActions]: (
+    ...args: Parameters<typeof BaseActions[key]>
+  ) => void;
+} &
+  {
+    [key in keyof T['actions']]: (
+      ...args: Parameters<T['actions'][key]>
+    ) => void;
+  };
 
 export type NavigationProp<
   T extends { actions: Router['actions'] } = { actions: {} }

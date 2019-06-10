@@ -6,6 +6,7 @@ import {
   useNavigationBuilder,
   NavigationState,
   NavigationProp,
+  CommonAction,
 } from '../src/index';
 
 type Props = {
@@ -28,11 +29,12 @@ const TabRouter = {
   }: {
     routeNames: string[];
     initialRouteName?: string;
-  }) {
+  }): NavigationState {
     const index = routeNames.indexOf(initialRouteName);
 
     return {
       index,
+      names: routeNames,
       routes: routeNames.map(name => ({
         name,
         key: `${name}-${shortid()}`,
@@ -40,15 +42,49 @@ const TabRouter = {
     };
   },
 
-  reduce(state: NavigationState, action: Action) {
+  reduce(
+    state: NavigationState,
+    action: Action | CommonAction
+  ): NavigationState | null {
     switch (action.type) {
-      case 'JUMP_TO':
+      case 'JUMP_TO': {
+        const index = state.routes.findIndex(
+          route => route.name === action.payload.name
+        );
+
+        if (index === -1) {
+          throw new Error(
+            `Couldn't find route "${action.payload.name}" in the state.`
+          );
+        }
+
         return {
           ...state,
-          index: state.routes.findIndex(
-            route => route.name === action.payload.name
-          ),
+          index,
         };
+      }
+
+      case 'NAVIGATE': {
+        const index = state.routes.findIndex(
+          route => route.name === action.payload.name
+        );
+
+        if (index === -1) {
+          return null;
+        }
+
+        return TabRouter.reduce(state, {
+          type: 'JUMP_TO',
+          payload: { name: action.payload.name },
+        });
+      }
+
+      case 'RESET':
+        return action.payload;
+
+      case 'GO_BACK':
+        return null;
+
       default:
         return state;
     }

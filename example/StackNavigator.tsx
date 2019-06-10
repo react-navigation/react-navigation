@@ -6,6 +6,7 @@ import {
   useNavigationBuilder,
   NavigationState,
   NavigationProp,
+  CommonAction,
 } from '../src/index';
 
 type Props = {
@@ -30,11 +31,12 @@ const StackRouter = {
   }: {
     routeNames: string[];
     initialRouteName?: string;
-  }) {
+  }): NavigationState {
     const index = routeNames.indexOf(initialRouteName);
 
     return {
       index,
+      names: routeNames,
       routes: routeNames.slice(0, index + 1).map(name => ({
         name,
         key: `${name}-${shortid()}`,
@@ -42,7 +44,10 @@ const StackRouter = {
     };
   },
 
-  reduce(state: NavigationState, action: Action) {
+  reduce(
+    state: NavigationState,
+    action: Action | CommonAction
+  ): NavigationState | null {
     switch (action.type) {
       case 'PUSH':
         return {
@@ -56,6 +61,7 @@ const StackRouter = {
             },
           ],
         };
+
       case 'POP':
         return state.index > 0
           ? {
@@ -64,6 +70,38 @@ const StackRouter = {
               routes: state.routes.slice(0, state.routes.length - 1),
             }
           : state;
+
+      case 'NAVIGATE':
+        if (state.names.includes(action.payload.name)) {
+          // If the route already exists, navigate to that
+          const index = state.routes.findIndex(
+            route => route.name === action.payload.name
+          );
+
+          if (index === -1) {
+            return StackRouter.reduce(state, {
+              type: 'PUSH',
+              payload: { name: action.payload.name },
+            });
+          }
+
+          return {
+            ...state,
+            index,
+            routes: state.routes.slice(0, index + 1),
+          };
+        }
+
+        return null;
+
+      case 'GO_BACK':
+        return state.index > 0
+          ? StackRouter.reduce(state, { type: 'POP' })
+          : state;
+
+      case 'RESET':
+        return action.payload;
+
       default:
         return state;
     }
