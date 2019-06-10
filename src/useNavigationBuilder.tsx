@@ -54,7 +54,16 @@ export default function useNavigationBuilder(router: Router, options: Options) {
 
   const helpers = React.useMemo((): NavigationHelpers => {
     const dispatch = (action: NavigationAction) =>
-      setState((s = initialState) => router.reduce(s, action));
+      setState((s = initialState) => {
+        const result = router.reduce(s, action);
+
+        // If router returned `null`, let the parent navigator handle it
+        if (result === null && parentNavigationHelpers !== undefined) {
+          parentNavigationHelpers.dispatch(action);
+        }
+
+        return result;
+      });
 
     return {
       ...parentNavigationHelpers,
