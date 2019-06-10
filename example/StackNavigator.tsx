@@ -7,6 +7,7 @@ import {
   NavigationState,
   NavigationProp,
   CommonAction,
+  InitialState,
 } from '../src/index';
 
 type Props = {
@@ -31,12 +32,11 @@ const StackRouter = {
   }: {
     routeNames: string[];
     initialRouteName?: string;
-  }): NavigationState {
+  }): InitialState {
     const index = routeNames.indexOf(initialRouteName);
 
     return {
       index,
-      names: routeNames,
       routes: routeNames.slice(0, index + 1).map(name => ({
         name,
         key: `${name}-${shortid()}`,

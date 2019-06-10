@@ -8,7 +8,7 @@ import {
 } from './types';
 import Screen, { Props as ScreenProps } from './Screen';
 import SceneView from './SceneView';
-import * as BaseActions from './actions';
+import * as BaseActions from './BaseActions';
 
 type Options = {
   initialRouteName?: string;
@@ -38,40 +38,70 @@ export default function useNavigationBuilder(router: Router, options: Options) {
 
   const routeNames = Object.keys(screens);
   const initialState = React.useMemo(
-    () =>
-      router.initial({
-        routeNames: Object.keys(screens),
+    () => ({
+      ...router.initial({
+        routeNames,
         initialRouteName: options.initialRouteName,
       }),
+      names: routeNames,
+    }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [options.initialRouteName, router, ...routeNames]
   );
 
-  const { state = initialState, setState } = React.useContext(
-    NavigationStateContext
-  );
+  const {
+    state: currentState = initialState,
+    getState: getCurrentState,
+    setState,
+  } = React.useContext(NavigationStateContext);
+
+  const getState = React.useCallback(() => {
+    let state = getCurrentState();
+
+    if (state === undefined) {
+      state = initialState;
+    }
+
+    if (state.names === undefined) {
+      state = { ...state, names: routeNames };
+    }
+
+    return state;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [getCurrentState, initialState, ...routeNames]);
 
   const parentNavigationHelpers = React.useContext(NavigationHelpersContext);
 
   const helpers = React.useMemo((): NavigationHelpers => {
-    const dispatch = (action: NavigationAction) =>
-      setState((s = initialState) => {
-        const result = router.reduce(s, action);
+    const dispatch = (action: NavigationAction) => {
+      const state = getState();
+      const result = router.reduce(state, action);
 
-        // If router returned `null`, let the parent navigator handle it
-        if (result === null && parentNavigationHelpers !== undefined) {
+      // If router returned `null`, let the parent navigator handle it
+      if (result === null) {
+        if (parentNavigationHelpers !== undefined) {
           parentNavigationHelpers.dispatch(action);
+        } else {
+          throw new Error(
+            `No navigators are able to handle the action "${action.type}".`
+          );
         }
+      } else {
+        setState(result);
+      }
+    };
 
-        return result;
-      });
+    const actions = {
+      ...router.actions,
+      ...BaseActions,
+    };
 
-    const actions = { ...router.actions, ...BaseActions };
-
+    // @ts-ignore
     return {
       ...parentNavigationHelpers,
       ...Object.keys(actions).reduce(
         (acc, name) => {
+          // @ts-ignore
           acc[name] = (...args: any) => dispatch(actions[name](...args));
           return acc;
         },
@@ -79,17 +109,17 @@ export default function useNavigationBuilder(router: Router, options: Options) {
       ),
       dispatch,
     };
-  }, [parentNavigationHelpers, router, setState, initialState]);
+  }, [router, parentNavigationHelpers, getState, setState]);
 
   const navigation = React.useMemo(
     () => ({
       ...helpers,
-      state,
+      state: currentState,
     }),
-    [helpers, state]
+    [helpers, currentState]
   );
 
-  const descriptors = state.routes.reduce(
+  const descriptors = currentState.routes.reduce(
     (acc, route) => {
       const screen = screens[route.name];
 
@@ -101,7 +131,7 @@ export default function useNavigationBuilder(router: Router, options: Options) {
                 helpers={helpers}
                 route={route}
                 screen={screen}
-                initialState={initialState}
+                getState={getState}
                 setState={setState}
               />
             </NavigationHelpersContext.Provider>

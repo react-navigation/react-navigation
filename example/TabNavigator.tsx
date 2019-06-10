@@ -7,6 +7,7 @@ import {
   NavigationState,
   NavigationProp,
   CommonAction,
+  InitialState,
 } from '../src/index';
 
 type Props = {
@@ -29,12 +30,11 @@ const TabRouter = {
   }: {
     routeNames: string[];
     initialRouteName?: string;
-  }): NavigationState {
+  }): InitialState {
     const index = routeNames.indexOf(initialRouteName);
 
     return {
       index,
-      names: routeNames,
       routes: routeNames.map(name => ({
         name,
         key: `${name}-${shortid()}`,
