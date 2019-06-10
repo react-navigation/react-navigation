@@ -5,6 +5,7 @@ import {
   NavigationAction,
   Descriptor,
   NavigationHelpers,
+  NavigationState,
 } from './types';
 import Screen, { Props as ScreenProps } from './Screen';
 import SceneView from './SceneView';
@@ -37,38 +38,26 @@ export default function useNavigationBuilder(router: Router, options: Options) {
   );
 
   const routeNames = Object.keys(screens);
-  const initialState = React.useMemo(
-    () => ({
-      ...router.initial({
-        routeNames,
-        initialRouteName: options.initialRouteName,
-      }),
-      names: routeNames,
-    }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [options.initialRouteName, router, ...routeNames]
-  );
 
   const {
-    state: currentState = initialState,
+    state: currentState = router.normalize({
+      routeNames,
+      initialRouteName: options.initialRouteName,
+    }),
     getState: getCurrentState,
     setState,
   } = React.useContext(NavigationStateContext);
 
-  const getState = React.useCallback(() => {
-    let state = getCurrentState();
-
-    if (state === undefined) {
-      state = initialState;
-    }
-
-    if (state.names === undefined) {
-      state = { ...state, names: routeNames };
-    }
-
-    return state;
+  const getState = React.useCallback(
+    (): NavigationState =>
+      router.normalize({
+        currentState: getCurrentState(),
+        routeNames,
+        initialRouteName: options.initialRouteName,
+      }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [getCurrentState, initialState, ...routeNames]);
+    [getCurrentState, ...routeNames]
+  );
 
   const parentNavigationHelpers = React.useContext(NavigationHelpersContext);
 

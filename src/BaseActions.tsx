@@ -1,4 +1,4 @@
-import { NavigationState } from './types';
+import { InitialState } from './types';
 
 export type Action =
   | { type: 'GO_BACK' }
@@ -8,7 +8,7 @@ export type Action =
     }
   | {
       type: 'RESET';
-      payload: NavigationState;
+      payload: InitialState & { key?: string };
     };
 
 export function goBack(): Action {
@@ -19,6 +19,6 @@ export function navigate(name: string): Action {
   return { type: 'NAVIGATE', payload: { name } };
 }
 
-export function reset(state: NavigationState): Action {
+export function reset(state: InitialState & { key?: string }): Action {
   return { type: 'RESET', payload: state };
 }

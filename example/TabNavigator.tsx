@@ -24,22 +24,38 @@ type Action = {
 export type TabNavigationProp = NavigationProp<typeof TabRouter>;
 
 const TabRouter = {
-  initial({
+  normalize({
+    currentState,
     routeNames,
     initialRouteName = routeNames[0],
   }: {
     routeNames: string[];
+    currentState?: InitialState | NavigationState;
     initialRouteName?: string;
-  }): InitialState {
-    const index = routeNames.indexOf(initialRouteName);
+  }): NavigationState {
+    let state = currentState;
 
-    return {
-      index,
-      routes: routeNames.map(name => ({
-        name,
-        key: `${name}-${shortid()}`,
-      })),
-    };
+    if (state === undefined) {
+      const index = routeNames.indexOf(initialRouteName);
+
+      state = {
+        index,
+        routes: routeNames.map(name => ({
+          name,
+          key: `${name}-${shortid()}`,
+        })),
+      };
+    }
+
+    if (state.names === undefined || state.key === undefined) {
+      state = {
+        ...state,
+        names: state.names || routeNames,
+        key: state.key || `tab-${shortid()}`,
+      };
+    }
+
+    return state;
   },
 
   reduce(
@@ -80,7 +96,18 @@ const TabRouter = {
       }
 
       case 'RESET':
-        return action.payload;
+        if (
+          action.payload.key === undefined ||
+          action.payload.key === state.key
+        ) {
+          return {
+            ...action.payload,
+            key: state.key,
+            names: state.names,
+          };
+        }
+
+        return null;
 
       case 'GO_BACK':
         return null;

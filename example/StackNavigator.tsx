@@ -26,22 +26,38 @@ type Action =
 export type StackNavigationProp = NavigationProp<typeof StackRouter>;
 
 const StackRouter = {
-  initial({
+  normalize({
+    currentState,
     routeNames,
     initialRouteName = routeNames[0],
   }: {
+    currentState?: InitialState | NavigationState;
     routeNames: string[];
     initialRouteName?: string;
-  }): InitialState {
-    const index = routeNames.indexOf(initialRouteName);
+  }): NavigationState {
+    let state = currentState;
 
-    return {
-      index,
-      routes: routeNames.slice(0, index + 1).map(name => ({
-        name,
-        key: `${name}-${shortid()}`,
-      })),
-    };
+    if (state === undefined) {
+      const index = routeNames.indexOf(initialRouteName);
+
+      state = {
+        index,
+        routes: routeNames.slice(0, index + 1).map(name => ({
+          name,
+          key: `${name}-${shortid()}`,
+        })),
+      };
+    }
+
+    if (state.names === undefined || state.key === undefined) {
+      state = {
+        ...state,
+        names: state.names || routeNames,
+        key: state.key || `stack-${shortid()}`,
+      };
+    }
+
+    return state;
   },
 
   reduce(
@@ -99,8 +115,20 @@ const StackRouter = {
           ? StackRouter.reduce(state, { type: 'POP' })
           : state;
 
-      case 'RESET':
-        return action.payload;
+      case 'RESET': {
+        if (
+          action.payload.key === undefined ||
+          action.payload.key === state.key
+        ) {
+          return {
+            ...action.payload,
+            key: state.key,
+            names: state.names,
+          };
+        }
+
+        return null;
+      }
 
       default:
         return state;
