@@ -8,6 +8,7 @@ import {
 } from './types';
 import Screen, { Props as ScreenProps } from './Screen';
 import SceneView from './SceneView';
+import * as BaseActions from './actions';
 
 type Options = {
   initialRouteName?: string;
@@ -65,11 +66,13 @@ export default function useNavigationBuilder(router: Router, options: Options) {
         return result;
       });
 
+    const actions = { ...router.actions, ...BaseActions };
+
     return {
       ...parentNavigationHelpers,
-      ...Object.keys(router.actions).reduce(
+      ...Object.keys(actions).reduce(
         (acc, name) => {
-          acc[name] = (...args: any) => dispatch(router.actions[name](...args));
+          acc[name] = (...args: any) => dispatch(actions[name](...args));
           return acc;
         },
         {} as { [key: string]: () => void }
