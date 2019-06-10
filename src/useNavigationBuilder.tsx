@@ -3,9 +3,8 @@ import { NavigationStateContext } from './NavigationContainer';
 import {
   Router,
   NavigationAction,
-  NavigationProp,
   Descriptor,
-  NavigationState,
+  NavigationHelpers,
 } from './types';
 import Screen, { Props as ScreenProps } from './Screen';
 import SceneView from './SceneView';
@@ -15,8 +14,8 @@ type Options = {
   children: React.ReactElement[];
 };
 
-export const NavigationPropContext = React.createContext<
-  NavigationProp | undefined
+export const NavigationHelpersContext = React.createContext<
+  NavigationHelpers | undefined
 >(undefined);
 
 export default function useNavigationBuilder(router: Router, options: Options) {
@@ -36,24 +35,29 @@ export default function useNavigationBuilder(router: Router, options: Options) {
     {} as { [key: string]: ScreenProps }
   );
 
-  const {
-    state = router.initial({
-      routeNames: Object.keys(screens),
-      initialRouteName: options.initialRouteName,
-    }),
-    setState,
-  } = React.useContext(NavigationStateContext);
+  const routeNames = Object.keys(screens);
+  const initialState = React.useMemo(
+    () =>
+      router.initial({
+        routeNames: Object.keys(screens),
+        initialRouteName: options.initialRouteName,
+      }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [options.initialRouteName, router, ...routeNames]
+  );
 
-  const parentNavigation = React.useContext(NavigationPropContext);
+  const { state = initialState, setState } = React.useContext(
+    NavigationStateContext
+  );
 
-  const navigation = React.useMemo((): NavigationProp & {
-    state: NavigationState;
-  } => {
+  const parentNavigationHelpers = React.useContext(NavigationHelpersContext);
+
+  const helpers = React.useMemo((): NavigationHelpers => {
     const dispatch = (action: NavigationAction) =>
-      setState(router.reduce(state, action));
+      setState((s = initialState) => router.reduce(s, action));
 
     return {
-      ...parentNavigation,
+      ...parentNavigationHelpers,
       ...Object.keys(router.actions).reduce(
         (acc, name) => {
           acc[name] = (...args: any) => dispatch(router.actions[name](...args));
@@ -61,10 +65,17 @@ export default function useNavigationBuilder(router: Router, options: Options) {
         },
         {} as { [key: string]: () => void }
       ),
-      state,
       dispatch,
     };
-  }, [router, state, setState, parentNavigation]);
+  }, [parentNavigationHelpers, router, setState, initialState]);
+
+  const navigation = React.useMemo(
+    () => ({
+      ...helpers,
+      state,
+    }),
+    [helpers, state]
+  );
 
   const descriptors = state.routes.reduce(
     (acc, route) => {
@@ -73,13 +84,15 @@ export default function useNavigationBuilder(router: Router, options: Options) {
       acc[route.key] = {
         render() {
           return (
-            <SceneView
-              navigation={navigation}
-              route={route}
-              screen={screen}
-              state={state}
-              setState={setState}
-            />
+            <NavigationHelpersContext.Provider value={helpers}>
+              <SceneView
+                helpers={helpers}
+                route={route}
+                screen={screen}
+                initialState={initialState}
+                setState={setState}
+              />
+            </NavigationHelpersContext.Provider>
           );
         },
         options: screen.options || {},
@@ -89,5 +102,8 @@ export default function useNavigationBuilder(router: Router, options: Options) {
     {} as { [key: string]: Descriptor }
   );
 
-  return { navigation, descriptors };
+  return {
+    navigation,
+    descriptors,
+  };
 }

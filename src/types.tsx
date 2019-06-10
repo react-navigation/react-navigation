@@ -22,13 +22,18 @@ export type Router<Action extends NavigationAction = NavigationAction> = {
   actions: { [key: string]: (...args: any) => Action };
 };
 
-export type NavigationProp<
+export type NavigationHelpers<
   T extends { actions: Router['actions'] } = { actions: {} }
 > = {
-  state: Route | NavigationState;
   dispatch: (action: NavigationAction) => void;
 } & {
   [key in keyof T['actions']]: (...args: Parameters<T['actions'][key]>) => void;
+};
+
+export type NavigationProp<
+  T extends { actions: Router['actions'] } = { actions: {} }
+> = NavigationHelpers<T> & {
+  state: Route | NavigationState;
 };
 
 export type Descriptor<Options = {}> = {
