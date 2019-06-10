@@ -4,7 +4,7 @@ export type Action =
   | { type: 'GO_BACK' }
   | {
       type: 'NAVIGATE';
-      payload: { name: string };
+      payload: { name: string; params?: object };
     }
   | {
       type: 'RESET';
@@ -15,8 +15,8 @@ export function goBack(): Action {
   return { type: 'GO_BACK' };
 }
 
-export function navigate(name: string): Action {
-  return { type: 'NAVIGATE', payload: { name } };
+export function navigate(name: string, params?: object): Action {
+  return { type: 'NAVIGATE', payload: { name, params } };
 }
 
 export function reset(state: InitialState & { key?: string }): Action {

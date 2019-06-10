@@ -6,8 +6,9 @@ import {
   Descriptor,
   NavigationHelpers,
   NavigationState,
+  ScreenProps,
 } from './types';
-import Screen, { Props as ScreenProps } from './Screen';
+import Screen from './Screen';
 import SceneView from './SceneView';
 import * as BaseActions from './BaseActions';
 
@@ -41,7 +42,7 @@ export default function useNavigationBuilder(router: Router, options: Options) {
 
   const {
     state: currentState = router.normalize({
-      routeNames,
+      screens,
       initialRouteName: options.initialRouteName,
     }),
     getState: getCurrentState,
@@ -51,8 +52,8 @@ export default function useNavigationBuilder(router: Router, options: Options) {
   const getState = React.useCallback(
     (): NavigationState =>
       router.normalize({
+        screens,
         currentState: getCurrentState(),
-        routeNames,
         initialRouteName: options.initialRouteName,
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps

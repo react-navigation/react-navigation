@@ -8,31 +8,43 @@ import {
   NavigationProp,
   CommonAction,
   InitialState,
+  ScreenProps,
+  ParamListBase,
 } from '../src/index';
 
 type Props = {
   initialRouteName?: string;
-  navigation?: NavigationProp;
   children: React.ReactElement[];
 };
 
 type Action = {
   type: 'JUMP_TO';
-  payload: { name: string };
+  payload: { name: string; params?: object };
 };
 
-export type TabNavigationProp = NavigationProp<typeof TabRouter>;
+export type TabNavigationProp<
+  ParamList extends ParamListBase,
+  RouteName extends keyof ParamList = string
+> = NavigationProp<ParamList, RouteName> & {
+  jumpTo<RouteName extends keyof ParamList>(
+    ...args: ParamList[RouteName] extends void
+      ? [RouteName]
+      : [RouteName, ParamList[RouteName]]
+  ): void;
+};
 
 const TabRouter = {
   normalize({
+    screens,
     currentState,
-    routeNames,
-    initialRouteName = routeNames[0],
+    initialRouteName = Object.keys(screens)[0],
   }: {
-    routeNames: string[];
+    screens: { [key: string]: ScreenProps };
     currentState?: InitialState | NavigationState;
     initialRouteName?: string;
   }): NavigationState {
+    const routeNames = Object.keys(screens);
+
     let state = currentState;
 
     if (state === undefined) {
@@ -43,6 +55,7 @@ const TabRouter = {
         routes: routeNames.map(name => ({
           name,
           key: `${name}-${shortid()}`,
+          params: screens[name].initialParams,
         })),
       };
     }
@@ -76,6 +89,17 @@ const TabRouter = {
 
         return {
           ...state,
+          routes:
+            action.payload.params !== undefined
+              ? state.routes.map((route, i) =>
+                  i === index
+                    ? {
+                        ...route,
+                        params: action.payload.params,
+                      }
+                    : route
+                )
+              : state.routes,
           index,
         };
       }

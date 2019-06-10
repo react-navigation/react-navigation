@@ -1,12 +1,5 @@
-import { Options } from './types';
+import { ScreenProps } from './types';
 
-export type Props = {
-  name: string;
-  options?: Options;
-} & (
-  | { component: React.ComponentType<any> }
-  | { children: (props: any) => React.ReactNode });
-
-export default function Screen(_: Props) {
+export default function Screen(_: ScreenProps) {
   return null;
 }

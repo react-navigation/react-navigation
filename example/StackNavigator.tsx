@@ -8,33 +8,46 @@ import {
   NavigationProp,
   CommonAction,
   InitialState,
+  ScreenProps,
+  ParamListBase,
 } from '../src/index';
 
 type Props = {
   initialRouteName?: string;
-  navigation?: NavigationProp;
   children: React.ReactElement[];
 };
 
 type Action =
   | {
       type: 'PUSH';
-      payload: { name: string };
+      payload: { name: string; params?: object };
     }
   | { type: 'POP' };
 
-export type StackNavigationProp = NavigationProp<typeof StackRouter>;
+export type StackNavigationProp<
+  ParamList extends ParamListBase,
+  RouteName extends keyof ParamList = string
+> = NavigationProp<ParamList, RouteName> & {
+  push<RouteName extends keyof ParamList>(
+    ...args: ParamList[RouteName] extends void
+      ? [RouteName]
+      : [RouteName, ParamList[RouteName]]
+  ): void;
+  pop(): void;
+};
 
 const StackRouter = {
   normalize({
+    screens,
     currentState,
-    routeNames,
-    initialRouteName = routeNames[0],
+    initialRouteName = Object.keys(screens)[0],
   }: {
+    screens: { [key: string]: ScreenProps };
     currentState?: InitialState | NavigationState;
-    routeNames: string[];
     initialRouteName?: string;
   }): NavigationState {
+    const routeNames = Object.keys(screens);
+
     let state = currentState;
 
     if (state === undefined) {
@@ -45,6 +58,7 @@ const StackRouter = {
         routes: routeNames.slice(0, index + 1).map(name => ({
           name,
           key: `${name}-${shortid()}`,
+          params: screens[name].initialParams,
         })),
       };
     }
@@ -72,8 +86,9 @@ const StackRouter = {
           routes: [
             ...state.routes,
             {
-              name: action.payload.name,
               key: `${action.payload.name}-${shortid()}`,
+              name: action.payload.name,
+              params: action.payload.params,
             },
           ],
         };
@@ -97,14 +112,19 @@ const StackRouter = {
           if (index === -1) {
             return StackRouter.reduce(state, {
               type: 'PUSH',
-              payload: { name: action.payload.name },
+              payload: action.payload,
             });
           }
 
           return {
             ...state,
             index,
-            routes: state.routes.slice(0, index + 1),
+            routes: [
+              ...state.routes.slice(0, index),
+              action.payload.params !== undefined
+                ? { ...state.routes[index], params: action.payload.params }
+                : state.routes[index],
+            ],
           };
         }
 

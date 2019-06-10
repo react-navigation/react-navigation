@@ -1,8 +1,12 @@
 import * as React from 'react';
 import { NavigationStateContext } from './NavigationContainer';
 import StaticContainer from './StaticContainer';
-import { Props as ScreenProps } from './Screen';
-import { Route, NavigationState, NavigationHelpers } from './types';
+import {
+  Route,
+  NavigationState,
+  NavigationHelpers,
+  ScreenProps,
+} from './types';
 
 type Props = {
   screen: ScreenProps;
