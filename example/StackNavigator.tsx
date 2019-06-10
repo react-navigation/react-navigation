@@ -106,6 +106,22 @@ export default function StackNavigator(props: Props) {
           {descriptors[route.key].render()}
         </div>
       ))}
+      <div
+        style={{
+          position: 'absolute',
+          left: 40,
+          width: 120,
+          padding: 10,
+          backgroundColor: 'tomato',
+          borderRadius: 3,
+          boxShadow: '0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)',
+        }}
+      >
+        {
+          descriptors[navigation.state.routes[navigation.state.index].key]
+            .options.title
+        }
+      </div>
     </div>
   );
 }

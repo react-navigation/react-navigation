@@ -1,6 +1,8 @@
+import { Options } from './types';
+
 export type Props = {
   name: string;
-  options?: object;
+  options?: Options;
 } & (
   | { component: React.ComponentType<any> }
   | { children: (props: any) => React.ReactNode });

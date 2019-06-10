@@ -36,7 +36,12 @@ export type NavigationProp<
   state: Route | NavigationState;
 };
 
-export type Descriptor<Options = {}> = {
+export type Descriptor = {
   render(): React.ReactNode;
   options: Options;
+};
+
+export type Options = {
+  title?: string;
+  [key: string]: any;
 };
