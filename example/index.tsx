@@ -89,9 +89,9 @@ function App() {
   return (
     <NavigationContainer initialState={initialState}>
       <StackNavigator>
-        <Screen name="first" component={First} />
-        <Screen name="second" component={Second} />
-        <Screen name="third">
+        <Screen name="first" component={First} options={{ title: 'Foo' }} />
+        <Screen name="second" component={Second} options={{ title: 'Bar' }} />
+        <Screen name="third" options={{ title: 'Baz' }}>
           {() => (
             <TabNavigator initialRouteName="fifth">
               <Screen name="fourth" component={Fourth} />
