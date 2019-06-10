@@ -8,12 +8,12 @@ type Props = {
   screen: ScreenProps;
   helpers: NavigationHelpers;
   route: Route & { state?: NavigationState };
-  initialState: NavigationState;
-  setState: React.Dispatch<React.SetStateAction<NavigationState | undefined>>;
+  getState: () => NavigationState;
+  setState: (state: NavigationState) => void;
 };
 
 export default function SceneView(props: Props) {
-  const { screen, route, helpers, initialState, setState } = props;
+  const { screen, route, helpers, getState, setState } = props;
 
   const navigation = React.useMemo(
     () => ({
@@ -23,26 +23,34 @@ export default function SceneView(props: Props) {
     [helpers, route]
   );
 
+  const stateRef = React.useRef(route.state);
+
+  React.useEffect(() => {
+    stateRef.current = route.state;
+  });
+
+  const getCurrentState = React.useCallback(() => stateRef.current, []);
+  const setCurrentState = React.useCallback(
+    (child: NavigationState | undefined) => {
+      const state = getState();
+
+      setState({
+        ...state,
+        routes: state.routes.map(r =>
+          r === route ? { ...route, state: child } : r
+        ),
+      });
+    },
+    [getState, route, setState]
+  );
+
   const value = React.useMemo(
     () => ({
       state: route.state,
-      setState<T = NavigationState | undefined>(child: T | ((state: T) => T)) {
-        setState((state: NavigationState = initialState) => ({
-          ...state,
-          routes: state.routes.map(r =>
-            r === route
-              ? {
-                  ...route,
-                  state:
-                    // @ts-ignore
-                    typeof child === 'function' ? child(route.state) : child,
-                }
-              : r
-          ),
-        }));
-      },
+      getState: getCurrentState,
+      setState: setCurrentState,
     }),
-    [initialState, route, setState]
+    [getCurrentState, route.state, setCurrentState]
   );
 
   return (

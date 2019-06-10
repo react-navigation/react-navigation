@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { NavigationState } from './types';
+import { NavigationState, InitialState } from './types';
 
 type Props = {
-  initialState?: NavigationState;
+  initialState?: InitialState;
   children: React.ReactNode;
 };
 
@@ -10,10 +10,11 @@ const MISSING_CONTEXT_ERROR =
   "We couldn't find a navigation context. Have you wrapped your app with 'NavigationContainer'?";
 
 export const NavigationStateContext = React.createContext<{
-  state?: NavigationState;
-  setState: React.Dispatch<React.SetStateAction<NavigationState | undefined>>;
+  state?: NavigationState | InitialState;
+  getState: () => NavigationState | InitialState | undefined;
+  setState: (state: NavigationState) => void;
 }>({
-  get state(): any {
+  get getState(): any {
     throw new Error(MISSING_CONTEXT_ERROR);
   },
   get setState(): any {
@@ -22,10 +23,21 @@ export const NavigationStateContext = React.createContext<{
 });
 
 export default function NavigationContainer({ initialState, children }: Props) {
-  const [state, setState] = React.useState<NavigationState | undefined>(
-    initialState
-  );
-  const value = React.useMemo(() => ({ state, setState }), [state, setState]);
+  const [state, setState] = React.useState<
+    NavigationState | InitialState | undefined
+  >(initialState);
+
+  const stateRef = React.useRef(state);
+
+  React.useEffect(() => {
+    stateRef.current = state;
+  });
+
+  const getState = React.useCallback(() => stateRef.current, []);
+  const value = React.useMemo(() => ({ state, getState, setState }), [
+    getState,
+    state,
+  ]);
 
   return (
     <NavigationStateContext.Provider value={value}>

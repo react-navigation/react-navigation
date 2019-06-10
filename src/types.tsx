@@ -8,6 +8,11 @@ export type NavigationState = {
   routes: Array<Route & { state?: NavigationState }>;
 };
 
+export type InitialState = Omit<NavigationState, 'names'> & {
+  names?: undefined;
+  state?: InitialState;
+};
+
 export type Route = {
   name: string;
   key: string;
@@ -22,7 +27,7 @@ export type Router<Action extends NavigationAction = NavigationAction> = {
   initial(options: {
     routeNames: string[];
     initialRouteName?: string;
-  }): NavigationState;
+  }): InitialState;
   reduce(
     state: NavigationState,
     action: Action | CommonAction
