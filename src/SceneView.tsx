@@ -1,52 +1,64 @@
 import * as React from 'react';
 import { NavigationStateContext } from './NavigationContainer';
-import { NavigationPropContext } from './useNavigationBuilder';
-import { Route, NavigationProp, NavigationState } from './types';
+import StaticContainer from './StaticContainer';
+import { Props as ScreenProps } from './Screen';
+import { Route, NavigationState, NavigationHelpers } from './types';
 
 type Props = {
-  screen:
-    | { component: React.ComponentType<any> }
-    | { children: (props: any) => React.ReactNode };
-  navigation: NavigationProp;
+  screen: ScreenProps;
+  helpers: NavigationHelpers;
   route: Route & { state?: NavigationState };
-  state: NavigationState;
-  setState: (state: NavigationState) => void;
+  initialState: NavigationState;
+  setState: React.Dispatch<React.SetStateAction<NavigationState | undefined>>;
 };
 
 export default function SceneView(props: Props) {
-  const { screen, route, state, setState } = props;
+  const { screen, route, helpers, initialState, setState } = props;
 
   const navigation = React.useMemo(
     () => ({
-      ...props.navigation,
+      ...helpers,
       state: route,
     }),
-    [props.navigation, route]
+    [helpers, route]
   );
 
   const value = React.useMemo(
     () => ({
       state: route.state,
-      setState: (child: NavigationState) =>
-        setState({
+      setState<T = NavigationState | undefined>(child: T | ((state: T) => T)) {
+        setState((state: NavigationState = initialState) => ({
           ...state,
           routes: state.routes.map(r =>
-            r === route ? { ...route, state: child } : r
+            r === route
+              ? {
+                  ...route,
+                  state:
+                    // @ts-ignore
+                    typeof child === 'function' ? child(route.state) : child,
+                }
+              : r
           ),
-        }),
+        }));
+      },
     }),
-    [route, setState, state]
+    [initialState, route, setState]
   );
 
   return (
     <NavigationStateContext.Provider value={value}>
-      <NavigationPropContext.Provider value={navigation}>
+      <StaticContainer
+        name={screen.name}
+        // @ts-ignore
+        render={screen.component || screen.children}
+        navigation={navigation}
+      >
         {'component' in screen && screen.component !== undefined ? (
           <screen.component navigation={navigation} />
         ) : 'children' in screen && screen.children !== undefined ? (
           screen.children({ navigation })
         ) : null}
-      </NavigationPropContext.Provider>
+      </StaticContainer>
     </NavigationStateContext.Provider>
   );
 }

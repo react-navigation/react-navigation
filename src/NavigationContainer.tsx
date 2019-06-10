@@ -11,7 +11,7 @@ const MISSING_CONTEXT_ERROR =
 
 export const NavigationStateContext = React.createContext<{
   state?: NavigationState;
-  setState: (state: NavigationState) => void;
+  setState: React.Dispatch<React.SetStateAction<NavigationState | undefined>>;
 }>({
   get state(): any {
     throw new Error(MISSING_CONTEXT_ERROR);
