@@ -3,19 +3,21 @@ import * as BaseActions from './BaseActions';
 export type CommonAction = BaseActions.Action;
 
 export type NavigationState = {
+  key: string;
   index: number;
   names: string[];
   routes: Array<Route & { state?: NavigationState }>;
 };
 
-export type InitialState = Omit<NavigationState, 'names'> & {
+export type InitialState = Omit<Omit<NavigationState, 'names'>, 'key'> & {
+  key?: undefined;
   names?: undefined;
   state?: InitialState;
 };
 
 export type Route = {
-  name: string;
   key: string;
+  name: string;
   params?: {};
 };
 
@@ -24,10 +26,12 @@ export type NavigationAction = {
 };
 
 export type Router<Action extends NavigationAction = NavigationAction> = {
-  initial(options: {
+  normalize(options: {
+    currentState?: NavigationState | InitialState;
     routeNames: string[];
     initialRouteName?: string;
-  }): InitialState;
+  }): NavigationState;
+
   reduce(
     state: NavigationState,
     action: Action | CommonAction
