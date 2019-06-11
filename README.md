@@ -52,6 +52,14 @@ The navigator can render a screen by calling `descriptors[route.key].render()`. 
 </NavigationStateContext.Provider>
 ```
 
+## Initial state
+
+In the current implementation of React Navigation, the initial state is extracted from the navigator definitions. This is possible because they are defined statically. In our case, it's not possible because the screens are rendered dynamically.
+
+Turns out we don't really need the initial state in the `NavigationContainer`. This state is the default state, so we can store `undefined` instead, and let the navigators initialize their initial state themselves. Next time an action modifies the state, we update the value in the container.
+
+If an initial state is specified, e.g. as a result of `Linking.getInitialURL()`, the child navigators will use that state, instead of having to initialize it themselves.
+
 ## Basic usage
 
 ```js
@@ -84,10 +92,72 @@ function App() {
 
 Navigators need to have `Screen` components as their direct children. These components don't do anything by themselves, but the navigator can extract information from these and determine what to render. Implementation-wise, we'll use `React.Children` API for this purpose.
 
-## Initial state
+## Type-checking
 
-In the current implementation of React Navigation, the initial state is extracted from the navigator definitions. This is possible because they are defined statically. In our case, it's not possible because the screens are rendered dynamically.
+The library exports few helper types. Each navigator also need to export a custom type for the `navigation` prop which should contain the actions they provide, .e.g. `push` for stack, `jumpTo` for tab etc.
 
-Turns out we don't really need the initial state in the `NavigationContainer`. This state is the default state, so we can store `undefined` instead, and let the navigators initialize their initial state themselves. Next time an action modifies the state, we update the value in the container.
+Currently type checking and intelliSense works for route name and params. The user has to define a type alias with a list of routes along with the type of params they use.
 
-If an initial state is specified, e.g. as a result of `Linking.getInitialURL()`, the child navigators will use that state, instead of having to initialize it themselves.
+For our example above, we need 2 separate types for stack and tabs:
+
+```ts
+type StackParamList = {
+  settings: void;
+  profile: { userId: string };
+  home: void;
+};
+
+type TabParamList = {
+  feed: void;
+  article: void;
+  notifications: void;
+};
+```
+
+In a component, it's possible to annotate the `navigation` prop using these types:
+
+```ts
+function Profile({
+  navigation,
+}: {
+  navigation: StackNavigationProp<StackParamList, 'profile'>;
+}) {
+  // Content
+}
+```
+
+For nested navigators, the `navigation` prop is a combination of multiple `navigation` props, so we need to combine multiple types to type them:
+
+```ts
+function Feed({
+  navigation,
+}: {
+  navigation: CompositeNavigationProp<
+    NavigationHelpers<TabParamList, 'feed'>,
+    StackNavigationProp<StackParamList>
+  >;
+}) {
+  // Content
+}
+```
+
+Annotating the `navigation` prop will be enough for provide type-checking for actions such as `navigate`, as well as accessing `params` for the current route etc.
+
+It's also possible to type-check the navigator to some extent. To do this, we need to create a typed navigator object:
+
+```ts
+const Stack: TypedNavigator<StackParamList, typeof StackNavigator> = {
+  Navigator: StackNavigator,
+  Screen,
+};
+```
+
+And then we use the typed navigator instead:
+
+```js
+<Stack.Navigator initialRouteName="profile">
+  <Stack.Screen name="settings" component={Settings} />
+  <Stack.Screen name="profile" component={Profile} />
+  <Stack.Screen name="home" component={Home} />
+</Stack.Navigator>
+```
