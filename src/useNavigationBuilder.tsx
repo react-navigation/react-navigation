@@ -180,8 +180,12 @@ export default function useNavigationBuilder(
   );
 
   const helpers = React.useMemo((): NavigationHelpers => {
-    const dispatch = (action: NavigationAction) => {
-      if (!onAction(action)) {
+    const dispatch = (
+      action: NavigationAction | ((state: NavigationState) => NavigationState)
+    ) => {
+      if (typeof action === 'function') {
+        setState(action(getState()));
+      } else if (!onAction(action)) {
         throw new Error(
           `No navigators are able to handle the action "${action.type}".`
         );
@@ -206,7 +210,7 @@ export default function useNavigationBuilder(
       ),
       dispatch,
     };
-  }, [onAction, parentNavigationHelpers, router.actionCreators]);
+  }, [getState, onAction, parentNavigationHelpers, router, setState]);
 
   const navigation = React.useMemo(
     () => ({
