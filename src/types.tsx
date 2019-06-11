@@ -128,8 +128,8 @@ export type NavigationProp<
 };
 
 export type CompositeNavigationProp<
-  A extends NavigationProp<ParamListBase, string>,
-  B extends NavigationProp<ParamListBase, string>
+  A extends NavigationHelpers<ParamListBase>,
+  B extends NavigationHelpers<ParamListBase>
 > = Omit<A & B, keyof NavigationHelpers<any>> &
   NavigationHelpers<
     (A extends NavigationHelpers<infer T> ? T : never) &

@@ -139,11 +139,8 @@ const TabRouter = {
 
         return null;
 
-      case 'GO_BACK':
-        return null;
-
       default:
-        return state;
+        return null;
     }
   },
 
