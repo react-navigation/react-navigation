@@ -14,7 +14,7 @@ import * as BaseActions from './BaseActions';
 
 type Options = {
   initialRouteName?: string;
-  children: React.ReactElement[];
+  children: React.ReactNode;
 };
 
 export const NavigationHelpersContext = React.createContext<
@@ -23,13 +23,13 @@ export const NavigationHelpersContext = React.createContext<
 
 export default function useNavigationBuilder(router: Router, options: Options) {
   const screens = React.Children.map(options.children, child => {
-    if (child.type !== Screen) {
-      throw new Error(
-        "A navigator can only contain 'Screen' components as its direct children"
-      );
+    if (React.isValidElement(child) && child.type === Screen) {
+      return child.props as ScreenProps;
     }
 
-    return child.props as ScreenProps;
+    throw new Error(
+      "A navigator can only contain 'Screen' components as its direct children"
+    );
   }).reduce(
     (acc, curr) => {
       acc[curr.name] = curr;
@@ -41,7 +41,7 @@ export default function useNavigationBuilder(router: Router, options: Options) {
   const routeNames = Object.keys(screens);
 
   const {
-    state: currentState = router.normalize({
+    state: currentState = router.initial({
       screens,
       initialRouteName: options.initialRouteName,
     }),
@@ -51,9 +51,9 @@ export default function useNavigationBuilder(router: Router, options: Options) {
 
   const getState = React.useCallback(
     (): NavigationState =>
-      router.normalize({
+      router.initial({
         screens,
-        currentState: getCurrentState(),
+        partialState: getCurrentState(),
         initialRouteName: options.initialRouteName,
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
