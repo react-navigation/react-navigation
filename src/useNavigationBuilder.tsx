@@ -185,10 +185,8 @@ export default function useNavigationBuilder(
     ) => {
       if (typeof action === 'function') {
         setState(action(getState()));
-      } else if (!onAction(action)) {
-        throw new Error(
-          `No navigators are able to handle the action "${action.type}".`
-        );
+      } else {
+        onAction(action);
       }
     };
 
