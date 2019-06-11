@@ -28,7 +28,10 @@ const NavigationBuilderContext = React.createContext<{
   onChildUpdate?: (state: NavigationState, focus?: boolean) => void;
 }>({});
 
-export default function useNavigationBuilder(router: Router, options: Options) {
+export default function useNavigationBuilder(
+  router: Router<any>,
+  options: Options
+) {
   const [key] = React.useState(shortid());
   const singleNavigatorContext = React.useContext(SingleNavigatorContext);
 

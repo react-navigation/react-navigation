@@ -7,6 +7,10 @@ export type Action =
       payload: { name: string; params?: object };
     }
   | {
+      type: 'REPLACE';
+      payload: { name: string; params?: object };
+    }
+  | {
       type: 'RESET';
       payload: InitialState & { key?: string };
     };
@@ -17,6 +21,10 @@ export function goBack(): Action {
 
 export function navigate(name: string, params?: object): Action {
   return { type: 'NAVIGATE', payload: { name, params } };
+}
+
+export function replace(name: string, params?: object): Action {
+  return { type: 'REPLACE', payload: { name, params } };
 }
 
 export function reset(state: InitialState & { key?: string }): Action {

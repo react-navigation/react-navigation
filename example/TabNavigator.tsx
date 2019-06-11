@@ -4,11 +4,8 @@ import * as React from 'react';
 import shortid from 'shortid';
 import {
   useNavigationBuilder,
-  NavigationState,
   NavigationProp,
   CommonAction,
-  InitialState,
-  ScreenProps,
   ParamListBase,
   Router,
 } from '../src/index';
@@ -40,16 +37,12 @@ export type TabNavigationProp<
   ): void;
 };
 
-const TabRouter: Router = {
+const TabRouter: Router<Action | CommonAction> = {
   getInitialState({
     screens,
     partialState,
     initialRouteName = Object.keys(screens)[0],
-  }: {
-    screens: { [key: string]: ScreenProps };
-    partialState?: InitialState | NavigationState;
-    initialRouteName?: string;
-  }): NavigationState {
+  }) {
     const routeNames = Object.keys(screens);
 
     let state = partialState;
@@ -78,52 +71,47 @@ const TabRouter: Router = {
     return state;
   },
 
-  getStateForAction(
-    state: NavigationState,
-    action: Action | CommonAction
-  ): NavigationState | null {
+  getStateForAction(state, action) {
     switch (action.type) {
-      case 'JUMP_TO': {
-        const index = state.routes.findIndex(
-          route => route.name === action.payload.name
-        );
-
-        if (index === -1) {
-          throw new Error(
-            `Couldn't find route "${action.payload.name}" in the state.`
+      case 'JUMP_TO':
+      case 'NAVIGATE':
+        if (state.names.includes(action.payload.name)) {
+          const index = state.routes.findIndex(
+            route => route.name === action.payload.name
           );
+
+          return {
+            ...state,
+            routes:
+              action.payload.params !== undefined
+                ? state.routes.map((route, i) =>
+                    i === index
+                      ? {
+                          ...route,
+                          params: action.payload.params,
+                        }
+                      : route
+                  )
+                : state.routes,
+            index,
+          };
         }
 
+        return null;
+
+      case 'REPLACE': {
         return {
           ...state,
-          routes:
-            action.payload.params !== undefined
-              ? state.routes.map((route, i) =>
-                  i === index
-                    ? {
-                        ...route,
-                        params: action.payload.params,
-                      }
-                    : route
-                )
-              : state.routes,
-          index,
+          routes: state.routes.map((route, i) =>
+            i === state.index
+              ? {
+                  key: `${action.payload.name}-${shortid()}`,
+                  name: action.payload.name,
+                  params: action.payload.params,
+                }
+              : route
+          ),
         };
-      }
-
-      case 'NAVIGATE': {
-        const index = state.routes.findIndex(
-          route => route.name === action.payload.name
-        );
-
-        if (index === -1) {
-          return null;
-        }
-
-        return TabRouter.getStateForAction(state, {
-          type: 'JUMP_TO',
-          payload: { name: action.payload.name },
-        });
       }
 
       case 'RESET':
@@ -145,10 +133,7 @@ const TabRouter: Router = {
     }
   },
 
-  getStateForChildUpdate(
-    state: NavigationState,
-    { update, focus }: { update: NavigationState; focus?: boolean }
-  ) {
+  getStateForChildUpdate(state, { update, focus }) {
     const index = state.routes.findIndex(r =>
       r.state ? r.state.key === update.key : false
     );
@@ -166,12 +151,12 @@ const TabRouter: Router = {
     };
   },
 
-  shouldActionChangeFocus(action: Action | CommonAction) {
+  shouldActionChangeFocus(action) {
     return action.type === 'NAVIGATE';
   },
 
   actionCreators: {
-    jumpTo(name: string): Action {
+    jumpTo(name: string) {
       return { type: 'JUMP_TO', payload: { name } };
     },
   },
