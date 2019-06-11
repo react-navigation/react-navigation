@@ -6,6 +6,7 @@ import {
   Screen,
   CompositeNavigationProp,
   TypedNavigator,
+  NavigationHelpers,
 } from '../src';
 import StackNavigator, { StackNavigationProp } from './StackNavigator';
 import TabNavigator, { TabNavigationProp } from './TabNavigator';
@@ -34,7 +35,10 @@ const Tab: TypedNavigator<TabParamList, typeof TabNavigator> = {
 const First = ({
   navigation,
 }: {
-  navigation: StackNavigationProp<StackParamList, 'first'>;
+  navigation: CompositeNavigationProp<
+    StackNavigationProp<StackParamList, 'first'>,
+    NavigationHelpers<TabParamList>
+  >;
 }) => (
   <div>
     <h1>First, {navigation.state.params.author}</h1>
@@ -43,6 +47,9 @@ const First = ({
     </button>
     <button type="button" onClick={() => navigation.push('third')}>
       Push third
+    </button>
+    <button type="button" onClick={() => navigation.navigate('fourth')}>
+      Navigate to fourth
     </button>
     <button
       type="button"
@@ -59,7 +66,10 @@ const First = ({
 const Second = ({
   navigation,
 }: {
-  navigation: StackNavigationProp<StackParamList, 'second'>;
+  navigation: CompositeNavigationProp<
+    StackNavigationProp<StackParamList, 'second'>,
+    NavigationHelpers<TabParamList>
+  >;
 }) => (
   <div>
     <h1>Second</h1>

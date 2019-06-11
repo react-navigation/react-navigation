@@ -17,8 +17,18 @@ type Options = {
   children: React.ReactNode;
 };
 
-export const NavigationHelpersContext = React.createContext<
+type HandleAction = (action: NavigationAction, fromKey: string) => boolean;
+
+const NavigationHelpersContext = React.createContext<
   NavigationHelpers | undefined
+>(undefined);
+
+const NavigationDispatchListenerContext = React.createContext<
+  ((listener: HandleAction) => void) | undefined
+>(undefined);
+
+const NavigationHandleActionContext = React.createContext<
+  HandleAction | undefined
 >(undefined);
 
 export default function useNavigationBuilder(router: Router, options: Options) {
@@ -49,6 +59,17 @@ export default function useNavigationBuilder(router: Router, options: Options) {
     setState,
   } = React.useContext(NavigationStateContext);
 
+  const parentNavigationHelpers = React.useContext(NavigationHelpersContext);
+  const dispatchListeners = React.useRef<HandleAction[]>([]);
+  const addDispatchListener = React.useCallback((listener: HandleAction) => {
+    dispatchListeners.current.push(listener);
+
+    return () => {
+      const index = dispatchListeners.current.indexOf(listener);
+      dispatchListeners.current.splice(index, 1);
+    };
+  }, []);
+
   const getState = React.useCallback(
     (): NavigationState =>
       router.initial({
@@ -60,24 +81,59 @@ export default function useNavigationBuilder(router: Router, options: Options) {
     [getCurrentState, ...routeNames]
   );
 
-  const parentNavigationHelpers = React.useContext(NavigationHelpersContext);
+  const onDispatch = React.useContext(NavigationDispatchListenerContext);
+  const handleActionParent = React.useContext(NavigationHandleActionContext);
+  const handleAction = React.useCallback(
+    (action: NavigationAction, fromKey?: string) => {
+      const state = getState();
+
+      // If the action was dispatched by this navigator, don't handle it
+      // This ensures that the action won't travel back up from children or down from parent
+      if (fromKey === state.key) {
+        return false;
+      }
+
+      const result = router.reduce(state, action);
+
+      if (result !== null) {
+        setState(result);
+        return true;
+      }
+
+      // If router returned `null`, it didn't handle it
+      // try to delegate the action to child navigators
+      for (let i = dispatchListeners.current.length - 1; i >= 0; i--) {
+        const listener = dispatchListeners.current[i];
+
+        if (listener(action, state.key)) {
+          return true;
+        }
+      }
+
+      if (handleActionParent !== undefined) {
+        // If non of the child navigators could handle the action, delegate it to parent
+        // This will enable sibling navigators to handle the action
+        if (handleActionParent(action, state.key)) {
+          return true;
+        }
+      }
+
+      return false;
+    },
+    [getState, handleActionParent, router, setState]
+  );
+
+  React.useEffect(() => onDispatch && onDispatch(handleAction), [
+    handleAction,
+    onDispatch,
+  ]);
 
   const helpers = React.useMemo((): NavigationHelpers => {
     const dispatch = (action: NavigationAction) => {
-      const state = getState();
-      const result = router.reduce(state, action);
-
-      // If router returned `null`, let the parent navigator handle it
-      if (result === null) {
-        if (parentNavigationHelpers !== undefined) {
-          parentNavigationHelpers.dispatch(action);
-        } else {
-          throw new Error(
-            `No navigators are able to handle the action "${action.type}".`
-          );
-        }
-      } else {
-        setState(result);
+      if (!handleAction(action)) {
+        throw new Error(
+          `No navigators are able to handle the action "${action.type}".`
+        );
       }
     };
 
@@ -99,7 +155,7 @@ export default function useNavigationBuilder(router: Router, options: Options) {
       ),
       dispatch,
     };
-  }, [router, parentNavigationHelpers, getState, setState]);
+  }, [handleAction, parentNavigationHelpers, router]);
 
   const navigation = React.useMemo(
     () => ({
@@ -117,13 +173,19 @@ export default function useNavigationBuilder(router: Router, options: Options) {
         render() {
           return (
             <NavigationHelpersContext.Provider value={helpers}>
-              <SceneView
-                helpers={helpers}
-                route={route}
-                screen={screen}
-                getState={getState}
-                setState={setState}
-              />
+              <NavigationHandleActionContext.Provider value={handleAction}>
+                <NavigationDispatchListenerContext.Provider
+                  value={addDispatchListener}
+                >
+                  <SceneView
+                    helpers={helpers}
+                    route={route}
+                    screen={screen}
+                    getState={getState}
+                    setState={setState}
+                  />
+                </NavigationDispatchListenerContext.Provider>
+              </NavigationHandleActionContext.Provider>
             </NavigationHelpersContext.Provider>
           );
         },

@@ -115,9 +115,18 @@ const StackRouter = {
       case 'NAVIGATE':
         if (state.names.includes(action.payload.name)) {
           // If the route already exists, navigate to that
-          const index = state.routes.findIndex(
-            route => route.name === action.payload.name
-          );
+          let index = -1;
+
+          if (state.routes[state.index].name === action.payload.name) {
+            index = state.index;
+          } else {
+            for (let i = state.routes.length - 1; i >= 0; i--) {
+              if (state.routes[i].name === action.payload.name) {
+                index = i;
+                break;
+              }
+            }
+          }
 
           if (index === -1) {
             return StackRouter.reduce(state, {
@@ -161,13 +170,13 @@ const StackRouter = {
       }
 
       default:
-        return state;
+        return null;
     }
   },
 
   actions: {
-    push(name: string): Action {
-      return { type: 'PUSH', payload: { name } };
+    push(name: string, params?: object): Action {
+      return { type: 'PUSH', payload: { name, params } };
     },
     pop(): Action {
       return { type: 'POP' };
