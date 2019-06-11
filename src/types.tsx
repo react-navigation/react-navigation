@@ -50,7 +50,7 @@ export type Router<Action extends NavigationAction = NavigationAction> = {
   /**
    * Initialize full navigation state with a given partial state.
    */
-  initial(options: {
+  getInitialState(options: {
     screens: { [key: string]: ScreenProps };
     partialState?: NavigationState | InitialState;
     initialRouteName?: string;
@@ -60,15 +60,28 @@ export type Router<Action extends NavigationAction = NavigationAction> = {
    * Take the current state and action, and return a new state.
    * If the action cannot be handled, return `null`.
    */
-  reduce(
+  getStateForAction(
     state: NavigationState,
     action: Action | CommonAction
   ): NavigationState | null;
 
+  getStateForChildUpdate(
+    state: NavigationState,
+    payload: {
+      update: NavigationState;
+      focus?: boolean;
+    }
+  ): NavigationState;
+
+  /**
+   * Whether the action should also change focus in parent navigator
+   */
+  shouldActionChangeFocus(action: Action | CommonAction): boolean;
+
   /**
    * Action creators for the router.
    */
-  actions: { [key: string]: (...args: any) => Action };
+  actionCreators: { [key: string]: (...args: any) => Action };
 };
 
 export type ParamListBase = { [key: string]: object | void };

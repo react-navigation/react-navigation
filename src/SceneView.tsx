@@ -49,7 +49,7 @@ export default function SceneView(props: Props) {
     [getState, route, setState]
   );
 
-  const value = React.useMemo(
+  const context = React.useMemo(
     () => ({
       state: route.state,
       getState: getCurrentState,
@@ -59,7 +59,7 @@ export default function SceneView(props: Props) {
   );
 
   return (
-    <NavigationStateContext.Provider value={value}>
+    <NavigationStateContext.Provider value={context}>
       <EnsureSingleNavigator>
         <StaticContainer
           name={screen.name}

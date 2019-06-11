@@ -10,6 +10,7 @@ import {
   InitialState,
   ScreenProps,
   ParamListBase,
+  Router,
 } from '../src/index';
 
 type Props = {
@@ -46,8 +47,8 @@ export type StackNavigationProp<
   pop(): void;
 };
 
-const StackRouter = {
-  initial({
+const StackRouter: Router = {
+  getInitialState({
     screens,
     partialState,
     initialRouteName = Object.keys(screens)[0],
@@ -84,7 +85,7 @@ const StackRouter = {
     return state;
   },
 
-  reduce(
+  getStateForAction(
     state: NavigationState,
     action: Action | CommonAction
   ): NavigationState | null {
@@ -129,7 +130,7 @@ const StackRouter = {
           }
 
           if (index === -1) {
-            return StackRouter.reduce(state, {
+            return StackRouter.getStateForAction(state, {
               type: 'PUSH',
               payload: action.payload,
             });
@@ -151,7 +152,7 @@ const StackRouter = {
 
       case 'GO_BACK':
         return state.index > 0
-          ? StackRouter.reduce(state, { type: 'POP' })
+          ? StackRouter.getStateForAction(state, { type: 'POP' })
           : state;
 
       case 'RESET': {
@@ -174,7 +175,37 @@ const StackRouter = {
     }
   },
 
-  actions: {
+  getStateForChildUpdate(
+    state: NavigationState,
+    { update, focus }: { update: NavigationState; focus?: boolean }
+  ) {
+    const index = state.routes.findIndex(r =>
+      r.state ? r.state.key === update.key : false
+    );
+
+    if (index === -1) {
+      return state;
+    }
+
+    return {
+      ...state,
+      index: focus ? index : state.index,
+      routes: focus
+        ? [
+            ...state.routes.slice(0, index),
+            { ...state.routes[index], state: update },
+          ]
+        : state.routes.map((route, i) =>
+            i === index ? { ...route, state: update } : route
+          ),
+    };
+  },
+
+  shouldActionChangeFocus(action: Action | CommonAction) {
+    return action.type === 'NAVIGATE';
+  },
+
+  actionCreators: {
     push(name: string, params?: object): Action {
       return { type: 'PUSH', payload: { name, params } };
     },
