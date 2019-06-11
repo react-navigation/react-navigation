@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { NavigationState, InitialState } from './types';
+import EnsureSingleNavigator from './EnsureSingleNavigator';
 
 type Props = {
   initialState?: InitialState;
@@ -41,7 +42,7 @@ export default function NavigationContainer({ initialState, children }: Props) {
 
   return (
     <NavigationStateContext.Provider value={value}>
-      {children}
+      <EnsureSingleNavigator>{children}</EnsureSingleNavigator>
     </NavigationStateContext.Provider>
   );
 }
