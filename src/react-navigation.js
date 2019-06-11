@@ -123,7 +123,14 @@ module.exports = {
   get createDrawerNavigator() {
     return require('react-navigation-drawer').createDrawerNavigator;
   },
-
+  get createTabNavigator() {
+    console.warn('createTabNavigator is deprecated. Please use the createBottomTabNavigator or createMaterialTopTabNavigator instead.')
+    return require('react-navigation-deprecated-tab-navigator').createTabNavigator
+  },
+  get TabNavigator() {
+    console.warn('TabNavigator is deprecated. Please use the createBottomTabNavigator or createMaterialTopTabNavigator instead.')
+    return require('react-navigation-deprecated-tab-navigator').createTabNavigator
+  },
   // Gesture contexts
 
   get StackGestureContext() {
