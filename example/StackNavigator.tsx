@@ -4,11 +4,8 @@ import * as React from 'react';
 import shortid from 'shortid';
 import {
   useNavigationBuilder,
-  NavigationState,
   NavigationProp,
   CommonAction,
-  InitialState,
-  ScreenProps,
   ParamListBase,
   Router,
 } from '../src/index';
@@ -23,7 +20,11 @@ type Action =
       type: 'PUSH';
       payload: { name: string; params?: object };
     }
-  | { type: 'POP' };
+  | {
+      type: 'POP';
+      payload: { count: number };
+    }
+  | { type: 'POP_TO_TOP' };
 
 export type StackNavigationProp<
   ParamList extends ParamListBase,
@@ -44,19 +45,20 @@ export type StackNavigationProp<
   /**
    * Pop a screen from the stack.
    */
-  pop(): void;
+  pop(count?: number): void;
+
+  /**
+   * Pop to the first route in the stack, dismissing all other screens.
+   */
+  popToTop(): void;
 };
 
-const StackRouter: Router = {
+const StackRouter: Router<CommonAction | Action> = {
   getInitialState({
     screens,
     partialState,
     initialRouteName = Object.keys(screens)[0],
-  }: {
-    screens: { [key: string]: ScreenProps };
-    partialState?: InitialState | NavigationState;
-    initialRouteName?: string;
-  }): NavigationState {
+  }) {
     const routeNames = Object.keys(screens);
 
     let state = partialState;
@@ -85,33 +87,45 @@ const StackRouter: Router = {
     return state;
   },
 
-  getStateForAction(
-    state: NavigationState,
-    action: Action | CommonAction
-  ): NavigationState | null {
+  getStateForAction(state, action) {
     switch (action.type) {
       case 'PUSH':
-        return {
-          ...state,
-          index: state.index + 1,
-          routes: [
-            ...state.routes,
-            {
-              key: `${action.payload.name}-${shortid()}`,
-              name: action.payload.name,
-              params: action.payload.params,
-            },
-          ],
-        };
+        if (state.names.includes(action.payload.name)) {
+          return {
+            ...state,
+            index: state.index + 1,
+            routes: [
+              ...state.routes,
+              {
+                key: `${action.payload.name}-${shortid()}`,
+                name: action.payload.name,
+                params: action.payload.params,
+              },
+            ],
+          };
+        }
+
+        return null;
 
       case 'POP':
-        return state.index > 0
-          ? {
-              ...state,
-              index: state.index - 1,
-              routes: state.routes.slice(0, state.routes.length - 1),
-            }
-          : state;
+        if (state.index > 0) {
+          return {
+            ...state,
+            index: state.index - 1,
+            routes: state.routes.slice(
+              0,
+              Math.max(state.routes.length - action.payload.count, 1)
+            ),
+          };
+        }
+
+        return null;
+
+      case 'POP_TO_TOP':
+        return StackRouter.getStateForAction(state, {
+          type: 'POP',
+          payload: { count: state.routes.length - 1 },
+        });
 
       case 'NAVIGATE':
         if (state.names.includes(action.payload.name)) {
@@ -150,10 +164,26 @@ const StackRouter: Router = {
 
         return null;
 
+      case 'REPLACE': {
+        return {
+          ...state,
+          routes: state.routes.map((route, i) =>
+            i === state.index
+              ? {
+                  key: `${action.payload.name}-${shortid()}`,
+                  name: action.payload.name,
+                  params: action.payload.params,
+                }
+              : route
+          ),
+        };
+      }
+
       case 'GO_BACK':
-        return state.index > 0
-          ? StackRouter.getStateForAction(state, { type: 'POP' })
-          : state;
+        return StackRouter.getStateForAction(state, {
+          type: 'POP',
+          payload: { count: 1 },
+        });
 
       case 'RESET': {
         if (
@@ -175,10 +205,7 @@ const StackRouter: Router = {
     }
   },
 
-  getStateForChildUpdate(
-    state: NavigationState,
-    { update, focus }: { update: NavigationState; focus?: boolean }
-  ) {
+  getStateForChildUpdate(state, { update, focus }) {
     const index = state.routes.findIndex(r =>
       r.state ? r.state.key === update.key : false
     );
@@ -201,16 +228,19 @@ const StackRouter: Router = {
     };
   },
 
-  shouldActionChangeFocus(action: Action | CommonAction) {
+  shouldActionChangeFocus(action) {
     return action.type === 'NAVIGATE';
   },
 
   actionCreators: {
-    push(name: string, params?: object): Action {
+    push(name: string, params?: object) {
       return { type: 'PUSH', payload: { name, params } };
     },
-    pop(): Action {
-      return { type: 'POP' };
+    pop(count: number = 1) {
+      return { type: 'POP', payload: { count } };
+    },
+    popToTop() {
+      return { type: 'POP_TO_TOP' };
     },
   },
 };

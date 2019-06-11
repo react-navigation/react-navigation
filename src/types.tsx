@@ -46,7 +46,7 @@ export type NavigationAction = {
   type: string;
 };
 
-export type Router<Action extends NavigationAction = NavigationAction> = {
+export type Router<Action extends NavigationAction = CommonAction> = {
   /**
    * Initialize full navigation state with a given partial state.
    */
@@ -62,7 +62,7 @@ export type Router<Action extends NavigationAction = NavigationAction> = {
    */
   getStateForAction(
     state: NavigationState,
-    action: Action | CommonAction
+    action: Action
   ): NavigationState | null;
 
   getStateForChildUpdate(
@@ -76,7 +76,7 @@ export type Router<Action extends NavigationAction = NavigationAction> = {
   /**
    * Whether the action should also change focus in parent navigator
    */
-  shouldActionChangeFocus(action: Action | CommonAction): boolean;
+  shouldActionChangeFocus(action: Action): boolean;
 
   /**
    * Action creators for the router.
@@ -110,6 +110,18 @@ export type NavigationHelpers<
    * @param [params] Params object for the route.
    */
   navigate<RouteName extends keyof ParamList>(
+    ...args: ParamList[RouteName] extends void
+      ? [RouteName]
+      : [RouteName, ParamList[RouteName]]
+  ): void;
+
+  /**
+   * Replace the current route with a new one.
+   *
+   * @param name Route name of the new route.
+   * @param [params] Params object for the new route.
+   */
+  replace<RouteName extends keyof ParamList>(
     ...args: ParamList[RouteName] extends void
       ? [RouteName]
       : [RouteName, ParamList[RouteName]]
