@@ -1,7 +1,12 @@
 import shortid from 'shortid';
 import * as React from 'react';
 import { render } from 'react-dom';
-import { NavigationContainer, Screen, CompositeNavigationProp } from '../src';
+import {
+  NavigationContainer,
+  Screen,
+  CompositeNavigationProp,
+  TypedNavigator,
+} from '../src';
 import StackNavigator, { StackNavigationProp } from './StackNavigator';
 import TabNavigator, { TabNavigationProp } from './TabNavigator';
 
@@ -14,6 +19,16 @@ type StackParamList = {
 type TabParamList = {
   fourth: void;
   fifth: void;
+};
+
+const Stack: TypedNavigator<StackParamList, typeof StackNavigator> = {
+  Navigator: StackNavigator,
+  Screen,
+};
+
+const Tab: TypedNavigator<TabParamList, typeof TabNavigator> = {
+  Navigator: TabNavigator,
+  Screen,
 };
 
 const First = ({
@@ -125,23 +140,27 @@ const initialState = routes.length
 function App() {
   return (
     <NavigationContainer initialState={initialState}>
-      <StackNavigator>
-        <Screen
+      <Stack.Navigator>
+        <Stack.Screen
           name="first"
           component={First}
           options={{ title: 'Foo' }}
           initialParams={{ author: 'Jane' }}
         />
-        <Screen name="second" component={Second} options={{ title: 'Bar' }} />
-        <Screen name="third" options={{ title: 'Baz' }}>
+        <Stack.Screen
+          name="second"
+          component={Second}
+          options={{ title: 'Bar' }}
+        />
+        <Stack.Screen name="third" options={{ title: 'Baz' }}>
           {() => (
-            <TabNavigator initialRouteName="fifth">
-              <Screen name="fourth" component={Fourth} />
-              <Screen name="fifth" component={Fifth} />
-            </TabNavigator>
+            <Tab.Navigator initialRouteName="fifth">
+              <Tab.Screen name="fourth" component={Fourth} />
+              <Tab.Screen name="fifth" component={Fifth} />
+            </Tab.Navigator>
           )}
-        </Screen>
-      </StackNavigator>
+        </Stack.Screen>
+      </Stack.Navigator>
     </NavigationContainer>
   );
 }

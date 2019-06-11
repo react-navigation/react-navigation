@@ -14,7 +14,7 @@ import {
 
 type Props = {
   initialRouteName?: string;
-  children: React.ReactElement[];
+  children: React.ReactNode;
 };
 
 type Action = {
@@ -26,6 +26,12 @@ export type TabNavigationProp<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = string
 > = NavigationProp<ParamList, RouteName> & {
+  /**
+   * Jump to an existing tab.
+   *
+   * @param name Name of the route for the tab.
+   * @param [params] Params object for the route.
+   */
   jumpTo<RouteName extends keyof ParamList>(
     ...args: ParamList[RouteName] extends void
       ? [RouteName]
@@ -34,18 +40,18 @@ export type TabNavigationProp<
 };
 
 const TabRouter = {
-  normalize({
+  initial({
     screens,
-    currentState,
+    partialState,
     initialRouteName = Object.keys(screens)[0],
   }: {
     screens: { [key: string]: ScreenProps };
-    currentState?: InitialState | NavigationState;
+    partialState?: InitialState | NavigationState;
     initialRouteName?: string;
   }): NavigationState {
     const routeNames = Object.keys(screens);
 
-    let state = currentState;
+    let state = partialState;
 
     if (state === undefined) {
       const index = routeNames.indexOf(initialRouteName);

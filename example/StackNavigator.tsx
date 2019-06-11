@@ -14,7 +14,7 @@ import {
 
 type Props = {
   initialRouteName?: string;
-  children: React.ReactElement[];
+  children: React.ReactNode;
 };
 
 type Action =
@@ -28,27 +28,37 @@ export type StackNavigationProp<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = string
 > = NavigationProp<ParamList, RouteName> & {
+  /**
+   * Push a new screen onto the stack.
+   *
+   * @param name Name of the route for the tab.
+   * @param [params] Params object for the route.
+   */
   push<RouteName extends keyof ParamList>(
     ...args: ParamList[RouteName] extends void
       ? [RouteName]
       : [RouteName, ParamList[RouteName]]
   ): void;
+
+  /**
+   * Pop a screen from the stack.
+   */
   pop(): void;
 };
 
 const StackRouter = {
-  normalize({
+  initial({
     screens,
-    currentState,
+    partialState,
     initialRouteName = Object.keys(screens)[0],
   }: {
     screens: { [key: string]: ScreenProps };
-    currentState?: InitialState | NavigationState;
+    partialState?: InitialState | NavigationState;
     initialRouteName?: string;
   }): NavigationState {
     const routeNames = Object.keys(screens);
 
-    let state = currentState;
+    let state = partialState;
 
     if (state === undefined) {
       const index = routeNames.indexOf(initialRouteName);
