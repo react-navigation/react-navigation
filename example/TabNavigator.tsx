@@ -10,6 +10,7 @@ import {
   InitialState,
   ScreenProps,
   ParamListBase,
+  Router,
 } from '../src/index';
 
 type Props = {
@@ -39,8 +40,8 @@ export type TabNavigationProp<
   ): void;
 };
 
-const TabRouter = {
-  initial({
+const TabRouter: Router = {
+  getInitialState({
     screens,
     partialState,
     initialRouteName = Object.keys(screens)[0],
@@ -77,7 +78,7 @@ const TabRouter = {
     return state;
   },
 
-  reduce(
+  getStateForAction(
     state: NavigationState,
     action: Action | CommonAction
   ): NavigationState | null {
@@ -119,7 +120,7 @@ const TabRouter = {
           return null;
         }
 
-        return TabRouter.reduce(state, {
+        return TabRouter.getStateForAction(state, {
           type: 'JUMP_TO',
           payload: { name: action.payload.name },
         });
@@ -144,7 +145,32 @@ const TabRouter = {
     }
   },
 
-  actions: {
+  getStateForChildUpdate(
+    state: NavigationState,
+    { update, focus }: { update: NavigationState; focus?: boolean }
+  ) {
+    const index = state.routes.findIndex(r =>
+      r.state ? r.state.key === update.key : false
+    );
+
+    if (index === -1) {
+      return state;
+    }
+
+    return {
+      ...state,
+      index: focus ? index : state.index,
+      routes: state.routes.map((route, i) =>
+        i === index ? { ...route, state: update } : route
+      ),
+    };
+  },
+
+  shouldActionChangeFocus(action: Action | CommonAction) {
+    return action.type === 'NAVIGATE';
+  },
+
+  actionCreators: {
     jumpTo(name: string): Action {
       return { type: 'JUMP_TO', payload: { name } };
     },

@@ -21,17 +21,12 @@ type Options = {
 
 type HandleAction = (action: NavigationAction, fromKey: string) => boolean;
 
-const NavigationHelpersContext = React.createContext<
-  NavigationHelpers | undefined
->(undefined);
-
-const NavigationDispatchListenerContext = React.createContext<
-  ((listener: HandleAction) => void) | undefined
->(undefined);
-
-const NavigationHandleActionContext = React.createContext<
-  HandleAction | undefined
->(undefined);
+const NavigationBuilderContext = React.createContext<{
+  helpers?: NavigationHelpers;
+  onDispatchListener?: (listener: HandleAction) => void;
+  onAction?: HandleAction;
+  onChildUpdate?: (state: NavigationState, focus?: boolean) => void;
+}>({});
 
 export default function useNavigationBuilder(router: Router, options: Options) {
   const [key] = React.useState(shortid());
@@ -70,7 +65,7 @@ export default function useNavigationBuilder(router: Router, options: Options) {
   const routeNames = Object.keys(screens);
 
   const {
-    state: currentState = router.initial({
+    state: currentState = router.getInitialState({
       screens,
       initialRouteName: options.initialRouteName,
     }),
@@ -78,9 +73,19 @@ export default function useNavigationBuilder(router: Router, options: Options) {
     setState,
   } = React.useContext(NavigationStateContext);
 
-  const parentNavigationHelpers = React.useContext(NavigationHelpersContext);
+  React.useEffect(() => {
+    setState(currentState as NavigationState);
+  }, [currentState, setState]);
+
+  const {
+    helpers: parentNavigationHelpers,
+    onAction: handleActionParent,
+    onChildUpdate: handleChildUpdateParent,
+    onDispatchListener: handleParentDispatch,
+  } = React.useContext(NavigationBuilderContext);
+
   const dispatchListeners = React.useRef<HandleAction[]>([]);
-  const addDispatchListener = React.useCallback((listener: HandleAction) => {
+  const onDispatchListener = React.useCallback((listener: HandleAction) => {
     dispatchListeners.current.push(listener);
 
     return () => {
@@ -91,7 +96,7 @@ export default function useNavigationBuilder(router: Router, options: Options) {
 
   const getState = React.useCallback(
     (): NavigationState =>
-      router.initial({
+      router.getInitialState({
         screens,
         partialState: getCurrentState(),
         initialRouteName: options.initialRouteName,
@@ -100,9 +105,7 @@ export default function useNavigationBuilder(router: Router, options: Options) {
     [getCurrentState, ...routeNames]
   );
 
-  const onDispatch = React.useContext(NavigationDispatchListenerContext);
-  const handleActionParent = React.useContext(NavigationHandleActionContext);
-  const handleAction = React.useCallback(
+  const onAction = React.useCallback(
     (action: NavigationAction, fromKey?: string) => {
       const state = getState();
 
@@ -112,10 +115,19 @@ export default function useNavigationBuilder(router: Router, options: Options) {
         return false;
       }
 
-      const result = router.reduce(state, action);
+      const result = router.getStateForAction(state, action);
 
       if (result !== null) {
-        setState(result);
+        if (handleChildUpdateParent) {
+          const shouldFocus = router.shouldActionChangeFocus(action);
+
+          handleChildUpdateParent(result, shouldFocus);
+        } else {
+          if (state !== result) {
+            setState(result);
+          }
+        }
+
         return true;
       }
 
@@ -139,17 +151,34 @@ export default function useNavigationBuilder(router: Router, options: Options) {
 
       return false;
     },
-    [getState, handleActionParent, router, setState]
+    [getState, handleActionParent, handleChildUpdateParent, router, setState]
   );
 
-  React.useEffect(() => onDispatch && onDispatch(handleAction), [
-    handleAction,
-    onDispatch,
-  ]);
+  const onChildUpdate = React.useCallback(
+    (update: NavigationState, focus?: boolean) => {
+      const state = getState();
+      const result = router.getStateForChildUpdate(state, {
+        update,
+        focus: true,
+      });
+
+      if (handleChildUpdateParent !== undefined) {
+        handleChildUpdateParent(result, focus);
+      } else {
+        setState(result);
+      }
+    },
+    [getState, handleChildUpdateParent, router, setState]
+  );
+
+  React.useEffect(
+    () => handleParentDispatch && handleParentDispatch(onAction),
+    [onAction, handleParentDispatch]
+  );
 
   const helpers = React.useMemo((): NavigationHelpers => {
     const dispatch = (action: NavigationAction) => {
-      if (!handleAction(action)) {
+      if (!onAction(action)) {
         throw new Error(
           `No navigators are able to handle the action "${action.type}".`
         );
@@ -157,7 +186,7 @@ export default function useNavigationBuilder(router: Router, options: Options) {
     };
 
     const actions = {
-      ...router.actions,
+      ...router.actionCreators,
       ...BaseActions,
     };
 
@@ -174,7 +203,7 @@ export default function useNavigationBuilder(router: Router, options: Options) {
       ),
       dispatch,
     };
-  }, [handleAction, parentNavigationHelpers, router]);
+  }, [onAction, parentNavigationHelpers, router.actionCreators]);
 
   const navigation = React.useMemo(
     () => ({
@@ -184,6 +213,16 @@ export default function useNavigationBuilder(router: Router, options: Options) {
     [helpers, currentState]
   );
 
+  const context = React.useMemo(
+    () => ({
+      helpers,
+      onAction,
+      onChildUpdate,
+      onDispatchListener,
+    }),
+    [helpers, onAction, onDispatchListener, onChildUpdate]
+  );
+
   const descriptors = currentState.routes.reduce(
     (acc, route) => {
       const screen = screens[route.name];
@@ -191,21 +230,15 @@ export default function useNavigationBuilder(router: Router, options: Options) {
       acc[route.key] = {
         render() {
           return (
-            <NavigationHelpersContext.Provider value={helpers}>
-              <NavigationHandleActionContext.Provider value={handleAction}>
-                <NavigationDispatchListenerContext.Provider
-                  value={addDispatchListener}
-                >
-                  <SceneView
-                    helpers={helpers}
-                    route={route}
-                    screen={screen}
-                    getState={getState}
-                    setState={setState}
-                  />
-                </NavigationDispatchListenerContext.Provider>
-              </NavigationHandleActionContext.Provider>
-            </NavigationHelpersContext.Provider>
+            <NavigationBuilderContext.Provider value={context}>
+              <SceneView
+                helpers={helpers}
+                route={route}
+                screen={screen}
+                getState={getState}
+                setState={setState}
+              />
+            </NavigationBuilderContext.Provider>
           );
         },
         options: screen.options || {},
