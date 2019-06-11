@@ -305,6 +305,7 @@ export default class Card extends React.Component<Props> {
           )
         ),
         // Stop animations while we're dragging
+        // and invoke proper listener
         cond(
           clockRunning(this.clock),
           call([this.toValue], ([target]) => {
@@ -379,6 +380,9 @@ export default class Card extends React.Component<Props> {
   ]);
 
   componentWillUnmount(): void {
+    // It might sometimes happen than animation will be unmounted
+    // during running. However, we need to invoke listener onClose
+    // manually in this case
     if (this.isRunningAnimation) {
       this.props.onClose(false);
     }
