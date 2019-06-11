@@ -9,8 +9,10 @@ import {
   ScreenProps,
 } from './types';
 import Screen from './Screen';
+import shortid from 'shortid';
 import SceneView from './SceneView';
 import * as BaseActions from './BaseActions';
+import { SingleNavigatorContext } from './EnsureSingleNavigator';
 
 type Options = {
   initialRouteName?: string;
@@ -32,6 +34,23 @@ const NavigationHandleActionContext = React.createContext<
 >(undefined);
 
 export default function useNavigationBuilder(router: Router, options: Options) {
+  const [key] = React.useState(shortid());
+  const singleNavigatorContext = React.useContext(SingleNavigatorContext);
+
+  React.useEffect(() => {
+    if (singleNavigatorContext === undefined) {
+      throw new Error(
+        "Couldn't register the navigator. You likely forgot to nest the navigator inside a 'NavigationContainer'."
+      );
+    }
+
+    const { register, unregister } = singleNavigatorContext;
+
+    register(key);
+
+    return () => unregister(key);
+  }, [key, singleNavigatorContext]);
+
   const screens = React.Children.map(options.children, child => {
     if (React.isValidElement(child) && child.type === Screen) {
       return child.props as ScreenProps;

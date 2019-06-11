@@ -7,6 +7,7 @@ import {
   NavigationHelpers,
   ScreenProps,
 } from './types';
+import EnsureSingleNavigator from './EnsureSingleNavigator';
 
 type Props = {
   screen: ScreenProps;
@@ -59,18 +60,20 @@ export default function SceneView(props: Props) {
 
   return (
     <NavigationStateContext.Provider value={value}>
-      <StaticContainer
-        name={screen.name}
-        // @ts-ignore
-        render={screen.component || screen.children}
-        navigation={navigation}
-      >
-        {'component' in screen && screen.component !== undefined ? (
-          <screen.component navigation={navigation} />
-        ) : 'children' in screen && screen.children !== undefined ? (
-          screen.children({ navigation })
-        ) : null}
-      </StaticContainer>
+      <EnsureSingleNavigator>
+        <StaticContainer
+          name={screen.name}
+          // @ts-ignore
+          render={screen.component || screen.children}
+          navigation={navigation}
+        >
+          {'component' in screen && screen.component !== undefined ? (
+            <screen.component navigation={navigation} />
+          ) : 'children' in screen && screen.children !== undefined ? (
+            screen.children({ navigation })
+          ) : null}
+        </StaticContainer>
+      </EnsureSingleNavigator>
     </NavigationStateContext.Provider>
   );
 }
