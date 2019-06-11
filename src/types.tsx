@@ -99,9 +99,12 @@ export type NavigationHelpers<
   ParamList extends ParamListBase = ParamListBase
 > = {
   /**
-   * Dispatch an action to the router.
+   * Dispatch an action or an update function to the router.
+   * The update function will receive the current state,
    */
-  dispatch(action: NavigationAction): void;
+  dispatch(
+    action: NavigationAction | ((state: NavigationState) => NavigationState)
+  ): void;
 
   /**
    * Navigate to a route in current navigation tree.
