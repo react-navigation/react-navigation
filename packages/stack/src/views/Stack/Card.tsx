@@ -18,8 +18,8 @@ type Props = ViewProps & {
   current: Animated.Value<number>;
   layout: Layout;
   direction: 'horizontal' | 'vertical';
-  onOpen: () => void;
-  onClose: () => void;
+  onOpen: (isFinished: boolean) => void;
+  onClose: (isFinished: boolean) => void;
   onTransitionStart?: (props: { closing: boolean }) => void;
   onGestureBegin?: () => void;
   onGestureCanceled?: () => void;
@@ -121,6 +121,7 @@ export default class Card extends React.Component<Props> {
   private nextIsVisible = new Value<Binary | -1>(UNSET);
 
   private isClosing = new Value<Binary>(FALSE);
+  private isRunningAnimation = false;
 
   private clock = new Clock();
 
@@ -186,7 +187,7 @@ export default class Card extends React.Component<Props> {
         startClock(this.clock),
         call([this.isVisible], ([value]: ReadonlyArray<Binary>) => {
           const { onTransitionStart } = this.props;
-
+          this.isRunningAnimation = true;
           onTransitionStart && onTransitionStart({ closing: !value });
         }),
       ]),
@@ -225,11 +226,11 @@ export default class Card extends React.Component<Props> {
         call([this.isVisible], ([value]: ReadonlyArray<Binary>) => {
           const isOpen = Boolean(value);
           const { onOpen, onClose } = this.props;
-
+          this.isRunningAnimation = false;
           if (isOpen) {
-            onOpen();
+            onOpen(true);
           } else {
-            onClose();
+            onClose(true);
           }
         }),
       ]),
@@ -245,7 +246,10 @@ export default class Card extends React.Component<Props> {
       this.nextIsVisible,
       cond(neq(this.nextIsVisible, UNSET), [
         // Stop any running animations
-        cond(clockRunning(this.clock), stopClock(this.clock)),
+        cond(clockRunning(this.clock), [
+          call([], () => (this.isRunningAnimation = false)),
+          stopClock(this.clock),
+        ]),
         set(this.gesture, 0),
         // Update the index to trigger the transition
         set(this.isVisible, this.nextIsVisible),
@@ -301,6 +305,17 @@ export default class Card extends React.Component<Props> {
           )
         ),
         // Stop animations while we're dragging
+        cond(
+          clockRunning(this.clock),
+          call([this.toValue], ([target]) => {
+            this.isRunningAnimation = false;
+            if (target) {
+              this.props.onOpen(false);
+            } else {
+              this.props.onClose(false);
+            }
+          })
+        ),
         stopClock(this.clock),
       ],
       [
@@ -362,6 +377,12 @@ export default class Card extends React.Component<Props> {
       },
     },
   ]);
+
+  componentWillUnmount(): void {
+    if (this.isRunningAnimation) {
+      this.props.onClose(false);
+    }
+  }
 
   // We need to ensure that this style doesn't change unless absolutely needs to
   // Changing it too often will result in huge frame drops due to detaching and attaching
