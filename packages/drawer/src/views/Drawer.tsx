@@ -90,6 +90,7 @@ type Props = {
   contentContainerStyle?: ViewStyle;
   renderDrawerContent: Renderer;
   renderSceneContent: Renderer;
+  gestureHandlerProps?: React.ComponentProps<typeof PanGestureHandler>;
 };
 
 export default class DrawerView extends React.PureComponent<Props> {
@@ -488,6 +489,7 @@ export default class DrawerView extends React.PureComponent<Props> {
       onGestureRef,
       renderDrawerContent,
       renderSceneContent,
+      gestureHandlerProps,
     } = this.props;
 
     const right = drawerPosition === 'right';
@@ -519,6 +521,7 @@ export default class DrawerView extends React.PureComponent<Props> {
         onHandlerStateChange={this.handleGestureEvent}
         hitSlop={hitSlop}
         enabled={!locked}
+        {...gestureHandlerProps}
       >
         <Animated.View
           onLayout={this.handleContainerLayout}
