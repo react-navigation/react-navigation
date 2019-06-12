@@ -39,8 +39,7 @@ export type EventEmitterProps = {
 export type PagerCommonProps = {
   keyboardDismissMode: 'none' | 'on-drag';
   swipeEnabled: boolean;
-  swipeDistanceThreshold?: number;
-  swipeVelocityThreshold?: number;
+  swipeVelocityImpact?: number;
   onSwipeStart?: () => void;
   onSwipeEnd?: () => void;
   springConfig: {

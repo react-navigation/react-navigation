@@ -44,7 +44,6 @@ const {
   onChange,
   abs,
   add,
-  and,
   block,
   call,
   ceil,
@@ -60,7 +59,6 @@ const {
   min,
   multiply,
   neq,
-  or,
   not,
   round,
   set,
@@ -80,9 +78,8 @@ const DIRECTION_LEFT = 1;
 const DIRECTION_RIGHT = -1;
 
 const SWIPE_DISTANCE_MINIMUM = 20;
-const SWIPE_DISTANCE_MULTIPLIER = 1 / 1.75;
 
-const SWIPE_VELOCITY_THRESHOLD_DEFAULT = 800;
+const SWIPE_VELOCITY_IMPACT = 800;
 
 const SPRING_CONFIG = {
   stiffness: 1000,
@@ -100,15 +97,14 @@ const TIMING_CONFIG = {
 
 export default class Pager<T extends Route> extends React.Component<Props<T>> {
   static defaultProps = {
-    swipeVelocityThreshold: SWIPE_VELOCITY_THRESHOLD_DEFAULT,
+    swipeVelocityImpact: SWIPE_VELOCITY_IMPACT,
   };
 
   componentDidUpdate(prevProps: Props<T>) {
     const {
       navigationState,
       layout,
-      swipeDistanceThreshold,
-      swipeVelocityThreshold,
+      swipeVelocityImpact,
       springConfig,
       timingConfig,
     } = this.props;
@@ -139,23 +135,11 @@ export default class Pager<T extends Route> extends React.Component<Props<T>> {
       this.layoutWidth.setValue(layout.width);
     }
 
-    if (swipeDistanceThreshold != null) {
-      if (prevProps.swipeDistanceThreshold !== swipeDistanceThreshold) {
-        this.swipeDistanceThreshold.setValue(swipeDistanceThreshold);
-      }
-    } else {
-      if (prevProps.layout.width !== layout.width) {
-        this.swipeDistanceThreshold.setValue(
-          layout.width * SWIPE_DISTANCE_MULTIPLIER
-        );
-      }
-    }
-
-    if (prevProps.swipeVelocityThreshold !== swipeVelocityThreshold) {
-      this.swipeVelocityThreshold.setValue(
-        swipeVelocityThreshold != null
-          ? swipeVelocityThreshold
-          : SWIPE_VELOCITY_THRESHOLD_DEFAULT
+    if (prevProps.swipeVelocityImpact !== swipeVelocityImpact) {
+      this.swipeVelocityImpact.setValue(
+        swipeVelocityImpact != null
+          ? swipeVelocityImpact
+          : SWIPE_VELOCITY_IMPACT
       );
     }
 
@@ -204,7 +188,7 @@ export default class Pager<T extends Route> extends React.Component<Props<T>> {
   // Current state of the gesture
   private velocityX = new Value(0);
   private gestureX = new Value(0);
-  private gestureState = new Value(State.UNDETERMINED);
+  private gestureState = new Value(State.END);
   private offsetX = new Value(0);
 
   // Current progress of the page (translateX value)
@@ -235,11 +219,10 @@ export default class Pager<T extends Route> extends React.Component<Props<T>> {
   private routesLength = new Value(this.props.navigationState.routes.length);
   private layoutWidth = new Value(this.props.layout.width);
 
-  // Threshold values to determine when to trigger a swipe gesture
-  private swipeDistanceThreshold = new Value(
-    this.props.swipeDistanceThreshold || 180
+  // Determines how relevant is a velocity while calculating next position while swiping
+  private swipeVelocityImpact = new Value(
+    this.props.swipeVelocityImpact || SWIPE_VELOCITY_IMPACT
   );
-  private swipeVelocityThreshold = new Value(this.props.swipeVelocityThreshold);
 
   // The position value represent the position of the pager on a scale of 0 - routes.length-1
   // It is calculated based on the translate value and layout width
@@ -427,6 +410,21 @@ export default class Pager<T extends Route> extends React.Component<Props<T>> {
     },
   ]);
 
+  private velocitySignum = cond(
+    this.velocityX,
+    divide(abs(this.velocityX), this.velocityX),
+    0
+  );
+  private extrapolatedPosition = add(
+    this.gestureX,
+    multiply(
+      this.velocityX,
+      this.velocityX,
+      this.velocitySignum,
+      this.swipeVelocityImpact
+    )
+  );
+
   private translateX = block([
     onChange(
       this.index,
@@ -516,16 +514,14 @@ export default class Pager<T extends Route> extends React.Component<Props<T>> {
         // Stop animations while we're dragging
         stopClock(this.clock),
       ],
-      [
+
+      cond(eq(this.gestureState, State.END), [
         set(this.isSwiping, FALSE),
         this.transitionTo(
           cond(
-            and(
-              greaterThan(abs(this.gestureX), SWIPE_DISTANCE_MINIMUM),
-              or(
-                greaterThan(abs(this.gestureX), this.swipeDistanceThreshold),
-                greaterThan(abs(this.velocityX), this.swipeVelocityThreshold)
-              )
+            greaterThan(
+              abs(this.extrapolatedPosition),
+              divide(this.layoutWidth, 2)
             ),
             // For swipe gesture, to calculate the index, determine direction and add to index
             // When the user swipes towards the left, we transition to the next tab
@@ -537,24 +533,9 @@ export default class Pager<T extends Route> extends React.Component<Props<T>> {
                   sub(
                     this.index,
                     cond(
-                      greaterThan(
-                        // Gesture can be positive, or negative
-                        // Get absolute for comparision
-                        abs(this.gestureX),
-                        this.swipeDistanceThreshold
-                      ),
-                      // If gesture value exceeded the threshold, calculate direction from distance travelled
-                      cond(
-                        greaterThan(this.gestureX, 0),
-                        I18nManager.isRTL ? DIRECTION_RIGHT : DIRECTION_LEFT,
-                        I18nManager.isRTL ? DIRECTION_LEFT : DIRECTION_RIGHT
-                      ),
-                      // Otherwise calculate direction from the gesture velocity
-                      cond(
-                        greaterThan(this.velocityX, 0),
-                        I18nManager.isRTL ? DIRECTION_RIGHT : DIRECTION_LEFT,
-                        I18nManager.isRTL ? DIRECTION_LEFT : DIRECTION_RIGHT
-                      )
+                      greaterThan(this.velocitySignum, 0),
+                      I18nManager.isRTL ? DIRECTION_RIGHT : DIRECTION_LEFT,
+                      I18nManager.isRTL ? DIRECTION_LEFT : DIRECTION_RIGHT
                     )
                   )
                 ),
@@ -565,7 +546,7 @@ export default class Pager<T extends Route> extends React.Component<Props<T>> {
             this.index
           )
         ),
-      ]
+      ])
     ),
     this.progress,
   ]);

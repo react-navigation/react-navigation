@@ -287,13 +287,9 @@ String indicating whether the keyboard gets dismissed in response to a drag gest
 
 Boolean indicating whether to enable swipe gestures. Swipe gestures are enabled by default. Passing `false` will disable swipe gestures, but the user can still switch tabs by pressing the tab bar.
 
-##### `swipeDistanceThreshold`
+##### `swipeVelocityImpact`
 
-Minimum swipe distance which triggers a tab switch. By default, this is automatically determined based on the screen width.
-
-##### `swipeVelocityThreshold`
-
-Minimum swipe velocity which triggers a tab switch. Defaults to `1200`.
+Determines how relevant is a velocity while calculating next position while swiping. Defaults to `0.01`.
 
 ##### `onSwipeStart`
 

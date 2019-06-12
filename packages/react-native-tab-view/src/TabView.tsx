@@ -107,8 +107,7 @@ export default class TabView<T extends Route> extends React.Component<
       removeClippedSubviews,
       keyboardDismissMode,
       swipeEnabled,
-      swipeDistanceThreshold,
-      swipeVelocityThreshold,
+      swipeVelocityImpact,
       timingConfig,
       springConfig,
       tabBarPosition,
@@ -128,8 +127,7 @@ export default class TabView<T extends Route> extends React.Component<
           layout={layout}
           keyboardDismissMode={keyboardDismissMode}
           swipeEnabled={swipeEnabled}
-          swipeDistanceThreshold={swipeDistanceThreshold}
-          swipeVelocityThreshold={swipeVelocityThreshold}
+          swipeVelocityImpact={swipeVelocityImpact}
           timingConfig={timingConfig}
           springConfig={springConfig}
           onSwipeStart={onSwipeStart}
