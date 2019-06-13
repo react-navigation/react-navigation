@@ -16,10 +16,10 @@ import {
 } from '../../types';
 import Header from './Header';
 
-type Props = {
+export type Props = {
   mode: 'float' | 'screen';
   layout: Layout;
-  scenes: HeaderScene<Route>[];
+  scenes: Array<HeaderScene<Route> | undefined>;
   navigation: NavigationProp;
   getPreviousRoute: (props: { route: Route }) => Route | undefined;
   onLayout?: (e: LayoutChangeEvent) => void;
@@ -42,7 +42,7 @@ export default function HeaderContainer({
   return (
     <View pointerEvents="box-none" style={style}>
       {scenes.map((scene, i, self) => {
-        if (mode === 'screen' && i !== self.length - 1) {
+        if ((mode === 'screen' && i !== self.length - 1) || !scene) {
           return null;
         }
 
@@ -56,8 +56,10 @@ export default function HeaderContainer({
           // The previous scene will be shortly before the current scene in the array
           // So loop back from current index to avoid looping over the full array
           for (let j = i - 1; j >= 0; j--) {
-            if (self[j].route.key === previousRoute.key) {
-              previous = self[j];
+            const s = self[j];
+
+            if (s && s.route.key === previousRoute.key) {
+              previous = s;
               break;
             }
           }

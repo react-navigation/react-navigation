@@ -8,8 +8,8 @@ import {
 } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { getDefaultHeaderHeight } from '../Header/HeaderSegment';
-import HeaderContainer from '../Header/HeaderContainer';
-import Card from './Card';
+import { Props as HeaderContainerProps } from '../Header/HeaderContainer';
+import StackItem from './StackItem';
 import {
   Route,
   Layout,
@@ -38,6 +38,7 @@ type Props = {
   onCloseRoute: (props: { route: Route }) => void;
   getPreviousRoute: (props: { route: Route }) => Route | undefined;
   getGesturesEnabled: (props: { route: Route }) => boolean;
+  renderHeader: (props: HeaderContainerProps) => React.ReactNode;
   renderScene: (props: { route: Route }) => React.ReactNode;
   transparentCard?: boolean;
   headerMode: HeaderMode;
@@ -182,6 +183,7 @@ export default class Stack extends React.Component<Props, State> {
       onGoBack,
       getPreviousRoute,
       getGesturesEnabled,
+      renderHeader,
       renderScene,
       transparentCard,
       headerMode,
@@ -212,29 +214,22 @@ export default class Stack extends React.Component<Props, State> {
             const scene = scenes[index];
 
             return (
-              <Card
+              <StackItem
                 key={route.key}
+                index={index}
                 active={index === self.length - 1}
-                transparent={transparentCard}
-                direction={direction}
+                focused={focused}
+                closing={closingRoutes.includes(route.key)}
                 layout={layout}
                 current={current}
-                next={scene.progress.next}
-                closing={closingRoutes.includes(route.key)}
-                onOpen={() => onOpenRoute({ route })}
-                onClose={() => onCloseRoute({ route })}
-                overlayEnabled={cardOverlayEnabled}
-                shadowEnabled={cardShadowEnabled}
+                scene={scene}
+                previousScene={scenes[index - 1]}
+                navigation={navigation}
+                direction={direction}
+                transparentCard={transparentCard}
+                cardOverlayEnabled={cardOverlayEnabled}
+                cardShadowEnabled={cardShadowEnabled}
                 gesturesEnabled={index !== 0 && getGesturesEnabled({ route })}
-                onTransitionStart={({ closing }) => {
-                  onTransitionStart &&
-                    onTransitionStart(
-                      { index: closing ? index - 1 : index },
-                      { index }
-                    );
-
-                  closing && onGoBack({ route });
-                }}
                 onGestureBegin={onGestureBegin}
                 onGestureCanceled={onGestureCanceled}
                 onGestureEnd={onGestureEnd}
@@ -242,49 +237,34 @@ export default class Stack extends React.Component<Props, State> {
                   descriptor.options.gestureResponseDistance
                 }
                 transitionSpec={transitionSpec}
-                styleInterpolator={cardStyleInterpolator}
-                accessibilityElementsHidden={!focused}
-                importantForAccessibility={
-                  focused ? 'auto' : 'no-hide-descendants'
-                }
-                pointerEvents="box-none"
-                style={[
-                  StyleSheet.absoluteFill,
-                  headerMode === 'float' &&
-                  descriptor &&
-                  descriptor.options.header !== null
-                    ? { marginTop: floaingHeaderHeight }
-                    : null,
-                ]}
-              >
-                {headerMode === 'screen' ? (
-                  <HeaderContainer
-                    mode="screen"
-                    layout={layout}
-                    scenes={[scenes[index - 1], scenes[index]]}
-                    navigation={navigation}
-                    getPreviousRoute={getPreviousRoute}
-                    styleInterpolator={headerStyleInterpolator}
-                    style={styles.header}
-                  />
-                ) : null}
-                {renderScene({ route })}
-              </Card>
+                headerStyleInterpolator={headerStyleInterpolator}
+                cardStyleInterpolator={cardStyleInterpolator}
+                floaingHeaderHeight={floaingHeaderHeight}
+                hasCustomHeader={descriptor.options.header === null}
+                getPreviousRoute={getPreviousRoute}
+                headerMode={headerMode}
+                renderHeader={renderHeader}
+                renderScene={renderScene}
+                onOpenRoute={onOpenRoute}
+                onCloseRoute={onCloseRoute}
+                onTransitionStart={onTransitionStart}
+                onGoBack={onGoBack}
+              />
             );
           })}
         </View>
-        {headerMode === 'float' ? (
-          <HeaderContainer
-            mode="float"
-            layout={layout}
-            scenes={scenes}
-            navigation={navigation}
-            getPreviousRoute={getPreviousRoute}
-            onLayout={this.handleFloatingHeaderLayout}
-            styleInterpolator={headerStyleInterpolator}
-            style={[styles.header, styles.floating]}
-          />
-        ) : null}
+        {headerMode === 'float'
+          ? renderHeader({
+              mode: 'float',
+              layout,
+              scenes,
+              navigation,
+              getPreviousRoute,
+              onLayout: this.handleFloatingHeaderLayout,
+              styleInterpolator: headerStyleInterpolator,
+              style: [styles.header, styles.floating],
+            })
+          : null}
       </React.Fragment>
     );
   }
