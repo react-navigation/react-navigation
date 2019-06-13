@@ -40,6 +40,7 @@
     "@babel/cli": "^7.4.4",
     "@babel/core": "^7.4.5",
     "@babel/preset-env": "^7.4.5",
+    "@babel/preset-react": "^7.0.0",
     "@babel/preset-typescript": "^7.3.3",
     "@commitlint/config-conventional": "^8.0.0",
     "@release-it/conventional-changelog": "^1.1.0",
@@ -58,6 +59,8 @@
     "prettier": "^1.18.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-native-testing-library": "^1.9.1",
+    "react-test-renderer": "^16.8.6",
     "release-it": "^12.3.0",
     "typescript": "^3.5.1"
   },
@@ -73,6 +76,9 @@
       "<rootDir>/types/",
       "<rootDir>/lib/"
     ],
-    "testRegex": "/__tests__/.*\\.(test|spec)\\.(js|tsx?)$"
+    "testRegex": "/__tests__/.*\\.(test|spec)\\.(js|tsx?)$",
+    "transform": {
+      "^.+\\.(js|ts|tsx)$": "babel-jest"
+    }
   }
 }
