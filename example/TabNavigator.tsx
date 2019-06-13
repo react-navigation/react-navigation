@@ -151,6 +151,10 @@ const TabRouter: Router<Action | CommonAction> = {
     };
   },
 
+  shouldActionPropagateToChildren(action) {
+    return action.type === 'NAVIGATE';
+  },
+
   shouldActionChangeFocus(action) {
     return action.type === 'NAVIGATE';
   },
