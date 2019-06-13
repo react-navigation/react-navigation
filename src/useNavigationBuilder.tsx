@@ -165,7 +165,7 @@ export default function useNavigationBuilder(
       const state = getState();
       const result = router.getStateForChildUpdate(state, {
         update,
-        focus: true,
+        focus,
       });
 
       if (handleChildUpdateParent !== undefined) {

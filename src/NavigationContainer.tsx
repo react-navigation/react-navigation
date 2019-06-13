@@ -4,6 +4,7 @@ import EnsureSingleNavigator from './EnsureSingleNavigator';
 
 type Props = {
   initialState?: InitialState;
+  onStateChange?: (state: NavigationState | InitialState) => void;
   children: React.ReactNode;
 };
 
@@ -23,7 +24,11 @@ export const NavigationStateContext = React.createContext<{
   },
 });
 
-export default function NavigationContainer({ initialState, children }: Props) {
+export default function NavigationContainer({
+  initialState,
+  onStateChange,
+  children,
+}: Props) {
   const [state, setState] = React.useState<
     NavigationState | InitialState | undefined
   >(initialState);
@@ -32,7 +37,11 @@ export default function NavigationContainer({ initialState, children }: Props) {
 
   React.useEffect(() => {
     stateRef.current = state;
-  });
+
+    if (onStateChange && state !== undefined) {
+      onStateChange(state);
+    }
+  }, [onStateChange, state]);
 
   const getState = React.useCallback(() => stateRef.current, []);
   const value = React.useMemo(() => ({ state, getState, setState }), [
