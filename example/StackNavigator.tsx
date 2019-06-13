@@ -228,6 +228,10 @@ const StackRouter: Router<CommonAction | Action> = {
     };
   },
 
+  shouldActionPropagateToChildren(action) {
+    return action.type === 'NAVIGATE';
+  },
+
   shouldActionChangeFocus(action) {
     return action.type === 'NAVIGATE';
   },

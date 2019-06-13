@@ -19,7 +19,7 @@ type Options = {
   children: React.ReactNode;
 };
 
-type HandleAction = (action: NavigationAction, fromKey: string) => boolean;
+type HandleAction = (action: NavigationAction, fromKey?: string) => boolean;
 
 const NavigationBuilderContext = React.createContext<{
   helpers?: NavigationHelpers;
@@ -134,19 +134,22 @@ export default function useNavigationBuilder(
         return true;
       }
 
-      // If router returned `null`, it didn't handle it
-      // try to delegate the action to child navigators
-      for (let i = dispatchListeners.current.length - 1; i >= 0; i--) {
-        const listener = dispatchListeners.current[i];
+      if (
+        fromKey === undefined &&
+        router.shouldActionPropagateToChildren(action)
+      ) {
+        // Try to delegate the action to child navigators
+        for (let i = dispatchListeners.current.length - 1; i >= 0; i--) {
+          const listener = dispatchListeners.current[i];
 
-        if (listener(action, state.key)) {
-          return true;
+          if (listener(action, state.key)) {
+            return true;
+          }
         }
       }
 
       if (handleActionParent !== undefined) {
-        // If non of the child navigators could handle the action, delegate it to parent
-        // This will enable sibling navigators to handle the action
+        // Bubble action to the parent if the current navigator didn't handle it
         if (handleActionParent(action, state.key)) {
           return true;
         }
