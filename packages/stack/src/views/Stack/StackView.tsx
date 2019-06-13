@@ -1,6 +1,10 @@
 import * as React from 'react';
+import { Platform } from 'react-native';
 import { SceneView, StackActions } from '@react-navigation/core';
 import Stack from './Stack';
+import HeaderContainer, {
+  Props as HeaderContainerProps,
+} from '../Header/HeaderContainer';
 import {
   DefaultTransition,
   ModalSlideFromBottomIOS,
@@ -11,7 +15,6 @@ import {
   NavigationConfig,
   Route,
 } from '../../types';
-import { Platform } from 'react-native';
 
 type Descriptors = { [key: string]: SceneDescriptor };
 
@@ -223,6 +226,10 @@ class StackView extends React.Component<Props, State> {
     );
   };
 
+  private renderHeader = (props: HeaderContainerProps) => {
+    return <HeaderContainer {...props} />;
+  };
+
   private handleTransitionComplete = () => {
     // TODO: remove when the new event system lands
     this.props.navigation.dispatch(StackActions.completeTransition());
@@ -294,6 +301,7 @@ class StackView extends React.Component<Props, State> {
         onGestureBegin={onGestureBegin}
         onGestureCanceled={onGestureCanceled}
         onGestureEnd={onGestureEnd}
+        renderHeader={this.renderHeader}
         renderScene={this.renderScene}
         headerMode={headerMode}
         navigation={navigation}
