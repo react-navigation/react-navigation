@@ -73,11 +73,11 @@ export default createStackNavigator(
   },
   {
     initialRouteName: 'List',
-    transparentCard: true,
     mode: 'modal',
     headerMode: 'none',
-    navigationOptions: {
+    defaultNavigationOptions: {
       gesturesEnabled: false,
+      cardTransparent: true,
     },
     cardStyleInterpolator: ({ progress: { current } }) => {
       const opacity = Animated.interpolate(current, {

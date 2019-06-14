@@ -172,6 +172,7 @@ Array [
                     Object {
                       "backgroundColor": "#eee",
                     },
+                    undefined,
                   ]
                 }
               >
@@ -345,6 +346,7 @@ Array [
                                   Object {
                                     "backgroundColor": "#eee",
                                   },
+                                  undefined,
                                 ]
                               }
                             />
