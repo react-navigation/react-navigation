@@ -9,6 +9,7 @@ import {
   DefaultTransition,
   ModalSlideFromBottomIOS,
 } from '../../TransitionConfigs/TransitionPresets';
+import { forNoAnimation } from '../../TransitionConfigs/HeaderStyleInterpolators';
 import {
   NavigationProp,
   SceneDescriptor,
@@ -282,10 +283,17 @@ class StackView extends React.Component<Props, State> {
     const headerMode =
       mode !== 'modal' && Platform.OS === 'ios' ? 'float' : 'screen';
 
-    const transitionPreset =
+    let transitionPreset =
       mode === 'modal' && Platform.OS === 'ios'
         ? ModalSlideFromBottomIOS
         : DefaultTransition;
+
+    if (headerMode === 'screen') {
+      transitionPreset = {
+        ...transitionPreset,
+        headerStyleInterpolator: forNoAnimation,
+      };
+    }
 
     return (
       <Stack
