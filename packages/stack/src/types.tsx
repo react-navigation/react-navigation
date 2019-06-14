@@ -79,6 +79,7 @@ export type HeaderOptions = {
   headerBackImage?: HeaderBackButtonProps['backImage'];
   headerPressColorAndroid?: string;
   headerBackground?: () => React.ReactNode;
+  headerBackgroundStyle?: StyleProp<ViewStyle>;
   headerStyle?: StyleProp<ViewStyle>;
   headerStatusBarHeight?: number;
 };
