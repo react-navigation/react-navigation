@@ -128,12 +128,12 @@ export default class StackItem extends React.PureComponent<Props> {
         accessibilityElementsHidden={!focused}
         importantForAccessibility={focused ? 'auto' : 'no-hide-descendants'}
         pointerEvents="box-none"
-        style={[
-          StyleSheet.absoluteFill,
+        containerStyle={
           headerMode === 'float' && !hasCustomHeader
             ? { marginTop: floaingHeaderHeight }
-            : null,
-        ]}
+            : null
+        }
+        style={StyleSheet.absoluteFill}
       >
         {headerMode === 'screen'
           ? renderHeader({

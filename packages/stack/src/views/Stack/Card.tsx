@@ -1,5 +1,12 @@
 import * as React from 'react';
-import { View, I18nManager, StyleSheet, ViewProps } from 'react-native';
+import {
+  View,
+  I18nManager,
+  StyleSheet,
+  ViewProps,
+  StyleProp,
+  ViewStyle,
+} from 'react-native';
 import Animated from 'react-native-reanimated';
 import {
   PanGestureHandler,
@@ -37,6 +44,7 @@ type Props = ViewProps & {
     close: TransitionSpec;
   };
   styleInterpolator: CardStyleInterpolator;
+  containerStyle?: StyleProp<ViewStyle>;
 };
 
 type Binary = 0 | 1;
@@ -463,6 +471,7 @@ export default class Card extends React.Component<Props> {
       gesturesEnabled,
       children,
       styleInterpolator,
+      containerStyle: customContainerStyle,
       ...rest
     } = this.props;
 
@@ -489,7 +498,7 @@ export default class Card extends React.Component<Props> {
             />
           ) : null}
           <Animated.View
-            style={[styles.container, containerStyle]}
+            style={[styles.container, containerStyle, customContainerStyle]}
             pointerEvents="box-none"
           >
             <PanGestureHandler
@@ -510,7 +519,7 @@ export default class Card extends React.Component<Props> {
                   active={active}
                   progress={this.props.current}
                   style={[
-                    StyleSheet.absoluteFill,
+                    styles.container,
                     transparent ? styles.transparent : styles.opaque,
                   ]}
                 >

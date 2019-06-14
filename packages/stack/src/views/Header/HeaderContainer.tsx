@@ -15,6 +15,7 @@ import {
   HeaderStyleInterpolator,
 } from '../../types';
 import Header from './Header';
+import { forStatic } from '../../TransitionConfigs/HeaderStyleInterpolators';
 
 export type Props = {
   mode: 'float' | 'screen';
@@ -65,13 +66,27 @@ export default function HeaderContainer({
           }
         }
 
+        // If the screen is next to a headerless screen, we need to make the header appear static
+        // This makes the header look like it's moving with the screen
+        const previousScene = self[i - 1];
+        const nextScene = self[i + 1];
+        const isHeaderStatic =
+          mode === 'float'
+            ? (previousScene &&
+                previousScene.descriptor.options.header === null &&
+                // We still need to animate when coming back from next scene
+                // A hacky way to check this is if the next scene exists
+                !nextScene) ||
+              (nextScene && nextScene.descriptor.options.header === null)
+            : false;
+
         const props = {
           mode,
           layout,
           scene,
           previous,
           navigation: scene.descriptor.navigation,
-          styleInterpolator,
+          styleInterpolator: isHeaderStatic ? forStatic : styleInterpolator,
         };
 
         return (
