@@ -125,7 +125,8 @@ export default class HeaderSegment extends React.Component<Props, State> {
         <HeaderBackButton {...props} />
       ),
       headerBackground,
-      headerStatusBarHeight,
+      // @ts-ignore
+      headerStatusBarHeight = getStatusBarHeight(layout.width > layout.height),
       headerRight: right,
       headerBackImage: backImage,
       headerBackTitle: leftLabel,
@@ -168,16 +169,8 @@ export default class HeaderSegment extends React.Component<Props, State> {
             {headerBackground()}
           </Animated.View>
         ) : null}
-        <View
-          pointerEvents="none"
-          style={{
-            height:
-              headerStatusBarHeight !== undefined
-                ? headerStatusBarHeight
-                : getStatusBarHeight(layout.width > layout.height),
-          }}
-        />
-        <View pointerEvents="box-none" style={[styles.container]}>
+        <View pointerEvents="none" style={{ height: headerStatusBarHeight }} />
+        <View pointerEvents="box-none" style={styles.container}>
           {onGoBack ? (
             <Animated.View
               style={[styles.left, leftButtonStyle, leftContainerStyle]}

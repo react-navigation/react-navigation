@@ -84,13 +84,15 @@ export default function HeaderContainer({
               isFocused ? 'auto' : 'no-hide-descendants'
             }
             style={[
-              { height: getDefaultHeaderHeight(layout) },
               mode === 'float' ? StyleSheet.absoluteFill : null,
+              mode === 'screen' && options.header !== undefined
+                ? null
+                : { height: getDefaultHeaderHeight(layout) },
               options.headerStyle,
             ]}
           >
             {options.header !== undefined ? (
-              options.header == null ? null : (
+              options.header === null ? null : (
                 options.header(props)
               )
             ) : (
