@@ -1,12 +1,13 @@
 import * as React from 'react';
 import {
-  View,
   StyleSheet,
   LayoutChangeEvent,
   Dimensions,
   Platform,
+  ViewProps,
 } from 'react-native';
 import Animated from 'react-native-reanimated';
+import { ScreenContainer, NativeScreen } from 'react-native-screens';
 import { getDefaultHeaderHeight } from '../Header/HeaderSegment';
 import { Props as HeaderContainerProps } from '../Header/HeaderContainer';
 import StackItem from './StackItem';
@@ -70,6 +71,16 @@ type State = {
 
 const dimensions = Dimensions.get('window');
 const layout = { width: dimensions.width, height: dimensions.height };
+
+const AnimatedScreen = Animated.createAnimatedComponent(
+  NativeScreen
+) as React.ComponentType<
+  ViewProps & { active: number | Animated.Node<number> }
+>;
+
+const { cond, eq } = Animated;
+
+const ANIMATED_ONE = new Animated.Value(1);
 
 export default class Stack extends React.Component<Props, State> {
   static getDerivedStateFromProps(props: Props, state: State) {
@@ -202,57 +213,72 @@ export default class Stack extends React.Component<Props, State> {
 
     return (
       <React.Fragment>
-        <View
-          style={styles.container}
-          onLayout={this.handleLayout}
-          pointerEvents={layout.height && layout.width ? 'box-none' : 'none'}
-        >
+        <ScreenContainer style={styles.container} onLayout={this.handleLayout}>
           {routes.map((route, index, self) => {
             const focused = focusedRoute.key === route.key;
             const current = progress[route.key];
             const descriptor = descriptors[route.key];
             const scene = scenes[index];
+            const next = self[index + 1]
+              ? progress[self[index + 1].key]
+              : ANIMATED_ONE;
+
+            // Display current screen and a screen beneath. On Android screen beneath is hidden on animation finished bs of RNS's issue.
+            const isScreenActive =
+              index === self.length - 1
+                ? 1
+                : Platform.OS === 'android'
+                ? cond(eq(next, 1), 0, 1)
+                : index === self.length - 2
+                ? 1
+                : 0;
 
             return (
-              <StackItem
+              <AnimatedScreen
                 key={route.key}
-                index={index}
-                active={index === self.length - 1}
-                focused={focused}
-                closing={closingRoutes.includes(route.key)}
-                layout={layout}
-                current={current}
-                scene={scene}
-                previousScene={scenes[index - 1]}
-                navigation={navigation}
-                direction={direction}
-                transparentCard={transparentCard}
-                cardOverlayEnabled={cardOverlayEnabled}
-                cardShadowEnabled={cardShadowEnabled}
-                gesturesEnabled={index !== 0 && getGesturesEnabled({ route })}
-                onGestureBegin={onGestureBegin}
-                onGestureCanceled={onGestureCanceled}
-                onGestureEnd={onGestureEnd}
-                gestureResponseDistance={
-                  descriptor.options.gestureResponseDistance
-                }
-                transitionSpec={transitionSpec}
-                headerStyleInterpolator={headerStyleInterpolator}
-                cardStyleInterpolator={cardStyleInterpolator}
-                floaingHeaderHeight={floaingHeaderHeight}
-                hasCustomHeader={descriptor.options.header === null}
-                getPreviousRoute={getPreviousRoute}
-                headerMode={headerMode}
-                renderHeader={renderHeader}
-                renderScene={renderScene}
-                onOpenRoute={onOpenRoute}
-                onCloseRoute={onCloseRoute}
-                onTransitionStart={onTransitionStart}
-                onGoBack={onGoBack}
-              />
+                style={StyleSheet.absoluteFill}
+                active={isScreenActive}
+                pointerEvents="box-none"
+              >
+                <StackItem
+                  index={index}
+                  active={index === self.length - 1}
+                  focused={focused}
+                  closing={closingRoutes.includes(route.key)}
+                  layout={layout}
+                  current={current}
+                  scene={scene}
+                  previousScene={scenes[index - 1]}
+                  navigation={navigation}
+                  direction={direction}
+                  transparentCard={transparentCard}
+                  cardOverlayEnabled={cardOverlayEnabled}
+                  cardShadowEnabled={cardShadowEnabled}
+                  gesturesEnabled={index !== 0 && getGesturesEnabled({ route })}
+                  onGestureBegin={onGestureBegin}
+                  onGestureCanceled={onGestureCanceled}
+                  onGestureEnd={onGestureEnd}
+                  gestureResponseDistance={
+                    descriptor.options.gestureResponseDistance
+                  }
+                  transitionSpec={transitionSpec}
+                  headerStyleInterpolator={headerStyleInterpolator}
+                  cardStyleInterpolator={cardStyleInterpolator}
+                  floaingHeaderHeight={floaingHeaderHeight}
+                  hasCustomHeader={descriptor.options.header === null}
+                  getPreviousRoute={getPreviousRoute}
+                  headerMode={headerMode}
+                  renderHeader={renderHeader}
+                  renderScene={renderScene}
+                  onOpenRoute={onOpenRoute}
+                  onCloseRoute={onCloseRoute}
+                  onTransitionStart={onTransitionStart}
+                  onGoBack={onGoBack}
+                />
+              </AnimatedScreen>
             );
           })}
-        </View>
+        </ScreenContainer>
         {headerMode === 'float'
           ? renderHeader({
               mode: 'float',
