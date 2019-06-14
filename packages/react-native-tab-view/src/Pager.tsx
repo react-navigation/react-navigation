@@ -79,7 +79,7 @@ const DIRECTION_RIGHT = -1;
 
 const SWIPE_DISTANCE_MINIMUM = 20;
 
-const SWIPE_VELOCITY_IMPACT = 800;
+const SWIPE_VELOCITY_IMPACT = 0.01;
 
 const SPRING_CONFIG = {
   stiffness: 1000,
