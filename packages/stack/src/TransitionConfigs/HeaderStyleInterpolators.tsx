@@ -102,6 +102,28 @@ export function forFade({
   };
 }
 
+export function forStatic({
+  progress: { current, next },
+  layouts: { screen },
+}: HeaderInterpolationProps): HeaderInterpolatedStyle {
+  const progress = add(current, next ? next : 0);
+  const translateX = interpolate(progress, {
+    inputRange: [0, 1, 2],
+    outputRange: I18nManager.isRTL
+      ? [-screen.width, 0, screen.width]
+      : [screen.width, 0, -screen.width],
+  });
+
+  const transform = [{ translateX }];
+
+  return {
+    leftButtonStyle: { transform },
+    rightButtonStyle: { transform },
+    titleStyle: { transform },
+    backgroundStyle: { transform },
+  };
+}
+
 export function forNoAnimation(): HeaderInterpolatedStyle {
   return {};
 }

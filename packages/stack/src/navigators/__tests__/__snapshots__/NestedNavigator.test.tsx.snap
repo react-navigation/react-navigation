@@ -36,18 +36,13 @@ Array [
         onTransitionStart={[Function]}
         pointerEvents="box-none"
         style={
-          Array [
-            Object {
-              "bottom": 0,
-              "left": 0,
-              "position": "absolute",
-              "right": 0,
-              "top": 0,
-            },
-            Object {
-              "marginTop": 64,
-            },
-          ]
+          Object {
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+          }
         }
         transitionSpec={
           Object {
@@ -103,6 +98,9 @@ Array [
                 "overflow": "hidden",
               },
               undefined,
+              Object {
+                "marginTop": 64,
+              },
             ]
           }
         >
@@ -168,11 +166,8 @@ Array [
                 style={
                   Array [
                     Object {
-                      "bottom": 0,
-                      "left": 0,
-                      "position": "absolute",
-                      "right": 0,
-                      "top": 0,
+                      "flex": 1,
+                      "overflow": "hidden",
                     },
                     Object {
                       "backgroundColor": "#eee",
@@ -214,18 +209,13 @@ Array [
                       onTransitionStart={[Function]}
                       pointerEvents="box-none"
                       style={
-                        Array [
-                          Object {
-                            "bottom": 0,
-                            "left": 0,
-                            "position": "absolute",
-                            "right": 0,
-                            "top": 0,
-                          },
-                          Object {
-                            "marginTop": 64,
-                          },
-                        ]
+                        Object {
+                          "bottom": 0,
+                          "left": 0,
+                          "position": "absolute",
+                          "right": 0,
+                          "top": 0,
+                        }
                       }
                       transitionSpec={
                         Object {
@@ -281,6 +271,9 @@ Array [
                               "overflow": "hidden",
                             },
                             undefined,
+                            Object {
+                              "marginTop": 64,
+                            },
                           ]
                         }
                       >
@@ -346,11 +339,8 @@ Array [
                               style={
                                 Array [
                                   Object {
-                                    "bottom": 0,
-                                    "left": 0,
-                                    "position": "absolute",
-                                    "right": 0,
-                                    "top": 0,
+                                    "flex": 1,
+                                    "overflow": "hidden",
                                   },
                                   Object {
                                     "backgroundColor": "#eee",
