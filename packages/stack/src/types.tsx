@@ -70,6 +70,7 @@ export type HeaderOptions = {
   headerBackAllowFontScaling?: boolean;
   headerBackTitle?: string;
   headerBackTitleStyle?: StyleProp<TextStyle>;
+  headerBackTitleVisible?: boolean;
   headerTruncatedBackTitle?: string;
   headerLeft?: (props: HeaderBackButtonProps) => React.ReactNode;
   headerLeftContainerStyle?: StyleProp<ViewStyle>;
@@ -106,7 +107,6 @@ export type NavigationStackOptions = HeaderOptions & {
 export type NavigationConfig = TransitionPreset & {
   mode: 'card' | 'modal';
   headerMode: HeaderMode;
-  headerBackTitleVisible?: boolean;
   cardShadowEnabled?: boolean;
   cardOverlayEnabled?: boolean;
   transparentCard?: boolean;
