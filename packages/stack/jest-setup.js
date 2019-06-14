@@ -27,7 +27,7 @@ jest.mock('react-native-reanimated', () => {
         makeConfigFromBouncinessAndSpeed: NOOP,
         makeConfigFromOrigamiTensionAndFriction: NOOP,
       },
-
+      createAnimatedComponent: Component => Component,
       View,
       Text,
       Image,
