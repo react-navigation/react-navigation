@@ -73,7 +73,7 @@ export type HeaderOptions = {
   headerTruncatedBackTitle?: string;
   headerLeft?: (props: HeaderBackButtonProps) => React.ReactNode;
   headerLeftContainerStyle?: StyleProp<ViewStyle>;
-  headerRight?: () => React.ReactNode;
+  headerRight?: (props: { tintColor?: string }) => React.ReactNode;
   headerRightContainerStyle?: StyleProp<ViewStyle>;
   headerBackImage?: HeaderBackButtonProps['backImage'];
   headerPressColorAndroid?: string;

@@ -125,6 +125,7 @@ export default class HeaderSegment extends React.Component<Props, State> {
         <HeaderBackButton {...props} />
       ),
       headerBackground,
+      headerTintColor,
       // @ts-ignore
       headerStatusBarHeight = getStatusBarHeight(layout.width > layout.height),
       headerRight: right,
@@ -186,6 +187,7 @@ export default class HeaderSegment extends React.Component<Props, State> {
                 onLabelLayout: this.handleLeftLabelLayout,
                 screenLayout: layout,
                 titleLayout,
+                tintColor: headerTintColor,
               })}
             </Animated.View>
           ) : null}
@@ -204,7 +206,7 @@ export default class HeaderSegment extends React.Component<Props, State> {
               <HeaderTitle
                 onLayout={this.handleTitleLayout}
                 allowFontScaling={titleAllowFontScaling}
-                style={customTitleStyle}
+                style={[{ color: headerTintColor }, customTitleStyle]}
               >
                 {currentTitle}
               </HeaderTitle>
@@ -214,7 +216,7 @@ export default class HeaderSegment extends React.Component<Props, State> {
             <Animated.View
               style={[styles.right, rightButtonStyle, rightContainerStyle]}
             >
-              {right()}
+              {right({ tintColor: headerTintColor })}
             </Animated.View>
           ) : null}
         </View>
