@@ -45,6 +45,7 @@ type Props = ViewProps & {
   };
   styleInterpolator: CardStyleInterpolator;
   containerStyle?: StyleProp<ViewStyle>;
+  contentStyle?: StyleProp<ViewStyle>;
 };
 
 type Binary = 0 | 1;
@@ -470,6 +471,7 @@ export default class Card extends React.Component<Props> {
       children,
       styleInterpolator,
       containerStyle: customContainerStyle,
+      contentStyle,
       ...rest
     } = this.props;
 
@@ -519,6 +521,7 @@ export default class Card extends React.Component<Props> {
                   style={[
                     styles.container,
                     transparent ? styles.transparent : styles.opaque,
+                    contentStyle,
                   ]}
                 >
                   {children}

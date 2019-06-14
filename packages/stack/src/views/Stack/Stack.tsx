@@ -41,11 +41,8 @@ type Props = {
   getGesturesEnabled: (props: { route: Route }) => boolean;
   renderHeader: (props: HeaderContainerProps) => React.ReactNode;
   renderScene: (props: { route: Route }) => React.ReactNode;
-  transparentCard?: boolean;
   headerMode: HeaderMode;
   direction: GestureDirection;
-  cardOverlayEnabled?: boolean;
-  cardShadowEnabled?: boolean;
   onTransitionStart?: (
     curr: { index: number },
     prev: { index: number }
@@ -185,8 +182,6 @@ export default class Stack extends React.Component<Props, State> {
     const {
       descriptors,
       navigation,
-      cardOverlayEnabled,
-      cardShadowEnabled,
       routes,
       closingRoutes,
       onOpenRoute,
@@ -196,7 +191,6 @@ export default class Stack extends React.Component<Props, State> {
       getGesturesEnabled,
       renderHeader,
       renderScene,
-      transparentCard,
       headerMode,
       direction,
       onTransitionStart,
@@ -233,6 +227,15 @@ export default class Stack extends React.Component<Props, State> {
                 ? 1
                 : 0;
 
+            const {
+              header,
+              cardTransparent,
+              cardShadowEnabled,
+              cardOverlayEnabled,
+              cardStyle,
+              gestureResponseDistance,
+            } = descriptor.options;
+
             return (
               <AnimatedScreen
                 key={route.key}
@@ -251,21 +254,20 @@ export default class Stack extends React.Component<Props, State> {
                   previousScene={scenes[index - 1]}
                   navigation={navigation}
                   direction={direction}
-                  transparentCard={transparentCard}
+                  cardTransparent={cardTransparent}
                   cardOverlayEnabled={cardOverlayEnabled}
                   cardShadowEnabled={cardShadowEnabled}
+                  cardStyle={cardStyle}
                   gesturesEnabled={index !== 0 && getGesturesEnabled({ route })}
                   onGestureBegin={onGestureBegin}
                   onGestureCanceled={onGestureCanceled}
                   onGestureEnd={onGestureEnd}
-                  gestureResponseDistance={
-                    descriptor.options.gestureResponseDistance
-                  }
+                  gestureResponseDistance={gestureResponseDistance}
                   transitionSpec={transitionSpec}
                   headerStyleInterpolator={headerStyleInterpolator}
                   cardStyleInterpolator={cardStyleInterpolator}
                   floaingHeaderHeight={floaingHeaderHeight}
-                  hasCustomHeader={descriptor.options.header === null}
+                  hasCustomHeader={header === null}
                   getPreviousRoute={getPreviousRoute}
                   headerMode={headerMode}
                   renderHeader={renderHeader}
