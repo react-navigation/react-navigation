@@ -297,7 +297,12 @@ Array [
                   "fontSize": 17,
                   "fontWeight": "600",
                 },
-                undefined,
+                Array [
+                  Object {
+                    "color": undefined,
+                  },
+                  undefined,
+                ],
               ]
             }
           >
@@ -627,7 +632,12 @@ Array [
                   "fontSize": 17,
                   "fontWeight": "600",
                 },
-                undefined,
+                Array [
+                  Object {
+                    "color": undefined,
+                  },
+                  undefined,
+                ],
               ]
             }
           >
