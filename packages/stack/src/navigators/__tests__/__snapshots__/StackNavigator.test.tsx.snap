@@ -197,14 +197,14 @@ Array [
       style={
         Array [
           Object {
-            "height": 64,
-          },
-          Object {
             "bottom": 0,
             "left": 0,
             "position": "absolute",
             "right": 0,
             "top": 0,
+          },
+          Object {
+            "height": 64,
           },
           Array [
             Object {
@@ -259,15 +259,13 @@ Array [
       <View
         pointerEvents="box-none"
         style={
-          Array [
-            Object {
-              "alignItems": "center",
-              "flex": 1,
-              "flexDirection": "row",
-              "justifyContent": "center",
-              "paddingHorizontal": 4,
-            },
-          ]
+          Object {
+            "alignItems": "center",
+            "flex": 1,
+            "flexDirection": "row",
+            "justifyContent": "center",
+            "paddingHorizontal": 4,
+          }
         }
       >
         <View
@@ -521,14 +519,14 @@ Array [
       style={
         Array [
           Object {
-            "height": 64,
-          },
-          Object {
             "bottom": 0,
             "left": 0,
             "position": "absolute",
             "right": 0,
             "top": 0,
+          },
+          Object {
+            "height": 64,
           },
           Array [
             Object {
@@ -583,15 +581,13 @@ Array [
       <View
         pointerEvents="box-none"
         style={
-          Array [
-            Object {
-              "alignItems": "center",
-              "flex": 1,
-              "flexDirection": "row",
-              "justifyContent": "center",
-              "paddingHorizontal": 4,
-            },
-          ]
+          Object {
+            "alignItems": "center",
+            "flex": 1,
+            "flexDirection": "row",
+            "justifyContent": "center",
+            "paddingHorizontal": 4,
+          }
         }
       >
         <View
