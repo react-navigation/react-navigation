@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet, Platform } from 'react-native';
+import { StyleSheet, Platform, StyleProp, ViewStyle } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { Props as HeaderContainerProps } from '../Header/HeaderContainer';
 import Card from './Card';
@@ -25,9 +25,10 @@ type Props = {
   previousScene?: HeaderScene<Route>;
   scene: HeaderScene<Route>;
   navigation: NavigationProp;
-  transparentCard?: boolean;
+  cardTransparent?: boolean;
   cardOverlayEnabled?: boolean;
   cardShadowEnabled?: boolean;
+  cardStyle?: StyleProp<ViewStyle>;
   gesturesEnabled?: boolean;
   direction: GestureDirection;
   getPreviousRoute: (props: { route: Route }) => Route | undefined;
@@ -85,9 +86,10 @@ export default class StackItem extends React.PureComponent<Props> {
       scene,
       previousScene,
       direction,
-      transparentCard,
+      cardTransparent,
       cardOverlayEnabled,
       cardShadowEnabled,
+      cardStyle,
       gesturesEnabled,
       onGestureBegin,
       onGestureCanceled,
@@ -107,7 +109,7 @@ export default class StackItem extends React.PureComponent<Props> {
     return (
       <Card
         active={active}
-        transparent={transparentCard}
+        transparent={cardTransparent}
         direction={direction}
         layout={layout}
         current={current}
@@ -133,6 +135,7 @@ export default class StackItem extends React.PureComponent<Props> {
             ? { marginTop: floaingHeaderHeight }
             : null
         }
+        contentStyle={cardStyle}
         style={StyleSheet.absoluteFill}
       >
         {headerMode === 'screen'

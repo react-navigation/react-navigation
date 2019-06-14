@@ -96,6 +96,10 @@ export type HeaderProps = {
 export type NavigationStackOptions = HeaderOptions & {
   title?: string;
   header?: null | ((props: HeaderProps) => React.ReactNode);
+  cardShadowEnabled?: boolean;
+  cardOverlayEnabled?: boolean;
+  cardTransparent?: boolean;
+  cardStyle?: StyleProp<ViewStyle>;
   animationEnabled?: boolean;
   gesturesEnabled?: boolean;
   gestureResponseDistance?: {
@@ -108,9 +112,6 @@ export type NavigationStackOptions = HeaderOptions & {
 export type NavigationConfig = TransitionPreset & {
   mode: 'card' | 'modal';
   headerMode: HeaderMode;
-  cardShadowEnabled?: boolean;
-  cardOverlayEnabled?: boolean;
-  transparentCard?: boolean;
 };
 
 export type SceneDescriptor = {
