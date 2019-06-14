@@ -120,11 +120,11 @@ export default class HeaderSegment extends React.Component<Props, State> {
       headerLeft: left = (props: HeaderBackButtonProps) => (
         <HeaderBackButton {...props} />
       ),
+      // @ts-ignore
       headerStatusBarHeight = getStatusBarHeight(layout.width > layout.height),
       headerTintColor,
       headerBackground,
       headerBackgroundStyle,
-      // @ts-ignore
       headerRight: right,
       headerBackImage: backImage,
       headerBackTitle: leftLabel,
