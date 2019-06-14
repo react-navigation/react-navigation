@@ -56,10 +56,6 @@ export const getDefaultHeaderHeight = (layout: Layout) => {
 };
 
 export default class HeaderSegment extends React.Component<Props, State> {
-  static defaultProps = {
-    headerBackground: () => <HeaderBackground />,
-  };
-
   state: State = {};
 
   private handleTitleLayout = (e: LayoutChangeEvent) => {
@@ -124,10 +120,11 @@ export default class HeaderSegment extends React.Component<Props, State> {
       headerLeft: left = (props: HeaderBackButtonProps) => (
         <HeaderBackButton {...props} />
       ),
-      headerBackground,
-      headerTintColor,
-      // @ts-ignore
       headerStatusBarHeight = getStatusBarHeight(layout.width > layout.height),
+      headerTintColor,
+      headerBackground,
+      headerBackgroundStyle,
+      // @ts-ignore
       headerRight: right,
       headerBackImage: backImage,
       headerBackTitle: leftLabel,
@@ -163,14 +160,16 @@ export default class HeaderSegment extends React.Component<Props, State> {
 
     return (
       <React.Fragment>
-        {headerBackground ? (
-          <Animated.View
-            pointerEvents="none"
-            style={[StyleSheet.absoluteFill, backgroundStyle]}
-          >
-            {headerBackground()}
-          </Animated.View>
-        ) : null}
+        <Animated.View
+          pointerEvents="none"
+          style={[StyleSheet.absoluteFill, backgroundStyle]}
+        >
+          {headerBackground ? (
+            headerBackground()
+          ) : (
+            <HeaderBackground style={headerBackgroundStyle} />
+          )}
+        </Animated.View>
         <View pointerEvents="none" style={{ height: headerStatusBarHeight }} />
         <View pointerEvents="box-none" style={styles.container}>
           {onGoBack ? (
