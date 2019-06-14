@@ -1,3 +1,4 @@
+import { I18nManager } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { HeaderInterpolationProps, HeaderInterpolatedStyle } from '../types';
 
@@ -40,7 +41,9 @@ export function forUIKit({
         {
           translateX: interpolate(progress, {
             inputRange: [0, 1, 2],
-            outputRange: [leftLabelOffset, 0, -rightOffset],
+            outputRange: I18nManager.isRTL
+              ? [-rightOffset, 0, leftLabelOffset]
+              : [leftLabelOffset, 0, -rightOffset],
           }),
         },
       ],
@@ -60,7 +63,9 @@ export function forUIKit({
         {
           translateX: interpolate(progress, {
             inputRange: [0.5, 1, 2],
-            outputRange: [rightOffset, 0, -titleLeftOffset],
+            outputRange: I18nManager.isRTL
+              ? [-titleLeftOffset, 0, rightOffset]
+              : [rightOffset, 0, -titleLeftOffset],
           }),
         },
       ],
@@ -70,7 +75,9 @@ export function forUIKit({
         {
           translateX: interpolate(progress, {
             inputRange: [0, 1, 2],
-            outputRange: [layouts.screen.width, 0, -layouts.screen.width],
+            outputRange: I18nManager.isRTL
+              ? [-layouts.screen.width, 0, layouts.screen.width]
+              : [layouts.screen.width, 0, -layouts.screen.width],
           }),
         },
       ],

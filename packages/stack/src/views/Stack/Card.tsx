@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet, ViewProps } from 'react-native';
+import { View, I18nManager, StyleSheet, ViewProps } from 'react-native';
 import Animated from 'react-native-reanimated';
 import {
   PanGestureHandler,
@@ -362,8 +362,10 @@ export default class Card extends React.Component<Props> {
   private handleGestureEventHorizontal = Animated.event([
     {
       nativeEvent: {
-        translationX: this.gesture,
-        velocityX: this.velocity,
+        translationX: (x: Animated.Adaptable<number>) =>
+          set(this.gesture, multiply(x, I18nManager.isRTL ? -1 : 1)),
+        velocityX: (x: Animated.Adaptable<number>) =>
+          set(this.velocity, multiply(x, I18nManager.isRTL ? -1 : 1)),
         state: this.gestureState,
       },
     },
@@ -428,11 +430,21 @@ export default class Card extends React.Component<Props> {
         hitSlop: { bottom: -layout.height + distance },
       };
     } else {
-      return {
-        minOffsetX: 5,
-        maxDeltaY: 20,
-        hitSlop: { right: -layout.width + distance },
-      };
+      const hitSlop = -layout.width + distance;
+
+      if (I18nManager.isRTL) {
+        return {
+          minOffsetX: -5,
+          maxDeltaY: 20,
+          hitSlop: { left: hitSlop },
+        };
+      } else {
+        return {
+          minOffsetX: 5,
+          maxDeltaY: 20,
+          hitSlop: { right: hitSlop },
+        };
+      }
     }
   }
 
