@@ -11,7 +11,7 @@
   "dependencies": {
     "@react-navigation/core": "3.4.1",
     "@react-navigation/native": "^3.4.1",
-    "expo": "^33.0.0",
+    "expo": "^33.0.5",
     "expo-asset": "^5.0.1",
     "expo-constants": "~5.0.1",
     "hoist-non-react-statics": "^3.3.0",
