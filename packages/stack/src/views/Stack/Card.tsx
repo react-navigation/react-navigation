@@ -57,10 +57,7 @@ const UNSET = -1;
 const DIRECTION_VERTICAL = -1;
 const DIRECTION_HORIZONTAL = 1;
 
-const SWIPE_VELOCITY_THRESHOLD_DEFAULT = 500;
-const SWIPE_DISTANCE_THRESHOLD_DEFAULT = 60;
-
-const SWIPE_DISTANCE_MINIMUM = 5;
+const SWIPE_VELOCITY_IMPACT = 0.01;
 
 /**
  * The distance of touch start from the edge of the screen where the gesture will be recognized
@@ -70,7 +67,7 @@ const GESTURE_RESPONSE_DISTANCE_VERTICAL = 135;
 
 const {
   abs,
-  and,
+  add,
   block,
   call,
   cond,
@@ -83,7 +80,6 @@ const {
   multiply,
   neq,
   onChange,
-  or,
   set,
   spring,
   sub,
@@ -245,6 +241,21 @@ export default class Card extends React.Component<Props> {
     ]);
   };
 
+  private velocitySignum = cond(
+    this.velocity,
+    divide(abs(this.velocity), this.velocity),
+    0
+  );
+  private extrapolatedPosition = add(
+    this.gesture,
+    multiply(
+      this.velocity,
+      this.velocity,
+      this.velocitySignum,
+      SWIPE_VELOCITY_IMPACT
+    )
+  );
+
   private exec = block([
     onChange(
       this.isClosing,
@@ -335,22 +346,9 @@ export default class Card extends React.Component<Props> {
         set(this.isSwiping, FALSE),
         this.runTransition(
           cond(
-            or(
-              and(
-                greaterThan(abs(this.gesture), SWIPE_DISTANCE_MINIMUM),
-                greaterThan(
-                  abs(this.velocity),
-                  SWIPE_VELOCITY_THRESHOLD_DEFAULT
-                )
-              ),
-              cond(
-                greaterThan(
-                  abs(this.gesture),
-                  SWIPE_DISTANCE_THRESHOLD_DEFAULT
-                ),
-                TRUE,
-                FALSE
-              )
+            greaterThan(
+              abs(this.extrapolatedPosition),
+              divide(this.distance, 2)
             ),
             cond(
               lessThan(
