@@ -31,7 +31,9 @@ import {
 // Comment the following two lines to stop using react-native-screens
 import { useScreens } from 'react-native-screens';
 
-// Uncomment the following line to force RTL. Requires closing and re-opening
+useScreens();
+
+// Change `false` to `true` to force RTL. Requires closing and re-opening
 // your app after you first load it with this option enabled.
 I18nManager.forceRTL(false);
 
@@ -141,7 +143,6 @@ const Root = createStackNavigator(
   }
 );
 
-useScreens();
 export default createAppContainer(Root);
 
 // Uncomment this to test immediate transitions

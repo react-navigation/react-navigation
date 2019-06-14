@@ -107,6 +107,10 @@ const StackWithHeaderPreset = createStackNavigator(
   {
     ...TransitionPresets.SlideFromRightIOS,
     headerStyleInterpolator: HeaderStyleInterpolators.forUIKit,
+    headerMode: 'float',
+    defaultNavigationOptions: {
+      gesturesEnabled: true,
+    },
   }
 );
 

@@ -1,3 +1,4 @@
+import { I18nManager } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { CardInterpolationProps, CardInterpolatedStyle } from '../types';
 
@@ -12,12 +13,15 @@ export function forHorizontalIOS({
 }: CardInterpolationProps): CardInterpolatedStyle {
   const translateFocused = interpolate(current, {
     inputRange: [0, 1],
-    outputRange: [screen.width, 0],
+    outputRange: [I18nManager.isRTL ? -screen.width : screen.width, 0],
   });
   const translateUnfocused = next
     ? interpolate(next, {
         inputRange: [0, 1],
-        outputRange: [0, multiply(screen.width, -0.3)],
+        outputRange: [
+          0,
+          multiply(I18nManager.isRTL ? -screen.width : screen.width, -0.3),
+        ],
       })
     : 0;
 

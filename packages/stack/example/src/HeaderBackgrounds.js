@@ -93,7 +93,11 @@ function createHeaderBackgroundExample(options = {}) {
     }
   );
 }
-export const HeaderBackgroundDefault = createHeaderBackgroundExample();
+export const HeaderBackgroundDefault = createHeaderBackgroundExample({
+  ...TransitionPresets.SlideFromRightIOS,
+  headerStyleInterpolator: HeaderStyleInterpolators.forUIKit,
+  headerMode: 'float',
+});
 
 export const HeaderBackgroundFade = createHeaderBackgroundExample({
   ...TransitionPresets.SlideFromRightIOS,
