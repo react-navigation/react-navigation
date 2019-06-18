@@ -1292,4 +1292,11 @@ declare module 'react-navigation' {
     getScreenProps: () => {},
     getCurrentNavigation: () => ?NavigationScreenProp<State>
   ): NavigationScreenProp<State>;
+
+  declare export function getActiveChildNavigationOptions<
+    State: NavigationState
+  >(
+    navigation: NavigationProp<State>,
+    screenProps?: screenProps
+  ): NavigationParams;
 }
