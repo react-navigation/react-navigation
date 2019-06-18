@@ -72,24 +72,6 @@ Array [
         }
       >
         <View
-          pointerEvents="none"
-          style={
-            Array [
-              Object {
-                "backgroundColor": "#000",
-                "bottom": 0,
-                "left": 0,
-                "position": "absolute",
-                "right": 0,
-                "top": 0,
-              },
-              Object {
-                "opacity": undefined,
-              },
-            ]
-          }
-        />
-        <View
           pointerEvents="box-none"
           style={
             Array [
@@ -245,24 +227,6 @@ Array [
                         }
                       }
                     >
-                      <View
-                        pointerEvents="none"
-                        style={
-                          Array [
-                            Object {
-                              "backgroundColor": "#000",
-                              "bottom": 0,
-                              "left": 0,
-                              "position": "absolute",
-                              "right": 0,
-                              "top": 0,
-                            },
-                            Object {
-                              "opacity": undefined,
-                            },
-                          ]
-                        }
-                      />
                       <View
                         pointerEvents="box-none"
                         style={

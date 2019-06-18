@@ -6,6 +6,7 @@ import {
   ViewProps,
   StyleProp,
   ViewStyle,
+  Platform,
 } from 'react-native';
 import Animated from 'react-native-reanimated';
 import {
@@ -94,7 +95,7 @@ const {
 
 export default class Card extends React.Component<Props> {
   static defaultProps = {
-    overlayEnabled: true,
+    overlayEnabled: Platform.OS !== 'ios',
     shadowEnabled: true,
     gesturesEnabled: true,
   };
