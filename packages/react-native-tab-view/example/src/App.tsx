@@ -1,4 +1,6 @@
-import { registerRootComponent, Asset, KeepAwake } from 'expo';
+import { registerRootComponent } from 'expo';
+import { Asset } from 'expo-asset';
+import { useKeepAwake } from 'expo-keep-awake';
 import * as React from 'react';
 import {
   AsyncStorage,
@@ -44,7 +46,12 @@ const EXAMPLE_COMPONENTS: ExampleComponentType[] = [
   CoverflowExample,
 ];
 
-export default class ExampleList extends React.Component<{}, State> {
+const KeepAwake = () => {
+  useKeepAwake();
+  return null;
+};
+
+export default class ExampleList extends React.Component<any, State> {
   state = {
     title: 'Examples',
     index: -1,

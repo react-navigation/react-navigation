@@ -4,7 +4,7 @@
     "description": "Demonstrates the various capabilities of react-native-tab-view: https://github.com/react-native-community/react-native-tab-view",
     "slug": "react-native-tab-view-demos",
     "privacy": "public",
-    "sdkVersion": "32.0.0",
+    "sdkVersion": "33.0.0",
     "version": "1.0.0",
     "primaryColor": "#2196f3",
     "icon": "assets/icon.png",
