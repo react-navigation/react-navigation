@@ -6,18 +6,18 @@ import {
   StyleSheet,
   ImageRequireSource,
 } from 'react-native';
-import {
-  TabView,
-  NavigationState,
-  SceneRendererProps,
-} from 'react-native-tab-view';
+import { TabView, SceneRendererProps } from 'react-native-tab-view';
 import Animated from 'react-native-reanimated';
 
 type Route = {
   key: string;
 };
 
-type State = NavigationState<Route>;
+type Props = SceneRendererProps & {
+  index: number;
+  length: number;
+  route: Route;
+};
 
 const ALBUMS: { [key: string]: ImageRequireSource } = {
   'Abbey Road': require('../assets/album-art-1.jpg'),
@@ -30,37 +30,23 @@ const ALBUMS: { [key: string]: ImageRequireSource } = {
   'Lost Horizons': require('../assets/album-art-8.jpg'),
 };
 
-export default class CoverflowExample extends React.Component<{}, State> {
-  static title = 'Coverflow';
-  static backgroundColor = '#000';
-  static appbarElevation = 0;
-
-  state = {
-    index: 2,
-    routes: Object.keys(ALBUMS).map(key => ({ key })),
-  };
-
-  private buildCoverFlowStyle = ({
-    layout,
-    position,
-    route,
-  }: SceneRendererProps & { route: Route }) => {
+const Scene = ({ route, position, layout, index, length }: Props) => {
+  const coverflowStyle: any = React.useMemo(() => {
     const { width } = layout;
-    const { routes } = this.state;
-    const currentIndex = routes.indexOf(route);
-    const inputRange = routes.map((_, i) => i);
+
+    const inputRange = Array.from({ length }, (_, i) => i);
     const translateOutputRange = inputRange.map(i => {
-      return (width / 2) * (currentIndex - i) * -1;
+      return (width / 2) * (index - i) * -1;
     });
     const scaleOutputRange = inputRange.map(i => {
-      if (currentIndex === i) {
+      if (index === i) {
         return 1;
       } else {
         return 0.7;
       }
     });
     const opacityOutputRange = inputRange.map(i => {
-      if (currentIndex === i) {
+      if (index === i) {
         return 1;
       } else {
         return 0.3;
@@ -87,39 +73,46 @@ export default class CoverflowExample extends React.Component<{}, State> {
       transform: [{ translateX }, { scale }],
       opacity,
     };
-  };
+  }, [index, layout, length, position]);
 
-  private handleIndexChange = (index: number) =>
-    this.setState({
-      index,
-    });
-
-  private renderTabBar = () => null;
-
-  private renderScene = (props: SceneRendererProps & { route: Route }) => (
-    <Animated.View
-      style={[styles.page, this.buildCoverFlowStyle(props) as any]}
-    >
+  return (
+    <Animated.View style={[styles.page, coverflowStyle]}>
       <View style={styles.album}>
-        <Image source={ALBUMS[props.route.key]} style={styles.cover} />
+        <Image source={ALBUMS[route.key]} style={styles.cover} />
       </View>
-      <Text style={styles.label}>{props.route.key}</Text>
+      <Text style={styles.label}>{route.key}</Text>
     </Animated.View>
   );
+};
 
-  render() {
-    return (
-      <TabView
-        style={styles.container}
-        sceneContainerStyle={styles.scene}
-        navigationState={this.state}
-        renderTabBar={this.renderTabBar}
-        renderScene={this.renderScene}
-        onIndexChange={this.handleIndexChange}
-      />
-    );
-  }
+export default function CoverflowExample() {
+  const [index, onIndexChange] = React.useState(2);
+  const [routes] = React.useState(Object.keys(ALBUMS).map(key => ({ key })));
+
+  return (
+    <TabView
+      style={styles.container}
+      sceneContainerStyle={styles.scene}
+      navigationState={{
+        index,
+        routes,
+      }}
+      onIndexChange={onIndexChange}
+      renderTabBar={() => null}
+      renderScene={(props: SceneRendererProps & { route: Route }) => (
+        <Scene
+          {...props}
+          index={routes.indexOf(props.route)}
+          length={routes.length}
+        />
+      )}
+    />
+  );
 }
+
+CoverflowExample.title = 'Coverflow';
+CoverflowExample.backgroundColor = '#000';
+CoverflowExample.appbarElevation = 0;
 
 const styles = StyleSheet.create({
   container: {
