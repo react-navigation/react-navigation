@@ -587,8 +587,8 @@ declare module 'react-navigation' {
 
   declare export function getActiveChildNavigationOptions<S>(
     navigation: NavigationProp<S>,
-    screenProps?: screenProps
-  ): NavigationParams;
+    screenProps?: {}
+  ): any;
 
   declare export type NavigationScreenProp<+S> = {
     +state: S,
