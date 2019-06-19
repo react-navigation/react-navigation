@@ -585,10 +585,10 @@ declare module 'react-navigation' {
     remove: () => void,
   };
 
-  declare export function getActiveChildNavigationOptions(
-    navigation: any,
-    screenProps?: any
-  ): any;
+  declare export function getActiveChildNavigationOptions<S>(
+    navigation: NavigationProp<S>,
+    screenProps?: {}
+  ): NavigationParams;
 
   declare export type NavigationScreenProp<+S> = {
     +state: S,
