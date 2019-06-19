@@ -754,6 +754,7 @@ declare module 'react-navigation' {
     pop: (n?: number, params?: { immediate?: boolean }) => boolean;
     popToTop: (params?: { immediate?: boolean }) => boolean;
     isFocused: () => boolean;
+    isFirstRouteInParent: () => boolean;
     router?: NavigationRouter;
     dangerouslyGetParent: () => NavigationScreenProp<S> | undefined;
   }
