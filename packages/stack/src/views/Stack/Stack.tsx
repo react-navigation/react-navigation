@@ -60,6 +60,7 @@ type Props = {
 
 type State = {
   routes: Route[];
+  descriptors: { [key: string]: SceneDescriptor };
   scenes: HeaderScene<Route>[];
   progress: ProgressValues;
   layout: Layout;
@@ -81,7 +82,10 @@ const ANIMATED_ONE = new Animated.Value(1);
 
 export default class Stack extends React.Component<Props, State> {
   static getDerivedStateFromProps(props: Props, state: State) {
-    if (props.routes === state.routes) {
+    if (
+      props.routes === state.routes &&
+      props.descriptors === state.descriptors
+    ) {
       return null;
     }
 
@@ -131,7 +135,8 @@ export default class Stack extends React.Component<Props, State> {
           scene.route === oldScene.route &&
           scene.progress.current === oldScene.progress.current &&
           scene.progress.next === oldScene.progress.next &&
-          scene.progress.previous === oldScene.progress.previous
+          scene.progress.previous === oldScene.progress.previous &&
+          scene.descriptor === oldScene.descriptor
         ) {
           return oldScene;
         }
@@ -139,6 +144,7 @@ export default class Stack extends React.Component<Props, State> {
         return scene;
       }),
       progress,
+      descriptors: props.descriptors,
     };
   }
 
@@ -147,6 +153,7 @@ export default class Stack extends React.Component<Props, State> {
     scenes: [],
     progress: {},
     layout,
+    descriptors: this.props.descriptors,
     // Used when card's header is null and mode is float to make transition
     // between screens with headers and those without headers smooth.
     // This is not a great heuristic here. We don't know synchronously
