@@ -6,7 +6,6 @@ import {
   StyleProp,
   ViewStyle,
 } from 'react-native';
-import { getDefaultHeaderHeight } from './HeaderSegment';
 import {
   Layout,
   Route,
@@ -98,13 +97,11 @@ export default function HeaderContainer({
             importantForAccessibility={
               isFocused ? 'auto' : 'no-hide-descendants'
             }
-            style={[
-              mode === 'float' ? StyleSheet.absoluteFill : null,
-              mode === 'screen' && options.header !== undefined
-                ? null
-                : { height: getDefaultHeaderHeight(layout) },
-              options.headerStyle,
-            ]}
+            style={
+              mode === 'float' || options.headerTransparent
+                ? styles.header
+                : null
+            }
           >
             {options.header !== undefined ? (
               options.header === null ? null : (
@@ -119,3 +116,12 @@ export default function HeaderContainer({
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  header: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+  },
+});
