@@ -387,6 +387,8 @@ Array [
                         Array [
                           Object {
                             "height": 64,
+                            "maxHeight": undefined,
+                            "minHeight": undefined,
                           },
                         ]
                       }
@@ -522,6 +524,8 @@ Array [
           Array [
             Object {
               "height": 64,
+              "maxHeight": undefined,
+              "minHeight": undefined,
             },
           ]
         }

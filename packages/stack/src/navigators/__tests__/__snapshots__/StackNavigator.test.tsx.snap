@@ -222,7 +222,6 @@ Array [
               },
               Object {
                 "backgroundColor": "red",
-                "opacity": 0.5,
               },
             ]
           }
@@ -234,6 +233,8 @@ Array [
           Array [
             Object {
               "height": 64,
+              "maxHeight": undefined,
+              "minHeight": undefined,
             },
           ]
         }
@@ -540,7 +541,6 @@ Array [
               },
               Object {
                 "backgroundColor": "red",
-                "opacity": 0.5,
               },
             ]
           }
@@ -552,6 +552,8 @@ Array [
           Array [
             Object {
               "height": 64,
+              "maxHeight": undefined,
+              "minHeight": undefined,
             },
           ]
         }
