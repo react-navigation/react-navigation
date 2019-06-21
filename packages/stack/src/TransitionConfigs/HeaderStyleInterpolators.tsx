@@ -98,7 +98,10 @@ export function forFade({
     leftButtonStyle: { opacity },
     rightButtonStyle: { opacity },
     titleStyle: { opacity },
-    backgroundStyle: { opacity },
+    // For both bakgrounds to cross-fade properly, we don't want to animate the one below from 0
+    // Because 2 semitransparent backgrounds on top of each other will always have some transparency
+    // And this will make the stuff under them visible (usually white) which isn't expected
+    backgroundStyle: { opacity: current },
   };
 }
 
