@@ -7,6 +7,8 @@ import {
   ViewStyle,
   TextStyle,
   LayoutChangeEvent,
+  I18nManager,
+  Platform,
 } from 'react-native';
 import Animated from 'react-native-reanimated';
 import TabBarItem from './TabBarItem';
@@ -98,7 +100,6 @@ export default class TabBar<T extends Route> extends React.Component<
   private scrollAmount = new Animated.Value(0);
 
   private scrollView: ScrollView | undefined;
-  private isMomentumScroll: boolean = false;
 
   private getTabWidth = (props: Props<T>, state: State) => {
     const { layout } = state;
@@ -126,6 +127,9 @@ export default class TabBar<T extends Route> extends React.Component<
     return layout.width / navigationState.routes.length;
   };
 
+  private getMaxScrollDistance = (tabBarWidth: number, layoutWidth: number) =>
+    tabBarWidth - layoutWidth;
+
   private normalizeScrollValue = (
     props: Props<T>,
     state: State,
@@ -138,9 +142,16 @@ export default class TabBar<T extends Route> extends React.Component<
       tabWidth * navigationState.routes.length,
       layout.width
     );
-    const maxDistance = tabBarWidth - layout.width;
+    const maxDistance = this.getMaxScrollDistance(tabBarWidth, layout.width);
+    const scrollValue = Math.max(Math.min(value, maxDistance), 0);
 
-    return Math.max(Math.min(value, maxDistance), 0);
+    if (Platform.OS === 'android' && I18nManager.isRTL) {
+      // On Android, scroll value is not applied in reverse in RTL
+      // so we need to manually adjust it to apply correct value
+      return maxDistance - scrollValue;
+    }
+
+    return scrollValue;
   };
 
   private getScrollAmount = (props: Props<T>, state: State, i: number) => {
@@ -162,32 +173,6 @@ export default class TabBar<T extends Route> extends React.Component<
     }
   };
 
-  private handleBeginDrag = () => {
-    // onScrollBeginDrag fires when user touches the ScrollView
-    this.isMomentumScroll = false;
-  };
-
-  private handleEndDrag = () => {
-    // onScrollEndDrag fires when user lifts his finger
-    // onMomentumScrollBegin fires after touch end
-    // run the logic in next frame so we get onMomentumScrollBegin first
-    requestAnimationFrame(() => {
-      if (this.isMomentumScroll) {
-        return;
-      }
-    });
-  };
-
-  private handleMomentumScrollBegin = () => {
-    // onMomentumScrollBegin fires on flick, as well as programmatic scroll
-    this.isMomentumScroll = true;
-  };
-
-  private handleMomentumScrollEnd = () => {
-    // onMomentumScrollEnd fires when the scroll finishes
-    this.isMomentumScroll = false;
-  };
-
   private handleLayout = (e: LayoutChangeEvent) => {
     const { height, width } = e.nativeEvent.layout;
 
@@ -206,8 +191,14 @@ export default class TabBar<T extends Route> extends React.Component<
     });
   };
 
-  private getTranslateX = memoize((scrollAmount: Animated.Node<number>) =>
-    Animated.multiply(scrollAmount, -1)
+  private getTranslateX = memoize(
+    (scrollAmount: Animated.Node<number>, maxScrollDistance: number) =>
+      Animated.multiply(
+        Platform.OS === 'android' && I18nManager.isRTL
+          ? Animated.sub(maxScrollDistance, scrollAmount)
+          : scrollAmount,
+        I18nManager.isRTL ? 1 : -1
+      )
   );
 
   render() {
@@ -240,7 +231,10 @@ export default class TabBar<T extends Route> extends React.Component<
     const { routes } = navigationState;
     const tabWidth = this.getTabWidth(this.props, this.state);
     const tabBarWidth = tabWidth * routes.length;
-    const translateX = this.getTranslateX(this.scrollAmount);
+    const translateX = this.getTranslateX(
+      this.scrollAmount,
+      this.getMaxScrollDistance(tabBarWidth, layout.width)
+    );
 
     return (
       <Animated.View
@@ -292,10 +286,6 @@ export default class TabBar<T extends Route> extends React.Component<
               ],
               { useNativeDriver: true }
             )}
-            onScrollBeginDrag={this.handleBeginDrag}
-            onScrollEndDrag={this.handleEndDrag}
-            onMomentumScrollBegin={this.handleMomentumScrollBegin}
-            onMomentumScrollEnd={this.handleMomentumScrollEnd}
             ref={el => {
               // @ts-ignore
               this.scrollView = el && el.getNode();
