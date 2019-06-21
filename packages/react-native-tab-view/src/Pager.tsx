@@ -42,6 +42,7 @@ const {
   Clock,
   Value,
   onChange,
+  and,
   abs,
   add,
   block,
@@ -188,7 +189,7 @@ export default class Pager<T extends Route> extends React.Component<Props<T>> {
   // Current state of the gesture
   private velocityX = new Value(0);
   private gestureX = new Value(0);
-  private gestureState = new Value(State.END);
+  private gestureState = new Value(State.UNDETERMINED);
   private offsetX = new Value(0);
 
   // Current progress of the page (translateX value)
@@ -415,6 +416,7 @@ export default class Pager<T extends Route> extends React.Component<Props<T>> {
     divide(abs(this.velocityX), this.velocityX),
     0
   );
+
   private extrapolatedPosition = add(
     this.gestureX,
     multiply(
@@ -514,14 +516,20 @@ export default class Pager<T extends Route> extends React.Component<Props<T>> {
         // Stop animations while we're dragging
         stopClock(this.clock),
       ],
-
-      cond(eq(this.gestureState, State.END), [
+      [
         set(this.isSwiping, FALSE),
         this.transitionTo(
           cond(
-            greaterThan(
-              abs(this.extrapolatedPosition),
-              divide(this.layoutWidth, 2)
+            and(
+              // We should consider velocity and gesture distance only when a swipe ends
+              // The gestureX value will be non-zero when swipe has happened
+              // We check against a minimum distance instead of 0 because `activeOffsetX` doesn't seem to be respected on Android
+              // For other factors such as state update, the velocity and gesture distance don't matter
+              greaterThan(abs(this.gestureX), SWIPE_DISTANCE_MINIMUM),
+              greaterThan(
+                abs(this.extrapolatedPosition),
+                divide(this.layoutWidth, 2)
+              )
             ),
             // For swipe gesture, to calculate the index, determine direction and add to index
             // When the user swipes towards the left, we transition to the next tab
@@ -546,7 +554,7 @@ export default class Pager<T extends Route> extends React.Component<Props<T>> {
             this.index
           )
         ),
-      ])
+      ]
     ),
     this.progress,
   ]);
