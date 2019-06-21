@@ -229,6 +229,7 @@ export default class Stack extends React.Component<Props, State> {
 
             const {
               header,
+              headerTransparent,
               cardTransparent,
               cardShadowEnabled,
               cardOverlayEnabled,
@@ -270,6 +271,7 @@ export default class Stack extends React.Component<Props, State> {
                   hasCustomHeader={header === null}
                   getPreviousRoute={getPreviousRoute}
                   headerMode={headerMode}
+                  headerTransparent={headerTransparent}
                   renderHeader={renderHeader}
                   renderScene={renderScene}
                   onOpenRoute={onOpenRoute}

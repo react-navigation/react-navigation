@@ -82,6 +82,7 @@ export type HeaderOptions = {
   headerBackgroundStyle?: StyleProp<ViewStyle>;
   headerStyle?: StyleProp<ViewStyle>;
   headerStatusBarHeight?: number;
+  headerTransparent?: boolean;
 };
 
 export type HeaderProps = {

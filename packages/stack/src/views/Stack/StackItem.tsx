@@ -55,6 +55,7 @@ type Props = {
   headerStyleInterpolator: HeaderStyleInterpolator;
   cardStyleInterpolator: CardStyleInterpolator;
   headerMode: HeaderMode;
+  headerTransparent?: boolean;
   floaingHeaderHeight: number;
   hasCustomHeader: boolean;
 };
@@ -102,6 +103,7 @@ export default class StackItem extends React.PureComponent<Props> {
       hasCustomHeader,
       getPreviousRoute,
       headerMode,
+      headerTransparent,
       renderHeader,
       renderScene,
     } = this.props;
@@ -131,7 +133,7 @@ export default class StackItem extends React.PureComponent<Props> {
         importantForAccessibility={focused ? 'auto' : 'no-hide-descendants'}
         pointerEvents="box-none"
         containerStyle={
-          headerMode === 'float' && !hasCustomHeader
+          headerMode === 'float' && !headerTransparent && !hasCustomHeader
             ? { marginTop: floaingHeaderHeight }
             : null
         }
