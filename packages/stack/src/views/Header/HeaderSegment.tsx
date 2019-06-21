@@ -40,16 +40,20 @@ type State = {
   leftLabelLayout?: Layout;
 };
 
-const warnIfHeaderStyleDefined = (value: any, styleProp: string) => {
-  if (styleProp === 'position' && value === 'absolute') {
-    console.warn(
-      "position: 'absolute' is not supported on headerStyle. If you would like to render content under the header, use the headerTransparent navigationOption."
-    );
-  } else if (value !== undefined) {
-    console.warn(
-      `${styleProp} was given a value of ${value}, this has no effect on headerStyle.`
-    );
-  }
+const warnIfHeaderStylesDefined = (styles: { [key: string]: any }) => {
+  Object.keys(styles).forEach(styleProp => {
+    const value = styles[styleProp];
+
+    if (styleProp === 'position' && value === 'absolute') {
+      console.warn(
+        "position: 'absolute' is not supported on headerStyle. If you would like to render content under the header, use the 'headerTransparent' navigationOption."
+      );
+    } else if (value !== undefined) {
+      console.warn(
+        `${styleProp} was given a value of ${value}, this has no effect on headerStyle.`
+      );
+    }
+  });
 };
 
 export const getDefaultHeaderHeight = (layout: Layout) => {
@@ -179,50 +183,91 @@ export default class HeaderSegment extends React.Component<Props, State> {
 
     const {
       height = getDefaultHeaderHeight(layout),
-      alignItems,
-      justifyContent,
-      flex,
-      flexDirection,
-      flexGrow,
-      flexShrink,
-      flexBasis,
-      flexWrap,
-      position,
-      padding,
-      paddingHorizontal,
-      paddingRight,
-      paddingLeft,
-      paddingVertical,
-      paddingTop,
-      paddingBottom,
-      top,
-      right: _right,
-      bottom: _bottom,
-      left: _left,
-      ...safeHeaderStyle
+      minHeight,
+      maxHeight,
+      backgroundColor,
+      borderBottomColor,
+      borderBottomEndRadius,
+      borderBottomLeftRadius,
+      borderBottomRightRadius,
+      borderBottomStartRadius,
+      borderBottomWidth,
+      borderColor,
+      borderEndColor,
+      borderEndWidth,
+      borderLeftColor,
+      borderLeftWidth,
+      borderRadius,
+      borderRightColor,
+      borderRightWidth,
+      borderStartColor,
+      borderStartWidth,
+      borderStyle,
+      borderTopColor,
+      borderTopEndRadius,
+      borderTopLeftRadius,
+      borderTopRightRadius,
+      borderTopStartRadius,
+      borderTopWidth,
+      borderWidth,
+      // @ts-ignore: web support for shadow
+      boxShadow,
+      elevation,
+      shadowColor,
+      shadowOffset,
+      shadowOpacity,
+      shadowRadius,
+      ...unsafeStyles
     } = StyleSheet.flatten(customHeaderStyle || {}) as ViewStyle;
 
     if (process.env.NODE_ENV !== 'production') {
-      warnIfHeaderStyleDefined(alignItems, 'alignItems');
-      warnIfHeaderStyleDefined(justifyContent, 'justifyContent');
-      warnIfHeaderStyleDefined(flex, 'flex');
-      warnIfHeaderStyleDefined(flexDirection, 'flexDirection');
-      warnIfHeaderStyleDefined(flexGrow, 'flexGrow');
-      warnIfHeaderStyleDefined(flexShrink, 'flexShrink');
-      warnIfHeaderStyleDefined(flexBasis, 'flexBasis');
-      warnIfHeaderStyleDefined(flexWrap, 'flexWrap');
-      warnIfHeaderStyleDefined(padding, 'padding');
-      warnIfHeaderStyleDefined(position, 'position');
-      warnIfHeaderStyleDefined(paddingHorizontal, 'paddingHorizontal');
-      warnIfHeaderStyleDefined(paddingRight, 'paddingRight');
-      warnIfHeaderStyleDefined(paddingLeft, 'paddingLeft');
-      warnIfHeaderStyleDefined(paddingVertical, 'paddingVertical');
-      warnIfHeaderStyleDefined(paddingTop, 'paddingTop');
-      warnIfHeaderStyleDefined(paddingBottom, 'paddingBottom');
-      warnIfHeaderStyleDefined(top, 'top');
-      warnIfHeaderStyleDefined(_right, 'right');
-      warnIfHeaderStyleDefined(_bottom, 'bottom');
-      warnIfHeaderStyleDefined(_left, 'left');
+      warnIfHeaderStylesDefined(unsafeStyles);
+    }
+
+    const safeStyles = {
+      backgroundColor,
+      borderBottomColor,
+      borderBottomEndRadius,
+      borderBottomLeftRadius,
+      borderBottomRightRadius,
+      borderBottomStartRadius,
+      borderBottomWidth,
+      borderColor,
+      borderEndColor,
+      borderEndWidth,
+      borderLeftColor,
+      borderLeftWidth,
+      borderRadius,
+      borderRightColor,
+      borderRightWidth,
+      borderStartColor,
+      borderStartWidth,
+      borderStyle,
+      borderTopColor,
+      borderTopEndRadius,
+      borderTopLeftRadius,
+      borderTopRightRadius,
+      borderTopStartRadius,
+      borderTopWidth,
+      borderWidth,
+      // @ts-ignore
+      boxShadow,
+      elevation,
+      shadowColor,
+      shadowOffset,
+      shadowOpacity,
+      shadowRadius,
+    };
+
+    // Setting a property to undefined triggers default style
+    // So we need to filter them out
+    // Users can use `null` instead
+    for (const styleProp in safeStyles) {
+      // @ts-ignore
+      if (safeStyles[styleProp] === undefined) {
+        // @ts-ignore
+        delete safeStyles[styleProp];
+      }
     }
 
     return (
@@ -234,10 +279,13 @@ export default class HeaderSegment extends React.Component<Props, State> {
           {headerBackground ? (
             headerBackground()
           ) : headerTransparent ? null : (
-            <HeaderBackground style={safeHeaderStyle} />
+            <HeaderBackground style={safeStyles} />
           )}
         </Animated.View>
-        <Animated.View pointerEvents="box-none" style={[{ height }]}>
+        <Animated.View
+          pointerEvents="box-none"
+          style={[{ height, minHeight, maxHeight }]}
+        >
           <View
             pointerEvents="none"
             style={{ height: headerStatusBarHeight }}
