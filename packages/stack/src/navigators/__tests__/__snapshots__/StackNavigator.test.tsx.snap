@@ -206,7 +206,7 @@ Array [
               "top": 0,
             },
             Object {
-              "opacity": undefined,
+              "opacity": NOOP {},
             },
           ]
         }
@@ -220,7 +220,10 @@ Array [
                 "borderBottomWidth": 0.5,
                 "flex": 1,
               },
-              undefined,
+              Object {
+                "backgroundColor": "red",
+                "opacity": 0.5,
+              },
             ]
           }
         />
@@ -232,14 +235,6 @@ Array [
             Object {
               "height": 64,
             },
-            Array [
-              Object {
-                "backgroundColor": "red",
-              },
-              Object {
-                "opacity": 0.5,
-              },
-            ],
           ]
         }
       >
@@ -529,7 +524,7 @@ Array [
               "top": 0,
             },
             Object {
-              "opacity": undefined,
+              "opacity": NOOP {},
             },
           ]
         }
@@ -543,7 +538,10 @@ Array [
                 "borderBottomWidth": 0.5,
                 "flex": 1,
               },
-              undefined,
+              Object {
+                "backgroundColor": "red",
+                "opacity": 0.5,
+              },
             ]
           }
         />
@@ -555,14 +553,6 @@ Array [
             Object {
               "height": 64,
             },
-            Array [
-              Object {
-                "backgroundColor": "red",
-              },
-              Object {
-                "opacity": 0.5,
-              },
-            ],
           ]
         }
       >

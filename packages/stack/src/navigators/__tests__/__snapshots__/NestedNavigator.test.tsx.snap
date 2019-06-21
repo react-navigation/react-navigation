@@ -362,7 +362,7 @@ Array [
                             "top": 0,
                           },
                           Object {
-                            "opacity": undefined,
+                            "opacity": NOOP {},
                           },
                         ]
                       }
@@ -376,7 +376,7 @@ Array [
                               "borderBottomWidth": 0.5,
                               "flex": 1,
                             },
-                            undefined,
+                            Object {},
                           ]
                         }
                       />
@@ -388,7 +388,6 @@ Array [
                           Object {
                             "height": 64,
                           },
-                          undefined,
                         ]
                       }
                     >
@@ -498,7 +497,7 @@ Array [
               "top": 0,
             },
             Object {
-              "opacity": undefined,
+              "opacity": NOOP {},
             },
           ]
         }
@@ -512,7 +511,7 @@ Array [
                 "borderBottomWidth": 0.5,
                 "flex": 1,
               },
-              undefined,
+              Object {},
             ]
           }
         />
@@ -524,7 +523,6 @@ Array [
             Object {
               "height": 64,
             },
-            undefined,
           ]
         }
       >
