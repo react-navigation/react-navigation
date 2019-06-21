@@ -186,26 +186,12 @@ Array [
       onLayout={[Function]}
       pointerEvents="box-none"
       style={
-        Array [
-          Object {
-            "bottom": 0,
-            "left": 0,
-            "position": "absolute",
-            "right": 0,
-            "top": 0,
-          },
-          Object {
-            "height": 64,
-          },
-          Array [
-            Object {
-              "backgroundColor": "red",
-            },
-            Object {
-              "opacity": 0.5,
-            },
-          ],
-        ]
+        Object {
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        }
       }
     >
       <View
@@ -240,77 +226,96 @@ Array [
         />
       </View>
       <View
-        pointerEvents="none"
-        style={
-          Object {
-            "height": 20,
-          }
-        }
-      />
-      <View
         pointerEvents="box-none"
         style={
-          Object {
-            "alignItems": "center",
-            "flex": 1,
-            "flexDirection": "row",
-            "justifyContent": "center",
-            "paddingHorizontal": 4,
-          }
+          Array [
+            Object {
+              "height": 64,
+            },
+            Array [
+              Object {
+                "backgroundColor": "red",
+              },
+              Object {
+                "opacity": 0.5,
+              },
+            ],
+          ]
         }
       >
         <View
+          pointerEvents="none"
           style={
-            Array [
-              null,
-              Object {},
-              Object {
-                "opacity": undefined,
-              },
-              undefined,
-            ]
+            Object {
+              "height": 20,
+            }
+          }
+        />
+        <View
+          pointerEvents="box-none"
+          style={
+            Object {
+              "alignItems": "center",
+              "flex": 1,
+              "flexDirection": "row",
+              "justifyContent": "center",
+              "paddingHorizontal": 4,
+            }
           }
         >
-          <Text
-            onLayout={[Function]}
+          <View
             style={
               Array [
+                null,
+                Object {},
                 Object {
-                  "color": "rgba(0, 0, 0, .9)",
-                  "fontSize": 17,
-                  "fontWeight": "600",
+                  "opacity": undefined,
                 },
-                Array [
-                  Object {
-                    "color": undefined,
-                  },
-                  undefined,
-                ],
+                undefined,
               ]
             }
           >
-            Welcome anonymous
-          </Text>
-        </View>
-        <View
-          style={
-            Array [
-              Object {
-                "alignItems": "flex-end",
-                "bottom": 0,
-                "justifyContent": "center",
-                "position": "absolute",
-                "right": 0,
-                "top": 0,
-              },
-              Object {
-                "opacity": undefined,
-              },
-              undefined,
-            ]
-          }
-        >
-          <View />
+            <Text
+              onLayout={[Function]}
+              style={
+                Array [
+                  Object {
+                    "color": "rgba(0, 0, 0, .9)",
+                    "fontSize": 17,
+                    "fontWeight": "600",
+                  },
+                  Array [
+                    Object {
+                      "color": undefined,
+                    },
+                    undefined,
+                  ],
+                ]
+              }
+            >
+              Welcome anonymous
+            </Text>
+          </View>
+          <View
+            style={
+              Array [
+                Object {
+                  "alignItems": "flex-end",
+                  "bottom": 0,
+                  "justifyContent": "center",
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                },
+                Object {
+                  "opacity": undefined,
+                },
+                undefined,
+              ]
+            }
+          >
+            <View />
+          </View>
         </View>
       </View>
     </View>
@@ -504,26 +509,12 @@ Array [
       onLayout={[Function]}
       pointerEvents="box-none"
       style={
-        Array [
-          Object {
-            "bottom": 0,
-            "left": 0,
-            "position": "absolute",
-            "right": 0,
-            "top": 0,
-          },
-          Object {
-            "height": 64,
-          },
-          Array [
-            Object {
-              "backgroundColor": "red",
-            },
-            Object {
-              "opacity": 0.5,
-            },
-          ],
-        ]
+        Object {
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        }
       }
     >
       <View
@@ -558,57 +549,76 @@ Array [
         />
       </View>
       <View
-        pointerEvents="none"
-        style={
-          Object {
-            "height": 20,
-          }
-        }
-      />
-      <View
         pointerEvents="box-none"
         style={
-          Object {
-            "alignItems": "center",
-            "flex": 1,
-            "flexDirection": "row",
-            "justifyContent": "center",
-            "paddingHorizontal": 4,
-          }
+          Array [
+            Object {
+              "height": 64,
+            },
+            Array [
+              Object {
+                "backgroundColor": "red",
+              },
+              Object {
+                "opacity": 0.5,
+              },
+            ],
+          ]
         }
       >
         <View
+          pointerEvents="none"
           style={
-            Array [
-              null,
-              Object {},
-              Object {
-                "opacity": undefined,
-              },
-              undefined,
-            ]
+            Object {
+              "height": 20,
+            }
+          }
+        />
+        <View
+          pointerEvents="box-none"
+          style={
+            Object {
+              "alignItems": "center",
+              "flex": 1,
+              "flexDirection": "row",
+              "justifyContent": "center",
+              "paddingHorizontal": 4,
+            }
           }
         >
-          <Text
-            onLayout={[Function]}
+          <View
             style={
               Array [
+                null,
+                Object {},
                 Object {
-                  "color": "rgba(0, 0, 0, .9)",
-                  "fontSize": 17,
-                  "fontWeight": "600",
+                  "opacity": undefined,
                 },
-                Array [
-                  Object {
-                    "color": undefined,
-                  },
-                  undefined,
-                ],
+                undefined,
               ]
             }
           >
-            Welcome anonymous
-          </Text>
+            <Text
+              onLayout={[Function]}
+              style={
+                Array [
+                  Object {
+                    "color": "rgba(0, 0, 0, .9)",
+                    "fontSize": 17,
+                    "fontWeight": "600",
+                  },
+                  Array [
+                    Object {
+                      "color": undefined,
+                    },
+                    undefined,
+                  ],
+                ]
+              }
+            >
+              Welcome anonymous
+            </Text>
+          </View>
         </View>
       </View>
     </View>

@@ -122,6 +122,7 @@ export default class HeaderSegment extends React.Component<Props, State> {
       ),
       // @ts-ignore
       headerStatusBarHeight = getStatusBarHeight(layout.width > layout.height),
+      headerTransparent,
       headerTintColor,
       headerBackground,
       headerBackgroundStyle,
@@ -138,6 +139,7 @@ export default class HeaderSegment extends React.Component<Props, State> {
       headerLeftContainerStyle: leftContainerStyle,
       headerRightContainerStyle: rightContainerStyle,
       headerTitleContainerStyle: titleContainerStyle,
+      headerStyle: customHeaderStyle,
       styleInterpolator,
     } = this.props;
 
@@ -166,68 +168,79 @@ export default class HeaderSegment extends React.Component<Props, State> {
         >
           {headerBackground ? (
             headerBackground()
-          ) : (
+          ) : headerTransparent ? null : (
             <HeaderBackground style={headerBackgroundStyle} />
           )}
         </Animated.View>
-        <View pointerEvents="none" style={{ height: headerStatusBarHeight }} />
-        <View pointerEvents="box-none" style={styles.container}>
-          {onGoBack ? (
-            <Animated.View
-              style={[styles.left, leftButtonStyle, leftContainerStyle]}
-            >
-              {left({
-                backImage,
-                pressColorAndroid,
-                allowFontScaling: backAllowFontScaling,
-                onPress: onGoBack,
-                labelVisible: headerBackTitleVisible,
-                label: leftLabel !== undefined ? leftLabel : previousTitle,
-                truncatedLabel,
-                labelStyle: [leftLabelStyle, customLeftLabelStyle],
-                onLabelLayout: this.handleLeftLabelLayout,
-                screenLayout: layout,
-                titleLayout,
-                tintColor: headerTintColor,
-              })}
-            </Animated.View>
-          ) : null}
-          {currentTitle ? (
-            <Animated.View
-              style={[
-                Platform.select({
-                  ios: null,
-                  default: { left: onGoBack ? 72 : 16 },
-                }),
-                styles.title,
-                titleStyle,
-                titleContainerStyle,
-              ]}
-            >
-              <HeaderTitle
-                onLayout={this.handleTitleLayout}
-                allowFontScaling={titleAllowFontScaling}
-                style={[{ color: headerTintColor }, customTitleStyle]}
+        <Animated.View
+          pointerEvents="box-none"
+          style={[
+            { height: getDefaultHeaderHeight(layout) },
+            customHeaderStyle,
+          ]}
+        >
+          <View
+            pointerEvents="none"
+            style={{ height: headerStatusBarHeight }}
+          />
+          <View pointerEvents="box-none" style={styles.content}>
+            {onGoBack ? (
+              <Animated.View
+                style={[styles.left, leftButtonStyle, leftContainerStyle]}
               >
-                {currentTitle}
-              </HeaderTitle>
-            </Animated.View>
-          ) : null}
-          {right ? (
-            <Animated.View
-              style={[styles.right, rightButtonStyle, rightContainerStyle]}
-            >
-              {right({ tintColor: headerTintColor })}
-            </Animated.View>
-          ) : null}
-        </View>
+                {left({
+                  backImage,
+                  pressColorAndroid,
+                  allowFontScaling: backAllowFontScaling,
+                  onPress: onGoBack,
+                  labelVisible: headerBackTitleVisible,
+                  label: leftLabel !== undefined ? leftLabel : previousTitle,
+                  truncatedLabel,
+                  labelStyle: [leftLabelStyle, customLeftLabelStyle],
+                  onLabelLayout: this.handleLeftLabelLayout,
+                  screenLayout: layout,
+                  titleLayout,
+                  tintColor: headerTintColor,
+                })}
+              </Animated.View>
+            ) : null}
+            {currentTitle ? (
+              <Animated.View
+                style={[
+                  Platform.select({
+                    ios: null,
+                    default: { left: onGoBack ? 72 : 16 },
+                  }),
+                  styles.title,
+                  titleStyle,
+                  titleContainerStyle,
+                ]}
+              >
+                <HeaderTitle
+                  onLayout={this.handleTitleLayout}
+                  allowFontScaling={titleAllowFontScaling}
+                  style={[{ color: headerTintColor }, customTitleStyle]}
+                >
+                  {currentTitle}
+                </HeaderTitle>
+              </Animated.View>
+            ) : null}
+            {right ? (
+              <Animated.View
+                style={[styles.right, rightButtonStyle, rightContainerStyle]}
+              >
+                {right({ tintColor: headerTintColor })}
+              </Animated.View>
+            ) : null}
+          </View>
+        </Animated.View>
       </React.Fragment>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
+  content: {
     flex: 1,
     paddingHorizontal: 4,
     flexDirection: 'row',
