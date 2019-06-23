@@ -607,6 +607,23 @@ The `lazy` option is disabled by default to provide a smoother tab switching exp
 
 On Android, enabling `removeClippedSubviews` can improve memory usage. This option can also affect rendering performance negatively, so it is disabled by default. So make sure to test it when enabling it. Refer the [prop reference](#removeclippedsubviews) for more details.
 
+### Usage with Wix [`react-native-navigation`](https://github.com/wix/react-native-navigation) on Android
+
+On Android, you should wrap all your screens that uses `react-native-tab-view` with `gestureHandlerRootHOC` from [`react-native-gesture-handler`](https://github.com/kmagiera/react-native-gesture-handler).
+
+For example:
+
+Your root file, where you register screens, ex. `index.js`:
+
+```
+import { Navigation } from 'react-native-navigation';
+import { gestureHandlerRootHOC } from 'react-native-gesture-handler';
+
+Navigation.registerComponent('MyScreen', () => gestureHandlerRootHOC(MyScreen));
+```
+
+Now inside `MyScreen.js` we can use `react-native-tab-view`.
+
 ## Contributing
 
 While developing, you can run the [example app](/example/README.md) to test your changes.
