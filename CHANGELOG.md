@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Fixes
 - Fix `navigationOptions` type from `NavigationScreenProp<NavigationRoute>` to `NavigationScreenConfig<Options>`.
 - Fix missing `isFirstRouteInParent` type in typescript and flow.
+- Fix `SceneView` type to set the PropTypes
 
 ## [3.11.0]
 
