@@ -1510,9 +1510,9 @@ declare module 'react-navigation' {
 
   export interface SceneViewProps {
     component: React.ComponentType;
-    screenProps: ScreenProps;
+    screenProps?: ScreenProps;
     navigation: NavigationScreenProp<NavigationRoute>;
   }
 
-  export class SceneView extends React.Component {}
+  export class SceneView extends React.Component<SceneViewProps> {}
 }
