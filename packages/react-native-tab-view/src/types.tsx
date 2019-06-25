@@ -37,7 +37,7 @@ export type EventEmitterProps = {
 };
 
 export type PagerCommonProps = {
-  keyboardDismissMode: 'none' | 'on-drag';
+  keyboardDismissMode: 'none' | 'on-drag' | 'auto';
   swipeEnabled: boolean;
   swipeVelocityImpact?: number;
   onSwipeStart?: () => void;

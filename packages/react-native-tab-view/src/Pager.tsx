@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet, Keyboard, I18nManager } from 'react-native';
+import { StyleSheet, TextInput, Keyboard, I18nManager } from 'react-native';
 import { PanGestureHandler, State } from 'react-native-gesture-handler';
 import Animated, { Easing } from 'react-native-reanimated';
 import memoize from './memoize';
@@ -215,6 +215,12 @@ export default class Pager<T extends Route> extends React.Component<Props<T>> {
   // Remember to set it before transition needs to occur
   private isSwipeGesture: Animated.Value<Binary> = new Value(FALSE);
 
+  // Track the index value when a swipe gesture has ended
+  // This lets us know if a gesture end triggered a tab switch or not
+  private indexAtSwipeEnd: Animated.Value<number> = new Value(
+    this.props.navigationState.index
+  );
+
   // Mappings to some prop values
   // We use them in animation calculations, so we need live animated nodes
   private routesLength = new Value(this.props.navigationState.routes.length);
@@ -291,6 +297,10 @@ export default class Pager<T extends Route> extends React.Component<Props<T>> {
   // It also needs to be reset right after componentDidUpdate fires
   private pendingIndexValue: number | undefined = undefined;
 
+  // Numeric id of the previously focused text input
+  // When a gesture didn't change the tab, we can restore the focused input with this
+  private previouslyFocusedTextInput: number | null = null;
+
   // Listeners for the entered screen
   private enterListeners: Listener[] = [];
 
@@ -301,7 +311,7 @@ export default class Pager<T extends Route> extends React.Component<Props<T>> {
   };
 
   private jumpTo = (key: string) => {
-    const { navigationState } = this.props;
+    const { navigationState, keyboardDismissMode, onIndexChange } = this.props;
 
     const index = navigationState.routes.findIndex(route => route.key === key);
 
@@ -311,7 +321,13 @@ export default class Pager<T extends Route> extends React.Component<Props<T>> {
     if (navigationState.index === index) {
       this.jumpToIndex(index);
     } else {
-      this.props.onIndexChange(index);
+      onIndexChange(index);
+
+      // When the index changes, the focused input will no longer be in current tab
+      // So we should dismiss the keyboard
+      if (keyboardDismissMode === 'auto') {
+        Keyboard.dismiss();
+      }
     }
   };
 
@@ -471,19 +487,43 @@ export default class Pager<T extends Route> extends React.Component<Props<T>> {
       // Listen to updates for this value only when it changes
       // Without `onChange`, this will fire even if the value didn't change
       // We don't want to call the listeners if the value didn't change
-      call([this.isSwiping], ([value]: readonly Binary[]) => {
-        const { keyboardDismissMode, onSwipeStart, onSwipeEnd } = this.props;
+      call(
+        [this.isSwiping, this.indexAtSwipeEnd, this.index],
+        ([isSwiping, indexAtSwipeEnd, currentIndex]: readonly number[]) => {
+          const { keyboardDismissMode, onSwipeStart, onSwipeEnd } = this.props;
 
-        if (value === TRUE) {
-          onSwipeStart && onSwipeStart();
+          if (isSwiping === TRUE) {
+            onSwipeStart && onSwipeStart();
 
-          if (keyboardDismissMode === 'on-drag') {
-            Keyboard.dismiss();
+            if (keyboardDismissMode === 'auto') {
+              const input = TextInput.State.currentlyFocusedField();
+
+              // When a gesture begins, blur the currently focused input
+              TextInput.State.blurTextInput(input);
+
+              // Store the id of this input so we can refocus it if gesture was cancelled
+              this.previouslyFocusedTextInput = input;
+            } else if (keyboardDismissMode === 'on-drag') {
+              Keyboard.dismiss();
+            }
+          } else {
+            onSwipeEnd && onSwipeEnd();
+
+            if (keyboardDismissMode === 'auto') {
+              if (indexAtSwipeEnd === currentIndex) {
+                // The index didn't change, we should restore the focus of text input
+                const input = this.previouslyFocusedTextInput;
+
+                if (input) {
+                  TextInput.State.focusTextInput(input);
+                }
+              }
+
+              this.previouslyFocusedTextInput = null;
+            }
           }
-        } else {
-          onSwipeEnd && onSwipeEnd();
         }
-      })
+      )
     ),
     onChange(
       this.nextIndex,
@@ -518,6 +558,7 @@ export default class Pager<T extends Route> extends React.Component<Props<T>> {
       ],
       [
         set(this.isSwiping, FALSE),
+        set(this.indexAtSwipeEnd, this.index),
         this.transitionTo(
           cond(
             and(

@@ -280,7 +280,8 @@ Boolean indicating whether to remove invisible views (such as unfocused screens)
 
 String indicating whether the keyboard gets dismissed in response to a drag gesture. Possible values are:
 
-- `'on-drag'` (default): the keyboard is dismissed when a drag begins.
+- `'auto'` (default): the keyboard is dismissed when the index changes.
+- `'on-drag'`: the keyboard is dismissed when a drag begins.
 - `'none'`: drags do not dismiss the keyboard.
 
 ##### `swipeEnabled`

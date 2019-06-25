@@ -58,7 +58,7 @@ export default class TabView<T extends Route> extends React.Component<
       <TabBar {...props} />
     ),
     renderLazyPlaceholder: () => null,
-    keyboardDismissMode: 'on-drag',
+    keyboardDismissMode: 'auto',
     swipeEnabled: true,
     lazy: false,
     lazyPreloadDistance: 0,
