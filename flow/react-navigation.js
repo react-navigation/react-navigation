@@ -585,11 +585,6 @@ declare module 'react-navigation' {
     remove: () => void,
   };
 
-  declare export function getActiveChildNavigationOptions<S>(
-    navigation: NavigationProp<S>,
-    screenProps?: {}
-  ): NavigationParams;
-
   declare export type NavigationScreenProp<+S> = {
     +state: S,
     dispatch: NavigationDispatch,
@@ -1297,4 +1292,9 @@ declare module 'react-navigation' {
     getScreenProps: () => {},
     getCurrentNavigation: () => ?NavigationScreenProp<State>
   ): NavigationScreenProp<State>;
+
+  declare export function getActiveChildNavigationOptions<S>(
+    navigation: NavigationScreenProp<S>,
+    screenProps?: {}
+  ): NavigationParams;
 }
