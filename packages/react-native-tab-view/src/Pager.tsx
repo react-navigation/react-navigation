@@ -80,7 +80,7 @@ const DIRECTION_RIGHT = -1;
 
 const SWIPE_DISTANCE_MINIMUM = 20;
 
-const SWIPE_VELOCITY_IMPACT = 0.01;
+const SWIPE_VELOCITY_IMPACT = 0.2;
 
 const SPRING_CONFIG = {
   stiffness: 1000,
@@ -427,20 +427,9 @@ export default class Pager<T extends Route> extends React.Component<Props<T>> {
     },
   ]);
 
-  private velocitySignum = cond(
-    this.velocityX,
-    divide(abs(this.velocityX), this.velocityX),
-    0
-  );
-
   private extrapolatedPosition = add(
     this.gestureX,
-    multiply(
-      this.velocityX,
-      this.velocityX,
-      this.velocitySignum,
-      this.swipeVelocityImpact
-    )
+    multiply(this.velocityX, this.swipeVelocityImpact)
   );
 
   private translateX = block([
@@ -582,7 +571,7 @@ export default class Pager<T extends Route> extends React.Component<Props<T>> {
                   sub(
                     this.index,
                     cond(
-                      greaterThan(this.velocitySignum, 0),
+                      greaterThan(this.extrapolatedPosition, 0),
                       I18nManager.isRTL ? DIRECTION_RIGHT : DIRECTION_LEFT,
                       I18nManager.isRTL ? DIRECTION_LEFT : DIRECTION_RIGHT
                     )

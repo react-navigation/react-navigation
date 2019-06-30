@@ -290,7 +290,7 @@ Boolean indicating whether to enable swipe gestures. Swipe gestures are enabled 
 
 ##### `swipeVelocityImpact`
 
-Determines how relevant is a velocity while calculating next position while swiping. Defaults to `0.01`.
+Determines how relevant is a velocity while calculating next position while swiping. Defaults to `0.2`.
 
 ##### `onSwipeStart`
 
