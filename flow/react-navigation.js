@@ -1129,6 +1129,8 @@ declare module 'react-navigation' {
     tintColor?: ?string,
     truncatedTitle?: ?string,
     width?: ?number,
+    disabled?: boolean,
+    backTitleVisible?: boolean,
   };
   declare export var HeaderBackButton: React$ComponentType<_HeaderBackButtonProps>;
 
