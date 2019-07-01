@@ -383,6 +383,7 @@ Array [
                             "height": 64,
                             "maxHeight": undefined,
                             "minHeight": undefined,
+                            "opacity": undefined,
                           },
                         ]
                       }
@@ -520,6 +521,7 @@ Array [
               "height": 64,
               "maxHeight": undefined,
               "minHeight": undefined,
+              "opacity": undefined,
             },
           ]
         }
