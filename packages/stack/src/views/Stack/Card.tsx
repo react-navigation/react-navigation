@@ -520,9 +520,15 @@ export default class Card extends React.Component<Props> {
               {...this.gestureActivationCriteria()}
             >
               <Animated.View style={[styles.container, cardStyle]}>
-                {shadowEnabled && !transparent ? (
+                {shadowEnabled && shadowStyle && !transparent ? (
                   <Animated.View
-                    style={[styles.shadow, shadowStyle]}
+                    style={[
+                      styles.shadow,
+                      direction === 'horizontal'
+                        ? styles.shadowHorizontal
+                        : styles.shadowVertical,
+                      shadowStyle,
+                    ]}
                     pointerEvents="none"
                   />
                 ) : null}
@@ -530,7 +536,7 @@ export default class Card extends React.Component<Props> {
                   active={active}
                   progress={this.props.current}
                   style={[
-                    styles.container,
+                    styles.content,
                     transparent ? styles.transparent : styles.opaque,
                     contentStyle,
                   ]}
@@ -549,6 +555,9 @@ export default class Card extends React.Component<Props> {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  content: {
+    flex: 1,
     overflow: 'hidden',
   },
   overlay: {
@@ -556,16 +565,25 @@ const styles = StyleSheet.create({
     backgroundColor: '#000',
   },
   shadow: {
+    position: 'absolute',
+    backgroundColor: '#fff',
+    shadowRadius: 5,
+    shadowColor: '#000',
+    shadowOpacity: 0.3,
+  },
+  shadowHorizontal: {
     top: 0,
     left: 0,
     bottom: 0,
     width: 3,
-    position: 'absolute',
-    backgroundColor: '#fff',
     shadowOffset: { width: -1, height: 1 },
-    shadowRadius: 5,
-    shadowColor: '#000',
-    shadowOpacity: 1,
+  },
+  shadowVertical: {
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 3,
+    shadowOffset: { width: 1, height: -1 },
   },
   transparent: {
     backgroundColor: 'transparent',

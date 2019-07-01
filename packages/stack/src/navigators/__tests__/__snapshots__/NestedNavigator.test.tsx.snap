@@ -77,7 +77,6 @@ Array [
             Array [
               Object {
                 "flex": 1,
-                "overflow": "hidden",
               },
               undefined,
               Object {
@@ -101,7 +100,6 @@ Array [
                 Array [
                   Object {
                     "flex": 1,
-                    "overflow": "hidden",
                   },
                   Object {
                     "transform": Array [
@@ -122,16 +120,18 @@ Array [
                   Array [
                     Object {
                       "backgroundColor": "#fff",
-                      "bottom": 0,
-                      "left": 0,
                       "position": "absolute",
                       "shadowColor": "#000",
+                      "shadowOpacity": 0.3,
+                      "shadowRadius": 5,
+                    },
+                    Object {
+                      "bottom": 0,
+                      "left": 0,
                       "shadowOffset": Object {
                         "height": 1,
                         "width": -1,
                       },
-                      "shadowOpacity": 1,
-                      "shadowRadius": 5,
                       "top": 0,
                       "width": 3,
                     },
@@ -230,7 +230,6 @@ Array [
                           Array [
                             Object {
                               "flex": 1,
-                              "overflow": "hidden",
                             },
                             undefined,
                             Object {
@@ -254,7 +253,6 @@ Array [
                               Array [
                                 Object {
                                   "flex": 1,
-                                  "overflow": "hidden",
                                 },
                                 Object {
                                   "transform": Array [
@@ -275,16 +273,18 @@ Array [
                                 Array [
                                   Object {
                                     "backgroundColor": "#fff",
-                                    "bottom": 0,
-                                    "left": 0,
                                     "position": "absolute",
                                     "shadowColor": "#000",
+                                    "shadowOpacity": 0.3,
+                                    "shadowRadius": 5,
+                                  },
+                                  Object {
+                                    "bottom": 0,
+                                    "left": 0,
                                     "shadowOffset": Object {
                                       "height": 1,
                                       "width": -1,
                                     },
-                                    "shadowOpacity": 1,
-                                    "shadowRadius": 5,
                                     "top": 0,
                                     "width": 3,
                                   },
