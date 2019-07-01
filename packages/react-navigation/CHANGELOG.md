@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Fixes
 - Fix `navigationOptions` type from `NavigationScreenProp<NavigationRoute>` to `NavigationScreenConfig<Options>`.
 - Fix missing `isFirstRouteInParent` type in typescript and flow.
+- Add missing `backTitleVisible` for typescript, `disabled` and `backTitleVisible` for flow definitions in type `HeaderBackButtonProps`
 
 ## [3.11.0]
 
