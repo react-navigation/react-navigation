@@ -17,7 +17,7 @@ type Props = HeaderBackButtonProps & {
 };
 
 type State = {
-  initialLabelWidth?: number;
+  fullLabelWidth?: number;
 };
 
 class HeaderBackButton extends React.Component<Props, State> {
@@ -38,21 +38,14 @@ class HeaderBackButton extends React.Component<Props, State> {
 
     onLabelLayout && onLabelLayout(e);
 
-    if (this.state.initialLabelWidth) {
-      return;
-    }
-
-    // This measurement is used to determine if we should truncate the label when it doesn't fit
-    // Only measure it once because `onLayout` will fire again when we render truncated label
-    // and we want the measurement of not-truncated label
     this.setState({
-      initialLabelWidth: e.nativeEvent.layout.x + e.nativeEvent.layout.width,
+      fullLabelWidth: e.nativeEvent.layout.x + e.nativeEvent.layout.width,
     });
   };
 
   private shouldTruncateLabel = () => {
     const { titleLayout, screenLayout, label } = this.props;
-    const { initialLabelWidth } = this.state;
+    const { fullLabelWidth: initialLabelWidth } = this.state;
 
     return (
       !label ||
@@ -104,7 +97,11 @@ class HeaderBackButton extends React.Component<Props, State> {
     const labelElement = (
       <Animated.Text
         accessible={false}
-        onLayout={this.handleLabelLayout}
+        onLayout={
+          // This measurement is used to determine if we should truncate the label when it doesn't fit
+          // Only measure it when label is not truncated because we want the measurement of full label
+          leftLabelText === label ? this.handleLabelLayout : undefined
+        }
         style={[
           styles.label,
           tintColor ? { color: tintColor } : null,
