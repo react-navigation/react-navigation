@@ -217,6 +217,7 @@ export default class HeaderSegment extends React.Component<Props, State> {
       shadowOffset,
       shadowOpacity,
       shadowRadius,
+      opacity,
       ...unsafeStyles
     } = StyleSheet.flatten(customHeaderStyle || {}) as ViewStyle;
 
@@ -257,6 +258,7 @@ export default class HeaderSegment extends React.Component<Props, State> {
       shadowOffset,
       shadowOpacity,
       shadowRadius,
+      opacity,
     };
 
     // Setting a property to undefined triggers default style
@@ -284,7 +286,7 @@ export default class HeaderSegment extends React.Component<Props, State> {
         </Animated.View>
         <Animated.View
           pointerEvents="box-none"
-          style={[{ height, minHeight, maxHeight }]}
+          style={[{ height, minHeight, maxHeight, opacity }]}
         >
           <View
             pointerEvents="none"
