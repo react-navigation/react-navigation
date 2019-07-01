@@ -115,6 +115,7 @@ export function forModalPresentationIOS({
 
   return {
     cardStyle: {
+      overflow: 'hidden',
       borderTopLeftRadius: borderRadius,
       borderTopRightRadius: borderRadius,
       marginTop: index === 0 ? 0 : statusBarHeight,
