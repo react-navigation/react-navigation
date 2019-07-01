@@ -356,7 +356,7 @@ Array [
                             "top": 0,
                           },
                           Object {
-                            "opacity": NOOP {},
+                            "opacity": undefined,
                           },
                         ]
                       }
@@ -494,7 +494,7 @@ Array [
               "top": 0,
             },
             Object {
-              "opacity": NOOP {},
+              "opacity": undefined,
             },
           ]
         }
