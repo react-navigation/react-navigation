@@ -30,8 +30,11 @@ function screensEnabled() {
   return USE_SCREENS;
 }
 
+// We initialize these lazily so that importing the module doesn't throw error when not linked
+// This is necessary coz libraries such as React Navigation import the library where it may not be enabled
 let NativeScreenValue;
 let NativeScreenContainerValue;
+let AnimatedNativeScreen;
 
 const ScreensNativeModules = {
   get NativeScreen() {
@@ -47,10 +50,6 @@ const ScreensNativeModules = {
     return NativeScreenContainerValue;
   },
 };
-
-const AnimatedNativeScreen = Animated.createAnimatedComponent(
-  ScreensNativeModules.NativeScreen
-);
 
 class Screen extends React.Component {
   setNativeProps(props) {
@@ -70,22 +69,28 @@ class Screen extends React.Component {
       const { active, onComponentRef, ...props } = this.props;
 
       return <Animated.View {...props} ref={this.setRef} />;
-    } else if (version.minor >= 57) {
-      return <AnimatedNativeScreen {...this.props} ref={this.setRef} />;
     } else {
-      // On RN version below 0.57 we need to wrap screen's children with an
-      // additional View because of a bug fixed in react-native/pull/20658 which
-      // was preventing a view from having both styles and some other props being
-      // "animated" (using Animated native driver)
-      const { style, children, ...rest } = this.props;
-      return (
-        <AnimatedNativeScreen
-          {...rest}
-          ref={this.setRef}
-          style={StyleSheet.absoluteFill}>
-          <Animated.View style={style}>{children}</Animated.View>
-        </AnimatedNativeScreen>
-      );
+      AnimatedNativeScreen =
+        AnimatedNativeScreen ||
+        Animated.createAnimatedComponent(ScreensNativeModules.NativeScreen);
+
+      if (version.minor >= 57) {
+        return <AnimatedNativeScreen {...this.props} ref={this.setRef} />;
+      } else {
+        // On RN version below 0.57 we need to wrap screen's children with an
+        // additional View because of a bug fixed in react-native/pull/20658 which
+        // was preventing a view from having both styles and some other props being
+        // "animated" (using Animated native driver)
+        const { style, children, ...rest } = this.props;
+        return (
+          <AnimatedNativeScreen
+            {...rest}
+            ref={this.setRef}
+            style={StyleSheet.absoluteFill}>
+            <Animated.View style={style}>{children}</Animated.View>
+          </AnimatedNativeScreen>
+        );
+      }
     }
   }
 }
