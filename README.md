@@ -142,7 +142,7 @@ In order for your native view on iOS to be notified when its parent navigation c
 }
 ```
 
-You can check our example app for a fully functional demo see [RNSSampleLifecycleAwareView.m](https://github.com/kmagiera/react-native-screens/blob/master./Example/ios/RNSSampleLifecycleAwareView.m) for more details.
+You can check our example app for a fully functional demo see [RNSSampleLifecycleAwareView.m](https://github.com/kmagiera/react-native-screens/blob/master/Example/ios/ScreensExample/RNSSampleLifecycleAwareView.m) for more details.
 
 ### Navigation lifecycle on Android
 
