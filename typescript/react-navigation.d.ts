@@ -1082,6 +1082,7 @@ declare module 'react-navigation' {
       scrollEnabled?: boolean;
       tabStyle?: StyleProp<ViewStyle>;
       indicatorStyle?: StyleProp<ViewStyle>;
+      keyboardHidesTabBar?: boolean;
     };
     swipeEnabled?: boolean;
     animationEnabled?: boolean;
