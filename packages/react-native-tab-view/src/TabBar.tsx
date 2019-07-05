@@ -231,6 +231,7 @@ export default class TabBar<T extends Route> extends React.Component<
     const { routes } = navigationState;
     const tabWidth = this.getTabWidth(this.props, this.state);
     const tabBarWidth = tabWidth * routes.length;
+    const tabBarWidthPercent = `${routes.length * 40}%`;
     const translateX = this.getTranslateX(
       this.scrollAmount,
       this.getMaxScrollDistance(tabBarWidth, layout.width)
@@ -246,7 +247,11 @@ export default class TabBar<T extends Route> extends React.Component<
           style={[
             styles.indicatorContainer,
             scrollEnabled ? { transform: [{ translateX }] as any } : null,
-            tabBarWidth ? { width: tabBarWidth } : null,
+            tabBarWidth
+              ? { width: tabBarWidth }
+              : scrollEnabled
+              ? { width: tabBarWidthPercent }
+              : null,
           ]}
         >
           {this.props.renderIndicator({
@@ -272,7 +277,7 @@ export default class TabBar<T extends Route> extends React.Component<
             contentContainerStyle={[
               styles.tabContent,
               scrollEnabled
-                ? { width: tabBarWidth || `${routes.length * 40}%` }
+                ? { width: tabBarWidth || tabBarWidthPercent }
                 : styles.container,
               contentContainerStyle,
             ]}
