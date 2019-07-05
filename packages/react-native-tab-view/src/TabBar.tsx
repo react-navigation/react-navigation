@@ -245,9 +245,8 @@ export default class TabBar<T extends Route> extends React.Component<
           pointerEvents="none"
           style={[
             styles.indicatorContainer,
-            scrollEnabled
-              ? { width: tabBarWidth, transform: [{ translateX }] as any }
-              : null,
+            scrollEnabled ? { transform: [{ translateX }] as any } : null,
+            tabBarWidth ? { width: tabBarWidth } : null,
           ]}
         >
           {this.props.renderIndicator({
@@ -272,7 +271,9 @@ export default class TabBar<T extends Route> extends React.Component<
             overScrollMode="never"
             contentContainerStyle={[
               styles.tabContent,
-              scrollEnabled ? null : styles.container,
+              scrollEnabled
+                ? { width: tabBarWidth || `${routes.length * 40}%` }
+                : styles.container,
               contentContainerStyle,
             ]}
             scrollEventThrottle={16}
@@ -296,9 +297,7 @@ export default class TabBar<T extends Route> extends React.Component<
                 key={route.key}
                 position={position}
                 route={route}
-                tabWidth={tabWidth}
                 navigationState={navigationState}
-                scrollEnabled={scrollEnabled}
                 getAccessibilityLabel={getAccessibilityLabel}
                 getAccessible={getAccessible}
                 getLabelText={getLabelText}

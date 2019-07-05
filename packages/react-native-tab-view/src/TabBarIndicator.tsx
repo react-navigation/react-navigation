@@ -25,7 +25,7 @@ export default class TabBarIndicator<T extends Route> extends React.Component<
   );
 
   render() {
-    const { width, position, navigationState, style } = this.props;
+    const { layout, width, position, navigationState, style } = this.props;
     const { routes } = navigationState;
 
     const translateX = this.getTranslateX(position, routes, width);
@@ -37,7 +37,7 @@ export default class TabBarIndicator<T extends Route> extends React.Component<
           { width: `${100 / routes.length}%` },
           // If layout is not available, use `left` property for positioning the indicator
           // This avoids rendering delay until we are able to calculate translateX
-          width
+          layout.width
             ? { transform: [{ translateX }] as any }
             : { left: `${(100 / routes.length) * navigationState.index}%` },
           style,

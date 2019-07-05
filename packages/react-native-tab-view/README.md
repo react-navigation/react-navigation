@@ -474,6 +474,8 @@ Opacity for pressed tab (iOS and Android < 5.0 only).
 
 Boolean indicating whether to enable scrollable tabs.
 
+If you set `scrollEnabled` to `true`, you should also specify a `width` in `tabStyle` to improve the initial render.
+
 ##### `bounces`
 
 Boolean indicating whether the tab bar bounces when scrolling.

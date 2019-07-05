@@ -93,7 +93,7 @@ export default class ExampleList extends React.Component<any, State> {
 
       if (
         Number.isFinite(savedIndex) &&
-        savedIndex > 0 &&
+        savedIndex >= 0 &&
         savedIndex < EXAMPLE_COMPONENTS.length
       ) {
         this.setState({

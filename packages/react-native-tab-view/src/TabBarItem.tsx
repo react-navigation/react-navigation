@@ -15,7 +15,6 @@ type Props<T extends Route> = {
   position: Animated.Node<number>;
   route: T;
   navigationState: NavigationState<T>;
-  scrollEnabled?: boolean;
   activeColor?: string;
   inactiveColor?: string;
   pressColor?: string;
@@ -37,7 +36,6 @@ type Props<T extends Route> = {
   renderBadge?: (scene: Scene<T>) => React.ReactNode;
   onPress: () => void;
   onLongPress: () => void;
-  tabWidth: number;
   labelStyle?: StyleProp<TextStyle>;
   style: StyleProp<ViewStyle>;
 };
@@ -81,7 +79,6 @@ export default class TabBarItem<T extends Route> extends React.Component<
       route,
       position,
       navigationState,
-      scrollEnabled,
       renderLabel: renderLabelPassed,
       renderIcon,
       renderBadge,
@@ -95,7 +92,6 @@ export default class TabBarItem<T extends Route> extends React.Component<
       pressOpacity,
       labelStyle,
       style,
-      tabWidth,
       onPress,
       onLongPress,
     } = this.props;
@@ -197,18 +193,8 @@ export default class TabBarItem<T extends Route> extends React.Component<
     }
 
     const tabStyle = StyleSheet.flatten(style);
-    const isWidthSet =
-      (tabStyle && typeof tabStyle.width !== 'undefined') ||
-      scrollEnabled === true;
-
-    const tabContainerStyle: ViewStyle = {};
-    const itemStyle = isWidthSet ? { width: tabWidth } : null;
-
-    if (tabStyle && typeof tabStyle.flex === 'number') {
-      tabContainerStyle.flex = tabStyle.flex;
-    } else if (!isWidthSet) {
-      tabContainerStyle.flex = 1;
-    }
+    const isWidthSet = tabStyle && tabStyle.width !== undefined;
+    const tabContainerStyle: ViewStyle | null = isWidthSet ? null : { flex: 1 };
 
     const scene = { route };
 
@@ -238,7 +224,7 @@ export default class TabBarItem<T extends Route> extends React.Component<
         onLongPress={onLongPress}
         style={tabContainerStyle}
       >
-        <View pointerEvents="none" style={[styles.item, itemStyle, tabStyle]}>
+        <View pointerEvents="none" style={[styles.item, tabStyle]}>
           {icon}
           {label}
           {badge != null ? <View style={styles.badge}>{badge}</View> : null}
