@@ -93,23 +93,24 @@ export type HeaderProps = {
   styleInterpolator: HeaderStyleInterpolator;
 };
 
-export type NavigationStackOptions = HeaderOptions & {
-  title?: string;
-  header?: null | ((props: HeaderProps) => React.ReactNode);
-  cardShadowEnabled?: boolean;
-  cardOverlayEnabled?: boolean;
-  cardTransparent?: boolean;
-  cardStyle?: StyleProp<ViewStyle>;
-  animationEnabled?: boolean;
-  gesturesEnabled?: boolean;
-  gestureResponseDistance?: {
-    vertical?: number;
-    horizontal?: number;
+export type NavigationStackOptions = HeaderOptions &
+  Partial<TransitionPreset> & {
+    title?: string;
+    header?: null | ((props: HeaderProps) => React.ReactNode);
+    cardShadowEnabled?: boolean;
+    cardOverlayEnabled?: boolean;
+    cardTransparent?: boolean;
+    cardStyle?: StyleProp<ViewStyle>;
+    animationEnabled?: boolean;
+    gesturesEnabled?: boolean;
+    gestureResponseDistance?: {
+      vertical?: number;
+      horizontal?: number;
+    };
+    disableKeyboardHandling?: boolean;
   };
-  disableKeyboardHandling?: boolean;
-};
 
-export type NavigationConfig = TransitionPreset & {
+export type NavigationConfig = {
   mode: 'card' | 'modal';
   headerMode: HeaderMode;
 };

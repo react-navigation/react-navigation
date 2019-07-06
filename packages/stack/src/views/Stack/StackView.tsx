@@ -6,11 +6,6 @@ import HeaderContainer, {
   Props as HeaderContainerProps,
 } from '../Header/HeaderContainer';
 import {
-  DefaultTransition,
-  ModalSlideFromBottomIOS,
-} from '../../TransitionConfigs/TransitionPresets';
-import { forNoAnimation } from '../../TransitionConfigs/HeaderStyleInterpolators';
-import {
   NavigationProp,
   SceneDescriptor,
   NavigationConfig,
@@ -283,20 +278,9 @@ class StackView extends React.Component<Props, State> {
     const headerMode =
       mode !== 'modal' && Platform.OS === 'ios' ? 'float' : 'screen';
 
-    let transitionPreset =
-      mode === 'modal' && Platform.OS === 'ios'
-        ? ModalSlideFromBottomIOS
-        : DefaultTransition;
-
-    if (headerMode === 'screen') {
-      transitionPreset = {
-        ...transitionPreset,
-        headerStyleInterpolator: forNoAnimation,
-      };
-    }
-
     return (
       <Stack
+        mode={mode}
         getPreviousRoute={this.getPreviousRoute}
         getGesturesEnabled={this.getGesturesEnabled}
         routes={routes}
@@ -314,7 +298,6 @@ class StackView extends React.Component<Props, State> {
         headerMode={headerMode}
         navigation={navigation}
         descriptors={descriptors}
-        {...transitionPreset}
         {...config}
       />
     );

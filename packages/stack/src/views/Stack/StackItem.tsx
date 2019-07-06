@@ -6,16 +6,13 @@ import Card from './Card';
 import {
   Route,
   HeaderScene,
-  GestureDirection,
   Layout,
-  TransitionSpec,
-  CardStyleInterpolator,
   HeaderMode,
   NavigationProp,
-  HeaderStyleInterpolator,
+  TransitionPreset,
 } from '../../types';
 
-type Props = {
+type Props = TransitionPreset & {
   index: number;
   active: boolean;
   focused: boolean;
@@ -30,7 +27,6 @@ type Props = {
   cardShadowEnabled?: boolean;
   cardStyle?: StyleProp<ViewStyle>;
   gesturesEnabled?: boolean;
-  direction: GestureDirection;
   getPreviousRoute: (props: { route: Route }) => Route | undefined;
   renderHeader: (props: HeaderContainerProps) => React.ReactNode;
   renderScene: (props: { route: Route }) => React.ReactNode;
@@ -48,12 +44,6 @@ type Props = {
     vertical?: number;
     horizontal?: number;
   };
-  transitionSpec: {
-    open: TransitionSpec;
-    close: TransitionSpec;
-  };
-  headerStyleInterpolator: HeaderStyleInterpolator;
-  cardStyleInterpolator: CardStyleInterpolator;
   headerMode: HeaderMode;
   headerTransparent?: boolean;
   floaingHeaderHeight: number;
@@ -87,7 +77,6 @@ export default class StackItem extends React.PureComponent<Props> {
       navigation,
       scene,
       previousScene,
-      direction,
       cardTransparent,
       cardOverlayEnabled,
       cardShadowEnabled,
@@ -97,9 +86,6 @@ export default class StackItem extends React.PureComponent<Props> {
       onGestureCanceled,
       onGestureEnd,
       gestureResponseDistance,
-      transitionSpec,
-      headerStyleInterpolator,
-      cardStyleInterpolator,
       floaingHeaderHeight,
       hasCustomHeader,
       getPreviousRoute,
@@ -107,6 +93,10 @@ export default class StackItem extends React.PureComponent<Props> {
       headerTransparent,
       renderHeader,
       renderScene,
+      direction,
+      transitionSpec,
+      cardStyleInterpolator,
+      headerStyleInterpolator,
     } = this.props;
 
     return (
