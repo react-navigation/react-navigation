@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {
+  View,
   StyleSheet,
   LayoutChangeEvent,
   Dimensions,
@@ -70,6 +71,22 @@ const AnimatedScreen = Animated.createAnimatedComponent(
 ) as React.ComponentType<
   ViewProps & { active: number | Animated.Node<number> }
 >;
+
+const MaybeScreenContainer = Platform.OS === 'ios' ? View : ScreenContainer;
+
+const MaybeScreen = ({
+  active,
+  ...rest
+}: ViewProps & {
+  active: number | Animated.Node<number>;
+  children: React.ReactNode;
+}) => {
+  if (Platform.OS === 'ios') {
+    return <View {...rest} />;
+  }
+
+  return <AnimatedScreen active={active} {...rest} />;
+};
 
 const { cond, eq } = Animated;
 
@@ -220,7 +237,10 @@ export default class Stack extends React.Component<Props, State> {
 
     return (
       <React.Fragment>
-        <ScreenContainer style={styles.container} onLayout={this.handleLayout}>
+        <MaybeScreenContainer
+          style={styles.container}
+          onLayout={this.handleLayout}
+        >
           {routes.map((route, index, self) => {
             const focused = focusedRoute.key === route.key;
             const current = progress[route.key];
@@ -255,7 +275,7 @@ export default class Stack extends React.Component<Props, State> {
             } = descriptor.options;
 
             return (
-              <AnimatedScreen
+              <MaybeScreen
                 key={route.key}
                 style={StyleSheet.absoluteFill}
                 active={isScreenActive}
@@ -296,10 +316,10 @@ export default class Stack extends React.Component<Props, State> {
                   cardStyleInterpolator={cardStyleInterpolator}
                   headerStyleInterpolator={headerStyleInterpolator}
                 />
-              </AnimatedScreen>
+              </MaybeScreen>
             );
           })}
-        </ScreenContainer>
+        </MaybeScreenContainer>
         {headerMode === 'float'
           ? renderHeader({
               mode: 'float',
