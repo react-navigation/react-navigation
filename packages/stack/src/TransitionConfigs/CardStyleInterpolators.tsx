@@ -183,6 +183,7 @@ export function forWipeFromBottomAndroid({
 
   return {
     containerStyle: {
+      overflow: 'hidden',
       transform: [{ translateY: containerTranslateY }],
     },
     cardStyle: {
