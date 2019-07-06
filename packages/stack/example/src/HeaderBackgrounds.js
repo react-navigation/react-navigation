@@ -94,14 +94,18 @@ function createHeaderBackgroundExample(options = {}) {
   );
 }
 export const HeaderBackgroundDefault = createHeaderBackgroundExample({
-  ...TransitionPresets.SlideFromRightIOS,
-  headerStyleInterpolator: HeaderStyleInterpolators.forUIKit,
+  defaultNavigationOptions: {
+    ...TransitionPresets.SlideFromRightIOS,
+    headerStyleInterpolator: HeaderStyleInterpolators.forUIKit,
+  },
   headerMode: 'float',
 });
 
 export const HeaderBackgroundFade = createHeaderBackgroundExample({
-  ...TransitionPresets.SlideFromRightIOS,
-  headerStyleInterpolator: HeaderStyleInterpolators.forFade,
+  defaultNavigationOptions: {
+    ...TransitionPresets.SlideFromRightIOS,
+    headerStyleInterpolator: HeaderStyleInterpolators.forFade,
+  },
   headerMode: 'float',
 });
 

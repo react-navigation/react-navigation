@@ -64,9 +64,9 @@ export default createStackNavigator(
     Details: DetailsScreen,
   },
   {
-    ...TransitionPresets.ModalPresentationIOS,
     mode: 'modal',
     defaultNavigationOptions: {
+      ...TransitionPresets.ModalPresentationIOS,
       cardOverlayEnabled: true,
       gesturesEnabled: true,
     },

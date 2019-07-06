@@ -105,10 +105,10 @@ const StackWithHeaderPreset = createStackNavigator(
     ScreenWithLongTitle: ScreenWithLongTitle,
   },
   {
-    ...TransitionPresets.SlideFromRightIOS,
-    headerStyleInterpolator: HeaderStyleInterpolators.forUIKit,
     headerMode: 'float',
     defaultNavigationOptions: {
+      ...TransitionPresets.SlideFromRightIOS,
+      headerStyleInterpolator: HeaderStyleInterpolators.forUIKit,
       gesturesEnabled: true,
     },
   }
