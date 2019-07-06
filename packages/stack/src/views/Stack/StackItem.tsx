@@ -55,7 +55,7 @@ export default class StackItem extends React.PureComponent<Props> {
     this.props.onOpenRoute({ route: this.props.scene.route });
 
   private handleClose = () =>
-    this.props.onOpenRoute({ route: this.props.scene.route });
+    this.props.onCloseRoute({ route: this.props.scene.route });
 
   private handleTransitionStart = ({ closing }: { closing: boolean }) => {
     const { index, scene, onTransitionStart, onGoBack } = this.props;
