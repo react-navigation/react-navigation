@@ -32,7 +32,7 @@ import {
 // Comment the following two lines to stop using react-native-screens
 import { useScreens } from 'react-native-screens';
 
-useScreens(false);
+useScreens(true);
 
 // Change `false` to `true` to force RTL. Requires closing and re-opening
 // your app after you first load it with this option enabled.

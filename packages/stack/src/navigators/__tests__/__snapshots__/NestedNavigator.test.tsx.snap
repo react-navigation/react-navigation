@@ -11,8 +11,7 @@ Array [
       }
     }
   >
-    <RNSScreen
-      active={1}
+    <View
       pointerEvents="box-none"
       style={
         Object {
@@ -164,8 +163,7 @@ Array [
                     }
                   }
                 >
-                  <RNSScreen
-                    active={1}
+                  <View
                     pointerEvents="box-none"
                     style={
                       Object {
@@ -312,7 +310,7 @@ Array [
                         </PanGestureHandler>
                       </View>
                     </View>
-                  </RNSScreen>
+                  </View>
                 </View>
                 <View
                   pointerEvents="box-none"
@@ -450,7 +448,7 @@ Array [
           </PanGestureHandler>
         </View>
       </View>
-    </RNSScreen>
+    </View>
   </View>,
   <View
     pointerEvents="box-none"
