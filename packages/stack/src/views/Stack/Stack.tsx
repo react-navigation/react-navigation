@@ -353,7 +353,7 @@ export default class Stack extends React.Component<Props, State> {
                 focusedOptions.headerStyleInterpolator !== undefined
                   ? focusedOptions.headerStyleInterpolator
                   : defaultTransitionPreset.headerStyleInterpolator,
-              style: [styles.header, styles.floating],
+              style: styles.floating,
             })
           : null}
       </React.Fragment>
@@ -365,10 +365,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     overflow: 'hidden',
-  },
-  header: {
-    // This is needed to show elevation shadow
-    zIndex: Platform.OS === 'android' ? 1 : 0,
   },
   floating: {
     position: 'absolute',
