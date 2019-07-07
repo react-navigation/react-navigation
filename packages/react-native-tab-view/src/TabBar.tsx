@@ -285,16 +285,13 @@ export default class TabBar<T extends Route> extends React.Component<
               contentContainerStyle,
             ]}
             scrollEventThrottle={16}
-            onScroll={Animated.event(
-              [
-                {
-                  nativeEvent: {
-                    contentOffset: { x: this.scrollAmount },
-                  },
+            onScroll={Animated.event([
+              {
+                nativeEvent: {
+                  contentOffset: { x: this.scrollAmount },
                 },
-              ],
-              { useNativeDriver: true }
-            )}
+              },
+            ])}
             ref={el => {
               // @ts-ignore
               this.scrollView = el && el.getNode();
