@@ -33,10 +33,12 @@ type Props = TransitionPreset & {
   onOpenRoute: (props: { route: Route }) => void;
   onCloseRoute: (props: { route: Route }) => void;
   onGoBack: (props: { route: Route }) => void;
-  onTransitionStart?: (
-    curr: { index: number },
-    prev: { index: number }
-  ) => void;
+  onTransitionStart?: (props: {
+    route: Route;
+    current: { index: number };
+    previous: { index: number };
+  }) => void;
+  onTransitionEnd?: (props: { route: Route }) => void;
   onGestureBegin?: () => void;
   onGestureCanceled?: () => void;
   onGestureEnd?: () => void;
@@ -46,22 +48,34 @@ type Props = TransitionPreset & {
   };
   headerMode: HeaderMode;
   headerTransparent?: boolean;
-  floaingHeaderHeight: number;
+  floatingHeaderHeight: number;
   hasCustomHeader: boolean;
 };
 
 export default class StackItem extends React.PureComponent<Props> {
-  private handleOpen = () =>
-    this.props.onOpenRoute({ route: this.props.scene.route });
+  private handleOpen = () => {
+    const { scene, onTransitionEnd, onOpenRoute } = this.props;
 
-  private handleClose = () =>
-    this.props.onCloseRoute({ route: this.props.scene.route });
+    onTransitionEnd && onTransitionEnd({ route: scene.route });
+    onOpenRoute({ route: scene.route });
+  };
+
+  private handleClose = () => {
+    const { scene, onTransitionEnd, onCloseRoute } = this.props;
+
+    onTransitionEnd && onTransitionEnd({ route: scene.route });
+    onCloseRoute({ route: scene.route });
+  };
 
   private handleTransitionStart = ({ closing }: { closing: boolean }) => {
     const { index, scene, onTransitionStart, onGoBack } = this.props;
 
     onTransitionStart &&
-      onTransitionStart({ index: closing ? index - 1 : index }, { index });
+      onTransitionStart({
+        route: scene.route,
+        previous: { index: closing ? index - 1 : index },
+        current: { index },
+      });
 
     closing && onGoBack({ route: scene.route });
   };
@@ -86,7 +100,7 @@ export default class StackItem extends React.PureComponent<Props> {
       onGestureCanceled,
       onGestureEnd,
       gestureResponseDistance,
-      floaingHeaderHeight,
+      floatingHeaderHeight,
       hasCustomHeader,
       getPreviousRoute,
       headerMode,
@@ -126,7 +140,7 @@ export default class StackItem extends React.PureComponent<Props> {
         pointerEvents="box-none"
         containerStyle={
           headerMode === 'float' && !headerTransparent && !hasCustomHeader
-            ? { marginTop: floaingHeaderHeight }
+            ? { marginTop: floatingHeaderHeight }
             : null
         }
         contentStyle={cardStyle}

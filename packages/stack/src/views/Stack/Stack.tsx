@@ -46,8 +46,8 @@ type Props = {
   renderScene: (props: { route: Route }) => React.ReactNode;
   headerMode: HeaderMode;
   onTransitionStart?: (
-    curr: { index: number },
-    prev: { index: number }
+    current: { index: number },
+    previous: { index: number }
   ) => void;
   onGestureBegin?: () => void;
   onGestureCanceled?: () => void;
@@ -60,7 +60,7 @@ type State = {
   scenes: HeaderScene<Route>[];
   progress: ProgressValues;
   layout: Layout;
-  floaingHeaderHeight: number;
+  floatingHeaderHeight: number;
 };
 
 const dimensions = Dimensions.get('window');
@@ -171,7 +171,7 @@ export default class Stack extends React.Component<Props, State> {
     // This is not a great heuristic here. We don't know synchronously
     // on mount what the header height is so we have just used the most
     // common cases here.
-    floaingHeaderHeight: getDefaultHeaderHeight(layout),
+    floatingHeaderHeight: getDefaultHeaderHeight(layout),
   };
 
   private handleLayout = (e: LayoutChangeEvent) => {
@@ -192,9 +192,30 @@ export default class Stack extends React.Component<Props, State> {
   private handleFloatingHeaderLayout = (e: LayoutChangeEvent) => {
     const { height } = e.nativeEvent.layout;
 
-    if (height !== this.state.floaingHeaderHeight) {
-      this.setState({ floaingHeaderHeight: height });
+    if (height !== this.state.floatingHeaderHeight) {
+      this.setState({ floatingHeaderHeight: height });
     }
+  };
+
+  private handleTransitionStart = ({
+    route,
+    current,
+    previous,
+  }: {
+    route: Route;
+    current: { index: number };
+    previous: { index: number };
+  }) => {
+    const { onTransitionStart, descriptors } = this.props;
+    const options = descriptors[route.key].options;
+
+    onTransitionStart && onTransitionStart(current, previous);
+    options.onTransitionStart && options.onTransitionStart();
+  };
+
+  private handleTransitionEnd = ({ route }: { route: Route }) => {
+    const options = this.props.descriptors[route.key].options;
+    options.onTransitionEnd && options.onTransitionEnd();
   };
 
   render() {
@@ -212,13 +233,12 @@ export default class Stack extends React.Component<Props, State> {
       renderHeader,
       renderScene,
       headerMode,
-      onTransitionStart,
       onGestureBegin,
       onGestureCanceled,
       onGestureEnd,
     } = this.props;
 
-    const { scenes, layout, progress, floaingHeaderHeight } = this.state;
+    const { scenes, layout, progress, floatingHeaderHeight } = this.state;
 
     const focusedRoute = navigation.state.routes[navigation.state.index];
     const focusedOptions = descriptors[focusedRoute.key].options;
@@ -300,7 +320,7 @@ export default class Stack extends React.Component<Props, State> {
                   onGestureCanceled={onGestureCanceled}
                   onGestureEnd={onGestureEnd}
                   gestureResponseDistance={gestureResponseDistance}
-                  floaingHeaderHeight={floaingHeaderHeight}
+                  floatingHeaderHeight={floatingHeaderHeight}
                   hasCustomHeader={header === null}
                   getPreviousRoute={getPreviousRoute}
                   headerMode={headerMode}
@@ -309,7 +329,8 @@ export default class Stack extends React.Component<Props, State> {
                   renderScene={renderScene}
                   onOpenRoute={onOpenRoute}
                   onCloseRoute={onCloseRoute}
-                  onTransitionStart={onTransitionStart}
+                  onTransitionStart={this.handleTransitionStart}
+                  onTransitionEnd={this.handleTransitionEnd}
                   onGoBack={onGoBack}
                   direction={direction}
                   transitionSpec={transitionSpec}

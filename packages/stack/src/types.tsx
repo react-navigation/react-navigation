@@ -108,6 +108,8 @@ export type NavigationStackOptions = HeaderOptions &
       horizontal?: number;
     };
     disableKeyboardHandling?: boolean;
+    onTransitionStart?: () => void;
+    onTransitionEnd?: () => void;
   };
 
 export type NavigationConfig = {
