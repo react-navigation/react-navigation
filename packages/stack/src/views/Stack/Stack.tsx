@@ -60,7 +60,7 @@ type State = {
   scenes: HeaderScene<Route>[];
   progress: ProgressValues;
   layout: Layout;
-  floatingHeaderHeight: number;
+  floatingHeaderHeights: { [key: string]: number };
 };
 
 const dimensions = Dimensions.get('window');
@@ -91,6 +91,23 @@ const MaybeScreen = ({
 const { cond, eq } = Animated;
 
 const ANIMATED_ONE = new Animated.Value(1);
+
+const getFloatingHeaderHeights = (
+  routes: Route[],
+  layout: Layout,
+  previous: { [key: string]: number }
+) => {
+  const defaultHeaderHeight = getDefaultHeaderHeight(layout);
+
+  return routes.reduce(
+    (acc, curr) => {
+      acc[curr.key] = previous[curr.key] || defaultHeaderHeight;
+
+      return acc;
+    },
+    {} as { [key: string]: number }
+  );
+};
 
 export default class Stack extends React.Component<Props, State> {
   static getDerivedStateFromProps(props: Props, state: State) {
@@ -157,6 +174,11 @@ export default class Stack extends React.Component<Props, State> {
       }),
       progress,
       descriptors: props.descriptors,
+      floatingHeaderHeights: getFloatingHeaderHeights(
+        props.routes,
+        state.layout,
+        state.floatingHeaderHeights
+      ),
     };
   }
 
@@ -171,7 +193,7 @@ export default class Stack extends React.Component<Props, State> {
     // This is not a great heuristic here. We don't know synchronously
     // on mount what the header height is so we have just used the most
     // common cases here.
-    floatingHeaderHeight: getDefaultHeaderHeight(layout),
+    floatingHeaderHeights: {},
   };
 
   private handleLayout = (e: LayoutChangeEvent) => {
@@ -186,15 +208,35 @@ export default class Stack extends React.Component<Props, State> {
 
     const layout = { width, height };
 
-    this.setState({ layout });
+    this.setState({
+      layout,
+      floatingHeaderHeights: getFloatingHeaderHeights(
+        this.props.routes,
+        layout,
+        {}
+      ),
+    });
   };
 
-  private handleFloatingHeaderLayout = (e: LayoutChangeEvent) => {
-    const { height } = e.nativeEvent.layout;
+  private handleFloatingHeaderLayout = ({
+    route,
+    height,
+  }: {
+    route: Route;
+    height: number;
+  }) => {
+    const previousHeight = this.state.floatingHeaderHeights[route.key];
 
-    if (height !== this.state.floatingHeaderHeight) {
-      this.setState({ floatingHeaderHeight: height });
+    if (previousHeight && previousHeight === height) {
+      return;
     }
+
+    this.setState(state => ({
+      floatingHeaderHeights: {
+        ...state.floatingHeaderHeights,
+        [route.key]: height,
+      },
+    }));
   };
 
   private handleTransitionStart = ({
@@ -238,7 +280,7 @@ export default class Stack extends React.Component<Props, State> {
       onGestureEnd,
     } = this.props;
 
-    const { scenes, layout, progress, floatingHeaderHeight } = this.state;
+    const { scenes, layout, progress, floatingHeaderHeights } = this.state;
 
     const focusedRoute = navigation.state.routes[navigation.state.index];
     const focusedOptions = descriptors[focusedRoute.key].options;
@@ -320,7 +362,7 @@ export default class Stack extends React.Component<Props, State> {
                   onGestureCanceled={onGestureCanceled}
                   onGestureEnd={onGestureEnd}
                   gestureResponseDistance={gestureResponseDistance}
-                  floatingHeaderHeight={floatingHeaderHeight}
+                  floatingHeaderHeight={floatingHeaderHeights[route.key]}
                   hasCustomHeader={header === null}
                   getPreviousRoute={getPreviousRoute}
                   headerMode={headerMode}
@@ -348,7 +390,7 @@ export default class Stack extends React.Component<Props, State> {
               scenes,
               navigation,
               getPreviousRoute,
-              onLayout: this.handleFloatingHeaderLayout,
+              onContentHeightChange: this.handleFloatingHeaderLayout,
               styleInterpolator:
                 focusedOptions.headerStyleInterpolator !== undefined
                   ? focusedOptions.headerStyleInterpolator
