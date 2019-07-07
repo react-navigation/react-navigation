@@ -163,17 +163,12 @@ Array [
   <View
     pointerEvents="box-none"
     style={
-      Array [
-        Object {
-          "zIndex": 0,
-        },
-        Object {
-          "left": 0,
-          "position": "absolute",
-          "right": 0,
-          "top": 0,
-        },
-      ]
+      Object {
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
     }
   >
     <View
@@ -258,6 +253,7 @@ Array [
           }
         >
           <View
+            pointerEvents="box-none"
             style={
               Array [
                 null,
@@ -291,6 +287,7 @@ Array [
             </Text>
           </View>
           <View
+            pointerEvents="box-none"
             style={
               Array [
                 Object {
@@ -480,17 +477,12 @@ Array [
   <View
     pointerEvents="box-none"
     style={
-      Array [
-        Object {
-          "zIndex": 0,
-        },
-        Object {
-          "left": 0,
-          "position": "absolute",
-          "right": 0,
-          "top": 0,
-        },
-      ]
+      Object {
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
     }
   >
     <View
@@ -575,6 +567,7 @@ Array [
           }
         >
           <View
+            pointerEvents="box-none"
             style={
               Array [
                 null,
