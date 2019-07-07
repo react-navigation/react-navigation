@@ -488,6 +488,10 @@ Style to apply to the individual tab items in the tab bar.
 
 Style to apply to the active indicator.
 
+##### `indicatorContainerStyle`
+
+Style to apply to the container view for the indicator.
+
 ##### `labelStyle`
 
 Style to apply to the tab item label.

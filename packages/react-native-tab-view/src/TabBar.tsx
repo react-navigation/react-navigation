@@ -52,10 +52,10 @@ export type Props<T extends Route> = SceneRendererProps & {
   onTabLongPress?: (scene: Scene<T>) => void;
   tabStyle?: StyleProp<ViewStyle>;
   indicatorStyle?: StyleProp<ViewStyle>;
+  indicatorContainerStyle?: StyleProp<ViewStyle>;
   labelStyle?: StyleProp<TextStyle>;
   contentContainerStyle?: StyleProp<ViewStyle>;
   style?: StyleProp<ViewStyle>;
-  indicatorContainerStyle?: StyleProp<ViewStyle>;
 };
 
 type State = {
