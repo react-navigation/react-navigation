@@ -1,11 +1,5 @@
 import * as React from 'react';
-import {
-  View,
-  StyleSheet,
-  LayoutChangeEvent,
-  StyleProp,
-  ViewStyle,
-} from 'react-native';
+import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 import {
   Layout,
   Route,
@@ -22,7 +16,7 @@ export type Props = {
   scenes: Array<HeaderScene<Route> | undefined>;
   navigation: NavigationProp;
   getPreviousRoute: (props: { route: Route }) => Route | undefined;
-  onLayout?: (e: LayoutChangeEvent) => void;
+  onContentHeightChange?: (props: { route: Route; height: number }) => void;
   styleInterpolator: HeaderStyleInterpolator;
   style?: StyleProp<ViewStyle>;
 };
@@ -33,7 +27,7 @@ export default function HeaderContainer({
   layout,
   navigation,
   getPreviousRoute,
-  onLayout,
+  onContentHeightChange,
   styleInterpolator,
   style,
 }: Props) {
@@ -91,7 +85,15 @@ export default function HeaderContainer({
         return (
           <View
             key={scene.route.key}
-            onLayout={onLayout}
+            onLayout={
+              onContentHeightChange
+                ? e =>
+                    onContentHeightChange({
+                      route: scene.route,
+                      height: e.nativeEvent.layout.height,
+                    })
+                : undefined
+            }
             pointerEvents="box-none"
             accessibilityElementsHidden={!isFocused}
             importantForAccessibility={
