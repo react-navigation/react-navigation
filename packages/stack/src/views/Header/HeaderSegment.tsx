@@ -295,6 +295,7 @@ export default class HeaderSegment extends React.Component<Props, State> {
           <View pointerEvents="box-none" style={styles.content}>
             {onGoBack ? (
               <Animated.View
+                pointerEvents="box-none"
                 style={[styles.left, leftButtonStyle, leftContainerStyle]}
               >
                 {left({
@@ -315,6 +316,7 @@ export default class HeaderSegment extends React.Component<Props, State> {
             ) : null}
             {currentTitle ? (
               <Animated.View
+                pointerEvents="box-none"
                 style={[
                   Platform.select({
                     ios: null,
@@ -336,6 +338,7 @@ export default class HeaderSegment extends React.Component<Props, State> {
             ) : null}
             {right ? (
               <Animated.View
+                pointerEvents="box-none"
                 style={[styles.right, rightButtonStyle, rightContainerStyle]}
               >
                 {right({ tintColor: headerTintColor })}
