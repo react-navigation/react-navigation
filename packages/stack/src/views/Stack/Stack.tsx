@@ -14,7 +14,7 @@ import { Props as HeaderContainerProps } from '../Header/HeaderContainer';
 import StackItem from './StackItem';
 import {
   DefaultTransition,
-  ModalSlideFromBottomIOS,
+  ModalTransition,
 } from '../../TransitionConfigs/TransitionPresets';
 import { forNoAnimation } from '../../TransitionConfigs/HeaderStyleInterpolators';
 import {
@@ -301,9 +301,7 @@ export default class Stack extends React.Component<Props, State> {
     const focusedOptions = descriptors[focusedRoute.key].options;
 
     let defaultTransitionPreset =
-      mode === 'modal' && Platform.OS === 'ios'
-        ? ModalSlideFromBottomIOS
-        : DefaultTransition;
+      mode === 'modal' ? ModalTransition : DefaultTransition;
 
     if (headerMode === 'screen') {
       defaultTransitionPreset = {
