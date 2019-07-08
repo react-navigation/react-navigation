@@ -79,3 +79,8 @@ export const DefaultTransition = Platform.select({
       ? FadeFromBottomAndroid
       : WipeFromBottomAndroid,
 });
+
+export const ModalTransition = Platform.select({
+  ios: ModalSlideFromBottomIOS,
+  default: DefaultTransition,
+});
