@@ -39,9 +39,6 @@ export const WipeFromBottomAndroidSpec: TransitionSpec = {
     duration: 425,
     // This is super rough approximation of the path used for the curve by android
     // See http://androidxref.com/9.0.0_r3/xref/frameworks/base/core/res/res/interpolator/fast_out_extra_slow_in.xml
-    easing: t =>
-      Easing.bezier(0.9, 0.06, 0.57, 0)(
-        Easing.bezier(0.06, 0.94, 0.22, 1.02)(t)
-      ),
+    easing: Easing.bezier(0.35, 0.45, 0, 1),
   },
 };
