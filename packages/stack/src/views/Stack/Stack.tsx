@@ -8,7 +8,7 @@ import {
   ViewProps,
 } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { ScreenContainer, NativeScreen } from 'react-native-screens';
+import * as Screens from 'react-native-screens'; // Import with * as to prevent getters being called
 import { getDefaultHeaderHeight } from '../Header/HeaderSegment';
 import { Props as HeaderContainerProps } from '../Header/HeaderContainer';
 import StackItem from './StackItem';
@@ -66,26 +66,41 @@ type State = {
 const dimensions = Dimensions.get('window');
 const layout = { width: dimensions.width, height: dimensions.height };
 
-const AnimatedScreen = Animated.createAnimatedComponent(
-  NativeScreen
-) as React.ComponentType<
+let AnimatedScreen: React.ComponentType<
   ViewProps & { active: number | Animated.Node<number> }
 >;
 
-const MaybeScreenContainer = Platform.OS === 'ios' ? View : ScreenContainer;
+const MaybeScreenContainer = ({
+  enabled,
+  ...rest
+}: ViewProps & {
+  enabled: boolean;
+  children: React.ReactNode;
+}) => {
+  if (Platform.OS !== 'ios' && enabled && Screens.screensEnabled()) {
+    return <Screens.ScreenContainer {...rest} />;
+  }
+
+  return <View {...rest} />;
+};
 
 const MaybeScreen = ({
+  enabled,
   active,
   ...rest
 }: ViewProps & {
+  enabled: boolean;
   active: number | Animated.Node<number>;
   children: React.ReactNode;
 }) => {
-  if (Platform.OS === 'ios') {
-    return <View {...rest} />;
+  if (Platform.OS !== 'ios' && enabled && Screens.screensEnabled()) {
+    AnimatedScreen =
+      AnimatedScreen || Animated.createAnimatedComponent(Screens.NativeScreen);
+
+    return <AnimatedScreen active={active} {...rest} />;
   }
 
-  return <AnimatedScreen active={active} {...rest} />;
+  return <View {...rest} />;
 };
 
 const { cond, eq } = Animated;
@@ -300,6 +315,7 @@ export default class Stack extends React.Component<Props, State> {
     return (
       <React.Fragment>
         <MaybeScreenContainer
+          enabled={mode !== 'modal'}
           style={styles.container}
           onLayout={this.handleLayout}
         >
@@ -340,6 +356,7 @@ export default class Stack extends React.Component<Props, State> {
               <MaybeScreen
                 key={route.key}
                 style={StyleSheet.absoluteFill}
+                enabled={mode !== 'modal'}
                 active={isScreenActive}
                 pointerEvents="box-none"
               >
