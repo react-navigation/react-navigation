@@ -107,7 +107,7 @@ export default class StackItem extends React.PureComponent<Props> {
       headerTransparent,
       renderHeader,
       renderScene,
-      direction,
+      gestureDirection,
       transitionSpec,
       cardStyleInterpolator,
       headerStyleInterpolator,
@@ -118,7 +118,7 @@ export default class StackItem extends React.PureComponent<Props> {
         index={index}
         active={active}
         transparent={cardTransparent}
-        direction={direction}
+        gestureDirection={gestureDirection}
         layout={layout}
         current={current}
         next={scene.progress.next}

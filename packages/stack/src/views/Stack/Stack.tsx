@@ -344,7 +344,7 @@ export default class Stack extends React.Component<Props, State> {
               cardOverlayEnabled,
               cardStyle,
               gestureResponseDistance,
-              direction = defaultTransitionPreset.direction,
+              gestureDirection = defaultTransitionPreset.gestureDirection,
               transitionSpec = defaultTransitionPreset.transitionSpec,
               cardStyleInterpolator = defaultTransitionPreset.cardStyleInterpolator,
               headerStyleInterpolator = defaultTransitionPreset.headerStyleInterpolator,
@@ -389,7 +389,7 @@ export default class Stack extends React.Component<Props, State> {
                   onTransitionStart={this.handleTransitionStart}
                   onTransitionEnd={this.handleTransitionEnd}
                   onGoBack={onGoBack}
-                  direction={direction}
+                  gestureDirection={gestureDirection}
                   transitionSpec={transitionSpec}
                   cardStyleInterpolator={cardStyleInterpolator}
                   headerStyleInterpolator={headerStyleInterpolator}

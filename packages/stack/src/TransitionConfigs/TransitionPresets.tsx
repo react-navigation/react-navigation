@@ -19,7 +19,7 @@ const ANDROID_VERSION_PIE = 28;
 
 // Standard iOS navigation transition
 export const SlideFromRightIOS: TransitionPreset = {
-  direction: 'horizontal',
+  gestureDirection: 'horizontal',
   transitionSpec: {
     open: TransitionIOSSpec,
     close: TransitionIOSSpec,
@@ -30,7 +30,7 @@ export const SlideFromRightIOS: TransitionPreset = {
 
 // Standard iOS navigation transition for modals
 export const ModalSlideFromBottomIOS: TransitionPreset = {
-  direction: 'vertical',
+  gestureDirection: 'vertical',
   transitionSpec: {
     open: TransitionIOSSpec,
     close: TransitionIOSSpec,
@@ -41,7 +41,7 @@ export const ModalSlideFromBottomIOS: TransitionPreset = {
 
 // Standard iOS modal presentation style (introduced in iOS 13)
 export const ModalPresentationIOS: TransitionPreset = {
-  direction: 'vertical',
+  gestureDirection: 'vertical',
   transitionSpec: {
     open: TransitionIOSSpec,
     close: TransitionIOSSpec,
@@ -52,7 +52,7 @@ export const ModalPresentationIOS: TransitionPreset = {
 
 // Standard Android navigation transition when opening or closing an Activity on Android < 9
 export const FadeFromBottomAndroid: TransitionPreset = {
-  direction: 'vertical',
+  gestureDirection: 'vertical',
   transitionSpec: {
     open: FadeInFromBottomAndroidSpec,
     close: FadeOutToBottomAndroidSpec,
@@ -63,7 +63,7 @@ export const FadeFromBottomAndroid: TransitionPreset = {
 
 // Standard Android navigation transition when opening or closing an Activity on Android >= 9
 export const RevealFromBottomAndroid: TransitionPreset = {
-  direction: 'vertical',
+  gestureDirection: 'vertical',
   transitionSpec: {
     open: RevealFromBottomAndroidSpec,
     close: RevealFromBottomAndroidSpec,
