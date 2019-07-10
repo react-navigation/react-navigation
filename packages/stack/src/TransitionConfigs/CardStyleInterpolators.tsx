@@ -158,7 +158,7 @@ export function forFadeFromBottomAndroid({
 /**
  * Standard Android-style wipe from the bottom for Android Pie.
  */
-export function forWipeFromBottomAndroid({
+export function forRevealFromBottomAndroid({
   progress: { current, next },
   layouts: { screen },
 }: CardInterpolationProps): CardInterpolatedStyle {

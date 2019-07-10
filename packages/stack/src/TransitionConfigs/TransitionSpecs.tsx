@@ -33,7 +33,7 @@ export const FadeOutToBottomAndroidSpec: TransitionSpec = {
 };
 
 // See http://androidxref.com/9.0.0_r3/xref/frameworks/base/core/res/res/anim/activity_open_enter.xml
-export const WipeFromBottomAndroidSpec: TransitionSpec = {
+export const RevealFromBottomAndroidSpec: TransitionSpec = {
   timing: 'timing',
   config: {
     duration: 425,
