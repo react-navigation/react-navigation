@@ -8,7 +8,6 @@ import {
 } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { getStatusBarHeight } from 'react-native-safe-area-view';
-import HeaderTitle from './HeaderTitle';
 import HeaderBackButton from './HeaderBackButton';
 import HeaderBackground from './HeaderBackground';
 import memoize from '../../utils/memoize';
@@ -17,6 +16,7 @@ import {
   HeaderStyleInterpolator,
   Route,
   HeaderBackButtonProps,
+  HeaderTitleProps,
   HeaderOptions,
   HeaderScene,
 } from '../../types';
@@ -27,6 +27,7 @@ export type Scene<T> = {
 };
 
 type Props = HeaderOptions & {
+  headerTitle: (props: HeaderTitleProps) => React.ReactNode;
   layout: Layout;
   onGoBack?: () => void;
   title?: string;
@@ -139,6 +140,7 @@ export default class HeaderSegment extends React.Component<Props, State> {
       title: currentTitle,
       leftLabel: previousTitle,
       onGoBack,
+      headerTitle,
       headerLeft: left = (props: HeaderBackButtonProps) => (
         <HeaderBackButton {...props} />
       ),
@@ -314,28 +316,25 @@ export default class HeaderSegment extends React.Component<Props, State> {
                 })}
               </Animated.View>
             ) : null}
-            {currentTitle ? (
-              <Animated.View
-                pointerEvents="box-none"
-                style={[
-                  Platform.select({
-                    ios: null,
-                    default: { left: onGoBack ? 72 : 16 },
-                  }),
-                  styles.title,
-                  titleStyle,
-                  titleContainerStyle,
-                ]}
-              >
-                <HeaderTitle
-                  onLayout={this.handleTitleLayout}
-                  allowFontScaling={titleAllowFontScaling}
-                  style={[{ color: headerTintColor }, customTitleStyle]}
-                >
-                  {currentTitle}
-                </HeaderTitle>
-              </Animated.View>
-            ) : null}
+            <Animated.View
+              pointerEvents="box-none"
+              style={[
+                Platform.select({
+                  ios: null,
+                  default: { left: onGoBack ? 72 : 16 },
+                }),
+                styles.title,
+                titleStyle,
+                titleContainerStyle,
+              ]}
+            >
+              {headerTitle({
+                children: currentTitle,
+                onLayout: this.handleTitleLayout,
+                allowFontScaling: titleAllowFontScaling,
+                style: [{ color: headerTintColor }, customTitleStyle],
+              })}
+            </Animated.View>
             {right ? (
               <Animated.View
                 pointerEvents="box-none"

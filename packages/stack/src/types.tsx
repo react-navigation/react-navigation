@@ -62,7 +62,7 @@ export type HeaderScene<T> = {
 };
 
 export type HeaderOptions = {
-  headerTitle?: string;
+  headerTitle?: string | ((props: HeaderTitleProps) => React.ReactNode);
   headerTitleStyle?: StyleProp<TextStyle>;
   headerTitleContainerStyle?: StyleProp<ViewStyle>;
   headerTintColor?: string;
@@ -138,6 +138,13 @@ export type HeaderBackButtonProps = {
   onLabelLayout?: (e: LayoutChangeEvent) => void;
   screenLayout?: Layout;
   titleLayout?: Layout;
+};
+
+export type HeaderTitleProps = {
+  onLayout: (e: LayoutChangeEvent) => void;
+  allowFontScaling?: boolean;
+  children?: string;
+  style?: StyleProp<TextStyle>;
 };
 
 export type Screen = React.ComponentType<any> & {
