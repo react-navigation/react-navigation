@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Text, StyleSheet, Platform, TextProps } from 'react-native';
 
 type Props = TextProps & {
-  children: string;
+  children?: string;
 };
 
 export default function HeaderTitle({ style, ...rest }: Props) {
