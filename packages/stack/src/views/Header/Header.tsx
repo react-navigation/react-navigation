@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { StackActions } from '@react-navigation/core';
 import HeaderSegment from './HeaderSegment';
-import { HeaderProps } from '../../types';
+import { HeaderProps, HeaderTitleProps } from '../../types';
+import HeaderTitle from './HeaderTitle';
 
 export default class Header extends React.PureComponent<HeaderProps> {
   render() {
@@ -14,6 +15,7 @@ export default class Header extends React.PureComponent<HeaderProps> {
     } = this.props;
     const { options } = scene.descriptor;
     const title =
+      typeof options.headerTitle !== 'function' &&
       options.headerTitle !== undefined
         ? options.headerTitle
         : options.title !== undefined
@@ -30,7 +32,7 @@ export default class Header extends React.PureComponent<HeaderProps> {
       const o = previous.descriptor.options;
 
       leftLabel =
-        o.headerTitle !== undefined
+        typeof o.headerTitle !== 'function' && o.headerTitle !== undefined
           ? o.headerTitle
           : o.title !== undefined
           ? o.title
@@ -44,6 +46,11 @@ export default class Header extends React.PureComponent<HeaderProps> {
         scene={scene}
         title={title}
         leftLabel={leftLabel}
+        headerTitle={
+          typeof options.headerTitle !== 'function'
+            ? (props: HeaderTitleProps) => <HeaderTitle {...props} />
+            : options.headerTitle
+        }
         onGoBack={
           previous
             ? () =>
