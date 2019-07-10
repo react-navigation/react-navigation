@@ -14,7 +14,7 @@ import { List, Divider } from 'react-native-paper';
 
 import FullScreen from './src/FullScreen';
 import SimpleStack from './src/SimpleStack';
-import WipeStack from './src/WipeStack';
+import RevealStack from './src/RevealStack';
 import ImageStack from './src/ImageStack';
 import TransparentStack from './src/TransparentStack';
 import ModalStack from './src/ModalStack';
@@ -41,7 +41,7 @@ I18nManager.forceRTL(false);
 const data = [
   { component: SimpleStack, title: 'Simple', routeName: 'SimpleStack' },
   { component: HeaderPreset, title: 'UIKit Preset', routeName: 'UIKit' },
-  { component: WipeStack, title: 'Wipe Preset', routeName: 'Wipe' },
+  { component: RevealStack, title: 'Reveal Preset', routeName: 'Reveal' },
   { component: ImageStack, title: 'Image', routeName: 'ImageStack' },
   { component: ModalStack, title: 'Modal', routeName: 'ModalStack' },
   {

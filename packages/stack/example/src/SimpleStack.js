@@ -6,6 +6,11 @@ import { createStackNavigator } from 'react-navigation-stack';
 const Buttons = withNavigation(props => (
   <React.Fragment>
     <Button
+      title="Push Details"
+      onPress={() => props.navigation.push('Details')}
+    />
+    <Button title="PopToTop" onPress={() => props.navigation.popToTop()} />
+    <Button
       title="Go to Details"
       onPress={() => props.navigation.navigate('Details')}
     />

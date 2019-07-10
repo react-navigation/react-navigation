@@ -153,7 +153,7 @@ export default createStackNavigator(
     initialRouteName: 'List',
     headerMode: 'screen',
     defaultNavigationOptions: {
-      ...TransitionPresets.WipeFromBottomAndroid,
+      ...TransitionPresets.RevealFromBottomAndroid,
       cardOverlayEnabled: true,
     },
   }

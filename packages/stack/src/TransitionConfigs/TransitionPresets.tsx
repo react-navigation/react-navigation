@@ -1,14 +1,14 @@
 import {
   forHorizontalIOS,
   forVerticalIOS,
-  forWipeFromBottomAndroid,
+  forRevealFromBottomAndroid,
   forFadeFromBottomAndroid,
   forModalPresentationIOS,
 } from './CardStyleInterpolators';
 import { forNoAnimation, forFade } from './HeaderStyleInterpolators';
 import {
   TransitionIOSSpec,
-  WipeFromBottomAndroidSpec,
+  RevealFromBottomAndroidSpec,
   FadeOutToBottomAndroidSpec,
   FadeInFromBottomAndroidSpec,
 } from './TransitionSpecs';
@@ -62,13 +62,13 @@ export const FadeFromBottomAndroid: TransitionPreset = {
 };
 
 // Standard Android navigation transition when opening or closing an Activity on Android >= 9
-export const WipeFromBottomAndroid: TransitionPreset = {
+export const RevealFromBottomAndroid: TransitionPreset = {
   direction: 'vertical',
   transitionSpec: {
-    open: WipeFromBottomAndroidSpec,
-    close: WipeFromBottomAndroidSpec,
+    open: RevealFromBottomAndroidSpec,
+    close: RevealFromBottomAndroidSpec,
   },
-  cardStyleInterpolator: forWipeFromBottomAndroid,
+  cardStyleInterpolator: forRevealFromBottomAndroid,
   headerStyleInterpolator: forNoAnimation,
 };
 
@@ -77,7 +77,7 @@ export const DefaultTransition = Platform.select({
   default:
     Platform.OS === 'android' && Platform.Version < ANDROID_VERSION_PIE
       ? FadeFromBottomAndroid
-      : WipeFromBottomAndroid,
+      : RevealFromBottomAndroid,
 });
 
 export const ModalTransition = Platform.select({
