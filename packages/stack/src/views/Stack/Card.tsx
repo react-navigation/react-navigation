@@ -26,7 +26,7 @@ type Props = ViewProps & {
   next?: Animated.Node<number>;
   current: Animated.Value<number>;
   layout: Layout;
-  direction: 'horizontal' | 'vertical';
+  gestureDirection: 'horizontal' | 'vertical';
   onOpen: (isFinished: boolean) => void;
   onClose: (isFinished: boolean) => void;
   onTransitionStart?: (props: { closing: boolean }) => void;
@@ -102,7 +102,7 @@ export default class Card extends React.Component<Props> {
   };
 
   componentDidUpdate(prevProps: Props) {
-    const { layout, direction, closing } = this.props;
+    const { layout, gestureDirection, closing } = this.props;
     const { width, height } = layout;
 
     if (width !== prevProps.layout.width) {
@@ -113,9 +113,11 @@ export default class Card extends React.Component<Props> {
       this.layout.height.setValue(height);
     }
 
-    if (direction !== prevProps.direction) {
+    if (gestureDirection !== prevProps.gestureDirection) {
       this.direction.setValue(
-        direction === 'vertical' ? DIRECTION_VERTICAL : DIRECTION_HORIZONTAL
+        gestureDirection === 'vertical'
+          ? DIRECTION_VERTICAL
+          : DIRECTION_HORIZONTAL
       );
     }
 
@@ -133,7 +135,7 @@ export default class Card extends React.Component<Props> {
   private clock = new Clock();
 
   private direction = new Value(
-    this.props.direction === 'vertical'
+    this.props.gestureDirection === 'vertical'
       ? DIRECTION_VERTICAL
       : DIRECTION_HORIZONTAL
   );
@@ -424,17 +426,17 @@ export default class Card extends React.Component<Props> {
   );
 
   private gestureActivationCriteria() {
-    const { layout, direction, gestureResponseDistance } = this.props;
+    const { layout, gestureDirection, gestureResponseDistance } = this.props;
 
     // Doesn't make sense for a response distance of 0, so this works fine
     const distance =
-      direction === 'vertical'
+      gestureDirection === 'vertical'
         ? (gestureResponseDistance && gestureResponseDistance.vertical) ||
           GESTURE_RESPONSE_DISTANCE_VERTICAL
         : (gestureResponseDistance && gestureResponseDistance.horizontal) ||
           GESTURE_RESPONSE_DISTANCE_HORIZONTAL;
 
-    if (direction === 'vertical') {
+    if (gestureDirection === 'vertical') {
       return {
         maxDeltaX: 15,
         minOffsetY: 5,
@@ -469,10 +471,10 @@ export default class Card extends React.Component<Props> {
       layout,
       current,
       next,
-      direction,
       overlayEnabled,
       shadowEnabled,
       gesturesEnabled,
+      gestureDirection,
       children,
       styleInterpolator,
       containerStyle: customContainerStyle,
@@ -494,7 +496,7 @@ export default class Card extends React.Component<Props> {
     );
 
     const handleGestureEvent =
-      direction === 'vertical'
+      gestureDirection === 'vertical'
         ? this.handleGestureEventVertical
         : this.handleGestureEventHorizontal;
 
@@ -524,7 +526,7 @@ export default class Card extends React.Component<Props> {
                   <Animated.View
                     style={[
                       styles.shadow,
-                      direction === 'horizontal'
+                      gestureDirection === 'horizontal'
                         ? styles.shadowHorizontal
                         : styles.shadowVertical,
                       shadowStyle,

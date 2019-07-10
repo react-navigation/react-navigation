@@ -212,7 +212,7 @@ export type HeaderStyleInterpolator = (
 ) => HeaderInterpolatedStyle;
 
 export type TransitionPreset = {
-  direction: GestureDirection;
+  gestureDirection: GestureDirection;
   transitionSpec: {
     open: TransitionSpec;
     close: TransitionSpec;
