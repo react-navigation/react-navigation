@@ -3,6 +3,7 @@ import {
   StyleSheet,
   View,
   StyleProp,
+  LayoutChangeEvent,
   TextStyle,
   ViewStyle,
 } from 'react-native';
@@ -34,6 +35,7 @@ type Props<T extends Route> = {
     color: string;
   }) => React.ReactNode;
   renderBadge?: (scene: Scene<T>) => React.ReactNode;
+  onLayout?: (event: LayoutChangeEvent) => void;
   onPress: () => void;
   onLongPress: () => void;
   labelStyle?: StyleProp<TextStyle>;
@@ -92,6 +94,7 @@ export default class TabBarItem<T extends Route> extends React.Component<
       pressOpacity,
       labelStyle,
       style,
+      onLayout,
       onPress,
       onLongPress,
     } = this.props;
@@ -220,6 +223,7 @@ export default class TabBarItem<T extends Route> extends React.Component<
         pressColor={pressColor}
         pressOpacity={pressOpacity}
         delayPressIn={0}
+        onLayout={onLayout}
         onPress={onPress}
         onLongPress={onLongPress}
         style={tabContainerStyle}

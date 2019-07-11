@@ -529,6 +529,8 @@ Boolean indicating whether the tab bar bounces when scrolling.
 
 Style to apply to the individual tab items in the tab bar.
 
+By default, all tab items take up the same pre-calculated width based on the width of the container. If you want them to take their original width, you can specify `width: 'auto'` in `tabStyle`.
+
 ##### `indicatorStyle`
 
 Style to apply to the active indicator.

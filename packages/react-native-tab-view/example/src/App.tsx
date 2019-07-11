@@ -15,6 +15,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import ScrollableTabBarExample from './ScrollableTabBarExample';
+import AutoWidthTabBarExample from './AutoWidthTabBarExample';
 import TabBarIconExample from './TabBarIconExample';
 import CustomIndicatorExample from './CustomIndicatorExample';
 import CustomTabBarExample from './CustomTabBarExample';
@@ -40,6 +41,7 @@ const PERSISTENCE_KEY = 'index_persistence';
 
 const EXAMPLE_COMPONENTS: ExampleComponentType[] = [
   ScrollableTabBarExample,
+  AutoWidthTabBarExample,
   TabBarIconExample,
   CustomIndicatorExample,
   CustomTabBarExample,
@@ -225,7 +227,6 @@ const styles = StyleSheet.create({
   },
   title: {
     flex: 1,
-    margin: 16,
     textAlign: Platform.OS === 'ios' ? 'center' : 'left',
     fontSize: 18,
     color: '#fff',

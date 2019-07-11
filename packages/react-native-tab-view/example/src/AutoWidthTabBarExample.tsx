@@ -17,11 +17,11 @@ type State = NavigationState<{
   title: string;
 }>;
 
-export default class ScrollableTabBarExample extends React.Component<
+export default class DynamicWidthTabBarExample extends React.Component<
   {},
   State
 > {
-  static title = 'Scrollable tab bar';
+  static title = 'Scrollable tab bar (auto width)';
   static backgroundColor = '#3f51b5';
   static appbarElevation = 0;
 
@@ -32,6 +32,8 @@ export default class ScrollableTabBarExample extends React.Component<
       { key: 'contacts', title: 'Contacts' },
       { key: 'albums', title: 'Albums' },
       { key: 'chat', title: 'Chat' },
+      { key: 'long', title: 'long long long title' },
+      { key: 'medium', title: 'medium title' },
     ],
   };
 
@@ -48,8 +50,8 @@ export default class ScrollableTabBarExample extends React.Component<
       scrollEnabled
       indicatorStyle={styles.indicator}
       style={styles.tabbar}
-      tabStyle={styles.tab}
       labelStyle={styles.label}
+      tabStyle={styles.tabStyle}
     />
   );
 
@@ -58,6 +60,8 @@ export default class ScrollableTabBarExample extends React.Component<
     contacts: Contacts,
     article: Article,
     chat: Chat,
+    long: Article,
+    medium: Article,
   });
 
   render() {
@@ -76,13 +80,13 @@ const styles = StyleSheet.create({
   tabbar: {
     backgroundColor: '#3f51b5',
   },
-  tab: {
-    width: 120,
-  },
   indicator: {
     backgroundColor: '#ffeb3b',
   },
   label: {
     fontWeight: '400',
+  },
+  tabStyle: {
+    width: 'auto',
   },
 });
