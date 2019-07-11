@@ -7,16 +7,14 @@ import HeaderContainer, {
 } from '../Header/HeaderContainer';
 import {
   NavigationProp,
-  SceneDescriptor,
   NavigationConfig,
   Route,
+  SceneDescriptorMap,
 } from '../../types';
-
-type Descriptors = { [key: string]: SceneDescriptor };
 
 type Props = {
   navigation: NavigationProp;
-  descriptors: Descriptors;
+  descriptors: SceneDescriptorMap;
   navigationConfig: NavigationConfig;
   onTransitionStart?: (
     current: { index: number },
@@ -39,7 +37,7 @@ type State = {
   replacing: string[];
   // Since the local routes can vary from the routes from props, we need to keep the descriptors for old routes
   // Otherwise we won't be able to access the options for routes that were removed
-  descriptors: Descriptors;
+  descriptors: SceneDescriptorMap;
 };
 
 class StackView extends React.Component<Props, State> {
@@ -91,9 +89,14 @@ class StackView extends React.Component<Props, State> {
       // We only need to animate routes if the focused route changed
       // Animating previous routes won't be visible coz the focused route is on top of everything
 
-      const isAnimationEnabled = (route: Route) =>
-        (props.descriptors[route.key] || state.descriptors[route.key]).options
-          .animationEnabled !== false;
+      const isAnimationEnabled = (route: Route) => {
+        const descriptor =
+          props.descriptors[route.key] || state.descriptors[route.key];
+
+        return descriptor
+          ? descriptor.options.animationEnabled !== false
+          : true;
+      };
 
       if (!previousRoutes.find(r => r.key === nextFocusedRoute.key)) {
         // A new route has come to the focus, we treat this as a push
@@ -156,7 +159,7 @@ class StackView extends React.Component<Props, State> {
 
         return acc;
       },
-      {} as Descriptors
+      {} as SceneDescriptorMap
     );
 
     return {
@@ -209,7 +212,13 @@ class StackView extends React.Component<Props, State> {
   };
 
   private renderScene = ({ route }: { route: Route }) => {
-    const descriptor = this.state.descriptors[route.key];
+    const descriptor =
+      this.state.descriptors[route.key] || this.props.descriptors[route.key];
+
+    if (!descriptor) {
+      return null;
+    }
+
     const { navigation, getComponent } = descriptor;
     const SceneComponent = getComponent();
 
