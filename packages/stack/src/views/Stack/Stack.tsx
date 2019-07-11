@@ -21,9 +21,10 @@ import {
   Route,
   Layout,
   HeaderMode,
-  SceneDescriptor,
   NavigationProp,
   HeaderScene,
+  SceneDescriptorMap,
+  NavigationStackOptions,
 } from '../../types';
 
 type ProgressValues = {
@@ -33,7 +34,7 @@ type ProgressValues = {
 type Props = {
   mode: 'card' | 'modal';
   navigation: NavigationProp;
-  descriptors: { [key: string]: SceneDescriptor };
+  descriptors: SceneDescriptorMap;
   routes: Route[];
   openingRoutes: string[];
   closingRoutes: string[];
@@ -56,7 +57,7 @@ type Props = {
 
 type State = {
   routes: Route[];
-  descriptors: { [key: string]: SceneDescriptor };
+  descriptors: SceneDescriptorMap;
   scenes: HeaderScene<Route>[];
   progress: ProgressValues;
   layout: Layout;
@@ -135,11 +136,14 @@ export default class Stack extends React.Component<Props, State> {
 
     const progress = props.routes.reduce(
       (acc, curr) => {
+        const descriptor = props.descriptors[curr.key];
+
         acc[curr.key] =
           state.progress[curr.key] ||
           new Animated.Value(
             props.openingRoutes.includes(curr.key) &&
-            props.descriptors[curr.key].options.animationEnabled !== false
+            descriptor &&
+            descriptor.options.animationEnabled !== false
               ? 0
               : 1
           );
@@ -264,15 +268,21 @@ export default class Stack extends React.Component<Props, State> {
     previous: { index: number };
   }) => {
     const { onTransitionStart, descriptors } = this.props;
-    const options = descriptors[route.key].options;
+    const descriptor = descriptors[route.key];
 
     onTransitionStart && onTransitionStart(current, previous);
-    options.onTransitionStart && options.onTransitionStart();
+
+    descriptor &&
+      descriptor.options.onTransitionStart &&
+      descriptor.options.onTransitionStart();
   };
 
   private handleTransitionEnd = ({ route }: { route: Route }) => {
-    const options = this.props.descriptors[route.key].options;
-    options.onTransitionEnd && options.onTransitionEnd();
+    const descriptor = this.props.descriptors[route.key];
+
+    descriptor &&
+      descriptor.options.onTransitionEnd &&
+      descriptor.options.onTransitionEnd();
   };
 
   render() {
@@ -298,7 +308,8 @@ export default class Stack extends React.Component<Props, State> {
     const { scenes, layout, progress, floatingHeaderHeights } = this.state;
 
     const focusedRoute = navigation.state.routes[navigation.state.index];
-    const focusedOptions = descriptors[focusedRoute.key].options;
+    const focusedDescriptor = descriptors[focusedRoute.key];
+    const focusedOptions = focusedDescriptor ? focusedDescriptor.options : {};
 
     let defaultTransitionPreset =
       mode === 'modal' ? ModalTransition : DefaultTransition;
@@ -348,7 +359,9 @@ export default class Stack extends React.Component<Props, State> {
               transitionSpec = defaultTransitionPreset.transitionSpec,
               cardStyleInterpolator = defaultTransitionPreset.cardStyleInterpolator,
               headerStyleInterpolator = defaultTransitionPreset.headerStyleInterpolator,
-            } = descriptor.options;
+            } = descriptor
+              ? descriptor.options
+              : ({} as NavigationStackOptions);
 
             return (
               <MaybeScreen
