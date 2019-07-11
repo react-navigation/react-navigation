@@ -124,6 +124,8 @@ export type SceneDescriptor = {
   getComponent(): React.ComponentType;
 };
 
+export type SceneDescriptorMap = { [key: string]: SceneDescriptor | undefined };
+
 export type HeaderBackButtonProps = {
   disabled?: boolean;
   onPress: () => void;
