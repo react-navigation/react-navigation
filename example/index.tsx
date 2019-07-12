@@ -123,7 +123,7 @@ const Fifth = ({
     <button type="button" onClick={() => navigation.jumpTo('fourth')}>
       Jump to fourth
     </button>
-    <button type="button" onClick={() => navigation.navigate('fifth')}>
+    <button type="button" onClick={() => navigation.push('second')}>
       Push second
     </button>
     <button type="button" onClick={() => navigation.pop()}>
