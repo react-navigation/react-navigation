@@ -107,14 +107,14 @@ export type NavigationStackOptions = HeaderOptions &
       vertical?: number;
       horizontal?: number;
     };
-    disableKeyboardHandling?: boolean;
     onTransitionStart?: () => void;
     onTransitionEnd?: () => void;
   };
 
-export type NavigationConfig = {
-  mode: 'card' | 'modal';
-  headerMode: HeaderMode;
+export type NavigationStackConfig = {
+  mode?: 'card' | 'modal';
+  headerMode?: HeaderMode;
+  disableKeyboardHandling?: boolean;
 };
 
 export type SceneDescriptor = {
