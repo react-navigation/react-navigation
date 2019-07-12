@@ -219,8 +219,6 @@ const StackRouter: Router<CommonAction | Action> = {
 };
 
 export default function StackNavigator(props: Props) {
-  // The `navigation` object contains the navigation state and some helpers (e.g. push, pop)
-  // The `descriptors` object contains `navigation` objects for children routes and helper for rendering a screen
   const { navigation, descriptors } = useNavigationBuilder(StackRouter, props);
 
   return (

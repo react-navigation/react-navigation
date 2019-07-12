@@ -141,8 +141,6 @@ const TabRouter: Router<Action | CommonAction> = {
 };
 
 export default function TabNavigator(props: Props) {
-  // The `navigation` object contains the navigation state and some helpers (e.g. push, pop)
-  // The `descriptors` object contains `navigation` objects for children routes and helper for rendering a screen
   const { navigation, descriptors } = useNavigationBuilder(TabRouter, props);
 
   return (
