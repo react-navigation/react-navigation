@@ -1044,6 +1044,7 @@ declare module 'react-navigation' {
     edgeWidth?: number;
     hideStatusBar?: boolean;
     overlayColor?: string;
+    unmountInactiveRoutes?: boolean;
   }
 
   export function DrawerNavigator(
