@@ -4,19 +4,19 @@ import { SingleNavigatorContext } from './EnsureSingleNavigator';
 
 export default function useRegisterNavigator() {
   const [key] = React.useState(shortid());
-  const singleNavigatorContext = React.useContext(SingleNavigatorContext);
+  const container = React.useContext(SingleNavigatorContext);
+
+  if (container === undefined) {
+    throw new Error(
+      "Couldn't register the navigator. Have you wrapped your app with 'NavigationContainer'?"
+    );
+  }
 
   React.useEffect(() => {
-    if (singleNavigatorContext === undefined) {
-      throw new Error(
-        "Couldn't register the navigator. You likely forgot to nest the navigator inside a 'NavigationContainer'."
-      );
-    }
-
-    const { register, unregister } = singleNavigatorContext;
+    const { register, unregister } = container;
 
     register(key);
 
     return () => unregister(key);
-  }, [key, singleNavigatorContext]);
+  }, [container, key]);
 }

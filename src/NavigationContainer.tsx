@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { NavigationState, InitialState } from './types';
 import EnsureSingleNavigator from './EnsureSingleNavigator';
+import { NavigationState, InitialState } from './types';
 
 type Props = {
   initialState?: InitialState;
