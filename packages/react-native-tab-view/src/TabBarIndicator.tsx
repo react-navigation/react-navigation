@@ -14,7 +14,7 @@ export type Props<T extends Route> = SceneRendererProps & {
   getTabWidth: GetTabWidth;
 };
 
-const { multiply } = Animated;
+const { interpolate, multiply, Extrapolate } = Animated;
 
 export default class TabBarIndicator<T extends Route> extends React.Component<
   Props<T>
@@ -65,9 +65,10 @@ export default class TabBarIndicator<T extends Route> extends React.Component<
         return [...acc, acc[i - 1] + getTabWidth(i - 1)];
       }, []);
 
-      const transalteX = Animated.interpolate(position, {
+      const transalteX = interpolate(position, {
         inputRange,
         outputRange,
+        extrapolate: Extrapolate.CLAMP,
       });
 
       return multiply(transalteX, I18nManager.isRTL ? -1 : 1);
@@ -83,9 +84,10 @@ export default class TabBarIndicator<T extends Route> extends React.Component<
       const inputRange = routes.map((_, i) => i);
       const outputRange = inputRange.map(getTabWidth);
 
-      return Animated.interpolate(position, {
+      return interpolate(position, {
         inputRange,
         outputRange,
+        extrapolate: Extrapolate.CLAMP,
       });
     }
   );
