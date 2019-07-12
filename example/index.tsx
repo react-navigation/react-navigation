@@ -1,4 +1,3 @@
-import shortid from 'shortid';
 import * as React from 'react';
 import { render } from 'react-dom';
 import {
@@ -7,6 +6,7 @@ import {
   CompositeNavigationProp,
   TypedNavigator,
   NavigationHelpers,
+  InitialState,
 } from '../src';
 import StackNavigator, { StackNavigationProp } from './StackNavigator';
 import TabNavigator, { TabNavigationProp } from './TabNavigator';
@@ -132,24 +132,24 @@ const Fifth = ({
   </div>
 );
 
-const routes =
-  location.pathname !== '/'
-    ? location.pathname
-        .slice(1)
-        .split('/')
-        .map(name => ({ name, key: `${name}-${shortid()}` }))
-    : [];
+const PERSISTENCE_KEY = 'NAVIGATION_STATE';
 
-const initialState = routes.length
-  ? {
-      index: routes.length - 1,
-      routes,
-    }
-  : undefined;
+let initialState: InitialState | undefined;
+
+try {
+  initialState = JSON.parse(localStorage.getItem(PERSISTENCE_KEY) || '');
+} catch (e) {
+  // Do nothing
+}
 
 function App() {
   return (
-    <NavigationContainer initialState={initialState}>
+    <NavigationContainer
+      initialState={initialState}
+      onStateChange={state =>
+        localStorage.setItem(PERSISTENCE_KEY, JSON.stringify(state))
+      }
+    >
       <Stack.Navigator>
         <Stack.Screen
           name="first"
