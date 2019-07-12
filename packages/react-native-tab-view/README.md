@@ -38,36 +38,16 @@ Install [`react-native-gesture-handler`](https://github.com/kmagiera/react-nativ
 yarn add react-native-reanimated react-native-gesture-handler
 ```
 
-On React Native >= 0.60, [linking is automatic](https://github.com/react-native-community/cli/blob/master/docs/autolinking.md) for `react-native-reanimated`. If you're on an older React Native version, you need to manually link it. To do that, run:
+On React Native >= 0.60, [linking is automatic](https://github.com/react-native-community/cli/blob/master/docs/autolinking.md). If you're on an older React Native version, you need to manually link the dependencies. To do that, run:
 
 ```sh
 react-native link react-native-reanimated
-```
-
-You need to link `react-native-gesture-handler` manually on all React Native versions:
-
-```sh
 react-native link react-native-gesture-handler
 ```
 
 **IMPORTANT:** There are additional steps required for `react-native-gesture-handler` on Android after linking. Check the [this guide](https://kmagiera.github.io/react-native-gesture-handler/docs/getting-started.html) to complete the installation.
 
-**IMPORTANT:** If you're on React Native >= 0.60, you also need to [disable autolinking for `react-native-gesture-handler`](https://github.com/react-native-community/cli/blob/master/docs/autolinking.md#how-can-i-disable-autolinking-for-unsupported-library). To do it, create a `react-native.config.js` file in the root of your project with the following content:
-
-```js
-module.exports = {
-  dependencies: {
-    'react-native-gesture-handler': {
-      platforms: {
-        android: null,
-        ios: null,
-      },
-    },
-  },
-};
-```
-
-**IMPORTANT:** If your project uses [Android X](https://developer.android.com/jetpack/androidx), you also need to use [`jetifier`](https://github.com/mikehardy/jetifier) to work around libraries using the old support library on Android:
+**IMPORTANT:** If you're on React Native >= 0.60, you also need to use [`jetifier`](https://github.com/mikehardy/jetifier) to work around libraries using the old support library on Android to be able to use [Android X](https://developer.android.com/jetpack/androidx):
 
 Add `jetify` under `scripts.postinstall` in your `package.json`:
 
@@ -77,13 +57,13 @@ Add `jetify` under `scripts.postinstall` in your `package.json`:
 }
 ```
 
-Then install the package:
+Then install the package (make sure to run this **after** adding the `postinstall` script):
 
 ```sh
 yarn add --dev jetifier
 ```
 
-Finally, run `react-native run-android` or `react-native run-ios` to launch the app on your device/simulator.
+Finally, build and run the app on your device/simulator.
 
 **NOTE:** If you use Wix [`react-native-navigation`](https://github.com/wix/react-native-navigation) on Android, you need to wrap all your screens that uses `react-native-tab-view` with `gestureHandlerRootHOC` from `react-native-gesture-handler`. Refer [`react-native-gesture-handler`'s docs](https://kmagiera.github.io/react-native-gesture-handler/docs/getting-started.html#with-wix-react-native-navigation-https-githubcom-wix-react-native-navigation) for more details.
 
