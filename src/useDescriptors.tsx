@@ -20,6 +20,8 @@ type Options = {
   setState: (state: NavigationState) => void;
 };
 
+const EMPTY_OPTIONS = Object.freeze({});
+
 export default function useDescriptors({
   state,
   screens,
@@ -54,7 +56,7 @@ export default function useDescriptors({
             </NavigationBuilderContext.Provider>
           );
         },
-        options: screen.options || {},
+        options: screen.options || EMPTY_OPTIONS,
       };
       return acc;
     },
