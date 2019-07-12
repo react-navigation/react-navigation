@@ -65,25 +65,6 @@ export type Router<Action extends NavigationAction = CommonAction> = {
     action: Action
   ): NavigationState | null;
 
-  getStateForChildUpdate(
-    state: NavigationState,
-    payload: {
-      update: NavigationState;
-      focus?: boolean;
-    }
-  ): NavigationState;
-
-  /**
-   * Whether the action bubbles to other navigators
-   * When an action isn't handled by current navigator, it can be passed to nested navigators
-   */
-  shouldActionPropagateToChildren(action: Action): boolean;
-
-  /**
-   * Whether the action should also change focus in parent navigator
-   */
-  shouldActionChangeFocus(action: Action): boolean;
-
   /**
    * Action creators for the router.
    */
@@ -174,7 +155,7 @@ export type Descriptor = {
   /**
    * Render the component associated with this route.
    */
-  render(): React.ReactNode;
+  render(): JSX.Element;
 
   /**
    * Options for the route.
