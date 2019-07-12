@@ -7,7 +7,7 @@ import HeaderContainer, {
 } from '../Header/HeaderContainer';
 import {
   NavigationProp,
-  NavigationConfig,
+  NavigationStackConfig,
   Route,
   SceneDescriptorMap,
 } from '../../types';
@@ -15,7 +15,7 @@ import {
 type Props = {
   navigation: NavigationProp;
   descriptors: SceneDescriptorMap;
-  navigationConfig: NavigationConfig;
+  navigationConfig: NavigationStackConfig;
   onTransitionStart?: (
     current: { index: number },
     previous: { index: number }
