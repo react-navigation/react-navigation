@@ -5,7 +5,7 @@ import useNavigationBuilder from '../useNavigationBuilder';
 import { Router } from '../types';
 import Screen from '../Screen';
 
-const MockRouter: Router = {
+const MockRouter: Router<{ type: 'UPDATE' | 'NOOP' }> = {
   getInitialState({ screens, initialRouteName }) {
     const routeNames = Object.keys(screens);
 
@@ -20,39 +20,59 @@ const MockRouter: Router = {
     };
   },
 
-  getStateForAction() {
-    return null;
-  },
+  getStateForAction(state, action) {
+    switch (action.type) {
+      case 'UPDATE':
+        return { ...state };
 
-  getStateForChildUpdate(state) {
-    return state;
-  },
+      case 'NOOP':
+        return null;
 
-  shouldActionPropagateToChildren() {
-    return false;
-  },
-
-  shouldActionChangeFocus() {
-    return false;
+      default:
+        return state;
+    }
   },
 
   actionCreators: {},
 };
 
-it('initializes state with router', () => {
+it('initializes state for a navigator on navigation', () => {
   expect.assertions(1);
 
   const TestNavigator = (props: any) => {
-    useNavigationBuilder(MockRouter, props);
+    const { navigation, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return descriptors[
+      navigation.state.routes[navigation.state.index].key
+    ].render();
+  };
+
+  const FooScreen = (props: any) => {
+    React.useEffect(() => {
+      props.navigation.dispatch({ type: 'UPDATE' });
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     return null;
   };
 
   const element = (
     <NavigationContainer
-      onStateChange={state => expect(state).toMatchSnapshot()}
+      onStateChange={state =>
+        expect(state).toEqual({
+          index: 0,
+          key: 'root',
+          names: ['foo', 'bar', 'baz'],
+          routes: [
+            { key: 'foo', name: 'foo' },
+            { key: 'bar', name: 'bar' },
+            { key: 'baz', name: 'baz' },
+          ],
+        })
+      }
     >
-      <TestNavigator initialRouteName="bar">
-        <Screen name="foo" component={jest.fn()} />
+      <TestNavigator initialRouteName="foo">
+        <Screen name="foo" component={FooScreen} />
         <Screen name="bar" component={jest.fn()} />
         <Screen name="baz" component={jest.fn()} />
       </TestNavigator>
@@ -62,7 +82,7 @@ it('initializes state with router', () => {
   render(element).update(element);
 });
 
-it('throws if muliple navigators rendered under one container', async () => {
+it('throws if muliple navigators rendered under one container', () => {
   expect.assertions(1);
 
   const TestNavigator = (props: any) => {

@@ -19,13 +19,11 @@ type Options = {
   children: React.ReactNode;
 };
 
-type HandleAction = (action: NavigationAction, fromKey?: string) => boolean;
+type HandleAction = (action: NavigationAction) => boolean;
 
 const NavigationBuilderContext = React.createContext<{
   helpers?: NavigationHelpers;
-  onDispatchListener?: (listener: HandleAction) => void;
   onAction?: HandleAction;
-  onChildUpdate?: (state: NavigationState, focus?: boolean) => void;
 }>({});
 
 export default function useNavigationBuilder(
@@ -76,26 +74,10 @@ export default function useNavigationBuilder(
     setState,
   } = React.useContext(NavigationStateContext);
 
-  React.useEffect(() => {
-    setState(currentState as NavigationState);
-  }, [currentState, setState]);
-
   const {
     helpers: parentNavigationHelpers,
     onAction: handleActionParent,
-    onChildUpdate: handleChildUpdateParent,
-    onDispatchListener: handleParentDispatch,
   } = React.useContext(NavigationBuilderContext);
-
-  const dispatchListeners = React.useRef<HandleAction[]>([]);
-  const onDispatchListener = React.useCallback((listener: HandleAction) => {
-    dispatchListeners.current.push(listener);
-
-    return () => {
-      const index = dispatchListeners.current.indexOf(listener);
-      dispatchListeners.current.splice(index, 1);
-    };
-  }, []);
 
   const getState = React.useCallback(
     (): NavigationState =>
@@ -109,77 +91,29 @@ export default function useNavigationBuilder(
   );
 
   const onAction = React.useCallback(
-    (action: NavigationAction, fromKey?: string) => {
+    (action: NavigationAction) => {
       const state = getState();
-
-      // If the action was dispatched by this navigator, don't handle it
-      // This ensures that the action won't travel back up from children or down from parent
-      if (fromKey === state.key) {
-        return false;
-      }
 
       const result = router.getStateForAction(state, action);
 
       if (result !== null) {
-        if (handleChildUpdateParent) {
-          const shouldFocus = router.shouldActionChangeFocus(action);
-
-          handleChildUpdateParent(result, shouldFocus);
-        } else {
-          if (state !== result) {
-            setState(result);
-          }
+        if (state !== result) {
+          setState(result);
         }
 
         return true;
       }
 
-      if (
-        fromKey === undefined &&
-        router.shouldActionPropagateToChildren(action)
-      ) {
-        // Try to delegate the action to child navigators
-        for (let i = dispatchListeners.current.length - 1; i >= 0; i--) {
-          const listener = dispatchListeners.current[i];
-
-          if (listener(action, state.key)) {
-            return true;
-          }
-        }
-      }
-
       if (handleActionParent !== undefined) {
         // Bubble action to the parent if the current navigator didn't handle it
-        if (handleActionParent(action, state.key)) {
+        if (handleActionParent(action)) {
           return true;
         }
       }
 
       return false;
     },
-    [getState, handleActionParent, handleChildUpdateParent, router, setState]
-  );
-
-  const onChildUpdate = React.useCallback(
-    (update: NavigationState, focus?: boolean) => {
-      const state = getState();
-      const result = router.getStateForChildUpdate(state, {
-        update,
-        focus,
-      });
-
-      if (handleChildUpdateParent !== undefined) {
-        handleChildUpdateParent(result, focus);
-      } else {
-        setState(result);
-      }
-    },
-    [getState, handleChildUpdateParent, router, setState]
-  );
-
-  React.useEffect(
-    () => handleParentDispatch && handleParentDispatch(onAction),
-    [onAction, handleParentDispatch]
+    [getState, handleActionParent, router, setState]
   );
 
   const helpers = React.useMemo((): NavigationHelpers => {
@@ -225,10 +159,8 @@ export default function useNavigationBuilder(
     () => ({
       helpers,
       onAction,
-      onChildUpdate,
-      onDispatchListener,
     }),
-    [helpers, onAction, onDispatchListener, onChildUpdate]
+    [helpers, onAction]
   );
 
   const descriptors = currentState.routes.reduce(

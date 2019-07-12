@@ -133,32 +133,6 @@ const TabRouter: Router<Action | CommonAction> = {
     }
   },
 
-  getStateForChildUpdate(state, { update, focus }) {
-    const index = state.routes.findIndex(r =>
-      r.state ? r.state.key === update.key : false
-    );
-
-    if (index === -1) {
-      return state;
-    }
-
-    return {
-      ...state,
-      index: focus ? index : state.index,
-      routes: state.routes.map((route, i) =>
-        i === index ? { ...route, state: update } : route
-      ),
-    };
-  },
-
-  shouldActionPropagateToChildren(action) {
-    return action.type === 'NAVIGATE';
-  },
-
-  shouldActionChangeFocus(action) {
-    return action.type === 'NAVIGATE';
-  },
-
   actionCreators: {
     jumpTo(name: string) {
       return { type: 'JUMP_TO', payload: { name } };
