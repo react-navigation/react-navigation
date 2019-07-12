@@ -19,20 +19,29 @@ export default function useNavigationBuilder(
   useRegisterNavigator();
 
   const screens = React.Children.map(options.children, child => {
+    if (child === null || child === undefined) {
+      return;
+    }
+
     if (React.isValidElement(child) && child.type === Screen) {
       return child.props as ScreenProps;
     }
 
     throw new Error(
-      "A navigator can only contain 'Screen' components as its direct children"
+      `A navigator can only contain 'Screen' components as its direct children (found '${
+        // @ts-ignore
+        child.type && child.type.name ? child.type.name : String(child)
+      }')`
     );
-  }).reduce(
-    (acc, curr) => {
-      acc[curr.name] = curr;
-      return acc;
-    },
-    {} as { [key: string]: ScreenProps }
-  );
+  })
+    .filter(Boolean)
+    .reduce(
+      (acc, curr) => {
+        acc[curr!.name] = curr as ScreenProps;
+        return acc;
+      },
+      {} as { [key: string]: ScreenProps }
+    );
 
   const routeNames = Object.keys(screens);
 

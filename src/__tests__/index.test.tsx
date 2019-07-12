@@ -82,6 +82,25 @@ it('initializes state for a navigator on navigation', () => {
   render(element).update(element);
 });
 
+it('throws if navigator is not inside a container', () => {
+  expect.assertions(1);
+
+  const TestNavigator = (props: any) => {
+    useNavigationBuilder(MockRouter, props);
+    return null;
+  };
+
+  const element = (
+    <TestNavigator>
+      <Screen name="foo" component={jest.fn()} />
+    </TestNavigator>
+  );
+
+  expect(() => render(element).update(element)).toThrowError(
+    "Couldn't register the navigator. Have you wrapped your app with 'NavigationContainer'?"
+  );
+});
+
 it('throws if muliple navigators rendered under one container', () => {
   expect.assertions(1);
 
@@ -104,4 +123,73 @@ it('throws if muliple navigators rendered under one container', () => {
   expect(() => render(element).update(element)).toThrowError(
     'Another navigator is already registered for this container'
   );
+});
+
+it('throws when Screen is not the direct children', () => {
+  expect.assertions(1);
+
+  const TestNavigator = (props: any) => {
+    useNavigationBuilder(MockRouter, props);
+    return null;
+  };
+
+  const Bar = () => null;
+
+  const element = (
+    <NavigationContainer>
+      <TestNavigator>
+        <Screen name="foo" component={jest.fn()} />
+        <Bar />
+      </TestNavigator>
+    </NavigationContainer>
+  );
+
+  expect(() => render(element).update(element)).toThrowError(
+    "A navigator can only contain 'Screen' components as its direct children (found 'Bar')"
+  );
+});
+
+it('throws when a React Element is not the direct children', () => {
+  expect.assertions(1);
+
+  const TestNavigator = (props: any) => {
+    useNavigationBuilder(MockRouter, props);
+    return null;
+  };
+
+  const element = (
+    <NavigationContainer>
+      <TestNavigator>
+        <Screen name="foo" component={jest.fn()} />
+        Hello world
+      </TestNavigator>
+    </NavigationContainer>
+  );
+
+  expect(() => render(element).update(element)).toThrowError(
+    "A navigator can only contain 'Screen' components as its direct children (found 'Hello world')"
+  );
+});
+
+it("doesn't throw when direct children is Screen or empty element", () => {
+  expect.assertions(0);
+
+  const TestNavigator = (props: any) => {
+    useNavigationBuilder(MockRouter, props);
+    return null;
+  };
+
+  const element = (
+    <NavigationContainer>
+      <TestNavigator>
+        <Screen name="foo" component={jest.fn()} />
+        {null}
+        {undefined}
+        {false}
+        {true}
+      </TestNavigator>
+    </NavigationContainer>
+  );
+
+  render(element).update(element);
 });
