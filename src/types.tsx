@@ -46,6 +46,10 @@ export type NavigationAction = {
   type: string;
 };
 
+export type ActionCreators<Action extends NavigationAction = CommonAction> = {
+  [key: string]: (...args: any) => Action;
+};
+
 export type Router<Action extends NavigationAction = CommonAction> = {
   /**
    * Initialize full navigation state with a given partial state.
@@ -68,7 +72,7 @@ export type Router<Action extends NavigationAction = CommonAction> = {
   /**
    * Action creators for the router.
    */
-  actionCreators: { [key: string]: (...args: any) => Action };
+  actionCreators: ActionCreators<Action>;
 };
 
 export type ParamListBase = { [key: string]: object | void };
