@@ -28,13 +28,12 @@ export default function SceneView(props: Props) {
     [helpers, route]
   );
 
-  const stateRef = React.useRef(route.state);
+  const getCurrentState = React.useCallback(() => {
+    const state = getState();
 
-  React.useEffect(() => {
-    stateRef.current = route.state;
-  });
+    return state.routes.find(r => r.key === route.key)!.state;
+  }, [getState, route.key]);
 
-  const getCurrentState = React.useCallback(() => stateRef.current, []);
   const setCurrentState = React.useCallback(
     (child: NavigationState | undefined) => {
       const state = getState();
@@ -42,11 +41,11 @@ export default function SceneView(props: Props) {
       setState({
         ...state,
         routes: state.routes.map(r =>
-          r === route ? { ...route, state: child } : r
+          r.key === route.key ? { ...r, state: child } : r
         ),
       });
     },
-    [getState, route, setState]
+    [getState, route.key, setState]
   );
 
   const context = React.useMemo(
