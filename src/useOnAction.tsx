@@ -23,7 +23,6 @@ export default function useOnAction({
   return React.useCallback(
     (action: NavigationAction) => {
       const state = getState();
-
       const result = getStateForAction(state, action);
 
       if (result !== null) {
