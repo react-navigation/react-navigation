@@ -82,6 +82,53 @@ it('initializes state for a navigator on navigation', () => {
   render(element).update(element);
 });
 
+it('allows arbitrary state updates by dispatching a function', () => {
+  expect.assertions(1);
+
+  const TestNavigator = (props: any) => {
+    const { navigation, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return descriptors[
+      navigation.state.routes[navigation.state.index].key
+    ].render();
+  };
+
+  const FooScreen = (props: any) => {
+    React.useEffect(() => {
+      props.navigation.dispatch((state: any) => ({
+        ...state,
+        routes: state.routes.slice().reverse(),
+        index: 1,
+      }));
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    return null;
+  };
+
+  const BarScreen = () => null;
+
+  const element = (
+    <NavigationContainer
+      onStateChange={state =>
+        expect(state).toEqual({
+          index: 1,
+          key: 'root',
+          names: ['foo', 'bar'],
+          routes: [{ key: 'bar', name: 'bar' }, { key: 'foo', name: 'foo' }],
+        })
+      }
+    >
+      <TestNavigator initialRouteName="foo">
+        <Screen name="foo" component={FooScreen} />
+        <Screen name="bar" component={BarScreen} />
+      </TestNavigator>
+    </NavigationContainer>
+  );
+
+  render(element).update(element);
+});
+
 it('throws if navigator is not inside a container', () => {
   expect.assertions(1);
 
