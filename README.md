@@ -20,7 +20,13 @@ Hook which can access the navigation state from the context. Along with the stat
 
 ### Router
 
-An object that provides a reducer to update the state as well as some action creators.
+An object that provides a reducer to update the state as well as some action creators. The router object should implement several properties:
+
+- `getInitialState`
+- `getStateForAction`
+- `actionCreators`
+
+The router is responsible for handling actions dispatched by calling methods on the `navigation` object. If the router cannot handle an action, it can return `null`, which would propagate the action to other routers until it's handled.
 
 ### Navigator
 
@@ -44,13 +50,7 @@ function StackNavigator({ initialRouteName, children, ...rest }) {
 }
 ```
 
-The navigator can render a screen by calling `descriptors[route.key].render()`. Internally, the descriptor wraps the screen in a `NavigationStateContext.Provider` to support nested state:
-
-```js
-<NavigationStateContext.Provider state={route.state}>
-  <MyComponent />
-</NavigationStateContext.Provider>
-```
+The navigator can render a screen by calling `descriptors[route.key].render()`. Internally, the descriptor adds appropriate wrappers to handle nested state.
 
 ## Initial state
 
@@ -90,7 +90,18 @@ function App() {
 }
 ```
 
-Navigators need to have `Screen` components as their direct children. These components don't do anything by themselves, but the navigator can extract information from these and determine what to render. Implementation-wise, we'll use `React.Children` API for this purpose.
+Navigators need to have `Screen` components as their direct children. These components don't do anything by themselves, but the navigator can extract information from these and determine what to render. Implementation-wise, we use `React.Children` API for this purpose.
+
+The content to render can be specified in 2 ways:
+
+1. React component in `component` prop (recommended)
+2. Render callback as children
+
+When a React component is specified, the navigator takes care of adding a `React.memo` to prevent unnecessary re-renders. However, it's not possible to pass extra props to the component this way. It's preferable to use the context API for such cases instead of props.
+
+A render callback which doesn't have such limitation and is easier to use for this purpose. However, performance optimization for the component is left to the user in such case.
+
+The rendered component will receives a `navigation` prop with various helpers.
 
 ## Type-checking
 
@@ -133,7 +144,7 @@ function Feed({
   navigation,
 }: {
   navigation: CompositeNavigationProp<
-    NavigationHelpers<TabParamList, 'feed'>,
+    TabNavigationProp<TabParamList, 'feed'>,
     StackNavigationProp<StackParamList>
   >;
 }) {
@@ -161,3 +172,5 @@ And then we use the typed navigator instead:
   <Stack.Screen name="home" component={Home} />
 </Stack.Navigator>
 ```
+
+Unfortunately it's not possible to verify that the type of children elements are correct since [TypeScript doesn't support type-checking JSX elements](https://github.com/microsoft/TypeScript/issues/21699).
