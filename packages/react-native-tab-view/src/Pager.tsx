@@ -91,6 +91,8 @@ const SPRING_CONFIG = {
   restSpeedThreshold: 0.01,
 };
 
+const SPRING_VELOCITY_SCALE = 1;
+
 const TIMING_CONFIG = {
   duration: 200,
   easing: Easing.out(Easing.cubic),
@@ -99,6 +101,7 @@ const TIMING_CONFIG = {
 export default class Pager<T extends Route> extends React.Component<Props<T>> {
   static defaultProps = {
     swipeVelocityImpact: SWIPE_VELOCITY_IMPACT,
+    springVelocityScale: SPRING_VELOCITY_SCALE,
   };
 
   componentDidUpdate(prevProps: Props<T>) {
@@ -106,6 +109,7 @@ export default class Pager<T extends Route> extends React.Component<Props<T>> {
       navigationState,
       layout,
       swipeVelocityImpact,
+      springVelocityScale,
       springConfig,
       timingConfig,
     } = this.props;
@@ -138,9 +142,17 @@ export default class Pager<T extends Route> extends React.Component<Props<T>> {
 
     if (prevProps.swipeVelocityImpact !== swipeVelocityImpact) {
       this.swipeVelocityImpact.setValue(
-        swipeVelocityImpact != null
+        swipeVelocityImpact !== undefined
           ? swipeVelocityImpact
           : SWIPE_VELOCITY_IMPACT
+      );
+    }
+
+    if (prevProps.springVelocityScale !== springVelocityScale) {
+      this.springVelocityScale.setValue(
+        springVelocityScale !== undefined
+          ? springVelocityScale
+          : SPRING_VELOCITY_SCALE
       );
     }
 
@@ -228,7 +240,15 @@ export default class Pager<T extends Route> extends React.Component<Props<T>> {
 
   // Determines how relevant is a velocity while calculating next position while swiping
   private swipeVelocityImpact = new Value(
-    this.props.swipeVelocityImpact || SWIPE_VELOCITY_IMPACT
+    this.props.swipeVelocityImpact !== undefined
+      ? this.props.swipeVelocityImpact
+      : SWIPE_VELOCITY_IMPACT
+  );
+
+  private springVelocityScale = new Value(
+    this.props.springVelocityScale !== undefined
+      ? this.props.springVelocityScale
+      : SPRING_VELOCITY_SCALE
   );
 
   // The position value represent the position of the pager on a scale of 0 - routes.length-1
@@ -381,7 +401,6 @@ export default class Pager<T extends Route> extends React.Component<Props<T>> {
         set(state.time, 0),
         set(state.finished, FALSE),
         set(this.index, index),
-        startClock(this.clock),
       ]),
       cond(
         this.isSwipeGesture,
@@ -390,8 +409,14 @@ export default class Pager<T extends Route> extends React.Component<Props<T>> {
           cond(
             not(clockRunning(this.clock)),
             I18nManager.isRTL
-              ? set(this.initialVelocityForSpring, multiply(-1, this.velocityX))
-              : set(this.initialVelocityForSpring, this.velocityX)
+              ? set(
+                  this.initialVelocityForSpring,
+                  multiply(-1, this.velocityX, this.springVelocityScale)
+                )
+              : set(
+                  this.initialVelocityForSpring,
+                  multiply(this.velocityX, this.springVelocityScale)
+                )
           ),
           spring(
             this.clock,
@@ -406,6 +431,7 @@ export default class Pager<T extends Route> extends React.Component<Props<T>> {
           { ...TIMING_CONFIG, ...this.timingConfig, toValue }
         )
       ),
+      cond(not(clockRunning(this.clock)), startClock(this.clock)),
       cond(state.finished, [
         // Reset values
         set(this.isSwipeGesture, FALSE),
