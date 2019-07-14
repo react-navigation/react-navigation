@@ -56,8 +56,6 @@ const MockRouter: Router<{ type: string }> = {
 };
 
 it('initializes state for a navigator on navigation', () => {
-  expect.assertions(2);
-
   const TestNavigator = (props: any) => {
     const { navigation, descriptors } = useNavigationBuilder(MockRouter, props);
 
@@ -113,8 +111,6 @@ it('initializes state for a navigator on navigation', () => {
 });
 
 it('rehydrates state for a navigator on navigation', () => {
-  expect.assertions(1);
-
   const TestNavigator = (props: any) => {
     const { navigation, descriptors } = useNavigationBuilder(MockRouter, props);
 
@@ -162,8 +158,6 @@ it('rehydrates state for a navigator on navigation', () => {
 });
 
 it('initializes state for nested navigator on navigation', () => {
-  expect.assertions(2);
-
   const TestNavigator = (props: any) => {
     const { navigation, descriptors } = useNavigationBuilder(MockRouter, props);
 
@@ -224,8 +218,6 @@ it('initializes state for nested navigator on navigation', () => {
 });
 
 it("doesn't update state if nothing changed", () => {
-  expect.assertions(1);
-
   const TestNavigator = (props: any) => {
     const { navigation, descriptors } = useNavigationBuilder(MockRouter, props);
 
@@ -260,8 +252,6 @@ it("doesn't update state if nothing changed", () => {
 });
 
 it("doesn't update state if action wasn't handled", () => {
-  expect.assertions(1);
-
   const TestNavigator = (props: any) => {
     const { navigation, descriptors } = useNavigationBuilder(MockRouter, props);
 
@@ -295,9 +285,56 @@ it("doesn't update state if action wasn't handled", () => {
   expect(onStateChange).toBeCalledTimes(0);
 });
 
-it("lets parent handle the action if child didn't", () => {
-  expect.assertions(2);
+it('cleans up state when the navigator unmounts', () => {
+  const TestNavigator = (props: any) => {
+    const { navigation, descriptors } = useNavigationBuilder(MockRouter, props);
 
+    return descriptors[
+      navigation.state.routes[navigation.state.index].key
+    ].render();
+  };
+
+  const FooScreen = (props: any) => {
+    React.useEffect(() => {
+      props.navigation.dispatch({ type: 'UPDATE' });
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    return null;
+  };
+
+  const onStateChange = jest.fn();
+
+  const element = (
+    <NavigationContainer onStateChange={onStateChange}>
+      <TestNavigator>
+        <Screen name="foo" component={FooScreen} />
+        <Screen name="bar" component={jest.fn()} />
+      </TestNavigator>
+    </NavigationContainer>
+  );
+
+  const root = render(element);
+
+  root.update(element);
+
+  expect(onStateChange).toBeCalledTimes(1);
+  expect(onStateChange).lastCalledWith({
+    index: 0,
+    key: 'root',
+    routeNames: ['foo', 'bar'],
+    routes: [{ key: 'foo', name: 'foo' }, { key: 'bar', name: 'bar' }],
+  });
+
+  root.update(
+    <NavigationContainer onStateChange={onStateChange} children={null} />
+  );
+
+  expect(onStateChange).toBeCalledTimes(2);
+  expect(onStateChange).lastCalledWith(undefined);
+});
+
+it("lets parent handle the action if child didn't", () => {
   const ParentRouter: Router<{ type: string }> = {
     ...MockRouter,
 
@@ -361,8 +398,8 @@ it("lets parent handle the action if child didn't", () => {
 
   render(element).update(element);
 
-  expect(onStateChange).toBeCalledTimes(1);
-  expect(onStateChange).toBeCalledWith({
+  expect(onStateChange).toBeCalledTimes(2);
+  expect(onStateChange).lastCalledWith({
     index: 2,
     key: 'root',
     routeNames: ['foo', 'bar', 'baz'],
@@ -375,8 +412,6 @@ it("lets parent handle the action if child didn't", () => {
 });
 
 it('allows arbitrary state updates by dispatching a function', () => {
-  expect.assertions(2);
-
   const TestNavigator = (props: any) => {
     const { navigation, descriptors } = useNavigationBuilder(MockRouter, props);
 
@@ -423,8 +458,6 @@ it('allows arbitrary state updates by dispatching a function', () => {
 });
 
 it('updates route params with setParams', () => {
-  expect.assertions(4);
-
   const TestNavigator = (props: any) => {
     const { navigation, descriptors } = useNavigationBuilder(MockRouter, props);
 
@@ -482,8 +515,6 @@ it('updates route params with setParams', () => {
 });
 
 it('throws if navigator is not inside a container', () => {
-  expect.assertions(1);
-
   const TestNavigator = (props: any) => {
     useNavigationBuilder(MockRouter, props);
     return null;
@@ -501,8 +532,6 @@ it('throws if navigator is not inside a container', () => {
 });
 
 it('throws if muliple navigators rendered under one container', () => {
-  expect.assertions(1);
-
   const TestNavigator = (props: any) => {
     useNavigationBuilder(MockRouter, props);
     return null;
@@ -525,8 +554,6 @@ it('throws if muliple navigators rendered under one container', () => {
 });
 
 it('throws when Screen is not the direct children', () => {
-  expect.assertions(1);
-
   const TestNavigator = (props: any) => {
     useNavigationBuilder(MockRouter, props);
     return null;
@@ -549,8 +576,6 @@ it('throws when Screen is not the direct children', () => {
 });
 
 it('throws when a React Element is not the direct children', () => {
-  expect.assertions(1);
-
   const TestNavigator = (props: any) => {
     useNavigationBuilder(MockRouter, props);
     return null;
@@ -571,8 +596,6 @@ it('throws when a React Element is not the direct children', () => {
 });
 
 it("doesn't throw when direct children is Screen or empty element", () => {
-  expect.assertions(0);
-
   const TestNavigator = (props: any) => {
     useNavigationBuilder(MockRouter, props);
     return null;
