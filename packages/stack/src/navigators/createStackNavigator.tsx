@@ -1,5 +1,5 @@
+import * as React from 'react';
 import { StackRouter, createNavigator } from '@react-navigation/core';
-import { createKeyboardAwareNavigator } from '@react-navigation/native';
 import { Platform } from 'react-native';
 import StackView from '../views/Stack/StackView';
 import {
@@ -8,6 +8,7 @@ import {
   NavigationProp,
   Screen,
 } from '../types';
+import KeyboardManager from '../views/KeyboardManager';
 
 function createStackNavigator(
   routeConfigMap: {
@@ -26,13 +27,19 @@ function createStackNavigator(
 ) {
   const router = StackRouter(routeConfigMap, stackConfig);
 
-  // Create a navigator with StackView as the view
-  let Navigator = createNavigator(StackView, router, stackConfig);
-  if (!stackConfig.disableKeyboardHandling && Platform.OS !== 'web') {
-    Navigator = createKeyboardAwareNavigator(Navigator, stackConfig);
+  if (stackConfig.disableKeyboardHandling || Platform.OS === 'web') {
+    return createNavigator(StackView, router, stackConfig);
   }
 
-  return Navigator;
+  return createNavigator(
+    navigatorProps => (
+      <KeyboardManager>
+        {props => <StackView {...props} {...navigatorProps} />}
+      </KeyboardManager>
+    ),
+    router,
+    stackConfig
+  );
 }
 
 export default createStackNavigator;

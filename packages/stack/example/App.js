@@ -23,6 +23,7 @@ import LifecycleInteraction from './src/LifecycleInteraction';
 import GestureInteraction from './src/GestureInteraction';
 import SwitchWithStacks from './src/SwitchWithStacks';
 import StackWithDrawer from './src/StackWithDrawer';
+import StackWithInput from './src/StackWithInput';
 import HeaderPreset from './src/HeaderPreset';
 import {
   HeaderBackgroundDefault,
@@ -74,6 +75,11 @@ const data = [
     component: StackWithDrawer,
     title: 'Stack with drawer inside',
     routeName: 'StackWithDrawer',
+  },
+  {
+    component: StackWithInput,
+    title: 'Stack with text input',
+    routeName: 'StackWithInput',
   },
   {
     component: HeaderBackgroundDefault,

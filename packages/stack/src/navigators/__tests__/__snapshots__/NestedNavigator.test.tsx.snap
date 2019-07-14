@@ -30,7 +30,6 @@ Array [
         onClose={[Function]}
         onGestureBegin={[Function]}
         onGestureCanceled={[Function]}
-        onGestureEnd={[Function]}
         onOpen={[Function]}
         onTransitionStart={[Function]}
         pointerEvents="box-none"
@@ -182,7 +181,6 @@ Array [
                       onClose={[Function]}
                       onGestureBegin={[Function]}
                       onGestureCanceled={[Function]}
-                      onGestureEnd={[Function]}
                       onOpen={[Function]}
                       onTransitionStart={[Function]}
                       pointerEvents="box-none"

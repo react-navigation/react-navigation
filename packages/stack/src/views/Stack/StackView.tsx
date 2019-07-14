@@ -16,13 +16,9 @@ type Props = {
   navigation: NavigationProp;
   descriptors: SceneDescriptorMap;
   navigationConfig: NavigationStackConfig;
-  onTransitionStart?: (
-    current: { index: number },
-    previous: { index: number }
-  ) => void;
-  onGestureBegin?: () => void;
-  onGestureCanceled?: () => void;
-  onGestureEnd?: () => void;
+  onPageChangeStart?: () => void;
+  onPageChangeConfirm?: () => void;
+  onPageChangeCancel?: () => void;
   screenProps?: unknown;
 };
 
@@ -275,10 +271,9 @@ class StackView extends React.Component<Props, State> {
     const {
       navigation,
       navigationConfig,
-      onTransitionStart,
-      onGestureBegin,
-      onGestureCanceled,
-      onGestureEnd,
+      onPageChangeStart,
+      onPageChangeConfirm,
+      onPageChangeCancel,
     } = this.props;
 
     const { mode = 'card', ...config } = navigationConfig;
@@ -298,10 +293,9 @@ class StackView extends React.Component<Props, State> {
         onGoBack={this.handleGoBack}
         onOpenRoute={this.handleOpenRoute}
         onCloseRoute={this.handleCloseRoute}
-        onTransitionStart={onTransitionStart}
-        onGestureBegin={onGestureBegin}
-        onGestureCanceled={onGestureCanceled}
-        onGestureEnd={onGestureEnd}
+        onPageChangeStart={onPageChangeStart}
+        onPageChangeConfirm={onPageChangeConfirm}
+        onPageChangeCancel={onPageChangeCancel}
         renderHeader={this.renderHeader}
         renderScene={this.renderScene}
         headerMode={headerMode}
