@@ -6,6 +6,8 @@ import useDescriptors from './useDescriptors';
 import useNavigationHelpers from './useNavigationHelpers';
 import useOnAction from './useOnAction';
 import { Router, NavigationState, ScreenProps } from './types';
+import useOnChildUpdate from './useOnChildUpdate';
+import useChildActionListeners from './useChildActionListeners';
 
 type Options = {
   initialRouteName?: string;
@@ -66,6 +68,7 @@ export default function useNavigationBuilder(
     }),
     getState: getCurrentState,
     setState,
+    key,
   } = React.useContext(NavigationStateContext);
 
   React.useEffect(() => {
@@ -92,10 +95,27 @@ export default function useNavigationBuilder(
     [getCurrentState, router.getRehydratedState, router.getInitialState]
   );
 
+  const {
+    listeners: actionListeners,
+    addActionListener,
+    removeActionListener,
+  } = useChildActionListeners();
+
   const onAction = useOnAction({
+    router,
     getState,
     setState,
+    key,
     getStateForAction: router.getStateForAction,
+    actionListeners,
+  });
+
+  const onChildUpdate = useOnChildUpdate({
+    router,
+    onAction,
+    key,
+    getState,
+    setState,
   });
 
   const helpers = useNavigationHelpers({
@@ -120,6 +140,9 @@ export default function useNavigationBuilder(
     onAction,
     getState,
     setState,
+    onChildUpdate,
+    addActionListener,
+    removeActionListener,
   });
 
   return {
