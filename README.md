@@ -113,15 +113,15 @@ For our example above, we need 2 separate types for stack and tabs:
 
 ```ts
 type StackParamList = {
-  settings: void;
+  settings: undefined;
   profile: { userId: string };
-  home: void;
+  home: undefined;
 };
 
 type TabParamList = {
-  feed: void;
-  article: void;
-  notifications: void;
+  feed: undefined;
+  article: undefined;
+  notifications: undefined;
 };
 ```
 

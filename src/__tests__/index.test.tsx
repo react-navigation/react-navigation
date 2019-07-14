@@ -6,23 +6,27 @@ import useNavigationBuilder from '../useNavigationBuilder';
 import { Router } from '../types';
 
 const MockRouter: Router<{ type: string }> = {
-  getInitialState({ screens, partialState, initialRouteName }) {
-    const routeNames = Object.keys(screens);
+  getInitialState({
+    routeNames,
+    initialRouteName = routeNames[0],
+    initialParamsList,
+  }) {
+    const index = routeNames.indexOf(initialRouteName);
 
+    return {
+      key: 'root',
+      index,
+      routeNames,
+      routes: routeNames.map(name => ({
+        name,
+        key: name,
+        params: initialParamsList[name],
+      })),
+    };
+  },
+
+  getRehydratedState({ routeNames, partialState }) {
     let state = partialState;
-
-    if (state === undefined) {
-      const index = routeNames.indexOf(initialRouteName || routeNames[0]);
-
-      state = {
-        index,
-        routes: routeNames.map(name => ({
-          name,
-          key: name,
-          params: screens[name].initialParams,
-        })),
-      };
-    }
 
     if (state.routeNames === undefined || state.key === undefined) {
       state = {
@@ -76,7 +80,11 @@ it('initializes state for a navigator on navigation', () => {
   const element = (
     <NavigationContainer onStateChange={onStateChange}>
       <TestNavigator initialRouteName="foo">
-        <Screen name="foo" component={FooScreen} />
+        <Screen
+          name="foo"
+          component={FooScreen}
+          initialParams={{ count: 10 }}
+        />
         <Screen name="bar" component={jest.fn()} />
         <Screen name="baz">
           {() => (
@@ -97,10 +105,59 @@ it('initializes state for a navigator on navigation', () => {
     key: 'root',
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
-      { key: 'foo', name: 'foo' },
+      { key: 'foo', name: 'foo', params: { count: 10 } },
       { key: 'bar', name: 'bar' },
       { key: 'baz', name: 'baz' },
     ],
+  });
+});
+
+it('rehydrates state for a navigator on navigation', () => {
+  expect.assertions(1);
+
+  const TestNavigator = (props: any) => {
+    const { navigation, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return descriptors[
+      navigation.state.routes[navigation.state.index].key
+    ].render();
+  };
+
+  const BarScreen = (props: any) => {
+    React.useEffect(() => {
+      props.navigation.dispatch({ type: 'UPDATE' });
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    return null;
+  };
+
+  const initialState = {
+    index: 1,
+    routes: [{ key: 'foo', name: 'foo' }, { key: 'bar', name: 'bar' }],
+  };
+
+  const onStateChange = jest.fn();
+
+  const element = (
+    <NavigationContainer
+      initialState={initialState}
+      onStateChange={onStateChange}
+    >
+      <TestNavigator initialRouteName="foo">
+        <Screen name="foo" component={jest.fn()} />
+        <Screen name="bar" component={BarScreen} />
+      </TestNavigator>
+    </NavigationContainer>
+  );
+
+  render(element).update(element);
+
+  expect(onStateChange).lastCalledWith({
+    index: 1,
+    key: 'root',
+    routeNames: ['foo', 'bar'],
+    routes: [{ key: 'foo', name: 'foo' }, { key: 'bar', name: 'bar' }],
   });
 });
 

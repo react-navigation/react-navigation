@@ -1,4 +1,4 @@
-import { InitialState } from './types';
+import { PartialState } from './types';
 
 export type Action =
   | { type: 'GO_BACK' }
@@ -12,7 +12,7 @@ export type Action =
     }
   | {
       type: 'RESET';
-      payload: InitialState & { key?: string };
+      payload: PartialState & { key?: string };
     };
 
 export function goBack(): Action {
@@ -27,6 +27,6 @@ export function replace(name: string, params?: object): Action {
   return { type: 'REPLACE', payload: { name, params } };
 }
 
-export function reset(state: InitialState & { key?: string }): Action {
+export function reset(state: PartialState & { key?: string }): Action {
   return { type: 'RESET', payload: state };
 }

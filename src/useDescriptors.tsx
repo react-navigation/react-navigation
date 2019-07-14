@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {
   Descriptor,
-  InitialState,
+  PartialState,
   NavigationAction,
   NavigationHelpers,
   NavigationState,
@@ -12,7 +12,7 @@ import SceneView from './SceneView';
 import NavigationBuilderContext from './NavigationBuilderContext';
 
 type Options = {
-  state: NavigationState | InitialState;
+  state: NavigationState | PartialState;
   screens: { [key: string]: ScreenProps<ParamListBase, string> };
   helpers: NavigationHelpers<ParamListBase>;
   onAction: (action: NavigationAction) => boolean;
