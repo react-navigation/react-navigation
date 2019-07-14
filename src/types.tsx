@@ -12,7 +12,7 @@ export type NavigationState = {
    */
   index: number;
   /**
-   * List if valid route names as defined in the screen components.
+   * List of valid route names as defined in the screen components.
    */
   routeNames: string[];
   /**
@@ -53,6 +53,10 @@ export type ActionCreators<Action extends NavigationAction = CommonAction> = {
 export type Router<Action extends NavigationAction = CommonAction> = {
   /**
    * Initialize the navigation state.
+   *
+   * @param routeNames List of valid route names as defined in the screen components.
+   * @param initialRouteName Route to focus in the state.
+   * @param initialParamsList Object containing initial params for each route.
    */
   getInitialState(options: {
     routeNames: string[];
@@ -62,6 +66,9 @@ export type Router<Action extends NavigationAction = CommonAction> = {
 
   /**
    * Rehydrate the full navigation state from a given partial state.
+   *
+   * @param routeNames List of valid route names as defined in the screen components.
+   * @param partialState Navigation state to rehydrate from.
    */
   getRehydratedState(options: {
     routeNames: string[];
@@ -71,6 +78,9 @@ export type Router<Action extends NavigationAction = CommonAction> = {
   /**
    * Take the current state and action, and return a new state.
    * If the action cannot be handled, return `null`.
+   *
+   * @param state State object to apply the action on.
+   * @param action Action object to apply.
    */
   getStateForAction(
     state: NavigationState,
@@ -100,6 +110,8 @@ export type NavigationHelpers<
   /**
    * Dispatch an action or an update function to the router.
    * The update function will receive the current state,
+   *
+   * @param action Action object or update function.
    */
   dispatch(
     action: NavigationAction | ((state: NavigationState) => NavigationState)
@@ -132,6 +144,8 @@ export type NavigationHelpers<
   /**
    * Reset the navigation state to the provided state.
    * If a key is provided, the state with matching key will be reset.
+   *
+   * @param state Navigation state object.
    */
   reset(state: PartialState & { key?: string }): void;
 
@@ -156,6 +170,8 @@ export type NavigationProp<
   /**
    * Update the param object for the route.
    * The new params will be shallow merged with the old one.
+   *
+   * @param params Params object for the current route.
    */
   setParams(params: ParamList[RouteName]): void;
 };
