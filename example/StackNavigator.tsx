@@ -76,10 +76,10 @@ const StackRouter: Router<CommonAction | Action> = {
       };
     }
 
-    if (state.names === undefined || state.key === undefined) {
+    if (state.routeNames === undefined || state.key === undefined) {
       state = {
         ...state,
-        names: state.names || routeNames,
+        routeNames: state.routeNames || routeNames,
         key: state.key || `stack-${shortid()}`,
       };
     }
@@ -90,7 +90,7 @@ const StackRouter: Router<CommonAction | Action> = {
   getStateForAction(state, action) {
     switch (action.type) {
       case 'PUSH':
-        if (state.names.includes(action.payload.name)) {
+        if (state.routeNames.includes(action.payload.name)) {
           return {
             ...state,
             index: state.index + 1,
@@ -128,7 +128,7 @@ const StackRouter: Router<CommonAction | Action> = {
         });
 
       case 'NAVIGATE':
-        if (state.names.includes(action.payload.name)) {
+        if (state.routeNames.includes(action.payload.name)) {
           // If the route already exists, navigate to that
           let index = -1;
 
@@ -199,7 +199,7 @@ const StackRouter: Router<CommonAction | Action> = {
           return {
             ...action.payload,
             key: state.key,
-            names: state.names,
+            routeNames: state.routeNames,
           };
         }
 

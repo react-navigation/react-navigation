@@ -24,10 +24,10 @@ const MockRouter: Router<{ type: string }> = {
       };
     }
 
-    if (state.names === undefined || state.key === undefined) {
+    if (state.routeNames === undefined || state.key === undefined) {
       state = {
         ...state,
-        names: state.names || routeNames,
+        routeNames: state.routeNames || routeNames,
         key: state.key || 'root',
       };
     }
@@ -95,7 +95,7 @@ it('initializes state for a navigator on navigation', () => {
   expect(onStateChange).toBeCalledWith({
     index: 0,
     key: 'root',
-    names: ['foo', 'bar', 'baz'],
+    routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo', name: 'foo' },
       { key: 'bar', name: 'bar' },
@@ -148,7 +148,7 @@ it('initializes state for nested navigator on navigation', () => {
   expect(onStateChange).toBeCalledWith({
     index: 2,
     key: 'root',
-    names: ['foo', 'bar', 'baz'],
+    routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo', name: 'foo' },
       { key: 'bar', name: 'bar' },
@@ -158,7 +158,7 @@ it('initializes state for nested navigator on navigation', () => {
         state: {
           index: 0,
           key: 'root',
-          names: ['qux'],
+          routeNames: ['qux'],
           routes: [{ key: 'qux', name: 'qux' }],
         },
       },
@@ -308,7 +308,7 @@ it("lets parent handle the action if child didn't", () => {
   expect(onStateChange).toBeCalledWith({
     index: 2,
     key: 'root',
-    names: ['foo', 'bar', 'baz'],
+    routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'baz', name: 'baz' },
       { key: 'bar', name: 'bar' },
@@ -360,7 +360,7 @@ it('allows arbitrary state updates by dispatching a function', () => {
   expect(onStateChange).toBeCalledWith({
     index: 1,
     key: 'root',
-    names: ['foo', 'bar'],
+    routeNames: ['foo', 'bar'],
     routes: [{ key: 'bar', name: 'bar' }, { key: 'foo', name: 'foo' }],
   });
 });
@@ -403,7 +403,7 @@ it('updates route params with setParams', () => {
   expect(onStateChange).lastCalledWith({
     index: 0,
     key: 'root',
-    names: ['foo', 'bar'],
+    routeNames: ['foo', 'bar'],
     routes: [
       { key: 'foo', name: 'foo', params: { username: 'alice' } },
       { key: 'bar', name: 'bar' },
@@ -416,7 +416,7 @@ it('updates route params with setParams', () => {
   expect(onStateChange).lastCalledWith({
     index: 0,
     key: 'root',
-    names: ['foo', 'bar'],
+    routeNames: ['foo', 'bar'],
     routes: [
       { key: 'foo', name: 'foo', params: { username: 'alice', age: 25 } },
       { key: 'bar', name: 'bar' },

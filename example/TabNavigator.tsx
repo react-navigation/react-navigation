@@ -60,10 +60,10 @@ const TabRouter: Router<Action | CommonAction> = {
       };
     }
 
-    if (state.names === undefined || state.key === undefined) {
+    if (state.routeNames === undefined || state.key === undefined) {
       state = {
         ...state,
-        names: state.names || routeNames,
+        routeNames: state.routeNames || routeNames,
         key: state.key || `tab-${shortid()}`,
       };
     }
@@ -75,7 +75,7 @@ const TabRouter: Router<Action | CommonAction> = {
     switch (action.type) {
       case 'JUMP_TO':
       case 'NAVIGATE':
-        if (state.names.includes(action.payload.name)) {
+        if (state.routeNames.includes(action.payload.name)) {
           const index = state.routes.findIndex(
             route => route.name === action.payload.name
           );
@@ -125,7 +125,7 @@ const TabRouter: Router<Action | CommonAction> = {
           return {
             ...action.payload,
             key: state.key,
-            names: state.names,
+            routeNames: state.routeNames,
           };
         }
 
