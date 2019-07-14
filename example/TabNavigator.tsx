@@ -39,26 +39,26 @@ export type TabNavigationProp<
 
 const TabRouter: Router<Action | CommonAction> = {
   getInitialState({
-    screens,
-    partialState,
-    initialRouteName = Object.keys(screens)[0],
+    routeNames,
+    initialRouteName = routeNames[0],
+    initialParamsList,
   }) {
-    const routeNames = Object.keys(screens);
+    const index = routeNames.indexOf(initialRouteName);
 
+    return {
+      key: `tab-${shortid()}`,
+      index,
+      routeNames,
+      routes: routeNames.map(name => ({
+        name,
+        key: `${name}-${shortid()}`,
+        params: initialParamsList[name],
+      })),
+    };
+  },
+
+  getRehydratedState({ routeNames, partialState }) {
     let state = partialState;
-
-    if (state === undefined) {
-      const index = routeNames.indexOf(initialRouteName);
-
-      state = {
-        index,
-        routes: routeNames.map(name => ({
-          name,
-          key: `${name}-${shortid()}`,
-          params: screens[name].initialParams,
-        })),
-      };
-    }
 
     if (state.routeNames === undefined || state.key === undefined) {
       state = {

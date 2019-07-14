@@ -21,10 +21,10 @@ export type NavigationState = {
   routes: Array<Route & { state?: NavigationState }>;
 };
 
-export type InitialState = Omit<Omit<NavigationState, 'routeNames'>, 'key'> & {
+export type PartialState = Omit<Omit<NavigationState, 'routeNames'>, 'key'> & {
   key?: undefined;
   routeNames?: undefined;
-  state?: InitialState;
+  state?: PartialState;
 };
 
 export type Route<RouteName = string> = {
@@ -39,7 +39,7 @@ export type Route<RouteName = string> = {
   /**
    * Params for the route.
    */
-  params?: object | void;
+  params?: object;
 };
 
 export type NavigationAction = {
@@ -52,12 +52,20 @@ export type ActionCreators<Action extends NavigationAction = CommonAction> = {
 
 export type Router<Action extends NavigationAction = CommonAction> = {
   /**
-   * Initialize full navigation state with a given partial state.
+   * Initialize the navigation state.
    */
   getInitialState(options: {
-    screens: { [key: string]: ScreenProps };
-    partialState?: NavigationState | InitialState;
-    initialRouteName?: string;
+    routeNames: string[];
+    initialRouteName: string;
+    initialParamsList: ParamListBase;
+  }): NavigationState;
+
+  /**
+   * Rehydrate the full navigation state from a given partial state.
+   */
+  getRehydratedState(options: {
+    routeNames: string[];
+    partialState: NavigationState | PartialState;
   }): NavigationState;
 
   /**
@@ -75,7 +83,7 @@ export type Router<Action extends NavigationAction = CommonAction> = {
   actionCreators: ActionCreators<Action>;
 };
 
-export type ParamListBase = { [key: string]: object | void };
+export type ParamListBase = { [key: string]: object | undefined };
 
 class PrivateValueStore<T> {
   /**
@@ -104,8 +112,8 @@ export type NavigationHelpers<
    * @param [params] Params object for the route.
    */
   navigate<RouteName extends keyof ParamList>(
-    ...args: ParamList[RouteName] extends void
-      ? [RouteName]
+    ...args: ParamList[RouteName] extends undefined
+      ? [RouteName] | [RouteName, undefined]
       : [RouteName, ParamList[RouteName]]
   ): void;
 
@@ -116,8 +124,8 @@ export type NavigationHelpers<
    * @param [params] Params object for the new route.
    */
   replace<RouteName extends keyof ParamList>(
-    ...args: ParamList[RouteName] extends void
-      ? [RouteName]
+    ...args: ParamList[RouteName] extends undefined
+      ? [RouteName] | [RouteName, undefined]
       : [RouteName, ParamList[RouteName]]
   ): void;
 
@@ -125,7 +133,7 @@ export type NavigationHelpers<
    * Reset the navigation state to the provided state.
    * If a key is provided, the state with matching key will be reset.
    */
-  reset(state: InitialState & { key?: string }): void;
+  reset(state: PartialState & { key?: string }): void;
 
   /**
    * Go back to the previous route in history.
@@ -140,9 +148,9 @@ export type NavigationProp<
   /**
    * State for the child navigator.
    */
-  state: Route<RouteName> &
-    (ParamList[RouteName] extends void
-      ? never
+  state: Omit<Route<RouteName>, 'params'> &
+    (ParamList[RouteName] extends undefined
+      ? {}
       : { params: ParamList[RouteName] });
 
   /**

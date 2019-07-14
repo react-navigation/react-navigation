@@ -55,26 +55,26 @@ export type StackNavigationProp<
 
 const StackRouter: Router<CommonAction | Action> = {
   getInitialState({
-    screens,
-    partialState,
-    initialRouteName = Object.keys(screens)[0],
+    routeNames,
+    initialRouteName = routeNames[0],
+    initialParamsList,
   }) {
-    const routeNames = Object.keys(screens);
+    const index = routeNames.indexOf(initialRouteName);
 
+    return {
+      key: `stack-${shortid()}`,
+      index,
+      routeNames,
+      routes: routeNames.slice(0, index + 1).map(name => ({
+        name,
+        key: `${name}-${shortid()}`,
+        params: initialParamsList[name],
+      })),
+    };
+  },
+
+  getRehydratedState({ routeNames, partialState }) {
     let state = partialState;
-
-    if (state === undefined) {
-      const index = routeNames.indexOf(initialRouteName);
-
-      state = {
-        index,
-        routes: routeNames.slice(0, index + 1).map(name => ({
-          name,
-          key: `${name}-${shortid()}`,
-          params: screens[name].initialParams,
-        })),
-      };
-    }
 
     if (state.routeNames === undefined || state.key === undefined) {
       state = {

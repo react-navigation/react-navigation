@@ -6,20 +6,20 @@ import {
   CompositeNavigationProp,
   TypedNavigator,
   NavigationHelpers,
-  InitialState,
+  PartialState,
 } from '../src';
 import StackNavigator, { StackNavigationProp } from './StackNavigator';
 import TabNavigator, { TabNavigationProp } from './TabNavigator';
 
 type StackParamList = {
   first: { author: string };
-  second: void;
-  third: void;
+  second: undefined;
+  third: undefined;
 };
 
 type TabParamList = {
-  fourth: void;
-  fifth: void;
+  fourth: undefined;
+  fifth: undefined;
 };
 
 const Stack: TypedNavigator<StackParamList, typeof StackNavigator> = {
@@ -134,7 +134,7 @@ const Fifth = ({
 
 const PERSISTENCE_KEY = 'NAVIGATION_STATE';
 
-let initialState: InitialState | undefined;
+let initialState: PartialState | undefined;
 
 try {
   initialState = JSON.parse(localStorage.getItem(PERSISTENCE_KEY) || '');
