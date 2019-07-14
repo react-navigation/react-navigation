@@ -23,9 +23,21 @@ export default function SceneView(props: Props) {
   const navigation = React.useMemo(
     () => ({
       ...helpers,
+      setParams: (params: object) => {
+        const state = getState();
+
+        setState({
+          ...state,
+          routes: state.routes.map(r =>
+            r.key === route.key
+              ? { ...r, params: { ...r.params, ...params } }
+              : r
+          ),
+        });
+      },
       state: route,
     }),
-    [helpers, route]
+    [getState, helpers, route, setState]
   );
 
   const getCurrentState = React.useCallback(() => {

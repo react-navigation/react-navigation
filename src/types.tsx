@@ -144,6 +144,12 @@ export type NavigationProp<
     (ParamList[RouteName] extends void
       ? never
       : { params: ParamList[RouteName] });
+
+  /**
+   * Update the param object for the route.
+   * The new params will be shallow merged with the old one.
+   */
+  setParams(params: ParamList[RouteName]): void;
 };
 
 export type CompositeNavigationProp<
