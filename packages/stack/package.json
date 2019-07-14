@@ -110,7 +110,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn lint && yarn test",
+      "pre-commit": "yarn typescript && yarn lint && yarn test",
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
   },
