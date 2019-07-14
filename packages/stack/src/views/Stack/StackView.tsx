@@ -281,7 +281,7 @@ class StackView extends React.Component<Props, State> {
       onGestureEnd,
     } = this.props;
 
-    const { mode, ...config } = navigationConfig;
+    const { mode = 'card', ...config } = navigationConfig;
     const { routes, descriptors, opening, closing } = this.state;
 
     const headerMode =
