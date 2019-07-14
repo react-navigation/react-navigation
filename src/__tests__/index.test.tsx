@@ -1,23 +1,38 @@
 import * as React from 'react';
-import { render } from 'react-native-testing-library';
+import { render, act } from 'react-native-testing-library';
 import Screen from '../Screen';
 import NavigationContainer from '../NavigationContainer';
 import useNavigationBuilder from '../useNavigationBuilder';
 import { Router } from '../types';
 
 const MockRouter: Router<{ type: string }> = {
-  getInitialState({ screens, initialRouteName }) {
+  getInitialState({ screens, partialState, initialRouteName }) {
     const routeNames = Object.keys(screens);
 
-    return {
-      key: 'root',
-      names: routeNames,
-      index: routeNames.indexOf(initialRouteName || routeNames[0]),
-      routes: routeNames.map(name => ({
-        key: name,
-        name,
-      })),
-    };
+    let state = partialState;
+
+    if (state === undefined) {
+      const index = routeNames.indexOf(initialRouteName || routeNames[0]);
+
+      state = {
+        index,
+        routes: routeNames.map(name => ({
+          name,
+          key: name,
+          params: screens[name].initialParams,
+        })),
+      };
+    }
+
+    if (state.names === undefined || state.key === undefined) {
+      state = {
+        ...state,
+        names: state.names || routeNames,
+        key: state.key || 'root',
+      };
+    }
+
+    return state;
   },
 
   getStateForAction(state, action) {
@@ -347,6 +362,65 @@ it('allows arbitrary state updates by dispatching a function', () => {
     key: 'root',
     names: ['foo', 'bar'],
     routes: [{ key: 'bar', name: 'bar' }, { key: 'foo', name: 'foo' }],
+  });
+});
+
+it('updates route params with setParams', () => {
+  expect.assertions(4);
+
+  const TestNavigator = (props: any) => {
+    const { navigation, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return descriptors[
+      navigation.state.routes[navigation.state.index].key
+    ].render();
+  };
+
+  let setParams: (params: object) => void = () => undefined;
+
+  const FooScreen = (props: any) => {
+    setParams = props.navigation.setParams;
+
+    return null;
+  };
+
+  const onStateChange = jest.fn();
+
+  const element = (
+    <NavigationContainer onStateChange={onStateChange}>
+      <TestNavigator initialRouteName="foo">
+        <Screen name="foo" component={FooScreen} />
+        <Screen name="bar" component={jest.fn()} />
+      </TestNavigator>
+    </NavigationContainer>
+  );
+
+  render(element);
+
+  act(() => setParams({ username: 'alice' }));
+
+  expect(onStateChange).toBeCalledTimes(1);
+  expect(onStateChange).lastCalledWith({
+    index: 0,
+    key: 'root',
+    names: ['foo', 'bar'],
+    routes: [
+      { key: 'foo', name: 'foo', params: { username: 'alice' } },
+      { key: 'bar', name: 'bar' },
+    ],
+  });
+
+  act(() => setParams({ age: 25 }));
+
+  expect(onStateChange).toBeCalledTimes(2);
+  expect(onStateChange).lastCalledWith({
+    index: 0,
+    key: 'root',
+    names: ['foo', 'bar'],
+    routes: [
+      { key: 'foo', name: 'foo', params: { username: 'alice', age: 25 } },
+      { key: 'bar', name: 'bar' },
+    ],
   });
 });
 
