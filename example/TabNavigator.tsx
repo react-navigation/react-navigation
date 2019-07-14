@@ -88,7 +88,10 @@ const TabRouter: Router<Action | CommonAction> = {
                     i === index
                       ? {
                           ...route,
-                          params: action.payload.params,
+                          params: {
+                            ...route.params,
+                            ...action.payload.params,
+                          },
                         }
                       : route
                   )
@@ -134,8 +137,8 @@ const TabRouter: Router<Action | CommonAction> = {
   },
 
   actionCreators: {
-    jumpTo(name: string) {
-      return { type: 'JUMP_TO', payload: { name } };
+    jumpTo(name: string, params?: object) {
+      return { type: 'JUMP_TO', payload: { name, params } };
     },
   },
 };
