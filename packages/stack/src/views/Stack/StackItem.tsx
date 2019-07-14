@@ -33,15 +33,11 @@ type Props = TransitionPreset & {
   onOpenRoute: (props: { route: Route }) => void;
   onCloseRoute: (props: { route: Route }) => void;
   onGoBack: (props: { route: Route }) => void;
-  onTransitionStart?: (props: {
-    route: Route;
-    current: { index: number };
-    previous: { index: number };
-  }) => void;
+  onTransitionStart?: (props: { route: Route }) => void;
   onTransitionEnd?: (props: { route: Route }) => void;
-  onGestureBegin?: () => void;
-  onGestureCanceled?: () => void;
-  onGestureEnd?: () => void;
+  onPageChangeStart?: () => void;
+  onPageChangeConfirm?: () => void;
+  onPageChangeCancel?: () => void;
   gestureResponseDistance?: {
     vertical?: number;
     horizontal?: number;
@@ -68,15 +64,21 @@ export default class StackItem extends React.PureComponent<Props> {
   };
 
   private handleTransitionStart = ({ closing }: { closing: boolean }) => {
-    const { index, scene, onTransitionStart, onGoBack } = this.props;
+    const {
+      scene,
+      onTransitionStart,
+      onPageChangeConfirm,
+      onPageChangeCancel,
+      onGoBack,
+    } = this.props;
 
-    onTransitionStart &&
-      onTransitionStart({
-        route: scene.route,
-        previous: { index: closing ? index - 1 : index },
-        current: { index },
-      });
+    if (closing) {
+      onPageChangeConfirm && onPageChangeConfirm();
+    } else {
+      onPageChangeCancel && onPageChangeCancel();
+    }
 
+    onTransitionStart && onTransitionStart({ route: scene.route });
     closing && onGoBack({ route: scene.route });
   };
 
@@ -96,9 +98,8 @@ export default class StackItem extends React.PureComponent<Props> {
       cardShadowEnabled,
       cardStyle,
       gesturesEnabled,
-      onGestureBegin,
-      onGestureCanceled,
-      onGestureEnd,
+      onPageChangeStart,
+      onPageChangeCancel,
       gestureResponseDistance,
       floatingHeaderHeight,
       hasCustomHeader,
@@ -129,9 +130,8 @@ export default class StackItem extends React.PureComponent<Props> {
         shadowEnabled={cardShadowEnabled}
         gesturesEnabled={gesturesEnabled}
         onTransitionStart={this.handleTransitionStart}
-        onGestureBegin={onGestureBegin}
-        onGestureCanceled={onGestureCanceled}
-        onGestureEnd={onGestureEnd}
+        onGestureBegin={onPageChangeStart}
+        onGestureCanceled={onPageChangeCancel}
         gestureResponseDistance={gestureResponseDistance}
         transitionSpec={transitionSpec}
         styleInterpolator={cardStyleInterpolator}

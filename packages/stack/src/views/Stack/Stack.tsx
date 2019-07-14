@@ -46,13 +46,9 @@ type Props = {
   renderHeader: (props: HeaderContainerProps) => React.ReactNode;
   renderScene: (props: { route: Route }) => React.ReactNode;
   headerMode: HeaderMode;
-  onTransitionStart?: (
-    current: { index: number },
-    previous: { index: number }
-  ) => void;
-  onGestureBegin?: () => void;
-  onGestureCanceled?: () => void;
-  onGestureEnd?: () => void;
+  onPageChangeStart?: () => void;
+  onPageChangeConfirm?: () => void;
+  onPageChangeCancel?: () => void;
 };
 
 type State = {
@@ -258,19 +254,9 @@ export default class Stack extends React.Component<Props, State> {
     }));
   };
 
-  private handleTransitionStart = ({
-    route,
-    current,
-    previous,
-  }: {
-    route: Route;
-    current: { index: number };
-    previous: { index: number };
-  }) => {
-    const { onTransitionStart, descriptors } = this.props;
+  private handleTransitionStart = ({ route }: { route: Route }) => {
+    const { descriptors } = this.props;
     const descriptor = descriptors[route.key];
-
-    onTransitionStart && onTransitionStart(current, previous);
 
     descriptor &&
       descriptor.options.onTransitionStart &&
@@ -300,9 +286,9 @@ export default class Stack extends React.Component<Props, State> {
       renderHeader,
       renderScene,
       headerMode,
-      onGestureBegin,
-      onGestureCanceled,
-      onGestureEnd,
+      onPageChangeStart,
+      onPageChangeConfirm,
+      onPageChangeCancel,
     } = this.props;
 
     const { scenes, layout, progress, floatingHeaderHeights } = this.state;
@@ -386,9 +372,9 @@ export default class Stack extends React.Component<Props, State> {
                   cardShadowEnabled={cardShadowEnabled}
                   cardStyle={cardStyle}
                   gesturesEnabled={index !== 0 && getGesturesEnabled({ route })}
-                  onGestureBegin={onGestureBegin}
-                  onGestureCanceled={onGestureCanceled}
-                  onGestureEnd={onGestureEnd}
+                  onPageChangeStart={onPageChangeStart}
+                  onPageChangeConfirm={onPageChangeConfirm}
+                  onPageChangeCancel={onPageChangeCancel}
                   gestureResponseDistance={gestureResponseDistance}
                   floatingHeaderHeight={floatingHeaderHeights[route.key]}
                   hasCustomHeader={header === null}
