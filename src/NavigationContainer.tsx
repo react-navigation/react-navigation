@@ -4,7 +4,7 @@ import { NavigationState, PartialState } from './types';
 
 type Props = {
   initialState?: PartialState;
-  onStateChange?: (state: NavigationState | PartialState) => void;
+  onStateChange?: (state: NavigationState | PartialState | undefined) => void;
   children: React.ReactNode;
 };
 
@@ -14,7 +14,7 @@ const MISSING_CONTEXT_ERROR =
 export const NavigationStateContext = React.createContext<{
   state?: NavigationState | PartialState;
   getState: () => NavigationState | PartialState | undefined;
-  setState: (state: NavigationState) => void;
+  setState: (state: NavigationState | undefined) => void;
 }>({
   get getState(): any {
     throw new Error(MISSING_CONTEXT_ERROR);
@@ -33,14 +33,22 @@ export default function NavigationContainer({
     NavigationState | PartialState | undefined
   >(initialState);
 
+  const initialMountRef = React.useRef(true);
   const stateRef = React.useRef(state);
 
-  React.useEffect(() => {
-    stateRef.current = state;
+  stateRef.current = state;
 
-    if (onStateChange && state !== undefined) {
-      onStateChange(state);
+  React.useEffect(() => {
+    if (initialMountRef.current) {
+      initialMountRef.current = false;
+
+      if (state === undefined) {
+        // Don't call the listener if we haven't initialized any state
+        return;
+      }
     }
+
+    onStateChange && onStateChange(state);
   }, [onStateChange, state]);
 
   const getState = React.useCallback(() => stateRef.current, []);
