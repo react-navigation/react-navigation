@@ -19,6 +19,7 @@ export const NavigationStateContext = React.createContext<{
   state?: NavigationState | PartialState;
   getState: () => NavigationState | PartialState | undefined;
   setState: (state: NavigationState | undefined) => void;
+  key?: string;
 }>({
   get getState(): any {
     throw new Error(MISSING_CONTEXT_ERROR);

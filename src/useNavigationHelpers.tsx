@@ -9,7 +9,7 @@ import {
 } from './types';
 
 type Options = {
-  onAction: (action: NavigationAction) => boolean;
+  onAction: (action: NavigationAction, sourceNavigatorKey?: string) => boolean;
   getState: () => NavigationState;
   setState: (state: NavigationState) => void;
   actionCreators: ActionCreators;

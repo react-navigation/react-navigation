@@ -211,6 +211,35 @@ const StackRouter: Router<CommonAction | Action> = {
     }
   },
 
+  getStateForChildUpdate(state, { update, focus, key }) {
+    const index = state.routes.findIndex(r => r.key === key);
+
+    if (index === -1) {
+      return state;
+    }
+
+    return {
+      ...state,
+      index: focus ? index : state.index,
+      routes: focus
+        ? [
+            ...state.routes.slice(0, index),
+            { ...state.routes[index], state: update },
+          ]
+        : state.routes.map((route, i) =>
+            i === index ? { ...route, state: update } : route
+          ),
+    };
+  },
+
+  shouldActionPropagateToChildren(action) {
+    return action.type === 'NAVIGATE';
+  },
+
+  shouldActionChangeFocus(action) {
+    return action.type === 'NAVIGATE';
+  },
+
   actionCreators: {
     push(name: string, params?: object) {
       return { type: 'PUSH', payload: { name, params } };

@@ -9,15 +9,24 @@ import {
   ScreenProps,
 } from './types';
 import SceneView from './SceneView';
-import NavigationBuilderContext from './NavigationBuilderContext';
+import NavigationBuilderContext, {
+  ChildActionListener,
+} from './NavigationBuilderContext';
 
 type Options = {
   state: NavigationState | PartialState;
   screens: { [key: string]: ScreenProps<ParamListBase, string> };
   helpers: NavigationHelpers<ParamListBase>;
-  onAction: (action: NavigationAction) => boolean;
+  onAction: (action: NavigationAction, sourceNavigatorKey?: string) => boolean;
   getState: () => NavigationState;
   setState: (state: NavigationState) => void;
+  addActionListener: (listener: ChildActionListener) => void;
+  removeActionListener: (listener: ChildActionListener) => void;
+  onChildUpdate: (
+    state: NavigationState,
+    focus: boolean,
+    key: string | undefined
+  ) => void;
 };
 
 const EMPTY_OPTIONS = Object.freeze({});
@@ -29,13 +38,19 @@ export default function useDescriptors({
   onAction,
   getState,
   setState,
+  addActionListener,
+  removeActionListener,
+  onChildUpdate,
 }: Options) {
   const context = React.useMemo(
     () => ({
       helpers,
       onAction,
+      addActionListener,
+      removeActionListener,
+      onChildUpdate,
     }),
-    [helpers, onAction]
+    [helpers, onAction, onChildUpdate, addActionListener, removeActionListener]
   );
 
   return state.routes.reduce(

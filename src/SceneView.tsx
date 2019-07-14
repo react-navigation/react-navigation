@@ -42,8 +42,9 @@ export default function SceneView(props: Props) {
 
   const getCurrentState = React.useCallback(() => {
     const state = getState();
+    const currentRoute = state.routes.find(r => r.key === route.key);
 
-    return state.routes.find(r => r.key === route.key)!.state;
+    return currentRoute ? currentRoute.state : undefined;
   }, [getState, route.key]);
 
   const setCurrentState = React.useCallback(
@@ -65,8 +66,9 @@ export default function SceneView(props: Props) {
       state: route.state,
       getState: getCurrentState,
       setState: setCurrentState,
+      key: route.key,
     }),
-    [getCurrentState, route.state, setCurrentState]
+    [getCurrentState, route.key, route.state, setCurrentState]
   );
 
   return (
