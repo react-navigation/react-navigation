@@ -12,18 +12,18 @@ export type NavigationState = {
    */
   index: number;
   /**
-   * List if valid route names.
+   * List if valid route names as defined in the screen components.
    */
-  names: string[];
+  routeNames: string[];
   /**
    * List of rendered routes.
    */
   routes: Array<Route & { state?: NavigationState }>;
 };
 
-export type InitialState = Omit<Omit<NavigationState, 'names'>, 'key'> & {
+export type InitialState = Omit<Omit<NavigationState, 'routeNames'>, 'key'> & {
   key?: undefined;
-  names?: undefined;
+  routeNames?: undefined;
   state?: InitialState;
 };
 
