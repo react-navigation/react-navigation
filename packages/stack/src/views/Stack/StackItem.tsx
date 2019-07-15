@@ -26,7 +26,7 @@ type Props = TransitionPreset & {
   cardOverlayEnabled?: boolean;
   cardShadowEnabled?: boolean;
   cardStyle?: StyleProp<ViewStyle>;
-  gesturesEnabled?: boolean;
+  gestureEnabled?: boolean;
   getPreviousRoute: (props: { route: Route }) => Route | undefined;
   renderHeader: (props: HeaderContainerProps) => React.ReactNode;
   renderScene: (props: { route: Route }) => React.ReactNode;
@@ -97,7 +97,7 @@ export default class StackItem extends React.PureComponent<Props> {
       cardOverlayEnabled,
       cardShadowEnabled,
       cardStyle,
-      gesturesEnabled,
+      gestureEnabled,
       onPageChangeStart,
       onPageChangeCancel,
       gestureResponseDistance,
@@ -128,7 +128,7 @@ export default class StackItem extends React.PureComponent<Props> {
         onClose={this.handleClose}
         overlayEnabled={cardOverlayEnabled}
         shadowEnabled={cardShadowEnabled}
-        gesturesEnabled={gesturesEnabled}
+        gestureEnabled={gestureEnabled}
         onTransitionStart={this.handleTransitionStart}
         onGestureBegin={onPageChangeStart}
         onGestureCanceled={onPageChangeCancel}

@@ -36,7 +36,7 @@ type Props = ViewProps & {
   children: React.ReactNode;
   overlayEnabled: boolean;
   shadowEnabled: boolean;
-  gesturesEnabled: boolean;
+  gestureEnabled: boolean;
   gestureResponseDistance?: {
     vertical?: number;
     horizontal?: number;
@@ -98,7 +98,7 @@ export default class Card extends React.Component<Props> {
   static defaultProps = {
     overlayEnabled: Platform.OS !== 'ios',
     shadowEnabled: true,
-    gesturesEnabled: true,
+    gestureEnabled: true,
   };
 
   componentDidUpdate(prevProps: Props) {
@@ -473,7 +473,7 @@ export default class Card extends React.Component<Props> {
       next,
       overlayEnabled,
       shadowEnabled,
-      gesturesEnabled,
+      gestureEnabled,
       gestureDirection,
       children,
       styleInterpolator,
@@ -516,7 +516,7 @@ export default class Card extends React.Component<Props> {
           >
             <PanGestureHandler
               ref={this.gestureRef}
-              enabled={layout.width !== 0 && gesturesEnabled}
+              enabled={layout.width !== 0 && gestureEnabled}
               onGestureEvent={handleGestureEvent}
               onHandlerStateChange={handleGestureEvent}
               {...this.gestureActivationCriteria()}

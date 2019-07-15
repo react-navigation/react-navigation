@@ -371,7 +371,7 @@ export default class Stack extends React.Component<Props, State> {
                   cardOverlayEnabled={cardOverlayEnabled}
                   cardShadowEnabled={cardShadowEnabled}
                   cardStyle={cardStyle}
-                  gesturesEnabled={index !== 0 && getGesturesEnabled({ route })}
+                  gestureEnabled={index !== 0 && getGesturesEnabled({ route })}
                   onPageChangeStart={onPageChangeStart}
                   onPageChangeConfirm={onPageChangeConfirm}
                   onPageChangeCancel={onPageChangeCancel}

@@ -102,7 +102,7 @@ export type NavigationStackOptions = HeaderOptions &
     cardTransparent?: boolean;
     cardStyle?: StyleProp<ViewStyle>;
     animationEnabled?: boolean;
-    gesturesEnabled?: boolean;
+    gestureEnabled?: boolean;
     gestureResponseDistance?: {
       vertical?: number;
       horizontal?: number;
