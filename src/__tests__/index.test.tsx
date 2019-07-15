@@ -237,7 +237,7 @@ it("doesn't update state if nothing changed", () => {
 
   const onStateChange = jest.fn();
 
-  const element = (
+  render(
     <NavigationContainer onStateChange={onStateChange}>
       <TestNavigator initialRouteName="foo">
         <Screen name="foo" component={FooScreen} />
@@ -245,8 +245,6 @@ it("doesn't update state if nothing changed", () => {
       </TestNavigator>
     </NavigationContainer>
   );
-
-  render(element).update(element);
 
   expect(onStateChange).toBeCalledTimes(0);
 });
@@ -271,7 +269,7 @@ it("doesn't update state if action wasn't handled", () => {
 
   const onStateChange = jest.fn();
 
-  const element = (
+  render(
     <NavigationContainer onStateChange={onStateChange}>
       <TestNavigator initialRouteName="foo">
         <Screen name="foo" component={FooScreen} />
@@ -280,58 +278,7 @@ it("doesn't update state if action wasn't handled", () => {
     </NavigationContainer>
   );
 
-  render(element).update(element);
-
   expect(onStateChange).toBeCalledTimes(0);
-});
-
-it('cleans up state when the navigator unmounts', () => {
-  const TestNavigator = (props: any) => {
-    const { navigation, descriptors } = useNavigationBuilder(MockRouter, props);
-
-    return descriptors[
-      navigation.state.routes[navigation.state.index].key
-    ].render();
-  };
-
-  const FooScreen = (props: any) => {
-    React.useEffect(() => {
-      props.navigation.dispatch({ type: 'UPDATE' });
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    return null;
-  };
-
-  const onStateChange = jest.fn();
-
-  const element = (
-    <NavigationContainer onStateChange={onStateChange}>
-      <TestNavigator>
-        <Screen name="foo" component={FooScreen} />
-        <Screen name="bar" component={jest.fn()} />
-      </TestNavigator>
-    </NavigationContainer>
-  );
-
-  const root = render(element);
-
-  root.update(element);
-
-  expect(onStateChange).toBeCalledTimes(1);
-  expect(onStateChange).lastCalledWith({
-    index: 0,
-    key: 'root',
-    routeNames: ['foo', 'bar'],
-    routes: [{ key: 'foo', name: 'foo' }, { key: 'bar', name: 'bar' }],
-  });
-
-  root.update(
-    <NavigationContainer onStateChange={onStateChange} children={null} />
-  );
-
-  expect(onStateChange).toBeCalledTimes(2);
-  expect(onStateChange).lastCalledWith(undefined);
 });
 
 it("lets parent handle the action if child didn't", () => {
@@ -372,6 +319,7 @@ it("lets parent handle the action if child didn't", () => {
   const TestScreen = (props: any) => {
     React.useEffect(() => {
       props.navigation.dispatch({ type: 'REVERSE' });
+
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -380,7 +328,7 @@ it("lets parent handle the action if child didn't", () => {
 
   const onStateChange = jest.fn();
 
-  const element = (
+  render(
     <NavigationContainer onStateChange={onStateChange}>
       <ParentNavigator initialRouteName="baz">
         <Screen name="foo">{() => null}</Screen>
@@ -396,9 +344,7 @@ it("lets parent handle the action if child didn't", () => {
     </NavigationContainer>
   );
 
-  render(element).update(element);
-
-  expect(onStateChange).toBeCalledTimes(2);
+  expect(onStateChange).toBeCalledTimes(1);
   expect(onStateChange).lastCalledWith({
     index: 2,
     key: 'root',
@@ -476,7 +422,7 @@ it('updates route params with setParams', () => {
 
   const onStateChange = jest.fn();
 
-  const element = (
+  render(
     <NavigationContainer onStateChange={onStateChange}>
       <TestNavigator initialRouteName="foo">
         <Screen name="foo" component={FooScreen} />
@@ -484,8 +430,6 @@ it('updates route params with setParams', () => {
       </TestNavigator>
     </NavigationContainer>
   );
-
-  render(element);
 
   act(() => setParams({ username: 'alice' }));
 
@@ -601,7 +545,7 @@ it("doesn't throw when direct children is Screen or empty element", () => {
     return null;
   };
 
-  const element = (
+  render(
     <NavigationContainer>
       <TestNavigator>
         <Screen name="foo" component={jest.fn()} />
@@ -612,6 +556,4 @@ it("doesn't throw when direct children is Screen or empty element", () => {
       </TestNavigator>
     </NavigationContainer>
   );
-
-  render(element).update(element);
 });

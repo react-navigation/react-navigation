@@ -58,7 +58,7 @@ const First = ({
       Navigate with params
     </button>
     <button type="button" onClick={() => navigation.pop()}>
-      Go back
+      Pop
     </button>
   </div>
 );
@@ -80,7 +80,7 @@ const Second = ({
       Push first
     </button>
     <button type="button" onClick={() => navigation.pop()}>
-      Go back
+      Pop
     </button>
   </div>
 );
@@ -104,7 +104,7 @@ const Fourth = ({
     >
       Push first
     </button>
-    <button type="button" onClick={() => navigation.pop()}>
+    <button type="button" onClick={() => navigation.goBack()}>
       Go back
     </button>
   </div>
@@ -127,7 +127,7 @@ const Fifth = ({
       Push second
     </button>
     <button type="button" onClick={() => navigation.pop()}>
-      Go back
+      Pop
     </button>
   </div>
 );
