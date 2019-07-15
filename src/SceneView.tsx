@@ -57,7 +57,7 @@ export default function SceneView(props: Props) {
         ),
       });
     },
-    [getState, route.key, setState]
+    [getState, route, setState]
   );
 
   const context = React.useMemo(

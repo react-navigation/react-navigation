@@ -33,16 +33,19 @@ export default function NavigationContainer({
     NavigationState | PartialState | undefined
   >(initialState);
 
-  const initialMountRef = React.useRef(true);
+  const firstRenderRef = React.useRef(true);
+  const initialStateRef = React.useRef(initialState);
   const stateRef = React.useRef(state);
 
-  stateRef.current = state;
+  React.useLayoutEffect(() => {
+    stateRef.current = state;
+  });
 
   React.useEffect(() => {
-    if (initialMountRef.current) {
-      initialMountRef.current = false;
+    if (firstRenderRef.current) {
+      firstRenderRef.current = false;
 
-      if (state === undefined) {
+      if (state === initialStateRef.current) {
         // Don't call the listener if we haven't initialized any state
         return;
       }

@@ -68,12 +68,6 @@ export default function useNavigationBuilder(
     setState,
   } = React.useContext(NavigationStateContext);
 
-  React.useEffect(() => {
-    // We need to clean up the state object when the navigator unmounts
-    return () => setState(undefined);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const getState = React.useCallback(
     (): NavigationState =>
       router.getRehydratedState({
