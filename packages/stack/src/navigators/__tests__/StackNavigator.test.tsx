@@ -30,7 +30,7 @@ class HomeScreen extends Component {
     title: `Welcome ${
       navigation.state.params ? navigation.state.params.user : 'anonymous'
     }`,
-    gesturesEnabled: true,
+    gestureEnabled: true,
     headerStyle: [{ backgroundColor: 'red' }, styles.header],
   });
 

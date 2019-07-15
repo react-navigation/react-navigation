@@ -76,7 +76,7 @@ export default createStackNavigator(
     mode: 'modal',
     headerMode: 'none',
     defaultNavigationOptions: {
-      gesturesEnabled: false,
+      gestureEnabled: false,
       cardTransparent: true,
     },
     cardStyleInterpolator: ({ progress: { current } }) => {

@@ -68,7 +68,7 @@ export default createStackNavigator(
     defaultNavigationOptions: {
       ...TransitionPresets.ModalPresentationIOS,
       cardOverlayEnabled: true,
-      gesturesEnabled: true,
+      gestureEnabled: true,
     },
   }
 );

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Button, TextInput, View } from 'react-native';
 import {
   createStackNavigator,
-  TransitionPresets,
+  CardStyleInterpolators,
 } from 'react-navigation-stack';
 
 class Input extends React.Component {
@@ -48,9 +48,11 @@ const App = createStackNavigator(
     Input: { screen: Input },
   },
   {
+    headerMode: 'screen',
     defaultNavigationOptions: {
-      ...TransitionPresets.SlideFromRightIOS,
-      gesturesEnabled: true,
+      cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+      gestureDirection: 'horizontal',
+      gestureEnabled: true,
     },
   }
 );
