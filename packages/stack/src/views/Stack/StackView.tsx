@@ -179,7 +179,7 @@ class StackView extends React.Component<Props, State> {
     const descriptor = this.state.descriptors[route.key];
 
     if (descriptor) {
-      const { gesturesEnabled, animationEnabled } = descriptor.options;
+      const { gestureEnabled, animationEnabled } = descriptor.options;
 
       if (animationEnabled === false) {
         // When animation is disabled, also disable gestures
@@ -187,8 +187,8 @@ class StackView extends React.Component<Props, State> {
         return false;
       }
 
-      return gesturesEnabled !== undefined
-        ? gesturesEnabled
+      return gestureEnabled !== undefined
+        ? gestureEnabled
         : Platform.OS !== 'android';
     }
 
