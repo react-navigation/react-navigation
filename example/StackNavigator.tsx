@@ -88,6 +88,14 @@ const StackRouter: Router<CommonAction | Action> = {
     return state;
   },
 
+  getStateForRouteNamesChange(state, { routeNames }) {
+    return {
+      ...state,
+      routeNames,
+      routes: state.routes.filter(route => routeNames.includes(route.name)),
+    };
+  },
+
   getStateForAction(state, action) {
     switch (action.type) {
       case 'PUSH':

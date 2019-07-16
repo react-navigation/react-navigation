@@ -41,6 +41,14 @@ export const MockRouter: Router<{ type: string }> & { key: number } = {
     return state;
   },
 
+  getStateForRouteNamesChange(state, { routeNames }) {
+    return {
+      ...state,
+      routeNames,
+      routes: state.routes.filter(route => routeNames.includes(route.name)),
+    };
+  },
+
   getStateForAction(state, action) {
     switch (action.type) {
       case 'UPDATE':
@@ -532,6 +540,41 @@ it('updates route params with setParams', () => {
       { key: 'foo', name: 'foo', params: { username: 'alice', age: 25 } },
       { key: 'bar', name: 'bar' },
     ],
+  });
+});
+
+it('handles change in route names', () => {
+  const TestNavigator = (props: any): any => {
+    useNavigationBuilder(MockRouter, props);
+    return null;
+  };
+
+  const onStateChange = jest.fn();
+
+  const root = render(
+    <NavigationContainer onStateChange={onStateChange}>
+      <TestNavigator initialRouteName="bar">
+        <Screen name="foo" component={jest.fn()} />
+        <Screen name="bar" component={jest.fn()} />
+      </TestNavigator>
+    </NavigationContainer>
+  );
+
+  root.update(
+    <NavigationContainer onStateChange={onStateChange}>
+      <TestNavigator>
+        <Screen name="foo" component={jest.fn()} />
+        <Screen name="baz" component={jest.fn()} />
+        <Screen name="qux" component={jest.fn()} />
+      </TestNavigator>
+    </NavigationContainer>
+  );
+
+  expect(onStateChange).toBeCalledWith({
+    index: 1,
+    key: '0',
+    routeNames: ['foo', 'baz', 'qux'],
+    routes: [{ key: 'foo', name: 'foo' }],
   });
 });
 
