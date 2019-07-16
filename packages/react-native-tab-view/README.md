@@ -32,40 +32,40 @@ yarn add react-native-tab-view
 
 If you are using Expo, you are done. Otherwise, continue to the next steps.
 
-Install [`react-native-gesture-handler`](https://github.com/kmagiera/react-native-gesture-handler) and [`react-native-reanimated`](https://github.com/kmagiera/react-native-reanimated).
+First, install [`react-native-gesture-handler`](https://github.com/kmagiera/react-native-gesture-handler) and [`react-native-reanimated`](https://github.com/kmagiera/react-native-reanimated).
 
 ```sh
 yarn add react-native-reanimated react-native-gesture-handler
 ```
 
-On React Native >= 0.60, [linking is automatic](https://github.com/react-native-community/cli/blob/master/docs/autolinking.md). If you're on an older React Native version, you need to manually link the dependencies. To do that, run:
+Next, we need to link these libraries. The steps depends on your React Native version:
 
-```sh
-react-native link react-native-reanimated
-react-native link react-native-gesture-handler
-```
+- **React Native 0.60 and higher**
 
-**IMPORTANT:** There are additional steps required for `react-native-gesture-handler` on Android after linking. Check the [this guide](https://kmagiera.github.io/react-native-gesture-handler/docs/getting-started.html) to complete the installation.
+  On newer versions of React Native, [linking is automatic](https://github.com/react-native-community/cli/blob/master/docs/autolinking.md).
 
-**IMPORTANT:** If you're on React Native >= 0.60, you also need to use [`jetifier`](https://github.com/mikehardy/jetifier) to work around libraries using the old support library on Android to be able to use [Android X](https://developer.android.com/jetpack/androidx):
+  To complete the linking on iOS, make sure you have [Cocoapods](https://cocoapods.org/) installed. Then run:
 
-Add `jetify` under `scripts.postinstall` in your `package.json`:
+  ```sh
+  cd ios
+  pod install
+  cd ..
+  ```
 
-```json
-"scripts": {
-  "postinstall": "jetify"
-}
-```
+- **React Native 0.59 and lower**
 
-Then install the package (make sure to run this **after** adding the `postinstall` script):
+  If you're on an older React Native version, you need to manually link the dependencies. To do that, run:
 
-```sh
-yarn add --dev jetifier
-```
+  ```sh
+  react-native link react-native-reanimated
+  react-native link react-native-gesture-handler
+  ```
 
-Finally, build and run the app on your device/simulator.
+**IMPORTANT:** There are additional steps required for `react-native-gesture-handler` on Android after linking (for all React Native versions). Check the [this guide](https://kmagiera.github.io/react-native-gesture-handler/docs/getting-started.html) to complete the installation.
 
 **NOTE:** If you use Wix [`react-native-navigation`](https://github.com/wix/react-native-navigation) on Android, you need to wrap all your screens that uses `react-native-tab-view` with `gestureHandlerRootHOC` from `react-native-gesture-handler`. Refer [`react-native-gesture-handler`'s docs](https://kmagiera.github.io/react-native-gesture-handler/docs/getting-started.html#with-wix-react-native-navigation-https-githubcom-wix-react-native-navigation) for more details.
+
+We're done! Now you can build and run the app on your device/simulator.
 
 ## Quick Start
 
