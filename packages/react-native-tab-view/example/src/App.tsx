@@ -1,18 +1,21 @@
-import { registerRootComponent } from 'expo';
-import { Asset } from 'expo-asset';
-import { useKeepAwake } from 'expo-keep-awake';
 import * as React from 'react';
 import {
   AsyncStorage,
   Platform,
   ScrollView,
   StatusBar,
+  SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
   YellowBox,
+  I18nManager,
 } from 'react-native';
+import { registerRootComponent } from 'expo';
+import { Asset } from 'expo-asset';
+import { useKeepAwake } from 'expo-keep-awake';
+import Constants from 'expo-constants';
 import { Ionicons } from '@expo/vector-icons';
 import ScrollableTabBarExample from './ScrollableTabBarExample';
 import AutoWidthTabBarExample from './AutoWidthTabBarExample';
@@ -34,6 +37,8 @@ type ExampleComponentType = React.ComponentType<{}> & {
   statusBarStyle?: 'light-content' | 'dark-content';
   appbarElevation?: number;
 };
+
+I18nManager.forceRTL(false);
 
 YellowBox.ignoreWarnings(['bind():']);
 
@@ -169,12 +174,6 @@ export default class ExampleList extends React.Component<any, State> {
         <KeepAwake />
         <View
           style={[
-            styles.statusbar,
-            backgroundColor ? { backgroundColor } : null,
-          ]}
-        />
-        <View
-          style={[
             styles.appbar,
             backgroundColor ? { backgroundColor } : null,
             appbarElevation
@@ -182,24 +181,35 @@ export default class ExampleList extends React.Component<any, State> {
               : null,
           ]}
         >
-          {index > -1 ? (
-            <TouchableOpacity
-              style={styles.button}
-              onPress={this.handleNavigateBack}
-            >
-              <Ionicons
-                name={
-                  Platform.OS === 'android' ? 'md-arrow-back' : 'ios-arrow-back'
-                }
-                size={24}
-                color={tintColor}
-              />
-            </TouchableOpacity>
-          ) : null}
-          <Text style={[styles.title, tintColor ? { color: tintColor } : null]}>
-            {index > -1 ? EXAMPLE_COMPONENTS[index].title : this.state.title}
-          </Text>
-          {index > -1 ? <View style={styles.button} /> : null}
+          <View style={styles.statusbar} />
+          <SafeAreaView>
+            <View style={styles.content}>
+              {index > -1 ? (
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={this.handleNavigateBack}
+                >
+                  <Ionicons
+                    name={
+                      Platform.OS === 'android'
+                        ? 'md-arrow-back'
+                        : 'ios-arrow-back'
+                    }
+                    size={24}
+                    color={tintColor}
+                  />
+                </TouchableOpacity>
+              ) : null}
+              <Text
+                style={[styles.title, tintColor ? { color: tintColor } : null]}
+              >
+                {index > -1
+                  ? EXAMPLE_COMPONENTS[index].title
+                  : this.state.title}
+              </Text>
+              {index > -1 ? <View style={styles.button} /> : null}
+            </View>
+          </SafeAreaView>
         </View>
         {index === -1 ? (
           <ScrollView>{EXAMPLE_COMPONENTS.map(this.renderItem)}</ScrollView>
@@ -217,19 +227,25 @@ const styles = StyleSheet.create({
     backgroundColor: '#eceff1',
   },
   statusbar: {
-    height: Platform.OS === 'ios' ? 20 : 25,
+    height: Platform.select({
+      android: Constants.statusBarHeight,
+      ios: Platform.Version < 11 ? Constants.statusBarHeight : 0,
+    }),
   },
   appbar: {
+    borderBottomColor: 'rgba(0, 0, 0, 0.1)',
+  },
+  content: {
     flexDirection: 'row',
     alignItems: 'center',
     height: 56,
-    borderBottomColor: 'rgba(0, 0, 0, 0.1)',
   },
   title: {
     flex: 1,
     textAlign: Platform.OS === 'ios' ? 'center' : 'left',
-    fontSize: 18,
+    fontSize: Platform.OS === 'ios' ? 17 : 18,
     color: '#fff',
+    margin: 16,
   },
   button: {
     flexDirection: 'row',

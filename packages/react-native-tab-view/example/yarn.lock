@@ -4320,7 +4320,7 @@ expo-cli@^2.20.1:
     "@expo/traveling-fastlane-darwin" "1.9.5"
     "@expo/traveling-fastlane-linux" "1.9.5"
 
-expo-constants@~5.0.1:
+expo-constants@^5.0.1, expo-constants@~5.0.1:
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/expo-constants/-/expo-constants-5.0.1.tgz#597263397f269d7fe37d9cd6b30e305c16635a00"
   integrity sha512-Ny3teALKaE/jFzBg6DHr2GOoHpwQ/OLs3q3VugZOoR6hXCeVcCEP9MyNvhgn/cheeBDAa6UIgarv2Yufb5RMqQ==

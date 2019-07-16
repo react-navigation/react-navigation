@@ -12,6 +12,7 @@
     "@expo/vector-icons": "^10.0.2",
     "expo": "^33.0.6",
     "expo-asset": "^5.0.1",
+    "expo-constants": "^5.0.1",
     "expo-keep-awake": "~5.0.1",
     "react": "16.8.3",
     "react-native": "https://github.com/expo/react-native/archive/sdk-33.0.0.tar.gz",
