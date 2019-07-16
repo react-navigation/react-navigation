@@ -72,6 +72,21 @@ const TabRouter: Router<Action | CommonAction> = {
     return state;
   },
 
+  getStateForRouteNamesChange(state, { routeNames, initialParamsList }) {
+    return {
+      ...state,
+      routeNames,
+      routes: routeNames.map(
+        name =>
+          state.routes.find(r => r.name === name) || {
+            name,
+            key: `${name}-${shortid()}`,
+            params: initialParamsList[name],
+          }
+      ),
+    };
+  },
+
   getStateForAction(state, action) {
     switch (action.type) {
       case 'JUMP_TO':

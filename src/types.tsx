@@ -54,9 +54,9 @@ export type Router<Action extends NavigationAction = CommonAction> = {
   /**
    * Initialize the navigation state.
    *
-   * @param routeNames List of valid route names as defined in the screen components.
-   * @param initialRouteName Route to focus in the state.
-   * @param initialParamsList Object containing initial params for each route.
+   * @param options.routeNames List of valid route names as defined in the screen components.
+   * @param options.initialRouteName Route to focus in the state.
+   * @param options.initialParamsList Object containing initial params for each route.
    */
   getInitialState(options: {
     routeNames: string[];
@@ -67,13 +67,30 @@ export type Router<Action extends NavigationAction = CommonAction> = {
   /**
    * Rehydrate the full navigation state from a given partial state.
    *
-   * @param routeNames List of valid route names as defined in the screen components.
-   * @param partialState Navigation state to rehydrate from.
+   * @param options.routeNames List of valid route names as defined in the screen components.
+   * @param options.partialState Navigation state to rehydrate from.
    */
   getRehydratedState(options: {
     routeNames: string[];
     partialState: NavigationState | PartialState;
   }): NavigationState;
+
+  /**
+   * Take the current state and updated list of route names, and return a new state.
+   *
+   * @param state State object to update.
+   * @param options.routeNames New list of route names.
+   * @param options.initialRouteName Route to focus in the state.
+   * @param options.initialParamsList Object containing initial params for each route.
+   */
+  getStateForRouteNamesChange(
+    state: NavigationState,
+    options: {
+      routeNames: string[];
+      initialRouteName: string;
+      initialParamsList: ParamListBase;
+    }
+  ): NavigationState;
 
   /**
    * Take the current state and action, and return a new state.

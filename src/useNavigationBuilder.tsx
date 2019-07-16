@@ -14,6 +14,9 @@ type Options = {
   children: React.ReactNode;
 };
 
+const isArrayEqual = (a: any[], b: any[]) =>
+  a.length === b.length && a.every((it, index) => it === b[index]);
+
 export default function useNavigationBuilder(
   router: Router<any>,
   options: Options
@@ -77,6 +80,24 @@ export default function useNavigationBuilder(
     routeNames,
     partialState: currentState,
   });
+
+  if (!isArrayEqual(state.routeNames, routeNames)) {
+    // When the list of route names change, the router should handle it to remove invalid routes
+    const nextState = router.getStateForRouteNamesChange(state, {
+      routeNames,
+      initialRouteName,
+      initialParamsList,
+    });
+
+    if (state !== nextState) {
+      // If the state needs to be updated, we'll schedule an update with React
+      // setState in render seems hacky, but that's how React docs implement getDerivedPropsFromState
+      // https://reactjs.org/docs/hooks-faq.html#how-do-i-implement-getderivedstatefromprops
+      setState(nextState);
+    }
+
+    state = nextState;
+  }
 
   React.useEffect(() => {
     return () => {
