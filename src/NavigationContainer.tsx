@@ -8,6 +8,10 @@ type Props = {
   children: React.ReactNode;
 };
 
+type State = {
+  navigationState: NavigationState | PartialState | undefined;
+};
+
 const MISSING_CONTEXT_ERROR =
   "We couldn't find a navigation context. Have you wrapped your app with 'NavigationContainer'?";
 
@@ -24,45 +28,35 @@ export const NavigationStateContext = React.createContext<{
   },
 });
 
-export default function NavigationContainer({
-  initialState,
-  onStateChange,
-  children,
-}: Props) {
-  const [state, setState] = React.useState<
-    NavigationState | PartialState | undefined
-  >(initialState);
+export default class NavigationContainer extends React.Component<Props, State> {
+  state: State = {
+    navigationState: this.props.initialState,
+  };
 
-  const firstRenderRef = React.useRef(true);
-  const initialStateRef = React.useRef(initialState);
-  const stateRef = React.useRef(state);
+  componentDidUpdate(_: Props, prevState: State) {
+    const { onStateChange } = this.props;
 
-  React.useLayoutEffect(() => {
-    stateRef.current = state;
-  });
-
-  React.useEffect(() => {
-    if (firstRenderRef.current) {
-      firstRenderRef.current = false;
-
-      if (state === initialStateRef.current) {
-        // Don't call the listener if we haven't initialized any state
-        return;
-      }
+    if (prevState.navigationState !== this.state.navigationState) {
+      onStateChange && onStateChange(this.state.navigationState);
     }
+  }
 
-    onStateChange && onStateChange(state);
-  }, [onStateChange, state]);
+  private getNavigationState = () => this.state.navigationState;
 
-  const getState = React.useCallback(() => stateRef.current, []);
-  const value = React.useMemo(() => ({ state, getState, setState }), [
-    getState,
-    state,
-  ]);
+  private setNavigationState = (navigationState: NavigationState | undefined) =>
+    this.setState({ navigationState });
 
-  return (
-    <NavigationStateContext.Provider value={value}>
-      <EnsureSingleNavigator>{children}</EnsureSingleNavigator>
-    </NavigationStateContext.Provider>
-  );
+  render() {
+    return (
+      <NavigationStateContext.Provider
+        value={{
+          state: this.state.navigationState,
+          getState: this.getNavigationState,
+          setState: this.setNavigationState,
+        }}
+      >
+        <EnsureSingleNavigator>{this.props.children}</EnsureSingleNavigator>
+      </NavigationStateContext.Provider>
+    );
+  }
 }
