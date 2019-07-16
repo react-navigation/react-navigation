@@ -8,6 +8,7 @@ import {
   CommonAction,
   ParamListBase,
   Router,
+  createNavigator,
 } from '../src/index';
 
 type Props = {
@@ -143,9 +144,8 @@ const TabRouter: Router<Action | CommonAction> = {
   },
 };
 
-export default function TabNavigator(props: Props) {
+export function TabNavigator(props: Props) {
   const { navigation, descriptors } = useNavigationBuilder(TabRouter, props);
-
   return (
     <div style={{ display: 'flex', flexDirection: 'row', height: '100%' }}>
       {navigation.state.routes.map((route, i, self) => (
@@ -164,3 +164,5 @@ export default function TabNavigator(props: Props) {
     </div>
   );
 }
+
+export default createNavigator(TabNavigator);

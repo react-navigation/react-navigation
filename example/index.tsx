@@ -2,14 +2,12 @@ import * as React from 'react';
 import { render } from 'react-dom';
 import {
   NavigationContainer,
-  Screen,
   CompositeNavigationProp,
-  TypedNavigator,
   NavigationHelpers,
   PartialState,
 } from '../src';
-import StackNavigator, { StackNavigationProp } from './StackNavigator';
-import TabNavigator, { TabNavigationProp } from './TabNavigator';
+import Stack, { StackNavigationProp } from './StackNavigator';
+import Tab, { TabNavigationProp } from './TabNavigator';
 
 type StackParamList = {
   first: { author: string };
@@ -22,15 +20,9 @@ type TabParamList = {
   fifth: undefined;
 };
 
-const Stack: TypedNavigator<StackParamList, typeof StackNavigator> = {
-  Navigator: StackNavigator,
-  Screen,
-};
+const MyStack = Stack<StackParamList>();
 
-const Tab: TypedNavigator<TabParamList, typeof TabNavigator> = {
-  Navigator: TabNavigator,
-  Screen,
-};
+const MyTab = Tab<TabParamList>();
 
 const First = ({
   navigation,
@@ -150,27 +142,27 @@ function App() {
         localStorage.setItem(PERSISTENCE_KEY, JSON.stringify(state))
       }
     >
-      <Stack.Navigator>
-        <Stack.Screen
+      <MyStack.Navigator>
+        <MyStack.Screen
           name="first"
           component={First}
           options={{ title: 'Foo' }}
           initialParams={{ author: 'Jane' }}
         />
-        <Stack.Screen
+        <MyStack.Screen
           name="second"
           component={Second}
           options={{ title: 'Bar' }}
         />
-        <Stack.Screen name="third" options={{ title: 'Baz' }}>
+        <MyStack.Screen name="third" options={{ title: 'Baz' }}>
           {() => (
-            <Tab.Navigator initialRouteName="fifth">
-              <Tab.Screen name="fourth" component={Fourth} />
-              <Tab.Screen name="fifth" component={Fifth} />
-            </Tab.Navigator>
+            <MyTab.Navigator initialRouteName="fifth">
+              <MyTab.Screen name="fourth" component={Fourth} />
+              <MyTab.Screen name="fifth" component={Fifth} />
+            </MyTab.Navigator>
           )}
-        </Stack.Screen>
-      </Stack.Navigator>
+        </MyStack.Screen>
+      </MyStack.Navigator>
     </NavigationContainer>
   );
 }

@@ -8,6 +8,7 @@ import {
   CommonAction,
   ParamListBase,
   Router,
+  createNavigator,
 } from '../src/index';
 
 type Props = {
@@ -167,7 +168,6 @@ const StackRouter: Router<CommonAction | Action> = {
             ],
           };
         }
-
         return null;
 
       case 'REPLACE': {
@@ -224,7 +224,7 @@ const StackRouter: Router<CommonAction | Action> = {
   },
 };
 
-export default function StackNavigator(props: Props) {
+export function StackNavigator(props: Props) {
   const { navigation, descriptors } = useNavigationBuilder(StackRouter, props);
 
   return (
@@ -268,3 +268,5 @@ export default function StackNavigator(props: Props) {
     </div>
   );
 }
+
+export default createNavigator(StackNavigator);
