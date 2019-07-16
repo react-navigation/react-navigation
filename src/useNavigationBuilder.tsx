@@ -20,32 +20,30 @@ export default function useNavigationBuilder(
 ) {
   useRegisterNavigator();
 
-  const [screens] = React.useState(() =>
-    React.Children.map(options.children, child => {
-      if (child === null || child === undefined) {
-        return;
-      }
+  const screens = React.Children.map(options.children, child => {
+    if (child === null || child === undefined) {
+      return;
+    }
 
-      if (React.isValidElement(child) && child.type === Screen) {
-        return child.props as ScreenProps;
-      }
+    if (React.isValidElement(child) && child.type === Screen) {
+      return child.props as ScreenProps;
+    }
 
-      throw new Error(
-        `A navigator can only contain 'Screen' components as its direct children (found '${
-          // @ts-ignore
-          child.type && child.type.name ? child.type.name : String(child)
-        }')`
-      );
-    })
-      .filter(Boolean)
-      .reduce(
-        (acc, curr) => {
-          acc[curr!.name] = curr as ScreenProps;
-          return acc;
-        },
-        {} as { [key: string]: ScreenProps }
-      )
-  );
+    throw new Error(
+      `A navigator can only contain 'Screen' components as its direct children (found '${
+        // @ts-ignore
+        child.type && child.type.name ? child.type.name : String(child)
+      }')`
+    );
+  })
+    .filter(Boolean)
+    .reduce(
+      (acc, curr) => {
+        acc[curr!.name] = curr as ScreenProps;
+        return acc;
+      },
+      {} as { [key: string]: ScreenProps }
+    );
 
   const routeNames = Object.keys(screens);
   const initialRouteName =
@@ -60,16 +58,25 @@ export default function useNavigationBuilder(
     {} as { [key: string]: object | undefined }
   );
 
-  const {
-    state: currentState = router.getInitialState({
+  const [initialState] = React.useState(() =>
+    router.getInitialState({
       routeNames,
       initialRouteName,
       initialParamsList,
-    }),
+    })
+  );
+
+  const {
+    state: currentState = initialState,
     getState: getCurrentState,
     setState,
     key,
   } = React.useContext(NavigationStateContext);
+
+  let state = router.getRehydratedState({
+    routeNames,
+    partialState: currentState,
+  });
 
   React.useEffect(() => {
     return () => {
@@ -83,13 +90,7 @@ export default function useNavigationBuilder(
     (): NavigationState =>
       router.getRehydratedState({
         routeNames,
-        partialState:
-          getCurrentState() ||
-          router.getInitialState({
-            routeNames,
-            initialRouteName,
-            initialParamsList,
-          }),
+        partialState: getCurrentState() || state,
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [getCurrentState, router.getRehydratedState, router.getInitialState]
@@ -125,16 +126,13 @@ export default function useNavigationBuilder(
     actionCreators: router.actionCreators,
   });
 
-  const navigation = React.useMemo(
-    () => ({
-      ...helpers,
-      state: currentState,
-    }),
-    [helpers, currentState]
-  );
+  const navigation = React.useMemo(() => ({ ...helpers, state }), [
+    helpers,
+    state,
+  ]);
 
   const descriptors = useDescriptors({
-    state: currentState,
+    state,
     screens,
     helpers,
     onAction,
