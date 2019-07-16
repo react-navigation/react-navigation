@@ -281,6 +281,55 @@ it("doesn't update state if action wasn't handled", () => {
   expect(onStateChange).toBeCalledTimes(0);
 });
 
+it('cleans up state when the navigator unmounts', () => {
+  const TestNavigator = (props: any) => {
+    const { navigation, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return descriptors[
+      navigation.state.routes[navigation.state.index].key
+    ].render();
+  };
+
+  const FooScreen = (props: any) => {
+    React.useEffect(() => {
+      props.navigation.dispatch({ type: 'UPDATE' });
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    return null;
+  };
+
+  const onStateChange = jest.fn();
+
+  const element = (
+    <NavigationContainer onStateChange={onStateChange}>
+      <TestNavigator>
+        <Screen name="foo" component={FooScreen} />
+        <Screen name="bar" component={jest.fn()} />
+      </TestNavigator>
+    </NavigationContainer>
+  );
+
+  const root = render(element);
+
+  root.update(element);
+
+  expect(onStateChange).toBeCalledTimes(1);
+  expect(onStateChange).lastCalledWith({
+    index: 0,
+    key: 'root',
+    routeNames: ['foo', 'bar'],
+    routes: [{ key: 'foo', name: 'foo' }, { key: 'bar', name: 'bar' }],
+  });
+
+  root.update(
+    <NavigationContainer onStateChange={onStateChange} children={null} />
+  );
+
+  expect(onStateChange).toBeCalledTimes(2);
+  expect(onStateChange).lastCalledWith(undefined);
+});
+
 it("lets parent handle the action if child didn't", () => {
   const ParentRouter: Router<{ type: string }> = {
     ...MockRouter,
