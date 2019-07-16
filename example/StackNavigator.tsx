@@ -80,8 +80,8 @@ const StackRouter: Router<CommonAction | Action> = {
     if (state.routeNames === undefined || state.key === undefined) {
       state = {
         ...state,
-        routeNames: state.routeNames || routeNames,
-        key: state.key || `stack-${shortid()}`,
+        routeNames,
+        key: `stack-${shortid()}`,
       };
     }
 

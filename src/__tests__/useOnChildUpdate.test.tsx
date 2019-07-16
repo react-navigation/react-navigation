@@ -6,6 +6,8 @@ import NavigationContainer from '../NavigationContainer';
 import Screen from '../Screen';
 import { MockRouter } from './index.test';
 
+beforeEach(() => (MockRouter.key = 0));
+
 it("lets children handle the action if parent didn't", () => {
   const ParentRouter: Router<{ type: string }> = {
     ...MockRouter,
@@ -78,9 +80,9 @@ it("lets children handle the action if parent didn't", () => {
         name: 'baz',
         state: {
           index: 0,
-          key: '3',
+          key: '4',
           routeNames: ['qux', 'lex'],
-          routes: [{ key: 'qux', name: 'qux' },{ key: 'lex', name: 'lex' }],
+          routes: [{ key: 'qux', name: 'qux' }, { key: 'lex', name: 'lex' }],
         },
       },
       { key: 'bar', name: 'bar' },
@@ -110,7 +112,7 @@ it("lets children handle the action if parent didn't", () => {
   expect(onStateChange).toBeCalledTimes(1);
   expect(onStateChange).lastCalledWith({
     index: 0,
-    key: '2',
+    key: '5',
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       {
@@ -118,7 +120,7 @@ it("lets children handle the action if parent didn't", () => {
         name: 'baz',
         state: {
           index: 0,
-          key: '3',
+          key: '4',
           routeNames: ['qux', 'lex'],
           routes: [{ key: 'lex', name: 'lex' }, { key: 'qux', name: 'qux' }],
         },

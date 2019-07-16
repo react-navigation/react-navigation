@@ -64,8 +64,8 @@ const TabRouter: Router<Action | CommonAction> = {
     if (state.routeNames === undefined || state.key === undefined) {
       state = {
         ...state,
-        routeNames: state.routeNames || routeNames,
-        key: state.key || `tab-${shortid()}`,
+        routeNames,
+        key: `tab-${shortid()}`,
       };
     }
 
@@ -170,6 +170,7 @@ const TabRouter: Router<Action | CommonAction> = {
 
 export function TabNavigator(props: Props) {
   const { navigation, descriptors } = useNavigationBuilder(TabRouter, props);
+
   return (
     <div style={{ display: 'flex', flexDirection: 'row', height: '100%' }}>
       {navigation.state.routes.map((route, i, self) => (
