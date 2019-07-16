@@ -1,5 +1,5 @@
 export { default as NavigationContainer } from './NavigationContainer';
-export { default as Screen } from './Screen';
+export { default as createNavigator } from './createNavigator';
 
 export { default as useNavigationBuilder } from './useNavigationBuilder';
 
