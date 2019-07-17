@@ -141,9 +141,9 @@ export default class HeaderSegment extends React.Component<Props, State> {
       leftLabel: previousTitle,
       onGoBack,
       headerTitle,
-      headerLeft: left = (props: HeaderBackButtonProps) => (
-        <HeaderBackButton {...props} />
-      ),
+      headerLeft: left = onGoBack
+        ? (props: HeaderBackButtonProps) => <HeaderBackButton {...props} />
+        : undefined,
       // @ts-ignore
       headerStatusBarHeight = getStatusBarHeight(layout.width > layout.height),
       headerTransparent,
@@ -295,7 +295,7 @@ export default class HeaderSegment extends React.Component<Props, State> {
             style={{ height: headerStatusBarHeight }}
           />
           <View pointerEvents="box-none" style={styles.content}>
-            {onGoBack ? (
+            {left ? (
               <Animated.View
                 pointerEvents="box-none"
                 style={[styles.left, leftButtonStyle, leftContainerStyle]}

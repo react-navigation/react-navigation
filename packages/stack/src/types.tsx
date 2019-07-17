@@ -128,7 +128,7 @@ export type SceneDescriptorMap = { [key: string]: SceneDescriptor | undefined };
 
 export type HeaderBackButtonProps = {
   disabled?: boolean;
-  onPress: () => void;
+  onPress?: () => void;
   pressColorAndroid?: string;
   backImage?: (props: { tintColor: string }) => React.ReactNode;
   tintColor?: string;
