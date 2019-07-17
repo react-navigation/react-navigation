@@ -60,7 +60,7 @@ const UNSET = -1;
 const DIRECTION_VERTICAL = -1;
 const DIRECTION_HORIZONTAL = 1;
 
-const SWIPE_VELOCITY_IMPACT = 0.01;
+const SWIPE_VELOCITY_IMPACT = 0.3;
 
 /**
  * The distance of touch start from the edge of the screen where the gesture will be recognized
@@ -246,19 +246,9 @@ export default class Card extends React.Component<Props> {
     ]);
   };
 
-  private velocitySignum = cond(
-    this.velocity,
-    divide(abs(this.velocity), this.velocity),
-    0
-  );
   private extrapolatedPosition = add(
     this.gesture,
-    multiply(
-      this.velocity,
-      this.velocity,
-      this.velocitySignum,
-      SWIPE_VELOCITY_IMPACT
-    )
+    multiply(this.velocity, SWIPE_VELOCITY_IMPACT)
   );
 
   private exec = block([
