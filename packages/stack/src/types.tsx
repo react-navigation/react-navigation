@@ -140,6 +140,7 @@ export type HeaderBackButtonProps = {
   onLabelLayout?: (e: LayoutChangeEvent) => void;
   screenLayout?: Layout;
   titleLayout?: Layout;
+  canGoBack?: boolean;
 };
 
 export type HeaderTitleProps = {
