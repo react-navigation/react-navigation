@@ -313,6 +313,7 @@ export default class HeaderSegment extends React.Component<Props, State> {
                   screenLayout: layout,
                   titleLayout,
                   tintColor: headerTintColor,
+                  canGoBack: Boolean(onGoBack),
                 })}
               </Animated.View>
             ) : null}
