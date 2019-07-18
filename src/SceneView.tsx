@@ -5,20 +5,20 @@ import {
   Route,
   NavigationState,
   NavigationHelpers,
-  ScreenProps,
+  RouteConfig,
 } from './types';
 import EnsureSingleNavigator from './EnsureSingleNavigator';
 
 type Props = {
-  screen: ScreenProps;
-  helpers: NavigationHelpers;
+  screen: RouteConfig;
+  navigation: NavigationHelpers;
   route: Route & { state?: NavigationState };
   getState: () => NavigationState;
   setState: (state: NavigationState) => void;
 };
 
 export default function SceneView(props: Props) {
-  const { screen, route, helpers, getState, setState } = props;
+  const { screen, route, navigation: helpers, getState, setState } = props;
 
   const navigation = React.useMemo(
     () => ({
@@ -35,9 +35,8 @@ export default function SceneView(props: Props) {
           ),
         });
       },
-      state: route,
     }),
-    [getState, helpers, route, setState]
+    [getState, helpers, route.key, setState]
   );
 
   const getCurrentState = React.useCallback(() => {
@@ -79,11 +78,12 @@ export default function SceneView(props: Props) {
           // @ts-ignore
           render={screen.component || screen.children}
           navigation={navigation}
+          route={route}
         >
           {'component' in screen && screen.component !== undefined ? (
-            <screen.component navigation={navigation} />
+            <screen.component navigation={navigation} route={route} />
           ) : 'children' in screen && screen.children !== undefined ? (
-            screen.children({ navigation })
+            screen.children({ navigation, route })
           ) : null}
         </StaticContainer>
       </EnsureSingleNavigator>

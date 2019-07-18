@@ -3,8 +3,9 @@ import { render } from 'react-dom';
 import {
   NavigationContainer,
   CompositeNavigationProp,
-  NavigationHelpers,
   PartialState,
+  NavigationHelpers,
+  RouteProp,
 } from '../src';
 import Stack, { StackNavigationProp } from './StackNavigator';
 import Tab, { TabNavigationProp } from './TabNavigator';
@@ -26,14 +27,16 @@ const MyTab = Tab<TabParamList>();
 
 const First = ({
   navigation,
+  route,
 }: {
   navigation: CompositeNavigationProp<
     StackNavigationProp<StackParamList, 'first'>,
     NavigationHelpers<TabParamList>
   >;
+  route: RouteProp<StackParamList, 'first'>;
 }) => (
   <div>
-    <h1>First, {navigation.state.params.author}</h1>
+    <h1>First, {route.params.author}</h1>
     <button type="button" onClick={() => navigation.push('second')}>
       Push second
     </button>

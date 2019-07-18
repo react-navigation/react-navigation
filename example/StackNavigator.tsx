@@ -262,11 +262,11 @@ const StackRouter: Router<CommonAction | Action> = {
 };
 
 export function StackNavigator(props: Props) {
-  const { navigation, descriptors } = useNavigationBuilder(StackRouter, props);
+  const { state, descriptors } = useNavigationBuilder(StackRouter, props);
 
   return (
     <div style={{ position: 'relative' }}>
-      {navigation.state.routes.map((route, i) => (
+      {state.routes.map((route, i) => (
         <div
           key={route.key}
           style={{
@@ -297,10 +297,7 @@ export function StackNavigator(props: Props) {
           boxShadow: '0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)',
         }}
       >
-        {
-          descriptors[navigation.state.routes[navigation.state.index].key]
-            .options.title
-        }
+        {descriptors[state.routes[state.index].key].options.title}
       </div>
     </div>
   );

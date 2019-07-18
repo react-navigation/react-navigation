@@ -205,14 +205,6 @@ export type NavigationProp<
   RouteName extends keyof ParamList
 > = NavigationHelpers<ParamList> & {
   /**
-   * State for the child navigator.
-   */
-  state: Omit<Route<RouteName>, 'params'> &
-    (ParamList[RouteName] extends undefined
-      ? {}
-      : { params: ParamList[RouteName] });
-
-  /**
    * Update the param object for the route.
    * The new params will be shallow merged with the old one.
    *
@@ -220,6 +212,19 @@ export type NavigationProp<
    */
   setParams(params: ParamList[RouteName]): void;
 };
+
+export type RouteProp<
+  ParamList extends ParamListBase,
+  RouteName extends keyof ParamList
+> = Omit<Route<RouteName>, 'params'> &
+  (ParamList[RouteName] extends undefined
+    ? {}
+    : {
+        /**
+         * Params for this route
+         */
+        params: ParamList[RouteName];
+      });
 
 export type CompositeNavigationProp<
   A extends NavigationHelpers<ParamListBase>,
@@ -251,7 +256,7 @@ export type Options = {
   [key: string]: any;
 };
 
-export type ScreenProps<
+export type RouteConfig<
   ParamList extends ParamListBase = ParamListBase,
   RouteName extends keyof ParamList = string
 > = {
@@ -295,5 +300,5 @@ export type TypedNavigator<
       initialRouteName?: keyof ParamList;
     }
   >;
-  Screen: React.ComponentType<ScreenProps<ParamList, keyof ParamList>>;
+  Screen: React.ComponentType<RouteConfig<ParamList, keyof ParamList>>;
 };

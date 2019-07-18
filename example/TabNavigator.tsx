@@ -184,18 +184,18 @@ const TabRouter: Router<Action | CommonAction> = {
 };
 
 export function TabNavigator(props: Props) {
-  const { navigation, descriptors } = useNavigationBuilder(TabRouter, props);
+  const { state, descriptors } = useNavigationBuilder(TabRouter, props);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'row', height: '100%' }}>
-      {navigation.state.routes.map((route, i, self) => (
+      {state.routes.map((route, i, self) => (
         <div
           key={route.key}
           style={{
             width: `${100 / self.length}%`,
             padding: 10,
             borderRadius: 3,
-            backgroundColor: i === navigation.state.index ? 'tomato' : 'white',
+            backgroundColor: i === state.index ? 'tomato' : 'white',
           }}
         >
           {descriptors[route.key].render()}

@@ -93,11 +93,9 @@ beforeEach(() => (MockRouter.key = 0));
 
 it('initializes state for a navigator on navigation', () => {
   const TestNavigator = (props: any) => {
-    const { navigation, descriptors } = useNavigationBuilder(MockRouter, props);
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
 
-    return descriptors[
-      navigation.state.routes[navigation.state.index].key
-    ].render();
+    return descriptors[state.routes[state.index].key].render();
   };
 
   const FooScreen = (props: any) => {
@@ -148,11 +146,9 @@ it('initializes state for a navigator on navigation', () => {
 
 it('rehydrates state for a navigator on navigation', () => {
   const TestNavigator = (props: any) => {
-    const { navigation, descriptors } = useNavigationBuilder(MockRouter, props);
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
 
-    return descriptors[
-      navigation.state.routes[navigation.state.index].key
-    ].render();
+    return descriptors[state.routes[state.index].key].render();
   };
 
   const BarScreen = (props: any) => {
@@ -195,11 +191,9 @@ it('rehydrates state for a navigator on navigation', () => {
 
 it('initializes state for nested navigator on navigation', () => {
   const TestNavigator = (props: any) => {
-    const { navigation, descriptors } = useNavigationBuilder(MockRouter, props);
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
 
-    return descriptors[
-      navigation.state.routes[navigation.state.index].key
-    ].render();
+    return descriptors[state.routes[state.index].key].render();
   };
 
   const TestScreen = (props: any) => {
@@ -255,11 +249,9 @@ it('initializes state for nested navigator on navigation', () => {
 
 it("doesn't update state if nothing changed", () => {
   const TestNavigator = (props: any) => {
-    const { navigation, descriptors } = useNavigationBuilder(MockRouter, props);
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
 
-    return descriptors[
-      navigation.state.routes[navigation.state.index].key
-    ].render();
+    return descriptors[state.routes[state.index].key].render();
   };
 
   const FooScreen = (props: any) => {
@@ -287,11 +279,9 @@ it("doesn't update state if nothing changed", () => {
 
 it("doesn't update state if action wasn't handled", () => {
   const TestNavigator = (props: any) => {
-    const { navigation, descriptors } = useNavigationBuilder(MockRouter, props);
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
 
-    return descriptors[
-      navigation.state.routes[navigation.state.index].key
-    ].render();
+    return descriptors[state.routes[state.index].key].render();
   };
 
   const FooScreen = (props: any) => {
@@ -319,11 +309,9 @@ it("doesn't update state if action wasn't handled", () => {
 
 it('cleans up state when the navigator unmounts', () => {
   const TestNavigator = (props: any) => {
-    const { navigation, descriptors } = useNavigationBuilder(MockRouter, props);
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
 
-    return descriptors[
-      navigation.state.routes[navigation.state.index].key
-    ].render();
+    return descriptors[state.routes[state.index].key].render();
   };
 
   const FooScreen = (props: any) => {
@@ -383,22 +371,15 @@ it("lets parent handle the action if child didn't", () => {
   };
 
   const ParentNavigator = (props: any) => {
-    const { navigation, descriptors } = useNavigationBuilder(
-      ParentRouter,
-      props
-    );
+    const { state, descriptors } = useNavigationBuilder(ParentRouter, props);
 
-    return descriptors[
-      navigation.state.routes[navigation.state.index].key
-    ].render();
+    return descriptors[state.routes[state.index].key].render();
   };
 
   const ChildNavigator = (props: any) => {
-    const { navigation, descriptors } = useNavigationBuilder(MockRouter, props);
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
 
-    return descriptors[
-      navigation.state.routes[navigation.state.index].key
-    ].render();
+    return descriptors[state.routes[state.index].key].render();
   };
 
   const TestScreen = (props: any) => {
@@ -444,11 +425,9 @@ it("lets parent handle the action if child didn't", () => {
 
 it('allows arbitrary state updates by dispatching a function', () => {
   const TestNavigator = (props: any) => {
-    const { navigation, descriptors } = useNavigationBuilder(MockRouter, props);
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
 
-    return descriptors[
-      navigation.state.routes[navigation.state.index].key
-    ].render();
+    return descriptors[state.routes[state.index].key].render();
   };
 
   const FooScreen = (props: any) => {
@@ -490,11 +469,9 @@ it('allows arbitrary state updates by dispatching a function', () => {
 
 it('updates route params with setParams', () => {
   const TestNavigator = (props: any) => {
-    const { navigation, descriptors } = useNavigationBuilder(MockRouter, props);
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
 
-    return descriptors[
-      navigation.state.routes[navigation.state.index].key
-    ].render();
+    return descriptors[state.routes[state.index].key].render();
   };
 
   let setParams: (params: object) => void = () => undefined;
