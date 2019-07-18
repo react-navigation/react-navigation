@@ -7,6 +7,7 @@ import {
   NavigationState,
   ActionCreators,
 } from './types';
+import { NavigationStateContext } from './NavigationContainer';
 
 type Options = {
   onAction: (action: NavigationAction, sourceNavigatorKey?: string) => boolean;
@@ -25,15 +26,19 @@ export default function useNavigationHelpers({
     NavigationBuilderContext
   );
 
+  const { performTransaction } = React.useContext(NavigationStateContext);
+
   return React.useMemo((): NavigationHelpers => {
     const dispatch = (
       action: NavigationAction | ((state: NavigationState) => NavigationState)
     ) => {
-      if (typeof action === 'function') {
-        setState(action(getState()));
-      } else {
-        onAction(action);
-      }
+      performTransaction(() => {
+        if (typeof action === 'function') {
+          setState(action(getState()));
+        } else {
+          onAction(action);
+        }
+      });
     };
 
     const actions = {
@@ -54,5 +59,12 @@ export default function useNavigationHelpers({
       ),
       dispatch,
     };
-  }, [getState, onAction, parentNavigationHelpers, actionCreators, setState]);
+  }, [
+    actionCreators,
+    parentNavigationHelpers,
+    performTransaction,
+    setState,
+    getState,
+    onAction,
+  ]);
 }
