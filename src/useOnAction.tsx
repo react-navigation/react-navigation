@@ -41,11 +41,7 @@ export default function useOnAction({
 
       if (result !== null) {
         if (handleChildUpdateParent) {
-          const shouldFocus = router.shouldActionChangeFocus(
-            action,
-            state.key,
-            sourceNavigatorKey
-          );
+          const shouldFocus = router.shouldActionChangeFocus(action);
 
           handleChildUpdateParent(result, shouldFocus, key);
         } else if (state !== result) {
@@ -62,13 +58,7 @@ export default function useOnAction({
         }
       }
 
-      if (
-        router.shouldActionPropagateToChildren(
-          action,
-          state.key,
-          sourceNavigatorKey
-        )
-      ) {
+      if (router.shouldActionPropagateToChildren(action)) {
         for (let i = actionListeners.length - 1; i >= 0; i--) {
           const listener = actionListeners[i];
 

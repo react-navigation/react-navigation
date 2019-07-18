@@ -20,11 +20,7 @@ Hook which can access the navigation state from the context. Along with the stat
 
 ### Router
 
-An object that provides a reducer to update the state as well as some action creators. The router object should implement several properties:
-
-- `getInitialState`
-- `getStateForAction`
-- `actionCreators`
+The router object provides various helper methods to deal with the state and actions, a reducer to update the state as well as some action creators.
 
 The router is responsible for handling actions dispatched by calling methods on the `navigation` object. If the router cannot handle an action, it can return `null`, which would propagate the action to other routers until it's handled.
 
@@ -38,16 +34,23 @@ A simple navigator could look like this:
 function StackNavigator({ initialRouteName, children, ...rest }) {
   // The `navigation` object contains the navigation state and some helpers (e.g. push, pop)
   // The `descriptors` object contains the screen options and a helper for rendering a screen
-  const { navigation, descriptors } = useNavigationBuilder(StackRouter, {
+  const { state, navigation, descriptors } = useNavigationBuilder(StackRouter, {
     initialRouteName,
     children,
   });
 
   return (
     // The view determines how to animate any state changes
-    <StackView navigation={navigation} descriptors={descriptors} {...rest} />
+    <StackView
+      state={state}
+      navigation={navigation}
+      descriptors={descriptors}
+      {...rest}
+    />
   );
 }
+
+export default createNavigator(StackNavigator);
 ```
 
 The navigator can render a screen by calling `descriptors[route.key].render()`. Internally, the descriptor adds appropriate wrappers to handle nested state.
@@ -63,28 +66,31 @@ If an initial state is specified, e.g. as a result of `Linking.getInitialURL()`,
 ## Basic usage
 
 ```js
+const Stack = StackNavigator();
+const Tab = TabNavigator();
+
 function App() {
   return (
     <NavigationContainer>
-      <StackNavigator initialRouteName="home">
-        <Screen name="settings" component={Settings} />
-        <Screen
+      <Stack.Navigator initialRouteName="home">
+        <Stack.Screen name="settings" component={Settings} />
+        <Stack.Screen
           name="profile"
           component={Profile}
           options={{ title: 'John Doe' }}
         />
-        <Screen name="home">
+        <Stack.Screen name="home">
           {() => (
-            <TabNavigator initialRouteName="feed">
-              <Screen name="feed" component={Feed} />
-              <Screen name="article" component={Article} />
-              <Screen name="notifications">
+            <Tab.Navigator initialRouteName="feed">
+              <Tab.Screen name="feed" component={Feed} />
+              <Tab.Screen name="article" component={Article} />
+              <Tab.Screen name="notifications">
                 {props => <Notifications {...props} />}
-              </Screen>
-            </TabNavigator>
+              </Tab.Screen>
+            </Tab.Navigator>
           )}
-        </Screen>
-      </StackNavigator>
+        </Stack.Screen>
+      </Stack.Navigator>
     </NavigationContainer>
   );
 }
@@ -101,7 +107,7 @@ When a React component is specified, the navigator takes care of adding a `React
 
 A render callback which doesn't have such limitation and is easier to use for this purpose. However, performance optimization for the component is left to the user in such case.
 
-The rendered component will receives a `navigation` prop with various helpers.
+The rendered component will receives a `navigation` prop with various helpers and a `route` prop which represents the route being rendered.
 
 ## Type-checking
 
@@ -125,13 +131,15 @@ type TabParamList = {
 };
 ```
 
-In a component, it's possible to annotate the `navigation` prop using these types:
+In a component, it's possible to annotate the `navigation` and `route` props using these types:
 
 ```ts
 function Profile({
   navigation,
+  route,
 }: {
   navigation: StackNavigationProp<StackParamList, 'profile'>;
+  route: RouteProp<StackParamList, 'profile'>;
 }) {
   // Content
 }
@@ -152,18 +160,15 @@ function Feed({
 }
 ```
 
-Annotating the `navigation` prop will be enough for provide type-checking for actions such as `navigate`, as well as accessing `params` for the current route etc.
+Annotating the `navigation` prop will be enough for provide type-checking for actions such as `navigate` etc. Annotating `route` will provide type-checking for accessing `params` for the current route.
 
-It's also possible to type-check the navigator to some extent. To do this, we need to create a typed navigator object:
+It's also possible to type-check the navigator to some extent. To do this, we need to pass a generic when creating the navigator object:
 
 ```ts
-const Stack: TypedNavigator<StackParamList, typeof StackNavigator> = {
-  Navigator: StackNavigator,
-  Screen,
-};
+const Stack = StackNavigator<StackParamList>();
 ```
 
-And then we use the typed navigator instead:
+And then we can use it:
 
 ```js
 <Stack.Navigator initialRouteName="profile">
