@@ -189,6 +189,51 @@ it('rehydrates state for a navigator on navigation', () => {
   });
 });
 
+it('initializes state for nested screens in React.Fragment', () => {
+  const TestNavigator = (props: any) => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return descriptors[state.routes[state.index].key].render();
+  };
+
+  const TestScreen = (props: any) => {
+    React.useEffect(() => {
+      props.navigation.dispatch({ type: 'UPDATE' });
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    return null;
+  };
+
+  const onStateChange = jest.fn();
+
+  const element = (
+    <NavigationContainer onStateChange={onStateChange}>
+      <TestNavigator>
+        <Screen name="foo" component={TestScreen} />
+        <React.Fragment>
+          <Screen name="bar" component={jest.fn()} />
+          <Screen name="baz" component={jest.fn()} />
+        </React.Fragment>
+      </TestNavigator>
+    </NavigationContainer>
+  );
+
+  render(element).update(element);
+
+  expect(onStateChange).toBeCalledTimes(1);
+  expect(onStateChange).toBeCalledWith({
+    index: 0,
+    key: '0',
+    routeNames: ['foo', 'bar', 'baz'],
+    routes: [
+      { key: 'foo', name: 'foo' },
+      { key: 'bar', name: 'bar' },
+      { key: 'baz', name: 'baz' },
+    ],
+  });
+});
+
 it('initializes state for nested navigator on navigation', () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
