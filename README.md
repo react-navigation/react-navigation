@@ -95,7 +95,7 @@ This component is a container for one or more `Screen` components.
 It does not accept other component types are direct children.
 The role of container is to control which of its children screens should be attached to the view hierarchy.
 It does that by monitoring `active` property of each of its children.
-It it possible to have as many `active` children as you'd like but in order for the component to be the most effictent we should keep the number of active screens to the minimum.
+It it possible to have as many `active` children as you'd like but in order for the component to be the most efficient we should keep the number of active screens to the minimum.
 In a case of stack navigator or tabs navigator we only want to have one active screen (the top most view on a stack or the selected tab).
 Then for the time of transitioning between views we may want to activate a second screen for the duration of transition, and then go back to just one active screen.
 
