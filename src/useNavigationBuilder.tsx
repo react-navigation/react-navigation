@@ -17,19 +17,18 @@ type Options = {
 const isArrayEqual = (a: any[], b: any[]) =>
   a.length === b.length && a.every((it, index) => it === b[index]);
 
-export default function useNavigationBuilder(
-  router: Router<any>,
-  options: Options
-) {
-  useRegisterNavigator();
+const getRouteConfigsFromChildren = (children: React.ReactNode) =>
+  React.Children.toArray(children).reduce<RouteConfig[]>((acc, child) => {
+    if (React.isValidElement(child)) {
+      if (child.type === Screen) {
+        acc.push(child.props as RouteConfig);
+        return acc;
+      }
 
-  const screens = React.Children.map(options.children, child => {
-    if (child === null || child === undefined) {
-      return;
-    }
-
-    if (React.isValidElement(child) && child.type === Screen) {
-      return child.props as RouteConfig;
+      if (child.type === React.Fragment) {
+        acc.push(...getRouteConfigsFromChildren(child.props.children));
+        return acc;
+      }
     }
 
     throw new Error(
@@ -38,15 +37,21 @@ export default function useNavigationBuilder(
         child.type && child.type.name ? child.type.name : String(child)
       }')`
     );
-  })
-    .filter(Boolean)
-    .reduce(
-      (acc, curr) => {
-        acc[curr!.name] = curr as RouteConfig;
-        return acc;
-      },
-      {} as { [key: string]: RouteConfig }
-    );
+  }, []);
+
+export default function useNavigationBuilder(
+  router: Router<any>,
+  options: Options
+) {
+  useRegisterNavigator();
+
+  const screens = getRouteConfigsFromChildren(options.children).reduce(
+    (acc, curr) => {
+      acc[curr.name] = curr;
+      return acc;
+    },
+    {} as { [key: string]: RouteConfig }
+  );
 
   const routeNames = Object.keys(screens);
   const initialRouteName =
