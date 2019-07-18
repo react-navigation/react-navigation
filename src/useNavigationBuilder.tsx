@@ -94,7 +94,9 @@ export default function useNavigationBuilder(
       // If the state needs to be updated, we'll schedule an update with React
       // setState in render seems hacky, but that's how React docs implement getDerivedPropsFromState
       // https://reactjs.org/docs/hooks-faq.html#how-do-i-implement-getderivedstatefromprops
-      setState(nextState, true);
+      performTransaction(() => {
+        setState(nextState);
+      });
     }
 
     state = nextState;

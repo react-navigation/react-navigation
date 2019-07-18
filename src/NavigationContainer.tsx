@@ -18,7 +18,7 @@ const MISSING_CONTEXT_ERROR =
 export const NavigationStateContext = React.createContext<{
   state?: NavigationState | PartialState;
   getState: () => NavigationState | PartialState | undefined;
-  setState: (state: NavigationState | undefined, dangerously?: boolean) => void;
+  setState: (state: NavigationState | undefined) => void;
   key?: string;
   performTransaction: (action: () => void) => void;
 }>({
@@ -67,17 +67,12 @@ export default class NavigationContainer extends React.Component<Props, State> {
     this.navigationState || this.state.navigationState;
 
   private setNavigationState = (
-    navigationState: NavigationState | undefined,
-    dangerously = false
+    navigationState: NavigationState | undefined
   ) => {
-    if (this.navigationState === null && !dangerously) {
+    if (this.navigationState === null) {
       throw new Error('setState need to be wrapped in a performTransaction');
     }
-    if (dangerously) {
-      this.setState({ navigationState });
-    } else {
-      this.navigationState = navigationState;
-    }
+    this.navigationState = navigationState;
   };
 
   render() {
