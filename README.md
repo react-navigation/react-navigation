@@ -34,7 +34,7 @@ useScreens();
 
 Note that the above code need to execute before first render of a navigation screen. You can check Example's app [App.js](https://github.com/kmagiera/react-native-screens/blob/master/Example/App.js#L16) file as a reference.
 
-4. On Android change your main activity class to extend [`ReactFragmentActivity`](https://github.com/facebook/react-native/blob/0.57-stable/ReactAndroid/src/main/java/com/facebook/react/ReactFragmentActivity.java). The file you'll have to change is likely called `MainActivity.java` unless you customized it after creating your project:
+4. On Android, you might need to change your main activity class to extend [`ReactFragmentActivity`](https://github.com/facebook/react-native/blob/0.57-stable/ReactAndroid/src/main/java/com/facebook/react/ReactFragmentActivity.java). The file you'll have to change is likely called `MainActivity.java` unless you customized it after creating your project. **Note that this isn't necessary if you're on React Native >= 0.59**.
 ```diff
 -import com.facebook.react.ReactActivity;
 +import android.os.Bundle;
