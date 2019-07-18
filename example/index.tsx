@@ -7,8 +7,8 @@ import {
   NavigationHelpers,
   RouteProp,
 } from '../src';
-import Stack, { StackNavigationProp } from './StackNavigator';
-import Tab, { TabNavigationProp } from './TabNavigator';
+import StackNavigator, { StackNavigationProp } from './StackNavigator';
+import TabNavigator, { TabNavigationProp } from './TabNavigator';
 
 type StackParamList = {
   first: { author: string };
@@ -21,9 +21,9 @@ type TabParamList = {
   fifth: undefined;
 };
 
-const MyStack = Stack<StackParamList>();
+const MyStack = StackNavigator<StackParamList>();
 
-const MyTab = Tab<TabParamList>();
+const MyTab = TabNavigator<TabParamList>();
 
 const First = ({
   navigation,
