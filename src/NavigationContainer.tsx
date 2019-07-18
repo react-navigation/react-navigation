@@ -18,13 +18,17 @@ const MISSING_CONTEXT_ERROR =
 export const NavigationStateContext = React.createContext<{
   state?: NavigationState | PartialState;
   getState: () => NavigationState | PartialState | undefined;
-  setState: (state: NavigationState | undefined) => void;
+  setState: (state: NavigationState | undefined, dangerously?: boolean) => void;
   key?: string;
+  performTransaction: (action: () => void) => void;
 }>({
   get getState(): any {
     throw new Error(MISSING_CONTEXT_ERROR);
   },
   get setState(): any {
+    throw new Error(MISSING_CONTEXT_ERROR);
+  },
+  get performTransaction(): any {
     throw new Error(MISSING_CONTEXT_ERROR);
   },
 });
@@ -42,10 +46,39 @@ export default class NavigationContainer extends React.Component<Props, State> {
     }
   }
 
-  private getNavigationState = () => this.state.navigationState;
+  private navigationState:
+    | NavigationState
+    | PartialState
+    | undefined
+    | null = null;
 
-  private setNavigationState = (navigationState: NavigationState | undefined) =>
-    this.setState({ navigationState });
+  private performTransaction = (action: () => void) => {
+    this.setState(
+      state => {
+        this.navigationState = state.navigationState;
+        action();
+        return { navigationState: this.navigationState };
+      },
+      () => (this.navigationState = null)
+    );
+  };
+
+  private getNavigationState = () =>
+    this.navigationState || this.state.navigationState;
+
+  private setNavigationState = (
+    navigationState: NavigationState | undefined,
+    dangerously = false
+  ) => {
+    if (this.navigationState === null && !dangerously) {
+      throw new Error('setState need to be wrapped in a performTransaction');
+    }
+    if (dangerously) {
+      this.setState({ navigationState });
+    } else {
+      this.navigationState = navigationState;
+    }
+  };
 
   render() {
     return (
@@ -54,6 +87,7 @@ export default class NavigationContainer extends React.Component<Props, State> {
           state: this.state.navigationState,
           getState: this.getNavigationState,
           setState: this.setNavigationState,
+          performTransaction: this.performTransaction,
         }}
       >
         <EnsureSingleNavigator>{this.props.children}</EnsureSingleNavigator>

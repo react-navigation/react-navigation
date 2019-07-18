@@ -74,6 +74,7 @@ export default function useNavigationBuilder(
     getState: getCurrentState,
     setState,
     key,
+    performTransaction,
   } = React.useContext(NavigationStateContext);
 
   let state = router.getRehydratedState({
@@ -93,7 +94,7 @@ export default function useNavigationBuilder(
       // If the state needs to be updated, we'll schedule an update with React
       // setState in render seems hacky, but that's how React docs implement getDerivedPropsFromState
       // https://reactjs.org/docs/hooks-faq.html#how-do-i-implement-getderivedstatefromprops
-      setState(nextState);
+      setState(nextState, true);
     }
 
     state = nextState;
@@ -102,7 +103,9 @@ export default function useNavigationBuilder(
   React.useEffect(() => {
     return () => {
       // We need to clean up state for this navigator on unmount
-      getCurrentState() !== undefined && setState(undefined);
+      performTransaction(
+        () => getCurrentState() !== undefined && setState(undefined)
+      );
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

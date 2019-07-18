@@ -19,24 +19,27 @@ type Props = {
 
 export default function SceneView(props: Props) {
   const { screen, route, navigation: helpers, getState, setState } = props;
+  const { performTransaction } = React.useContext(NavigationStateContext);
 
   const navigation = React.useMemo(
     () => ({
       ...helpers,
       setParams: (params: object) => {
-        const state = getState();
+        performTransaction(() => {
+          const state = getState();
 
-        setState({
-          ...state,
-          routes: state.routes.map(r =>
-            r.key === route.key
-              ? { ...r, params: { ...r.params, ...params } }
-              : r
-          ),
+          setState({
+            ...state,
+            routes: state.routes.map(r =>
+              r.key === route.key
+                ? { ...r, params: { ...r.params, ...params } }
+                : r
+            ),
+          });
         });
       },
     }),
-    [getState, helpers, route.key, setState]
+    [getState, helpers, performTransaction, route.key, setState]
   );
 
   const getCurrentState = React.useCallback(() => {
@@ -65,9 +68,16 @@ export default function SceneView(props: Props) {
       state: route.state,
       getState: getCurrentState,
       setState: setCurrentState,
+      performTransaction,
       key: route.key,
     }),
-    [getCurrentState, route.key, route.state, setCurrentState]
+    [
+      getCurrentState,
+      performTransaction,
+      route.key,
+      route.state,
+      setCurrentState,
+    ]
   );
 
   return (
