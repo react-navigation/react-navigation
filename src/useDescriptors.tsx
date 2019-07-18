@@ -6,7 +6,7 @@ import {
   NavigationHelpers,
   NavigationState,
   ParamListBase,
-  ScreenProps,
+  RouteConfig,
 } from './types';
 import SceneView from './SceneView';
 import NavigationBuilderContext, {
@@ -15,8 +15,8 @@ import NavigationBuilderContext, {
 
 type Options = {
   state: NavigationState | PartialState;
-  screens: { [key: string]: ScreenProps<ParamListBase, string> };
-  helpers: NavigationHelpers<ParamListBase>;
+  screens: { [key: string]: RouteConfig<ParamListBase, string> };
+  navigation: NavigationHelpers<ParamListBase>;
   onAction: (action: NavigationAction, sourceNavigatorKey?: string) => boolean;
   getState: () => NavigationState;
   setState: (state: NavigationState) => void;
@@ -34,7 +34,7 @@ const EMPTY_OPTIONS = Object.freeze({});
 export default function useDescriptors({
   state,
   screens,
-  helpers,
+  navigation,
   onAction,
   getState,
   setState,
@@ -44,13 +44,19 @@ export default function useDescriptors({
 }: Options) {
   const context = React.useMemo(
     () => ({
-      helpers,
+      navigation,
       onAction,
       addActionListener,
       removeActionListener,
       onChildUpdate,
     }),
-    [helpers, onAction, onChildUpdate, addActionListener, removeActionListener]
+    [
+      navigation,
+      onAction,
+      onChildUpdate,
+      addActionListener,
+      removeActionListener,
+    ]
   );
 
   return state.routes.reduce(
@@ -62,7 +68,7 @@ export default function useDescriptors({
           return (
             <NavigationBuilderContext.Provider value={context}>
               <SceneView
-                helpers={helpers}
+                navigation={navigation}
                 route={route}
                 screen={screen}
                 getState={getState}

@@ -7,7 +7,7 @@ export type ChildActionListener = (
 ) => boolean;
 
 const NavigationBuilderContext = React.createContext<{
-  helpers?: NavigationHelpers;
+  navigation?: NavigationHelpers;
   onAction?: (action: NavigationAction, sourceNavigatorKey?: string) => boolean;
   addActionListener?: (listener: ChildActionListener) => void;
   removeActionListener?: (listener: ChildActionListener) => void;

@@ -37,25 +37,17 @@ it("lets children handle the action if parent didn't", () => {
   };
 
   const ChildNavigator = (props: any) => {
-    const { navigation, descriptors } = useNavigationBuilder(
-      ChildRouter,
-      props
-    );
+    const { state, descriptors } = useNavigationBuilder(ChildRouter, props);
 
-    return descriptors[
-      navigation.state.routes[navigation.state.index].key
-    ].render();
+    return descriptors[state.routes[state.index].key].render();
   };
 
   const ParentNavigator = (props: any) => {
-    const { navigation, descriptors } = useNavigationBuilder(
-      ParentRouter,
-      props
-    );
+    const { state, descriptors } = useNavigationBuilder(ParentRouter, props);
 
     return (
       <React.Fragment>
-        {navigation.state.routes.map(route => descriptors[route.key].render())}
+        {state.routes.map(route => descriptors[route.key].render())}
       </React.Fragment>
     );
   };

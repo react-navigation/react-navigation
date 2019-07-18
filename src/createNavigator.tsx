@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ParamListBase, ScreenProps, TypedNavigator } from './types';
+import { ParamListBase, RouteConfig, TypedNavigator } from './types';
 import Screen from './Screen';
 
 export default function createNavigator<N extends React.ComponentType<any>>(
@@ -12,7 +12,7 @@ export default function createNavigator<N extends React.ComponentType<any>>(
     return {
       Navigator: RawNavigator,
       Screen: Screen as React.ComponentType<
-        ScreenProps<ParamList, keyof ParamList>
+        RouteConfig<ParamList, keyof ParamList>
       >,
     };
   };

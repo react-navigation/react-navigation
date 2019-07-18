@@ -5,7 +5,7 @@ import useRegisterNavigator from './useRegisterNavigator';
 import useDescriptors from './useDescriptors';
 import useNavigationHelpers from './useNavigationHelpers';
 import useOnAction from './useOnAction';
-import { Router, NavigationState, ScreenProps } from './types';
+import { Router, NavigationState, RouteConfig } from './types';
 import useOnChildUpdate from './useOnChildUpdate';
 import useChildActionListeners from './useChildActionListeners';
 
@@ -29,7 +29,7 @@ export default function useNavigationBuilder(
     }
 
     if (React.isValidElement(child) && child.type === Screen) {
-      return child.props as ScreenProps;
+      return child.props as RouteConfig;
     }
 
     throw new Error(
@@ -42,10 +42,10 @@ export default function useNavigationBuilder(
     .filter(Boolean)
     .reduce(
       (acc, curr) => {
-        acc[curr!.name] = curr as ScreenProps;
+        acc[curr!.name] = curr as RouteConfig;
         return acc;
       },
-      {} as { [key: string]: ScreenProps }
+      {} as { [key: string]: RouteConfig }
     );
 
   const routeNames = Object.keys(screens);
@@ -140,22 +140,17 @@ export default function useNavigationBuilder(
     setState,
   });
 
-  const helpers = useNavigationHelpers({
+  const navigation = useNavigationHelpers({
     onAction,
     getState,
     setState,
     actionCreators: router.actionCreators,
   });
 
-  const navigation = React.useMemo(() => ({ ...helpers, state }), [
-    helpers,
-    state,
-  ]);
-
   const descriptors = useDescriptors({
     state,
     screens,
-    helpers,
+    navigation,
     onAction,
     getState,
     setState,
@@ -165,6 +160,7 @@ export default function useNavigationBuilder(
   });
 
   return {
+    state,
     navigation,
     descriptors,
   };

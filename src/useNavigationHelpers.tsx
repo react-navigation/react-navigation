@@ -21,7 +21,7 @@ export default function useNavigationHelpers({
   setState,
   actionCreators,
 }: Options) {
-  const { helpers: parentNavigationHelpers } = React.useContext(
+  const { navigation: parentNavigationHelpers } = React.useContext(
     NavigationBuilderContext
   );
 
