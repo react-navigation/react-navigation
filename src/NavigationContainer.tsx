@@ -33,60 +33,67 @@ export const NavigationStateContext = React.createContext<{
   },
 });
 
-export default class NavigationContainer extends React.Component<Props, State> {
-  state: State = {
-    navigationState: this.props.initialState,
-  };
+export default function NavigationContainer(props: Props) {
+  const [state, setState] = React.useState<State>({
+    navigationState: props.initialState,
+  });
 
-  componentDidUpdate(_: Props, prevState: State) {
-    const { onStateChange } = this.props;
+  const navigationState = React.useRef<
+    NavigationState | PartialState | undefined | null
+  >(null);
 
-    if (prevState.navigationState !== this.state.navigationState) {
-      onStateChange && onStateChange(this.state.navigationState);
-    }
-  }
-
-  private navigationState:
-    | NavigationState
-    | PartialState
-    | undefined
-    | null = null;
-
-  private performTransaction = (action: () => void) => {
-    this.setState(
-      state => {
-        this.navigationState = state.navigationState;
-        action();
-        return { navigationState: this.navigationState };
+  const {
+    performTransaction,
+    getNavigationState,
+    setNavigationState,
+  }: {
+    performTransaction: (action: () => void) => void;
+    getNavigationState: () => PartialState | NavigationState | undefined;
+    setNavigationState: (
+      newNavigationState: NavigationState | undefined
+    ) => void;
+  } = React.useMemo(
+    () => ({
+      performTransaction: action => {
+        setState((state: State) => {
+          navigationState.current = state.navigationState;
+          action();
+          return { navigationState: navigationState.current };
+        });
       },
-      () => (this.navigationState = null)
-    );
-  };
+      getNavigationState: () =>
+        navigationState.current || state.navigationState,
+      setNavigationState: newNavigationState => {
+        if (navigationState.current === null) {
+          throw new Error(
+            'setState need to be wrapped in a performTransaction'
+          );
+        }
+        navigationState.current = newNavigationState;
+      },
+    }),
+    []
+  );
 
-  private getNavigationState = () =>
-    this.navigationState || this.state.navigationState;
-
-  private setNavigationState = (
-    navigationState: NavigationState | undefined
-  ) => {
-    if (this.navigationState === null) {
-      throw new Error('setState need to be wrapped in a performTransaction');
+  const isFirstMount = React.useRef<boolean>(true);
+  React.useEffect(() => {
+    navigationState.current = null;
+    if (!isFirstMount.current && props.onStateChange) {
+      props.onStateChange(state.navigationState);
     }
-    this.navigationState = navigationState;
-  };
+    isFirstMount.current = false;
+  }, [state.navigationState, props.onStateChange]);
 
-  render() {
-    return (
-      <NavigationStateContext.Provider
-        value={{
-          state: this.state.navigationState,
-          getState: this.getNavigationState,
-          setState: this.setNavigationState,
-          performTransaction: this.performTransaction,
-        }}
-      >
-        <EnsureSingleNavigator>{this.props.children}</EnsureSingleNavigator>
-      </NavigationStateContext.Provider>
-    );
-  }
+  return (
+    <NavigationStateContext.Provider
+      value={{
+        state: state.navigationState,
+        getState: getNavigationState,
+        setState: setNavigationState,
+        performTransaction: performTransaction,
+      }}
+    >
+      <EnsureSingleNavigator>{props.children}</EnsureSingleNavigator>
+    </NavigationStateContext.Provider>
+  );
 }

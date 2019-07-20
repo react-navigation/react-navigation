@@ -81,7 +81,7 @@ it("lets children handle the action if parent didn't", () => {
     ],
   };
 
-  render(
+  const element = (
     <NavigationContainer
       initialState={initialState}
       onStateChange={onStateChange}
@@ -100,6 +100,8 @@ it("lets children handle the action if parent didn't", () => {
       </ParentNavigator>
     </NavigationContainer>
   );
+
+  render(element).update(element);
 
   expect(onStateChange).toBeCalledTimes(1);
   expect(onStateChange).lastCalledWith({
