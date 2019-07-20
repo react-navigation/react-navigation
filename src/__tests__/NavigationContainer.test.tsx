@@ -66,6 +66,7 @@ it('throws when setState is called outside performTransaction', () => {
 
   const Test = () => {
     const { setState } = React.useContext(NavigationStateContext);
+
     React.useEffect(() => {
       setState(undefined);
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -81,6 +82,33 @@ it('throws when setState is called outside performTransaction', () => {
   );
 
   expect(() => render(element).update(element)).toThrowError(
-    'setState need to be wrapped in a performTransaction'
+    "Any 'setState' calls need to be done inside 'performTransaction'"
+  );
+});
+
+it('throws when nesting performTransaction', () => {
+  expect.assertions(1);
+
+  const Test = () => {
+    const { performTransaction } = React.useContext(NavigationStateContext);
+
+    React.useEffect(() => {
+      performTransaction(() => {
+        performTransaction(() => {});
+      });
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    return null;
+  };
+
+  const element = (
+    <NavigationContainer>
+      <Test />
+    </NavigationContainer>
+  );
+
+  expect(() => render(element).update(element)).toThrowError(
+    "Only one transaction can be active at a time. Did you accidentally nest 'performTransaction'?"
   );
 });

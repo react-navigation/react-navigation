@@ -8,9 +8,7 @@ type Props = {
   children: React.ReactNode;
 };
 
-type State = {
-  navigationState: NavigationState | PartialState | undefined;
-};
+type State = NavigationState | PartialState | undefined;
 
 const MISSING_CONTEXT_ERROR =
   "We couldn't find a navigation context. Have you wrapped your app with 'NavigationContainer'?";
@@ -34,65 +32,66 @@ export const NavigationStateContext = React.createContext<{
 });
 
 export default function NavigationContainer(props: Props) {
-  const [state, setState] = React.useState<State>({
-    navigationState: props.initialState,
-  });
+  const { onStateChange } = props;
+  const [state, setState] = React.useState<State>(props.initialState);
 
-  const navigationState = React.useRef<
-    NavigationState | PartialState | undefined | null
-  >(null);
+  const navigationStateRef = React.useRef<State | null>(null);
+  const isTransactionActiveRef = React.useRef<boolean>(false);
+  const isFirstMountRef = React.useRef<boolean>(true);
 
-  const {
-    performTransaction,
-    getNavigationState,
-    setNavigationState,
-  }: {
-    performTransaction: (action: () => void) => void;
-    getNavigationState: () => PartialState | NavigationState | undefined;
-    setNavigationState: (
-      newNavigationState: NavigationState | undefined
-    ) => void;
-  } = React.useMemo(
+  const context = React.useMemo(
     () => ({
-      performTransaction: action => {
-        setState((state: State) => {
-          navigationState.current = state.navigationState;
-          action();
-          return { navigationState: navigationState.current };
-        });
-      },
-      getNavigationState: () =>
-        navigationState.current || state.navigationState,
-      setNavigationState: newNavigationState => {
-        if (navigationState.current === null) {
+      state,
+
+      performTransaction: (callback: () => void) => {
+        if (isTransactionActiveRef.current) {
           throw new Error(
-            'setState need to be wrapped in a performTransaction'
+            "Only one transaction can be active at a time. Did you accidentally nest 'performTransaction'?"
           );
         }
-        navigationState.current = newNavigationState;
+
+        setState((navigationState: State) => {
+          isTransactionActiveRef.current = true;
+          navigationStateRef.current = navigationState;
+
+          callback();
+
+          isTransactionActiveRef.current = false;
+
+          return navigationStateRef.current;
+        });
+      },
+
+      getState: () =>
+        navigationStateRef.current !== null
+          ? navigationStateRef.current
+          : state,
+
+      setState: (navigationState: State) => {
+        if (navigationStateRef.current === null) {
+          throw new Error(
+            "Any 'setState' calls need to be done inside 'performTransaction'"
+          );
+        }
+
+        navigationStateRef.current = navigationState;
       },
     }),
-    []
+    [state]
   );
 
-  const isFirstMount = React.useRef<boolean>(true);
   React.useEffect(() => {
-    navigationState.current = null;
-    if (!isFirstMount.current && props.onStateChange) {
-      props.onStateChange(state.navigationState);
+    navigationStateRef.current = null;
+
+    if (!isFirstMountRef.current && onStateChange) {
+      onStateChange(state);
     }
-    isFirstMount.current = false;
-  }, [state.navigationState, props.onStateChange]);
+
+    isFirstMountRef.current = false;
+  }, [state, onStateChange]);
 
   return (
-    <NavigationStateContext.Provider
-      value={{
-        state: state.navigationState,
-        getState: getNavigationState,
-        setState: setNavigationState,
-        performTransaction: performTransaction,
-      }}
-    >
+    <NavigationStateContext.Provider value={context}>
       <EnsureSingleNavigator>{props.children}</EnsureSingleNavigator>
     </NavigationStateContext.Provider>
   );
