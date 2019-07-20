@@ -3,7 +3,7 @@ import {
   Descriptor,
   PartialState,
   NavigationAction,
-  NavigationHelpers,
+  NavigationProp,
   NavigationState,
   ParamListBase,
   RouteConfig,
@@ -16,7 +16,7 @@ import NavigationBuilderContext, {
 type Options = {
   state: NavigationState | PartialState;
   screens: { [key: string]: RouteConfig<ParamListBase, string> };
-  navigation: NavigationHelpers<ParamListBase>;
+  navigation: NavigationProp<ParamListBase>;
   onAction: (action: NavigationAction, sourceNavigatorKey?: string) => boolean;
   getState: () => NavigationState;
   setState: (state: NavigationState) => void;

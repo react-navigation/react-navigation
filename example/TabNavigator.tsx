@@ -10,6 +10,7 @@ import {
   Router,
   createNavigator,
   TargetRoute,
+  BaseRouter,
 } from '../src/index';
 
 type Props = {
@@ -22,10 +23,9 @@ type Action = {
   payload: { name?: string; key?: string; params?: object };
 };
 
-export type TabNavigationProp<
-  ParamList extends ParamListBase,
-  RouteName extends keyof ParamList = string
-> = NavigationProp<ParamList, RouteName> & {
+export type TabNavigationProp<ParamList extends ParamListBase> = NavigationProp<
+  ParamList
+> & {
   /**
    * Jump to an existing tab.
    *
@@ -168,7 +168,7 @@ const TabRouter: Router<Action | CommonAction> = {
         return null;
 
       default:
-        return null;
+        return BaseRouter.getStateForAction(state, action);
     }
   },
 

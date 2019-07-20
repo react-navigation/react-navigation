@@ -8,6 +8,7 @@ import {
   CommonAction,
   ParamListBase,
   Router,
+  BaseRouter,
   createNavigator,
 } from '../src/index';
 
@@ -28,9 +29,8 @@ type Action =
   | { type: 'POP_TO_TOP' };
 
 export type StackNavigationProp<
-  ParamList extends ParamListBase,
-  RouteName extends keyof ParamList = string
-> = NavigationProp<ParamList, RouteName> & {
+  ParamList extends ParamListBase
+> = NavigationProp<ParamList> & {
   /**
    * Push a new screen onto the stack.
    *
@@ -55,6 +55,7 @@ export type StackNavigationProp<
 };
 
 const StackRouter: Router<CommonAction | Action> = {
+  ...BaseRouter,
   getInitialState({
     routeNames,
     initialRouteName = routeNames[0],
@@ -86,14 +87,6 @@ const StackRouter: Router<CommonAction | Action> = {
     }
 
     return state;
-  },
-
-  getStateForRouteNamesChange(state, { routeNames }) {
-    return {
-      ...state,
-      routeNames,
-      routes: state.routes.filter(route => routeNames.includes(route.name)),
-    };
   },
 
   getStateForRouteFocus(state, key) {
@@ -246,16 +239,8 @@ const StackRouter: Router<CommonAction | Action> = {
       }
 
       default:
-        return null;
+        return BaseRouter.getStateForAction(state, action);
     }
-  },
-
-  shouldActionPropagateToChildren(action) {
-    return action.type === 'NAVIGATE';
-  },
-
-  shouldActionChangeFocus(action) {
-    return action.type === 'NAVIGATE';
   },
 
   actionCreators: {

@@ -4,7 +4,7 @@ import {
   NavigationContainer,
   CompositeNavigationProp,
   PartialState,
-  NavigationHelpers,
+  NavigationProp,
   RouteProp,
 } from '../src';
 import StackNavigator, { StackNavigationProp } from './StackNavigator';
@@ -30,8 +30,8 @@ const First = ({
   route,
 }: {
   navigation: CompositeNavigationProp<
-    StackNavigationProp<StackParamList, 'first'>,
-    NavigationHelpers<TabParamList>
+    StackNavigationProp<StackParamList>,
+    NavigationProp<TabParamList>
   >;
   route: RouteProp<StackParamList, 'first'>;
 }) => (
@@ -62,8 +62,8 @@ const Second = ({
   navigation,
 }: {
   navigation: CompositeNavigationProp<
-    StackNavigationProp<StackParamList, 'second'>,
-    NavigationHelpers<TabParamList>
+    StackNavigationProp<StackParamList>,
+    NavigationProp<TabParamList>
   >;
 }) => (
   <div>
@@ -84,7 +84,7 @@ const Fourth = ({
   navigation,
 }: {
   navigation: CompositeNavigationProp<
-    TabNavigationProp<TabParamList, 'fourth'>,
+    TabNavigationProp<TabParamList>,
     StackNavigationProp<StackParamList>
   >;
 }) => (
@@ -109,7 +109,7 @@ const Fifth = ({
   navigation,
 }: {
   navigation: CompositeNavigationProp<
-    TabNavigationProp<TabParamList, 'fifth'>,
+    TabNavigationProp<TabParamList>,
     StackNavigationProp<StackParamList>
   >;
 }) => (

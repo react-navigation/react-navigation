@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { NavigationHelpers, NavigationAction } from './types';
+import { NavigationProp, NavigationAction } from './types';
 
 export type ChildActionListener = (
   action: NavigationAction,
@@ -7,7 +7,7 @@ export type ChildActionListener = (
 ) => boolean;
 
 const NavigationBuilderContext = React.createContext<{
-  navigation?: NavigationHelpers;
+  navigation?: NavigationProp;
   onAction?: (action: NavigationAction, sourceNavigatorKey?: string) => boolean;
   addActionListener?: (listener: ChildActionListener) => void;
   removeActionListener?: (listener: ChildActionListener) => void;

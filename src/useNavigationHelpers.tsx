@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as BaseActions from './BaseActions';
 import NavigationBuilderContext from './NavigationBuilderContext';
 import {
-  NavigationHelpers,
+  NavigationProp,
   NavigationAction,
   NavigationState,
   ActionCreators,
@@ -13,7 +13,7 @@ type Options = {
   onAction: (action: NavigationAction, sourceNavigatorKey?: string) => boolean;
   getState: () => NavigationState;
   setState: (state: NavigationState) => void;
-  actionCreators: ActionCreators;
+  actionCreators?: ActionCreators;
 };
 
 export default function useNavigationHelpers({
@@ -28,7 +28,7 @@ export default function useNavigationHelpers({
 
   const { performTransaction } = React.useContext(NavigationStateContext);
 
-  return React.useMemo((): NavigationHelpers => {
+  return React.useMemo((): NavigationProp => {
     const dispatch = (
       action: NavigationAction | ((state: NavigationState) => NavigationState)
     ) => {
