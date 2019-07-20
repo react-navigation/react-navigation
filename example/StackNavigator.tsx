@@ -151,25 +151,42 @@ const StackRouter: Router<CommonAction | Action> = {
         });
 
       case 'NAVIGATE':
-        if (state.routeNames.includes(action.payload.name)) {
+        if (
+          action.payload.key ||
+          (action.payload.name &&
+            state.routeNames.includes(action.payload.name))
+        ) {
           // If the route already exists, navigate to that
           let index = -1;
 
-          if (state.routes[state.index].name === action.payload.name) {
+          if (
+            state.routes[state.index].name === action.payload.name ||
+            state.routes[state.index].key === action.payload.key
+          ) {
             index = state.index;
           } else {
             for (let i = state.routes.length - 1; i >= 0; i--) {
-              if (state.routes[i].name === action.payload.name) {
+              if (
+                state.routes[i].name === action.payload.name ||
+                state.routes[i].key === action.payload.key
+              ) {
                 index = i;
                 break;
               }
             }
           }
 
-          if (index === -1) {
+          if (index === -1 && action.payload.key) {
+            return null;
+          }
+
+          if (index === -1 && action.payload.name !== undefined) {
             return StackRouter.getStateForAction(state, {
               type: 'PUSH',
-              payload: action.payload,
+              payload: {
+                name: action.payload.name,
+                params: action.payload.params,
+              },
             });
           }
 
