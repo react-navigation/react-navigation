@@ -135,7 +135,7 @@ export type Router<Action extends NavigationAction = CommonAction> = {
   /**
    * Action creators for the router.
    */
-  actionCreators: ActionCreators<Action>;
+  actionCreators?: ActionCreators<Action>;
 };
 
 export type ParamListBase = { [key: string]: object | undefined };
@@ -149,9 +149,7 @@ class PrivateValueStore<T> {
   private __private_value_type?: T;
 }
 
-export type NavigationHelpers<
-  ParamList extends ParamListBase = ParamListBase
-> = {
+export type NavigationProp<ParamList extends ParamListBase = ParamListBase> = {
   /**
    * Dispatch an action or an update function to the router.
    * The update function will receive the current state,
@@ -198,20 +196,19 @@ export type NavigationHelpers<
    * Go back to the previous route in history.
    */
   goBack(): void;
-} & PrivateValueStore<ParamList>;
 
-export type NavigationProp<
-  ParamList extends ParamListBase,
-  RouteName extends keyof ParamList
-> = NavigationHelpers<ParamList> & {
   /**
    * Update the param object for the route.
    * The new params will be shallow merged with the old one.
    *
    * @param params Params object for the current route.
+   * @routeName params Target route for setParam.
    */
-  setParams(params: ParamList[RouteName]): void;
-};
+  setParams<RouteName extends Extract<keyof ParamList, string>>(
+    params: ParamList[RouteName],
+    target: TargetRoute<RouteName>
+  ): void;
+} & PrivateValueStore<ParamList>;
 
 export type RouteProp<
   ParamList extends ParamListBase,
@@ -227,12 +224,12 @@ export type RouteProp<
       });
 
 export type CompositeNavigationProp<
-  A extends NavigationHelpers<ParamListBase>,
-  B extends NavigationHelpers<ParamListBase>
-> = Omit<A & B, keyof NavigationHelpers<any>> &
-  NavigationHelpers<
-    (A extends NavigationHelpers<infer T> ? T : never) &
-      (B extends NavigationHelpers<infer U> ? U : never)
+  A extends NavigationProp<ParamListBase>,
+  B extends NavigationProp<ParamListBase>
+> = Omit<A & B, keyof NavigationProp<any>> &
+  NavigationProp<
+    (A extends NavigationProp<infer T> ? T : never) &
+      (B extends NavigationProp<infer U> ? U : never)
   >;
 
 export type Descriptor = {

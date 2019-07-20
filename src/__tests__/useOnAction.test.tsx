@@ -4,12 +4,12 @@ import { Router } from '../types';
 import useNavigationBuilder from '../useNavigationBuilder';
 import NavigationContainer from '../NavigationContainer';
 import Screen from '../Screen';
-import MockRouter from './__fixtures__/MockRouter';
+import MockRouter, { MockActions } from './__fixtures__/MockRouter';
 
 beforeEach(() => (MockRouter.key = 0));
 
 it("lets parent handle the action if child didn't", () => {
-  const ParentRouter: Router<{ type: string }> = {
+  const ParentRouter: Router<MockActions> = {
     ...MockRouter,
 
     getStateForAction(state, action) {
@@ -78,7 +78,7 @@ it("lets parent handle the action if child didn't", () => {
 });
 
 it("lets children handle the action if parent didn't", () => {
-  const ParentRouter: Router<{ type: string }> = {
+  const ParentRouter: Router<MockActions> = {
     ...MockRouter,
 
     shouldActionPropagateToChildren() {
@@ -86,7 +86,7 @@ it("lets children handle the action if parent didn't", () => {
     },
   };
 
-  const ChildRouter: Router<{ type: string }> = {
+  const ChildRouter: Router<MockActions> = {
     ...MockRouter,
 
     shouldActionChangeFocus() {

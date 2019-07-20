@@ -412,6 +412,56 @@ it('updates route params with setParams', () => {
   });
 });
 
+it('updates another route params with setParams', () => {
+  const TestNavigator = (props: any) => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return descriptors[state.routes[state.index].key].render();
+  };
+
+  let setParams: (params: object, target: object) => void = () => undefined;
+
+  const FooScreen = (props: any) => {
+    setParams = props.navigation.setParams;
+
+    return null;
+  };
+
+  const onStateChange = jest.fn();
+
+  render(
+    <NavigationContainer onStateChange={onStateChange}>
+      <TestNavigator initialRouteName="foo">
+        <Screen name="foo" component={FooScreen} />
+        <Screen name="bar" component={jest.fn()} />
+      </TestNavigator>
+    </NavigationContainer>
+  );
+
+  act(() => setParams({ username: 'alice' }, { name: 'bar' }));
+
+  expect(onStateChange).toBeCalledTimes(1);
+  expect(onStateChange).lastCalledWith({
+    index: 0,
+    key: '0',
+    routeNames: ['foo', 'bar'],
+    routes: [{ key: 'foo', name: 'foo', params: undefined }, { key: 'bar', name: 'bar', params: { username: 'alice' } }],
+  });
+
+  act(() => setParams({ age: 25 }, { name: 'bar' }));
+
+  expect(onStateChange).toBeCalledTimes(2);
+  expect(onStateChange).lastCalledWith({
+    index: 0,
+    key: '0',
+    routeNames: ['foo', 'bar'],
+    routes: [
+      { key: 'foo', name: 'foo', params: undefined },
+      { key: 'bar', name: 'bar', params: { username: 'alice', age: 25 } },
+    ],
+  });
+});
+
 it('handles change in route names', () => {
   const TestNavigator = (props: any): any => {
     useNavigationBuilder(MockRouter, props);

@@ -4,14 +4,15 @@ import StaticContainer from './StaticContainer';
 import {
   Route,
   NavigationState,
-  NavigationHelpers,
+  NavigationProp,
   RouteConfig,
+  TargetRoute,
 } from './types';
 import EnsureSingleNavigator from './EnsureSingleNavigator';
 
 type Props = {
   screen: RouteConfig;
-  navigation: NavigationHelpers;
+  navigation: NavigationProp;
   route: Route & { state?: NavigationState };
   getState: () => NavigationState;
   setState: (state: NavigationState) => void;
@@ -24,22 +25,11 @@ export default function SceneView(props: Props) {
   const navigation = React.useMemo(
     () => ({
       ...helpers,
-      setParams: (params: object) => {
-        performTransaction(() => {
-          const state = getState();
-
-          setState({
-            ...state,
-            routes: state.routes.map(r =>
-              r.key === route.key
-                ? { ...r, params: { ...r.params, ...params } }
-                : r
-            ),
-          });
-        });
+      setParams: (params: object, target?: TargetRoute<string>) => {
+        helpers.setParams(params, target ? target : { key: route.key });
       },
     }),
-    [getState, helpers, performTransaction, route.key, setState]
+    [helpers, route.key]
   );
 
   const getCurrentState = React.useCallback(() => {

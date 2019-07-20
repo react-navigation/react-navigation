@@ -1,6 +1,9 @@
-import { Router } from '../../types';
+import { Router, CommonAction } from '../../types';
+import { BaseRouter } from '../../index';
 
-const MockRouter: Router<{ type: string }> & { key: number } = {
+export type MockActions = CommonAction & { type: 'NOOP' | 'REVERSE' | 'UPDATE' };
+
+const MockRouter: Router<MockActions> & { key: number } = {
   key: 0,
 
   getInitialState({
@@ -63,7 +66,7 @@ const MockRouter: Router<{ type: string }> & { key: number } = {
         return state;
 
       default:
-        return null;
+        return BaseRouter.getStateForAction(state, action);
     }
   },
 
