@@ -22,11 +22,7 @@ type Options = {
   setState: (state: NavigationState) => void;
   addActionListener: (listener: ChildActionListener) => void;
   removeActionListener: (listener: ChildActionListener) => void;
-  onChildUpdate: (
-    state: NavigationState,
-    focus: boolean,
-    key: string | undefined
-  ) => void;
+  onRouteFocus: (key: string) => void;
 };
 
 const EMPTY_OPTIONS = Object.freeze({});
@@ -40,7 +36,7 @@ export default function useDescriptors({
   setState,
   addActionListener,
   removeActionListener,
-  onChildUpdate,
+  onRouteFocus,
 }: Options) {
   const context = React.useMemo(
     () => ({
@@ -48,12 +44,12 @@ export default function useDescriptors({
       onAction,
       addActionListener,
       removeActionListener,
-      onChildUpdate,
+      onRouteFocus,
     }),
     [
       navigation,
       onAction,
-      onChildUpdate,
+      onRouteFocus,
       addActionListener,
       removeActionListener,
     ]

@@ -96,6 +96,20 @@ const StackRouter: Router<CommonAction | Action> = {
     };
   },
 
+  getStateForRouteFocus(state, key) {
+    const index = state.routes.findIndex(r => r.key === key);
+
+    if (index === -1 || index === state.index) {
+      return state;
+    }
+
+    return {
+      ...state,
+      index,
+      routes: state.routes.slice(0, index + 1),
+    };
+  },
+
   getStateForAction(state, action) {
     switch (action.type) {
       case 'PUSH':
@@ -217,27 +231,6 @@ const StackRouter: Router<CommonAction | Action> = {
       default:
         return null;
     }
-  },
-
-  getStateForChildUpdate(state, { update, focus, key }) {
-    const index = state.routes.findIndex(r => r.key === key);
-
-    if (index === -1) {
-      return state;
-    }
-
-    return {
-      ...state,
-      index: focus ? index : state.index,
-      routes: focus
-        ? [
-            ...state.routes.slice(0, index),
-            { ...state.routes[index], state: update },
-          ]
-        : state.routes.map((route, i) =>
-            i === index ? { ...route, state: update } : route
-          ),
-    };
   },
 
   shouldActionPropagateToChildren(action) {

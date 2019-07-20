@@ -5,15 +5,11 @@ import NavigationBuilderContext, {
 import { NavigationAction, NavigationState, Router } from './types';
 
 type Options = {
-  router: Router;
-  getState: () => NavigationState;
+  router: Router<NavigationAction>;
   key?: string;
+  getState: () => NavigationState;
   setState: (state: NavigationState) => void;
-  getStateForAction: (
-    state: NavigationState,
-    action: NavigationAction
-  ) => NavigationState | null;
-  actionListeners: ChildActionListener[];
+  listeners: ChildActionListener[];
 };
 
 export default function useOnAction({
@@ -21,12 +17,11 @@ export default function useOnAction({
   getState,
   setState,
   key,
-  getStateForAction,
-  actionListeners,
+  listeners,
 }: Options) {
   const {
-    onAction: handleActionParent,
-    onChildUpdate: handleChildUpdateParent,
+    onAction: onActionParent,
+    onRouteFocus: onRouteFocusParent,
   } = React.useContext(NavigationBuilderContext);
 
   return React.useCallback(
@@ -37,30 +32,34 @@ export default function useOnAction({
         return false;
       }
 
-      const result = getStateForAction(state, action);
+      const result = router.getStateForAction(state, action);
 
       if (result !== null) {
-        if (handleChildUpdateParent) {
+        if (state !== result) {
+          setState(result);
+        }
+
+        if (onRouteFocusParent !== undefined) {
           const shouldFocus = router.shouldActionChangeFocus(action);
 
-          handleChildUpdateParent(result, shouldFocus, key);
-        } else if (state !== result) {
-          setState(result);
+          if (shouldFocus && key !== undefined) {
+            onRouteFocusParent(key);
+          }
         }
 
         return true;
       }
 
-      if (handleActionParent !== undefined) {
+      if (onActionParent !== undefined) {
         // Bubble action to the parent if the current navigator didn't handle it
-        if (handleActionParent(action, state.key)) {
+        if (onActionParent(action, state.key)) {
           return true;
         }
       }
 
       if (router.shouldActionPropagateToChildren(action)) {
-        for (let i = actionListeners.length - 1; i >= 0; i--) {
-          const listener = actionListeners[i];
+        for (let i = listeners.length - 1; i >= 0; i--) {
+          const listener = listeners[i];
 
           if (listener(action, state.key)) {
             return true;
@@ -72,13 +71,12 @@ export default function useOnAction({
     },
     [
       getState,
-      getStateForAction,
-      handleActionParent,
       router,
-      handleChildUpdateParent,
-      key,
+      onActionParent,
+      onRouteFocusParent,
       setState,
-      actionListeners,
+      key,
+      listeners,
     ]
   );
 }
