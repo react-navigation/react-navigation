@@ -87,6 +87,16 @@ const TabRouter: Router<Action | CommonAction> = {
     };
   },
 
+  getStateForRouteFocus(state, key) {
+    const index = state.routes.findIndex(r => r.key === key);
+
+    if (index === -1) {
+      return state;
+    }
+
+    return { ...state, index };
+  },
+
   getStateForAction(state, action) {
     switch (action.type) {
       case 'JUMP_TO':
@@ -150,22 +160,6 @@ const TabRouter: Router<Action | CommonAction> = {
       default:
         return null;
     }
-  },
-
-  getStateForChildUpdate(state, { update, focus, key }) {
-    const index = state.routes.findIndex(r => r.key === key);
-
-    if (index === -1) {
-      return state;
-    }
-
-    return {
-      ...state,
-      index: focus ? index : state.index,
-      routes: state.routes.map((route, i) =>
-        i === index ? { ...route, state: update } : route
-      ),
-    };
   },
 
   shouldActionPropagateToChildren(action) {

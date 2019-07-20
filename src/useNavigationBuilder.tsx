@@ -6,7 +6,7 @@ import useDescriptors from './useDescriptors';
 import useNavigationHelpers from './useNavigationHelpers';
 import useOnAction from './useOnAction';
 import { Router, NavigationState, RouteConfig } from './types';
-import useOnChildUpdate from './useOnChildUpdate';
+import useOnRouteFocus from './useOnRouteFocus';
 import useChildActionListeners from './useChildActionListeners';
 
 type Options = {
@@ -138,11 +138,10 @@ export default function useNavigationBuilder(
     getState,
     setState,
     key,
-    getStateForAction: router.getStateForAction,
-    actionListeners,
+    listeners: actionListeners,
   });
 
-  const onChildUpdate = useOnChildUpdate({
+  const onRouteFocus = useOnRouteFocus({
     router,
     onAction,
     key,
@@ -164,7 +163,7 @@ export default function useNavigationBuilder(
     onAction,
     getState,
     setState,
-    onChildUpdate,
+    onRouteFocus,
     addActionListener,
     removeActionListener,
   });

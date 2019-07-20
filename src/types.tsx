@@ -93,6 +93,14 @@ export type Router<Action extends NavigationAction = CommonAction> = {
   ): NavigationState;
 
   /**
+   * Take the current state and key of a route, and return a new state with the route focused
+   *
+   * @param state State object to apply the action on.
+   * @param key Key of the route to focus.
+   */
+  getStateForRouteFocus(state: NavigationState, key: string): NavigationState;
+
+  /**
    * Take the current state and action, and return a new state.
    * If the action cannot be handled, return `null`.
    *
@@ -103,23 +111,6 @@ export type Router<Action extends NavigationAction = CommonAction> = {
     state: NavigationState,
     action: Action
   ): NavigationState | null;
-
-  /**
-   * Update state for a child navigator and focus it
-   *
-   * @param state State object to apply the action on.
-   * @param options.update Updated navigation state for the child navigator.
-   * @param options.focus Whether to focus the new child.
-   * @param options.key Route key of the child to update.
-   */
-  getStateForChildUpdate(
-    state: NavigationState,
-    payload: {
-      update: NavigationState;
-      focus: boolean;
-      key: string | undefined;
-    }
-  ): NavigationState;
 
   /**
    * Whether the action bubbles to other navigators
