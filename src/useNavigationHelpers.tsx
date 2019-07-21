@@ -1,13 +1,13 @@
 import * as React from 'react';
 import * as BaseActions from './BaseActions';
-import NavigationBuilderContext from './NavigationBuilderContext';
+import NavigationContext from './NavigationContext';
+import { NavigationStateContext } from './NavigationContainer';
 import {
   NavigationProp,
   NavigationAction,
   NavigationState,
   ActionCreators,
 } from './types';
-import { NavigationStateContext } from './NavigationContainer';
 
 type Options = {
   onAction: (action: NavigationAction, sourceNavigatorKey?: string) => boolean;
@@ -22,10 +22,7 @@ export default function useNavigationHelpers({
   setState,
   actionCreators,
 }: Options) {
-  const { navigation: parentNavigationHelpers } = React.useContext(
-    NavigationBuilderContext
-  );
-
+  const parentNavigationHelpers = React.useContext(NavigationContext);
   const { performTransaction } = React.useContext(NavigationStateContext);
 
   return React.useMemo((): NavigationProp => {
