@@ -37,7 +37,7 @@ export type StackNavigationOptions = {
 
 export type StackNavigationProp<
   ParamList extends ParamListBase
-> = NavigationProp<ParamList> & {
+> = NavigationProp<ParamList, StackNavigationOptions> & {
   /**
    * Push a new screen onto the stack.
    *

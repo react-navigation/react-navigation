@@ -36,6 +36,7 @@ export default function useDescriptors<ScreenOptions extends object>({
   removeActionListener,
   onRouteFocus,
 }: Options) {
+  const [options, setOptions] = React.useState<{ [key: string]: object }>({});
   const context = React.useMemo(
     () => ({
       navigation,
@@ -67,6 +68,7 @@ export default function useDescriptors<ScreenOptions extends object>({
                 screen={screen}
                 getState={getState}
                 setState={setState}
+                setOptions={setOptions}
               />
             </NavigationBuilderContext.Provider>
           );
@@ -79,6 +81,7 @@ export default function useDescriptors<ScreenOptions extends object>({
                 navigation,
               })
             : screen.options),
+          ...options[route.key],
         },
       };
       return acc;

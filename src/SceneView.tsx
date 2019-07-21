@@ -17,6 +17,9 @@ type Props = {
   route: Route & { state?: NavigationState };
   getState: () => NavigationState;
   setState: (state: NavigationState) => void;
+  setOptions: (
+    cb: (options: { [key: string]: object }) => { [key: string]: object }
+  ) => void;
 };
 
 export default function SceneView({
@@ -25,6 +28,7 @@ export default function SceneView({
   navigation: helpers,
   getState,
   setState,
+  setOptions,
 }: Props) {
   const { performTransaction } = React.useContext(NavigationStateContext);
 
@@ -34,8 +38,16 @@ export default function SceneView({
       setParams: (params: object, target?: TargetRoute<string>) => {
         helpers.setParams(params, target ? target : { key: route.key });
       },
+      setOptions: (options: object) =>
+        setOptions(o => ({
+          ...o,
+          [route.key]: {
+            ...o[route.key],
+            ...options,
+          },
+        })),
     }),
-    [helpers, route.key]
+    [helpers, route.key, setOptions]
   );
 
   const getCurrentState = React.useCallback(() => {
