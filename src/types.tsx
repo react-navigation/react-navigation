@@ -149,7 +149,10 @@ class PrivateValueStore<T> {
   private __private_value_type?: T;
 }
 
-export type NavigationProp<ParamList extends ParamListBase = ParamListBase> = {
+export type NavigationProp<
+  ParamList extends ParamListBase = ParamListBase,
+  ScreenOptions extends object = object
+> = {
   /**
    * Dispatch an action or an update function to the router.
    * The update function will receive the current state,
@@ -208,6 +211,14 @@ export type NavigationProp<ParamList extends ParamListBase = ParamListBase> = {
     params: ParamList[RouteName],
     target: TargetRoute<RouteName>
   ): void;
+
+  /**
+   * Update the options for the route.
+   * The options object will be shallow merged with default options object.
+   *
+   * @param options Options object for the route.
+   */
+  setOptions(options: Partial<ScreenOptions>): void;
 } & PrivateValueStore<ParamList>;
 
 export type RouteProp<
@@ -224,15 +235,17 @@ export type RouteProp<
       });
 
 export type CompositeNavigationProp<
-  A extends NavigationProp<ParamListBase>,
-  B extends NavigationProp<ParamListBase>
-> = Omit<A & B, keyof NavigationProp<any>> &
+  A extends NavigationProp<ParamListBase, object>,
+  B extends NavigationProp<ParamListBase, object>
+> = Omit<A & B, keyof NavigationProp<any, any>> &
   NavigationProp<
-    (A extends NavigationProp<infer T> ? T : never) &
-      (B extends NavigationProp<infer U> ? U : never)
+    (A extends NavigationProp<infer T, any> ? T : never) &
+      (B extends NavigationProp<infer U, any> ? U : never),
+    (A extends NavigationProp<any, infer O> ? O : never) &
+      (B extends NavigationProp<any, infer P> ? P : never)
   >;
 
-export type Descriptor<Options extends object> = {
+export type Descriptor<ScreenOptions extends object> = {
   /**
    * Render the component associated with this route.
    */
@@ -241,13 +254,13 @@ export type Descriptor<Options extends object> = {
   /**
    * Options for the route.
    */
-  options: Options;
+  options: ScreenOptions;
 };
 
 export type RouteConfig<
   ParamList extends ParamListBase = ParamListBase,
   RouteName extends keyof ParamList = string,
-  Options extends object = object
+  ScreenOptions extends object = object
 > = {
   /**
    * Route name of this screen.
@@ -258,11 +271,11 @@ export type RouteConfig<
    * Navigator options for this screen.
    */
   options?:
-    | Options
+    | ScreenOptions
     | ((props: {
         route: RouteProp<ParamList, RouteName>;
         navigation: NavigationProp<ParamList>;
-      }) => Options);
+      }) => ScreenOptions);
 
   /**
    * Initial params object for the route.
@@ -284,7 +297,7 @@ export type RouteConfig<
 
 export type TypedNavigator<
   ParamList extends ParamListBase,
-  Options extends object,
+  ScreenOptions extends object,
   Navigator extends React.ComponentType<any>
 > = {
   Navigator: React.ComponentType<
@@ -295,5 +308,7 @@ export type TypedNavigator<
       initialRouteName?: keyof ParamList;
     }
   >;
-  Screen: React.ComponentType<RouteConfig<ParamList, keyof ParamList, Options>>;
+  Screen: React.ComponentType<
+    RouteConfig<ParamList, keyof ParamList, ScreenOptions>
+  >;
 };

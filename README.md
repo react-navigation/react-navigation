@@ -109,6 +109,30 @@ A render callback which doesn't have such limitation and is easier to use for th
 
 The rendered component will receives a `navigation` prop with various helpers and a `route` prop which represents the route being rendered.
 
+## Setting screen options
+
+In React Navigation, screen options can be specified in a static property on the component (`navigationOptions`). This poses few issues:
+
+- It's not possible to configure options based on props, state or context
+- To update the props based on an action in the component (such as button press), we need to do it in a hacky way by changing params
+- It breaks when used with HOCs which don't hoist static props, which is a common source of confusion
+
+Instead of a static property, we expose a method to configure screen options:
+
+```js
+function Selection({ navigation }) {
+  const [selectedIds, setSelectedIds] = React.useState([]);
+
+  navigation.setOptions({
+    title: `${selectedIds.length} items selected`,
+  });
+
+  return <SelectionList onSelect={id => setSelectedIds(ids => [...ids, id])} />;
+}
+```
+
+This allows options to be changed based on props, state or context, and doesn't have the disadvantages of static configuration.
+
 ## Type-checking
 
 The library exports few helper types. Each navigator also need to export a custom type for the `navigation` prop which should contain the actions they provide, .e.g. `push` for stack, `jumpTo` for tab etc.

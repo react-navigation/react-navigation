@@ -65,20 +65,34 @@ const Second = ({
     StackNavigationProp<StackParamList>,
     NavigationProp<TabParamList>
   >;
-}) => (
-  <div>
-    <h1>Second</h1>
-    <button
-      type="button"
-      onClick={() => navigation.push('first', { author: 'Joel' })}
-    >
-      Push first
-    </button>
-    <button type="button" onClick={() => navigation.pop()}>
-      Pop
-    </button>
-  </div>
-);
+}) => {
+  const [count, setCount] = React.useState(0);
+
+  React.useEffect(() => {
+    const timer = setInterval(() => setCount(c => c + 1), 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  navigation.setOptions({
+    title: `Count ${count}`,
+  });
+
+  return (
+    <div>
+      <h1>Second</h1>
+      <button
+        type="button"
+        onClick={() => navigation.push('first', { author: 'Joel' })}
+      >
+        Push first
+      </button>
+      <button type="button" onClick={() => navigation.pop()}>
+        Pop
+      </button>
+    </div>
+  );
+};
 
 const Fourth = ({
   navigation,
