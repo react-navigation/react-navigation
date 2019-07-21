@@ -1,11 +1,24 @@
-import { CommonAction, Router } from './types';
+import shortid from 'shortid';
+import { CommonAction, NavigationState } from './types';
 
-const BaseRouter: Omit<
-  Omit<Router<CommonAction>, 'getInitialState'>,
-  'getRehydratedState'
-> = {
-  getStateForAction(state, action) {
+const BaseRouter = {
+  getStateForAction(state: NavigationState, action: CommonAction) {
     switch (action.type) {
+      case 'REPLACE': {
+        return {
+          ...state,
+          routes: state.routes.map((route, i) =>
+            i === state.index
+              ? {
+                  key: `${action.payload.name}-${shortid()}`,
+                  name: action.payload.name,
+                  params: action.payload.params,
+                }
+              : route
+          ),
+        };
+      }
+
       case 'SET_PARAMS':
         return {
           ...state,
@@ -15,33 +28,31 @@ const BaseRouter: Omit<
               : r
           ),
         };
+
+      case 'RESET':
+        if (
+          action.payload.key === undefined ||
+          action.payload.key === state.key
+        ) {
+          return {
+            ...action.payload,
+            key: state.key,
+            routeNames: state.routeNames,
+          };
+        }
+
+        return null;
+
       default:
         return null;
     }
   },
 
-  getStateForRouteNamesChange(state, { routeNames }) {
-    return {
-      ...state,
-      routeNames,
-      routes: state.routes.filter(route => routeNames.includes(route.name)),
-    };
+  shouldActionPropagateToChildren(action: CommonAction) {
+    return action.type === 'NAVIGATE' || action.type === 'RESET';
   },
 
-  getStateForRouteFocus(state, key) {
-    const index = state.routes.findIndex(r => r.key === key);
-
-    if (index === -1 || index === state.index) {
-      return state;
-    }
-
-    return { ...state, index };
-  },
-  shouldActionPropagateToChildren(action) {
-    return action.type === 'NAVIGATE';
-  },
-
-  shouldActionChangeFocus(action) {
+  shouldActionChangeFocus(action: CommonAction) {
     return action.type === 'NAVIGATE';
   },
 };
