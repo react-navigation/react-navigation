@@ -40,6 +40,8 @@ export type TabNavigationProp<ParamList extends ParamListBase> = NavigationProp<
 };
 
 const TabRouter: Router<Action | CommonAction> = {
+  ...BaseRouter,
+
   getInitialState({
     routeNames,
     initialRouteName = routeNames[0],
@@ -91,7 +93,7 @@ const TabRouter: Router<Action | CommonAction> = {
   getStateForRouteFocus(state, key) {
     const index = state.routes.findIndex(r => r.key === key);
 
-    if (index === -1) {
+    if (index === -1 || index === state.index) {
       return state;
     }
 
@@ -99,10 +101,11 @@ const TabRouter: Router<Action | CommonAction> = {
   },
 
   getStateForAction(state, action) {
-    let index = -1;
     switch (action.type) {
       case 'JUMP_TO':
-      case 'NAVIGATE':
+      case 'NAVIGATE': {
+        let index = -1;
+
         if (action.payload.key) {
           index = state.routes.findIndex(
             route => route.key === action.payload.key
@@ -115,7 +118,7 @@ const TabRouter: Router<Action | CommonAction> = {
           );
         }
 
-        if (index == -1) {
+        if (index === -1) {
           return null;
         }
 
@@ -137,35 +140,7 @@ const TabRouter: Router<Action | CommonAction> = {
               : state.routes,
           index,
         };
-
-      case 'REPLACE': {
-        return {
-          ...state,
-          routes: state.routes.map((route, i) =>
-            i === state.index
-              ? {
-                  key: `${action.payload.name}-${shortid()}`,
-                  name: action.payload.name,
-                  params: action.payload.params,
-                }
-              : route
-          ),
-        };
       }
-
-      case 'RESET':
-        if (
-          action.payload.key === undefined ||
-          action.payload.key === state.key
-        ) {
-          return {
-            ...action.payload,
-            key: state.key,
-            routeNames: state.routeNames,
-          };
-        }
-
-        return null;
 
       default:
         return BaseRouter.getStateForAction(state, action);

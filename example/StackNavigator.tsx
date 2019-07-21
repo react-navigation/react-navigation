@@ -56,6 +56,7 @@ export type StackNavigationProp<
 
 const StackRouter: Router<CommonAction | Action> = {
   ...BaseRouter,
+
   getInitialState({
     routeNames,
     initialRouteName = routeNames[0],
@@ -87,6 +88,14 @@ const StackRouter: Router<CommonAction | Action> = {
     }
 
     return state;
+  },
+
+  getStateForRouteNamesChange(state, { routeNames }) {
+    return {
+      ...state,
+      routeNames,
+      routes: state.routes.filter(route => routeNames.includes(route.name)),
+    };
   },
 
   getStateForRouteFocus(state, key) {
@@ -202,41 +211,11 @@ const StackRouter: Router<CommonAction | Action> = {
         }
         return null;
 
-      case 'REPLACE': {
-        return {
-          ...state,
-          routes: state.routes.map((route, i) =>
-            i === state.index
-              ? {
-                  key: `${action.payload.name}-${shortid()}`,
-                  name: action.payload.name,
-                  params: action.payload.params,
-                }
-              : route
-          ),
-        };
-      }
-
       case 'GO_BACK':
         return StackRouter.getStateForAction(state, {
           type: 'POP',
           payload: { count: 1 },
         });
-
-      case 'RESET': {
-        if (
-          action.payload.key === undefined ||
-          action.payload.key === state.key
-        ) {
-          return {
-            ...action.payload,
-            key: state.key,
-            routeNames: state.routeNames,
-          };
-        }
-
-        return null;
-      }
 
       default:
         return BaseRouter.getStateForAction(state, action);
