@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { NavigationStateContext } from './NavigationContainer';
+import NavigationContext from './NavigationContext';
 import StaticContainer from './StaticContainer';
+import EnsureSingleNavigator from './EnsureSingleNavigator';
 import {
   Route,
   NavigationState,
@@ -8,7 +10,6 @@ import {
   RouteConfig,
   TargetRoute,
 } from './types';
-import EnsureSingleNavigator from './EnsureSingleNavigator';
 
 type Props = {
   screen: RouteConfig;
@@ -71,22 +72,24 @@ export default function SceneView(props: Props) {
   );
 
   return (
-    <NavigationStateContext.Provider value={context}>
-      <EnsureSingleNavigator>
-        <StaticContainer
-          name={screen.name}
-          // @ts-ignore
-          render={screen.component || screen.children}
-          navigation={navigation}
-          route={route}
-        >
-          {'component' in screen && screen.component !== undefined ? (
-            <screen.component navigation={navigation} route={route} />
-          ) : 'children' in screen && screen.children !== undefined ? (
-            screen.children({ navigation, route })
-          ) : null}
-        </StaticContainer>
-      </EnsureSingleNavigator>
-    </NavigationStateContext.Provider>
+    <NavigationContext.Provider value={navigation}>
+      <NavigationStateContext.Provider value={context}>
+        <EnsureSingleNavigator>
+          <StaticContainer
+            name={screen.name}
+            // @ts-ignore
+            render={screen.component || screen.children}
+            navigation={navigation}
+            route={route}
+          >
+            {'component' in screen && screen.component !== undefined ? (
+              <screen.component navigation={navigation} route={route} />
+            ) : 'children' in screen && screen.children !== undefined ? (
+              screen.children({ navigation, route })
+            ) : null}
+          </StaticContainer>
+        </EnsureSingleNavigator>
+      </NavigationStateContext.Provider>
+    </NavigationContext.Provider>
   );
 }
