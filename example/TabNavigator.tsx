@@ -29,10 +29,10 @@ export type TabNavigationOptions = {
   title?: string;
 };
 
-export type TabNavigationProp<ParamList extends ParamListBase> = NavigationProp<
-  ParamList,
-  TabNavigationOptions
-> & {
+export type TabNavigationProp<
+  ParamList extends ParamListBase,
+  RouteName extends keyof ParamList = string
+> = NavigationProp<ParamList, RouteName, TabNavigationOptions> & {
   /**
    * Jump to an existing tab.
    *
