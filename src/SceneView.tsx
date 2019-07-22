@@ -6,10 +6,10 @@ import EnsureSingleNavigator from './EnsureSingleNavigator';
 import {
   Route,
   ParamListBase,
+  NavigationAction,
   NavigationState,
   NavigationHelpers,
   RouteConfig,
-  TargetRoute,
 } from './types';
 
 type Props<ScreenOptions extends object> = {
@@ -36,9 +36,12 @@ export default function SceneView<ScreenOptions extends object>({
   const navigation = React.useMemo(
     () => ({
       ...helpers,
-      setParams: (params: object, target?: TargetRoute<string>) => {
-        helpers.setParams(params, target ? target : { key: route.key });
-      },
+      dispatch: (
+        action: NavigationAction | ((state: NavigationState) => NavigationState)
+      ) =>
+        helpers.dispatch(
+          typeof action === 'object' ? { source: route.key, ...action } : action
+        ),
       setOptions: (options: object) =>
         setOptions(o => ({
           ...o,

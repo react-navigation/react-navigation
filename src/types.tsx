@@ -64,6 +64,7 @@ export type Route<RouteName extends string> = {
 
 export type NavigationAction = {
   type: string;
+  source?: string;
 };
 
 export type ActionCreators<Action extends NavigationAction> = {
@@ -161,13 +162,15 @@ export type Router<
 
 export type ParamListBase = { [key: string]: object | undefined };
 
-class PrivateValueStore<T> {
+class PrivateValueStore<A, B> {
   /**
    * TypeScript requires a type to be actually used to be able to infer it.
    * This is a hacky way of storing type in a property without surfacing it in intellisense.
    */
   // @ts-ignore
-  private __private_value_type?: T;
+  private __private_value_type_a?: A;
+  // @ts-ignore
+  private __private_value_type_b?: B;
 }
 
 type NavigationHelpersCommon<
@@ -218,7 +221,7 @@ type NavigationHelpersCommon<
    * Go back to the previous route in history.
    */
   goBack(): void;
-} & PrivateValueStore<ParamList>;
+} & PrivateValueStore<ParamList, keyof ParamList>;
 
 export type NavigationHelpers<
   ParamList extends ParamListBase
@@ -228,11 +231,11 @@ export type NavigationHelpers<
    * The new params will be shallow merged with the old one.
    *
    * @param params Params object for the current route.
-   * @param target Target route for updating params.
+   * @param key Key of the route for updating params.
    */
-  setParams<RouteName extends Extract<keyof ParamList, string>>(
+  setParams<RouteName extends keyof ParamList>(
     params: ParamList[RouteName],
-    target: TargetRoute<RouteName>
+    key: string
   ): void;
 };
 
@@ -247,12 +250,10 @@ export type NavigationProp<
    * The new params will be shallow merged with the old one.
    *
    * @param params Params object for the current route.
-   * @param [target] Target route for updating params. Defaults to current route.
+   * @param [key] Key of the route for updating params. Defaults to current route.
    */
-  setParams<TargetRouteName extends keyof ParamList = RouteName>(
-    params: ParamList[TargetRouteName],
-    target?: TargetRoute<Extract<TargetRouteName, string>>
-  ): void;
+  setParams(params: ParamList[RouteName]): void;
+  setParams(params: ParamList[keyof ParamList], key: string): void;
 
   /**
    * Update the options for the route.
@@ -261,7 +262,7 @@ export type NavigationProp<
    * @param options Options object for the route.
    */
   setOptions(options: Partial<ScreenOptions>): void;
-};
+} & PrivateValueStore<ParamList, RouteName>;
 
 export type RouteProp<
   ParamList extends ParamListBase,

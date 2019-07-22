@@ -420,7 +420,7 @@ it('updates another route params with setParams', () => {
     return descriptors[state.routes[state.index].key].render();
   };
 
-  let setParams: (params: object, target: object) => void = () => undefined;
+  let setParams: (params: object, key: string) => void = () => undefined;
 
   const FooScreen = (props: any) => {
     setParams = props.navigation.setParams;
@@ -439,7 +439,7 @@ it('updates another route params with setParams', () => {
     </NavigationContainer>
   );
 
-  act(() => setParams({ username: 'alice' }, { name: 'bar' }));
+  act(() => setParams({ username: 'alice' }, 'bar'));
 
   expect(onStateChange).toBeCalledTimes(1);
   expect(onStateChange).lastCalledWith({
@@ -452,7 +452,7 @@ it('updates another route params with setParams', () => {
     ],
   });
 
-  act(() => setParams({ age: 25 }, { name: 'bar' }));
+  act(() => setParams({ age: 25 }, 'bar'));
 
   expect(onStateChange).toBeCalledTimes(2);
   expect(onStateChange).lastCalledWith({

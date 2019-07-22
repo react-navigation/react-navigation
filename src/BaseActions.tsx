@@ -7,20 +7,22 @@ export type Action =
       payload:
         | { name: string; key?: undefined; params?: object }
         | { key: string; name?: undefined; params?: object };
+      source?: string;
     }
   | {
       type: 'REPLACE';
       payload: { name: string; params?: object };
+      source?: string;
     }
   | {
       type: 'RESET';
       payload: PartialState<NavigationState> & { key?: string };
+      source?: string;
     }
   | {
       type: 'SET_PARAMS';
-      payload:
-        | { name: string; key?: undefined; params?: object }
-        | { key: string; name?: undefined; params?: object };
+      payload: { key?: string; params?: object };
+      source?: string;
     };
 
 export function goBack(): Action {
@@ -53,19 +55,6 @@ export function reset(
   return { type: 'RESET', payload: state };
 }
 
-export function setParams(
-  params: object,
-  target: { name: string } | { key: string }
-): Action {
-  if (
-    target &&
-    ((target.hasOwnProperty('key') && target.hasOwnProperty('name')) ||
-      (!target.hasOwnProperty('key') && !target.hasOwnProperty('name')))
-  ) {
-    throw new Error(
-      'While calling setState with given second param you need to specify either name or key'
-    );
-  }
-
-  return { type: 'SET_PARAMS', payload: { params, ...target } };
+export function setParams(params: object, key: string): Action {
+  return { type: 'SET_PARAMS', payload: { key, params } };
 }
