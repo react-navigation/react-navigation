@@ -3,9 +3,9 @@ import { render } from 'react-dom';
 import {
   NavigationContainer,
   CompositeNavigationProp,
-  PartialState,
   NavigationProp,
   RouteProp,
+  InitialState,
 } from '../src';
 import StackNavigator, { StackNavigationProp } from './StackNavigator';
 import TabNavigator, { TabNavigationProp } from './TabNavigator';
@@ -143,7 +143,7 @@ const Fifth = ({
 
 const PERSISTENCE_KEY = 'NAVIGATION_STATE';
 
-let initialState: PartialState | undefined;
+let initialState: InitialState | undefined;
 
 try {
   initialState = JSON.parse(localStorage.getItem(PERSISTENCE_KEY) || '');

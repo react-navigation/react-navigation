@@ -102,6 +102,7 @@ it('rehydrates state for a navigator on navigation', () => {
     key: '2',
     routeNames: ['foo', 'bar'],
     routes: [{ key: 'foo', name: 'foo' }, { key: 'bar', name: 'bar' }],
+    stale: false,
   });
 });
 
@@ -445,7 +446,10 @@ it('updates another route params with setParams', () => {
     index: 0,
     key: '0',
     routeNames: ['foo', 'bar'],
-    routes: [{ key: 'foo', name: 'foo', params: undefined }, { key: 'bar', name: 'bar', params: { username: 'alice' } }],
+    routes: [
+      { key: 'foo', name: 'foo', params: undefined },
+      { key: 'bar', name: 'bar', params: { username: 'alice' } },
+    ],
   });
 
   act(() => setParams({ age: 25 }, { name: 'bar' }));
