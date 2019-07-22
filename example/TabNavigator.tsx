@@ -23,6 +23,13 @@ type Action = {
   payload: { name?: string; key?: string; params?: object };
 };
 
+export type TabNavigationOptions = {
+  /**
+   * Title text for the screen.
+   */
+  title?: string;
+};
+
 export type TabNavigationProp<ParamList extends ParamListBase> = NavigationProp<
   ParamList
 > & {
@@ -196,4 +203,6 @@ export function TabNavigator(props: Props) {
   );
 }
 
-export default createNavigator(TabNavigator);
+export default createNavigator<TabNavigationOptions, typeof TabNavigator>(
+  TabNavigator
+);

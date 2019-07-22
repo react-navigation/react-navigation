@@ -25,9 +25,7 @@ type Options = {
   onRouteFocus: (key: string) => void;
 };
 
-const EMPTY_OPTIONS = Object.freeze({});
-
-export default function useDescriptors({
+export default function useDescriptors<ScreenOptions extends object>({
   state,
   screens,
   navigation,
@@ -73,10 +71,18 @@ export default function useDescriptors({
             </NavigationBuilderContext.Provider>
           );
         },
-        options: screen.options || EMPTY_OPTIONS,
+        options: {
+          ...(typeof screen.options === 'function'
+            ? screen.options({
+                // @ts-ignore
+                route,
+                navigation,
+              })
+            : screen.options),
+        },
       };
       return acc;
     },
-    {} as { [key: string]: Descriptor }
+    {} as { [key: string]: Descriptor<ScreenOptions> }
   );
 }

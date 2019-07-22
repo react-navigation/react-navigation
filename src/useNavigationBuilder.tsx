@@ -39,7 +39,7 @@ const getRouteConfigsFromChildren = (children: React.ReactNode) =>
     );
   }, []);
 
-export default function useNavigationBuilder(
+export default function useNavigationBuilder<ScreenOptions extends object>(
   router: Router<any>,
   options: Options
 ) {
@@ -156,7 +156,7 @@ export default function useNavigationBuilder(
     actionCreators: router.actionCreators,
   });
 
-  const descriptors = useDescriptors({
+  const descriptors = useDescriptors<ScreenOptions>({
     state,
     screens,
     navigation,

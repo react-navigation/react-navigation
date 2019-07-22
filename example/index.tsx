@@ -149,14 +149,14 @@ function App() {
         <MyStack.Screen
           name="first"
           component={First}
-          options={{ title: 'Foo' }}
+          options={({ route }) => ({
+            title: `Foo (${route.params ? route.params.author : ''})`,
+          })}
           initialParams={{ author: 'Jane' }}
         />
-        <MyStack.Screen
-          name="second"
-          component={Second}
-          options={{ title: 'Bar' }}
-        />
+        <MyStack.Screen name="second" options={{ title: 'Bar' }}>
+          {props => <Second {...props} />}
+        </MyStack.Screen>
         <MyStack.Screen name="third" options={{ title: 'Baz' }}>
           {() => (
             <MyTab.Navigator initialRouteName="fifth">

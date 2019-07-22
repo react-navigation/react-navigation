@@ -173,7 +173,11 @@ And then we can use it:
 ```js
 <Stack.Navigator initialRouteName="profile">
   <Stack.Screen name="settings" component={Settings} />
-  <Stack.Screen name="profile" component={Profile} />
+  <Stack.Screen
+    name="profile"
+    component={Profile}
+    options={{ title: 'My profile' }}
+  />
   <Stack.Screen name="home" component={Home} />
 </Stack.Navigator>
 ```

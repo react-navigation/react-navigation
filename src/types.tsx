@@ -232,7 +232,7 @@ export type CompositeNavigationProp<
       (B extends NavigationProp<infer U> ? U : never)
   >;
 
-export type Descriptor = {
+export type Descriptor<Options extends object> = {
   /**
    * Render the component associated with this route.
    */
@@ -244,18 +244,10 @@ export type Descriptor = {
   options: Options;
 };
 
-export type Options = {
-  /**
-   * Title text for the screen.
-   */
-  title?: string;
-
-  [key: string]: any;
-};
-
 export type RouteConfig<
   ParamList extends ParamListBase = ParamListBase,
-  RouteName extends keyof ParamList = string
+  RouteName extends keyof ParamList = string,
+  Options extends object = object
 > = {
   /**
    * Route name of this screen.
@@ -265,7 +257,12 @@ export type RouteConfig<
   /**
    * Navigator options for this screen.
    */
-  options?: Options;
+  options?:
+    | Options
+    | ((props: {
+        route: RouteProp<ParamList, RouteName>;
+        navigation: NavigationProp<ParamList>;
+      }) => Options);
 
   /**
    * Initial params object for the route.
@@ -287,6 +284,7 @@ export type RouteConfig<
 
 export type TypedNavigator<
   ParamList extends ParamListBase,
+  Options extends object,
   Navigator extends React.ComponentType<any>
 > = {
   Navigator: React.ComponentType<
@@ -297,5 +295,5 @@ export type TypedNavigator<
       initialRouteName?: keyof ParamList;
     }
   >;
-  Screen: React.ComponentType<RouteConfig<ParamList, keyof ParamList>>;
+  Screen: React.ComponentType<RouteConfig<ParamList, keyof ParamList, Options>>;
 };

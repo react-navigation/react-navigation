@@ -28,6 +28,13 @@ type Action =
     }
   | { type: 'POP_TO_TOP' };
 
+export type StackNavigationOptions = {
+  /**
+   * Title text for the screen.
+   */
+  title?: string;
+};
+
 export type StackNavigationProp<
   ParamList extends ParamListBase
 > = NavigationProp<ParamList> & {
@@ -236,7 +243,10 @@ const StackRouter: Router<CommonAction | Action> = {
 };
 
 export function StackNavigator(props: Props) {
-  const { state, descriptors } = useNavigationBuilder(StackRouter, props);
+  const { state, descriptors } = useNavigationBuilder<StackNavigationOptions>(
+    StackRouter,
+    props
+  );
 
   return (
     <div style={{ position: 'relative' }}>
@@ -277,4 +287,6 @@ export function StackNavigator(props: Props) {
   );
 }
 
-export default createNavigator(StackNavigator);
+export default createNavigator<StackNavigationOptions, typeof StackNavigator>(
+  StackNavigator
+);
