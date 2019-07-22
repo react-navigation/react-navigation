@@ -3,7 +3,7 @@ import * as BaseActions from './BaseActions';
 import NavigationContext from './NavigationContext';
 import { NavigationStateContext } from './NavigationContainer';
 import {
-  NavigationProp,
+  NavigationHelpers,
   NavigationAction,
   NavigationState,
   ActionCreators,
@@ -26,7 +26,7 @@ export default function useNavigationHelpers<Action extends NavigationAction>({
   const parentNavigationHelpers = React.useContext(NavigationContext);
   const { performTransaction } = React.useContext(NavigationStateContext);
 
-  return React.useMemo((): NavigationProp<ParamListBase> => {
+  return React.useMemo((): NavigationHelpers<ParamListBase> => {
     const dispatch = (
       action: NavigationAction | ((state: NavigationState) => NavigationState)
     ) => {

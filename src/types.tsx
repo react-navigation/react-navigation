@@ -162,10 +162,7 @@ class PrivateValueStore<T> {
   private __private_value_type?: T;
 }
 
-export type NavigationProp<
-  ParamList extends ParamListBase,
-  ScreenOptions extends object = {}
-> = {
+export type NavigationHelpers<ParamList extends ParamListBase> = {
   /**
    * Dispatch an action or an update function to the router.
    * The update function will receive the current state,
@@ -218,11 +215,29 @@ export type NavigationProp<
    * The new params will be shallow merged with the old one.
    *
    * @param params Params object for the current route.
-   * @routeName params Target route for setParam.
+   * @param target Target route for updating params.
    */
   setParams<RouteName extends Extract<keyof ParamList, string>>(
     params: ParamList[RouteName],
     target: TargetRoute<RouteName>
+  ): void;
+} & PrivateValueStore<ParamList>;
+
+export type NavigationProp<
+  ParamList extends ParamListBase,
+  RouteName extends keyof ParamList = string,
+  ScreenOptions extends object = {}
+> = Omit<NavigationHelpers<ParamList>, 'setParams'> & {
+  /**
+   * Update the param object for the route.
+   * The new params will be shallow merged with the old one.
+   *
+   * @param params Params object for the current route.
+   * @param [target] Target route for updating params. Defaults to current route.
+   */
+  setParams<TargetRouteName extends keyof ParamList = RouteName>(
+    params: ParamList[TargetRouteName],
+    target?: TargetRoute<Extract<TargetRouteName, string>>
   ): void;
 
   /**
@@ -232,7 +247,7 @@ export type NavigationProp<
    * @param options Options object for the route.
    */
   setOptions(options: Partial<ScreenOptions>): void;
-} & PrivateValueStore<ParamList>;
+};
 
 export type RouteProp<
   ParamList extends ParamListBase,
@@ -248,15 +263,9 @@ export type RouteProp<
       });
 
 export type CompositeNavigationProp<
-  A extends NavigationProp<ParamListBase, object>,
-  B extends NavigationProp<ParamListBase, object>
-> = Omit<A & B, keyof NavigationProp<any, any>> &
-  NavigationProp<
-    (A extends NavigationProp<infer T, any> ? T : never) &
-      (B extends NavigationProp<infer U, any> ? U : never),
-    (A extends NavigationProp<any, infer O> ? O : never) &
-      (B extends NavigationProp<any, infer P> ? P : never)
-  >;
+  A extends Omit<NavigationHelpers<ParamListBase>, 'setParams'>,
+  B extends Omit<NavigationHelpers<ParamListBase>, 'setParams'>
+> = A & B;
 
 export type Descriptor<ScreenOptions extends object> = {
   /**
@@ -287,7 +296,7 @@ export type RouteConfig<
     | ScreenOptions
     | ((props: {
         route: RouteProp<ParamList, RouteName>;
-        navigation: NavigationProp<ParamList, ScreenOptions>;
+        navigation: NavigationHelpers<ParamList>;
       }) => ScreenOptions);
 
   /**

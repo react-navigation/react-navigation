@@ -3,7 +3,7 @@ import { render } from 'react-dom';
 import {
   NavigationContainer,
   CompositeNavigationProp,
-  NavigationProp,
+  NavigationHelpers,
   RouteProp,
   InitialState,
 } from '../src';
@@ -30,8 +30,8 @@ const First = ({
   route,
 }: {
   navigation: CompositeNavigationProp<
-    StackNavigationProp<StackParamList>,
-    NavigationProp<TabParamList>
+    StackNavigationProp<StackParamList, 'first'>,
+    NavigationHelpers<TabParamList>
   >;
   route: RouteProp<StackParamList, 'first'>;
 }) => (
@@ -62,8 +62,8 @@ const Second = ({
   navigation,
 }: {
   navigation: CompositeNavigationProp<
-    StackNavigationProp<StackParamList>,
-    NavigationProp<TabParamList>
+    StackNavigationProp<StackParamList, 'second'>,
+    NavigationHelpers<TabParamList>
   >;
 }) => {
   const [count, setCount] = React.useState(0);
@@ -98,7 +98,7 @@ const Fourth = ({
   navigation,
 }: {
   navigation: CompositeNavigationProp<
-    TabNavigationProp<TabParamList>,
+    TabNavigationProp<TabParamList, 'fourth'>,
     StackNavigationProp<StackParamList>
   >;
 }) => (
@@ -123,7 +123,7 @@ const Fifth = ({
   navigation,
 }: {
   navigation: CompositeNavigationProp<
-    TabNavigationProp<TabParamList>,
+    TabNavigationProp<TabParamList, 'fifth'>,
     StackNavigationProp<StackParamList>
   >;
 }) => (
