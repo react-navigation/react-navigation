@@ -13,9 +13,9 @@ import NavigationBuilderContext, {
   ChildActionListener,
 } from './NavigationBuilderContext';
 
-type Options = {
+type Options<ScreenOptions extends object> = {
   state: NavigationState | PartialState;
-  screens: { [key: string]: RouteConfig<ParamListBase, string> };
+  screens: { [key: string]: RouteConfig<ParamListBase, string, ScreenOptions> };
   navigation: NavigationProp<ParamListBase>;
   onAction: (action: NavigationAction, sourceNavigatorKey?: string) => boolean;
   getState: () => NavigationState;
@@ -35,7 +35,7 @@ export default function useDescriptors<ScreenOptions extends object>({
   addActionListener,
   removeActionListener,
   onRouteFocus,
-}: Options) {
+}: Options<ScreenOptions>) {
   const [options, setOptions] = React.useState<{ [key: string]: object }>({});
   const context = React.useMemo(
     () => ({
@@ -74,13 +74,13 @@ export default function useDescriptors<ScreenOptions extends object>({
           );
         },
         options: {
-          ...(typeof screen.options === 'function'
-            ? screen.options({
+          ...(typeof screen.options === 'object' || screen.options == null
+            ? screen.options
+            : screen.options({
                 // @ts-ignore
                 route,
                 navigation,
-              })
-            : screen.options),
+              })),
           ...options[route.key],
         },
       };

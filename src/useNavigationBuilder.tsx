@@ -5,7 +5,7 @@ import useRegisterNavigator from './useRegisterNavigator';
 import useDescriptors from './useDescriptors';
 import useNavigationHelpers from './useNavigationHelpers';
 import useOnAction from './useOnAction';
-import { Router, NavigationState, RouteConfig } from './types';
+import { Router, NavigationState, RouteConfig, ParamListBase } from './types';
 import useOnRouteFocus from './useOnRouteFocus';
 import useChildActionListeners from './useChildActionListeners';
 
@@ -17,16 +17,26 @@ type Options = {
 const isArrayEqual = (a: any[], b: any[]) =>
   a.length === b.length && a.every((it, index) => it === b[index]);
 
-const getRouteConfigsFromChildren = (children: React.ReactNode) =>
-  React.Children.toArray(children).reduce<RouteConfig[]>((acc, child) => {
+const getRouteConfigsFromChildren = <ScreenOptions extends object>(
+  children: React.ReactNode
+) =>
+  React.Children.toArray(children).reduce<
+    RouteConfig<ParamListBase, string, ScreenOptions>[]
+  >((acc, child) => {
     if (React.isValidElement(child)) {
       if (child.type === Screen) {
-        acc.push(child.props as RouteConfig);
+        acc.push(child.props as RouteConfig<
+          ParamListBase,
+          string,
+          ScreenOptions
+        >);
         return acc;
       }
 
       if (child.type === React.Fragment) {
-        acc.push(...getRouteConfigsFromChildren(child.props.children));
+        acc.push(
+          ...getRouteConfigsFromChildren<ScreenOptions>(child.props.children)
+        );
         return acc;
       }
     }
@@ -45,12 +55,14 @@ export default function useNavigationBuilder<ScreenOptions extends object>(
 ) {
   useRegisterNavigator();
 
-  const screens = getRouteConfigsFromChildren(options.children).reduce(
+  const screens = getRouteConfigsFromChildren<ScreenOptions>(
+    options.children
+  ).reduce(
     (acc, curr) => {
       acc[curr.name] = curr;
       return acc;
     },
-    {} as { [key: string]: RouteConfig }
+    {} as { [key: string]: RouteConfig<ParamListBase, string, ScreenOptions> }
   );
 
   const routeNames = Object.keys(screens);

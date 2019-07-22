@@ -5,16 +5,17 @@ import StaticContainer from './StaticContainer';
 import EnsureSingleNavigator from './EnsureSingleNavigator';
 import {
   Route,
+  ParamListBase,
   NavigationState,
   NavigationProp,
   RouteConfig,
   TargetRoute,
 } from './types';
 
-type Props = {
-  screen: RouteConfig;
-  navigation: NavigationProp;
-  route: Route & { state?: NavigationState };
+type Props<ScreenOptions extends object> = {
+  screen: RouteConfig<ParamListBase, string, ScreenOptions>;
+  navigation: NavigationProp<ParamListBase>;
+  route: Route<string> & { state?: NavigationState };
   getState: () => NavigationState;
   setState: (state: NavigationState) => void;
   setOptions: (
@@ -22,14 +23,14 @@ type Props = {
   ) => void;
 };
 
-export default function SceneView({
+export default function SceneView<ScreenOptions extends object>({
   screen,
   route,
   navigation: helpers,
   getState,
   setState,
   setOptions,
-}: Props) {
+}: Props<ScreenOptions>) {
   const { performTransaction } = React.useContext(NavigationStateContext);
 
   const navigation = React.useMemo(
