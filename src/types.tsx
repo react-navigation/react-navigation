@@ -23,7 +23,7 @@ export type NavigationState = {
   /**
    * List of rendered routes.
    */
-  routes: Array<Route & { state?: NavigationState }>;
+  routes: Array<Route<string> & { state?: NavigationState }>;
 };
 
 export type PartialState = Omit<Omit<NavigationState, 'routeNames'>, 'key'> & {
@@ -32,7 +32,7 @@ export type PartialState = Omit<Omit<NavigationState, 'routeNames'>, 'key'> & {
   state?: PartialState;
 };
 
-export type Route<RouteName = string> = {
+export type Route<RouteName extends string> = {
   /**
    * Unique key for the route.
    */
@@ -51,11 +51,11 @@ export type NavigationAction = {
   type: string;
 };
 
-export type ActionCreators<Action extends NavigationAction = CommonAction> = {
+export type ActionCreators<Action extends NavigationAction> = {
   [key: string]: (...args: any) => Action;
 };
 
-export type Router<Action extends NavigationAction = CommonAction> = {
+export type Router<Action extends NavigationAction> = {
   /**
    * Initialize the navigation state.
    *
@@ -150,8 +150,8 @@ class PrivateValueStore<T> {
 }
 
 export type NavigationProp<
-  ParamList extends ParamListBase = ParamListBase,
-  ScreenOptions extends object = object
+  ParamList extends ParamListBase,
+  ScreenOptions extends object = {}
 > = {
   /**
    * Dispatch an action or an update function to the router.
@@ -224,7 +224,7 @@ export type NavigationProp<
 export type RouteProp<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList
-> = Omit<Route<RouteName>, 'params'> &
+> = Omit<Route<Extract<RouteName, string>>, 'params'> &
   (ParamList[RouteName] extends undefined
     ? {}
     : {
@@ -258,9 +258,9 @@ export type Descriptor<ScreenOptions extends object> = {
 };
 
 export type RouteConfig<
-  ParamList extends ParamListBase = ParamListBase,
-  RouteName extends keyof ParamList = string,
-  ScreenOptions extends object = object
+  ParamList extends ParamListBase,
+  RouteName extends keyof ParamList,
+  ScreenOptions extends object
 > = {
   /**
    * Route name of this screen.
@@ -274,7 +274,7 @@ export type RouteConfig<
     | ScreenOptions
     | ((props: {
         route: RouteProp<ParamList, RouteName>;
-        navigation: NavigationProp<ParamList>;
+        navigation: NavigationProp<ParamList, ScreenOptions>;
       }) => ScreenOptions);
 
   /**

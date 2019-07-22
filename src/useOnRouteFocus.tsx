@@ -2,21 +2,21 @@ import * as React from 'react';
 import { NavigationAction, NavigationState, Router } from './types';
 import NavigationBuilderContext from './NavigationBuilderContext';
 
-type Options = {
-  router: Router;
+type Options<Action extends NavigationAction> = {
+  router: Router<Action>;
   onAction: (action: NavigationAction, sourceNavigatorKey?: string) => boolean;
   getState: () => NavigationState;
   setState: (state: NavigationState) => void;
   key?: string;
 };
 
-export default function useOnRouteFocus({
+export default function useOnRouteFocus<Action extends NavigationAction>({
   router,
   onAction,
   getState,
   key: sourceNavigatorKey,
   setState,
-}: Options) {
+}: Options<Action>) {
   const {
     onRouteFocus: onRouteFocusParent,
     addActionListener: addActionListenerParent,

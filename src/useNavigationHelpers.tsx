@@ -7,25 +7,26 @@ import {
   NavigationAction,
   NavigationState,
   ActionCreators,
+  ParamListBase,
 } from './types';
 
-type Options = {
+type Options<Action extends NavigationAction> = {
   onAction: (action: NavigationAction, sourceNavigatorKey?: string) => boolean;
   getState: () => NavigationState;
   setState: (state: NavigationState) => void;
-  actionCreators?: ActionCreators;
+  actionCreators?: ActionCreators<Action>;
 };
 
-export default function useNavigationHelpers({
+export default function useNavigationHelpers<Action extends NavigationAction>({
   onAction,
   getState,
   setState,
   actionCreators,
-}: Options) {
+}: Options<Action>) {
   const parentNavigationHelpers = React.useContext(NavigationContext);
   const { performTransaction } = React.useContext(NavigationStateContext);
 
-  return React.useMemo((): NavigationProp => {
+  return React.useMemo((): NavigationProp<ParamListBase> => {
     const dispatch = (
       action: NavigationAction | ((state: NavigationState) => NavigationState)
     ) => {
