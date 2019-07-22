@@ -9,7 +9,6 @@ import {
   ParamListBase,
   Router,
   createNavigator,
-  TargetRoute,
   BaseRouter,
 } from '../src/index';
 
@@ -20,7 +19,7 @@ type Props = {
 
 type Action = {
   type: 'JUMP_TO';
-  payload: { name?: string; key?: string; params?: object };
+  payload: { name: string; params?: object };
 };
 
 export type TabNavigationOptions = {
@@ -42,8 +41,8 @@ export type TabNavigationProp<ParamList extends ParamListBase> = NavigationProp<
    */
   jumpTo<RouteName extends Extract<keyof ParamList, string>>(
     ...args: ParamList[RouteName] extends void
-      ? [TargetRoute<RouteName>]
-      : [TargetRoute<RouteName>, ParamList[RouteName]]
+      ? [RouteName]
+      : [RouteName, ParamList[RouteName]]
   ): void;
 };
 
@@ -115,15 +114,13 @@ const TabRouter: Router<Action | CommonAction> = {
       case 'NAVIGATE': {
         let index = -1;
 
-        if (action.payload.key) {
+        if (action.type === 'NAVIGATE' && action.payload.key) {
           index = state.routes.findIndex(
             route => route.key === action.payload.key
           );
-        }
-
-        if (action.payload.name) {
+        } else {
           index = state.routes.findIndex(
-            route => route.name === action.payload.name
+            route => route.key === action.payload.name
           );
         }
 
@@ -165,20 +162,8 @@ const TabRouter: Router<Action | CommonAction> = {
   },
 
   actionCreators: {
-    jumpTo(target: TargetRoute<string>, params?: object) {
-      if (typeof target === 'string') {
-        return { type: 'JUMP_TO', payload: { name: target, params } };
-      } else {
-        if (
-          (target.hasOwnProperty('key') && target.hasOwnProperty('name')) ||
-          (!target.hasOwnProperty('key') && !target.hasOwnProperty('name'))
-        ) {
-          throw new Error(
-            'While calling jumpTo you need to specify either name or key'
-          );
-        }
-        return { type: 'JUMP_TO', payload: { ...target, params } };
-      }
+    jumpTo(name: string, params?: object) {
+      return { type: 'JUMP_TO', payload: { name, params } };
     },
   },
 };

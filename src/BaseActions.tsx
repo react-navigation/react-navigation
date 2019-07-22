@@ -4,7 +4,9 @@ export type Action =
   | { type: 'GO_BACK' }
   | {
       type: 'NAVIGATE';
-      payload: { name?: string; key?: string; params?: object };
+      payload:
+        | { name: string; key?: undefined; params?: object }
+        | { key: string; name?: undefined; params?: object };
     }
   | {
       type: 'REPLACE';
@@ -16,7 +18,9 @@ export type Action =
     }
   | {
       type: 'SET_PARAMS';
-      payload: { name?: string; key?: string; params?: object };
+      payload:
+        | { name: string; key?: undefined; params?: object }
+        | { key: string; name?: undefined; params?: object };
     };
 
 export function goBack(): Action {
@@ -49,7 +53,7 @@ export function reset(state: PartialState & { key?: string }): Action {
 
 export function setParams(
   params: object,
-  target: { name?: string; key?: string }
+  target: { name: string } | { key: string }
 ): Action {
   if (
     target &&
