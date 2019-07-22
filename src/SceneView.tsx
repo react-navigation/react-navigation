@@ -19,8 +19,13 @@ type Props = {
   setState: (state: NavigationState) => void;
 };
 
-export default function SceneView(props: Props) {
-  const { screen, route, navigation: helpers, getState, setState } = props;
+export default function SceneView({
+  screen,
+  route,
+  navigation: helpers,
+  getState,
+  setState,
+}: Props) {
   const { performTransaction } = React.useContext(NavigationStateContext);
 
   const navigation = React.useMemo(
