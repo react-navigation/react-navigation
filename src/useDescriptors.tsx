@@ -61,7 +61,7 @@ export default function useDescriptors<ScreenOptions extends object>({
       acc[route.key] = {
         render() {
           return (
-            <NavigationBuilderContext.Provider value={context}>
+            <NavigationBuilderContext.Provider key={route.key} value={context}>
               <SceneView
                 navigation={navigation}
                 route={route}

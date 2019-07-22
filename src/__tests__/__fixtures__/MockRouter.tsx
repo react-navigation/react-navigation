@@ -1,7 +1,9 @@
 import { Router, CommonAction } from '../../types';
 import { BaseRouter } from '../../index';
 
-export type MockActions = CommonAction & { type: 'NOOP' | 'REVERSE' | 'UPDATE' };
+export type MockActions = CommonAction & {
+  type: 'NOOP' | 'REVERSE' | 'UPDATE';
+};
 
 const MockRouter: Router<MockActions> & { key: number } = {
   key: 0,
@@ -28,9 +30,10 @@ const MockRouter: Router<MockActions> & { key: number } = {
   getRehydratedState({ routeNames, partialState }) {
     let state = partialState;
 
-    if (state.routeNames === undefined || state.key === undefined) {
+    if (state.stale) {
       state = {
         ...state,
+        stale: false,
         routeNames,
         key: String(MockRouter.key++),
       };

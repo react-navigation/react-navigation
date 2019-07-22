@@ -174,16 +174,18 @@ it("lets children handle the action if parent didn't", () => {
 
   expect(onStateChange).toBeCalledTimes(1);
   expect(onStateChange).lastCalledWith({
+    stale: false,
     index: 0,
-    key: '5',
+    key: '7',
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       {
         key: 'baz',
         name: 'baz',
         state: {
+          stale: false,
           index: 0,
-          key: '4',
+          key: '6',
           routeNames: ['qux', 'lex'],
           routes: [{ key: 'lex', name: 'lex' }, { key: 'qux', name: 'qux' }],
         },

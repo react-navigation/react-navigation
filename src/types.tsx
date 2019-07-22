@@ -23,13 +23,26 @@ export type NavigationState = {
   /**
    * List of rendered routes.
    */
-  routes: Array<Route<string> & { state?: NavigationState }>;
+  routes: Array<Route<string> & { state?: NavigationState | PartialState }>;
+  /**
+   * Whether the navigation state has been rehydrated.
+   */
+  stale?: false;
 };
 
-export type PartialState = Omit<Omit<NavigationState, 'routeNames'>, 'key'> & {
+export type InitialState = Omit<
+  Omit<Omit<NavigationState, 'key'>, 'routes'>,
+  'routeNames'
+> & {
+  key?: string;
+  routeNames?: string[];
+  routes: Array<Route<string> & { state?: InitialState }>;
+};
+
+export type PartialState = NavigationState & {
+  stale: true;
   key?: undefined;
   routeNames?: undefined;
-  state?: PartialState;
 };
 
 export type Route<RouteName extends string> = {

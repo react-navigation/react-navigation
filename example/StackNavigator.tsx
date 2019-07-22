@@ -86,9 +86,10 @@ const StackRouter: Router<CommonAction | Action> = {
   getRehydratedState({ routeNames, partialState }) {
     let state = partialState;
 
-    if (state.routeNames === undefined || state.key === undefined) {
+    if (state.stale) {
       state = {
         ...state,
+        stale: false,
         routeNames,
         key: `stack-${shortid()}`,
       };

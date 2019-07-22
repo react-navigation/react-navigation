@@ -1,9 +1,9 @@
 import * as React from 'react';
 import EnsureSingleNavigator from './EnsureSingleNavigator';
-import { NavigationState, PartialState } from './types';
+import { Route, NavigationState, InitialState, PartialState } from './types';
 
 type Props = {
-  initialState?: PartialState;
+  initialState?: InitialState;
   onStateChange?: (state: NavigationState | PartialState | undefined) => void;
   children: React.ReactNode;
 };
@@ -31,9 +31,37 @@ export const NavigationStateContext = React.createContext<{
   },
 });
 
-export default function NavigationContainer(props: Props) {
-  const { onStateChange } = props;
-  const [state, setState] = React.useState<State>(props.initialState);
+const getPartialState = (
+  state: InitialState | undefined
+): PartialState | undefined => {
+  if (state === undefined) {
+    return;
+  }
+
+  // @ts-ignore
+  return {
+    ...state,
+    stale: true,
+    key: undefined,
+    routeNames: undefined,
+    routes: state.routes.map(route => {
+      if (route.state === undefined) {
+        return route as Route<string> & { state?: PartialState };
+      }
+
+      return { ...route, state: getPartialState(route.state) };
+    }),
+  };
+};
+
+export default function NavigationContainer({
+  initialState,
+  onStateChange,
+  children,
+}: Props) {
+  const [state, setState] = React.useState<State>(() =>
+    getPartialState(initialState)
+  );
 
   const navigationStateRef = React.useRef<State | null>(null);
   const isTransactionActiveRef = React.useRef<boolean>(false);
@@ -92,7 +120,7 @@ export default function NavigationContainer(props: Props) {
 
   return (
     <NavigationStateContext.Provider value={context}>
-      <EnsureSingleNavigator>{props.children}</EnsureSingleNavigator>
+      <EnsureSingleNavigator>{children}</EnsureSingleNavigator>
     </NavigationStateContext.Provider>
   );
 }
