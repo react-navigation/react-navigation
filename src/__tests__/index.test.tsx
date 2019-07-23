@@ -3,9 +3,9 @@ import { render, act } from 'react-native-testing-library';
 import Screen from '../Screen';
 import NavigationContainer from '../NavigationContainer';
 import useNavigationBuilder from '../useNavigationBuilder';
-import MockRouter from './__fixtures__/MockRouter';
+import MockRouter, { MockRouterKey } from './__fixtures__/MockRouter';
 
-beforeEach(() => (MockRouter.key = 0));
+beforeEach(() => (MockRouterKey.current = 0));
 
 it('initializes state for a navigator on navigation', () => {
   const TestNavigator = (props: any) => {

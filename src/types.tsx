@@ -70,6 +70,16 @@ export type ActionCreators<Action extends NavigationAction> = {
   [key: string]: (...args: any) => Action;
 };
 
+export type DefaultRouterOptions = {
+  initialRouteName?: string;
+};
+
+export type RouterFactory<
+  State extends NavigationState,
+  Action extends NavigationAction,
+  RouterOptions extends DefaultRouterOptions
+> = (options: RouterOptions) => Router<State, Action>;
+
 export type Router<
   State extends NavigationState,
   Action extends NavigationAction
@@ -78,13 +88,11 @@ export type Router<
    * Initialize the navigation state.
    *
    * @param options.routeNames List of valid route names as defined in the screen components.
-   * @param options.initialRouteName Route to focus in the state.
-   * @param options.initialParamsList Object containing initial params for each route.
+   * @param options.routeParamsList Object containing params for each route.
    */
   getInitialState(options: {
     routeNames: string[];
-    initialRouteName: string;
-    initialParamsList: ParamListBase;
+    routeParamList: ParamListBase;
   }): State;
 
   /**
@@ -103,15 +111,13 @@ export type Router<
    *
    * @param state State object to update.
    * @param options.routeNames New list of route names.
-   * @param options.initialRouteName Route to focus in the state.
-   * @param options.initialParamsList Object containing initial params for each route.
+   * @param options.routeParamsList Object containing params for each route.
    */
   getStateForRouteNamesChange(
     state: State,
     options: {
       routeNames: string[];
-      initialRouteName: string;
-      initialParamsList: ParamListBase;
+      routeParamList: ParamListBase;
     }
   ): State;
 

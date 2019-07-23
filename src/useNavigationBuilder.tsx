@@ -5,12 +5,18 @@ import useRegisterNavigator from './useRegisterNavigator';
 import useDescriptors from './useDescriptors';
 import useNavigationHelpers from './useNavigationHelpers';
 import useOnAction from './useOnAction';
+import {
+  DefaultRouterOptions,
+  NavigationState,
+  ParamListBase,
+  RouteConfig,
+  Router,
+  RouterFactory,
+} from './types';
 import useOnRouteFocus from './useOnRouteFocus';
 import useChildActionListeners from './useChildActionListeners';
-import { Router, NavigationState, RouteConfig, ParamListBase } from './types';
 
 type Options = {
-  initialRouteName?: string;
   children: React.ReactNode;
 };
 
@@ -51,13 +57,20 @@ const getRouteConfigsFromChildren = <ScreenOptions extends object>(
 
 export default function useNavigationBuilder<
   State extends NavigationState,
-  ScreenOptions extends object
->(router: Router<State, any>, options: Options) {
+  ScreenOptions extends object,
+  RouterOptions extends DefaultRouterOptions
+>(
+  createRouter: RouterFactory<State, any, RouterOptions>,
+  options: Options & RouterOptions
+) {
   useRegisterNavigator();
 
-  const screens = getRouteConfigsFromChildren<ScreenOptions>(
-    options.children
-  ).reduce(
+  const { children, ...rest } = options;
+  const { current: router } = React.useRef<Router<State, any>>(
+    createRouter((rest as unknown) as RouterOptions)
+  );
+
+  const screens = getRouteConfigsFromChildren<ScreenOptions>(children).reduce(
     (acc, curr) => {
       acc[curr.name] = curr;
       return acc;
@@ -66,11 +79,7 @@ export default function useNavigationBuilder<
   );
 
   const routeNames = Object.keys(screens);
-  const initialRouteName =
-    options.initialRouteName !== undefined
-      ? options.initialRouteName
-      : routeNames[0];
-  const initialParamsList = routeNames.reduce(
+  const routeParamList = routeNames.reduce(
     (acc, curr) => {
       acc[curr] = screens[curr].initialParams;
       return acc;
@@ -81,8 +90,7 @@ export default function useNavigationBuilder<
   const [initialState] = React.useState(() =>
     router.getInitialState({
       routeNames,
-      initialRouteName,
-      initialParamsList,
+      routeParamList,
     })
   );
 
@@ -103,8 +111,7 @@ export default function useNavigationBuilder<
     // When the list of route names change, the router should handle it to remove invalid routes
     const nextState = router.getStateForRouteNamesChange(state, {
       routeNames,
-      initialRouteName,
-      initialParamsList,
+      routeParamList,
     });
 
     if (state !== nextState) {

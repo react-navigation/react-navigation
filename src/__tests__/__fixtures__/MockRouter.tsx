@@ -1,87 +1,93 @@
-import { Router, CommonAction, NavigationState } from '../../types';
-import { BaseRouter } from '../../index';
+import BaseRouter from '../../BaseRouter';
+import {
+  Router,
+  CommonAction,
+  NavigationState,
+  DefaultRouterOptions,
+} from '../../types';
 
 export type MockActions = CommonAction & {
   type: 'NOOP' | 'REVERSE' | 'UPDATE';
 };
 
-const MockRouter: Router<NavigationState, MockActions> & { key: number } = {
-  key: 0,
+export const MockRouterKey = { current: 0 };
 
-  getInitialState({
-    routeNames,
-    initialRouteName = routeNames[0],
-    initialParamsList,
-  }) {
-    const index = routeNames.indexOf(initialRouteName);
+export default function MockRouter(options: DefaultRouterOptions) {
+  const router: Router<NavigationState, MockActions> = {
+    getInitialState({ routeNames, routeParamList }) {
+      const index =
+        options.initialRouteName === undefined
+          ? 0
+          : routeNames.indexOf(options.initialRouteName);
 
-    return {
-      key: String(MockRouter.key++),
-      index,
-      routeNames,
-      routes: routeNames.map(name => ({
-        name,
-        key: name,
-        params: initialParamsList[name],
-      })),
-    };
-  },
-
-  getRehydratedState({ routeNames, partialState }) {
-    let state = partialState;
-
-    if (state.stale) {
-      state = {
-        ...state,
-        stale: false,
+      return {
+        key: String(MockRouterKey.current++),
+        index,
         routeNames,
-        key: String(MockRouter.key++),
+        routes: routeNames.map(name => ({
+          name,
+          key: name,
+          params: routeParamList[name],
+        })),
       };
-    }
+    },
 
-    return state;
-  },
+    getRehydratedState({ routeNames, partialState }) {
+      let state = partialState;
 
-  getStateForRouteNamesChange(state, { routeNames }) {
-    return {
-      ...state,
-      routeNames,
-      routes: state.routes.filter(route => routeNames.includes(route.name)),
-    };
-  },
+      if (state.stale) {
+        state = {
+          ...state,
+          stale: false,
+          routeNames,
+          key: String(MockRouterKey.current++),
+        };
+      }
 
-  getStateForRouteFocus(state, key) {
-    const index = state.routes.findIndex(r => r.key === key);
-
-    if (index === -1 || index === state.index) {
       return state;
-    }
+    },
 
-    return { ...state, index };
-  },
+    getStateForRouteNamesChange(state, { routeNames }) {
+      return {
+        ...state,
+        routeNames,
+        routes: state.routes.filter(route => routeNames.includes(route.name)),
+      };
+    },
 
-  getStateForAction(state, action) {
-    switch (action.type) {
-      case 'UPDATE':
-        return { ...state };
+    getStateForRouteFocus(state, key) {
+      const index = state.routes.findIndex(r => r.key === key);
 
-      case 'NOOP':
+      if (index === -1 || index === state.index) {
         return state;
+      }
 
-      default:
-        return BaseRouter.getStateForAction(state, action);
-    }
-  },
+      return { ...state, index };
+    },
 
-  shouldActionPropagateToChildren() {
-    return false;
-  },
+    getStateForAction(state, action) {
+      switch (action.type) {
+        case 'UPDATE':
+          return { ...state };
 
-  shouldActionChangeFocus() {
-    return false;
-  },
+        case 'NOOP':
+          return state;
 
-  actionCreators: {},
-};
+        default:
+          return BaseRouter.getStateForAction(state, action);
+      }
+    },
 
-export default MockRouter;
+    shouldActionPropagateToChildren() {
+      return false;
+    },
+
+    shouldActionChangeFocus() {
+      return false;
+    },
+
+    actionCreators: {},
+  };
+
+  return router;
+}
