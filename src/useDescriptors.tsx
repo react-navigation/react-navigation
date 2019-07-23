@@ -1,4 +1,8 @@
 import * as React from 'react';
+import SceneView from './SceneView';
+import NavigationBuilderContext, {
+  ChildActionListener,
+} from './NavigationBuilderContext';
 import {
   Descriptor,
   PartialState,
@@ -8,10 +12,6 @@ import {
   ParamListBase,
   RouteConfig,
 } from './types';
-import SceneView from './SceneView';
-import NavigationBuilderContext, {
-  ChildActionListener,
-} from './NavigationBuilderContext';
 
 type Options<ScreenOptions extends object> = {
   state: NavigationState | PartialState<NavigationState>;

@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { ParamListBase, RouteConfig, TypedNavigator } from './types';
 import Screen from './Screen';
+import { ParamListBase, RouteConfig, TypedNavigator } from './types';
 
 export default function createNavigator<
   ScreenOptions extends object,
