@@ -162,7 +162,7 @@ class PrivateValueStore<T> {
   private __private_value_type?: T;
 }
 
-export type NavigationHelpers<ParamList extends ParamListBase> = {
+type NavigationHelpersCommon<ParamList extends ParamListBase> = {
   /**
    * Dispatch an action or an update function to the router.
    * The update function will receive the current state,
@@ -209,7 +209,11 @@ export type NavigationHelpers<ParamList extends ParamListBase> = {
    * Go back to the previous route in history.
    */
   goBack(): void;
+} & PrivateValueStore<ParamList>;
 
+export type NavigationHelpers<
+  ParamList extends ParamListBase
+> = NavigationHelpersCommon<ParamList> & {
   /**
    * Update the param object for the route.
    * The new params will be shallow merged with the old one.
@@ -221,13 +225,13 @@ export type NavigationHelpers<ParamList extends ParamListBase> = {
     params: ParamList[RouteName],
     target: TargetRoute<RouteName>
   ): void;
-} & PrivateValueStore<ParamList>;
+};
 
 export type NavigationProp<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = string,
   ScreenOptions extends object = {}
-> = Omit<NavigationHelpers<ParamList>, 'setParams'> & {
+> = NavigationHelpersCommon<ParamList> & {
   /**
    * Update the param object for the route.
    * The new params will be shallow merged with the old one.
@@ -263,9 +267,17 @@ export type RouteProp<
       });
 
 export type CompositeNavigationProp<
-  A extends Omit<NavigationHelpers<ParamListBase>, 'setParams'>,
-  B extends Omit<NavigationHelpers<ParamListBase>, 'setParams'>
-> = A & B;
+  A extends NavigationHelpersCommon<ParamListBase>,
+  B extends NavigationHelpersCommon<ParamListBase>
+> = Omit<A & B, keyof NavigationHelpersCommon<any>> &
+  /**
+   * We want the common helpers to combine param list from both navigation options
+   * For example, we should be able to navigate to screens in both A and B
+   */
+  NavigationHelpersCommon<
+    (A extends NavigationHelpersCommon<infer T> ? T : never) &
+      (B extends NavigationHelpersCommon<infer U> ? U : never)
+  >;
 
 export type Descriptor<ScreenOptions extends object> = {
   /**
