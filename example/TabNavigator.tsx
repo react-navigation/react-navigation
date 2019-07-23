@@ -11,6 +11,7 @@ import {
   createNavigator,
   BaseRouter,
   NavigationState,
+  DefaultRouterOptions,
 } from '../src/index';
 
 type Props = {
@@ -52,132 +53,135 @@ export type TabNavigationProp<
   ): void;
 };
 
-const TabRouter: Router<NavigationState, Action | CommonAction> = {
-  ...BaseRouter,
+function TabRouter(options: DefaultRouterOptions) {
+  const router: Router<NavigationState, Action | CommonAction> = {
+    ...BaseRouter,
 
-  getInitialState({
-    routeNames,
-    initialRouteName = routeNames[0],
-    initialParamsList,
-  }) {
-    const index = routeNames.indexOf(initialRouteName);
+    getInitialState({ routeNames, routeParamList }) {
+      const index =
+        options.initialRouteName === undefined
+          ? 0
+          : routeNames.indexOf(options.initialRouteName);
 
-    return {
-      key: `tab-${shortid()}`,
-      index,
-      routeNames,
-      routes: routeNames.map(name => ({
-        name,
-        key: `${name}-${shortid()}`,
-        params: initialParamsList[name],
-      })),
-    };
-  },
-
-  getRehydratedState({ routeNames, partialState }) {
-    let state = partialState;
-
-    if (state.stale) {
-      state = {
-        ...state,
-        stale: false,
-        routeNames,
+      return {
         key: `tab-${shortid()}`,
+        index,
+        routeNames,
+        routes: routeNames.map(name => ({
+          name,
+          key: `${name}-${shortid()}`,
+          params: routeParamList[name],
+        })),
       };
-    }
+    },
 
-    return state;
-  },
+    getRehydratedState({ routeNames, partialState }) {
+      let state = partialState;
 
-  getStateForRouteNamesChange(state, { routeNames, initialParamsList }) {
-    return {
-      ...state,
-      routeNames,
-      routes: routeNames.map(
-        name =>
-          state.routes.find(r => r.name === name) || {
-            name,
-            key: `${name}-${shortid()}`,
-            params: initialParamsList[name],
-          }
-      ),
-    };
-  },
-
-  getStateForRouteFocus(state, key) {
-    const index = state.routes.findIndex(r => r.key === key);
-
-    if (index === -1 || index === state.index) {
-      return state;
-    }
-
-    return { ...state, index };
-  },
-
-  getStateForAction(state, action) {
-    switch (action.type) {
-      case 'JUMP_TO':
-      case 'NAVIGATE': {
-        let index = -1;
-
-        if (action.type === 'NAVIGATE' && action.payload.key) {
-          index = state.routes.findIndex(
-            route => route.key === action.payload.key
-          );
-        } else {
-          index = state.routes.findIndex(
-            route => route.key === action.payload.name
-          );
-        }
-
-        if (index === -1) {
-          return null;
-        }
-
-        return {
+      if (state.stale) {
+        state = {
           ...state,
-          routes:
-            action.payload.params !== undefined
-              ? state.routes.map((route, i) =>
-                  i === index
-                    ? {
-                        ...route,
-                        params: {
-                          ...route.params,
-                          ...action.payload.params,
-                        },
-                      }
-                    : route
-                )
-              : state.routes,
-          index,
+          stale: false,
+          routeNames,
+          key: `tab-${shortid()}`,
         };
       }
 
-      default:
-        return BaseRouter.getStateForAction(state, action);
-    }
-  },
-
-  shouldActionPropagateToChildren(action) {
-    return action.type === 'NAVIGATE';
-  },
-
-  shouldActionChangeFocus(action) {
-    return action.type === 'NAVIGATE';
-  },
-
-  actionCreators: {
-    jumpTo(name: string, params?: object) {
-      return { type: 'JUMP_TO', payload: { name, params } };
+      return state;
     },
-  },
-};
+
+    getStateForRouteNamesChange(state, { routeNames, routeParamList }) {
+      return {
+        ...state,
+        routeNames,
+        routes: routeNames.map(
+          name =>
+            state.routes.find(r => r.name === name) || {
+              name,
+              key: `${name}-${shortid()}`,
+              params: routeParamList[name],
+            }
+        ),
+      };
+    },
+
+    getStateForRouteFocus(state, key) {
+      const index = state.routes.findIndex(r => r.key === key);
+
+      if (index === -1 || index === state.index) {
+        return state;
+      }
+
+      return { ...state, index };
+    },
+
+    getStateForAction(state, action) {
+      switch (action.type) {
+        case 'JUMP_TO':
+        case 'NAVIGATE': {
+          let index = -1;
+
+          if (action.type === 'NAVIGATE' && action.payload.key) {
+            index = state.routes.findIndex(
+              route => route.key === action.payload.key
+            );
+          } else {
+            index = state.routes.findIndex(
+              route => route.key === action.payload.name
+            );
+          }
+
+          if (index === -1) {
+            return null;
+          }
+
+          return {
+            ...state,
+            routes:
+              action.payload.params !== undefined
+                ? state.routes.map((route, i) =>
+                    i === index
+                      ? {
+                          ...route,
+                          params: {
+                            ...route.params,
+                            ...action.payload.params,
+                          },
+                        }
+                      : route
+                  )
+                : state.routes,
+            index,
+          };
+        }
+
+        default:
+          return BaseRouter.getStateForAction(state, action);
+      }
+    },
+
+    shouldActionPropagateToChildren(action) {
+      return action.type === 'NAVIGATE';
+    },
+
+    shouldActionChangeFocus(action) {
+      return action.type === 'NAVIGATE';
+    },
+
+    actionCreators: {
+      jumpTo(name: string, params?: object) {
+        return { type: 'JUMP_TO', payload: { name, params } };
+      },
+    },
+  };
+  return router;
+}
 
 export function TabNavigator(props: Props) {
   const { state, descriptors } = useNavigationBuilder<
     NavigationState,
-    TabNavigationOptions
+    TabNavigationOptions,
+    DefaultRouterOptions
   >(TabRouter, props);
 
   return (

@@ -3,9 +3,9 @@ import { render } from 'react-native-testing-library';
 import Screen from '../Screen';
 import NavigationContainer from '../NavigationContainer';
 import useNavigationBuilder from '../useNavigationBuilder';
-import MockRouter from './__fixtures__/MockRouter';
+import MockRouter, { MockRouterKey } from './__fixtures__/MockRouter';
 
-beforeEach(() => (MockRouter.key = 0));
+beforeEach(() => (MockRouterKey.current = 0));
 
 it('throws if NAVIGATE dispatched with both key and name', () => {
   const TestNavigator = (props: any) => {

@@ -1,31 +1,37 @@
 import * as React from 'react';
 import { render } from 'react-native-testing-library';
+import { Router, DefaultRouterOptions, NavigationState } from '../types';
 import useNavigationBuilder from '../useNavigationBuilder';
 import NavigationContainer from '../NavigationContainer';
 import Screen from '../Screen';
-import MockRouter, { MockActions } from './__fixtures__/MockRouter';
-import { Router, NavigationState } from '../types';
+import MockRouter, {
+  MockActions,
+  MockRouterKey,
+} from './__fixtures__/MockRouter';
 
-beforeEach(() => (MockRouter.key = 0));
+beforeEach(() => (MockRouterKey.current = 0));
 
 it("lets parent handle the action if child didn't", () => {
-  const ParentRouter: Router<NavigationState, MockActions> = {
-    ...MockRouter,
+  function CurrentRouter(options: DefaultRouterOptions) {
+    const CurrentMockRouter = MockRouter(options);
+    const ParentRouter: Router<NavigationState, MockActions> = {
+      ...CurrentMockRouter,
 
-    getStateForAction(state, action) {
-      if (action.type === 'REVERSE') {
-        return {
-          ...state,
-          routes: state.routes.slice().reverse(),
-        };
-      }
+      getStateForAction(state, action) {
+        if (action.type === 'REVERSE') {
+          return {
+            ...state,
+            routes: state.routes.slice().reverse(),
+          };
+        }
 
-      return MockRouter.getStateForAction(state, action);
-    },
-  };
-
+        return CurrentMockRouter.getStateForAction(state, action);
+      },
+    };
+    return ParentRouter;
+  }
   const ParentNavigator = (props: any) => {
-    const { state, descriptors } = useNavigationBuilder(ParentRouter, props);
+    const { state, descriptors } = useNavigationBuilder(CurrentRouter, props);
 
     return descriptors[state.routes[state.index].key].render();
   };
@@ -78,41 +84,54 @@ it("lets parent handle the action if child didn't", () => {
 });
 
 it("lets children handle the action if parent didn't", () => {
-  const ParentRouter: Router<NavigationState, MockActions> = {
-    ...MockRouter,
+  function CurrentParentRouter(options: DefaultRouterOptions) {
+    const CurrentMockRouter = MockRouter(options);
+    const ParentRouter: Router<NavigationState, MockActions> = {
+      ...CurrentMockRouter,
 
-    shouldActionPropagateToChildren() {
-      return true;
-    },
-  };
+      shouldActionPropagateToChildren() {
+        return true;
+      },
+    };
+    return ParentRouter;
+  }
 
-  const ChildRouter: Router<NavigationState, MockActions> = {
-    ...MockRouter,
+  function CurrentChildRouter(options: DefaultRouterOptions) {
+    const CurrentMockRouter = MockRouter(options);
+    const ChildRouter: Router<NavigationState, MockActions> = {
+      ...CurrentMockRouter,
 
-    shouldActionChangeFocus() {
-      return true;
-    },
+      shouldActionChangeFocus() {
+        return true;
+      },
 
-    getStateForAction(state, action) {
-      if (action.type === 'REVERSE') {
-        return {
-          ...state,
-          routes: state.routes.slice().reverse(),
-        };
-      }
-
-      return MockRouter.getStateForAction(state, action);
-    },
-  };
+      getStateForAction(state, action) {
+        if (action.type === 'REVERSE') {
+          return {
+            ...state,
+            routes: state.routes.slice().reverse(),
+          };
+        }
+        return CurrentMockRouter.getStateForAction(state, action);
+      },
+    };
+    return ChildRouter;
+  }
 
   const ChildNavigator = (props: any) => {
-    const { state, descriptors } = useNavigationBuilder(ChildRouter, props);
+    const { state, descriptors } = useNavigationBuilder(
+      CurrentChildRouter,
+      props
+    );
 
     return descriptors[state.routes[state.index].key].render();
   };
 
   const ParentNavigator = (props: any) => {
-    const { state, descriptors } = useNavigationBuilder(ParentRouter, props);
+    const { state, descriptors } = useNavigationBuilder(
+      CurrentParentRouter,
+      props
+    );
 
     return (
       <React.Fragment>

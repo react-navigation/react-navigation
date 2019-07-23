@@ -11,6 +11,7 @@ import {
   Router,
   BaseRouter,
   createNavigator,
+  DefaultRouterOptions,
 } from '../src/index';
 
 type Props = {
@@ -68,192 +69,195 @@ export type StackNavigationProp<
   popToTop(): void;
 };
 
-const StackRouter: Router<NavigationState, CommonAction | Action> = {
-  ...BaseRouter,
+function StackRouter(options: DefaultRouterOptions) {
+  const router: Router<NavigationState, CommonAction | Action> = {
+    ...BaseRouter,
 
-  getInitialState({
-    routeNames,
-    initialRouteName = routeNames[0],
-    initialParamsList,
-  }) {
-    const index = routeNames.indexOf(initialRouteName);
+    getInitialState({ routeNames, routeParamList }) {
+      const index =
+        options.initialRouteName === undefined
+          ? 0
+          : routeNames.indexOf(options.initialRouteName);
 
-    return {
-      key: `stack-${shortid()}`,
-      index,
-      routeNames,
-      routes: routeNames.slice(0, index + 1).map(name => ({
-        name,
-        key: `${name}-${shortid()}`,
-        params: initialParamsList[name],
-      })),
-    };
-  },
-
-  getRehydratedState({ routeNames, partialState }) {
-    let state = partialState;
-
-    if (state.stale) {
-      state = {
-        ...state,
-        stale: false,
-        routeNames,
+      return {
         key: `stack-${shortid()}`,
+        index,
+        routeNames,
+        routes: routeNames.slice(0, index + 1).map(name => ({
+          name,
+          key: `${name}-${shortid()}`,
+          params: routeParamList[name],
+        })),
       };
-    }
+    },
 
-    return state;
-  },
+    getRehydratedState({ routeNames, partialState }) {
+      let state = partialState;
 
-  getStateForRouteNamesChange(state, { routeNames }) {
-    return {
-      ...state,
-      routeNames,
-      routes: state.routes.filter(route => routeNames.includes(route.name)),
-    };
-  },
+      if (state.stale) {
+        state = {
+          ...state,
+          stale: false,
+          routeNames,
+          key: `stack-${shortid()}`,
+        };
+      }
 
-  getStateForRouteFocus(state, key) {
-    const index = state.routes.findIndex(r => r.key === key);
-
-    if (index === -1 || index === state.index) {
       return state;
-    }
+    },
 
-    return {
-      ...state,
-      index,
-      routes: state.routes.slice(0, index + 1),
-    };
-  },
+    getStateForRouteNamesChange(state, { routeNames }) {
+      return {
+        ...state,
+        routeNames,
+        routes: state.routes.filter(route => routeNames.includes(route.name)),
+      };
+    },
 
-  getStateForAction(state, action) {
-    switch (action.type) {
-      case 'PUSH':
-        if (state.routeNames.includes(action.payload.name)) {
-          return {
-            ...state,
-            index: state.index + 1,
-            routes: [
-              ...state.routes,
-              {
-                key: `${action.payload.name}-${shortid()}`,
-                name: action.payload.name,
-                params: action.payload.params,
-              },
-            ],
-          };
-        }
+    getStateForRouteFocus(state, key) {
+      const index = state.routes.findIndex(r => r.key === key);
 
-        return null;
+      if (index === -1 || index === state.index) {
+        return state;
+      }
 
-      case 'POP':
-        if (state.index > 0) {
-          return {
-            ...state,
-            index: state.index - 1,
-            routes: state.routes.slice(
-              0,
-              Math.max(state.routes.length - action.payload.count, 1)
-            ),
-          };
-        }
+      return {
+        ...state,
+        index,
+        routes: state.routes.slice(0, index + 1),
+      };
+    },
 
-        return null;
+    getStateForAction(state, action) {
+      switch (action.type) {
+        case 'PUSH':
+          if (state.routeNames.includes(action.payload.name)) {
+            return {
+              ...state,
+              index: state.index + 1,
+              routes: [
+                ...state.routes,
+                {
+                  key: `${action.payload.name}-${shortid()}`,
+                  name: action.payload.name,
+                  params: action.payload.params,
+                },
+              ],
+            };
+          }
 
-      case 'POP_TO_TOP':
-        return StackRouter.getStateForAction(state, {
-          type: 'POP',
-          payload: { count: state.routes.length - 1 },
-        });
+          return null;
 
-      case 'NAVIGATE':
-        if (
-          action.payload.key ||
-          (action.payload.name &&
-            state.routeNames.includes(action.payload.name))
-        ) {
-          // If the route already exists, navigate to that
-          let index = -1;
+        case 'POP':
+          if (state.index > 0) {
+            return {
+              ...state,
+              index: state.index - 1,
+              routes: state.routes.slice(
+                0,
+                Math.max(state.routes.length - action.payload.count, 1)
+              ),
+            };
+          }
 
+          return null;
+
+        case 'POP_TO_TOP':
+          return router.getStateForAction(state, {
+            type: 'POP',
+            payload: { count: state.routes.length - 1 },
+          });
+
+        case 'NAVIGATE':
           if (
-            state.routes[state.index].name === action.payload.name ||
-            state.routes[state.index].key === action.payload.key
+            action.payload.key ||
+            (action.payload.name &&
+              state.routeNames.includes(action.payload.name))
           ) {
-            index = state.index;
-          } else {
-            for (let i = state.routes.length - 1; i >= 0; i--) {
-              if (
-                state.routes[i].name === action.payload.name ||
-                state.routes[i].key === action.payload.key
-              ) {
-                index = i;
-                break;
+            // If the route already exists, navigate to that
+            let index = -1;
+
+            if (
+              state.routes[state.index].name === action.payload.name ||
+              state.routes[state.index].key === action.payload.key
+            ) {
+              index = state.index;
+            } else {
+              for (let i = state.routes.length - 1; i >= 0; i--) {
+                if (
+                  state.routes[i].name === action.payload.name ||
+                  state.routes[i].key === action.payload.key
+                ) {
+                  index = i;
+                  break;
+                }
               }
             }
+
+            if (index === -1 && action.payload.key) {
+              return null;
+            }
+
+            if (index === -1 && action.payload.name !== undefined) {
+              return router.getStateForAction(state, {
+                type: 'PUSH',
+                payload: {
+                  name: action.payload.name,
+                  params: action.payload.params,
+                },
+              });
+            }
+
+            return {
+              ...state,
+              index,
+              routes: [
+                ...state.routes.slice(0, index),
+                action.payload.params !== undefined
+                  ? {
+                      ...state.routes[index],
+                      params: {
+                        ...state.routes[index].params,
+                        ...action.payload.params,
+                      },
+                    }
+                  : state.routes[index],
+              ],
+            };
           }
+          return null;
 
-          if (index === -1 && action.payload.key) {
-            return null;
-          }
+        case 'GO_BACK':
+          return router.getStateForAction(state, {
+            type: 'POP',
+            payload: { count: 1 },
+          });
 
-          if (index === -1 && action.payload.name !== undefined) {
-            return StackRouter.getStateForAction(state, {
-              type: 'PUSH',
-              payload: {
-                name: action.payload.name,
-                params: action.payload.params,
-              },
-            });
-          }
-
-          return {
-            ...state,
-            index,
-            routes: [
-              ...state.routes.slice(0, index),
-              action.payload.params !== undefined
-                ? {
-                    ...state.routes[index],
-                    params: {
-                      ...state.routes[index].params,
-                      ...action.payload.params,
-                    },
-                  }
-                : state.routes[index],
-            ],
-          };
-        }
-        return null;
-
-      case 'GO_BACK':
-        return StackRouter.getStateForAction(state, {
-          type: 'POP',
-          payload: { count: 1 },
-        });
-
-      default:
-        return BaseRouter.getStateForAction(state, action);
-    }
-  },
-
-  actionCreators: {
-    push(name: string, params?: object) {
-      return { type: 'PUSH', payload: { name, params } };
+        default:
+          return BaseRouter.getStateForAction(state, action);
+      }
     },
-    pop(count: number = 1) {
-      return { type: 'POP', payload: { count } };
+
+    actionCreators: {
+      push(name: string, params?: object) {
+        return { type: 'PUSH', payload: { name, params } };
+      },
+      pop(count: number = 1) {
+        return { type: 'POP', payload: { count } };
+      },
+      popToTop() {
+        return { type: 'POP_TO_TOP' };
+      },
     },
-    popToTop() {
-      return { type: 'POP_TO_TOP' };
-    },
-  },
-};
+  };
+  return router;
+}
 
 export function StackNavigator(props: Props) {
   const { state, descriptors } = useNavigationBuilder<
     NavigationState,
-    StackNavigationOptions
+    StackNavigationOptions,
+    DefaultRouterOptions
   >(StackRouter, props);
 
   return (
