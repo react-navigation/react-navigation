@@ -271,16 +271,30 @@ export type RouteProp<
       });
 
 export type CompositeNavigationProp<
-  A extends NavigationHelpersCommon<ParamListBase>,
+  A extends NavigationProp<ParamListBase>,
   B extends NavigationHelpersCommon<ParamListBase>
-> = Omit<A & B, keyof NavigationHelpersCommon<any>> &
-  /**
-   * We want the common helpers to combine param list from both navigation options
-   * For example, we should be able to navigate to screens in both A and B
-   */
-  NavigationHelpersCommon<
+> = Omit<A & B, keyof NavigationProp<any, any, any>> &
+  NavigationProp<
+    /**
+     * Param list from both navigation objects needs to be combined
+     * For example, we should be able to navigate to screens in both A and B
+     */
     (A extends NavigationHelpersCommon<infer T> ? T : never) &
-      (B extends NavigationHelpersCommon<infer U> ? U : never)
+      (B extends NavigationHelpersCommon<infer U> ? U : never),
+    /**
+     * The route name should refer to the route name specified in the first type
+     * Ideally it should work for any of them, but it's not possible to infer that way
+     */
+    A extends NavigationProp<any, infer R> ? R : string,
+    /**
+     * The type of state should refer to the state specified in the first type
+     */
+    A extends NavigationProp<any, any, infer S> ? S : NavigationState,
+    /**
+     * Screen options from both navigation objects needs to be combined
+     */
+    (A extends NavigationProp<any, any, any, infer O> ? O : {}) &
+      (B extends NavigationProp<any, any, any, infer P> ? P : {})
   >;
 
 export type Descriptor<ScreenOptions extends object> = {

@@ -158,33 +158,40 @@ type TabParamList = {
 In a component, it's possible to annotate the `navigation` and `route` props using these types:
 
 ```ts
-function Profile({
-  navigation,
-  route,
-}: {
+type Props = {
   navigation: StackNavigationProp<StackParamList, 'profile'>;
   route: RouteProp<StackParamList, 'profile'>;
-}) {
-  // Content
-}
-```
+};
 
-For nested navigators, the `navigation` prop is a combination of multiple `navigation` props, so we need to combine multiple types to type them:
-
-```ts
-function Feed({
-  navigation,
-}: {
-  navigation: CompositeNavigationProp<
-    TabNavigationProp<TabParamList, 'feed'>,
-    StackNavigationProp<StackParamList>
-  >;
-}) {
+function Profile(props: Props) {
   // Content
 }
 ```
 
 Annotating the `navigation` prop will be enough for provide type-checking for actions such as `navigate` etc. Annotating `route` will provide type-checking for accessing `params` for the current route.
+
+For nested navigators, the `navigation` prop is a combination of multiple `navigation` props, so we need to combine multiple types to type them. We export a type called `CompositeNavigationProp` to make it easier:
+
+```ts
+type FeedScreenNavigationProp = CompositeNavigationProp<
+  TabNavigationProp<TabParamList, 'feed'>,
+  StackNavigationProp<StackParamList>
+>;
+```
+
+The `CompositeNavigationProp` type takes 2 parameters, first parameter is the primary navigation type (type for the navigator that owns this screen) and second parameter is the secondary navigation type (type for a parent navigator). The primary navigation type should always have the screen's route name as it's second parameter.
+
+For multiple parent navigators, this secondary type should be nested:
+
+```ts
+type FeedScreenNavigationProp = CompositeNavigationProp<
+  TabNavigationProp<TabParamList, 'feed'>,
+  CompositeNavigationProp<
+    StackNavigationProp<StackParamList>,
+    DrawerNavigationProp<DrawerParamList>
+  >
+>;
+```
 
 It's also possible to type-check the navigator to some extent. To do this, we need to pass a generic when creating the navigator object:
 
