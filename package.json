@@ -80,6 +80,7 @@
     "testRegex": "/__tests__/.*\\.(test|spec)\\.(js|tsx?)$",
     "transform": {
       "^.+\\.(js|ts|tsx)$": "babel-jest"
-    }
+    },
+    "setupFiles": ["<rootDir>/jest/setup.js"]
   }
 }
