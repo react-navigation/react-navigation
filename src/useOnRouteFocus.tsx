@@ -3,7 +3,7 @@ import { NavigationAction, NavigationState, Router } from './types';
 import NavigationBuilderContext from './NavigationBuilderContext';
 
 type Options<Action extends NavigationAction> = {
-  router: Router<Action>;
+  router: Router<NavigationState, Action>;
   onAction: (action: NavigationAction, sourceNavigatorKey?: string) => boolean;
   getState: () => NavigationState;
   setState: (state: NavigationState) => void;

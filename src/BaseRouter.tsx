@@ -2,7 +2,10 @@ import shortid from 'shortid';
 import { CommonAction, NavigationState } from './types';
 
 const BaseRouter = {
-  getStateForAction(state: NavigationState, action: CommonAction) {
+  getStateForAction<State extends NavigationState>(
+    state: State,
+    action: CommonAction
+  ): State | null {
     switch (action.type) {
       case 'REPLACE': {
         return {
@@ -35,7 +38,7 @@ const BaseRouter = {
           action.payload.key === state.key
         ) {
           return {
-            ...action.payload,
+            ...(action.payload as any),
             key: state.key,
             routeNames: state.routeNames,
           };

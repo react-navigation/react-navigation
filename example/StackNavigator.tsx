@@ -5,6 +5,7 @@ import shortid from 'shortid';
 import {
   useNavigationBuilder,
   NavigationProp,
+  NavigationState,
   CommonAction,
   ParamListBase,
   Router,
@@ -38,7 +39,12 @@ export type StackNavigationOptions = {
 export type StackNavigationProp<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = string
-> = NavigationProp<ParamList, RouteName, StackNavigationOptions> & {
+> = NavigationProp<
+  ParamList,
+  RouteName,
+  NavigationState,
+  StackNavigationOptions
+> & {
   /**
    * Push a new screen onto the stack.
    *
@@ -62,7 +68,7 @@ export type StackNavigationProp<
   popToTop(): void;
 };
 
-const StackRouter: Router<CommonAction | Action> = {
+const StackRouter: Router<NavigationState, CommonAction | Action> = {
   ...BaseRouter,
 
   getInitialState({
@@ -245,10 +251,10 @@ const StackRouter: Router<CommonAction | Action> = {
 };
 
 export function StackNavigator(props: Props) {
-  const { state, descriptors } = useNavigationBuilder<StackNavigationOptions>(
-    StackRouter,
-    props
-  );
+  const { state, descriptors } = useNavigationBuilder<
+    NavigationState,
+    StackNavigationOptions
+  >(StackRouter, props);
 
   return (
     <div style={{ position: 'relative' }}>

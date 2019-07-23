@@ -1,15 +1,15 @@
 import * as React from 'react';
 import { render } from 'react-native-testing-library';
-import { Router } from '../types';
 import useNavigationBuilder from '../useNavigationBuilder';
 import NavigationContainer from '../NavigationContainer';
 import Screen from '../Screen';
 import MockRouter, { MockActions } from './__fixtures__/MockRouter';
+import { Router, NavigationState } from '../types';
 
 beforeEach(() => (MockRouter.key = 0));
 
 it("lets parent handle the action if child didn't", () => {
-  const ParentRouter: Router<MockActions> = {
+  const ParentRouter: Router<NavigationState, MockActions> = {
     ...MockRouter,
 
     getStateForAction(state, action) {
@@ -78,7 +78,7 @@ it("lets parent handle the action if child didn't", () => {
 });
 
 it("lets children handle the action if parent didn't", () => {
-  const ParentRouter: Router<MockActions> = {
+  const ParentRouter: Router<NavigationState, MockActions> = {
     ...MockRouter,
 
     shouldActionPropagateToChildren() {
@@ -86,7 +86,7 @@ it("lets children handle the action if parent didn't", () => {
     },
   };
 
-  const ChildRouter: Router<MockActions> = {
+  const ChildRouter: Router<NavigationState, MockActions> = {
     ...MockRouter,
 
     shouldActionChangeFocus() {

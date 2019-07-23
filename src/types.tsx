@@ -23,7 +23,9 @@ export type NavigationState = {
   /**
    * List of rendered routes.
    */
-  routes: Array<Route<string> & { state?: NavigationState | PartialState }>;
+  routes: Array<
+    Route<string> & { state?: NavigationState | PartialState<NavigationState> }
+  >;
   /**
    * Whether the navigation state has been rehydrated.
    */
@@ -39,7 +41,7 @@ export type InitialState = Omit<
   routes: Array<Route<string> & { state?: InitialState }>;
 };
 
-export type PartialState = NavigationState & {
+export type PartialState<State extends NavigationState> = State & {
   stale: true;
   key?: undefined;
   routeNames?: undefined;
@@ -68,7 +70,10 @@ export type ActionCreators<Action extends NavigationAction> = {
   [key: string]: (...args: any) => Action;
 };
 
-export type Router<Action extends NavigationAction> = {
+export type Router<
+  State extends NavigationState,
+  Action extends NavigationAction
+> = {
   /**
    * Initialize the navigation state.
    *
@@ -80,7 +85,7 @@ export type Router<Action extends NavigationAction> = {
     routeNames: string[];
     initialRouteName: string;
     initialParamsList: ParamListBase;
-  }): NavigationState;
+  }): State;
 
   /**
    * Rehydrate the full navigation state from a given partial state.
@@ -90,8 +95,8 @@ export type Router<Action extends NavigationAction> = {
    */
   getRehydratedState(options: {
     routeNames: string[];
-    partialState: NavigationState | PartialState;
-  }): NavigationState;
+    partialState: State | PartialState<State>;
+  }): State;
 
   /**
    * Take the current state and updated list of route names, and return a new state.
@@ -102,13 +107,13 @@ export type Router<Action extends NavigationAction> = {
    * @param options.initialParamsList Object containing initial params for each route.
    */
   getStateForRouteNamesChange(
-    state: NavigationState,
+    state: State,
     options: {
       routeNames: string[];
       initialRouteName: string;
       initialParamsList: ParamListBase;
     }
-  ): NavigationState;
+  ): State;
 
   /**
    * Take the current state and key of a route, and return a new state with the route focused
@@ -116,7 +121,7 @@ export type Router<Action extends NavigationAction> = {
    * @param state State object to apply the action on.
    * @param key Key of the route to focus.
    */
-  getStateForRouteFocus(state: NavigationState, key: string): NavigationState;
+  getStateForRouteFocus(state: State, key: string): State;
 
   /**
    * Take the current state and action, and return a new state.
@@ -125,10 +130,7 @@ export type Router<Action extends NavigationAction> = {
    * @param state State object to apply the action on.
    * @param action Action object to apply.
    */
-  getStateForAction(
-    state: NavigationState,
-    action: Action
-  ): NavigationState | null;
+  getStateForAction(state: State, action: Action): State | null;
 
   /**
    * Whether the action bubbles to other navigators
@@ -162,16 +164,17 @@ class PrivateValueStore<T> {
   private __private_value_type?: T;
 }
 
-type NavigationHelpersCommon<ParamList extends ParamListBase> = {
+type NavigationHelpersCommon<
+  ParamList extends ParamListBase,
+  State extends NavigationState = NavigationState
+> = {
   /**
    * Dispatch an action or an update function to the router.
    * The update function will receive the current state,
    *
    * @param action Action object or update function.
    */
-  dispatch(
-    action: NavigationAction | ((state: NavigationState) => NavigationState)
-  ): void;
+  dispatch(action: NavigationAction | ((state: State) => State)): void;
 
   /**
    * Navigate to a route in current navigation tree.
@@ -203,7 +206,7 @@ type NavigationHelpersCommon<ParamList extends ParamListBase> = {
    *
    * @param state Navigation state object.
    */
-  reset(state: PartialState & { key?: string }): void;
+  reset(state: PartialState<State> & { key?: string }): void;
 
   /**
    * Go back to the previous route in history.
@@ -230,8 +233,9 @@ export type NavigationHelpers<
 export type NavigationProp<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = string,
+  State extends NavigationState = NavigationState,
   ScreenOptions extends object = {}
-> = NavigationHelpersCommon<ParamList> & {
+> = NavigationHelpersCommon<ParamList, State> & {
   /**
    * Update the param object for the route.
    * The new params will be shallow merged with the old one.

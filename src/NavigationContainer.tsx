@@ -4,18 +4,20 @@ import { Route, NavigationState, InitialState, PartialState } from './types';
 
 type Props = {
   initialState?: InitialState;
-  onStateChange?: (state: NavigationState | PartialState | undefined) => void;
+  onStateChange?: (
+    state: NavigationState | PartialState<NavigationState> | undefined
+  ) => void;
   children: React.ReactNode;
 };
 
-type State = NavigationState | PartialState | undefined;
+type State = NavigationState | PartialState<NavigationState> | undefined;
 
 const MISSING_CONTEXT_ERROR =
   "We couldn't find a navigation context. Have you wrapped your app with 'NavigationContainer'?";
 
 export const NavigationStateContext = React.createContext<{
-  state?: NavigationState | PartialState;
-  getState: () => NavigationState | PartialState | undefined;
+  state?: NavigationState | PartialState<NavigationState>;
+  getState: () => NavigationState | PartialState<NavigationState> | undefined;
   setState: (state: NavigationState | undefined) => void;
   key?: string;
   performTransaction: (action: () => void) => void;
@@ -33,7 +35,7 @@ export const NavigationStateContext = React.createContext<{
 
 const getPartialState = (
   state: InitialState | undefined
-): PartialState | undefined => {
+): PartialState<NavigationState> | undefined => {
   if (state === undefined) {
     return;
   }
@@ -46,7 +48,9 @@ const getPartialState = (
     routeNames: undefined,
     routes: state.routes.map(route => {
       if (route.state === undefined) {
-        return route as Route<string> & { state?: PartialState };
+        return route as Route<string> & {
+          state?: PartialState<NavigationState>;
+        };
       }
 
       return { ...route, state: getPartialState(route.state) };

@@ -5,7 +5,7 @@ import NavigationBuilderContext, {
 import { NavigationAction, NavigationState, Router } from './types';
 
 type Options = {
-  router: Router<NavigationAction>;
+  router: Router<NavigationState, NavigationAction>;
   key?: string;
   getState: () => NavigationState;
   setState: (state: NavigationState) => void;
