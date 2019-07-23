@@ -4,6 +4,7 @@ import useNavigationBuilder from '../useNavigationBuilder';
 import NavigationContainer from '../NavigationContainer';
 import Screen from '../Screen';
 import MockRouter from './__fixtures__/MockRouter';
+import { NavigationState } from '../types';
 
 jest.useFakeTimers();
 
@@ -11,10 +12,10 @@ beforeEach(() => (MockRouter.key = 0));
 
 it('sets options with options prop as an object', () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors } = useNavigationBuilder<{ title?: string }>(
-      MockRouter,
-      props
-    );
+    const { state, descriptors } = useNavigationBuilder<
+      NavigationState,
+      { title?: string }
+    >(MockRouter, props);
     const { render, options } = descriptors[state.routes[state.index].key];
 
     return (
@@ -54,10 +55,10 @@ it('sets options with options prop as an object', () => {
 
 it('sets options with options prop as a fuction', () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors } = useNavigationBuilder<{ title?: string }>(
-      MockRouter,
-      props
-    );
+    const { state, descriptors } = useNavigationBuilder<
+      NavigationState,
+      { title?: string }
+    >(MockRouter, props);
     const { render, options } = descriptors[state.routes[state.index].key];
 
     return (
@@ -98,10 +99,13 @@ it('sets options with options prop as a fuction', () => {
 
 it('sets initial options with setOptions', () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors } = useNavigationBuilder<{
-      title?: string;
-      color?: string;
-    }>(MockRouter, props);
+    const { state, descriptors } = useNavigationBuilder<
+      NavigationState,
+      {
+        title?: string;
+        color?: string;
+      }
+    >(MockRouter, props);
     const { render, options } = descriptors[state.routes[state.index].key];
 
     return (
@@ -147,7 +151,10 @@ it('sets initial options with setOptions', () => {
 
 it('updates options with setOptions', () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors } = useNavigationBuilder<any>(MockRouter, props);
+    const { state, descriptors } = useNavigationBuilder<NavigationState, any>(
+      MockRouter,
+      props
+    );
     const { render, options } = descriptors[state.routes[state.index].key];
 
     return (

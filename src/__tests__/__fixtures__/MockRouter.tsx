@@ -1,11 +1,11 @@
-import { Router, CommonAction } from '../../types';
+import { Router, CommonAction, NavigationState } from '../../types';
 import { BaseRouter } from '../../index';
 
 export type MockActions = CommonAction & {
   type: 'NOOP' | 'REVERSE' | 'UPDATE';
 };
 
-const MockRouter: Router<MockActions> & { key: number } = {
+const MockRouter: Router<NavigationState, MockActions> & { key: number } = {
   key: 0,
 
   getInitialState({

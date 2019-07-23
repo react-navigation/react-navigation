@@ -5,9 +5,9 @@ import useRegisterNavigator from './useRegisterNavigator';
 import useDescriptors from './useDescriptors';
 import useNavigationHelpers from './useNavigationHelpers';
 import useOnAction from './useOnAction';
-import { Router, NavigationState, RouteConfig, ParamListBase } from './types';
 import useOnRouteFocus from './useOnRouteFocus';
 import useChildActionListeners from './useChildActionListeners';
+import { Router, NavigationState, RouteConfig, ParamListBase } from './types';
 
 type Options = {
   initialRouteName?: string;
@@ -49,10 +49,10 @@ const getRouteConfigsFromChildren = <ScreenOptions extends object>(
     );
   }, []);
 
-export default function useNavigationBuilder<ScreenOptions extends object>(
-  router: Router<any>,
-  options: Options
-) {
+export default function useNavigationBuilder<
+  State extends NavigationState,
+  ScreenOptions extends object
+>(router: Router<State, any>, options: Options) {
   useRegisterNavigator();
 
   const screens = getRouteConfigsFromChildren<ScreenOptions>(
@@ -96,7 +96,7 @@ export default function useNavigationBuilder<ScreenOptions extends object>(
 
   let state = router.getRehydratedState({
     routeNames,
-    partialState: currentState,
+    partialState: currentState as any,
   });
 
   if (!isArrayEqual(state.routeNames, routeNames)) {
@@ -130,10 +130,10 @@ export default function useNavigationBuilder<ScreenOptions extends object>(
   }, []);
 
   const getState = React.useCallback(
-    (): NavigationState =>
+    (): State =>
       router.getRehydratedState({
         routeNames,
-        partialState: getCurrentState() || state,
+        partialState: (getCurrentState() as any) || state,
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [getCurrentState, router.getRehydratedState, router.getInitialState]

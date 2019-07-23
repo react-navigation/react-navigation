@@ -1,4 +1,4 @@
-import { PartialState, TargetRoute } from './types';
+import { PartialState, NavigationState, TargetRoute } from './types';
 
 export type Action =
   | { type: 'GO_BACK' }
@@ -14,7 +14,7 @@ export type Action =
     }
   | {
       type: 'RESET';
-      payload: PartialState & { key?: string };
+      payload: PartialState<NavigationState> & { key?: string };
     }
   | {
       type: 'SET_PARAMS';
@@ -47,7 +47,9 @@ export function replace(name: string, params?: object): Action {
   return { type: 'REPLACE', payload: { name, params } };
 }
 
-export function reset(state: PartialState & { key?: string }): Action {
+export function reset(
+  state: PartialState<NavigationState> & { key?: string }
+): Action {
   return { type: 'RESET', payload: state };
 }
 

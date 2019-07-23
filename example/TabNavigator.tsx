@@ -10,6 +10,7 @@ import {
   Router,
   createNavigator,
   BaseRouter,
+  NavigationState,
 } from '../src/index';
 
 type Props = {
@@ -32,7 +33,12 @@ export type TabNavigationOptions = {
 export type TabNavigationProp<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = string
-> = NavigationProp<ParamList, RouteName, TabNavigationOptions> & {
+> = NavigationProp<
+  ParamList,
+  RouteName,
+  NavigationState,
+  TabNavigationOptions
+> & {
   /**
    * Jump to an existing tab.
    *
@@ -46,7 +52,7 @@ export type TabNavigationProp<
   ): void;
 };
 
-const TabRouter: Router<Action | CommonAction> = {
+const TabRouter: Router<NavigationState, Action | CommonAction> = {
   ...BaseRouter,
 
   getInitialState({
@@ -169,7 +175,10 @@ const TabRouter: Router<Action | CommonAction> = {
 };
 
 export function TabNavigator(props: Props) {
-  const { state, descriptors } = useNavigationBuilder(TabRouter, props);
+  const { state, descriptors } = useNavigationBuilder<
+    NavigationState,
+    TabNavigationOptions
+  >(TabRouter, props);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'row', height: '100%' }}>
