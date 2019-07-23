@@ -5,6 +5,8 @@ import useRegisterNavigator from './useRegisterNavigator';
 import useDescriptors from './useDescriptors';
 import useNavigationHelpers from './useNavigationHelpers';
 import useOnAction from './useOnAction';
+import useOnRouteFocus from './useOnRouteFocus';
+import useChildActionListeners from './useChildActionListeners';
 import {
   DefaultRouterOptions,
   NavigationState,
@@ -13,8 +15,6 @@ import {
   Router,
   RouterFactory,
 } from './types';
-import useOnRouteFocus from './useOnRouteFocus';
-import useChildActionListeners from './useChildActionListeners';
 
 type Options = {
   children: React.ReactNode;
