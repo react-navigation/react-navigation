@@ -18,7 +18,7 @@
   },
   "author": "Satyajit Sahoo <satyajit.happy@gmail.com> (https://github.com/satya164/)",
   "scripts": {
-    "lint": "eslint .",
+    "lint": "eslint --ext '.js,.ts,.tsx' .",
     "typescript": "tsc --noEmit",
     "test": "jest",
     "prebuild": "del lib/ types/",
