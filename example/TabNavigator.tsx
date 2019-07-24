@@ -127,7 +127,7 @@ function TabRouter(options: DefaultRouterOptions) {
             );
           } else {
             index = state.routes.findIndex(
-              route => route.key === action.payload.name
+              route => route.name === action.payload.name
             );
           }
 
