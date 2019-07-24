@@ -3,6 +3,7 @@ import SceneView from './SceneView';
 import NavigationBuilderContext, {
   ChildActionListener,
 } from './NavigationBuilderContext';
+import useNavigationCache from './useNavigationCache';
 import {
   Descriptor,
   PartialState,
@@ -54,6 +55,12 @@ export default function useDescriptors<ScreenOptions extends object>({
     ]
   );
 
+  const navigations = useNavigationCache({
+    state,
+    navigation,
+    setOptions,
+  });
+
   return state.routes.reduce(
     (acc, route) => {
       const screen = screens[route.name];
@@ -63,12 +70,11 @@ export default function useDescriptors<ScreenOptions extends object>({
           return (
             <NavigationBuilderContext.Provider key={route.key} value={context}>
               <SceneView
-                navigation={navigation}
+                navigation={navigations[route.key]}
                 route={route}
                 screen={screen}
                 getState={getState}
                 setState={setState}
-                setOptions={setOptions}
               />
             </NavigationBuilderContext.Provider>
           );
@@ -79,7 +85,7 @@ export default function useDescriptors<ScreenOptions extends object>({
             : screen.options({
                 // @ts-ignore
                 route,
-                navigation,
+                navigation: navigations[route.key],
               })),
           ...options[route.key],
         },
