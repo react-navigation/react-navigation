@@ -32,7 +32,7 @@ export default function MockRouter(options: DefaultRouterOptions) {
       };
     },
 
-    getRehydratedState({ routeNames, partialState }) {
+    getRehydratedState({ key, routeNames, partialState }) {
       let state = partialState;
 
       if (state.stale) {
@@ -40,7 +40,7 @@ export default function MockRouter(options: DefaultRouterOptions) {
           ...state,
           stale: false,
           routeNames,
-          key: String(MockRouterKey.current++),
+          key,
         };
       }
 

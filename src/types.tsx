@@ -103,6 +103,7 @@ export type Router<
    * @param options.partialState Navigation state to rehydrate from.
    */
   getRehydratedState(options: {
+    key: string;
     routeNames: string[];
     partialState: State | PartialState<State>;
   }): State;

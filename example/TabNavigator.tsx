@@ -75,7 +75,7 @@ function TabRouter(options: DefaultRouterOptions) {
       };
     },
 
-    getRehydratedState({ routeNames, partialState }) {
+    getRehydratedState({ key, routeNames, partialState }) {
       let state = partialState;
 
       if (state.stale) {
@@ -83,7 +83,7 @@ function TabRouter(options: DefaultRouterOptions) {
           ...state,
           stale: false,
           routeNames,
-          key: `tab-${shortid()}`,
+          key,
         };
       }
 

@@ -103,6 +103,7 @@ export default function useNavigationBuilder<
   } = React.useContext(NavigationStateContext);
 
   let state = router.getRehydratedState({
+    key: initialState.key,
     routeNames,
     partialState: currentState as any,
   });
@@ -139,6 +140,7 @@ export default function useNavigationBuilder<
   const getState = React.useCallback(
     (): State =>
       router.getRehydratedState({
+        key: initialState.key,
         routeNames,
         partialState: (getCurrentState() as any) || state,
       }),

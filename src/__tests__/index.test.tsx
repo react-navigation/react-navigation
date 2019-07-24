@@ -99,7 +99,7 @@ it('rehydrates state for a navigator on navigation', () => {
 
   expect(onStateChange).lastCalledWith({
     index: 1,
-    key: '2',
+    key: '0',
     routeNames: ['foo', 'bar'],
     routes: [{ key: 'foo', name: 'foo' }, { key: 'bar', name: 'bar' }],
     stale: false,
