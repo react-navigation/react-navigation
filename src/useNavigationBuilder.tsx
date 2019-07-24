@@ -87,26 +87,30 @@ export default function useNavigationBuilder<
     {} as { [key: string]: object | undefined }
   );
 
-  const [initialState] = React.useState(() =>
-    router.getInitialState({
-      routeNames,
-      routeParamList,
-    })
-  );
-
   const {
-    state: currentState = initialState,
+    state: currentState,
     getState: getCurrentState,
     setState,
     key,
     performTransaction,
   } = React.useContext(NavigationStateContext);
 
-  let state = router.getRehydratedState({
-    key: initialState.key,
-    routeNames,
-    partialState: currentState as any,
-  });
+  const [initialState] = React.useState(() =>
+    currentState === undefined
+      ? router.getInitialState({
+          routeNames,
+          routeParamList,
+        })
+      : router.getRehydratedState({
+          routeNames,
+          partialState: currentState as any,
+        })
+  );
+
+  let state =
+    currentState === undefined || currentState.stale
+      ? initialState
+      : (currentState as State);
 
   if (!isArrayEqual(state.routeNames, routeNames)) {
     // When the list of route names change, the router should handle it to remove invalid routes
@@ -137,16 +141,13 @@ export default function useNavigationBuilder<
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const getState = React.useCallback(
-    (): State =>
-      router.getRehydratedState({
-        key: initialState.key,
-        routeNames,
-        partialState: (getCurrentState() as any) || state,
-      }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [getCurrentState, router.getRehydratedState, router.getInitialState]
-  );
+  const getState = React.useCallback((): State => {
+    const currentState = getCurrentState();
+
+    return currentState === undefined || currentState.stale
+      ? initialState
+      : (currentState as State);
+  }, [getCurrentState, initialState]);
 
   const {
     listeners: actionListeners,
