@@ -6,53 +6,27 @@ import EnsureSingleNavigator from './EnsureSingleNavigator';
 import {
   Route,
   ParamListBase,
-  NavigationAction,
   NavigationState,
-  NavigationHelpers,
+  NavigationProp,
   RouteConfig,
 } from './types';
 
 type Props<ScreenOptions extends object> = {
   screen: RouteConfig<ParamListBase, string, ScreenOptions>;
-  navigation: NavigationHelpers<ParamListBase>;
+  navigation: NavigationProp<ParamListBase>;
   route: Route<string> & { state?: NavigationState };
   getState: () => NavigationState;
   setState: (state: NavigationState) => void;
-  setOptions: (
-    cb: (options: { [key: string]: object }) => { [key: string]: object }
-  ) => void;
 };
 
 export default function SceneView<ScreenOptions extends object>({
   screen,
   route,
-  navigation: helpers,
+  navigation,
   getState,
   setState,
-  setOptions,
 }: Props<ScreenOptions>) {
   const { performTransaction } = React.useContext(NavigationStateContext);
-
-  const navigation = React.useMemo(
-    () => ({
-      ...helpers,
-      dispatch: (
-        action: NavigationAction | ((state: NavigationState) => NavigationState)
-      ) =>
-        helpers.dispatch(
-          typeof action === 'object' ? { source: route.key, ...action } : action
-        ),
-      setOptions: (options: object) =>
-        setOptions(o => ({
-          ...o,
-          [route.key]: {
-            ...o[route.key],
-            ...options,
-          },
-        })),
-    }),
-    [helpers, route.key, setOptions]
-  );
 
   const getCurrentState = React.useCallback(() => {
     const state = getState();
