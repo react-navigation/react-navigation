@@ -91,7 +91,7 @@ function StackRouter(options: DefaultRouterOptions) {
       };
     },
 
-    getRehydratedState({ key, routeNames, partialState }) {
+    getRehydratedState({ routeNames, partialState }) {
       let state = partialState;
 
       if (state.stale) {
@@ -99,7 +99,7 @@ function StackRouter(options: DefaultRouterOptions) {
           ...state,
           stale: false,
           routeNames,
-          key,
+          key: `stack-${shortid()}`,
         };
       }
 
