@@ -6,74 +6,13 @@ import {
   View,
   Keyboard,
   Platform,
-  StyleProp,
-  TextStyle,
-  ViewStyle,
   LayoutChangeEvent,
-  AccessibilityRole,
-  AccessibilityState,
 } from 'react-native';
 import SafeAreaView from 'react-native-safe-area-view';
 
 import CrossFadeIcon from './CrossFadeIcon';
 import withDimensions from '../utils/withDimensions';
-import { Route, NavigationProp } from '../types';
-
-type Orientation = 'horizontal' | 'vertical';
-type Position = 'beside-icon' | 'below-icon';
-type LabelPosition =
-  | Position
-  | ((options: { deviceOrientation: Orientation }) => Position);
-
-export type TabBarOptions = {
-  keyboardHidesTabBar: boolean;
-  activeTintColor?: string;
-  inactiveTintColor?: string;
-  activeBackgroundColor?: string;
-  inactiveBackgroundColor?: string;
-  allowFontScaling: boolean;
-  showLabel: boolean;
-  showIcon: boolean;
-  labelStyle: StyleProp<TextStyle>;
-  tabStyle: StyleProp<ViewStyle>;
-  labelPosition?: LabelPosition;
-  adaptive?: boolean;
-  style: StyleProp<ViewStyle>;
-};
-
-type Props = TabBarOptions & {
-  navigation: NavigationProp;
-  onTabPress: (props: { route: Route }) => void;
-  onTabLongPress: (props: { route: Route }) => void;
-  getAccessibilityLabel: (props: { route: Route }) => string | undefined;
-  getAccessibilityRole: (props: {
-    route: Route;
-  }) => AccessibilityRole | undefined;
-  getAccessibilityStates: (props: { route: Route }) => AccessibilityState[];
-  getButtonComponent: (props: {
-    route: Route;
-  }) => React.ComponentType<any> | undefined;
-  getLabelText: (props: {
-    route: Route;
-  }) =>
-    | ((scene: {
-        focused: boolean;
-        tintColor?: string;
-        orientation: 'horizontal' | 'vertical';
-      }) => React.ReactNode)
-    | string
-    | undefined;
-  getTestID: (props: { route: Route }) => string;
-  renderIcon: (props: {
-    route: Route;
-    focused: boolean;
-    tintColor?: string;
-    horizontal?: boolean;
-  }) => React.ReactNode;
-  dimensions: { width: number; height: number };
-  isLandscape: boolean;
-  safeAreaInset: React.ComponentProps<typeof SafeAreaView>['forceInset'];
-};
+import { Route, BottomTabBarProps } from '../types';
 
 type State = {
   layout: { height: number; width: number };
@@ -88,7 +27,9 @@ const isIOS11 = majorVersion >= 11 && isIos;
 const DEFAULT_MAX_TAB_ITEM_WIDTH = 125;
 
 class TouchableWithoutFeedbackWrapper extends React.Component<
-  React.ComponentProps<typeof TouchableWithoutFeedback>
+  React.ComponentProps<typeof TouchableWithoutFeedback> & {
+    children: React.ReactNode;
+  }
 > {
   render() {
     const {
@@ -117,7 +58,7 @@ class TouchableWithoutFeedbackWrapper extends React.Component<
   }
 }
 
-class TabBarBottom extends React.Component<Props, State> {
+class TabBarBottom extends React.Component<BottomTabBarProps, State> {
   static defaultProps = {
     keyboardHidesTabBar: true,
     activeTintColor: '#007AFF',
