@@ -4,7 +4,7 @@
   "private": true,
   "main": "./node_modules/expo/AppEntry.js",
   "scripts": {
-    "postinstall": "patch-package && rm -rf node_modules/react-navigation/node_modules/react-native && rm -rf node_modules/react-navigation/node_modules/@types && rm -rf node_modules/react-navigation/node_modules/examples && rm -rf node_modules/react-navigation/node_modules/react-native-gesture-handler && rm -rf node_modules/react-navigation/node_modules/react",
+    "postinstall": "patch-package && rm -rf node_modules/react-navigation/node_modules/react-native && rm -rf node_modules/react-navigation/node_modules/@types && rm -rf node_modules/react-navigation/node_modules/examples && rm -rf node_modules/react-navigation/node_modules/react-native-gesture-handler && rm -rf node_modules/react-navigation/node_modules/react && rm -rf node_modules/react-navigation/examples",
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
