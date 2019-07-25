@@ -1,5 +1,10 @@
 import * as React from 'react';
-import { View, StyleSheet } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  AccessibilityRole,
+  AccessibilityState,
+} from 'react-native';
 
 // eslint-disable-next-line import/no-unresolved
 import { ScreenContainer } from 'react-native-screens';
@@ -7,18 +12,29 @@ import { ScreenContainer } from 'react-native-screens';
 import createTabNavigator, {
   NavigationViewProps,
 } from '../utils/createTabNavigator';
-import BottomTabBar, { TabBarOptions } from '../views/BottomTabBar';
+import BottomTabBar from '../views/BottomTabBar';
 import ResourceSavingScene from '../views/ResourceSavingScene';
-import { NavigationProp, Route, SceneDescriptor } from '../types';
+import {
+  NavigationProp,
+  Route,
+  SceneDescriptor,
+  NavigationBottomTabOptions,
+  BottomTabBarOptions,
+} from '../types';
 
 type Props = NavigationViewProps & {
-  getAccessibilityRole: (props: { route: any }) => string;
-  getAccessibilityStates: (props: { route: any }) => string[];
+  getAccessibilityRole: (props: {
+    route: Route;
+  }) => AccessibilityRole | undefined;
+  getAccessibilityStates: (props: {
+    route: Route;
+    focused: boolean;
+  }) => AccessibilityState[];
   lazy?: boolean;
   tabBarComponent?: React.ComponentType<any>;
-  tabBarOptions?: TabBarOptions;
+  tabBarOptions?: BottomTabBarOptions;
   navigation: NavigationProp;
-  descriptors: { [key: string]: SceneDescriptor };
+  descriptors: { [key: string]: SceneDescriptor<NavigationBottomTabOptions> };
   screenProps?: unknown;
 };
 
@@ -29,9 +45,12 @@ type State = {
 class TabNavigationView extends React.PureComponent<Props, State> {
   static defaultProps = {
     lazy: true,
-    getAccessibilityRole: () => 'button',
-    getAccessibilityStates: ({ focused }: { focused: boolean }) =>
-      focused ? ['selected'] : [],
+    getAccessibilityRole: (): AccessibilityRole => 'button',
+    getAccessibilityStates: ({
+      focused,
+    }: {
+      focused: boolean;
+    }): AccessibilityState[] => (focused ? ['selected'] : []),
   };
 
   static getDerivedStateFromProps(nextProps: Props, prevState: State) {
@@ -157,4 +176,6 @@ const styles = StyleSheet.create({
   },
 });
 
-export default createTabNavigator(TabNavigationView);
+export default createTabNavigator<NavigationBottomTabOptions, Props>(
+  TabNavigationView
+);
