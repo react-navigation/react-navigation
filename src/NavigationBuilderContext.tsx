@@ -3,7 +3,8 @@ import { NavigationAction } from './types';
 
 export type ChildActionListener = (
   action: NavigationAction,
-  sourceRouteKey?: string
+  sourceRouteKey?: string,
+  targetForInternalDispatching?: string | null
 ) => boolean;
 
 const NavigationBuilderContext = React.createContext<{
