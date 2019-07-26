@@ -33,8 +33,8 @@ type Props = TransitionPreset & {
   onOpenRoute: (props: { route: Route }) => void;
   onCloseRoute: (props: { route: Route }) => void;
   onGoBack: (props: { route: Route }) => void;
-  onTransitionStart?: (props: { route: Route }) => void;
-  onTransitionEnd?: (props: { route: Route }) => void;
+  onTransitionStart?: (props: { route: Route }, closing: boolean) => void;
+  onTransitionEnd?: (props: { route: Route }, closing: boolean) => void;
   onPageChangeStart?: () => void;
   onPageChangeConfirm?: () => void;
   onPageChangeCancel?: () => void;
@@ -52,14 +52,14 @@ export default class StackItem extends React.PureComponent<Props> {
   private handleOpen = () => {
     const { scene, onTransitionEnd, onOpenRoute } = this.props;
 
-    onTransitionEnd && onTransitionEnd({ route: scene.route });
+    onTransitionEnd && onTransitionEnd({ route: scene.route }, false);
     onOpenRoute({ route: scene.route });
   };
 
   private handleClose = () => {
     const { scene, onTransitionEnd, onCloseRoute } = this.props;
 
-    onTransitionEnd && onTransitionEnd({ route: scene.route });
+    onTransitionEnd && onTransitionEnd({ route: scene.route }, true);
     onCloseRoute({ route: scene.route });
   };
 
@@ -78,7 +78,7 @@ export default class StackItem extends React.PureComponent<Props> {
       onPageChangeCancel && onPageChangeCancel();
     }
 
-    onTransitionStart && onTransitionStart({ route: scene.route });
+    onTransitionStart && onTransitionStart({ route: scene.route }, closing);
     closing && onGoBack({ route: scene.route });
   };
 
