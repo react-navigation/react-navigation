@@ -531,11 +531,14 @@ declare module 'react-navigation' {
     | NavigationCloseDrawerAction
     | NavigationToggleDrawerAction;
 
+  export type NavigationSwitchAction = NavigationJumpToAction;
+
   export type NavigationAction =
     | NavigationInitAction
     | NavigationStackAction
     | NavigationTabAction
-    | NavigationDrawerAction;
+    | NavigationDrawerAction
+    | NavigationSwitchAction;
 
   export type NavigationRouteConfig =
     | NavigationComponent
