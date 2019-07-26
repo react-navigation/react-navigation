@@ -254,21 +254,27 @@ export default class Stack extends React.Component<Props, State> {
     }));
   };
 
-  private handleTransitionStart = ({ route }: { route: Route }) => {
+  private handleTransitionStart = (
+    { route }: { route: Route },
+    closing: boolean
+  ) => {
     const { descriptors } = this.props;
     const descriptor = descriptors[route.key];
 
     descriptor &&
       descriptor.options.onTransitionStart &&
-      descriptor.options.onTransitionStart();
+      descriptor.options.onTransitionStart(closing);
   };
 
-  private handleTransitionEnd = ({ route }: { route: Route }) => {
+  private handleTransitionEnd = (
+    { route }: { route: Route },
+    closing: boolean
+  ) => {
     const descriptor = this.props.descriptors[route.key];
 
     descriptor &&
       descriptor.options.onTransitionEnd &&
-      descriptor.options.onTransitionEnd();
+      descriptor.options.onTransitionEnd(closing);
   };
 
   render() {
