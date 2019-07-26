@@ -1,6 +1,17 @@
 import * as React from 'react';
+import * as BaseActions from './BaseActions';
 import EnsureSingleNavigator from './EnsureSingleNavigator';
-import { Route, NavigationState, InitialState, PartialState } from './types';
+import NavigationBuilderContext from './NavigationBuilderContext';
+import useChildActionListeners from './useChildActionListeners';
+import {
+  Route,
+  NavigationState,
+  InitialState,
+  PartialState,
+  ParamListBase,
+  NavigationHelpers,
+  NavigationAction,
+} from './types';
 
 type Props = {
   initialState?: InitialState;
@@ -58,18 +69,55 @@ const getPartialState = (
   };
 };
 
-export default function NavigationContainer({
-  initialState,
-  onStateChange,
-  children,
-}: Props) {
+function NavigationContainer(
+  { initialState, onStateChange, children }: Props,
+  ref: React.Ref<NavigationHelpers<ParamListBase>>
+) {
   const [state, setState] = React.useState<State>(() =>
     getPartialState(initialState)
   );
 
+  const dispatch = (action: NavigationAction) =>
+    context.performTransaction(() => {
+      for (let i = 0; i < actionListeners.length; i++) {
+        actionListeners[i](action, undefined, null);
+      }
+    });
+
+  React.useImperativeHandle(ref, () => ({
+    dispatch,
+    ...(Object.keys(BaseActions) as Array<keyof typeof BaseActions>).reduce<
+      any
+    >((acc, name) => {
+      acc[name] = (...args: any[]) =>
+        dispatch(
+          // eslint-disable-next-line import/namespace
+          BaseActions[name](
+            // @ts-ignore
+            ...args
+          )
+        );
+      return acc;
+    }, {}),
+  }));
+
   const navigationStateRef = React.useRef<State | null>(null);
   const isTransactionActiveRef = React.useRef<boolean>(false);
   const isFirstMountRef = React.useRef<boolean>(true);
+
+  const {
+    listeners: actionListeners,
+    addActionListener,
+    removeActionListener,
+  } = useChildActionListeners();
+
+  const navigationContext = React.useMemo(
+    () => ({
+      addActionListener,
+      removeActionListener,
+    }),
+    [addActionListener, removeActionListener]
+  );
 
   const context = React.useMemo(
     () => ({
@@ -124,7 +172,11 @@ export default function NavigationContainer({
 
   return (
     <NavigationStateContext.Provider value={context}>
-      <EnsureSingleNavigator>{children}</EnsureSingleNavigator>
+      <NavigationBuilderContext.Provider value={navigationContext}>
+        <EnsureSingleNavigator>{children}</EnsureSingleNavigator>
+      </NavigationBuilderContext.Provider>
     </NavigationStateContext.Provider>
   );
 }
+
+export default React.forwardRef(NavigationContainer);
