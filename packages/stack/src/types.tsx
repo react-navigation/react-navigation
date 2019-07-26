@@ -107,8 +107,8 @@ export type NavigationStackOptions = HeaderOptions &
       vertical?: number;
       horizontal?: number;
     };
-    onTransitionStart?: () => void;
-    onTransitionEnd?: () => void;
+    onTransitionStart?: (closing: boolean) => void;
+    onTransitionEnd?: (closing: boolean) => void;
   };
 
 export type NavigationStackConfig = {
