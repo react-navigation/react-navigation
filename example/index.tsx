@@ -7,8 +7,8 @@ import {
   RouteProp,
   InitialState,
 } from '../src';
-import StackNavigator, { StackNavigationProp } from './StackNavigator';
-import TabNavigator, { TabNavigationProp } from './TabNavigator';
+import createStackNavigator, { StackNavigationProp } from './StackNavigator';
+import createTabNavigator, { TabNavigationProp } from './TabNavigator';
 
 type StackParamList = {
   first: { author: string };
@@ -21,9 +21,9 @@ type TabParamList = {
   fifth: undefined;
 };
 
-const MyStack = StackNavigator<StackParamList>();
+const Stack = createStackNavigator<StackParamList>();
 
-const MyTab = TabNavigator<TabParamList>();
+const Tab = createTabNavigator<TabParamList>();
 
 const First = ({
   navigation,
@@ -159,8 +159,8 @@ function App() {
         localStorage.setItem(PERSISTENCE_KEY, JSON.stringify(state))
       }
     >
-      <MyStack.Navigator>
-        <MyStack.Screen
+      <Stack.Navigator>
+        <Stack.Screen
           name="first"
           component={First}
           options={({ route }) => ({
@@ -168,18 +168,18 @@ function App() {
           })}
           initialParams={{ author: 'Jane' }}
         />
-        <MyStack.Screen name="second" options={{ title: 'Bar' }}>
+        <Stack.Screen name="second" options={{ title: 'Bar' }}>
           {props => <Second {...props} />}
-        </MyStack.Screen>
-        <MyStack.Screen name="third" options={{ title: 'Baz' }}>
+        </Stack.Screen>
+        <Stack.Screen name="third" options={{ title: 'Baz' }}>
           {() => (
-            <MyTab.Navigator initialRouteName="fifth">
-              <MyTab.Screen name="fourth" component={Fourth} />
-              <MyTab.Screen name="fifth" component={Fifth} />
-            </MyTab.Navigator>
+            <Tab.Navigator initialRouteName="fifth">
+              <Tab.Screen name="fourth" component={Fourth} />
+              <Tab.Screen name="fifth" component={Fifth} />
+            </Tab.Navigator>
           )}
-        </MyStack.Screen>
-      </MyStack.Navigator>
+        </Stack.Screen>
+      </Stack.Navigator>
     </NavigationContainer>
   );
 }
