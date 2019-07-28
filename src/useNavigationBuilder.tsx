@@ -87,6 +87,12 @@ export default function useNavigationBuilder<
     {} as { [key: string]: object | undefined }
   );
 
+  if (!routeNames.length) {
+    throw new Error(
+      "Couldn't find any screens for the navigator. Have you defined any screens as its children?"
+    );
+  }
+
   const {
     state: currentState,
     getState: getCurrentState,
