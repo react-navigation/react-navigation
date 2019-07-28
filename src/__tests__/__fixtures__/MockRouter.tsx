@@ -46,10 +46,15 @@ export default function MockRouter(options: DefaultRouterOptions) {
     },
 
     getStateForRouteNamesChange(state, { routeNames }) {
+      const routes = state.routes.filter(route =>
+        routeNames.includes(route.name)
+      );
+
       return {
         ...state,
         routeNames,
-        routes: state.routes.filter(route => routeNames.includes(route.name)),
+        routes,
+        index: Math.min(state.index, routes.length - 1),
       };
     },
 

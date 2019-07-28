@@ -91,17 +91,20 @@ function TabRouter(options: DefaultRouterOptions) {
     },
 
     getStateForRouteNamesChange(state, { routeNames, routeParamList }) {
+      const routes = routeNames.map(
+        name =>
+          state.routes.find(r => r.name === name) || {
+            name,
+            key: `${name}-${shortid()}`,
+            params: routeParamList[name],
+          }
+      );
+
       return {
         ...state,
         routeNames,
-        routes: routeNames.map(
-          name =>
-            state.routes.find(r => r.name === name) || {
-              name,
-              key: `${name}-${shortid()}`,
-              params: routeParamList[name],
-            }
-        ),
+        routes,
+        index: Math.min(state.index, routes.length - 1),
       };
     },
 
