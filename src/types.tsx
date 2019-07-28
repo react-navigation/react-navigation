@@ -162,7 +162,35 @@ export type Router<
 
 export type ParamListBase = { [key: string]: object | undefined };
 
-class PrivateValueStore<A, B> {
+export type EventMapBase = {
+  focus: undefined;
+  blur: undefined;
+};
+
+export type EventListenerCallback<Data> = Data extends undefined
+  ? () => void
+  : (data: Data) => void;
+
+export type EventConsumer<EventMap extends { [key: string]: any }> = {
+  addListener<EventName extends Extract<keyof EventMap, string>>(
+    type: EventName,
+    callback: EventListenerCallback<EventMap[EventName]>
+  ): () => void;
+  removeListener<EventName extends Extract<keyof EventMap, string>>(
+    type: EventName,
+    callback: EventListenerCallback<EventMap[EventName]>
+  ): void;
+};
+
+export type EventEmitter<EventMap extends { [key: string]: any }> = {
+  emit<EventName extends Extract<keyof EventMap, string>>(options: {
+    type: EventName;
+    data?: EventMap[EventName];
+    target?: string;
+  }): void;
+};
+
+class PrivateValueStore<A, B, C> {
   /**
    * TypeScript requires a type to be actually used to be able to infer it.
    * This is a hacky way of storing type in a property without surfacing it in intellisense.
@@ -171,6 +199,8 @@ class PrivateValueStore<A, B> {
   private __private_value_type_a?: A;
   // @ts-ignore
   private __private_value_type_b?: B;
+  // @ts-ignore
+  private __private_value_type_c?: C;
 }
 
 type NavigationHelpersCommon<
@@ -221,29 +251,38 @@ type NavigationHelpersCommon<
    * Go back to the previous route in history.
    */
   goBack(): void;
-} & PrivateValueStore<ParamList, keyof ParamList>;
+
+  /**
+   * Check if the screen is focused. The method returns `true` if focused, `false` otherwise.
+   * Note that this method doesn't re-render screen when the focus changes. So don't use it in `render`.
+   * To get notified of focus changes, use `addListener('focus', cb)` and `addListener('blur', cb)`.
+   */
+  isFocused(): boolean;
+} & PrivateValueStore<ParamList, keyof ParamList, {}>;
 
 export type NavigationHelpers<
   ParamList extends ParamListBase
-> = NavigationHelpersCommon<ParamList> & {
-  /**
-   * Update the param object for the route.
-   * The new params will be shallow merged with the old one.
-   *
-   * @param params Params object for the current route.
-   * @param key Key of the route for updating params.
-   */
-  setParams<RouteName extends keyof ParamList>(
-    params: ParamList[RouteName],
-    key: string
-  ): void;
-};
+> = NavigationHelpersCommon<ParamList> &
+  EventEmitter<{ [key: string]: any }> & {
+    /**
+     * Update the param object for the route.
+     * The new params will be shallow merged with the old one.
+     *
+     * @param params Params object for the current route.
+     * @param key Key of the route for updating params.
+     */
+    setParams<RouteName extends keyof ParamList>(
+      params: ParamList[RouteName],
+      key: string
+    ): void;
+  };
 
 export type NavigationProp<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = string,
   State extends NavigationState = NavigationState,
-  ScreenOptions extends object = {}
+  ScreenOptions extends object = {},
+  EventMap extends { [key: string]: any } = {}
 > = NavigationHelpersCommon<ParamList, State> & {
   /**
    * Update the param object for the route.
@@ -262,7 +301,8 @@ export type NavigationProp<
    * @param options Options object for the route.
    */
   setOptions(options: Partial<ScreenOptions>): void;
-} & PrivateValueStore<ParamList, RouteName>;
+} & EventConsumer<EventMap & EventMapBase> &
+  PrivateValueStore<ParamList, RouteName, EventMap>;
 
 export type RouteProp<
   ParamList extends ParamListBase,
@@ -280,7 +320,7 @@ export type RouteProp<
 export type CompositeNavigationProp<
   A extends NavigationProp<ParamListBase>,
   B extends NavigationHelpersCommon<ParamListBase>
-> = Omit<A & B, keyof NavigationProp<any, any, any>> &
+> = Omit<A & B, keyof NavigationProp<any>> &
   NavigationProp<
     /**
      * Param list from both navigation objects needs to be combined
@@ -299,9 +339,15 @@ export type CompositeNavigationProp<
     A extends NavigationProp<any, any, infer S> ? S : NavigationState,
     /**
      * Screen options from both navigation objects needs to be combined
+     * This allows typechecking `setOptions`
      */
     (A extends NavigationProp<any, any, any, infer O> ? O : {}) &
-      (B extends NavigationProp<any, any, any, infer P> ? P : {})
+      (B extends NavigationProp<any, any, any, infer P> ? P : {}),
+    /**
+     * Event consumer config should refer to the config specified in the first type
+     * This allows typechecking `addListener`/`removeListener`
+     */
+    A extends NavigationProp<any, any, any, any, infer E> ? E : {}
   >;
 
 export type Descriptor<ScreenOptions extends object> = {
@@ -333,7 +379,7 @@ export type RouteConfig<
     | ScreenOptions
     | ((props: {
         route: RouteProp<ParamList, RouteName>;
-        navigation: NavigationHelpers<ParamList>;
+        navigation: NavigationHelpersCommon<ParamList>;
       }) => ScreenOptions);
 
   /**

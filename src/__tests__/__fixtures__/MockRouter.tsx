@@ -76,13 +76,25 @@ export default function MockRouter(options: DefaultRouterOptions) {
         case 'NOOP':
           return state;
 
+        case 'NAVIGATE': {
+          const index = state.routes.findIndex(
+            route => route.name === action.payload.name
+          );
+
+          if (index === -1) {
+            return null;
+          }
+
+          return { ...state, index };
+        }
+
         default:
           return BaseRouter.getStateForAction(state, action);
       }
     },
 
-    shouldActionPropagateToChildren() {
-      return false;
+    shouldActionPropagateToChildren(action) {
+      return action.type === 'NAVIGATE';
     },
 
     shouldActionChangeFocus() {

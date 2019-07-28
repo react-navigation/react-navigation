@@ -133,6 +133,36 @@ function Selection({ navigation }) {
 
 This allows options to be changed based on props, state or context, and doesn't have the disadvantages of static configuration.
 
+## Navigation events
+
+Screens can add listeners on the `navigation` prop like in React Navigation. By default, `focus` and `blur` events are fired when focused screen changes:
+
+```js
+function Profile({ navigation }) {
+  React.useEffect(() =>
+    navigation.addListener('focus', () => {
+      // do something
+    })
+  );
+
+  return <ProfileContent />;
+}
+```
+
+Navigators can also emit custom events using the `emit` method in the `navigation` object passed:
+
+```js
+navigation.emit({
+  type: 'transitionStart',
+  data: { blurring: false },
+  target: route.key,
+});
+```
+
+The `target` property determines the screen that will receive the event. If the `target` property is omitted, the event is dispatched to all screens in the navigator.
+
+Screens cannot emit events as there is no `emit` method on a screen's `navigation` prop.
+
 ## Type-checking
 
 The library exports few helper types. Each navigator also need to export a custom type for the `navigation` prop which should contain the actions they provide, .e.g. `push` for stack, `jumpTo` for tab etc.

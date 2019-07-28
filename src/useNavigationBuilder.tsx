@@ -1,10 +1,12 @@
 import * as React from 'react';
 import { NavigationStateContext } from './NavigationContainer';
 import Screen from './Screen';
+import useEventEmitter from './useEventEmitter';
 import useRegisterNavigator from './useRegisterNavigator';
 import useDescriptors from './useDescriptors';
 import useNavigationHelpers from './useNavigationHelpers';
 import useOnAction from './useOnAction';
+import useFocusEvents from './useFocusEvents';
 import useOnRouteFocus from './useOnRouteFocus';
 import useChildActionListeners from './useChildActionListeners';
 import {
@@ -155,6 +157,10 @@ export default function useNavigationBuilder<
       : (currentState as State);
   }, [getCurrentState, initialState]);
 
+  const emitter = useEventEmitter();
+
+  useFocusEvents({ state, emitter });
+
   const {
     listeners: actionListeners,
     addActionListener,
@@ -181,6 +187,7 @@ export default function useNavigationBuilder<
     onAction,
     getState,
     setState,
+    emitter,
     actionCreators: router.actionCreators,
   });
 
@@ -194,6 +201,7 @@ export default function useNavigationBuilder<
     onRouteFocus,
     addActionListener,
     removeActionListener,
+    emitter,
   });
 
   return {
