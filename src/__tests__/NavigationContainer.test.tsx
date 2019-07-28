@@ -138,7 +138,10 @@ it('handle dispatching with ref', () => {
 
   function CurrentChildRouter(options: DefaultRouterOptions) {
     const CurrentMockRouter = MockRouter(options);
-    const ChildRouter: Router<NavigationState, MockActions> = {
+    const ChildRouter: Router<
+      NavigationState,
+      MockActions | { type: 'REVERSE' }
+    > = {
       ...CurrentMockRouter,
 
       shouldActionChangeFocus() {
