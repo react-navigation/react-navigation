@@ -14,7 +14,10 @@ beforeEach(() => (MockRouterKey.current = 0));
 it("lets parent handle the action if child didn't", () => {
   function CurrentRouter(options: DefaultRouterOptions) {
     const CurrentMockRouter = MockRouter(options);
-    const ParentRouter: Router<NavigationState, MockActions> = {
+    const ParentRouter: Router<
+      NavigationState,
+      MockActions | { type: 'REVERSE' }
+    > = {
       ...CurrentMockRouter,
 
       getStateForAction(state, action) {
@@ -98,7 +101,10 @@ it("lets children handle the action if parent didn't", () => {
 
   function CurrentChildRouter(options: DefaultRouterOptions) {
     const CurrentMockRouter = MockRouter(options);
-    const ChildRouter: Router<NavigationState, MockActions> = {
+    const ChildRouter: Router<
+      NavigationState,
+      MockActions | { type: 'REVERSE' }
+    > = {
       ...CurrentMockRouter,
 
       shouldActionChangeFocus() {

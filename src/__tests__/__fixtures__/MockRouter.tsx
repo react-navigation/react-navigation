@@ -6,9 +6,7 @@ import {
   DefaultRouterOptions,
 } from '../../types';
 
-export type MockActions = CommonAction & {
-  type: 'NOOP' | 'REVERSE' | 'UPDATE';
-};
+export type MockActions = CommonAction | { type: 'NOOP' | 'UPDATE' };
 
 export const MockRouterKey = { current: 0 };
 
