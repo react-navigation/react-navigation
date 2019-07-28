@@ -501,6 +501,23 @@ it('handles change in route names', () => {
   });
 });
 
+it("throws if navigator doesn't have any screens", () => {
+  const TestNavigator = (props: any) => {
+    useNavigationBuilder(MockRouter, props);
+    return null;
+  };
+
+  const element = (
+    <NavigationContainer>
+      <TestNavigator />
+    </NavigationContainer>
+  );
+
+  expect(() => render(element).update(element)).toThrowError(
+    "Couldn't find any screens for the navigator. Have you defined any screens as its children?"
+  );
+});
+
 it('throws if navigator is not inside a container', () => {
   const TestNavigator = (props: any) => {
     useNavigationBuilder(MockRouter, props);
