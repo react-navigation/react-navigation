@@ -494,7 +494,7 @@ it('handles change in route names', () => {
   );
 
   expect(onStateChange).toBeCalledWith({
-    index: 1,
+    index: 0,
     key: '0',
     routeNames: ['foo', 'baz', 'qux'],
     routes: [{ key: 'foo', name: 'foo' }],
