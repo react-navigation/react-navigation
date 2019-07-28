@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as BaseActions from './BaseActions';
 import NavigationContext from './NavigationContext';
 import { NavigationStateContext } from './NavigationContainer';
+import { NavigationEventEmitter } from './useEventEmitter';
 import {
   NavigationHelpers,
   NavigationAction,
@@ -18,6 +19,7 @@ type Options<Action extends NavigationAction> = {
   getState: () => NavigationState;
   setState: (state: NavigationState) => void;
   actionCreators?: ActionCreators<Action>;
+  emitter: NavigationEventEmitter;
 };
 
 export default function useNavigationHelpers<Action extends NavigationAction>({
@@ -25,6 +27,7 @@ export default function useNavigationHelpers<Action extends NavigationAction>({
   getState,
   setState,
   actionCreators,
+  emitter,
 }: Options<Action>) {
   const parentNavigationHelpers = React.useContext(NavigationContext);
   const { performTransaction } = React.useContext(NavigationStateContext);
@@ -59,10 +62,15 @@ export default function useNavigationHelpers<Action extends NavigationAction>({
         {} as { [key: string]: () => void }
       ),
       dispatch,
+      emit: emitter.emit,
+      isFocused: parentNavigationHelpers
+        ? parentNavigationHelpers.isFocused
+        : () => true,
     };
   }, [
     actionCreators,
     parentNavigationHelpers,
+    emitter.emit,
     performTransaction,
     setState,
     getState,

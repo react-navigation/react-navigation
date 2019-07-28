@@ -1,7 +1,10 @@
 import * as React from 'react';
 import NavigationContext from './NavigationContext';
+import { NavigationProp, ParamListBase } from './types';
 
-export default function useNavigation() {
+export default function useNavigation<
+  T extends NavigationProp<ParamListBase>
+>(): T {
   const navigation = React.useContext(NavigationContext);
 
   if (navigation === undefined) {
@@ -10,5 +13,5 @@ export default function useNavigation() {
     );
   }
 
-  return navigation;
+  return navigation as T;
 }

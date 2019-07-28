@@ -3,6 +3,7 @@ import SceneView from './SceneView';
 import NavigationBuilderContext, {
   ChildActionListener,
 } from './NavigationBuilderContext';
+import { NavigationEventEmitter } from './useEventEmitter';
 import useNavigationCache from './useNavigationCache';
 import {
   Descriptor,
@@ -27,6 +28,7 @@ type Options<ScreenOptions extends object> = {
   addActionListener: (listener: ChildActionListener) => void;
   removeActionListener: (listener: ChildActionListener) => void;
   onRouteFocus: (key: string) => void;
+  emitter: NavigationEventEmitter;
 };
 
 export default function useDescriptors<ScreenOptions extends object>({
@@ -39,6 +41,7 @@ export default function useDescriptors<ScreenOptions extends object>({
   addActionListener,
   removeActionListener,
   onRouteFocus,
+  emitter,
 }: Options<ScreenOptions>) {
   const [options, setOptions] = React.useState<{ [key: string]: object }>({});
   const context = React.useMemo(
@@ -60,8 +63,10 @@ export default function useDescriptors<ScreenOptions extends object>({
 
   const navigations = useNavigationCache({
     state,
+    getState,
     navigation,
     setOptions,
+    emitter,
   });
 
   return state.routes.reduce(

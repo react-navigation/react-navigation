@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { NavigationHelpers, ParamListBase } from './types';
+import { NavigationProp, ParamListBase } from './types';
 
 const NavigationContext = React.createContext<
-  NavigationHelpers<ParamListBase> | undefined
+  NavigationProp<ParamListBase> | undefined
 >(undefined);
 
 export default NavigationContext;
