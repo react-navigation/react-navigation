@@ -263,7 +263,7 @@ export default class Stack extends React.Component<Props, State> {
 
     descriptor &&
       descriptor.options.onTransitionStart &&
-      descriptor.options.onTransitionStart(closing);
+      descriptor.options.onTransitionStart({ closing });
   };
 
   private handleTransitionEnd = (
@@ -274,7 +274,7 @@ export default class Stack extends React.Component<Props, State> {
 
     descriptor &&
       descriptor.options.onTransitionEnd &&
-      descriptor.options.onTransitionEnd(closing);
+      descriptor.options.onTransitionEnd({ closing });
   };
 
   render() {
