@@ -6,6 +6,7 @@ import {
   NavigationHelpers,
   RouteProp,
   InitialState,
+  useFocusEffect,
 } from '../src';
 import createStackNavigator, { StackNavigationProp } from './StackNavigator';
 import createTabNavigator, { TabNavigationProp } from './TabNavigator';
@@ -34,29 +35,39 @@ const First = ({
     NavigationHelpers<TabParamList>
   >;
   route: RouteProp<StackParamList, 'first'>;
-}) => (
-  <div>
-    <h1>First, {route.params.author}</h1>
-    <button type="button" onClick={() => navigation.push('second')}>
-      Push second
-    </button>
-    <button type="button" onClick={() => navigation.push('third')}>
-      Push third
-    </button>
-    <button type="button" onClick={() => navigation.navigate('fourth')}>
-      Navigate to fourth
-    </button>
-    <button
-      type="button"
-      onClick={() => navigation.navigate('first', { author: 'John' })}
-    >
-      Navigate with params
-    </button>
-    <button type="button" onClick={() => navigation.pop()}>
-      Pop
-    </button>
-  </div>
-);
+}) => {
+  const updateTitle = React.useCallback(() => {
+    document.title = `${route.name} (${route.params.author})`;
+
+    return () => (document.title = '');
+  }, [route.name, route.params.author]);
+
+  useFocusEffect(updateTitle);
+
+  return (
+    <div>
+      <h1>First, {route.params.author}</h1>
+      <button type="button" onClick={() => navigation.push('second')}>
+        Push second
+      </button>
+      <button type="button" onClick={() => navigation.push('third')}>
+        Push third
+      </button>
+      <button type="button" onClick={() => navigation.navigate('fourth')}>
+        Navigate to fourth
+      </button>
+      <button
+        type="button"
+        onClick={() => navigation.navigate('first', { author: 'John' })}
+      >
+        Navigate with params
+      </button>
+      <button type="button" onClick={() => navigation.pop()}>
+        Pop
+      </button>
+    </div>
+  );
+};
 
 const Second = ({
   navigation,
