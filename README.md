@@ -66,8 +66,8 @@ If an initial state is specified, e.g. as a result of `Linking.getInitialURL()`,
 ## Basic usage
 
 ```js
-const Stack = StackNavigator();
-const Tab = TabNavigator();
+const Stack = createStackNavigator();
+const Tab = createTabNavigator();
 
 function App() {
   return (
@@ -163,6 +163,45 @@ The `target` property determines the screen that will receive the event. If the 
 
 Screens cannot emit events as there is no `emit` method on a screen's `navigation` prop.
 
+If you don't need to get notified of focus change, but just need to check if the screen is currently focused in a callback, you can use the `navigation.isFocused()` method which returns a boolean. Note that it's not safe to use this in `render`. Only use it in callbacks, event listeners etc.
+
+## Side-effects in focused screen
+
+Sometimes we want to run side-effects when a screen is focused. A side effect may involve things like adding an event listener, fetching data, updating document title, etc. While this can be achieved using `focus` and `blur` events, it's not very ergonomic.
+
+To make this easier, the library exports a `useFocusEffect` hook:
+
+```js
+function Profile({ userId }) {
+  const [user, setUser] = React.useState(null);
+
+  const fetchUser = React.useCallback(() => {
+    const request = API.fetchUser(userId).then(
+      data => setUser(data),
+      error => alert(error.message)
+    );
+
+    return () => request.abort();
+  }, [userId]);
+
+  useFocusEffect(fetchUser);
+
+  return <ProfileContent user={user} />;
+}
+```
+
+The `useFocusEffect` is analogous to React's `useEffect` hook. The only difference is that it runs on focus instead of render.
+
+**NOTE:** To avoid the running the effect too often, it's important to wrap the callback in `useCallback` before passing it to `useFocusEffect` as shown in the example.
+
+## Access navigation anywhere
+
+Passing the `navigation` prop down can be tedious. The library exports a `useNavigation` hook which can access the `navigation` prop from the parent screen.
+
+```js
+const navigation = useNavigation();
+```
+
 ## Type-checking
 
 The library exports few helper types. Each navigator also need to export a custom type for the `navigation` prop which should contain the actions they provide, .e.g. `push` for stack, `jumpTo` for tab etc.
@@ -221,6 +260,12 @@ type FeedScreenNavigationProp = CompositeNavigationProp<
     DrawerNavigationProp<DrawerParamList>
   >
 >;
+```
+
+To annotate the `navigation` prop from `useNavigation`, we can use a type parameter:
+
+```ts
+const navigation = useNavigation<FeedScreenNavigationProp>();
 ```
 
 It's also possible to type-check the navigator to some extent. To do this, we need to pass a generic when creating the navigator object:
