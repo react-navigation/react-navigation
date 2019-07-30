@@ -93,6 +93,10 @@ export type HeaderProps = {
   styleInterpolator: HeaderStyleInterpolator;
 };
 
+export type TransitionCallbackProps = {
+  closing: boolean;
+};
+
 export type NavigationStackOptions = HeaderOptions &
   Partial<TransitionPreset> & {
     title?: string;
@@ -107,8 +111,8 @@ export type NavigationStackOptions = HeaderOptions &
       vertical?: number;
       horizontal?: number;
     };
-    onTransitionStart?: (closing: boolean) => void;
-    onTransitionEnd?: (closing: boolean) => void;
+    onTransitionStart?: (props: TransitionCallbackProps) => void;
+    onTransitionEnd?: (props: TransitionCallbackProps) => void;
   };
 
 export type NavigationStackConfig = {
