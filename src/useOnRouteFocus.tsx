@@ -4,7 +4,10 @@ import { NavigationAction, NavigationState, Router } from './types';
 
 type Options<Action extends NavigationAction> = {
   router: Router<NavigationState, Action>;
-  onAction: (action: NavigationAction, sourceNavigatorKey?: string) => boolean;
+  onAction: (
+    action: NavigationAction,
+    visitedNavigators?: Set<string>
+  ) => boolean;
   getState: () => NavigationState;
   setState: (state: NavigationState) => void;
   key?: string;
@@ -14,7 +17,7 @@ export default function useOnRouteFocus<Action extends NavigationAction>({
   router,
   onAction,
   getState,
-  key: sourceNavigatorKey,
+  key: sourceRouteKey,
   setState,
 }: Options<Action>) {
   const {
@@ -40,13 +43,10 @@ export default function useOnRouteFocus<Action extends NavigationAction>({
         setState(result);
       }
 
-      if (
-        onRouteFocusParent !== undefined &&
-        sourceNavigatorKey !== undefined
-      ) {
-        onRouteFocusParent(sourceNavigatorKey);
+      if (onRouteFocusParent !== undefined && sourceRouteKey !== undefined) {
+        onRouteFocusParent(sourceRouteKey);
       }
     },
-    [getState, onRouteFocusParent, router, setState, sourceNavigatorKey]
+    [getState, onRouteFocusParent, router, setState, sourceRouteKey]
   );
 }

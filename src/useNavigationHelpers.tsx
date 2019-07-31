@@ -11,7 +11,10 @@ import {
 } from './types';
 
 type Options<Action extends NavigationAction> = {
-  onAction: (action: NavigationAction, sourceNavigatorKey?: string) => boolean;
+  onAction: (
+    action: NavigationAction,
+    visitedNavigators?: Set<string>
+  ) => boolean;
   getState: () => NavigationState;
   setState: (state: NavigationState) => void;
   actionCreators?: ActionCreators<Action>;
