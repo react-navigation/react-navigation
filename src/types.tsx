@@ -301,6 +301,13 @@ export type NavigationProp<
    * @param options Options object for the route.
    */
   setOptions(options: Partial<ScreenOptions>): void;
+
+  /**
+   * Check if the screen is the first route in the navigator.
+   * This method returns `true` if the index of the route is `0`, `false` otherwise.
+   * It can be useful to decide whether to display a back button in a stack.
+   */
+  isFirstRouteInParent(): boolean;
 } & EventConsumer<EventMap & EventMapBase> &
   PrivateValueStore<ParamList, RouteName, EventMap>;
 
