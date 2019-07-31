@@ -30,14 +30,16 @@ export default function useOnAction({
   const onAction = React.useCallback(
     (
       action: NavigationAction,
-      sourceNavigatorKey?: string,
+      visitedNavigators: Set<string> = new Set<string>(),
       targetForInternalDispatching?: string | null
     ) => {
       const state = getState();
 
-      if (sourceNavigatorKey === state.key) {
+      if (visitedNavigators.has(state.key)) {
         return false;
       }
+
+      visitedNavigators.add(state.key);
 
       if (targetForInternalDispatching === undefined) {
         const result = router.getStateForAction(state, action);
@@ -60,7 +62,7 @@ export default function useOnAction({
 
         if (onActionParent !== undefined) {
           // Bubble action to the parent if the current navigator didn't handle it
-          if (onActionParent(action, state.key)) {
+          if (onActionParent(action, visitedNavigators)) {
             return true;
           }
         }
@@ -69,16 +71,18 @@ export default function useOnAction({
           for (let i = listeners.length - 1; i >= 0; i--) {
             const listener = listeners[i];
 
-            if (listener(action, state.key)) {
+            if (listener(action, visitedNavigators)) {
               return true;
             }
           }
         }
       } else {
+        const focusedKey = state.routes[state.index].key;
+
         for (let i = listeners.length - 1; i >= 0; i--) {
           const listener = listeners[i];
 
-          if (listener(action, state.key, state.routes[state.index].key)) {
+          if (listener(action, visitedNavigators, focusedKey)) {
             return true;
           }
         }

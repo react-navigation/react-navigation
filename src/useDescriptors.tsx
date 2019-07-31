@@ -18,7 +18,10 @@ type Options<ScreenOptions extends object> = {
   state: NavigationState | PartialState<NavigationState>;
   screens: { [key: string]: RouteConfig<ParamListBase, string, ScreenOptions> };
   navigation: NavigationHelpers<ParamListBase>;
-  onAction: (action: NavigationAction, sourceNavigatorKey?: string) => boolean;
+  onAction: (
+    action: NavigationAction,
+    visitedNavigators?: Set<string>
+  ) => boolean;
   getState: () => NavigationState;
   setState: (state: NavigationState) => void;
   addActionListener: (listener: ChildActionListener) => void;

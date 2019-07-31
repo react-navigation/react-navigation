@@ -182,7 +182,7 @@ it("lets children handle the action if parent didn't", () => {
     >
       <ParentNavigator>
         <Screen name="foo">{() => null}</Screen>
-        <Screen name="bar">{TestScreen}</Screen>
+        <Screen name="bar" component={TestScreen} />
         <Screen name="baz">
           {() => (
             <ChildNavigator>
@@ -218,4 +218,74 @@ it("lets children handle the action if parent didn't", () => {
       { key: 'bar', name: 'bar' },
     ],
   });
+});
+
+it("doesn't crash if no navigator handled the action", () => {
+  function TestRouter(options: DefaultRouterOptions) {
+    const router: Router<NavigationState, MockActions> = {
+      ...MockRouter(options),
+
+      shouldActionPropagateToChildren() {
+        return true;
+      },
+    };
+
+    return router;
+  }
+
+  const TestNavigator = (props: any) => {
+    const { state, descriptors } = useNavigationBuilder(TestRouter, props);
+
+    return (
+      <React.Fragment>
+        {state.routes.map(route => descriptors[route.key].render())}
+      </React.Fragment>
+    );
+  };
+
+  const TestScreen = (props: any) => {
+    React.useEffect(() => {
+      props.navigation.dispatch({ type: 'UNKNOWN' });
+
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    return null;
+  };
+
+  const initialState = {
+    index: 1,
+    routes: [
+      {
+        key: 'baz',
+        name: 'baz',
+        state: {
+          index: 0,
+          key: '4',
+          routeNames: ['qux', 'lex'],
+          routes: [{ key: 'qux', name: 'qux' }, { key: 'lex', name: 'lex' }],
+        },
+      },
+      { key: 'bar', name: 'bar' },
+    ],
+  };
+
+  const element = (
+    <NavigationContainer initialState={initialState}>
+      <TestNavigator>
+        <Screen name="foo">{() => null}</Screen>
+        <Screen name="bar" component={TestScreen} />
+        <Screen name="baz">
+          {() => (
+            <TestNavigator>
+              <Screen name="qux" component={() => null} />
+              <Screen name="lex" component={() => null} />
+            </TestNavigator>
+          )}
+        </Screen>
+      </TestNavigator>
+    </NavigationContainer>
+  );
+
+  render(element).update(element);
 });
