@@ -1,5 +1,7 @@
 import React from 'react';
 import {
+  Alert,
+  TouchableOpacity,
   LayoutAnimation,
   StatusBar,
   StyleSheet,
@@ -8,6 +10,7 @@ import {
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {
+  MaterialTopTabBar,
   createMaterialTopTabNavigator,
   NavigationScreenProp,
   NavigationState,
@@ -53,9 +56,9 @@ class MyHomeScreen extends React.Component<Props> {
   }
 }
 
-class RecommendedScreen extends React.Component<Props> {
+class StarredScreen extends React.Component<Props> {
   static navigationOptions = {
-    tabBarLabel: 'Recommended',
+    tabBarLabel: 'Starred',
     tabBarIcon: ({
       tintColor,
       focused,
@@ -76,12 +79,27 @@ class RecommendedScreen extends React.Component<Props> {
     const { navigation } = this.props;
     return (
       <SafeAreaView forceInset={{ horizontal: 'always', top: 'always' }}>
-        <Text>Recommended Screen</Text>
+        <Text>Starred Screen</Text>
         <Button
           onPress={() => navigation.navigate('Home')}
           title="Go to home tab"
         />
         <Button onPress={() => navigation.goBack(null)} title="Go back" />
+      </SafeAreaView>
+    );
+  }
+}
+
+type MaterialTopTabBarProps = React.ComponentProps<typeof MaterialTopTabBar>;
+
+class MaterialTopTabBarWrapper extends React.Component<MaterialTopTabBarProps> {
+  render() {
+    return (
+      <SafeAreaView
+        style={{ backgroundColor: '#000' }}
+        forceInset={{ top: 'always', horizontal: 'never', bottom: 'never' }}
+      >
+        <MaterialTopTabBar {...this.props} />
       </SafeAreaView>
     );
   }
@@ -125,11 +143,21 @@ class FeaturedScreen extends React.Component<Props> {
   }
 }
 
-const SimpleTabs = createMaterialTopTabNavigator({
-  Home: MyHomeScreen,
-  Recommended: RecommendedScreen,
-  Featured: FeaturedScreen,
-});
+const SimpleTabs = createMaterialTopTabNavigator(
+  {
+    Home: MyHomeScreen,
+    Starred: StarredScreen,
+    Featured: FeaturedScreen,
+  },
+  {
+    tabBarComponent: MaterialTopTabBarWrapper,
+    tabBarOptions: {
+      style: {
+        backgroundColor: '#000',
+      },
+    },
+  }
+);
 
 class TabNavigator extends React.Component<Props> {
   static router = SimpleTabs.router;
@@ -143,25 +171,32 @@ class TabNavigator extends React.Component<Props> {
     let bottom = null;
     if (activeRoute.routeName !== 'Home') {
       bottom = (
-        <View style={{ height: 50, borderTopWidth: StyleSheet.hairlineWidth }}>
-          <Button
-            title="Check out"
+        <View
+          style={{
+            height: 50,
+            borderTopWidth: StyleSheet.hairlineWidth,
+            backgroundColor: '#000',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <TouchableOpacity
             onPress={() => {
+              Alert.alert('hello!');
               //
             }}
-          />
+          >
+            <Text style={{ fontSize: 20, color: '#fff', fontWeight: 'bold' }}>
+              Check out
+            </Text>
+          </TouchableOpacity>
         </View>
       );
     }
     return (
       <View style={{ flex: 1 }}>
-        <StatusBar barStyle="default" />
-        <SafeAreaView
-          style={{ flex: 1 }}
-          forceInset={{ horizontal: 'always', top: 'always' }}
-        >
-          <SimpleTabs navigation={navigation} />
-        </SafeAreaView>
+        <StatusBar barStyle="light-content" />
+        <SimpleTabs navigation={navigation} />
         {bottom}
       </View>
     );
