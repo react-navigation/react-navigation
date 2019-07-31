@@ -73,7 +73,7 @@ function NavigationContainer(
   { initialState, onStateChange, children }: Props,
   ref: React.Ref<NavigationHelpers<ParamListBase>>
 ) {
-  const [state, setState] = React.useState<State>(() =>
+  const [state, setNavigationState] = React.useState<State>(() =>
     getPartialState(initialState)
   );
 
@@ -101,7 +101,8 @@ function NavigationContainer(
     }, {}),
   }));
 
-  const navigationStateRef = React.useRef<State | null>(null);
+  const navigationStateRef = React.useRef<State>();
+  const transactionStateRef = React.useRef<State | null>(null);
   const isTransactionActiveRef = React.useRef<boolean>(false);
   const isFirstMountRef = React.useRef<boolean>(true);
 
@@ -119,49 +120,56 @@ function NavigationContainer(
     [addActionListener, removeActionListener]
   );
 
+  const performTransaction = React.useCallback((callback: () => void) => {
+    if (isTransactionActiveRef.current) {
+      throw new Error(
+        "Only one transaction can be active at a time. Did you accidentally nest 'performTransaction'?"
+      );
+    }
+
+    setNavigationState((navigationState: State) => {
+      isTransactionActiveRef.current = true;
+      transactionStateRef.current = navigationState;
+
+      callback();
+
+      isTransactionActiveRef.current = false;
+
+      return transactionStateRef.current;
+    });
+  }, []);
+
+  const getState = React.useCallback(
+    () =>
+      transactionStateRef.current !== null
+        ? transactionStateRef.current
+        : navigationStateRef.current,
+    []
+  );
+
+  const setState = React.useCallback((navigationState: State) => {
+    if (transactionStateRef.current === null) {
+      throw new Error(
+        "Any 'setState' calls need to be done inside 'performTransaction'"
+      );
+    }
+
+    transactionStateRef.current = navigationState;
+  }, []);
+
   const context = React.useMemo(
     () => ({
       state,
-
-      performTransaction: (callback: () => void) => {
-        if (isTransactionActiveRef.current) {
-          throw new Error(
-            "Only one transaction can be active at a time. Did you accidentally nest 'performTransaction'?"
-          );
-        }
-
-        setState((navigationState: State) => {
-          isTransactionActiveRef.current = true;
-          navigationStateRef.current = navigationState;
-
-          callback();
-
-          isTransactionActiveRef.current = false;
-
-          return navigationStateRef.current;
-        });
-      },
-
-      getState: () =>
-        navigationStateRef.current !== null
-          ? navigationStateRef.current
-          : state,
-
-      setState: (navigationState: State) => {
-        if (navigationStateRef.current === null) {
-          throw new Error(
-            "Any 'setState' calls need to be done inside 'performTransaction'"
-          );
-        }
-
-        navigationStateRef.current = navigationState;
-      },
+      performTransaction,
+      getState,
+      setState,
     }),
-    [state]
+    [getState, performTransaction, setState, state]
   );
 
   React.useEffect(() => {
-    navigationStateRef.current = null;
+    navigationStateRef.current = state;
+    transactionStateRef.current = null;
 
     if (!isFirstMountRef.current && onStateChange) {
       onStateChange(state);
