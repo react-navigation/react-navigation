@@ -1,6 +1,7 @@
 {
   "expo": {
-    "name": "NavigationPlayground",
+    "name": "React Navigation Playground",
+    "description": "Explore various patterns for navigation",
     "slug": "NavigationPlayground",
     "privacy": "public",
     "sdkVersion": "32.0.0",
