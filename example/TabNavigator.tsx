@@ -14,14 +14,17 @@ import {
   DefaultRouterOptions,
 } from '../src/index';
 
-type Props = {
-  initialRouteName?: string;
+type Props = TabRouterOptions & {
   children: React.ReactNode;
 };
 
 type Action = {
   type: 'JUMP_TO';
   payload: { name: string; params?: object };
+};
+
+export type TabRouterOptions = DefaultRouterOptions & {
+  backBehavior?: 'initialRoute' | 'order' | 'history' | 'none';
 };
 
 export type TabNavigationOptions = {
@@ -31,13 +34,20 @@ export type TabNavigationOptions = {
   title?: string;
 };
 
+export type TabNavigationState = NavigationState & {
+  /**
+   * List of previously visited route keys.
+   */
+  routeKeyHistory: string[];
+};
+
 export type TabNavigationProp<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = string
 > = NavigationProp<
   ParamList,
   RouteName,
-  NavigationState,
+  TabNavigationState,
   TabNavigationOptions
 > & {
   /**
@@ -53,20 +63,24 @@ export type TabNavigationProp<
   ): void;
 };
 
-function TabRouter(options: DefaultRouterOptions) {
-  const router: Router<NavigationState, Action | CommonAction> = {
+function TabRouter({
+  initialRouteName,
+  backBehavior = 'history',
+}: TabRouterOptions) {
+  const router: Router<TabNavigationState, Action | CommonAction> = {
     ...BaseRouter,
 
     getInitialState({ routeNames, routeParamList }) {
       const index =
-        options.initialRouteName === undefined
+        initialRouteName === undefined
           ? 0
-          : routeNames.indexOf(options.initialRouteName);
+          : routeNames.indexOf(initialRouteName);
 
       return {
         key: `tab-${shortid()}`,
         index,
         routeNames,
+        routeKeyHistory: [],
         routes: routeNames.map(name => ({
           name,
           key: `${name}-${shortid()}`,
@@ -115,7 +129,13 @@ function TabRouter(options: DefaultRouterOptions) {
         return state;
       }
 
-      return { ...state, index };
+      return {
+        ...state,
+        routeKeyHistory: [
+          ...new Set([...state.routeKeyHistory, state.routes[state.index].key]),
+        ],
+        index,
+      };
     },
 
     getStateForAction(state, action) {
@@ -140,6 +160,12 @@ function TabRouter(options: DefaultRouterOptions) {
 
           return {
             ...state,
+            routeKeyHistory: [
+              ...new Set([
+                ...state.routeKeyHistory,
+                state.routes[state.index].key,
+              ]),
+            ],
             routes:
               action.payload.params !== undefined
                 ? state.routes.map((route, i) =>
@@ -157,6 +183,52 @@ function TabRouter(options: DefaultRouterOptions) {
             index,
           };
         }
+
+        case 'GO_BACK':
+          switch (backBehavior) {
+            case 'initialRoute': {
+              const index = initialRouteName
+                ? state.routeNames.indexOf(initialRouteName)
+                : 0;
+
+              if (index === -1 || index === state.index) {
+                return null;
+              }
+
+              return { ...state, index };
+            }
+
+            case 'order':
+              if (state.index === 0) {
+                return null;
+              }
+
+              return {
+                ...state,
+                index: state.index - 1,
+              };
+
+            case 'history': {
+              const previousKey =
+                state.routeKeyHistory[state.routeKeyHistory.length - 1];
+              const index = state.routes.findIndex(
+                route => route.key === previousKey
+              );
+
+              if (index === -1) {
+                return null;
+              }
+
+              return {
+                ...state,
+                routeKeyHistory: state.routeKeyHistory.slice(0, -1),
+                index,
+              };
+            }
+
+            default:
+              return null;
+          }
 
         default:
           return BaseRouter.getStateForAction(state, action);
@@ -183,9 +255,9 @@ function TabRouter(options: DefaultRouterOptions) {
 
 export function TabNavigator(props: Props) {
   const { state, descriptors } = useNavigationBuilder<
-    NavigationState,
+    TabNavigationState,
     TabNavigationOptions,
-    DefaultRouterOptions
+    TabRouterOptions
   >(TabRouter, props);
 
   return (
