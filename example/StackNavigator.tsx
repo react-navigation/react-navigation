@@ -14,8 +14,7 @@ import {
   DefaultRouterOptions,
 } from '../src/index';
 
-type Props = {
-  initialRouteName?: string;
+type Props = DefaultRouterOptions & {
   children: React.ReactNode;
 };
 

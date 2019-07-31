@@ -325,8 +325,8 @@ export type RouteProp<
       });
 
 export type CompositeNavigationProp<
-  A extends NavigationProp<ParamListBase>,
-  B extends NavigationHelpersCommon<ParamListBase>
+  A extends NavigationProp<ParamListBase, string, any, any>,
+  B extends NavigationHelpersCommon<ParamListBase, any>
 > = Omit<A & B, keyof NavigationProp<any>> &
   NavigationProp<
     /**
