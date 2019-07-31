@@ -177,6 +177,7 @@ function TabRouter(options: DefaultRouterOptions) {
       },
     },
   };
+
   return router;
 }
 

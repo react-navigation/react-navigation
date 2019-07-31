@@ -36,8 +36,11 @@ export default function useNavigationCache({
   ]);
 
   cache.current = state.routes.reduce<NavigationCache>((acc, route, index) => {
-    if (cache.current[route.key]) {
-      acc[route.key] = cache.current[route.key];
+    const previous = cache.current[route.key];
+    const isFirst = route.key === state.routes[0].key;
+
+    if (previous && previous.isFirstRouteInParent() === isFirst) {
+      acc[route.key] = previous;
     } else {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { emit, ...rest } = navigation;
@@ -69,6 +72,7 @@ export default function useNavigationCache({
 
           return navigation ? navigation.isFocused() : true;
         },
+        isFirstRouteInParent: () => isFirst,
       } as NavigationProp<ParamListBase>;
     }
 

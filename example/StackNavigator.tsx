@@ -255,6 +255,7 @@ function StackRouter(options: DefaultRouterOptions) {
       },
     },
   };
+
   return router;
 }
 
