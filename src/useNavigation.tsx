@@ -2,6 +2,11 @@ import * as React from 'react';
 import NavigationContext from './NavigationContext';
 import { NavigationProp, ParamListBase } from './types';
 
+/**
+ * Hook to access the navigation prop of the parent screen anywhere.
+ *
+ * @returns Navigation prop of the parent screen.
+ */
 export default function useNavigation<
   T extends NavigationProp<ParamListBase>
 >(): T {

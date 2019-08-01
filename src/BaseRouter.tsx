@@ -1,6 +1,10 @@
 import shortid from 'shortid';
 import { CommonAction, NavigationState } from './types';
 
+/**
+ * Base router object that can be used when writing custom routers.
+ * This provides few helper methods to handle common actions such as `RESET`.
+ */
 const BaseRouter = {
   getStateForAction<State extends NavigationState>(
     state: State,
