@@ -1,22 +1,11 @@
-/* eslint-disable react-native/no-inline-styles */
-
-import * as React from 'react';
 import shortid from 'shortid';
 import {
-  useNavigationBuilder,
-  NavigationProp,
   NavigationState,
   CommonAction,
-  ParamListBase,
   Router,
   BaseRouter,
-  createNavigator,
   DefaultRouterOptions,
-} from '../src/index';
-
-type Props = DefaultRouterOptions & {
-  children: React.ReactNode;
-};
+} from '@navigation-ex/core';
 
 type Action =
   | {
@@ -29,47 +18,12 @@ type Action =
     }
   | { type: 'POP_TO_TOP' };
 
-export type StackNavigationOptions = {
-  /**
-   * Title text for the screen.
-   */
-  title?: string;
-};
+export type StackRouterOptions = DefaultRouterOptions;
 
-export type StackNavigationProp<
-  ParamList extends ParamListBase,
-  RouteName extends keyof ParamList = string
-> = NavigationProp<
-  ParamList,
-  RouteName,
-  NavigationState,
-  StackNavigationOptions
-> & {
-  /**
-   * Push a new screen onto the stack.
-   *
-   * @param name Name of the route for the tab.
-   * @param [params] Params object for the route.
-   */
-  push<RouteName extends keyof ParamList>(
-    ...args: ParamList[RouteName] extends void
-      ? [RouteName]
-      : [RouteName, ParamList[RouteName]]
-  ): void;
+export type StackNavigationState = NavigationState;
 
-  /**
-   * Pop a screen from the stack.
-   */
-  pop(count?: number): void;
-
-  /**
-   * Pop to the first route in the stack, dismissing all other screens.
-   */
-  popToTop(): void;
-};
-
-function StackRouter(options: DefaultRouterOptions) {
-  const router: Router<NavigationState, CommonAction | Action> = {
+export default function StackRouter(options: StackRouterOptions) {
+  const router: Router<StackNavigationState, CommonAction | Action> = {
     ...BaseRouter,
 
     getInitialState({ routeNames, routeParamList }) {
@@ -257,53 +211,3 @@ function StackRouter(options: DefaultRouterOptions) {
 
   return router;
 }
-
-export function StackNavigator(props: Props) {
-  const { state, descriptors } = useNavigationBuilder<
-    NavigationState,
-    StackNavigationOptions,
-    DefaultRouterOptions
-  >(StackRouter, props);
-
-  return (
-    <div style={{ position: 'relative' }}>
-      {state.routes.map((route, i) => (
-        <div
-          key={route.key}
-          style={{
-            position: 'absolute',
-            margin: 20,
-            left: i * 20,
-            top: i * 20,
-            padding: 10,
-            height: 480,
-            width: 320,
-            backgroundColor: 'white',
-            borderRadius: 3,
-            boxShadow:
-              '0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)',
-          }}
-        >
-          {descriptors[route.key].render()}
-        </div>
-      ))}
-      <div
-        style={{
-          position: 'absolute',
-          left: 40,
-          width: 120,
-          padding: 10,
-          backgroundColor: 'tomato',
-          borderRadius: 3,
-          boxShadow: '0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)',
-        }}
-      >
-        {descriptors[state.routes[state.index].key].options.title}
-      </div>
-    </div>
-  );
-}
-
-export default createNavigator<StackNavigationOptions, typeof StackNavigator>(
-  StackNavigator
-);

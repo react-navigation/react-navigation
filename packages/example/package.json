@@ -1,0 +1,41 @@
+{
+  "name": "@navigation-ex/example",
+  "version": "0.0.0",
+  "private": true,
+  "workspaces": {
+    "nohoist": [
+      "*",
+      "*/**"
+    ]
+  },
+  "main": "node_modules/expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "eject": "expo eject"
+  },
+  "dependencies": {
+    "expo": "^34.0.1",
+    "react": "16.8.3",
+    "react-dom": "^16.8.3",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-34.0.0.tar.gz",
+    "react-native-paper": "3.0.0-alpha.3",
+    "react-native-web": "^0.11.4",
+    "scheduler": "^0.14.0",
+    "shortid": "^2.2.14"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@expo/webpack-config": "^0.7.0",
+    "@types/react": "^16.8.23",
+    "@types/react-native": "^0.57.65",
+    "babel-preset-expo": "^6.0.0",
+    "expo-cli": "^3.0.6"
+  },
+  "resolutions": {
+    "react": "16.8.3",
+    "react-dom": "^16.8.3"
+  }
+}
