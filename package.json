@@ -1,16 +1,20 @@
 {
-  "name": "navigation-ex",
-  "private": true,
-  "version": "0.0.0",
   "description": "Rethinking navigation",
-  "keywords": [],
-  "types": "types/index.d.ts",
-  "main": "lib/index.js",
-  "files": [
-    "lib/",
-    "types/",
-    "index.d.ts"
-  ],
+  "private": true,
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ],
+    "nohoist": [
+      "**/expo",
+      "**/expo/**",
+      "**/react-native",
+      "**/react-native/**"
+    ]
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -21,48 +25,25 @@
     "lint": "eslint --ext '.js,.ts,.tsx' .",
     "typescript": "tsc --noEmit",
     "test": "jest",
-    "prebuild": "del lib/ types/",
-    "babel": "babel src --out-dir lib --ignore '**/__tests__/**' --source-maps",
-    "declarations": "tsc --declaration --emitDeclarationOnly --outDir types",
-    "build": "yarn babel && yarn declarations",
-    "example": "parcel example/index.html",
-    "prepare": "yarn build",
-    "release": "release-it"
-  },
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
-  },
-  "dependencies": {
-    "core-js": "^3.1.3",
-    "shortid": "^2.2.14"
+    "example": "yarn --cwd packages/example"
   },
   "devDependencies": {
-    "@babel/cli": "^7.4.4",
-    "@babel/core": "^7.4.5",
-    "@babel/plugin-proposal-class-properties": "^7.5.0",
-    "@babel/preset-env": "^7.4.5",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
     "@babel/preset-react": "^7.0.0",
     "@babel/preset-typescript": "^7.3.3",
+    "@babel/runtime": "^7.5.5",
     "@commitlint/config-conventional": "^8.0.0",
-    "@release-it/conventional-changelog": "^1.1.0",
     "@types/jest": "^24.0.13",
-    "@types/react": "^16.8.19",
-    "@types/react-dom": "^16.8.4",
-    "@types/shortid": "^0.0.29",
     "codecov": "^3.5.0",
     "commitlint": "^8.0.0",
+    "core-js": "^3.1.4",
     "del-cli": "^2.0.0",
     "eslint": "^5.16.0",
     "eslint-config-satya164": "^2.4.1",
     "husky": "^2.4.0",
     "jest": "^24.8.0",
-    "parcel": "^1.12.3",
     "prettier": "^1.18.2",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
-    "react-native-testing-library": "^1.9.1",
-    "react-test-renderer": "^16.8.6",
-    "release-it": "^12.3.0",
     "typescript": "^3.5.1"
   },
   "husky": {
@@ -73,14 +54,12 @@
   },
   "jest": {
     "testEnvironment": "node",
-    "modulePathIgnorePatterns": [
-      "<rootDir>/types/",
-      "<rootDir>/lib/"
-    ],
     "testRegex": "/__tests__/.*\\.(test|spec)\\.(js|tsx?)$",
     "transform": {
       "^.+\\.(js|ts|tsx)$": "babel-jest"
     },
-    "setupFiles": ["<rootDir>/jest/setup.js"]
+    "setupFiles": [
+      "<rootDir>/jest/setup.js"
+    ]
   }
 }

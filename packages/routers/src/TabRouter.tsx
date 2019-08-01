@@ -1,22 +1,11 @@
-/* eslint-disable react-native/no-inline-styles */
-
-import * as React from 'react';
 import shortid from 'shortid';
 import {
-  useNavigationBuilder,
-  NavigationProp,
   CommonAction,
-  ParamListBase,
-  Router,
-  createNavigator,
   BaseRouter,
   NavigationState,
   DefaultRouterOptions,
-} from '../src/index';
-
-type Props = TabRouterOptions & {
-  children: React.ReactNode;
-};
+  Router,
+} from '@navigation-ex/core';
 
 type Action = {
   type: 'JUMP_TO';
@@ -27,13 +16,6 @@ export type TabRouterOptions = DefaultRouterOptions & {
   backBehavior?: 'initialRoute' | 'order' | 'history' | 'none';
 };
 
-export type TabNavigationOptions = {
-  /**
-   * Title text for the screen.
-   */
-  title?: string;
-};
-
 export type TabNavigationState = NavigationState & {
   /**
    * List of previously visited route keys.
@@ -41,29 +23,7 @@ export type TabNavigationState = NavigationState & {
   routeKeyHistory: string[];
 };
 
-export type TabNavigationProp<
-  ParamList extends ParamListBase,
-  RouteName extends keyof ParamList = string
-> = NavigationProp<
-  ParamList,
-  RouteName,
-  TabNavigationState,
-  TabNavigationOptions
-> & {
-  /**
-   * Jump to an existing tab.
-   *
-   * @param name Name of the route for the tab.
-   * @param [params] Params object for the route.
-   */
-  jumpTo<RouteName extends Extract<keyof ParamList, string>>(
-    ...args: ParamList[RouteName] extends void
-      ? [RouteName]
-      : [RouteName, ParamList[RouteName]]
-  ): void;
-};
-
-function TabRouter({
+export default function TabRouter({
   initialRouteName,
   backBehavior = 'history',
 }: TabRouterOptions) {
@@ -252,33 +212,3 @@ function TabRouter({
 
   return router;
 }
-
-export function TabNavigator(props: Props) {
-  const { state, descriptors } = useNavigationBuilder<
-    TabNavigationState,
-    TabNavigationOptions,
-    TabRouterOptions
-  >(TabRouter, props);
-
-  return (
-    <div style={{ display: 'flex', flexDirection: 'row', height: '100%' }}>
-      {state.routes.map((route, i, self) => (
-        <div
-          key={route.key}
-          style={{
-            width: `${100 / self.length}%`,
-            padding: 10,
-            borderRadius: 3,
-            backgroundColor: i === state.index ? 'tomato' : 'white',
-          }}
-        >
-          {descriptors[route.key].render()}
-        </div>
-      ))}
-    </div>
-  );
-}
-
-export default createNavigator<TabNavigationOptions, typeof TabNavigator>(
-  TabNavigator
-);

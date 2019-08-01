@@ -1,0 +1,10 @@
+{
+  "name": "@navigation-ex/routers",
+  "version": "0.0.1",
+  "main": "src/index",
+  "license": "MIT",
+  "dependencies": {
+    "shortid": "^2.2.14",
+    "@navigation-ex/core": "^0.0.1"
+  }
+}

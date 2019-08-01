@@ -1,7 +1,7 @@
 import * as React from 'react';
 import useNavigation from './useNavigation';
 
-type EffectCallback = (() => undefined) | (() => () => void);
+type EffectCallback = (() => void) | (() => () => void);
 
 /**
  * Hook to an effect in a focused screen, similar to `React.useEffect`.
@@ -15,7 +15,7 @@ export default function useFocusEffect(callback: EffectCallback) {
 
   React.useEffect(() => {
     let isFocused = false;
-    let cleanup: (() => void) | undefined;
+    let cleanup: (() => void) | void;
 
     // We need to run the effect on intial render/dep changes if the screen is focused
     if (navigation.isFocused()) {

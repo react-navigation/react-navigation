@@ -2,9 +2,22 @@
 .cache
 .vscode
 .idea
+.expo
 
 /coverage/
 /types/
 /lib/
 /dist/
-/node_modules/
+
+node_modules/
+web-build/
+web-report/
+
+npm-debug.*
+
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*

@@ -1,5 +1,13 @@
 import * as React from 'react';
-import { render } from 'react-dom';
+import {
+  View,
+  Text,
+  Platform,
+  AsyncStorage,
+  YellowBox,
+  StyleSheet,
+} from 'react-native';
+import { Button } from 'react-native-paper';
 import {
   NavigationContainer,
   CompositeNavigationProp,
@@ -7,7 +15,7 @@ import {
   RouteProp,
   InitialState,
   useFocusEffect,
-} from '../src';
+} from '@navigation-ex/core';
 import createStackNavigator, { StackNavigationProp } from './StackNavigator';
 import createTabNavigator, { TabNavigationProp } from './TabNavigator';
 
@@ -21,6 +29,8 @@ type TabParamList = {
   fourth: undefined;
   fifth: undefined;
 };
+
+YellowBox.ignoreWarnings(['Require cycle:', 'Warning: Async Storage']);
 
 const Stack = createStackNavigator<StackParamList>();
 
@@ -37,35 +47,32 @@ const First = ({
   route: RouteProp<StackParamList, 'first'>;
 }) => {
   const updateTitle = React.useCallback(() => {
+    if (Platform.OS !== 'web') {
+      return;
+    }
+
     document.title = `${route.name} (${route.params.author})`;
 
-    return () => (document.title = '');
+    return () => {
+      document.title = '';
+    };
   }, [route.name, route.params.author]);
 
   useFocusEffect(updateTitle);
 
   return (
-    <div>
-      <h1>First, {route.params.author}</h1>
-      <button type="button" onClick={() => navigation.push('second')}>
-        Push second
-      </button>
-      <button type="button" onClick={() => navigation.push('third')}>
-        Push third
-      </button>
-      <button type="button" onClick={() => navigation.navigate('fourth')}>
+    <View>
+      <Text style={styles.title}>First, {route.params.author}</Text>
+      <Button onPress={() => navigation.push('second')}>Push second</Button>
+      <Button onPress={() => navigation.push('third')}>Push third</Button>
+      <Button onPress={() => navigation.navigate('fourth')}>
         Navigate to fourth
-      </button>
-      <button
-        type="button"
-        onClick={() => navigation.navigate('first', { author: 'John' })}
-      >
+      </Button>
+      <Button onPress={() => navigation.navigate('first', { author: 'John' })}>
         Navigate with params
-      </button>
-      <button type="button" onClick={() => navigation.pop()}>
-        Pop
-      </button>
-    </div>
+      </Button>
+      <Button onPress={() => navigation.pop()}>Pop</Button>
+    </View>
   );
 };
 
@@ -90,18 +97,13 @@ const Second = ({
   });
 
   return (
-    <div>
-      <h1>Second</h1>
-      <button
-        type="button"
-        onClick={() => navigation.push('first', { author: 'Joel' })}
-      >
+    <View>
+      <Text style={styles.title}>Second</Text>
+      <Button onPress={() => navigation.push('first', { author: 'Joel' })}>
         Push first
-      </button>
-      <button type="button" onClick={() => navigation.pop()}>
-        Pop
-      </button>
-    </div>
+      </Button>
+      <Button onPress={() => navigation.pop()}>Pop</Button>
+    </View>
   );
 };
 
@@ -113,21 +115,14 @@ const Fourth = ({
     StackNavigationProp<StackParamList>
   >;
 }) => (
-  <div>
-    <h1>Fourth</h1>
-    <button type="button" onClick={() => navigation.jumpTo('fifth')}>
-      Jump to fifth
-    </button>
-    <button
-      type="button"
-      onClick={() => navigation.push('first', { author: 'Jake' })}
-    >
+  <View>
+    <Text style={styles.title}>Fourth</Text>
+    <Button onPress={() => navigation.jumpTo('fifth')}>Jump to fifth</Button>
+    <Button onPress={() => navigation.push('first', { author: 'Jake' })}>
       Push first
-    </button>
-    <button type="button" onClick={() => navigation.goBack()}>
-      Go back
-    </button>
-  </div>
+    </Button>
+    <Button onPress={() => navigation.goBack()}>Go back</Button>
+  </View>
 );
 
 const Fifth = ({
@@ -138,36 +133,48 @@ const Fifth = ({
     StackNavigationProp<StackParamList>
   >;
 }) => (
-  <div>
-    <h1>Fifth</h1>
-    <button type="button" onClick={() => navigation.jumpTo('fourth')}>
-      Jump to fourth
-    </button>
-    <button type="button" onClick={() => navigation.push('second')}>
-      Push second
-    </button>
-    <button type="button" onClick={() => navigation.pop()}>
-      Pop
-    </button>
-  </div>
+  <View>
+    <Text style={styles.title}>Fifth</Text>
+    <Button onPress={() => navigation.jumpTo('fourth')}>Jump to fourth</Button>
+    <Button onPress={() => navigation.push('second')}>Push second</Button>
+    <Button onPress={() => navigation.pop()}>Pop</Button>
+  </View>
 );
 
 const PERSISTENCE_KEY = 'NAVIGATION_STATE';
 
-let initialState: InitialState | undefined;
+export default function App() {
+  const [isReady, setIsReady] = React.useState(false);
+  const [initialState, setInitialState] = React.useState<
+    InitialState | undefined
+  >();
 
-try {
-  initialState = JSON.parse(localStorage.getItem(PERSISTENCE_KEY) || '');
-} catch (e) {
-  // Do nothing
-}
+  React.useEffect(() => {
+    AsyncStorage.getItem(PERSISTENCE_KEY).then(
+      data => {
+        try {
+          const result = JSON.parse(data || '');
 
-function App() {
+          if (result) {
+            setInitialState(result);
+          }
+        } finally {
+          setIsReady(true);
+        }
+      },
+      () => setIsReady(true)
+    );
+  }, []);
+
+  if (!isReady) {
+    return null;
+  }
+
   return (
     <NavigationContainer
       initialState={initialState}
       onStateChange={state =>
-        localStorage.setItem(PERSISTENCE_KEY, JSON.stringify(state))
+        AsyncStorage.setItem(PERSISTENCE_KEY, JSON.stringify(state))
       }
     >
       <Stack.Navigator>
@@ -195,4 +202,10 @@ function App() {
   );
 }
 
-render(<App />, document.getElementById('root'));
+const styles = StyleSheet.create({
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+});
