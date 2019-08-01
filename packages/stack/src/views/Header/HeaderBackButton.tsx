@@ -6,11 +6,16 @@ import {
   Platform,
   StyleSheet,
   LayoutChangeEvent,
-  MaskedViewIOS,
+  UIManager,
 } from 'react-native';
 import Animated from 'react-native-reanimated';
+import MaskedView from '@react-native-community/masked-view';
 import TouchableItem from '../TouchableItem';
 import { HeaderBackButtonProps } from '../../types';
+
+const isMaskedViewAvailable =
+  // @ts-ignore
+  UIManager.getViewManagerConfig('RNCMaskedView') != null;
 
 type Props = HeaderBackButtonProps & {
   tintColor: string;
@@ -95,33 +100,43 @@ class HeaderBackButton extends React.Component<Props, State> {
     }
 
     const labelElement = (
-      <Animated.Text
-        accessible={false}
-        onLayout={
-          // This measurement is used to determine if we should truncate the label when it doesn't fit
-          // Only measure it when label is not truncated because we want the measurement of full label
-          leftLabelText === label ? this.handleLabelLayout : undefined
+      <View
+        style={
+          screenLayout
+            ? // We make the button extend till the middle of the screen
+              // Otherwise it appears to cut off when translating
+              [styles.labelWrapper, { minWidth: screenLayout.width / 2 - 27 }]
+            : null
         }
-        style={[
-          styles.label,
-          tintColor ? { color: tintColor } : null,
-          labelStyle,
-        ]}
-        numberOfLines={1}
-        allowFontScaling={!!allowFontScaling}
       >
-        {leftLabelText}
-      </Animated.Text>
+        <Animated.Text
+          accessible={false}
+          onLayout={
+            // This measurement is used to determine if we should truncate the label when it doesn't fit
+            // Only measure it when label is not truncated because we want the measurement of full label
+            leftLabelText === label ? this.handleLabelLayout : undefined
+          }
+          style={[
+            styles.label,
+            tintColor ? { color: tintColor } : null,
+            labelStyle,
+          ]}
+          numberOfLines={1}
+          allowFontScaling={!!allowFontScaling}
+        >
+          {leftLabelText}
+        </Animated.Text>
+      </View>
     );
 
-    if (backImage || Platform.OS !== 'ios') {
+    if (!isMaskedViewAvailable || backImage || Platform.OS !== 'ios') {
       // When a custom backimage is specified, we can't mask the label
       // Otherwise there might be weird effect due to our mask not being the same as the image
       return labelElement;
     }
 
     return (
-      <MaskedViewIOS
+      <MaskedView
         maskElement={
           <View style={styles.iconMaskContainer}>
             <Image
@@ -132,18 +147,8 @@ class HeaderBackButton extends React.Component<Props, State> {
           </View>
         }
       >
-        <View
-          style={
-            screenLayout
-              ? // We make the button extend till the middle of the screen
-                // Otherwise it appears to cut off when translating
-                [styles.labelWrapper, { minWidth: screenLayout.width / 2 - 27 }]
-              : null
-          }
-        >
-          {labelElement}
-        </View>
-      </MaskedViewIOS>
+        {labelElement}
+      </MaskedView>
     );
   }
 
