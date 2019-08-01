@@ -49,6 +49,7 @@
     "@commitlint/config-conventional": "^8.0.0",
     "@expo/vector-icons": "^10.0.3",
     "@react-native-community/bob": "^0.6.1",
+    "@react-native-community/masked-view": "^0.1.1",
     "@react-navigation/core": "^3.4.2",
     "@react-navigation/native": "^3.5.0",
     "@release-it/conventional-changelog": "^1.1.0",
@@ -75,6 +76,7 @@
     "typescript": "^3.5.2"
   },
   "peerDependencies": {
+    "@react-native-community/masked-view": "^0.1.1",
     "@react-navigation/core": "^3.0.0",
     "react": "*",
     "react-native": "*",

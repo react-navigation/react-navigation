@@ -9,6 +9,7 @@
     "ios": "expo start --ios"
   },
   "dependencies": {
+    "@react-native-community/masked-view": "^0.1.1",
     "@react-navigation/core": "3.4.2",
     "@react-navigation/native": "^3.4.1",
     "expo": "^33.0.7",

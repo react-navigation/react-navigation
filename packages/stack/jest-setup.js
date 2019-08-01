@@ -1,5 +1,7 @@
 /* eslint-env jest */
 
+jest.mock('@react-native-community/masked-view', () => () => null);
+
 jest.mock('react-native-gesture-handler', () => ({
   PanGestureHandler: 'PanGestureHandler',
   BaseButton: 'BaseButton',
