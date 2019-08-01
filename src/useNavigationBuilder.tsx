@@ -57,6 +57,13 @@ const getRouteConfigsFromChildren = <ScreenOptions extends object>(
     );
   }, []);
 
+/**
+ * Hook for building navigators.
+ *
+ * @param createRouter Factory method which returns router object.
+ * @param options Options object containing `children` and additional options for the router.
+ * @returns An object containing `state`, `navigation`, `descriptors` objects.
+ */
 export default function useNavigationBuilder<
   State extends NavigationState,
   ScreenOptions extends object,
