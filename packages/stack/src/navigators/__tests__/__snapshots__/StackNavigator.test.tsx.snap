@@ -206,9 +206,14 @@ Array [
             Array [
               Object {
                 "backgroundColor": "white",
-                "borderBottomColor": "#A7A7AA",
-                "borderBottomWidth": 0.5,
                 "flex": 1,
+                "shadowColor": "rgba(0, 0, 0, 0.3)",
+                "shadowOffset": Object {
+                  "height": 0.5,
+                  "width": 0,
+                },
+                "shadowOpacity": 0.85,
+                "shadowRadius": 0,
               },
               Object {
                 "backgroundColor": "red",
@@ -519,9 +524,14 @@ Array [
             Array [
               Object {
                 "backgroundColor": "white",
-                "borderBottomColor": "#A7A7AA",
-                "borderBottomWidth": 0.5,
                 "flex": 1,
+                "shadowColor": "rgba(0, 0, 0, 0.3)",
+                "shadowOffset": Object {
+                  "height": 0.5,
+                  "width": 0,
+                },
+                "shadowOpacity": 0.85,
+                "shadowRadius": 0,
               },
               Object {
                 "backgroundColor": "red",
