@@ -23,6 +23,20 @@ export type TabNavigationState = NavigationState & {
   routeKeyHistory: string[];
 };
 
+const changeIndex = (state: TabNavigationState, index: number) => {
+  const previousKey = state.routes[state.index].key;
+  const currentKey = state.routes[index].key;
+  const routeKeyHistory = state.routeKeyHistory
+    .filter(key => key !== currentKey && key !== previousKey)
+    .concat(previousKey);
+
+  return {
+    ...state,
+    index,
+    routeKeyHistory,
+  };
+};
+
 export default function TabRouter({
   initialRouteName,
   backBehavior = 'history',
@@ -89,13 +103,7 @@ export default function TabRouter({
         return state;
       }
 
-      return {
-        ...state,
-        routeKeyHistory: [
-          ...new Set([...state.routeKeyHistory, state.routes[state.index].key]),
-        ],
-        index,
-      };
+      return changeIndex(state, index);
     },
 
     getStateForAction(state, action) {
@@ -118,30 +126,26 @@ export default function TabRouter({
             return null;
           }
 
-          return {
-            ...state,
-            routeKeyHistory: [
-              ...new Set([
-                ...state.routeKeyHistory,
-                state.routes[state.index].key,
-              ]),
-            ],
-            routes:
-              action.payload.params !== undefined
-                ? state.routes.map((route, i) =>
-                    i === index
-                      ? {
-                          ...route,
-                          params: {
-                            ...route.params,
-                            ...action.payload.params,
-                          },
-                        }
-                      : route
-                  )
-                : state.routes,
-            index,
-          };
+          return changeIndex(
+            {
+              ...state,
+              routes:
+                action.payload.params !== undefined
+                  ? state.routes.map((route, i) =>
+                      i === index
+                        ? {
+                            ...route,
+                            params: {
+                              ...route.params,
+                              ...action.payload.params,
+                            },
+                          }
+                        : route
+                    )
+                  : state.routes,
+            },
+            index
+          );
         }
 
         case 'GO_BACK':

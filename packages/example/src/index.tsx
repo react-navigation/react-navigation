@@ -16,8 +16,12 @@ import {
   InitialState,
   useFocusEffect,
 } from '@navigation-ex/core';
-import createStackNavigator, { StackNavigationProp } from './StackNavigator';
-import createTabNavigator, { TabNavigationProp } from './TabNavigator';
+import createStackNavigator, {
+  StackNavigationProp,
+} from '@navigation-ex/stack';
+import createMaterialTopTabNavigator, {
+  MaterialTopTabNavigationProp,
+} from '@navigation-ex/material-top-tabs';
 
 type StackParamList = {
   first: { author: string };
@@ -34,7 +38,7 @@ YellowBox.ignoreWarnings(['Require cycle:', 'Warning: Async Storage']);
 
 const Stack = createStackNavigator<StackParamList>();
 
-const Tab = createTabNavigator<TabParamList>();
+const Tab = createMaterialTopTabNavigator<TabParamList>();
 
 const First = ({
   navigation,
@@ -111,7 +115,7 @@ const Fourth = ({
   navigation,
 }: {
   navigation: CompositeNavigationProp<
-    TabNavigationProp<TabParamList, 'fourth'>,
+    MaterialTopTabNavigationProp<TabParamList, 'fourth'>,
     StackNavigationProp<StackParamList>
   >;
 }) => (
@@ -129,7 +133,7 @@ const Fifth = ({
   navigation,
 }: {
   navigation: CompositeNavigationProp<
-    TabNavigationProp<TabParamList, 'fifth'>,
+    MaterialTopTabNavigationProp<TabParamList, 'fifth'>,
     StackNavigationProp<StackParamList>
   >;
 }) => (
@@ -192,8 +196,16 @@ export default function App() {
         <Stack.Screen name="third" options={{ title: 'Baz' }}>
           {() => (
             <Tab.Navigator initialRouteName="fifth">
-              <Tab.Screen name="fourth" component={Fourth} />
-              <Tab.Screen name="fifth" component={Fifth} />
+              <Tab.Screen
+                name="fourth"
+                component={Fourth}
+                options={{ title: 'This' }}
+              />
+              <Tab.Screen
+                name="fifth"
+                component={Fifth}
+                options={{ title: 'That' }}
+              />
             </Tab.Navigator>
           )}
         </Stack.Screen>

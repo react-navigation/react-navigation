@@ -4,12 +4,6 @@
   "workspaces": {
     "packages": [
       "packages/*"
-    ],
-    "nohoist": [
-      "**/expo",
-      "**/expo/**",
-      "**/react-native",
-      "**/react-native/**"
     ]
   },
   "publishConfig": {
