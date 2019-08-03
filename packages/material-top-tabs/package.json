@@ -1,0 +1,22 @@
+{
+  "name": "@navigation-ex/material-top-tabs",
+  "version": "0.0.1",
+  "main": "src/index",
+  "license": "MIT",
+  "dependencies": {
+    "@navigation-ex/core": "^0.0.1",
+    "@navigation-ex/routers": "^0.0.1"
+  },
+  "devDependencies": {
+    "@types/react": "^16.8.24",
+    "@types/react-native": "^0.60.2",
+    "react": "16.8.3",
+    "react-native": "^0.59.8",
+    "react-native-tab-view": "^2.0.0"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*",
+    "react-native-tab-view": "^2.0.0"
+  }
+}

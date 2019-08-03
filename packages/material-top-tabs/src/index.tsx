@@ -1,7 +1,5 @@
-/* eslint-disable react-native/no-inline-styles */
-
 import * as React from 'react';
-import { View } from 'react-native';
+import { TabView, TabBar } from 'react-native-tab-view';
 import {
   useNavigationBuilder,
   NavigationProp,
@@ -14,9 +12,15 @@ import {
   TabNavigationState,
 } from '@navigation-ex/routers';
 
-type Props = TabRouterOptions & {
-  children: React.ReactNode;
-};
+type Props = TabRouterOptions &
+  Partial<
+    Omit<
+      React.ComponentProps<typeof TabView>,
+      'navigationState' | 'onIndexChange' | 'renderScene' | 'renderTabBar'
+    >
+  > & {
+    children: React.ReactNode;
+  };
 
 export type TabNavigationOptions = {
   /**
@@ -25,7 +29,7 @@ export type TabNavigationOptions = {
   title?: string;
 };
 
-export type TabNavigationProp<
+export type MaterialTopTabNavigationProp<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = string
 > = NavigationProp<
@@ -47,29 +51,37 @@ export type TabNavigationProp<
   ): void;
 };
 
-export function TabNavigator(props: Props) {
-  const { state, descriptors } = useNavigationBuilder<
+export function TabNavigator({
+  initialRouteName,
+  backBehavior,
+  children,
+  ...rest
+}: Props) {
+  const { state, descriptors, navigation } = useNavigationBuilder<
     TabNavigationState,
     TabNavigationOptions,
     TabRouterOptions
-  >(TabRouter, props);
+  >(TabRouter, {
+    initialRouteName,
+    backBehavior,
+    children,
+  });
 
   return (
-    <View style={{ display: 'flex', flexDirection: 'row', height: '100%' }}>
-      {state.routes.map((route, i, self) => (
-        <View
-          key={route.key}
-          style={{
-            width: `${100 / self.length}%`,
-            padding: 10,
-            borderRadius: 3,
-            backgroundColor: i === state.index ? 'tomato' : 'white',
-          }}
-        >
-          {descriptors[route.key].render()}
-        </View>
-      ))}
-    </View>
+    <TabView
+      {...rest}
+      navigationState={state}
+      onIndexChange={index =>
+        navigation.navigate({ key: state.routes[index].key }, {})
+      }
+      renderScene={({ route }) => descriptors[route.key].render()}
+      renderTabBar={props => (
+        <TabBar
+          getLabelText={({ route }) => descriptors[route.key].options.title}
+          {...props}
+        />
+      )}
+    />
   );
 }
 

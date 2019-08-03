@@ -2,7 +2,12 @@
   "extends": "satya164",
   "settings": {
     "react": { "version": "16" },
-    "import/core-modules": ["@navigation-ex/core", "@navigation-ex/routers"]
+    "import/core-modules": [
+      "@navigation-ex/core",
+      "@navigation-ex/routers",
+      "@navigation-ex/stack",
+      "@navigation-ex/material-top-tabs"
+    ]
   },
   "env": { "browser": true }
 }
