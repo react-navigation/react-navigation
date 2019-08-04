@@ -199,10 +199,6 @@ export default function TabRouter({
       }
     },
 
-    shouldActionPropagateToChildren(action) {
-      return action.type === 'NAVIGATE';
-    },
-
     shouldActionChangeFocus(action) {
       return action.type === 'NAVIGATE';
     },

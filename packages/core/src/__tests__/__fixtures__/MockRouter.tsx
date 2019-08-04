@@ -93,10 +93,6 @@ export default function MockRouter(options: DefaultRouterOptions) {
       }
     },
 
-    shouldActionPropagateToChildren(action) {
-      return action.type === 'NAVIGATE';
-    },
-
     shouldActionChangeFocus() {
       return false;
     },
