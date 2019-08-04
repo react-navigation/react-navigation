@@ -75,15 +75,6 @@ const BaseRouter = {
     }
   },
 
-  shouldActionPropagateToChildren(action: CommonAction) {
-    return (
-      action.type === 'NAVIGATE' ||
-      action.type === 'REPLACE' ||
-      action.type === 'SET_PARAMS' ||
-      action.type === 'RESET'
-    );
-  },
-
   shouldActionChangeFocus(action: CommonAction) {
     return action.type === 'NAVIGATE';
   },

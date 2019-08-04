@@ -67,13 +67,11 @@ export default function useOnAction({
           }
         }
 
-        if (router.shouldActionPropagateToChildren(action)) {
-          for (let i = listeners.length - 1; i >= 0; i--) {
-            const listener = listeners[i];
+        for (let i = listeners.length - 1; i >= 0; i--) {
+          const listener = listeners[i];
 
-            if (listener(action, visitedNavigators)) {
-              return true;
-            }
+          if (listener(action, visitedNavigators)) {
+            return true;
           }
         }
       } else {

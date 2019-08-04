@@ -124,17 +124,7 @@ it('throws when nesting performTransaction', () => {
 });
 
 it('handle dispatching with ref', () => {
-  function CurrentParentRouter(options: DefaultRouterOptions) {
-    const CurrentMockRouter = MockRouter(options);
-    const ParentRouter: Router<NavigationState, MockActions> = {
-      ...CurrentMockRouter,
-
-      shouldActionPropagateToChildren() {
-        return true;
-      },
-    };
-    return ParentRouter;
-  }
+  const CurrentParentRouter = MockRouter;
 
   function CurrentChildRouter(options: DefaultRouterOptions) {
     const CurrentMockRouter = MockRouter(options);

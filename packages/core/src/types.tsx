@@ -140,14 +140,6 @@ export type Router<
   getStateForAction(state: State, action: Action): State | null;
 
   /**
-   * Whether the action bubbles to other navigators
-   * When an action isn't handled by current navigator, it can be passed to nested navigators
-   *
-   * @param action Action object to check.
-   */
-  shouldActionPropagateToChildren(action: NavigationAction): boolean;
-
-  /**
    * Whether the action should also change focus in parent navigator
    *
    * @param action Action object to check.

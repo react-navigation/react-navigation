@@ -87,17 +87,7 @@ it("lets parent handle the action if child didn't", () => {
 });
 
 it("lets children handle the action if parent didn't", () => {
-  function CurrentParentRouter(options: DefaultRouterOptions) {
-    const CurrentMockRouter = MockRouter(options);
-    const ParentRouter: Router<NavigationState, MockActions> = {
-      ...CurrentMockRouter,
-
-      shouldActionPropagateToChildren() {
-        return true;
-      },
-    };
-    return ParentRouter;
-  }
+  const CurrentParentRouter = MockRouter;
 
   function CurrentChildRouter(options: DefaultRouterOptions) {
     const CurrentMockRouter = MockRouter(options);
@@ -221,17 +211,7 @@ it("lets children handle the action if parent didn't", () => {
 });
 
 it("doesn't crash if no navigator handled the action", () => {
-  function TestRouter(options: DefaultRouterOptions) {
-    const router: Router<NavigationState, MockActions> = {
-      ...MockRouter(options),
-
-      shouldActionPropagateToChildren() {
-        return true;
-      },
-    };
-
-    return router;
-  }
+  const TestRouter = MockRouter;
 
   const TestNavigator = (props: any) => {
     const { state, descriptors } = useNavigationBuilder(TestRouter, props);
