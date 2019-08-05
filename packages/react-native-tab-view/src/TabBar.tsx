@@ -20,6 +20,7 @@ import {
   SceneRendererProps,
   NavigationState,
   Layout,
+  Event,
 } from './types';
 
 export type Props<T extends Route> = SceneRendererProps & {
@@ -48,7 +49,7 @@ export type Props<T extends Route> = SceneRendererProps & {
   ) => React.ReactNode;
   renderBadge?: (scene: Scene<T>) => React.ReactNode;
   renderIndicator: (props: IndicatorProps<T>) => React.ReactNode;
-  onTabPress?: (scene: Scene<T>) => void;
+  onTabPress?: (scene: Scene<T> & Event) => void;
   onTabLongPress?: (scene: Scene<T>) => void;
   tabStyle?: StyleProp<ViewStyle>;
   indicatorStyle?: StyleProp<ViewStyle>;
@@ -430,7 +431,20 @@ export default class TabBar<T extends Route> extends React.Component<
                 pressColor={pressColor}
                 pressOpacity={pressOpacity}
                 onPress={() => {
-                  onTabPress && onTabPress({ route });
+                  const event: Scene<T> & Event = {
+                    route,
+                    defaultPrevented: false,
+                    preventDefault: () => {
+                      event.defaultPrevented = true;
+                    },
+                  };
+
+                  onTabPress && onTabPress(event);
+
+                  if (event.defaultPrevented) {
+                    return;
+                  }
+
                   this.props.jumpTo(route.key);
                 }}
                 onLongPress={() => onTabLongPress && onTabLongPress({ route })}

@@ -479,6 +479,18 @@ Function which takes an object with the current route and returns a custom React
 
 Function to execute on tab press. It receives the scene for the pressed tab, useful for things like scroll to top.
 
+By default, tab press also switches the tab. To prevent this behavior, you can call `preventDefault`:
+
+```js
+onTabPress={({ route, preventDefault }) => {
+  if (route.key === 'home') {
+    preventDefault();
+
+    // Do something else
+  }
+}}
+```
+
 ##### `onTabLongPress`
 
 Function to execute on tab long press, use for things like showing a menu with more options

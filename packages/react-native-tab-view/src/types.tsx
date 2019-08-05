@@ -9,6 +9,11 @@ export type Route = {
   testID?: string;
 };
 
+export type Event = {
+  defaultPrevented: boolean;
+  preventDefault(): void;
+};
+
 export type Scene<T extends Route> = {
   route: T;
 };
