@@ -13,3 +13,11 @@ export {
   TabRouterOptions,
   TabNavigationState,
 } from './TabRouter';
+
+export {
+  default as DrawerRouter,
+  DrawerActions,
+  DrawerActionType,
+  DrawerRouterOptions,
+  DrawerNavigationState,
+} from './DrawerRouter';

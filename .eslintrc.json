@@ -6,6 +6,7 @@
       "@navigation-ex/core",
       "@navigation-ex/routers",
       "@navigation-ex/stack",
+      "@navigation-ex/drawer",
       "@navigation-ex/material-top-tabs"
     ]
   },
