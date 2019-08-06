@@ -26,7 +26,7 @@ The router is responsible for handling actions dispatched by calling methods on 
 
 ### Navigator
 
-Navigators bundle a `router` and a view which takes the navigation state and decides how to render it.
+Navigators bundle a router and a view which takes the navigation state and decides how to render it.
 
 A simple navigator could look like this:
 
@@ -55,13 +55,74 @@ export default createNavigator(StackNavigator);
 
 The navigator can render a screen by calling `descriptors[route.key].render()`. Internally, the descriptor adds appropriate wrappers to handle nested state.
 
-## Initial state
+## Architectural differences
+
+### Shape of the navigation state
+
+The shape of the navigation state looks very similar to the current implementation. There are few important differences:
+
+- The name of the route is in the `route.name` property instead of `route.routeName`.
+- The state of the child navigator exists on a separate property `route.state`.
+- The state object contains a `routeNames` property which contains the list of defined route names in an array of strings,
+
+Example:
+
+```js
+{
+  index: 0,
+  key: 'stack-ytwk65',
+  routeNames: ['home', 'profile', 'settings'],
+  routes: [
+    {
+      key: 'home-hjds3b',
+      name: 'home',
+      state: {
+        index: 1,
+        key: 'tab-jhsf6g',
+        routeNames: ['feed', 'recommended'],
+        routes: [
+          {
+            key: 'feed-jv2iud',
+            name: 'feed',
+          },
+          {
+            key: 'recommended-njdh63',
+            name: 'recommended',
+          },
+        ],
+      },
+    },
+  ],
+}
+```
+
+### Deriving initial state
 
 In the current implementation of React Navigation, the initial state is extracted from the navigator definitions. This is possible because they are defined statically. In our case, it's not possible because the screens are rendered dynamically.
 
 Turns out we don't really need the initial state in the `NavigationContainer`. This state is the default state, so we can store `undefined` instead, and let the navigators initialize their initial state themselves. Next time an action modifies the state, we update the value in the container.
 
 If an initial state is specified, e.g. as a result of `Linking.getInitialURL()`, the child navigators will use that state, instead of having to initialize it themselves.
+
+### Passing state to child navigator
+
+Navigation state is exposed to children navigators via React context instead of having to pass it down manually. This lets the user nest navigators freely without having to worry about properly passing the state down.
+
+### Accessing state of other navigators
+
+Navigators should not access the state of other navigators. It might be tempting to access the state of a child route to perform some checks, but it's not going to work correctly, as the state object may not exist yet.
+
+Instead of direct state access, navigators should communicate via events. Each navigator should access and modify its own state only.
+
+### Bubbling of actions
+
+In the current implementation of React Navigation, routers manually call the child routers to apply any actions. Since we have a component based architecture, this is not really possible.
+
+Instead, we use an event based system. Child navigators can add listeners to handle actions. If the parent couldn't handle the action, it'll call the listeners. The event system is built into the core and the routers don't need to worry about it.
+
+When an action can be bubble, the `getStateForAction` method from a router should return `null`, otherwise it should return the state object.
+
+It's also possible to disable bubbling of actions when dispatching them by adding a `target` key in the action. The `target` key should refer to the key of the navigator that should handle the action.
 
 ## Basic usage
 
