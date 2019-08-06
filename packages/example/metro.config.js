@@ -1,5 +1,4 @@
 /* eslint-disable import/no-commonjs, import/no-extraneous-dependencies */
-/* eslint-env node */
 
 const path = require('path');
 const fs = require('fs');

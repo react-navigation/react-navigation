@@ -1,5 +1,4 @@
 /* eslint-disable import/no-commonjs */
-/* eslint-env node */
 
 module.exports = {
   presets: [

@@ -1,5 +1,4 @@
 /* eslint-disable import/no-commonjs */
-/* eslint-env node */
 
 const createExpoWebpackConfigAsync = require('@expo/webpack-config');
 
