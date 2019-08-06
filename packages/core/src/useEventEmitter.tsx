@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { EventEmitter, EventConsumer } from './types';
+import { EventEmitter, EventConsumer, EventArg } from './types';
 
 export type NavigationEventEmitter = EventEmitter<{ [key: string]: any }> & {
   create: (target: string) => EventConsumer<{ [key: string]: any }>;
@@ -51,7 +51,26 @@ export default function useEventEmitter(): NavigationEventEmitter {
           ? items[target] && items[target].slice()
           : ([] as Listeners).concat(...Object.keys(items).map(t => items[t]));
 
-      callbacks && callbacks.forEach(cb => cb(data));
+      let defaultPrevented = false;
+
+      const event: EventArg<any, any> = {
+        get type() {
+          return type;
+        },
+        get data() {
+          return data;
+        },
+        get defaultPrevented() {
+          return defaultPrevented;
+        },
+        preventDefault() {
+          defaultPrevented = true;
+        },
+      };
+
+      callbacks && callbacks.forEach(cb => cb(event));
+
+      return event;
     },
     []
   );

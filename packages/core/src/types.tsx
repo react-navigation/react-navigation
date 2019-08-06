@@ -160,18 +160,24 @@ export type EventMapBase = {
   blur: undefined;
 };
 
-export type EventListenerCallback<Data> = Data extends undefined
-  ? () => void
-  : (data: Data) => void;
+export type EventArg<EventName extends string, Data> = {
+  readonly type: EventName;
+  readonly defaultPrevented: boolean;
+  preventDefault(): void;
+} & (Data extends undefined ? {} : { readonly data: Data });
+
+export type EventListenerCallback<EventName extends string, Data> = (
+  e: EventArg<EventName, Data>
+) => void;
 
 export type EventConsumer<EventMap extends { [key: string]: any }> = {
   addListener<EventName extends Extract<keyof EventMap, string>>(
     type: EventName,
-    callback: EventListenerCallback<EventMap[EventName]>
+    callback: EventListenerCallback<EventName, EventMap[EventName]>
   ): () => void;
   removeListener<EventName extends Extract<keyof EventMap, string>>(
     type: EventName,
-    callback: EventListenerCallback<EventMap[EventName]>
+    callback: EventListenerCallback<EventName, EventMap[EventName]>
   ): void;
 };
 
@@ -180,7 +186,7 @@ export type EventEmitter<EventMap extends { [key: string]: any }> = {
     type: EventName;
     data?: EventMap[EventName];
     target?: string;
-  }): void;
+  }): EventArg<EventName, EventMap[EventName]>;
 };
 
 class PrivateValueStore<A, B, C> {

@@ -247,20 +247,23 @@ it('fires custom events', () => {
   expect(secondCallback).toBeCalledTimes(0);
   expect(thirdCallback).toBeCalledTimes(0);
 
-  act(() =>
+  act(() => {
     ref.current.navigation.emit({
       type: eventName,
       target: ref.current.state.routes[ref.current.state.routes.length - 1].key,
       data: 42,
-    })
-  );
+    });
+  });
 
   expect(firstCallback).toBeCalledTimes(0);
   expect(secondCallback).toBeCalledTimes(0);
   expect(thirdCallback).toBeCalledTimes(1);
-  expect(thirdCallback.mock.calls[0][0]).toBe(42);
+  expect(thirdCallback.mock.calls[0][0].type).toBe('someSuperCoolEvent');
+  expect(thirdCallback.mock.calls[0][0].data).toBe(42);
 
-  act(() => ref.current.navigation.emit({ type: eventName }));
+  act(() => {
+    ref.current.navigation.emit({ type: eventName });
+  });
 
   expect(firstCallback).toBeCalledTimes(1);
   expect(secondCallback).toBeCalledTimes(1);
