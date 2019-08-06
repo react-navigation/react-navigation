@@ -220,6 +220,8 @@ navigation.emit({
 });
 ```
 
+The `data` is available under the `data` property in the `event` object, i.e. `event.data`.
+
 The `target` property determines the screen that will receive the event. If the `target` property is omitted, the event is dispatched to all screens in the navigator.
 
 Screens cannot emit events as there is no `emit` method on a screen's `navigation` prop.
