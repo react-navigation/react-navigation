@@ -42,7 +42,11 @@ export default function useOnAction({
       visitedNavigators.add(state.key);
 
       if (targetForInternalDispatching === undefined) {
-        const result = router.getStateForAction(state, action);
+        let result = router.getStateForAction(state, action);
+
+        // If a target is specified and set to current navigator, the action shouldn't bubble
+        result =
+          result === null && action.target === state.key ? state : result;
 
         if (result !== null) {
           if (state !== result) {

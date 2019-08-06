@@ -65,6 +65,7 @@ export type Route<RouteName extends string> = {
 export type NavigationAction = {
   type: string;
   source?: string;
+  target?: string;
 };
 
 export type ActionCreators<Action extends NavigationAction> = {

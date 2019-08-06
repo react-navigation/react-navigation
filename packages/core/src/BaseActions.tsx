@@ -1,28 +1,36 @@
 import { PartialState, NavigationState, TargetRoute } from './types';
 
 export type Action =
-  | { type: 'GO_BACK'; source?: string }
+  | {
+      type: 'GO_BACK';
+      source?: string;
+      target?: string;
+    }
   | {
       type: 'NAVIGATE';
       payload:
         | { name: string; key?: undefined; params?: object }
         | { key: string; name?: undefined; params?: object };
       source?: string;
+      target?: string;
     }
   | {
       type: 'REPLACE';
       payload: { name: string; params?: object };
       source?: string;
+      target?: string;
     }
   | {
       type: 'RESET';
       payload: PartialState<NavigationState> & { key?: string };
       source?: string;
+      target?: string;
     }
   | {
       type: 'SET_PARAMS';
       payload: { key?: string; params?: object };
       source?: string;
+      target?: string;
     };
 
 export function goBack(): Action {

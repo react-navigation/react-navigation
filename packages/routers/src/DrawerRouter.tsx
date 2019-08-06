@@ -12,6 +12,7 @@ export type DrawerActionType =
   | {
       type: 'OPEN_DRAWER' | 'CLOSE_DRAWER' | 'TOGGLE_DRAWER';
       source?: string;
+      target?: string;
     };
 
 export type DrawerRouterOptions = TabRouterOptions;
@@ -65,6 +66,24 @@ export default function DrawerRouter(
         })),
         isDrawerOpen: false,
       };
+    },
+
+    getStateForRouteFocus(state, key) {
+      const index = state.routes.findIndex(r => r.key === key);
+
+      const result =
+        index === -1 || index === state.index
+          ? state
+          : router.getStateForRouteFocus(state, key);
+
+      if (result.isDrawerOpen) {
+        return {
+          ...result,
+          isDrawerOpen: false,
+        };
+      }
+
+      return result;
     },
 
     getStateForAction(state, action) {
