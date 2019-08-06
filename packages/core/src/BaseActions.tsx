@@ -1,7 +1,7 @@
 import { PartialState, NavigationState, TargetRoute } from './types';
 
 export type Action =
-  | { type: 'GO_BACK' }
+  | { type: 'GO_BACK'; source?: string }
   | {
       type: 'NAVIGATE';
       payload:

@@ -40,6 +40,11 @@
     "prettier": "^1.18.2",
     "typescript": "^3.5.1"
   },
+  "resolutions": {
+    "react": "16.8.3",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-34.0.0.tar.gz",
+    "react-native-safe-area-view": "0.14.6"
+  },
   "husky": {
     "hooks": {
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",

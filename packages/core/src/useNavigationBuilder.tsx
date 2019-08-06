@@ -198,7 +198,7 @@ export default function useNavigationBuilder<
     actionCreators: router.actionCreators,
   });
 
-  const descriptors = useDescriptors<ScreenOptions>({
+  const descriptors = useDescriptors<State, ScreenOptions>({
     state,
     screens,
     navigation,

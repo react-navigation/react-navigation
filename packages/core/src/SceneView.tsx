@@ -11,21 +11,24 @@ import {
   RouteConfig,
 } from './types';
 
-type Props<ScreenOptions extends object> = {
+type Props<State extends NavigationState, ScreenOptions extends object> = {
   screen: RouteConfig<ParamListBase, string, ScreenOptions>;
-  navigation: NavigationProp<ParamListBase>;
+  navigation: NavigationProp<ParamListBase, string, State, ScreenOptions>;
   route: Route<string> & { state?: NavigationState };
   getState: () => NavigationState;
   setState: (state: NavigationState) => void;
 };
 
-export default function SceneView<ScreenOptions extends object>({
+export default function SceneView<
+  State extends NavigationState,
+  ScreenOptions extends object
+>({
   screen,
   route,
   navigation,
   getState,
   setState,
-}: Props<ScreenOptions>) {
+}: Props<State, ScreenOptions>) {
   const { performTransaction } = React.useContext(NavigationStateContext);
 
   const getCurrentState = React.useCallback(() => {

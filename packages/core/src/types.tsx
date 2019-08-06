@@ -349,7 +349,13 @@ export type CompositeNavigationProp<
     A extends NavigationProp<any, any, any, any, infer E> ? E : {}
   >;
 
-export type Descriptor<ScreenOptions extends object> = {
+export type Descriptor<
+  ParamList extends ParamListBase,
+  RouteName extends keyof ParamList = string,
+  State extends NavigationState = NavigationState,
+  ScreenOptions extends object = {},
+  EventMap extends { [key: string]: any } = {}
+> = {
   /**
    * Render the component associated with this route.
    */
@@ -359,6 +365,17 @@ export type Descriptor<ScreenOptions extends object> = {
    * Options for the route.
    */
   options: ScreenOptions;
+
+  /**
+   * Navigation object for the screen
+   */
+  navigation: NavigationProp<
+    ParamList,
+    RouteName,
+    State,
+    ScreenOptions,
+    EventMap
+  >;
 };
 
 export type RouteConfig<
@@ -378,7 +395,7 @@ export type RouteConfig<
     | ScreenOptions
     | ((props: {
         route: RouteProp<ParamList, RouteName>;
-        navigation: NavigationHelpersCommon<ParamList>;
+        navigation: any;
       }) => ScreenOptions);
 
   /**
