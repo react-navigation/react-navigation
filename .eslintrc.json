@@ -10,5 +10,5 @@
       "@navigation-ex/material-top-tabs"
     ]
   },
-  "env": { "browser": true }
+  "env": { "browser": true, "node": true }
 }
