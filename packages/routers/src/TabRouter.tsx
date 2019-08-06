@@ -11,6 +11,7 @@ export type TabActionType = {
   type: 'JUMP_TO';
   payload: { name: string; params?: object };
   source?: string;
+  target?: string;
 };
 
 export type TabRouterOptions = DefaultRouterOptions & {

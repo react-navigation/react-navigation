@@ -1,3 +1,7 @@
+import * as BaseActions from './BaseActions';
+
+export { BaseActions };
+
 export { default as BaseRouter } from './BaseRouter';
 export { default as NavigationContainer } from './NavigationContainer';
 export { default as createNavigator } from './createNavigator';

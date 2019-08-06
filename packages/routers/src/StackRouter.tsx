@@ -12,13 +12,19 @@ export type StackActionType =
       type: 'PUSH';
       payload: { name: string; params?: object };
       source?: string;
+      target?: string;
     }
   | {
       type: 'POP';
       payload: { count: number };
       source?: string;
+      target?: string;
     }
-  | { type: 'POP_TO_TOP'; source?: string };
+  | {
+      type: 'POP_TO_TOP';
+      source?: string;
+      target?: string;
+    };
 
 export type StackRouterOptions = DefaultRouterOptions;
 
@@ -129,7 +135,7 @@ export default function StackRouter(options: StackRouterOptions) {
             if (state.index > 0 && index > -1) {
               return {
                 ...state,
-                index: state.index - 1,
+                index: Math.max(0, state.index - action.payload.count),
                 routes: state.routes.slice(
                   0,
                   Math.max(index - action.payload.count + 1, 1)

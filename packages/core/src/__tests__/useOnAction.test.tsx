@@ -210,6 +210,91 @@ it("lets children handle the action if parent didn't", () => {
   });
 });
 
+it("action doesn't bubble if target is specified", () => {
+  const CurrentParentRouter = MockRouter;
+
+  function CurrentChildRouter(options: DefaultRouterOptions) {
+    const CurrentMockRouter = MockRouter(options);
+    const ChildRouter: Router<
+      NavigationState,
+      MockActions | { type: 'REVERSE' }
+    > = {
+      ...CurrentMockRouter,
+
+      shouldActionChangeFocus() {
+        return true;
+      },
+
+      getStateForAction(state, action) {
+        if (action.type === 'REVERSE') {
+          return {
+            ...state,
+            routes: state.routes.slice().reverse(),
+          };
+        }
+
+        return CurrentMockRouter.getStateForAction(state, action);
+      },
+    };
+    return ChildRouter;
+  }
+
+  const ChildNavigator = (props: any) => {
+    const { state, descriptors } = useNavigationBuilder(
+      CurrentChildRouter,
+      props
+    );
+
+    return descriptors[state.routes[state.index].key].render();
+  };
+
+  const ParentNavigator = (props: any) => {
+    const { state, descriptors } = useNavigationBuilder(
+      CurrentParentRouter,
+      props
+    );
+
+    return (
+      <React.Fragment>
+        {state.routes.map(route => descriptors[route.key].render())}
+      </React.Fragment>
+    );
+  };
+
+  const TestScreen = (props: any) => {
+    React.useEffect(() => {
+      props.navigation.dispatch({ type: 'REVERSE', target: '0' });
+
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    return null;
+  };
+
+  const onStateChange = jest.fn();
+
+  const element = (
+    <NavigationContainer onStateChange={onStateChange}>
+      <ParentNavigator>
+        <Screen name="foo">{() => null}</Screen>
+        <Screen name="bar" component={TestScreen} />
+        <Screen name="baz">
+          {() => (
+            <ChildNavigator>
+              <Screen name="qux" component={() => null} />
+              <Screen name="lex" component={() => null} />
+            </ChildNavigator>
+          )}
+        </Screen>
+      </ParentNavigator>
+    </NavigationContainer>
+  );
+
+  render(element).update(element);
+
+  expect(onStateChange).not.toBeCalled();
+});
+
 it("doesn't crash if no navigator handled the action", () => {
   const TestRouter = MockRouter;
 
