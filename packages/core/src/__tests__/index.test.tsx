@@ -617,3 +617,24 @@ it("doesn't throw when direct children is Screen or empty element", () => {
     </NavigationContainer>
   );
 });
+
+it('throws when multiple screens with same name are defined', () => {
+  const TestNavigator = (props: any) => {
+    useNavigationBuilder(MockRouter, props);
+    return null;
+  };
+
+  const element = (
+    <NavigationContainer>
+      <TestNavigator>
+        <Screen name="foo" component={jest.fn()} />
+        <Screen name="bar" component={jest.fn()} />
+        <Screen name="foo" component={jest.fn()} />
+      </TestNavigator>
+    </NavigationContainer>
+  );
+
+  expect(() => render(element).update(element)).toThrowError(
+    "A navigator cannot contain multiple 'Screen' components with the same name (found duplicate screen named 'foo')"
+  );
+});

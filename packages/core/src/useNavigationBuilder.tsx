@@ -81,6 +81,12 @@ export default function useNavigationBuilder<
 
   const screens = getRouteConfigsFromChildren<ScreenOptions>(children).reduce(
     (acc, curr) => {
+      if (curr.name in acc) {
+        throw new Error(
+          `A navigator cannot contain multiple 'Screen' components with the same name (found duplicate screen named '${curr.name}')`
+        );
+      }
+
       acc[curr.name] = curr;
       return acc;
     },
