@@ -29,11 +29,13 @@ module.exports = {
 
     providesModuleNodeModules: [
       '@babel/runtime',
+      '@react-native-community/masked-view',
       'react',
       'react-native',
       'react-native-gesture-handler',
       'react-native-reanimated',
       'react-native-safe-area-view',
+      'react-native-screens',
       'react-native-tab-view',
       'shortid',
     ],

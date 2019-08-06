@@ -7,9 +7,10 @@ import {
   Router,
 } from '@navigation-ex/core';
 
-type Action = {
+export type TabActionType = {
   type: 'JUMP_TO';
   payload: { name: string; params?: object };
+  source?: string;
 };
 
 export type TabRouterOptions = DefaultRouterOptions & {
@@ -21,6 +22,12 @@ export type TabNavigationState = NavigationState & {
    * List of previously visited route keys.
    */
   routeKeyHistory: string[];
+};
+
+export const TabActions = {
+  jumpTo(name: string, params?: object): TabActionType {
+    return { type: 'JUMP_TO', payload: { name, params } };
+  },
 };
 
 const changeIndex = (state: TabNavigationState, index: number) => {
@@ -41,7 +48,7 @@ export default function TabRouter({
   initialRouteName,
   backBehavior = 'history',
 }: TabRouterOptions) {
-  const router: Router<TabNavigationState, Action | CommonAction> = {
+  const router: Router<TabNavigationState, TabActionType | CommonAction> = {
     ...BaseRouter,
 
     getInitialState({ routeNames, routeParamList }) {
@@ -203,11 +210,7 @@ export default function TabRouter({
       return action.type === 'NAVIGATE';
     },
 
-    actionCreators: {
-      jumpTo(name: string, params?: object) {
-        return { type: 'JUMP_TO', payload: { name, params } };
-      },
-    },
+    actionCreators: TabActions,
   };
 
   return router;

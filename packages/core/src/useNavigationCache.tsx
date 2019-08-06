@@ -18,66 +18,69 @@ type Options = {
   emitter: NavigationEventEmitter;
 };
 
-type NavigationCache = { [key: string]: NavigationProp<ParamListBase> };
+type NavigationCache<
+  State extends NavigationState,
+  ScreenOptions extends object
+> = {
+  [key: string]: NavigationProp<ParamListBase, string, State, ScreenOptions>;
+};
 
-export default function useNavigationCache({
-  state,
-  getState,
-  navigation,
-  setOptions,
-  emitter,
-}: Options) {
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const cache = React.useMemo(() => ({ current: {} as NavigationCache }), [
-    getState,
-    navigation,
-    setOptions,
-    emitter,
-  ]);
+export default function useNavigationCache<
+  State extends NavigationState,
+  ScreenOptions extends object
+>({ state, getState, navigation, setOptions, emitter }: Options) {
+  const cache = React.useMemo(
+    () => ({ current: {} as NavigationCache<State, ScreenOptions> }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [getState, navigation, setOptions, emitter]
+  );
 
-  cache.current = state.routes.reduce<NavigationCache>((acc, route, index) => {
-    const previous = cache.current[route.key];
-    const isFirst = route.key === state.routes[0].key;
+  cache.current = state.routes.reduce<NavigationCache<State, ScreenOptions>>(
+    (acc, route, index) => {
+      const previous = cache.current[route.key];
+      const isFirst = route.key === state.routes[0].key;
 
-    if (previous && previous.isFirstRouteInParent() === isFirst) {
-      acc[route.key] = previous;
-    } else {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { emit, ...rest } = navigation;
+      if (previous && previous.isFirstRouteInParent() === isFirst) {
+        acc[route.key] = previous;
+      } else {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { emit, ...rest } = navigation;
 
-      acc[route.key] = {
-        ...rest,
-        ...emitter.create(route.key),
-        dispatch: (
-          action:
-            | NavigationAction
-            | ((state: NavigationState) => NavigationState)
-        ) =>
-          navigation.dispatch(
-            typeof action === 'object' && action != null
-              ? { source: route.key, ...action }
-              : action
-          ),
-        setOptions: (options: object) =>
-          setOptions(o => ({
-            ...o,
-            [route.key]: { ...o[route.key], ...options },
-          })),
-        isFocused: () => {
-          const state = getState();
+        acc[route.key] = {
+          ...rest,
+          ...emitter.create(route.key),
+          dispatch: (
+            action:
+              | NavigationAction
+              | ((state: NavigationState) => NavigationState)
+          ) =>
+            navigation.dispatch(
+              typeof action === 'object' && action != null
+                ? { source: route.key, ...action }
+                : action
+            ),
+          setOptions: (options: object) =>
+            setOptions(o => ({
+              ...o,
+              [route.key]: { ...o[route.key], ...options },
+            })),
+          isFocused: () => {
+            const state = getState();
 
-          if (index !== state.index) {
-            return false;
-          }
+            if (index !== state.index) {
+              return false;
+            }
 
-          return navigation ? navigation.isFocused() : true;
-        },
-        isFirstRouteInParent: () => isFirst,
-      } as NavigationProp<ParamListBase>;
-    }
+            return navigation ? navigation.isFocused() : true;
+          },
+          isFirstRouteInParent: () => isFirst,
+        } as NavigationProp<ParamListBase, string, State, ScreenOptions>;
+      }
 
-    return acc;
-  }, {});
+      return acc;
+    },
+    {}
+  );
 
   return cache.current;
 }

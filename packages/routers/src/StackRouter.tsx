@@ -7,23 +7,37 @@ import {
   DefaultRouterOptions,
 } from '@navigation-ex/core';
 
-type Action =
+export type StackActionType =
   | {
       type: 'PUSH';
       payload: { name: string; params?: object };
+      source?: string;
     }
   | {
       type: 'POP';
       payload: { count: number };
+      source?: string;
     }
-  | { type: 'POP_TO_TOP' };
+  | { type: 'POP_TO_TOP'; source?: string };
 
 export type StackRouterOptions = DefaultRouterOptions;
 
 export type StackNavigationState = NavigationState;
 
+export const StackActions = {
+  push(name: string, params?: object): StackActionType {
+    return { type: 'PUSH', payload: { name, params } };
+  },
+  pop(count: number = 1): StackActionType {
+    return { type: 'POP', payload: { count } };
+  },
+  popToTop(): StackActionType {
+    return { type: 'POP_TO_TOP' };
+  },
+};
+
 export default function StackRouter(options: StackRouterOptions) {
-  const router: Router<StackNavigationState, CommonAction | Action> = {
+  const router: Router<StackNavigationState, CommonAction | StackActionType> = {
     ...BaseRouter,
 
     getInitialState({ routeNames, routeParamList }) {
@@ -107,15 +121,21 @@ export default function StackRouter(options: StackRouterOptions) {
           return null;
 
         case 'POP':
-          if (state.index > 0) {
-            return {
-              ...state,
-              index: state.index - 1,
-              routes: state.routes.slice(
-                0,
-                Math.max(state.routes.length - action.payload.count, 1)
-              ),
-            };
+          {
+            const index = action.source
+              ? state.routes.findIndex(r => r.key === action.source)
+              : state.routes.length - 1;
+
+            if (state.index > 0 && index > -1) {
+              return {
+                ...state,
+                index: state.index - 1,
+                routes: state.routes.slice(
+                  0,
+                  Math.max(index - action.payload.count + 1, 1)
+                ),
+              };
+            }
           }
 
           return null;
@@ -124,6 +144,7 @@ export default function StackRouter(options: StackRouterOptions) {
           return router.getStateForAction(state, {
             type: 'POP',
             payload: { count: state.routes.length - 1 },
+            source: action.source,
           });
 
         case 'NAVIGATE':
@@ -163,6 +184,7 @@ export default function StackRouter(options: StackRouterOptions) {
                   name: action.payload.name,
                   params: action.payload.params,
                 },
+                source: action.source,
               });
             }
 
@@ -189,6 +211,7 @@ export default function StackRouter(options: StackRouterOptions) {
           return router.getStateForAction(state, {
             type: 'POP',
             payload: { count: 1 },
+            source: action.source,
           });
 
         default:
@@ -196,17 +219,7 @@ export default function StackRouter(options: StackRouterOptions) {
       }
     },
 
-    actionCreators: {
-      push(name: string, params?: object) {
-        return { type: 'PUSH', payload: { name, params } };
-      },
-      pop(count: number = 1) {
-        return { type: 'POP', payload: { count } };
-      },
-      popToTop() {
-        return { type: 'POP_TO_TOP' };
-      },
-    },
+    actionCreators: StackActions,
   };
 
   return router;

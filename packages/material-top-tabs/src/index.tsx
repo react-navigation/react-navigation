@@ -22,7 +22,7 @@ type Props = TabRouterOptions &
     children: React.ReactNode;
   };
 
-export type TabNavigationOptions = {
+export type MaterialTopTabNavigationOptions = {
   /**
    * Title text for the screen.
    */
@@ -36,7 +36,7 @@ export type MaterialTopTabNavigationProp<
   ParamList,
   RouteName,
   TabNavigationState,
-  TabNavigationOptions
+  MaterialTopTabNavigationOptions
 > & {
   /**
    * Jump to an existing tab.
@@ -51,7 +51,7 @@ export type MaterialTopTabNavigationProp<
   ): void;
 };
 
-export function TabNavigator({
+function TabNavigator({
   initialRouteName,
   backBehavior,
   children,
@@ -59,7 +59,7 @@ export function TabNavigator({
 }: Props) {
   const { state, descriptors, navigation } = useNavigationBuilder<
     TabNavigationState,
-    TabNavigationOptions,
+    MaterialTopTabNavigationOptions,
     TabRouterOptions
   >(TabRouter, {
     initialRouteName,
@@ -85,6 +85,7 @@ export function TabNavigator({
   );
 }
 
-export default createNavigator<TabNavigationOptions, typeof TabNavigator>(
-  TabNavigator
-);
+export default createNavigator<
+  MaterialTopTabNavigationOptions,
+  typeof TabNavigator
+>(TabNavigator);

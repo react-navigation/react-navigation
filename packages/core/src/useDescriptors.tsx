@@ -31,7 +31,10 @@ type Options<ScreenOptions extends object> = {
   emitter: NavigationEventEmitter;
 };
 
-export default function useDescriptors<ScreenOptions extends object>({
+export default function useDescriptors<
+  State extends NavigationState,
+  ScreenOptions extends object
+>({
   state,
   screens,
   navigation,
@@ -61,7 +64,7 @@ export default function useDescriptors<ScreenOptions extends object>({
     ]
   );
 
-  const navigations = useNavigationCache({
+  const navigations = useNavigationCache<State, ScreenOptions>({
     state,
     getState,
     navigation,
@@ -97,9 +100,12 @@ export default function useDescriptors<ScreenOptions extends object>({
               })),
           ...options[route.key],
         },
+        navigation: navigations[route.key],
       };
       return acc;
     },
-    {} as { [key: string]: Descriptor<ScreenOptions> }
+    {} as {
+      [key: string]: Descriptor<ParamListBase, string, State, ScreenOptions>;
+    }
   );
 }
