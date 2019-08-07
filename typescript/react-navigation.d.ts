@@ -124,7 +124,7 @@ declare module 'react-navigation' {
     routes: NavigationRoute[];
     isTransitioning: boolean;
     key: string;
-    params: NavigationParams;
+    params: NavigationParams | undefined;
   }
 
   export interface DrawerNavigationState extends NavigationState {
