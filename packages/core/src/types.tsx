@@ -436,7 +436,7 @@ export type TypedNavigator<
       initialRouteName?: keyof ParamList;
     }
   >;
-  Screen: React.ComponentType<
-    RouteConfig<ParamList, keyof ParamList, ScreenOptions>
-  >;
+  Screen: <RouteName extends keyof ParamList>(
+    _: RouteConfig<ParamList, RouteName, ScreenOptions>
+  ) => null;
 };
