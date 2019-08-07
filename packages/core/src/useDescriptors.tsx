@@ -19,6 +19,7 @@ type Options<ScreenOptions extends object> = {
   state: NavigationState | PartialState<NavigationState>;
   screens: { [key: string]: RouteConfig<ParamListBase, string, ScreenOptions> };
   navigation: NavigationHelpers<ParamListBase>;
+  screenOptions?: ScreenOptions;
   onAction: (
     action: NavigationAction,
     visitedNavigators?: Set<string>
@@ -38,6 +39,7 @@ export default function useDescriptors<
   state,
   screens,
   navigation,
+  screenOptions,
   onAction,
   getState,
   setState,
@@ -91,6 +93,7 @@ export default function useDescriptors<
           );
         },
         options: {
+          ...screenOptions,
           ...(typeof screen.options === 'object' || screen.options == null
             ? screen.options
             : screen.options({

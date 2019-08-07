@@ -11,16 +11,13 @@ import useOnRouteFocus from './useOnRouteFocus';
 import useChildActionListeners from './useChildActionListeners';
 import {
   DefaultRouterOptions,
+  DefaultNavigatorOptions,
   NavigationState,
   ParamListBase,
   RouteConfig,
   Router,
   RouterFactory,
 } from './types';
-
-type Options = {
-  children: React.ReactNode;
-};
 
 const isArrayEqual = (a: any[], b: any[]) =>
   a.length === b.length && a.every((it, index) => it === b[index]);
@@ -70,7 +67,7 @@ export default function useNavigationBuilder<
   RouterOptions extends DefaultRouterOptions
 >(
   createRouter: RouterFactory<State, any, RouterOptions>,
-  options: Options & RouterOptions
+  options: DefaultNavigatorOptions<ScreenOptions> & RouterOptions
 ) {
   useRegisterNavigator();
 
@@ -208,6 +205,7 @@ export default function useNavigationBuilder<
     state,
     screens,
     navigation,
+    screenOptions: options.screenOptions,
     onAction,
     getState,
     setState,
