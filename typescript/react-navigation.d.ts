@@ -989,23 +989,25 @@ declare module 'react-navigation' {
   // DrawerItems
   export const DrawerItems: React.ComponentType<DrawerItemsProps>;
 
-  export interface DrawerItemsProps {
-    navigation: NavigationScreenProp<DrawerNavigationState>;
-    items: NavigationRoute[];
-    activeItemKey?: string;
+  export interface DrawerItemsOptions {
     activeTintColor?: string;
     activeBackgroundColor?: string;
     inactiveTintColor?: string;
     inactiveBackgroundColor?: string;
-    getLabel: (scene: DrawerScene) => React.ReactNode | string;
-    renderIcon: (scene: DrawerScene) => React.ReactNode;
-    onItemPress: (info: DrawerItem) => void;
     itemsContainerStyle?: StyleProp<ViewStyle>;
     itemStyle?: StyleProp<ViewStyle>;
     labelStyle?: StyleProp<TextStyle>;
     activeLabelStyle?: StyleProp<TextStyle>;
     inactiveLabelStyle?: StyleProp<TextStyle>;
     iconContainerStyle?: StyleProp<ViewStyle>;
+  }
+  export interface DrawerItemsProps {
+    navigation: NavigationScreenProp<DrawerNavigationState>;
+    items: NavigationRoute[];
+    activeItemKey?: string;
+    getLabel: (scene: DrawerScene) => React.ReactNode | string;
+    renderIcon: (scene: DrawerScene) => React.ReactNode;
+    onItemPress: (info: DrawerItem) => void;
     drawerPosition: 'left' | 'right';
   }
   export interface DrawerScene {
@@ -1027,21 +1029,13 @@ declare module 'react-navigation' {
     drawerWidth?: number;
     drawerPosition?: 'left' | 'right';
     contentComponent?: React.ComponentType<DrawerItemsProps>;
-    contentOptions?: any;
+    contentOptions?: DrawerItemsOptions;
     style?: StyleProp<ViewStyle>;
   }
   export interface DrawerNavigatorConfig
     extends NavigationTabRouterConfig,
       DrawerViewConfig {
     containerConfig?: any;
-    contentOptions?: {
-      activeTintColor?: string;
-      activeBackgroundColor?: string;
-      inactiveTintColor?: string;
-      inactiveBackgroundColor?: string;
-      style?: StyleProp<ViewStyle>;
-      labelStyle?: StyleProp<TextStyle>;
-    };
     drawerType?: 'front' | 'back' | 'slide';
     drawerLockMode?: DrawerLockMode;
     edgeWidth?: number;

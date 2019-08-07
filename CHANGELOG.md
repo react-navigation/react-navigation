@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add missing `backTitleVisible` for typescript, `disabled` and `backTitleVisible` for flow definitions in type `HeaderBackButtonProps`
 - Add missing `keyboardHidesTabBar` for TypeScript to `TabViewConfig.tabBarOptions`
 - Add missing `unmountInactiveRoutes` for TypeScript to `DrawerNavigatorConfig`
+- Fix `contentOptions`in `DrawerNavigatorConfig` TypeScript definition
 
 ## [3.11.0]
 
