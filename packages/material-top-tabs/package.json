@@ -12,11 +12,12 @@
     "@types/react-native": "^0.60.2",
     "react": "16.8.3",
     "react-native": "^0.59.8",
-    "react-native-tab-view": "^2.0.0"
+    "react-native-tab-view": "^2.10.0",
+    "react-native-reanimated": "^1.1.0"
   },
   "peerDependencies": {
     "react": "*",
     "react-native": "*",
-    "react-native-tab-view": "^2.0.0"
+    "react-native-tab-view": "^2.10.0"
   }
 }

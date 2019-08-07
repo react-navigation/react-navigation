@@ -76,6 +76,13 @@ export type DefaultRouterOptions = {
   initialRouteName?: string;
 };
 
+export type DefaultNavigatorOptions<
+  ScreenOptions extends object
+> = DefaultRouterOptions & {
+  children: React.ReactNode;
+  screenOptions?: ScreenOptions;
+};
+
 export type RouterFactory<
   State extends NavigationState,
   Action extends NavigationAction,
