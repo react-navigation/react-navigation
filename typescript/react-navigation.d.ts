@@ -973,6 +973,8 @@ declare module 'react-navigation' {
 
   export interface SwitchNavigatorConfig {
     initialRouteName: string;
+    navigationOptions?: object;
+    defaultNavigationOptions?: object;
     resetOnBlur?: boolean;
     paths?: NavigationPathsConfig;
     backBehavior?: 'none' | 'initialRoute';
