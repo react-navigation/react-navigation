@@ -18,7 +18,9 @@
   },
   "dependencies": {
     "@react-native-community/masked-view": "^0.1.1",
+    "@expo/vector-icons": "10.0.3",
     "expo": "^34.0.1",
+    "expo-asset": "4.0.0",
     "react": "16.8.3",
     "react-dom": "^16.8.3",
     "react-native": "https://github.com/expo/react-native/archive/sdk-34.0.0.tar.gz",

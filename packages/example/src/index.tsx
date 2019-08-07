@@ -1,151 +1,44 @@
 import * as React from 'react';
-import {
-  View,
-  Text,
-  Platform,
-  AsyncStorage,
-  YellowBox,
-  StyleSheet,
-} from 'react-native';
-import { Button } from 'react-native-paper';
-import {
-  NavigationContainer,
-  CompositeNavigationProp,
-  NavigationHelpers,
-  RouteProp,
-  InitialState,
-  useFocusEffect,
-} from '@navigation-ex/core';
+import { ScrollView, AsyncStorage, YellowBox } from 'react-native';
+import { Appbar, List } from 'react-native-paper';
+import { Asset } from 'expo-asset';
+import { NavigationContainer, InitialState } from '@navigation-ex/core';
+import createDrawerNavigator, {
+  DrawerNavigationProp,
+} from '@navigation-ex/drawer';
 import createStackNavigator, {
+  Assets as StackAssets,
   StackNavigationProp,
 } from '@navigation-ex/stack';
-import createMaterialTopTabNavigator, {
-  MaterialTopTabNavigationProp,
-} from '@navigation-ex/material-top-tabs';
 
-type StackParamList = {
-  first: { author: string };
-  second: undefined;
-  third: undefined;
-};
-
-type TabParamList = {
-  fourth: undefined;
-  fifth: undefined;
-};
+import SimpleStackScreen from './Screens/SimpleStack';
+import BottomTabsScreen from './Screens/BottomTabs';
+import MaterialTabsScreen from './Screens/MaterialTabs';
 
 YellowBox.ignoreWarnings(['Require cycle:', 'Warning: Async Storage']);
 
-const Stack = createStackNavigator<StackParamList>();
-
-const Tab = createMaterialTopTabNavigator<TabParamList>();
-
-const First = ({
-  navigation,
-  route,
-}: {
-  navigation: CompositeNavigationProp<
-    StackNavigationProp<StackParamList, 'first'>,
-    NavigationHelpers<TabParamList>
-  >;
-  route: RouteProp<StackParamList, 'first'>;
-}) => {
-  const updateTitle = React.useCallback(() => {
-    if (Platform.OS !== 'web') {
-      return;
-    }
-
-    document.title = `${route.name} (${route.params.author})`;
-
-    return () => {
-      document.title = '';
-    };
-  }, [route.name, route.params.author]);
-
-  useFocusEffect(updateTitle);
-
-  return (
-    <View>
-      <Text style={styles.title}>First, {route.params.author}</Text>
-      <Button onPress={() => navigation.push('second')}>Push second</Button>
-      <Button onPress={() => navigation.push('third')}>Push third</Button>
-      <Button onPress={() => navigation.navigate('fourth')}>
-        Navigate to fourth
-      </Button>
-      <Button onPress={() => navigation.navigate('first', { author: 'John' })}>
-        Navigate with params
-      </Button>
-      <Button onPress={() => navigation.pop()}>Pop</Button>
-    </View>
-  );
+type RootDrawerParamList = {
+  Root: undefined;
 };
 
-const Second = ({
-  navigation,
-}: {
-  navigation: CompositeNavigationProp<
-    StackNavigationProp<StackParamList, 'second'>,
-    NavigationHelpers<TabParamList>
-  >;
-}) => {
-  const [count, setCount] = React.useState(0);
-
-  React.useEffect(() => {
-    const timer = setInterval(() => setCount(c => c + 1), 1000);
-
-    return () => clearInterval(timer);
-  }, []);
-
-  navigation.setOptions({
-    title: `Count ${count}`,
-  });
-
-  return (
-    <View>
-      <Text style={styles.title}>Second</Text>
-      <Button onPress={() => navigation.push('first', { author: 'Joel' })}>
-        Push first
-      </Button>
-      <Button onPress={() => navigation.pop()}>Pop</Button>
-    </View>
-  );
+type RootStackParamList = {
+  Home: undefined;
+} & {
+  [P in keyof typeof SCREENS]: undefined;
 };
 
-const Fourth = ({
-  navigation,
-}: {
-  navigation: CompositeNavigationProp<
-    MaterialTopTabNavigationProp<TabParamList, 'fourth'>,
-    StackNavigationProp<StackParamList>
-  >;
-}) => (
-  <View>
-    <Text style={styles.title}>Fourth</Text>
-    <Button onPress={() => navigation.jumpTo('fifth')}>Jump to fifth</Button>
-    <Button onPress={() => navigation.push('first', { author: 'Jake' })}>
-      Push first
-    </Button>
-    <Button onPress={() => navigation.goBack()}>Go back</Button>
-  </View>
-);
+const SCREENS = {
+  SimpleStack: { title: 'Simple Stack', component: SimpleStackScreen },
+  BottomTabs: { title: 'Bottom Tabs', component: BottomTabsScreen },
+  MaterialTabs: { title: 'Material Tabs', component: MaterialTabsScreen },
+};
 
-const Fifth = ({
-  navigation,
-}: {
-  navigation: CompositeNavigationProp<
-    MaterialTopTabNavigationProp<TabParamList, 'fifth'>,
-    StackNavigationProp<StackParamList>
-  >;
-}) => (
-  <View>
-    <Text style={styles.title}>Fifth</Text>
-    <Button onPress={() => navigation.jumpTo('fourth')}>Jump to fourth</Button>
-    <Button onPress={() => navigation.push('second')}>Push second</Button>
-    <Button onPress={() => navigation.pop()}>Pop</Button>
-  </View>
-);
+const Drawer = createDrawerNavigator<RootDrawerParamList>();
+const Stack = createStackNavigator<RootStackParamList>();
 
 const PERSISTENCE_KEY = 'NAVIGATION_STATE';
+
+Asset.loadAsync(StackAssets);
 
 export default function App() {
   const [isReady, setIsReady] = React.useState(false);
@@ -181,43 +74,58 @@ export default function App() {
         AsyncStorage.setItem(PERSISTENCE_KEY, JSON.stringify(state))
       }
     >
-      <Stack.Navigator>
-        <Stack.Screen
-          name="first"
-          component={First}
-          options={({ route }) => ({
-            title: `Foo (${route.params ? route.params.author : ''})`,
-          })}
-          initialParams={{ author: 'Jane' }}
-        />
-        <Stack.Screen name="second" options={{ title: 'Bar' }}>
-          {props => <Second {...props} />}
-        </Stack.Screen>
-        <Stack.Screen name="third" options={{ title: 'Baz' }}>
-          {() => (
-            <Tab.Navigator initialRouteName="fifth">
-              <Tab.Screen
-                name="fourth"
-                component={Fourth}
-                options={{ title: 'This' }}
-              />
-              <Tab.Screen
-                name="fifth"
-                component={Fifth}
-                options={{ title: 'That' }}
-              />
-            </Tab.Navigator>
+      <Drawer.Navigator>
+        <Drawer.Screen name="Root" options={{ title: 'Examples' }}>
+          {({
+            navigation,
+          }: {
+            navigation: DrawerNavigationProp<RootDrawerParamList>;
+          }) => (
+            <Stack.Navigator>
+              <Stack.Screen
+                name="Home"
+                options={{
+                  title: 'Examples',
+                  headerLeft: () => (
+                    <Appbar.Action
+                      icon="menu"
+                      onPress={() => navigation.toggleDrawer()}
+                    />
+                  ),
+                }}
+              >
+                {({
+                  navigation,
+                }: {
+                  navigation: StackNavigationProp<RootStackParamList>;
+                }) => (
+                  <ScrollView>
+                    {(Object.keys(SCREENS) as Array<keyof typeof SCREENS>).map(
+                      name => (
+                        <List.Item
+                          key={name}
+                          title={SCREENS[name].title}
+                          onPress={() => navigation.push(name)}
+                        />
+                      )
+                    )}
+                  </ScrollView>
+                )}
+              </Stack.Screen>
+              {(Object.keys(SCREENS) as Array<keyof typeof SCREENS>).map(
+                name => (
+                  <Stack.Screen
+                    key={name}
+                    name={name}
+                    component={SCREENS[name].component}
+                    options={{ title: SCREENS[name].title }}
+                  />
+                )
+              )}
+            </Stack.Navigator>
           )}
-        </Stack.Screen>
-      </Stack.Navigator>
+        </Drawer.Screen>
+      </Drawer.Navigator>
     </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 8,
-  },
-});
