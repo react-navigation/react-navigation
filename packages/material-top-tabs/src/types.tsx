@@ -10,10 +10,8 @@ import {
 import { TabNavigationState } from '@navigation-ex/routers';
 
 export type MaterialTopTabNavigationEventMap = {
-  tabPress: {
-    defaultPrevented: boolean;
-    preventDefault(): void;
-  };
+  refocus: undefined;
+  tabPress: undefined;
   tabLongPress: undefined;
   swipeStart: undefined;
   swipeEnd: undefined;

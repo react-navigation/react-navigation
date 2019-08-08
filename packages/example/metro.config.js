@@ -28,6 +28,7 @@ module.exports = {
 
     providesModuleNodeModules: [
       '@babel/runtime',
+      '@expo/vector-icons',
       '@react-native-community/masked-view',
       'react',
       'react-native',
@@ -35,6 +36,7 @@ module.exports = {
       'react-native-reanimated',
       'react-native-safe-area-view',
       'react-native-screens',
+      'react-native-paper',
       'react-native-tab-view',
       'shortid',
     ],
