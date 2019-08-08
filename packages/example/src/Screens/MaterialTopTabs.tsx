@@ -5,39 +5,39 @@ import Albums from '../Shared/Albums';
 import Contacts from '../Shared/Contacts';
 import Chat from '../Shared/Chat';
 
-type MaterialTabParams = {
+type MaterialTopTabParams = {
   albums: undefined;
   contacts: undefined;
   chat: undefined;
 };
 
-const MaterialTabs = createMaterialTopTabNavigator<MaterialTabParams>();
+const MaterialTopTabs = createMaterialTopTabNavigator<MaterialTopTabParams>();
 
-export default function MaterialTabsScreen() {
+export default function MaterialTopTabsScreen() {
   return (
-    <MaterialTabs.Navigator
+    <MaterialTopTabs.Navigator
       tabBarOptions={{
         style: styles.tabBar,
         labelStyle: styles.tabLabel,
         indicatorStyle: styles.tabIndicator,
       }}
     >
-      <MaterialTabs.Screen
+      <MaterialTopTabs.Screen
         name="chat"
         component={Chat}
         options={{ title: 'Chat' }}
       />
-      <MaterialTabs.Screen
+      <MaterialTopTabs.Screen
         name="contacts"
         component={Contacts}
         options={{ title: 'Contacts' }}
       />
-      <MaterialTabs.Screen
+      <MaterialTopTabs.Screen
         name="albums"
         component={Albums}
         options={{ title: 'Albums' }}
       />
-    </MaterialTabs.Navigator>
+    </MaterialTopTabs.Navigator>
   );
 }
 

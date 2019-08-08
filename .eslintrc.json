@@ -8,7 +8,8 @@
       "@navigation-ex/stack",
       "@navigation-ex/drawer",
       "@navigation-ex/bottom-tabs",
-      "@navigation-ex/material-top-tabs"
+      "@navigation-ex/material-top-tabs",
+      "@navigation-ex/material-bottom-tabs"
     ]
   },
   "env": { "browser": true, "node": true }

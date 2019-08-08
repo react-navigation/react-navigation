@@ -13,7 +13,8 @@ import createStackNavigator, {
 
 import SimpleStackScreen from './Screens/SimpleStack';
 import BottomTabsScreen from './Screens/BottomTabs';
-import MaterialTabsScreen from './Screens/MaterialTabs';
+import MaterialTopTabsScreen from './Screens/MaterialTopTabs';
+import MaterialBottomTabs from './Screens/MaterialBottomTabs';
 
 YellowBox.ignoreWarnings(['Require cycle:', 'Warning: Async Storage']);
 
@@ -30,7 +31,14 @@ type RootStackParamList = {
 const SCREENS = {
   SimpleStack: { title: 'Simple Stack', component: SimpleStackScreen },
   BottomTabs: { title: 'Bottom Tabs', component: BottomTabsScreen },
-  MaterialTabs: { title: 'Material Tabs', component: MaterialTabsScreen },
+  MaterialTopTabs: {
+    title: 'Material Top Tabs',
+    component: MaterialTopTabsScreen,
+  },
+  MaterialBottomTabs: {
+    title: 'Material Bottom Tabs',
+    component: MaterialBottomTabs,
+  },
 };
 
 const Drawer = createDrawerNavigator<RootDrawerParamList>();
