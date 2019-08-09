@@ -225,6 +225,10 @@ export default function StackRouter(options: StackRouterOptions) {
       }
     },
 
+    canGoBack(state) {
+      return state.routes.length > 1;
+    },
+
     actionCreators: StackActions,
   };
 

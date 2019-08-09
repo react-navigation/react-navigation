@@ -88,9 +88,7 @@ const Container = React.forwardRef(function NavigationContainer(
 
   const dispatch = (action: NavigationAction) =>
     context.performTransaction(() => {
-      for (let i = 0; i < actionListeners.length; i++) {
-        actionListeners[i](action, undefined, null);
-      }
+      actionListeners[0](action, undefined, null);
     });
 
   React.useImperativeHandle(ref, () => ({
