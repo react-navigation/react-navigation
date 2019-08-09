@@ -1306,5 +1306,245 @@ declare module 'react-navigation' {
 
   declare export var NavigationContext: React$Context<{}>;
 
-  declare export var ScrollView: React$ComponentType<{}>;
+  declare type ScrollEvent = {
+    bubbles: ?boolean,
+    cancelable: ?boolean,
+    currentTarget: number,
+    defaultPrevented: ?boolean,
+    dispatchConfig: $ReadOnly<{|
+      registrationName: string,
+    |}>,
+    eventPhase: ?number,
+    preventDefault: () => void,
+    isDefaultPrevented: () => boolean,
+    stopPropagation: () => void,
+    isPropagationStopped: () => boolean,
+    isTrusted: ?boolean,
+    nativeEvent: $ReadOnly<{|
+      contentInset: $ReadOnly<{|
+        bottom: number,
+        left: number,
+        right: number,
+        top: number,
+      |}>,
+      contentOffset: $ReadOnly<{|
+        y: number,
+        x: number,
+      |}>,
+      contentSize: $ReadOnly<{|
+        height: number,
+        width: number,
+      |}>,
+      layoutMeasurement: $ReadOnly<{|
+        height: number,
+        width: number,
+      |}>,
+      targetContentOffset?: $ReadOnly<{|
+        y: number,
+        x: number,
+      |}>,
+      velocity?: $ReadOnly<{|
+        y: number,
+        x: number,
+      |}>,
+      zoomScale?: number,
+      responderIgnoreScroll?: boolean,
+    |}>,
+    persist: () => void,
+    target: ?number,
+    timeStamp: number,
+    type: ?string,
+  };
+
+  declare export var ScrollView: React$ComponentType<{
+    style?: ?ViewStyleProp,
+    contentContainerStyle?: ?ViewStyleProp,
+    disableIntervalMomentum?: ?boolean,
+    decelerationRate?: ?('fast' | 'normal' | number),
+    horizontal?: ?boolean,
+    invertStickyHeaders?: ?boolean,
+    keyboardDismissMode?: ?('none' | 'on-drag' | 'interactive'),
+    keyboardShouldPersistTaps?: ?(
+      | 'always'
+      | 'never'
+      | 'handled'
+      | true
+      | false
+    ),
+    onMomentumScrollBegin?: (event: ScrollEvent) => void,
+    onMomentumScrollEnd?: (event: ScrollEvent) => void,
+    onScroll?: (event: ScrollEvent) => void,
+    onScrollBeginDrag?: (event: ScrollEvent) => void,
+    onScrollEndDrag?: (event: ScrollEvent) => void,
+    onContentSizeChange?: (contentWidth: number, contentHeight: number) => void,
+    onKeyboardDidShow?: (event: PressEvent) => void,
+    pagingEnabled?: ?boolean,
+    scrollEnabled?: ?boolean,
+    showsVerticalScrollIndicator?: ?boolean,
+    stickyHeaderIndices?: ?$ReadOnlyArray<number>,
+    StickyHeaderComponent?: React$ComponentType<any>,
+    snapToInterval?: ?number,
+    snapToOffsets?: ?$ReadOnlyArray<number>,
+    snapToStart?: ?boolean,
+    snapToEnd?: ?boolean,
+    removeClippedSubviews?: ?boolean,
+    refreshControl?: ?React$Element<any>,
+    children?: React$Node,
+  }>;
+
+  declare export var FlatList: React$ComponentType<{
+    style?: ?ViewStyleProp,
+    data: ?$ReadOnlyArray<any>,
+    renderItem?: ?({
+      info: {
+        item: any,
+        index: number,
+        separators: {
+          highlight: () => void,
+          unhighlight: () => void,
+          updateProps: (
+            select: 'leading' | 'trailing',
+            newProps: Object
+          ) => void,
+        },
+      },
+    }) => ?React$Element<any>,
+    ItemSeparatorComponent?: ?React$ComponentType<any>,
+    ListItemComponent?: ?React$ComponentType<any>,
+    ListEmptyComponent?: ?(React$ComponentType<any> | React$Element<any>),
+    ListFooterComponent?: ?(React$ComponentType<any> | React$Element<any>),
+    ListFooterComponentStyle?: ViewStyleProp,
+    ListHeaderComponent?: ?(React$ComponentType<any> | React$Element<any>),
+    ListHeaderComponentStyle?: ViewStyleProp,
+    columnWrapperStyle?: ViewStyleProp,
+    extraData?: any,
+    getItemLayout?: (
+      data: ?Array<any>,
+      index: number
+    ) => { length: number, offset: number, index: number },
+    horizontal?: ?boolean,
+    initialNumToRender: number,
+    initialScrollIndex?: ?number,
+    inverted?: ?boolean,
+    keyExtractor?: (item: any, index: number) => string,
+    numColumns?: number,
+    onEndReached?: ?(info: { distanceFromEnd: number }) => void,
+    onEndReachedThreshold?: ?number,
+    onRefresh?: ?() => void,
+    onViewableItemsChanged?: ?(info: {
+      viewableItems: Array<any>,
+      changed: Array<any>,
+    }) => void,
+    progressViewOffset?: number,
+    legacyImplementation?: empty,
+    refreshing?: ?boolean,
+    removeClippedSubviews?: boolean,
+  }>;
+
+  declare export var SectionList: React$ComponentType<{
+    style?: ?ViewStyleProp,
+    sections: ?$ReadOnlyArray<any>,
+    renderItem?: ?({
+      info: {
+        item: any,
+        index: number,
+        section: any,
+        separators: {
+          highlight: () => void,
+          unhighlight: () => void,
+          updateProps: (
+            select: 'leading' | 'trailing',
+            newProps: Object
+          ) => void,
+        },
+      },
+    }) => ?React$Element<any>,
+    SectionSeparatorComponent?: ?React$ComponentType<any>,
+    ItemSeparatorComponent?: ?React$ComponentType<any>,
+    ListItemComponent?: ?React$ComponentType<any>,
+    ListEmptyComponent?: ?(React$ComponentType<any> | React$Element<any>),
+    ListFooterComponent?: ?(React$ComponentType<any> | React$Element<any>),
+    ListFooterComponentStyle?: ViewStyleProp,
+    ListHeaderComponent?: ?(React$ComponentType<any> | React$Element<any>),
+    ListHeaderComponentStyle?: ViewStyleProp,
+    columnWrapperStyle?: ViewStyleProp,
+    extraData?: any,
+    getItemLayout?: (
+      data: ?Array<any>,
+      index: number
+    ) => { length: number, offset: number, index: number },
+    horizontal?: ?boolean,
+    initialNumToRender: number,
+    initialScrollIndex?: ?number,
+    inverted?: ?boolean,
+    keyExtractor?: (item: any, index: number) => string,
+    numColumns?: number,
+    onEndReached?: ?(info: { distanceFromEnd: number }) => void,
+    onEndReachedThreshold?: ?number,
+    onRefresh?: ?() => void,
+    onViewableItemsChanged?: ?(info: {
+      viewableItems: Array<any>,
+      changed: Array<any>,
+    }) => void,
+    progressViewOffset?: number,
+    legacyImplementation?: empty,
+    refreshing?: ?boolean,
+    removeClippedSubviews?: boolean,
+    renderSectionHeader?: ?(info: { section: any }) => ?React$Element<any>,
+    renderSectionFooter?: ?(info: { section: any }) => ?React$Element<any>,
+    stickySectionHeadersEnabled?: boolean,
+  }>;
+
+  declare export var SceneView: React$ComponentType<{
+    component: React$ComponentType<any>,
+    screenProps?: ?{},
+    navigation: NavigationScreenProp<NavigationRoute>,
+  }>;
+
+  declare export var ResourceSavingSceneView: React$ComponentType<{
+    isFocused?: boolean,
+    animationEnabled?: boolean,
+    swipeEnabled?: boolean,
+    childNavigation?: any,
+    removeClippedSubviews?: boolean,
+    awake?: boolean,
+  }>;
+
+  declare export function withOrientation<
+    Props: {},
+    ComponentType: React$ComponentType<Props>
+  >(
+    Component: ComponentType
+  ): React$ComponentType<
+    $Diff<React$ElementConfig<ComponentType>, { isLandscape: boolean | void }>
+  >;
+
+  declare export function getScreenForRouteName(
+    routeConfigs: NavigationRouteConfigMap,
+    routeName: string
+  ): NavigationComponent | NavigationRouteConfig;
+
+  declare export var StackView: React$ComponentType<{
+    navigation: NavigationScreenProp<NavigationRoute>,
+    descriptors: { [key: string]: NavigationDescriptor },
+    navigationConfig: NavigationStackViewConfig,
+    onTransitionStart?: () => void,
+    onGestureBegin?: () => void,
+    onGestureCanceled?: () => void,
+    onGestureEnd?: () => void,
+    screenProps?: any,
+  }>;
+
+  declare export var StackViewCard: React$ComponentType<{
+    scene: NavigationScene,
+    navigation: NavigationScreenProp<NavigationRoute>,
+    realPosition: Animated,
+    style: ViewStyleProp,
+    animatedStyle: any,
+    position: AnimatedInterpolation,
+    transparent?: boolean,
+    children: React$Node,
+  }>;
+
+  declare export var SwitchView: React$ComponentType<{}>;
 }
