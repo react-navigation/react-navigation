@@ -30,13 +30,21 @@ Open a Terminal in the project root and run:
 yarn add react-native-tab-view
 ```
 
-If you are using Expo, you are done. Otherwise, continue to the next steps.
+Now we need to install [`react-native-gesture-handler`](https://github.com/kmagiera/react-native-gesture-handler) and [`react-native-reanimated`](https://github.com/kmagiera/react-native-reanimated).
 
-First, install [`react-native-gesture-handler`](https://github.com/kmagiera/react-native-gesture-handler) and [`react-native-reanimated`](https://github.com/kmagiera/react-native-reanimated).
+If you are using Expo, to ensure that you get the compatible versions of the libraries, run:
+
+```sh
+expo install react-native-gesture-handler react-native-reanimated
+```
+
+If you are not using Expo, run the following:
 
 ```sh
 yarn add react-native-reanimated react-native-gesture-handler
 ```
+
+If you are using Expo, you are done. Otherwise, continue to the next steps.
 
 Next, we need to link these libraries. The steps depends on your React Native version:
 
