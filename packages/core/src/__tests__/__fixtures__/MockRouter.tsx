@@ -97,7 +97,9 @@ export default function MockRouter(options: DefaultRouterOptions) {
       return false;
     },
 
-    actionCreators: {},
+    canGoBack() {
+      return false;
+    },
   };
 
   return router;

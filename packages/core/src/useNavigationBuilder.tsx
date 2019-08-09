@@ -198,6 +198,7 @@ export default function useNavigationBuilder<
     getState,
     setState,
     emitter,
+    router,
     actionCreators: router.actionCreators,
   });
 

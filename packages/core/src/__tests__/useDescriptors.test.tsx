@@ -3,8 +3,11 @@ import { render, act } from 'react-native-testing-library';
 import useNavigationBuilder from '../useNavigationBuilder';
 import NavigationContainer from '../NavigationContainer';
 import Screen from '../Screen';
-import MockRouter, { MockRouterKey } from './__fixtures__/MockRouter';
-import { NavigationState } from '../types';
+import MockRouter, {
+  MockActions,
+  MockRouterKey,
+} from './__fixtures__/MockRouter';
+import { DefaultRouterOptions, NavigationState, Router } from '../types';
 
 jest.useFakeTimers();
 
@@ -52,6 +55,180 @@ it('sets options with options prop as an object', () => {
               </div>
             </main>
       `);
+});
+
+it("returns correct value for canGoBack when it's not overridden", () => {
+  const TestNavigator = (props: any) => {
+    const { state, descriptors } = useNavigationBuilder<
+      NavigationState,
+      { title?: string },
+      any
+    >(MockRouter, props);
+    const { render, options } = descriptors[state.routes[state.index].key];
+
+    return (
+      <main>
+        <h1>{options.title}</h1>
+        <div>{render()}</div>
+      </main>
+    );
+  };
+
+  let result = true;
+
+  const TestScreen = ({ navigation }: any): any => {
+    React.useEffect(() => {
+      result = navigation.canGoBack();
+    });
+
+    return null;
+  };
+
+  const root = (
+    <NavigationContainer>
+      <TestNavigator>
+        <Screen
+          name="foo"
+          component={TestScreen}
+          options={{ title: 'Hello world' }}
+        />
+        <Screen name="bar" component={jest.fn()} />
+      </TestNavigator>
+    </NavigationContainer>
+  );
+
+  render(root).update(root);
+
+  expect(result).toEqual(false);
+});
+
+it("returns correct value for canGoBack when it's overridden", () => {
+  function ParentRouter(options: DefaultRouterOptions) {
+    const CurrentMockRouter = MockRouter(options);
+    const ChildRouter: Router<NavigationState, MockActions> = {
+      ...CurrentMockRouter,
+
+      canGoBack() {
+        return true;
+      },
+    };
+    return ChildRouter;
+  }
+
+  const ParentNavigator = (props: any) => {
+    const { state, descriptors } = useNavigationBuilder<
+      NavigationState,
+      { title?: string },
+      any
+    >(ParentRouter, props);
+    return descriptors[state.routes[state.index].key].render();
+  };
+
+  const ChildNavigator = (props: any) => {
+    const { state, descriptors } = useNavigationBuilder<
+      NavigationState,
+      { title?: string },
+      any
+    >(MockRouter, props);
+
+    return descriptors[state.routes[state.index].key].render();
+  };
+
+  let result = false;
+
+  const TestScreen = ({ navigation }: any): any => {
+    React.useEffect(() => {
+      result = navigation.canGoBack();
+    });
+
+    return null;
+  };
+
+  const root = (
+    <NavigationContainer>
+      <ParentNavigator>
+        <Screen name="baz">
+          {() => (
+            <ChildNavigator>
+              <Screen name="qux" component={TestScreen} />
+            </ChildNavigator>
+          )}
+        </Screen>
+      </ParentNavigator>
+    </NavigationContainer>
+  );
+
+  render(root).update(root);
+
+  expect(result).toEqual(true);
+});
+
+it('returns correct value for canGoBack when parent router overrides it', () => {
+  function OverrodeRouter(options: DefaultRouterOptions) {
+    const CurrentMockRouter = MockRouter(options);
+    const ChildRouter: Router<NavigationState, MockActions> = {
+      ...CurrentMockRouter,
+
+      canGoBack() {
+        return true;
+      },
+    };
+    return ChildRouter;
+  }
+
+  const OverrodeNavigator = (props: any) => {
+    const { state, descriptors } = useNavigationBuilder<
+      NavigationState,
+      { title?: string },
+      any
+    >(OverrodeRouter, props);
+    return descriptors[state.routes[state.index].key].render();
+  };
+
+  const TestNavigator = (props: any) => {
+    const { state, descriptors } = useNavigationBuilder<
+      NavigationState,
+      { title?: string },
+      any
+    >(MockRouter, props);
+
+    return descriptors[state.routes[state.index].key].render();
+  };
+
+  let result = true;
+
+  const TestScreen = ({ navigation }: any): any => {
+    React.useEffect(() => {
+      result = navigation.canGoBack();
+    });
+
+    return null;
+  };
+
+  const root = (
+    <NavigationContainer>
+      <TestNavigator>
+        <Screen name="baz">
+          {() => (
+            <TestNavigator>
+              <Screen name="qux" component={TestScreen} />
+            </TestNavigator>
+          )}
+        </Screen>
+        <Screen name="qux">
+          {() => (
+            <OverrodeNavigator>
+              <Screen name="qux" component={() => null} />
+            </OverrodeNavigator>
+          )}
+        </Screen>
+      </TestNavigator>
+    </NavigationContainer>
+  );
+
+  render(root).update(root);
+
+  expect(result).toEqual(false);
 });
 
 it('sets options with options prop as a fuction', () => {

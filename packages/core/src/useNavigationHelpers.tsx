@@ -10,6 +10,7 @@ import {
   NavigationState,
   ActionCreators,
   ParamListBase,
+  Router,
 } from './types';
 
 type Options<Action extends NavigationAction> = {
@@ -21,6 +22,7 @@ type Options<Action extends NavigationAction> = {
   setState: (state: NavigationState) => void;
   actionCreators?: ActionCreators<Action>;
   emitter: NavigationEventEmitter;
+  router: Router<NavigationState, Action>;
 };
 
 export default function useNavigationHelpers<Action extends NavigationAction>({
@@ -29,6 +31,7 @@ export default function useNavigationHelpers<Action extends NavigationAction>({
   setState,
   actionCreators,
   emitter,
+  router,
 }: Options<Action>) {
   const parentNavigationHelpers = React.useContext(NavigationContext);
   const { performTransaction } = React.useContext(NavigationStateContext);
@@ -68,14 +71,19 @@ export default function useNavigationHelpers<Action extends NavigationAction>({
       isFocused: parentNavigationHelpers
         ? parentNavigationHelpers.isFocused
         : () => true,
+      canGoBack: () =>
+        router.canGoBack(getState()) ||
+        (parentNavigationHelpers && parentNavigationHelpers.canGoBack()) ||
+        false,
     };
   }, [
     actionCreators,
+    router,
+    getState,
     parentNavigationHelpers,
     emitter.emit,
     performTransaction,
     setState,
-    getState,
     onAction,
   ]);
 }

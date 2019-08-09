@@ -155,6 +155,13 @@ export type Router<
   shouldActionChangeFocus(action: NavigationAction): boolean;
 
   /**
+   * Whether the back action will be handled by navigation
+   *
+   * @param state State object to check.
+   */
+  canGoBack(state: State): boolean;
+
+  /**
    * Action creators for the router.
    */
   actionCreators?: ActionCreators<Action>;
@@ -264,6 +271,12 @@ type NavigationHelpersCommon<
    * To get notified of focus changes, use `addListener('focus', cb)` and `addListener('blur', cb)`.
    */
   isFocused(): boolean;
+
+  /**
+   * Check if dispatching back action will be handled by navigation.
+   * Note that this method doesn't re-render screen when the result changes. So don't use it in `render`.
+   */
+  canGoBack(): boolean;
 } & PrivateValueStore<ParamList, keyof ParamList, {}>;
 
 export type NavigationHelpers<
