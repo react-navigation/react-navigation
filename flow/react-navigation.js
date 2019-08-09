@@ -1303,4 +1303,8 @@ declare module 'react-navigation' {
     navigation: NavigationScreenProp<State>,
     screenProps?: {}
   ): Options;
+
+  declare export var NavigationContext: React$Context<{}>;
+
+  declare export var ScrollView: React$ComponentType<{}>;
 }

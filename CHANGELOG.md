@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+- Add missing Flow type exports for `ScrollView` and `NavigationContext`
+
 ## [3.11.1]
 
 ## Fixes
@@ -245,7 +247,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Fix drawer accessibility label when drawer label is not a string
 
-
 ## [3.0.5] - [2018-12-03](https://github.com/react-navigation/react-navigation/releases/tag/3.0.5)
 
 ## Fixes
@@ -267,7 +268,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Added
 
 - Accessibility labels on drawer items (https://github.com/react-navigation/react-navigation-drawer/pull/30)
-
 
 ## [3.0.3] - [2018-11-30](https://github.com/react-navigation/react-navigation/releases/tag/3.0.3)
 
