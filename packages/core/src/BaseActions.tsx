@@ -28,7 +28,7 @@ export type Action =
     }
   | {
       type: 'SET_PARAMS';
-      payload: { key?: string; params?: object };
+      payload: { params?: object };
       source?: string;
       target?: string;
     };
@@ -63,6 +63,6 @@ export function reset(
   return { type: 'RESET', payload: state };
 }
 
-export function setParams(params: object, key: string): Action {
-  return { type: 'SET_PARAMS', payload: { key, params } };
+export function setParams(params: object): Action {
+  return { type: 'SET_PARAMS', payload: { params } };
 }
