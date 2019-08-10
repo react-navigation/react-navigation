@@ -2,11 +2,6 @@ import * as BaseActions from './BaseActions';
 
 export type CommonAction = BaseActions.Action;
 
-export type TargetRoute<RouteName extends string> =
-  | RouteName
-  | { name: RouteName }
-  | { key: string };
-
 export type NavigationState = {
   /**
    * Unique key for the navigation state.
@@ -234,10 +229,21 @@ type NavigationHelpersCommon<
    * @param name Name of the route to navigate to.
    * @param [params] Params object for the route.
    */
-  navigate<RouteName extends Extract<keyof ParamList, string>>(
+  navigate<RouteName extends keyof ParamList>(
     ...args: ParamList[RouteName] extends undefined
-      ? [TargetRoute<RouteName>] | [TargetRoute<RouteName>, undefined]
-      : [TargetRoute<RouteName>, ParamList[RouteName]]
+      ? [RouteName] | [RouteName, undefined]
+      : [RouteName, ParamList[RouteName]]
+  ): void;
+
+  /**
+   * Navigate to a route in current navigation tree.
+   *
+   * @param route Object with `key` or `name` for the route to navigate to, and a `params` object.
+   */
+  navigate<RouteName extends keyof ParamList>(
+    route:
+      | { key: string; params?: ParamList[RouteName] }
+      | { name: RouteName; params: ParamList[RouteName] }
   ): void;
 
   /**
