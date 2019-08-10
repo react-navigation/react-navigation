@@ -8,12 +8,17 @@ type Options = {
   emitter: NavigationEventEmitter;
 };
 
+/**
+ * Hook to take care of emitting `focus` and `blur` events.
+ */
 export default function useFocusEvents({ state, emitter }: Options) {
   const navigation = React.useContext(NavigationContext);
   const lastFocusedKeyRef = React.useRef<string | undefined>();
 
   const currentFocusedKey = state.routes[state.index].key;
 
+  // When the parent screen changes its focus state, we also need to change child's focus
+  // Coz the child screen can't be focused if the parent screen is out of fcous
   React.useEffect(
     () =>
       navigation &&

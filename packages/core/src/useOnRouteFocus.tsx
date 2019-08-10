@@ -4,35 +4,25 @@ import { NavigationAction, NavigationState, Router } from './types';
 
 type Options<Action extends NavigationAction> = {
   router: Router<NavigationState, Action>;
-  onAction: (
-    action: NavigationAction,
-    visitedNavigators?: Set<string>
-  ) => boolean;
   getState: () => NavigationState;
   setState: (state: NavigationState) => void;
   key?: string;
 };
 
+/**
+ * Hook to handle focus actions for a route.
+ * Focus action needs to be treated specially, coz when a nested route is focused,
+ * the parent navigators also needs to be focused.
+ */
 export default function useOnRouteFocus<Action extends NavigationAction>({
   router,
-  onAction,
   getState,
   key: sourceRouteKey,
   setState,
 }: Options<Action>) {
-  const {
-    onRouteFocus: onRouteFocusParent,
-    addActionListener: addActionListenerParent,
-    removeActionListener: removeActionListenerParent,
-  } = React.useContext(NavigationBuilderContext);
-
-  React.useEffect(() => {
-    addActionListenerParent && addActionListenerParent(onAction);
-
-    return () => {
-      removeActionListenerParent && removeActionListenerParent(onAction);
-    };
-  }, [addActionListenerParent, onAction, removeActionListenerParent]);
+  const { onRouteFocus: onRouteFocusParent } = React.useContext(
+    NavigationBuilderContext
+  );
 
   return React.useCallback(
     (key: string) => {

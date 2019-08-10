@@ -28,8 +28,8 @@ export type NavigationState = {
 };
 
 export type InitialState = Omit<
-  Omit<Omit<NavigationState, 'key'>, 'routes'>,
-  'routeNames'
+  NavigationState,
+  'key' | 'routes' | 'routeNames'
 > & {
   key?: string;
   routeNames?: string[];
@@ -58,8 +58,17 @@ export type Route<RouteName extends string> = {
 };
 
 export type NavigationAction = {
+  /**
+   * Type of the action (e.g. `NAVIGATE`)
+   */
   type: string;
+  /**
+   * Key of the route which dispatched this action.
+   */
   source?: string;
+  /**
+   * Key of the navigator which should handle this action.
+   */
   target?: string;
 };
 
@@ -68,13 +77,24 @@ export type ActionCreators<Action extends NavigationAction> = {
 };
 
 export type DefaultRouterOptions = {
+  /**
+   * Name of the route to focus by on initial render.
+   * If not specified, usually the first route is used.
+   */
   initialRouteName?: string;
 };
 
 export type DefaultNavigatorOptions<
   ScreenOptions extends object
 > = DefaultRouterOptions & {
+  /**
+   * Children React Elements to extract the route configuration from.
+   * Only `Screen` components are supported as children.
+   */
   children: React.ReactNode;
+  /**
+   * Default options for all screens under this navigator.
+   */
   screenOptions?: ScreenOptions;
 };
 
@@ -170,8 +190,17 @@ export type EventMapBase = {
 };
 
 export type EventArg<EventName extends string, Data> = {
+  /**
+   * Type of the event (e.g. `focus`, `blur`)
+   */
   readonly type: EventName;
+  /**
+   * Whether `event.preventDefault()` was called on this event object.
+   */
   readonly defaultPrevented: boolean;
+  /**
+   * Prevent the default action which happens on this event.
+   */
   preventDefault(): void;
 } & (Data extends undefined ? {} : { readonly data: Data });
 
@@ -180,6 +209,12 @@ export type EventListenerCallback<EventName extends string, Data> = (
 ) => void;
 
 export type EventConsumer<EventMap extends { [key: string]: any }> = {
+  /**
+   * Subscribe to events from the parent navigator.
+   *
+   * @param type Type of the event (e.g. `focus`, `blur`)
+   * @param callback Callback listener which is executed upon receiving the event.
+   */
   addListener<EventName extends Extract<keyof EventMap, string>>(
     type: EventName,
     callback: EventListenerCallback<EventName, EventMap[EventName]>
@@ -191,6 +226,14 @@ export type EventConsumer<EventMap extends { [key: string]: any }> = {
 };
 
 export type EventEmitter<EventMap extends { [key: string]: any }> = {
+  /**
+   * Emit an event to child screens.
+   *
+   * @param options.type Type of the event (e.g. `focus`, `blur`)
+   * @param [options.data] Optional information regarding the event.
+   * @param [options.target] Key of the target route which should receive the event.
+   * If not specified, all routes receive the event.
+   */
   emit<EventName extends Extract<keyof EventMap, string>>(options: {
     type: EventName;
     data?: EventMap[EventName];
@@ -449,6 +492,9 @@ export type TypedNavigator<
   ScreenOptions extends object,
   Navigator extends React.ComponentType<any>
 > = {
+  /**
+   * Navigator component which manages the child screens.
+   */
   Navigator: React.ComponentType<
     React.ComponentProps<Navigator> & {
       /**
@@ -457,6 +503,9 @@ export type TypedNavigator<
       initialRouteName?: keyof ParamList;
     }
   >;
+  /**
+   * Component used for specifying route configuration.
+   */
   Screen: <RouteName extends keyof ParamList>(
     _: RouteConfig<ParamList, RouteName, ScreenOptions>
   ) => null;

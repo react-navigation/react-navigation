@@ -19,6 +19,10 @@ type Props<State extends NavigationState, ScreenOptions extends object> = {
   setState: (state: NavigationState) => void;
 };
 
+/**
+ * Component which takes care of rendering the screen for a route.
+ * It provides all required contexts and applies optimizations when applicable.
+ */
 export default function SceneView<
   State extends NavigationState,
   ScreenOptions extends object

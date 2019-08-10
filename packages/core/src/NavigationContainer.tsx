@@ -44,6 +44,11 @@ export const NavigationStateContext = React.createContext<{
   },
 });
 
+/**
+ * Remove `key` and `routeNames` from the state objects recursively to get partial state.
+ *
+ * @param state Initial state object.
+ */
 const getPartialState = (
   state: InitialState | undefined
 ): PartialState<NavigationState> | undefined => {
@@ -51,12 +56,13 @@ const getPartialState = (
     return;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { key, routeNames, ...partialState } = state;
+
   // @ts-ignore
   return {
-    ...state,
+    ...partialState,
     stale: true,
-    key: undefined,
-    routeNames: undefined,
     routes: state.routes.map(route => {
       if (route.state === undefined) {
         return route as Route<string> & {

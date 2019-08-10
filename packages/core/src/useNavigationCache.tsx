@@ -25,10 +25,18 @@ type NavigationCache<
   [key: string]: NavigationProp<ParamListBase, string, State, ScreenOptions>;
 };
 
+/**
+ * Hook to cache navigation objects for each screen in the navigator.
+ * It's important to cache them to make sure navigation objects don't change between renders.
+ * This lets us apply optimizations like `React.memo` to minimize re-rendering screens.
+ */
 export default function useNavigationCache<
   State extends NavigationState,
   ScreenOptions extends object
 >({ state, getState, navigation, setOptions, emitter }: Options) {
+  // Cache object which holds navigation objects for each screen
+  // We use `React.useMemo` instead of `React.useRef` coz we want to invalidate it when deps change
+  // In reality, these deps will rarely change, if ever
   const cache = React.useMemo(
     () => ({ current: {} as NavigationCache<State, ScreenOptions> }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -41,6 +49,8 @@ export default function useNavigationCache<
       const isFirst = route.key === state.routes[0].key;
 
       if (previous && previous.isFirstRouteInParent() === isFirst) {
+        // If a cached navigation object already exists and has same `isFirstRouteInParent`, reuse it
+        // This method could return different result if the index of the route changes somehow
         acc[route.key] = previous;
       } else {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -71,6 +81,8 @@ export default function useNavigationCache<
               return false;
             }
 
+            // If the current screen is focused, we also need to check if parent navigtor is focused
+            // This makes sure that we return the focus state in the whole tree, not just this navigator
             return navigation ? navigation.isFocused() : true;
           },
           isFirstRouteInParent: () => isFirst,

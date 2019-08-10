@@ -13,6 +13,15 @@ type Options = {
   listeners: ChildActionListener[];
 };
 
+/**
+ * Hook to handle actions for a navigator, including state updates and bubbling.
+ *
+ * Bubbling an action is achieved in 2 ways:
+ * 1. To bubble action to parent, we expose the action handler in context and then access the parent context
+ * 2. To bubble action to child, child adds event listeners subscribing to actions from parent
+ *
+ * When the action handler handles as action, it returns `true`, otherwise `false`.
+ */
 export default function useOnAction({
   router,
   getState,
@@ -23,6 +32,8 @@ export default function useOnAction({
   const {
     onAction: onActionParent,
     onRouteFocus: onRouteFocusParent,
+    addActionListener: addActionListenerParent,
+    removeActionListener: removeActionListenerParent,
   } = React.useContext(NavigationBuilderContext);
 
   const { key: routeKey } = React.useContext(NavigationStateContext);
@@ -35,13 +46,40 @@ export default function useOnAction({
     ) => {
       const state = getState();
 
+      // Since actions can bubble both up and down, they could come to the same navigator again
+      // We keep track of navigators which have already tried to handle the action and return if it's already visited
       if (visitedNavigators.has(state.key)) {
         return false;
       }
 
       visitedNavigators.add(state.key);
 
-      if (targetForInternalDispatching === undefined) {
+      if (targetForInternalDispatching !== undefined) {
+        // The action was dispatched to be handled by the currently focused navigator in the tree
+        // First, we need to check if there is a child navigator in the focused route which can handle it
+        // So we re-dispatch the action to child navigators with the target set to focused route key
+        const focusedKey = state.routes[state.index].key;
+
+        for (let i = listeners.length - 1; i >= 0; i--) {
+          const listener = listeners[i];
+
+          if (listener(action, visitedNavigators, focusedKey)) {
+            return true;
+          }
+        }
+
+        // If the action wasn't handled, there was no child navigator in the focused route
+        // This means this navigator should handle the action itself
+        if (
+          targetForInternalDispatching === null ||
+          targetForInternalDispatching === routeKey
+        ) {
+          onAction(action);
+          return true;
+        }
+
+        return false;
+      } else {
         if (typeof action.target === 'string' && action.target !== state.key) {
           return false;
         }
@@ -49,6 +87,7 @@ export default function useOnAction({
         let result = router.getStateForAction(state, action);
 
         // If a target is specified and set to current navigator, the action shouldn't bubble
+        // So instead of `null`, we use the state object for such cases to signal that action was handled
         result =
           result === null && action.target === state.key ? state : result;
 
@@ -58,6 +97,8 @@ export default function useOnAction({
           }
 
           if (onRouteFocusParent !== undefined) {
+            // Some actions such as `NAVIGATE` also want to bring the navigated route to focus in the whole tree
+            // This means we need to focus all of the parent navigators of this navigator as well
             const shouldFocus = router.shouldActionChangeFocus(action);
 
             if (shouldFocus && key !== undefined) {
@@ -75,6 +116,7 @@ export default function useOnAction({
           }
         }
 
+        // If the action wasn't handled by current navigator or a parent navigator, let children handle it
         for (let i = listeners.length - 1; i >= 0; i--) {
           const listener = listeners[i];
 
@@ -82,26 +124,6 @@ export default function useOnAction({
             return true;
           }
         }
-      } else {
-        const focusedKey = state.routes[state.index].key;
-
-        for (let i = listeners.length - 1; i >= 0; i--) {
-          const listener = listeners[i];
-
-          if (listener(action, visitedNavigators, focusedKey)) {
-            return true;
-          }
-        }
-
-        if (
-          targetForInternalDispatching === null ||
-          targetForInternalDispatching === routeKey
-        ) {
-          onAction(action);
-          return true;
-        }
-
-        return false;
       }
 
       return false;
@@ -117,5 +139,14 @@ export default function useOnAction({
       routeKey,
     ]
   );
+
+  React.useEffect(() => {
+    addActionListenerParent && addActionListenerParent(onAction);
+
+    return () => {
+      removeActionListenerParent && removeActionListenerParent(onAction);
+    };
+  }, [addActionListenerParent, onAction, removeActionListenerParent]);
+
   return onAction;
 }

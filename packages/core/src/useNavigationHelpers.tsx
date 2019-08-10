@@ -8,7 +8,6 @@ import {
   NavigationProp,
   NavigationAction,
   NavigationState,
-  ActionCreators,
   ParamListBase,
   Router,
 } from './types';
@@ -20,16 +19,18 @@ type Options<Action extends NavigationAction> = {
   ) => boolean;
   getState: () => NavigationState;
   setState: (state: NavigationState) => void;
-  actionCreators?: ActionCreators<Action>;
   emitter: NavigationEventEmitter;
   router: Router<NavigationState, Action>;
 };
 
+/**
+ * Navigation object with helper methods to be used by a navigator.
+ * This object includes methods for common actions as well as methods the parent screen's navigation object.
+ */
 export default function useNavigationHelpers<Action extends NavigationAction>({
   onAction,
   getState,
   setState,
-  actionCreators,
   emitter,
   router,
 }: Options<Action>) {
@@ -51,7 +52,7 @@ export default function useNavigationHelpers<Action extends NavigationAction>({
     };
 
     const actions = {
-      ...actionCreators,
+      ...router.actionCreators,
       ...BaseActions,
     };
 
@@ -77,7 +78,6 @@ export default function useNavigationHelpers<Action extends NavigationAction>({
         false,
     };
   }, [
-    actionCreators,
     router,
     getState,
     parentNavigationHelpers,
