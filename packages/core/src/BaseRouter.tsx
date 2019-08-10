@@ -54,18 +54,12 @@ const BaseRouter = {
       }
 
       case 'RESET':
-        if (
-          action.payload.key === undefined ||
-          action.payload.key === state.key
-        ) {
-          return {
-            ...(action.payload as any),
-            key: state.key,
-            routeNames: state.routeNames,
-          };
-        }
-
-        return null;
+        return {
+          ...state,
+          ...action.payload,
+          key: state.key,
+          routeNames: state.routeNames,
+        };
 
       default:
         return null;
