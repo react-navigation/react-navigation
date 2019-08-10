@@ -1,4 +1,4 @@
-import { NavigationState, TargetRoute } from './types';
+import { NavigationState } from './types';
 
 export type Action =
   | {
@@ -37,19 +37,26 @@ export function goBack(): Action {
   return { type: 'GO_BACK' };
 }
 
-export function navigate(target: TargetRoute<string>, params?: object): Action {
-  if (typeof target === 'string') {
-    return { type: 'NAVIGATE', payload: { name: target, params } };
+export function navigate(
+  route: { key: string; params?: object } | { name: string; params?: object }
+): Action;
+export function navigate(name: string, params?: object): Action;
+export function navigate(...args: any): Action {
+  if (typeof args[0] === 'string') {
+    return { type: 'NAVIGATE', payload: { name: args[0], params: args[1] } };
   } else {
+    const payload = args[0];
+
     if (
-      (target.hasOwnProperty('key') && target.hasOwnProperty('name')) ||
-      (!target.hasOwnProperty('key') && !target.hasOwnProperty('name'))
+      (payload.hasOwnProperty('key') && payload.hasOwnProperty('name')) ||
+      (!payload.hasOwnProperty('key') && !payload.hasOwnProperty('name'))
     ) {
       throw new Error(
-        'While calling navigate you need to specify either name or key'
+        'While calling navigate with an object as the argument, you need to specify either name or key'
       );
     }
-    return { type: 'NAVIGATE', payload: { ...target, params } };
+
+    return { type: 'NAVIGATE', payload };
   }
 }
 

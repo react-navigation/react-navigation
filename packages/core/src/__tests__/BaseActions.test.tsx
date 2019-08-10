@@ -38,7 +38,7 @@ it('throws if NAVIGATE dispatched with both key and name', () => {
   );
 
   expect(() => render(element).update(element)).toThrowError(
-    'While calling navigate you need to specify either name or key'
+    'While calling navigate with an object as the argument, you need to specify either name or key'
   );
 });
 
@@ -73,6 +73,6 @@ it('throws if NAVIGATE dispatched neither both key nor name', () => {
   );
 
   expect(() => render(element).update(element)).toThrowError(
-    'While calling navigate you need to specify either name or key'
+    'While calling navigate with an object as the argument, you need to specify either name or key'
   );
 });
