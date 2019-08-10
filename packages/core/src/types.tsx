@@ -288,11 +288,9 @@ export type NavigationHelpers<
      * The new params will be shallow merged with the old one.
      *
      * @param params Params object for the current route.
-     * @param key Key of the route for updating params.
      */
     setParams<RouteName extends keyof ParamList>(
-      params: ParamList[RouteName],
-      key: string
+      params: ParamList[RouteName]
     ): void;
   };
 
@@ -308,10 +306,8 @@ export type NavigationProp<
    * The new params will be shallow merged with the old one.
    *
    * @param params Params object for the current route.
-   * @param [key] Key of the route for updating params. Defaults to current route.
    */
   setParams(params: ParamList[RouteName]): void;
-  setParams(params: ParamList[keyof ParamList], key: string): void;
 
   /**
    * Update the options for the route.

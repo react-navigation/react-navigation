@@ -35,12 +35,9 @@ const BaseRouter = {
       }
 
       case 'SET_PARAMS': {
-        const index =
-          action.payload.key || action.source
-            ? state.routes.findIndex(
-                r => r.key === action.payload.key || r.key === action.source
-              )
-            : state.index;
+        const index = action.source
+          ? state.routes.findIndex(r => r.key === action.source)
+          : state.index;
 
         if (index === -1) {
           return null;
