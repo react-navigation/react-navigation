@@ -19,9 +19,18 @@ import {
   RouterFactory,
 } from './types';
 
+/**
+ * Compare two arrays with primitive values as the content.
+ * We need to make sure that both values and order match.
+ */
 const isArrayEqual = (a: any[], b: any[]) =>
   a.length === b.length && a.every((it, index) => it === b[index]);
 
+/**
+ * Extract route config object from React children elements.
+ *
+ * @param children React Elements to extract the config from.
+ */
 const getRouteConfigsFromChildren = <ScreenOptions extends object>(
   children: React.ReactNode
 ) =>
@@ -30,6 +39,8 @@ const getRouteConfigsFromChildren = <ScreenOptions extends object>(
   >((acc, child) => {
     if (React.isValidElement(child)) {
       if (child.type === Screen) {
+        // We can only extract the config from `Screen` elements
+        // If something else was rendered, it's probably a bug
         acc.push(child.props as RouteConfig<
           ParamListBase,
           string,
@@ -39,6 +50,8 @@ const getRouteConfigsFromChildren = <ScreenOptions extends object>(
       }
 
       if (child.type === React.Fragment) {
+        // When we encounter a fragment, we need to dive into its children to extract the configs
+        // This is handy to conditionally define a group of screens
         acc.push(
           ...getRouteConfigsFromChildren<ScreenOptions>(child.props.children)
         );
@@ -114,6 +127,9 @@ export default function useNavigationBuilder<
   } = React.useContext(NavigationStateContext);
 
   const [initialState] = React.useState(() =>
+    // If the current state isn't initialized on first render, we initialize it
+    // Otherwise assume that the state was provided as initial state
+    // So we need to rehydrate it to make it usable
     currentState === undefined
       ? router.getInitialState({
           routeNames,
@@ -126,6 +142,9 @@ export default function useNavigationBuilder<
   );
 
   let state =
+    // If the state isn't initialized, or stale, use the state we initialized instead
+    // The state won't update until there's a change needed in the state we have initalized locally
+    // So it'll be `undefined` or stale untill the first navigation event happens
     currentState === undefined || currentState.stale
       ? initialState
       : (currentState as State);
@@ -146,6 +165,9 @@ export default function useNavigationBuilder<
       });
     }
 
+    // The up-to-date state will come in next render, but we don't need to wait for it
+    // We can't use the outdated state since the screens have changed, which will cause error due to mismatched config
+    // So we override the state objec we return to use the latest state as soon as possible
     state = nextState;
   }
 
@@ -187,7 +209,6 @@ export default function useNavigationBuilder<
 
   const onRouteFocus = useOnRouteFocus({
     router,
-    onAction,
     key,
     getState,
     setState,
@@ -199,7 +220,6 @@ export default function useNavigationBuilder<
     setState,
     emitter,
     router,
-    actionCreators: router.actionCreators,
   });
 
   const descriptors = useDescriptors<State, ScreenOptions>({

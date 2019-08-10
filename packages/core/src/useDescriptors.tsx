@@ -32,6 +32,14 @@ type Options<ScreenOptions extends object> = {
   emitter: NavigationEventEmitter;
 };
 
+/**
+ * Hook to create descriptor objects for the child routes.
+ *
+ * A descriptor object provides 3 things:
+ * - Helper method to render a screen
+ * - Options specified by the screen for the navigator
+ * - Navigation object intended for the route
+ */
 export default function useDescriptors<
   State extends NavigationState,
   ScreenOptions extends object
@@ -93,7 +101,9 @@ export default function useDescriptors<
           );
         },
         options: {
+          // The default `screenOptions` passed to the navigator
           ...screenOptions,
+          // The `options` prop passed to `Screen` elements
           ...(typeof screen.options === 'object' || screen.options == null
             ? screen.options
             : screen.options({
@@ -101,6 +111,7 @@ export default function useDescriptors<
                 route,
                 navigation: navigations[route.key],
               })),
+          // The options set via `navigation.setOptions`
           ...options[route.key],
         },
         navigation: navigations[route.key],

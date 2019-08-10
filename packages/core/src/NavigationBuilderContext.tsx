@@ -7,6 +7,9 @@ export type ChildActionListener = (
   targetForInternalDispatching?: string | null
 ) => boolean;
 
+/**
+ * Context which holds the required helpers needed to build nested navigators.
+ */
 const NavigationBuilderContext = React.createContext<{
   onAction?: (
     action: NavigationAction,

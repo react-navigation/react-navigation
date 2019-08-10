@@ -1,5 +1,8 @@
 import { RouteConfig, ParamListBase } from './types';
 
+/**
+ * Empty component used for specifying route configuration.
+ */
 export default function Screen<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList,

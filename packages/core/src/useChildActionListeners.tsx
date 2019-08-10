@@ -1,6 +1,9 @@
 import * as React from 'react';
 import { ChildActionListener } from './NavigationBuilderContext';
 
+/**
+ * Hook which lets child navigators add action listeners.
+ */
 export default function useChildActionListeners() {
   const { current: listeners } = React.useRef<ChildActionListener[]>([]);
 

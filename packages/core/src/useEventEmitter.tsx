@@ -7,6 +7,9 @@ export type NavigationEventEmitter = EventEmitter<{ [key: string]: any }> & {
 
 type Listeners = Array<(data: any) => void>;
 
+/**
+ * Hook to manage the event system used by the navigator to notify screens of various events.
+ */
 export default function useEventEmitter(): NavigationEventEmitter {
   const listeners = React.useRef<{
     [key: string]: { [key: string]: Listeners };
