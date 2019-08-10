@@ -254,11 +254,10 @@ type NavigationHelpersCommon<
 
   /**
    * Reset the navigation state to the provided state.
-   * If a key is provided, the state with matching key will be reset.
    *
    * @param state Navigation state object.
    */
-  reset(state: PartialState<State> & { key?: string }): void;
+  reset(state: Partial<State>): void;
 
   /**
    * Go back to the previous route in history.
