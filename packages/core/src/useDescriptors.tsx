@@ -13,6 +13,7 @@ import {
   NavigationState,
   ParamListBase,
   RouteConfig,
+  Router,
 } from './types';
 
 type Options<ScreenOptions extends object> = {
@@ -29,6 +30,7 @@ type Options<ScreenOptions extends object> = {
   addActionListener: (listener: ChildActionListener) => void;
   removeActionListener: (listener: ChildActionListener) => void;
   onRouteFocus: (key: string) => void;
+  router: Router<NavigationState, NavigationAction>;
   emitter: NavigationEventEmitter;
 };
 
@@ -54,6 +56,7 @@ export default function useDescriptors<
   addActionListener,
   removeActionListener,
   onRouteFocus,
+  router,
   emitter,
 }: Options<ScreenOptions>) {
   const [options, setOptions] = React.useState<{ [key: string]: object }>({});
@@ -79,6 +82,7 @@ export default function useDescriptors<
     getState,
     navigation,
     setOptions,
+    router,
     emitter,
   });
 

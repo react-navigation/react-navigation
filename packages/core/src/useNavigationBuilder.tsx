@@ -233,6 +233,7 @@ export default function useNavigationBuilder<
     onRouteFocus,
     addActionListener,
     removeActionListener,
+    router,
     emitter,
   });
 

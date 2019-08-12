@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as BaseActions from './BaseActions';
 import { NavigationEventEmitter } from './useEventEmitter';
 import {
   NavigationAction,
@@ -6,15 +7,18 @@ import {
   NavigationProp,
   ParamListBase,
   NavigationState,
+  Router,
 } from './types';
 
 type Options = {
   state: NavigationState;
   getState: () => NavigationState;
-  navigation: NavigationHelpers<ParamListBase>;
+  navigation: NavigationHelpers<ParamListBase> &
+    Partial<NavigationProp<ParamListBase, string, any, any, any>>;
   setOptions: (
     cb: (options: { [key: string]: object }) => { [key: string]: object }
   ) => void;
+  router: Router<NavigationState, NavigationAction>;
   emitter: NavigationEventEmitter;
 };
 
@@ -33,15 +37,20 @@ type NavigationCache<
 export default function useNavigationCache<
   State extends NavigationState,
   ScreenOptions extends object
->({ state, getState, navigation, setOptions, emitter }: Options) {
+>({ state, getState, navigation, setOptions, router, emitter }: Options) {
   // Cache object which holds navigation objects for each screen
   // We use `React.useMemo` instead of `React.useRef` coz we want to invalidate it when deps change
   // In reality, these deps will rarely change, if ever
   const cache = React.useMemo(
     () => ({ current: {} as NavigationCache<State, ScreenOptions> }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [getState, navigation, setOptions, emitter]
+    [getState, navigation, setOptions, router, emitter]
   );
+
+  const actions = {
+    ...router.actionCreators,
+    ...BaseActions,
+  };
 
   cache.current = state.routes.reduce<NavigationCache<State, ScreenOptions>>(
     (acc, route, index) => {
@@ -56,19 +65,29 @@ export default function useNavigationCache<
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { emit, ...rest } = navigation;
 
+        const dispatch = (
+          action: NavigationAction | ((state: State) => State)
+        ) =>
+          navigation.dispatch(
+            typeof action === 'object' && action != null
+              ? { source: route.key, ...action }
+              : action
+          );
+
+        const helpers = Object.keys(actions).reduce(
+          (acc, name) => {
+            // @ts-ignore
+            acc[name] = (...args: any) => dispatch(actions[name](...args));
+            return acc;
+          },
+          {} as { [key: string]: () => void }
+        );
+
         acc[route.key] = {
           ...rest,
+          ...helpers,
           ...emitter.create(route.key),
-          dispatch: (
-            action:
-              | NavigationAction
-              | ((state: NavigationState) => NavigationState)
-          ) =>
-            navigation.dispatch(
-              typeof action === 'object' && action != null
-                ? { source: route.key, ...action }
-                : action
-            ),
+          dispatch,
           setOptions: (options: object) =>
             setOptions(o => ({
               ...o,
@@ -86,7 +105,7 @@ export default function useNavigationCache<
             return navigation ? navigation.isFocused() : true;
           },
           isFirstRouteInParent: () => isFirst,
-        } as NavigationProp<ParamListBase, string, State, ScreenOptions>;
+        };
       }
 
       return acc;
