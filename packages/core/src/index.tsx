@@ -9,5 +9,6 @@ export { default as createNavigator } from './createNavigator';
 export { default as useNavigationBuilder } from './useNavigationBuilder';
 export { default as useNavigation } from './useNavigation';
 export { default as useFocusEffect } from './useFocusEffect';
+export { default as useIsFocused } from './useIsFocused';
 
 export * from './types';

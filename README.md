@@ -228,7 +228,17 @@ Screens cannot emit events as there is no `emit` method on a screen's `navigatio
 
 If you don't need to get notified of focus change, but just need to check if the screen is currently focused in a callback, you can use the `navigation.isFocused()` method which returns a boolean. Note that it's not safe to use this in `render`. Only use it in callbacks, event listeners etc.
 
-## Side-effects in focused screen
+## Additional utilities
+
+### Access navigation anywhere
+
+Passing the `navigation` prop down can be tedious. The library exports a `useNavigation` hook which can access the `navigation` prop from the parent screen:
+
+```js
+const navigation = useNavigation();
+```
+
+### Side-effects in focused screen
 
 Sometimes we want to run side-effects when a screen is focused. A side effect may involve things like adding an event listener, fetching data, updating document title, etc. While this can be achieved using `focus` and `blur` events, it's not very ergonomic.
 
@@ -257,12 +267,12 @@ The `useFocusEffect` is analogous to React's `useEffect` hook. The only differen
 
 **NOTE:** To avoid the running the effect too often, it's important to wrap the callback in `useCallback` before passing it to `useFocusEffect` as shown in the example.
 
-## Access navigation anywhere
+### Render based on focus state
 
-Passing the `navigation` prop down can be tedious. The library exports a `useNavigation` hook which can access the `navigation` prop from the parent screen.
+We might want to render different content based on the current focus state of the screen. The library exports a `useIsFocused` hook to make this easier:
 
 ```js
-const navigation = useNavigation();
+const isFocused = useIsFocused();
 ```
 
 ## Type-checking
