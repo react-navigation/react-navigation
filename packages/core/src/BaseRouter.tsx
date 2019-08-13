@@ -69,10 +69,6 @@ const BaseRouter = {
   shouldActionChangeFocus(action: CommonAction) {
     return action.type === 'NAVIGATE';
   },
-
-  canGoBack() {
-    return false;
-  },
 };
 
 export default BaseRouter;
