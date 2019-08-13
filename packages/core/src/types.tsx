@@ -317,6 +317,7 @@ type NavigationHelpersCommon<
    * Check if the screen is focused. The method returns `true` if focused, `false` otherwise.
    * Note that this method doesn't re-render screen when the focus changes. So don't use it in `render`.
    * To get notified of focus changes, use `addListener('focus', cb)` and `addListener('blur', cb)`.
+   * To conditionally render content based on focus state, use the `useIsFocused` hook.
    */
   isFocused(): boolean;
 

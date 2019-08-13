@@ -4,15 +4,16 @@
   "main": "src/index",
   "license": "MIT",
   "dependencies": {
-    "shortid": "^2.2.14"
+    "shortid": "^2.2.14",
+    "use-subscription": "^1.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.4.5",
+    "@types/react": "^16.8.19",
+    "@types/shortid": "^0.0.29",
     "react": "^16.8.3",
     "react-native-testing-library": "^1.9.1",
-    "react-test-renderer": "^16.8.3",
-    "@types/react": "^16.8.19",
-    "@types/shortid": "^0.0.29"
+    "react-test-renderer": "^16.8.3"
   },
   "peerDependencies": {
     "react": "^16.8.3"
