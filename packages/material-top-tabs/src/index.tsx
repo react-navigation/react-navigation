@@ -1,7 +1,9 @@
 /**
  * Navigators
  */
-export { default } from './navigators/createMaterialTopTabNavigator';
+export {
+  default as createMaterialTopTabNavigator,
+} from './navigators/createMaterialTopTabNavigator';
 
 /**
  * Views

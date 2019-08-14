@@ -3,10 +3,12 @@ import { ScrollView, AsyncStorage, YellowBox } from 'react-native';
 import { Appbar, List } from 'react-native-paper';
 import { Asset } from 'expo-asset';
 import { NavigationContainer, InitialState } from '@navigation-ex/core';
-import createDrawerNavigator, {
+import {
+  createDrawerNavigator,
   DrawerNavigationProp,
 } from '@navigation-ex/drawer';
-import createStackNavigator, {
+import {
+  createStackNavigator,
   Assets as StackAssets,
   StackNavigationProp,
 } from '@navigation-ex/stack';

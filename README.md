@@ -344,7 +344,7 @@ const navigation = useNavigation<FeedScreenNavigationProp>();
 It's also possible to type-check the navigator to some extent. To do this, we need to pass a generic when creating the navigator object:
 
 ```ts
-const Stack = StackNavigator<StackParamList>();
+const Stack = createStackNavigator<StackParamList>();
 ```
 
 And then we can use it:
