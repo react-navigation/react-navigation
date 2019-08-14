@@ -2,7 +2,8 @@ import * as React from 'react';
 import * as BaseActions from './BaseActions';
 import EnsureSingleNavigator from './EnsureSingleNavigator';
 import NavigationBuilderContext from './NavigationBuilderContext';
-import useChildActionListeners from './useChildActionListeners';
+import useFocusedListeners from './useFocusedListeners';
+
 import {
   Route,
   NavigationState,
@@ -92,10 +93,11 @@ const Container = React.forwardRef(function NavigationContainer(
     getPartialState(initialState)
   );
 
-  const dispatch = (action: NavigationAction) =>
-    context.performTransaction(() => {
-      actionListeners[0](action, undefined, null);
-    });
+  const { listeners, addListener: addFocusedListener } = useFocusedListeners();
+
+  const dispatch = (action: NavigationAction) => {
+    listeners[0](navigation => navigation.dispatch(action));
+  };
 
   React.useImperativeHandle(ref, () => ({
     dispatch,
@@ -119,18 +121,11 @@ const Container = React.forwardRef(function NavigationContainer(
   const isTransactionActiveRef = React.useRef<boolean>(false);
   const isFirstMountRef = React.useRef<boolean>(true);
 
-  const {
-    listeners: actionListeners,
-    addActionListener,
-    removeActionListener,
-  } = useChildActionListeners();
-
-  const navigationContext = React.useMemo(
+  const builderContext = React.useMemo(
     () => ({
-      addActionListener,
-      removeActionListener,
+      addFocusedListener,
     }),
-    [addActionListener, removeActionListener]
+    [addFocusedListener]
   );
 
   const performTransaction = React.useCallback((callback: () => void) => {
@@ -192,11 +187,11 @@ const Container = React.forwardRef(function NavigationContainer(
   }, [state, onStateChange]);
 
   return (
-    <NavigationStateContext.Provider value={context}>
-      <NavigationBuilderContext.Provider value={navigationContext}>
+    <NavigationBuilderContext.Provider value={builderContext}>
+      <NavigationStateContext.Provider value={context}>
         <EnsureSingleNavigator>{children}</EnsureSingleNavigator>
-      </NavigationBuilderContext.Provider>
-    </NavigationStateContext.Provider>
+      </NavigationStateContext.Provider>
+    </NavigationBuilderContext.Provider>
   );
 });
 

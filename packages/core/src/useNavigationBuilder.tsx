@@ -9,6 +9,8 @@ import useOnAction from './useOnAction';
 import useFocusEvents from './useFocusEvents';
 import useOnRouteFocus from './useOnRouteFocus';
 import useChildActionListeners from './useChildActionListeners';
+import useFocusedListeners from './useFocusedListeners';
+import useFocusedListenersChildrenAdapter from './useFocusedListenersChildrenAdapter';
 import {
   DefaultRouterOptions,
   DefaultNavigatorOptions,
@@ -195,9 +197,13 @@ export default function useNavigationBuilder<
 
   const {
     listeners: actionListeners,
-    addActionListener,
-    removeActionListener,
+    addListener: addActionListener,
   } = useChildActionListeners();
+
+  const {
+    listeners: focusedListeners,
+    addListener: addFocusedListener,
+  } = useFocusedListeners();
 
   const onAction = useOnAction({
     router,
@@ -222,6 +228,11 @@ export default function useNavigationBuilder<
     router,
   });
 
+  useFocusedListenersChildrenAdapter({
+    navigation,
+    focusedListeners,
+  });
+
   const descriptors = useDescriptors<State, ScreenOptions>({
     state,
     screens,
@@ -232,9 +243,9 @@ export default function useNavigationBuilder<
     setState,
     onRouteFocus,
     addActionListener,
-    removeActionListener,
     router,
     emitter,
+    addFocusedListener,
   });
 
   return {

@@ -2,6 +2,7 @@ import * as React from 'react';
 import SceneView from './SceneView';
 import NavigationBuilderContext, {
   ChildActionListener,
+  FocusedNavigationListener,
 } from './NavigationBuilderContext';
 import { NavigationEventEmitter } from './useEventEmitter';
 import useNavigationCache from './useNavigationCache';
@@ -28,7 +29,7 @@ type Options<ScreenOptions extends object> = {
   getState: () => NavigationState;
   setState: (state: NavigationState) => void;
   addActionListener: (listener: ChildActionListener) => void;
-  removeActionListener: (listener: ChildActionListener) => void;
+  addFocusedListener: (listener: FocusedNavigationListener) => void;
   onRouteFocus: (key: string) => void;
   router: Router<NavigationState, NavigationAction>;
   emitter: NavigationEventEmitter;
@@ -54,10 +55,10 @@ export default function useDescriptors<
   getState,
   setState,
   addActionListener,
-  removeActionListener,
   onRouteFocus,
   router,
   emitter,
+  addFocusedListener,
 }: Options<ScreenOptions>) {
   const [options, setOptions] = React.useState<{ [key: string]: object }>({});
   const context = React.useMemo(
@@ -65,16 +66,10 @@ export default function useDescriptors<
       navigation,
       onAction,
       addActionListener,
-      removeActionListener,
+      addFocusedListener,
       onRouteFocus,
     }),
-    [
-      navigation,
-      onAction,
-      onRouteFocus,
-      addActionListener,
-      removeActionListener,
-    ]
+    [navigation, onAction, addActionListener, addFocusedListener, onRouteFocus]
   );
 
   const navigations = useNavigationCache<State, ScreenOptions>({
