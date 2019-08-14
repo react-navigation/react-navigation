@@ -4,6 +4,7 @@
     "react": { "version": "16" },
     "import/core-modules": [
       "@navigation-ex/core",
+      "@navigation-ex/native",
       "@navigation-ex/routers",
       "@navigation-ex/stack",
       "@navigation-ex/drawer",

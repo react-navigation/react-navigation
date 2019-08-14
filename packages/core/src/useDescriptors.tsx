@@ -55,12 +55,13 @@ export default function useDescriptors<
   getState,
   setState,
   addActionListener,
+  addFocusedListener,
   onRouteFocus,
   router,
   emitter,
-  addFocusedListener,
 }: Options<ScreenOptions>) {
   const [options, setOptions] = React.useState<{ [key: string]: object }>({});
+
   const context = React.useMemo(
     () => ({
       navigation,

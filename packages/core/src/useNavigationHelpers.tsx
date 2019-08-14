@@ -35,7 +35,7 @@ export default function useNavigationHelpers<
   const { performTransaction } = React.useContext(NavigationStateContext);
 
   return React.useMemo(() => {
-    const dispatch = (action: Action | ((state: State) => State)) => {
+    const dispatch = (action: Action | ((state: State) => State)) =>
       performTransaction(() => {
         if (typeof action === 'function') {
           setState(action(getState()));
@@ -43,7 +43,6 @@ export default function useNavigationHelpers<
           onAction(action);
         }
       });
-    };
 
     const actions = {
       ...router.actionCreators,
