@@ -99,8 +99,19 @@ const Container = React.forwardRef(function NavigationContainer(
     listeners[0](navigation => navigation.dispatch(action));
   };
 
+  const canGoBack = () => {
+    const { result, handled } = listeners[0](navigation =>
+      navigation.canGoBack()
+    );
+
+    if (handled) {
+      return result;
+    } else {
+      return false;
+    }
+  };
+
   React.useImperativeHandle(ref, () => ({
-    dispatch,
     ...(Object.keys(BaseActions) as Array<keyof typeof BaseActions>).reduce<
       any
     >((acc, name) => {
@@ -114,6 +125,8 @@ const Container = React.forwardRef(function NavigationContainer(
         );
       return acc;
     }, {}),
+    dispatch,
+    canGoBack,
   }));
 
   const navigationStateRef = React.useRef<State>();

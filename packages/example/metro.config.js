@@ -39,6 +39,7 @@ module.exports = {
       'react-native-paper',
       'react-native-tab-view',
       'shortid',
+      'use-subscription',
     ],
   },
 

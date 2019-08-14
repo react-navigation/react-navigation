@@ -31,7 +31,8 @@
     "react-native-tab-view": "2.7.1",
     "react-native-web": "^0.11.4",
     "scheduler": "^0.14.0",
-    "shortid": "^2.2.14"
+    "shortid": "^2.2.14",
+    "use-subscription": "^1.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",

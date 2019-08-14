@@ -2,7 +2,13 @@ import * as React from 'react';
 import { ScrollView, AsyncStorage, YellowBox } from 'react-native';
 import { Appbar, List } from 'react-native-paper';
 import { Asset } from 'expo-asset';
-import { NavigationContainer, InitialState } from '@navigation-ex/core';
+import {
+  NavigationContainer,
+  InitialState,
+  NavigationHelpers,
+  ParamListBase,
+} from '@navigation-ex/core';
+import { useNativeIntegration } from '@navigation-ex/native';
 import {
   createDrawerNavigator,
   DrawerNavigationProp,
@@ -51,6 +57,10 @@ const PERSISTENCE_KEY = 'NAVIGATION_STATE';
 Asset.loadAsync(StackAssets);
 
 export default function App() {
+  const containerRef = React.useRef<NavigationHelpers<ParamListBase>>(null);
+
+  useNativeIntegration(containerRef);
+
   const [isReady, setIsReady] = React.useState(false);
   const [initialState, setInitialState] = React.useState<
     InitialState | undefined
@@ -79,6 +89,7 @@ export default function App() {
 
   return (
     <NavigationContainer
+      ref={containerRef}
       initialState={initialState}
       onStateChange={state =>
         AsyncStorage.setItem(PERSISTENCE_KEY, JSON.stringify(state))

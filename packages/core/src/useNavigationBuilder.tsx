@@ -243,9 +243,9 @@ export default function useNavigationBuilder<
     setState,
     onRouteFocus,
     addActionListener,
+    addFocusedListener,
     router,
     emitter,
-    addFocusedListener,
   });
 
   return {
