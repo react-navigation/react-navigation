@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
-import createMaterialBottomTabNavigator from '@navigation-ex/material-bottom-tabs';
+import { createMaterialBottomTabNavigator } from '@navigation-ex/material-bottom-tabs';
 import Article from '../Shared/Article';
 import Albums from '../Shared/Albums';
 import Contacts from '../Shared/Contacts';

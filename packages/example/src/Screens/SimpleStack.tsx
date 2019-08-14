@@ -2,7 +2,8 @@ import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Button } from 'react-native-paper';
 import { RouteProp, ParamListBase } from '@navigation-ex/core';
-import createStackNavigator, {
+import {
+  createStackNavigator,
   StackNavigationProp,
 } from '@navigation-ex/stack';
 import Article from '../Shared/Article';
