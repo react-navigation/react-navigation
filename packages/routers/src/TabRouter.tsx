@@ -211,10 +211,6 @@ export default function TabRouter({
       return action.type === 'NAVIGATE';
     },
 
-    canGoBack(state) {
-      return router.getStateForAction(state, { type: 'GO_BACK' }) !== null;
-    },
-
     actionCreators: TabActions,
   };
 

@@ -96,10 +96,6 @@ export default function MockRouter(options: DefaultRouterOptions) {
     shouldActionChangeFocus() {
       return false;
     },
-
-    canGoBack() {
-      return false;
-    },
   };
 
   return router;
