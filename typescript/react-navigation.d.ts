@@ -235,15 +235,15 @@ declare module 'react-navigation' {
     NavigationTabScreenOptions &
     NavigationDrawerScreenOptions;
 
-  export interface NavigationScreenConfigProps {
-    navigation: NavigationScreenProp<NavigationRoute>;
+  export interface NavigationScreenConfigProps<Params = NavigationParams> {
+    navigation: NavigationScreenProp<NavigationRoute, Params>;
     screenProps: ScreenProps;
   }
 
-  export type NavigationScreenConfig<Options> =
+  export type NavigationScreenConfig<Options, Params = NavigationParams> =
     | Options
     | ((
-        navigationOptionsContainer: NavigationScreenConfigProps & {
+        navigationOptionsContainer: NavigationScreenConfigProps<Params> & {
           navigationOptions: NavigationScreenConfig<Options>;
         }
       ) => Options);
