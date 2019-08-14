@@ -68,7 +68,8 @@ export default function useNavigationHelpers<
         ? parentNavigationHelpers.isFocused
         : () => true,
       canGoBack: () =>
-        router.canGoBack(getState()) ||
+        router.getStateForAction(getState(), BaseActions.goBack() as Action) !==
+          null ||
         (parentNavigationHelpers && parentNavigationHelpers.canGoBack()) ||
         false,
     } as NavigationHelpers<ParamListBase> &

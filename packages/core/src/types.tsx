@@ -170,13 +170,6 @@ export type Router<
   shouldActionChangeFocus(action: NavigationAction): boolean;
 
   /**
-   * Whether the back action will be handled by navigation
-   *
-   * @param state State object to check.
-   */
-  canGoBack(state: State): boolean;
-
-  /**
    * Action creators for the router.
    */
   actionCreators?: ActionCreators<Action>;

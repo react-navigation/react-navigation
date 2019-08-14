@@ -102,14 +102,68 @@ it("returns correct value for canGoBack when it's not overridden", () => {
   expect(result).toEqual(false);
 });
 
-it("returns correct value for canGoBack when it's overridden", () => {
+it(`returns false for canGoBack when current router doesn't handle GO_BACK`, () => {
+  function TestRouter(options: DefaultRouterOptions) {
+    const CurrentMockRouter = MockRouter(options);
+    const ChildRouter: Router<NavigationState, MockActions> = {
+      ...CurrentMockRouter,
+
+      getStateForAction(state, action) {
+        if (action.type === 'GO_BACK') {
+          return null;
+        }
+
+        return CurrentMockRouter.getStateForAction(state, action);
+      },
+    };
+    return ChildRouter;
+  }
+
+  const TestNavigator = (props: any) => {
+    const { state, descriptors } = useNavigationBuilder<
+      NavigationState,
+      any,
+      any
+    >(TestRouter, props);
+
+    return descriptors[state.routes[state.index].key].render();
+  };
+
+  let result = false;
+
+  const TestScreen = ({ navigation }: any): any => {
+    React.useEffect(() => {
+      result = navigation.canGoBack();
+    });
+
+    return null;
+  };
+
+  const root = (
+    <NavigationContainer>
+      <TestNavigator>
+        <Screen name="baz" component={TestScreen} />
+      </TestNavigator>
+    </NavigationContainer>
+  );
+
+  render(root).update(root);
+
+  expect(result).toBe(false);
+});
+
+it('returns true for canGoBack when current router handles GO_BACK', () => {
   function ParentRouter(options: DefaultRouterOptions) {
     const CurrentMockRouter = MockRouter(options);
     const ChildRouter: Router<NavigationState, MockActions> = {
       ...CurrentMockRouter,
 
-      canGoBack() {
-        return true;
+      getStateForAction(state, action) {
+        if (action.type === 'GO_BACK') {
+          return state;
+        }
+
+        return CurrentMockRouter.getStateForAction(state, action);
       },
     };
     return ChildRouter;
@@ -160,17 +214,21 @@ it("returns correct value for canGoBack when it's overridden", () => {
 
   render(root).update(root);
 
-  expect(result).toEqual(true);
+  expect(result).toBe(true);
 });
 
-it('returns correct value for canGoBack when parent router overrides it', () => {
+it('returns true for canGoBack when parent router handles GO_BACK', () => {
   function OverrodeRouter(options: DefaultRouterOptions) {
     const CurrentMockRouter = MockRouter(options);
     const ChildRouter: Router<NavigationState, MockActions> = {
       ...CurrentMockRouter,
 
-      canGoBack() {
-        return true;
+      getStateForAction(state, action) {
+        if (action.type === 'GO_BACK') {
+          return state;
+        }
+
+        return CurrentMockRouter.getStateForAction(state, action);
       },
     };
     return ChildRouter;
@@ -228,7 +286,7 @@ it('returns correct value for canGoBack when parent router overrides it', () => 
 
   render(root).update(root);
 
-  expect(result).toEqual(false);
+  expect(result).toBe(false);
 });
 
 it('sets options with options prop as a fuction', () => {
