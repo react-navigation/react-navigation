@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+- Add generic for NavigationScreenConfig to be able to pass custom NavigationParams
 - Add missing Flow type exports for `ScrollView` and `NavigationContext`
 
 ## [3.11.1]
