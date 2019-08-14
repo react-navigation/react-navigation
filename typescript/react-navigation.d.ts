@@ -258,7 +258,7 @@ declare module 'react-navigation' {
     Options = {},
     Props = {}
   > = React.ComponentType<NavigationScreenProps<Params, Options> & Props> & {
-    navigationOptions?: NavigationScreenConfig<Options>;
+    navigationOptions?: NavigationScreenConfig<Options, Params>;
   };
 
   export type NavigationNavigator<
