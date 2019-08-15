@@ -27,19 +27,17 @@ export type NavigationState = {
   stale?: false;
 };
 
-export type InitialState = Omit<
-  NavigationState,
-  'key' | 'routes' | 'routeNames'
-> & {
-  key?: string;
-  routeNames?: string[];
-  routes: Array<Route<string> & { state?: InitialState }>;
+export type InitialState = Partial<Omit<NavigationState, 'routes'>> & {
+  routes: Array<Omit<Route<string>, 'key'> & { state?: InitialState }>;
 };
 
-export type PartialState<State extends NavigationState> = State & {
-  stale: true;
-  key?: undefined;
-  routeNames?: undefined;
+export type PartialState<State extends NavigationState> = Partial<
+  Omit<State, 'key' | 'routes' | 'routeNames'>
+> & {
+  stale: boolean;
+  routes: Array<
+    Omit<Route<string>, 'key'> & { key?: string; state?: InitialState }
+  >;
 };
 
 export type Route<RouteName extends string> = {
@@ -122,13 +120,17 @@ export type Router<
   /**
    * Rehydrate the full navigation state from a given partial state.
    *
+   * @param partialState Navigation state to rehydrate from.
    * @param options.routeNames List of valid route names as defined in the screen components.
-   * @param options.partialState Navigation state to rehydrate from.
+   * @param options.routeParamsList Object containing params for each route.
    */
-  getRehydratedState(options: {
-    routeNames: string[];
-    partialState: State | PartialState<State>;
-  }): State;
+  getRehydratedState(
+    partialState: PartialState<State>,
+    options: {
+      routeNames: string[];
+      routeParamList: ParamListBase;
+    }
+  ): State;
 
   /**
    * Take the current state and updated list of route names, and return a new state.

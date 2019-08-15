@@ -71,19 +71,46 @@ export default function TabRouter({
       };
     },
 
-    getRehydratedState({ routeNames, partialState }) {
+    getRehydratedState(partialState, { routeNames, routeParamList }) {
       let state = partialState;
 
-      if (state.stale) {
-        state = {
-          ...state,
-          stale: false,
-          routeNames,
-          key: `tab-${shortid()}`,
-        };
+      if (!state.stale) {
+        return state as TabNavigationState;
       }
 
-      return state;
+      const routes = routeNames.map(name => {
+        const route = state.routes.find(r => r.name === name);
+
+        return {
+          name,
+          key: route && route.key ? route.key : `${name}-${shortid()}`,
+          params:
+            routeParamList[name] !== undefined
+              ? {
+                  ...routeParamList[name],
+                  ...(route ? route.params : undefined),
+                }
+              : route
+              ? route.params
+              : undefined,
+        };
+      });
+
+      const routeKeyHistory = state.routeKeyHistory
+        ? state.routeKeyHistory.filter(key => routes.find(r => r.key === key))
+        : [];
+
+      return {
+        stale: false,
+        key: `tab-${shortid()}`,
+        index:
+          typeof state.index === 'number' && state.index < routes.length
+            ? state.index
+            : 0,
+        routeNames,
+        routeKeyHistory,
+        routes,
+      };
     },
 
     getStateForRouteNamesChange(state, { routeNames, routeParamList }) {

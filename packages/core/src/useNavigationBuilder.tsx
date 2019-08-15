@@ -19,6 +19,7 @@ import {
   RouteConfig,
   Router,
   RouterFactory,
+  PartialState,
 } from './types';
 
 /**
@@ -137,9 +138,9 @@ export default function useNavigationBuilder<
           routeNames,
           routeParamList,
         })
-      : router.getRehydratedState({
+      : router.getRehydratedState(currentState as PartialState<State>, {
           routeNames,
-          partialState: currentState as any,
+          routeParamList,
         })
   );
 

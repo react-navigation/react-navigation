@@ -8,7 +8,6 @@ import { NavigationEventEmitter } from './useEventEmitter';
 import useNavigationCache from './useNavigationCache';
 import {
   Descriptor,
-  PartialState,
   NavigationAction,
   NavigationHelpers,
   NavigationState,
@@ -18,7 +17,7 @@ import {
 } from './types';
 
 type Options<ScreenOptions extends object> = {
-  state: NavigationState | PartialState<NavigationState>;
+  state: NavigationState;
   screens: { [key: string]: RouteConfig<ParamListBase, string, ScreenOptions> };
   navigation: NavigationHelpers<ParamListBase>;
   screenOptions?: ScreenOptions;
