@@ -11,4 +11,7 @@ export { default as useNavigation } from './useNavigation';
 export { default as useFocusEffect } from './useFocusEffect';
 export { default as useIsFocused } from './useIsFocused';
 
+export { default as getStateFromPath } from './getStateFromPath';
+export { default as getPathFromState } from './getPathFromState';
+
 export * from './types';

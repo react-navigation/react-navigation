@@ -27,12 +27,15 @@ export type NavigationState = {
   stale?: false;
 };
 
-export type InitialState = Partial<Omit<NavigationState, 'routes'>> & {
+export type InitialState = Partial<
+  Omit<NavigationState, 'stale' | 'routes'>
+> & {
+  stale?: boolean;
   routes: Array<Omit<Route<string>, 'key'> & { state?: InitialState }>;
 };
 
 export type PartialState<State extends NavigationState> = Partial<
-  Omit<State, 'key' | 'routes' | 'routeNames'>
+  Omit<State, 'stale' | 'key' | 'routes' | 'routeNames'>
 > & {
   stale: boolean;
   routes: Array<
