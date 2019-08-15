@@ -3,6 +3,7 @@ import {
   Router,
   CommonAction,
   NavigationState,
+  Route,
   DefaultRouterOptions,
 } from '../../types';
 
@@ -30,19 +31,40 @@ export default function MockRouter(options: DefaultRouterOptions) {
       };
     },
 
-    getRehydratedState({ routeNames, partialState }) {
+    getRehydratedState(partialState, { routeNames, routeParamList }) {
       let state = partialState;
 
-      if (state.stale) {
-        state = {
-          ...state,
-          stale: false,
-          routeNames,
-          key: String(MockRouterKey.current++),
-        };
+      if (!state.stale) {
+        return state as NavigationState;
       }
 
-      return state;
+      const routes = state.routes
+        .filter(route => routeNames.includes(route.name))
+        .map(
+          route =>
+            ({
+              ...route,
+              key: route.key || `${route.name}-${MockRouterKey.current++}`,
+              params:
+                routeParamList[route.name] !== undefined
+                  ? {
+                      ...routeParamList[route.name],
+                      ...route.params,
+                    }
+                  : route.params,
+            } as Route<string>)
+        );
+
+      return {
+        stale: false,
+        key: String(MockRouterKey.current++),
+        index:
+          typeof state.index === 'number' && state.index < routes.length
+            ? state.index
+            : 0,
+        routeNames,
+        routes,
+      };
     },
 
     getStateForRouteNamesChange(state, { routeNames }) {

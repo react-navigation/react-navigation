@@ -9,12 +9,15 @@ import {
   NavigationState,
   NavigationProp,
   RouteConfig,
+  PartialState,
 } from './types';
 
 type Props<State extends NavigationState, ScreenOptions extends object> = {
   screen: RouteConfig<ParamListBase, string, ScreenOptions>;
   navigation: NavigationProp<ParamListBase, string, State, ScreenOptions>;
-  route: Route<string> & { state?: NavigationState };
+  route: Route<string> & {
+    state?: NavigationState | PartialState<NavigationState>;
+  };
   getState: () => NavigationState;
   setState: (state: NavigationState) => void;
 };

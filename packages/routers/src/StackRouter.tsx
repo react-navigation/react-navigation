@@ -5,6 +5,7 @@ import {
   Router,
   BaseRouter,
   DefaultRouterOptions,
+  Route,
 } from '@navigation-ex/core';
 
 export type StackActionType =
@@ -47,36 +48,69 @@ export default function StackRouter(options: StackRouterOptions) {
     ...BaseRouter,
 
     getInitialState({ routeNames, routeParamList }) {
-      const index =
-        options.initialRouteName === undefined
-          ? 0
-          : routeNames.indexOf(options.initialRouteName);
+      const initialRouteName =
+        options.initialRouteName !== undefined
+          ? options.initialRouteName
+          : routeNames[0];
 
       return {
         key: `stack-${shortid()}`,
-        index,
+        index: 0,
         routeNames,
-        routes: routeNames.slice(0, index + 1).map(name => ({
-          name,
-          key: `${name}-${shortid()}`,
-          params: routeParamList[name],
-        })),
+        routes: [
+          {
+            key: `${initialRouteName}-${shortid()}`,
+            name: initialRouteName,
+            params: routeParamList[initialRouteName],
+          },
+        ],
       };
     },
 
-    getRehydratedState({ routeNames, partialState }) {
+    getRehydratedState(partialState, { routeNames, routeParamList }) {
       let state = partialState;
 
-      if (state.stale) {
-        state = {
-          ...state,
-          stale: false,
-          routeNames,
-          key: `stack-${shortid()}`,
-        };
+      if (!state.stale) {
+        return state as StackNavigationState;
       }
 
-      return state;
+      const routes = state.routes
+        .filter(route => routeNames.includes(route.name))
+        .map(
+          route =>
+            ({
+              ...route,
+              key: route.key || `${route.name}-${shortid()}`,
+              params:
+                routeParamList[route.name] !== undefined
+                  ? {
+                      ...routeParamList[route.name],
+                      ...route.params,
+                    }
+                  : route.params,
+            } as Route<string>)
+        );
+
+      if (routes.length === 0) {
+        const initialRouteName =
+          options.initialRouteName !== undefined
+            ? options.initialRouteName
+            : routeNames[0];
+
+        routes.push({
+          key: `${initialRouteName}-${shortid()}`,
+          name: initialRouteName,
+          params: routeParamList[initialRouteName],
+        });
+      }
+
+      return {
+        stale: false,
+        key: `stack-${shortid()}`,
+        index: routes.length - 1,
+        routeNames,
+        routes,
+      };
     },
 
     getStateForRouteNamesChange(state, { routeNames }) {

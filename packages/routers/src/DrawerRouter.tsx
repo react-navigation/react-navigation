@@ -68,6 +68,25 @@ export default function DrawerRouter(
       };
     },
 
+    getRehydratedState(partialState, { routeNames, routeParamList }) {
+      if (!partialState.stale) {
+        return partialState as DrawerNavigationState;
+      }
+
+      const state = router.getRehydratedState(partialState, {
+        routeNames,
+        routeParamList,
+      });
+
+      return {
+        ...state,
+        isDrawerOpen:
+          typeof partialState.isDrawerOpen === 'boolean'
+            ? partialState.isDrawerOpen
+            : false,
+      };
+    },
+
     getStateForRouteFocus(state, key) {
       const index = state.routes.findIndex(r => r.key === key);
 
