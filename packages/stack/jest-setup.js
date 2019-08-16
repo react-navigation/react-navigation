@@ -97,6 +97,8 @@ jest.mock('react-native-reanimated', () => {
       timing: NOOP,
       spring: NOOP,
 
+      proc: a => a,
+
       useCode: NOOP,
     },
 

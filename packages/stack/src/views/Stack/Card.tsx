@@ -87,6 +87,8 @@ const {
   onChange,
   set,
   spring,
+  // @ts-ignore
+  proc,
   sub,
   timing,
   startClock,
@@ -95,6 +97,79 @@ const {
   Clock,
   Value,
 } = Animated;
+
+const springHelper = proc(
+  (
+    finished: Animated.Value<number>,
+    velocity: Animated.Value<number>,
+    position: Animated.Value<number>,
+    time: Animated.Value<number>,
+    prevPosition: Animated.Value<number>,
+    toValue: Animated.Adaptable<number>,
+    damping: Animated.Adaptable<number>,
+    mass: Animated.Adaptable<number>,
+    stiffness: Animated.Adaptable<number>,
+    overshootClamping: Animated.Adaptable<number>,
+    restSpeedThreshold: Animated.Adaptable<number>,
+    restDisplacementThreshold: Animated.Adaptable<number>,
+    clock: Animated.Clock
+  ) =>
+    spring(
+      clock,
+      {
+        finished,
+        velocity,
+        position,
+        time,
+        // @ts-ignore
+        prevPosition,
+      },
+      {
+        toValue,
+        damping,
+        mass,
+        stiffness,
+        overshootClamping,
+        restDisplacementThreshold,
+        restSpeedThreshold,
+      }
+    )
+);
+
+function memoizedSpring(
+  clock: Animated.Clock,
+  state: {
+    finished: Animated.Value<number>;
+    velocity: Animated.Value<number>;
+    position: Animated.Value<number>;
+    time: Animated.Value<number>;
+  },
+  config: {
+    toValue: Animated.Adaptable<number>;
+    damping: Animated.Adaptable<number>;
+    mass: Animated.Adaptable<number>;
+    stiffness: Animated.Adaptable<number>;
+    overshootClamping: Animated.Adaptable<boolean>;
+    restSpeedThreshold: Animated.Adaptable<number>;
+    restDisplacementThreshold: Animated.Adaptable<number>;
+  }
+) {
+  return springHelper(
+    state.finished,
+    state.velocity,
+    state.position,
+    state.time,
+    new Value(0),
+    config.toValue,
+    config.damping,
+    config.mass,
+    config.stiffness,
+    config.overshootClamping,
+    config.restSpeedThreshold,
+    config.restDisplacementThreshold,
+    clock
+  );
+}
 
 export default class Card extends React.Component<Props> {
   static defaultProps = {
@@ -216,7 +291,7 @@ export default class Card extends React.Component<Props> {
       cond(
         eq(isVisible, 1),
         openingSpec.timing === 'spring'
-          ? spring(
+          ? memoizedSpring(
               this.clock,
               { ...this.transitionState, velocity: this.transitionVelocity },
               { ...openingSpec.config, toValue: this.toValue }
@@ -227,7 +302,7 @@ export default class Card extends React.Component<Props> {
               { ...openingSpec.config, toValue: this.toValue }
             ),
         closingSpec.timing === 'spring'
-          ? spring(
+          ? memoizedSpring(
               this.clock,
               { ...this.transitionState, velocity: this.transitionVelocity },
               { ...closingSpec.config, toValue: this.toValue }
