@@ -3,6 +3,7 @@ import * as BaseActions from './BaseActions';
 import EnsureSingleNavigator from './EnsureSingleNavigator';
 import NavigationBuilderContext from './NavigationBuilderContext';
 import useFocusedListeners from './useFocusedListeners';
+import useDevTools from './useDevTools';
 
 import {
   Route,
@@ -133,12 +134,25 @@ const Container = React.forwardRef(function NavigationContainer(
   const transactionStateRef = React.useRef<State | null>(null);
   const isTransactionActiveRef = React.useRef<boolean>(false);
   const isFirstMountRef = React.useRef<boolean>(true);
+  const skipTrackingRef = React.useRef<boolean>(false);
+
+  const reset = React.useCallback((state: NavigationState) => {
+    skipTrackingRef.current = true;
+    setNavigationState(state);
+  }, []);
+
+  const { trackState, trackAction } = useDevTools({
+    name: '@navigation-ex',
+    reset,
+    state,
+  });
 
   const builderContext = React.useMemo(
     () => ({
       addFocusedListener,
+      trackAction,
     }),
-    [addFocusedListener]
+    [addFocusedListener, trackAction]
   );
 
   const performTransaction = React.useCallback((callback: () => void) => {
@@ -189,6 +203,12 @@ const Container = React.forwardRef(function NavigationContainer(
   );
 
   React.useEffect(() => {
+    if (skipTrackingRef.current) {
+      skipTrackingRef.current = false;
+    } else {
+      trackState(state);
+    }
+
     navigationStateRef.current = state;
     transactionStateRef.current = null;
 
@@ -197,7 +217,7 @@ const Container = React.forwardRef(function NavigationContainer(
     }
 
     isFirstMountRef.current = false;
-  }, [state, onStateChange]);
+  }, [state, onStateChange, trackState]);
 
   return (
     <NavigationBuilderContext.Provider value={builderContext}>
