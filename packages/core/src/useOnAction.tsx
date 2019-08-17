@@ -32,6 +32,7 @@ export default function useOnAction({
     onAction: onActionParent,
     onRouteFocus: onRouteFocusParent,
     addActionListener: addActionListenerParent,
+    trackAction,
   } = React.useContext(NavigationBuilderContext);
 
   const onAction = React.useCallback(
@@ -60,6 +61,8 @@ export default function useOnAction({
       result = result === null && action.target === state.key ? state : result;
 
       if (result !== null) {
+        trackAction(state.key, action);
+
         if (state !== result) {
           setState(result);
         }
@@ -99,6 +102,7 @@ export default function useOnAction({
       getState,
       router,
       onActionParent,
+      trackAction,
       onRouteFocusParent,
       setState,
       key,

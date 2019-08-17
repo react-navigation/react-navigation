@@ -61,6 +61,7 @@ export default function useDescriptors<
   emitter,
 }: Options<ScreenOptions>) {
   const [options, setOptions] = React.useState<{ [key: string]: object }>({});
+  const { trackAction } = React.useContext(NavigationBuilderContext);
 
   const context = React.useMemo(
     () => ({
@@ -69,8 +70,16 @@ export default function useDescriptors<
       addActionListener,
       addFocusedListener,
       onRouteFocus,
+      trackAction,
     }),
-    [navigation, onAction, addActionListener, addFocusedListener, onRouteFocus]
+    [
+      navigation,
+      onAction,
+      addActionListener,
+      addFocusedListener,
+      onRouteFocus,
+      trackAction,
+    ]
   );
 
   const navigations = useNavigationCache<State, ScreenOptions>({
