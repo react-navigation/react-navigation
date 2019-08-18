@@ -61,7 +61,7 @@ export default function useOnAction({
       result = result === null && action.target === state.key ? state : result;
 
       if (result !== null) {
-        trackAction(state.key, action);
+        trackAction(action);
 
         if (state !== result) {
           setState(result);

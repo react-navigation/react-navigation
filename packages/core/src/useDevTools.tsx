@@ -43,9 +43,7 @@ export default function useDevTools({ name, reset, state }: Options) {
 
   const devTools = devToolsRef.current;
   const lastStateRef = React.useRef<State>(state);
-  const actions = React.useRef<
-    Array<{ key: string; action: NavigationAction }>
-  >([]);
+  const actions = React.useRef<Array<NavigationAction | string>>([]);
 
   React.useEffect(() => {
     devTools && devTools.init(lastStateRef.current);
@@ -84,12 +82,12 @@ export default function useDevTools({ name, reset, state }: Options) {
   );
 
   const trackAction = React.useCallback(
-    (key: string, action: NavigationAction) => {
+    (action: NavigationAction | string) => {
       if (!devTools) {
         return;
       }
 
-      actions.current.push({ key, action });
+      actions.current.push(action);
     },
     [devTools]
   );

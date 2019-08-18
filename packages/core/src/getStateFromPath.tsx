@@ -1,4 +1,4 @@
-import { InitialState } from './types';
+import { NavigationState, PartialState } from './types';
 
 /**
  * Utility to parse a path string to initial state object accepted by the container.
@@ -8,17 +8,17 @@ import { InitialState } from './types';
  */
 export default function getStateFromPath(
   path: string
-): InitialState | undefined {
+): PartialState<NavigationState> | undefined {
   const parts = path.split('?');
   const segments = parts[0].split('/').filter(Boolean);
   const query = parts[1] ? parts[1].split('&') : undefined;
 
-  let result: InitialState | undefined;
-  let current: InitialState | undefined;
+  let result: PartialState<NavigationState> | undefined;
+  let current: PartialState<NavigationState> | undefined;
 
   while (segments.length) {
     const state = {
-      stale: true as true,
+      stale: true,
       routes: [{ name: decodeURIComponent(segments[0]) }],
     };
 

@@ -10,20 +10,17 @@ import {
   NavigationState,
   InitialState,
   PartialState,
-  ParamListBase,
-  NavigationHelpers,
   NavigationAction,
+  NavigationContainerRef,
 } from './types';
+
+type State = NavigationState | PartialState<NavigationState> | undefined;
 
 type Props = {
   initialState?: InitialState;
-  onStateChange?: (
-    state: NavigationState | PartialState<NavigationState> | undefined
-  ) => void;
+  onStateChange?: (state: State) => void;
   children: React.ReactNode;
 };
-
-type State = NavigationState | PartialState<NavigationState> | undefined;
 
 const MISSING_CONTEXT_ERROR =
   "We couldn't find a navigation context. Have you wrapped your app with 'NavigationContainer'?";
@@ -88,7 +85,7 @@ const getPartialState = (
  */
 const Container = React.forwardRef(function NavigationContainer(
   { initialState, onStateChange, children }: Props,
-  ref: React.Ref<NavigationHelpers<ParamListBase>>
+  ref: React.Ref<NavigationContainerRef>
 ) {
   const [state, setNavigationState] = React.useState<State>(() =>
     getPartialState(initialState)
@@ -126,6 +123,10 @@ const Container = React.forwardRef(function NavigationContainer(
         );
       return acc;
     }, {}),
+    resetRoot: (state: PartialState<NavigationState> | NavigationState) => {
+      trackAction('@@RESET_ROOT');
+      setNavigationState(state);
+    },
     dispatch,
     canGoBack,
   }));

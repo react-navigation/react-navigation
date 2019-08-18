@@ -85,7 +85,10 @@ export default function TabRouter({
         return {
           ...route,
           name,
-          key: route && route.key ? route.key : `${name}-${shortid()}`,
+          key:
+            route && route.name === name && route.key
+              ? route.key
+              : `${name}-${shortid()}`,
           params:
             routeParamList[name] !== undefined
               ? {

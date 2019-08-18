@@ -1,4 +1,4 @@
-import { NavigationState } from './types';
+import { NavigationState, PartialState } from './types';
 
 export type Action =
   | {
@@ -22,7 +22,7 @@ export type Action =
     }
   | {
       type: 'RESET';
-      payload: Partial<NavigationState>;
+      payload: PartialState<NavigationState>;
       source?: string;
       target?: string;
     }
@@ -64,7 +64,7 @@ export function replace(name: string, params?: object): Action {
   return { type: 'REPLACE', payload: { name, params } };
 }
 
-export function reset(state: Partial<NavigationState>): Action {
+export function reset(state: PartialState<NavigationState>): Action {
   return { type: 'RESET', payload: state };
 }
 

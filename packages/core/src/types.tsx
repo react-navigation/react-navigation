@@ -37,7 +37,7 @@ export type InitialState = Partial<
 export type PartialState<State extends NavigationState> = Partial<
   Omit<State, 'stale' | 'key' | 'routes' | 'routeNames'>
 > & {
-  stale: boolean;
+  stale?: boolean;
   routes: Array<
     Omit<Route<string>, 'key'> & { key?: string; state?: InitialState }
   >;
@@ -304,7 +304,7 @@ type NavigationHelpersCommon<
    *
    * @param state Navigation state object.
    */
-  reset(state: Partial<State>): void;
+  reset(state: PartialState<State> | State): void;
 
   /**
    * Go back to the previous route in history.
@@ -485,6 +485,18 @@ export type RouteConfig<
        */
       children: (props: any) => React.ReactNode;
     });
+
+export type NavigationContainerRef =
+  | NavigationHelpers<ParamListBase> & {
+      /**
+       * Reset the navigation state of the root navigator to the provided state.
+       *
+       * @param state Navigation state object.
+       */
+      resetRoot(state: PartialState<NavigationState> | NavigationState): void;
+    }
+  | undefined
+  | null;
 
 export type TypedNavigator<
   ParamList extends ParamListBase,

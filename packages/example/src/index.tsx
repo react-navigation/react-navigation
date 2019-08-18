@@ -1,14 +1,15 @@
 import * as React from 'react';
 import { ScrollView, AsyncStorage, YellowBox } from 'react-native';
+import { Linking } from 'expo';
 import { Appbar, List } from 'react-native-paper';
 import { Asset } from 'expo-asset';
 import {
   NavigationContainer,
   InitialState,
-  NavigationHelpers,
-  ParamListBase,
+  getStateFromPath,
+  NavigationContainerRef,
 } from '@navigation-ex/core';
-import { useNativeIntegration } from '@navigation-ex/native';
+import { useBackButton, useLinking } from '@navigation-ex/native';
 import {
   createDrawerNavigator,
   DrawerNavigationProp,
@@ -57,9 +58,34 @@ const PERSISTENCE_KEY = 'NAVIGATION_STATE';
 Asset.loadAsync(StackAssets);
 
 export default function App() {
-  const containerRef = React.useRef<NavigationHelpers<ParamListBase>>(null);
+  const containerRef = React.useRef<NavigationContainerRef>();
 
-  useNativeIntegration(containerRef);
+  useBackButton(containerRef);
+
+  // To test deep linking on, run the following in the Terminal:
+  // Android: adb shell am start -a android.intent.action.VIEW -d "exp://127.0.0.1:19000/--/simple-stack"
+  // iOS: xcrun simctl openurl booted exp://127.0.0.1:19000/--/simple-stack
+  // The first segment of the link is the the scheme + host (returned by `Linking.makeUrl`)
+  const { getInitialState } = useLinking(containerRef, {
+    prefixes: [Linking.makeUrl('/')],
+    getStateFromPath: path => {
+      const state = getStateFromPath(path);
+
+      return {
+        stale: true,
+        routes: [
+          {
+            name: 'root',
+            state: {
+              ...state,
+              stale: true,
+              routes: [{ name: 'home' }, ...(state ? state.routes : [])],
+            },
+          },
+        ],
+      };
+    },
+  });
 
   const [isReady, setIsReady] = React.useState(false);
   const [initialState, setInitialState] = React.useState<
@@ -67,21 +93,25 @@ export default function App() {
   >();
 
   React.useEffect(() => {
-    AsyncStorage.getItem(PERSISTENCE_KEY).then(
-      data => {
-        try {
-          const result = JSON.parse(data || '');
+    const restoreState = async () => {
+      try {
+        let state = await getInitialState();
 
-          if (result) {
-            setInitialState(result);
-          }
-        } finally {
-          setIsReady(true);
+        if (state === undefined) {
+          const savedState = await AsyncStorage.getItem(PERSISTENCE_KEY);
+          state = savedState ? JSON.parse(savedState) : undefined;
         }
-      },
-      () => setIsReady(true)
-    );
-  }, []);
+
+        if (state !== undefined) {
+          setInitialState(state);
+        }
+      } finally {
+        setIsReady(true);
+      }
+    };
+
+    restoreState();
+  }, [getInitialState]);
 
   if (!isReady) {
     return null;
