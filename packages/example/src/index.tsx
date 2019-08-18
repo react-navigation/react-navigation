@@ -27,23 +27,23 @@ import MaterialBottomTabs from './Screens/MaterialBottomTabs';
 YellowBox.ignoreWarnings(['Require cycle:', 'Warning: Async Storage']);
 
 type RootDrawerParamList = {
-  Root: undefined;
+  root: undefined;
 };
 
 type RootStackParamList = {
-  Home: undefined;
+  home: undefined;
 } & {
   [P in keyof typeof SCREENS]: undefined;
 };
 
 const SCREENS = {
-  SimpleStack: { title: 'Simple Stack', component: SimpleStackScreen },
-  BottomTabs: { title: 'Bottom Tabs', component: BottomTabsScreen },
-  MaterialTopTabs: {
+  'simple-stack': { title: 'Simple Stack', component: SimpleStackScreen },
+  'bottom-tabs': { title: 'Bottom Tabs', component: BottomTabsScreen },
+  'material-top-tabs': {
     title: 'Material Top Tabs',
     component: MaterialTopTabsScreen,
   },
-  MaterialBottomTabs: {
+  'material-bottom-tabs': {
     title: 'Material Bottom Tabs',
     component: MaterialBottomTabs,
   },
@@ -96,7 +96,7 @@ export default function App() {
       }
     >
       <Drawer.Navigator>
-        <Drawer.Screen name="Root" options={{ title: 'Examples' }}>
+        <Drawer.Screen name="root" options={{ title: 'Examples' }}>
           {({
             navigation,
           }: {
@@ -104,7 +104,7 @@ export default function App() {
           }) => (
             <Stack.Navigator>
               <Stack.Screen
-                name="Home"
+                name="home"
                 options={{
                   title: 'Examples',
                   headerLeft: () => (
