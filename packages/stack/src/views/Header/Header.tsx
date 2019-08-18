@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StackActions } from '@react-navigation/core';
+import { StackActions } from '@navigation-ex/routers';
 import HeaderSegment from './HeaderSegment';
 import { HeaderProps, HeaderTitleProps } from '../../types';
 import HeaderTitle from './HeaderTitle';
@@ -20,7 +20,7 @@ export default class Header extends React.PureComponent<HeaderProps> {
         ? options.headerTitle
         : options.title !== undefined
         ? options.title
-        : scene.route.routeName;
+        : scene.route.name;
 
     let leftLabel;
 
@@ -36,7 +36,7 @@ export default class Header extends React.PureComponent<HeaderProps> {
           ? o.headerTitle
           : o.title !== undefined
           ? o.title
-          : previous.route.routeName;
+          : previous.route.name;
     }
 
     return (
@@ -54,7 +54,10 @@ export default class Header extends React.PureComponent<HeaderProps> {
         onGoBack={
           previous
             ? () =>
-                navigation.dispatch(StackActions.pop({ key: scene.route.key }))
+                navigation.dispatch({
+                  ...StackActions.pop(),
+                  source: scene.route.key,
+                })
             : undefined
         }
         styleInterpolator={styleInterpolator}

@@ -1,22 +1,29 @@
 import * as React from 'react';
 import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
-import {
-  Layout,
-  Route,
-  HeaderScene,
-  NavigationProp,
-  HeaderStyleInterpolator,
-} from '../../types';
+import { Route, ParamListBase } from '@navigation-ex/core';
+import { StackNavigationState } from '@navigation-ex/routers';
+
 import Header from './Header';
 import { forStatic } from '../../TransitionConfigs/HeaderStyleInterpolators';
+import {
+  Layout,
+  HeaderScene,
+  HeaderStyleInterpolator,
+  StackNavigationProp,
+} from '../../types';
 
 export type Props = {
   mode: 'float' | 'screen';
   layout: Layout;
-  scenes: Array<HeaderScene<Route> | undefined>;
-  navigation: NavigationProp;
-  getPreviousRoute: (props: { route: Route }) => Route | undefined;
-  onContentHeightChange?: (props: { route: Route; height: number }) => void;
+  scenes: Array<HeaderScene<Route<string>> | undefined>;
+  state: StackNavigationState;
+  getPreviousRoute: (props: {
+    route: Route<string>;
+  }) => Route<string> | undefined;
+  onContentHeightChange?: (props: {
+    route: Route<string>;
+    height: number;
+  }) => void;
   styleInterpolator: HeaderStyleInterpolator;
   style?: StyleProp<ViewStyle>;
 };
@@ -25,13 +32,13 @@ export default function HeaderContainer({
   mode,
   scenes,
   layout,
-  navigation,
+  state,
   getPreviousRoute,
   onContentHeightChange,
   styleInterpolator,
   style,
 }: Props) {
-  const focusedRoute = navigation.state.routes[navigation.state.index];
+  const focusedRoute = state.routes[state.index];
 
   return (
     <View pointerEvents="box-none" style={style}>
@@ -78,7 +85,9 @@ export default function HeaderContainer({
           layout,
           scene,
           previous,
-          navigation: scene.descriptor.navigation,
+          navigation: scene.descriptor.navigation as StackNavigationProp<
+            ParamListBase
+          >,
           styleInterpolator: isHeaderStatic ? forStatic : styleInterpolator,
         };
 

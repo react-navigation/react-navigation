@@ -5,44 +5,50 @@ import {
   LayoutChangeEvent,
 } from 'react-native';
 import Animated from 'react-native-reanimated';
+import {
+  NavigationProp,
+  ParamListBase,
+  Descriptor,
+  Route,
+} from '@navigation-ex/core';
+import { StackNavigationState } from '@navigation-ex/routers';
 
-export type Route = {
-  key: string;
-  routeName: string;
+export type StackNavigationEventMap = {
+  transitionStart: { closing: boolean };
+  transitionEnd: { closing: boolean };
 };
 
-export type NavigationEventName =
-  | 'willFocus'
-  | 'didFocus'
-  | 'willBlur'
-  | 'didBlur';
+export type StackNavigationProp<
+  ParamList extends ParamListBase,
+  RouteName extends keyof ParamList = string
+> = NavigationProp<
+  ParamList,
+  RouteName,
+  StackNavigationState,
+  StackNavigationOptions,
+  StackNavigationEventMap
+> & {
+  /**
+   * Push a new screen onto the stack.
+   *
+   * @param name Name of the route for the tab.
+   * @param [params] Params object for the route.
+   */
+  push<RouteName extends keyof ParamList>(
+    ...args: ParamList[RouteName] extends void
+      ? [RouteName]
+      : [RouteName, ParamList[RouteName]]
+  ): void;
 
-export type NavigationState = {
-  key: string;
-  index: number;
-  routes: Route[];
-  transitions: {
-    pushing: string[];
-    popping: string[];
-  };
-  params?: { [key: string]: unknown };
-};
+  /**
+   * Pop a screen from the stack.
+   */
+  pop(count?: number): void;
 
-export type NavigationProp<RouteName = string, Params = object> = {
-  navigate(routeName: RouteName): void;
-  goBack(): void;
-  goBack(key: string | null): void;
-  addListener: (
-    event: NavigationEventName,
-    callback: () => void
-  ) => { remove: () => void };
-  isFocused(): boolean;
-  state: NavigationState;
-  setParams(params: Params): void;
-  getParam(): Params;
-  dispatch(action: { type: string }): void;
-  isFirstRouteInParent(): boolean;
-  dangerouslyGetParent(): NavigationProp | undefined;
+  /**
+   * Pop to the first route in the stack, dismissing all other screens.
+   */
+  popToTop(): void;
 };
 
 export type Layout = { width: number; height: number };
@@ -53,7 +59,7 @@ export type HeaderMode = 'float' | 'screen' | 'none';
 
 export type HeaderScene<T> = {
   route: T;
-  descriptor: SceneDescriptor;
+  descriptor: StackDescriptor;
   progress: {
     current: Animated.Node<number>;
     next?: Animated.Node<number>;
@@ -87,17 +93,28 @@ export type HeaderOptions = {
 export type HeaderProps = {
   mode: 'float' | 'screen';
   layout: Layout;
-  scene: HeaderScene<Route>;
-  previous?: HeaderScene<Route>;
-  navigation: NavigationProp;
+  scene: HeaderScene<Route<string>>;
+  previous?: HeaderScene<Route<string>>;
+  navigation: StackNavigationProp<ParamListBase>;
   styleInterpolator: HeaderStyleInterpolator;
+};
+
+export type StackDescriptor = Descriptor<
+  ParamListBase,
+  string,
+  StackNavigationState,
+  StackNavigationOptions
+>;
+
+export type StackDescriptorMap = {
+  [key: string]: StackDescriptor;
 };
 
 export type TransitionCallbackProps = {
   closing: boolean;
 };
 
-export type NavigationStackOptions = HeaderOptions &
+export type StackNavigationOptions = HeaderOptions &
   Partial<TransitionPreset> & {
     title?: string;
     header?: null | ((props: HeaderProps) => React.ReactNode);
@@ -111,24 +128,13 @@ export type NavigationStackOptions = HeaderOptions &
       vertical?: number;
       horizontal?: number;
     };
-    onTransitionStart?: (props: TransitionCallbackProps) => void;
-    onTransitionEnd?: (props: TransitionCallbackProps) => void;
   };
 
-export type NavigationStackConfig = {
+export type StackNavigationConfig = {
   mode?: 'card' | 'modal';
   headerMode?: HeaderMode;
-  disableKeyboardHandling?: boolean;
+  keyboardHandlingEnabled?: boolean;
 };
-
-export type SceneDescriptor = {
-  key: string;
-  options: NavigationStackOptions;
-  navigation: NavigationProp;
-  getComponent(): React.ComponentType;
-};
-
-export type SceneDescriptorMap = { [key: string]: SceneDescriptor | undefined };
 
 export type HeaderBackButtonProps = {
   disabled?: boolean;
@@ -155,7 +161,7 @@ export type HeaderTitleProps = {
 };
 
 export type Screen = React.ComponentType<any> & {
-  navigationOptions?: NavigationStackOptions & {
+  navigationOptions?: StackNavigationOptions & {
     [key: string]: any;
   };
 };

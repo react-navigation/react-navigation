@@ -37,7 +37,6 @@
     "eslint-config-satya164": "^2.4.1",
     "husky": "^2.4.0",
     "jest": "^24.8.0",
-    "lerna": "^3.16.4",
     "prettier": "^1.18.2",
     "typescript": "^3.5.1"
   },

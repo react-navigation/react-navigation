@@ -2,6 +2,7 @@ import * as React from 'react';
 import { TextInput, Keyboard } from 'react-native';
 
 type Props = {
+  enabled: boolean;
   children: (props: {
     onPageChangeStart: () => void;
     onPageChangeConfirm: () => void;
@@ -15,6 +16,10 @@ export default class KeyboardManager extends React.Component<Props> {
   private previouslyFocusedTextInput: number | null = null;
 
   private handlePageChangeStart = () => {
+    if (!this.props.enabled) {
+      return;
+    }
+
     const input = TextInput.State.currentlyFocusedField();
 
     // When a page change begins, blur the currently focused input
@@ -25,6 +30,10 @@ export default class KeyboardManager extends React.Component<Props> {
   };
 
   private handlePageChangeConfirm = () => {
+    if (!this.props.enabled) {
+      return;
+    }
+
     Keyboard.dismiss();
 
     // Cleanup the ID on successful page change
@@ -32,6 +41,10 @@ export default class KeyboardManager extends React.Component<Props> {
   };
 
   private handlePageChangeCancel = () => {
+    if (!this.props.enabled) {
+      return;
+    }
+
     // The page didn't change, we should restore the focus of text input
     const input = this.previouslyFocusedTextInput;
 
