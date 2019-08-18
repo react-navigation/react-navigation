@@ -5,6 +5,7 @@ import {
   NavigationState,
   DefaultRouterOptions,
   Router,
+  Route,
 } from '@navigation-ex/core';
 
 export type TabActionType = {
@@ -82,6 +83,7 @@ export default function TabRouter({
         const route = state.routes.find(r => r.name === name);
 
         return {
+          ...route,
           name,
           key: route && route.key ? route.key : `${name}-${shortid()}`,
           params:
@@ -93,7 +95,7 @@ export default function TabRouter({
               : route
               ? route.params
               : undefined,
-        };
+        } as Route<string>;
       });
 
       const routeKeyHistory = state.routeKeyHistory

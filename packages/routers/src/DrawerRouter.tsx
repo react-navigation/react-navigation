@@ -80,6 +80,7 @@ export default function DrawerRouter(
 
       return {
         ...state,
+        key: `drawer-${shortid()}`,
         isDrawerOpen:
           typeof partialState.isDrawerOpen === 'boolean'
             ? partialState.isDrawerOpen
