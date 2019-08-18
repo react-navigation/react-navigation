@@ -127,9 +127,11 @@ export default class Card extends React.Component<Props> {
   }
 
   private isVisible = new Value<Binary>(TRUE);
+  private isVisibleValue: Binary = TRUE;
   private nextIsVisible = new Value<Binary | -1>(UNSET);
 
   private isClosing = new Value<Binary>(FALSE);
+  private noAnimationStartedSoFar = true;
   private isRunningAnimation = false;
 
   private clock = new Clock();
@@ -196,6 +198,7 @@ export default class Card extends React.Component<Props> {
         startClock(this.clock),
         call([this.isVisible], ([value]: ReadonlyArray<Binary>) => {
           const { onTransitionStart } = this.props;
+          this.noAnimationStartedSoFar = false;
           this.isRunningAnimation = true;
           onTransitionStart && onTransitionStart({ closing: !value });
         }),
@@ -358,6 +361,10 @@ export default class Card extends React.Component<Props> {
         ),
       ]
     ),
+    onChange(
+      this.isVisible,
+      call([this.isVisible], ([isVisible]) => (this.isVisibleValue = isVisible))
+    ),
   ]);
 
   private handleGestureEventHorizontal = Animated.event([
@@ -386,8 +393,12 @@ export default class Card extends React.Component<Props> {
     // It might sometimes happen than animation will be unmounted
     // during running. However, we need to invoke listener onClose
     // manually in this case
-    if (this.isRunningAnimation) {
-      this.props.onClose(false);
+    if (this.isRunningAnimation || this.noAnimationStartedSoFar) {
+      if (this.isVisibleValue) {
+        this.props.onOpen(false);
+      } else {
+        this.props.onClose(false);
+      }
     }
   }
 

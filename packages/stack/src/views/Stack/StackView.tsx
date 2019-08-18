@@ -27,7 +27,7 @@ type State = {
   routes: Route[];
   // List of routes being opened, we need to animate pushing of these new routes
   opening: string[];
-  // List of routes being closed, we need to animate popping of thse routes
+  // List of routes being closed, we need to animate popping of these routes
   closing: string[];
   // List of routes being replaced, we need to keep a copy until the new route animates in
   replacing: string[];
@@ -103,7 +103,7 @@ class StackView extends React.Component<Props, State> {
           !opening.includes(nextFocusedRoute.key)
         ) {
           // In this case, we need to animate pushing the focused route
-          // We don't care about animating any other addded routes because they won't be visible
+          // We don't care about animating any other added routes because they won't be visible
           opening = [...opening, nextFocusedRoute.key];
 
           closing = closing.filter(key => key !== nextFocusedRoute.key);
@@ -250,6 +250,7 @@ class StackView extends React.Component<Props, State> {
         : state.routes,
       opening: state.opening.filter(key => key !== route.key),
       replacing: [],
+      closing: state.closing.filter(key => key !== route.key),
     }));
   };
 
@@ -262,7 +263,7 @@ class StackView extends React.Component<Props, State> {
     // @ts-ignore
     this.setState(state => ({
       routes: state.routes.filter(r => r.key !== route.key),
-      opening: state.closing.filter(key => key !== route.key),
+      opening: state.opening.filter(key => key !== route.key),
       closing: state.closing.filter(key => key !== route.key),
     }));
   };
