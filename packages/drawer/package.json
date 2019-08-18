@@ -1,0 +1,24 @@
+{
+  "name": "@navigation-ex/drawer",
+  "version": "0.0.1",
+  "main": "src/index",
+  "license": "MIT",
+  "dependencies": {
+    "@navigation-ex/core": "^0.0.1",
+    "@navigation-ex/routers": "^0.0.1",
+    "react-native-safe-area-view": "^0.14.6"
+  },
+  "devDependencies": {
+    "@types/react": "^16.8.24",
+    "@types/react-native": "^0.60.2",
+    "react": "16.8.3",
+    "react-native": "^0.59.8",
+    "react-native-gesture-handler": "^1.3.0",
+    "react-native-reanimated": "^1.1.0",
+    "react-native-screens": "^1.0.0-alpha.22"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*"
+  }
+}

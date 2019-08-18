@@ -9,17 +9,18 @@ import {
   TabRouterOptions,
   TabNavigationState,
 } from '@navigation-ex/routers';
-import BottomTabView from '../views/BottomTabView';
+
+import MaterialBottomTabView from '../views/MaterialBottomTabView';
 import {
-  BottomTabNavigationConfig,
-  BottomTabNavigationOptions,
+  MaterialBottomTabNavigationConfig,
+  MaterialBottomTabNavigationOptions,
 } from '../types';
 
-type Props = DefaultNavigatorOptions<BottomTabNavigationOptions> &
+type Props = DefaultNavigatorOptions<MaterialBottomTabNavigationOptions> &
   TabRouterOptions &
-  BottomTabNavigationConfig;
+  MaterialBottomTabNavigationConfig;
 
-function BottomTabNavigator({
+function MaterialBottomTabNavigator({
   initialRouteName,
   backBehavior,
   children,
@@ -28,7 +29,7 @@ function BottomTabNavigator({
 }: Props) {
   const { state, descriptors, navigation } = useNavigationBuilder<
     TabNavigationState,
-    BottomTabNavigationOptions,
+    MaterialBottomTabNavigationOptions,
     TabRouterOptions
   >(TabRouter, {
     initialRouteName,
@@ -38,7 +39,7 @@ function BottomTabNavigator({
   });
 
   return (
-    <BottomTabView
+    <MaterialBottomTabView
       {...rest}
       state={state}
       navigation={navigation}
@@ -48,6 +49,6 @@ function BottomTabNavigator({
 }
 
 export default createNavigator<
-  BottomTabNavigationOptions,
-  typeof BottomTabNavigator
->(BottomTabNavigator);
+  MaterialBottomTabNavigationOptions,
+  typeof MaterialBottomTabNavigator
+>(MaterialBottomTabNavigator);

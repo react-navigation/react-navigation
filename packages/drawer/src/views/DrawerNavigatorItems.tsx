@@ -1,27 +1,9 @@
 import * as React from 'react';
-import { View, Text, StyleSheet, ViewStyle, TextStyle } from 'react-native';
-import { SafeAreaView } from '@react-navigation/native';
-import TouchableItem from './TouchableItem';
-import { Scene, Route } from '../types';
+import { View, Text, StyleSheet } from 'react-native';
+import SafeAreaView from 'react-native-safe-area-view';
 
-export type Props = {
-  items: Route[];
-  activeItemKey?: string | null;
-  activeTintColor?: string;
-  activeBackgroundColor?: string;
-  inactiveTintColor?: string;
-  inactiveBackgroundColor?: string;
-  getLabel: (scene: Scene) => React.ReactNode;
-  renderIcon: (scene: Scene) => React.ReactNode;
-  onItemPress: (scene: { route: Route; focused: boolean }) => void;
-  itemsContainerStyle?: ViewStyle;
-  itemStyle?: ViewStyle;
-  labelStyle?: TextStyle;
-  activeLabelStyle?: TextStyle;
-  inactiveLabelStyle?: TextStyle;
-  iconContainerStyle?: ViewStyle;
-  drawerPosition: 'left' | 'right';
-};
+import TouchableItem from './TouchableItem';
+import { DrawerNavigationItemsProps } from '../types';
 
 /**
  * Component that renders the navigation list in the drawer.
@@ -43,7 +25,7 @@ const DrawerNavigatorItems = ({
   inactiveLabelStyle,
   iconContainerStyle,
   drawerPosition,
-}: Props) => (
+}: DrawerNavigationItemsProps) => (
   <View style={[styles.container, itemsContainerStyle]}>
     {items.map((route, index: number) => {
       const focused = activeItemKey === route.key;

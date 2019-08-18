@@ -29,5 +29,9 @@ export { CardStyleInterpolators, HeaderStyleInterpolators, TransitionPresets };
 /**
  * Utilities
  */
-
 export { default as StackGestureContext } from './utils/StackGestureContext';
+
+/**
+ * Types
+ */
+export { StackNavigationOptions, StackNavigationProp } from './types';

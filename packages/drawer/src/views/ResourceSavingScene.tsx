@@ -1,8 +1,6 @@
-/* @flow */
-
 import * as React from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
-
+// eslint-disable-next-line import/no-unresolved
 import { Screen, screensEnabled } from 'react-native-screens';
 
 type Props = {

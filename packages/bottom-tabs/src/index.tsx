@@ -4,17 +4,13 @@
 export {
   default as createBottomTabNavigator,
 } from './navigators/createBottomTabNavigator';
-export {
-  default as createMaterialTopTabNavigator,
-} from './navigators/createMaterialTopTabNavigator';
 
 /**
  * Views
  */
 export { default as BottomTabBar } from './views/BottomTabBar';
-export { default as MaterialTopTabBar } from './views/MaterialTopTabBar';
 
 /**
- * Utils
+ * Types
  */
-export { default as createTabNavigator } from './utils/createTabNavigator';
+export { BottomTabNavigationOptions, BottomTabNavigationProp } from './types';

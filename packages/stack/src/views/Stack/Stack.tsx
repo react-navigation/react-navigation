@@ -8,7 +8,11 @@ import {
   ViewProps,
 } from 'react-native';
 import Animated from 'react-native-reanimated';
+// eslint-disable-next-line import/no-unresolved
 import * as Screens from 'react-native-screens'; // Import with * as to prevent getters being called
+import { Route, NavigationHelpers, ParamListBase } from '@navigation-ex/core';
+import { StackNavigationState } from '@navigation-ex/routers';
+
 import { getDefaultHeaderHeight } from '../Header/HeaderSegment';
 import { Props as HeaderContainerProps } from '../Header/HeaderContainer';
 import StackItem from './StackItem';
@@ -18,13 +22,11 @@ import {
 } from '../../TransitionConfigs/TransitionPresets';
 import { forNoAnimation } from '../../TransitionConfigs/HeaderStyleInterpolators';
 import {
-  Route,
   Layout,
   HeaderMode,
-  NavigationProp,
   HeaderScene,
-  SceneDescriptorMap,
-  NavigationStackOptions,
+  StackDescriptorMap,
+  StackNavigationOptions,
 } from '../../types';
 
 type ProgressValues = {
@@ -33,18 +35,21 @@ type ProgressValues = {
 
 type Props = {
   mode: 'card' | 'modal';
-  navigation: NavigationProp;
-  descriptors: SceneDescriptorMap;
-  routes: Route[];
+  state: StackNavigationState;
+  navigation: NavigationHelpers<ParamListBase>;
+  descriptors: StackDescriptorMap;
+  routes: Route<string>[];
   openingRoutes: string[];
   closingRoutes: string[];
-  onGoBack: (props: { route: Route }) => void;
-  onOpenRoute: (props: { route: Route }) => void;
-  onCloseRoute: (props: { route: Route }) => void;
-  getPreviousRoute: (props: { route: Route }) => Route | undefined;
-  getGesturesEnabled: (props: { route: Route }) => boolean;
+  onGoBack: (props: { route: Route<string> }) => void;
+  onOpenRoute: (props: { route: Route<string> }) => void;
+  onCloseRoute: (props: { route: Route<string> }) => void;
+  getPreviousRoute: (props: {
+    route: Route<string>;
+  }) => Route<string> | undefined;
+  getGesturesEnabled: (props: { route: Route<string> }) => boolean;
   renderHeader: (props: HeaderContainerProps) => React.ReactNode;
-  renderScene: (props: { route: Route }) => React.ReactNode;
+  renderScene: (props: { route: Route<string> }) => React.ReactNode;
   headerMode: HeaderMode;
   onPageChangeStart?: () => void;
   onPageChangeConfirm?: () => void;
@@ -52,9 +57,9 @@ type Props = {
 };
 
 type State = {
-  routes: Route[];
-  descriptors: SceneDescriptorMap;
-  scenes: HeaderScene<Route>[];
+  routes: Route<string>[];
+  descriptors: StackDescriptorMap;
+  scenes: HeaderScene<Route<string>>[];
   progress: ProgressValues;
   layout: Layout;
   floatingHeaderHeights: { [key: string]: number };
@@ -105,7 +110,7 @@ const { cond, eq } = Animated;
 const ANIMATED_ONE = new Animated.Value(1);
 
 const getFloatingHeaderHeights = (
-  routes: Route[],
+  routes: Route<string>[],
   layout: Layout,
   previous: { [key: string]: number }
 ) => {
@@ -164,7 +169,8 @@ export default class Stack extends React.Component<Props, State> {
         const scene = {
           route,
           previous: previousRoute,
-          descriptor: props.descriptors[route.key],
+          descriptor:
+            props.descriptors[route.key] || state.descriptors[route.key],
           progress: {
             current,
             next,
@@ -237,7 +243,7 @@ export default class Stack extends React.Component<Props, State> {
     route,
     height,
   }: {
-    route: Route;
+    route: Route<string>;
     height: number;
   }) => {
     const previousHeight = this.state.floatingHeaderHeights[route.key];
@@ -255,32 +261,30 @@ export default class Stack extends React.Component<Props, State> {
   };
 
   private handleTransitionStart = (
-    { route }: { route: Route },
+    { route }: { route: Route<string> },
     closing: boolean
-  ) => {
-    const { descriptors } = this.props;
-    const descriptor = descriptors[route.key];
-
-    descriptor &&
-      descriptor.options.onTransitionStart &&
-      descriptor.options.onTransitionStart({ closing });
-  };
+  ) =>
+    this.props.navigation.emit({
+      type: 'transitionStart',
+      data: { closing },
+      target: route.key,
+    });
 
   private handleTransitionEnd = (
-    { route }: { route: Route },
+    { route }: { route: Route<string> },
     closing: boolean
-  ) => {
-    const descriptor = this.props.descriptors[route.key];
-
-    descriptor &&
-      descriptor.options.onTransitionEnd &&
-      descriptor.options.onTransitionEnd({ closing });
-  };
+  ) =>
+    this.props.navigation.emit({
+      type: 'transitionEnd',
+      data: { closing },
+      target: route.key,
+    });
 
   render() {
     const {
       mode,
       descriptors,
+      state,
       navigation,
       routes,
       closingRoutes,
@@ -299,7 +303,7 @@ export default class Stack extends React.Component<Props, State> {
 
     const { scenes, layout, progress, floatingHeaderHeights } = this.state;
 
-    const focusedRoute = navigation.state.routes[navigation.state.index];
+    const focusedRoute = state.routes[state.index];
     const focusedDescriptor = descriptors[focusedRoute.key];
     const focusedOptions = focusedDescriptor ? focusedDescriptor.options : {};
 
@@ -353,7 +357,7 @@ export default class Stack extends React.Component<Props, State> {
               headerStyleInterpolator = defaultTransitionPreset.headerStyleInterpolator,
             } = descriptor
               ? descriptor.options
-              : ({} as NavigationStackOptions);
+              : ({} as StackNavigationOptions);
 
             return (
               <MaybeScreen
@@ -373,6 +377,7 @@ export default class Stack extends React.Component<Props, State> {
                   scene={scene}
                   previousScene={scenes[index - 1]}
                   navigation={navigation}
+                  state={state}
                   cardTransparent={cardTransparent}
                   cardOverlayEnabled={cardOverlayEnabled}
                   cardShadowEnabled={cardShadowEnabled}
@@ -408,7 +413,7 @@ export default class Stack extends React.Component<Props, State> {
               mode: 'float',
               layout,
               scenes,
-              navigation,
+              state,
               getPreviousRoute,
               onContentHeightChange: this.handleFloatingHeaderLayout,
               styleInterpolator:

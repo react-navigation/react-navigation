@@ -7,6 +7,7 @@ import {
   Platform,
   Keyboard,
   StatusBar,
+  StyleProp,
 } from 'react-native';
 import {
   PanGestureHandler,
@@ -85,9 +86,9 @@ type Props = {
   swipeVelocityThreshold: number;
   hideStatusBar: boolean;
   statusBarAnimation: 'slide' | 'none' | 'fade';
-  overlayStyle?: ViewStyle;
-  drawerStyle?: ViewStyle;
-  contentContainerStyle?: ViewStyle;
+  overlayStyle?: StyleProp<ViewStyle>;
+  drawerStyle?: StyleProp<ViewStyle>;
+  contentContainerStyle?: StyleProp<ViewStyle>;
   renderDrawerContent: Renderer;
   renderSceneContent: Renderer;
   gestureHandlerProps?: React.ComponentProps<typeof PanGestureHandler>;
@@ -577,6 +578,7 @@ export default class DrawerView extends React.PureComponent<Props> {
             style={[
               styles.container,
               right ? { right: offset } : { left: offset },
+              // eslint-disable-next-line react-native/no-inline-styles
               {
                 transform: [{ translateX: drawerTranslateX }],
                 opacity: this.drawerOpacity,

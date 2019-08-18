@@ -1,51 +1,27 @@
 import * as React from 'react';
-import { Dimensions, StyleSheet, ViewStyle } from 'react-native';
-import { SceneView } from '@react-navigation/core';
+import { Dimensions, StyleSheet, I18nManager, Platform } from 'react-native';
+// eslint-disable-next-line import/no-unresolved
 import { ScreenContainer } from 'react-native-screens';
+import SafeAreaView from 'react-native-safe-area-view';
+import { PanGestureHandler, ScrollView } from 'react-native-gesture-handler';
+import { ParamListBase, NavigationHelpers } from '@navigation-ex/core';
+import { DrawerNavigationState, DrawerActions } from '@navigation-ex/routers';
 
-import * as DrawerActions from '../routers/DrawerActions';
-import DrawerSidebar, { ContentComponentProps } from './DrawerSidebar';
+import DrawerSidebar from './DrawerSidebar';
 import DrawerGestureContext from '../utils/DrawerGestureContext';
 import ResourceSavingScene from './ResourceSavingScene';
+import DrawerNavigatorItems from './DrawerNavigatorItems';
 import Drawer from './Drawer';
-import { Navigation } from '../types';
-import { PanGestureHandler } from 'react-native-gesture-handler';
+import {
+  DrawerDescriptorMap,
+  DrawerNavigationConfig,
+  ContentComponentProps,
+} from '../types';
 
-type DrawerOptions = {
-  drawerBackgroundColor?: string;
-  overlayColor?: string;
-  minSwipeDistance?: number;
-  drawerPosition: 'left' | 'right';
-  drawerType: 'front' | 'back' | 'slide';
-  drawerLockMode?: 'unlocked' | 'locked-closed' | 'locked-open';
-  keyboardDismissMode?: 'on-drag' | 'none';
-  drawerWidth: number | (() => number);
-  statusBarAnimation: 'slide' | 'none' | 'fade';
-  onDrawerClose?: () => void;
-  onDrawerOpen?: () => void;
-  contentContainerStyle?: ViewStyle;
-  edgeWidth: number;
-  hideStatusBar?: boolean;
-  style?: ViewStyle;
-  gestureHandlerProps?: React.ComponentProps<typeof PanGestureHandler>;
-};
-
-type Props = {
-  lazy: boolean;
-  navigation: Navigation;
-  descriptors: {
-    [key: string]: {
-      navigation: {};
-      getComponent: () => React.ComponentType<{}>;
-      options: DrawerOptions;
-    };
-  };
-  navigationConfig: DrawerOptions & {
-    contentComponent?: React.ComponentType<ContentComponentProps>;
-    unmountInactiveRoutes?: boolean;
-    contentOptions?: object;
-  };
-  screenProps: unknown;
+type Props = DrawerNavigationConfig & {
+  state: DrawerNavigationState;
+  navigation: NavigationHelpers<ParamListBase>;
+  descriptors: DrawerDescriptorMap;
 };
 
 type State = {
@@ -53,16 +29,46 @@ type State = {
   drawerWidth: number;
 };
 
+const DefaultContentComponent = (props: ContentComponentProps) => (
+  <ScrollView alwaysBounceVertical={false}>
+    <SafeAreaView forceInset={{ top: 'always', horizontal: 'never' }}>
+      <DrawerNavigatorItems {...props} />
+    </SafeAreaView>
+  </ScrollView>
+);
+
 /**
  * Component that renders the drawer.
  */
 export default class DrawerView extends React.PureComponent<Props, State> {
   static defaultProps = {
     lazy: true,
+    drawerWidth: () => {
+      /*
+       * Default drawer width is screen width - header height
+       * with a max width of 280 on mobile and 320 on tablet
+       * https://material.io/guidelines/patterns/navigation-drawer.html
+       */
+      const { height, width } = Dimensions.get('window');
+      const smallerAxisSize = Math.min(height, width);
+      const isLandscape = width > height;
+      const isTablet = smallerAxisSize >= 600;
+      const appBarHeight = Platform.OS === 'ios' ? (isLandscape ? 32 : 44) : 56;
+      const maxWidth = isTablet ? 320 : 280;
+
+      return Math.min(smallerAxisSize - appBarHeight, maxWidth);
+    },
+    contentComponent: DefaultContentComponent,
+    drawerPosition: I18nManager.isRTL ? 'right' : 'left',
+    keyboardDismissMode: 'on-drag',
+    drawerBackgroundColor: 'white',
+    drawerType: 'front',
+    hideStatusBar: false,
+    statusBarAnimation: 'slide',
   };
 
   static getDerivedStateFromProps(nextProps: Props, prevState: State) {
-    const { index } = nextProps.navigation.state;
+    const { index } = nextProps.state;
 
     return {
       // Set the current tab to be loaded if it was not loaded before
@@ -73,11 +79,11 @@ export default class DrawerView extends React.PureComponent<Props, State> {
   }
 
   state: State = {
-    loaded: [this.props.navigation.state.index],
+    loaded: [this.props.state.index],
     drawerWidth:
-      typeof this.props.navigationConfig.drawerWidth === 'function'
-        ? this.props.navigationConfig.drawerWidth()
-        : this.props.navigationConfig.drawerWidth,
+      typeof this.props.drawerWidth === 'function'
+        ? this.props.drawerWidth()
+        : this.props.drawerWidth,
   };
 
   componentDidMount() {
@@ -91,30 +97,32 @@ export default class DrawerView extends React.PureComponent<Props, State> {
   private drawerGestureRef = React.createRef<PanGestureHandler>();
 
   private handleDrawerOpen = () => {
-    const { navigation } = this.props;
+    const { state, navigation } = this.props;
 
-    navigation.dispatch(
-      DrawerActions.openDrawer({
-        key: navigation.state.key,
-      })
-    );
+    navigation.dispatch({
+      ...DrawerActions.openDrawer(),
+      target: state.key,
+    });
+
+    navigation.emit({ type: 'drawerOpen' });
   };
 
   private handleDrawerClose = () => {
-    const { navigation } = this.props;
+    const { state, navigation } = this.props;
 
-    navigation.dispatch(
-      DrawerActions.closeDrawer({
-        key: navigation.state.key,
-      })
-    );
+    navigation.dispatch({
+      ...DrawerActions.closeDrawer(),
+      target: state.key,
+    });
+
+    navigation.emit({ type: 'drawerClose' });
   };
 
   private updateWidth = () => {
     const drawerWidth =
-      typeof this.props.navigationConfig.drawerWidth === 'function'
-        ? this.props.navigationConfig.drawerWidth()
-        : this.props.navigationConfig.drawerWidth;
+      typeof this.props.drawerWidth === 'function'
+        ? this.props.drawerWidth()
+        : this.props.drawerWidth;
 
     if (this.state.drawerWidth !== drawerWidth) {
       this.setState({ drawerWidth });
@@ -122,63 +130,42 @@ export default class DrawerView extends React.PureComponent<Props, State> {
   };
 
   private renderNavigationView = ({ progress }: any) => {
-    return (
-      <DrawerSidebar
-        screenProps={this.props.screenProps}
-        drawerOpenProgress={progress}
-        navigation={this.props.navigation}
-        descriptors={this.props.descriptors}
-        contentComponent={this.props.navigationConfig.contentComponent}
-        contentOptions={this.props.navigationConfig.contentOptions}
-        drawerPosition={this.props.navigationConfig.drawerPosition}
-        style={this.props.navigationConfig.style}
-        {...this.props.navigationConfig}
-      />
-    );
+    return <DrawerSidebar drawerOpenProgress={progress} {...this.props} />;
   };
 
   private renderContent = () => {
-    let { lazy, navigation } = this.props;
-    let { loaded } = this.state;
-    let { routes } = navigation.state;
+    let { lazy, state, descriptors, unmountInactiveRoutes } = this.props;
 
-    if (this.props.navigationConfig.unmountInactiveRoutes) {
-      let activeKey = navigation.state.routes[navigation.state.index].key;
-      let descriptor = this.props.descriptors[activeKey];
+    const { loaded } = this.state;
 
-      return (
-        <SceneView
-          navigation={descriptor.navigation}
-          screenProps={this.props.screenProps}
-          component={descriptor.getComponent()}
-        />
-      );
+    if (unmountInactiveRoutes) {
+      const activeKey = state.routes[state.index].key;
+      const descriptor = descriptors[activeKey];
+
+      return descriptor.render();
     } else {
       return (
         <ScreenContainer style={styles.content}>
-          {routes.map((route, index) => {
+          {state.routes.map((route, index) => {
             if (lazy && !loaded.includes(index)) {
               // Don't render a screen if we've never navigated to it
               return null;
             }
 
-            let isFocused = navigation.state.index === index;
-            let descriptor = this.props.descriptors[route.key];
+            const isFocused = state.index === index;
+            const descriptor = descriptors[route.key];
 
             return (
               <ResourceSavingScene
                 key={route.key}
                 style={[
                   StyleSheet.absoluteFill,
+                  // eslint-disable-next-line react-native/no-inline-styles
                   { opacity: isFocused ? 1 : 0 },
                 ]}
                 isVisible={isFocused}
               >
-                <SceneView
-                  navigation={descriptor.navigation}
-                  screenProps={this.props.screenProps}
-                  component={descriptor.getComponent()}
-                />
+                {descriptor.render()}
               </ResourceSavingScene>
             );
           })}
@@ -193,9 +180,11 @@ export default class DrawerView extends React.PureComponent<Props, State> {
   };
 
   render() {
-    const { navigation } = this.props;
     const {
+      state,
+      descriptors,
       drawerType,
+      drawerPosition,
       drawerBackgroundColor,
       overlayColor,
       contentContainerStyle,
@@ -204,16 +193,17 @@ export default class DrawerView extends React.PureComponent<Props, State> {
       hideStatusBar,
       statusBarAnimation,
       gestureHandlerProps,
-    } = this.props.navigationConfig;
-    const activeKey = navigation.state.routes[navigation.state.index].key;
-    const { drawerLockMode } = this.props.descriptors[activeKey].options;
+    } = this.props;
+
+    const activeKey = state.routes[state.index].key;
+    const { drawerLockMode } = descriptors[activeKey].options;
 
     const isOpen =
       drawerLockMode === 'locked-closed'
         ? false
         : drawerLockMode === 'locked-open'
         ? true
-        : this.props.navigation.state.isDrawerOpen;
+        : state.isDrawerOpen;
 
     return (
       <DrawerGestureContext.Provider value={this.drawerGestureRef}>
@@ -228,7 +218,7 @@ export default class DrawerView extends React.PureComponent<Props, State> {
           onGestureRef={this.setDrawerGestureRef}
           gestureHandlerProps={gestureHandlerProps}
           drawerType={drawerType}
-          drawerPosition={this.props.navigationConfig.drawerPosition}
+          drawerPosition={drawerPosition}
           contentContainerStyle={contentContainerStyle}
           drawerStyle={{
             backgroundColor: drawerBackgroundColor || 'white',

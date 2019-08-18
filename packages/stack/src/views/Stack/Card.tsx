@@ -126,6 +126,19 @@ export default class Card extends React.Component<Props> {
     }
   }
 
+  componentWillUnmount(): void {
+    // It might sometimes happen than animation will be unmounted
+    // during running. However, we need to invoke listener onClose
+    // manually in this case
+    if (this.isRunningAnimation || this.noAnimationStartedSoFar) {
+      if (this.isVisibleValue) {
+        this.props.onOpen(false);
+      } else {
+        this.props.onClose(false);
+      }
+    }
+  }
+
   private isVisible = new Value<Binary>(TRUE);
   private isVisibleValue: Binary = TRUE;
   private nextIsVisible = new Value<Binary | -1>(UNSET);
@@ -388,19 +401,6 @@ export default class Card extends React.Component<Props> {
       },
     },
   ]);
-
-  componentWillUnmount(): void {
-    // It might sometimes happen than animation will be unmounted
-    // during running. However, we need to invoke listener onClose
-    // manually in this case
-    if (this.isRunningAnimation || this.noAnimationStartedSoFar) {
-      if (this.isVisibleValue) {
-        this.props.onOpen(false);
-      } else {
-        this.props.onClose(false);
-      }
-    }
-  }
 
   // We need to ensure that this style doesn't change unless absolutely needs to
   // Changing it too often will result in huge frame drops due to detaching and attaching

@@ -8,13 +8,13 @@ import {
 } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { getStatusBarHeight } from 'react-native-safe-area-view';
+import { Route } from '@navigation-ex/core';
 import HeaderBackButton from './HeaderBackButton';
 import HeaderBackground from './HeaderBackground';
 import memoize from '../../utils/memoize';
 import {
   Layout,
   HeaderStyleInterpolator,
-  Route,
   HeaderBackButtonProps,
   HeaderTitleProps,
   HeaderOptions,
@@ -32,7 +32,7 @@ type Props = HeaderOptions & {
   onGoBack?: () => void;
   title?: string;
   leftLabel?: string;
-  scene: HeaderScene<Route>;
+  scene: HeaderScene<Route<string>>;
   styleInterpolator: HeaderStyleInterpolator;
 };
 
@@ -322,7 +322,7 @@ export default class HeaderSegment extends React.Component<Props, State> {
               style={[
                 Platform.select({
                   ios: null,
-                  default: { left: onGoBack ? 72 : 16 },
+                  default: { left: left ? 72 : 16 },
                 }),
                 styles.title,
                 titleStyle,

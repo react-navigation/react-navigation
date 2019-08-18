@@ -1,26 +1,25 @@
 import * as React from 'react';
-import { StyleSheet, View, Animated, ViewStyle } from 'react-native';
-import { NavigationActions } from '@react-navigation/core';
+import { StyleSheet, View, ViewStyle, StyleProp } from 'react-native';
+import Animated from 'react-native-reanimated';
+import {
+  NavigationHelpers,
+  ParamListBase,
+  Route,
+  BaseActions,
+} from '@navigation-ex/core';
+import { DrawerActions, DrawerNavigationState } from '@navigation-ex/routers';
 
-import { Props as DrawerNavigatorItemsProps } from './DrawerNavigatorItems';
-import { Navigation, Scene, Route } from '../types';
-
-export type ContentComponentProps = DrawerNavigatorItemsProps & {
-  navigation: Navigation;
-  descriptors: { [key: string]: any };
-  drawerOpenProgress: Animated.AnimatedInterpolation;
-  screenProps: unknown;
-};
+import { Scene, ContentComponentProps, DrawerDescriptorMap } from '../types';
 
 type Props = {
   contentComponent?: React.ComponentType<ContentComponentProps>;
   contentOptions?: object;
-  screenProps?: unknown;
-  navigation: Navigation;
-  descriptors: { [key: string]: any };
-  drawerOpenProgress: Animated.AnimatedInterpolation;
+  state: DrawerNavigationState;
+  navigation: NavigationHelpers<ParamListBase>;
+  descriptors: DrawerDescriptorMap;
+  drawerOpenProgress: Animated.Node<number>;
   drawerPosition: 'left' | 'right';
-  style?: ViewStyle;
+  style?: StyleProp<ViewStyle>;
 };
 
 /**
@@ -51,7 +50,7 @@ class DrawerSidebar extends React.PureComponent<Props> {
       return title;
     }
 
-    return route.routeName;
+    return route.name;
   };
 
   private renderIcon = ({ focused, tintColor, route }: Scene) => {
@@ -68,16 +67,17 @@ class DrawerSidebar extends React.PureComponent<Props> {
     route,
     focused,
   }: {
-    route: Route;
+    route: Route<string>;
     focused: boolean;
   }) => {
-    if (focused) {
-      this.props.navigation.closeDrawer();
-    } else {
-      this.props.navigation.dispatch(
-        NavigationActions.navigate({ routeName: route.routeName })
-      );
-    }
+    const { state, navigation } = this.props;
+
+    navigation.dispatch({
+      ...(focused
+        ? DrawerActions.closeDrawer()
+        : BaseActions.navigate(route.name)),
+      target: state.key,
+    });
   };
 
   render() {
@@ -87,7 +87,7 @@ class DrawerSidebar extends React.PureComponent<Props> {
       return null;
     }
 
-    const { state } = this.props.navigation;
+    const { state } = this.props;
 
     if (typeof state.index !== 'number') {
       throw new Error(
@@ -106,7 +106,6 @@ class DrawerSidebar extends React.PureComponent<Props> {
           activeItemKey={
             state.routes[state.index] ? state.routes[state.index].key : null
           }
-          screenProps={this.props.screenProps}
           getLabel={this.getLabel}
           renderIcon={this.renderIcon}
           onItemPress={this.handleItemPress}

@@ -1,16 +1,11 @@
 import * as React from 'react';
 import { StyleSheet, Platform, StyleProp, ViewStyle } from 'react-native';
 import Animated from 'react-native-reanimated';
+import { StackNavigationState } from '@navigation-ex/routers';
+import { Route, NavigationHelpers, ParamListBase } from '@navigation-ex/core';
 import { Props as HeaderContainerProps } from '../Header/HeaderContainer';
 import Card from './Card';
-import {
-  Route,
-  HeaderScene,
-  Layout,
-  HeaderMode,
-  NavigationProp,
-  TransitionPreset,
-} from '../../types';
+import { HeaderScene, Layout, HeaderMode, TransitionPreset } from '../../types';
 
 type Props = TransitionPreset & {
   index: number;
@@ -19,22 +14,28 @@ type Props = TransitionPreset & {
   closing: boolean;
   layout: Layout;
   current: Animated.Value<number>;
-  previousScene?: HeaderScene<Route>;
-  scene: HeaderScene<Route>;
-  navigation: NavigationProp;
+  previousScene?: HeaderScene<Route<string>>;
+  scene: HeaderScene<Route<string>>;
+  state: StackNavigationState;
+  navigation: NavigationHelpers<ParamListBase>;
   cardTransparent?: boolean;
   cardOverlayEnabled?: boolean;
   cardShadowEnabled?: boolean;
   cardStyle?: StyleProp<ViewStyle>;
   gestureEnabled?: boolean;
-  getPreviousRoute: (props: { route: Route }) => Route | undefined;
+  getPreviousRoute: (props: {
+    route: Route<string>;
+  }) => Route<string> | undefined;
   renderHeader: (props: HeaderContainerProps) => React.ReactNode;
-  renderScene: (props: { route: Route }) => React.ReactNode;
-  onOpenRoute: (props: { route: Route }) => void;
-  onCloseRoute: (props: { route: Route }) => void;
-  onGoBack: (props: { route: Route }) => void;
-  onTransitionStart?: (props: { route: Route }, closing: boolean) => void;
-  onTransitionEnd?: (props: { route: Route }, closing: boolean) => void;
+  renderScene: (props: { route: Route<string> }) => React.ReactNode;
+  onOpenRoute: (props: { route: Route<string> }) => void;
+  onCloseRoute: (props: { route: Route<string> }) => void;
+  onGoBack: (props: { route: Route<string> }) => void;
+  onTransitionStart?: (
+    props: { route: Route<string> },
+    closing: boolean
+  ) => void;
+  onTransitionEnd?: (props: { route: Route<string> }, closing: boolean) => void;
   onPageChangeStart?: () => void;
   onPageChangeConfirm?: () => void;
   onPageChangeCancel?: () => void;
@@ -90,7 +91,7 @@ export default class StackItem extends React.PureComponent<Props> {
       focused,
       closing,
       current,
-      navigation,
+      state,
       scene,
       previousScene,
       cardTransparent,
@@ -151,7 +152,7 @@ export default class StackItem extends React.PureComponent<Props> {
               mode: 'screen',
               layout,
               scenes: [previousScene, scene],
-              navigation,
+              state,
               getPreviousRoute,
               styleInterpolator: headerStyleInterpolator,
               style: styles.header,
