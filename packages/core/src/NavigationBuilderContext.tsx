@@ -25,7 +25,7 @@ const NavigationBuilderContext = React.createContext<{
   addActionListener?: (listener: ChildActionListener) => void;
   addFocusedListener?: (listener: FocusedNavigationListener) => void;
   onRouteFocus?: (key: string) => void;
-  trackAction: (key: string, action: NavigationAction) => void;
+  trackAction: (action: NavigationAction) => void;
 }>({
   trackAction: () => undefined,
 });

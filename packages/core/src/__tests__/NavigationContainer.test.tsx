@@ -10,8 +10,7 @@ import {
   DefaultRouterOptions,
   NavigationState,
   Router,
-  NavigationHelpers,
-  ParamListBase,
+  NavigationContainerRef,
 } from '../types';
 
 it('throws when getState is accessed without a container', () => {
@@ -173,7 +172,7 @@ it('handle dispatching with ref', () => {
     );
   };
 
-  const ref = React.createRef<NavigationHelpers<ParamListBase>>();
+  const ref = React.createRef<NavigationContainerRef>();
 
   const onStateChange = jest.fn();
 
@@ -226,7 +225,7 @@ it('handle dispatching with ref', () => {
   render(element).update(element);
 
   act(() => {
-    if (ref.current !== null) {
+    if (ref.current != null) {
       ref.current.dispatch({ type: 'REVERSE' });
     }
   });
@@ -252,4 +251,74 @@ it('handle dispatching with ref', () => {
       { key: 'bar', name: 'bar' },
     ],
   });
+});
+
+it('handle resetting state with ref', () => {
+  const TestNavigator = (props: any) => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return (
+      <React.Fragment>
+        {state.routes.map(route => descriptors[route.key].render())}
+      </React.Fragment>
+    );
+  };
+
+  const ref = React.createRef<NavigationContainerRef>();
+
+  const onStateChange = jest.fn();
+
+  const element = (
+    <NavigationContainer ref={ref} onStateChange={onStateChange}>
+      <TestNavigator>
+        <Screen name="foo">{() => null}</Screen>
+        <Screen name="foo2">
+          {() => (
+            <TestNavigator>
+              <Screen name="qux" component={() => null} />
+              <Screen name="lex" component={() => null} />
+            </TestNavigator>
+          )}
+        </Screen>
+        <Screen name="bar">{() => null}</Screen>
+        <Screen name="baz">
+          {() => (
+            <TestNavigator>
+              <Screen name="qux" component={() => null} />
+              <Screen name="lex" component={() => null} />
+            </TestNavigator>
+          )}
+        </Screen>
+      </TestNavigator>
+    </NavigationContainer>
+  );
+
+  render(element).update(element);
+
+  const state = {
+    stale: true,
+    index: 1,
+    routes: [
+      {
+        key: 'baz',
+        name: 'baz',
+        state: {
+          index: 0,
+          key: '4',
+          routeNames: ['qux', 'lex'],
+          routes: [{ key: 'qux', name: 'qux' }, { key: 'lex', name: 'lex' }],
+        },
+      },
+      { key: 'bar', name: 'bar' },
+    ],
+  };
+
+  act(() => {
+    if (ref.current != null) {
+      ref.current.resetRoot(state);
+    }
+  });
+
+  expect(onStateChange).toBeCalledTimes(1);
+  expect(onStateChange).lastCalledWith(state);
 });

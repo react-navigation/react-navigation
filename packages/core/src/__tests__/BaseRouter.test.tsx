@@ -126,6 +126,7 @@ it('resets state to new state with RESET', () => {
 it('ignores key and routeNames when resetting with RESET', () => {
   const result = BaseRouter.getStateForAction(
     STATE,
+    // @ts-ignore
     BaseActions.reset({ index: 2, key: 'foo', routeNames: ['test'] })
   );
 

@@ -129,27 +129,41 @@ export default function useNavigationBuilder<
     performTransaction,
   } = React.useContext(NavigationStateContext);
 
-  const [initialState] = React.useState(() =>
+  const previousStateRef = React.useRef<
+    NavigationState | PartialState<NavigationState> | undefined
+  >();
+  const initializedStateRef = React.useRef<State>();
+
+  if (
+    initializedStateRef.current === undefined ||
+    currentState !== previousStateRef.current
+  ) {
     // If the current state isn't initialized on first render, we initialize it
+    // We also need to re-initialize it if the state passed from parent was changed (maybe due to reset)
     // Otherwise assume that the state was provided as initial state
     // So we need to rehydrate it to make it usable
-    currentState === undefined
-      ? router.getInitialState({
-          routeNames,
-          routeParamList,
-        })
-      : router.getRehydratedState(currentState as PartialState<State>, {
-          routeNames,
-          routeParamList,
-        })
-  );
+    initializedStateRef.current =
+      currentState === undefined
+        ? router.getInitialState({
+            routeNames,
+            routeParamList,
+          })
+        : router.getRehydratedState(currentState as PartialState<State>, {
+            routeNames,
+            routeParamList,
+          });
+  }
+
+  React.useEffect(() => {
+    previousStateRef.current = currentState;
+  }, [currentState]);
 
   let state =
     // If the state isn't initialized, or stale, use the state we initialized instead
     // The state won't update until there's a change needed in the state we have initalized locally
     // So it'll be `undefined` or stale untill the first navigation event happens
     currentState === undefined || currentState.stale
-      ? initialState
+      ? (initializedStateRef.current as State)
       : (currentState as State);
 
   if (!isArrayEqual(state.routeNames, routeNames)) {
@@ -188,9 +202,9 @@ export default function useNavigationBuilder<
     const currentState = getCurrentState();
 
     return currentState === undefined || currentState.stale
-      ? initialState
+      ? (initializedStateRef.current as State)
       : (currentState as State);
-  }, [getCurrentState, initialState]);
+  }, [getCurrentState]);
 
   const emitter = useEventEmitter();
 
