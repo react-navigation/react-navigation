@@ -277,7 +277,9 @@ const isFocused = useIsFocused();
 
 ## Type-checking
 
-The library exports few helper types. Each navigator also need to export a custom type for the `navigation` prop which should contain the actions they provide, .e.g. `push` for stack, `jumpTo` for tab etc.
+The library is written with TypeScript and provides type definitions for TypeScript projects.
+
+When building custom navigators, each navigator also need to export a custom type for the `navigation` prop which should contain the actions they provide, .e.g. `push` for stack, `jumpTo` for tab etc. and pass correct type parameters to the helper functions to ensure that it works well with type-checking.
 
 Currently type checking and intelliSense works for route name and params. The user has to define a type alias with a list of routes along with the type of params they use.
 
@@ -362,3 +364,32 @@ And then we can use it:
 ```
 
 Unfortunately it's not possible to verify that the type of children elements are correct since [TypeScript doesn't support type-checking JSX elements](https://github.com/microsoft/TypeScript/issues/21699).
+
+## Contributing
+
+The project uses a monorepo structure for the packages managed by [yarn workspaces](https://yarnpkg.com/lang/en/docs/workspaces/). To get started with the project, run `yarn` to install the required dependencies for each package:
+
+```sh
+yarn
+```
+
+While developing, you can run the [example app](/example/) with [Expo](https://expo.io/) to test your changes:
+
+```sh
+yarn example start
+```
+
+Make sure your code passes TypeScript and ESLint. Run the following to verify:
+
+```sh
+yarn typescript
+yarn lint
+```
+
+To fix formatting errors, run the following:
+
+```sh
+yarn lint --fix
+```
+
+Remember to add tests for your change if possible.
