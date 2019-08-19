@@ -352,7 +352,11 @@ if (!isReady) {
   return null;
 }
 
-return <NavigationContainer ref={ref}>{/* content */}</NavigationContainer>;
+return (
+  <NavigationContainer initialState={initialState} ref={ref}>
+    {/* content */}
+  </NavigationContainer>
+);
 ```
 
 The hook also accepts a `getStateFromPath` option where you can provide a custom function to convert the URL to a valid state object for more advanced use cases.
