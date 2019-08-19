@@ -6,17 +6,14 @@ it('converts path string to initial state', () => {
       'foo/bar/baz%20qux?author=%22jane%20%26%20co%22&valid=true'
     )
   ).toEqual({
-    stale: true,
     routes: [
       {
         name: 'foo',
         state: {
-          stale: true,
           routes: [
             {
               name: 'bar',
               state: {
-                stale: true,
                 routes: [
                   {
                     name: 'baz qux',
@@ -34,12 +31,10 @@ it('converts path string to initial state', () => {
 
 it('handles leading slash when converting', () => {
   expect(getStateFromPath('/foo/bar/?count=42')).toEqual({
-    stale: true,
     routes: [
       {
         name: 'foo',
         state: {
-          stale: true,
           routes: [
             {
               name: 'bar',
@@ -54,12 +49,10 @@ it('handles leading slash when converting', () => {
 
 it('handles ending slash when converting', () => {
   expect(getStateFromPath('foo/bar/?count=42')).toEqual({
-    stale: true,
     routes: [
       {
         name: 'foo',
         state: {
-          stale: true,
           routes: [
             {
               name: 'bar',
@@ -74,12 +67,10 @@ it('handles ending slash when converting', () => {
 
 it('handles route without param', () => {
   expect(getStateFromPath('foo/bar')).toEqual({
-    stale: true,
     routes: [
       {
         name: 'foo',
         state: {
-          stale: true,
           routes: [{ name: 'bar' }],
         },
       },

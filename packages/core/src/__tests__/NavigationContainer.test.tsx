@@ -296,7 +296,6 @@ it('handle resetting state with ref', () => {
   render(element).update(element);
 
   const state = {
-    stale: true,
     index: 1,
     routes: [
       {

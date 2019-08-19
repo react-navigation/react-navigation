@@ -4,6 +4,7 @@ import * as BaseActions from '../BaseActions';
 jest.mock('shortid', () => () => 'test');
 
 const STATE = {
+  stale: false as false,
   key: 'root',
   index: 1,
   routes: [
@@ -21,6 +22,7 @@ it('replaces focused screen with REPLACE', () => {
   );
 
   expect(result).toEqual({
+    stale: false,
     key: 'root',
     index: 1,
     routes: [
@@ -39,6 +41,7 @@ it('replaces source screen with REPLACE', () => {
   });
 
   expect(result).toEqual({
+    stale: false,
     key: 'root',
     index: 1,
     routes: [
@@ -66,6 +69,7 @@ it('sets params for the focused screen with SET_PARAMS', () => {
   );
 
   expect(result).toEqual({
+    stale: false,
     key: 'root',
     index: 1,
     routes: [
@@ -84,6 +88,7 @@ it('sets params for the source screen with SET_PARAMS', () => {
   });
 
   expect(result).toEqual({
+    stale: false,
     key: 'root',
     index: 1,
     routes: [

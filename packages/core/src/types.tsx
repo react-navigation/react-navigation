@@ -24,20 +24,19 @@ export type NavigationState = {
   /**
    * Whether the navigation state has been rehydrated.
    */
-  stale?: false;
+  stale: false;
 };
 
 export type InitialState = Partial<
   Omit<NavigationState, 'stale' | 'routes'>
 > & {
-  stale?: boolean;
   routes: Array<Omit<Route<string>, 'key'> & { state?: InitialState }>;
 };
 
 export type PartialState<State extends NavigationState> = Partial<
   Omit<State, 'stale' | 'key' | 'routes' | 'routeNames'>
 > & {
-  stale?: boolean;
+  stale?: true;
   routes: Array<
     Omit<Route<string>, 'key'> & { key?: string; state?: InitialState }
   >;
@@ -128,7 +127,7 @@ export type Router<
    * @param options.routeParamsList Object containing params for each route.
    */
   getRehydratedState(
-    partialState: PartialState<State>,
+    partialState: PartialState<State> | State,
     options: {
       routeNames: string[];
       routeParamList: ParamListBase;

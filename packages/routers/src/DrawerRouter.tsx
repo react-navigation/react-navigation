@@ -55,6 +55,7 @@ export default function DrawerRouter(
           : routeNames.indexOf(options.initialRouteName);
 
       return {
+        stale: false,
         key: `drawer-${shortid()}`,
         index,
         routeNames,
@@ -69,8 +70,8 @@ export default function DrawerRouter(
     },
 
     getRehydratedState(partialState, { routeNames, routeParamList }) {
-      if (!partialState.stale) {
-        return partialState as DrawerNavigationState;
+      if (partialState.stale === false) {
+        return partialState;
       }
 
       const state = router.getRehydratedState(partialState, {
