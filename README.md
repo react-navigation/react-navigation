@@ -275,6 +275,88 @@ We might want to render different content based on the current focus state of th
 const isFocused = useIsFocused();
 ```
 
+## React Native
+
+For proper UX in React Native, we need to respect platform behavior such as the device back button on Android, deep linking etc. The library exports few hooks to make it easier.
+
+### Back button integration
+
+When the back button on the device is pressed, we also want to navigate back in the focused navigator. The library exports a `useBackButton` hook to handle this:
+
+```js
+const ref = React.useRef();
+
+useBackButton(ref);
+
+return <NavigationContainer ref={ref}>{/* content */}</NavigationContainer>;
+```
+
+### Deep-link integration
+
+To handle incoming links, we need to handle 2 scenarios:
+
+1. If the app wasn't previously open, we need to set the initial state based on the link
+2. If the app was already open, we need to update the state to reflect the incoming link
+
+The current implementation of React Navigation has an advantage in handling deep links and is able to automatically set the state based on the path definitions for each screen. It's possible because it can get the configuration for all screens statically.
+
+With our dynamic architecture, we can't determine the state automatically. So it's necessary to manually translate a deep link to a navigation state. The library exports a `getStateFromPath` utility to convert a URL to a state object if the path segments translate directly to route names.
+
+For example, the path `/rooms/chat?user=jane` will be translated to a state object like this:
+
+```js
+{
+  stale: true,
+  routes: [
+    {
+      name: 'rooms',
+      state: {
+        stale: true,
+        routes: [
+          {
+            name: 'chat',
+            params: { user: 'jane' },
+          },
+        ],
+      },
+    },
+  ],
+}
+```
+
+The `useLinking` hooks makes it easier to handle incoming links:
+
+```js
+const ref = React.useRef();
+
+const { getInitialState } = useLinking(ref, {
+  prefixes: ['https://myapp.com', 'myapp://'],
+});
+
+const [isReady, setIsReady] = React.useState(false);
+const [initialState, setInitialState] = React.useState();
+
+React.useEffect(() => {
+  getInitialState()
+    .catch(() => {})
+    .then(state => {
+      if (state !== undefined) {
+        setInitialState(state);
+      }
+
+      setIsReady(true);
+    });
+}, [getInitialState]);
+
+if (!isReady) {
+  return null;
+}
+
+return <NavigationContainer ref={ref}>{/* content */}</NavigationContainer>;
+```
+
+The hook also accepts a `getStateFromPath` option where you can provide a custom function to convert the URL to a valid state object for more advanced use cases.
+
 ## Type-checking
 
 The library is written with TypeScript and provides type definitions for TypeScript projects.
