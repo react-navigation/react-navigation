@@ -49,6 +49,7 @@ it('initializes state for a navigator on navigation', () => {
 
   expect(onStateChange).toBeCalledTimes(1);
   expect(onStateChange).toBeCalledWith({
+    stale: false,
     index: 0,
     key: '0',
     routeNames: ['foo', 'bar', 'baz'],
@@ -140,6 +141,7 @@ it('initializes state for nested screens in React.Fragment', () => {
 
   expect(onStateChange).toBeCalledTimes(1);
   expect(onStateChange).toBeCalledWith({
+    stale: false,
     index: 0,
     key: '0',
     routeNames: ['foo', 'bar', 'baz'],
@@ -189,6 +191,7 @@ it('initializes state for nested navigator on navigation', () => {
 
   expect(onStateChange).toBeCalledTimes(1);
   expect(onStateChange).toBeCalledWith({
+    stale: false,
     index: 2,
     key: '0',
     routeNames: ['foo', 'bar', 'baz'],
@@ -199,6 +202,7 @@ it('initializes state for nested navigator on navigation', () => {
         key: 'baz',
         name: 'baz',
         state: {
+          stale: false,
           index: 0,
           key: '1',
           routeNames: ['qux'],
@@ -302,6 +306,7 @@ it('cleans up state when the navigator unmounts', () => {
 
   expect(onStateChange).toBeCalledTimes(1);
   expect(onStateChange).lastCalledWith({
+    stale: false,
     index: 0,
     key: '0',
     routeNames: ['foo', 'bar'],
@@ -353,6 +358,7 @@ it('allows arbitrary state updates by dispatching a function', () => {
 
   expect(onStateChange).toBeCalledTimes(1);
   expect(onStateChange).toBeCalledWith({
+    stale: false,
     index: 1,
     key: '0',
     routeNames: ['foo', 'bar'],
@@ -390,6 +396,7 @@ it('updates route params with setParams', () => {
 
   expect(onStateChange).toBeCalledTimes(1);
   expect(onStateChange).lastCalledWith({
+    stale: false,
     index: 0,
     key: '0',
     routeNames: ['foo', 'bar'],
@@ -403,6 +410,7 @@ it('updates route params with setParams', () => {
 
   expect(onStateChange).toBeCalledTimes(2);
   expect(onStateChange).lastCalledWith({
+    stale: false,
     index: 0,
     key: '0',
     routeNames: ['foo', 'bar'],
@@ -441,6 +449,7 @@ it('handles change in route names', () => {
   );
 
   expect(onStateChange).toBeCalledWith({
+    stale: false,
     index: 0,
     key: '0',
     routeNames: ['foo', 'baz', 'qux'],

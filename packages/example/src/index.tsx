@@ -72,13 +72,11 @@ export default function App() {
       const state = getStateFromPath(path);
 
       return {
-        stale: true,
         routes: [
           {
             name: 'root',
             state: {
               ...state,
-              stale: true,
               routes: [{ name: 'home' }, ...(state ? state.routes : [])],
             },
           },

@@ -2,6 +2,7 @@ import shortid from 'shortid';
 import {
   CommonAction,
   BaseRouter,
+  PartialState,
   NavigationState,
   DefaultRouterOptions,
   Router,
@@ -60,6 +61,7 @@ export default function TabRouter({
           : routeNames.indexOf(initialRouteName);
 
       return {
+        stale: false,
         key: `tab-${shortid()}`,
         index,
         routeNames,
@@ -75,12 +77,14 @@ export default function TabRouter({
     getRehydratedState(partialState, { routeNames, routeParamList }) {
       let state = partialState;
 
-      if (!state.stale) {
-        return state as TabNavigationState;
+      if (state.stale === false) {
+        return state;
       }
 
       const routes = routeNames.map(name => {
-        const route = state.routes.find(r => r.name === name);
+        const route = (state as PartialState<TabNavigationState>).routes.find(
+          r => r.name === name
+        );
 
         return {
           ...route,

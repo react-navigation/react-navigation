@@ -18,7 +18,6 @@ export default function getStateFromPath(
 
   while (segments.length) {
     const state = {
-      stale: true,
       routes: [{ name: decodeURIComponent(segments[0]) }],
     };
 

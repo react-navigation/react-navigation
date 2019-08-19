@@ -162,7 +162,7 @@ export default function useNavigationBuilder<
     // If the state isn't initialized, or stale, use the state we initialized instead
     // The state won't update until there's a change needed in the state we have initalized locally
     // So it'll be `undefined` or stale untill the first navigation event happens
-    currentState === undefined || currentState.stale
+    currentState === undefined || currentState.stale !== false
       ? (initializedStateRef.current as State)
       : (currentState as State);
 
@@ -201,7 +201,7 @@ export default function useNavigationBuilder<
   const getState = React.useCallback((): State => {
     const currentState = getCurrentState();
 
-    return currentState === undefined || currentState.stale
+    return currentState === undefined || currentState.stale !== false
       ? (initializedStateRef.current as State)
       : (currentState as State);
   }, [getCurrentState]);

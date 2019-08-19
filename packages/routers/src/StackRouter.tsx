@@ -54,6 +54,7 @@ export default function StackRouter(options: StackRouterOptions) {
           : routeNames[0];
 
       return {
+        stale: false,
         key: `stack-${shortid()}`,
         index: 0,
         routeNames,
@@ -70,8 +71,8 @@ export default function StackRouter(options: StackRouterOptions) {
     getRehydratedState(partialState, { routeNames, routeParamList }) {
       let state = partialState;
 
-      if (!state.stale) {
-        return state as StackNavigationState;
+      if (state.stale === false) {
+        return state;
       }
 
       const routes = state.routes

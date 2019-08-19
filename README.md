@@ -306,12 +306,10 @@ For example, the path `/rooms/chat?user=jane` will be translated to a state obje
 
 ```js
 {
-  stale: true,
   routes: [
     {
       name: 'rooms',
       state: {
-        stale: true,
         routes: [
           {
             name: 'chat',

@@ -20,6 +20,7 @@ export default function MockRouter(options: DefaultRouterOptions) {
           : routeNames.indexOf(options.initialRouteName);
 
       return {
+        stale: false,
         key: String(MockRouterKey.current++),
         index,
         routeNames,
@@ -34,7 +35,7 @@ export default function MockRouter(options: DefaultRouterOptions) {
     getRehydratedState(partialState, { routeNames, routeParamList }) {
       let state = partialState;
 
-      if (!state.stale) {
+      if (state.stale === false) {
         return state as NavigationState;
       }
 
