@@ -10,10 +10,25 @@ import {
 import { TabNavigationState } from '@navigation-ex/routers';
 
 export type MaterialTopTabNavigationEventMap = {
+  /**
+   * Event which fires on tapping on the tab for an already focused screen.
+   */
   refocus: undefined;
+  /**
+   * Event which fires on tapping on the tab in the tab bar.
+   */
   tabPress: undefined;
+  /**
+   * Event which fires on long press on the tab in the tab bar.
+   */
   tabLongPress: undefined;
+  /**
+   * Event which fires when a swipe gesture starts, i.e. finger touches the screen.
+   */
   swipeStart: undefined;
+  /**
+   * Event which fires when a swipe gesture ends, i.e. finger leaves the screen.
+   */
   swipeEnd: undefined;
 };
 
@@ -102,9 +117,27 @@ export type MaterialTopTabNavigationConfig = Partial<
     | 'renderLazyPlaceholder'
   >
 > & {
+  /**
+   * Component to render for routes that haven't been rendered yet.
+   * Receives an object containing the route as the prop.
+   * The lazy prop also needs to be enabled.
+   *
+   * This view is usually only shown for a split second. Keep it lightweight.
+   *
+   * By default, this renders null..
+   */
   lazyPlaceholderComponent?: React.ComponentType<{ route: Route<string> }>;
+  /**
+   * Custom tab bar component.
+   */
   tabBarComponent?: React.ComponentType<MaterialTopTabBarProps>;
+  /**
+   * Options for the tab bar which will be passed as props to the tab bar component.
+   */
   tabBarOptions?: MaterialTopTabBarOptions;
+  /**
+   * Position of the tab bar. Defaults to `top`.
+   */
   tabBarPosition?: 'top' | 'bottom';
 };
 
@@ -124,12 +157,33 @@ export type MaterialTopTabBarOptions = Partial<
     | keyof SceneRendererProps
   >
 > & {
+  /**
+   * Color for the icon and label in the active tab.
+   */
   activeTintColor?: string;
+  /**
+   * Color for the icon and label in the inactive tabs.
+   */
   inactiveTintColor?: string;
+  /**
+   * Style object for the tab icon container.
+   */
   iconStyle?: StyleProp<ViewStyle>;
+  /**
+   * Whether the tab label should be visible. Defaults to `true`.
+   */
   showLabel?: boolean;
+  /**
+   * Whether the tab icon should be visible. Defaults to `false`.
+   */
   showIcon?: boolean;
+  /**
+   * Whether the tab label text should capitalized. Defaults to `true`.
+   */
   upperCaseLabel?: boolean;
+  /**
+   * Whether label font should scale to respect Text Size accessibility settings.
+   */
   allowFontScaling?: boolean;
 };
 

@@ -15,7 +15,7 @@ import memoize from '../../utils/memoize';
 import {
   Layout,
   HeaderStyleInterpolator,
-  HeaderBackButtonProps,
+  HeaderLeftButtonProps,
   HeaderTitleProps,
   HeaderOptions,
   HeaderScene,
@@ -142,7 +142,7 @@ export default class HeaderSegment extends React.Component<Props, State> {
       onGoBack,
       headerTitle,
       headerLeft: left = onGoBack
-        ? (props: HeaderBackButtonProps) => <HeaderBackButton {...props} />
+        ? (props: HeaderLeftButtonProps) => <HeaderBackButton {...props} />
         : undefined,
       // @ts-ignore
       headerStatusBarHeight = getStatusBarHeight(layout.width > layout.height),

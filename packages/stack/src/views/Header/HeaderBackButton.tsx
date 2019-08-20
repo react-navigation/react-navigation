@@ -11,13 +11,13 @@ import {
 import Animated from 'react-native-reanimated';
 import MaskedView from '@react-native-community/masked-view';
 import TouchableItem from '../TouchableItem';
-import { HeaderBackButtonProps } from '../../types';
+import { HeaderLeftButtonProps } from '../../types';
 
 const isMaskedViewAvailable =
   // @ts-ignore
   UIManager.getViewManagerConfig('RNCMaskedView') != null;
 
-type Props = HeaderBackButtonProps & {
+type Props = HeaderLeftButtonProps & {
   tintColor: string;
 };
 
