@@ -17,8 +17,17 @@ import {
 import { TabNavigationState } from '@navigation-ex/routers';
 
 export type BottomTabNavigationEventMap = {
+  /**
+   * Event which fires on tapping on the tab for an already focused screen.
+   */
   refocus: undefined;
+  /**
+   * Event which fires on tapping on the tab in the tab bar.
+   */
   tabPress: undefined;
+  /**
+   * Event which fires on long press on the tab in the tab bar.
+   */
   tabLongPress: undefined;
 };
 
@@ -113,26 +122,77 @@ export type BottomTabDescriptorMap = {
 };
 
 export type BottomTabNavigationConfig = {
+  /**
+   * Whether the screens should render the first time they are accessed. Defaults to `true`.
+   * Set it to `false` if you want to render all screens on initial render.
+   */
   lazy?: boolean;
+  /**
+   * Custom tab bar component.
+   */
   tabBarComponent?: React.ComponentType<BottomTabBarProps>;
+  /**
+   * Options for the tab bar which will be passed as props to the tab bar component.
+   */
   tabBarOptions?: BottomTabBarOptions;
 };
 
 export type BottomTabBarOptions = {
+  /**
+   * Whether the tab bar gets hidden when the keyboard is shown.
+   */
   keyboardHidesTabBar?: boolean;
+  /**
+   * Color for the icon and label in the active tab.
+   */
   activeTintColor?: string;
+  /**
+   * Color for the icon and label in the inactive tabs.
+   */
   inactiveTintColor?: string;
+  /**
+   * Background olor for the active tab.
+   */
   activeBackgroundColor?: string;
+  /**
+   * background color for the inactive tabs.
+   */
   inactiveBackgroundColor?: string;
+  /**
+   * Whether label font should scale to respect Text Size accessibility settings.
+   */
   allowFontScaling?: boolean;
+  /**
+   * Whether the tab label should be visible. Defaults to `true`.
+   */
   showLabel?: boolean;
+  /**
+   * Whether the tab icon should be visible. Defaults to `true`.
+   */
   showIcon?: boolean;
+  /**
+   * Style object for the tab label.
+   */
   labelStyle?: StyleProp<TextStyle>;
+  /**
+   * Style object for the tab container.
+   */
   tabStyle?: StyleProp<ViewStyle>;
+  /**
+   * Whether the label is renderd below the icon or beside the icon.
+   * When a function is passed, it receives the device orientation to render the label differently.
+   * By default, in `vertical` orinetation, label is rendered below and in `horizontal` orientation, it's renderd beside.
+   */
   labelPosition?:
     | LabelPosition
     | ((options: { deviceOrientation: Orientation }) => LabelPosition);
+  /**
+   * Whether the label position should adapt to the orientation.
+   */
   adaptive?: boolean;
+  /**
+   * Style object for the tab bar container.
+   */
   style?: StyleProp<ViewStyle>;
 };
 
