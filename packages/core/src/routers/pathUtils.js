@@ -40,14 +40,25 @@ const getRestOfPath = (pathMatch, pathMatchKeys) => {
   return rest;
 };
 
+const determineDelimiter = (uri, uriPrefix) => {
+  if (Array.isArray(uriPrefix)) {
+    if (uriPrefix.length === 1) return uriPrefix[0];
+    for (let prefix of uriPrefix) {
+      if (uri.startsWith(prefix)) return prefix;
+    }
+    return null;
+  }
+  return uriPrefix;
+};
+
 export const urlToPathAndParams = (url, uriPrefix) => {
   const searchMatch = url.match(/^(.*)\?(.*)$/);
-  const params = searchMatch ? queryString.parse(searchMatch[2]) : {};
-  const urlWithoutSearch = searchMatch ? searchMatch[1] : url;
-  const delimiter = uriPrefix || '://';
-  let path = urlWithoutSearch.split(delimiter)[1];
+  const [, urlWithoutQuery, query] = searchMatch || [null, url, {}];
+  const params = queryString.parse(query);
+  const delimiter = determineDelimiter(urlWithoutQuery, uriPrefix) || '://';
+  let path = urlWithoutQuery.split(delimiter)[1];
   if (path === undefined) {
-    path = urlWithoutSearch;
+    path = urlWithoutQuery;
   }
   if (path === '/') {
     path = '';
