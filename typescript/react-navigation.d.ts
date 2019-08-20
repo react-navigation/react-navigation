@@ -971,13 +971,9 @@ declare module 'react-navigation' {
     stackConfig?: StackNavigatorConfig
   ): NavigationContainer;
 
-  export interface SwitchNavigatorConfig {
-    initialRouteName: string;
-    navigationOptions?: object;
-    defaultNavigationOptions?: object;
-    resetOnBlur?: boolean;
-    paths?: NavigationPathsConfig;
-    backBehavior?: 'none' | 'initialRoute';
+  export interface SwitchNavigatorConfig
+    extends NavigationSwitchRouterConfig {
+      navigationOptions?: NavigationScreenConfig<NavigationScreenOptions>;
   }
 
   // Return createNavigationContainer
