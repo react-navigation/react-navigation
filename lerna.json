@@ -1,8 +1,18 @@
 {
-  "version": "0.0.0",
   "packages": [
     "packages/*"
   ],
   "npmClient": "yarn",
-  "useWorkspaces": true
+  "useWorkspaces": true,
+  "version": "independent",
+  "command": {
+    "publish": {
+      "allowBranch": "master",
+      "conventionalCommits": true,
+      "createRelease": "github",
+      "preId": "alpha",
+      "preDistTag": "next",
+      "message": "chore: publish"
+    }
+  }
 }

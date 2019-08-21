@@ -487,3 +487,13 @@ Then run the tests:
 ```sh
 yarn test
 ```
+
+## Publishing
+
+To publish a new version, first we need to export a `GH_TOKEN` environment variable as mentioned [here](https://github.com/lerna/lerna/tree/master/commands/version#--create-release-type). Then run:
+
+```sh
+lerna publish
+```
+
+This will automatically bump the version and publish the packages. It'll also publish the changelogs on GitHub for each package.

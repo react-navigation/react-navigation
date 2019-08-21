@@ -1,5 +1,12 @@
 {
   "name": "@react-navigation/native",
+  "description": "React Native integration for React Navigation",
+  "keywords": [
+    "react-native",
+    "react-navigation",
+    "ios",
+    "android"
+  ],
   "version": "5.0.0-alpha.0",
   "license": "MIT",
   "main": "lib/commonjs/index.js",
@@ -23,7 +30,8 @@
     "@types/react-native": "^0.60.2",
     "del-cli": "^2.0.0",
     "react": "16.8.3",
-    "react-native": "^0.59.8"
+    "react-native": "^0.59.8",
+    "typescript": "^3.5.3"
   },
   "peerDependencies": {
     "react": "*",

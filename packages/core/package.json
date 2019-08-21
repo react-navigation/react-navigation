@@ -1,5 +1,11 @@
 {
   "name": "@react-navigation/core",
+  "description": "Core utilities for building navigators",
+  "keywords": [
+    "react",
+    "react-native",
+    "react-navigation"
+  ],
   "version": "5.0.0-alpha.0",
   "license": "MIT",
   "main": "lib/commonjs/index.js",
@@ -26,7 +32,8 @@
     "del-cli": "^2.0.0",
     "react": "^16.8.3",
     "react-native-testing-library": "^1.9.1",
-    "react-test-renderer": "^16.8.3"
+    "react-test-renderer": "^16.8.3",
+    "typescript": "^3.5.3"
   },
   "peerDependencies": {
     "react": "^16.8.3"

@@ -1,5 +1,16 @@
 {
   "name": "@react-navigation/material-bottom-tabs",
+  "description": "Integration for bottom navigation component from react-native-paper",
+  "keywords": [
+    "react-native-component",
+    "react-component",
+    "react-native",
+    "react-navigation",
+    "ios",
+    "android",
+    "material",
+    "tab"
+  ],
   "version": "5.0.0-alpha.0",
   "license": "MIT",
   "main": "lib/commonjs/index.js",
@@ -27,7 +38,8 @@
     "react": "16.8.3",
     "react-native": "^0.59.8",
     "react-native-paper": "^3.0.0-alpha.3",
-    "react-native-vector-icons": "^6.6.0"
+    "react-native-vector-icons": "^6.6.0",
+    "typescript": "^3.5.3"
   },
   "peerDependencies": {
     "react": "*",

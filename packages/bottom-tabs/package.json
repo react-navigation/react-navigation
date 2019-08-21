@@ -1,5 +1,15 @@
 {
   "name": "@react-navigation/bottom-tabs",
+  "description": "Bottom tab navigator following iOS design guidelines",
+  "keywords": [
+    "react-native-component",
+    "react-component",
+    "react-native",
+    "react-navigation",
+    "ios",
+    "android",
+    "tab"
+  ],
   "version": "5.0.0-alpha.0",
   "license": "MIT",
   "main": "lib/commonjs/index.js",
@@ -25,7 +35,8 @@
     "@types/react-native": "^0.60.2",
     "del-cli": "^2.0.0",
     "react": "16.8.3",
-    "react-native": "^0.59.8"
+    "react-native": "^0.59.8",
+    "typescript": "^3.5.3"
   },
   "peerDependencies": {
     "react": "*",
