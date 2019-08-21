@@ -1,6 +1,8 @@
 import * as React from 'react';
 import * as BaseActions from './BaseActions';
 import { NavigationEventEmitter } from './useEventEmitter';
+import NavigationContext from './NavigationContext';
+
 import {
   NavigationAction,
   NavigationHelpers,
@@ -52,6 +54,8 @@ export default function useNavigationCache<
     ...BaseActions,
   };
 
+  const parentNavigation = React.useContext(NavigationContext);
+
   cache.current = state.routes.reduce<NavigationCache<State, ScreenOptions>>(
     (acc, route, index) => {
       const previous = cache.current[route.key];
@@ -87,6 +91,7 @@ export default function useNavigationCache<
           ...rest,
           ...helpers,
           ...emitter.create(route.key),
+          dangerouslyGetParent: () => parentNavigation,
           dispatch,
           setOptions: (options: object) =>
             setOptions(o => ({
@@ -100,7 +105,7 @@ export default function useNavigationCache<
               return false;
             }
 
-            // If the current screen is focused, we also need to check if parent navigtor is focused
+            // If the current screen is focused, we also need to check if parent navigator is focused
             // This makes sure that we return the focus state in the whole tree, not just this navigator
             return navigation ? navigation.isFocused() : true;
           },

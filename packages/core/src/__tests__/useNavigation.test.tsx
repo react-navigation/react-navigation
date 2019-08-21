@@ -32,6 +32,80 @@ it('gets navigation prop from context', () => {
   );
 });
 
+it("gets navigation's parent from context", () => {
+  expect.assertions(1);
+
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return state.routes.map(route => descriptors[route.key].render());
+  };
+
+  const Test = () => {
+    const navigation = useNavigation();
+
+    expect(navigation.dangerouslyGetParent()).toBeDefined();
+
+    return null;
+  };
+
+  render(
+    <NavigationContainer>
+      <TestNavigator>
+        <Screen name="foo">
+          {() => (
+            <TestNavigator>
+              <Screen name="bar" component={Test} />
+            </TestNavigator>
+          )}
+        </Screen>
+      </TestNavigator>
+    </NavigationContainer>
+  );
+});
+
+it("gets navigation's parent's parent from context", () => {
+  expect.assertions(2);
+
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return state.routes.map(route => descriptors[route.key].render());
+  };
+
+  const Test = () => {
+    const navigation = useNavigation();
+    const parent = navigation.dangerouslyGetParent();
+
+    expect(parent).toBeDefined();
+    if (parent !== undefined) {
+      expect(parent.navigate).toBeDefined();
+    }
+
+    return null;
+  };
+
+  render(
+    <NavigationContainer>
+      <TestNavigator>
+        <Screen name="foo">
+          {() => (
+            <TestNavigator>
+              <Screen name="foo">
+                {() => (
+                  <TestNavigator>
+                    <Screen name="quo" component={Test} />
+                  </TestNavigator>
+                )}
+              </Screen>
+            </TestNavigator>
+          )}
+        </Screen>
+      </TestNavigator>
+    </NavigationContainer>
+  );
+});
+
 it('throws if called outside a navigation context', () => {
   expect.assertions(1);
 
