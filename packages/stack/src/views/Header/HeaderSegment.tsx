@@ -274,6 +274,24 @@ export default class HeaderSegment extends React.Component<Props, State> {
       }
     }
 
+    const leftButton = left
+      ? left({
+          backImage,
+          pressColorAndroid,
+          allowFontScaling: backAllowFontScaling,
+          onPress: onGoBack,
+          labelVisible: headerBackTitleVisible,
+          label: leftLabel !== undefined ? leftLabel : previousTitle,
+          truncatedLabel,
+          labelStyle: [leftLabelStyle, customLeftLabelStyle],
+          onLabelLayout: this.handleLeftLabelLayout,
+          screenLayout: layout,
+          titleLayout,
+          tintColor: headerTintColor,
+          canGoBack: Boolean(onGoBack),
+        })
+      : null;
+
     return (
       <React.Fragment>
         <Animated.View
@@ -295,26 +313,12 @@ export default class HeaderSegment extends React.Component<Props, State> {
             style={{ height: headerStatusBarHeight }}
           />
           <View pointerEvents="box-none" style={styles.content}>
-            {left ? (
+            {leftButton ? (
               <Animated.View
                 pointerEvents="box-none"
                 style={[styles.left, leftButtonStyle, leftContainerStyle]}
               >
-                {left({
-                  backImage,
-                  pressColorAndroid,
-                  allowFontScaling: backAllowFontScaling,
-                  onPress: onGoBack,
-                  labelVisible: headerBackTitleVisible,
-                  label: leftLabel !== undefined ? leftLabel : previousTitle,
-                  truncatedLabel,
-                  labelStyle: [leftLabelStyle, customLeftLabelStyle],
-                  onLabelLayout: this.handleLeftLabelLayout,
-                  screenLayout: layout,
-                  titleLayout,
-                  tintColor: headerTintColor,
-                  canGoBack: Boolean(onGoBack),
-                })}
+                {leftButton}
               </Animated.View>
             ) : null}
             <Animated.View
@@ -322,7 +326,7 @@ export default class HeaderSegment extends React.Component<Props, State> {
               style={[
                 Platform.select({
                   ios: null,
-                  default: { left: left ? 72 : 16 },
+                  default: { left: leftButton ? 72 : 16 },
                 }),
                 styles.title,
                 titleStyle,
