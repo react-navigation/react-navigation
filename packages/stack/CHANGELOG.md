@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.2](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.1...@react-navigation/stack@5.0.0-alpha.2) (2019-08-21)
+
+
+### Bug Fixes
+
+* check if left button is truthy to add a left offset ([8645e36](https://github.com/react-navigation/navigation-ex/commit/8645e36))
+
+
+
+
+
 # 5.0.0-alpha.1 (2019-08-21)
 
 
