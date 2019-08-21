@@ -7,7 +7,7 @@ Bottom tab navigator for React Navigation following iOS design guidelines.
 Open a Terminal in your project's folder and run,
 
 ```sh
-yarn add @react-navigation/stack
+yarn add @react-navigation/core @react-navigation/stack @react-native-community/masked-view
 ```
 
 Now we need to install [`react-native-gesture-handler`](https://github.com/kmagiera/react-native-gesture-handler) and [`react-native-reanimated`](https://github.com/kmagiera/react-native-reanimated).

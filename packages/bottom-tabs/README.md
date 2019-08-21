@@ -7,7 +7,7 @@ Bottom tab navigator for React Navigation following iOS design guidelines.
 Open a Terminal in your project's folder and run,
 
 ```sh
-yarn add @react-navigation/bottom-tabs
+yarn add @react-navigation/core @react-navigation/bottom-tabs
 ```
 
 ## Usage

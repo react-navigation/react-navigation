@@ -8,6 +8,11 @@
   ],
   "version": "5.0.0-alpha.0",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/react-navigation/navigation-ex.git",
+    "directory": "packages/routers"
+  },
   "main": "lib/commonjs/index.js",
   "react-native": "src/index.tsx",
   "module": "lib/module/index.js",
@@ -24,13 +29,15 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "@react-navigation/core": "^5.0.0-alpha.0",
     "shortid": "^2.2.14"
   },
   "devDependencies": {
     "@react-native-community/bob": "^0.7.0",
     "del-cli": "^2.0.0",
     "typescript": "^3.5.3"
+  },
+  "peerDependencies": {
+    "@react-navigation/core": "^5.0.0-alpha.0"
   },
   "@react-native-community/bob": {
     "source": "src",

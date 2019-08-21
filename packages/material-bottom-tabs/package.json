@@ -13,6 +13,11 @@
   ],
   "version": "5.0.0-alpha.0",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/react-navigation/navigation-ex.git",
+    "directory": "packages/material-bottom-tabs"
+  },
   "main": "lib/commonjs/index.js",
   "react-native": "src/index.tsx",
   "module": "lib/module/index.js",
@@ -29,7 +34,6 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "@react-navigation/core": "^5.0.0-alpha.0",
     "@react-navigation/routers": "^5.0.0-alpha.0"
   },
   "devDependencies": {
@@ -45,6 +49,7 @@
     "typescript": "^3.5.3"
   },
   "peerDependencies": {
+    "@react-navigation/core": "^5.0.0-alpha.0",
     "react": "*",
     "react-native": "*",
     "react-native-paper": "^3.0.0-alpha.3",
