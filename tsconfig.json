@@ -2,7 +2,8 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@navigation-ex": ["./packages"]
+      "@navigation-ex/*": ["./packages/*/src", "./packages/*/lib/typescript"],
+      "use-subscription": ["./typings/use-subscription.d"]
     },
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,

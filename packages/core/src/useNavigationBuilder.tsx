@@ -20,7 +20,12 @@ import {
   Router,
   RouterFactory,
   PartialState,
+  PrivateValueStore,
 } from './types';
+
+// This is to make TypeScript compiler happy
+// eslint-disable-next-line babel/no-unused-expressions
+PrivateValueStore;
 
 /**
  * Compare two arrays with primitive values as the content.

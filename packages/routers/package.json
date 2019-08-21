@@ -1,10 +1,34 @@
 {
   "name": "@navigation-ex/routers",
   "version": "0.0.1",
-  "main": "src/index",
   "license": "MIT",
+  "main": "lib/commonjs/index.js",
+  "react-native": "src/index.tsx",
+  "module": "lib/module/index.js",
+  "types": "lib/typescript/src/index.d.ts",
+  "files": [
+    "src",
+    "lib"
+  ],
+  "scripts": {
+    "prepare": "bob build",
+    "clean": "del lib"
+  },
   "dependencies": {
-    "shortid": "^2.2.14",
-    "@navigation-ex/core": "^0.0.1"
+    "@navigation-ex/core": "^0.0.1",
+    "shortid": "^2.2.14"
+  },
+  "devDependencies": {
+    "@react-native-community/bob": "^0.7.0",
+    "del-cli": "^2.0.0"
+  },
+  "@react-native-community/bob": {
+    "source": "src",
+    "output": "lib",
+    "targets": [
+      "commonjs",
+      "module",
+      "typescript"
+    ]
   }
 }

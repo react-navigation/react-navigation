@@ -1,17 +1,30 @@
 {
   "name": "@navigation-ex/stack",
   "version": "0.0.1",
-  "main": "src/index",
   "license": "MIT",
+  "main": "lib/commonjs/index.js",
+  "react-native": "src/index.tsx",
+  "module": "lib/module/index.js",
+  "types": "lib/typescript/src/index.d.ts",
+  "files": [
+    "src",
+    "lib"
+  ],
+  "scripts": {
+    "prepare": "bob build",
+    "clean": "del lib"
+  },
   "dependencies": {
     "@navigation-ex/core": "^0.0.1",
     "@navigation-ex/routers": "^0.0.1",
     "react-native-safe-area-view": "^0.14.6"
   },
   "devDependencies": {
+    "@react-native-community/bob": "^0.7.0",
     "@react-native-community/masked-view": "^0.1.1",
     "@types/react": "^16.8.24",
     "@types/react-native": "^0.60.2",
+    "del-cli": "^2.0.0",
     "react": "16.8.3",
     "react-native": "^0.59.8",
     "react-native-gesture-handler": "^1.3.0",
@@ -21,5 +34,14 @@
   "peerDependencies": {
     "react": "*",
     "react-native": "*"
+  },
+  "@react-native-community/bob": {
+    "source": "src",
+    "output": "lib",
+    "targets": [
+      "commonjs",
+      "module",
+      "typescript"
+    ]
   }
 }

@@ -17,8 +17,8 @@
     "eject": "expo eject"
   },
   "dependencies": {
-    "@react-native-community/masked-view": "^0.1.1",
     "@expo/vector-icons": "10.0.3",
+    "@react-native-community/masked-view": "^0.1.1",
     "expo": "^34.0.1",
     "expo-asset": "~6.0.0",
     "react": "16.8.3",

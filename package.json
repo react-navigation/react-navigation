@@ -32,11 +32,11 @@
     "codecov": "^3.5.0",
     "commitlint": "^8.0.0",
     "core-js": "^3.1.4",
-    "del-cli": "^2.0.0",
     "eslint": "^5.16.0",
     "eslint-config-satya164": "^2.4.1",
     "husky": "^2.4.0",
     "jest": "^24.8.0",
+    "lerna": "^3.16.4",
     "prettier": "^1.18.2",
     "typescript": "^3.5.1"
   },

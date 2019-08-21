@@ -238,7 +238,7 @@ export type EventEmitter<EventMap extends { [key: string]: any }> = {
   }): EventArg<EventName, EventMap[EventName]>;
 };
 
-class PrivateValueStore<A, B, C> {
+export class PrivateValueStore<A, B, C> {
   /**
    * TypeScript requires a type to be actually used to be able to infer it.
    * This is a hacky way of storing type in a property without surfacing it in intellisense.
