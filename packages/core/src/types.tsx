@@ -369,6 +369,14 @@ export type NavigationProp<
    * It can be useful to decide whether to display a back button in a stack.
    */
   isFirstRouteInParent(): boolean;
+  /**
+   * Returns the parent navigator, if any. Reason why the function is called
+   * dangerouslyGetParent is to warn developers against overusing it to eg. get parent
+   * of parent and other hard-to-follow patterns.
+   */
+  dangerouslyGetParent():
+    | NavigationProp<ParamListBase, string, any, any>
+    | undefined;
 } & EventConsumer<EventMap & EventMapBase> &
   PrivateValueStore<ParamList, RouteName, EventMap>;
 

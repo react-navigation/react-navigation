@@ -421,6 +421,68 @@ it('updates route params with setParams', () => {
   });
 });
 
+it('updates route params with setParams applied to parent', () => {
+  const TestNavigator = (props: any) => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return descriptors[state.routes[state.index].key].render();
+  };
+
+  let setParams: (params: object) => void = () => undefined;
+
+  const FooScreen = (props: any) => {
+    const parent = props.navigation.dangerouslyGetParent();
+    if (parent) {
+      setParams = parent.setParams;
+    }
+
+    return null;
+  };
+
+  const onStateChange = jest.fn();
+
+  render(
+    <NavigationContainer onStateChange={onStateChange}>
+      <TestNavigator initialRouteName="foo">
+        <Screen name="foo">
+          {() => (
+            <TestNavigator initialRouteName="baz">
+              <Screen name="baz" component={FooScreen} />
+            </TestNavigator>
+          )}
+        </Screen>
+        <Screen name="bar" component={jest.fn()} />
+      </TestNavigator>
+    </NavigationContainer>
+  );
+
+  act(() => setParams({ username: 'alice' }));
+
+  expect(onStateChange).toBeCalledTimes(1);
+  expect(onStateChange).lastCalledWith({
+    index: 0,
+    key: '0',
+    routeNames: ['foo', 'bar'],
+    routes: [
+      { key: 'foo', name: 'foo', params: { username: 'alice' } },
+      { key: 'bar', name: 'bar' },
+    ],
+  });
+
+  act(() => setParams({ age: 25 }));
+
+  expect(onStateChange).toBeCalledTimes(2);
+  expect(onStateChange).lastCalledWith({
+    index: 0,
+    key: '0',
+    routeNames: ['foo', 'bar'],
+    routes: [
+      { key: 'foo', name: 'foo', params: { username: 'alice', age: 25 } },
+      { key: 'bar', name: 'bar' },
+    ],
+  });
+});
+
 it('handles change in route names', () => {
   const TestNavigator = (props: any): any => {
     useNavigationBuilder(MockRouter, props);
@@ -491,7 +553,7 @@ it('throws if navigator is not inside a container', () => {
   );
 });
 
-it('throws if muliple navigators rendered under one container', () => {
+it('throws if multiple navigators rendered under one container', () => {
   const TestNavigator = (props: any) => {
     useNavigationBuilder(MockRouter, props);
     return null;
