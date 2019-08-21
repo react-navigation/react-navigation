@@ -2,7 +2,7 @@ import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { TabBar } from 'react-native-tab-view';
 import Animated from 'react-native-reanimated';
-import { Route } from '@navigation-ex/core';
+import { Route } from '@react-navigation/core';
 
 import { MaterialTopTabBarProps } from '../types';
 

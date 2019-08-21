@@ -12,7 +12,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/satya164/navigation-ex.git"
+    "url": "git+https://github.com/satya164/react-navigation.git"
   },
   "author": "Satyajit Sahoo <satyajit.happy@gmail.com> (https://github.com/satya164/)",
   "scripts": {
@@ -61,5 +61,5 @@
       "<rootDir>/jest/setup.js"
     ]
   },
-  "name": "navigation-ex"
+  "name": "react-navigation"
 }

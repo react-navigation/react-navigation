@@ -1,7 +1,11 @@
 import * as React from 'react';
 import { TabView, SceneRendererProps } from 'react-native-tab-view';
-import { NavigationHelpers, ParamListBase, Route } from '@navigation-ex/core';
-import { TabNavigationState, TabActions } from '@navigation-ex/routers';
+import {
+  NavigationHelpers,
+  ParamListBase,
+  Route,
+} from '@react-navigation/core';
+import { TabNavigationState, TabActions } from '@react-navigation/routers';
 
 import MaterialTopTabBar from './MaterialTopTabBar';
 import {

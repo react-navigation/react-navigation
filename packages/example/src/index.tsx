@@ -8,17 +8,17 @@ import {
   InitialState,
   getStateFromPath,
   NavigationContainerRef,
-} from '@navigation-ex/core';
-import { useBackButton, useLinking } from '@navigation-ex/native';
+} from '@react-navigation/core';
+import { useBackButton, useLinking } from '@react-navigation/native';
 import {
   createDrawerNavigator,
   DrawerNavigationProp,
-} from '@navigation-ex/drawer';
+} from '@react-navigation/drawer';
 import {
   createStackNavigator,
   Assets as StackAssets,
   StackNavigationProp,
-} from '@navigation-ex/stack';
+} from '@react-navigation/stack';
 
 import SimpleStackScreen from './Screens/SimpleStack';
 import BottomTabsScreen from './Screens/BottomTabs';

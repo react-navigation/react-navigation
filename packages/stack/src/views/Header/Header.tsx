@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StackActions } from '@navigation-ex/routers';
+import { StackActions } from '@react-navigation/routers';
 import HeaderSegment from './HeaderSegment';
 import { HeaderProps, HeaderTitleProps } from '../../types';
 import HeaderTitle from './HeaderTitle';

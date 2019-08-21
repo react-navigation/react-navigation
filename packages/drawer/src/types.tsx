@@ -6,8 +6,8 @@ import {
   NavigationProp,
   Descriptor,
   NavigationHelpers,
-} from '@navigation-ex/core';
-import { DrawerNavigationState } from '@navigation-ex/routers';
+} from '@react-navigation/core';
+import { DrawerNavigationState } from '@react-navigation/routers';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 
 export type Scene = {

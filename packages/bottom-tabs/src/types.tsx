@@ -13,8 +13,8 @@ import {
   ParamListBase,
   Descriptor,
   Route,
-} from '@navigation-ex/core';
-import { TabNavigationState } from '@navigation-ex/routers';
+} from '@react-navigation/core';
+import { TabNavigationState } from '@react-navigation/routers';
 
 export type BottomTabNavigationEventMap = {
   /**

@@ -3,14 +3,14 @@
   "settings": {
     "react": { "version": "16" },
     "import/core-modules": [
-      "@navigation-ex/core",
-      "@navigation-ex/native",
-      "@navigation-ex/routers",
-      "@navigation-ex/stack",
-      "@navigation-ex/drawer",
-      "@navigation-ex/bottom-tabs",
-      "@navigation-ex/material-top-tabs",
-      "@navigation-ex/material-bottom-tabs"
+      "@react-navigation/core",
+      "@react-navigation/native",
+      "@react-navigation/routers",
+      "@react-navigation/stack",
+      "@react-navigation/drawer",
+      "@react-navigation/bottom-tabs",
+      "@react-navigation/material-top-tabs",
+      "@react-navigation/material-bottom-tabs"
     ]
   },
   "env": { "browser": true, "node": true }
