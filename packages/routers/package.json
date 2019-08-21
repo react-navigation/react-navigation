@@ -1,5 +1,11 @@
 {
   "name": "@react-navigation/routers",
+  "description": "Routers to help build custom navigators",
+  "keywords": [
+    "react",
+    "react-native",
+    "react-navigation"
+  ],
   "version": "5.0.0-alpha.0",
   "license": "MIT",
   "main": "lib/commonjs/index.js",
@@ -20,7 +26,8 @@
   },
   "devDependencies": {
     "@react-native-community/bob": "^0.7.0",
-    "del-cli": "^2.0.0"
+    "del-cli": "^2.0.0",
+    "typescript": "^3.5.3"
   },
   "@react-native-community/bob": {
     "source": "src",

@@ -15,8 +15,8 @@ web-build/
 web-report/
 
 npm-debug.*
-yarn-error.log
 
+*.log
 *.jks
 *.p8
 *.p12

@@ -1,6 +1,7 @@
 {
   "name": "@react-navigation/example",
-  "version": "0.0.0",
+  "description": "Demo app to showcase various functionality of React Navigation",
+  "version": "5.0.0-alpha.0",
   "private": true,
   "workspaces": {
     "nohoist": [
@@ -40,6 +41,7 @@
     "@types/react": "^16.8.23",
     "@types/react-native": "^0.57.65",
     "babel-preset-expo": "^6.0.0",
-    "expo-cli": "^3.0.6"
+    "expo-cli": "^3.0.6",
+    "typescript": "^3.5.3"
   }
 }
