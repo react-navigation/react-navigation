@@ -6,14 +6,16 @@
 
 /coverage/
 /types/
-/lib/
 /dist/
+/lib/
+/packages/**/lib/
 
 node_modules/
 web-build/
 web-report/
 
 npm-debug.*
+yarn-error.log
 
 *.jks
 *.p8

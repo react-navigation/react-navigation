@@ -10,7 +10,12 @@ import {
   NavigationState,
   ParamListBase,
   Router,
+  PrivateValueStore,
 } from './types';
+
+// This is to make TypeScript compiler happy
+// eslint-disable-next-line babel/no-unused-expressions
+PrivateValueStore;
 
 type Options<State extends NavigationState, Action extends NavigationAction> = {
   onAction: (
