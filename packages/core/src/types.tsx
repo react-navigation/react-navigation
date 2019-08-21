@@ -377,6 +377,13 @@ export type NavigationProp<
   dangerouslyGetParent():
     | NavigationProp<ParamListBase, string, any, any>
     | undefined;
+
+  /**
+   * Returns the navigator's state. Reason why the function is called
+   * dangerouslyGetState is to discourage developers to use internal navigation's state.
+   * Note that this method doesn't re-render screen when the result changes. So don't use it in `render`.
+   */
+  dangerouslyGetState(): State;
 } & EventConsumer<EventMap & EventMapBase> &
   PrivateValueStore<ParamList, RouteName, EventMap>;
 

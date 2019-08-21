@@ -4,6 +4,8 @@ import Screen from '../Screen';
 import NavigationContainer from '../NavigationContainer';
 import useNavigationBuilder from '../useNavigationBuilder';
 import MockRouter, { MockRouterKey } from './__fixtures__/MockRouter';
+import useNavigation from '../useNavigation';
+import { NavigationState } from '../types';
 
 beforeEach(() => (MockRouterKey.current = 0));
 
@@ -467,6 +469,7 @@ it('updates route params with setParams applied to parent', () => {
       { key: 'foo', name: 'foo', params: { username: 'alice' } },
       { key: 'bar', name: 'bar' },
     ],
+    stale: false,
   });
 
   act(() => setParams({ age: 25 }));
@@ -480,6 +483,7 @@ it('updates route params with setParams applied to parent', () => {
       { key: 'foo', name: 'foo', params: { username: 'alice', age: 25 } },
       { key: 'bar', name: 'bar' },
     ],
+    stale: false,
   });
 });
 
@@ -516,6 +520,40 @@ it('handles change in route names', () => {
     key: '0',
     routeNames: ['foo', 'baz', 'qux'],
     routes: [{ key: 'foo', name: 'foo' }],
+  });
+});
+
+it('gives access to internal state', () => {
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return descriptors[state.routes[state.index].key].render();
+  };
+
+  let state: NavigationState | undefined;
+
+  const Test = () => {
+    const navigation = useNavigation();
+    state = navigation.dangerouslyGetState();
+    return null;
+  };
+
+  const root = (
+    <NavigationContainer>
+      <TestNavigator initialRouteName="bar">
+        <Screen name="bar" component={Test} />
+      </TestNavigator>
+    </NavigationContainer>
+  );
+
+  render(root).update(root);
+
+  expect(state).toEqual({
+    index: 0,
+    key: '0',
+    routeNames: ['bar'],
+    routes: [{ key: 'bar', name: 'bar' }],
+    stale: false,
   });
 });
 
