@@ -21,6 +21,9 @@
     "src",
     "lib"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "prepare": "bob build",
     "clean": "del lib"
