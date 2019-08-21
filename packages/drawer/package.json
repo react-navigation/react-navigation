@@ -1,6 +1,6 @@
 {
-  "name": "@navigation-ex/drawer",
-  "version": "0.0.1",
+  "name": "@react-navigation/drawer",
+  "version": "5.0.0-alpha.0",
   "license": "MIT",
   "main": "lib/commonjs/index.js",
   "react-native": "src/index.tsx",
@@ -15,8 +15,8 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "@navigation-ex/core": "^0.0.1",
-    "@navigation-ex/routers": "^0.0.1",
+    "@react-navigation/core": "^5.0.0-alpha.0",
+    "@react-navigation/routers": "^5.0.0-alpha.0",
     "react-native-safe-area-view": "^0.14.6"
   },
   "devDependencies": {

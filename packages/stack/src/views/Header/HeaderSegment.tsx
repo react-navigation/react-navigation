@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { getStatusBarHeight } from 'react-native-safe-area-view';
-import { Route } from '@navigation-ex/core';
+import { Route } from '@react-navigation/core';
 import HeaderBackButton from './HeaderBackButton';
 import HeaderBackground from './HeaderBackground';
 import memoize from '../../utils/memoize';

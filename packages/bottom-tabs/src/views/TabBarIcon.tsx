@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
-import { Route } from '@navigation-ex/core';
+import { Route } from '@react-navigation/core';
 
 type Props = {
   route: Route<string>;

@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { MaterialIcons } from '@expo/vector-icons';
-import { createBottomTabNavigator } from '@navigation-ex/bottom-tabs';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 // @ts-ignore
 import TouchableBounce from 'react-native/Libraries/Components/Touchable/TouchableBounce';
 import Albums from '../Shared/Albums';

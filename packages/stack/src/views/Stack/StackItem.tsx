@@ -1,8 +1,12 @@
 import * as React from 'react';
 import { StyleSheet, Platform, StyleProp, ViewStyle } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { StackNavigationState } from '@navigation-ex/routers';
-import { Route, NavigationHelpers, ParamListBase } from '@navigation-ex/core';
+import { StackNavigationState } from '@react-navigation/routers';
+import {
+  Route,
+  NavigationHelpers,
+  ParamListBase,
+} from '@react-navigation/core';
 import { Props as HeaderContainerProps } from '../Header/HeaderContainer';
 import Card from './Card';
 import { HeaderScene, Layout, HeaderMode, TransitionPreset } from '../../types';

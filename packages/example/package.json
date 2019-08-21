@@ -1,5 +1,5 @@
 {
-  "name": "@navigation-ex/example",
+  "name": "@react-navigation/example",
   "version": "0.0.0",
   "private": true,
   "workspaces": {

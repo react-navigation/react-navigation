@@ -6,7 +6,7 @@ import {
   BaseRouter,
   DefaultRouterOptions,
   Route,
-} from '@navigation-ex/core';
+} from '@react-navigation/core';
 
 export type StackActionType =
   | {

@@ -6,8 +6,11 @@ import {
   ParamListBase,
   Route,
   BaseActions,
-} from '@navigation-ex/core';
-import { DrawerActions, DrawerNavigationState } from '@navigation-ex/routers';
+} from '@react-navigation/core';
+import {
+  DrawerActions,
+  DrawerNavigationState,
+} from '@react-navigation/routers';
 
 import { Scene, ContentComponentProps, DrawerDescriptorMap } from '../types';
 

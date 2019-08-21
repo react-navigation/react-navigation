@@ -10,8 +10,8 @@ import {
   ParamListBase,
   Descriptor,
   Route,
-} from '@navigation-ex/core';
-import { StackNavigationState } from '@navigation-ex/routers';
+} from '@react-navigation/core';
+import { StackNavigationState } from '@react-navigation/routers';
 
 export type StackNavigationEventMap = {
   /**

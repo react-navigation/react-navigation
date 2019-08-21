@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
-import { Route, ParamListBase } from '@navigation-ex/core';
-import { StackNavigationState } from '@navigation-ex/routers';
+import { Route, ParamListBase } from '@react-navigation/core';
+import { StackNavigationState } from '@react-navigation/routers';
 
 import Header from './Header';
 import { forStatic } from '../../TransitionConfigs/HeaderStyleInterpolators';

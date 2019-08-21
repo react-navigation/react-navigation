@@ -10,8 +10,8 @@ import {
   ParamListBase,
   Route,
   BaseActions,
-} from '@navigation-ex/core';
-import { TabNavigationState } from '@navigation-ex/routers';
+} from '@react-navigation/core';
+import { TabNavigationState } from '@react-navigation/routers';
 // eslint-disable-next-line import/no-unresolved
 import { ScreenContainer } from 'react-native-screens';
 

@@ -1,7 +1,11 @@
 import * as React from 'react';
 import { Platform } from 'react-native';
-import { ParamListBase, Route, NavigationHelpers } from '@navigation-ex/core';
-import { StackActions, StackNavigationState } from '@navigation-ex/routers';
+import {
+  ParamListBase,
+  Route,
+  NavigationHelpers,
+} from '@react-navigation/core';
+import { StackActions, StackNavigationState } from '@react-navigation/routers';
 
 import Stack from './Stack';
 import HeaderContainer, {

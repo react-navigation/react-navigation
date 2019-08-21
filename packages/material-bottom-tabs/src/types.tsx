@@ -1,6 +1,10 @@
 import { BottomNavigation } from 'react-native-paper';
-import { ParamListBase, Descriptor, NavigationProp } from '@navigation-ex/core';
-import { TabNavigationState } from '@navigation-ex/routers';
+import {
+  ParamListBase,
+  Descriptor,
+  NavigationProp,
+} from '@react-navigation/core';
+import { TabNavigationState } from '@react-navigation/routers';
 
 export type MaterialBottomTabNavigationEventMap = {
   refocus: undefined;

@@ -9,7 +9,7 @@ import {
   Dimensions,
 } from 'react-native';
 import SafeAreaView from 'react-native-safe-area-view';
-import { Route } from '@navigation-ex/core';
+import { Route } from '@react-navigation/core';
 
 import TabBarIcon from './TabBarIcon';
 import TouchableWithoutFeedbackWrapper from './TouchableWithoutFeedbackWrapper';

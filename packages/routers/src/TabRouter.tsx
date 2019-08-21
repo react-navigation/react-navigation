@@ -7,7 +7,7 @@ import {
   DefaultRouterOptions,
   Router,
   Route,
-} from '@navigation-ex/core';
+} from '@react-navigation/core';
 
 export type TabActionType = {
   type: 'JUMP_TO';

@@ -4,13 +4,13 @@ import {
   createNavigator,
   DefaultNavigatorOptions,
   EventArg,
-} from '@navigation-ex/core';
+} from '@react-navigation/core';
 import {
   StackRouter,
   StackRouterOptions,
   StackNavigationState,
   StackActions,
-} from '@navigation-ex/routers';
+} from '@react-navigation/routers';
 import KeyboardManager from '../views/KeyboardManager';
 import StackView from '../views/Stack/StackView';
 import { StackNavigationConfig, StackNavigationOptions } from '../types';

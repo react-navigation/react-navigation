@@ -5,7 +5,7 @@ import {
   NavigationContainerRef,
   NavigationState,
   PartialState,
-} from '@navigation-ex/core';
+} from '@react-navigation/core';
 
 type Options = {
   /**

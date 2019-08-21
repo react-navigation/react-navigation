@@ -10,8 +10,12 @@ import {
 import Animated from 'react-native-reanimated';
 // eslint-disable-next-line import/no-unresolved
 import * as Screens from 'react-native-screens'; // Import with * as to prevent getters being called
-import { Route, NavigationHelpers, ParamListBase } from '@navigation-ex/core';
-import { StackNavigationState } from '@navigation-ex/routers';
+import {
+  Route,
+  NavigationHelpers,
+  ParamListBase,
+} from '@react-navigation/core';
+import { StackNavigationState } from '@react-navigation/routers';
 
 import { getDefaultHeaderHeight } from '../Header/HeaderSegment';
 import { Props as HeaderContainerProps } from '../Header/HeaderContainer';

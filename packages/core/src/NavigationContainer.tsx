@@ -143,7 +143,7 @@ const Container = React.forwardRef(function NavigationContainer(
   }, []);
 
   const { trackState, trackAction } = useDevTools({
-    name: '@navigation-ex',
+    name: '@react-navigation',
     reset,
     state,
   });

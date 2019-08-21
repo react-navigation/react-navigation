@@ -1,5 +1,5 @@
 import shortid from 'shortid';
-import { CommonAction, Router } from '@navigation-ex/core';
+import { CommonAction, Router } from '@react-navigation/core';
 import TabRouter, {
   TabActions,
   TabActionType,
