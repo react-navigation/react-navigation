@@ -7,7 +7,7 @@ React Navigation integration for animated tab view component from [`react-native
 Open a Terminal in your project's folder and run,
 
 ```sh
-yarn add @react-navigation/material-top-tabs react-native-tab-view
+yarn add @react-navigation/core @react-navigation/material-top-tabs react-native-tab-view
 ```
 
 Now we need to install [`react-native-gesture-handler`](https://github.com/kmagiera/react-native-gesture-handler) and [`react-native-reanimated`](https://github.com/kmagiera/react-native-reanimated).

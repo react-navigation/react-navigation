@@ -7,7 +7,7 @@ React Native integration for React Navigation
 Open a Terminal in your project's folder and run,
 
 ```sh
-yarn add @react-navigation/native
+yarn add @react-navigation/core @react-navigation/native
 ```
 
 ## Usage
