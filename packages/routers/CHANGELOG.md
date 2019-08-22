@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.2](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/routers@5.0.0-alpha.1...@react-navigation/routers@5.0.0-alpha.2) (2019-08-22)
+
+
+### Bug Fixes
+
+* properly handle pop action from stack ([61dce7a](https://github.com/react-navigation/navigation-ex/commit/61dce7a))
+
+
+
+
+
 # 5.0.0-alpha.1 (2019-08-21)
 
 
