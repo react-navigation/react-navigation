@@ -18,6 +18,7 @@ it('sets options with options prop as an object', () => {
     const { state, descriptors } = useNavigationBuilder<
       NavigationState,
       { title?: string },
+      any,
       any
     >(MockRouter, props);
     const { render, options } = descriptors[state.routes[state.index].key];
@@ -62,6 +63,7 @@ it("returns correct value for canGoBack when it's not overridden", () => {
     const { state, descriptors } = useNavigationBuilder<
       NavigationState,
       { title?: string },
+      any,
       any
     >(MockRouter, props);
     const { render, options } = descriptors[state.routes[state.index].key];
@@ -123,6 +125,7 @@ it(`returns false for canGoBack when current router doesn't handle GO_BACK`, () 
     const { state, descriptors } = useNavigationBuilder<
       NavigationState,
       any,
+      any,
       any
     >(TestRouter, props);
 
@@ -173,6 +176,7 @@ it('returns true for canGoBack when current router handles GO_BACK', () => {
     const { state, descriptors } = useNavigationBuilder<
       NavigationState,
       { title?: string },
+      any,
       any
     >(ParentRouter, props);
     return descriptors[state.routes[state.index].key].render();
@@ -182,6 +186,7 @@ it('returns true for canGoBack when current router handles GO_BACK', () => {
     const { state, descriptors } = useNavigationBuilder<
       NavigationState,
       { title?: string },
+      any,
       any
     >(MockRouter, props);
 
@@ -238,6 +243,7 @@ it('returns true for canGoBack when parent router handles GO_BACK', () => {
     const { state, descriptors } = useNavigationBuilder<
       NavigationState,
       { title?: string },
+      any,
       any
     >(OverrodeRouter, props);
     return descriptors[state.routes[state.index].key].render();
@@ -247,6 +253,7 @@ it('returns true for canGoBack when parent router handles GO_BACK', () => {
     const { state, descriptors } = useNavigationBuilder<
       NavigationState,
       { title?: string },
+      any,
       any
     >(MockRouter, props);
 
@@ -294,6 +301,7 @@ it('sets options with options prop as a fuction', () => {
     const { state, descriptors } = useNavigationBuilder<
       NavigationState,
       { title?: string },
+      any,
       any
     >(MockRouter, props);
     const { render, options } = descriptors[state.routes[state.index].key];
@@ -342,6 +350,7 @@ it('sets initial options with setOptions', () => {
         title?: string;
         color?: string;
       },
+      any,
       any
     >(MockRouter, props);
     const { render, options } = descriptors[state.routes[state.index].key];
@@ -391,6 +400,7 @@ it('updates options with setOptions', () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors } = useNavigationBuilder<
       NavigationState,
+      any,
       any,
       any
     >(MockRouter, props);

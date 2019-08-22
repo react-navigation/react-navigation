@@ -13,6 +13,7 @@ import BottomTabView from '../views/BottomTabView';
 import {
   BottomTabNavigationConfig,
   BottomTabNavigationOptions,
+  BottomTabNavigationEventMap,
 } from '../types';
 
 type Props = DefaultNavigatorOptions<BottomTabNavigationOptions> &
@@ -29,7 +30,8 @@ function BottomTabNavigator({
   const { state, descriptors, navigation } = useNavigationBuilder<
     TabNavigationState,
     BottomTabNavigationOptions,
-    TabRouterOptions
+    TabRouterOptions,
+    BottomTabNavigationEventMap
   >(TabRouter, {
     initialRouteName,
     backBehavior,

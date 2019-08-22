@@ -13,7 +13,11 @@ import {
 } from '@react-navigation/routers';
 import KeyboardManager from '../views/KeyboardManager';
 import StackView from '../views/Stack/StackView';
-import { StackNavigationConfig, StackNavigationOptions } from '../types';
+import {
+  StackNavigationConfig,
+  StackNavigationOptions,
+  StackNavigationEventMap,
+} from '../types';
 
 type Props = DefaultNavigatorOptions<StackNavigationOptions> &
   StackRouterOptions &
@@ -29,7 +33,8 @@ function StackNavigator({
   const { state, descriptors, navigation } = useNavigationBuilder<
     StackNavigationState,
     StackNavigationOptions,
-    StackRouterOptions
+    StackRouterOptions,
+    StackNavigationEventMap
   >(StackRouter, {
     initialRouteName,
     children,

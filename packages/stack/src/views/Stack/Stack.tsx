@@ -10,11 +10,7 @@ import {
 import Animated from 'react-native-reanimated';
 // eslint-disable-next-line import/no-unresolved
 import * as Screens from 'react-native-screens'; // Import with * as to prevent getters being called
-import {
-  Route,
-  NavigationHelpers,
-  ParamListBase,
-} from '@react-navigation/core';
+import { Route } from '@react-navigation/core';
 import { StackNavigationState } from '@react-navigation/routers';
 
 import { getDefaultHeaderHeight } from '../Header/HeaderSegment';
@@ -31,6 +27,7 @@ import {
   HeaderScene,
   StackDescriptorMap,
   StackNavigationOptions,
+  StackNavigationHelpers,
 } from '../../types';
 
 type ProgressValues = {
@@ -40,7 +37,7 @@ type ProgressValues = {
 type Props = {
   mode: 'card' | 'modal';
   state: StackNavigationState;
-  navigation: NavigationHelpers<ParamListBase>;
+  navigation: StackNavigationHelpers;
   descriptors: StackDescriptorMap;
   routes: Route<string>[];
   openingRoutes: string[];

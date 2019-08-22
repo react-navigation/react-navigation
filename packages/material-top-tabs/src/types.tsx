@@ -32,6 +32,11 @@ export type MaterialTopTabNavigationEventMap = {
   swipeEnd: undefined;
 };
 
+export type MaterialTopTabNavigationHelpers = NavigationHelpers<
+  ParamListBase,
+  MaterialTopTabNavigationEventMap
+>;
+
 export type MaterialTopTabNavigationProp<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = string

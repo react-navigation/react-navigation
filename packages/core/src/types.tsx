@@ -231,11 +231,14 @@ export type EventEmitter<EventMap extends { [key: string]: any }> = {
    * @param [options.target] Key of the target route which should receive the event.
    * If not specified, all routes receive the event.
    */
-  emit<EventName extends Extract<keyof EventMap, string>>(options: {
-    type: EventName;
-    data?: EventMap[EventName];
-    target?: string;
-  }): EventArg<EventName, EventMap[EventName]>;
+  emit<EventName extends Extract<keyof EventMap, string>>(
+    options: {
+      type: EventName;
+      target?: string;
+    } & (EventMap[EventName] extends undefined
+      ? {}
+      : { data: EventMap[EventName] })
+  ): EventArg<EventName, EventMap[EventName]>;
 };
 
 export class PrivateValueStore<A, B, C> {
@@ -326,9 +329,10 @@ type NavigationHelpersCommon<
 } & PrivateValueStore<ParamList, keyof ParamList, {}>;
 
 export type NavigationHelpers<
-  ParamList extends ParamListBase
+  ParamList extends ParamListBase,
+  EventMap extends { [key: string]: any } = {}
 > = NavigationHelpersCommon<ParamList> &
-  EventEmitter<{ [key: string]: any }> & {
+  EventEmitter<EventMap> & {
     /**
      * Update the param object for the route.
      * The new params will be shallow merged with the old one.

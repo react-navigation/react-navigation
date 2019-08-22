@@ -21,6 +21,7 @@ import {
   RouterFactory,
   PartialState,
   PrivateValueStore,
+  NavigationAction,
 } from './types';
 
 // This is to make TypeScript compiler happy
@@ -85,7 +86,8 @@ const getRouteConfigsFromChildren = <ScreenOptions extends object>(
 export default function useNavigationBuilder<
   State extends NavigationState,
   ScreenOptions extends object,
-  RouterOptions extends DefaultRouterOptions
+  RouterOptions extends DefaultRouterOptions,
+  EventMap extends { [key: string]: any }
 >(
   createRouter: RouterFactory<State, any, RouterOptions>,
   options: DefaultNavigatorOptions<ScreenOptions> & RouterOptions
@@ -240,7 +242,7 @@ export default function useNavigationBuilder<
     setState,
   });
 
-  const navigation = useNavigationHelpers({
+  const navigation = useNavigationHelpers<State, NavigationAction, EventMap>({
     onAction,
     getState,
     setState,

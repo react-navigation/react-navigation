@@ -4,7 +4,6 @@ import { Dimensions, StyleSheet, I18nManager, Platform } from 'react-native';
 import { ScreenContainer } from 'react-native-screens';
 import SafeAreaView from 'react-native-safe-area-view';
 import { PanGestureHandler, ScrollView } from 'react-native-gesture-handler';
-import { ParamListBase, NavigationHelpers } from '@react-navigation/core';
 import {
   DrawerNavigationState,
   DrawerActions,
@@ -19,11 +18,12 @@ import {
   DrawerDescriptorMap,
   DrawerNavigationConfig,
   ContentComponentProps,
+  DrawerNavigationHelpers,
 } from '../types';
 
 type Props = DrawerNavigationConfig & {
   state: DrawerNavigationState;
-  navigation: NavigationHelpers<ParamListBase>;
+  navigation: DrawerNavigationHelpers;
   descriptors: DrawerDescriptorMap;
 };
 

@@ -2,21 +2,18 @@ import * as React from 'react';
 import { StyleSheet } from 'react-native';
 import { BottomNavigation } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialIcons';
-import {
-  NavigationHelpers,
-  ParamListBase,
-  Route,
-} from '@react-navigation/core';
+import { Route } from '@react-navigation/core';
 import { TabNavigationState, TabActions } from '@react-navigation/routers';
 
 import {
   MaterialBottomTabDescriptorMap,
   MaterialBottomTabNavigationConfig,
+  MaterialBottomTabNavigationHelpers,
 } from '../types';
 
 type Props = MaterialBottomTabNavigationConfig & {
   state: TabNavigationState;
-  navigation: NavigationHelpers<ParamListBase>;
+  navigation: MaterialBottomTabNavigationHelpers;
   descriptors: MaterialBottomTabDescriptorMap;
 };
 
