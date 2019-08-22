@@ -29,8 +29,8 @@ function MaterialTopTabNavigator({
 }: Props) {
   const { state, descriptors, navigation } = useNavigationBuilder<
     TabNavigationState,
-    MaterialTopTabNavigationOptions,
     TabRouterOptions,
+    MaterialTopTabNavigationOptions,
     MaterialTopTabNavigationEventMap
   >(TabRouter, {
     initialRouteName,

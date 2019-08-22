@@ -29,8 +29,8 @@ function DrawerNavigator({
 }: Props) {
   const { state, descriptors, navigation } = useNavigationBuilder<
     DrawerNavigationState,
-    DrawerNavigationOptions,
     DrawerRouterOptions,
+    DrawerNavigationOptions,
     DrawerNavigationEventMap
   >(DrawerRouter, {
     initialRouteName,

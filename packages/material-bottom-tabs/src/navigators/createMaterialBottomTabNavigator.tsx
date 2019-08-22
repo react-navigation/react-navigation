@@ -30,8 +30,8 @@ function MaterialBottomTabNavigator({
 }: Props) {
   const { state, descriptors, navigation } = useNavigationBuilder<
     TabNavigationState,
-    MaterialBottomTabNavigationOptions,
     TabRouterOptions,
+    MaterialBottomTabNavigationOptions,
     MaterialBottomTabNavigationEventMap
   >(TabRouter, {
     initialRouteName,

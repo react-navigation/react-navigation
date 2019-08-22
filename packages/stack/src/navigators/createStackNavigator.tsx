@@ -32,8 +32,8 @@ function StackNavigator({
 }: Props) {
   const { state, descriptors, navigation } = useNavigationBuilder<
     StackNavigationState,
-    StackNavigationOptions,
     StackRouterOptions,
+    StackNavigationOptions,
     StackNavigationEventMap
   >(StackRouter, {
     initialRouteName,
