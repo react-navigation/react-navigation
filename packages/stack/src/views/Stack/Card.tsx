@@ -26,7 +26,7 @@ type Props = ViewProps & {
   next?: Animated.Node<number>;
   current: Animated.Value<number>;
   layout: Layout;
-  gestureDirection: 'horizontal' | 'vertical';
+  gestureDirection: 'horizontal' | 'vertical' | 'vertical-inverted';
   onOpen: (isFinished: boolean) => void;
   onClose: (isFinished: boolean) => void;
   onTransitionStart?: (props: { closing: boolean }) => void;
@@ -56,6 +56,8 @@ const TRUE = 1;
 const FALSE = 0;
 const NOOP = 0;
 const UNSET = -1;
+const TOP = -1;
+const BOTTOM = 1;
 
 const DIRECTION_VERTICAL = -1;
 const DIRECTION_HORIZONTAL = 1;
@@ -115,9 +117,13 @@ export default class Card extends React.Component<Props> {
 
     if (gestureDirection !== prevProps.gestureDirection) {
       this.direction.setValue(
-        gestureDirection === 'vertical'
+        gestureDirection === 'vertical' ||
+          gestureDirection === 'vertical-inverted'
           ? DIRECTION_VERTICAL
           : DIRECTION_HORIZONTAL
+      );
+      this.verticalGestureDirection.setValue(
+        gestureDirection === 'vertical-inverted' ? TOP : BOTTOM
       );
     }
 
@@ -129,6 +135,9 @@ export default class Card extends React.Component<Props> {
   private isVisible = new Value<Binary>(TRUE);
   private isVisibleValue: Binary = TRUE;
   private nextIsVisible = new Value<Binary | -1>(UNSET);
+  private verticalGestureDirection = new Value(
+    this.props.gestureDirection === 'vertical-inverted' ? TOP : BOTTOM
+  );
 
   private isClosing = new Value<Binary>(FALSE);
   private noAnimationStartedSoFar = true;
@@ -137,7 +146,8 @@ export default class Card extends React.Component<Props> {
   private clock = new Clock();
 
   private direction = new Value(
-    this.props.gestureDirection === 'vertical'
+    this.props.gestureDirection === 'vertical' ||
+    this.props.gestureDirection === 'vertical-inverted'
       ? DIRECTION_VERTICAL
       : DIRECTION_HORIZONTAL
   );
@@ -370,9 +380,9 @@ export default class Card extends React.Component<Props> {
   private handleGestureEventHorizontal = Animated.event([
     {
       nativeEvent: {
-        translationX: (x: Animated.Adaptable<number>) =>
+        translationX: (x: Animated.Node<number>) =>
           set(this.gesture, multiply(x, I18nManager.isRTL ? -1 : 1)),
-        velocityX: (x: Animated.Adaptable<number>) =>
+        velocityX: (x: Animated.Node<number>) =>
           set(this.velocity, multiply(x, I18nManager.isRTL ? -1 : 1)),
         state: this.gestureState,
       },
@@ -382,8 +392,10 @@ export default class Card extends React.Component<Props> {
   private handleGestureEventVertical = Animated.event([
     {
       nativeEvent: {
-        translationY: this.gesture,
-        velocityY: this.velocity,
+        translationY: (y: Animated.Node<number>) =>
+          set(this.gesture, multiply(y, this.verticalGestureDirection)),
+        velocityY: (y: Animated.Node<number>) =>
+          set(this.velocity, multiply(y, this.verticalGestureDirection)),
         state: this.gestureState,
       },
     },
@@ -431,7 +443,8 @@ export default class Card extends React.Component<Props> {
 
     // Doesn't make sense for a response distance of 0, so this works fine
     const distance =
-      gestureDirection === 'vertical'
+      gestureDirection === 'vertical' ||
+      gestureDirection === 'vertical-inverted'
         ? (gestureResponseDistance && gestureResponseDistance.vertical) ||
           GESTURE_RESPONSE_DISTANCE_VERTICAL
         : (gestureResponseDistance && gestureResponseDistance.horizontal) ||
@@ -442,6 +455,12 @@ export default class Card extends React.Component<Props> {
         maxDeltaX: 15,
         minOffsetY: 5,
         hitSlop: { bottom: -layout.height + distance },
+      };
+    } else if (gestureDirection === 'vertical-inverted') {
+      return {
+        maxDeltaX: 15,
+        minOffsetY: -5,
+        hitSlop: { top: -layout.height + distance },
       };
     } else {
       const hitSlop = -layout.width + distance;
@@ -497,7 +516,8 @@ export default class Card extends React.Component<Props> {
     );
 
     const handleGestureEvent =
-      gestureDirection === 'vertical'
+      gestureDirection === 'vertical' ||
+      gestureDirection === 'vertical-inverted'
         ? this.handleGestureEventVertical
         : this.handleGestureEventHorizontal;
 

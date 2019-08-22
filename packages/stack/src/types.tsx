@@ -47,7 +47,7 @@ export type NavigationProp<RouteName = string, Params = object> = {
 
 export type Layout = { width: number; height: number };
 
-export type GestureDirection = 'horizontal' | 'vertical';
+export type GestureDirection = 'horizontal' | 'vertical' | 'vertical-inverted';
 
 export type HeaderMode = 'float' | 'screen' | 'none';
 
