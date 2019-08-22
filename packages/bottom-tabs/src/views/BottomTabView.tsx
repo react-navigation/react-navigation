@@ -5,23 +5,22 @@ import {
   AccessibilityRole,
   AccessibilityStates,
 } from 'react-native';
-import {
-  NavigationHelpers,
-  ParamListBase,
-  Route,
-  BaseActions,
-} from '@react-navigation/core';
+import { Route, BaseActions } from '@react-navigation/core';
 import { TabNavigationState } from '@react-navigation/routers';
 // eslint-disable-next-line import/no-unresolved
 import { ScreenContainer } from 'react-native-screens';
 
 import BottomTabBar from './BottomTabBar';
-import { BottomTabNavigationConfig, BottomTabDescriptorMap } from '../types';
+import {
+  BottomTabNavigationConfig,
+  BottomTabDescriptorMap,
+  BottomTabNavigationHelpers,
+} from '../types';
 import ResourceSavingScene from './ResourceSavingScene';
 
 type Props = BottomTabNavigationConfig & {
   state: TabNavigationState;
-  navigation: NavigationHelpers<ParamListBase>;
+  navigation: BottomTabNavigationHelpers;
   descriptors: BottomTabDescriptorMap;
 };
 

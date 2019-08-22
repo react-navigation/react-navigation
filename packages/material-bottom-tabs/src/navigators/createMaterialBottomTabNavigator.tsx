@@ -14,6 +14,7 @@ import MaterialBottomTabView from '../views/MaterialBottomTabView';
 import {
   MaterialBottomTabNavigationConfig,
   MaterialBottomTabNavigationOptions,
+  MaterialBottomTabNavigationEventMap,
 } from '../types';
 
 type Props = DefaultNavigatorOptions<MaterialBottomTabNavigationOptions> &
@@ -30,7 +31,8 @@ function MaterialBottomTabNavigator({
   const { state, descriptors, navigation } = useNavigationBuilder<
     TabNavigationState,
     MaterialBottomTabNavigationOptions,
-    TabRouterOptions
+    TabRouterOptions,
+    MaterialBottomTabNavigationEventMap
   >(TabRouter, {
     initialRouteName,
     backBehavior,

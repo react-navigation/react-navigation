@@ -2,14 +2,16 @@ import * as React from 'react';
 import { StyleSheet, Platform, StyleProp, ViewStyle } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { StackNavigationState } from '@react-navigation/routers';
-import {
-  Route,
-  NavigationHelpers,
-  ParamListBase,
-} from '@react-navigation/core';
+import { Route } from '@react-navigation/core';
 import { Props as HeaderContainerProps } from '../Header/HeaderContainer';
 import Card from './Card';
-import { HeaderScene, Layout, HeaderMode, TransitionPreset } from '../../types';
+import {
+  StackNavigationHelpers,
+  HeaderScene,
+  Layout,
+  HeaderMode,
+  TransitionPreset,
+} from '../../types';
 
 type Props = TransitionPreset & {
   index: number;
@@ -21,7 +23,7 @@ type Props = TransitionPreset & {
   previousScene?: HeaderScene<Route<string>>;
   scene: HeaderScene<Route<string>>;
   state: StackNavigationState;
-  navigation: NavigationHelpers<ParamListBase>;
+  navigation: StackNavigationHelpers;
   cardTransparent?: boolean;
   cardOverlayEnabled?: boolean;
   cardShadowEnabled?: boolean;

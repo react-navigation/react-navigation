@@ -182,6 +182,11 @@ export type DrawerNavigationEventMap = {
   drawerClose: undefined;
 };
 
+export type DrawerNavigationHelpers = NavigationHelpers<
+  ParamListBase,
+  DrawerNavigationEventMap
+>;
+
 export type DrawerNavigationProp<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = string

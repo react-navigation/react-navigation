@@ -3,6 +3,7 @@ import {
   ParamListBase,
   Descriptor,
   NavigationProp,
+  NavigationHelpers,
 } from '@react-navigation/core';
 import { TabNavigationState } from '@react-navigation/routers';
 
@@ -10,6 +11,11 @@ export type MaterialBottomTabNavigationEventMap = {
   refocus: undefined;
   tabPress: undefined;
 };
+
+export type MaterialBottomTabNavigationHelpers = NavigationHelpers<
+  ParamListBase,
+  MaterialBottomTabNavigationEventMap
+>;
 
 export type MaterialBottomTabNavigationProp<
   ParamList extends ParamListBase,

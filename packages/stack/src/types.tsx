@@ -10,6 +10,7 @@ import {
   ParamListBase,
   Descriptor,
   Route,
+  NavigationHelpers,
 } from '@react-navigation/core';
 import { StackNavigationState } from '@react-navigation/routers';
 
@@ -23,6 +24,11 @@ export type StackNavigationEventMap = {
    */
   transitionEnd: { closing: boolean };
 };
+
+export type StackNavigationHelpers = NavigationHelpers<
+  ParamListBase,
+  StackNavigationEventMap
+>;
 
 export type StackNavigationProp<
   ParamList extends ParamListBase,

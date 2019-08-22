@@ -11,7 +11,11 @@ import {
 } from '@react-navigation/routers';
 
 import DrawerView from '../views/DrawerView';
-import { DrawerNavigationOptions, DrawerNavigationConfig } from '../types';
+import {
+  DrawerNavigationOptions,
+  DrawerNavigationConfig,
+  DrawerNavigationEventMap,
+} from '../types';
 
 type Props = DefaultNavigatorOptions<DrawerNavigationOptions> &
   DrawerRouterOptions &
@@ -26,7 +30,8 @@ function DrawerNavigator({
   const { state, descriptors, navigation } = useNavigationBuilder<
     DrawerNavigationState,
     DrawerNavigationOptions,
-    DrawerRouterOptions
+    DrawerRouterOptions,
+    DrawerNavigationEventMap
   >(DrawerRouter, {
     initialRouteName,
     children,

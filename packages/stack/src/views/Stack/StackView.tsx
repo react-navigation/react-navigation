@@ -1,21 +1,21 @@
 import * as React from 'react';
 import { Platform } from 'react-native';
-import {
-  ParamListBase,
-  Route,
-  NavigationHelpers,
-} from '@react-navigation/core';
+import { Route } from '@react-navigation/core';
 import { StackActions, StackNavigationState } from '@react-navigation/routers';
 
 import Stack from './Stack';
 import HeaderContainer, {
   Props as HeaderContainerProps,
 } from '../Header/HeaderContainer';
-import { StackNavigationConfig, StackDescriptorMap } from '../../types';
+import {
+  StackNavigationHelpers,
+  StackNavigationConfig,
+  StackDescriptorMap,
+} from '../../types';
 
 type Props = StackNavigationConfig & {
   state: StackNavigationState;
-  navigation: NavigationHelpers<ParamListBase>;
+  navigation: StackNavigationHelpers;
   descriptors: StackDescriptorMap;
   onPageChangeStart?: () => void;
   onPageChangeConfirm?: () => void;

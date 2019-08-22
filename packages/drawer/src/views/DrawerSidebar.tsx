@@ -1,24 +1,24 @@
 import * as React from 'react';
 import { StyleSheet, View, ViewStyle, StyleProp } from 'react-native';
 import Animated from 'react-native-reanimated';
-import {
-  NavigationHelpers,
-  ParamListBase,
-  Route,
-  BaseActions,
-} from '@react-navigation/core';
+import { Route, BaseActions } from '@react-navigation/core';
 import {
   DrawerActions,
   DrawerNavigationState,
 } from '@react-navigation/routers';
 
-import { Scene, ContentComponentProps, DrawerDescriptorMap } from '../types';
+import {
+  Scene,
+  ContentComponentProps,
+  DrawerDescriptorMap,
+  DrawerNavigationHelpers,
+} from '../types';
 
 type Props = {
   contentComponent?: React.ComponentType<ContentComponentProps>;
   contentOptions?: object;
   state: DrawerNavigationState;
-  navigation: NavigationHelpers<ParamListBase>;
+  navigation: DrawerNavigationHelpers;
   descriptors: DrawerDescriptorMap;
   drawerOpenProgress: Animated.Node<number>;
   drawerPosition: 'left' | 'right';

@@ -34,7 +34,8 @@ type Options<State extends NavigationState, Action extends NavigationAction> = {
  */
 export default function useNavigationHelpers<
   State extends NavigationState,
-  Action extends NavigationAction
+  Action extends NavigationAction,
+  EventMap extends { [key: string]: any }
 >({ onAction, getState, setState, emitter, router }: Options<State, Action>) {
   const parentNavigationHelpers = React.useContext(NavigationContext);
   const { performTransaction } = React.useContext(NavigationStateContext);
@@ -76,7 +77,7 @@ export default function useNavigationHelpers<
           null ||
         (parentNavigationHelpers && parentNavigationHelpers.canGoBack()) ||
         false,
-    } as NavigationHelpers<ParamListBase> &
+    } as NavigationHelpers<ParamListBase, EventMap> &
       (NavigationProp<ParamListBase, string, any, any, any> | undefined);
   }, [
     router,

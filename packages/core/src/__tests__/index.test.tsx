@@ -3,8 +3,8 @@ import { render, act } from 'react-native-testing-library';
 import Screen from '../Screen';
 import NavigationContainer from '../NavigationContainer';
 import useNavigationBuilder from '../useNavigationBuilder';
-import MockRouter, { MockRouterKey } from './__fixtures__/MockRouter';
 import useNavigation from '../useNavigation';
+import MockRouter, { MockRouterKey } from './__fixtures__/MockRouter';
 import { NavigationState } from '../types';
 
 beforeEach(() => (MockRouterKey.current = 0));

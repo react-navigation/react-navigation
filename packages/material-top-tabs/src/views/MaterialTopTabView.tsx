@@ -1,21 +1,18 @@
 import * as React from 'react';
 import { TabView, SceneRendererProps } from 'react-native-tab-view';
-import {
-  NavigationHelpers,
-  ParamListBase,
-  Route,
-} from '@react-navigation/core';
+import { Route } from '@react-navigation/core';
 import { TabNavigationState, TabActions } from '@react-navigation/routers';
 
 import MaterialTopTabBar from './MaterialTopTabBar';
 import {
   MaterialTopTabDescriptorMap,
   MaterialTopTabNavigationConfig,
+  MaterialTopTabNavigationHelpers,
 } from '../types';
 
 type Props = MaterialTopTabNavigationConfig & {
   state: TabNavigationState;
-  navigation: NavigationHelpers<ParamListBase>;
+  navigation: MaterialTopTabNavigationHelpers;
   descriptors: MaterialTopTabDescriptorMap;
   tabBarPosition: 'top' | 'bottom';
 };

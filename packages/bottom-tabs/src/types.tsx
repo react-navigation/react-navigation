@@ -35,6 +35,11 @@ export type Orientation = 'horizontal' | 'vertical';
 
 export type LabelPosition = 'beside-icon' | 'below-icon';
 
+export type BottomTabNavigationHelpers = NavigationHelpers<
+  ParamListBase,
+  BottomTabNavigationEventMap
+>;
+
 export type BottomTabNavigationProp<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = string

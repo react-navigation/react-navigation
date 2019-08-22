@@ -13,6 +13,7 @@ import MaterialTopTabView from '../views/MaterialTopTabView';
 import {
   MaterialTopTabNavigationConfig,
   MaterialTopTabNavigationOptions,
+  MaterialTopTabNavigationEventMap,
 } from '../types';
 
 type Props = DefaultNavigatorOptions<MaterialTopTabNavigationOptions> &
@@ -29,7 +30,8 @@ function MaterialTopTabNavigator({
   const { state, descriptors, navigation } = useNavigationBuilder<
     TabNavigationState,
     MaterialTopTabNavigationOptions,
-    TabRouterOptions
+    TabRouterOptions,
+    MaterialTopTabNavigationEventMap
   >(TabRouter, {
     initialRouteName,
     backBehavior,
