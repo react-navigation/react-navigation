@@ -2,7 +2,10 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@react-navigation/*": ["./packages/*/src", "./packages/*/lib/typescript"],
+      "@react-navigation/*": [
+        "./packages/*/src",
+        "./packages/*/lib/typescript"
+      ],
       "use-subscription": ["./typings/use-subscription.d"]
     },
     "allowUnreachableCode": false,

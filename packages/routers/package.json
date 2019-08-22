@@ -16,7 +16,7 @@
   "main": "lib/commonjs/index.js",
   "react-native": "src/index.tsx",
   "module": "lib/module/index.js",
-  "types": "lib/typescript/src/index.d.ts",
+  "types": "lib/typescript/routers/src/index.d.ts",
   "files": [
     "src",
     "lib"
