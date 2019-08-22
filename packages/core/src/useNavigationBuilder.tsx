@@ -85,8 +85,8 @@ const getRouteConfigsFromChildren = <ScreenOptions extends object>(
  */
 export default function useNavigationBuilder<
   State extends NavigationState,
-  ScreenOptions extends object,
   RouterOptions extends DefaultRouterOptions,
+  ScreenOptions extends object,
   EventMap extends { [key: string]: any }
 >(
   createRouter: RouterFactory<State, any, RouterOptions>,

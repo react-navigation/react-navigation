@@ -29,8 +29,8 @@ function BottomTabNavigator({
 }: Props) {
   const { state, descriptors, navigation } = useNavigationBuilder<
     TabNavigationState,
-    BottomTabNavigationOptions,
     TabRouterOptions,
+    BottomTabNavigationOptions,
     BottomTabNavigationEventMap
   >(TabRouter, {
     initialRouteName,
