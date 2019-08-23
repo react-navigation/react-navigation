@@ -1,6 +1,6 @@
 {
   "name": "@react-navigation/native",
-  "version": "3.5.0",
+  "version": "3.6.0",
   "description": "React Native support for React Navigation",
   "main": "dist/index.js",
   "files": [
@@ -41,7 +41,7 @@
   "homepage": "https://github.com/react-navigation/react-navigation-native#readme",
   "devDependencies": {
     "@expo/vector-icons": "^6.2.0",
-    "@react-navigation/core": "^3.0.0-alpha",
+    "@react-navigation/core": "^3.5.0-alpha.4",
     "babel-cli": "^6.26.0",
     "babel-jest": "^22.4.1",
     "babel-plugin-syntax-class-properties": "^6.13.0",

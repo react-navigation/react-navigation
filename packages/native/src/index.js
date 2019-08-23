@@ -36,4 +36,7 @@ module.exports = {
   get SectionList() {
     return require('./Scrollables').SectionList;
   },
+  get Themed() {
+    return require('./Themed').default;
+  },
 };

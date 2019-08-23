@@ -2,6 +2,7 @@ import React from 'react';
 import { Linking, Platform, BackHandler } from 'react-native';
 import {
   NavigationActions,
+  ThemeProvider,
   pathUtils,
   getNavigation,
   NavigationProvider,
@@ -87,6 +88,10 @@ export default function createNavigationContainer(Component) {
 
     static router = Component.router;
     static navigationOptions = null;
+
+    static defaultProps = {
+      theme: 'light',
+    };
 
     static getDerivedStateFromProps(nextProps) {
       validateProps(nextProps);
@@ -404,6 +409,21 @@ export default function createNavigationContainer(Component) {
 
     _getScreenProps = () => this.props.screenProps;
 
+    _getTheme = () => {
+      if (this.props.theme === 'light' || this.props.theme === 'dark') {
+        return this.props.theme;
+      } else if (this.props.theme === 'no-preference') {
+        return 'light';
+      } else {
+        console.warn(
+          `Invalid theme provided: ${
+            this.props.theme
+          }. Only 'light' and 'dark' are supported. Falling back to 'light'`
+        );
+        return 'light';
+      }
+    };
+
     render() {
       let navigation = this.props.navigation;
       if (this._isStateful()) {
@@ -424,10 +444,13 @@ export default function createNavigationContainer(Component) {
         navigation = this._navigation;
       }
       invariant(navigation, 'failed to get navigation');
+
       return (
-        <NavigationProvider value={navigation}>
-          <Component {...this.props} navigation={navigation} />
-        </NavigationProvider>
+        <ThemeProvider value={this._getTheme()}>
+          <NavigationProvider value={navigation}>
+            <Component {...this.props} navigation={navigation} />
+          </NavigationProvider>
+        </ThemeProvider>
       );
     }
   }
