@@ -1,18 +1,26 @@
 import React from 'react';
 import invariant from '../utils/invariant';
+import ThemeContext from '../views/ThemeContext';
 
 function createNavigator(NavigatorView, router, navigationConfig) {
   class Navigator extends React.Component {
+    static contextType = ThemeContext;
     static router = router;
     static navigationOptions = navigationConfig.navigationOptions;
 
-    state = {
-      descriptors: {},
-      screenProps: this.props.screenProps,
-    };
+    constructor(props, context) {
+      super(props, context);
 
-    static getDerivedStateFromProps(nextProps, prevState) {
-      const prevDescriptors = prevState.descriptors;
+      this.state = {
+        descriptors: {},
+        screenProps: this.props.screenProps,
+        theme: context,
+        themeContext: context,
+      };
+    }
+
+    static getDerivedStateFromProps(nextProps, currentState) {
+      const prevDescriptors = currentState.descriptors;
       const { navigation, screenProps } = nextProps;
       invariant(
         navigation != null,
@@ -33,7 +41,8 @@ function createNavigator(NavigatorView, router, navigationConfig) {
           prevDescriptors &&
           prevDescriptors[route.key] &&
           route === prevDescriptors[route.key].state &&
-          screenProps === prevState.screenProps
+          screenProps === currentState.screenProps &&
+          currentState.themeContext === currentState.theme
         ) {
           descriptors[route.key] = prevDescriptors[route.key];
           return;
@@ -43,7 +52,11 @@ function createNavigator(NavigatorView, router, navigationConfig) {
           route.routeName
         );
         const childNavigation = navigation.getChildNavigation(route.key);
-        const options = router.getScreenOptions(childNavigation, screenProps);
+        const options = router.getScreenOptions(
+          childNavigation,
+          screenProps,
+          currentState.themeContext
+        );
         descriptors[route.key] = {
           key: route.key,
           getComponent,
@@ -53,7 +66,14 @@ function createNavigator(NavigatorView, router, navigationConfig) {
         };
       });
 
-      return { descriptors, screenProps };
+      return { descriptors, screenProps, theme: state.themeContext };
+    }
+
+    componentDidUpdate() {
+      if (this.context !== this.state.themeContext) {
+        // eslint-disable-next-line react/no-did-update-set-state
+        this.setState({ themeContext: this.context });
+      }
     }
 
     render() {

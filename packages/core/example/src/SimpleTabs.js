@@ -1,6 +1,7 @@
 import React from 'react';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
-import { Button, Text, View } from 'react-native';
+import { Themed } from '@react-navigation/native';
+import { Button, View } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 
 class Screen extends React.Component {
@@ -14,11 +15,14 @@ class Screen extends React.Component {
   render() {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>{JSON.stringify(this.props.navigation.state.params)}</Text>
+        <Themed.Text>
+          {JSON.stringify(this.props.navigation.state.params)}
+        </Themed.Text>
         <Button
           title="Go back"
           onPress={() => this.props.navigation.goBack(null)}
         />
+        <Themed.StatusBar />
       </View>
     );
   }
@@ -48,8 +52,14 @@ export const createSimpleTabs = (options = {}) => {
       backBehavior: 'history',
       ...options,
       tabBarOptions: {
-        activeTintColor: '#000',
-        inactiveTintColor: '#eee',
+        activeTintColor: {
+          light: '#000',
+          dark: '#fff',
+        },
+        inactiveTintColor: {
+          light: 'rgba(0,0,0,0.2)',
+          dark: 'rgba(255,255,255,0.2)',
+        },
         ...options.tabBarOptions,
       },
     }

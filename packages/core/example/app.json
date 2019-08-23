@@ -3,7 +3,7 @@
     "name": "React Navigation Core Example",
     "description": "Useful for experimenting with core and native together",
     "slug": "react-navigation-core-demo",
-    "sdkVersion": "32.0.0",
+    "sdkVersion": "33.0.0",
     "version": "1.0.0",
     "primaryColor": "#2196f3",
     "packagerOpts": {

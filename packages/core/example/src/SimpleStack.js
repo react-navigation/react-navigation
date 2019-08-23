@@ -1,7 +1,9 @@
 import React from 'react';
-import { Button, ScrollView, TouchableOpacity, View, Text } from 'react-native';
+import { Button, ScrollView, TouchableOpacity, View } from 'react-native';
 import { MaterialIcons } from 'react-native-vector-icons';
 import { createStackNavigator } from 'react-navigation-stack';
+import { Themed } from '@react-navigation/native';
+import { ThemeContext } from '@react-navigation/core';
 
 const LOREM_PAGE_ONE = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse in lacus malesuada tellus bibendum fringilla. Integer suscipit suscipit erat, sed molestie eros. Nullam fermentum odio vel mauris pulvinar accumsan. Duis blandit id nulla ac euismod. Nunc nec convallis mauris. Proin sit amet malesuada orci. Aliquam blandit mattis nisi ut eleifend. Morbi blandit ante neque, eu tincidunt est interdum in. Mauris pellentesque euismod nulla. Mauris posuere egestas nulla, sit amet eleifend quam egestas at. Maecenas odio erat, auctor eu consectetur eu, vulputate nec arcu. Praesent in felis massa. Nunc fermentum, massa vitae ultricies dictum, est mi posuere eros, sit amet posuere mi ante ac nulla. Etiam odio libero, tempor sit amet sagittis sed, fermentum ac lorem. Donec dignissim fermentum velit, ac ultrices nulla tristique vel.
 Suspendisse auctor elit vitae elementum auctor. Vestibulum gravida auctor facilisis. Vivamus rhoncus ornare magna, non pharetra diam porta ac. Aliquam et justo vitae neque congue dignissim. Etiam et dui euismod, cursus mauris in, aliquam nunc. Mauris elit nulla, rutrum non aliquam a, imperdiet a erat. Nullam molestie elit risus, in posuere dui maximus ut. Integer ac sapien molestie, vestibulum ligula ultricies, pellentesque nisl. Duis elementum, ante ac tincidunt cursus, odio leo lacinia purus, at posuere mauris diam suscipit lorem. In hac habitasse platea dictumst. Pellentesque sagittis nunc non ipsum porttitor pellentesque. Phasellus dapibus accumsan aliquam. Etiam feugiat vitae magna condimentum tincidunt.
@@ -16,11 +18,12 @@ Nulla eu eros mi. Sed non lobortis risus. Donec fermentum augue ut scelerisque s
 Donec eget mi a justo congue faucibus eu sed odio. Morbi condimentum, nulla non iaculis lobortis, mauris diam facilisis nisi, in tincidunt ex nulla bibendum ipsum. Nam interdum turpis eget leo convallis, lobortis sollicitudin elit posuere. Aliquam erat volutpat. Suspendisse in nibh interdum nibh porttitor accumsan. Nullam blandit, neque sed lacinia dapibus, nisl lacus egestas odio, sit amet molestie libero nibh ac massa. Quisque tempor placerat elit, non volutpat elit pellentesque quis. Etiam sit amet nisi at ex ornare commodo non vel tortor. Mauris ac dictum sem. Donec feugiat id augue at tempus. Nunc non aliquam odio, quis luctus augue. Maecenas vulputate urna aliquet ultricies tincidunt.`;
 
 class LoremScreen extends React.Component {
-  static navigationOptions = ({ navigation }) => ({
+  static navigationOptions = ({ navigation, theme }) => ({
     title: 'Lorem Ipsum',
     headerRight: navigation.getParam('nextPage') ? (
       <Button
         title="Next"
+        color={theme === 'light' ? 'red' : 'white'}
         onPress={() => navigation.navigate(navigation.getParam('nextPage'))}
       />
     ) : null,
@@ -40,21 +43,18 @@ class LoremScreen extends React.Component {
         ref={view => {
           this.scrollView = view;
         }}
-        style={{
-          flex: 1,
-          backgroundColor: '#fff',
-        }}
+        style={{ flex: 1 }}
       >
         {this.props.navigation
           .getParam('text')
           .split('\n')
           .map((p, i) => (
-            <Text
+            <Themed.Text
               key={i}
               style={{ marginBottom: 10, marginTop: 8, marginHorizontal: 10 }}
             >
               {p}
-            </Text>
+            </Themed.Text>
           ))}
       </ScrollView>
     );
@@ -85,6 +85,7 @@ const SimpleStack = createStackNavigator(
 
 export default class StackWithRefocus extends React.Component {
   static router = SimpleStack.router;
+  static context = ThemeContext;
 
   _emitRefocus = () => {
     this.props.navigation.emit('refocus', {});
@@ -96,7 +97,11 @@ export default class StackWithRefocus extends React.Component {
         <SimpleStack navigation={this.props.navigation} />
         <View style={{ position: 'absolute', bottom: 10, right: 10 }}>
           <TouchableOpacity onPress={this._emitRefocus}>
-            <MaterialIcons name="center-focus-strong" size={30} />
+            <MaterialIcons
+              name="center-focus-strong"
+              size={30}
+              color={this.context === 'light' ? '#000' : '#fff'}
+            />
           </TouchableOpacity>
         </View>
       </View>

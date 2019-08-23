@@ -24,7 +24,8 @@ function applyConfig(configurer, navigationOptions, configProps) {
 
 export default (routeConfigs, navigatorScreenConfig) => (
   navigation,
-  screenProps
+  screenProps,
+  theme
 ) => {
   const { state } = navigation;
   const route = state;
@@ -42,7 +43,7 @@ export default (routeConfigs, navigatorScreenConfig) => (
     routeConfig === Component ? null : routeConfig.navigationOptions;
   const componentScreenConfig = Component.navigationOptions;
 
-  const configOptions = { navigation, screenProps: screenProps || {} };
+  const configOptions = { navigation, screenProps: screenProps || {}, theme };
 
   let outputConfig = applyConfig(navigatorScreenConfig, {}, configOptions);
   outputConfig = applyConfig(

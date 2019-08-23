@@ -21,9 +21,25 @@ module.exports = {
   get NavigationConsumer() {
     return require('./views/NavigationContext').default.Consumer;
   },
-
   get createSwitchNavigator() {
     return require('./navigators/createSwitchNavigator').default;
+  },
+
+  // Themes
+  get ThemeContext() {
+    return require('./views/ThemeContext').default;
+  },
+  get ThemeProvider() {
+    return require('./views/ThemeContext').default.Provider;
+  },
+  get ThemeConsumer() {
+    return require('./views/ThemeContext').default.Consumer;
+  },
+  get ThemeColors() {
+    return require('./ThemeColors').default;
+  },
+  get useTheme() {
+    return require('./useTheme').default;
   },
 
   // Actions

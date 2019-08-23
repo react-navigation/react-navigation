@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button, ScrollView, View, Text } from 'react-native';
 import { withNavigation } from '@react-navigation/core';
+import { Themed } from '@react-navigation/native';
 import { createStackNavigator } from 'react-navigation-stack';
 
 const getColorOfEvent = evt => {
@@ -83,20 +84,17 @@ class SampleScreen extends React.Component {
         ref={view => {
           this.scrollView = view;
         }}
-        style={{
-          flex: 1,
-          backgroundColor: '#fff',
-        }}
+        style={{ flex: 1 }}
       >
         <FocusTag />
-        <Text
+        <Themed.Text
           onPress={() => {
             this.props.navigation.push('PageTwo');
           }}
         >
           Push
-        </Text>
-        <Text
+        </Themed.Text>
+        <Themed.Text
           onPress={() => {
             const { push, goBack } = this.props.navigation;
             push('PageTwo');
@@ -106,14 +104,14 @@ class SampleScreen extends React.Component {
           }}
         >
           Push and Pop Quickly
-        </Text>
-        <Text
+        </Themed.Text>
+        <Themed.Text
           onPress={() => {
             this.props.navigation.navigate('Home');
           }}
         >
           Back to Examples
-        </Text>
+        </Themed.Text>
       </ScrollView>
     );
   }
