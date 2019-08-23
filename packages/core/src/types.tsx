@@ -1,4 +1,5 @@
 import * as BaseActions from './BaseActions';
+import * as React from 'react';
 
 export type CommonAction = BaseActions.Action;
 
@@ -343,6 +344,14 @@ export type NavigationHelpers<
       params: ParamList[RouteName]
     ): void;
   };
+
+export type NavigationContainerProps = {
+  initialState?: InitialState;
+  onStateChange?: (
+    state: NavigationState | PartialState<NavigationState> | undefined
+  ) => void;
+  children: React.ReactNode;
+};
 
 export type NavigationProp<
   ParamList extends ParamListBase,
