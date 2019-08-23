@@ -12,15 +12,10 @@ import {
   PartialState,
   NavigationAction,
   NavigationContainerRef,
+  NavigationContainerProps,
 } from './types';
 
 type State = NavigationState | PartialState<NavigationState> | undefined;
-
-type Props = {
-  initialState?: InitialState;
-  onStateChange?: (state: State) => void;
-  children: React.ReactNode;
-};
 
 const MISSING_CONTEXT_ERROR =
   "We couldn't find a navigation context. Have you wrapped your app with 'NavigationContainer'?";
@@ -84,7 +79,7 @@ const getPartialState = (
  * @param props.ref Ref object which refers to the navigation object containing helper methods.
  */
 const Container = React.forwardRef(function NavigationContainer(
-  { initialState, onStateChange, children }: Props,
+  { initialState, onStateChange, children }: NavigationContainerProps,
   ref: React.Ref<NavigationContainerRef>
 ) {
   const [state, setNavigationState] = React.useState<State>(() =>

@@ -4,12 +4,11 @@ import { Linking } from 'expo';
 import { Appbar, List } from 'react-native-paper';
 import { Asset } from 'expo-asset';
 import {
-  NavigationContainer,
   InitialState,
   getStateFromPath,
   NavigationContainerRef,
 } from '@react-navigation/core';
-import { useBackButton, useLinking } from '@react-navigation/native';
+import { useLinking, NativeContainer } from '@react-navigation/native';
 import {
   createDrawerNavigator,
   DrawerNavigationProp,
@@ -59,8 +58,6 @@ Asset.loadAsync(StackAssets);
 
 export default function App() {
   const containerRef = React.useRef<NavigationContainerRef>();
-
-  useBackButton(containerRef);
 
   // To test deep linking on, run the following in the Terminal:
   // Android: adb shell am start -a android.intent.action.VIEW -d "exp://127.0.0.1:19000/--/simple-stack"
@@ -116,7 +113,7 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer
+    <NativeContainer
       ref={containerRef}
       initialState={initialState}
       onStateChange={state =>
@@ -175,6 +172,6 @@ export default function App() {
           )}
         </Drawer.Screen>
       </Drawer.Navigator>
-    </NavigationContainer>
+    </NativeContainer>
   );
 }
