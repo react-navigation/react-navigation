@@ -1,9 +1,67 @@
 {
   "name": "react-navigation-animated-switch",
   "version": "0.2.1",
-  "description": "",
-  "main": "index.js",
-  "types": "index.d.ts",
+  "description": "Animated switch for React Navigation",
+  "main": "lib/commonjs/index.js",
+  "react-native": "lib/module/index.js",
+  "module": "lib/module/index.js",
+  "types": "lib/typescript/src/index.d.ts",
   "author": "",
-  "license": "MIT"
+  "license": "MIT",
+  "files": [
+    "src",
+    "lib"
+  ],
+  "scripts": {
+    "lint": "eslint --ext .js,.ts,.tsx .",
+    "prepare": "bob build",
+    "release": "release-it",
+    "typescript": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@commitlint/config-conventional": "8.1.0",
+    "@react-native-community/bob": "0.6.1",
+    "@react-navigation/core": "3.4.2",
+    "@release-it/conventional-changelog": "1.1.0",
+    "@types/react": "16.8.24",
+    "@types/react-native": "0.60.3",
+    "commitlint": "8.1.0",
+    "eslint": "6.1.0",
+    "eslint-config-satya164": "2.4.1",
+    "eslint-plugin-react-native-globals": "0.1.2",
+    "husky": "3.0.2",
+    "prettier": "1.18.2",
+    "react": "16.8.6",
+    "react-native": "0.60.4",
+    "react-native-reanimated": "1.1.0",
+    "react-navigation": "3.11.1",
+    "release-it": "12.3.5",
+    "typescript": "3.5.3"
+  },
+  "peerDependencies": {
+    "@react-navigation/core": "^3.0.0",
+    "react": "*",
+    "react-native": "*",
+    "react-native-reanimated": "^1.0.0",
+    "react-navigation": "^3.0.0"
+  },
+  "prettier": {
+    "trailingComma": "es5",
+    "singleQuote": true
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn lint && yarn typescript",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "@react-native-community/bob": {
+    "source": "src",
+    "output": "lib",
+    "targets": [
+      "commonjs",
+      "module",
+      "typescript"
+    ]
+  }
 }
