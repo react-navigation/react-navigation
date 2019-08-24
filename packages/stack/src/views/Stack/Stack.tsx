@@ -328,8 +328,8 @@ export default class Stack extends React.Component<Props, State> {
           {routes.map((route, index, self) => {
             const focused = focusedRoute.key === route.key;
             const current = progress[route.key];
-            const descriptor = descriptors[route.key];
             const scene = scenes[index];
+            const descriptor = scene.descriptor;
             const next = self[index + 1]
               ? progress[self[index + 1].key]
               : ANIMATED_ONE;
