@@ -62,19 +62,12 @@ export default class MaterialBottomTabView extends React.PureComponent<Props> {
   };
 
   private handleTabPress = ({ route }: Scene) => {
-    const { state, navigation } = this.props;
+    const { navigation } = this.props;
 
     navigation.emit({
       type: 'tabPress',
       target: route.key,
     });
-
-    if (state.routes[state.index].key === route.key) {
-      navigation.emit({
-        type: 'refocus',
-        target: route.key,
-      });
-    }
   };
 
   private renderIcon = ({

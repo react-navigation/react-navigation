@@ -73,7 +73,6 @@ export default class MaterialTopTabView extends React.PureComponent<Props> {
     route: Route<string>;
     preventDefault: () => void;
   }) => {
-    const { state, navigation } = this.props;
     const event = this.props.navigation.emit({
       type: 'tabPress',
       target: route.key,
@@ -81,13 +80,6 @@ export default class MaterialTopTabView extends React.PureComponent<Props> {
 
     if (event.defaultPrevented) {
       preventDefault();
-    }
-
-    if (state.routes[state.index].key === route.key) {
-      navigation.emit({
-        type: 'refocus',
-        target: route.key,
-      });
     }
   };
 

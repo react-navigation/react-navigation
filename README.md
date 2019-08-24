@@ -31,6 +31,8 @@ Navigators bundle a router and a view which takes the navigation state and decid
 A simple navigator could look like this:
 
 ```js
+import { createNavigator } from '@react-navigation/core';
+
 function StackNavigator({ initialRouteName, children, ...rest }) {
   // The `navigation` object contains the navigation state and some helpers (e.g. push, pop)
   // The `descriptors` object contains the screen options and a helper for rendering a screen
@@ -127,8 +129,11 @@ It's also possible to disable bubbling of actions when dispatching them by addin
 ## Basic usage
 
 ```js
+import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+
 const Stack = createStackNavigator();
-const Tab = createTabNavigator();
+const Tab = createBottomTabNavigator();
 
 function App() {
   return (
@@ -210,6 +215,8 @@ function Profile({ navigation }) {
 }
 ```
 
+The `navigation.addListener` method returns a function to remove the listener which can be returned as the cleanup function in an effect.
+
 Navigators can also emit custom events using the `emit` method in the `navigation` object passed:
 
 ```js
@@ -245,6 +252,8 @@ Sometimes we want to run side-effects when a screen is focused. A side effect ma
 To make this easier, the library exports a `useFocusEffect` hook:
 
 ```js
+import { useFocusEffect } from '@react-navigation/core';
+
 function Profile({ userId }) {
   const [user, setUser] = React.useState(null);
 
@@ -272,6 +281,10 @@ The `useFocusEffect` is analogous to React's `useEffect` hook. The only differen
 We might want to render different content based on the current focus state of the screen. The library exports a `useIsFocused` hook to make this easier:
 
 ```js
+import { useIsFocused } from '@react-navigation/core';
+
+// ...
+
 const isFocused = useIsFocused();
 ```
 
@@ -284,12 +297,34 @@ For proper UX in React Native, we need to respect platform behavior such as the 
 When the back button on the device is pressed, we also want to navigate back in the focused navigator. The library exports a `useBackButton` hook to handle this:
 
 ```js
+import { useBackButton } from '@react-navigation/native';
+
+// ...
+
 const ref = React.useRef();
 
 useBackButton(ref);
 
 return <NavigationContainer ref={ref}>{/* content */}</NavigationContainer>;
 ```
+
+### Scroll to top on tab button press
+
+When there's a scroll view in a tab and the user taps on the already focused tab bar again, we might want to scroll to top in our scroll view. The library exports a `useScrollToTop` hook to handle this:
+
+```js
+import { useScrollToTop } from '@react-navigation/native';
+
+// ...
+
+const ref = React.useRef();
+
+useScrollToTop(ref);
+
+return <ScrollView ref={ref}>{/* content */}</ScrollView>;
+```
+
+The hook can accept a ref object to any view that has a `scrollTo` method.
 
 ### Deep-link integration
 
@@ -325,6 +360,10 @@ For example, the path `/rooms/chat?user=jane` will be translated to a state obje
 The `useLinking` hooks makes it easier to handle incoming links:
 
 ```js
+import { useLinking } from '@react-navigation/native';
+
+// ...
+
 const ref = React.useRef();
 
 const { getInitialState } = useLinking(ref, {

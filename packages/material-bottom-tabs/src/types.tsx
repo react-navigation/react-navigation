@@ -8,7 +8,9 @@ import {
 import { TabNavigationState } from '@react-navigation/routers';
 
 export type MaterialBottomTabNavigationEventMap = {
-  refocus: undefined;
+  /**
+   * Event which fires on tapping on the tab in the tab bar.
+   */
   tabPress: undefined;
 };
 

@@ -44,13 +44,23 @@ function StackNavigator({
   React.useEffect(
     () =>
       navigation.addListener &&
-      navigation.addListener('refocus', (e: EventArg<'refocus', undefined>) => {
-        if (state.index > 0 && !e.defaultPrevented) {
-          navigation.dispatch({
-            ...StackActions.popToTop(),
-            target: state.key,
-          });
-        }
+      navigation.addListener('tabPress', (e: EventArg<'tabPress'>) => {
+        // Run the operation in the next frame so we're sure all listeners have been run
+        // This is necessary to know if preventDefault() has been called
+        requestAnimationFrame(() => {
+          if (
+            state.index > 0 &&
+            navigation.isFocused() &&
+            !e.defaultPrevented
+          ) {
+            // When user taps on already focused tab and we're inside the tab,
+            // reset the stack to replicate native behaviour
+            navigation.dispatch({
+              ...StackActions.popToTop(),
+              target: state.key,
+            });
+          }
+        });
       }),
     [navigation, state.index, state.key]
   );
