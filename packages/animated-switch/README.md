@@ -44,4 +44,21 @@ const MySwitch = createAnimatedSwitchNavigator(
 );
 ```
 
+If you need to customize the underlying `Transitioning.View` style, you can pass in a `transitionViewStyle` option.
+
+```js
+import createAnimatedSwitchNavigator from 'react-navigation-animated-switch';
+import { Transition } from 'react-native-reanimated';
+
+const MySwitch = createAnimatedSwitchNavigator(
+  {
+    Home: HomeScreen,
+    Other: OtherScreen,
+  },
+  {
+    transitionViewStyle: { backgroundColor: 'red' },
+  }
+);
+```
+
 [Learn more about the `Transition` API here](https://github.com/kmagiera/react-native-reanimated).
