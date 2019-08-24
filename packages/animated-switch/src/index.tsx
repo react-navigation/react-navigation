@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, ViewStyle } from 'react-native';
 import {
   NavigationProp,
   NavigationDescriptor,
@@ -57,12 +57,13 @@ class AnimatedSwitchView extends React.Component<Props, {}> {
 
     const transition =
       (navigationConfig && navigationConfig.transition) || DEFAULT_TRANSITION;
+    const transitionViewStyle = navigationConfig && navigationConfig.transition;
 
     return (
       <Transitioning.View
         ref={this.containerRef}
         transition={transition}
-        style={styles.container}
+        style={[styles.container, transitionViewStyle]}
       >
         <SceneView
           component={ChildComponent}
@@ -76,6 +77,7 @@ class AnimatedSwitchView extends React.Component<Props, {}> {
 
 export interface AnimatedSwitchNavigatorConfig extends SwitchNavigatorConfig {
   transition?: React.ReactNode;
+  transitionViewStyle?: ViewStyle;
 }
 
 export default function createAnimatedSwitchNavigator(
