@@ -138,12 +138,10 @@ export default class BottomTabView extends React.Component<Props, State> {
       target: route.key,
     });
 
-    if (state.routes[state.index].key === route.key) {
-      navigation.emit({
-        type: 'refocus',
-        target: route.key,
-      });
-    } else if (!event.defaultPrevented) {
+    if (
+      state.routes[state.index].key !== route.key &&
+      !event.defaultPrevented
+    ) {
       navigation.dispatch({
         ...BaseActions.navigate(route.name),
         target: state.key,

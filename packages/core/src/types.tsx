@@ -187,7 +187,7 @@ export type EventMapBase = {
   blur: undefined;
 };
 
-export type EventArg<EventName extends string, Data> = {
+export type EventArg<EventName extends string, Data = undefined> = {
   /**
    * Type of the event (e.g. `focus`, `blur`)
    */

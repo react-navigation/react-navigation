@@ -18,10 +18,6 @@ import { TabNavigationState } from '@react-navigation/routers';
 
 export type BottomTabNavigationEventMap = {
   /**
-   * Event which fires on tapping on the tab for an already focused screen.
-   */
-  refocus: undefined;
-  /**
    * Event which fires on tapping on the tab in the tab bar.
    */
   tabPress: undefined;
