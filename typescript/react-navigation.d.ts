@@ -594,7 +594,14 @@ declare module 'react-navigation' {
     horizontal: boolean;
   }
 
+  export interface TabBarRoute {
+    key: string;
+    routeName: string;
+    params?: NavigationParams;
+  }
+
   export interface TabBarLabelProps {
+    route: TabBarRoute;
     tintColor: string | null;
     focused: boolean;
   }
