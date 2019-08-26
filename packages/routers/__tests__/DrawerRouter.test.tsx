@@ -1,10 +1,10 @@
 import { BaseActions } from '@react-navigation/core';
-import { TabRouter } from '../src';
+import { DrawerRouter } from '../src';
 
 jest.mock('shortid', () => () => 'test');
 
 it('handles navigate action', () => {
-  const router = TabRouter({});
+  const router = DrawerRouter({});
 
   expect(
     router.getStateForAction(
@@ -14,6 +14,7 @@ it('handles navigate action', () => {
         index: 1,
         routeNames: ['baz', 'bar'],
         routeKeyHistory: [],
+        isDrawerOpen: false,
         routes: [{ key: 'baz', name: 'baz' }, { key: 'bar', name: 'bar' }],
       },
       BaseActions.navigate('baz', { answer: 42 })
@@ -23,6 +24,7 @@ it('handles navigate action', () => {
     key: 'root',
     index: 0,
     routeNames: ['baz', 'bar'],
+    isDrawerOpen: false,
     routeKeyHistory: ['bar'],
     routes: [
       { key: 'baz', name: 'baz', params: { answer: 42 } },
@@ -31,58 +33,8 @@ it('handles navigate action', () => {
   });
 });
 
-it('handles jump to action', () => {
-  const router = TabRouter({});
-
-  expect(
-    router.getStateForAction(
-      {
-        stale: false,
-        key: 'root',
-        index: 0,
-        routeNames: ['baz', 'bar'],
-        routeKeyHistory: [],
-        routes: [{ key: 'baz', name: 'baz' }, { key: 'bar', name: 'bar' }],
-      },
-      { type: 'JUMP_TO', payload: { name: 'bar' } }
-    )
-  ).toEqual({
-    stale: false,
-    key: 'root',
-    index: 1,
-    routeNames: ['baz', 'bar'],
-    routeKeyHistory: ['baz'],
-    routes: [{ key: 'baz', name: 'baz' }, { key: 'bar', name: 'bar' }],
-  });
-});
-
-it('handles history back action', () => {
-  const router = TabRouter({});
-
-  expect(
-    router.getStateForAction(
-      {
-        stale: false,
-        key: 'root',
-        index: 0,
-        routeNames: ['baz', 'bar'],
-        routeKeyHistory: ['bar'],
-        routes: [{ key: 'baz', name: 'baz' }, { key: 'bar', name: 'bar' }],
-      },
-      { type: 'GO_BACK' }
-    )
-  ).toEqual({
-    stale: false,
-    key: 'root',
-    index: 1,
-    routeNames: ['baz', 'bar'],
-    routeKeyHistory: [],
-    routes: [{ key: 'baz', name: 'baz' }, { key: 'bar', name: 'bar' }],
-  });
-});
-
-it('handles order back action', () => {
-  const router = TabRouter({ backBehavior: 'order' });
+it('handles open drawer action', () => {
+  const router = DrawerRouter({});
 
   expect(
     router.getStateForAction(
@@ -92,22 +44,24 @@ it('handles order back action', () => {
         index: 1,
         routeNames: ['baz', 'bar'],
         routeKeyHistory: [],
+        isDrawerOpen: false,
         routes: [{ key: 'baz', name: 'baz' }, { key: 'bar', name: 'bar' }],
       },
-      { type: 'GO_BACK' }
+      { type: 'OPEN_DRAWER' }
     )
   ).toEqual({
     stale: false,
     key: 'root',
-    index: 0,
+    index: 1,
     routeNames: ['baz', 'bar'],
+    isDrawerOpen: true,
     routeKeyHistory: [],
     routes: [{ key: 'baz', name: 'baz' }, { key: 'bar', name: 'bar' }],
   });
 });
 
-it('handles initialRoute back action', () => {
-  const router = TabRouter({ backBehavior: 'initialRoute' });
+it('handles close drawer action', () => {
+  const router = DrawerRouter({});
 
   expect(
     router.getStateForAction(
@@ -117,34 +71,68 @@ it('handles initialRoute back action', () => {
         index: 1,
         routeNames: ['baz', 'bar'],
         routeKeyHistory: [],
+        isDrawerOpen: true,
         routes: [{ key: 'baz', name: 'baz' }, { key: 'bar', name: 'bar' }],
       },
-      { type: 'GO_BACK' }
+      { type: 'CLOSE_DRAWER' }
     )
   ).toEqual({
     stale: false,
     key: 'root',
-    index: 0,
+    index: 1,
     routeNames: ['baz', 'bar'],
+    isDrawerOpen: false,
     routeKeyHistory: [],
     routes: [{ key: 'baz', name: 'baz' }, { key: 'bar', name: 'bar' }],
   });
 });
 
-it('handles none back action', () => {
-  const router = TabRouter({ backBehavior: 'none' });
+it('handles toggle drawer action', () => {
+  const router = DrawerRouter({});
 
   expect(
     router.getStateForAction(
       {
         stale: false,
         key: 'root',
-        index: 0,
+        index: 1,
         routeNames: ['baz', 'bar'],
         routeKeyHistory: [],
+        isDrawerOpen: true,
         routes: [{ key: 'baz', name: 'baz' }, { key: 'bar', name: 'bar' }],
       },
-      { type: 'GO_BACK' }
+      { type: 'TOGGLE_DRAWER' }
     )
-  ).toEqual(null);
+  ).toEqual({
+    stale: false,
+    key: 'root',
+    index: 1,
+    routeNames: ['baz', 'bar'],
+    isDrawerOpen: false,
+    routeKeyHistory: [],
+    routes: [{ key: 'baz', name: 'baz' }, { key: 'bar', name: 'bar' }],
+  });
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        key: 'root',
+        index: 1,
+        routeNames: ['baz', 'bar'],
+        routeKeyHistory: [],
+        isDrawerOpen: false,
+        routes: [{ key: 'baz', name: 'baz' }, { key: 'bar', name: 'bar' }],
+      },
+      { type: 'TOGGLE_DRAWER' }
+    )
+  ).toEqual({
+    stale: false,
+    key: 'root',
+    index: 1,
+    routeNames: ['baz', 'bar'],
+    isDrawerOpen: true,
+    routeKeyHistory: [],
+    routes: [{ key: 'baz', name: 'baz' }, { key: 'bar', name: 'bar' }],
+  });
 });
