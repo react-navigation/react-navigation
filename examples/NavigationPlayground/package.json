@@ -14,12 +14,12 @@
     "release": "release-it"
   },
   "dependencies": {
-    "expo": "^32.0.0",
+    "expo": "^33.0.7",
+    "expo-blur": "~5.0.1",
     "patch-package": "^6.0.5",
     "postinstall-postinstall": "^2.0.0",
-    "react": "16.5.0",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
-    "react-native-blur": "^3.2.2",
+    "react": "16.8.3",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-33.0.0.tar.gz",
     "react-native-gesture-handler": "^1.1.0",
     "react-native-iphone-x-helper": "^1.2.0",
     "react-native-vector-icons": "^6.1.0",

@@ -1,21 +1,18 @@
 import * as React from 'react';
-import {
-  Platform,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  View,
-} from 'react-native';
-import { BlurView } from 'react-native-blur';
+import { Platform, ScrollView, StyleSheet, View } from 'react-native';
+import { BlurView } from 'expo-blur';
 import { isIphoneX } from 'react-native-iphone-x-helper';
 import {
   createStackNavigator,
   Header,
   HeaderStyleInterpolator,
   NavigationEventPayload,
+  NavigationScreenConfigProps,
   NavigationEventSubscription,
   NavigationScreenProp,
   NavigationState,
+  Themed,
+  SupportedThemes,
   TransitionConfig,
 } from 'react-navigation';
 import { Button } from './commonComponents/ButtonWithMargin';
@@ -49,7 +46,7 @@ class MyNavScreen extends React.Component<MyNavScreenProps> {
         <Button onPress={() => popToTop()} title="Pop to top" />
         <Button onPress={() => pop()} title="Pop" />
         <Button onPress={() => navigation.goBack(null)} title="Go back" />
-        <StatusBar barStyle="default" />
+        <Themed.StatusBar />
       </ScrollView>
     );
   }
@@ -190,8 +187,9 @@ const MyProfileScreen = ({
 
 MyProfileScreen.navigationOptions = (props: {
   navigation: NavigationScreenProp<NavigationState>;
+  theme: SupportedThemes;
 }) => {
-  const { navigation } = props;
+  const { navigation, theme } = props;
   const { state, setParams } = navigation;
   const { params } = state;
   return {
@@ -201,6 +199,7 @@ MyProfileScreen.navigationOptions = (props: {
     headerRight: (
       <HeaderButtons>
         <HeaderButtons.Item
+          color={theme === 'light' ? '#000' : '#fff'}
           title={params!.mode === 'edit' ? 'Done' : 'Edit'}
           onPress={() =>
             setParams({ mode: params!.mode === 'edit' ? '' : 'edit' })
@@ -227,19 +226,22 @@ const StackWithTranslucentHeader = createStackNavigator(
     },
   },
   {
-    defaultNavigationOptions: {
+    defaultNavigationOptions: ({ theme }: NavigationScreenConfigProps) => ({
       headerBackground:
-      Platform.OS === 'ios' ? (
-        <BlurView style={{ flex: 1 }} blurType="light" />
-      ) : (
-        <View style={{ flex: 1, backgroundColor: 'rgba(255,255,255,0.7)' }} />
-      ),
+        Platform.OS === 'ios' ? (
+          <BlurView
+            style={{ flex: 1 }}
+            blurType={theme === 'light' ? 'light' : 'dark'}
+          />
+        ) : (
+          <View style={{ flex: 1, backgroundColor: 'rgba(255,255,255,0.7)' }} />
+        ),
       headerStyle: {
-        borderBottomColor: '#A7A7AA',
+        borderBottomColor: theme === 'light' ? '#A7A7AA' : 'transparent',
         borderBottomWidth: StyleSheet.hairlineWidth,
       },
       headerTransparent: true,
-    },
+    }),
     headerTransitionPreset: 'uikit',
     // You can leave this out if you don't want the card shadow to
     // be visible through the header

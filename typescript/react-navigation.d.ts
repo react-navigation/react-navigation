@@ -37,6 +37,9 @@ declare module 'react-navigation' {
 
   import {
     Animated,
+    Text,
+    TextInput,
+    StatusBar,
     TextStyle,
     ViewProps,
     ViewStyle,
@@ -73,7 +76,8 @@ declare module 'react-navigation' {
   // @todo - any..
   export function getActiveChildNavigationOptions<S>(
     navigation: NavigationProp<S>,
-    screenProps?: ScreenProps
+    screenProps?: ScreenProps,
+    theme?: SupportedThemes,
   ): NavigationParams;
 
   // @todo when we split types into common, native and web,
@@ -176,7 +180,8 @@ declare module 'react-navigation' {
 
   export type NavigationScreenOptionsGetter<Options> = (
     navigation: NavigationScreenProp<NavigationRoute<any>>,
-    screenProps?: ScreenProps
+    screenProps: ScreenProps | null,
+    theme: SupportedThemes,
   ) => Options;
 
   export interface NavigationRouter<State = NavigationState, Options = {}> {
@@ -238,6 +243,7 @@ declare module 'react-navigation' {
   export interface NavigationScreenConfigProps {
     navigation: NavigationScreenProp<NavigationRoute>;
     screenProps: ScreenProps;
+    theme: SupportedThemes;
   }
 
   export type NavigationScreenConfig<Options> =
@@ -763,6 +769,7 @@ declare module 'react-navigation' {
   }
 
   export interface NavigationNavigatorProps<O = {}, S = {}> {
+    theme?: SupportedThemes | 'no-preference';
     detached?: boolean;
     navigation?: NavigationProp<S>;
     screenProps?: ScreenProps;
@@ -1256,7 +1263,9 @@ declare module 'react-navigation' {
   export namespace SwitchActions {
     const JUMP_TO: 'Navigation/JUMP_TO';
 
-    function jumpTo(options: NavigationJumpToActionPayload): NavigationJumpToAction;
+    function jumpTo(
+      options: NavigationJumpToActionPayload
+    ): NavigationJumpToAction;
   }
 
   /**
@@ -1521,4 +1530,40 @@ declare module 'react-navigation' {
   }
 
   export class SceneView extends React.Component {}
+
+  /**
+   * Themes
+   */
+
+  // Context
+  export type SupportedThemes = 'light' | 'dark';
+  export const ThemeContext: React.Context<SupportedThemes>;
+
+  // Hooks
+  export function useTheme(): SupportedThemes;
+
+  // Colors
+  export interface Theme {
+    header: string;
+    headerBorder: string;
+    body: string;
+    bodyBorder: string;
+    bodyContent: string;
+    bodyContentBorder: string;
+    label: string;
+  }
+  export const ThemeColors: { [k in SupportedThemes]: Theme };
+
+  // Themed components
+  interface ThemedStatusBarProps
+    extends React.ComponentProps<typeof StatusBar> {}
+  interface ThemedTextProps extends React.ComponentProps<typeof Text> {}
+  interface ThemedTextInputProps
+    extends React.ComponentProps<typeof TextInput> {}
+
+  export namespace Themed {
+    export const StatusBar: React.ComponentType<ThemedStatusBarProps>;
+    export const Text: React.ComponentType<ThemedTextProps>;
+    export const TextInput: React.ComponentType<ThemedTextInputProps>;
+  }
 }

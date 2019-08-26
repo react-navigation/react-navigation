@@ -1,9 +1,11 @@
 import * as React from 'react';
-import { Button, Image, StatusBar, StyleSheet } from 'react-native';
+import { Button, Image, StyleSheet } from 'react-native';
 import {
   createStackNavigator,
   NavigationScreenProp,
   NavigationState,
+  NavigationScreenConfigProps,
+  Themed,
   SafeAreaView,
 } from 'react-navigation';
 import SampleText from './SampleText';
@@ -36,7 +38,7 @@ class MyNavScreen extends React.Component<MyNavScreenProps> {
           title="Navigate to a photos screen"
         />
         <Button onPress={() => navigation.goBack(null)} title="Go back" />
-        <StatusBar barStyle="default" />
+        <Themed.StatusBar />
       </SafeAreaView>
     );
   }
@@ -81,7 +83,7 @@ class MyPhotosScreen extends React.Component<MyPhotosScreenProps> {
           title="Navigate to a profile screen"
         />
         <Button onPress={() => navigation.goBack(null)} title="Go back" />
-        <StatusBar barStyle="default" />
+        <Themed.StatusBar />
       </SafeAreaView>
     );
   }
@@ -91,12 +93,9 @@ interface MyProfileScreenProps {
   navigation: NavigationScreenProp<NavigationState>;
 }
 class MyProfileScreen extends React.Component<MyProfileScreenProps> {
-  static navigationOptions = () => ({
-    headerBackImage: (
-      <MyCustomHeaderBackImage style={styles.myCustomHeaderBackImageAlt} />
-    ),
+  static navigationOptions = {
     title: 'Profile',
-  });
+  };
 
   render() {
     const { navigation } = this.props;
@@ -104,7 +103,7 @@ class MyProfileScreen extends React.Component<MyProfileScreenProps> {
       <SafeAreaView>
         <SampleText>{`${navigation.state.params!.name}'s Profile`}</SampleText>
         <Button onPress={() => navigation.goBack(null)} title="Go back" />
-        <StatusBar barStyle="default" />
+        <Themed.StatusBar />
       </SafeAreaView>
     );
   }
@@ -125,9 +124,18 @@ const StackWithCustomHeaderBackImage = createStackNavigator(
     },
   },
   {
-    defaultNavigationOptions: {
-      headerBackImage: MyCustomHeaderBackImage as any,
-    },
+    defaultNavigationOptions: ({ theme }: NavigationScreenConfigProps) => ({
+      headerBackImage: (
+        <MyCustomHeaderBackImage
+          style={[
+            styles.myCustomHeaderBackImageAlt,
+            {
+              tintColor: theme === 'light' ? '#000' : '#fff',
+            },
+          ]}
+        />
+      ),
+    }),
   }
 );
 
@@ -142,7 +150,5 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     width: 24,
   },
-  myCustomHeaderBackImageAlt: {
-    tintColor: '#f00',
-  },
+  myCustomHeaderBackImageAlt: {},
 });

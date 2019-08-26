@@ -1,9 +1,10 @@
 import React from 'react';
-import { ScrollView, StatusBar, StyleProp, TextStyle } from 'react-native';
+import { ScrollView, StyleProp, TextStyle } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {
   createDrawerNavigator,
   createStackNavigator,
+  Themed,
   SafeAreaView,
 } from 'react-navigation';
 import { NavigationScreenProp, NavigationState } from 'react-navigation';
@@ -27,7 +28,7 @@ const MyNavScreen = ({
       />
       <Button onPress={() => navigation.navigate('Index')} title="Go back" />
     </SafeAreaView>
-    <StatusBar barStyle="default" />
+    <Themed.StatusBar />
   </ScrollView>
 );
 
