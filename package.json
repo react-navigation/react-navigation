@@ -14,7 +14,7 @@
     "type": "git",
     "url": "git+https://github.com/satya164/react-navigation.git"
   },
-  "author": "Satyajit Sahoo <satyajit.happy@gmail.com> (https://github.com/satya164/)",
+  "author": "Satyajit Sahoo <satyajit.happy@gmail.com> (https://github.com/satya164/), Michał Osadnik <micosa97@gmail.com> (https://github.com/osdnk/)",
   "scripts": {
     "lint": "eslint --ext '.js,.ts,.tsx' .",
     "typescript": "tsc --noEmit",
