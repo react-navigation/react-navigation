@@ -37,6 +37,7 @@ jobs:
         - attach_workspace:
             at: ~/project
         - run: |
+            yarn lerna run prepare
             yarn test --coverage
             cat ./coverage/lcov.info | ./node_modules/.bin/codecov
         - store_artifacts:
