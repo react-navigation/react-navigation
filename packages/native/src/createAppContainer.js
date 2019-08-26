@@ -148,7 +148,7 @@ export default function createNavigationContainer(Component) {
       }
 
       // eslint-disable-next-line no-unused-vars
-      const { navigation, screenProps, ...containerProps } = props;
+      const { navigation, screenProps, theme, ...containerProps } = props;
 
       const keys = Object.keys(containerProps);
 
