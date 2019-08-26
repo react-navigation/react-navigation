@@ -6,9 +6,12 @@ import {
   NavigationState,
   SafeAreaView,
   TabRouter,
+  Themed,
+  useTheme,
+  createAppContainer,
+  NavigationScreenProp,
 } from 'react-navigation';
-import { createAppContainer } from 'react-navigation';
-import { NavigationScreenProp } from 'react-navigation';
+
 import { Button } from './commonComponents/ButtonWithMargin';
 import SampleText from './SampleText';
 
@@ -29,7 +32,7 @@ const MyNavScreen = ({
         title="Go back"
       />
     </SafeAreaView>
-    <StatusBar barStyle="default" />
+    <Themed.StatusBar />
   </ScrollView>
 );
 
@@ -65,13 +68,12 @@ const CustomTabBar = ({
           style={styles.tab}
           key={route.routeName}
         >
-          <Text>{route.routeName}</Text>
+          <Themed.Text>{route.routeName}</Themed.Text>
         </BorderlessButton>
       ))}
     </SafeAreaView>
   );
 };
-
 // @todo - how does the type definition for a custom navigator work?
 class CustomTabView extends React.Component<any> {
   render() {
@@ -129,4 +131,9 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CustomTabs;
+export default () => {
+  // Need to thread the theme through to detached nested navigator
+  let theme = useTheme();
+
+  return <CustomTabs detached theme={theme} />;
+};

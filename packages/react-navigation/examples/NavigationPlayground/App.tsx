@@ -5,6 +5,7 @@ import {
   Platform,
   StatusBar,
   StyleSheet,
+  TouchableOpacity,
   Text,
   View,
 } from 'react-native';
@@ -13,10 +14,15 @@ import {
   RectButton,
 } from 'react-native-gesture-handler';
 import {
+  SupportedThemes,
+  ThemeColors,
+  ThemeContext,
+  Themed,
   createAppContainer,
   createStackNavigator,
   SafeAreaView,
 } from 'react-navigation';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import CustomTabs from './src/CustomTabs';
 import CustomTabUI from './src/CustomTabUI';
 import Drawer from './src/Drawer';
@@ -173,6 +179,9 @@ interface State {
 }
 
 class MainScreen extends React.Component<any, State> {
+  static contextType = ThemeContext;
+  context!: React.ContextType<typeof ThemeContext>;
+
   state = {
     scrollY: new Animated.Value(0),
   };
@@ -218,7 +227,7 @@ class MainScreen extends React.Component<any, State> {
       <View style={{ flex: 1 }}>
         <NativeViewGestureHandler>
           <Animated.ScrollView
-            style={{ flex: 1, backgroundColor: '#eee' }}
+            style={{ flex: 1, backgroundColor: ThemeColors[this.context].body }}
             scrollEventThrottle={1}
             onScroll={Animated.event(
               [
@@ -263,7 +272,11 @@ class MainScreen extends React.Component<any, State> {
               forceInset={{ top: 'never', bottom: 'always' }}
               style={{ backgroundColor: '#eee' }}
             >
-              <View style={{ backgroundColor: '#fff' }}>
+              <View
+                style={{
+                  backgroundColor: ThemeColors[this.context].bodyContent,
+                }}
+              >
                 {Object.keys(ExampleRoutes).map((routeName: string) => (
                   <RectButton
                     key={routeName}
@@ -283,10 +296,17 @@ class MainScreen extends React.Component<any, State> {
                       }
                     }}
                   >
-                    <View style={styles.item}>
-                      <Text style={styles.title}>
+                    <View
+                      style={[
+                        styles.item,
+                        this.context === 'dark'
+                          ? styles.itemDark
+                          : styles.itemLight,
+                      ]}
+                    >
+                      <Themed.Text style={styles.title}>
                         {ExampleInfo[routeName].name}
-                      </Text>
+                      </Themed.Text>
                       <Text style={styles.description}>
                         {ExampleInfo[routeName].description}
                       </Text>
@@ -306,7 +326,7 @@ class MainScreen extends React.Component<any, State> {
   }
 }
 
-const AppNavigator = createAppContainer(
+const Navigation = createAppContainer(
   createStackNavigator(
     {
       ...ExampleRoutes,
@@ -327,11 +347,50 @@ const AppNavigator = createAppContainer(
   )
 );
 
-export default class App extends React.Component {
-  render() {
-    return <AppNavigator /* persistenceKey="if-you-want-it" */ />;
-  }
-}
+export default () => {
+  let [theme, setTheme] = React.useState<SupportedThemes>('light');
+
+  return (
+    <View style={{ flex: 1 }}>
+      <Navigation theme={theme} />
+      <View style={{ position: 'absolute', bottom: 60, right: 20 }}>
+        <TouchableOpacity
+          onPress={() => {
+            setTheme(theme === 'light' ? 'dark' : 'light');
+          }}
+        >
+          <View
+            style={{
+              backgroundColor: ThemeColors[theme].bodyContent,
+              borderRadius: 25,
+              width: 50,
+              height: 50,
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderColor: ThemeColors[theme].bodyBorder,
+              borderWidth: 1,
+              shadowColor: ThemeColors[theme].label,
+              shadowOffset: {
+                width: 0,
+                height: 2,
+              },
+              shadowOpacity: 0.4,
+              shadowRadius: 2,
+
+              elevation: 5,
+            }}
+          >
+            <MaterialCommunityIcons
+              name="theme-light-dark"
+              size={30}
+              color={ThemeColors[theme].label}
+            />
+          </View>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   backgroundUnderlay: {
@@ -377,10 +436,15 @@ const styles = StyleSheet.create({
     width: 120,
   },
   item: {
-    borderBottomColor: '#ddd',
     borderBottomWidth: StyleSheet.hairlineWidth,
     paddingHorizontal: 16,
     paddingVertical: 12,
+  },
+  itemLight: {
+    borderBottomColor: ThemeColors.light.bodyBorder,
+  },
+  itemDark: {
+    borderBottomColor: ThemeColors.dark.bodyBorder,
   },
   statusBarUnderlay: {
     backgroundColor: '#673ab7',
@@ -391,7 +455,6 @@ const styles = StyleSheet.create({
     top: 0,
   },
   title: {
-    color: '#444',
     fontSize: 16,
     fontWeight: 'bold',
   },

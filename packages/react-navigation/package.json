@@ -1,6 +1,6 @@
 {
   "name": "react-navigation",
-  "version": "3.11.1",
+  "version": "3.12.0",
   "description": "Routing and navigation for your React Native apps",
   "main": "src/react-navigation.js",
   "types": "typescript/react-navigation.d.ts",
@@ -36,11 +36,11 @@
     "react-native": "*"
   },
   "dependencies": {
-    "@react-navigation/core": "~3.4.1",
-    "@react-navigation/native": "~3.5.0",
-    "react-navigation-drawer": "~1.2.1",
-    "react-navigation-stack": "~1.4.0",
-    "react-navigation-tabs": "~1.1.4"
+    "@react-navigation/core": "~3.5.0",
+    "@react-navigation/native": "~3.6.1",
+    "react-navigation-drawer": "~1.4.0",
+    "react-navigation-tabs": "~1.2.0",
+    "react-navigation-stack": "~1.5.0"
   },
   "devDependencies": {
     "@types/react-native": "~0.57.38",

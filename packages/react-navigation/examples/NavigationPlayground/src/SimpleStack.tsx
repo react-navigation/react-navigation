@@ -1,7 +1,6 @@
 // tslint:disable no-unused-expression
 
 import * as React from 'react';
-import { StatusBar } from 'react-native';
 import {
   createStackNavigator,
   NavigationActions,
@@ -12,6 +11,7 @@ import {
   NavigationStateRoute,
   SafeAreaView,
   StackActions,
+  Themed,
   withNavigation,
 } from 'react-navigation';
 import { Button } from './commonComponents/ButtonWithMargin';
@@ -93,7 +93,7 @@ class MyNavScreen extends React.Component<MyNavScreenProps> {
           title="Go back"
         />
         <Button onPress={() => dismiss()} title="Dismiss" />
-        <StatusBar barStyle="default" />
+        <Themed.StatusBar />
       </SafeAreaView>
     );
   }

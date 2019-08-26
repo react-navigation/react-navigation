@@ -1,5 +1,4 @@
 import React from 'react';
-import { Animated, Platform, StatusBar, Text, View } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {
   createBottomTabNavigator,
@@ -7,6 +6,7 @@ import {
   NavigationEventSubscription,
   NavigationScreenProp,
   SafeAreaView,
+  Themed,
   ScrollView,
 } from 'react-navigation';
 import { NavigationEventPayload, NavigationState } from 'react-navigation';
@@ -37,11 +37,11 @@ const MyNavScreen = ({
       />
       <Button onPress={() => navigation.goBack(null)} title="Go back" />
       {TEXT.split('\n').map((p, n) => (
-        <Text key={n} style={{ marginVertical: 10, marginHorizontal: 8 }}>
+        <Themed.Text key={n} style={{ marginVertical: 10, marginHorizontal: 8 }}>
           {p}
-        </Text>
+        </Themed.Text>
       ))}
-      <StatusBar barStyle="default" />
+      <Themed.StatusBar />
     </SafeAreaView>
   </ScrollView>
 );
@@ -56,9 +56,9 @@ const MyListScreen = ({
     style={{ paddingTop: 10 }}
     keyExtractor={(item, index) => index.toString()}
     renderItem={({ item }) => (
-      <Text style={{ fontSize: 16, marginVertical: 10, marginHorizontal: 8 }}>
+      <Themed.Text style={{ fontSize: 16, marginVertical: 10, marginHorizontal: 8 }}>
         {item}
-      </Text>
+      </Themed.Text>
     )}
   />
 );

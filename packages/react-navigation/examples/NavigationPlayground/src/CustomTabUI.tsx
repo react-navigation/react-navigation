@@ -11,7 +11,9 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {
   MaterialTopTabBar,
+  Themed,
   createMaterialTopTabNavigator,
+  ThemeContext,
   NavigationScreenProp,
   NavigationState,
   SafeAreaView,
@@ -45,7 +47,7 @@ class MyHomeScreen extends React.Component<Props> {
     const { navigation } = this.props;
     return (
       <SafeAreaView forceInset={{ horizontal: 'always', top: 'always' }}>
-        <Text>Home Screen</Text>
+        <Themed.Text>Home Screen</Themed.Text>
         <Button
           onPress={() => navigation.navigate('Home')}
           title="Go to home tab"
@@ -79,7 +81,7 @@ class StarredScreen extends React.Component<Props> {
     const { navigation } = this.props;
     return (
       <SafeAreaView forceInset={{ horizontal: 'always', top: 'always' }}>
-        <Text>Starred Screen</Text>
+        <Themed.Text>Starred Screen</Themed.Text>
         <Button
           onPress={() => navigation.navigate('Home')}
           title="Go to home tab"
@@ -132,7 +134,7 @@ class FeaturedScreen extends React.Component<Props> {
     const { navigation } = this.props;
     return (
       <SafeAreaView forceInset={{ horizontal: 'always', top: 'always' }}>
-        <Text>Featured Screen</Text>
+        <Themed.Text>Featured Screen</Themed.Text>
         <Button
           onPress={() => navigation.navigate('Home')}
           title="Go to home tab"
@@ -160,6 +162,8 @@ const SimpleTabs = createMaterialTopTabNavigator(
 );
 
 class TabNavigator extends React.Component<Props> {
+  static contextType = ThemeContext;
+
   static router = SimpleTabs.router;
   componentWillUpdate() {
     LayoutAnimation.easeInEaseOut();
@@ -175,7 +179,7 @@ class TabNavigator extends React.Component<Props> {
           style={{
             height: 50,
             borderTopWidth: StyleSheet.hairlineWidth,
-            backgroundColor: '#000',
+            backgroundColor: this.context === 'light' ? '#000' : '#fff',
             alignItems: 'center',
             justifyContent: 'center',
           }}
@@ -186,7 +190,13 @@ class TabNavigator extends React.Component<Props> {
               //
             }}
           >
-            <Text style={{ fontSize: 20, color: '#fff', fontWeight: 'bold' }}>
+            <Text
+              style={{
+                fontSize: 20,
+                color: this.context === 'light' ? '#fff' : '#000',
+                fontWeight: 'bold',
+              }}
+            >
               Check out
             </Text>
           </TouchableOpacity>

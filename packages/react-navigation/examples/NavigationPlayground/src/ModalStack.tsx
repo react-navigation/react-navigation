@@ -1,8 +1,9 @@
 import React from 'react';
-import { ScrollView, StatusBar, Text } from 'react-native';
+import { ScrollView } from 'react-native';
 import {
   createStackNavigator,
   NavigationScreenProp,
+  Themed,
   SafeAreaView,
 } from 'react-navigation';
 import { NavigationState } from 'react-navigation';
@@ -45,7 +46,7 @@ const MyNavScreen = ({
       )}
       <Button onPress={() => navigation.goBack(null)} title="Go back" />
     </SafeAreaView>
-    <StatusBar barStyle="default" />
+    <Themed.StatusBar />
   </ScrollView>
 );
 

@@ -1,6 +1,20 @@
 /* eslint global-require: 0 */
 
 module.exports = {
+  // Themes
+  get useTheme() {
+    return require('@react-navigation/core').useTheme;
+  },
+  get ThemeContext() {
+    return require('@react-navigation/core').ThemeContext;
+  },
+  get ThemeColors() {
+    return require('@react-navigation/core').ThemeColors;
+  },
+  get Themed() {
+    return require('@react-navigation/native').Themed;
+  },
+
   // Native
   get createAppContainer() {
     return require('@react-navigation/native').createAppContainer;
