@@ -59,7 +59,10 @@
     },
     "setupFiles": [
       "<rootDir>/jest/setup.js"
-    ]
+    ],
+    "moduleNameMapper": {
+      "@react-navigation/([^/]+)": "<rootDir>/packages/$1/src"
+    }
   },
   "name": "react-navigation"
 }
