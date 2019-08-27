@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.5](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.4...@react-navigation/stack@5.0.0-alpha.5) (2019-08-27)
+
+
+### Bug Fixes
+
+* link proper descriptor for StackView ([469ec31](https://github.com/react-navigation/navigation-ex/commit/469ec31))
+* set correct pointer events when active prop changes ([1bbd6ac](https://github.com/react-navigation/navigation-ex/commit/1bbd6ac))
+
+
+### Features
+
+* add hook to scroll to top on tab press ([9e1104c](https://github.com/react-navigation/navigation-ex/commit/9e1104c))
+* add memoization of spring for stack ([7990cf2](https://github.com/react-navigation/navigation-ex/commit/7990cf2))
+
+
+
+
+
 # [5.0.0-alpha.4](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.3...@react-navigation/stack@5.0.0-alpha.4) (2019-08-22)
 
 

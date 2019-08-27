@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.3](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/native@5.0.0-alpha.2...@react-navigation/native@5.0.0-alpha.3) (2019-08-27)
+
+
+### Features
+
+* add hook to scroll to top on tab press ([9e1104c](https://github.com/react-navigation/navigation-ex/commit/9e1104c))
+* add native container ([d26b77f](https://github.com/react-navigation/navigation-ex/commit/d26b77f))
+
+
+
+
+
 # [5.0.0-alpha.2](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/native@5.0.0-alpha.1...@react-navigation/native@5.0.0-alpha.2) (2019-08-22)
 
 

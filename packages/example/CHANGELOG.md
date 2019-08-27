@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.2](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/example@5.0.0-alpha.1...@react-navigation/example@5.0.0-alpha.2) (2019-08-27)
+
+
+### Features
+
+* add native container ([d26b77f](https://github.com/react-navigation/navigation-ex/commit/d26b77f))
+
+
+
+
+
 # 5.0.0-alpha.1 (2019-08-21)
 
 
