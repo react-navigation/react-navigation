@@ -34,6 +34,7 @@ function validateProps(props) {
     screenProps,
     persistNavigationState,
     loadNavigationState,
+    theme,
     ...containerProps
   } = props;
   /* eslint-enable no-unused-vars */
@@ -140,28 +141,6 @@ export default function createNavigationContainer(Component) {
 
     _isStateful() {
       return isStateful(this.props);
-    }
-
-    _validateProps(props) {
-      if (this._isStateful()) {
-        return;
-      }
-
-      // eslint-disable-next-line no-unused-vars
-      const { navigation, screenProps, theme, ...containerProps } = props;
-
-      const keys = Object.keys(containerProps);
-
-      if (keys.length !== 0) {
-        throw new Error(
-          'This navigator has both navigation and container props, so it is ' +
-            `unclear if it should own its own state. Remove props: "${keys.join(
-              ', '
-            )}" ` +
-            'if the navigator should get its state from the navigation prop. If the ' +
-            'navigator should maintain its own state, do not pass a navigation prop.'
-        );
-      }
     }
 
     _handleOpenURL = ({ url }) => {
