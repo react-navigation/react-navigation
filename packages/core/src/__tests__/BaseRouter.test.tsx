@@ -1,5 +1,5 @@
 import BaseRouter from '../BaseRouter';
-import * as BaseActions from '../BaseActions';
+import * as CommonActions from '../CommonActions';
 
 jest.mock('shortid', () => () => 'test');
 
@@ -18,7 +18,7 @@ const STATE = {
 it('replaces focused screen with REPLACE', () => {
   const result = BaseRouter.getStateForAction(
     STATE,
-    BaseActions.replace('qux', { answer: 42 })
+    CommonActions.replace('qux', { answer: 42 })
   );
 
   expect(result).toEqual({
@@ -36,7 +36,7 @@ it('replaces focused screen with REPLACE', () => {
 
 it('replaces source screen with REPLACE', () => {
   const result = BaseRouter.getStateForAction(STATE, {
-    ...BaseActions.replace('qux', { answer: 42 }),
+    ...CommonActions.replace('qux', { answer: 42 }),
     source: 'baz',
   });
 
@@ -55,7 +55,7 @@ it('replaces source screen with REPLACE', () => {
 
 it("doesn't handle REPLACE if source key isn't present", () => {
   const result = BaseRouter.getStateForAction(STATE, {
-    ...BaseActions.replace('qux', { answer: 42 }),
+    ...CommonActions.replace('qux', { answer: 42 }),
     source: 'magic',
   });
 
@@ -65,7 +65,7 @@ it("doesn't handle REPLACE if source key isn't present", () => {
 it('sets params for the focused screen with SET_PARAMS', () => {
   const result = BaseRouter.getStateForAction(
     STATE,
-    BaseActions.setParams({ answer: 42 })
+    CommonActions.setParams({ answer: 42 })
   );
 
   expect(result).toEqual({
@@ -83,7 +83,7 @@ it('sets params for the focused screen with SET_PARAMS', () => {
 
 it('sets params for the source screen with SET_PARAMS', () => {
   const result = BaseRouter.getStateForAction(STATE, {
-    ...BaseActions.setParams({ answer: 42 }),
+    ...CommonActions.setParams({ answer: 42 }),
     source: 'foo',
   });
 
@@ -102,7 +102,7 @@ it('sets params for the source screen with SET_PARAMS', () => {
 
 it("doesn't handle SET_PARAMS if source key isn't present", () => {
   const result = BaseRouter.getStateForAction(STATE, {
-    ...BaseActions.setParams({ answer: 42 }),
+    ...CommonActions.setParams({ answer: 42 }),
     source: 'magic',
   });
 
@@ -119,7 +119,7 @@ it('resets state to new state with RESET', () => {
 
   const result = BaseRouter.getStateForAction(
     STATE,
-    BaseActions.reset({
+    CommonActions.reset({
       index: 0,
       routes,
     })
@@ -132,7 +132,7 @@ it('ignores key and routeNames when resetting with RESET', () => {
   const result = BaseRouter.getStateForAction(
     STATE,
     // @ts-ignore
-    BaseActions.reset({ index: 2, key: 'foo', routeNames: ['test'] })
+    CommonActions.reset({ index: 2, key: 'foo', routeNames: ['test'] })
   );
 
   expect(result).toEqual({ ...STATE, index: 2 });

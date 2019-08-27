@@ -1,6 +1,6 @@
-import * as BaseActions from './BaseActions';
+import * as CommonActions from './CommonActions';
 
-export { BaseActions };
+export { CommonActions };
 
 export { default as BaseRouter } from './BaseRouter';
 export { default as NavigationContainer } from './NavigationContainer';

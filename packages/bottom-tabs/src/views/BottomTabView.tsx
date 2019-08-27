@@ -5,7 +5,7 @@ import {
   AccessibilityRole,
   AccessibilityStates,
 } from 'react-native';
-import { Route, BaseActions } from '@react-navigation/core';
+import { Route, CommonActions } from '@react-navigation/core';
 import { TabNavigationState } from '@react-navigation/routers';
 // eslint-disable-next-line import/no-unresolved
 import { ScreenContainer } from 'react-native-screens';
@@ -143,7 +143,7 @@ export default class BottomTabView extends React.Component<Props, State> {
       !event.defaultPrevented
     ) {
       navigation.dispatch({
-        ...BaseActions.navigate(route.name),
+        ...CommonActions.navigate(route.name),
         target: state.key,
       });
     }

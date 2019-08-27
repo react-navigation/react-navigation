@@ -1,4 +1,4 @@
-import { BaseActions } from '@react-navigation/core';
+import { CommonActions } from '@react-navigation/core';
 import { StackRouter } from '../src';
 
 jest.mock('shortid', () => () => 'test');
@@ -15,7 +15,7 @@ it('handles navigate action', () => {
         routeNames: ['baz', 'bar', 'qux'],
         routes: [{ key: 'baz', name: 'baz' }, { key: 'bar', name: 'bar' }],
       },
-      BaseActions.navigate('qux', { answer: 42 })
+      CommonActions.navigate('qux', { answer: 42 })
     )
   ).toEqual({
     stale: false,

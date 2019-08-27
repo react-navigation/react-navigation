@@ -1,5 +1,5 @@
 import * as React from 'react';
-import * as BaseActions from './BaseActions';
+import * as CommonActions from './CommonActions';
 import NavigationContext from './NavigationContext';
 import { NavigationStateContext } from './NavigationContainer';
 import { NavigationEventEmitter } from './useEventEmitter';
@@ -52,7 +52,7 @@ export default function useNavigationHelpers<
 
     const actions = {
       ...router.actionCreators,
-      ...BaseActions,
+      ...CommonActions,
     };
 
     const helpers = Object.keys(actions).reduce(
@@ -73,8 +73,10 @@ export default function useNavigationHelpers<
         ? parentNavigationHelpers.isFocused
         : () => true,
       canGoBack: () =>
-        router.getStateForAction(getState(), BaseActions.goBack() as Action) !==
-          null ||
+        router.getStateForAction(
+          getState(),
+          CommonActions.goBack() as Action
+        ) !== null ||
         (parentNavigationHelpers && parentNavigationHelpers.canGoBack()) ||
         false,
     } as NavigationHelpers<ParamListBase, EventMap> &
