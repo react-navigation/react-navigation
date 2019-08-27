@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.4](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/bottom-tabs@5.0.0-alpha.3...@react-navigation/bottom-tabs@5.0.0-alpha.4) (2019-08-27)
+
+
+### Features
+
+* add hook to scroll to top on tab press ([9e1104c](https://github.com/react-navigation/navigation-ex/commit/9e1104c))
+
+
+
+
+
 # [5.0.0-alpha.3](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/bottom-tabs@5.0.0-alpha.2...@react-navigation/bottom-tabs@5.0.0-alpha.3) (2019-08-22)
 
 
