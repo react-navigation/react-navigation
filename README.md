@@ -1,5 +1,9 @@
 # Rethinking Navigation
 
+[![Build Status][build-badge]][build]
+[![Code Coverage][coverage-badge]][coverage]
+[![MIT License][license-badge]][license]
+
 An exploration of a component-first API for React Navigation for building more dynamic navigation solutions.
 
 ## Considerations
@@ -530,3 +534,12 @@ yarn lerna publish
 ```
 
 This will automatically bump the version and publish the packages. It'll also publish the changelogs on GitHub for each package.
+
+<!-- badges -->
+
+[build-badge]: https://img.shields.io/circleci/project/github/react-navigation/navigation-ex/master.svg?style=flat-square
+[build]: https://circleci.com/gh/react-navigation/navigation-ex
+[coverage-badge]: https://img.shields.io/codecov/c/github/react-navigation/navigation-ex.svg?style=flat-square
+[coverage]: https://codecov.io/github/react-navigation/navigation-ex
+[license-badge]: https://img.shields.io/npm/l/@react-navigation/core.svg?style=flat-square
+[license]: https://opensource.org/licenses/MIT
