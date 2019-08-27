@@ -37,12 +37,18 @@ jobs:
         - attach_workspace:
             at: ~/project
         - run: |
-            yarn lerna run prepare
             yarn test --coverage
             cat ./coverage/lcov.info | ./node_modules/.bin/codecov
         - store_artifacts:
             path: coverage
             destination: coverage
+  build-packages:
+      <<: *defaults
+      steps:
+        - attach_workspace:
+            at: ~/project
+        - run: |
+            yarn lerna run prepare
 
 workflows:
   version: 2
@@ -53,5 +59,8 @@ workflows:
           requires:
             - install-dependencies
       - unit-test:
+          requires:
+            - install-dependencies
+      - build-packages:
           requires:
             - install-dependencies

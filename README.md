@@ -490,10 +490,10 @@ Unfortunately it's not possible to verify that the type of children elements are
 
 ## Contributing
 
-The project uses a monorepo structure for the packages managed by [yarn workspaces](https://yarnpkg.com/lang/en/docs/workspaces/) and [lerna](https://lerna.js.org). To get started with the project, run `lerna bootstrap` to install the required dependencies for each package:
+The project uses a monorepo structure for the packages managed by [yarn workspaces](https://yarnpkg.com/lang/en/docs/workspaces/) and [lerna](https://lerna.js.org). To get started with the project, run `yarn` in the root directory to install the required dependencies for each package:
 
 ```sh
-lerna bootstrap
+yarn
 ```
 
 While developing, you can run the [example app](/example/) with [Expo](https://expo.io/) to test your changes:
@@ -515,13 +515,7 @@ To fix formatting errors, run the following:
 yarn lint --fix
 ```
 
-Remember to add tests for your change if possible. To run tests, first build all the files:
-
-```sh
-lerna run prepare
-```
-
-Then run the tests:
+Remember to add tests for your change if possible. Run the tests by:
 
 ```sh
 yarn test
@@ -532,7 +526,7 @@ yarn test
 To publish a new version, first we need to export a `GH_TOKEN` environment variable as mentioned [here](https://github.com/lerna/lerna/tree/master/commands/version#--create-release-type). Then run:
 
 ```sh
-lerna publish
+yarn lerna publish
 ```
 
 This will automatically bump the version and publish the packages. It'll also publish the changelogs on GitHub for each package.
