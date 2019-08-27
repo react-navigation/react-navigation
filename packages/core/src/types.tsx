@@ -1,7 +1,7 @@
-import * as BaseActions from './BaseActions';
+import * as CommonActions from './CommonActions';
 import * as React from 'react';
 
-export type CommonAction = BaseActions.Action;
+export type CommonAction = CommonActions.Action;
 
 export type NavigationState = {
   /**

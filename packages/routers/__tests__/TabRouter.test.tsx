@@ -1,4 +1,4 @@
-import { BaseActions } from '@react-navigation/core';
+import { CommonActions } from '@react-navigation/core';
 import { TabRouter } from '../src';
 
 jest.mock('shortid', () => () => 'test');
@@ -16,7 +16,7 @@ it('handles navigate action', () => {
         routeKeyHistory: [],
         routes: [{ key: 'baz', name: 'baz' }, { key: 'bar', name: 'bar' }],
       },
-      BaseActions.navigate('baz', { answer: 42 })
+      CommonActions.navigate('baz', { answer: 42 })
     )
   ).toEqual({
     stale: false,

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import * as BaseActions from './BaseActions';
+import * as CommonActions from './CommonActions';
 import { NavigationEventEmitter } from './useEventEmitter';
 import NavigationContext from './NavigationContext';
 
@@ -53,7 +53,7 @@ export default function useNavigationCache<
 
   const actions = {
     ...router.actionCreators,
-    ...BaseActions,
+    ...CommonActions,
   };
 
   cache.current = state.routes.reduce<NavigationCache<State, ScreenOptions>>(

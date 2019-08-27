@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { StyleSheet, View, ViewStyle, StyleProp } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { Route, BaseActions } from '@react-navigation/core';
+import { Route, CommonActions } from '@react-navigation/core';
 import {
   DrawerActions,
   DrawerNavigationState,
@@ -78,7 +78,7 @@ class DrawerSidebar extends React.PureComponent<Props> {
     navigation.dispatch({
       ...(focused
         ? DrawerActions.closeDrawer()
-        : BaseActions.navigate(route.name)),
+        : CommonActions.navigate(route.name)),
       target: state.key,
     });
   };

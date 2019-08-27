@@ -1,5 +1,5 @@
 import * as React from 'react';
-import * as BaseActions from './BaseActions';
+import * as CommonActions from './CommonActions';
 import EnsureSingleNavigator from './EnsureSingleNavigator';
 import NavigationBuilderContext from './NavigationBuilderContext';
 import useFocusedListeners from './useFocusedListeners';
@@ -105,13 +105,13 @@ const Container = React.forwardRef(function NavigationContainer(
   };
 
   React.useImperativeHandle(ref, () => ({
-    ...(Object.keys(BaseActions) as Array<keyof typeof BaseActions>).reduce<
+    ...(Object.keys(CommonActions) as Array<keyof typeof CommonActions>).reduce<
       any
     >((acc, name) => {
       acc[name] = (...args: any[]) =>
         dispatch(
           // eslint-disable-next-line import/namespace
-          BaseActions[name](
+          CommonActions[name](
             // @ts-ignore
             ...args
           )
