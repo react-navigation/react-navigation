@@ -17,7 +17,9 @@ import { Platform } from 'react-native';
 
 const ANDROID_VERSION_PIE = 28;
 
-// Standard iOS navigation transition
+/**
+ * Standard iOS navigation transition.
+ */
 export const SlideFromRightIOS: TransitionPreset = {
   gestureDirection: 'horizontal',
   transitionSpec: {
@@ -28,7 +30,9 @@ export const SlideFromRightIOS: TransitionPreset = {
   headerStyleInterpolator: forFade,
 };
 
-// Standard iOS navigation transition for modals
+/**
+ * Standard iOS navigation transition for modals.
+ */
 export const ModalSlideFromBottomIOS: TransitionPreset = {
   gestureDirection: 'vertical',
   transitionSpec: {
@@ -39,7 +43,9 @@ export const ModalSlideFromBottomIOS: TransitionPreset = {
   headerStyleInterpolator: forNoAnimation,
 };
 
-// Standard iOS modal presentation style (introduced in iOS 13)
+/**
+ * Standard iOS modal presentation style (introduced in iOS 13).
+ */
 export const ModalPresentationIOS: TransitionPreset = {
   gestureDirection: 'vertical',
   transitionSpec: {
@@ -50,7 +56,9 @@ export const ModalPresentationIOS: TransitionPreset = {
   headerStyleInterpolator: forNoAnimation,
 };
 
-// Standard Android navigation transition when opening or closing an Activity on Android < 9
+/**
+ * Standard Android navigation transition when opening or closing an Activity on Android < 9 (Oreo).
+ */
 export const FadeFromBottomAndroid: TransitionPreset = {
   gestureDirection: 'vertical',
   transitionSpec: {
@@ -61,7 +69,9 @@ export const FadeFromBottomAndroid: TransitionPreset = {
   headerStyleInterpolator: forNoAnimation,
 };
 
-// Standard Android navigation transition when opening or closing an Activity on Android >= 9
+/**
+ * Standard Android navigation transition when opening or closing an Activity on Android >= 9 (Pie).
+ */
 export const RevealFromBottomAndroid: TransitionPreset = {
   gestureDirection: 'vertical',
   transitionSpec: {
@@ -72,6 +82,9 @@ export const RevealFromBottomAndroid: TransitionPreset = {
   headerStyleInterpolator: forNoAnimation,
 };
 
+/**
+ * Default navigation transition for the current platform.
+ */
 export const DefaultTransition = Platform.select({
   ios: SlideFromRightIOS,
   default:
@@ -80,6 +93,9 @@ export const DefaultTransition = Platform.select({
       : RevealFromBottomAndroid,
 });
 
+/**
+ * Default modal transition for the current platform.
+ */
 export const ModalTransition = Platform.select({
   ios: ModalSlideFromBottomIOS,
   default: DefaultTransition,

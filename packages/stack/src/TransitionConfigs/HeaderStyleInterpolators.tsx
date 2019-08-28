@@ -4,6 +4,9 @@ import { HeaderInterpolationProps, HeaderInterpolatedStyle } from '../types';
 
 const { interpolate, add } = Animated;
 
+/**
+ * Standard UIKit style animation for the header where the title fades into the back button label.
+ */
 export function forUIKit({
   progress: { current, next },
   layouts,
@@ -85,6 +88,9 @@ export function forUIKit({
   };
 }
 
+/**
+ * Simple fade animation for the header elements.
+ */
 export function forFade({
   progress: { current, next },
 }: HeaderInterpolationProps): HeaderInterpolatedStyle {
@@ -102,6 +108,9 @@ export function forFade({
   };
 }
 
+/**
+ * Simple translate animation to translate the header along with the sliding screen.
+ */
 export function forStatic({
   progress: { current, next },
   layouts: { screen },
