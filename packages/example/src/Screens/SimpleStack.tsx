@@ -72,17 +72,18 @@ const AlbumsScreen = ({
 
 const SimpleStack = createStackNavigator<SimpleStackParams>();
 
-export default function SimpleStackScreen({
-  navigation,
-}: {
+type Props = {
+  options?: React.ComponentProps<typeof SimpleStack.Navigator>;
   navigation: StackNavigationProp<ParamListBase>;
-}) {
+};
+
+export default function SimpleStackScreen({ navigation, options }: Props) {
   navigation.setOptions({
     header: null,
   });
 
   return (
-    <SimpleStack.Navigator>
+    <SimpleStack.Navigator {...options}>
       <SimpleStack.Screen
         name="article"
         component={ArticleScreen}

@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
-import Article from '../Shared/Article';
 import Albums from '../Shared/Albums';
 import Contacts from '../Shared/Contacts';
 import Chat from '../Shared/Chat';
+import SimpleStackScreen from './SimpleStack';
 
 type MaterialBottomTabParams = {
   article: undefined;
@@ -22,13 +22,16 @@ export default function MaterialBottomTabsScreen() {
     <MaterialBottomTabs.Navigator barStyle={styles.tabBar}>
       <MaterialBottomTabs.Screen
         name="article"
-        component={Article}
         options={{
           tabBarLabel: 'Article',
           tabBarIcon: 'chrome-reader-mode',
           tabBarColor: '#C9E7F8',
         }}
-      />
+      >
+        {props => (
+          <SimpleStackScreen {...props} options={{ headerMode: 'none' }} />
+        )}
+      </MaterialBottomTabs.Screen>
       <MaterialBottomTabs.Screen
         name="chat"
         component={Chat}
