@@ -298,7 +298,7 @@ export default class Card extends React.Component<Props> {
       ]),
       cond(
         eq(isVisible, 1),
-        openingSpec.timing === 'spring'
+        openingSpec.animation === 'spring'
           ? memoizedSpring(
               this.clock,
               { ...this.transitionState, velocity: this.transitionVelocity },
@@ -309,7 +309,7 @@ export default class Card extends React.Component<Props> {
               { ...this.transitionState, frameTime: this.frameTime },
               { ...openingSpec.config, toValue: this.toValue }
             ),
-        closingSpec.timing === 'spring'
+        closingSpec.animation === 'spring'
           ? memoizedSpring(
               this.clock,
               { ...this.transitionState, velocity: this.transitionVelocity },
