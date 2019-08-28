@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { FlatList } from 'react-native-gesture-handler';
+import { View, Text, FlatList, StyleSheet } from 'react-native';
+import { useScrollToTop } from '@react-navigation/native';
 
 type Item = { name: string; number: number };
 
@@ -79,23 +79,24 @@ class ContactItem extends React.PureComponent<{
   }
 }
 
-export default class Contacts extends React.Component {
-  private renderItem = ({ item }: { item: Item }) => (
-    <ContactItem item={item} />
+export default function Contacts() {
+  const ref = React.useRef<FlatList<Item>>(null);
+
+  useScrollToTop(ref);
+
+  const renderItem = ({ item }: { item: Item }) => <ContactItem item={item} />;
+
+  const ItemSeparator = () => <View style={styles.separator} />;
+
+  return (
+    <FlatList
+      ref={ref}
+      data={CONTACTS}
+      keyExtractor={(_, i) => String(i)}
+      renderItem={renderItem}
+      ItemSeparatorComponent={ItemSeparator}
+    />
   );
-
-  private ItemSeparator = () => <View style={styles.separator} />;
-
-  render() {
-    return (
-      <FlatList
-        data={CONTACTS}
-        keyExtractor={(_, i) => String(i)}
-        renderItem={this.renderItem}
-        ItemSeparatorComponent={this.ItemSeparator}
-      />
-    );
-  }
 }
 
 const styles = StyleSheet.create({
