@@ -175,8 +175,8 @@ export type TimingConfig = {
 };
 
 export type TransitionSpec =
-  | { timing: 'spring'; config: SpringConfig }
-  | { timing: 'timing'; config: TimingConfig };
+  | { animation: 'spring'; config: SpringConfig }
+  | { animation: 'timing'; config: TimingConfig };
 
 export type CardInterpolationProps = {
   index: number;

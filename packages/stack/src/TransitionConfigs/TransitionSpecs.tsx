@@ -3,7 +3,7 @@ import { TransitionSpec } from '../types';
 
 // These are the exact values from UINavigationController's animation configuration
 export const TransitionIOSSpec: TransitionSpec = {
-  timing: 'spring',
+  animation: 'spring',
   config: {
     stiffness: 1000,
     damping: 500,
@@ -16,7 +16,7 @@ export const TransitionIOSSpec: TransitionSpec = {
 
 // See http://androidxref.com/7.1.1_r6/xref/frameworks/base/core/res/res/anim/activity_open_enter.xml
 export const FadeInFromBottomAndroidSpec: TransitionSpec = {
-  timing: 'timing',
+  animation: 'timing',
   config: {
     duration: 350,
     easing: Easing.out(Easing.poly(5)),
@@ -25,7 +25,7 @@ export const FadeInFromBottomAndroidSpec: TransitionSpec = {
 
 // See http://androidxref.com/7.1.1_r6/xref/frameworks/base/core/res/res/anim/activity_close_exit.xml
 export const FadeOutToBottomAndroidSpec: TransitionSpec = {
-  timing: 'timing',
+  animation: 'timing',
   config: {
     duration: 150,
     easing: Easing.in(Easing.linear),
@@ -34,7 +34,7 @@ export const FadeOutToBottomAndroidSpec: TransitionSpec = {
 
 // See http://androidxref.com/9.0.0_r3/xref/frameworks/base/core/res/res/anim/activity_open_enter.xml
 export const RevealFromBottomAndroidSpec: TransitionSpec = {
-  timing: 'timing',
+  animation: 'timing',
   config: {
     duration: 425,
     // This is super rough approximation of the path used for the curve by android
