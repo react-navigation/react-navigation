@@ -7,8 +7,7 @@ import {
 } from 'react-navigation';
 import { List, Divider } from 'react-native-paper';
 
-// Unclear why this isn't getitng picked up :O
-// eslint-disable-next-line import/named
+// eslint-disable-next-line import/no-unresolved
 import { Assets as StackAssets } from 'react-navigation-stack';
 
 import SimpleTabs from './src/SimpleTabs';
