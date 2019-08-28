@@ -20,7 +20,7 @@
   "main": "lib/commonjs/index.js",
   "react-native": "src/index.tsx",
   "module": "lib/module/index.js",
-  "types": "lib/typescript/bottom-tabssrc/index.d.ts",
+  "types": "lib/typescript/bottom-tabs/src/index.d.ts",
   "files": [
     "src",
     "lib"
