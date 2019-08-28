@@ -367,6 +367,15 @@ export default class Card extends React.Component<Props> {
       ])
     ),
     onChange(
+      this.isVisible,
+      call([this.isVisible], ([isVisible]) => (this.isVisibleValue = isVisible))
+    ),
+  ]);
+
+  private execNoGesture = this.runTransition(this.isVisible);
+
+  private execWithGesture = block([
+    onChange(
       this.isSwiping,
       call(
         [this.isSwiping, this.isSwipeCancelled],
@@ -453,10 +462,6 @@ export default class Card extends React.Component<Props> {
           )
         ),
       ]
-    ),
-    onChange(
-      this.isVisible,
-      call([this.isVisible], ([isVisible]) => (this.isVisibleValue = isVisible))
     ),
   ]);
 
@@ -576,15 +581,21 @@ export default class Card extends React.Component<Props> {
       layout
     );
 
-    const handleGestureEvent =
-      gestureDirection === 'vertical'
+    const handleGestureEvent = gestureEnabled
+      ? gestureDirection === 'vertical'
         ? this.handleGestureEventVertical
-        : this.handleGestureEventHorizontal;
+        : this.handleGestureEventHorizontal
+      : undefined;
 
     return (
       <StackGestureContext.Provider value={this.gestureRef}>
         <View pointerEvents="box-none" {...rest}>
           <Animated.Code exec={this.exec} />
+          {this.props.gestureEnabled ? (
+            <Animated.Code exec={this.execNoGesture} />
+          ) : (
+            <Animated.Code exec={this.execWithGesture} />
+          )}
           {overlayEnabled && overlayStyle ? (
             <Animated.View
               pointerEvents="none"
