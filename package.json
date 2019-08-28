@@ -64,5 +64,11 @@
       "@react-navigation/([^/]+)": "<rootDir>/packages/$1/src"
     }
   },
+  "prettier": {
+    "tabWidth": 2,
+    "useTabs": false,
+    "singleQuote": true,
+    "trailingComma": "es5"
+  },
   "name": "react-navigation"
 }
