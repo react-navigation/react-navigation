@@ -8,6 +8,7 @@ import TouchableBounce from 'react-native/Libraries/Components/Touchable/Touchab
 import Albums from '../Shared/Albums';
 import Contacts from '../Shared/Contacts';
 import Chat from '../Shared/Chat';
+import SimpleStackScreen from './SimpleStack';
 
 const getTabBarIcon = (name: string) => ({
   tintColor,
@@ -20,6 +21,7 @@ const getTabBarIcon = (name: string) => ({
 );
 
 type BottomTabParams = {
+  article: undefined;
   albums: undefined;
   contacts: undefined;
   chat: undefined;
@@ -30,6 +32,18 @@ const BottomTabs = createBottomTabNavigator<BottomTabParams>();
 export default function BottomTabsScreen() {
   return (
     <BottomTabs.Navigator>
+      <BottomTabs.Screen
+        name="article"
+        options={{
+          title: 'Article',
+          tabBarIcon: 'chrome-reader-mode',
+          tabBarButtonComponent: TouchableBounce,
+        }}
+      >
+        {props => (
+          <SimpleStackScreen {...props} options={{ headerMode: 'none' }} />
+        )}
+      </BottomTabs.Screen>
       <BottomTabs.Screen
         name="chat"
         component={Chat}
