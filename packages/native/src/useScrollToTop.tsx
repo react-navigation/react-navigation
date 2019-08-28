@@ -9,7 +9,31 @@ type ScrollableView =
   | { scrollToOffset(options: ScrollOptions): void }
   | { scrollResponderScrollTo(options: ScrollOptions): void };
 
-export default function useScrollToTop(ref: React.RefObject<ScrollableView>) {
+type MaybeScrollableWrapperView =
+  | ScrollableView
+  | { getScrollResponder: () => ScrollableView }
+  | { getNode: () => ScrollableView };
+
+function getNodeFromRef(
+  ref: React.RefObject<MaybeScrollableWrapperView>
+): ScrollableView | null {
+  if (ref.current === null) {
+    return null;
+  }
+
+  // Support weird animated containers and Animated components.
+  if ('getScrollResponder' in ref.current) {
+    return ref.current.getScrollResponder();
+  } else if ('getNode' in ref.current) {
+    return ref.current.getNode();
+  } else {
+    return ref.current;
+  }
+}
+
+export default function useScrollToTop(
+  ref: React.RefObject<MaybeScrollableWrapperView>
+) {
   const navigation = useNavigation();
 
   React.useEffect(
@@ -23,7 +47,7 @@ export default function useScrollToTop(ref: React.RefObject<ScrollableView>) {
         // Run the operation in the next frame so we're sure all listeners have been run
         // This is necessary to know if preventDefault() has been called
         requestAnimationFrame(() => {
-          const scrollable = ref.current;
+          const scrollable = getNodeFromRef(ref);
 
           if (isFocused && !e.defaultPrevented && scrollable) {
             // When user taps on already focused tab, scroll to top
