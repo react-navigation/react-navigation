@@ -36,7 +36,7 @@ export default function BottomTabsScreen() {
         name="article"
         options={{
           title: 'Article',
-          tabBarIcon: 'chrome-reader-mode',
+          tabBarIcon: getTabBarIcon('chrome-reader-mode'),
           tabBarButtonComponent: TouchableBounce,
         }}
       >
