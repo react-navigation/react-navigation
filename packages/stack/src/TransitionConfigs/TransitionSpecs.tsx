@@ -1,7 +1,9 @@
 import { Easing } from 'react-native-reanimated';
 import { TransitionSpec } from '../types';
 
-// These are the exact values from UINavigationController's animation configuration
+/**
+ * Exact values from UINavigationController's animation configuration.
+ */
 export const TransitionIOSSpec: TransitionSpec = {
   timing: 'spring',
   config: {
@@ -14,7 +16,10 @@ export const TransitionIOSSpec: TransitionSpec = {
   },
 };
 
-// See http://androidxref.com/7.1.1_r6/xref/frameworks/base/core/res/res/anim/activity_open_enter.xml
+/**
+ * Configuration for activity open animation from Android Nougat.
+ * See http://androidxref.com/7.1.1_r6/xref/frameworks/base/core/res/res/anim/activity_open_enter.xml
+ */
 export const FadeInFromBottomAndroidSpec: TransitionSpec = {
   timing: 'timing',
   config: {
@@ -23,7 +28,10 @@ export const FadeInFromBottomAndroidSpec: TransitionSpec = {
   },
 };
 
-// See http://androidxref.com/7.1.1_r6/xref/frameworks/base/core/res/res/anim/activity_close_exit.xml
+/**
+ * Configuration for activity close animation from Android Nougat.
+ * See http://androidxref.com/7.1.1_r6/xref/frameworks/base/core/res/res/anim/activity_close_exit.xml
+ */
 export const FadeOutToBottomAndroidSpec: TransitionSpec = {
   timing: 'timing',
   config: {
@@ -32,7 +40,10 @@ export const FadeOutToBottomAndroidSpec: TransitionSpec = {
   },
 };
 
-// See http://androidxref.com/9.0.0_r3/xref/frameworks/base/core/res/res/anim/activity_open_enter.xml
+/**
+ * Approximate configuration for activity open animation from Android Pie.
+ * See http://androidxref.com/9.0.0_r3/xref/frameworks/base/core/res/res/anim/activity_open_enter.xml
+ */
 export const RevealFromBottomAndroidSpec: TransitionSpec = {
   timing: 'timing',
   config: {

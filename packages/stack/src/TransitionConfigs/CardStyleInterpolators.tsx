@@ -156,7 +156,7 @@ export function forFadeFromBottomAndroid({
 }
 
 /**
- * Standard Android-style wipe from the bottom for Android Pie.
+ * Standard Android-style reveal from the bottom for Android Pie.
  */
 export function forRevealFromBottomAndroid({
   progress: { current, next },
