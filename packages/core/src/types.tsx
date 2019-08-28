@@ -274,8 +274,8 @@ type NavigationHelpersCommon<
    * @param [params] Params object for the route.
    */
   navigate<RouteName extends keyof ParamList>(
-    ...args: ParamList[RouteName] extends undefined
-      ? [RouteName] | [RouteName, undefined]
+    ...args: ParamList[RouteName] extends (undefined | any)
+      ? [RouteName] | [RouteName, ParamList[RouteName]]
       : [RouteName, ParamList[RouteName]]
   ): void;
 
@@ -298,7 +298,7 @@ type NavigationHelpersCommon<
    */
   replace<RouteName extends keyof ParamList>(
     ...args: ParamList[RouteName] extends undefined
-      ? [RouteName] | [RouteName, undefined]
+      ? [RouteName] | [RouteName, ParamList[RouteName]]
       : [RouteName, ParamList[RouteName]]
   ): void;
 
