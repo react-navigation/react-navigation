@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.4](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/native@5.0.0-alpha.3...@react-navigation/native@5.0.0-alpha.4) (2019-08-28)
+
+
+### Bug Fixes
+
+* fix stack nested in tab always getting reset ([dead4e8](https://github.com/react-navigation/navigation-ex/commit/dead4e8))
+
+
+
+
+
 # [5.0.0-alpha.3](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/native@5.0.0-alpha.2...@react-navigation/native@5.0.0-alpha.3) (2019-08-27)
 
 
