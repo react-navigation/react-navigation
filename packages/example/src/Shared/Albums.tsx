@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Image, Dimensions, ScrollView, StyleSheet } from 'react-native';
+import { useScrollToTop } from '@react-navigation/native';
 
 const COVERS = [
   require('../../assets/album-art-1.jpg'),
@@ -12,19 +13,22 @@ const COVERS = [
   require('../../assets/album-art-8.jpg'),
 ];
 
-export default class Albums extends React.Component {
-  render() {
-    return (
-      <ScrollView
-        style={styles.container}
-        contentContainerStyle={styles.content}
-      >
-        {COVERS.map((source, i) => (
-          <Image key={i} source={source} style={styles.cover} />
-        ))}
-      </ScrollView>
-    );
-  }
+export default function Albums() {
+  const ref = React.useRef<ScrollView>(null);
+
+  useScrollToTop(ref);
+
+  return (
+    <ScrollView
+      ref={ref}
+      style={styles.container}
+      contentContainerStyle={styles.content}
+    >
+      {COVERS.map((source, i) => (
+        <Image key={i} source={source} style={styles.cover} />
+      ))}
+    </ScrollView>
+  );
 }
 
 const styles = StyleSheet.create({

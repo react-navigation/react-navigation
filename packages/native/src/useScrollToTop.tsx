@@ -1,9 +1,13 @@
 import * as React from 'react';
 import { useNavigation, EventArg } from '@react-navigation/core';
 
-type ScrollableView = {
-  scrollTo(options: { x?: number; y?: number; animated?: boolean }): void;
-};
+type ScrollOptions = { y?: number; animated?: boolean };
+
+type ScrollableView =
+  | { scrollToTop(): void }
+  | { scrollTo(options: ScrollOptions): void }
+  | { scrollToOffset(options: ScrollOptions): void }
+  | { scrollResponderScrollTo(options: ScrollOptions): void };
 
 export default function useScrollToTop(ref: React.RefObject<ScrollableView>) {
   const navigation = useNavigation();
@@ -19,9 +23,19 @@ export default function useScrollToTop(ref: React.RefObject<ScrollableView>) {
         // Run the operation in the next frame so we're sure all listeners have been run
         // This is necessary to know if preventDefault() has been called
         requestAnimationFrame(() => {
-          if (isFocused && !e.defaultPrevented && ref.current) {
+          const scrollable = ref.current;
+
+          if (isFocused && !e.defaultPrevented && scrollable) {
             // When user taps on already focused tab, scroll to top
-            ref.current.scrollTo({ y: 0 });
+            if ('scrollToTop' in scrollable) {
+              scrollable.scrollToTop();
+            } else if ('scrollTo' in scrollable) {
+              scrollable.scrollTo({ y: 0, animated: true });
+            } else if ('scrollToOffset' in scrollable) {
+              scrollable.scrollToOffset({ y: 0, animated: true });
+            } else if ('scrollResponderScrollTo' in scrollable) {
+              scrollable.scrollResponderScrollTo({ y: 0, animated: true });
+            }
           }
         });
       }),
