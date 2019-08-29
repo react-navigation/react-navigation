@@ -202,7 +202,11 @@ export default class Card extends React.Component<Props> {
     }
 
     if (closing !== prevProps.closing) {
-      this.isClosing.setValue(closing ? TRUE : FALSE);
+      // If the style updates during render, setting the value here doesn't work
+      // We need to defer it a bit so the animation starts properly
+      requestAnimationFrame(() =>
+        this.isClosing.setValue(closing ? TRUE : FALSE)
+      );
     }
   }
 
@@ -265,6 +269,17 @@ export default class Card extends React.Component<Props> {
     position: this.props.current,
     time: new Value(0),
     finished: new Value(FALSE),
+  };
+
+  private handleTransitionEnd = () => {
+    this.isRunningAnimation = false;
+    this.interpolatedStyle = this.getInterpolatedStyle(
+      this.props.styleInterpolator,
+      this.props.index,
+      this.props.current,
+      this.props.next,
+      this.props.layout
+    );
   };
 
   private runTransition = (isVisible: Binary | Animated.Node<number>) => {
@@ -331,7 +346,9 @@ export default class Card extends React.Component<Props> {
         call([this.isVisible], ([value]: ReadonlyArray<Binary>) => {
           const isOpen = Boolean(value);
           const { onOpen, onClose } = this.props;
-          this.isRunningAnimation = false;
+
+          this.handleTransitionEnd();
+
           if (isOpen) {
             onOpen(true);
           } else {
@@ -357,7 +374,7 @@ export default class Card extends React.Component<Props> {
       cond(neq(this.nextIsVisible, UNSET), [
         // Stop any running animations
         cond(clockRunning(this.clock), [
-          call([], () => (this.isRunningAnimation = false)),
+          call([], this.handleTransitionEnd),
           stopClock(this.clock),
         ]),
         set(this.gesture, 0),
@@ -511,6 +528,18 @@ export default class Card extends React.Component<Props> {
       })
   );
 
+  // Keep track of the style in a property to avoid changing the animated node when deps change
+  // The style shouldn't change in the middle of the animation and should refer to what was there at the start of it
+  // Which will be the last value when just before the render which started the animation
+  // We need to make sure to update this when the running animation ends
+  private interpolatedStyle = this.getInterpolatedStyle(
+    this.props.styleInterpolator,
+    this.props.index,
+    this.props.current,
+    this.props.next,
+    this.props.layout
+  );
+
   private gestureActivationCriteria() {
     const { layout, gestureDirection, gestureResponseDistance } = this.props;
 
@@ -551,35 +580,39 @@ export default class Card extends React.Component<Props> {
 
   render() {
     const {
-      index,
       active,
       transparent,
-      layout,
+      styleInterpolator,
+      index,
       current,
       next,
+      layout,
       overlayEnabled,
       shadowEnabled,
       gestureEnabled,
       gestureDirection,
       children,
-      styleInterpolator,
       containerStyle: customContainerStyle,
       contentStyle,
       ...rest
     } = this.props;
+
+    if (!this.isRunningAnimation) {
+      this.interpolatedStyle = this.getInterpolatedStyle(
+        styleInterpolator,
+        index,
+        current,
+        next,
+        layout
+      );
+    }
 
     const {
       containerStyle,
       cardStyle,
       overlayStyle,
       shadowStyle,
-    } = this.getInterpolatedStyle(
-      styleInterpolator,
-      index,
-      current,
-      next,
-      layout
-    );
+    } = this.interpolatedStyle;
 
     const handleGestureEvent = gestureEnabled
       ? gestureDirection === 'vertical'
