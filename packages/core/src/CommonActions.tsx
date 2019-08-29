@@ -10,7 +10,8 @@ export type Action =
       type: 'NAVIGATE';
       payload:
         | { name: string; key?: undefined; params?: object }
-        | { key: string; name?: undefined; params?: object };
+        | { key: string; name?: undefined; params?: object }
+        | { key: string; name: string; params?: object };
       source?: string;
       target?: string;
     }
@@ -38,7 +39,10 @@ export function goBack(): Action {
 }
 
 export function navigate(
-  route: { key: string; params?: object } | { name: string; params?: object }
+  route:
+    | { key: string; params?: object }
+    | { name: string; params?: object }
+    | { name: string; key: string; params?: object }
 ): Action;
 export function navigate(name: string, params?: object): Action;
 export function navigate(...args: any): Action {
@@ -47,12 +51,9 @@ export function navigate(...args: any): Action {
   } else {
     const payload = args[0];
 
-    if (
-      (payload.hasOwnProperty('key') && payload.hasOwnProperty('name')) ||
-      (!payload.hasOwnProperty('key') && !payload.hasOwnProperty('name'))
-    ) {
+    if (!payload.hasOwnProperty('key') && !payload.hasOwnProperty('name')) {
       throw new Error(
-        'While calling navigate with an object as the argument, you need to specify either name or key'
+        'While calling navigate with an object as the argument, you need to specify name or key'
       );
     }
 

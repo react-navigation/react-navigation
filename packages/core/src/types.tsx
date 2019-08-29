@@ -287,7 +287,7 @@ type NavigationHelpersCommon<
   navigate<RouteName extends keyof ParamList>(
     route:
       | { key: string; params?: ParamList[RouteName] }
-      | { name: RouteName; params: ParamList[RouteName] }
+      | { name: RouteName; key?: string; params: ParamList[RouteName] }
   ): void;
 
   /**
