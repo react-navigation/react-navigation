@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.8](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.7...@react-navigation/stack@5.0.0-alpha.8) (2019-08-29)
+
+
+### Bug Fixes
+
+* allow making params optional. fixes [#80](https://github.com/react-navigation/navigation-ex/issues/80) ([a9d4813](https://github.com/react-navigation/navigation-ex/commit/a9d4813))
+* fix gestures not working in stack ([8c1acc3](https://github.com/react-navigation/navigation-ex/commit/8c1acc3))
+
+
+
+
+
 # [5.0.0-alpha.7](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.6...@react-navigation/stack@5.0.0-alpha.7) (2019-08-28)
 
 
