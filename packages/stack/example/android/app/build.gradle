@@ -139,6 +139,7 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-safe-area-context')
     implementation project(':react-native-webview')
     implementation project(':react-native-reanimated')
     implementation project(':react-native-gesture-handler')

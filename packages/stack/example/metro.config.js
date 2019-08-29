@@ -28,6 +28,7 @@ module.exports = {
 
     providesModuleNodeModules: [
       '@expo/vector-icons',
+      'react-native-safe-area-context',
       '@babel/runtime',
       'react-navigation',
       ...projectDependencies,

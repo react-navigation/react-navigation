@@ -2,6 +2,25 @@
 
 jest.mock('@react-native-community/masked-view', () => () => null);
 
+jest.mock('react-native-safe-area-context', () => {
+  const React = require('react');
+
+  const SafeAreaContext = React.createContext({
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  });
+
+  return {
+    __esModule: true,
+
+    SafeAreaContext,
+    SafeAreaProvider: SafeAreaContext.Provider,
+    SafeAreaConsumer: SafeAreaContext.Consumer,
+  };
+});
+
 jest.mock('react-native-gesture-handler', () => ({
   PanGestureHandler: 'PanGestureHandler',
   BaseButton: 'BaseButton',

@@ -5,6 +5,7 @@ import {
   LayoutChangeEvent,
 } from 'react-native';
 import Animated from 'react-native-reanimated';
+import { EdgeInsets } from 'react-native-safe-area-context';
 import {
   NavigationRoute,
   NavigationState,
@@ -93,7 +94,6 @@ export type HeaderOptions = {
   headerPressColorAndroid?: string;
   headerBackground?: React.ReactNode | (() => React.ReactNode);
   headerStyle?: StyleProp<ViewStyle>;
-  headerStatusBarHeight?: number;
   headerTransparent?: boolean;
 };
 
@@ -221,6 +221,7 @@ export type CardInterpolationProps = {
   layouts: {
     screen: Layout;
   };
+  insets: EdgeInsets;
 };
 
 export type CardInterpolatedStyle = {

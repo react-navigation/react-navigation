@@ -14,6 +14,7 @@ import {
   PanGestureHandler,
   State as GestureState,
 } from 'react-native-gesture-handler';
+import { SafeAreaContext, EdgeInsets } from 'react-native-safe-area-context';
 import {
   TransitionSpec,
   CardStyleInterpolator,
@@ -228,6 +229,13 @@ function transformTimingConfigToAnimatedValues(
   };
 }
 
+const DEFAULT_INSETS: EdgeInsets = {
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+};
+
 export default class Card extends React.Component<Props> {
   static defaultProps = {
     overlayEnabled: Platform.OS !== 'ios',
@@ -235,6 +243,10 @@ export default class Card extends React.Component<Props> {
     gestureEnabled: true,
     gestureVelocityImpact: GESTURE_VELOCITY_IMPACT,
   };
+
+  static contextType = SafeAreaContext;
+
+  context!: EdgeInsets | null;
 
   componentDidUpdate(prevProps: Props) {
     const {
@@ -394,7 +406,8 @@ export default class Card extends React.Component<Props> {
       this.props.index,
       this.props.current,
       this.props.next,
-      this.props.layout
+      this.props.layout,
+      this.context || DEFAULT_INSETS
     );
   };
 
@@ -702,7 +715,8 @@ export default class Card extends React.Component<Props> {
       index: number,
       current: Animated.Node<number>,
       next: Animated.Node<number> | undefined,
-      layout: Layout
+      layout: Layout,
+      insets: EdgeInsets
     ) =>
       styleInterpolator({
         index,
@@ -712,6 +726,7 @@ export default class Card extends React.Component<Props> {
         layouts: {
           screen: layout,
         },
+        insets,
       })
   );
 
@@ -724,7 +739,8 @@ export default class Card extends React.Component<Props> {
     this.props.index,
     this.props.current,
     this.props.next,
-    this.props.layout
+    this.props.layout,
+    this.context || DEFAULT_INSETS
   );
 
   private gestureActivationCriteria() {
@@ -797,7 +813,8 @@ export default class Card extends React.Component<Props> {
         index,
         current,
         next,
-        layout
+        layout,
+        this.context || DEFAULT_INSETS
       );
     }
 

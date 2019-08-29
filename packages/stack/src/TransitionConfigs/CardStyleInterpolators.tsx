@@ -1,6 +1,5 @@
 import { I18nManager } from 'react-native';
 import Animated from 'react-native-reanimated';
-import getStatusBarHeight from '../utils/getStatusBarHeight';
 import { CardInterpolationProps, CardInterpolatedStyle } from '../types';
 
 const { cond, add, multiply, interpolate } = Animated;
@@ -81,9 +80,10 @@ export function forModalPresentationIOS({
   current,
   next,
   layouts: { screen },
+  insets,
 }: CardInterpolationProps): CardInterpolatedStyle {
   const topOffset = 10;
-  const statusBarHeight = getStatusBarHeight(screen.width > screen.height);
+  const statusBarHeight = insets.top;
   const aspectRatio = screen.height / screen.width;
 
   const progress = add(current.progress, next ? next.progress : 0);

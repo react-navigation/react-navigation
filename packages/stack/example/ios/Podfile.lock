@@ -39,6 +39,8 @@ PODS:
     - React/Core (= 0.59.10)
   - react-native-maps (0.24.2):
     - React
+  - react-native-safe-area-context (0.3.3):
+    - React
   - react-native-webview (5.12.1):
     - React
   - React/Core (0.59.10):
@@ -133,6 +135,7 @@ DEPENDENCIES:
   - Folly (from `../node_modules/react-native/third-party-podspecs/Folly.podspec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - react-native-maps (from `../node_modules/react-native-maps`)
+  - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-webview (from `../node_modules/react-native-webview`)
   - React/Core (from `../node_modules/react-native`)
   - React/CxxBridge (from `../node_modules/react-native`)
@@ -213,6 +216,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native"
   react-native-maps:
     :path: "../node_modules/react-native-maps"
+  react-native-safe-area-context:
+    :path: "../node_modules/react-native-safe-area-context"
   react-native-webview:
     :path: "../node_modules/react-native-webview"
   RNGestureHandler:
@@ -278,6 +283,7 @@ SPEC CHECKSUMS:
   glog: aefd1eb5dda2ab95ba0938556f34b98e2da3a60d
   React: 36d0768f9e93be2473b37e7fa64f92c1d5341eef
   react-native-maps: 0316ed017dbb64b33b227751fa810e2454fcfa39
+  react-native-safe-area-context: 05fce11cf3a094304cb4cb8761a8f66f1bbaf0a0
   react-native-webview: 5036ed4a973ad1deeeff118262d2df7b60b3419d
   RNGestureHandler: 5329a942fce3d41c68b84c2c2276ce06a696d8b0
   RNReanimated: 7a52c90473b5e81c13408d40d797b98387eaddde
@@ -296,6 +302,6 @@ SPEC CHECKSUMS:
   UMTaskManagerInterface: 8664abd37a00715727e60df9ecd65e42ba47b548
   yoga: 684513b14b03201579ba3cee20218c9d1298b0cc
 
-PODFILE CHECKSUM: ba5af81bcabf9feca0e74ef3f931f99ebe73e278
+PODFILE CHECKSUM: 8eac0f6d450c8440d0530650ff7a9cfe8f185063
 
 COCOAPODS: 1.7.5
