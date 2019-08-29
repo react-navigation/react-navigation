@@ -267,6 +267,51 @@ it('handles navigate action', () => {
       CommonActions.navigate({ key: 'unknown' })
     )
   ).toBe(null);
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        key: 'root',
+        index: 1,
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [{ key: 'baz-0', name: 'baz' }, { key: 'bar', name: 'bar' }],
+      },
+      {
+        type: 'NAVIGATE',
+        payload: { key: 'baz-0', name: 'baz' },
+      }
+    )
+  ).toEqual({
+    stale: false,
+    key: 'root',
+    index: 0,
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [{ key: 'baz-0', name: 'baz' }],
+  });
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        key: 'root',
+        index: 1,
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [{ key: 'baz-0', name: 'baz' }, { key: 'bar', name: 'bar' }],
+      },
+      CommonActions.navigate({ key: 'baz-1', name: 'baz' })
+    )
+  ).toEqual({
+    stale: false,
+    key: 'root',
+    index: 2,
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [
+      { key: 'baz-0', name: 'baz' },
+      { key: 'bar', name: 'bar' },
+      { key: 'baz-1', name: 'baz' },
+    ],
+  });
 });
 
 it('handles go back action', () => {

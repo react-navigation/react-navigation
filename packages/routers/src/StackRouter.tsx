@@ -11,7 +11,7 @@ import {
 export type StackActionType =
   | {
       type: 'PUSH';
-      payload: { name: string; params?: object };
+      payload: { name: string; key?: string | undefined; params?: object };
       source?: string;
       target?: string;
     }
@@ -151,7 +151,10 @@ export default function StackRouter(options: StackRouterOptions) {
               routes: [
                 ...state.routes,
                 {
-                  key: `${action.payload.name}-${shortid()}`,
+                  key:
+                    action.payload.key === undefined
+                      ? `${action.payload.name}-${shortid()}`
+                      : action.payload.key,
                   name: action.payload.name,
                   params: action.payload.params,
                 },
@@ -199,14 +202,16 @@ export default function StackRouter(options: StackRouterOptions) {
             let index = -1;
 
             if (
-              state.routes[state.index].name === action.payload.name ||
+              (state.routes[state.index].name === action.payload.name &&
+                action.payload.key === undefined) ||
               state.routes[state.index].key === action.payload.key
             ) {
               index = state.index;
             } else {
               for (let i = state.routes.length - 1; i >= 0; i--) {
                 if (
-                  state.routes[i].name === action.payload.name ||
+                  (state.routes[i].name === action.payload.name &&
+                    action.payload.key === undefined) ||
                   state.routes[i].key === action.payload.key
                 ) {
                   index = i;
@@ -215,7 +220,11 @@ export default function StackRouter(options: StackRouterOptions) {
               }
             }
 
-            if (index === -1 && action.payload.key) {
+            if (
+              index === -1 &&
+              action.payload.key &&
+              action.payload.name === undefined
+            ) {
               return null;
             }
 
@@ -223,6 +232,7 @@ export default function StackRouter(options: StackRouterOptions) {
               return router.getStateForAction(state, {
                 type: 'PUSH',
                 payload: {
+                  key: action.payload.key,
                   name: action.payload.name,
                   params: action.payload.params,
                 },
