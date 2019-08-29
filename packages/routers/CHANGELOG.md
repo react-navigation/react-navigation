@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.6](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/routers@5.0.0-alpha.5...@react-navigation/routers@5.0.0-alpha.6) (2019-08-29)
+
+
+### Features
+
+* handle navigating with both with both key and name ([#83](https://github.com/react-navigation/navigation-ex/issues/83)) ([6b75cba](https://github.com/react-navigation/navigation-ex/commit/6b75cba))
+
+
+
+
+
 # [5.0.0-alpha.5](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/routers@5.0.0-alpha.4...@react-navigation/routers@5.0.0-alpha.5) (2019-08-28)
 
 **Note:** Version bump only for package @react-navigation/routers

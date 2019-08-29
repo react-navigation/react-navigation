@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.4](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/core@5.0.0-alpha.3...@react-navigation/core@5.0.0-alpha.4) (2019-08-29)
+
+
+### Bug Fixes
+
+* allow making params optional. fixes [#80](https://github.com/react-navigation/navigation-ex/issues/80) ([a9d4813](https://github.com/react-navigation/navigation-ex/commit/a9d4813))
+
+
+### Features
+
+* export NavigationContext ([9245c79](https://github.com/react-navigation/navigation-ex/commit/9245c79))
+* handle navigating with both with both key and name ([#83](https://github.com/react-navigation/navigation-ex/issues/83)) ([6b75cba](https://github.com/react-navigation/navigation-ex/commit/6b75cba))
+
+
+
+
+
 # [5.0.0-alpha.3](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/core@5.0.0-alpha.2...@react-navigation/core@5.0.0-alpha.3) (2019-08-27)
 
 

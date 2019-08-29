@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.5](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/native@5.0.0-alpha.4...@react-navigation/native@5.0.0-alpha.5) (2019-08-29)
+
+
+### Bug Fixes
+
+* handle both null and undefined in useScrollToTop ([c951027](https://github.com/react-navigation/navigation-ex/commit/c951027))
+
+
+### Features
+
+* handle animated component wrappers in `useScrollToTop` ([#81](https://github.com/react-navigation/navigation-ex/issues/81)) ([cdbf1e9](https://github.com/react-navigation/navigation-ex/commit/cdbf1e9))
+* handle more methods in useScrollToTop ([f9e8c7e](https://github.com/react-navigation/navigation-ex/commit/f9e8c7e))
+
+
+
+
+
 # [5.0.0-alpha.4](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/native@5.0.0-alpha.3...@react-navigation/native@5.0.0-alpha.4) (2019-08-28)
 
 
