@@ -66,6 +66,8 @@ export type HeaderOptions = {
   headerTitleStyle?: StyleProp<TextStyle>;
   headerTitleContainerStyle?: StyleProp<ViewStyle>;
   headerTintColor?: string;
+  headerLeftTintColor?: string;
+  headerRightTintColor?: string;
   headerTitleAllowFontScaling?: boolean;
   headerBackAllowFontScaling?: boolean;
   headerBackTitle?: string;

@@ -148,6 +148,8 @@ export default class HeaderSegment extends React.Component<Props, State> {
       headerStatusBarHeight = getStatusBarHeight(layout.width > layout.height),
       headerTransparent,
       headerTintColor,
+      headerLeftTintColor,
+      headerRightTintColor,
       headerBackground,
       headerRight: right,
       headerBackImage: backImage,
@@ -287,7 +289,7 @@ export default class HeaderSegment extends React.Component<Props, State> {
           onLabelLayout: this.handleLeftLabelLayout,
           screenLayout: layout,
           titleLayout,
-          tintColor: headerTintColor,
+          tintColor: headerLeftTintColor || headerTintColor,
           canGoBack: Boolean(onGoBack),
         })
       : null;
@@ -345,7 +347,7 @@ export default class HeaderSegment extends React.Component<Props, State> {
                 pointerEvents="box-none"
                 style={[styles.right, rightButtonStyle, rightContainerStyle]}
               >
-                {right({ tintColor: headerTintColor })}
+                {right({ tintColor: headerRightTintColor || headerTintColor })}
               </Animated.View>
             ) : null}
           </View>
