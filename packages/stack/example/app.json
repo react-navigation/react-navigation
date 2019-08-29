@@ -9,6 +9,9 @@
     "packagerOpts": {
       "config": "./metro.config.js",
       "projectRoots": ""
-    }
-  }
+    },
+    "entryPoint": "node_modules/expo/AppEntry.js"
+  },
+  "displayName": "React Navigation Stack Example",
+  "name": "StackExample"
 }

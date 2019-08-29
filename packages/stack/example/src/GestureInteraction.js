@@ -3,10 +3,10 @@ import {
   ActivityIndicator,
   Button,
   InteractionManager,
-  WebView,
   View,
 } from 'react-native';
-import { MapView } from 'expo';
+import { WebView } from 'react-native-webview';
+import MapView from 'react-native-maps';
 import {
   createStackNavigator,
   StackGestureContext,
