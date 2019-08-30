@@ -23,6 +23,7 @@ import SimpleStackScreen from './Screens/SimpleStack';
 import BottomTabsScreen from './Screens/BottomTabs';
 import MaterialTopTabsScreen from './Screens/MaterialTopTabs';
 import MaterialBottomTabs from './Screens/MaterialBottomTabs';
+import AuthFlow from './Screens/AuthFlow';
 
 YellowBox.ignoreWarnings(['Require cycle:', 'Warning: Async Storage']);
 
@@ -46,6 +47,10 @@ const SCREENS = {
   'material-bottom-tabs': {
     title: 'Material Bottom Tabs',
     component: MaterialBottomTabs,
+  },
+  'auth-flow': {
+    title: 'Auth Flow',
+    component: AuthFlow,
   },
 };
 
