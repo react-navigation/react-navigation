@@ -190,7 +190,7 @@ export default class DrawerView extends React.PureComponent<Props, State> {
       drawerPosition,
       drawerBackgroundColor,
       overlayColor,
-      contentContainerStyle,
+      sceneContainerStyle,
       edgeWidth,
       minSwipeDistance,
       hideStatusBar,
@@ -222,7 +222,7 @@ export default class DrawerView extends React.PureComponent<Props, State> {
           gestureHandlerProps={gestureHandlerProps}
           drawerType={drawerType}
           drawerPosition={drawerPosition}
-          contentContainerStyle={contentContainerStyle}
+          sceneContainerStyle={sceneContainerStyle}
           drawerStyle={{
             backgroundColor: drawerBackgroundColor || 'white',
             width: this.state.drawerWidth,
