@@ -75,7 +75,7 @@ export type DrawerNavigationConfig = {
   lazy: boolean;
   /**
    * Whether a screen should be unmounted when navigating away from it.
-   * Defaults to `false`..
+   * Defaults to `false`.
    */
   unmountInactiveRoutes?: boolean;
   /**
@@ -87,7 +87,10 @@ export type DrawerNavigationConfig = {
    * Options for the content component which will be passed as props.
    */
   contentOptions?: object;
-  contentContainerStyle?: StyleProp<ViewStyle>;
+  /**
+   * Style object for the component wrapping the screen content.
+   */
+  sceneContainerStyle?: StyleProp<ViewStyle>;
   style?: StyleProp<ViewStyle>;
 };
 
