@@ -138,7 +138,7 @@ it('gets state on route names change', () => {
   expect(
     router.getStateForRouteNamesChange(
       {
-        index: 0,
+        index: 2,
         key: 'stack-test',
         routeNames: ['bar', 'baz', 'qux'],
         routes: [
@@ -157,13 +157,71 @@ it('gets state on route names change', () => {
       }
     )
   ).toEqual({
-    index: 0,
+    index: 1,
     key: 'stack-test',
     routeNames: ['qux', 'baz', 'foo', 'fiz'],
     routes: [
       { key: 'baz-test', name: 'baz', params: { answer: 42 } },
       { key: 'qux-test', name: 'qux', params: { name: 'Jane' } },
     ],
+    stale: false,
+  });
+
+  expect(
+    router.getStateForRouteNamesChange(
+      {
+        index: 1,
+        key: 'stack-test',
+        routeNames: ['foo', 'bar'],
+        routes: [
+          { key: 'foo-test', name: 'foo' },
+          { key: 'bar-test', name: 'bar' },
+        ],
+        stale: false,
+      },
+      {
+        routeNames: ['baz', 'qux'],
+        routeParamList: {
+          baz: { name: 'John' },
+        },
+      }
+    )
+  ).toEqual({
+    index: 0,
+    key: 'stack-test',
+    routeNames: ['baz', 'qux'],
+    routes: [{ key: 'baz-test', name: 'baz', params: { name: 'John' } }],
+    stale: false,
+  });
+});
+
+it('gets state on route names change with initialRouteName', () => {
+  const router = StackRouter({ initialRouteName: 'qux' });
+
+  expect(
+    router.getStateForRouteNamesChange(
+      {
+        index: 1,
+        key: 'stack-test',
+        routeNames: ['foo', 'bar'],
+        routes: [
+          { key: 'foo-test', name: 'foo' },
+          { key: 'bar-test', name: 'bar' },
+        ],
+        stale: false,
+      },
+      {
+        routeNames: ['baz', 'qux'],
+        routeParamList: {
+          baz: { name: 'John' },
+        },
+      }
+    )
+  ).toEqual({
+    index: 0,
+    key: 'stack-test',
+    routeNames: ['baz', 'qux'],
+    routes: [{ key: 'qux-test', name: 'qux' }],
     stale: false,
   });
 });

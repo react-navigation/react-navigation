@@ -114,10 +114,24 @@ export default function StackRouter(options: StackRouterOptions) {
       };
     },
 
-    getStateForRouteNamesChange(state, { routeNames }) {
+    getStateForRouteNamesChange(state, { routeNames, routeParamList }) {
       const routes = state.routes.filter(route =>
         routeNames.includes(route.name)
       );
+
+      if (routes.length === 0) {
+        const initialRouteName =
+          options.initialRouteName !== undefined &&
+          routeNames.includes(options.initialRouteName)
+            ? options.initialRouteName
+            : routeNames[0];
+
+        routes.push({
+          key: `${initialRouteName}-${shortid()}`,
+          name: initialRouteName,
+          params: routeParamList[initialRouteName],
+        });
+      }
 
       return {
         ...state,
