@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.9](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.8...@react-navigation/stack@5.0.0-alpha.9) (2019-08-30)
+
+
+### Bug Fixes
+
+* change interpolated style when idle to avoid messing up reanimated ([3ad2e6e](https://github.com/react-navigation/navigation-ex/commit/3ad2e6e))
+* properly set animated node on gestureEnabled change ([6a8242c](https://github.com/react-navigation/navigation-ex/commit/6a8242c))
+
+
+
+
+
 # [5.0.0-alpha.8](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.7...@react-navigation/stack@5.0.0-alpha.8) (2019-08-29)
 
 
