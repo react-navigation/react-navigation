@@ -8,19 +8,14 @@
     "url": "git@github.com:react-navigation/react-navigation.git",
     "type": "git"
   },
-  "author": "Adam Miskiewicz <adam@sk3vy.com>, Eric Vicenti <ericvicenti@gmail.com>, Brent Vatne <brent@expo.io>",
-  "license": "BSD-2-Clause",
+  "author": "Adam Miskiewicz <adam@sk3vy.com>, Eric Vicenti <ericvicenti@gmail.com>, Brent Vatne <brent@expo.io>, Satyajit Sahoo <satyajit.happy@gmail.com>",
+  "license": "MIT",
   "scripts": {
-    "start": "npm run ios",
-    "ios": "cd examples/NavigationPlayground && yarn && yarn ios",
-    "android": "cd examples/NavigationPlayground && yarn && yarn android",
-    "test": "npm run lint && npm run jest",
-    "codecov": "codecov",
-    "jest": "jest",
-    "test-update-snapshot": "jest --updateSnapshot",
-    "lint": "eslint .",
-    "format": "eslint --fix .",
-    "precommit": "lint-staged",
+    "bootstrap": "yarn example && yarn",
+    "example": "yarn --cwd example",
+    "test": "jest",
+    "lint": "eslint . --ext '.js,.ts,.tsx'",
+    "typescript": "tsc --noEmit",
     "release": "release-it"
   },
   "publishConfig": {
@@ -36,37 +31,28 @@
     "react-native": "*"
   },
   "dependencies": {
-    "@react-navigation/core": "~3.5.0",
-    "@react-navigation/native": "~3.6.1",
-    "react-navigation-drawer": "~1.4.0",
-    "react-navigation-tabs": "~1.2.0",
-    "react-navigation-stack": "~1.5.0"
+    "@react-navigation/core": "^3.5.0",
+    "@react-navigation/native": "^3.6.2"
   },
   "devDependencies": {
-    "@types/react-native": "~0.57.38",
-    "babel-cli": "^6.24.1",
-    "babel-core": "^6.25.0",
-    "babel-eslint": "^7.2.3",
-    "babel-jest": "^22.4.1",
-    "babel-preset-react-native": "^2.1.0",
-    "codecov": "^2.2.0",
-    "eslint": "^4.2.0",
-    "eslint-config-prettier": "^2.9.0",
-    "eslint-plugin-import": "^2.7.0",
-    "eslint-plugin-jsx-a11y": "^6.0.2",
-    "eslint-plugin-prettier": "^2.6.0",
-    "eslint-plugin-react": "^7.1.0",
-    "husky": "^0.14.3",
-    "jest": "^24.5.0",
-    "jest-expo": "^25.1.0",
-    "lint-staged": "^4.2.1",
-    "prettier": "^1.12.1",
-    "prettier-eslint": "^8.8.1",
-    "react": "16.6.1",
-    "react-native": "~0.57.7",
-    "react-native-vector-icons": "^4.2.0",
-    "react-test-renderer": "^16.0.0",
-    "release-it": "^7.6.1"
+    "@commitlint/config-conventional": "^8.0.0",
+    "@release-it/conventional-changelog": "^1.1.0",
+    "@types/jest": "^24.0.18",
+    "@types/react": "^16.9.2",
+    "@types/react-native": "^0.60.9",
+    "codecov": "^3.5.0",
+    "commitlint": "^8.0.0",
+    "eslint": "^5.16.0",
+    "eslint-config-satya164": "^2.4.1",
+    "eslint-plugin-react-native-globals": "^0.1.0",
+    "husky": "^3.0.0",
+    "jest": "^24.9.0",
+    "prettier": "^1.18.2",
+    "react": "16.8.3",
+    "react-native": "~0.59.8",
+    "react-test-renderer": "16.8.3",
+    "release-it": "^12.3.6",
+    "typescript": "^3.6.2"
   },
   "jest": {
     "notify": true,
@@ -90,17 +76,20 @@
       "\\.png$": "<rootDir>/assetsTransformer.js"
     },
     "modulePathIgnorePatterns": [
-      "<rootDir>/examples/"
+      "<rootDir>/example/"
     ],
     "transformIgnorePatterns": [
-      "node_modules/(?!(jest-)?react-native|react-clone-referenced-element|react-navigation-deprecated-tab-navigator|react-navigation-stack|@react-navigation/core|@react-navigation/native)"
+      "node_modules/(?!(jest-)?react-native|react-clone-referenced-element|react-navigation-stack|@react-navigation/core|@react-navigation/native)"
     ]
   },
-  "lint-staged": {
-    "*.js": [
-      "eslint --fix",
-      "prettier --write flow/react-navigation.js",
-      "git add"
-    ]
+  "prettier": {
+    "trailingComma": "es5",
+    "singleQuote": true
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn typescript && yarn lint && yarn test",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
   }
 }

@@ -1,0 +1,37 @@
+{
+  "name": "playground",
+  "version": "0.0.1",
+  "private": true,
+  "main": "node_modules/expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios"
+  },
+  "dependencies": {
+    "@expo/vector-icons": "^10.0.0",
+    "@react-native-community/masked-view": "^0.1.1",
+    "@react-navigation/core": "^3.5.0",
+    "@react-navigation/native": "^3.6.2",
+    "expo": "^33.0.7",
+    "expo-asset": "^5.0.1",
+    "expo-blur": "~5.0.1",
+    "expo-constants": "~5.0.1",
+    "hoist-non-react-statics": "^3.3.0",
+    "react": "16.8.3",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-33.0.0.tar.gz",
+    "react-native-iphone-x-helper": "^1.2.1",
+    "react-native-paper": "^2.15.2",
+    "react-navigation-drawer": "^2.0.1",
+    "react-navigation-header-buttons": "^3.0.2",
+    "react-navigation-stack": "^1.5.1",
+    "react-navigation-tabs": "^1.2.0"
+  },
+  "devDependencies": {
+    "babel-plugin-module-resolver": "^3.2.0"
+  },
+  "resolutions": {
+    "react-native-safe-area-view": "0.14.6",
+    "react-native-screens": "1.0.0-alpha.23"
+  }
+}
