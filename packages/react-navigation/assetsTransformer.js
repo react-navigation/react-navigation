@@ -1,3 +1,4 @@
+/* eslint-disable import/no-commonjs */
 /**
  * This file is needed to hijack asset imports so that test files don't attempt
  * to import them as JavaScript modules.
@@ -6,7 +7,7 @@
 const path = require('path');
 
 module.exports = {
-  process(src, filename, config, options) {
+  process(src, filename) {
     return 'module.exports = ' + JSON.stringify(path.basename(filename)) + ';';
   },
 };

@@ -1,8 +1,6 @@
-coverage
-flow
-node_modules
-lib*
-build
-
-## Temporary
-examples
+coverage/
+flow/
+node_modules/
+lib/
+build/
+typescript/

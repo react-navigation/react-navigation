@@ -50,25 +50,6 @@ declare module 'react-navigation' {
   // @todo: should we re-export from RNGH? not currently exposed through it
   export { FlatList, SectionList, ScrollView } from 'react-native';
 
-  // @todo: improve this type! not super important as it's not commonly used
-  type HeaderStyleInterpolatorFunction = (props: any) => any;
-
-  type HeaderStyleInterpolatorStatic = {
-    forLayout: HeaderStyleInterpolatorFunction;
-    forLeft: HeaderStyleInterpolatorFunction;
-    forLeftButton: HeaderStyleInterpolatorFunction;
-    forLeftLabel: HeaderStyleInterpolatorFunction;
-    forCenterFromLeft: HeaderStyleInterpolatorFunction;
-    forCenter: HeaderStyleInterpolatorFunction;
-    forRight: HeaderStyleInterpolatorFunction;
-    forBackground: HeaderStyleInterpolatorFunction;
-    forBackgroundWithInactiveHidden: HeaderStyleInterpolatorFunction;
-    forBackgroundWithFade: HeaderStyleInterpolatorFunction;
-    forBackgroundWithTranslation: HeaderStyleInterpolatorFunction;
-  };
-
-  export const HeaderStyleInterpolator: HeaderStyleInterpolatorStatic;
-
   export type ScreenProps = {
     [key: string]: any;
   };
@@ -77,35 +58,12 @@ declare module 'react-navigation' {
   export function getActiveChildNavigationOptions<S>(
     navigation: NavigationProp<S>,
     screenProps?: ScreenProps,
-    theme?: SupportedThemes,
+    theme?: SupportedThemes
   ): NavigationParams;
 
   // @todo when we split types into common, native and web,
   // we can properly change Animated.Value to its real value
   export type AnimatedValue = any;
-
-  export type HeaderMode = 'float' | 'screen' | 'none';
-
-  export interface HeaderForceInset {
-    horizontal?: string;
-    vertical?: string;
-    left?: string;
-    right?: string;
-    top?: string;
-    bottom?: string;
-  }
-
-  export interface HeaderProps extends NavigationSceneRendererProps {
-    mode: HeaderMode;
-    router: NavigationRouter<NavigationState, NavigationStackScreenOptions>;
-    getScreenDetails: (
-      navigationScene: NavigationScene
-    ) => NavigationScreenDetails<NavigationStackScreenOptions>;
-    leftInterpolator: (props: NavigationSceneRendererProps) => {};
-    titleInterpolator: (props: NavigationSceneRendererProps) => {};
-    rightInterpolator: (props: NavigationSceneRendererProps) => {};
-    style: StyleProp<ViewStyle>;
-  }
 
   /**
    * NavigationState is a tree of routes for a single navigator, where each child
@@ -181,7 +139,7 @@ declare module 'react-navigation' {
   export type NavigationScreenOptionsGetter<Options> = (
     navigation: NavigationScreenProp<NavigationRoute<any>>,
     screenProps: ScreenProps | null,
-    theme: SupportedThemes,
+    theme: SupportedThemes
   ) => Options;
 
   export interface NavigationRouter<State = NavigationState, Options = {}> {
@@ -431,31 +389,6 @@ declare module 'react-navigation' {
     type: 'Navigation/TOGGLE_DRAWER';
   }
 
-  export interface NavigationStackViewConfig {
-    mode?: 'card' | 'modal';
-    headerMode?: HeaderMode;
-    headerBackTitleVisible?: boolean;
-    headerTransitionPreset?: 'fade-in-place' | 'uikit';
-    headerLayoutPreset?: 'left' | 'center';
-    cardShadowEnabled?: boolean;
-    cardOverlayEnabled?: boolean;
-    cardStyle?: StyleProp<ViewStyle>;
-    transparentCard?: boolean;
-    transitionConfig?: (
-      transitionProps: NavigationTransitionProps,
-      prevTransitionProps: NavigationTransitionProps,
-      isModal: boolean
-    ) => TransitionConfig;
-    onTransitionStart?: (
-      transitionProps: NavigationTransitionProps,
-      prevTransitionProps?: NavigationTransitionProps
-    ) => Promise<void> | void;
-    onTransitionEnd?: (
-      transitionProps: NavigationTransitionProps,
-      prevTransitionProps?: NavigationTransitionProps
-    ) => void;
-  }
-
   /**
    * Switch Navigator
    */
@@ -472,48 +405,6 @@ declare module 'react-navigation' {
     resetOnBlur?: boolean; // defaults to `true`
   }
 
-  export interface NavigationStackScreenOptions {
-    title?: string;
-    header?:
-      | React.ReactElement<any>
-      | ((headerProps: HeaderProps) => React.ReactElement<any>)
-      | null;
-    headerTransparent?: boolean;
-    headerTitle?: string | React.ReactElement<any>;
-    headerTitleStyle?: StyleProp<TextStyle>;
-    headerTitleAllowFontScaling?: boolean;
-    headerTitleContainerStyle?: StyleProp<TextStyle>;
-    headerTintColor?: string;
-    headerLeft?:
-      | React.ReactElement<any>
-      | ((backButtonProps: HeaderBackButtonProps) => React.ReactElement<any>)
-      | null;
-    headerBackTitle?: string | null;
-    headerBackImage?: React.ReactElement<any>;
-    headerTruncatedBackTitle?: string;
-    headerBackTitleStyle?: StyleProp<TextStyle>;
-    headerPressColorAndroid?: string;
-    headerRight?: React.ReactElement<any> | null;
-    headerStyle?: StyleProp<ViewStyle>;
-    headerLeftContainerStyle?: StyleProp<ViewStyle>;
-    headerRightContainerStyle?: StyleProp<ViewStyle>;
-    headerForceInset?: HeaderForceInset;
-    headerBackground?: React.ReactNode | React.ReactType;
-    headerBackgroundTransitionPreset?: 'toggle' | 'fade' | 'translate';
-    gesturesEnabled?: boolean;
-    gestureResponseDistance?: { vertical?: number; horizontal?: number };
-    gestureDirection?: 'default' | 'inverted';
-  }
-
-  export interface NavigationStackRouterConfig {
-    headerTransitionPreset?: 'fade-in-place' | 'uikit';
-    initialRouteName?: string;
-    initialRouteParams?: NavigationParams;
-    paths?: NavigationPathsConfig;
-    defaultNavigationOptions?: NavigationScreenConfig<NavigationScreenOptions>;
-    navigationOptions?: NavigationScreenConfig<NavigationScreenOptions>;
-    initialRouteKey?: string;
-  }
 
   export type NavigationStackAction =
     | NavigationInitAction
@@ -586,88 +477,6 @@ declare module 'react-navigation' {
       NavigationBottomTabScreenOptions
     >;
     navigationOptions?: NavigationScreenConfig<any>;
-  }
-  export interface TabScene {
-    route: NavigationRoute;
-    focused: boolean;
-    index: number;
-    tintColor?: string;
-  }
-
-  export interface TabBarIconProps {
-    tintColor: string | null;
-    focused: boolean;
-    horizontal: boolean;
-  }
-
-  export interface TabBarLabelProps {
-    tintColor: string | null;
-    focused: boolean;
-  }
-
-  // tslint:disable-next-line:strict-export-declare-modifiers
-  interface NavigationTabScreenOptionsBase {
-    title?: string;
-    tabBarIcon?:
-      | React.ReactElement<any>
-      | ((options: TabBarIconProps) => React.ReactElement<any> | null);
-    tabBarLabel?:
-      | string
-      | React.ReactElement<any>
-      | ((
-          options: TabBarLabelProps
-        ) => React.ReactElement<any> | string | null);
-    tabBarVisible?: boolean;
-    tabBarTestIDProps?: { testID?: string; accessibilityLabel?: string };
-  }
-  export interface NavigationTabScreenOptions
-    extends NavigationTabScreenOptionsBase {
-    swipeEnabled?: boolean;
-    tabBarOnPress?: (options: {
-      previousScene: TabScene;
-      scene: TabScene;
-      jumpToIndex: (index: number) => void;
-    }) => void;
-    tabBarOnLongPress?: (options: {
-      previousScene: TabScene;
-      scene: TabScene;
-      jumpToIndex: (index: number) => void;
-    }) => void;
-  }
-  export interface NavigationBottomTabScreenOptions
-    extends NavigationTabScreenOptionsBase {
-    tabBarOnPress?: (options: {
-      navigation: NavigationScreenProp<NavigationRoute>;
-      defaultHandler: () => void;
-    }) => void;
-    tabBarOnLongPress?: (options: {
-      navigation: NavigationScreenProp<NavigationRoute>;
-      defaultHandler: () => void;
-    }) => void;
-  }
-
-  export type DrawerLockMode = 'unlocked' | 'locked-closed' | 'locked-open';
-
-  export interface DrawerIconProps {
-    tintColor: string | null;
-    focused: boolean;
-  }
-
-  export interface DrawerLabelProps {
-    tintColor: string | null;
-    focused: boolean;
-  }
-
-  export interface NavigationDrawerScreenOptions {
-    title?: string;
-    drawerIcon?:
-      | React.ReactElement<any>
-      | ((options: DrawerIconProps) => React.ReactElement<any> | null);
-    drawerLabel?:
-      | string
-      | React.ReactElement<any>
-      | ((options: DrawerLabelProps) => React.ReactElement<any> | null);
-    drawerLockMode?: DrawerLockMode;
   }
 
   export interface NavigationRouteConfigMap {
@@ -776,141 +585,6 @@ declare module 'react-navigation' {
     navigationOptions?: O;
   }
 
-  /**
-   * Gestures, Animations, and Interpolators
-   */
-
-  export type NavigationGestureDirection = 'horizontal' | 'vertical';
-
-  export interface NavigationLayout {
-    height: AnimatedValue;
-    initHeight: number;
-    initWidth: number;
-    isMeasured: boolean;
-    width: AnimatedValue;
-  }
-
-  export interface NavigationScene {
-    index: number;
-    isActive: boolean;
-    isStale: boolean;
-    key: string;
-    route: NavigationRoute;
-    descriptor: NavigationDescriptor;
-  }
-
-  export interface NavigationTransitionProps {
-    // The layout of the screen container
-    layout: NavigationLayout;
-
-    // The destination navigation state of the transition
-    navigation: NavigationScreenProp<NavigationState>;
-
-    // The progressive index of the transitioner's navigation state.
-    position: AnimatedValue;
-
-    // The value that represents the progress of the transition when navigation
-    // state changes from one to another. Its numberic value will range from 0
-    // to 1.
-    //  progress.__getAnimatedValue() < 1 : transtion is happening.
-    //  progress.__getAnimatedValue() == 1 : transtion completes.
-    progress: AnimatedValue;
-
-    // All the scenes of the transitioner.
-    scenes: NavigationScene[];
-
-    // The active scene, corresponding to the route at
-    // `navigation.state.routes[navigation.state.index]`. When rendering
-    // NavigationSceneRendererPropsIndex, the scene does not refer to the active
-    // scene, but instead the scene that is being rendered. The index always
-    // is the index of the scene
-    scene: NavigationScene;
-    index: number;
-
-    screenProps?: ScreenProps;
-  }
-
-  // The scene renderer props are nearly identical to the props used for rendering
-  // a transition. The exception is that the passed scene is not the active scene
-  // but is instead the scene that the renderer should render content for.
-  export type NavigationSceneRendererProps = NavigationTransitionProps;
-
-  export interface NavigationTransitionSpec {
-    duration?: number;
-    // An easing function from `Easing`.
-    easing?: (t: number) => number;
-    // A timing function such as `Animated.timing`.
-    timing?: (value: AnimatedValue, config: any) => any;
-    friction?: number;
-    tension?: number;
-    useNativeDriver?: boolean;
-  }
-
-  /**
-   * Describes a visual transition from one screen to another.
-   */
-  export interface TransitionConfig {
-    // The basics properties of the animation, such as duration and easing
-    transitionSpec?: NavigationTransitionSpec;
-    // How to animate position and opacity of the screen
-    // based on the value generated by the transitionSpec
-    screenInterpolator?: (props: NavigationSceneRendererProps) => any;
-    // How to animate position and opacity of the header componetns
-    // based on the value generated by the transitionSpec
-    headerLeftInterpolator?: (props: NavigationSceneRendererProps) => any;
-    headerTitleInterpolator?: (props: NavigationSceneRendererProps) => any;
-    headerRightInterpolator?: (props: NavigationSceneRendererProps) => any;
-    // The style of the container. Useful when a scene doesn't have
-    // 100% opacity and the underlying container is visible.
-    containerStyle?: StyleProp<ViewStyle>;
-  }
-
-  export type TransitionConfigurer = (
-    transitionProps: NavigationTransitionProps,
-    prevTransitionProps: NavigationTransitionProps,
-    isModal: boolean
-  ) => TransitionConfig;
-
-  export interface StackViewTransitionConfigsType {
-    defaultTransitionConfig: TransitionConfigurer;
-    getTransitionConfig: (
-      transitionConfigurer: TransitionConfigurer,
-      transitionProps: NavigationTransitionProps,
-      prevTransitionProps: NavigationTransitionProps,
-      isModal: boolean
-    ) => TransitionConfig;
-    SlideFromRightIOS: TransitionConfig;
-    ModalSlideFromBottomIOS: TransitionConfig;
-    FadeInFromBottomAndroid: TransitionConfig;
-    FadeOutToBottomAndroid: TransitionConfig;
-    NoAnimation: TransitionConfig;
-  }
-
-  export const StackViewTransitionConfigs: StackViewTransitionConfigsType;
-
-  export type NavigationAnimationSetter = (
-    position: AnimatedValue,
-    newState: NavigationState,
-    lastState: NavigationState
-  ) => void;
-
-  export type NavigationSceneRenderer = () => React.ReactElement<any> | null;
-
-  export type NavigationStyleInterpolator = (
-    props: NavigationSceneRendererProps
-  ) => ViewStyle;
-
-  export interface LayoutEvent {
-    nativeEvent: {
-      layout: {
-        x: number;
-        y: number;
-        width: number;
-        height: number;
-      };
-    };
-  }
-
   export type NavigatorType =
     | 'react-navigation/STACK'
     | 'react-navigation/TABS'
@@ -967,17 +641,6 @@ declare module 'react-navigation' {
     state: { nav: NavigationState | null };
   }
 
-  export interface StackNavigatorConfig
-    extends NavigationStackViewConfig,
-      NavigationStackRouterConfig {
-    containerOptions?: any;
-  }
-
-  export function createStackNavigator(
-    routeConfigMap: NavigationRouteConfigMap,
-    stackConfig?: StackNavigatorConfig
-  ): NavigationContainer;
-
   export interface SwitchNavigatorConfig {
     initialRouteName: string;
     resetOnBlur?: boolean;
@@ -992,208 +655,6 @@ declare module 'react-navigation' {
     routeConfigMap: NavigationRouteConfigMap,
     switchConfig?: SwitchNavigatorConfig
   ): NavigationContainer;
-
-  // DrawerItems
-  export const DrawerItems: React.ComponentType<DrawerItemsProps>;
-
-  export interface DrawerItemsProps {
-    navigation: NavigationScreenProp<DrawerNavigationState>;
-    items: NavigationRoute[];
-    activeItemKey?: string;
-    activeTintColor?: string;
-    activeBackgroundColor?: string;
-    inactiveTintColor?: string;
-    inactiveBackgroundColor?: string;
-    getLabel: (scene: DrawerScene) => React.ReactNode | string;
-    renderIcon: (scene: DrawerScene) => React.ReactNode;
-    onItemPress: (info: DrawerItem) => void;
-    itemsContainerStyle?: StyleProp<ViewStyle>;
-    itemStyle?: StyleProp<ViewStyle>;
-    labelStyle?: StyleProp<TextStyle>;
-    activeLabelStyle?: StyleProp<TextStyle>;
-    inactiveLabelStyle?: StyleProp<TextStyle>;
-    iconContainerStyle?: StyleProp<ViewStyle>;
-    drawerPosition: 'left' | 'right';
-  }
-  export interface DrawerScene {
-    route: NavigationRoute;
-    focused: boolean;
-    index: number;
-    tintColor?: string;
-  }
-  export interface DrawerItem {
-    route: NavigationRoute;
-    focused: boolean;
-  }
-
-  /**
-   * Drawer Navigator
-   */
-  export interface DrawerViewConfig {
-    drawerBackgroundColor?: string;
-    drawerWidth?: number;
-    drawerPosition?: 'left' | 'right';
-    contentComponent?: React.ComponentType<DrawerItemsProps>;
-    contentOptions?: any;
-    style?: StyleProp<ViewStyle>;
-  }
-  export interface DrawerNavigatorConfig
-    extends NavigationTabRouterConfig,
-      DrawerViewConfig {
-    containerConfig?: any;
-    contentOptions?: {
-      activeTintColor?: string;
-      activeBackgroundColor?: string;
-      inactiveTintColor?: string;
-      inactiveBackgroundColor?: string;
-      style?: StyleProp<ViewStyle>;
-      labelStyle?: StyleProp<TextStyle>;
-    };
-    drawerType?: 'front' | 'back' | 'slide';
-    drawerLockMode?: DrawerLockMode;
-    edgeWidth?: number;
-    hideStatusBar?: boolean;
-    overlayColor?: string;
-    unmountInactiveRoutes?: boolean;
-  }
-
-  export function DrawerNavigator(
-    routeConfigMap: NavigationRouteConfigMap,
-    drawerConfig?: DrawerNavigatorConfig
-  ): NavigationContainer;
-
-  export function createDrawerNavigator(
-    routeConfigMap: NavigationRouteConfigMap,
-    drawerConfig?: DrawerNavigatorConfig
-  ): NavigationContainer;
-
-  /**
-   * Tab Navigator
-   */
-
-  // From views/TabView/TabView.js
-  export interface TabViewConfig {
-    tabBarComponent?: React.ReactType;
-    tabBarPosition?: 'top' | 'bottom';
-    tabBarOptions?: {
-      activeTintColor?: string;
-      allowFontScaling?: boolean;
-      activeBackgroundColor?: string;
-      inactiveTintColor?: string;
-      inactiveBackgroundColor?: string;
-      showLabel?: boolean;
-      style?: StyleProp<ViewStyle>;
-      labelStyle?: StyleProp<TextStyle>;
-      iconStyle?: StyleProp<ViewStyle>;
-      // Top
-      showIcon?: boolean;
-      upperCaseLabel?: boolean;
-      pressColor?: string;
-      pressOpacity?: number;
-      scrollEnabled?: boolean;
-      tabStyle?: StyleProp<ViewStyle>;
-      indicatorStyle?: StyleProp<ViewStyle>;
-      keyboardHidesTabBar?: boolean;
-    };
-    swipeEnabled?: boolean;
-    animationEnabled?: boolean;
-    lazy?: boolean;
-  }
-
-  export interface InitialLayout {
-    height: number;
-    width: number;
-  }
-
-  // From navigators/TabNavigator.js
-  export interface TabNavigatorConfig
-    extends NavigationTabRouterConfig,
-      TabViewConfig {
-    lazy?: boolean;
-    removeClippedSubviews?: boolean;
-    initialLayout?: InitialLayout;
-  }
-  export interface BottomTabNavigatorConfig
-    extends NavigationBottomTabRouterConfig,
-      TabViewConfig {
-    lazy?: boolean;
-    removeClippedSubviews?: boolean;
-    initialLayout?: InitialLayout;
-  }
-
-  export function createBottomTabNavigator(
-    routeConfigMap: NavigationRouteConfigMap,
-    drawConfig?: BottomTabNavigatorConfig
-  ): NavigationContainer;
-
-  export function createMaterialTopTabNavigator(
-    routeConfigMap: NavigationRouteConfigMap,
-    drawConfig?: TabNavigatorConfig
-  ): NavigationContainer;
-
-  export interface MaterialTopTabBarProps {
-    activeTintColor: string;
-    inactiveTintColor: string;
-    indicatorStyle: StyleProp<ViewStyle>;
-    showIcon: boolean;
-    showLabel: boolean;
-    upperCaseLabel: boolean;
-    allowFontScaling: boolean;
-    position: AnimatedValue;
-    tabBarPosition: string;
-    navigation: NavigationScreenProp<NavigationState>;
-    jumpToIndex: (index: number) => void;
-    getLabelText: (scene: TabScene) => React.ReactNode | string;
-    getOnPress: (
-      previousScene: NavigationRoute,
-      scene: TabScene
-    ) => (args: {
-      previousScene: NavigationRoute;
-      scene: TabScene;
-      jumpToIndex: (index: number) => void;
-    }) => void;
-    renderIcon: (scene: TabScene) => React.ReactElement<any>;
-    labelStyle?: TextStyle;
-    iconStyle?: ViewStyle;
-  }
-
-  export interface BottomTabBarProps {
-    activeTintColor: string;
-    activeBackgroundColor: string;
-    adaptive?: boolean;
-    inactiveTintColor: string;
-    inactiveBackgroundColor: string;
-    showLabel?: boolean;
-    allowFontScaling: boolean;
-    position: AnimatedValue;
-    navigation: NavigationScreenProp<NavigationState>;
-    jumpToIndex: (index: number) => void;
-    getLabelText: (scene: TabScene) => React.ReactNode | string;
-    getOnPress: (
-      previousScene: NavigationRoute,
-      scene: TabScene
-    ) => (args: {
-      previousScene: NavigationRoute;
-      scene: TabScene;
-      jumpToIndex: (index: number) => void;
-    }) => void;
-    getTestIDProps: (scene: TabScene) => (scene: TabScene) => any;
-    renderIcon: (scene: TabScene) => React.ReactNode;
-    style?: ViewStyle;
-    animateStyle?: ViewStyle;
-    labelStyle?: TextStyle;
-    tabStyle?: ViewStyle;
-    showIcon?: boolean;
-    safeAreaInset?: {
-      top?: SafeAreaViewForceInsetValue;
-      bottom?: SafeAreaViewForceInsetValue;
-      left?: SafeAreaViewForceInsetValue;
-      right?: SafeAreaViewForceInsetValue;
-    };
-  }
-
-  export const MaterialTopTabBar: React.ComponentType<MaterialTopTabBarProps>;
-  export const BottomTabBar: React.ComponentType<BottomTabBarProps>;
 
   /**
    * NavigationActions
@@ -1269,44 +730,6 @@ declare module 'react-navigation' {
   }
 
   /**
-   * Transitioner
-   * @desc From react-navigation/src/views/Transitioner.js
-   */
-  export interface TransitionerProps {
-    configureTransition: (
-      transitionProps: NavigationTransitionProps,
-      prevTransitionProps?: NavigationTransitionProps
-    ) => NavigationTransitionSpec;
-    navigation: NavigationScreenProp<NavigationState>;
-    onTransitionStart?: (
-      transitionProps: NavigationTransitionProps,
-      prevTransitionProps?: NavigationTransitionProps
-    ) => Promise<void> | void;
-    onTransitionEnd?: (
-      transitionProps: NavigationTransitionProps,
-      prevTransitionProps?: NavigationTransitionProps
-    ) => void;
-    render: (
-      transitionProps: NavigationTransitionProps,
-      prevTransitionProps?: NavigationTransitionProps
-    ) => any;
-    descriptors?: { [key: string]: NavigationDescriptor };
-    style?: StyleProp<ViewStyle>;
-  }
-
-  export interface TransitionerState {
-    layout: NavigationLayout;
-    position: Animated.Value;
-    progress: Animated.Value;
-    scenes: NavigationScene[];
-  }
-
-  export class Transitioner extends React.Component<
-    TransitionerProps,
-    TransitionerState
-  > {}
-
-  /**
    * Tab Router
    *
    * @desc from react-navigation/src/routers/TabRouter.js
@@ -1325,6 +748,15 @@ declare module 'react-navigation' {
     routeConfigs: NavigationRouteConfigMap,
     config: NavigationTabRouterConfig
   ): NavigationRouter<any, any>;
+
+  export interface NavigationStackRouterConfig {
+    initialRouteName?: string;
+    initialRouteParams?: NavigationParams;
+    paths?: NavigationPathsConfig;
+    defaultNavigationOptions?: NavigationScreenConfig<NavigationScreenOptions>;
+    navigationOptions?: NavigationScreenConfig<NavigationScreenOptions>;
+    initialRouteKey?: string;
+  }
 
   /**
    * Create Navigator
@@ -1395,32 +827,6 @@ declare module 'react-navigation' {
   /**
    * END CUSTOM CONVENIENCE INTERFACES
    */
-
-  /*
-   * Header
-   */
-
-  // src/views/HeaderBackButton.js
-
-  export interface HeaderBackButtonProps {
-    onPress?: () => void;
-    pressColorAndroid?: string;
-    title?: string | null;
-    titleStyle?: StyleProp<TextStyle>;
-    tintColor?: string;
-    truncatedTitle?: string;
-    width?: number;
-    disabled?: boolean;
-    backTitleVisible?: boolean;
-  }
-
-  export const HeaderBackButton: React.ComponentClass<HeaderBackButtonProps>;
-  /**
-   * Header Component
-   */
-  export class Header extends React.Component<HeaderProps> {
-    static HEIGHT: number;
-  }
 
   export type Omit<T, K extends keyof any> = Pick<T, Exclude<keyof T, K>>;
 
@@ -1513,10 +919,6 @@ declare module 'react-navigation' {
 
   export const NavigationContext: React.Context<
     NavigationScreenProp<NavigationRoute>
-  >;
-  export const StackGestureContext: React.Context<React.Ref<PanGestureHandler>>;
-  export const DrawerGestureContext: React.Context<
-    React.Ref<PanGestureHandler>
   >;
 
   /**
