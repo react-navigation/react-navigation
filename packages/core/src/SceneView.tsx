@@ -76,8 +76,16 @@ export default function SceneView<
     ]
   );
 
+  const navigationContext = React.useMemo(
+    () => ({
+      navigation,
+      route,
+    }),
+    [navigation, route]
+  );
+
   return (
-    <NavigationContext.Provider value={navigation}>
+    <NavigationContext.Provider value={navigationContext}>
       <NavigationStateContext.Provider value={context}>
         <EnsureSingleNavigator>
           <StaticContainer

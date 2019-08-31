@@ -10,6 +10,7 @@ export { default as NavigationContext } from './NavigationContext';
 
 export { default as useNavigationBuilder } from './useNavigationBuilder';
 export { default as useNavigation } from './useNavigation';
+export { default as useRoute } from './useRoute';
 export { default as useFocusEffect } from './useFocusEffect';
 export { default as useIsFocused } from './useIsFocused';
 
