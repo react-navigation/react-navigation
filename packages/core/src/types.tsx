@@ -96,7 +96,12 @@ export type DefaultNavigatorOptions<
   /**
    * Default options for all screens under this navigator.
    */
-  screenOptions?: ScreenOptions;
+  screenOptions?:
+    | ScreenOptions
+    | ((props: {
+        route: RouteProp<ParamListBase, string>;
+        navigation: any;
+      }) => ScreenOptions);
 };
 
 export type RouterFactory<
@@ -534,11 +539,24 @@ export type TypedNavigator<
    * Navigator component which manages the child screens.
    */
   Navigator: React.ComponentType<
-    React.ComponentProps<Navigator> & {
+    Omit<
+      React.ComponentProps<Navigator>,
+      'initialRouteName' | 'screenOptions'
+    > & {
       /**
-       * Route to focus on initial render.
+       * Name of the route to focus by on initial render.
+       * If not specified, usually the first route is used.
        */
       initialRouteName?: keyof ParamList;
+      /**
+       * Default options for all screens under this navigator.
+       */
+      screenOptions?:
+        | ScreenOptions
+        | ((props: {
+            route: RouteProp<ParamList, keyof ParamList>;
+            navigation: any;
+          }) => ScreenOptions);
     }
   >;
   /**

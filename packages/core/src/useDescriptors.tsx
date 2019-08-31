@@ -13,6 +13,7 @@ import {
   NavigationState,
   ParamListBase,
   RouteConfig,
+  RouteProp,
   Router,
 } from './types';
 
@@ -20,7 +21,12 @@ type Options<ScreenOptions extends object> = {
   state: NavigationState;
   screens: { [key: string]: RouteConfig<ParamListBase, string, ScreenOptions> };
   navigation: NavigationHelpers<ParamListBase>;
-  screenOptions?: ScreenOptions;
+  screenOptions?:
+    | ScreenOptions
+    | ((props: {
+        route: RouteProp<ParamListBase, string>;
+        navigation: any;
+      }) => ScreenOptions);
   onAction: (
     action: NavigationAction,
     visitedNavigators?: Set<string>
@@ -110,7 +116,13 @@ export default function useDescriptors<
         },
         options: {
           // The default `screenOptions` passed to the navigator
-          ...screenOptions,
+          ...(typeof screenOptions === 'object' || screenOptions == null
+            ? screenOptions
+            : screenOptions({
+                // @ts-ignore
+                route,
+                navigation: navigations[route.key],
+              })),
           // The `options` prop passed to `Screen` elements
           ...(typeof screen.options === 'object' || screen.options == null
             ? screen.options
