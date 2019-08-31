@@ -11,7 +11,7 @@
     "material",
     "tab"
   ],
-  "version": "5.0.0-alpha.6",
+  "version": "5.0.0-alpha.7",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -34,7 +34,7 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "@react-navigation/routers": "^5.0.0-alpha.6"
+    "@react-navigation/routers": "^5.0.0-alpha.7"
   },
   "devDependencies": {
     "@react-native-community/bob": "^0.7.0",
