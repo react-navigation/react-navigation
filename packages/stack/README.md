@@ -54,4 +54,4 @@ yarn lint --fix
 
 ## Docs
 
-Documentation can be found on the [React Navigation website](https://reactnavigation.org/docs/en/stack-navigator.html).
+Documentation can be found on the [React Navigation website](https://reactnavigation.org/docs/en/stack-navigator-2.0.html).
