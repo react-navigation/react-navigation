@@ -8,7 +8,10 @@ import {
   getStateFromPath,
   NavigationContainerRef,
 } from '@react-navigation/core';
-import { useLinking, NativeContainer } from '@react-navigation/native';
+import {
+  useLinking,
+  NavigationNativeContainer,
+} from '@react-navigation/native';
 import {
   createDrawerNavigator,
   DrawerNavigationProp,
@@ -118,7 +121,7 @@ export default function App() {
   }
 
   return (
-    <NativeContainer
+    <NavigationNativeContainer
       ref={containerRef}
       initialState={initialState}
       onStateChange={state =>
@@ -177,6 +180,6 @@ export default function App() {
           )}
         </Drawer.Screen>
       </Drawer.Navigator>
-    </NativeContainer>
+    </NavigationNativeContainer>
   );
 }

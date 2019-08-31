@@ -16,14 +16,14 @@ import useBackButton from './useBackButton';
  * @param props.children Child elements to render the content.
  * @param props.ref Ref object which refers to the navigation object containing helper methods.
  */
-
-const NativeContainer = React.forwardRef(function NativeContainer(
+const NavigationNativeContainer = React.forwardRef(function NativeContainer(
   props: NavigationContainerProps,
   ref: React.Ref<NavigationContainerRef>
 ) {
   const refContainer = React.useRef<NavigationContainerRef>(null);
 
   useBackButton(refContainer);
+
   React.useImperativeHandle(ref, () => refContainer.current);
 
   return (
@@ -35,4 +35,4 @@ const NativeContainer = React.forwardRef(function NativeContainer(
   );
 });
 
-export default NativeContainer;
+export default NavigationNativeContainer;
