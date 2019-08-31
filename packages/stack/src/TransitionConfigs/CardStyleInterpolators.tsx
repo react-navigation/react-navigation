@@ -9,15 +9,16 @@ const { cond, add, multiply, interpolate } = Animated;
  * Standard iOS-style slide in from the right.
  */
 export function forHorizontalIOS({
-  progress: { current, next },
+  current,
+  next,
   layouts: { screen },
 }: CardInterpolationProps): CardInterpolatedStyle {
-  const translateFocused = interpolate(current, {
+  const translateFocused = interpolate(current.progress, {
     inputRange: [0, 1],
     outputRange: [I18nManager.isRTL ? -screen.width : screen.width, 0],
   });
   const translateUnfocused = next
-    ? interpolate(next, {
+    ? interpolate(next.progress, {
         inputRange: [0, 1],
         outputRange: [
           0,
@@ -26,12 +27,12 @@ export function forHorizontalIOS({
       })
     : 0;
 
-  const overlayOpacity = interpolate(current, {
+  const overlayOpacity = interpolate(current.progress, {
     inputRange: [0, 1],
     outputRange: [0, 0.07],
   });
 
-  const shadowOpacity = interpolate(current, {
+  const shadowOpacity = interpolate(current.progress, {
     inputRange: [0, 1],
     outputRange: [0, 0.3],
   });
@@ -54,10 +55,10 @@ export function forHorizontalIOS({
  * Standard iOS-style slide in from the bottom (used for modals).
  */
 export function forVerticalIOS({
-  progress: { current },
+  current,
   layouts: { screen },
 }: CardInterpolationProps): CardInterpolatedStyle {
-  const translateY = interpolate(current, {
+  const translateY = interpolate(current.progress, {
     inputRange: [0, 1],
     outputRange: [screen.height, 0],
   });
@@ -77,14 +78,15 @@ export function forVerticalIOS({
  */
 export function forModalPresentationIOS({
   index,
-  progress: { current, next },
+  current,
+  next,
   layouts: { screen },
 }: CardInterpolationProps): CardInterpolatedStyle {
   const topOffset = 10;
   const statusBarHeight = getStatusBarHeight(screen.width > screen.height);
   const aspectRatio = screen.height / screen.width;
 
-  const progress = add(current, next ? next : 0);
+  const progress = add(current.progress, next ? next.progress : 0);
 
   const translateY = interpolate(progress, {
     inputRange: [0, 1, 2],
@@ -129,19 +131,19 @@ export function forModalPresentationIOS({
  * Standard Android-style fade in from the bottom for Android Oreo.
  */
 export function forFadeFromBottomAndroid({
-  progress: { current },
+  current,
   layouts: { screen },
   closing,
 }: CardInterpolationProps): CardInterpolatedStyle {
-  const translateY = interpolate(current, {
+  const translateY = interpolate(current.progress, {
     inputRange: [0, 1],
     outputRange: [multiply(screen.height, 0.08), 0],
   });
 
   const opacity = cond(
     closing,
-    current,
-    interpolate(current, {
+    current.progress,
+    interpolate(current.progress, {
       inputRange: [0, 0.5, 0.9, 1],
       outputRange: [0, 0.25, 0.7, 1],
     })
@@ -159,24 +161,25 @@ export function forFadeFromBottomAndroid({
  * Standard Android-style reveal from the bottom for Android Pie.
  */
 export function forRevealFromBottomAndroid({
-  progress: { current, next },
+  current,
+  next,
   layouts: { screen },
 }: CardInterpolationProps): CardInterpolatedStyle {
-  const containerTranslateY = interpolate(current, {
+  const containerTranslateY = interpolate(current.progress, {
     inputRange: [0, 1],
     outputRange: [screen.height, 0],
   });
-  const cardTranslateYFocused = interpolate(current, {
+  const cardTranslateYFocused = interpolate(current.progress, {
     inputRange: [0, 1],
     outputRange: [multiply(screen.height, 95.9 / 100, -1), 0],
   });
   const cardTranslateYUnfocused = next
-    ? interpolate(next, {
+    ? interpolate(next.progress, {
         inputRange: [0, 1],
         outputRange: [0, multiply(screen.height, 2 / 100, -1)],
       })
     : 0;
-  const overlayOpacity = interpolate(current, {
+  const overlayOpacity = interpolate(current.progress, {
     inputRange: [0, 0.36, 1],
     outputRange: [0, 0.1, 0.1],
   });

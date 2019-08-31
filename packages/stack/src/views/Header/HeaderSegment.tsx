@@ -121,10 +121,8 @@ export default class HeaderSegment extends React.Component<Props, State> {
       leftLabelLayout: Layout | undefined
     ) =>
       styleInterpolator({
-        progress: {
-          current,
-          next,
-        },
+        current: { progress: current },
+        next: next && { progress: next },
         layouts: {
           screen: layout,
           title: titleLayout,

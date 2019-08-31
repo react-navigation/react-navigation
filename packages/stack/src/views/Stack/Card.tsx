@@ -517,10 +517,8 @@ export default class Card extends React.Component<Props> {
     ) =>
       styleInterpolator({
         index,
-        progress: {
-          current,
-          next,
-        },
+        current: { progress: current },
+        next: next && { progress: next },
         closing: this.isClosing,
         layouts: {
           screen: layout,

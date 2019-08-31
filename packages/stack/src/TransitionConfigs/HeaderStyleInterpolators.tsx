@@ -8,7 +8,8 @@ const { interpolate, add } = Animated;
  * Standard UIKit style animation for the header where the title fades into the back button label.
  */
 export function forUIKit({
-  progress: { current, next },
+  current,
+  next,
   layouts,
 }: HeaderInterpolationProps): HeaderInterpolatedStyle {
   const defaultOffset = 100;
@@ -30,7 +31,7 @@ export function forUIKit({
   // The back title also animates in from this position
   const rightOffset = layouts.screen.width / 4;
 
-  const progress = add(current, next ? next : 0);
+  const progress = add(current.progress, next ? next.progress : 0);
 
   return {
     leftButtonStyle: {
@@ -92,9 +93,10 @@ export function forUIKit({
  * Simple fade animation for the header elements.
  */
 export function forFade({
-  progress: { current, next },
+  current,
+  next,
 }: HeaderInterpolationProps): HeaderInterpolatedStyle {
-  const progress = add(current, next ? next : 0);
+  const progress = add(current.progress, next ? next.progress : 0);
   const opacity = interpolate(progress, {
     inputRange: [0, 1, 2],
     outputRange: [0, 1, 0],
@@ -112,10 +114,11 @@ export function forFade({
  * Simple translate animation to translate the header along with the sliding screen.
  */
 export function forStatic({
-  progress: { current, next },
+  current,
+  next,
   layouts: { screen },
 }: HeaderInterpolationProps): HeaderInterpolatedStyle {
-  const progress = add(current, next ? next : 0);
+  const progress = add(current.progress, next ? next.progress : 0);
   const translateX = interpolate(progress, {
     inputRange: [0, 1, 2],
     outputRange: I18nManager.isRTL
