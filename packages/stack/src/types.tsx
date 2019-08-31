@@ -410,23 +410,28 @@ export type TransitionSpec =
 
 export type CardInterpolationProps = {
   /**
+   * Values for the current screen.
+   */
+  current: {
+    /**
+     * Animated node representing the progress value of the current screen.
+     */
+    progress: Animated.Node<number>;
+  };
+  /**
+   * Values for the current screen the screen after this one in the stack.
+   * This can be `undefined` in case the screen animating is the last one.
+   */
+  next?: {
+    /**
+     * Animated node representing the progress value of the next screen.
+     */
+    progress: Animated.Node<number>;
+  };
+  /**
    * The index of the card in the stack.
    */
   index: number;
-  /**
-   * Animated nodes representing the progress of the animation.
-   */
-  progress: {
-    /**
-     * Progress value of the current screen.
-     */
-    current: Animated.Node<number>;
-    /**
-     * Progress value for the screen after this one in the stack.
-     * This can be `undefined` in case the screen animating is the last one.
-     */
-    next?: Animated.Node<number>;
-  };
   /**
    * Animated node representing whether the card is closing.
    */
@@ -467,18 +472,23 @@ export type CardStyleInterpolator = (
 
 export type HeaderInterpolationProps = {
   /**
-   * Animated nodes representing the progress of the animation.
+   * Values for the current screen (the screen which owns this header).
    */
-  progress: {
+  current: {
     /**
-     * Progress value of the current screen (the screen which owns this header).
+     * Animated node representing the progress value of the current screen.
      */
-    current: Animated.Node<number>;
+    progress: Animated.Node<number>;
+  };
+  /**
+   * Values for the current screen the screen after this one in the stack.
+   * This can be `undefined` in case the screen animating is the last one.
+   */
+  next?: {
     /**
-     * Progress value for the screen after this one in the stack.
-     * This can be `undefined` in case the screen animating is the last one.
+     * Animated node representing the progress value of the next screen.
      */
-    next?: Animated.Node<number>;
+    progress: Animated.Node<number>;
   };
   /**
    * Layout measurements for various items we use for animation.

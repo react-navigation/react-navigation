@@ -125,7 +125,7 @@ export type MaterialTopTabNavigationConfig = Partial<
    *
    * This view is usually only shown for a split second. Keep it lightweight.
    *
-   * By default, this renders null..
+   * By default, this renders null.
    */
   lazyPlaceholderComponent?: React.ComponentType<{ route: Route<string> }>;
   /**
