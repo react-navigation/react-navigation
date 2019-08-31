@@ -23,7 +23,7 @@ type DrawerOptions = {
   statusBarAnimation: 'slide' | 'none' | 'fade';
   onDrawerClose?: () => void;
   onDrawerOpen?: () => void;
-  contentContainerStyle?: ViewStyle;
+  sceneContainerStyle?: ViewStyle;
   edgeWidth: number;
   hideStatusBar?: boolean;
   style?: ViewStyle;
@@ -198,7 +198,7 @@ export default class DrawerView extends React.PureComponent<Props, State> {
       drawerType,
       drawerBackgroundColor,
       overlayColor,
-      contentContainerStyle,
+      sceneContainerStyle,
       edgeWidth,
       minSwipeDistance,
       hideStatusBar,
@@ -229,7 +229,7 @@ export default class DrawerView extends React.PureComponent<Props, State> {
           gestureHandlerProps={gestureHandlerProps}
           drawerType={drawerType}
           drawerPosition={this.props.navigationConfig.drawerPosition}
-          contentContainerStyle={contentContainerStyle}
+          sceneContainerStyle={sceneContainerStyle}
           drawerStyle={{
             backgroundColor: drawerBackgroundColor || 'white',
             width: this.state.drawerWidth,

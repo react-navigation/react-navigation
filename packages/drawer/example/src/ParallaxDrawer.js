@@ -210,7 +210,7 @@ function createDrawerExample(options = {}) {
     {
       overlayColor: 'rgba(0,0,0,0)',
       drawerType: 'back',
-      contentContainerStyle: {
+      sceneContainerStyle: {
         shadowColor: '#000000',
         shadowOpacity: 0.4,
         shadowRadius: 8,
