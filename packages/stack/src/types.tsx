@@ -181,11 +181,13 @@ export type TransitionSpec =
   | { animation: 'timing'; config: TimingConfig };
 
 export type CardInterpolationProps = {
-  index: number;
-  progress: {
-    current: Animated.Node<number>;
-    next?: Animated.Node<number>;
+  current: {
+    progress: Animated.Node<number>;
   };
+  next?: {
+    progress: Animated.Node<number>;
+  };
+  index: number;
   closing: Animated.Node<0 | 1>;
   layouts: {
     screen: Layout;
@@ -204,9 +206,11 @@ export type CardStyleInterpolator = (
 ) => CardInterpolatedStyle;
 
 export type HeaderInterpolationProps = {
-  progress: {
-    current: Animated.Node<number>;
-    next?: Animated.Node<number>;
+  current: {
+    progress: Animated.Node<number>;
+  };
+  next?: {
+    progress: Animated.Node<number>;
   };
   layouts: {
     screen: Layout;
