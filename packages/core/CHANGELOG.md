@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.7](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/core@5.0.0-alpha.5...@react-navigation/core@5.0.0-alpha.7) (2019-08-31)
+
+
+### Bug Fixes
+
+* fix navigation object changing too often ([3c840bb](https://github.com/react-navigation/navigation-ex/commit/3c840bb))
+
+
+### Features
+
+* add useRoute ([#89](https://github.com/react-navigation/navigation-ex/issues/89)) ([b0a3756](https://github.com/react-navigation/navigation-ex/commit/b0a3756))
+* support function in screenOptions ([eff0c04](https://github.com/react-navigation/navigation-ex/commit/eff0c04))
+
+
+
+
+
 # [5.0.0-alpha.6](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/core@5.0.0-alpha.5...@react-navigation/core@5.0.0-alpha.6) (2019-08-31)
 
 
