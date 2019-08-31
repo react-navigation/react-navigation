@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.7](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/routers@5.0.0-alpha.6...@react-navigation/routers@5.0.0-alpha.7) (2019-08-31)
+
+
+### Bug Fixes
+
+* handle route names change when all routes are removed ([#86](https://github.com/react-navigation/navigation-ex/issues/86)) ([1b2983e](https://github.com/react-navigation/navigation-ex/commit/1b2983e))
+
+
+
+
+
 # [5.0.0-alpha.6](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/routers@5.0.0-alpha.5...@react-navigation/routers@5.0.0-alpha.6) (2019-08-29)
 
 
