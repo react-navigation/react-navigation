@@ -5,7 +5,7 @@
   "main": "lib/commonjs/index.js",
   "react-native": "lib/module/index.js",
   "module": "lib/module/index.js",
-  "types": "lib/typescript/src/index.d.ts",
+  "types": "lib/typescript/index.d.ts",
   "files": [
     "src",
     "lib"
@@ -43,9 +43,9 @@
     "@commitlint/config-conventional": "^7.5.0",
     "@expo/vector-icons": "^10.0.1",
     "@react-native-community/bob": "^0.3.4",
-    "@react-navigation/core": "^3.4.0",
-    "@react-navigation/native": "^3.4.1",
-    "@release-it/conventional-changelog": "^1.0.0",
+    "@react-navigation/core": "^3.5.0",
+    "@react-navigation/native": "^3.6.2",
+    "@release-it/conventional-changelog": "^1.1.0",
     "@types/jest": "^24.0.11",
     "@types/react": "^16.8.13",
     "@types/react-native": "^0.57.49",
@@ -68,12 +68,12 @@
     "react-native-screens": "^1.0.0-alpha.22",
     "react-native-testing-library": "^1.7.0",
     "react-test-renderer": "16.8.6",
-    "release-it": "^12.0.1",
+    "release-it": "^12.3.6",
     "typescript": "^3.4.5"
   },
   "peerDependencies": {
-    "@react-navigation/core": "^3.0.0",
-    "@react-navigation/native": "^3.1.1",
+    "@react-navigation/core": "^3.5.0",
+    "@react-navigation/native": "^3.6.2",
     "react": "*",
     "react-native": "*",
     "react-native-gesture-handler": "^1.0.12",
