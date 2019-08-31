@@ -64,6 +64,11 @@ export default createMaterialBottomTabNavigator({
 });
 ```
 
+## Documentation
+
+- [`createBottomTabNavigator`](https://reactnavigation.org/docs/en/bottom-tab-navigator.html)
+- [`createMaterialTopTabNavigator`](https://reactnavigation.org/docs/en/material-top-tab-navigator.html)
+
 <!-- badges -->
 [build-badge]: https://img.shields.io/circleci/project/github/react-navigation/tabs/master.svg?style=flat-square
 [build]: https://circleci.com/gh/react-navigation/tabs
