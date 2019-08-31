@@ -99,13 +99,15 @@ export default function useDescriptors<
   return state.routes.reduce(
     (acc, route) => {
       const screen = screens[route.name];
+      const navigation = navigations[route.key];
 
       acc[route.key] = {
+        navigation,
         render() {
           return (
             <NavigationBuilderContext.Provider key={route.key} value={context}>
               <SceneView
-                navigation={navigations[route.key]}
+                navigation={navigation}
                 route={route}
                 screen={screen}
                 getState={getState}
@@ -114,28 +116,30 @@ export default function useDescriptors<
             </NavigationBuilderContext.Provider>
           );
         },
-        options: {
-          // The default `screenOptions` passed to the navigator
-          ...(typeof screenOptions === 'object' || screenOptions == null
-            ? screenOptions
-            : screenOptions({
-                // @ts-ignore
-                route,
-                navigation: navigations[route.key],
-              })),
-          // The `options` prop passed to `Screen` elements
-          ...(typeof screen.options === 'object' || screen.options == null
-            ? screen.options
-            : screen.options({
-                // @ts-ignore
-                route,
-                navigation: navigations[route.key],
-              })),
-          // The options set via `navigation.setOptions`
-          ...options[route.key],
+        get options() {
+          return {
+            // The default `screenOptions` passed to the navigator
+            ...(typeof screenOptions === 'object' || screenOptions == null
+              ? screenOptions
+              : screenOptions({
+                  // @ts-ignore
+                  route,
+                  navigation,
+                })),
+            // The `options` prop passed to `Screen` elements
+            ...(typeof screen.options === 'object' || screen.options == null
+              ? screen.options
+              : screen.options({
+                  // @ts-ignore
+                  route,
+                  navigation,
+                })),
+            // The options set via `navigation.setOptions`
+            ...options[route.key],
+          };
         },
-        navigation: navigations[route.key],
       };
+
       return acc;
     },
     {} as {
