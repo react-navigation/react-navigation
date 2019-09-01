@@ -254,7 +254,9 @@ export default class Card extends React.Component<Props> {
       // If the style updates during render, setting the value here doesn't work
       // We need to defer it a bit so the animation starts properly
       requestAnimationFrame(() =>
-        this.isClosing.setValue(closing ? TRUE : FALSE)
+        requestAnimationFrame(() =>
+          this.isClosing.setValue(closing ? TRUE : FALSE)
+        )
       );
     }
   }
