@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.13](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.12...@react-navigation/stack@5.0.0-alpha.13) (2019-09-01)
+
+
+### Features
+
+* useForeground if possible in stack header backButton ([aa6313c](https://github.com/react-navigation/navigation-ex/commit/aa6313c))
+
+
+
+
+
 # [5.0.0-alpha.12](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.11...@react-navigation/stack@5.0.0-alpha.12) (2019-09-01)
 
 
