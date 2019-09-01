@@ -15,7 +15,3 @@ The code must pass tests.
 ## Code formatting
 
 Look around. Match the style of the rest of the codebase. Run `yarn format` before committing.
-
-## Changelog
-
-Add an entry under the "Unreleased" heading in [CHANGELOG.md](https://github.com/react-navigation/react-navigation/blob/master/CHANGELOG.md#unreleased) which explains your change.
