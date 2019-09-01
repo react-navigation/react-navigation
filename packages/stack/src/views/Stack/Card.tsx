@@ -598,6 +598,7 @@ export default class Card extends React.Component<Props> {
       nativeEvent: {
         translationX: this.gestureUntraversed,
         velocityX: this.velocityUntraversed,
+        state: this.gestureState,
       },
     },
   ]);
@@ -634,7 +635,7 @@ export default class Card extends React.Component<Props> {
       })
   );
 
-  // Keep track of the style in a property to avoid changing the animated node when deps change`
+  // Keep track of the style in a property to avoid changing the animated node when deps change
   // The style shouldn't change in the middle of the animation and should refer to what was there at the start of it
   // Which will be the last value when just before the render which started the animation
   // We need to make sure to update this when the running animation ends
