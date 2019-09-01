@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.11](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.10...@react-navigation/stack@5.0.0-alpha.11) (2019-09-01)
+
+
+### Features
+
+* optimizations in stack ([3f853d4](https://github.com/react-navigation/navigation-ex/commit/3f853d4))
+
+
+
+
+
 # [5.0.0-alpha.10](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.9...@react-navigation/stack@5.0.0-alpha.10) (2019-08-31)
 
 **Note:** Version bump only for package @react-navigation/stack
