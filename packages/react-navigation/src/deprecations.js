@@ -52,7 +52,7 @@ module.exports = {
 
   get DrawerGestureContext() {
     throwError(
-      '`DrawerGestureContext` has been moved to `react-navigation-drawe`',
+      '`DrawerGestureContext` has been moved to `react-navigation-drawer`',
       'stack-navigator'
     );
   },
@@ -68,7 +68,7 @@ module.exports = {
 
   get DrawerActions() {
     throwError(
-      '`DrawerActions` has been moved to `react-navigation-drawe`',
+      '`DrawerActions` has been moved to `react-navigation-drawer`',
       'drawer-navigator'
     );
   },
