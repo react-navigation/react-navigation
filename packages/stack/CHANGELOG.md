@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.14](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.13...@react-navigation/stack@5.0.0-alpha.14) (2019-09-03)
+
+
+### Bug Fixes
+
+* change order of attaching nodes in card exec ([167d58c](https://github.com/react-navigation/navigation-ex/commit/167d58c))
+
+
+
+
+
 # [5.0.0-alpha.13](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.12...@react-navigation/stack@5.0.0-alpha.13) (2019-09-01)
 
 
