@@ -1,6 +1,7 @@
 import React from 'react';
-import { StatusBar, Text } from 'react-native';
+import { Text } from 'react-native';
 import {
+  Themed,
   NavigationScreenProp,
   NavigationState,
   SafeAreaView,
@@ -52,7 +53,7 @@ class MyNavScreen extends React.Component<Props> {
           ))}
         </SafeAreaView>
 
-        <StatusBar barStyle="default" />
+        <Themed.StatusBar />
       </ScrollView>
     );
   }

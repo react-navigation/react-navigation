@@ -1,6 +1,7 @@
 import React from 'react';
-import { StatusBar, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { NavigationScreenProp, NavigationState } from 'react-navigation';
+import { Themed } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { Button } from './commonComponents/ButtonWithMargin';
 
@@ -27,7 +28,7 @@ class HomeScreen extends React.Component<Props, any> {
           title="Go back to other examples"
           onPress={() => this.props.navigation.goBack(null)}
         />
-        <StatusBar barStyle="default" />
+        <Themed.StatusBar />
       </View>
     );
   }
