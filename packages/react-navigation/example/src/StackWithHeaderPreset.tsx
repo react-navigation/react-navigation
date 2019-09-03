@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { StatusBar } from 'react-native';
 import {
   NavigationScreenProp,
   NavigationState,
@@ -30,7 +29,7 @@ class HomeScreen extends React.Component<NavScreenProps> {
           title="Push screen with no header"
         />
         <Button onPress={() => navigation.goBack(null)} title="Go Home" />
-        <StatusBar barStyle="default" />
+        <Themed.StatusBar />
       </SafeAreaView>
     );
   }
@@ -57,7 +56,7 @@ class OtherScreen extends React.Component<NavScreenProps> {
         />
         <Button onPress={() => pop()} title="Pop" />
         <Button onPress={() => navigation.goBack(null)} title="Go back" />
-        <StatusBar barStyle="default" />
+        <Themed.StatusBar />
       </SafeAreaView>
     );
   }
@@ -76,7 +75,7 @@ class ScreenWithLongTitle extends React.Component<NavScreenProps> {
       <SafeAreaView style={{ paddingTop: 30 }}>
         <Button onPress={() => pop()} title="Pop" />
         <Button onPress={() => navigation.goBack(null)} title="Go back" />
-        <StatusBar barStyle="default" />
+        <Themed.StatusBar />
       </SafeAreaView>
     );
   }
@@ -97,7 +96,7 @@ class ScreenWithNoHeader extends React.Component<NavScreenProps> {
         <Button onPress={() => push('Other')} title="Push another screen" />
         <Button onPress={() => pop()} title="Pop" />
         <Button onPress={() => navigation.goBack(null)} title="Go back" />
-        <StatusBar barStyle="default" />
+        <Themed.StatusBar />
       </SafeAreaView>
     );
   }

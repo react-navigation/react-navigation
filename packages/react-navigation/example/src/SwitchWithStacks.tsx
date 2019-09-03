@@ -2,12 +2,11 @@ import React from 'react';
 import {
   ActivityIndicator,
   AsyncStorage,
-  StatusBar,
   StyleSheet,
   View,
   Platform,
 } from 'react-native';
-import { createSwitchNavigator } from 'react-navigation';
+import { Themed, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { Button } from './commonComponents/ButtonWithMargin';
 
@@ -24,7 +23,7 @@ class SignInScreen extends React.Component<any, any> {
           title="Go back to other examples"
           onPress={() => this.props.navigation.goBack(null)}
         />
-        <StatusBar barStyle="default" />
+        <Themed.StatusBar />
       </View>
     );
   }
@@ -45,7 +44,7 @@ class HomeScreen extends React.Component<any, any> {
       <View style={styles.container}>
         <Button title="Show me more of the app" onPress={this.showMoreApp} />
         <Button title="Actually, sign me out :)" onPress={this.signOutAsync} />
-        <StatusBar barStyle="default" />
+        <Themed.StatusBar />
       </View>
     );
   }
@@ -74,7 +73,7 @@ class OtherScreen extends React.Component<any, any> {
     return (
       <View style={styles.container}>
         <Button title="I'm done, sign me out" onPress={this.signOutAsync} />
-        <StatusBar barStyle="default" />
+        <Themed.StatusBar />
       </View>
     );
   }
@@ -105,7 +104,7 @@ class LoadingScreen extends React.Component<any, any> {
     return (
       <View style={styles.container}>
         <ActivityIndicator />
-        <StatusBar barStyle="default" />
+        <Themed.StatusBar />
       </View>
     );
   }
