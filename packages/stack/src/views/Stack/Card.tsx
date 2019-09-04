@@ -741,7 +741,6 @@ export default class Card extends React.Component<Props> {
     return (
       <StackGestureContext.Provider value={this.gestureRef}>
         <View pointerEvents="box-none" {...rest}>
-          {/* <Animated.Code exec={this.exec} /> */}
           <Animated.Code
             key={gestureEnabled ? 'gesture-code' : 'no-gesture-code'}
             exec={gestureEnabled ? this.execWithGesture : this.execNoGesture}
