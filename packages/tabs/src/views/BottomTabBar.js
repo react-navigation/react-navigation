@@ -9,6 +9,7 @@ import {
   Keyboard,
   Platform,
 } from 'react-native';
+import { ThemeColors, ThemeContext } from '@react-navigation/core';
 import { SafeAreaView } from '@react-navigation/native';
 
 import CrossFadeIcon from './CrossFadeIcon';
@@ -20,12 +21,17 @@ type LabelPosition =
   | Position
   | ((options: { deviceOrientation: Orientation }) => Position);
 
+export type ThemedColor = {
+  light: string,
+  dark: string,
+};
+
 export type TabBarOptions = {
   keyboardHidesTabBar: boolean,
-  activeTintColor?: string,
-  inactiveTintColor?: string,
-  activeBackgroundColor?: string,
-  inactiveBackgroundColor?: string,
+  activeTintColor?: string | ThemedColor,
+  inactiveTintColor?: string | ThemedColor,
+  activeBackgroundColor?: string | ThemedColor,
+  inactiveBackgroundColor?: string | ThemedColor,
   allowFontScaling: boolean,
   showLabel: boolean,
   showIcon: boolean,
@@ -93,11 +99,19 @@ class TouchableWithoutFeedbackWrapper extends React.Component<*> {
 }
 
 class TabBarBottom extends React.Component<Props, State> {
+  static contextType = ThemeContext;
+
   static defaultProps = {
     keyboardHidesTabBar: true,
-    activeTintColor: '#007AFF',
+    activeTintColor: {
+      light: '#007AFF',
+      dark: '#fff',
+    },
+    inactiveTintColor: {
+      light: '#8e8e93',
+      dark: '#7f7f7f',
+    },
     activeBackgroundColor: 'transparent',
-    inactiveTintColor: '#8E8E93',
     inactiveBackgroundColor: 'transparent',
     showLabel: true,
     showIcon: true,
@@ -166,23 +180,62 @@ class TabBarBottom extends React.Component<Props, State> {
     });
   };
 
+  _getActiveTintColor = () => {
+    let { activeTintColor } = this.props;
+    if (!activeTintColor) {
+      return;
+    } else if (typeof activeTintColor === 'string') {
+      return activeTintColor;
+    }
+
+    return activeTintColor[this.context];
+  };
+
+  _getInactiveTintColor = () => {
+    let { inactiveTintColor } = this.props;
+    if (!inactiveTintColor) {
+      return;
+    } else if (typeof inactiveTintColor === 'string') {
+      return inactiveTintColor;
+    }
+
+    return inactiveTintColor[this.context];
+  };
+
+  _getActiveBackgroundColor = () => {
+    let { activeBackgroundColor } = this.props;
+    if (!activeBackgroundColor) {
+      return;
+    } else if (typeof activeBackgroundColor === 'string') {
+      return activeBackgroundColor;
+    }
+
+    return activeBackgroundColor[this.context];
+  };
+
+  _getInactiveBackgroundColor = () => {
+    let { inactiveBackgroundColor } = this.props;
+    if (!inactiveBackgroundColor) {
+      return;
+    } else if (typeof inactiveBackgroundColor === 'string') {
+      return inactiveBackgroundColor;
+    }
+
+    return inactiveBackgroundColor[this.context];
+  };
+
   _renderLabel = ({ route, focused }) => {
-    const {
-      activeTintColor,
-      inactiveTintColor,
-      labelStyle,
-      showLabel,
-      showIcon,
-      allowFontScaling,
-    } = this.props;
+    const { labelStyle, showLabel, showIcon, allowFontScaling } = this.props;
 
     if (showLabel === false) {
       return null;
     }
 
+    const activeTintColor = this._getActiveTintColor();
+    const inactiveTintColor = this._getInactiveTintColor();
     const label = this.props.getLabelText({ route });
-    const horizontal = this._shouldUseHorizontalLabels();
     const tintColor = focused ? activeTintColor : inactiveTintColor;
+    const horizontal = this._shouldUseHorizontalLabels();
 
     if (typeof label === 'string') {
       return (
@@ -214,20 +267,15 @@ class TabBarBottom extends React.Component<Props, State> {
   };
 
   _renderIcon = ({ route, focused }) => {
-    const {
-      navigation,
-      activeTintColor,
-      inactiveTintColor,
-      renderIcon,
-      showIcon,
-      showLabel,
-    } = this.props;
+    const { navigation, renderIcon, showIcon, showLabel } = this.props;
     if (showIcon === false) {
       return null;
     }
 
     const horizontal = this._shouldUseHorizontalLabels();
 
+    const activeTintColor = this._getActiveTintColor();
+    const inactiveTintColor = this._getInactiveTintColor();
     const activeOpacity = focused ? 1 : 0;
     const inactiveOpacity = focused ? 0 : 1;
 
@@ -302,8 +350,6 @@ class TabBarBottom extends React.Component<Props, State> {
     const {
       navigation,
       keyboardHidesTabBar,
-      activeBackgroundColor,
-      inactiveBackgroundColor,
       onTabPress,
       onTabLongPress,
       safeAreaInset,
@@ -312,9 +358,14 @@ class TabBarBottom extends React.Component<Props, State> {
     } = this.props;
 
     const { routes } = navigation.state;
+    const isDark = this.context === 'dark';
+
+    const activeBackgroundColor = this._getActiveBackgroundColor();
+    const inactiveBackgroundColor = this._getInactiveBackgroundColor();
 
     const tabBarStyle = [
       styles.tabBar,
+      isDark ? styles.tabBarDark : styles.tabBarLight,
       this._shouldUseHorizontalLabels() && !Platform.isPad
         ? styles.tabBarCompact
         : styles.tabBarRegular,
@@ -408,10 +459,16 @@ const COMPACT_HEIGHT = 29;
 
 const styles = StyleSheet.create({
   tabBar: {
-    backgroundColor: '#fff',
     borderTopWidth: StyleSheet.hairlineWidth,
-    borderTopColor: 'rgba(0, 0, 0, .3)',
     flexDirection: 'row',
+  },
+  tabBarLight: {
+    backgroundColor: ThemeColors.light.header,
+    borderTopColor: ThemeColors.light.headerBorder,
+  },
+  tabBarDark: {
+    backgroundColor: ThemeColors.dark.header,
+    borderTopColor: ThemeColors.dark.headerBorder,
   },
   container: {
     left: 0,
