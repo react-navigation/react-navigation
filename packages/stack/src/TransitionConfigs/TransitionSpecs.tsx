@@ -53,3 +53,15 @@ export const RevealFromBottomAndroidSpec: TransitionSpec = {
     easing: Easing.bezier(0.35, 0.45, 0, 1),
   },
 };
+
+/**
+ * Approximate configuration for activity open animation from Android Q.
+ * TODO: Update this with correct values when AOSP is updated.
+ */
+export const ScaleFromCenterAndroidSpec: TransitionSpec = {
+  animation: 'timing',
+  config: {
+    duration: 425,
+    easing: Easing.bezier(0.35, 0.45, 0, 1),
+  },
+};

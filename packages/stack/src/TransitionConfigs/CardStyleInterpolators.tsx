@@ -198,3 +198,34 @@ export function forRevealFromBottomAndroid({
     overlayStyle: { opacity: overlayOpacity },
   };
 }
+
+/**
+ * Standard Android-style reveal from the bottom for Android Q.
+ * TODO: Update this with correct values when AOSP is updated.
+ */
+export function forScaleFromCenterAndroid({
+  current,
+  next,
+}: CardInterpolationProps): CardInterpolatedStyle {
+  const cardOpacityFocused = interpolate(current.progress, {
+    inputRange: [0, 0.5, 1],
+    outputRange: [0, 1, 1],
+  });
+  const cardScaleFocused = interpolate(current.progress, {
+    inputRange: [0, 1],
+    outputRange: [0.9, 1],
+  });
+  const cardScaleUnFocused = next
+    ? interpolate(next.progress, {
+        inputRange: [0, 1],
+        outputRange: [1, 1.1],
+      })
+    : 1;
+
+  return {
+    containerStyle: {
+      opacity: cardOpacityFocused,
+      transform: [{ scale: cardScaleFocused }, { scale: cardScaleUnFocused }],
+    },
+  };
+}
