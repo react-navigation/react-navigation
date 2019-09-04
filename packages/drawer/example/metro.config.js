@@ -1,14 +1,12 @@
-/* eslint-disable import/no-extraneous-dependencies, import/no-commonjs */
+/* eslint-disable import/no-commonjs, import/no-extraneous-dependencies */
 
 const path = require('path');
 const blacklist = require('metro-config/src/defaults/blacklist');
-const project = require('../package.json');
+const pak = require('../package.json');
 const escape = require('escape-string-regexp');
 
-const projectDependencies = Object.keys({
-  ...project.dependencies,
-  ...project.peerDependencies,
-});
+const dependencies = Object.keys(pak.dependencies);
+const peerDependencies = Object.keys(pak.peerDependencies);
 
 module.exports = {
   projectRoot: __dirname,
@@ -17,11 +15,6 @@ module.exports = {
   resolver: {
     blacklistRE: blacklist([
       new RegExp(
-        `^${escape(
-          path.resolve(__dirname, 'node_modules', project.name)
-        )}\\/.*$`
-      ),
-      new RegExp(
         `^${escape(path.resolve(__dirname, '..', 'node_modules'))}\\/.*$`
       ),
     ]),
@@ -29,7 +22,12 @@ module.exports = {
     providesModuleNodeModules: [
       '@expo/vector-icons',
       '@babel/runtime',
-      ...projectDependencies,
+      '@react-navigation/core',
+      '@react-navigation/native',
+      'react-native-gesture-handler',
+      'react-native-reanimated',
+      ...dependencies,
+      ...peerDependencies,
     ],
   },
 };

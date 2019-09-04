@@ -121,7 +121,7 @@ it('renders successfully', () => {
         removeClippedSubviews={false}
         style={
           Object {
-            "backgroundColor": "white",
+            "backgroundColor": "#fff",
             "bottom": 0,
             "left": undefined,
             "maxWidth": "100%",

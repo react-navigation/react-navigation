@@ -1,14 +1,11 @@
-import * as React from 'react';
-import { Button, ScrollView, StatusBar, Text } from 'react-native';
-
-// eslint-disable-next-line import/named
+import React from 'react';
+import { Button, ScrollView } from 'react-native';
 import { createStackNavigator } from 'react-navigation-stack';
-
-import { SafeAreaView } from '@react-navigation/native';
+import { Themed, SafeAreaView } from '@react-navigation/native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { createDrawerNavigator } from 'react-navigation-drawer';
 
-const SampleText = ({ children }) => <Text>{children}</Text>;
+const SampleText = ({ children }) => <Themed.Text>{children}</Themed.Text>;
 
 const MyNavScreen = ({ navigation, banner }) => (
   <ScrollView>
@@ -21,7 +18,7 @@ const MyNavScreen = ({ navigation, banner }) => (
       />
       <Button onPress={() => navigation.navigate('Home')} title="Go back" />
     </SafeAreaView>
-    <StatusBar barStyle="default" />
+    <Themed.StatusBar />
   </ScrollView>
 );
 
@@ -83,12 +80,16 @@ const DrawerExample = createDrawerNavigator(
     },
   },
   {
+    drawerBackgroundColor: {
+      light: '#eee',
+      dark: 'rgba(40,40,40,1)',
+    },
     initialRouteName: 'Drafts',
     contentOptions: {
       activeTintColor: '#e91e63',
     },
     drawerType: 'back',
-    overlayColor: 'rgba(233, 30, 99, 0.5)',
+    overlayColor: '#00000000',
     hideStatusBar: true,
   }
 );

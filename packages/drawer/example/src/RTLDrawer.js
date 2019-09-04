@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { Component } from 'react';
 import {
   Text,
   View,
@@ -7,11 +7,11 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
-// eslint-disable-next-line import/named
+import { Themed } from '@react-navigation/native';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createDrawerNavigator } from 'react-navigation-drawer';
 
-class RightDrawer extends React.Component {
+class RightDrawer extends Component {
   state = {
     categories: [{ i: 'c1', n: 'name1' }, { i: 'c2', n: 'name2' }],
   };
@@ -58,6 +58,7 @@ class RightDrawer extends React.Component {
             );
           })}
         </ScrollView>
+        <Themed.StatusBar barStyle="light-content" />
       </View>
     );
   }
@@ -66,7 +67,7 @@ class RightDrawer extends React.Component {
 const CategoryScreen = ({ navigation }) => {
   return (
     <View>
-      <Text>CategoryScreen {navigation.getParam('title')}</Text>
+      <Themed.Text>CategoryScreen {navigation.getParam('title')}</Themed.Text>
     </View>
   );
 };

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Dimensions, Platform, ScrollView, I18nManager } from 'react-native';
-import { createNavigator } from '@react-navigation/core';
+import { createNavigator, ThemeColors } from '@react-navigation/core';
 import { SafeAreaView } from '@react-navigation/native';
 import DrawerRouter from '../routers/DrawerRouter';
 import DrawerView from '../views/DrawerView';
@@ -37,7 +37,14 @@ const DefaultDrawerConfig = {
   contentComponent: defaultContentComponent,
   drawerPosition: I18nManager.isRTL ? 'right' : 'left',
   keyboardDismissMode: 'on-drag',
-  drawerBackgroundColor: 'white',
+  drawerBackgroundColor: {
+    light: ThemeColors.light.bodyContent,
+    dark: ThemeColors.dark.bodyContent,
+  },
+  overlayColor: {
+    light: 'rgba(0, 0, 0, 0.5)',
+    dark: 'rgba(0, 0, 0, 0.5)',
+  },
   drawerType: 'front',
   hideStatusBar: false,
   statusBarAnimation: 'slide',

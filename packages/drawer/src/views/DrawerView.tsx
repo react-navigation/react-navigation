@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Dimensions, StyleSheet, ViewStyle } from 'react-native';
-import { SceneView } from '@react-navigation/core';
+import { SceneView, ThemeColors, ThemeContext } from '@react-navigation/core';
 import { ScreenContainer } from 'react-native-screens';
 
 import * as DrawerActions from '../routers/DrawerActions';
@@ -57,6 +57,7 @@ type State = {
  * Component that renders the drawer.
  */
 export default class DrawerView extends React.PureComponent<Props, State> {
+  static contextType = ThemeContext;
   static defaultProps = {
     lazy: true,
   };
@@ -87,6 +88,8 @@ export default class DrawerView extends React.PureComponent<Props, State> {
   componentWillUnmount() {
     Dimensions.removeEventListener('change', this.updateWidth);
   }
+
+  context!: React.ContextType<typeof ThemeContext>;
 
   private drawerGestureRef = React.createRef<PanGestureHandler>();
 
@@ -192,12 +195,34 @@ export default class DrawerView extends React.PureComponent<Props, State> {
     this.drawerGestureRef.current = ref;
   };
 
+  private getDrawerBackgroundColor() {
+    const { drawerBackgroundColor } = this.props.navigationConfig;
+
+    if (drawerBackgroundColor) {
+      return typeof drawerBackgroundColor === 'string'
+        ? drawerBackgroundColor
+        : drawerBackgroundColor[this.context];
+    } else {
+      return ThemeColors[this.context].bodyContent;
+    }
+  }
+
+  private getOverlayColor() {
+    const { overlayColor } = this.props.navigationConfig;
+
+    if (overlayColor) {
+      return typeof overlayColor === 'string'
+        ? overlayColor
+        : overlayColor[this.context];
+    } else {
+      return 'rgba(0,0,0,0.5)';
+    }
+  }
+
   render() {
     const { navigation } = this.props;
     const {
       drawerType,
-      drawerBackgroundColor,
-      overlayColor,
       sceneContainerStyle,
       edgeWidth,
       minSwipeDistance,
@@ -207,6 +232,9 @@ export default class DrawerView extends React.PureComponent<Props, State> {
     } = this.props.navigationConfig;
     const activeKey = navigation.state.routes[navigation.state.index].key;
     const { drawerLockMode } = this.props.descriptors[activeKey].options;
+
+    const drawerBackgroundColor = this.getDrawerBackgroundColor();
+    const overlayColor = this.getOverlayColor();
 
     const isOpen =
       drawerLockMode === 'locked-closed'
@@ -231,12 +259,10 @@ export default class DrawerView extends React.PureComponent<Props, State> {
           drawerPosition={this.props.navigationConfig.drawerPosition}
           sceneContainerStyle={sceneContainerStyle}
           drawerStyle={{
-            backgroundColor: drawerBackgroundColor || 'white',
+            backgroundColor: drawerBackgroundColor,
             width: this.state.drawerWidth,
           }}
-          overlayStyle={{
-            backgroundColor: overlayColor || 'rgba(0, 0, 0, 0.5)',
-          }}
+          overlayStyle={{ backgroundColor: overlayColor }}
           swipeEdgeWidth={edgeWidth}
           swipeDistanceThreshold={minSwipeDistance}
           hideStatusBar={hideStatusBar}

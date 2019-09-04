@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { Button, WebView, View } from 'react-native';
-import { MapView } from 'expo';
+import { Button, View } from 'react-native';
 import { withNavigation } from '@react-navigation/core';
 import {
   createDrawerNavigator,
   DrawerGestureContext,
 } from 'react-navigation-drawer';
+import MapView from 'react-native-maps';
+import { WebView } from 'react-native-webview';
 import { NativeViewGestureHandler } from 'react-native-gesture-handler';
 
 @withNavigation
@@ -44,13 +45,13 @@ class ContainerWithButtons extends React.Component {
 
 const MapScreen = () => (
   <ContainerWithButtons>
-    <DrawerGestureContext>
+    <DrawerGestureContext.Consumer>
       {ref => (
         <NativeViewGestureHandler waitFor={ref}>
           <MapView style={{ flex: 1 }} />
         </NativeViewGestureHandler>
       )}
-    </DrawerGestureContext>
+    </DrawerGestureContext.Consumer>
   </ContainerWithButtons>
 );
 
@@ -60,7 +61,7 @@ MapScreen.navigationOptions = {
 
 const WebViewScreen = () => (
   <ContainerWithButtons>
-    <DrawerGestureContext>
+    <DrawerGestureContext.Consumer>
       {ref => (
         <NativeViewGestureHandler waitFor={ref}>
           <WebView
@@ -69,7 +70,7 @@ const WebViewScreen = () => (
           />
         </NativeViewGestureHandler>
       )}
-    </DrawerGestureContext>
+    </DrawerGestureContext.Consumer>
   </ContainerWithButtons>
 );
 

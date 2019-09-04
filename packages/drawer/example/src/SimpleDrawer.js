@@ -1,108 +1,106 @@
-import * as React from 'react';
-import {
-  Button,
-  TextInput,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
-
-// eslint-disable-next-line import/named
+import React from 'react';
+import { Button, ScrollView, StyleSheet, View } from 'react-native';
 import { createStackNavigator } from 'react-navigation-stack';
-import { SafeAreaView } from '@react-navigation/native';
+import { ThemeColors, useTheme } from '@react-navigation/core';
+import { Themed, SafeAreaView } from '@react-navigation/native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { createDrawerNavigator } from 'react-navigation-drawer';
-import { KeepAwake } from 'expo';
 
-const SampleText = ({ children }) => <Text>{children}</Text>;
+const SampleText = ({ children }) => <Themed.Text>{children}</Themed.Text>;
 
-const MyNavScreen = ({ navigation, banner }) => (
-  <ScrollView>
-    <SafeAreaView forceInset={{ top: 'always' }}>
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <SampleText>{banner}</SampleText>
-      </View>
-      <TextInput
-        style={{
-          flex: 1,
-          height: 35,
-          marginHorizontal: 10,
-          marginVertical: 10,
-          borderWidth: StyleSheet.hairlineWidth,
-          borderColor: '#eee',
-          textAlign: 'center',
-        }}
-        placeholder="Focus this TextInput then drag the drawer!"
-      />
-      <Button onPress={() => navigation.openDrawer()} title="Open drawer" />
-      <Button onPress={() => navigation.toggleDrawer()} title="Toggle drawer" />
-      <Button
-        onPress={() => {
-          navigation.openDrawer();
-          navigation.closeDrawer();
-        }}
-        title="Open and immediately close"
-      />
-      <Button
-        onPress={() => {
-          navigation.closeDrawer();
-          navigation.openDrawer();
-        }}
-        title="Close and immediately open"
-      />
-      <Button
-        onPress={() => {
-          navigation.openDrawer();
-          setTimeout(() => {
+const MyNavScreen = ({ navigation, banner }) => {
+  let theme = useTheme();
+
+  return (
+    <ScrollView>
+      <SafeAreaView forceInset={{ top: 'always' }}>
+        <View
+          style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
+        >
+          <SampleText>{banner}</SampleText>
+        </View>
+        <Themed.TextInput
+          style={{
+            flex: 1,
+            height: 35,
+            marginHorizontal: 10,
+            marginVertical: 10,
+            borderWidth: StyleSheet.hairlineWidth,
+            borderColor: ThemeColors[theme].bodyBorder,
+            textAlign: 'center',
+          }}
+          placeholder="Focus this TextInput then drag the drawer!"
+        />
+        <Button onPress={() => navigation.openDrawer()} title="Open drawer" />
+        <Button
+          onPress={() => navigation.toggleDrawer()}
+          title="Toggle drawer"
+        />
+        <Button
+          onPress={() => {
+            navigation.openDrawer();
             navigation.closeDrawer();
-          }, 150);
-        }}
-        title="Open then close drawer shortly after"
-      />
-      <Button
-        onPress={() => navigation.navigate('Email')}
-        title="Open other screen"
-      />
-      <Button onPress={() => navigation.goBack(null)} title="Go back" />
-      <Button
-        onPress={() => navigation.navigate('Home')}
-        title="Go back to list"
-      />
-      {
+          }}
+          title="Open and immediately close"
+        />
+        <Button
+          onPress={() => {
+            navigation.closeDrawer();
+            navigation.openDrawer();
+          }}
+          title="Close and immediately open"
+        />
+        <Button
+          onPress={() => {
+            navigation.openDrawer();
+            setTimeout(() => {
+              navigation.closeDrawer();
+            }, 150);
+          }}
+          title="Open then close drawer shortly after"
+        />
+        <Button
+          onPress={() => navigation.navigate('Email')}
+          title="Open other screen"
+        />
+        <Button onPress={() => navigation.goBack(null)} title="Go back" />
+        <Button
+          onPress={() => navigation.navigate('Home')}
+          title="Go back to list"
+        />
         {
-          'locked-open': (
-            <Button
-              onPress={() =>
-                navigation.setParams({ drawerLockMode: 'locked-closed' })
-              }
-              title="Set locked-closed"
-            />
-          ),
-          'locked-closed': (
-            <Button
-              onPress={() =>
-                navigation.setParams({ drawerLockMode: 'unlocked' })
-              }
-              title="Set unlocked"
-            />
-          ),
-          unlocked: (
-            <Button
-              onPress={() =>
-                navigation.setParams({ drawerLockMode: 'locked-open' })
-              }
-              title="Set locked-open"
-            />
-          ),
-        }[navigation.getParam('drawerLockMode', 'unlocked')]
-      }
-    </SafeAreaView>
-    <StatusBar barStyle="default" />
-    <KeepAwake />
-  </ScrollView>
-);
+          {
+            'locked-open': (
+              <Button
+                onPress={() =>
+                  navigation.setParams({ drawerLockMode: 'locked-closed' })
+                }
+                title="Set locked-closed"
+              />
+            ),
+            'locked-closed': (
+              <Button
+                onPress={() =>
+                  navigation.setParams({ drawerLockMode: 'unlocked' })
+                }
+                title="Set unlocked"
+              />
+            ),
+            unlocked: (
+              <Button
+                onPress={() =>
+                  navigation.setParams({ drawerLockMode: 'locked-open' })
+                }
+                title="Set locked-open"
+              />
+            ),
+          }[navigation.getParam('drawerLockMode', 'unlocked')]
+        }
+      </SafeAreaView>
+      <Themed.StatusBar />
+    </ScrollView>
+  );
+};
 
 const InboxScreen = ({ navigation }) => (
   <MyNavScreen banner="Inbox Screen" navigation={navigation} />
@@ -176,7 +174,7 @@ function createDrawerExample(options = {}) {
     },
     {
       initialRouteName: 'Drafts',
-      drawerWidth: '60%',
+      drawerWidth: 210,
       navigationOptions: {
         header: null,
       },
