@@ -12,7 +12,7 @@ type Options = {
  * Hook to take care of emitting `focus` and `blur` events.
  */
 export default function useFocusEvents({ state, emitter }: Options) {
-  const { navigation } = React.useContext(NavigationContext);
+  const navigation = React.useContext(NavigationContext);
   const lastFocusedKeyRef = React.useRef<string | undefined>();
 
   const currentFocusedKey = state.routes[state.index].key;

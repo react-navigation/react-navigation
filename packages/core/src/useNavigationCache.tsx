@@ -43,7 +43,7 @@ export default function useNavigationCache<
   // Cache object which holds navigation objects for each screen
   // We use `React.useMemo` instead of `React.useRef` coz we want to invalidate it when deps change
   // In reality, these deps will rarely change, if ever
-  const { navigation: parentNavigation } = React.useContext(NavigationContext);
+  const parentNavigation = React.useContext(NavigationContext);
 
   const cache = React.useMemo(
     () => ({ current: {} as NavigationCache<State, ScreenOptions> }),
