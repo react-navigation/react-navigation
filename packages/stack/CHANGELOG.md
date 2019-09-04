@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.15](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.14...@react-navigation/stack@5.0.0-alpha.15) (2019-09-04)
+
+
+### Features
+
+* add approximate android Q transition ([196cce0](https://github.com/react-navigation/navigation-ex/commit/196cce0))
+
+
+
+
+
 # [5.0.0-alpha.14](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.13...@react-navigation/stack@5.0.0-alpha.14) (2019-09-03)
 
 
