@@ -37,9 +37,7 @@ export default function useNavigationHelpers<
   Action extends NavigationAction,
   EventMap extends { [key: string]: any }
 >({ onAction, getState, setState, emitter, router }: Options<State, Action>) {
-  const { navigation: parentNavigationHelpers } = React.useContext(
-    NavigationContext
-  );
+  const parentNavigationHelpers = React.useContext(NavigationContext);
   const { performTransaction } = React.useContext(NavigationStateContext);
 
   return React.useMemo(() => {

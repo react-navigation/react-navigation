@@ -1,5 +1,5 @@
 import * as React from 'react';
-import NavigationContext from './NavigationContext';
+import NavigationRouteContext from './NavigationRouteContext';
 import { ParamListBase, RouteProp } from './types';
 
 /**
@@ -10,7 +10,7 @@ import { ParamListBase, RouteProp } from './types';
 export default function useRoute<
   T extends RouteProp<ParamListBase, string>
 >(): T {
-  const { route } = React.useContext(NavigationContext);
+  const route = React.useContext(NavigationRouteContext);
 
   if (route === undefined) {
     throw new Error(

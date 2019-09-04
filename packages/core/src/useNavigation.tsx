@@ -10,7 +10,7 @@ import { NavigationProp, ParamListBase } from './types';
 export default function useNavigation<
   T extends NavigationProp<ParamListBase>
 >(): T {
-  const { navigation } = React.useContext(NavigationContext);
+  const navigation = React.useContext(NavigationContext);
 
   if (navigation === undefined) {
     throw new Error(
