@@ -1,6 +1,7 @@
 import {
   forHorizontalIOS,
   forVerticalIOS,
+  forScaleFromCenterAndroid,
   forRevealFromBottomAndroid,
   forFadeFromBottomAndroid,
   forModalPresentationIOS,
@@ -8,6 +9,7 @@ import {
 import { forNoAnimation, forFade } from './HeaderStyleInterpolators';
 import {
   TransitionIOSSpec,
+  ScaleFromCenterAndroidSpec,
   RevealFromBottomAndroidSpec,
   FadeOutToBottomAndroidSpec,
   FadeInFromBottomAndroidSpec,
@@ -70,7 +72,7 @@ export const FadeFromBottomAndroid: TransitionPreset = {
 };
 
 /**
- * Standard Android navigation transition when opening or closing an Activity on Android >= 9 (Pie).
+ * Standard Android navigation transition when opening or closing an Activity on Android 9 (Pie).
  */
 export const RevealFromBottomAndroid: TransitionPreset = {
   gestureDirection: 'vertical',
@@ -79,6 +81,19 @@ export const RevealFromBottomAndroid: TransitionPreset = {
     close: RevealFromBottomAndroidSpec,
   },
   cardStyleInterpolator: forRevealFromBottomAndroid,
+  headerStyleInterpolator: forNoAnimation,
+};
+
+/**
+ * Standard Android navigation transition when opening or closing an Activity on Android 10 (Q).
+ */
+export const ScaleFromCenterAndroid: TransitionPreset = {
+  gestureDirection: 'horizontal',
+  transitionSpec: {
+    open: ScaleFromCenterAndroidSpec,
+    close: ScaleFromCenterAndroidSpec,
+  },
+  cardStyleInterpolator: forScaleFromCenterAndroid,
   headerStyleInterpolator: forNoAnimation,
 };
 
