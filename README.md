@@ -7,6 +7,10 @@ This project aims to expose native navigation container components to React Nati
 Screens are already integrated with the React Native's most popular navigation library [react-navigation](https://github.com/react-navigation/react-navigation) and [Expo](https://expo.io).
 Read usage guide depending on if you are [using Expo](#usage-in-expo-with-react-navigation) or [not](#usage-with-react-navigation-without-expo).
 
+## Supported react-native version
+
+Since version 2.0.0 react-native-screens requires RN v0.60+. Check 1.0.0-alpha for Expo support or older versions of React Native.
+
 ## Usage with [react-navigation](https://github.com/react-navigation/react-navigation) (without Expo)
 
 Screens support is built into [react-navigation](https://github.com/react-navigation/react-navigation) starting from version [2.14.0](https://github.com/react-navigation/react-navigation/releases/tag/2.14.0) for all the different navigator types (stack, tab, drawer, etc). We plan on adding it to other navigators in near future.
@@ -34,30 +38,20 @@ useScreens();
 
 Note that the above code need to execute before first render of a navigation screen. You can check Example's app [App.js](https://github.com/kmagiera/react-native-screens/blob/master/Example/App.js#L16) file as a reference.
 
-4. On Android, you might need to change your main activity class to extend [`ReactFragmentActivity`](https://github.com/facebook/react-native/blob/0.57-stable/ReactAndroid/src/main/java/com/facebook/react/ReactFragmentActivity.java). The file you'll have to change is likely called `MainActivity.java` unless you customized it after creating your project. **Note that this isn't necessary if you're on React Native >= 0.59**.
-```diff
--import com.facebook.react.ReactActivity;
-+import android.os.Bundle;
-+import com.facebook.react.ReactFragmentActivity;
- import com.facebook.react.ReactActivityDelegate;
+4. Add the following two lines to `dependencies` section in `android/app/build.gradle`. You likely already have `appcompat` dependency listed there in which case you need to make sure that you use version `1.1.0-rc.01`:
 
--public class MainActivity extends ReactActivity {
-+public class MainActivity extends ReactFragmentActivity {
-+
-+    @Override
-+    protected void onCreate(Bundle savedInstanceState) {
-+        super.onCreate(null);
-+    }
-
-     @Override
-     protected String getMainComponentName() {
+```groovy
+implementation 'androidx.appcompat:appcompat:1.1.0-rc01'
+implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0-alpha02'
 ```
+
+(the dependency on swiperefresh is only needed because of a bug in appcompat library that does not list it as dependency despite referencing classes from that package).
 
 5. Make sure that the version of [react-navigation](https://github.com/react-navigation/react-navigation) you are using is 2.14.0 or higher
 
-5. You are all set 🎉 – when screens are enabled in your application code react-navigation will automatically use them instead of relying on plain React Native Views.
+6. You are all set 🎉 – when screens are enabled in your application code react-navigation will automatically use them instead of relying on plain React Native Views.
 
-## Usage in Expo with [react-navigation](https://github.com/react-navigation/react-navigation)
+## Usage in Expo with [react-navigation](https://github.com/react-navigation/react-navigation) v1.0.0
 
 Screens support is built into Expo [SDK 30](https://blog.expo.io/expo-sdk-30-0-0-is-now-available-e64d8b1db2a7) and react-navigation starting from [2.14.0](https://github.com/react-navigation/react-navigation/releases/tag/2.14.0). Make sure your app use these versions before you start.
 
@@ -78,6 +72,16 @@ useScreens();
 ## Interop with [react-native-navigation](https://github.com/wix/react-native-navigation)
 
 React-native-navigation library already uses native containers for rendering navigation scenes so wrapping these scenes with `<ScreenContainer>` or `<Screen>` component does not provide any benefits. Yet if you would like to build a component that uses screens primitives under the hood (for example a view pager component) it is safe to use `<ScreenContainer>` and `<Screen>` components for that as these work out of the box when rendered on react-native-navigation scenes.
+
+## Using native stack navigator
+
+In order to take advantage of the native stack navigator primitive introduced in version 2.0 you need to use navigator creator function exported by react-native-screens package:
+
+```js
+import createNativeStackNavigator from 'react-native-screens/createNativeStackNavigator';
+```
+
+Then replace places when you use `createStackNavigator` with `createNativeStackNavigator`. Note that not all the screen customization optioms are supported. There are some technical limitations for implementing some of the stack header options. Documenting the supported parameters is on an immediate roadmap and will be available soon.
 
 ## Interop with other libraries
 
