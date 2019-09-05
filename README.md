@@ -107,7 +107,7 @@ In addition to plain React Native [View props](http://facebook.github.io/react-n
 When `active` is set to `0`, the parent container will detach its views from the native view hierarchy.
 Otherwise the views will be attached as long as the parent container is attached too.
 
-### Example
+#### Example
 
 ```js
 <ScreenContainer>
@@ -116,6 +116,99 @@ Otherwise the views will be attached as long as the parent container is attached
   <Screen>{tab3}</Screen>
 </ScreenContainer>
 ```
+
+### `<ScreenStack>`
+
+Screen stack component expects one or more `Screen` components as direct children and renders them in a platform native stack container (for iOS it is `UINavigationController` and for Android inside `Fragment` container). For `Screen` components placed as children of `ScteenStack` the `active` property is ignored and instead the screen that corresponds to the last child is rendered as active. All type of updates done to the list of children are acceptable, when the top element is exchanged the container will use platform default (unless customized) animation to transition between screens.
+
+`StackScreen` extends the capabilities of `Screen` component to allow additional customizations and to make it possible to handle events such as using hardware back or back gesture to dismiss the top screen. Below is the list of additional properties that can be used for `Screen` component:
+
+#### `onDismiss`
+
+A callback that gets called when the current screen is dismissed by hardware back (on Android) or dismiss gesture (swipe back or down). The callback takes no arguments.
+
+#### `stackAnimation`
+
+Allows for the customization of how the given screen should appear/dissapear when pushed or popped at the top of the stack. The followin values are currently supported:
+ - `"default"` – uses a platform default animation
+ - `"fade"` – fades screen in or out
+ - `"none"` – the screen appears/dissapears without an animation
+
+ #### `stackPresentation`
+
+Defines how the method that should be used to present the given screen. It is a separate property from `stackAnimation` as the presentation mode can carry additional semantic. The allowed values are:
+ - `"push"` – the new screen will be pushed onto a stack which on iOS means that the default animation will be slide from the side, the animation on Android may vary depending on the OS version and theme.
+ - `"modal"` – the new screen will be presented modally. In addition this allow for a nested stack to be rendered inside such screens
+ - `"transparentModal"` – the new screen will be presente modally but in addition the second to last screen will remain attached to the stack container such that if the top screen is non opaque the content below can still be seen. If `"modal"` is used instead the below screen will get unmounted as soon as the transition ends.
+
+### `<ScreenStackHeaderConfig>`
+
+The config component is expected to be rendered as a direct children of `<Screen>`. It provides an ability to configure native navigation header that gets rendered as a part of native screen stack. The component acts as a "virtual" element that is not directly rendered under `Screen`. You can use its properties to customize platform native header for the parent screen and also render react-native components that you'd like to be displayed inside the header (e.g. in the title are or on the side).
+
+Along with this component properties that can be used to customize header behavior one can also use one or the below component containers to render custom react-native content in different areas of the native header:
+ - `ScreenStackHeaderTitleView` – react native views rendered as children will appear on the navigation bar in the place of title. Note that title is aligned next to back button on Android while it is centered on iOS.
+ - `ScreenStackHeaderCenterView` – the childern will render in the center of the native navigation bar (on iOS this has the same behavior as `ScreenStackHeaderTitleView` container)
+ - `ScreenStackHeaderRightView` – the children will render on the right hand side of the navigation bar (or on the left hand side in case LTR locales are set on the user's device)
+ - `ScreenStackHeaderLeftView` – the children will render on the left hand side of the navigation bar (or on the right hand side in case LTR locales are set on the user's device).
+
+Below is a list of properties that can be set with `ScreenStackHeaderConfig` component:
+
+
+#### `hidden`
+
+When set to `true` the header will be hidden while the parent `Screen` is on the top of the stack. The default value is `false`.
+
+#### `color`
+
+Controls the color of items rendered on the header. This includes back icon, back text (iOS only) and title text. If you want the title to have different color use `titleColor` property.
+
+#### `title`
+
+String that representing screen title that will get rendered in the middle section of the header. On iOS the title is centered on the header while on Android it is aligned to the left and placed next to back button (if one is present).
+
+#### `titleFontFamily`
+
+Customize font family to be used for the title.
+
+#### `titleFontSize`
+
+Customize the size of the font to be used for the title.
+
+#### `titleColor`
+
+Allows for setting text color of the title.
+
+#### `backgroundColor`
+
+Controlls the color of the navigation header.
+
+#### `hideShadow`
+
+Boolean that allows for disabling drop shadow under navigation header. The default value is `true`.
+
+#### `hideBackButton`
+
+If set to `true` the back button will not be rendered as a part of navigation header.
+
+#### `gestureEnabled`
+
+When set to `false` the back swipe gesture will be disabled when the parent `Screen` is on top of the stack. The default value is `true`.
+
+#### `translucent` (iOS only)
+
+When set to `true`, it makes native navigation bar on iOS semi transparent with blur effect. It is a common way of presenting navigation bar introduced in iOS 11. The default value is `false`.
+
+#### `backTitle` (iOS only)
+
+Allows for controlling the string to be rendered next to back button. By default iOS uses the title of the previous screen.
+
+#### `backTitleFontFamily` (iOS only)
+
+Allows for customizing font family to be used for back button title on iOS.
+
+#### `backTitleFontSize` (iOS only)
+
+Allows for customizing font size to be used for back button title on iOS.
 
 ## Guide for native component authors
 

@@ -1,0 +1,318 @@
+#import "RNSScreenStackHeaderConfig.h"
+#import "RNSScreen.h"
+
+#import <React/RCTBridge.h>
+#import <React/RCTUIManager.h>
+#import <React/RCTUIManagerUtils.h>
+#import <React/RCTShadowView.h>
+
+@interface RNSScreenHeaderItemMeasurements : NSObject
+@property (nonatomic, readonly) CGSize headerSize;
+@property (nonatomic, readonly) CGFloat leftPadding;
+@property (nonatomic, readonly) CGFloat rightPadding;
+
+- (instancetype)initWithHeaderSize:(CGSize)headerSize leftPadding:(CGFloat)leftPadding rightPadding:(CGFloat)rightPadding;
+@end
+
+@implementation RNSScreenHeaderItemMeasurements
+
+- (instancetype)initWithHeaderSize:(CGSize)headerSize leftPadding:(CGFloat)leftPadding rightPadding:(CGFloat)rightPadding
+{
+  if (self = [super init]) {
+    _headerSize = headerSize;
+    _leftPadding = leftPadding;
+    _rightPadding = rightPadding;
+  }
+  return self;
+}
+
+@end
+
+@interface RNSScreenStackHeaderSubview : UIView
+
+@property (nonatomic, weak) UIView *reactSuperview;
+@property (nonatomic) RNSScreenStackHeaderSubviewType type;
+
+@end
+
+@implementation RNSScreenStackHeaderConfig {
+  NSMutableArray<RNSScreenStackHeaderSubview *> *_reactSubviews;
+}
+
+- (instancetype)init
+{
+  if (self = [super init]) {
+    self.hidden = YES;
+    _translucent = YES;
+    _reactSubviews = [NSMutableArray new];
+    _gestureEnabled = YES;
+  }
+  return self;
+}
+
+- (void)insertReactSubview:(RNSScreenStackHeaderSubview *)subview atIndex:(NSInteger)atIndex
+{
+  [_reactSubviews insertObject:subview atIndex:atIndex];
+  subview.reactSuperview = self;
+}
+
+- (void)removeReactSubview:(RNSScreenStackHeaderSubview *)subview
+{
+  [_reactSubviews removeObject:subview];
+}
+
+- (NSArray<UIView *> *)reactSubviews
+{
+  return _reactSubviews;
+}
+
+- (UIViewController*)screen
+{
+  UIView *superview = self.superview;
+  if ([superview isKindOfClass:[RNSScreenView class]]) {
+    return ((RNSScreenView *)superview).controller;
+  }
+  return nil;
+}
+
+- (void)setAnimatedConfig:(UIViewController *)vc
+{
+  UINavigationBar *navbar = ((UINavigationController *)vc.parentViewController).navigationBar;
+  BOOL hideShadow = _hideShadow;
+  [navbar setTintColor:_color];
+  if (_backgroundColor && CGColorGetAlpha(_backgroundColor.CGColor) == 0.) {
+    [navbar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
+    [navbar setBarTintColor:[UIColor clearColor]];
+    hideShadow = YES;
+  } else {
+    [navbar setBackgroundImage:nil forBarMetrics:UIBarMetricsDefault];
+    [navbar setBarTintColor:_backgroundColor];
+  }
+  [navbar setTranslucent:_translucent];
+  [navbar setValue:@(hideShadow ? YES : NO) forKey:@"hidesShadow"];
+
+  if (_titleFontFamily || _titleFontSize || _titleColor) {
+    NSMutableDictionary *attrs = [NSMutableDictionary new];
+
+    if (_titleColor) {
+      attrs[NSForegroundColorAttributeName] = _titleColor;
+    }
+
+    CGFloat size = _titleFontSize ? [_titleFontSize floatValue] : 17;
+    if (_titleFontFamily) {
+      attrs[NSFontAttributeName] = [UIFont fontWithName:_titleFontFamily size:size];
+    } else {
+      attrs[NSFontAttributeName] = [UIFont boldSystemFontOfSize:size];
+    }
+    [navbar setTitleTextAttributes:attrs];
+  }
+
+}
+
+- (void)setTitleAttibutes:(NSDictionary *)attrs forButton:(UIBarButtonItem *)button
+{
+  [button setTitleTextAttributes:attrs forState:UIControlStateNormal];
+  [button setTitleTextAttributes:attrs forState:UIControlStateHighlighted];
+  [button setTitleTextAttributes:attrs forState:UIControlStateDisabled];
+  [button setTitleTextAttributes:attrs forState:UIControlStateSelected];
+  if (@available(iOS 9.0, *)) {
+    [button setTitleTextAttributes:attrs forState:UIControlStateFocused];
+  }
+}
+
+- (void)willShowViewController:(UIViewController *)vc
+{
+  UINavigationItem *navitem = vc.navigationItem;
+  UINavigationController *navctr = (UINavigationController *)vc.parentViewController;
+
+  NSUInteger currentIndex = [navctr.viewControllers indexOfObject:vc];
+  UINavigationItem *prevItem = currentIndex > 0 ? [navctr.viewControllers objectAtIndex:currentIndex - 1].navigationItem : nil;
+
+  BOOL wasHidden = navctr.navigationBarHidden;
+
+  [navctr setNavigationBarHidden:_hide animated:YES];
+  navctr.interactivePopGestureRecognizer.enabled = _gestureEnabled;
+  if (_hide) {
+    return;
+  }
+
+  navitem.title = _title;
+  navitem.hidesBackButton = _hideBackButton;
+  if (_backTitle != nil) {
+    prevItem.backBarButtonItem = [[UIBarButtonItem alloc]
+                                  initWithTitle:_backTitle
+                                  style:UIBarButtonItemStylePlain
+                                  target:nil
+                                  action:nil];
+    if (_backTitleFontFamily || _backTitleFontSize) {
+      NSMutableDictionary *attrs = [NSMutableDictionary new];
+      CGFloat size = _backTitleFontSize ? [_backTitleFontSize floatValue] : 17;
+      if (_backTitleFontFamily) {
+        attrs[NSFontAttributeName] = [UIFont fontWithName:_backTitleFontFamily size:size];
+      } else {
+        attrs[NSFontAttributeName] = [UIFont boldSystemFontOfSize:size];
+      }
+      [self setTitleAttibutes:attrs forButton:prevItem.backBarButtonItem];
+    }
+  } else {
+    prevItem.backBarButtonItem = nil;
+  }
+
+  if (@available(iOS 11.0, *)) {
+    if (self.largeTitle) {
+      navctr.navigationBar.prefersLargeTitles = YES;
+    }
+    navitem.largeTitleDisplayMode = self.largeTitle ? UINavigationItemLargeTitleDisplayModeAlways : UINavigationItemLargeTitleDisplayModeNever;
+  }
+
+  for (RNSScreenStackHeaderSubview *subview in _reactSubviews) {
+    switch (subview.type) {
+      case RNSScreenStackHeaderSubviewTypeLeft: {
+        UIBarButtonItem *buttonItem = [[UIBarButtonItem alloc] initWithCustomView:subview];
+        navitem.leftBarButtonItem = buttonItem;
+        break;
+      }
+      case RNSScreenStackHeaderSubviewTypeRight: {
+        UIBarButtonItem *buttonItem = [[UIBarButtonItem alloc] initWithCustomView:subview];
+        navitem.rightBarButtonItem = buttonItem;
+        break;
+      }
+      case RNSScreenStackHeaderSubviewTypeCenter:
+      case RNSScreenStackHeaderSubviewTypeTitle: {
+        subview.translatesAutoresizingMaskIntoConstraints = NO;
+        navitem.titleView = subview;
+        break;
+      }
+    }
+  }
+
+  if (vc.transitionCoordinator != nil && !wasHidden) {
+    [vc.transitionCoordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> _Nonnull context) {
+      [self setAnimatedConfig:vc];
+    } completion:nil];
+  } else {
+    [self setAnimatedConfig:vc];
+  }
+}
+
+@end
+
+@implementation RNSScreenStackHeaderConfigManager
+
+RCT_EXPORT_MODULE()
+
+- (UIView *)view
+{
+  return [RNSScreenStackHeaderConfig new];
+}
+
+RCT_EXPORT_VIEW_PROPERTY(title, NSString)
+RCT_EXPORT_VIEW_PROPERTY(titleFontFamily, NSString)
+RCT_EXPORT_VIEW_PROPERTY(titleFontSize, NSNumber)
+RCT_EXPORT_VIEW_PROPERTY(titleColor, UIColor)
+RCT_EXPORT_VIEW_PROPERTY(backTitle, NSString)
+RCT_EXPORT_VIEW_PROPERTY(backTitleFontFamily, NSString)
+RCT_EXPORT_VIEW_PROPERTY(backTitleFontSize, NSString)
+RCT_EXPORT_VIEW_PROPERTY(backgroundColor, UIColor)
+RCT_EXPORT_VIEW_PROPERTY(color, UIColor)
+RCT_EXPORT_VIEW_PROPERTY(largeTitle, BOOL)
+RCT_EXPORT_VIEW_PROPERTY(hideBackButton, BOOL)
+RCT_EXPORT_VIEW_PROPERTY(hideShadow, BOOL)
+// `hidden` is an UIView property, we need to use different name internally
+RCT_REMAP_VIEW_PROPERTY(hidden, hide, BOOL)
+RCT_EXPORT_VIEW_PROPERTY(translucent, BOOL)
+RCT_EXPORT_VIEW_PROPERTY(gestureEnabled, BOOL)
+
+@end
+
+@implementation RCTConvert (RNSScreenStackHeader)
+
+RCT_ENUM_CONVERTER(RNSScreenStackHeaderSubviewType, (@{
+   @"left": @(RNSScreenStackHeaderSubviewTypeLeft),
+   @"right": @(RNSScreenStackHeaderSubviewTypeRight),
+   @"title": @(RNSScreenStackHeaderSubviewTypeTitle),
+   @"center": @(RNSScreenStackHeaderSubviewTypeCenter),
+   }), RNSScreenStackHeaderSubviewTypeTitle, integerValue)
+
+@end
+
+@implementation RNSScreenStackHeaderSubview {
+  __weak RCTBridge *_bridge;
+}
+
+- (instancetype)initWithBridge:(RCTBridge *)bridge
+{
+  if (self = [super init]) {
+    _bridge = bridge;
+  }
+  return self;
+}
+
+- (void)layoutSubviews
+{
+  [super layoutSubviews];
+  if (!self.translatesAutoresizingMaskIntoConstraints) {
+    CGSize size = self.superview.frame.size;
+    CGFloat right = size.width - self.frame.size.width - self.frame.origin.x;
+    CGFloat left = self.frame.origin.x;
+    [_bridge.uiManager
+     setLocalData:[[RNSScreenHeaderItemMeasurements alloc]
+                   initWithHeaderSize:size
+                   leftPadding:left rightPadding:right]
+     forView:self];
+  }
+}
+
+- (void)reactSetFrame:(CGRect)frame
+{
+  if (self.translatesAutoresizingMaskIntoConstraints) {
+    [super reactSetFrame:frame];
+  }
+}
+
+- (CGSize)intrinsicContentSize
+{
+  return UILayoutFittingExpandedSize;
+}
+
+@end
+
+@interface RNSScreenStackHeaderSubviewShadow : RCTShadowView
+@end
+
+@implementation RNSScreenStackHeaderSubviewShadow
+
+- (void)setLocalData:(RNSScreenHeaderItemMeasurements *)data
+{
+  self.width = (YGValue){data.headerSize.width - data.leftPadding - data.rightPadding, YGUnitPoint};
+  self.height = (YGValue){data.headerSize.height, YGUnitPoint};
+
+  if (data.leftPadding > data.rightPadding) {
+    self.paddingLeft = (YGValue){0, YGUnitPoint};
+    self.paddingRight = (YGValue){data.leftPadding - data.rightPadding, YGUnitPoint};
+  } else {
+    self.paddingLeft = (YGValue){data.rightPadding - data.leftPadding, YGUnitPoint};
+    self.paddingRight = (YGValue){0, YGUnitPoint};
+  }
+  [self didSetProps:@[@"width", @"height", @"paddingLeft", @"paddingRight"]];
+}
+
+@end
+
+@implementation RNSScreenStackHeaderSubviewManager
+
+RCT_EXPORT_MODULE()
+
+RCT_EXPORT_VIEW_PROPERTY(type, RNSScreenStackHeaderSubviewType)
+
+- (UIView *)view
+{
+  return [[RNSScreenStackHeaderSubview alloc] initWithBridge:self.bridge];
+}
+
+- (RCTShadowView *)shadowView
+{
+  return [RNSScreenStackHeaderSubviewShadow new];
+}
+
+@end

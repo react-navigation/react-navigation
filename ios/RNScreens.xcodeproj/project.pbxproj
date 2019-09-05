@@ -7,9 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		442389EC22DF259000611BBE /* RNSScreenX.m in Sources */ = {isa = PBXBuildFile; fileRef = 442389EB22DF259000611BBE /* RNSScreenX.m */; };
 		448078F52114595900280661 /* RNSScreenContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = 448078F12114595900280661 /* RNSScreenContainer.m */; };
-		448078F72114595900280661 /* RNSScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = 448078F42114595900280661 /* RNSScreen.m */; };
-		B5C32A47220C6379000FFB8D /* RNSScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = 448078F42114595900280661 /* RNSScreen.m */; };
+		4482D5EF22CB391800D5A5B9 /* RNSScreenStackHeaderConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 4482D5EE22CB391800D5A5B9 /* RNSScreenStackHeaderConfig.m */; };
+		44A67C3122C3B8B40017156F /* RNSScreenStack.m in Sources */ = {isa = PBXBuildFile; fileRef = 44A67C3022C3B8B40017156F /* RNSScreenStack.m */; };
 		B5C32A48220C6379000FFB8D /* RNSScreenContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = 448078F12114595900280661 /* RNSScreenContainer.m */; };
 /* End PBXBuildFile section */
 
@@ -36,10 +37,14 @@
 
 /* Begin PBXFileReference section */
 		134814201AA4EA6300B7C361 /* libRNScreens.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRNScreens.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		442389EB22DF259000611BBE /* RNSScreenX.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNSScreenX.m; sourceTree = "<group>"; };
 		448078EF2114595900280661 /* RNSScreen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNSScreen.h; sourceTree = "<group>"; };
 		448078F02114595900280661 /* RNSScreenContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNSScreenContainer.h; sourceTree = "<group>"; };
 		448078F12114595900280661 /* RNSScreenContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNSScreenContainer.m; sourceTree = "<group>"; };
-		448078F42114595900280661 /* RNSScreen.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNSScreen.m; sourceTree = "<group>"; };
+		4482D5ED22CB391800D5A5B9 /* RNSScreenStackHeaderConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNSScreenStackHeaderConfig.h; sourceTree = "<group>"; };
+		4482D5EE22CB391800D5A5B9 /* RNSScreenStackHeaderConfig.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNSScreenStackHeaderConfig.m; sourceTree = "<group>"; };
+		44A67C2F22C3B8B40017156F /* RNSScreenStack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNSScreenStack.h; sourceTree = "<group>"; };
+		44A67C3022C3B8B40017156F /* RNSScreenStack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNSScreenStack.m; sourceTree = "<group>"; };
 		B5C32A4F220C6379000FFB8D /* libRNScreens-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libRNScreens-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -72,8 +77,12 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
+				4482D5ED22CB391800D5A5B9 /* RNSScreenStackHeaderConfig.h */,
+				4482D5EE22CB391800D5A5B9 /* RNSScreenStackHeaderConfig.m */,
+				44A67C2F22C3B8B40017156F /* RNSScreenStack.h */,
+				44A67C3022C3B8B40017156F /* RNSScreenStack.m */,
 				448078EF2114595900280661 /* RNSScreen.h */,
-				448078F42114595900280661 /* RNSScreen.m */,
+				442389EB22DF259000611BBE /* RNSScreenX.m */,
 				448078F02114595900280661 /* RNSScreenContainer.h */,
 				448078F12114595900280661 /* RNSScreenContainer.m */,
 				134814211AA4EA7D00B7C361 /* Products */,
@@ -137,6 +146,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = 58B511D21A9E6C8500147676;
@@ -155,8 +165,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				448078F72114595900280661 /* RNSScreen.m in Sources */,
+				442389EC22DF259000611BBE /* RNSScreenX.m in Sources */,
 				448078F52114595900280661 /* RNSScreenContainer.m in Sources */,
+				44A67C3122C3B8B40017156F /* RNSScreenStack.m in Sources */,
+				4482D5EF22CB391800D5A5B9 /* RNSScreenStackHeaderConfig.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -164,7 +176,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B5C32A47220C6379000FFB8D /* RNSScreen.m in Sources */,
 				B5C32A48220C6379000FFB8D /* RNSScreenContainer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

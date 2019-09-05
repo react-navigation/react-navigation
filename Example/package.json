@@ -3,13 +3,13 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "start": "react-native start",
     "test": "jest",
     "postinstall": "rm -rf node_modules/react-native-screens/{.git,node_modules,Example}"
   },
   "dependencies": {
     "react": "16.5.1",
-    "react-native": "0.57.0",
+    "react-native": "^0.60.5",
     "react-native-gesture-handler": "^1.0.12",
     "react-native-screens": "file:..",
     "react-navigation": "^3.0.8"

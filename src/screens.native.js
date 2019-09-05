@@ -34,6 +34,9 @@ function screensEnabled() {
 // This is necessary coz libraries such as React Navigation import the library where it may not be enabled
 let NativeScreenValue;
 let NativeScreenContainerValue;
+let NativeScreenStack;
+let NativeScreenStackHeaderConfig;
+let NativeScreenStackHeaderSubview;
 let AnimatedNativeScreen;
 
 const ScreensNativeModules = {
@@ -48,6 +51,26 @@ const ScreensNativeModules = {
       NativeScreenContainerValue ||
       requireNativeComponent('RNSScreenContainer', null);
     return NativeScreenContainerValue;
+  },
+
+  get NativeScreenStack() {
+    NativeScreenStack =
+      NativeScreenStack || requireNativeComponent('RNSScreenStack', null);
+    return NativeScreenStack;
+  },
+
+  get NativeScreenStackHeaderConfig() {
+    NativeScreenStackHeaderConfig =
+      NativeScreenStackHeaderConfig ||
+      requireNativeComponent('RNSScreenStackHeaderConfig', null);
+    return NativeScreenStackHeaderConfig;
+  },
+
+  get NativeScreenStackHeaderSubview() {
+    NativeScreenStackHeaderSubview =
+      NativeScreenStackHeaderSubview ||
+      requireNativeComponent('RNSScreenStackHeaderSubview', null);
+    return NativeScreenStackHeaderSubview;
   },
 };
 
@@ -105,6 +128,48 @@ class ScreenContainer extends React.Component {
   }
 }
 
+const styles = StyleSheet.create({
+  headerSubview: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
+
+export const ScreenStackHeaderRightView = props => (
+  <ScreensNativeModules.NativeScreenStackHeaderSubview
+    {...props}
+    type="right"
+    style={styles.headerSubview}
+  />
+);
+
+export const ScreenStackHeaderLeftView = props => (
+  <ScreensNativeModules.NativeScreenStackHeaderSubview
+    {...props}
+    type="left"
+    style={styles.headerSubview}
+  />
+);
+
+export const ScreenStackHeaderTitleView = props => (
+  <ScreensNativeModules.NativeScreenStackHeaderSubview
+    {...props}
+    type="title"
+    style={styles.headerSubview}
+  />
+);
+
+export const ScreenStackHeaderCenterView = props => (
+  <ScreensNativeModules.NativeScreenStackHeaderSubview
+    {...props}
+    type="center"
+    style={styles.headerSubview}
+  />
+);
 module.exports = {
   ScreenContainer,
   Screen,
@@ -115,6 +180,17 @@ module.exports = {
   get NativeScreenContainer() {
     return ScreensNativeModules.NativeScreenContainer;
   },
+
+  get ScreenStack() {
+    return ScreensNativeModules.NativeScreenStack;
+  },
+  get ScreenStackHeaderConfig() {
+    return ScreensNativeModules.NativeScreenStackHeaderConfig;
+  },
+  get ScreenStackHeaderSubview() {
+    return ScreensNativeModules.NativeScreenStackHeaderSubview;
+  },
+
   useScreens,
   screensEnabled,
 };

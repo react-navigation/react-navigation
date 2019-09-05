@@ -14,6 +14,7 @@
   "types": "src/screens.d.ts",
   "files": [
     "src/",
+    "createNativeStackNavigator.js",
     "android/src/main/AndroidManifest.xml",
     "android/src/main/java/",
     "android/build.gradle",

@@ -1,14 +1,14 @@
 package com.swmansion.rnscreens;
 
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentTransaction;
-
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.facebook.react.ReactRootView;
 import com.facebook.react.modules.core.ChoreographerCompat;
@@ -21,7 +21,7 @@ import java.util.Set;
 
 public class ScreenContainer extends ViewGroup {
 
-  private final ArrayList<Screen> mScreens = new ArrayList<>();
+  protected final ArrayList<Screen> mScreens = new ArrayList<>();
   private final Set<Screen> mActiveScreens = new HashSet<>();
 
   private @Nullable FragmentTransaction mCurrentTransaction;
@@ -79,7 +79,7 @@ public class ScreenContainer extends ViewGroup {
     return mScreens.get(index);
   }
 
-  private FragmentActivity findRootFragmentActivity() {
+  protected final FragmentActivity findRootFragmentActivity() {
     ViewParent parent = this;
     while (!(parent instanceof ReactRootView) && parent.getParent() != null) {
       parent = parent.getParent();
@@ -105,7 +105,7 @@ public class ScreenContainer extends ViewGroup {
     return (FragmentActivity) context;
   }
 
-  private FragmentTransaction getOrCreateTransaction() {
+  protected FragmentTransaction getOrCreateTransaction() {
     if (mCurrentTransaction == null) {
       mCurrentTransaction = findRootFragmentActivity().getSupportFragmentManager().beginTransaction();
       mCurrentTransaction.setReorderingAllowed(true);
@@ -113,7 +113,7 @@ public class ScreenContainer extends ViewGroup {
     return mCurrentTransaction;
   }
 
-  private void tryCommitTransaction() {
+  protected void tryCommitTransaction() {
     if (mCurrentTransaction != null) {
       mCurrentTransaction.commitAllowingStateLoss();
       mCurrentTransaction = null;
@@ -159,7 +159,10 @@ public class ScreenContainer extends ViewGroup {
       return;
     }
     mNeedUpdate = false;
+    onUpdate();
+  }
 
+  protected void onUpdate() {
     // detach screens that are no longer active
     Set<Screen> orphaned = new HashSet<>(mActiveScreens);
     for (int i = 0, size = mScreens.size(); i < size; i++) {
