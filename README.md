@@ -81,7 +81,7 @@ In order to take advantage of the native stack navigator primitive introduced in
 import createNativeStackNavigator from 'react-native-screens/createNativeStackNavigator';
 ```
 
-Then replace places when you use `createStackNavigator` with `createNativeStackNavigator`. Note that not all the screen customization optioms are supported. There are some technical limitations for implementing some of the stack header options. Documenting the supported parameters is on an immediate roadmap and will be available soon.
+Then replace places when you use `createStackNavigator` with `createNativeStackNavigator`. Note that not all the screen customization options are supported. There are some technical limitations for implementing some of the stack header options. Documenting the supported parameters is on an immediate roadmap and will be available soon.
 
 ## Interop with other libraries
 
