@@ -17,6 +17,10 @@ See: https://reactnavigation.org/docs/en/getting-started.html
 * The [Community Resources](https://github.com/react-navigation/react-navigation/blob/master/COMMUNITY_RESOURCES.md) document lists some other resources submitted to us by people who use React Navigation. Feel free to open a pull request to add your resource to the list.
 * You can contribute improvements to the documentation [in the website repository](https://github.com/react-navigation/react-navigation.github.io).
 
+## Changelog
+
+The changes for each release are outlined on [the Github releases page](https://github.com/react-navigation/react-navigation/releases).
+
 ## Try it out
 
 You can also try out the [Navigation Playground app](https://exp.host/@react-navigation/NavigationPlayground) to get a sense for some of the tools built in to React Navigation. The "Fundamentals" in the documentation also include examples you can play with.
