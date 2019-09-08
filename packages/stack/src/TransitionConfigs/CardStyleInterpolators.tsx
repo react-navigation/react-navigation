@@ -201,31 +201,35 @@ export function forRevealFromBottomAndroid({
 
 /**
  * Standard Android-style reveal from the bottom for Android Q.
- * TODO: Update this with correct values when AOSP is updated.
  */
 export function forScaleFromCenterAndroid({
   current,
   next,
+  closing,
 }: CardInterpolationProps): CardInterpolatedStyle {
-  const cardOpacityFocused = interpolate(current.progress, {
-    inputRange: [0, 0.5, 1],
-    outputRange: [0, 1, 1],
+  const progress = add(current.progress, next ? next.progress : 0);
+
+  const opacity = interpolate(progress, {
+    inputRange: [0, 0.8, 1, 1.2, 2],
+    outputRange: [0, 0.5, 1, 0.33, 0],
   });
-  const cardScaleFocused = interpolate(current.progress, {
-    inputRange: [0, 1],
-    outputRange: [0.9, 1],
-  });
-  const cardScaleUnFocused = next
-    ? interpolate(next.progress, {
-        inputRange: [0, 1],
-        outputRange: [1, 1.1],
-      })
-    : 1;
+
+  const scale = cond(
+    closing,
+    interpolate(current.progress, {
+      inputRange: [0, 1],
+      outputRange: [0.9, 1],
+    }),
+    interpolate(progress, {
+      inputRange: [0, 1, 2],
+      outputRange: [0.85, 1, 1.1],
+    })
+  );
 
   return {
     containerStyle: {
-      opacity: cardOpacityFocused,
-      transform: [{ scale: cardScaleFocused }, { scale: cardScaleUnFocused }],
+      opacity,
+      transform: [{ scale }],
     },
   };
 }
