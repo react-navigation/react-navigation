@@ -18,7 +18,7 @@ export const TransitionIOSSpec: TransitionSpec = {
 
 /**
  * Configuration for activity open animation from Android Nougat.
- * See http://androidxref.com/7.1.1_r6/xref/frameworks/base/core/res/res/anim/activity_open_enter.xml
+ * See http://aosp.opersys.com/xref/android-7.1.2_r37/xref/frameworks/base/core/res/res/anim/activity_open_enter.xml
  */
 export const FadeInFromBottomAndroidSpec: TransitionSpec = {
   animation: 'timing',
@@ -30,7 +30,7 @@ export const FadeInFromBottomAndroidSpec: TransitionSpec = {
 
 /**
  * Configuration for activity close animation from Android Nougat.
- * See http://androidxref.com/7.1.1_r6/xref/frameworks/base/core/res/res/anim/activity_close_exit.xml
+ * See http://aosp.opersys.com/xref/android-7.1.2_r37/xref/frameworks/base/core/res/res/anim/activity_close_exit.xml
  */
 export const FadeOutToBottomAndroidSpec: TransitionSpec = {
   animation: 'timing',
@@ -42,26 +42,28 @@ export const FadeOutToBottomAndroidSpec: TransitionSpec = {
 
 /**
  * Approximate configuration for activity open animation from Android Pie.
- * See http://androidxref.com/9.0.0_r3/xref/frameworks/base/core/res/res/anim/activity_open_enter.xml
+ * See http://aosp.opersys.com/xref/android-9.0.0_r47/xref/frameworks/base/core/res/res/anim/activity_open_enter.xml
  */
 export const RevealFromBottomAndroidSpec: TransitionSpec = {
   animation: 'timing',
   config: {
     duration: 425,
     // This is super rough approximation of the path used for the curve by android
-    // See http://androidxref.com/9.0.0_r3/xref/frameworks/base/core/res/res/interpolator/fast_out_extra_slow_in.xml
+    // See http://aosp.opersys.com/xref/android-9.0.0_r47/xref/frameworks/base/core/res/res/interpolator/fast_out_extra_slow_in.xml
     easing: Easing.bezier(0.35, 0.45, 0, 1),
   },
 };
 
 /**
  * Approximate configuration for activity open animation from Android Q.
- * TODO: Update this with correct values when AOSP is updated.
+ * See http://aosp.opersys.com/xref/android-10.0.0_r2/xref/frameworks/base/core/res/res/anim/activity_open_enter.xml
  */
 export const ScaleFromCenterAndroidSpec: TransitionSpec = {
   animation: 'timing',
   config: {
-    duration: 425,
+    duration: 400,
+    // This is super rough approximation of the path used for the curve by android
+    // See http://aosp.opersys.com/xref/android-10.0.0_r2/xref/frameworks/base/core/res/res/interpolator/fast_out_extra_slow_in.xml
     easing: Easing.bezier(0.35, 0.45, 0, 1),
   },
 };
