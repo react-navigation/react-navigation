@@ -40,7 +40,7 @@
     "del-cli": "^2.0.0",
     "react": "^16.8.3",
     "react-native-testing-library": "^1.9.1",
-    "react-test-renderer": "^16.8.3",
+    "react-test-renderer": "16.8.3",
     "typescript": "^3.5.3"
   },
   "peerDependencies": {

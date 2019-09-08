@@ -35,7 +35,7 @@
     "@types/react-native": "^0.60.2",
     "del-cli": "^2.0.0",
     "react": "16.8.3",
-    "react-native": "^0.59.8",
+    "react-native": "0.59.10",
     "typescript": "^3.5.3"
   },
   "peerDependencies": {
