@@ -25,6 +25,9 @@
     ],
     "ios": {
       "supportsTablet": true
-    }
-  }
+    },
+    "entryPoint": "node_modules/expo/AppEntry.js"
+  },
+  "displayName": "React Navigation Example",
+  "name": "ReactNavigationExample"
 }

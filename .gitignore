@@ -3,16 +3,21 @@
 .vscode
 .idea
 .expo
+.gradle
 
 /coverage/
 /types/
 /dist/
 /lib/
-/packages/**/lib/
 
 node_modules/
 web-build/
 web-report/
+
+xcuserdata
+generated
+lib
+build
 
 npm-debug.*
 

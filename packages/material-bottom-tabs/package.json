@@ -43,7 +43,7 @@
     "@types/react-native-vector-icons": "^6.4.1",
     "del-cli": "^2.0.0",
     "react": "16.8.3",
-    "react-native": "^0.59.8",
+    "react-native": "0.59.10",
     "react-native-paper": "^3.0.0-alpha.3",
     "react-native-vector-icons": "^6.6.0",
     "typescript": "^3.5.3"

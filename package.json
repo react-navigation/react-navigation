@@ -42,8 +42,8 @@
   },
   "resolutions": {
     "react": "16.8.3",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-34.0.0.tar.gz",
-    "react-native-safe-area-view": "0.14.6"
+    "react-native": "0.59.10",
+    "react-native-safe-area-view": "0.14.7"
   },
   "husky": {
     "hooks": {
@@ -69,6 +69,5 @@
     "useTabs": false,
     "singleQuote": true,
     "trailingComma": "es5"
-  },
-  "name": "react-navigation"
+  }
 }

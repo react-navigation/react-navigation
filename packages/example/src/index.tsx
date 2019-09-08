@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ScrollView, AsyncStorage, YellowBox } from 'react-native';
-import { Linking } from 'expo';
+import LinkingPrefixes from './LinkingPrefixes';
 import { Appbar, List } from 'react-native-paper';
 import { Asset } from 'expo-asset';
 import {
@@ -72,7 +72,7 @@ export default function App() {
   // iOS: xcrun simctl openurl booted exp://127.0.0.1:19000/--/simple-stack
   // The first segment of the link is the the scheme + host (returned by `Linking.makeUrl`)
   const { getInitialState } = useLinking(containerRef, {
-    prefixes: [Linking.makeUrl('/')],
+    prefixes: LinkingPrefixes,
     getStateFromPath: path => {
       const state = getStateFromPath(path);
 
