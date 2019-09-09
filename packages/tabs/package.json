@@ -19,6 +19,9 @@
     "release": "yarn release-it",
     "prepare": "bob build"
   },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
   "keywords": [
     "react-native-component",
     "react-component",
