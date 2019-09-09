@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.swmansion.rnscreens.Screen.StackAnimation.*;
-
 public class ScreenStack extends ScreenContainer {
 
   private final ArrayList<Screen> mStack = new ArrayList<>();
