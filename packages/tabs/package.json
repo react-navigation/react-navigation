@@ -2,17 +2,22 @@
   "name": "react-navigation-tabs",
   "version": "2.4.0",
   "description": "Tab Navigation components for React Navigation",
-  "main": "src/index.js",
+  "main": "lib/commonjs/index.js",
+  "module": "lib/module/index.js",
+  "react-native": "lib/module/index.js",
+  "types": "lib/typescript/index.d.ts",
   "files": [
-    "src/"
+    "src",
+    "lib"
   ],
   "scripts": {
     "test": "jest",
-    "flow": "flow",
-    "lint": "eslint .",
+    "typescript": "tsc --noEmit",
+    "lint": "eslint --ext .js,.ts,.tsx .",
     "bootstrap": "yarn && yarn --cwd example",
     "example": "yarn --cwd example",
-    "release": "yarn release-it"
+    "release": "yarn release-it",
+    "prepare": "bob build"
   },
   "keywords": [
     "react-native-component",
@@ -38,11 +43,16 @@
   "dependencies": {
     "hoist-non-react-statics": "^3.3.0",
     "react-lifecycles-compat": "^3.0.4",
+    "react-native-safe-area-view": "^0.14.6",
     "react-native-tab-view": "^2.9.0"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^7.5.0",
     "@expo/vector-icons": "^10.0.1",
+    "@react-native-community/bob": "^0.6.1",
+    "@types/hoist-non-react-statics": "^3.3.1",
+    "@types/react": "^16.8.17",
+    "@types/react-native": "^0.57.57",
     "babel-jest": "^24.5.0",
     "commitlint": "^7.5.2",
     "conventional-changelog-cli": "^2.0.12",
@@ -50,23 +60,23 @@
     "enzyme-adapter-react-16": "^1.11.2",
     "enzyme-to-json": "^3.2.2",
     "eslint": "^5.16.0",
-    "eslint-config-satya164": "^2.3.5",
+    "eslint-config-satya164": "^2.4.1",
     "eslint-plugin-react-native-globals": "^0.1.0",
     "flow-bin": "~0.78.0",
     "husky": "^1.3.1",
     "jest": "^24.5.0",
-    "prettier": "^1.8.2",
+    "prettier": "^1.17.1",
     "react": "16.5.0",
     "react-dom": "16.5.0",
     "react-native": "~0.57.1",
     "react-native-reanimated": "^1.0.0-alpha.12",
     "react-navigation": "^3.3.2",
     "react-test-renderer": "16.5.0",
-    "release-it": "^10.3.1"
+    "release-it": "^10.3.1",
+    "typescript": "^3.5.2"
   },
   "peerDependencies": {
     "@react-navigation/core": "^3.4.0",
-    "@react-navigation/native": "^3.0.0",
     "react": "*",
     "react-native": "*",
     "react-native-gesture-handler": "^1.0.0",
@@ -85,10 +95,20 @@
       "<rootDir>/__setup__/enzyme.js"
     ],
     "modulePathIgnorePatterns": [
-      "<rootDir>/example/node_modules"
+      "<rootDir>/example/node_modules",
+      "<rootDir>/lib/"
     ],
     "snapshotSerializers": [
       "enzyme-to-json/serializer"
+    ]
+  },
+  "@react-native-community/bob": {
+    "source": "src",
+    "output": "lib",
+    "targets": [
+      "commonjs",
+      "module",
+      "typescript"
     ]
   }
 }

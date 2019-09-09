@@ -1,37 +1,59 @@
-/* @flow */
-
 import * as React from 'react';
-import { View, StyleSheet } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  AccessibilityRole,
+  AccessibilityState,
+} from 'react-native';
 
 // eslint-disable-next-line import/no-unresolved
 import { ScreenContainer } from 'react-native-screens';
 
 import createTabNavigator, {
-  type InjectedProps,
+  NavigationViewProps,
 } from '../utils/createTabNavigator';
-import BottomTabBar, { type TabBarOptions } from '../views/BottomTabBar';
+import BottomTabBar from '../views/BottomTabBar';
 import ResourceSavingScene from '../views/ResourceSavingScene';
+import {
+  NavigationProp,
+  Route,
+  SceneDescriptor,
+  NavigationBottomTabOptions,
+  BottomTabBarOptions,
+} from '../types';
 
-type Props = InjectedProps & {
-  getAccessibilityRole: (props: { route: any }) => string,
-  getAccessibilityStates: (props: { route: any }) => string[],
-  lazy?: boolean,
-  tabBarComponent?: React.ComponentType<*>,
-  tabBarOptions?: TabBarOptions,
+type Props = NavigationViewProps & {
+  getAccessibilityRole: (props: {
+    route: Route;
+  }) => AccessibilityRole | undefined;
+  getAccessibilityStates: (props: {
+    route: Route;
+    focused: boolean;
+  }) => AccessibilityState[];
+  lazy?: boolean;
+  tabBarComponent?: React.ComponentType<any>;
+  tabBarOptions?: BottomTabBarOptions;
+  navigation: NavigationProp;
+  descriptors: { [key: string]: SceneDescriptor<NavigationBottomTabOptions> };
+  screenProps?: unknown;
 };
 
 type State = {
-  loaded: number[],
+  loaded: number[];
 };
 
 class TabNavigationView extends React.PureComponent<Props, State> {
   static defaultProps = {
     lazy: true,
-    getAccessibilityRole: () => 'button',
-    getAccessibilityStates: ({ focused }) => (focused ? ['selected'] : []),
+    getAccessibilityRole: (): AccessibilityRole => 'button',
+    getAccessibilityStates: ({
+      focused,
+    }: {
+      focused: boolean;
+    }): AccessibilityState[] => (focused ? ['selected'] : []),
   };
 
-  static getDerivedStateFromProps(nextProps, prevState) {
+  static getDerivedStateFromProps(nextProps: Props, prevState: State) {
     const { index } = nextProps.navigation.state;
 
     return {
@@ -46,7 +68,7 @@ class TabNavigationView extends React.PureComponent<Props, State> {
     loaded: [this.props.navigation.state.index],
   };
 
-  _getButtonComponent = ({ route }) => {
+  _getButtonComponent = ({ route }: { route: Route }) => {
     const { descriptors } = this.props;
     const descriptor = descriptors[route.key];
     const options = descriptor.options;
@@ -55,7 +77,7 @@ class TabNavigationView extends React.PureComponent<Props, State> {
       return options.tabBarButtonComponent;
     }
 
-    return null;
+    return undefined;
   };
 
   _renderTabBar = () => {
@@ -154,4 +176,6 @@ const styles = StyleSheet.create({
   },
 });
 
-export default createTabNavigator(TabNavigationView);
+export default createTabNavigator<NavigationBottomTabOptions, Props>(
+  TabNavigationView
+);

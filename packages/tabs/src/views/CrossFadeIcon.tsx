@@ -1,18 +1,22 @@
-/* @flow */
-
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 import Animated from 'react-native-reanimated';
+import { Route } from '../types';
 
 type Props = {
-  route: any,
-  horizontal?: boolean,
-  activeOpacity: any,
-  inactiveOpacity: any,
-  activeTintColor: any,
-  inactiveTintColor: any,
-  renderIcon: any,
-  style: any,
+  route: Route;
+  horizontal?: boolean;
+  activeOpacity: number;
+  inactiveOpacity: number;
+  activeTintColor?: string;
+  inactiveTintColor?: string;
+  renderIcon: (props: {
+    route: Route;
+    focused: boolean;
+    tintColor?: string;
+    horizontal?: boolean;
+  }) => React.ReactNode;
+  style: StyleProp<ViewStyle>;
 };
 
 export default class TabBarIcon extends React.Component<Props> {

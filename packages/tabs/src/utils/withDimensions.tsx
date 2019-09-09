@@ -1,10 +1,23 @@
 import * as React from 'react';
-import { Dimensions } from 'react-native';
+import { Dimensions, ScaledSize } from 'react-native';
 import hoistNonReactStatic from 'hoist-non-react-statics';
 
-export const isOrientationLandscape = ({ width, height }) => width > height;
+type DimensionsType = {
+  width: number;
+  height: number;
+};
 
-export default function withDimensions(WrappedComponent) {
+type InjectedProps = {
+  dimensions: DimensionsType;
+  isLandscape: boolean;
+};
+
+export const isOrientationLandscape = ({ width, height }: DimensionsType) =>
+  width > height;
+
+export default function withDimensions<Props extends InjectedProps>(
+  WrappedComponent: React.ComponentType<Props>
+): React.ComponentType<Pick<Props, Exclude<keyof Props, keyof InjectedProps>>> {
   const { width, height } = Dimensions.get('window');
 
   class EnhancedComponent extends React.Component {
@@ -23,15 +36,17 @@ export default function withDimensions(WrappedComponent) {
       Dimensions.removeEventListener('change', this.handleOrientationChange);
     }
 
-    handleOrientationChange = ({ window }) => {
+    handleOrientationChange = ({ window }: { window: ScaledSize }) => {
       const isLandscape = isOrientationLandscape(window);
       this.setState({ isLandscape });
     };
 
     render() {
+      // @ts-ignore
       return <WrappedComponent {...this.props} {...this.state} />;
     }
   }
 
+  // @ts-ignore
   return hoistNonReactStatic(EnhancedComponent, WrappedComponent);
 }

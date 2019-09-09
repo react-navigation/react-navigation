@@ -21,8 +21,8 @@ jobs:
             - v1-dependencies-example-{{ checksum "example/package.json" }}
             - v1-dependencies-example-
       - run: |
-          yarn install
-          yarn install --cwd example
+          yarn install --frozen-lockfile
+          yarn install --frozen-lockfile --cwd example
       - save_cache:
           key: v1-dependencies-{{ checksum "package.json" }}
           paths: node_modules
@@ -32,20 +32,29 @@ jobs:
       - persist_to_workspace:
           root: .
           paths: .
-  lint-and-flow:
+  lint-and-typecheck:
       <<: *defaults
       steps:
         - attach_workspace:
             at: ~/project
         - run: |
             yarn lint
-            yarn flow check
+            yarn typescript
+  unit-tests:
+      <<: *defaults
+      steps:
+        - attach_workspace:
+            at: ~/project
+        - run: yarn test -- --coverage
+        - store_artifacts:
+            path: coverage
+            destination: coverage
 
 workflows:
   version: 2
   build-and-test:
     jobs:
       - install-dependencies
-      - lint-and-flow:
+      - lint-and-typecheck:
           requires:
             - install-dependencies
