@@ -33,7 +33,6 @@
 
 declare module 'react-navigation' {
   import * as React from 'react';
-  import { PanGestureHandler } from 'react-native-gesture-handler';
 
   import {
     Animated,
@@ -50,14 +49,10 @@ declare module 'react-navigation' {
   // @todo: should we re-export from RNGH? not currently exposed through it
   export { FlatList, SectionList, ScrollView } from 'react-native';
 
-  export type ScreenProps = {
-    [key: string]: any;
-  };
-
   // @todo - any..
   export function getActiveChildNavigationOptions<S>(
     navigation: NavigationProp<S>,
-    screenProps?: ScreenProps,
+    screenProps?: unknown,
     theme?: SupportedThemes
   ): NavigationParams;
 
@@ -138,7 +133,7 @@ declare module 'react-navigation' {
 
   export type NavigationScreenOptionsGetter<Options> = (
     navigation: NavigationScreenProp<NavigationRoute<any>>,
-    screenProps: ScreenProps | null,
+    screenProps: unknown | null,
     theme: SupportedThemes
   ) => Options;
 
@@ -173,6 +168,13 @@ declare module 'react-navigation' {
 
     getComponentForState: (state: State) => NavigationComponent;
 
+    getActionCreators: (
+      route: NavigationRoute,
+      key: string
+    ) => {
+      [key: string]: () => NavigationAction;
+    };
+
     /**
      * Gets the screen navigation options for a given screen.
      *
@@ -194,13 +196,9 @@ declare module 'react-navigation' {
     navigation: NavigationScreenProp<NavigationRoute>;
   }
 
-  export type NavigationScreenOptions = NavigationStackScreenOptions &
-    NavigationTabScreenOptions &
-    NavigationDrawerScreenOptions;
-
   export interface NavigationScreenConfigProps {
     navigation: NavigationScreenProp<NavigationRoute>;
-    screenProps: ScreenProps;
+    screenProps: unknown;
     theme: SupportedThemes;
   }
 
@@ -221,7 +219,7 @@ declare module 'react-navigation' {
     Params = NavigationParams,
     Options = {},
     Props = {}
-  > = React.ComponentType<NavigationScreenProps<Params, Options> & Props> & {
+  > = React.ComponentType<Navigationunknown<Params, Options> & Props> & {
     navigationOptions?: NavigationScreenConfig<Options>;
   };
 
@@ -255,6 +253,7 @@ declare module 'react-navigation' {
 
   export interface NavigationBackActionPayload {
     key?: string | null;
+    immediate?: boolean;
   }
 
   export interface NavigationBackAction extends NavigationBackActionPayload {
@@ -280,6 +279,7 @@ declare module 'react-navigation' {
 
   export interface NavigationInitAction extends NavigationInitActionPayload {
     type: 'Navigation/INIT';
+    key?: string;
   }
 
   export interface NavigationReplaceActionPayload {
@@ -300,6 +300,7 @@ declare module 'react-navigation' {
 
   export interface NavigationCompleteTransitionActionPayload {
     key?: string;
+    toChildKey?: string;
   }
 
   export interface NavigationCompleteTransitionAction {
@@ -333,6 +334,7 @@ declare module 'react-navigation' {
 
   export interface NavigationPopAction extends NavigationPopActionPayload {
     type: 'Navigation/POP';
+    key?: string;
   }
 
   export interface NavigationPopToTopActionPayload {
@@ -374,6 +376,16 @@ declare module 'react-navigation' {
     params?: NavigationParams;
   }
 
+  export interface NavigationDrawerOpenedAction {
+    key?: string;
+    type: 'Navigation/DRAWER_OPENED';
+  }
+
+  export interface NavigationDrawerClosedAction {
+    key?: string;
+    type: 'Navigation/DRAWER_CLOSED';
+  }
+
   export interface NavigationOpenDrawerAction {
     key?: string;
     type: 'Navigation/OPEN_DRAWER';
@@ -392,19 +404,19 @@ declare module 'react-navigation' {
   /**
    * Switch Navigator
    */
-
-  export interface SwitchRouter extends NavigationRouter {}
-
   export interface NavigationSwitchRouterConfig {
     initialRouteName?: string;
     initialRouteParams?: NavigationParams;
     paths?: NavigationPathsConfig;
-    defaultNavigationOptions?: NavigationScreenConfig<NavigationScreenOptions>;
     order?: string[];
-    backBehavior: 'none' | 'initialRoute' | 'history' | 'order'; // defaults to 'none'
+    backBehavior?: 'none' | 'initialRoute' | 'history' | 'order'; // defaults to 'none'
     resetOnBlur?: boolean; // defaults to `true`
   }
 
+  export function SwitchRouter(
+    routeConfigs: NavigationRouteConfigMap,
+    config?: NavigationSwitchRouterConfig
+  ): NavigationRouter<any, any>;
 
   export type NavigationStackAction =
     | NavigationInitAction
@@ -424,6 +436,8 @@ declare module 'react-navigation' {
     | NavigationBackAction;
 
   export type NavigationDrawerAction =
+    | NavigationDrawerOpenedAction
+    | NavigationDrawerClosedAction
     | NavigationOpenDrawerAction
     | NavigationCloseDrawerAction
     | NavigationToggleDrawerAction;
@@ -435,7 +449,8 @@ declare module 'react-navigation' {
     | NavigationStackAction
     | NavigationTabAction
     | NavigationDrawerAction
-    | NavigationSwitchAction;
+    | NavigationSwitchAction
+    | { type: 'CHILD_ACTION'; key?: string };
 
   export type NavigationRouteConfig =
     | NavigationComponent
@@ -458,25 +473,13 @@ declare module 'react-navigation' {
   }
 
   // tslint:disable-next-line:strict-export-declare-modifiers
-  interface NavigationTabRouterConfigBase {
+  interface NavigationTabRouterConfig {
     initialRouteName?: string;
     initialRouteParams?: NavigationParams;
     paths?: NavigationPathsConfig;
     order?: string[]; // todo: type these as the real route names rather than 'string'
     backBehavior?: 'none' | 'initialRoute' | 'history' | 'order'; // defaults to 'initialRoute'
     resetOnBlur?: boolean;
-  }
-  export interface NavigationTabRouterConfig
-    extends NavigationTabRouterConfigBase {
-    defaultNavigationOptions?: NavigationScreenConfig<NavigationScreenOptions>;
-    navigationOptions?: NavigationScreenConfig<any>;
-  }
-  export interface NavigationBottomTabRouterConfig
-    extends NavigationTabRouterConfigBase {
-    defaultNavigationOptions?: NavigationScreenConfig<
-      NavigationBottomTabScreenOptions
-    >;
-    navigationOptions?: NavigationScreenConfig<any>;
   }
 
   export interface NavigationRouteConfigMap {
@@ -581,7 +584,7 @@ declare module 'react-navigation' {
     theme?: SupportedThemes | 'no-preference';
     detached?: boolean;
     navigation?: NavigationProp<S>;
-    screenProps?: ScreenProps;
+    screenProps?: unknown;
     navigationOptions?: O;
   }
 
@@ -614,7 +617,7 @@ declare module 'react-navigation' {
     persistNavigationState?: (state: NavigationState) => Promise<any>;
 
     renderLoadingExperimental?: React.ComponentType;
-    screenProps?: ScreenProps;
+    screenProps?: unknown;
     navigationOptions?: O;
     style?: StyleProp<ViewStyle>;
   }
@@ -636,7 +639,7 @@ declare module 'react-navigation' {
     ): NavigationContainerComponent;
 
     router: NavigationRouter<any, any>;
-    screenProps: ScreenProps;
+    screenProps: unknown;
     navigationOptions: any;
     state: { nav: NavigationState | null };
   }
@@ -714,7 +717,7 @@ declare module 'react-navigation' {
     ): NavigationReplaceAction;
 
     function completeTransition(
-      payload: NavigationCompleteTransitionActionPayload
+      payload?: NavigationCompleteTransitionActionPayload
     ): NavigationCompleteTransitionAction;
   }
 
@@ -746,15 +749,13 @@ declare module 'react-navigation' {
    */
   export function StackRouter(
     routeConfigs: NavigationRouteConfigMap,
-    config: NavigationTabRouterConfig
+    config?: NavigationTabRouterConfig
   ): NavigationRouter<any, any>;
 
   export interface NavigationStackRouterConfig {
     initialRouteName?: string;
     initialRouteParams?: NavigationParams;
     paths?: NavigationPathsConfig;
-    defaultNavigationOptions?: NavigationScreenConfig<NavigationScreenOptions>;
-    navigationOptions?: NavigationScreenConfig<NavigationScreenOptions>;
     initialRouteKey?: string;
   }
 
@@ -763,11 +764,14 @@ declare module 'react-navigation' {
    *
    * @see https://github.com/react-navigation/react-navigation/blob/master/src/navigators/createNavigator.js
    */
-  export interface NavigationDescriptor<Params = NavigationParams> {
+  export interface NavigationDescriptor<
+    Params = NavigationParams,
+    Options = {}
+  > {
     key: string;
     state: NavigationLeafRoute<Params> | NavigationStateRoute<Params>;
     navigation: NavigationScreenProp<any>;
-    options: NavigationScreenOptions;
+    options: Options;
     getComponent: () => React.ComponentType;
   }
 
@@ -775,7 +779,7 @@ declare module 'react-navigation' {
     {
       descriptors: { [key: string]: NavigationDescriptor };
       navigationConfig: O;
-      screenProps?: ScreenProps;
+      screenProps?: unknown;
     } & NavigationInjectedProps
   >;
 
@@ -815,12 +819,12 @@ declare module 'react-navigation' {
    * BEGIN CUSTOM CONVENIENCE INTERFACES
    */
 
-  export interface NavigationScreenProps<
+  export interface Navigationunknown<
     Params = NavigationParams,
     Options = any
   > {
     navigation: NavigationScreenProp<NavigationRoute<Params>, Params>;
-    screenProps?: ScreenProps;
+    screenProps?: unknown;
     navigationOptions?: NavigationScreenConfig<Options>;
   }
 
@@ -837,6 +841,11 @@ declare module 'react-navigation' {
   export interface NavigationOrientationInjectedProps {
     isLandscape: boolean;
   }
+
+  export function createKeyboardAwareNavigator<Props>(
+    Comp: React.ComponentType<Props>,
+    stackConfig: object
+  ): React.ComponentType<Props>;
 
   export function withOrientation<P extends NavigationOrientationInjectedProps>(
     Component: React.ComponentType<P>
@@ -868,6 +877,10 @@ declare module 'react-navigation' {
   ): React.ComponentType<
     T & { onRef?: React.Ref<React.Component<T & NavigationInjectedProps<P>>> }
   >;
+
+  export const NavigationProvider: React.ComponentType<{
+    value: NavigationProp<any>;
+  }>;
 
   export interface NavigationFocusInjectedProps<P = NavigationParams>
     extends NavigationInjectedProps<P> {
@@ -921,17 +934,22 @@ declare module 'react-navigation' {
     NavigationScreenProp<NavigationRoute>
   >;
 
+  export function createKeyboardAwareNavigator<Props>(
+    Comp: React.ComponentType<Props>,
+    stackConfig: object
+  ): React.ComponentType<Props>;
+
   /**
    * SceneView
    */
 
   export interface SceneViewProps {
     component: React.ComponentType;
-    screenProps: ScreenProps;
-    navigation: NavigationScreenProp<NavigationRoute>;
+    screenProps: unknown;
+    navigation: NavigationProp<any>;
   }
 
-  export class SceneView extends React.Component {}
+  export const SceneView: React.ComponentType<SceneViewProps>;
 
   /**
    * Themes
