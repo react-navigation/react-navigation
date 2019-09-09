@@ -3,6 +3,7 @@ import {
   NavigationScreenProp,
   NavigationState,
   SafeAreaView,
+  Themed,
 } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 

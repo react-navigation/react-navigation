@@ -1,7 +1,10 @@
 import React from 'react';
 import { Text, View } from 'react-native';
-import { NavigationScreenProp, NavigationState } from 'react-navigation';
-import { Themed } from 'react-navigation';
+import {
+  NavigationScreenProp,
+  NavigationState,
+  Themed,
+} from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { Button } from './commonComponents/ButtonWithMargin';
 
