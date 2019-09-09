@@ -5,7 +5,7 @@ import {
   SceneView,
   createNavigator,
   SwitchActions,
-} from '@react-navigation/core';
+} from 'react-navigation';
 import {
   NavigationProp,
   SceneDescriptor,
@@ -255,6 +255,9 @@ export default function createTabNavigator<
 
   return (routes: RouteConfig<Options>, config: Partial<Options> = {}) => {
     const router = TabRouter(routes, config as any);
+
+    // TODO: don't have time to fix it right now
+    // @ts-ignore
     return createNavigator(NavigationView, router, config as any);
   };
 }

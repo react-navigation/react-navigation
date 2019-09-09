@@ -5,8 +5,12 @@ import {
   Assets as StackAssets,
   createStackNavigator,
 } from 'react-navigation-stack';
-import { Themed, createAppContainer } from '@react-navigation/native';
-import { ThemeColors, useTheme } from '@react-navigation/core';
+import {
+  Themed,
+  createAppContainer,
+  ThemeColors,
+  useTheme,
+} from 'react-navigation';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Asset } from 'expo-asset';
 

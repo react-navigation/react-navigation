@@ -10,14 +10,13 @@
   "main": "App.js",
   "dependencies": {
     "@expo/vector-icons": "^10.0.0",
-    "@react-navigation/core": "3.5.0",
-    "@react-navigation/native": "^3.6.2",
     "expo": "^33.0.7",
     "expo-asset": "^6.0.0",
     "expo-constants": "~5.0.1",
     "react": "16.8.3",
+    "react-navigation": "^4.0.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-33.0.0.tar.gz",
-    "react-native-safe-area-view": "^0.13.1",
+    "react-native-safe-area-view": "0.13.1",
     "react-native-screens": "1.0.0-alpha.22",
     "react-native-tab-view": "^2.10.0",
     "react-navigation-stack": "1.5.3"
@@ -28,6 +27,8 @@
     "glob-to-regexp": "^0.4.0"
   },
   "resolutions": {
+    "**/react-native-screens": "1.0.0-alpha.22",
+    "**/react-native-safe-area-view": "0.13.1",
     "**/hoist-non-react-statics": "2.5.0",
     "**/react-native-tab-view": "2.10.0",
     "**/prop-types": "15.6.1"

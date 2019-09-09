@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { View, Image, ScrollView, Dimensions, StyleSheet } from 'react-native';
-import { withNavigation } from '@react-navigation/core';
+import { withNavigation } from 'react-navigation';
 
 @withNavigation
 class NavigationAwareScrollView extends React.Component {

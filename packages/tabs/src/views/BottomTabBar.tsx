@@ -9,7 +9,7 @@ import {
   LayoutChangeEvent,
 } from 'react-native';
 import SafeAreaView from 'react-native-safe-area-view';
-import { ThemeColors, ThemeContext } from '@react-navigation/core';
+import { ThemeColors, ThemeContext } from 'react-navigation';
 
 import CrossFadeIcon from './CrossFadeIcon';
 import withDimensions from '../utils/withDimensions';
