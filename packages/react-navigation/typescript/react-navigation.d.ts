@@ -219,7 +219,7 @@ declare module 'react-navigation' {
     Params = NavigationParams,
     Options = {},
     Props = {}
-  > = React.ComponentType<Navigationunknown<Params, Options> & Props> & {
+  > = React.ComponentType<NavigationScreenProps<Params, Options> & Props> & {
     navigationOptions?: NavigationScreenConfig<Options>;
   };
 
@@ -819,7 +819,7 @@ declare module 'react-navigation' {
    * BEGIN CUSTOM CONVENIENCE INTERFACES
    */
 
-  export interface Navigationunknown<
+  export interface NavigationScreenProps<
     Params = NavigationParams,
     Options = any
   > {
