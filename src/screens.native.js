@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export const ScreenStackHeaderRightView = props => (
+const ScreenStackHeaderRightView = props => (
   <ScreensNativeModules.NativeScreenStackHeaderSubview
     {...props}
     type="right"
@@ -147,7 +147,7 @@ export const ScreenStackHeaderRightView = props => (
   />
 );
 
-export const ScreenStackHeaderLeftView = props => (
+const ScreenStackHeaderLeftView = props => (
   <ScreensNativeModules.NativeScreenStackHeaderSubview
     {...props}
     type="left"
@@ -155,7 +155,7 @@ export const ScreenStackHeaderLeftView = props => (
   />
 );
 
-export const ScreenStackHeaderTitleView = props => (
+const ScreenStackHeaderTitleView = props => (
   <ScreensNativeModules.NativeScreenStackHeaderSubview
     {...props}
     type="title"
@@ -163,13 +163,14 @@ export const ScreenStackHeaderTitleView = props => (
   />
 );
 
-export const ScreenStackHeaderCenterView = props => (
+const ScreenStackHeaderCenterView = props => (
   <ScreensNativeModules.NativeScreenStackHeaderSubview
     {...props}
     type="center"
     style={styles.headerSubview}
   />
 );
+
 module.exports = {
   ScreenContainer,
   Screen,
@@ -190,6 +191,10 @@ module.exports = {
   get ScreenStackHeaderSubview() {
     return ScreensNativeModules.NativeScreenStackHeaderSubview;
   },
+  ScreenStackHeaderRightView,
+  ScreenStackHeaderLeftView,
+  ScreenStackHeaderTitleView,
+  ScreenStackHeaderCenterView,
 
   useScreens,
   screensEnabled,

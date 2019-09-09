@@ -75,7 +75,7 @@ class StackView extends React.Component {
 
     if (options.headerLeft !== undefined) {
       children.push(
-        <ScreenStackHeaderLeftView>
+        <ScreenStackHeaderLeftView key="left">
           {options.headerLeft({ scene })}
         </ScreenStackHeaderLeftView>
       );
@@ -88,7 +88,7 @@ class StackView extends React.Component {
       };
 
       children.push(
-        <ScreenStackHeaderLeftView>
+        <ScreenStackHeaderLeftView key="left">
           <HeaderBackButton
             onPress={goBack}
             pressColorAndroid={options.headerPressColorAndroid}
@@ -107,7 +107,7 @@ class StackView extends React.Component {
 
     if (options.headerTitle) {
       children.push(
-        <ScreenStackHeaderTitleView>
+        <ScreenStackHeaderTitleView key="title">
           {options.headerTitle({ scene })}
         </ScreenStackHeaderTitleView>
       );
@@ -115,7 +115,7 @@ class StackView extends React.Component {
 
     if (options.headerRight) {
       children.push(
-        <ScreenStackHeaderRightView>
+        <ScreenStackHeaderRightView key="right">
           {options.headerRight({ scene })}
         </ScreenStackHeaderRightView>
       );
@@ -180,9 +180,9 @@ function createStackNavigator(routeConfigMap, stackConfig = {}) {
 
   // Create a navigator with StackView as the view
   let Navigator = createNavigator(StackView, router, stackConfig);
-  if (!stackConfig.disableKeyboardHandling) {
-    Navigator = createKeyboardAwareNavigator(Navigator, stackConfig);
-  }
+  // if (!stackConfig.disableKeyboardHandling) {
+  //   Navigator = createKeyboardAwareNavigator(Navigator, stackConfig);
+  // }
 
   return Navigator;
 }

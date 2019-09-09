@@ -188,8 +188,21 @@
 
   if (vc.transitionCoordinator != nil && !wasHidden) {
     [vc.transitionCoordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> _Nonnull context) {
-      [self setAnimatedConfig:vc];
+
     } completion:nil];
+    [vc.transitionCoordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+      [self setAnimatedConfig:vc];
+    } completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+      if ([context isCancelled]) {
+        UIViewController* fromVC = [context  viewControllerForKey:UITransitionContextFromViewControllerKey];
+        for (UIView *subview in fromVC.view.reactSubviews) {
+          if ([subview isKindOfClass:[RNSScreenStackHeaderConfig class]]) {
+            [((RNSScreenStackHeaderConfig*) subview) setAnimatedConfig:fromVC];
+            break;
+          }
+        }
+      }
+    }];
   } else {
     [self setAnimatedConfig:vc];
   }

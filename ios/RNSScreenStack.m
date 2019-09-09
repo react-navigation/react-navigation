@@ -78,6 +78,15 @@
 
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
 {
+  // cancel touches in parent, this is needed to cancel RN touch events. For example when Touchable
+  // item is close to an edge and we start pulling from edge we want the Touchable to be cancelled.
+  // Without the below code the Touchable will remain active (highlighted) for the duration of back
+  // gesture and onPress may fire when we release the finger.
+  UIView *parent = _controller.view;
+  while (parent != nil && ![parent isKindOfClass:[RCTRootView class]]) parent = parent.superview;
+  RCTRootView *rootView = (RCTRootView *)parent;
+  [rootView cancelTouches];
+
   return _controller.viewControllers.count > 1;
 }
 
