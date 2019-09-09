@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Button, StatusBar } from 'react-native';
-import { SafeAreaView } from '@react-navigation/native';
+import { SafeAreaView } from 'react-navigation';
 import {
   createStackNavigator,
   TransitionPresets,

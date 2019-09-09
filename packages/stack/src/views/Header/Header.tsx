@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StackActions } from '@react-navigation/core';
+import { StackActions } from 'react-navigation';
 import HeaderSegment from './HeaderSegment';
 import { HeaderProps, HeaderTitleProps } from '../../types';
 import HeaderTitle from './HeaderTitle';
@@ -54,6 +54,7 @@ export default class Header extends React.PureComponent<HeaderProps> {
         onGoBack={
           previous
             ? () =>
+                // @ts-ignore
                 navigation.dispatch(StackActions.pop({ key: scene.route.key }))
             : undefined
         }

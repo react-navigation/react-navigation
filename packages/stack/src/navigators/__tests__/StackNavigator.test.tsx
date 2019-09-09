@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { StyleSheet, View } from 'react-native';
 import renderer from 'react-test-renderer';
-import { withNavigation } from '@react-navigation/core';
+import { withNavigation } from 'react-navigation';
 
 import createStackNavigator from '../createStackNavigator';
 
+// eslint-disable-next-line import/no-extraneous-dependencies
 import createAppContainer, {
   _TESTING_ONLY_reset_container_count,
   // @ts-ignore

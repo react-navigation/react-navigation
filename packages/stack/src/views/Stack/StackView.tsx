@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Platform } from 'react-native';
-import { SceneView, StackActions } from '@react-navigation/core';
+import { SceneView, StackActions } from 'react-navigation';
 import Stack from './Stack';
 import HeaderContainer, {
   Props as HeaderContainerProps,
@@ -239,6 +239,7 @@ class StackView extends React.Component<Props, State> {
   private handleGoBack = ({ route }: { route: Route }) => {
     // This event will trigger when a gesture ends
     // We need to perform the transition before removing the route completely
+    // @ts-ignore
     this.props.navigation.dispatch(StackActions.pop({ key: route.key }));
   };
 

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { createStackNavigator } from 'react-navigation-stack';
-import { createAppContainer } from '@react-navigation/native';
+import { createAppContainer } from 'react-navigation';
 
 class ScreenOne extends React.Component {
   componentDidMount() {

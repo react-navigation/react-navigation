@@ -1,4 +1,4 @@
-declare module '@react-navigation/native' {
+declare module 'react-navigation' {
   import { ComponentType } from 'react';
   import { StyleProp, ViewStyle, ViewProps } from 'react-native';
 

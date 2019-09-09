@@ -1,4 +1,4 @@
-declare module '@react-navigation/core' {
+declare module 'react-navigation' {
   import * as React from 'react';
 
   export const StackActions: {

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Button, Text, View, StyleSheet } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
-import { withNavigationFocus } from '@react-navigation/core';
+import { withNavigationFocus } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 
 const IndexScreen = ({ navigation }) => (

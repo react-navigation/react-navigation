@@ -40,7 +40,7 @@ export type NavigationProp<RouteName = string, Params = object> = {
   state: NavigationState;
   setParams(params: Params): void;
   getParam(): Params;
-  dispatch(action: { type: string }): void;
+  dispatch(action: { type: string }): boolean;
   isFirstRouteInParent(): boolean;
   dangerouslyGetParent(): NavigationProp | undefined;
 };

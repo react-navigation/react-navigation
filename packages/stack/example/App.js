@@ -1,11 +1,7 @@
 import * as React from 'react';
 import { Asset } from 'expo-asset';
 import { FlatList, I18nManager } from 'react-native';
-import {
-  createAppContainer,
-  SafeAreaView,
-  ScrollView,
-} from '@react-navigation/native';
+import { createAppContainer, SafeAreaView, ScrollView } from 'react-navigation';
 import {
   Assets as StackAssets,
   createStackNavigator,
@@ -31,6 +27,7 @@ import {
 } from './src/HeaderBackgrounds';
 
 // Comment the following two lines to stop using react-native-screens
+// eslint-disable-next-line import/no-unresolved
 import { useScreens } from 'react-native-screens';
 
 useScreens(true);

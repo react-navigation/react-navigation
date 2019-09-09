@@ -32,19 +32,21 @@ jobs:
       - persist_to_workspace:
           root: .
           paths: .
-  lint:
+  lint-and-typecheck:
       <<: *defaults
       steps:
         - attach_workspace:
             at: ~/project
         - run: |
-            yarn run lint
+            yarn lint
+            yarn typescript
   unit-tests:
       <<: *defaults
       steps:
         - attach_workspace:
             at: ~/project
-        - run: yarn test --coverage
+        - run: |
+            yarn test --coverage
         - store_artifacts:
             path: coverage
             destination: coverage
@@ -60,7 +62,7 @@ workflows:
   build-and-test:
     jobs:
       - install-dependencies
-      - lint:
+      - lint-and-typecheck:
           requires:
             - install-dependencies
       - unit-tests:

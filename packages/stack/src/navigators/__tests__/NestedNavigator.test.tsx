@@ -1,6 +1,6 @@
 import * as React from 'react';
 import renderer from 'react-test-renderer';
-import { createAppContainer } from '@react-navigation/native';
+import { createAppContainer } from 'react-navigation';
 import StackNavigator from '../createStackNavigator';
 
 const SubNavigator = StackNavigator({

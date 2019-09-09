@@ -7,6 +7,7 @@
     "react": {
       "version": "detect"
     },
+    "import/core-modules": ["react-native-screens"]
   },
 
   "env": {
@@ -15,7 +16,7 @@
   },
 
   "rules": {
-    "import/no-unresolved": "off",
+    "import/named": "off",
     "react/sort-comp": "off",
     "jest/no-disabled-tests": "off",
   }

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StackRouter, createNavigator } from '@react-navigation/core';
+import { StackRouter, createNavigator } from 'react-navigation';
 import { Platform } from 'react-native';
 import StackView from '../views/Stack/StackView';
 import {
