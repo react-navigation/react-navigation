@@ -2,7 +2,6 @@
 
 import * as React from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
-
 import { Screen, screensEnabled } from 'react-native-screens';
 
 type Props = {

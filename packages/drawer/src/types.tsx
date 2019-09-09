@@ -1,4 +1,4 @@
-import { DrawerActionType } from './routers/DrawerActions';
+import { NavigationAction } from 'react-navigation';
 
 export type Route = {
   key: string;
@@ -21,9 +21,5 @@ export type Navigation = {
   };
   openDrawer: () => void;
   closeDrawer: () => void;
-  dispatch: (action: {
-    type: DrawerActionType;
-    key: string;
-    willShow?: boolean;
-  }) => void;
+  dispatch: (action: NavigationAction) => boolean;
 };

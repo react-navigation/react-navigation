@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Dimensions, Platform, ScrollView, I18nManager } from 'react-native';
-import { createNavigator, ThemeColors } from '@react-navigation/core';
-import { SafeAreaView } from '@react-navigation/native';
+import { createNavigator, ThemeColors, SafeAreaView } from 'react-navigation';
 import DrawerRouter from '../routers/DrawerRouter';
 import DrawerView from '../views/DrawerView';
 import DrawerItems, { Props } from '../views/DrawerNavigatorItems';
@@ -53,6 +52,9 @@ const DefaultDrawerConfig = {
 const DrawerNavigator = (routeConfigs: object, config: any = {}) => {
   const mergedConfig = { ...DefaultDrawerConfig, ...config };
   const drawerRouter = DrawerRouter(routeConfigs, mergedConfig);
+
+  // TODO: don't have time to fix it right now
+  // @ts-ignore
   const navigator = createNavigator(DrawerView, drawerRouter, mergedConfig);
   return navigator;
 };

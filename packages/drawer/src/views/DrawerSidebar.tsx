@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { StyleSheet, View, Animated, ViewStyle } from 'react-native';
-import { NavigationActions } from '@react-navigation/core';
+import { NavigationActions } from 'react-navigation';
 
 import { Props as DrawerNavigatorItemsProps } from './DrawerNavigatorItems';
 import { Navigation, Scene, Route } from '../types';

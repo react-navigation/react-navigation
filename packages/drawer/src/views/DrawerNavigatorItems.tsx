@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { View, Text, StyleSheet, ViewStyle, TextStyle } from 'react-native';
-import { SafeAreaView } from '@react-navigation/native';
-import { ThemeContext } from '@react-navigation/core';
+import { SafeAreaView, ThemeContext } from 'react-navigation';
 import TouchableItem from './TouchableItem';
 import { Scene, Route } from '../types';
 

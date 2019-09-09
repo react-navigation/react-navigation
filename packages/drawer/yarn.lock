@@ -7349,6 +7349,14 @@ react-native@~0.59.10:
     xmldoc "^0.4.0"
     yargs "^9.0.0"
 
+react-navigation@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/react-navigation/-/react-navigation-4.0.1.tgz#96c17ac90afcf0a5bc957358152326211a79d183"
+  integrity sha512-6XzuqvhOnY6FA6tCErD6+vfZdnP+O/7hCQper9qDulxxW2ZVkCF4xWdzoVcv3DDR6P5CK6l1tcbJ1ku256AdFQ==
+  dependencies:
+    "@react-navigation/core" "^3.5.0"
+    "@react-navigation/native" "^3.6.2"
+
 react-proxy@^1.1.7:
   version "1.1.8"
   resolved "https://registry.yarnpkg.com/react-proxy/-/react-proxy-1.1.8.tgz#9dbfd9d927528c3aa9f444e4558c37830ab8c26a"

@@ -5,11 +5,15 @@
 
   "env": {
     "es6": true,
-    "react-native-globals/all": true,
+    "react-native-globals/all": true
+  },
+
+  "settings": {
+    "import/core-modules": ["react-native-screens"]
   },
 
   "rules": {
-    "import/no-unresolved": "off",
+    "import/named": "off",
     "react-native/no-inline-styles": "off"
   }
 }

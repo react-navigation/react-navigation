@@ -1,8 +1,12 @@
 import * as React from 'react';
 // eslint-disable-next-line no-unused-vars
 import { View, TouchableOpacity, FlatList, I18nManager } from 'react-native';
-import { ThemeContext, ThemeColors } from '@react-navigation/core';
-import { Themed, createAppContainer } from '@react-navigation/native';
+import {
+  ThemeContext,
+  ThemeColors,
+  Themed,
+  createAppContainer,
+} from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { List, Divider } from 'react-native-paper';

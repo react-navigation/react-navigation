@@ -1,19 +1,12 @@
-import { SwitchRouter, NavigationActions } from '@react-navigation/core';
+import {
+  SwitchRouter,
+  NavigationActions,
+  NavigationAction,
+  NavigationRoute,
+} from 'react-navigation';
 import * as DrawerActions from './DrawerActions';
 
-type Route = {
-  key: string;
-  index?: number;
-  routes?: Route[];
-};
-
-type Action = {
-  key: null;
-  type: string;
-  willShow: any;
-};
-
-type State = Route & {
+type State = NavigationRoute & {
   isDrawerOpen?: any;
 };
 
@@ -28,7 +21,7 @@ function withDefaultValue(obj: object, key: string, defaultValue: any): any {
   return obj;
 }
 
-const getActiveRouteKey = (route: Route): string => {
+const getActiveRouteKey = (route: NavigationRoute): string => {
   if (
     route.routes &&
     typeof route.index === 'number' &&
@@ -61,7 +54,7 @@ export default (
   return {
     ...switchRouter,
 
-    getActionCreators(route: Route, navStateKey: string) {
+    getActionCreators(route: NavigationRoute, navStateKey: string) {
       return {
         openDrawer: () => DrawerActions.openDrawer({ key: navStateKey }),
         closeDrawer: () => DrawerActions.closeDrawer({ key: navStateKey }),
@@ -70,7 +63,7 @@ export default (
       };
     },
 
-    getStateForAction(action: Action, state: State) {
+    getStateForAction(action: NavigationAction, state?: State) {
       // Set up the initial state if needed
       if (!state) {
         return {

@@ -918,7 +918,7 @@
     query-string "^6.4.2"
     react-is "^16.8.6"
 
-"@react-navigation/native@^3.6.0":
+"@react-navigation/native@^3.6.2":
   version "3.6.2"
   resolved "https://registry.yarnpkg.com/@react-navigation/native/-/native-3.6.2.tgz#3634697b6350cc5189657ae4551f2d52b57fbbf0"
   integrity sha512-Cybeou6N82ZeRmgnGlu+wzlV3z5BZQR2dmYaNFV1TNLUGHqtvv8E7oNw9uYcz9Ox5LFbiX+FdNTn2d6ZPlK0kg==
@@ -4352,9 +4352,9 @@ react-native-safe-area-view@^0.12.0:
     hoist-non-react-statics "^2.3.1"
 
 react-native-safe-area-view@^0.14.1:
-  version "0.14.7"
-  resolved "https://registry.yarnpkg.com/react-native-safe-area-view/-/react-native-safe-area-view-0.14.7.tgz#e1dd1c4d25a90677df2c15347fdddb2306ba5971"
-  integrity sha512-fmuBYpvKDJK33bimo4JXrK2BN2CGw7nof1y1LDRgzqv+FZ3eADSDGshprN8WeQqSZjQ20hJx1CiWk28Edg/v4Q==
+  version "0.14.8"
+  resolved "https://registry.yarnpkg.com/react-native-safe-area-view/-/react-native-safe-area-view-0.14.8.tgz#ef33c46ff8164ae77acad48c3039ec9c34873e5b"
+  integrity sha512-MtRSIcZNstxv87Jet+UsPhEd1tpGe8cVskDXlP657x6rHpSrbrc+y13ZNXrwAgGNNhqQNX7UJT68ZIq//ZRmvw==
   dependencies:
     hoist-non-react-statics "^2.3.1"
 
@@ -4439,6 +4439,14 @@ react-navigation-stack@^1.4.0:
   integrity sha512-VEMSsKvicaLlFu6+U4u5YkwFe4hnMTLu83bR15GumuqrpCVPPgl7Qt4fSZCRG/YtC5ZcUiy5EgCRu9MVIINV5w==
   dependencies:
     prop-types "^15.7.2"
+
+react-navigation@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/react-navigation/-/react-navigation-4.0.1.tgz#96c17ac90afcf0a5bc957358152326211a79d183"
+  integrity sha512-6XzuqvhOnY6FA6tCErD6+vfZdnP+O/7hCQper9qDulxxW2ZVkCF4xWdzoVcv3DDR6P5CK6l1tcbJ1ku256AdFQ==
+  dependencies:
+    "@react-navigation/core" "^3.5.0"
+    "@react-navigation/native" "^3.6.2"
 
 react-proxy@^1.1.7:
   version "1.1.8"

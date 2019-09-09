@@ -1,10 +1,9 @@
 import React from 'react';
 import { Button, ScrollView, StyleSheet, View } from 'react-native';
 import { createStackNavigator } from 'react-navigation-stack';
-import { ThemeColors, useTheme } from '@react-navigation/core';
-import { Themed, SafeAreaView } from '@react-navigation/native';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { ThemeColors, useTheme, Themed, SafeAreaView } from 'react-navigation';
 import { createDrawerNavigator } from 'react-navigation-drawer';
+import { MaterialIcons } from '@expo/vector-icons';
 
 const SampleText = ({ children }) => <Themed.Text>{children}</Themed.Text>;
 

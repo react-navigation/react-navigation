@@ -1,5 +1,6 @@
 /* eslint-env jest */
 
+// eslint-disable-next-line import/no-unresolved
 import NativeModules from 'NativeModules';
 
 Object.assign(NativeModules, {

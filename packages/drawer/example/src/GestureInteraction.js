@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Button, View } from 'react-native';
-import { withNavigation } from '@react-navigation/core';
+import { withNavigation } from 'react-navigation';
 import {
   createDrawerNavigator,
   DrawerGestureContext,

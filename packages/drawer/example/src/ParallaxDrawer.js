@@ -7,13 +7,11 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-
+import { ThemeColors, useTheme, Themed, SafeAreaView } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
-import { ThemeColors, useTheme } from '@react-navigation/core';
-import { Themed, SafeAreaView } from '@react-navigation/native';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import Animated from 'react-native-reanimated';
 import { createDrawerNavigator } from 'react-navigation-drawer';
+import Animated from 'react-native-reanimated';
+import { MaterialIcons } from '@expo/vector-icons';
 
 const SampleText = ({ children }) => <Themed.Text>{children}</Themed.Text>;
 

@@ -1,6 +1,11 @@
 import * as React from 'react';
 import { Dimensions, StyleSheet, ViewStyle } from 'react-native';
-import { SceneView, ThemeColors, ThemeContext } from '@react-navigation/core';
+import {
+  SceneView,
+  ThemeColors,
+  ThemeContext,
+  NavigationProp,
+} from 'react-navigation';
 import { ScreenContainer } from 'react-native-screens';
 
 import * as DrawerActions from '../routers/DrawerActions';
@@ -35,7 +40,7 @@ type Props = {
   navigation: Navigation;
   descriptors: {
     [key: string]: {
-      navigation: {};
+      navigation: NavigationProp<any>;
       getComponent: () => React.ComponentType<{}>;
       options: DrawerOptions;
     };

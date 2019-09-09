@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
-import { Themed } from '@react-navigation/native';
+import { Themed } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createDrawerNavigator } from 'react-navigation-drawer';
 
