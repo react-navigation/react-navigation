@@ -146,6 +146,7 @@ Array [
                       "flex": 1,
                       "overflow": "hidden",
                     },
+                    null,
                     Object {
                       "backgroundColor": "#eee",
                     },
@@ -297,6 +298,7 @@ Array [
                                     "flex": 1,
                                     "overflow": "hidden",
                                   },
+                                  null,
                                   Object {
                                     "backgroundColor": "#eee",
                                   },
