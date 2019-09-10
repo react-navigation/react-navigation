@@ -4,7 +4,7 @@
   "description": "Material Bottom Tab Navigation component for React Navigation",
   "main": "lib/commonjs/index.js",
   "module": "lib/module/index.js",
-  "react-native": "src/index.js",
+  "react-native": "src/index.tsx",
   "files": [
     "src",
     "lib"
