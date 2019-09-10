@@ -2,7 +2,7 @@ import * as React from 'react';
 import { View, Image, Dimensions, StyleSheet } from 'react-native';
 import { ScrollView } from 'react-navigation';
 
-export default function PhotoGrid({ id }) {
+export default function PhotoGrid({ id }: { id: string }) {
   const PHOTOS = Array.from({ length: 24 }).map(
     (_, i) => `https://unsplash.it/300/300/?random&__id=${id}${i}`
   );

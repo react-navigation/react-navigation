@@ -1,20 +1,23 @@
 import * as React from 'react';
-import Expo from 'expo';
+import { StyleSheet } from 'react-native';
+import { registerRootComponent } from 'expo';
+import { Asset } from 'expo-asset';
 import {
   FlatList,
   createAppContainer,
-  createStackNavigator,
+  NavigationScreenProp,
 } from 'react-navigation';
+import {
+  createStackNavigator,
+  Assets as StackAssets,
+} from 'react-navigation-stack';
 import { List, Divider } from 'react-native-paper';
-
-// eslint-disable-next-line import/no-unresolved
-import { Assets as StackAssets } from 'react-navigation-stack';
 
 import SimpleTabs from './src/SimpleTabs';
 import ShiftingTabs from './src/ShiftingTabs';
 import IconTabs from './src/IconTabs';
 
-Expo.Asset.loadAsync(StackAssets);
+Asset.loadAsync(StackAssets);
 
 const data = [
   { component: ShiftingTabs, title: 'Shifting', routeName: 'ShiftingTabs' },
@@ -22,24 +25,30 @@ const data = [
   { component: IconTabs, title: 'Icons only', routeName: 'IconTabs' },
 ];
 
-class Home extends React.Component {
+type Props = {
+  navigation: NavigationScreenProp<any>;
+};
+
+type Item = { title: string; routeName: string };
+
+class Home extends React.Component<Props> {
   static navigationOptions = {
     title: 'Examples',
   };
 
-  _renderItem = ({ item }) => (
+  _renderItem = ({ item }: { item: Item }) => (
     <List.Item
       title={item.title}
       onPress={() => this.props.navigation.navigate(item.routeName)}
     />
   );
 
-  _keyExtractor = item => item.routeName;
+  _keyExtractor = (item: Item) => item.routeName;
 
   render() {
     return (
       <FlatList
-        style={{ backgroundColor: '#fff' }}
+        style={styles.container}
         ItemSeparatorComponent={Divider}
         renderItem={this._renderItem}
         keyExtractor={this._keyExtractor}
@@ -51,7 +60,12 @@ class Home extends React.Component {
 
 const MainStack = createStackNavigator({
   Home,
-  ...data.reduce((acc, it) => {
+  ...data.reduce<{
+    [key: string]: {
+      screen: React.ComponentType;
+      navigationOptions: { title: string };
+    };
+  }>((acc, it) => {
     acc[it.routeName] = {
       screen: it.component,
       navigationOptions: {
@@ -64,4 +78,12 @@ const MainStack = createStackNavigator({
 });
 
 const App = createAppContainer(MainStack);
-Expo.registerRootComponent(App);
+
+// @ts-ignore
+registerRootComponent(App);
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#fff',
+  },
+});

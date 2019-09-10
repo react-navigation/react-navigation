@@ -2,22 +2,20 @@
   "name": "react-navigation-material-bottom-tabs",
   "version": "1.1.1",
   "description": "Material Bottom Tab Navigation component for React Navigation",
-  "main": "dist/index.js",
-  "files": [
-    "dist/",
-    "src/",
-    "LICENSE.md",
-    "README.md"
-  ],
+  "main": "lib/commonjs/index.js",
+  "module": "lib/module/index.js",
   "react-native": "src/index.js",
+  "files": [
+    "src",
+    "lib"
+  ],
   "scripts": {
-    "test": "jest",
-    "flow": "flow",
-    "lint": "eslint .",
-    "precommit": "yarn lint && yarn flow && yarn test",
-    "build": "babel --no-babelrc --plugins=transform-es2015-block-scoping,transform-react-jsx,transform-class-properties,transform-object-rest-spread,transform-flow-strip-types src --out-dir dist --ignore '**/__tests__/**'",
-    "prepare": "yarn build",
-    "release": "release-it"
+    "typescript": "tsc --noEmit",
+    "lint": "eslint --ext .js,.ts,.tsx .",
+    "bootstrap": "yarn --cwd example && yarn",
+    "example": "yarn --cwd example",
+    "release": "yarn release-it",
+    "prepare": "bob build"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
@@ -41,58 +39,50 @@
     "url": "https://github.com/react-navigation/react-navigation-material-bottom-tabs/issues"
   },
   "homepage": "https://github.com/react-navigation/react-navigation-material-bottom-tabs#readme",
-  "dependencies": {
-    "hoist-non-react-statics": "^2.5.0",
-    "prop-types": "^15.6.0",
-    "react-navigation-tabs": "~1.2.0"
-  },
   "devDependencies": {
-    "@expo/vector-icons": "^6.2.0",
-    "@react-navigation/core": "^3.0.0-alpha",
-    "@react-navigation/native": "^3.0.0-alpha",
-    "babel-cli": "^6.26.0",
-    "babel-jest": "^21.2.0",
-    "babel-plugin-transform-class-properties": "^6.24.1",
-    "babel-plugin-transform-es2015-block-scoping": "^6.26.0",
-    "babel-plugin-transform-flow-strip-types": "^6.22.0",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-plugin-transform-react-jsx": "^6.24.1",
-    "babel-preset-react-native": "^4.0.0",
-    "conventional-changelog-cli": "^2.0.11",
-    "enzyme": "3.2.0",
-    "enzyme-adapter-react-16": "^1.1.0",
-    "enzyme-to-json": "^3.2.2",
-    "eslint": "^4.12.1",
-    "eslint-config-satya164": "^1.0.1",
+    "@commitlint/config-conventional": "^7.5.0",
+    "@expo/vector-icons": "^10.0.1",
+    "@react-native-community/bob": "^0.6.1",
+    "@release-it/conventional-changelog": "^1.1.0",
+    "@types/hoist-non-react-statics": "^3.3.1",
+    "@types/react": "^16.8.17",
+    "@types/react-native": "^0.57.57",
+    "babel-jest": "^24.5.0",
+    "commitlint": "^7.5.2",
+    "eslint": "^5.16.0",
+    "eslint-config-satya164": "^2.4.1",
     "eslint-plugin-react-native-globals": "^0.1.0",
-    "flow-bin": "~0.67.0",
-    "husky": "^0.14.3",
-    "jest": "^21.2.1",
-    "prettier": "^1.8.2",
-    "react": "16.3.1",
-    "react-dom": "16.3.1",
-    "react-native": "~0.55.4",
-    "react-native-paper": "^2.2.2",
-    "react-navigation": "^2.1.0",
-    "react-test-renderer": "16.2.0",
-    "release-it": "^7.6.2"
+    "husky": "^1.3.1",
+    "jest": "^24.5.0",
+    "prettier": "^1.17.1",
+    "react": "16.8.3",
+    "react-native": "~0.59.8",
+    "react-native-gesture-handler": "^1.4.1",
+    "react-native-paper": "^3.0.0-alpha.4",
+    "react-native-reanimated": "^1.2.0",
+    "react-navigation": "^4.0.1",
+    "release-it": "^12.3.6",
+    "typescript": "^3.5.2"
   },
   "peerDependencies": {
     "react": "*",
     "react-native": "*",
-    "react-native-paper": "^2.2.2",
-    "react-navigation": ">=2.0 || ^2.0.0-beta"
+    "react-native-paper": "^2.2.2 || ^3.0.0-alpha.1",
+    "react-navigation": "^4.0.2"
   },
-  "jest": {
-    "preset": "react-native",
-    "setupFiles": [
-      "<rootDir>/__setup__/enzyme.js"
-    ],
-    "modulePathIgnorePatterns": [
-      "<rootDir>/example/node_modules"
-    ],
-    "snapshotSerializers": [
-      "enzyme-to-json/serializer"
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+      "pre-commit": "yarn lint && yarn typescript"
+    }
+  },
+  "@react-native-community/bob": {
+    "source": "src",
+    "output": "lib",
+    "targets": [
+      "commonjs",
+      "module",
+      "typescript"
     ]
   }
 }

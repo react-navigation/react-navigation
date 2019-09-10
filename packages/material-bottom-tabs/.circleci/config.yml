@@ -2,7 +2,7 @@ version: 2
 
 defaults: &defaults
   docker:
-    - image: circleci/node:7.10
+    - image: circleci/node:10.9.0
   working_directory: ~/project
 
 jobs:
@@ -21,8 +21,7 @@ jobs:
             - v1-dependencies-example-{{ checksum "example/package.json" }}
             - v1-dependencies-example-
       - run: |
-          yarn install --ignore-engines
-          yarn install --cwd example
+          yarn bootstrap
       - save_cache:
           key: v1-dependencies-{{ checksum "package.json" }}
           paths: node_modules
@@ -32,32 +31,39 @@ jobs:
       - persist_to_workspace:
           root: .
           paths: .
-  lint-and-flow:
+  lint-and-typecheck:
       <<: *defaults
       steps:
         - attach_workspace:
             at: ~/project
         - run: |
             yarn lint
-            yarn flow
+            yarn typescript
   unit-tests:
       <<: *defaults
       steps:
         - attach_workspace:
             at: ~/project
-        - run: yarn test -- --coverage
+        - run: |
+            yarn test --coverage
         - store_artifacts:
             path: coverage
             destination: coverage
+  build:
+      <<: *defaults
+      steps:
+        - attach_workspace:
+            at: ~/project
+        - run: yarn prepare
 
 workflows:
   version: 2
   build-and-test:
     jobs:
       - install-dependencies
-      - lint-and-flow:
+      - lint-and-typecheck:
           requires:
             - install-dependencies
-      - unit-tests:
+      - build:
           requires:
             - install-dependencies

@@ -3,8 +3,18 @@
 
   "plugins": ["react-native-globals"],
 
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+
   "env": {
     "es6": true,
     "react-native-globals/all": true,
+  },
+
+  "rules": {
+    "import/named": "off"
   }
 }
