@@ -21,7 +21,8 @@ import SampleText from './SampleText';
 const DEBUG = false;
 
 interface MyNavScreenProps {
-  navigation: NavigationScreenProp<NavigationState>;
+  // TODO: satya164 - use stack's navigation type
+  navigation: any;
   banner: React.ReactNode;
 }
 
@@ -144,8 +145,10 @@ class MyHomeScreen extends React.Component<MyHomeScreenProps> {
 }
 
 interface MyPhotosScreenProps {
-  navigation: NavigationScreenProp<NavigationState>;
+  // TODO: satya164 - use stack's navigation type
+  navigation: any;
 }
+
 class MyPhotosScreen extends React.Component<MyPhotosScreenProps> {
   static navigationOptions = {
     headerLeft: () => <MyBackButtonWithNavigation />,

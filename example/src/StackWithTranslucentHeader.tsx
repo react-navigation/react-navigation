@@ -20,7 +20,8 @@ import { HeaderButtons } from './commonComponents/HeaderButtons';
 import SampleText from './SampleText';
 
 interface MyNavScreenProps {
-  navigation: NavigationScreenProp<NavigationState>;
+  // TODO: satya164 - use stack's navigation type
+  navigation: any;
   banner: React.ReactNode;
 }
 
