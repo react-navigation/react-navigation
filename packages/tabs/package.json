@@ -14,7 +14,7 @@
     "test": "jest",
     "typescript": "tsc --noEmit",
     "lint": "eslint --ext .js,.ts,.tsx .",
-    "bootstrap": "yarn && yarn --cwd example",
+    "bootstrap": "yarn --cwd example && yarn",
     "example": "yarn --cwd example",
     "release": "yarn release-it",
     "prepare": "bob build"
@@ -74,14 +74,14 @@
     "react-native": "~0.57.1",
     "react-native-gesture-handler": "^1.4.1",
     "react-native-reanimated": "^1.2.0",
-    "react-navigation": "^4.0.1",
+    "react-navigation": "^4.0.3",
     "react-test-renderer": "16.5.0",
     "release-it": "^10.3.1",
     "typescript": "^3.5.2"
   },
   "peerDependencies": {
     "react": "*",
-    "react-navigation": "^4.0.1",
+    "react-navigation": "^4.0.3",
     "react-native": "*",
     "react-native-gesture-handler": "^1.0.0",
     "react-native-reanimated": "^1.0.0-alpha",

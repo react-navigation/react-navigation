@@ -6,10 +6,10 @@ import createTabNavigator, {
 } from '../utils/createTabNavigator';
 import MaterialTopTabBar from '../views/MaterialTopTabBar';
 import {
-  NavigationProp,
-  SceneDescriptor,
+  NavigationTabProp,
   NavigationMaterialTabOptions,
   MaterialTabBarOptions,
+  SceneDescriptorMap,
 } from '../types';
 
 type Route = {
@@ -32,8 +32,8 @@ type Props = NavigationViewProps & {
   tabBarPosition?: 'top' | 'bottom';
   sceneContainerStyle?: StyleProp<ViewStyle>;
   style?: StyleProp<ViewStyle>;
-  navigation: NavigationProp;
-  descriptors: { [key: string]: SceneDescriptor<NavigationMaterialTabOptions> };
+  navigation: NavigationTabProp;
+  descriptors: SceneDescriptorMap;
   screenProps?: unknown;
 };
 
@@ -119,9 +119,10 @@ class MaterialTabView extends React.PureComponent<Props> {
     const options = descriptor.options;
 
     let swipeEnabled =
+      // @ts-ignore
       options.swipeEnabled == null
         ? this.props.swipeEnabled
-        : options.swipeEnabled;
+        : (options as any).swipeEnabled;
 
     if (typeof swipeEnabled === 'function') {
       swipeEnabled = swipeEnabled(state);

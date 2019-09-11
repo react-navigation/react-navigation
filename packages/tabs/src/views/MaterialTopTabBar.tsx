@@ -2,9 +2,10 @@ import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { TabBar } from 'react-native-tab-view';
 import Animated from 'react-native-reanimated';
-import { MaterialTabBarProps, Route } from '../types';
+import { NavigationRoute } from 'react-navigation';
+import { MaterialTabBarProps } from '../types';
 
-type Scene = { route: Route; focused: boolean; color: string };
+type Scene = { route: NavigationRoute; focused: boolean; color: string };
 
 export default class TabBarTop extends React.PureComponent<
   MaterialTabBarProps

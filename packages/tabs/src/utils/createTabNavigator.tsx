@@ -5,29 +5,25 @@ import {
   SceneView,
   createNavigator,
   SwitchActions,
+  NavigationRoute,
+  NavigationRouteConfigMap,
+  CreateNavigatorConfig,
+  NavigationTabRouterConfig,
 } from 'react-navigation';
 import {
-  NavigationProp,
-  SceneDescriptor,
-  Route,
-  Screen,
+  NavigationTabProp,
   NavigationCommonTabOptions,
+  SceneDescriptorMap,
 } from '../types';
 
-type RouteConfig<Options> = {
-  [key: string]:
-    | Screen<Options>
-    | ({ screen: Screen<Options> } | { getScreen(): Screen<Options> }) & {
-        path?: string;
-        navigationOptions?:
-          | Options
-          | ((options: { navigation: NavigationProp }) => Options);
-      };
-};
+type RouteConfig<Options> = NavigationRouteConfigMap<
+  Options,
+  NavigationTabProp
+>;
 
-type CommonProps<Options> = {
-  navigation: NavigationProp;
-  descriptors: { [key: string]: SceneDescriptor<Options> };
+type CommonProps = {
+  navigation: NavigationTabProp;
+  descriptors: SceneDescriptorMap;
   screenProps?: unknown;
 };
 
@@ -36,26 +32,28 @@ type ExtraProps = {
 };
 
 export type RenderIconProps = {
-  route: Route;
+  route: NavigationRoute;
   focused: boolean;
   tintColor?: string;
   horizontal?: boolean;
 };
 
 export type NavigationViewProps = {
-  getLabelText: (props: { route: Route }) => string | undefined;
-  getAccessibilityLabel: (props: { route: Route }) => string | undefined;
-  getTestID: (props: { route: Route }) => string | undefined;
+  getLabelText: (props: { route: NavigationRoute }) => string | undefined;
+  getAccessibilityLabel: (props: {
+    route: NavigationRoute;
+  }) => string | undefined;
+  getTestID: (props: { route: NavigationRoute }) => string | undefined;
   renderIcon: (props: RenderIconProps) => React.ReactNode;
-  renderScene: (props: { route: Route }) => React.ReactNode;
+  renderScene: (props: { route: NavigationRoute }) => React.ReactNode;
   onIndexChange: (index: number) => void;
-  onTabPress: (props: { route: Route }) => void;
-  onTabLongPress: (props: { route: Route }) => void;
+  onTabPress: (props: { route: NavigationRoute }) => void;
+  onTabLongPress: (props: { route: NavigationRoute }) => void;
 };
 
 export default function createTabNavigator<
   Options extends NavigationCommonTabOptions,
-  Props extends NavigationViewProps & CommonProps<Options>
+  Props extends NavigationViewProps & CommonProps
 >(
   TabView: React.ComponentType<Props>
 ): (
@@ -99,7 +97,7 @@ export default function createTabNavigator<
       return null;
     };
 
-    _getLabelText = ({ route }: { route: Route }) => {
+    _getLabelText = ({ route }: { route: NavigationRoute }) => {
       const { descriptors } = this.props;
       const descriptor = descriptors[route.key];
       const options = descriptor.options;
@@ -115,7 +113,7 @@ export default function createTabNavigator<
       return route.routeName;
     };
 
-    _getAccessibilityLabel = ({ route }: { route: Route }) => {
+    _getAccessibilityLabel = ({ route }: { route: NavigationRoute }) => {
       const { descriptors } = this.props;
       const descriptor = descriptors[route.key];
       const options = descriptor.options;
@@ -136,7 +134,7 @@ export default function createTabNavigator<
       return undefined;
     };
 
-    _getTestID = ({ route }: { route: Route }) => {
+    _getTestID = ({ route }: { route: NavigationRoute }) => {
       const { descriptors } = this.props;
       const descriptor = descriptors[route.key];
       const options = descriptor.options;
@@ -148,8 +146,8 @@ export default function createTabNavigator<
       route,
       navigation,
     }: {
-      route: Route;
-      navigation: NavigationProp;
+      route: NavigationRoute;
+      navigation: NavigationTabProp;
     }) => () => {
       if (navigation.isFocused()) {
         if (route.hasOwnProperty('index') && route.index > 0) {
@@ -163,7 +161,7 @@ export default function createTabNavigator<
       }
     };
 
-    _handleTabPress = ({ route }: { route: Route }) => {
+    _handleTabPress = ({ route }: { route: NavigationRoute }) => {
       this._isTabPress = true;
 
       // After tab press, handleIndexChange will be called synchronously
@@ -183,7 +181,7 @@ export default function createTabNavigator<
       }
     };
 
-    _handleTabLongPress = ({ route }: { route: Route }) => {
+    _handleTabLongPress = ({ route }: { route: NavigationRoute }) => {
       const { descriptors } = this.props;
       const descriptor = descriptors[route.key];
       const { navigation, options } = descriptor;
@@ -253,7 +251,14 @@ export default function createTabNavigator<
     }
   }
 
-  return (routes: RouteConfig<Options>, config: Partial<Options> = {}) => {
+  return (
+    routes: RouteConfig<Options>,
+    config: CreateNavigatorConfig<
+      {},
+      NavigationTabRouterConfig,
+      Partial<Options>
+    > = {}
+  ) => {
     const router = TabRouter(routes, config as any);
 
     // TODO: don't have time to fix it right now

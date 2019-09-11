@@ -8,41 +8,21 @@ import {
 } from 'react-native';
 import SafeAreaView from 'react-native-safe-area-view';
 import Animated from 'react-native-reanimated';
+import {
+  NavigationRoute,
+  NavigationState,
+  NavigationScreenProp,
+  NavigationParams,
+  NavigationDescriptor,
+} from 'react-navigation';
 
-export type Route = {
-  key: string;
-  routeName: string;
-} & (NavigationState | undefined);
+export type NavigationTabState = NavigationState;
 
-export type NavigationEventName =
-  | 'willFocus'
-  | 'didFocus'
-  | 'willBlur'
-  | 'didBlur';
-
-export type NavigationState = {
-  key: string;
-  index: number;
-  routes: Route[];
-  isTransitioning?: boolean;
-  params?: { [key: string]: unknown };
-};
-
-export type NavigationProp<RouteName = string, Params = object> = {
-  emit(eventName: string): void;
-  navigate(routeName: RouteName): void;
-  goBack(): void;
-  goBack(key: string | null): void;
-  addListener: (
-    event: NavigationEventName,
-    callback: () => void
-  ) => { remove: () => void };
-  isFocused(): boolean;
-  state: NavigationState;
-  setParams(params: Params): void;
-  getParam(): Params;
-  dispatch(action: { type: string }): boolean;
-  dangerouslyGetParent(): NavigationProp | undefined;
+export type NavigationTabProp<
+  State = NavigationRoute,
+  Params = NavigationParams
+> = NavigationScreenProp<State, Params> & {
+  jumpTo(routeName: string, key?: string): void;
 };
 
 export type ThemedColor =
@@ -75,22 +55,24 @@ export type BottomTabBarOptions = {
 };
 
 export type BottomTabBarProps = BottomTabBarOptions & {
-  navigation: NavigationProp;
-  onTabPress: (props: { route: Route }) => void;
-  onTabLongPress: (props: { route: Route }) => void;
-  getAccessibilityLabel: (props: { route: Route }) => string | undefined;
+  navigation: NavigationTabProp;
+  onTabPress: (props: { route: NavigationRoute }) => void;
+  onTabLongPress: (props: { route: NavigationRoute }) => void;
+  getAccessibilityLabel: (props: {
+    route: NavigationRoute;
+  }) => string | undefined;
   getAccessibilityRole: (props: {
-    route: Route;
+    route: NavigationRoute;
   }) => AccessibilityRole | undefined;
   getAccessibilityStates: (props: {
-    route: Route;
+    route: NavigationRoute;
     focused: boolean;
   }) => AccessibilityState[];
   getButtonComponent: (props: {
-    route: Route;
+    route: NavigationRoute;
   }) => React.ComponentType<any> | undefined;
   getLabelText: (props: {
-    route: Route;
+    route: NavigationRoute;
   }) =>
     | ((scene: {
         focused: boolean;
@@ -99,9 +81,9 @@ export type BottomTabBarProps = BottomTabBarOptions & {
       }) => string | undefined)
     | string
     | undefined;
-  getTestID: (props: { route: Route }) => string | undefined;
+  getTestID: (props: { route: NavigationRoute }) => string | undefined;
   renderIcon: (props: {
-    route: Route;
+    route: NavigationRoute;
     focused: boolean;
     tintColor?: string;
     horizontal?: boolean;
@@ -140,26 +122,28 @@ export type MaterialTabBarProps = MaterialTabBarOptions & {
   position: Animated.Node<number>;
   jumpTo: (key: string) => void;
   getLabelText: (scene: {
-    route: Route;
+    route: NavigationRoute;
   }) =>
     | ((scene: { focused: boolean; tintColor: string }) => string | undefined)
     | string
     | undefined;
-  getAccessible?: (scene: { route: Route }) => boolean | undefined;
-  getAccessibilityLabel: (scene: { route: Route }) => string | undefined;
-  getTestID: (scene: { route: Route }) => string | undefined;
+  getAccessible?: (scene: { route: NavigationRoute }) => boolean | undefined;
+  getAccessibilityLabel: (scene: {
+    route: NavigationRoute;
+  }) => string | undefined;
+  getTestID: (scene: { route: NavigationRoute }) => string | undefined;
   renderIcon: (scene: {
-    route: Route;
+    route: NavigationRoute;
     focused: boolean;
     tintColor: string;
     horizontal?: boolean;
   }) => React.ReactNode;
-  renderBadge?: (scene: { route: Route }) => React.ReactNode;
-  onTabPress?: (scene: { route: Route }) => void;
-  onTabLongPress?: (scene: { route: Route }) => void;
+  renderBadge?: (scene: { route: NavigationRoute }) => React.ReactNode;
+  onTabPress?: (scene: { route: NavigationRoute }) => void;
+  onTabLongPress?: (scene: { route: NavigationRoute }) => void;
   tabBarPosition?: 'top' | 'bottom';
   screenProps: unknown;
-  navigation: NavigationProp;
+  navigation: NavigationTabProp;
 };
 
 export type NavigationCommonTabOptions = {
@@ -176,11 +160,11 @@ export type NavigationCommonTabOptions = {
         horizontal?: boolean;
       }) => React.ReactNode);
   tabBarOnPress?: (props: {
-    navigation: NavigationProp;
+    navigation: NavigationTabProp;
     defaultHandler: () => void;
   }) => void;
   tabBarOnLongPress?: (props: {
-    navigation: NavigationProp;
+    navigation: NavigationTabProp;
     defaultHandler: () => void;
   }) => void;
 };
@@ -194,17 +178,10 @@ export type NavigationMaterialTabOptions = NavigationCommonTabOptions & {
   swipeEnabled?: boolean | ((state: NavigationState) => boolean);
 };
 
-export type SceneDescriptor<Options extends NavigationCommonTabOptions> = {
-  key: string;
-  options: Options;
-  navigation: NavigationProp;
-  getComponent(): React.ComponentType;
-};
-
-export type Screen<
-  Options extends NavigationCommonTabOptions
-> = React.ComponentType<any> & {
-  navigationOptions?: Options & {
-    [key: string]: any;
-  };
+export type SceneDescriptorMap = {
+  [key: string]: NavigationDescriptor<
+    NavigationParams,
+    NavigationBottomTabOptions | NavigationMaterialTabOptions,
+    NavigationTabProp
+  >;
 };

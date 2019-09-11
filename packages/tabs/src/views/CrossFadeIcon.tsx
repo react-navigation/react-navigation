@@ -1,17 +1,17 @@
 import React from 'react';
 import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { Route } from '../types';
+import { NavigationRoute } from 'react-navigation';
 
 type Props = {
-  route: Route;
+  route: NavigationRoute;
   horizontal?: boolean;
   activeOpacity: number;
   inactiveOpacity: number;
   activeTintColor?: string;
   inactiveTintColor?: string;
   renderIcon: (props: {
-    route: Route;
+    route: NavigationRoute;
     focused: boolean;
     tintColor?: string;
     horizontal?: boolean;

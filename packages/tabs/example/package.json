@@ -14,7 +14,7 @@
     "expo-asset": "^6.0.0",
     "expo-constants": "~5.0.1",
     "react": "16.8.3",
-    "react-navigation": "^4.0.1",
+    "react-navigation": "^4.0.3",
     "react-native": "https://github.com/expo/react-native/archive/sdk-33.0.0.tar.gz",
     "react-native-safe-area-view": "0.13.1",
     "react-native-screens": "1.0.0-alpha.22",

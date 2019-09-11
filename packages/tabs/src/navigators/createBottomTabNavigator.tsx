@@ -5,6 +5,7 @@ import {
   AccessibilityRole,
   AccessibilityState,
 } from 'react-native';
+import { NavigationRoute } from 'react-navigation';
 
 // eslint-disable-next-line import/no-unresolved
 import { ScreenContainer } from 'react-native-screens';
@@ -15,26 +16,25 @@ import createTabNavigator, {
 import BottomTabBar from '../views/BottomTabBar';
 import ResourceSavingScene from '../views/ResourceSavingScene';
 import {
-  NavigationProp,
-  Route,
-  SceneDescriptor,
+  NavigationTabProp,
   NavigationBottomTabOptions,
   BottomTabBarOptions,
+  SceneDescriptorMap,
 } from '../types';
 
 type Props = NavigationViewProps & {
   getAccessibilityRole: (props: {
-    route: Route;
+    route: NavigationRoute;
   }) => AccessibilityRole | undefined;
   getAccessibilityStates: (props: {
-    route: Route;
+    route: NavigationRoute;
     focused: boolean;
   }) => AccessibilityState[];
   lazy?: boolean;
   tabBarComponent?: React.ComponentType<any>;
   tabBarOptions?: BottomTabBarOptions;
-  navigation: NavigationProp;
-  descriptors: { [key: string]: SceneDescriptor<NavigationBottomTabOptions> };
+  navigation: NavigationTabProp;
+  descriptors: SceneDescriptorMap;
   screenProps?: unknown;
 };
 
@@ -68,7 +68,7 @@ class TabNavigationView extends React.PureComponent<Props, State> {
     loaded: [this.props.navigation.state.index],
   };
 
-  _getButtonComponent = ({ route }: { route: Route }) => {
+  _getButtonComponent = ({ route }: { route: NavigationRoute }) => {
     const { descriptors } = this.props;
     const descriptor = descriptors[route.key];
     const options = descriptor.options;

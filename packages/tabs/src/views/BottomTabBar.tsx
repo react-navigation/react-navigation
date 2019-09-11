@@ -9,11 +9,11 @@ import {
   LayoutChangeEvent,
 } from 'react-native';
 import SafeAreaView from 'react-native-safe-area-view';
-import { ThemeColors, ThemeContext } from 'react-navigation';
+import { ThemeColors, ThemeContext, NavigationRoute } from 'react-navigation';
 
 import CrossFadeIcon from './CrossFadeIcon';
 import withDimensions from '../utils/withDimensions';
-import { Route, BottomTabBarProps } from '../types';
+import { BottomTabBarProps } from '../types';
 
 type State = {
   layout: { height: number; width: number };
@@ -190,7 +190,13 @@ class TabBarBottom extends React.Component<BottomTabBarProps, State> {
     return inactiveBackgroundColor[this.context];
   };
 
-  _renderLabel = ({ route, focused }: { route: Route; focused: boolean }) => {
+  _renderLabel = ({
+    route,
+    focused,
+  }: {
+    route: NavigationRoute;
+    focused: boolean;
+  }) => {
     const { labelStyle, showLabel, showIcon, allowFontScaling } = this.props;
 
     if (showLabel === false) {
@@ -231,7 +237,13 @@ class TabBarBottom extends React.Component<BottomTabBarProps, State> {
     return label;
   };
 
-  _renderIcon = ({ route, focused }: { route: Route; focused: boolean }) => {
+  _renderIcon = ({
+    route,
+    focused,
+  }: {
+    route: NavigationRoute;
+    focused: boolean;
+  }) => {
     const { renderIcon, showIcon, showLabel } = this.props;
 
     if (showIcon === false) {

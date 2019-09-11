@@ -18,3 +18,14 @@ export { default as MaterialTopTabBar } from './views/MaterialTopTabBar';
  * Utils
  */
 export { default as createTabNavigator } from './utils/createTabNavigator';
+
+/**
+ * Types
+ */
+
+export {
+  NavigationTabState,
+  NavigationTabProp,
+  NavigationBottomTabOptions,
+  NavigationMaterialTabOptions,
+} from './types';
