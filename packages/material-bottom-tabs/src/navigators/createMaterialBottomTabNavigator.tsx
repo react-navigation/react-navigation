@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { StyleProp, ViewStyle } from 'react-native';
 import {
   TabRouter,
   StackActions,
@@ -10,57 +9,18 @@ import {
   NavigationScreenProp,
   NavigationRoute,
   NavigationDescriptor,
+  NavigationRouteConfigMap,
+  NavigationParams,
+  CreateNavigatorConfig,
+  NavigationTabRouterConfig,
 } from 'react-navigation';
 import MaterialBottomTabView from '../views/MaterialBottomTabView';
-
-type NavigationMaterialBottomTabOptions = {
-  shifting?: boolean;
-  labeled?: boolean;
-  activeColor?: string;
-  activeColorLight?: string;
-  activeColorDark?: string;
-  inactiveColor?: string;
-  inactiveColorLight?: string;
-  inactiveColorDark?: string;
-  barStyle?: StyleProp<ViewStyle>;
-  barStyleLight?: StyleProp<ViewStyle>;
-  barStyleDark?: StyleProp<ViewStyle>;
-  title?: string;
-  tabBarLabel?: React.ReactNode;
-  tabBarVisible?: boolean;
-  tabBarAccessibilityLabel?: string;
-  tabBarTestID?: string;
-  tabBarIcon?:
-    | React.ReactNode
-    | ((props: {
-        focused: boolean;
-        tintColor?: string;
-        horizontal?: boolean;
-      }) => React.ReactNode);
-  tabBarOnPress?: (props: {
-    navigation: NavigationScreenProp<any>;
-    defaultHandler: () => void;
-  }) => void;
-};
-
-type Screen<
-  Options extends NavigationMaterialBottomTabOptions
-> = React.ComponentType<any> & {
-  navigationOptions?: Options & {
-    [key: string]: any;
-  };
-};
-
-type RouteConfig<Options> = {
-  [key: string]:
-    | Screen<Options>
-    | ({ screen: Screen<Options> } | { getScreen(): Screen<Options> }) & {
-        path?: string;
-        navigationOptions?:
-          | Options
-          | ((options: { navigation: NavigationScreenProp<any> }) => Options);
-      };
-};
+import {
+  NavigationMaterialBottomTabOptions,
+  NavigationTabState,
+  NavigationMaterialBottomTabConfig,
+  NavigationTabProp,
+} from '../types';
 
 export type RenderIconProps = {
   route: NavigationRoute<any>;
@@ -70,11 +30,12 @@ export type RenderIconProps = {
 };
 
 export type NavigationViewProps = {
-  navigation: NavigationProp<any>;
+  navigation: NavigationProp<NavigationTabState>;
   descriptors: {
     [key: string]: NavigationDescriptor<
-      any,
-      NavigationMaterialBottomTabOptions
+      NavigationParams,
+      NavigationMaterialBottomTabOptions,
+      NavigationTabProp
     >;
   };
   screenProps?: unknown;
@@ -91,8 +52,15 @@ export type NavigationViewProps = {
 };
 
 export default function createMaterialBottomTabNavigator(
-  routes: RouteConfig<NavigationMaterialBottomTabOptions>,
-  config: NavigationMaterialBottomTabOptions
+  routes: NavigationRouteConfigMap<
+    NavigationMaterialBottomTabOptions,
+    NavigationTabProp
+  >,
+  config: CreateNavigatorConfig<
+    NavigationMaterialBottomTabConfig,
+    NavigationTabRouterConfig,
+    NavigationMaterialBottomTabOptions
+  > = {}
 ) {
   class NavigationView extends React.Component<NavigationViewProps> {
     _renderScene = ({ route }: { route: { key: string } }) => {

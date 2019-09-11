@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { StyleProp, ViewStyle } from 'react-native';
 import {
   ThemeContext,
   NavigationRoute,
@@ -7,6 +6,7 @@ import {
   NavigationDescriptor,
 } from 'react-navigation';
 import { BottomNavigation } from 'react-native-paper';
+import { NavigationMaterialBottomTabConfig } from '../types';
 
 type Options = {
   tabBarVisible?: boolean;
@@ -15,25 +15,17 @@ type Options = {
   tabBarColorDark?: string;
 };
 
-type Props = React.ComponentProps<typeof BottomNavigation> & {
-  navigation: NavigationProp<any>;
-  descriptors: { [key: string]: NavigationDescriptor<any, Options> };
-  screenProps?: unknown;
-  renderIcon: (options: {
-    route: NavigationRoute;
-    focused: boolean;
-    tintColor: string;
-  }) => React.ReactNode;
-  activeColor?: string;
-  activeColorLight?: string;
-  activeColorDark?: string;
-  inactiveColor?: string;
-  inactiveColorLight?: string;
-  inactiveColorDark?: string;
-  barStyle?: StyleProp<ViewStyle>;
-  barStyleLight?: StyleProp<ViewStyle>;
-  barStyleDark?: StyleProp<ViewStyle>;
-};
+type Props = React.ComponentProps<typeof BottomNavigation> &
+  NavigationMaterialBottomTabConfig & {
+    navigation: NavigationProp<any>;
+    descriptors: { [key: string]: NavigationDescriptor<any, Options> };
+    screenProps?: unknown;
+    renderIcon: (options: {
+      route: NavigationRoute;
+      focused: boolean;
+      tintColor: string;
+    }) => React.ReactNode;
+  };
 
 export default class MaterialBottomTabView extends React.Component<Props> {
   static contextType = ThemeContext;

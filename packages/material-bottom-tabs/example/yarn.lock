@@ -4318,10 +4318,10 @@ react-navigation-stack@^1.5.4:
   dependencies:
     prop-types "^15.7.2"
 
-react-navigation@^4.0.2:
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/react-navigation/-/react-navigation-4.0.2.tgz#09fe915cdc2436c964b8f85b642eaf8d429305c6"
-  integrity sha512-c95NfoOCTb5GEHUTcngtJ9h9lxU484UftYAZ8oeNWWVW4YPbCuvUqwviUCSq3uT0JVkcEhdUqHekmL+eqYhg8g==
+react-navigation@^4.0.3:
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/react-navigation/-/react-navigation-4.0.3.tgz#ba2cacb71db56e22ee50d774829ebc7fa95a0724"
+  integrity sha512-oASR5gHwd6se1Mw8AM4Ie8GicD5mKzRiYP6oaQujiQroQzQPij9sXxkRSqOscd/Kw1/Hf3htvBX3ZRPbOkWsfA==
   dependencies:
     "@react-navigation/core" "^3.5.0"
     "@react-navigation/native" "^3.6.2"
