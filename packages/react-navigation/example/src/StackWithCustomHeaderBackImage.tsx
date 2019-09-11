@@ -124,7 +124,10 @@ const StackWithCustomHeaderBackImage = createStackNavigator(
     },
   },
   {
-    defaultNavigationOptions: ({ theme }: NavigationScreenConfigProps) => ({
+    // TODO: satya164 - use stack's navigation type
+    defaultNavigationOptions: ({
+      theme,
+    }: NavigationScreenConfigProps<any>) => ({
       headerBackImage: (
         <MyCustomHeaderBackImage
           style={[

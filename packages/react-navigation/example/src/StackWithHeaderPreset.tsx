@@ -1,16 +1,12 @@
 import * as React from 'react';
-import {
-  NavigationScreenProp,
-  NavigationState,
-  SafeAreaView,
-  Themed,
-} from 'react-navigation';
+import { SafeAreaView, Themed } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 
 import { Button } from './commonComponents/ButtonWithMargin';
 
 interface NavScreenProps {
-  navigation: NavigationScreenProp<NavigationState>;
+  // TODO: satya164 - use stack's navigation type
+  navigation: any;
 }
 
 class HomeScreen extends React.Component<NavScreenProps> {
