@@ -1,19 +1,18 @@
 import * as React from 'react';
 import { Platform } from 'react-native';
-import { SceneView, StackActions } from 'react-navigation';
+import { SceneView, StackActions, NavigationRoute } from 'react-navigation';
 import Stack from './Stack';
 import HeaderContainer, {
   Props as HeaderContainerProps,
 } from '../Header/HeaderContainer';
 import {
-  NavigationProp,
+  NavigationStackProp,
   NavigationStackConfig,
-  Route,
   SceneDescriptorMap,
 } from '../../types';
 
 type Props = {
-  navigation: NavigationProp;
+  navigation: NavigationStackProp;
   descriptors: SceneDescriptorMap;
   navigationConfig: NavigationStackConfig;
   onPageChangeStart?: () => void;
@@ -24,7 +23,7 @@ type Props = {
 
 type State = {
   // Local copy of the routes which are actually rendered
-  routes: Route[];
+  routes: NavigationRoute[];
   // List of routes being opened, we need to animate pushing of these new routes
   opening: string[];
   // List of routes being closed, we need to animate popping of these routes
@@ -85,7 +84,7 @@ class StackView extends React.Component<Props, State> {
       // We only need to animate routes if the focused route changed
       // Animating previous routes won't be visible coz the focused route is on top of everything
 
-      const isAnimationEnabled = (route: Route) => {
+      const isAnimationEnabled = (route: NavigationRoute) => {
         const descriptor =
           props.descriptors[route.key] || state.descriptors[route.key];
 
@@ -175,7 +174,7 @@ class StackView extends React.Component<Props, State> {
     descriptors: {},
   };
 
-  private getGesturesEnabled = ({ route }: { route: Route }) => {
+  private getGesturesEnabled = ({ route }: { route: NavigationRoute }) => {
     const descriptor = this.state.descriptors[route.key];
 
     if (descriptor) {
@@ -195,7 +194,7 @@ class StackView extends React.Component<Props, State> {
     return false;
   };
 
-  private getPreviousRoute = ({ route }: { route: Route }) => {
+  private getPreviousRoute = ({ route }: { route: NavigationRoute }) => {
     const { closing, replacing } = this.state;
     const routes = this.state.routes.filter(
       r =>
@@ -207,7 +206,7 @@ class StackView extends React.Component<Props, State> {
     return routes[index - 1];
   };
 
-  private renderScene = ({ route }: { route: Route }) => {
+  private renderScene = ({ route }: { route: NavigationRoute }) => {
     const descriptor =
       this.state.descriptors[route.key] || this.props.descriptors[route.key];
 
@@ -236,14 +235,14 @@ class StackView extends React.Component<Props, State> {
     this.props.navigation.dispatch(StackActions.completeTransition());
   };
 
-  private handleGoBack = ({ route }: { route: Route }) => {
+  private handleGoBack = ({ route }: { route: NavigationRoute }) => {
     // This event will trigger when a gesture ends
     // We need to perform the transition before removing the route completely
     // @ts-ignore
     this.props.navigation.dispatch(StackActions.pop({ key: route.key }));
   };
 
-  private handleOpenRoute = ({ route }: { route: Route }) => {
+  private handleOpenRoute = ({ route }: { route: NavigationRoute }) => {
     this.handleTransitionComplete();
     this.setState(state => ({
       routes: state.replacing.length
@@ -255,7 +254,7 @@ class StackView extends React.Component<Props, State> {
     }));
   };
 
-  private handleCloseRoute = ({ route }: { route: Route }) => {
+  private handleCloseRoute = ({ route }: { route: NavigationRoute }) => {
     this.handleTransitionComplete();
 
     // This event will trigger when the animation for closing the route ends

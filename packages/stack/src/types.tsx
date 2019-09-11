@@ -5,44 +5,47 @@ import {
   LayoutChangeEvent,
 } from 'react-native';
 import Animated from 'react-native-reanimated';
+import {
+  NavigationRoute,
+  NavigationState,
+  NavigationScreenProp,
+  NavigationParams,
+  NavigationNavigateAction,
+  NavigationAction,
+  NavigationEventCallback,
+  NavigationEventSubscription,
+  NavigationDescriptor,
+} from 'react-navigation';
 
-export type Route = {
-  key: string;
-  routeName: string;
-};
-
-export type NavigationEventName =
+export type NavigationStackEventName =
   | 'willFocus'
   | 'didFocus'
   | 'willBlur'
   | 'didBlur';
 
-export type NavigationState = {
-  key: string;
-  index: number;
-  routes: Route[];
-  transitions: {
-    pushing: string[];
-    popping: string[];
-  };
-  params?: { [key: string]: unknown };
-};
+export type NavigationStackState = NavigationState;
 
-export type NavigationProp<RouteName = string, Params = object> = {
-  navigate(routeName: RouteName): void;
-  goBack(): void;
-  goBack(key: string | null): void;
+export type NavigationStackProp<
+  State = NavigationRoute,
+  Params = NavigationParams
+> = NavigationScreenProp<State, Params> & {
+  push: (
+    routeName: string,
+    params?: NavigationParams,
+    action?: NavigationNavigateAction
+  ) => boolean;
+  replace: (
+    routeName: string,
+    params?: NavigationParams,
+    action?: NavigationNavigateAction
+  ) => boolean;
+  reset: (actions: NavigationAction[], index: number) => boolean;
+  pop: (n?: number, params?: { immediate?: boolean }) => boolean;
+  popToTop: (params?: { immediate?: boolean }) => boolean;
   addListener: (
-    event: NavigationEventName,
-    callback: () => void
-  ) => { remove: () => void };
-  isFocused(): boolean;
-  state: NavigationState;
-  setParams(params: Params): void;
-  getParam(): Params;
-  dispatch(action: { type: string }): boolean;
-  isFirstRouteInParent(): boolean;
-  dangerouslyGetParent(): NavigationProp | undefined;
+    event: NavigationStackEventName,
+    callback: NavigationEventCallback
+  ) => NavigationEventSubscription;
 };
 
 export type Layout = { width: number; height: number };
@@ -51,9 +54,9 @@ export type GestureDirection = 'horizontal' | 'vertical' | 'vertical-inverted';
 
 export type HeaderMode = 'float' | 'screen' | 'none';
 
-export type HeaderScene<T> = {
+export type HeaderScene<T = NavigationRoute> = {
   route: T;
-  descriptor: SceneDescriptor;
+  descriptor: NavigationDescriptor<NavigationParams, NavigationStackOptions>;
   progress: {
     current: Animated.Node<number>;
     next?: Animated.Node<number>;
@@ -89,9 +92,9 @@ export type HeaderOptions = {
 export type HeaderProps = {
   mode: 'float' | 'screen';
   layout: Layout;
-  scene: HeaderScene<Route>;
-  previous?: HeaderScene<Route>;
-  navigation: NavigationProp;
+  scene: HeaderScene;
+  previous?: HeaderScene;
+  navigation: NavigationStackProp;
   styleInterpolator: HeaderStyleInterpolator;
 };
 
@@ -123,14 +126,15 @@ export type NavigationStackConfig = {
   disableKeyboardHandling?: boolean;
 };
 
-export type SceneDescriptor = {
-  key: string;
-  options: NavigationStackOptions;
-  navigation: NavigationProp;
-  getComponent(): React.ComponentType;
+export type SceneDescriptorMap = {
+  [key: string]:
+    | NavigationDescriptor<
+        NavigationParams,
+        NavigationStackOptions,
+        NavigationStackProp
+      >
+    | undefined;
 };
-
-export type SceneDescriptorMap = { [key: string]: SceneDescriptor | undefined };
 
 export type HeaderBackButtonProps = {
   disabled?: boolean;
@@ -154,12 +158,6 @@ export type HeaderTitleProps = {
   allowFontScaling?: boolean;
   children?: string;
   style?: StyleProp<TextStyle>;
-};
-
-export type Screen = React.ComponentType<any> & {
-  navigationOptions?: NavigationStackOptions & {
-    [key: string]: any;
-  };
 };
 
 export type SpringConfig = {

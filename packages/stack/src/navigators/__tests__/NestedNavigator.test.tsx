@@ -17,7 +17,7 @@ const NavNestedDirect = StackNavigator({
 
 const NavNestedIndirect = StackNavigator({
   Sub: {
-    screen: props => <SubNavigator {...props} />,
+    screen: (props: any) => <SubNavigator {...props} />,
   },
 });
 

@@ -7,6 +7,7 @@ import {
   Platform,
   ViewProps,
 } from 'react-native';
+import { NavigationRoute } from 'react-navigation';
 import Animated from 'react-native-reanimated';
 import * as Screens from 'react-native-screens'; // Import with * as to prevent getters being called
 import { getDefaultHeaderHeight } from '../Header/HeaderSegment';
@@ -18,10 +19,9 @@ import {
 } from '../../TransitionConfigs/TransitionPresets';
 import { forNoAnimation } from '../../TransitionConfigs/HeaderStyleInterpolators';
 import {
-  Route,
   Layout,
   HeaderMode,
-  NavigationProp,
+  NavigationStackProp,
   HeaderScene,
   SceneDescriptorMap,
   NavigationStackOptions,
@@ -33,18 +33,20 @@ type ProgressValues = {
 
 type Props = {
   mode: 'card' | 'modal';
-  navigation: NavigationProp;
+  navigation: NavigationStackProp;
   descriptors: SceneDescriptorMap;
-  routes: Route[];
+  routes: NavigationRoute[];
   openingRoutes: string[];
   closingRoutes: string[];
-  onGoBack: (props: { route: Route }) => void;
-  onOpenRoute: (props: { route: Route }) => void;
-  onCloseRoute: (props: { route: Route }) => void;
-  getPreviousRoute: (props: { route: Route }) => Route | undefined;
-  getGesturesEnabled: (props: { route: Route }) => boolean;
+  onGoBack: (props: { route: NavigationRoute }) => void;
+  onOpenRoute: (props: { route: NavigationRoute }) => void;
+  onCloseRoute: (props: { route: NavigationRoute }) => void;
+  getPreviousRoute: (props: {
+    route: NavigationRoute;
+  }) => NavigationRoute | undefined;
+  getGesturesEnabled: (props: { route: NavigationRoute }) => boolean;
   renderHeader: (props: HeaderContainerProps) => React.ReactNode;
-  renderScene: (props: { route: Route }) => React.ReactNode;
+  renderScene: (props: { route: NavigationRoute }) => React.ReactNode;
   headerMode: HeaderMode;
   onPageChangeStart?: () => void;
   onPageChangeConfirm?: () => void;
@@ -52,9 +54,9 @@ type Props = {
 };
 
 type State = {
-  routes: Route[];
+  routes: NavigationRoute[];
   descriptors: SceneDescriptorMap;
-  scenes: HeaderScene<Route>[];
+  scenes: HeaderScene<NavigationRoute>[];
   progress: ProgressValues;
   layout: Layout;
   floatingHeaderHeights: { [key: string]: number };
@@ -105,7 +107,7 @@ const { cond, eq } = Animated;
 const ANIMATED_ONE = new Animated.Value(1);
 
 const getFloatingHeaderHeights = (
-  routes: Route[],
+  routes: NavigationRoute[],
   layout: Layout,
   previous: { [key: string]: number }
 ) => {
@@ -237,7 +239,7 @@ export default class Stack extends React.Component<Props, State> {
     route,
     height,
   }: {
-    route: Route;
+    route: NavigationRoute;
     height: number;
   }) => {
     const previousHeight = this.state.floatingHeaderHeights[route.key];
@@ -255,7 +257,7 @@ export default class Stack extends React.Component<Props, State> {
   };
 
   private handleTransitionStart = (
-    { route }: { route: Route },
+    { route }: { route: NavigationRoute },
     closing: boolean
   ) => {
     const { descriptors } = this.props;
@@ -267,7 +269,7 @@ export default class Stack extends React.Component<Props, State> {
   };
 
   private handleTransitionEnd = (
-    { route }: { route: Route },
+    { route }: { route: NavigationRoute },
     closing: boolean
   ) => {
     const descriptor = this.props.descriptors[route.key];

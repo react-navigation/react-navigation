@@ -31,3 +31,13 @@ export { CardStyleInterpolators, HeaderStyleInterpolators, TransitionPresets };
  */
 
 export { default as StackGestureContext } from './utils/StackGestureContext';
+
+/**
+ * Types
+ */
+export {
+  NavigationStackState,
+  NavigationStackProp,
+  NavigationStackOptions,
+  NavigationStackConfig,
+} from './types';

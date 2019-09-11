@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
+import { NavigationRoute } from 'react-navigation';
 import {
   Layout,
-  Route,
   HeaderScene,
-  NavigationProp,
+  NavigationStackProp,
   HeaderStyleInterpolator,
 } from '../../types';
 import Header from './Header';
@@ -13,10 +13,15 @@ import { forStatic } from '../../TransitionConfigs/HeaderStyleInterpolators';
 export type Props = {
   mode: 'float' | 'screen';
   layout: Layout;
-  scenes: Array<HeaderScene<Route> | undefined>;
-  navigation: NavigationProp;
-  getPreviousRoute: (props: { route: Route }) => Route | undefined;
-  onContentHeightChange?: (props: { route: Route; height: number }) => void;
+  scenes: Array<HeaderScene | undefined>;
+  navigation: NavigationStackProp;
+  getPreviousRoute: (props: {
+    route: NavigationRoute;
+  }) => NavigationRoute | undefined;
+  onContentHeightChange?: (props: {
+    route: NavigationRoute;
+    height: number;
+  }) => void;
   styleInterpolator: HeaderStyleInterpolator;
   style?: StyleProp<ViewStyle>;
 };
@@ -78,7 +83,7 @@ export default function HeaderContainer({
           layout,
           scene,
           previous,
-          navigation: scene.descriptor.navigation,
+          navigation: scene.descriptor.navigation as NavigationStackProp,
           styleInterpolator: isHeaderStatic ? forStatic : styleInterpolator,
         };
 

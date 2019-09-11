@@ -1,29 +1,30 @@
 import * as React from 'react';
-import { StackRouter, createNavigator } from 'react-navigation';
+import {
+  StackRouter,
+  createNavigator,
+  NavigationRouteConfigMap,
+  NavigationStackRouterConfig,
+  CreateNavigatorConfig,
+} from 'react-navigation';
 import { Platform } from 'react-native';
 import StackView from '../views/Stack/StackView';
 import {
   NavigationStackConfig,
   NavigationStackOptions,
-  NavigationProp,
-  Screen,
+  NavigationStackProp,
 } from '../types';
 import KeyboardManager from '../views/KeyboardManager';
 
 function createStackNavigator(
-  routeConfigMap: {
-    [key: string]:
-      | Screen
-      | ({ screen: Screen } | { getScreen(): Screen }) & {
-          path?: string;
-          navigationOptions?:
-            | NavigationStackOptions
-            | ((options: {
-                navigation: NavigationProp;
-              }) => NavigationStackOptions);
-        };
-  },
-  stackConfig: NavigationStackConfig = {}
+  routeConfigMap: NavigationRouteConfigMap<
+    NavigationStackOptions,
+    NavigationStackProp
+  >,
+  stackConfig: CreateNavigatorConfig<
+    NavigationStackConfig,
+    NavigationStackRouterConfig,
+    NavigationStackOptions
+  > = {}
 ) {
   const router = StackRouter(routeConfigMap, stackConfig);
 

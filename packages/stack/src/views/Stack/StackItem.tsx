@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { StyleSheet, Platform, StyleProp, ViewStyle } from 'react-native';
 import Animated from 'react-native-reanimated';
+import { NavigationRoute } from 'react-navigation';
 import { Props as HeaderContainerProps } from '../Header/HeaderContainer';
 import Card from './Card';
 import {
-  Route,
   HeaderScene,
   Layout,
   HeaderMode,
-  NavigationProp,
+  NavigationStackProp,
   TransitionPreset,
 } from '../../types';
 
@@ -19,22 +19,30 @@ type Props = TransitionPreset & {
   closing: boolean;
   layout: Layout;
   current: Animated.Value<number>;
-  previousScene?: HeaderScene<Route>;
-  scene: HeaderScene<Route>;
-  navigation: NavigationProp;
+  previousScene?: HeaderScene;
+  scene: HeaderScene;
+  navigation: NavigationStackProp;
   cardTransparent?: boolean;
   cardOverlayEnabled?: boolean;
   cardShadowEnabled?: boolean;
   cardStyle?: StyleProp<ViewStyle>;
   gestureEnabled?: boolean;
-  getPreviousRoute: (props: { route: Route }) => Route | undefined;
+  getPreviousRoute: (props: {
+    route: NavigationRoute;
+  }) => NavigationRoute | undefined;
   renderHeader: (props: HeaderContainerProps) => React.ReactNode;
-  renderScene: (props: { route: Route }) => React.ReactNode;
-  onOpenRoute: (props: { route: Route }) => void;
-  onCloseRoute: (props: { route: Route }) => void;
-  onGoBack: (props: { route: Route }) => void;
-  onTransitionStart?: (props: { route: Route }, closing: boolean) => void;
-  onTransitionEnd?: (props: { route: Route }, closing: boolean) => void;
+  renderScene: (props: { route: NavigationRoute }) => React.ReactNode;
+  onOpenRoute: (props: { route: NavigationRoute }) => void;
+  onCloseRoute: (props: { route: NavigationRoute }) => void;
+  onGoBack: (props: { route: NavigationRoute }) => void;
+  onTransitionStart?: (
+    props: { route: NavigationRoute },
+    closing: boolean
+  ) => void;
+  onTransitionEnd?: (
+    props: { route: NavigationRoute },
+    closing: boolean
+  ) => void;
   onPageChangeStart?: () => void;
   onPageChangeConfirm?: () => void;
   onPageChangeCancel?: () => void;

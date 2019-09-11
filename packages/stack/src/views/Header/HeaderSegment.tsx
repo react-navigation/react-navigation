@@ -14,7 +14,6 @@ import memoize from '../../utils/memoize';
 import {
   Layout,
   HeaderStyleInterpolator,
-  Route,
   HeaderBackButtonProps,
   HeaderTitleProps,
   HeaderOptions,
@@ -32,7 +31,7 @@ type Props = HeaderOptions & {
   onGoBack?: () => void;
   title?: string;
   leftLabel?: string;
-  scene: HeaderScene<Route>;
+  scene: HeaderScene;
   styleInterpolator: HeaderStyleInterpolator;
 };
 
