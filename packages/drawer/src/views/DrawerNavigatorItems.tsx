@@ -1,37 +1,15 @@
 import * as React from 'react';
-import { View, Text, StyleSheet, ViewStyle, TextStyle } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { SafeAreaView, ThemeContext } from 'react-navigation';
 import TouchableItem from './TouchableItem';
-import { Scene, Route } from '../types';
-
-export type ThemedColor = {
-  light: string;
-  dark: string;
-};
-
-export type Props = {
-  items: Route[];
-  activeItemKey?: string | null;
-  activeTintColor?: string | ThemedColor;
-  activeBackgroundColor?: string | ThemedColor;
-  inactiveTintColor?: string | ThemedColor;
-  inactiveBackgroundColor?: string | ThemedColor;
-  getLabel: (scene: Scene) => React.ReactNode;
-  renderIcon: (scene: Scene) => React.ReactNode;
-  onItemPress: (scene: { route: Route; focused: boolean }) => void;
-  itemsContainerStyle?: ViewStyle;
-  itemStyle?: ViewStyle;
-  labelStyle?: TextStyle;
-  activeLabelStyle?: TextStyle;
-  inactiveLabelStyle?: TextStyle;
-  iconContainerStyle?: ViewStyle;
-  drawerPosition: 'left' | 'right';
-};
+import { DrawerNavigatorItemsProps } from '../types';
 
 /**
  * Component that renders the navigation list in the drawer.
  */
-export default class DrawerNavigatorItems extends React.Component<Props, any> {
+export default class DrawerNavigatorItems extends React.Component<
+  DrawerNavigatorItemsProps
+> {
   /* Material design specs - https://material.io/guidelines/patterns/navigation-drawer.html#navigation-drawer-specs */
   static defaultProps = {
     activeTintColor: {

@@ -1,24 +1,25 @@
 import * as React from 'react';
-import { StyleSheet, View, Animated, ViewStyle } from 'react-native';
-import { NavigationActions } from 'react-navigation';
-
-import { Props as DrawerNavigatorItemsProps } from './DrawerNavigatorItems';
-import { Navigation, Scene, Route } from '../types';
-
-export type ContentComponentProps = DrawerNavigatorItemsProps & {
-  navigation: Navigation;
-  descriptors: { [key: string]: any };
-  drawerOpenProgress: Animated.AnimatedInterpolation;
-  screenProps: unknown;
-};
+import { StyleSheet, View, ViewStyle } from 'react-native';
+import {
+  NavigationActions,
+  NavigationRoute,
+  NavigationProp,
+} from 'react-navigation';
+import Animated from 'react-native-reanimated';
+import {
+  Scene,
+  NavigationDrawerState,
+  ContentComponentProps,
+  SceneDescriptorMap,
+} from '../types';
 
 type Props = {
   contentComponent?: React.ComponentType<ContentComponentProps>;
   contentOptions?: object;
   screenProps?: unknown;
-  navigation: Navigation;
-  descriptors: { [key: string]: any };
-  drawerOpenProgress: Animated.AnimatedInterpolation;
+  navigation: NavigationProp<NavigationDrawerState>;
+  descriptors: SceneDescriptorMap;
+  drawerOpenProgress: Animated.Node<number>;
   drawerPosition: 'left' | 'right';
   style?: ViewStyle;
 };
@@ -68,10 +69,11 @@ class DrawerSidebar extends React.PureComponent<Props> {
     route,
     focused,
   }: {
-    route: Route;
+    route: NavigationRoute;
     focused: boolean;
   }) => {
     if (focused) {
+      // @ts-ignore
       this.props.navigation.closeDrawer();
     } else {
       this.props.navigation.dispatch(

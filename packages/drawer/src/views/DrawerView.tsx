@@ -9,11 +9,15 @@ import {
 import { ScreenContainer } from 'react-native-screens';
 
 import * as DrawerActions from '../routers/DrawerActions';
-import DrawerSidebar, { ContentComponentProps } from './DrawerSidebar';
+import DrawerSidebar from './DrawerSidebar';
 import DrawerGestureContext from '../utils/DrawerGestureContext';
 import ResourceSavingScene from './ResourceSavingScene';
 import Drawer from './Drawer';
-import { Navigation } from '../types';
+import {
+  NavigationDrawerState,
+  ContentComponentProps,
+  SceneDescriptorMap,
+} from '../types';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 
 type DrawerOptions = {
@@ -37,14 +41,8 @@ type DrawerOptions = {
 
 type Props = {
   lazy: boolean;
-  navigation: Navigation;
-  descriptors: {
-    [key: string]: {
-      navigation: NavigationProp<any>;
-      getComponent: () => React.ComponentType<{}>;
-      options: DrawerOptions;
-    };
-  };
+  navigation: NavigationProp<NavigationDrawerState>;
+  descriptors: SceneDescriptorMap;
   navigationConfig: DrawerOptions & {
     contentComponent?: React.ComponentType<ContentComponentProps>;
     unmountInactiveRoutes?: boolean;

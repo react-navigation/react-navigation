@@ -21,3 +21,14 @@ export { default as DrawerSidebar } from './views/DrawerSidebar';
 export { default as DrawerView } from './views/DrawerView';
 
 export { default as DrawerGestureContext } from './utils/DrawerGestureContext';
+
+/**
+ * Types
+ */
+export {
+  NavigationDrawerState,
+  NavigationDrawerProp,
+  NavigationDrawerOptions,
+  NavigationDrawerConfig,
+  NavigationDrawerRouterConfig,
+} from './types';

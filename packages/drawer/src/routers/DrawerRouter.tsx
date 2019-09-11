@@ -3,6 +3,7 @@ import {
   NavigationActions,
   NavigationAction,
   NavigationRoute,
+  NavigationRouteConfigMap,
 } from 'react-navigation';
 import * as DrawerActions from './DrawerActions';
 
@@ -34,7 +35,7 @@ const getActiveRouteKey = (route: NavigationRoute): string => {
 };
 
 export default (
-  routeConfigs: object,
+  routeConfigs: NavigationRouteConfigMap<any, any>,
   config: {
     unmountInactiveRoutes?: boolean;
     resetOnBlur?: boolean;

@@ -1,15 +1,24 @@
 import * as React from 'react';
 import { Dimensions, Platform, ScrollView, I18nManager } from 'react-native';
-import { createNavigator, ThemeColors, SafeAreaView } from 'react-navigation';
+import {
+  createNavigator,
+  ThemeColors,
+  SafeAreaView,
+  NavigationRouteConfigMap,
+  CreateNavigatorConfig,
+} from 'react-navigation';
 import DrawerRouter from '../routers/DrawerRouter';
 import DrawerView from '../views/DrawerView';
-import DrawerItems, { Props } from '../views/DrawerNavigatorItems';
+import DrawerItems from '../views/DrawerNavigatorItems';
+import {
+  NavigationDrawerOptions,
+  NavigationDrawerProp,
+  NavigationDrawerConfig,
+  NavigationDrawerRouterConfig,
+  ContentComponentProps,
+} from '../types';
 
-// A stack navigators props are the intersection between
-// the base navigator props (navgiation, screenProps, etc)
-// and the view's props
-
-const defaultContentComponent = (props: Props) => (
+const defaultContentComponent = (props: ContentComponentProps) => (
   <ScrollView alwaysBounceVertical={false}>
     <SafeAreaView forceInset={{ top: 'always', horizontal: 'never' }}>
       <DrawerItems {...props} />
@@ -17,7 +26,7 @@ const defaultContentComponent = (props: Props) => (
   </ScrollView>
 );
 
-const DefaultDrawerConfig = {
+const DefaultDrawerConfig: NavigationDrawerConfig = {
   drawerWidth: () => {
     /*
      * Default drawer width is screen width - header height
@@ -49,7 +58,17 @@ const DefaultDrawerConfig = {
   statusBarAnimation: 'slide',
 };
 
-const DrawerNavigator = (routeConfigs: object, config: any = {}) => {
+const DrawerNavigator = (
+  routeConfigs: NavigationRouteConfigMap<
+    NavigationDrawerOptions,
+    NavigationDrawerProp
+  >,
+  config: CreateNavigatorConfig<
+    NavigationDrawerConfig,
+    NavigationDrawerRouterConfig,
+    NavigationDrawerProp
+  > = {}
+) => {
   const mergedConfig = { ...DefaultDrawerConfig, ...config };
   const drawerRouter = DrawerRouter(routeConfigs, mergedConfig);
 
