@@ -18,7 +18,7 @@ import {
 
 type RouteConfig<Options> = NavigationRouteConfigMap<
   Options,
-  NavigationTabProp
+  NavigationTabProp<NavigationRoute, any>
 >;
 
 type CommonProps = {
@@ -62,7 +62,7 @@ export default function createTabNavigator<
     {},
     NavigationTabRouterConfig,
     Partial<Options>,
-    NavigationTabProp
+    NavigationTabProp<NavigationRoute, any>
   >
 ) => React.ComponentType<
   Pick<Props, Exclude<keyof Props, keyof NavigationViewProps>> & ExtraProps
@@ -262,7 +262,7 @@ export default function createTabNavigator<
       {},
       NavigationTabRouterConfig,
       Partial<Options>,
-      NavigationTabProp
+      NavigationTabProp<NavigationRoute, any>
     > = {}
   ) => {
     const router = TabRouter(routes, config as any);
