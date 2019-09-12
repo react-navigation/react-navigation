@@ -6,10 +6,16 @@ import Article from './Shared/Article';
 import Chat from './Shared/Chat';
 import Contacts from './Shared/Contacts';
 
-// eslint-disable-next-line import/default
+// @ts-ignore
 import TouchableBounce from 'react-native/Libraries/Components/Touchable/TouchableBounce';
 
-const tabBarIcon = name => ({ tintColor, horizontal }) => (
+const tabBarIcon = (name: string) => ({
+  tintColor,
+  horizontal,
+}: {
+  tintColor: string;
+  horizontal: boolean;
+}) => (
   <MaterialIcons name={name} color={tintColor} size={horizontal ? 17 : 24} />
 );
 
@@ -61,9 +67,14 @@ class ContactsScreen extends React.Component {
   }
 }
 
-export default createBottomTabNavigator({
-  AlbumsScreen,
-  ArticleScreen,
-  ChatScreen,
-  ContactsScreen,
-});
+export default createBottomTabNavigator(
+  {
+    AlbumsScreen,
+    ArticleScreen,
+    ChatScreen,
+    ContactsScreen,
+  },
+  {
+    initialRouteName: 'AlbumsScreen',
+  }
+);

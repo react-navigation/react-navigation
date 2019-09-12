@@ -1,5 +1,3 @@
-/* @flow */
-
 import * as React from 'react';
 import { View, Image, Text, ScrollView, StyleSheet } from 'react-native';
 
@@ -10,7 +8,7 @@ const MESSAGES = [
   'make me a sandwich',
 ];
 
-export default class Albums extends React.Component<*> {
+export default class Albums extends React.Component {
   render() {
     return (
       <View style={styles.container}>

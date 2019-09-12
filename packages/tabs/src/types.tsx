@@ -14,6 +14,8 @@ import {
   NavigationScreenProp,
   NavigationParams,
   NavigationDescriptor,
+  NavigationScreenConfig,
+  SupportedThemes,
 } from 'react-navigation';
 
 export type NavigationTabState = NavigationState;
@@ -176,6 +178,35 @@ export type NavigationBottomTabOptions = NavigationCommonTabOptions & {
 export type NavigationMaterialTabOptions = NavigationCommonTabOptions & {
   tabBarButtonComponent?: React.ComponentType<any>;
   swipeEnabled?: boolean | ((state: NavigationState) => boolean);
+};
+
+export type NavigationTabScreenProps<
+  Params = NavigationParams,
+  ScreenProps = unknown
+> = {
+  theme: SupportedThemes;
+  navigation: NavigationTabProp<NavigationRoute, Params>;
+  screenProps: ScreenProps;
+};
+
+export type NavigationMaterialTabScreenComponent<
+  Params = NavigationParams,
+  ScreenProps = unknown
+> = React.ComponentType<NavigationTabScreenProps<Params, ScreenProps>> & {
+  navigationOptions?: NavigationScreenConfig<
+    NavigationMaterialTabOptions,
+    NavigationTabProp<NavigationRoute, Params>
+  >;
+};
+
+export type NavigationBottomTabScreenComponent<
+  Params = NavigationParams,
+  ScreenProps = unknown
+> = React.ComponentType<NavigationTabScreenProps<Params, ScreenProps>> & {
+  navigationOptions?: NavigationScreenConfig<
+    NavigationBottomTabOptions,
+    NavigationTabProp<NavigationRoute, Params>
+  >;
 };
 
 export type SceneDescriptorMap = {

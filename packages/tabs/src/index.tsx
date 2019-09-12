@@ -22,10 +22,12 @@ export { default as createTabNavigator } from './utils/createTabNavigator';
 /**
  * Types
  */
-
 export {
   NavigationTabState,
   NavigationTabProp,
+  NavigationTabScreenProps,
   NavigationBottomTabOptions,
   NavigationMaterialTabOptions,
+  NavigationBottomTabScreenComponent,
+  NavigationMaterialTabScreenComponent,
 } from './types';

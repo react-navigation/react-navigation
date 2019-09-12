@@ -15,6 +15,8 @@
   },
 
   "rules": {
-    "import/named": "off"
+    "import/named": "off",
+    "import/default": "off",
+    "import/namespace": "off",
   }
 }

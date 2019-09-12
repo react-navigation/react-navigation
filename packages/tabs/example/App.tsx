@@ -4,6 +4,7 @@ import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import {
   Assets as StackAssets,
   createStackNavigator,
+  NavigationStackScreenProps,
 } from 'react-navigation-stack';
 import {
   Themed,
@@ -20,7 +21,7 @@ import MaterialTopTabs from './src/MaterialTopTabs';
 // Load the back button etc
 Asset.loadAsync(StackAssets);
 
-const Home = props => {
+const Home = (props: NavigationStackScreenProps) => {
   let theme = useTheme();
 
   return (
@@ -62,7 +63,7 @@ const List = createStackNavigator({
 const Navigation = createAppContainer(List);
 
 const App = () => {
-  let [theme, setTheme] = React.useState('light');
+  let [theme, setTheme] = React.useState<'light' | 'dark'>('light');
 
   return (
     <View style={styles.container}>
@@ -97,7 +98,7 @@ const styles = {
     flex: 1,
   },
   buttonContainer: {
-    position: 'absolute',
+    position: 'absolute' as const,
     bottom: 60,
     right: 20,
   },
@@ -111,8 +112,8 @@ const styles = {
     borderRadius: 25,
     width: 50,
     height: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
     elevation: 5,
     borderWidth: 1,
   },
@@ -130,4 +131,5 @@ const styles = {
   },
 };
 
+// @ts-ignore
 registerRootComponent(App);
