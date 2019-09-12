@@ -4,6 +4,8 @@ import {
   NavigationState,
   NavigationScreenProp,
   NavigationParams,
+  NavigationScreenConfig,
+  SupportedThemes,
 } from 'react-navigation';
 
 export type NavigationTabState = NavigationState;
@@ -84,4 +86,23 @@ export type NavigationMaterialBottomTabConfig = {
   barStyleLight?: StyleProp<ViewStyle>;
   barStyleDark?: StyleProp<ViewStyle>;
   style?: StyleProp<ViewStyle>;
+};
+
+export type NavigationTabScreenProps<
+  Params = NavigationParams,
+  ScreenProps = unknown
+> = {
+  theme: SupportedThemes;
+  navigation: NavigationTabProp<NavigationRoute, Params>;
+  screenProps: ScreenProps;
+};
+
+export type NavigationMaterialBottomTabScreenComponent<
+  Params = NavigationParams,
+  ScreenProps = unknown
+> = React.ComponentType<NavigationTabScreenProps<Params, ScreenProps>> & {
+  navigationOptions?: NavigationScreenConfig<
+    NavigationMaterialBottomTabOptions,
+    NavigationTabProp<NavigationRoute, Params>
+  >;
 };

@@ -54,12 +54,13 @@ export type NavigationViewProps = {
 export default function createMaterialBottomTabNavigator(
   routes: NavigationRouteConfigMap<
     NavigationMaterialBottomTabOptions,
-    NavigationTabProp
+    NavigationTabProp<NavigationRoute, any>
   >,
   config: CreateNavigatorConfig<
     NavigationMaterialBottomTabConfig,
     NavigationTabRouterConfig,
-    NavigationMaterialBottomTabOptions
+    NavigationMaterialBottomTabOptions,
+    NavigationTabProp<NavigationRoute, any>
   > = {}
 ) {
   class NavigationView extends React.Component<NavigationViewProps> {
