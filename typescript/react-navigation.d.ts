@@ -200,7 +200,7 @@ declare module 'react-navigation' {
     | Options
     | ((
         navigationOptionsContainer: NavigationScreenConfigProps<NavigationScreenPropType> & {
-          navigationOptions: NavigationScreenConfig<Options, NavigationScreenPropType>;
+          navigationOptions: Options;
         }
       ) => Options);
 
@@ -439,6 +439,7 @@ declare module 'react-navigation' {
         | { screen: NavigationComponent<Options, NavigationScreenPropType> }
         | { getScreen(): NavigationScreenComponent<Options, NavigationScreenPropType> }) & {
         navigationOptions?: NavigationScreenConfig<Options, NavigationScreenPropType>;
+        params?: { [key: string]: any }
         path?: string;
       };
 
@@ -745,9 +746,9 @@ declare module 'react-navigation' {
     } & NavigationInjectedProps
   >;
 
-  export type CreateNavigatorConfig<NavigatorConfig, RouterConfig, Options> = NavigatorConfig & RouterConfig & {
-    defaultNavigationOptions?: Options;
-    navigationOptions?: { [key: string]: any };
+  export type CreateNavigatorConfig<NavigatorConfig, RouterConfig, Options, NavigationScreenPropType> = NavigatorConfig & RouterConfig & {
+    defaultNavigationOptions?: NavigationScreenConfig<Options, NavigationScreenPropType>;
+    navigationOptions?: NavigationScreenConfig<{ [key: string]: any }, NavigationScreenProp<NavigationRoute>>;
   }
 
   export function createNavigator<S, Options>(
