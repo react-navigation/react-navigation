@@ -1,6 +1,6 @@
 {
   "name": "react-navigation-drawer",
-  "version": "2.1.2",
+  "version": "2.2.0",
   "description": "Drawer navigator component for React Navigation",
   "main": "lib/commonjs/index.js",
   "react-native": "lib/module/index.js",
