@@ -24,7 +24,7 @@
     "react-native-paper": "^2.15.2",
     "react-navigation-drawer": "^2.0.1",
     "react-navigation-header-buttons": "^3.0.2",
-    "react-navigation-stack": "^1.5.1",
+    "react-navigation-stack": "^1.7.2",
     "react-navigation-tabs": "^1.2.0"
   },
   "devDependencies": {

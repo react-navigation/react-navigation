@@ -1,15 +1,13 @@
 import * as React from 'react';
 import { SafeAreaView, Themed } from 'react-navigation';
-import { createStackNavigator } from 'react-navigation-stack';
+import {
+  createStackNavigator,
+  NavigationStackScreenProps,
+} from 'react-navigation-stack';
 
 import { Button } from './commonComponents/ButtonWithMargin';
 
-interface NavScreenProps {
-  // TODO: satya164 - use stack's navigation type
-  navigation: any;
-}
-
-class HomeScreen extends React.Component<NavScreenProps> {
+class HomeScreen extends React.Component<NavigationStackScreenProps> {
   static navigationOptions = {
     title: 'Welcome',
   };
@@ -32,7 +30,7 @@ class HomeScreen extends React.Component<NavScreenProps> {
   }
 }
 
-class OtherScreen extends React.Component<NavScreenProps> {
+class OtherScreen extends React.Component<NavigationStackScreenProps> {
   static navigationOptions = {
     title: 'Your title here',
   };
@@ -59,7 +57,7 @@ class OtherScreen extends React.Component<NavScreenProps> {
   }
 }
 
-class ScreenWithLongTitle extends React.Component<NavScreenProps> {
+class ScreenWithLongTitle extends React.Component<NavigationStackScreenProps> {
   static navigationOptions = {
     title: "Another title that's kind of long",
   };
@@ -78,7 +76,7 @@ class ScreenWithLongTitle extends React.Component<NavScreenProps> {
   }
 }
 
-class ScreenWithNoHeader extends React.Component<NavScreenProps> {
+class ScreenWithNoHeader extends React.Component<NavigationStackScreenProps> {
   static navigationOptions = {
     header: null,
     title: 'No Header',

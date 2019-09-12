@@ -6,7 +6,10 @@ import {
   SafeAreaView,
   NavigationState,
 } from 'react-navigation';
-import { createStackNavigator } from 'react-navigation-stack';
+import {
+  createStackNavigator,
+  NavigationStackScreenProps,
+} from 'react-navigation-stack';
 import { Button } from './commonComponents/ButtonWithMargin';
 import SampleText from './SampleText';
 
@@ -95,16 +98,13 @@ const ProfileNavigator = createStackNavigator(
   }
 );
 
-const MyHeaderTestScreen = ({
-  navigation,
-}: {
-  navigation: NavigationScreenProp<NavigationState>;
-}) => <MyNavScreen banner="Full screen view" navigation={navigation} />;
+const MyHeaderTestScreen = ({ navigation }: NavigationStackScreenProps) => (
+  <MyNavScreen banner="Full screen view" navigation={navigation} />
+);
+
 MyHeaderTestScreen.navigationOptions = ({
   navigation,
-}: {
-  navigation: NavigationScreenProp<NavigationState>;
-}) => {
+}: NavigationStackScreenProps) => {
   const headerVisible =
     navigation.state.params && navigation.state.params.headerVisible;
   return {

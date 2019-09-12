@@ -7,7 +7,10 @@ import {
   NavigationScreenProp,
   NavigationState,
 } from 'react-navigation';
-import { createStackNavigator } from 'react-navigation-stack';
+import {
+  createStackNavigator,
+  NavigationStackScreenProps,
+} from 'react-navigation-stack';
 import { createDrawerNavigator } from 'react-navigation-drawer';
 import { Button } from './commonComponents/ButtonWithMargin';
 import SampleText from './SampleText';
@@ -42,17 +45,13 @@ InboxScreen.navigationOptions = {
   headerTitle: 'Inbox',
 };
 
-const EmailScreen = ({
-  navigation,
-}: {
-  navigation: NavigationScreenProp<NavigationState>;
-}) => <MyNavScreen banner="Email Screen" navigation={navigation} />;
+const EmailScreen = ({ navigation }: NavigationStackScreenProps) => (
+  <MyNavScreen banner="Email Screen" navigation={navigation} />
+);
 
-const DraftsScreen = ({
-  navigation,
-}: {
-  navigation: NavigationScreenProp<NavigationState>;
-}) => <MyNavScreen banner="Drafts Screen" navigation={navigation} />;
+const DraftsScreen = ({ navigation }: NavigationStackScreenProps) => (
+  <MyNavScreen banner="Drafts Screen" navigation={navigation} />
+);
 DraftsScreen.navigationOptions = {
   headerTitle: 'Drafts',
 };

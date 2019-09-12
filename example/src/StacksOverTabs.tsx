@@ -7,7 +7,10 @@ import {
   NavigationState,
   SafeAreaView,
 } from 'react-navigation';
-import { createStackNavigator } from 'react-navigation-stack';
+import {
+  createStackNavigator,
+  NavigationStackScreenProps,
+} from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { Button } from './commonComponents/ButtonWithMargin';
 import SampleText from './SampleText';
@@ -59,9 +62,9 @@ const MyProfileScreen = ({
 
 const MyNotificationsSettingsScreen = ({
   navigation,
-}: {
-  navigation: NavigationScreenProp<NavigationState>;
-}) => <MyNavScreen banner="Notifications Screen" navigation={navigation} />;
+}: NavigationStackScreenProps) => (
+  <MyNavScreen banner="Notifications Screen" navigation={navigation} />
+);
 
 const MySettingsScreen = ({
   navigation,
@@ -141,11 +144,7 @@ const StacksOverTabs = createStackNavigator({
     screen: MyNotificationsSettingsScreen,
   },
   Profile: {
-    navigationOptions: ({
-      navigation,
-    }: {
-      navigation: NavigationScreenProp<NavigationState>;
-    }) => ({
+    navigationOptions: ({ navigation }: NavigationStackScreenProps) => ({
       title: `${navigation.state.params!.name}'s Profile!`,
     }),
     path: '/people/:name',
