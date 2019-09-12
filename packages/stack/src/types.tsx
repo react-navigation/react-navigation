@@ -15,6 +15,8 @@ import {
   NavigationEventCallback,
   NavigationEventSubscription,
   NavigationDescriptor,
+  NavigationScreenConfig,
+  SupportedThemes,
 } from 'react-navigation';
 
 export type NavigationStackEventName =
@@ -124,6 +126,25 @@ export type NavigationStackConfig = {
   mode?: 'card' | 'modal';
   headerMode?: HeaderMode;
   disableKeyboardHandling?: boolean;
+};
+
+export type NavigationStackScreenProps<
+  Params = NavigationParams,
+  ScreenProps = unknown
+> = {
+  theme: SupportedThemes;
+  navigation: NavigationStackProp<NavigationRoute, Params>;
+  screenProps: ScreenProps;
+};
+
+export type NavigationStackScreenComponent<
+  Params = NavigationParams,
+  ScreenProps = unknown
+> = React.ComponentType<NavigationStackScreenProps<Params, ScreenProps>> & {
+  navigationOptions?: NavigationScreenConfig<
+    NavigationStackOptions,
+    NavigationStackProp<NavigationRoute, Params>
+  >;
 };
 
 export type SceneDescriptorMap = {

@@ -68,7 +68,7 @@
     "react-native-gesture-handler": "^1.3.0",
     "react-native-reanimated": "^1.1.0",
     "react-native-screens": "^1.0.0-alpha.23",
-    "react-navigation": "^4.0.3",
+    "react-navigation": "^4.0.4",
     "react-test-renderer": "16.8.3",
     "release-it": "^12.3.2",
     "scheduler": "^0.14.0",
@@ -81,7 +81,7 @@
     "react-native-gesture-handler": "^1.0.0",
     "react-native-reanimated": "^1.3.0-alpha",
     "react-native-screens": "^1.0.0 || ^1.0.0-alpha",
-    "react-navigation": "^4.0.3"
+    "react-navigation": "^4.0.4"
   },
   "jest": {
     "preset": "react-native",

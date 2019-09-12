@@ -23,7 +23,8 @@ function createStackNavigator(
   stackConfig: CreateNavigatorConfig<
     NavigationStackConfig,
     NavigationStackRouterConfig,
-    NavigationStackOptions
+    NavigationStackOptions,
+    NavigationStackProp
   > = {}
 ) {
   const router = StackRouter(routeConfigMap, stackConfig);

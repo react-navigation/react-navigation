@@ -40,4 +40,6 @@ export {
   NavigationStackProp,
   NavigationStackOptions,
   NavigationStackConfig,
+  NavigationStackScreenComponent,
+  NavigationStackScreenProps,
 } from './types';
