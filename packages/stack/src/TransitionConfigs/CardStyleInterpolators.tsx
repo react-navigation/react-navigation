@@ -1,7 +1,7 @@
 import { I18nManager } from 'react-native';
 import Animated from 'react-native-reanimated';
+import getStatusBarHeight from '../utils/getStatusBarHeight';
 import { CardInterpolationProps, CardInterpolatedStyle } from '../types';
-import { getStatusBarHeight } from 'react-native-safe-area-view';
 
 const { cond, add, multiply, interpolate } = Animated;
 
