@@ -227,7 +227,7 @@ const StackWithTranslucentHeader = createStackNavigator(
     },
   },
   {
-    defaultNavigationOptions: ({ theme }) => ({
+    defaultNavigationOptions: ({ theme }: { theme: SupportedThemes }) => ({
       headerBackground:
         Platform.OS === 'ios' ? (
           <BlurView
