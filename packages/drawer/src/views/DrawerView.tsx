@@ -15,7 +15,7 @@ import ResourceSavingScene from './ResourceSavingScene';
 import Drawer from './Drawer';
 import {
   NavigationDrawerState,
-  ContentComponentProps,
+  DrawerContentComponentProps,
   SceneDescriptorMap,
 } from '../types';
 import { PanGestureHandler } from 'react-native-gesture-handler';
@@ -44,7 +44,7 @@ type Props = {
   navigation: NavigationProp<NavigationDrawerState>;
   descriptors: SceneDescriptorMap;
   navigationConfig: DrawerOptions & {
-    contentComponent?: React.ComponentType<ContentComponentProps>;
+    contentComponent?: React.ComponentType<DrawerContentComponentProps>;
     unmountInactiveRoutes?: boolean;
     contentOptions?: object;
   };

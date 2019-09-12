@@ -1,13 +1,37 @@
 import React from 'react';
 import { Button, ScrollView, StyleSheet, View } from 'react-native';
-import { createStackNavigator } from 'react-navigation-stack';
-import { ThemeColors, useTheme, Themed, SafeAreaView } from 'react-navigation';
-import { createDrawerNavigator } from 'react-navigation-drawer';
+import {
+  createStackNavigator,
+  NavigationStackProp,
+  NavigationStackScreenComponent,
+} from 'react-navigation-stack';
+import {
+  ThemeColors,
+  useTheme,
+  Themed,
+  SafeAreaView,
+  NavigationRoute,
+} from 'react-navigation';
+import {
+  createDrawerNavigator,
+  NavigationDrawerOptions,
+  NavigationDrawerScreenProps,
+} from 'react-navigation-drawer';
 import { MaterialIcons } from '@expo/vector-icons';
 
-const SampleText = ({ children }) => <Themed.Text>{children}</Themed.Text>;
+const SampleText = ({ children }: { children: React.ReactNode }) => (
+  <Themed.Text>{children}</Themed.Text>
+);
 
-const MyNavScreen = ({ navigation, banner }) => {
+type Params = { drawerLockMode: 'unlocked' | 'locked-open' | 'locked-closed' };
+
+const MyNavScreen = ({
+  navigation,
+  banner,
+}: {
+  navigation: NavigationStackProp<NavigationRoute, Params>;
+  banner: string;
+}) => {
   let theme = useTheme();
 
   return (
@@ -101,20 +125,20 @@ const MyNavScreen = ({ navigation, banner }) => {
   );
 };
 
-const InboxScreen = ({ navigation }) => (
-  <MyNavScreen banner="Inbox Screen" navigation={navigation} />
-);
+const InboxScreen: NavigationStackScreenComponent<Params> = ({
+  navigation,
+}) => <MyNavScreen banner="Inbox Screen" navigation={navigation} />;
 InboxScreen.navigationOptions = {
   headerTitle: 'Inbox',
 };
 
-const EmailScreen = ({ navigation }) => (
-  <MyNavScreen banner="Email Screen" navigation={navigation} />
-);
+const EmailScreen: NavigationStackScreenComponent<Params> = ({
+  navigation,
+}) => <MyNavScreen banner="Email Screen" navigation={navigation} />;
 
-const DraftsScreen = ({ navigation }) => (
-  <MyNavScreen banner="Drafts Screen" navigation={navigation} />
-);
+const DraftsScreen: NavigationStackScreenComponent<Params> = ({
+  navigation,
+}) => <MyNavScreen banner="Drafts Screen" navigation={navigation} />;
 DraftsScreen.navigationOptions = {
   headerTitle: 'Drafts',
 };
@@ -125,19 +149,23 @@ const InboxStack = createStackNavigator(
     Email: { screen: EmailScreen },
   },
   {
-    navigationOptions: ({ navigation }) => ({
-      drawerLabel: 'Inbox',
-      drawerLockMode: (
-        navigation.state.routes[navigation.state.index].params || {}
-      ).drawerLockMode,
-      drawerIcon: ({ tintColor }) => (
-        <MaterialIcons
-          name="move-to-inbox"
-          size={24}
-          style={{ color: tintColor }}
-        />
-      ),
-    }),
+    navigationOptions: ({ navigation }: NavigationDrawerScreenProps) => {
+      const options: NavigationDrawerOptions = {
+        drawerLabel: 'Inbox',
+        drawerLockMode: (
+          navigation.state.routes[navigation.state.index].params || {}
+        ).drawerLockMode,
+        drawerIcon: ({ tintColor }) => (
+          <MaterialIcons
+            name="move-to-inbox"
+            size={24}
+            style={{ color: tintColor }}
+          />
+        ),
+      };
+
+      return options;
+    },
   }
 );
 
@@ -147,15 +175,19 @@ const DraftsStack = createStackNavigator(
     Email: { screen: EmailScreen },
   },
   {
-    navigationOptions: ({ navigation }) => ({
-      drawerLabel: 'Drafts',
-      drawerLockMode: (
-        navigation.state.routes[navigation.state.index].params || {}
-      ).drawerLockMode,
-      drawerIcon: ({ tintColor }) => (
-        <MaterialIcons name="drafts" size={24} style={{ color: tintColor }} />
-      ),
-    }),
+    navigationOptions: ({ navigation }: NavigationDrawerScreenProps) => {
+      const options: NavigationDrawerOptions = {
+        drawerLabel: 'Drafts',
+        drawerLockMode: (
+          navigation.state.routes[navigation.state.index].params || {}
+        ).drawerLockMode,
+        drawerIcon: ({ tintColor }) => (
+          <MaterialIcons name="drafts" size={24} style={{ color: tintColor }} />
+        ),
+      };
+
+      return options;
+    },
   }
 );
 

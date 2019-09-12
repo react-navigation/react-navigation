@@ -7,15 +7,40 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import { ThemeColors, useTheme, Themed, SafeAreaView } from 'react-navigation';
-import { createStackNavigator } from 'react-navigation-stack';
-import { createDrawerNavigator } from 'react-navigation-drawer';
+import {
+  ThemeColors,
+  useTheme,
+  Themed,
+  SafeAreaView,
+  NavigationRoute,
+} from 'react-navigation';
+import {
+  createStackNavigator,
+  NavigationStackScreenComponent,
+  NavigationStackProp,
+} from 'react-navigation-stack';
+import {
+  createDrawerNavigator,
+  DrawerContentComponentProps,
+  NavigationDrawerOptions,
+  NavigationDrawerProp,
+} from 'react-navigation-drawer';
 import Animated from 'react-native-reanimated';
 import { MaterialIcons } from '@expo/vector-icons';
 
-const SampleText = ({ children }) => <Themed.Text>{children}</Themed.Text>;
+type Params = { drawerLockMode: 'unlocked' | 'locked-open' | 'locked-closed' };
 
-const MyNavScreen = ({ navigation, banner }) => {
+const SampleText = ({ children }: { children: React.ReactNode }) => (
+  <Themed.Text>{children}</Themed.Text>
+);
+
+const MyNavScreen = ({
+  navigation,
+  banner,
+}: {
+  navigation: NavigationStackProp<NavigationRoute, Params>;
+  banner: string;
+}) => {
   let theme = useTheme();
 
   return (
@@ -109,20 +134,22 @@ const MyNavScreen = ({ navigation, banner }) => {
   );
 };
 
-const InboxScreen = ({ navigation }) => (
-  <MyNavScreen banner="Inbox Screen" navigation={navigation} />
-);
+const InboxScreen: NavigationStackScreenComponent<Params> = ({
+  navigation,
+}) => <MyNavScreen banner="Inbox Screen" navigation={navigation} />;
+
 InboxScreen.navigationOptions = {
   headerTitle: 'Inbox',
 };
 
-const EmailScreen = ({ navigation }) => (
-  <MyNavScreen banner="Email Screen" navigation={navigation} />
-);
+const EmailScreen: NavigationStackScreenComponent<Params> = ({
+  navigation,
+}) => <MyNavScreen banner="Email Screen" navigation={navigation} />;
 
-const DraftsScreen = ({ navigation }) => (
-  <MyNavScreen banner="Drafts Screen" navigation={navigation} />
-);
+const DraftsScreen: NavigationStackScreenComponent<Params> = ({
+  navigation,
+}) => <MyNavScreen banner="Drafts Screen" navigation={navigation} />;
+
 DraftsScreen.navigationOptions = {
   headerTitle: 'Drafts',
 };
@@ -133,19 +160,23 @@ const InboxStack = createStackNavigator(
     Email: { screen: EmailScreen },
   },
   {
-    navigationOptions: ({ navigation }) => ({
-      drawerLabel: 'Inbox',
-      drawerLockMode: (
-        navigation.state.routes[navigation.state.index].params || {}
-      ).drawerLockMode,
-      drawerIcon: ({ tintColor }) => (
-        <MaterialIcons
-          name="move-to-inbox"
-          size={24}
-          style={{ color: tintColor }}
-        />
-      ),
-    }),
+    navigationOptions: ({ navigation }) => {
+      const options: NavigationDrawerOptions = {
+        drawerLabel: 'Inbox',
+        drawerLockMode: (
+          navigation.state.routes[navigation.state.index].params || {}
+        ).drawerLockMode,
+        drawerIcon: ({ tintColor }) => (
+          <MaterialIcons
+            name="move-to-inbox"
+            size={24}
+            style={{ color: tintColor }}
+          />
+        ),
+      };
+
+      return options;
+    },
   }
 );
 
@@ -155,19 +186,27 @@ const DraftsStack = createStackNavigator(
     Email: { screen: EmailScreen },
   },
   {
-    navigationOptions: ({ navigation }) => ({
-      drawerLabel: 'Drafts',
-      drawerLockMode: (
-        navigation.state.routes[navigation.state.index].params || {}
-      ).drawerLockMode,
-      drawerIcon: ({ tintColor }) => (
-        <MaterialIcons name="drafts" size={24} style={{ color: tintColor }} />
-      ),
-    }),
+    navigationOptions: ({ navigation }) => {
+      const options: NavigationDrawerOptions = {
+        drawerLabel: 'Drafts',
+        drawerLockMode: (
+          navigation.state.routes[navigation.state.index].params || {}
+        ).drawerLockMode,
+        drawerIcon: ({ tintColor }) => (
+          <MaterialIcons name="drafts" size={24} style={{ color: tintColor }} />
+        ),
+      };
+
+      return options;
+    },
   }
 );
 
-const DrawerContents = ({ drawerOpenProgress, navigation }) => {
+const DrawerContents = ({
+  drawerOpenProgress,
+  descriptors,
+  navigation,
+}: DrawerContentComponentProps) => {
   // `contentComponent` is passed an Animated.Value called drawerOpenProgress
   // that can be used to do interesting things like a simple parallax drawe
   const translateX = Animated.interpolate(drawerOpenProgress, {
@@ -179,15 +218,23 @@ const DrawerContents = ({ drawerOpenProgress, navigation }) => {
     <Animated.View style={{ transform: [{ translateX }] }}>
       <ScrollView>
         <SafeAreaView forceInset={{ top: 'always' }}>
-          <DrawerItem navigation={navigation} item="Drafts" />
-          <DrawerItem navigation={navigation} item="Email" />
+          {navigation.state.routes.map(route => (
+            <DrawerItem
+              key={route.key}
+              navigation={descriptors[route.key].navigation}
+              item={route.routeName}
+            />
+          ))}
         </SafeAreaView>
       </ScrollView>
     </Animated.View>
   );
 };
 
-const DrawerItem = props => {
+const DrawerItem = (props: {
+  navigation: NavigationDrawerProp;
+  item: string;
+}) => {
   return (
     <TouchableOpacity onPress={() => props.navigation.navigate(props.item)}>
       <Themed.Text style={{ padding: 10, fontSize: 18, fontWeight: '600' }}>

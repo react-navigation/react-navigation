@@ -31,4 +31,7 @@ export {
   NavigationDrawerOptions,
   NavigationDrawerConfig,
   NavigationDrawerRouterConfig,
+  NavigationDrawerScreenProps,
+  NavigationDrawerScreenComponent,
+  DrawerContentComponentProps,
 } from './types';

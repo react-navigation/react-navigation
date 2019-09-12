@@ -1,13 +1,18 @@
 import * as React from 'react';
-// eslint-disable-next-line no-unused-vars
-import { View, TouchableOpacity, FlatList, I18nManager } from 'react-native';
+import { View, TouchableOpacity, FlatList } from 'react-native';
 import {
   ThemeContext,
   ThemeColors,
   Themed,
   createAppContainer,
+  SupportedThemes,
 } from 'react-navigation';
-import { createStackNavigator } from 'react-navigation-stack';
+import {
+  createStackNavigator,
+  NavigationStackOptions,
+  NavigationStackProp,
+  NavigationStackScreenProps,
+} from 'react-navigation-stack';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { List, Divider } from 'react-native-paper';
 
@@ -17,9 +22,13 @@ import StyledDrawer from './src/StyledDrawer';
 import GestureInteraction from './src/GestureInteraction';
 import RTLDrawer from './src/RTLDrawer';
 
-// I18nManager.forceRTL(false);
+type Item = {
+  component: React.ComponentType;
+  title: string;
+  routeName: string;
+};
 
-const data = [
+const data: Item[] = [
   {
     component: SimpleDrawer,
     title: 'Simple - persistent routes like tabs',
@@ -48,8 +57,13 @@ const data = [
   },
 ];
 
-class Row extends React.PureComponent {
+class Row extends React.PureComponent<{
+  navigation: NavigationStackProp;
+  item: Item;
+}> {
   static contextType = ThemeContext;
+
+  context: SupportedThemes = 'light';
 
   render() {
     let { item, navigation } = this.props;
@@ -65,15 +79,16 @@ class Row extends React.PureComponent {
   }
 }
 
-class Home extends React.Component {
+class Home extends React.Component<NavigationStackScreenProps> {
   static contextType = ThemeContext;
 
   static navigationOptions = {
     title: 'Examples',
   };
 
-  _keyExtractor = item => item.routeName;
-  _renderItem = ({ item }) => {
+  _keyExtractor = (item: Item) => item.routeName;
+
+  _renderItem = ({ item }: { item: Item }) => {
     return <Row item={item} navigation={this.props.navigation} />;
   };
 
@@ -95,7 +110,12 @@ class Home extends React.Component {
 const MainNavigator = createStackNavigator(
   {
     Home: createStackNavigator({ Home }),
-    ...data.reduce((acc, it) => {
+    ...data.reduce<{
+      [key: string]: {
+        screen: React.ComponentType<any>;
+        navigationOptions: NavigationStackOptions;
+      };
+    }>((acc, it) => {
       acc[it.routeName] = {
         screen: it.component,
         navigationOptions: {
@@ -118,7 +138,7 @@ const MainNavigator = createStackNavigator(
 const Navigation = createAppContainer(MainNavigator);
 
 const App = () => {
-  let [theme, setTheme] = React.useState('light');
+  let [theme, setTheme] = React.useState<SupportedThemes>('light');
 
   return (
     <View style={{ flex: 1 }}>

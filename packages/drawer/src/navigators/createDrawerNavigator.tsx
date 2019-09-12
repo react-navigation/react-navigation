@@ -6,6 +6,7 @@ import {
   SafeAreaView,
   NavigationRouteConfigMap,
   CreateNavigatorConfig,
+  NavigationRoute,
 } from 'react-navigation';
 import DrawerRouter from '../routers/DrawerRouter';
 import DrawerView from '../views/DrawerView';
@@ -15,10 +16,10 @@ import {
   NavigationDrawerProp,
   NavigationDrawerConfig,
   NavigationDrawerRouterConfig,
-  ContentComponentProps,
+  DrawerContentComponentProps,
 } from '../types';
 
-const defaultContentComponent = (props: ContentComponentProps) => (
+const defaultContentComponent = (props: DrawerContentComponentProps) => (
   <ScrollView alwaysBounceVertical={false}>
     <SafeAreaView forceInset={{ top: 'always', horizontal: 'never' }}>
       <DrawerItems {...props} />
@@ -61,12 +62,13 @@ const DefaultDrawerConfig: NavigationDrawerConfig = {
 const DrawerNavigator = (
   routeConfigs: NavigationRouteConfigMap<
     NavigationDrawerOptions,
-    NavigationDrawerProp
+    NavigationDrawerProp<NavigationRoute, any>
   >,
   config: CreateNavigatorConfig<
     NavigationDrawerConfig,
     NavigationDrawerRouterConfig,
-    NavigationDrawerProp
+    NavigationDrawerOptions,
+    NavigationDrawerProp<NavigationRoute, any>
   > = {}
 ) => {
   const mergedConfig = { ...DefaultDrawerConfig, ...config };

@@ -20,8 +20,8 @@
     "react-native-paper": "^2.2.0",
     "react-native-reanimated": "~1.1.0",
     "react-native-webview": "~5.12.0",
-    "react-navigation": "^4.0.3",
-    "react-navigation-stack": "^1.4.0"
+    "react-navigation": "^4.0.4",
+    "react-navigation-stack": "^1.7.3"
   },
   "devDependencies": {
     "babel-plugin-module-resolver": "^3.2.0",

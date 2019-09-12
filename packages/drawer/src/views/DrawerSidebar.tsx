@@ -9,12 +9,12 @@ import Animated from 'react-native-reanimated';
 import {
   Scene,
   NavigationDrawerState,
-  ContentComponentProps,
+  DrawerContentComponentProps,
   SceneDescriptorMap,
 } from '../types';
 
 type Props = {
-  contentComponent?: React.ComponentType<ContentComponentProps>;
+  contentComponent?: React.ComponentType<DrawerContentComponentProps>;
   contentOptions?: object;
   screenProps?: unknown;
   navigation: NavigationProp<NavigationDrawerState>;

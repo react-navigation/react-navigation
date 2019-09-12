@@ -5,6 +5,8 @@ import {
   NavigationParams,
   NavigationProp,
   NavigationDescriptor,
+  SupportedThemes,
+  NavigationScreenConfig,
 } from 'react-navigation';
 import { StyleProp, ViewStyle, TextStyle } from 'react-native';
 import Animated from 'react-native-reanimated';
@@ -38,14 +40,17 @@ export type NavigationDrawerOptions = {
   drawerIcon?:
     | React.ReactNode
     | ((props: { tintColor?: string; focused: boolean }) => React.ReactNode);
-  drawerLockMode?: 'locked-closed' | 'locked-open';
+  drawerLockMode?: 'unlocked' | 'locked-closed' | 'locked-open';
 };
 
 export type NavigationDrawerConfig = {
+  contentComponent?: React.ComponentType<DrawerContentComponentProps>;
+  edgeWidth?: number;
+  minSwipeDistance?: number;
   drawerWidth?: number | (() => number);
-  contentComponent?: React.ComponentType<ContentComponentProps>;
   drawerPosition?: 'left' | 'right';
   drawerType?: 'front' | 'back' | 'slide';
+  drawerLockMode?: 'unlocked' | 'locked-closed' | 'locked-open';
   keyboardDismissMode?: 'none' | 'on-drag';
   swipeEdgeWidth?: number;
   swipeDistanceThreshold?: number;
@@ -54,20 +59,24 @@ export type NavigationDrawerConfig = {
   statusBarAnimation?: 'slide' | 'none' | 'fade';
   drawerBackgroundColor?: ThemedColor;
   overlayColor?: ThemedColor;
+  screenContainerStyle?: StyleProp<ViewStyle>;
 };
 
 export type NavigationDrawerRouterConfig = {
   unmountInactiveRoutes?: boolean;
   resetOnBlur?: boolean;
   initialRouteName?: string;
-  contentComponent?: React.ComponentType<ContentComponentProps>;
+  contentComponent?: React.ComponentType<DrawerContentComponentProps>;
   contentOptions?: object;
+  backBehavior?: 'none' | 'initialRoute' | 'history';
 };
 
-export type ThemedColor = {
-  light: string;
-  dark: string;
-};
+export type ThemedColor =
+  | string
+  | {
+      light: string;
+      dark: string;
+    };
 
 export type DrawerNavigatorItemsProps = {
   items: NavigationRoute[];
@@ -88,17 +97,36 @@ export type DrawerNavigatorItemsProps = {
   drawerPosition: 'left' | 'right';
 };
 
-export type ContentComponentProps = DrawerNavigatorItemsProps & {
+export type DrawerContentComponentProps = DrawerNavigatorItemsProps & {
   navigation: NavigationProp<NavigationDrawerState>;
-  descriptors: { [key: string]: any };
+  descriptors: SceneDescriptorMap;
   drawerOpenProgress: Animated.Node<number>;
   screenProps: unknown;
+};
+
+export type NavigationDrawerScreenProps<
+  Params = NavigationParams,
+  ScreenProps = unknown
+> = {
+  theme: SupportedThemes;
+  navigation: NavigationDrawerProp<NavigationRoute, Params>;
+  screenProps: ScreenProps;
+};
+
+export type NavigationDrawerScreenComponent<
+  Params = NavigationParams,
+  ScreenProps = unknown
+> = React.ComponentType<NavigationDrawerScreenProps<Params, ScreenProps>> & {
+  navigationOptions?: NavigationScreenConfig<
+    NavigationDrawerOptions,
+    NavigationDrawerProp<NavigationRoute, Params>
+  >;
 };
 
 export type SceneDescriptorMap = {
   [key: string]: NavigationDescriptor<
     NavigationParams,
     NavigationDrawerOptions,
-    NavigationDrawerProp
+    NavigationDrawerProp<NavigationRoute, any>
   >;
 };

@@ -7,11 +7,18 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
-import { Themed } from 'react-navigation';
-import { createStackNavigator } from 'react-navigation-stack';
-import { createDrawerNavigator } from 'react-navigation-drawer';
+import { Themed, NavigationActions } from 'react-navigation';
+import {
+  createStackNavigator,
+  NavigationStackScreenComponent,
+} from 'react-navigation-stack';
+import {
+  createDrawerNavigator,
+  DrawerContentComponentProps,
+  DrawerActions,
+} from 'react-navigation-drawer';
 
-class RightDrawer extends Component {
+class RightDrawer extends Component<DrawerContentComponentProps> {
   state = {
     categories: [{ i: 'c1', n: 'name1' }, { i: 'c2', n: 'name2' }],
   };
@@ -28,11 +35,16 @@ class RightDrawer extends Component {
                 key={key.n}
                 onPress={() => {
                   let nid = key.i;
-                  this.props.navigation.navigate('CategoryScreen', {
-                    id: nid,
-                    title: key.n,
-                  });
-                  this.props.navigation.closeDrawer();
+                  this.props.navigation.dispatch(
+                    NavigationActions.navigate({
+                      routeName: 'CategoryScreen',
+                      params: {
+                        id: nid,
+                        title: key.n,
+                      },
+                    })
+                  );
+                  this.props.navigation.dispatch(DrawerActions.closeDrawer());
                 }}
               >
                 <View
@@ -64,7 +76,7 @@ class RightDrawer extends Component {
   }
 }
 
-const CategoryScreen = ({ navigation }) => {
+const CategoryScreen: NavigationStackScreenComponent = ({ navigation }) => {
   return (
     <View>
       <Themed.Text>CategoryScreen {navigation.getParam('title')}</Themed.Text>

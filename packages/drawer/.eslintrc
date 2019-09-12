@@ -14,6 +14,8 @@
 
   "rules": {
     "import/named": "off",
+    "import/default": "off",
+    "import/namespace": "off",
     "react-native/no-inline-styles": "off"
   }
 }
