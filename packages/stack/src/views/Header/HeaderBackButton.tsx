@@ -6,16 +6,11 @@ import {
   Platform,
   StyleSheet,
   LayoutChangeEvent,
-  UIManager,
 } from 'react-native';
 import Animated from 'react-native-reanimated';
-import MaskedView from '@react-native-community/masked-view';
+import MaskedView from '../MaskedView';
 import TouchableItem from '../TouchableItem';
 import { HeaderLeftButtonProps } from '../../types';
-
-const isMaskedViewAvailable =
-  // @ts-ignore
-  UIManager.getViewManagerConfig('RNCMaskedView') != null;
 
 type Props = HeaderLeftButtonProps & {
   tintColor: string;
@@ -129,7 +124,7 @@ class HeaderBackButton extends React.Component<Props, State> {
       </View>
     );
 
-    if (!isMaskedViewAvailable || backImage || Platform.OS !== 'ios') {
+    if (backImage || Platform.OS !== 'ios') {
       // When a custom backimage is specified, we can't mask the label
       // Otherwise there might be weird effect due to our mask not being the same as the image
       return labelElement;
