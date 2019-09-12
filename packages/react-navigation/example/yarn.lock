@@ -4798,10 +4798,10 @@ react-navigation-header-buttons@^3.0.2:
   dependencies:
     react-native-platform-touchable "^1.1.1"
 
-react-navigation-stack@^1.5.1:
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/react-navigation-stack/-/react-navigation-stack-1.5.1.tgz#8a8c0cd0b8498225f4e8e564f06043849961bede"
-  integrity sha512-VEMSsKvicaLlFu6+U4u5YkwFe4hnMTLu83bR15GumuqrpCVPPgl7Qt4fSZCRG/YtC5ZcUiy5EgCRu9MVIINV5w==
+react-navigation-stack@^1.7.2:
+  version "1.7.2"
+  resolved "https://registry.yarnpkg.com/react-navigation-stack/-/react-navigation-stack-1.7.2.tgz#d7cf7a7dc76c2390024be6358fc65461c848a034"
+  integrity sha512-72oL9rVXUFvFayoA7k+OgXcwP/6e5BAtCSpUXfKX+lZYrJe3BvuhZz2KDhEjdfbuP/sNok55ZRzc3/X1kh5mxQ==
   dependencies:
     prop-types "^15.7.2"
 

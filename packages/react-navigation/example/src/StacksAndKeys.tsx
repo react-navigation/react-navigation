@@ -1,18 +1,13 @@
 import React from 'react';
 import { Text, View } from 'react-native';
+import { Themed } from 'react-navigation';
 import {
-  NavigationScreenProp,
-  NavigationState,
-  Themed,
-} from 'react-navigation';
-import { createStackNavigator } from 'react-navigation-stack';
+  createStackNavigator,
+  NavigationStackScreenProps,
+} from 'react-navigation-stack';
 import { Button } from './commonComponents/ButtonWithMargin';
 
-interface Props {
-  navigation: NavigationScreenProp<NavigationState & any>;
-}
-
-class HomeScreen extends React.Component<Props, any> {
+class HomeScreen extends React.Component<NavigationStackScreenProps> {
   render() {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
@@ -37,9 +32,12 @@ class HomeScreen extends React.Component<Props, any> {
   }
 }
 
-class ProfileScreen extends React.Component<any, any> {
+class ProfileScreen extends React.Component<
+  NavigationStackScreenProps<{ homeKey: string }>
+> {
   render() {
-    const { homeKey } = this.props.navigation.state.params;
+    const homeKey = this.props.navigation.getParam('homeKey');
+
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <Text>Profile</Text>
@@ -64,7 +62,7 @@ class ProfileScreen extends React.Component<any, any> {
   }
 }
 
-class SettingsScreen extends React.Component<Props, any> {
+class SettingsScreen extends React.Component<NavigationStackScreenProps> {
   render() {
     const { homeKey } = this.props.navigation.state.params!;
 

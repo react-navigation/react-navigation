@@ -11,7 +11,10 @@ import {
   NavigationState,
   SafeAreaView,
 } from 'react-navigation';
-import { createStackNavigator } from 'react-navigation-stack';
+import {
+  createStackNavigator,
+  NavigationStackScreenProps,
+} from 'react-navigation-stack';
 import {
   createMaterialTopTabNavigator,
   MaterialTopTabBar,
@@ -64,11 +67,7 @@ const MyHomeScreen = ({
   />
 );
 
-const MyProfileScreen = ({
-  navigation,
-}: {
-  navigation: NavigationScreenProp<NavigationState>;
-}) => (
+const MyProfileScreen = ({ navigation }: NavigationStackScreenProps) => (
   <MyNavScreen
     banner={`${navigation.state.params!.name}s Profile`}
     navigation={navigation}
@@ -77,9 +76,9 @@ const MyProfileScreen = ({
 
 const MyNotificationsSettingsScreen = ({
   navigation,
-}: {
-  navigation: NavigationScreenProp<NavigationState>;
-}) => <MyNavScreen banner="Notifications Screen" navigation={navigation} />;
+}: NavigationStackScreenProps) => (
+  <MyNavScreen banner="Notifications Screen" navigation={navigation} />
+);
 
 const MySettingsScreen = ({
   navigation,
@@ -159,11 +158,7 @@ const StackNavigator = createStackNavigator(
     },
     Profile: {
       screen: MyProfileScreen,
-      navigationOptions: ({
-        navigation,
-      }: {
-        navigation: NavigationScreenProp<NavigationState>;
-      }) => ({
+      navigationOptions: ({ navigation }: NavigationStackScreenProps) => ({
         title: `${navigation.state.params!.name}'s Profile!`,
       }),
     },

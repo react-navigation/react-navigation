@@ -7,7 +7,11 @@ import {
   SafeAreaView,
   ScrollView,
 } from 'react-navigation';
-import { createStackNavigator } from 'react-navigation-stack';
+import {
+  createStackNavigator,
+  NavigationStackScreenProps,
+  NavigationStackProp,
+} from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import { Button } from './commonComponents/ButtonWithMargin';
@@ -19,7 +23,7 @@ Nulla convallis pulvinar hendrerit. Nulla mattis sem et aliquam ultrices. Nam eg
 Praesent lobortis elit sit amet mauris pulvinar, viverra condimentum massa pellentesque. Curabitur massa ex, dignissim eget neque at, fringilla consectetur justo. Cras sollicitudin vel ligula sed cursus. Aliquam porta sem hendrerit diam porta ultricies. Sed eu mi erat. Curabitur id justo vel tortor hendrerit vestibulum id eget est. Morbi eros magna, placerat id diam ut, varius sollicitudin mi. Curabitur pretium finibus accumsan.`;
 
 interface Props {
-  navigation: NavigationScreenProp<NavigationState>;
+  navigation: NavigationStackProp;
   banner: string;
 }
 
@@ -59,11 +63,7 @@ class MyNavScreen extends React.Component<Props> {
   }
 }
 
-const MyProfileScreen = ({
-  navigation,
-}: {
-  navigation: NavigationScreenProp<NavigationState>;
-}) => (
+const MyProfileScreen = ({ navigation }: NavigationStackScreenProps) => (
   <MyNavScreen
     banner={`${navigation.state.params!.name}s Profile`}
     navigation={navigation}

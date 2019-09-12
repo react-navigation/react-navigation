@@ -3,11 +3,13 @@ import { Button, Image, StyleSheet } from 'react-native';
 import {
   NavigationScreenProp,
   NavigationState,
-  NavigationScreenConfigProps,
   Themed,
   SafeAreaView,
 } from 'react-navigation';
-import { createStackNavigator } from 'react-navigation-stack';
+import {
+  createStackNavigator,
+  NavigationStackScreenProps,
+} from 'react-navigation-stack';
 import SampleText from './SampleText';
 
 interface MyNavScreenProps {
@@ -124,11 +126,8 @@ const StackWithCustomHeaderBackImage = createStackNavigator(
     },
   },
   {
-    // TODO: satya164 - use stack's navigation type
-    defaultNavigationOptions: ({
-      theme,
-    }: NavigationScreenConfigProps<any>) => ({
-      headerBackImage: (
+    defaultNavigationOptions: ({ theme }: NavigationStackScreenProps) => ({
+      headerBackImage: () => (
         <MyCustomHeaderBackImage
           style={[
             styles.myCustomHeaderBackImageAlt,

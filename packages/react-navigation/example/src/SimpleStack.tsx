@@ -5,15 +5,16 @@ import {
   NavigationActions,
   NavigationEventPayload,
   NavigationEventSubscription,
-  NavigationScreenProp,
-  NavigationState,
-  NavigationStateRoute,
   SafeAreaView,
   StackActions,
   Themed,
   withNavigation,
 } from 'react-navigation';
-import { createStackNavigator } from 'react-navigation-stack';
+import {
+  createStackNavigator,
+  NavigationStackProp,
+  NavigationStackScreenProps,
+} from 'react-navigation-stack';
 import { Button } from './commonComponents/ButtonWithMargin';
 import { HeaderButtons } from './commonComponents/HeaderButtons';
 import SampleText from './SampleText';
@@ -21,13 +22,12 @@ import SampleText from './SampleText';
 const DEBUG = false;
 
 interface MyNavScreenProps {
-  // TODO: satya164 - use stack's navigation type
-  navigation: any;
+  navigation: NavigationStackProp;
   banner: React.ReactNode;
 }
 
 interface BackButtonProps {
-  navigation: NavigationScreenProp<NavigationStateRoute<any>>;
+  navigation: NavigationStackProp;
 }
 
 class MyBackButton extends React.Component<BackButtonProps, any> {
@@ -100,11 +100,7 @@ class MyNavScreen extends React.Component<MyNavScreenProps> {
   }
 }
 
-interface MyHomeScreenProps {
-  navigation: NavigationScreenProp<NavigationState>;
-}
-
-class MyHomeScreen extends React.Component<MyHomeScreenProps> {
+class MyHomeScreen extends React.Component<NavigationStackScreenProps> {
   static navigationOptions = {
     title: 'Welcome',
   };
@@ -144,12 +140,7 @@ class MyHomeScreen extends React.Component<MyHomeScreenProps> {
   }
 }
 
-interface MyPhotosScreenProps {
-  // TODO: satya164 - use stack's navigation type
-  navigation: any;
-}
-
-class MyPhotosScreen extends React.Component<MyPhotosScreenProps> {
+class MyPhotosScreen extends React.Component<NavigationStackScreenProps> {
   static navigationOptions = {
     headerLeft: () => <MyBackButtonWithNavigation />,
     title: 'Photos',
@@ -198,7 +189,7 @@ class MyPhotosScreen extends React.Component<MyPhotosScreenProps> {
 const MyProfileScreen = ({
   navigation,
 }: {
-  navigation: NavigationScreenProp<NavigationState>;
+  navigation: NavigationStackProp;
 }) => (
   <MyNavScreen
     banner={`${
@@ -208,7 +199,7 @@ const MyProfileScreen = ({
   />
 );
 
-MyProfileScreen.navigationOptions = (props: MyHomeScreenProps) => {
+MyProfileScreen.navigationOptions = (props: NavigationStackScreenProps) => {
   const { navigation } = props;
   const { state, setParams } = navigation;
   const { params } = state;

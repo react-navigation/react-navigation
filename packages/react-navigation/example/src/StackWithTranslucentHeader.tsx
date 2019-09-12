@@ -5,8 +5,6 @@ import { isIphoneX } from 'react-native-iphone-x-helper';
 import {
   NavigationEventPayload,
   NavigationEventSubscription,
-  NavigationScreenProp,
-  NavigationState,
   Themed,
   SupportedThemes,
 } from 'react-navigation';
@@ -14,14 +12,15 @@ import {
   createStackNavigator,
   Header,
   HeaderStyleInterpolator,
+  NavigationStackScreenProps,
+  NavigationStackProp,
 } from 'react-navigation-stack';
 import { Button } from './commonComponents/ButtonWithMargin';
 import { HeaderButtons } from './commonComponents/HeaderButtons';
 import SampleText from './SampleText';
 
 interface MyNavScreenProps {
-  // TODO: satya164 - use stack's navigation type
-  navigation: any;
+  navigation: NavigationStackProp;
   banner: React.ReactNode;
 }
 
@@ -82,7 +81,7 @@ class MyNavScreen extends React.Component<MyNavScreenProps> {
 }
 
 interface MyHomeScreenProps {
-  navigation: NavigationScreenProp<NavigationState>;
+  navigation: NavigationStackProp;
 }
 
 class MyHomeScreen extends React.Component<MyHomeScreenProps> {
@@ -126,7 +125,7 @@ class MyHomeScreen extends React.Component<MyHomeScreenProps> {
 }
 
 interface MyPhotosScreenProps {
-  navigation: NavigationScreenProp<NavigationState>;
+  navigation: NavigationStackProp;
 }
 class MyPhotosScreen extends React.Component<MyPhotosScreenProps> {
   static navigationOptions = {
@@ -176,7 +175,7 @@ class MyPhotosScreen extends React.Component<MyPhotosScreenProps> {
 const MyProfileScreen = ({
   navigation,
 }: {
-  navigation: NavigationScreenProp<NavigationState>;
+  navigation: NavigationStackProp;
 }) => (
   <MyNavScreen
     banner={`${navigation.state.params!.mode === 'edit' ? 'Now Editing ' : ''}${
@@ -187,7 +186,7 @@ const MyProfileScreen = ({
 );
 
 MyProfileScreen.navigationOptions = (props: {
-  navigation: NavigationScreenProp<NavigationState>;
+  navigation: NavigationStackProp;
   theme: SupportedThemes;
 }) => {
   const { navigation, theme } = props;
@@ -227,7 +226,7 @@ const StackWithTranslucentHeader = createStackNavigator(
     },
   },
   {
-    defaultNavigationOptions: ({ theme }: { theme: SupportedThemes }) => ({
+    defaultNavigationOptions: ({ theme }: NavigationStackScreenProps) => ({
       headerBackground:
         Platform.OS === 'ios' ? (
           <BlurView
