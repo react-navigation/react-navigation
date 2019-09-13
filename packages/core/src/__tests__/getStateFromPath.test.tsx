@@ -2,9 +2,7 @@ import getStateFromPath from '../getStateFromPath';
 
 it('converts path string to initial state', () => {
   expect(
-    getStateFromPath(
-      'foo/bar/baz%20qux?author=%22jane%20%26%20co%22&valid=true'
-    )
+    getStateFromPath('foo/bar/baz%20qux?author=jane%20%26%20co&valid=true')
   ).toEqual({
     routes: [
       {
@@ -17,7 +15,55 @@ it('converts path string to initial state', () => {
                 routes: [
                   {
                     name: 'baz qux',
-                    params: { author: 'jane & co', valid: true },
+                    params: { author: 'jane & co', valid: 'true' },
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  });
+});
+
+it('converts path string to initial state with config', () => {
+  expect(
+    getStateFromPath(
+      '/few/bar/sweet/apple/baz/jane?count=10&answer=42&valid=true',
+      {
+        Foo: 'few',
+        Bar: 'bar/:type/:fruit',
+        Baz: {
+          path: 'baz/:author',
+          parse: {
+            author: (author: string) =>
+              author.replace(/^\w/, c => c.toUpperCase()),
+            count: Number,
+            valid: Boolean,
+          },
+        },
+      }
+    )
+  ).toEqual({
+    routes: [
+      {
+        name: 'Foo',
+        state: {
+          routes: [
+            {
+              name: 'Bar',
+              params: { fruit: 'apple', type: 'sweet' },
+              state: {
+                routes: [
+                  {
+                    name: 'Baz',
+                    params: {
+                      author: 'Jane',
+                      count: 10,
+                      answer: '42',
+                      valid: true,
+                    },
                   },
                 ],
               },
@@ -38,7 +84,7 @@ it('handles leading slash when converting', () => {
           routes: [
             {
               name: 'bar',
-              params: { count: 42 },
+              params: { count: '42' },
             },
           ],
         },
@@ -56,7 +102,7 @@ it('handles ending slash when converting', () => {
           routes: [
             {
               name: 'bar',
-              params: { count: 42 },
+              params: { count: '42' },
             },
           ],
         },

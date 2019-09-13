@@ -7,6 +7,12 @@ import {
   PartialState,
 } from '@react-navigation/core';
 
+type Config = {
+  [routeName: string]:
+    | string
+    | { path: string; parse?: { [key: string]: (value: string) => any } };
+};
+
 type Options = {
   /**
    * The prefixes are stripped from the URL before parsing them.
@@ -14,27 +20,44 @@ type Options = {
    */
   prefixes: string[];
   /**
-   * Custom function to parse the URL object to a valid navigation state.
+   * Config to fine-tune how to parse the path.
+   *
+   * Example:
+   * ```js
+   * {
+   *   Chat: {
+   *     path: 'chat/:author/:id',
+   *     parse: { id: Number }
+   *   }
+   * }
+   * ```
+   */
+  config?: Config;
+  /**
+   * Custom function to parse the URL object to a valid navigation state (advanced).
    */
   getStateFromPath?: (
-    path: string
+    path: string,
+    options?: Config
   ) => PartialState<NavigationState> | undefined;
 };
 
 export default function useLinking(
   ref: React.RefObject<NavigationContainerRef>,
-  { prefixes, getStateFromPath = getStateFromPathDefault }: Options
+  { prefixes, config, getStateFromPath = getStateFromPathDefault }: Options
 ) {
   // We store these options in ref to avoid re-creating getInitialState and re-subscribing listeners
   // This lets user avoid wrapping the items in `React.useCallback` or `React.useMemo`
   // Not re-creating `getInitialState` is important coz it makes it easier for the user to use in an effect
   const prefixesRef = React.useRef(prefixes);
+  const configRef = React.useRef(config);
   const getStateFromPathRef = React.useRef(getStateFromPath);
 
   React.useEffect(() => {
     prefixesRef.current = prefixes;
+    configRef.current = config;
     getStateFromPathRef.current = getStateFromPath;
-  }, [getStateFromPath, prefixes]);
+  }, [config, getStateFromPath, prefixes]);
 
   const extractPathFromURL = React.useCallback((url: string) => {
     for (const prefix of prefixesRef.current) {
@@ -51,7 +74,7 @@ export default function useLinking(
     const path = url ? extractPathFromURL(url) : null;
 
     if (path) {
-      return getStateFromPathRef.current(path);
+      return getStateFromPathRef.current(path, configRef.current);
     } else {
       return undefined;
     }
@@ -63,7 +86,7 @@ export default function useLinking(
       const navigation = ref.current;
 
       if (navigation && path) {
-        const state = getStateFromPathRef.current(path);
+        const state = getStateFromPathRef.current(path, configRef.current);
 
         if (state) {
           navigation.resetRoot(state);
