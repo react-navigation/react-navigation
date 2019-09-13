@@ -20,14 +20,16 @@ const BaseRouter = {
           return null;
         }
 
+        const { name, key, params } = action.payload;
+
         return {
           ...state,
           routes: state.routes.map((route, i) =>
             i === index
               ? {
-                  key: `${action.payload.name}-${shortid()}`,
-                  name: action.payload.name,
-                  params: action.payload.params,
+                  key: key !== undefined ? key : `${name}-${shortid()}`,
+                  name,
+                  params,
                 }
               : route
           ),

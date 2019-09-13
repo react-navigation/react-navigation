@@ -9,15 +9,14 @@ export type Action =
   | {
       type: 'NAVIGATE';
       payload:
-        | { name: string; key?: undefined; params?: object }
         | { key: string; name?: undefined; params?: object }
-        | { key: string; name: string; params?: object };
+        | { name: string; key?: string; params?: object };
       source?: string;
       target?: string;
     }
   | {
       type: 'REPLACE';
-      payload: { name: string; params?: object };
+      payload: { name: string; key?: string; params?: object };
       source?: string;
       target?: string;
     }
@@ -41,8 +40,7 @@ export function goBack(): Action {
 export function navigate(
   route:
     | { key: string; params?: object }
-    | { name: string; params?: object }
-    | { name: string; key: string; params?: object }
+    | { name: string; key?: string; params?: object }
 ): Action;
 export function navigate(name: string, params?: object): Action;
 export function navigate(...args: any): Action {
