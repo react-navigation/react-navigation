@@ -192,7 +192,7 @@ declare module 'react-navigation' {
 
   export interface NavigationScreenConfigProps<NavigationScreenPropType> {
     navigation: NavigationScreenPropType;
-    screenProps: unknown;
+    screenProps: any;
     theme: SupportedThemes;
   }
 
