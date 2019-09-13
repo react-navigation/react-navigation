@@ -29,6 +29,8 @@
     "clean": "del lib"
   },
   "dependencies": {
+    "escape-string-regexp": "^2.0.0",
+    "query-string": "^6.8.3",
     "shortid": "^2.2.14",
     "use-subscription": "^1.0.0"
   },
