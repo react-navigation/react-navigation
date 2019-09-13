@@ -6,6 +6,7 @@
       "@react-navigation/core",
       "@react-navigation/native",
       "@react-navigation/routers",
+      "@react-navigation/compat",
       "@react-navigation/stack",
       "@react-navigation/drawer",
       "@react-navigation/bottom-tabs",

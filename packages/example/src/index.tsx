@@ -27,6 +27,7 @@ import BottomTabsScreen from './Screens/BottomTabs';
 import MaterialTopTabsScreen from './Screens/MaterialTopTabs';
 import MaterialBottomTabs from './Screens/MaterialBottomTabs';
 import AuthFlow from './Screens/AuthFlow';
+import CompatAPI from './Screens/CompatAPI';
 
 YellowBox.ignoreWarnings(['Require cycle:', 'Warning: Async Storage']);
 
@@ -54,6 +55,10 @@ const SCREENS = {
   'auth-flow': {
     title: 'Auth Flow',
     component: AuthFlow,
+  },
+  'compat-api': {
+    title: 'Compat Layer',
+    component: CompatAPI,
   },
 };
 

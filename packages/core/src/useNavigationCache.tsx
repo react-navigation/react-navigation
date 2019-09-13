@@ -91,7 +91,7 @@ export default function useNavigationCache<
           ...rest,
           ...helpers,
           ...emitter.create(route.key),
-          dangerouslyGetParent: () => parentNavigation,
+          dangerouslyGetParent: () => parentNavigation as any,
           dangerouslyGetState: getState as () => State,
           dispatch,
           setOptions: (options: object) =>
