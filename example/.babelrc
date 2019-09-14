@@ -1,3 +1,12 @@
 {
-  "presets": ["expo"]
+  "presets": [
+    "expo"
+  ],
+  "plugins": [
+    ["module-resolver", {
+      "alias": {
+        "react-navigation": "../src/react-navigation"
+      }
+    }]
+  ]
 }
