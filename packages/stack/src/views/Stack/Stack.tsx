@@ -110,6 +110,8 @@ const { cond, eq } = Animated;
 
 const ANIMATED_ONE = new Animated.Value(1);
 
+const FALLBACK_DESCRIPTOR = Object.freeze({ options: {} });
+
 const getFloatingHeaderHeights = (
   routes: Route<string>[],
   layout: Layout,
@@ -174,7 +176,7 @@ export default class Stack extends React.Component<Props, State> {
           descriptor:
             props.descriptors[route.key] ||
             state.descriptors[route.key] ||
-            (oldScene ? oldScene.descriptor : { options: {} }),
+            (oldScene ? oldScene.descriptor : FALLBACK_DESCRIPTOR),
           progress: {
             current,
             next,
