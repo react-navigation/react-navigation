@@ -34,9 +34,7 @@ function createNavigator(NavigatorView, router, navigationConfig) {
         );
       }
 
-      const descriptors = {};
-
-      routes.forEach(route => {
+      const descriptors = routes.reduce((acc, route) => {
         if (
           prevDescriptors &&
           prevDescriptors[route.key] &&
@@ -44,8 +42,8 @@ function createNavigator(NavigatorView, router, navigationConfig) {
           screenProps === currentState.screenProps &&
           currentState.themeContext === currentState.theme
         ) {
-          descriptors[route.key] = prevDescriptors[route.key];
-          return;
+          acc[route.key] = prevDescriptors[route.key];
+          return acc;
         }
         const getComponent = router.getComponentForRouteName.bind(
           null,
@@ -57,14 +55,15 @@ function createNavigator(NavigatorView, router, navigationConfig) {
           screenProps,
           currentState.themeContext
         );
-        descriptors[route.key] = {
+        acc[route.key] = {
           key: route.key,
           getComponent,
           options,
           state: route,
           navigation: childNavigation,
         };
-      });
+        return acc;
+      }, {});
 
       return { descriptors, screenProps, theme: state.themeContext };
     }
