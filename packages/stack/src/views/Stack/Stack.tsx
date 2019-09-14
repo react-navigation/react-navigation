@@ -102,6 +102,8 @@ const MaybeScreen = ({
   return <View {...rest} />;
 };
 
+const FALLBACK_DESCRIPTOR = Object.freeze({ options: {} });
+
 const { cond, eq } = Animated;
 
 const ANIMATED_ONE = new Animated.Value(1);
@@ -163,18 +165,20 @@ export default class Stack extends React.Component<Props, State> {
           : undefined;
         const next = nextRoute ? progress[nextRoute.key] : undefined;
 
+        const oldScene = state.scenes[index];
         const scene = {
           route,
           previous: previousRoute,
-          descriptor: props.descriptors[route.key],
+          descriptor:
+            props.descriptors[route.key] ||
+            state.descriptors[route.key] ||
+            (oldScene ? oldScene.descriptor : FALLBACK_DESCRIPTOR),
           progress: {
             current,
             next,
             previous,
           },
         };
-
-        const oldScene = state.scenes[index];
 
         if (
           oldScene &&
