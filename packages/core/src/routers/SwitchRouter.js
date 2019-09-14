@@ -186,17 +186,19 @@ export default (routeConfigs, config = {}) => {
 
         return getNextState(action, prevState, {
           ...state,
-          routes: state.routes.map((route, i) =>
-            i === index
-              ? {
-                  ...route,
-                  params: {
-                    ...route.params,
-                    ...params,
-                  },
-                }
-              : route
-          ),
+          routes: params
+            ? state.routes.map((route, i) =>
+                i === index
+                  ? {
+                      ...route,
+                      params: {
+                        ...route.params,
+                        ...params,
+                      },
+                    }
+                  : route
+              )
+            : state.routes,
           index,
         });
       }
