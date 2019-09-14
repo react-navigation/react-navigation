@@ -11,7 +11,7 @@
   "dependencies": {
     "@expo/vector-icons": "^10.0.0",
     "@react-native-community/masked-view": "^0.1.1",
-    "@react-navigation/core": "^3.5.0",
+    "@react-navigation/core": "^3.5.1",
     "@react-navigation/native": "^3.6.2",
     "expo": "^33.0.7",
     "expo-asset": "^5.0.1",
