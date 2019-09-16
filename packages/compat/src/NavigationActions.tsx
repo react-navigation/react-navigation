@@ -1,4 +1,4 @@
-import { CommonActions } from '@react-navigation/core';
+import { CommonActions, NavigationState } from '@react-navigation/core';
 
 export function navigate({
   routeName,
@@ -24,14 +24,14 @@ export function navigate({
   });
 }
 
-export function back(options?: { key: null | never }): CommonActions.Action {
-  if (options !== undefined && options.key != null) {
-    throw new Error(
-      "The legacy `back` action with a key is not supported. To go back from a specific route, you need to specify both route key and the navigator's state key in the action: `{ ...CommonActions.goBack(), source: route.key, target: state.key }`."
-    );
-  }
-
-  return CommonActions.goBack();
+export function back(options?: { key?: null | string }) {
+  return options && options.key != null
+    ? (state: NavigationState) => ({
+        ...CommonActions.goBack(),
+        source: options.key,
+        target: state.key,
+      })
+    : CommonActions.goBack();
 }
 
 export function setParams({

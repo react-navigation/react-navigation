@@ -26,16 +26,24 @@ export default function createCompatNavigationProp<
 ) {
   return {
     ...navigation,
-    ...Object.entries(helpers).reduce<{ [key: string]: Function }>(
-      (acc, [name, method]: [string, Function]) => {
-        if (name in navigation) {
-          acc[name] = (...args: any[]) => navigation.dispatch(method(...args));
-        }
+    ...Object.entries(helpers).reduce<{
+      [key: string]: (...args: any[]) => void;
+    }>((acc, [name, method]) => {
+      if (name in navigation) {
+        acc[name] = (...args: any[]) => {
+          // @ts-ignore
+          const payload = method(...args);
 
-        return acc;
-      },
-      {}
-    ),
+          navigation.dispatch(
+            typeof payload === 'function'
+              ? payload(navigation.dangerouslyGetState())
+              : payload
+          );
+        };
+      }
+
+      return acc;
+    }, {}),
     original: navigation,
     addListener(type: EventName, callback: () => void) {
       let unsubscribe: () => void;
