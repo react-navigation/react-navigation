@@ -574,7 +574,13 @@ export default class Card extends React.Component<Props> {
                 this.offset,
                 cond(
                   this.distance,
-                  divide(this.gesture, this.distance),
+                  divide(
+                    multiply(
+                      this.gestureUntraversed,
+                      I18nManager.isRTL ? MINUS_ONE_NODE : TRUE_NODE
+                    ),
+                    this.distance
+                  ),
                   TRUE_NODE
                 )
               ),
@@ -584,16 +590,10 @@ export default class Card extends React.Component<Props> {
           )
         ),
         // Stop animations while we're dragging
-        // and invoke proper listener
         cond(
           clockRunning(this.clock),
-          call([this.toValue], ([target]) => {
+          call([], () => {
             this.isRunningAnimation = false;
-            if (target) {
-              this.props.onOpen(false);
-            } else {
-              this.props.onClose(false);
-            }
           })
         ),
         stopClock(this.clock),
