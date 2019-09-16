@@ -1,9 +1,14 @@
 import * as NavigationActions from '../NavigationActions';
 import invariant from '../utils/invariant';
 
-const getNavigationActionCreators = route => {
+interface NavigationParams {
+  [key: string]: any;
+}
+
+// TODO: Type `route`
+const getNavigationActionCreators = (route: any) => {
   return {
-    goBack: key => {
+    goBack: (key?: string | null) => {
       let actualizedKey = key;
       if (key === undefined && route.key) {
         invariant(typeof route.key === 'string', 'key should be a string');
@@ -11,7 +16,11 @@ const getNavigationActionCreators = route => {
       }
       return NavigationActions.back({ key: actualizedKey });
     },
-    navigate: (navigateTo, params, action) => {
+    navigate: (
+      navigateTo: string | NavigationActions.NavigationNavigateActionPayload,
+      params?: NavigationParams,
+      action?: NavigationActions.NavigationNavigateAction
+    ) => {
       if (typeof navigateTo === 'string') {
         return NavigationActions.navigate({
           routeName: navigateTo,
@@ -33,7 +42,7 @@ const getNavigationActionCreators = route => {
       );
       return NavigationActions.navigate(navigateTo);
     },
-    setParams: params => {
+    setParams: (params?: NavigationParams) => {
       invariant(
         route.key && typeof route.key === 'string',
         'setParams cannot be called by root navigator'

@@ -1,5 +1,3 @@
-/* eslint-disable import/no-commonjs */
-
 /**
  * Use invariant() to assert state which your program assumes to be true.
  *
@@ -11,33 +9,28 @@
  * will remain to ensure logic does not differ in production.
  */
 
-var validateFormat = function() {};
+let validateFormat: (format?: string) => void = function() {};
 
-if (process.env !== 'production') {
-  validateFormat = function(format) {
+if (process.env.NODE_ENV !== 'production') {
+  validateFormat = function(format?: string) {
     if (format === undefined) {
       throw new Error('invariant requires an error message argument');
     }
   };
 }
 
-function invariant(condition, format, a, b, c, d, e, f) {
+function invariant(condition: boolean, format?: string, ...args: any[]) {
   validateFormat(format);
 
   if (!condition) {
-    var error;
+    let error: Error & { framesToPop?: number };
     if (format === undefined) {
       error = new Error(
         'Minified exception occurred; use the non-minified dev environment for the full error message and additional helpful warnings.'
       );
     } else {
-      var args = [a, b, c, d, e, f];
-      var argIndex = 0;
-      error = new Error(
-        format.replace(/%s/g, function() {
-          return args[argIndex++];
-        })
-      );
+      let argIndex = 0;
+      error = new Error(format.replace(/%s/g, () => args[argIndex++]));
       error.name = 'Invariant Violation';
     }
 
@@ -46,4 +39,4 @@ function invariant(condition, format, a, b, c, d, e, f) {
   }
 }
 
-module.exports = invariant;
+export default invariant;
