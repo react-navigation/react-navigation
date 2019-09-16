@@ -5,10 +5,8 @@ The NavigationPlayground example app includes a variety of patterns and is used 
 ## Usage
 
 ```bash
-yarn # in the react-navigation root directory
-cd example
-yarn
-yarn start
+yarn bootstrap # in the react-navigation root directory
+yarn example start
 ```
 
 You can view this example application directly on Android phones by visiting scanning the QR code on [this site](https://exp.host/@react-navigation/NavigationPlayground) with the [Expo app](https://play.google.com/store/apps/details?id=host.exp.exponent&hl=en).
