@@ -30,6 +30,8 @@ module.exports = {
       '@babel/runtime',
       '@expo/vector-icons',
       '@react-native-community/masked-view',
+      'escape-string-regexp',
+      'query-string',
       'react',
       'react-native',
       'react-native-gesture-handler',
