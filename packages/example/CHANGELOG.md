@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.7](https://github.com/satya164/navigation-ex/compare/@react-navigation/example@5.0.0-alpha.6...@react-navigation/example@5.0.0-alpha.7) (2019-09-16)
+
+
+### Features
+
+* compatibility layer ([e0f28a4](https://github.com/satya164/navigation-ex/commit/e0f28a4))
+* make example run as bare react-native project as well ([#85](https://github.com/satya164/navigation-ex/issues/85)) ([d16c20c](https://github.com/satya164/navigation-ex/commit/d16c20c))
+
+
+
+
+
 # [5.0.0-alpha.6](https://github.com/satya164/navigation-ex/compare/@react-navigation/example@5.0.0-alpha.4...@react-navigation/example@5.0.0-alpha.6) (2019-08-31)
 
 **Note:** Version bump only for package @react-navigation/example

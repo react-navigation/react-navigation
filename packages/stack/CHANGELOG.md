@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.16](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.15...@react-navigation/stack@5.0.0-alpha.16) (2019-09-16)
+
+
+### Bug Fixes
+
+* don't remove route if animation isn't finished when dragging ([#100](https://github.com/react-navigation/navigation-ex/issues/100)) ([6af8400](https://github.com/react-navigation/navigation-ex/commit/6af8400))
+* tweak android q animations ([f57a91c](https://github.com/react-navigation/navigation-ex/commit/f57a91c))
+
+
+### Features
+
+* integrate `InterationManager` in stack ([9563a27](https://github.com/react-navigation/navigation-ex/commit/9563a27))
+* make example run as bare react-native project as well ([#85](https://github.com/react-navigation/navigation-ex/issues/85)) ([d16c20c](https://github.com/react-navigation/navigation-ex/commit/d16c20c))
+
+
+
+
+
 # [5.0.0-alpha.15](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.14...@react-navigation/stack@5.0.0-alpha.15) (2019-09-04)
 
 
