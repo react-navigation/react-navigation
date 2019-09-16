@@ -20,6 +20,7 @@
     "@react-native-community/masked-view": "^0.1.1",
     "expo": "^34.0.1",
     "expo-asset": "~6.0.0",
+    "query-string": "^6.8.3",
     "react": "16.8.3",
     "react-dom": "^16.8.3",
     "react-native": "0.59.10",
