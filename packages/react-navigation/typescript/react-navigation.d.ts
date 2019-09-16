@@ -345,7 +345,7 @@ declare module 'react-navigation' {
 
   export interface NavigationJumpToActionPayload {
     routeName: string;
-    key: string;
+    key?: string;
     params?: NavigationParams;
   }
 
