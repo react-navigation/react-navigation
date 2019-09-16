@@ -1098,10 +1098,10 @@
     universal-user-agent "^2.0.0"
     url-template "^2.0.8"
 
-"@react-native-community/bob@^0.3.4":
-  version "0.3.4"
-  resolved "https://registry.yarnpkg.com/@react-native-community/bob/-/bob-0.3.4.tgz#dd04498cf8edc8ae515f32eb63413f5aa83a72f8"
-  integrity sha512-esZGZwcwuwTm8bAp33jtzvPfPfVpt+wxDl0mlaLuTceao/aeAGs0XPm51SZkPnc4HOv4YBiDJBlc3HWXcadu+g==
+"@react-native-community/bob@^0.7.0":
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/@react-native-community/bob/-/bob-0.7.0.tgz#2d3944a0fbc2b5a7b35545adc2b66c960de349e3"
+  integrity sha512-FKJkf9D3RuLXFMnkAawVVLTH5HXyn6UMMkLGFcIeXnzJnBEdZrV9JPpBIPAITnrUrOAl/8mBLkPJTjH/IebSjg==
   dependencies:
     "@babel/core" "^7.4.0"
     chalk "^2.4.2"
@@ -1113,6 +1113,8 @@
     is-git-dirty "^1.0.0"
     metro-react-native-babel-preset "^0.53.1"
     yargs "^13.2.2"
+  optionalDependencies:
+    jetifier "^1.0.0-beta04.2"
 
 "@react-navigation/core@^3.3.1":
   version "3.3.1"
@@ -5904,6 +5906,11 @@ jest@^24.7.1:
   dependencies:
     import-local "^2.0.0"
     jest-cli "^24.7.1"
+
+jetifier@^1.0.0-beta04.2:
+  version "1.6.4"
+  resolved "https://registry.yarnpkg.com/jetifier/-/jetifier-1.6.4.tgz#6159db8e275d97980d26162897a0648b6d4a3222"
+  integrity sha512-+f/4OLeqY8RAmXnonI1ffeY1DR8kMNJPhv5WMFehchf7U71cjMQVKkOz1n6asz6kfVoAqKNWJz1A/18i18AcXA==
 
 "js-tokens@^3.0.0 || ^4.0.0", js-tokens@^4.0.0:
   version "4.0.0"

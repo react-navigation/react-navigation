@@ -47,7 +47,7 @@
   "devDependencies": {
     "@babel/cli": "^7.4.3",
     "@commitlint/config-conventional": "^7.5.0",
-    "@react-native-community/bob": "^0.3.4",
+    "@react-native-community/bob": "^0.7.0",
     "@react-navigation/core": "^3.3.1",
     "@react-navigation/native": "^3.4.1",
     "@types/react": "~16.8.3",
