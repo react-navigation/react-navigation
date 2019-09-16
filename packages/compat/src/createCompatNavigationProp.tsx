@@ -27,9 +27,9 @@ export default function createCompatNavigationProp<
   return {
     ...navigation,
     ...Object.entries(helpers).reduce<{ [key: string]: Function }>(
-      (acc, [name, method]) => {
+      (acc, [name, method]: [string, Function]) => {
         if (name in navigation) {
-          acc[name] = method;
+          acc[name] = (...args: any[]) => navigation.dispatch(method(...args));
         }
 
         return acc;
