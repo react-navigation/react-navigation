@@ -29,10 +29,8 @@ export function navigate(
   return NavigationActions.navigate(options);
 }
 
-export function goBack(fromKey?: null | never) {
-  return NavigationActions.back(
-    fromKey !== undefined ? { key: fromKey } : undefined
-  );
+export function goBack(fromKey?: null | string) {
+  return NavigationActions.back({ key: fromKey });
 }
 
 export function setParams(params: object) {
