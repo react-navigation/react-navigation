@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.9](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/core@5.0.0-alpha.8...@react-navigation/core@5.0.0-alpha.9) (2019-09-16)
+
+
+### Features
+
+* compatibility layer ([e0f28a4](https://github.com/react-navigation/navigation-ex/commit/e0f28a4))
+* make deep link handling more flexible ([849d952](https://github.com/react-navigation/navigation-ex/commit/849d952))
+* make example run as bare react-native project as well ([#85](https://github.com/react-navigation/navigation-ex/issues/85)) ([d16c20c](https://github.com/react-navigation/navigation-ex/commit/d16c20c))
+
+
+
+
+
 # [5.0.0-alpha.8](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/core@5.0.0-alpha.7...@react-navigation/core@5.0.0-alpha.8) (2019-09-04)
 
 **Note:** Version bump only for package @react-navigation/core

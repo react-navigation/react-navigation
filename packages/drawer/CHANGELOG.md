@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.9](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/drawer@5.0.0-alpha.8...@react-navigation/drawer@5.0.0-alpha.9) (2019-09-16)
+
+
+### Features
+
+* make example run as bare react-native project as well ([#85](https://github.com/react-navigation/navigation-ex/issues/85)) ([d16c20c](https://github.com/react-navigation/navigation-ex/commit/d16c20c))
+
+
+
+
+
 # [5.0.0-alpha.8](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/drawer@5.0.0-alpha.7...@react-navigation/drawer@5.0.0-alpha.8) (2019-08-31)
 
 **Note:** Version bump only for package @react-navigation/drawer
