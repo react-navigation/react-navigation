@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.17](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.16...@react-navigation/stack@5.0.0-alpha.17) (2019-09-17)
+
+
+### Bug Fixes
+
+* add fallbacks for non-web modules ([b4bbf9b](https://github.com/react-navigation/navigation-ex/commit/b4bbf9b)), closes [#95](https://github.com/react-navigation/navigation-ex/issues/95) [#96](https://github.com/react-navigation/navigation-ex/issues/96)
+* provide navigation prop in header ([30e510d](https://github.com/react-navigation/navigation-ex/commit/30e510d))
+
+
+
+
+
 # [5.0.0-alpha.16](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.15...@react-navigation/stack@5.0.0-alpha.16) (2019-09-16)
 
 
