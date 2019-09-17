@@ -13,7 +13,8 @@ export {
   default as createCompatNavigationProp,
 } from './createCompatNavigationProp';
 
-export { default as useCompatNavigation } from './useCompatNavigation';
+export { default as createSwitchNavigator } from './createSwitchNavigator';
+
 export { default as withNavigation } from './withNavigation';
 export { default as withNavigationFocus } from './withNavigationFocus';
 
