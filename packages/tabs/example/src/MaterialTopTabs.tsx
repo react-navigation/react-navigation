@@ -34,8 +34,16 @@ class ContactsScreen extends React.Component {
   }
 }
 
-export default createMaterialTopTabNavigator({
-  AlbumsScreen,
-  ArticleScreen,
-  ContactsScreen,
-});
+export default createMaterialTopTabNavigator(
+  {
+    AlbumsScreen,
+    ArticleScreen,
+    ContactsScreen,
+  },
+  {
+    lazy: true,
+    tabBarOptions: {
+      style: { backgroundColor: '#5620E4' },
+    },
+  }
+);

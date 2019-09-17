@@ -17,13 +17,11 @@ type Route = {
   routeName: string;
 };
 
-type Props = NavigationViewProps & {
+type Config = {
   keyboardDismissMode?: 'none' | 'on-drag';
   swipeEnabled?: boolean;
   swipeDistanceThreshold?: number;
   swipeVelocityThreshold?: number;
-  onSwipeStart?: () => void;
-  onSwipeEnd?: () => void;
   initialLayout?: { width?: number; height?: number };
   lazy?: boolean;
   lazyPlaceholderComponent?: React.ComponentType<{ route: Route }>;
@@ -32,10 +30,16 @@ type Props = NavigationViewProps & {
   tabBarPosition?: 'top' | 'bottom';
   sceneContainerStyle?: StyleProp<ViewStyle>;
   style?: StyleProp<ViewStyle>;
-  navigation: NavigationTabProp;
-  descriptors: SceneDescriptorMap;
-  screenProps?: unknown;
 };
+
+type Props = NavigationViewProps &
+  Config & {
+    onSwipeStart?: () => void;
+    onSwipeEnd?: () => void;
+    navigation: NavigationTabProp;
+    descriptors: SceneDescriptorMap;
+    screenProps?: unknown;
+  };
 
 class MaterialTabView extends React.PureComponent<Props> {
   _renderLazyPlaceholder = (props: { route: Route }) => {
@@ -140,6 +144,6 @@ class MaterialTabView extends React.PureComponent<Props> {
   }
 }
 
-export default createTabNavigator<NavigationMaterialTabOptions, Props>(
+export default createTabNavigator<Config, NavigationMaterialTabOptions, Props>(
   MaterialTabView
 );

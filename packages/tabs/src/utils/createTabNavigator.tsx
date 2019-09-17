@@ -27,8 +27,8 @@ type CommonProps = {
   screenProps?: unknown;
 };
 
-type ExtraProps = {
-  navigationConfig: any;
+type ExtraProps<Config extends {}> = {
+  navigationConfig: Config;
 };
 
 export type RenderIconProps = {
@@ -52,23 +52,22 @@ export type NavigationViewProps = {
 };
 
 export default function createTabNavigator<
+  Config extends {},
   Options extends NavigationCommonTabOptions,
   Props extends NavigationViewProps & CommonProps
 >(
-  TabView: React.ComponentType<Props>
+  TabView: React.ComponentType<Props & Config & Options>
 ): (
   routes: RouteConfig<Options>,
   config?: CreateNavigatorConfig<
-    {},
+    Partial<Config>,
     NavigationTabRouterConfig,
     Partial<Options>,
     NavigationTabProp<NavigationRoute, any>
   >
-) => React.ComponentType<
-  Pick<Props, Exclude<keyof Props, keyof NavigationViewProps>> & ExtraProps
-> {
+) => React.ComponentType<{}> {
   class NavigationView extends React.Component<
-    Pick<Props, Exclude<keyof Props, keyof NavigationViewProps>> & ExtraProps
+    Exclude<Props, NavigationViewProps> & ExtraProps<Config>
   > {
     _renderScene = ({ route }: { route: { key: string } }) => {
       const { screenProps, descriptors } = this.props;
@@ -232,14 +231,13 @@ export default function createTabNavigator<
       const { state } = navigation;
       const route = state.routes[state.index];
       const descriptor = descriptors[route.key];
-      const options = {
-        ...navigationConfig,
-        ...descriptor.options,
-      };
 
       return (
+        // TODO: don't have time to fix it right now
+        // @ts-ignore
         <TabView
-          {...options}
+          {...navigationConfig}
+          {...descriptor.options}
           getLabelText={this._getLabelText}
           getAccessibilityLabel={this._getAccessibilityLabel}
           getTestID={this._getTestID}
@@ -259,7 +257,7 @@ export default function createTabNavigator<
   return (
     routes: RouteConfig<Options>,
     config: CreateNavigatorConfig<
-      {},
+      Partial<Config>,
       NavigationTabRouterConfig,
       Partial<Options>,
       NavigationTabProp<NavigationRoute, any>

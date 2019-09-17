@@ -22,21 +22,25 @@ import {
   SceneDescriptorMap,
 } from '../types';
 
-type Props = NavigationViewProps & {
-  getAccessibilityRole: (props: {
-    route: NavigationRoute;
-  }) => AccessibilityRole | undefined;
-  getAccessibilityStates: (props: {
-    route: NavigationRoute;
-    focused: boolean;
-  }) => AccessibilityState[];
+type Config = {
   lazy?: boolean;
   tabBarComponent?: React.ComponentType<any>;
   tabBarOptions?: BottomTabBarOptions;
-  navigation: NavigationTabProp;
-  descriptors: SceneDescriptorMap;
-  screenProps?: unknown;
 };
+
+type Props = NavigationViewProps &
+  Config & {
+    getAccessibilityRole: (props: {
+      route: NavigationRoute;
+    }) => AccessibilityRole | undefined;
+    getAccessibilityStates: (props: {
+      route: NavigationRoute;
+      focused: boolean;
+    }) => AccessibilityState[];
+    navigation: NavigationTabProp;
+    descriptors: SceneDescriptorMap;
+    screenProps?: unknown;
+  };
 
 type State = {
   loaded: number[];
@@ -176,6 +180,6 @@ const styles = StyleSheet.create({
   },
 });
 
-export default createTabNavigator<NavigationBottomTabOptions, Props>(
+export default createTabNavigator<Config, NavigationBottomTabOptions, Props>(
   TabNavigationView
 );
