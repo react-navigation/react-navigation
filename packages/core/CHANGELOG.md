@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.10](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/core@5.0.0-alpha.9...@react-navigation/core@5.0.0-alpha.10) (2019-09-17)
+
+**Note:** Version bump only for package @react-navigation/core
+
+
+
+
+
 # [5.0.0-alpha.9](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/core@5.0.0-alpha.8...@react-navigation/core@5.0.0-alpha.9) (2019-09-16)
 
 

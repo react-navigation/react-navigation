@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.9](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/bottom-tabs@5.0.0-alpha.8...@react-navigation/bottom-tabs@5.0.0-alpha.9) (2019-09-17)
+
+
+### Bug Fixes
+
+* provide navigation prop in header ([30e510d](https://github.com/react-navigation/navigation-ex/commit/30e510d))
+
+
+
+
+
 # [5.0.0-alpha.8](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/bottom-tabs@5.0.0-alpha.7...@react-navigation/bottom-tabs@5.0.0-alpha.8) (2019-09-16)
 
 
