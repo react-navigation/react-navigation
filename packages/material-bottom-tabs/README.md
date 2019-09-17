@@ -27,7 +27,7 @@ export default function App() {
         component={Article}
         options={{
           tabBarLabel: 'Article',
-          tabBarIcon: 'chrome-reader-mode',
+          tabBarIcon: 'file-document-box',
         }}
       />
       <MaterialBottomTabs.Screen
@@ -35,7 +35,7 @@ export default function App() {
         component={Chat}
         options={{
           tabBarLabel: 'Chat',
-          tabBarIcon: 'chat-bubble',
+          tabBarIcon: 'message-reply',
         }}
       />
       <MaterialBottomTabs.Screen
@@ -51,7 +51,7 @@ export default function App() {
         component={Albums}
         options={{
           tabBarLabel: 'Albums',
-          tabBarIcon: 'photo-album',
+          tabBarIcon: 'image-album',
         }}
       />
     </MaterialBottomTabs.Navigator>

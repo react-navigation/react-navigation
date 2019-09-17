@@ -1,8 +1,7 @@
 import * as React from 'react';
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-// @ts-ignore
-import TouchableBounce from 'react-native/Libraries/Components/Touchable/TouchableBounce';
+import TouchableBounce from '../Shared/TouchableBounce';
 import Albums from '../Shared/Albums';
 import Contacts from '../Shared/Contacts';
 import Chat from '../Shared/Chat';
@@ -15,7 +14,11 @@ const getTabBarIcon = (name: string) => ({
   tintColor: string;
   horizontal: boolean;
 }) => (
-  <MaterialIcons name={name} color={tintColor} size={horizontal ? 17 : 24} />
+  <MaterialCommunityIcons
+    name={name}
+    color={tintColor}
+    size={horizontal ? 17 : 24}
+  />
 );
 
 type BottomTabParams = {
@@ -34,7 +37,7 @@ export default function BottomTabsScreen() {
         name="article"
         options={{
           title: 'Article',
-          tabBarIcon: getTabBarIcon('chrome-reader-mode'),
+          tabBarIcon: getTabBarIcon('file-document-box'),
           tabBarButtonComponent: TouchableBounce,
         }}
       >
@@ -47,7 +50,7 @@ export default function BottomTabsScreen() {
         component={Chat}
         options={{
           title: 'Chat',
-          tabBarIcon: getTabBarIcon('chat-bubble'),
+          tabBarIcon: getTabBarIcon('message-reply'),
           tabBarButtonComponent: TouchableBounce,
         }}
       />
@@ -65,7 +68,7 @@ export default function BottomTabsScreen() {
         component={Albums}
         options={{
           title: 'Albums',
-          tabBarIcon: getTabBarIcon('photo-album'),
+          tabBarIcon: getTabBarIcon('image-album'),
           tabBarButtonComponent: TouchableBounce,
         }}
       />

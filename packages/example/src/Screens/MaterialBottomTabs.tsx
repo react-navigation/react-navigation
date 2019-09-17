@@ -24,7 +24,7 @@ export default function MaterialBottomTabsScreen() {
         name="article"
         options={{
           tabBarLabel: 'Article',
-          tabBarIcon: 'chrome-reader-mode',
+          tabBarIcon: 'file-document-box',
           tabBarColor: '#C9E7F8',
         }}
       >
@@ -37,7 +37,7 @@ export default function MaterialBottomTabsScreen() {
         component={Chat}
         options={{
           tabBarLabel: 'Chat',
-          tabBarIcon: 'chat-bubble',
+          tabBarIcon: 'message-reply',
           tabBarColor: '#9FD5C9',
           tabBarBadge: true,
         }}
@@ -56,7 +56,7 @@ export default function MaterialBottomTabsScreen() {
         component={Albums}
         options={{
           tabBarLabel: 'Albums',
-          tabBarIcon: 'photo-album',
+          tabBarIcon: 'image-album',
           tabBarColor: '#FAD4D6',
         }}
       />
