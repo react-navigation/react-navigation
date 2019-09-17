@@ -245,7 +245,6 @@ export default function useNavigationBuilder<
   const navigation = useNavigationHelpers<State, NavigationAction, EventMap>({
     onAction,
     getState,
-    setState,
     emitter,
     router,
   });

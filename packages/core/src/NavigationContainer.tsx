@@ -88,7 +88,9 @@ const Container = React.forwardRef(function NavigationContainer(
 
   const { listeners, addListener: addFocusedListener } = useFocusedListeners();
 
-  const dispatch = (action: NavigationAction) => {
+  const dispatch = (
+    action: NavigationAction | ((state: NavigationState) => NavigationAction)
+  ) => {
     listeners[0](navigation => navigation.dispatch(action));
   };
 

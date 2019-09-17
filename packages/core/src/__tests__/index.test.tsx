@@ -323,7 +323,7 @@ it('cleans up state when the navigator unmounts', () => {
   expect(onStateChange).lastCalledWith(undefined);
 });
 
-it('allows arbitrary state updates by dispatching a function', () => {
+it('allows state updates by dispatching a function returning an action', () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
 
@@ -332,11 +332,11 @@ it('allows arbitrary state updates by dispatching a function', () => {
 
   const FooScreen = (props: any) => {
     React.useEffect(() => {
-      props.navigation.dispatch((state: any) => ({
-        ...state,
-        routes: state.routes.slice().reverse(),
-        index: 1,
-      }));
+      props.navigation.dispatch((state: NavigationState) =>
+        state.index === 0
+          ? { type: 'NAVIGATE', payload: { name: state.routeNames[1] } }
+          : { type: 'NOOP' }
+      );
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -364,7 +364,7 @@ it('allows arbitrary state updates by dispatching a function', () => {
     index: 1,
     key: '0',
     routeNames: ['foo', 'bar'],
-    routes: [{ key: 'bar', name: 'bar' }, { key: 'foo', name: 'foo' }],
+    routes: [{ key: 'foo', name: 'foo' }, { key: 'bar', name: 'bar' }],
   });
 });
 
