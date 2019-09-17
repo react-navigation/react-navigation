@@ -7,15 +7,18 @@ import {
 import ScreenPropsContext from './ScreenPropsContext';
 import createCompatNavigationProp from './createCompatNavigationProp';
 
-type Props = {
-  navigation: NavigationProp<ParamListBase>;
-  route: RouteProp<ParamListBase, string>;
+type Props<ParamList extends ParamListBase> = {
+  navigation: NavigationProp<ParamList>;
+  route: RouteProp<ParamList, string>;
   component: React.ComponentType<any>;
 };
 
-function ScreenComponent(props: Props) {
+function ScreenComponent<ParamList extends ParamListBase>(
+  props: Props<ParamList>
+) {
   const navigation = React.useMemo(
-    () => createCompatNavigationProp(props.navigation, props.route),
+    () =>
+      createCompatNavigationProp(props.navigation as any, props.route as any),
     [props.navigation, props.route]
   );
 

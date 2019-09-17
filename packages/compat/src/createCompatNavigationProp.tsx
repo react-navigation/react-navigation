@@ -6,6 +6,7 @@ import {
   RouteProp,
 } from '@react-navigation/core';
 import * as helpers from './helpers';
+import { CompatNavigationProp } from './types';
 
 type EventName = 'willFocus' | 'willBlur' | 'didFocus' | 'didBlur' | 'refocus';
 
@@ -14,16 +15,21 @@ const blurSubscriptions = new WeakMap<() => void, () => void>();
 const refocusSubscriptions = new WeakMap<() => void, () => void>();
 
 export default function createCompatNavigationProp<
-  ParamList extends ParamListBase
+  NavigationPropType extends NavigationProp<ParamListBase>,
+  ParamList extends ParamListBase = NavigationPropType extends NavigationProp<
+    infer P
+  >
+    ? P
+    : ParamListBase
 >(
-  navigation: NavigationProp<ParamList>,
+  navigation: NavigationPropType,
   state:
     | (RouteProp<ParamList, keyof ParamList> & {
         state?: NavigationState | PartialState<NavigationState>;
       })
     | NavigationState
     | PartialState<NavigationState>
-) {
+): CompatNavigationProp<NavigationPropType> {
   return {
     ...navigation,
     ...Object.entries(helpers).reduce<{
@@ -179,5 +185,5 @@ export default function createCompatNavigationProp<
 
       return undefined;
     },
-  };
+  } as any;
 }
