@@ -49,7 +49,7 @@ export default function App() {
         component={Article}
         options={{
           tabBarLabel: 'Article',
-          tabBarIcon: 'chrome-reader-mode',
+          tabBarIcon: 'file-document-box',
         }}
       />
       <BottomTabs.Screen
@@ -57,7 +57,7 @@ export default function App() {
         component={Chat}
         options={{
           tabBarLabel: 'Chat',
-          tabBarIcon: 'chat-bubble',
+          tabBarIcon: 'message-reply',
         }}
       />
       <BottomTabs.Screen
