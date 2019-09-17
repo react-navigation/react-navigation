@@ -9,7 +9,7 @@ import {
   Dimensions,
 } from 'react-native';
 import SafeAreaView from 'react-native-safe-area-view';
-import { Route } from '@react-navigation/core';
+import { Route, NavigationContext } from '@react-navigation/core';
 
 import TabBarIcon from './TabBarIcon';
 import TouchableWithoutFeedbackWrapper from './TouchableWithoutFeedbackWrapper';
@@ -261,6 +261,7 @@ export default class TabBarBottom extends React.Component<Props, State> {
   render() {
     const {
       state,
+      descriptors,
       keyboardHidesTabBar,
       activeBackgroundColor,
       inactiveBackgroundColor,
@@ -337,26 +338,30 @@ export default class TabBarBottom extends React.Component<Props, State> {
               getButtonComponent({ route }) || TouchableWithoutFeedbackWrapper;
 
             return (
-              <ButtonComponent
+              <NavigationContext.Provider
                 key={route.key}
-                onPress={() => onTabPress({ route })}
-                onLongPress={() => onTabLongPress({ route })}
-                testID={testID}
-                accessibilityLabel={accessibilityLabel}
-                accessibilityRole={accessibilityRole}
-                accessibilityStates={accessibilityStates}
-                style={[
-                  styles.tab,
-                  { backgroundColor },
-                  this.shouldUseHorizontalLabels()
-                    ? styles.tabLandscape
-                    : styles.tabPortrait,
-                  tabStyle,
-                ]}
+                value={descriptors[route.key].navigation}
               >
-                {this.renderIcon(scene)}
-                {this.renderLabel(scene)}
-              </ButtonComponent>
+                <ButtonComponent
+                  onPress={() => onTabPress({ route })}
+                  onLongPress={() => onTabLongPress({ route })}
+                  testID={testID}
+                  accessibilityLabel={accessibilityLabel}
+                  accessibilityRole={accessibilityRole}
+                  accessibilityStates={accessibilityStates}
+                  style={[
+                    styles.tab,
+                    { backgroundColor },
+                    this.shouldUseHorizontalLabels()
+                      ? styles.tabLandscape
+                      : styles.tabPortrait,
+                    tabStyle,
+                  ]}
+                >
+                  {this.renderIcon(scene)}
+                  {this.renderLabel(scene)}
+                </ButtonComponent>
+              </NavigationContext.Provider>
             );
           })}
         </SafeAreaView>
