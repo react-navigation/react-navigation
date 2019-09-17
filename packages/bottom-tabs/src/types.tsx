@@ -199,6 +199,7 @@ export type BottomTabBarOptions = {
 
 export type BottomTabBarProps = BottomTabBarOptions & {
   state: TabNavigationState;
+  descriptors: BottomTabDescriptorMap;
   navigation: NavigationHelpers<ParamListBase>;
   onTabPress: (props: { route: Route<string> }) => void;
   onTabLongPress: (props: { route: Route<string> }) => void;

@@ -177,6 +177,7 @@ export default class BottomTabView extends React.Component<Props, State> {
       <TabBarComponent
         {...tabBarOptions}
         state={state}
+        descriptors={descriptors}
         navigation={navigation}
         onTabPress={this.handleTabPress}
         onTabLongPress={this.handleTabLongPress}

@@ -1,6 +1,10 @@
 import * as React from 'react';
 import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
-import { Route, ParamListBase } from '@react-navigation/core';
+import {
+  NavigationContext,
+  Route,
+  ParamListBase,
+} from '@react-navigation/core';
 import { StackNavigationState } from '@react-navigation/routers';
 
 import Header from './Header';
@@ -92,36 +96,40 @@ export default function HeaderContainer({
         };
 
         return (
-          <View
+          <NavigationContext.Provider
             key={scene.route.key}
-            onLayout={
-              onContentHeightChange
-                ? e =>
-                    onContentHeightChange({
-                      route: scene.route,
-                      height: e.nativeEvent.layout.height,
-                    })
-                : undefined
-            }
-            pointerEvents="box-none"
-            accessibilityElementsHidden={!isFocused}
-            importantForAccessibility={
-              isFocused ? 'auto' : 'no-hide-descendants'
-            }
-            style={
-              mode === 'float' || options.headerTransparent
-                ? styles.header
-                : null
-            }
+            value={scene.descriptor.navigation}
           >
-            {options.header !== undefined ? (
-              options.header === null ? null : (
-                options.header(props)
-              )
-            ) : (
-              <Header {...props} />
-            )}
-          </View>
+            <View
+              onLayout={
+                onContentHeightChange
+                  ? e =>
+                      onContentHeightChange({
+                        route: scene.route,
+                        height: e.nativeEvent.layout.height,
+                      })
+                  : undefined
+              }
+              pointerEvents="box-none"
+              accessibilityElementsHidden={!isFocused}
+              importantForAccessibility={
+                isFocused ? 'auto' : 'no-hide-descendants'
+              }
+              style={
+                mode === 'float' || options.headerTransparent
+                  ? styles.header
+                  : null
+              }
+            >
+              {options.header !== undefined ? (
+                options.header === null ? null : (
+                  options.header(props)
+                )
+              ) : (
+                <Header {...props} />
+              )}
+            </View>
+          </NavigationContext.Provider>
         );
       })}
     </View>
