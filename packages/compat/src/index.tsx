@@ -9,4 +9,12 @@ export {
   default as createCompatNavigatorFactory,
 } from './createCompatNavigatorFactory';
 
+export {
+  default as createCompatNavigationProp,
+} from './createCompatNavigationProp';
+
+export { default as useCompatNavigation } from './useCompatNavigation';
+export { default as withNavigation } from './withNavigation';
+export { default as withNavigationFocus } from './withNavigationFocus';
+
 export * from './types';

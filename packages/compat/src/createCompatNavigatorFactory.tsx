@@ -80,7 +80,7 @@ export default function createCompatNavigatorFactory<
               navigation,
               route,
             }: {
-              navigation: NavigationProp<ParamList>;
+              navigation: NavigationPropType;
               route: RouteProp<ParamList, keyof ParamList> & {
                 state?: NavigationState | PartialState<NavigationState>;
               };
@@ -101,10 +101,9 @@ export default function createCompatNavigatorFactory<
                 typeof routeNavigationOptions === 'function' ||
                 typeof screenNavigationOptions === 'function'
                   ? {
-                      navigation: createCompatNavigationProp<ParamList>(
-                        navigation,
-                        route
-                      ),
+                      navigation: createCompatNavigationProp<
+                        NavigationPropType
+                      >(navigation, route),
                       navigationOptions: defaultNavigationOptions || {},
                       screenProps,
                     }
