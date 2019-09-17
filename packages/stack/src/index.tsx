@@ -36,11 +36,14 @@ export { default as StackGestureContext } from './utils/StackGestureContext';
  * Types
  */
 export {
-  HeaderBackButtonProps,
   NavigationStackState,
   NavigationStackProp,
   NavigationStackOptions,
   NavigationStackConfig,
   NavigationStackScreenComponent,
   NavigationStackScreenProps,
+  HeaderProps,
+  HeaderBackButtonProps,
+  HeaderTitleProps,
+  TransitionPreset,
 } from './types';
