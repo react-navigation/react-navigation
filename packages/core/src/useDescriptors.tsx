@@ -17,8 +17,8 @@ import {
   Router,
 } from './types';
 
-type Options<ScreenOptions extends object> = {
-  state: NavigationState;
+type Options<State extends NavigationState, ScreenOptions extends object> = {
+  state: State;
   screens: { [key: string]: RouteConfig<ParamListBase, string, ScreenOptions> };
   navigation: NavigationHelpers<ParamListBase>;
   screenOptions?:
@@ -31,12 +31,12 @@ type Options<ScreenOptions extends object> = {
     action: NavigationAction,
     visitedNavigators?: Set<string>
   ) => boolean;
-  getState: () => NavigationState;
-  setState: (state: NavigationState) => void;
+  getState: () => State;
+  setState: (state: State) => void;
   addActionListener: (listener: ChildActionListener) => void;
   addFocusedListener: (listener: FocusedNavigationListener) => void;
   onRouteFocus: (key: string) => void;
-  router: Router<NavigationState, NavigationAction>;
+  router: Router<State, NavigationAction>;
   emitter: NavigationEventEmitter;
 };
 
@@ -64,7 +64,7 @@ export default function useDescriptors<
   onRouteFocus,
   router,
   emitter,
-}: Options<ScreenOptions>) {
+}: Options<State, ScreenOptions>) {
   const [options, setOptions] = React.useState<{ [key: string]: object }>({});
   const { trackAction } = React.useContext(NavigationBuilderContext);
 

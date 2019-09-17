@@ -270,7 +270,9 @@ type NavigationHelpersCommon<
    *
    * @param action Action object or update function.
    */
-  dispatch(action: NavigationAction | ((state: State) => State)): void;
+  dispatch(
+    action: NavigationAction | ((state: State) => NavigationAction)
+  ): void;
 
   /**
    * Navigate to a route in current navigation tree.

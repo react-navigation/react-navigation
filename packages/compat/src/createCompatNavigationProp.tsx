@@ -28,18 +28,9 @@ export default function createCompatNavigationProp<
     ...navigation,
     ...Object.entries(helpers).reduce<{
       [key: string]: (...args: any[]) => void;
-    }>((acc, [name, method]) => {
+    }>((acc, [name, method]: [string, Function]) => {
       if (name in navigation) {
-        acc[name] = (...args: any[]) => {
-          // @ts-ignore
-          const payload = method(...args);
-
-          navigation.dispatch(
-            typeof payload === 'function'
-              ? payload(navigation.dangerouslyGetState())
-              : payload
-          );
-        };
+        acc[name] = (...args: any[]) => navigation.dispatch(method(...args));
       }
 
       return acc;

@@ -23,7 +23,6 @@ type Options<State extends NavigationState, Action extends NavigationAction> = {
     visitedNavigators?: Set<string>
   ) => boolean;
   getState: () => State;
-  setState: (state: State) => void;
   emitter: NavigationEventEmitter;
   router: Router<State, Action>;
 };
@@ -36,18 +35,17 @@ export default function useNavigationHelpers<
   State extends NavigationState,
   Action extends NavigationAction,
   EventMap extends { [key: string]: any }
->({ onAction, getState, setState, emitter, router }: Options<State, Action>) {
+>({ onAction, getState, emitter, router }: Options<State, Action>) {
   const parentNavigationHelpers = React.useContext(NavigationContext);
   const { performTransaction } = React.useContext(NavigationStateContext);
 
   return React.useMemo(() => {
-    const dispatch = (action: Action | ((state: State) => State)) =>
+    const dispatch = (action: Action | ((state: State) => Action)) =>
       performTransaction(() => {
-        if (typeof action === 'function') {
-          setState(action(getState()));
-        } else {
-          onAction(action);
-        }
+        const payload =
+          typeof action === 'function' ? action(getState()) : action;
+
+        onAction(payload);
       });
 
     const actions = {
@@ -87,7 +85,6 @@ export default function useNavigationHelpers<
     parentNavigationHelpers,
     emitter.emit,
     performTransaction,
-    setState,
     onAction,
   ]);
 }

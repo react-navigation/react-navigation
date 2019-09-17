@@ -12,15 +12,15 @@ import {
   Router,
 } from './types';
 
-type Options = {
-  state: NavigationState;
-  getState: () => NavigationState;
+type Options<State extends NavigationState> = {
+  state: State;
+  getState: () => State;
   navigation: NavigationHelpers<ParamListBase> &
     Partial<NavigationProp<ParamListBase, string, any, any, any>>;
   setOptions: (
     cb: (options: { [key: string]: object }) => { [key: string]: object }
   ) => void;
-  router: Router<NavigationState, NavigationAction>;
+  router: Router<State, NavigationAction>;
   emitter: NavigationEventEmitter;
 };
 
@@ -39,7 +39,14 @@ type NavigationCache<
 export default function useNavigationCache<
   State extends NavigationState,
   ScreenOptions extends object
->({ state, getState, navigation, setOptions, router, emitter }: Options) {
+>({
+  state,
+  getState,
+  navigation,
+  setOptions,
+  router,
+  emitter,
+}: Options<State>) {
   // Cache object which holds navigation objects for each screen
   // We use `React.useMemo` instead of `React.useRef` coz we want to invalidate it when deps change
   // In reality, these deps will rarely change, if ever
@@ -70,13 +77,17 @@ export default function useNavigationCache<
         const { emit, ...rest } = navigation;
 
         const dispatch = (
-          action: NavigationAction | ((state: State) => State)
-        ) =>
+          action: NavigationAction | ((state: State) => NavigationAction)
+        ) => {
+          const payload =
+            typeof action === 'function' ? action(getState()) : action;
+
           navigation.dispatch(
-            typeof action === 'object' && action != null
-              ? { source: route.key, ...action }
-              : action
+            typeof payload === 'object' && payload != null
+              ? { source: route.key, ...payload }
+              : payload
           );
+        };
 
         const helpers = Object.keys(actions).reduce(
           (acc, name) => {
@@ -92,7 +103,7 @@ export default function useNavigationCache<
           ...helpers,
           ...emitter.create(route.key),
           dangerouslyGetParent: () => parentNavigation as any,
-          dangerouslyGetState: getState as () => State,
+          dangerouslyGetState: getState,
           dispatch,
           setOptions: (options: object) =>
             setOptions(o => ({

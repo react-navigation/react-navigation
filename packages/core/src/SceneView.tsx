@@ -19,8 +19,8 @@ type Props<State extends NavigationState, ScreenOptions extends object> = {
   route: Route<string> & {
     state?: NavigationState | PartialState<NavigationState>;
   };
-  getState: () => NavigationState;
-  setState: (state: NavigationState) => void;
+  getState: () => State;
+  setState: (state: State) => void;
 };
 
 /**
