@@ -29,8 +29,8 @@ const DEFAULT_TRANSITION = (
 
 interface Props {
   navigationConfig: {
-    transition?: React.ReactNode,
-    transitionViewStyle?: ViewStyle,
+    transition?: React.ReactNode;
+    transitionViewStyle?: ViewStyle;
   };
   navigation: NavigationProp<NavigationState>;
   descriptors: { [key: string]: NavigationDescriptor };
