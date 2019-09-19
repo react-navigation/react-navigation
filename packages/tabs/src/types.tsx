@@ -57,6 +57,18 @@ export type BottomTabBarOptions = {
   style?: StyleProp<ViewStyle>;
 };
 
+export type ButtonComponentProps = {
+  route: NavigationRoute;
+  focused: boolean;
+  onPress: () => void;
+  onLongPress: () => void;
+  testID?: string;
+  accessibilityLabel?: string;
+  accessibilityRole?: AccessibilityRole;
+  accessibilityStates?: AccessibilityState[];
+  style?: StyleProp<ViewStyle>;
+};
+
 export type BottomTabBarProps = BottomTabBarOptions & {
   navigation: NavigationTabProp;
   onTabPress: (props: { route: NavigationRoute }) => void;
@@ -73,7 +85,7 @@ export type BottomTabBarProps = BottomTabBarOptions & {
   }) => AccessibilityState[];
   getButtonComponent: (props: {
     route: NavigationRoute;
-  }) => React.ComponentType<any> | undefined;
+  }) => React.ComponentType<ButtonComponentProps> | undefined;
   getLabelText: (props: {
     route: NavigationRoute;
   }) =>
@@ -172,7 +184,7 @@ export type NavigationCommonTabOptions = {
 };
 
 export type NavigationBottomTabOptions = NavigationCommonTabOptions & {
-  tabBarButtonComponent?: React.ComponentType<BottomTabBarProps>;
+  tabBarButtonComponent?: React.ComponentType<ButtonComponentProps>;
 };
 
 export type NavigationMaterialTabOptions = NavigationCommonTabOptions & {

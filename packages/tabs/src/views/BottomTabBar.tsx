@@ -13,7 +13,7 @@ import { ThemeColors, ThemeContext, NavigationRoute } from 'react-navigation';
 
 import CrossFadeIcon from './CrossFadeIcon';
 import withDimensions from '../utils/withDimensions';
-import { BottomTabBarProps } from '../types';
+import { BottomTabBarProps, ButtonComponentProps } from '../types';
 
 type State = {
   layout: { height: number; width: number };
@@ -28,19 +28,21 @@ const isIOS11 = majorVersion >= 11 && isIos;
 const DEFAULT_MAX_TAB_ITEM_WIDTH = 125;
 
 class TouchableWithoutFeedbackWrapper extends React.Component<
-  React.ComponentProps<typeof TouchableWithoutFeedback> & {
-    children: React.ReactNode;
-  }
+  ButtonComponentProps
 > {
   render() {
     const {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      route,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      focused,
       onPress,
       onLongPress,
       testID,
       accessibilityLabel,
       accessibilityRole,
       accessibilityStates,
-      ...props
+      ...rest
     } = this.props;
 
     return (
@@ -53,7 +55,7 @@ class TouchableWithoutFeedbackWrapper extends React.Component<
         accessibilityRole={accessibilityRole}
         accessibilityStates={accessibilityStates}
       >
-        <View {...props} />
+        <View {...rest} />
       </TouchableWithoutFeedback>
     );
   }
@@ -407,6 +409,8 @@ class TabBarBottom extends React.Component<BottomTabBarProps, State> {
             return (
               <ButtonComponent
                 key={route.key}
+                route={route}
+                focused={focused}
                 onPress={() => onTabPress({ route })}
                 onLongPress={() => onTabLongPress({ route })}
                 testID={testID}
