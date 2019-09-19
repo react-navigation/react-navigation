@@ -55,17 +55,7 @@ export default function createTabNavigator<
   Config extends {},
   Options extends NavigationCommonTabOptions,
   Props extends NavigationViewProps & CommonProps
->(
-  TabView: React.ComponentType<Props & Config & Options>
-): (
-  routes: RouteConfig<Options>,
-  config?: CreateNavigatorConfig<
-    Partial<Config>,
-    NavigationTabRouterConfig,
-    Partial<Options>,
-    NavigationTabProp<NavigationRoute, any>
-  >
-) => React.ComponentType<{}> {
+>(TabView: React.ComponentType<Props & Config & Options>) {
   class NavigationView extends React.Component<
     Exclude<Props, NavigationViewProps> & ExtraProps<Config>
   > {
@@ -265,8 +255,6 @@ export default function createTabNavigator<
   ) => {
     const router = TabRouter(routes, config as any);
 
-    // TODO: don't have time to fix it right now
-    // @ts-ignore
-    return createNavigator(NavigationView, router, config as any);
+    return createNavigator(NavigationView as any, router, config as any);
   };
 }

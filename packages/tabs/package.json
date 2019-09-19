@@ -74,7 +74,7 @@
     "react-native": "~0.57.1",
     "react-native-gesture-handler": "^1.4.1",
     "react-native-reanimated": "^1.2.0",
-    "react-navigation": "^4.0.4",
+    "react-navigation": "^4.0.5",
     "react-test-renderer": "16.5.0",
     "release-it": "^10.3.1",
     "typescript": "^3.5.2"
@@ -85,7 +85,7 @@
     "react-native-gesture-handler": "^1.0.0",
     "react-native-reanimated": "^1.0.0-alpha",
     "react-native-screens": "^1.0.0 || ^1.0.0-alpha",
-    "react-navigation": "^4.0.4"
+    "react-navigation": "^4.0.5"
   },
   "husky": {
     "hooks": {
