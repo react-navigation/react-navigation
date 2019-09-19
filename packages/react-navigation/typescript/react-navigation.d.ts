@@ -619,7 +619,7 @@ declare module 'react-navigation' {
   export function createSwitchNavigator(
     routeConfigMap: NavigationRouteConfigMap<SwitchNavigatorConfig, NavigationScreenProp<NavigationRoute>>,
     switchConfig?: SwitchNavigatorConfig
-  ): NavigationContainer;
+  ): NavigationNavigator<{}, NavigationProp<NavigationState>>;
 
   /**
    * NavigationActions
@@ -754,9 +754,9 @@ declare module 'react-navigation' {
   export function createNavigator<S, Options>(
     view: NavigationView<Options, S>,
     router: NavigationRouter<S, Options>,
-    navigatorConfig?: {} | null,
+    navigatorConfig?: {},
     navigatorType?: NavigatorType
-  ): any;
+  ): NavigationNavigator<Options, NavigationProp<NavigationState>>;
 
   /**
    * Create an HOC that injects the navigation and manages the navigation state
