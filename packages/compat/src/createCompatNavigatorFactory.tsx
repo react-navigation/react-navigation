@@ -19,7 +19,14 @@ export default function createCompatNavigatorFactory<
     React.ComponentType<any>
   >
 >(createNavigator: CreateNavigator) {
-  return <
+  // @ts-ignore
+  if (createNavigator.isCompat) {
+    throw new Error(
+      `The navigator is already in compat mode. You don't need to wrap it in 'createCompatNavigatorFactory'.`
+    );
+  }
+
+  const createCompatNavigator = <
     NavigationPropType extends NavigationProp<any, any, any, any, any>,
     ParamList extends ParamListBase = NavigationPropType extends NavigationProp<
       infer P
@@ -157,4 +164,8 @@ export default function createCompatNavigatorFactory<
 
     return Navigator;
   };
+
+  createCompatNavigator.isCompat = true;
+
+  return createCompatNavigator;
 }
