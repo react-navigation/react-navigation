@@ -53,6 +53,7 @@ export type BottomTabBarOptions = {
     | LabelPosition
     | ((options: { deviceOrientation: Orientation }) => LabelPosition);
   adaptive?: boolean;
+  safeAreaInset?: React.ComponentProps<typeof SafeAreaView>['forceInset'];
   style?: StyleProp<ViewStyle>;
 };
 
@@ -92,7 +93,6 @@ export type BottomTabBarProps = BottomTabBarOptions & {
   }) => React.ReactNode;
   dimensions: { width: number; height: number };
   isLandscape: boolean;
-  safeAreaInset?: React.ComponentProps<typeof SafeAreaView>['forceInset'];
   jumpTo: (key: string) => void;
   screenProps: unknown;
 };
