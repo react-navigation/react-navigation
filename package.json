@@ -36,11 +36,11 @@
     "react-native": "*"
   },
   "dependencies": {
-    "@react-navigation/core": "~3.5.0",
-    "@react-navigation/native": "~3.6.1",
+    "@react-navigation/core": "~3.5.1",
+    "@react-navigation/native": "~3.6.2",
     "react-navigation-drawer": "~1.4.0",
-    "react-navigation-tabs": "~1.2.0",
-    "react-navigation-stack": "~1.5.0"
+    "react-navigation-stack": "1.5.3",
+    "react-navigation-tabs": "~1.2.0"
   },
   "devDependencies": {
     "@types/react-native": "~0.57.38",
