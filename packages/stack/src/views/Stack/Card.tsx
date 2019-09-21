@@ -609,6 +609,7 @@ export default class Card extends React.Component<Props> {
       nativeEvent: {
         translationX: this.gestureUntraversed,
         velocityX: this.velocityUntraversed,
+        state: this.gestureState,
       },
     },
   ]);
