@@ -13,10 +13,10 @@ const gestureResponseDistance = {
 };
 
 function forVerticalInvertedIOS({
-  progress: { current },
+  current: { progress },
   layouts: { screen },
 }) {
-  const translateY = interpolate(current, {
+  const translateY = interpolate(progress, {
     inputRange: [0, 1],
     outputRange: [-screen.height, 0],
   });
