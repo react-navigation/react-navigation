@@ -190,16 +190,16 @@ declare module 'react-navigation' {
     navigationOptions?: NavigationScreenConfig<Options, NavigationScreenPropType>;
   };
 
-  export interface NavigationScreenConfigProps<NavigationScreenPropType> {
+  export interface NavigationScreenConfigProps<NavigationScreenPropType, ScreenProps = unknown> {
     navigation: NavigationScreenPropType;
-    screenProps: unknown;
+    screenProps: ScreenProps;
     theme: SupportedThemes;
   }
 
-  export type NavigationScreenConfig<Options, NavigationScreenPropType> =
+  export type NavigationScreenConfig<Options, NavigationScreenPropType, ScreenProps = unknown> =
     | Options
     | ((
-        navigationOptionsContainer: NavigationScreenConfigProps<NavigationScreenPropType> & {
+        navigationOptionsContainer: NavigationScreenConfigProps<NavigationScreenPropType, ScreenProps> & {
           navigationOptions: Options;
         }
       ) => Options);
@@ -542,12 +542,12 @@ declare module 'react-navigation' {
     dangerouslyGetParent: () => NavigationScreenProp<S> | undefined;
   }
 
-  export interface NavigationNavigatorProps<O = {}, S = {}> {
+  export interface NavigationNavigatorProps<Options = {}, State = {}, ScreenProps = unknown> {
     theme?: SupportedThemes | 'no-preference';
     detached?: boolean;
-    navigation?: NavigationProp<S>;
-    screenProps?: unknown;
-    navigationOptions?: O;
+    navigation?: NavigationProp<State>;
+    screenProps?: ScreenProps;
+    navigationOptions?: Options;
   }
 
   export type NavigatorType =
@@ -555,7 +555,7 @@ declare module 'react-navigation' {
     | 'react-navigation/TABS'
     | 'react-navigation/DRAWER';
 
-  export interface NavigationContainerProps<S = {}, O = {}> {
+  export interface NavigationContainerProps<State = {}, Options = {}, ScreenProps = unknown> {
     uriPrefix?: string | RegExp;
     /**
      * Controls whether the navigation container handles URLs opened via 'Linking'
@@ -568,7 +568,7 @@ declare module 'react-navigation' {
       nextNavigationState: NavigationState,
       action: NavigationAction
     ) => void | null | undefined;
-    navigation?: NavigationScreenProp<S>;
+    navigation?: NavigationScreenProp<State>;
     /*
      * This prop is no longer supported. Use `loadNavigationState` and
      * `persistNavigationState` instead.
@@ -579,8 +579,8 @@ declare module 'react-navigation' {
     persistNavigationState?: (state: NavigationState) => Promise<any>;
 
     renderLoadingExperimental?: React.ComponentType;
-    screenProps?: unknown;
-    navigationOptions?: O;
+    screenProps?: ScreenProps;
+    navigationOptions?: Options;
     style?: StyleProp<ViewStyle>;
   }
 
@@ -612,9 +612,6 @@ declare module 'react-navigation' {
     paths?: NavigationPathsConfig;
     backBehavior?: 'none' | 'initialRoute';
   }
-
-  // Return createNavigationContainer
-  export type _SwitchNavigatorConfig = NavigationSwitchRouterConfig;
 
   export function createSwitchNavigator(
     routeConfigMap: NavigationRouteConfigMap<SwitchNavigatorConfig, NavigationScreenProp<NavigationRoute>>,
@@ -738,11 +735,11 @@ declare module 'react-navigation' {
     getComponent: () => React.ComponentType;
   }
 
-  export type NavigationView<O, S> = React.ComponentType<
+  export type NavigationView<Options, State, ScreenProps = unknown> = React.ComponentType<
     {
       descriptors: { [key: string]: NavigationDescriptor };
-      navigationConfig: O;
-      screenProps?: unknown;
+      navigationConfig: Options;
+      screenProps?: ScreenProps;
     } & NavigationInjectedProps
   >;
 
@@ -778,28 +775,6 @@ declare module 'react-navigation' {
   export function createAppContainer<Options, NavigationPropType>(
     Component: NavigationNavigator<Options, NavigationPropType>
   ): NavigationContainer;
-
-  /**
-   * END MANUAL DEFINITIONS OUTSIDE OF TYPEDEFINITION.JS
-   */
-
-  /**
-   * BEGIN CUSTOM CONVENIENCE INTERFACES
-   */
-
-  export interface NavigationScreenProps<
-    Params = NavigationParams,
-    Options = {},
-    NavigationScreenPropType = NavigationScreenProp<NavigationRoute>
-  > {
-    navigation: NavigationScreenProp<NavigationRoute<Params>, Params>;
-    screenProps?: unknown;
-    navigationOptions?: NavigationScreenConfig<Options, NavigationScreenPropType>;
-  }
-
-  /**
-   * END CUSTOM CONVENIENCE INTERFACES
-   */
 
   export type Omit<T, K extends keyof any> = Pick<T, Exclude<keyof T, K>>;
 
