@@ -103,6 +103,7 @@ export type NavigationMaterialBottomTabScreenComponent<
 > = React.ComponentType<NavigationTabScreenProps<Params, ScreenProps>> & {
   navigationOptions?: NavigationScreenConfig<
     NavigationMaterialBottomTabOptions,
-    NavigationTabProp<NavigationRoute, Params>
+    NavigationTabProp<NavigationRoute, Params>,
+    ScreenProps
   >;
 };
