@@ -464,7 +464,7 @@ export default class Card extends React.Component<Props> {
     multiply(this.velocity, SWIPE_VELOCITY_IMPACT)
   );
 
-  private exec = block([
+  private exec = [
     set(
       this.gesture,
       multiply(
@@ -501,11 +501,25 @@ export default class Card extends React.Component<Props> {
       this.isVisible,
       call([this.isVisible], ([isVisible]) => (this.isVisibleValue = isVisible))
     ),
+  ];
+
+  private changeVisiblityExec = onChange(
+    this.isVisible,
+    call([this.isVisible], ([isVisible]) => (this.isVisibleValue = isVisible))
+  );
+
+  private execNoGesture = block([
+    ...this.exec,
+    this.runTransition(this.isVisible),
+    onChange(
+      this.isVisible,
+      call([this.isVisible], ([isVisible]) => (this.isVisibleValue = isVisible))
+    ),
+    this.changeVisiblityExec,
   ]);
 
-  private execNoGesture = this.runTransition(this.isVisible);
-
   private execWithGesture = block([
+    ...this.exec,
     onChange(
       this.isSwiping,
       call(
@@ -602,6 +616,7 @@ export default class Card extends React.Component<Props> {
         ),
       ]
     ),
+    this.changeVisiblityExec,
   ]);
 
   private handleGestureEventHorizontal = Animated.event([
@@ -757,7 +772,6 @@ export default class Card extends React.Component<Props> {
     return (
       <StackGestureContext.Provider value={this.gestureRef}>
         <View pointerEvents="box-none" {...rest}>
-          <Animated.Code exec={this.exec} />
           <Animated.Code
             key={gestureEnabled ? 'gesture-code' : 'no-gesture-code'}
             exec={gestureEnabled ? this.execWithGesture : this.execNoGesture}
