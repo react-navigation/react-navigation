@@ -52,6 +52,7 @@ export default class TouchableItem extends React.Component<Props> {
       return (
         <TouchableNativeFeedback
           {...rest}
+          useForeground={TouchableNativeFeedback.canUseNativeForeground()}
           background={TouchableNativeFeedback.Ripple(pressColor, borderless)}
         >
           <View style={style}>{React.Children.only(children)}</View>
