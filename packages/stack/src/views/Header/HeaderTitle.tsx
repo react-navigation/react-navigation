@@ -1,12 +1,13 @@
 import * as React from 'react';
-import { Text, StyleSheet, Platform, TextProps } from 'react-native';
+import { StyleSheet, Platform, TextProps } from 'react-native';
+import Animated from 'react-native-reanimated';
 
 type Props = TextProps & {
   children?: string;
 };
 
 export default function HeaderTitle({ style, ...rest }: Props) {
-  return <Text {...rest} style={[styles.title, style]} />;
+  return <Animated.Text {...rest} style={[styles.title, style]} />;
 }
 
 const styles = StyleSheet.create({
