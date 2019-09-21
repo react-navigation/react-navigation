@@ -7,6 +7,7 @@ import {
   StyleProp,
   ViewStyle,
   Platform,
+  InteractionManager,
 } from 'react-native';
 import Animated from 'react-native-reanimated';
 import {
@@ -269,6 +270,8 @@ export default class Card extends React.Component<Props> {
   }
 
   componentWillUnmount(): void {
+    this.handleEndInteraction();
+
     // It might sometimes happen than animation will be unmounted
     // during running. However, we need to invoke listener onClose
     // manually in this case
@@ -353,7 +356,24 @@ export default class Card extends React.Component<Props> {
     finished: new Value(FALSE),
   };
 
+  private interactionHandle: number | undefined;
+
+  private handleStartInteraction = () => {
+    if (this.interactionHandle === undefined) {
+      this.interactionHandle = InteractionManager.createInteractionHandle();
+    }
+  };
+
+  private handleEndInteraction = () => {
+    if (this.interactionHandle !== undefined) {
+      InteractionManager.clearInteractionHandle(this.interactionHandle);
+      this.interactionHandle = undefined;
+    }
+  };
+
   private handleTransitionEnd = () => {
+    this.handleEndInteraction();
+
     this.isRunningAnimation = false;
     this.interpolatedStyle = this.getInterpolatedStyle(
       this.props.styleInterpolator,
@@ -391,6 +411,8 @@ export default class Card extends React.Component<Props> {
         set(this.isVisible, isVisible),
         startClock(this.clock),
         call([this.isVisible], ([value]: ReadonlyArray<Binary>) => {
+          this.handleStartInteraction();
+
           const { onTransitionStart } = this.props;
           this.noAnimationStartedSoFar = false;
           this.isRunningAnimation = true;
@@ -532,8 +554,12 @@ export default class Card extends React.Component<Props> {
           } = this.props;
 
           if (isSwiping === TRUE) {
+            this.handleStartInteraction();
+
             onGestureBegin && onGestureBegin();
           } else {
+            this.handleEndInteraction();
+
             if (isSwipeCancelled === TRUE) {
               onGestureCanceled && onGestureCanceled();
             } else {
