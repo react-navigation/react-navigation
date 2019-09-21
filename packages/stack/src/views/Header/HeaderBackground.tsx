@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { View, StyleSheet, Platform, ViewProps } from 'react-native';
+import { StyleSheet, Platform, ViewProps } from 'react-native';
+import Animated from 'react-native-reanimated';
 
 export default function HeaderBackground({ style, ...rest }: ViewProps) {
-  return <View style={[styles.container, style]} {...rest} />;
+  return <Animated.View style={[styles.container, style]} {...rest} />;
 }
 
 const styles = StyleSheet.create({
