@@ -119,7 +119,8 @@ export type NavigationDrawerScreenComponent<
 > = React.ComponentType<NavigationDrawerScreenProps<Params, ScreenProps>> & {
   navigationOptions?: NavigationScreenConfig<
     NavigationDrawerOptions,
-    NavigationDrawerProp<NavigationRoute, Params>
+    NavigationDrawerProp<NavigationRoute, Params>,
+    ScreenProps
   >;
 };
 
