@@ -13,7 +13,13 @@ import {
   PanGestureHandler,
   State as GestureState,
 } from 'react-native-gesture-handler';
-import { TransitionSpec, CardStyleInterpolator, Layout } from '../../types';
+import {
+  TransitionSpec,
+  CardStyleInterpolator,
+  Layout,
+  SpringConfig,
+  TimingConfig,
+} from '../../types';
 import memoize from '../../utils/memoize';
 import StackGestureContext from '../../utils/StackGestureContext';
 import PointerEventsView from './PointerEventsView';
@@ -50,12 +56,32 @@ type Props = ViewProps & {
   contentStyle?: StyleProp<ViewStyle>;
 };
 
+type AnimatedSpringConfig = {
+  damping: Animated.Value<number>;
+  mass: Animated.Value<number>;
+  stiffness: Animated.Value<number>;
+  restSpeedThreshold: Animated.Value<number>;
+  restDisplacementThreshold: Animated.Value<number>;
+  overshootClamping: Animated.Value<boolean>;
+};
+
+export type AnimatedTimingConfig = {
+  duration: Animated.Value<number>;
+  easing: Animated.EasingFunction;
+};
+
 type Binary = 0 | 1;
 
 const TRUE = 1;
+const TRUE_NODE = new Animated.Value(TRUE);
 const FALSE = 0;
-const NOOP = 0;
+const FALSE_NODE = new Animated.Value(FALSE);
+const NOOP_NODE = FALSE_NODE;
 const UNSET = -1;
+const UNSET_NODE = new Animated.Value(UNSET);
+
+const MINUS_ONE_NODE = UNSET_NODE;
+
 const TOP = -1;
 const BOTTOM = 1;
 
@@ -112,7 +138,7 @@ if (Animated.proc) {
       damping: Animated.Adaptable<number>,
       mass: Animated.Adaptable<number>,
       stiffness: Animated.Adaptable<number>,
-      overshootClamping: Animated.Adaptable<number>,
+      overshootClamping: Animated.Adaptable<boolean>,
       restSpeedThreshold: Animated.Adaptable<number>,
       restDisplacementThreshold: Animated.Adaptable<number>,
       clock: Animated.Clock
@@ -176,6 +202,30 @@ if (Animated.proc) {
   };
 }
 
+function transformSpringConfigToAnimatedValues(
+  config: SpringConfig
+): AnimatedSpringConfig {
+  return {
+    damping: new Animated.Value(config.damping),
+    stiffness: new Animated.Value(config.stiffness),
+    mass: new Animated.Value(config.mass),
+    restDisplacementThreshold: new Animated.Value(
+      config.restDisplacementThreshold
+    ),
+    restSpeedThreshold: new Animated.Value(config.restSpeedThreshold),
+    overshootClamping: new Animated.Value(config.overshootClamping),
+  };
+}
+
+function transformTimingConfigToAnimatedValues(
+  config: TimingConfig
+): AnimatedTimingConfig {
+  return {
+    duration: new Animated.Value(config.duration),
+    easing: config.easing,
+  };
+}
+
 export default class Card extends React.Component<Props> {
   static defaultProps = {
     overlayEnabled: Platform.OS !== 'ios',
@@ -216,6 +266,19 @@ export default class Card extends React.Component<Props> {
     }
   }
 
+  componentWillUnmount(): void {
+    // It might sometimes happen than animation will be unmounted
+    // during running. However, we need to invoke listener onClose
+    // manually in this case
+    if (this.isRunningAnimation || this.noAnimationStartedSoFar) {
+      if (this.isVisibleValue) {
+        this.props.onOpen(false);
+      } else {
+        this.props.onClose(false);
+      }
+    }
+  }
+
   private isVisible = new Value<Binary>(TRUE);
   private isVisibleValue: Binary = TRUE;
   private nextIsVisible = new Value<Binary | -1>(UNSET);
@@ -241,14 +304,34 @@ export default class Card extends React.Component<Props> {
     height: new Value(this.props.layout.height),
   };
 
+  openingSpecConfig =
+    this.props.transitionSpec.open.animation === 'timing'
+      ? transformTimingConfigToAnimatedValues(
+          this.props.transitionSpec.open.config
+        )
+      : transformSpringConfigToAnimatedValues(
+          this.props.transitionSpec.open.config
+        );
+
+  closingSpecConfig =
+    this.props.transitionSpec.close.animation === 'timing'
+      ? transformTimingConfigToAnimatedValues(
+          this.props.transitionSpec.close.config
+        )
+      : transformSpringConfigToAnimatedValues(
+          this.props.transitionSpec.close.config
+        );
+
   private distance = cond(
     eq(this.direction, DIRECTION_VERTICAL),
     this.layout.height,
     this.layout.width
   );
 
+  private gestureUntraversed = new Value(0);
   private gesture = new Value(0);
   private offset = new Value(0);
+  private velocityUntraversed = new Value(0);
   private velocity = new Value(0);
 
   private gestureState = new Value(0);
@@ -282,8 +365,8 @@ export default class Card extends React.Component<Props> {
   private runTransition = (isVisible: Binary | Animated.Node<number>) => {
     const { open: openingSpec, close: closingSpec } = this.props.transitionSpec;
 
-    return cond(eq(this.props.current, isVisible), NOOP, [
-      cond(clockRunning(this.clock), NOOP, [
+    return cond(eq(this.props.current, isVisible), NOOP_NODE, [
+      cond(clockRunning(this.clock), NOOP_NODE, [
         // Animation wasn't running before
         // Set the initial values and start the clock
         set(this.toValue, isVisible),
@@ -292,13 +375,17 @@ export default class Card extends React.Component<Props> {
         set(
           this.transitionVelocity,
           multiply(
-            cond(this.distance, divide(this.velocity, this.distance), 0),
+            cond(
+              this.distance,
+              divide(this.velocity, this.distance),
+              FALSE_NODE
+            ),
             -1
           )
         ),
-        set(this.frameTime, 0),
-        set(this.transitionState.time, 0),
-        set(this.transitionState.finished, FALSE),
+        set(this.frameTime, FALSE_NODE),
+        set(this.transitionState.time, FALSE_NODE),
+        set(this.transitionState.finished, FALSE_NODE),
         set(this.isVisible, isVisible),
         startClock(this.clock),
         call([this.isVisible], ([value]: ReadonlyArray<Binary>) => {
@@ -309,35 +396,49 @@ export default class Card extends React.Component<Props> {
         }),
       ]),
       cond(
-        eq(isVisible, 1),
+        eq(isVisible, TRUE_NODE),
         openingSpec.animation === 'spring'
           ? memoizedSpring(
               this.clock,
               { ...this.transitionState, velocity: this.transitionVelocity },
-              { ...openingSpec.config, toValue: this.toValue }
+              // @ts-ignore
+              {
+                ...(this.openingSpecConfig as AnimatedSpringConfig),
+                toValue: this.toValue,
+              }
             )
           : timing(
               this.clock,
               { ...this.transitionState, frameTime: this.frameTime },
-              { ...openingSpec.config, toValue: this.toValue }
+              {
+                ...(this.openingSpecConfig as AnimatedTimingConfig),
+                toValue: this.toValue,
+              }
             ),
         closingSpec.animation === 'spring'
           ? memoizedSpring(
               this.clock,
               { ...this.transitionState, velocity: this.transitionVelocity },
-              { ...closingSpec.config, toValue: this.toValue }
+              // @ts-ignore
+              {
+                ...(this.closingSpecConfig as AnimatedSpringConfig),
+                toValue: this.toValue,
+              }
             )
           : timing(
               this.clock,
               { ...this.transitionState, frameTime: this.frameTime },
-              { ...closingSpec.config, toValue: this.toValue }
+              {
+                ...(this.closingSpecConfig as AnimatedTimingConfig),
+                toValue: this.toValue,
+              }
             )
       ),
       cond(this.transitionState.finished, [
         // Reset values
-        set(this.isSwipeGesture, FALSE),
-        set(this.gesture, 0),
-        set(this.velocity, 0),
+        set(this.isSwipeGesture, FALSE_NODE),
+        set(this.gesture, FALSE_NODE),
+        set(this.velocity, FALSE_NODE),
         // When the animation finishes, stop the clock
         stopClock(this.clock),
         call([this.isVisible], ([value]: ReadonlyArray<Binary>) => {
@@ -362,22 +463,36 @@ export default class Card extends React.Component<Props> {
   );
 
   private exec = block([
+    set(
+      this.gesture,
+      multiply(
+        this.gestureUntraversed,
+        I18nManager.isRTL ? MINUS_ONE_NODE : TRUE_NODE
+      )
+    ),
+    set(
+      this.velocity,
+      multiply(
+        this.velocityUntraversed,
+        I18nManager.isRTL ? MINUS_ONE_NODE : TRUE_NODE
+      )
+    ),
     onChange(
       this.isClosing,
-      cond(this.isClosing, set(this.nextIsVisible, FALSE))
+      cond(this.isClosing, set(this.nextIsVisible, FALSE_NODE))
     ),
     onChange(
       this.nextIsVisible,
-      cond(neq(this.nextIsVisible, UNSET), [
+      cond(neq(this.nextIsVisible, UNSET_NODE), [
         // Stop any running animations
         cond(clockRunning(this.clock), [
           call([], this.handleTransitionEnd),
           stopClock(this.clock),
         ]),
-        set(this.gesture, 0),
+        set(this.gesture, FALSE_NODE),
         // Update the index to trigger the transition
         set(this.isVisible, this.nextIsVisible),
-        set(this.nextIsVisible, UNSET),
+        set(this.nextIsVisible, UNSET_NODE),
       ])
     ),
     onChange(
@@ -415,11 +530,11 @@ export default class Card extends React.Component<Props> {
     cond(
       eq(this.gestureState, GestureState.ACTIVE),
       [
-        cond(this.isSwiping, NOOP, [
+        cond(this.isSwiping, NOOP_NODE, [
           // We weren't dragging before, set it to true
-          set(this.isSwipeCancelled, FALSE),
-          set(this.isSwiping, TRUE),
-          set(this.isSwipeGesture, TRUE),
+          set(this.isSwipeCancelled, FALSE_NODE),
+          set(this.isSwiping, TRUE_NODE),
+          set(this.isSwipeGesture, TRUE_NODE),
           // Also update the drag offset to the last position
           set(this.offset, this.props.current),
         ]),
@@ -430,11 +545,15 @@ export default class Card extends React.Component<Props> {
             max(
               sub(
                 this.offset,
-                cond(this.distance, divide(this.gesture, this.distance), 1)
+                cond(
+                  this.distance,
+                  divide(this.gesture, this.distance),
+                  TRUE_NODE
+                )
               ),
-              0
+              FALSE_NODE
             ),
-            1
+            TRUE_NODE
           )
         ),
         // Stop animations while we're dragging
@@ -457,7 +576,7 @@ export default class Card extends React.Component<Props> {
           this.isSwipeCancelled,
           eq(this.gestureState, GestureState.CANCELLED)
         ),
-        set(this.isSwiping, FALSE),
+        set(this.isSwiping, FALSE_NODE),
         this.runTransition(
           cond(
             greaterThan(
@@ -466,11 +585,15 @@ export default class Card extends React.Component<Props> {
             ),
             cond(
               lessThan(
-                cond(eq(this.velocity, 0), this.gesture, this.velocity),
-                0
+                cond(
+                  eq(this.velocity, FALSE_NODE),
+                  this.gesture,
+                  this.velocity
+                ),
+                FALSE_NODE
               ),
-              TRUE,
-              FALSE
+              TRUE_NODE,
+              FALSE_NODE
             ),
             this.isVisible
           )
@@ -482,11 +605,8 @@ export default class Card extends React.Component<Props> {
   private handleGestureEventHorizontal = Animated.event([
     {
       nativeEvent: {
-        translationX: (x: Animated.Node<number>) =>
-          set(this.gesture, multiply(x, I18nManager.isRTL ? -1 : 1)),
-        velocityX: (x: Animated.Node<number>) =>
-          set(this.velocity, multiply(x, I18nManager.isRTL ? -1 : 1)),
-        state: this.gestureState,
+        translationX: this.gestureUntraversed,
+        velocityX: this.velocityUntraversed,
       },
     },
   ]);
@@ -494,27 +614,12 @@ export default class Card extends React.Component<Props> {
   private handleGestureEventVertical = Animated.event([
     {
       nativeEvent: {
-        translationY: (y: Animated.Node<number>) =>
-          set(this.gesture, multiply(y, this.verticalGestureDirection)),
-        velocityY: (y: Animated.Node<number>) =>
-          set(this.velocity, multiply(y, this.verticalGestureDirection)),
+        translationY: this.gesture,
+        velocityY: this.velocity,
         state: this.gestureState,
       },
     },
   ]);
-
-  componentWillUnmount(): void {
-    // It might sometimes happen than animation will be unmounted
-    // during running. However, we need to invoke listener onClose
-    // manually in this case
-    if (this.isRunningAnimation || this.noAnimationStartedSoFar) {
-      if (this.isVisibleValue) {
-        this.props.onOpen(false);
-      } else {
-        this.props.onClose(false);
-      }
-    }
-  }
 
   // We need to ensure that this style doesn't change unless absolutely needs to
   // Changing it too often will result in huge frame drops due to detaching and attaching
@@ -597,18 +702,18 @@ export default class Card extends React.Component<Props> {
 
   render() {
     const {
-      index,
       active,
       transparent,
-      layout,
+      styleInterpolator,
+      index,
       current,
       next,
+      layout,
       overlayEnabled,
       shadowEnabled,
       gestureEnabled,
       gestureDirection,
       children,
-      styleInterpolator,
       containerStyle: customContainerStyle,
       contentStyle,
       ...rest
