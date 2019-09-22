@@ -46,4 +46,6 @@ export {
   HeaderBackButtonProps,
   HeaderTitleProps,
   TransitionPreset,
+  CardStyleInterpolator,
+  HeaderStyleInterpolator,
 } from './types';

@@ -1,13 +1,15 @@
 import * as React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { createStackNavigator } from 'react-navigation-stack';
+import {
+  createStackNavigator,
+  NavigationStackScreenProps,
+} from 'react-navigation-stack';
 import { createAppContainer } from 'react-navigation';
 
-class ScreenOne extends React.Component {
+class ScreenOne extends React.Component<NavigationStackScreenProps> {
   componentDidMount() {
-    this._timer = setTimeout(() => {
+    setTimeout(() => {
       this.props.navigation.navigate('Screen2');
-      clearTimeout(this._timer);
     }, 0);
   }
 
@@ -29,7 +31,7 @@ class ScreenOne extends React.Component {
   }
 }
 
-class ScreenTwo extends React.Component {
+class ScreenTwo extends React.Component<NavigationStackScreenProps> {
   render() {
     return (
       <View style={styles.container}>

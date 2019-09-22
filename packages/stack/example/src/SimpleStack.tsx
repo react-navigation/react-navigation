@@ -1,9 +1,13 @@
 import * as React from 'react';
 import { Dimensions, Button, View, Text } from 'react-native';
 import { withNavigation } from 'react-navigation';
-import { createStackNavigator } from 'react-navigation-stack';
+import {
+  createStackNavigator,
+  NavigationStackScreenProps,
+  NavigationStackProp,
+} from 'react-navigation-stack';
 
-const Buttons = withNavigation(props => (
+const Buttons = withNavigation((props: { navigation: NavigationStackProp }) => (
   <React.Fragment>
     <Button
       title="Push Details"
@@ -79,7 +83,7 @@ class ListScreen extends React.Component {
   }
 }
 
-class DetailsScreen extends React.Component {
+class DetailsScreen extends React.Component<NavigationStackScreenProps> {
   static navigationOptions = {
     title: 'Details',
     gestureResponseDistance: {

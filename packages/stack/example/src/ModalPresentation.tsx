@@ -3,9 +3,10 @@ import { Button, View, Text } from 'react-native';
 import {
   createStackNavigator,
   TransitionPresets,
+  NavigationStackScreenProps,
 } from 'react-navigation-stack';
 
-class ListScreen extends React.Component {
+class ListScreen extends React.Component<NavigationStackScreenProps> {
   static navigationOptions = {
     title: 'My Modal',
   };
@@ -28,7 +29,7 @@ class ListScreen extends React.Component {
   }
 }
 
-class DetailsScreen extends React.Component {
+class DetailsScreen extends React.Component<NavigationStackScreenProps> {
   static navigationOptions = {
     header: null,
   };

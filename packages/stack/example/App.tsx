@@ -5,7 +5,10 @@ import { createAppContainer, SafeAreaView, ScrollView } from 'react-navigation';
 import {
   Assets as StackAssets,
   createStackNavigator,
+  NavigationStackScreenProps,
+  NavigationStackOptions,
 } from 'react-navigation-stack';
+// eslint-disable-next-line import/namespace
 import { List, Divider } from 'react-native-paper';
 
 import FullScreen from './src/FullScreen';
@@ -37,7 +40,13 @@ useScreens(true);
 // your app after you first load it with this option enabled.
 I18nManager.forceRTL(false);
 
-const data = [
+type Item = {
+  component: React.ComponentType<any>;
+  title: string;
+  routeName: string;
+};
+
+const data: Item[] = [
   { component: SimpleStack, title: 'Simple', routeName: 'SimpleStack' },
   { component: HeaderPreset, title: 'UIKit Preset', routeName: 'UIKit' },
   { component: RevealStack, title: 'Reveal Preset', routeName: 'Reveal' },
@@ -99,19 +108,19 @@ const data = [
 // Cache images
 Asset.loadAsync(StackAssets);
 
-class Home extends React.Component {
+class Home extends React.Component<NavigationStackScreenProps> {
   static navigationOptions = {
     title: 'Examples',
   };
 
-  _renderItem = ({ item }) => (
+  _renderItem = ({ item }: { item: Item }) => (
     <List.Item
       title={item.title}
       onPress={() => this.props.navigation.navigate(item.routeName)}
     />
   );
 
-  _keyExtractor = item => item.routeName;
+  _keyExtractor = (item: Item) => item.routeName;
 
   render() {
     return (
@@ -141,7 +150,12 @@ class SafeAreaScrollView extends React.Component {
 const Root = createStackNavigator(
   {
     Home: createStackNavigator({ Home }),
-    ...data.reduce((acc, it) => {
+    ...data.reduce<{
+      [key: string]: {
+        screen: React.ComponentType<any>;
+        navigationOptions: NavigationStackOptions;
+      };
+    }>((acc, it) => {
       acc[it.routeName] = {
         screen: it.component,
         navigationOptions: {

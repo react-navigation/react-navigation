@@ -1,19 +1,38 @@
 import * as React from 'react';
 import { Button, Text, View } from 'react-native';
-import { createStackNavigator } from 'react-navigation-stack';
-import { createDrawerNavigator } from 'react-navigation-drawer';
-import { createBottomTabNavigator } from 'react-navigation-tabs';
+import {
+  createStackNavigator,
+  NavigationStackScreenProps,
+} from 'react-navigation-stack';
+import {
+  createDrawerNavigator,
+  DrawerContentComponentProps,
+} from 'react-navigation-drawer';
+import {
+  createBottomTabNavigator,
+  NavigationTabScreenProps,
+} from 'react-navigation-tabs';
 
-function Menu({ navigation }) {
+function Menu({ navigation }: DrawerContentComponentProps) {
   return (
     <View style={{ flex: 1 }}>
-      <Button title="Open on top" onPress={() => navigation.navigate('Top')} />
+      <Button
+        title="Open on top"
+        onPress={() => {
+          // @ts-ignore
+          navigation.navigate('Top');
+        }}
+      />
     </View>
   );
 }
 
-class Fake extends React.Component {
-  static navigationOptions = ({ navigation }) => ({
+class Fake extends React.Component<
+  NavigationTabScreenProps | NavigationStackScreenProps
+> {
+  static navigationOptions = ({
+    navigation,
+  }: NavigationTabScreenProps | NavigationStackScreenProps) => ({
     title: navigation.getParam('title'),
   });
 

@@ -3,6 +3,7 @@ import { Button, TextInput, View } from 'react-native';
 import {
   createStackNavigator,
   CardStyleInterpolators,
+  NavigationStackScreenProps,
 } from 'react-navigation-stack';
 
 class Input extends React.Component {
@@ -25,7 +26,7 @@ class Input extends React.Component {
   }
 }
 
-class Home extends React.Component {
+class Home extends React.Component<NavigationStackScreenProps> {
   static navigationOptions = {
     title: 'Home',
   };

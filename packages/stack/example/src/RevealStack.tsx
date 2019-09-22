@@ -4,9 +4,11 @@ import { withNavigation } from 'react-navigation';
 import {
   createStackNavigator,
   TransitionPresets,
+  NavigationStackScreenProps,
+  NavigationStackProp,
 } from 'react-navigation-stack';
 
-const Buttons = withNavigation(props => (
+const Buttons = withNavigation((props: { navigation: NavigationStackProp }) => (
   <React.Fragment>
     <Button
       title="Go to Details"
@@ -73,7 +75,7 @@ class ListScreen extends React.Component {
   }
 }
 
-class DetailsScreen extends React.Component {
+class DetailsScreen extends React.Component<NavigationStackScreenProps> {
   static navigationOptions = {
     title: 'Details',
     gestureResponseDistance: {

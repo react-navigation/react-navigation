@@ -8,9 +8,12 @@ import {
   View,
 } from 'react-native';
 import { createSwitchNavigator } from 'react-navigation';
-import { createStackNavigator } from 'react-navigation-stack';
+import {
+  createStackNavigator,
+  NavigationStackScreenProps,
+} from 'react-navigation-stack';
 
-class SignInScreen extends React.Component<any, any> {
+class SignInScreen extends React.Component<NavigationStackScreenProps> {
   static navigationOptions = {
     title: 'Please sign in',
   };
@@ -34,7 +37,7 @@ class SignInScreen extends React.Component<any, any> {
   };
 }
 
-class HomeScreen extends React.Component<any, any> {
+class HomeScreen extends React.Component<NavigationStackScreenProps> {
   static navigationOptions = {
     title: 'Welcome to the app!',
   };
@@ -59,7 +62,7 @@ class HomeScreen extends React.Component<any, any> {
   };
 }
 
-class OtherScreen extends React.Component<any, any> {
+class OtherScreen extends React.Component<NavigationStackScreenProps> {
   static navigationOptions = {
     title: 'Lots of features here',
   };
@@ -79,7 +82,7 @@ class OtherScreen extends React.Component<any, any> {
   };
 }
 
-class LoadingScreen extends React.Component<any, any> {
+class LoadingScreen extends React.Component<NavigationStackScreenProps> {
   componentDidMount() {
     this._bootstrapAsync();
   }

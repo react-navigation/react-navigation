@@ -1,13 +1,14 @@
 import * as React from 'react';
-import { Button, StatusBar } from 'react-native';
+import { Button, StatusBar, StyleProp, ViewStyle } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import {
   createStackNavigator,
   TransitionPresets,
   HeaderStyleInterpolators,
+  NavigationStackScreenProps,
 } from 'react-navigation-stack';
 
-class HomeScreen extends React.Component {
+class HomeScreen extends React.Component<NavigationStackScreenProps> {
   static navigationOptions = {
     title: 'Welcome',
   };
@@ -30,7 +31,7 @@ class HomeScreen extends React.Component {
   }
 }
 
-class OtherScreen extends React.Component {
+class OtherScreen extends React.Component<NavigationStackScreenProps> {
   static navigationOptions = {
     title: 'Your title here',
   };
@@ -57,7 +58,7 @@ class OtherScreen extends React.Component {
   }
 }
 
-class ScreenWithLongTitle extends React.Component {
+class ScreenWithLongTitle extends React.Component<NavigationStackScreenProps> {
   static navigationOptions = {
     title: "Another title that's kind of long",
   };
@@ -76,7 +77,7 @@ class ScreenWithLongTitle extends React.Component {
   }
 }
 
-class ScreenWithNoHeader extends React.Component {
+class ScreenWithNoHeader extends React.Component<NavigationStackScreenProps> {
   static navigationOptions = {
     header: null,
     title: 'No Header',
@@ -109,7 +110,8 @@ const StackWithHeaderPreset = createStackNavigator(
     defaultNavigationOptions: {
       ...TransitionPresets.SlideFromRightIOS,
       headerStyleInterpolator: HeaderStyleInterpolators.forUIKit,
-      headerTitleContainerStyle: { left: null },
+      // @ts-ignore
+      headerTitleContainerStyle: { left: null } as StyleProp<ViewStyle>,
       gestureEnabled: true,
     },
   }

@@ -1,10 +1,13 @@
 import * as React from 'react';
 import { Dimensions, Button, Image, View } from 'react-native';
-import { createStackNavigator } from 'react-navigation-stack';
+import {
+  createStackNavigator,
+  NavigationStackScreenProps,
+} from 'react-navigation-stack';
 import { FlatList, BorderlessButton } from 'react-native-gesture-handler';
 
-class ListScreen extends React.Component {
-  static navigationOptions = ({ navigation }) => ({
+class ListScreen extends React.Component<NavigationStackScreenProps> {
+  static navigationOptions = ({ navigation }: NavigationStackScreenProps) => ({
     title: 'Image list',
     headerBackTitle: 'Back',
     headerLeft: () => (
@@ -13,7 +16,7 @@ class ListScreen extends React.Component {
   });
 
   state = {
-    items: Array.apply(null, Array(60)).map((v, i) => {
+    items: Array.apply(null, Array(60)).map((_, i) => {
       return {
         id: i,
         src: `https://source.unsplash.com/random/400x${400 + i}`,
@@ -40,14 +43,14 @@ class ListScreen extends React.Component {
           </View>
         )}
         numColumns={3}
-        keyExtractor={(item, index) => index}
+        keyExtractor={(_, index) => String(index)}
         style={{ flex: 1, backgroundColor: '#fff' }}
       />
     );
   }
 }
 
-class DetailsScreen extends React.Component {
+class DetailsScreen extends React.Component<NavigationStackScreenProps> {
   static navigationOptions = {
     title: 'Random image from Unsplash',
   };

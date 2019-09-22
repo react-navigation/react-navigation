@@ -3,6 +3,8 @@ import { Button, View, Text, Dimensions, Switch } from 'react-native';
 import {
   createStackNavigator,
   CardStyleInterpolators,
+  NavigationStackScreenProps,
+  CardStyleInterpolator,
 } from 'react-navigation-stack';
 import Animated from 'react-native-reanimated';
 
@@ -12,10 +14,10 @@ const gestureResponseDistance = {
   vertical: Dimensions.get('window').height,
 };
 
-function forVerticalInvertedIOS({
+const forVerticalInvertedIOS: CardStyleInterpolator = ({
   current: { progress },
   layouts: { screen },
-}) {
+}) => {
   const translateY = interpolate(progress, {
     inputRange: [0, 1],
     outputRange: [-screen.height, 0],
@@ -29,10 +31,10 @@ function forVerticalInvertedIOS({
       ],
     },
   };
-}
+};
 
-class Modal extends React.Component {
-  static navigationOptions = ({ navigation }) => {
+class Modal extends React.Component<NavigationStackScreenProps> {
+  static navigationOptions = ({ navigation }: NavigationStackScreenProps) => {
     return {
       title: 'Modal',
       cardStyleInterpolator:
@@ -64,7 +66,10 @@ class Modal extends React.Component {
   }
 }
 
-class ListScreen extends React.Component {
+class ListScreen extends React.Component<
+  NavigationStackScreenProps,
+  { isInverted: boolean }
+> {
   static navigationOptions = {
     title: 'My Modal',
   };
@@ -108,7 +113,7 @@ class ListScreen extends React.Component {
   }
 }
 
-class DetailsScreen extends React.Component {
+class DetailsScreen extends React.Component<NavigationStackScreenProps> {
   static navigationOptions = {
     // Uncomment below to test inverted modal gesture
     // gestureDirection: 'inverted',

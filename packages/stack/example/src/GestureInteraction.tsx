@@ -10,10 +10,12 @@ import MapView from 'react-native-maps';
 import {
   createStackNavigator,
   StackGestureContext,
+  NavigationStackScreenComponent,
+  NavigationStackScreenProps,
 } from 'react-navigation-stack';
 import { NativeViewGestureHandler } from 'react-native-gesture-handler';
 
-const IndexScreen = ({ navigation }) => (
+const IndexScreen: NavigationStackScreenComponent = ({ navigation }) => (
   <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
     <Button title="Go to MapView" onPress={() => navigation.navigate('Map')} />
     <Button title="Go to WebView" onPress={() => navigation.navigate('Web')} />
@@ -28,8 +30,15 @@ IndexScreen.navigationOptions = {
   title: 'Gesture Interactions',
 };
 
-class MapScreen extends React.Component {
-  constructor(props) {
+class MapScreen extends React.Component<
+  NavigationStackScreenProps,
+  { interactionComplete: boolean }
+> {
+  static navigationOptions = {
+    title: 'MapView',
+  };
+
+  constructor(props: NavigationStackScreenProps) {
     super(props);
     InteractionManager.runAfterInteractions(() => {
       this.setState({ interactionComplete: true });
@@ -62,10 +71,6 @@ class MapScreen extends React.Component {
     );
   }
 }
-
-MapScreen.navigationOptions = {
-  title: 'MapView',
-};
 
 const WebViewScreen = () => (
   <StackGestureContext.Consumer>

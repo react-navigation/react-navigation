@@ -4,13 +4,14 @@ import {
   createStackNavigator,
   TransitionPresets,
   HeaderStyleInterpolators,
+  NavigationStackScreenProps,
 } from 'react-navigation-stack';
 
 function createHeaderBackgroundExample(options = {}) {
   return createStackNavigator(
     {
       Login: {
-        screen: ({ navigation }) => (
+        screen: ({ navigation }: NavigationStackScreenProps) => (
           <View style={styles.container}>
             <Text
               style={styles.tips}
@@ -29,7 +30,7 @@ function createHeaderBackgroundExample(options = {}) {
         },
       },
       Games: {
-        screen: ({ navigation }) => (
+        screen: ({ navigation }: NavigationStackScreenProps) => (
           <View style={styles.container}>
             <Text
               style={styles.tips}
@@ -48,7 +49,7 @@ function createHeaderBackgroundExample(options = {}) {
         },
       },
       Main: {
-        screen: ({ navigation }) => (
+        screen: ({ navigation }: NavigationStackScreenProps) => (
           <View style={styles.container}>
             <Text style={styles.tips} onPress={() => navigation.navigate('My')}>
               Main Screen
@@ -60,7 +61,7 @@ function createHeaderBackgroundExample(options = {}) {
         },
       },
       My: {
-        screen: ({ navigation }) => (
+        screen: ({ navigation }: NavigationStackScreenProps) => (
           <View style={styles.container}>
             <Text
               style={styles.tips}
