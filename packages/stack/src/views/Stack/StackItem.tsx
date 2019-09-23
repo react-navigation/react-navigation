@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet, Platform, StyleProp, ViewStyle } from 'react-native';
+import { View, StyleSheet, Platform, StyleProp, ViewStyle } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { NavigationRoute } from 'react-navigation';
 import { Props as HeaderContainerProps } from '../Header/HeaderContainer';
@@ -154,24 +154,35 @@ export default class StackItem extends React.PureComponent<Props> {
         contentStyle={cardStyle}
         style={StyleSheet.absoluteFill}
       >
-        {headerMode === 'screen'
-          ? renderHeader({
-              mode: 'screen',
-              layout,
-              scenes: [previousScene, scene],
-              navigation,
-              getPreviousRoute,
-              styleInterpolator: headerStyleInterpolator,
-              style: styles.header,
-            })
-          : null}
-        {renderScene({ route: scene.route })}
+        <View style={styles.container}>
+          <View style={styles.scene}>
+            {renderScene({ route: scene.route })}
+          </View>
+          {headerMode === 'screen'
+            ? renderHeader({
+                mode: 'screen',
+                layout,
+                scenes: [previousScene, scene],
+                navigation,
+                getPreviousRoute,
+                styleInterpolator: headerStyleInterpolator,
+                style: styles.header,
+              })
+            : null}
+        </View>
       </Card>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: 'column-reverse',
+  },
+  scene: {
+    flex: 1,
+  },
   header: {
     // This is needed to show elevation shadow
     zIndex: Platform.OS === 'android' ? 1 : 0,

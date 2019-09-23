@@ -153,7 +153,24 @@ Array [
                     undefined,
                   ]
                 }
-              />
+              >
+                <View
+                  style={
+                    Object {
+                      "flex": 1,
+                      "flexDirection": "column-reverse",
+                    }
+                  }
+                >
+                  <View
+                    style={
+                      Object {
+                        "flex": 1,
+                      }
+                    }
+                  />
+                </View>
+              </View>
             </View>
           </PanGestureHandler>
         </View>
@@ -472,7 +489,24 @@ Array [
                     undefined,
                   ]
                 }
-              />
+              >
+                <View
+                  style={
+                    Object {
+                      "flex": 1,
+                      "flexDirection": "column-reverse",
+                    }
+                  }
+                >
+                  <View
+                    style={
+                      Object {
+                        "flex": 1,
+                      }
+                    }
+                  />
+                </View>
+              </View>
             </View>
           </PanGestureHandler>
         </View>
