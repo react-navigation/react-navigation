@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.19](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.18...@react-navigation/stack@5.0.0-alpha.19) (2019-09-23)
+
+
+### Bug Fixes
+
+* vertical gesture in stack ([4ee19bc](https://github.com/react-navigation/navigation-ex/commit/4ee19bc))
+
+
+
+
+
 # [5.0.0-alpha.18](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.17...@react-navigation/stack@5.0.0-alpha.18) (2019-09-23)
 
 
