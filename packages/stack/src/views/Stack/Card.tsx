@@ -476,11 +476,14 @@ export default class Card extends React.Component<Props> {
   );
 
   private exec = [
-    set(
-      this.gesture,
-      multiply(
-        this.gestureUntraversed,
-        I18nManager.isRTL ? MINUS_ONE_NODE : TRUE_NODE
+    cond(
+      eq(this.direction, DIRECTION_HORIZONTAL),
+      set(
+        this.gesture,
+        multiply(
+          this.gestureUntraversed,
+          I18nManager.isRTL ? MINUS_ONE_NODE : TRUE_NODE
+        )
       )
     ),
     set(
