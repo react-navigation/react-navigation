@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.18](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.17...@react-navigation/stack@5.0.0-alpha.18) (2019-09-23)
+
+
+### Bug Fixes
+
+* fix header rendered behind card. closes [#108](https://github.com/react-navigation/navigation-ex/issues/108) ([2f66556](https://github.com/react-navigation/navigation-ex/commit/2f66556))
+
+
+### Features
+
+* **stack:** use Animated.Text for header title ([#105](https://github.com/react-navigation/navigation-ex/issues/105)) ([f398136](https://github.com/react-navigation/navigation-ex/commit/f398136))
+* **stack:** use Animated.View for header background ([#106](https://github.com/react-navigation/navigation-ex/issues/106)) ([089390c](https://github.com/react-navigation/navigation-ex/commit/089390c))
+
+
+
+
+
 # [5.0.0-alpha.17](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.16...@react-navigation/stack@5.0.0-alpha.17) (2019-09-17)
 
 
