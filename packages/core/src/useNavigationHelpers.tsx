@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as CommonActions from './CommonActions';
 import NavigationContext from './NavigationContext';
+import ResetRootContext from './ResetRootContext';
 import { NavigationStateContext } from './NavigationContainer';
 import { NavigationEventEmitter } from './useEventEmitter';
 import {
@@ -36,6 +37,7 @@ export default function useNavigationHelpers<
   Action extends NavigationAction,
   EventMap extends { [key: string]: any }
 >({ onAction, getState, emitter, router }: Options<State, Action>) {
+  const resetRoot = React.useContext(ResetRootContext);
   const parentNavigationHelpers = React.useContext(NavigationContext);
   const { performTransaction } = React.useContext(NavigationStateContext);
 
@@ -65,6 +67,7 @@ export default function useNavigationHelpers<
     return {
       ...parentNavigationHelpers,
       ...helpers,
+      resetRoot,
       dispatch,
       emit: emitter.emit,
       isFocused: parentNavigationHelpers
@@ -83,6 +86,7 @@ export default function useNavigationHelpers<
     router,
     getState,
     parentNavigationHelpers,
+    resetRoot,
     emitter.emit,
     performTransaction,
     onAction,

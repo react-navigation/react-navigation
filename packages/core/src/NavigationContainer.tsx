@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as CommonActions from './CommonActions';
 import EnsureSingleNavigator from './EnsureSingleNavigator';
 import NavigationBuilderContext from './NavigationBuilderContext';
+import ResetRootContext from './ResetRootContext';
 import useFocusedListeners from './useFocusedListeners';
 import useDevTools from './useDevTools';
 
@@ -86,6 +87,23 @@ const Container = React.forwardRef(function NavigationContainer(
     getPartialState(initialState)
   );
 
+  const navigationStateRef = React.useRef<State>();
+  const transactionStateRef = React.useRef<State | null>(null);
+  const isTransactionActiveRef = React.useRef<boolean>(false);
+  const isFirstMountRef = React.useRef<boolean>(true);
+  const skipTrackingRef = React.useRef<boolean>(false);
+
+  const reset = React.useCallback((state: NavigationState) => {
+    skipTrackingRef.current = true;
+    setNavigationState(state);
+  }, []);
+
+  const { trackState, trackAction } = useDevTools({
+    name: '@react-navigation',
+    reset,
+    state,
+  });
+
   const { listeners, addListener: addFocusedListener } = useFocusedListeners();
 
   const dispatch = (
@@ -106,6 +124,14 @@ const Container = React.forwardRef(function NavigationContainer(
     }
   };
 
+  const resetRoot = React.useCallback(
+    (state: PartialState<NavigationState> | NavigationState) => {
+      trackAction('@@RESET_ROOT');
+      setNavigationState(state);
+    },
+    [trackAction]
+  );
+
   React.useImperativeHandle(ref, () => ({
     ...(Object.keys(CommonActions) as Array<keyof typeof CommonActions>).reduce<
       any
@@ -120,30 +146,10 @@ const Container = React.forwardRef(function NavigationContainer(
         );
       return acc;
     }, {}),
-    resetRoot: (state: PartialState<NavigationState> | NavigationState) => {
-      trackAction('@@RESET_ROOT');
-      setNavigationState(state);
-    },
+    resetRoot,
     dispatch,
     canGoBack,
   }));
-
-  const navigationStateRef = React.useRef<State>();
-  const transactionStateRef = React.useRef<State | null>(null);
-  const isTransactionActiveRef = React.useRef<boolean>(false);
-  const isFirstMountRef = React.useRef<boolean>(true);
-  const skipTrackingRef = React.useRef<boolean>(false);
-
-  const reset = React.useCallback((state: NavigationState) => {
-    skipTrackingRef.current = true;
-    setNavigationState(state);
-  }, []);
-
-  const { trackState, trackAction } = useDevTools({
-    name: '@react-navigation',
-    reset,
-    state,
-  });
 
   const builderContext = React.useMemo(
     () => ({
@@ -220,7 +226,9 @@ const Container = React.forwardRef(function NavigationContainer(
   return (
     <NavigationBuilderContext.Provider value={builderContext}>
       <NavigationStateContext.Provider value={context}>
-        <EnsureSingleNavigator>{children}</EnsureSingleNavigator>
+        <ResetRootContext.Provider value={resetRoot}>
+          <EnsureSingleNavigator>{children}</EnsureSingleNavigator>
+        </ResetRootContext.Provider>
       </NavigationStateContext.Provider>
     </NavigationBuilderContext.Provider>
   );
