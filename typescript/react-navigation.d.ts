@@ -675,19 +675,14 @@ declare module 'react-navigation' {
     state: { nav: NavigationState | null };
   }
 
-  export interface SwitchNavigatorConfig {
-    initialRouteName: string;
-    resetOnBlur?: boolean;
-    paths?: NavigationPathsConfig;
-    backBehavior?: 'none' | 'initialRoute';
-  }
-
   export function createSwitchNavigator(
-    routeConfigMap: NavigationRouteConfigMap<
-      SwitchNavigatorConfig,
-      NavigationScreenProp<NavigationRoute>
-    >,
-    switchConfig?: SwitchNavigatorConfig
+    routeConfigMap: NavigationRouteConfigMap<{}, NavigationSwitchProp>,
+    switchConfig?: CreateNavigatorConfig<
+      {},
+      NavigationSwitchRouterConfig,
+      {},
+      NavigationSwitchProp
+    >
   ): NavigationNavigator<{}, NavigationProp<NavigationState>>;
 
   /**
