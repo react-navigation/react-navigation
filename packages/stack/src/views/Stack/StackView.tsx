@@ -230,9 +230,15 @@ class StackView extends React.Component<Props, State> {
     return <HeaderContainer {...props} />;
   };
 
-  private handleTransitionComplete = () => {
+  private handleTransitionComplete = ({
+    route,
+  }: {
+    route: NavigationRoute;
+  }) => {
     // TODO: remove when the new event system lands
-    this.props.navigation.dispatch(StackActions.completeTransition());
+    this.props.navigation.dispatch(
+      StackActions.completeTransition({ toChildKey: route.key })
+    );
   };
 
   private handleGoBack = ({ route }: { route: NavigationRoute }) => {
@@ -243,7 +249,7 @@ class StackView extends React.Component<Props, State> {
   };
 
   private handleOpenRoute = ({ route }: { route: NavigationRoute }) => {
-    this.handleTransitionComplete();
+    this.handleTransitionComplete({ route });
     this.setState(state => ({
       routes: state.replacing.length
         ? state.routes.filter(r => !state.replacing.includes(r.key))
@@ -255,7 +261,9 @@ class StackView extends React.Component<Props, State> {
   };
 
   private handleCloseRoute = ({ route }: { route: NavigationRoute }) => {
-    this.handleTransitionComplete();
+    this.handleTransitionComplete({
+      route: this.state.routes[this.state.routes.length - 1],
+    });
 
     // This event will trigger when the animation for closing the route ends
     // In this case, we need to clean up any state tracking the route and pop it immediately
