@@ -4,6 +4,7 @@ import useNavigationBuilder from '../useNavigationBuilder';
 import NavigationContainer from '../NavigationContainer';
 import Screen from '../Screen';
 import MockRouter from './__fixtures__/MockRouter';
+import { Router, NavigationState } from '../types';
 
 it('fires focus and blur events in root navigator', () => {
   const TestNavigator = React.forwardRef((props: any, ref: any): any => {
@@ -198,6 +199,131 @@ it('fires focus and blur events in nested navigator', () => {
 
   expect(fourthBlurCallback).toBeCalledTimes(1);
   expect(thirdFocusCallback).toBeCalledTimes(1);
+});
+
+it('fires blur event when a route is removed with a delay', async () => {
+  const TestRouter = (options: any): Router<NavigationState, any> => {
+    const router = MockRouter(options);
+
+    return {
+      ...router,
+
+      getInitialState({ routeNames, routeParamList }) {
+        const initialRouteName =
+          options.initialRouteName !== undefined
+            ? options.initialRouteName
+            : routeNames[0];
+
+        return {
+          stale: false,
+          key: 'stack',
+          index: 0,
+          routeNames,
+          routes: [
+            {
+              key: initialRouteName,
+              name: initialRouteName,
+              params: routeParamList[initialRouteName],
+            },
+          ],
+        };
+      },
+
+      getStateForAction(state, action) {
+        switch (action.type) {
+          case 'PUSH':
+            return {
+              ...state,
+              index: state.index + 1,
+              routes: [...state.routes, action.payload],
+            };
+          case 'POP': {
+            const routes = state.routes.slice(0, -1);
+
+            return {
+              ...state,
+              index: routes.length - 1,
+              routes,
+            };
+          }
+          default:
+            return router.getStateForAction(state, action);
+        }
+      },
+
+      actionCreators: {
+        push(payload) {
+          return { type: 'PUSH', payload };
+        },
+
+        pop() {
+          return { type: 'POP' };
+        },
+      },
+    };
+  };
+
+  const TestNavigator = React.forwardRef((props: any, ref: any): any => {
+    const { state, navigation, descriptors } = useNavigationBuilder(
+      TestRouter,
+      props
+    );
+
+    React.useImperativeHandle(ref, () => navigation, [navigation]);
+
+    const [previous, dispatch] = React.useReducer(
+      (state, action) => {
+        return { ...state, ...action };
+      },
+      { routes: state.routes, descriptors }
+    );
+
+    React.useEffect(() => {
+      dispatch({ routes: state.routes, descriptors });
+    }, [descriptors, state.routes]);
+
+    return previous.routes.map((route: any) =>
+      previous.descriptors[route.key].render()
+    );
+  });
+
+  const blurCallback = jest.fn();
+
+  const First = () => null;
+
+  const Second = ({ navigation }: any) => {
+    React.useEffect(() => navigation.addListener('blur', blurCallback), [
+      navigation,
+    ]);
+
+    return null;
+  };
+
+  const navigation = React.createRef<any>();
+
+  const element = (
+    <NavigationContainer>
+      <TestNavigator ref={navigation}>
+        <Screen name="first" component={First} />
+        <Screen name="second" component={Second} />
+      </TestNavigator>
+    </NavigationContainer>
+  );
+
+  render(element);
+
+  act(() =>
+    navigation.current.push({
+      name: 'second',
+      key: 'second',
+    })
+  );
+
+  expect(blurCallback).toBeCalledTimes(0);
+
+  act(() => navigation.current.pop());
+
+  expect(blurCallback).toBeCalledTimes(1);
 });
 
 it('fires custom events', () => {

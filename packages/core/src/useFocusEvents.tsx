@@ -57,19 +57,19 @@ export default function useFocusEvents({ state, emitter }: Options) {
       return;
     }
 
-    state.routes.forEach((route, i) => {
-      if (
-        lastFocusedKey === undefined ||
-        (route.key !== lastFocusedKey && route.key !== currentFocusedKey)
-      ) {
-        // Only fire events after mount, or if focus state of this route changed
-        return;
-      }
+    if (lastFocusedKey === undefined) {
+      // Only fire events after initial mount
+      return;
+    }
 
-      emitter.emit({
-        type: i === state.index ? 'focus' : 'blur',
-        target: route.key,
-      });
+    emitter.emit({
+      type: 'focus',
+      target: currentFocusedKey,
     });
-  }, [currentFocusedKey, emitter, navigation, state.index, state.routes]);
+
+    emitter.emit({
+      type: 'blur',
+      target: lastFocusedKey,
+    });
+  }, [currentFocusedKey, emitter, navigation]);
 }
