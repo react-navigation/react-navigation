@@ -317,6 +317,13 @@ type NavigationHelpersCommon<
   reset(state: PartialState<State> | State): void;
 
   /**
+   * Reset the navigation state of the root navigator to the provided state.
+   *
+   * @param state Navigation state object.
+   */
+  resetRoot(state: PartialState<NavigationState> | NavigationState): void;
+
+  /**
    * Go back to the previous route in history.
    */
   goBack(): void;
