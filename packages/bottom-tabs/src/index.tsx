@@ -8,7 +8,10 @@ export {
 /**
  * Views
  */
-export { default as BottomTabBar } from './views/BottomTabBar';
+export {
+  default as BottomTabBar,
+  Props as BottomTabBarProps,
+} from './views/BottomTabBar';
 
 /**
  * Types
