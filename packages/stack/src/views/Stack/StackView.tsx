@@ -261,8 +261,11 @@ class StackView extends React.Component<Props, State> {
   };
 
   private handleCloseRoute = ({ route }: { route: NavigationRoute }) => {
+    const index = this.state.routes.findIndex(r => r.key === route.key);
+    // While closing route we need to point to the previous one assuming that
+    // this previous one in routes array
     this.handleTransitionComplete({
-      route: this.state.routes[this.state.routes.length - 2],
+      route: this.state.routes[Math.max(index - 1, 0)],
     });
 
     // This event will trigger when the animation for closing the route ends
