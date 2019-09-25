@@ -262,7 +262,7 @@ class StackView extends React.Component<Props, State> {
 
   private handleCloseRoute = ({ route }: { route: NavigationRoute }) => {
     this.handleTransitionComplete({
-      route: this.state.routes[this.state.routes.length - 1],
+      route: this.state.routes[this.state.routes.length - 2],
     });
 
     // This event will trigger when the animation for closing the route ends
