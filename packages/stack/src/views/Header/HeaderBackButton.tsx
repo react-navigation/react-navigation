@@ -10,9 +10,9 @@ import {
 import Animated from 'react-native-reanimated';
 import MaskedView from '../MaskedView';
 import TouchableItem from '../TouchableItem';
-import { HeaderLeftButtonProps } from '../../types';
+import { StackHeaderLeftButtonProps } from '../../types';
 
-type Props = HeaderLeftButtonProps & {
+type Props = StackHeaderLeftButtonProps & {
   tintColor: string;
 };
 

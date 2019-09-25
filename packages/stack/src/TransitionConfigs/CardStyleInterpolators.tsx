@@ -1,7 +1,10 @@
 import { I18nManager } from 'react-native';
 import Animated from 'react-native-reanimated';
 import getStatusBarHeight from '../utils/getStatusBarHeight';
-import { CardInterpolationProps, CardInterpolatedStyle } from '../types';
+import {
+  StackCardInterpolationProps,
+  StackCardInterpolatedStyle,
+} from '../types';
 
 const { cond, add, multiply, interpolate } = Animated;
 
@@ -12,7 +15,7 @@ export function forHorizontalIOS({
   current,
   next,
   layouts: { screen },
-}: CardInterpolationProps): CardInterpolatedStyle {
+}: StackCardInterpolationProps): StackCardInterpolatedStyle {
   const translateFocused = interpolate(current.progress, {
     inputRange: [0, 1],
     outputRange: [I18nManager.isRTL ? -screen.width : screen.width, 0],
@@ -57,7 +60,7 @@ export function forHorizontalIOS({
 export function forVerticalIOS({
   current,
   layouts: { screen },
-}: CardInterpolationProps): CardInterpolatedStyle {
+}: StackCardInterpolationProps): StackCardInterpolatedStyle {
   const translateY = interpolate(current.progress, {
     inputRange: [0, 1],
     outputRange: [screen.height, 0],
@@ -81,7 +84,7 @@ export function forModalPresentationIOS({
   current,
   next,
   layouts: { screen },
-}: CardInterpolationProps): CardInterpolatedStyle {
+}: StackCardInterpolationProps): StackCardInterpolatedStyle {
   const topOffset = 10;
   const statusBarHeight = getStatusBarHeight(screen.width > screen.height);
   const aspectRatio = screen.height / screen.width;
@@ -134,7 +137,7 @@ export function forFadeFromBottomAndroid({
   current,
   layouts: { screen },
   closing,
-}: CardInterpolationProps): CardInterpolatedStyle {
+}: StackCardInterpolationProps): StackCardInterpolatedStyle {
   const translateY = interpolate(current.progress, {
     inputRange: [0, 1],
     outputRange: [multiply(screen.height, 0.08), 0],
@@ -164,7 +167,7 @@ export function forRevealFromBottomAndroid({
   current,
   next,
   layouts: { screen },
-}: CardInterpolationProps): CardInterpolatedStyle {
+}: StackCardInterpolationProps): StackCardInterpolatedStyle {
   const containerTranslateY = interpolate(current.progress, {
     inputRange: [0, 1],
     outputRange: [screen.height, 0],
@@ -206,7 +209,7 @@ export function forScaleFromCenterAndroid({
   current,
   next,
   closing,
-}: CardInterpolationProps): CardInterpolatedStyle {
+}: StackCardInterpolationProps): StackCardInterpolatedStyle {
   const progress = add(current.progress, next ? next.progress : 0);
 
   const opacity = interpolate(progress, {

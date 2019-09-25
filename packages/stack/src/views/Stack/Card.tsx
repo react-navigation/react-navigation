@@ -16,7 +16,7 @@ import {
 } from 'react-native-gesture-handler';
 import {
   TransitionSpec,
-  CardStyleInterpolator,
+  StackCardStyleInterpolator,
   Layout,
   SpringConfig,
   TimingConfig,
@@ -52,7 +52,7 @@ type Props = ViewProps & {
     open: TransitionSpec;
     close: TransitionSpec;
   };
-  styleInterpolator: CardStyleInterpolator;
+  styleInterpolator: StackCardStyleInterpolator;
   containerStyle?: StyleProp<ViewStyle>;
   contentStyle?: StyleProp<ViewStyle>;
 };
@@ -658,7 +658,7 @@ export default class Card extends React.Component<Props> {
   // Changing it during an animations can result in unexpected results
   private getInterpolatedStyle = memoize(
     (
-      styleInterpolator: CardStyleInterpolator,
+      styleInterpolator: StackCardStyleInterpolator,
       index: number,
       current: Animated.Node<number>,
       next: Animated.Node<number> | undefined,

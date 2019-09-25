@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { StackActions } from '@react-navigation/routers';
 import HeaderSegment from './HeaderSegment';
-import { HeaderProps, HeaderTitleProps } from '../../types';
+import { StackHeaderProps, StackHeaderTitleProps } from '../../types';
 import HeaderTitle from './HeaderTitle';
 
-export default React.memo(function Header(props: HeaderProps) {
+export default React.memo(function Header(props: StackHeaderProps) {
   const { scene, previous, layout, navigation, styleInterpolator } = props;
   const { options } = scene.descriptor;
   const title =
@@ -41,7 +41,7 @@ export default React.memo(function Header(props: HeaderProps) {
       leftLabel={leftLabel}
       headerTitle={
         typeof options.headerTitle !== 'function'
-          ? (props: HeaderTitleProps) => <HeaderTitle {...props} />
+          ? (props: StackHeaderTitleProps) => <HeaderTitle {...props} />
           : options.headerTitle
       }
       onGoBack={

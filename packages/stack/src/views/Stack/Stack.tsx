@@ -23,8 +23,8 @@ import {
 import { forNoAnimation } from '../../TransitionConfigs/HeaderStyleInterpolators';
 import {
   Layout,
-  HeaderMode,
-  HeaderScene,
+  StackHeaderMode,
+  Scene,
   StackDescriptorMap,
   StackNavigationOptions,
   StackNavigationHelpers,
@@ -51,7 +51,7 @@ type Props = {
   getGesturesEnabled: (props: { route: Route<string> }) => boolean;
   renderHeader: (props: HeaderContainerProps) => React.ReactNode;
   renderScene: (props: { route: Route<string> }) => React.ReactNode;
-  headerMode: HeaderMode;
+  headerMode: StackHeaderMode;
   onPageChangeStart?: () => void;
   onPageChangeConfirm?: () => void;
   onPageChangeCancel?: () => void;
@@ -60,7 +60,7 @@ type Props = {
 type State = {
   routes: Route<string>[];
   descriptors: StackDescriptorMap;
-  scenes: HeaderScene<Route<string>>[];
+  scenes: Scene<Route<string>>[];
   progress: ProgressValues;
   layout: Layout;
   floatingHeaderHeights: { [key: string]: number };

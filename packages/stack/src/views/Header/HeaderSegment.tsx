@@ -14,11 +14,11 @@ import getStatusBarHeight from '../../utils/getStatusBarHeight';
 import memoize from '../../utils/memoize';
 import {
   Layout,
-  HeaderStyleInterpolator,
-  HeaderLeftButtonProps,
-  HeaderTitleProps,
-  HeaderOptions,
-  HeaderScene,
+  StackHeaderStyleInterpolator,
+  StackHeaderLeftButtonProps,
+  StackHeaderTitleProps,
+  StackHeaderOptions,
+  Scene,
 } from '../../types';
 
 export type Scene<T> = {
@@ -26,14 +26,14 @@ export type Scene<T> = {
   progress: Animated.Node<number>;
 };
 
-type Props = HeaderOptions & {
-  headerTitle: (props: HeaderTitleProps) => React.ReactNode;
+type Props = StackHeaderOptions & {
+  headerTitle: (props: StackHeaderTitleProps) => React.ReactNode;
   layout: Layout;
   onGoBack?: () => void;
   title?: string;
   leftLabel?: string;
-  scene: HeaderScene<Route<string>>;
-  styleInterpolator: HeaderStyleInterpolator;
+  scene: Scene<Route<string>>;
+  styleInterpolator: StackHeaderStyleInterpolator;
 };
 
 type State = {
@@ -113,7 +113,7 @@ export default class HeaderSegment extends React.Component<Props, State> {
 
   private getInterpolatedStyle = memoize(
     (
-      styleInterpolator: HeaderStyleInterpolator,
+      styleInterpolator: StackHeaderStyleInterpolator,
       layout: Layout,
       current: Animated.Node<number>,
       next: Animated.Node<number> | undefined,
@@ -140,7 +140,7 @@ export default class HeaderSegment extends React.Component<Props, State> {
       onGoBack,
       headerTitle,
       headerLeft: left = onGoBack
-        ? (props: HeaderLeftButtonProps) => <HeaderBackButton {...props} />
+        ? (props: StackHeaderLeftButtonProps) => <HeaderBackButton {...props} />
         : undefined,
       // @ts-ignore
       headerStatusBarHeight = getStatusBarHeight(layout.width > layout.height),

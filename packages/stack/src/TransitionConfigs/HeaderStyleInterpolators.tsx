@@ -1,6 +1,9 @@
 import { I18nManager } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { HeaderInterpolationProps, HeaderInterpolatedStyle } from '../types';
+import {
+  StackHeaderInterpolationProps,
+  StackHeaderInterpolatedStyle,
+} from '../types';
 
 const { interpolate, add } = Animated;
 
@@ -11,7 +14,7 @@ export function forUIKit({
   current,
   next,
   layouts,
-}: HeaderInterpolationProps): HeaderInterpolatedStyle {
+}: StackHeaderInterpolationProps): StackHeaderInterpolatedStyle {
   const defaultOffset = 100;
   const leftSpacing = 27;
 
@@ -95,7 +98,7 @@ export function forUIKit({
 export function forFade({
   current,
   next,
-}: HeaderInterpolationProps): HeaderInterpolatedStyle {
+}: StackHeaderInterpolationProps): StackHeaderInterpolatedStyle {
   const progress = add(current.progress, next ? next.progress : 0);
   const opacity = interpolate(progress, {
     inputRange: [0, 1, 2],
@@ -117,7 +120,7 @@ export function forStatic({
   current,
   next,
   layouts: { screen },
-}: HeaderInterpolationProps): HeaderInterpolatedStyle {
+}: StackHeaderInterpolationProps): StackHeaderInterpolatedStyle {
   const progress = add(current.progress, next ? next.progress : 0);
   const translateX = interpolate(progress, {
     inputRange: [0, 1, 2],
@@ -136,6 +139,6 @@ export function forStatic({
   };
 }
 
-export function forNoAnimation(): HeaderInterpolatedStyle {
+export function forNoAnimation(): StackHeaderInterpolatedStyle {
   return {};
 }

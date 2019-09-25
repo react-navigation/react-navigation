@@ -11,15 +11,15 @@ import Header from './Header';
 import { forStatic } from '../../TransitionConfigs/HeaderStyleInterpolators';
 import {
   Layout,
-  HeaderScene,
-  HeaderStyleInterpolator,
+  Scene,
+  StackHeaderStyleInterpolator,
   StackNavigationProp,
 } from '../../types';
 
 export type Props = {
   mode: 'float' | 'screen';
   layout: Layout;
-  scenes: Array<HeaderScene<Route<string>> | undefined>;
+  scenes: Array<Scene<Route<string>> | undefined>;
   state: StackNavigationState;
   getPreviousRoute: (props: {
     route: Route<string>;
@@ -28,7 +28,7 @@ export type Props = {
     route: Route<string>;
     height: number;
   }) => void;
-  styleInterpolator: HeaderStyleInterpolator;
+  styleInterpolator: StackHeaderStyleInterpolator;
   style?: StyleProp<ViewStyle>;
 };
 
