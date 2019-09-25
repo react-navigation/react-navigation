@@ -34,4 +34,16 @@ export { default as StackGestureContext } from './utils/StackGestureContext';
 /**
  * Types
  */
-export { StackNavigationOptions, StackNavigationProp } from './types';
+export {
+  StackNavigationOptions,
+  StackNavigationProp,
+  StackHeaderProps,
+  StackHeaderLeftButtonProps,
+  StackHeaderTitleProps,
+  StackCardInterpolatedStyle,
+  StackCardInterpolationProps,
+  StackCardStyleInterpolator,
+  StackHeaderInterpolatedStyle,
+  StackHeaderInterpolationProps,
+  StackHeaderStyleInterpolator,
+} from './types';

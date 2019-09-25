@@ -8,12 +8,14 @@ export {
 /**
  * Views
  */
-export {
-  default as BottomTabBar,
-  Props as BottomTabBarProps,
-} from './views/BottomTabBar';
+export { default as BottomTabBar } from './views/BottomTabBar';
 
 /**
  * Types
  */
-export { BottomTabNavigationOptions, BottomTabNavigationProp } from './types';
+export {
+  BottomTabNavigationOptions,
+  BottomTabNavigationProp,
+  BottomTabBarProps,
+  BottomTabBarOptions,
+} from './types';

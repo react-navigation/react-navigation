@@ -7,9 +7,9 @@ import { Props as HeaderContainerProps } from '../Header/HeaderContainer';
 import Card from './Card';
 import {
   StackNavigationHelpers,
-  HeaderScene,
+  Scene,
   Layout,
-  HeaderMode,
+  StackHeaderMode,
   TransitionPreset,
 } from '../../types';
 
@@ -20,8 +20,8 @@ type Props = TransitionPreset & {
   closing: boolean;
   layout: Layout;
   current: Animated.Value<number>;
-  previousScene?: HeaderScene<Route<string>>;
-  scene: HeaderScene<Route<string>>;
+  previousScene?: Scene<Route<string>>;
+  scene: Scene<Route<string>>;
   state: StackNavigationState;
   navigation: StackNavigationHelpers;
   cardTransparent?: boolean;
@@ -49,7 +49,7 @@ type Props = TransitionPreset & {
     vertical?: number;
     horizontal?: number;
   };
-  headerMode: HeaderMode;
+  headerMode: StackHeaderMode;
   headerTransparent?: boolean;
   floatingHeaderHeight: number;
   hasCustomHeader: boolean;

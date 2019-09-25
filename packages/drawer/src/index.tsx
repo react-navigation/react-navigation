@@ -20,4 +20,8 @@ export { default as DrawerGestureContext } from './utils/DrawerGestureContext';
 /**
  * Types
  */
-export { DrawerNavigationOptions, DrawerNavigationProp } from './types';
+export {
+  DrawerNavigationOptions,
+  DrawerNavigationProp,
+  DrawerNavigationItemsProps,
+} from './types';

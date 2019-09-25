@@ -16,4 +16,6 @@ export { default as MaterialTopTabBar } from './views/MaterialTopTabBar';
 export {
   MaterialTopTabNavigationOptions,
   MaterialTopTabNavigationProp,
+  MaterialTopTabBarProps,
+  MaterialTopTabBarOptions,
 } from './types';

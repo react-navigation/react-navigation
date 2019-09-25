@@ -232,5 +232,7 @@ export type BottomTabBarProps = BottomTabBarOptions & {
     tintColor: string;
     horizontal: boolean;
   }) => React.ReactNode;
+  activeTintColor: string;
+  inactiveTintColor: string;
   safeAreaInset?: React.ComponentProps<typeof SafeAreaView>['forceInset'];
 };

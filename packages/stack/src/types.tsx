@@ -67,9 +67,7 @@ export type Layout = { width: number; height: number };
 
 export type GestureDirection = 'horizontal' | 'vertical';
 
-export type HeaderMode = 'float' | 'screen' | 'none';
-
-export type HeaderScene<T> = {
+export type Scene<T> = {
   /**
    * Current route object,
    */
@@ -99,14 +97,16 @@ export type HeaderScene<T> = {
   };
 };
 
-export type HeaderOptions = {
+export type StackHeaderMode = 'float' | 'screen' | 'none';
+
+export type StackHeaderOptions = {
   /**
    * String or a function that returns a React Element to be used by the header.
    * Defaults to scene `title`.
    * It receives `allowFontScaling`, `onLayout`, `style` and `children` in the options object as an argument.
    * The title string is passed in `children`.
    */
-  headerTitle?: string | ((props: HeaderTitleProps) => React.ReactNode);
+  headerTitle?: string | ((props: StackHeaderTitleProps) => React.ReactNode);
   /**
    * Style object for the title component.
    */
@@ -151,7 +151,7 @@ export type HeaderOptions = {
    * Function which returns a React Element to display on the left side of the header.
    * It receives a number of arguments when rendered (`onPress`, `label`, `labelStyle` and more.
    */
-  headerLeft?: (props: HeaderLeftButtonProps) => React.ReactNode;
+  headerLeft?: (props: StackHeaderLeftButtonProps) => React.ReactNode;
   /**
    * Style object for the container of the `headerLeft` component, for example to add padding.
    */
@@ -169,7 +169,7 @@ export type HeaderOptions = {
    * It receives the `tintColor` in in the options object as an argument. object.
    * Defaults to Image component with a the default back icon image for the platform (a chevron on iOS and an arrow on Android).
    */
-  headerBackImage?: HeaderLeftButtonProps['backImage'];
+  headerBackImage?: StackHeaderLeftButtonProps['backImage'];
   /**
    * Color for material ripple (Android >= 5.0 only).
    */
@@ -196,7 +196,7 @@ export type HeaderOptions = {
   headerTransparent?: boolean;
 };
 
-export type HeaderProps = {
+export type StackHeaderProps = {
   /**
    * Mode of the header: `float` renders a single floating header across all screens,
    * `screen` renders separate headers for each screen.
@@ -209,11 +209,11 @@ export type HeaderProps = {
   /**
    * Object representing the current scene, such as the route object and animation progress.
    */
-  scene: HeaderScene<Route<string>>;
+  scene: Scene<Route<string>>;
   /**
    * Object representing the previous scene.
    */
-  previous?: HeaderScene<Route<string>>;
+  previous?: Scene<Route<string>>;
   /**
    * Navigation prop for the header.
    */
@@ -221,7 +221,7 @@ export type HeaderProps = {
   /**
    * Interpolated styles for various elements in the header.
    */
-  styleInterpolator: HeaderStyleInterpolator;
+  styleInterpolator: StackHeaderStyleInterpolator;
 };
 
 export type StackDescriptor = Descriptor<
@@ -235,7 +235,7 @@ export type StackDescriptorMap = {
   [key: string]: StackDescriptor;
 };
 
-export type StackNavigationOptions = HeaderOptions &
+export type StackNavigationOptions = StackHeaderOptions &
   Partial<TransitionPreset> & {
     /**
      * String that can be displayed in the header as a fallback for `headerTitle`.
@@ -245,7 +245,7 @@ export type StackNavigationOptions = HeaderOptions &
      * Function that given `HeaderProps` returns a React Element to display as a header.
      * Setting to `null` hides header.
      */
-    header?: null | ((props: HeaderProps) => React.ReactNode);
+    header?: null | ((props: StackHeaderProps) => React.ReactNode);
     /**
      * Whether a shadow is visible for the card during transitions. Defaults to `true`.
      */
@@ -295,7 +295,7 @@ export type StackNavigationOptions = HeaderOptions &
 
 export type StackNavigationConfig = {
   mode?: 'card' | 'modal';
-  headerMode?: HeaderMode;
+  headerMode?: StackHeaderMode;
   /**
    * If `false`, the keyboard will NOT automatically dismiss when navigating to a new screen.
    * Defaults to `true`.
@@ -303,7 +303,7 @@ export type StackNavigationConfig = {
   keyboardHandlingEnabled?: boolean;
 };
 
-export type HeaderLeftButtonProps = {
+export type StackHeaderLeftButtonProps = {
   /**
    * Whether the button is disabled.
    */
@@ -365,7 +365,7 @@ export type HeaderLeftButtonProps = {
   canGoBack?: boolean;
 };
 
-export type HeaderTitleProps = {
+export type StackHeaderTitleProps = {
   /**
    * Callback to trigger when the size of the title element changes.
    */
@@ -408,7 +408,7 @@ export type TransitionSpec =
   | { animation: 'spring'; config: SpringConfig }
   | { animation: 'timing'; config: TimingConfig };
 
-export type CardInterpolationProps = {
+export type StackCardInterpolationProps = {
   /**
    * Values for the current screen.
    */
@@ -447,7 +447,7 @@ export type CardInterpolationProps = {
   };
 };
 
-export type CardInterpolatedStyle = {
+export type StackCardInterpolatedStyle = {
   /**
    * Interpolated style for the container view wrapping the card.
    */
@@ -466,11 +466,11 @@ export type CardInterpolatedStyle = {
   shadowStyle?: any;
 };
 
-export type CardStyleInterpolator = (
-  props: CardInterpolationProps
-) => CardInterpolatedStyle;
+export type StackCardStyleInterpolator = (
+  props: StackCardInterpolationProps
+) => StackCardInterpolatedStyle;
 
-export type HeaderInterpolationProps = {
+export type StackHeaderInterpolationProps = {
   /**
    * Values for the current screen (the screen which owns this header).
    */
@@ -509,7 +509,7 @@ export type HeaderInterpolationProps = {
   };
 };
 
-export type HeaderInterpolatedStyle = {
+export type StackHeaderInterpolatedStyle = {
   /**
    * Interpolated style for the label of the left button (back button label).
    */
@@ -532,9 +532,9 @@ export type HeaderInterpolatedStyle = {
   backgroundStyle?: any;
 };
 
-export type HeaderStyleInterpolator = (
-  props: HeaderInterpolationProps
-) => HeaderInterpolatedStyle;
+export type StackHeaderStyleInterpolator = (
+  props: StackHeaderInterpolationProps
+) => StackHeaderInterpolatedStyle;
 
 export type TransitionPreset = {
   /**
@@ -557,9 +557,9 @@ export type TransitionPreset = {
   /**
    * Function which specifies interpolated styles for various parts of the card, e.g. the overlay, shadow etc.
    */
-  cardStyleInterpolator: CardStyleInterpolator;
+  cardStyleInterpolator: StackCardStyleInterpolator;
   /**
    * Function which specifies interpolated styles for various parts of the header, e.g. the title, left button etc.
    */
-  headerStyleInterpolator: HeaderStyleInterpolator;
+  headerStyleInterpolator: StackHeaderStyleInterpolator;
 };
