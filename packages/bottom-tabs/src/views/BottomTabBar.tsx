@@ -22,7 +22,7 @@ type State = {
   visible: Animated.Value;
 };
 
-type Props = BottomTabBarProps & {
+export type Props = BottomTabBarProps & {
   activeTintColor: string;
   inactiveTintColor: string;
   safeAreaInset: React.ComponentProps<typeof SafeAreaView>['forceInset'];
