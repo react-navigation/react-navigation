@@ -15,7 +15,6 @@ import {
   Layout,
   HeaderStyleInterpolator,
   HeaderBackButtonProps,
-  HeaderTitleProps,
   HeaderOptions,
   HeaderScene,
 } from '../../types';
@@ -26,10 +25,9 @@ export type Scene<T> = {
 };
 
 type Props = HeaderOptions & {
-  headerTitle: (props: HeaderTitleProps) => React.ReactNode;
   layout: Layout;
   onGoBack?: () => void;
-  title?: string;
+  title?: React.ReactNode;
   leftLabel?: string;
   scene: HeaderScene;
   styleInterpolator: HeaderStyleInterpolator;
@@ -273,23 +271,26 @@ export default class HeaderSegment extends React.Component<Props, State> {
       }
     }
 
-    const leftButton = left
-      ? left({
-          backImage,
-          pressColorAndroid,
-          allowFontScaling: backAllowFontScaling,
-          onPress: onGoBack,
-          labelVisible: headerBackTitleVisible,
-          label: leftLabel !== undefined ? leftLabel : previousTitle,
-          truncatedLabel,
-          labelStyle: [leftLabelStyle, customLeftLabelStyle],
-          onLabelLayout: this.handleLeftLabelLayout,
-          screenLayout: layout,
-          titleLayout,
-          tintColor: headerLeftTintColor || headerTintColor,
-          canGoBack: Boolean(onGoBack),
-        })
-      : null;
+    const leftButton =
+      left !== undefined
+        ? typeof left === 'function'
+          ? left({
+              backImage,
+              pressColorAndroid,
+              allowFontScaling: backAllowFontScaling,
+              onPress: onGoBack,
+              labelVisible: headerBackTitleVisible,
+              label: leftLabel !== undefined ? leftLabel : previousTitle,
+              truncatedLabel,
+              labelStyle: [leftLabelStyle, customLeftLabelStyle],
+              onLabelLayout: this.handleLeftLabelLayout,
+              screenLayout: layout,
+              titleLayout,
+              tintColor: headerLeftTintColor || headerTintColor,
+              canGoBack: Boolean(onGoBack),
+            })
+          : left
+        : null;
 
     return (
       <React.Fragment>
@@ -298,7 +299,11 @@ export default class HeaderSegment extends React.Component<Props, State> {
           style={[StyleSheet.absoluteFill, backgroundStyle]}
         >
           {headerBackground ? (
-            headerBackground()
+            typeof headerBackground === 'function' ? (
+              headerBackground()
+            ) : (
+              headerBackground
+            )
           ) : headerTransparent ? null : (
             <HeaderBackground style={safeStyles} />
           )}
@@ -332,19 +337,25 @@ export default class HeaderSegment extends React.Component<Props, State> {
                 titleContainerStyle,
               ]}
             >
-              {headerTitle({
-                children: currentTitle,
-                onLayout: this.handleTitleLayout,
-                allowFontScaling: titleAllowFontScaling,
-                style: [{ color: headerTintColor }, customTitleStyle],
-              })}
+              {typeof headerTitle === 'function'
+                ? headerTitle({
+                    children: currentTitle,
+                    onLayout: this.handleTitleLayout,
+                    allowFontScaling: titleAllowFontScaling,
+                    style: [{ color: headerTintColor }, customTitleStyle],
+                  })
+                : headerTitle}
             </Animated.View>
-            {right ? (
+            {right !== undefined ? (
               <Animated.View
                 pointerEvents="box-none"
                 style={[styles.right, rightButtonStyle, rightContainerStyle]}
               >
-                {right({ tintColor: headerRightTintColor || headerTintColor })}
+                {typeof right === 'function'
+                  ? right({
+                      tintColor: headerRightTintColor || headerTintColor,
+                    })
+                  : right}
               </Animated.View>
             ) : null}
           </View>

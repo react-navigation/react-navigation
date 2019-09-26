@@ -67,7 +67,9 @@ export type HeaderScene<T = NavigationRoute> = {
 };
 
 export type HeaderOptions = {
-  headerTitle?: string | ((props: HeaderTitleProps) => React.ReactNode);
+  headerTitle?:
+    | React.ReactNode
+    | ((props: HeaderTitleProps) => React.ReactNode);
   headerTitleStyle?: StyleProp<TextStyle>;
   headerTitleContainerStyle?: StyleProp<ViewStyle>;
   headerTintColor?: string;
@@ -79,13 +81,17 @@ export type HeaderOptions = {
   headerBackTitleStyle?: StyleProp<TextStyle>;
   headerBackTitleVisible?: boolean;
   headerTruncatedBackTitle?: string;
-  headerLeft?: (props: HeaderBackButtonProps) => React.ReactNode;
+  headerLeft?:
+    | React.ReactNode
+    | ((props: HeaderBackButtonProps) => React.ReactNode);
   headerLeftContainerStyle?: StyleProp<ViewStyle>;
-  headerRight?: (props: { tintColor?: string }) => React.ReactNode;
+  headerRight?:
+    | React.ReactNode
+    | ((props: { tintColor?: string }) => React.ReactNode);
   headerRightContainerStyle?: StyleProp<ViewStyle>;
   headerBackImage?: HeaderBackButtonProps['backImage'];
   headerPressColorAndroid?: string;
-  headerBackground?: () => React.ReactNode;
+  headerBackground?: React.ReactNode | (() => React.ReactNode);
   headerStyle?: StyleProp<ViewStyle>;
   headerStatusBarHeight?: number;
   headerTransparent?: boolean;
@@ -107,7 +113,7 @@ export type TransitionCallbackProps = {
 export type NavigationStackOptions = HeaderOptions &
   Partial<TransitionPreset> & {
     title?: string;
-    header?: null | ((props: HeaderProps) => React.ReactNode);
+    header?: React.ReactNode | ((props: HeaderProps) => React.ReactNode);
     cardShadowEnabled?: boolean;
     cardOverlayEnabled?: boolean;
     cardTransparent?: boolean;
@@ -163,7 +169,9 @@ export type HeaderBackButtonProps = {
   disabled?: boolean;
   onPress?: () => void;
   pressColorAndroid?: string;
-  backImage?: (props: { tintColor: string }) => React.ReactNode;
+  backImage?:
+    | React.ReactNode
+    | ((props: { tintColor: string }) => React.ReactNode);
   tintColor?: string;
   label?: string;
   truncatedLabel?: string;
@@ -179,7 +187,7 @@ export type HeaderBackButtonProps = {
 export type HeaderTitleProps = {
   onLayout: (e: LayoutChangeEvent) => void;
   allowFontScaling?: boolean;
-  children?: string;
+  children?: React.ReactNode;
   style?: StyleProp<TextStyle>;
 };
 

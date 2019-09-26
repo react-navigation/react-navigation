@@ -114,9 +114,9 @@ export default function HeaderContainer({
               }
             >
               {options.header !== undefined ? (
-                options.header === null ? null : (
+                typeof options.header === 'function' ? (
                   options.header(props)
-                )
+                ) : null
               ) : (
                 <Header {...props} />
               )}

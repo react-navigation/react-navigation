@@ -60,7 +60,11 @@ class HeaderBackButton extends React.Component<Props, State> {
     const { backImage, labelVisible, tintColor } = this.props;
 
     if (backImage) {
-      return backImage({ tintColor });
+      if (typeof backImage === 'function') {
+        return backImage({ tintColor });
+      }
+
+      return backImage;
     } else {
       return (
         <Image

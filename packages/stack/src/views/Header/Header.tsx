@@ -32,7 +32,7 @@ export default class Header extends React.PureComponent<HeaderProps> {
       const o = previous.descriptor.options;
 
       leftLabel =
-        typeof o.headerTitle !== 'function' && o.headerTitle !== undefined
+        typeof o.headerTitle !== 'function' && typeof o.headerTitle === 'string'
           ? o.headerTitle
           : o.title !== undefined
           ? o.title
@@ -47,7 +47,7 @@ export default class Header extends React.PureComponent<HeaderProps> {
         title={title}
         leftLabel={leftLabel}
         headerTitle={
-          typeof options.headerTitle !== 'function'
+          options.headerTitle === undefined
             ? (props: HeaderTitleProps) => <HeaderTitle {...props} />
             : options.headerTitle
         }

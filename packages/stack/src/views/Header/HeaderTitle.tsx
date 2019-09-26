@@ -3,7 +3,7 @@ import { StyleSheet, Platform, TextProps } from 'react-native';
 import Animated from 'react-native-reanimated';
 
 type Props = TextProps & {
-  children?: string;
+  children?: React.ReactNode;
 };
 
 export default function HeaderTitle({ style, ...rest }: Props) {
