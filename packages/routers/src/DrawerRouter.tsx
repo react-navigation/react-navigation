@@ -135,6 +135,15 @@ export default function DrawerRouter(
             isDrawerOpen: !state.isDrawerOpen,
           };
 
+        case 'NAVIGATE':
+          return router.getStateForAction(
+            {
+              ...state,
+              isDrawerOpen: false,
+            },
+            action
+          );
+
         default:
           return router.getStateForAction(state, action);
       }
