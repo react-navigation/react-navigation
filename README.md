@@ -143,7 +143,7 @@ Allows for the customization of how the given screen should appear/dissapear whe
 Defines how the method that should be used to present the given screen. It is a separate property from `stackAnimation` as the presentation mode can carry additional semantic. The allowed values are:
  - `"push"` – the new screen will be pushed onto a stack which on iOS means that the default animation will be slide from the side, the animation on Android may vary depending on the OS version and theme.
  - `"modal"` – the new screen will be presented modally. In addition this allow for a nested stack to be rendered inside such screens
- - `"transparentModal"` – the new screen will be presente modally but in addition the second to last screen will remain attached to the stack container such that if the top screen is non opaque the content below can still be seen. If `"modal"` is used instead the below screen will get unmounted as soon as the transition ends.
+ - `"transparentModal"` – the new screen will be presented modally but in addition the second to last screen will remain attached to the stack container such that if the top screen is non opaque the content below can still be seen. If `"modal"` is used instead the below screen will get unmounted as soon as the transition ends.
 
 ### `<ScreenStackHeaderConfig>`
 
