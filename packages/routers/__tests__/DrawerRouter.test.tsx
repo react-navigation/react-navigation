@@ -215,6 +215,36 @@ it('handles navigate action', () => {
   });
 });
 
+it('handles navigate action with open drawer', () => {
+  const router = DrawerRouter({});
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        key: 'root',
+        index: 1,
+        routeNames: ['baz', 'bar'],
+        routeKeyHistory: [],
+        isDrawerOpen: true,
+        routes: [{ key: 'baz', name: 'baz' }, { key: 'bar', name: 'bar' }],
+      },
+      CommonActions.navigate('baz', { answer: 42 })
+    )
+  ).toEqual({
+    stale: false,
+    key: 'root',
+    index: 0,
+    routeNames: ['baz', 'bar'],
+    isDrawerOpen: false,
+    routeKeyHistory: ['bar'],
+    routes: [
+      { key: 'baz', name: 'baz', params: { answer: 42 } },
+      { key: 'bar', name: 'bar' },
+    ],
+  });
+});
+
 it('handles open drawer action', () => {
   const router = DrawerRouter({});
 
