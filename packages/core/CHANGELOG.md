@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.11](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/core@5.0.0-alpha.10...@react-navigation/core@5.0.0-alpha.11) (2019-09-27)
+
+
+### Bug Fixes
+
+* fire blur event when a route is removed with a delay ([1153d55](https://github.com/react-navigation/navigation-ex/commit/1153d55)), closes [#110](https://github.com/react-navigation/navigation-ex/issues/110)
+
+
+### Features
+
+* add a method to reset root navigator state ([e61f594](https://github.com/react-navigation/navigation-ex/commit/e61f594))
+
+
+
+
+
 # [5.0.0-alpha.10](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/core@5.0.0-alpha.9...@react-navigation/core@5.0.0-alpha.10) (2019-09-17)
 
 **Note:** Version bump only for package @react-navigation/core

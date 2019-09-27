@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.20](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.19...@react-navigation/stack@5.0.0-alpha.20) (2019-09-27)
+
+
+### Features
+
+* export some more type aliases ([8b78d61](https://github.com/react-navigation/navigation-ex/commit/8b78d61))
+
+
+
+
+
 # [5.0.0-alpha.19](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.18...@react-navigation/stack@5.0.0-alpha.19) (2019-09-23)
 
 

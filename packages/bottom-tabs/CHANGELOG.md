@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.10](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/bottom-tabs@5.0.0-alpha.9...@react-navigation/bottom-tabs@5.0.0-alpha.10) (2019-09-27)
+
+
+### Features
+
+* export BottomTabBar props type ([#109](https://github.com/react-navigation/navigation-ex/issues/109)) ([1fd5a86](https://github.com/react-navigation/navigation-ex/commit/1fd5a86))
+* export some more type aliases ([8b78d61](https://github.com/react-navigation/navigation-ex/commit/8b78d61))
+
+
+
+
+
 # [5.0.0-alpha.9](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/bottom-tabs@5.0.0-alpha.8...@react-navigation/bottom-tabs@5.0.0-alpha.9) (2019-09-17)
 
 

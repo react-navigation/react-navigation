@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.8](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/material-top-tabs@5.0.0-alpha.7...@react-navigation/material-top-tabs@5.0.0-alpha.8) (2019-09-27)
+
+
+### Features
+
+* export some more type aliases ([8b78d61](https://github.com/react-navigation/navigation-ex/commit/8b78d61))
+
+
+
+
+
 # [5.0.0-alpha.7](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/material-top-tabs@5.0.0-alpha.6...@react-navigation/material-top-tabs@5.0.0-alpha.7) (2019-08-31)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs
