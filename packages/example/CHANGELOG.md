@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.8](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/example@5.0.0-alpha.7...@react-navigation/example@5.0.0-alpha.8) (2019-09-27)
+
+
+### Bug Fixes
+
+* close drawer on navigate ([655a220](https://github.com/react-navigation/navigation-ex/commit/655a220))
+
+
+
+
+
 # [5.0.0-alpha.7](https://github.com/satya164/navigation-ex/compare/@react-navigation/example@5.0.0-alpha.6...@react-navigation/example@5.0.0-alpha.7) (2019-09-16)
 
 
