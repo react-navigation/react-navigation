@@ -47,7 +47,7 @@ export default function SceneView<
   }, [getState, route.key]);
 
   const setCurrentState = React.useCallback(
-    (child: NavigationState | undefined) => {
+    (child: NavigationState | PartialState<NavigationState> | undefined) => {
       const state = getState();
 
       setState({

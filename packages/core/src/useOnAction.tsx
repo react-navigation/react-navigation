@@ -2,13 +2,18 @@ import * as React from 'react';
 import NavigationBuilderContext, {
   ChildActionListener,
 } from './NavigationBuilderContext';
-import { NavigationAction, NavigationState, Router } from './types';
+import {
+  NavigationAction,
+  NavigationState,
+  PartialState,
+  Router,
+} from './types';
 
 type Options = {
   router: Router<NavigationState, NavigationAction>;
   key?: string;
   getState: () => NavigationState;
-  setState: (state: NavigationState) => void;
+  setState: (state: NavigationState | PartialState<NavigationState>) => void;
   listeners: ChildActionListener[];
 };
 

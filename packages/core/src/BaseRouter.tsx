@@ -1,5 +1,5 @@
 import shortid from 'shortid';
-import { CommonAction, NavigationState } from './types';
+import { CommonAction, NavigationState, PartialState } from './types';
 
 /**
  * Base router object that can be used when writing custom routers.
@@ -9,7 +9,7 @@ const BaseRouter = {
   getStateForAction<State extends NavigationState>(
     state: State,
     action: CommonAction
-  ): State | null {
+  ): State | PartialState<State> | null {
     switch (action.type) {
       case 'REPLACE': {
         const index = action.source
@@ -56,12 +56,7 @@ const BaseRouter = {
       }
 
       case 'RESET':
-        return {
-          ...state,
-          ...action.payload,
-          key: state.key,
-          routeNames: state.routeNames,
-        };
+        return action.payload as PartialState<State>;
 
       default:
         return null;
