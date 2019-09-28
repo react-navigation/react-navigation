@@ -655,6 +655,7 @@ it('throws when a React Element is not the direct children', () => {
   );
 });
 
+// eslint-disable-next-line jest/expect-expect
 it("doesn't throw when direct children is Screen or empty element", () => {
   const TestNavigator = (props: any) => {
     useNavigationBuilder(MockRouter, props);

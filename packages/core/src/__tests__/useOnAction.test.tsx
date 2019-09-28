@@ -296,6 +296,7 @@ it("action doesn't bubble if target is specified", () => {
   expect(onStateChange).not.toBeCalled();
 });
 
+// eslint-disable-next-line jest/expect-expect
 it("doesn't crash if no navigator handled the action", () => {
   const TestRouter = MockRouter;
 

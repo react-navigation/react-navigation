@@ -25,6 +25,7 @@ export default function Albums() {
       contentContainerStyle={styles.content}
     >
       {COVERS.map((source, i) => (
+        // eslint-disable-next-line react/no-array-index-key
         <Image key={i} source={source} style={styles.cover} />
       ))}
     </ScrollView>
