@@ -170,7 +170,10 @@ export type Router<
    * @param state State object to apply the action on.
    * @param action Action object to apply.
    */
-  getStateForAction(state: State, action: Action): State | null;
+  getStateForAction(
+    state: State,
+    action: Action
+  ): State | PartialState<State> | null;
 
   /**
    * Whether the action should also change focus in parent navigator

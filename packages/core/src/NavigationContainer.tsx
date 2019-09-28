@@ -24,7 +24,9 @@ const MISSING_CONTEXT_ERROR =
 export const NavigationStateContext = React.createContext<{
   state?: NavigationState | PartialState<NavigationState>;
   getState: () => NavigationState | PartialState<NavigationState> | undefined;
-  setState: (state: NavigationState | undefined) => void;
+  setState: (
+    state: NavigationState | PartialState<NavigationState> | undefined
+  ) => void;
   key?: string;
   performTransaction: (action: () => void) => void;
 }>({

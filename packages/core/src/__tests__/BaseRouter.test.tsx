@@ -125,15 +125,5 @@ it('resets state to new state with RESET', () => {
     })
   );
 
-  expect(result).toEqual({ ...STATE, index: 0, routes });
-});
-
-it('ignores key and routeNames when resetting with RESET', () => {
-  const result = BaseRouter.getStateForAction(
-    STATE,
-    // @ts-ignore
-    CommonActions.reset({ index: 2, key: 'foo', routeNames: ['test'] })
-  );
-
-  expect(result).toEqual({ ...STATE, index: 2 });
+  expect(result).toEqual({ index: 0, routes });
 });
