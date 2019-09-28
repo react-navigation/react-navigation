@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-cycle
 import * as CommonActions from './CommonActions';
 import * as React from 'react';
 

@@ -18,6 +18,7 @@ type DevTools = {
 };
 
 declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace NodeJS {
     interface Global {
       __REDUX_DEVTOOLS_EXTENSION__:

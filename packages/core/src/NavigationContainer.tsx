@@ -140,7 +140,6 @@ const Container = React.forwardRef(function NavigationContainer(
     >((acc, name) => {
       acc[name] = (...args: any[]) =>
         dispatch(
-          // eslint-disable-next-line import/namespace
           CommonActions[name](
             // @ts-ignore
             ...args
