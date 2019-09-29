@@ -269,7 +269,7 @@ declare module 'react-navigation' {
     key: string;
 
     // The new params to merge into the existing route params
-    params?: NavigationParams;
+    params: NavigationParams;
   }
 
   export interface NavigationSetParamsAction
