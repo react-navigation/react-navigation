@@ -916,7 +916,7 @@ declare module 'react-navigation' {
 
   // If the wrapped component is a class, we can get a ref to it
   export function withNavigationFocus<
-    P extends NavigationFocusInjectedProps,
+    P extends Partial<NavigationFocusInjectedProps>,
     T extends React.ComponentClass<P>
   >(
     Component: T & React.ComponentClass<P>
@@ -926,7 +926,9 @@ declare module 'react-navigation' {
     }
   >;
 
-  export function withNavigationFocus<P extends NavigationFocusInjectedProps>(
+  export function withNavigationFocus<
+    P extends Partial<NavigationFocusInjectedProps>
+  >(
     Component: React.ComponentType<P>
   ): React.ComponentType<Omit<P, keyof NavigationFocusInjectedProps>>;
 
