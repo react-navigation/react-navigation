@@ -3,6 +3,7 @@ import SceneView from './SceneView';
 import NavigationBuilderContext, {
   ChildActionListener,
   FocusedNavigationListener,
+  NavigatorStateGetter,
 } from './NavigationBuilderContext';
 import { NavigationEventEmitter } from './useEventEmitter';
 import useNavigationCache from './useNavigationCache';
@@ -35,6 +36,7 @@ type Options<State extends NavigationState, ScreenOptions extends object> = {
   setState: (state: State) => void;
   addActionListener: (listener: ChildActionListener) => void;
   addFocusedListener: (listener: FocusedNavigationListener) => void;
+  addStateGetter: (key: string, getter: NavigatorStateGetter) => void;
   onRouteFocus: (key: string) => void;
   router: Router<State, NavigationAction>;
   emitter: NavigationEventEmitter;
@@ -61,6 +63,7 @@ export default function useDescriptors<
   setState,
   addActionListener,
   addFocusedListener,
+  addStateGetter,
   onRouteFocus,
   router,
   emitter,
@@ -74,6 +77,7 @@ export default function useDescriptors<
       onAction,
       addActionListener,
       addFocusedListener,
+      addStateGetter,
       onRouteFocus,
       trackAction,
     }),
@@ -83,6 +87,7 @@ export default function useDescriptors<
       addActionListener,
       addFocusedListener,
       onRouteFocus,
+      addStateGetter,
       trackAction,
     ]
   );

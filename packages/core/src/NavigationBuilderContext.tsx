@@ -1,5 +1,10 @@
 import * as React from 'react';
-import { NavigationAction, NavigationHelpers, ParamListBase } from './types';
+import {
+  NavigationAction,
+  NavigationHelpers,
+  NavigationState,
+  ParamListBase,
+} from './types';
 
 export type ChildActionListener = (
   action: NavigationAction,
@@ -14,6 +19,8 @@ export type FocusedNavigationListener = <T>(
   callback: FocusedNavigationCallback<T>
 ) => { handled: boolean; result: T };
 
+export type NavigatorStateGetter = () => NavigationState;
+
 /**
  * Context which holds the required helpers needed to build nested navigators.
  */
@@ -25,6 +32,7 @@ const NavigationBuilderContext = React.createContext<{
   addActionListener?: (listener: ChildActionListener) => void;
   addFocusedListener?: (listener: FocusedNavigationListener) => void;
   onRouteFocus?: (key: string) => void;
+  addStateGetter?: (key: string, getter: NavigatorStateGetter) => void;
   trackAction: (action: NavigationAction) => void;
 }>({
   trackAction: () => undefined,

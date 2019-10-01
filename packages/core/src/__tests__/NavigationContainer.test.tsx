@@ -321,3 +321,56 @@ it('handle resetting state with ref', () => {
   expect(onStateChange).toBeCalledTimes(1);
   expect(onStateChange).lastCalledWith(state);
 });
+
+it('handle getRootState', () => {
+  const TestNavigator = (props: any) => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return descriptors[state.routes[state.index].key].render();
+  };
+
+  const ref = React.createRef<NavigationContainerRef>();
+
+  const element = (
+    <NavigationContainer ref={ref}>
+      <TestNavigator initialRouteName="foo">
+        <Screen name="foo">
+          {() => (
+            <TestNavigator>
+              <Screen name="qux" component={() => null} />
+              <Screen name="lex" component={() => null} />
+            </TestNavigator>
+          )}
+        </Screen>
+        <Screen name="bar" component={() => null} />
+      </TestNavigator>
+    </NavigationContainer>
+  );
+
+  render(element);
+
+  let state;
+  if (ref.current) {
+    state = ref.current.getRootState();
+  }
+  expect(state).toEqual({
+    index: 0,
+    key: '7',
+    routeNames: ['foo', 'bar'],
+    routes: [
+      {
+        key: 'foo',
+        name: 'foo',
+        state: {
+          index: 0,
+          key: '8',
+          routeNames: ['qux', 'lex'],
+          routes: [{ key: 'qux', name: 'qux' }, { key: 'lex', name: 'lex' }],
+          stale: false,
+        },
+      },
+      { key: 'bar', name: 'bar' },
+    ],
+    stale: false,
+  });
+});

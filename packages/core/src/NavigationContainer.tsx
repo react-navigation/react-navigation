@@ -5,6 +5,7 @@ import NavigationBuilderContext from './NavigationBuilderContext';
 import ResetRootContext from './ResetRootContext';
 import useFocusedListeners from './useFocusedListeners';
 import useDevTools from './useDevTools';
+import useStateGetters from './useStateGetters';
 
 import {
   Route,
@@ -108,6 +109,8 @@ const Container = React.forwardRef(function NavigationContainer(
 
   const { listeners, addListener: addFocusedListener } = useFocusedListeners();
 
+  const { getStateForRoute, addStateGetter } = useStateGetters();
+
   const dispatch = (
     action: NavigationAction | ((state: NavigationState) => NavigationAction)
   ) => {
@@ -134,6 +137,10 @@ const Container = React.forwardRef(function NavigationContainer(
     [trackAction]
   );
 
+  const getRootState = () => {
+    return getStateForRoute('root');
+  };
+
   React.useImperativeHandle(ref, () => ({
     ...(Object.keys(CommonActions) as Array<keyof typeof CommonActions>).reduce<
       any
@@ -150,14 +157,16 @@ const Container = React.forwardRef(function NavigationContainer(
     resetRoot,
     dispatch,
     canGoBack,
+    getRootState,
   }));
 
   const builderContext = React.useMemo(
     () => ({
       addFocusedListener,
+      addStateGetter,
       trackAction,
     }),
-    [addFocusedListener, trackAction]
+    [addFocusedListener, trackAction, addStateGetter]
   );
 
   const performTransaction = React.useCallback((callback: () => void) => {
