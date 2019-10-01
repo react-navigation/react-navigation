@@ -23,6 +23,8 @@ import {
   PrivateValueStore,
   NavigationAction,
 } from './types';
+import useStateGetters from './useStateGetters';
+import useOnGetState from './useOnGetState';
 
 // This is to make TypeScript compiler happy
 // eslint-disable-next-line babel/no-unused-expressions
@@ -227,6 +229,8 @@ export default function useNavigationBuilder<
     addListener: addFocusedListener,
   } = useFocusedListeners();
 
+  const { getStateForRoute, addStateGetter } = useStateGetters();
+
   const onAction = useOnAction({
     router,
     getState,
@@ -254,6 +258,11 @@ export default function useNavigationBuilder<
     focusedListeners,
   });
 
+  useOnGetState({
+    getState,
+    getStateForRoute,
+  });
+
   const descriptors = useDescriptors<State, ScreenOptions>({
     state,
     screens,
@@ -265,6 +274,7 @@ export default function useNavigationBuilder<
     onRouteFocus,
     addActionListener,
     addFocusedListener,
+    addStateGetter,
     router,
     emitter,
   });

@@ -538,6 +538,7 @@ export type NavigationContainerRef =
        * @param state Navigation state object.
        */
       resetRoot(state: PartialState<NavigationState> | NavigationState): void;
+      getRootState(): NavigationState;
     }
   | undefined
   | null;
