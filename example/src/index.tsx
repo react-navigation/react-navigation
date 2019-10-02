@@ -22,10 +22,10 @@ import {
   Appbar,
   List,
   Divider,
+  Text,
 } from 'react-native-paper';
 import {
   InitialState,
-  useLinking,
   NavigationContainerRef,
   NavigationContainer,
   DefaultTheme,
@@ -53,6 +53,7 @@ import MaterialBottomTabs from './Screens/MaterialBottomTabs';
 import DynamicTabs from './Screens/DynamicTabs';
 import AuthFlow from './Screens/AuthFlow';
 import CompatAPI from './Screens/CompatAPI';
+import LinkComponent from './Screens/LinkComponent';
 import SettingsItem from './Shared/SettingsItem';
 
 YellowBox.ignoreWarnings(['Require cycle:', 'Warning: Async Storage']);
@@ -105,6 +106,10 @@ const SCREENS = {
     title: 'Compat Layer',
     component: CompatAPI,
   },
+  LinkComponent: {
+    title: '<Link />',
+    component: LinkComponent,
+  },
 };
 
 const Drawer = createDrawerNavigator<RootDrawerParamList>();
@@ -118,34 +123,6 @@ Asset.loadAsync(StackAssets);
 export default function App() {
   const containerRef = React.useRef<NavigationContainerRef>(null);
 
-  // To test deep linking on, run the following in the Terminal:
-  // Android: adb shell am start -a android.intent.action.VIEW -d "exp://127.0.0.1:19000/--/simple-stack"
-  // iOS: xcrun simctl openurl booted exp://127.0.0.1:19000/--/simple-stack
-  // Android (bare): adb shell am start -a android.intent.action.VIEW -d "rne://127.0.0.1:19000/--/simple-stack"
-  // iOS (bare): xcrun simctl openurl booted rne://127.0.0.1:19000/--/simple-stack
-  // The first segment of the link is the the scheme + host (returned by `Linking.makeUrl`)
-  const { getInitialState } = useLinking(containerRef, {
-    prefixes: LinkingPrefixes,
-    config: {
-      Root: {
-        path: '',
-        initialRouteName: 'Home',
-        screens: Object.keys(SCREENS).reduce<{ [key: string]: string }>(
-          (acc, name) => {
-            // Convert screen names such as SimpleStack to kebab case (simple-stack)
-            acc[name] = name
-              .replace(/([A-Z]+)/g, '-$1')
-              .replace(/^-/, '')
-              .toLowerCase();
-
-            return acc;
-          },
-          { Home: '' }
-        ),
-      },
-    },
-  });
-
   const [theme, setTheme] = React.useState(DefaultTheme);
 
   const [isReady, setIsReady] = React.useState(false);
@@ -156,12 +133,13 @@ export default function App() {
   React.useEffect(() => {
     const restoreState = async () => {
       try {
-        let state = await getInitialState();
+        let state;
 
         if (Platform.OS !== 'web' && state === undefined) {
           const savedState = await AsyncStorage.getItem(
             NAVIGATION_PERSISTENCE_KEY
           );
+
           state = savedState ? JSON.parse(savedState) : undefined;
         }
 
@@ -182,7 +160,7 @@ export default function App() {
     };
 
     restoreState();
-  }, [getInitialState]);
+  }, []);
 
   const paperTheme = React.useMemo(() => {
     const t = theme.dark ? PaperDarkTheme : PaperLightTheme;
@@ -231,6 +209,34 @@ export default function App() {
           )
         }
         theme={theme}
+        linking={{
+          // To test deep linking on, run the following in the Terminal:
+          // Android: adb shell am start -a android.intent.action.VIEW -d "exp://127.0.0.1:19000/--/simple-stack"
+          // iOS: xcrun simctl openurl booted exp://127.0.0.1:19000/--/simple-stack
+          // Android (bare): adb shell am start -a android.intent.action.VIEW -d "rne://127.0.0.1:19000/--/simple-stack"
+          // iOS (bare): xcrun simctl openurl booted rne://127.0.0.1:19000/--/simple-stack
+          // The first segment of the link is the the scheme + host (returned by `Linking.makeUrl`)
+          prefixes: LinkingPrefixes,
+          config: {
+            Root: {
+              path: '',
+              initialRouteName: 'Home',
+              screens: Object.keys(SCREENS).reduce<{ [key: string]: string }>(
+                (acc, name) => {
+                  // Convert screen names such as SimpleStack to kebab case (simple-stack)
+                  acc[name] = name
+                    .replace(/([A-Z]+)/g, '-$1')
+                    .replace(/^-/, '')
+                    .toLowerCase();
+
+                  return acc;
+                },
+                { Home: '' }
+              ),
+            },
+          },
+        }}
+        fallback={<Text>Loading…</Text>}
       >
         <Drawer.Navigator drawerType={isLargeScreen ? 'permanent' : undefined}>
           <Drawer.Screen
