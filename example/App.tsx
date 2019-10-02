@@ -48,23 +48,9 @@ const ExampleInfo: any = {
     description: 'Custom tabs with tab router',
     name: 'Custom Tabs',
   },
-  CustomTransitioner: {
-    description: 'Custom transitioner with stack router',
-    name: 'Custom Transitioner',
-  },
   Drawer: {
     description: 'Android-style drawer navigation',
     name: 'Drawer Example',
-  },
-  InactiveStack: {
-    description:
-      'An inactive route in a stack should be given the opportunity to handle actions',
-    name: 'Navigate idempotently to stacks in inactive routes',
-  },
-  KeyboardHandlingExample: {
-    description:
-      'Demo automatic handling of keyboard showing/hiding inside StackNavigator',
-    name: 'Keyboard Handling Example',
   },
   LinkStack: {
     description: 'Deep linking into a route in stack',
@@ -124,22 +110,9 @@ const ExampleInfo: any = {
     description: 'Jump between routes',
     name: 'Switch between routes',
   },
-  // MultipleDrawer: {
-  //   description: 'Add any drawer you need',
-  //   name: 'Multiple Drawer Example',
-  // },
   TabsInDrawer: {
     description: 'A drawer combined with tabs',
     name: 'Drawer + Tabs Example',
-  },
-  TabsWithNavigationEvents: {
-    description:
-      'Declarative NavigationEvents component to subscribe to navigation events',
-    name: 'NavigationEvents',
-  },
-  TabsWithNavigationFocus: {
-    description: 'Receive the focus prop to know when a screen is focused',
-    name: 'withNavigationFocus',
   },
 };
 
