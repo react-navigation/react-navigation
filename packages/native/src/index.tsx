@@ -11,3 +11,5 @@ export { default as DefaultTheme } from './theming/DefaultTheme';
 export { default as DarkTheme } from './theming/DarkTheme';
 export { default as ThemeProvider } from './theming/ThemeProvider';
 export { default as useTheme } from './theming/useTheme';
+
+export { default as Link } from './Link';

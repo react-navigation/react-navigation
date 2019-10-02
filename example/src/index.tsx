@@ -51,6 +51,7 @@ import MaterialBottomTabs from './Screens/MaterialBottomTabs';
 import DynamicTabs from './Screens/DynamicTabs';
 import AuthFlow from './Screens/AuthFlow';
 import CompatAPI from './Screens/CompatAPI';
+import LinkComponent from './Screens/LinkComponent';
 import SettingsItem from './Shared/SettingsItem';
 
 YellowBox.ignoreWarnings(['Require cycle:', 'Warning: Async Storage']);
@@ -102,6 +103,10 @@ const SCREENS = {
   CompatAPI: {
     title: 'Compat Layer',
     component: CompatAPI,
+  },
+  LinkComponent: {
+    title: '<Link />',
+    component: LinkComponent,
   },
 };
 
