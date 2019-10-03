@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 import Animated from 'react-native-reanimated';
+import { EdgeInsets } from 'react-native-safe-area-context';
 import { StackNavigationState } from '@react-navigation/routers';
 import { Route } from '@react-navigation/core';
 import { Props as HeaderContainerProps } from '../Header/HeaderContainer';
@@ -19,6 +20,7 @@ type Props = TransitionPreset & {
   focused: boolean;
   closing: boolean;
   layout: Layout;
+  insets: EdgeInsets;
   current: Animated.Value<number>;
   previousScene?: Scene<Route<string>>;
   scene: Scene<Route<string>>;
@@ -93,6 +95,7 @@ export default class StackItem extends React.PureComponent<Props> {
     const {
       index,
       layout,
+      insets,
       active,
       focused,
       closing,
@@ -128,6 +131,7 @@ export default class StackItem extends React.PureComponent<Props> {
         transparent={cardTransparent}
         gestureDirection={gestureDirection}
         layout={layout}
+        insets={insets}
         current={current}
         next={scene.progress.next}
         closing={closing}
