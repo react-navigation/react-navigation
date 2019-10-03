@@ -14,11 +14,13 @@ type AuthStackParams = {
   'sign-in': undefined;
 };
 
-const SplashScreen = () => (
-  <View style={styles.content}>
-    <ActivityIndicator />
-  </View>
-);
+const SplashScreen = () => {
+  return (
+    <View style={styles.content}>
+      <ActivityIndicator />
+    </View>
+  );
+};
 
 const SignInScreen = ({
   setUserToken,

@@ -1,10 +1,12 @@
 import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Button } from 'react-native-paper';
+import { useSafeArea } from 'react-native-safe-area-context';
 import { RouteProp, ParamListBase } from '@react-navigation/core';
 import {
   createStackNavigator,
   StackNavigationProp,
+  TransitionPresets,
 } from '@react-navigation/stack';
 import Article from '../Shared/Article';
 import Albums from '../Shared/Albums';
@@ -23,9 +25,11 @@ const ArticleScreen = ({
   navigation: SimpleStackNavigation;
   route: RouteProp<SimpleStackParams, 'article'>;
 }) => {
+  const insets = useSafeArea();
+
   return (
     <React.Fragment>
-      <View style={styles.buttons}>
+      <View style={[styles.buttons, { marginTop: insets.top }]}>
         <Button
           mode="contained"
           onPress={() => navigation.push('album')}
@@ -51,9 +55,11 @@ const AlbumsScreen = ({
 }: {
   navigation: SimpleStackNavigation;
 }) => {
+  const insets = useSafeArea();
+
   return (
     <React.Fragment>
-      <View style={styles.buttons}>
+      <View style={[styles.buttons, { marginTop: insets.top }]}>
         <Button
           mode="contained"
           onPress={() => navigation.push('article', { author: 'Babel fish' })}
@@ -74,10 +80,10 @@ const AlbumsScreen = ({
   );
 };
 
-const SimpleStack = createStackNavigator<SimpleStackParams>();
+const ModalPresentationStack = createStackNavigator<SimpleStackParams>();
 
 type Props = {
-  options?: React.ComponentProps<typeof SimpleStack.Navigator>;
+  options?: React.ComponentProps<typeof ModalPresentationStack.Navigator>;
   navigation: StackNavigationProp<ParamListBase>;
 };
 
@@ -87,8 +93,17 @@ export default function SimpleStackScreen({ navigation, options }: Props) {
   });
 
   return (
-    <SimpleStack.Navigator {...options}>
-      <SimpleStack.Screen
+    <ModalPresentationStack.Navigator
+      mode="modal"
+      headerMode="none"
+      screenOptions={{
+        ...TransitionPresets.ModalPresentationIOS,
+        cardOverlayEnabled: true,
+        gestureEnabled: true,
+      }}
+      {...options}
+    >
+      <ModalPresentationStack.Screen
         name="article"
         component={ArticleScreen}
         options={({ route }) => ({
@@ -96,12 +111,12 @@ export default function SimpleStackScreen({ navigation, options }: Props) {
         })}
         initialParams={{ author: 'Gandalf' }}
       />
-      <SimpleStack.Screen
+      <ModalPresentationStack.Screen
         name="album"
         component={AlbumsScreen}
         options={{ title: 'Album' }}
       />
-    </SimpleStack.Navigator>
+    </ModalPresentationStack.Navigator>
   );
 }
 
