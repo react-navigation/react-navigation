@@ -227,14 +227,10 @@
         // first screen on the list needs to be places as "push controller"
         [pushControllers addObject:screen.controller];
       } else {
-        switch (screen.stackPresentation) {
-          case RNSScreenStackPresentationPush:
-            [pushControllers addObject:screen.controller];
-            break;
-          case RNSScreenStackPresentationModal:
-          case RNSScreenStackPresentationTransparentModal:
-            [modalControllers addObject:screen.controller];
-            break;
+        if (screen.stackPresentation == RNSScreenStackPresentationPush) {
+          [pushControllers addObject:screen.controller];
+        } else {
+          [modalControllers addObject:screen.controller];
         }
       }
     }
@@ -251,9 +247,20 @@
   _controller.view.frame = self.bounds;
 }
 
+- (void)dismissOnReload
+{
+  dispatch_async(dispatch_get_main_queue(), ^{
+    for (UIViewController *controller in self->_presentedModals) {
+      [controller dismissViewControllerAnimated:NO completion:nil];
+    }
+  });
+}
+
 @end
 
-@implementation RNSScreenStackManager
+@implementation RNSScreenStackManager {
+  NSPointerArray *_stacks;
+}
 
 RCT_EXPORT_MODULE()
 
@@ -262,7 +269,20 @@ RCT_EXPORT_VIEW_PROPERTY(progress, CGFloat)
 
 - (UIView *)view
 {
-  return [[RNSScreenStackView alloc] initWithManager:self];
+  RNSScreenStackView *view = [[RNSScreenStackView alloc] initWithManager:self];
+  if (!_stacks) {
+    _stacks = [NSPointerArray weakObjectsPointerArray];
+  }
+  [_stacks addPointer:(__bridge void *)view];
+  return view;
+}
+
+- (void)invalidate
+{
+ for (RNSScreenStackView *stack in _stacks) {
+   [stack dismissOnReload];
+ }
+ _stacks = nil;
 }
 
 @end

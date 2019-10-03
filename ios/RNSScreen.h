@@ -9,6 +9,8 @@ typedef NS_ENUM(NSInteger, RNSScreenStackPresentation) {
   RNSScreenStackPresentationPush,
   RNSScreenStackPresentationModal,
   RNSScreenStackPresentationTransparentModal,
+  RNSScreenStackPresentationContainedModal,
+  RNSScreenStackPresentationContainedTransparentModal
 };
 
 typedef NS_ENUM(NSInteger, RNSScreenStackAnimation) {
@@ -27,7 +29,7 @@ typedef NS_ENUM(NSInteger, RNSScreenStackAnimation) {
 @interface RNSScreenManager : RCTViewManager
 @end
 
-@interface RNSScreenView : RCTView <RCTInvalidating>
+@interface RNSScreenView : RCTView
 
 @property (nonatomic, copy) RCTDirectEventBlock onDismissed;
 @property (weak, nonatomic) UIView<RNSScreenContainerDelegate> *reactSuperview;

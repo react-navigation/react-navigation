@@ -5,6 +5,7 @@
 
 #import <React/RCTUIManager.h>
 #import <React/RCTShadowView.h>
+#import <React/RCTTouchHandler.h>
 
 @interface RNSScreenFrameData : NSObject
 @property (nonatomic, readonly) CGFloat rightInset;
@@ -40,10 +41,13 @@
 
 @end
 
+@interface RNSScreenView () <UIAdaptivePresentationControllerDelegate>
+@end
+
 @implementation RNSScreenView {
   __weak RCTBridge *_bridge;
   RNSScreen *_controller;
-  BOOL _invalidated;
+  RCTTouchHandler *_touchHandler;
 }
 
 @synthesize controller = _controller;
@@ -53,7 +57,7 @@
   if (self = [super init]) {
     _bridge = bridge;
     _controller = [[RNSScreen alloc] initWithView:self];
-    _controller.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+    _controller.presentationController.delegate = self;
     _stackPresentation = RNSScreenStackPresentationPush;
     _stackAnimation = RNSScreenStackAnimationDefault;
   }
@@ -96,9 +100,23 @@
   _stackPresentation = stackPresentation;
   switch (stackPresentation) {
     case RNSScreenStackPresentationModal:
-      _controller.modalPresentationStyle = UIModalPresentationCurrentContext;
+#ifdef __IPHONE_13_0
+      if (@available(iOS 13.0, *)) {
+        _controller.modalPresentationStyle = UIModalPresentationAutomatic;
+      } else {
+        _controller.modalPresentationStyle = UIModalPresentationFullScreen;
+      }
+#else
+      _controller.modalPresentationStyle = UIModalPresentationFullScreen;
+#endif
       break;
     case RNSScreenStackPresentationTransparentModal:
+      _controller.modalPresentationStyle = UIModalPresentationOverFullScreen;
+      break;
+    case RNSScreenStackPresentationContainedModal:
+      _controller.modalPresentationStyle = UIModalPresentationCurrentContext;
+      break;
+    case RNSScreenStackPresentationContainedTransparentModal:
       _controller.modalPresentationStyle = UIModalPresentationOverCurrentContext;
       break;
   }
@@ -107,11 +125,6 @@
 - (UIView *)reactSuperview
 {
   return _reactSuperview;
-}
-
-- (void)invalidate
-{
-  _invalidated = YES;
 }
 
 - (void)notifyFinishTransitioning
@@ -128,6 +141,47 @@
       }
     });
   }
+}
+
+- (BOOL)isMountedUnderScreenOrReactRoot
+{
+  for (UIView *parent = self.superview; parent != nil; parent = parent.superview) {
+    if ([parent isKindOfClass:[RCTRootView class]] || [parent isKindOfClass:[RNSScreenView class]]) {
+      return YES;
+    }
+  }
+  return NO;
+}
+
+- (void)didMoveToWindow
+{
+  // For RN touches to work we need to instantiate and connect RCTTouchHandler. This only applies
+  // for screens that aren't mounted under RCTRootView e.g., modals that are mounted directly to
+  // root application window.
+  if (self.window != nil && ![self isMountedUnderScreenOrReactRoot]) {
+    if (_touchHandler == nil) {
+      _touchHandler = [[RCTTouchHandler alloc] initWithBridge:_bridge];
+    }
+    [_touchHandler attachToView:self];
+  } else {
+    [_touchHandler detachFromView:self];
+  }
+}
+
+- (void)presentationControllerWillDismiss:(UIPresentationController *)presentationController
+{
+  // We need to call both "cancel" and "reset" here because RN's gesture recognizer
+  // does not handle the scenario when it gets cancelled by other top
+  // level gesture recognizer. In this case by the modal dismiss gesture.
+  // Because of that, at the moment when this method gets called the React's
+  // gesture recognizer is already in FAILED state but cancel events never gets
+  // send to JS. Calling "reset" forces RCTTouchHanler to dispatch cancel event.
+  // To test this behavior one need to open a dismissable modal and start
+  // pulling down starting at some touchable item. Without "reset" the touchable
+  // will never go back from highlighted state even when the modal start sliding
+  // down.
+  [_touchHandler cancel];
+  [_touchHandler reset];
 }
 
 @end
@@ -237,7 +291,9 @@ RCT_EXPORT_VIEW_PROPERTY(onDismissed, RCTDirectEventBlock);
 RCT_ENUM_CONVERTER(RNSScreenStackPresentation, (@{
                                                   @"push": @(RNSScreenStackPresentationPush),
                                                   @"modal": @(RNSScreenStackPresentationModal),
-                                                  @"transparentModal": @(RNSScreenStackPresentationTransparentModal)
+                                                  @"containedModal": @(RNSScreenStackPresentationContainedModal),
+                                                  @"transparentModal": @(RNSScreenStackPresentationTransparentModal),
+                                                  @"containedTransparentModal": @(RNSScreenStackPresentationContainedTransparentModal)
                                                   }), RNSScreenStackPresentationPush, integerValue)
 
 RCT_ENUM_CONVERTER(RNSScreenStackAnimation, (@{

@@ -9,6 +9,6 @@
 
 @end
 
-@interface RNSScreenStackManager : RCTViewManager
+@interface RNSScreenStackManager : RCTViewManager <RCTInvalidating>
 
 @end
