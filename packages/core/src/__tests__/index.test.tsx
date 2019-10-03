@@ -695,3 +695,30 @@ it('throws when multiple screens with same name are defined', () => {
     "A navigator cannot contain multiple 'Screen' components with the same name (found duplicate screen named 'foo')"
   );
 });
+
+it('switches rendered navigators', () => {
+  const TestNavigator = (props: any) => {
+    useNavigationBuilder(MockRouter, props);
+    return null;
+  };
+
+  const root = render(
+    <NavigationContainer>
+      <TestNavigator key="a">
+        <Screen name="foo" component={jest.fn()} />
+      </TestNavigator>
+    </NavigationContainer>
+  );
+
+  expect(() =>
+    root.update(
+      <NavigationContainer>
+        <TestNavigator key="b">
+          <Screen name="foo" component={jest.fn()} />
+        </TestNavigator>
+      </NavigationContainer>
+    )
+  ).not.toThrowError(
+    'Another navigator is already registered for this container.'
+  );
+});

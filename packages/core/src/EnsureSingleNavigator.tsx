@@ -18,25 +18,30 @@ export const SingleNavigatorContext = React.createContext<
  * Component which ensures that there's only one navigator nested under it.
  */
 export default function EnsureSingleNavigator({ children }: Props) {
-  const [currentKey, setCurrentKey] = React.useState<string | undefined>();
+  const navigatorKeyRef = React.useRef<string | undefined>();
+
   const value = React.useMemo(
     () => ({
       register(key: string) {
+        const currentKey = navigatorKeyRef.current;
+
         if (currentKey !== undefined && key !== currentKey) {
           throw new Error(MULTIPLE_NAVIGATOR_ERROR);
         }
 
-        setCurrentKey(key);
+        navigatorKeyRef.current = key;
       },
       unregister(key: string) {
-        if (currentKey !== undefined && key !== currentKey) {
-          throw new Error(MULTIPLE_NAVIGATOR_ERROR);
+        const currentKey = navigatorKeyRef.current;
+
+        if (key !== currentKey) {
+          return;
         }
 
-        setCurrentKey(undefined);
+        navigatorKeyRef.current = undefined;
       },
     }),
-    [currentKey]
+    []
   );
 
   return (
