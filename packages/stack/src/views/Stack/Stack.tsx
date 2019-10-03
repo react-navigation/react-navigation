@@ -292,6 +292,7 @@ export default class Stack extends React.Component<Props, State> {
   render() {
     const {
       mode,
+      insets,
       descriptors,
       state,
       navigation,
@@ -382,6 +383,7 @@ export default class Stack extends React.Component<Props, State> {
                   focused={focused}
                   closing={closingRoutes.includes(route.key)}
                   layout={layout}
+                  insets={insets}
                   current={current}
                   scene={scene}
                   previousScene={scenes[index - 1]}

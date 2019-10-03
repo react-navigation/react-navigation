@@ -14,6 +14,10 @@ import {
   PanGestureHandler,
   State as GestureState,
 } from 'react-native-gesture-handler';
+import { EdgeInsets } from 'react-native-safe-area-context';
+import PointerEventsView from './PointerEventsView';
+import memoize from '../../utils/memoize';
+import StackGestureContext from '../../utils/StackGestureContext';
 import {
   TransitionSpec,
   StackCardStyleInterpolator,
@@ -21,9 +25,6 @@ import {
   SpringConfig,
   TimingConfig,
 } from '../../types';
-import memoize from '../../utils/memoize';
-import StackGestureContext from '../../utils/StackGestureContext';
-import PointerEventsView from './PointerEventsView';
 
 type Props = ViewProps & {
   index: number;
@@ -33,6 +34,7 @@ type Props = ViewProps & {
   next?: Animated.Node<number>;
   current: Animated.Value<number>;
   layout: Layout;
+  insets: EdgeInsets;
   gestureDirection: 'horizontal' | 'vertical';
   onOpen: (isFinished: boolean) => void;
   onClose: (isFinished: boolean) => void;
@@ -368,7 +370,8 @@ export default class Card extends React.Component<Props> {
       this.props.index,
       this.props.current,
       this.props.next,
-      this.props.layout
+      this.props.layout,
+      this.props.insets
     );
   };
 
@@ -661,7 +664,8 @@ export default class Card extends React.Component<Props> {
       index: number,
       current: Animated.Node<number>,
       next: Animated.Node<number> | undefined,
-      layout: Layout
+      layout: Layout,
+      insets: EdgeInsets
     ) =>
       styleInterpolator({
         index,
@@ -671,12 +675,7 @@ export default class Card extends React.Component<Props> {
         layouts: {
           screen: layout,
         },
-        insets: {
-          top: 0,
-          right: 0,
-          bottom: 0,
-          left: 0,
-        },
+        insets,
       })
   );
 
@@ -689,7 +688,8 @@ export default class Card extends React.Component<Props> {
     this.props.index,
     this.props.current,
     this.props.next,
-    this.props.layout
+    this.props.layout,
+    this.props.insets
   );
 
   private gestureActivationCriteria() {
@@ -739,6 +739,7 @@ export default class Card extends React.Component<Props> {
       current,
       next,
       layout,
+      insets,
       overlayEnabled,
       shadowEnabled,
       gestureEnabled,
@@ -755,7 +756,8 @@ export default class Card extends React.Component<Props> {
         index,
         current,
         next,
-        layout
+        layout,
+        insets
       );
     }
 
