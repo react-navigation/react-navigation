@@ -24,12 +24,7 @@ export default class ResourceSavingScene extends React.Component<Props> {
 
     return (
       <View
-        style={[
-          styles.container,
-          style,
-          // eslint-disable-next-line react-native/no-inline-styles
-          { opacity: isVisible ? 1 : 0 },
-        ]}
+        style={[styles.container, style, { opacity: isVisible ? 1 : 0 }]}
         collapsable={false}
         removeClippedSubviews={
           // On iOS, set removeClippedSubviews to true only when not focused

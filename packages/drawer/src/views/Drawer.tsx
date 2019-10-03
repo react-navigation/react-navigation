@@ -578,7 +578,6 @@ export default class DrawerView extends React.PureComponent<Props> {
             style={[
               styles.container,
               right ? { right: offset } : { left: offset },
-              // eslint-disable-next-line react-native/no-inline-styles
               {
                 transform: [{ translateX: drawerTranslateX }],
                 opacity: this.drawerOpacity,

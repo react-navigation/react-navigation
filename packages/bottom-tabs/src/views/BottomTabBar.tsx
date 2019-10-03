@@ -290,8 +290,7 @@ export default class TabBarBottom extends React.Component<Props, State> {
         style={[
           styles.container,
           keyboardHidesTabBar
-            ? // eslint-disable-next-line react-native/no-inline-styles
-              {
+            ? {
                 // When the keyboard is shown, slide down the tab bar
                 transform: [
                   {
