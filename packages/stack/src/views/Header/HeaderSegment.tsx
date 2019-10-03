@@ -7,10 +7,10 @@ import {
   ViewStyle,
 } from 'react-native';
 import Animated from 'react-native-reanimated';
+import { EdgeInsets } from 'react-native-safe-area-context';
 import { Route } from '@react-navigation/core';
 import HeaderBackButton from './HeaderBackButton';
 import HeaderBackground from './HeaderBackground';
-import getStatusBarHeight from '../../utils/getStatusBarHeight';
 import memoize from '../../utils/memoize';
 import {
   Layout,
@@ -29,6 +29,7 @@ export type Scene<T> = {
 type Props = StackHeaderOptions & {
   headerTitle: (props: StackHeaderTitleProps) => React.ReactNode;
   layout: Layout;
+  insets: EdgeInsets;
   onGoBack?: () => void;
   title?: string;
   leftLabel?: string;
@@ -57,7 +58,7 @@ const warnIfHeaderStylesDefined = (styles: { [key: string]: any }) => {
   });
 };
 
-export const getDefaultHeaderHeight = (layout: Layout) => {
+export const getDefaultHeaderHeight = (layout: Layout, insets: EdgeInsets) => {
   const isLandscape = layout.width > layout.height;
 
   let headerHeight;
@@ -75,7 +76,7 @@ export const getDefaultHeaderHeight = (layout: Layout) => {
     headerHeight = 64;
   }
 
-  return headerHeight + getStatusBarHeight(isLandscape);
+  return headerHeight + insets.top;
 };
 
 export default class HeaderSegment extends React.Component<Props, State> {
@@ -135,6 +136,7 @@ export default class HeaderSegment extends React.Component<Props, State> {
     const {
       scene,
       layout,
+      insets,
       title: currentTitle,
       leftLabel: previousTitle,
       onGoBack,
@@ -142,8 +144,6 @@ export default class HeaderSegment extends React.Component<Props, State> {
       headerLeft: left = onGoBack
         ? (props: StackHeaderLeftButtonProps) => <HeaderBackButton {...props} />
         : undefined,
-      // @ts-ignore
-      headerStatusBarHeight = getStatusBarHeight(layout.width > layout.height),
       headerTransparent,
       headerTintColor,
       headerBackground,
@@ -182,7 +182,7 @@ export default class HeaderSegment extends React.Component<Props, State> {
     );
 
     const {
-      height = getDefaultHeaderHeight(layout),
+      height = getDefaultHeaderHeight(layout, insets),
       minHeight,
       maxHeight,
       backgroundColor,
@@ -306,15 +306,17 @@ export default class HeaderSegment extends React.Component<Props, State> {
           pointerEvents="box-none"
           style={[{ height, minHeight, maxHeight, opacity }]}
         >
-          <View
-            pointerEvents="none"
-            style={{ height: headerStatusBarHeight }}
-          />
+          <View pointerEvents="none" style={{ height: insets.top }} />
           <View pointerEvents="box-none" style={styles.content}>
             {leftButton ? (
               <Animated.View
                 pointerEvents="box-none"
-                style={[styles.left, leftButtonStyle, leftContainerStyle]}
+                style={[
+                  styles.left,
+                  { left: insets.left },
+                  leftButtonStyle,
+                  leftContainerStyle,
+                ]}
               >
                 {leftButton}
               </Animated.View>
@@ -341,7 +343,12 @@ export default class HeaderSegment extends React.Component<Props, State> {
             {right ? (
               <Animated.View
                 pointerEvents="box-none"
-                style={[styles.right, rightButtonStyle, rightContainerStyle]}
+                style={[
+                  styles.right,
+                  { right: insets.right },
+                  rightButtonStyle,
+                  rightContainerStyle,
+                ]}
               >
                 {right({ tintColor: headerTintColor })}
               </Animated.View>

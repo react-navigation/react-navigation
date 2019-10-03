@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Dimensions, StyleSheet, I18nManager, Platform } from 'react-native';
+import { SafeAreaProvider, useSafeArea } from 'react-native-safe-area-context';
 // eslint-disable-next-line import/no-unresolved
 import { ScreenContainer } from 'react-native-screens';
-import SafeAreaView from 'react-native-safe-area-view';
 import { PanGestureHandler, ScrollView } from 'react-native-gesture-handler';
 import {
   DrawerNavigationState,
@@ -32,13 +32,18 @@ type State = {
   drawerWidth: number;
 };
 
-const DefaultContentComponent = (props: ContentComponentProps) => (
-  <ScrollView alwaysBounceVertical={false}>
-    <SafeAreaView forceInset={{ top: 'always', horizontal: 'never' }}>
+const DefaultContentComponent = (props: ContentComponentProps) => {
+  const insets = useSafeArea();
+
+  return (
+    <ScrollView
+      alwaysBounceVertical={false}
+      contentContainerStyle={{ marginTop: insets.top }}
+    >
       <DrawerNavigatorItems {...props} />
-    </SafeAreaView>
-  </ScrollView>
-);
+    </ScrollView>
+  );
+};
 
 /**
  * Component that renders the drawer.
@@ -208,35 +213,37 @@ export default class DrawerView extends React.PureComponent<Props, State> {
         : state.isDrawerOpen;
 
     return (
-      <DrawerGestureContext.Provider value={this.drawerGestureRef}>
-        <Drawer
-          open={isOpen}
-          locked={
-            drawerLockMode === 'locked-open' ||
-            drawerLockMode === 'locked-closed'
-          }
-          onOpen={this.handleDrawerOpen}
-          onClose={this.handleDrawerClose}
-          onGestureRef={this.setDrawerGestureRef}
-          gestureHandlerProps={gestureHandlerProps}
-          drawerType={drawerType}
-          drawerPosition={drawerPosition}
-          sceneContainerStyle={sceneContainerStyle}
-          drawerStyle={{
-            backgroundColor: drawerBackgroundColor || 'white',
-            width: this.state.drawerWidth,
-          }}
-          overlayStyle={{
-            backgroundColor: overlayColor || 'rgba(0, 0, 0, 0.5)',
-          }}
-          swipeEdgeWidth={edgeWidth}
-          swipeDistanceThreshold={minSwipeDistance}
-          hideStatusBar={hideStatusBar}
-          statusBarAnimation={statusBarAnimation}
-          renderDrawerContent={this.renderNavigationView}
-          renderSceneContent={this.renderContent}
-        />
-      </DrawerGestureContext.Provider>
+      <SafeAreaProvider>
+        <DrawerGestureContext.Provider value={this.drawerGestureRef}>
+          <Drawer
+            open={isOpen}
+            locked={
+              drawerLockMode === 'locked-open' ||
+              drawerLockMode === 'locked-closed'
+            }
+            onOpen={this.handleDrawerOpen}
+            onClose={this.handleDrawerClose}
+            onGestureRef={this.setDrawerGestureRef}
+            gestureHandlerProps={gestureHandlerProps}
+            drawerType={drawerType}
+            drawerPosition={drawerPosition}
+            sceneContainerStyle={sceneContainerStyle}
+            drawerStyle={{
+              backgroundColor: drawerBackgroundColor || 'white',
+              width: this.state.drawerWidth,
+            }}
+            overlayStyle={{
+              backgroundColor: overlayColor || 'rgba(0, 0, 0, 0.5)',
+            }}
+            swipeEdgeWidth={edgeWidth}
+            swipeDistanceThreshold={minSwipeDistance}
+            hideStatusBar={hideStatusBar}
+            statusBarAnimation={statusBarAnimation}
+            renderDrawerContent={this.renderNavigationView}
+            renderSceneContent={this.renderContent}
+          />
+        </DrawerGestureContext.Provider>
+      </SafeAreaProvider>
     );
   }
 }

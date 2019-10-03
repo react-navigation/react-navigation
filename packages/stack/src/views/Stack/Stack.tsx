@@ -8,6 +8,7 @@ import {
   ViewProps,
 } from 'react-native';
 import Animated from 'react-native-reanimated';
+import { EdgeInsets } from 'react-native-safe-area-context';
 // eslint-disable-next-line import/no-unresolved
 import * as Screens from 'react-native-screens'; // Import with * as to prevent getters being called
 import { Route } from '@react-navigation/core';
@@ -36,6 +37,7 @@ type ProgressValues = {
 
 type Props = {
   mode: 'card' | 'modal';
+  insets: EdgeInsets;
   state: StackNavigationState;
   navigation: StackNavigationHelpers;
   descriptors: StackDescriptorMap;
@@ -114,10 +116,11 @@ const FALLBACK_DESCRIPTOR = Object.freeze({ options: {} });
 
 const getFloatingHeaderHeights = (
   routes: Route<string>[],
+  insets: EdgeInsets,
   layout: Layout,
   previous: { [key: string]: number }
 ) => {
-  const defaultHeaderHeight = getDefaultHeaderHeight(layout);
+  const defaultHeaderHeight = getDefaultHeaderHeight(layout, insets);
 
   return routes.reduce(
     (acc, curr) => {
@@ -201,6 +204,7 @@ export default class Stack extends React.Component<Props, State> {
       descriptors: props.descriptors,
       floatingHeaderHeights: getFloatingHeaderHeights(
         props.routes,
+        props.insets,
         state.layout,
         state.floatingHeaderHeights
       ),
@@ -237,6 +241,7 @@ export default class Stack extends React.Component<Props, State> {
       layout,
       floatingHeaderHeights: getFloatingHeaderHeights(
         this.props.routes,
+        this.props.insets,
         layout,
         {}
       ),
