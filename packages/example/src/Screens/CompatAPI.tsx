@@ -19,27 +19,29 @@ type CompatStackParams = {
 
 const ArticleScreen: CompatScreenType<
   StackNavigationProp<CompatStackParams, 'Article'>
-> = ({ navigation }) => (
-  <React.Fragment>
-    <View style={styles.buttons}>
-      <Button
-        mode="contained"
-        onPress={() => navigation.push('Album')}
-        style={styles.button}
-      >
-        Push album
-      </Button>
-      <Button
-        mode="outlined"
-        onPress={() => navigation.goBack()}
-        style={styles.button}
-      >
-        Go back
-      </Button>
-    </View>
-    <Article author={{ name: navigation.getParam('author') }} />
-  </React.Fragment>
-);
+> = ({ navigation }) => {
+  return (
+    <React.Fragment>
+      <View style={styles.buttons}>
+        <Button
+          mode="contained"
+          onPress={() => navigation.push('Album')}
+          style={styles.button}
+        >
+          Push album
+        </Button>
+        <Button
+          mode="outlined"
+          onPress={() => navigation.goBack()}
+          style={styles.button}
+        >
+          Go back
+        </Button>
+      </View>
+      <Article author={{ name: navigation.getParam('author') }} />
+    </React.Fragment>
+  );
+};
 
 ArticleScreen.navigationOptions = ({ navigation }) => ({
   title: `Article by ${navigation.getParam('author')}`,
@@ -47,27 +49,29 @@ ArticleScreen.navigationOptions = ({ navigation }) => ({
 
 const AlbumsScreen: CompatScreenType<
   StackNavigationProp<CompatStackParams>
-> = ({ navigation }) => (
-  <React.Fragment>
-    <View style={styles.buttons}>
-      <Button
-        mode="contained"
-        onPress={() => navigation.push('Article', { author: 'Babel fish' })}
-        style={styles.button}
-      >
-        Push article
-      </Button>
-      <Button
-        mode="outlined"
-        onPress={() => navigation.goBack()}
-        style={styles.button}
-      >
-        Go back
-      </Button>
-    </View>
-    <Albums />
-  </React.Fragment>
-);
+> = ({ navigation }) => {
+  return (
+    <React.Fragment>
+      <View style={styles.buttons}>
+        <Button
+          mode="contained"
+          onPress={() => navigation.push('Article', { author: 'Babel fish' })}
+          style={styles.button}
+        >
+          Push article
+        </Button>
+        <Button
+          mode="outlined"
+          onPress={() => navigation.goBack()}
+          style={styles.button}
+        >
+          Go back
+        </Button>
+      </View>
+      <Albums />
+    </React.Fragment>
+  );
+};
 
 const CompatStack = createCompatNavigatorFactory(createStackNavigator)<
   StackNavigationProp<CompatStackParams>

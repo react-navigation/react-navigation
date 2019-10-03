@@ -22,8 +22,9 @@ import {
   StackNavigationProp,
 } from '@react-navigation/stack';
 
-import SimpleStackScreen from './Screens/SimpleStack';
-import BottomTabsScreen from './Screens/BottomTabs';
+import SimpleStack from './Screens/SimpleStack';
+import ModalPresentationStack from './Screens/ModalPresentationStack';
+import BottomTabs from './Screens/BottomTabs';
 import MaterialTopTabsScreen from './Screens/MaterialTopTabs';
 import MaterialBottomTabs from './Screens/MaterialBottomTabs';
 import AuthFlow from './Screens/AuthFlow';
@@ -42,21 +43,25 @@ type RootStackParamList = {
 };
 
 const SCREENS = {
-  'simple-stack': { title: 'Simple Stack', component: SimpleStackScreen },
-  'bottom-tabs': { title: 'Bottom Tabs', component: BottomTabsScreen },
-  'material-top-tabs': {
+  SimpleStack: { title: 'Simple Stack', component: SimpleStack },
+  ModalPresentationStack: {
+    title: 'Modal Presentation Stack',
+    component: ModalPresentationStack,
+  },
+  BottomTabs: { title: 'Bottom Tabs', component: BottomTabs },
+  MaterialTopTabs: {
     title: 'Material Top Tabs',
     component: MaterialTopTabsScreen,
   },
-  'material-bottom-tabs': {
+  MaterialBottomTabs: {
     title: 'Material Bottom Tabs',
     component: MaterialBottomTabs,
   },
-  'auth-flow': {
+  AuthFlow: {
     title: 'Auth Flow',
     component: AuthFlow,
   },
-  'compat-api': {
+  CompatAPI: {
     title: 'Compat Layer',
     component: CompatAPI,
   },
