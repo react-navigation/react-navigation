@@ -19,7 +19,7 @@
 @property (nonatomic) BOOL translucent;
 @property (nonatomic) BOOL gestureEnabled;
 
-- (void)willShowViewController:(UIViewController *)vc;
++ (void)willShowViewController:(UIViewController *)vc withConfig:(RNSScreenStackHeaderConfig*)config;
 
 @end
 

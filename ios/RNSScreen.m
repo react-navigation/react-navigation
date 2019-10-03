@@ -2,6 +2,7 @@
 
 #import "RNSScreen.h"
 #import "RNSScreenContainer.h"
+#import "RNSScreenStackHeaderConfig.h"
 
 #import <React/RCTUIManager.h>
 #import <React/RCTShadowView.h>
@@ -125,6 +126,13 @@
 - (UIView *)reactSuperview
 {
   return _reactSuperview;
+}
+
+- (void)addSubview:(UIView *)view
+{
+  if (![view isKindOfClass:[RNSScreenStackHeaderConfig class]]) {
+    [super addSubview:view];
+  }
 }
 
 - (void)notifyFinishTransitioning

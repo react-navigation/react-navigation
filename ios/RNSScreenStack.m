@@ -42,12 +42,14 @@
 - (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated
 {
   UIView *view = viewController.view;
+  RNSScreenStackHeaderConfig *config = nil;
   for (UIView *subview in view.reactSubviews) {
     if ([subview isKindOfClass:[RNSScreenStackHeaderConfig class]]) {
-      [((RNSScreenStackHeaderConfig*) subview) willShowViewController:viewController];
+      config = (RNSScreenStackHeaderConfig*) subview;
       break;
     }
   }
+  [RNSScreenStackHeaderConfig willShowViewController:viewController withConfig:config];
 }
 
 - (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated

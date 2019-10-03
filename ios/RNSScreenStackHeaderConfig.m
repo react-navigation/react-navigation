@@ -75,32 +75,32 @@
   return nil;
 }
 
-- (void)setAnimatedConfig:(UIViewController *)vc
++ (void)setAnimatedConfig:(UIViewController *)vc withConfig:(RNSScreenStackHeaderConfig *)config
 {
   UINavigationBar *navbar = ((UINavigationController *)vc.parentViewController).navigationBar;
-  BOOL hideShadow = _hideShadow;
-  [navbar setTintColor:_color];
-  if (_backgroundColor && CGColorGetAlpha(_backgroundColor.CGColor) == 0.) {
+  BOOL hideShadow = config.hideShadow;
+  [navbar setTintColor:config.color];
+  if (config.backgroundColor && CGColorGetAlpha(config.backgroundColor.CGColor) == 0.) {
     [navbar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
     [navbar setBarTintColor:[UIColor clearColor]];
     hideShadow = YES;
   } else {
     [navbar setBackgroundImage:nil forBarMetrics:UIBarMetricsDefault];
-    [navbar setBarTintColor:_backgroundColor];
+    [navbar setBarTintColor:config.backgroundColor];
   }
-  [navbar setTranslucent:_translucent];
+  [navbar setTranslucent:config.translucent];
   [navbar setValue:@(hideShadow ? YES : NO) forKey:@"hidesShadow"];
 
-  if (_titleFontFamily || _titleFontSize || _titleColor) {
+  if (config.titleFontFamily || config.titleFontSize || config.titleColor) {
     NSMutableDictionary *attrs = [NSMutableDictionary new];
 
-    if (_titleColor) {
-      attrs[NSForegroundColorAttributeName] = _titleColor;
+    if (config.titleColor) {
+      attrs[NSForegroundColorAttributeName] = config.titleColor;
     }
 
-    CGFloat size = _titleFontSize ? [_titleFontSize floatValue] : 17;
-    if (_titleFontFamily) {
-      attrs[NSFontAttributeName] = [UIFont fontWithName:_titleFontFamily size:size];
+    CGFloat size = config.titleFontSize ? [config.titleFontSize floatValue] : 17;
+    if (config.titleFontFamily) {
+      attrs[NSFontAttributeName] = [UIFont fontWithName:config.titleFontFamily size:size];
     } else {
       attrs[NSFontAttributeName] = [UIFont boldSystemFontOfSize:size];
     }
@@ -109,7 +109,7 @@
 
 }
 
-- (void)setTitleAttibutes:(NSDictionary *)attrs forButton:(UIBarButtonItem *)button
++ (void)setTitleAttibutes:(NSDictionary *)attrs forButton:(UIBarButtonItem *)button
 {
   [button setTitleTextAttributes:attrs forState:UIControlStateNormal];
   [button setTitleTextAttributes:attrs forState:UIControlStateHighlighted];
@@ -120,7 +120,7 @@
   }
 }
 
-- (void)willShowViewController:(UIViewController *)vc
++ (void)willShowViewController:(UIViewController *)vc withConfig:(RNSScreenStackHeaderConfig *)config
 {
   UINavigationItem *navitem = vc.navigationItem;
   UINavigationController *navctr = (UINavigationController *)vc.parentViewController;
@@ -129,26 +129,30 @@
   UINavigationItem *prevItem = currentIndex > 0 ? [navctr.viewControllers objectAtIndex:currentIndex - 1].navigationItem : nil;
 
   BOOL wasHidden = navctr.navigationBarHidden;
+  BOOL shouldHide = config == nil || config.hide;
 
-  [navctr setNavigationBarHidden:_hide animated:YES];
-  navctr.interactivePopGestureRecognizer.enabled = _gestureEnabled;
-  if (_hide) {
+  [navctr setNavigationBarHidden:shouldHide animated:YES];
+  navctr.interactivePopGestureRecognizer.enabled = config.gestureEnabled;
+#ifdef __IPHONE_13_0
+  vc.modalInPresentation = !config.gestureEnabled;
+#endif
+  if (shouldHide) {
     return;
   }
 
-  navitem.title = _title;
-  navitem.hidesBackButton = _hideBackButton;
-  if (_backTitle != nil) {
+  navitem.title = config.title;
+  navitem.hidesBackButton = config.hideBackButton;
+  if (config.backTitle != nil) {
     prevItem.backBarButtonItem = [[UIBarButtonItem alloc]
-                                  initWithTitle:_backTitle
+                                  initWithTitle:config.backTitle
                                   style:UIBarButtonItemStylePlain
                                   target:nil
                                   action:nil];
-    if (_backTitleFontFamily || _backTitleFontSize) {
+    if (config.backTitleFontFamily || config.backTitleFontSize) {
       NSMutableDictionary *attrs = [NSMutableDictionary new];
-      CGFloat size = _backTitleFontSize ? [_backTitleFontSize floatValue] : 17;
-      if (_backTitleFontFamily) {
-        attrs[NSFontAttributeName] = [UIFont fontWithName:_backTitleFontFamily size:size];
+      CGFloat size = config.backTitleFontSize ? [config.backTitleFontSize floatValue] : 17;
+      if (config.backTitleFontFamily) {
+        attrs[NSFontAttributeName] = [UIFont fontWithName:config.backTitleFontFamily size:size];
       } else {
         attrs[NSFontAttributeName] = [UIFont boldSystemFontOfSize:size];
       }
@@ -159,13 +163,13 @@
   }
 
   if (@available(iOS 11.0, *)) {
-    if (self.largeTitle) {
+    if (config.largeTitle) {
       navctr.navigationBar.prefersLargeTitles = YES;
     }
-    navitem.largeTitleDisplayMode = self.largeTitle ? UINavigationItemLargeTitleDisplayModeAlways : UINavigationItemLargeTitleDisplayModeNever;
+    navitem.largeTitleDisplayMode = config.largeTitle ? UINavigationItemLargeTitleDisplayModeAlways : UINavigationItemLargeTitleDisplayModeNever;
   }
 
-  for (RNSScreenStackHeaderSubview *subview in _reactSubviews) {
+  for (RNSScreenStackHeaderSubview *subview in config.reactSubviews) {
     switch (subview.type) {
       case RNSScreenStackHeaderSubviewTypeLeft: {
         UIBarButtonItem *buttonItem = [[UIBarButtonItem alloc] initWithCustomView:subview];
@@ -191,20 +195,22 @@
 
     } completion:nil];
     [vc.transitionCoordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-      [self setAnimatedConfig:vc];
+      [self setAnimatedConfig:vc withConfig:config];
     } completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
       if ([context isCancelled]) {
         UIViewController* fromVC = [context  viewControllerForKey:UITransitionContextFromViewControllerKey];
+        RNSScreenStackHeaderConfig* config = nil;
         for (UIView *subview in fromVC.view.reactSubviews) {
           if ([subview isKindOfClass:[RNSScreenStackHeaderConfig class]]) {
-            [((RNSScreenStackHeaderConfig*) subview) setAnimatedConfig:fromVC];
+            config = (RNSScreenStackHeaderConfig*) subview;
             break;
           }
         }
+        [self setAnimatedConfig:fromVC withConfig:config];
       }
     }];
   } else {
-    [self setAnimatedConfig:vc];
+    [self setAnimatedConfig:vc withConfig:config];
   }
 }
 
