@@ -31,12 +31,12 @@
   },
   "devDependencies": {
     "@react-native-community/bob": "^0.7.0",
-    "@types/react": "^16.8.24",
-    "@types/react-native": "^0.60.2",
-    "del-cli": "^2.0.0",
+    "@types/react": "^16.9.4",
+    "@types/react-native": "^0.60.17",
+    "del-cli": "^3.0.0",
     "react": "16.8.3",
     "react-native": "0.59.10",
-    "typescript": "^3.5.3"
+    "typescript": "^3.6.3"
   },
   "peerDependencies": {
     "@react-navigation/core": "^5.0.0-alpha.0",

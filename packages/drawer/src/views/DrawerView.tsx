@@ -163,7 +163,6 @@ export default class DrawerView extends React.PureComponent<Props, State> {
                 key={route.key}
                 style={[
                   StyleSheet.absoluteFill,
-                  // eslint-disable-next-line react-native/no-inline-styles
                   { opacity: isFocused ? 1 : 0 },
                 ]}
                 isVisible={isFocused}

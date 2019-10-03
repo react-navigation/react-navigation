@@ -122,9 +122,8 @@ const {
 
 // We need to be prepared for both version of reanimated. With and w/out proc
 let memoizedSpring = spring;
-// @ts-ignore
+
 if (Animated.proc) {
-  // @ts-ignore
   const springHelper = Animated.proc(
     (
       finished: Animated.Value<number>,
@@ -136,7 +135,7 @@ if (Animated.proc) {
       damping: Animated.Adaptable<number>,
       mass: Animated.Adaptable<number>,
       stiffness: Animated.Adaptable<number>,
-      overshootClamping: Animated.Adaptable<boolean>,
+      overshootClamping: Animated.Adaptable<number>,
       restSpeedThreshold: Animated.Adaptable<number>,
       restDisplacementThreshold: Animated.Adaptable<number>,
       clock: Animated.Clock
@@ -177,7 +176,7 @@ if (Animated.proc) {
       damping: Animated.Adaptable<number>;
       mass: Animated.Adaptable<number>;
       stiffness: Animated.Adaptable<number>;
-      overshootClamping: Animated.Adaptable<boolean>;
+      overshootClamping: Animated.Adaptable<number>;
       restSpeedThreshold: Animated.Adaptable<number>;
       restDisplacementThreshold: Animated.Adaptable<number>;
     }
