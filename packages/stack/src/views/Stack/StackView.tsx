@@ -57,10 +57,6 @@ class StackView extends React.Component<Props, State> {
       );
     }
 
-    if (!routes.length) {
-      throw new Error(`There should always be at least one route.`);
-    }
-
     // If there was no change in routes, we don't need to compute anything
     if (routes === state.routes || !state.routes.length) {
       return {
@@ -144,6 +140,20 @@ class StackView extends React.Component<Props, State> {
         // i.e. the currently focused route already existed and the previously focused route still exists
         // We don't know how to animate this
       }
+    } else {
+      // Keep the routes we are closing or replacing
+      routes = routes.slice();
+      routes.splice(
+        routes.length - 1,
+        0,
+        ...state.routes.filter(
+          ({ key }) => replacing.includes(key) || closing.includes(key)
+        )
+      );
+    }
+
+    if (!routes.length) {
+      throw new Error(`There should always be at least one route.`);
     }
 
     const descriptors = routes.reduce(
