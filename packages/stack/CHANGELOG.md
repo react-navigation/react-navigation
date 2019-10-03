@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.23](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.22...@react-navigation/stack@5.0.0-alpha.23) (2019-10-03)
+
+
+### Bug Fixes
+
+* fix passing insets to interpolator ([6f5f4b7](https://github.com/react-navigation/navigation-ex/commit/6f5f4b7))
+* fix vertical gesture ([a7c4a4d](https://github.com/react-navigation/navigation-ex/commit/a7c4a4d))
+
+
+
+
+
 # [5.0.0-alpha.22](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.21...@react-navigation/stack@5.0.0-alpha.22) (2019-10-03)
 
 **Note:** Version bump only for package @react-navigation/stack
