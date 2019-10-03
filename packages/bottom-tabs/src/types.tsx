@@ -6,7 +6,6 @@ import {
   TextStyle,
   ViewStyle,
 } from 'react-native';
-import SafeAreaView from 'react-native-safe-area-view';
 import {
   NavigationHelpers,
   NavigationProp,
@@ -234,5 +233,4 @@ export type BottomTabBarProps = BottomTabBarOptions & {
   }) => React.ReactNode;
   activeTintColor: string;
   inactiveTintColor: string;
-  safeAreaInset?: React.ComponentProps<typeof SafeAreaView>['forceInset'];
 };

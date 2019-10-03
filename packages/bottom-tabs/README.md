@@ -10,6 +10,30 @@ Open a Terminal in your project's folder and run,
 yarn add @react-navigation/core @react-navigation/bottom-tabs
 ```
 
+Now we need to install [`react-native-safe-area-context`](https://github.com/th3rdwave/react-native-safe-area-context).
+
+If you are using Expo, to ensure that you get the compatible versions of the libraries, run:
+
+```sh
+expo install react-native-safe-area-context
+```
+
+If you are not using Expo, run the following:
+
+```sh
+yarn add react-native-safe-area-context
+```
+
+If you are using Expo, you are done. Otherwise, continue to the next steps.
+
+To complete the linking on iOS, make sure you have [Cocoapods](https://cocoapods.org/) installed. Then run:
+
+```sh
+cd ios
+pod install
+cd ..
+```
+
 ## Usage
 
 ```js

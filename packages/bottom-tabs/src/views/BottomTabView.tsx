@@ -9,6 +9,7 @@ import { Route, CommonActions } from '@react-navigation/core';
 import { TabNavigationState } from '@react-navigation/routers';
 // eslint-disable-next-line import/no-unresolved
 import { ScreenContainer } from 'react-native-screens';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import BottomTabBar from './BottomTabBar';
 import {
@@ -198,29 +199,31 @@ export default class BottomTabView extends React.Component<Props, State> {
     const { loaded } = this.state;
 
     return (
-      <View style={styles.container}>
-        <ScreenContainer style={styles.pages}>
-          {routes.map((route, index) => {
-            if (lazy && !loaded.includes(index)) {
-              // Don't render a screen if we've never navigated to it
-              return null;
-            }
+      <SafeAreaProvider>
+        <View style={styles.container}>
+          <ScreenContainer style={styles.pages}>
+            {routes.map((route, index) => {
+              if (lazy && !loaded.includes(index)) {
+                // Don't render a screen if we've never navigated to it
+                return null;
+              }
 
-            const isFocused = state.index === index;
+              const isFocused = state.index === index;
 
-            return (
-              <ResourceSavingScene
-                key={route.key}
-                style={StyleSheet.absoluteFill}
-                isVisible={isFocused}
-              >
-                {descriptors[route.key].render()}
-              </ResourceSavingScene>
-            );
-          })}
-        </ScreenContainer>
-        {this.renderTabBar()}
-      </View>
+              return (
+                <ResourceSavingScene
+                  key={route.key}
+                  style={StyleSheet.absoluteFill}
+                  isVisible={isFocused}
+                >
+                  {descriptors[route.key].render()}
+                </ResourceSavingScene>
+              );
+            })}
+          </ScreenContainer>
+          {this.renderTabBar()}
+        </View>
+      </SafeAreaProvider>
     );
   }
 }

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import SafeAreaView from 'react-native-safe-area-view';
+import { useSafeArea } from 'react-native-safe-area-context';
 
 import TouchableItem from './TouchableItem';
 import { DrawerNavigationItemsProps } from '../types';
@@ -25,63 +25,72 @@ const DrawerNavigatorItems = ({
   inactiveLabelStyle,
   iconContainerStyle,
   drawerPosition,
-}: DrawerNavigationItemsProps) => (
-  <View style={[styles.container, itemsContainerStyle]}>
-    {items.map((route, index: number) => {
-      const focused = activeItemKey === route.key;
-      const color = focused ? activeTintColor : inactiveTintColor;
-      const backgroundColor = focused
-        ? activeBackgroundColor
-        : inactiveBackgroundColor;
-      const scene = { route, index, focused, tintColor: color };
-      const icon = renderIcon(scene);
-      const label = getLabel(scene);
-      const accessibilityLabel = typeof label === 'string' ? label : undefined;
-      const extraLabelStyle = focused ? activeLabelStyle : inactiveLabelStyle;
-      return (
-        <TouchableItem
-          key={route.key}
-          accessible
-          accessibilityLabel={accessibilityLabel}
-          onPress={() => {
-            onItemPress({ route, focused });
-          }}
-          delayPressIn={0}
-        >
-          <SafeAreaView
-            style={[{ backgroundColor }, styles.item, itemStyle]}
-            forceInset={{
-              [drawerPosition]: 'always',
-              [drawerPosition === 'left' ? 'right' : 'left']: 'never',
-              vertical: 'never',
+}: DrawerNavigationItemsProps) => {
+  const insets = useSafeArea();
+
+  return (
+    <View style={[styles.container, itemsContainerStyle]}>
+      {items.map((route, index: number) => {
+        const focused = activeItemKey === route.key;
+        const color = focused ? activeTintColor : inactiveTintColor;
+        const backgroundColor = focused
+          ? activeBackgroundColor
+          : inactiveBackgroundColor;
+        const scene = { route, index, focused, tintColor: color };
+        const icon = renderIcon(scene);
+        const label = getLabel(scene);
+        const accessibilityLabel =
+          typeof label === 'string' ? label : undefined;
+        const extraLabelStyle = focused ? activeLabelStyle : inactiveLabelStyle;
+
+        return (
+          <TouchableItem
+            key={route.key}
+            accessible
+            accessibilityLabel={accessibilityLabel}
+            onPress={() => {
+              onItemPress({ route, focused });
             }}
+            delayPressIn={0}
           >
-            {icon ? (
-              <View
-                style={[
-                  styles.icon,
-                  focused ? null : styles.inactiveIcon,
-                  iconContainerStyle,
-                ]}
-              >
-                {icon}
-              </View>
-            ) : null}
-            {typeof label === 'string' ? (
-              <Text
-                style={[styles.label, { color }, labelStyle, extraLabelStyle]}
-              >
-                {label}
-              </Text>
-            ) : (
-              label
-            )}
-          </SafeAreaView>
-        </TouchableItem>
-      );
-    })}
-  </View>
-);
+            <View
+              style={[
+                {
+                  backgroundColor,
+                  marginLeft: drawerPosition === 'left' ? insets.left : 0,
+                  marginRight: drawerPosition === 'right' ? insets.right : 0,
+                },
+                styles.item,
+                itemStyle,
+              ]}
+            >
+              {icon ? (
+                <View
+                  style={[
+                    styles.icon,
+                    focused ? null : styles.inactiveIcon,
+                    iconContainerStyle,
+                  ]}
+                >
+                  {icon}
+                </View>
+              ) : null}
+              {typeof label === 'string' ? (
+                <Text
+                  style={[styles.label, { color }, labelStyle, extraLabelStyle]}
+                >
+                  {label}
+                </Text>
+              ) : (
+                label
+              )}
+            </View>
+          </TouchableItem>
+        );
+      })}
+    </View>
+  );
+};
 
 /* Material design specs - https://material.io/guidelines/patterns/navigation-drawer.html#navigation-drawer-specs */
 DrawerNavigatorItems.defaultProps = {

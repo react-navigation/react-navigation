@@ -185,10 +185,6 @@ export type StackHeaderOptions = {
    */
   headerStyle?: StyleProp<ViewStyle>;
   /**
-   * Custom status bar height to set as the top padding in the header.
-   */
-  headerStatusBarHeight?: number;
-  /**
    * Defaults to `false`. If `true`, the header will not have a background unless you explicitly provide it with `headerBackground`.
    * The header will also float over the screen so that it overlaps the content underneath.
    * This is useful if you want to render a semi-transparent header or a blurred background.
@@ -444,6 +440,15 @@ export type StackCardInterpolationProps = {
      * Layout of the whole screen.
      */
     screen: Layout;
+  };
+  /**
+   * Safe area insets
+   */
+  insets: {
+    top: number;
+    right: number;
+    bottom: number;
+    left: number;
   };
 };
 

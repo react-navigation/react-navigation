@@ -33,8 +33,7 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "@react-navigation/routers": "^5.0.0-alpha.9",
-    "react-native-safe-area-view": "^0.14.7"
+    "@react-navigation/routers": "^5.0.0-alpha.9"
   },
   "devDependencies": {
     "@react-native-community/bob": "^0.7.0",
@@ -42,10 +41,11 @@
     "@types/react": "^16.9.4",
     "@types/react-native": "^0.60.17",
     "del-cli": "^3.0.0",
-    "react": "16.8.3",
+    "react": "16.10.1",
     "react-native": "0.59.10",
     "react-native-gesture-handler": "^1.3.0",
     "react-native-reanimated": "^1.3.0",
+    "react-native-safe-area-context": "^0.3.6",
     "react-native-screens": "^1.0.0-alpha.22",
     "typescript": "^3.6.3"
   },
@@ -56,6 +56,7 @@
     "react-native": "*",
     "react-native-gesture-handler": "^1.0.0",
     "react-native-reanimated": "^1.0.0",
+    "react-native-safe-area-context": "^0.3.6",
     "react-native-screens": "^1.0.0-alpha.0"
   },
   "@react-native-community/bob": {

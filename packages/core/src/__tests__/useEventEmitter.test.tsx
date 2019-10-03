@@ -273,7 +273,11 @@ it('fires blur event when a route is removed with a delay', async () => {
 
     const [previous, dispatch] = React.useReducer(
       (state, action) => {
-        return { ...state, ...action };
+        if (state.routes !== action.routes) {
+          return { ...state, ...action };
+        }
+
+        return state;
       },
       { routes: state.routes, descriptors }
     );

@@ -36,7 +36,7 @@ module.exports = {
       'react-native',
       'react-native-gesture-handler',
       'react-native-reanimated',
-      'react-native-safe-area-view',
+      'react-native-safe-area-context',
       'react-native-screens',
       'react-native-paper',
       'react-native-tab-view',
