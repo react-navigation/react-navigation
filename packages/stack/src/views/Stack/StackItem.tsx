@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet, Platform, StyleProp, ViewStyle } from 'react-native';
+import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { StackNavigationState } from '@react-navigation/routers';
 import { Route } from '@react-navigation/core';
@@ -165,7 +165,6 @@ export default class StackItem extends React.PureComponent<Props> {
                 state,
                 getPreviousRoute,
                 styleInterpolator: headerStyleInterpolator,
-                style: styles.header,
               })
             : null}
         </View>
@@ -181,9 +180,5 @@ const styles = StyleSheet.create({
   },
   scene: {
     flex: 1,
-  },
-  header: {
-    // This is needed to show elevation shadow
-    zIndex: Platform.OS === 'android' ? 1 : 0,
   },
 });
