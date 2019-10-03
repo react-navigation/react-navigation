@@ -11,7 +11,7 @@
     "material",
     "drawer"
   ],
-  "version": "5.0.0-alpha.10",
+  "version": "5.0.0-alpha.11",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -34,7 +34,7 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "@react-navigation/routers": "^5.0.0-alpha.8",
+    "@react-navigation/routers": "^5.0.0-alpha.9",
     "react-native-safe-area-view": "^0.14.7"
   },
   "devDependencies": {

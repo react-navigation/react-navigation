@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.21](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.20...@react-navigation/stack@5.0.0-alpha.21) (2019-10-03)
+
+
+### Bug Fixes
+
+* add missing React import ([ece6e38](https://github.com/react-navigation/navigation-ex/commit/ece6e38))
+* fix header buttons not clickable on Android. fixes [#108](https://github.com/react-navigation/navigation-ex/issues/108) ([da944cc](https://github.com/react-navigation/navigation-ex/commit/da944cc))
+* keep the routes we are closing or replacing ([bc3586a](https://github.com/react-navigation/navigation-ex/commit/bc3586a))
+
+
+
+
+
 # [5.0.0-alpha.20](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.19...@react-navigation/stack@5.0.0-alpha.20) (2019-09-27)
 
 

@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.12](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/core@5.0.0-alpha.11...@react-navigation/core@5.0.0-alpha.12) (2019-10-03)
+
+
+### Bug Fixes
+
+* don't merge state with existing state during reset. fixes [#111](https://github.com/react-navigation/navigation-ex/issues/111) ([7393464](https://github.com/react-navigation/navigation-ex/commit/7393464))
+* don't throw when switching navigator. fixes [#91](https://github.com/react-navigation/navigation-ex/issues/91) ([19be2b4](https://github.com/react-navigation/navigation-ex/commit/19be2b4))
+
+
+### Features
+
+* add a getRootState method ([#119](https://github.com/react-navigation/navigation-ex/issues/119)) ([7a5bcb4](https://github.com/react-navigation/navigation-ex/commit/7a5bcb4))
+
+
+
+
+
 # [5.0.0-alpha.11](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/core@5.0.0-alpha.10...@react-navigation/core@5.0.0-alpha.11) (2019-09-27)
 
 
