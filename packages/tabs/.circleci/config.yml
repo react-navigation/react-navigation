@@ -21,8 +21,8 @@ jobs:
             - v1-dependencies-example-{{ checksum "example/package.json" }}
             - v1-dependencies-example-
       - run: |
-          yarn install --frozen-lockfile
           yarn install --frozen-lockfile --cwd example
+          yarn install --frozen-lockfile
       - save_cache:
           key: v1-dependencies-{{ checksum "package.json" }}
           paths: node_modules
