@@ -648,8 +648,8 @@ export default class Card extends React.Component<Props> {
   private handleGestureEventVertical = Animated.event([
     {
       nativeEvent: {
-        translationY: this.gesture,
-        velocityY: this.velocity,
+        translationY: this.gestureUntraversed,
+        velocityY: this.velocityUntraversed,
         state: this.gestureState,
       },
     },
