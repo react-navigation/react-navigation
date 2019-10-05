@@ -145,6 +145,16 @@ class StackView extends React.Component<Props, State> {
         // i.e. the currently focused route already existed and the previously focused route still exists
         // We don't know how to animate this
       }
+    } else {
+      // Keep the routes we are closing or replacing
+      routes = routes.slice();
+      routes.splice(
+        routes.length - 1,
+        0,
+        ...state.routes.filter(
+          ({ key }) => replacing.includes(key) || closing.includes(key)
+        )
+      );
     }
 
     const descriptors = routes.reduce(
