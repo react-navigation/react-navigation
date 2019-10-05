@@ -30,12 +30,14 @@ type Props = StackNavigationConfig & {
 type State = {
   // Local copy of the routes which are actually rendered
   routes: Route<string>[];
+  // Previous routes, to compare whether routes have changed or not
+  previousRoutes: Route<string>[];
   // List of routes being opened, we need to animate pushing of these new routes
-  opening: string[];
+  openingRouteKeys: string[];
   // List of routes being closed, we need to animate popping of these routes
-  closing: string[];
+  closingRouteKeys: string[];
   // List of routes being replaced, we need to keep a copy until the new route animates in
-  replacing: string[];
+  replacingRouteKeys: string[];
   // Since the local routes can vary from the routes from props, we need to keep the descriptors for old routes
   // Otherwise we won't be able to access the options for routes that were removed
   descriptors: StackDescriptorMap;
@@ -46,6 +48,11 @@ class StackView extends React.Component<Props, State> {
     props: Readonly<Props>,
     state: Readonly<State>
   ) {
+    // If there was no change in routes, we don't need to compute anything
+    if (props.state.routes === state.previousRoutes && state.routes.length) {
+      return null;
+    }
+
     // Here we determine which routes were added or removed to animate them
     // We keep a copy of the route being removed in local state to be able to animate it
 
@@ -56,31 +63,23 @@ class StackView extends React.Component<Props, State> {
           props.state.routes.slice(0, props.state.index + 1)
         : props.state.routes;
 
-    if (props.state.index < props.state.routes.length - 1) {
-      console.warn(
-        'StackRouter provided invalid state, index should always be the last route in the stack.'
-      );
-    }
-
-    // If there was no change in routes, we don't need to compute anything
-    if (routes === state.routes || !state.routes.length) {
-      return {
-        routes,
-        descriptors: props.descriptors,
-      };
-    }
-
     // Now we need to determine which routes were added and removed
-    let { opening, closing, replacing } = state;
+    let {
+      openingRouteKeys,
+      closingRouteKeys,
+      replacingRouteKeys,
+      previousRoutes,
+    } = state;
 
-    const previousRoutes = state.routes.filter(
-      route => !closing.includes(route.key) && !replacing.includes(route.key)
-    );
-
-    const previousFocusedRoute = previousRoutes[previousRoutes.length - 1];
+    const previousFocusedRoute = previousRoutes[previousRoutes.length - 1] as
+      | Route<string>
+      | undefined;
     const nextFocusedRoute = routes[routes.length - 1];
 
-    if (previousFocusedRoute.key !== nextFocusedRoute.key) {
+    if (
+      previousFocusedRoute &&
+      previousFocusedRoute.key !== nextFocusedRoute.key
+    ) {
       // We only need to animate routes if the focused route changed
       // Animating previous routes won't be visible coz the focused route is on top of everything
 
@@ -99,22 +98,33 @@ class StackView extends React.Component<Props, State> {
 
         if (
           isAnimationEnabled(nextFocusedRoute) &&
-          !opening.includes(nextFocusedRoute.key)
+          !openingRouteKeys.includes(nextFocusedRoute.key)
         ) {
           // In this case, we need to animate pushing the focused route
           // We don't care about animating any other added routes because they won't be visible
-          opening = [...opening, nextFocusedRoute.key];
+          openingRouteKeys = [...openingRouteKeys, nextFocusedRoute.key];
 
-          closing = closing.filter(key => key !== nextFocusedRoute.key);
-          replacing = replacing.filter(key => key !== nextFocusedRoute.key);
+          closingRouteKeys = closingRouteKeys.filter(
+            key => key !== nextFocusedRoute.key
+          );
+          replacingRouteKeys = replacingRouteKeys.filter(
+            key => key !== nextFocusedRoute.key
+          );
 
           if (!routes.find(r => r.key === previousFocusedRoute.key)) {
             // The previous focused route isn't present in state, we treat this as a replace
 
-            replacing = [...replacing, previousFocusedRoute.key];
+            replacingRouteKeys = [
+              ...replacingRouteKeys,
+              previousFocusedRoute.key,
+            ];
 
-            opening = opening.filter(key => key !== previousFocusedRoute.key);
-            closing = closing.filter(key => key !== previousFocusedRoute.key);
+            openingRouteKeys = openingRouteKeys.filter(
+              key => key !== previousFocusedRoute.key
+            );
+            closingRouteKeys = closingRouteKeys.filter(
+              key => key !== previousFocusedRoute.key
+            );
 
             // Keep the old route in state because it's visible under the new route, and removing it will feel abrupt
             // We need to insert it just before the focused one (the route being pushed)
@@ -128,14 +138,18 @@ class StackView extends React.Component<Props, State> {
 
         if (
           isAnimationEnabled(previousFocusedRoute) &&
-          !closing.includes(previousFocusedRoute.key)
+          !closingRouteKeys.includes(previousFocusedRoute.key)
         ) {
           // Sometimes a route can be closed before the opening animation finishes
           // So we also need to remove it from the opening list
-          closing = [...closing, previousFocusedRoute.key];
+          closingRouteKeys = [...closingRouteKeys, previousFocusedRoute.key];
 
-          opening = opening.filter(key => key !== previousFocusedRoute.key);
-          replacing = replacing.filter(key => key !== previousFocusedRoute.key);
+          openingRouteKeys = openingRouteKeys.filter(
+            key => key !== previousFocusedRoute.key
+          );
+          replacingRouteKeys = replacingRouteKeys.filter(
+            key => key !== previousFocusedRoute.key
+          );
 
           // Keep a copy of route being removed in the state to be able to animate it
           routes = [...routes, previousFocusedRoute];
@@ -145,14 +159,15 @@ class StackView extends React.Component<Props, State> {
         // i.e. the currently focused route already existed and the previously focused route still exists
         // We don't know how to animate this
       }
-    } else {
+    } else if (replacingRouteKeys.length || closingRouteKeys.length) {
       // Keep the routes we are closing or replacing
       routes = routes.slice();
       routes.splice(
         routes.length - 1,
         0,
         ...state.routes.filter(
-          ({ key }) => replacing.includes(key) || closing.includes(key)
+          ({ key }) =>
+            replacingRouteKeys.includes(key) || closingRouteKeys.includes(key)
         )
       );
     }
@@ -173,18 +188,20 @@ class StackView extends React.Component<Props, State> {
 
     return {
       routes,
-      opening,
-      closing,
-      replacing,
+      previousRoutes: props.state.routes,
+      openingRouteKeys,
+      closingRouteKeys,
+      replacingRouteKeys,
       descriptors,
     };
   }
 
   state: State = {
     routes: [],
-    opening: [],
-    closing: [],
-    replacing: [],
+    previousRoutes: [],
+    openingRouteKeys: [],
+    closingRouteKeys: [],
+    replacingRouteKeys: [],
     descriptors: {},
   };
 
@@ -209,11 +226,12 @@ class StackView extends React.Component<Props, State> {
   };
 
   private getPreviousRoute = ({ route }: { route: Route<string> }) => {
-    const { closing, replacing } = this.state;
+    const { closingRouteKeys, replacingRouteKeys } = this.state;
     const routes = this.state.routes.filter(
       r =>
         r.key === route.key ||
-        (!closing.includes(r.key) && !replacing.includes(r.key))
+        (!closingRouteKeys.includes(r.key) &&
+          !replacingRouteKeys.includes(r.key))
     );
     const index = routes.findIndex(r => r.key === route.key);
 
@@ -249,12 +267,12 @@ class StackView extends React.Component<Props, State> {
 
   private handleOpenRoute = ({ route }: { route: Route<string> }) => {
     this.setState(state => ({
-      routes: state.replacing.length
-        ? state.routes.filter(r => !state.replacing.includes(r.key))
+      routes: state.replacingRouteKeys.length
+        ? state.routes.filter(r => !state.replacingRouteKeys.includes(r.key))
         : state.routes,
-      opening: state.opening.filter(key => key !== route.key),
-      closing: state.closing.filter(key => key !== route.key),
-      replacing: [],
+      openingRouteKeys: state.openingRouteKeys.filter(key => key !== route.key),
+      closingRouteKeys: state.closingRouteKeys.filter(key => key !== route.key),
+      replacingRouteKeys: [],
     }));
   };
 
@@ -265,8 +283,8 @@ class StackView extends React.Component<Props, State> {
     // @ts-ignore
     this.setState(state => ({
       routes: state.routes.filter(r => r.key !== route.key),
-      opening: state.opening.filter(key => key !== route.key),
-      closing: state.closing.filter(key => key !== route.key),
+      openingRouteKeys: state.openingRouteKeys.filter(key => key !== route.key),
+      closingRouteKeys: state.closingRouteKeys.filter(key => key !== route.key),
     }));
   };
 
@@ -281,7 +299,12 @@ class StackView extends React.Component<Props, State> {
       ...rest
     } = this.props;
 
-    const { routes, descriptors, opening, closing } = this.state;
+    const {
+      routes,
+      descriptors,
+      openingRouteKeys,
+      closingRouteKeys,
+    } = this.state;
 
     const headerMode =
       mode !== 'modal' && Platform.OS === 'ios' ? 'float' : 'screen';
@@ -296,8 +319,8 @@ class StackView extends React.Component<Props, State> {
               getPreviousRoute={this.getPreviousRoute}
               getGesturesEnabled={this.getGesturesEnabled}
               routes={routes}
-              openingRoutes={opening}
-              closingRoutes={closing}
+              openingRouteKeys={openingRouteKeys}
+              closingRouteKeys={closingRouteKeys}
               onGoBack={this.handleGoBack}
               onOpenRoute={this.handleOpenRoute}
               onCloseRoute={this.handleCloseRoute}
