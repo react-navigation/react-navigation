@@ -42,8 +42,8 @@ type Props = {
   navigation: StackNavigationHelpers;
   descriptors: StackDescriptorMap;
   routes: Route<string>[];
-  openingRoutes: string[];
-  closingRoutes: string[];
+  openingRouteKeys: string[];
+  closingRouteKeys: string[];
   onGoBack: (props: { route: Route<string> }) => void;
   onOpenRoute: (props: { route: Route<string> }) => void;
   onCloseRoute: (props: { route: Route<string> }) => void;
@@ -148,7 +148,7 @@ export default class Stack extends React.Component<Props, State> {
         acc[curr.key] =
           state.progress[curr.key] ||
           new Animated.Value(
-            props.openingRoutes.includes(curr.key) &&
+            props.openingRouteKeys.includes(curr.key) &&
             descriptor &&
             descriptor.options.animationEnabled !== false
               ? 0
@@ -297,7 +297,7 @@ export default class Stack extends React.Component<Props, State> {
       state,
       navigation,
       routes,
-      closingRoutes,
+      closingRouteKeys,
       onOpenRoute,
       onCloseRoute,
       onGoBack,
@@ -381,7 +381,7 @@ export default class Stack extends React.Component<Props, State> {
                   index={index}
                   active={index === self.length - 1}
                   focused={focused}
-                  closing={closingRoutes.includes(route.key)}
+                  closing={closingRouteKeys.includes(route.key)}
                   layout={layout}
                   insets={insets}
                   current={current}
