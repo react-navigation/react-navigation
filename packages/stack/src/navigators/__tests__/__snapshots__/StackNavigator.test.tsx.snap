@@ -26,6 +26,7 @@ Array [
       <View
         accessibilityElementsHidden={false}
         closing={false}
+        gestureVelocityImpact={0.3}
         importantForAccessibility="auto"
         onClose={[Function]}
         onGestureBegin={[Function]}
@@ -362,6 +363,7 @@ Array [
       <View
         accessibilityElementsHidden={false}
         closing={false}
+        gestureVelocityImpact={0.3}
         importantForAccessibility="auto"
         onClose={[Function]}
         onGestureBegin={[Function]}

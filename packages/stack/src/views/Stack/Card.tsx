@@ -53,6 +53,7 @@ type Props = ViewProps & {
     close: TransitionSpec;
   };
   styleInterpolator: CardStyleInterpolator;
+  gestureVelocityImpact: number;
   containerStyle?: StyleProp<ViewStyle>;
   contentStyle?: StyleProp<ViewStyle>;
 };
@@ -89,7 +90,7 @@ const BOTTOM = 1;
 const DIRECTION_VERTICAL = -1;
 const DIRECTION_HORIZONTAL = 1;
 
-const SWIPE_VELOCITY_IMPACT = 0.3;
+const GESTURE_VELOCITY_IMPACT = 0.3;
 
 /**
  * The distance of touch start from the edge of the screen where the gesture will be recognized
@@ -232,10 +233,16 @@ export default class Card extends React.Component<Props> {
     overlayEnabled: Platform.OS !== 'ios',
     shadowEnabled: true,
     gestureEnabled: true,
+    gestureVelocityImpact: GESTURE_VELOCITY_IMPACT,
   };
 
   componentDidUpdate(prevProps: Props) {
-    const { layout, gestureDirection, closing } = this.props;
+    const {
+      layout,
+      gestureDirection,
+      closing,
+      gestureVelocityImpact,
+    } = this.props;
     const { width, height } = layout;
 
     if (width !== prevProps.layout.width) {
@@ -244,6 +251,10 @@ export default class Card extends React.Component<Props> {
 
     if (height !== prevProps.layout.height) {
       this.layout.height.setValue(height);
+    }
+
+    if (gestureVelocityImpact !== prevProps.gestureVelocityImpact) {
+      this.gestureVelocityImpact.setValue(gestureVelocityImpact);
     }
 
     if (gestureDirection !== prevProps.gestureDirection) {
@@ -285,6 +296,9 @@ export default class Card extends React.Component<Props> {
   }
 
   private isVisible = new Value<Binary>(TRUE);
+  private gestureVelocityImpact = new Value<number>(
+    this.props.gestureVelocityImpact
+  );
   private isVisibleValue: Binary = TRUE;
   private nextIsVisible = new Value<Binary | -1>(UNSET);
   private verticalGestureDirection = new Value(
@@ -483,18 +497,19 @@ export default class Card extends React.Component<Props> {
 
   private extrapolatedPosition = add(
     this.gesture,
-    multiply(this.velocity, SWIPE_VELOCITY_IMPACT)
+    multiply(this.velocity, this.gestureVelocityImpact)
   );
 
   private exec = [
-    cond(
-      eq(this.direction, DIRECTION_HORIZONTAL),
-      set(
-        this.gesture,
+    set(
+      this.gesture,
+      cond(
+        eq(this.direction, DIRECTION_HORIZONTAL),
         multiply(
           this.gestureUntraversed,
           I18nManager.isRTL ? MINUS_ONE_NODE : TRUE_NODE
-        )
+        ),
+        this.gestureUntraversed
       )
     ),
     set(
@@ -593,9 +608,13 @@ export default class Card extends React.Component<Props> {
                 cond(
                   this.distance,
                   divide(
-                    multiply(
-                      this.gestureUntraversed,
-                      I18nManager.isRTL ? MINUS_ONE_NODE : TRUE_NODE
+                    cond(
+                      eq(this.direction, DIRECTION_HORIZONTAL),
+                      multiply(
+                        this.gestureUntraversed,
+                        I18nManager.isRTL ? MINUS_ONE_NODE : TRUE_NODE
+                      ),
+                      this.gestureUntraversed
                     ),
                     this.distance
                   ),

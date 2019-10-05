@@ -357,6 +357,7 @@ export default class Stack extends React.Component<Props, State> {
               transitionSpec = defaultTransitionPreset.transitionSpec,
               cardStyleInterpolator = defaultTransitionPreset.cardStyleInterpolator,
               headerStyleInterpolator = defaultTransitionPreset.headerStyleInterpolator,
+              gestureVelocityImpact,
             } = descriptor
               ? descriptor.options
               : ({} as NavigationStackOptions);
@@ -404,6 +405,7 @@ export default class Stack extends React.Component<Props, State> {
                   transitionSpec={transitionSpec}
                   cardStyleInterpolator={cardStyleInterpolator}
                   headerStyleInterpolator={headerStyleInterpolator}
+                  gestureVelocityImpact={gestureVelocityImpact}
                 />
               </MaybeScreen>
             );
