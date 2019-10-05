@@ -478,14 +478,15 @@ export default class Card extends React.Component<Props> {
   );
 
   private exec = [
-    cond(
-      eq(this.direction, DIRECTION_HORIZONTAL),
-      set(
-        this.gesture,
+    set(
+      this.gesture,
+      cond(
+        eq(this.direction, DIRECTION_HORIZONTAL),
         multiply(
           this.gestureUntraversed,
           I18nManager.isRTL ? MINUS_ONE_NODE : TRUE_NODE
-        )
+        ),
+        this.gestureUntraversed
       )
     ),
     set(
@@ -580,9 +581,13 @@ export default class Card extends React.Component<Props> {
                 cond(
                   this.distance,
                   divide(
-                    multiply(
-                      this.gestureUntraversed,
-                      I18nManager.isRTL ? MINUS_ONE_NODE : TRUE_NODE
+                    cond(
+                      eq(this.direction, DIRECTION_HORIZONTAL),
+                      multiply(
+                        this.gestureUntraversed,
+                        I18nManager.isRTL ? MINUS_ONE_NODE : TRUE_NODE
+                      ),
+                      this.gestureUntraversed
                     ),
                     this.distance
                   ),
