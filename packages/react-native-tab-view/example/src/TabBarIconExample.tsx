@@ -20,6 +20,7 @@ type Route = {
 type State = NavigationState<Route>;
 
 export default class TabBarIconExample extends React.Component<{}, State> {
+  // eslint-disable-next-line react/sort-comp
   static title = 'Top tab bar with icons';
   static backgroundColor = '#e91e63';
   static appbarElevation = 0;

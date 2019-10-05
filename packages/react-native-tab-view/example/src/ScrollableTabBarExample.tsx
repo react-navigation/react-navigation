@@ -21,6 +21,7 @@ export default class ScrollableTabBarExample extends React.Component<
   {},
   State
 > {
+  // eslint-disable-next-line react/sort-comp
   static title = 'Scrollable tab bar';
   static backgroundColor = '#3f51b5';
   static appbarElevation = 0;

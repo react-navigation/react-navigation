@@ -22,6 +22,7 @@ type Route = {
 type State = NavigationState<Route>;
 
 export default class CustomIndicatorExample extends React.Component<{}, State> {
+  // eslint-disable-next-line react/sort-comp
   static title = 'Custom indicator';
   static backgroundColor = '#263238';
   static appbarElevation = 4;

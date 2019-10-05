@@ -22,6 +22,7 @@ type Route = {
 type State = NavigationState<Route>;
 
 export default class CustomTabBarExample extends React.Component<{}, State> {
+  // eslint-disable-next-line react/sort-comp
   static title = 'Custom tab bar';
   static backgroundColor = '#fafafa';
   static tintColor = '#263238';

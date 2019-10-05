@@ -155,7 +155,6 @@ export default class TabBarItem<T extends Route> extends React.Component<
                 <Animated.Text
                   style={[
                     styles.label,
-                    // eslint-disable-next-line react-native/no-inline-styles
                     icon ? { marginTop: 0 } : null,
                     { color },
                     labelStyle,
