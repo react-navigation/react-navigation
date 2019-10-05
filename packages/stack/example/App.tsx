@@ -8,7 +8,6 @@ import {
   NavigationStackScreenProps,
   NavigationStackOptions,
 } from 'react-navigation-stack';
-// eslint-disable-next-line import/namespace
 import { List, Divider } from 'react-native-paper';
 
 import FullScreen from './src/FullScreen';
@@ -34,6 +33,7 @@ import DragLimitedToModal from './src/DragLimitedToModal';
 // eslint-disable-next-line import/no-unresolved
 import { useScreens } from 'react-native-screens';
 
+// eslint-disable-next-line react-hooks/rules-of-hooks
 useScreens(true);
 
 // Change `false` to `true` to force RTL. Requires closing and re-opening

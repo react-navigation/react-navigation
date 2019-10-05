@@ -31,7 +31,7 @@
   },
   "devDependencies": {
     "babel-plugin-module-resolver": "^3.2.0",
-    "expo-cli": "^3.0.10"
+    "expo-cli": "^3.2.3"
   },
   "resolutions": {
     "react-native-safe-area-view": "0.14.6",
