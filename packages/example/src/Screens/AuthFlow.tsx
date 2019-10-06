@@ -76,7 +76,7 @@ export default function SimpleStackScreen({ navigation }: Props) {
   }, []);
 
   navigation.setOptions({
-    header: null,
+    headerShown: false,
   });
 
   return (

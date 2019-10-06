@@ -53,9 +53,9 @@ type Props = TransitionPreset & {
   };
   gestureVelocityImpact?: number;
   headerMode: StackHeaderMode;
+  headerShown?: boolean;
   headerTransparent?: boolean;
   floatingHeaderHeight: number;
-  hasCustomHeader: boolean;
 };
 
 export default class StackItem extends React.PureComponent<Props> {
@@ -114,7 +114,7 @@ export default class StackItem extends React.PureComponent<Props> {
       gestureResponseDistance,
       gestureVelocityImpact,
       floatingHeaderHeight,
-      hasCustomHeader,
+      headerShown,
       getPreviousRoute,
       headerMode,
       headerTransparent,
@@ -153,7 +153,7 @@ export default class StackItem extends React.PureComponent<Props> {
         importantForAccessibility={focused ? 'auto' : 'no-hide-descendants'}
         pointerEvents="box-none"
         containerStyle={
-          headerMode === 'float' && !headerTransparent && !hasCustomHeader
+          headerMode === 'float' && !headerTransparent && headerShown !== false
             ? { marginTop: floatingHeaderHeight }
             : null
         }

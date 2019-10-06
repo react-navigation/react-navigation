@@ -89,7 +89,7 @@ type Props = {
 
 export default function SimpleStackScreen({ navigation, options }: Props) {
   navigation.setOptions({
-    header: null,
+    headerShown: false,
   });
 
   return (

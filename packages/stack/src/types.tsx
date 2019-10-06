@@ -241,7 +241,12 @@ export type StackNavigationOptions = StackHeaderOptions &
      * Function that given `HeaderProps` returns a React Element to display as a header.
      * Setting to `null` hides header.
      */
-    header?: null | ((props: StackHeaderProps) => React.ReactNode);
+    header?: (props: StackHeaderProps) => React.ReactNode;
+    /**
+     * Whether to show the header. The header is shown by default unless `headerMode` was set to `none`.
+     * Setting this to `false` hides the header.
+     */
+    headerShown?: boolean;
     /**
      * Whether a shadow is visible for the card during transitions. Defaults to `true`.
      */
