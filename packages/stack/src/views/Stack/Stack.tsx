@@ -338,7 +338,6 @@ export default class Stack extends React.Component<Props, State> {
             const focused = focusedRoute.key === route.key;
             const current = progress[route.key];
             const scene = scenes[index];
-            const descriptor = scene.descriptor;
             const next = self[index + 1]
               ? progress[self[index + 1].key]
               : ANIMATED_ONE;
@@ -365,9 +364,41 @@ export default class Stack extends React.Component<Props, State> {
               transitionSpec = defaultTransitionPreset.transitionSpec,
               cardStyleInterpolator = defaultTransitionPreset.cardStyleInterpolator,
               headerStyleInterpolator = defaultTransitionPreset.headerStyleInterpolator,
-            } = descriptor
-              ? descriptor.options
+            } = scene.descriptor
+              ? scene.descriptor.options
               : ({} as StackNavigationOptions);
+
+            let transitionConfig = {
+              transitionSpec,
+              cardStyleInterpolator,
+              headerStyleInterpolator,
+            };
+
+            // When a screen is not the last, it should use next screen's transition config
+            // Many transitions also animate the previous screen, so using 2 different transitions doesn't look right
+            // For example combining a slide and a modal transition would look wrong otherwise
+            // With this approach, combining different transition styles in the same navigator mostly looks right
+            // This will still be broken when 2 transitions have different idle state (e.g. modal presentation),
+            // but majority of the transitions look alright
+            if (index !== self.length - 1) {
+              const nextScene = scenes[index + 1];
+
+              if (nextScene) {
+                const {
+                  transitionSpec = defaultTransitionPreset.transitionSpec,
+                  cardStyleInterpolator = defaultTransitionPreset.cardStyleInterpolator,
+                  headerStyleInterpolator = defaultTransitionPreset.headerStyleInterpolator,
+                } = nextScene.descriptor
+                  ? nextScene.descriptor.options
+                  : ({} as StackNavigationOptions);
+
+                transitionConfig = {
+                  transitionSpec,
+                  cardStyleInterpolator,
+                  headerStyleInterpolator,
+                };
+              }
+            }
 
             return (
               <MaybeScreen
@@ -411,9 +442,7 @@ export default class Stack extends React.Component<Props, State> {
                   onTransitionEnd={this.handleTransitionEnd}
                   onGoBack={onGoBack}
                   gestureDirection={gestureDirection}
-                  transitionSpec={transitionSpec}
-                  cardStyleInterpolator={cardStyleInterpolator}
-                  headerStyleInterpolator={headerStyleInterpolator}
+                  {...transitionConfig}
                 />
               </MaybeScreen>
             );
