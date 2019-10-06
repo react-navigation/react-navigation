@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/example",
   "description": "Demo app to showcase various functionality of React Navigation",
-  "version": "5.0.0-alpha.11",
+  "version": "5.0.0-alpha.12",
   "private": true,
   "workspaces": {
     "nohoist": [
