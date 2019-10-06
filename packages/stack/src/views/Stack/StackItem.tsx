@@ -30,7 +30,6 @@ type Props = TransitionPreset & {
   cardOverlayEnabled?: boolean;
   cardShadowEnabled?: boolean;
   cardStyle?: StyleProp<ViewStyle>;
-  gestureEnabled?: boolean;
   getPreviousRoute: (props: {
     route: Route<string>;
   }) => Route<string> | undefined;
@@ -47,15 +46,16 @@ type Props = TransitionPreset & {
   onPageChangeStart?: () => void;
   onPageChangeConfirm?: () => void;
   onPageChangeCancel?: () => void;
+  gestureEnabled?: boolean;
   gestureResponseDistance?: {
     vertical?: number;
     horizontal?: number;
   };
+  gestureVelocityImpact?: number;
   headerMode: StackHeaderMode;
   headerTransparent?: boolean;
   floatingHeaderHeight: number;
   hasCustomHeader: boolean;
-  gestureVelocityImpact?: number;
 };
 
 export default class StackItem extends React.PureComponent<Props> {
@@ -108,10 +108,11 @@ export default class StackItem extends React.PureComponent<Props> {
       cardOverlayEnabled,
       cardShadowEnabled,
       cardStyle,
-      gestureEnabled,
       onPageChangeStart,
       onPageChangeCancel,
+      gestureEnabled,
       gestureResponseDistance,
+      gestureVelocityImpact,
       floatingHeaderHeight,
       hasCustomHeader,
       getPreviousRoute,
@@ -123,7 +124,6 @@ export default class StackItem extends React.PureComponent<Props> {
       transitionSpec,
       cardStyleInterpolator,
       headerStyleInterpolator,
-      gestureVelocityImpact,
     } = this.props;
 
     return (
@@ -141,11 +141,12 @@ export default class StackItem extends React.PureComponent<Props> {
         onClose={this.handleClose}
         overlayEnabled={cardOverlayEnabled}
         shadowEnabled={cardShadowEnabled}
-        gestureEnabled={gestureEnabled}
         onTransitionStart={this.handleTransitionStart}
         onGestureBegin={onPageChangeStart}
         onGestureCanceled={onPageChangeCancel}
+        gestureEnabled={gestureEnabled}
         gestureResponseDistance={gestureResponseDistance}
+        gestureVelocityImpact={gestureVelocityImpact}
         transitionSpec={transitionSpec}
         styleInterpolator={cardStyleInterpolator}
         accessibilityElementsHidden={!focused}
@@ -158,7 +159,6 @@ export default class StackItem extends React.PureComponent<Props> {
         }
         contentStyle={cardStyle}
         style={StyleSheet.absoluteFill}
-        gestureVelocityImpact={gestureVelocityImpact}
       >
         <View style={styles.container}>
           <View style={styles.scene}>

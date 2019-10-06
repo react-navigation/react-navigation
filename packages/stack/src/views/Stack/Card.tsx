@@ -50,12 +50,12 @@ type Props = ViewProps & {
     vertical?: number;
     horizontal?: number;
   };
+  gestureVelocityImpact: number;
   transitionSpec: {
     open: TransitionSpec;
     close: TransitionSpec;
   };
   styleInterpolator: StackCardStyleInterpolator;
-  gestureVelocityImpact: number;
   containerStyle?: StyleProp<ViewStyle>;
   contentStyle?: StyleProp<ViewStyle>;
 };
@@ -238,8 +238,8 @@ export default class Card extends React.Component<Props> {
     const {
       layout,
       gestureDirection,
-      closing,
       gestureVelocityImpact,
+      closing,
     } = this.props;
     const { width, height } = layout;
 
