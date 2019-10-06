@@ -287,6 +287,11 @@ export type StackNavigationOptions = StackHeaderOptions &
        */
       horizontal?: number;
     };
+    /**
+     * Number which determines the relevance of velocity for the gesture.
+     * Defaults to 0.3.
+     */
+    gestureVelocityImpact?: number;
   };
 
 export type StackNavigationConfig = {

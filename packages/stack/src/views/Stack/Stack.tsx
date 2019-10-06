@@ -360,6 +360,7 @@ export default class Stack extends React.Component<Props, State> {
               cardOverlayEnabled,
               cardStyle,
               gestureResponseDistance,
+              gestureVelocityImpact,
               gestureDirection = defaultTransitionPreset.gestureDirection,
               transitionSpec = defaultTransitionPreset.transitionSpec,
               cardStyleInterpolator = defaultTransitionPreset.cardStyleInterpolator,
@@ -424,7 +425,6 @@ export default class Stack extends React.Component<Props, State> {
                   cardOverlayEnabled={cardOverlayEnabled}
                   cardShadowEnabled={cardShadowEnabled}
                   cardStyle={cardStyle}
-                  gestureEnabled={index !== 0 && getGesturesEnabled({ route })}
                   onPageChangeStart={onPageChangeStart}
                   onPageChangeConfirm={onPageChangeConfirm}
                   onPageChangeCancel={onPageChangeCancel}
@@ -441,6 +441,8 @@ export default class Stack extends React.Component<Props, State> {
                   onTransitionStart={this.handleTransitionStart}
                   onTransitionEnd={this.handleTransitionEnd}
                   onGoBack={onGoBack}
+                  gestureEnabled={index !== 0 && getGesturesEnabled({ route })}
+                  gestureVelocityImpact={gestureVelocityImpact}
                   gestureDirection={gestureDirection}
                   {...transitionConfig}
                 />
