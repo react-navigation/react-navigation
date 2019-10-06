@@ -17,6 +17,7 @@ import ImageStack from './src/ImageStack';
 import TransparentStack from './src/TransparentStack';
 import ModalStack from './src/ModalStack';
 import ModalPresentation from './src/ModalPresentation';
+import PerScreenTransitions from './src/PerScreenTransitions';
 import LifecycleInteraction from './src/LifecycleInteraction';
 import GestureInteraction from './src/GestureInteraction';
 import SwitchWithStacks from './src/SwitchWithStacks';
@@ -56,6 +57,11 @@ const data: Item[] = [
     component: ModalPresentation,
     title: 'Modal (iOS style)',
     routeName: 'ModalPresentation',
+  },
+  {
+    component: PerScreenTransitions,
+    title: 'Per screen transitions',
+    routeName: 'PerScreenTransitions',
   },
   { component: FullScreen, title: 'Full Screen', routeName: 'FullScreen' },
   {
