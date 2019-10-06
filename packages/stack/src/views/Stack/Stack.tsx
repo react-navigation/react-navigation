@@ -18,6 +18,7 @@ import {
   ModalTransition,
 } from '../../TransitionConfigs/TransitionPresets';
 import { forNoAnimation } from '../../TransitionConfigs/HeaderStyleInterpolators';
+import validateDeprecatedOptions from '../../utils/validateDeprecatedOptions';
 import {
   Layout,
   HeaderMode,
@@ -343,6 +344,14 @@ export default class Stack extends React.Component<Props, State> {
                 : index === self.length - 2
                 ? 1
                 : 0;
+
+            if (
+              process.env.NODE_ENV !== 'production' &&
+              scene.descriptor &&
+              scene.descriptor.options
+            ) {
+              validateDeprecatedOptions(scene.descriptor.options);
+            }
 
             const {
               header,
