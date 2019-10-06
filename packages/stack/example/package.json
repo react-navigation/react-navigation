@@ -35,7 +35,6 @@
     "expo-cli": "^3.2.3"
   },
   "resolutions": {
-    "react-native-safe-area-view": "0.14.6",
     "react-native-screens": "1.0.0-alpha.23"
   }
 }

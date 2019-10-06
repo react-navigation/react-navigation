@@ -7311,7 +7311,7 @@ react-native-safe-area-context@^0.3.3:
   resolved "https://registry.yarnpkg.com/react-native-safe-area-context/-/react-native-safe-area-context-0.3.3.tgz#42a4e50be2eb3e18f7382c2d9756c6665ca3c081"
   integrity sha512-tOcSBbNle3zIuonagm8pzMf0+5VCL0iSGJJbgajIjssO4skE38mN7uXFWPFHy0D/kNDwywZ2WG53INgxdoQL6g==
 
-react-native-safe-area-view@^0.14.1, react-native-safe-area-view@^0.14.6:
+react-native-safe-area-view@^0.14.1:
   version "0.14.6"
   resolved "https://registry.yarnpkg.com/react-native-safe-area-view/-/react-native-safe-area-view-0.14.6.tgz#9a9d37d9f8f3887d60c4076eae7b5d2319539446"
   integrity sha512-dbzuvaeHFV1VBpyMaC0gtJ2BqFt6ls/405A0t78YN1sXiTrVr3ki86Ysct8mzifWqLdvWzcWagE5wfMtdxnqoA==
