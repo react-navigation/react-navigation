@@ -96,7 +96,7 @@ export default function CompatStackScreen({
   navigation: StackNavigationProp<{}>;
 }) {
   navigation.setOptions({
-    header: null,
+    headerShown: false,
   });
 
   return <CompatStack />;

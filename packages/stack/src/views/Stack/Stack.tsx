@@ -353,7 +353,7 @@ export default class Stack extends React.Component<Props, State> {
                 : 0;
 
             const {
-              header,
+              headerShown,
               headerTransparent,
               cardTransparent,
               cardShadowEnabled,
@@ -430,9 +430,9 @@ export default class Stack extends React.Component<Props, State> {
                   onPageChangeCancel={onPageChangeCancel}
                   gestureResponseDistance={gestureResponseDistance}
                   floatingHeaderHeight={floatingHeaderHeights[route.key]}
-                  hasCustomHeader={header === null}
                   getPreviousRoute={getPreviousRoute}
                   headerMode={headerMode}
+                  headerShown={headerShown}
                   headerTransparent={headerTransparent}
                   renderHeader={renderHeader}
                   renderScene={renderScene}
