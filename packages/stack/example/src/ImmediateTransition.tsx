@@ -70,7 +70,7 @@ export const Stack = createStackNavigator(
   {
     initialRouteName: 'Screen1',
     defaultNavigationOptions: {
-      header: null,
+      headerShown: false,
     },
   }
 );

@@ -79,8 +79,8 @@ class ScreenWithLongTitle extends React.Component<NavigationStackScreenProps> {
 
 class ScreenWithNoHeader extends React.Component<NavigationStackScreenProps> {
   static navigationOptions = {
-    header: null,
     title: 'No Header',
+    headerShown: false,
   };
 
   render() {

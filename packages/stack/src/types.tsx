@@ -114,6 +114,7 @@ export type NavigationStackOptions = HeaderOptions &
   Partial<TransitionPreset> & {
     title?: string;
     header?: React.ReactNode | ((props: HeaderProps) => React.ReactNode);
+    headerShown?: boolean;
     cardShadowEnabled?: boolean;
     cardOverlayEnabled?: boolean;
     cardTransparent?: boolean;

@@ -4,7 +4,7 @@ import { createStackNavigator } from 'react-navigation-stack';
 
 class Screen extends React.Component {
   static navigationOptions = {
-    header: null,
+    headerShown: false,
   };
 
   render() {

@@ -31,7 +31,7 @@ class ListScreen extends React.Component<NavigationStackScreenProps> {
 
 class DetailsScreen extends React.Component<NavigationStackScreenProps> {
   static navigationOptions = {
-    header: null,
+    headerShown: false,
   };
 
   render() {

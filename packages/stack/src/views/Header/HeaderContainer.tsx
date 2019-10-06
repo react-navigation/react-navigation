@@ -71,11 +71,14 @@ export default function HeaderContainer({
         const isHeaderStatic =
           mode === 'float'
             ? (previousScene &&
-                previousScene.descriptor.options.header === null &&
+                (previousScene.descriptor.options.header === null ||
+                  previousScene.descriptor.options.headerShown === false) &&
                 // We still need to animate when coming back from next scene
                 // A hacky way to check this is if the next scene exists
                 !nextScene) ||
-              (nextScene && nextScene.descriptor.options.header === null)
+              (nextScene &&
+                (nextScene.descriptor.options.header === null ||
+                  nextScene.descriptor.options.headerShown === false))
             : false;
 
         const props = {
@@ -113,13 +116,17 @@ export default function HeaderContainer({
                   : null
               }
             >
-              {options.header !== undefined ? (
-                typeof options.header === 'function' ? (
-                  options.header(props)
-                ) : null
-              ) : (
-                <Header {...props} />
-              )}
+              {options.headerShown !== false ? (
+                options.header !== undefined ? (
+                  typeof options.header === 'function' ? (
+                    options.header(props)
+                  ) : (
+                    options.header
+                  )
+                ) : (
+                  <Header {...props} />
+                )
+              ) : null}
             </View>
           </NavigationContext.Provider>
         );
