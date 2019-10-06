@@ -1,6 +1,6 @@
 # React Navigation Stack
 
-[![CircleCI badge](https://circleci.com/gh/react-navigation/stack/tree/master.svg?style=shield)](https://circleci.com/gh/react-navigation/stack/tree/master)
+[![CircleCI badge](https://circleci.com/gh/react-navigation/stack/tree/master.svg?style=shield)](https://circleci.com/gh/react-navigation/stack/tree/master) ![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
 
 Stack navigator for use on iOS and Android.
 
@@ -10,6 +10,10 @@ Open a Terminal in your project's folder and run,
 
 ```sh
 yarn add react-navigation-stack
+```
+or
+```sh
+npm i react-navigation-stack
 ```
 
 ## Usage
