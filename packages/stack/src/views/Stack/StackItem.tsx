@@ -149,7 +149,7 @@ export default class StackItem extends React.PureComponent<Props> {
         importantForAccessibility={focused ? 'auto' : 'no-hide-descendants'}
         pointerEvents="box-none"
         containerStyle={
-          headerMode === 'float' && !headerTransparent && !headerShown
+          headerMode === 'float' && !headerTransparent && headerShown !== false
             ? { marginTop: floatingHeaderHeight }
             : null
         }
