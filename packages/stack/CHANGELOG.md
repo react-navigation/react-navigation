@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.24](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.23...@react-navigation/stack@5.0.0-alpha.24) (2019-10-06)
+
+
+### Bug Fixes
+
+* actually expose gestureVelocityImpact in the public API ([16079d1](https://github.com/react-navigation/navigation-ex/commit/16079d1))
+* don't recompute if routes didn't change ([615b523](https://github.com/react-navigation/navigation-ex/commit/615b523))
+* handling vertical gesture in RTL ([#122](https://github.com/react-navigation/navigation-ex/issues/122)) ([a27ade8](https://github.com/react-navigation/navigation-ex/commit/a27ade8))
+* use next screen's animation when not focused. fixes [#87](https://github.com/react-navigation/navigation-ex/issues/87) ([b4a7681](https://github.com/react-navigation/navigation-ex/commit/b4a7681))
+
+
+### Features
+
+* add gestureVelocityImpact as a prop for stack ([#123](https://github.com/react-navigation/navigation-ex/issues/123)) ([8294efc](https://github.com/react-navigation/navigation-ex/commit/8294efc))
+* drop header: null in favor of more explitit headerShown option ([ba6b6ae](https://github.com/react-navigation/navigation-ex/commit/ba6b6ae))
+
+
+
+
+
 # [5.0.0-alpha.23](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.22...@react-navigation/stack@5.0.0-alpha.23) (2019-10-03)
 
 
