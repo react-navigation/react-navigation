@@ -1,5 +1,6 @@
 import * as CardStyleInterpolators from './TransitionConfigs/CardStyleInterpolators';
 import * as HeaderStyleInterpolators from './TransitionConfigs/HeaderStyleInterpolators';
+import * as TransitionSpecs from './TransitionConfigs/TransitionSpecs';
 import * as TransitionPresets from './TransitionConfigs/TransitionPresets';
 
 /**
@@ -24,7 +25,12 @@ export { default as HeaderBackButton } from './views/Header/HeaderBackButton';
 /**
  * Transition presets
  */
-export { CardStyleInterpolators, HeaderStyleInterpolators, TransitionPresets };
+export {
+  CardStyleInterpolators,
+  HeaderStyleInterpolators,
+  TransitionSpecs,
+  TransitionPresets,
+};
 
 /**
  * Utilities
