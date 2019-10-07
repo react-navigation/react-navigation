@@ -1,30 +1,35 @@
 import * as React from 'react';
-import { Dimensions, StyleSheet, I18nManager, Platform } from 'react-native';
-import { SafeAreaProvider, useSafeArea } from 'react-native-safe-area-context';
+import {
+  Dimensions,
+  StyleSheet,
+  I18nManager,
+  Platform,
+  ScaledSize,
+} from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 // eslint-disable-next-line import/no-unresolved
 import { ScreenContainer } from 'react-native-screens';
-import { PanGestureHandler, ScrollView } from 'react-native-gesture-handler';
+import { PanGestureHandler } from 'react-native-gesture-handler';
 import {
   DrawerNavigationState,
   DrawerActions,
 } from '@react-navigation/routers';
 
-import DrawerSidebar from './DrawerSidebar';
 import DrawerGestureContext from '../utils/DrawerGestureContext';
 import ResourceSavingScene from './ResourceSavingScene';
-import DrawerNavigatorItems from './DrawerNavigatorItems';
+import DrawerContent from './DrawerContent';
 import Drawer from './Drawer';
 import {
   DrawerDescriptorMap,
   DrawerNavigationConfig,
-  ContentComponentProps,
   DrawerNavigationHelpers,
 } from '../types';
 
-type Props = DrawerNavigationConfig & {
+type Props = Omit<DrawerNavigationConfig, 'overlayColor'> & {
   state: DrawerNavigationState;
   navigation: DrawerNavigationHelpers;
   descriptors: DrawerDescriptorMap;
+  overlayColor: string;
 };
 
 type State = {
@@ -32,17 +37,25 @@ type State = {
   drawerWidth: number;
 };
 
-const DefaultContentComponent = (props: ContentComponentProps) => {
-  const insets = useSafeArea();
+const getDefaultDrawerWidth = ({
+  height,
+  width,
+}: {
+  height: number;
+  width: number;
+}) => {
+  /*
+   * Default drawer width is screen width - header height
+   * with a max width of 280 on mobile and 320 on tablet
+   * https://material.io/guidelines/patterns/navigation-drawer.html
+   */
+  const smallerAxisSize = Math.min(height, width);
+  const isLandscape = width > height;
+  const isTablet = smallerAxisSize >= 600;
+  const appBarHeight = Platform.OS === 'ios' ? (isLandscape ? 32 : 44) : 56;
+  const maxWidth = isTablet ? 320 : 280;
 
-  return (
-    <ScrollView
-      alwaysBounceVertical={false}
-      contentContainerStyle={{ marginTop: insets.top }}
-    >
-      <DrawerNavigatorItems {...props} />
-    </ScrollView>
-  );
+  return Math.min(smallerAxisSize - appBarHeight, maxWidth);
 };
 
 /**
@@ -51,25 +64,10 @@ const DefaultContentComponent = (props: ContentComponentProps) => {
 export default class DrawerView extends React.PureComponent<Props, State> {
   static defaultProps = {
     lazy: true,
-    drawerWidth: () => {
-      /*
-       * Default drawer width is screen width - header height
-       * with a max width of 280 on mobile and 320 on tablet
-       * https://material.io/guidelines/patterns/navigation-drawer.html
-       */
-      const { height, width } = Dimensions.get('window');
-      const smallerAxisSize = Math.min(height, width);
-      const isLandscape = width > height;
-      const isTablet = smallerAxisSize >= 600;
-      const appBarHeight = Platform.OS === 'ios' ? (isLandscape ? 32 : 44) : 56;
-      const maxWidth = isTablet ? 320 : 280;
-
-      return Math.min(smallerAxisSize - appBarHeight, maxWidth);
-    },
-    contentComponent: DefaultContentComponent,
+    contentComponent: DrawerContent,
     drawerPosition: I18nManager.isRTL ? 'right' : 'left',
     keyboardDismissMode: 'on-drag',
-    drawerBackgroundColor: 'white',
+    overlayColor: 'rgba(0, 0, 0, 0.5)',
     drawerType: 'front',
     hideStatusBar: false,
     statusBarAnimation: 'slide',
@@ -88,10 +86,7 @@ export default class DrawerView extends React.PureComponent<Props, State> {
 
   state: State = {
     loaded: [this.props.state.index],
-    drawerWidth:
-      typeof this.props.drawerWidth === 'function'
-        ? this.props.drawerWidth()
-        : this.props.drawerWidth,
+    drawerWidth: getDefaultDrawerWidth(Dimensions.get('window')),
   };
 
   componentDidMount() {
@@ -126,11 +121,8 @@ export default class DrawerView extends React.PureComponent<Props, State> {
     navigation.emit({ type: 'drawerClose' });
   };
 
-  private updateWidth = () => {
-    const drawerWidth =
-      typeof this.props.drawerWidth === 'function'
-        ? this.props.drawerWidth()
-        : this.props.drawerWidth;
+  private updateWidth = ({ window }: { window: ScaledSize }) => {
+    const drawerWidth = getDefaultDrawerWidth(window);
 
     if (this.state.drawerWidth !== drawerWidth) {
       this.setState({ drawerWidth });
@@ -138,7 +130,17 @@ export default class DrawerView extends React.PureComponent<Props, State> {
   };
 
   private renderNavigationView = ({ progress }: any) => {
-    return <DrawerSidebar drawerOpenProgress={progress} {...this.props} />;
+    const { state, navigation, descriptors, drawerPosition } = this.props;
+
+    return (
+      <DrawerContent
+        progress={progress}
+        state={state}
+        navigation={navigation}
+        descriptors={descriptors}
+        drawerPosition={drawerPosition}
+      />
+    );
   };
 
   private renderContent = () => {
@@ -192,15 +194,17 @@ export default class DrawerView extends React.PureComponent<Props, State> {
       descriptors,
       drawerType,
       drawerPosition,
-      drawerBackgroundColor,
       overlayColor,
       sceneContainerStyle,
+      drawerStyle,
       edgeWidth,
       minSwipeDistance,
       hideStatusBar,
       statusBarAnimation,
       gestureHandlerProps,
     } = this.props;
+
+    const { drawerWidth } = this.state;
 
     const activeKey = state.routes[state.index].key;
     const { drawerLockMode } = descriptors[activeKey].options;
@@ -228,13 +232,8 @@ export default class DrawerView extends React.PureComponent<Props, State> {
             drawerType={drawerType}
             drawerPosition={drawerPosition}
             sceneContainerStyle={sceneContainerStyle}
-            drawerStyle={{
-              backgroundColor: drawerBackgroundColor || 'white',
-              width: this.state.drawerWidth,
-            }}
-            overlayStyle={{
-              backgroundColor: overlayColor || 'rgba(0, 0, 0, 0.5)',
-            }}
+            drawerStyle={[{ width: drawerWidth }, drawerStyle]}
+            overlayStyle={{ backgroundColor: overlayColor }}
             swipeEdgeWidth={edgeWidth}
             swipeDistanceThreshold={minSwipeDistance}
             hideStatusBar={hideStatusBar}

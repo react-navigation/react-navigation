@@ -12,16 +12,11 @@ import { PanGestureHandler } from 'react-native-gesture-handler';
 
 export type Scene = {
   route: Route<string>;
-  index: number;
   focused: boolean;
   color?: string;
 };
 
-export type DrawerNavigationConfig = {
-  /**
-   * Custom background color for the drawer. Defaults to `white`.
-   */
-  drawerBackgroundColor: string;
+export type DrawerNavigationConfig<T = DrawerContentOptions> = {
   /**
    * Position of the drawer on the screen. Defaults to `left`.
    */
@@ -33,11 +28,6 @@ export type DrawerNavigationConfig = {
    * - `slide`: Both the screen and the drawer slide on swipe to reveal the drawer.
    */
   drawerType: 'front' | 'back' | 'slide';
-  /**
-   * Number or a function which returns the width of the drawer.
-   * If a function is provided, it'll be called again when the screen's dimensions change.
-   */
-  drawerWidth: number | (() => number);
   /**
    * How far from the edge of the screen the swipe gesture should activate.
    */
@@ -82,49 +72,51 @@ export type DrawerNavigationConfig = {
    * Custom component used to render as the content of the drawer, for example, navigation items.
    * Defaults to `DrawerItems`.
    */
-  contentComponent: React.ComponentType<ContentComponentProps>;
+  contentComponent: React.ComponentType<DrawerContentComponentProps<T>>;
   /**
    * Options for the content component which will be passed as props.
    */
-  contentOptions?: object;
+  contentOptions?: T;
   /**
    * Style object for the component wrapping the screen content.
    */
   sceneContainerStyle?: StyleProp<ViewStyle>;
-  style?: StyleProp<ViewStyle>;
+  /**
+   * Style object for the drawer component.
+   * You can pass a custom background color for a drawer or a custom width here.
+   */
+  drawerStyle?: StyleProp<ViewStyle>;
 };
 
 export type DrawerNavigationOptions = {
   title?: string;
   drawerLabel?:
     | string
-    | ((props: { color?: string; focused: boolean }) => React.ReactElement);
+    | ((props: { color: string; focused: boolean }) => React.ReactNode);
   drawerIcon?: (props: {
-    color?: string;
+    color: string;
+    size: number;
     focused: boolean;
-  }) => React.ReactElement;
+  }) => React.ReactNode;
   drawerLockMode?: 'unlocked' | 'locked-closed' | 'locked-open';
 };
 
-export type ContentComponentProps = DrawerNavigationItemsProps & {
+export type DrawerContentComponentProps<T = DrawerContentOptions> = T & {
+  state: DrawerNavigationState;
   navigation: NavigationHelpers<ParamListBase>;
-  descriptors: { [key: string]: any };
+  descriptors: DrawerDescriptorMap;
   /**
    * Animated node which represents the current progress of the drawer's open state.
    * `0` is closed, `1` is open.
    */
-  drawerOpenProgress: Animated.Node<number>;
+  progress: Animated.Node<number>;
+  /**
+   * Position of the drawer on the screen.
+   */
+  drawerPosition: 'left' | 'right';
 };
 
-export type DrawerNavigationItemsProps = {
-  /**
-   * The array of routes, can be modified or overridden to control what's shown in the drawer.
-   */
-  items: Route<string>[];
-  /**
-   * Route key identifying the currently active route.
-   */
-  activeItemKey?: string | null;
+export type DrawerContentOptions = {
   /**
    * Color for the icon and label in the active item in the drawer.
    */
@@ -144,7 +136,7 @@ export type DrawerNavigationItemsProps = {
   /**
    * Style object for the content section.
    */
-  itemsContainerStyle?: ViewStyle;
+  contentContainerStyle?: ViewStyle;
   /**
    * Style object for the single item, which can contain an icon and/or a label.
    */
@@ -161,17 +153,6 @@ export type DrawerNavigationItemsProps = {
    * Style object to overwrite `Text` style of the inactive label.
    */
   inactiveLabelStyle?: StyleProp<TextStyle>;
-  /**
-   * Style object for the wrapper `View` of the icon.
-   */
-  iconContainerStyle?: StyleProp<ViewStyle>;
-  /**
-   * Position of the drawer on the screen.
-   */
-  drawerPosition: 'left' | 'right';
-  getLabel: (scene: Scene) => React.ReactNode;
-  renderIcon: (scene: Scene) => React.ReactNode;
-  onItemPress: (scene: { route: Route<string>; focused: boolean }) => void;
 };
 
 export type DrawerNavigationEventMap = {

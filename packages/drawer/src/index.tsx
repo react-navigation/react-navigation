@@ -8,8 +8,9 @@ export {
 /**
  * Views
  */
-export { default as DrawerNavigatorItems } from './views/DrawerNavigatorItems';
-export { default as DrawerSidebar } from './views/DrawerSidebar';
+export { default as DrawerItem } from './views/DrawerItem';
+export { default as DrawerItemList } from './views/DrawerItemList';
+export { default as DrawerContent } from './views/DrawerContent';
 export { default as DrawerView } from './views/DrawerView';
 
 /**
@@ -23,5 +24,5 @@ export { default as DrawerGestureContext } from './utils/DrawerGestureContext';
 export {
   DrawerNavigationOptions,
   DrawerNavigationProp,
-  DrawerNavigationItemsProps,
+  DrawerContentOptions,
 } from './types';
