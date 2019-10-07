@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ScrollView, AsyncStorage, YellowBox } from 'react-native';
-import LinkingPrefixes from './LinkingPrefixes';
+import { MaterialIcons } from '@expo/vector-icons';
 import { Appbar, List } from 'react-native-paper';
 import { Asset } from 'expo-asset';
 import {
@@ -22,6 +22,7 @@ import {
   StackNavigationProp,
 } from '@react-navigation/stack';
 
+import LinkingPrefixes from './LinkingPrefixes';
 import SimpleStack from './Screens/SimpleStack';
 import NativeStack from './Screens/NativeStack';
 import ModalPresentationStack from './Screens/ModalPresentationStack';
@@ -34,11 +35,12 @@ import CompatAPI from './Screens/CompatAPI';
 YellowBox.ignoreWarnings(['Require cycle:', 'Warning: Async Storage']);
 
 type RootDrawerParamList = {
-  root: undefined;
+  Root: undefined;
+  Another: undefined;
 };
 
 type RootStackParamList = {
-  home: undefined;
+  Home: undefined;
 } & {
   [P in keyof typeof SCREENS]: undefined;
 };
@@ -141,7 +143,15 @@ export default function App() {
       }
     >
       <Drawer.Navigator>
-        <Drawer.Screen name="root" options={{ title: 'Examples' }}>
+        <Drawer.Screen
+          name="Root"
+          options={{
+            title: 'Examples',
+            drawerIcon: ({ size, color }) => (
+              <MaterialIcons size={size} color={color} name="folder" />
+            ),
+          }}
+        >
           {({
             navigation,
           }: {
@@ -149,7 +159,7 @@ export default function App() {
           }) => (
             <Stack.Navigator>
               <Stack.Screen
-                name="home"
+                name="Home"
                 options={{
                   title: 'Examples',
                   headerLeft: () => (
