@@ -64,6 +64,7 @@ export default createStackNavigator(
     },
   },
   {
+    headerMode: 'screen',
     defaultNavigationOptions: {
       cardOverlayEnabled: true,
       gestureEnabled: true,
