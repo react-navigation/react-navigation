@@ -1,6 +1,9 @@
 import * as React from 'react';
 import { Platform } from 'react-native';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import {
+  SafeAreaProvider,
+  SafeAreaConsumer,
+} from 'react-native-safe-area-context';
 import { SceneView, StackActions, NavigationRoute } from 'react-navigation';
 import Stack from './Stack';
 import HeaderContainer, {
@@ -339,26 +342,31 @@ class StackView extends React.Component<Props, State> {
 
     return (
       <SafeAreaProvider>
-        <Stack
-          mode={mode}
-          getPreviousRoute={this.getPreviousRoute}
-          getGesturesEnabled={this.getGesturesEnabled}
-          routes={routes}
-          openingRoutesKeys={openingRouteKeys}
-          closingRoutesKeys={closingRouteKeys}
-          onGoBack={this.handleGoBack}
-          onOpenRoute={this.handleOpenRoute}
-          onCloseRoute={this.handleCloseRoute}
-          onPageChangeStart={onPageChangeStart}
-          onPageChangeConfirm={onPageChangeConfirm}
-          onPageChangeCancel={onPageChangeCancel}
-          renderHeader={this.renderHeader}
-          renderScene={this.renderScene}
-          headerMode={headerMode}
-          navigation={navigation}
-          descriptors={descriptors}
-          {...config}
-        />
+        <SafeAreaConsumer>
+          {insets => (
+            <Stack
+              mode={mode}
+              insets={insets}
+              getPreviousRoute={this.getPreviousRoute}
+              getGesturesEnabled={this.getGesturesEnabled}
+              routes={routes}
+              openingRoutesKeys={openingRouteKeys}
+              closingRoutesKeys={closingRouteKeys}
+              onGoBack={this.handleGoBack}
+              onOpenRoute={this.handleOpenRoute}
+              onCloseRoute={this.handleCloseRoute}
+              onPageChangeStart={onPageChangeStart}
+              onPageChangeConfirm={onPageChangeConfirm}
+              onPageChangeCancel={onPageChangeCancel}
+              renderHeader={this.renderHeader}
+              renderScene={this.renderScene}
+              headerMode={headerMode}
+              navigation={navigation}
+              descriptors={descriptors}
+              {...config}
+            />
+          )}
+        </SafeAreaConsumer>
       </SafeAreaProvider>
     );
   }

@@ -8,6 +8,7 @@ import {
   ViewProps,
 } from 'react-native';
 import { NavigationRoute } from 'react-navigation';
+import { EdgeInsets } from 'react-native-safe-area-context';
 import Animated from 'react-native-reanimated';
 import * as Screens from 'react-native-screens'; // Import with * as to prevent getters being called
 import { getDefaultHeaderHeight } from '../Header/HeaderSegment';
@@ -34,6 +35,7 @@ type ProgressValues = {
 
 type Props = {
   mode: 'card' | 'modal';
+  insets: EdgeInsets | null;
   navigation: NavigationStackProp;
   descriptors: SceneDescriptorMap;
   routes: NavigationRoute[];
@@ -111,10 +113,12 @@ const ANIMATED_ONE = new Animated.Value(1);
 
 const getFloatingHeaderHeights = (
   routes: NavigationRoute[],
+  insets: EdgeInsets | null,
   layout: Layout,
   previous: { [key: string]: number }
 ) => {
-  const defaultHeaderHeight = getDefaultHeaderHeight(layout);
+  const defaultHeaderHeight =
+    getDefaultHeaderHeight(layout) + (insets ? insets.top : 0);
 
   return routes.reduce(
     (acc, curr) => {
@@ -198,6 +202,7 @@ export default class Stack extends React.Component<Props, State> {
       descriptors: props.descriptors,
       floatingHeaderHeights: getFloatingHeaderHeights(
         props.routes,
+        props.insets,
         state.layout,
         state.floatingHeaderHeights
       ),
@@ -234,6 +239,7 @@ export default class Stack extends React.Component<Props, State> {
       layout,
       floatingHeaderHeights: getFloatingHeaderHeights(
         this.props.routes,
+        this.props.insets,
         layout,
         {}
       ),
