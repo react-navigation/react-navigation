@@ -85,7 +85,8 @@ export function forModalPresentationIOS({
   layouts: { screen },
   insets,
 }: StackCardInterpolationProps): StackCardInterpolatedStyle {
-  const topOffset = 10;
+  const isLandscape = screen.width > screen.height;
+  const topOffset = isLandscape ? 0 : 10;
   const statusBarHeight = insets.top;
   const aspectRatio = screen.height / screen.width;
 
@@ -105,18 +106,25 @@ export function forModalPresentationIOS({
     outputRange: [0, 0.3, 1, 1],
   });
 
-  const scale = interpolate(progress, {
-    inputRange: [0, 1, 2],
-    outputRange: [1, 1, screen.width ? 1 - (topOffset * 2) / screen.width : 1],
-  });
+  const scale = isLandscape
+    ? 1
+    : interpolate(progress, {
+        inputRange: [0, 1, 2],
+        outputRange: [
+          1,
+          1,
+          screen.width ? 1 - (topOffset * 2) / screen.width : 1,
+        ],
+      });
 
-  const borderRadius =
-    index === 0
-      ? interpolate(progress, {
-          inputRange: [0, 1, 2],
-          outputRange: [0, 0, 10],
-        })
-      : 10;
+  const borderRadius = isLandscape
+    ? 0
+    : index === 0
+    ? interpolate(progress, {
+        inputRange: [0, 1, 2],
+        outputRange: [0, 0, 10],
+      })
+    : 10;
 
   return {
     cardStyle: {
