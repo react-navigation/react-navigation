@@ -101,8 +101,8 @@ export function forModalPresentationIOS({
   });
 
   const overlayOpacity = interpolate(progress, {
-    inputRange: [0, 1, 2],
-    outputRange: [0, 0.3, 1],
+    inputRange: [0, 1, 1.0001, 2],
+    outputRange: [0, 0.3, 1, 1],
   });
 
   const scale = interpolate(progress, {
