@@ -343,6 +343,37 @@ class TabBarBottom extends React.Component<BottomTabBarProps, State> {
     const activeBackgroundColor = this._getActiveBackgroundColor();
     const inactiveBackgroundColor = this._getInactiveBackgroundColor();
 
+    const {
+      position,
+      top,
+      left = 0,
+      bottom = 0,
+      right = 0,
+      margin,
+      marginTop,
+      marginLeft,
+      marginBottom,
+      marginRight,
+      marginHorizontal,
+      marginVertical,
+      ...innerStyle
+    } = StyleSheet.flatten(style || {});
+
+    const containerStyle = {
+      position,
+      top,
+      left,
+      bottom,
+      right,
+      margin,
+      marginTop,
+      marginLeft,
+      marginBottom,
+      marginRight,
+      marginHorizontal,
+      marginVertical,
+    };
+
     const tabBarStyle = [
       styles.tabBar,
       isDark ? styles.tabBarDark : styles.tabBarLight,
@@ -350,7 +381,7 @@ class TabBarBottom extends React.Component<BottomTabBarProps, State> {
       this._shouldUseHorizontalLabels() && !Platform.isPad
         ? styles.tabBarCompact
         : styles.tabBarRegular,
-      style,
+      innerStyle,
     ];
 
     return (
@@ -374,6 +405,7 @@ class TabBarBottom extends React.Component<BottomTabBarProps, State> {
                 position: this.state.keyboard ? 'absolute' : null,
               }
             : null,
+          containerStyle,
         ]}
         pointerEvents={
           keyboardHidesTabBar && this.state.keyboard ? 'none' : 'auto'
@@ -454,9 +486,6 @@ const styles = StyleSheet.create({
     borderTopColor: ThemeColors.dark.headerBorder,
   },
   container: {
-    left: 0,
-    right: 0,
-    bottom: 0,
     elevation: 8,
   },
   tabBarCompact: {
