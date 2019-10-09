@@ -175,7 +175,7 @@ dependencies {
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0-alpha02'
     implementation 'com.facebook.react:react-native:+'  // From node_modules
 
-    def hermesPath = "../../node_modules/hermesvm/android/";
+    def hermesPath = "../../node_modules/hermes-engine/android/";
     debugImplementation files(hermesPath + "hermes-debug.aar")
     releaseImplementation files(hermesPath + "hermes-release.aar")
 }
