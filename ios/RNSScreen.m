@@ -240,6 +240,10 @@
   }
 }
 
+- (void) viewDidAppear:(BOOL)animated {
+  [((RNSScreenView *)self.view) updateBounds];
+}
+
 - (void)notifyFinishTransitioning
 {
   [_previousFirstResponder becomeFirstResponder];
