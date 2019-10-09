@@ -117,8 +117,7 @@ const getFloatingHeaderHeights = (
   layout: Layout,
   previous: { [key: string]: number }
 ) => {
-  const defaultHeaderHeight =
-    getDefaultHeaderHeight(layout) + (insets ? insets.top : 0);
+  const defaultHeaderHeight = getDefaultHeaderHeight(layout, insets);
 
   return routes.reduce(
     (acc, curr) => {

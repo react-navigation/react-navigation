@@ -54,25 +54,28 @@ const warnIfHeaderStylesDefined = (styles: { [key: string]: any }) => {
   });
 };
 
-/*
- * This does not include the status bar or notch height anymore! This is up to
- * the user to take care of manually.
- */
-export const getDefaultHeaderHeight = (layout: Layout) => {
+export const getDefaultHeaderHeight = (
+  layout: Layout,
+  insets: EdgeInsets | null
+) => {
   const isLandscape = layout.width > layout.height;
+
+  let headerHeight;
 
   if (Platform.OS === 'ios') {
     // @ts-ignore
     if (isLandscape && !Platform.isPad) {
-      return 32;
+      headerHeight = 32;
     } else {
-      return 44;
+      headerHeight = 44;
     }
   } else if (Platform.OS === 'android') {
-    return 56;
+    headerHeight = 56;
   } else {
-    return 64;
+    headerHeight = 64;
   }
+
+  return headerHeight + (insets ? insets.top : 0);
 };
 
 export default class HeaderSegment extends React.Component<Props, State> {
@@ -185,7 +188,7 @@ export default class HeaderSegment extends React.Component<Props, State> {
     const statusBarHeight = this.context ? this.context.top : 0;
 
     const {
-      height = getDefaultHeaderHeight(layout) + statusBarHeight,
+      height = getDefaultHeaderHeight(layout, this.context),
       minHeight,
       maxHeight,
       backgroundColor,
