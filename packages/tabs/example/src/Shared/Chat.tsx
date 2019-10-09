@@ -21,6 +21,7 @@ export default class Albums extends React.Component {
 
             return (
               <View
+                // eslint-disable-next-line react/no-array-index-key
                 key={i}
                 style={[odd ? styles.odd : styles.even, styles.inverted]}
               >

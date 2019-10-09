@@ -83,6 +83,7 @@ class TabBarBottom extends React.Component<BottomTabBarProps, State> {
     >['forceInset'],
   };
 
+  // eslint-disable-next-line react/sort-comp
   static contextType = ThemeContext;
 
   state = {
@@ -389,8 +390,7 @@ class TabBarBottom extends React.Component<BottomTabBarProps, State> {
         style={[
           styles.container,
           keyboardHidesTabBar
-            ? // eslint-disable-next-line react-native/no-inline-styles
-              {
+            ? {
                 // When the keyboard is shown, slide down the tab bar
                 transform: [
                   {
