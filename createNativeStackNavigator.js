@@ -8,7 +8,7 @@ import {
   createNavigator,
 } from '@react-navigation/core';
 import { createKeyboardAwareNavigator } from '@react-navigation/native';
-import { ScenesReducer, HeaderBackButton } from 'react-navigation-stack';
+import { HeaderBackButton } from 'react-navigation-stack';
 import {
   ScreenStack,
   Screen,
@@ -19,20 +19,20 @@ import {
 } from 'react-native-screens';
 
 class StackView extends React.Component {
-  _removeScene = scene => {
+  _removeScene = route => {
     const { navigation } = this.props;
     navigation.dispatch(
       NavigationActions.back({
-        key: scene.route.key,
+        key: route.key,
         immediate: true,
       })
     );
     navigation.dispatch(StackActions.completeTransition());
   };
 
-  _renderHeaderConfig = (scene, scenes) => {
+  _renderHeaderConfig = (index, route, descriptor) => {
     const { navigationConfig } = this.props;
-    const { options } = scene.descriptor;
+    const { options } = descriptor;
     const { headerMode } = navigationConfig;
 
     const {
@@ -46,6 +46,13 @@ class StackView extends React.Component {
       largeTitle,
       translucent,
     } = options;
+
+    const scene = {
+      index,
+      key: route.key,
+      route,
+      descriptor,
+    };
 
     const headerOptions = {
       translucent: translucent === undefined ? false : translucent,
@@ -83,7 +90,7 @@ class StackView extends React.Component {
       const goBack = () => {
         // Go back on next tick because button ripple effect needs to happen on Android
         requestAnimationFrame(() => {
-          scene.descriptor.navigation.goBack(scene.descriptor.key);
+          descriptor.navigation.goBack(descriptor.key);
         });
       };
 
@@ -128,8 +135,8 @@ class StackView extends React.Component {
     return <ScreenStackHeaderConfig {...headerOptions} />;
   };
 
-  _renderScene = (scene, scenes) => {
-    const { navigation, getComponent } = scene.descriptor;
+  _renderScene = (index, route, descriptor) => {
+    const { navigation, getComponent } = descriptor;
     const { mode, transparentCard } = this.props.navigationConfig;
     const SceneComponent = getComponent();
 
@@ -141,11 +148,11 @@ class StackView extends React.Component {
     const { screenProps } = this.props;
     return (
       <Screen
-        key={`screen_${scene.key}`}
+        key={`screen_${route.key}`}
         style={StyleSheet.absoluteFill}
         stackPresentation={stackPresentation}
-        onDismissed={() => this._removeScene(scene)}>
-        {this._renderHeaderConfig(scene, scenes)}
+        onDismissed={() => this._removeScene(route)}>
+        {this._renderHeaderConfig(index, route, descriptor)}
         <SceneView
           screenProps={screenProps}
           navigation={navigation}
@@ -156,16 +163,13 @@ class StackView extends React.Component {
   };
 
   render() {
-    const scenes = ScenesReducer(
-      [],
-      this.props.navigation.state,
-      null,
-      this.props.descriptors
-    );
+    const { navigation, descriptors } = this.props;
 
     return (
       <ScreenStack style={styles.scenes}>
-        {scenes.map(scene => this._renderScene(scene, scenes))}
+        {navigation.state.routes.map((route, i) =>
+          this._renderScene(i, route, descriptors[route.key])
+        )}
       </ScreenStack>
     );
   }
