@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  View,
   Animated,
   StyleSheet,
   Keyboard,
@@ -32,7 +33,7 @@ const DEFAULT_MAX_TAB_ITEM_WIDTH = 125;
 
 export default class TabBarBottom extends React.Component<Props, State> {
   static defaultProps = {
-    keyboardHidesTabBar: true,
+    keyboardHidesTabBar: false,
     activeTintColor: '#007AFF',
     activeBackgroundColor: 'transparent',
     inactiveTintColor: '#8E8E93',
@@ -82,7 +83,7 @@ export default class TabBarBottom extends React.Component<Props, State> {
     this.setState({ keyboard: true }, () =>
       Animated.timing(this.state.visible, {
         toValue: 0,
-        duration: 150,
+        duration: 200,
         useNativeDriver: true,
       }).start()
     );
@@ -90,10 +91,12 @@ export default class TabBarBottom extends React.Component<Props, State> {
   private handleKeyboardHide = () =>
     Animated.timing(this.state.visible, {
       toValue: 1,
-      duration: 100,
+      duration: 250,
       useNativeDriver: true,
-    }).start(() => {
-      this.setState({ keyboard: false });
+    }).start(({ finished }) => {
+      if (finished) {
+        this.setState({ keyboard: false });
+      }
     });
 
   private handleLayout = (e: LayoutChangeEvent) => {
@@ -305,58 +308,59 @@ export default class TabBarBottom extends React.Component<Props, State> {
             pointerEvents={
               keyboardHidesTabBar && this.state.keyboard ? 'none' : 'auto'
             }
-            onLayout={this.handleLayout}
           >
-            {routes.map((route, index) => {
-              const focused = index === state.index;
-              const scene = { route, focused };
-              const accessibilityLabel = getAccessibilityLabel({
-                route,
-              });
+            <View style={styles.content} onLayout={this.handleLayout}>
+              {routes.map((route, index) => {
+                const focused = index === state.index;
+                const scene = { route, focused };
+                const accessibilityLabel = getAccessibilityLabel({
+                  route,
+                });
 
-              const accessibilityRole = getAccessibilityRole({
-                route,
-              });
+                const accessibilityRole = getAccessibilityRole({
+                  route,
+                });
 
-              const accessibilityStates = getAccessibilityStates(scene);
+                const accessibilityStates = getAccessibilityStates(scene);
 
-              const testID = getTestID({ route });
+                const testID = getTestID({ route });
 
-              const backgroundColor = focused
-                ? activeBackgroundColor
-                : inactiveBackgroundColor;
+                const backgroundColor = focused
+                  ? activeBackgroundColor
+                  : inactiveBackgroundColor;
 
-              const ButtonComponent =
-                getButtonComponent({ route }) ||
-                TouchableWithoutFeedbackWrapper;
+                const ButtonComponent =
+                  getButtonComponent({ route }) ||
+                  TouchableWithoutFeedbackWrapper;
 
-              return (
-                <NavigationContext.Provider
-                  key={route.key}
-                  value={descriptors[route.key].navigation}
-                >
-                  <ButtonComponent
-                    onPress={() => onTabPress({ route })}
-                    onLongPress={() => onTabLongPress({ route })}
-                    testID={testID}
-                    accessibilityLabel={accessibilityLabel}
-                    accessibilityRole={accessibilityRole}
-                    accessibilityStates={accessibilityStates}
-                    style={[
-                      styles.tab,
-                      { backgroundColor },
-                      this.shouldUseHorizontalLabels()
-                        ? styles.tabLandscape
-                        : styles.tabPortrait,
-                      tabStyle,
-                    ]}
+                return (
+                  <NavigationContext.Provider
+                    key={route.key}
+                    value={descriptors[route.key].navigation}
                   >
-                    {this.renderIcon(scene)}
-                    {this.renderLabel(scene)}
-                  </ButtonComponent>
-                </NavigationContext.Provider>
-              );
-            })}
+                    <ButtonComponent
+                      onPress={() => onTabPress({ route })}
+                      onLongPress={() => onTabLongPress({ route })}
+                      testID={testID}
+                      accessibilityLabel={accessibilityLabel}
+                      accessibilityRole={accessibilityRole}
+                      accessibilityStates={accessibilityStates}
+                      style={[
+                        styles.tab,
+                        { backgroundColor },
+                        this.shouldUseHorizontalLabels()
+                          ? styles.tabLandscape
+                          : styles.tabPortrait,
+                        tabStyle,
+                      ]}
+                    >
+                      {this.renderIcon(scene)}
+                      {this.renderLabel(scene)}
+                    </ButtonComponent>
+                  </NavigationContext.Provider>
+                );
+              })}
+            </View>
           </Animated.View>
         )}
       </SafeAreaConsumer>
@@ -375,8 +379,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderTopWidth: StyleSheet.hairlineWidth,
     borderTopColor: 'rgba(0, 0, 0, .3)',
-    flexDirection: 'row',
     elevation: 8,
+  },
+  content: {
+    flex: 1,
+    flexDirection: 'row',
   },
   tab: {
     flex: 1,
