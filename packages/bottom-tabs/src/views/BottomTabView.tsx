@@ -64,13 +64,13 @@ export default class BottomTabView extends React.Component<Props, State> {
   private renderIcon = ({
     route,
     focused,
-    tintColor,
-    horizontal,
+    color,
+    size,
   }: {
     route: Route<string>;
     focused: boolean;
-    tintColor: string;
-    horizontal: boolean;
+    color: string;
+    size: number;
   }) => {
     const { descriptors } = this.props;
     const descriptor = descriptors[route.key];
@@ -78,7 +78,7 @@ export default class BottomTabView extends React.Component<Props, State> {
 
     if (options.tabBarIcon) {
       return typeof options.tabBarIcon === 'function'
-        ? options.tabBarIcon({ focused, tintColor, horizontal })
+        ? options.tabBarIcon({ focused, color, size })
         : options.tabBarIcon;
     }
 

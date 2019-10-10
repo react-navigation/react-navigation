@@ -41,11 +41,11 @@ class DrawerSidebar extends React.PureComponent<Props> {
     return descriptor.options;
   };
 
-  private getLabel = ({ focused, tintColor, route }: Scene) => {
+  private getLabel = ({ focused, color, route }: Scene) => {
     const { drawerLabel, title } = this.getScreenOptions(route.key);
     if (drawerLabel) {
       return typeof drawerLabel === 'function'
-        ? drawerLabel({ tintColor, focused })
+        ? drawerLabel({ color, focused })
         : drawerLabel;
     }
 
@@ -56,11 +56,11 @@ class DrawerSidebar extends React.PureComponent<Props> {
     return route.name;
   };
 
-  private renderIcon = ({ focused, tintColor, route }: Scene) => {
+  private renderIcon = ({ focused, color, route }: Scene) => {
     const { drawerIcon } = this.getScreenOptions(route.key);
     if (drawerIcon) {
       return typeof drawerIcon === 'function'
-        ? drawerIcon({ tintColor, focused })
+        ? drawerIcon({ color, focused })
         : drawerIcon;
     }
     return null;

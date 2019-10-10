@@ -53,7 +53,7 @@ export default class TabBarTop extends React.PureComponent<
     }
 
     if (typeof label === 'function') {
-      return label({ focused, tintColor: color });
+      return label({ focused, color });
     }
 
     return label;
@@ -79,7 +79,7 @@ export default class TabBarTop extends React.PureComponent<
     if (options.tabBarIcon !== undefined) {
       const icon =
         typeof options.tabBarIcon === 'function'
-          ? options.tabBarIcon({ focused, tintColor: color })
+          ? options.tabBarIcon({ focused, color })
           : options.tabBarIcon;
 
       return <View style={[styles.icon, iconStyle]}>{icon}</View>;

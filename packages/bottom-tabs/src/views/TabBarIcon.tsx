@@ -4,7 +4,7 @@ import { Route } from '@react-navigation/core';
 
 type Props = {
   route: Route<string>;
-  horizontal: boolean;
+  size: number;
   activeOpacity: number;
   inactiveOpacity: number;
   activeTintColor: string;
@@ -12,8 +12,8 @@ type Props = {
   renderIcon: (props: {
     route: Route<string>;
     focused: boolean;
-    tintColor: string;
-    horizontal: boolean;
+    color: string;
+    size: number;
   }) => React.ReactNode;
   style: StyleProp<ViewStyle>;
 };
@@ -25,7 +25,7 @@ export default function TabBarIcon({
   activeTintColor,
   inactiveTintColor,
   renderIcon,
-  horizontal,
+  size,
   style,
 }: Props) {
   // We render the icon twice at the same position on top of each other:
@@ -36,16 +36,16 @@ export default function TabBarIcon({
         {renderIcon({
           route,
           focused: true,
-          horizontal,
-          tintColor: activeTintColor,
+          size,
+          color: activeTintColor,
         })}
       </View>
       <View style={[styles.icon, { opacity: inactiveOpacity }]}>
         {renderIcon({
           route,
           focused: false,
-          horizontal,
-          tintColor: inactiveTintColor,
+          size,
+          color: inactiveTintColor,
         })}
       </View>
     </View>

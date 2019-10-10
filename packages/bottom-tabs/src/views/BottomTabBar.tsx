@@ -137,7 +137,7 @@ export default class TabBarBottom extends React.Component<Props, State> {
 
     const label = this.props.getLabelText({ route });
     const horizontal = this.shouldUseHorizontalLabels();
-    const tintColor = focused ? activeTintColor : inactiveTintColor;
+    const color = focused ? activeTintColor : inactiveTintColor;
 
     if (typeof label === 'string') {
       return (
@@ -145,7 +145,7 @@ export default class TabBarBottom extends React.Component<Props, State> {
           numberOfLines={1}
           style={[
             styles.label,
-            { color: tintColor },
+            { color },
             showIcon && horizontal ? styles.labelBeside : styles.labelBeneath,
             labelStyle,
           ]}
@@ -159,7 +159,7 @@ export default class TabBarBottom extends React.Component<Props, State> {
     if (typeof label === 'function') {
       return label({
         focused,
-        tintColor,
+        color,
         orientation: horizontal ? 'horizontal' : 'vertical',
       });
     }
@@ -194,7 +194,7 @@ export default class TabBarBottom extends React.Component<Props, State> {
     return (
       <TabBarIcon
         route={route}
-        horizontal={horizontal}
+        size={horizontal ? 17 : 24}
         activeOpacity={activeOpacity}
         inactiveOpacity={inactiveOpacity}
         activeTintColor={activeTintColor}

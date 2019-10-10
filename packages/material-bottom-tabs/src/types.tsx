@@ -60,7 +60,7 @@ export type MaterialBottomTabNavigationOptions = {
 
   /**
    * String referring to an icon in the `MaterialCommunityIcons` set, or a
-   * function that given { focused: boolean, tintColor: string } returns a React.Node to display in the navigation bar.
+   * function that given { focused: boolean, color: string } returns a React.Node to display in the navigation bar.
    */
   tabBarIcon?:
     | string

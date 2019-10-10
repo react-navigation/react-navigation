@@ -37,7 +37,12 @@ cd ..
 ## Usage
 
 ```js
+import { MaterialCommunityIcons } from 'react-native-vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+
+const getTabBarIcon = name => ({ color, size }) => (
+  <MaterialCommunityIcons name={name} color={color} size={size} />
+);
 
 const BottomTabs = createBottomTabNavigator();
 
@@ -49,7 +54,7 @@ export default function App() {
         component={Article}
         options={{
           tabBarLabel: 'Article',
-          tabBarIcon: 'file-document-box',
+          tabBarIcon: getTabBarIcon('file-document-box'),
         }}
       />
       <BottomTabs.Screen
@@ -57,7 +62,7 @@ export default function App() {
         component={Chat}
         options={{
           tabBarLabel: 'Chat',
-          tabBarIcon: 'message-reply',
+          tabBarIcon: getTabBarIcon('message-reply'),
         }}
       />
       <BottomTabs.Screen
@@ -65,7 +70,7 @@ export default function App() {
         component={Contacts}
         options={{
           tabBarLabel: 'Contacts',
-          tabBarIcon: 'contacts',
+          tabBarIcon: getTabBarIcon('contacts'),
         }}
       />
     </BottomTabs.Navigator>

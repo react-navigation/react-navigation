@@ -36,7 +36,7 @@ const DrawerNavigatorItems = ({
         const backgroundColor = focused
           ? activeBackgroundColor
           : inactiveBackgroundColor;
-        const scene = { route, index, focused, tintColor: color };
+        const scene = { route, index, focused, color };
         const icon = renderIcon(scene);
         const label = getLabel(scene);
         const accessibilityLabel =
