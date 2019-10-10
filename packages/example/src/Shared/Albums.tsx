@@ -28,6 +28,10 @@ export default function Albums() {
         // eslint-disable-next-line react/no-array-index-key
         <Image key={i} source={source} style={styles.cover} />
       ))}
+      {COVERS.map((source, i) => (
+        // eslint-disable-next-line react/no-array-index-key
+        <Image key={i + 'F'} source={source} style={styles.cover} />
+      ))}
     </ScrollView>
   );
 }

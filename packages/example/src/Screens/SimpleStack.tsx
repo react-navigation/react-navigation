@@ -5,6 +5,7 @@ import { RouteProp, ParamListBase } from '@react-navigation/core';
 import {
   createStackNavigator,
   StackNavigationProp,
+  StackNavigationOptions,
 } from '@react-navigation/stack';
 import Article from '../Shared/Article';
 import Albums from '../Shared/Albums';
@@ -77,7 +78,7 @@ const AlbumsScreen = ({
 const SimpleStack = createStackNavigator<SimpleStackParams>();
 
 type Props = {
-  options?: React.ComponentProps<typeof SimpleStack.Navigator>;
+  options?: StackNavigationOptions;
   navigation: StackNavigationProp<ParamListBase>;
 };
 
