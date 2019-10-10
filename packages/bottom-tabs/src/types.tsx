@@ -66,26 +66,26 @@ export type BottomTabNavigationOptions = {
 
   /**
    * Title string of a tab displayed in the tab bar or React Element
-   * or a function that given { focused: boolean, tintColor: string } returns a React.Node, to display in tab bar.
+   * or a function that given { focused: boolean, color: string } returns a React.Node, to display in tab bar.
    * When undefined, scene title is used. To hide, see tabBarOptions.showLabel in the previous section.
    */
   tabBarLabel?:
     | React.ReactNode
     | ((props: {
         focused: boolean;
-        tintColor: string;
-        horizontal: boolean;
+        color: string;
+        size: number;
       }) => React.ReactNode);
 
   /**
-   * React Element or a function that given { focused: boolean, tintColor: string } returns a React.Node, to display in the tab bar.
+   * React Element or a function that given { focused: boolean, color: string } returns a React.Node, to display in the tab bar.
    */
   tabBarIcon?:
     | React.ReactNode
     | ((props: {
         focused: boolean;
-        tintColor: string;
-        horizontal: boolean;
+        color: string;
+        size: number;
       }) => React.ReactNode);
 
   /**
@@ -220,7 +220,7 @@ export type BottomTabBarProps = BottomTabBarOptions & {
   }) =>
     | ((scene: {
         focused: boolean;
-        tintColor: string;
+        color: string;
         orientation: 'horizontal' | 'vertical';
       }) => React.ReactNode | undefined)
     | React.ReactNode;
@@ -228,8 +228,8 @@ export type BottomTabBarProps = BottomTabBarOptions & {
   renderIcon: (props: {
     route: Route<string>;
     focused: boolean;
-    tintColor: string;
-    horizontal: boolean;
+    color: string;
+    size: number;
   }) => React.ReactNode;
   activeTintColor: string;
   inactiveTintColor: string;

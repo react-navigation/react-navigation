@@ -8,15 +8,15 @@ import Chat from '../Shared/Chat';
 import SimpleStackScreen from './SimpleStack';
 
 const getTabBarIcon = (name: string) => ({
-  tintColor,
+  color,
   horizontal,
 }: {
-  tintColor: string;
+  color: string;
   horizontal: boolean;
 }) => (
   <MaterialCommunityIcons
     name={name}
-    color={tintColor}
+    color={color}
     size={horizontal ? 17 : 24}
   />
 );

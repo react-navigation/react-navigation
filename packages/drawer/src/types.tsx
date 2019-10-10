@@ -14,7 +14,7 @@ export type Scene = {
   route: Route<string>;
   index: number;
   focused: boolean;
-  tintColor?: string;
+  color?: string;
 };
 
 export type DrawerNavigationConfig = {
@@ -98,9 +98,9 @@ export type DrawerNavigationOptions = {
   title?: string;
   drawerLabel?:
     | string
-    | ((props: { tintColor?: string; focused: boolean }) => React.ReactElement);
+    | ((props: { color?: string; focused: boolean }) => React.ReactElement);
   drawerIcon?: (props: {
-    tintColor?: string;
+    color?: string;
     focused: boolean;
   }) => React.ReactElement;
   drawerLockMode?: 'unlocked' | 'locked-closed' | 'locked-open';
