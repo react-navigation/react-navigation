@@ -28,12 +28,12 @@
   },
   "devDependencies": {
     "@types/react": "^16.9.4",
-    "react": "^16.8.3",
+    "react": "~16.8.3",
     "typescript": "^3.6.3"
   },
   "peerDependencies": {
     "@react-navigation/core": "^5.0.0-alpha.0",
-    "react": "^16.8.3"
+    "react": "~16.8.3"
   },
   "@react-native-community/bob": {
     "source": "src",

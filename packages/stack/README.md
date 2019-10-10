@@ -1,6 +1,6 @@
 # `@react-navigation/stack`
 
-Bottom tab navigator for React Navigation following iOS design guidelines.
+Stack navigator for React Navigation.
 
 ## Installation
 

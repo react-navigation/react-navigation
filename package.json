@@ -41,8 +41,8 @@
     "typescript": "^3.6.3"
   },
   "resolutions": {
-    "react": "16.8.3",
-    "react-native": "0.59.10"
+    "react": "~16.8.3",
+    "react-native": "~0.59.10"
   },
   "husky": {
     "hooks": {

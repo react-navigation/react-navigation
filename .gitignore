@@ -5,6 +5,8 @@
 .expo
 .gradle
 
+local.properties
+
 /coverage/
 /types/
 /dist/

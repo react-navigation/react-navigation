@@ -1,27 +1,22 @@
 {
-  "name": "@react-navigation/material-bottom-tabs",
-  "description": "Integration for bottom navigation component from react-native-paper",
+  "name": "@react-navigation/native-stack",
+  "description": "Native stack navigator component for iOS and Android",
   "keywords": [
-    "react-native-component",
-    "react-component",
+    "react",
     "react-native",
-    "react-navigation",
-    "ios",
-    "android",
-    "material",
-    "tab"
+    "react-navigation"
   ],
-  "version": "5.0.0-alpha.12",
+  "version": "5.0.0-alpha.0",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/react-navigation/navigation-ex.git",
-    "directory": "packages/material-bottom-tabs"
+    "directory": "packages/native-stack"
   },
   "main": "lib/commonjs/index.js",
   "react-native": "src/index.tsx",
   "module": "lib/module/index.js",
-  "types": "lib/typescript/material-bottom-tabs/src/index.d.ts",
+  "types": "lib/typescript/native-stack/src/index.d.ts",
   "files": [
     "src",
     "lib"
@@ -38,22 +33,15 @@
   },
   "devDependencies": {
     "@react-native-community/bob": "^0.7.0",
-    "@types/react": "^16.9.4",
-    "@types/react-native": "^0.60.17",
-    "@types/react-native-vector-icons": "^6.4.4",
-    "del-cli": "^3.0.0",
-    "react": "~16.8.3",
-    "react-native": "~0.59.10",
-    "react-native-paper": "^3.0.0-alpha.3",
-    "react-native-vector-icons": "^6.6.0",
-    "typescript": "^3.6.3"
+    "del-cli": "^2.0.0",
+    "react-native-screens": "^2.0.0-alpha.3",
+    "typescript": "^3.5.3"
   },
   "peerDependencies": {
     "@react-navigation/core": "^5.0.0-alpha.0",
     "react": "*",
     "react-native": "*",
-    "react-native-paper": "^3.0.0-alpha.3",
-    "react-native-vector-icons": "^6.0.0"
+    "react-native-screens": "^2.0.0-alpha.3"
   },
   "@react-native-community/bob": {
     "source": "src",
