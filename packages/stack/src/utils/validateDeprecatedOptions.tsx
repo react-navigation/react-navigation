@@ -22,8 +22,8 @@ const validations: Validation[] = [
   {
     check: o =>
       o.headerTitle !== undefined &&
-      typeof o.header !== 'string' &&
-      typeof o.header !== 'function',
+      typeof o.headerTitle !== 'string' &&
+      typeof o.headerTitle !== 'function',
     deprecated: 'headerTitle: <SomeElement />',
     updated: 'headerTitle: () => <SomeElement />',
   },
