@@ -139,7 +139,7 @@ export type BottomTabNavigationConfig = {
 
 export type BottomTabBarOptions = {
   /**
-   * Whether the tab bar gets hidden when the keyboard is shown.
+   * Whether the tab bar gets hidden when the keyboard is shown. Defaults to `false`.
    */
   keyboardHidesTabBar?: boolean;
   /**
