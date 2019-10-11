@@ -24,18 +24,15 @@ export default function DrawerItemList({
   state,
   navigation,
   descriptors,
-  activeTintColor = '#6200ee',
-  inactiveTintColor = 'rgba(0, 0, 0, .68)',
-  activeBackgroundColor = 'rgba(98, 0, 238, 0.12)',
-  inactiveBackgroundColor = 'transparent',
+  activeTintColor,
+  inactiveTintColor,
+  activeBackgroundColor,
+  inactiveBackgroundColor,
   itemStyle,
   labelStyle,
-  activeLabelStyle,
-  inactiveLabelStyle,
 }: Props) {
   return (state.routes.map((route, i) => {
     const focused = i === state.index;
-    const color = focused ? activeTintColor : inactiveTintColor;
     const { title, drawerLabel, drawerIcon } = descriptors[route.key].options;
 
     return (
@@ -50,19 +47,12 @@ export default function DrawerItemList({
         }
         icon={drawerIcon}
         focused={focused}
-        color={color}
-        style={[
-          {
-            backgroundColor: focused
-              ? activeBackgroundColor
-              : inactiveBackgroundColor,
-          },
-          itemStyle,
-        ]}
-        labelStyle={[
-          labelStyle,
-          focused ? activeLabelStyle : inactiveLabelStyle,
-        ]}
+        activeTintColor={activeTintColor}
+        inactiveTintColor={inactiveTintColor}
+        activeBackgroundColor={activeBackgroundColor}
+        inactiveBackgroundColor={inactiveBackgroundColor}
+        labelStyle={labelStyle}
+        style={itemStyle}
         onPress={() => {
           navigation.dispatch({
             ...(focused

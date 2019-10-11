@@ -25,4 +25,5 @@ export {
   DrawerNavigationOptions,
   DrawerNavigationProp,
   DrawerContentOptions,
+  DrawerContentComponentProps,
 } from './types';

@@ -142,14 +142,6 @@ export type DrawerContentOptions = {
    */
   labelStyle?: StyleProp<TextStyle>;
   /**
-   * Style object to apply to the `Text` of the active label.
-   */
-  activeLabelStyle?: StyleProp<TextStyle>;
-  /**
-   * Style object to apply to the `Text` of the inactive label.
-   */
-  inactiveLabelStyle?: StyleProp<TextStyle>;
-  /**
    * Style object for the content section.
    */
   contentContainerStyle?: StyleProp<ViewStyle>;

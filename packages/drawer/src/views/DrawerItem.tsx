@@ -27,15 +27,27 @@ type Props = {
   /**
    * Whether to highlight the drawer item as active.
    */
-  focused: boolean;
+  focused?: boolean;
   /**
    * Function to execute on press.
    */
-  onPress?: () => void;
+  onPress: () => void;
   /**
-   * Color for the icon and label.
+   * Color for the icon and label when the item is active.
    */
-  color: string;
+  activeTintColor?: string;
+  /**
+   * Color for the icon and label when the item is inactive.
+   */
+  inactiveTintColor?: string;
+  /**
+   * Background color for item when its active.
+   */
+  activeBackgroundColor?: string;
+  /**
+   * Background color for item when its inactive.
+   */
+  inactiveBackgroundColor?: string;
   /**
    * Style object for the label element.
    */
@@ -52,18 +64,29 @@ type Props = {
 export default function DrawerItem({
   icon,
   label,
-  focused,
-  color,
+  focused = false,
+  activeTintColor = '#6200ee',
+  inactiveTintColor = 'rgba(0, 0, 0, .68)',
+  activeBackgroundColor = 'rgba(98, 0, 238, 0.12)',
+  inactiveBackgroundColor = 'transparent',
   style,
   onPress,
   ...rest
 }: Props) {
   const { borderRadius = 4 } = StyleSheet.flatten(style || {});
+  const color = focused ? activeTintColor : inactiveTintColor;
+  const backgroundColor = focused
+    ? activeBackgroundColor
+    : inactiveBackgroundColor;
 
   const iconNode = icon ? icon({ size: 24, focused, color }) : null;
 
   return (
-    <View {...rest} style={[styles.container, { borderRadius }, style]}>
+    <View
+      collapsable={false}
+      {...rest}
+      style={[styles.container, { borderRadius, backgroundColor }, style]}
+    >
       <TouchableItem
         borderless
         delayPressIn={0}
