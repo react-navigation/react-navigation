@@ -444,8 +444,7 @@ Array [
                               pointerEvents="box-none"
                               style={
                                 Array [
-                                  null,
-                                  Object {},
+                                  false,
                                   Object {
                                     "opacity": undefined,
                                   },
@@ -585,8 +584,7 @@ Array [
             pointerEvents="box-none"
             style={
               Array [
-                null,
-                Object {},
+                false,
                 Object {
                   "opacity": undefined,
                 },

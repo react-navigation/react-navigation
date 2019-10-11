@@ -71,6 +71,7 @@ export type HeaderOptions = {
   headerTitle?:
     | React.ReactNode
     | ((props: HeaderTitleProps) => React.ReactNode);
+  headerTitleAlign?: 'left' | 'center';
   headerTitleStyle?: StyleProp<TextStyle>;
   headerTitleContainerStyle?: StyleProp<ViewStyle>;
   headerTintColor?: string;

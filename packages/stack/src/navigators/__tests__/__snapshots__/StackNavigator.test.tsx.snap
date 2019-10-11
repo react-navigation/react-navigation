@@ -279,8 +279,7 @@ Array [
             pointerEvents="box-none"
             style={
               Array [
-                null,
-                Object {},
+                false,
                 Object {
                   "opacity": undefined,
                 },
@@ -320,6 +319,9 @@ Array [
                   "position": "absolute",
                   "right": 0,
                   "top": 0,
+                },
+                Object {
+                  "right": 0,
                 },
                 Object {
                   "opacity": undefined,
@@ -616,8 +618,7 @@ Array [
             pointerEvents="box-none"
             style={
               Array [
-                null,
-                Object {},
+                false,
                 Object {
                   "opacity": undefined,
                 },
