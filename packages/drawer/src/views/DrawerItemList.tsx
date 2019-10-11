@@ -11,7 +11,7 @@ import {
   DrawerContentOptions,
 } from '../types';
 
-type Props = DrawerContentOptions & {
+type Props = Omit<DrawerContentOptions, 'contentContainerStyle' | 'style'> & {
   state: DrawerNavigationState;
   navigation: DrawerNavigationHelpers;
   descriptors: DrawerDescriptorMap;

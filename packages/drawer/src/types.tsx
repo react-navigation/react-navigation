@@ -134,10 +134,6 @@ export type DrawerContentOptions = {
    */
   inactiveBackgroundColor?: string;
   /**
-   * Style object for the content section.
-   */
-  contentContainerStyle?: ViewStyle;
-  /**
    * Style object for the single item, which can contain an icon and/or a label.
    */
   itemStyle?: StyleProp<ViewStyle>;
@@ -153,6 +149,14 @@ export type DrawerContentOptions = {
    * Style object to overwrite `Text` style of the inactive label.
    */
   inactiveLabelStyle?: StyleProp<TextStyle>;
+  /**
+   * Style object for the content section.
+   */
+  contentContainerStyle?: StyleProp<ViewStyle>;
+  /**
+   * Style object for the wrapper view.
+   */
+  style?: StyleProp<ViewStyle>;
 };
 
 export type DrawerNavigationEventMap = {
