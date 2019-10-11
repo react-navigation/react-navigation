@@ -70,21 +70,14 @@ export type NativeStackNavigationOptions = {
    */
   headerShown?: boolean;
   /**
-   * Style object for header title. Supported properties:
-   * - backgroundColor
-   */
-  headerStyle?: {
-    backgroundColor?: string;
-  };
-  /**
-   * Indicating whether the navigation bar is translucent.
+   * Boolean indicating whether the navigation bar is translucent.
    * Only supported on iOS.
    *
    * @platform ios
    */
   headerTranslucent?: boolean;
   /**
-   * Set native property to prefer large title header (like in iOS seeting).
+   * Boolean to set native property to prefer large title header (like in iOS setting).
    * Only supported on iOS.
    *
    * @platform ios
@@ -95,9 +88,30 @@ export type NativeStackNavigationOptions = {
    */
   headerRight?: () => React.ReactNode;
   /**
-   * Tint color for the header.
+   * Tint color for the header. Changes the color of back button and title.
    */
   headerTintColor?: string;
+  /**
+   * Boolean indicating whether to hide the back button in header.
+   * Only supported on Android.
+   *
+   * @platform android
+   */
+  headerHideBackButton?: boolean;
+  /**
+   * Boolean indicating whether to hide the elevation shadow on the header.
+   * Only supported on Android.
+   *
+   * @platform android
+   */
+  headerHideShadow?: boolean;
+  /**
+   * Style object for header title. Supported properties:
+   * - backgroundColor
+   */
+  headerStyle?: {
+    backgroundColor?: string;
+  };
   /**
    * Style object for header title. Supported properties:
    * - fontFamily
@@ -123,6 +137,10 @@ export type NativeStackNavigationOptions = {
     fontSize?: number;
   };
   /**
+   * Style object for the scene content.
+   */
+  contentStyle?: StyleProp<ViewStyle>;
+  /**
    * Whether you can use gestures to dismiss this screen. Defaults to `true`.
    * Only supported on iOS.
    *
@@ -130,16 +148,16 @@ export type NativeStackNavigationOptions = {
    */
   gestureEnabled?: boolean;
   /**
-   * Style object for the scene content.
-   */
-  contentStyle?: StyleProp<ViewStyle>;
-  /**
    * How should the screen be presented.
-   * Only supported on iOS.
-   *
-   * @platform ios
    */
   presentation?: 'modal' | 'transparentModal' | 'push';
+  /**
+   * How should the screen should be animated.
+   * Only supported on Android.
+   *
+   * @platform android
+   */
+  animation?: 'default' | 'fade' | 'none';
 };
 
 export type NativeStackNavigatorProps = DefaultNavigatorOptions<

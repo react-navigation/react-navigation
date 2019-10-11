@@ -20,20 +20,24 @@ export default function HeaderConfig(props: Props) {
     headerRight,
     headerTitle,
     headerBackTitle,
+    headerHideBackButton,
+    headerHideShadow,
     headerTintColor,
-    gestureEnabled,
     headerLargeTitle,
     headerTranslucent,
     headerStyle = {},
     headerTitleStyle = {},
     headerBackTitleStyle = {},
     headerShown,
+    gestureEnabled,
   } = props;
 
   return (
     <ScreenStackHeaderConfig
       hidden={headerShown === false}
       translucent={headerTranslucent === true}
+      hideShadow={headerHideShadow}
+      hideBackButton={headerHideBackButton}
       title={
         headerTitle !== undefined
           ? headerTitle
