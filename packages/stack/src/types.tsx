@@ -108,6 +108,11 @@ export type StackHeaderOptions = {
    */
   headerTitle?: string | ((props: StackHeaderTitleProps) => React.ReactNode);
   /**
+   * How to align the the header title.
+   * Defaults to `center` on iOS and `left` on Android.
+   */
+  headerTitleAlign?: 'left' | 'center';
+  /**
    * Style object for the title component.
    */
   headerTitleStyle?: StyleProp<TextStyle>;

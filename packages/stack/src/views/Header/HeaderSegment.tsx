@@ -141,6 +141,10 @@ export default class HeaderSegment extends React.Component<Props, State> {
       leftLabel: previousTitle,
       onGoBack,
       headerTitle,
+      headerTitleAlign = Platform.select({
+        ios: 'center',
+        default: 'left',
+      }),
       headerLeft: left = onGoBack
         ? (props: StackHeaderLeftButtonProps) => <HeaderBackButton {...props} />
         : undefined,
@@ -324,11 +328,10 @@ export default class HeaderSegment extends React.Component<Props, State> {
             <Animated.View
               pointerEvents="box-none"
               style={[
-                Platform.select({
-                  ios: null,
-                  default: { left: leftButton ? 72 : 16 },
-                }),
-                styles.title,
+                headerTitleAlign === 'left' && {
+                  position: 'absolute',
+                  left: leftButton ? 72 : 16,
+                },
                 titleStyle,
                 titleContainerStyle,
               ]}
@@ -384,8 +387,4 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'flex-end',
   },
-  title: Platform.select({
-    ios: {},
-    default: { position: 'absolute' },
-  }),
 });
