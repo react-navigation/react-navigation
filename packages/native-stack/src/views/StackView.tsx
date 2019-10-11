@@ -25,7 +25,7 @@ export default function StackView({ state, navigation, descriptors }: Props) {
     <ScreenStack style={styles.scenes}>
       {state.routes.map(route => {
         const { options, render: renderScene } = descriptors[route.key];
-        const { presentation = 'push', contentStyle } = options;
+        const { presentation = 'push', animation, contentStyle } = options;
 
         return (
           // @ts-ignore
@@ -33,6 +33,7 @@ export default function StackView({ state, navigation, descriptors }: Props) {
             key={route.key}
             style={StyleSheet.absoluteFill}
             stackPresentation={presentation}
+            stackAnimation={animation}
             onDismissed={() => {
               navigation.dispatch({
                 ...StackActions.pop(),
