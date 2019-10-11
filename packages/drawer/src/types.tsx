@@ -138,15 +138,15 @@ export type DrawerContentOptions = {
    */
   itemStyle?: StyleProp<ViewStyle>;
   /**
-   * Style object to overwrite `Text` style inside content section which renders a label.
+   * Style object to apply to the `Text` inside content section which renders a label.
    */
   labelStyle?: StyleProp<TextStyle>;
   /**
-   * Style object to overwrite `Text` style of the active label.
+   * Style object to apply to the `Text` of the active label.
    */
   activeLabelStyle?: StyleProp<TextStyle>;
   /**
-   * Style object to overwrite `Text` style of the inactive label.
+   * Style object to apply to the `Text` of the inactive label.
    */
   inactiveLabelStyle?: StyleProp<TextStyle>;
   /**
