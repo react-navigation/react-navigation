@@ -1,14 +1,12 @@
 import * as React from 'react';
-import { ScrollView } from 'react-native';
+import { ScrollView, StyleSheet } from 'react-native';
 import { useSafeArea } from 'react-native-safe-area-context';
 import DrawerItemList from './DrawerItemList';
 import { DrawerContentComponentProps } from '../types';
 
 export default function DrawerContent({
-  state,
-  navigation,
-  descriptors,
   contentContainerStyle,
+  style,
   drawerPosition,
   ...rest
 }: DrawerContentComponentProps) {
@@ -24,13 +22,15 @@ export default function DrawerContent({
         },
         contentContainerStyle,
       ]}
+      style={[styles.container, style]}
     >
-      <DrawerItemList
-        state={state}
-        navigation={navigation}
-        descriptors={descriptors}
-        {...rest}
-      />
+      <DrawerItemList {...rest} />
     </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
