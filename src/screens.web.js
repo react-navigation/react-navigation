@@ -2,19 +2,19 @@ import debounce from 'debounce';
 import React from 'react';
 import { Animated, View } from 'react-native';
 
-let _shouldUseScreens = true;
+let _shouldEnableScreens = true;
 
-export function useScreens(shouldUseScreens = true) {
-  if (shouldUseScreens) {
+export function enableScreens(shouldEnableScreens = true) {
+  if (shouldEnableScreens) {
     console.warn(
       'react-native-screens is not fully supported on this platform yet.'
     );
   }
-  _shouldUseScreens = shouldUseScreens;
+  _shouldEnableScreens = shouldEnableScreens;
 }
 
 export function screensEnabled() {
-  return _shouldUseScreens;
+  return _shouldEnableScreens;
 }
 
 function isAnimatedValue(value) {

@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { version } from 'react-native/Libraries/Core/ReactNativeVersion';
 
-let USE_SCREENS = false;
+let ENABLE_SCREENS = false;
 
 // UIManager[`${moduleName}`] is deprecated in RN 0.58 and `getViewManagerConfig` is added.
 // We can remove this when we drop support for RN < 0.58.
@@ -17,17 +17,22 @@ const getViewManagerConfigCompat = name =>
     ? UIManager.getViewManagerConfig(name)
     : UIManager[name];
 
-function useScreens(shouldUseScreens = true) {
-  USE_SCREENS = shouldUseScreens;
-  if (USE_SCREENS && !getViewManagerConfigCompat('RNSScreen')) {
+export function enableScreens(shouldEnableScreens = true) {
+  ENABLE_SCREENS = shouldEnableScreens;
+  if (ENABLE_SCREENS && !getViewManagerConfigCompat('RNSScreen')) {
     console.error(
       `Screen native module hasn't been linked. Please check the react-native-screens README for more details`
     );
   }
 }
 
-function screensEnabled() {
-  return USE_SCREENS;
+// we should remove this at some point
+export function useScreens(shouldUseScreens = true) {
+  enableScreens(shouldUseScreens);
+}
+
+export function screensEnabled() {
+  return ENABLE_SCREENS;
 }
 
 // We initialize these lazily so that importing the module doesn't throw error when not linked
@@ -83,7 +88,7 @@ class Screen extends React.Component {
     this.props.onComponentRef && this.props.onComponentRef(ref);
   };
   render() {
-    if (!USE_SCREENS) {
+    if (!ENABLE_SCREENS) {
       // Filter out active prop in this case because it is unused and
       // can cause problems depending on react-native version:
       // https://github.com/react-navigation/react-navigation/issues/4886
@@ -120,7 +125,7 @@ class Screen extends React.Component {
 
 class ScreenContainer extends React.Component {
   render() {
-    if (!USE_SCREENS) {
+    if (!ENABLE_SCREENS) {
       return <View {...this.props} />;
     } else {
       return <ScreensNativeModules.NativeScreenContainer {...this.props} />;

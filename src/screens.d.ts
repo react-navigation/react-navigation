@@ -6,6 +6,7 @@ declare module 'react-native-screens' {
   import { ViewProps, Animated } from 'react-native';
 
   export function useScreens(shouldUseScreens?: boolean): void;
+  export function enableScreens(shouldEnableScreens?: boolean): void;
   export function screensEnabled(): boolean;
 
   export interface ScreenProps extends ViewProps {

@@ -17,23 +17,26 @@ Screens support is built into [react-navigation](https://github.com/react-naviga
 
 To configure react-navigation to use screens instead of plain RN Views for rendering screen views, follow the steps below:
 
-1. Add this library as a depedency to your project:
-```
+1. Add this library as a dependency to your project:
+
+```bash
 yarn add react-native-screens
 ```
 
-2. Link native modules this library ships with into your app:
-```
+2.Link native modules this library ships with into your app:
+
+```bash
 react-native link react-native-screens
 ```
 
- > If you are not familiar with the concept of linking libraries [read on here](https://facebook.github.io/react-native/docs/linking-libraries-ios).
+> If you are not familiar with the concept of linking libraries [read on here](https://facebook.github.io/react-native/docs/linking-libraries-ios).
 
-3. Enable screens support before any of your navigation screen renders. Add the following code to your main application file (e.g. App.js):
+3.Enable screens support before any of your navigation screen renders. Add the following code to your main application file (e.g. App.js):
+
 ```js
-import { useScreens } from 'react-native-screens';
+import { enableScreens } from 'react-native-screens';
 
-useScreens();
+enableScreens();
 ```
 
 Note that the above code need to execute before first render of a navigation screen. You can check Example's app [App.js](https://github.com/kmagiera/react-native-screens/blob/master/Example/App.js#L16) file as a reference.
@@ -56,12 +59,14 @@ implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0-alpha02'
 Screens support is built into Expo [SDK 30](https://blog.expo.io/expo-sdk-30-0-0-is-now-available-e64d8b1db2a7) and react-navigation starting from [2.14.0](https://github.com/react-navigation/react-navigation/releases/tag/2.14.0). Make sure your app use these versions before you start.
 
 1. Add screens library as dependency to your project – you can skip this step when using snack as the dependency will be imported when you import it in one of the JS files
-```
+
+```bash
 yarn add react-native-screens
 ```
 
 2. Open your App.js file and add the following snippet somewhere near the top of the file (e.g. right after import statements):
-```
+
+```js
 import { useScreens } from 'react-native-screens';
 
 useScreens();
@@ -85,8 +90,7 @@ Then replace places when you use `createStackNavigator` with `createNativeStackN
 
 ## Interop with other libraries
 
-This library should work out of the box with all existing react-native libraries. If you expirience problems with interoperability please [report an issue](https://github.com/kmagiera/react-native-screens/issues).
-
+This library should work out of the box with all existing react-native libraries. If you experience problems with interoperability please [report an issue](https://github.com/kmagiera/react-native-screens/issues).
 
 ## Guide for navigation library authors
 
@@ -258,5 +262,5 @@ React native screens library is licensed under [The MIT License](LICENSE).
 
 This project is supported by amazing people from [Expo.io](https://expo.io) and [Software Mansion](https://swmansion.com)
 
-[![expo](https://avatars2.githubusercontent.com/u/12504344?v=3&s=100 "Expo.io")](https://expo.io)
-[![swm](https://avatars1.githubusercontent.com/u/6952717?v=3&s=100 "Software Mansion")](https://swmansion.com)
+[![expo](https://avatars2.githubusercontent.com/u/12504344?v=3&s=100 'Expo.io')](https://expo.io)
+[![swm](https://avatars1.githubusercontent.com/u/6952717?v=3&s=100 'Software Mansion')](https://swmansion.com)

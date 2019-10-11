@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { Text, View, StyleSheet, Button } from 'react-native';
-import { useScreens } from 'react-native-screens';
+import { enableScreens } from 'react-native-screens';
 import {
   createAppContainer,
   createStackNavigator,
   createBottomTabNavigator,
 } from 'react-navigation';
 
-useScreens();
+enableScreens();
 
 class DetailsScreen extends React.Component {
   static navigationOptions = ({ navigation }) => {
