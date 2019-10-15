@@ -30,6 +30,8 @@ type State = {
   routes: NavigationRoute[];
   // Previous routes, to compare whether routes have changed or not
   previousRoutes: NavigationRoute[];
+  // Previous descriptors, to compare whether descriptors have changed or not
+  previousDescriptors: SceneDescriptorMap;
   // List of routes being opened, we need to animate pushing of these new routes
   openingRouteKeys: string[];
   // List of routes being closed, we need to animate popping of these routes
@@ -56,6 +58,23 @@ class StackView extends React.Component<Props, State> {
       navigation.state.routes === state.previousRoutes &&
       state.routes.length
     ) {
+      if (props.descriptors !== state.previousDescriptors) {
+        const descriptors = state.routes.reduce<SceneDescriptorMap>(
+          (acc, route) => {
+            acc[route.key] =
+              props.descriptors[route.key] || state.descriptors[route.key];
+
+            return acc;
+          },
+          {}
+        );
+
+        return {
+          previousDescriptors: props.descriptors,
+          descriptors,
+        };
+      }
+
       return null;
     }
 
@@ -185,19 +204,17 @@ class StackView extends React.Component<Props, State> {
       throw new Error(`There should always be at least one route.`);
     }
 
-    const descriptors = routes.reduce(
-      (acc, route) => {
-        acc[route.key] =
-          props.descriptors[route.key] || state.descriptors[route.key];
+    const descriptors = routes.reduce<SceneDescriptorMap>((acc, route) => {
+      acc[route.key] =
+        props.descriptors[route.key] || state.descriptors[route.key];
 
-        return acc;
-      },
-      {} as SceneDescriptorMap
-    );
+      return acc;
+    }, {});
 
     return {
       routes,
       previousRoutes: navigation.state.routes,
+      previousDescriptors: props.descriptors,
       openingRouteKeys,
       closingRouteKeys,
       replacingRouteKeys,
@@ -208,6 +225,7 @@ class StackView extends React.Component<Props, State> {
   state: State = {
     routes: [],
     previousRoutes: [],
+    previousDescriptors: {},
     openingRouteKeys: [],
     closingRouteKeys: [],
     replacingRouteKeys: [],
