@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.13](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/example@5.0.0-alpha.12...@react-navigation/example@5.0.0-alpha.13) (2019-10-15)
+
+
+### Bug Fixes
+
+* block GH interactions in Native Stack example ([#126](https://github.com/react-navigation/navigation-ex/issues/126)) ([386d1c0](https://github.com/react-navigation/navigation-ex/commit/386d1c0))
+* make it possible to run the example on web ([7a901af](https://github.com/react-navigation/navigation-ex/commit/7a901af))
+
+
+### Features
+
+* initial version of native stack ([#102](https://github.com/react-navigation/navigation-ex/issues/102)) ([ba3f718](https://github.com/react-navigation/navigation-ex/commit/ba3f718))
+
+
+
+
+
 # [5.0.0-alpha.12](https://github.com/satya164/navigation-ex/compare/@react-navigation/example@5.0.0-alpha.11...@react-navigation/example@5.0.0-alpha.12) (2019-10-06)
 
 

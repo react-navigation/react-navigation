@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.14](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/bottom-tabs@5.0.0-alpha.13...@react-navigation/bottom-tabs@5.0.0-alpha.14) (2019-10-15)
+
+
+### Bug Fixes
+
+* improve keyboard handling with bottom tab bar ([42beb66](https://github.com/react-navigation/navigation-ex/commit/42beb66))
+* make it possible to run the example on web ([7a901af](https://github.com/react-navigation/navigation-ex/commit/7a901af))
+
+
+### Features
+
+* initial version of native stack ([#102](https://github.com/react-navigation/navigation-ex/issues/102)) ([ba3f718](https://github.com/react-navigation/navigation-ex/commit/ba3f718))
+
+
+
+
+
 # [5.0.0-alpha.13](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/bottom-tabs@5.0.0-alpha.12...@react-navigation/bottom-tabs@5.0.0-alpha.13) (2019-10-06)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs

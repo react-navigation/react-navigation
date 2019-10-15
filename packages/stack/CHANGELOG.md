@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.25](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.24...@react-navigation/stack@5.0.0-alpha.25) (2019-10-15)
+
+
+### Bug Fixes
+
+* don't ignore descriptors change ([9d9fe31](https://github.com/react-navigation/navigation-ex/commit/9d9fe31))
+* increase hitSlop of back button on Android ([c7da1e4](https://github.com/react-navigation/navigation-ex/commit/c7da1e4))
+* interpolation in iOS modal presentation ([b32cda2](https://github.com/react-navigation/navigation-ex/commit/b32cda2))
+* make modal presentation mode fullscreen on landscape ([#124](https://github.com/react-navigation/navigation-ex/issues/124)) ([e789846](https://github.com/react-navigation/navigation-ex/commit/e789846))
+
+
+### Features
+
+* add a headerTitleAlign option to center or left align title ([6a0ca90](https://github.com/react-navigation/navigation-ex/commit/6a0ca90))
+* export TransitionSpecs ([708dde0](https://github.com/react-navigation/navigation-ex/commit/708dde0))
+* initial version of native stack ([#102](https://github.com/react-navigation/navigation-ex/issues/102)) ([ba3f718](https://github.com/react-navigation/navigation-ex/commit/ba3f718))
+
+
+
+
+
 # [5.0.0-alpha.24](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.23...@react-navigation/stack@5.0.0-alpha.24) (2019-10-06)
 
 
