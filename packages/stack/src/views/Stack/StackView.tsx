@@ -32,6 +32,8 @@ type State = {
   routes: Route<string>[];
   // Previous routes, to compare whether routes have changed or not
   previousRoutes: Route<string>[];
+  // Previous descriptors, to compare whether descriptors have changed or not
+  previousDescriptors: StackDescriptorMap;
   // List of routes being opened, we need to animate pushing of these new routes
   openingRouteKeys: string[];
   // List of routes being closed, we need to animate popping of these routes
@@ -50,6 +52,23 @@ class StackView extends React.Component<Props, State> {
   ) {
     // If there was no change in routes, we don't need to compute anything
     if (props.state.routes === state.previousRoutes && state.routes.length) {
+      if (props.descriptors !== state.previousDescriptors) {
+        const descriptors = state.routes.reduce(
+          (acc, route) => {
+            acc[route.key] =
+              props.descriptors[route.key] || state.descriptors[route.key];
+
+            return acc;
+          },
+          {} as StackDescriptorMap
+        );
+
+        return {
+          previousDescriptors: props.descriptors,
+          descriptors,
+        };
+      }
+
       return null;
     }
 
@@ -189,6 +208,7 @@ class StackView extends React.Component<Props, State> {
     return {
       routes,
       previousRoutes: props.state.routes,
+      previousDescriptors: props.descriptors,
       openingRouteKeys,
       closingRouteKeys,
       replacingRouteKeys,
@@ -199,6 +219,7 @@ class StackView extends React.Component<Props, State> {
   state: State = {
     routes: [],
     previousRoutes: [],
+    previousDescriptors: {},
     openingRouteKeys: [],
     closingRouteKeys: [],
     replacingRouteKeys: [],
