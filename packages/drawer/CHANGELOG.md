@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.14](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/drawer@5.0.0-alpha.13...@react-navigation/drawer@5.0.0-alpha.14) (2019-10-15)
+
+
+### Bug Fixes
+
+* add flex: 1 to drawer content ([2b57702](https://github.com/react-navigation/navigation-ex/commit/2b57702))
+* fix content component not rendering in drawer ([0a5fb3e](https://github.com/react-navigation/navigation-ex/commit/0a5fb3e))
+
+
+### Features
+
+* initial version of native stack ([#102](https://github.com/react-navigation/navigation-ex/issues/102)) ([ba3f718](https://github.com/react-navigation/navigation-ex/commit/ba3f718))
+
+
+
+
+
 # [5.0.0-alpha.13](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/drawer@5.0.0-alpha.12...@react-navigation/drawer@5.0.0-alpha.13) (2019-10-06)
 
 **Note:** Version bump only for package @react-navigation/drawer

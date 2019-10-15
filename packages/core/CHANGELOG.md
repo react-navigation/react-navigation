@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.15](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/core@5.0.0-alpha.14...@react-navigation/core@5.0.0-alpha.15) (2019-10-15)
+
+
+### Features
+
+* initial version of native stack ([#102](https://github.com/react-navigation/navigation-ex/issues/102)) ([ba3f718](https://github.com/react-navigation/navigation-ex/commit/ba3f718))
+
+
+
+
+
 # [5.0.0-alpha.14](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/core@5.0.0-alpha.13...@react-navigation/core@5.0.0-alpha.14) (2019-10-06)
 
 **Note:** Version bump only for package @react-navigation/core

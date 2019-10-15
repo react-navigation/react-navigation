@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.8](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/compat@5.0.0-alpha.7...@react-navigation/compat@5.0.0-alpha.8) (2019-10-15)
+
+
+### Features
+
+* initial version of native stack ([#102](https://github.com/react-navigation/navigation-ex/issues/102)) ([ba3f718](https://github.com/react-navigation/navigation-ex/commit/ba3f718))
+
+
+
+
+
 # [5.0.0-alpha.7](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/compat@5.0.0-alpha.6...@react-navigation/compat@5.0.0-alpha.7) (2019-10-06)
 
 **Note:** Version bump only for package @react-navigation/compat
