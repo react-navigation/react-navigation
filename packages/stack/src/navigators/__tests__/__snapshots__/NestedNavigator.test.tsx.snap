@@ -383,7 +383,7 @@ Array [
                                 "top": 0,
                               },
                               Object {
-                                "opacity": undefined,
+                                "opacity": NOOP {},
                               },
                             ]
                           }
@@ -523,7 +523,7 @@ Array [
               "top": 0,
             },
             Object {
-              "opacity": undefined,
+              "opacity": NOOP {},
             },
           ]
         }
