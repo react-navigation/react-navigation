@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { SafeAreaContext, EdgeInsets } from 'react-native-safe-area-context';
+import HeaderTitle from './HeaderTitle';
 import HeaderBackButton from './HeaderBackButton';
 import HeaderBackground from './HeaderBackground';
 import memoize from '../../utils/memoize';
@@ -358,14 +359,22 @@ export default class HeaderSegment extends React.Component<Props, State> {
                 titleContainerStyle,
               ]}
             >
-              {typeof headerTitle === 'function'
-                ? headerTitle({
-                    children: currentTitle,
-                    onLayout: this.handleTitleLayout,
-                    allowFontScaling: titleAllowFontScaling,
-                    style: [{ color: headerTintColor }, customTitleStyle],
-                  })
-                : headerTitle}
+              {typeof headerTitle === 'function' ? (
+                headerTitle({
+                  children: currentTitle,
+                  onLayout: this.handleTitleLayout,
+                  allowFontScaling: titleAllowFontScaling,
+                  style: [{ color: headerTintColor }, customTitleStyle],
+                })
+              ) : (
+                <HeaderTitle
+                  onLayout={this.handleTitleLayout}
+                  allowFontScaling={titleAllowFontScaling}
+                  style={[{ color: headerTintColor }, customTitleStyle]}
+                >
+                  {currentTitle}
+                </HeaderTitle>
+              )}
             </Animated.View>
             {right !== undefined ? (
               <Animated.View
