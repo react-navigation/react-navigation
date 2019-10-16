@@ -117,6 +117,7 @@ const FALLBACK_DESCRIPTOR = Object.freeze({ options: {} });
 const getFloatingHeaderHeights = (
   routes: Route<string>[],
   insets: EdgeInsets,
+  descriptors: StackDescriptorMap,
   layout: Layout,
   previous: { [key: string]: number }
 ) => {
@@ -124,7 +125,13 @@ const getFloatingHeaderHeights = (
 
   return routes.reduce(
     (acc, curr) => {
-      acc[curr.key] = previous[curr.key] || defaultHeaderHeight;
+      const { options = {} } =
+        descriptors[curr.key] || ({} as StackNavigationOptions);
+      const { height = previous[curr.key] } = StyleSheet.flatten(
+        options.headerStyle || {}
+      );
+
+      acc[curr.key] = typeof height === 'number' ? height : defaultHeaderHeight;
 
       return acc;
     },
@@ -141,24 +148,21 @@ export default class Stack extends React.Component<Props, State> {
       return null;
     }
 
-    const progress = props.routes.reduce(
-      (acc, curr) => {
-        const descriptor = props.descriptors[curr.key];
+    const progress = props.routes.reduce<ProgressValues>((acc, curr) => {
+      const descriptor = props.descriptors[curr.key];
 
-        acc[curr.key] =
-          state.progress[curr.key] ||
-          new Animated.Value(
-            props.openingRouteKeys.includes(curr.key) &&
-            descriptor &&
-            descriptor.options.animationEnabled !== false
-              ? 0
-              : 1
-          );
+      acc[curr.key] =
+        state.progress[curr.key] ||
+        new Animated.Value(
+          props.openingRouteKeys.includes(curr.key) &&
+          descriptor &&
+          descriptor.options.animationEnabled !== false
+            ? 0
+            : 1
+        );
 
-        return acc;
-      },
-      {} as ProgressValues
-    );
+      return acc;
+    }, {});
 
     return {
       routes: props.routes,
@@ -205,6 +209,7 @@ export default class Stack extends React.Component<Props, State> {
       floatingHeaderHeights: getFloatingHeaderHeights(
         props.routes,
         props.insets,
+        state.descriptors,
         state.layout,
         state.floatingHeaderHeights
       ),
@@ -237,15 +242,16 @@ export default class Stack extends React.Component<Props, State> {
 
     const layout = { width, height };
 
-    this.setState({
+    this.setState(state => ({
       layout,
       floatingHeaderHeights: getFloatingHeaderHeights(
         this.props.routes,
         this.props.insets,
+        state.descriptors,
         layout,
         {}
       ),
-    });
+    }));
   };
 
   private handleFloatingHeaderLayout = ({
