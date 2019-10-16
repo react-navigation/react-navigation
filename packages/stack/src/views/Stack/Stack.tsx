@@ -125,8 +125,7 @@ const getFloatingHeaderHeights = (
 
   return routes.reduce(
     (acc, curr) => {
-      const { options = {} } =
-        descriptors[curr.key] || ({} as StackNavigationOptions);
+      const { options = {} } = descriptors[curr.key] || {};
       const { height = previous[curr.key] } = StyleSheet.flatten(
         options.headerStyle || {}
       );
