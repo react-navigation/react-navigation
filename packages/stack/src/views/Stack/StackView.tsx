@@ -53,14 +53,14 @@ class StackView extends React.Component<Props, State> {
     // If there was no change in routes, we don't need to compute anything
     if (props.state.routes === state.previousRoutes && state.routes.length) {
       if (props.descriptors !== state.previousDescriptors) {
-        const descriptors = state.routes.reduce(
+        const descriptors = state.routes.reduce<StackDescriptorMap>(
           (acc, route) => {
             acc[route.key] =
               props.descriptors[route.key] || state.descriptors[route.key];
 
             return acc;
           },
-          {} as StackDescriptorMap
+          {}
         );
 
         return {
@@ -195,15 +195,12 @@ class StackView extends React.Component<Props, State> {
       throw new Error(`There should always be at least one route.`);
     }
 
-    const descriptors = routes.reduce(
-      (acc, route) => {
-        acc[route.key] =
-          props.descriptors[route.key] || state.descriptors[route.key];
+    const descriptors = routes.reduce<StackDescriptorMap>((acc, route) => {
+      acc[route.key] =
+        props.descriptors[route.key] || state.descriptors[route.key];
 
-        return acc;
-      },
-      {} as StackDescriptorMap
-    );
+      return acc;
+    }, {});
 
     return {
       routes,
