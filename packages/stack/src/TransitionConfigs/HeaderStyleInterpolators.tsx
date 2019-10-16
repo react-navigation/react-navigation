@@ -109,7 +109,7 @@ export function forFade({
     leftButtonStyle: { opacity },
     rightButtonStyle: { opacity },
     titleStyle: { opacity },
-    backgroundStyle: { opacity },
+    backgroundStyle: { opacity: current.progress },
   };
 }
 
