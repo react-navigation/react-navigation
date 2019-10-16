@@ -369,12 +369,14 @@ declare module 'react-navigation' {
   export interface NavigationJumpToActionPayload {
     routeName: string;
     key?: string;
+    preserveFocus?: boolean;
   }
 
   export interface NavigationJumpToAction {
     type: 'Navigation/JUMP_TO';
     routeName: string;
     key: string;
+    preserveFocus?: boolean;
   }
 
   export interface NavigationDrawerOpenedAction {
