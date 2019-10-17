@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.26](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.25...@react-navigation/stack@5.0.0-alpha.26) (2019-10-17)
+
+
+### Bug Fixes
+
+* don't fade incoming background when fading header ([#127](https://github.com/react-navigation/navigation-ex/issues/127)) ([c6d0c19](https://github.com/react-navigation/navigation-ex/commit/c6d0c19))
+* fix incorrect type ([731cf7d](https://github.com/react-navigation/navigation-ex/commit/731cf7d))
+* use header height from style if specified ([442b95d](https://github.com/react-navigation/navigation-ex/commit/442b95d))
+
+
+
+
+
 # [5.0.0-alpha.25](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.24...@react-navigation/stack@5.0.0-alpha.25) (2019-10-15)
 
 

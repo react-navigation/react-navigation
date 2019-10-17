@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.15](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/drawer@5.0.0-alpha.14...@react-navigation/drawer@5.0.0-alpha.15) (2019-10-17)
+
+
+### Bug Fixes
+
+* fix passing content options in drawer ([cab6160](https://github.com/react-navigation/navigation-ex/commit/cab6160))
+
+
+
+
+
 # [5.0.0-alpha.14](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/drawer@5.0.0-alpha.13...@react-navigation/drawer@5.0.0-alpha.14) (2019-10-15)
 
 
