@@ -864,12 +864,11 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
-"@callstack/react-theme-provider@^3.0.2":
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/@callstack/react-theme-provider/-/react-theme-provider-3.0.3.tgz#f964dda28cd6e731c3fbcf916b0579c6f9fb2db7"
-  integrity sha512-B+9JBK7zsND/AdVkjwHvbb4cR05fJofLFG30hOeoXke8WkKAWN36yFljauAhI8qwlXlGFGZMYE1wQvsqBSccrA==
+"@callstack/react-theme-provider@^3.0.5":
+  version "3.0.5"
+  resolved "https://registry.yarnpkg.com/@callstack/react-theme-provider/-/react-theme-provider-3.0.5.tgz#a173e455e9603c9c45357a3b6ace1273086527ca"
+  integrity sha512-Iec+ybWN0FvNj87sD3oWo/49edGUP0UOSdMnzCJEFJIDYr992ECIuOV89burAAh2/ibPCxgLiK6dmgv2mO/8Tg==
   dependencies:
-    "@types/hoist-non-react-statics" "^3.3.1"
     deepmerge "^3.2.0"
     hoist-non-react-statics "^3.3.0"
 
@@ -2529,14 +2528,6 @@
     "@types/events" "*"
     "@types/minimatch" "*"
     "@types/node" "*"
-
-"@types/hoist-non-react-statics@^3.3.1":
-  version "3.3.1"
-  resolved "https://registry.yarnpkg.com/@types/hoist-non-react-statics/-/hoist-non-react-statics-3.3.1.tgz#1124aafe5118cb591977aeb1ceaaed1070eb039f"
-  integrity sha512-iMIqiko6ooLrTh1joXodJK5X9xeEALT1kM5G3ZLhD3hszxBdIEd5C75U834D9mLcINgD4OyZf5uQXjkuYydWvA==
-  dependencies:
-    "@types/react" "*"
-    hoist-non-react-statics "^3.3.0"
 
 "@types/http-proxy-middleware@*":
   version "0.19.3"
@@ -13111,12 +13102,12 @@ react-native-gesture-handler@~1.3.0:
     invariant "^2.2.2"
     prop-types "^15.5.10"
 
-react-native-paper@^3.0.0-alpha.3:
-  version "3.0.0-alpha.5"
-  resolved "https://registry.yarnpkg.com/react-native-paper/-/react-native-paper-3.0.0-alpha.5.tgz#2a3e23c52ec717d7c6a1df1e7adc1005611b08a2"
-  integrity sha512-LSsmhCIo2EgT9azd1usjBmfGBgNkKOMdHWkFJnwmGrXo/JMxhlD/KMt+GRTz4ZjFWmJu3GO635ihYleSJhW6Mg==
+react-native-paper@^3.0.0-alpha.7:
+  version "3.0.0-alpha.7"
+  resolved "https://registry.yarnpkg.com/react-native-paper/-/react-native-paper-3.0.0-alpha.7.tgz#fbbfe5dc9ef8dbd18932786aa3d7f0479501538b"
+  integrity sha512-tjqewrUMnucLM4yqMiVtCOnrqilnvDDNr2guIImwsUpJ6HWaJKBEFKqB25SEdMvuo88MWSdA0gyRNtS3WRpS3w==
   dependencies:
-    "@callstack/react-theme-provider" "^3.0.2"
+    "@callstack/react-theme-provider" "^3.0.5"
     color "^3.1.2"
     react-native-safe-area-view "^0.12.0"
 

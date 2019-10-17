@@ -2,7 +2,6 @@ import * as React from 'react';
 import { StyleSheet } from 'react-native';
 import { BottomNavigation } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { Route } from '@react-navigation/core';
 import { TabNavigationState, TabActions } from '@react-navigation/routers';
 
 import {
@@ -17,7 +16,7 @@ type Props = MaterialBottomTabNavigationConfig & {
   descriptors: MaterialBottomTabDescriptorMap;
 };
 
-type Scene = { route: Route<string> };
+type Scene = { route: { key: string } };
 
 export default class MaterialBottomTabView extends React.PureComponent<Props> {
   private getColor = ({ route }: Scene) => {
@@ -35,7 +34,7 @@ export default class MaterialBottomTabView extends React.PureComponent<Props> {
       ? options.tabBarLabel
       : typeof options.title === 'string'
       ? options.title
-      : route.name;
+      : ((route as any) as { name: string }).name;
   };
 
   private getAccessibilityLabel = ({ route }: Scene) => {
@@ -49,9 +48,9 @@ export default class MaterialBottomTabView extends React.PureComponent<Props> {
     const label = this.getLabelText({ route });
 
     if (typeof label === 'string') {
-      return `${label}, tab, ${state.routes.indexOf(route) + 1} of ${
-        state.routes.length
-      }`;
+      return `${label}, tab, ${state.routes.findIndex(
+        r => r.key === route.key
+      ) + 1} of ${state.routes.length}`;
     }
 
     return undefined;
@@ -75,7 +74,7 @@ export default class MaterialBottomTabView extends React.PureComponent<Props> {
     focused,
     color,
   }: {
-    route: Route<string>;
+    route: { key: string };
     focused: boolean;
     color: string;
   }) => {
@@ -114,7 +113,7 @@ export default class MaterialBottomTabView extends React.PureComponent<Props> {
             target: state.key,
           })
         }
-        renderScene={({ route }: Scene) => descriptors[route.key].render()}
+        renderScene={({ route }) => descriptors[route.key].render()}
         renderIcon={this.renderIcon}
         getLabelText={this.getLabelText}
         getColor={this.getColor}
