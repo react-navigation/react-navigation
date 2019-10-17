@@ -96,6 +96,16 @@ export type MaterialBottomTabDescriptorMap = {
 export type MaterialBottomTabNavigationConfig = Partial<
   Omit<
     React.ComponentProps<typeof BottomNavigation>,
-    'navigationState' | 'onIndexChange' | 'renderScene'
+    | 'navigationState'
+    | 'onIndexChange'
+    | 'onTabPress'
+    | 'renderScene'
+    | 'renderLabel'
+    | 'renderIcon'
+    | 'getAccessibilityLabel'
+    | 'getBadge'
+    | 'getColor'
+    | 'getLabelText'
+    | 'getTestID'
   >
 >;
