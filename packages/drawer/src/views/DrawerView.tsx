@@ -136,6 +136,7 @@ export default class DrawerView extends React.PureComponent<Props, State> {
       descriptors,
       drawerPosition,
       contentComponent: ContentComponent,
+      contentOptions,
     } = this.props;
 
     return (
@@ -145,6 +146,7 @@ export default class DrawerView extends React.PureComponent<Props, State> {
         navigation={navigation}
         descriptors={descriptors}
         drawerPosition={drawerPosition}
+        {...contentOptions}
       />
     );
   };
