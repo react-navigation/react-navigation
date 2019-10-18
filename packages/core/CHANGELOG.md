@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.16](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/core@5.0.0-alpha.15...@react-navigation/core@5.0.0-alpha.16) (2019-10-18)
+
+
+### Bug Fixes
+
+* rehydrate state before using it ([3e92e22](https://github.com/react-navigation/navigation-ex/commit/3e92e22))
+
+
+### Features
+
+* make it easier to navigate to a specific route in navigator ([#114](https://github.com/react-navigation/navigation-ex/issues/114)) ([a543f1b](https://github.com/react-navigation/navigation-ex/commit/a543f1b)), closes [#90](https://github.com/react-navigation/navigation-ex/issues/90)
+
+
+
+
+
 # [5.0.0-alpha.15](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/core@5.0.0-alpha.14...@react-navigation/core@5.0.0-alpha.15) (2019-10-15)
 
 
