@@ -108,7 +108,24 @@ export default function MockRouter(options: DefaultRouterOptions) {
             return null;
           }
 
-          return { ...state, index };
+          return {
+            ...state,
+            index,
+            routes:
+              action.payload.params !== undefined
+                ? state.routes.map((route, i) =>
+                    i === index
+                      ? {
+                          ...route,
+                          params: {
+                            ...route.params,
+                            ...action.payload.params,
+                          },
+                        }
+                      : route
+                  )
+                : state.routes,
+          };
         }
 
         default:
