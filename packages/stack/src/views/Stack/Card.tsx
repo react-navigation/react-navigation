@@ -385,7 +385,10 @@ export default class Card extends React.Component<Props> {
       this.props.current,
       this.props.next,
       this.props.layout,
-      this.props.insets
+      this.props.insets.top,
+      this.props.insets.right,
+      this.props.insets.bottom,
+      this.props.insets.left
     );
   };
 
@@ -684,7 +687,10 @@ export default class Card extends React.Component<Props> {
       current: Animated.Node<number>,
       next: Animated.Node<number> | undefined,
       layout: Layout,
-      insets: EdgeInsets
+      insetTop: number,
+      insetRight: number,
+      insetBottom: number,
+      insetLeft: number
     ) =>
       styleInterpolator({
         index,
@@ -694,7 +700,12 @@ export default class Card extends React.Component<Props> {
         layouts: {
           screen: layout,
         },
-        insets,
+        insets: {
+          top: insetTop,
+          right: insetRight,
+          bottom: insetBottom,
+          left: insetLeft,
+        },
       })
   );
 
@@ -708,7 +719,10 @@ export default class Card extends React.Component<Props> {
     this.props.current,
     this.props.next,
     this.props.layout,
-    this.props.insets
+    this.props.insets.top,
+    this.props.insets.right,
+    this.props.insets.bottom,
+    this.props.insets.left
   );
 
   private gestureActivationCriteria() {
@@ -776,7 +790,10 @@ export default class Card extends React.Component<Props> {
         current,
         next,
         layout,
-        insets
+        insets.top,
+        insets.right,
+        insets.bottom,
+        insets.left
       );
     }
 

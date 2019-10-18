@@ -1,15 +1,19 @@
 import * as React from 'react';
 import { StackActions } from '@react-navigation/routers';
-import { useSafeArea } from 'react-native-safe-area-context';
 
 import HeaderSegment from './HeaderSegment';
 import { StackHeaderProps, StackHeaderTitleProps } from '../../types';
 import HeaderTitle from './HeaderTitle';
 
 export default React.memo(function Header(props: StackHeaderProps) {
-  const insets = useSafeArea();
-
-  const { scene, previous, layout, navigation, styleInterpolator } = props;
+  const {
+    scene,
+    previous,
+    layout,
+    insets,
+    navigation,
+    styleInterpolator,
+  } = props;
   const { options } = scene.descriptor;
   const title =
     typeof options.headerTitle !== 'function' &&
