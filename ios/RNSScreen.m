@@ -66,20 +66,15 @@
   return self;
 }
 
+- (void)reactSetFrame:(CGRect)frame
+{
+  // ignore setFrame call from react, the frame of this view
+  // is controlled by the UIViewController it is contained in
+}
+
 - (void)updateBounds
 {
-  CGFloat navbarOffset = 0;
-  UINavigationController *navctr = self.controller.navigationController;
-  if (!navctr.isNavigationBarHidden && !navctr.navigationBar.isTranslucent) {
-    CGRect navbarFrame = navctr.navigationBar.frame;
-    navbarOffset = navbarFrame.origin.y + navbarFrame.size.height;
-  }
-
-  [_bridge.uiManager
-   setLocalData:[[RNSScreenFrameData alloc]
-                 initWithInsets:UIEdgeInsetsZero
-                 andNavbarOffset:navbarOffset]
-   forView:self];
+  [_bridge.uiManager setSize:self.bounds.size forView:self];
 }
 
 - (void)setActive:(BOOL)active
@@ -197,6 +192,7 @@
 @implementation RNSScreen {
   __weak UIView *_view;
   __weak id _previousFirstResponder;
+  CGRect _lastViewFrame;
 }
 
 - (instancetype)initWithView:(UIView *)view
@@ -205,6 +201,16 @@
     _view = view;
   }
   return self;
+}
+
+- (void)viewDidLayoutSubviews
+{
+  [super viewDidLayoutSubviews];
+
+  if (!CGRectEqualToRect(_lastViewFrame, self.view.frame)) {
+    _lastViewFrame = self.view.frame;
+    [((RNSScreenView *)self.view) updateBounds];
+  }
 }
 
 - (id)findFirstResponder:(UIView*)parent
@@ -240,10 +246,6 @@
   }
 }
 
-- (void) viewDidAppear:(BOOL)animated {
-  [((RNSScreenView *)self.view) updateBounds];
-}
-
 - (void)notifyFinishTransitioning
 {
   [_previousFirstResponder becomeFirstResponder];
@@ -260,23 +262,6 @@
 
 @end
 
-@interface RNSScreenShadowView : RCTShadowView
-@end
-
-@implementation RNSScreenShadowView
-
-- (void)setLocalData:(RNSScreenFrameData *)data
-{
-  self.paddingTop = (YGValue){data.topInset, YGUnitPoint};
-  self.paddingBottom = (YGValue){data.bottomInset, YGUnitPoint};
-  self.paddingLeft = (YGValue){data.leftInset, YGUnitPoint};
-  self.paddingRight = (YGValue){data.rightInset, YGUnitPoint};
-  self.top = (YGValue){data.navbarOffset, YGUnitPoint};
-  [self didSetProps:@[@"paddingTop", @"paddingBottom", @"paddingLeft", @"paddingRight", @"top"]];
-}
-
-@end
-
 @implementation RNSScreenManager
 
 RCT_EXPORT_MODULE()
@@ -289,11 +274,6 @@ RCT_EXPORT_VIEW_PROPERTY(onDismissed, RCTDirectEventBlock);
 - (UIView *)view
 {
   return [[RNSScreenView alloc] initWithBridge:self.bridge];
-}
-
-- (RCTShadowView *)shadowView
-{
-  return [RNSScreenShadowView new];
 }
 
 @end

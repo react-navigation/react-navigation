@@ -59,4 +59,9 @@ public class ScreenStackViewManager extends ViewGroupManager<ScreenStack> {
   public View getChildAt(ScreenStack parent, int index) {
     return parent.getScreenAt(index);
   }
+
+  @Override
+  public boolean needsCustomLayoutForChildren() {
+    return true;
+  }
 }

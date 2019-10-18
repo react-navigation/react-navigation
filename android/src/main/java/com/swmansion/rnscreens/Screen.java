@@ -1,10 +1,8 @@
 package com.swmansion.rnscreens;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Paint;
-import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -13,11 +11,12 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.facebook.react.bridge.GuardedRunnable;
 import com.facebook.react.bridge.ReactContext;
+import com.facebook.react.uimanager.MeasureSpecAssertions;
 import com.facebook.react.uimanager.PointerEvents;
 import com.facebook.react.uimanager.ReactPointerEventsView;
 import com.facebook.react.uimanager.UIManagerModule;
-import com.facebook.react.uimanager.events.EventDispatcher;
 
 public class Screen extends ViewGroup implements ReactPointerEventsView {
 
@@ -31,34 +30,6 @@ public class Screen extends ViewGroup implements ReactPointerEventsView {
     DEFAULT,
     NONE,
     FADE
-  }
-
-  public static class ScreenFragment extends Fragment {
-
-    private Screen mScreenView;
-
-    public ScreenFragment() {
-      throw new IllegalStateException("Screen fragments should never be restored");
-    }
-
-    @SuppressLint("ValidFragment")
-    public ScreenFragment(Screen screenView) {
-      super();
-      mScreenView = screenView;
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater,
-                             @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-      return mScreenView;
-    }
-
-    @Override
-    public void onDestroy() {
-      super.onDestroy();
-      mScreenView.mEventDispatcher.dispatchEvent(new ScreenDismissedEvent(mScreenView.getId()));
-    }
   }
 
   private static OnAttachStateChangeListener sShowSoftKeyboardOnAttach = new OnAttachStateChangeListener() {
@@ -77,8 +48,7 @@ public class Screen extends ViewGroup implements ReactPointerEventsView {
     }
   };
 
-  private final Fragment mFragment;
-  private final EventDispatcher mEventDispatcher;
+  private @Nullable Fragment mFragment;
   private @Nullable ScreenContainer mContainer;
   private boolean mActive;
   private boolean mTransitioning;
@@ -87,13 +57,23 @@ public class Screen extends ViewGroup implements ReactPointerEventsView {
 
   public Screen(ReactContext context) {
     super(context);
-    mFragment = new ScreenFragment(this);
-    mEventDispatcher = context.getNativeModule(UIManagerModule.class).getEventDispatcher();
   }
 
   @Override
-  protected void onLayout(boolean changed, int l, int t, int b, int r) {
-    // no-op
+  protected void onLayout(boolean changed, int l, int t, int r, int b) {
+    if (changed) {
+      final int width = r - l;
+      final int height = b - t;
+      final ReactContext reactContext = (ReactContext) getContext();
+      reactContext.runOnNativeModulesQueueThread(
+              new GuardedRunnable(reactContext) {
+                @Override
+                public void runGuarded() {
+                  reactContext.getNativeModule(UIManagerModule.class)
+                          .updateNodeSize(getId(), width, height);
+                }
+              });
+    }
   }
 
   @Override
@@ -166,12 +146,16 @@ public class Screen extends ViewGroup implements ReactPointerEventsView {
     mContainer = container;
   }
 
-  protected @Nullable ScreenContainer getContainer() {
-    return mContainer;
+  protected void setFragment(Fragment fragment) {
+    mFragment = fragment;
   }
 
-  protected Fragment getFragment() {
+  protected @Nullable Fragment getFragment() {
     return mFragment;
+  }
+
+  protected @Nullable ScreenContainer getContainer() {
+    return mContainer;
   }
 
   public void setActive(boolean active) {

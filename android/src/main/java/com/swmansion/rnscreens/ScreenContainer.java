@@ -6,7 +6,6 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -16,13 +15,12 @@ import com.facebook.react.modules.core.ReactChoreographer;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-public class ScreenContainer extends ViewGroup {
+public class ScreenContainer<T extends ScreenFragment> extends ViewGroup {
 
-  protected final ArrayList<Screen> mScreens = new ArrayList<>();
-  private final Set<Screen> mActiveScreens = new HashSet<>();
+  protected final ArrayList<T> mScreenFragments = new ArrayList<>();
+  private final Set<ScreenFragment> mActiveScreenFragments = new HashSet<>();
 
   private @Nullable FragmentTransaction mCurrentTransaction;
   private boolean mNeedUpdate;
@@ -59,24 +57,30 @@ public class ScreenContainer extends ViewGroup {
     markUpdated();
   }
 
+  protected T adapt(Screen screen) {
+    return (T) new ScreenFragment(screen);
+  }
+
   protected void addScreen(Screen screen, int index) {
-    mScreens.add(index, screen);
+    T fragment = adapt(screen);
+    screen.setFragment(fragment);
+    mScreenFragments.add(index, fragment);
     screen.setContainer(this);
     markUpdated();
   }
 
   protected void removeScreenAt(int index) {
-    mScreens.get(index).setContainer(null);
-    mScreens.remove(index);
+    mScreenFragments.get(index).getScreen().setContainer(null);
+    mScreenFragments.remove(index);
     markUpdated();
   }
 
   protected int getScreenCount() {
-    return mScreens.size();
+    return mScreenFragments.size();
   }
 
   protected Screen getScreenAt(int index) {
-    return mScreens.get(index);
+    return mScreenFragments.get(index).getScreen();
   }
 
   protected final FragmentActivity findRootFragmentActivity() {
@@ -120,25 +124,24 @@ public class ScreenContainer extends ViewGroup {
     }
   }
 
-  private void attachScreen(Screen screen) {
-    getOrCreateTransaction().add(getId(), screen.getFragment());
-    mActiveScreens.add(screen);
+  private void attachScreen(ScreenFragment screenFragment) {
+    getOrCreateTransaction().add(getId(), screenFragment);
+    mActiveScreenFragments.add(screenFragment);
   }
 
-  private void moveToFront(Screen screen) {
+  private void moveToFront(ScreenFragment screenFragment) {
     FragmentTransaction transaction = getOrCreateTransaction();
-    Fragment fragment = screen.getFragment();
-    transaction.remove(fragment);
-    transaction.add(getId(), fragment);
+    transaction.remove(screenFragment);
+    transaction.add(getId(), screenFragment);
   }
 
-  private void detachScreen(Screen screen) {
-    getOrCreateTransaction().remove(screen.getFragment());
-    mActiveScreens.remove(screen);
+  private void detachScreen(ScreenFragment screenFragment) {
+    getOrCreateTransaction().remove(screenFragment);
+    mActiveScreenFragments.remove(screenFragment);
   }
 
-  protected boolean isScreenActive(Screen screen, List<Screen> allScreens) {
-    return screen.isActive();
+  protected boolean isScreenActive(ScreenFragment screenFragment) {
+    return screenFragment.getScreen().isActive();
   }
 
   @Override
@@ -164,26 +167,26 @@ public class ScreenContainer extends ViewGroup {
 
   protected void onUpdate() {
     // detach screens that are no longer active
-    Set<Screen> orphaned = new HashSet<>(mActiveScreens);
-    for (int i = 0, size = mScreens.size(); i < size; i++) {
-      Screen screen = mScreens.get(i);
-      boolean isActive = isScreenActive(screen, mScreens);
-      if (!isActive && mActiveScreens.contains(screen)) {
-        detachScreen(screen);
+    Set<ScreenFragment> orphaned = new HashSet<>(mActiveScreenFragments);
+    for (int i = 0, size = mScreenFragments.size(); i < size; i++) {
+      ScreenFragment screenFragment = mScreenFragments.get(i);
+      boolean isActive = isScreenActive(screenFragment);
+      if (!isActive && mActiveScreenFragments.contains(screenFragment)) {
+        detachScreen(screenFragment);
       }
-      orphaned.remove(screen);
+      orphaned.remove(screenFragment);
     }
     if (!orphaned.isEmpty()) {
       Object[] orphanedAry = orphaned.toArray();
       for (int i = 0; i < orphanedAry.length; i++) {
-        detachScreen((Screen) orphanedAry[i]);
+        detachScreen((ScreenFragment) orphanedAry[i]);
       }
     }
 
     // detect if we are "transitioning" based on the number of active screens
     int activeScreens = 0;
-    for (int i = 0, size = mScreens.size(); i < size; i++) {
-      if (isScreenActive(mScreens.get(i), mScreens)) {
+    for (int i = 0, size = mScreenFragments.size(); i < size; i++) {
+      if (isScreenActive(mScreenFragments.get(i))) {
         activeScreens += 1;
       }
     }
@@ -191,16 +194,16 @@ public class ScreenContainer extends ViewGroup {
 
     // attach newly activated screens
     boolean addedBefore = false;
-    for (int i = 0, size = mScreens.size(); i < size; i++) {
-      Screen screen = mScreens.get(i);
-      boolean isActive = isScreenActive(screen, mScreens);
-      if (isActive && !mActiveScreens.contains(screen)) {
+    for (int i = 0, size = mScreenFragments.size(); i < size; i++) {
+      ScreenFragment screenFragment = mScreenFragments.get(i);
+      boolean isActive = isScreenActive(screenFragment);
+      if (isActive && !mActiveScreenFragments.contains(screenFragment)) {
         addedBefore = true;
-        attachScreen(screen);
+        attachScreen(screenFragment);
       } else if (isActive && addedBefore) {
-        moveToFront(screen);
+        moveToFront(screenFragment);
       }
-      screen.setTransitioning(transitioning);
+      screenFragment.getScreen().setTransitioning(transitioning);
     }
     tryCommitTransaction();
   }
