@@ -43,7 +43,20 @@ export default function StackView({ state, navigation, descriptors }: Props) {
             }}
           >
             <HeaderConfig {...options} route={route} />
-            <View style={[styles.content, contentStyle]}>{renderScene()}</View>
+            <View
+              style={[
+                styles.content,
+                {
+                  marginTop:
+                    Platform.OS === 'android' && options.headerShown !== false
+                      ? 56
+                      : 0,
+                },
+                contentStyle,
+              ]}
+            >
+              {renderScene()}
+            </View>
           </Screen>
         );
       })}
@@ -55,7 +68,6 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     backgroundColor: '#eee',
-    marginTop: Platform.OS === 'android' ? 56 : 0,
   },
   scenes: {
     flex: 1,
