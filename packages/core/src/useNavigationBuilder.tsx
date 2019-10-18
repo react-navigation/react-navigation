@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { NavigationStateContext } from './NavigationContainer';
+import NavigationRouteContext from './NavigationRouteContext';
 import Screen from './Screen';
+import { navigate } from './CommonActions';
 import useEventEmitter from './useEventEmitter';
 import useRegisterNavigator from './useRegisterNavigator';
 import useDescriptors from './useDescriptors';
@@ -29,6 +31,13 @@ import useOnGetState from './useOnGetState';
 // This is to make TypeScript compiler happy
 // eslint-disable-next-line babel/no-unused-expressions
 PrivateValueStore;
+
+type NavigatorRoute = {
+  params?: {
+    screen?: string;
+    params?: object;
+  };
+};
 
 /**
  * Compare two arrays with primitive values as the content.
@@ -96,9 +105,24 @@ export default function useNavigationBuilder<
 ) {
   useRegisterNavigator();
 
+  const route = React.useContext(NavigationRouteContext) as (
+    | NavigatorRoute
+    | undefined);
+
+  const previousRouteRef = React.useRef(route);
+
+  React.useEffect(() => {
+    previousRouteRef.current = route;
+  }, [route]);
+
   const { children, ...rest } = options;
   const { current: router } = React.useRef<Router<State, any>>(
-    createRouter((rest as unknown) as RouterOptions)
+    createRouter({
+      ...((rest as unknown) as RouterOptions),
+      ...(route && route.params && typeof route.params.screen === 'string'
+        ? { initialRouteName: route.params.screen }
+        : null),
+    })
   );
 
   const screens = getRouteConfigsFromChildren<ScreenOptions>(children).reduce(
@@ -118,7 +142,20 @@ export default function useNavigationBuilder<
   const routeNames = Object.keys(screens);
   const routeParamList = routeNames.reduce(
     (acc, curr) => {
-      acc[curr] = screens[curr].initialParams;
+      const { initialParams } = screens[curr];
+      const initialParamsFromParams =
+        route && route.params && route.params.screen === curr
+          ? route.params.params
+          : undefined;
+
+      acc[curr] =
+        initialParams !== undefined || initialParamsFromParams !== undefined
+          ? {
+              ...initialParams,
+              ...initialParamsFromParams,
+            }
+          : undefined;
+
       return acc;
     },
     {} as { [key: string]: object | undefined }
@@ -175,27 +212,46 @@ export default function useNavigationBuilder<
       ? (initializedStateRef.current as State)
       : (currentState as State);
 
+  let nextState: State = state;
+
   if (!isArrayEqual(state.routeNames, routeNames)) {
     // When the list of route names change, the router should handle it to remove invalid routes
-    const nextState = router.getStateForRouteNamesChange(state, {
+    nextState = router.getStateForRouteNamesChange(state, {
       routeNames,
       routeParamList,
     });
-
-    if (state !== nextState) {
-      // If the state needs to be updated, we'll schedule an update with React
-      // setState in render seems hacky, but that's how React docs implement getDerivedPropsFromState
-      // https://reactjs.org/docs/hooks-faq.html#how-do-i-implement-getderivedstatefromprops
-      performTransaction(() => {
-        setState(nextState);
-      });
-    }
-
-    // The up-to-date state will come in next render, but we don't need to wait for it
-    // We can't use the outdated state since the screens have changed, which will cause error due to mismatched config
-    // So we override the state objec we return to use the latest state as soon as possible
-    state = nextState;
   }
+
+  if (
+    previousRouteRef.current &&
+    route &&
+    route.params &&
+    typeof route.params.screen === 'string' &&
+    route.params !== previousRouteRef.current.params
+  ) {
+    // If the route was updated with new name and/or params, we should navigate there
+    // The update should be limited to current navigator only, so we call the router manually
+    const updatedState = router.getStateForAction(
+      state,
+      navigate(route.params.screen, route.params.params)
+    );
+
+    nextState = updatedState !== null ? updatedState : state;
+  }
+
+  if (state !== nextState) {
+    // If the state needs to be updated, we'll schedule an update with React
+    // setState in render seems hacky, but that's how React docs implement getDerivedPropsFromState
+    // https://reactjs.org/docs/hooks-faq.html#how-do-i-implement-getderivedstatefromprops
+    performTransaction(() => {
+      setState(nextState);
+    });
+  }
+
+  // The up-to-date state will come in next render, but we don't need to wait for it
+  // We can't use the outdated state since the screens have changed, which will cause error due to mismatched config
+  // So we override the state objec we return to use the latest state as soon as possible
+  state = nextState;
 
   React.useEffect(() => {
     return () => {

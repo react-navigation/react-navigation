@@ -5,7 +5,7 @@ import NavigationContainer from '../NavigationContainer';
 import useNavigationBuilder from '../useNavigationBuilder';
 import useNavigation from '../useNavigation';
 import MockRouter, { MockRouterKey } from './__fixtures__/MockRouter';
-import { NavigationState } from '../types';
+import { NavigationState, NavigationContainerRef } from '../types';
 
 beforeEach(() => (MockRouterKey.current = 0));
 
@@ -521,6 +521,80 @@ it('handles change in route names', () => {
     routeNames: ['foo', 'baz', 'qux'],
     routes: [{ key: 'foo', name: 'foo' }],
   });
+});
+
+it('navigates to nested child in a navigator', () => {
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return descriptors[state.routes[state.index].key].render();
+  };
+
+  const TestComponent = ({ route }: any): any =>
+    `[${route.name}, ${JSON.stringify(route.params)}]`;
+
+  const onStateChange = jest.fn();
+
+  const navigation = React.createRef<NavigationContainerRef>();
+
+  const element = render(
+    <NavigationContainer ref={navigation} onStateChange={onStateChange}>
+      <TestNavigator>
+        <Screen name="foo">
+          {() => (
+            <TestNavigator>
+              <Screen name="foo-a" component={TestComponent} />
+              <Screen name="foo-b" component={TestComponent} />
+            </TestNavigator>
+          )}
+        </Screen>
+        <Screen name="bar">
+          {() => (
+            <TestNavigator initialRouteName="bar-a">
+              <Screen
+                name="bar-a"
+                component={TestComponent}
+                initialParams={{ lol: 'why' }}
+              />
+              <Screen
+                name="bar-b"
+                component={TestComponent}
+                initialParams={{ some: 'stuff' }}
+              />
+            </TestNavigator>
+          )}
+        </Screen>
+      </TestNavigator>
+    </NavigationContainer>
+  );
+
+  expect(element).toMatchInlineSnapshot(`"[foo-a, undefined]"`);
+
+  act(
+    () =>
+      navigation.current &&
+      navigation.current.navigate('bar', {
+        screen: 'bar-b',
+        params: { test: 42 },
+      })
+  );
+
+  expect(element).toMatchInlineSnapshot(
+    `"[bar-b, {\\"some\\":\\"stuff\\",\\"test\\":42}]"`
+  );
+
+  act(
+    () =>
+      navigation.current &&
+      navigation.current.navigate('bar', {
+        screen: 'bar-a',
+        params: { whoa: 'test' },
+      })
+  );
+
+  expect(element).toMatchInlineSnapshot(
+    `"[bar-a, {\\"lol\\":\\"why\\",\\"whoa\\":\\"test\\"}]"`
+  );
 });
 
 it('gives access to internal state', () => {
