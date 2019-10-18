@@ -5,6 +5,7 @@ import {
   LayoutChangeEvent,
 } from 'react-native';
 import Animated from 'react-native-reanimated';
+import { EdgeInsets } from 'react-native-safe-area-context';
 import {
   NavigationProp,
   ParamListBase,
@@ -208,6 +209,10 @@ export type StackHeaderProps = {
    */
   layout: Layout;
   /**
+   * Safe area insets to use in the header, e.g. to apply extra spacing for statusbar and notch.
+   */
+  insets: EdgeInsets;
+  /**
    * Object representing the current scene, such as the route object and animation progress.
    */
   scene: Scene<Route<string>>;
@@ -302,6 +307,17 @@ export type StackNavigationOptions = StackHeaderOptions &
      * Defaults to 0.3.
      */
     gestureVelocityImpact?: number;
+    /**
+     * Safe area insets for the screen. This is used to avoid elements like notch and status bar.
+     * By default, the device's safe area insets are automatically detected. You can override the behavior with this option.
+     * For example, to remove the extra spacing for status bar, pass `safeAreaInsets: { top: 0 }`.
+     */
+    safeAreaInsets?: {
+      top?: number;
+      right?: number;
+      bottom?: number;
+      left?: number;
+    };
   };
 
 export type StackNavigationConfig = {

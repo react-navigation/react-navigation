@@ -332,6 +332,13 @@ export default class Stack extends React.Component<Props, State> {
       };
     }
 
+    const {
+      top = insets.top,
+      right = insets.right,
+      bottom = insets.bottom,
+      left = insets.left,
+    } = focusedOptions.safeAreaInsets || {};
+
     return (
       <React.Fragment>
         <MaybeScreenContainer
@@ -358,6 +365,7 @@ export default class Stack extends React.Component<Props, State> {
                 : 0;
 
             const {
+              safeAreaInsets,
               headerShown,
               headerTransparent,
               cardTransparent,
@@ -406,6 +414,13 @@ export default class Stack extends React.Component<Props, State> {
               }
             }
 
+            const {
+              top: safeAreaInsetTop = insets.top,
+              right: safeAreaInsetRight = insets.right,
+              bottom: safeAreaInsetBottom = insets.bottom,
+              left: safeAreaInsetLeft = insets.left,
+            } = safeAreaInsets || {};
+
             return (
               <MaybeScreen
                 key={route.key}
@@ -420,12 +435,15 @@ export default class Stack extends React.Component<Props, State> {
                   focused={focused}
                   closing={closingRouteKeys.includes(route.key)}
                   layout={layout}
-                  insets={insets}
                   current={current}
                   scene={scene}
                   previousScene={scenes[index - 1]}
                   navigation={navigation}
                   state={state}
+                  safeAreaInsetTop={safeAreaInsetTop}
+                  safeAreaInsetRight={safeAreaInsetRight}
+                  safeAreaInsetBottom={safeAreaInsetBottom}
+                  safeAreaInsetLeft={safeAreaInsetLeft}
                   cardTransparent={cardTransparent}
                   cardOverlayEnabled={cardOverlayEnabled}
                   cardShadowEnabled={cardShadowEnabled}
@@ -459,6 +477,7 @@ export default class Stack extends React.Component<Props, State> {
           ? renderHeader({
               mode: 'float',
               layout,
+              insets: { top, right, bottom, left },
               scenes,
               state,
               getPreviousRoute,

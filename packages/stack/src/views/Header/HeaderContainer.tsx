@@ -6,6 +6,7 @@ import {
   ParamListBase,
 } from '@react-navigation/core';
 import { StackNavigationState } from '@react-navigation/routers';
+import { EdgeInsets } from 'react-native-safe-area-context';
 
 import Header from './Header';
 import { forStatic } from '../../TransitionConfigs/HeaderStyleInterpolators';
@@ -19,6 +20,7 @@ import {
 export type Props = {
   mode: 'float' | 'screen';
   layout: Layout;
+  insets: EdgeInsets;
   scenes: Array<Scene<Route<string>> | undefined>;
   state: StackNavigationState;
   getPreviousRoute: (props: {
@@ -36,6 +38,7 @@ export default function HeaderContainer({
   mode,
   scenes,
   layout,
+  insets,
   state,
   getPreviousRoute,
   onContentHeightChange,
@@ -87,6 +90,7 @@ export default function HeaderContainer({
         const props = {
           mode,
           layout,
+          insets,
           scene,
           previous,
           navigation: scene.descriptor.navigation as StackNavigationProp<

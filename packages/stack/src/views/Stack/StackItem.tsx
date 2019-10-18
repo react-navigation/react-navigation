@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { EdgeInsets } from 'react-native-safe-area-context';
 import { StackNavigationState } from '@react-navigation/routers';
 import { Route } from '@react-navigation/core';
 import { Props as HeaderContainerProps } from '../Header/HeaderContainer';
@@ -20,12 +19,15 @@ type Props = TransitionPreset & {
   focused: boolean;
   closing: boolean;
   layout: Layout;
-  insets: EdgeInsets;
   current: Animated.Value<number>;
   previousScene?: Scene<Route<string>>;
   scene: Scene<Route<string>>;
   state: StackNavigationState;
   navigation: StackNavigationHelpers;
+  safeAreaInsetTop: number;
+  safeAreaInsetRight: number;
+  safeAreaInsetBottom: number;
+  safeAreaInsetLeft: number;
   cardTransparent?: boolean;
   cardOverlayEnabled?: boolean;
   cardShadowEnabled?: boolean;
@@ -96,7 +98,6 @@ export default class StackItem extends React.PureComponent<Props> {
     const {
       index,
       layout,
-      insets,
       active,
       focused,
       closing,
@@ -104,6 +105,10 @@ export default class StackItem extends React.PureComponent<Props> {
       state,
       scene,
       previousScene,
+      safeAreaInsetTop,
+      safeAreaInsetRight,
+      safeAreaInsetBottom,
+      safeAreaInsetLeft,
       cardTransparent,
       cardOverlayEnabled,
       cardShadowEnabled,
@@ -125,6 +130,13 @@ export default class StackItem extends React.PureComponent<Props> {
       cardStyleInterpolator,
       headerStyleInterpolator,
     } = this.props;
+
+    const insets = {
+      top: safeAreaInsetTop,
+      right: safeAreaInsetRight,
+      bottom: safeAreaInsetBottom,
+      left: safeAreaInsetLeft,
+    };
 
     return (
       <Card
@@ -168,6 +180,7 @@ export default class StackItem extends React.PureComponent<Props> {
             ? renderHeader({
                 mode: 'screen',
                 layout,
+                insets,
                 scenes: [previousScene, scene],
                 state,
                 getPreviousRoute,
