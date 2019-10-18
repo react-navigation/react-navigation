@@ -46,7 +46,7 @@ export default function HeaderConfig(props: Props) {
           : route.name
       }
       titleFontFamily={headerTitleStyle.fontFamily}
-      titleFontSize={headerTitleStyle.fontFamily}
+      titleFontSize={headerTitleStyle.fontSize}
       titleColor={
         headerTitleStyle.color !== undefined
           ? headerTitleStyle.color
