@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.27](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.26...@react-navigation/stack@5.0.0-alpha.27) (2019-10-18)
+
+
+### Features
+
+* add an option to override safe area insets ([300791a](https://github.com/react-navigation/navigation-ex/commit/300791a))
+
+
+
+
+
 # [5.0.0-alpha.26](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.25...@react-navigation/stack@5.0.0-alpha.26) (2019-10-17)
 
 
