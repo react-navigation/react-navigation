@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 import { NavigationContext, NavigationRoute } from 'react-navigation';
+import { EdgeInsets } from 'react-native-safe-area-context';
 import {
   Layout,
   HeaderScene,
@@ -13,6 +14,7 @@ import { forStatic } from '../../TransitionConfigs/HeaderStyleInterpolators';
 export type Props = {
   mode: 'float' | 'screen';
   layout: Layout;
+  insets: EdgeInsets;
   scenes: Array<HeaderScene | undefined>;
   navigation: NavigationStackProp;
   getPreviousRoute: (props: {
@@ -30,6 +32,7 @@ export default function HeaderContainer({
   mode,
   scenes,
   layout,
+  insets,
   navigation,
   getPreviousRoute,
   onContentHeightChange,
@@ -84,6 +87,7 @@ export default function HeaderContainer({
         const props = {
           mode,
           layout,
+          insets,
           scene,
           previous,
           navigation: scene.descriptor.navigation as NavigationStackProp,

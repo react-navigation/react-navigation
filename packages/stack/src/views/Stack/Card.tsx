@@ -14,7 +14,7 @@ import {
   PanGestureHandler,
   State as GestureState,
 } from 'react-native-gesture-handler';
-import { SafeAreaContext, EdgeInsets } from 'react-native-safe-area-context';
+import { EdgeInsets } from 'react-native-safe-area-context';
 import {
   TransitionSpec,
   CardStyleInterpolator,
@@ -34,6 +34,7 @@ type Props = ViewProps & {
   next?: Animated.Node<number>;
   current: Animated.Value<number>;
   layout: Layout;
+  insets: EdgeInsets;
   gestureDirection: 'horizontal' | 'vertical' | 'vertical-inverted';
   onOpen: (isFinished: boolean) => void;
   onClose: (isFinished: boolean) => void;
@@ -229,13 +230,6 @@ function transformTimingConfigToAnimatedValues(
   };
 }
 
-const DEFAULT_INSETS: EdgeInsets = {
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: 0,
-};
-
 export default class Card extends React.Component<Props> {
   static defaultProps = {
     overlayEnabled: Platform.OS !== 'ios',
@@ -243,10 +237,6 @@ export default class Card extends React.Component<Props> {
     gestureEnabled: true,
     gestureVelocityImpact: GESTURE_VELOCITY_IMPACT,
   };
-
-  static contextType = SafeAreaContext;
-
-  context!: EdgeInsets | null;
 
   componentDidUpdate(prevProps: Props) {
     const {
@@ -407,7 +397,10 @@ export default class Card extends React.Component<Props> {
       this.props.current,
       this.props.next,
       this.props.layout,
-      this.context || DEFAULT_INSETS
+      this.props.insets.top,
+      this.props.insets.right,
+      this.props.insets.bottom,
+      this.props.insets.left
     );
   };
 
@@ -716,7 +709,10 @@ export default class Card extends React.Component<Props> {
       current: Animated.Node<number>,
       next: Animated.Node<number> | undefined,
       layout: Layout,
-      insets: EdgeInsets
+      insetTop: number,
+      insetRight: number,
+      insetBottom: number,
+      insetLeft: number
     ) =>
       styleInterpolator({
         index,
@@ -726,7 +722,12 @@ export default class Card extends React.Component<Props> {
         layouts: {
           screen: layout,
         },
-        insets,
+        insets: {
+          top: insetTop,
+          right: insetRight,
+          bottom: insetBottom,
+          left: insetLeft,
+        },
       })
   );
 
@@ -740,7 +741,10 @@ export default class Card extends React.Component<Props> {
     this.props.current,
     this.props.next,
     this.props.layout,
-    this.context || DEFAULT_INSETS
+    this.props.insets.top,
+    this.props.insets.right,
+    this.props.insets.bottom,
+    this.props.insets.left
   );
 
   private gestureActivationCriteria() {
@@ -797,6 +801,7 @@ export default class Card extends React.Component<Props> {
       current,
       next,
       layout,
+      insets,
       overlayEnabled,
       shadowEnabled,
       gestureEnabled,
@@ -814,7 +819,10 @@ export default class Card extends React.Component<Props> {
         current,
         next,
         layout,
-        this.context || DEFAULT_INSETS
+        insets.top,
+        insets.right,
+        insets.bottom,
+        insets.left
       );
     }
 

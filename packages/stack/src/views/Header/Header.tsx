@@ -9,6 +9,7 @@ export default class Header extends React.PureComponent<HeaderProps> {
       scene,
       previous,
       layout,
+      insets,
       navigation,
       styleInterpolator,
     } = this.props;
@@ -42,6 +43,7 @@ export default class Header extends React.PureComponent<HeaderProps> {
       <HeaderSegment
         {...options}
         layout={layout}
+        insets={insets}
         scene={scene}
         title={title}
         leftLabel={leftLabel}

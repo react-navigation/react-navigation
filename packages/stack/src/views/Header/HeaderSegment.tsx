@@ -7,7 +7,7 @@ import {
   ViewStyle,
 } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { SafeAreaContext, EdgeInsets } from 'react-native-safe-area-context';
+import { EdgeInsets } from 'react-native-safe-area-context';
 import HeaderTitle from './HeaderTitle';
 import HeaderBackButton from './HeaderBackButton';
 import HeaderBackground from './HeaderBackground';
@@ -27,6 +27,7 @@ export type Scene<T> = {
 
 type Props = HeaderOptions & {
   layout: Layout;
+  insets: EdgeInsets;
   onGoBack?: () => void;
   title?: React.ReactNode;
   leftLabel?: string;
@@ -37,13 +38,6 @@ type Props = HeaderOptions & {
 type State = {
   titleLayout?: Layout;
   leftLabelLayout?: Layout;
-};
-
-const DEFAULT_INSETS = {
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: 0,
 };
 
 const warnIfHeaderStylesDefined = (styles: { [key: string]: any }) => {
@@ -87,10 +81,6 @@ export const getDefaultHeaderHeight = (
 };
 
 export default class HeaderSegment extends React.Component<Props, State> {
-  static contextType = SafeAreaContext;
-
-  context!: EdgeInsets | null;
-
   state: State = {};
 
   private handleTitleLayout = (e: LayoutChangeEvent) => {
@@ -147,6 +137,7 @@ export default class HeaderSegment extends React.Component<Props, State> {
     const {
       scene,
       layout,
+      insets,
       title: currentTitle,
       leftLabel: previousTitle,
       onGoBack,
@@ -197,12 +188,10 @@ export default class HeaderSegment extends React.Component<Props, State> {
       previousTitle ? leftLabelLayout : undefined
     );
 
-    const insets = this.context || DEFAULT_INSETS;
-
     const statusBarHeight = insets.top;
 
     const {
-      height = getDefaultHeaderHeight(layout, this.context),
+      height = getDefaultHeaderHeight(layout, insets),
       minHeight,
       maxHeight,
       backgroundColor,

@@ -43,6 +43,13 @@ type State = {
   descriptors: SceneDescriptorMap;
 };
 
+const DEFAULT_INSETS = {
+  top: 0,
+  right: 0,
+  bottom: 0,
+  left: 0,
+};
+
 class StackView extends React.Component<Props, State> {
   static getDerivedStateFromProps(
     props: Readonly<Props>,
@@ -364,7 +371,7 @@ class StackView extends React.Component<Props, State> {
           {insets => (
             <Stack
               mode={mode}
-              insets={insets}
+              insets={insets || DEFAULT_INSETS}
               getPreviousRoute={this.getPreviousRoute}
               getGesturesEnabled={this.getGesturesEnabled}
               routes={routes}

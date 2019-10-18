@@ -101,6 +101,7 @@ export type HeaderOptions = {
 export type HeaderProps = {
   mode: 'float' | 'screen';
   layout: Layout;
+  insets: EdgeInsets;
   scene: HeaderScene;
   previous?: HeaderScene;
   navigation: NavigationStackProp;
@@ -129,6 +130,12 @@ export type NavigationStackOptions = HeaderOptions &
     onTransitionStart?: (props: TransitionCallbackProps) => void;
     onTransitionEnd?: (props: TransitionCallbackProps) => void;
     gestureVelocityImpact?: number;
+    safeAreaInsets?: {
+      top?: number;
+      right?: number;
+      bottom?: number;
+      left?: number;
+    };
   };
 
 export type NavigationStackConfig = {

@@ -35,7 +35,7 @@ type ProgressValues = {
 
 type Props = {
   mode: 'card' | 'modal';
-  insets: EdgeInsets | null;
+  insets: EdgeInsets;
   navigation: NavigationStackProp;
   descriptors: SceneDescriptorMap;
   routes: NavigationRoute[];
@@ -300,6 +300,7 @@ export default class Stack extends React.Component<Props, State> {
   render() {
     const {
       mode,
+      insets,
       descriptors,
       navigation,
       routes,
@@ -332,6 +333,13 @@ export default class Stack extends React.Component<Props, State> {
         headerStyleInterpolator: forNoAnimation,
       };
     }
+
+    const {
+      top = insets.top,
+      right = insets.right,
+      bottom = insets.bottom,
+      left = insets.left,
+    } = focusedOptions.safeAreaInsets || {};
 
     return (
       <React.Fragment>
@@ -367,6 +375,7 @@ export default class Stack extends React.Component<Props, State> {
             }
 
             const {
+              safeAreaInsets,
               header,
               headerShown,
               headerTransparent,
@@ -416,6 +425,13 @@ export default class Stack extends React.Component<Props, State> {
               }
             }
 
+            const {
+              top: safeAreaInsetTop = insets.top,
+              right: safeAreaInsetRight = insets.right,
+              bottom: safeAreaInsetBottom = insets.bottom,
+              left: safeAreaInsetLeft = insets.left,
+            } = safeAreaInsets || {};
+
             return (
               <MaybeScreen
                 key={route.key}
@@ -434,6 +450,10 @@ export default class Stack extends React.Component<Props, State> {
                   scene={scene}
                   previousScene={scenes[index - 1]}
                   navigation={navigation}
+                  safeAreaInsetTop={safeAreaInsetTop}
+                  safeAreaInsetRight={safeAreaInsetRight}
+                  safeAreaInsetBottom={safeAreaInsetBottom}
+                  safeAreaInsetLeft={safeAreaInsetLeft}
                   cardTransparent={cardTransparent}
                   cardOverlayEnabled={cardOverlayEnabled}
                   cardShadowEnabled={cardShadowEnabled}
@@ -470,6 +490,7 @@ export default class Stack extends React.Component<Props, State> {
           ? renderHeader({
               mode: 'float',
               layout,
+              insets: { top, right, bottom, left },
               scenes,
               navigation,
               getPreviousRoute,

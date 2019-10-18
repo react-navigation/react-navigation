@@ -22,6 +22,10 @@ type Props = TransitionPreset & {
   previousScene?: HeaderScene;
   scene: HeaderScene;
   navigation: NavigationStackProp;
+  safeAreaInsetTop: number;
+  safeAreaInsetRight: number;
+  safeAreaInsetBottom: number;
+  safeAreaInsetLeft: number;
   cardTransparent?: boolean;
   cardOverlayEnabled?: boolean;
   cardShadowEnabled?: boolean;
@@ -102,6 +106,10 @@ export default class StackItem extends React.PureComponent<Props> {
       navigation,
       scene,
       previousScene,
+      safeAreaInsetTop,
+      safeAreaInsetRight,
+      safeAreaInsetBottom,
+      safeAreaInsetLeft,
       cardTransparent,
       cardOverlayEnabled,
       cardShadowEnabled,
@@ -124,6 +132,13 @@ export default class StackItem extends React.PureComponent<Props> {
       gestureVelocityImpact,
     } = this.props;
 
+    const insets = {
+      top: safeAreaInsetTop,
+      right: safeAreaInsetRight,
+      bottom: safeAreaInsetBottom,
+      left: safeAreaInsetLeft,
+    };
+
     return (
       <Card
         index={index}
@@ -131,6 +146,7 @@ export default class StackItem extends React.PureComponent<Props> {
         transparent={cardTransparent}
         gestureDirection={gestureDirection}
         layout={layout}
+        insets={insets}
         current={current}
         next={scene.progress.next}
         closing={closing}
@@ -165,6 +181,7 @@ export default class StackItem extends React.PureComponent<Props> {
             ? renderHeader({
                 mode: 'screen',
                 layout,
+                insets,
                 scenes: [previousScene, scene],
                 navigation,
                 getPreviousRoute,
