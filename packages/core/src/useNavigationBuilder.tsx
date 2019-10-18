@@ -236,7 +236,13 @@ export default function useNavigationBuilder<
       navigate(route.params.screen, route.params.params)
     );
 
-    nextState = updatedState !== null ? updatedState : state;
+    nextState =
+      updatedState !== null
+        ? router.getRehydratedState(updatedState, {
+            routeNames,
+            routeParamList,
+          })
+        : state;
   }
 
   if (state !== nextState) {
