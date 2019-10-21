@@ -18,17 +18,6 @@ export type NavigationTabProp<
 };
 
 export type NavigationMaterialBottomTabOptions = {
-  shifting?: boolean;
-  labeled?: boolean;
-  activeColor?: string;
-  activeColorLight?: string;
-  activeColorDark?: string;
-  inactiveColor?: string;
-  inactiveColorLight?: string;
-  inactiveColorDark?: string;
-  barStyle?: StyleProp<ViewStyle>;
-  barStyleLight?: StyleProp<ViewStyle>;
-  barStyleDark?: StyleProp<ViewStyle>;
   title?: string;
   tabBarLabel?: React.ReactNode;
   tabBarVisible?: boolean;
