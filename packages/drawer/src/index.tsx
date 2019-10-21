@@ -17,6 +17,7 @@ export { default as DrawerRouter } from './routers/DrawerRouter';
  * Views
  */
 export { default as DrawerNavigatorItems } from './views/DrawerNavigatorItems';
+export { default as DrawerItems } from './views/DrawerNavigatorItems';
 export { default as DrawerSidebar } from './views/DrawerSidebar';
 export { default as DrawerView } from './views/DrawerView';
 
