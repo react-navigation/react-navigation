@@ -49,7 +49,7 @@ export default function createCompatNavigatorFactory<
     navigationConfig: Partial<Omit<NavigationConfig, 'screenOptions'>> & {
       order?: Array<Extract<keyof ParamList, string>>;
       defaultNavigationOptions?: ScreenOptions;
-      navigationOptions?: { [key: string]: any };
+      navigationOptions?: Record<string, any>;
     } = {}
   ) => {
     const Pair = createNavigator();

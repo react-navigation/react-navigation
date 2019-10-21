@@ -10,7 +10,7 @@ import {
 type Config = {
   [routeName: string]:
     | string
-    | { path: string; parse?: { [key: string]: (value: string) => any } };
+    | { path: string; parse?: Record<string, (value: string) => any> };
 };
 
 type Options = {

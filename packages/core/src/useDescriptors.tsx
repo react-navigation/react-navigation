@@ -20,7 +20,7 @@ import {
 
 type Options<State extends NavigationState, ScreenOptions extends object> = {
   state: State;
-  screens: { [key: string]: RouteConfig<ParamListBase, string, ScreenOptions> };
+  screens: Record<string, RouteConfig<ParamListBase, string, ScreenOptions>>;
   navigation: NavigationHelpers<ParamListBase>;
   screenOptions?:
     | ScreenOptions
@@ -68,7 +68,7 @@ export default function useDescriptors<
   router,
   emitter,
 }: Options<State, ScreenOptions>) {
-  const [options, setOptions] = React.useState<{ [key: string]: object }>({});
+  const [options, setOptions] = React.useState<Record<string, object>>({});
   const { trackAction } = React.useContext(NavigationBuilderContext);
 
   const context = React.useMemo(

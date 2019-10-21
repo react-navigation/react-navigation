@@ -2,7 +2,7 @@ import escape from 'escape-string-regexp';
 import queryString from 'query-string';
 import { NavigationState, PartialState } from './types';
 
-type ParseConfig = { [key: string]: (value: string) => any };
+type ParseConfig = Record<string, (value: string) => any>;
 
 type Options = {
   [routeName: string]: string | { path: string; parse?: ParseConfig };
@@ -78,7 +78,7 @@ export default function getStateFromPath(
           .filter(p => p.startsWith(':'));
 
         if (paramPatterns.length) {
-          params = paramPatterns.reduce<{ [key: string]: any }>((acc, p, i) => {
+          params = paramPatterns.reduce<Record<string, any>>((acc, p, i) => {
             const key = p.replace(/^:/, '');
             const value = match[i + 1]; // The param segments start from index 1 in the regex match result
 

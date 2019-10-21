@@ -65,7 +65,7 @@ type State = {
   scenes: Scene<Route<string>>[];
   progress: ProgressValues;
   layout: Layout;
-  floatingHeaderHeights: { [key: string]: number };
+  floatingHeaderHeights: Record<string, number>;
 };
 
 const dimensions = Dimensions.get('window');
@@ -119,23 +119,20 @@ const getFloatingHeaderHeights = (
   insets: EdgeInsets,
   descriptors: StackDescriptorMap,
   layout: Layout,
-  previous: { [key: string]: number }
+  previous: Record<string, number>
 ) => {
   const defaultHeaderHeight = getDefaultHeaderHeight(layout, insets);
 
-  return routes.reduce(
-    (acc, curr) => {
-      const { options = {} } = descriptors[curr.key] || {};
-      const { height = previous[curr.key] } = StyleSheet.flatten(
-        options.headerStyle || {}
-      );
+  return routes.reduce<Record<string, number>>((acc, curr) => {
+    const { options = {} } = descriptors[curr.key] || {};
+    const { height = previous[curr.key] } = StyleSheet.flatten(
+      options.headerStyle || {}
+    );
 
-      acc[curr.key] = typeof height === 'number' ? height : defaultHeaderHeight;
+    acc[curr.key] = typeof height === 'number' ? height : defaultHeaderHeight;
 
-      return acc;
-    },
-    {} as { [key: string]: number }
-  );
+    return acc;
+  }, {});
 };
 
 export default class Stack extends React.Component<Props, State> {

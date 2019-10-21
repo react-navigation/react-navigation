@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { EventEmitter, EventConsumer, EventArg } from './types';
 
-export type NavigationEventEmitter = EventEmitter<{ [key: string]: any }> & {
-  create: (target: string) => EventConsumer<{ [key: string]: any }>;
+export type NavigationEventEmitter = EventEmitter<Record<string, any>> & {
+  create: (target: string) => EventConsumer<Record<string, any>>;
 };
 
 type Listeners = Array<(data: any) => void>;
@@ -11,9 +11,7 @@ type Listeners = Array<(data: any) => void>;
  * Hook to manage the event system used by the navigator to notify screens of various events.
  */
 export default function useEventEmitter(): NavigationEventEmitter {
-  const listeners = React.useRef<{
-    [key: string]: { [key: string]: Listeners };
-  }>({});
+  const listeners = React.useRef<Record<string, Record<string, Listeners>>>({});
 
   const create = React.useCallback((target: string) => {
     const removeListener = (type: string, callback: (data: any) => void) => {

@@ -42,7 +42,7 @@ type State = {
   leftLabelLayout?: Layout;
 };
 
-const warnIfHeaderStylesDefined = (styles: { [key: string]: any }) => {
+const warnIfHeaderStylesDefined = (styles: Record<string, any>) => {
   Object.keys(styles).forEach(styleProp => {
     const value = styles[styleProp];
 
