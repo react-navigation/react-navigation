@@ -218,6 +218,18 @@ Allows for customizing font family to be used for back button title on iOS.
 
 Allows for customizing font size to be used for back button title on iOS.
 
+#### `largeTitle` (iOS only)
+
+When set to `true` it makes the title display using the large title effect.
+
+#### `largeTitleFontFamily` (iOS only)
+
+Customize font family to be used for the large title.
+
+#### `largeTitleFontSize` (iOS only)
+
+Customize the size of the font to be used for the large title.
+
 ## Guide for native component authors
 
 If you are adding a new native component to be used from the React Native app, you may want it to respond to navigation lifecycle events.

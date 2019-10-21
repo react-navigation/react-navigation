@@ -106,7 +106,22 @@
     }
     [navbar setTitleTextAttributes:attrs];
   }
-
+  
+  if (@available(iOS 11.0, *) && config.largeTitle) {
+    if (config.largeTitleFontFamily || config.largeTitleFontSize || config.titleColor) {
+      NSMutableDictionary *largeAttrs = [NSMutableDictionary new];
+      if (config.titleColor) {
+        largeAttrs[NSForegroundColorAttributeName] = config.titleColor;
+      }
+      CGFloat largeSize = config.largeTitleFontSize ? [config.largeTitleFontSize floatValue] : 34;
+      if (config.largeTitleFontFamily) {
+        largeAttrs[NSFontAttributeName] = [UIFont fontWithName:config.largeTitleFontFamily size:largeSize];
+      } else {
+        largeAttrs[NSFontAttributeName] = [UIFont boldSystemFontOfSize:largeSize];
+      }
+      [navbar setLargeTitleTextAttributes:largeAttrs];
+    }
+  }
 }
 
 + (void)setTitleAttibutes:(NSDictionary *)attrs forButton:(UIBarButtonItem *)button
@@ -235,6 +250,8 @@ RCT_EXPORT_VIEW_PROPERTY(backTitleFontSize, NSString)
 RCT_EXPORT_VIEW_PROPERTY(backgroundColor, UIColor)
 RCT_EXPORT_VIEW_PROPERTY(color, UIColor)
 RCT_EXPORT_VIEW_PROPERTY(largeTitle, BOOL)
+RCT_EXPORT_VIEW_PROPERTY(largeTitleFontFamily, NSString)
+RCT_EXPORT_VIEW_PROPERTY(largeTitleFontSize, NSNumber)
 RCT_EXPORT_VIEW_PROPERTY(hideBackButton, BOOL)
 RCT_EXPORT_VIEW_PROPERTY(hideShadow, BOOL)
 // `hidden` is an UIView property, we need to use different name internally

@@ -14,6 +14,8 @@
 @property (nonatomic, retain) UIColor *color;
 @property (nonatomic) BOOL hide;
 @property (nonatomic) BOOL largeTitle;
+@property (nonatomic, retain) NSString *largeTitleFontFamily;
+@property (nonatomic, retain) NSNumber *largeTitleFontSize;
 @property (nonatomic) BOOL hideBackButton;
 @property (nonatomic) BOOL hideShadow;
 @property (nonatomic) BOOL translucent;
