@@ -58,7 +58,6 @@
   if (self = [super init]) {
     _bridge = bridge;
     _controller = [[RNSScreen alloc] initWithView:self];
-    _controller.presentationController.delegate = self;
     _stackPresentation = RNSScreenStackPresentationPush;
     _stackAnimation = RNSScreenStackAnimationDefault;
   }
@@ -116,6 +115,10 @@
       _controller.modalPresentationStyle = UIModalPresentationOverCurrentContext;
       break;
   }
+  // `modalPresentationStyle` must be set before accessing `presentationController`
+  // otherwise a default controller will be created and cannot be changed after.
+  // Documented here: https://developer.apple.com/documentation/uikit/uiviewcontroller/1621426-presentationcontroller?language=objc
+  _controller.presentationController.delegate = self;
 }
 
 - (UIView *)reactSuperview
