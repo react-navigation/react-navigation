@@ -1,11 +1,14 @@
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
-import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
+import {
+  createMaterialBottomTabNavigator,
+  NavigationMaterialBottomTabOptions,
+} from 'react-navigation-material-bottom-tabs';
 import PhotoGrid from './shared/PhotoGrid';
 import tabBarIcon from './shared/tabBarIcon';
 
 class Album extends React.Component {
-  static navigationOptions = {
+  static navigationOptions: NavigationMaterialBottomTabOptions = {
     tabBarIcon: tabBarIcon('photo-album'),
   };
 
@@ -15,7 +18,7 @@ class Album extends React.Component {
 }
 
 class Library extends React.Component {
-  static navigationOptions = {
+  static navigationOptions: NavigationMaterialBottomTabOptions = {
     tabBarIcon: tabBarIcon('inbox'),
   };
 
@@ -25,7 +28,7 @@ class Library extends React.Component {
 }
 
 class Favorites extends React.Component {
-  static navigationOptions = {
+  static navigationOptions: NavigationMaterialBottomTabOptions = {
     tabBarIcon: tabBarIcon('favorite'),
   };
 
@@ -35,8 +38,9 @@ class Favorites extends React.Component {
 }
 
 class Purchased extends React.Component {
-  static navigationOptions = {
+  static navigationOptions: NavigationMaterialBottomTabOptions = {
     tabBarIcon: tabBarIcon('shop'),
+    tabBarBadge: 12,
   };
 
   render() {

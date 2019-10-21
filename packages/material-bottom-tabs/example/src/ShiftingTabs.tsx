@@ -1,10 +1,13 @@
 import * as React from 'react';
-import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
+import {
+  createMaterialBottomTabNavigator,
+  NavigationMaterialBottomTabOptions,
+} from 'react-navigation-material-bottom-tabs';
 import PhotoGrid from './shared/PhotoGrid';
 import tabBarIcon from './shared/tabBarIcon';
 
 class Album extends React.Component {
-  static navigationOptions = {
+  static navigationOptions: NavigationMaterialBottomTabOptions = {
     tabBarColor: '#6200ee',
     tabBarIcon: tabBarIcon('photo-album'),
   };
@@ -15,7 +18,7 @@ class Album extends React.Component {
 }
 
 class Library extends React.Component {
-  static navigationOptions = {
+  static navigationOptions: NavigationMaterialBottomTabOptions = {
     tabBarColor: '#2962ff',
     tabBarIcon: tabBarIcon('inbox'),
   };
@@ -26,7 +29,7 @@ class Library extends React.Component {
 }
 
 class Favorites extends React.Component {
-  static navigationOptions = {
+  static navigationOptions: NavigationMaterialBottomTabOptions = {
     tabBarColor: '#00796b',
     tabBarIcon: tabBarIcon('favorite'),
   };
@@ -37,9 +40,10 @@ class Favorites extends React.Component {
 }
 
 class Purchased extends React.Component {
-  static navigationOptions = {
+  static navigationOptions: NavigationMaterialBottomTabOptions = {
     tabBarColor: '#c51162',
     tabBarIcon: tabBarIcon('shop'),
+    tabBarBadge: 'test',
   };
 
   render() {

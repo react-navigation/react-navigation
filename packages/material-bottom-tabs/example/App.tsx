@@ -39,7 +39,9 @@ class Home extends React.Component<Props> {
   _renderItem = ({ item }: { item: Item }) => (
     <List.Item
       title={item.title}
-      onPress={() => this.props.navigation.navigate(item.routeName)}
+      onPress={() => {
+        this.props.navigation.navigate(item.routeName);
+      }}
     />
   );
 

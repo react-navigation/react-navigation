@@ -5,7 +5,6 @@ const blacklist = require('metro-config/src/defaults/blacklist');
 const pak = require('../package.json');
 const escape = require('escape-string-regexp');
 
-const dependencies = Object.keys(pak.dependencies);
 const peerDependencies = Object.keys(pak.peerDependencies);
 
 module.exports = {
@@ -22,7 +21,6 @@ module.exports = {
     providesModuleNodeModules: [
       '@expo/vector-icons',
       '@babel/runtime',
-      ...dependencies,
       ...peerDependencies,
     ],
   },

@@ -1,12 +1,12 @@
 import * as React from 'react';
 import {
   ThemeContext,
-  NavigationRoute,
   NavigationProp,
   NavigationDescriptor,
 } from 'react-navigation';
 import { BottomNavigation } from 'react-native-paper';
 import { NavigationMaterialBottomTabConfig } from '../types';
+import { ViewStyle } from 'react-native';
 
 type Options = {
   tabBarVisible?: boolean;
@@ -21,7 +21,7 @@ type Props = React.ComponentProps<typeof BottomNavigation> &
     descriptors: { [key: string]: NavigationDescriptor<any, Options> };
     screenProps?: unknown;
     renderIcon: (options: {
-      route: NavigationRoute;
+      route: { key: string };
       focused: boolean;
       tintColor: string;
     }) => React.ReactNode;
@@ -30,7 +30,7 @@ type Props = React.ComponentProps<typeof BottomNavigation> &
 export default class MaterialBottomTabView extends React.Component<Props> {
   static contextType = ThemeContext;
 
-  _getColor = ({ route }: { route: NavigationRoute }) => {
+  _getColor = ({ route }: { route: { key: string } }) => {
     const { descriptors } = this.props;
     const descriptor = descriptors[route.key];
     const options = descriptor.options;
@@ -93,7 +93,7 @@ export default class MaterialBottomTabView extends React.Component<Props> {
     focused,
     color,
   }: {
-    route: NavigationRoute;
+    route: { key: string };
     focused: boolean;
     color: string;
   }) => {
@@ -113,9 +113,9 @@ export default class MaterialBottomTabView extends React.Component<Props> {
     const barStyle = this._getBarStyle();
 
     const isVisible = this._isVisible();
-    const extraStyle =
+    const extraStyle: ViewStyle | null =
       typeof isVisible === 'boolean'
-        ? { display: isVisible ? null : 'none' }
+        ? { display: isVisible ? undefined : 'none' }
         : null;
 
     return (

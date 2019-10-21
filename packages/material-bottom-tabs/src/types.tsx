@@ -20,6 +20,7 @@ export type NavigationTabProp<
 export type NavigationMaterialBottomTabOptions = {
   title?: string;
   tabBarLabel?: React.ReactNode;
+  tabBarBadge?: boolean | number | string;
   tabBarVisible?: boolean;
   tabBarAccessibilityLabel?: string;
   tabBarTestID?: string;

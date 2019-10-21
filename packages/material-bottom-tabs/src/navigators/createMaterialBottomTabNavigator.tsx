@@ -141,6 +141,14 @@ export default function createMaterialBottomTabNavigator(
       return options.tabBarTestID;
     };
 
+    _getBadge = ({ route }: { route: NavigationRoute }) => {
+      const { descriptors } = this.props;
+      const descriptor = descriptors[route.key];
+      const options = descriptor.options;
+
+      return options.tabBarBadge;
+    };
+
     _makeDefaultHandler = ({
       route,
       navigation,
@@ -224,6 +232,7 @@ export default function createMaterialBottomTabNavigator(
           getLabelText={this._getLabelText}
           getAccessibilityLabel={this._getAccessibilityLabel}
           getTestID={this._getTestID}
+          getBadge={this._getBadge}
           renderIcon={this._renderIcon}
           renderScene={this._renderScene}
           onIndexChange={this._handleIndexChange}
