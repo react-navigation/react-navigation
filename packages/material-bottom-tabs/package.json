@@ -59,7 +59,7 @@
     "react": "16.8.3",
     "react-native": "~0.59.8",
     "react-native-gesture-handler": "^1.4.1",
-    "react-native-paper": "^3.0.0-alpha.7",
+    "react-native-paper": "^3.0.0-alpha.8",
     "react-native-reanimated": "^1.2.0",
     "react-navigation": "^4.0.7",
     "release-it": "^12.3.6",

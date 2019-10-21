@@ -71,13 +71,7 @@ export default class MaterialBottomTabView extends React.Component<Props> {
   _getBarStyle = () => {
     let { barStyle, barStyleLight, barStyleDark } = this.props;
 
-    if (this.context === 'dark' && barStyleDark) {
-      return barStyleDark;
-    } else if (barStyleLight) {
-      return barStyleLight;
-    } else {
-      return barStyle;
-    }
+    return [barStyle, this.context === 'dark' ? barStyleDark : barStyleLight];
   };
 
   _isVisible() {
