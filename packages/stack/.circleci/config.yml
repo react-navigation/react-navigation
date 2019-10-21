@@ -14,20 +14,20 @@ jobs:
           at: ~/project
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-{{ checksum "yarn.lock" }}
             - v1-dependencies-
       - restore_cache:
           keys:
-            - v1-dependencies-example-{{ checksum "example/package.json" }}
+            - v1-dependencies-example-{{ checksum "example/yarn.lock" }}
             - v1-dependencies-example-
       - run: |
           yarn install --frozen-lockfile --cwd example
           yarn install --frozen-lockfile
       - save_cache:
-          key: v1-dependencies-{{ checksum "package.json" }}
+          key: v1-dependencies-{{ checksum "yarn.lock" }}
           paths: node_modules
       - save_cache:
-          key: v1-dependencies-example-{{ checksum "example/package.json" }}
+          key: v1-dependencies-example-{{ checksum "example/yarn.lock" }}
           paths: example/node_modules
       - persist_to_workspace:
           root: .
