@@ -27,6 +27,7 @@ export default function HeaderConfig(props: Props) {
     headerTranslucent,
     headerStyle = {},
     headerTitleStyle = {},
+    headerLargeTitleStyle = {},
     headerBackTitleStyle = {},
     headerShown,
     gestureEnabled,
@@ -58,6 +59,8 @@ export default function HeaderConfig(props: Props) {
       color={headerTintColor}
       gestureEnabled={gestureEnabled === undefined ? true : gestureEnabled}
       largeTitle={headerLargeTitle}
+      largeTitleFontFamily={headerLargeTitleStyle.fontFamily}
+      largeTitleFontSize={headerLargeTitleStyle.fontSize}
       backgroundColor={headerStyle.backgroundColor}
     >
       {headerRight !== undefined ? (

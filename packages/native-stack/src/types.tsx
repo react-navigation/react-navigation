@@ -124,6 +124,19 @@ export type NativeStackNavigationOptions = {
     color?: string;
   };
   /**
+   * Style object for header large title. Supported properties:
+   * - fontFamily
+   * - fontSize
+   *
+   * Only supported on iOS.
+   *
+   * @platform ios
+   */
+  headerLargeTitleStyle?: {
+    fontFamily?: string;
+    fontSize?: number;
+  };
+  /**
    * Style object for header back title. Supported properties:
    * - fontFamily
    * - fontSize

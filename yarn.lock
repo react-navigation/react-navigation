@@ -13140,6 +13140,13 @@ react-native-screens@2.0.0-alpha.4:
   dependencies:
     debounce "^1.2.0"
 
+react-native-screens@2.0.0-alpha.5:
+  version "2.0.0-alpha.5"
+  resolved "https://registry.yarnpkg.com/react-native-screens/-/react-native-screens-2.0.0-alpha.5.tgz#5b6a72df959d31ffaf7045cd5eb753477e80689b"
+  integrity sha512-uKVc+JYEC59Dz2RPBI4tnaIB8W6T0dHGY6PjUtvkvaBmZBjfxhpezd3m2t8o913Xarx6EvT2maSH8816+MNJnw==
+  dependencies:
+    debounce "^1.2.0"
+
 react-native-screens@^2.0.0-alpha.3:
   version "2.0.0-alpha.3"
   resolved "https://registry.yarnpkg.com/react-native-screens/-/react-native-screens-2.0.0-alpha.3.tgz#af86f265b2fb4293b626cf4396db7743de5a54af"
