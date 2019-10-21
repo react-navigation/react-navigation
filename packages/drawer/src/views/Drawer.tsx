@@ -14,6 +14,7 @@ import {
   State,
 } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
+import DrawerProgressContext from '../utils/DrawerProgressContext';
 
 const {
   Clock,
@@ -513,82 +514,86 @@ export default class DrawerView extends React.PureComponent<Props> {
       : { left: 0, width: open ? undefined : swipeEdgeWidth };
 
     return (
-      <PanGestureHandler
-        ref={onGestureRef}
-        activeOffsetX={[-SWIPE_DISTANCE_MINIMUM, SWIPE_DISTANCE_MINIMUM]}
-        failOffsetY={[-SWIPE_DISTANCE_MINIMUM, SWIPE_DISTANCE_MINIMUM]}
-        onGestureEvent={this.handleGestureEvent}
-        onHandlerStateChange={this.handleGestureEvent}
-        hitSlop={hitSlop}
-        enabled={!locked}
-        {...gestureHandlerProps}
-      >
-        <Animated.View
-          onLayout={this.handleContainerLayout}
-          style={styles.main}
+      <DrawerProgressContext.Provider value={this.progress}>
+        <PanGestureHandler
+          ref={onGestureRef}
+          activeOffsetX={[-SWIPE_DISTANCE_MINIMUM, SWIPE_DISTANCE_MINIMUM]}
+          failOffsetY={[-SWIPE_DISTANCE_MINIMUM, SWIPE_DISTANCE_MINIMUM]}
+          onGestureEvent={this.handleGestureEvent}
+          onHandlerStateChange={this.handleGestureEvent}
+          hitSlop={hitSlop}
+          enabled={!locked}
+          {...gestureHandlerProps}
         >
           <Animated.View
-            style={[
-              styles.content,
-              {
-                transform: [{ translateX: contentTranslateX }],
-              },
-              sceneContainerStyle as any,
-            ]}
+            onLayout={this.handleContainerLayout}
+            style={styles.main}
           >
-            {renderSceneContent({ progress: this.progress })}
-            <TapGestureHandler onHandlerStateChange={this.handleTapStateChange}>
-              <Animated.View
-                style={[
-                  styles.overlay,
-                  {
-                    opacity: interpolate(this.progress, {
-                      inputRange: [PROGRESS_EPSILON, 1],
-                      outputRange: [0, 1],
-                    }),
-                    // We don't want the user to be able to press through the overlay when drawer is open
-                    // One approach is to adjust the pointerEvents based on the progress
-                    // But we can also send the overlay behind the screen, which works, and is much less code
-                    zIndex: cond(
-                      greaterThan(this.progress, PROGRESS_EPSILON),
-                      0,
-                      -1
-                    ),
-                  },
-                  overlayStyle,
-                ]}
-              />
-            </TapGestureHandler>
-          </Animated.View>
-          <Animated.Code
-            exec={block([
-              onChange(this.manuallyTriggerSpring, [
-                cond(eq(this.manuallyTriggerSpring, TRUE), [
-                  set(this.nextIsOpen, FALSE),
-                  call([], () => (this.currentOpenValue = false)),
+            <Animated.View
+              style={[
+                styles.content,
+                {
+                  transform: [{ translateX: contentTranslateX }],
+                },
+                sceneContainerStyle as any,
+              ]}
+            >
+              {renderSceneContent({ progress: this.progress })}
+              <TapGestureHandler
+                onHandlerStateChange={this.handleTapStateChange}
+              >
+                <Animated.View
+                  style={[
+                    styles.overlay,
+                    {
+                      opacity: interpolate(this.progress, {
+                        inputRange: [PROGRESS_EPSILON, 1],
+                        outputRange: [0, 1],
+                      }),
+                      // We don't want the user to be able to press through the overlay when drawer is open
+                      // One approach is to adjust the pointerEvents based on the progress
+                      // But we can also send the overlay behind the screen, which works, and is much less code
+                      zIndex: cond(
+                        greaterThan(this.progress, PROGRESS_EPSILON),
+                        0,
+                        -1
+                      ),
+                    },
+                    overlayStyle,
+                  ]}
+                />
+              </TapGestureHandler>
+            </Animated.View>
+            <Animated.Code
+              exec={block([
+                onChange(this.manuallyTriggerSpring, [
+                  cond(eq(this.manuallyTriggerSpring, TRUE), [
+                    set(this.nextIsOpen, FALSE),
+                    call([], () => (this.currentOpenValue = false)),
+                  ]),
                 ]),
-              ]),
-            ])}
-          />
-          <Animated.View
-            accessibilityViewIsModal={open}
-            removeClippedSubviews={Platform.OS !== 'ios'}
-            onLayout={this.handleDrawerLayout}
-            style={[
-              styles.container,
-              right ? { right: offset } : { left: offset },
-              {
-                transform: [{ translateX: drawerTranslateX }],
-                opacity: this.drawerOpacity,
-                zIndex: drawerType === 'back' ? -1 : 0,
-              },
-              drawerStyle as any,
-            ]}
-          >
-            {renderDrawerContent({ progress: this.progress })}
+              ])}
+            />
+            <Animated.View
+              accessibilityViewIsModal={open}
+              removeClippedSubviews={Platform.OS !== 'ios'}
+              onLayout={this.handleDrawerLayout}
+              style={[
+                styles.container,
+                right ? { right: offset } : { left: offset },
+                {
+                  transform: [{ translateX: drawerTranslateX }],
+                  opacity: this.drawerOpacity,
+                  zIndex: drawerType === 'back' ? -1 : 0,
+                },
+                drawerStyle as any,
+              ]}
+            >
+              {renderDrawerContent({ progress: this.progress })}
+            </Animated.View>
           </Animated.View>
-        </Animated.View>
-      </PanGestureHandler>
+        </PanGestureHandler>
+      </DrawerProgressContext.Provider>
     );
   }
 }
