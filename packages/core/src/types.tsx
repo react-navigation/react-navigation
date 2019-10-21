@@ -189,7 +189,7 @@ export type Router<
   actionCreators?: ActionCreators<Action>;
 };
 
-export type ParamListBase = { [key: string]: object | undefined };
+export type ParamListBase = Record<string, object | undefined>;
 
 export type EventMapBase = {
   focus: undefined;
@@ -215,7 +215,7 @@ export type EventListenerCallback<EventName extends string, Data> = (
   e: EventArg<EventName, Data>
 ) => void;
 
-export type EventConsumer<EventMap extends { [key: string]: any }> = {
+export type EventConsumer<EventMap extends Record<string, any>> = {
   /**
    * Subscribe to events from the parent navigator.
    *
@@ -232,7 +232,7 @@ export type EventConsumer<EventMap extends { [key: string]: any }> = {
   ): void;
 };
 
-export type EventEmitter<EventMap extends { [key: string]: any }> = {
+export type EventEmitter<EventMap extends Record<string, any>> = {
   /**
    * Emit an event to child screens.
    *
@@ -349,7 +349,7 @@ type NavigationHelpersCommon<
 
 export type NavigationHelpers<
   ParamList extends ParamListBase,
-  EventMap extends { [key: string]: any } = {}
+  EventMap extends Record<string, any> = {}
 > = NavigationHelpersCommon<ParamList> &
   EventEmitter<EventMap> & {
     /**
@@ -376,7 +376,7 @@ export type NavigationProp<
   RouteName extends keyof ParamList = string,
   State extends NavigationState = NavigationState,
   ScreenOptions extends object = {},
-  EventMap extends { [key: string]: any } = {}
+  EventMap extends Record<string, any> = {}
 > = NavigationHelpersCommon<ParamList, State> & {
   /**
    * Update the param object for the route.
@@ -468,7 +468,7 @@ export type Descriptor<
   RouteName extends keyof ParamList = string,
   State extends NavigationState = NavigationState,
   ScreenOptions extends object = {},
-  EventMap extends { [key: string]: any } = {}
+  EventMap extends Record<string, any> = {}
 > = {
   /**
    * Render the component associated with this route.

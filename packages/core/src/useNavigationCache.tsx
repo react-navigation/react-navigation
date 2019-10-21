@@ -18,7 +18,7 @@ type Options<State extends NavigationState> = {
   navigation: NavigationHelpers<ParamListBase> &
     Partial<NavigationProp<ParamListBase, string, any, any, any>>;
   setOptions: (
-    cb: (options: { [key: string]: object }) => { [key: string]: object }
+    cb: (options: Record<string, object>) => Record<string, object>
   ) => void;
   router: Router<State, NavigationAction>;
   emitter: NavigationEventEmitter;
@@ -89,13 +89,13 @@ export default function useNavigationCache<
           );
         };
 
-        const helpers = Object.keys(actions).reduce(
+        const helpers = Object.keys(actions).reduce<Record<string, () => void>>(
           (acc, name) => {
             // @ts-ignore
             acc[name] = (...args: any) => dispatch(actions[name](...args));
             return acc;
           },
-          {} as { [key: string]: () => void }
+          {}
         );
 
         acc[route.key] = {

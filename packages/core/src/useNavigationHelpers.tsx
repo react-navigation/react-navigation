@@ -35,7 +35,7 @@ type Options<State extends NavigationState, Action extends NavigationAction> = {
 export default function useNavigationHelpers<
   State extends NavigationState,
   Action extends NavigationAction,
-  EventMap extends { [key: string]: any }
+  EventMap extends Record<string, any>
 >({ onAction, getState, emitter, router }: Options<State, Action>) {
   const resetRoot = React.useContext(ResetRootContext);
   const parentNavigationHelpers = React.useContext(NavigationContext);
@@ -55,13 +55,13 @@ export default function useNavigationHelpers<
       ...CommonActions,
     };
 
-    const helpers = Object.keys(actions).reduce(
+    const helpers = Object.keys(actions).reduce<Record<string, () => void>>(
       (acc, name) => {
         // @ts-ignore
         acc[name] = (...args: any) => dispatch(actions[name](...args));
         return acc;
       },
-      {} as { [key: string]: () => void }
+      {}
     );
 
     return {

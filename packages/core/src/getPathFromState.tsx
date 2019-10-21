@@ -3,7 +3,7 @@ import { NavigationState, PartialState, Route } from './types';
 
 type State = NavigationState | Omit<PartialState<NavigationState>, 'stale'>;
 
-type StringifyConfig = { [key: string]: (value: any) => string };
+type StringifyConfig = Record<string, (value: any) => string>;
 
 type Options = {
   [routeName: string]: string | { path: string; stringify?: StringifyConfig };

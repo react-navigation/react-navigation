@@ -98,7 +98,7 @@ export default function useNavigationBuilder<
   State extends NavigationState,
   RouterOptions extends DefaultRouterOptions,
   ScreenOptions extends object,
-  EventMap extends { [key: string]: any }
+  EventMap extends Record<string, any>
 >(
   createRouter: RouterFactory<State, any, RouterOptions>,
   options: DefaultNavigatorOptions<ScreenOptions> & RouterOptions
@@ -125,22 +125,21 @@ export default function useNavigationBuilder<
     })
   );
 
-  const screens = getRouteConfigsFromChildren<ScreenOptions>(children).reduce(
-    (acc, curr) => {
-      if (curr.name in acc) {
-        throw new Error(
-          `A navigator cannot contain multiple 'Screen' components with the same name (found duplicate screen named '${curr.name}')`
-        );
-      }
+  const screens = getRouteConfigsFromChildren<ScreenOptions>(children).reduce<
+    Record<string, RouteConfig<ParamListBase, string, ScreenOptions>>
+  >((acc, curr) => {
+    if (curr.name in acc) {
+      throw new Error(
+        `A navigator cannot contain multiple 'Screen' components with the same name (found duplicate screen named '${curr.name}')`
+      );
+    }
 
-      acc[curr.name] = curr;
-      return acc;
-    },
-    {} as { [key: string]: RouteConfig<ParamListBase, string, ScreenOptions> }
-  );
+    acc[curr.name] = curr;
+    return acc;
+  }, {});
 
   const routeNames = Object.keys(screens);
-  const routeParamList = routeNames.reduce(
+  const routeParamList = routeNames.reduce<Record<string, object | undefined>>(
     (acc, curr) => {
       const { initialParams } = screens[curr];
       const initialParamsFromParams =
@@ -158,7 +157,7 @@ export default function useNavigationBuilder<
 
       return acc;
     },
-    {} as { [key: string]: object | undefined }
+    {}
   );
 
   if (!routeNames.length) {
