@@ -34,6 +34,7 @@ export type NavigationMaterialBottomTabOptions = {
   tabBarVisible?: boolean;
   tabBarAccessibilityLabel?: string;
   tabBarTestID?: string;
+  tabBarColor?: string;
   tabBarIcon?:
     | React.ReactNode
     | ((props: {
