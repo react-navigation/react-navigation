@@ -18,15 +18,18 @@ export const isOrientationLandscape = ({ width, height }: DimensionsType) =>
 export default function withDimensions<Props extends InjectedProps>(
   WrappedComponent: React.ComponentType<Props>
 ): React.ComponentType<Pick<Props, Exclude<keyof Props, keyof InjectedProps>>> {
-  const { width, height } = Dimensions.get('window');
-
   class EnhancedComponent extends React.Component {
     static displayName = `withDimensions(${WrappedComponent.displayName})`;
 
-    state = {
-      dimensions: { width, height },
-      isLandscape: isOrientationLandscape({ width, height }),
-    };
+    constructor(props: Props) {
+      super(props);
+
+      const { width, height } = Dimensions.get('window');
+      this.state = {
+        dimensions: { width, height },
+        isLandscape: isOrientationLandscape({ width, height }),
+      };
+    }
 
     componentDidMount() {
       Dimensions.addEventListener('change', this.handleOrientationChange);
@@ -37,8 +40,11 @@ export default function withDimensions<Props extends InjectedProps>(
     }
 
     handleOrientationChange = ({ window }: { window: ScaledSize }) => {
-      const isLandscape = isOrientationLandscape(window);
-      this.setState({ isLandscape });
+      const { width, height } = window;
+      this.setState({
+        dimensions: { width, height },
+        isLandscape: isOrientationLandscape({ width, height }),
+      });
     };
 
     render() {
