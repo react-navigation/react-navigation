@@ -102,7 +102,8 @@ class Screen extends React.Component {
         AnimatedNativeScreen ||
         Animated.createAnimatedComponent(ScreensNativeModules.NativeScreen);
 
-      if (version.minor >= 57) {
+      // When using RN from master version is 0.0.0
+      if (version.minor >= 57 || version.minor === 0) {
         return <AnimatedNativeScreen {...this.props} ref={this.setRef} />;
       } else {
         // On RN version below 0.57 we need to wrap screen's children with an
