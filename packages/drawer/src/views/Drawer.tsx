@@ -428,7 +428,14 @@ export default class DrawerView extends React.PureComponent<Props> {
         x: this.touchX,
         translationX: this.gestureX,
         velocityX: this.velocityX,
-        state: this.gestureState,
+      },
+    },
+  ]);
+
+  private handleGestureStateChange = event([
+    {
+      nativeEvent: {
+        state: (s: Animated.Value<number>) => set(this.gestureState, s),
       },
     },
   ]);
@@ -519,7 +526,7 @@ export default class DrawerView extends React.PureComponent<Props> {
         activeOffsetX={[-SWIPE_DISTANCE_MINIMUM, SWIPE_DISTANCE_MINIMUM]}
         failOffsetY={[-SWIPE_DISTANCE_MINIMUM, SWIPE_DISTANCE_MINIMUM]}
         onGestureEvent={this.handleGestureEvent}
-        onHandlerStateChange={this.handleGestureEvent}
+        onHandlerStateChange={this.handleGestureStateChange}
         hitSlop={hitSlop}
         enabled={!locked}
         {...gestureHandlerProps}

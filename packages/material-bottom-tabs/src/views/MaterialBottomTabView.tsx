@@ -113,7 +113,7 @@ export default class MaterialBottomTabView extends React.PureComponent<Props> {
             target: state.key,
           })
         }
-        renderScene={({ route }) => descriptors[route.key].render()}
+        renderScene={({ route }: Scene) => descriptors[route.key].render()}
         renderIcon={this.renderIcon}
         getLabelText={this.getLabelText}
         getColor={this.getColor}
