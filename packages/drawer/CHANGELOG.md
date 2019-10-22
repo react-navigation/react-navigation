@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.16](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/drawer@5.0.0-alpha.15...@react-navigation/drawer@5.0.0-alpha.16) (2019-10-22)
+
+
+### Bug Fixes
+
+* navigation drawer sometimes not closing when pressed outside ([0d8cdc8](https://github.com/react-navigation/navigation-ex/commit/0d8cdc8))
+
+
+
+
+
 # [5.0.0-alpha.15](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/drawer@5.0.0-alpha.14...@react-navigation/drawer@5.0.0-alpha.15) (2019-10-17)
 
 

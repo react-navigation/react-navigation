@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.15](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/material-bottom-tabs@5.0.0-alpha.14...@react-navigation/material-bottom-tabs@5.0.0-alpha.15) (2019-10-22)
+
+
+### Bug Fixes
+
+* navigation drawer sometimes not closing when pressed outside ([0d8cdc8](https://github.com/react-navigation/navigation-ex/commit/0d8cdc8))
+
+
+
+
+
 # [5.0.0-alpha.14](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/material-bottom-tabs@5.0.0-alpha.13...@react-navigation/material-bottom-tabs@5.0.0-alpha.14) (2019-10-17)
 
 **Note:** Version bump only for package @react-navigation/material-bottom-tabs
