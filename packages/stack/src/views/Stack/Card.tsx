@@ -766,10 +766,14 @@ export default class Card extends React.Component<Props> {
     const distance =
       gestureDirection === 'vertical' ||
       gestureDirection === 'vertical-inverted'
-        ? (gestureResponseDistance && gestureResponseDistance.vertical) ||
-          GESTURE_RESPONSE_DISTANCE_VERTICAL
-        : (gestureResponseDistance && gestureResponseDistance.horizontal) ||
-          GESTURE_RESPONSE_DISTANCE_HORIZONTAL;
+        ? gestureResponseDistance &&
+          gestureResponseDistance.vertical !== undefined
+          ? gestureResponseDistance.vertical
+          : GESTURE_RESPONSE_DISTANCE_VERTICAL
+        : gestureResponseDistance &&
+          gestureResponseDistance.horizontal !== undefined
+        ? gestureResponseDistance.horizontal
+        : GESTURE_RESPONSE_DISTANCE_HORIZONTAL;
 
     if (gestureDirection === 'vertical') {
       return {
