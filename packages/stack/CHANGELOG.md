@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.29](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.28...@react-navigation/stack@5.0.0-alpha.29) (2019-10-22)
+
+
+### Bug Fixes
+
+* conditions in gesture direction ([225e760](https://github.com/react-navigation/navigation-ex/commit/225e760))
+
+
+
+
+
 # [5.0.0-alpha.28](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.27...@react-navigation/stack@5.0.0-alpha.28) (2019-10-22)
 
 
