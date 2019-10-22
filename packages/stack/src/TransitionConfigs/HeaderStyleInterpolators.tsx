@@ -109,7 +109,12 @@ export function forFade({
     leftButtonStyle: { opacity },
     rightButtonStyle: { opacity },
     titleStyle: { opacity },
-    backgroundStyle: { opacity: current.progress },
+    backgroundStyle: {
+      opacity: interpolate(progress, {
+        inputRange: [0, 1, 1.9, 2],
+        outputRange: [0, 1, 1, 0],
+      }),
+    },
   };
 }
 
