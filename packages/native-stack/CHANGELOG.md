@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.4](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/native-stack@5.0.0-alpha.3...@react-navigation/native-stack@5.0.0-alpha.4) (2019-10-22)
+
+
+### Features
+
+* **native-stack:** add support for large title attributes ([#135](https://github.com/react-navigation/navigation-ex/issues/135)) ([6cf1a04](https://github.com/react-navigation/navigation-ex/commit/6cf1a04))
+
+
+
+
+
 # [5.0.0-alpha.3](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/native-stack@5.0.0-alpha.2...@react-navigation/native-stack@5.0.0-alpha.3) (2019-10-18)
 
 

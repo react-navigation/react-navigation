@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.28](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.27...@react-navigation/stack@5.0.0-alpha.28) (2019-10-22)
+
+
+### Bug Fixes
+
+* don't fire onOpen when screen is unmounting ([#137](https://github.com/react-navigation/navigation-ex/issues/137)) ([f22abb7](https://github.com/react-navigation/navigation-ex/commit/f22abb7)), closes [#136](https://github.com/react-navigation/navigation-ex/issues/136)
+* don't keep unfocused header backgrounds visible ([031c4d2](https://github.com/react-navigation/navigation-ex/commit/031c4d2))
+
+
+
+
+
 # [5.0.0-alpha.27](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.26...@react-navigation/stack@5.0.0-alpha.27) (2019-10-18)
 
 
