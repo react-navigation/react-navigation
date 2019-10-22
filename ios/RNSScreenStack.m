@@ -6,6 +6,8 @@
 #import <React/RCTUIManager.h>
 #import <React/RCTUIManagerUtils.h>
 #import <React/RCTShadowView.h>
+#import <React/RCTRootContentView.h>
+#import <React/RCTTouchHandler.h>
 
 @interface RNSScreenStackView () <UINavigationControllerDelegate, UIGestureRecognizerDelegate>
 @end
@@ -85,9 +87,9 @@
   // Without the below code the Touchable will remain active (highlighted) for the duration of back
   // gesture and onPress may fire when we release the finger.
   UIView *parent = _controller.view;
-  while (parent != nil && ![parent isKindOfClass:[RCTRootView class]]) parent = parent.superview;
-  RCTRootView *rootView = (RCTRootView *)parent;
-  [rootView cancelTouches];
+  while (parent != nil && ![parent isKindOfClass:[RCTRootContentView class]]) parent = parent.superview;
+  RCTRootContentView *rootView = (RCTRootContentView *)parent;
+  [rootView.touchHandler cancel];
 
   return _controller.viewControllers.count > 1;
 }
