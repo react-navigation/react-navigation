@@ -28,6 +28,7 @@ export function enableScreens(shouldEnableScreens = true) {
 
 // we should remove this at some point
 export function useScreens(shouldUseScreens = true) {
+  console.warn('Method `useScreens` is deprecated, please use `enableScreens`');
   enableScreens(shouldUseScreens);
 }
 
@@ -202,6 +203,7 @@ module.exports = {
   ScreenStackHeaderTitleView,
   ScreenStackHeaderCenterView,
 
+  enableScreens,
   useScreens,
   screensEnabled,
 };
