@@ -46,6 +46,7 @@ class StackView extends React.Component {
       largeTitle,
       headerLargeTitleStyle,
       translucent,
+      hideShadow,
     } = options;
 
     const scene = {
@@ -72,6 +73,7 @@ class StackView extends React.Component {
         headerLargeTitleStyle && headerLargeTitleStyle.fontFamily,
       largeTitleFontSize:
         headerLargeTitleStyle && headerLargeTitleStyle.fontSize,
+      hideShadow,
     };
 
     const hasHeader = headerMode !== 'none' && options.header !== null;
