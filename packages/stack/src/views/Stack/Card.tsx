@@ -418,7 +418,7 @@ export default class Card extends React.Component<Props> {
               // It's especially vital for having inputs properly focused.
               this.handleStartInteraction();
               const { onTransitionStart } = this.props;
-              onTransitionStart && onTransitionStart({ closing: true });
+              onTransitionStart && onTransitionStart({ closing: false });
               this.handleTransitionEnd();
               this.props.onOpen(true);
             }
