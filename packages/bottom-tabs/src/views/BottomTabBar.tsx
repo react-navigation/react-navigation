@@ -157,11 +157,7 @@ export default class TabBarBottom extends React.Component<Props, State> {
     }
 
     if (typeof label === 'function') {
-      return label({
-        focused,
-        color,
-        orientation: horizontal ? 'horizontal' : 'vertical',
-      });
+      return label({ focused, color });
     }
 
     return label;

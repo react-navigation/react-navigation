@@ -71,11 +71,7 @@ export type BottomTabNavigationOptions = {
    */
   tabBarLabel?:
     | React.ReactNode
-    | ((props: {
-        focused: boolean;
-        color: string;
-        size: number;
-      }) => React.ReactNode);
+    | ((props: { focused: boolean; color: string }) => React.ReactNode);
 
   /**
    * React Element or a function that given { focused: boolean, color: string } returns a React.Node, to display in the tab bar.
@@ -221,7 +217,6 @@ export type BottomTabBarProps = BottomTabBarOptions & {
     | ((scene: {
         focused: boolean;
         color: string;
-        orientation: 'horizontal' | 'vertical';
       }) => React.ReactNode | undefined)
     | React.ReactNode;
   getTestID: (props: { route: Route<string> }) => string | undefined;
