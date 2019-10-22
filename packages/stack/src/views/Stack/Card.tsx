@@ -351,6 +351,7 @@ export default class Card extends React.Component<Props> {
   private offset = new Value(0);
   private velocityUntraversed = new Value(0);
   private velocity = new Value(0);
+  private didMovementHappen = new Value(0);
 
   private gestureState = new Value(0);
 
@@ -404,98 +405,126 @@ export default class Card extends React.Component<Props> {
   private runTransition = (isVisible: Binary | Animated.Node<number>) => {
     const { open: openingSpec, close: closingSpec } = this.props.transitionSpec;
 
-    return cond(eq(this.props.current, isVisible), NOOP_NODE, [
-      cond(clockRunning(this.clock), NOOP_NODE, [
-        // Animation wasn't running before
-        // Set the initial values and start the clock
-        set(this.toValue, isVisible),
-        // The velocity value is ideal for translating the whole screen
-        // But since we have 0-1 scale, we need to adjust the velocity
-        set(
-          this.transitionVelocity,
-          multiply(
-            cond(
-              this.distance,
-              divide(this.velocity, this.distance),
-              FALSE_NODE
-            ),
-            -1
-          )
-        ),
-        set(this.frameTime, FALSE_NODE),
-        set(this.transitionState.time, FALSE_NODE),
-        set(this.transitionState.finished, FALSE_NODE),
-        set(this.isVisible, isVisible),
-        startClock(this.clock),
-        call([this.isVisible], ([value]: ReadonlyArray<Binary>) => {
-          this.handleStartInteraction();
-
-          const { onTransitionStart } = this.props;
-          this.noAnimationStartedSoFar = false;
-          this.isRunningAnimation = true;
-          onTransitionStart && onTransitionStart({ closing: !value });
-        }),
-      ]),
+    return [
       cond(
-        eq(isVisible, TRUE_NODE),
-        openingSpec.animation === 'spring'
-          ? memoizedSpring(
-              this.clock,
-              { ...this.transitionState, velocity: this.transitionVelocity },
-              // @ts-ignore
-              {
-                ...(this.openingSpecConfig as AnimatedSpringConfig),
-                toValue: this.toValue,
-              }
-            )
-          : timing(
-              this.clock,
-              { ...this.transitionState, frameTime: this.frameTime },
-              {
-                ...(this.openingSpecConfig as AnimatedTimingConfig),
-                toValue: this.toValue,
-              }
-            ),
-        closingSpec.animation === 'spring'
-          ? memoizedSpring(
-              this.clock,
-              { ...this.transitionState, velocity: this.transitionVelocity },
-              // @ts-ignore
-              {
-                ...(this.closingSpecConfig as AnimatedSpringConfig),
-                toValue: this.toValue,
-              }
-            )
-          : timing(
-              this.clock,
-              { ...this.transitionState, frameTime: this.frameTime },
-              {
-                ...(this.closingSpecConfig as AnimatedTimingConfig),
-                toValue: this.toValue,
-              }
-            )
-      ),
-      cond(this.transitionState.finished, [
-        // Reset values
-        set(this.isSwipeGesture, FALSE_NODE),
-        set(this.gesture, FALSE_NODE),
-        set(this.velocity, FALSE_NODE),
-        // When the animation finishes, stop the clock
-        stopClock(this.clock),
-        call([this.isVisible], ([value]: ReadonlyArray<Binary>) => {
-          const isOpen = Boolean(value);
-          const { onOpen, onClose } = this.props;
-
-          this.handleTransitionEnd();
-
-          if (isOpen) {
-            onOpen(true);
-          } else {
-            onClose(true);
+        eq(this.props.current, isVisible),
+        call(
+          [this.didMovementHappen, this.isVisible],
+          ([didMovementHappen]: ReadonlyArray<Binary>) => {
+            if (didMovementHappen) {
+              // if we go back to the same position,
+              // let's pretend that whole animation happen
+              // for making the logic consistent
+              // It's especially vital for having inputs properly focused.
+              this.handleStartInteraction();
+              const { onTransitionStart } = this.props;
+              onTransitionStart && onTransitionStart({ closing: true });
+              this.handleTransitionEnd();
+              this.props.onOpen(true);
+            }
           }
-        }),
-      ]),
-    ]);
+        ),
+        [
+          cond(clockRunning(this.clock), NOOP_NODE, [
+            // Animation wasn't running before
+            // Set the initial values and start the clock
+            set(this.toValue, isVisible),
+            // The velocity value is ideal for translating the whole screen
+            // But since we have 0-1 scale, we need to adjust the velocity
+            set(
+              this.transitionVelocity,
+              multiply(
+                cond(
+                  this.distance,
+                  divide(this.velocity, this.distance),
+                  FALSE_NODE
+                ),
+                -1
+              )
+            ),
+            set(this.frameTime, FALSE_NODE),
+            set(this.transitionState.time, FALSE_NODE),
+            set(this.transitionState.finished, FALSE_NODE),
+            set(this.isVisible, isVisible),
+            startClock(this.clock),
+            call([this.isVisible], ([value]: ReadonlyArray<Binary>) => {
+              this.handleStartInteraction();
+
+              const { onTransitionStart } = this.props;
+              this.noAnimationStartedSoFar = false;
+              this.isRunningAnimation = true;
+              onTransitionStart && onTransitionStart({ closing: !value });
+            }),
+          ]),
+          cond(
+            eq(isVisible, TRUE_NODE),
+            openingSpec.animation === 'spring'
+              ? memoizedSpring(
+                  this.clock,
+                  {
+                    ...this.transitionState,
+                    velocity: this.transitionVelocity,
+                  },
+                  // @ts-ignore
+                  {
+                    ...(this.openingSpecConfig as AnimatedSpringConfig),
+                    toValue: this.toValue,
+                  }
+                )
+              : timing(
+                  this.clock,
+                  { ...this.transitionState, frameTime: this.frameTime },
+                  {
+                    ...(this.openingSpecConfig as AnimatedTimingConfig),
+                    toValue: this.toValue,
+                  }
+                ),
+            closingSpec.animation === 'spring'
+              ? memoizedSpring(
+                  this.clock,
+                  {
+                    ...this.transitionState,
+                    velocity: this.transitionVelocity,
+                  },
+                  // @ts-ignore
+                  {
+                    ...(this.closingSpecConfig as AnimatedSpringConfig),
+                    toValue: this.toValue,
+                  }
+                )
+              : timing(
+                  this.clock,
+                  { ...this.transitionState, frameTime: this.frameTime },
+                  {
+                    ...(this.closingSpecConfig as AnimatedTimingConfig),
+                    toValue: this.toValue,
+                  }
+                )
+          ),
+          cond(this.transitionState.finished, [
+            // Reset values
+            set(this.isSwipeGesture, FALSE_NODE),
+            set(this.gesture, FALSE_NODE),
+            set(this.velocity, FALSE_NODE),
+            // When the animation finishes, stop the clock
+            stopClock(this.clock),
+            call([this.isVisible], ([value]: ReadonlyArray<Binary>) => {
+              const isOpen = Boolean(value);
+              const { onOpen, onClose } = this.props;
+
+              this.handleTransitionEnd();
+
+              if (isOpen) {
+                onOpen(true);
+              } else {
+                onClose(true);
+              }
+            }),
+          ]),
+        ]
+      ),
+      set(this.didMovementHappen, 0),
+    ];
   };
 
   private extrapolatedPosition = add(
@@ -576,6 +605,7 @@ export default class Card extends React.Component<Props> {
         }
       )
     ),
+    onChange(this.gestureUntraversed, set(this.didMovementHappen, 1)),
     cond(
       eq(this.gestureState, GestureState.ACTIVE),
       [

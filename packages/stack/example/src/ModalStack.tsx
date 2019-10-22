@@ -1,5 +1,12 @@
 import * as React from 'react';
-import { Button, View, Text, Dimensions, Switch } from 'react-native';
+import {
+  Button,
+  View,
+  Text,
+  Dimensions,
+  Switch,
+  TextInput,
+} from 'react-native';
 import {
   createStackNavigator,
   CardStyleInterpolators,
@@ -128,6 +135,10 @@ class DetailsScreen extends React.Component<NavigationStackScreenProps> {
           onPress={() => this.props.navigation.push('Details')}
         />
         <Button
+          title="Go to inputs..."
+          onPress={() => this.props.navigation.push('Inputs')}
+        />
+        <Button
           title="Go to List"
           onPress={() => this.props.navigation.navigate('List')}
         />
@@ -143,12 +154,34 @@ class DetailsScreen extends React.Component<NavigationStackScreenProps> {
     );
   }
 }
+function InputsScreen({ navigation }: NavigationStackScreenProps) {
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Text>Inputs Screen</Text>
+      <TextInput
+        defaultValue="sample"
+        autoFocus
+        style={{ backgroundColor: 'blue' }}
+      />
+      <TextInput defaultValue="sample" style={{ backgroundColor: 'red' }} />
+      <TextInput defaultValue="sample" style={{ backgroundColor: 'green' }} />
+      <Button
+        title="Go to inputs... again"
+        onPress={() => navigation.push('Inputs')}
+      />
+    </View>
+  );
+}
 
 export default createStackNavigator(
   {
     List: ListScreen,
     Details: DetailsScreen,
     Modal: Modal,
+    Inputs: {
+      screen: InputsScreen,
+      navigationOptions: { gestureDirection: 'vertical' },
+    },
   },
   {
     initialRouteName: 'List',
