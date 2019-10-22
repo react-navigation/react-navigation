@@ -52,6 +52,13 @@ public class ScreenStackFragment extends ScreenFragment {
     }
   }
 
+  public void onStackUpdate() {
+    View child = mScreenView.getChildAt(0);
+    if (child instanceof ScreenStackHeaderConfig) {
+      ((ScreenStackHeaderConfig) child).onUpdate();
+    }
+  }
+
   @Override
   public View onCreateView(LayoutInflater inflater,
                            @Nullable ViewGroup container,

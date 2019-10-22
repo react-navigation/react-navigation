@@ -2,7 +2,6 @@ package com.swmansion.rnscreens;
 
 import android.content.Context;
 import android.graphics.Paint;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -13,7 +12,6 @@ import androidx.fragment.app.Fragment;
 
 import com.facebook.react.bridge.GuardedRunnable;
 import com.facebook.react.bridge.ReactContext;
-import com.facebook.react.uimanager.MeasureSpecAssertions;
 import com.facebook.react.uimanager.PointerEvents;
 import com.facebook.react.uimanager.ReactPointerEventsView;
 import com.facebook.react.uimanager.UIManagerModule;

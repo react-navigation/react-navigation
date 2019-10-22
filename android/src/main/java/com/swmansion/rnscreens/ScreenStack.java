@@ -25,6 +25,10 @@ public class ScreenStack extends ScreenContainer<ScreenStackFragment> {
     onUpdate();
   }
 
+  public Screen getTopScreen() {
+    return mTopScreen.getScreen();
+  }
+
   public Screen getRootScreen() {
     for (int i = 0, size = getScreenCount(); i < size; i++) {
       Screen screen = getScreenAt(i);
@@ -51,9 +55,7 @@ public class ScreenStack extends ScreenContainer<ScreenStackFragment> {
   protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
     super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     for (int i = 0, size = getChildCount(); i < size; i++) {
-      getChildAt(i).measure(
-              MeasureSpec.makeMeasureSpec(getWidth(), MeasureSpec.EXACTLY),
-              MeasureSpec.makeMeasureSpec(getHeight(), MeasureSpec.EXACTLY));
+      getChildAt(i).measure(widthMeasureSpec, heightMeasureSpec);
     }
   }
 
@@ -169,5 +171,9 @@ public class ScreenStack extends ScreenContainer<ScreenStackFragment> {
     mStack.addAll(mScreenFragments);
 
     tryCommitTransaction();
+
+    for (ScreenStackFragment screen : mStack) {
+      screen.onStackUpdate();
+    }
   }
 }

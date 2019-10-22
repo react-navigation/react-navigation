@@ -35,9 +35,11 @@ public class ScreenViewManager extends ViewGroupManager<Screen> {
   public void setStackPresentation(Screen view, String presentation) {
     if ("push".equals(presentation)) {
       view.setStackPresentation(Screen.StackPresentation.PUSH);
-    } else if ("modal".equals(presentation)) {
+    } else if ("modal".equals(presentation) || "containedModal".equals(presentation)) {
+      // at the moment Android implementation does not handle contained vs regular modals
       view.setStackPresentation(Screen.StackPresentation.MODAL);
-    } else if ("transparentModal".equals(presentation)) {
+    } else if ("transparentModal".equals(presentation) || "containedTransparentModal".equals((presentation))) {
+      // at the moment Android implementation does not handle contained vs regular modals
       view.setStackPresentation(Screen.StackPresentation.TRANSPARENT_MODAL);
     } else {
       throw new JSApplicationIllegalArgumentException("Unknown presentation type " + presentation);

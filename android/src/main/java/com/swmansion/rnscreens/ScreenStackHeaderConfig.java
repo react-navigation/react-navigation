@@ -1,7 +1,6 @@
 package com.swmansion.rnscreens;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.util.TypedValue;
@@ -29,17 +28,26 @@ public class ScreenStackHeaderConfig extends ViewGroup {
   private int mTitleFontSize;
   private int mBackgroundColor;
   private boolean mIsHidden;
+  private boolean mGestureEnabled = true;
   private boolean mIsBackButtonHidden;
   private boolean mIsShadowHidden;
   private int mTintColor;
   private final Toolbar mToolbar;
 
+  private boolean mIsAttachedToWindow = false;
+
   private OnBackPressedCallback mBackCallback = new OnBackPressedCallback(false) {
     @Override
     public void handleOnBackPressed() {
-      getScreenStack().dismiss(getScreenFragment());
+      ScreenStack stack = getScreenStack();
+      Screen current = getScreen();
+      if (stack.getTopScreen() == current) {
+        stack.dismiss(getScreenFragment());
+      }
+      mBackCallback.remove();
     }
   };
+
   private OnClickListener mBackClickListener = new OnClickListener() {
     @Override
     public void onClick(View view) {
@@ -68,7 +76,14 @@ public class ScreenStackHeaderConfig extends ViewGroup {
   @Override
   protected void onAttachedToWindow() {
     super.onAttachedToWindow();
-    update();
+    mIsAttachedToWindow = true;
+    onUpdate();
+  }
+
+  @Override
+  protected void onDetachedFromWindow() {
+    super.onDetachedFromWindow();
+    mIsAttachedToWindow = false;
   }
 
   private Screen getScreen() {
@@ -101,14 +116,27 @@ public class ScreenStackHeaderConfig extends ViewGroup {
     return null;
   }
 
-  private void installBackCallback() {
-    mBackCallback.remove();
-    Fragment fragment = getScreenFragment();
-    fragment.requireActivity().getOnBackPressedDispatcher().addCallback(fragment, mBackCallback);
-  }
-
-  private void update() {
+  public void onUpdate() {
     Screen parent = (Screen) getParent();
+    final ScreenStack stack = getScreenStack();
+    boolean isRoot = stack == null ? true : stack.getRootScreen() == parent;
+    boolean isTop = stack == null ? true : stack.getTopScreen() == parent;
+
+    // we need to clean up back handler especially in the case given screen is no longer on top
+    // because we don't want it to capture back event if it is not responsible for handling it
+    // as that would block other handlers from running
+    mBackCallback.remove();
+
+    if (!mIsAttachedToWindow || !isTop) {
+      return;
+    }
+
+    if (!isRoot && isTop && mGestureEnabled) {
+      Fragment fragment = getScreenFragment();
+      fragment.requireActivity().getOnBackPressedDispatcher().addCallback(fragment, mBackCallback);
+      mBackCallback.setEnabled(true);
+    }
+
     if (mIsHidden) {
       if (mToolbar.getParent() != null) {
         getScreenFragment().removeToolbar();
@@ -125,13 +153,7 @@ public class ScreenStackHeaderConfig extends ViewGroup {
     ActionBar actionBar = activity.getSupportActionBar();
 
     // hide back button
-    final ScreenStack stack = getScreenStack();
-    boolean isRoot = stack == null ? true : stack.getRootScreen() == parent;
     actionBar.setDisplayHomeAsUpEnabled(isRoot ? false : !mIsBackButtonHidden);
-    if (!isRoot) {
-      installBackCallback();
-    }
-    mBackCallback.setEnabled(!isRoot);
 
     // when setSupportActionBar is called a toolbar wrapper gets initialized that overwrites
     // navigation click listener. The default behavior set in the wrapper is to call into
@@ -266,6 +288,10 @@ public class ScreenStackHeaderConfig extends ViewGroup {
 
   public void setHideShadow(boolean hideShadow) {
     mIsShadowHidden = hideShadow;
+  }
+
+  public void setGestureEnabled(boolean gestureEnabled) {
+    mGestureEnabled = gestureEnabled;
   }
 
   public void setHideBackButton(boolean hideBackButton) {
