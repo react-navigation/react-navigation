@@ -289,20 +289,13 @@ export default class Card extends React.Component<Props> {
     // during running. However, we need to invoke listener onClose
     // manually in this case
     if (this.isRunningAnimation || this.noAnimationStartedSoFar) {
-      if (this.isVisibleValue) {
-        this.props.onOpen(false);
-      } else {
-        this.props.onClose(false);
-      }
+      this.props.onClose(false);
     }
   }
 
   private isVisible = new Value<Binary>(TRUE);
-  private gestureVelocityImpact = new Value<number>(
-    this.props.gestureVelocityImpact
-  );
-  private isVisibleValue: Binary = TRUE;
   private nextIsVisible = new Value<Binary | -1>(UNSET);
+
   private verticalGestureDirection = new Value(
     this.props.gestureDirection === 'vertical-inverted' ? TOP : BOTTOM
   );
@@ -325,7 +318,11 @@ export default class Card extends React.Component<Props> {
     height: new Value(this.props.layout.height),
   };
 
-  openingSpecConfig =
+  private gestureVelocityImpact = new Value<number>(
+    this.props.gestureVelocityImpact
+  );
+
+  private openingSpecConfig =
     this.props.transitionSpec.open.animation === 'timing'
       ? transformTimingConfigToAnimatedValues(
           this.props.transitionSpec.open.config
@@ -334,7 +331,7 @@ export default class Card extends React.Component<Props> {
           this.props.transitionSpec.open.config
         );
 
-  closingSpecConfig =
+  private closingSpecConfig =
     this.props.transitionSpec.close.animation === 'timing'
       ? transformTimingConfigToAnimatedValues(
           this.props.transitionSpec.close.config
@@ -543,25 +540,11 @@ export default class Card extends React.Component<Props> {
         set(this.nextIsVisible, UNSET_NODE),
       ])
     ),
-    onChange(
-      this.isVisible,
-      call([this.isVisible], ([isVisible]) => (this.isVisibleValue = isVisible))
-    ),
   ];
-
-  private changeVisiblityExec = onChange(
-    this.isVisible,
-    call([this.isVisible], ([isVisible]) => (this.isVisibleValue = isVisible))
-  );
 
   private execNoGesture = block([
     ...this.exec,
     this.runTransition(this.isVisible),
-    onChange(
-      this.isVisible,
-      call([this.isVisible], ([isVisible]) => (this.isVisibleValue = isVisible))
-    ),
-    this.changeVisiblityExec,
   ]);
 
   private execWithGesture = block([
@@ -676,7 +659,6 @@ export default class Card extends React.Component<Props> {
         ),
       ]
     ),
-    this.changeVisiblityExec,
   ]);
 
   private handleGestureEventHorizontal = Animated.event([
