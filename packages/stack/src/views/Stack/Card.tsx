@@ -762,7 +762,6 @@ export default class Card extends React.Component<Props> {
   private gestureActivationCriteria() {
     const { layout, gestureDirection, gestureResponseDistance } = this.props;
 
-    // Doesn't make sense for a response distance of 0, so this works fine
     const distance =
       gestureDirection === 'vertical' ||
       gestureDirection === 'vertical-inverted'
