@@ -17,7 +17,7 @@ const getViewManagerConfigCompat = name =>
     ? UIManager.getViewManagerConfig(name)
     : UIManager[name];
 
-export function enableScreens(shouldEnableScreens = true) {
+function enableScreens(shouldEnableScreens = true) {
   ENABLE_SCREENS = shouldEnableScreens;
   if (ENABLE_SCREENS && !getViewManagerConfigCompat('RNSScreen')) {
     console.error(
@@ -27,12 +27,12 @@ export function enableScreens(shouldEnableScreens = true) {
 }
 
 // we should remove this at some point
-export function useScreens(shouldUseScreens = true) {
+function useScreens(shouldUseScreens = true) {
   console.warn('Method `useScreens` is deprecated, please use `enableScreens`');
   enableScreens(shouldUseScreens);
 }
 
-export function screensEnabled() {
+function screensEnabled() {
   return ENABLE_SCREENS;
 }
 
