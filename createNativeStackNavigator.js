@@ -20,7 +20,7 @@ import {
 
 function renderComponentOrThunk(componentOrThunk, props) {
   if (typeof componentOrThunk === 'function') {
-    return componentOrThunk(pops);
+    return componentOrThunk(props);
   }
   return componentOrThunk;
 }
