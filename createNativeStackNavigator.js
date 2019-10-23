@@ -18,6 +18,13 @@ import {
   ScreenStackHeaderTitleView,
 } from 'react-native-screens';
 
+function renderComponentOrThunk(componentOrThunk, props) {
+  if (typeof componentOrThunk === 'function') {
+    return componentOrThunk(pops);
+  }
+  return componentOrThunk;
+}
+
 class StackView extends React.Component {
   _removeScene = route => {
     const { navigation } = this.props;
@@ -90,7 +97,7 @@ class StackView extends React.Component {
     if (options.headerLeft !== undefined) {
       children.push(
         <ScreenStackHeaderLeftView key="left">
-          {options.headerLeft({ scene })}
+          {renderComponentOrThunk(options.headerLeft, { scene })}
         </ScreenStackHeaderLeftView>
       );
     } else if (options.headerBackImage !== undefined) {
@@ -120,17 +127,21 @@ class StackView extends React.Component {
     }
 
     if (options.headerTitle) {
-      children.push(
-        <ScreenStackHeaderTitleView key="title">
-          {options.headerTitle({ scene })}
-        </ScreenStackHeaderTitleView>
-      );
+      if (title === undefined && typeof options.headerTitle === 'string') {
+        headerOptions.title = options.headerTitle;
+      } else {
+        children.push(
+          <ScreenStackHeaderTitleView key="title">
+            {renderComponentOrThunk(options.headerTitle, { scene })}
+          </ScreenStackHeaderTitleView>
+        );
+      }
     }
 
     if (options.headerRight) {
       children.push(
         <ScreenStackHeaderRightView key="right">
-          {options.headerRight({ scene })}
+          {renderComponentOrThunk(options.headerRight, { scene })}
         </ScreenStackHeaderRightView>
       );
     }
