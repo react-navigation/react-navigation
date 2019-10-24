@@ -93,7 +93,7 @@ PODS:
     - React
   - RNReanimated (1.2.0):
     - React
-  - RNScreens (2.0.0-alpha.4):
+  - RNScreens (2.0.0-alpha.5):
     - React
   - UMBarCodeScannerInterface (4.0.0)
   - UMCameraInterface (4.0.0)
@@ -159,7 +159,7 @@ DEPENDENCIES:
   - yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  trunk:
     - boost-for-react-native
 
 EXTERNAL SOURCES:
@@ -267,7 +267,7 @@ SPEC CHECKSUMS:
   react-native-safe-area-context: e380a6f783ccaec848e2f3cc8eb205a62362950d
   RNGestureHandler: 5329a942fce3d41c68b84c2c2276ce06a696d8b0
   RNReanimated: 1b52415c4302f198cb581282a0166690bad62c43
-  RNScreens: 84be1a2369a580beb2fea0755cc62ef16b83fffe
+  RNScreens: ca5c144495ebf33cc1f66be04a7fd3fafd3e40ff
   UMBarCodeScannerInterface: d5a6fdc98ed6241225b0a8432a7f4e2b397668bc
   UMCameraInterface: 68870a3197fee85bd5afca5609ba4a5b7257d19d
   UMConstantsInterface: d25b8e8887ca7aaf568c06caf08f4d40734ee4ef
@@ -284,4 +284,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 1276a2dd000c142ccc03272023bb8a6b2d5b9933
 
-COCOAPODS: 1.7.5
+COCOAPODS: 1.8.3
