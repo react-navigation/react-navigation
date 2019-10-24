@@ -9,16 +9,43 @@ export default function getChildEventSubscriber(
   key,
   initialLastFocusEvent = 'didBlur'
 ) {
-  const eventSubscribers = new Map();
+  const actionSubscribers = new Set();
+  const willFocusSubscribers = new Set();
+  const didFocusSubscribers = new Set();
+  const willBlurSubscribers = new Set();
+  const didBlurSubscribers = new Set();
+  const refocusSubscribers = new Set();
 
   const removeAll = () => {
-    eventSubscribers.forEach(set => set.clear());
+    [
+      actionSubscribers,
+      willFocusSubscribers,
+      didFocusSubscribers,
+      willBlurSubscribers,
+      didBlurSubscribers,
+      refocusSubscribers,
+    ].forEach(set => set.clear());
 
     upstreamSubscribers.forEach(subs => subs && subs.remove());
   };
 
   const getChildSubscribers = evtName => {
-    return eventSubscribers.get(evtName);
+    switch (evtName) {
+      case 'action':
+        return actionSubscribers;
+      case 'willFocus':
+        return willFocusSubscribers;
+      case 'didFocus':
+        return didFocusSubscribers;
+      case 'willBlur':
+        return willBlurSubscribers;
+      case 'didBlur':
+        return didBlurSubscribers;
+      case 'refocus':
+        return refocusSubscribers;
+      default:
+        return null;
+    }
   };
 
   const emit = (type, payload) => {
@@ -43,20 +70,11 @@ export default function getChildEventSubscriber(
     'didBlur',
     'refocus',
     'action',
-    'drawerOpen',
-    'drawerClose',
   ];
 
   const upstreamSubscribers = upstreamEvents.map(eventName =>
     addListener(eventName, payload => {
-      if (!eventSubscribers.has(eventName)) {
-        eventSubscribers.set(eventName, new Set());
-      }
-      if (
-        eventName === 'refocus' ||
-        eventName === 'drawerOpen' ||
-        eventName === 'drawerClose'
-      ) {
+      if (eventName === 'refocus') {
         emit(eventName, payload);
         return;
       }
@@ -166,6 +184,12 @@ export default function getChildEventSubscriber(
       return { remove };
     },
     emit(eventName, payload) {
+      if (eventName !== 'refocus') {
+        console.error(
+          `navigation.emit only supports the 'refocus' event currently.`
+        );
+        return;
+      }
       emit(eventName, payload);
     },
   };
