@@ -521,13 +521,19 @@ export type RouteConfig<
       /**
        * React component to render for this screen.
        */
-      component: React.ComponentType<any>;
+      component: React.ComponentType<{
+        route: RouteProp<ParamList, RouteName>;
+        navigation: any;
+      }>;
     }
   | {
       /**
        * Render callback to render content of this screen.
        */
-      children: (props: any) => React.ReactNode;
+      children: (props: {
+        route: RouteProp<ParamList, RouteName>;
+        navigation: any;
+      }) => React.ReactNode;
     });
 
 export type NavigationContainerRef =

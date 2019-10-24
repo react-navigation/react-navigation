@@ -5,7 +5,6 @@ import { RouteProp, ParamListBase } from '@react-navigation/core';
 import {
   createStackNavigator,
   StackNavigationProp,
-  StackNavigationOptions,
 } from '@react-navigation/stack';
 import Article from '../Shared/Article';
 import Albums from '../Shared/Albums';
@@ -77,18 +76,17 @@ const AlbumsScreen = ({
 
 const SimpleStack = createStackNavigator<SimpleStackParams>();
 
-type Props = {
-  options?: StackNavigationOptions;
+type Props = Partial<React.ComponentProps<typeof SimpleStack.Navigator>> & {
   navigation: StackNavigationProp<ParamListBase>;
 };
 
-export default function SimpleStackScreen({ navigation, options }: Props) {
+export default function SimpleStackScreen({ navigation, ...rest }: Props) {
   navigation.setOptions({
     headerShown: false,
   });
 
   return (
-    <SimpleStack.Navigator {...options}>
+    <SimpleStack.Navigator {...rest}>
       <SimpleStack.Screen
         name="article"
         component={ArticleScreen}
