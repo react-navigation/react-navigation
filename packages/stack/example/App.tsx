@@ -29,6 +29,7 @@ import {
   HeaderBackgroundFade,
 } from './src/HeaderBackgrounds';
 import DragLimitedToModal from './src/DragLimitedToModal';
+import StackAnimationConsumerStack from './src/StackAnimationConsumerStack';
 
 // Comment the following two lines to stop using react-native-screens
 // eslint-disable-next-line import/no-unresolved
@@ -108,6 +109,11 @@ const data: Item[] = [
     component: DragLimitedToModal,
     title: 'Drag limited to modal',
     routeName: 'DragLimitedToModal',
+  },
+  {
+    component: StackAnimationConsumerStack,
+    title: 'Stack animation consumer stack',
+    routeName: 'StackAnimationConsumerStack',
   },
 ];
 

@@ -35,8 +35,16 @@ export {
 /**
  * Utilities
  */
-
 export { default as StackGestureContext } from './utils/StackGestureContext';
+export {
+  default as StackAnimationProgressContext,
+} from './utils/StackAnimationProgressContext';
+export {
+  default as StackAnimationIsSwipingContext,
+} from './utils/StackAnimationIsSwipingContext';
+export {
+  default as StackAnimationIsClosingContext,
+} from './utils/StackAnimationIsClosingContext';
 
 /**
  * Types

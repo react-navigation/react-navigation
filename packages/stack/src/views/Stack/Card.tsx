@@ -25,6 +25,9 @@ import {
 import memoize from '../../utils/memoize';
 import StackGestureContext from '../../utils/StackGestureContext';
 import PointerEventsView from './PointerEventsView';
+import StackAnimationProgressContext from '../../utils/StackAnimationProgressContext';
+import StackAnimationIsSwipingContext from '../../utils/StackAnimationIsSwipingContext';
+import StackAnimationIsClosingContext from '../../utils/StackAnimationIsClosingContext';
 
 type Props = ViewProps & {
   index: number;
@@ -910,7 +913,17 @@ export default class Card extends React.Component<Props> {
                     contentStyle,
                   ]}
                 >
-                  {children}
+                  <StackAnimationProgressContext.Provider value={current}>
+                    <StackAnimationIsSwipingContext.Provider
+                      value={this.isSwiping}
+                    >
+                      <StackAnimationIsClosingContext.Provider
+                        value={this.isClosing}
+                      >
+                        {children}
+                      </StackAnimationIsClosingContext.Provider>
+                    </StackAnimationIsSwipingContext.Provider>
+                  </StackAnimationProgressContext.Provider>
                 </PointerEventsView>
               </Animated.View>
             </PanGestureHandler>
