@@ -49,10 +49,7 @@ export default function BottomTabsScreen() {
         name="chat"
         component={Chat}
         options={{
-          tabBarLabel: props => {
-            console.log(props);
-            return null;
-          },
+          tabBarLabel: 'Chat',
           tabBarIcon: getTabBarIcon('message-reply'),
           tabBarButtonComponent: TouchableBounce,
         }}
