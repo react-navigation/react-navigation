@@ -28,9 +28,7 @@ export default function MaterialBottomTabsScreen() {
           tabBarColor: '#C9E7F8',
         }}
       >
-        {props => (
-          <SimpleStackScreen {...props} options={{ headerMode: 'none' }} />
-        )}
+        {props => <SimpleStackScreen {...props} headerMode="none" />}
       </MaterialBottomTabs.Screen>
       <MaterialBottomTabs.Screen
         name="chat"

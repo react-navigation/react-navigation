@@ -41,9 +41,7 @@ export default function BottomTabsScreen() {
           tabBarButtonComponent: TouchableBounce,
         }}
       >
-        {props => (
-          <SimpleStackScreen {...props} options={{ headerMode: 'none' }} />
-        )}
+        {props => <SimpleStackScreen {...props} headerMode="none" />}
       </BottomTabs.Screen>
       <BottomTabs.Screen
         name="chat"

@@ -90,8 +90,10 @@ export default function SceneView<
               route={route}
             >
               {'component' in screen && screen.component !== undefined ? (
+                // @ts-ignore
                 <screen.component navigation={navigation} route={route} />
               ) : 'children' in screen && screen.children !== undefined ? (
+                // @ts-ignore
                 screen.children({ navigation, route })
               ) : null}
             </StaticContainer>
