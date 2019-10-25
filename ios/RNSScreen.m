@@ -35,13 +35,6 @@
 
 @end
 
-@interface RNSScreen : UIViewController
-
-- (instancetype)initWithView:(UIView *)view;
-- (void)notifyFinishTransitioning;
-
-@end
-
 @interface RNSScreenView () <UIAdaptivePresentationControllerDelegate>
 @end
 

@@ -37,6 +37,12 @@
     _needUpdate = NO;
     [self addSubview:_controller.view];
     _controller.interactivePopGestureRecognizer.delegate = self;
+
+    // we have to initialize viewControllers with a non empty array for
+    // largeTitle header to render in the opened state. If it is empty
+    // the header will render in collapsed state which is perhaps a bug
+    // in UIKit but ¯\_(ツ)_/¯
+    [_controller setViewControllers:@[[UIViewController new]]];
   }
   return self;
 }
@@ -60,7 +66,6 @@
     if ([viewController isEqual:[_reactSubviews objectAtIndex:i - 1].controller]) {
       break;
     } else {
-      // TODO: send dismiss event
       [_dismissedScreens addObject:[_reactSubviews objectAtIndex:i - 1]];
     }
   }
@@ -94,23 +99,6 @@
   return _controller.viewControllers.count > 1;
 }
 
-- (void)markUpdated
-{
-  // We want 'updateContainer' to be executed on main thread after all enqueued operations in
-  // uimanager are complete. In order to achieve that we enqueue call on UIManagerQueue from which
-  // we enqueue call on the main queue. This seems to be working ok in all the cases I've tried but
-  // there is a chance it is not the correct way to do that.
-  if (!_needUpdate) {
-    _needUpdate = YES;
-    RCTExecuteOnUIManagerQueue(^{
-      RCTExecuteOnMainQueue(^{
-        _needUpdate = NO;
-        [self updateContainer];
-      });
-    });
-  }
-}
-
 - (void)markChildUpdated
 {
   // do nothing
@@ -128,14 +116,12 @@
     return;
   }
   [_reactSubviews insertObject:subview atIndex:atIndex];
-  [self markUpdated];
 }
 
 - (void)removeReactSubview:(RNSScreenView *)subview
 {
   [_reactSubviews removeObject:subview];
   [_dismissedScreens removeObject:subview];
-  [self markUpdated];
 }
 
 - (NSArray<UIView *> *)reactSubviews
@@ -146,6 +132,7 @@
 - (void)didUpdateReactSubviews
 {
   // do nothing
+  [self updateContainer];
 }
 
 - (void)setModalViewControllers:(NSArray<UIViewController *> *)controllers
@@ -188,9 +175,15 @@
   UIViewController *top = controllers.lastObject;
   UIViewController *lastTop = _controller.viewControllers.lastObject;
 
-  BOOL shouldAnimate = ((RNSScreenView *) lastTop.view).stackAnimation != RNSScreenStackAnimationNone;
+  // at the start we set viewControllers to contain a single UIVIewController
+  // instance. This is a workaround for header height adjustment bug (see comment
+  // in the init function). Here, we need to detect if the initial empty
+  // controller is still there
+  BOOL firstTimePush = ![lastTop isKindOfClass:[RNSScreen class]];
 
-  if (_controller.viewControllers.count == 0) {
+  BOOL shouldAnimate = !firstTimePush && ((RNSScreenView *) lastTop.view).stackAnimation != RNSScreenStackAnimationNone;
+
+  if (firstTimePush) {
     // nothing pushed yet
     [_controller setViewControllers:@[top] animated:NO];
   } else if (top != lastTop) {

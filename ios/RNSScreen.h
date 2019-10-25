@@ -26,6 +26,13 @@ typedef NS_ENUM(NSInteger, RNSScreenStackAnimation) {
 
 @end
 
+@interface RNSScreen : UIViewController
+
+- (instancetype)initWithView:(UIView *)view;
+- (void)notifyFinishTransitioning;
+
+@end
+
 @interface RNSScreenManager : RCTViewManager
 @end
 
