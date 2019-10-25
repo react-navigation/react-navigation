@@ -65,13 +65,13 @@ export default class TabBarIndicator<T extends Route> extends React.Component<
         return [...acc, acc[i - 1] + getTabWidth(i - 1)];
       }, []);
 
-      const transalteX = interpolate(position, {
+      const translateX = interpolate(position, {
         inputRange,
         outputRange,
         extrapolate: Extrapolate.CLAMP,
       });
 
-      return multiply(transalteX, I18nManager.isRTL ? -1 : 1);
+      return multiply(translateX, I18nManager.isRTL ? -1 : 1);
     }
   );
 
