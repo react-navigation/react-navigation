@@ -78,51 +78,54 @@
 + (void)setAnimatedConfig:(UIViewController *)vc withConfig:(RNSScreenStackHeaderConfig *)config
 {
   UINavigationBar *navbar = ((UINavigationController *)vc.parentViewController).navigationBar;
-  BOOL hideShadow = config.hideShadow;
   [navbar setTintColor:config.color];
-  if (config.backgroundColor && CGColorGetAlpha(config.backgroundColor.CGColor) == 0.) {
-    [navbar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
-    [navbar setBarTintColor:[UIColor clearColor]];
-    hideShadow = YES;
+
+  if (@available(iOS 13.0, *)) {
+    // font customized on the navigation item level, so nothing to do here
   } else {
-    [navbar setBackgroundImage:nil forBarMetrics:UIBarMetricsDefault];
-    [navbar setBarTintColor:config.backgroundColor];
-  }
-  [navbar setTranslucent:config.translucent];
-  [navbar setValue:@(hideShadow ? YES : NO) forKey:@"hidesShadow"];
+    BOOL hideShadow = config.hideShadow;
 
-  if (config.titleFontFamily || config.titleFontSize || config.titleColor) {
-    NSMutableDictionary *attrs = [NSMutableDictionary new];
-
-    if (config.titleColor) {
-      attrs[NSForegroundColorAttributeName] = config.titleColor;
-    }
-
-    CGFloat size = config.titleFontSize ? [config.titleFontSize floatValue] : 17;
-    if (config.titleFontFamily) {
-      attrs[NSFontAttributeName] = [UIFont fontWithName:config.titleFontFamily size:size];
+    if (config.backgroundColor && CGColorGetAlpha(config.backgroundColor.CGColor) == 0.) {
+      [navbar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
+      [navbar setBarTintColor:[UIColor clearColor]];
+      hideShadow = YES;
     } else {
-      attrs[NSFontAttributeName] = [UIFont boldSystemFontOfSize:size];
+      [navbar setBackgroundImage:nil forBarMetrics:UIBarMetricsDefault];
+      [navbar setBarTintColor:config.backgroundColor];
     }
-    [navbar setTitleTextAttributes:attrs];
-  }
-  
-  if (@available(iOS 11.0, *)) {
-    if (
-      config.largeTitle &&
-      (config.largeTitleFontFamily || config.largeTitleFontSize || config.titleColor)
-    ) {
-      NSMutableDictionary *largeAttrs = [NSMutableDictionary new];
+    [navbar setTranslucent:config.translucent];
+    [navbar setValue:@(hideShadow ? YES : NO) forKey:@"hidesShadow"];
+
+    if (config.titleFontFamily || config.titleFontSize || config.titleColor) {
+      NSMutableDictionary *attrs = [NSMutableDictionary new];
+
       if (config.titleColor) {
-        largeAttrs[NSForegroundColorAttributeName] = config.titleColor;
+        attrs[NSForegroundColorAttributeName] = config.titleColor;
       }
-      CGFloat largeSize = config.largeTitleFontSize ? [config.largeTitleFontSize floatValue] : 34;
-      if (config.largeTitleFontFamily) {
-        largeAttrs[NSFontAttributeName] = [UIFont fontWithName:config.largeTitleFontFamily size:largeSize];
+
+      CGFloat size = config.titleFontSize ? [config.titleFontSize floatValue] : 17;
+      if (config.titleFontFamily) {
+        attrs[NSFontAttributeName] = [UIFont fontWithName:config.titleFontFamily size:size];
       } else {
-        largeAttrs[NSFontAttributeName] = [UIFont boldSystemFontOfSize:largeSize];
+        attrs[NSFontAttributeName] = [UIFont boldSystemFontOfSize:size];
       }
-      [navbar setLargeTitleTextAttributes:largeAttrs];
+      [navbar setTitleTextAttributes:attrs];
+    }
+
+    if (@available(iOS 11.0, *)) {
+      if (config.largeTitle && (config.largeTitleFontFamily || config.largeTitleFontSize || config.titleColor)) {
+        NSMutableDictionary *largeAttrs = [NSMutableDictionary new];
+        if (config.titleColor) {
+          largeAttrs[NSForegroundColorAttributeName] = config.titleColor;
+        }
+        CGFloat largeSize = config.largeTitleFontSize ? [config.largeTitleFontSize floatValue] : 34;
+        if (config.largeTitleFontFamily) {
+          largeAttrs[NSFontAttributeName] = [UIFont fontWithName:config.largeTitleFontFamily size:largeSize];
+        } else {
+          largeAttrs[NSFontAttributeName] = [UIFont boldSystemFontOfSize:largeSize];
+        }
+        [navbar setLargeTitleTextAttributes:largeAttrs];
+      }
     }
   }
 }
@@ -187,6 +190,72 @@
       navctr.navigationBar.prefersLargeTitles = YES;
     }
     navitem.largeTitleDisplayMode = config.largeTitle ? UINavigationItemLargeTitleDisplayModeAlways : UINavigationItemLargeTitleDisplayModeNever;
+  }
+
+  if (@available(iOS 13.0, *)) {
+    UINavigationBarAppearance *appearance = [UINavigationBarAppearance new];
+
+    if (config.backgroundColor && CGColorGetAlpha(config.backgroundColor.CGColor) == 0.) {
+      // transparent background color
+      [appearance configureWithTransparentBackground];
+    } else {
+      // non-transparent background or default background
+      if (config.translucent) {
+        [appearance configureWithDefaultBackground];
+      } else {
+        [appearance configureWithOpaqueBackground];
+      }
+
+      // set background color if specified
+      if (config.backgroundColor) {
+        appearance.backgroundColor = config.backgroundColor;
+      }
+    }
+
+    if (config.backgroundColor && CGColorGetAlpha(config.backgroundColor.CGColor) == 0.) {
+      appearance.backgroundColor = config.backgroundColor;
+    }
+
+    if (config.hideShadow) {
+      appearance.shadowColor = nil;
+    }
+
+    if (config.titleFontFamily || config.titleFontSize || config.titleColor) {
+      NSMutableDictionary *attrs = [NSMutableDictionary new];
+
+      if (config.titleColor) {
+        attrs[NSForegroundColorAttributeName] = config.titleColor;
+      }
+
+      CGFloat size = config.titleFontSize ? [config.titleFontSize floatValue] : 17;
+      if (config.titleFontFamily) {
+        attrs[NSFontAttributeName] = [UIFont fontWithName:config.titleFontFamily size:size];
+      } else {
+        attrs[NSFontAttributeName] = [UIFont boldSystemFontOfSize:size];
+      }
+      appearance.titleTextAttributes = attrs;
+    }
+
+    if (config.largeTitleFontFamily || config.largeTitleFontSize || config.titleColor) {
+      NSMutableDictionary *largeAttrs = [NSMutableDictionary new];
+
+      if (config.titleColor) {
+        largeAttrs[NSForegroundColorAttributeName] = config.titleColor;
+      }
+
+      CGFloat largeSize = config.largeTitleFontSize ? [config.largeTitleFontSize floatValue] : 34;
+      if (config.largeTitleFontFamily) {
+        largeAttrs[NSFontAttributeName] = [UIFont fontWithName:config.largeTitleFontFamily size:largeSize];
+      } else {
+        largeAttrs[NSFontAttributeName] = [UIFont boldSystemFontOfSize:largeSize];
+      }
+
+      appearance.largeTitleTextAttributes = largeAttrs;
+    }
+
+    navitem.standardAppearance = appearance;
+    navitem.compactAppearance = appearance;
+    navitem.scrollEdgeAppearance = appearance;
   }
 
   for (RNSScreenStackHeaderSubview *subview in config.reactSubviews) {
