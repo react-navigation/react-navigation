@@ -16,7 +16,7 @@ export default class KeyboardManager extends React.Component<Props> {
   private startTimestamp: number = 0;
   private keyboardTimeout: NodeJS.Timeout | undefined;
 
-  clearKeyboardTimeout = () => {
+  private clearKeyboardTimeout = () => {
     if (this.keyboardTimeout !== undefined) {
       clearTimeout(this.keyboardTimeout);
       this.keyboardTimeout = undefined;
