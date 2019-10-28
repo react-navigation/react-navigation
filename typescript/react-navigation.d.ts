@@ -787,7 +787,6 @@ declare module 'react-navigation' {
   /**
    * Create Navigator
    *
-   * @see https://github.com/react-navigation/react-navigation/blob/master/src/navigators/createNavigator.js
    */
   export interface NavigationDescriptor<
     Params = NavigationParams,
@@ -843,7 +842,6 @@ declare module 'react-navigation' {
    * This allows to use e.g. the StackNavigator and TabNavigator as root-level
    * components.
    *
-   * @see https://github.com/react-navigation/react-navigation/blob/master/src/createNavigationContainer.js
    */
   export function createNavigationContainer<Options, NavigationPropType>(
     Component: NavigationNavigator<Options, NavigationPropType>
