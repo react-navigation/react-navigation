@@ -30,7 +30,7 @@ A lot of developers poured their knowledge in blog posts, and other repos - we w
 * [Migrate from ExNavigation to React Navigation](https://hackernoon.com/migrate-from-exnavigation-to-react-navigation-1af661ec5082)
 * [Playing with React Navigation and Airbnb's Native Navigation](https://medium.com/@ericvicenti/playing-with-react-navigation-and-airbnbs-native-navigation-4e49fc765489)
 * [How we restructured our app with React Navigation](https://m.oursky.com/how-we-restructured-our-app-with-react-navigation-98a89e219c26)
-* [What’s Happening with Navigation in React Native?](https://blog.revisify.com/whats-happening-with-navigation-in-react-native-c193535888c3)
+* [What’s Happening with Navigation in React Native?](https://medium.com/@pavsidhu/whats-happening-with-navigation-in-react-native-c193535888c3)
 
 #### Example Projects
 
