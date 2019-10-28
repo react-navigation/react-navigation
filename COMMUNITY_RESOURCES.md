@@ -18,7 +18,7 @@ A lot of developers poured their knowledge in blog posts, and other repos - we w
 * [Integrating React-Navigation and Redux with authentication flow](https://medium.com/@shubhnik/a-comprehensive-guide-for-integrating-react-navigation-with-redux-including-authentication-flow-cb7b90611adf)
 * [Using React Navigation and Redux in your React Native Application](https://medium.com/modus-create-front-end-development/using-react-navigation-and-redux-in-your-react-native-application-efac33265138)
 * [React-Navigation, complete Redux state management, tab-bar, and multiple navigators](https://medium.com/@parkerdan/react-navigation-with-complete-redux-state-management-tab-bar-and-multiple-navigators-ed30a69d9a4d)
-* [Custom Drawer with React-Navigation in React-Native](http://www.skywardsoftwares.co.in/react-native/custom-drawer-with-react-navigation-in-react-native/)
+* [Custom Drawer with React-Navigation in React-Native](https://medium.com/@hardik.skyward/custom-drawer-with-react-navigation-in-react-native-25e06a518fad)
 * [React Navigation Drawer - a tutorial series](https://shift.infinite.red/react-navigation-drawer-tutorial-a802fc3ee6dc)
 
 #### Advanced Topics
