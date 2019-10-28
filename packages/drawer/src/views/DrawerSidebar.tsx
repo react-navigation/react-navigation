@@ -3,7 +3,7 @@ import { StyleSheet, View, ViewStyle } from 'react-native';
 import {
   NavigationActions,
   NavigationRoute,
-  NavigationProp,
+  NavigationScreenProp,
 } from 'react-navigation';
 import Animated from 'react-native-reanimated';
 import {
@@ -17,7 +17,7 @@ type Props = {
   contentComponent?: React.ComponentType<DrawerContentComponentProps>;
   contentOptions?: object;
   screenProps?: unknown;
-  navigation: NavigationProp<NavigationDrawerState>;
+  navigation: NavigationScreenProp<NavigationDrawerState>;
   descriptors: SceneDescriptorMap;
   drawerOpenProgress: Animated.Node<number>;
   drawerPosition: 'left' | 'right';
@@ -73,7 +73,6 @@ class DrawerSidebar extends React.PureComponent<Props> {
     focused: boolean;
   }) => {
     if (focused) {
-      // @ts-ignore
       this.props.navigation.closeDrawer();
     } else {
       this.props.navigation.dispatch(

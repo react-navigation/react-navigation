@@ -4,7 +4,7 @@ import {
   SceneView,
   ThemeColors,
   ThemeContext,
-  NavigationProp,
+  NavigationScreenProp,
 } from 'react-navigation';
 import { ScreenContainer } from 'react-native-screens';
 
@@ -41,7 +41,7 @@ type DrawerOptions = {
 
 type Props = {
   lazy: boolean;
-  navigation: NavigationProp<NavigationDrawerState>;
+  navigation: NavigationScreenProp<NavigationDrawerState>;
   descriptors: SceneDescriptorMap;
   navigationConfig: DrawerOptions & {
     contentComponent?: React.ComponentType<DrawerContentComponentProps>;
