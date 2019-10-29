@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.17](https://github.com/satya164/navigation-ex/compare/@react-navigation/example@5.0.0-alpha.16...@react-navigation/example@5.0.0-alpha.17) (2019-10-29)
+
+
+### Bug Fixes
+
+* improve type annotation for screens ([8f16085](https://github.com/satya164/navigation-ex/commit/8f16085))
+
+
+
+
+
 # [5.0.0-alpha.16](https://github.com/satya164/navigation-ex/compare/@react-navigation/example@5.0.0-alpha.15...@react-navigation/example@5.0.0-alpha.16) (2019-10-22)
 
 **Note:** Version bump only for package @react-navigation/example

@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.30](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.29...@react-navigation/stack@5.0.0-alpha.30) (2019-10-29)
+
+
+### Bug Fixes
+
+* keyboard manager in stack for fast swipe ([07bfc86](https://github.com/react-navigation/navigation-ex/commit/07bfc86))
+* make clearKeyboardTimeout private ([876c318](https://github.com/react-navigation/navigation-ex/commit/876c318))
+
+
+
+
+
 # [5.0.0-alpha.29](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.28...@react-navigation/stack@5.0.0-alpha.29) (2019-10-22)
 
 
