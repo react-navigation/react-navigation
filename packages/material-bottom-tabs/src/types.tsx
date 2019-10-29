@@ -1,4 +1,5 @@
 import { StyleProp, ViewStyle } from 'react-native';
+import { BottomNavigation } from 'react-native-paper';
 import {
   NavigationRoute,
   NavigationState,
@@ -38,45 +39,28 @@ export type NavigationMaterialBottomTabOptions = {
   }) => void;
 };
 
-export type NavigationMaterialBottomTabConfig = {
-  /**
-   * Whether the shifting style is used, the active tab appears wider and the inactive tabs won't have a label.
-   * By default, this is `true` when you have more than 3 tabs.
-   */
-  shifting?: boolean;
-  /**
-   * Whether to show labels in tabs. When `false`, only icons will be displayed.
-   */
-  labeled?: boolean;
-  /**
-   * Custom color for icon and label in the active tab.
-   */
-  activeColor?: string;
+export type NavigationMaterialBottomTabConfig = Partial<
+  Omit<
+    React.ComponentProps<typeof BottomNavigation>,
+    | 'navigationState'
+    | 'onIndexChange'
+    | 'onTabPress'
+    | 'renderScene'
+    | 'renderLabel'
+    | 'renderIcon'
+    | 'getAccessibilityLabel'
+    | 'getBadge'
+    | 'getColor'
+    | 'getLabelText'
+    | 'getTestID'
+  >
+> & {
   activeColorLight?: string;
   activeColorDark?: string;
-  /**
-   * Custom color for icon and label in the inactive tab.
-   */
-  inactiveColor?: string;
   inactiveColorLight?: string;
   inactiveColorDark?: string;
-  /**
-   * Whether the bottom navigation bar is hidden when keyboard is shown.
-   * On Android, this works best when [`windowSoftInputMode`](https://developer.android.com/guide/topics/manifest/activity-element#wsoft) is set to `adjustResize`.
-   */
-  keyboardHidesNavigationBar?: boolean;
-  /**
-   * Style for the bottom navigation bar.
-   * You can set a bottom padding here if you have a translucent navigation bar on Android:
-   *
-   * ```js
-   * barStyle={{ paddingBottom: 48 }}
-   * ```
-   */
-  barStyle?: StyleProp<ViewStyle>;
   barStyleLight?: StyleProp<ViewStyle>;
   barStyleDark?: StyleProp<ViewStyle>;
-  style?: StyleProp<ViewStyle>;
 };
 
 export type NavigationTabScreenProps<
