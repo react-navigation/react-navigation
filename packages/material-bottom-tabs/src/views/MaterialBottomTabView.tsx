@@ -108,8 +108,13 @@ export default class MaterialBottomTabView extends React.Component<Props> {
 
     const isVisible = this._isVisible();
     const extraStyle: ViewStyle | null =
-      typeof isVisible === 'boolean'
-        ? { display: isVisible ? undefined : 'none' }
+      isVisible === false
+        ? {
+            display: 'none',
+            // When keyboard is shown, `position` is set to `absolute` in the library
+            // This somehow breaks `display: 'none'`, so we explcitely override `position`
+            position: undefined,
+          }
         : null;
 
     return (
