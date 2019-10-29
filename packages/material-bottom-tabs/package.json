@@ -44,7 +44,7 @@
     "del-cli": "^3.0.0",
     "react": "~16.8.3",
     "react-native": "~0.59.10",
-    "react-native-paper": "^3.0.0-alpha.7",
+    "react-native-paper": "^3.1.1",
     "react-native-vector-icons": "^6.6.0",
     "typescript": "^3.6.3"
   },
@@ -52,7 +52,7 @@
     "@react-navigation/core": "^5.0.0-alpha.0",
     "react": "*",
     "react-native": "*",
-    "react-native-paper": "^3.0.0-alpha.0",
+    "react-native-paper": "^3.0.0",
     "react-native-vector-icons": "^6.0.0"
   },
   "@react-native-community/bob": {
