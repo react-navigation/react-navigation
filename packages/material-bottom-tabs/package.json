@@ -1,6 +1,6 @@
 {
   "name": "react-navigation-material-bottom-tabs",
-  "version": "2.1.4",
+  "version": "2.1.5",
   "description": "Material Bottom Tab Navigation component for React Navigation",
   "main": "lib/commonjs/index.js",
   "module": "lib/module/index.js",
