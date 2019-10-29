@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.10](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/routers@5.0.0-alpha.9...@react-navigation/routers@5.0.0-alpha.10) (2019-10-29)
+
+
+### Bug Fixes
+
+* use index of first route when rehydrating tab state ([7635373](https://github.com/react-navigation/navigation-ex/commit/7635373))
+
+
+
+
+
 # [5.0.0-alpha.9](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/routers@5.0.0-alpha.8...@react-navigation/routers@5.0.0-alpha.9) (2019-10-03)
 
 **Note:** Version bump only for package @react-navigation/routers
