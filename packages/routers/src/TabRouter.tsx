@@ -105,6 +105,16 @@ export default function TabRouter({
         } as Route<string>;
       });
 
+      const index = Math.min(
+        Math.max(
+          typeof state.index === 'number'
+            ? state.index
+            : routeNames.indexOf(state.routes[0].name),
+          0
+        ),
+        routes.length - 1
+      );
+
       const routeKeyHistory = state.routeKeyHistory
         ? state.routeKeyHistory.filter(key => routes.find(r => r.key === key))
         : [];
@@ -112,10 +122,7 @@ export default function TabRouter({
       return {
         stale: false,
         key: `tab-${shortid()}`,
-        index:
-          typeof state.index === 'number' && state.index < routes.length
-            ? state.index
-            : 0,
+        index,
         routeNames,
         routeKeyHistory,
         routes,
