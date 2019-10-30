@@ -29,7 +29,12 @@ export type StackActionType =
 
 export type StackRouterOptions = DefaultRouterOptions;
 
-export type StackNavigationState = NavigationState;
+export type StackNavigationState = NavigationState & {
+  /**
+   * Type of the router, in this case, it's stack.
+   */
+  type: 'stack';
+};
 
 export const StackActions = {
   push(name: string, params?: object): StackActionType {
@@ -47,6 +52,8 @@ export default function StackRouter(options: StackRouterOptions) {
   const router: Router<StackNavigationState, CommonAction | StackActionType> = {
     ...BaseRouter,
 
+    type: 'stack',
+
     getInitialState({ routeNames, routeParamList }) {
       const initialRouteName =
         options.initialRouteName !== undefined
@@ -55,6 +62,7 @@ export default function StackRouter(options: StackRouterOptions) {
 
       return {
         stale: false,
+        type: 'stack',
         key: `stack-${shortid()}`,
         index: 0,
         routeNames,
@@ -107,6 +115,7 @@ export default function StackRouter(options: StackRouterOptions) {
 
       return {
         stale: false,
+        type: 'stack',
         key: `stack-${shortid()}`,
         index: routes.length - 1,
         routeNames,

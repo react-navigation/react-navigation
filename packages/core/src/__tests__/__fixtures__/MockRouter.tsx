@@ -13,6 +13,8 @@ export const MockRouterKey = { current: 0 };
 
 export default function MockRouter(options: DefaultRouterOptions) {
   const router: Router<NavigationState, MockActions> = {
+    type: 'test',
+
     getInitialState({ routeNames, routeParamList }) {
       const index =
         options.initialRouteName === undefined
@@ -21,6 +23,7 @@ export default function MockRouter(options: DefaultRouterOptions) {
 
       return {
         stale: false,
+        type: 'test',
         key: String(MockRouterKey.current++),
         index,
         routeNames,
@@ -58,6 +61,7 @@ export default function MockRouter(options: DefaultRouterOptions) {
 
       return {
         stale: false,
+        type: 'test',
         key: String(MockRouterKey.current++),
         index:
           typeof state.index === 'number' && state.index < routes.length

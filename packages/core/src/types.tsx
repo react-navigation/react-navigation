@@ -24,6 +24,12 @@ export type NavigationState = {
     Route<string> & { state?: NavigationState | PartialState<NavigationState> }
   >;
   /**
+   * Custom type for the state, whether it's for tab, stack, drawer etc.
+   * During rehydration, the state will be discarded if type doesn't match with router type.
+   * It can also be used to detect the type of the navigator we're dealing with.
+   */
+  type: string;
+  /**
    * Whether the navigation state has been rehydrated.
    */
   stale: false;
@@ -36,9 +42,10 @@ export type InitialState = Partial<
 };
 
 export type PartialState<State extends NavigationState> = Partial<
-  Omit<State, 'stale' | 'key' | 'routes' | 'routeNames'>
+  Omit<State, 'stale' | 'type' | 'key' | 'routes' | 'routeNames'>
 > & {
   stale?: true;
+  type?: string;
   routes: Array<
     Omit<Route<string>, 'key'> & { key?: string; state?: InitialState }
   >;
@@ -115,6 +122,12 @@ export type Router<
   State extends NavigationState,
   Action extends NavigationAction
 > = {
+  /**
+   * Type of the router. Should match the `type` property in state.
+   * If the type doesn't match, the state will be discarded during rehydration.
+   */
+  type: State['type'];
+
   /**
    * Initialize the navigation state.
    *

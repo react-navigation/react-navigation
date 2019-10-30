@@ -4,7 +4,8 @@ import * as CommonActions from '../CommonActions';
 jest.mock('shortid', () => () => 'test');
 
 const STATE = {
-  stale: false as false,
+  stale: false as const,
+  type: 'test',
   key: 'root',
   index: 1,
   routes: [
@@ -23,6 +24,7 @@ it('replaces focused screen with REPLACE', () => {
 
   expect(result).toEqual({
     stale: false,
+    type: 'test',
     key: 'root',
     index: 1,
     routes: [
@@ -42,6 +44,7 @@ it('replaces source screen with REPLACE', () => {
 
   expect(result).toEqual({
     stale: false,
+    type: 'test',
     key: 'root',
     index: 1,
     routes: [
@@ -70,6 +73,7 @@ it('sets params for the focused screen with SET_PARAMS', () => {
 
   expect(result).toEqual({
     stale: false,
+    type: 'test',
     key: 'root',
     index: 1,
     routes: [
@@ -89,6 +93,7 @@ it('sets params for the source screen with SET_PARAMS', () => {
 
   expect(result).toEqual({
     stale: false,
+    type: 'test',
     key: 'root',
     index: 1,
     routes: [

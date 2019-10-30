@@ -233,6 +233,7 @@ it('handle dispatching with ref', () => {
   expect(onStateChange).toBeCalledTimes(1);
   expect(onStateChange).lastCalledWith({
     stale: false,
+    type: 'test',
     index: 0,
     key: '0',
     routeNames: ['foo', 'foo2', 'bar', 'baz'],
@@ -242,6 +243,7 @@ it('handle dispatching with ref', () => {
         name: 'baz',
         state: {
           stale: false,
+          type: 'test',
           index: 0,
           key: '1',
           routeNames: ['qux', 'lex'],
@@ -367,10 +369,12 @@ it('handle getRootState', () => {
           routeNames: ['qux', 'lex'],
           routes: [{ key: 'qux', name: 'qux' }, { key: 'lex', name: 'lex' }],
           stale: false,
+          type: 'test',
         },
       },
       { key: 'bar', name: 'bar' },
     ],
     stale: false,
+    type: 'test',
   });
 });

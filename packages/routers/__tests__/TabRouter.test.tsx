@@ -25,6 +25,7 @@ it('gets initial state from route names and params with initialRouteName', () =>
       { key: 'qux-test', name: 'qux', params: { name: 'Jane' } },
     ],
     stale: false,
+    type: 'tab',
   });
 });
 
@@ -50,6 +51,7 @@ it('gets initial state from route names and params without initialRouteName', ()
       { key: 'qux-test', name: 'qux', params: { name: 'Jane' } },
     ],
     stale: false,
+    type: 'tab',
   });
 });
 
@@ -82,6 +84,7 @@ it('gets rehydrated state from partial state', () => {
       { key: 'qux-1', name: 'qux', params: { name: 'Jane' } },
     ],
     stale: false,
+    type: 'tab',
   });
 
   expect(
@@ -102,6 +105,7 @@ it('gets rehydrated state from partial state', () => {
       { key: 'qux-test', name: 'qux', params: { name: 'Jane' } },
     ],
     stale: false,
+    type: 'tab',
   });
 
   expect(
@@ -127,6 +131,7 @@ it('gets rehydrated state from partial state', () => {
       { key: 'qux-2', name: 'qux', params: { name: 'Jane' } },
     ],
     stale: false,
+    type: 'tab',
   });
 
   expect(
@@ -148,6 +153,7 @@ it('gets rehydrated state from partial state', () => {
       { key: 'qux-test', name: 'qux', params: { name: 'Jane' } },
     ],
     stale: false,
+    type: 'tab',
   });
 
   expect(
@@ -170,6 +176,7 @@ it('gets rehydrated state from partial state', () => {
       { key: 'qux-test', name: 'qux', params: { name: 'Jane' } },
     ],
     stale: false,
+    type: 'tab',
   });
 });
 
@@ -187,6 +194,7 @@ it("doesn't rehydrate state if it's not stale", () => {
       { key: 'qux-test', name: 'qux', params: { name: 'Jane' } },
     ],
     stale: false as const,
+    type: 'tab' as const,
   };
 
   expect(
@@ -213,6 +221,7 @@ it('gets state on route names change', () => {
           { key: 'qux-test', name: 'qux', params: { name: 'Jane' } },
         ],
         stale: false,
+        type: 'tab',
       },
       {
         routeNames: ['qux', 'baz', 'foo', 'fiz'],
@@ -234,6 +243,7 @@ it('gets state on route names change', () => {
       { key: 'fiz-test', name: 'fiz', params: { fruit: 'apple' } },
     ],
     stale: false,
+    type: 'tab',
   });
 });
 
@@ -244,6 +254,7 @@ it('handles navigate action', () => {
     router.getStateForAction(
       {
         stale: false,
+        type: 'tab',
         key: 'root',
         index: 1,
         routeNames: ['baz', 'bar'],
@@ -254,6 +265,7 @@ it('handles navigate action', () => {
     )
   ).toEqual({
     stale: false,
+    type: 'tab',
     key: 'root',
     index: 1,
     routeNames: ['baz', 'bar'],
@@ -268,6 +280,7 @@ it('handles navigate action', () => {
     router.getStateForAction(
       {
         stale: false,
+        type: 'tab',
         key: 'root',
         index: 1,
         routeNames: ['baz', 'bar'],
@@ -278,6 +291,7 @@ it('handles navigate action', () => {
     )
   ).toEqual({
     stale: false,
+    type: 'tab',
     key: 'root',
     index: 0,
     routeNames: ['baz', 'bar'],
@@ -292,6 +306,7 @@ it('handles navigate action', () => {
     router.getStateForAction(
       {
         stale: false,
+        type: 'tab',
         key: 'root',
         index: 1,
         routeNames: ['baz', 'bar'],
@@ -310,6 +325,7 @@ it('handles jump to action', () => {
     router.getStateForAction(
       {
         stale: false,
+        type: 'tab',
         key: 'root',
         index: 0,
         routeNames: ['baz', 'bar'],
@@ -320,6 +336,7 @@ it('handles jump to action', () => {
     )
   ).toEqual({
     stale: false,
+    type: 'tab',
     key: 'root',
     index: 1,
     routeNames: ['baz', 'bar'],
@@ -335,6 +352,7 @@ it('handles back action with backBehavior: history', () => {
     router.getStateForAction(
       {
         stale: false,
+        type: 'tab',
         key: 'root',
         index: 0,
         routeNames: ['baz', 'bar'],
@@ -345,6 +363,7 @@ it('handles back action with backBehavior: history', () => {
     )
   ).toEqual({
     stale: false,
+    type: 'tab',
     key: 'root',
     index: 1,
     routeNames: ['baz', 'bar'],
@@ -356,6 +375,7 @@ it('handles back action with backBehavior: history', () => {
     router.getStateForAction(
       {
         stale: false,
+        type: 'tab',
         key: 'root',
         index: 0,
         routeNames: ['baz', 'bar'],
@@ -374,6 +394,7 @@ it('handles back action with backBehavior: order', () => {
     router.getStateForAction(
       {
         stale: false,
+        type: 'tab',
         key: 'root',
         index: 1,
         routeNames: ['baz', 'bar'],
@@ -384,6 +405,7 @@ it('handles back action with backBehavior: order', () => {
     )
   ).toEqual({
     stale: false,
+    type: 'tab',
     key: 'root',
     index: 0,
     routeNames: ['baz', 'bar'],
@@ -395,6 +417,7 @@ it('handles back action with backBehavior: order', () => {
     router.getStateForAction(
       {
         stale: false,
+        type: 'tab',
         key: 'root',
         index: 0,
         routeNames: ['baz', 'bar'],
@@ -416,6 +439,7 @@ it('handles back action with backBehavior: initialRoute', () => {
     router.getStateForAction(
       {
         stale: false,
+        type: 'tab',
         key: 'root',
         index: 0,
         routeNames: ['baz', 'bar'],
@@ -426,6 +450,7 @@ it('handles back action with backBehavior: initialRoute', () => {
     )
   ).toEqual({
     stale: false,
+    type: 'tab',
     key: 'root',
     index: 1,
     routeNames: ['baz', 'bar'],
@@ -437,6 +462,7 @@ it('handles back action with backBehavior: initialRoute', () => {
     router.getStateForAction(
       {
         stale: false,
+        type: 'tab',
         key: 'root',
         index: 1,
         routeNames: ['baz', 'bar'],
@@ -455,6 +481,7 @@ it('handles back action with backBehavior: none', () => {
     router.getStateForAction(
       {
         stale: false,
+        type: 'tab',
         key: 'root',
         index: 0,
         routeNames: ['baz', 'bar'],
@@ -480,6 +507,7 @@ it('updates route key history on navigate and jump to', () => {
       { key: 'qux-0', name: 'qux', params: { name: 'Jane' } },
     ],
     stale: false as const,
+    type: 'tab',
   };
 
   expect(state.routeKeyHistory).toEqual([]);
@@ -534,6 +562,7 @@ it('updates route key history on focus change', () => {
       { key: 'qux-0', name: 'qux', params: { name: 'Jane' } },
     ],
     stale: false as const,
+    type: 'tab' as const,
   };
 
   expect(router.getStateForRouteFocus(state, 'bar-0').routeKeyHistory).toEqual(

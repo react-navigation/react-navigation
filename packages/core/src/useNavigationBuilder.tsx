@@ -166,6 +166,17 @@ export default function useNavigationBuilder<
     );
   }
 
+  const isStateValid = React.useCallback(
+    state => state.type === undefined || state.type === router.type,
+    [router.type]
+  );
+
+  const isStateInitialized = React.useCallback(
+    state =>
+      state !== undefined && state.stale === false && isStateValid(state),
+    [isStateValid]
+  );
+
   const {
     state: currentState,
     getState: getCurrentState,
@@ -188,7 +199,7 @@ export default function useNavigationBuilder<
     // Otherwise assume that the state was provided as initial state
     // So we need to rehydrate it to make it usable
     initializedStateRef.current =
-      currentState === undefined
+      currentState === undefined || !isStateValid(currentState)
         ? router.getInitialState({
             routeNames,
             routeParamList,
@@ -207,9 +218,9 @@ export default function useNavigationBuilder<
     // If the state isn't initialized, or stale, use the state we initialized instead
     // The state won't update until there's a change needed in the state we have initalized locally
     // So it'll be `undefined` or stale untill the first navigation event happens
-    currentState === undefined || currentState.stale !== false
-      ? (initializedStateRef.current as State)
-      : (currentState as State);
+    isStateInitialized(currentState)
+      ? (currentState as State)
+      : (initializedStateRef.current as State);
 
   let nextState: State = state;
 
@@ -271,10 +282,10 @@ export default function useNavigationBuilder<
   const getState = React.useCallback((): State => {
     const currentState = getCurrentState();
 
-    return currentState === undefined || currentState.stale !== false
-      ? (initializedStateRef.current as State)
-      : (currentState as State);
-  }, [getCurrentState]);
+    return isStateInitialized(currentState)
+      ? (currentState as State)
+      : (initializedStateRef.current as State);
+  }, [getCurrentState, isStateInitialized]);
 
   const emitter = useEventEmitter();
 
