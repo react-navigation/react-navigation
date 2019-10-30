@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useNavigation, EventArg } from '@react-navigation/core';
+import { useNavigation, useRoute, EventArg } from '@react-navigation/core';
 
 type ScrollOptions = { y?: number; animated?: boolean };
 
@@ -36,22 +36,42 @@ export default function useScrollToTop(
   ref: React.RefObject<ScrollableWrapper>
 ) {
   const navigation = useNavigation();
+  const route = useRoute();
 
-  React.useEffect(
-    () =>
-      // @ts-ignore
+  React.useEffect(() => {
+    let current = navigation;
+
+    // The screen might be inside another navigator such as stack nested in tabs
+    // We need to find the closest tab navigator and add the listener there
+    while (current && current.dangerouslyGetState().type !== 'tab') {
+      current = current.dangerouslyGetParent();
+    }
+
+    if (!current) {
+      return;
+    }
+
+    const unsubscribe = current.addListener(
       // We don't wanna import tab types here to avoid extra deps
       // in addition, there are multiple tab implementations
-      navigation.addListener('tabPress', (e: EventArg<'tabPress'>) => {
+      // @ts-ignore
+      'tabPress',
+      (e: EventArg<'tabPress'>) => {
+        // We should scroll to top only when the screen is focused
         const isFocused = navigation.isFocused();
+
+        // In a nested stack navigator, tab press resets the stack to first screen
+        // So we should scroll to top only when we are on first screen
+        const isFirst =
+          navigation === current ||
+          navigation.dangerouslyGetState().routes[0].key === route.key;
 
         // Run the operation in the next frame so we're sure all listeners have been run
         // This is necessary to know if preventDefault() has been called
         requestAnimationFrame(() => {
           const scrollable = getScrollableNode(ref);
 
-          if (isFocused && !e.defaultPrevented && scrollable) {
-            // When user taps on already focused tab, scroll to top
+          if (isFocused && isFirst && scrollable && !e.defaultPrevented) {
             if ('scrollToTop' in scrollable) {
               scrollable.scrollToTop();
             } else if ('scrollTo' in scrollable) {
@@ -63,7 +83,9 @@ export default function useScrollToTop(
             }
           }
         });
-      }),
-    [navigation, ref]
-  );
+      }
+    );
+
+    return unsubscribe;
+  }, [navigation, ref, route.key]);
 }
