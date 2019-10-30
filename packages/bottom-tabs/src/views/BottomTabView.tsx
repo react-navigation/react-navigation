@@ -194,7 +194,7 @@ export default class BottomTabView extends React.Component<Props, State> {
   };
 
   render() {
-    const { state, descriptors, lazy } = this.props;
+    const { state, descriptors, lazy, unmountInactiveScreens } = this.props;
     const { routes } = state;
     const { loaded } = this.state;
 
@@ -203,6 +203,10 @@ export default class BottomTabView extends React.Component<Props, State> {
         <View style={styles.container}>
           <ScreenContainer style={styles.pages}>
             {routes.map((route, index) => {
+              if (unmountInactiveScreens && index !== state.index) {
+                return null;
+              }
+
               if (lazy && !loaded.includes(index)) {
                 // Don't render a screen if we've never navigated to it
                 return null;

@@ -124,6 +124,11 @@ export type BottomTabNavigationConfig = {
    */
   lazy?: boolean;
   /**
+   * Whether a screen should be unmounted when navigating away from it.
+   * Defaults to `false`.
+   */
+  unmountInactiveScreens?: boolean;
+  /**
    * Custom tab bar component.
    */
   tabBarComponent?: React.ComponentType<BottomTabBarProps>;
