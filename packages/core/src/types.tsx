@@ -395,13 +395,6 @@ export type NavigationProp<
   setOptions(options: Partial<ScreenOptions>): void;
 
   /**
-   * Check if the screen is the first route in the navigator.
-   * This method returns `true` if the index of the route is `0`, `false` otherwise.
-   * It can be useful to decide whether to display a back button in a stack.
-   */
-  isFirstRouteInParent(): boolean;
-
-  /**
    * Returns the parent navigator, if any. Reason why the function is called
    * dangerouslyGetParent is to warn developers against overusing it to eg. get parent
    * of parent and other hard-to-follow patterns.
