@@ -37,6 +37,7 @@ it('renders successfully', () => {
       }
     >
       <View
+        importantForAccessibility="yes"
         style={
           Object {
             "flex": 1,

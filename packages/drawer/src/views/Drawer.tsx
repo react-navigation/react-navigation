@@ -544,6 +544,7 @@ export default class DrawerView extends React.PureComponent<Props> {
                 },
                 sceneContainerStyle as any,
               ]}
+              importantForAccessibility={open ? 'no-hide-descendants' : 'yes'}
             >
               {renderSceneContent({ progress: this.progress })}
               <TapGestureHandler
