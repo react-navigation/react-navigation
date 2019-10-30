@@ -8,6 +8,7 @@ import {
   Keyboard,
   StatusBar,
   StyleProp,
+  View,
 } from 'react-native';
 import {
   PanGestureHandler,
@@ -544,7 +545,13 @@ export default class DrawerView extends React.PureComponent<Props> {
               sceneContainerStyle as any,
             ]}
           >
-            {renderSceneContent({ progress: this.progress })}
+            <View
+              accessibilityElementsHidden={open}
+              importantForAccessibility={open ? 'no-hide-descendants' : 'auto'}
+              style={styles.content}
+            >
+              {renderSceneContent({ progress: this.progress })}
+            </View>
             <TapGestureHandler onHandlerStateChange={this.handleTapStateChange}>
               <Animated.View
                 style={[
