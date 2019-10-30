@@ -20,6 +20,7 @@ it('gets initial state from route names and params with initialRouteName', () =>
     routeNames: ['bar', 'baz', 'qux'],
     routes: [{ key: 'baz-test', name: 'baz', params: { answer: 42 } }],
     stale: false,
+    type: 'stack',
   });
 });
 
@@ -40,6 +41,7 @@ it('gets initial state from route names and params without initialRouteName', ()
     routeNames: ['bar', 'baz', 'qux'],
     routes: [{ key: 'bar-test', name: 'bar' }],
     stale: false,
+    type: 'stack',
   });
 });
 
@@ -70,6 +72,7 @@ it('gets rehydrated state from partial state', () => {
       { key: 'qux-1', name: 'qux', params: { name: 'Jane' } },
     ],
     stale: false,
+    type: 'stack',
   });
 
   expect(
@@ -94,6 +97,7 @@ it('gets rehydrated state from partial state', () => {
       { key: 'qux-2', name: 'qux', params: { name: 'Jane' } },
     ],
     stale: false,
+    type: 'stack',
   });
 
   expect(
@@ -110,6 +114,7 @@ it('gets rehydrated state from partial state', () => {
     routeNames: ['bar', 'baz', 'qux'],
     routes: [{ key: 'bar-test', name: 'bar' }],
     stale: false,
+    type: 'stack',
   });
 });
 
@@ -122,6 +127,7 @@ it("doesn't rehydrate state if it's not stale", () => {
     routeNames: ['bar', 'baz', 'qux'],
     routes: [{ key: 'bar-test', name: 'bar' }],
     stale: false as const,
+    type: 'stack' as const,
   };
 
   expect(
@@ -147,6 +153,7 @@ it('gets state on route names change', () => {
           { key: 'qux-test', name: 'qux', params: { name: 'Jane' } },
         ],
         stale: false,
+        type: 'stack',
       },
       {
         routeNames: ['qux', 'baz', 'foo', 'fiz'],
@@ -165,6 +172,7 @@ it('gets state on route names change', () => {
       { key: 'qux-test', name: 'qux', params: { name: 'Jane' } },
     ],
     stale: false,
+    type: 'stack',
   });
 
   expect(
@@ -178,6 +186,7 @@ it('gets state on route names change', () => {
           { key: 'bar-test', name: 'bar' },
         ],
         stale: false,
+        type: 'stack',
       },
       {
         routeNames: ['baz', 'qux'],
@@ -192,6 +201,7 @@ it('gets state on route names change', () => {
     routeNames: ['baz', 'qux'],
     routes: [{ key: 'baz-test', name: 'baz', params: { name: 'John' } }],
     stale: false,
+    type: 'stack',
   });
 });
 
@@ -209,6 +219,7 @@ it('gets state on route names change with initialRouteName', () => {
           { key: 'bar-test', name: 'bar' },
         ],
         stale: false,
+        type: 'stack',
       },
       {
         routeNames: ['baz', 'qux'],
@@ -223,6 +234,7 @@ it('gets state on route names change with initialRouteName', () => {
     routeNames: ['baz', 'qux'],
     routes: [{ key: 'qux-test', name: 'qux' }],
     stale: false,
+    type: 'stack',
   });
 });
 
@@ -233,6 +245,7 @@ it('handles navigate action', () => {
     router.getStateForAction(
       {
         stale: false,
+        type: 'stack',
         key: 'root',
         index: 1,
         routeNames: ['baz', 'bar', 'qux'],
@@ -242,6 +255,7 @@ it('handles navigate action', () => {
     )
   ).toEqual({
     stale: false,
+    type: 'stack',
     key: 'root',
     index: 2,
     routeNames: ['baz', 'bar', 'qux'],
@@ -260,6 +274,7 @@ it('handles navigate action', () => {
     router.getStateForAction(
       {
         stale: false,
+        type: 'stack',
         key: 'root',
         index: 1,
         routeNames: ['baz', 'bar', 'qux'],
@@ -269,6 +284,7 @@ it('handles navigate action', () => {
     )
   ).toEqual({
     stale: false,
+    type: 'stack',
     key: 'root',
     index: 0,
     routeNames: ['baz', 'bar', 'qux'],
@@ -279,6 +295,7 @@ it('handles navigate action', () => {
     router.getStateForAction(
       {
         stale: false,
+        type: 'stack',
         key: 'root',
         index: 1,
         routeNames: ['baz', 'bar', 'qux'],
@@ -291,6 +308,7 @@ it('handles navigate action', () => {
     )
   ).toEqual({
     stale: false,
+    type: 'stack',
     key: 'root',
     index: 1,
     routeNames: ['baz', 'bar', 'qux'],
@@ -304,6 +322,7 @@ it('handles navigate action', () => {
     router.getStateForAction(
       {
         stale: false,
+        type: 'stack',
         key: 'root',
         index: 1,
         routeNames: ['baz', 'bar', 'qux'],
@@ -317,6 +336,7 @@ it('handles navigate action', () => {
     router.getStateForAction(
       {
         stale: false,
+        type: 'stack',
         key: 'root',
         index: 1,
         routeNames: ['baz', 'bar', 'qux'],
@@ -330,6 +350,7 @@ it('handles navigate action', () => {
     router.getStateForAction(
       {
         stale: false,
+        type: 'stack',
         key: 'root',
         index: 1,
         routeNames: ['baz', 'bar', 'qux'],
@@ -342,6 +363,7 @@ it('handles navigate action', () => {
     )
   ).toEqual({
     stale: false,
+    type: 'stack',
     key: 'root',
     index: 0,
     routeNames: ['baz', 'bar', 'qux'],
@@ -352,6 +374,7 @@ it('handles navigate action', () => {
     router.getStateForAction(
       {
         stale: false,
+        type: 'stack',
         key: 'root',
         index: 1,
         routeNames: ['baz', 'bar', 'qux'],
@@ -361,6 +384,7 @@ it('handles navigate action', () => {
     )
   ).toEqual({
     stale: false,
+    type: 'stack',
     key: 'root',
     index: 2,
     routeNames: ['baz', 'bar', 'qux'],
@@ -379,6 +403,7 @@ it('handles go back action', () => {
     router.getStateForAction(
       {
         stale: false,
+        type: 'stack',
         key: 'root',
         index: 1,
         routeNames: ['baz', 'bar', 'qux'],
@@ -388,6 +413,7 @@ it('handles go back action', () => {
     )
   ).toEqual({
     stale: false,
+    type: 'stack',
     key: 'root',
     index: 0,
     routeNames: ['baz', 'bar', 'qux'],
@@ -398,6 +424,7 @@ it('handles go back action', () => {
     router.getStateForAction(
       {
         stale: false,
+        type: 'stack',
         key: 'root',
         index: 0,
         routeNames: ['baz', 'bar', 'qux'],
@@ -415,6 +442,7 @@ it('handles pop action', () => {
     router.getStateForAction(
       {
         stale: false,
+        type: 'stack',
         key: 'root',
         index: 2,
         routeNames: ['baz', 'bar', 'qux'],
@@ -428,6 +456,7 @@ it('handles pop action', () => {
     )
   ).toEqual({
     stale: false,
+    type: 'stack',
     key: 'root',
     index: 1,
     routeNames: ['baz', 'bar', 'qux'],
@@ -438,6 +467,7 @@ it('handles pop action', () => {
     router.getStateForAction(
       {
         stale: false,
+        type: 'stack',
         key: 'root',
         index: 2,
         routeNames: ['baz', 'bar', 'qux'],
@@ -451,6 +481,7 @@ it('handles pop action', () => {
     )
   ).toEqual({
     stale: false,
+    type: 'stack',
     key: 'root',
     index: 0,
     routeNames: ['baz', 'bar', 'qux'],
@@ -461,6 +492,7 @@ it('handles pop action', () => {
     router.getStateForAction(
       {
         stale: false,
+        type: 'stack',
         key: 'root',
         index: 2,
         routeNames: ['baz', 'bar', 'qux'],
@@ -478,6 +510,7 @@ it('handles pop action', () => {
     )
   ).toEqual({
     stale: false,
+    type: 'stack',
     key: 'root',
     index: 0,
     routeNames: ['baz', 'bar', 'qux'],
@@ -488,6 +521,7 @@ it('handles pop action', () => {
     router.getStateForAction(
       {
         stale: false,
+        type: 'stack',
         key: 'root',
         index: 0,
         routeNames: ['baz', 'bar', 'qux'],
@@ -505,6 +539,7 @@ it('handles pop to top action', () => {
     router.getStateForAction(
       {
         stale: false,
+        type: 'stack',
         key: 'root',
         index: 2,
         routeNames: ['baz', 'bar', 'qux'],
@@ -518,6 +553,7 @@ it('handles pop to top action', () => {
     )
   ).toEqual({
     stale: false,
+    type: 'stack',
     key: 'root',
     index: 0,
     routeNames: ['baz', 'bar', 'qux'],
@@ -532,6 +568,7 @@ it('handles push action', () => {
     router.getStateForAction(
       {
         stale: false,
+        type: 'stack',
         key: 'root',
         index: 2,
         routeNames: ['baz', 'bar', 'qux'],
@@ -541,6 +578,7 @@ it('handles push action', () => {
     )
   ).toEqual({
     stale: false,
+    type: 'stack',
     key: 'root',
     index: 3,
     routeNames: ['baz', 'bar', 'qux'],
@@ -551,6 +589,7 @@ it('handles push action', () => {
     router.getStateForAction(
       {
         stale: false,
+        type: 'stack',
         key: 'root',
         index: 2,
         routeNames: ['baz', 'bar', 'qux'],
@@ -576,6 +615,7 @@ it('changes index on focus change', () => {
           { key: 'qux-0', name: 'qux' },
         ],
         stale: false,
+        type: 'stack',
       },
       'baz-0'
     )
@@ -585,6 +625,7 @@ it('changes index on focus change', () => {
     routeNames: ['bar', 'baz', 'qux'],
     routes: [{ key: 'bar-0', name: 'bar' }, { key: 'baz-0', name: 'baz' }],
     stale: false,
+    type: 'stack',
   });
 
   const state = {
@@ -593,6 +634,7 @@ it('changes index on focus change', () => {
     routeNames: ['bar', 'baz', 'qux'],
     routes: [{ key: 'bar-0', name: 'bar' }, { key: 'baz-0', name: 'baz' }],
     stale: false as const,
+    type: 'stack' as const,
   };
 
   expect(router.getStateForRouteFocus(state, 'qux-0')).toEqual(state);

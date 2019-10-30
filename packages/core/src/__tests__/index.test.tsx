@@ -52,6 +52,7 @@ it('initializes state for a navigator on navigation', () => {
   expect(onStateChange).toBeCalledTimes(1);
   expect(onStateChange).toBeCalledWith({
     stale: false,
+    type: 'test',
     index: 0,
     key: '0',
     routeNames: ['foo', 'bar', 'baz'],
@@ -106,6 +107,66 @@ it('rehydrates state for a navigator on navigation', () => {
     routeNames: ['foo', 'bar'],
     routes: [{ key: 'foo', name: 'foo' }, { key: 'bar', name: 'bar' }],
     stale: false,
+    type: 'test',
+  });
+});
+
+it("doesn't rehydrate state if the type of state didn't match router", () => {
+  const TestNavigator = (props: any) => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return descriptors[state.routes[state.index].key].render();
+  };
+
+  const FooScreen = (props: any) => {
+    React.useEffect(() => {
+      props.navigation.dispatch({ type: 'UPDATE' });
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    return null;
+  };
+
+  const initialState = {
+    index: 1,
+    type: 'something-else',
+    routes: [{ key: 'foo', name: 'foo' }, { key: 'bar', name: 'bar' }],
+  };
+
+  const onStateChange = jest.fn();
+
+  const element = (
+    <NavigationContainer
+      initialState={initialState}
+      onStateChange={onStateChange}
+    >
+      <TestNavigator initialRouteName="foo">
+        <Screen
+          name="foo"
+          component={FooScreen}
+          initialParams={{ answer: 42 }}
+        />
+        <Screen name="bar" component={jest.fn()} />
+      </TestNavigator>
+    </NavigationContainer>
+  );
+
+  render(element).update(element);
+
+  expect(onStateChange).lastCalledWith({
+    index: 0,
+    key: '0',
+    routeNames: ['foo', 'bar'],
+    routes: [
+      {
+        key: 'foo',
+        name: 'foo',
+        params: { answer: 42 },
+      },
+      { key: 'bar', name: 'bar' },
+    ],
+    stale: false,
+    type: 'test',
   });
 });
 
@@ -144,6 +205,7 @@ it('initializes state for nested screens in React.Fragment', () => {
   expect(onStateChange).toBeCalledTimes(1);
   expect(onStateChange).toBeCalledWith({
     stale: false,
+    type: 'test',
     index: 0,
     key: '0',
     routeNames: ['foo', 'bar', 'baz'],
@@ -194,6 +256,7 @@ it('initializes state for nested navigator on navigation', () => {
   expect(onStateChange).toBeCalledTimes(1);
   expect(onStateChange).toBeCalledWith({
     stale: false,
+    type: 'test',
     index: 2,
     key: '0',
     routeNames: ['foo', 'bar', 'baz'],
@@ -205,6 +268,7 @@ it('initializes state for nested navigator on navigation', () => {
         name: 'baz',
         state: {
           stale: false,
+          type: 'test',
           index: 0,
           key: '1',
           routeNames: ['qux'],
@@ -309,6 +373,7 @@ it('cleans up state when the navigator unmounts', () => {
   expect(onStateChange).toBeCalledTimes(1);
   expect(onStateChange).lastCalledWith({
     stale: false,
+    type: 'test',
     index: 0,
     key: '0',
     routeNames: ['foo', 'bar'],
@@ -361,6 +426,7 @@ it('allows state updates by dispatching a function returning an action', () => {
   expect(onStateChange).toBeCalledTimes(1);
   expect(onStateChange).toBeCalledWith({
     stale: false,
+    type: 'test',
     index: 1,
     key: '0',
     routeNames: ['foo', 'bar'],
@@ -399,6 +465,7 @@ it('updates route params with setParams', () => {
   expect(onStateChange).toBeCalledTimes(1);
   expect(onStateChange).lastCalledWith({
     stale: false,
+    type: 'test',
     index: 0,
     key: '0',
     routeNames: ['foo', 'bar'],
@@ -413,6 +480,7 @@ it('updates route params with setParams', () => {
   expect(onStateChange).toBeCalledTimes(2);
   expect(onStateChange).lastCalledWith({
     stale: false,
+    type: 'test',
     index: 0,
     key: '0',
     routeNames: ['foo', 'bar'],
@@ -470,6 +538,7 @@ it('updates route params with setParams applied to parent', () => {
       { key: 'bar', name: 'bar' },
     ],
     stale: false,
+    type: 'test',
   });
 
   act(() => setParams({ age: 25 }));
@@ -484,6 +553,7 @@ it('updates route params with setParams applied to parent', () => {
       { key: 'bar', name: 'bar' },
     ],
     stale: false,
+    type: 'test',
   });
 });
 
@@ -516,6 +586,7 @@ it('handles change in route names', () => {
 
   expect(onStateChange).toBeCalledWith({
     stale: false,
+    type: 'test',
     index: 0,
     key: '0',
     routeNames: ['foo', 'baz', 'qux'],
@@ -628,6 +699,7 @@ it('gives access to internal state', () => {
     routeNames: ['bar'],
     routes: [{ key: 'bar', name: 'bar' }],
     stale: false,
+    type: 'test',
   });
 });
 

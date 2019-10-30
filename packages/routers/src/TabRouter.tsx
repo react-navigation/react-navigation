@@ -22,6 +22,10 @@ export type TabRouterOptions = DefaultRouterOptions & {
 
 export type TabNavigationState = NavigationState & {
   /**
+   * Type of the router, in this case, it's tab.
+   */
+  type: 'tab';
+  /**
    * List of previously visited route keys.
    */
   routeKeyHistory: string[];
@@ -54,6 +58,8 @@ export default function TabRouter({
   const router: Router<TabNavigationState, TabActionType | CommonAction> = {
     ...BaseRouter,
 
+    type: 'tab',
+
     getInitialState({ routeNames, routeParamList }) {
       const index =
         initialRouteName === undefined
@@ -62,6 +68,7 @@ export default function TabRouter({
 
       return {
         stale: false,
+        type: 'tab',
         key: `tab-${shortid()}`,
         index,
         routeNames,
@@ -121,6 +128,7 @@ export default function TabRouter({
 
       return {
         stale: false,
+        type: 'tab',
         key: `tab-${shortid()}`,
         index,
         routeNames,

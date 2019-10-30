@@ -17,7 +17,11 @@ export type DrawerActionType =
 
 export type DrawerRouterOptions = TabRouterOptions;
 
-export type DrawerNavigationState = TabNavigationState & {
+export type DrawerNavigationState = Omit<TabNavigationState, 'type'> & {
+  /**
+   * Type of the router, in this case, it's drawer.
+   */
+  type: 'drawer';
   /**
    * Whether the drawer is open or closed.
    */
@@ -40,13 +44,15 @@ export const DrawerActions = {
 export default function DrawerRouter(
   options: DrawerRouterOptions
 ): Router<DrawerNavigationState, DrawerActionType | CommonAction> {
-  const router = TabRouter(options) as Router<
+  const router = (TabRouter(options) as unknown) as Router<
     DrawerNavigationState,
     TabActionType | CommonAction
   >;
 
   return {
     ...router,
+
+    type: 'drawer',
 
     getInitialState({ routeNames, routeParamList }) {
       const index =
@@ -56,6 +62,7 @@ export default function DrawerRouter(
 
       return {
         stale: false,
+        type: 'drawer',
         key: `drawer-${shortid()}`,
         index,
         routeNames,
@@ -81,6 +88,7 @@ export default function DrawerRouter(
 
       return {
         ...state,
+        type: 'drawer',
         key: `drawer-${shortid()}`,
         isDrawerOpen:
           typeof partialState.isDrawerOpen === 'boolean'

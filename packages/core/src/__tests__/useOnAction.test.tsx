@@ -76,6 +76,7 @@ it("lets parent handle the action if child didn't", () => {
   expect(onStateChange).toBeCalledTimes(1);
   expect(onStateChange).lastCalledWith({
     stale: false,
+    type: 'test',
     index: 2,
     key: '0',
     routeNames: ['foo', 'bar', 'baz'],
@@ -191,6 +192,7 @@ it("lets children handle the action if parent didn't", () => {
   expect(onStateChange).toBeCalledTimes(1);
   expect(onStateChange).lastCalledWith({
     stale: false,
+    type: 'test',
     index: 0,
     key: '0',
     routeNames: ['foo', 'bar', 'baz'],
@@ -200,6 +202,7 @@ it("lets children handle the action if parent didn't", () => {
         name: 'baz',
         state: {
           stale: false,
+          type: 'test',
           index: 0,
           key: '1',
           routeNames: ['qux', 'lex'],

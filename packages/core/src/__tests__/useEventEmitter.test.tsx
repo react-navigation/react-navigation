@@ -216,6 +216,7 @@ it('fires blur event when a route is removed with a delay', async () => {
 
         return {
           stale: false,
+          type: 'test',
           key: 'stack',
           index: 0,
           routeNames,
