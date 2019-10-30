@@ -66,11 +66,9 @@ export default function useNavigationCache<
   cache.current = state.routes.reduce<NavigationCache<State, ScreenOptions>>(
     (acc, route, index) => {
       const previous = cache.current[route.key];
-      const isFirst = route.key === state.routes[0].key;
 
-      if (previous && previous.isFirstRouteInParent() === isFirst) {
-        // If a cached navigation object already exists and has same `isFirstRouteInParent`, reuse it
-        // This method could return different result if the index of the route changes somehow
+      if (previous) {
+        // If a cached navigation object already exists, reuse it
         acc[route.key] = previous;
       } else {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -121,7 +119,6 @@ export default function useNavigationCache<
             // This makes sure that we return the focus state in the whole tree, not just this navigator
             return navigation ? navigation.isFocused() : true;
           },
-          isFirstRouteInParent: () => isFirst,
         };
       }
 

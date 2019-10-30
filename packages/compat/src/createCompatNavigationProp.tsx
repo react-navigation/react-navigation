@@ -173,6 +173,12 @@ export default function createCompatNavigationProp<
 
       return defaultValue;
     },
+    isFirstRouteInParent(): boolean {
+      const { routes } = navigation.dangerouslyGetState();
+
+      // @ts-ignore
+      return routes[0].key === state.key;
+    },
     dangerouslyGetParent() {
       const parent = navigation.dangerouslyGetParent();
 

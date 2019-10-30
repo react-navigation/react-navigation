@@ -25,6 +25,7 @@ export type CompatNavigationProp<
       paramName: T,
       defaultValue?: ParamList[RouteName][T]
     ): ParamList[RouteName][T];
+    isFirstRouteInParent(): boolean;
     dangerouslyGetParent<
       T = NavigationProp<ParamListBase> | undefined
     >(): T extends NavigationProp<ParamListBase>
