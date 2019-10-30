@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.11](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/compat@5.0.0-alpha.10...@react-navigation/compat@5.0.0-alpha.11) (2019-10-30)
+
+
+### Bug Fixes
+
+* drop isFirstRouteInParent method ([#145](https://github.com/react-navigation/navigation-ex/issues/145)) ([3a77107](https://github.com/react-navigation/navigation-ex/commit/3a77107))
+
+
+
+
+
 # [5.0.0-alpha.10](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/compat@5.0.0-alpha.9...@react-navigation/compat@5.0.0-alpha.10) (2019-10-29)
 
 **Note:** Version bump only for package @react-navigation/compat

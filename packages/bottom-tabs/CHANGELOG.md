@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.17](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/bottom-tabs@5.0.0-alpha.16...@react-navigation/bottom-tabs@5.0.0-alpha.17) (2019-10-30)
+
+
+### Bug Fixes
+
+* hide inactive pages from screen reader in tabs ([#148](https://github.com/react-navigation/navigation-ex/issues/148)) ([58f7115](https://github.com/react-navigation/navigation-ex/commit/58f7115))
+
+
+### Features
+
+* add an 'unmountInactiveScreens' option ([12d597f](https://github.com/react-navigation/navigation-ex/commit/12d597f))
+
+
+
+
+
 # [5.0.0-alpha.16](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/bottom-tabs@5.0.0-alpha.15...@react-navigation/bottom-tabs@5.0.0-alpha.16) (2019-10-29)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs
