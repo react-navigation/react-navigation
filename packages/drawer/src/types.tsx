@@ -67,7 +67,7 @@ export type DrawerNavigationConfig<T = DrawerContentOptions> = {
    * Whether a screen should be unmounted when navigating away from it.
    * Defaults to `false`.
    */
-  unmountInactiveRoutes?: boolean;
+  unmountInactiveScreens?: boolean;
   /**
    * Custom component used to render as the content of the drawer, for example, navigation items.
    * Defaults to `DrawerItems`.

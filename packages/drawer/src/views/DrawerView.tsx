@@ -152,43 +152,37 @@ export default class DrawerView extends React.PureComponent<Props, State> {
   };
 
   private renderContent = () => {
-    let { lazy, state, descriptors, unmountInactiveRoutes } = this.props;
+    let { lazy, state, descriptors, unmountInactiveScreens } = this.props;
 
     const { loaded } = this.state;
 
-    if (unmountInactiveRoutes) {
-      const activeKey = state.routes[state.index].key;
-      const descriptor = descriptors[activeKey];
+    return (
+      <ScreenContainer style={styles.content}>
+        {state.routes.map((route, index) => {
+          if (unmountInactiveScreens && index !== state.index) {
+            return null;
+          }
 
-      return descriptor.render();
-    } else {
-      return (
-        <ScreenContainer style={styles.content}>
-          {state.routes.map((route, index) => {
-            if (lazy && !loaded.includes(index)) {
-              // Don't render a screen if we've never navigated to it
-              return null;
-            }
+          if (lazy && !loaded.includes(index)) {
+            // Don't render a screen if we've never navigated to it
+            return null;
+          }
 
-            const isFocused = state.index === index;
-            const descriptor = descriptors[route.key];
+          const isFocused = state.index === index;
+          const descriptor = descriptors[route.key];
 
-            return (
-              <ResourceSavingScene
-                key={route.key}
-                style={[
-                  StyleSheet.absoluteFill,
-                  { opacity: isFocused ? 1 : 0 },
-                ]}
-                isVisible={isFocused}
-              >
-                {descriptor.render()}
-              </ResourceSavingScene>
-            );
-          })}
-        </ScreenContainer>
-      );
-    }
+          return (
+            <ResourceSavingScene
+              key={route.key}
+              style={[StyleSheet.absoluteFill, { opacity: isFocused ? 1 : 0 }]}
+              isVisible={isFocused}
+            >
+              {descriptor.render()}
+            </ResourceSavingScene>
+          );
+        })}
+      </ScreenContainer>
+    );
   };
 
   private setDrawerGestureRef = (ref: PanGestureHandler | null) => {
