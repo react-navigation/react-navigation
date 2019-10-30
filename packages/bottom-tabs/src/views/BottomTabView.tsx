@@ -216,7 +216,15 @@ export default class BottomTabView extends React.Component<Props, State> {
                   style={StyleSheet.absoluteFill}
                   isVisible={isFocused}
                 >
-                  {descriptors[route.key].render()}
+                  <View
+                    accessibilityElementsHidden={!isFocused}
+                    importantForAccessibility={
+                      isFocused ? 'auto' : 'no-hide-descendants'
+                    }
+                    style={styles.content}
+                  >
+                    {descriptors[route.key].render()}
+                  </View>
                 </ResourceSavingScene>
               );
             })}
@@ -234,6 +242,9 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   pages: {
+    flex: 1,
+  },
+  content: {
     flex: 1,
   },
 });
