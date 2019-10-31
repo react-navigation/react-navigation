@@ -38,8 +38,49 @@ export type Orientation = 'horizontal' | 'vertical';
 
 export type LabelPosition = 'beside-icon' | 'below-icon';
 
+interface BaseAnimation {
+  useNativeDriver?: boolean;
+}
+interface TimingAnimation extends BaseAnimation {
+  easing?: (value: number) => number;
+  duration?: number;
+  delay?: number;
+}
+interface SpringAnimation extends BaseAnimation {
+  overshootClamping?: boolean;
+  restDisplacementThreshold?: number;
+  restSpeedThreshold?: number;
+  velocity?: number | { x: number; y: number };
+  bounciness?: number;
+  speed?: number;
+  tension?: number;
+  friction?: number;
+  stiffness?: number;
+  mass?: number;
+  damping?: number;
+  delay?: number;
+}
+export type TimingKeyboardAnimationConfig = {
+  animation: 'timing';
+  config?: TimingAnimation;
+};
+export type SpringKeyboardAnimationConfig = {
+  animation: 'spring';
+  config?: SpringAnimation;
+};
+export type KeyboardAnimationConfig =
+  | TimingKeyboardAnimationConfig
+  | SpringKeyboardAnimationConfig;
+export type KeyboardHidesTabBarAnimationConfig = {
+  show: KeyboardAnimationConfig;
+  hide: KeyboardAnimationConfig;
+};
+
 export type BottomTabBarOptions = {
   keyboardHidesTabBar?: boolean;
+  keyboardHidesTabBarAnimationConfig?: Partial<
+    KeyboardHidesTabBarAnimationConfig
+  >;
   activeTintColor?: ThemedColor;
   inactiveTintColor?: ThemedColor;
   activeBackgroundColor?: ThemedColor;
