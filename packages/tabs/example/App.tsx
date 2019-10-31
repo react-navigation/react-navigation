@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { registerRootComponent } from 'expo';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import {
   Assets as StackAssets,
@@ -22,7 +21,7 @@ import MaterialTopTabs from './src/MaterialTopTabs';
 Asset.loadAsync(StackAssets);
 
 const Home = (props: NavigationStackScreenProps) => {
-  let theme = useTheme();
+  const theme = useTheme();
 
   return (
     <View>
@@ -131,5 +130,4 @@ const styles = {
   },
 };
 
-// @ts-ignore
-registerRootComponent(App);
+export default App;

@@ -37,18 +37,48 @@ You can install another package, [`react-navigation-material-bottom-tabs`](https
 ```js
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
 
-export default createMaterialBottomTabNavigator({
-  Album: { screen: Album },
-  Library: { screen: Library },
-  History: { screen: History },
-  Cart: { screen: Cart },
-}, {
-  initialRouteName: 'Album',
-  activeTintColor: '#F44336',
-});
+export default createMaterialBottomTabNavigator(
+  {
+    Album: { screen: Album },
+    Library: { screen: Library },
+    History: { screen: History },
+    Cart: { screen: Cart },
+  },
+  {
+    initialRouteName: 'Album',
+    activeTintColor: '#F44336',
+  },
+);
 ```
 
-## Documentation
+## Development workflow
+
+To setup the development environment, open a Terminal in the repo directory and run the following:
+
+```sh
+yarn bootstrap
+```
+
+While developing, you can run the example app with [Expo](https://expo.io/) to test your changes:
+
+```sh
+yarn example start
+```
+
+Make sure your code passes TypeScript and ESLint. Run the following to verify:
+
+```sh
+yarn typescript
+yarn lint
+```
+
+To fix formatting errors, run the following:
+
+```sh
+yarn lint --fix
+```
+
+## Docs
 
 - [`createBottomTabNavigator`](https://reactnavigation.org/docs/en/bottom-tab-navigator.html)
 - [`createMaterialTopTabNavigator`](https://reactnavigation.org/docs/en/material-top-tab-navigator.html)
