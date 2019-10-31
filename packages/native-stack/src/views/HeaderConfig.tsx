@@ -20,6 +20,7 @@ export default function HeaderConfig(props: Props) {
     headerRight,
     headerTitle,
     headerBackTitle,
+    headerBackTitleVisible = true,
     headerHideBackButton,
     headerHideShadow,
     headerTintColor,
@@ -53,7 +54,7 @@ export default function HeaderConfig(props: Props) {
           ? headerTitleStyle.color
           : headerTintColor
       }
-      backTitle={headerBackTitle}
+      backTitle={headerBackTitleVisible ? headerBackTitle : ''}
       backTitleFontFamily={headerBackTitleStyle.fontFamily}
       backTitleFontSize={headerBackTitleStyle.fontSize}
       color={headerTintColor}
