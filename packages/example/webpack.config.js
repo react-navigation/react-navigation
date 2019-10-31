@@ -10,6 +10,7 @@ module.exports = async function(env, argv) {
   config.module.rules.push({
     test: /\.(js|ts|tsx)$/,
     include: /packages\/.+/,
+    exclude: /node_modules/,
     use: 'babel-loader',
   });
 
@@ -17,25 +18,23 @@ module.exports = async function(env, argv) {
     p => !(p instanceof ModuleScopePlugin)
   );
 
-  config.resolve.alias['react'] = path.resolve(
-    __dirname,
-    'node_modules',
-    'react'
-  );
-  config.resolve.alias['react-native'] = path.resolve(
-    __dirname,
-    'node_modules',
-    'react-native-web'
-  );
-  config.resolve.alias['react-native-web'] = path.resolve(
-    __dirname,
-    'node_modules',
-    'react-native-web'
-  );
-
-  config.resolve.alias[
-    '@expo/vector-icons/MaterialCommunityIcons'
-  ] = require.resolve('@expo/vector-icons/MaterialCommunityIcons');
+  Object.assign(config.resolve.alias, {
+    react: path.resolve(__dirname, 'node_modules', 'react'),
+    'react-native': path.resolve(__dirname, 'node_modules', 'react-native-web'),
+    'react-native-web': path.resolve(
+      __dirname,
+      'node_modules',
+      'react-native-web'
+    ),
+    'react-native-reanimated': path.resolve(
+      __dirname,
+      'node_modules',
+      'react-native-reanimated-web'
+    ),
+    '@expo/vector-icons/MaterialCommunityIcons': require.resolve(
+      '@expo/vector-icons/MaterialCommunityIcons'
+    ),
+  });
 
   fs.readdirSync(path.join(__dirname, '..')).forEach(name => {
     config.resolve.alias[`@react-navigation/${name}`] = path.resolve(

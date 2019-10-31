@@ -2,7 +2,7 @@ import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Button } from 'react-native-paper';
 // eslint-disable-next-line import/no-unresolved
-import { useScreens } from 'react-native-screens';
+import { enableScreens } from 'react-native-screens';
 import {
   RouteProp,
   ParamListBase,
@@ -124,8 +124,7 @@ export default function NativeStackScreen({ navigation }: Props) {
   );
 }
 
-// eslint-disable-next-line react-hooks/rules-of-hooks
-useScreens(true);
+enableScreens(true);
 
 const styles = StyleSheet.create({
   buttons: {
