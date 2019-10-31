@@ -91,12 +91,12 @@ afterEvaluate { project ->
     }
 
     task androidJavadocJar(type: Jar, dependsOn: androidJavadoc) {
-        archiveClassifier.set('javadoc')
+        classifier = 'javadoc'
         from androidJavadoc.destinationDir
     }
 
     task androidSourcesJar(type: Jar) {
-        archiveClassifier.set('sources')
+        classifier = 'sources'
         from android.sourceSets.main.java.srcDirs
         include '**/*.java'
     }
