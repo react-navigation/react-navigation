@@ -66,6 +66,13 @@ export type NativeStackNavigationOptions = {
    */
   headerBackTitle?: string;
   /**
+   * Whether the back button title should be visible or not. Defaults to `true`.
+   * Only supported on iOS.
+   *
+   * @platform ios
+   */
+  headerBackTitleVisible?: boolean;
+  /**
    * Whether to show the header.
    */
   headerShown?: boolean;
