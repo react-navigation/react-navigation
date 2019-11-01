@@ -366,7 +366,6 @@ export default class HeaderSegment extends React.Component<Props, State> {
 const styles = StyleSheet.create({
   content: {
     flex: 1,
-    paddingHorizontal: 4,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
