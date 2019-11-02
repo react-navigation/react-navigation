@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet, Platform } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { StackNavigationState, StackActions } from '@react-navigation/routers';
 
 import {
@@ -43,20 +43,7 @@ export default function StackView({ state, navigation, descriptors }: Props) {
             }}
           >
             <HeaderConfig {...options} route={route} />
-            <View
-              style={[
-                styles.content,
-                {
-                  marginTop:
-                    Platform.OS === 'android' && options.headerShown !== false
-                      ? 56
-                      : 0,
-                },
-                contentStyle,
-              ]}
-            >
-              {renderScene()}
-            </View>
+            <View style={[styles.content, contentStyle]}>{renderScene()}</View>
           </Screen>
         );
       })}
