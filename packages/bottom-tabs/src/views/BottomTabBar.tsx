@@ -14,7 +14,7 @@ import { SafeAreaConsumer } from 'react-native-safe-area-context';
 
 import TabBarIcon from './TabBarIcon';
 import TouchableWithoutFeedbackWrapper from './TouchableWithoutFeedbackWrapper';
-import { BottomTabBarProps } from '../types';
+import { BottomTabBarProps, BottomTabBarButtonProps } from '../types';
 
 type State = {
   dimensions: { height: number; width: number };
@@ -23,7 +23,10 @@ type State = {
   visible: Animated.Value;
 };
 
-type Props = BottomTabBarProps;
+type Props = BottomTabBarProps & {
+  activeTintColor: string;
+  inactiveTintColor: string;
+};
 
 const majorVersion = parseInt(Platform.Version as string, 10);
 const isIos = Platform.OS === 'ios';
@@ -262,7 +265,9 @@ export default class TabBarBottom extends React.Component<Props, State> {
       getAccessibilityLabel,
       getAccessibilityRole,
       getAccessibilityStates,
-      getButtonComponent,
+      renderButton = (props: BottomTabBarButtonProps) => (
+        <TouchableWithoutFeedbackWrapper {...props} />
+      ),
       getTestID,
       style,
       tabStyle,
@@ -325,34 +330,34 @@ export default class TabBarBottom extends React.Component<Props, State> {
                   ? activeBackgroundColor
                   : inactiveBackgroundColor;
 
-                const ButtonComponent =
-                  getButtonComponent({ route }) ||
-                  TouchableWithoutFeedbackWrapper;
-
                 return (
                   <NavigationContext.Provider
                     key={route.key}
                     value={descriptors[route.key].navigation}
                   >
-                    <ButtonComponent
-                      onPress={() => onTabPress({ route })}
-                      onLongPress={() => onTabLongPress({ route })}
-                      testID={testID}
-                      accessibilityLabel={accessibilityLabel}
-                      accessibilityRole={accessibilityRole}
-                      accessibilityStates={accessibilityStates}
-                      style={[
+                    {renderButton({
+                      route,
+                      onPress: () => onTabPress({ route }),
+                      onLongPress: () => onTabLongPress({ route }),
+                      testID,
+                      accessibilityLabel,
+                      accessibilityRole,
+                      accessibilityStates,
+                      style: [
                         styles.tab,
                         { backgroundColor },
                         this.shouldUseHorizontalLabels()
                           ? styles.tabLandscape
                           : styles.tabPortrait,
                         tabStyle,
-                      ]}
-                    >
-                      {this.renderIcon(scene)}
-                      {this.renderLabel(scene)}
-                    </ButtonComponent>
+                      ],
+                      children: (
+                        <React.Fragment>
+                          {this.renderIcon(scene)}
+                          {this.renderLabel(scene)}
+                        </React.Fragment>
+                      ),
+                    })}
                   </NavigationContext.Provider>
                 );
               })}

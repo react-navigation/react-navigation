@@ -8,6 +8,7 @@ import {
   MaterialTopTabDescriptorMap,
   MaterialTopTabNavigationConfig,
   MaterialTopTabNavigationHelpers,
+  MaterialTopTabBarProps,
 } from '../types';
 
 type Props = MaterialTopTabNavigationConfig & {
@@ -23,10 +24,10 @@ export default class MaterialTopTabView extends React.PureComponent<Props> {
   };
 
   private renderLazyPlaceholder = (props: { route: Route<string> }) => {
-    const { lazyPlaceholderComponent: LazyPlaceholder } = this.props;
+    const { lazyPlaceholder } = this.props;
 
-    if (LazyPlaceholder != null) {
-      return <LazyPlaceholder {...props} />;
+    if (lazyPlaceholder != null) {
+      return lazyPlaceholder(props);
     }
 
     return null;
@@ -99,30 +100,30 @@ export default class MaterialTopTabView extends React.PureComponent<Props> {
 
     const {
       navigation,
-      tabBarComponent: TabBarComponent = MaterialTopTabBar,
+      tabBar = (props: MaterialTopTabBarProps) => (
+        <MaterialTopTabBar {...props} />
+      ),
       tabBarPosition,
       tabBarOptions,
     } = this.props;
 
-    if (TabBarComponent === null || !tabBarVisible) {
+    if (tabBarVisible === false) {
       return null;
     }
 
-    return (
-      <TabBarComponent
-        {...tabBarOptions}
-        {...props}
-        tabBarPosition={tabBarPosition}
-        state={state}
-        navigation={navigation}
-        descriptors={descriptors}
-        getAccessibilityLabel={this.getAccessibilityLabel}
-        getLabelText={this.getLabelText}
-        getTestID={this.getTestID}
-        onTabPress={this.handleTabPress}
-        onTabLongPress={this.handleTabLongPress}
-      />
-    );
+    return tabBar({
+      ...tabBarOptions,
+      ...props,
+      tabBarPosition: tabBarPosition,
+      state: state,
+      navigation: navigation,
+      descriptors: descriptors,
+      getAccessibilityLabel: this.getAccessibilityLabel,
+      getLabelText: this.getLabelText,
+      getTestID: this.getTestID,
+      onTabPress: this.handleTabPress,
+      onTabLongPress: this.handleTabLongPress,
+    });
   };
 
   private handleSwipeStart = () =>
@@ -138,8 +139,8 @@ export default class MaterialTopTabView extends React.PureComponent<Props> {
   render() {
     const {
       /* eslint-disable @typescript-eslint/no-unused-vars */
-      lazyPlaceholderComponent,
-      tabBarComponent,
+      lazyPlaceholder,
+      tabBar,
       tabBarOptions,
       /* eslint-enable @typescript-eslint/no-unused-vars */
       state,

@@ -119,7 +119,7 @@ export type MaterialTopTabNavigationConfig = Partial<
   >
 > & {
   /**
-   * Component to render for routes that haven't been rendered yet.
+   * Function that returns a React element to render for routes that haven't been rendered yet.
    * Receives an object containing the route as the prop.
    * The lazy prop also needs to be enabled.
    *
@@ -127,11 +127,11 @@ export type MaterialTopTabNavigationConfig = Partial<
    *
    * By default, this renders null.
    */
-  lazyPlaceholderComponent?: React.ComponentType<{ route: Route<string> }>;
+  lazyPlaceholder?: (props: { route: Route<string> }) => React.ReactNode;
   /**
-   * Custom tab bar component.
+   * Function that returns a React element to display as the tab bar.
    */
-  tabBarComponent?: React.ComponentType<MaterialTopTabBarProps>;
+  tabBar?: (props: MaterialTopTabBarProps) => React.ReactNode;
   /**
    * Options for the tab bar which will be passed as props to the tab bar component.
    */

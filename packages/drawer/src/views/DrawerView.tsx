@@ -23,6 +23,7 @@ import {
   DrawerDescriptorMap,
   DrawerNavigationConfig,
   DrawerNavigationHelpers,
+  DrawerContentComponentProps,
 } from '../types';
 
 type Props = Omit<DrawerNavigationConfig, 'overlayColor'> & {
@@ -64,7 +65,9 @@ const getDefaultDrawerWidth = ({
 export default class DrawerView extends React.PureComponent<Props, State> {
   static defaultProps = {
     lazy: true,
-    contentComponent: DrawerContent,
+    drawerContent: (props: DrawerContentComponentProps) => (
+      <DrawerContent {...props} />
+    ),
     drawerPosition: I18nManager.isRTL ? 'right' : 'left',
     keyboardDismissMode: 'on-drag',
     overlayColor: 'rgba(0, 0, 0, 0.5)',
@@ -135,20 +138,18 @@ export default class DrawerView extends React.PureComponent<Props, State> {
       navigation,
       descriptors,
       drawerPosition,
-      contentComponent: ContentComponent,
-      contentOptions,
+      drawerContent,
+      drawerContentOptions,
     } = this.props;
 
-    return (
-      <ContentComponent
-        progress={progress}
-        state={state}
-        navigation={navigation}
-        descriptors={descriptors}
-        drawerPosition={drawerPosition}
-        {...contentOptions}
-      />
-    );
+    return drawerContent({
+      ...drawerContentOptions,
+      progress: progress,
+      state: state,
+      navigation: navigation,
+      descriptors: descriptors,
+      drawerPosition: drawerPosition,
+    });
   };
 
   private renderContent = () => {

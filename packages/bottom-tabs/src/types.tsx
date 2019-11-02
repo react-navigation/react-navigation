@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {
+  TouchableWithoutFeedbackProps,
   AccessibilityRole,
   AccessibilityStates,
   StyleProp,
@@ -101,9 +102,10 @@ export type BottomTabNavigationOptions = {
   tabBarVisible?: boolean;
 
   /**
-   * Buttton component to render for the tab items instead of the default `TouchableWithoutFeedback`
+   * Function which returns a React element to render as the tab bar button.
+   * Renders `TouchableWithoutFeedback` by default.
    */
-  tabBarButtonComponent?: React.ComponentType<any>;
+  tabBarButton?: (props: BottomTabBarButtonProps) => React.ReactNode;
 };
 
 export type BottomTabDescriptor = Descriptor<
@@ -129,9 +131,9 @@ export type BottomTabNavigationConfig = {
    */
   unmountInactiveScreens?: boolean;
   /**
-   * Custom tab bar component.
+   * Function that returns a React element to display as the tab bar.
    */
-  tabBarComponent?: React.ComponentType<BottomTabBarProps>;
+  tabBar?: (props: BottomTabBarProps) => React.ReactNode;
   /**
    * Options for the tab bar which will be passed as props to the tab bar component.
    */
@@ -213,9 +215,6 @@ export type BottomTabBarProps = BottomTabBarOptions & {
     route: Route<string>;
     focused: boolean;
   }) => AccessibilityStates[];
-  getButtonComponent: (props: {
-    route: Route<string>;
-  }) => React.ComponentType<any> | undefined;
   getLabelText: (props: {
     route: Route<string>;
   }) =>
@@ -225,12 +224,17 @@ export type BottomTabBarProps = BottomTabBarOptions & {
       }) => React.ReactNode | undefined)
     | React.ReactNode;
   getTestID: (props: { route: Route<string> }) => string | undefined;
+  renderButton: (
+    props: { route: Route<string> } & BottomTabBarButtonProps
+  ) => React.ReactNode;
   renderIcon: (props: {
     route: Route<string>;
     focused: boolean;
     color: string;
     size: number;
   }) => React.ReactNode;
-  activeTintColor: string;
-  inactiveTintColor: string;
+};
+
+export type BottomTabBarButtonProps = TouchableWithoutFeedbackProps & {
+  children: React.ReactNode;
 };
