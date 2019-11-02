@@ -11,13 +11,15 @@ import { TabNavigationState } from '@react-navigation/routers';
 import { ScreenContainer } from 'react-native-screens';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import ResourceSavingScene from './ResourceSavingScene';
 import BottomTabBar from './BottomTabBar';
 import {
   BottomTabNavigationConfig,
   BottomTabDescriptorMap,
   BottomTabNavigationHelpers,
+  BottomTabBarProps,
+  BottomTabBarButtonProps,
 } from '../types';
-import ResourceSavingScene from './ResourceSavingScene';
 
 type Props = BottomTabNavigationConfig & {
   state: TabNavigationState;
@@ -49,13 +51,16 @@ export default class BottomTabView extends React.Component<Props, State> {
     loaded: [this.props.state.index],
   };
 
-  private getButtonComponent = ({ route }: { route: Route<string> }) => {
+  private renderButton = ({
+    route,
+    ...rest
+  }: { route: Route<string> } & BottomTabBarButtonProps) => {
     const { descriptors } = this.props;
     const descriptor = descriptors[route.key];
     const options = descriptor.options;
 
-    if (options.tabBarButtonComponent) {
-      return options.tabBarButtonComponent;
+    if (options.tabBarButton) {
+      return options.tabBarButton(rest);
     }
 
     return undefined;
@@ -159,7 +164,7 @@ export default class BottomTabView extends React.Component<Props, State> {
 
   private renderTabBar = () => {
     const {
-      tabBarComponent: TabBarComponent = BottomTabBar,
+      tabBar = (props: BottomTabBarProps) => <BottomTabBar {...props} />,
       tabBarOptions,
       state,
       navigation,
@@ -174,23 +179,21 @@ export default class BottomTabView extends React.Component<Props, State> {
       return null;
     }
 
-    return (
-      <TabBarComponent
-        {...tabBarOptions}
-        state={state}
-        descriptors={descriptors}
-        navigation={navigation}
-        onTabPress={this.handleTabPress}
-        onTabLongPress={this.handleTabLongPress}
-        getLabelText={this.getLabelText}
-        getButtonComponent={this.getButtonComponent}
-        getAccessibilityLabel={this.getAccessibilityLabel}
-        getAccessibilityRole={this.getAccessibilityRole}
-        getAccessibilityStates={this.getAccessibilityStates}
-        getTestID={this.getTestID}
-        renderIcon={this.renderIcon}
-      />
-    );
+    return tabBar({
+      ...tabBarOptions,
+      state: state,
+      descriptors: descriptors,
+      navigation: navigation,
+      onTabPress: this.handleTabPress,
+      onTabLongPress: this.handleTabLongPress,
+      getLabelText: this.getLabelText,
+      getAccessibilityLabel: this.getAccessibilityLabel,
+      getAccessibilityRole: this.getAccessibilityRole,
+      getAccessibilityStates: this.getAccessibilityStates,
+      getTestID: this.getTestID,
+      renderButton: this.renderButton,
+      renderIcon: this.renderIcon,
+    });
   };
 
   render() {

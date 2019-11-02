@@ -249,7 +249,6 @@ export type StackNavigationOptions = StackHeaderOptions &
     title?: string;
     /**
      * Function that given `HeaderProps` returns a React Element to display as a header.
-     * Setting to `null` hides header.
      */
     header?: (props: StackHeaderProps) => React.ReactNode;
     /**

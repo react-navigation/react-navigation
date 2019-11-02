@@ -69,14 +69,14 @@ export type DrawerNavigationConfig<T = DrawerContentOptions> = {
    */
   unmountInactiveScreens?: boolean;
   /**
-   * Custom component used to render as the content of the drawer, for example, navigation items.
-   * Defaults to `DrawerItems`.
+   * Function that returns React element to render as the content of the drawer, for example, navigation items.
+   * Defaults to `DrawerContent`.
    */
-  contentComponent: React.ComponentType<DrawerContentComponentProps<T>>;
+  drawerContent: (props: DrawerContentComponentProps<T>) => React.ReactNode;
   /**
    * Options for the content component which will be passed as props.
    */
-  contentOptions?: T;
+  drawerContentOptions?: T;
   /**
    * Style object for the component wrapping the screen content.
    */

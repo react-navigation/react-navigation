@@ -32,13 +32,16 @@ const BottomTabs = createBottomTabNavigator<BottomTabParams>();
 
 export default function BottomTabsScreen() {
   return (
-    <BottomTabs.Navigator>
+    <BottomTabs.Navigator
+      screenOptions={{
+        tabBarButton: props => <TouchableBounce {...props} />,
+      }}
+    >
       <BottomTabs.Screen
         name="article"
         options={{
           title: 'Article',
           tabBarIcon: getTabBarIcon('file-document-box'),
-          tabBarButtonComponent: TouchableBounce,
         }}
       >
         {props => <SimpleStackScreen {...props} headerMode="none" />}
@@ -49,7 +52,6 @@ export default function BottomTabsScreen() {
         options={{
           tabBarLabel: 'Chat',
           tabBarIcon: getTabBarIcon('message-reply'),
-          tabBarButtonComponent: TouchableBounce,
         }}
       />
       <BottomTabs.Screen
@@ -58,7 +60,6 @@ export default function BottomTabsScreen() {
         options={{
           title: 'Contacts',
           tabBarIcon: getTabBarIcon('contacts'),
-          tabBarButtonComponent: TouchableBounce,
         }}
       />
       <BottomTabs.Screen
@@ -67,7 +68,6 @@ export default function BottomTabsScreen() {
         options={{
           title: 'Albums',
           tabBarIcon: getTabBarIcon('image-album'),
-          tabBarButtonComponent: TouchableBounce,
         }}
       />
     </BottomTabs.Navigator>
