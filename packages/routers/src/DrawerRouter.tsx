@@ -152,6 +152,16 @@ export default function DrawerRouter(
             action
           );
 
+        case 'GO_BACK':
+          if (state.isDrawerOpen) {
+            return {
+              ...state,
+              isDrawerOpen: false,
+            };
+          }
+
+          return router.getStateForAction(state, action);
+
         default:
           return router.getStateForAction(state, action);
       }
