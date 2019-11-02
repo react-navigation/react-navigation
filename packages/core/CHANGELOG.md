@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.20](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/core@5.0.0-alpha.19...@react-navigation/core@5.0.0-alpha.20) (2019-11-02)
+
+
+### Bug Fixes
+
+* pass rehydrated state in onStateChange and devtools ([5a34764](https://github.com/react-navigation/navigation-ex/commit/5a34764))
+
+
+
+
+
 # [5.0.0-alpha.19](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/core@5.0.0-alpha.18...@react-navigation/core@5.0.0-alpha.19) (2019-10-30)
 
 

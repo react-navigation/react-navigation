@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.8](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/native-stack@5.0.0-alpha.7...@react-navigation/native-stack@5.0.0-alpha.8) (2019-11-02)
+
+
+### Features
+
+* add headerBackTitleVisible to navigation options in native stack ([77f29d3](https://github.com/react-navigation/navigation-ex/commit/77f29d3))
+
+
+
+
+
 # [5.0.0-alpha.7](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/native-stack@5.0.0-alpha.6...@react-navigation/native-stack@5.0.0-alpha.7) (2019-11-02)
 
 
