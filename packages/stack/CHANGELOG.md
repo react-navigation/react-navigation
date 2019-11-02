@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.33](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.32...@react-navigation/stack@5.0.0-alpha.33) (2019-11-02)
+
+
+### Bug Fixes
+
+* add horizontal margin to centered title ([2ef5ad4](https://github.com/react-navigation/navigation-ex/commit/2ef5ad4))
+* remove unnecessary paddingHorizontal on stack header ([74ee216](https://github.com/react-navigation/navigation-ex/commit/74ee216))
+
+
+
+
+
 # [5.0.0-alpha.32](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.31...@react-navigation/stack@5.0.0-alpha.32) (2019-11-02)
 
 
