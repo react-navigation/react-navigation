@@ -328,10 +328,9 @@ export default class HeaderSegment extends React.Component<Props, State> {
             <Animated.View
               pointerEvents="box-none"
               style={[
-                headerTitleAlign === 'left' && {
-                  position: 'absolute',
-                  left: leftButton ? 72 : 16,
-                },
+                headerTitleAlign === 'left'
+                  ? { position: 'absolute', left: leftButton ? 72 : 16 }
+                  : { marginHorizontal: 18 },
                 titleStyle,
                 titleContainerStyle,
               ]}
