@@ -137,9 +137,9 @@ const Container = React.forwardRef(function NavigationContainer(
     [trackAction]
   );
 
-  const getRootState = () => {
+  const getRootState = React.useCallback(() => {
     return getStateForRoute('root');
-  };
+  }, [getStateForRoute]);
 
   React.useImperativeHandle(ref, () => ({
     ...(Object.keys(CommonActions) as Array<keyof typeof CommonActions>).reduce<
@@ -220,18 +220,18 @@ const Container = React.forwardRef(function NavigationContainer(
     if (skipTrackingRef.current) {
       skipTrackingRef.current = false;
     } else {
-      trackState(state);
+      trackState(getRootState);
     }
 
     navigationStateRef.current = state;
     transactionStateRef.current = null;
 
     if (!isFirstMountRef.current && onStateChange) {
-      onStateChange(state);
+      onStateChange(getRootState());
     }
 
     isFirstMountRef.current = false;
-  }, [state, onStateChange, trackState]);
+  }, [state, onStateChange, trackState, getRootState]);
 
   return (
     <NavigationBuilderContext.Provider value={builderContext}>
