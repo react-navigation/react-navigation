@@ -7,7 +7,9 @@ type Props = TextProps & {
 };
 
 export default function HeaderTitle({ style, ...rest }: Props) {
-  return <Animated.Text {...rest} style={[styles.title, style]} />;
+  return (
+    <Animated.Text numberOfLines={1} {...rest} style={[styles.title, style]} />
+  );
 }
 
 const styles = StyleSheet.create({
