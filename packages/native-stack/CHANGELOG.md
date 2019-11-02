@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.7](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/native-stack@5.0.0-alpha.6...@react-navigation/native-stack@5.0.0-alpha.7) (2019-11-02)
+
+
+### Bug Fixes
+
+* remove top margin from screen in native stack on Android ([5cd6940](https://github.com/react-navigation/navigation-ex/commit/5cd6940))
+
+
+
+
+
 # [5.0.0-alpha.6](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/native-stack@5.0.0-alpha.5...@react-navigation/native-stack@5.0.0-alpha.6) (2019-10-30)
 
 **Note:** Version bump only for package @react-navigation/native-stack
