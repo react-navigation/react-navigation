@@ -321,7 +321,28 @@ it('handle resetting state with ref', () => {
   });
 
   expect(onStateChange).toBeCalledTimes(1);
-  expect(onStateChange).lastCalledWith(state);
+  expect(onStateChange).lastCalledWith({
+    index: 1,
+    key: '5',
+    routeNames: ['foo', 'foo2', 'bar', 'baz'],
+    routes: [
+      {
+        key: 'baz',
+        name: 'baz',
+        state: {
+          index: 0,
+          key: '6',
+          routeNames: ['qux', 'lex'],
+          routes: [{ key: 'qux', name: 'qux' }, { key: 'lex', name: 'lex' }],
+          stale: false,
+          type: 'test',
+        },
+      },
+      { key: 'bar', name: 'bar' },
+    ],
+    stale: false,
+    type: 'test',
+  });
 });
 
 it('handle getRootState', () => {

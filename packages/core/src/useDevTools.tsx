@@ -62,7 +62,7 @@ export default function useDevTools({ name, reset, state }: Options) {
   );
 
   const trackState = React.useCallback(
-    (state: State) => {
+    (getState: () => State) => {
       if (!devTools) {
         return;
       }
@@ -71,9 +71,11 @@ export default function useDevTools({ name, reset, state }: Options) {
         devTools.send(actions.current.shift(), lastStateRef.current);
       }
 
+      const state = getState();
+
       if (actions.current.length) {
         devTools.send(actions.current.pop(), state);
-      } else if (lastStateRef.current !== state) {
+      } else {
         devTools.send('@@UNKNOWN', state);
       }
 

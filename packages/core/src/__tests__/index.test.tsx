@@ -534,7 +534,19 @@ it('updates route params with setParams applied to parent', () => {
     key: '0',
     routeNames: ['foo', 'bar'],
     routes: [
-      { key: 'foo', name: 'foo', params: { username: 'alice' } },
+      {
+        key: 'foo',
+        name: 'foo',
+        params: { username: 'alice' },
+        state: {
+          index: 0,
+          key: '1',
+          routeNames: ['baz'],
+          routes: [{ key: 'baz', name: 'baz' }],
+          stale: false,
+          type: 'test',
+        },
+      },
       { key: 'bar', name: 'bar' },
     ],
     stale: false,
@@ -549,7 +561,19 @@ it('updates route params with setParams applied to parent', () => {
     key: '0',
     routeNames: ['foo', 'bar'],
     routes: [
-      { key: 'foo', name: 'foo', params: { username: 'alice', age: 25 } },
+      {
+        key: 'foo',
+        name: 'foo',
+        params: { username: 'alice', age: 25 },
+        state: {
+          index: 0,
+          key: '1',
+          routeNames: ['baz'],
+          routes: [{ key: 'baz', name: 'baz' }],
+          stale: false,
+          type: 'test',
+        },
+      },
       { key: 'bar', name: 'bar' },
     ],
     stale: false,

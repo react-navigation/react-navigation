@@ -9,7 +9,7 @@ export default function useStateGetters() {
   const stateGetters = React.useRef<Record<string, NavigatorStateGetter>>({});
 
   const getStateForRoute = React.useCallback(
-    routeKey =>
+    (routeKey: string) =>
       stateGetters.current[routeKey] === undefined
         ? undefined
         : stateGetters.current[routeKey](),

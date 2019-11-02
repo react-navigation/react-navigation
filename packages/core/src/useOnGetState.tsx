@@ -14,7 +14,7 @@ export default function useOnGetState({
   const route = React.useContext(NavigationRouteContext);
   const key = route ? route.key : 'root';
 
-  const getter = React.useCallback(() => {
+  const getRehydratedState = React.useCallback(() => {
     const state = getState();
     return {
       ...state,
@@ -26,6 +26,6 @@ export default function useOnGetState({
   }, [getState, getStateForRoute]);
 
   React.useEffect(() => {
-    return addStateGetter && addStateGetter(key, getter);
-  }, [addStateGetter, getter, key]);
+    return addStateGetter && addStateGetter(key, getRehydratedState);
+  }, [addStateGetter, getRehydratedState, key]);
 }
