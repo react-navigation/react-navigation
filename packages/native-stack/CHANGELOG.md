@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.10](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/native-stack@5.0.0-alpha.9...@react-navigation/native-stack@5.0.0-alpha.10) (2019-11-04)
+
+
+### Bug Fixes
+
+* popToTop on tab press in native stack ([301c35e](https://github.com/react-navigation/navigation-ex/commit/301c35e))
+
+
+
+
+
 # [5.0.0-alpha.9](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/native-stack@5.0.0-alpha.8...@react-navigation/native-stack@5.0.0-alpha.9) (2019-11-04)
 
 **Note:** Version bump only for package @react-navigation/native-stack
