@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.34](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.33...@react-navigation/stack@5.0.0-alpha.34) (2019-11-04)
+
+
+### Features
+
+* support transform style for header ([#158](https://github.com/react-navigation/navigation-ex/issues/158)) ([a93a81e](https://github.com/react-navigation/navigation-ex/commit/a93a81e))
+
+
+
+
+
 # [5.0.0-alpha.33](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.32...@react-navigation/stack@5.0.0-alpha.33) (2019-11-02)
 
 
