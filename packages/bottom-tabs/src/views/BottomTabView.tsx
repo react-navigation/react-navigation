@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {
   View,
+  TouchableWithoutFeedback,
   StyleSheet,
   AccessibilityRole,
   AccessibilityStates,
@@ -12,7 +13,6 @@ import { TabNavigationState } from '@react-navigation/routers';
 import { ScreenContainer } from 'react-native-screens';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import TouchableWithoutFeedbackWrapper from './TouchableWithoutFeedbackWrapper';
 import ResourceSavingScene from './ResourceSavingScene';
 import BottomTabBar from './BottomTabBar';
 import {
@@ -55,6 +55,8 @@ export default class BottomTabView extends React.Component<Props, State> {
 
   private renderButton = ({
     route,
+    children,
+    style,
     ...rest
   }: { route: Route<string> } & BottomTabBarButtonProps) => {
     const { descriptors } = this.props;
@@ -62,10 +64,14 @@ export default class BottomTabView extends React.Component<Props, State> {
     const options = descriptor.options;
 
     if (options.tabBarButton) {
-      return options.tabBarButton(rest);
+      return options.tabBarButton({ children, style, ...rest });
     }
 
-    return <TouchableWithoutFeedbackWrapper {...rest} />;
+    return (
+      <TouchableWithoutFeedback {...rest}>
+        <View style={style}>{children}</View>
+      </TouchableWithoutFeedback>
+    );
   };
 
   private renderIcon = ({
