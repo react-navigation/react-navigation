@@ -185,7 +185,9 @@ export type StackHeaderOptions = {
    * This is useful for using backgrounds such as an image or a gradient.
    * You can use this with `headerTransparent` to render a blur view, for example, to create a translucent header.
    */
-  headerBackground?: () => React.ReactNode;
+  headerBackground?: (props: {
+    style: StyleProp<ViewStyle>;
+  }) => React.ReactNode;
   /**
    * Style object for the header. You can specify a custom background color here, for example.
    */

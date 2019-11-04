@@ -222,6 +222,7 @@ export default class HeaderSegment extends React.Component<Props, State> {
       shadowOpacity,
       shadowRadius,
       opacity,
+      transform,
       ...unsafeStyles
     } = StyleSheet.flatten(customHeaderStyle || {}) as ViewStyle;
 
@@ -263,6 +264,7 @@ export default class HeaderSegment extends React.Component<Props, State> {
       shadowOpacity,
       shadowRadius,
       opacity,
+      transform,
     };
 
     // Setting a property to undefined triggers default style
@@ -301,14 +303,14 @@ export default class HeaderSegment extends React.Component<Props, State> {
           style={[StyleSheet.absoluteFill, backgroundStyle]}
         >
           {headerBackground ? (
-            headerBackground()
+            headerBackground({ style: safeStyles })
           ) : headerTransparent ? null : (
             <HeaderBackground style={safeStyles} />
           )}
         </Animated.View>
         <Animated.View
           pointerEvents="box-none"
-          style={[{ height, minHeight, maxHeight, opacity }]}
+          style={[{ height, minHeight, maxHeight, opacity, transform }]}
         >
           <View pointerEvents="none" style={{ height: insets.top }} />
           <View pointerEvents="box-none" style={styles.content}>
