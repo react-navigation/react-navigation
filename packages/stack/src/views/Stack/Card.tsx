@@ -412,8 +412,10 @@ export default class Card extends React.Component<Props> {
       cond(
         eq(this.props.current, isVisible),
         call(
-          [this.didMovementHappen, this.isVisible],
-          ([didMovementHappen]: ReadonlyArray<Binary>) => {
+          [this.didMovementHappen, isVisible],
+          ([didMovementHappen, isVisibleVal]: ReadonlyArray<
+            Binary | number
+          >) => {
             if (didMovementHappen) {
               // if we go back to the same position,
               // let's pretend that whole animation happen
@@ -421,9 +423,14 @@ export default class Card extends React.Component<Props> {
               // It's especially vital for having inputs properly focused.
               this.handleStartInteraction();
               const { onTransitionStart } = this.props;
-              onTransitionStart && onTransitionStart({ closing: false });
+              onTransitionStart &&
+                onTransitionStart({ closing: !isVisibleVal });
               this.handleTransitionEnd();
-              this.props.onOpen(true);
+              if (isVisibleVal) {
+                this.props.onOpen(true);
+              } else {
+                this.props.onClose(true);
+              }
             }
           }
         ),
@@ -514,7 +521,6 @@ export default class Card extends React.Component<Props> {
             call([this.isVisible], ([value]: ReadonlyArray<Binary>) => {
               const isOpen = Boolean(value);
               const { onOpen, onClose } = this.props;
-
               this.handleTransitionEnd();
 
               if (isOpen) {
@@ -544,14 +550,18 @@ export default class Card extends React.Component<Props> {
           this.gestureUntraversed,
           I18nManager.isRTL ? MINUS_ONE_NODE : TRUE_NODE
         ),
-        this.gestureUntraversed
+        multiply(this.gestureUntraversed, this.verticalGestureDirection)
       )
     ),
     set(
       this.velocity,
-      multiply(
-        this.velocityUntraversed,
-        I18nManager.isRTL ? MINUS_ONE_NODE : TRUE_NODE
+      cond(
+        eq(this.direction, DIRECTION_HORIZONTAL),
+        multiply(
+          this.velocityUntraversed,
+          I18nManager.isRTL ? MINUS_ONE_NODE : TRUE_NODE
+        ),
+        multiply(this.velocityUntraversed, this.verticalGestureDirection)
       )
     ),
     onChange(
@@ -636,7 +646,10 @@ export default class Card extends React.Component<Props> {
                         this.gestureUntraversed,
                         I18nManager.isRTL ? MINUS_ONE_NODE : TRUE_NODE
                       ),
-                      this.gestureUntraversed
+                      multiply(
+                        this.gestureUntraversed,
+                        this.verticalGestureDirection
+                      )
                     ),
                     this.distance
                   ),
