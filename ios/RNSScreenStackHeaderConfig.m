@@ -191,7 +191,7 @@
     }
     navitem.largeTitleDisplayMode = config.largeTitle ? UINavigationItemLargeTitleDisplayModeAlways : UINavigationItemLargeTitleDisplayModeNever;
   }
-
+#ifdef __IPHONE_13_0
   if (@available(iOS 13.0, *)) {
     UINavigationBarAppearance *appearance = [UINavigationBarAppearance new];
 
@@ -257,7 +257,7 @@
     navitem.compactAppearance = appearance;
     navitem.scrollEdgeAppearance = appearance;
   }
-
+#endif
   for (RNSScreenStackHeaderSubview *subview in config.reactSubviews) {
     switch (subview.type) {
       case RNSScreenStackHeaderSubviewTypeLeft: {
