@@ -60,7 +60,6 @@ export type Props<T extends Route> = SceneRendererProps & {
 };
 
 type State = {
-  layout: Layout;
   tabWidths: { [key: string]: number };
 };
 
@@ -86,25 +85,23 @@ export default class TabBar<T extends Route> extends React.Component<
   };
 
   state: State = {
-    layout: { width: 0, height: 0 },
     tabWidths: {},
   };
 
   componentDidUpdate(prevProps: Props<T>, prevState: State) {
     const { navigationState } = this.props;
-    const { layout, tabWidths } = this.state;
+    const { tabWidths } = this.state;
 
     if (
       prevProps.navigationState.routes.length !==
         navigationState.routes.length ||
       prevProps.navigationState.index !== navigationState.index ||
-      prevState.layout.width !== layout.width ||
       prevState.tabWidths !== tabWidths
     ) {
       if (
         this.getFlattenedTabWidth(this.props.tabStyle) === 'auto' &&
         !(
-          layout.width &&
+          this.layout.width &&
           navigationState.routes.every(
             r => typeof tabWidths[r.key] === 'number'
           )
@@ -117,6 +114,8 @@ export default class TabBar<T extends Route> extends React.Component<
       this.resetScroll(navigationState.index);
     }
   }
+
+  private layout: Layout = { width: 0, height: 0 };
 
   // to store the layout.width of each tab
   // when all onLayout's are fired, this would be set in state
@@ -185,7 +184,7 @@ export default class TabBar<T extends Route> extends React.Component<
     tabBarWidth - layoutWidth;
 
   private getTabBarWidth = (props: Props<T>, state: State) => {
-    const { layout, tabWidths } = state;
+    const { tabWidths } = state;
     const { scrollEnabled, tabStyle } = props;
     const { routes } = props.navigationState;
 
@@ -194,7 +193,7 @@ export default class TabBar<T extends Route> extends React.Component<
         acc +
         this.getComputedTabWidth(
           i,
-          layout,
+          this.layout,
           routes,
           scrollEnabled,
           tabWidths,
@@ -209,7 +208,7 @@ export default class TabBar<T extends Route> extends React.Component<
     state: State,
     value: number
   ) => {
-    const { layout } = state;
+    const { layout } = this;
     const tabBarWidth = this.getTabBarWidth(props, state);
     const maxDistance = this.getMaxScrollDistance(tabBarWidth, layout.width);
     const scrollValue = Math.max(Math.min(value, maxDistance), 0);
@@ -224,7 +223,8 @@ export default class TabBar<T extends Route> extends React.Component<
   };
 
   private getScrollAmount = (props: Props<T>, state: State, index: number) => {
-    const { layout, tabWidths } = state;
+    const { tabWidths } = state;
+    const { layout } = this;
     const { scrollEnabled, tabStyle } = props;
     const { routes } = props.navigationState;
 
@@ -264,19 +264,20 @@ export default class TabBar<T extends Route> extends React.Component<
   private handleLayout = (e: LayoutChangeEvent) => {
     const { height, width } = e.nativeEvent.layout;
 
-    if (
-      this.state.layout.width === width &&
-      this.state.layout.height === height
-    ) {
-      return;
-    }
-
-    this.setState({
-      layout: {
-        height,
-        width,
-      },
-    });
+    // Decided not to place layout in state because
+    // onLayout is often called before applying changes
+    // (according to https://facebook.github.io/react-native/docs/view.html#onlayout)
+    // and new state (and related evaluation)
+    // can be called before actually applying new related which might lead
+    // to unexpected position of components.
+    // Furthermore, component gets updated anyway after changing orientation
+    // so having it stored as a class member is good enough and new values will
+    // be consider in a new render.
+    // Anyway, we call forceUpdate because handleLayout can
+    // be invoked not only as a result of orientation's change.
+    this.layout.height = height;
+    this.layout.width = width;
+    this.forceUpdate();
   };
 
   private getTranslateX = memoize(
@@ -316,7 +317,9 @@ export default class TabBar<T extends Route> extends React.Component<
       style,
       indicatorContainerStyle,
     } = this.props;
-    const { layout, tabWidths } = this.state;
+
+    const { tabWidths } = this.state;
+    const { layout } = this;
     const { routes } = navigationState;
 
     const isWidthDynamic = this.getFlattenedTabWidth(tabStyle) === 'auto';
