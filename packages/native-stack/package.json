@@ -35,7 +35,7 @@
     "@react-native-community/bob": "^0.7.0",
     "del-cli": "^2.0.0",
     "react-native-screens": "^2.0.0-alpha.7",
-    "typescript": "^3.5.3"
+    "typescript": "^3.7.2"
   },
   "peerDependencies": {
     "@react-navigation/core": "^5.0.0-alpha.0",

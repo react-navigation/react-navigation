@@ -5,7 +5,8 @@ import { StackNavigationState, StackActions } from '@react-navigation/routers';
 import {
   // @ts-ignore
   ScreenStack,
-  Screen,
+  Screen as ScreenComponent,
+  ScreenProps,
   // eslint-disable-next-line import/no-unresolved
 } from 'react-native-screens';
 import HeaderConfig from './HeaderConfig';
@@ -13,6 +14,14 @@ import {
   NativeStackNavigationHelpers,
   NativeStackDescriptorMap,
 } from '../types';
+
+const Screen = (ScreenComponent as unknown) as React.ComponentType<
+  ScreenProps & {
+    stackPresentation?: 'push' | 'modal' | 'transparentModal';
+    stackAnimation?: 'default' | 'fade' | 'none';
+    onDismissed?: () => void;
+  }
+>;
 
 type Props = {
   state: StackNavigationState;
@@ -28,7 +37,6 @@ export default function StackView({ state, navigation, descriptors }: Props) {
         const { presentation = 'push', animation, contentStyle } = options;
 
         return (
-          // @ts-ignore
           <Screen
             key={route.key}
             style={StyleSheet.absoluteFill}

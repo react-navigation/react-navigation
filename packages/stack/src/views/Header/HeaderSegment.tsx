@@ -21,11 +21,6 @@ import {
   Scene,
 } from '../../types';
 
-export type Scene<T> = {
-  route: T;
-  progress: Animated.Node<number>;
-};
-
 type Props = StackHeaderOptions & {
   headerTitle: (props: StackHeaderTitleProps) => React.ReactNode;
   layout: Layout;

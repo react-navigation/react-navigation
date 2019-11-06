@@ -36,7 +36,7 @@
     "del-cli": "^3.0.0",
     "react": "~16.8.3",
     "react-native": "~0.59.10",
-    "typescript": "^3.6.3"
+    "typescript": "^3.7.2"
   },
   "peerDependencies": {
     "@react-navigation/core": "^5.0.0-alpha.0",
