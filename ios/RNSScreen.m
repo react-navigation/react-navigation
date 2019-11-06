@@ -8,33 +8,6 @@
 #import <React/RCTShadowView.h>
 #import <React/RCTTouchHandler.h>
 
-@interface RNSScreenFrameData : NSObject
-@property (nonatomic, readonly) CGFloat rightInset;
-@property (nonatomic, readonly) CGFloat topInset;
-@property (nonatomic, readonly) CGFloat bottomInset;
-@property (nonatomic, readonly) CGFloat leftInset;
-@property (nonatomic, readonly) CGFloat navbarOffset;
-
-- (instancetype)initWithInsets:(UIEdgeInsets)insets;
-
-@end
-
-@implementation RNSScreenFrameData
-
-- (instancetype)initWithInsets:(UIEdgeInsets)insets andNavbarOffset:(CGFloat)navbarOffset
-{
-  if (self = [super init]) {
-    _topInset = insets.top;
-    _bottomInset = insets.bottom;
-    _leftInset = insets.left;
-    _rightInset = insets.right;
-    _navbarOffset = navbarOffset;
-  }
-  return self;
-}
-
-@end
-
 @interface RNSScreenView () <UIAdaptivePresentationControllerDelegate>
 @end
 
