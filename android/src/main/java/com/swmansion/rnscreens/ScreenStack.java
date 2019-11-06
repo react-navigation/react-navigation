@@ -17,7 +17,6 @@ public class ScreenStack extends ScreenContainer<ScreenStackFragment> {
   private final Set<ScreenStackFragment> mDismissed = new HashSet<>();
 
   private ScreenStackFragment mTopScreen = null;
-  private boolean mLayoutEnqueued = false;
 
   private final FragmentManager.OnBackStackChangedListener mBackStackListener = new FragmentManager.OnBackStackChangedListener() {
     @Override
@@ -60,45 +59,9 @@ public class ScreenStack extends ScreenContainer<ScreenStackFragment> {
   }
 
   @Override
-  protected void onLayout(boolean changed, int l, int t, int r, int b) {
-    for (int i = 0, size = getChildCount(); i < size; i++) {
-      getChildAt(i).layout(0, 0, getWidth(), getHeight());
-    }
-  }
-
-  @Override
-  protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-    super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-    for (int i = 0, size = getChildCount(); i < size; i++) {
-      getChildAt(i).measure(widthMeasureSpec, heightMeasureSpec);
-    }
-  }
-
-  @Override
   protected void onDetachedFromWindow() {
     super.onDetachedFromWindow();
     getFragmentManager().removeOnBackStackChangedListener(mBackStackListener);
-  }
-
-  private final Runnable mLayoutRunnable = new Runnable() {
-    @Override
-    public void run() {
-      mLayoutEnqueued = false;
-      measure(
-              MeasureSpec.makeMeasureSpec(getWidth(), MeasureSpec.EXACTLY),
-              MeasureSpec.makeMeasureSpec(getHeight(), MeasureSpec.EXACTLY));
-      layout(getLeft(), getTop(), getRight(), getBottom());
-    }
-  };
-
-  @Override
-  public void requestLayout() {
-    super.requestLayout();
-
-    if (!mLayoutEnqueued) {
-      mLayoutEnqueued = true;
-      post(mLayoutRunnable);
-    }
   }
 
   @Override

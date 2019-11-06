@@ -26,11 +26,23 @@ public class ScreenContainer<T extends ScreenFragment> extends ViewGroup {
   private @Nullable FragmentTransaction mCurrentTransaction;
   private boolean mNeedUpdate;
   private boolean mIsAttached;
+  private boolean mLayoutEnqueued = false;
 
-  private ChoreographerCompat.FrameCallback mFrameCallback = new ChoreographerCompat.FrameCallback() {
+  private final ChoreographerCompat.FrameCallback mFrameCallback = new ChoreographerCompat.FrameCallback() {
     @Override
     public void doFrame(long frameTimeNanos) {
       updateIfNeeded();
+    }
+  };
+
+  private final Runnable mLayoutRunnable = new Runnable() {
+    @Override
+    public void run() {
+      mLayoutEnqueued = false;
+      measure(
+              MeasureSpec.makeMeasureSpec(getWidth(), MeasureSpec.EXACTLY),
+              MeasureSpec.makeMeasureSpec(getHeight(), MeasureSpec.EXACTLY));
+      layout(getLeft(), getTop(), getRight(), getBottom());
     }
   };
 
@@ -39,8 +51,20 @@ public class ScreenContainer<T extends ScreenFragment> extends ViewGroup {
   }
 
   @Override
-  protected void onLayout(boolean b, int i, int i1, int i2, int i3) {
-    // no-op
+  protected void onLayout(boolean changed, int l, int t, int r, int b) {
+    for (int i = 0, size = getChildCount(); i < size; i++) {
+      getChildAt(i).layout(0, 0, getWidth(), getHeight());
+    }
+  }
+
+  @Override
+  public void requestLayout() {
+    super.requestLayout();
+
+    if (!mLayoutEnqueued) {
+      mLayoutEnqueued = true;
+      post(mLayoutRunnable);
+    }
   }
 
   protected void markUpdated() {
@@ -160,6 +184,14 @@ public class ScreenContainer<T extends ScreenFragment> extends ViewGroup {
   protected void onDetachedFromWindow() {
     super.onDetachedFromWindow();
     mIsAttached = false;
+  }
+
+  @Override
+  protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+    super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    for (int i = 0, size = getChildCount(); i < size; i++) {
+      getChildAt(i).measure(widthMeasureSpec, heightMeasureSpec);
+    }
   }
 
   private void updateIfNeeded() {
