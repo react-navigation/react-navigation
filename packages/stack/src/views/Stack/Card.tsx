@@ -25,9 +25,7 @@ import {
 import memoize from '../../utils/memoize';
 import StackGestureContext from '../../utils/StackGestureContext';
 import PointerEventsView from './PointerEventsView';
-import StackAnimationProgressContext from '../../utils/StackAnimationProgressContext';
-import StackAnimationIsSwipingContext from '../../utils/StackAnimationIsSwipingContext';
-import StackAnimationIsClosingContext from '../../utils/StackAnimationIsClosingContext';
+import StackCardAnimationContext from '../../utils/StackCardAnimationContext';
 
 type Props = ViewProps & {
   index: number;
@@ -775,6 +773,29 @@ export default class Card extends React.Component<Props> {
     this.props.insets.left
   );
 
+  // Keep track of the animation context when deps changes.
+  private getCardAnimationContext = memoize(
+    (
+      index: number,
+      current: Animated.Node<number>,
+      next: Animated.Node<number> | undefined,
+      isSwiping: Animated.Node<0 | 1>,
+      isClosing: Animated.Node<0 | 1>,
+      layout: Layout,
+      insets: EdgeInsets
+    ) => ({
+      index,
+      current: { progress: current },
+      next: next && { progress: next },
+      closing: isClosing,
+      swiping: isSwiping,
+      layouts: {
+        screen: layout,
+      },
+      insets,
+    })
+  );
+
   private gestureActivationCriteria() {
     const { layout, gestureDirection, gestureResponseDistance } = this.props;
 
@@ -926,17 +947,19 @@ export default class Card extends React.Component<Props> {
                     contentStyle,
                   ]}
                 >
-                  <StackAnimationProgressContext.Provider value={current}>
-                    <StackAnimationIsSwipingContext.Provider
-                      value={this.isSwiping}
-                    >
-                      <StackAnimationIsClosingContext.Provider
-                        value={this.isClosing}
-                      >
-                        {children}
-                      </StackAnimationIsClosingContext.Provider>
-                    </StackAnimationIsSwipingContext.Provider>
-                  </StackAnimationProgressContext.Provider>
+                  <StackCardAnimationContext.Provider
+                    value={this.getCardAnimationContext(
+                      index,
+                      current,
+                      next,
+                      this.isClosing,
+                      this.isSwiping,
+                      this.props.layout,
+                      this.props.insets
+                    )}
+                  >
+                    {children}
+                  </StackCardAnimationContext.Provider>
                 </PointerEventsView>
               </Animated.View>
             </PanGestureHandler>

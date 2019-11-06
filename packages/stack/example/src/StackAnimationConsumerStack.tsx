@@ -4,9 +4,7 @@ import Animated from 'react-native-reanimated';
 import {
   createStackNavigator,
   NavigationStackScreenProps,
-  StackAnimationProgressContext,
-  StackAnimationIsSwipingContext,
-  StackAnimationIsClosingContext,
+  StackCardAnimationContext,
 } from 'react-navigation-stack';
 
 const ListScreen = (props: NavigationStackScreenProps) => (
@@ -27,12 +25,14 @@ const ListScreen = (props: NavigationStackScreenProps) => (
 );
 
 const AnotherScreen = () => (
-  <StackAnimationProgressContext.Consumer>
-    {progress => {
-      const fontSize = Animated.interpolate(progress, {
-        inputRange: [0, 1],
-        outputRange: [8, 32],
-      });
+  <StackCardAnimationContext.Consumer>
+    {value => {
+      const fontSize = value
+        ? Animated.interpolate(value.current.progress, {
+            inputRange: [0, 1],
+            outputRange: [8, 32],
+          })
+        : 32;
 
       return (
         <View
@@ -43,13 +43,15 @@ const AnotherScreen = () => (
             backgroundColor: 'honeydew',
           }}
         >
-          <Animated.Text style={{ fontSize, opacity: progress }}>
+          <Animated.Text
+            style={{ fontSize, opacity: value ? value.current.progress : 1 }}
+          >
             Animates on progress
           </Animated.Text>
         </View>
       );
     }}
-  </StackAnimationProgressContext.Consumer>
+  </StackCardAnimationContext.Consumer>
 );
 
 const YetAnotherScreen = () => (
@@ -61,36 +63,40 @@ const YetAnotherScreen = () => (
       backgroundColor: 'papayawhip',
     }}
   >
-    <StackAnimationIsSwipingContext.Consumer>
-      {isSwiping => (
+    <StackCardAnimationContext.Consumer>
+      {value => (
         <Animated.Text
           style={{
             fontSize: 24,
-            opacity: Animated.interpolate(isSwiping, {
-              inputRange: [0, 1],
-              outputRange: [1, 0],
-            }),
+            opacity: value
+              ? Animated.interpolate(value.swiping, {
+                  inputRange: [0, 1],
+                  outputRange: [1, 0],
+                })
+              : 1,
           }}
         >
           Disappears when swiping
         </Animated.Text>
       )}
-    </StackAnimationIsSwipingContext.Consumer>
-    <StackAnimationIsClosingContext.Consumer>
-      {isClosing => (
+    </StackCardAnimationContext.Consumer>
+    <StackCardAnimationContext.Consumer>
+      {value => (
         <Animated.Text
           style={{
             fontSize: 24,
-            opacity: Animated.interpolate(isClosing, {
-              inputRange: [0, 1],
-              outputRange: [1, 0],
-            }),
+            opacity: value
+              ? Animated.interpolate(value.closing, {
+                  inputRange: [0, 1],
+                  outputRange: [1, 0],
+                })
+              : 1,
           }}
         >
           Disappears only when closing
         </Animated.Text>
       )}
-    </StackAnimationIsClosingContext.Consumer>
+    </StackCardAnimationContext.Consumer>
   </View>
 );
 
