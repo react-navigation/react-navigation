@@ -2,6 +2,7 @@ package com.swmansion.rnscreens;
 
 import android.content.Context;
 
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import java.util.ArrayList;
@@ -10,11 +11,25 @@ import java.util.Set;
 
 public class ScreenStack extends ScreenContainer<ScreenStackFragment> {
 
+  private static final String BACK_STACK_TAG = "RN_SCREEN_LAST";
+
   private final ArrayList<ScreenStackFragment> mStack = new ArrayList<>();
   private final Set<ScreenStackFragment> mDismissed = new HashSet<>();
 
   private ScreenStackFragment mTopScreen = null;
   private boolean mLayoutEnqueued = false;
+
+  private final FragmentManager.OnBackStackChangedListener mBackStackListener = new FragmentManager.OnBackStackChangedListener() {
+    @Override
+    public void onBackStackChanged() {
+      if (getFragmentManager().getBackStackEntryCount() == 0) {
+        // when back stack entry count hits 0 it means the user's navigated back using hw back
+        // button. As the "fake" transaction we installed on the back stack does nothing we need
+        // to handle back navigation on our own.
+        dismiss(mTopScreen);
+      }
+    }
+  };
 
   public ScreenStack(Context context) {
     super(context);
@@ -57,6 +72,12 @@ public class ScreenStack extends ScreenContainer<ScreenStackFragment> {
     for (int i = 0, size = getChildCount(); i < size; i++) {
       getChildAt(i).measure(widthMeasureSpec, heightMeasureSpec);
     }
+  }
+
+  @Override
+  protected void onDetachedFromWindow() {
+    super.onDetachedFromWindow();
+    getFragmentManager().removeOnBackStackChangedListener(mBackStackListener);
   }
 
   private final Runnable mLayoutRunnable = new Runnable() {
@@ -172,8 +193,51 @@ public class ScreenStack extends ScreenContainer<ScreenStackFragment> {
 
     tryCommitTransaction();
 
+    setupBackHandlerIfNeeded(mTopScreen);
+
     for (ScreenStackFragment screen : mStack) {
       screen.onStackUpdate();
+    }
+  }
+
+  /**
+   * The below method sets up fragment manager's back stack in a way that it'd trigger our back
+   * stack change listener when hw back button is clicked.
+   *
+   * Because back stack by default rolls back the transaction the stack entry is associated with we
+   * generate a "fake" transaction that hides and shows the top fragment. As a result when back
+   * stack entry is rolled back nothing happens and we are free to handle back navigation on our
+   * own in `mBackStackListener`.
+   *
+   * We pop that "fake" transaction each time we update stack and we add a new one in case the top
+   * screen is allowed to be dismised using hw back button. This way in the listener we can tell
+   * if back button was pressed based on the count of the items on back stack. We expect 0 items
+   * in case hw back is pressed becakse we try to keep the number of items at 1 by always resetting
+   * and adding new items. In case we don't add a new item to back stack we remove listener so that
+   * it does not get triggered.
+   *
+   * It is important that we don't install back handler when stack contains a single screen as in
+   * that case we want the parent navigator or activity handler to take over.
+   */
+  private void setupBackHandlerIfNeeded(ScreenStackFragment topScreen) {
+    getFragmentManager().removeOnBackStackChangedListener(mBackStackListener);
+    getFragmentManager().popBackStack(BACK_STACK_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+    ScreenStackFragment firstScreen = null;
+    for (int i = 0, size = mStack.size(); i < size; i++) {
+      ScreenStackFragment screen = mStack.get(i);
+      if (!mDismissed.contains(screen)) {
+        firstScreen = screen;
+        break;
+      }
+    }
+    if (topScreen != firstScreen && topScreen.isDismissable()) {
+      getFragmentManager().addOnBackStackChangedListener(mBackStackListener);
+      getFragmentManager()
+              .beginTransaction()
+              .hide(topScreen)
+              .show(topScreen)
+              .addToBackStack(BACK_STACK_TAG)
+              .commit();
     }
   }
 }

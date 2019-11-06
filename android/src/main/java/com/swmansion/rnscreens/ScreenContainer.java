@@ -7,6 +7,7 @@ import android.view.ViewParent;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.facebook.react.ReactRootView;
@@ -109,9 +110,13 @@ public class ScreenContainer<T extends ScreenFragment> extends ViewGroup {
     return (FragmentActivity) context;
   }
 
+  protected FragmentManager getFragmentManager() {
+    return findRootFragmentActivity().getSupportFragmentManager();
+  }
+
   protected FragmentTransaction getOrCreateTransaction() {
     if (mCurrentTransaction == null) {
-      mCurrentTransaction = findRootFragmentActivity().getSupportFragmentManager().beginTransaction();
+      mCurrentTransaction = getFragmentManager().beginTransaction();
       mCurrentTransaction.setReorderingAllowed(true);
     }
     return mCurrentTransaction;

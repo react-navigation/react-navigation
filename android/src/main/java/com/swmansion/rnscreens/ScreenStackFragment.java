@@ -86,4 +86,12 @@ public class ScreenStackFragment extends ScreenFragment {
 
     return view;
   }
+
+  public boolean isDismissable() {
+    View child = mScreenView.getChildAt(0);
+    if (child instanceof ScreenStackHeaderConfig) {
+      return ((ScreenStackHeaderConfig) child).isDismissable();
+    }
+    return true;
+  }
 }

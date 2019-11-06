@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.TextView;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -35,18 +34,6 @@ public class ScreenStackHeaderConfig extends ViewGroup {
   private final Toolbar mToolbar;
 
   private boolean mIsAttachedToWindow = false;
-
-  private OnBackPressedCallback mBackCallback = new OnBackPressedCallback(false) {
-    @Override
-    public void handleOnBackPressed() {
-      ScreenStack stack = getScreenStack();
-      Screen current = getScreen();
-      if (stack.getTopScreen() == current) {
-        stack.dismiss(getScreenFragment());
-      }
-      mBackCallback.remove();
-    }
-  };
 
   private OnClickListener mBackClickListener = new OnClickListener() {
     @Override
@@ -116,25 +103,18 @@ public class ScreenStackHeaderConfig extends ViewGroup {
     return null;
   }
 
+  public boolean isDismissable() {
+    return mGestureEnabled;
+  }
+
   public void onUpdate() {
     Screen parent = (Screen) getParent();
     final ScreenStack stack = getScreenStack();
     boolean isRoot = stack == null ? true : stack.getRootScreen() == parent;
     boolean isTop = stack == null ? true : stack.getTopScreen() == parent;
 
-    // we need to clean up back handler especially in the case given screen is no longer on top
-    // because we don't want it to capture back event if it is not responsible for handling it
-    // as that would block other handlers from running
-    mBackCallback.remove();
-
     if (!mIsAttachedToWindow || !isTop) {
       return;
-    }
-
-    if (!isRoot && isTop && mGestureEnabled) {
-      Fragment fragment = getScreenFragment();
-      fragment.requireActivity().getOnBackPressedDispatcher().addCallback(fragment, mBackCallback);
-      mBackCallback.setEnabled(true);
     }
 
     if (mIsHidden) {
