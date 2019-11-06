@@ -43,7 +43,7 @@
     "react": "~16.8.3",
     "react-native-testing-library": "^1.9.1",
     "react-test-renderer": "~16.8.3",
-    "typescript": "^3.6.3"
+    "typescript": "^3.7.2"
   },
   "peerDependencies": {
     "react": "~16.8.3"

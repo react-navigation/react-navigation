@@ -47,6 +47,6 @@
     "babel-preset-expo": "^7.0.0",
     "expo-cli": "^3.4.1",
     "jetifier": "^1.6.4",
-    "typescript": "^3.6.3"
+    "typescript": "^3.7.2"
   }
 }
