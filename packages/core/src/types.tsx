@@ -338,7 +338,7 @@ type NavigationHelpersCommon<
    *
    * @param state Navigation state object.
    */
-  resetRoot(state: PartialState<NavigationState> | NavigationState): void;
+  resetRoot(state?: PartialState<NavigationState> | NavigationState): void;
 
   /**
    * Go back to the previous route in history.
@@ -549,7 +549,7 @@ export type NavigationContainerRef =
        *
        * @param state Navigation state object.
        */
-      resetRoot(state: PartialState<NavigationState> | NavigationState): void;
+      resetRoot(state?: PartialState<NavigationState> | NavigationState): void;
       getRootState(): NavigationState;
     }
   | undefined
