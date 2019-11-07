@@ -64,6 +64,27 @@ it('initializes state for a navigator on navigation', () => {
   });
 });
 
+it("doesn't crash when initialState is null", () => {
+  const TestNavigator = (props: any) => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return descriptors[state.routes[state.index].key].render();
+  };
+
+  const TestScreen = () => null;
+
+  const element = (
+    // @ts-ignore
+    <NavigationContainer initialState={null}>
+      <TestNavigator>
+        <Screen name="foo" component={TestScreen} />
+      </TestNavigator>
+    </NavigationContainer>
+  );
+
+  expect(() => render(element)).not.toThrowError();
+});
+
 it('rehydrates state for a navigator on navigation', () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
