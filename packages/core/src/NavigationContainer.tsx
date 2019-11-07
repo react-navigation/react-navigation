@@ -87,7 +87,7 @@ const Container = React.forwardRef(function NavigationContainer(
   ref: React.Ref<NavigationContainerRef>
 ) {
   const [state, setNavigationState] = React.useState<State>(() =>
-    getPartialState(initialState)
+    getPartialState(initialState == null ? undefined : initialState)
   );
 
   const navigationStateRef = React.useRef<State>();
