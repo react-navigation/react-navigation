@@ -130,7 +130,7 @@ const Container = React.forwardRef(function NavigationContainer(
   };
 
   const resetRoot = React.useCallback(
-    (state: PartialState<NavigationState> | NavigationState) => {
+    (state?: PartialState<NavigationState> | NavigationState) => {
       trackAction('@@RESET_ROOT');
       setNavigationState(state);
     },
