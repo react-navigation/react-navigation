@@ -745,6 +745,7 @@ export default class Card extends React.Component<Props> {
         current: { progress: current },
         next: next && { progress: next },
         closing: this.isClosing,
+        swiping: this.isSwiping,
         layouts: {
           screen: layout,
         },
@@ -779,20 +780,26 @@ export default class Card extends React.Component<Props> {
       index: number,
       current: Animated.Node<number>,
       next: Animated.Node<number> | undefined,
-      isSwiping: Animated.Node<0 | 1>,
-      isClosing: Animated.Node<0 | 1>,
       layout: Layout,
-      insets: EdgeInsets
+      insetTop: number,
+      insetRight: number,
+      insetBottom: number,
+      insetLeft: number
     ) => ({
       index,
       current: { progress: current },
       next: next && { progress: next },
-      closing: isClosing,
-      swiping: isSwiping,
+      closing: this.isClosing,
+      swiping: this.isSwiping,
       layouts: {
         screen: layout,
       },
-      insets,
+      insets: {
+        top: insetTop,
+        right: insetRight,
+        bottom: insetBottom,
+        left: insetLeft,
+      },
     })
   );
 
@@ -878,6 +885,17 @@ export default class Card extends React.Component<Props> {
       );
     }
 
+    const animationContext = this.getCardAnimationContext(
+      index,
+      current,
+      next,
+      layout,
+      insets.top,
+      insets.right,
+      insets.bottom,
+      insets.left
+    );
+
     const {
       containerStyle,
       cardStyle,
@@ -947,17 +965,7 @@ export default class Card extends React.Component<Props> {
                     contentStyle,
                   ]}
                 >
-                  <StackCardAnimationContext.Provider
-                    value={this.getCardAnimationContext(
-                      index,
-                      current,
-                      next,
-                      this.isClosing,
-                      this.isSwiping,
-                      this.props.layout,
-                      this.props.insets
-                    )}
-                  >
+                  <StackCardAnimationContext.Provider value={animationContext}>
                     {children}
                   </StackCardAnimationContext.Provider>
                 </PointerEventsView>

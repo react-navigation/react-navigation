@@ -227,6 +227,7 @@ export type CardInterpolationProps = {
   };
   index: number;
   closing: Animated.Node<0 | 1>;
+  swiping: Animated.Node<0 | 1>;
   layouts: {
     screen: Layout;
   };
