@@ -62,9 +62,9 @@ export default function TabRouter({
 
     getInitialState({ routeNames, routeParamList }) {
       const index =
-        initialRouteName === undefined
-          ? 0
-          : routeNames.indexOf(initialRouteName);
+        initialRouteName !== undefined && routeNames.includes(initialRouteName)
+          ? routeNames.indexOf(initialRouteName)
+          : 0;
 
       return {
         stale: false,
