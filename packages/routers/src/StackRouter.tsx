@@ -56,7 +56,8 @@ export default function StackRouter(options: StackRouterOptions) {
 
     getInitialState({ routeNames, routeParamList }) {
       const initialRouteName =
-        options.initialRouteName !== undefined
+        options.initialRouteName !== undefined &&
+        routeNames.includes(options.initialRouteName)
           ? options.initialRouteName
           : routeNames[0];
 
