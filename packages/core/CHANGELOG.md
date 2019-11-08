@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.21](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/core@5.0.0-alpha.20...@react-navigation/core@5.0.0-alpha.21) (2019-11-08)
+
+
+### Bug Fixes
+
+* don't crash if initialState is null ([270fbdc](https://github.com/react-navigation/navigation-ex/commit/270fbdc))
+* fix types for resetRoot to accept undefined ([e871fdb](https://github.com/react-navigation/navigation-ex/commit/e871fdb))
+
+
+
+
+
 # [5.0.0-alpha.20](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/core@5.0.0-alpha.19...@react-navigation/core@5.0.0-alpha.20) (2019-11-02)
 
 

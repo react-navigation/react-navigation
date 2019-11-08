@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.11](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/native-stack@5.0.0-alpha.10...@react-navigation/native-stack@5.0.0-alpha.11) (2019-11-08)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+
+
+
+
 # [5.0.0-alpha.10](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/native-stack@5.0.0-alpha.9...@react-navigation/native-stack@5.0.0-alpha.10) (2019-11-04)
 
 
