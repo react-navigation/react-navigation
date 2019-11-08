@@ -564,22 +564,23 @@ declare module 'react-navigation' {
     dispatch: NavigationDispatch;
     goBack: (routeKey?: string | null) => boolean;
     dismiss: () => boolean;
-    navigate(options: {
+    navigate<T extends NavigationParams>(options: {
       routeName:
         | string
         | {
             routeName: string;
-            params?: NavigationParams;
+            params?: T;
             action?: NavigationNavigateAction;
             key?: string;
           };
-      params?: NavigationParams;
+      params?: T;
       action?: NavigationAction;
       key?: string;
     }): boolean;
-    navigate(
+
+    navigate<T extends NavigationParams>(
       routeNameOrOptions: string,
-      params?: NavigationParams,
+      params?: T,
       action?: NavigationAction
     ): boolean;
     openDrawer: () => any;
