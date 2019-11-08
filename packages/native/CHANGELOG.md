@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.15](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/native@5.0.0-alpha.14...@react-navigation/native@5.0.0-alpha.15) (2019-11-08)
+
+
+### Bug Fixes
+
+* don't call getNode if ref is already scrollable ([#162](https://github.com/react-navigation/navigation-ex/issues/162)) ([66551f2](https://github.com/react-navigation/navigation-ex/commit/66551f2))
+
+
+
+
+
 # [5.0.0-alpha.14](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/native@5.0.0-alpha.13...@react-navigation/native@5.0.0-alpha.14) (2019-10-30)
 
 
