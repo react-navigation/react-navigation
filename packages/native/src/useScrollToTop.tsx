@@ -19,13 +19,23 @@ function getScrollableNode(ref: React.RefObject<ScrollableWrapper>) {
     return null;
   }
 
-  if ('getScrollResponder' in ref.current) {
+  if (
+    'scrollToTop' in ref.current ||
+    'scrollTo' in ref.current ||
+    'scrollToOffset' in ref.current ||
+    'scrollResponderScrollTo' in ref.current
+  ) {
+    // This is already a scrollable node.
+    return ref.current;
+  } else if ('getScrollResponder' in ref.current) {
     // If the view is a wrapper like FlatList, SectionList etc.
     // We need to use `getScrollResponder` to get access to the scroll responder
     return ref.current.getScrollResponder();
   } else if ('getNode' in ref.current) {
     // When a `ScrollView` is wraped in `Animated.createAnimatedComponent`
-    // we need to use `getNode` to get the ref to the actual scrollview
+    // we need to use `getNode` to get the ref to the actual scrollview.
+    // Note that `getNode` is deprecated in newer versions of react-native
+    // this is why we check if we already have a scrollable node above.
     return ref.current.getNode();
   } else {
     return ref.current;
