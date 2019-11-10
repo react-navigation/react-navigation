@@ -23,6 +23,7 @@ const MISSING_CONTEXT_ERROR =
   "We couldn't find a navigation context. Have you wrapped your app with 'NavigationContainer'?";
 
 export const NavigationStateContext = React.createContext<{
+  isDefault?: true;
   state?: NavigationState | PartialState<NavigationState>;
   getState: () => NavigationState | PartialState<NavigationState> | undefined;
   setState: (
@@ -31,6 +32,8 @@ export const NavigationStateContext = React.createContext<{
   key?: string;
   performTransaction: (action: () => void) => void;
 }>({
+  isDefault: true,
+
   get getState(): any {
     throw new Error(MISSING_CONTEXT_ERROR);
   },
@@ -83,9 +86,22 @@ const getPartialState = (
  * @param props.ref Ref object which refers to the navigation object containing helper methods.
  */
 const Container = React.forwardRef(function NavigationContainer(
-  { initialState, onStateChange, children }: NavigationContainerProps,
+  {
+    initialState,
+    onStateChange,
+    independent,
+    children,
+  }: NavigationContainerProps,
   ref: React.Ref<NavigationContainerRef>
 ) {
+  const parent = React.useContext(NavigationStateContext);
+
+  if (!parent.isDefault && !independent) {
+    throw new Error(
+      "Looks like you have nested a 'NavigationContainer' inside another. Normally you need only one container at the root of the app, so this was probably an error. If this was intentional, pass 'independent={true}' explicitely."
+    );
+  }
+
   const [state, setNavigationState] = React.useState<State>(() =>
     getPartialState(initialState == null ? undefined : initialState)
   );

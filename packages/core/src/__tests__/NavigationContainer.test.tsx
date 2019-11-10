@@ -122,6 +122,32 @@ it('throws when nesting performTransaction', () => {
   );
 });
 
+it('throws when nesting containers', () => {
+  expect(() =>
+    render(
+      <NavigationContainer>
+        <NavigationContainer>
+          <React.Fragment />
+        </NavigationContainer>
+      </NavigationContainer>
+    )
+  ).toThrowError(
+    "Looks like you have nested a 'NavigationContainer' inside another."
+  );
+
+  expect(() =>
+    render(
+      <NavigationContainer>
+        <NavigationContainer independent>
+          <React.Fragment />
+        </NavigationContainer>
+      </NavigationContainer>
+    )
+  ).not.toThrowError(
+    "Looks like you have nested a 'NavigationContainer' inside another."
+  );
+});
+
 it('handle dispatching with ref', () => {
   const CurrentParentRouter = MockRouter;
 

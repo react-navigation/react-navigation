@@ -377,10 +377,23 @@ export type NavigationHelpers<
   };
 
 export type NavigationContainerProps = {
+  /**
+   * Initial navigation state for the child navigators.
+   */
   initialState?: InitialState;
-  onStateChange?: (
-    state: NavigationState | PartialState<NavigationState> | undefined
-  ) => void;
+  /**
+   * Callback which is called with the latest navigation state when it changes.
+   */
+  onStateChange?: (state: NavigationState | undefined) => void;
+  /**
+   * Whether this navigation container should be independent of parent containers.
+   * If this is not set to `true`, this container cannot be nested inside another container.
+   * Setting it to `true` disconnects any children navigators from parent container.
+   */
+  independent?: boolean;
+  /**
+   * Children elements to render.
+   */
   children: React.ReactNode;
 };
 
