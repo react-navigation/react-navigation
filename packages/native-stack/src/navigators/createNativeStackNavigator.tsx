@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  createNavigator,
+  createNavigatorFactory,
   useNavigationBuilder,
   EventArg,
 } from '@react-navigation/core';
@@ -73,7 +73,7 @@ function NativeStackNavigator(props: NativeStackNavigatorProps) {
   );
 }
 
-export default createNavigator<
+export default createNavigatorFactory<
   NativeStackNavigationOptions,
   typeof NativeStackNavigator
 >(NativeStackNavigator);

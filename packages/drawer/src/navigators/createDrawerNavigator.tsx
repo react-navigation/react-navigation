@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {
-  createNavigator,
+  createNavigatorFactory,
   useNavigationBuilder,
   DefaultNavigatorOptions,
 } from '@react-navigation/core';
@@ -48,6 +48,7 @@ function DrawerNavigator({
   );
 }
 
-export default createNavigator<DrawerNavigationOptions, typeof DrawerNavigator>(
-  DrawerNavigator
-);
+export default createNavigatorFactory<
+  DrawerNavigationOptions,
+  typeof DrawerNavigator
+>(DrawerNavigator);

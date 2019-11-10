@@ -1,6 +1,6 @@
 import {
   useNavigationBuilder,
-  createNavigator,
+  createNavigatorFactory,
   DefaultNavigatorOptions,
 } from '@react-navigation/core';
 import {
@@ -24,5 +24,5 @@ function SwitchNavigator(props: Props) {
 }
 
 export default createCompatNavigatorFactory(
-  createNavigator<{}, typeof SwitchNavigator>(SwitchNavigator)
+  createNavigatorFactory<{}, typeof SwitchNavigator>(SwitchNavigator)
 );

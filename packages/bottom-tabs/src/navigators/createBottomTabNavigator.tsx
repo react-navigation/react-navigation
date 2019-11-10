@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {
   useNavigationBuilder,
-  createNavigator,
+  createNavigatorFactory,
   DefaultNavigatorOptions,
 } from '@react-navigation/core';
 import {
@@ -49,7 +49,7 @@ function BottomTabNavigator({
   );
 }
 
-export default createNavigator<
+export default createNavigatorFactory<
   BottomTabNavigationOptions,
   typeof BottomTabNavigator
 >(BottomTabNavigator);

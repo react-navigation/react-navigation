@@ -17,7 +17,7 @@ yarn add @react-navigation/core @react-navigation/routers
 A basic custom navigator bundling a router and a view looks like this:
 
 ```js
-import { useNavigationBuilder } from '@react-navigation/core';
+import { createNavigatorFactory, useNavigationBuilder } from '@react-navigation/core';
 import { StackRouter } from '@react-navigation/routers';
 
 function StackNavigator({ initialRouteName, children, ...rest }) {
@@ -36,5 +36,5 @@ function StackNavigator({ initialRouteName, children, ...rest }) {
   );
 }
 
-export default createNavigator(StackNavigator);
+export default createNavigatorFactory(StackNavigator);
 ```

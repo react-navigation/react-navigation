@@ -4,7 +4,7 @@ export { CommonActions };
 
 export { default as BaseRouter } from './BaseRouter';
 export { default as NavigationContainer } from './NavigationContainer';
-export { default as createNavigator } from './createNavigator';
+export { default as createNavigatorFactory } from './createNavigatorFactory';
 
 export { default as NavigationContext } from './NavigationContext';
 export { default as NavigationRouteContext } from './NavigationRouteContext';

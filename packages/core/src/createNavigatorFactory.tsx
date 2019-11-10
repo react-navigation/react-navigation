@@ -9,7 +9,7 @@ import { ParamListBase, TypedNavigator } from './types';
  * @param Navigator The navigtor component to wrap.
  * @returns Factory method to create a `Navigator` and `Screen` pair.
  */
-export default function createNavigator<
+export default function createNavigatorFactory<
   ScreenOptions extends object,
   NavigatorComponent extends React.ComponentType<any>
 >(Navigator: NavigatorComponent) {
