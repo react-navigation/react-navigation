@@ -93,7 +93,7 @@ PODS:
     - React
   - RNReanimated (1.2.0):
     - React
-  - RNScreens (2.0.0-alpha.7):
+  - RNScreens (2.0.0-alpha.8):
     - React
   - UMBarCodeScannerInterface (4.0.0)
   - UMCameraInterface (4.0.0)
@@ -267,7 +267,7 @@ SPEC CHECKSUMS:
   react-native-safe-area-context: e380a6f783ccaec848e2f3cc8eb205a62362950d
   RNGestureHandler: 5329a942fce3d41c68b84c2c2276ce06a696d8b0
   RNReanimated: 1b52415c4302f198cb581282a0166690bad62c43
-  RNScreens: 2f53466846305189a0cfd1745f26b6ca141b3a08
+  RNScreens: bfa9143ca291bcf3804c932f77b9617ff324704f
   UMBarCodeScannerInterface: d5a6fdc98ed6241225b0a8432a7f4e2b397668bc
   UMCameraInterface: 68870a3197fee85bd5afca5609ba4a5b7257d19d
   UMConstantsInterface: d25b8e8887ca7aaf568c06caf08f4d40734ee4ef
