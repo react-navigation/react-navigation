@@ -27,10 +27,7 @@ type Props = BottomTabBarProps & {
   inactiveTintColor: string;
 };
 
-const majorVersion = parseInt(Platform.Version as string, 10);
-const isIos = Platform.OS === 'ios';
-const isIOS11 = majorVersion >= 11 && isIos;
-
+const DEFAULT_TABBAR_HEIGHT = 50;
 const DEFAULT_MAX_TAB_ITEM_WIDTH = 125;
 
 export default class TabBarBottom extends React.Component<Props, State> {
@@ -43,7 +40,7 @@ export default class TabBarBottom extends React.Component<Props, State> {
     showLabel: true,
     showIcon: true,
     allowFontScaling: true,
-    adaptive: isIOS11,
+    adaptive: true,
   };
 
   state = {
@@ -177,7 +174,6 @@ export default class TabBarBottom extends React.Component<Props, State> {
       inactiveTintColor,
       renderIcon,
       showIcon,
-      showLabel,
     } = this.props;
 
     if (showIcon === false) {
@@ -198,11 +194,7 @@ export default class TabBarBottom extends React.Component<Props, State> {
         activeTintColor={activeTintColor}
         inactiveTintColor={inactiveTintColor}
         renderIcon={renderIcon}
-        style={[
-          styles.iconWithExplicitHeight,
-          showLabel === false && !horizontal && styles.iconWithoutLabel,
-          showLabel !== false && !horizontal && styles.iconWithLabel,
-        ]}
+        style={horizontal ? styles.iconHorizontal : styles.iconVertical}
       />
     );
   };
@@ -215,12 +207,11 @@ export default class TabBarBottom extends React.Component<Props, State> {
 
     if (labelPosition) {
       let position;
+
       if (typeof labelPosition === 'string') {
         position = labelPosition;
       } else {
-        position = labelPosition({
-          deviceOrientation: isLandscape ? 'horizontal' : 'vertical',
-        });
+        position = labelPosition({ dimensions });
       }
 
       if (position) {
@@ -232,8 +223,8 @@ export default class TabBarBottom extends React.Component<Props, State> {
       return false;
     }
 
-    // @ts-ignore
-    if (Platform.isPad) {
+    if (dimensions.width >= 768) {
+      // Screen size matches a tablet
       let maxTabItemWidth = DEFAULT_MAX_TAB_ITEM_WIDTH;
 
       const flattenedStyle = StyleSheet.flatten(tabStyle);
@@ -294,11 +285,7 @@ export default class TabBarBottom extends React.Component<Props, State> {
                   }
                 : null,
               {
-                height:
-                  // @ts-ignore
-                  (this.shouldUseHorizontalLabels() && !Platform.isPad
-                    ? COMPACT_HEIGHT
-                    : DEFAULT_HEIGHT) + (insets ? insets.bottom : 0),
+                height: DEFAULT_TABBAR_HEIGHT + (insets ? insets.bottom : 0),
                 paddingBottom: insets ? insets.bottom : 0,
               },
               style,
@@ -366,9 +353,6 @@ export default class TabBarBottom extends React.Component<Props, State> {
   }
 }
 
-const DEFAULT_HEIGHT = 49;
-const COMPACT_HEIGHT = 29;
-
 const styles = StyleSheet.create({
   tabBar: {
     left: 0,
@@ -385,7 +369,7 @@ const styles = StyleSheet.create({
   },
   tab: {
     flex: 1,
-    alignItems: isIos ? 'center' : 'stretch',
+    alignItems: 'center',
   },
   tabPortrait: {
     justifyContent: 'flex-end',
@@ -395,15 +379,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flexDirection: 'row',
   },
-  iconWithoutLabel: {
+  iconVertical: {
     flex: 1,
   },
-  iconWithLabel: {
-    flex: 1,
-  },
-  iconWithExplicitHeight: {
-    // @ts-ignore
-    height: Platform.isPad ? DEFAULT_HEIGHT : COMPACT_HEIGHT,
+  iconHorizontal: {
+    height: '100%',
   },
   label: {
     textAlign: 'center',
