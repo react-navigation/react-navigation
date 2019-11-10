@@ -35,7 +35,7 @@ Navigators bundle a router and a view which takes the navigation state and decid
 A simple navigator could look like this:
 
 ```js
-import { createNavigator } from '@react-navigation/core';
+import { createNavigatorFactory } from '@react-navigation/core';
 
 function StackNavigator({ initialRouteName, children, ...rest }) {
   // The `navigation` object contains the navigation state and some helpers (e.g. push, pop)
@@ -56,7 +56,7 @@ function StackNavigator({ initialRouteName, children, ...rest }) {
   );
 }
 
-export default createNavigator(StackNavigator);
+export default createNavigatorFactory(StackNavigator);
 ```
 
 The navigator can render a screen by calling `descriptors[route.key].render()`. Internally, the descriptor adds appropriate wrappers to handle nested state.
