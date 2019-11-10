@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.22](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/core@5.0.0-alpha.21...@react-navigation/core@5.0.0-alpha.22) (2019-11-10)
+
+
+### Bug Fixes
+
+* throw when containers are nested within another ([d4072e7](https://github.com/react-navigation/navigation-ex/commit/d4072e7))
+
+
+
+
+
 # [5.0.0-alpha.21](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/core@5.0.0-alpha.20...@react-navigation/core@5.0.0-alpha.21) (2019-11-08)
 
 
