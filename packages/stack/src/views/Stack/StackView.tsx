@@ -1,14 +1,12 @@
 import * as React from 'react';
 import { Platform } from 'react-native';
-import {
-  SafeAreaProvider,
-  SafeAreaConsumer,
-} from 'react-native-safe-area-context';
+import { SafeAreaConsumer } from 'react-native-safe-area-context';
 import { SceneView, StackActions, NavigationRoute } from 'react-navigation';
 import Stack from './Stack';
 import HeaderContainer, {
   Props as HeaderContainerProps,
 } from '../Header/HeaderContainer';
+import SafeAreaProviderCompat from '../SafeAreaProviderCompat';
 import {
   NavigationStackProp,
   NavigationStackConfig,
@@ -366,7 +364,7 @@ class StackView extends React.Component<Props, State> {
       mode !== 'modal' && Platform.OS === 'ios' ? 'float' : 'screen';
 
     return (
-      <SafeAreaProvider>
+      <SafeAreaProviderCompat>
         <SafeAreaConsumer>
           {insets => (
             <Stack
@@ -392,7 +390,7 @@ class StackView extends React.Component<Props, State> {
             />
           )}
         </SafeAreaConsumer>
-      </SafeAreaProvider>
+      </SafeAreaProviderCompat>
     );
   }
 }
