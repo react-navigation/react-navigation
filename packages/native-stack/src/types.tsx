@@ -106,10 +106,7 @@ export type NativeStackNavigationOptions = {
    */
   headerHideBackButton?: boolean;
   /**
-   * Boolean indicating whether to hide the elevation shadow on the header.
-   * Only supported on Android.
-   *
-   * @platform android
+   * Boolean indicating whether to hide the elevation shadow or the bottom border on the header.
    */
   headerHideShadow?: boolean;
   /**
