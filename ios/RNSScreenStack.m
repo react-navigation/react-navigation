@@ -185,7 +185,7 @@
 
   if (firstTimePush) {
     // nothing pushed yet
-    [_controller setViewControllers:@[top] animated:NO];
+    [_controller setViewControllers:controllers animated:NO];
   } else if (top != lastTop) {
     if (![controllers containsObject:lastTop]) {
       // last top controller is no longer on stack
