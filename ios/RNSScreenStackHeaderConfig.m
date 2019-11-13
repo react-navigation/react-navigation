@@ -152,6 +152,15 @@
   BOOL wasHidden = navctr.navigationBarHidden;
   BOOL shouldHide = config == nil || config.hide;
 
+  if (!shouldHide && !config.translucent) {
+    // when nav bar is not translucent we chage edgesForExtendedLayout to avoid system laying out
+    // the screen underneath navigation controllers
+    vc.edgesForExtendedLayout = UIRectEdgeNone;
+  } else {
+    // system default is UIRectEdgeAll
+    vc.edgesForExtendedLayout = UIRectEdgeAll;
+  }
+
   [navctr setNavigationBarHidden:shouldHide animated:YES];
   navctr.interactivePopGestureRecognizer.enabled = config.gestureEnabled;
 #ifdef __IPHONE_13_0
