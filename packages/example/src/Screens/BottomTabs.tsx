@@ -9,17 +9,11 @@ import SimpleStackScreen from './SimpleStack';
 
 const getTabBarIcon = (name: string) => ({
   color,
-  horizontal,
+  size,
 }: {
   color: string;
-  horizontal: boolean;
-}) => (
-  <MaterialCommunityIcons
-    name={name}
-    color={color}
-    size={horizontal ? 17 : 24}
-  />
-);
+  size: number;
+}) => <MaterialCommunityIcons name={name} color={color} size={size} />;
 
 type BottomTabParams = {
   article: undefined;

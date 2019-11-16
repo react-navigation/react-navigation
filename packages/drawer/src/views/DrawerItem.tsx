@@ -99,24 +99,26 @@ export default function DrawerItem({
       >
         <React.Fragment>
           {iconNode}
-          {typeof label === 'function' ? (
-            label({ color, focused })
-          ) : (
-            <Text
-              numberOfLines={1}
-              style={[
-                styles.label,
-                {
+          <View
+            style={[
+              styles.label,
+              { marginLeft: iconNode ? 32 : 0, marginVertical: 5 },
+            ]}
+          >
+            {typeof label === 'string' ? (
+              <Text
+                numberOfLines={1}
+                style={{
                   color,
                   fontWeight: '500',
-                  marginLeft: iconNode ? 32 : 0,
-                  marginVertical: 5,
-                },
-              ]}
-            >
-              {label}
-            </Text>
-          )}
+                }}
+              >
+                {label}
+              </Text>
+            ) : (
+              label({ color, focused })
+            )}
+          </View>
         </React.Fragment>
       </TouchableItem>
     </View>

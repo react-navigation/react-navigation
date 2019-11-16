@@ -90,9 +90,9 @@ export default class BottomTabView extends React.Component<Props, State> {
     const options = descriptor.options;
 
     if (options.tabBarIcon) {
-      return typeof options.tabBarIcon === 'function'
-        ? options.tabBarIcon({ focused, color, size })
-        : options.tabBarIcon;
+      return typeof options.tabBarIcon === 'string'
+        ? options.tabBarIcon
+        : options.tabBarIcon({ focused, color, size });
     }
 
     return null;

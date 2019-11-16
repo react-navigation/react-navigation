@@ -63,20 +63,18 @@ export type MaterialTopTabNavigationOptions = {
   title?: string;
 
   /**
-   * Title string of a tab displayed in the tab bar or React Element
+   * Title string of a tab displayed in the tab bar
    * or a function that given { focused: boolean, color: string } returns a React.Node, to display in tab bar.
    * When undefined, scene title is used. To hide, see tabBarOptions.showLabel in the previous section.
    */
   tabBarLabel?:
-    | React.ReactNode
+    | string
     | ((props: { focused: boolean; color: string }) => React.ReactNode);
 
   /**
-   * React Element or a function that given { focused: boolean, color: string } returns a React.Node, to display in the tab bar.
+   * A function that given { focused: boolean, color: string } returns a React.Node to display in the tab bar.
    */
-  tabBarIcon?:
-    | React.ReactNode
-    | ((props: { focused: boolean; color: string }) => React.ReactNode);
+  tabBarIcon?: (props: { focused: boolean; color: string }) => React.ReactNode;
 
   /**
    * Accessibility label for the tab button. This is read by the screen reader when the user taps the tab.
@@ -197,7 +195,7 @@ export type MaterialTopTabBarProps = MaterialTopTabBarOptions &
       route: Route<string>;
     }) =>
       | ((scene: { focused: boolean; color: string }) => React.ReactNode)
-      | React.ReactNode;
+      | string;
     getAccessibilityLabel: (props: {
       route: Route<string>;
     }) => string | undefined;
