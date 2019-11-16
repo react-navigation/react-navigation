@@ -243,7 +243,11 @@ export default function useNavigationBuilder<
     // The update should be limited to current navigator only, so we call the router manually
     const updatedState = router.getStateForAction(
       state,
-      navigate(route.params.screen, route.params.params)
+      navigate(route.params.screen, route.params.params),
+      {
+        routeNames,
+        routeParamList,
+      }
     );
 
     nextState =
@@ -309,6 +313,10 @@ export default function useNavigationBuilder<
     setState,
     key,
     listeners: actionListeners,
+    routerConfigOptions: {
+      routeNames,
+      routeParamList,
+    },
   });
 
   const onRouteFocus = useOnRouteFocus({

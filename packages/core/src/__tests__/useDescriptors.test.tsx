@@ -419,12 +419,12 @@ it(`returns false for canGoBack when current router doesn't handle GO_BACK`, () 
     const ChildRouter: Router<NavigationState, MockActions> = {
       ...CurrentMockRouter,
 
-      getStateForAction(state, action) {
+      getStateForAction(state, action, options) {
         if (action.type === 'GO_BACK') {
           return null;
         }
 
-        return CurrentMockRouter.getStateForAction(state, action);
+        return CurrentMockRouter.getStateForAction(state, action, options);
       },
     };
     return ChildRouter;
@@ -470,12 +470,12 @@ it('returns true for canGoBack when current router handles GO_BACK', () => {
     const ChildRouter: Router<NavigationState, MockActions> = {
       ...CurrentMockRouter,
 
-      getStateForAction(state, action) {
+      getStateForAction(state, action, options) {
         if (action.type === 'GO_BACK') {
           return state;
         }
 
-        return CurrentMockRouter.getStateForAction(state, action);
+        return CurrentMockRouter.getStateForAction(state, action, options);
       },
     };
     return ChildRouter;
@@ -537,12 +537,12 @@ it('returns true for canGoBack when parent router handles GO_BACK', () => {
     const ChildRouter: Router<NavigationState, MockActions> = {
       ...CurrentMockRouter,
 
-      getStateForAction(state, action) {
+      getStateForAction(state, action, options) {
         if (action.type === 'GO_BACK') {
           return state;
         }
 
-        return CurrentMockRouter.getStateForAction(state, action);
+        return CurrentMockRouter.getStateForAction(state, action, options);
       },
     };
     return ChildRouter;

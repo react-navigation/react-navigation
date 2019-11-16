@@ -216,6 +216,10 @@ it("doesn't rehydrate state if it's not stale", () => {
 
 it('handles navigate action', () => {
   const router = DrawerRouter({});
+  const options = {
+    routeNames: ['baz', 'bar'],
+    routeParamList: {},
+  };
 
   expect(
     router.getStateForAction(
@@ -229,7 +233,8 @@ it('handles navigate action', () => {
         isDrawerOpen: false,
         routes: [{ key: 'baz', name: 'baz' }, { key: 'bar', name: 'bar' }],
       },
-      CommonActions.navigate('baz', { answer: 42 })
+      CommonActions.navigate('baz', { answer: 42 }),
+      options
     )
   ).toEqual({
     stale: false,
@@ -248,6 +253,10 @@ it('handles navigate action', () => {
 
 it('handles navigate action with open drawer', () => {
   const router = DrawerRouter({});
+  const options = {
+    routeNames: ['baz', 'bar'],
+    routeParamList: {},
+  };
 
   expect(
     router.getStateForAction(
@@ -261,7 +270,8 @@ it('handles navigate action with open drawer', () => {
         isDrawerOpen: true,
         routes: [{ key: 'baz', name: 'baz' }, { key: 'bar', name: 'bar' }],
       },
-      CommonActions.navigate('baz', { answer: 42 })
+      CommonActions.navigate('baz', { answer: 42 }),
+      options
     )
   ).toEqual({
     stale: false,
@@ -280,6 +290,10 @@ it('handles navigate action with open drawer', () => {
 
 it('handles open drawer action', () => {
   const router = DrawerRouter({});
+  const options = {
+    routeNames: ['baz', 'bar'],
+    routeParamList: {},
+  };
 
   expect(
     router.getStateForAction(
@@ -293,7 +307,8 @@ it('handles open drawer action', () => {
         isDrawerOpen: false,
         routes: [{ key: 'baz', name: 'baz' }, { key: 'bar', name: 'bar' }],
       },
-      DrawerActions.openDrawer()
+      DrawerActions.openDrawer(),
+      options
     )
   ).toEqual({
     stale: false,
@@ -317,13 +332,17 @@ it('handles open drawer action', () => {
     routes: [{ key: 'baz', name: 'baz' }, { key: 'bar', name: 'bar' }],
   };
 
-  expect(router.getStateForAction(state, DrawerActions.openDrawer())).toBe(
-    state
-  );
+  expect(
+    router.getStateForAction(state, DrawerActions.openDrawer(), options)
+  ).toBe(state);
 });
 
 it('handles close drawer action', () => {
   const router = DrawerRouter({});
+  const options = {
+    routeNames: ['baz', 'bar'],
+    routeParamList: {},
+  };
 
   expect(
     router.getStateForAction(
@@ -337,7 +356,8 @@ it('handles close drawer action', () => {
         isDrawerOpen: true,
         routes: [{ key: 'baz', name: 'baz' }, { key: 'bar', name: 'bar' }],
       },
-      DrawerActions.closeDrawer()
+      DrawerActions.closeDrawer(),
+      options
     )
   ).toEqual({
     stale: false,
@@ -361,13 +381,17 @@ it('handles close drawer action', () => {
     routes: [{ key: 'baz', name: 'baz' }, { key: 'bar', name: 'bar' }],
   };
 
-  expect(router.getStateForAction(state, DrawerActions.closeDrawer())).toBe(
-    state
-  );
+  expect(
+    router.getStateForAction(state, DrawerActions.closeDrawer(), options)
+  ).toBe(state);
 });
 
 it('handles toggle drawer action', () => {
   const router = DrawerRouter({});
+  const options = {
+    routeNames: ['baz', 'bar'],
+    routeParamList: {},
+  };
 
   expect(
     router.getStateForAction(
@@ -381,7 +405,8 @@ it('handles toggle drawer action', () => {
         isDrawerOpen: true,
         routes: [{ key: 'baz', name: 'baz' }, { key: 'bar', name: 'bar' }],
       },
-      DrawerActions.toggleDrawer()
+      DrawerActions.toggleDrawer(),
+      options
     )
   ).toEqual({
     stale: false,
@@ -406,7 +431,8 @@ it('handles toggle drawer action', () => {
         isDrawerOpen: false,
         routes: [{ key: 'baz', name: 'baz' }, { key: 'bar', name: 'bar' }],
       },
-      DrawerActions.toggleDrawer()
+      DrawerActions.toggleDrawer(),
+      options
     )
   ).toEqual({
     stale: false,

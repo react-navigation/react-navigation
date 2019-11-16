@@ -230,7 +230,7 @@ it('fires blur event when a route is removed with a delay', async () => {
         };
       },
 
-      getStateForAction(state, action) {
+      getStateForAction(state, action, options) {
         switch (action.type) {
           case 'PUSH':
             return {
@@ -248,7 +248,7 @@ it('fires blur event when a route is removed with a delay', async () => {
             };
           }
           default:
-            return router.getStateForAction(state, action);
+            return router.getStateForAction(state, action, options);
         }
       },
 

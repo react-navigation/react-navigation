@@ -73,13 +73,18 @@ export default function useNavigationHelpers<
       isFocused: parentNavigationHelpers
         ? parentNavigationHelpers.isFocused
         : () => true,
-      canGoBack: () =>
-        router.getStateForAction(
-          getState(),
-          CommonActions.goBack() as Action
-        ) !== null ||
-        (parentNavigationHelpers && parentNavigationHelpers.canGoBack()) ||
-        false,
+      canGoBack: () => {
+        const state = getState();
+
+        return (
+          router.getStateForAction(state, CommonActions.goBack() as Action, {
+            routeNames: state.routeNames,
+            routeParamList: {},
+          }) !== null ||
+          (parentNavigationHelpers && parentNavigationHelpers.canGoBack()) ||
+          false
+        );
+      },
     } as NavigationHelpers<ParamListBase, EventMap> &
       (NavigationProp<ParamListBase, string, any, any, any> | undefined);
   }, [
