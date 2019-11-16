@@ -11,8 +11,8 @@ import { Route, CommonActions } from '@react-navigation/core';
 import { TabNavigationState } from '@react-navigation/routers';
 // eslint-disable-next-line import/no-unresolved
 import { ScreenContainer } from 'react-native-screens';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import SafeAreaProviderCompat from './SafeAreaProviderCompat';
 import ResourceSavingScene from './ResourceSavingScene';
 import BottomTabBar from './BottomTabBar';
 import {
@@ -210,7 +210,7 @@ export default class BottomTabView extends React.Component<Props, State> {
     const { loaded } = this.state;
 
     return (
-      <SafeAreaProvider>
+      <SafeAreaProviderCompat>
         <View style={styles.container}>
           <ScreenContainer style={styles.pages}>
             {routes.map((route, index) => {
@@ -246,7 +246,7 @@ export default class BottomTabView extends React.Component<Props, State> {
           </ScreenContainer>
           {this.renderTabBar()}
         </View>
-      </SafeAreaProvider>
+      </SafeAreaProviderCompat>
     );
   }
 }

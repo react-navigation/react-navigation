@@ -6,7 +6,6 @@ import {
   Platform,
   ScaledSize,
 } from 'react-native';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
 // eslint-disable-next-line import/no-unresolved
 import { ScreenContainer } from 'react-native-screens';
 import { PanGestureHandler } from 'react-native-gesture-handler';
@@ -16,6 +15,7 @@ import {
 } from '@react-navigation/routers';
 
 import DrawerGestureContext from '../utils/DrawerGestureContext';
+import SafeAreaProviderCompat from './SafeAreaProviderCompat';
 import ResourceSavingScene from './ResourceSavingScene';
 import DrawerContent from './DrawerContent';
 import Drawer from './Drawer';
@@ -213,7 +213,7 @@ export default class DrawerView extends React.PureComponent<Props, State> {
     const { gestureEnabled } = descriptors[activeKey].options;
 
     return (
-      <SafeAreaProvider>
+      <SafeAreaProviderCompat>
         <DrawerGestureContext.Provider value={this.drawerGestureRef}>
           <Drawer
             open={state.isDrawerOpen}
@@ -235,7 +235,7 @@ export default class DrawerView extends React.PureComponent<Props, State> {
             renderSceneContent={this.renderContent}
           />
         </DrawerGestureContext.Provider>
-      </SafeAreaProvider>
+      </SafeAreaProviderCompat>
     );
   }
 }
