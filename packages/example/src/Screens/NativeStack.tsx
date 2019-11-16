@@ -96,11 +96,11 @@ export default function NativeStackScreen({ navigation }: Props) {
       >;
 
       navigation.setOptions({ gestureEnabled: false });
-      drawer.setOptions({ drawerLockMode: 'locked-closed' });
+      drawer.setOptions({ gestureEnabled: false });
 
       return () => {
         navigation.setOptions({ gestureEnabled: true });
-        drawer.setOptions({ drawerLockMode: 'unlocked' });
+        drawer.setOptions({ gestureEnabled: true });
       };
     }, [navigation])
   );

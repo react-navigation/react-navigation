@@ -89,16 +89,34 @@ export type DrawerNavigationConfig<T = DrawerContentOptions> = {
 };
 
 export type DrawerNavigationOptions = {
+  /**
+   * Title text for the screen.
+   */
   title?: string;
+
+  /**
+   * Title string of a screen displayed in the drawer
+   * or a function that given { focused: boolean, color: string } returns a React.Node
+   * When undefined, scene title is used.
+   */
   drawerLabel?:
     | string
     | ((props: { color: string; focused: boolean }) => React.ReactNode);
+
+  /**
+   * A function that given { focused: boolean, color: string } returns a React.Node to display an icon the drawer.
+   */
   drawerIcon?: (props: {
     color: string;
     size: number;
     focused: boolean;
   }) => React.ReactNode;
-  drawerLockMode?: 'unlocked' | 'locked-closed' | 'locked-open';
+
+  /**
+   * Whether you can use gestures to open or close the drawer.
+   * Defaults to `true`
+   */
+  gestureEnabled?: boolean;
 };
 
 export type DrawerContentComponentProps<T = DrawerContentOptions> = T & {
