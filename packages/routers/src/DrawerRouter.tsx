@@ -115,7 +115,7 @@ export default function DrawerRouter(
       return result;
     },
 
-    getStateForAction(state, action) {
+    getStateForAction(state, action, options) {
       switch (action.type) {
         case 'OPEN_DRAWER':
           if (state.isDrawerOpen) {
@@ -149,7 +149,8 @@ export default function DrawerRouter(
               ...state,
               isDrawerOpen: false,
             },
-            action
+            action,
+            options
           );
 
         case 'GO_BACK':
@@ -160,10 +161,10 @@ export default function DrawerRouter(
             };
           }
 
-          return router.getStateForAction(state, action);
+          return router.getStateForAction(state, action, options);
 
         default:
-          return router.getStateForAction(state, action);
+          return router.getStateForAction(state, action, options);
       }
     },
 

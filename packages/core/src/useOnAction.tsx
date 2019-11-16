@@ -7,6 +7,7 @@ import {
   NavigationState,
   PartialState,
   Router,
+  RouterConfigOptions,
 } from './types';
 
 type Options = {
@@ -15,6 +16,7 @@ type Options = {
   getState: () => NavigationState;
   setState: (state: NavigationState | PartialState<NavigationState>) => void;
   listeners: ChildActionListener[];
+  routerConfigOptions: RouterConfigOptions;
 };
 
 /**
@@ -32,6 +34,7 @@ export default function useOnAction({
   setState,
   key,
   listeners,
+  routerConfigOptions,
 }: Options) {
   const {
     onAction: onActionParent,
@@ -39,6 +42,14 @@ export default function useOnAction({
     addActionListener: addActionListenerParent,
     trackAction,
   } = React.useContext(NavigationBuilderContext);
+
+  const routerConfigOptionsRef = React.useRef<RouterConfigOptions>(
+    routerConfigOptions
+  );
+
+  React.useEffect(() => {
+    routerConfigOptionsRef.current = routerConfigOptions;
+  });
 
   const onAction = React.useCallback(
     (
@@ -59,7 +70,11 @@ export default function useOnAction({
         return false;
       }
 
-      let result = router.getStateForAction(state, action);
+      let result = router.getStateForAction(
+        state,
+        action,
+        routerConfigOptionsRef.current
+      );
 
       // If a target is specified and set to current navigator, the action shouldn't bubble
       // So instead of `null`, we use the state object for such cases to signal that action was handled

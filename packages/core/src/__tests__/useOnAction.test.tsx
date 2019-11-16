@@ -20,7 +20,7 @@ it("lets parent handle the action if child didn't", () => {
     > = {
       ...CurrentMockRouter,
 
-      getStateForAction(state, action) {
+      getStateForAction(state, action, options) {
         if (action.type === 'REVERSE') {
           return {
             ...state,
@@ -28,7 +28,7 @@ it("lets parent handle the action if child didn't", () => {
           };
         }
 
-        return CurrentMockRouter.getStateForAction(state, action);
+        return CurrentMockRouter.getStateForAction(state, action, options);
       },
     };
     return ParentRouter;
@@ -103,14 +103,14 @@ it("lets children handle the action if parent didn't", () => {
         return true;
       },
 
-      getStateForAction(state, action) {
+      getStateForAction(state, action, options) {
         if (action.type === 'REVERSE') {
           return {
             ...state,
             routes: state.routes.slice().reverse(),
           };
         }
-        return CurrentMockRouter.getStateForAction(state, action);
+        return CurrentMockRouter.getStateForAction(state, action, options);
       },
     };
     return ChildRouter;
@@ -229,7 +229,7 @@ it("action doesn't bubble if target is specified", () => {
         return true;
       },
 
-      getStateForAction(state, action) {
+      getStateForAction(state, action, options) {
         if (action.type === 'REVERSE') {
           return {
             ...state,
@@ -237,7 +237,7 @@ it("action doesn't bubble if target is specified", () => {
           };
         }
 
-        return CurrentMockRouter.getStateForAction(state, action);
+        return CurrentMockRouter.getStateForAction(state, action, options);
       },
     };
     return ChildRouter;

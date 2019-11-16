@@ -163,14 +163,14 @@ it('handle dispatching with ref', () => {
         return true;
       },
 
-      getStateForAction(state, action) {
+      getStateForAction(state, action, options) {
         if (action.type === 'REVERSE') {
           return {
             ...state,
             routes: state.routes.slice().reverse(),
           };
         }
-        return CurrentMockRouter.getStateForAction(state, action);
+        return CurrentMockRouter.getStateForAction(state, action, options);
       },
     };
     return ChildRouter;

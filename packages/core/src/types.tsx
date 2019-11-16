@@ -118,6 +118,11 @@ export type RouterFactory<
   RouterOptions extends DefaultRouterOptions
 > = (options: RouterOptions) => Router<State, Action>;
 
+export type RouterConfigOptions = {
+  routeNames: string[];
+  routeParamList: ParamListBase;
+};
+
 export type Router<
   State extends NavigationState,
   Action extends NavigationAction
@@ -134,10 +139,7 @@ export type Router<
    * @param options.routeNames List of valid route names as defined in the screen components.
    * @param options.routeParamsList Object containing params for each route.
    */
-  getInitialState(options: {
-    routeNames: string[];
-    routeParamList: ParamListBase;
-  }): State;
+  getInitialState(options: RouterConfigOptions): State;
 
   /**
    * Rehydrate the full navigation state from a given partial state.
@@ -148,10 +150,7 @@ export type Router<
    */
   getRehydratedState(
     partialState: PartialState<State> | State,
-    options: {
-      routeNames: string[];
-      routeParamList: ParamListBase;
-    }
+    options: RouterConfigOptions
   ): State;
 
   /**
@@ -163,10 +162,7 @@ export type Router<
    */
   getStateForRouteNamesChange(
     state: State,
-    options: {
-      routeNames: string[];
-      routeParamList: ParamListBase;
-    }
+    options: RouterConfigOptions
   ): State;
 
   /**
@@ -183,10 +179,13 @@ export type Router<
    *
    * @param state State object to apply the action on.
    * @param action Action object to apply.
+   * @param options.routeNames List of valid route names as defined in the screen components.
+   * @param options.routeParamsList Object containing params for each route.
    */
   getStateForAction(
     state: State,
-    action: Action
+    action: Action,
+    options: RouterConfigOptions
   ): State | PartialState<State> | null;
 
   /**
