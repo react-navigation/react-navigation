@@ -210,24 +210,14 @@ export default class DrawerView extends React.PureComponent<Props, State> {
     const { drawerWidth } = this.state;
 
     const activeKey = state.routes[state.index].key;
-    const { drawerLockMode } = descriptors[activeKey].options;
-
-    const isOpen =
-      drawerLockMode === 'locked-closed'
-        ? false
-        : drawerLockMode === 'locked-open'
-        ? true
-        : state.isDrawerOpen;
+    const { gestureEnabled } = descriptors[activeKey].options;
 
     return (
       <SafeAreaProvider>
         <DrawerGestureContext.Provider value={this.drawerGestureRef}>
           <Drawer
-            open={isOpen}
-            locked={
-              drawerLockMode === 'locked-open' ||
-              drawerLockMode === 'locked-closed'
-            }
+            open={state.isDrawerOpen}
+            gestureEnabled={gestureEnabled === true}
             onOpen={this.handleDrawerOpen}
             onClose={this.handleDrawerClose}
             onGestureRef={this.setDrawerGestureRef}

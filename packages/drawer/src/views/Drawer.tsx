@@ -78,7 +78,7 @@ type Props = {
   onOpen: () => void;
   onClose: () => void;
   onGestureRef?: (ref: PanGestureHandler | null) => void;
-  locked: boolean;
+  gestureEnabled: boolean;
   drawerPosition: 'left' | 'right';
   drawerType: 'front' | 'back' | 'slide';
   keyboardDismissMode: 'none' | 'on-drag';
@@ -112,14 +112,14 @@ export default class DrawerView extends React.PureComponent<Props> {
       open,
       drawerPosition,
       drawerType,
-      locked,
+      gestureEnabled,
       swipeDistanceThreshold,
       swipeVelocityThreshold,
       hideStatusBar,
     } = this.props;
 
-    if (prevProps.locked !== locked) {
-      this.isLocked.setValue(locked ? TRUE : FALSE);
+    if (prevProps.gestureEnabled !== gestureEnabled) {
+      this.isGestureEnabled.setValue(gestureEnabled ? TRUE : FALSE);
     }
 
     if (
@@ -168,7 +168,9 @@ export default class DrawerView extends React.PureComponent<Props> {
   private isDrawerTypeFront = new Value<Binary>(
     this.props.drawerType === 'front' ? TRUE : FALSE
   );
-  private isLocked = new Value(this.props.locked ? TRUE : FALSE);
+  private isGestureEnabled = new Value(
+    this.props.gestureEnabled ? TRUE : FALSE
+  );
 
   private isOpen = new Value<Binary>(this.props.open ? TRUE : FALSE);
   private nextIsOpen = new Value<Binary | -1>(UNSET);
@@ -446,7 +448,7 @@ export default class DrawerView extends React.PureComponent<Props> {
       nativeEvent: {
         oldState: (s: Animated.Value<number>) =>
           cond(
-            and(eq(s, State.ACTIVE), eq(this.isLocked, FALSE)),
+            and(eq(s, State.ACTIVE), this.isGestureEnabled),
             set(this.manuallyTriggerSpring, TRUE)
           ),
       },
@@ -488,7 +490,7 @@ export default class DrawerView extends React.PureComponent<Props> {
   render() {
     const {
       open,
-      locked,
+      gestureEnabled,
       drawerPosition,
       drawerType,
       swipeEdgeWidth,
@@ -529,7 +531,7 @@ export default class DrawerView extends React.PureComponent<Props> {
         onGestureEvent={this.handleGestureEvent}
         onHandlerStateChange={this.handleGestureStateChange}
         hitSlop={hitSlop}
-        enabled={!locked}
+        enabled={gestureEnabled}
         {...gestureHandlerProps}
       >
         <Animated.View
