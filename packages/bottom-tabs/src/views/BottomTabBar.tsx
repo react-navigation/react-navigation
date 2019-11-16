@@ -155,11 +155,11 @@ export default class TabBarBottom extends React.Component<Props, State> {
       );
     }
 
-    if (typeof label === 'function') {
-      return label({ focused, color });
+    if (typeof label === 'string') {
+      return label;
     }
 
-    return label;
+    return label({ focused, color });
   };
 
   private renderIcon = ({
