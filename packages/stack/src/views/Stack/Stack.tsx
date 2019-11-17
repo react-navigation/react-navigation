@@ -71,9 +71,9 @@ type State = {
 const dimensions = Dimensions.get('window');
 const layout = { width: dimensions.width, height: dimensions.height };
 
-let AnimatedScreen: React.ComponentType<
-  ViewProps & { active: number | Animated.Node<number> }
->;
+let AnimatedScreen: React.ComponentType<ViewProps & {
+  active: number | Animated.Node<number>;
+}>;
 
 const MaybeScreenContainer = ({
   enabled,

@@ -34,7 +34,7 @@ PODS:
   - glog (0.3.5)
   - React (0.59.10):
     - React/Core (= 0.59.10)
-  - react-native-safe-area-context (0.3.6):
+  - react-native-safe-area-context (0.6.0):
     - React
   - React/Core (0.59.10):
     - yoga (= 0.59.10.React)
@@ -93,7 +93,7 @@ PODS:
     - React
   - RNReanimated (1.2.0):
     - React
-  - RNScreens (2.0.0-alpha.8):
+  - RNScreens (2.0.0-alpha.11):
     - React
   - UMBarCodeScannerInterface (4.0.0)
   - UMCameraInterface (4.0.0)
@@ -264,10 +264,10 @@ SPEC CHECKSUMS:
   Folly: de497beb10f102453a1afa9edbf8cf8a251890de
   glog: aefd1eb5dda2ab95ba0938556f34b98e2da3a60d
   React: 36d0768f9e93be2473b37e7fa64f92c1d5341eef
-  react-native-safe-area-context: e380a6f783ccaec848e2f3cc8eb205a62362950d
+  react-native-safe-area-context: d288138da2c800caa111f9352e9333f186a06ead
   RNGestureHandler: 5329a942fce3d41c68b84c2c2276ce06a696d8b0
   RNReanimated: 1b52415c4302f198cb581282a0166690bad62c43
-  RNScreens: bfa9143ca291bcf3804c932f77b9617ff324704f
+  RNScreens: ad3661f864ef18d952e9a4799b6791683e33c1fc
   UMBarCodeScannerInterface: d5a6fdc98ed6241225b0a8432a7f4e2b397668bc
   UMCameraInterface: 68870a3197fee85bd5afca5609ba4a5b7257d19d
   UMConstantsInterface: d25b8e8887ca7aaf568c06caf08f4d40734ee4ef

@@ -6,9 +6,7 @@ import * as TransitionPresets from './TransitionConfigs/TransitionPresets';
 /**
  * Navigators
  */
-export {
-  default as createStackNavigator,
-} from './navigators/createStackNavigator';
+export { default as createStackNavigator } from './navigators/createStackNavigator';
 
 export const Assets = [
   require('./views/assets/back-icon.png'),

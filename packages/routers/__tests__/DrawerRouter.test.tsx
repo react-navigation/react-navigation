@@ -71,7 +71,10 @@ it('gets rehydrated state from partial state', () => {
   expect(
     router.getRehydratedState(
       {
-        routes: [{ key: 'bar-0', name: 'bar' }, { key: 'qux-1', name: 'qux' }],
+        routes: [
+          { key: 'bar-0', name: 'bar' },
+          { key: 'qux-1', name: 'qux' },
+        ],
       },
       options
     )
@@ -231,7 +234,10 @@ it('handles navigate action', () => {
         routeNames: ['baz', 'bar'],
         routeKeyHistory: [],
         isDrawerOpen: false,
-        routes: [{ key: 'baz', name: 'baz' }, { key: 'bar', name: 'bar' }],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar' },
+        ],
       },
       CommonActions.navigate('baz', { answer: 42 }),
       options
@@ -268,7 +274,10 @@ it('handles navigate action with open drawer', () => {
         routeNames: ['baz', 'bar'],
         routeKeyHistory: [],
         isDrawerOpen: true,
-        routes: [{ key: 'baz', name: 'baz' }, { key: 'bar', name: 'bar' }],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar' },
+        ],
       },
       CommonActions.navigate('baz', { answer: 42 }),
       options
@@ -305,7 +314,10 @@ it('handles open drawer action', () => {
         routeNames: ['baz', 'bar'],
         routeKeyHistory: [],
         isDrawerOpen: false,
-        routes: [{ key: 'baz', name: 'baz' }, { key: 'bar', name: 'bar' }],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar' },
+        ],
       },
       DrawerActions.openDrawer(),
       options
@@ -318,7 +330,10 @@ it('handles open drawer action', () => {
     routeNames: ['baz', 'bar'],
     isDrawerOpen: true,
     routeKeyHistory: [],
-    routes: [{ key: 'baz', name: 'baz' }, { key: 'bar', name: 'bar' }],
+    routes: [
+      { key: 'baz', name: 'baz' },
+      { key: 'bar', name: 'bar' },
+    ],
   });
 
   const state = {
@@ -329,7 +344,10 @@ it('handles open drawer action', () => {
     routeNames: ['baz', 'bar'],
     isDrawerOpen: true,
     routeKeyHistory: [],
-    routes: [{ key: 'baz', name: 'baz' }, { key: 'bar', name: 'bar' }],
+    routes: [
+      { key: 'baz', name: 'baz' },
+      { key: 'bar', name: 'bar' },
+    ],
   };
 
   expect(
@@ -354,7 +372,10 @@ it('handles close drawer action', () => {
         routeNames: ['baz', 'bar'],
         routeKeyHistory: [],
         isDrawerOpen: true,
-        routes: [{ key: 'baz', name: 'baz' }, { key: 'bar', name: 'bar' }],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar' },
+        ],
       },
       DrawerActions.closeDrawer(),
       options
@@ -367,7 +388,10 @@ it('handles close drawer action', () => {
     routeNames: ['baz', 'bar'],
     isDrawerOpen: false,
     routeKeyHistory: [],
-    routes: [{ key: 'baz', name: 'baz' }, { key: 'bar', name: 'bar' }],
+    routes: [
+      { key: 'baz', name: 'baz' },
+      { key: 'bar', name: 'bar' },
+    ],
   });
 
   const state = {
@@ -378,7 +402,10 @@ it('handles close drawer action', () => {
     routeNames: ['baz', 'bar'],
     isDrawerOpen: false,
     routeKeyHistory: [],
-    routes: [{ key: 'baz', name: 'baz' }, { key: 'bar', name: 'bar' }],
+    routes: [
+      { key: 'baz', name: 'baz' },
+      { key: 'bar', name: 'bar' },
+    ],
   };
 
   expect(
@@ -403,7 +430,10 @@ it('handles toggle drawer action', () => {
         routeNames: ['baz', 'bar'],
         routeKeyHistory: [],
         isDrawerOpen: true,
-        routes: [{ key: 'baz', name: 'baz' }, { key: 'bar', name: 'bar' }],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar' },
+        ],
       },
       DrawerActions.toggleDrawer(),
       options
@@ -416,7 +446,10 @@ it('handles toggle drawer action', () => {
     routeNames: ['baz', 'bar'],
     isDrawerOpen: false,
     routeKeyHistory: [],
-    routes: [{ key: 'baz', name: 'baz' }, { key: 'bar', name: 'bar' }],
+    routes: [
+      { key: 'baz', name: 'baz' },
+      { key: 'bar', name: 'bar' },
+    ],
   });
 
   expect(
@@ -429,7 +462,10 @@ it('handles toggle drawer action', () => {
         routeNames: ['baz', 'bar'],
         routeKeyHistory: [],
         isDrawerOpen: false,
-        routes: [{ key: 'baz', name: 'baz' }, { key: 'bar', name: 'bar' }],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar' },
+        ],
       },
       DrawerActions.toggleDrawer(),
       options
@@ -442,7 +478,10 @@ it('handles toggle drawer action', () => {
     routeNames: ['baz', 'bar'],
     isDrawerOpen: true,
     routeKeyHistory: [],
-    routes: [{ key: 'baz', name: 'baz' }, { key: 'bar', name: 'bar' }],
+    routes: [
+      { key: 'baz', name: 'baz' },
+      { key: 'bar', name: 'bar' },
+    ],
   });
 });
 

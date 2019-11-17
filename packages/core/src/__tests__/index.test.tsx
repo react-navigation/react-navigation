@@ -103,7 +103,10 @@ it('rehydrates state for a navigator on navigation', () => {
 
   const initialState = {
     index: 1,
-    routes: [{ key: 'foo', name: 'foo' }, { key: 'bar', name: 'bar' }],
+    routes: [
+      { key: 'foo', name: 'foo' },
+      { key: 'bar', name: 'bar' },
+    ],
   };
 
   const onStateChange = jest.fn();
@@ -126,7 +129,10 @@ it('rehydrates state for a navigator on navigation', () => {
     index: 1,
     key: '0',
     routeNames: ['foo', 'bar'],
-    routes: [{ key: 'foo', name: 'foo' }, { key: 'bar', name: 'bar' }],
+    routes: [
+      { key: 'foo', name: 'foo' },
+      { key: 'bar', name: 'bar' },
+    ],
     stale: false,
     type: 'test',
   });
@@ -151,7 +157,10 @@ it("doesn't rehydrate state if the type of state didn't match router", () => {
   const initialState = {
     index: 1,
     type: 'something-else',
-    routes: [{ key: 'foo', name: 'foo' }, { key: 'bar', name: 'bar' }],
+    routes: [
+      { key: 'foo', name: 'foo' },
+      { key: 'bar', name: 'bar' },
+    ],
   };
 
   const onStateChange = jest.fn();
@@ -398,7 +407,10 @@ it('cleans up state when the navigator unmounts', () => {
     index: 0,
     key: '0',
     routeNames: ['foo', 'bar'],
-    routes: [{ key: 'foo', name: 'foo' }, { key: 'bar', name: 'bar' }],
+    routes: [
+      { key: 'foo', name: 'foo' },
+      { key: 'bar', name: 'bar' },
+    ],
   });
 
   root.update(
@@ -451,7 +463,10 @@ it('allows state updates by dispatching a function returning an action', () => {
     index: 1,
     key: '0',
     routeNames: ['foo', 'bar'],
-    routes: [{ key: 'foo', name: 'foo' }, { key: 'bar', name: 'bar' }],
+    routes: [
+      { key: 'foo', name: 'foo' },
+      { key: 'bar', name: 'bar' },
+    ],
   });
 });
 

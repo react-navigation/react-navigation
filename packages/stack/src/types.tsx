@@ -48,7 +48,7 @@ export type StackNavigationProp<
    * @param [params] Params object for the route.
    */
   push<RouteName extends keyof ParamList>(
-    ...args: ParamList[RouteName] extends (undefined | any)
+    ...args: ParamList[RouteName] extends undefined | any
       ? [RouteName] | [RouteName, ParamList[RouteName]]
       : [RouteName, ParamList[RouteName]]
   ): void;

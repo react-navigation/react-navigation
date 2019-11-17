@@ -1,9 +1,7 @@
 /**
  * Navigators
  */
-export {
-  default as createBottomTabNavigator,
-} from './navigators/createBottomTabNavigator';
+export { default as createBottomTabNavigator } from './navigators/createBottomTabNavigator';
 
 /**
  * Views

@@ -69,7 +69,10 @@ it('gets rehydrated state from partial state', () => {
   expect(
     router.getRehydratedState(
       {
-        routes: [{ key: 'bar-0', name: 'bar' }, { key: 'qux-1', name: 'qux' }],
+        routes: [
+          { key: 'bar-0', name: 'bar' },
+          { key: 'qux-1', name: 'qux' },
+        ],
       },
       options
     )
@@ -263,7 +266,10 @@ it('handles navigate action', () => {
         index: 1,
         routeNames: ['baz', 'bar'],
         routeKeyHistory: [],
-        routes: [{ key: 'baz-1', name: 'baz' }, { key: 'bar-1', name: 'bar' }],
+        routes: [
+          { key: 'baz-1', name: 'baz' },
+          { key: 'bar-1', name: 'bar' },
+        ],
       },
       CommonActions.navigate({ key: 'bar-1', params: { answer: 42 } }),
       options
@@ -290,7 +296,10 @@ it('handles navigate action', () => {
         index: 1,
         routeNames: ['baz', 'bar'],
         routeKeyHistory: [],
-        routes: [{ key: 'baz', name: 'baz' }, { key: 'bar', name: 'bar' }],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar' },
+        ],
       },
       CommonActions.navigate('baz', { answer: 42 }),
       options
@@ -317,7 +326,10 @@ it('handles navigate action', () => {
         index: 1,
         routeNames: ['baz', 'bar'],
         routeKeyHistory: [],
-        routes: [{ key: 'baz', name: 'baz' }, { key: 'bar', name: 'bar' }],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar' },
+        ],
       },
       CommonActions.navigate('non-existent'),
       options
@@ -341,7 +353,10 @@ it('handles jump to action', () => {
         index: 0,
         routeNames: ['baz', 'bar'],
         routeKeyHistory: [],
-        routes: [{ key: 'baz', name: 'baz' }, { key: 'bar', name: 'bar' }],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar' },
+        ],
       },
       TabActions.jumpTo('bar'),
       options
@@ -353,7 +368,10 @@ it('handles jump to action', () => {
     index: 1,
     routeNames: ['baz', 'bar'],
     routeKeyHistory: ['baz'],
-    routes: [{ key: 'baz', name: 'baz' }, { key: 'bar', name: 'bar' }],
+    routes: [
+      { key: 'baz', name: 'baz' },
+      { key: 'bar', name: 'bar' },
+    ],
   });
 });
 
@@ -373,7 +391,10 @@ it('handles back action with backBehavior: history', () => {
         index: 0,
         routeNames: ['baz', 'bar'],
         routeKeyHistory: ['bar'],
-        routes: [{ key: 'baz', name: 'baz' }, { key: 'bar', name: 'bar' }],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar' },
+        ],
       },
       CommonActions.goBack(),
       options
@@ -385,7 +406,10 @@ it('handles back action with backBehavior: history', () => {
     index: 1,
     routeNames: ['baz', 'bar'],
     routeKeyHistory: [],
-    routes: [{ key: 'baz', name: 'baz' }, { key: 'bar', name: 'bar' }],
+    routes: [
+      { key: 'baz', name: 'baz' },
+      { key: 'bar', name: 'bar' },
+    ],
   });
 
   expect(
@@ -397,7 +421,10 @@ it('handles back action with backBehavior: history', () => {
         index: 0,
         routeNames: ['baz', 'bar'],
         routeKeyHistory: [],
-        routes: [{ key: 'baz', name: 'baz' }, { key: 'bar', name: 'bar' }],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar' },
+        ],
       },
       CommonActions.goBack(),
       options
@@ -421,7 +448,10 @@ it('handles back action with backBehavior: order', () => {
         index: 1,
         routeNames: ['baz', 'bar'],
         routeKeyHistory: [],
-        routes: [{ key: 'baz', name: 'baz' }, { key: 'bar', name: 'bar' }],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar' },
+        ],
       },
       CommonActions.goBack(),
       options
@@ -433,7 +463,10 @@ it('handles back action with backBehavior: order', () => {
     index: 0,
     routeNames: ['baz', 'bar'],
     routeKeyHistory: [],
-    routes: [{ key: 'baz', name: 'baz' }, { key: 'bar', name: 'bar' }],
+    routes: [
+      { key: 'baz', name: 'baz' },
+      { key: 'bar', name: 'bar' },
+    ],
   });
 
   expect(
@@ -445,7 +478,10 @@ it('handles back action with backBehavior: order', () => {
         index: 0,
         routeNames: ['baz', 'bar'],
         routeKeyHistory: [],
-        routes: [{ key: 'baz', name: 'baz' }, { key: 'bar', name: 'bar' }],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar' },
+        ],
       },
       CommonActions.goBack(),
       options
@@ -473,7 +509,10 @@ it('handles back action with backBehavior: initialRoute', () => {
         index: 0,
         routeNames: ['baz', 'bar'],
         routeKeyHistory: [],
-        routes: [{ key: 'baz', name: 'baz' }, { key: 'bar', name: 'bar' }],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar' },
+        ],
       },
       CommonActions.goBack(),
       options
@@ -485,7 +524,10 @@ it('handles back action with backBehavior: initialRoute', () => {
     index: 1,
     routeNames: ['baz', 'bar'],
     routeKeyHistory: [],
-    routes: [{ key: 'baz', name: 'baz' }, { key: 'bar', name: 'bar' }],
+    routes: [
+      { key: 'baz', name: 'baz' },
+      { key: 'bar', name: 'bar' },
+    ],
   });
 
   expect(
@@ -497,7 +539,10 @@ it('handles back action with backBehavior: initialRoute', () => {
         index: 1,
         routeNames: ['baz', 'bar'],
         routeKeyHistory: [],
-        routes: [{ key: 'baz', name: 'baz' }, { key: 'bar', name: 'bar' }],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar' },
+        ],
       },
       CommonActions.goBack(),
       options
@@ -521,7 +566,10 @@ it('handles back action with backBehavior: none', () => {
         index: 0,
         routeNames: ['bar', 'baz'],
         routeKeyHistory: [],
-        routes: [{ key: 'baz', name: 'baz' }, { key: 'bar', name: 'bar' }],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar' },
+        ],
       },
       CommonActions.goBack(),
       options

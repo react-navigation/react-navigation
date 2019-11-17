@@ -51,7 +51,7 @@ export type BottomTabNavigationProp<
    * @param [params] Params object for the route.
    */
   jumpTo<RouteName extends Extract<keyof ParamList, string>>(
-    ...args: ParamList[RouteName] extends (undefined | any)
+    ...args: ParamList[RouteName] extends undefined | any
       ? [RouteName] | [RouteName, ParamList[RouteName]]
       : [RouteName, ParamList[RouteName]]
   ): void;

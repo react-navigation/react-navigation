@@ -59,7 +59,10 @@ it('gets rehydrated state from partial state', () => {
   expect(
     router.getRehydratedState(
       {
-        routes: [{ key: 'bar-0', name: 'bar' }, { key: 'qux-1', name: 'qux' }],
+        routes: [
+          { key: 'bar-0', name: 'bar' },
+          { key: 'qux-1', name: 'qux' },
+        ],
       },
       options
     )
@@ -253,7 +256,10 @@ it('handles navigate action', () => {
         key: 'root',
         index: 1,
         routeNames: ['baz', 'bar', 'qux'],
-        routes: [{ key: 'baz', name: 'baz' }, { key: 'bar', name: 'bar' }],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar' },
+        ],
       },
       CommonActions.navigate('qux', { answer: 42 }),
       options
@@ -283,7 +289,10 @@ it('handles navigate action', () => {
         key: 'root',
         index: 1,
         routeNames: ['baz', 'bar', 'qux'],
-        routes: [{ key: 'baz', name: 'baz' }, { key: 'bar', name: 'bar' }],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar' },
+        ],
       },
       CommonActions.navigate('baz', { answer: 42 }),
       options
@@ -333,7 +342,10 @@ it('handles navigate action', () => {
         key: 'root',
         index: 1,
         routeNames: ['baz', 'bar', 'qux'],
-        routes: [{ key: 'baz', name: 'baz' }, { key: 'bar', name: 'bar' }],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar' },
+        ],
       },
       CommonActions.navigate('unknown'),
       options
@@ -348,7 +360,10 @@ it('handles navigate action', () => {
         key: 'root',
         index: 1,
         routeNames: ['baz', 'bar', 'qux'],
-        routes: [{ key: 'baz-0', name: 'baz' }, { key: 'bar-0', name: 'bar' }],
+        routes: [
+          { key: 'baz-0', name: 'baz' },
+          { key: 'bar-0', name: 'bar' },
+        ],
       },
       CommonActions.navigate({ key: 'unknown' }),
       options
@@ -363,7 +378,10 @@ it('handles navigate action', () => {
         key: 'root',
         index: 1,
         routeNames: ['baz', 'bar', 'qux'],
-        routes: [{ key: 'baz-0', name: 'baz' }, { key: 'bar', name: 'bar' }],
+        routes: [
+          { key: 'baz-0', name: 'baz' },
+          { key: 'bar', name: 'bar' },
+        ],
       },
       {
         type: 'NAVIGATE',
@@ -388,7 +406,10 @@ it('handles navigate action', () => {
         key: 'root',
         index: 1,
         routeNames: ['baz', 'bar', 'qux'],
-        routes: [{ key: 'baz-0', name: 'baz' }, { key: 'bar', name: 'bar' }],
+        routes: [
+          { key: 'baz-0', name: 'baz' },
+          { key: 'bar', name: 'bar' },
+        ],
       },
       CommonActions.navigate({ key: 'baz-1', name: 'baz' }),
       options
@@ -422,7 +443,10 @@ it('handles go back action', () => {
         key: 'root',
         index: 1,
         routeNames: ['baz', 'bar', 'qux'],
-        routes: [{ key: 'baz', name: 'baz' }, { key: 'bar', name: 'bar' }],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar' },
+        ],
       },
       CommonActions.goBack(),
       options
@@ -482,7 +506,10 @@ it('handles pop action', () => {
     key: 'root',
     index: 1,
     routeNames: ['baz', 'bar', 'qux'],
-    routes: [{ key: 'baz', name: 'baz' }, { key: 'bar', name: 'bar' }],
+    routes: [
+      { key: 'baz', name: 'baz' },
+      { key: 'bar', name: 'bar' },
+    ],
   });
 
   expect(
@@ -689,7 +716,10 @@ it('changes index on focus change', () => {
     index: 1,
     key: 'stack-test',
     routeNames: ['bar', 'baz', 'qux'],
-    routes: [{ key: 'bar-0', name: 'bar' }, { key: 'baz-0', name: 'baz' }],
+    routes: [
+      { key: 'bar-0', name: 'bar' },
+      { key: 'baz-0', name: 'baz' },
+    ],
     stale: false,
     type: 'stack',
   });
@@ -698,7 +728,10 @@ it('changes index on focus change', () => {
     index: 0,
     key: 'stack-test',
     routeNames: ['bar', 'baz', 'qux'],
-    routes: [{ key: 'bar-0', name: 'bar' }, { key: 'baz-0', name: 'baz' }],
+    routes: [
+      { key: 'bar-0', name: 'bar' },
+      { key: 'baz-0', name: 'baz' },
+    ],
     stale: false as const,
     type: 'stack' as const,
   };
