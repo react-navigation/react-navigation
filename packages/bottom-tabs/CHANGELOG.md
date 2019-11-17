@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.22](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/bottom-tabs@5.0.0-alpha.21...@react-navigation/bottom-tabs@5.0.0-alpha.22) (2019-11-17)
+
+
+### Bug Fixes
+
+* workaround SafereaProvider causing jumping ([c17ad18](https://github.com/react-navigation/navigation-ex/commit/c17ad18b20cb05c577e1235a58ccc1c856fee086)), closes [#174](https://github.com/react-navigation/navigation-ex/issues/174)
+
+
+
+
+
 # [5.0.0-alpha.21](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/bottom-tabs@5.0.0-alpha.20...@react-navigation/bottom-tabs@5.0.0-alpha.21) (2019-11-10)
 
 

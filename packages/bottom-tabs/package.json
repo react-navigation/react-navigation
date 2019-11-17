@@ -10,7 +10,7 @@
     "android",
     "tab"
   ],
-  "version": "5.0.0-alpha.21",
+  "version": "5.0.0-alpha.22",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -33,7 +33,7 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "@react-navigation/routers": "^5.0.0-alpha.14"
+    "@react-navigation/routers": "^5.0.0-alpha.15"
   },
   "devDependencies": {
     "@react-native-community/bob": "^0.7.0",

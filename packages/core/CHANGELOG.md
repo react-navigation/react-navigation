@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.23](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/core@5.0.0-alpha.22...@react-navigation/core@5.0.0-alpha.23) (2019-11-17)
+
+
+### Bug Fixes
+
+* merge initial params on push ([11efb06](https://github.com/react-navigation/navigation-ex/commit/11efb066429a3fc8b7e8e48d897286208d9a5449))
+
+
+
+
+
 # [5.0.0-alpha.22](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/core@5.0.0-alpha.21...@react-navigation/core@5.0.0-alpha.22) (2019-11-10)
 
 
