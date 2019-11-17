@@ -64,6 +64,7 @@ type Props = {
 export default function DrawerItem({
   icon,
   label,
+  labelStyle,
   focused = false,
   activeTintColor = '#6200ee',
   inactiveTintColor = 'rgba(0, 0, 0, .68)',
@@ -108,10 +109,13 @@ export default function DrawerItem({
             {typeof label === 'string' ? (
               <Text
                 numberOfLines={1}
-                style={{
-                  color,
-                  fontWeight: '500',
-                }}
+                style={[
+                  {
+                    color,
+                    fontWeight: '500',
+                  },
+                  labelStyle,
+                ]}
               >
                 {label}
               </Text>
