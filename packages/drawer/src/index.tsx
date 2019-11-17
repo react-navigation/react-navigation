@@ -1,9 +1,7 @@
 /**
  * Navigators
  */
-export {
-  default as createDrawerNavigator,
-} from './navigators/createDrawerNavigator';
+export { default as createDrawerNavigator } from './navigators/createDrawerNavigator';
 
 /**
  * Views

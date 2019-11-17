@@ -61,11 +61,9 @@ const getRouteConfigsFromChildren = <ScreenOptions extends object>(
       if (child.type === Screen) {
         // We can only extract the config from `Screen` elements
         // If something else was rendered, it's probably a bug
-        acc.push(child.props as RouteConfig<
-          ParamListBase,
-          string,
-          ScreenOptions
-        >);
+        acc.push(
+          child.props as RouteConfig<ParamListBase, string, ScreenOptions>
+        );
         return acc;
       }
 
@@ -105,9 +103,9 @@ export default function useNavigationBuilder<
 ) {
   useRegisterNavigator();
 
-  const route = React.useContext(NavigationRouteContext) as (
+  const route = React.useContext(NavigationRouteContext) as
     | NavigatorRoute
-    | undefined);
+    | undefined;
 
   const previousRouteRef = React.useRef(route);
 

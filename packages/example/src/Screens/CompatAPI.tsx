@@ -17,9 +17,10 @@ type CompatStackParams = {
   Album: undefined;
 };
 
-const ArticleScreen: CompatScreenType<
-  StackNavigationProp<CompatStackParams, 'Article'>
-> = ({ navigation }) => {
+const ArticleScreen: CompatScreenType<StackNavigationProp<
+  CompatStackParams,
+  'Article'
+>> = ({ navigation }) => {
   return (
     <React.Fragment>
       <View style={styles.buttons}>
@@ -47,9 +48,9 @@ ArticleScreen.navigationOptions = ({ navigation }) => ({
   title: `Article by ${navigation.getParam('author')}`,
 });
 
-const AlbumsScreen: CompatScreenType<
-  StackNavigationProp<CompatStackParams>
-> = ({ navigation }) => {
+const AlbumsScreen: CompatScreenType<StackNavigationProp<
+  CompatStackParams
+>> = ({ navigation }) => {
   return (
     <React.Fragment>
       <View style={styles.buttons}>

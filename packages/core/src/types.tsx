@@ -297,7 +297,7 @@ type NavigationHelpersCommon<
    * @param [params] Params object for the route.
    */
   navigate<RouteName extends keyof ParamList>(
-    ...args: ParamList[RouteName] extends (undefined | any)
+    ...args: ParamList[RouteName] extends undefined | any
       ? [RouteName] | [RouteName, ParamList[RouteName]]
       : [RouteName, ParamList[RouteName]]
   ): void;
@@ -552,10 +552,11 @@ export type RouteConfig<
         route: RouteProp<ParamList, RouteName>;
         navigation: any;
       }) => React.ReactNode;
-    });
+    }
+);
 
 export type NavigationContainerRef =
-  | NavigationHelpers<ParamListBase> & {
+  | (NavigationHelpers<ParamListBase> & {
       /**
        * Reset the navigation state of the root navigator to the provided state.
        *
@@ -563,7 +564,7 @@ export type NavigationContainerRef =
        */
       resetRoot(state?: PartialState<NavigationState> | NavigationState): void;
       getRootState(): NavigationState;
-    }
+    })
   | undefined
   | null;
 

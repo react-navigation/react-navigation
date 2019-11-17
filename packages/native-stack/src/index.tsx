@@ -1,9 +1,7 @@
 /**
  * Navigators
  */
-export {
-  default as createNativeStackNavigator,
-} from './navigators/createNativeStackNavigator';
+export { default as createNativeStackNavigator } from './navigators/createNativeStackNavigator';
 
 /**
  * Types
