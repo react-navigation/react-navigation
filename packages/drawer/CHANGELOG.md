@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.23](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/drawer@5.0.0-alpha.22...@react-navigation/drawer@5.0.0-alpha.23) (2019-11-17)
+
+
+### Bug Fixes
+
+* pass labelStyle prop in DrawerItem label ([#170](https://github.com/react-navigation/navigation-ex/issues/170)) ([cd7c9c4](https://github.com/react-navigation/navigation-ex/commit/cd7c9c4398ce12a1e965786d91fdbe6e3c42ee0a))
+* workaround SafereaProvider causing jumping ([c17ad18](https://github.com/react-navigation/navigation-ex/commit/c17ad18b20cb05c577e1235a58ccc1c856fee086)), closes [#174](https://github.com/react-navigation/navigation-ex/issues/174)
+
+
+
+
+
 # [5.0.0-alpha.22](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/drawer@5.0.0-alpha.21...@react-navigation/drawer@5.0.0-alpha.22) (2019-11-10)
 
 **Note:** Version bump only for package @react-navigation/drawer

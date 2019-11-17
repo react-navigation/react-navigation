@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.37](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.36...@react-navigation/stack@5.0.0-alpha.37) (2019-11-17)
+
+
+### Bug Fixes
+
+* workaround SafereaProvider causing jumping ([c17ad18](https://github.com/react-navigation/navigation-ex/commit/c17ad18b20cb05c577e1235a58ccc1c856fee086)), closes [#174](https://github.com/react-navigation/navigation-ex/issues/174)
+
+
+
+
+
 # [5.0.0-alpha.36](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.35...@react-navigation/stack@5.0.0-alpha.36) (2019-11-10)
 
 **Note:** Version bump only for package @react-navigation/stack
