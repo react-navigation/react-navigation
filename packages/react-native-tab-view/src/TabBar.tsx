@@ -271,12 +271,19 @@ export default class TabBar<T extends Route> extends React.Component<
       return;
     }
 
-    this.setState({
-      layout: {
-        height,
-        width,
-      },
-    });
+    // If we don't delay this state update, the UI gets stuck in weird state
+    // Maybe an issue in Reanimated?
+    // https://github.com/react-native-community/react-native-tab-view/issues/877
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() =>
+        this.setState({
+          layout: {
+            height,
+            width,
+          },
+        })
+      )
+    );
   };
 
   private getTranslateX = memoize(
