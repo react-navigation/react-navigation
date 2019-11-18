@@ -117,6 +117,28 @@ describe('SwitchRouter', () => {
     expect(getState().routeKeyHistory).toEqual(['B']);
   });
 
+  it('handles history backBehavior without popping routeKeyHistory when child handles action', () => {
+    const { navigateTo, back, getState, getSubState } = getRouterTestHelper(
+      getExampleRouter({ backBehavior: 'history' })
+    );
+    expect(getState().routeKeyHistory).toEqual(['A']);
+
+    navigateTo('B');
+    expect(getState().index).toEqual(1);
+    expect(getState().routeKeyHistory).toEqual(['A', 'B']);
+
+    navigateTo('B2');
+    expect(getState().index).toEqual(1);
+    expect(getState().routeKeyHistory).toEqual(['A', 'B']);
+    expect(getSubState(2).routeName).toEqual('B2');
+
+    back();
+    expect(getState().index).toEqual(1);
+    // 'B' should not be popped when the child handles the back action
+    expect(getState().routeKeyHistory).toEqual(['A', 'B']);
+    expect(getSubState(2).routeName).toEqual('B1');
+  });
+
   it('handles nested actions', () => {
     const { navigateTo, getSubState } = getRouterTestHelper(getExampleRouter());
 

@@ -81,8 +81,8 @@ export default (routeConfigs, config = {}) => {
   }
 
   function getNextState(action, prevState, possibleNextState) {
-    function updateNextStateHistory(nextState) {
-      if (backBehavior !== 'history') {
+    function updateNextStateHistory(prevState, nextState) {
+      if (backBehavior !== 'history' || nextState.index === prevState.index) {
         return nextState;
       }
       let nextRouteKeyHistory = prevState ? prevState.routeKeyHistory : [];
@@ -115,7 +115,7 @@ export default (routeConfigs, config = {}) => {
         routes: nextRoutes,
       };
     }
-    return updateNextStateHistory(nextState);
+    return updateNextStateHistory(prevState, nextState);
   }
 
   function getInitialState() {
