@@ -15,7 +15,7 @@ import {
 
 type Binary = 0 | 1;
 
-type Props<T extends Route> = PagerCommonProps & {
+export type Props<T extends Route> = PagerCommonProps & {
   onIndexChange: (index: number) => void;
   navigationState: NavigationState<T>;
   layout: Layout;

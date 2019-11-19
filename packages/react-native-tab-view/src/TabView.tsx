@@ -9,7 +9,6 @@ import {
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
 import TabBar, { Props as TabBarProps } from './TabBar';
-import Pager from './Pager';
 import SceneView from './SceneView';
 import {
   Layout,
@@ -18,6 +17,7 @@ import {
   SceneRendererProps,
   PagerCommonProps,
 } from './types';
+import Pager, { Props as ChildProps } from './Pager';
 
 type Props<T extends Route> = PagerCommonProps & {
   position?: Animated.Value<number>;
@@ -42,6 +42,7 @@ type Props<T extends Route> = PagerCommonProps & {
   sceneContainerStyle?: StyleProp<ViewStyle>;
   style?: StyleProp<ViewStyle>;
   gestureHandlerProps: React.ComponentProps<typeof PanGestureHandler>;
+  renderPager: (props: ChildProps<T>) => React.ReactNode;
 };
 
 type State = {
@@ -66,6 +67,7 @@ export default class TabView<T extends Route> extends React.Component<
     springConfig: {},
     timingConfig: {},
     gestureHandlerProps: {},
+    renderPager: (props: ChildProps<any>) => <Pager {...props} />,
   };
 
   state = {
@@ -118,27 +120,33 @@ export default class TabView<T extends Route> extends React.Component<
       style,
       gestureHandlerProps,
       springVelocityScale,
+      renderPager,
     } = this.props;
     const { layout } = this.state;
 
     return (
       <View onLayout={this.handleLayout} style={[styles.pager, style]}>
-        <Pager
-          navigationState={navigationState}
-          layout={layout}
-          keyboardDismissMode={keyboardDismissMode}
-          swipeEnabled={swipeEnabled}
-          swipeVelocityImpact={swipeVelocityImpact}
-          timingConfig={timingConfig}
-          springConfig={springConfig}
-          onSwipeStart={onSwipeStart}
-          onSwipeEnd={onSwipeEnd}
-          onIndexChange={this.jumpToIndex}
-          springVelocityScale={springVelocityScale}
-          removeClippedSubviews={removeClippedSubviews}
-          gestureHandlerProps={gestureHandlerProps}
-        >
-          {({ position, render, addListener, removeListener, jumpTo }) => {
+        {renderPager({
+          navigationState,
+          layout,
+          keyboardDismissMode,
+          swipeEnabled,
+          swipeVelocityImpact,
+          timingConfig,
+          springConfig,
+          onSwipeStart,
+          onSwipeEnd,
+          onIndexChange: this.jumpToIndex,
+          springVelocityScale,
+          removeClippedSubviews,
+          gestureHandlerProps,
+          children: ({
+            position,
+            render,
+            addListener,
+            removeListener,
+            jumpTo,
+          }) => {
             // All of the props here must not change between re-renders
             // This is crucial to optimizing the routes with PureComponent
             const sceneRendererProps = {
@@ -192,8 +200,8 @@ export default class TabView<T extends Route> extends React.Component<
                   })}
               </React.Fragment>
             );
-          }}
-        </Pager>
+          },
+        })}
       </View>
     );
   }

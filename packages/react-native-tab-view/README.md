@@ -281,6 +281,11 @@ If this is not specified, the default tab bar is rendered. You pass this props t
 renderTabBar = () => null;
 ```
 
+##### `renderPager`
+
+Callback which returns a custom React Element to use as pager:
+
+
 ##### `tabBarPosition`
 
 Position of the tab bar in the tab view. Possible values are `'top'` and `'bottom'`. Defaults to `'top'`.
