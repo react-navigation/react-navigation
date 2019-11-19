@@ -371,7 +371,7 @@ export type NavigationHelpers<
      * @param params Params object for the current route.
      */
     setParams<RouteName extends keyof ParamList>(
-      params: ParamList[RouteName]
+      params: Partial<ParamList[RouteName]>
     ): void;
   };
 
@@ -409,7 +409,7 @@ export type NavigationProp<
    *
    * @param params Params object for the current route.
    */
-  setParams(params: ParamList[RouteName]): void;
+  setParams(params: Partial<ParamList[RouteName]>): void;
 
   /**
    * Update the options for the route.
