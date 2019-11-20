@@ -55,7 +55,7 @@
     "path-to-regexp": "^1.7.0",
     "prop-types": "^15.5.10",
     "react-native-drawer-layout-polyfill": "^1.3.2",
-    "react-native-tab-view": "^2.2.1"
+    "react-native-tab-view": "https://github.com/Asbar/react-native-tab-view.git#feature\/viewPageAndroid"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
