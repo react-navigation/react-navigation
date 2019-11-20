@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.23](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/example@5.0.0-alpha.22...@react-navigation/example@5.0.0-alpha.23) (2019-11-20)
+
+**Note:** Version bump only for package @react-navigation/example
+
+
+
+
+
 # [5.0.0-alpha.22](https://github.com/satya164/navigation-ex/compare/@react-navigation/example@5.0.0-alpha.21...@react-navigation/example@5.0.0-alpha.22) (2019-11-17)
 
 **Note:** Version bump only for package @react-navigation/example

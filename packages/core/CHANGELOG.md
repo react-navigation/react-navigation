@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.24](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/core@5.0.0-alpha.23...@react-navigation/core@5.0.0-alpha.24) (2019-11-20)
+
+
+### Bug Fixes
+
+* allow passing partial params to `setParams` ([#177](https://github.com/react-navigation/navigation-ex/issues/177)) ([c3e9e45](https://github.com/react-navigation/navigation-ex/commit/c3e9e4578e98aa5b0635949a288e19eaeec12c85))
+
+
+
+
+
 # [5.0.0-alpha.23](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/core@5.0.0-alpha.22...@react-navigation/core@5.0.0-alpha.23) (2019-11-17)
 
 
