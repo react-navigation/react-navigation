@@ -95,6 +95,9 @@
     case RNSScreenStackAnimationFade:
       _controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
       break;
+    case RNSScreenStackAnimationFlip:
+      _controller.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+      break;
     case RNSScreenStackAnimationNone:
     case RNSScreenStackAnimationDefault:
       // Default
@@ -275,8 +278,10 @@ RCT_ENUM_CONVERTER(RNSScreenStackPresentation, (@{
 RCT_ENUM_CONVERTER(RNSScreenStackAnimation, (@{
                                                   @"default": @(RNSScreenStackAnimationDefault),
                                                   @"none": @(RNSScreenStackAnimationNone),
-                                                  @"fade": @(RNSScreenStackAnimationFade)
+                                                  @"fade": @(RNSScreenStackAnimationFade),
+                                                  @"flip": @(RNSScreenStackAnimationFlip),
                                                   }), RNSScreenStackAnimationDefault, integerValue)
 
 
 @end
+

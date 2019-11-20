@@ -140,6 +140,7 @@ A callback that gets called when the current screen is dismissed by hardware bac
 Allows for the customization of how the given screen should appear/dissapear when pushed or popped at the top of the stack. The followin values are currently supported:
  - `"default"` – uses a platform default animation
  - `"fade"` – fades screen in or out
+ - `"flip"` – flips the screen, requires `stackPresentation: "modal"` (iOS only)
  - `"none"` – the screen appears/dissapears without an animation
 
  #### `stackPresentation`
