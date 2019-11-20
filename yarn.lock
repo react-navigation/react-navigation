@@ -13220,15 +13220,10 @@ react-native-screens@^2.0.0-alpha.11:
   dependencies:
     debounce "^1.2.0"
 
-react-native-tab-view@2.10.2:
-  version "2.10.2"
-  resolved "https://registry.yarnpkg.com/react-native-tab-view/-/react-native-tab-view-2.10.2.tgz#35ae92f574f2220312138f479a99ad3cbf981b6f"
-  integrity sha512-DJMz7WDlQiykgvojaEPM5MKFNMlGC89SMhX++wkD6iJ4TK04NyUgvUKsZYuY7u6k0o0HtG7sNeexFsbxfwhrVg==
-
-react-native-tab-view@^2.10.1:
-  version "2.10.1"
-  resolved "https://registry.yarnpkg.com/react-native-tab-view/-/react-native-tab-view-2.10.1.tgz#3ddff9858a1f7da7477dc9f52a69a6bf17f31541"
-  integrity sha512-U4swsor8h1A1mkBFUX+k1FXvijVsh7ZhD01O0cxKjR5Q7hBXCCygP3rs9jCjnoRMhyMJHsbmeZypUs5l+mVdGQ==
+react-native-tab-view@2.11.0, react-native-tab-view@^2.11.0:
+  version "2.11.0"
+  resolved "https://registry.yarnpkg.com/react-native-tab-view/-/react-native-tab-view-2.11.0.tgz#2e57d1f617ccc88c7f452708804f3409f880b700"
+  integrity sha512-vqetlxGO7A8bnqvXcB50MWpRZAImXFrDGz1WCQKdCqe03Ey3ZzENe7yLuWrtBJYlepGfOLAsmCXv+wW82Yfm1w==
 
 react-native-testing-library@^1.9.1:
   version "1.11.1"
