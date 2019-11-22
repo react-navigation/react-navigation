@@ -114,6 +114,8 @@
 {
   if (![view isKindOfClass:[RNSScreenStackHeaderConfig class]]) {
     [super addSubview:view];
+  } else {
+    ((RNSScreenStackHeaderConfig*) view).screenView = self;
   }
 }
 
