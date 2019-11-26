@@ -24,7 +24,7 @@ public class ScreenStackHeaderConfig extends ViewGroup {
   private String mTitle;
   private int mTitleColor;
   private String mTitleFontFamily;
-  private int mTitleFontSize;
+  private float mTitleFontSize;
   private int mBackgroundColor;
   private boolean mIsHidden;
   private boolean mGestureEnabled = true;
@@ -258,7 +258,7 @@ public class ScreenStackHeaderConfig extends ViewGroup {
     mTitleFontFamily = titleFontFamily;
   }
 
-  public void setTitleFontSize(int titleFontSize) {
+  public void setTitleFontSize(float titleFontSize) {
     mTitleFontSize = titleFontSize;
   }
 
