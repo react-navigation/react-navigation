@@ -23,6 +23,7 @@ public class ScreenContainer<T extends ScreenFragment> extends ViewGroup {
   protected final ArrayList<T> mScreenFragments = new ArrayList<>();
   private final Set<ScreenFragment> mActiveScreenFragments = new HashSet<>();
 
+  private @Nullable FragmentManager mFragmentManager;
   private @Nullable FragmentTransaction mCurrentTransaction;
   private boolean mNeedUpdate;
   private boolean mIsAttached;
@@ -108,11 +109,18 @@ public class ScreenContainer<T extends ScreenFragment> extends ViewGroup {
     return mScreenFragments.get(index).getScreen();
   }
 
-  protected final FragmentActivity findRootFragmentActivity() {
+  private FragmentManager findFragmentManager() {
     ViewParent parent = this;
-    while (!(parent instanceof ReactRootView) && parent.getParent() != null) {
+    // We traverse view hierarchy up until we find screen parent or a root view
+    while (!(parent instanceof ReactRootView || parent instanceof Screen) && parent.getParent() != null) {
       parent = parent.getParent();
     }
+    // If parent is of type Screen it means we are inside a nested fragment structure.
+    // Otherwise we expect to connect directly with root view and get root fragment manager
+    if (parent instanceof Screen) {
+      return ((Screen) parent).getFragment().getChildFragmentManager();
+    }
+
     // we expect top level view to be of type ReactRootView, this isn't really necessary but in order
     // to find root view we test if parent is null. This could potentially happen also when the view
     // is detached from the hierarchy and that test would not correctly indicate the root view. So
@@ -131,11 +139,14 @@ public class ScreenContainer<T extends ScreenFragment> extends ViewGroup {
       throw new IllegalStateException(
               "In order to use RNScreens components your app's activity need to extend ReactFragmentActivity or ReactCompatActivity");
     }
-    return (FragmentActivity) context;
+    return ((FragmentActivity) context).getSupportFragmentManager();
   }
 
-  protected FragmentManager getFragmentManager() {
-    return findRootFragmentActivity().getSupportFragmentManager();
+  protected final FragmentManager getFragmentManager() {
+    if (mFragmentManager == null) {
+      mFragmentManager = findFragmentManager();
+    }
+    return mFragmentManager;
   }
 
   protected FragmentTransaction getOrCreateTransaction() {

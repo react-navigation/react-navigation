@@ -61,8 +61,16 @@ public class ScreenStack extends ScreenContainer<ScreenStackFragment> {
   @Override
   protected void onDetachedFromWindow() {
     super.onDetachedFromWindow();
-    getFragmentManager().removeOnBackStackChangedListener(mBackStackListener);
-    getFragmentManager().popBackStack(BACK_STACK_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+    FragmentManager fm = getFragmentManager();
+    if (!fm.isStateSaved()) {
+      // state save means that the container where fragment manager was installed has been unmounted.
+      // This could happen as a result of dismissing nested stack. In such a case we don't need to
+      // reset back stack as it'd result in a crash caused by the fact the fragment manager is no
+      // longer attached.
+      fm.removeOnBackStackChangedListener(mBackStackListener);
+      fm.popBackStack(BACK_STACK_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+    }
+
   }
 
   @Override
@@ -88,7 +96,11 @@ public class ScreenStack extends ScreenContainer<ScreenStackFragment> {
         getOrCreateTransaction().remove(screen);
       }
     }
-    ScreenStackFragment newTop = null;
+
+    // When going back from a nested stack with a single screen on it, we may hit an edge case
+    // when all screens are dismissed and no screen is to be displayed on top. We need to gracefully
+    // handle the case of newTop being NULL, which happens in several places below
+    ScreenStackFragment newTop = null; // newTop is nullable, see the above comment ^
     ScreenStackFragment belowTop = null; // this is only set if newTop has TRANSPARENT_MODAL presentation mode
 
     for (int i = mScreenFragments.size() - 1; i >= 0; i--) {
@@ -105,7 +117,6 @@ public class ScreenStack extends ScreenContainer<ScreenStackFragment> {
         }
       }
     }
-
 
     for (ScreenStackFragment screen : mScreenFragments) {
       // add all new views that weren't on stack before
@@ -127,7 +138,10 @@ public class ScreenStack extends ScreenContainer<ScreenStackFragment> {
         }
       });
     }
-    getOrCreateTransaction().show(newTop);
+
+    if (newTop != null) {
+      getOrCreateTransaction().show(newTop);
+    }
 
     if (!mStack.contains(newTop)) {
       // if new top screen wasn't on stack we do "open animation" so long it is not the very first screen on stack
@@ -165,7 +179,9 @@ public class ScreenStack extends ScreenContainer<ScreenStackFragment> {
 
     tryCommitTransaction();
 
-    setupBackHandlerIfNeeded(mTopScreen);
+    if (mTopScreen != null) {
+      setupBackHandlerIfNeeded(mTopScreen);
+    }
 
     for (ScreenStackFragment screen : mStack) {
       screen.onStackUpdate();
@@ -208,6 +224,7 @@ public class ScreenStack extends ScreenContainer<ScreenStackFragment> {
               .hide(topScreen)
               .show(topScreen)
               .addToBackStack(BACK_STACK_TAG)
+              .setPrimaryNavigationFragment(topScreen)
               .commitAllowingStateLoss();
       getFragmentManager().addOnBackStackChangedListener(mBackStackListener);
     }
