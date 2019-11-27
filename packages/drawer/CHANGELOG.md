@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.24](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/drawer@5.0.0-alpha.23...@react-navigation/drawer@5.0.0-alpha.24) (2019-11-27)
+
+
+### Bug Fixes
+
+* enable gestures by default in drawer. closes [#188](https://github.com/react-navigation/navigation-ex/issues/188) ([7080517](https://github.com/react-navigation/navigation-ex/commit/7080517c914b4821e07a6320de94660e50d02950))
+
+
+
+
+
 # [5.0.0-alpha.23](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/drawer@5.0.0-alpha.22...@react-navigation/drawer@5.0.0-alpha.23) (2019-11-17)
 
 
