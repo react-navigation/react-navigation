@@ -2,10 +2,10 @@ package com.swmansion.rnscreens;
 
 import android.content.Context;
 import android.view.View;
-import android.view.WindowInsets;
 
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -30,6 +30,15 @@ public class ScreenStack extends ScreenContainer<ScreenStackFragment> {
         // button. As the "fake" transaction we installed on the back stack does nothing we need
         // to handle back navigation on our own.
         dismiss(mTopScreen);
+      }
+    }
+  };
+
+  private final FragmentManager.FragmentLifecycleCallbacks mLifecycleCallbacks = new FragmentManager.FragmentLifecycleCallbacks() {
+    @Override
+    public void onFragmentResumed(FragmentManager fm, Fragment f) {
+      if (mTopScreen == f) {
+        setupBackHandlerIfNeeded(mTopScreen);
       }
     }
   };
@@ -93,12 +102,13 @@ public class ScreenStack extends ScreenContainer<ScreenStackFragment> {
   protected void onDetachedFromWindow() {
     super.onDetachedFromWindow();
     FragmentManager fm = getFragmentManager();
+    fm.removeOnBackStackChangedListener(mBackStackListener);
+    getFragmentManager().unregisterFragmentLifecycleCallbacks(mLifecycleCallbacks);
     if (!fm.isStateSaved()) {
       // state save means that the container where fragment manager was installed has been unmounted.
       // This could happen as a result of dismissing nested stack. In such a case we don't need to
       // reset back stack as it'd result in a crash caused by the fact the fragment manager is no
       // longer attached.
-      fm.removeOnBackStackChangedListener(mBackStackListener);
       fm.popBackStack(BACK_STACK_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
   }
@@ -106,9 +116,7 @@ public class ScreenStack extends ScreenContainer<ScreenStackFragment> {
   @Override
   protected void onAttachedToWindow() {
     super.onAttachedToWindow();
-    if (mTopScreen != null) {
-      setupBackHandlerIfNeeded(mTopScreen);
-    }
+    getFragmentManager().registerFragmentLifecycleCallbacks(mLifecycleCallbacks, false);
   }
 
   @Override
@@ -238,6 +246,12 @@ public class ScreenStack extends ScreenContainer<ScreenStackFragment> {
    * that case we want the parent navigator or activity handler to take over.
    */
   private void setupBackHandlerIfNeeded(ScreenStackFragment topScreen) {
+    if (!mTopScreen.isResumed()) {
+      // if the top fragment is not in a resumed state, adding back stack transaction would throw.
+      // In such a case we skip installing back handler and use FragmentLifecycleCallbacks to get
+      // notified when it gets resumed so that we can install the handler.
+      return;
+    }
     getFragmentManager().removeOnBackStackChangedListener(mBackStackListener);
     getFragmentManager().popBackStack(BACK_STACK_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     ScreenStackFragment firstScreen = null;
