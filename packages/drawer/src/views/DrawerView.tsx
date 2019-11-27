@@ -217,7 +217,7 @@ export default class DrawerView extends React.PureComponent<Props, State> {
         <DrawerGestureContext.Provider value={this.drawerGestureRef}>
           <Drawer
             open={state.isDrawerOpen}
-            gestureEnabled={gestureEnabled === true}
+            gestureEnabled={gestureEnabled !== false}
             onOpen={this.handleDrawerOpen}
             onClose={this.handleDrawerClose}
             onGestureRef={this.setDrawerGestureRef}

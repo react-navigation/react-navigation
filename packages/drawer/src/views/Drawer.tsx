@@ -97,9 +97,9 @@ type Props = {
 
 export default class DrawerView extends React.PureComponent<Props> {
   static defaultProps = {
-    locked: false,
     drawerPostion: I18nManager.isRTL ? 'left' : 'right',
     drawerType: 'front',
+    gestureEnabled: true,
     swipeEdgeWidth: 32,
     swipeVelocityThreshold: 500,
     keyboardDismissMode: 'on-drag',
@@ -447,10 +447,7 @@ export default class DrawerView extends React.PureComponent<Props> {
     {
       nativeEvent: {
         oldState: (s: Animated.Value<number>) =>
-          cond(
-            and(eq(s, State.ACTIVE), this.isGestureEnabled),
-            set(this.manuallyTriggerSpring, TRUE)
-          ),
+          cond(eq(s, State.ACTIVE), set(this.manuallyTriggerSpring, TRUE)),
       },
     },
   ]);
