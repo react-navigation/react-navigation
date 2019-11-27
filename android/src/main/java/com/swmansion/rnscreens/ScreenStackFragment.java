@@ -64,20 +64,22 @@ public class ScreenStackFragment extends ScreenFragment {
                            @Nullable ViewGroup container,
                            @Nullable Bundle savedInstanceState) {
     CoordinatorLayout view = new CoordinatorLayout(getContext());
+    view.setFitsSystemWindows(true);
     CoordinatorLayout.LayoutParams params = new CoordinatorLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-    params.setBehavior(new AppBarLayout.ScrollingViewBehavior());
     mScreenView.setLayoutParams(params);
     view.addView(mScreenView);
 
     mAppBarLayout = new AppBarLayout(getContext());
+    mAppBarLayout.setFitsSystemWindows(true);
     // By default AppBarLayout will have a background color set but since we cover the whole layout
     // with toolbar (that can be semi-transparent) the bar layout background color does not pay a
     // role. On top of that it breaks screens animations when alfa offscreen compositing is off
     // (which is the default)
     mAppBarLayout.setBackgroundColor(Color.TRANSPARENT);
     mAppBarLayout.setLayoutParams(new AppBarLayout.LayoutParams(
-            AppBarLayout.LayoutParams.MATCH_PARENT, AppBarLayout.LayoutParams.WRAP_CONTENT));
+            AppBarLayout.LayoutParams.MATCH_PARENT,
+            AppBarLayout.LayoutParams.WRAP_CONTENT));
     view.addView(mAppBarLayout);
 
     if (mToolbar != null) {

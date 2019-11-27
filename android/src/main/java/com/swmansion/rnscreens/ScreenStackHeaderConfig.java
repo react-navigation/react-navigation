@@ -47,6 +47,7 @@ public class ScreenStackHeaderConfig extends ViewGroup {
     setVisibility(View.GONE);
 
     mToolbar = new Toolbar(context);
+    mToolbar.setFitsSystemWindows(true);
 
     // set primary color as background by default
     TypedValue tv = new TypedValue();
