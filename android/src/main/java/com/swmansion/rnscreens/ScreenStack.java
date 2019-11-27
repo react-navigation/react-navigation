@@ -1,10 +1,7 @@
 package com.swmansion.rnscreens;
 
 import android.content.Context;
-import android.view.View;
 
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -45,15 +42,6 @@ public class ScreenStack extends ScreenContainer<ScreenStackFragment> {
 
   public ScreenStack(Context context) {
     super(context);
-
-    ViewCompat.setOnApplyWindowInsetsListener(this,
-            new androidx.core.view.OnApplyWindowInsetsListener() {
-              @Override
-              public WindowInsetsCompat onApplyWindowInsets(View v, WindowInsetsCompat insets) {
-                setWindowInsets(insets);
-                return insets;
-              }
-            });
   }
 
   public void dismiss(ScreenStackFragment screenFragment) {
@@ -75,24 +63,6 @@ public class ScreenStack extends ScreenContainer<ScreenStackFragment> {
     throw new IllegalStateException("Stack has no root screen set");
   }
 
-  private void setWindowInsets(WindowInsetsCompat insets) {
-    // we allow each screen to handle insets separately as they are all attached to the same parent
-    // and take up full screen. Therefore we make a copy of each inset object before passing it down
-    // to views.
-    boolean consumed = false;
-    for (int i = mScreenFragments.size() - 1; i >= 0; i--) {
-      ScreenStackFragment screen = mScreenFragments.get(i);
-      if (!mDismissed.contains(screen) && screen.getView() != null) {
-        if (ViewCompat.dispatchApplyWindowInsets(screen.getView(), new WindowInsetsCompat(insets)).isConsumed()) {
-          consumed = true;
-        }
-      }
-    }
-    if (consumed) {
-      insets.consumeSystemWindowInsets();
-    }
-  }
-
   @Override
   protected ScreenStackFragment adapt(Screen screen) {
     return new ScreenStackFragment(screen);
@@ -111,6 +81,7 @@ public class ScreenStack extends ScreenContainer<ScreenStackFragment> {
       // longer attached.
       fm.popBackStack(BACK_STACK_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
+
   }
 
   @Override
