@@ -48,6 +48,7 @@ class StackView extends React.Component {
       headerTitleStyle,
       headerBackTitleStyle,
       headerBackTitle,
+      headerBackTitleVisible,
       headerTintColor,
       gestureEnabled,
       largeTitle,
@@ -69,7 +70,7 @@ class StackView extends React.Component {
       titleFontFamily: headerTitleStyle && headerTitleStyle.fontFamily,
       titleColor: headerTintColor,
       titleFontSize: headerTitleStyle && headerTitleStyle.fontSize,
-      backTitle: headerBackTitle,
+      backTitle: headerBackTitleVisible === false ? '' : headerBackTitle,
       backTitleFontFamily:
         headerBackTitleStyle && headerBackTitleStyle.fontFamily,
       backTitleFontSize: headerBackTitleStyle && headerBackTitleStyle.fontSize,
@@ -154,7 +155,7 @@ class StackView extends React.Component {
   };
 
   _renderScene = (index, route, descriptor) => {
-    const { navigation, getComponent } = descriptor;
+    const { navigation, getComponent, options } = descriptor;
     const { mode, transparentCard } = this.props.navigationConfig;
     const SceneComponent = getComponent();
 
@@ -167,7 +168,7 @@ class StackView extends React.Component {
     return (
       <Screen
         key={`screen_${route.key}`}
-        style={StyleSheet.absoluteFill}
+        style={options.cardStyle}
         stackPresentation={stackPresentation}
         onDismissed={() => this._removeScene(route)}>
         {this._renderHeaderConfig(index, route, descriptor)}
