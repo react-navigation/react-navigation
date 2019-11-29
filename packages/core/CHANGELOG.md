@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.25](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/core@5.0.0-alpha.24...@react-navigation/core@5.0.0-alpha.25) (2019-11-29)
+
+
+### Bug Fixes
+
+* wrap reset and resetRoot inside transaction ([#189](https://github.com/react-navigation/navigation-ex/issues/189)) ([5a0dfa1](https://github.com/react-navigation/navigation-ex/commit/5a0dfa1a155715714c8483fafc5a94dbc5120754)), closes [#185](https://github.com/react-navigation/navigation-ex/issues/185)
+
+
+
+
+
 # [5.0.0-alpha.24](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/core@5.0.0-alpha.23...@react-navigation/core@5.0.0-alpha.24) (2019-11-20)
 
 

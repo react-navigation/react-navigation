@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.38](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.37...@react-navigation/stack@5.0.0-alpha.38) (2019-11-29)
+
+
+### Bug Fixes
+
+* respect custom safearea insets when calculating header height ([2750cad](https://github.com/react-navigation/navigation-ex/commit/2750cad272def2e701ba2823a6e5693cee61eff0)), closes [#190](https://github.com/react-navigation/navigation-ex/issues/190)
+
+
+
+
+
 # [5.0.0-alpha.37](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.36...@react-navigation/stack@5.0.0-alpha.37) (2019-11-17)
 
 
