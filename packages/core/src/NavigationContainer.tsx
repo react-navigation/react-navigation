@@ -112,79 +112,6 @@ const Container = React.forwardRef(function NavigationContainer(
   const isFirstMountRef = React.useRef<boolean>(true);
   const skipTrackingRef = React.useRef<boolean>(false);
 
-  const reset = React.useCallback((state: NavigationState) => {
-    skipTrackingRef.current = true;
-    setNavigationState(state);
-  }, []);
-
-  const { trackState, trackAction } = useDevTools({
-    name: '@react-navigation',
-    reset,
-    state,
-  });
-
-  const { listeners, addListener: addFocusedListener } = useFocusedListeners();
-
-  const { getStateForRoute, addStateGetter } = useStateGetters();
-
-  const dispatch = (
-    action: NavigationAction | ((state: NavigationState) => NavigationAction)
-  ) => {
-    listeners[0](navigation => navigation.dispatch(action));
-  };
-
-  const canGoBack = () => {
-    const { result, handled } = listeners[0](navigation =>
-      navigation.canGoBack()
-    );
-
-    if (handled) {
-      return result;
-    } else {
-      return false;
-    }
-  };
-
-  const resetRoot = React.useCallback(
-    (state?: PartialState<NavigationState> | NavigationState) => {
-      trackAction('@@RESET_ROOT');
-      setNavigationState(state);
-    },
-    [trackAction]
-  );
-
-  const getRootState = React.useCallback(() => {
-    return getStateForRoute('root');
-  }, [getStateForRoute]);
-
-  React.useImperativeHandle(ref, () => ({
-    ...(Object.keys(CommonActions) as Array<keyof typeof CommonActions>).reduce<
-      any
-    >((acc, name) => {
-      acc[name] = (...args: any[]) =>
-        dispatch(
-          CommonActions[name](
-            // @ts-ignore
-            ...args
-          )
-        );
-      return acc;
-    }, {}),
-    resetRoot,
-    dispatch,
-    canGoBack,
-    getRootState,
-  }));
-
-  const builderContext = React.useMemo(
-    () => ({
-      addFocusedListener,
-      addStateGetter,
-      trackAction,
-    }),
-    [addFocusedListener, trackAction, addStateGetter]
-  );
-
   const performTransaction = React.useCallback((callback: () => void) => {
     if (isTransactionActiveRef.current) {
       throw new Error(
@@ -221,6 +148,86 @@ const Container = React.forwardRef(function NavigationContainer(
 
     transactionStateRef.current = navigationState;
   }, []);
+
+  const reset = React.useCallback(
+    (state: NavigationState) => {
+      performTransaction(() => {
+        skipTrackingRef.current = true;
+        setState(state);
+      });
+    },
+    [performTransaction, setState]
+  );
+
+  const { trackState, trackAction } = useDevTools({
+    name: '@react-navigation',
+    reset,
+    state,
+  });
+
+  const { listeners, addListener: addFocusedListener } = useFocusedListeners();
+
+  const { getStateForRoute, addStateGetter } = useStateGetters();
+
+  const dispatch = (
+    action: NavigationAction | ((state: NavigationState) => NavigationAction)
+  ) => {
+    listeners[0](navigation => navigation.dispatch(action));
+  };
+
+  const canGoBack = () => {
+    const { result, handled } = listeners[0](navigation =>
+      navigation.canGoBack()
+    );
+
+    if (handled) {
+      return result;
+    } else {
+      return false;
+    }
+  };
+
+  const resetRoot = React.useCallback(
+    (state?: PartialState<NavigationState> | NavigationState) => {
+      performTransaction(() => {
+        trackAction('@@RESET_ROOT');
+        setState(state);
+      });
+    },
+    [performTransaction, setState, trackAction]
+  );
+
+  const getRootState = React.useCallback(() => {
+    return getStateForRoute('root');
+  }, [getStateForRoute]);
+
+  React.useImperativeHandle(ref, () => ({
+    ...(Object.keys(CommonActions) as Array<keyof typeof CommonActions>).reduce<
+      any
+    >((acc, name) => {
+      acc[name] = (...args: any[]) =>
+        dispatch(
+          CommonActions[name](
+            // @ts-ignore
+            ...args
+          )
+        );
+      return acc;
+    }, {}),
+    resetRoot,
+    dispatch,
+    canGoBack,
+    getRootState,
+  }));
+
+  const builderContext = React.useMemo(
+    () => ({
+      addFocusedListener,
+      addStateGetter,
+      trackAction,
+    }),
+    [addFocusedListener, trackAction, addStateGetter]
+  );
 
   const context = React.useMemo(
     () => ({
