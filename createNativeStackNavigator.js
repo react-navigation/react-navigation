@@ -160,8 +160,9 @@ class StackView extends React.Component {
     const SceneComponent = getComponent();
 
     let stackPresentation = 'push';
-    if (mode === 'modal') {
-      stackPresentation = transparentCard ? 'transparentModal' : 'modal';
+    if (mode === 'modal' || mode === 'containedModal') {
+      stackPresentation =
+        transparentCard || options.cardTransparent ? 'transparentModal' : mode;
     }
 
     const { screenProps } = this.props;
