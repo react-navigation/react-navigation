@@ -40,13 +40,13 @@
     "@types/react": "^16.9.11",
     "@types/shortid": "^0.0.29",
     "del-cli": "^3.0.0",
-    "react": "~16.8.3",
+    "react": "~16.9.0",
     "react-native-testing-library": "^1.9.1",
-    "react-test-renderer": "~16.8.3",
+    "react-test-renderer": "~16.9.0",
     "typescript": "^3.7.2"
   },
   "peerDependencies": {
-    "react": "~16.8.3"
+    "react": "~16.9.0"
   },
   "@react-native-community/bob": {
     "source": "src",
