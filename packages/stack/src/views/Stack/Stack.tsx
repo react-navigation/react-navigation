@@ -121,15 +121,19 @@ const getFloatingHeaderHeights = (
   layout: Layout,
   previous: Record<string, number>
 ) => {
-  const defaultHeaderHeight = getDefaultHeaderHeight(layout, insets);
-
   return routes.reduce<Record<string, number>>((acc, curr) => {
     const { options = {} } = descriptors[curr.key] || {};
     const { height = previous[curr.key] } = StyleSheet.flatten(
       options.headerStyle || {}
     );
 
-    acc[curr.key] = typeof height === 'number' ? height : defaultHeaderHeight;
+    acc[curr.key] =
+      typeof height === 'number'
+        ? height
+        : getDefaultHeaderHeight(layout, {
+            ...insets,
+            ...options.safeAreaInsets,
+          });
 
     return acc;
   }, {});
@@ -263,12 +267,17 @@ export default class Stack extends React.Component<Props, State> {
       return;
     }
 
-    this.setState(state => ({
-      floatingHeaderHeights: {
-        ...state.floatingHeaderHeights,
-        [route.key]: height,
-      },
-    }));
+    // Update in next frame to make sure it's applied after screen's onLayout
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => {
+        this.setState(state => ({
+          floatingHeaderHeights: {
+            ...state.floatingHeaderHeights,
+            [route.key]: height,
+          },
+        }));
+      })
+    );
   };
 
   private handleTransitionStart = (
