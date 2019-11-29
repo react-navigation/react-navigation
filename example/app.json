@@ -3,7 +3,7 @@
     "name": "@react-navigation/example",
     "slug": "react-navigation-example",
     "privacy": "public",
-    "sdkVersion": "35.0.0",
+    "sdkVersion": "36.0.0",
     "platforms": [
       "ios",
       "android",
@@ -25,7 +25,8 @@
     "ios": {
       "supportsTablet": true
     },
-    "entryPoint": "node_modules/expo/AppEntry.js"
+    "entryPoint": "node_modules/expo/AppEntry.js",
+    "description": "Demo app to showcase various functionality of React Navigation"
   },
   "displayName": "React Navigation Example",
   "name": "ReactNavigationExample"

@@ -5,39 +5,53 @@ const fs = require('fs');
 const escape = require('escape-string-regexp');
 const blacklist = require('metro-config/src/defaults/blacklist');
 
+const root = path.resolve(__dirname, '..');
+const packages = path.resolve(__dirname, '..', 'packages');
+
+const modules = ['@babel/runtime', '@expo/vector-icons']
+  .concat(
+    ...fs
+      .readdirSync(packages)
+      .filter(p => !p.startsWith('.'))
+      .map(p => {
+        const pak = JSON.parse(
+          fs.readFileSync(path.join(packages, p, 'package.json'), 'utf8')
+        );
+
+        const deps = [];
+
+        if (pak.dependencies) {
+          deps.push(...Object.keys(pak.dependencies));
+        }
+
+        if (pak.peerDependencies) {
+          deps.push(...Object.keys(pak.peerDependencies));
+        }
+
+        return deps;
+      })
+  )
+  .sort()
+  .filter(
+    (m, i, self) =>
+      self.lastIndexOf(m) === i && !m.startsWith('@react-navigation/')
+  );
+
 module.exports = {
   projectRoot: __dirname,
-  watchFolders: [path.resolve(__dirname, '..')],
+  watchFolders: [root],
 
   resolver: {
     blacklistRE: blacklist(
-      [...fs.readdirSync(path.resolve(__dirname, '..', 'packages')), '..'].map(
-        it =>
-          new RegExp(
-            `^${escape(
-              path.resolve(__dirname, '..', 'packages', it, 'node_modules')
-            )}\\/.*$`
-          )
+      [root, ...fs.readdirSync(packages).map(p => path.join(packages, p))].map(
+        it => new RegExp(`^${escape(path.join(it, 'node_modules'))}\\/.*$`)
       )
     ),
 
-    providesModuleNodeModules: [
-      '@babel/runtime',
-      '@expo/vector-icons',
-      '@react-native-community/masked-view',
-      'escape-string-regexp',
-      'query-string',
-      'react',
-      'react-native',
-      'react-native-gesture-handler',
-      'react-native-reanimated',
-      'react-native-safe-area-context',
-      'react-native-screens',
-      'react-native-paper',
-      'react-native-tab-view',
-      'shortid',
-      'use-subscription',
-    ],
+    extraNodeModules: modules.reduce((acc, name) => {
+      acc[name] = path.join(__dirname, 'node_modules', name);
+      return acc;
+    }, {}),
   },
 
   transformer: {
