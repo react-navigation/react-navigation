@@ -295,6 +295,9 @@
     navitem.scrollEdgeAppearance = appearance;
   }
 #endif
+  navitem.leftBarButtonItem = nil;
+  navitem.rightBarButtonItem = nil;
+  navitem.titleView = nil;
   for (RNSScreenStackHeaderSubview *subview in config.reactSubviews) {
     switch (subview.type) {
       case RNSScreenStackHeaderSubviewTypeLeft: {
