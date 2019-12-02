@@ -9,12 +9,17 @@ import {
   Platform,
   InteractionManager,
 } from 'react-native';
-import Animated from 'react-native-reanimated';
-import {
-  PanGestureHandler,
-  State as GestureState,
-} from 'react-native-gesture-handler';
+import Animated, { Easing } from 'react-native-reanimated';
+import { PanGestureHandler } from 'react-native-gesture-handler';
 import { EdgeInsets } from 'react-native-safe-area-context';
+import animate, {
+  Binary,
+  TRUE,
+  FALSE,
+  UNSET,
+  ANIMATION_SPRING,
+  ANIMATION_TIMING,
+} from './CardAnimation';
 import PointerEventsView from './PointerEventsView';
 import memoize from '../../utils/memoize';
 import StackGestureContext from '../../utils/StackGestureContext';
@@ -22,8 +27,8 @@ import {
   TransitionSpec,
   StackCardStyleInterpolator,
   Layout,
-  SpringConfig,
   TimingConfig,
+  SpringConfig,
 } from '../../types';
 
 type Props = ViewProps & {
@@ -69,22 +74,9 @@ type AnimatedSpringConfig = {
   overshootClamping: Animated.Value<boolean>;
 };
 
-export type AnimatedTimingConfig = {
+type AnimatedTimingConfig = {
   duration: Animated.Value<number>;
-  easing: Animated.EasingFunction;
 };
-
-type Binary = 0 | 1;
-
-const TRUE = 1;
-const TRUE_NODE = new Animated.Value(TRUE);
-const FALSE = 0;
-const FALSE_NODE = new Animated.Value(FALSE);
-const NOOP_NODE = FALSE_NODE;
-const UNSET = -1;
-const UNSET_NODE = new Animated.Value(UNSET);
-
-const MINUS_ONE_NODE = UNSET_NODE;
 
 const DIRECTION_VERTICAL = -1;
 const DIRECTION_HORIZONTAL = 1;
@@ -98,132 +90,151 @@ const GESTURE_RESPONSE_DISTANCE_HORIZONTAL = 50;
 const GESTURE_RESPONSE_DISTANCE_VERTICAL = 135;
 
 const {
-  abs,
-  add,
-  block,
-  call,
-  cond,
-  divide,
-  eq,
-  greaterThan,
-  lessThan,
-  max,
-  min,
-  multiply,
-  neq,
-  onChange,
-  set,
-  spring,
-  sub,
-  timing,
+  clockRunning,
   startClock,
   stopClock,
-  clockRunning,
+  spring,
+  timing,
+  call,
+  cond,
+  eq,
   Clock,
   Value,
 } = Animated;
 
-// We need to be prepared for both version of reanimated. With and w/out proc
-let memoizedSpring = spring;
+const springHelper = Animated.proc(
+  (
+    clock: Animated.Clock,
+    prevPosition: Animated.Value<number>,
+    position: Animated.Value<number>,
+    finished: Animated.Value<number>,
+    velocity: Animated.Value<number>,
+    time: Animated.Value<number>,
+    toValue: Animated.Adaptable<number>,
+    damping: Animated.Adaptable<number>,
+    mass: Animated.Adaptable<number>,
+    stiffness: Animated.Adaptable<number>,
+    overshootClamping: Animated.Adaptable<number>,
+    restSpeedThreshold: Animated.Adaptable<number>,
+    restDisplacementThreshold: Animated.Adaptable<number>
+  ) =>
+    spring(
+      clock,
+      {
+        // @ts-ignore
+        prevPosition,
+        position,
+        finished,
+        velocity,
+        time,
+      },
+      {
+        toValue,
+        damping,
+        mass,
+        stiffness,
+        overshootClamping,
+        restDisplacementThreshold,
+        restSpeedThreshold,
+      }
+    )
+);
 
-if (Animated.proc) {
-  const springHelper = Animated.proc(
-    (
-      finished: Animated.Value<number>,
-      velocity: Animated.Value<number>,
-      position: Animated.Value<number>,
-      time: Animated.Value<number>,
-      prevPosition: Animated.Value<number>,
-      toValue: Animated.Adaptable<number>,
-      damping: Animated.Adaptable<number>,
-      mass: Animated.Adaptable<number>,
-      stiffness: Animated.Adaptable<number>,
-      overshootClamping: Animated.Adaptable<number>,
-      restSpeedThreshold: Animated.Adaptable<number>,
-      restDisplacementThreshold: Animated.Adaptable<number>,
-      clock: Animated.Clock
-    ) =>
-      spring(
-        clock,
-        {
-          finished,
-          velocity,
-          position,
-          time,
-          // @ts-ignore
-          prevPosition,
-        },
-        {
-          toValue,
-          damping,
-          mass,
-          stiffness,
-          overshootClamping,
-          restDisplacementThreshold,
-          restSpeedThreshold,
-        }
-      )
+const runSpring = (
+  clock: Animated.Clock,
+  state: {
+    finished: Animated.Value<number>;
+    velocity: Animated.Value<number>;
+    position: Animated.Value<number>;
+    time: Animated.Value<number>;
+  },
+  config: {
+    toValue: Animated.Adaptable<number>;
+    damping: Animated.Adaptable<number>;
+    mass: Animated.Adaptable<number>;
+    stiffness: Animated.Adaptable<number>;
+    overshootClamping: Animated.Adaptable<boolean>;
+    restSpeedThreshold: Animated.Adaptable<number>;
+    restDisplacementThreshold: Animated.Adaptable<number>;
+  }
+) =>
+  springHelper(
+    clock,
+    new Value(0),
+    state.position,
+    state.finished,
+    state.velocity,
+    state.time,
+    config.toValue,
+    config.damping,
+    config.mass,
+    config.stiffness,
+    config.overshootClamping as any,
+    config.restSpeedThreshold,
+    config.restDisplacementThreshold
   );
 
-  // @ts-ignore
-  memoizedSpring = function(
-    clock: Animated.Clock,
-    state: {
-      finished: Animated.Value<number>;
-      velocity: Animated.Value<number>;
-      position: Animated.Value<number>;
-      time: Animated.Value<number>;
-    },
-    config: {
-      toValue: Animated.Adaptable<number>;
-      damping: Animated.Adaptable<number>;
-      mass: Animated.Adaptable<number>;
-      stiffness: Animated.Adaptable<number>;
-      overshootClamping: Animated.Adaptable<number>;
-      restSpeedThreshold: Animated.Adaptable<number>;
-      restDisplacementThreshold: Animated.Adaptable<number>;
-    }
-  ) {
-    return springHelper(
-      state.finished,
-      state.velocity,
-      state.position,
-      state.time,
-      new Value(0),
-      config.toValue,
-      config.damping,
-      config.mass,
-      config.stiffness,
-      config.overshootClamping,
-      config.restSpeedThreshold,
-      config.restDisplacementThreshold,
-      clock
-    );
-  };
-}
-
 function transformSpringConfigToAnimatedValues(
-  config: SpringConfig
+  spec: TransitionSpec,
+  current?: AnimatedSpringConfig
 ): AnimatedSpringConfig {
-  return {
-    damping: new Animated.Value(config.damping),
-    stiffness: new Animated.Value(config.stiffness),
-    mass: new Animated.Value(config.mass),
-    restDisplacementThreshold: new Animated.Value(
+  if (current) {
+    if (spec.animation !== 'spring') {
+      return current;
+    }
+
+    const { config } = spec;
+
+    current.damping.setValue(config.damping);
+    current.stiffness.setValue(config.stiffness);
+    current.mass.setValue(config.mass);
+    current.restDisplacementThreshold.setValue(
       config.restDisplacementThreshold
-    ),
-    restSpeedThreshold: new Animated.Value(config.restSpeedThreshold),
-    overshootClamping: new Animated.Value(config.overshootClamping),
-  };
+    );
+    current.restSpeedThreshold.setValue(config.restSpeedThreshold);
+    current.overshootClamping.setValue(config.overshootClamping);
+
+    return current;
+  } else {
+    const config: Partial<SpringConfig> =
+      spec.animation !== 'spring' ? {} : spec.config;
+
+    return {
+      damping: new Animated.Value(config.damping || 0),
+      mass: new Animated.Value(config.mass || 0),
+      overshootClamping: new Animated.Value(config.overshootClamping !== false),
+      restDisplacementThreshold: new Animated.Value(
+        config.restDisplacementThreshold || 0
+      ),
+      restSpeedThreshold: new Animated.Value(config.restSpeedThreshold || 0),
+      stiffness: new Animated.Value(config.stiffness || 0),
+    };
+  }
 }
 
 function transformTimingConfigToAnimatedValues(
-  config: TimingConfig
-): AnimatedTimingConfig {
-  return {
-    duration: new Animated.Value(config.duration),
-    easing: config.easing,
-  };
+  spec: TransitionSpec,
+  current?: AnimatedTimingConfig & { easing: Animated.EasingFunction }
+): AnimatedTimingConfig & { easing: Animated.EasingFunction } {
+  if (current) {
+    if (spec.animation !== 'timing') {
+      return current;
+    }
+
+    const { config } = spec;
+
+    current.duration.setValue(config.duration);
+
+    return current;
+  } else {
+    const config: Partial<TimingConfig> =
+      spec.animation !== 'timing' ? {} : spec.config;
+
+    return {
+      duration: new Animated.Value(config.duration || 0),
+      easing: config.easing !== undefined ? config.easing : Easing.linear,
+    };
+  }
 }
 
 export default class Card extends React.Component<Props> {
@@ -237,8 +248,10 @@ export default class Card extends React.Component<Props> {
   componentDidUpdate(prevProps: Props) {
     const {
       layout,
+      gestureEnabled,
       gestureDirection,
       gestureVelocityImpact,
+      transitionSpec,
       closing,
     } = this.props;
     const { width, height } = layout;
@@ -251,6 +264,10 @@ export default class Card extends React.Component<Props> {
       this.layout.height.setValue(height);
     }
 
+    if (gestureEnabled !== prevProps.gestureEnabled) {
+      this.isGestureEnabled.setValue(gestureEnabled ? TRUE : FALSE);
+    }
+
     if (gestureVelocityImpact !== prevProps.gestureVelocityImpact) {
       this.gestureVelocityImpact.setValue(gestureVelocityImpact);
     }
@@ -260,6 +277,52 @@ export default class Card extends React.Component<Props> {
         gestureDirection === 'vertical'
           ? DIRECTION_VERTICAL
           : DIRECTION_HORIZONTAL
+      );
+    }
+
+    if (transitionSpec.open !== prevProps.transitionSpec.open) {
+      if (
+        transitionSpec.open.animation !==
+        prevProps.transitionSpec.open.animation
+      ) {
+        this.animationTypeOpen.setValue(
+          transitionSpec.open.animation === 'spring'
+            ? ANIMATION_SPRING
+            : ANIMATION_TIMING
+        );
+      }
+
+      transformTimingConfigToAnimatedValues(
+        transitionSpec.open,
+        this.timingConfigOpen
+      );
+
+      transformSpringConfigToAnimatedValues(
+        transitionSpec.open,
+        this.springConfigOpen
+      );
+    }
+
+    if (transitionSpec.close !== prevProps.transitionSpec.close) {
+      if (
+        transitionSpec.close.animation !==
+        prevProps.transitionSpec.close.animation
+      ) {
+        this.animationTypeClose.setValue(
+          transitionSpec.close.animation === 'spring'
+            ? ANIMATION_SPRING
+            : ANIMATION_TIMING
+        );
+      }
+
+      transformTimingConfigToAnimatedValues(
+        transitionSpec.close,
+        this.timingConfigClose
+      );
+
+      transformSpringConfigToAnimatedValues(
+        transitionSpec.close,
+        this.springConfigClose
       );
     }
 
@@ -288,6 +351,22 @@ export default class Card extends React.Component<Props> {
   private isVisible = new Value<Binary>(TRUE);
   private nextIsVisible = new Value<Binary | -1>(UNSET);
 
+  private animationTypeOpen = new Value<Binary>(
+    this.props.transitionSpec.open.animation === 'spring'
+      ? ANIMATION_SPRING
+      : ANIMATION_TIMING
+  );
+
+  private animationTypeClose = new Value<Binary>(
+    this.props.transitionSpec.open.animation === 'spring'
+      ? ANIMATION_SPRING
+      : ANIMATION_TIMING
+  );
+
+  private isGestureEnabled = new Value<Binary>(
+    this.props.gestureEnabled ? TRUE : FALSE
+  );
+
   private isClosing = new Value<Binary>(FALSE);
   private noAnimationStartedSoFar = true;
   private isRunningAnimation = false;
@@ -309,23 +388,21 @@ export default class Card extends React.Component<Props> {
     this.props.gestureVelocityImpact
   );
 
-  private openingSpecConfig =
-    this.props.transitionSpec.open.animation === 'timing'
-      ? transformTimingConfigToAnimatedValues(
-          this.props.transitionSpec.open.config
-        )
-      : transformSpringConfigToAnimatedValues(
-          this.props.transitionSpec.open.config
-        );
+  private springConfigOpen = transformSpringConfigToAnimatedValues(
+    this.props.transitionSpec.open
+  );
 
-  private closingSpecConfig =
-    this.props.transitionSpec.close.animation === 'timing'
-      ? transformTimingConfigToAnimatedValues(
-          this.props.transitionSpec.close.config
-        )
-      : transformSpringConfigToAnimatedValues(
-          this.props.transitionSpec.close.config
-        );
+  private springConfigClose = transformSpringConfigToAnimatedValues(
+    this.props.transitionSpec.close
+  );
+
+  private timingConfigOpen = transformTimingConfigToAnimatedValues(
+    this.props.transitionSpec.open
+  );
+
+  private timingConfigClose = transformTimingConfigToAnimatedValues(
+    this.props.transitionSpec.close
+  );
 
   private distance = cond(
     eq(this.direction, DIRECTION_VERTICAL),
@@ -345,15 +422,11 @@ export default class Card extends React.Component<Props> {
   private isSwipeCancelled = new Value(FALSE);
   private isSwipeGesture = new Value(FALSE);
 
-  private toValue = new Value(0);
-  private frameTime = new Value(0);
-
-  private transitionVelocity = new Value(0);
-
-  private transitionState = {
-    position: this.props.current,
+  private transitionConfig = {
     time: new Value(0),
+    frameTime: new Value(0),
     finished: new Value(FALSE),
+    velocity: new Value(0),
   };
 
   private interactionHandle: number | undefined;
@@ -388,259 +461,126 @@ export default class Card extends React.Component<Props> {
     );
   };
 
-  private runTransition = (isVisible: Binary | Animated.Node<number>) => {
-    const { open: openingSpec, close: closingSpec } = this.props.transitionSpec;
+  private listenerOnStart = call(
+    [this.isVisible],
+    ([value]: ReadonlyArray<Binary>) => {
+      this.handleStartInteraction();
 
-    return cond(eq(this.props.current, isVisible), NOOP_NODE, [
-      cond(clockRunning(this.clock), NOOP_NODE, [
-        // Animation wasn't running before
-        // Set the initial values and start the clock
-        set(this.toValue, isVisible),
-        // The velocity value is ideal for translating the whole screen
-        // But since we have 0-1 scale, we need to adjust the velocity
-        set(
-          this.transitionVelocity,
-          multiply(
-            cond(
-              this.distance,
-              divide(this.velocity, this.distance),
-              FALSE_NODE
-            ),
-            -1
-          )
-        ),
-        set(this.frameTime, FALSE_NODE),
-        set(this.transitionState.time, FALSE_NODE),
-        set(this.transitionState.finished, FALSE_NODE),
-        set(this.isVisible, isVisible),
-        startClock(this.clock),
-        call([this.isVisible], ([value]: ReadonlyArray<Binary>) => {
-          this.handleStartInteraction();
-
-          const { onTransitionStart } = this.props;
-          this.noAnimationStartedSoFar = false;
-          this.isRunningAnimation = true;
-          onTransitionStart && onTransitionStart({ closing: !value });
-        }),
-      ]),
-      cond(
-        eq(isVisible, TRUE_NODE),
-        openingSpec.animation === 'spring'
-          ? memoizedSpring(
-              this.clock,
-              { ...this.transitionState, velocity: this.transitionVelocity },
-              // @ts-ignore
-              {
-                ...(this.openingSpecConfig as AnimatedSpringConfig),
-                toValue: this.toValue,
-              }
-            )
-          : timing(
-              this.clock,
-              { ...this.transitionState, frameTime: this.frameTime },
-              {
-                ...(this.openingSpecConfig as AnimatedTimingConfig),
-                toValue: this.toValue,
-              }
-            ),
-        closingSpec.animation === 'spring'
-          ? memoizedSpring(
-              this.clock,
-              { ...this.transitionState, velocity: this.transitionVelocity },
-              // @ts-ignore
-              {
-                ...(this.closingSpecConfig as AnimatedSpringConfig),
-                toValue: this.toValue,
-              }
-            )
-          : timing(
-              this.clock,
-              { ...this.transitionState, frameTime: this.frameTime },
-              {
-                ...(this.closingSpecConfig as AnimatedTimingConfig),
-                toValue: this.toValue,
-              }
-            )
-      ),
-      cond(this.transitionState.finished, [
-        // Reset values
-        set(this.isSwipeGesture, FALSE_NODE),
-        set(this.gesture, FALSE_NODE),
-        set(this.velocity, FALSE_NODE),
-        // When the animation finishes, stop the clock
-        stopClock(this.clock),
-        call([this.isVisible], ([value]: ReadonlyArray<Binary>) => {
-          const isOpen = Boolean(value);
-          const { onOpen, onClose } = this.props;
-
-          this.handleTransitionEnd();
-
-          if (isOpen) {
-            onOpen(true);
-          } else {
-            onClose(true);
-          }
-        }),
-      ]),
-    ]);
-  };
-
-  private extrapolatedPosition = add(
-    this.gesture,
-    multiply(this.velocity, this.gestureVelocityImpact)
+      const { onTransitionStart } = this.props;
+      this.noAnimationStartedSoFar = false;
+      this.isRunningAnimation = true;
+      onTransitionStart && onTransitionStart({ closing: !value });
+    }
   );
 
-  private exec = [
-    set(
-      this.gesture,
-      cond(
-        eq(this.direction, DIRECTION_HORIZONTAL),
-        multiply(
-          this.gestureUntraversed,
-          I18nManager.isRTL ? MINUS_ONE_NODE : TRUE_NODE
-        ),
-        this.gestureUntraversed
-      )
-    ),
-    set(
-      this.velocity,
-      multiply(
-        this.velocityUntraversed,
-        I18nManager.isRTL ? MINUS_ONE_NODE : TRUE_NODE
-      )
-    ),
-    onChange(
-      this.isClosing,
-      cond(this.isClosing, set(this.nextIsVisible, FALSE_NODE))
-    ),
-    onChange(
-      this.nextIsVisible,
-      cond(neq(this.nextIsVisible, UNSET_NODE), [
-        // Stop any running animations
-        cond(clockRunning(this.clock), [
-          call([], this.handleTransitionEnd),
-          stopClock(this.clock),
-        ]),
-        set(this.gesture, FALSE_NODE),
-        // Update the index to trigger the transition
-        set(this.isVisible, this.nextIsVisible),
-        set(this.nextIsVisible, UNSET_NODE),
-      ])
-    ),
-  ];
+  private listenerOnEnd = call(
+    [this.isVisible],
+    ([value]: ReadonlyArray<Binary>) => {
+      const isOpen = Boolean(value);
+      const { onOpen, onClose } = this.props;
 
-  private execNoGesture = block([
-    ...this.exec,
-    this.runTransition(this.isVisible),
-  ]);
+      this.handleTransitionEnd();
 
-  private execWithGesture = block([
-    ...this.exec,
-    onChange(
-      this.isSwiping,
-      call(
-        [this.isSwiping, this.isSwipeCancelled],
-        ([isSwiping, isSwipeCancelled]: readonly Binary[]) => {
-          const {
-            onGestureBegin,
-            onGestureEnd,
-            onGestureCanceled,
-          } = this.props;
+      if (isOpen) {
+        onOpen(true);
+      } else {
+        onClose(true);
+      }
+    }
+  );
 
-          if (isSwiping === TRUE) {
-            this.handleStartInteraction();
+  private listenerOnCancel = call([], () => {
+    this.isRunningAnimation = false;
+  });
 
-            onGestureBegin && onGestureBegin();
-          } else {
-            this.handleEndInteraction();
+  private listenerOnSwipe = call(
+    [this.isSwiping, this.isSwipeCancelled],
+    ([isSwiping, isSwipeCancelled]: readonly Binary[]) => {
+      const { onGestureBegin, onGestureEnd, onGestureCanceled } = this.props;
 
-            if (isSwipeCancelled === TRUE) {
-              onGestureCanceled && onGestureCanceled();
-            } else {
-              onGestureEnd && onGestureEnd();
-            }
-          }
+      if (isSwiping === TRUE) {
+        this.handleStartInteraction();
+
+        onGestureBegin && onGestureBegin();
+      } else {
+        this.handleEndInteraction();
+
+        if (isSwipeCancelled === TRUE) {
+          onGestureCanceled && onGestureCanceled();
+        } else {
+          onGestureEnd && onGestureEnd();
         }
+      }
+    }
+  );
+
+  private listenerOnTransitionEnd = call([], this.handleTransitionEnd);
+
+  private runAnimation = () => {
+    const state = {
+      position: this.props.current,
+      ...this.transitionConfig,
+    };
+
+    return cond(
+      eq(this.isVisible, TRUE),
+      cond(
+        eq(this.animationTypeOpen, ANIMATION_SPRING),
+        runSpring(this.clock, state, {
+          ...this.springConfigOpen,
+          toValue: this.isVisible,
+        }),
+        timing(this.clock, state, {
+          ...this.timingConfigOpen,
+          toValue: this.isVisible,
+        })
+      ),
+      cond(
+        eq(this.animationTypeClose, ANIMATION_SPRING),
+        runSpring(this.clock, state, {
+          ...this.springConfigClose,
+          toValue: this.isVisible,
+        }),
+        timing(this.clock, state, {
+          ...this.timingConfigClose,
+          toValue: this.isVisible,
+        })
       )
-    ),
-    cond(
-      eq(this.gestureState, GestureState.ACTIVE),
-      [
-        cond(this.isSwiping, NOOP_NODE, [
-          // We weren't dragging before, set it to true
-          set(this.isSwipeCancelled, FALSE_NODE),
-          set(this.isSwiping, TRUE_NODE),
-          set(this.isSwipeGesture, TRUE_NODE),
-          // Also update the drag offset to the last position
-          set(this.offset, this.props.current),
-        ]),
-        // Update position with next offset + gesture distance
-        set(
-          this.props.current,
-          min(
-            max(
-              sub(
-                this.offset,
-                cond(
-                  this.distance,
-                  divide(
-                    cond(
-                      eq(this.direction, DIRECTION_HORIZONTAL),
-                      multiply(
-                        this.gestureUntraversed,
-                        I18nManager.isRTL ? MINUS_ONE_NODE : TRUE_NODE
-                      ),
-                      this.gestureUntraversed
-                    ),
-                    this.distance
-                  ),
-                  TRUE_NODE
-                )
-              ),
-              FALSE_NODE
-            ),
-            TRUE_NODE
-          )
-        ),
-        // Stop animations while we're dragging
-        cond(
-          clockRunning(this.clock),
-          call([], () => {
-            this.isRunningAnimation = false;
-          })
-        ),
-        stopClock(this.clock),
-      ],
-      [
-        set(
-          this.isSwipeCancelled,
-          eq(this.gestureState, GestureState.CANCELLED)
-        ),
-        set(this.isSwiping, FALSE_NODE),
-        this.runTransition(
-          cond(
-            greaterThan(
-              abs(this.extrapolatedPosition),
-              divide(this.distance, 2)
-            ),
-            cond(
-              lessThan(
-                cond(
-                  eq(this.velocity, FALSE_NODE),
-                  this.gesture,
-                  this.velocity
-                ),
-                FALSE_NODE
-              ),
-              TRUE_NODE,
-              FALSE_NODE
-            ),
-            this.isVisible
-          )
-        ),
-      ]
-    ),
-  ]);
+    );
+  };
+
+  private exec = animate(
+    clockRunning(this.clock),
+    startClock(this.clock),
+    stopClock(this.clock),
+    this.direction,
+    this.distance,
+    this.gesture,
+    this.gestureState,
+    this.gestureUntraversed,
+    this.gestureVelocityImpact,
+    this.isClosing,
+    this.isGestureEnabled,
+    this.isSwipeCancelled,
+    this.isSwipeGesture,
+    this.isSwiping,
+    this.isVisible,
+    this.listenerOnCancel,
+    this.listenerOnEnd,
+    this.listenerOnStart,
+    this.listenerOnSwipe,
+    this.listenerOnTransitionEnd,
+    this.nextIsVisible,
+    this.offset,
+    this.props.current,
+    this.runAnimation(),
+    this.transitionConfig.finished,
+    this.transitionConfig.frameTime,
+    this.transitionConfig.time,
+    this.transitionConfig.velocity,
+    this.velocity,
+    this.velocityUntraversed
+  );
 
   private handleGestureEventHorizontal = Animated.event([
     {
@@ -803,7 +743,7 @@ export default class Card extends React.Component<Props> {
         <View pointerEvents="box-none" {...rest}>
           <Animated.Code
             key={gestureEnabled ? 'gesture-code' : 'no-gesture-code'}
-            exec={gestureEnabled ? this.execWithGesture : this.execNoGesture}
+            exec={this.exec}
           />
           {overlayEnabled && overlayStyle ? (
             <Animated.View
