@@ -17,10 +17,11 @@ import androidx.fragment.app.Fragment;
 
 import com.facebook.react.views.text.ReactFontManager;
 
+import java.util.ArrayList;
+
 public class ScreenStackHeaderConfig extends ViewGroup {
 
-  private final ScreenStackHeaderSubview mConfigSubviews[] = new ScreenStackHeaderSubview[3];
-  private int mSubviewsCount = 0;
+  private final ArrayList<ScreenStackHeaderSubview> mConfigSubviews = new ArrayList<>(3);
   private String mTitle;
   private int mTitleColor;
   private String mTitleFontFamily;
@@ -174,8 +175,13 @@ public class ScreenStackHeaderConfig extends ViewGroup {
     }
 
     // subviews
-    for (int i = 0; i < mSubviewsCount; i++) {
-      ScreenStackHeaderSubview view = mConfigSubviews[i];
+    for (int i = mToolbar.getChildCount() - 1; i >= 0; i--) {
+      if (mToolbar.getChildAt(i) instanceof ScreenStackHeaderSubview) {
+        mToolbar.removeViewAt(i);
+      }
+    }
+    for (int i = 0, size = mConfigSubviews.size(); i < size; i++) {
+      ScreenStackHeaderSubview view = mConfigSubviews.get(i);
       ScreenStackHeaderSubview.Type type = view.getType();
 
       Toolbar.LayoutParams params =
@@ -201,9 +207,7 @@ public class ScreenStackHeaderConfig extends ViewGroup {
       }
 
       view.setLayoutParams(params);
-      if (view.getParent() == null) {
-        mToolbar.addView(view);
-      }
+      mToolbar.addView(view);
     }
   }
 
@@ -214,26 +218,20 @@ public class ScreenStackHeaderConfig extends ViewGroup {
   }
 
   public ScreenStackHeaderSubview getConfigSubview(int index) {
-    return mConfigSubviews[index];
+    return mConfigSubviews.get(index);
   }
 
   public int getConfigSubviewsCount() {
-    return mSubviewsCount;
+    return mConfigSubviews.size();
   }
 
   public void removeConfigSubview(int index) {
-    if (mConfigSubviews[index] != null) {
-      mSubviewsCount--;
-    }
-    mConfigSubviews[index] = null;
+    mConfigSubviews.remove(index);
     maybeUpdate();
   }
 
   public void addConfigSubview(ScreenStackHeaderSubview child, int index) {
-    if (mConfigSubviews[index] == null) {
-      mSubviewsCount++;
-    }
-    mConfigSubviews[index] = child;
+    mConfigSubviews.add(index, child);
     maybeUpdate();
   }
 
