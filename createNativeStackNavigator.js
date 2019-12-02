@@ -165,11 +165,17 @@ class StackView extends React.Component {
         transparentCard || options.cardTransparent ? 'transparentModal' : mode;
     }
 
+    let stackAnimation = undefined;
+    if (options.animationEnabled === false) {
+      stackAnimation = 'none';
+    }
+
     const { screenProps } = this.props;
     return (
       <Screen
         key={`screen_${route.key}`}
         style={options.cardStyle}
+        stackAnimation={stackAnimation}
         stackPresentation={stackPresentation}
         onDismissed={() => this._removeScene(route)}>
         {this._renderHeaderConfig(index, route, descriptor)}
