@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.39](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.38...@react-navigation/stack@5.0.0-alpha.39) (2019-12-03)
+
+
+### Bug Fixes
+
+* correctly update layout on onLayout events ([eaf8847](https://github.com/react-navigation/navigation-ex/commit/eaf88478cc392fb9ff0b69c7539595920db8e010))
+* disable pointerEvents on header when not focused ([87d445b](https://github.com/react-navigation/navigation-ex/commit/87d445b4e4468cf6c17787f47dd875ab8a95598a))
+
+
+
+
+
 # [5.0.0-alpha.38](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.37...@react-navigation/stack@5.0.0-alpha.38) (2019-11-29)
 
 
