@@ -29,7 +29,11 @@ type Props = {
   descriptors: NativeStackDescriptorMap;
 };
 
-export default function StackView({ state, navigation, descriptors }: Props) {
+export default function NativeStackView({
+  state,
+  navigation,
+  descriptors,
+}: Props) {
   return (
     <ScreenStack style={styles.scenes}>
       {state.routes.map(route => {
