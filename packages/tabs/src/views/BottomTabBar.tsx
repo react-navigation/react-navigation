@@ -460,7 +460,7 @@ class TabBarBottom extends React.Component<BottomTabBarProps, State> {
                 ],
                 // Absolutely position the tab bar so that the content is below it
                 // This is needed to avoid gap at bottom when the tab bar is hidden
-                position: this.state.keyboard ? 'absolute' : undefined,
+                position: this.state.keyboard ? 'absolute' : position,
               }
             : null,
         ]}
