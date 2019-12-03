@@ -446,6 +446,7 @@ class TabBarBottom extends React.Component<BottomTabBarProps, State> {
       <Animated.View
         style={[
           styles.container,
+          containerStyle,
           keyboardHidesTabBar
             ? {
                 // When the keyboard is shown, slide down the tab bar
@@ -459,10 +460,9 @@ class TabBarBottom extends React.Component<BottomTabBarProps, State> {
                 ],
                 // Absolutely position the tab bar so that the content is below it
                 // This is needed to avoid gap at bottom when the tab bar is hidden
-                position: this.state.keyboard ? 'absolute' : null,
+                position: this.state.keyboard ? 'absolute' : undefined,
               }
             : null,
-          containerStyle,
         ]}
         pointerEvents={
           keyboardHidesTabBar && this.state.keyboard ? 'none' : 'auto'
