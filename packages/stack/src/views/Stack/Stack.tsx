@@ -233,25 +233,24 @@ export default class Stack extends React.Component<Props, State> {
   private handleLayout = (e: LayoutChangeEvent) => {
     const { height, width } = e.nativeEvent.layout;
 
-    if (
-      height === this.state.layout.height &&
-      width === this.state.layout.width
-    ) {
-      return;
-    }
-
     const layout = { width, height };
 
-    this.setState(state => ({
-      layout,
-      floatingHeaderHeights: getFloatingHeaderHeights(
-        this.props.routes,
-        this.props.insets,
-        state.descriptors,
+    this.setState((state, props) => {
+      if (height === state.layout.height && width === state.layout.width) {
+        return null;
+      }
+
+      return {
         layout,
-        {}
-      ),
-    }));
+        floatingHeaderHeights: getFloatingHeaderHeights(
+          props.routes,
+          props.insets,
+          state.descriptors,
+          layout,
+          {}
+        ),
+      };
+    });
   };
 
   private handleFloatingHeaderLayout = ({
@@ -261,23 +260,20 @@ export default class Stack extends React.Component<Props, State> {
     route: Route<string>;
     height: number;
   }) => {
-    const previousHeight = this.state.floatingHeaderHeights[route.key];
+    this.setState(({ floatingHeaderHeights }) => {
+      const previousHeight = this.state.floatingHeaderHeights[route.key];
 
-    if (previousHeight && previousHeight === height) {
-      return;
-    }
+      if (previousHeight && previousHeight === height) {
+        return null;
+      }
 
-    // Update in next frame to make sure it's applied after screen's onLayout
-    requestAnimationFrame(() =>
-      requestAnimationFrame(() => {
-        this.setState(state => ({
-          floatingHeaderHeights: {
-            ...state.floatingHeaderHeights,
-            [route.key]: height,
-          },
-        }));
-      })
-    );
+      return {
+        floatingHeaderHeights: {
+          ...floatingHeaderHeights,
+          [route.key]: height,
+        },
+      };
+    });
   };
 
   private handleTransitionStart = (

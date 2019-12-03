@@ -79,17 +79,20 @@ export default class HeaderSegment extends React.Component<Props, State> {
 
   private handleTitleLayout = (e: LayoutChangeEvent) => {
     const { height, width } = e.nativeEvent.layout;
-    const { titleLayout } = this.state;
 
-    if (
-      titleLayout &&
-      height === titleLayout.height &&
-      width === titleLayout.width
-    ) {
-      return;
-    }
+    this.setState(({ titleLayout }) => {
+      if (
+        titleLayout &&
+        height === titleLayout.height &&
+        width === titleLayout.width
+      ) {
+        return null;
+      }
 
-    this.setState({ titleLayout: { height, width } });
+      return {
+        titleLayout: { height, width },
+      };
+    });
   };
 
   private handleLeftLabelLayout = (e: LayoutChangeEvent) => {
