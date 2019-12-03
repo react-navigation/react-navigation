@@ -6,6 +6,7 @@ export { default as createBottomTabNavigator } from './navigators/createBottomTa
 /**
  * Views
  */
+export { default as BottomTabView } from './views/BottomTabView';
 export { default as BottomTabBar } from './views/BottomTabBar';
 
 /**

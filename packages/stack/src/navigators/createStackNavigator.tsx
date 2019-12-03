@@ -11,7 +11,6 @@ import {
   StackNavigationState,
   StackActions,
 } from '@react-navigation/routers';
-import KeyboardManager from '../views/KeyboardManager';
 import StackView from '../views/Stack/StackView';
 import {
   StackNavigationConfig,
@@ -24,7 +23,6 @@ type Props = DefaultNavigatorOptions<StackNavigationOptions> &
   StackNavigationConfig;
 
 function StackNavigator({
-  keyboardHandlingEnabled,
   initialRouteName,
   children,
   screenOptions,
@@ -64,17 +62,12 @@ function StackNavigator({
   );
 
   return (
-    <KeyboardManager enabled={keyboardHandlingEnabled !== false}>
-      {props => (
-        <StackView
-          state={state}
-          descriptors={descriptors}
-          navigation={navigation}
-          {...rest}
-          {...props}
-        />
-      )}
-    </KeyboardManager>
+    <StackView
+      {...rest}
+      state={state}
+      descriptors={descriptors}
+      navigation={navigation}
+    />
   );
 }
 

@@ -40,10 +40,10 @@ function DrawerNavigator({
 
   return (
     <DrawerView
+      {...rest}
       state={state}
       descriptors={descriptors}
       navigation={navigation}
-      {...rest}
     />
   );
 }

@@ -60,7 +60,7 @@ type Props = TransitionPreset & {
   floatingHeaderHeight: number;
 };
 
-export default class StackItem extends React.PureComponent<Props> {
+export default class CardContainer extends React.PureComponent<Props> {
   private handleOpen = () => {
     const { scene, onTransitionEnd, onOpenRoute } = this.props;
 

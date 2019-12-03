@@ -4,7 +4,8 @@ import { SafeAreaConsumer, EdgeInsets } from 'react-native-safe-area-context';
 import { Route } from '@react-navigation/core';
 import { StackActions, StackNavigationState } from '@react-navigation/routers';
 
-import Stack from './Stack';
+import CardStack from './CardStack';
+import KeyboardManager from '../KeyboardManager';
 import HeaderContainer, {
   Props as HeaderContainerProps,
 } from '../Header/HeaderContainer';
@@ -19,9 +20,6 @@ type Props = StackNavigationConfig & {
   state: StackNavigationState;
   navigation: StackNavigationHelpers;
   descriptors: StackDescriptorMap;
-  onPageChangeStart?: () => void;
-  onPageChangeConfirm?: () => void;
-  onPageChangeCancel?: () => void;
 };
 
 type State = {
@@ -307,9 +305,7 @@ class StackView extends React.Component<Props, State> {
     const {
       state,
       navigation,
-      onPageChangeStart,
-      onPageChangeConfirm,
-      onPageChangeCancel,
+      keyboardHandlingEnabled,
       mode = 'card',
       ...rest
     } = this.props;
@@ -328,28 +324,30 @@ class StackView extends React.Component<Props, State> {
       <SafeAreaProviderCompat>
         <SafeAreaConsumer>
           {insets => (
-            <Stack
-              mode={mode}
-              insets={insets as EdgeInsets}
-              getPreviousRoute={this.getPreviousRoute}
-              getGesturesEnabled={this.getGesturesEnabled}
-              routes={routes}
-              openingRouteKeys={openingRouteKeys}
-              closingRouteKeys={closingRouteKeys}
-              onGoBack={this.handleGoBack}
-              onOpenRoute={this.handleOpenRoute}
-              onCloseRoute={this.handleCloseRoute}
-              onPageChangeStart={onPageChangeStart}
-              onPageChangeConfirm={onPageChangeConfirm}
-              onPageChangeCancel={onPageChangeCancel}
-              renderHeader={this.renderHeader}
-              renderScene={this.renderScene}
-              headerMode={headerMode}
-              state={state}
-              navigation={navigation}
-              descriptors={descriptors}
-              {...rest}
-            />
+            <KeyboardManager enabled={keyboardHandlingEnabled !== false}>
+              {props => (
+                <CardStack
+                  mode={mode}
+                  insets={insets as EdgeInsets}
+                  getPreviousRoute={this.getPreviousRoute}
+                  getGesturesEnabled={this.getGesturesEnabled}
+                  routes={routes}
+                  openingRouteKeys={openingRouteKeys}
+                  closingRouteKeys={closingRouteKeys}
+                  onGoBack={this.handleGoBack}
+                  onOpenRoute={this.handleOpenRoute}
+                  onCloseRoute={this.handleCloseRoute}
+                  renderHeader={this.renderHeader}
+                  renderScene={this.renderScene}
+                  headerMode={headerMode}
+                  state={state}
+                  navigation={navigation}
+                  descriptors={descriptors}
+                  {...rest}
+                  {...props}
+                />
+              )}
+            </KeyboardManager>
           )}
         </SafeAreaConsumer>
       </SafeAreaProviderCompat>

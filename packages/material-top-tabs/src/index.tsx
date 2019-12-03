@@ -6,6 +6,7 @@ export { default as createMaterialTopTabNavigator } from './navigators/createMat
 /**
  * Views
  */
+export { default as MaterialTopTabView } from './views/MaterialTopTabView';
 export { default as MaterialTopTabBar } from './views/MaterialTopTabBar';
 
 /**

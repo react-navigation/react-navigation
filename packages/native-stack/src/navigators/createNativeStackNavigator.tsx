@@ -16,7 +16,7 @@ import {
   screensEnabled,
   // eslint-disable-next-line import/no-unresolved
 } from 'react-native-screens';
-import StackView from '../views/StackView';
+import NativeStackView from '../views/NativeStackView';
 import {
   NativeStackNavigatorProps,
   NativeStackNavigationOptions,
@@ -64,11 +64,11 @@ function NativeStackNavigator(props: NativeStackNavigatorProps) {
   );
 
   return (
-    <StackView
+    <NativeStackView
+      {...rest}
       state={state}
       navigation={navigation}
       descriptors={descriptors}
-      {...rest}
     />
   );
 }

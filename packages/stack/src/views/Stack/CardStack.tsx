@@ -16,7 +16,7 @@ import { StackNavigationState } from '@react-navigation/routers';
 
 import { getDefaultHeaderHeight } from '../Header/HeaderSegment';
 import { Props as HeaderContainerProps } from '../Header/HeaderContainer';
-import StackItem from './StackItem';
+import CardContainer from './CardContainer';
 import {
   DefaultTransition,
   ModalTransition,
@@ -139,7 +139,7 @@ const getFloatingHeaderHeights = (
   }, {});
 };
 
-export default class Stack extends React.Component<Props, State> {
+export default class CardStack extends React.Component<Props, State> {
   static getDerivedStateFromProps(props: Props, state: State) {
     if (
       props.routes === state.routes &&
@@ -431,7 +431,7 @@ export default class Stack extends React.Component<Props, State> {
                 active={isScreenActive}
                 pointerEvents="box-none"
               >
-                <StackItem
+                <CardContainer
                   index={index}
                   active={index === self.length - 1}
                   focused={focused}
