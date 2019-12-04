@@ -2,7 +2,7 @@
 #import <React/RCTUIManagerObserverCoordinator.h>
 #import "RNSScreenContainer.h"
 
-@interface RNSScreenStackView : UIView <RNSScreenContainerDelegate>
+@interface RNSScreenStackView : UIView <RNSScreenContainerDelegate, RCTInvalidating>
 
 - (void)markChildUpdated;
 - (void)didUpdateChildren;
