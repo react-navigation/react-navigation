@@ -624,7 +624,7 @@ declare module 'react-navigation' {
     Options = {},
     ScreenProps = unknown
   > {
-    uriPrefix?: string | RegExp;
+    uriPrefix?: string | string[] | RegExp;
     /**
      * Controls whether the navigation container handles URLs opened via 'Linking'
      * @see https://facebook.github.io/react-native/docs/linking
