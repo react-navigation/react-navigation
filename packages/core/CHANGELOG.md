@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.26](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/core@5.0.0-alpha.25...@react-navigation/core@5.0.0-alpha.26) (2019-12-07)
+
+
+### Bug Fixes
+
+* don't handle replace if screen to replace with isn't present ([7b13a81](https://github.com/react-navigation/navigation-ex/commit/7b13a81ac8260879c8658be5704f46db59a72c73)), closes [#193](https://github.com/react-navigation/navigation-ex/issues/193)
+
+
+
+
+
 # [5.0.0-alpha.25](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/core@5.0.0-alpha.24...@react-navigation/core@5.0.0-alpha.25) (2019-11-29)
 
 

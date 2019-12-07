@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.20](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/material-top-tabs@5.0.0-alpha.19...@react-navigation/material-top-tabs@5.0.0-alpha.20) (2019-12-07)
+
+
+### Features
+
+* export underlying views used to build navigators ([#191](https://github.com/react-navigation/navigation-ex/issues/191)) ([d618ab3](https://github.com/react-navigation/navigation-ex/commit/d618ab382ecc5eccbcd5faa89e76f9ed2d75f405))
+
+
+
+
+
 # [5.0.0-alpha.19](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/material-top-tabs@5.0.0-alpha.18...@react-navigation/material-top-tabs@5.0.0-alpha.19) (2019-11-20)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs

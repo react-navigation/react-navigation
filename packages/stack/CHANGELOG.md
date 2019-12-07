@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.40](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.39...@react-navigation/stack@5.0.0-alpha.40) (2019-12-07)
+
+
+### Features
+
+* export underlying views used to build navigators ([#191](https://github.com/react-navigation/navigation-ex/issues/191)) ([d618ab3](https://github.com/react-navigation/navigation-ex/commit/d618ab382ecc5eccbcd5faa89e76f9ed2d75f405))
+
+
+
+
+
 # [5.0.0-alpha.39](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.38...@react-navigation/stack@5.0.0-alpha.39) (2019-12-03)
 
 
