@@ -121,27 +121,25 @@ export default function useDescriptors<
             </NavigationBuilderContext.Provider>
           );
         },
-        get options() {
-          return {
-            // The default `screenOptions` passed to the navigator
-            ...(typeof screenOptions === 'object' || screenOptions == null
-              ? screenOptions
-              : screenOptions({
-                  // @ts-ignore
-                  route,
-                  navigation,
-                })),
-            // The `options` prop passed to `Screen` elements
-            ...(typeof screen.options === 'object' || screen.options == null
-              ? screen.options
-              : screen.options({
-                  // @ts-ignore
-                  route,
-                  navigation,
-                })),
-            // The options set via `navigation.setOptions`
-            ...options[route.key],
-          };
+        options: {
+          // The default `screenOptions` passed to the navigator
+          ...(typeof screenOptions === 'object' || screenOptions == null
+            ? screenOptions
+            : screenOptions({
+                // @ts-ignore
+                route,
+                navigation,
+              })),
+          // The `options` prop passed to `Screen` elements
+          ...(typeof screen.options === 'object' || screen.options == null
+            ? screen.options
+            : screen.options({
+                // @ts-ignore
+                route,
+                navigation,
+              })),
+          // The options set via `navigation.setOptions`
+          ...options[route.key],
         },
       };
 
