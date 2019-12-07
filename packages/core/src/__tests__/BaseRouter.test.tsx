@@ -65,6 +65,15 @@ it("doesn't handle REPLACE if source key isn't present", () => {
   expect(result).toBe(null);
 });
 
+it("doesn't handle REPLACE if screen to replace with isn't present", () => {
+  const result = BaseRouter.getStateForAction(
+    STATE,
+    CommonActions.replace('nonexistent', { answer: 42 })
+  );
+
+  expect(result).toBe(null);
+});
+
 it('sets params for the focused screen with SET_PARAMS', () => {
   const result = BaseRouter.getStateForAction(
     STATE,
