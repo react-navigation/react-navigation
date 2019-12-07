@@ -22,6 +22,10 @@ const BaseRouter = {
 
         const { name, key, params } = action.payload;
 
+        if (!state.routeNames.includes(name)) {
+          return null;
+        }
+
         return {
           ...state,
           routes: state.routes.map((route, i) =>
