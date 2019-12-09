@@ -104,6 +104,7 @@ const GESTURE_RESPONSE_DISTANCE_VERTICAL = 135;
 const {
   abs,
   add,
+  and,
   block,
   call,
   cond,
@@ -678,6 +679,13 @@ export default class Card extends React.Component<Props> {
         set(
           this.isSwipeCancelled,
           eq(this.gestureState, GestureState.CANCELLED)
+        ),
+        cond(
+          and(
+            eq(this.gestureState, GestureState.END),
+            lessThan(this.velocity, 0)
+          ),
+          [set(this.velocity, 0), set(this.velocityUntraversed, 0)]
         ),
         set(this.isSwiping, FALSE_NODE),
         this.runTransition(
