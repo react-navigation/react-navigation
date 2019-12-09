@@ -12,20 +12,14 @@ import {
 import Animated, { Easing } from 'react-native-reanimated';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import { EdgeInsets } from 'react-native-safe-area-context';
-import animate, {
-  Binary,
-  TRUE,
-  FALSE,
-  UNSET,
-  ANIMATION_SPRING,
-  ANIMATION_TIMING,
-} from './CardAnimation';
+import animate, { Binary } from './CardAnimation';
 import PointerEventsView from './PointerEventsView';
 import memoize from '../../utils/memoize';
 import StackGestureContext from '../../utils/StackGestureContext';
 import {
   TransitionSpec,
   StackCardStyleInterpolator,
+  GestureDirection,
   Layout,
   TimingConfig,
   SpringConfig,
@@ -40,7 +34,7 @@ type Props = ViewProps & {
   current: Animated.Value<number>;
   layout: Layout;
   insets: EdgeInsets;
-  gestureDirection: 'horizontal' | 'vertical';
+  gestureDirection: GestureDirection;
   onOpen: (isFinished: boolean) => void;
   onClose: (isFinished: boolean) => void;
   onTransitionStart?: (props: { closing: boolean }) => void;
@@ -78,10 +72,17 @@ type AnimatedTimingConfig = {
   duration: Animated.Value<number>;
 };
 
+const ANIMATION_SPRING = 0;
+const ANIMATION_TIMING = 1;
+
 const DIRECTION_VERTICAL = -1;
 const DIRECTION_HORIZONTAL = 1;
 
 const GESTURE_VELOCITY_IMPACT = 0.3;
+
+const TRUE = 1;
+const FALSE = 0;
+const UNSET = -1;
 
 /**
  * The distance of touch start from the edge of the screen where the gesture will be recognized
@@ -96,6 +97,8 @@ const {
   spring,
   timing,
   call,
+  set,
+  multiply,
   cond,
   eq,
   Clock,
@@ -237,6 +240,19 @@ function transformTimingConfigToAnimatedValues(
   }
 }
 
+function getInvertedMultiplier(gestureDirection: GestureDirection): 1 | -1 {
+  switch (gestureDirection) {
+    case 'vertical':
+      return 1;
+    case 'vertical-inverted':
+      return -1;
+    case 'horizontal':
+      return I18nManager.isRTL ? -1 : 1;
+    case 'horizontal-inverted':
+      return I18nManager.isRTL ? 1 : -1;
+  }
+}
+
 export default class Card extends React.Component<Props> {
   static defaultProps = {
     overlayEnabled: Platform.OS !== 'ios',
@@ -274,10 +290,13 @@ export default class Card extends React.Component<Props> {
 
     if (gestureDirection !== prevProps.gestureDirection) {
       this.direction.setValue(
-        gestureDirection === 'vertical'
+        gestureDirection === 'vertical' ||
+          gestureDirection === 'vertical-inverted'
           ? DIRECTION_VERTICAL
           : DIRECTION_HORIZONTAL
       );
+
+      this.inverted.setValue(getInvertedMultiplier(gestureDirection));
     }
 
     if (transitionSpec.open !== prevProps.transitionSpec.open) {
@@ -374,9 +393,14 @@ export default class Card extends React.Component<Props> {
   private clock = new Clock();
 
   private direction = new Value(
-    this.props.gestureDirection === 'vertical'
+    this.props.gestureDirection === 'vertical' ||
+    this.props.gestureDirection === 'vertical-inverted'
       ? DIRECTION_VERTICAL
       : DIRECTION_HORIZONTAL
+  );
+
+  private inverted = new Value(
+    getInvertedMultiplier(this.props.gestureDirection)
   );
 
   private layout = {
@@ -410,10 +434,8 @@ export default class Card extends React.Component<Props> {
     this.layout.width
   );
 
-  private gestureUntraversed = new Value(0);
   private gesture = new Value(0);
   private offset = new Value(0);
-  private velocityUntraversed = new Value(0);
   private velocity = new Value(0);
 
   private gestureState = new Value(0);
@@ -553,11 +575,9 @@ export default class Card extends React.Component<Props> {
     clockRunning(this.clock),
     startClock(this.clock),
     stopClock(this.clock),
-    this.direction,
     this.distance,
     this.gesture,
     this.gestureState,
-    this.gestureUntraversed,
     this.gestureVelocityImpact,
     this.isClosing,
     this.isGestureEnabled,
@@ -578,15 +598,16 @@ export default class Card extends React.Component<Props> {
     this.transitionConfig.frameTime,
     this.transitionConfig.time,
     this.transitionConfig.velocity,
-    this.velocity,
-    this.velocityUntraversed
+    this.velocity
   );
 
   private handleGestureEventHorizontal = Animated.event([
     {
       nativeEvent: {
-        translationX: this.gestureUntraversed,
-        velocityX: this.velocityUntraversed,
+        translationX: (x: Animated.Node<number>) =>
+          set(this.gesture, multiply(x, this.inverted)),
+        velocityX: (x: Animated.Node<number>) =>
+          set(this.velocity, multiply(x, this.inverted)),
         state: this.gestureState,
       },
     },
@@ -595,8 +616,10 @@ export default class Card extends React.Component<Props> {
   private handleGestureEventVertical = Animated.event([
     {
       nativeEvent: {
-        translationY: this.gestureUntraversed,
-        velocityY: this.velocityUntraversed,
+        translationY: (y: Animated.Node<number>) =>
+          set(this.gesture, multiply(y, this.inverted)),
+        velocityY: (y: Animated.Node<number>) =>
+          set(this.velocity, multiply(y, this.inverted)),
         state: this.gestureState,
       },
     },
@@ -622,6 +645,7 @@ export default class Card extends React.Component<Props> {
         current: { progress: current },
         next: next && { progress: next },
         closing: this.isClosing,
+        inverted: this.inverted,
         layouts: {
           screen: layout,
         },
@@ -654,7 +678,8 @@ export default class Card extends React.Component<Props> {
     const { layout, gestureDirection, gestureResponseDistance } = this.props;
 
     const distance =
-      gestureDirection === 'vertical'
+      gestureDirection === 'vertical' ||
+      gestureDirection === 'vertical-inverted'
         ? gestureResponseDistance &&
           gestureResponseDistance.vertical !== undefined
           ? gestureResponseDistance.vertical
@@ -670,20 +695,27 @@ export default class Card extends React.Component<Props> {
         minOffsetY: 5,
         hitSlop: { bottom: -layout.height + distance },
       };
+    } else if (gestureDirection === 'vertical-inverted') {
+      return {
+        maxDeltaX: 15,
+        minOffsetY: -5,
+        hitSlop: { top: -layout.height + distance },
+      };
     } else {
       const hitSlop = -layout.width + distance;
+      const invertedMultiplier = getInvertedMultiplier(gestureDirection);
 
-      if (I18nManager.isRTL) {
-        return {
-          minOffsetX: -5,
-          maxDeltaY: 20,
-          hitSlop: { left: hitSlop },
-        };
-      } else {
+      if (invertedMultiplier === 1) {
         return {
           minOffsetX: 5,
           maxDeltaY: 20,
           hitSlop: { right: hitSlop },
+        };
+      } else {
+        return {
+          minOffsetX: -5,
+          maxDeltaY: 20,
+          hitSlop: { left: hitSlop },
         };
       }
     }
