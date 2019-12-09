@@ -28,7 +28,6 @@ import {
   Scene,
   StackDescriptorMap,
   StackNavigationOptions,
-  StackNavigationHelpers,
 } from '../../types';
 
 type ProgressValues = {
@@ -39,7 +38,6 @@ type Props = {
   mode: 'card' | 'modal';
   insets: EdgeInsets;
   state: StackNavigationState;
-  navigation: StackNavigationHelpers;
   descriptors: StackDescriptorMap;
   routes: Route<string>[];
   openingRouteKeys: string[];
@@ -54,6 +52,11 @@ type Props = {
   renderHeader: (props: HeaderContainerProps) => React.ReactNode;
   renderScene: (props: { route: Route<string> }) => React.ReactNode;
   headerMode: StackHeaderMode;
+  onTransitionStart: (
+    props: { route: Route<string> },
+    closing: boolean
+  ) => void;
+  onTransitionEnd: (props: { route: Route<string> }, closing: boolean) => void;
   onPageChangeStart?: () => void;
   onPageChangeConfirm?: () => void;
   onPageChangeCancel?: () => void;
@@ -276,33 +279,12 @@ export default class CardStack extends React.Component<Props, State> {
     });
   };
 
-  private handleTransitionStart = (
-    { route }: { route: Route<string> },
-    closing: boolean
-  ) =>
-    this.props.navigation.emit({
-      type: 'transitionStart',
-      data: { closing },
-      target: route.key,
-    });
-
-  private handleTransitionEnd = (
-    { route }: { route: Route<string> },
-    closing: boolean
-  ) =>
-    this.props.navigation.emit({
-      type: 'transitionEnd',
-      data: { closing },
-      target: route.key,
-    });
-
   render() {
     const {
       mode,
       insets,
       descriptors,
       state,
-      navigation,
       routes,
       closingRouteKeys,
       onOpenRoute,
@@ -313,6 +295,8 @@ export default class CardStack extends React.Component<Props, State> {
       renderHeader,
       renderScene,
       headerMode,
+      onTransitionStart,
+      onTransitionEnd,
       onPageChangeStart,
       onPageChangeConfirm,
       onPageChangeCancel,
@@ -440,7 +424,6 @@ export default class CardStack extends React.Component<Props, State> {
                   current={current}
                   scene={scene}
                   previousScene={scenes[index - 1]}
-                  navigation={navigation}
                   state={state}
                   safeAreaInsetTop={safeAreaInsetTop}
                   safeAreaInsetRight={safeAreaInsetRight}
@@ -463,8 +446,8 @@ export default class CardStack extends React.Component<Props, State> {
                   renderScene={renderScene}
                   onOpenRoute={onOpenRoute}
                   onCloseRoute={onCloseRoute}
-                  onTransitionStart={this.handleTransitionStart}
-                  onTransitionEnd={this.handleTransitionEnd}
+                  onTransitionStart={onTransitionStart}
+                  onTransitionEnd={onTransitionEnd}
                   onGoBack={onGoBack}
                   gestureEnabled={index !== 0 && getGesturesEnabled({ route })}
                   gestureVelocityImpact={gestureVelocityImpact}

@@ -5,13 +5,7 @@ import { StackNavigationState } from '@react-navigation/routers';
 import { Route } from '@react-navigation/core';
 import { Props as HeaderContainerProps } from '../Header/HeaderContainer';
 import Card from './Card';
-import {
-  StackNavigationHelpers,
-  Scene,
-  Layout,
-  StackHeaderMode,
-  TransitionPreset,
-} from '../../types';
+import { Scene, Layout, StackHeaderMode, TransitionPreset } from '../../types';
 
 type Props = TransitionPreset & {
   index: number;
@@ -23,7 +17,6 @@ type Props = TransitionPreset & {
   previousScene?: Scene<Route<string>>;
   scene: Scene<Route<string>>;
   state: StackNavigationState;
-  navigation: StackNavigationHelpers;
   safeAreaInsetTop: number;
   safeAreaInsetRight: number;
   safeAreaInsetBottom: number;
