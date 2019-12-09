@@ -119,6 +119,16 @@ export default class TabBarBottom extends React.Component<Props, State> {
     });
   };
 
+  private getLabelText = ({ route }: { route: Route<string> }) => {
+    const { options } = this.props.descriptors[route.key];
+
+    return options.tabBarLabel !== undefined
+      ? options.tabBarLabel
+      : options.title !== undefined
+      ? options.title
+      : route.name;
+  };
+
   private renderLabel = ({
     route,
     focused,
@@ -139,14 +149,7 @@ export default class TabBarBottom extends React.Component<Props, State> {
       return null;
     }
 
-    const { options } = this.props.descriptors[route.key];
-    const label =
-      options.tabBarLabel !== undefined
-        ? options.tabBarLabel
-        : options.title !== undefined
-        ? options.title
-        : route.name;
-
+    const label = this.getLabelText({ route });
     const horizontal = this.shouldUseHorizontalLabels();
     const color = focused ? activeTintColor : inactiveTintColor;
 
@@ -354,6 +357,14 @@ export default class TabBarBottom extends React.Component<Props, State> {
                   });
                 };
 
+                const label = this.getLabelText({ route });
+                const accessibilityLabel =
+                  options.tabBarAccessibilityLabel !== undefined
+                    ? options.tabBarAccessibilityLabel
+                    : typeof label === 'string'
+                    ? `${label}, tab, ${index + 1} of ${routes.length}`
+                    : undefined;
+
                 return (
                   <NavigationContext.Provider
                     key={route.key}
@@ -362,10 +373,10 @@ export default class TabBarBottom extends React.Component<Props, State> {
                     {renderButton({
                       onPress,
                       onLongPress,
-                      testID: options.tabBarTestID,
-                      accessibilityLabel: options.tabBarAccessibilityLabel,
+                      accessibilityLabel,
                       accessibilityRole: 'button',
                       accessibilityStates: focused ? ['selected'] : [],
+                      testID: options.tabBarTestID,
                       style: [
                         styles.tab,
                         { backgroundColor },
