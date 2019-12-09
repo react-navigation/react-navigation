@@ -301,9 +301,30 @@ class StackView extends React.Component<Props, State> {
     }));
   };
 
+  private handleTransitionStart = (
+    { route }: { route: Route<string> },
+    closing: boolean
+  ) =>
+    this.props.navigation.emit({
+      type: 'transitionStart',
+      data: { closing },
+      target: route.key,
+    });
+
+  private handleTransitionEnd = (
+    { route }: { route: Route<string> },
+    closing: boolean
+  ) =>
+    this.props.navigation.emit({
+      type: 'transitionEnd',
+      data: { closing },
+      target: route.key,
+    });
+
   render() {
     const {
       state,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       navigation,
       keyboardHandlingEnabled,
       mode = 'card',
@@ -337,11 +358,12 @@ class StackView extends React.Component<Props, State> {
                   onGoBack={this.handleGoBack}
                   onOpenRoute={this.handleOpenRoute}
                   onCloseRoute={this.handleCloseRoute}
+                  onTransitionStart={this.handleTransitionStart}
+                  onTransitionEnd={this.handleTransitionEnd}
                   renderHeader={this.renderHeader}
                   renderScene={this.renderScene}
                   headerMode={headerMode}
                   state={state}
-                  navigation={navigation}
                   descriptors={descriptors}
                   {...rest}
                   {...props}
