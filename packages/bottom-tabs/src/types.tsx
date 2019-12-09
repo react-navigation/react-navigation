@@ -1,8 +1,6 @@
 import * as React from 'react';
 import {
   TouchableWithoutFeedbackProps,
-  AccessibilityRole,
-  AccessibilityStates,
   StyleProp,
   TextStyle,
   ViewStyle,
@@ -12,7 +10,6 @@ import {
   NavigationProp,
   ParamListBase,
   Descriptor,
-  Route,
 } from '@react-navigation/core';
 import { TabNavigationState } from '@react-navigation/routers';
 
@@ -200,37 +197,7 @@ export type BottomTabBarOptions = {
 export type BottomTabBarProps = BottomTabBarOptions & {
   state: TabNavigationState;
   descriptors: BottomTabDescriptorMap;
-  navigation: NavigationHelpers<ParamListBase>;
-  onTabPress: (props: { route: Route<string> }) => void;
-  onTabLongPress: (props: { route: Route<string> }) => void;
-  getAccessibilityLabel: (props: {
-    route: Route<string>;
-  }) => string | undefined;
-  getAccessibilityRole: (props: {
-    route: Route<string>;
-  }) => AccessibilityRole | undefined;
-  getAccessibilityStates: (props: {
-    route: Route<string>;
-    focused: boolean;
-  }) => AccessibilityStates[];
-  getLabelText: (props: {
-    route: Route<string>;
-  }) =>
-    | ((scene: {
-        focused: boolean;
-        color: string;
-      }) => React.ReactNode | undefined)
-    | string;
-  getTestID: (props: { route: Route<string> }) => string | undefined;
-  renderButton: (
-    props: { route: Route<string> } & BottomTabBarButtonProps
-  ) => React.ReactNode;
-  renderIcon: (props: {
-    route: Route<string>;
-    focused: boolean;
-    color: string;
-    size: number;
-  }) => React.ReactNode;
+  navigation: NavigationHelpers<ParamListBase, BottomTabNavigationEventMap>;
 };
 
 export type BottomTabBarButtonProps = TouchableWithoutFeedbackProps & {

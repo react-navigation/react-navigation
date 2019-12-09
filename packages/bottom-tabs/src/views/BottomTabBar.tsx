@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   View,
+  TouchableWithoutFeedback,
   Animated,
   StyleSheet,
   Keyboard,
@@ -9,11 +10,15 @@ import {
   ScaledSize,
   Dimensions,
 } from 'react-native';
-import { Route, NavigationContext } from '@react-navigation/core';
+import {
+  Route,
+  NavigationContext,
+  CommonActions,
+} from '@react-navigation/core';
 import { SafeAreaConsumer } from 'react-native-safe-area-context';
 
 import TabBarIcon from './TabBarIcon';
-import { BottomTabBarProps } from '../types';
+import { BottomTabBarProps, BottomTabBarButtonProps } from '../types';
 
 type State = {
   dimensions: { height: number; width: number };
@@ -134,7 +139,14 @@ export default class TabBarBottom extends React.Component<Props, State> {
       return null;
     }
 
-    const label = this.props.getLabelText({ route });
+    const { options } = this.props.descriptors[route.key];
+    const label =
+      options.tabBarLabel !== undefined
+        ? options.tabBarLabel
+        : options.title !== undefined
+        ? options.title
+        : route.name;
+
     const horizontal = this.shouldUseHorizontalLabels();
     const color = focused ? activeTintColor : inactiveTintColor;
 
@@ -169,21 +181,31 @@ export default class TabBarBottom extends React.Component<Props, State> {
     route: Route<string>;
     focused: boolean;
   }) => {
-    const {
-      activeTintColor,
-      inactiveTintColor,
-      renderIcon,
-      showIcon,
-    } = this.props;
+    const { activeTintColor, inactiveTintColor, showIcon } = this.props;
 
     if (showIcon === false) {
       return null;
     }
 
+    const { options } = this.props.descriptors[route.key];
     const horizontal = this.shouldUseHorizontalLabels();
 
     const activeOpacity = focused ? 1 : 0;
     const inactiveOpacity = focused ? 0 : 1;
+
+    const renderIcon = (props: {
+      focused: boolean;
+      color: string;
+      size: number;
+    }) => {
+      if (options.tabBarIcon) {
+        return typeof options.tabBarIcon === 'string'
+          ? options.tabBarIcon
+          : options.tabBarIcon(props);
+      }
+
+      return null;
+    };
 
     return (
       <TabBarIcon
@@ -246,17 +268,11 @@ export default class TabBarBottom extends React.Component<Props, State> {
   render() {
     const {
       state,
+      navigation,
       descriptors,
       keyboardHidesTabBar,
       activeBackgroundColor,
       inactiveBackgroundColor,
-      onTabPress,
-      onTabLongPress,
-      getAccessibilityLabel,
-      getAccessibilityRole,
-      getAccessibilityStates,
-      renderButton,
-      getTestID,
       style,
       tabStyle,
     } = this.props;
@@ -298,21 +314,45 @@ export default class TabBarBottom extends React.Component<Props, State> {
               {routes.map((route, index) => {
                 const focused = index === state.index;
                 const scene = { route, focused };
-                const accessibilityLabel = getAccessibilityLabel({
-                  route,
-                });
-
-                const accessibilityRole = getAccessibilityRole({
-                  route,
-                });
-
-                const accessibilityStates = getAccessibilityStates(scene);
-
-                const testID = getTestID({ route });
+                const { options } = descriptors[route.key];
 
                 const backgroundColor = focused
                   ? activeBackgroundColor
                   : inactiveBackgroundColor;
+
+                const renderButton =
+                  options.tabBarButton !== undefined
+                    ? options.tabBarButton
+                    : ({
+                        children,
+                        style,
+                        ...rest
+                      }: BottomTabBarButtonProps) => (
+                        <TouchableWithoutFeedback {...rest}>
+                          <View style={style}>{children}</View>
+                        </TouchableWithoutFeedback>
+                      );
+
+                const onPress = () => {
+                  const event = navigation.emit({
+                    type: 'tabPress',
+                    target: route.key,
+                  });
+
+                  if (!focused && !event.defaultPrevented) {
+                    navigation.dispatch({
+                      ...CommonActions.navigate(route.name),
+                      target: state.key,
+                    });
+                  }
+                };
+
+                const onLongPress = () => {
+                  navigation.emit({
+                    type: 'tabLongPress',
+                    target: route.key,
+                  });
+                };
 
                 return (
                   <NavigationContext.Provider
@@ -320,13 +360,12 @@ export default class TabBarBottom extends React.Component<Props, State> {
                     value={descriptors[route.key].navigation}
                   >
                     {renderButton({
-                      route,
-                      onPress: () => onTabPress({ route }),
-                      onLongPress: () => onTabLongPress({ route }),
-                      testID,
-                      accessibilityLabel,
-                      accessibilityRole,
-                      accessibilityStates,
+                      onPress,
+                      onLongPress,
+                      testID: options.tabBarTestID,
+                      accessibilityLabel: options.tabBarAccessibilityLabel,
+                      accessibilityRole: 'button',
+                      accessibilityStates: focused ? ['selected'] : [],
                       style: [
                         styles.tab,
                         { backgroundColor },

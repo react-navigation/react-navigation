@@ -1,4 +1,4 @@
-import { StyleProp, ViewStyle } from 'react-native';
+import { StyleProp, ViewStyle, TextStyle } from 'react-native';
 import { TabBar, SceneRendererProps, TabView } from 'react-native-tab-view';
 import {
   ParamListBase,
@@ -169,6 +169,10 @@ export type MaterialTopTabBarOptions = Partial<
    */
   iconStyle?: StyleProp<ViewStyle>;
   /**
+   * Style object for the tab label.
+   */
+  labelStyle?: StyleProp<TextStyle>;
+  /**
    * Whether the tab label should be visible. Defaults to `true`.
    */
   showLabel?: boolean;
@@ -176,10 +180,6 @@ export type MaterialTopTabBarOptions = Partial<
    * Whether the tab icon should be visible. Defaults to `false`.
    */
   showIcon?: boolean;
-  /**
-   * Whether the tab label text should capitalized. Defaults to `true`.
-   */
-  upperCaseLabel?: boolean;
   /**
    * Whether label font should scale to respect Text Size accessibility settings.
    */
@@ -189,21 +189,9 @@ export type MaterialTopTabBarOptions = Partial<
 export type MaterialTopTabBarProps = MaterialTopTabBarOptions &
   SceneRendererProps & {
     state: TabNavigationState;
-    navigation: NavigationHelpers<ParamListBase>;
+    navigation: NavigationHelpers<
+      ParamListBase,
+      MaterialTopTabNavigationEventMap
+    >;
     descriptors: MaterialTopTabDescriptorMap;
-    getLabelText: (props: {
-      route: Route<string>;
-    }) =>
-      | ((scene: { focused: boolean; color: string }) => React.ReactNode)
-      | string;
-    getAccessibilityLabel: (props: {
-      route: Route<string>;
-    }) => string | undefined;
-    getTestID: (props: { route: Route<string> }) => string | undefined;
-    onTabPress: (props: {
-      route: Route<string>;
-      preventDefault(): void;
-    }) => void;
-    onTabLongPress: (props: { route: Route<string> }) => void;
-    tabBarPosition: 'top' | 'bottom';
   };

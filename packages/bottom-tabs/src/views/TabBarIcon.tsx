@@ -10,7 +10,6 @@ type Props = {
   activeTintColor: string;
   inactiveTintColor: string;
   renderIcon: (props: {
-    route: Route<string>;
     focused: boolean;
     color: string;
     size: number;
@@ -19,7 +18,6 @@ type Props = {
 };
 
 export default function TabBarIcon({
-  route,
   activeOpacity,
   inactiveOpacity,
   activeTintColor,
@@ -34,7 +32,6 @@ export default function TabBarIcon({
     <View style={style}>
       <View style={[styles.icon, { opacity: activeOpacity }]}>
         {renderIcon({
-          route,
           focused: true,
           size,
           color: activeTintColor,
@@ -42,7 +39,6 @@ export default function TabBarIcon({
       </View>
       <View style={[styles.icon, { opacity: inactiveOpacity }]}>
         {renderIcon({
-          route,
           focused: false,
           size,
           color: inactiveTintColor,
