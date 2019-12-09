@@ -22,18 +22,14 @@ const SplashScreen = () => {
   );
 };
 
-const SignInScreen = ({
-  setUserToken,
-}: {
-  setUserToken: (token: string) => void;
-}) => {
+const SignInScreen = ({ onSignIn }: { onSignIn: (token: string) => void }) => {
   return (
     <View style={styles.content}>
       <TextInput placeholder="Username" style={styles.input} />
       <TextInput placeholder="Password" secureTextEntry style={styles.input} />
       <Button
         mode="contained"
-        onPress={() => setUserToken('token')}
+        onPress={() => onSignIn('token')}
         style={styles.button}
       >
         Sign in
@@ -42,15 +38,11 @@ const SignInScreen = ({
   );
 };
 
-const HomeScreen = ({
-  setUserToken,
-}: {
-  setUserToken: (token: undefined) => void;
-}) => {
+const HomeScreen = ({ onSignOut }: { onSignOut: () => void }) => {
   return (
     <View style={styles.content}>
       <Title style={styles.text}>Signed in successfully 🎉</Title>
-      <Button onPress={() => setUserToken(undefined)} style={styles.button}>
+      <Button onPress={onSignOut} style={styles.button}>
         Sign out
       </Button>
     </View>
@@ -63,14 +55,48 @@ type Props = {
   navigation: StackNavigationProp<ParamListBase>;
 };
 
+type State = {
+  isLoading: boolean;
+  userToken: undefined | string;
+};
+
+type Action =
+  | { type: 'RESTORE_TOKEN'; token: undefined | string }
+  | { type: 'SIGN_IN'; token: string }
+  | { type: 'SIGN_OUT' };
+
 export default function SimpleStackScreen({ navigation }: Props) {
-  const [isLoading, setIsLoading] = React.useState(true);
-  const [userToken, setUserToken] = React.useState<string | undefined>(
-    undefined
+  const [state, dispatch] = React.useReducer<React.Reducer<State, Action>>(
+    (prevState, action) => {
+      switch (action.type) {
+        case 'RESTORE_TOKEN':
+          return {
+            ...prevState,
+            userToken: action.token,
+            isLoading: false,
+          };
+        case 'SIGN_IN':
+          return {
+            ...prevState,
+            userToken: action.token,
+          };
+        case 'SIGN_OUT':
+          return {
+            ...prevState,
+            userToken: undefined,
+          };
+      }
+    },
+    {
+      isLoading: true,
+      userToken: undefined,
+    }
   );
 
   React.useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 1000);
+    const timer = setTimeout(() => {
+      dispatch({ type: 'RESTORE_TOKEN', token: undefined });
+    }, 1000);
 
     return () => clearTimeout(timer);
   }, []);
@@ -87,19 +113,25 @@ export default function SimpleStackScreen({ navigation }: Props) {
         ),
       }}
     >
-      {isLoading ? (
+      {state.isLoading ? (
         <SimpleStack.Screen
           name="splash"
           component={SplashScreen}
           options={{ title: `Auth Flow` }}
         />
-      ) : userToken === undefined ? (
+      ) : state.userToken === undefined ? (
         <SimpleStack.Screen name="sign-in" options={{ title: `Sign in` }}>
-          {() => <SignInScreen setUserToken={setUserToken} />}
+          {() => (
+            <SignInScreen
+              onSignIn={token => dispatch({ type: 'SIGN_IN', token })}
+            />
+          )}
         </SimpleStack.Screen>
       ) : (
         <SimpleStack.Screen name="home" options={{ title: 'Home' }}>
-          {() => <HomeScreen setUserToken={setUserToken} />}
+          {() => (
+            <HomeScreen onSignOut={() => dispatch({ type: 'SIGN_OUT' })} />
+          )}
         </SimpleStack.Screen>
       )}
     </SimpleStack.Navigator>
