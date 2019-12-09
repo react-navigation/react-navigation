@@ -3,7 +3,8 @@
   "private": true,
   "workspaces": {
     "packages": [
-      "packages/*"
+      "packages/*",
+      "example"
     ]
   },
   "publishConfig": {
@@ -19,7 +20,7 @@
     "lint": "eslint --ext '.js,.ts,.tsx' .",
     "typescript": "tsc --noEmit",
     "test": "jest",
-    "example": "yarn --cwd packages/example"
+    "example": "yarn --cwd example"
   },
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.7.0",

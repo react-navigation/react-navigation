@@ -9,7 +9,7 @@ module.exports = async function(env, argv) {
 
   config.module.rules.push({
     test: /\.(js|ts|tsx)$/,
-    include: /packages\/.+/,
+    include: /(packages|example)\/.+/,
     exclude: /node_modules/,
     use: 'babel-loader',
   });
@@ -40,6 +40,7 @@ module.exports = async function(env, argv) {
     config.resolve.alias[`@react-navigation/${name}`] = path.resolve(
       __dirname,
       '..',
+      'packages',
       name,
       'src'
     );
