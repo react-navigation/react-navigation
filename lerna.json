@@ -1,6 +1,7 @@
 {
   "packages": [
-    "packages/*"
+    "packages/*",
+    "example"
   ],
   "npmClient": "yarn",
   "useWorkspaces": true,
@@ -12,7 +13,13 @@
       "createRelease": "github",
       "preId": "alpha",
       "preDistTag": "next",
-      "message": "chore: publish"
+      "message": "chore: publish",
+      "ignoreChanges": [
+        "**/__fixtures__/**",
+        "**/__tests__/**",
+        "**/*.md",
+        "**/example/**"
+      ]
     }
   }
 }

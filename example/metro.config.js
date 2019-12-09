@@ -7,20 +7,15 @@ const blacklist = require('metro-config/src/defaults/blacklist');
 
 module.exports = {
   projectRoot: __dirname,
-  watchFolders: [path.resolve(__dirname, '..', '..')],
+  watchFolders: [path.resolve(__dirname, '..')],
 
   resolver: {
     blacklistRE: blacklist(
-      [
-        ...fs
-          .readdirSync(path.resolve(__dirname, '..'))
-          .filter(d => d !== 'example'),
-        '..',
-      ].map(
+      [...fs.readdirSync(path.resolve(__dirname, '..', 'packages')), '..'].map(
         it =>
           new RegExp(
             `^${escape(
-              path.resolve(__dirname, '..', it, 'node_modules')
+              path.resolve(__dirname, '..', 'packages', it, 'node_modules')
             )}\\/.*$`
           )
       )
