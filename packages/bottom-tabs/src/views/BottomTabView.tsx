@@ -1,13 +1,6 @@
 import * as React from 'react';
-import {
-  View,
-  TouchableWithoutFeedback,
-  StyleSheet,
-  AccessibilityRole,
-  AccessibilityStates,
-} from 'react-native';
+import { View, StyleSheet } from 'react-native';
 
-import { Route, CommonActions } from '@react-navigation/core';
 import { TabNavigationState } from '@react-navigation/routers';
 // eslint-disable-next-line import/no-unresolved
 import { ScreenContainer } from 'react-native-screens';
@@ -20,7 +13,6 @@ import {
   BottomTabDescriptorMap,
   BottomTabNavigationHelpers,
   BottomTabBarProps,
-  BottomTabBarButtonProps,
 } from '../types';
 
 type Props = BottomTabNavigationConfig & {
@@ -53,123 +45,6 @@ export default class BottomTabView extends React.Component<Props, State> {
     loaded: [this.props.state.index],
   };
 
-  private renderButton = ({
-    route,
-    children,
-    style,
-    ...rest
-  }: { route: Route<string> } & BottomTabBarButtonProps) => {
-    const { descriptors } = this.props;
-    const descriptor = descriptors[route.key];
-    const options = descriptor.options;
-
-    if (options.tabBarButton) {
-      return options.tabBarButton({ children, style, ...rest });
-    }
-
-    return (
-      <TouchableWithoutFeedback {...rest}>
-        <View style={style}>{children}</View>
-      </TouchableWithoutFeedback>
-    );
-  };
-
-  private renderIcon = ({
-    route,
-    focused,
-    color,
-    size,
-  }: {
-    route: Route<string>;
-    focused: boolean;
-    color: string;
-    size: number;
-  }) => {
-    const { descriptors } = this.props;
-    const descriptor = descriptors[route.key];
-    const options = descriptor.options;
-
-    if (options.tabBarIcon) {
-      return typeof options.tabBarIcon === 'string'
-        ? options.tabBarIcon
-        : options.tabBarIcon({ focused, color, size });
-    }
-
-    return null;
-  };
-
-  private getLabelText = ({ route }: { route: Route<string> }) => {
-    const { descriptors } = this.props;
-    const descriptor = descriptors[route.key];
-    const options = descriptor.options;
-
-    if (options.tabBarLabel !== undefined) {
-      return options.tabBarLabel;
-    }
-
-    if (typeof options.title === 'string') {
-      return options.title;
-    }
-
-    return route.name;
-  };
-
-  private getAccessibilityLabel = ({ route }: { route: Route<string> }) => {
-    const { state, descriptors } = this.props;
-    const descriptor = descriptors[route.key];
-    const options = descriptor.options;
-
-    if (typeof options.tabBarAccessibilityLabel !== 'undefined') {
-      return options.tabBarAccessibilityLabel;
-    }
-
-    const label = this.getLabelText({ route });
-
-    if (typeof label === 'string') {
-      return `${label}, tab, ${state.routes.indexOf(route) + 1} of ${
-        state.routes.length
-      }`;
-    }
-
-    return undefined;
-  };
-
-  private getAccessibilityRole = (): AccessibilityRole => 'button';
-
-  private getAccessibilityStates = ({
-    focused,
-  }: {
-    focused: boolean;
-  }): AccessibilityStates[] => (focused ? ['selected'] : []);
-
-  private getTestID = ({ route }: { route: Route<string> }) =>
-    this.props.descriptors[route.key].options.tabBarTestID;
-
-  private handleTabPress = ({ route }: { route: Route<string> }) => {
-    const { state, navigation } = this.props;
-    const event = this.props.navigation.emit({
-      type: 'tabPress',
-      target: route.key,
-    });
-
-    if (
-      state.routes[state.index].key !== route.key &&
-      !event.defaultPrevented
-    ) {
-      navigation.dispatch({
-        ...CommonActions.navigate(route.name),
-        target: state.key,
-      });
-    }
-  };
-
-  private handleTabLongPress = ({ route }: { route: Route<string> }) => {
-    this.props.navigation.emit({
-      type: 'tabLongPress',
-      target: route.key,
-    });
-  };
-
   private renderTabBar = () => {
     const {
       tabBar = (props: BottomTabBarProps) => <BottomTabBar {...props} />,
@@ -192,15 +67,6 @@ export default class BottomTabView extends React.Component<Props, State> {
       state: state,
       descriptors: descriptors,
       navigation: navigation,
-      onTabPress: this.handleTabPress,
-      onTabLongPress: this.handleTabLongPress,
-      getLabelText: this.getLabelText,
-      getAccessibilityLabel: this.getAccessibilityLabel,
-      getAccessibilityRole: this.getAccessibilityRole,
-      getAccessibilityStates: this.getAccessibilityStates,
-      getTestID: this.getTestID,
-      renderButton: this.renderButton,
-      renderIcon: this.renderIcon,
     });
   };
 

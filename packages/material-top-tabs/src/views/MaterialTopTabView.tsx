@@ -33,64 +33,6 @@ export default class MaterialTopTabView extends React.PureComponent<Props> {
     return null;
   };
 
-  private getLabelText = ({ route }: { route: Route<string> }) => {
-    const { descriptors } = this.props;
-    const { options } = descriptors[route.key];
-
-    return options.tabBarLabel !== undefined
-      ? options.tabBarLabel
-      : typeof options.title === 'string'
-      ? options.title
-      : route.name;
-  };
-
-  private getAccessibilityLabel = ({ route }: { route: Route<string> }) => {
-    const { descriptors, state } = this.props;
-    const { options } = descriptors[route.key];
-
-    if (typeof options.tabBarAccessibilityLabel !== 'undefined') {
-      return options.tabBarAccessibilityLabel;
-    }
-
-    const label = this.getLabelText({ route });
-
-    if (typeof label === 'string') {
-      return `${label}, tab, ${state.routes.indexOf(route) + 1} of ${
-        state.routes.length
-      }`;
-    }
-
-    return undefined;
-  };
-
-  private getTestID = ({ route }: { route: Route<string> }) => {
-    return this.props.descriptors[route.key].options.tabBarTestID;
-  };
-
-  private handleTabPress = ({
-    route,
-    preventDefault,
-  }: {
-    route: Route<string>;
-    preventDefault: () => void;
-  }) => {
-    const event = this.props.navigation.emit({
-      type: 'tabPress',
-      target: route.key,
-    });
-
-    if (event.defaultPrevented) {
-      preventDefault();
-    }
-  };
-
-  private handleTabLongPress = ({ route }: { route: Route<string> }) => {
-    this.props.navigation.emit({
-      type: 'tabLongPress',
-      target: route.key,
-    });
-  };
-
   private renderTabBar = (props: SceneRendererProps) => {
     const { state, descriptors } = this.props;
     const route = state.routes[state.index];
@@ -103,7 +45,6 @@ export default class MaterialTopTabView extends React.PureComponent<Props> {
       tabBar = (props: MaterialTopTabBarProps) => (
         <MaterialTopTabBar {...props} />
       ),
-      tabBarPosition,
       tabBarOptions,
     } = this.props;
 
@@ -114,15 +55,9 @@ export default class MaterialTopTabView extends React.PureComponent<Props> {
     return tabBar({
       ...tabBarOptions,
       ...props,
-      tabBarPosition: tabBarPosition,
       state: state,
       navigation: navigation,
       descriptors: descriptors,
-      getAccessibilityLabel: this.getAccessibilityLabel,
-      getLabelText: this.getLabelText,
-      getTestID: this.getTestID,
-      onTabPress: this.handleTabPress,
-      onTabLongPress: this.handleTabLongPress,
     });
   };
 
