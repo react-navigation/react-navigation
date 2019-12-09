@@ -1,22 +1,12 @@
-import { I18nManager } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { State as GestureState } from 'react-native-gesture-handler';
 
 export type Binary = 0 | 1;
 
-export const TRUE = 1;
-export const FALSE = 0;
-export const UNSET = -1;
+const TRUE_NODE = new Animated.Value(1);
+const FALSE_NODE = new Animated.Value(0);
+const UNSET_NODE = new Animated.Value(-1);
 
-export const ANIMATION_SPRING = 0;
-export const ANIMATION_TIMING = 1;
-
-export const DIRECTION_HORIZONTAL = 1;
-
-const TRUE_NODE = new Animated.Value(TRUE);
-const FALSE_NODE = new Animated.Value(FALSE);
-const UNSET_NODE = new Animated.Value(UNSET);
-const MINUS_ONE_NODE = UNSET_NODE;
 const NOOP_NODE = FALSE_NODE;
 
 const {
@@ -39,16 +29,14 @@ const {
   proc,
 } = Animated;
 
-const proc3 = proc(
+const proc2 = proc(
   (
     clockIsRunning: Animated.Node<number>,
     clockStart: Animated.Node<number>,
     clockStop: Animated.Node<number>,
-    direction: Animated.Node<number>,
     distance: Animated.Node<number>,
     gesture: Animated.Value<number>,
     gestureState: Animated.Node<number>,
-    gestureUntraversed: Animated.Node<number>,
     gestureVelocityImpact: Animated.Node<number>,
     isGestureEnabled: Animated.Node<number>,
     isSwipeCancelled: Animated.Value<number>,
@@ -75,12 +63,12 @@ const proc3 = proc(
           // But since we have 0-1 scale, we need to adjust the velocity
           set(
             transitionVelocity,
-            multiply(cond(distance, divide(velocity, distance), FALSE_NODE), -1)
+            multiply(cond(distance, divide(velocity, distance), 0), -1)
           ),
           // Animation wasn't running before
           // Set the initial values and start the clock
-          set(transitionFrameTime, FALSE_NODE),
-          set(transitionTime, FALSE_NODE),
+          set(transitionFrameTime, 0),
+          set(transitionTime, 0),
           set(transitionFinished, FALSE_NODE),
           set(isVisible, transitionTo),
           clockStart,
@@ -121,21 +109,7 @@ const proc3 = proc(
                   max(
                     sub(
                       offset,
-                      cond(
-                        distance,
-                        divide(
-                          cond(
-                            eq(direction, DIRECTION_HORIZONTAL),
-                            multiply(
-                              gestureUntraversed,
-                              I18nManager.isRTL ? MINUS_ONE_NODE : TRUE_NODE
-                            ),
-                            gestureUntraversed
-                          ),
-                          distance
-                        ),
-                        TRUE_NODE
-                      )
+                      cond(distance, divide(gesture, distance), TRUE_NODE)
                     ),
                     FALSE_NODE
                   ),
@@ -158,10 +132,7 @@ const proc3 = proc(
                     divide(distance, 2)
                   ),
                   cond(
-                    lessThan(
-                      cond(eq(velocity, FALSE_NODE), gesture, velocity),
-                      FALSE_NODE
-                    ),
+                    lessThan(cond(eq(velocity, 0), gesture, velocity), 0),
                     TRUE_NODE,
                     FALSE_NODE
                   ),
@@ -178,37 +149,6 @@ const proc3 = proc(
 );
 
 const proc1 = proc(
-  (
-    direction: Animated.Node<number>,
-    gesture: Animated.Value<number>,
-    gestureUntraversed: Animated.Node<number>,
-    velocity: Animated.Value<number>,
-    velocityUntraversed: Animated.Node<number>
-  ) => {
-    return block([
-      set(
-        gesture,
-        cond(
-          eq(direction, DIRECTION_HORIZONTAL),
-          multiply(
-            gestureUntraversed,
-            I18nManager.isRTL ? MINUS_ONE_NODE : TRUE_NODE
-          ),
-          gestureUntraversed
-        )
-      ),
-      set(
-        velocity,
-        multiply(
-          velocityUntraversed,
-          I18nManager.isRTL ? MINUS_ONE_NODE : TRUE_NODE
-        )
-      ),
-    ]);
-  }
-);
-
-const proc2 = proc(
   (
     nextIsVisible: Animated.Value<number>,
     isVisible: Animated.Value<number>,
@@ -242,11 +182,9 @@ export default (
   clockIsRunning: Animated.Node<number>,
   clockStart: Animated.Node<number>,
   clockStop: Animated.Node<number>,
-  direction: Animated.Node<number>,
   distance: Animated.Node<number>,
   gesture: Animated.Value<number>,
   gestureState: Animated.Node<number>,
-  gestureUntraversed: Animated.Node<number>,
   gestureVelocityImpact: Animated.Node<number>,
   isClosing: Animated.Node<number>,
   isGestureEnabled: Animated.Node<number>,
@@ -267,21 +205,13 @@ export default (
   transitionFrameTime: Animated.Value<number>,
   transitionTime: Animated.Value<number>,
   transitionVelocity: Animated.Value<number>,
-  velocity: Animated.Value<number>,
-  velocityUntraversed: Animated.Node<number>
+  velocity: Animated.Value<number>
 ) => {
   return block([
-    proc1(
-      direction,
-      gesture,
-      gestureUntraversed,
-      velocity,
-      velocityUntraversed
-    ),
     onChange(isClosing, cond(isClosing, set(nextIsVisible, FALSE_NODE))),
     onChange(
       nextIsVisible,
-      proc2(
+      proc1(
         nextIsVisible,
         isVisible,
         clockIsRunning,
@@ -290,15 +220,13 @@ export default (
         gesture
       )
     ),
-    proc3(
+    proc2(
       clockIsRunning,
       clockStart,
       clockStop,
-      direction,
       distance,
       gesture,
       gestureState,
-      gestureUntraversed,
       gestureVelocityImpact,
       isGestureEnabled,
       isSwipeCancelled,

@@ -66,7 +66,11 @@ export type StackNavigationProp<
 
 export type Layout = { width: number; height: number };
 
-export type GestureDirection = 'horizontal' | 'vertical';
+export type GestureDirection =
+  | 'horizontal'
+  | 'horizontal-inverted'
+  | 'vertical'
+  | 'vertical-inverted';
 
 export type Scene<T> = {
   /**
@@ -464,6 +468,10 @@ export type StackCardInterpolationProps = {
    * Animated node representing whether the card is closing.
    */
   closing: Animated.Node<0 | 1>;
+  /**
+   * Animated node representing multiplier when direction is inverted.
+   */
+  inverted: Animated.Node<-1 | 1>;
   /**
    * Layout measurements for various items we use for animation.
    */
