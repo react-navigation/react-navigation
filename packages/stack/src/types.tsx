@@ -469,6 +469,10 @@ export type StackCardInterpolationProps = {
    */
   closing: Animated.Node<0 | 1>;
   /**
+   * Animated node representing whether the card is being swiped.
+   */
+  swiping: Animated.Node<0 | 1>;
+  /**
    * Animated node representing multiplier when direction is inverted.
    */
   inverted: Animated.Node<-1 | 1>;

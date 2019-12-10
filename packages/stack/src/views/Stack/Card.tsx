@@ -16,6 +16,7 @@ import animate, { Binary } from './CardAnimation';
 import PointerEventsView from './PointerEventsView';
 import memoize from '../../utils/memoize';
 import StackGestureContext from '../../utils/StackGestureContext';
+import StackCardAnimationContext from '../../utils/StackCardAnimationContext';
 import {
   TransitionSpec,
   StackCardStyleInterpolator,
@@ -645,6 +646,7 @@ export default class Card extends React.Component<Props> {
         current: { progress: current },
         next: next && { progress: next },
         closing: this.isClosing,
+        swiping: this.isSwiping,
         inverted: this.inverted,
         layouts: {
           screen: layout,
@@ -672,6 +674,36 @@ export default class Card extends React.Component<Props> {
     this.props.insets.right,
     this.props.insets.bottom,
     this.props.insets.left
+  );
+
+  // Keep track of the animation context when deps changes.
+  private getCardAnimationContext = memoize(
+    (
+      index: number,
+      current: Animated.Node<number>,
+      next: Animated.Node<number> | undefined,
+      layout: Layout,
+      insetTop: number,
+      insetRight: number,
+      insetBottom: number,
+      insetLeft: number
+    ) => ({
+      index,
+      current: { progress: current },
+      next: next && { progress: next },
+      closing: this.isClosing,
+      swiping: this.isSwiping,
+      inverted: this.inverted,
+      layouts: {
+        screen: layout,
+      },
+      insets: {
+        top: insetTop,
+        right: insetRight,
+        bottom: insetBottom,
+        left: insetLeft,
+      },
+    })
   );
 
   private gestureActivationCriteria() {
@@ -757,6 +789,17 @@ export default class Card extends React.Component<Props> {
       );
     }
 
+    const animationContext = this.getCardAnimationContext(
+      index,
+      current,
+      next,
+      layout,
+      insets.top,
+      insets.right,
+      insets.bottom,
+      insets.left
+    );
+
     const {
       containerStyle,
       cardStyle,
@@ -816,7 +859,9 @@ export default class Card extends React.Component<Props> {
                     contentStyle,
                   ]}
                 >
-                  {children}
+                  <StackCardAnimationContext.Provider value={animationContext}>
+                    {children}
+                  </StackCardAnimationContext.Provider>
                 </PointerEventsView>
               </Animated.View>
             </PanGestureHandler>

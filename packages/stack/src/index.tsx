@@ -35,6 +35,7 @@ export {
  * Utilities
  */
 export { default as StackGestureContext } from './utils/StackGestureContext';
+export { default as StackCardAnimationContext } from './utils/StackCardAnimationContext';
 
 /**
  * Types
