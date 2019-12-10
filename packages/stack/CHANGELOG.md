@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.42](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.41...@react-navigation/stack@5.0.0-alpha.42) (2019-12-10)
+
+
+### Features
+
+* expose animation related values in context ([6cddb52](https://github.com/react-navigation/navigation-ex/commit/6cddb5238c0b1e37238c85c76e2ecb1f81517c19))
+
+
+
+
+
 # [5.0.0-alpha.41](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.40...@react-navigation/stack@5.0.0-alpha.41) (2019-12-10)
 
 **Note:** Version bump only for package @react-navigation/stack
