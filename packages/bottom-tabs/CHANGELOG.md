@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.24](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/bottom-tabs@5.0.0-alpha.23...@react-navigation/bottom-tabs@5.0.0-alpha.24) (2019-12-10)
+
+
+### Bug Fixes
+
+* fix accessibility label in bottom tab bar ([448fa64](https://github.com/react-navigation/navigation-ex/commit/448fa642edcc282cd18ac034fd5baa6529a6c0f8))
+
+
+
+
+
 # [5.0.0-alpha.23](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/bottom-tabs@5.0.0-alpha.22...@react-navigation/bottom-tabs@5.0.0-alpha.23) (2019-12-07)
 
 
