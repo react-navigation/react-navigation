@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   View,
-  TouchableWithoutFeedback,
   Animated,
   StyleSheet,
   Keyboard,
@@ -17,8 +16,8 @@ import {
 } from '@react-navigation/core';
 import { SafeAreaConsumer } from 'react-native-safe-area-context';
 
-import TabBarIcon from './TabBarIcon';
-import { BottomTabBarProps, BottomTabBarButtonProps } from '../types';
+import BottomTabItem from './BottomTabItem';
+import { BottomTabBarProps } from '../types';
 
 type State = {
   dimensions: { height: number; width: number };
@@ -28,23 +27,16 @@ type State = {
 };
 
 type Props = BottomTabBarProps & {
-  activeTintColor: string;
-  inactiveTintColor: string;
+  activeTintColor?: string;
+  inactiveTintColor?: string;
 };
 
 const DEFAULT_TABBAR_HEIGHT = 50;
 const DEFAULT_MAX_TAB_ITEM_WIDTH = 125;
 
-export default class TabBarBottom extends React.Component<Props, State> {
+export default class BottomTabBar extends React.Component<Props, State> {
   static defaultProps = {
     keyboardHidesTabBar: false,
-    activeTintColor: '#007AFF',
-    activeBackgroundColor: 'transparent',
-    inactiveTintColor: '#8E8E93',
-    inactiveBackgroundColor: 'transparent',
-    showLabel: true,
-    showIcon: true,
-    allowFontScaling: true,
     adaptive: true,
   };
 
@@ -129,101 +121,6 @@ export default class TabBarBottom extends React.Component<Props, State> {
       : route.name;
   };
 
-  private renderLabel = ({
-    route,
-    focused,
-  }: {
-    route: Route<string>;
-    focused: boolean;
-  }) => {
-    const {
-      activeTintColor,
-      inactiveTintColor,
-      labelStyle,
-      showLabel,
-      showIcon,
-      allowFontScaling,
-    } = this.props;
-
-    if (showLabel === false) {
-      return null;
-    }
-
-    const label = this.getLabelText({ route });
-    const horizontal = this.shouldUseHorizontalLabels();
-    const color = focused ? activeTintColor : inactiveTintColor;
-
-    if (typeof label === 'string') {
-      return (
-        <Animated.Text
-          numberOfLines={1}
-          style={[
-            styles.label,
-            { color },
-            showIcon && horizontal ? styles.labelBeside : styles.labelBeneath,
-            labelStyle,
-          ]}
-          allowFontScaling={allowFontScaling}
-        >
-          {label}
-        </Animated.Text>
-      );
-    }
-
-    if (typeof label === 'string') {
-      return label;
-    }
-
-    return label({ focused, color });
-  };
-
-  private renderIcon = ({
-    route,
-    focused,
-  }: {
-    route: Route<string>;
-    focused: boolean;
-  }) => {
-    const { activeTintColor, inactiveTintColor, showIcon } = this.props;
-
-    if (showIcon === false) {
-      return null;
-    }
-
-    const { options } = this.props.descriptors[route.key];
-    const horizontal = this.shouldUseHorizontalLabels();
-
-    const activeOpacity = focused ? 1 : 0;
-    const inactiveOpacity = focused ? 0 : 1;
-
-    const renderIcon = (props: {
-      focused: boolean;
-      color: string;
-      size: number;
-    }) => {
-      if (options.tabBarIcon) {
-        return typeof options.tabBarIcon === 'string'
-          ? options.tabBarIcon
-          : options.tabBarIcon(props);
-      }
-
-      return null;
-    };
-
-    return (
-      <TabBarIcon
-        route={route}
-        size={horizontal ? 17 : 24}
-        activeOpacity={activeOpacity}
-        inactiveOpacity={inactiveOpacity}
-        activeTintColor={activeTintColor}
-        inactiveTintColor={inactiveTintColor}
-        renderIcon={renderIcon}
-        style={horizontal ? styles.iconHorizontal : styles.iconVertical}
-      />
-    );
-  };
-
   private shouldUseHorizontalLabels = () => {
     const { state, adaptive, tabStyle, labelPosition } = this.props;
     const { dimensions } = this.state;
@@ -274,8 +171,14 @@ export default class TabBarBottom extends React.Component<Props, State> {
       navigation,
       descriptors,
       keyboardHidesTabBar,
+      activeTintColor,
+      inactiveTintColor,
       activeBackgroundColor,
       inactiveBackgroundColor,
+      labelStyle,
+      showIcon,
+      showLabel,
+      allowFontScaling,
       style,
       tabStyle,
     } = this.props;
@@ -316,25 +219,7 @@ export default class TabBarBottom extends React.Component<Props, State> {
             <View style={styles.content} onLayout={this.handleLayout}>
               {routes.map((route, index) => {
                 const focused = index === state.index;
-                const scene = { route, focused };
                 const { options } = descriptors[route.key];
-
-                const backgroundColor = focused
-                  ? activeBackgroundColor
-                  : inactiveBackgroundColor;
-
-                const renderButton =
-                  options.tabBarButton !== undefined
-                    ? options.tabBarButton
-                    : ({
-                        children,
-                        style,
-                        ...rest
-                      }: BottomTabBarButtonProps) => (
-                        <TouchableWithoutFeedback {...rest}>
-                          <View style={style}>{children}</View>
-                        </TouchableWithoutFeedback>
-                      );
 
                 const onPress = () => {
                   const event = navigation.emit({
@@ -370,28 +255,27 @@ export default class TabBarBottom extends React.Component<Props, State> {
                     key={route.key}
                     value={descriptors[route.key].navigation}
                   >
-                    {renderButton({
-                      onPress,
-                      onLongPress,
-                      accessibilityLabel,
-                      accessibilityRole: 'button',
-                      accessibilityStates: focused ? ['selected'] : [],
-                      testID: options.tabBarTestID,
-                      style: [
-                        styles.tab,
-                        { backgroundColor },
-                        this.shouldUseHorizontalLabels()
-                          ? styles.tabLandscape
-                          : styles.tabPortrait,
-                        tabStyle,
-                      ],
-                      children: (
-                        <React.Fragment>
-                          {this.renderIcon(scene)}
-                          {this.renderLabel(scene)}
-                        </React.Fragment>
-                      ),
-                    })}
+                    <BottomTabItem
+                      route={route}
+                      focused={focused}
+                      horizontal={this.shouldUseHorizontalLabels()}
+                      onPress={onPress}
+                      onLongPress={onLongPress}
+                      accessibilityLabel={accessibilityLabel}
+                      testID={options.tabBarTestID}
+                      allowFontScaling={allowFontScaling}
+                      activeTintColor={activeTintColor}
+                      inactiveTintColor={inactiveTintColor}
+                      activeBackgroundColor={activeBackgroundColor}
+                      inactiveBackgroundColor={inactiveBackgroundColor}
+                      button={options.tabBarButton}
+                      icon={options.tabBarIcon}
+                      label={label}
+                      showIcon={showIcon}
+                      showLabel={showLabel}
+                      labelStyle={labelStyle}
+                      style={tabStyle}
+                    />
                   </NavigationContext.Provider>
                 );
               })}
@@ -416,35 +300,5 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     flexDirection: 'row',
-  },
-  tab: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  tabPortrait: {
-    justifyContent: 'flex-end',
-    flexDirection: 'column',
-  },
-  tabLandscape: {
-    justifyContent: 'center',
-    flexDirection: 'row',
-  },
-  iconVertical: {
-    flex: 1,
-  },
-  iconHorizontal: {
-    height: '100%',
-  },
-  label: {
-    textAlign: 'center',
-    backgroundColor: 'transparent',
-  },
-  labelBeneath: {
-    fontSize: 11,
-    marginBottom: 1.5,
-  },
-  labelBeside: {
-    fontSize: 12,
-    marginLeft: 20,
   },
 });
