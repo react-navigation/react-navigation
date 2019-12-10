@@ -17,16 +17,14 @@ declare module 'react-navigation' {
 
   export type SafeAreaViewForceInsetValue = 'always' | 'never';
 
-  export const SafeAreaView: ComponentType<
-    ViewProps & {
-      forceInset?: {
-        top?: SafeAreaViewForceInsetValue;
-        bottom?: SafeAreaViewForceInsetValue;
-        left?: SafeAreaViewForceInsetValue;
-        right?: SafeAreaViewForceInsetValue;
-        horizontal?: SafeAreaViewForceInsetValue;
-        vertical?: SafeAreaViewForceInsetValue;
-      };
-    }
-  >;
+  export const SafeAreaView: ComponentType<ViewProps & {
+    forceInset?: {
+      top?: SafeAreaViewForceInsetValue;
+      bottom?: SafeAreaViewForceInsetValue;
+      left?: SafeAreaViewForceInsetValue;
+      right?: SafeAreaViewForceInsetValue;
+      horizontal?: SafeAreaViewForceInsetValue;
+      vertical?: SafeAreaViewForceInsetValue;
+    };
+  }>;
 }

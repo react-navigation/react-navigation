@@ -147,11 +147,12 @@ Array [
                       "flex": 1,
                       "overflow": "hidden",
                     },
-                    null,
-                    Object {
-                      "backgroundColor": "#eee",
-                    },
-                    undefined,
+                    Array [
+                      Object {
+                        "backgroundColor": "rgb(242, 242, 242)",
+                      },
+                      undefined,
+                    ],
                   ]
                 }
               >
@@ -315,11 +316,12 @@ Array [
                                         "flex": 1,
                                         "overflow": "hidden",
                                       },
-                                      null,
-                                      Object {
-                                        "backgroundColor": "#eee",
-                                      },
-                                      undefined,
+                                      Array [
+                                        Object {
+                                          "backgroundColor": "rgb(242, 242, 242)",
+                                        },
+                                        undefined,
+                                      ],
                                     ]
                                   }
                                 >
@@ -392,15 +394,18 @@ Array [
                             style={
                               Array [
                                 Object {
-                                  "backgroundColor": "white",
                                   "flex": 1,
-                                  "shadowColor": "rgba(0, 0, 0, 0.3)",
                                   "shadowOffset": Object {
                                     "height": 0.5,
                                     "width": 0,
                                   },
                                   "shadowOpacity": 0.85,
                                   "shadowRadius": 0,
+                                },
+                                Object {
+                                  "backgroundColor": "#fff",
+                                  "borderBottomColor": "#a7a7aa",
+                                  "shadowColor": "#a7a7aa",
                                 },
                                 Object {},
                               ]
@@ -416,6 +421,7 @@ Array [
                                 "maxHeight": undefined,
                                 "minHeight": undefined,
                                 "opacity": undefined,
+                                "transform": undefined,
                               },
                             ]
                           }
@@ -436,7 +442,6 @@ Array [
                                 "flex": 1,
                                 "flexDirection": "row",
                                 "justifyContent": "center",
-                                "paddingHorizontal": 4,
                               }
                             }
                           >
@@ -444,7 +449,9 @@ Array [
                               pointerEvents="box-none"
                               style={
                                 Array [
-                                  false,
+                                  Object {
+                                    "marginHorizontal": 18,
+                                  },
                                   Object {
                                     "opacity": undefined,
                                   },
@@ -453,20 +460,18 @@ Array [
                               }
                             >
                               <Text
+                                numberOfLines={1}
                                 onLayout={[Function]}
                                 style={
                                   Array [
                                     Object {
-                                      "color": "rgba(0, 0, 0, .9)",
                                       "fontSize": 17,
                                       "fontWeight": "600",
                                     },
-                                    Array [
-                                      Object {
-                                        "color": undefined,
-                                      },
-                                      undefined,
-                                    ],
+                                    Object {
+                                      "color": "rgba(0, 0, 0, 0.9)",
+                                    },
+                                    undefined,
                                   ]
                                 }
                               >
@@ -532,15 +537,18 @@ Array [
           style={
             Array [
               Object {
-                "backgroundColor": "white",
                 "flex": 1,
-                "shadowColor": "rgba(0, 0, 0, 0.3)",
                 "shadowOffset": Object {
                   "height": 0.5,
                   "width": 0,
                 },
                 "shadowOpacity": 0.85,
                 "shadowRadius": 0,
+              },
+              Object {
+                "backgroundColor": "#fff",
+                "borderBottomColor": "#a7a7aa",
+                "shadowColor": "#a7a7aa",
               },
               Object {},
             ]
@@ -556,6 +564,7 @@ Array [
               "maxHeight": undefined,
               "minHeight": undefined,
               "opacity": undefined,
+              "transform": undefined,
             },
           ]
         }
@@ -576,7 +585,6 @@ Array [
               "flex": 1,
               "flexDirection": "row",
               "justifyContent": "center",
-              "paddingHorizontal": 4,
             }
           }
         >
@@ -584,7 +592,9 @@ Array [
             pointerEvents="box-none"
             style={
               Array [
-                false,
+                Object {
+                  "marginHorizontal": 18,
+                },
                 Object {
                   "opacity": undefined,
                 },
@@ -593,20 +603,18 @@ Array [
             }
           >
             <Text
+              numberOfLines={1}
               onLayout={[Function]}
               style={
                 Array [
                   Object {
-                    "color": "rgba(0, 0, 0, .9)",
                     "fontSize": 17,
                     "fontWeight": "600",
                   },
-                  Array [
-                    Object {
-                      "color": undefined,
-                    },
-                    undefined,
-                  ],
+                  Object {
+                    "color": "rgba(0, 0, 0, 0.9)",
+                  },
+                  undefined,
                 ]
               }
             >

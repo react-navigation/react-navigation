@@ -6,39 +6,29 @@ import {
   NavigationStackRouterConfig,
   CreateNavigatorConfig,
 } from 'react-navigation';
-import { Platform } from 'react-native';
-import StackView from '../views/Stack/StackView';
+import StackView from '../views/StackView';
 import {
-  NavigationStackConfig,
-  NavigationStackOptions,
-  NavigationStackProp,
-} from '../types';
-import KeyboardManager from '../views/KeyboardManager';
+  StackNavigationConfig,
+  StackNavigationOptions,
+  StackNavigationProp,
+} from '../vendor/types';
 
 function createStackNavigator(
   routeConfigMap: NavigationRouteConfigMap<
-    NavigationStackOptions,
-    NavigationStackProp
+    StackNavigationOptions,
+    StackNavigationProp
   >,
   stackConfig: CreateNavigatorConfig<
-    NavigationStackConfig,
+    StackNavigationConfig,
     NavigationStackRouterConfig,
-    NavigationStackOptions,
-    NavigationStackProp
+    StackNavigationOptions,
+    StackNavigationProp
   > = {}
 ) {
   const router = StackRouter(routeConfigMap, stackConfig);
 
-  if (stackConfig.disableKeyboardHandling || Platform.OS === 'web') {
-    return createNavigator(StackView, router, stackConfig);
-  }
-
   return createNavigator(
-    navigatorProps => (
-      <KeyboardManager>
-        {props => <StackView {...props} {...navigatorProps} />}
-      </KeyboardManager>
-    ),
+    navigatorProps => <StackView {...navigatorProps} />,
     router,
     stackConfig
   );

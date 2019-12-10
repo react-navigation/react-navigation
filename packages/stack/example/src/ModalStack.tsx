@@ -11,7 +11,7 @@ import {
   createStackNavigator,
   CardStyleInterpolators,
   NavigationStackScreenProps,
-  CardStyleInterpolator,
+  StackCardStyleInterpolator,
 } from 'react-navigation-stack';
 import Animated from 'react-native-reanimated';
 
@@ -21,7 +21,7 @@ const gestureResponseDistance = {
   vertical: Dimensions.get('window').height,
 };
 
-const forVerticalInvertedIOS: CardStyleInterpolator = ({
+const forVerticalInvertedIOS: StackCardStyleInterpolator = ({
   current: { progress },
   layouts: { screen },
 }) => {

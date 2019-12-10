@@ -1,0 +1,617 @@
+diff -ruN node_modules/@react-navigation/stack/src/index.tsx src/vendor/index.tsx
+--- node_modules/@react-navigation/stack/src/index.tsx	2019-12-14 22:46:16.000000000 +0100
++++ src/vendor/index.tsx	1970-01-01 01:00:00.000000000 +0100
+@@ -1,55 +0,0 @@
+-import * as CardStyleInterpolators from './TransitionConfigs/CardStyleInterpolators';
+-import * as HeaderStyleInterpolators from './TransitionConfigs/HeaderStyleInterpolators';
+-import * as TransitionSpecs from './TransitionConfigs/TransitionSpecs';
+-import * as TransitionPresets from './TransitionConfigs/TransitionPresets';
+-
+-/**
+- * Navigators
+- */
+-export { default as createStackNavigator } from './navigators/createStackNavigator';
+-
+-export const Assets = [
+-  require('./views/assets/back-icon.png'),
+-  require('./views/assets/back-icon-mask.png'),
+-];
+-
+-/**
+- * Views
+- */
+-export { default as StackView } from './views/Stack/StackView';
+-export { default as Header } from './views/Header/Header';
+-export { default as HeaderTitle } from './views/Header/HeaderTitle';
+-export { default as HeaderBackButton } from './views/Header/HeaderBackButton';
+-
+-/**
+- * Transition presets
+- */
+-export {
+-  CardStyleInterpolators,
+-  HeaderStyleInterpolators,
+-  TransitionSpecs,
+-  TransitionPresets,
+-};
+-
+-/**
+- * Utilities
+- */
+-export { default as StackGestureContext } from './utils/StackGestureContext';
+-export { default as StackCardAnimationContext } from './utils/StackCardAnimationContext';
+-
+-/**
+- * Types
+- */
+-export {
+-  StackNavigationOptions,
+-  StackNavigationProp,
+-  StackHeaderProps,
+-  StackHeaderLeftButtonProps,
+-  StackHeaderTitleProps,
+-  StackCardInterpolatedStyle,
+-  StackCardInterpolationProps,
+-  StackCardStyleInterpolator,
+-  StackHeaderInterpolatedStyle,
+-  StackHeaderInterpolationProps,
+-  StackHeaderStyleInterpolator,
+-} from './types';
+diff -ruN node_modules/@react-navigation/stack/src/navigators/createStackNavigator.tsx src/vendor/navigators/createStackNavigator.tsx
+--- node_modules/@react-navigation/stack/src/navigators/createStackNavigator.tsx	2019-12-14 22:46:16.000000000 +0100
++++ src/vendor/navigators/createStackNavigator.tsx	1970-01-01 01:00:00.000000000 +0100
+@@ -1,77 +0,0 @@
+-import * as React from 'react';
+-import {
+-  useNavigationBuilder,
+-  createNavigatorFactory,
+-  DefaultNavigatorOptions,
+-  EventArg,
+-} from '@react-navigation/native';
+-import {
+-  StackRouter,
+-  StackRouterOptions,
+-  StackNavigationState,
+-  StackActions,
+-} from '@react-navigation/routers';
+-import StackView from '../views/Stack/StackView';
+-import {
+-  StackNavigationConfig,
+-  StackNavigationOptions,
+-  StackNavigationEventMap,
+-} from '../types';
+-
+-type Props = DefaultNavigatorOptions<StackNavigationOptions> &
+-  StackRouterOptions &
+-  StackNavigationConfig;
+-
+-function StackNavigator({
+-  initialRouteName,
+-  children,
+-  screenOptions,
+-  ...rest
+-}: Props) {
+-  const { state, descriptors, navigation } = useNavigationBuilder<
+-    StackNavigationState,
+-    StackRouterOptions,
+-    StackNavigationOptions,
+-    StackNavigationEventMap
+-  >(StackRouter, {
+-    initialRouteName,
+-    children,
+-    screenOptions,
+-  });
+-
+-  React.useEffect(
+-    () =>
+-      navigation.addListener &&
+-      navigation.addListener('tabPress', (e: EventArg<'tabPress'>) => {
+-        const isFocused = navigation.isFocused();
+-
+-        // Run the operation in the next frame so we're sure all listeners have been run
+-        // This is necessary to know if preventDefault() has been called
+-        requestAnimationFrame(() => {
+-          if (state.index > 0 && isFocused && !e.defaultPrevented) {
+-            // When user taps on already focused tab and we're inside the tab,
+-            // reset the stack to replicate native behaviour
+-            navigation.dispatch({
+-              ...StackActions.popToTop(),
+-              target: state.key,
+-            });
+-          }
+-        });
+-      }),
+-    [navigation, state.index, state.key]
+-  );
+-
+-  return (
+-    <StackView
+-      {...rest}
+-      state={state}
+-      descriptors={descriptors}
+-      navigation={navigation}
+-    />
+-  );
+-}
+-
+-export default createNavigatorFactory<
+-  StackNavigationOptions,
+-  typeof StackNavigator
+->(StackNavigator);
+diff -ruN node_modules/@react-navigation/stack/src/types.tsx src/vendor/types.tsx
+--- node_modules/@react-navigation/stack/src/types.tsx	2019-12-14 22:46:16.000000000 +0100
++++ src/vendor/types.tsx	2019-12-14 22:56:00.000000000 +0100
+@@ -7,13 +7,28 @@
+ import Animated from 'react-native-reanimated';
+ import { EdgeInsets } from 'react-native-safe-area-context';
+ import {
++  NavigationRoute,
++  NavigationState,
++  NavigationScreenProp,
+   NavigationProp,
+-  ParamListBase,
+-  Descriptor,
+-  Route,
+-  NavigationHelpers,
+-} from '@react-navigation/native';
+-import { StackNavigationState } from '@react-navigation/routers';
++  NavigationParams,
++  NavigationNavigateAction,
++  NavigationAction,
++  NavigationEventCallback,
++  NavigationEventSubscription,
++  NavigationDescriptor,
++} from 'react-navigation';
++
++// @ts-ignore
++export type Route<T extends string> = NavigationRoute;
++
++export type NavigationStackState = NavigationState;
++
++export type NavigationStackEventName =
++  | 'willFocus'
++  | 'didFocus'
++  | 'willBlur'
++  | 'didBlur';
+ 
+ export type StackNavigationEventMap = {
+   /**
+@@ -26,42 +41,29 @@
+   transitionEnd: { closing: boolean };
+ };
+ 
+-export type StackNavigationHelpers = NavigationHelpers<
+-  ParamListBase,
+-  StackNavigationEventMap
+->;
++export type StackNavigationHelpers = NavigationProp<NavigationStackState>
+ 
+ export type StackNavigationProp<
+-  ParamList extends ParamListBase,
+-  RouteName extends keyof ParamList = string
+-> = NavigationProp<
+-  ParamList,
+-  RouteName,
+-  StackNavigationState,
+-  StackNavigationOptions,
+-  StackNavigationEventMap
+-> & {
+-  /**
+-   * Push a new screen onto the stack.
+-   *
+-   * @param name Name of the route for the tab.
+-   * @param [params] Params object for the route.
+-   */
+-  push<RouteName extends keyof ParamList>(
+-    ...args: ParamList[RouteName] extends undefined | any
+-      ? [RouteName] | [RouteName, ParamList[RouteName]]
+-      : [RouteName, ParamList[RouteName]]
+-  ): void;
+-
+-  /**
+-   * Pop a screen from the stack.
+-   */
+-  pop(count?: number): void;
+-
+-  /**
+-   * Pop to the first route in the stack, dismissing all other screens.
+-   */
+-  popToTop(): void;
++State = NavigationRoute,
++Params = NavigationParams
++> = NavigationScreenProp<State, Params> & {
++  push: (
++    routeName: string,
++    params?: NavigationParams,
++    action?: NavigationNavigateAction
++  ) => boolean;
++  replace: (
++    routeName: string,
++    params?: NavigationParams,
++    action?: NavigationNavigateAction
++  ) => boolean;
++  reset: (actions: NavigationAction[], index: number) => boolean;
++  pop: (n?: number, params?: { immediate?: boolean }) => boolean;
++  popToTop: (params?: { immediate?: boolean }) => boolean;
++  addListener: (
++    event: NavigationStackEventName,
++    callback: NavigationEventCallback
++  ) => NavigationEventSubscription;
+ };
+ 
+ export type Layout = { width: number; height: number };
+@@ -229,24 +231,27 @@
+   /**
+    * Navigation prop for the header.
+    */
+-  navigation: StackNavigationProp<ParamListBase>;
++  navigation: StackNavigationProp;
+   /**
+    * Interpolated styles for various elements in the header.
+    */
+   styleInterpolator: StackHeaderStyleInterpolator;
+ };
+ 
+-export type StackDescriptor = Descriptor<
+-  ParamListBase,
+-  string,
+-  StackNavigationState,
+-  StackNavigationOptions
+->;
++export type StackDescriptor = NavigationDescriptor<
++  NavigationParams,
++  StackNavigationOptions,
++  StackNavigationProp
++>
+ 
+ export type StackDescriptorMap = {
+   [key: string]: StackDescriptor;
+ };
+ 
++export type TransitionCallbackProps = {
++  closing: boolean;
++};
++
+ export type StackNavigationOptions = StackHeaderOptions &
+   Partial<TransitionPreset> & {
+     /**
+@@ -323,6 +328,8 @@
+       bottom?: number;
+       left?: number;
+     };
++    onTransitionStart?: (props: TransitionCallbackProps) => void;
++    onTransitionEnd?: (props: TransitionCallbackProps) => void;
+   };
+ 
+ export type StackNavigationConfig = {
+diff -ruN node_modules/@react-navigation/stack/src/views/Header/Header.tsx src/vendor/views/Header/Header.tsx
+--- node_modules/@react-navigation/stack/src/views/Header/Header.tsx	2019-12-14 22:46:16.000000000 +0100
++++ src/vendor/views/Header/Header.tsx	2019-12-14 22:55:33.000000000 +0100
+@@ -1,5 +1,5 @@
+ import * as React from 'react';
+-import { StackActions } from '@react-navigation/routers';
++import { StackActions } from 'react-navigation';
+ 
+ import HeaderSegment from './HeaderSegment';
+ import { StackHeaderProps, StackHeaderTitleProps } from '../../types';
+@@ -21,7 +21,7 @@
+       ? options.headerTitle
+       : options.title !== undefined
+       ? options.title
+-      : scene.route.name;
++      : scene.route.routeName;
+ 
+   let leftLabel;
+ 
+@@ -37,7 +37,7 @@
+         ? o.headerTitle
+         : o.title !== undefined
+         ? o.title
+-        : previous.route.name;
++        : previous.route.routeName;
+   }
+ 
+   return (
+@@ -55,11 +55,8 @@
+       }
+       onGoBack={
+         previous
+-          ? () =>
+-              navigation.dispatch({
+-                ...StackActions.pop(),
+-                source: scene.route.key,
+-              })
++        // @ts-ignore
++          ? () => navigation.dispatch(StackActions.pop({ key: scene.route.key }))
+           : undefined
+       }
+       styleInterpolator={styleInterpolator}
+diff -ruN node_modules/@react-navigation/stack/src/views/Header/HeaderBackButton.tsx src/vendor/views/Header/HeaderBackButton.tsx
+--- node_modules/@react-navigation/stack/src/views/Header/HeaderBackButton.tsx	2019-12-14 22:46:16.000000000 +0100
++++ src/vendor/views/Header/HeaderBackButton.tsx	2019-12-14 23:05:22.000000000 +0100
+@@ -8,10 +8,10 @@
+   LayoutChangeEvent,
+ } from 'react-native';
+ import Animated from 'react-native-reanimated';
+-import { useTheme } from '@react-navigation/native';
+ import MaskedView from '../MaskedView';
+ import TouchableItem from '../TouchableItem';
+ import { StackHeaderLeftButtonProps } from '../../types';
++import useTheme from '../../../utils/useTheme';
+ 
+ type Props = StackHeaderLeftButtonProps;
+ 
+diff -ruN node_modules/@react-navigation/stack/src/views/Header/HeaderBackground.tsx src/vendor/views/Header/HeaderBackground.tsx
+--- node_modules/@react-navigation/stack/src/views/Header/HeaderBackground.tsx	2019-12-14 22:46:16.000000000 +0100
++++ src/vendor/views/Header/HeaderBackground.tsx	2019-12-14 23:05:39.000000000 +0100
+@@ -1,7 +1,7 @@
+ import * as React from 'react';
+ import { StyleSheet, Platform, ViewProps } from 'react-native';
+ import Animated from 'react-native-reanimated';
+-import { useTheme } from '@react-navigation/native';
++import useTheme from '../../../utils/useTheme';
+ 
+ export default function HeaderBackground({ style, ...rest }: ViewProps) {
+   const { colors } = useTheme();
+diff -ruN node_modules/@react-navigation/stack/src/views/Header/HeaderContainer.tsx src/vendor/views/Header/HeaderContainer.tsx
+--- node_modules/@react-navigation/stack/src/views/Header/HeaderContainer.tsx	2019-12-14 22:46:16.000000000 +0100
++++ src/vendor/views/Header/HeaderContainer.tsx	2019-12-14 22:55:33.000000000 +0100
+@@ -1,16 +1,13 @@
+ import * as React from 'react';
+ import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
+-import {
+-  NavigationContext,
+-  Route,
+-  ParamListBase,
+-} from '@react-navigation/native';
+-import { StackNavigationState } from '@react-navigation/routers';
++import { NavigationContext } from 'react-navigation';
++import { NavigationState as StackNavigationState } from 'react-navigation';
+ import { EdgeInsets } from 'react-native-safe-area-context';
+ 
+ import Header from './Header';
+ import { forStatic } from '../../TransitionConfigs/HeaderStyleInterpolators';
+ import {
++  Route,
+   Layout,
+   Scene,
+   StackHeaderStyleInterpolator,
+@@ -93,9 +90,7 @@
+           insets,
+           scene,
+           previous,
+-          navigation: scene.descriptor.navigation as StackNavigationProp<
+-            ParamListBase
+-          >,
++          navigation: scene.descriptor.navigation as StackNavigationProp,
+           styleInterpolator: isHeaderStatic ? forStatic : styleInterpolator,
+         };
+ 
+diff -ruN node_modules/@react-navigation/stack/src/views/Header/HeaderSegment.tsx src/vendor/views/Header/HeaderSegment.tsx
+--- node_modules/@react-navigation/stack/src/views/Header/HeaderSegment.tsx	2019-12-14 22:46:16.000000000 +0100
++++ src/vendor/views/Header/HeaderSegment.tsx	2019-12-14 22:55:33.000000000 +0100
+@@ -8,7 +8,7 @@
+ } from 'react-native';
+ import Animated from 'react-native-reanimated';
+ import { EdgeInsets } from 'react-native-safe-area-context';
+-import { Route } from '@react-navigation/native';
++import { NavigationRoute } from 'react-navigation';
+ import HeaderBackButton from './HeaderBackButton';
+ import HeaderBackground from './HeaderBackground';
+ import memoize from '../../utils/memoize';
+@@ -28,7 +28,7 @@
+   onGoBack?: () => void;
+   title?: string;
+   leftLabel?: string;
+-  scene: Scene<Route<string>>;
++  scene: Scene<NavigationRoute>;
+   styleInterpolator: StackHeaderStyleInterpolator;
+ };
+ 
+diff -ruN node_modules/@react-navigation/stack/src/views/Header/HeaderTitle.tsx src/vendor/views/Header/HeaderTitle.tsx
+--- node_modules/@react-navigation/stack/src/views/Header/HeaderTitle.tsx	2019-12-14 22:46:16.000000000 +0100
++++ src/vendor/views/Header/HeaderTitle.tsx	2019-12-14 23:05:46.000000000 +0100
+@@ -1,7 +1,7 @@
+ import * as React from 'react';
+ import { StyleSheet, Platform, TextProps } from 'react-native';
+ import Animated from 'react-native-reanimated';
+-import { useTheme } from '@react-navigation/native';
++import useTheme from '../../../utils/useTheme';
+ 
+ type Props = TextProps & {
+   tintColor?: string;
+diff -ruN node_modules/@react-navigation/stack/src/views/Stack/CardContainer.tsx src/vendor/views/Stack/CardContainer.tsx
+--- node_modules/@react-navigation/stack/src/views/Stack/CardContainer.tsx	2019-12-14 22:46:16.000000000 +0100
++++ src/vendor/views/Stack/CardContainer.tsx	2019-12-14 23:05:57.000000000 +0100
+@@ -1,11 +1,17 @@
+ import * as React from 'react';
+ import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
+ import Animated from 'react-native-reanimated';
+-import { StackNavigationState } from '@react-navigation/routers';
+-import { Route, useTheme } from '@react-navigation/native';
++import { NavigationState as StackNavigationState } from 'react-navigation';
+ import { Props as HeaderContainerProps } from '../Header/HeaderContainer';
+ import Card from './Card';
+-import { Scene, Layout, StackHeaderMode, TransitionPreset } from '../../types';
++import useTheme from '../../../utils/useTheme';
++import {
++  Route,
++  Scene,
++  Layout,
++  StackHeaderMode,
++  TransitionPreset,
++} from '../../types';
+ 
+ type Props = TransitionPreset & {
+   index: number;
+diff -ruN node_modules/@react-navigation/stack/src/views/Stack/CardStack.tsx src/vendor/views/Stack/CardStack.tsx
+--- node_modules/@react-navigation/stack/src/views/Stack/CardStack.tsx	2019-12-14 22:46:16.000000000 +0100
++++ src/vendor/views/Stack/CardStack.tsx	2019-12-14 22:55:33.000000000 +0100
+@@ -11,8 +11,7 @@
+ import { EdgeInsets } from 'react-native-safe-area-context';
+ // eslint-disable-next-line import/no-unresolved
+ import * as Screens from 'react-native-screens'; // Import with * as to prevent getters being called
+-import { Route } from '@react-navigation/native';
+-import { StackNavigationState } from '@react-navigation/routers';
++import { NavigationState as StackNavigationState } from 'react-navigation';
+ 
+ import { getDefaultHeaderHeight } from '../Header/HeaderSegment';
+ import { Props as HeaderContainerProps } from '../Header/HeaderContainer';
+@@ -22,7 +21,9 @@
+   ModalTransition,
+ } from '../../TransitionConfigs/TransitionPresets';
+ import { forNoAnimation } from '../../TransitionConfigs/HeaderStyleInterpolators';
++import validateDeprecatedOptions from '../../../utils/validateDeprecatedOptions';
+ import {
++  Route,
+   Layout,
+   StackHeaderMode,
+   Scene,
+@@ -350,6 +351,14 @@
+                 ? 1
+                 : 0;
+ 
++            if (
++              process.env.NODE_ENV !== 'production' &&
++              scene.descriptor &&
++              scene.descriptor.options
++            ) {
++              validateDeprecatedOptions(scene.descriptor.options);
++            }
++
+             const {
+               safeAreaInsets,
+               headerShown,
+diff -ruN node_modules/@react-navigation/stack/src/views/Stack/StackView.tsx src/vendor/views/Stack/StackView.tsx
+--- node_modules/@react-navigation/stack/src/views/Stack/StackView.tsx	2019-12-14 22:46:16.000000000 +0100
++++ src/vendor/views/Stack/StackView.tsx	2019-12-14 22:55:33.000000000 +0100
+@@ -1,8 +1,7 @@
+ import * as React from 'react';
+ import { Platform } from 'react-native';
+ import { SafeAreaConsumer, EdgeInsets } from 'react-native-safe-area-context';
+-import { Route } from '@react-navigation/native';
+-import { StackActions, StackNavigationState } from '@react-navigation/routers';
++import { StackActions, NavigationState as StackNavigationState, SceneView } from 'react-navigation';
+ 
+ import CardStack from './CardStack';
+ import KeyboardManager from '../KeyboardManager';
+@@ -11,6 +10,7 @@
+ } from '../Header/HeaderContainer';
+ import SafeAreaProviderCompat from '../SafeAreaProviderCompat';
+ import {
++  Route,
+   StackNavigationHelpers,
+   StackNavigationConfig,
+   StackDescriptorMap,
+@@ -20,6 +20,7 @@
+   state: StackNavigationState;
+   navigation: StackNavigationHelpers;
+   descriptors: StackDescriptorMap;
++  screenProps: unknown;
+ };
+ 
+ type State = {
+@@ -259,26 +260,42 @@
+       return null;
+     }
+ 
+-    return descriptor.render();
++    const { navigation, getComponent } = descriptor;
++    const SceneComponent = getComponent();
++
++    return (
++      <SceneView
++        screenProps={this.props.screenProps}
++        navigation={navigation}
++        component={SceneComponent}
++      />
++    );
+   };
+ 
+   private renderHeader = (props: HeaderContainerProps) => {
+     return <HeaderContainer {...props} />;
+   };
+ 
+-  private handleGoBack = ({ route }: { route: Route<string> }) => {
+-    const { state, navigation } = this.props;
++  private handleTransitionComplete = ({
++    route,
++  }: {
++    route: Route<string>;
++  }) => {
++    // TODO: remove when the new event system lands
++    this.props.navigation.dispatch(
++      StackActions.completeTransition({ toChildKey: route.key })
++    );
++  };
+ 
++  private handleGoBack = ({ route }: { route: Route<string> }) => {
+     // This event will trigger when a gesture ends
+     // We need to perform the transition before removing the route completely
+-    navigation.dispatch({
+-      ...StackActions.pop(),
+-      source: route.key,
+-      target: state.key,
+-    });
++    // @ts-ignore
++    this.props.navigation.dispatch(StackActions.pop({ key: route.key }));
+   };
+ 
+   private handleOpenRoute = ({ route }: { route: Route<string> }) => {
++    this.handleTransitionComplete({ route });
+     this.setState(state => ({
+       routes: state.replacingRouteKeys.length
+         ? state.routes.filter(r => !state.replacingRouteKeys.includes(r.key))
+@@ -290,6 +307,13 @@
+   };
+ 
+   private handleCloseRoute = ({ route }: { route: Route<string> }) => {
++    const index = this.state.routes.findIndex(r => r.key === route.key);
++    // While closing route we need to point to the previous one assuming that
++    // this previous one in routes array
++    this.handleTransitionComplete({
++      route: this.state.routes[Math.max(index - 1, 0)],
++    });
++
+     // This event will trigger when the animation for closing the route ends
+     // In this case, we need to clean up any state tracking the route and pop it immediately
+ 
+@@ -304,22 +328,26 @@
+   private handleTransitionStart = (
+     { route }: { route: Route<string> },
+     closing: boolean
+-  ) =>
+-    this.props.navigation.emit({
+-      type: 'transitionStart',
+-      data: { closing },
+-      target: route.key,
+-    });
++  ) => {
++    const { descriptors } = this.props;
++    const descriptor = descriptors[route.key];
++
++    descriptor &&
++      descriptor.options.onTransitionStart &&
++      descriptor.options.onTransitionStart({ closing });
++  }
+ 
+   private handleTransitionEnd = (
+     { route }: { route: Route<string> },
+     closing: boolean
+-  ) =>
+-    this.props.navigation.emit({
+-      type: 'transitionEnd',
+-      data: { closing },
+-      target: route.key,
+-    });
++  ) => {
++    const { descriptors } = this.props;
++    const descriptor = descriptors[route.key];
++
++    descriptor &&
++      descriptor.options.onTransitionStart &&
++      descriptor.options.onTransitionStart({ closing });
++  }
+ 
+   render() {
+     const {

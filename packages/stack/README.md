@@ -47,6 +47,10 @@ While developing, you can run the example app with [Expo](https://expo.io/) to t
 yarn example start
 ```
 
+The code in this repo uses the source from [`@react-navigation/stack`](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack) and patches it to make it usable in React Navigation 4. If you need to make changes, please send a pull request there.
+
+If the change is specifically related to React Navigation 4 integration, change the files in `src/vendor` and then run `yarn patch` to update the patch file with the latest changes.
+
 Make sure your code passes TypeScript and ESLint. Run the following to verify:
 
 ```sh
