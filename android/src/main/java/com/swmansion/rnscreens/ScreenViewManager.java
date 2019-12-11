@@ -62,6 +62,8 @@ public class ScreenViewManager extends ViewGroupManager<Screen> {
   public Map getExportedCustomDirectEventTypeConstants() {
     return MapBuilder.of(
             ScreenDismissedEvent.EVENT_NAME,
-            MapBuilder.of("registrationName", "onDismissed"));
+            MapBuilder.of("registrationName", "onDismissed"),
+            ScreenAppearEvent.EVENT_NAME,
+            MapBuilder.of("registrationName", "onAppear"));
   }
 }

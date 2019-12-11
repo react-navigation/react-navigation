@@ -22,6 +22,7 @@ public class ScreenStackFragment extends ScreenFragment {
   private AppBarLayout mAppBarLayout;
   private Toolbar mToolbar;
   private boolean mShadowHidden;
+  private CoordinatorLayout mScreenRootView;
 
   @SuppressLint("ValidFragment")
   public ScreenStackFragment(Screen screenView) {
@@ -59,10 +60,7 @@ public class ScreenStackFragment extends ScreenFragment {
     }
   }
 
-  @Override
-  public View onCreateView(LayoutInflater inflater,
-                           @Nullable ViewGroup container,
-                           @Nullable Bundle savedInstanceState) {
+  private CoordinatorLayout configureView() {
     CoordinatorLayout view = new CoordinatorLayout(getContext());
     CoordinatorLayout.LayoutParams params = new CoordinatorLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
@@ -85,6 +83,17 @@ public class ScreenStackFragment extends ScreenFragment {
     }
 
     return view;
+  }
+
+  @Override
+  public View onCreateView(LayoutInflater inflater,
+                           @Nullable ViewGroup container,
+                           @Nullable Bundle savedInstanceState) {
+    if (mScreenRootView == null) {
+      mScreenRootView = configureView();
+    }
+
+    return mScreenRootView;
   }
 
   public boolean isDismissable() {

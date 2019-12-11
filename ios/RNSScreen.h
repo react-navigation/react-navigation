@@ -39,6 +39,7 @@ typedef NS_ENUM(NSInteger, RNSScreenStackAnimation) {
 
 @interface RNSScreenView : RCTView
 
+@property (nonatomic, copy) RCTDirectEventBlock onAppear;
 @property (nonatomic, copy) RCTDirectEventBlock onDismissed;
 @property (weak, nonatomic) UIView<RNSScreenContainerDelegate> *reactSuperview;
 @property (nonatomic, retain) UIViewController *controller;

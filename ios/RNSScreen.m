@@ -135,6 +135,17 @@
   }
 }
 
+- (void)notifyAppear
+{
+  if (self.onAppear) {
+    dispatch_async(dispatch_get_main_queue(), ^{
+      if (self.onAppear) {
+        self.onAppear(nil);
+      }
+    });
+  }
+}
+
 - (BOOL)isMountedUnderScreenOrReactRoot
 {
   for (UIView *parent = self.superview; parent != nil; parent = parent.superview) {
@@ -235,6 +246,12 @@
   }
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+  [super viewDidAppear:animated];
+  [((RNSScreenView *)self.view) notifyAppear];
+}
+
 - (void)notifyFinishTransitioning
 {
   [_previousFirstResponder becomeFirstResponder];
@@ -258,6 +275,7 @@ RCT_EXPORT_MODULE()
 RCT_EXPORT_VIEW_PROPERTY(active, BOOL)
 RCT_EXPORT_VIEW_PROPERTY(stackPresentation, RNSScreenStackPresentation)
 RCT_EXPORT_VIEW_PROPERTY(stackAnimation, RNSScreenStackAnimation)
+RCT_EXPORT_VIEW_PROPERTY(onAppear, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onDismissed, RCTDirectEventBlock);
 
 - (UIView *)view

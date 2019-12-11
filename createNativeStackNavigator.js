@@ -4,7 +4,6 @@ import {
   StackRouter,
   SceneView,
   StackActions,
-  NavigationActions,
   createNavigator,
 } from '@react-navigation/core';
 import { createKeyboardAwareNavigator } from '@react-navigation/native';
@@ -27,14 +26,13 @@ function renderComponentOrThunk(componentOrThunk, props) {
 
 class StackView extends React.Component {
   _removeScene = route => {
-    const { navigation } = this.props;
-    navigation.dispatch(
-      NavigationActions.back({
-        key: route.key,
-        immediate: true,
-      })
+    this.props.navigation.dispatch(StackActions.pop({ key: route.key }));
+  };
+
+  _onSceneFocus = route => {
+    this.props.navigation.dispatch(
+      StackActions.completeTransition({ toChildKey: route.key })
     );
-    navigation.dispatch(StackActions.completeTransition());
   };
 
   _renderHeaderConfig = (index, route, descriptor) => {
@@ -165,7 +163,7 @@ class StackView extends React.Component {
         transparentCard || options.cardTransparent ? 'transparentModal' : mode;
     }
 
-    let stackAnimation = undefined;
+    let stackAnimation;
     if (options.animationEnabled === false) {
       stackAnimation = 'none';
     }
@@ -177,6 +175,7 @@ class StackView extends React.Component {
         style={options.cardStyle}
         stackAnimation={stackAnimation}
         stackPresentation={stackPresentation}
+        onAppear={() => this._onSceneFocus(route)}
         onDismissed={() => this._removeScene(route)}>
         {this._renderHeaderConfig(index, route, descriptor)}
         <SceneView

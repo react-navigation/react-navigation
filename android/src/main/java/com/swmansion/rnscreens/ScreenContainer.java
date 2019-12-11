@@ -2,6 +2,7 @@ package com.swmansion.rnscreens;
 
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
@@ -22,11 +23,14 @@ public class ScreenContainer<T extends ScreenFragment> extends ViewGroup {
 
   protected final ArrayList<T> mScreenFragments = new ArrayList<>();
   private final Set<ScreenFragment> mActiveScreenFragments = new HashSet<>();
+  private final ArrayList<Runnable> mAfterTransitionRunnables = new ArrayList<>(1);
 
   private @Nullable FragmentManager mFragmentManager;
   private @Nullable FragmentTransaction mCurrentTransaction;
+  private @Nullable FragmentTransaction mProcessingTransaction;
   private boolean mNeedUpdate;
   private boolean mIsAttached;
+  private boolean mIsTransitioning;
   private boolean mLayoutEnqueued = false;
 
   private final ChoreographerCompat.FrameCallback mFrameCallback = new ChoreographerCompat.FrameCallback() {
@@ -101,6 +105,36 @@ public class ScreenContainer<T extends ScreenFragment> extends ViewGroup {
     markUpdated();
   }
 
+  @Override
+  public void startViewTransition(View view) {
+    super.startViewTransition(view);
+    mIsTransitioning = true;
+  }
+
+  @Override
+  public void endViewTransition(View view) {
+    super.endViewTransition(view);
+    if (mIsTransitioning) {
+      mIsTransitioning = false;
+      notifyTransitionFinished();
+    }
+  }
+
+  public boolean isTransitioning() {
+    return mIsTransitioning || mProcessingTransaction != null;
+  }
+
+  public void postAfterTransition(Runnable runnable) {
+    mAfterTransitionRunnables.add(runnable);
+  }
+
+  protected void notifyTransitionFinished() {
+    for (int i = 0, size = mAfterTransitionRunnables.size(); i < size; i++) {
+      mAfterTransitionRunnables.get(i).run();
+    }
+    mAfterTransitionRunnables.clear();
+  }
+
   protected int getScreenCount() {
     return mScreenFragments.size();
   }
@@ -159,6 +193,19 @@ public class ScreenContainer<T extends ScreenFragment> extends ViewGroup {
 
   protected void tryCommitTransaction() {
     if (mCurrentTransaction != null) {
+      final FragmentTransaction transaction = mCurrentTransaction;
+      mProcessingTransaction = transaction;
+      mProcessingTransaction.runOnCommit(new Runnable() {
+        @Override
+        public void run() {
+         if (mProcessingTransaction == transaction) {
+           // we need to take into account that commit is initiated with some other transaction while
+           // the previous one is still processing. In this case mProcessingTransaction gets overwritten
+           // and we don't want to set it to null until the second transaction is finished.
+           mProcessingTransaction = null;
+         }
+        }
+      });
       mCurrentTransaction.commitAllowingStateLoss();
       mCurrentTransaction = null;
     }
@@ -182,6 +229,10 @@ public class ScreenContainer<T extends ScreenFragment> extends ViewGroup {
 
   protected boolean isScreenActive(ScreenFragment screenFragment) {
     return screenFragment.getScreen().isActive();
+  }
+
+  protected boolean hasScreen(ScreenFragment screenFragment) {
+    return mScreenFragments.contains(screenFragment);
   }
 
   @Override

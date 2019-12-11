@@ -98,6 +98,11 @@ public class ScreenStack extends ScreenContainer<ScreenStackFragment> {
   }
 
   @Override
+  protected boolean hasScreen(ScreenFragment screenFragment) {
+    return super.hasScreen(screenFragment) && !mDismissed.contains(screenFragment);
+  }
+
+  @Override
   protected void onUpdate() {
     // remove all screens previously on stack
     for (ScreenStackFragment screen : mStack) {
@@ -128,19 +133,15 @@ public class ScreenStack extends ScreenContainer<ScreenStackFragment> {
     }
 
     for (ScreenStackFragment screen : mScreenFragments) {
-      // add all new views that weren't on stack before
-      if (!mStack.contains(screen) && !mDismissed.contains(screen)) {
-        getOrCreateTransaction().add(getId(), screen);
-      }
       // detach all screens that should not be visible
       if (screen != newTop && screen != belowTop && !mDismissed.contains(screen)) {
-        getOrCreateTransaction().hide(screen);
+        getOrCreateTransaction().remove(screen);
       }
     }
     // attach "below top" screen if set
-    if (belowTop != null) {
+    if (belowTop != null && !belowTop.isAdded()) {
       final ScreenStackFragment top = newTop;
-      getOrCreateTransaction().show(belowTop).runOnCommit(new Runnable() {
+      getOrCreateTransaction().add(getId(), belowTop).runOnCommit(new Runnable() {
         @Override
         public void run() {
           top.getScreen().bringToFront();
@@ -148,8 +149,8 @@ public class ScreenStack extends ScreenContainer<ScreenStackFragment> {
       });
     }
 
-    if (newTop != null) {
-      getOrCreateTransaction().show(newTop);
+    if (newTop != null && !newTop.isAdded()) {
+      getOrCreateTransaction().add(getId(), newTop);
     }
 
     if (!mStack.contains(newTop)) {

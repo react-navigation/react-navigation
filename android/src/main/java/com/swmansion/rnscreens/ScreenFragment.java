@@ -7,12 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.uimanager.UIManagerModule;
-import com.facebook.react.uimanager.events.EventDispatcher;
 
 public class ScreenFragment extends Fragment {
 
@@ -39,12 +37,39 @@ public class ScreenFragment extends Fragment {
     return mScreenView;
   }
 
-  @Override
-  public void onDestroy() {
-    super.onDestroy();
+  private void dispatchOnAppear() {
     ((ReactContext) mScreenView.getContext())
             .getNativeModule(UIManagerModule.class)
             .getEventDispatcher()
-            .dispatchEvent(new ScreenDismissedEvent(mScreenView.getId()));
+            .dispatchEvent(new ScreenAppearEvent(mScreenView.getId()));
+  }
+
+  @Override
+  public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    ScreenContainer container = mScreenView.getContainer();
+    if (container.isTransitioning()) {
+      container.postAfterTransition(new Runnable() {
+        @Override
+        public void run() {
+          dispatchOnAppear();
+        }
+      });
+    } else {
+      dispatchOnAppear();
+    }
+  }
+
+  @Override
+  public void onDestroy() {
+    super.onDestroy();
+    ScreenContainer container = mScreenView.getContainer();
+    if (container == null || !container.hasScreen(this)) {
+      // we only send dismissed even when the screen has been removed from its container
+      ((ReactContext) mScreenView.getContext())
+              .getNativeModule(UIManagerModule.class)
+              .getEventDispatcher()
+              .dispatchEvent(new ScreenDismissedEvent(mScreenView.getId()));
+    }
   }
 }
