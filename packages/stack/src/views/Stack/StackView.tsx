@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Platform } from 'react-native';
 import { SafeAreaConsumer, EdgeInsets } from 'react-native-safe-area-context';
-import { Route } from '@react-navigation/core';
+import { Route } from '@react-navigation/native';
 import { StackActions, StackNavigationState } from '@react-navigation/routers';
 
 import CardStack from './CardStack';

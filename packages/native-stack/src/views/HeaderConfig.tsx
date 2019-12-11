@@ -6,7 +6,7 @@ import {
   ScreenStackHeaderRightView,
   // eslint-disable-next-line import/no-unresolved
 } from 'react-native-screens';
-import { Route } from '@react-navigation/core';
+import { Route } from '@react-navigation/native';
 import { NativeStackNavigationOptions } from '../types';
 
 type Props = NativeStackNavigationOptions & {

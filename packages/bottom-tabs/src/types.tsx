@@ -10,7 +10,7 @@ import {
   NavigationProp,
   ParamListBase,
   Descriptor,
-} from '@react-navigation/core';
+} from '@react-navigation/native';
 import { TabNavigationState } from '@react-navigation/routers';
 
 export type BottomTabNavigationEventMap = {

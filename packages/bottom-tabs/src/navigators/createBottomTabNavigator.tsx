@@ -3,7 +3,7 @@ import {
   useNavigationBuilder,
   createNavigatorFactory,
   DefaultNavigatorOptions,
-} from '@react-navigation/core';
+} from '@react-navigation/native';
 import {
   TabRouter,
   TabRouterOptions,

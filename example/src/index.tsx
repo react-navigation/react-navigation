@@ -6,10 +6,8 @@ import { Asset } from 'expo-asset';
 import {
   InitialState,
   getStateFromPath,
-  NavigationContainerRef,
-} from '@react-navigation/core';
-import {
   useLinking,
+  NavigationContainerRef,
   NavigationNativeContainer,
 } from '@react-navigation/native';
 import {

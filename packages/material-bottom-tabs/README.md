@@ -7,7 +7,7 @@ React Navigation integration for [bottom navigation](https://material.io/design/
 Open a Terminal in your project's folder and run,
 
 ```sh
-yarn add @react-navigation/core @react-navigation/material-bottom-tabs
+yarn add @react-navigation/native @react-navigation/material-bottom-tabs
 ```
 
 Setup `react-native-paper` following the [Getting Started guide](https://callstack.github.io/react-native-paper/getting-started.html).

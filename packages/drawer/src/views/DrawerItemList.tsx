@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { CommonActions } from '@react-navigation/core';
+import { CommonActions } from '@react-navigation/native';
 import {
   DrawerActions,
   DrawerNavigationState,

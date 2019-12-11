@@ -9,7 +9,7 @@ You probably don't need to use this package directly if you're not building cust
 Open a Terminal in your project's folder and run,
 
 ```sh
-yarn add @react-navigation/core @react-navigation/routers
+yarn add @react-navigation/routers
 ```
 
 ## Usage
@@ -17,7 +17,7 @@ yarn add @react-navigation/core @react-navigation/routers
 A basic custom navigator bundling a router and a view looks like this:
 
 ```js
-import { createNavigatorFactory, useNavigationBuilder } from '@react-navigation/core';
+import { createNavigatorFactory, useNavigationBuilder } from '@react-navigation/native';
 import { StackRouter } from '@react-navigation/routers';
 
 function StackNavigator({ initialRouteName, children, ...rest }) {

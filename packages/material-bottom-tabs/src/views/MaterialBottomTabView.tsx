@@ -2,7 +2,7 @@ import * as React from 'react';
 import { StyleSheet } from 'react-native';
 import { BottomNavigation } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { Route } from '@react-navigation/core';
+import { Route } from '@react-navigation/native';
 import { TabNavigationState, TabActions } from '@react-navigation/routers';
 
 import {

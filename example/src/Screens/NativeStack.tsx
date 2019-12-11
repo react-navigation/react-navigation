@@ -7,7 +7,7 @@ import {
   RouteProp,
   ParamListBase,
   useFocusEffect,
-} from '@react-navigation/core';
+} from '@react-navigation/native';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { StackNavigationProp } from '@react-navigation/stack';
 import {

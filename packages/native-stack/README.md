@@ -9,7 +9,7 @@ Expo is currently not supported as it includes an older version of `react-native
 Open a Terminal in your project's folder and run,
 
 ```sh
-yarn add @react-navigation/core @react-navigation/native-stack
+yarn add @react-navigation/native @react-navigation/native-stack
 ```
 
 Now we need to install [`react-native-screens`](https://github.com/kmagiera/react-native-screens).

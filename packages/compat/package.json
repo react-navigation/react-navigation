@@ -32,7 +32,7 @@
     "typescript": "^3.7.2"
   },
   "peerDependencies": {
-    "@react-navigation/core": "^5.0.0-alpha.0",
+    "@react-navigation/native": "^5.0.0-alpha.0",
     "react": "~16.9.0"
   },
   "@react-native-community/bob": {

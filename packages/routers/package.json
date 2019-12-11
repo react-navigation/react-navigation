@@ -29,15 +29,13 @@
     "clean": "del lib"
   },
   "dependencies": {
+    "@react-navigation/core": "^5.0.0-alpha.27",
     "shortid": "^2.2.15"
   },
   "devDependencies": {
     "@react-native-community/bob": "^0.7.0",
     "del-cli": "^3.0.0",
     "typescript": "^3.7.2"
-  },
-  "peerDependencies": {
-    "@react-navigation/core": "^5.0.0-alpha.0"
   },
   "@react-native-community/bob": {
     "source": "src",

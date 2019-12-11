@@ -1,4 +1,4 @@
-import { CommonActions, NavigationState } from '@react-navigation/core';
+import { CommonActions, NavigationState } from '@react-navigation/native';
 
 export function navigate({
   routeName,

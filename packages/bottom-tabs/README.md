@@ -7,7 +7,7 @@ Bottom tab navigator for React Navigation following iOS design guidelines.
 Open a Terminal in your project's folder and run,
 
 ```sh
-yarn add @react-navigation/core @react-navigation/bottom-tabs
+yarn add @react-navigation/native @react-navigation/bottom-tabs
 ```
 
 Now we need to install [`react-native-safe-area-context`](https://github.com/th3rdwave/react-native-safe-area-context).

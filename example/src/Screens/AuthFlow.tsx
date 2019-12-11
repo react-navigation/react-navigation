@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View, TextInput, ActivityIndicator, StyleSheet } from 'react-native';
 import { Title, Button } from 'react-native-paper';
-import { ParamListBase } from '@react-navigation/core';
+import { ParamListBase } from '@react-navigation/native';
 import {
   createStackNavigator,
   HeaderBackButton,

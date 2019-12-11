@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { TabView, SceneRendererProps } from 'react-native-tab-view';
-import { Route } from '@react-navigation/core';
+import { Route } from '@react-navigation/native';
 import { TabNavigationState, TabActions } from '@react-navigation/routers';
 
 import MaterialTopTabBar from './MaterialTopTabBar';

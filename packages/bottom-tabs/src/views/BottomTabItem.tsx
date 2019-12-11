@@ -8,7 +8,7 @@ import {
   ViewStyle,
   TextStyle,
 } from 'react-native';
-import { Route } from '@react-navigation/core';
+import { Route } from '@react-navigation/native';
 
 import TabBarIcon from './TabBarIcon';
 import { BottomTabBarButtonProps } from '../types';

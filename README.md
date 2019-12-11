@@ -35,7 +35,7 @@ Navigators bundle a router and a view which takes the navigation state and decid
 A simple navigator could look like this:
 
 ```js
-import { createNavigatorFactory } from '@react-navigation/core';
+import { createNavigatorFactory } from '@react-navigation/native';
 
 function StackNavigator({ initialRouteName, children, ...rest }) {
   // The `navigation` object contains the navigation state and some helpers (e.g. push, pop)
@@ -256,7 +256,7 @@ Sometimes we want to run side-effects when a screen is focused. A side effect ma
 To make this easier, the library exports a `useFocusEffect` hook:
 
 ```js
-import { useFocusEffect } from '@react-navigation/core';
+import { useFocusEffect } from '@react-navigation/native';
 
 function Profile({ userId }) {
   const [user, setUser] = React.useState(null);
@@ -285,7 +285,7 @@ The `useFocusEffect` is analogous to React's `useEffect` hook. The only differen
 We might want to render different content based on the current focus state of the screen. The library exports a `useIsFocused` hook to make this easier:
 
 ```js
-import { useIsFocused } from '@react-navigation/core';
+import { useIsFocused } from '@react-navigation/native';
 
 // ...
 

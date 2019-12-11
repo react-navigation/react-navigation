@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useIsFocused } from '@react-navigation/core';
+import { useIsFocused } from '@react-navigation/native';
 
 type InjectedProps = {
   isFocused: boolean;

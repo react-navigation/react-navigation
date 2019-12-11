@@ -6,7 +6,7 @@ import {
   NavigationHelpers,
   NavigationProp,
   ParamListBase,
-} from '@react-navigation/core';
+} from '@react-navigation/native';
 import {
   StackNavigationState,
   StackRouterOptions,

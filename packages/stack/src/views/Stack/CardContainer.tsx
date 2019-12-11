@@ -2,7 +2,7 @@ import * as React from 'react';
 import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { StackNavigationState } from '@react-navigation/routers';
-import { Route } from '@react-navigation/core';
+import { Route } from '@react-navigation/native';
 import { Props as HeaderContainerProps } from '../Header/HeaderContainer';
 import Card from './Card';
 import { Scene, Layout, StackHeaderMode, TransitionPreset } from '../../types';

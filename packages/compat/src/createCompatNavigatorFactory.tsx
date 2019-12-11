@@ -6,7 +6,7 @@ import {
   TypedNavigator,
   NavigationProp,
   RouteProp,
-} from '@react-navigation/core';
+} from '@react-navigation/native';
 import CompatScreen from './CompatScreen';
 import ScreenPropsContext from './ScreenPropsContext';
 import createCompatNavigationProp from './createCompatNavigationProp';
