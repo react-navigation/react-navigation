@@ -4,7 +4,7 @@ import {
   NavigationContext,
   Route,
   ParamListBase,
-} from '@react-navigation/core';
+} from '@react-navigation/native';
 import { StackNavigationState } from '@react-navigation/routers';
 import { EdgeInsets } from 'react-native-safe-area-context';
 

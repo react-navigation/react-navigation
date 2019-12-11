@@ -2,7 +2,7 @@ import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Button } from 'react-native-paper';
 import { useSafeArea } from 'react-native-safe-area-context';
-import { RouteProp, ParamListBase } from '@react-navigation/core';
+import { RouteProp, ParamListBase } from '@react-navigation/native';
 import {
   createStackNavigator,
   StackNavigationProp,

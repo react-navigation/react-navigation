@@ -7,7 +7,7 @@ Compatibility layer to write navigator definitions in static configuration forma
 Open a Terminal in your project's folder and run,
 
 ```sh
-yarn add @react-navigation/core @react-navigation/compat
+yarn add @react-navigation/native @react-navigation/compat
 ```
 
 ## Usage

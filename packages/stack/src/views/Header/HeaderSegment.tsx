@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { EdgeInsets } from 'react-native-safe-area-context';
-import { Route } from '@react-navigation/core';
+import { Route } from '@react-navigation/native';
 import HeaderBackButton from './HeaderBackButton';
 import HeaderBackground from './HeaderBackground';
 import memoize from '../../utils/memoize';

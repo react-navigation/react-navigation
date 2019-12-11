@@ -4,7 +4,7 @@ import {
   useRoute,
   NavigationProp,
   ParamListBase,
-} from '@react-navigation/core';
+} from '@react-navigation/native';
 import createCompatNavigationProp from './createCompatNavigationProp';
 import { CompatNavigationProp } from './types';
 

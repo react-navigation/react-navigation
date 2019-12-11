@@ -1,3 +1,5 @@
+export * from '@react-navigation/core';
+
 export { default as NavigationNativeContainer } from './NavigationNativeContainer';
 
 export { default as useBackButton } from './useBackButton';

@@ -3,7 +3,7 @@ import {
   createNavigatorFactory,
   useNavigationBuilder,
   EventArg,
-} from '@react-navigation/core';
+} from '@react-navigation/native';
 
 import {
   StackRouter,

@@ -29,6 +29,9 @@
     "prepare": "bob build",
     "clean": "del lib"
   },
+  "dependencies": {
+    "@react-navigation/core": "^5.0.0-alpha.27"
+  },
   "devDependencies": {
     "@react-native-community/bob": "^0.7.0",
     "@types/react": "^16.9.11",
@@ -39,7 +42,6 @@
     "typescript": "^3.7.2"
   },
   "peerDependencies": {
-    "@react-navigation/core": "^5.0.0-alpha.0",
     "react": "*",
     "react-native": "*"
   },

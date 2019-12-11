@@ -3,7 +3,7 @@ import {
   NavigationProp,
   ParamListBase,
   RouteProp,
-} from '@react-navigation/core';
+} from '@react-navigation/native';
 import ScreenPropsContext from './ScreenPropsContext';
 import createCompatNavigationProp from './createCompatNavigationProp';
 

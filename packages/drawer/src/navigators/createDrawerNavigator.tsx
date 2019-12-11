@@ -3,7 +3,7 @@ import {
   createNavigatorFactory,
   useNavigationBuilder,
   DefaultNavigatorOptions,
-} from '@react-navigation/core';
+} from '@react-navigation/native';
 import {
   DrawerNavigationState,
   DrawerRouterOptions,

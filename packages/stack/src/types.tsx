@@ -12,7 +12,7 @@ import {
   Descriptor,
   Route,
   NavigationHelpers,
-} from '@react-navigation/core';
+} from '@react-navigation/native';
 import { StackNavigationState } from '@react-navigation/routers';
 
 export type StackNavigationEventMap = {

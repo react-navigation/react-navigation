@@ -7,7 +7,7 @@ Stack navigator for React Navigation.
 Open a Terminal in your project's folder and run,
 
 ```sh
-yarn add @react-navigation/core @react-navigation/stack @react-native-community/masked-view
+yarn add @react-navigation/native @react-navigation/stack @react-native-community/masked-view
 ```
 
 Now we need to install [`react-native-gesture-handler`](https://github.com/kmagiera/react-native-gesture-handler), [`react-native-reanimated`](https://github.com/kmagiera/react-native-reanimated), [`react-native-screens`](https://github.com/kmagiera/react-native-screens) and [`react-native-safe-area-context`](https://github.com/th3rdwave/react-native-safe-area-context).

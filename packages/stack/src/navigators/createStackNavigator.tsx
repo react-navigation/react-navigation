@@ -4,7 +4,7 @@ import {
   createNavigatorFactory,
   DefaultNavigatorOptions,
   EventArg,
-} from '@react-navigation/core';
+} from '@react-navigation/native';
 import {
   StackRouter,
   StackRouterOptions,

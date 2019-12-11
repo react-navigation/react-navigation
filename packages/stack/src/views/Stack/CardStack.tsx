@@ -11,7 +11,7 @@ import Animated from 'react-native-reanimated';
 import { EdgeInsets } from 'react-native-safe-area-context';
 // eslint-disable-next-line import/no-unresolved
 import * as Screens from 'react-native-screens'; // Import with * as to prevent getters being called
-import { Route } from '@react-navigation/core';
+import { Route } from '@react-navigation/native';
 import { StackNavigationState } from '@react-navigation/routers';
 
 import { getDefaultHeaderHeight } from '../Header/HeaderSegment';

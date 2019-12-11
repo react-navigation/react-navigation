@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { TabBar } from 'react-native-tab-view';
-import { Route } from '@react-navigation/core';
+import { Route } from '@react-navigation/native';
 
 import { MaterialTopTabBarProps } from '../types';
 

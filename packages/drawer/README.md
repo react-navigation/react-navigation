@@ -7,7 +7,7 @@ Bottom tab navigator for React Navigation following iOS design guidelines.
 Open a Terminal in your project's folder and run,
 
 ```sh
-yarn add @react-navigation/core @react-navigation/drawer
+yarn add @react-navigation/native @react-navigation/drawer
 ```
 
 Now we need to install [`react-native-gesture-handler`](https://github.com/kmagiera/react-native-gesture-handler), [`react-native-reanimated`](https://github.com/kmagiera/react-native-reanimated) and [`react-native-safe-area-context`](https://github.com/th3rdwave/react-native-safe-area-context).
