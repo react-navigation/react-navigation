@@ -652,9 +652,14 @@ declare module 'react-navigation' {
     style?: StyleProp<ViewStyle>;
   }
 
+  export interface NavigationContainerState {
+    nav: NavigationState | null
+  }
+
   export interface NavigationContainerComponent
     extends React.Component<
-      NavigationContainerProps & NavigationNavigatorProps<any>
+      NavigationContainerProps & NavigationNavigatorProps<any>,
+      NavigationContainerState
     > {
     dispatch: NavigationDispatch;
   }
@@ -671,7 +676,7 @@ declare module 'react-navigation' {
     router: NavigationRouter<any, any>;
     screenProps: unknown;
     navigationOptions: any;
-    state: { nav: NavigationState | null };
+    state: NavigationContainerState;
   }
 
   export function createSwitchNavigator(
