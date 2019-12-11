@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.27](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/drawer@5.0.0-alpha.26...@react-navigation/drawer@5.0.0-alpha.27) (2019-12-11)
+
+**Note:** Version bump only for package @react-navigation/drawer
+
+
+
+
+
 # [5.0.0-alpha.26](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/drawer@5.0.0-alpha.25...@react-navigation/drawer@5.0.0-alpha.26) (2019-12-10)
 
 **Note:** Version bump only for package @react-navigation/drawer
