@@ -9,10 +9,26 @@ import {
 } from '@react-navigation/stack';
 
 type AuthStackParams = {
-  splash: undefined;
-  home: undefined;
-  'sign-in': undefined;
+  Splash: undefined;
+  Home: undefined;
+  SignIn: undefined;
+  PostSignOut: undefined;
 };
+
+const AUTH_CONTEXT_ERROR =
+  'Authentication context not found. Have your wrapped your components with AuthContext.Consumer?';
+
+const AuthContext = React.createContext<{
+  signIn: () => void;
+  signOut: () => void;
+}>({
+  signIn: () => {
+    throw new Error(AUTH_CONTEXT_ERROR);
+  },
+  signOut: () => {
+    throw new Error(AUTH_CONTEXT_ERROR);
+  },
+});
 
 const SplashScreen = () => {
   return (
@@ -22,27 +38,27 @@ const SplashScreen = () => {
   );
 };
 
-const SignInScreen = ({ onSignIn }: { onSignIn: (token: string) => void }) => {
+const SignInScreen = () => {
+  const { signIn } = React.useContext(AuthContext);
+
   return (
     <View style={styles.content}>
       <TextInput placeholder="Username" style={styles.input} />
       <TextInput placeholder="Password" secureTextEntry style={styles.input} />
-      <Button
-        mode="contained"
-        onPress={() => onSignIn('token')}
-        style={styles.button}
-      >
+      <Button mode="contained" onPress={signIn} style={styles.button}>
         Sign in
       </Button>
     </View>
   );
 };
 
-const HomeScreen = ({ onSignOut }: { onSignOut: () => void }) => {
+const HomeScreen = () => {
+  const { signOut } = React.useContext(AuthContext);
+
   return (
     <View style={styles.content}>
       <Title style={styles.text}>Signed in successfully 🎉</Title>
-      <Button onPress={onSignOut} style={styles.button}>
+      <Button onPress={signOut} style={styles.button}>
         Sign out
       </Button>
     </View>
@@ -105,36 +121,44 @@ export default function SimpleStackScreen({ navigation }: Props) {
     headerShown: false,
   });
 
+  const authContext = React.useMemo(
+    () => ({
+      signIn: () => dispatch({ type: 'SIGN_IN', token: 'dummy-auth-token' }),
+      signOut: () => dispatch({ type: 'SIGN_OUT' }),
+    }),
+    []
+  );
+
   return (
-    <SimpleStack.Navigator
-      screenOptions={{
-        headerLeft: () => (
-          <HeaderBackButton onPress={() => navigation.goBack()} />
-        ),
-      }}
-    >
-      {state.isLoading ? (
-        <SimpleStack.Screen
-          name="splash"
-          component={SplashScreen}
-          options={{ title: `Auth Flow` }}
-        />
-      ) : state.userToken === undefined ? (
-        <SimpleStack.Screen name="sign-in" options={{ title: `Sign in` }}>
-          {() => (
-            <SignInScreen
-              onSignIn={token => dispatch({ type: 'SIGN_IN', token })}
-            />
-          )}
-        </SimpleStack.Screen>
-      ) : (
-        <SimpleStack.Screen name="home" options={{ title: 'Home' }}>
-          {() => (
-            <HomeScreen onSignOut={() => dispatch({ type: 'SIGN_OUT' })} />
-          )}
-        </SimpleStack.Screen>
-      )}
-    </SimpleStack.Navigator>
+    <AuthContext.Provider value={authContext}>
+      <SimpleStack.Navigator
+        screenOptions={{
+          headerLeft: () => (
+            <HeaderBackButton onPress={() => navigation.goBack()} />
+          ),
+        }}
+      >
+        {state.isLoading ? (
+          <SimpleStack.Screen
+            name="Splash"
+            component={SplashScreen}
+            options={{ title: 'Auth Flow' }}
+          />
+        ) : state.userToken === undefined ? (
+          <SimpleStack.Screen
+            name="SignIn"
+            options={{ title: 'Sign in' }}
+            component={SignInScreen}
+          />
+        ) : (
+          <SimpleStack.Screen
+            name="Home"
+            options={{ title: 'Home' }}
+            component={HomeScreen}
+          />
+        )}
+      </SimpleStack.Navigator>
+    </AuthContext.Provider>
   );
 }
 
