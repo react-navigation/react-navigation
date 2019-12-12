@@ -1,0 +1,31 @@
+{
+  "name": "reanimated-switch-example",
+  "version": "0.0.1",
+  "description": "Example for Reanimated Switch Navigator",
+  "author": "",
+  "private": true,
+  "scripts": {
+    "start": "expo start",
+    "android": "expo android",
+    "ios": "expo ios"
+  },
+  "main": "node_modules/expo/AppEntry.js",
+  "dependencies": {
+    "expo": "^36.0.0",
+    "expo-keep-awake": "~8.0.0",
+    "react": "16.9.0",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-36.0.0.tar.gz",
+    "react-native-gesture-handler": "~1.5.0",
+    "react-native-reanimated": "~1.4.0",
+    "react-navigation": "^4.0.10"
+  },
+  "devDependencies": {
+    "babel-plugin-module-resolver": "^4.0.0",
+    "babel-preset-expo": "^8.0.0",
+    "escape-string-regexp": "^2.0.0",
+    "expo-cli": "^3.11.1"
+  },
+  "resolutions": {
+    "**/react": "16.9.0"
+  }
+}

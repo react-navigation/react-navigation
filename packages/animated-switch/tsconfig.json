@@ -1,5 +1,9 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "react-navigation-animated-switch": ["./src/index"]
+    },
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
     "alwaysStrict": true,
@@ -20,8 +24,7 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
-    "target": "esnext",
-    "plugins": [{ "name": "typescript-tslint-plugin" }]
+    "target": "esnext"
   },
   "typeAcquisition": {
     "enable": true,

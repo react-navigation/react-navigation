@@ -16,34 +16,36 @@
     "lint": "eslint --ext .js,.ts,.tsx .",
     "prepare": "bob build",
     "release": "release-it",
-    "typescript": "tsc --noEmit"
+    "typescript": "tsc --noEmit",
+    "example": "yarn --cwd example",
+    "bootstrap": "yarn example && yarn"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
   },
   "devDependencies": {
-    "@commitlint/config-conventional": "8.1.0",
-    "@react-native-community/bob": "0.6.1",
-    "@react-navigation/core": "3.4.2",
+    "@commitlint/config-conventional": "8.2.0",
+    "@react-native-community/bob": "0.7.0",
     "@release-it/conventional-changelog": "1.1.0",
-    "@types/react": "16.8.24",
-    "@types/react-native": "0.60.3",
-    "commitlint": "8.1.0",
-    "eslint": "6.1.0",
-    "eslint-config-satya164": "2.4.1",
-    "eslint-plugin-react-native-globals": "0.1.2",
-    "husky": "3.0.2",
-    "prettier": "1.18.2",
-    "react": "16.8.6",
-    "react-native": "0.60.4",
-    "react-native-reanimated": "1.1.0",
-    "react-navigation": "3.11.1",
-    "release-it": "12.3.5",
-    "typescript": "3.5.3"
+    "@types/react": "16.9.16",
+    "@types/react-native": "0.60.25",
+    "commitlint": "8.2.0",
+    "eslint": "^6.7.2",
+    "eslint-config-satya164": "^3.1.2",
+    "husky": "3.1.0",
+    "prettier": "^1.19.1",
+    "react": "~16.9.0",
+    "react-native": "~0.61.5",
+    "react-native-reanimated": "~1.4.0",
+    "react-navigation": "^4.0.10",
+    "release-it": "12.4.3",
+    "typescript": "3.7.3"
   },
   "peerDependencies": {
-    "@react-navigation/core": "^3.0.0",
+    "react-navigation": "^4.0.0",
     "react": "*",
     "react-native": "*",
-    "react-native-reanimated": "^1.0.0",
-    "react-navigation": "^3.0.0"
+    "react-native-reanimated": "^1.0.0"
   },
   "prettier": {
     "trailingComma": "es5",

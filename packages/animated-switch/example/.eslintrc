@@ -1,0 +1,7 @@
+{
+  "extends": "../.eslintrc",
+
+  "settings": {
+    "import/core-modules": [ "react-navigation-animated-switch" ]
+  }
+}
