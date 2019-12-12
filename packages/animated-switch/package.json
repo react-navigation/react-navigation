@@ -1,6 +1,6 @@
 {
   "name": "react-navigation-animated-switch",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "description": "Animated switch for React Navigation",
   "main": "lib/commonjs/index.js",
   "react-native": "lib/module/index.js",
