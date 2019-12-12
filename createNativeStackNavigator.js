@@ -159,8 +159,13 @@ class StackView extends React.Component {
 
     let stackPresentation = 'push';
     if (mode === 'modal' || mode === 'containedModal') {
-      stackPresentation =
-        transparentCard || options.cardTransparent ? 'transparentModal' : mode;
+      stackPresentation = mode;
+      if (transparentCard || options.cardTransparent) {
+        stackPresentation =
+          mode === 'containedModal'
+            ? 'containedTransparentModal'
+            : 'transparentModal';
+      }
     }
 
     let stackAnimation;
