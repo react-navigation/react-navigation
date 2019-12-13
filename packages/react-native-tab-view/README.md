@@ -88,28 +88,28 @@ const SecondRoute = () => (
   <View style={[styles.scene, { backgroundColor: '#673ab7' }]} />
 );
 
-export default class TabViewExample extends React.Component {
-  state = {
-    index: 0,
-    routes: [
-      { key: 'first', title: 'First' },
-      { key: 'second', title: 'Second' },
-    ],
-  };
+const initialLayout = { width: Dimensions.get('window').width };
 
-  render() {
-    return (
-      <TabView
-        navigationState={this.state}
-        renderScene={SceneMap({
-          first: FirstRoute,
-          second: SecondRoute,
-        })}
-        onIndexChange={index => this.setState({ index })}
-        initialLayout={{ width: Dimensions.get('window').width }}
-      />
-    );
-  }
+export default function TabViewExample() {
+  const [index, setIndex] = React.useState(index);
+  const [routes] = React.useState([
+    { key: 'first', title: 'First' },
+    { key: 'second', title: 'Second' },
+  ]);
+
+  const renderScene = SceneMap({
+    first: FirstRoute,
+    second: SecondRoute,
+  });
+
+  return (
+    <TabView
+      navigationState={{ index, routes }}
+      renderScene={renderScene}
+      onIndexChange={setIndex}
+      initialLayout={initialLayout}
+    />
+  );
 }
 
 const styles = StyleSheet.create({
@@ -138,8 +138,8 @@ Basic usage look like this:
 
 ```js
 <TabView
-  navigationState={this.state}
-  onIndexChange={index => this.setState({ index })}
+  navigationState={{ index, routes }}
+  onIndexChange={setIndex}
   renderScene={SceneMap({
     first: FirstRoute,
     second: SecondRoute,
@@ -190,7 +190,7 @@ The navigation state needs to be updated when it's called, otherwise the change 
 Callback which returns a react element to render as the page for the tab. Receives an object containing the route as the argument:
 
 ```js
-renderScene = ({ route, jumpTo }) => {
+const renderScene = ({ route, jumpTo }) => {
   switch (route.key) {
     case 'music':
       return <MusicRoute jumpTo={jumpTo} />;
@@ -209,7 +209,7 @@ import { SceneMap } from 'react-native-tab-view';
 
 ...
 
-renderScene = SceneMap({
+const renderScene = SceneMap({
   music: MusicRoute,
   albums: AlbumsRoute,
 });
@@ -245,7 +245,7 @@ Always define your components elsewhere in the top level of the file. If you pas
 If you need to pass additional props, use a custom `renderScene` function:
 
 ```js
-renderScene = ({ route }) => {
+const renderScene = ({ route }) => {
   switch (route.key) {
     case 'first':
       return <FirstRoute foo={this.props.foo} />;
@@ -266,13 +266,19 @@ import { TabBar } from 'react-native-tab-view';
 
 ...
 
-renderTabBar = props => <TabBar {...props} />;
+<TabView
+  renderTabBar={props => <TabBar {...props} />}
+  ...
+/>
 ```
 
 If this is not specified, the default tab bar is rendered. You pass this props to customize the default tab bar, provide your own tab bar, or disable the tab bar completely.
 
 ```js
-renderTabBar = () => null;
+<TabView
+  renderTabBar={() => null}
+  ...
+/>
 ```
 
 ##### `renderPager`
@@ -357,9 +363,10 @@ Number for determining how meaningful is gesture velocity for calculating initia
 Object containing the initial height and width of the screens. Passing this will improve the initial rendering performance. For most apps, this is a good default:
 
 ```js
-{
-  width: Dimensions.get('window').width;
-}
+<TabView
+  initialLayout={{ width: Dimensions.get('window').width }}
+  ...
+/>
 ```
 
 ##### `position`
@@ -367,16 +374,14 @@ Object containing the initial height and width of the screens. Passing this will
 Animated value to listen to the position updates. The passed position value will be kept in sync with the current position of the tabs. It's useful for accessing the animated value outside the tab view.
 
 ```js
-position = new Animated.Value(0);
+const [position] = useState(() => new Animated.Value(0));
 
-render() {
-  return (
-    <TabView
-      position={this.position}
-      ...
-    />
-  );
-}
+return (
+  <TabView
+    position={position}
+    ...
+  />
+);
 ```
 
 ##### `sceneContainerStyle`
@@ -392,10 +397,13 @@ Style to apply to the tab view container.
 An object with props to be passed to underlying [`PanGestureHandler`](https://kmagiera.github.io/react-native-gesture-handler/docs/handler-pan.html#properties). For example:
 
 ```js
-gestureHandlerProps={{
-  maxPointers: 1,
-  waitFor: [someRef]
-}}
+<TabView
+  gestureHandlerProps={{
+    maxPointers: 1,
+    waitFor: [someRef]
+  }}
+  ...
+/>
 ```
 
 ### `TabBar`
@@ -405,13 +413,23 @@ Material design themed tab bar. To customize the tab bar, you'd need to use the 
 For example, to customize the indicator color and the tab bar background color, you can pass `indicatorStyle` and `style` props to the `TabBar` respectively:
 
 ```js
-renderTabBar={props =>
+const renderTabBar = props => (
   <TabBar
     {...props}
     indicatorStyle={{ backgroundColor: 'white' }}
     style={{ backgroundColor: 'pink' }}
   />
-}
+);
+
+//...
+
+
+return (
+  <TabView
+    renderTabBar={renderTabBar}
+    ...
+  />
+);
 ```
 
 #### Props
@@ -421,7 +439,10 @@ renderTabBar={props =>
 Function which takes an object with the current route and returns the label text for the tab. Uses `route.title` by default.
 
 ```js
-getLabelText={({ route }) => route.title}
+<TabBar
+  getLabelText={({ route }) => route.title}
+  ...
+/>
 ```
 
 ##### `getAccessible`
@@ -433,35 +454,37 @@ Function which takes an object with the current route and returns a boolean to i
 Function which takes an object with the current route and returns a accessibility label for the tab button. Uses `route.accessibilityLabel` by default if specified, otherwise uses the route title.
 
 ```js
-getAccessibilityLabel={({ route }) => route.accessibilityLabel}
+<TabBar
+  getAccessibilityLabel={({ route }) => route.accessibilityLabel}
+  ...
+/>
 ```
 
-##### `testID`
+##### `getTestID`
 
 Function which takes an object with the current route and returns a test id for the tab button to locate this tab button in tests. Uses `route.testID` by default.
 
 ```js
-getTestID={({ route }) => route.testID}
+<TabBar
+  getTestID={({ route }) => route.testID}
+  ...
+/>
 ```
-
-getAccessibilityLabel: (props: { route: T }) => string;
-Get accessibility label for the tab button. This is read by the screen reader when the user taps the tab.
-Uses `route.accessibilityLabel` by default if specified, otherwise uses the route title.
-
-getTestID: (props: { route: T }) => string | undefined;
-Get the id to locate this tab button in tests, uses `route.testID` by default.
 
 ##### `renderIcon`
 
 Function which takes an object with the current route, focused status and color and returns a custom React Element to be used as a icon.
 
 ```js
-renderIcon={({ route, focused, color }) => (
-  <Icon
-    name={focused ? 'abums' : 'albums-outlined'}
-    color={color}
-  />
-)}
+<TabBar
+  renderIcon={({ route, focused, color }) => (
+    <Icon
+      name={focused ? 'abums' : 'albums-outlined'}
+      color={color}
+    />
+  )}
+  ...
+/>
 ```
 
 ##### `renderLabel`
@@ -469,11 +492,14 @@ renderIcon={({ route, focused, color }) => (
 Function which takes an object with the current route, focused status and color and returns a custom React Element to be used as a label.
 
 ```js
-renderLabel={({ route, focused, color }) => (
-  <Text style={{ color, margin: 8 }}>
-    {route.title}
-  </Text>
-)}
+<TabBar
+  renderLabel={({ route, focused, color }) => (
+    <Text style={{ color, margin: 8 }}>
+      {route.title}
+    </Text>
+  )}
+  ...
+/>
 ```
 
 ##### `renderIndicator`
@@ -491,13 +517,16 @@ Function to execute on tab press. It receives the scene for the pressed tab, use
 By default, tab press also switches the tab. To prevent this behavior, you can call `preventDefault`:
 
 ```js
-onTabPress={({ route, preventDefault }) => {
-  if (route.key === 'home') {
-    preventDefault();
+<TabBar
+  onTabPress={({ route, preventDefault }) => {
+    if (route.key === 'home') {
+      preventDefault();
 
-    // Do something else
-  }
-}}
+      // Do something else
+    }
+  }}
+  ...
+/>
 ```
 
 ##### `onTabLongPress`
@@ -707,7 +736,7 @@ For example, do the following to render only 2 routes on each side:
 
 ```js
 renderScene = ({ route }) => {
-  if (Math.abs(this.state.index - this.state.routes.indexOf(route)) > 2) {
+  if (Math.abs(index - routes.indexOf(route)) > 2) {
     return <View />;
   }
 
