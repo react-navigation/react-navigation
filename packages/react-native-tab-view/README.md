@@ -71,8 +71,6 @@ Next, we need to link these libraries. The steps depends on your React Native ve
 
 **IMPORTANT:** There are additional steps required for `react-native-gesture-handler` on Android after linking (for all React Native versions). Check the [this guide](https://kmagiera.github.io/react-native-gesture-handler/docs/getting-started.html) to complete the installation.
 
-**NOTE:** If you use Wix [`react-native-navigation`](https://github.com/wix/react-native-navigation) on Android, you need to wrap all your screens that uses `react-native-tab-view` with `gestureHandlerRootHOC` from `react-native-gesture-handler`. Refer [`react-native-gesture-handler`'s docs](https://kmagiera.github.io/react-native-gesture-handler/docs/getting-started.html#with-wix-react-native-navigation-https-githubcom-wix-react-native-navigation) for more details.
-
 We're done! Now you can build and run the app on your device/simulator.
 
 ## Quick Start
@@ -127,10 +125,6 @@ const styles = StyleSheet.create({
 
 - [Custom Tab Bar](https://snack.expo.io/@satya164/react-native-tab-view-custom-tabbar)
 - [Lazy Load](https://snack.expo.io/@satya164/react-native-tab-view-lazy-load)
-
-## Integration with React Navigation
-
-React Navigation integration can be achieved by the [react-navigation-tabs](https://github.com/react-navigation/react-navigation-tabs) package. Note that while it's easier to use, it is not as flexible as using the library directly.
 
 ## API reference
 
@@ -363,7 +357,9 @@ Number for determining how meaningful is gesture velocity for calculating initia
 Object containing the initial height and width of the screens. Passing this will improve the initial rendering performance. For most apps, this is a good default:
 
 ```js
-{ width: Dimensions.get('window').width }
+{
+  width: Dimensions.get('window').width;
+}
 ```
 
 ##### `position`
@@ -559,6 +555,67 @@ Style to apply to the inner container for tabs.
 ##### `style`
 
 Style to apply to the tab bar container.
+
+## Using with other libraries
+
+### [React Navigation](https://github.com/react-navigation/react-navigation)
+
+If you want to integrate the tab view with React Navigation's navigation system, e.g. want to be able to navigate to a tab using `navigation.navigate` etc, you can use the following official integrations:
+
+- [@react-navigation/material-top-tabs](https://github.com/react-navigation/navigation-ex/tree/master/packages/material-top-tabs) for React Navigation 5
+- [react-navigation-tabs](https://github.com/react-navigation/react-navigation-tabs) for React Navigation 4
+
+Note that some functionalities are not available with the React Navigation 4 integration because of the limitations in React Navigation. For example, it's possible to dynamically change the rendered tabs.
+
+### [React Native Navigation (Wix)](https://github.com/wix/react-native-navigation)
+
+If you use React Native Navigation by Wix on Android, you need to wrap all your screens that uses `react-native-tab-view` with `gestureHandlerRootHOC` from `react-native-gesture-handler`. Refer [`react-native-gesture-handler`'s docs](https://kmagiera.github.io/react-native-gesture-handler/docs/getting-started.html#with-wix-react-native-navigation-https-githubcom-wix-react-native-navigation) for more details.
+
+### [Mobx](https://mobx.js.org/)
+
+Normally we recommend to use React's local state to manage the navigation state for the tabs. But if you need to use Mobx to manage the navigation state, there is a gotcha you need to be aware of.
+
+Mobx relies on data being accessed in `render` to work properly. However, we don't use the `index` value inside `render` in the library, so Mobx fails to track any changes to the `index`. You might see that the tabs don't change on pressing on the tab bar if you have a state like this:
+
+```js
+@observable navigationState = {
+  index: 0,
+  routes: [
+    { key: 'music', title: 'Music' },
+    { key: 'albums', title: 'Albums' },
+  ],
+};
+```
+
+To workaround this, we need to make sure that `index` is accessed in `render`. We can refactor our state to something like this for it to work:
+
+```js
+@observer
+class MyComponent extends React.Component {
+  @observable index = 0;
+
+  @observable routes = [
+    { key: 'music', title: 'Music' },
+    { key: 'albums', title: 'Albums' },
+  ];
+
+  @action handleIndexChange = index => {
+    this.index = index;
+  };
+
+  render() {
+    return (
+      <TabView
+        navigationState={{ index: this.index, routes: this.routes }}
+        renderScene={({ route }) => {
+          /* ... */
+        }}
+        onIndexChange={this.handleIndexChange}
+      />
+    );
+  }
+}
+```
 
 ## Optimization Tips
 
