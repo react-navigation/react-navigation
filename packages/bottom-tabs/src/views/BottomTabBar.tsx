@@ -9,22 +9,11 @@ import {
   ScaledSize,
   Dimensions,
 } from 'react-native';
-import {
-  Route,
-  NavigationContext,
-  CommonActions,
-} from '@react-navigation/native';
+import { NavigationContext, CommonActions } from '@react-navigation/native';
 import { SafeAreaConsumer } from 'react-native-safe-area-context';
 
 import BottomTabItem from './BottomTabItem';
 import { BottomTabBarProps } from '../types';
-
-type State = {
-  dimensions: { height: number; width: number };
-  layout: { height: number; width: number };
-  keyboard: boolean;
-  visible: Animated.Value;
-};
 
 type Props = BottomTabBarProps & {
   activeTintColor?: string;
@@ -34,97 +23,99 @@ type Props = BottomTabBarProps & {
 const DEFAULT_TABBAR_HEIGHT = 50;
 const DEFAULT_MAX_TAB_ITEM_WIDTH = 125;
 
-export default class BottomTabBar extends React.Component<Props, State> {
-  static defaultProps = {
-    keyboardHidesTabBar: false,
-    adaptive: true,
-  };
+export default function BottomTabBar({
+  state,
+  navigation,
+  descriptors,
+  activeBackgroundColor,
+  activeTintColor,
+  adaptive = true,
+  allowFontScaling,
+  inactiveBackgroundColor,
+  inactiveTintColor,
+  keyboardHidesTabBar = false,
+  labelPosition,
+  labelStyle,
+  showIcon,
+  showLabel,
+  style,
+  tabStyle,
+}: Props) {
+  const [dimensions, setDimensions] = React.useState(Dimensions.get('window'));
+  const [layout, setLayout] = React.useState({ height: 0, width: 0 });
+  const [keyboardShown, setKeyboardShown] = React.useState(false);
 
-  state = {
-    dimensions: Dimensions.get('window'),
-    layout: { height: 0, width: 0 },
-    keyboard: false,
-    visible: new Animated.Value(1),
-  };
+  const [visible] = React.useState(() => new Animated.Value(0));
 
-  componentDidMount() {
-    Dimensions.addEventListener('change', this.handleOrientationChange);
+  const { routes } = state;
 
-    if (Platform.OS === 'ios') {
-      Keyboard.addListener('keyboardWillShow', this.handleKeyboardShow);
-      Keyboard.addListener('keyboardWillHide', this.handleKeyboardHide);
-    } else {
-      Keyboard.addListener('keyboardDidShow', this.handleKeyboardShow);
-      Keyboard.addListener('keyboardDidHide', this.handleKeyboardHide);
-    }
-  }
-
-  componentWillUnmount() {
-    Dimensions.removeEventListener('change', this.handleOrientationChange);
-
-    if (Platform.OS === 'ios') {
-      Keyboard.removeListener('keyboardWillShow', this.handleKeyboardShow);
-      Keyboard.removeListener('keyboardWillHide', this.handleKeyboardHide);
-    } else {
-      Keyboard.removeListener('keyboardDidShow', this.handleKeyboardShow);
-      Keyboard.removeListener('keyboardDidHide', this.handleKeyboardHide);
-    }
-  }
-
-  private handleOrientationChange = ({ window }: { window: ScaledSize }) => {
-    this.setState({ dimensions: window });
-  };
-
-  private handleKeyboardShow = () =>
-    this.setState({ keyboard: true }, () =>
-      Animated.timing(this.state.visible, {
+  React.useEffect(() => {
+    if (keyboardShown) {
+      Animated.timing(visible, {
         toValue: 0,
         duration: 200,
         useNativeDriver: true,
-      }).start()
-    );
+      }).start();
+    }
+  }, [keyboardShown, visible]);
 
-  private handleKeyboardHide = () =>
-    Animated.timing(this.state.visible, {
-      toValue: 1,
-      duration: 250,
-      useNativeDriver: true,
-    }).start(({ finished }) => {
-      if (finished) {
-        this.setState({ keyboard: false });
-      }
-    });
+  React.useEffect(() => {
+    const handleOrientationChange = ({ window }: { window: ScaledSize }) => {
+      setDimensions(window);
+    };
 
-  private handleLayout = (e: LayoutChangeEvent) => {
-    const { layout } = this.state;
-    const { height, width } = e.nativeEvent.layout;
+    const handleKeyboardShow = () => setKeyboardShown(true);
 
-    if (height === layout.height && width === layout.width) {
-      return;
+    const handleKeyboardHide = () =>
+      Animated.timing(visible, {
+        toValue: 1,
+        duration: 250,
+        useNativeDriver: true,
+      }).start(({ finished }) => {
+        if (finished) {
+          setKeyboardShown(false);
+        }
+      });
+
+    Dimensions.addEventListener('change', handleOrientationChange);
+
+    if (Platform.OS === 'ios') {
+      Keyboard.addListener('keyboardWillShow', handleKeyboardShow);
+      Keyboard.addListener('keyboardWillHide', handleKeyboardHide);
+    } else {
+      Keyboard.addListener('keyboardDidShow', handleKeyboardShow);
+      Keyboard.addListener('keyboardDidHide', handleKeyboardHide);
     }
 
-    this.setState({
-      layout: {
-        height,
-        width,
-      },
+    return () => {
+      Dimensions.removeEventListener('change', handleOrientationChange);
+
+      if (Platform.OS === 'ios') {
+        Keyboard.removeListener('keyboardWillShow', handleKeyboardShow);
+        Keyboard.removeListener('keyboardWillHide', handleKeyboardHide);
+      } else {
+        Keyboard.removeListener('keyboardDidShow', handleKeyboardShow);
+        Keyboard.removeListener('keyboardDidHide', handleKeyboardHide);
+      }
+    };
+  }, [visible]);
+
+  const handleLayout = (e: LayoutChangeEvent) => {
+    const { height, width } = e.nativeEvent.layout;
+
+    setLayout(layout => {
+      if (height === layout.height && width === layout.width) {
+        return layout;
+      } else {
+        return {
+          height,
+          width,
+        };
+      }
     });
   };
 
-  private getLabelText = ({ route }: { route: Route<string> }) => {
-    const { options } = this.props.descriptors[route.key];
-
-    return options.tabBarLabel !== undefined
-      ? options.tabBarLabel
-      : options.title !== undefined
-      ? options.title
-      : route.name;
-  };
-
-  private shouldUseHorizontalLabels = () => {
-    const { state, adaptive, tabStyle, labelPosition } = this.props;
-    const { dimensions } = this.state;
-    const { routes } = state;
+  const shouldUseHorizontalLabels = () => {
     const isLandscape = dimensions.width > dimensions.height;
 
     if (labelPosition) {
@@ -165,126 +156,110 @@ export default class BottomTabBar extends React.Component<Props, State> {
     }
   };
 
-  render() {
-    const {
-      state,
-      navigation,
-      descriptors,
-      keyboardHidesTabBar,
-      activeTintColor,
-      inactiveTintColor,
-      activeBackgroundColor,
-      inactiveBackgroundColor,
-      labelStyle,
-      showIcon,
-      showLabel,
-      allowFontScaling,
-      style,
-      tabStyle,
-    } = this.props;
-    const { routes } = state;
+  return (
+    <SafeAreaConsumer>
+      {insets => (
+        <Animated.View
+          style={[
+            styles.tabBar,
+            keyboardHidesTabBar
+              ? {
+                  // When the keyboard is shown, slide down the tab bar
+                  transform: [
+                    {
+                      translateY: visible.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [layout.height, 0],
+                      }),
+                    },
+                  ],
+                  // Absolutely position the tab bar so that the content is below it
+                  // This is needed to avoid gap at bottom when the tab bar is hidden
+                  position: keyboardShown ? 'absolute' : null,
+                }
+              : null,
+            {
+              height: DEFAULT_TABBAR_HEIGHT + (insets ? insets.bottom : 0),
+              paddingBottom: insets ? insets.bottom : 0,
+            },
+            style,
+          ]}
+          pointerEvents={keyboardHidesTabBar && keyboardShown ? 'none' : 'auto'}
+        >
+          <View style={styles.content} onLayout={handleLayout}>
+            {routes.map((route, index) => {
+              const focused = index === state.index;
+              const { options } = descriptors[route.key];
 
-    return (
-      <SafeAreaConsumer>
-        {insets => (
-          <Animated.View
-            style={[
-              styles.tabBar,
-              keyboardHidesTabBar
-                ? {
-                    // When the keyboard is shown, slide down the tab bar
-                    transform: [
-                      {
-                        translateY: this.state.visible.interpolate({
-                          inputRange: [0, 1],
-                          outputRange: [this.state.layout.height, 0],
-                        }),
-                      },
-                    ],
-                    // Absolutely position the tab bar so that the content is below it
-                    // This is needed to avoid gap at bottom when the tab bar is hidden
-                    position: this.state.keyboard ? 'absolute' : null,
-                  }
-                : null,
-              {
-                height: DEFAULT_TABBAR_HEIGHT + (insets ? insets.bottom : 0),
-                paddingBottom: insets ? insets.bottom : 0,
-              },
-              style,
-            ]}
-            pointerEvents={
-              keyboardHidesTabBar && this.state.keyboard ? 'none' : 'auto'
-            }
-          >
-            <View style={styles.content} onLayout={this.handleLayout}>
-              {routes.map((route, index) => {
-                const focused = index === state.index;
-                const { options } = descriptors[route.key];
+              const onPress = () => {
+                const event = navigation.emit({
+                  type: 'tabPress',
+                  target: route.key,
+                });
 
-                const onPress = () => {
-                  const event = navigation.emit({
-                    type: 'tabPress',
-                    target: route.key,
+                if (!focused && !event.defaultPrevented) {
+                  navigation.dispatch({
+                    ...CommonActions.navigate(route.name),
+                    target: state.key,
                   });
+                }
+              };
 
-                  if (!focused && !event.defaultPrevented) {
-                    navigation.dispatch({
-                      ...CommonActions.navigate(route.name),
-                      target: state.key,
-                    });
-                  }
-                };
+              const onLongPress = () => {
+                navigation.emit({
+                  type: 'tabLongPress',
+                  target: route.key,
+                });
+              };
 
-                const onLongPress = () => {
-                  navigation.emit({
-                    type: 'tabLongPress',
-                    target: route.key,
-                  });
-                };
+              const label =
+                options.tabBarLabel !== undefined
+                  ? options.tabBarLabel
+                  : options.title !== undefined
+                  ? options.title
+                  : route.name;
 
-                const label = this.getLabelText({ route });
-                const accessibilityLabel =
-                  options.tabBarAccessibilityLabel !== undefined
-                    ? options.tabBarAccessibilityLabel
-                    : typeof label === 'string'
-                    ? `${label}, tab, ${index + 1} of ${routes.length}`
-                    : undefined;
+              const accessibilityLabel =
+                options.tabBarAccessibilityLabel !== undefined
+                  ? options.tabBarAccessibilityLabel
+                  : typeof label === 'string'
+                  ? `${label}, tab, ${index + 1} of ${routes.length}`
+                  : undefined;
 
-                return (
-                  <NavigationContext.Provider
-                    key={route.key}
-                    value={descriptors[route.key].navigation}
-                  >
-                    <BottomTabItem
-                      route={route}
-                      focused={focused}
-                      horizontal={this.shouldUseHorizontalLabels()}
-                      onPress={onPress}
-                      onLongPress={onLongPress}
-                      accessibilityLabel={accessibilityLabel}
-                      testID={options.tabBarTestID}
-                      allowFontScaling={allowFontScaling}
-                      activeTintColor={activeTintColor}
-                      inactiveTintColor={inactiveTintColor}
-                      activeBackgroundColor={activeBackgroundColor}
-                      inactiveBackgroundColor={inactiveBackgroundColor}
-                      button={options.tabBarButton}
-                      icon={options.tabBarIcon}
-                      label={label}
-                      showIcon={showIcon}
-                      showLabel={showLabel}
-                      labelStyle={labelStyle}
-                      style={tabStyle}
-                    />
-                  </NavigationContext.Provider>
-                );
-              })}
-            </View>
-          </Animated.View>
-        )}
-      </SafeAreaConsumer>
-    );
-  }
+              return (
+                <NavigationContext.Provider
+                  key={route.key}
+                  value={descriptors[route.key].navigation}
+                >
+                  <BottomTabItem
+                    route={route}
+                    focused={focused}
+                    horizontal={shouldUseHorizontalLabels()}
+                    onPress={onPress}
+                    onLongPress={onLongPress}
+                    accessibilityLabel={accessibilityLabel}
+                    testID={options.tabBarTestID}
+                    allowFontScaling={allowFontScaling}
+                    activeTintColor={activeTintColor}
+                    inactiveTintColor={inactiveTintColor}
+                    activeBackgroundColor={activeBackgroundColor}
+                    inactiveBackgroundColor={inactiveBackgroundColor}
+                    button={options.tabBarButton}
+                    icon={options.tabBarIcon}
+                    label={label}
+                    showIcon={showIcon}
+                    showLabel={showLabel}
+                    labelStyle={labelStyle}
+                    style={tabStyle}
+                  />
+                </NavigationContext.Provider>
+              );
+            })}
+          </View>
+        </Animated.View>
+      )}
+    </SafeAreaConsumer>
+  );
 }
 
 const styles = StyleSheet.create({
