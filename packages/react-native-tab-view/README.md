@@ -655,7 +655,7 @@ The `renderScene` function is called every time the index changes. If your `rend
 For example, instead of:
 
 ```js
-renderScene = ({ route }) => {
+const renderScene = ({ route }) => {
   switch (route.key) {
     case 'home':
       return (
@@ -673,7 +673,7 @@ renderScene = ({ route }) => {
 Do the following:
 
 ```js
-renderScene = ({ route }) => {
+const renderScene = ({ route }) => {
   switch (route.key) {
     case 'home':
       return <HomeComponent />;
@@ -735,7 +735,7 @@ If you've a large number of routes, especially images, it can slow the animation
 For example, do the following to render only 2 routes on each side:
 
 ```js
-renderScene = ({ route }) => {
+const renderScene = ({ route }) => {
   if (Math.abs(index - routes.indexOf(route)) > 2) {
     return <View />;
   }
