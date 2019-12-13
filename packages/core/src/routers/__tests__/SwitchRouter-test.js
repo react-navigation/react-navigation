@@ -231,6 +231,19 @@ describe('SwitchRouter', () => {
     navigateTo('Home');
     expect(getSubState(1).routeName).toEqual('Home');
   });
+
+  it('does not error for a nested navigate action in an uninitialized history router', () => {
+    const { navigateTo, getSubState } = getRouterTestHelper(
+      getExampleRouter({ backBehavior: 'history' }),
+      { skipInitializeState: true }
+    );
+
+    navigateTo('B', {
+      action: NavigationActions.navigate({ routeName: 'B2' }),
+    });
+    expect(getSubState(1).routeName).toEqual('B');
+    expect(getSubState(2).routeName).toEqual('B2');
+  });
 });
 
 const getExampleRouter = (config = {}) => {

@@ -6,12 +6,15 @@ import * as SwitchActions from '../../routers/SwitchActions';
 // it's often convenient to manipulate a structure that keeps the router state to avoid
 // creating many state1, state2, state3 local variables which are prone to typos...
 
-const defaultInitAction = {
-  type: NavigationActions.INIT,
+const defaultOptions = {
+  skipInitializeState: false,
 };
 
-export const getRouterTestHelper = (router, initAction = defaultInitAction) => {
-  let state = router.getStateForAction(initAction);
+export const getRouterTestHelper = (router, options = defaultOptions) => {
+  let state =
+    options && options.skipInitializeState
+      ? undefined
+      : router.getStateForAction({ type: NavigationActions.INIT });
 
   const applyAction = action => {
     state = router.getStateForAction(action, state);

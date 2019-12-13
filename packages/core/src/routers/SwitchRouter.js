@@ -82,7 +82,10 @@ export default (routeConfigs, config = {}) => {
 
   function getNextState(action, prevState, possibleNextState) {
     function updateNextStateHistory(prevState, nextState) {
-      if (backBehavior !== 'history' || nextState.index === prevState.index) {
+      if (
+        backBehavior !== 'history' ||
+        (prevState && nextState && nextState.index === prevState.index)
+      ) {
         return nextState;
       }
       let nextRouteKeyHistory = prevState ? prevState.routeKeyHistory : [];
@@ -104,6 +107,7 @@ export default (routeConfigs, config = {}) => {
     let nextState = possibleNextState;
     if (
       prevState &&
+      possibleNextState &&
       prevState.index !== possibleNextState.index &&
       resetOnBlur
     ) {
