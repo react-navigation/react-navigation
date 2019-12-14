@@ -1,29 +1,46 @@
 import * as React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { TabBar } from 'react-native-tab-view';
-import { Route } from '@react-navigation/native';
+import { Route, useTheme } from '@react-navigation/native';
+import Color from 'color';
 
 import { MaterialTopTabBarProps } from '../types';
 
-export default function TabBarTop({
-  state,
-  navigation,
-  descriptors,
-  activeTintColor = 'rgba(255, 255, 255, 1)',
-  inactiveTintColor = 'rgba(255, 255, 255, 0.7)',
-  allowFontScaling = true,
-  iconStyle,
-  labelStyle,
-  showIcon = false,
-  showLabel = true,
-  ...rest
-}: MaterialTopTabBarProps) {
+export default function TabBarTop(props: MaterialTopTabBarProps) {
+  const { colors } = useTheme();
+
+  const {
+    state,
+    navigation,
+    descriptors,
+    activeTintColor = colors.text,
+    inactiveTintColor = Color(activeTintColor)
+      .alpha(0.5)
+      .rgb()
+      .string(),
+    allowFontScaling = true,
+    showIcon = false,
+    showLabel = true,
+    pressColor = Color(activeTintColor)
+      .alpha(0.08)
+      .rgb()
+      .string(),
+    iconStyle,
+    labelStyle,
+    indicatorStyle,
+    style,
+    ...rest
+  } = props;
+
   return (
     <TabBar
       {...rest}
       navigationState={state}
       activeColor={activeTintColor}
       inactiveColor={inactiveTintColor}
+      indicatorStyle={[{ backgroundColor: colors.primary }, indicatorStyle]}
+      style={[{ backgroundColor: colors.card }, style]}
+      pressColor={pressColor}
       getAccessibilityLabel={({ route }) =>
         descriptors[route.key].options.tabBarAccessibilityLabel
       }

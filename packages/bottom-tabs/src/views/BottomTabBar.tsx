@@ -9,7 +9,11 @@ import {
   ScaledSize,
   Dimensions,
 } from 'react-native';
-import { NavigationContext, CommonActions } from '@react-navigation/native';
+import {
+  NavigationContext,
+  CommonActions,
+  useTheme,
+} from '@react-navigation/native';
 import { SafeAreaConsumer } from 'react-native-safe-area-context';
 
 import BottomTabItem from './BottomTabItem';
@@ -41,6 +45,8 @@ export default function BottomTabBar({
   style,
   tabStyle,
 }: Props) {
+  const { colors } = useTheme();
+
   const [dimensions, setDimensions] = React.useState(Dimensions.get('window'));
   const [layout, setLayout] = React.useState({ height: 0, width: 0 });
   const [keyboardShown, setKeyboardShown] = React.useState(false);
@@ -162,6 +168,10 @@ export default function BottomTabBar({
         <Animated.View
           style={[
             styles.tabBar,
+            {
+              backgroundColor: colors.card,
+              borderTopColor: colors.border,
+            },
             keyboardHidesTabBar
               ? {
                   // When the keyboard is shown, slide down the tab bar
@@ -267,9 +277,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: '#fff',
     borderTopWidth: StyleSheet.hairlineWidth,
-    borderTopColor: 'rgba(0, 0, 0, .3)',
     elevation: 8,
   },
   content: {

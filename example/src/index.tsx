@@ -1,7 +1,23 @@
 import * as React from 'react';
-import { ScrollView, AsyncStorage, YellowBox } from 'react-native';
+import {
+  View,
+  ScrollView,
+  AsyncStorage,
+  YellowBox,
+  Platform,
+  StatusBar,
+} from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
-import { Appbar, List } from 'react-native-paper';
+import {
+  Provider as PaperProvider,
+  DefaultTheme as PaperLightTheme,
+  DarkTheme as PaperDarkTheme,
+  Subheading,
+  Appbar,
+  List,
+  Switch,
+  Divider,
+} from 'react-native-paper';
 import { Asset } from 'expo-asset';
 import {
   InitialState,
@@ -9,6 +25,8 @@ import {
   useLinking,
   NavigationContainerRef,
   NavigationNativeContainer,
+  DefaultTheme,
+  DarkTheme,
 } from '@react-navigation/native';
 import {
   createDrawerNavigator,
@@ -72,7 +90,8 @@ const SCREENS = {
 const Drawer = createDrawerNavigator<RootDrawerParamList>();
 const Stack = createStackNavigator<RootStackParamList>();
 
-const PERSISTENCE_KEY = 'NAVIGATION_STATE';
+const NAVIGATION_PERSISTENCE_KEY = 'NAVIGATION_STATE';
+const THEME_PERSISTENCE_KEY = 'THEME_TYPE';
 
 Asset.loadAsync(StackAssets);
 
@@ -102,6 +121,8 @@ export default function App() {
     },
   });
 
+  const [theme, setTheme] = React.useState(DefaultTheme);
+
   const [isReady, setIsReady] = React.useState(false);
   const [initialState, setInitialState] = React.useState<
     InitialState | undefined
@@ -113,7 +134,9 @@ export default function App() {
         let state = await getInitialState();
 
         if (state === undefined) {
-          const savedState = await AsyncStorage.getItem(PERSISTENCE_KEY);
+          const savedState = await AsyncStorage.getItem(
+            NAVIGATION_PERSISTENCE_KEY
+          );
           state = savedState ? JSON.parse(savedState) : undefined;
         }
 
@@ -121,6 +144,14 @@ export default function App() {
           setInitialState(state);
         }
       } finally {
+        try {
+          const themeName = await AsyncStorage.getItem(THEME_PERSISTENCE_KEY);
+
+          setTheme(themeName === 'dark' ? DarkTheme : DefaultTheme);
+        } catch (e) {
+          // Ignore
+        }
+
         setIsReady(true);
       }
     };
@@ -128,78 +159,126 @@ export default function App() {
     restoreState();
   }, [getInitialState]);
 
+  const paperTheme = React.useMemo(() => {
+    const t = theme.dark ? PaperDarkTheme : PaperLightTheme;
+
+    return {
+      ...t,
+      colors: {
+        ...t.colors,
+        ...theme.colors,
+        surface: theme.colors.card,
+        accent: theme.dark ? 'rgb(255, 55, 95)' : 'rgb(255, 45, 85)',
+      },
+    };
+  }, [theme.colors, theme.dark]);
+
   if (!isReady) {
     return null;
   }
 
   return (
-    <NavigationNativeContainer
-      ref={containerRef}
-      initialState={initialState}
-      onStateChange={state =>
-        AsyncStorage.setItem(PERSISTENCE_KEY, JSON.stringify(state))
-      }
-    >
-      <Drawer.Navigator>
-        <Drawer.Screen
-          name="Root"
-          options={{
-            title: 'Examples',
-            drawerIcon: ({ size, color }) => (
-              <MaterialIcons size={size} color={color} name="folder" />
-            ),
-          }}
-        >
-          {({
-            navigation,
-          }: {
-            navigation: DrawerNavigationProp<RootDrawerParamList>;
-          }) => (
-            <Stack.Navigator>
-              <Stack.Screen
-                name="Home"
-                options={{
-                  title: 'Examples',
-                  headerLeft: () => (
-                    <Appbar.Action
-                      icon="menu"
-                      onPress={() => navigation.toggleDrawer()}
-                    />
-                  ),
-                }}
-              >
-                {({
-                  navigation,
-                }: {
-                  navigation: StackNavigationProp<RootStackParamList>;
-                }) => (
-                  <ScrollView>
-                    {(Object.keys(SCREENS) as Array<keyof typeof SCREENS>).map(
-                      name => (
+    <PaperProvider theme={paperTheme}>
+      {Platform.OS === 'ios' && (
+        <StatusBar barStyle={theme.dark ? 'light-content' : 'dark-content'} />
+      )}
+      <NavigationNativeContainer
+        ref={containerRef}
+        initialState={initialState}
+        onStateChange={state =>
+          AsyncStorage.setItem(
+            NAVIGATION_PERSISTENCE_KEY,
+            JSON.stringify(state)
+          )
+        }
+        theme={theme}
+      >
+        <Drawer.Navigator>
+          <Drawer.Screen
+            name="Root"
+            options={{
+              title: 'Examples',
+              drawerIcon: ({ size, color }) => (
+                <MaterialIcons size={size} color={color} name="folder" />
+              ),
+            }}
+          >
+            {({
+              navigation,
+            }: {
+              navigation: DrawerNavigationProp<RootDrawerParamList>;
+            }) => (
+              <Stack.Navigator>
+                <Stack.Screen
+                  name="Home"
+                  options={{
+                    title: 'Examples',
+                    headerLeft: () => (
+                      <Appbar.Action
+                        color={theme.colors.text}
+                        icon="menu"
+                        onPress={() => navigation.toggleDrawer()}
+                      />
+                    ),
+                  }}
+                >
+                  {({
+                    navigation,
+                  }: {
+                    navigation: StackNavigationProp<RootStackParamList>;
+                  }) => (
+                    <ScrollView
+                      style={{ backgroundColor: theme.colors.background }}
+                    >
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          padding: 16,
+                        }}
+                      >
+                        <Subheading>Dark theme</Subheading>
+                        <Switch
+                          value={theme.dark}
+                          onValueChange={() => {
+                            AsyncStorage.setItem(
+                              THEME_PERSISTENCE_KEY,
+                              theme.dark ? 'light' : 'dark'
+                            );
+
+                            setTheme(t => (t.dark ? DefaultTheme : DarkTheme));
+                          }}
+                        />
+                      </View>
+                      <Divider />
+                      {(Object.keys(SCREENS) as Array<
+                        keyof typeof SCREENS
+                      >).map(name => (
                         <List.Item
                           key={name}
                           title={SCREENS[name].title}
                           onPress={() => navigation.push(name)}
                         />
-                      )
-                    )}
-                  </ScrollView>
+                      ))}
+                    </ScrollView>
+                  )}
+                </Stack.Screen>
+                {(Object.keys(SCREENS) as Array<keyof typeof SCREENS>).map(
+                  name => (
+                    <Stack.Screen
+                      key={name}
+                      name={name}
+                      component={SCREENS[name].component}
+                      options={{ title: SCREENS[name].title }}
+                    />
+                  )
                 )}
-              </Stack.Screen>
-              {(Object.keys(SCREENS) as Array<keyof typeof SCREENS>).map(
-                name => (
-                  <Stack.Screen
-                    key={name}
-                    name={name}
-                    component={SCREENS[name].component}
-                    options={{ title: SCREENS[name].title }}
-                  />
-                )
-              )}
-            </Stack.Navigator>
-          )}
-        </Drawer.Screen>
-      </Drawer.Navigator>
-    </NavigationNativeContainer>
+              </Stack.Navigator>
+            )}
+          </Drawer.Screen>
+        </Drawer.Navigator>
+      </NavigationNativeContainer>
+    </PaperProvider>
   );
 }

@@ -2,6 +2,7 @@ import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
 
 import { TabNavigationState } from '@react-navigation/routers';
+import { useTheme } from '@react-navigation/native';
 // eslint-disable-next-line import/no-unresolved
 import { ScreenContainer } from 'react-native-screens';
 
@@ -24,6 +25,26 @@ type Props = BottomTabNavigationConfig & {
 type State = {
   loaded: number[];
 };
+
+function SceneContent({
+  isFocused,
+  children,
+}: {
+  isFocused: boolean;
+  children: React.ReactNode;
+}) {
+  const { colors } = useTheme();
+
+  return (
+    <View
+      accessibilityElementsHidden={!isFocused}
+      importantForAccessibility={isFocused ? 'auto' : 'no-hide-descendants'}
+      style={[styles.content, { backgroundColor: colors.background }]}
+    >
+      {children}
+    </View>
+  );
+}
 
 export default class BottomTabView extends React.Component<Props, State> {
   static defaultProps = {
@@ -97,15 +118,9 @@ export default class BottomTabView extends React.Component<Props, State> {
                   style={StyleSheet.absoluteFill}
                   isVisible={isFocused}
                 >
-                  <View
-                    accessibilityElementsHidden={!isFocused}
-                    importantForAccessibility={
-                      isFocused ? 'auto' : 'no-hide-descendants'
-                    }
-                    style={styles.content}
-                  >
+                  <SceneContent isFocused={isFocused}>
                     {descriptors[route.key].render()}
-                  </View>
+                  </SceneContent>
                 </ResourceSavingScene>
               );
             })}

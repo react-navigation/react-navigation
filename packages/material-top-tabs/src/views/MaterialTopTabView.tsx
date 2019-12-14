@@ -1,6 +1,7 @@
 import * as React from 'react';
+import { View } from 'react-native';
 import { TabView, SceneRendererProps } from 'react-native-tab-view';
-import { Route } from '@react-navigation/native';
+import { Route, useTheme } from '@react-navigation/native';
 import { TabNavigationState, TabActions } from '@react-navigation/routers';
 
 import MaterialTopTabBar from './MaterialTopTabBar';
@@ -17,6 +18,16 @@ type Props = MaterialTopTabNavigationConfig & {
   descriptors: MaterialTopTabDescriptorMap;
   tabBarPosition: 'top' | 'bottom';
 };
+
+function SceneContent({ children }: { children: React.ReactNode }) {
+  const { colors } = useTheme();
+
+  return (
+    <View style={{ flex: 1, backgroundColor: colors.background }}>
+      {children}
+    </View>
+  );
+}
 
 export default class MaterialTopTabView extends React.PureComponent<Props> {
   static defaultProps = {
@@ -93,7 +104,9 @@ export default class MaterialTopTabView extends React.PureComponent<Props> {
             target: state.key,
           })
         }
-        renderScene={({ route }) => descriptors[route.key].render()}
+        renderScene={({ route }) => (
+          <SceneContent>{descriptors[route.key].render()}</SceneContent>
+        )}
         navigationState={state}
         renderTabBar={this.renderTabBar}
         renderLazyPlaceholder={this.renderLazyPlaceholder}

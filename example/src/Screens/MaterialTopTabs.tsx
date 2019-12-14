@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { StyleSheet } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import Albums from '../Shared/Albums';
 import Contacts from '../Shared/Contacts';
@@ -15,13 +14,7 @@ const MaterialTopTabs = createMaterialTopTabNavigator<MaterialTopTabParams>();
 
 export default function MaterialTopTabsScreen() {
   return (
-    <MaterialTopTabs.Navigator
-      tabBarOptions={{
-        style: styles.tabBar,
-        labelStyle: styles.tabLabel,
-        indicatorStyle: styles.tabIndicator,
-      }}
-    >
+    <MaterialTopTabs.Navigator>
       <MaterialTopTabs.Screen
         name="chat"
         component={Chat}
@@ -40,15 +33,3 @@ export default function MaterialTopTabsScreen() {
     </MaterialTopTabs.Navigator>
   );
 }
-
-const styles = StyleSheet.create({
-  tabBar: {
-    backgroundColor: 'white',
-  },
-  tabLabel: {
-    color: 'black',
-  },
-  tabIndicator: {
-    backgroundColor: 'tomato',
-  },
-});

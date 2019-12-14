@@ -7,7 +7,8 @@ import {
   ScrollView,
   StyleSheet,
 } from 'react-native';
-import { useScrollToTop } from '@react-navigation/native';
+import { useScrollToTop, useTheme } from '@react-navigation/native';
+import Color from 'color';
 
 const MESSAGES = [
   'okay',
@@ -20,6 +21,8 @@ export default function Chat() {
   const ref = React.useRef<ScrollView>(null);
 
   useScrollToTop(ref);
+
+  const { colors } = useTheme();
 
   return (
     <View style={styles.container}>
@@ -45,9 +48,12 @@ export default function Chat() {
                 }
               />
               <View
-                style={[styles.bubble, odd ? styles.received : styles.sent]}
+                style={[
+                  styles.bubble,
+                  { backgroundColor: odd ? colors.primary : colors.card },
+                ]}
               >
-                <Text style={odd ? styles.receivedText : styles.sentText}>
+                <Text style={{ color: odd ? 'white' : colors.text }}>
                   {text}
                 </Text>
               </View>
@@ -56,7 +62,14 @@ export default function Chat() {
         })}
       </ScrollView>
       <TextInput
-        style={styles.input}
+        style={[
+          styles.input,
+          { backgroundColor: colors.card, color: colors.text },
+        ]}
+        placeholderTextColor={Color(colors.text)
+          .alpha(0.5)
+          .rgb()
+          .string()}
         placeholder="Write a message"
         underlineColorAndroid="transparent"
       />
@@ -67,7 +80,6 @@ export default function Chat() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#eceff1',
   },
   inverted: {
     transform: [{ scaleY: -1 }],
@@ -97,22 +109,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     borderRadius: 20,
   },
-  sent: {
-    backgroundColor: '#cfd8dc',
-  },
-  received: {
-    backgroundColor: '#2196F3',
-  },
-  sentText: {
-    color: 'black',
-  },
-  receivedText: {
-    color: 'white',
-  },
   input: {
     height: 48,
     paddingVertical: 12,
     paddingHorizontal: 24,
-    backgroundColor: 'white',
   },
 });

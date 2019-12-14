@@ -38,7 +38,7 @@ export default function Albums() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#343C46',
+    backgroundColor: '#000',
   },
   content: {
     flexDirection: 'row',

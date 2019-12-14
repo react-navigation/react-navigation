@@ -407,6 +407,10 @@ export type StackHeaderTitleProps = {
    */
   allowFontScaling?: boolean;
   /**
+   * Tint color for the header.
+   */
+  tintColor?: string;
+  /**
    * Content of the title element. Usually the title string.
    */
   children?: string;

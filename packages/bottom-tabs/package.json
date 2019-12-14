@@ -33,10 +33,12 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "@react-navigation/routers": "^5.0.0-alpha.16"
+    "@react-navigation/routers": "^5.0.0-alpha.16",
+    "color": "^3.1.2"
   },
   "devDependencies": {
     "@react-native-community/bob": "^0.7.0",
+    "@types/color": "^3.0.0",
     "@types/react": "^16.9.11",
     "@types/react-native": "^0.60.22",
     "del-cli": "^3.0.0",

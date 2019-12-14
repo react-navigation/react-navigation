@@ -121,7 +121,7 @@ export type DrawerNavigationOptions = {
 
 export type DrawerContentComponentProps<T = DrawerContentOptions> = T & {
   state: DrawerNavigationState;
-  navigation: NavigationHelpers<ParamListBase>;
+  navigation: DrawerNavigationHelpers;
   descriptors: DrawerDescriptorMap;
   /**
    * Animated node which represents the current progress of the drawer's open state.

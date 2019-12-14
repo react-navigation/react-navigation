@@ -6,7 +6,7 @@ import {
   ScreenStackHeaderRightView,
   // eslint-disable-next-line import/no-unresolved
 } from 'react-native-screens';
-import { Route } from '@react-navigation/native';
+import { Route, useTheme } from '@react-navigation/native';
 import { NativeStackNavigationOptions } from '../types';
 
 type Props = NativeStackNavigationOptions & {
@@ -14,6 +14,7 @@ type Props = NativeStackNavigationOptions & {
 };
 
 export default function HeaderConfig(props: Props) {
+  const { colors } = useTheme();
   const {
     route,
     title,
@@ -52,17 +53,23 @@ export default function HeaderConfig(props: Props) {
       titleColor={
         headerTitleStyle.color !== undefined
           ? headerTitleStyle.color
-          : headerTintColor
+          : headerTintColor !== undefined
+          ? headerTintColor
+          : colors.text
       }
       backTitle={headerBackTitleVisible ? headerBackTitle : ''}
       backTitleFontFamily={headerBackTitleStyle.fontFamily}
       backTitleFontSize={headerBackTitleStyle.fontSize}
-      color={headerTintColor}
+      color={headerTintColor !== undefined ? headerTintColor : colors.primary}
       gestureEnabled={gestureEnabled === undefined ? true : gestureEnabled}
       largeTitle={headerLargeTitle}
       largeTitleFontFamily={headerLargeTitleStyle.fontFamily}
       largeTitleFontSize={headerLargeTitleStyle.fontSize}
-      backgroundColor={headerStyle.backgroundColor}
+      backgroundColor={
+        headerStyle.backgroundColor !== undefined
+          ? headerStyle.backgroundColor
+          : colors.card
+      }
     >
       {headerRight !== undefined ? (
         <ScreenStackHeaderRightView>{headerRight()}</ScreenStackHeaderRightView>
