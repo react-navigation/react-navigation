@@ -423,8 +423,9 @@ declare module 'react-navigation' {
 
   export type NavigationSwitchProp<
     State = NavigationRoute,
-    Params = NavigationParams
-  > = NavigationScreenProp<State, Params> & {
+    Params = NavigationParams,
+    NextParams = NavigationParams,
+  > = NavigationScreenProp<State, Params, NextParams> & {
     jumpTo(routeName: string, key?: string): void;
   };
 
@@ -559,7 +560,7 @@ declare module 'react-navigation' {
 
   export const NavigationEvents: React.ComponentType<NavigationEventsProps>;
 
-  export interface NavigationScreenProp<S, P = NavigationParams> {
+  export interface NavigationScreenProp<S, P = NavigationParams, NextParams = NavigationParams> {
     state: S & { params?: P };
     dispatch: NavigationDispatch;
     goBack: (routeKey?: string | null) => boolean;
@@ -569,17 +570,17 @@ declare module 'react-navigation' {
         | string
         | {
             routeName: string;
-            params?: NavigationParams;
+            params?: NextParams;
             action?: NavigationNavigateAction;
             key?: string;
           };
-      params?: NavigationParams;
+      params?: NextParams;
       action?: NavigationAction;
       key?: string;
     }): boolean;
     navigate(
       routeNameOrOptions: string,
-      params?: NavigationParams,
+      params?: NextParams,
       action?: NavigationAction
     ): boolean;
     openDrawer: () => any;
