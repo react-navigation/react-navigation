@@ -54,6 +54,23 @@ module.exports = {
     }, {}),
   },
 
+  server: {
+    enhanceMiddleware: middleware => {
+      return (req, res, next) => {
+        const assets = '/packages/stack/src/views/assets';
+
+        if (req.url.startsWith(assets)) {
+          req.url = req.url.replace(
+            assets,
+            '/assets/../packages/stack/src/views/assets'
+          );
+        }
+
+        return middleware(req, res, next);
+      };
+    },
+  },
+
   transformer: {
     getTransformOptions: async () => ({
       transform: {
