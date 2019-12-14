@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.28](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/drawer@5.0.0-alpha.27...@react-navigation/drawer@5.0.0-alpha.28) (2019-12-14)
+
+
+### Features
+
+* add custom theme support ([#211](https://github.com/react-navigation/navigation-ex/issues/211)) ([00fc616](https://github.com/react-navigation/navigation-ex/commit/00fc616de0572bade8aa85052cdc8290360b1d7f))
+
+
+
+
+
 # [5.0.0-alpha.27](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/drawer@5.0.0-alpha.26...@react-navigation/drawer@5.0.0-alpha.27) (2019-12-11)
 
 **Note:** Version bump only for package @react-navigation/drawer
