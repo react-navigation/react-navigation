@@ -339,7 +339,8 @@ export default class HeaderSegment extends React.Component<Props, State> {
                 children: currentTitle,
                 onLayout: this.handleTitleLayout,
                 allowFontScaling: titleAllowFontScaling,
-                style: [{ color: headerTintColor }, customTitleStyle],
+                tintColor: headerTintColor,
+                style: customTitleStyle,
               })}
             </Animated.View>
             {right ? (

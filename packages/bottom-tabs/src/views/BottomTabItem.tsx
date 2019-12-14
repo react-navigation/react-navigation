@@ -8,7 +8,8 @@ import {
   ViewStyle,
   TextStyle,
 } from 'react-native';
-import { Route } from '@react-navigation/native';
+import { Route, useTheme } from '@react-navigation/native';
+import Color from 'color';
 
 import TabBarIcon from './TabBarIcon';
 import { BottomTabBarButtonProps } from '../types';
@@ -113,8 +114,8 @@ export default function BottomTabBarItem({
   onPress,
   onLongPress,
   horizontal,
-  activeTintColor = '#007AFF',
-  inactiveTintColor = '#8E8E93',
+  activeTintColor: customActiveTintColor,
+  inactiveTintColor: customInactiveTintColor,
   activeBackgroundColor = 'transparent',
   inactiveBackgroundColor = 'transparent',
   showLabel = true,
@@ -123,6 +124,20 @@ export default function BottomTabBarItem({
   labelStyle,
   style,
 }: Props) {
+  const { colors } = useTheme();
+
+  const activeTintColor =
+    customActiveTintColor === undefined
+      ? colors.primary
+      : customActiveTintColor;
+
+  const inactiveTintColor =
+    customInactiveTintColor === undefined
+      ? Color(colors.text)
+          .mix(Color(colors.card), 0.5)
+          .hex()
+      : customInactiveTintColor;
+
   const renderLabel = ({ focused }: { focused: boolean }) => {
     if (showLabel === false) {
       return null;

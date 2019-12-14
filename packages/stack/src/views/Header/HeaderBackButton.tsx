@@ -8,45 +8,56 @@ import {
   LayoutChangeEvent,
 } from 'react-native';
 import Animated from 'react-native-reanimated';
+import { useTheme } from '@react-navigation/native';
 import MaskedView from '../MaskedView';
 import TouchableItem from '../TouchableItem';
 import { StackHeaderLeftButtonProps } from '../../types';
 
-type Props = StackHeaderLeftButtonProps & {
-  tintColor: string;
-};
+type Props = StackHeaderLeftButtonProps;
 
-type State = {
-  fullLabelWidth?: number;
-};
+export default function HeaderBackButton({
+  disabled,
+  allowFontScaling,
+  backImage,
+  label,
+  labelStyle,
+  labelVisible = Platform.OS === 'ios',
+  onLabelLayout,
+  onPress,
+  pressColorAndroid: customPressColorAndroid,
+  screenLayout,
+  tintColor: customTintColor,
+  titleLayout,
+  truncatedLabel = 'Back',
+}: Props) {
+  const { dark, colors } = useTheme();
 
-class HeaderBackButton extends React.Component<Props, State> {
-  static defaultProps = {
-    pressColorAndroid: 'rgba(0, 0, 0, .32)',
-    tintColor: Platform.select({
-      ios: '#037aff',
-      web: '#5f6368',
-    }),
-    labelVisible: Platform.OS === 'ios',
-    truncatedLabel: 'Back',
-  };
+  const [initialLabelWidth, setInitialLabelWidth] = React.useState<
+    undefined | number
+  >(undefined);
 
-  state: State = {};
+  const tintColor =
+    customTintColor !== undefined
+      ? customTintColor
+      : Platform.select({
+          ios: colors.primary,
+          default: colors.text,
+        });
 
-  private handleLabelLayout = (e: LayoutChangeEvent) => {
-    const { onLabelLayout } = this.props;
+  const pressColorAndroid =
+    customPressColorAndroid !== undefined
+      ? customPressColorAndroid
+      : dark
+      ? 'rgba(255, 255, 255, .32)'
+      : 'rgba(0, 0, 0, .32)';
 
+  const handleLabelLayout = (e: LayoutChangeEvent) => {
     onLabelLayout && onLabelLayout(e);
 
-    this.setState({
-      fullLabelWidth: e.nativeEvent.layout.x + e.nativeEvent.layout.width,
-    });
+    setInitialLabelWidth(e.nativeEvent.layout.x + e.nativeEvent.layout.width);
   };
 
-  private shouldTruncateLabel = () => {
-    const { titleLayout, screenLayout, label } = this.props;
-    const { fullLabelWidth: initialLabelWidth } = this.state;
-
+  const shouldTruncateLabel = () => {
     return (
       !label ||
       (initialLabelWidth &&
@@ -56,9 +67,7 @@ class HeaderBackButton extends React.Component<Props, State> {
     );
   };
 
-  private renderBackImage = () => {
-    const { backImage, labelVisible, tintColor } = this.props;
-
+  const renderBackImage = () => {
     if (backImage) {
       return backImage({ tintColor });
     } else {
@@ -76,19 +85,8 @@ class HeaderBackButton extends React.Component<Props, State> {
     }
   };
 
-  private renderLabel() {
-    const {
-      label,
-      truncatedLabel,
-      allowFontScaling,
-      labelVisible,
-      backImage,
-      labelStyle,
-      tintColor,
-      screenLayout,
-    } = this.props;
-
-    const leftLabelText = this.shouldTruncateLabel() ? truncatedLabel : label;
+  const renderLabel = () => {
+    const leftLabelText = shouldTruncateLabel() ? truncatedLabel : label;
 
     if (!labelVisible || leftLabelText === undefined) {
       return null;
@@ -109,7 +107,7 @@ class HeaderBackButton extends React.Component<Props, State> {
           onLayout={
             // This measurement is used to determine if we should truncate the label when it doesn't fit
             // Only measure it when label is not truncated because we want the measurement of full label
-            leftLabelText === label ? this.handleLabelLayout : undefined
+            leftLabelText === label ? handleLabelLayout : undefined
           }
           style={[
             styles.label,
@@ -145,42 +143,37 @@ class HeaderBackButton extends React.Component<Props, State> {
         {labelElement}
       </MaskedView>
     );
-  }
+  };
 
-  private handlePress = () =>
-    this.props.onPress && requestAnimationFrame(this.props.onPress);
+  const handlePress = () => onPress && requestAnimationFrame(onPress);
 
-  render() {
-    const { pressColorAndroid, label, disabled } = this.props;
-
-    return (
-      <TouchableItem
-        disabled={disabled}
-        accessible
-        accessibilityRole="button"
-        accessibilityComponentType="button"
-        accessibilityLabel={
-          label && label !== 'Back' ? `${label}, back` : 'Go back'
-        }
-        accessibilityTraits="button"
-        testID="header-back"
-        delayPressIn={0}
-        onPress={disabled ? undefined : this.handlePress}
-        pressColor={pressColorAndroid}
-        style={[styles.container, disabled && styles.disabled]}
-        hitSlop={Platform.select({
-          ios: undefined,
-          default: { top: 16, right: 16, bottom: 16, left: 16 },
-        })}
-        borderless
-      >
-        <React.Fragment>
-          {this.renderBackImage()}
-          {this.renderLabel()}
-        </React.Fragment>
-      </TouchableItem>
-    );
-  }
+  return (
+    <TouchableItem
+      disabled={disabled}
+      accessible
+      accessibilityRole="button"
+      accessibilityComponentType="button"
+      accessibilityLabel={
+        label && label !== 'Back' ? `${label}, back` : 'Go back'
+      }
+      accessibilityTraits="button"
+      testID="header-back"
+      delayPressIn={0}
+      onPress={disabled ? undefined : handlePress}
+      pressColor={pressColorAndroid}
+      style={[styles.container, disabled && styles.disabled]}
+      hitSlop={Platform.select({
+        ios: undefined,
+        default: { top: 16, right: 16, bottom: 16, left: 16 },
+      })}
+      borderless
+    >
+      <React.Fragment>
+        {renderBackImage()}
+        {renderLabel()}
+      </React.Fragment>
+    </TouchableItem>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -253,5 +246,3 @@ const styles = StyleSheet.create({
     transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }],
   },
 });
-
-export default HeaderBackButton;

@@ -9,6 +9,7 @@ import {
   ScreenProps,
   // eslint-disable-next-line import/no-unresolved
 } from 'react-native-screens';
+import { useTheme } from '@react-navigation/native';
 import HeaderConfig from './HeaderConfig';
 import {
   NativeStackNavigationHelpers,
@@ -34,8 +35,10 @@ export default function NativeStackView({
   navigation,
   descriptors,
 }: Props) {
+  const { colors } = useTheme();
+
   return (
-    <ScreenStack style={styles.scenes}>
+    <ScreenStack style={styles.container}>
       {state.routes.map(route => {
         const { options, render: renderScene } = descriptors[route.key];
         const { presentation = 'push', animation, contentStyle } = options;
@@ -55,7 +58,15 @@ export default function NativeStackView({
             }}
           >
             <HeaderConfig {...options} route={route} />
-            <View style={[styles.content, contentStyle]}>{renderScene()}</View>
+            <View
+              style={[
+                styles.container,
+                { backgroundColor: colors.background },
+                contentStyle,
+              ]}
+            >
+              {renderScene()}
+            </View>
           </Screen>
         );
       })}
@@ -64,11 +75,7 @@ export default function NativeStackView({
 }
 
 const styles = StyleSheet.create({
-  content: {
-    flex: 1,
-    backgroundColor: '#eee',
-  },
-  scenes: {
+  container: {
     flex: 1,
   },
 });

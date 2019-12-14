@@ -853,11 +853,7 @@ export default class Card extends React.Component<Props> {
                 <PointerEventsView
                   active={active}
                   progress={this.props.current}
-                  style={[
-                    styles.content,
-                    transparent ? styles.transparent : styles.opaque,
-                    contentStyle,
-                  ]}
+                  style={[styles.content, contentStyle]}
                 >
                   <StackCardAnimationContext.Provider value={animationContext}>
                     {children}
@@ -904,11 +900,5 @@ const styles = StyleSheet.create({
     right: 0,
     height: 3,
     shadowOffset: { width: 1, height: -1 },
-  },
-  transparent: {
-    backgroundColor: 'transparent',
-  },
-  opaque: {
-    backgroundColor: '#eee',
   },
 });

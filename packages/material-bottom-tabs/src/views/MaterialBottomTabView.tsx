@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
-import { BottomNavigation } from 'react-native-paper';
+import { BottomNavigation, DefaultTheme, DarkTheme } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { Route } from '@react-navigation/native';
+import { Route, useTheme } from '@react-navigation/native';
 import { TabNavigationState, TabActions } from '@react-navigation/routers';
 
 import {
@@ -25,9 +25,25 @@ export default function MaterialBottomTabView({
   descriptors,
   ...rest
 }: Props) {
+  const { dark, colors } = useTheme();
+
+  const theme = React.useMemo(() => {
+    const t = dark ? DarkTheme : DefaultTheme;
+
+    return {
+      ...t,
+      colors: {
+        ...t.colors,
+        ...colors,
+        surface: colors.card,
+      },
+    };
+  }, [colors, dark]);
+
   return (
     <BottomNavigation
       {...rest}
+      theme={theme}
       navigationState={state}
       onIndexChange={(index: number) =>
         navigation.dispatch({

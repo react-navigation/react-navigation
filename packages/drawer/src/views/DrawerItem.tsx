@@ -7,6 +7,8 @@ import {
   ViewStyle,
   TextStyle,
 } from 'react-native';
+import { useTheme } from '@react-navigation/native';
+import Color from 'color';
 import TouchableItem from './TouchableItem';
 
 type Props = {
@@ -61,19 +63,29 @@ type Props = {
 /**
  * A component used to show an action item with an icon and a label in a navigation drawer.
  */
-export default function DrawerItem({
-  icon,
-  label,
-  labelStyle,
-  focused = false,
-  activeTintColor = '#6200ee',
-  inactiveTintColor = 'rgba(0, 0, 0, .68)',
-  activeBackgroundColor = 'rgba(98, 0, 238, 0.12)',
-  inactiveBackgroundColor = 'transparent',
-  style,
-  onPress,
-  ...rest
-}: Props) {
+export default function DrawerItem(props: Props) {
+  const { colors } = useTheme();
+
+  const {
+    icon,
+    label,
+    labelStyle,
+    focused = false,
+    activeTintColor = colors.primary,
+    inactiveTintColor = Color(colors.text)
+      .alpha(0.68)
+      .rgb()
+      .string(),
+    activeBackgroundColor = Color(activeTintColor)
+      .alpha(0.12)
+      .rgb()
+      .string(),
+    inactiveBackgroundColor = 'transparent',
+    style,
+    onPress,
+    ...rest
+  } = props;
+
   const { borderRadius = 4 } = StyleSheet.flatten(style || {});
   const color = focused ? activeTintColor : inactiveTintColor;
   const backgroundColor = focused
