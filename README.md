@@ -127,7 +127,7 @@ Otherwise the views will be attached as long as the parent container is attached
 
 ### `<ScreenStack>`
 
-Screen stack component expects one or more `Screen` components as direct children and renders them in a platform native stack container (for iOS it is `UINavigationController` and for Android inside `Fragment` container). For `Screen` components placed as children of `ScteenStack` the `active` property is ignored and instead the screen that corresponds to the last child is rendered as active. All type of updates done to the list of children are acceptable, when the top element is exchanged the container will use platform default (unless customized) animation to transition between screens.
+Screen stack component expects one or more `Screen` components as direct children and renders them in a platform native stack container (for iOS it is `UINavigationController` and for Android inside `Fragment` container). For `Screen` components placed as children of `ScreenStack` the `active` property is ignored and instead the screen that corresponds to the last child is rendered as active. All type of updates done to the list of children are acceptable, when the top element is exchanged the container will use platform default (unless customized) animation to transition between screens.
 
 `StackScreen` extends the capabilities of `Screen` component to allow additional customizations and to make it possible to handle events such as using hardware back or back gesture to dismiss the top screen. Below is the list of additional properties that can be used for `Screen` component:
 
