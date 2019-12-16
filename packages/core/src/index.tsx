@@ -17,5 +17,6 @@ export { default as useIsFocused } from './useIsFocused';
 
 export { default as getStateFromPath } from './getStateFromPath';
 export { default as getPathFromState } from './getPathFromState';
+export { default as getActionFromState } from './getActionFromState';
 
 export * from './types';

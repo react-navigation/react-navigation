@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Linking } from 'react-native';
 import {
+  getActionFromState,
   getStateFromPath as getStateFromPathDefault,
   NavigationContainerRef,
 } from '@react-navigation/core';
@@ -82,7 +83,13 @@ export default function useLinking(
         const state = getStateFromPathRef.current(path, configRef.current);
 
         if (state) {
-          navigation.resetRoot(state);
+          const action = getActionFromState(state);
+
+          if (action.type === 'RESET_ROOT') {
+            navigation.resetRoot(action.payload);
+          } else {
+            navigation.dispatch(action);
+          }
         }
       }
     };
