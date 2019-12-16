@@ -14,9 +14,9 @@ const DragLimitedToModal: NavigationStackScreenComponent = () => (
 );
 
 DragLimitedToModal.navigationOptions = {
+  cardStyle: { backgroundColor: 'transparent' },
   gestureDirection: 'vertical',
   gestureResponseDistance: { vertical: HEIGHT },
-  cardTransparent: true,
   cardStyleInterpolator: ({ current }) => {
     const translateY = interpolate(current.progress, {
       inputRange: [0, 1],

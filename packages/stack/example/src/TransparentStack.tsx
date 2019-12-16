@@ -72,8 +72,8 @@ export default createStackNavigator(
     mode: 'modal',
     headerMode: 'none',
     defaultNavigationOptions: {
+      cardStyle: { backgroundColor: 'transparent' },
       gestureEnabled: false,
-      cardTransparent: true,
       cardStyleInterpolator: ({ current: { progress } }) => {
         const opacity = Animated.interpolate(progress, {
           inputRange: [0, 0.5, 0.9, 1],

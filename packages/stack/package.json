@@ -49,8 +49,9 @@
     "@expo/vector-icons": "^10.0.6",
     "@react-native-community/bob": "^0.7.0",
     "@react-native-community/masked-view": "^0.1.5",
-    "@react-navigation/stack": "^5.0.0-alpha.44",
+    "@react-navigation/stack": "^5.0.0-alpha.45",
     "@release-it/conventional-changelog": "^1.1.0",
+    "@types/color": "^3.0.0",
     "@types/jest": "^24.0.23",
     "@types/react": "^16.9.16",
     "@types/react-native": "^0.60.25",
@@ -124,5 +125,8 @@
       "module",
       "typescript"
     ]
+  },
+  "dependencies": {
+    "color": "^3.1.2"
   }
 }

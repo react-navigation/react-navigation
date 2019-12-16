@@ -12,8 +12,14 @@ const shownWarnings: string[] = [];
 
 const validations: Record<string, Validation> = {
   transparentCard: {
-    message: `'transparentCard' is renamed to 'cardTransparent' and moved to 'navigationOptions'. Specify it in 'defaultNavigationOptions' to keep the same behaviour.`,
-    compat: (c, o) => ({ ...o, cardTransparent: c.transparentCard }),
+    message: `'transparentCard' is removed in favor of 'cardStyle: { backgroundColor: 'transparent' }' in 'navigationOptions'. Specify it in 'defaultNavigationOptions' to keep the same behaviour.`,
+    compat: (c, o) =>
+      c.transparentCard
+        ? {
+            ...o,
+            cardStyle: [{ backgroundColor: 'transparent' }, o.cardStyle],
+          }
+        : o,
   },
   headerLayoutPreset: {
     message: `'headerLayoutPreset' is renamed to 'headerTitleAlign' and moved to 'navigationOptions'. Specify it in 'defaultNavigationOptions' to keep the same behaviour.`,

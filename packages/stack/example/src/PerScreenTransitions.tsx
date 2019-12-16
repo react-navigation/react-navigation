@@ -114,9 +114,9 @@ export default createStackNavigator(
     Transparent: {
       screen: TransparentScreen,
       navigationOptions: {
+        cardStyle: { backgroundColor: 'transparent' },
         headerShown: false,
         gestureEnabled: false,
-        cardTransparent: true,
         transitionSpec: {
           open: TransitionSpecs.TransitionIOSSpec,
           close: TransitionSpecs.TransitionIOSSpec,
