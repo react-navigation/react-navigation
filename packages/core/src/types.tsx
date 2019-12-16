@@ -533,7 +533,7 @@ export type RouteConfig<
   /**
    * Initial params object for the route.
    */
-  initialParams?: ParamList[RouteName];
+  initialParams?: Partial<ParamList[RouteName]>;
 } & (
   | {
       /**
