@@ -273,3 +273,7 @@ export function forScaleFromCenterAndroid({
     },
   };
 }
+
+export function forNoAnimation(): StackCardInterpolatedStyle {
+  return {};
+}
