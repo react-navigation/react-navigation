@@ -19,7 +19,7 @@ import {
 
 type Props = DefaultNavigatorOptions<DrawerNavigationOptions> &
   DrawerRouterOptions &
-  Partial<DrawerNavigationConfig>;
+  DrawerNavigationConfig;
 
 function DrawerNavigator({
   initialRouteName,
