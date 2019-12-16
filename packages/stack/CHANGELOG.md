@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.45](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.44...@react-navigation/stack@5.0.0-alpha.45) (2019-12-16)
+
+
+### Bug Fixes
+
+* disable style interpolation for card when animation is disabled ([c110570](https://github.com/react-navigation/navigation-ex/commit/c110570d4c89a38336f19403e6f2d0870868620e))
+
+
+
+
+
 # [5.0.0-alpha.44](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.43...@react-navigation/stack@5.0.0-alpha.44) (2019-12-14)
 
 

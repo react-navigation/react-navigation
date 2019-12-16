@@ -6,7 +6,7 @@
     "react-native",
     "react-navigation"
   ],
-  "version": "5.0.0-alpha.16",
+  "version": "5.0.0-alpha.17",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -29,7 +29,7 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "@react-navigation/core": "^5.0.0-alpha.27",
+    "@react-navigation/core": "^5.0.0-alpha.28",
     "shortid": "^2.2.15"
   },
   "devDependencies": {
