@@ -438,7 +438,6 @@ export default class CardStack extends React.Component<Props, State> {
                   cardOverlayEnabled={cardOverlayEnabled}
                   cardShadowEnabled={cardShadowEnabled}
                   cardStyle={cardStyle}
-                  animationEnabled={animationEnabled}
                   onPageChangeStart={onPageChangeStart}
                   onPageChangeConfirm={onPageChangeConfirm}
                   onPageChangeCancel={onPageChangeCancel}
