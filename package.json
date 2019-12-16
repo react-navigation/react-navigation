@@ -24,22 +24,22 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.7.0",
-    "@babel/preset-env": "^7.7.1",
+    "@babel/preset-env": "^7.7.6",
     "@babel/preset-react": "^7.7.0",
     "@babel/preset-typescript": "^7.7.2",
-    "@babel/runtime": "^7.7.2",
+    "@babel/runtime": "^7.7.6",
     "@commitlint/config-conventional": "^8.2.0",
     "@types/jest": "^24.0.23",
     "codecov": "^3.6.1",
     "commitlint": "^8.2.0",
-    "core-js": "^3.4.1",
-    "eslint": "^6.6.0",
+    "core-js": "^3.5.0",
+    "eslint": "^6.7.2",
     "eslint-config-satya164": "^3.1.2",
     "husky": "^3.0.9",
     "jest": "^24.8.0",
     "lerna": "^3.18.4",
     "prettier": "^1.19.1",
-    "typescript": "^3.7.2"
+    "typescript": "^3.7.3"
   },
   "resolutions": {
     "react": "~16.9.0",

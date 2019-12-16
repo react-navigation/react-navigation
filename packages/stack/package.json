@@ -40,16 +40,16 @@
     "@react-native-community/bob": "^0.7.0",
     "@react-native-community/masked-view": "^0.1.5",
     "@types/color": "^3.0.0",
-    "@types/react": "^16.9.11",
-    "@types/react-native": "^0.60.22",
+    "@types/react": "^16.9.16",
+    "@types/react-native": "^0.60.25",
     "del-cli": "^3.0.0",
     "react": "~16.9.0",
     "react-native": "~0.61.5",
     "react-native-gesture-handler": "^1.5.0",
     "react-native-reanimated": "^1.4.0",
     "react-native-safe-area-context": "^0.6.0",
-    "react-native-screens": "^2.0.0-alpha.11",
-    "typescript": "^3.7.2"
+    "react-native-screens": "^2.0.0-alpha.19",
+    "typescript": "^3.7.3"
   },
   "peerDependencies": {
     "@react-native-community/masked-view": "^0.1.1",
@@ -58,7 +58,7 @@
     "react-native": "*",
     "react-native-gesture-handler": "^1.0.0",
     "react-native-reanimated": "^1.0.0",
-    "react-native-safe-area-context": "^0.3.6",
+    "react-native-safe-area-context": "^0.6.0",
     "react-native-screens": "^1.0.0-alpha.0 || ^2.0.0-alpha.0"
   },
   "@react-native-community/bob": {

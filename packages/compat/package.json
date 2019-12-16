@@ -27,9 +27,9 @@
     "@react-navigation/routers": "^5.0.0-alpha.17"
   },
   "devDependencies": {
-    "@types/react": "^16.9.11",
+    "@types/react": "^16.9.16",
     "react": "~16.9.0",
-    "typescript": "^3.7.2"
+    "typescript": "^3.7.3"
   },
   "peerDependencies": {
     "@react-navigation/native": "^5.0.0-alpha.0",
