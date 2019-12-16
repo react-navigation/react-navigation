@@ -272,17 +272,13 @@ export type StackNavigationOptions = StackHeaderOptions &
      */
     cardOverlayEnabled?: boolean;
     /**
-     * Whether to use a transparent background for the card instead of a white one.
-     * This is useful to implement things like modal dialogs where the previous scene should still be visible underneath the current one.
-     * Defaults to `false`.
-     *
-     * If you use [`react-native-screens`](https://github.com/kmagiera/react-native-screens),
-     * you should also specify `mode: 'modal'` in the stack view config so previous screens aren't detached.
-     */
-    cardTransparent?: boolean;
-    /**
      * Style object for the card in stack.
      * You can provide a custom background color to use instead of the default background here.
+     *
+     * You can also specify `{ backgroundColor: 'transparent' }` to make the previous screen visible underneath.
+     * This is useful to implement things like modal dialogs.
+     * If you use [`react-native-screens`](https://github.com/kmagiera/react-native-screens), you should also specify `mode: 'modal'`
+     * in the stack view config when using a transparent background so previous screens aren't detached.
      */
     cardStyle?: StyleProp<ViewStyle>;
     /**
