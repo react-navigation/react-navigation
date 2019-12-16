@@ -7,7 +7,7 @@
     "ios",
     "android"
   ],
-  "version": "5.0.0-alpha.19",
+  "version": "5.0.0-alpha.20",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -30,7 +30,7 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "@react-navigation/core": "^5.0.0-alpha.27"
+    "@react-navigation/core": "^5.0.0-alpha.28"
   },
   "devDependencies": {
     "@react-native-community/bob": "^0.7.0",

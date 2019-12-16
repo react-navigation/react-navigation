@@ -11,7 +11,7 @@
     "material",
     "tab"
   ],
-  "version": "5.0.0-alpha.23",
+  "version": "5.0.0-alpha.24",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -34,7 +34,7 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "@react-navigation/routers": "^5.0.0-alpha.16",
+    "@react-navigation/routers": "^5.0.0-alpha.17",
     "color": "^3.1.2"
   },
   "devDependencies": {

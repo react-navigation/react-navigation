@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.28](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/core@5.0.0-alpha.27...@react-navigation/core@5.0.0-alpha.28) (2019-12-16)
+
+
+### Bug Fixes
+
+* use Partial type for initialParam ([#206](https://github.com/react-navigation/navigation-ex/issues/206)) ([c3d3748](https://github.com/react-navigation/navigation-ex/commit/c3d374814308b0bd6d259099444f0f24593f4d7e))
+
+
+### Features
+
+* add nested config in deep linking ([#210](https://github.com/react-navigation/navigation-ex/issues/210)) ([8002d51](https://github.com/react-navigation/navigation-ex/commit/8002d5179524a7211c37760a4ed45e8c12af4358)), closes [#154](https://github.com/react-navigation/navigation-ex/issues/154)
+
+
+
+
+
 # [5.0.0-alpha.27](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/core@5.0.0-alpha.26...@react-navigation/core@5.0.0-alpha.27) (2019-12-10)
 
 **Note:** Version bump only for package @react-navigation/core

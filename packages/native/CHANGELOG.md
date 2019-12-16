@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.20](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/native@5.0.0-alpha.19...@react-navigation/native@5.0.0-alpha.20) (2019-12-16)
+
+
+### Features
+
+* add nested config in deep linking ([#210](https://github.com/react-navigation/navigation-ex/issues/210)) ([8002d51](https://github.com/react-navigation/navigation-ex/commit/8002d5179524a7211c37760a4ed45e8c12af4358)), closes [#154](https://github.com/react-navigation/navigation-ex/issues/154)
+
+
+
+
+
 # [5.0.0-alpha.19](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/native@5.0.0-alpha.18...@react-navigation/native@5.0.0-alpha.19) (2019-12-14)
 
 
