@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { ScrollView, StyleSheet, ScrollViewProps } from 'react-native';
 import { useSafeArea } from 'react-native-safe-area-context';
-import { useTheme } from '@react-navigation/native';
 
 type Props = ScrollViewProps & {
   drawerPosition: 'left' | 'right';
@@ -16,7 +15,6 @@ export default function DrawerContentScrollView({
   ...rest
 }: Props) {
   const insets = useSafeArea();
-  const { colors } = useTheme();
 
   return (
     <ScrollView
@@ -29,7 +27,7 @@ export default function DrawerContentScrollView({
         },
         contentContainerStyle,
       ]}
-      style={[styles.container, { backgroundColor: colors.card }, style]}
+      style={[styles.container, style]}
     >
       {children}
     </ScrollView>
