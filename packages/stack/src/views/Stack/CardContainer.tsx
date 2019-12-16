@@ -21,7 +21,6 @@ type Props = TransitionPreset & {
   safeAreaInsetRight: number;
   safeAreaInsetBottom: number;
   safeAreaInsetLeft: number;
-  cardTransparent?: boolean;
   cardOverlayEnabled?: boolean;
   cardShadowEnabled?: boolean;
   cardStyle?: StyleProp<ViewStyle>;
@@ -59,7 +58,6 @@ export default function CardContainer({
   cardShadowEnabled,
   cardStyle,
   cardStyleInterpolator,
-  cardTransparent,
   closing,
   current,
   floatingHeaderHeight,
@@ -128,7 +126,6 @@ export default function CardContainer({
     <Card
       index={index}
       active={active}
-      transparent={cardTransparent}
       gestureDirection={gestureDirection}
       layout={layout}
       insets={insets}
@@ -155,12 +152,7 @@ export default function CardContainer({
           ? { marginTop: floatingHeaderHeight }
           : null
       }
-      contentStyle={[
-        {
-          backgroundColor: cardTransparent ? 'transparent' : colors.background,
-        },
-        cardStyle,
-      ]}
+      contentStyle={[{ backgroundColor: colors.background }, cardStyle]}
       style={StyleSheet.absoluteFill}
     >
       <View style={styles.container}>

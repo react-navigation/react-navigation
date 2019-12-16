@@ -12,6 +12,7 @@ import {
 import Animated, { Easing } from 'react-native-reanimated';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import { EdgeInsets } from 'react-native-safe-area-context';
+import Color from 'color';
 import animate, { Binary } from './CardAnimation';
 import PointerEventsView from './PointerEventsView';
 import memoize from '../../utils/memoize';
@@ -30,7 +31,6 @@ type Props = ViewProps & {
   index: number;
   active: boolean;
   closing?: boolean;
-  transparent?: boolean;
   next?: Animated.Node<number>;
   current: Animated.Value<number>;
   layout: Layout;
@@ -758,7 +758,6 @@ export default class Card extends React.Component<Props> {
   render() {
     const {
       active,
-      transparent,
       styleInterpolator,
       index,
       current,
@@ -813,6 +812,11 @@ export default class Card extends React.Component<Props> {
         : this.handleGestureEventHorizontal
       : undefined;
 
+    const { backgroundColor } = StyleSheet.flatten(contentStyle || {});
+    const isTransparent = backgroundColor
+      ? Color(backgroundColor).alpha() === 0
+      : false;
+
     return (
       <StackGestureContext.Provider value={this.gestureRef}>
         <View pointerEvents="box-none" {...rest}>
@@ -838,7 +842,7 @@ export default class Card extends React.Component<Props> {
               {...this.gestureActivationCriteria()}
             >
               <Animated.View style={[styles.container, cardStyle]}>
-                {shadowEnabled && shadowStyle && !transparent ? (
+                {shadowEnabled && shadowStyle && !isTransparent ? (
                   <Animated.View
                     style={[
                       styles.shadow,
