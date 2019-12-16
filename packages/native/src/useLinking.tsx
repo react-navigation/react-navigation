@@ -3,15 +3,11 @@ import { Linking } from 'react-native';
 import {
   getStateFromPath as getStateFromPathDefault,
   NavigationContainerRef,
-  NavigationState,
-  PartialState,
 } from '@react-navigation/core';
 
-type Config = {
-  [routeName: string]:
-    | string
-    | { path: string; parse?: Record<string, (value: string) => any> };
-};
+type GetStateFromPath = typeof getStateFromPathDefault;
+
+type Config = Parameters<GetStateFromPath>[1];
 
 type Options = {
   /**
@@ -36,10 +32,7 @@ type Options = {
   /**
    * Custom function to parse the URL object to a valid navigation state (advanced).
    */
-  getStateFromPath?: (
-    path: string,
-    options?: Config
-  ) => PartialState<NavigationState> | undefined;
+  getStateFromPath?: GetStateFromPath;
 };
 
 export default function useLinking(
