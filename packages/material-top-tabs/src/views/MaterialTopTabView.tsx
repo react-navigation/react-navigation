@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { View } from 'react-native';
 import { TabView, SceneRendererProps } from 'react-native-tab-view';
 import { Route, useTheme } from '@react-navigation/native';
 import { TabNavigationState, TabActions } from '@react-navigation/routers';
@@ -16,27 +15,22 @@ type Props = MaterialTopTabNavigationConfig & {
   state: TabNavigationState;
   navigation: MaterialTopTabNavigationHelpers;
   descriptors: MaterialTopTabDescriptorMap;
-  tabBarPosition: 'top' | 'bottom';
+  tabBarPosition?: 'top' | 'bottom';
 };
 
-function SceneContent({ children }: { children: React.ReactNode }) {
+export default function MaterialTopTabView({
+  lazyPlaceholder,
+  tabBar = (props: MaterialTopTabBarProps) => <MaterialTopTabBar {...props} />,
+  tabBarOptions,
+  state,
+  navigation,
+  descriptors,
+  sceneContainerStyle,
+  ...rest
+}: Props) {
   const { colors } = useTheme();
 
-  return (
-    <View style={{ flex: 1, backgroundColor: colors.background }}>
-      {children}
-    </View>
-  );
-}
-
-export default class MaterialTopTabView extends React.PureComponent<Props> {
-  static defaultProps = {
-    tabBarPosition: 'top',
-  };
-
-  private renderLazyPlaceholder = (props: { route: Route<string> }) => {
-    const { lazyPlaceholder } = this.props;
-
+  const renderLazyPlaceholder = (props: { route: Route<string> }) => {
     if (lazyPlaceholder != null) {
       return lazyPlaceholder(props);
     }
@@ -44,20 +38,11 @@ export default class MaterialTopTabView extends React.PureComponent<Props> {
     return null;
   };
 
-  private renderTabBar = (props: SceneRendererProps) => {
-    const { state, descriptors } = this.props;
+  const renderTabBar = (props: SceneRendererProps) => {
     const route = state.routes[state.index];
     const options = descriptors[route.key].options;
 
     const tabBarVisible = options.tabBarVisible !== false;
-
-    const {
-      navigation,
-      tabBar = (props: MaterialTopTabBarProps) => (
-        <MaterialTopTabBar {...props} />
-      ),
-      tabBarOptions,
-    } = this.props;
 
     if (tabBarVisible === false) {
       return null;
@@ -72,47 +57,25 @@ export default class MaterialTopTabView extends React.PureComponent<Props> {
     });
   };
 
-  private handleSwipeStart = () =>
-    this.props.navigation.emit({
-      type: 'swipeStart',
-    });
-
-  private handleSwipeEnd = () =>
-    this.props.navigation.emit({
-      type: 'swipeEnd',
-    });
-
-  render() {
-    const {
-      /* eslint-disable @typescript-eslint/no-unused-vars */
-      lazyPlaceholder,
-      tabBar,
-      tabBarOptions,
-      /* eslint-enable @typescript-eslint/no-unused-vars */
-      state,
-      navigation,
-      descriptors,
-      ...rest
-    } = this.props;
-
-    return (
-      <TabView
-        {...rest}
-        onIndexChange={index =>
-          navigation.dispatch({
-            ...TabActions.jumpTo(state.routes[index].name),
-            target: state.key,
-          })
-        }
-        renderScene={({ route }) => (
-          <SceneContent>{descriptors[route.key].render()}</SceneContent>
-        )}
-        navigationState={state}
-        renderTabBar={this.renderTabBar}
-        renderLazyPlaceholder={this.renderLazyPlaceholder}
-        onSwipeStart={this.handleSwipeStart}
-        onSwipeEnd={this.handleSwipeEnd}
-      />
-    );
-  }
+  return (
+    <TabView
+      {...rest}
+      onIndexChange={index =>
+        navigation.dispatch({
+          ...TabActions.jumpTo(state.routes[index].name),
+          target: state.key,
+        })
+      }
+      renderScene={({ route }) => descriptors[route.key].render()}
+      navigationState={state}
+      renderTabBar={renderTabBar}
+      renderLazyPlaceholder={renderLazyPlaceholder}
+      onSwipeStart={() => navigation.emit({ type: 'swipeStart' })}
+      onSwipeEnd={() => navigation.emit({ type: 'swipeEnd' })}
+      sceneContainerStyle={[
+        { backgroundColor: colors.background },
+        sceneContainerStyle,
+      ]}
+    />
+  );
 }
