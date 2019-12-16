@@ -15,6 +15,10 @@ type RouteConfig = {
   parse: Record<string, (value: string) => any> | undefined;
 };
 
+type ResultState = PartialState<NavigationState> & {
+  state?: ResultState;
+};
+
 /**
  * Utility to parse a path string to initial state object accepted by the container.
  * This is useful for deep linking when we need to handle the incoming URL.
@@ -37,7 +41,7 @@ type RouteConfig = {
 export default function getStateFromPath(
   path: string,
   options: Options = {}
-): PartialState<NavigationState> | undefined {
+): ResultState | undefined {
   // Create a normalized configs array which will be easier to use
   const configs = ([] as RouteConfig[]).concat(
     ...Object.keys(options).map(key => createNormalizedConfigs(key, options))
