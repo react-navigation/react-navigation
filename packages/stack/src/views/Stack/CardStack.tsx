@@ -21,7 +21,8 @@ import {
   DefaultTransition,
   ModalTransition,
 } from '../../TransitionConfigs/TransitionPresets';
-import { forNoAnimation } from '../../TransitionConfigs/HeaderStyleInterpolators';
+import { forNoAnimation as forNoAnimationHeader } from '../../TransitionConfigs/HeaderStyleInterpolators';
+import { forNoAnimation as forNoAnimationCard } from '../../TransitionConfigs/CardStyleInterpolators';
 import {
   Layout,
   StackHeaderMode,
@@ -314,7 +315,7 @@ export default class CardStack extends React.Component<Props, State> {
     if (headerMode === 'screen') {
       defaultTransitionPreset = {
         ...defaultTransitionPreset,
-        headerStyleInterpolator: forNoAnimation,
+        headerStyleInterpolator: forNoAnimationHeader,
       };
     }
 
@@ -357,11 +358,14 @@ export default class CardStack extends React.Component<Props, State> {
               cardShadowEnabled,
               cardOverlayEnabled,
               cardStyle,
+              animationEnabled,
               gestureResponseDistance,
               gestureVelocityImpact,
               gestureDirection = defaultTransitionPreset.gestureDirection,
               transitionSpec = defaultTransitionPreset.transitionSpec,
-              cardStyleInterpolator = defaultTransitionPreset.cardStyleInterpolator,
+              cardStyleInterpolator = animationEnabled === false
+                ? forNoAnimationCard
+                : defaultTransitionPreset.cardStyleInterpolator,
               headerStyleInterpolator = defaultTransitionPreset.headerStyleInterpolator,
             } = scene.descriptor
               ? scene.descriptor.options
@@ -384,8 +388,11 @@ export default class CardStack extends React.Component<Props, State> {
 
               if (nextScene) {
                 const {
+                  animationEnabled,
                   transitionSpec = defaultTransitionPreset.transitionSpec,
-                  cardStyleInterpolator = defaultTransitionPreset.cardStyleInterpolator,
+                  cardStyleInterpolator = animationEnabled === false
+                    ? forNoAnimationCard
+                    : defaultTransitionPreset.cardStyleInterpolator,
                   headerStyleInterpolator = defaultTransitionPreset.headerStyleInterpolator,
                 } = nextScene.descriptor
                   ? nextScene.descriptor.options
@@ -431,6 +438,7 @@ export default class CardStack extends React.Component<Props, State> {
                   cardOverlayEnabled={cardOverlayEnabled}
                   cardShadowEnabled={cardShadowEnabled}
                   cardStyle={cardStyle}
+                  animationEnabled={animationEnabled}
                   onPageChangeStart={onPageChangeStart}
                   onPageChangeConfirm={onPageChangeConfirm}
                   onPageChangeCancel={onPageChangeCancel}

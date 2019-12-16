@@ -24,6 +24,7 @@ type Props = TransitionPreset & {
   cardOverlayEnabled?: boolean;
   cardShadowEnabled?: boolean;
   cardStyle?: StyleProp<ViewStyle>;
+  animationEnabled?: boolean;
   getPreviousRoute: (props: {
     route: Route<string>;
   }) => Route<string> | undefined;
