@@ -15,11 +15,12 @@
     "test": "jest",
     "lint": "eslint --ext .js,.ts,.tsx .",
     "typescript": "tsc --noEmit",
-    "postinstall": "bash scripts/sync-stack.sh",
     "prepare": "bob build",
+    "prerelease": "yarn sync",
     "release": "release-it",
     "example": "yarn --cwd example",
-    "bootstrap": "yarn example && yarn",
+    "bootstrap": "yarn example && yarn && yarn sync",
+    "sync": "bash scripts/sync-stack.sh",
     "patch": "diff -ruN node_modules/@react-navigation/stack/src src/vendor > scripts/stack.patch; printf ''"
   },
   "publishConfig": {
