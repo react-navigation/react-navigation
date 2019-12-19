@@ -117,7 +117,7 @@ export default function useNavigationBuilder<
   const { current: router } = React.useRef<Router<State, any>>(
     createRouter({
       ...((rest as unknown) as RouterOptions),
-      ...(route && route.params && typeof route.params.screen === 'string'
+      ...(route?.params && typeof route.params.screen === 'string'
         ? { initialRouteName: route.params.screen }
         : null),
     })
@@ -141,7 +141,7 @@ export default function useNavigationBuilder<
     (acc, curr) => {
       const { initialParams } = screens[curr];
       const initialParamsFromParams =
-        route && route.params && route.params.screen === curr
+        route?.params && route.params.screen === curr
           ? route.params.params
           : undefined;
 

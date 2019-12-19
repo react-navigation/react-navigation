@@ -26,6 +26,6 @@ export default function useOnGetState({
   }, [getState, getStateForRoute]);
 
   React.useEffect(() => {
-    return addStateGetter && addStateGetter(key, getRehydratedState);
+    return addStateGetter?.(key, getRehydratedState);
   }, [addStateGetter, getRehydratedState, key]);
 }

@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-cycle
 import { NavigationState, PartialState } from './types';
 
 export type Action =

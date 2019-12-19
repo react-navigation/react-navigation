@@ -13,7 +13,7 @@ const FAR_FAR_AWAY = 3000; // this should be big enough to move the whole view o
 
 export default class ResourceSavingScene extends React.Component<Props> {
   render() {
-    if (screensEnabled && screensEnabled()) {
+    if (screensEnabled?.()) {
       const { isVisible, ...rest } = this.props;
 
       // @ts-ignore

@@ -21,7 +21,7 @@ export type Props = {
   mode: 'float' | 'screen';
   layout: Layout;
   insets: EdgeInsets;
-  scenes: Array<Scene<Route<string>> | undefined>;
+  scenes: (Scene<Route<string>> | undefined)[];
   state: StackNavigationState;
   getPreviousRoute: (props: {
     route: Route<string>;

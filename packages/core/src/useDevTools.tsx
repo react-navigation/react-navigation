@@ -44,16 +44,15 @@ export default function useDevTools({ name, reset, state }: Options) {
 
   const devTools = devToolsRef.current;
   const lastStateRef = React.useRef<State>(state);
-  const actions = React.useRef<Array<NavigationAction | string>>([]);
+  const actions = React.useRef<(NavigationAction | string)[]>([]);
 
   React.useEffect(() => {
-    devTools && devTools.init(lastStateRef.current);
+    devTools?.init(lastStateRef.current);
   }, [devTools]);
 
   React.useEffect(
     () =>
-      devTools &&
-      devTools.subscribe(message => {
+      devTools?.subscribe(message => {
         if (message.type === 'DISPATCH' && message.state) {
           reset(JSON.parse(message.state));
         }

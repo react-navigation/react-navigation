@@ -93,23 +93,23 @@ export default function CardContainer({
   transitionSpec,
 }: Props) {
   const handleOpen = () => {
-    onTransitionEnd && onTransitionEnd({ route: scene.route }, false);
+    onTransitionEnd?.({ route: scene.route }, false);
     onOpenRoute({ route: scene.route });
   };
 
   const handleClose = () => {
-    onTransitionEnd && onTransitionEnd({ route: scene.route }, true);
+    onTransitionEnd?.({ route: scene.route }, true);
     onCloseRoute({ route: scene.route });
   };
 
   const handleTransitionStart = ({ closing }: { closing: boolean }) => {
     if (closing) {
-      onPageChangeConfirm && onPageChangeConfirm();
+      onPageChangeConfirm?.();
     } else {
-      onPageChangeCancel && onPageChangeCancel();
+      onPageChangeCancel?.();
     }
 
-    onTransitionStart && onTransitionStart({ route: scene.route }, closing);
+    onTransitionStart?.({ route: scene.route }, closing);
     closing && onGoBack({ route: scene.route });
   };
 

@@ -252,19 +252,19 @@ export default function App() {
                         />
                       </View>
                       <Divider />
-                      {(Object.keys(SCREENS) as Array<
-                        keyof typeof SCREENS
-                      >).map(name => (
-                        <List.Item
-                          key={name}
-                          title={SCREENS[name].title}
-                          onPress={() => navigation.push(name)}
-                        />
-                      ))}
+                      {(Object.keys(SCREENS) as (keyof typeof SCREENS)[]).map(
+                        name => (
+                          <List.Item
+                            key={name}
+                            title={SCREENS[name].title}
+                            onPress={() => navigation.push(name)}
+                          />
+                        )
+                      )}
                     </ScrollView>
                   )}
                 </Stack.Screen>
-                {(Object.keys(SCREENS) as Array<keyof typeof SCREENS>).map(
+                {(Object.keys(SCREENS) as (keyof typeof SCREENS)[]).map(
                   name => (
                     <Stack.Screen
                       key={name}

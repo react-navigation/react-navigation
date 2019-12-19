@@ -109,17 +109,17 @@ export default function createCompatNavigationProp<
           break;
         case 'didFocus': {
           const unsubscribe = focusSubscriptions.get(callback);
-          unsubscribe && unsubscribe();
+          unsubscribe?.();
           break;
         }
         case 'didBlur': {
           const unsubscribe = blurSubscriptions.get(callback);
-          unsubscribe && unsubscribe();
+          unsubscribe?.();
           break;
         }
         case 'refocus': {
           const unsubscribe = refocusSubscriptions.get(callback);
-          unsubscribe && unsubscribe();
+          unsubscribe?.();
           break;
         }
         default:

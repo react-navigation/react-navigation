@@ -130,10 +130,10 @@ export default function useOnAction({
     ]
   );
 
-  React.useEffect(
-    () => addActionListenerParent && addActionListenerParent(onAction),
-    [addActionListenerParent, onAction]
-  );
+  React.useEffect(() => addActionListenerParent?.(onAction), [
+    addActionListenerParent,
+    onAction,
+  ]);
 
   return onAction;
 }

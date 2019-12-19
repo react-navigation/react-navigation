@@ -288,7 +288,7 @@ export default class DrawerView extends React.PureComponent<Props> {
         set(this.offsetX, 0),
         // When the animation finishes, stop the clock
         stopClock(this.clock),
-        call([this.isOpen], ([value]: ReadonlyArray<Binary>) => {
+        call([this.isOpen], ([value]: readonly Binary[]) => {
           const open = Boolean(value);
 
           if (open !== this.props.open) {
@@ -304,7 +304,7 @@ export default class DrawerView extends React.PureComponent<Props> {
   private dragX = block([
     onChange(
       this.isOpen,
-      call([this.isOpen], ([value]: ReadonlyArray<Binary>) => {
+      call([this.isOpen], ([value]: readonly Binary[]) => {
         const open = Boolean(value);
 
         this.currentOpenValue = open;
@@ -344,7 +344,7 @@ export default class DrawerView extends React.PureComponent<Props> {
       // Listen to updates for this value only when it changes
       // Without `onChange`, this will fire even if the value didn't change
       // We don't want to call the listeners if the value didn't change
-      call([this.isSwiping], ([value]: ReadonlyArray<Binary>) => {
+      call([this.isSwiping], ([value]: readonly Binary[]) => {
         const { keyboardDismissMode } = this.props;
 
         if (value === TRUE) {

@@ -272,6 +272,7 @@ export default class HeaderSegment extends React.Component<Props, State> {
       // @ts-ignore
       if (safeStyles[styleProp] === undefined) {
         // @ts-ignore
+        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
         delete safeStyles[styleProp];
       }
     }

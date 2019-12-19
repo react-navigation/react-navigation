@@ -202,7 +202,7 @@ const Container = React.forwardRef(function NavigationContainer(
   }, [getStateForRoute]);
 
   React.useImperativeHandle(ref, () => ({
-    ...(Object.keys(CommonActions) as Array<keyof typeof CommonActions>).reduce<
+    ...(Object.keys(CommonActions) as (keyof typeof CommonActions)[]).reduce<
       any
     >((acc, name) => {
       acc[name] = (...args: any[]) =>

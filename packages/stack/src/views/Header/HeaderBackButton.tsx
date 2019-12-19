@@ -52,7 +52,7 @@ export default function HeaderBackButton({
       : 'rgba(0, 0, 0, .32)';
 
   const handleLabelLayout = (e: LayoutChangeEvent) => {
-    onLabelLayout && onLabelLayout(e);
+    onLabelLayout?.(e);
 
     setInitialLabelWidth(e.nativeEvent.layout.x + e.nativeEvent.layout.width);
   };

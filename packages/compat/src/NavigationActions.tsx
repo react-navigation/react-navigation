@@ -25,7 +25,7 @@ export function navigate({
 }
 
 export function back(options?: { key?: null | string }) {
-  return options && options.key != null
+  return options?.key != null
     ? (state: NavigationState) => ({
         ...CommonActions.goBack(),
         source: options.key,

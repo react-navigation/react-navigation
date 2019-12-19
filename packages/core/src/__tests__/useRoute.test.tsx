@@ -19,7 +19,7 @@ it('gets route prop from context', () => {
   const Test = () => {
     const route = useRoute<RouteProp<{ sample: { x: string } }, 'sample'>>();
 
-    expect(route && route.params && route.params.x).toEqual(1);
+    expect(route?.params?.x).toEqual(1);
 
     return null;
   };

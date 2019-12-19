@@ -21,8 +21,7 @@ export default function useFocusEvents({ state, emitter }: Options) {
   // Coz the child screen can't be focused if the parent screen is out of fcous
   React.useEffect(
     () =>
-      navigation &&
-      navigation.addListener('focus', () =>
+      navigation?.addListener('focus', () =>
         emitter.emit({ type: 'focus', target: currentFocusedKey })
       ),
     [currentFocusedKey, emitter, navigation]
@@ -30,8 +29,7 @@ export default function useFocusEvents({ state, emitter }: Options) {
 
   React.useEffect(
     () =>
-      navigation &&
-      navigation.addListener('blur', () =>
+      navigation?.addListener('blur', () =>
         emitter.emit({ type: 'blur', target: currentFocusedKey })
       ),
     [currentFocusedKey, emitter, navigation]
