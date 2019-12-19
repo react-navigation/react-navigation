@@ -1,3 +1,5 @@
+/* eslint-disable import/no-commonjs */
+
 import * as React from 'react';
 import { Image, Dimensions, ScrollView, StyleSheet } from 'react-native';
 import { useScrollToTop } from '@react-navigation/native';

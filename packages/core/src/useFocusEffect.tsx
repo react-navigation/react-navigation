@@ -1,7 +1,7 @@
 import * as React from 'react';
 import useNavigation from './useNavigation';
 
-type EffectCallback = (() => void) | (() => () => void);
+type EffectCallback = (() => undefined) | (() => () => void);
 
 /**
  * Hook to run an effect in a focused screen, similar to `React.useEffect`.
@@ -15,7 +15,7 @@ export default function useFocusEffect(callback: EffectCallback) {
 
   React.useEffect(() => {
     let isFocused = false;
-    let cleanup: (() => void) | void;
+    let cleanup: (() => void) | undefined;
 
     // We need to run the effect on intial render/dep changes if the screen is focused
     if (navigation.isFocused()) {
@@ -30,19 +30,19 @@ export default function useFocusEffect(callback: EffectCallback) {
         return;
       }
 
-      cleanup && cleanup();
+      cleanup?.();
       cleanup = callback();
       isFocused = true;
     });
 
     const unsubscribeBlur = navigation.addListener('blur', () => {
-      cleanup && cleanup();
+      cleanup?.();
       cleanup = undefined;
       isFocused = false;
     });
 
     return () => {
-      cleanup && cleanup();
+      cleanup?.();
       unsubscribeFocus();
       unsubscribeBlur();
     };

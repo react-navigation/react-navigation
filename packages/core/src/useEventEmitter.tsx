@@ -5,7 +5,7 @@ export type NavigationEventEmitter = EventEmitter<Record<string, any>> & {
   create: (target: string) => EventConsumer<Record<string, any>>;
 };
 
-type Listeners = Array<(data: any) => void>;
+type Listeners = ((data: any) => void)[];
 
 /**
  * Hook to manage the event system used by the navigator to notify screens of various events.
@@ -69,7 +69,7 @@ export default function useEventEmitter(): NavigationEventEmitter {
         },
       };
 
-      callbacks && callbacks.forEach(cb => cb(event));
+      callbacks?.forEach(cb => cb(event));
 
       return event;
     },

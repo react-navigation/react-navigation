@@ -24,6 +24,7 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.7.0",
+    "@babel/plugin-proposal-optional-chaining": "^7.7.5",
     "@babel/preset-env": "^7.7.6",
     "@babel/preset-react": "^7.7.0",
     "@babel/preset-typescript": "^7.7.2",
@@ -34,7 +35,7 @@
     "commitlint": "^8.2.0",
     "core-js": "^3.5.0",
     "eslint": "^6.7.2",
-    "eslint-config-satya164": "^3.1.2",
+    "eslint-config-satya164": "^3.1.5",
     "husky": "^3.0.9",
     "jest": "^24.8.0",
     "lerna": "^3.18.4",

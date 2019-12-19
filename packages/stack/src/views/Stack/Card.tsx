@@ -486,19 +486,19 @@ export default class Card extends React.Component<Props> {
 
   private listenerOnStart = call(
     [this.isVisible],
-    ([value]: ReadonlyArray<Binary>) => {
+    ([value]: readonly Binary[]) => {
       this.handleStartInteraction();
 
       const { onTransitionStart } = this.props;
       this.noAnimationStartedSoFar = false;
       this.isRunningAnimation = true;
-      onTransitionStart && onTransitionStart({ closing: !value });
+      onTransitionStart?.({ closing: !value });
     }
   );
 
   private listenerOnEnd = call(
     [this.isVisible],
-    ([value]: ReadonlyArray<Binary>) => {
+    ([value]: readonly Binary[]) => {
       const isOpen = Boolean(value);
       const { onOpen, onClose } = this.props;
 
@@ -524,14 +524,14 @@ export default class Card extends React.Component<Props> {
       if (isSwiping === TRUE) {
         this.handleStartInteraction();
 
-        onGestureBegin && onGestureBegin();
+        onGestureBegin?.();
       } else {
         this.handleEndInteraction();
 
         if (isSwipeCancelled === TRUE) {
-          onGestureCanceled && onGestureCanceled();
+          onGestureCanceled?.();
         } else {
-          onGestureEnd && onGestureEnd();
+          onGestureEnd?.();
         }
       }
     }
@@ -712,12 +712,10 @@ export default class Card extends React.Component<Props> {
     const distance =
       gestureDirection === 'vertical' ||
       gestureDirection === 'vertical-inverted'
-        ? gestureResponseDistance &&
-          gestureResponseDistance.vertical !== undefined
+        ? gestureResponseDistance?.vertical !== undefined
           ? gestureResponseDistance.vertical
           : GESTURE_RESPONSE_DISTANCE_VERTICAL
-        : gestureResponseDistance &&
-          gestureResponseDistance.horizontal !== undefined
+        : gestureResponseDistance?.horizontal !== undefined
         ? gestureResponseDistance.horizontal
         : GESTURE_RESPONSE_DISTANCE_HORIZONTAL;
 

@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-cycle
 import * as CommonActions from './CommonActions';
 import * as React from 'react';
 
@@ -20,9 +19,9 @@ export type NavigationState = {
   /**
    * List of rendered routes.
    */
-  routes: Array<
-    Route<string> & { state?: NavigationState | PartialState<NavigationState> }
-  >;
+  routes: (Route<string> & {
+    state?: NavigationState | PartialState<NavigationState>;
+  })[];
   /**
    * Custom type for the state, whether it's for tab, stack, drawer etc.
    * During rehydration, the state will be discarded if type doesn't match with router type.
@@ -38,7 +37,7 @@ export type NavigationState = {
 export type InitialState = Partial<
   Omit<NavigationState, 'stale' | 'routes'>
 > & {
-  routes: Array<Omit<Route<string>, 'key'> & { state?: InitialState }>;
+  routes: (Omit<Route<string>, 'key'> & { state?: InitialState })[];
 };
 
 export type PartialState<State extends NavigationState> = Partial<
@@ -46,9 +45,10 @@ export type PartialState<State extends NavigationState> = Partial<
 > & {
   stale?: true;
   type?: string;
-  routes: Array<
-    Omit<Route<string>, 'key'> & { key?: string; state?: InitialState }
-  >;
+  routes: (Omit<Route<string>, 'key'> & {
+    key?: string;
+    state?: InitialState;
+  })[];
 };
 
 export type Route<RouteName extends string> = {

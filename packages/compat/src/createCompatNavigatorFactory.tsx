@@ -47,7 +47,7 @@ export default function createCompatNavigatorFactory<
   >(
     routeConfig: CompatRouteConfig<NavigationPropType>,
     navigationConfig: Partial<Omit<NavigationConfig, 'screenOptions'>> & {
-      order?: Array<Extract<keyof ParamList, string>>;
+      order?: Extract<keyof ParamList, string>[];
       defaultNavigationOptions?: ScreenOptions;
       navigationOptions?: Record<string, any>;
     } = {}

@@ -60,7 +60,7 @@ export default function getPathFromState(
         Object.entries(route.params).reduce<{
           [key: string]: string;
         }>((acc, [key, value]) => {
-          acc[key] = config && config[key] ? config[key](value) : String(value);
+          acc[key] = config?.[key] ? config[key](value) : String(value);
           return acc;
         }, {})
       : undefined;
@@ -80,6 +80,7 @@ export default function getPathFromState(
           if (params && name in params && p.startsWith(':')) {
             const value = params[name];
             // Remove the used value from the params object since we'll use the rest for query string
+            // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
             delete params[name];
             return encodeURIComponent(value);
           }

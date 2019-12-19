@@ -81,7 +81,7 @@ export default function useNavigationHelpers<
             routeNames: state.routeNames,
             routeParamList: {},
           }) !== null ||
-          (parentNavigationHelpers && parentNavigationHelpers.canGoBack()) ||
+          parentNavigationHelpers?.canGoBack() ||
           false
         );
       },
