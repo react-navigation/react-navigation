@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.46](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.45...@react-navigation/stack@5.0.0-alpha.46) (2019-12-19)
+
+
+### Bug Fixes
+
+* fix typescript issues ([c52a8c4](https://github.com/react-navigation/navigation-ex/commit/c52a8c46a8906812651e5259a850207fc448590e))
+
+
+
+
+
 # [5.0.0-alpha.45](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.44...@react-navigation/stack@5.0.0-alpha.45) (2019-12-16)
 
 
