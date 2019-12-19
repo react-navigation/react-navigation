@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.30](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/drawer@5.0.0-alpha.29...@react-navigation/drawer@5.0.0-alpha.30) (2019-12-19)
+
+
+### Bug Fixes
+
+* set screen background in drawer from theme ([0635365](https://github.com/react-navigation/navigation-ex/commit/0635365483bf5ac38e75191b4ba8f52cf6d73896))
+
+
+
+
+
 # [5.0.0-alpha.29](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/drawer@5.0.0-alpha.28...@react-navigation/drawer@5.0.0-alpha.29) (2019-12-16)
 
 **Note:** Version bump only for package @react-navigation/drawer
