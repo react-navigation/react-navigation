@@ -7,10 +7,10 @@ import Chat from '../Shared/Chat';
 import SimpleStackScreen from './SimpleStack';
 
 type MaterialBottomTabParams = {
-  article: undefined;
-  albums: undefined;
-  contacts: undefined;
-  chat: undefined;
+  Article: undefined;
+  Albums: undefined;
+  Contacts: undefined;
+  Chat: undefined;
 };
 
 const MaterialBottomTabs = createMaterialBottomTabNavigator<
@@ -21,7 +21,7 @@ export default function MaterialBottomTabsScreen() {
   return (
     <MaterialBottomTabs.Navigator barStyle={styles.tabBar}>
       <MaterialBottomTabs.Screen
-        name="article"
+        name="Article"
         options={{
           tabBarLabel: 'Article',
           tabBarIcon: 'file-document-box',
@@ -31,7 +31,7 @@ export default function MaterialBottomTabsScreen() {
         {props => <SimpleStackScreen {...props} headerMode="none" />}
       </MaterialBottomTabs.Screen>
       <MaterialBottomTabs.Screen
-        name="chat"
+        name="Chat"
         component={Chat}
         options={{
           tabBarLabel: 'Chat',
@@ -41,7 +41,7 @@ export default function MaterialBottomTabsScreen() {
         }}
       />
       <MaterialBottomTabs.Screen
-        name="contacts"
+        name="Contacts"
         component={Contacts}
         options={{
           tabBarLabel: 'Contacts',
@@ -50,7 +50,7 @@ export default function MaterialBottomTabsScreen() {
         }}
       />
       <MaterialBottomTabs.Screen
-        name="albums"
+        name="Albums"
         component={Albums}
         options={{
           tabBarLabel: 'Albums',
