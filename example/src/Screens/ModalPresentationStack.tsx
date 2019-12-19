@@ -11,19 +11,19 @@ import {
 import Article from '../Shared/Article';
 import Albums from '../Shared/Albums';
 
-type SimpleStackParams = {
-  article: { author: string };
-  album: undefined;
+type ModalStackParams = {
+  Article: { author: string };
+  Album: undefined;
 };
 
-type SimpleStackNavigation = StackNavigationProp<SimpleStackParams>;
+type ModalStackNavigation = StackNavigationProp<ModalStackParams>;
 
 const ArticleScreen = ({
   navigation,
   route,
 }: {
-  navigation: SimpleStackNavigation;
-  route: RouteProp<SimpleStackParams, 'article'>;
+  navigation: ModalStackNavigation;
+  route: RouteProp<ModalStackParams, 'Article'>;
 }) => {
   const insets = useSafeArea();
 
@@ -32,7 +32,7 @@ const ArticleScreen = ({
       <View style={[styles.buttons, { marginTop: insets.top }]}>
         <Button
           mode="contained"
-          onPress={() => navigation.push('album')}
+          onPress={() => navigation.push('Album')}
           style={styles.button}
         >
           Push album
@@ -50,11 +50,7 @@ const ArticleScreen = ({
   );
 };
 
-const AlbumsScreen = ({
-  navigation,
-}: {
-  navigation: SimpleStackNavigation;
-}) => {
+const AlbumsScreen = ({ navigation }: { navigation: ModalStackNavigation }) => {
   const insets = useSafeArea();
 
   return (
@@ -62,7 +58,7 @@ const AlbumsScreen = ({
       <View style={[styles.buttons, { marginTop: insets.top }]}>
         <Button
           mode="contained"
-          onPress={() => navigation.push('article', { author: 'Babel fish' })}
+          onPress={() => navigation.push('Article', { author: 'Babel fish' })}
           style={styles.button}
         >
           Push article
@@ -80,7 +76,7 @@ const AlbumsScreen = ({
   );
 };
 
-const ModalPresentationStack = createStackNavigator<SimpleStackParams>();
+const ModalPresentationStack = createStackNavigator<ModalStackParams>();
 
 type Props = {
   options?: React.ComponentProps<typeof ModalPresentationStack.Navigator>;
@@ -104,7 +100,7 @@ export default function SimpleStackScreen({ navigation, options }: Props) {
       {...options}
     >
       <ModalPresentationStack.Screen
-        name="article"
+        name="Article"
         component={ArticleScreen}
         options={({ route }) => ({
           title: `Article by ${route.params.author}`,
@@ -112,7 +108,7 @@ export default function SimpleStackScreen({ navigation, options }: Props) {
         initialParams={{ author: 'Gandalf' }}
       />
       <ModalPresentationStack.Screen
-        name="album"
+        name="Album"
         component={AlbumsScreen}
         options={{ title: 'Album' }}
       />

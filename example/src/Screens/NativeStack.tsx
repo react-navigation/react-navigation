@@ -18,8 +18,8 @@ import {
 import Albums from '../Shared/Albums';
 
 type NativeStackParams = {
-  article: { author: string };
-  album: undefined;
+  Article: { author: string };
+  Album: undefined;
 };
 
 type NativeStackNavigation = NativeStackNavigationProp<NativeStackParams>;
@@ -42,7 +42,7 @@ const ArticleScreen = ({
   navigation,
 }: {
   navigation: NativeStackNavigation;
-  route: RouteProp<NativeStackParams, 'article'>;
+  route: RouteProp<NativeStackParams, 'Article'>;
 }) => {
   const { colors } = useTheme();
 
@@ -54,7 +54,7 @@ const ArticleScreen = ({
       <View style={styles.buttons}>
         <Button
           mode="contained"
-          onPress={() => navigation.push('album')}
+          onPress={() => navigation.push('Album')}
           style={styles.button}
         >
           Push album
@@ -141,7 +141,7 @@ const AlbumsScreen = ({
     <View style={styles.buttons}>
       <Button
         mode="contained"
-        onPress={() => navigation.push('article', { author: 'Babel fish' })}
+        onPress={() => navigation.push('Article', { author: 'Babel fish' })}
         style={styles.button}
       >
         Push article
@@ -188,7 +188,7 @@ export default function NativeStackScreen({ navigation }: Props) {
   return (
     <NativeStack.Navigator>
       <NativeStack.Screen
-        name="article"
+        name="Article"
         component={ArticleScreen}
         options={{
           title: 'Lorem Ipsum',
@@ -197,7 +197,7 @@ export default function NativeStackScreen({ navigation }: Props) {
         }}
       />
       <NativeStack.Screen
-        name="album"
+        name="Album"
         component={AlbumsScreen}
         options={{ title: 'Album' }}
       />

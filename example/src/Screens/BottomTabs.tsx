@@ -16,10 +16,10 @@ const getTabBarIcon = (name: string) => ({
 }) => <MaterialCommunityIcons name={name} color={color} size={size} />;
 
 type BottomTabParams = {
-  article: undefined;
-  albums: undefined;
-  contacts: undefined;
-  chat: undefined;
+  Article: undefined;
+  Albums: undefined;
+  Contacts: undefined;
+  Chat: undefined;
 };
 
 const BottomTabs = createBottomTabNavigator<BottomTabParams>();
@@ -32,7 +32,7 @@ export default function BottomTabsScreen() {
       }}
     >
       <BottomTabs.Screen
-        name="article"
+        name="Article"
         options={{
           title: 'Article',
           tabBarIcon: getTabBarIcon('file-document-box'),
@@ -41,7 +41,7 @@ export default function BottomTabsScreen() {
         {props => <SimpleStackScreen {...props} headerMode="none" />}
       </BottomTabs.Screen>
       <BottomTabs.Screen
-        name="chat"
+        name="Chat"
         component={Chat}
         options={{
           tabBarLabel: 'Chat',
@@ -49,7 +49,7 @@ export default function BottomTabsScreen() {
         }}
       />
       <BottomTabs.Screen
-        name="contacts"
+        name="Contacts"
         component={Contacts}
         options={{
           title: 'Contacts',
@@ -57,7 +57,7 @@ export default function BottomTabsScreen() {
         }}
       />
       <BottomTabs.Screen
-        name="albums"
+        name="Albums"
         component={Albums}
         options={{
           title: 'Albums',

@@ -21,7 +21,6 @@ import {
 import { Asset } from 'expo-asset';
 import {
   InitialState,
-  getStateFromPath,
   useLinking,
   NavigationContainerRef,
   NavigationNativeContainer,
@@ -104,20 +103,19 @@ export default function App() {
   // The first segment of the link is the the scheme + host (returned by `Linking.makeUrl`)
   const { getInitialState } = useLinking(containerRef, {
     prefixes: LinkingPrefixes,
-    getStateFromPath: path => {
-      const state = getStateFromPath(path);
+    config: {
+      Root: Object.keys(SCREENS).reduce<{ [key: string]: string }>(
+        (acc, name) => {
+          // Convert screen names such as SimpleStack to kebab case (simple-stack)
+          acc[name] = name
+            .replace(/([A-Z]+)/g, '-$1')
+            .replace(/^-/, '')
+            .toLowerCase();
 
-      return {
-        routes: [
-          {
-            name: 'root',
-            state: {
-              ...state,
-              routes: [{ name: 'home' }, ...(state ? state.routes : [])],
-            },
-          },
-        ],
-      };
+          return acc;
+        },
+        {}
+      ),
     },
   });
 

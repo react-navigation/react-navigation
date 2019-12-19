@@ -5,9 +5,9 @@ import Contacts from '../Shared/Contacts';
 import Chat from '../Shared/Chat';
 
 type MaterialTopTabParams = {
-  albums: undefined;
-  contacts: undefined;
-  chat: undefined;
+  Albums: undefined;
+  Contacts: undefined;
+  Chat: undefined;
 };
 
 const MaterialTopTabs = createMaterialTopTabNavigator<MaterialTopTabParams>();
@@ -16,17 +16,17 @@ export default function MaterialTopTabsScreen() {
   return (
     <MaterialTopTabs.Navigator>
       <MaterialTopTabs.Screen
-        name="chat"
+        name="Chat"
         component={Chat}
         options={{ title: 'Chat' }}
       />
       <MaterialTopTabs.Screen
-        name="contacts"
+        name="Contacts"
         component={Contacts}
         options={{ title: 'Contacts' }}
       />
       <MaterialTopTabs.Screen
-        name="albums"
+        name="Albums"
         component={Albums}
         options={{ title: 'Albums' }}
       />

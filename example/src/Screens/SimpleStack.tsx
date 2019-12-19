@@ -10,8 +10,8 @@ import Article from '../Shared/Article';
 import Albums from '../Shared/Albums';
 
 type SimpleStackParams = {
-  article: { author: string };
-  album: undefined;
+  Article: { author: string };
+  Album: undefined;
 };
 
 type SimpleStackNavigation = StackNavigationProp<SimpleStackParams>;
@@ -21,14 +21,14 @@ const ArticleScreen = ({
   route,
 }: {
   navigation: SimpleStackNavigation;
-  route: RouteProp<SimpleStackParams, 'article'>;
+  route: RouteProp<SimpleStackParams, 'Article'>;
 }) => {
   return (
     <React.Fragment>
       <View style={styles.buttons}>
         <Button
           mode="contained"
-          onPress={() => navigation.push('album')}
+          onPress={() => navigation.push('Album')}
           style={styles.button}
         >
           Push album
@@ -56,7 +56,7 @@ const AlbumsScreen = ({
       <View style={styles.buttons}>
         <Button
           mode="contained"
-          onPress={() => navigation.push('article', { author: 'Babel fish' })}
+          onPress={() => navigation.push('Article', { author: 'Babel fish' })}
           style={styles.button}
         >
           Push article
@@ -88,7 +88,7 @@ export default function SimpleStackScreen({ navigation, ...rest }: Props) {
   return (
     <SimpleStack.Navigator {...rest}>
       <SimpleStack.Screen
-        name="article"
+        name="Article"
         component={ArticleScreen}
         options={({ route }) => ({
           title: `Article by ${route.params.author}`,
@@ -96,7 +96,7 @@ export default function SimpleStackScreen({ navigation, ...rest }: Props) {
         initialParams={{ author: 'Gandalf' }}
       />
       <SimpleStack.Screen
-        name="album"
+        name="Album"
         component={AlbumsScreen}
         options={{ title: 'Album' }}
       />
