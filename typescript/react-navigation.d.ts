@@ -596,6 +596,19 @@ declare module 'react-navigation' {
       eventName: string,
       callback: NavigationEventCallback
     ) => NavigationEventSubscription;
+    push: (
+      routeName: string,
+      params?: NavigationParams,
+      action?: NavigationNavigateAction
+    ) => boolean;
+    replace: (
+      routeName: string,
+      params?: NavigationParams,
+      action?: NavigationNavigateAction
+    ) => boolean;
+    reset: (actions: NavigationAction[], index: number) => boolean;
+    pop: (n?: number, params?: { immediate?: boolean }) => boolean;
+    popToTop: (params?: { immediate?: boolean }) => boolean;
     isFocused: () => boolean;
     isFirstRouteInParent: () => boolean;
     router?: NavigationRouter;
