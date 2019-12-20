@@ -175,7 +175,7 @@ class StackView extends React.Component {
       }
     }
 
-    let stackAnimation;
+    let stackAnimation = options.stackAnimation;
     if (options.animationEnabled === false) {
       stackAnimation = 'none';
     }
