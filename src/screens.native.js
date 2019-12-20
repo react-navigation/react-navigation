@@ -4,6 +4,7 @@ import {
   requireNativeComponent,
   View,
   UIManager,
+  Image,
   StyleSheet,
 } from 'react-native';
 import { version } from 'react-native/Libraries/Core/ReactNativeVersion';
@@ -146,6 +147,14 @@ const styles = StyleSheet.create({
   },
 });
 
+const ScreenStackHeaderBackButtonImage = props => (
+  <ScreensNativeModules.NativeScreenStackHeaderSubview
+    type="back"
+    style={styles.headerSubview}>
+    <Image resizeMode="center" fadeDuration={0} {...props} />
+  </ScreensNativeModules.NativeScreenStackHeaderSubview>
+);
+
 const ScreenStackHeaderRightView = props => (
   <ScreensNativeModules.NativeScreenStackHeaderSubview
     {...props}
@@ -198,6 +207,7 @@ module.exports = {
   get ScreenStackHeaderSubview() {
     return ScreensNativeModules.NativeScreenStackHeaderSubview;
   },
+  ScreenStackHeaderBackButtonImage,
   ScreenStackHeaderRightView,
   ScreenStackHeaderLeftView,
   ScreenStackHeaderTitleView,

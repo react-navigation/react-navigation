@@ -12,6 +12,7 @@ import {
   ScreenStack,
   Screen,
   ScreenStackHeaderConfig,
+  ScreenStackHeaderBackButtonImage,
   ScreenStackHeaderLeftView,
   ScreenStackHeaderRightView,
   ScreenStackHeaderTitleView,
@@ -92,6 +93,12 @@ class StackView extends React.Component {
     }
 
     const children = [];
+
+    if (options.backButtonImage) {
+      children.push(
+        <ScreenStackHeaderBackButtonImage source={options.backButtonImage} />
+      );
+    }
 
     if (options.headerLeft !== undefined) {
       children.push(

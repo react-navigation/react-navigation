@@ -8,6 +8,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
@@ -15,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
+import com.facebook.react.bridge.JSApplicationIllegalArgumentException;
 import com.facebook.react.views.text.ReactFontManager;
 
 import java.util.ArrayList;
@@ -183,6 +185,17 @@ public class ScreenStackHeaderConfig extends ViewGroup {
     for (int i = 0, size = mConfigSubviews.size(); i < size; i++) {
       ScreenStackHeaderSubview view = mConfigSubviews.get(i);
       ScreenStackHeaderSubview.Type type = view.getType();
+
+      if (type == ScreenStackHeaderSubview.Type.BACK) {
+        // we special case BACK button header config type as we don't add it as a view into toolbar
+        // but instead just copy the drawable from imageview that's added as a first child to it.
+        View firstChild = view.getChildAt(0);
+        if (!(firstChild instanceof ImageView)) {
+          throw new JSApplicationIllegalArgumentException("Back button header config view should have Image as first child");
+        }
+        actionBar.setHomeAsUpIndicator(((ImageView) firstChild).getDrawable());
+        continue;
+      }
 
       Toolbar.LayoutParams params =
               new Toolbar.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);

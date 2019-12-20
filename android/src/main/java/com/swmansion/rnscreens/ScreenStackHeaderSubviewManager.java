@@ -47,6 +47,8 @@ public class ScreenStackHeaderSubviewManager extends ReactViewManager {
       view.setType(ScreenStackHeaderSubview.Type.TITLE);
     } else if ("right".equals(type)) {
       view.setType(ScreenStackHeaderSubview.Type.RIGHT);
+    } else if ("back".equals(type)) {
+      view.setType(ScreenStackHeaderSubview.Type.BACK);
     }
   }
 }
