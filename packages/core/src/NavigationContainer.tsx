@@ -123,9 +123,11 @@ const Container = React.forwardRef(function NavigationContainer(
       isTransactionActiveRef.current = true;
       transactionStateRef.current = navigationState;
 
-      callback();
-
-      isTransactionActiveRef.current = false;
+      try {
+        callback();
+      } finally {
+        isTransactionActiveRef.current = false;
+      }
 
       return transactionStateRef.current;
     });
