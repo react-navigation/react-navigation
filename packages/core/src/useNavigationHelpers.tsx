@@ -42,13 +42,22 @@ export default function useNavigationHelpers<
   const { performTransaction } = React.useContext(NavigationStateContext);
 
   return React.useMemo(() => {
-    const dispatch = (action: Action | ((state: State) => Action)) =>
+    const dispatch = (action: Action | ((state: State) => Action)) => {
       performTransaction(() => {
         const payload =
           typeof action === 'function' ? action(getState()) : action;
 
-        onAction(payload);
+        const handled = onAction(payload);
+
+        if (!handled && process.env.NODE_ENV !== 'production') {
+          console.error(
+            `The action '${payload.type}' with payload '${JSON.stringify(
+              payload.payload
+            )}' was not handled by any navigator.`
+          );
+        }
       });
+    };
 
     const actions = {
       ...router.actionCreators,

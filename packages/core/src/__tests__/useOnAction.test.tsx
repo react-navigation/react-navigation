@@ -305,8 +305,7 @@ it("action doesn't bubble if target is specified", () => {
   expect(onStateChange).not.toBeCalled();
 });
 
-// eslint-disable-next-line jest/expect-expect
-it("doesn't crash if no navigator handled the action", () => {
+it('logs error if no navigator handled the action', () => {
   const TestRouter = MockRouter;
 
   const TestNavigator = (props: any) => {
@@ -366,5 +365,13 @@ it("doesn't crash if no navigator handled the action", () => {
     </NavigationContainer>
   );
 
+  const spy = jest.spyOn(console, 'error').mockImplementation();
+
   render(element).update(element);
+
+  expect(spy.mock.calls[0][0]).toMatch(
+    "The action 'UNKNOWN' with payload 'undefined' was not handled by any navigator."
+  );
+
+  spy.mockRestore();
 });

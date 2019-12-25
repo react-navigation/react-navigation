@@ -357,6 +357,8 @@ it("doesn't update state if action wasn't handled", () => {
 
   const onStateChange = jest.fn();
 
+  const spy = jest.spyOn(console, 'error').mockImplementation();
+
   render(
     <NavigationContainer onStateChange={onStateChange}>
       <TestNavigator initialRouteName="foo">
@@ -367,6 +369,12 @@ it("doesn't update state if action wasn't handled", () => {
   );
 
   expect(onStateChange).toBeCalledTimes(0);
+
+  expect(spy.mock.calls[0][0]).toMatch(
+    "The action 'INVALID' with payload 'undefined' was not handled by any navigator."
+  );
+
+  spy.mockRestore();
 });
 
 it('cleans up state when the navigator unmounts', () => {

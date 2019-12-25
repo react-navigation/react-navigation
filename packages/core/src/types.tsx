@@ -72,6 +72,10 @@ export type NavigationAction = {
    */
   type: string;
   /**
+   * Additional data for the action
+   */
+  payload?: object;
+  /**
    * Key of the route which dispatched this action.
    */
   source?: string;
