@@ -10,18 +10,18 @@ Open a Terminal in your project's folder and run,
 yarn add @react-navigation/native @react-navigation/stack @react-native-community/masked-view
 ```
 
-Now we need to install [`react-native-gesture-handler`](https://github.com/kmagiera/react-native-gesture-handler), [`react-native-reanimated`](https://github.com/kmagiera/react-native-reanimated), [`react-native-screens`](https://github.com/kmagiera/react-native-screens) and [`react-native-safe-area-context`](https://github.com/th3rdwave/react-native-safe-area-context).
+Now we need to install [`react-native-gesture-handler`](https://github.com/kmagiera/react-native-gesture-handler), [`react-native-screens`](https://github.com/kmagiera/react-native-screens) and [`react-native-safe-area-context`](https://github.com/th3rdwave/react-native-safe-area-context).
 
 If you are using Expo, to ensure that you get the compatible versions of the libraries, run:
 
 ```sh
-expo install react-native-gesture-handler react-native-reanimated react-native-screens react-native-safe-area-context
+expo install react-native-gesture-handler react-native-screens react-native-safe-area-context
 ```
 
 If you are not using Expo, run the following:
 
 ```sh
-yarn add react-native-reanimated react-native-gesture-handler react-native-screens react-native-safe-area-context
+yarn add react-native-gesture-handler react-native-screens react-native-safe-area-context
 ```
 
 If you are using Expo, you are done. Otherwise, continue to the next steps.

@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { StyleSheet, Platform, ViewProps } from 'react-native';
-import Animated from 'react-native-reanimated';
+import { Animated, StyleSheet, Platform, ViewProps } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 
 export default function HeaderBackground({ style, ...rest }: ViewProps) {

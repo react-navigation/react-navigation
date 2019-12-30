@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {
+  Animated,
   I18nManager,
   Image,
   View,
@@ -7,7 +8,6 @@ import {
   StyleSheet,
   LayoutChangeEvent,
 } from 'react-native';
-import Animated from 'react-native-reanimated';
 import { useTheme } from '@react-navigation/native';
 import MaskedView from '../MaskedView';
 import TouchableItem from '../TouchableItem';
