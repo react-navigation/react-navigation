@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {
+  Animated,
   View,
   StyleSheet,
   LayoutChangeEvent,
@@ -7,10 +8,9 @@ import {
   Platform,
   ViewProps,
 } from 'react-native';
-import Animated from 'react-native-reanimated';
 import { EdgeInsets } from 'react-native-safe-area-context';
 // eslint-disable-next-line import/no-unresolved
-import * as Screens from 'react-native-screens'; // Import with * as to prevent getters being called
+import { ScreenContainer, Screen, screensEnabled } from 'react-native-screens'; // Import with * as to prevent getters being called
 import { Route } from '@react-navigation/native';
 import { StackNavigationState } from '@react-navigation/routers';
 
@@ -23,20 +23,23 @@ import {
 } from '../../TransitionConfigs/TransitionPresets';
 import { forNoAnimation as forNoAnimationHeader } from '../../TransitionConfigs/HeaderStyleInterpolators';
 import { forNoAnimation as forNoAnimationCard } from '../../TransitionConfigs/CardStyleInterpolators';
+import getDistanceForDirection from '../../utils/getDistanceForDirection';
 import {
   Layout,
   StackHeaderMode,
+  StackCardMode,
   Scene,
   StackDescriptorMap,
   StackNavigationOptions,
+  StackDescriptor,
 } from '../../types';
 
-type ProgressValues = {
-  [key: string]: Animated.Value<number>;
+type GestureValues = {
+  [key: string]: Animated.Value;
 };
 
 type Props = {
-  mode: 'card' | 'modal';
+  mode: StackCardMode;
   insets: EdgeInsets;
   state: StackNavigationState;
   descriptors: StackDescriptorMap;
@@ -67,17 +70,15 @@ type State = {
   routes: Route<string>[];
   descriptors: StackDescriptorMap;
   scenes: Scene<Route<string>>[];
-  progress: ProgressValues;
+  gestures: GestureValues;
   layout: Layout;
   floatingHeaderHeights: Record<string, number>;
 };
 
+const EPSILON = 1e-5;
+
 const dimensions = Dimensions.get('window');
 const layout = { width: dimensions.width, height: dimensions.height };
-
-let AnimatedScreen: React.ComponentType<ViewProps & {
-  active: number | Animated.Node<number>;
-}>;
 
 const MaybeScreenContainer = ({
   enabled,
@@ -86,8 +87,8 @@ const MaybeScreenContainer = ({
   enabled: boolean;
   children: React.ReactNode;
 }) => {
-  if (Platform.OS !== 'ios' && enabled && Screens.screensEnabled()) {
-    return <Screens.ScreenContainer {...rest} />;
+  if (Platform.OS !== 'ios' && enabled && screensEnabled()) {
+    return <ScreenContainer {...rest} />;
   }
 
   return <View {...rest} />;
@@ -99,22 +100,16 @@ const MaybeScreen = ({
   ...rest
 }: ViewProps & {
   enabled: boolean;
-  active: number | Animated.Node<number>;
+  active: number | Animated.AnimatedInterpolation;
   children: React.ReactNode;
 }) => {
-  if (Platform.OS !== 'ios' && enabled && Screens.screensEnabled()) {
-    AnimatedScreen =
-      AnimatedScreen || Animated.createAnimatedComponent(Screens.NativeScreen);
-
-    return <AnimatedScreen active={active} {...rest} />;
+  if (Platform.OS !== 'ios' && enabled && screensEnabled()) {
+    // @ts-ignore
+    return <Screen active={active} {...rest} />;
   }
 
   return <View {...rest} />;
 };
-
-const { cond, eq } = Animated;
-
-const ANIMATED_ONE = new Animated.Value(1);
 
 const FALLBACK_DESCRIPTOR = Object.freeze({ options: {} });
 
@@ -143,6 +138,43 @@ const getFloatingHeaderHeights = (
   }, {});
 };
 
+const getDistanceFromOptions = (
+  mode: StackCardMode,
+  layout: Layout,
+  descriptor?: StackDescriptor
+) => {
+  const {
+    gestureDirection = mode === 'modal'
+      ? ModalTransition.gestureDirection
+      : DefaultTransition.gestureDirection,
+  } = descriptor?.options || {};
+
+  return getDistanceForDirection(layout, gestureDirection);
+};
+
+const getProgressFromGesture = (
+  mode: StackCardMode,
+  gesture: Animated.Value,
+  layout: Layout,
+  descriptor?: StackDescriptor
+) => {
+  const distance = getDistanceFromOptions(mode, layout, descriptor);
+
+  if (distance > 0) {
+    return gesture.interpolate({
+      inputRange: [0, distance],
+      outputRange: [1, 0],
+      extrapolate: 'clamp',
+    });
+  }
+
+  return gesture.interpolate({
+    inputRange: [distance, 0],
+    outputRange: [0, 1],
+    extrapolate: 'clamp',
+  });
+};
+
 export default class CardStack extends React.Component<Props, State> {
   static getDerivedStateFromProps(props: Props, state: State) {
     if (
@@ -152,17 +184,17 @@ export default class CardStack extends React.Component<Props, State> {
       return null;
     }
 
-    const progress = props.routes.reduce<ProgressValues>((acc, curr) => {
+    const gestures = props.routes.reduce<GestureValues>((acc, curr) => {
       const descriptor = props.descriptors[curr.key];
+      const { animationEnabled } = descriptor?.options || {};
 
       acc[curr.key] =
-        state.progress[curr.key] ||
+        state.gestures[curr.key] ||
         new Animated.Value(
           props.openingRouteKeys.includes(curr.key) &&
-          descriptor &&
-          descriptor.options.animationEnabled !== false
-            ? 0
-            : 1
+          animationEnabled !== false
+            ? getDistanceFromOptions(props.mode, state.layout, descriptor)
+            : 0
         );
 
       return acc;
@@ -174,41 +206,79 @@ export default class CardStack extends React.Component<Props, State> {
         const previousRoute = self[index - 1];
         const nextRoute = self[index + 1];
 
-        const current = progress[route.key];
-        const previous = previousRoute
-          ? progress[previousRoute.key]
-          : undefined;
-        const next = nextRoute ? progress[nextRoute.key] : undefined;
-
         const oldScene = state.scenes[index];
+
+        const currentGesture = gestures[route.key];
+        const previousGesture = previousRoute
+          ? gestures[previousRoute.key]
+          : undefined;
+        const nextGesture = nextRoute ? gestures[nextRoute.key] : undefined;
+
+        const descriptor =
+          props.descriptors[route.key] ||
+          state.descriptors[route.key] ||
+          (oldScene ? oldScene.descriptor : FALLBACK_DESCRIPTOR);
+
+        const nextDescriptor =
+          props.descriptors[nextRoute?.key] ||
+          state.descriptors[nextRoute?.key];
+
+        const previousDescriptor =
+          props.descriptors[previousRoute?.key] ||
+          state.descriptors[previousRoute?.key];
+
         const scene = {
           route,
-          previous: previousRoute,
-          descriptor:
-            props.descriptors[route.key] ||
-            state.descriptors[route.key] ||
-            (oldScene ? oldScene.descriptor : FALLBACK_DESCRIPTOR),
+          descriptor,
           progress: {
-            current,
-            next,
-            previous,
+            current: getProgressFromGesture(
+              props.mode,
+              currentGesture,
+              state.layout,
+              descriptor
+            ),
+            next: nextGesture
+              ? getProgressFromGesture(
+                  props.mode,
+                  nextGesture,
+                  state.layout,
+                  nextDescriptor
+                )
+              : undefined,
+            previous: previousGesture
+              ? getProgressFromGesture(
+                  props.mode,
+                  previousGesture,
+                  state.layout,
+                  previousDescriptor
+                )
+              : undefined,
           },
+          __memo: [
+            route,
+            state.layout,
+            descriptor,
+            nextDescriptor,
+            previousDescriptor,
+            currentGesture,
+            nextGesture,
+            previousGesture,
+          ],
         };
 
         if (
           oldScene &&
-          scene.route === oldScene.route &&
-          scene.progress.current === oldScene.progress.current &&
-          scene.progress.next === oldScene.progress.next &&
-          scene.progress.previous === oldScene.progress.previous &&
-          scene.descriptor === oldScene.descriptor
+          scene.__memo.every((it, i) => {
+            // @ts-ignore
+            return oldScene.__memo[i] === it;
+          })
         ) {
           return oldScene;
         }
 
         return scene;
       }),
-      progress,
+      gestures,
       descriptors: props.descriptors,
       floatingHeaderHeights: getFloatingHeaderHeights(
         props.routes,
@@ -223,7 +293,7 @@ export default class CardStack extends React.Component<Props, State> {
   state: State = {
     routes: [],
     scenes: [],
-    progress: {},
+    gestures: {},
     layout,
     descriptors: this.props.descriptors,
     // Used when card's header is null and mode is float to make transition
@@ -303,7 +373,7 @@ export default class CardStack extends React.Component<Props, State> {
       onPageChangeCancel,
     } = this.props;
 
-    const { scenes, layout, progress, floatingHeaderHeights } = this.state;
+    const { scenes, layout, gestures, floatingHeaderHeights } = this.state;
 
     const focusedRoute = state.routes[state.index];
     const focusedDescriptor = descriptors[focusedRoute.key];
@@ -335,18 +405,22 @@ export default class CardStack extends React.Component<Props, State> {
         >
           {routes.map((route, index, self) => {
             const focused = focusedRoute.key === route.key;
-            const current = progress[route.key];
+            const gesture = gestures[route.key];
             const scene = scenes[index];
-            const next = self[index + 1]
-              ? progress[self[index + 1].key]
-              : ANIMATED_ONE;
 
-            // Display current screen and a screen beneath. On Android screen beneath is hidden on animation finished bs of RNS's issue.
+            // Display current screen and a screen beneath.
+            // On Android screen beneath is hidden on animation finished bs of RNS's issue.
             const isScreenActive =
               index === self.length - 1
                 ? 1
                 : Platform.OS === 'android'
-                ? cond(eq(next, 1), 0, 1)
+                ? scene.progress.next
+                  ? scene.progress.next.interpolate({
+                      inputRange: [0, 1 - EPSILON, 1],
+                      outputRange: [1, 1, 0],
+                      extrapolate: 'clamp',
+                    })
+                  : 1
                 : index === self.length - 2
                 ? 1
                 : 0;
@@ -427,7 +501,7 @@ export default class CardStack extends React.Component<Props, State> {
                   focused={focused}
                   closing={closingRouteKeys.includes(route.key)}
                   layout={layout}
-                  current={current}
+                  gesture={gesture}
                   scene={scene}
                   previousScene={scenes[index - 1]}
                   state={state}

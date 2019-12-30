@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { StyleSheet, Platform, TextProps } from 'react-native';
-import Animated from 'react-native-reanimated';
+import { Animated, StyleSheet, Platform, TextProps } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 
 type Props = TextProps & {

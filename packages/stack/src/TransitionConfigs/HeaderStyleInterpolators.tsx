@@ -1,11 +1,10 @@
-import { I18nManager } from 'react-native';
-import Animated from 'react-native-reanimated';
+import { Animated, I18nManager } from 'react-native';
 import {
   StackHeaderInterpolationProps,
   StackHeaderInterpolatedStyle,
 } from '../types';
 
-const { interpolate, add } = Animated;
+const { add } = Animated;
 
 /**
  * Standard UIKit style animation for the header where the title fades into the back button label.
@@ -38,7 +37,7 @@ export function forUIKit({
 
   return {
     leftButtonStyle: {
-      opacity: interpolate(progress, {
+      opacity: progress.interpolate({
         inputRange: [0.3, 1, 1.5],
         outputRange: [0, 1, 0],
       }),
@@ -46,7 +45,7 @@ export function forUIKit({
     leftLabelStyle: {
       transform: [
         {
-          translateX: interpolate(progress, {
+          translateX: progress.interpolate({
             inputRange: [0, 1, 2],
             outputRange: I18nManager.isRTL
               ? [-rightOffset, 0, leftLabelOffset]
@@ -56,19 +55,19 @@ export function forUIKit({
       ],
     },
     rightButtonStyle: {
-      opacity: interpolate(progress, {
+      opacity: progress.interpolate({
         inputRange: [0.3, 1, 1.5],
         outputRange: [0, 1, 0],
       }),
     },
     titleStyle: {
-      opacity: interpolate(progress, {
+      opacity: progress.interpolate({
         inputRange: [0, 0.4, 1, 1.5],
         outputRange: [0, 0.1, 1, 0],
       }),
       transform: [
         {
-          translateX: interpolate(progress, {
+          translateX: progress.interpolate({
             inputRange: [0.5, 1, 2],
             outputRange: I18nManager.isRTL
               ? [-titleLeftOffset, 0, rightOffset]
@@ -80,7 +79,7 @@ export function forUIKit({
     backgroundStyle: {
       transform: [
         {
-          translateX: interpolate(progress, {
+          translateX: progress.interpolate({
             inputRange: [0, 1, 2],
             outputRange: I18nManager.isRTL
               ? [-layouts.screen.width, 0, layouts.screen.width]
@@ -100,7 +99,7 @@ export function forFade({
   next,
 }: StackHeaderInterpolationProps): StackHeaderInterpolatedStyle {
   const progress = add(current.progress, next ? next.progress : 0);
-  const opacity = interpolate(progress, {
+  const opacity = progress.interpolate({
     inputRange: [0, 1, 2],
     outputRange: [0, 1, 0],
   });
@@ -110,7 +109,7 @@ export function forFade({
     rightButtonStyle: { opacity },
     titleStyle: { opacity },
     backgroundStyle: {
-      opacity: interpolate(progress, {
+      opacity: progress.interpolate({
         inputRange: [0, 1, 1.9, 2],
         outputRange: [0, 1, 1, 0],
       }),
@@ -127,7 +126,7 @@ export function forStatic({
   layouts: { screen },
 }: StackHeaderInterpolationProps): StackHeaderInterpolatedStyle {
   const progress = add(current.progress, next ? next.progress : 0);
-  const translateX = interpolate(progress, {
+  const translateX = progress.interpolate({
     inputRange: [0, 1, 2],
     outputRange: I18nManager.isRTL
       ? [-screen.width, 0, screen.width]

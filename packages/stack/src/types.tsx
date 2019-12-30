@@ -1,10 +1,11 @@
 import {
+  Animated,
+  EasingFunction,
   StyleProp,
   TextStyle,
   ViewStyle,
   LayoutChangeEvent,
 } from 'react-native';
-import Animated from 'react-native-reanimated';
 import { EdgeInsets } from 'react-native-safe-area-context';
 import {
   NavigationProp,
@@ -88,21 +89,23 @@ export type Scene<T> = {
     /**
      * Progress value of the current screen.
      */
-    current: Animated.Node<number>;
+    current: Animated.AnimatedInterpolation;
     /**
      * Progress value for the screen after this one in the stack.
      * This can be `undefined` in case the screen animating is the last one.
      */
-    next?: Animated.Node<number>;
+    next?: Animated.AnimatedInterpolation;
     /**
      * Progress value for the screen before this one in the stack.
      * This can be `undefined` in case the screen animating is the first one.
      */
-    previous?: Animated.Node<number>;
+    previous?: Animated.AnimatedInterpolation;
   };
 };
 
 export type StackHeaderMode = 'float' | 'screen' | 'none';
+
+export type StackCardMode = 'card' | 'modal';
 
 export type StackHeaderOptions = {
   /**
@@ -322,7 +325,7 @@ export type StackNavigationOptions = StackHeaderOptions &
   };
 
 export type StackNavigationConfig = {
-  mode?: 'card' | 'modal';
+  mode?: StackCardMode;
   headerMode?: StackHeaderMode;
   /**
    * If `false`, the keyboard will NOT automatically dismiss when navigating to a new screen.
@@ -433,7 +436,7 @@ export type SpringConfig = {
 
 export type TimingConfig = {
   duration: number;
-  easing: Animated.EasingFunction;
+  easing: EasingFunction;
 };
 
 export type TransitionSpec =
@@ -448,7 +451,7 @@ export type StackCardInterpolationProps = {
     /**
      * Animated node representing the progress value of the current screen.
      */
-    progress: Animated.Node<number>;
+    progress: Animated.AnimatedInterpolation;
   };
   /**
    * Values for the current screen the screen after this one in the stack.
@@ -458,24 +461,24 @@ export type StackCardInterpolationProps = {
     /**
      * Animated node representing the progress value of the next screen.
      */
-    progress: Animated.Node<number>;
+    progress: Animated.AnimatedInterpolation;
   };
   /**
    * The index of the card in the stack.
    */
   index: number;
   /**
-   * Animated node representing whether the card is closing.
+   * Animated node representing whether the card is closing (1 - closing, 0 - not closing).
    */
-  closing: Animated.Node<0 | 1>;
+  closing: Animated.AnimatedInterpolation;
   /**
-   * Animated node representing whether the card is being swiped.
+   * Animated node representing whether the card is being swiped (1 - swiping, 0 - not swiping).
    */
-  swiping: Animated.Node<0 | 1>;
+  swiping: Animated.AnimatedInterpolation;
   /**
-   * Animated node representing multiplier when direction is inverted.
+   * Animated node representing multiplier when direction is inverted (-1 - inverted, 1 - normal).
    */
-  inverted: Animated.Node<-1 | 1>;
+  inverted: Animated.AnimatedInterpolation;
   /**
    * Layout measurements for various items we use for animation.
    */
@@ -527,7 +530,7 @@ export type StackHeaderInterpolationProps = {
     /**
      * Animated node representing the progress value of the current screen.
      */
-    progress: Animated.Node<number>;
+    progress: Animated.AnimatedInterpolation;
   };
   /**
    * Values for the current screen the screen after this one in the stack.
@@ -537,7 +540,7 @@ export type StackHeaderInterpolationProps = {
     /**
      * Animated node representing the progress value of the next screen.
      */
-    progress: Animated.Node<number>;
+    progress: Animated.AnimatedInterpolation;
   };
   /**
    * Layout measurements for various items we use for animation.

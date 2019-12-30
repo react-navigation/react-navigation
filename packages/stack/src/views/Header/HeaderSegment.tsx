@@ -1,12 +1,12 @@
 import * as React from 'react';
 import {
+  Animated,
   View,
   StyleSheet,
   LayoutChangeEvent,
   Platform,
   ViewStyle,
 } from 'react-native';
-import Animated from 'react-native-reanimated';
 import { EdgeInsets } from 'react-native-safe-area-context';
 import { Route } from '@react-navigation/native';
 import HeaderBackButton from './HeaderBackButton';
@@ -114,8 +114,8 @@ export default class HeaderSegment extends React.Component<Props, State> {
     (
       styleInterpolator: StackHeaderStyleInterpolator,
       layout: Layout,
-      current: Animated.Node<number>,
-      next: Animated.Node<number> | undefined,
+      current: Animated.AnimatedInterpolation,
+      next: Animated.AnimatedInterpolation | undefined,
       titleLayout: Layout | undefined,
       leftLabelLayout: Layout | undefined
     ) =>

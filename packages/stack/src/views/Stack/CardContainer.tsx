@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
-import Animated from 'react-native-reanimated';
+import { Animated, View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 import { StackNavigationState } from '@react-navigation/routers';
 import { Route, useTheme } from '@react-navigation/native';
 import { Props as HeaderContainerProps } from '../Header/HeaderContainer';
@@ -13,7 +12,7 @@ type Props = TransitionPreset & {
   focused: boolean;
   closing: boolean;
   layout: Layout;
-  current: Animated.Value<number>;
+  gesture: Animated.Value;
   previousScene?: Scene<Route<string>>;
   scene: Scene<Route<string>>;
   state: StackNavigationState;
@@ -59,7 +58,7 @@ export default function CardContainer({
   cardStyle,
   cardStyleInterpolator,
   closing,
-  current,
+  gesture,
   floatingHeaderHeight,
   focused,
   gestureDirection,
@@ -129,7 +128,8 @@ export default function CardContainer({
       gestureDirection={gestureDirection}
       layout={layout}
       insets={insets}
-      current={current}
+      gesture={gesture}
+      current={scene.progress.current}
       next={scene.progress.next}
       closing={closing}
       onOpen={handleOpen}
