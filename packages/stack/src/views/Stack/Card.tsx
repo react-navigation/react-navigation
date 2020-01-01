@@ -376,15 +376,18 @@ export default class Card extends React.Component<Props> {
     } = interpolatedStyle;
 
     const handleGestureEvent = gestureEnabled
-      ? Animated.event([
-          {
-            nativeEvent:
-              gestureDirection === 'vertical' ||
-              gestureDirection === 'vertical-inverted'
-                ? { translationY: gesture }
-                : { translationX: gesture },
-          },
-        ])
+      ? Animated.event(
+          [
+            {
+              nativeEvent:
+                gestureDirection === 'vertical' ||
+                gestureDirection === 'vertical-inverted'
+                  ? { translationY: gesture }
+                  : { translationX: gesture },
+            },
+          ],
+          { useNativeDriver: true }
+        )
       : undefined;
 
     const { backgroundColor } = StyleSheet.flatten(contentStyle || {});
