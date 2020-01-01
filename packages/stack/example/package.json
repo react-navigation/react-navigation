@@ -4,9 +4,8 @@
   "private": true,
   "scripts": {
     "start": "expo start",
-    "native": "react-native start",
-    "android": "react-native run-android",
-    "ios": "react-native run-ios"
+    "android": "expo android",
+    "ios": "expo ios"
   },
   "dependencies": {
     "@react-native-community/masked-view": "0.1.5",
