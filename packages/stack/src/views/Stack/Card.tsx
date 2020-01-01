@@ -105,6 +105,11 @@ export default class Card extends React.Component<Props> {
     if (
       this.getAnimateToValue(this.props) !== this.getAnimateToValue(prevProps)
     ) {
+      // We need to trigger the animation when route was closed
+      // Thr route might have been closed by a `POP` action or by a gesture
+      // When route was closed due to a gesture, the animation would've happened already
+      // It's still important to trigger the animation so that `onClose` is called
+      // If `onClose` is not called, cleanup step won't be performed for gestures
       this.animate({ closing });
     }
   }
@@ -132,7 +137,7 @@ export default class Card extends React.Component<Props> {
     closing,
     velocity,
   }: {
-    closing: boolean | undefined;
+    closing?: boolean;
     velocity?: number;
   }) => {
     const {
@@ -142,6 +147,11 @@ export default class Card extends React.Component<Props> {
       onClose,
       onTransitionStart,
     } = this.props;
+
+    const toValue = this.getAnimateToValue({
+      ...this.props,
+      closing,
+    });
 
     const spec = closing ? transitionSpec.close : transitionSpec.open;
 
@@ -153,7 +163,7 @@ export default class Card extends React.Component<Props> {
       ...spec.config,
       velocity,
       useNativeDriver: true,
-      toValue: this.getAnimateToValue(this.props),
+      toValue,
     }).start(({ finished }) => {
       if (finished) {
         if (closing) {
@@ -169,7 +179,11 @@ export default class Card extends React.Component<Props> {
     closing,
     layout,
     gestureDirection,
-  }: Props) => {
+  }: {
+    closing?: boolean;
+    layout: Layout;
+    gestureDirection: GestureDirection;
+  }) => {
     if (!closing) {
       return 0;
     }

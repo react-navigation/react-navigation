@@ -266,18 +266,6 @@ class StackView extends React.Component<Props, State> {
     return <HeaderContainer {...props} />;
   };
 
-  private handleGoBack = ({ route }: { route: Route<string> }) => {
-    const { state, navigation } = this.props;
-
-    // This event will trigger when a gesture ends
-    // We need to perform the transition before removing the route completely
-    navigation.dispatch({
-      ...StackActions.pop(),
-      source: route.key,
-      target: state.key,
-    });
-  };
-
   private handleOpenRoute = ({ route }: { route: Route<string> }) => {
     this.setState(state => ({
       routes: state.replacingRouteKeys.length
@@ -290,15 +278,33 @@ class StackView extends React.Component<Props, State> {
   };
 
   private handleCloseRoute = ({ route }: { route: Route<string> }) => {
-    // This event will trigger when the animation for closing the route ends
-    // In this case, we need to clean up any state tracking the route and pop it immediately
+    const { state, navigation } = this.props;
 
-    // @ts-ignore
-    this.setState(state => ({
-      routes: state.routes.filter(r => r.key !== route.key),
-      openingRouteKeys: state.openingRouteKeys.filter(key => key !== route.key),
-      closingRouteKeys: state.closingRouteKeys.filter(key => key !== route.key),
-    }));
+    if (state.routes.find(r => r.key === route.key)) {
+      // If a route exists in state, trigger a pop
+      // This will happen in when the route was closed from the card component
+      // e.g. When the close animation triggered from a gesture ends
+      // For the cleanup, the card needs to call this function again from its componentDidUpdate
+      navigation.dispatch({
+        ...StackActions.pop(),
+        source: route.key,
+        target: state.key,
+      });
+    } else {
+      // Otherwise, the animation was triggered due to a route removal
+      // In this case, we need to clean up any state tracking the route and pop it immediately
+
+      // @ts-ignore
+      this.setState(state => ({
+        routes: state.routes.filter(r => r.key !== route.key),
+        openingRouteKeys: state.openingRouteKeys.filter(
+          key => key !== route.key
+        ),
+        closingRouteKeys: state.closingRouteKeys.filter(
+          key => key !== route.key
+        ),
+      }));
+    }
   };
 
   private handleTransitionStart = (
@@ -355,7 +361,6 @@ class StackView extends React.Component<Props, State> {
                   routes={routes}
                   openingRouteKeys={openingRouteKeys}
                   closingRouteKeys={closingRouteKeys}
-                  onGoBack={this.handleGoBack}
                   onOpenRoute={this.handleOpenRoute}
                   onCloseRoute={this.handleCloseRoute}
                   onTransitionStart={this.handleTransitionStart}
