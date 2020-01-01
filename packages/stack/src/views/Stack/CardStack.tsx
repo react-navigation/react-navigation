@@ -46,7 +46,6 @@ type Props = {
   routes: Route<string>[];
   openingRouteKeys: string[];
   closingRouteKeys: string[];
-  onGoBack: (props: { route: Route<string> }) => void;
   onOpenRoute: (props: { route: Route<string> }) => void;
   onCloseRoute: (props: { route: Route<string> }) => void;
   getPreviousRoute: (props: {
@@ -360,7 +359,6 @@ export default class CardStack extends React.Component<Props, State> {
       closingRouteKeys,
       onOpenRoute,
       onCloseRoute,
-      onGoBack,
       getPreviousRoute,
       getGesturesEnabled,
       renderHeader,
@@ -527,7 +525,6 @@ export default class CardStack extends React.Component<Props, State> {
                   onCloseRoute={onCloseRoute}
                   onTransitionStart={onTransitionStart}
                   onTransitionEnd={onTransitionEnd}
-                  onGoBack={onGoBack}
                   gestureEnabled={index !== 0 && getGesturesEnabled({ route })}
                   gestureVelocityImpact={gestureVelocityImpact}
                   gestureDirection={gestureDirection}

@@ -30,7 +30,6 @@ type Props = TransitionPreset & {
   renderScene: (props: { route: Route<string> }) => React.ReactNode;
   onOpenRoute: (props: { route: Route<string> }) => void;
   onCloseRoute: (props: { route: Route<string> }) => void;
-  onGoBack: (props: { route: Route<string> }) => void;
   onTransitionStart?: (
     props: { route: Route<string> },
     closing: boolean
@@ -73,7 +72,6 @@ export default function CardContainer({
   index,
   layout,
   onCloseRoute,
-  onGoBack,
   onOpenRoute,
   onPageChangeCancel,
   onPageChangeConfirm,
@@ -109,7 +107,6 @@ export default function CardContainer({
     }
 
     onTransitionStart?.({ route: scene.route }, closing);
-    closing && onGoBack({ route: scene.route });
   };
 
   const insets = {
