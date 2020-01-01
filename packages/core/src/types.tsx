@@ -83,10 +83,6 @@ export type NavigationAction = {
    * Key of the navigator which should handle this action.
    */
   target?: string;
-  /**
-   * Additional data for the action.
-   */
-  payload?: object;
 };
 
 export type ActionCreators<Action extends NavigationAction> = {
