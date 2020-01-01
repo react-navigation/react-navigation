@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.48](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.47...@react-navigation/stack@5.0.0-alpha.48) (2020-01-01)
+
+
+### Bug Fixes
+
+* improve gesture performance ([59803f5](https://github.com/react-navigation/navigation-ex/commit/59803f54d64f85c8e46c1ebc70613a70a812f53a))
+* use native driver for gestures ([9356598](https://github.com/react-navigation/navigation-ex/commit/935659899f1d4084c601fbefea4a935f9b6ce087))
+
+
+
+
+
 # [5.0.0-alpha.47](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.46...@react-navigation/stack@5.0.0-alpha.47) (2020-01-01)
 
 **Note:** Version bump only for package @react-navigation/stack
