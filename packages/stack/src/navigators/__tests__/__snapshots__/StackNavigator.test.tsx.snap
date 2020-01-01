@@ -73,15 +73,10 @@ Array [
         <View
           pointerEvents="box-none"
           style={
-            Array [
-              Object {
-                "flex": 1,
-              },
-              undefined,
-              Object {
-                "marginTop": 44,
-              },
-            ]
+            Object {
+              "flex": 1,
+              "marginTop": 44,
+            }
           }
         >
           <PanGestureHandler
@@ -93,54 +88,45 @@ Array [
             }
             maxDeltaY={20}
             minOffsetX={5}
+            onHandlerStateChange={[Function]}
           >
             <View
               style={
-                Array [
-                  Object {
-                    "flex": 1,
-                  },
-                  Object {
-                    "transform": Array [
-                      Object {
-                        "translateX": undefined,
-                      },
-                      Object {
-                        "translateX": 0,
-                      },
-                    ],
-                  },
-                ]
+                Object {
+                  "flex": 1,
+                  "transform": Array [
+                    Object {
+                      "translateX": 0,
+                    },
+                    Object {
+                      "translateX": 0,
+                    },
+                  ],
+                }
               }
             >
               <View
                 pointerEvents="none"
                 style={
-                  Array [
-                    Object {
-                      "backgroundColor": "#fff",
-                      "position": "absolute",
-                      "shadowColor": "#000",
-                      "shadowOpacity": 0.3,
-                      "shadowRadius": 5,
+                  Object {
+                    "backgroundColor": "#fff",
+                    "bottom": 0,
+                    "left": 0,
+                    "position": "absolute",
+                    "shadowColor": "#000",
+                    "shadowOffset": Object {
+                      "height": 1,
+                      "width": -1,
                     },
-                    Object {
-                      "bottom": 0,
-                      "left": 0,
-                      "shadowOffset": Object {
-                        "height": 1,
-                        "width": -1,
-                      },
-                      "top": 0,
-                      "width": 3,
-                    },
-                    Object {
-                      "shadowOpacity": undefined,
-                    },
-                  ]
+                    "shadowOpacity": 0.3,
+                    "shadowRadius": 5,
+                    "top": 0,
+                    "width": 3,
+                  }
                 }
               />
               <View
+                progress={1}
                 style={
                   Array [
                     Object {
@@ -207,57 +193,44 @@ Array [
       <View
         pointerEvents="none"
         style={
-          Array [
-            Object {
-              "bottom": 0,
-              "left": 0,
-              "position": "absolute",
-              "right": 0,
-              "top": 0,
-            },
-            Object {
-              "opacity": undefined,
-            },
-          ]
+          Object {
+            "bottom": 0,
+            "left": 0,
+            "opacity": 1,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+          }
         }
       >
         <View
           style={
-            Array [
-              Object {
-                "flex": 1,
-                "shadowOffset": Object {
-                  "height": 0.5,
-                  "width": 0,
-                },
-                "shadowOpacity": 0.85,
-                "shadowRadius": 0,
+            Object {
+              "backgroundColor": "red",
+              "borderBottomColor": "#a7a7aa",
+              "flex": 1,
+              "opacity": 0.5,
+              "shadowColor": "#a7a7aa",
+              "shadowOffset": Object {
+                "height": 0.5,
+                "width": 0,
               },
-              Object {
-                "backgroundColor": "#fff",
-                "borderBottomColor": "#a7a7aa",
-                "shadowColor": "#a7a7aa",
-              },
-              Object {
-                "backgroundColor": "red",
-                "opacity": 0.5,
-              },
-            ]
+              "shadowOpacity": 0.85,
+              "shadowRadius": 0,
+            }
           }
         />
       </View>
       <View
         pointerEvents="box-none"
         style={
-          Array [
-            Object {
-              "height": 44,
-              "maxHeight": undefined,
-              "minHeight": undefined,
-              "opacity": 0.5,
-              "transform": undefined,
-            },
-          ]
+          Object {
+            "height": 44,
+            "maxHeight": undefined,
+            "minHeight": undefined,
+            "opacity": 0.5,
+            "transform": undefined,
+          }
         }
       >
         <View
@@ -282,31 +255,21 @@ Array [
           <View
             pointerEvents="box-none"
             style={
-              Array [
-                Object {
-                  "marginHorizontal": 18,
-                },
-                Object {
-                  "opacity": undefined,
-                },
-                undefined,
-              ]
+              Object {
+                "marginHorizontal": 18,
+                "opacity": 1,
+              }
             }
           >
             <Text
               numberOfLines={1}
               onLayout={[Function]}
               style={
-                Array [
-                  Object {
-                    "fontSize": 17,
-                    "fontWeight": "600",
-                  },
-                  Object {
-                    "color": "rgba(0, 0, 0, 0.9)",
-                  },
-                  undefined,
-                ]
+                Object {
+                  "color": "rgba(0, 0, 0, 0.9)",
+                  "fontSize": 17,
+                  "fontWeight": "600",
+                }
               }
             >
               Welcome anonymous
@@ -315,23 +278,15 @@ Array [
           <View
             pointerEvents="box-none"
             style={
-              Array [
-                Object {
-                  "alignItems": "flex-end",
-                  "bottom": 0,
-                  "justifyContent": "center",
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
-                },
-                Object {
-                  "right": 0,
-                },
-                Object {
-                  "opacity": undefined,
-                },
-                undefined,
-              ]
+              Object {
+                "alignItems": "flex-end",
+                "bottom": 0,
+                "justifyContent": "center",
+                "opacity": 1,
+                "position": "absolute",
+                "right": 0,
+                "top": 0,
+              }
             }
           >
             <View />
@@ -416,15 +371,10 @@ Array [
         <View
           pointerEvents="box-none"
           style={
-            Array [
-              Object {
-                "flex": 1,
-              },
-              undefined,
-              Object {
-                "marginTop": 44,
-              },
-            ]
+            Object {
+              "flex": 1,
+              "marginTop": 44,
+            }
           }
         >
           <PanGestureHandler
@@ -436,54 +386,45 @@ Array [
             }
             maxDeltaY={20}
             minOffsetX={5}
+            onHandlerStateChange={[Function]}
           >
             <View
               style={
-                Array [
-                  Object {
-                    "flex": 1,
-                  },
-                  Object {
-                    "transform": Array [
-                      Object {
-                        "translateX": undefined,
-                      },
-                      Object {
-                        "translateX": 0,
-                      },
-                    ],
-                  },
-                ]
+                Object {
+                  "flex": 1,
+                  "transform": Array [
+                    Object {
+                      "translateX": 0,
+                    },
+                    Object {
+                      "translateX": 0,
+                    },
+                  ],
+                }
               }
             >
               <View
                 pointerEvents="none"
                 style={
-                  Array [
-                    Object {
-                      "backgroundColor": "#fff",
-                      "position": "absolute",
-                      "shadowColor": "#000",
-                      "shadowOpacity": 0.3,
-                      "shadowRadius": 5,
+                  Object {
+                    "backgroundColor": "#fff",
+                    "bottom": 0,
+                    "left": 0,
+                    "position": "absolute",
+                    "shadowColor": "#000",
+                    "shadowOffset": Object {
+                      "height": 1,
+                      "width": -1,
                     },
-                    Object {
-                      "bottom": 0,
-                      "left": 0,
-                      "shadowOffset": Object {
-                        "height": 1,
-                        "width": -1,
-                      },
-                      "top": 0,
-                      "width": 3,
-                    },
-                    Object {
-                      "shadowOpacity": undefined,
-                    },
-                  ]
+                    "shadowOpacity": 0.3,
+                    "shadowRadius": 5,
+                    "top": 0,
+                    "width": 3,
+                  }
                 }
               />
               <View
+                progress={1}
                 style={
                   Array [
                     Object {
@@ -550,57 +491,44 @@ Array [
       <View
         pointerEvents="none"
         style={
-          Array [
-            Object {
-              "bottom": 0,
-              "left": 0,
-              "position": "absolute",
-              "right": 0,
-              "top": 0,
-            },
-            Object {
-              "opacity": undefined,
-            },
-          ]
+          Object {
+            "bottom": 0,
+            "left": 0,
+            "opacity": 1,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+          }
         }
       >
         <View
           style={
-            Array [
-              Object {
-                "flex": 1,
-                "shadowOffset": Object {
-                  "height": 0.5,
-                  "width": 0,
-                },
-                "shadowOpacity": 0.85,
-                "shadowRadius": 0,
+            Object {
+              "backgroundColor": "red",
+              "borderBottomColor": "#a7a7aa",
+              "flex": 1,
+              "opacity": 0.5,
+              "shadowColor": "#a7a7aa",
+              "shadowOffset": Object {
+                "height": 0.5,
+                "width": 0,
               },
-              Object {
-                "backgroundColor": "#fff",
-                "borderBottomColor": "#a7a7aa",
-                "shadowColor": "#a7a7aa",
-              },
-              Object {
-                "backgroundColor": "red",
-                "opacity": 0.5,
-              },
-            ]
+              "shadowOpacity": 0.85,
+              "shadowRadius": 0,
+            }
           }
         />
       </View>
       <View
         pointerEvents="box-none"
         style={
-          Array [
-            Object {
-              "height": 44,
-              "maxHeight": undefined,
-              "minHeight": undefined,
-              "opacity": 0.5,
-              "transform": undefined,
-            },
-          ]
+          Object {
+            "height": 44,
+            "maxHeight": undefined,
+            "minHeight": undefined,
+            "opacity": 0.5,
+            "transform": undefined,
+          }
         }
       >
         <View
@@ -625,31 +553,21 @@ Array [
           <View
             pointerEvents="box-none"
             style={
-              Array [
-                Object {
-                  "marginHorizontal": 18,
-                },
-                Object {
-                  "opacity": undefined,
-                },
-                undefined,
-              ]
+              Object {
+                "marginHorizontal": 18,
+                "opacity": 1,
+              }
             }
           >
             <Text
               numberOfLines={1}
               onLayout={[Function]}
               style={
-                Array [
-                  Object {
-                    "fontSize": 17,
-                    "fontWeight": "600",
-                  },
-                  Object {
-                    "color": "rgba(0, 0, 0, 0.9)",
-                  },
-                  undefined,
-                ]
+                Object {
+                  "color": "rgba(0, 0, 0, 0.9)",
+                  "fontSize": 17,
+                  "fontWeight": "600",
+                }
               }
             >
               Welcome anonymous

@@ -13,9 +13,6 @@ import {
   NavigationStackScreenProps,
   StackCardStyleInterpolator,
 } from 'react-navigation-stack';
-import Animated from 'react-native-reanimated';
-
-const { interpolate } = Animated;
 
 const gestureResponseDistance = {
   vertical: Dimensions.get('window').height,
@@ -25,7 +22,7 @@ const forVerticalInvertedIOS: StackCardStyleInterpolator = ({
   current: { progress },
   layouts: { screen },
 }) => {
-  const translateY = interpolate(progress, {
+  const translateY = progress.interpolate({
     inputRange: [0, 1],
     outputRange: [-screen.height, 0],
   });

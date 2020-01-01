@@ -4,7 +4,6 @@ import {
   createStackNavigator,
   NavigationStackScreenComponent,
 } from 'react-navigation-stack';
-import Animated from 'react-native-reanimated';
 
 const ListScreen: NavigationStackScreenComponent = function(props) {
   return (
@@ -75,7 +74,7 @@ export default createStackNavigator(
       cardStyle: { backgroundColor: 'transparent' },
       gestureEnabled: false,
       cardStyleInterpolator: ({ current: { progress } }) => {
-        const opacity = Animated.interpolate(progress, {
+        const opacity = progress.interpolate({
           inputRange: [0, 0.5, 0.9, 1],
           outputRange: [0, 0.25, 0.7, 1],
         });

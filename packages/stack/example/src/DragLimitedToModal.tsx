@@ -1,11 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
-import Animated from 'react-native-reanimated';
 import { NavigationStackScreenComponent } from 'react-navigation-stack';
 
 const HEIGHT = Dimensions.get('screen').height;
-
-const { interpolate } = Animated;
 
 const DragLimitedToModal: NavigationStackScreenComponent = () => (
   <View style={styles.modal}>
@@ -18,7 +15,7 @@ DragLimitedToModal.navigationOptions = {
   gestureDirection: 'vertical',
   gestureResponseDistance: { vertical: HEIGHT },
   cardStyleInterpolator: ({ current }) => {
-    const translateY = interpolate(current.progress, {
+    const translateY = current.progress.interpolate({
       inputRange: [0, 1],
       outputRange: [HEIGHT, 0],
     });

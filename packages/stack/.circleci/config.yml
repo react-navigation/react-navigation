@@ -22,7 +22,7 @@ jobs:
             - v1-dependencies-example-
       - run: |
           yarn install --frozen-lockfile --cwd example
-          yarn install --frozen-lockfile
+          yarn install --frozen-lockfile --ignore-scripts
           yarn sync
       - save_cache:
           key: v1-dependencies-{{ checksum "yarn.lock" }}

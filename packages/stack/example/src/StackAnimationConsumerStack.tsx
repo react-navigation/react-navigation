@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { Button, View } from 'react-native';
-import Animated from 'react-native-reanimated';
+import { Animated, Button, View } from 'react-native';
 import {
   createStackNavigator,
   NavigationStackScreenProps,
@@ -27,12 +26,12 @@ const ListScreen = (props: NavigationStackScreenProps) => (
 const AnotherScreen = () => (
   <StackCardAnimationContext.Consumer>
     {value => {
-      const fontSize = value
-        ? Animated.interpolate(value.current.progress, {
+      const scale = value
+        ? value.current.progress.interpolate({
             inputRange: [0, 1],
-            outputRange: [8, 32],
+            outputRange: [0.25, 1],
           })
-        : 32;
+        : 1;
 
       return (
         <View
@@ -44,7 +43,11 @@ const AnotherScreen = () => (
           }}
         >
           <Animated.Text
-            style={{ fontSize, opacity: value ? value.current.progress : 1 }}
+            style={{
+              fontSize: 32,
+              opacity: value ? value.current.progress : 1,
+              transform: [{ scale }],
+            }}
           >
             Animates on progress
           </Animated.Text>
@@ -69,7 +72,7 @@ const YetAnotherScreen = () => (
           style={{
             fontSize: 24,
             opacity: value
-              ? Animated.interpolate(value.swiping, {
+              ? value.swiping.interpolate({
                   inputRange: [0, 1],
                   outputRange: [1, 0],
                 })
@@ -86,7 +89,7 @@ const YetAnotherScreen = () => (
           style={{
             fontSize: 24,
             opacity: value
-              ? Animated.interpolate(value.closing, {
+              ? value.closing.interpolate({
                   inputRange: [0, 1],
                   outputRange: [1, 0],
                 })

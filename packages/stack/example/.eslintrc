@@ -8,7 +8,6 @@
           'expo-asset',
           'react-navigation-stack',
           'react-native-gesture-handler',
-          'react-native-reanimated',
           'react-native-vector-icons',
         ],
     },

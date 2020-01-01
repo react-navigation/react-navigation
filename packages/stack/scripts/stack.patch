@@ -1,7 +1,7 @@
 diff -ruN node_modules/@react-navigation/stack/src/index.tsx src/vendor/index.tsx
---- node_modules/@react-navigation/stack/src/index.tsx	2019-12-16 16:13:08.000000000 +0100
+--- node_modules/@react-navigation/stack/src/index.tsx	2020-01-01 17:08:32.000000000 +0100
 +++ src/vendor/index.tsx	1970-01-01 01:00:00.000000000 +0100
-@@ -1,55 +0,0 @@
+@@ -1,57 +0,0 @@
 -import * as CardStyleInterpolators from './TransitionConfigs/CardStyleInterpolators';
 -import * as HeaderStyleInterpolators from './TransitionConfigs/HeaderStyleInterpolators';
 -import * as TransitionSpecs from './TransitionConfigs/TransitionSpecs';
@@ -13,7 +13,9 @@ diff -ruN node_modules/@react-navigation/stack/src/index.tsx src/vendor/index.ts
 -export { default as createStackNavigator } from './navigators/createStackNavigator';
 -
 -export const Assets = [
+-  // eslint-disable-next-line import/no-commonjs
 -  require('./views/assets/back-icon.png'),
+-  // eslint-disable-next-line import/no-commonjs
 -  require('./views/assets/back-icon-mask.png'),
 -];
 -
@@ -58,7 +60,7 @@ diff -ruN node_modules/@react-navigation/stack/src/index.tsx src/vendor/index.ts
 -  StackHeaderStyleInterpolator,
 -} from './types';
 diff -ruN node_modules/@react-navigation/stack/src/navigators/createStackNavigator.tsx src/vendor/navigators/createStackNavigator.tsx
---- node_modules/@react-navigation/stack/src/navigators/createStackNavigator.tsx	2019-12-16 16:13:08.000000000 +0100
+--- node_modules/@react-navigation/stack/src/navigators/createStackNavigator.tsx	2020-01-01 17:08:32.000000000 +0100
 +++ src/vendor/navigators/createStackNavigator.tsx	1970-01-01 01:00:00.000000000 +0100
 @@ -1,77 +0,0 @@
 -import * as React from 'react';
@@ -139,10 +141,10 @@ diff -ruN node_modules/@react-navigation/stack/src/navigators/createStackNavigat
 -  typeof StackNavigator
 ->(StackNavigator);
 diff -ruN node_modules/@react-navigation/stack/src/types.tsx src/vendor/types.tsx
---- node_modules/@react-navigation/stack/src/types.tsx	2019-12-16 16:13:08.000000000 +0100
-+++ src/vendor/types.tsx	2019-12-16 16:13:14.000000000 +0100
-@@ -7,13 +7,28 @@
- import Animated from 'react-native-reanimated';
+--- node_modules/@react-navigation/stack/src/types.tsx	2020-01-01 17:08:32.000000000 +0100
++++ src/vendor/types.tsx	2020-01-01 17:26:26.000000000 +0100
+@@ -8,13 +8,28 @@
+ } from 'react-native';
  import { EdgeInsets } from 'react-native-safe-area-context';
  import {
 +  NavigationRoute,
@@ -176,7 +178,7 @@ diff -ruN node_modules/@react-navigation/stack/src/types.tsx src/vendor/types.ts
  
  export type StackNavigationEventMap = {
    /**
-@@ -26,42 +41,29 @@
+@@ -27,42 +42,29 @@
    transitionEnd: { closing: boolean };
  };
  
@@ -240,7 +242,7 @@ diff -ruN node_modules/@react-navigation/stack/src/types.tsx src/vendor/types.ts
  };
  
  export type Layout = { width: number; height: number };
-@@ -229,24 +231,27 @@
+@@ -232,24 +234,27 @@
    /**
     * Navigation prop for the header.
     */
@@ -275,7 +277,7 @@ diff -ruN node_modules/@react-navigation/stack/src/types.tsx src/vendor/types.ts
  export type StackNavigationOptions = StackHeaderOptions &
    Partial<TransitionPreset> & {
      /**
-@@ -319,6 +324,8 @@
+@@ -322,6 +327,8 @@
        bottom?: number;
        left?: number;
      };
@@ -285,8 +287,8 @@ diff -ruN node_modules/@react-navigation/stack/src/types.tsx src/vendor/types.ts
  
  export type StackNavigationConfig = {
 diff -ruN node_modules/@react-navigation/stack/src/views/Header/Header.tsx src/vendor/views/Header/Header.tsx
---- node_modules/@react-navigation/stack/src/views/Header/Header.tsx	2019-12-16 16:13:08.000000000 +0100
-+++ src/vendor/views/Header/Header.tsx	2019-12-16 16:13:14.000000000 +0100
+--- node_modules/@react-navigation/stack/src/views/Header/Header.tsx	2020-01-01 17:08:32.000000000 +0100
++++ src/vendor/views/Header/Header.tsx	2020-01-01 17:26:26.000000000 +0100
 @@ -1,5 +1,5 @@
  import * as React from 'react';
 -import { StackActions } from '@react-navigation/routers';
@@ -327,35 +329,33 @@ diff -ruN node_modules/@react-navigation/stack/src/views/Header/Header.tsx src/v
        }
        styleInterpolator={styleInterpolator}
 diff -ruN node_modules/@react-navigation/stack/src/views/Header/HeaderBackButton.tsx src/vendor/views/Header/HeaderBackButton.tsx
---- node_modules/@react-navigation/stack/src/views/Header/HeaderBackButton.tsx	2019-12-16 16:13:08.000000000 +0100
-+++ src/vendor/views/Header/HeaderBackButton.tsx	2019-12-16 16:13:14.000000000 +0100
-@@ -8,10 +8,10 @@
+--- node_modules/@react-navigation/stack/src/views/Header/HeaderBackButton.tsx	2020-01-01 17:08:32.000000000 +0100
++++ src/vendor/views/Header/HeaderBackButton.tsx	2020-01-01 17:26:57.000000000 +0100
+@@ -8,9 +8,9 @@
+   StyleSheet,
    LayoutChangeEvent,
  } from 'react-native';
- import Animated from 'react-native-reanimated';
 -import { useTheme } from '@react-navigation/native';
  import MaskedView from '../MaskedView';
  import TouchableItem from '../TouchableItem';
- import { StackHeaderLeftButtonProps } from '../../types';
 +import useTheme from '../../../utils/useTheme';
+ import { StackHeaderLeftButtonProps } from '../../types';
  
  type Props = StackHeaderLeftButtonProps;
- 
 diff -ruN node_modules/@react-navigation/stack/src/views/Header/HeaderBackground.tsx src/vendor/views/Header/HeaderBackground.tsx
---- node_modules/@react-navigation/stack/src/views/Header/HeaderBackground.tsx	2019-12-16 16:13:08.000000000 +0100
-+++ src/vendor/views/Header/HeaderBackground.tsx	2019-12-16 16:13:14.000000000 +0100
-@@ -1,7 +1,7 @@
+--- node_modules/@react-navigation/stack/src/views/Header/HeaderBackground.tsx	2020-01-01 17:08:32.000000000 +0100
++++ src/vendor/views/Header/HeaderBackground.tsx	2020-01-01 17:27:08.000000000 +0100
+@@ -1,6 +1,6 @@
  import * as React from 'react';
- import { StyleSheet, Platform, ViewProps } from 'react-native';
- import Animated from 'react-native-reanimated';
+ import { Animated, StyleSheet, Platform, ViewProps } from 'react-native';
 -import { useTheme } from '@react-navigation/native';
 +import useTheme from '../../../utils/useTheme';
  
  export default function HeaderBackground({ style, ...rest }: ViewProps) {
    const { colors } = useTheme();
 diff -ruN node_modules/@react-navigation/stack/src/views/Header/HeaderContainer.tsx src/vendor/views/Header/HeaderContainer.tsx
---- node_modules/@react-navigation/stack/src/views/Header/HeaderContainer.tsx	2019-12-16 16:13:08.000000000 +0100
-+++ src/vendor/views/Header/HeaderContainer.tsx	2019-12-16 16:13:14.000000000 +0100
+--- node_modules/@react-navigation/stack/src/views/Header/HeaderContainer.tsx	2020-01-01 17:08:32.000000000 +0100
++++ src/vendor/views/Header/HeaderContainer.tsx	2020-01-01 17:26:26.000000000 +0100
 @@ -1,16 +1,13 @@
  import * as React from 'react';
  import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
@@ -388,11 +388,11 @@ diff -ruN node_modules/@react-navigation/stack/src/views/Header/HeaderContainer.
          };
  
 diff -ruN node_modules/@react-navigation/stack/src/views/Header/HeaderSegment.tsx src/vendor/views/Header/HeaderSegment.tsx
---- node_modules/@react-navigation/stack/src/views/Header/HeaderSegment.tsx	2019-12-16 16:13:08.000000000 +0100
-+++ src/vendor/views/Header/HeaderSegment.tsx	2019-12-16 16:13:14.000000000 +0100
+--- node_modules/@react-navigation/stack/src/views/Header/HeaderSegment.tsx	2020-01-01 17:08:32.000000000 +0100
++++ src/vendor/views/Header/HeaderSegment.tsx	2020-01-01 17:26:26.000000000 +0100
 @@ -8,7 +8,7 @@
+   ViewStyle,
  } from 'react-native';
- import Animated from 'react-native-reanimated';
  import { EdgeInsets } from 'react-native-safe-area-context';
 -import { Route } from '@react-navigation/native';
 +import { NavigationRoute } from 'react-navigation';
@@ -409,24 +409,22 @@ diff -ruN node_modules/@react-navigation/stack/src/views/Header/HeaderSegment.ts
  };
  
 diff -ruN node_modules/@react-navigation/stack/src/views/Header/HeaderTitle.tsx src/vendor/views/Header/HeaderTitle.tsx
---- node_modules/@react-navigation/stack/src/views/Header/HeaderTitle.tsx	2019-12-16 16:13:08.000000000 +0100
-+++ src/vendor/views/Header/HeaderTitle.tsx	2019-12-16 16:13:14.000000000 +0100
-@@ -1,7 +1,7 @@
+--- node_modules/@react-navigation/stack/src/views/Header/HeaderTitle.tsx	2020-01-01 17:08:32.000000000 +0100
++++ src/vendor/views/Header/HeaderTitle.tsx	2020-01-01 17:27:39.000000000 +0100
+@@ -1,6 +1,6 @@
  import * as React from 'react';
- import { StyleSheet, Platform, TextProps } from 'react-native';
- import Animated from 'react-native-reanimated';
+ import { Animated, StyleSheet, Platform, TextProps } from 'react-native';
 -import { useTheme } from '@react-navigation/native';
 +import useTheme from '../../../utils/useTheme';
  
  type Props = TextProps & {
    tintColor?: string;
 diff -ruN node_modules/@react-navigation/stack/src/views/Stack/CardContainer.tsx src/vendor/views/Stack/CardContainer.tsx
---- node_modules/@react-navigation/stack/src/views/Stack/CardContainer.tsx	2019-12-16 16:13:08.000000000 +0100
-+++ src/vendor/views/Stack/CardContainer.tsx	2019-12-16 16:13:14.000000000 +0100
-@@ -1,11 +1,17 @@
+--- node_modules/@react-navigation/stack/src/views/Stack/CardContainer.tsx	2020-01-01 17:08:32.000000000 +0100
++++ src/vendor/views/Stack/CardContainer.tsx	2020-01-01 17:28:53.000000000 +0100
+@@ -1,10 +1,16 @@
  import * as React from 'react';
- import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
- import Animated from 'react-native-reanimated';
+ import { Animated, View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 -import { StackNavigationState } from '@react-navigation/routers';
 -import { Route, useTheme } from '@react-navigation/native';
 +import { NavigationState as StackNavigationState } from 'react-navigation';
@@ -445,40 +443,44 @@ diff -ruN node_modules/@react-navigation/stack/src/views/Stack/CardContainer.tsx
  type Props = TransitionPreset & {
    index: number;
 diff -ruN node_modules/@react-navigation/stack/src/views/Stack/CardStack.tsx src/vendor/views/Stack/CardStack.tsx
---- node_modules/@react-navigation/stack/src/views/Stack/CardStack.tsx	2019-12-16 16:13:08.000000000 +0100
-+++ src/vendor/views/Stack/CardStack.tsx	2019-12-16 16:14:31.000000000 +0100
+--- node_modules/@react-navigation/stack/src/views/Stack/CardStack.tsx	2020-01-01 17:08:32.000000000 +0100
++++ src/vendor/views/Stack/CardStack.tsx	2020-01-01 17:28:15.000000000 +0100
 @@ -11,8 +11,7 @@
  import { EdgeInsets } from 'react-native-safe-area-context';
  // eslint-disable-next-line import/no-unresolved
- import * as Screens from 'react-native-screens'; // Import with * as to prevent getters being called
+ import { ScreenContainer, Screen, screensEnabled } from 'react-native-screens'; // Import with * as to prevent getters being called
 -import { Route } from '@react-navigation/native';
 -import { StackNavigationState } from '@react-navigation/routers';
 +import { NavigationState as StackNavigationState } from 'react-navigation';
  
  import { getDefaultHeaderHeight } from '../Header/HeaderSegment';
  import { Props as HeaderContainerProps } from '../Header/HeaderContainer';
-@@ -24,6 +23,7 @@
- import { forNoAnimation as forNoAnimationHeader } from '../../TransitionConfigs/HeaderStyleInterpolators';
+@@ -25,6 +24,7 @@
  import { forNoAnimation as forNoAnimationCard } from '../../TransitionConfigs/CardStyleInterpolators';
+ import getDistanceForDirection from '../../utils/getDistanceForDirection';
  import {
 +  Route,
    Layout,
    StackHeaderMode,
-   Scene,
+   StackCardMode,
 diff -ruN node_modules/@react-navigation/stack/src/views/Stack/StackView.tsx src/vendor/views/Stack/StackView.tsx
---- node_modules/@react-navigation/stack/src/views/Stack/StackView.tsx	2019-12-16 16:13:08.000000000 +0100
-+++ src/vendor/views/Stack/StackView.tsx	2019-12-16 16:13:14.000000000 +0100
-@@ -1,8 +1,7 @@
+--- node_modules/@react-navigation/stack/src/views/Stack/StackView.tsx	2020-01-01 17:08:32.000000000 +0100
++++ src/vendor/views/Stack/StackView.tsx	2020-01-01 17:31:34.000000000 +0100
+@@ -1,8 +1,11 @@
  import * as React from 'react';
  import { Platform } from 'react-native';
  import { SafeAreaConsumer, EdgeInsets } from 'react-native-safe-area-context';
 -import { Route } from '@react-navigation/native';
 -import { StackActions, StackNavigationState } from '@react-navigation/routers';
-+import { StackActions, NavigationState as StackNavigationState, SceneView } from 'react-navigation';
++import {
++  StackActions,
++  NavigationState as StackNavigationState,
++  SceneView,
++} from 'react-navigation';
  
  import CardStack from './CardStack';
  import KeyboardManager from '../KeyboardManager';
-@@ -11,6 +10,7 @@
+@@ -11,6 +14,7 @@
  } from '../Header/HeaderContainer';
  import SafeAreaProviderCompat from '../SafeAreaProviderCompat';
  import {
@@ -486,7 +488,7 @@ diff -ruN node_modules/@react-navigation/stack/src/views/Stack/StackView.tsx src
    StackNavigationHelpers,
    StackNavigationConfig,
    StackDescriptorMap,
-@@ -20,6 +20,7 @@
+@@ -20,6 +24,7 @@
    state: StackNavigationState;
    navigation: StackNavigationHelpers;
    descriptors: StackDescriptorMap;
@@ -494,7 +496,7 @@ diff -ruN node_modules/@react-navigation/stack/src/views/Stack/StackView.tsx src
  };
  
  type State = {
-@@ -259,26 +260,42 @@
+@@ -259,14 +264,31 @@
        return null;
      }
  
@@ -515,51 +517,44 @@ diff -ruN node_modules/@react-navigation/stack/src/views/Stack/StackView.tsx src
      return <HeaderContainer {...props} />;
    };
  
--  private handleGoBack = ({ route }: { route: Route<string> }) => {
--    const { state, navigation } = this.props;
-+  private handleTransitionComplete = ({
-+    route,
-+  }: {
-+    route: Route<string>;
-+  }) => {
++  private handleTransitionComplete = ({ route }: { route: Route<string> }) => {
 +    // TODO: remove when the new event system lands
 +    this.props.navigation.dispatch(
 +      StackActions.completeTransition({ toChildKey: route.key })
 +    );
 +  };
- 
-+  private handleGoBack = ({ route }: { route: Route<string> }) => {
-     // This event will trigger when a gesture ends
-     // We need to perform the transition before removing the route completely
--    navigation.dispatch({
--      ...StackActions.pop(),
--      source: route.key,
--      target: state.key,
--    });
-+    // @ts-ignore
-+    this.props.navigation.dispatch(StackActions.pop({ key: route.key }));
-   };
- 
++
    private handleOpenRoute = ({ route }: { route: Route<string> }) => {
 +    this.handleTransitionComplete({ route });
      this.setState(state => ({
        routes: state.replacingRouteKeys.length
          ? state.routes.filter(r => !state.replacingRouteKeys.includes(r.key))
-@@ -290,6 +307,13 @@
-   };
+@@ -285,15 +307,19 @@
+       // This will happen in when the route was closed from the card component
+       // e.g. When the close animation triggered from a gesture ends
+       // For the cleanup, the card needs to call this function again from its componentDidUpdate
+-      navigation.dispatch({
+-        ...StackActions.pop(),
+-        source: route.key,
+-        target: state.key,
+-      });
++      // @ts-ignore
++      navigation.dispatch(StackActions.pop({ key: route.key }));
+     } else {
+       // Otherwise, the animation was triggered due to a route removal
+       // In this case, we need to clean up any state tracking the route and pop it immediately
  
-   private handleCloseRoute = ({ route }: { route: Route<string> }) => {
-+    const index = this.state.routes.findIndex(r => r.key === route.key);
-+    // While closing route we need to point to the previous one assuming that
-+    // this previous one in routes array
-+    this.handleTransitionComplete({
-+      route: this.state.routes[Math.max(index - 1, 0)],
-+    });
++      // While closing route we need to point to the previous one assuming that
++      // this previous one in routes array
++      const index = this.state.routes.findIndex(r => r.key === route.key);
++      this.handleTransitionComplete({
++        route: this.state.routes[Math.max(index - 1, 0)],
++      });
 +
-     // This event will trigger when the animation for closing the route ends
-     // In this case, we need to clean up any state tracking the route and pop it immediately
- 
-@@ -304,22 +328,26 @@
+       // @ts-ignore
+       this.setState(state => ({
+         routes: state.routes.filter(r => r.key !== route.key),
+@@ -310,22 +336,26 @@
    private handleTransitionStart = (
      { route }: { route: Route<string> },
      closing: boolean
@@ -576,7 +571,7 @@ diff -ruN node_modules/@react-navigation/stack/src/views/Stack/StackView.tsx src
 +    descriptor &&
 +      descriptor.options.onTransitionStart &&
 +      descriptor.options.onTransitionStart({ closing });
-+  }
++  };
  
    private handleTransitionEnd = (
      { route }: { route: Route<string> },
@@ -594,7 +589,7 @@ diff -ruN node_modules/@react-navigation/stack/src/views/Stack/StackView.tsx src
 +    descriptor &&
 +      descriptor.options.onTransitionStart &&
 +      descriptor.options.onTransitionStart({ closing });
-+  }
++  };
  
    render() {
      const {

@@ -1352,10 +1352,10 @@
     query-string "^6.4.2"
     react-is "^16.8.6"
 
-"@react-navigation/core@^5.0.0-alpha.28":
-  version "5.0.0-alpha.28"
-  resolved "https://registry.yarnpkg.com/@react-navigation/core/-/core-5.0.0-alpha.28.tgz#284d07114e6dd93a2b0bc06d2a23e72f27ea3bf2"
-  integrity sha512-GkRGb2F3lxj+F2B/N1Fih1KFFX0B5fnMlsHvuY14uU/7aEOdS0pUeOMMLBzrpQx3FhJDMGm9mIh68j28NEU2eg==
+"@react-navigation/core@^5.0.0-alpha.30":
+  version "5.0.0-alpha.30"
+  resolved "https://registry.yarnpkg.com/@react-navigation/core/-/core-5.0.0-alpha.30.tgz#cde10907b051148e714f6eb92811a9151791e0c7"
+  integrity sha512-3FnTvyYqNl7uobdyvJhQ15JXhVcT4oKzJqS9em7miXUZQe0s+xIFhUhmNbptNrbOgCc8Ya3B2UMK+gsbe4OX+g==
   dependencies:
     escape-string-regexp "^2.0.0"
     query-string "^6.9.0"
@@ -1371,20 +1371,20 @@
     react-native-safe-area-view "^0.14.1"
     react-native-screens "^1.0.0 || ^1.0.0-alpha"
 
-"@react-navigation/routers@^5.0.0-alpha.17":
-  version "5.0.0-alpha.17"
-  resolved "https://registry.yarnpkg.com/@react-navigation/routers/-/routers-5.0.0-alpha.17.tgz#821bd3e5dbd289fe0d8edea6a12c80b6378d1673"
-  integrity sha512-ERfl+Al1QOiI+iM6m055nSpga1PHb3aW3QqUNNWu3x56hWjsb+NidoYFjUHdGfiFBTBgPHp1jjxcfLrxfIhSgg==
+"@react-navigation/routers@^5.0.0-alpha.19":
+  version "5.0.0-alpha.19"
+  resolved "https://registry.yarnpkg.com/@react-navigation/routers/-/routers-5.0.0-alpha.19.tgz#2038fd99c0e40e73e528aa54fbc23b1e166e9fbf"
+  integrity sha512-lUaXF97TRS738CssjBthnX95qriFi2zJUldGyZ6WD/isKX55/SKdRotsRH4Q4AIsFTrWrAv3MpU5d+naeLD9KQ==
   dependencies:
-    "@react-navigation/core" "^5.0.0-alpha.28"
+    "@react-navigation/core" "^5.0.0-alpha.30"
     shortid "^2.2.15"
 
-"@react-navigation/stack@^5.0.0-alpha.45":
-  version "5.0.0-alpha.45"
-  resolved "https://registry.yarnpkg.com/@react-navigation/stack/-/stack-5.0.0-alpha.45.tgz#62b33fd38f5ed96be6c957b69e4c57c49a741071"
-  integrity sha512-FSun8t5Ohl14iy/FZHYNmnThcynk9dVyY5ZKYiQYKILrEWAn8sQiu1zTD2kf9cNd71PkSka3ur3uqLiCsqKIAQ==
+"@react-navigation/stack@^5.0.0-alpha.48":
+  version "5.0.0-alpha.48"
+  resolved "https://registry.yarnpkg.com/@react-navigation/stack/-/stack-5.0.0-alpha.48.tgz#7e421f7aa7957d87f3143389f1e223294aac0f40"
+  integrity sha512-sHaccTWYVZdIfa+Y8W/AGDnY+f11YLkizlq0cOHdA3I58vm15NAdIS5T7dizn7HB8FU1+5e13tuB1XPgxDeW5g==
   dependencies:
-    "@react-navigation/routers" "^5.0.0-alpha.17"
+    "@react-navigation/routers" "^5.0.0-alpha.19"
     color "^3.1.2"
 
 "@release-it/conventional-changelog@^1.1.0":
@@ -7542,11 +7542,6 @@ react-native-gesture-handler@^1.5.2:
     hoist-non-react-statics "^2.3.1"
     invariant "^2.2.4"
     prop-types "^15.7.2"
-
-react-native-reanimated@^1.4.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-1.4.0.tgz#7f1acbf9be08492d834f512700570978052be2f9"
-  integrity sha512-tO7nSNNP+iRLVbkcSS5GXyDBb7tSI02+XuRL3/S39EAr35rnvUy2JfeLUQG+fWSObJjnMVhasUDEUwlENk8IXw==
 
 react-native-safe-area-context@^0.6.1:
   version "0.6.1"
