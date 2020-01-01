@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.30](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/core@5.0.0-alpha.29...@react-navigation/core@5.0.0-alpha.30) (2020-01-01)
+
+
+### Bug Fixes
+
+* cleanup transaction even if action wasn't handled ([f462d67](https://github.com/react-navigation/navigation-ex/commit/f462d672708cabfb0477c3a48505bd194ea626fd))
+* show error if an action was not handled ([0252bdc](https://github.com/react-navigation/navigation-ex/commit/0252bdc2222ebe7410a0ed593bf03b2bdf5dc7ca))
+
+
+
+
+
 # [5.0.0-alpha.29](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/core@5.0.0-alpha.28...@react-navigation/core@5.0.0-alpha.29) (2019-12-19)
 
 **Note:** Version bump only for package @react-navigation/core
