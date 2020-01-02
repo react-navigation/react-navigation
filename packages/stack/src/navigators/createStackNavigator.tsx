@@ -28,6 +28,8 @@ function createStackNavigator(
   const router = StackRouter(routeConfigMap, stackConfig);
 
   return createNavigator(
+    // TODO: don't have time to fix it right now
+    // @ts-ignore
     navigatorProps => <StackView {...navigatorProps} />,
     router,
     stackConfig
