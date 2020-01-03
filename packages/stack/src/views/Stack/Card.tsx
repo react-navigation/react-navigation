@@ -16,7 +16,6 @@ import {
 } from 'react-native-gesture-handler';
 import { EdgeInsets } from 'react-native-safe-area-context';
 import Color from 'color';
-import PointerEventsView from './PointerEventsView';
 import StackGestureContext from '../../utils/StackGestureContext';
 import StackCardAnimationContext from '../../utils/StackCardAnimationContext';
 import getDistanceForDirection from '../../utils/getDistanceForDirection';
@@ -31,7 +30,6 @@ import {
 
 type Props = ViewProps & {
   index: number;
-  active: boolean;
   closing?: boolean;
   next?: Animated.AnimatedInterpolation;
   current: Animated.AnimatedInterpolation;
@@ -158,6 +156,7 @@ export default class Card extends React.Component<Props> {
     const animation =
       spec.animation === 'spring' ? Animated.spring : Animated.timing;
 
+    this.setPointerEventsEnabled(!closing);
     this.handleStartInteraction();
 
     onTransitionStart?.({ closing: Boolean(closing) });
@@ -195,6 +194,15 @@ export default class Card extends React.Component<Props> {
 
     return getDistanceForDirection(layout, gestureDirection);
   };
+
+  private setPointerEventsEnabled = (enabled: boolean) => {
+    const pointerEvents = enabled ? 'box-none' : 'none';
+
+    this.content.current &&
+      this.content.current.setNativeProps({ pointerEvents });
+  };
+
+  private content = React.createRef<View>();
 
   private handleStartInteraction = () => {
     if (this.interactionHandle === undefined) {
@@ -344,7 +352,6 @@ export default class Card extends React.Component<Props> {
 
   render() {
     const {
-      active,
       styleInterpolator,
       index,
       current,
@@ -446,15 +453,11 @@ export default class Card extends React.Component<Props> {
                     pointerEvents="none"
                   />
                 ) : null}
-                <PointerEventsView
-                  active={active}
-                  progress={current}
-                  style={[styles.content, contentStyle]}
-                >
+                <View ref={this.content} style={[styles.content, contentStyle]}>
                   <StackCardAnimationContext.Provider value={animationContext}>
                     {children}
                   </StackCardAnimationContext.Provider>
-                </PointerEventsView>
+                </View>
               </Animated.View>
             </PanGestureHandler>
           </Animated.View>

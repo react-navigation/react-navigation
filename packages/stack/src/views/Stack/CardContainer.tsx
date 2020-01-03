@@ -125,7 +125,6 @@ export default function CardContainer({
   return (
     <Card
       index={index}
-      active={active}
       gestureDirection={gestureDirection}
       layout={layout}
       insets={insets}
