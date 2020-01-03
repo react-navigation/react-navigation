@@ -159,6 +159,7 @@ export default class Card extends React.Component<Props> {
       spec.animation === 'spring' ? Animated.spring : Animated.timing;
 
     this.handleStartInteraction();
+
     onTransitionStart?.({ closing: Boolean(closing) });
     animation(gesture, {
       isInteraction: false,
@@ -168,6 +169,7 @@ export default class Card extends React.Component<Props> {
       toValue,
     }).start(({ finished }) => {
       this.handleEndInteraction();
+
       if (finished) {
         if (closing) {
           onClose();
