@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.50](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.49...@react-navigation/stack@5.0.0-alpha.50) (2020-01-03)
+
+
+### Bug Fixes
+
+* keep screens for replace when animation is enabled ([7f963a7](https://github.com/react-navigation/navigation-ex/commit/7f963a74bb4d4b04134e917fe47e38e4d982afed))
+* use gesture direction when using next screen's animation ([572beae](https://github.com/react-navigation/navigation-ex/commit/572beae41b326f3ef80bc2b790badf123e0071bc))
+
+
+
+
+
 # [5.0.0-alpha.49](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.48...@react-navigation/stack@5.0.0-alpha.49) (2020-01-03)
 
 
