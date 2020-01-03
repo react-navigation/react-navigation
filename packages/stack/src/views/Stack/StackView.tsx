@@ -90,6 +90,12 @@ class StackView extends React.Component<Props, State> {
       | undefined;
     const nextFocusedRoute = routes[routes.length - 1];
 
+    const isAnimationEnabled = (key: string) => {
+      const descriptor = props.descriptors[key] || state.descriptors[key];
+
+      return descriptor ? descriptor.options.animationEnabled !== false : true;
+    };
+
     if (
       previousFocusedRoute &&
       previousFocusedRoute.key !== nextFocusedRoute.key
@@ -97,21 +103,12 @@ class StackView extends React.Component<Props, State> {
       // We only need to animate routes if the focused route changed
       // Animating previous routes won't be visible coz the focused route is on top of everything
 
-      const isAnimationEnabled = (route: Route<string>) => {
-        const descriptor =
-          props.descriptors[route.key] || state.descriptors[route.key];
-
-        return descriptor
-          ? descriptor.options.animationEnabled !== false
-          : true;
-      };
-
       if (!previousRoutes.find(r => r.key === nextFocusedRoute.key)) {
         // A new route has come to the focus, we treat this as a push
         // A replace can also trigger this, the animation should look like push
 
         if (
-          isAnimationEnabled(nextFocusedRoute) &&
+          isAnimationEnabled(nextFocusedRoute.key) &&
           !openingRouteKeys.includes(nextFocusedRoute.key)
         ) {
           // In this case, we need to animate pushing the focused route
@@ -151,7 +148,7 @@ class StackView extends React.Component<Props, State> {
         // The previously focused route was removed, we treat this as a pop
 
         if (
-          isAnimationEnabled(previousFocusedRoute) &&
+          isAnimationEnabled(previousFocusedRoute.key) &&
           !closingRouteKeys.includes(previousFocusedRoute.key)
         ) {
           // Sometimes a route can be closed before the opening animation finishes
@@ -174,14 +171,15 @@ class StackView extends React.Component<Props, State> {
         // We don't know how to animate this
       }
     } else if (replacingRouteKeys.length || closingRouteKeys.length) {
-      // Keep the routes we are closing or replacing
+      // Keep the routes we are closing or replacing if animation is enabled for them
       routes = routes.slice();
       routes.splice(
         routes.length - 1,
         0,
-        ...state.routes.filter(
-          ({ key }) =>
-            replacingRouteKeys.includes(key) || closingRouteKeys.includes(key)
+        ...state.routes.filter(({ key }) =>
+          isAnimationEnabled(key)
+            ? replacingRouteKeys.includes(key) || closingRouteKeys.includes(key)
+            : false
         )
       );
     }
