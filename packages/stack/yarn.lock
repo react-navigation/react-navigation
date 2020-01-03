@@ -1379,13 +1379,14 @@
     "@react-navigation/core" "^5.0.0-alpha.30"
     shortid "^2.2.15"
 
-"@react-navigation/stack@^5.0.0-alpha.48":
-  version "5.0.0-alpha.48"
-  resolved "https://registry.yarnpkg.com/@react-navigation/stack/-/stack-5.0.0-alpha.48.tgz#7e421f7aa7957d87f3143389f1e223294aac0f40"
-  integrity sha512-sHaccTWYVZdIfa+Y8W/AGDnY+f11YLkizlq0cOHdA3I58vm15NAdIS5T7dizn7HB8FU1+5e13tuB1XPgxDeW5g==
+"@react-navigation/stack@^5.0.0-alpha.49":
+  version "5.0.0-alpha.49"
+  resolved "https://registry.yarnpkg.com/@react-navigation/stack/-/stack-5.0.0-alpha.49.tgz#251512287919c33bba87f0b8825f2be6783415d3"
+  integrity sha512-iUJg+aptIVYcqj44j7jtMoji0AIZwXDzr72YMsvHuEgWKXEhagG/tC9mTd4zESBREffHXieHewf1WTWVK2JDvA==
   dependencies:
     "@react-navigation/routers" "^5.0.0-alpha.19"
     color "^3.1.2"
+    react-native-iphone-x-helper "^1.2.1"
 
 "@release-it/conventional-changelog@^1.1.0":
   version "1.1.0"
@@ -7542,6 +7543,11 @@ react-native-gesture-handler@^1.5.2:
     hoist-non-react-statics "^2.3.1"
     invariant "^2.2.4"
     prop-types "^15.7.2"
+
+react-native-iphone-x-helper@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/react-native-iphone-x-helper/-/react-native-iphone-x-helper-1.2.1.tgz#645e2ffbbb49e80844bb4cbbe34a126fda1e6772"
+  integrity sha512-/VbpIEp8tSNNHIvstuA3Swx610whci1Zpc9mqNkqn14DkMbw+ORviln2u0XyHG1kPvvwTNGZY6QpeFwxYaSdbQ==
 
 react-native-safe-area-context@^0.6.1:
   version "0.6.1"
