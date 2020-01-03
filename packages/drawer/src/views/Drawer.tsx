@@ -9,6 +9,7 @@ import {
   StatusBar,
   StyleProp,
   View,
+  InteractionManager,
 } from 'react-native';
 import {
   PanGestureHandler,
@@ -161,9 +162,24 @@ export default class DrawerView extends React.PureComponent<Props> {
 
   componentWillUnmount() {
     this.toggleStatusBar(false);
+    this.handleEndInteraction();
   }
 
+  private handleEndInteraction = () => {
+    if (this.interactionHandle !== undefined) {
+      InteractionManager.clearInteractionHandle(this.interactionHandle);
+      this.interactionHandle = undefined;
+    }
+  };
+
+  private handleStartInteraction = () => {
+    if (this.interactionHandle === undefined) {
+      this.interactionHandle = InteractionManager.createInteractionHandle();
+    }
+  };
+
   private clock = new Clock();
+  private interactionHandle: number | undefined;
 
   private isDrawerTypeFront = new Value<Binary>(
     this.props.drawerType === 'front' ? TRUE : FALSE
@@ -277,6 +293,7 @@ export default class DrawerView extends React.PureComponent<Props> {
         set(state.velocity, this.velocityX),
         set(this.isOpen, isOpen),
         startClock(this.clock),
+        call([], this.handleStartInteraction),
         set(this.manuallyTriggerSpring, FALSE),
       ]),
       spring(this.clock, state, { ...SPRING_CONFIG, toValue }),
@@ -290,6 +307,7 @@ export default class DrawerView extends React.PureComponent<Props> {
         stopClock(this.clock),
         call([this.isOpen], ([value]: readonly Binary[]) => {
           const open = Boolean(value);
+          this.handleEndInteraction();
 
           if (open !== this.props.open) {
             // Sync drawer's state after animation finished
@@ -357,6 +375,13 @@ export default class DrawerView extends React.PureComponent<Props> {
           this.toggleStatusBar(this.currentOpenValue);
         }
       })
+    ),
+    onChange(
+      this.gestureState,
+      cond(
+        eq(this.gestureState, State.ACTIVE),
+        call([], this.handleStartInteraction)
+      )
     ),
     cond(
       eq(this.gestureState, State.ACTIVE),
