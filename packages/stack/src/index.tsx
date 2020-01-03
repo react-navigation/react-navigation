@@ -9,7 +9,9 @@ import * as TransitionPresets from './vendor/TransitionConfigs/TransitionPresets
 export { default as createStackNavigator } from './navigators/createStackNavigator';
 
 export const Assets = [
+  // eslint-disable-next-line import/no-commonjs
   require('./vendor/views/assets/back-icon.png'),
+  // eslint-disable-next-line import/no-commonjs
   require('./vendor/views/assets/back-icon-mask.png'),
 ];
 

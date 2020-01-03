@@ -126,7 +126,6 @@ Array [
                 }
               />
               <View
-                progress={1}
                 style={
                   Array [
                     Object {
@@ -424,7 +423,6 @@ Array [
                 }
               />
               <View
-                progress={1}
                 style={
                   Array [
                     Object {

@@ -1,3 +1,4 @@
+import { StyleProp, ViewStyle } from 'react-native';
 import { StackNavigationOptions, StackNavigationConfig } from '../vendor/types';
 
 type Validation = {
@@ -17,7 +18,10 @@ const validations: Record<string, Validation> = {
       c.transparentCard
         ? {
             ...o,
-            cardStyle: [{ backgroundColor: 'transparent' }, o.cardStyle],
+            cardStyle: [
+              { backgroundColor: 'transparent' },
+              o.cardStyle,
+            ] as StyleProp<ViewStyle>,
           }
         : o,
   },
