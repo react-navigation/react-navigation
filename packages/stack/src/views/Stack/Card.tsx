@@ -158,13 +158,16 @@ export default class Card extends React.Component<Props> {
     const animation =
       spec.animation === 'spring' ? Animated.spring : Animated.timing;
 
+    this.handleStartInteraction();
     onTransitionStart?.({ closing: Boolean(closing) });
     animation(gesture, {
+      isInteraction: false,
       ...spec.config,
       velocity,
       useNativeDriver: true,
       toValue,
     }).start(({ finished }) => {
+      this.handleEndInteraction();
       if (finished) {
         if (closing) {
           onClose();
@@ -229,7 +232,6 @@ export default class Card extends React.Component<Props> {
         break;
       case GestureState.END: {
         this.isSwiping.setValue(FALSE);
-        this.handleEndInteraction();
 
         let distance;
         let translation;
