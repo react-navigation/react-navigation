@@ -89,6 +89,10 @@ export default function CardContainer({
   state,
   transitionSpec,
 }: Props) {
+  React.useEffect(() => {
+    onPageChangeConfirm?.();
+  }, [active, onPageChangeConfirm]);
+
   const handleOpen = () => {
     onTransitionEnd?.({ route: scene.route }, false);
     onOpenRoute({ route: scene.route });
@@ -100,7 +104,7 @@ export default function CardContainer({
   };
 
   const handleTransitionStart = ({ closing }: { closing: boolean }) => {
-    if (closing) {
+    if (active && closing) {
       onPageChangeConfirm?.();
     } else {
       onPageChangeCancel?.();
