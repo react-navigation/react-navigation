@@ -162,11 +162,11 @@ export default class Card extends React.Component<Props> {
 
     onTransitionStart?.({ closing: Boolean(closing) });
     animation(gesture, {
-      isInteraction: false,
       ...spec.config,
       velocity,
-      useNativeDriver: true,
       toValue,
+      useNativeDriver: true,
+      isInteraction: false,
     }).start(({ finished }) => {
       this.handleEndInteraction();
 
