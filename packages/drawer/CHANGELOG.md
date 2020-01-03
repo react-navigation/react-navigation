@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.33](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/drawer@5.0.0-alpha.32...@react-navigation/drawer@5.0.0-alpha.33) (2020-01-03)
+
+
+### Bug Fixes
+
+* provide initial values for safe area to prevent blank screen ([#238](https://github.com/react-navigation/navigation-ex/issues/238)) ([77b7570](https://github.com/react-navigation/navigation-ex/commit/77b757091c0451e20bca01138629669c7da544a8))
+
+
+### Features
+
+* add interaction handle to drawer ([#239](https://github.com/react-navigation/navigation-ex/issues/239)) ([fa4411a](https://github.com/react-navigation/navigation-ex/commit/fa4411a14dc4aae568794e4b884088e3276a2876))
+
+
+
+
+
 # [5.0.0-alpha.32](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/drawer@5.0.0-alpha.31...@react-navigation/drawer@5.0.0-alpha.32) (2020-01-03)
 
 

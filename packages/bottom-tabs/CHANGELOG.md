@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.31](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/bottom-tabs@5.0.0-alpha.30...@react-navigation/bottom-tabs@5.0.0-alpha.31) (2020-01-03)
+
+
+### Bug Fixes
+
+* provide initial values for safe area to prevent blank screen ([#238](https://github.com/react-navigation/navigation-ex/issues/238)) ([77b7570](https://github.com/react-navigation/navigation-ex/commit/77b757091c0451e20bca01138629669c7da544a8))
+
+
+
+
+
 # [5.0.0-alpha.30](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/bottom-tabs@5.0.0-alpha.29...@react-navigation/bottom-tabs@5.0.0-alpha.30) (2020-01-03)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs
