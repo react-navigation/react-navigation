@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.49](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.48...@react-navigation/stack@5.0.0-alpha.49) (2020-01-03)
+
+
+### Bug Fixes
+
+* dismiss keyboard on page change ([2c31d17](https://github.com/react-navigation/navigation-ex/commit/2c31d1705c4e5827b19b9cc7f3e5b05207c3238a))
+* interaction manager in stack ([#237](https://github.com/react-navigation/navigation-ex/issues/237)) ([6b9b999](https://github.com/react-navigation/navigation-ex/commit/6b9b999c5b60a67ed683b84484928700d4260585))
+* provide initial values for safe area to prevent blank screen ([#238](https://github.com/react-navigation/navigation-ex/issues/238)) ([77b7570](https://github.com/react-navigation/navigation-ex/commit/77b757091c0451e20bca01138629669c7da544a8))
+
+
+
+
+
 # [5.0.0-alpha.48](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.47...@react-navigation/stack@5.0.0-alpha.48) (2020-01-01)
 
 
