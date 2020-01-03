@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.32](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/drawer@5.0.0-alpha.31...@react-navigation/drawer@5.0.0-alpha.32) (2020-01-03)
+
+
+### Bug Fixes
+
+* pass backBehavior to the router in drawer. fixes [#230](https://github.com/react-navigation/navigation-ex/issues/230) ([3cd1aed](https://github.com/react-navigation/navigation-ex/commit/3cd1aedcf490a4c7962b2d36873d714637f3b9b0))
+
+
+
+
+
 # [5.0.0-alpha.31](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/drawer@5.0.0-alpha.30...@react-navigation/drawer@5.0.0-alpha.31) (2020-01-01)
 
 **Note:** Version bump only for package @react-navigation/drawer
