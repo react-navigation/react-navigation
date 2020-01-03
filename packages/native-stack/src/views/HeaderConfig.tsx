@@ -57,7 +57,7 @@ export default function HeaderConfig(props: Props) {
           ? headerTintColor
           : colors.text
       }
-      backTitle={headerBackTitleVisible ? headerBackTitle : ''}
+      backTitle={headerBackTitleVisible ? headerBackTitle : ' '}
       backTitleFontFamily={headerBackTitleStyle.fontFamily}
       backTitleFontSize={headerBackTitleStyle.fontSize}
       color={headerTintColor !== undefined ? headerTintColor : colors.primary}
