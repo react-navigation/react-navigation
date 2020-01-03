@@ -444,6 +444,7 @@ export default class CardStack extends React.Component<Props, State> {
               : ({} as StackNavigationOptions);
 
             let transitionConfig = {
+              gestureDirection,
               transitionSpec,
               cardStyleInterpolator,
               headerStyleInterpolator,
@@ -461,6 +462,7 @@ export default class CardStack extends React.Component<Props, State> {
               if (nextScene) {
                 const {
                   animationEnabled,
+                  gestureDirection = defaultTransitionPreset.gestureDirection,
                   transitionSpec = defaultTransitionPreset.transitionSpec,
                   cardStyleInterpolator = animationEnabled === false
                     ? forNoAnimationCard
@@ -471,6 +473,7 @@ export default class CardStack extends React.Component<Props, State> {
                   : ({} as StackNavigationOptions);
 
                 transitionConfig = {
+                  gestureDirection,
                   transitionSpec,
                   cardStyleInterpolator,
                   headerStyleInterpolator,
@@ -527,7 +530,6 @@ export default class CardStack extends React.Component<Props, State> {
                   onTransitionEnd={onTransitionEnd}
                   gestureEnabled={index !== 0 && getGesturesEnabled({ route })}
                   gestureVelocityImpact={gestureVelocityImpact}
-                  gestureDirection={gestureDirection}
                   {...transitionConfig}
                 />
               </MaybeScreen>
