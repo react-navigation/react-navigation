@@ -3,6 +3,17 @@ import {
   SafeAreaProvider,
   SafeAreaConsumer,
 } from 'react-native-safe-area-context';
+import {
+  getStatusBarHeight,
+  getBottomSpace,
+} from 'react-native-iphone-x-helper';
+
+const initialSafeAreaInsets = {
+  top: getStatusBarHeight(true),
+  bottom: getBottomSpace(),
+  right: 0,
+  left: 0,
+};
 
 type Props = {
   children: React.ReactNode;
@@ -19,7 +30,11 @@ export default function SafeAreaProviderCompat({ children }: Props) {
           return children;
         }
 
-        return <SafeAreaProvider>{children}</SafeAreaProvider>;
+        return (
+          <SafeAreaProvider initialSafeAreaInsets={initialSafeAreaInsets}>
+            {children}
+          </SafeAreaProvider>
+        );
       }}
     </SafeAreaConsumer>
   );
