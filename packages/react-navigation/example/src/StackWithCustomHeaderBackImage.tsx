@@ -52,7 +52,7 @@ interface MyHomeScreenProps {
 
 class MyHomeScreen extends React.Component<MyHomeScreenProps> {
   static navigationOptions = {
-    headerBackTitle: null,
+    headerBackTitleVisible: false,
     title: 'Welcome',
   };
 
@@ -65,13 +65,14 @@ class MyHomeScreen extends React.Component<MyHomeScreenProps> {
 interface MyPhotosScreenProps {
   navigation: NavigationScreenProp<NavigationState>;
 }
+
 class MyPhotosScreen extends React.Component<MyPhotosScreenProps> {
   static navigationOptions = ({
     navigation,
   }: {
     navigation: NavigationScreenProp<NavigationState>;
   }) => ({
-    headerBackTitle: null,
+    headerBackTitleVisible: false,
     title: `${navigation.state.params!.name}'s photos`,
   });
 
@@ -94,6 +95,7 @@ class MyPhotosScreen extends React.Component<MyPhotosScreenProps> {
 interface MyProfileScreenProps {
   navigation: NavigationScreenProp<NavigationState>;
 }
+
 class MyProfileScreen extends React.Component<MyProfileScreenProps> {
   static navigationOptions = {
     title: 'Profile',

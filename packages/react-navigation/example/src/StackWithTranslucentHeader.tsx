@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { BlurView } from 'expo-blur';
-import { isIphoneX } from 'react-native-iphone-x-helper';
+import { getStatusBarHeight } from 'react-native-iphone-x-helper';
 import {
   NavigationEventPayload,
   NavigationEventSubscription,
@@ -10,10 +10,10 @@ import {
 } from 'react-navigation';
 import {
   createStackNavigator,
-  Header,
-  HeaderStyleInterpolator,
+  HeaderStyleInterpolators,
   NavigationStackScreenProps,
   NavigationStackProp,
+  TransitionPresets,
 } from 'react-navigation-stack';
 import { Button } from './commonComponents/ButtonWithMargin';
 import { HeaderButtons } from './commonComponents/HeaderButtons';
@@ -56,15 +56,8 @@ class MyNavScreen extends React.Component<MyNavScreenProps> {
   // at some point.
 
   getHeaderInset(): any {
-    const NOTCH_HEIGHT = isIphoneX() ? 25 : 0;
-
-    // $FlowIgnore: we will remove the HEIGHT static soon enough
-    const BASE_HEADER_HEIGHT = Header.HEIGHT;
-
     const HEADER_HEIGHT =
-      Platform.OS === 'ios'
-        ? BASE_HEADER_HEIGHT + NOTCH_HEIGHT
-        : BASE_HEADER_HEIGHT + 20;
+      getStatusBarHeight() + Platform.select({ ios: 44, default: 56 });
 
     return Platform.select({
       android: {
@@ -193,10 +186,12 @@ MyProfileScreen.navigationOptions = (props: {
   const { state, setParams } = navigation;
   const { params } = state;
   return {
-    headerBackImage: params!.headerBackImage,
+    headerBackImage: params!.headerBackImage
+      ? () => params!.headerBackImage
+      : undefined,
     // Render a button on the right side of the header.
     // When pressed switches the screen to edit mode.
-    headerRight: (
+    headerRight: () => (
       <HeaderButtons>
         <HeaderButtons.Item
           color={theme === 'light' ? '#000' : '#fff'}
@@ -227,7 +222,8 @@ const StackWithTranslucentHeader = createStackNavigator(
   },
   {
     defaultNavigationOptions: ({ theme }: NavigationStackScreenProps) => ({
-      headerBackground:
+      ...TransitionPresets.SlideFromRightIOS,
+      headerBackground: () =>
         Platform.OS === 'ios' ? (
           <BlurView
             style={{ flex: 1 }}
@@ -241,13 +237,7 @@ const StackWithTranslucentHeader = createStackNavigator(
         borderBottomWidth: StyleSheet.hairlineWidth,
       },
       headerTransparent: true,
-    }),
-    headerTransitionPreset: 'uikit',
-    // You can leave this out if you don't want the card shadow to
-    // be visible through the header
-    transitionConfig: () => ({
-      headerBackgroundInterpolator:
-        HeaderStyleInterpolator.forBackgroundWithTranslation,
+      headerStyleInterpolator: HeaderStyleInterpolators.forUIKit,
     }),
   }
 );

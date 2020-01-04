@@ -3,6 +3,8 @@ import { SafeAreaView, Themed } from 'react-navigation';
 import {
   createStackNavigator,
   NavigationStackScreenProps,
+  TransitionPresets,
+  HeaderStyleInterpolators,
 } from 'react-navigation-stack';
 
 import { Button } from './commonComponents/ButtonWithMargin';
@@ -78,7 +80,7 @@ class ScreenWithLongTitle extends React.Component<NavigationStackScreenProps> {
 
 class ScreenWithNoHeader extends React.Component<NavigationStackScreenProps> {
   static navigationOptions = {
-    header: null,
+    headerShown: false,
     title: 'No Header',
   };
 
@@ -105,7 +107,10 @@ const StackWithHeaderPreset = createStackNavigator(
     ScreenWithNoHeader,
   },
   {
-    headerTransitionPreset: 'uikit',
+    defaultNavigationOptions: {
+      ...TransitionPresets.SlideFromRightIOS,
+      headerStyleInterpolator: HeaderStyleInterpolators.forUIKit,
+    },
   }
 );
 

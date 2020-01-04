@@ -51,6 +51,7 @@ class MyNavScreen extends React.Component<Props> {
           <Button onPress={() => navigation.goBack(null)} title="Go back" />
 
           {TEXT.split('\n').map((p, n) => (
+            // eslint-disable-next-line react/no-array-index-key
             <Text key={n} style={{ marginVertical: 10, marginHorizontal: 8 }}>
               {p}
             </Text>

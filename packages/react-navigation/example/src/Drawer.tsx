@@ -11,7 +11,10 @@ import {
   createStackNavigator,
   NavigationStackScreenProps,
 } from 'react-navigation-stack';
-import { createDrawerNavigator } from 'react-navigation-drawer';
+import {
+  createDrawerNavigator,
+  NavigationDrawerScreenProps,
+} from 'react-navigation-drawer';
 import { Button } from './commonComponents/ButtonWithMargin';
 import SampleText from './SampleText';
 
@@ -36,11 +39,10 @@ const MyNavScreen = ({
   </ScrollView>
 );
 
-const InboxScreen = ({
-  navigation,
-}: {
-  navigation: NavigationScreenProp<NavigationState>;
-}) => <MyNavScreen banner="Inbox Screen" navigation={navigation} />;
+const InboxScreen = ({ navigation }: NavigationDrawerScreenProps) => (
+  <MyNavScreen banner="Inbox Screen" navigation={navigation} />
+);
+
 InboxScreen.navigationOptions = {
   headerTitle: 'Inbox',
 };
@@ -52,6 +54,7 @@ const EmailScreen = ({ navigation }: NavigationStackScreenProps) => (
 const DraftsScreen = ({ navigation }: NavigationStackScreenProps) => (
   <MyNavScreen banner="Drafts Screen" navigation={navigation} />
 );
+
 DraftsScreen.navigationOptions = {
   headerTitle: 'Drafts',
 };
