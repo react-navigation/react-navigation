@@ -39,6 +39,7 @@ const MyNavScreen = ({
       <Button onPress={() => navigation.goBack(null)} title="Go back" />
       {TEXT.split('\n').map((p, n) => (
         <Themed.Text
+          // eslint-disable-next-line react/no-array-index-key
           key={n}
           style={{ marginVertical: 10, marginHorizontal: 8 }}
         >

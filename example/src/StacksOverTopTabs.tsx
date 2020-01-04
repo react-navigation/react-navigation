@@ -147,7 +147,7 @@ const StackNavigator = createStackNavigator(
     Root: {
       screen: TabNavigator,
       navigationOptions: {
-        header: null,
+        headerShown: false,
       },
     },
     NotifSettings: {

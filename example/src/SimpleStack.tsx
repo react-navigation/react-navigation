@@ -207,7 +207,7 @@ MyProfileScreen.navigationOptions = (props: NavigationStackScreenProps) => {
     headerBackImage: params!.headerBackImage,
     // Render a button on the right side of the header.
     // When pressed switches the screen to edit mode.
-    headerRight: (
+    headerRight: () => (
       <HeaderButtons>
         <HeaderButtons.Item
           title={params!.mode === 'edit' ? 'Done' : 'Edit'}
@@ -221,23 +221,18 @@ MyProfileScreen.navigationOptions = (props: NavigationStackScreenProps) => {
   };
 };
 
-const SimpleStack = createStackNavigator(
-  {
-    Home: {
-      screen: MyHomeScreen,
-    },
-    Photos: {
-      path: 'photos/:name',
-      screen: MyPhotosScreen,
-    },
-    Profile: {
-      path: 'people/:name',
-      screen: MyProfileScreen,
-    },
+const SimpleStack = createStackNavigator({
+  Home: {
+    screen: MyHomeScreen,
   },
-  {
-    // headerLayoutPreset: 'center',
-  }
-);
+  Photos: {
+    path: 'photos/:name',
+    screen: MyPhotosScreen,
+  },
+  Profile: {
+    path: 'people/:name',
+    screen: MyProfileScreen,
+  },
+});
 
 export default SimpleStack;

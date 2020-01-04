@@ -92,7 +92,7 @@ const ProfileNavigator = createStackNavigator(
   },
   {
     defaultNavigationOptions: {
-      headerLeft: null,
+      headerLeft: () => null,
     },
     mode: 'modal',
   }
@@ -107,8 +107,9 @@ MyHeaderTestScreen.navigationOptions = ({
 }: NavigationStackScreenProps) => {
   const headerVisible =
     navigation.state.params && navigation.state.params.headerVisible;
+
   return {
-    header: headerVisible ? undefined : null,
+    headerShown: headerVisible,
     title: 'Now you see me',
   };
 };
@@ -122,7 +123,7 @@ const ModalStack = createStackNavigator(
   },
   {
     defaultNavigationOptions: {
-      header: null,
+      headerShown: false,
     },
     mode: 'modal',
   }
