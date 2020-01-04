@@ -582,9 +582,6 @@ declare module 'react-navigation' {
       params?: NavigationParams,
       action?: NavigationAction
     ): boolean;
-    openDrawer: () => any;
-    closeDrawer: () => any;
-    toggleDrawer: () => any;
     getParam<T extends keyof P>(
       param: T,
       fallback: NonNullable<P[T]>
