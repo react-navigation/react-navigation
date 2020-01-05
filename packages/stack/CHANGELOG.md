@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.53](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.52...@react-navigation/stack@5.0.0-alpha.53) (2020-01-05)
+
+
+### Bug Fixes
+
+* compare with correct height when floating header height updates ([a9e584c](https://github.com/react-navigation/navigation-ex/commit/a9e584c3b765ae1e166a3a82b3fa0a40e8e2172a))
+
+
+### Features
+
+* expose header height in context ([133b59c](https://github.com/react-navigation/navigation-ex/commit/133b59cd175ddc899dff3b56bf3a0514c0c91ae6))
+
+
+
+
+
 # [5.0.0-alpha.52](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.51...@react-navigation/stack@5.0.0-alpha.52) (2020-01-05)
 
 
