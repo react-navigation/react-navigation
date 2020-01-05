@@ -49,6 +49,7 @@ jobs:
             at: ~/project
         - run: |
             yarn lerna run prepare
+            node scripts/check-types-path.js
 
 workflows:
   version: 2
