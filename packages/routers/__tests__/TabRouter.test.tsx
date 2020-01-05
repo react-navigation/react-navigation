@@ -250,6 +250,89 @@ it('gets state on route names change', () => {
   });
 });
 
+it('preserves focused route on route names change', () => {
+  const router = TabRouter({});
+
+  expect(
+    router.getStateForRouteNamesChange(
+      {
+        index: 1,
+        key: 'tab-test',
+        routeKeyHistory: [],
+        routeNames: ['bar', 'baz', 'qux'],
+        routes: [
+          { key: 'bar-test', name: 'bar' },
+          { key: 'baz-test', name: 'baz', params: { answer: 42 } },
+          { key: 'qux-test', name: 'qux', params: { name: 'Jane' } },
+        ],
+        stale: false,
+        type: 'tab',
+      },
+      {
+        routeNames: ['qux', 'foo', 'fiz', 'baz'],
+        routeParamList: {
+          qux: { name: 'John' },
+          fiz: { fruit: 'apple' },
+        },
+      }
+    )
+  ).toEqual({
+    index: 3,
+    key: 'tab-test',
+    routeKeyHistory: [],
+    routeNames: ['qux', 'foo', 'fiz', 'baz'],
+    routes: [
+      { key: 'qux-test', name: 'qux', params: { name: 'Jane' } },
+      { key: 'foo-test', name: 'foo' },
+      { key: 'fiz-test', name: 'fiz', params: { fruit: 'apple' } },
+      { key: 'baz-test', name: 'baz', params: { answer: 42 } },
+    ],
+    stale: false,
+    type: 'tab',
+  });
+});
+
+it('falls back to first route if route is removed on route names change', () => {
+  const router = TabRouter({});
+
+  expect(
+    router.getStateForRouteNamesChange(
+      {
+        index: 1,
+        key: 'tab-test',
+        routeKeyHistory: [],
+        routeNames: ['bar', 'baz', 'qux'],
+        routes: [
+          { key: 'bar-test', name: 'bar' },
+          { key: 'baz-test', name: 'baz', params: { answer: 42 } },
+          { key: 'qux-test', name: 'qux', params: { name: 'Jane' } },
+        ],
+        stale: false,
+        type: 'tab',
+      },
+      {
+        routeNames: ['qux', 'foo', 'fiz'],
+        routeParamList: {
+          qux: { name: 'John' },
+          fiz: { fruit: 'apple' },
+        },
+      }
+    )
+  ).toEqual({
+    index: 0,
+    key: 'tab-test',
+    routeKeyHistory: [],
+    routeNames: ['qux', 'foo', 'fiz'],
+    routes: [
+      { key: 'qux-test', name: 'qux', params: { name: 'Jane' } },
+      { key: 'foo-test', name: 'foo' },
+      { key: 'fiz-test', name: 'fiz', params: { fruit: 'apple' } },
+    ],
+    stale: false,
+    type: 'tab',
+  });
+});
+
 it('handles navigate action', () => {
   const router = TabRouter({});
   const options = {

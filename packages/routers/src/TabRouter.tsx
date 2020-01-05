@@ -147,11 +147,16 @@ export default function TabRouter({
           }
       );
 
+      const index = Math.max(
+        0,
+        routeNames.indexOf(state.routes[state.index].name)
+      );
+
       return {
         ...state,
         routeNames,
         routes,
-        index: Math.min(state.index, routes.length - 1),
+        index,
       };
     },
 
