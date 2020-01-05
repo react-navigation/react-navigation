@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { TabView, SceneRendererProps } from 'react-native-tab-view';
-import { Route, useTheme } from '@react-navigation/native';
+import { useTheme } from '@react-navigation/native';
 import { TabNavigationState, TabActions } from '@react-navigation/routers';
 
 import MaterialTopTabBar from './MaterialTopTabBar';
@@ -19,6 +19,7 @@ type Props = MaterialTopTabNavigationConfig & {
 };
 
 export default function MaterialTopTabView({
+  pager,
   lazyPlaceholder,
   tabBar = (props: MaterialTopTabBarProps) => <MaterialTopTabBar {...props} />,
   tabBarOptions,
@@ -29,14 +30,6 @@ export default function MaterialTopTabView({
   ...rest
 }: Props) {
   const { colors } = useTheme();
-
-  const renderLazyPlaceholder = (props: { route: Route<string> }) => {
-    if (lazyPlaceholder != null) {
-      return lazyPlaceholder(props);
-    }
-
-    return null;
-  };
 
   const renderTabBar = (props: SceneRendererProps) => {
     const route = state.routes[state.index];
@@ -69,7 +62,8 @@ export default function MaterialTopTabView({
       renderScene={({ route }) => descriptors[route.key].render()}
       navigationState={state}
       renderTabBar={renderTabBar}
-      renderLazyPlaceholder={renderLazyPlaceholder}
+      renderPager={pager}
+      renderLazyPlaceholder={lazyPlaceholder}
       onSwipeStart={() => navigation.emit({ type: 'swipeStart' })}
       onSwipeEnd={() => navigation.emit({ type: 'swipeEnd' })}
       sceneContainerStyle={[
