@@ -55,7 +55,7 @@ type Props = TransitionPreset & {
   }) => void;
 };
 
-export default function CardContainer({
+function CardContainer({
   active,
   cardOverlayEnabled,
   cardShadowEnabled,
@@ -183,6 +183,8 @@ export default function CardContainer({
     </Card>
   );
 }
+
+export default React.memo(CardContainer);
 
 const styles = StyleSheet.create({
   container: {
