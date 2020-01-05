@@ -16,8 +16,8 @@ import {
 } from 'react-native-gesture-handler';
 import { EdgeInsets } from 'react-native-safe-area-context';
 import Color from 'color';
-import StackGestureContext from '../../utils/StackGestureContext';
-import StackCardAnimationContext from '../../utils/StackCardAnimationContext';
+import StackGestureRefContext from '../../utils/GestureHandlerRefContext';
+import CardAnimationContext from '../../utils/CardAnimationContext';
 import getDistanceForDirection from '../../utils/getDistanceForDirection';
 import getInvertedMultiplier from '../../utils/getInvertedMultiplier';
 import memoize from '../../utils/memoize';
@@ -421,48 +421,48 @@ export default class Card extends React.Component<Props> {
       : false;
 
     return (
-      <StackGestureContext.Provider value={this.gestureRef}>
-        <View pointerEvents="box-none" {...rest}>
-          {overlayEnabled && overlayStyle ? (
-            <Animated.View
-              pointerEvents="none"
-              style={[styles.overlay, overlayStyle]}
-            />
-          ) : null}
+      <View pointerEvents="box-none" {...rest}>
+        {overlayEnabled && overlayStyle ? (
           <Animated.View
-            style={[styles.container, containerStyle, customContainerStyle]}
-            pointerEvents="box-none"
+            pointerEvents="none"
+            style={[styles.overlay, overlayStyle]}
+          />
+        ) : null}
+        <Animated.View
+          style={[styles.container, containerStyle, customContainerStyle]}
+          pointerEvents="box-none"
+        >
+          <PanGestureHandler
+            ref={this.gestureRef}
+            enabled={layout.width !== 0 && gestureEnabled}
+            onGestureEvent={handleGestureEvent}
+            onHandlerStateChange={this.handleGestureStateChange}
+            {...this.gestureActivationCriteria()}
           >
-            <PanGestureHandler
-              ref={this.gestureRef}
-              enabled={layout.width !== 0 && gestureEnabled}
-              onGestureEvent={handleGestureEvent}
-              onHandlerStateChange={this.handleGestureStateChange}
-              {...this.gestureActivationCriteria()}
-            >
-              <Animated.View style={[styles.container, cardStyle]}>
-                {shadowEnabled && shadowStyle && !isTransparent ? (
-                  <Animated.View
-                    style={[
-                      styles.shadow,
-                      gestureDirection === 'horizontal'
-                        ? styles.shadowHorizontal
-                        : styles.shadowVertical,
-                      shadowStyle,
-                    ]}
-                    pointerEvents="none"
-                  />
-                ) : null}
-                <View ref={this.content} style={[styles.content, contentStyle]}>
-                  <StackCardAnimationContext.Provider value={animationContext}>
+            <Animated.View style={[styles.container, cardStyle]}>
+              {shadowEnabled && shadowStyle && !isTransparent ? (
+                <Animated.View
+                  style={[
+                    styles.shadow,
+                    gestureDirection === 'horizontal'
+                      ? styles.shadowHorizontal
+                      : styles.shadowVertical,
+                    shadowStyle,
+                  ]}
+                  pointerEvents="none"
+                />
+              ) : null}
+              <View ref={this.content} style={[styles.content, contentStyle]}>
+                <StackGestureRefContext.Provider value={this.gestureRef}>
+                  <CardAnimationContext.Provider value={animationContext}>
                     {children}
-                  </StackCardAnimationContext.Provider>
-                </View>
-              </Animated.View>
-            </PanGestureHandler>
-          </Animated.View>
-        </View>
-      </StackGestureContext.Provider>
+                  </CardAnimationContext.Provider>
+                </StackGestureRefContext.Provider>
+              </View>
+            </Animated.View>
+          </PanGestureHandler>
+        </Animated.View>
+      </View>
     );
   }
 }

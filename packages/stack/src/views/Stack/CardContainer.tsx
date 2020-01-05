@@ -4,6 +4,7 @@ import { StackNavigationState } from '@react-navigation/routers';
 import { Route, useTheme } from '@react-navigation/native';
 import { Props as HeaderContainerProps } from '../Header/HeaderContainer';
 import Card from './Card';
+import FloatingHeaderHeightContext from '../../utils/FloatingHeaderHeightContext';
 import { Scene, Layout, StackHeaderMode, TransitionPreset } from '../../types';
 
 type Props = TransitionPreset & {
@@ -156,7 +157,11 @@ export default function CardContainer({
       style={StyleSheet.absoluteFill}
     >
       <View style={styles.container}>
-        <View style={styles.scene}>{renderScene({ route: scene.route })}</View>
+        <View style={styles.scene}>
+          <FloatingHeaderHeightContext.Provider value={floatingHeaderHeight}>
+            {renderScene({ route: scene.route })}
+          </FloatingHeaderHeightContext.Provider>
+        </View>
         {headerMode === 'screen'
           ? renderHeader({
               mode: 'screen',

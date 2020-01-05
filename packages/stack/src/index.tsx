@@ -36,8 +36,13 @@ export {
 /**
  * Utilities
  */
-export { default as StackGestureContext } from './utils/StackGestureContext';
-export { default as StackCardAnimationContext } from './utils/StackCardAnimationContext';
+export { default as CardAnimationContext } from './utils/CardAnimationContext';
+export { default as FloatingHeaderHeightContext } from './utils/FloatingHeaderHeightContext';
+export { default as GestureHandlerRefContext } from './utils/GestureHandlerRefContext';
+
+export { default as useCardAnimation } from './utils/useCardAnimation';
+export { default as useFloatingHeaderHeight } from './utils/useFloatingHeaderHeight';
+export { default as useGestureHandlerRef } from './utils/useGestureHandlerRef';
 
 /**
  * Types
