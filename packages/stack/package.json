@@ -50,7 +50,7 @@
     "@expo/vector-icons": "^10.0.6",
     "@react-native-community/bob": "^0.7.0",
     "@react-native-community/masked-view": "^0.1.5",
-    "@react-navigation/stack": "^5.0.0-alpha.50",
+    "@react-navigation/stack": "^5.0.0-alpha.52",
     "@release-it/conventional-changelog": "^1.1.0",
     "@types/color": "^3.0.1",
     "@types/jest": "^24.0.25",
@@ -82,7 +82,7 @@
     "react-native": "*",
     "react-native-gesture-handler": "^1.5.0",
     "react-native-safe-area-context": "^0.6.0",
-    "react-native-screens": "^1.0.0 || ^1.0.0-alpha.0 || ^2.0.0-alph.20",
+    "react-native-screens": "^1.0.0 || ^1.0.0-alpha.0 || ^2.0.0-alpha.20",
     "react-navigation": "^4.0.10"
   },
   "jest": {
