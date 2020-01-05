@@ -4,7 +4,7 @@ import { StackNavigationState } from '@react-navigation/routers';
 import { Route, useTheme } from '@react-navigation/native';
 import { Props as HeaderContainerProps } from '../Header/HeaderContainer';
 import Card from './Card';
-import FloatingHeaderHeightContext from '../../utils/FloatingHeaderHeightContext';
+import HeaderHeightContext from '../../utils/HeaderHeightContext';
 import { Scene, Layout, StackHeaderMode, TransitionPreset } from '../../types';
 
 type Props = TransitionPreset & {
@@ -48,7 +48,11 @@ type Props = TransitionPreset & {
   headerMode: StackHeaderMode;
   headerShown?: boolean;
   headerTransparent?: boolean;
-  floatingHeaderHeight: number;
+  headerHeight: number;
+  onHeaderHeightChange: (props: {
+    route: Route<string>;
+    height: number;
+  }) => void;
 };
 
 export default function CardContainer({
@@ -59,7 +63,6 @@ export default function CardContainer({
   cardStyleInterpolator,
   closing,
   gesture,
-  floatingHeaderHeight,
   focused,
   gestureDirection,
   gestureEnabled,
@@ -70,6 +73,8 @@ export default function CardContainer({
   headerShown,
   headerStyleInterpolator,
   headerTransparent,
+  headerHeight,
+  onHeaderHeightChange,
   index,
   layout,
   onCloseRoute,
@@ -150,7 +155,7 @@ export default function CardContainer({
       pointerEvents="box-none"
       containerStyle={
         headerMode === 'float' && !headerTransparent && headerShown !== false
-          ? { marginTop: floatingHeaderHeight }
+          ? { marginTop: headerHeight }
           : null
       }
       contentStyle={[{ backgroundColor: colors.background }, cardStyle]}
@@ -158,9 +163,9 @@ export default function CardContainer({
     >
       <View style={styles.container}>
         <View style={styles.scene}>
-          <FloatingHeaderHeightContext.Provider value={floatingHeaderHeight}>
+          <HeaderHeightContext.Provider value={headerHeight}>
             {renderScene({ route: scene.route })}
-          </FloatingHeaderHeightContext.Provider>
+          </HeaderHeightContext.Provider>
         </View>
         {headerMode === 'screen'
           ? renderHeader({
@@ -171,6 +176,7 @@ export default function CardContainer({
               state,
               getPreviousRoute,
               styleInterpolator: headerStyleInterpolator,
+              onContentHeightChange: onHeaderHeightChange,
             })
           : null}
       </View>

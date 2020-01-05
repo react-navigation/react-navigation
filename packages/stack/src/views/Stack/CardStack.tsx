@@ -71,7 +71,7 @@ type State = {
   scenes: Scene<Route<string>>[];
   gestures: GestureValues;
   layout: Layout;
-  floatingHeaderHeights: Record<string, number>;
+  headerHeights: Record<string, number>;
 };
 
 const EPSILON = 1e-5;
@@ -112,7 +112,7 @@ const MaybeScreen = ({
 
 const FALLBACK_DESCRIPTOR = Object.freeze({ options: {} });
 
-const getFloatingHeaderHeights = (
+const getHeaderHeights = (
   routes: Route<string>[],
   insets: EdgeInsets,
   descriptors: StackDescriptorMap,
@@ -283,12 +283,12 @@ export default class CardStack extends React.Component<Props, State> {
       }),
       gestures,
       descriptors: props.descriptors,
-      floatingHeaderHeights: getFloatingHeaderHeights(
+      headerHeights: getHeaderHeights(
         props.routes,
         props.insets,
         state.descriptors,
         state.layout,
-        state.floatingHeaderHeights
+        state.headerHeights
       ),
     };
   }
@@ -304,7 +304,7 @@ export default class CardStack extends React.Component<Props, State> {
     // This is not a great heuristic here. We don't know synchronously
     // on mount what the header height is so we have just used the most
     // common cases here.
-    floatingHeaderHeights: {},
+    headerHeights: {},
   };
 
   private handleLayout = (e: LayoutChangeEvent) => {
@@ -319,7 +319,7 @@ export default class CardStack extends React.Component<Props, State> {
 
       return {
         layout,
-        floatingHeaderHeights: getFloatingHeaderHeights(
+        headerHeights: getHeaderHeights(
           props.routes,
           props.insets,
           state.descriptors,
@@ -330,23 +330,23 @@ export default class CardStack extends React.Component<Props, State> {
     });
   };
 
-  private handleFloatingHeaderLayout = ({
+  private handleHeaderLayout = ({
     route,
     height,
   }: {
     route: Route<string>;
     height: number;
   }) => {
-    this.setState(({ floatingHeaderHeights }) => {
-      const previousHeight = floatingHeaderHeights[route.key];
+    this.setState(({ headerHeights }) => {
+      const previousHeight = headerHeights[route.key];
 
       if (previousHeight === height) {
         return null;
       }
 
       return {
-        floatingHeaderHeights: {
-          ...floatingHeaderHeights,
+        headerHeights: {
+          ...headerHeights,
           [route.key]: height,
         },
       };
@@ -375,7 +375,7 @@ export default class CardStack extends React.Component<Props, State> {
       onPageChangeCancel,
     } = this.props;
 
-    const { scenes, layout, gestures, floatingHeaderHeights } = this.state;
+    const { scenes, layout, gestures, headerHeights } = this.state;
 
     const focusedRoute = state.routes[state.index];
     const focusedDescriptor = descriptors[focusedRoute.key];
@@ -521,7 +521,8 @@ export default class CardStack extends React.Component<Props, State> {
                   onPageChangeConfirm={onPageChangeConfirm}
                   onPageChangeCancel={onPageChangeCancel}
                   gestureResponseDistance={gestureResponseDistance}
-                  floatingHeaderHeight={floatingHeaderHeights[route.key]}
+                  headerHeight={headerHeights[route.key]}
+                  onHeaderHeightChange={this.handleHeaderLayout}
                   getPreviousRoute={getPreviousRoute}
                   headerMode={headerMode}
                   headerShown={headerShown}
@@ -548,7 +549,7 @@ export default class CardStack extends React.Component<Props, State> {
               scenes,
               state,
               getPreviousRoute,
-              onContentHeightChange: this.handleFloatingHeaderLayout,
+              onContentHeightChange: this.handleHeaderLayout,
               styleInterpolator:
                 focusedOptions.headerStyleInterpolator !== undefined
                   ? focusedOptions.headerStyleInterpolator
