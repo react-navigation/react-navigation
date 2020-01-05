@@ -273,6 +273,38 @@ export default class Card extends React.Component<Props> {
     }
   };
 
+  // Memoize this to avoid extra work on re-render
+  private getInterpolatedStyle = memoize(
+    (
+      styleInterpolator: StackCardStyleInterpolator,
+      index: number,
+      current: Animated.AnimatedInterpolation,
+      next: Animated.AnimatedInterpolation | undefined,
+      layout: Layout,
+      insetTop: number,
+      insetRight: number,
+      insetBottom: number,
+      insetLeft: number
+    ) =>
+      styleInterpolator({
+        index,
+        current: { progress: current },
+        next: next && { progress: next },
+        closing: this.isClosing,
+        swiping: this.isSwiping,
+        inverted: this.inverted,
+        layouts: {
+          screen: layout,
+        },
+        insets: {
+          top: insetTop,
+          right: insetRight,
+          bottom: insetBottom,
+          left: insetLeft,
+        },
+      })
+  );
+
   // Keep track of the animation context when deps changes.
   private getCardAnimationContext = memoize(
     (
@@ -369,18 +401,17 @@ export default class Card extends React.Component<Props> {
       ...rest
     } = this.props;
 
-    const interpolatedStyle = styleInterpolator({
+    const interpolatedStyle = this.getInterpolatedStyle(
+      styleInterpolator,
       index,
-      current: { progress: current },
-      next: next && { progress: next },
-      closing: this.isClosing,
-      swiping: this.isSwiping,
-      inverted: this.inverted,
-      layouts: {
-        screen: layout,
-      },
-      insets,
-    });
+      current,
+      next,
+      layout,
+      insets.top,
+      insets.right,
+      insets.bottom,
+      insets.left
+    );
 
     const animationContext = this.getCardAnimationContext(
       index,
