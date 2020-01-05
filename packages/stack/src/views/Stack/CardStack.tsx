@@ -338,9 +338,9 @@ export default class CardStack extends React.Component<Props, State> {
     height: number;
   }) => {
     this.setState(({ floatingHeaderHeights }) => {
-      const previousHeight = this.state.floatingHeaderHeights[route.key];
+      const previousHeight = floatingHeaderHeights[route.key];
 
-      if (previousHeight && previousHeight === height) {
+      if (previousHeight === height) {
         return null;
       }
 
