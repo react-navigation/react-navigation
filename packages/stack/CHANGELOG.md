@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.54](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.53...@react-navigation/stack@5.0.0-alpha.54) (2020-01-05)
+
+
+### Bug Fixes
+
+* expose the header height even if not floating ([12d9083](https://github.com/react-navigation/navigation-ex/commit/12d90833eb36e9e7f229384ec8a05823b0a564d1))
+* use memo for card container ([65ce20e](https://github.com/react-navigation/navigation-ex/commit/65ce20ecbc1e5f2dba9f1004cb29de03a6e5504a))
+
+
+
+
+
 # [5.0.0-alpha.53](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.52...@react-navigation/stack@5.0.0-alpha.53) (2020-01-05)
 
 
