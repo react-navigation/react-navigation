@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.27](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/material-top-tabs@5.0.0-alpha.26...@react-navigation/material-top-tabs@5.0.0-alpha.27) (2020-01-05)
+
+
+### Features
+
+* add support for pager component ([dcc5f99](https://github.com/react-navigation/navigation-ex/commit/dcc5f99ecd495ad1903c9e99884e0d4e9b3994f1))
+
+
+
+
+
 # [5.0.0-alpha.26](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/material-top-tabs@5.0.0-alpha.25...@react-navigation/material-top-tabs@5.0.0-alpha.26) (2020-01-01)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs

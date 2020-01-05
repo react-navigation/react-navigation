@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/compat",
   "description": "Compatibility layer to write navigator definitions in static configuration format",
-  "version": "5.0.0-alpha.20",
+  "version": "5.0.0-alpha.21",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -24,7 +24,7 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "@react-navigation/routers": "^5.0.0-alpha.19"
+    "@react-navigation/routers": "^5.0.0-alpha.20"
   },
   "devDependencies": {
     "@types/react": "^16.9.16",

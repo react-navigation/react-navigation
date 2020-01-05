@@ -10,7 +10,7 @@
     "android",
     "stack"
   ],
-  "version": "5.0.0-alpha.50",
+  "version": "5.0.0-alpha.51",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -33,7 +33,7 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "@react-navigation/routers": "^5.0.0-alpha.19",
+    "@react-navigation/routers": "^5.0.0-alpha.20",
     "color": "^3.1.2",
     "react-native-iphone-x-helper": "^1.2.1"
   },
