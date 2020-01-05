@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.52](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.51...@react-navigation/stack@5.0.0-alpha.52) (2020-01-05)
+
+
+### Features
+
+* add headerStatusBarHeight option to stack ([b201fd2](https://github.com/react-navigation/navigation-ex/commit/b201fd20716a2f03cb9373c72281f5d396a9356d))
+
+
+
+
+
 # [5.0.0-alpha.51](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.50...@react-navigation/stack@5.0.0-alpha.51) (2020-01-05)
 
 **Note:** Version bump only for package @react-navigation/stack
