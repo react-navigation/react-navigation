@@ -25,6 +25,9 @@ type Config = {
   initialLayout?: { width?: number; height?: number };
   lazy?: boolean;
   lazyPlaceholderComponent?: React.ComponentType<{ route: Route }>;
+  pagerComponent?: React.ComponentType<
+    Parameters<React.ComponentProps<typeof TabView>['renderPager']>[0]
+  >;
   tabBarComponent?: React.ComponentType<any>;
   tabBarOptions?: MaterialTabBarOptions;
   tabBarPosition?: 'top' | 'bottom';
@@ -42,17 +45,7 @@ type Props = NavigationViewProps &
   };
 
 class MaterialTabView extends React.PureComponent<Props> {
-  _renderLazyPlaceholder = (props: { route: Route }) => {
-    const { lazyPlaceholderComponent: LazyPlaceholder } = this.props;
-
-    if (LazyPlaceholder != null) {
-      return <LazyPlaceholder {...props} />;
-    }
-
-    return null;
-  };
-
-  _renderTabBar = (props: SceneRendererProps) => {
+  private renderTabBar = (props: SceneRendererProps) => {
     const { state } = this.props.navigation;
     const route = state.routes[state.index];
     const { descriptors } = this.props;
@@ -107,10 +100,11 @@ class MaterialTabView extends React.PureComponent<Props> {
       onTabPress,
       onTabLongPress,
       screenProps,
-      lazyPlaceholderComponent,
       tabBarComponent,
       tabBarOptions,
       /* eslint-enable @typescript-eslint/no-unused-vars */
+      lazyPlaceholderComponent,
+      pagerComponent,
       navigation,
       descriptors,
       ...rest
@@ -137,8 +131,17 @@ class MaterialTabView extends React.PureComponent<Props> {
         {...rest}
         navigationState={navigation.state}
         swipeEnabled={swipeEnabled}
-        renderTabBar={this._renderTabBar}
-        renderLazyPlaceholder={this._renderLazyPlaceholder}
+        renderTabBar={this.renderTabBar}
+        renderLazyPlaceholder={
+          lazyPlaceholderComponent !== undefined
+            ? props => React.createElement(lazyPlaceholderComponent, props)
+            : undefined
+        }
+        renderPager={
+          pagerComponent !== undefined
+            ? props => React.createElement(pagerComponent, props)
+            : undefined
+        }
       />
     );
   }
