@@ -53,7 +53,10 @@ const warnIfHeaderStylesDefined = (styles: Record<string, any>) => {
   });
 };
 
-export const getDefaultHeaderHeight = (layout: Layout, insets: EdgeInsets) => {
+export const getDefaultHeaderHeight = (
+  layout: Layout,
+  statusBarHeight: number
+) => {
   const isLandscape = layout.width > layout.height;
 
   let headerHeight;
@@ -71,7 +74,7 @@ export const getDefaultHeaderHeight = (layout: Layout, insets: EdgeInsets) => {
     headerHeight = 64;
   }
 
-  return headerHeight + insets.top;
+  return headerHeight + statusBarHeight;
 };
 
 export default class HeaderSegment extends React.Component<Props, State> {
@@ -163,6 +166,7 @@ export default class HeaderSegment extends React.Component<Props, State> {
       headerRightContainerStyle: rightContainerStyle,
       headerTitleContainerStyle: titleContainerStyle,
       headerStyle: customHeaderStyle,
+      headerStatusBarHeight = insets.top,
       styleInterpolator,
     } = this.props;
 
@@ -184,7 +188,7 @@ export default class HeaderSegment extends React.Component<Props, State> {
     );
 
     const {
-      height = getDefaultHeaderHeight(layout, insets),
+      height = getDefaultHeaderHeight(layout, headerStatusBarHeight),
       minHeight,
       maxHeight,
       backgroundColor,
@@ -311,7 +315,10 @@ export default class HeaderSegment extends React.Component<Props, State> {
           pointerEvents="box-none"
           style={[{ height, minHeight, maxHeight, opacity, transform }]}
         >
-          <View pointerEvents="none" style={{ height: insets.top }} />
+          <View
+            pointerEvents="none"
+            style={{ height: headerStatusBarHeight }}
+          />
           <View pointerEvents="box-none" style={styles.content}>
             {leftButton ? (
               <Animated.View

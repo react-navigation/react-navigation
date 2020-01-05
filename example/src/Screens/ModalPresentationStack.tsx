@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Button } from 'react-native-paper';
-import { useSafeArea } from 'react-native-safe-area-context';
 import { RouteProp, ParamListBase } from '@react-navigation/native';
 import {
   createStackNavigator,
@@ -25,11 +24,9 @@ const ArticleScreen = ({
   navigation: ModalStackNavigation;
   route: RouteProp<ModalStackParams, 'Article'>;
 }) => {
-  const insets = useSafeArea();
-
   return (
     <React.Fragment>
-      <View style={[styles.buttons, { marginTop: insets.top }]}>
+      <View style={styles.buttons}>
         <Button
           mode="contained"
           onPress={() => navigation.push('Album')}
@@ -51,11 +48,9 @@ const ArticleScreen = ({
 };
 
 const AlbumsScreen = ({ navigation }: { navigation: ModalStackNavigation }) => {
-  const insets = useSafeArea();
-
   return (
     <React.Fragment>
-      <View style={[styles.buttons, { marginTop: insets.top }]}>
+      <View style={styles.buttons}>
         <Button
           mode="contained"
           onPress={() => navigation.push('Article', { author: 'Babel fish' })}
@@ -91,12 +86,16 @@ export default function SimpleStackScreen({ navigation, options }: Props) {
   return (
     <ModalPresentationStack.Navigator
       mode="modal"
-      headerMode="none"
-      screenOptions={{
+      headerMode="screen"
+      screenOptions={({ route, navigation }) => ({
         ...TransitionPresets.ModalPresentationIOS,
         cardOverlayEnabled: true,
         gestureEnabled: true,
-      }}
+        headerStatusBarHeight:
+          navigation.dangerouslyGetState().routes.indexOf(route) > 0
+            ? 0
+            : undefined,
+      })}
       {...options}
     >
       <ModalPresentationStack.Screen
