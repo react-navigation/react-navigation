@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.51](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.50...@react-navigation/stack@5.0.0-alpha.51) (2020-01-05)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+
+
+
+
 # [5.0.0-alpha.50](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.49...@react-navigation/stack@5.0.0-alpha.50) (2020-01-03)
 
 

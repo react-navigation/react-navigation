@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.20](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/routers@5.0.0-alpha.19...@react-navigation/routers@5.0.0-alpha.20) (2020-01-05)
+
+
+### Bug Fixes
+
+* preserve focused route in tab on changing screens list ([adbeb29](https://github.com/react-navigation/navigation-ex/commit/adbeb292f522be8d7a58dd3f84e560a6d83d01a8))
+
+
+
+
+
 # [5.0.0-alpha.19](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/routers@5.0.0-alpha.18...@react-navigation/routers@5.0.0-alpha.19) (2020-01-01)
 
 **Note:** Version bump only for package @react-navigation/routers
