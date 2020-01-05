@@ -125,13 +125,17 @@ const getFloatingHeaderHeights = (
       options.headerStyle || {}
     );
 
+    const safeAreaInsets = {
+      ...insets,
+      ...options.safeAreaInsets,
+    };
+
+    const { headerStatusBarHeight = safeAreaInsets.top } = options;
+
     acc[curr.key] =
       typeof height === 'number'
         ? height
-        : getDefaultHeaderHeight(layout, {
-            ...insets,
-            ...options.safeAreaInsets,
-          });
+        : getDefaultHeaderHeight(layout, headerStatusBarHeight);
 
     return acc;
   }, {});

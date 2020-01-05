@@ -205,6 +205,12 @@ export type StackHeaderOptions = {
    * This is useful if you want to render a semi-transparent header or a blurred background.
    */
   headerTransparent?: boolean;
+  /**
+   * Extra padding to add at the top of header to account for translucent status bar.
+   * By default, it uses the top value from the safe area insets of the device.
+   * Pass 0 or a custom value to disable the default behaviour, and customize the height.
+   */
+  headerStatusBarHeight?: number;
 };
 
 export type StackHeaderProps = {
