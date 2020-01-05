@@ -2,6 +2,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
+      "react-navigation": ["react-navigation"],
       "react-navigation-stack": ["./src/index"]
     },
     "allowUnreachableCode": false,
