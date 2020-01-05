@@ -21,7 +21,7 @@
     "example": "yarn --cwd example",
     "bootstrap": "yarn example && yarn --ignore-scripts && yarn sync",
     "sync": "bash scripts/sync-stack.sh",
-    "patch": "diff -ruN node_modules/@react-navigation/stack/src src/vendor > scripts/stack.patch; printf ''"
+    "patch": "diff -Naur node_modules/@react-navigation/stack/src src/vendor > scripts/stack.patch; printf ''"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
@@ -50,7 +50,7 @@
     "@expo/vector-icons": "^10.0.6",
     "@react-native-community/bob": "^0.7.0",
     "@react-native-community/masked-view": "^0.1.5",
-    "@react-navigation/stack": "^5.0.0-alpha.52",
+    "@react-navigation/stack": "^5.0.0-alpha.53",
     "@release-it/conventional-changelog": "^1.1.0",
     "@types/color": "^3.0.1",
     "@types/jest": "^24.0.25",

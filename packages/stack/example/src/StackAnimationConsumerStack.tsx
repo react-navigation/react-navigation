@@ -3,7 +3,7 @@ import { Animated, Button, View } from 'react-native';
 import {
   createStackNavigator,
   NavigationStackScreenProps,
-  StackCardAnimationContext,
+  CardAnimationContext,
 } from 'react-navigation-stack';
 
 const ListScreen = (props: NavigationStackScreenProps) => (
@@ -24,7 +24,7 @@ const ListScreen = (props: NavigationStackScreenProps) => (
 );
 
 const AnotherScreen = () => (
-  <StackCardAnimationContext.Consumer>
+  <CardAnimationContext.Consumer>
     {value => {
       const scale = value
         ? value.current.progress.interpolate({
@@ -54,7 +54,7 @@ const AnotherScreen = () => (
         </View>
       );
     }}
-  </StackCardAnimationContext.Consumer>
+  </CardAnimationContext.Consumer>
 );
 
 const YetAnotherScreen = () => (
@@ -66,7 +66,7 @@ const YetAnotherScreen = () => (
       backgroundColor: 'papayawhip',
     }}
   >
-    <StackCardAnimationContext.Consumer>
+    <CardAnimationContext.Consumer>
       {value => (
         <Animated.Text
           style={{
@@ -82,8 +82,8 @@ const YetAnotherScreen = () => (
           Disappears when swiping
         </Animated.Text>
       )}
-    </StackCardAnimationContext.Consumer>
-    <StackCardAnimationContext.Consumer>
+    </CardAnimationContext.Consumer>
+    <CardAnimationContext.Consumer>
       {value => (
         <Animated.Text
           style={{
@@ -99,7 +99,7 @@ const YetAnotherScreen = () => (
           Disappears only when closing
         </Animated.Text>
       )}
-    </StackCardAnimationContext.Consumer>
+    </CardAnimationContext.Consumer>
   </View>
 );
 

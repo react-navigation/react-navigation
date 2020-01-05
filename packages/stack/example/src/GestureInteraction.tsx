@@ -9,7 +9,7 @@ import { WebView } from 'react-native-webview';
 import MapView from 'react-native-maps';
 import {
   createStackNavigator,
-  StackGestureContext,
+  GestureHandlerRefContext,
   NavigationStackScreenComponent,
   NavigationStackScreenProps,
 } from 'react-navigation-stack';
@@ -61,19 +61,19 @@ class MapScreen extends React.Component<
     }
 
     return (
-      <StackGestureContext.Consumer>
+      <GestureHandlerRefContext.Consumer>
         {ref => (
           <NativeViewGestureHandler waitFor={ref}>
             <MapView style={{ flex: 1 }} />
           </NativeViewGestureHandler>
         )}
-      </StackGestureContext.Consumer>
+      </GestureHandlerRefContext.Consumer>
     );
   }
 }
 
 const WebViewScreen = () => (
-  <StackGestureContext.Consumer>
+  <GestureHandlerRefContext.Consumer>
     {ref => (
       <NativeViewGestureHandler waitFor={ref}>
         <WebView
@@ -82,7 +82,7 @@ const WebViewScreen = () => (
         />
       </NativeViewGestureHandler>
     )}
-  </StackGestureContext.Consumer>
+  </GestureHandlerRefContext.Consumer>
 );
 
 WebViewScreen.navigationOptions = {
