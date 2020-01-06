@@ -577,8 +577,8 @@ diff -Naur node_modules/@react-navigation/stack/src/views/Stack/StackView.tsx sr
 +    const descriptor = descriptors[route.key];
 +
 +    descriptor &&
-+      descriptor.options.onTransitionStart &&
-+      descriptor.options.onTransitionStart({ closing });
++      descriptor.options.onTransitionEnd &&
++      descriptor.options.onTransitionEnd({ closing });
 +  };
  
    render() {
