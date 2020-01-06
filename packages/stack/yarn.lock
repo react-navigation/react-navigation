@@ -1396,10 +1396,10 @@
     "@react-navigation/core" "^5.0.0-alpha.30"
     shortid "^2.2.15"
 
-"@react-navigation/stack@^5.0.0-alpha.54":
-  version "5.0.0-alpha.54"
-  resolved "https://registry.yarnpkg.com/@react-navigation/stack/-/stack-5.0.0-alpha.54.tgz#21e4e612a02fe754a58cc9b8f305f83143634e3e"
-  integrity sha512-dkGUJh/h7HmwMmWVViCIpkImsmbzQt0bdH6Ax9kD0Ch+eHCFPUDzjme88kM8/Jgk/URpqIqKZU2dLwgobyeApQ==
+"@react-navigation/stack@^5.0.0-alpha.55":
+  version "5.0.0-alpha.55"
+  resolved "https://registry.yarnpkg.com/@react-navigation/stack/-/stack-5.0.0-alpha.55.tgz#78a423f2ea07fd4f909179d4c445b352aa6b1789"
+  integrity sha512-eqfu/O7Ooxhc5GB5Fnco/Efohq4da97VEJIATco98za2Dmt/KFIGNfENe+7XhalMZmZaQTNBgxSMcxUR00C4LA==
   dependencies:
     "@react-navigation/routers" "^5.0.0-alpha.20"
     color "^3.1.2"
