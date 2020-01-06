@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.55](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.54...@react-navigation/stack@5.0.0-alpha.55) (2020-01-06)
+
+
+### Bug Fixes
+
+* memoize interpolated style to avoid extra work ([d8b88bd](https://github.com/react-navigation/navigation-ex/commit/d8b88bd83f57f2626d5b66bb157fd8e21a937c28))
+
+
+
+
+
 # [5.0.0-alpha.54](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.53...@react-navigation/stack@5.0.0-alpha.54) (2020-01-05)
 
 
