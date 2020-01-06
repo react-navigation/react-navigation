@@ -601,6 +601,7 @@ declare module 'react-navigation' {
       params?: NavigationParams,
       action?: NavigationNavigateAction
     ) => boolean;
+    // https://reactnavigation.org/docs/en/typescript.html
     replace: (
       routeName: string,
       params?: NavigationParams,
