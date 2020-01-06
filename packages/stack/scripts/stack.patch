@@ -556,7 +556,7 @@ diff -Naur node_modules/@react-navigation/stack/src/views/Stack/StackView.tsx sr
 -    });
 +  ) => {
 +    const { descriptors } = this.props;
-+    const descriptor = descriptors[route.key];
++    const descriptor = descriptors[route.key] || this.state.descriptors[route.key];
 +
 +    descriptor &&
 +      descriptor.options.onTransitionStart &&
@@ -574,7 +574,7 @@ diff -Naur node_modules/@react-navigation/stack/src/views/Stack/StackView.tsx sr
 -    });
 +  ) => {
 +    const { descriptors } = this.props;
-+    const descriptor = descriptors[route.key];
++    const descriptor = descriptors[route.key] || this.state.descriptors[route.key];
 +
 +    descriptor &&
 +      descriptor.options.onTransitionEnd &&
