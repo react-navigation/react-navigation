@@ -3,7 +3,11 @@
     "baseUrl": ".",
     "paths": {
       "react-navigation": ["react-navigation"],
-      "react-navigation-stack": ["./src/index"]
+      "react-navigation-stack": ["./src/index"],
+      "react-native-gesture-handler": ["react-native-gesture-handler", "example/node_modules/react-native-gesture-handler/react-native-gesture-handler"],
+      "@react-native-community/masked-view": ["@react-native-community/masked-view"],
+      "react-native-safe-area-context": ["react-native-safe-area-context"],
+      "react-native-screens": ["react-native-screens"]
     },
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
