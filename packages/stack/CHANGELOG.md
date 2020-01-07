@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.56](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.55...@react-navigation/stack@5.0.0-alpha.56) (2020-01-07)
+
+
+### Bug Fixes
+
+* remove clamping in extrapolation of progress of stack animation ([d3f5c55](https://github.com/react-navigation/navigation-ex/commit/d3f5c55dbfbbff604c3289a40f3eccd91a60ee2e))
+
+
+
+
+
 # [5.0.0-alpha.55](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/stack@5.0.0-alpha.54...@react-navigation/stack@5.0.0-alpha.55) (2020-01-06)
 
 
