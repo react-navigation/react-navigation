@@ -1,6 +1,6 @@
 diff -Naur node_modules/@react-navigation/stack/src/index.tsx src/vendor/index.tsx
---- node_modules/@react-navigation/stack/src/index.tsx	2020-01-05 15:33:46.000000000 +0100
-+++ src/vendor/index.tsx	2020-01-05 15:37:12.000000000 +0100
+--- node_modules/@react-navigation/stack/src/index.tsx	2020-01-07 15:54:09.000000000 +0100
++++ src/vendor/index.tsx	2020-01-07 16:06:06.000000000 +0100
 @@ -3,11 +3,6 @@
  import * as TransitionSpecs from './TransitionConfigs/TransitionSpecs';
  import * as TransitionPresets from './TransitionConfigs/TransitionPresets';
@@ -28,7 +28,7 @@ diff -Naur node_modules/@react-navigation/stack/src/index.tsx src/vendor/index.t
    StackHeaderTitleProps,
    StackCardInterpolatedStyle,
 diff -Naur node_modules/@react-navigation/stack/src/navigators/createStackNavigator.tsx src/vendor/navigators/createStackNavigator.tsx
---- node_modules/@react-navigation/stack/src/navigators/createStackNavigator.tsx	2020-01-05 15:33:46.000000000 +0100
+--- node_modules/@react-navigation/stack/src/navigators/createStackNavigator.tsx	2020-01-07 15:54:09.000000000 +0100
 +++ src/vendor/navigators/createStackNavigator.tsx	1970-01-01 01:00:00.000000000 +0100
 @@ -1,77 +0,0 @@
 -import * as React from 'react';
@@ -109,8 +109,8 @@ diff -Naur node_modules/@react-navigation/stack/src/navigators/createStackNaviga
 -  typeof StackNavigator
 ->(StackNavigator);
 diff -Naur node_modules/@react-navigation/stack/src/types.tsx src/vendor/types.tsx
---- node_modules/@react-navigation/stack/src/types.tsx	2020-01-05 15:33:46.000000000 +0100
-+++ src/vendor/types.tsx	2020-01-05 15:37:12.000000000 +0100
+--- node_modules/@react-navigation/stack/src/types.tsx	2020-01-07 15:54:09.000000000 +0100
++++ src/vendor/types.tsx	2020-01-07 16:06:06.000000000 +0100
 @@ -8,13 +8,28 @@
  } from 'react-native';
  import { EdgeInsets } from 'react-native-safe-area-context';
@@ -255,16 +255,26 @@ diff -Naur node_modules/@react-navigation/stack/src/types.tsx src/vendor/types.t
  
  export type StackNavigationConfig = {
 diff -Naur node_modules/@react-navigation/stack/src/views/Header/Header.tsx src/vendor/views/Header/Header.tsx
---- node_modules/@react-navigation/stack/src/views/Header/Header.tsx	2020-01-05 15:33:46.000000000 +0100
-+++ src/vendor/views/Header/Header.tsx	2020-01-05 15:37:12.000000000 +0100
-@@ -1,5 +1,5 @@
+--- node_modules/@react-navigation/stack/src/views/Header/Header.tsx	2020-01-07 15:54:09.000000000 +0100
++++ src/vendor/views/Header/Header.tsx	2020-01-07 16:06:09.000000000 +0100
+@@ -1,11 +1,13 @@
  import * as React from 'react';
 -import { StackActions } from '@react-navigation/routers';
++import { Dimensions } from 'react-native';
 +import { StackActions } from 'react-navigation';
++import { getStatusBarHeight } from 'react-native-iphone-x-helper';
  
- import HeaderSegment from './HeaderSegment';
+-import HeaderSegment from './HeaderSegment';
++import HeaderSegment, { getDefaultHeaderHeight } from './HeaderSegment';
  import { StackHeaderProps, StackHeaderTitleProps } from '../../types';
-@@ -21,7 +21,7 @@
+ import HeaderTitle from './HeaderTitle';
+ 
+-export default React.memo(function Header(props: StackHeaderProps) {
++const Header = React.memo(function Header(props: StackHeaderProps) {
+   const {
+     scene,
+     previous,
+@@ -21,7 +23,7 @@
        ? options.headerTitle
        : options.title !== undefined
        ? options.title
@@ -273,7 +283,7 @@ diff -Naur node_modules/@react-navigation/stack/src/views/Header/Header.tsx src/
  
    let leftLabel;
  
-@@ -37,7 +37,7 @@
+@@ -37,7 +39,7 @@
          ? o.headerTitle
          : o.title !== undefined
          ? o.title
@@ -282,7 +292,7 @@ diff -Naur node_modules/@react-navigation/stack/src/views/Header/Header.tsx src/
    }
  
    return (
-@@ -55,11 +55,8 @@
+@@ -55,14 +57,26 @@
        }
        onGoBack={
          previous
@@ -296,9 +306,27 @@ diff -Naur node_modules/@react-navigation/stack/src/views/Header/Header.tsx src/
            : undefined
        }
        styleInterpolator={styleInterpolator}
+     />
+   );
+ });
++
++Object.defineProperty(Header, 'HEIGHT', {
++  get() {
++    console.warn(
++      "Deprecation in 'createStackNavigator': 'Header.HEIGHT' will be removed in a future version. Use 'useHeaderHeight' or 'HeaderHeightContext' instead"
++    );
++
++    return getDefaultHeaderHeight(
++      Dimensions.get('window'),
++      getStatusBarHeight(true)
++    );
++  },
++});
++
++export default Header;
 diff -Naur node_modules/@react-navigation/stack/src/views/Header/HeaderBackButton.tsx src/vendor/views/Header/HeaderBackButton.tsx
---- node_modules/@react-navigation/stack/src/views/Header/HeaderBackButton.tsx	2020-01-05 15:33:46.000000000 +0100
-+++ src/vendor/views/Header/HeaderBackButton.tsx	2020-01-05 15:37:12.000000000 +0100
+--- node_modules/@react-navigation/stack/src/views/Header/HeaderBackButton.tsx	2020-01-07 15:54:09.000000000 +0100
++++ src/vendor/views/Header/HeaderBackButton.tsx	2020-01-07 16:06:06.000000000 +0100
 @@ -8,9 +8,9 @@
    StyleSheet,
    LayoutChangeEvent,
@@ -311,8 +339,8 @@ diff -Naur node_modules/@react-navigation/stack/src/views/Header/HeaderBackButto
  
  type Props = StackHeaderLeftButtonProps;
 diff -Naur node_modules/@react-navigation/stack/src/views/Header/HeaderBackground.tsx src/vendor/views/Header/HeaderBackground.tsx
---- node_modules/@react-navigation/stack/src/views/Header/HeaderBackground.tsx	2020-01-05 15:33:46.000000000 +0100
-+++ src/vendor/views/Header/HeaderBackground.tsx	2020-01-05 15:37:12.000000000 +0100
+--- node_modules/@react-navigation/stack/src/views/Header/HeaderBackground.tsx	2020-01-07 15:54:09.000000000 +0100
++++ src/vendor/views/Header/HeaderBackground.tsx	2020-01-07 16:06:06.000000000 +0100
 @@ -1,6 +1,6 @@
  import * as React from 'react';
  import { Animated, StyleSheet, Platform, ViewProps } from 'react-native';
@@ -322,8 +350,8 @@ diff -Naur node_modules/@react-navigation/stack/src/views/Header/HeaderBackgroun
  export default function HeaderBackground({ style, ...rest }: ViewProps) {
    const { colors } = useTheme();
 diff -Naur node_modules/@react-navigation/stack/src/views/Header/HeaderContainer.tsx src/vendor/views/Header/HeaderContainer.tsx
---- node_modules/@react-navigation/stack/src/views/Header/HeaderContainer.tsx	2020-01-05 15:33:46.000000000 +0100
-+++ src/vendor/views/Header/HeaderContainer.tsx	2020-01-05 15:37:12.000000000 +0100
+--- node_modules/@react-navigation/stack/src/views/Header/HeaderContainer.tsx	2020-01-07 15:54:09.000000000 +0100
++++ src/vendor/views/Header/HeaderContainer.tsx	2020-01-07 16:06:06.000000000 +0100
 @@ -1,16 +1,13 @@
  import * as React from 'react';
  import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
@@ -356,8 +384,8 @@ diff -Naur node_modules/@react-navigation/stack/src/views/Header/HeaderContainer
          };
  
 diff -Naur node_modules/@react-navigation/stack/src/views/Header/HeaderSegment.tsx src/vendor/views/Header/HeaderSegment.tsx
---- node_modules/@react-navigation/stack/src/views/Header/HeaderSegment.tsx	2020-01-05 15:33:46.000000000 +0100
-+++ src/vendor/views/Header/HeaderSegment.tsx	2020-01-05 15:37:12.000000000 +0100
+--- node_modules/@react-navigation/stack/src/views/Header/HeaderSegment.tsx	2020-01-07 15:54:09.000000000 +0100
++++ src/vendor/views/Header/HeaderSegment.tsx	2020-01-07 16:06:06.000000000 +0100
 @@ -8,7 +8,7 @@
    ViewStyle,
  } from 'react-native';
@@ -377,8 +405,8 @@ diff -Naur node_modules/@react-navigation/stack/src/views/Header/HeaderSegment.t
  };
  
 diff -Naur node_modules/@react-navigation/stack/src/views/Header/HeaderTitle.tsx src/vendor/views/Header/HeaderTitle.tsx
---- node_modules/@react-navigation/stack/src/views/Header/HeaderTitle.tsx	2020-01-05 15:33:46.000000000 +0100
-+++ src/vendor/views/Header/HeaderTitle.tsx	2020-01-05 15:37:12.000000000 +0100
+--- node_modules/@react-navigation/stack/src/views/Header/HeaderTitle.tsx	2020-01-07 15:54:09.000000000 +0100
++++ src/vendor/views/Header/HeaderTitle.tsx	2020-01-07 16:06:06.000000000 +0100
 @@ -1,6 +1,6 @@
  import * as React from 'react';
  import { Animated, StyleSheet, Platform, TextProps } from 'react-native';
@@ -388,9 +416,9 @@ diff -Naur node_modules/@react-navigation/stack/src/views/Header/HeaderTitle.tsx
  type Props = TextProps & {
    tintColor?: string;
 diff -Naur node_modules/@react-navigation/stack/src/views/Stack/Card.tsx src/vendor/views/Stack/Card.tsx
---- node_modules/@react-navigation/stack/src/views/Stack/Card.tsx	2020-01-05 15:33:46.000000000 +0100
-+++ src/vendor/views/Stack/Card.tsx	2020-01-05 15:37:12.000000000 +0100
-@@ -452,7 +452,7 @@
+--- node_modules/@react-navigation/stack/src/views/Stack/Card.tsx	2020-01-07 15:54:09.000000000 +0100
++++ src/vendor/views/Stack/Card.tsx	2020-01-07 16:06:06.000000000 +0100
+@@ -483,7 +483,7 @@
                    pointerEvents="none"
                  />
                ) : null}
@@ -400,8 +428,8 @@ diff -Naur node_modules/@react-navigation/stack/src/views/Stack/Card.tsx src/ven
                    <CardAnimationContext.Provider value={animationContext}>
                      {children}
 diff -Naur node_modules/@react-navigation/stack/src/views/Stack/CardContainer.tsx src/vendor/views/Stack/CardContainer.tsx
---- node_modules/@react-navigation/stack/src/views/Stack/CardContainer.tsx	2020-01-05 15:33:46.000000000 +0100
-+++ src/vendor/views/Stack/CardContainer.tsx	2020-01-05 15:37:43.000000000 +0100
+--- node_modules/@react-navigation/stack/src/views/Stack/CardContainer.tsx	2020-01-07 15:54:09.000000000 +0100
++++ src/vendor/views/Stack/CardContainer.tsx	2020-01-07 16:06:06.000000000 +0100
 @@ -1,11 +1,17 @@
  import * as React from 'react';
  import { Animated, View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
@@ -433,8 +461,8 @@ diff -Naur node_modules/@react-navigation/stack/src/views/Stack/CardContainer.ts
      >
        <View style={styles.container}>
 diff -Naur node_modules/@react-navigation/stack/src/views/Stack/CardStack.tsx src/vendor/views/Stack/CardStack.tsx
---- node_modules/@react-navigation/stack/src/views/Stack/CardStack.tsx	2020-01-05 15:33:46.000000000 +0100
-+++ src/vendor/views/Stack/CardStack.tsx	2020-01-05 15:37:12.000000000 +0100
+--- node_modules/@react-navigation/stack/src/views/Stack/CardStack.tsx	2020-01-07 15:54:09.000000000 +0100
++++ src/vendor/views/Stack/CardStack.tsx	2020-01-07 16:06:06.000000000 +0100
 @@ -11,8 +11,7 @@
  import { EdgeInsets } from 'react-native-safe-area-context';
  // eslint-disable-next-line import/no-unresolved
@@ -454,8 +482,8 @@ diff -Naur node_modules/@react-navigation/stack/src/views/Stack/CardStack.tsx sr
    StackHeaderMode,
    StackCardMode,
 diff -Naur node_modules/@react-navigation/stack/src/views/Stack/StackView.tsx src/vendor/views/Stack/StackView.tsx
---- node_modules/@react-navigation/stack/src/views/Stack/StackView.tsx	2020-01-05 15:33:46.000000000 +0100
-+++ src/vendor/views/Stack/StackView.tsx	2020-01-05 15:37:12.000000000 +0100
+--- node_modules/@react-navigation/stack/src/views/Stack/StackView.tsx	2020-01-07 15:54:09.000000000 +0100
++++ src/vendor/views/Stack/StackView.tsx	2020-01-07 16:06:06.000000000 +0100
 @@ -1,8 +1,11 @@
  import * as React from 'react';
  import { Platform } from 'react-native';
