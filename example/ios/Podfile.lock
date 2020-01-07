@@ -253,7 +253,7 @@ PODS:
     - React
   - RNReanimated (1.4.0):
     - React
-  - RNScreens (2.0.0-alpha.17):
+  - RNScreens (2.0.0-alpha.19):
     - React
   - UMBarCodeScannerInterface (5.0.0)
   - UMCameraInterface (5.0.0)
@@ -274,15 +274,15 @@ PODS:
 
 DEPENDENCIES:
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
-  - EXAppLoaderProvider (from `../node_modules/expo/node_modules/expo-app-loader-provider/ios`)
-  - EXConstants (from `../node_modules/expo/node_modules/expo-constants/ios`)
+  - EXAppLoaderProvider (from `../node_modules/expo-app-loader-provider/ios`)
+  - EXConstants (from `../node_modules/expo-constants/ios`)
   - EXErrorRecovery (from `../node_modules/expo-error-recovery/ios`)
-  - EXFileSystem (from `../node_modules/expo/node_modules/expo-file-system/ios`)
+  - EXFileSystem (from `../node_modules/expo-file-system/ios`)
   - EXFont (from `../node_modules/expo-font/ios`)
   - EXKeepAwake (from `../node_modules/expo-keep-awake/ios`)
   - EXLinearGradient (from `../node_modules/expo-linear-gradient/ios`)
   - EXLocation (from `../node_modules/expo-location/ios`)
-  - EXPermissions (from `../node_modules/expo/node_modules/expo-permissions/ios`)
+  - EXPermissions (from `../node_modules/expo-permissions/ios`)
   - EXSQLite (from `../node_modules/expo-sqlite/ios`)
   - EXWebBrowser (from `../node_modules/expo-web-browser/ios`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
@@ -316,18 +316,18 @@ DEPENDENCIES:
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
-  - UMBarCodeScannerInterface (from `../node_modules/expo/node_modules/unimodules-barcode-scanner-interface/ios`)
-  - UMCameraInterface (from `../node_modules/expo/node_modules/unimodules-camera-interface/ios`)
-  - UMConstantsInterface (from `../node_modules/expo/node_modules/unimodules-constants-interface/ios`)
-  - "UMCore (from `../node_modules/expo/node_modules/@unimodules/core/ios`)"
-  - UMFaceDetectorInterface (from `../node_modules/expo/node_modules/unimodules-face-detector-interface/ios`)
-  - UMFileSystemInterface (from `../node_modules/expo/node_modules/unimodules-file-system-interface/ios`)
-  - UMFontInterface (from `../node_modules/expo/node_modules/unimodules-font-interface/ios`)
-  - UMImageLoaderInterface (from `../node_modules/expo/node_modules/unimodules-image-loader-interface/ios`)
-  - UMPermissionsInterface (from `../node_modules/expo/node_modules/unimodules-permissions-interface/ios`)
-  - "UMReactNativeAdapter (from `../node_modules/expo/node_modules/@unimodules/react-native-adapter/ios`)"
-  - UMSensorsInterface (from `../node_modules/expo/node_modules/unimodules-sensors-interface/ios`)
-  - UMTaskManagerInterface (from `../node_modules/expo/node_modules/unimodules-task-manager-interface/ios`)
+  - UMBarCodeScannerInterface (from `../node_modules/unimodules-barcode-scanner-interface/ios`)
+  - UMCameraInterface (from `../node_modules/unimodules-camera-interface/ios`)
+  - UMConstantsInterface (from `../node_modules/unimodules-constants-interface/ios`)
+  - "UMCore (from `../node_modules/@unimodules/core/ios`)"
+  - UMFaceDetectorInterface (from `../node_modules/unimodules-face-detector-interface/ios`)
+  - UMFileSystemInterface (from `../node_modules/unimodules-file-system-interface/ios`)
+  - UMFontInterface (from `../node_modules/unimodules-font-interface/ios`)
+  - UMImageLoaderInterface (from `../node_modules/unimodules-image-loader-interface/ios`)
+  - UMPermissionsInterface (from `../node_modules/unimodules-permissions-interface/ios`)
+  - "UMReactNativeAdapter (from `../node_modules/@unimodules/react-native-adapter/ios`)"
+  - UMSensorsInterface (from `../node_modules/unimodules-sensors-interface/ios`)
+  - UMTaskManagerInterface (from `../node_modules/unimodules-task-manager-interface/ios`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -339,16 +339,16 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
   EXAppLoaderProvider:
     :path: !ruby/object:Pathname
-    path: "../node_modules/expo/node_modules/expo-app-loader-provider/ios"
+    path: "../node_modules/expo-app-loader-provider/ios"
   EXConstants:
     :path: !ruby/object:Pathname
-    path: "../node_modules/expo/node_modules/expo-constants/ios"
+    path: "../node_modules/expo-constants/ios"
   EXErrorRecovery:
     :path: !ruby/object:Pathname
     path: "../node_modules/expo-error-recovery/ios"
   EXFileSystem:
     :path: !ruby/object:Pathname
-    path: "../node_modules/expo/node_modules/expo-file-system/ios"
+    path: "../node_modules/expo-file-system/ios"
   EXFont:
     :path: !ruby/object:Pathname
     path: "../node_modules/expo-font/ios"
@@ -363,7 +363,7 @@ EXTERNAL SOURCES:
     path: "../node_modules/expo-location/ios"
   EXPermissions:
     :path: !ruby/object:Pathname
-    path: "../node_modules/expo/node_modules/expo-permissions/ios"
+    path: "../node_modules/expo-permissions/ios"
   EXSQLite:
     :path: !ruby/object:Pathname
     path: "../node_modules/expo-sqlite/ios"
@@ -428,40 +428,40 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-screens"
   UMBarCodeScannerInterface:
     :path: !ruby/object:Pathname
-    path: "../node_modules/expo/node_modules/unimodules-barcode-scanner-interface/ios"
+    path: "../node_modules/unimodules-barcode-scanner-interface/ios"
   UMCameraInterface:
     :path: !ruby/object:Pathname
-    path: "../node_modules/expo/node_modules/unimodules-camera-interface/ios"
+    path: "../node_modules/unimodules-camera-interface/ios"
   UMConstantsInterface:
     :path: !ruby/object:Pathname
-    path: "../node_modules/expo/node_modules/unimodules-constants-interface/ios"
+    path: "../node_modules/unimodules-constants-interface/ios"
   UMCore:
     :path: !ruby/object:Pathname
-    path: "../node_modules/expo/node_modules/@unimodules/core/ios"
+    path: "../node_modules/@unimodules/core/ios"
   UMFaceDetectorInterface:
     :path: !ruby/object:Pathname
-    path: "../node_modules/expo/node_modules/unimodules-face-detector-interface/ios"
+    path: "../node_modules/unimodules-face-detector-interface/ios"
   UMFileSystemInterface:
     :path: !ruby/object:Pathname
-    path: "../node_modules/expo/node_modules/unimodules-file-system-interface/ios"
+    path: "../node_modules/unimodules-file-system-interface/ios"
   UMFontInterface:
     :path: !ruby/object:Pathname
-    path: "../node_modules/expo/node_modules/unimodules-font-interface/ios"
+    path: "../node_modules/unimodules-font-interface/ios"
   UMImageLoaderInterface:
     :path: !ruby/object:Pathname
-    path: "../node_modules/expo/node_modules/unimodules-image-loader-interface/ios"
+    path: "../node_modules/unimodules-image-loader-interface/ios"
   UMPermissionsInterface:
     :path: !ruby/object:Pathname
-    path: "../node_modules/expo/node_modules/unimodules-permissions-interface/ios"
+    path: "../node_modules/unimodules-permissions-interface/ios"
   UMReactNativeAdapter:
     :path: !ruby/object:Pathname
-    path: "../node_modules/expo/node_modules/@unimodules/react-native-adapter/ios"
+    path: "../node_modules/@unimodules/react-native-adapter/ios"
   UMSensorsInterface:
     :path: !ruby/object:Pathname
-    path: "../node_modules/expo/node_modules/unimodules-sensors-interface/ios"
+    path: "../node_modules/unimodules-sensors-interface/ios"
   UMTaskManagerInterface:
     :path: !ruby/object:Pathname
-    path: "../node_modules/expo/node_modules/unimodules-task-manager-interface/ios"
+    path: "../node_modules/unimodules-task-manager-interface/ios"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -506,7 +506,7 @@ SPEC CHECKSUMS:
   RNCMaskedView: dd13f9f7b146a9ad82f9b7eb6c9b5548fcf6e990
   RNGestureHandler: 946a7691e41df61e2c4b1884deab41a4cdc3afff
   RNReanimated: b2ab0b693dddd2339bd2f300e770f6302d2e960c
-  RNScreens: f5e2ff7ccde2a1bfcf2a48c6fd07fdcf1fd95223
+  RNScreens: 62284de159bbddba268edd282337afdb8771aaed
   UMBarCodeScannerInterface: 3802c8574ef119c150701d679ab386e2266d6a54
   UMCameraInterface: 985d301f688ed392f815728f0dd906ca34b7ccb1
   UMConstantsInterface: bda5f8bd3403ad99e663eb3c4da685d063c5653c
