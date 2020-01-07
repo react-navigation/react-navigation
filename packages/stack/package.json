@@ -50,7 +50,7 @@
     "@expo/vector-icons": "^10.0.6",
     "@react-native-community/bob": "^0.7.0",
     "@react-native-community/masked-view": "^0.1.5",
-    "@react-navigation/stack": "^5.0.0-alpha.55",
+    "@react-navigation/stack": "^5.0.0-alpha.56",
     "@release-it/conventional-changelog": "^1.1.0",
     "@types/color": "^3.0.1",
     "@types/jest": "^24.0.25",
