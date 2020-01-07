@@ -167,14 +167,12 @@ const getProgressFromGesture = (
     return gesture.interpolate({
       inputRange: [0, distance],
       outputRange: [1, 0],
-      extrapolate: 'clamp',
     });
   }
 
   return gesture.interpolate({
     inputRange: [distance, 0],
     outputRange: [0, 1],
-    extrapolate: 'clamp',
   });
 };
 
