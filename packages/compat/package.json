@@ -3,11 +3,7 @@
   "description": "Compatibility layer to write navigator definitions in static configuration format",
   "version": "5.0.0-alpha.21",
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/react-navigation/navigation-ex.git",
-    "directory": "packages/compat"
-  },
+  "repository": "https://github.com/react-navigation/navigation-ex/tree/master/packages/compat",
   "main": "lib/commonjs/index.js",
   "react-native": "src/index.tsx",
   "module": "lib/module/index.js",

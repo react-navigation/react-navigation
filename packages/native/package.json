@@ -9,11 +9,7 @@
   ],
   "version": "5.0.0-alpha.22",
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/react-navigation/navigation-ex.git",
-    "directory": "packages/native"
-  },
+  "repository": "https://github.com/react-navigation/navigation-ex/tree/master/packages/native",
   "main": "lib/commonjs/index.js",
   "react-native": "src/index.tsx",
   "module": "lib/module/index.js",
