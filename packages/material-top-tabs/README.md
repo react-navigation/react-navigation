@@ -2,6 +2,8 @@
 
 React Navigation integration for animated tab view component from [`react-native-tab-view`](https://github.com/react-native-community/react-native-tab-view).
 
+Documentation can be found on the [React Navigation website](https://reactnavigation.org/docs/en/next/material-top-tab-navigator.html).
+
 ## Installation
 
 Open a Terminal in your project's folder and run,

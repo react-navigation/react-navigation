@@ -2,6 +2,8 @@
 
 React Navigation integration for [bottom navigation](https://material.io/design/components/bottom-navigation.html) component from [`react-native-paper`](https://callstack.github.io/react-native-paper/bottom-navigation.html).
 
+Documentation can be found on the [React Navigation website](https://reactnavigation.org/docs/en/next/material-bottom-tab-navigator.html).
+
 ## Installation
 
 Open a Terminal in your project's folder and run,

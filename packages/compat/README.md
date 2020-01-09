@@ -2,6 +2,8 @@
 
 Compatibility layer to write navigator definitions in static configuration format.
 
+Documentation can be found on the [React Navigation website](https://reactnavigation.org/docs/en/next/compatibility.html).
+
 ## Installation
 
 Open a Terminal in your project's folder and run,
