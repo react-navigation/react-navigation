@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.22](https://github.com/react-navigation/navigation-ex/tree/master/packages/routers/compare/@react-navigation/routers@5.0.0-alpha.20...@react-navigation/routers@5.0.0-alpha.22) (2020-01-09)
+
+
+### Bug Fixes
+
+* change POP behaviour to remove elements from index only ([7a3d652](https://github.com/react-navigation/navigation-ex/tree/master/packages/routers/commit/7a3d652e847e173964a06cc9d859129ca0317861)), closes [#256](https://github.com/react-navigation/navigation-ex/tree/master/packages/routers/issues/256)
+
+
+
+
+
 # [5.0.0-alpha.21](https://github.com/react-navigation/navigation-ex/tree/master/packages/routers/compare/@react-navigation/routers@5.0.0-alpha.20...@react-navigation/routers@5.0.0-alpha.21) (2020-01-09)
 
 
