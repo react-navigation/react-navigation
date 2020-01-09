@@ -35,6 +35,7 @@ import {
   createStackNavigator,
   Assets as StackAssets,
   StackNavigationProp,
+  HeaderStyleInterpolators,
 } from '@react-navigation/stack';
 
 import LinkingPrefixes from './LinkingPrefixes';
@@ -206,7 +207,11 @@ export default function App() {
             }: {
               navigation: DrawerNavigationProp<RootDrawerParamList>;
             }) => (
-              <Stack.Navigator>
+              <Stack.Navigator
+                screenOptions={{
+                  headerStyleInterpolator: HeaderStyleInterpolators.forUIKit,
+                }}
+              >
                 <Stack.Screen
                   name="Home"
                   options={{

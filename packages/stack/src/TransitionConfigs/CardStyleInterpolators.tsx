@@ -20,6 +20,7 @@ export function forHorizontalIOS({
     current.progress.interpolate({
       inputRange: [0, 1],
       outputRange: [screen.width, 0],
+      extrapolate: 'clamp',
     }),
     inverted
   );
@@ -29,6 +30,7 @@ export function forHorizontalIOS({
         next.progress.interpolate({
           inputRange: [0, 1],
           outputRange: [0, screen.width * -0.3],
+          extrapolate: 'clamp',
         }),
         inverted
       )
@@ -37,11 +39,13 @@ export function forHorizontalIOS({
   const overlayOpacity = current.progress.interpolate({
     inputRange: [0, 1],
     outputRange: [0, 0.07],
+    extrapolate: 'clamp',
   });
 
   const shadowOpacity = current.progress.interpolate({
     inputRange: [0, 1],
     outputRange: [0, 0.3],
+    extrapolate: 'clamp',
   });
 
   return {
@@ -70,6 +74,7 @@ export function forVerticalIOS({
     current.progress.interpolate({
       inputRange: [0, 1],
       outputRange: [screen.height, 0],
+      extrapolate: 'clamp',
     }),
     inverted
   );
@@ -100,7 +105,20 @@ export function forModalPresentationIOS({
   const statusBarHeight = insets.top;
   const aspectRatio = screen.height / screen.width;
 
-  const progress = add(current.progress, next ? next.progress : 0);
+  const progress = add(
+    current.progress.interpolate({
+      inputRange: [0, 1],
+      outputRange: [0, 1],
+      extrapolate: 'clamp',
+    }),
+    next
+      ? next.progress.interpolate({
+          inputRange: [0, 1],
+          outputRange: [0, 1],
+          extrapolate: 'clamp',
+        })
+      : 0
+  );
 
   const translateY = multiply(
     progress.interpolate({
@@ -164,6 +182,7 @@ export function forFadeFromBottomAndroid({
     current.progress.interpolate({
       inputRange: [0, 1],
       outputRange: [screen.height * 0.08, 0],
+      extrapolate: 'clamp',
     }),
     inverted
   );
@@ -198,6 +217,7 @@ export function forRevealFromBottomAndroid({
     current.progress.interpolate({
       inputRange: [0, 1],
       outputRange: [screen.height, 0],
+      extrapolate: 'clamp',
     }),
     inverted
   );
@@ -206,6 +226,7 @@ export function forRevealFromBottomAndroid({
     current.progress.interpolate({
       inputRange: [0, 1],
       outputRange: [screen.height * (95.9 / 100) * -1, 0],
+      extrapolate: 'clamp',
     }),
     inverted
   );
@@ -215,6 +236,7 @@ export function forRevealFromBottomAndroid({
         next.progress.interpolate({
           inputRange: [0, 1],
           outputRange: [0, screen.height * (2 / 100) * -1],
+          extrapolate: 'clamp',
         }),
         inverted
       )
@@ -223,6 +245,7 @@ export function forRevealFromBottomAndroid({
   const overlayOpacity = current.progress.interpolate({
     inputRange: [0, 0.36, 1],
     outputRange: [0, 0.1, 0.1],
+    extrapolate: 'clamp',
   });
 
   return {
@@ -248,7 +271,20 @@ export function forScaleFromCenterAndroid({
   next,
   closing,
 }: StackCardInterpolationProps): StackCardInterpolatedStyle {
-  const progress = add(current.progress, next ? next.progress : 0);
+  const progress = add(
+    current.progress.interpolate({
+      inputRange: [0, 1],
+      outputRange: [0, 1],
+      extrapolate: 'clamp',
+    }),
+    next
+      ? next.progress.interpolate({
+          inputRange: [0, 1],
+          outputRange: [0, 1],
+          extrapolate: 'clamp',
+        })
+      : 0
+  );
 
   const opacity = progress.interpolate({
     inputRange: [0, 0.8, 1, 1.2, 2],
@@ -260,6 +296,7 @@ export function forScaleFromCenterAndroid({
     current.progress.interpolate({
       inputRange: [0, 1],
       outputRange: [0.9, 1],
+      extrapolate: 'clamp',
     }),
     progress.interpolate({
       inputRange: [0, 1, 2],
