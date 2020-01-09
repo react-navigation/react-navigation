@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.58](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/compare/@react-navigation/stack@5.0.0-alpha.56...@react-navigation/stack@5.0.0-alpha.58) (2020-01-09)
+
+
+### Bug Fixes
+
+* change default screen change animation on web ([37d26ca](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/commit/37d26ca994f13dd78db234309b78122a52d4550c))
+* change POP behaviour to remove elements from index only ([7a3d652](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/commit/7a3d652e847e173964a06cc9d859129ca0317861)), closes [#256](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/issues/256)
+* clamp interpolated styles ([67798af](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/commit/67798af869dcbbf323629fc7e7cc9062d1e12c29))
+* don't add header animation if mode is not float ([5470aea](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/commit/5470aeaca2f82c0cc320f773ed0cd1672a1e338a))
+* only render last 3 headers in stack ([32ffaac](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/commit/32ffaac647fa711edf188a7929b762f5beb1df15))
+
+
+
+
+
 # [5.0.0-alpha.57](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/compare/@react-navigation/stack@5.0.0-alpha.56...@react-navigation/stack@5.0.0-alpha.57) (2020-01-09)
 
 

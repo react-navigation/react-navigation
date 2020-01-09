@@ -11,7 +11,7 @@
     "material",
     "tab"
   ],
-  "version": "5.0.0-alpha.30",
+  "version": "5.0.0-alpha.31",
   "license": "MIT",
   "repository": "https://github.com/react-navigation/navigation-ex/tree/master/packages/material-bottom-tabs",
   "main": "lib/commonjs/index.js",
@@ -30,7 +30,7 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "@react-navigation/routers": "^5.0.0-alpha.21"
+    "@react-navigation/routers": "^5.0.0-alpha.22"
   },
   "devDependencies": {
     "@react-native-community/bob": "^0.7.0",
