@@ -34,6 +34,7 @@
     "codecov": "^3.6.1",
     "commitlint": "^8.3.4",
     "core-js": "^3.6.2",
+    "detox": "^15.0.0",
     "eslint": "^6.8.0",
     "eslint-config-satya164": "^3.1.5",
     "husky": "^4.0.1",
@@ -70,5 +71,27 @@
     "useTabs": false,
     "singleQuote": true,
     "trailingComma": "es5"
+  },
+  "detox": {
+    "test-runner": "jest",
+    "runner-config": "example/e2e/config.json",
+    "configurations": {
+      "ios.sim.debug": {
+        "binaryPath": "example/ios/build/Build/Products/Debug-iphonesimulator/ReactNavigationExample.app",
+        "build": "set -o pipefail; xcodebuild -workspace example/ios/ReactNavigationExample.xcworkspace -scheme ReactNavigationExample -configuration Debug -sdk iphonesimulator -derivedDataPath example/ios/build",
+        "type": "ios.simulator",
+        "device": {
+          "type": "iPhone 11 Pro"
+        }
+      },
+      "ios.sim.release": {
+        "binaryPath": "example/ios/build/Build/Products/Release-iphonesimulator/ReactNavigationExample.app",
+        "build": "export RCT_NO_LAUNCH_PACKAGER=true; set -o pipefail; xcodebuild -workspace example/ios/ReactNavigationExample.xcworkspace -scheme ReactNavigationExample -configuration Release -sdk iphonesimulator -derivedDataPath example/ios/build",
+        "type": "ios.simulator",
+        "device": {
+          "type": "iPhone 11 Pro"
+        }
+      }
+    }
   }
 }

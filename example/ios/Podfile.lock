@@ -273,62 +273,62 @@ PODS:
   - Yoga (1.14.0)
 
 DEPENDENCIES:
-  - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
-  - EXAppLoaderProvider (from `../node_modules/expo-app-loader-provider/ios`)
-  - EXConstants (from `../node_modules/expo-constants/ios`)
-  - EXErrorRecovery (from `../node_modules/expo-error-recovery/ios`)
-  - EXFileSystem (from `../node_modules/expo-file-system/ios`)
-  - EXFont (from `../node_modules/expo-font/ios`)
-  - EXKeepAwake (from `../node_modules/expo-keep-awake/ios`)
-  - EXLinearGradient (from `../node_modules/expo-linear-gradient/ios`)
-  - EXLocation (from `../node_modules/expo-location/ios`)
-  - EXPermissions (from `../node_modules/expo-permissions/ios`)
-  - EXSQLite (from `../node_modules/expo-sqlite/ios`)
-  - EXWebBrowser (from `../node_modules/expo-web-browser/ios`)
-  - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
-  - FBReactNativeSpec (from `../node_modules/react-native/Libraries/FBReactNativeSpec`)
-  - Folly (from `../node_modules/react-native/third-party-podspecs/Folly.podspec`)
-  - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
-  - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
-  - RCTTypeSafety (from `../node_modules/react-native/Libraries/TypeSafety`)
-  - React (from `../node_modules/react-native/`)
-  - React-Core (from `../node_modules/react-native/`)
-  - React-Core/DevSupport (from `../node_modules/react-native/`)
-  - React-Core/RCTWebSocket (from `../node_modules/react-native/`)
-  - React-CoreModules (from `../node_modules/react-native/React/CoreModules`)
-  - React-cxxreact (from `../node_modules/react-native/ReactCommon/cxxreact`)
-  - React-jsi (from `../node_modules/react-native/ReactCommon/jsi`)
-  - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
-  - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
-  - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
-  - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
-  - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
-  - React-RCTBlob (from `../node_modules/react-native/Libraries/Blob`)
-  - React-RCTImage (from `../node_modules/react-native/Libraries/Image`)
-  - React-RCTLinking (from `../node_modules/react-native/Libraries/LinkingIOS`)
-  - React-RCTNetwork (from `../node_modules/react-native/Libraries/Network`)
-  - React-RCTSettings (from `../node_modules/react-native/Libraries/Settings`)
-  - React-RCTText (from `../node_modules/react-native/Libraries/Text`)
-  - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
-  - ReactCommon/jscallinvoker (from `../node_modules/react-native/ReactCommon`)
-  - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
-  - "RNCMaskedView (from `../node_modules/@react-native-community/masked-view`)"
-  - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
-  - RNReanimated (from `../node_modules/react-native-reanimated`)
-  - RNScreens (from `../node_modules/react-native-screens`)
-  - UMBarCodeScannerInterface (from `../node_modules/unimodules-barcode-scanner-interface/ios`)
-  - UMCameraInterface (from `../node_modules/unimodules-camera-interface/ios`)
-  - UMConstantsInterface (from `../node_modules/unimodules-constants-interface/ios`)
-  - "UMCore (from `../node_modules/@unimodules/core/ios`)"
-  - UMFaceDetectorInterface (from `../node_modules/unimodules-face-detector-interface/ios`)
-  - UMFileSystemInterface (from `../node_modules/unimodules-file-system-interface/ios`)
-  - UMFontInterface (from `../node_modules/unimodules-font-interface/ios`)
-  - UMImageLoaderInterface (from `../node_modules/unimodules-image-loader-interface/ios`)
-  - UMPermissionsInterface (from `../node_modules/unimodules-permissions-interface/ios`)
-  - "UMReactNativeAdapter (from `../node_modules/@unimodules/react-native-adapter/ios`)"
-  - UMSensorsInterface (from `../node_modules/unimodules-sensors-interface/ios`)
-  - UMTaskManagerInterface (from `../node_modules/unimodules-task-manager-interface/ios`)
-  - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
+  - DoubleConversion (from `../../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
+  - EXAppLoaderProvider (from `../../node_modules/expo-app-loader-provider/ios`)
+  - EXConstants (from `../../node_modules/expo-constants/ios`)
+  - EXErrorRecovery (from `../../node_modules/expo-error-recovery/ios`)
+  - EXFileSystem (from `../../node_modules/expo-file-system/ios`)
+  - EXFont (from `../../node_modules/expo-font/ios`)
+  - EXKeepAwake (from `../../node_modules/expo-keep-awake/ios`)
+  - EXLinearGradient (from `../../node_modules/expo-linear-gradient/ios`)
+  - EXLocation (from `../../node_modules/expo-location/ios`)
+  - EXPermissions (from `../../node_modules/expo-permissions/ios`)
+  - EXSQLite (from `../../node_modules/expo-sqlite/ios`)
+  - EXWebBrowser (from `../../node_modules/expo-web-browser/ios`)
+  - FBLazyVector (from `../../node_modules/react-native/Libraries/FBLazyVector`)
+  - FBReactNativeSpec (from `../../node_modules/react-native/Libraries/FBReactNativeSpec`)
+  - Folly (from `../../node_modules/react-native/third-party-podspecs/Folly.podspec`)
+  - glog (from `../../node_modules/react-native/third-party-podspecs/glog.podspec`)
+  - RCTRequired (from `../../node_modules/react-native/Libraries/RCTRequired`)
+  - RCTTypeSafety (from `../../node_modules/react-native/Libraries/TypeSafety`)
+  - React (from `../../node_modules/react-native/`)
+  - React-Core (from `../../node_modules/react-native/`)
+  - React-Core/DevSupport (from `../../node_modules/react-native/`)
+  - React-Core/RCTWebSocket (from `../../node_modules/react-native/`)
+  - React-CoreModules (from `../../node_modules/react-native/React/CoreModules`)
+  - React-cxxreact (from `../../node_modules/react-native/ReactCommon/cxxreact`)
+  - React-jsi (from `../../node_modules/react-native/ReactCommon/jsi`)
+  - React-jsiexecutor (from `../../node_modules/react-native/ReactCommon/jsiexecutor`)
+  - React-jsinspector (from `../../node_modules/react-native/ReactCommon/jsinspector`)
+  - react-native-safe-area-context (from `../../node_modules/react-native-safe-area-context`)
+  - React-RCTActionSheet (from `../../node_modules/react-native/Libraries/ActionSheetIOS`)
+  - React-RCTAnimation (from `../../node_modules/react-native/Libraries/NativeAnimation`)
+  - React-RCTBlob (from `../../node_modules/react-native/Libraries/Blob`)
+  - React-RCTImage (from `../../node_modules/react-native/Libraries/Image`)
+  - React-RCTLinking (from `../../node_modules/react-native/Libraries/LinkingIOS`)
+  - React-RCTNetwork (from `../../node_modules/react-native/Libraries/Network`)
+  - React-RCTSettings (from `../../node_modules/react-native/Libraries/Settings`)
+  - React-RCTText (from `../../node_modules/react-native/Libraries/Text`)
+  - React-RCTVibration (from `../../node_modules/react-native/Libraries/Vibration`)
+  - ReactCommon/jscallinvoker (from `../../node_modules/react-native/ReactCommon`)
+  - ReactCommon/turbomodule/core (from `../../node_modules/react-native/ReactCommon`)
+  - "RNCMaskedView (from `../../node_modules/@react-native-community/masked-view`)"
+  - RNGestureHandler (from `../../node_modules/react-native-gesture-handler`)
+  - RNReanimated (from `../../node_modules/react-native-reanimated`)
+  - RNScreens (from `../../node_modules/react-native-screens`)
+  - UMBarCodeScannerInterface (from `../../node_modules/unimodules-barcode-scanner-interface/ios`)
+  - UMCameraInterface (from `../../node_modules/unimodules-camera-interface/ios`)
+  - UMConstantsInterface (from `../../node_modules/unimodules-constants-interface/ios`)
+  - "UMCore (from `../../node_modules/@unimodules/core/ios`)"
+  - UMFaceDetectorInterface (from `../../node_modules/unimodules-face-detector-interface/ios`)
+  - UMFileSystemInterface (from `../../node_modules/unimodules-file-system-interface/ios`)
+  - UMFontInterface (from `../../node_modules/unimodules-font-interface/ios`)
+  - UMImageLoaderInterface (from `../../node_modules/unimodules-image-loader-interface/ios`)
+  - UMPermissionsInterface (from `../../node_modules/unimodules-permissions-interface/ios`)
+  - "UMReactNativeAdapter (from `../../node_modules/@unimodules/react-native-adapter/ios`)"
+  - UMSensorsInterface (from `../../node_modules/unimodules-sensors-interface/ios`)
+  - UMTaskManagerInterface (from `../../node_modules/unimodules-task-manager-interface/ios`)
+  - Yoga (from `../../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
   trunk:
@@ -336,134 +336,134 @@ SPEC REPOS:
 
 EXTERNAL SOURCES:
   DoubleConversion:
-    :podspec: "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
+    :podspec: "../../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
   EXAppLoaderProvider:
     :path: !ruby/object:Pathname
-    path: "../node_modules/expo-app-loader-provider/ios"
+    path: "../../node_modules/expo-app-loader-provider/ios"
   EXConstants:
     :path: !ruby/object:Pathname
-    path: "../node_modules/expo-constants/ios"
+    path: "../../node_modules/expo-constants/ios"
   EXErrorRecovery:
     :path: !ruby/object:Pathname
-    path: "../node_modules/expo-error-recovery/ios"
+    path: "../../node_modules/expo-error-recovery/ios"
   EXFileSystem:
     :path: !ruby/object:Pathname
-    path: "../node_modules/expo-file-system/ios"
+    path: "../../node_modules/expo-file-system/ios"
   EXFont:
     :path: !ruby/object:Pathname
-    path: "../node_modules/expo-font/ios"
+    path: "../../node_modules/expo-font/ios"
   EXKeepAwake:
     :path: !ruby/object:Pathname
-    path: "../node_modules/expo-keep-awake/ios"
+    path: "../../node_modules/expo-keep-awake/ios"
   EXLinearGradient:
     :path: !ruby/object:Pathname
-    path: "../node_modules/expo-linear-gradient/ios"
+    path: "../../node_modules/expo-linear-gradient/ios"
   EXLocation:
     :path: !ruby/object:Pathname
-    path: "../node_modules/expo-location/ios"
+    path: "../../node_modules/expo-location/ios"
   EXPermissions:
     :path: !ruby/object:Pathname
-    path: "../node_modules/expo-permissions/ios"
+    path: "../../node_modules/expo-permissions/ios"
   EXSQLite:
     :path: !ruby/object:Pathname
-    path: "../node_modules/expo-sqlite/ios"
+    path: "../../node_modules/expo-sqlite/ios"
   EXWebBrowser:
     :path: !ruby/object:Pathname
-    path: "../node_modules/expo-web-browser/ios"
+    path: "../../node_modules/expo-web-browser/ios"
   FBLazyVector:
-    :path: "../node_modules/react-native/Libraries/FBLazyVector"
+    :path: "../../node_modules/react-native/Libraries/FBLazyVector"
   FBReactNativeSpec:
-    :path: "../node_modules/react-native/Libraries/FBReactNativeSpec"
+    :path: "../../node_modules/react-native/Libraries/FBReactNativeSpec"
   Folly:
-    :podspec: "../node_modules/react-native/third-party-podspecs/Folly.podspec"
+    :podspec: "../../node_modules/react-native/third-party-podspecs/Folly.podspec"
   glog:
-    :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
+    :podspec: "../../node_modules/react-native/third-party-podspecs/glog.podspec"
   RCTRequired:
-    :path: "../node_modules/react-native/Libraries/RCTRequired"
+    :path: "../../node_modules/react-native/Libraries/RCTRequired"
   RCTTypeSafety:
-    :path: "../node_modules/react-native/Libraries/TypeSafety"
+    :path: "../../node_modules/react-native/Libraries/TypeSafety"
   React:
-    :path: "../node_modules/react-native/"
+    :path: "../../node_modules/react-native/"
   React-Core:
-    :path: "../node_modules/react-native/"
+    :path: "../../node_modules/react-native/"
   React-CoreModules:
-    :path: "../node_modules/react-native/React/CoreModules"
+    :path: "../../node_modules/react-native/React/CoreModules"
   React-cxxreact:
-    :path: "../node_modules/react-native/ReactCommon/cxxreact"
+    :path: "../../node_modules/react-native/ReactCommon/cxxreact"
   React-jsi:
-    :path: "../node_modules/react-native/ReactCommon/jsi"
+    :path: "../../node_modules/react-native/ReactCommon/jsi"
   React-jsiexecutor:
-    :path: "../node_modules/react-native/ReactCommon/jsiexecutor"
+    :path: "../../node_modules/react-native/ReactCommon/jsiexecutor"
   React-jsinspector:
-    :path: "../node_modules/react-native/ReactCommon/jsinspector"
+    :path: "../../node_modules/react-native/ReactCommon/jsinspector"
   react-native-safe-area-context:
-    :path: "../node_modules/react-native-safe-area-context"
+    :path: "../../node_modules/react-native-safe-area-context"
   React-RCTActionSheet:
-    :path: "../node_modules/react-native/Libraries/ActionSheetIOS"
+    :path: "../../node_modules/react-native/Libraries/ActionSheetIOS"
   React-RCTAnimation:
-    :path: "../node_modules/react-native/Libraries/NativeAnimation"
+    :path: "../../node_modules/react-native/Libraries/NativeAnimation"
   React-RCTBlob:
-    :path: "../node_modules/react-native/Libraries/Blob"
+    :path: "../../node_modules/react-native/Libraries/Blob"
   React-RCTImage:
-    :path: "../node_modules/react-native/Libraries/Image"
+    :path: "../../node_modules/react-native/Libraries/Image"
   React-RCTLinking:
-    :path: "../node_modules/react-native/Libraries/LinkingIOS"
+    :path: "../../node_modules/react-native/Libraries/LinkingIOS"
   React-RCTNetwork:
-    :path: "../node_modules/react-native/Libraries/Network"
+    :path: "../../node_modules/react-native/Libraries/Network"
   React-RCTSettings:
-    :path: "../node_modules/react-native/Libraries/Settings"
+    :path: "../../node_modules/react-native/Libraries/Settings"
   React-RCTText:
-    :path: "../node_modules/react-native/Libraries/Text"
+    :path: "../../node_modules/react-native/Libraries/Text"
   React-RCTVibration:
-    :path: "../node_modules/react-native/Libraries/Vibration"
+    :path: "../../node_modules/react-native/Libraries/Vibration"
   ReactCommon:
-    :path: "../node_modules/react-native/ReactCommon"
+    :path: "../../node_modules/react-native/ReactCommon"
   RNCMaskedView:
-    :path: "../node_modules/@react-native-community/masked-view"
+    :path: "../../node_modules/@react-native-community/masked-view"
   RNGestureHandler:
-    :path: "../node_modules/react-native-gesture-handler"
+    :path: "../../node_modules/react-native-gesture-handler"
   RNReanimated:
-    :path: "../node_modules/react-native-reanimated"
+    :path: "../../node_modules/react-native-reanimated"
   RNScreens:
-    :path: "../node_modules/react-native-screens"
+    :path: "../../node_modules/react-native-screens"
   UMBarCodeScannerInterface:
     :path: !ruby/object:Pathname
-    path: "../node_modules/unimodules-barcode-scanner-interface/ios"
+    path: "../../node_modules/unimodules-barcode-scanner-interface/ios"
   UMCameraInterface:
     :path: !ruby/object:Pathname
-    path: "../node_modules/unimodules-camera-interface/ios"
+    path: "../../node_modules/unimodules-camera-interface/ios"
   UMConstantsInterface:
     :path: !ruby/object:Pathname
-    path: "../node_modules/unimodules-constants-interface/ios"
+    path: "../../node_modules/unimodules-constants-interface/ios"
   UMCore:
     :path: !ruby/object:Pathname
-    path: "../node_modules/@unimodules/core/ios"
+    path: "../../node_modules/@unimodules/core/ios"
   UMFaceDetectorInterface:
     :path: !ruby/object:Pathname
-    path: "../node_modules/unimodules-face-detector-interface/ios"
+    path: "../../node_modules/unimodules-face-detector-interface/ios"
   UMFileSystemInterface:
     :path: !ruby/object:Pathname
-    path: "../node_modules/unimodules-file-system-interface/ios"
+    path: "../../node_modules/unimodules-file-system-interface/ios"
   UMFontInterface:
     :path: !ruby/object:Pathname
-    path: "../node_modules/unimodules-font-interface/ios"
+    path: "../../node_modules/unimodules-font-interface/ios"
   UMImageLoaderInterface:
     :path: !ruby/object:Pathname
-    path: "../node_modules/unimodules-image-loader-interface/ios"
+    path: "../../node_modules/unimodules-image-loader-interface/ios"
   UMPermissionsInterface:
     :path: !ruby/object:Pathname
-    path: "../node_modules/unimodules-permissions-interface/ios"
+    path: "../../node_modules/unimodules-permissions-interface/ios"
   UMReactNativeAdapter:
     :path: !ruby/object:Pathname
-    path: "../node_modules/@unimodules/react-native-adapter/ios"
+    path: "../../node_modules/@unimodules/react-native-adapter/ios"
   UMSensorsInterface:
     :path: !ruby/object:Pathname
-    path: "../node_modules/unimodules-sensors-interface/ios"
+    path: "../../node_modules/unimodules-sensors-interface/ios"
   UMTaskManagerInterface:
     :path: !ruby/object:Pathname
-    path: "../node_modules/unimodules-task-manager-interface/ios"
+    path: "../../node_modules/unimodules-task-manager-interface/ios"
   Yoga:
-    :path: "../node_modules/react-native/ReactCommon/yoga"
+    :path: "../../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
@@ -521,6 +521,6 @@ SPEC CHECKSUMS:
   UMTaskManagerInterface: a98e37a576a5220bf43b8faf33cfdc129d2f441d
   Yoga: f2a7cd4280bfe2cca5a7aed98ba0eb3d1310f18b
 
-PODFILE CHECKSUM: 18b58708b4bb9901516029103ee63c94d63edd9e
+PODFILE CHECKSUM: c48a21ff513d3eadafa50f8797207ef2be75e234
 
 COCOAPODS: 1.8.4

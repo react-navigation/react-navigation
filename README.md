@@ -41,12 +41,12 @@ Remember to add tests for your change if possible. Run the unit tests by:
 yarn test
 ```
 
-Running Detox (on iOS) requires the following:
+Running the e2e tests with Detox (on iOS) requires the following:
 
 - Mac with macOS (at least macOS High Sierra 10.13.6)
 - Xcode 10.1+ with Xcode command line tools
 
-To run the integration tests, first you need to install `applesimutils` and `detox-cli`:
+First you need to install `applesimutils` and `detox-cli`:
 
 ```sh
 brew tap wix/brew
@@ -57,7 +57,6 @@ yarn global add detox-cli
 Then you can build and run the tests:
 
 ```sh
-cd example
 detox build -c ios.sim.debug
 detox test -c ios.sim.debug
 ```

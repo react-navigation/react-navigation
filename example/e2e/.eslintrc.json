@@ -1,0 +1,10 @@
+{
+  "settings": {
+    "import/core-modules": [
+      "detox",
+      "detox/runners/jest/adapter",
+      "detox/runners/jest/specReporter"
+    ]
+  },
+  "env": { "jest": true, "jasmine": true }
+}

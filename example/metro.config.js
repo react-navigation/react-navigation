@@ -43,13 +43,16 @@ module.exports = {
 
   resolver: {
     blacklistRE: blacklist(
-      [root, ...fs.readdirSync(packages).map(p => path.join(packages, p))].map(
-        it => new RegExp(`^${escape(path.join(it, 'node_modules'))}\\/.*$`)
-      )
+      fs
+        .readdirSync(packages)
+        .map(p => path.join(packages, p))
+        .map(
+          it => new RegExp(`^${escape(path.join(it, 'node_modules'))}\\/.*$`)
+        )
     ),
 
     extraNodeModules: modules.reduce((acc, name) => {
-      acc[name] = path.join(__dirname, 'node_modules', name);
+      acc[name] = path.join(__dirname, '..', 'node_modules', name);
       return acc;
     }, {}),
   },

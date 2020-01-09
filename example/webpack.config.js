@@ -4,7 +4,7 @@ const createExpoWebpackConfigAsync = require('@expo/webpack-config');
 // eslint-disable-next-line import/no-extraneous-dependencies
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 
-const node_modules = path.resolve(__dirname, 'node_modules');
+const node_modules = path.resolve(__dirname, '..', 'node_modules');
 const packages = path.resolve(__dirname, '..', 'packages');
 
 module.exports = async function(env, argv) {

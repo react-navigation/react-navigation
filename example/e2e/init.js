@@ -1,8 +1,7 @@
-/* eslint-disable import/no-commonjs, jest/no-jasmine-globals */
-/* eslint-env jest, jasmine */
+/* eslint-disable jest/no-jasmine-globals, import/no-commonjs */
 
 const detox = require('detox');
-const config = require('../package.json').detox;
+const config = require('../../package.json').detox;
 const adapter = require('detox/runners/jest/adapter');
 const specReporter = require('detox/runners/jest/specReporter');
 

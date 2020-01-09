@@ -61,10 +61,8 @@ jobs:
     - name: Build Detox
       if: steps.detox-cache.outputs.cache-hit != 'true'
       run: |
-        cd example
         detox build --configuration ios.sim.release
 
     - name: Run Detox tests
       run: |
-        cd example
         detox test --configuration ios.sim.release --cleanup --debug-synchronization 200

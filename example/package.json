@@ -3,19 +3,12 @@
   "description": "Demo app to showcase various functionality of React Navigation",
   "version": "5.0.0-alpha.23",
   "private": true,
-  "workspaces": {
-    "nohoist": [
-      "*",
-      "*/**"
-    ]
-  },
   "scripts": {
     "start": "expo start",
     "web": "expo start --web",
-    "react-native": "./node_modules/.bin/react-native",
-    "native": "./node_modules/.bin/react-native start",
-    "android": "./node_modules/.bin/react-native run-android",
-    "ios": "./node_modules/.bin/react-native run-ios"
+    "native": "react-native start",
+    "android": "react-native run-android",
+    "ios": "react-native run-ios"
   },
   "dependencies": {
     "@expo/vector-icons": "^10.0.0",
@@ -46,30 +39,7 @@
     "@types/react": "^16.9.17",
     "@types/react-native": "^0.60.30",
     "babel-preset-expo": "^8.0.0",
-    "detox": "^15.0.0",
     "expo-cli": "^3.11.5",
-    "jest": "^24.9.0",
     "typescript": "^3.7.4"
-  },
-  "detox": {
-    "test-runner": "jest",
-    "configurations": {
-      "ios.sim.debug": {
-        "binaryPath": "ios/build/Build/Products/Debug-iphonesimulator/ReactNavigationExample.app",
-        "build": "set -o pipefail; xcodebuild -workspace ios/ReactNavigationExample.xcworkspace -scheme ReactNavigationExample -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build",
-        "type": "ios.simulator",
-        "device": {
-          "type": "iPhone 11 Pro"
-        }
-      },
-      "ios.sim.release": {
-        "binaryPath": "ios/build/Build/Products/Release-iphonesimulator/ReactNavigationExample.app",
-        "build": "export RCT_NO_LAUNCH_PACKAGER=true; set -o pipefail; xcodebuild -workspace ios/ReactNavigationExample.xcworkspace -scheme ReactNavigationExample -configuration Release -sdk iphonesimulator -derivedDataPath ios/build",
-        "type": "ios.simulator",
-        "device": {
-          "type": "iPhone 11 Pro"
-        }
-      }
-    }
   }
 }
