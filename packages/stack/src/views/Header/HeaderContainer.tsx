@@ -49,7 +49,7 @@ export default function HeaderContainer({
 
   return (
     <View pointerEvents="box-none" style={style}>
-      {scenes.map((scene, i, self) => {
+      {scenes.slice(-3).map((scene, i, self) => {
         if ((mode === 'screen' && i !== self.length - 1) || !scene) {
           return null;
         }
