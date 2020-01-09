@@ -103,9 +103,9 @@ export const ScaleFromCenterAndroid: TransitionPreset = {
 export const DefaultTransition = Platform.select({
   ios: SlideFromRightIOS,
   default:
-    Platform.OS === 'android' && Platform.Version < ANDROID_VERSION_PIE
-      ? FadeFromBottomAndroid
-      : RevealFromBottomAndroid,
+    Platform.OS === 'android' && Platform.Version >= ANDROID_VERSION_PIE
+      ? RevealFromBottomAndroid
+      : FadeFromBottomAndroid,
 });
 
 /**
