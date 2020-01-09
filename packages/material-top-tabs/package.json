@@ -11,7 +11,7 @@
     "material",
     "tab"
   ],
-  "version": "5.0.0-alpha.29",
+  "version": "5.0.0-alpha.30",
   "license": "MIT",
   "repository": "https://github.com/react-navigation/navigation-ex/tree/master/packages/material-top-tabs",
   "main": "lib/commonjs/index.js",
