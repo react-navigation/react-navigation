@@ -30,7 +30,8 @@ class StackView extends React.Component {
     this.props.navigation.dispatch(StackActions.pop({ key: route.key }));
   };
 
-  _onSceneFocus = route => {
+  _onSceneFocus = (route, descriptor) => {
+    descriptor.options && descriptor.options.onAppear && descriptor.options.onAppear()
     this.props.navigation.dispatch(
       StackActions.completeTransition({ toChildKey: route.key })
     );
@@ -190,7 +191,7 @@ class StackView extends React.Component {
         style={options.cardStyle}
         stackAnimation={stackAnimation}
         stackPresentation={stackPresentation}
-        onAppear={() => this._onSceneFocus(route)}
+        onAppear={() => this._onSceneFocus(route, descriptor)}
         onDismissed={() => this._removeScene(route)}>
         {this._renderHeaderConfig(index, route, descriptor)}
         <SceneView
