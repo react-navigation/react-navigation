@@ -32,15 +32,6 @@ export default function MaterialTopTabView({
   const { colors } = useTheme();
 
   const renderTabBar = (props: SceneRendererProps) => {
-    const route = state.routes[state.index];
-    const options = descriptors[route.key].options;
-
-    const tabBarVisible = options.tabBarVisible !== false;
-
-    if (tabBarVisible === false) {
-      return null;
-    }
-
     return tabBar({
       ...tabBarOptions,
       ...props,
