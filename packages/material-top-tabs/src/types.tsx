@@ -86,11 +86,6 @@ export type MaterialTopTabNavigationOptions = {
    * ID to locate this tab button in tests.
    */
   tabBarTestID?: string;
-
-  /**
-   * Boolean indicating whether the tab bar is visible when this screen is active.
-   */
-  tabBarVisible?: boolean;
 };
 
 export type MaterialTopTabDescriptor = Descriptor<
