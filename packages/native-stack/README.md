@@ -2,6 +2,8 @@
 
 Stack navigator for React Native using native primitives for navigation. Uses [`react-native-screens`](https://github.com/kmagiera/react-native-screens) under the hood.
 
+Documentation can be found on the [React Navigation website](https://reactnavigation.org/docs/en/next/native-stack-navigator.html).
+
 Expo SDK 35 and lower is not supported as it includes an older version of `react-native-screens`.
 
 ## Installation

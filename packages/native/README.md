@@ -1,6 +1,8 @@
 # `@react-navigation/native`
 
-React Native integration for React Navigation
+React Native integration for React Navigation.
+
+Documentation can be found on the [React Navigation website](https://reactnavigation.org/docs/en/next/getting-started.html).
 
 ## Installation
 
