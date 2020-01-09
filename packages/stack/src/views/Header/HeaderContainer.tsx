@@ -9,7 +9,10 @@ import { StackNavigationState } from '@react-navigation/routers';
 import { EdgeInsets } from 'react-native-safe-area-context';
 
 import Header from './Header';
-import { forStatic } from '../../TransitionConfigs/HeaderStyleInterpolators';
+import {
+  forStatic,
+  forNoAnimation,
+} from '../../TransitionConfigs/HeaderStyleInterpolators';
 import {
   Layout,
   Scene,
@@ -78,14 +81,12 @@ export default function HeaderContainer({
         const previousScene = self[i - 1];
         const nextScene = self[i + 1];
         const isHeaderStatic =
-          mode === 'float'
-            ? (previousScene &&
-                previousScene.descriptor.options.headerShown === false &&
-                // We still need to animate when coming back from next scene
-                // A hacky way to check this is if the next scene exists
-                !nextScene) ||
-              (nextScene && nextScene.descriptor.options.headerShown === false)
-            : false;
+          (previousScene &&
+            previousScene.descriptor.options.headerShown === false &&
+            // We still need to animate when coming back from next scene
+            // A hacky way to check this is if the next scene exists
+            !nextScene) ||
+          (nextScene && nextScene.descriptor.options.headerShown === false);
 
         const props = {
           mode,
@@ -96,7 +97,12 @@ export default function HeaderContainer({
           navigation: scene.descriptor.navigation as StackNavigationProp<
             ParamListBase
           >,
-          styleInterpolator: isHeaderStatic ? forStatic : styleInterpolator,
+          styleInterpolator:
+            mode === 'float'
+              ? isHeaderStatic
+                ? forStatic
+                : styleInterpolator
+              : forNoAnimation,
         };
 
         return (
