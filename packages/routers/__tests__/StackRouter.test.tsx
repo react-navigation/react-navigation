@@ -563,9 +563,48 @@ it('handles pop action', () => {
     stale: false,
     type: 'stack',
     key: 'root',
-    index: 0,
+    index: 1,
     routeNames: ['baz', 'bar', 'qux'],
-    routes: [{ key: 'baz-0', name: 'baz' }],
+    routes: [
+      { key: 'baz-0', name: 'baz' },
+      { key: 'qux-0', name: 'qux' },
+    ],
+  });
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 4,
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          { key: 'baz-0', name: 'baz' },
+          { key: 'bar-0', name: 'bar' },
+          { key: 'qux-0', name: 'qux' },
+          { key: 'quy-0', name: 'quy' },
+          { key: 'quz-0', name: 'quz' },
+        ],
+      },
+      {
+        ...StackActions.pop(2),
+        target: 'root',
+        source: 'qux-0',
+      },
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 2,
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [
+      { key: 'baz-0', name: 'baz' },
+      { key: 'quy-0', name: 'quy' },
+      { key: 'quz-0', name: 'quz' },
+    ],
   });
 
   expect(
