@@ -96,7 +96,10 @@ class StackView extends React.Component {
 
     if (options.backButtonImage) {
       children.push(
-        <ScreenStackHeaderBackButtonImage source={options.backButtonImage} />
+        <ScreenStackHeaderBackButtonImage
+          key="backImage"
+          source={options.backButtonImage}
+        />
       );
     }
 
@@ -218,7 +221,6 @@ const styles = StyleSheet.create({
 
 function createStackNavigator(routeConfigMap, stackConfig = {}) {
   const router = StackRouter(routeConfigMap, stackConfig);
-
   // Create a navigator with StackView as the view
   let Navigator = createNavigator(StackView, router, stackConfig);
   // if (!stackConfig.disableKeyboardHandling) {
