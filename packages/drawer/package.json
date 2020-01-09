@@ -13,11 +13,7 @@
   ],
   "version": "5.0.0-alpha.34",
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/react-navigation/navigation-ex.git",
-    "directory": "packages/drawer"
-  },
+  "repository": "https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer",
   "main": "lib/commonjs/index.js",
   "react-native": "src/index.tsx",
   "module": "lib/module/index.js",
