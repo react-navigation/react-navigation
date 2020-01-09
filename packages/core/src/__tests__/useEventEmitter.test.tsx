@@ -273,7 +273,7 @@ it('fires blur event when a route is removed with a delay', async () => {
     React.useImperativeHandle(ref, () => navigation, [navigation]);
 
     const [previous, dispatch] = React.useReducer(
-      (state, action) => {
+      (state: any, action: any) => {
         if (state.routes !== action.routes) {
           return { ...state, ...action };
         }
