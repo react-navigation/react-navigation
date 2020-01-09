@@ -33,7 +33,20 @@ export function forUIKit({
   // The back title also animates in from this position
   const rightOffset = layouts.screen.width / 4;
 
-  const progress = add(current.progress, next ? next.progress : 0);
+  const progress = add(
+    current.progress.interpolate({
+      inputRange: [0, 1],
+      outputRange: [0, 1],
+      extrapolate: 'clamp',
+    }),
+    next
+      ? next.progress.interpolate({
+          inputRange: [0, 1],
+          outputRange: [0, 1],
+          extrapolate: 'clamp',
+        })
+      : 0
+  );
 
   return {
     leftButtonStyle: {
@@ -98,7 +111,21 @@ export function forFade({
   current,
   next,
 }: StackHeaderInterpolationProps): StackHeaderInterpolatedStyle {
-  const progress = add(current.progress, next ? next.progress : 0);
+  const progress = add(
+    current.progress.interpolate({
+      inputRange: [0, 1],
+      outputRange: [0, 1],
+      extrapolate: 'clamp',
+    }),
+    next
+      ? next.progress.interpolate({
+          inputRange: [0, 1],
+          outputRange: [0, 1],
+          extrapolate: 'clamp',
+        })
+      : 0
+  );
+
   const opacity = progress.interpolate({
     inputRange: [0, 1, 2],
     outputRange: [0, 1, 0],
@@ -125,7 +152,21 @@ export function forStatic({
   next,
   layouts: { screen },
 }: StackHeaderInterpolationProps): StackHeaderInterpolatedStyle {
-  const progress = add(current.progress, next ? next.progress : 0);
+  const progress = add(
+    current.progress.interpolate({
+      inputRange: [0, 1],
+      outputRange: [0, 1],
+      extrapolate: 'clamp',
+    }),
+    next
+      ? next.progress.interpolate({
+          inputRange: [0, 1],
+          outputRange: [0, 1],
+          extrapolate: 'clamp',
+        })
+      : 0
+  );
+
   const translateX = progress.interpolate({
     inputRange: [0, 1, 2],
     outputRange: I18nManager.isRTL
