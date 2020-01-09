@@ -30,7 +30,7 @@ import {
 
 type Props = ViewProps & {
   index: number;
-  closing?: boolean;
+  closing: boolean;
   next?: Animated.AnimatedInterpolation;
   current: Animated.AnimatedInterpolation;
   gesture: Animated.Value;
@@ -135,7 +135,7 @@ export default class Card extends React.Component<Props> {
     closing,
     velocity,
   }: {
-    closing?: boolean;
+    closing: boolean;
     velocity?: number;
   }) => {
     const {
@@ -159,7 +159,7 @@ export default class Card extends React.Component<Props> {
     this.setPointerEventsEnabled(!closing);
     this.handleStartInteraction();
 
-    onTransitionStart?.({ closing: Boolean(closing) });
+    onTransitionStart?.({ closing });
     animation(gesture, {
       ...spec.config,
       velocity,

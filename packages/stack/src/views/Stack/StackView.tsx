@@ -282,27 +282,19 @@ class StackView extends React.Component<Props, State> {
       // If a route exists in state, trigger a pop
       // This will happen in when the route was closed from the card component
       // e.g. When the close animation triggered from a gesture ends
-      // For the cleanup, the card needs to call this function again from its componentDidUpdate
       navigation.dispatch({
         ...StackActions.pop(),
         source: route.key,
         target: state.key,
       });
-    } else {
-      // Otherwise, the animation was triggered due to a route removal
-      // In this case, we need to clean up any state tracking the route and pop it immediately
-
-      // @ts-ignore
-      this.setState(state => ({
-        routes: state.routes.filter(r => r.key !== route.key),
-        openingRouteKeys: state.openingRouteKeys.filter(
-          key => key !== route.key
-        ),
-        closingRouteKeys: state.closingRouteKeys.filter(
-          key => key !== route.key
-        ),
-      }));
     }
+
+    // We need to clean up any state tracking the route and pop it immediately
+    this.setState(state => ({
+      routes: state.routes.filter(r => r.key !== route.key),
+      openingRouteKeys: state.openingRouteKeys.filter(key => key !== route.key),
+      closingRouteKeys: state.closingRouteKeys.filter(key => key !== route.key),
+    }));
   };
 
   private handleTransitionStart = (
