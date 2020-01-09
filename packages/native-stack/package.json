@@ -6,7 +6,7 @@
     "react-native",
     "react-navigation"
   ],
-  "version": "5.0.0-alpha.22",
+  "version": "5.0.0-alpha.23",
   "license": "MIT",
   "repository": "https://github.com/react-navigation/navigation-ex/tree/master/packages/native-stack",
   "main": "lib/commonjs/index.js",
@@ -25,13 +25,13 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "@react-navigation/routers": "^5.0.0-alpha.20"
+    "@react-navigation/routers": "^5.0.0-alpha.21"
   },
   "devDependencies": {
     "@react-native-community/bob": "^0.7.0",
     "del-cli": "^3.0.0",
-    "react-native-screens": "^2.0.0-alpha.19",
-    "typescript": "^3.7.3"
+    "react-native-screens": "^2.0.0-alpha.22",
+    "typescript": "^3.7.4"
   },
   "peerDependencies": {
     "@react-navigation/native": "^5.0.0-alpha.0",

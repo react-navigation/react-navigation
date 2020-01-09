@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.22](https://github.com/react-navigation/navigation-ex/tree/master/packages/compat/compare/@react-navigation/compat@5.0.0-alpha.21...@react-navigation/compat@5.0.0-alpha.22) (2020-01-09)
+
+**Note:** Version bump only for package @react-navigation/compat
+
+
+
+
+
 # [5.0.0-alpha.21](https://github.com/react-navigation/navigation-ex/compare/@react-navigation/compat@5.0.0-alpha.20...@react-navigation/compat@5.0.0-alpha.21) (2020-01-05)
 
 **Note:** Version bump only for package @react-navigation/compat
