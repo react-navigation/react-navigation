@@ -137,11 +137,15 @@
 
 - (void)setModalViewControllers:(NSArray<UIViewController *> *)controllers
 {
+  // when there is no change we return immediately. This check is important because sometime we may
+  // accidently trigger modal dismiss if we don't verify to run the below code only when an actual
+  // change in the list of presented modal was made.
+  if ([_presentedModals isEqualToArray:controllers]) {
+    return;
+  }
+
   NSMutableArray<UIViewController *> *newControllers = [NSMutableArray arrayWithArray:controllers];
   [newControllers removeObjectsInArray:_presentedModals];
-
-  NSMutableArray<UIViewController *> *controllersToRemove = [NSMutableArray arrayWithArray:_presentedModals];
-  [controllersToRemove removeObjectsInArray:controllers];
 
   // find bottom-most controller that should stay on the stack for the duration of transition
   NSUInteger changeRootIndex = 0;
@@ -173,9 +177,6 @@
                              completion:nil];
       previous = next;
     }
-
-    [self->_presentedModals removeAllObjects];
-    [self->_presentedModals addObjectsFromArray:controllers];
   };
 
   if (changeRootController.presentedViewController) {
@@ -185,10 +186,16 @@
   } else {
     finish();
   }
+  [_presentedModals setArray:controllers];
 }
 
 - (void)setPushViewControllers:(NSArray<UIViewController *> *)controllers
 {
+  // when there is no change we return immediately
+  if ([_controller.viewControllers isEqualToArray:controllers]) {
+    return;
+  }
+
   UIViewController *top = controllers.lastObject;
   UIViewController *lastTop = _controller.viewControllers.lastObject;
 
@@ -198,7 +205,7 @@
   // controller is still there
   BOOL firstTimePush = ![lastTop isKindOfClass:[RNSScreen class]];
 
-  BOOL shouldAnimate = !firstTimePush && ((RNSScreenView *) lastTop.view).stackAnimation != RNSScreenStackAnimationNone;
+  BOOL shouldAnimate = !firstTimePush && ((RNSScreenView *) lastTop.view).stackAnimation != RNSScreenStackAnimationNone && !_controller.presentedViewController;
 
   if (firstTimePush) {
     // nothing pushed yet
