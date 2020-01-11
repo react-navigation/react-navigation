@@ -96,6 +96,11 @@ public class ScreenStackFragment extends ScreenFragment {
     return mScreenRootView;
   }
 
+  @Override
+  protected ViewGroup getScreenRootView() {
+    return mScreenRootView;
+  }
+
   public boolean isDismissable() {
     View child = mScreenView.getChildAt(0);
     if (child instanceof ScreenStackHeaderConfig) {

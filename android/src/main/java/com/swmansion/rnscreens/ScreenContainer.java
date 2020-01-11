@@ -235,10 +235,24 @@ public class ScreenContainer<T extends ScreenFragment> extends ViewGroup {
     return mScreenFragments.contains(screenFragment);
   }
 
+  protected void ensureFragmentManager() {
+    if (mFragmentManager != null && mFragmentManager.isDestroyed()) {
+      // When fragmentManager is destroyed, try to remove current fragment's views
+      for (int i = 0, size = mScreenFragments.size(); i < size; i++) {
+        ScreenFragment screenFragment = mScreenFragments.get(i);
+        removeView(screenFragment.getScreenRootView());
+      }
+      mFragmentManager = null;
+      mActiveScreenFragments.clear();
+      mNeedUpdate = true;
+    }
+  }
+
   @Override
   protected void onAttachedToWindow() {
     super.onAttachedToWindow();
     mIsAttached = true;
+    ensureFragmentManager();
     updateIfNeeded();
   }
 
