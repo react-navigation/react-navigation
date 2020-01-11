@@ -1,0 +1,38 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Stack Navigator
+    url: https://github.com/react-navigation/stack/issues/new
+    about: Submit a bug report for Stack Navigator (react-navigation-stack).
+  - name: Drawer Navigator
+    url: https://github.com/react-navigation/drawer/issues/new
+    about: Submit a bug report for Drawer Navigator (react-navigation-drawer).
+  - name: Tab Navigator
+    url: https://github.com/react-navigation/tabs/issues/new
+    about: Submit a bug report for Bottom Tab Navigator and Material Top Tab Navigator (react-navigation-tabs).
+  - name: Material Bottom Tab Navigator
+    url: https://github.com/react-navigation/material-bottom-tabs/issues/new
+    about: Submit a bug report for Material Bottom Tab Navigator (react-navigation-material-bottom-tabs).
+  - name: Animated Switch Navigator
+    url: https://github.com/react-navigation/animated-switch/issues/new
+    about: Submit a bug report for Animated Switch Navigator (react-navigation-animated-switch).
+  - name: React Navigation 5
+    url: https://github.com/react-navigation/navigation-ex/issues/new/choose
+    about: Submit a bug report for React Navigation 5.
+  - name: Common mistakes
+    url: https://reactnavigation.org/docs/en/common-mistakes.html
+    about: Read about common mistakes and how to fix them.
+  - name: Documentation
+    url: https://reactnavigation.org
+    about: Read the official documentation.
+  - name: Feature requests
+    url: https://react-navigation.canny.io/feature-requests
+    about: Post a feature request on Canny.
+  - name: StackOverflow
+    url: https://stackoverflow.com/questions/tagged/react-navigation
+    about: Ask and answer questions using the react-navigation label.
+  - name: Reactiflux
+    url: https://www.reactiflux.com/
+    about: Chat with other community members in the react-navigation channel.
+  - name: Write an RFC
+    url: https://github.com/react-navigation/rfcs
+    about: Write a RFC if you have ideas for how to implement a feature request.
