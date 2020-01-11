@@ -1,32 +1,32 @@
-<!-- Issues that don't use this template are likely to be closed. -->
-<!-- Please search the existing issues and read the documentation before opening an issue. -->
+**Current Behavior**
 
-### Current behaviour
+- What code are you running and what is happening?
+- Include a screenshot or video if it makes sense.
 
-<!-- What's currently happening? -->
+**Expected Behavior**
 
-### Expected behaviour
+- What do you expect should be happening?
+- Include a screenshot or video if it makes sense.
 
-<!-- What do you expect to happen? If there is an error, provide the complete error message with stack trace. -->
+**How to reproduce**
 
-### Code sample
+- You must provide a way to reproduce the problem. If you are having an issue with your machine or build tools, the issue belongs on another repository as that is outside of the scope of React Navigation.
+- Either re-create the bug on [Snack](https://snack.expo.io) or link to a GitHub repository with code that reproduces the bug.
+- Explain how to run the example app and any steps that we need to take to reproduce the issue from the example app.
+- Keep the repro code as simple as possible, with the minimum amount of code required to repro the issue.
+- Before reporting an issue, make sure you are on latest version of the package.
 
-<!-- Provide a complete code sample that could be run to reproduce the issue, ideally on snack.expo.io or in a github repo. -->
+**Your Environment**
 
-### Screenshots (if applicable)
-
-<!-- Include screenshots if there's a bug in the layout. -->
-
-### What have you tried
-
-<!-- List down the steps you have tried to fix or identify the issue and links to any related issues you found. -->
-
-### Your Environment
-
-| software              | version
-| --------------------- | -------
-| ios or android        |
-| react-native          |
-| react-navigation-tabs |
-| node                  |
-| npm or yarn           |
+| software                     | version |
+| ---------------------------- | ------- |
+| iOS or Android               |
+| react-navigation             |
+| react-navigation-tabs        |
+| react-native-reanimated      |
+| react-native-gesture-handler |
+| react-native-screens         |
+| react-native                 |
+| expo                         |
+| node                         |
+| npm or yarn                  |
