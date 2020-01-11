@@ -514,8 +514,8 @@ export default class Pager<T extends Route> extends React.Component<
       });
   };
 
-  // Cancel gesture if swiping back from initial tab or forward from last tab.
-  // Enables parent Pager to pick up the gesture, if one exists.
+  // Cancel gesture if swiping back from the initial tab or forward from the last tab.
+  // Enables parent Pager to pick up the gesture if one exists.
   private maybeCancel = block([
     cond(
       and(
