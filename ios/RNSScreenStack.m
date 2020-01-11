@@ -22,6 +22,7 @@
   NSMutableArray<RNSScreenView *> *_reactSubviews;
   NSMutableSet<RNSScreenView *> *_dismissedScreens;
   NSMutableArray<UIViewController *> *_presentedModals;
+  __weak UIViewController* recentPopped;
   __weak RNSScreenStackManager *_manager;
 }
 
@@ -69,6 +70,10 @@
       [_dismissedScreens addObject:[_reactSubviews objectAtIndex:i - 1]];
     }
   }
+  if (recentPopped != nil) {
+    recentPopped.view = nil;
+    recentPopped = nil;
+  }
 }
 
 - (id<UIViewControllerAnimatedTransitioning>)navigationController:(UINavigationController *)navigationController animationControllerForOperation:(UINavigationControllerOperation)operation fromViewController:(UIViewController *)fromVC toViewController:(UIViewController *)toVC
@@ -77,7 +82,8 @@
   if (operation == UINavigationControllerOperationPush) {
     screen = (RNSScreenView *) toVC.view;
   } else if (operation == UINavigationControllerOperationPop) {
-   screen = (RNSScreenView *) fromVC.view;
+    screen = (RNSScreenView *) fromVC.view;
+    recentPopped = fromVC;
   }
   if (screen != nil && (screen.stackAnimation == RNSScreenStackAnimationFade || screen.stackAnimation == RNSScreenStackAnimationNone)) {
     return  [[RNSScreenStackAnimator alloc] initWithOperation:operation];
