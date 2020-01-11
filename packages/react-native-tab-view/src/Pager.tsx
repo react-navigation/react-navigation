@@ -38,11 +38,17 @@ export type Props<T extends Route> = PagerCommonProps & {
   gestureHandlerProps: React.ComponentProps<typeof PanGestureHandler>;
 };
 
+type ComponentState = {
+  enabled: boolean;
+  childPanGestureHandlerRefs: React.RefObject<PanGestureHandler>[];
+};
+
 const {
   Clock,
   Value,
   onChange,
   and,
+  or,
   abs,
   add,
   block,
@@ -69,6 +75,8 @@ const {
   sub,
   timing,
 } = Animated;
+
+const PagerContext = React.createContext({});
 
 const TRUE = 1;
 const FALSE = 0;
@@ -98,11 +106,27 @@ const TIMING_CONFIG = {
   easing: Easing.out(Easing.cubic),
 };
 
-export default class Pager<T extends Route> extends React.Component<Props<T>> {
+export default class Pager<T extends Route> extends React.Component<
+  Props<T>,
+  ComponentState
+> {
   static defaultProps = {
     swipeVelocityImpact: SWIPE_VELOCITY_IMPACT,
     springVelocityScale: SPRING_VELOCITY_SCALE,
   };
+
+  state = {
+    enabled: true,
+    childPanGestureHandlerRefs: [] as React.RefObject<PanGestureHandler>[],
+  };
+
+  componentDidMount() {
+    // Register this PanGestureHandler with the parent (if parent exists)
+    // in order to coordinate gestures between handlers.
+    if (this.context && this.context.addGestureHandlerRef) {
+      this.context.addGestureHandlerRef(this.gestureHandlerRef);
+    }
+  }
 
   componentDidUpdate(prevProps: Props<T>) {
     const {
@@ -195,6 +219,28 @@ export default class Pager<T extends Route> extends React.Component<Props<T>> {
     }
   }
 
+  static contextType = PagerContext;
+
+  // Mechanism to add child PanGestureHandler refs in the case that this
+  // Pager is a parent to child Pagers. Allows for coordination between handlers
+  private providerVal = {
+    addGestureHandlerRef: (ref: React.RefObject<PanGestureHandler>) => {
+      if (!this.state.childPanGestureHandlerRefs.includes(ref)) {
+        this.setState((prevState: ComponentState) => ({
+          childPanGestureHandlerRefs: [
+            ...prevState.childPanGestureHandlerRefs,
+            ref,
+          ],
+        }));
+      }
+    },
+  };
+
+  // PanGestureHandler ref used for coordination with parent handlers
+  private gestureHandlerRef: React.RefObject<
+    PanGestureHandler
+  > = React.createRef();
+
   // Clock used for tab transition animations
   private clock = new Clock();
 
@@ -203,6 +249,9 @@ export default class Pager<T extends Route> extends React.Component<Props<T>> {
   private gestureX = new Value(0);
   private gestureState = new Value(State.UNDETERMINED);
   private offsetX = new Value(0);
+
+  // Tracks current state of gesture handler enabled
+  private gesturesEnabled = new Value(1);
 
   // Current progress of the page (translateX value)
   private progress = new Value(
@@ -458,12 +507,43 @@ export default class Pager<T extends Route> extends React.Component<Props<T>> {
     multiply(this.velocityX, this.swipeVelocityImpact)
   );
 
+  private toggleEnabled = () => {
+    if (this.state.enabled)
+      this.setState({ enabled: false }, () => {
+        this.setState({ enabled: true });
+      });
+  };
+
+  // Cancel gesture if swiping back from initial tab or forward from last tab.
+  // Enables parent Pager to pick up the gesture, if one exists.
+  private maybeCancel = block([
+    cond(
+      and(
+        this.gesturesEnabled,
+        or(
+          and(
+            eq(this.index, sub(this.routesLength, 1)),
+            lessThan(this.gestureX, 0)
+          ),
+          and(eq(this.index, 0), greaterThan(this.gestureX, 0))
+        )
+      ),
+      set(this.gesturesEnabled, 0)
+    ),
+  ]);
+
   private translateX = block([
+    onChange(
+      this.gesturesEnabled,
+      cond(
+        not(this.gesturesEnabled),
+        call([this.gesturesEnabled], this.toggleEnabled)
+      )
+    ),
     onChange(
       this.index,
       call([this.index], ([value]) => {
         this.currentIndexValue = value;
-
         // Without this check, the pager can go to an infinite update <-> animate loop for sync updates
         if (value !== this.props.navigationState.index) {
           // If the index changed, and previous animation has finished, update state
@@ -502,43 +582,50 @@ export default class Pager<T extends Route> extends React.Component<Props<T>> {
       // Listen to updates for this value only when it changes
       // Without `onChange`, this will fire even if the value didn't change
       // We don't want to call the listeners if the value didn't change
-      call(
-        [this.isSwiping, this.indexAtSwipeEnd, this.index],
-        ([isSwiping, indexAtSwipeEnd, currentIndex]: readonly number[]) => {
-          const { keyboardDismissMode, onSwipeStart, onSwipeEnd } = this.props;
+      [
+        cond(not(this.isSwiping), set(this.gesturesEnabled, 1)),
+        call(
+          [this.isSwiping, this.indexAtSwipeEnd, this.index],
+          ([isSwiping, indexAtSwipeEnd, currentIndex]: readonly number[]) => {
+            const {
+              keyboardDismissMode,
+              onSwipeStart,
+              onSwipeEnd,
+            } = this.props;
 
-          if (isSwiping === TRUE) {
-            onSwipeStart && onSwipeStart();
+            if (isSwiping === TRUE) {
+              onSwipeStart && onSwipeStart();
 
-            if (keyboardDismissMode === 'auto') {
-              const input = TextInput.State.currentlyFocusedField();
+              if (keyboardDismissMode === 'auto') {
+                const input = TextInput.State.currentlyFocusedField();
 
-              // When a gesture begins, blur the currently focused input
-              TextInput.State.blurTextInput(input);
+                // When a gesture begins, blur the currently focused input
+                TextInput.State.blurTextInput(input);
 
-              // Store the id of this input so we can refocus it if gesture was cancelled
-              this.previouslyFocusedTextInput = input;
-            } else if (keyboardDismissMode === 'on-drag') {
-              Keyboard.dismiss();
-            }
-          } else {
-            onSwipeEnd && onSwipeEnd();
-
-            if (keyboardDismissMode === 'auto') {
-              if (indexAtSwipeEnd === currentIndex) {
-                // The index didn't change, we should restore the focus of text input
-                const input = this.previouslyFocusedTextInput;
-
-                if (input) {
-                  TextInput.State.focusTextInput(input);
-                }
+                // Store the id of this input so we can refocus it if gesture was cancelled
+                this.previouslyFocusedTextInput = input;
+              } else if (keyboardDismissMode === 'on-drag') {
+                Keyboard.dismiss();
               }
+            } else {
+              onSwipeEnd && onSwipeEnd();
 
-              this.previouslyFocusedTextInput = null;
+              if (keyboardDismissMode === 'auto') {
+                if (indexAtSwipeEnd === currentIndex) {
+                  // The index didn't change, we should restore the focus of text input
+                  const input = this.previouslyFocusedTextInput;
+
+                  if (input) {
+                    TextInput.State.focusTextInput(input);
+                  }
+                }
+
+                this.previouslyFocusedTextInput = null;
+              }
             }
           }
-        }
-      )
+        ),
+      ]
     ),
     onChange(
       this.nextIndex,
@@ -554,6 +641,7 @@ export default class Pager<T extends Route> extends React.Component<Props<T>> {
     cond(
       eq(this.gestureState, State.ACTIVE),
       [
+        this.maybeCancel,
         cond(this.isSwiping, NOOP, [
           // We weren't dragging before, set it to true
           set(this.isSwiping, TRUE),
@@ -657,7 +745,10 @@ export default class Pager<T extends Route> extends React.Component<Props<T>> {
       jumpTo: this.jumpTo,
       render: children => (
         <PanGestureHandler
-          enabled={layout.width !== 0 && swipeEnabled}
+          ref={this.gestureHandlerRef}
+          simultaneousHandlers={this.state.childPanGestureHandlerRefs}
+          waitFor={this.state.childPanGestureHandlerRefs}
+          enabled={layout.width !== 0 && swipeEnabled && this.state.enabled}
           onGestureEvent={this.handleGestureEvent}
           onHandlerStateChange={this.handleGestureEvent}
           activeOffsetX={[-SWIPE_DISTANCE_MINIMUM, SWIPE_DISTANCE_MINIMUM]}
@@ -676,7 +767,9 @@ export default class Pager<T extends Route> extends React.Component<Props<T>> {
                 : null,
             ]}
           >
-            {children}
+            <PagerContext.Provider value={this.providerVal}>
+              {children}
+            </PagerContext.Provider>
           </Animated.View>
         </PanGestureHandler>
       ),
