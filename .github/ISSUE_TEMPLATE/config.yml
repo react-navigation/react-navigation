@@ -6,7 +6,7 @@ contact_links:
   - name: Documentation
     url: https://next.reactnavigation.org
     about: Read the official documentation.
-  - name: Feature Requests
+  - name: Feature requests
     url: https://react-navigation.canny.io/feature-requests
     about: Post a feature request on Canny.
   - name: StackOverflow
