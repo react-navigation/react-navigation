@@ -3,11 +3,11 @@
     "baseUrl": ".",
     "paths": {
       "@react-navigation/*": [
-        "./packages/*/src",
-        "./packages/*/lib/typescript"
+        "./packages/*/src"
       ],
       "use-subscription": ["./typings/use-subscription.d"]
     },
+    "composite": true,
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
     "esModuleInterop": true,
